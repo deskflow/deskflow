@@ -48,6 +48,10 @@ private:
     bool m_StartMain;
     SynergyLocale m_Locale;
 
+#if defined(Q_OS_MAC)
+    void duplicateSpaces();
+#endif // defined(Q_OS_MAC)
+
 private slots:
     void on_m_pComboLanguage_currentIndexChanged(int index);
 };

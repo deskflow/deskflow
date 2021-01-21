@@ -29,7 +29,7 @@ if (WIN32)
         tb_idle.ico
         tb_run.ico
         tb_wait.ico
-		synergys.exe.manifest
+        synergys.exe.manifest
     )
 elseif (APPLE)
     file(GLOB arch_headers "OSX*.h")
@@ -48,7 +48,7 @@ endif()
 
 add_executable(synergys ${sources})
 target_link_libraries(synergys
-    arch base client common io mt net ipc platform server synlib ${libs} ${OPENSSL_LIBS})
+    arch base client common io mt net ipc platform server synlib ${libs})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergys DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})

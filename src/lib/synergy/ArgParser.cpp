@@ -233,9 +233,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
         // try to restart
         argsBase().m_restartable = true;
     }
-    else if (isArg(i, argc, argv, "-z", NULL)) {
-        argsBase().m_backend = true;
-    }
     else if (isArg(i, argc, argv, NULL, "--no-hooks")) {
         argsBase().m_noHooks = true;
     }

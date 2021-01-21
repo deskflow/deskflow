@@ -455,13 +455,6 @@ Double click on a screen to edit its settings.</string>
             </item>
            </layout>
           </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxEnableDragAndDrop">
-            <property name="text">
-             <string>Enable drag and drop file transfers</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
             <property name="enabled">
@@ -554,16 +547,6 @@ Double click on a screen to edit its settings.</string>
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxScreenSaverSync">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>S&amp;ynchronize screen savers</string>
-            </property>
-           </widget>
           </item>
           <item row="6" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">

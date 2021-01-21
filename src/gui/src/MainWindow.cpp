@@ -135,7 +135,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
+    
     m_pLabelScreenName->setText(getScreenName());
+    connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
     m_pLabelIpAddresses->setText(getIPAddresses());
 
 #if defined(Q_OS_WIN)
@@ -1402,4 +1404,9 @@ void MainWindow::windowStateChanged()
 {
     if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
         hide();
+}
+
+void MainWindow::updateScreenName() 
+{
+    m_pLabelScreenName->setText(getScreenName());
 }
