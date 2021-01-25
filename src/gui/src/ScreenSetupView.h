@@ -44,6 +44,7 @@ class ScreenSetupView : public QTableView
 
     protected:
         void mouseDoubleClickEvent(QMouseEvent*) override;
+        void keyPressEvent(QKeyEvent*) override;
         void setTableSize();
         void resizeEvent(QResizeEvent*) override;
         void dragEnterEvent(QDragEnterEvent* event) override;
@@ -51,6 +52,9 @@ class ScreenSetupView : public QTableView
         void startDrag(Qt::DropActions supportedActions) override;
         QStyleOptionViewItem viewOptions() const override;
         void scrollTo(const QModelIndex&, ScrollHint) override {}
+    private:
+        void enter(const QModelIndex&);
+        void remove(const QModelIndex&);
 };
 
 #endif

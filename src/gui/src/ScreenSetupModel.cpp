@@ -71,7 +71,7 @@ Qt::ItemFlags ScreenSetupModel::flags(const QModelIndex& index) const
     if (!screen(index).isNull())
         return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 
-    return Qt::ItemIsDropEnabled;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 }
 
 Qt::DropActions ScreenSetupModel::supportedDropActions() const
