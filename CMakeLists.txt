@@ -30,9 +30,9 @@ option (BUILD_TESTS "Override building of tests" ON)
 option (ENABLE_COVERAGE "Build with coverage")
 
 if (DEFINED ENV{SYNERGY_ENTERPRISE})
-  option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
+    option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
 else()
-  option (SYNERGY_ENTERPRISE "Build Enterprise" OFF)
+    option (SYNERGY_ENTERPRISE "Build Enterprise" OFF)
 endif()
 
 set (CMAKE_CXX_STANDARD 14)
@@ -341,23 +341,23 @@ endif()
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 # Update submodules as needed
-  option(GIT_SUBMODULE "Check submodules during build" ON)
-  if(GIT_SUBMODULE)
-    message(STATUS "Submodule update")
-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      RESULT_VARIABLE GIT_SUBMOD_RESULT)
-    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-      message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+    if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
     endif()
-  endif()
 endif()
 
 #
 # Google Test
 #
 if(BUILD_TESTS AND NOT EXISTS "${PROJECT_SOURCE_DIR}/ext/googletest/CMakeLists.txt")
-  message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+    message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 endif()
 
 
@@ -392,21 +392,21 @@ macro (configure_files srcDir destDir)
 endmacro (configure_files)
 
 macro(generate_versionfile)
-	if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-		FILE(WRITE ${CMAKE_BINARY_DIR}/version
-		"export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
-		"export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
-		"export SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
-		"export SYNERGY_VERSION_BUILD=\"${SYNERGY_VERSION_BUILD}\"\n"
-		"export SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
-	elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-		FILE(WRITE ${CMAKE_BINARY_DIR}/version.bat
-		"SET SYNERGY_VERSION_MAJOR=${SYNERGY_VERSION_MAJOR}\n"
-		"SET SYNERGY_VERSION_MINOR=${SYNERGY_VERSION_MINOR}\n"
-		"SET SYNERGY_VERSION_PATCH=${SYNERGY_VERSION_PATCH}\n"
-		"SET SYNERGY_VERSION_BUILD=${SYNERGY_VERSION_BUILD}\n"
-		"SET SYNERGY_VERSION_STAGE=${SYNERGY_VERSION_STAGE}\n")
-	endif()
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
+        FILE(WRITE ${CMAKE_BINARY_DIR}/version
+        "export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
+        "export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
+        "export SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
+        "export SYNERGY_VERSION_BUILD=\"${SYNERGY_VERSION_BUILD}\"\n"
+        "export SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
+    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        FILE(WRITE ${CMAKE_BINARY_DIR}/version.bat
+        "SET SYNERGY_VERSION_MAJOR=${SYNERGY_VERSION_MAJOR}\n"
+        "SET SYNERGY_VERSION_MINOR=${SYNERGY_VERSION_MINOR}\n"
+        "SET SYNERGY_VERSION_PATCH=${SYNERGY_VERSION_PATCH}\n"
+        "SET SYNERGY_VERSION_BUILD=${SYNERGY_VERSION_BUILD}\n"
+        "SET SYNERGY_VERSION_STAGE=${SYNERGY_VERSION_STAGE}\n")
+    endif()
 endmacro(generate_versionfile)
 
 
@@ -421,7 +421,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
 
-	generate_versionfile()
+    generate_versionfile()
     configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
 endif()
 
@@ -430,8 +430,8 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
-		generate_versionfile()
-		set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
+        generate_versionfile()
+        set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
@@ -446,7 +446,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
     endif()
-	generate_versionfile()
+    generate_versionfile()
 endif()
 
 else()

@@ -29,7 +29,7 @@ if (WIN32)
         tb_idle.ico
         tb_run.ico
         tb_wait.ico
-		synergyc.exe.manifest
+        synergyc.exe.manifest
     )
 elseif (APPLE)
     file(GLOB arch_headers "OSX*.h")
