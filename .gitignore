@@ -10,6 +10,8 @@ config.h
 /lib
 /build
 /CMakeFiles
+/ext/cryptopp562
+/ext/openssl
 /src/gui/Makefile*
 /src/gui/object_script*
 /src/gui/tmp
@@ -24,4 +26,3 @@ src/setup/win32/synergy.suo
 /.vs
 /CMakeLists.txt.*
 /doxygen/
-deps

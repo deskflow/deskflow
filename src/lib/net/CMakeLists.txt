@@ -22,17 +22,7 @@ if (SYNERGY_ADD_HEADERS)
 endif()
 
 add_library(net STATIC ${sources})
-target_link_libraries(net
-    PUBLIC
-        OpenSSL::SSL
-    PRIVATE
-        mt
-        io
-)
-if(WIN32)
-    target_link_libraries(net
-        PRIVATE
-            Crypt32
-            ws2_32
-    )
+
+if (UNIX)
+    target_link_libraries(net mt io ${OPENSSL_LIBS})
 endif()

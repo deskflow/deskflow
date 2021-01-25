@@ -1,0 +1,31 @@
+name: Mac
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-arch64:
+    runs-on: macos-10.15
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install qt
+      run: brew install qt
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/opt/qt ..
+        . ./version
+        make -j
+
+    - name: Run unit test
+      run: ./build/bin/unittests
