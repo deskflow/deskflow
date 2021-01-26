@@ -58,13 +58,17 @@ if (NOT SYNERGY_ENTERPRISE)
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        find_library (DNSSD_LIB dnssd.lib
-                HINTS ENV BONJOUR_SDK_HOME
-                PATH_SUFFIXES "Lib/x64")
+        find_library (
+            DNSSD_LIB dnssd.lib
+            HINTS ENV BONJOUR_SDK_HOME
+            PATH_SUFFIXES "Lib/x64"
+        )
     else()
-        find_library (DNSSD_LIB dnssd.lib
-                HINTS ENV BONJOUR_SDK_HOME
-                PATH_SUFFIXES "Lib/Win32")
+        find_library (
+            DNSSD_LIB dnssd.lib
+            HINTS ENV BONJOUR_SDK_HOME
+            PATH_SUFFIXES "Lib/Win32"
+        )
     endif()
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries (synergy dns_sd)
@@ -85,8 +89,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
     install (CODE "MESSAGE (\"Running macdeployqt to install frameworks in bundle\")")
-    install (CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE} 
-             ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)")
+    install (CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     install (TARGETS synergy DESTINATION bin)
 endif()
@@ -96,10 +99,10 @@ if (WIN32)
         get_target_property(_qt5_qmake_location Qt5::qmake IMPORTED_LOCATION)
 
         execute_process(
-                COMMAND "${_qt5_qmake_location}" -query QT_INSTALL_PREFIX
-                RESULT_VARIABLE return_code
-                OUTPUT_VARIABLE qt5_install_prefix
-                OUTPUT_STRIP_TRAILING_WHITESPACE
+            COMMAND "${_qt5_qmake_location}" -query QT_INSTALL_PREFIX
+            RESULT_VARIABLE return_code
+            OUTPUT_VARIABLE qt5_install_prefix
+            OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 
         set(imported_location "${qt5_install_prefix}/bin/windeployqt.exe")
@@ -107,9 +110,7 @@ if (WIN32)
         if(EXISTS ${imported_location})
             add_executable(Qt5::windeployqt IMPORTED)
 
-            set_target_properties(Qt5::windeployqt PROPERTIES
-                    IMPORTED_LOCATION ${imported_location}
-                    )
+            set_target_properties(Qt5::windeployqt PROPERTIES IMPORTED_LOCATION ${imported_location})
         endif()
     endif()
     if(TARGET Qt5::windeployqt)

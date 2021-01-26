@@ -2,14 +2,15 @@
 # Tests to see if command exists
 #
 Function Test-CommandExists {
-    Param ($command)
-    Try {
-        if(Get-Command $command) {
-            RETURN $true
-        }
-    } Catch {
-        RETURN $false
+  Param ($command)
+  Try {
+    if (Get-Command $command) {
+      RETURN $true
     }
+  }
+  Catch {
+    RETURN $false
+  }
 }
 
 
@@ -17,7 +18,7 @@ Function Test-CommandExists {
 # Check prerequisites
 #
 If (-not (Test-CommandExists "cmake" -ErrorAction SilentlyContinue)) {
-    Write-Error "Cmake not found. Aborting." -ErrorAction Stop
+  Write-Error "Cmake not found. Aborting." -ErrorAction Stop
 }
 
 
@@ -26,11 +27,13 @@ If (-not (Test-CommandExists "cmake" -ErrorAction SilentlyContinue)) {
 # Find vswhere (installed with recent Visual Studio versions).
 #
 If ($vsWhere = Get-Command "vswhere.exe" -ErrorAction SilentlyContinue) {
-    $vsWhere = $vsWhere.Path
-} ElseIf (Test-Path "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe") {
-    $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-} Else {
-    Write-Error "vswhere not found. Aborting." -ErrorAction Stop
+  $vsWhere = $vsWhere.Path
+}
+ElseIf (Test-Path "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe") {
+  $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+}
+Else {
+  Write-Error "vswhere not found. Aborting." -ErrorAction Stop
 }
 
 
@@ -38,13 +41,13 @@ If ($vsWhere = Get-Command "vswhere.exe" -ErrorAction SilentlyContinue) {
 # Get path to Visual Studio installation using vswhere.
 #
 $vsPath = &$vsWhere `
-    -latest `
-    -products * `
-    -version "[16.0,17.0)" `
-    -requires Microsoft.Component.MSBuild `
-    -property installationPath
+  -latest `
+  -products * `
+  -version "[16.0,17.0)" `
+  -requires Microsoft.Component.MSBuild `
+  -property installationPath
 If ([string]::IsNullOrEmpty("$vsPath")) {
-    Write-Error "Failed to find Visual Studio 2019 installation. Aborting." -ErrorAction Stop
+  Write-Error "Failed to find Visual Studio 2019 installation. Aborting." -ErrorAction Stop
 }
 
 
@@ -52,19 +55,20 @@ If ([string]::IsNullOrEmpty("$vsPath")) {
 # Make sure the Visual Studio Command Prompt variables are set.
 #
 If (-not (Test-Path env:LIBPATH)) {
-    # Load VC vars
-    Push-Location "${vsPath}\VC\Auxiliary\Build"
-    Try {
-        cmd /c "vcvarsall.bat x64&set" |
-        ForEach-Object {
-            If ($_ -match "=") {
-                $v = $_.split("=")
-                Set-Item -Force -Path "ENV:\$($v[0])" -Value "$($v[1])"
-            }
-        }
-    } Finally {
-        Pop-Location
+  # Load VC vars
+  Push-Location "${vsPath}\VC\Auxiliary\Build"
+  Try {
+    cmd /c "vcvarsall.bat x64&set" |
+    ForEach-Object {
+      If ($_ -match "=") {
+        $v = $_.split("=")
+        Set-Item -Force -Path "ENV:\$($v[0])" -Value "$($v[1])"
+      }
     }
+  }
+  Finally {
+    Pop-Location
+  }
 }
 
 
@@ -73,10 +77,10 @@ If (-not (Test-Path env:LIBPATH)) {
 #
 $env:SYNERGY_NO_LEGACY = 1
 If (-not (Test-Path env:SYNERGY_BUILD_TYPE)) {
-    $env:SYNERGY_BUILD_TYPE = "Release"
+  $env:SYNERGY_BUILD_TYPE = "Release"
 }
 If (-not (Test-Path env:SYNERGY_BUILD_DIRECTORY)) {
-    $env:SYNERGY_BUILD_DIRECTORY = '.\build'
+  $env:SYNERGY_BUILD_DIRECTORY = '.\build'
 }
 
 
@@ -84,28 +88,29 @@ If (-not (Test-Path env:SYNERGY_BUILD_DIRECTORY)) {
 # Create build folder and make builds
 #
 New-Item `
-    -Path . `
-    -Name $env:SYNERGY_BUILD_DIRECTORY `
-    -ItemType "directory" `
-    -ErrorAction SilentlyContinue | Out-Null
+  -Path . `
+  -Name $env:SYNERGY_BUILD_DIRECTORY `
+  -ItemType "directory" `
+  -ErrorAction SilentlyContinue | Out-Null
 Push-Location $env:SYNERGY_BUILD_DIRECTORY
 Try {
-    cmake `
-        -G "Visual Studio 16 2019" `
-        -DCMAKE_BUILD_TYPE=$env:SYNERGY_BUILD_TYPE `
-        ..
+  cmake `
+    -G "Visual Studio 16 2019" `
+    -DCMAKE_BUILD_TYPE=$env:SYNERGY_BUILD_TYPE `
+    ..
 
-    msbuild synergy-core.sln `
-        /p:Platform="x64" `
-        /p:Configuration=$env:SYNERGY_BUILD_TYPE `
-        /m `
-        /t:synergys `
-        /t:synergyc
-    Compress-Archive `
-        -Path ".\bin\${env:SYNERGY_BUILD_TYPE}\*" `
-        -DestinationPath "synergy-core-win-x64.zip"
-    Write-Output "::set-output name=location::build\synergy-core-win-x64.zip"
-    Write-Output "::set-output name=name::synergy-core-win-x64.zip"
-} Finally {
-    Pop-Location
+  msbuild synergy-core.sln `
+    /p:Platform="x64" `
+    /p:Configuration=$env:SYNERGY_BUILD_TYPE `
+    /m `
+    /t:synergys `
+    /t:synergyc
+  Compress-Archive `
+    -Path ".\bin\${env:SYNERGY_BUILD_TYPE}\*" `
+    -DestinationPath "synergy-core-win-x64.zip"
+  Write-Output "::set-output name=location::build\synergy-core-win-x64.zip"
+  Write-Output "::set-output name=name::synergy-core-win-x64.zip"
+}
+Finally {
+  Pop-Location
 }
