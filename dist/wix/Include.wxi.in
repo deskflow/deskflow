@@ -16,7 +16,7 @@
         <?define PlatformSimpleName="32-bit" ?>
         <?define UpgradeGuid="BE0B9FD8-45E2-4A8E-A0D8-1F774D074A78" ?>
     <?endif ?>
-	<?define QtPath="@QT_PATH@" ?>
+    <?define QtPath="@QT_PATH@" ?>
     <?define QtBinPath="$(var.QtPath)\bin" ?>
     <?define QtPluginsPath="$(var.QtPath)\plugins" ?>
     <?define OpenSSLPath="$(var.ExtPath)\openssl\windows\$(var.Platform)" ?>
