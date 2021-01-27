@@ -8,6 +8,7 @@ Bug fixes:
 - #6920 Windows Installer checksums
 - #6921 Handling pre-main window creation status notifications
 - #6922 macOS CI build
+- #6927 Text copied and pasted between Windows and Mac OS converts to japanese
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
