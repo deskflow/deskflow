@@ -19,6 +19,7 @@
 #include "platform/OSXClipboard.h"
 
 #include "synergy/Clipboard.h"
+#include "platform/OSXClipboardUTF8Converter.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardBMPConverter.h"
@@ -36,10 +37,9 @@ OSXClipboard::OSXClipboard() :
 {
     m_converters.push_back(new OSXClipboardHTMLConverter);
     m_converters.push_back(new OSXClipboardBMPConverter);
+    m_converters.push_back(new OSXClipboardUTF8Converter);
     m_converters.push_back(new OSXClipboardUTF16Converter);
     m_converters.push_back(new OSXClipboardTextConverter);
-
-
 
     OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
     if (createErr != noErr) {
@@ -121,16 +121,18 @@ OSXClipboard::add(EFormat format, const String & data)
             CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
             PasteboardItemID itemID = 0;
 
-            PasteboardPutItemFlavor(
-                m_pboard,
-                itemID,
-                flavorType,
-                dataRef,
-                kPasteboardFlavorNoFlags);
-            
-            LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
+            if (dataRef) {
+               PasteboardPutItemFlavor(
+               m_pboard,
+               itemID,
+               flavorType,
+               dataRef,
+               kPasteboardFlavorNoFlags);
+
+               CFRelease(dataRef);
+               LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
+            }
         }
-        
     }
 }
 
