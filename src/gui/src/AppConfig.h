@@ -292,7 +292,7 @@ protected:
 
         /// @brief This method loads config from specified scope
         /// @param [in] scope which should be loaded.
-        void loadScope(GUI::Config::ConfigWriter::Scope scope);
+        void loadScope(GUI::Config::ConfigWriter::Scope scope) const;
 
     signals:
         void sslToggled() const;

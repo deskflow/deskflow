@@ -92,17 +92,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief handels the regenerate cert button event
         ///         This will regenerate the TLS certificate as long as the settings haven't changed
         void on_m_pPushButtonRegenCert_clicked();
-        void on_m_pComboLanguage_currentIndexChanged(const QString &arg1);
-        void on_m_pLineEditScreenName_textEdited(const QString &arg1);
-        void on_m_pSpinBoxPort_valueChanged(int arg1);
-        void on_m_pLineEditInterface_textEdited(const QString &arg1);
-        void on_m_pCheckBoxAutoHide_clicked();
-        void on_m_pCheckBoxMinimizeToTray_clicked();
-        void on_m_pCheckBoxAutoConfig_clicked();
-        void on_m_pLineEditCertificatePath_textChanged(const QString &arg1);
-        void on_m_pComboLogLevel_currentIndexChanged(int index);
-        void on_m_pCheckBoxLogToFile_clicked();
-        void on_m_pLineEditLogFilename_textChanged(const QString &arg1);
+
+        /// @brief This slot handles common functionality for all fields.
+        void onChange();
 };
 
 #endif

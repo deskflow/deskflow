@@ -465,7 +465,7 @@ QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& default
     return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
 }
 
-void AppConfig::loadScope(GUI::Config::ConfigWriter::Scope scope) {
+void AppConfig::loadScope(GUI::Config::ConfigWriter::Scope scope) const {
    auto writer = GUI::Config::ConfigWriter::make();
 
    if (writer->getScope() != scope) {

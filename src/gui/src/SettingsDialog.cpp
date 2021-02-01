@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "SettingsDialog.h"
 
 #include "CoreInterface.h"
@@ -50,6 +49,16 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
 
     loadFromConfig();
+
+    connect(m_pLineEditLogFilename,     SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
+    connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
+    connect(m_pLineEditCertificatePath, SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
+    connect(m_pCheckBoxAutoConfig,      SIGNAL(clicked()),                   this, SLOT(onChange()));
+    connect(m_pCheckBoxMinimizeToTray,  SIGNAL(clicked()),                   this, SLOT(onChange()));
+    connect(m_pCheckBoxAutoHide,        SIGNAL(clicked()),                   this, SLOT(onChange()));
+    connect(m_pLineEditInterface,       SIGNAL(textEdited(const QString&)),  this, SLOT(onChange()));
+    connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),           this, SLOT(onChange()));
+    connect(m_pLineEditScreenName,      SIGNAL(textEdited(const QString&)),  this, SLOT(onChange()));
 }
 
 void SettingsDialog::accept()
@@ -193,6 +202,7 @@ void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
 
     m_pLineEditLogFilename->setEnabled(checked);
     m_pButtonBrowseLog->setEnabled(checked);
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
 }
 
 void SettingsDialog::on_m_pButtonBrowseLog_clicked()
@@ -212,6 +222,7 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
     QSynergyApplication::getInstance()->switchTranslator(ietfCode);
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
 }
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
@@ -234,10 +245,10 @@ void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
 
 void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
 {
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(m_isSystemAtStart != checked);
     //We only need to test the System scoped Radio as they are connected
     appConfig().setLoadFromSystemScope(checked);
     loadFromConfig();
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(m_isSystemAtStart != checked);
 }
 
 void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
@@ -286,7 +297,6 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
     appConfig().setTLSKeyLength(length);
 }
 
-#include <iostream>
 bool SettingsDialog::isModified()
 {
    return (
@@ -307,57 +317,7 @@ bool SettingsDialog::isModified()
    );
 }
 
-void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(const QString &arg1)
+void SettingsDialog::onChange()
 {
    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pLineEditScreenName_textEdited(const QString &arg1)
-{
-   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pSpinBoxPort_valueChanged(int arg1)
-{
-   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pLineEditInterface_textEdited(const QString &arg1)
-{
-   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pCheckBoxAutoHide_clicked()
-{
-   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pCheckBoxMinimizeToTray_clicked()
-{
-   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pCheckBoxAutoConfig_clicked()
-{
-   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pLineEditCertificatePath_textChanged(const QString &arg1)
-{
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pComboLogLevel_currentIndexChanged(int index)
-{
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pCheckBoxLogToFile_clicked()
-{
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-}
-
-void SettingsDialog::on_m_pLineEditLogFilename_textChanged(const QString &arg1)
-{
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
 }
