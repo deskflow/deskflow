@@ -45,9 +45,6 @@ namespace GUI {
             ///@brief An Enumeration of all the scopes available
             enum Scope { kCurrent, kSystem, kUser};
 
-            /// @brief The choice selected when saving.
-            enum SaveChoice { kSave, kCancel, kSaveToUser};
-
             /// @brief Checks if the setting exists
             /// @param [in] name The name of the setting to check
             /// @param [in] scope The scope to search in
@@ -81,9 +78,6 @@ namespace GUI {
             /// @brief trigger a config save across all registered classes
             void globalSave();
 
-            /// @brief Saves the settings to file
-            void save();
-
             /// @brief Returns the current scopes settings object
             ///         If more specialize control into the settings is needed this can provide
             ///         direct access to the settings file handler
@@ -100,12 +94,6 @@ namespace GUI {
             /// @brief Checks if any registered class has any unsaved changes
             /// @return bool True if any registered class has unsaved changes
             bool unsavedChanges() const;
-
-            /// @brief If the scope is set to system, this function will query the user
-            ///         if they want to continue saving to global scope or switch to user scope
-            ///         if the scope is set to User the function will just return Save
-            /// @return SaveChoice The choice that was selected, or Save if the scope is user already
-            SaveChoice checkSystemSave() const;
 
         protected:
 

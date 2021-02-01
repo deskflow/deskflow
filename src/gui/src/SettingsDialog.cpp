@@ -34,8 +34,6 @@
 #include <QFileDialog>
 #include <QDir>
 
-static const char networkSecurity[] = "ns";
-
 SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::SettingsDialogBase(),
@@ -48,39 +46,43 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pMainWindow = dynamic_cast<MainWindow*>(parent);
 
     m_Locale.fillLanguageComboBox(m_pComboLanguage);
+    m_isSystemAtStart = appConfig().isSystemScoped();
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
 
     loadFromConfig();
 }
 
 void SettingsDialog::accept()
 {
-    appConfig().setScreenName(m_pLineEditScreenName->text());
-    appConfig().setPort(m_pSpinBoxPort->value());
-    appConfig().setNetworkInterface(m_pLineEditInterface->text());
-    appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
-    appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
-    appConfig().setLogFilename(m_pLineEditLogFilename->text());
-    appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
-    appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
-    appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
-    appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
-    appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
-    appConfig().setTLSCertPath(m_pLineEditCertificatePath->text());
-    appConfig().setTLSKeyLength(m_pComboBoxKeyLength->currentText());
+   appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
+   appConfig().setScreenName(m_pLineEditScreenName->text());
+   appConfig().setPort(m_pSpinBoxPort->value());
+   appConfig().setNetworkInterface(m_pLineEditInterface->text());
+   appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
+   appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
+   appConfig().setLogFilename(m_pLineEditLogFilename->text());
+   appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
+   appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
+   appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+   appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
+   appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
+   appConfig().setTLSCertPath(m_pLineEditCertificatePath->text());
+   appConfig().setTLSKeyLength(m_pComboBoxKeyLength->currentText());
+   appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
 
-    //We only need to test the System scoped Radio as they are connected
-    appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
-    m_appConfig.setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
-
-    appConfig().saveSettings();
-
-    QDialog::accept();
+   appConfig().saveSettings();
+   QDialog::accept();
 }
 
 void SettingsDialog::reject()
 {
     if (appConfig().language() != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
         QSynergyApplication::getInstance()->switchTranslator(appConfig().language());
+    }
+
+    // We should restore scope at start if the user rejects changes.
+    if (appConfig().isSystemScoped() != m_isSystemAtStart) {
+        appConfig().setLoadFromSystemScope(m_isSystemAtStart);
     }
 
     QDialog::reject();
@@ -178,7 +180,6 @@ void SettingsDialog::loadFromConfig() {
     adjustSize();
 }
 
-
 void SettingsDialog::allowAutoConfig()
 {
     m_pLabelInstallBonjour->hide();
@@ -215,7 +216,7 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
-    m_appConfig.setCryptoEnabled(checked);
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
     if (checked) {
         verticalSpacer_4->changeSize(10, 10, QSizePolicy::Minimum);
     } else {
@@ -233,6 +234,8 @@ void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
 
 void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
 {
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(m_isSystemAtStart != checked);
+    //We only need to test the System scoped Radio as they are connected
     appConfig().setLoadFromSystemScope(checked);
     loadFromConfig();
 }
@@ -256,6 +259,7 @@ void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
 }
 
 void SettingsDialog::on_m_pComboBoxKeyLength_currentIndexChanged(int index) {
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
     updateRegenButton();
 }
 
@@ -280,4 +284,80 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
     m_pComboBoxKeyLength->setCurrentIndex(index);
     //Also update what is in the appconfig to match the file itself
     appConfig().setTLSKeyLength(length);
+}
+
+#include <iostream>
+bool SettingsDialog::isModified()
+{
+   return (
+      appConfig().screenName()           != m_pLineEditScreenName->text()
+      || appConfig().port()              != m_pSpinBoxPort->value()
+      || appConfig().networkInterface()  != m_pLineEditInterface->text()
+      || appConfig().logLevel()          != m_pComboLogLevel->currentIndex()
+      || appConfig().logToFile()         != m_pCheckBoxLogToFile->isChecked()
+      || appConfig().logFilename()       != m_pLineEditLogFilename->text()
+      || appConfig().language()          != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()
+      || appConfig().elevateMode()       != static_cast<ElevateMode>(m_pComboElevate->currentIndex())
+      || appConfig().getAutoHide()       != m_pCheckBoxAutoHide->isChecked()
+      || appConfig().autoConfig()        != m_pCheckBoxAutoConfig->isChecked()
+      || appConfig().getMinimizeToTray() != m_pCheckBoxMinimizeToTray->isChecked()
+      || appConfig().getTLSCertPath()    != m_pLineEditCertificatePath->text()
+      || appConfig().getTLSKeyLength()   != m_pComboBoxKeyLength->currentText()
+      || appConfig().getCryptoEnabled()  != m_pCheckBoxEnableCrypto->isChecked()
+   );
+}
+
+void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(const QString &arg1)
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pLineEditScreenName_textEdited(const QString &arg1)
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pSpinBoxPort_valueChanged(int arg1)
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pLineEditInterface_textEdited(const QString &arg1)
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pCheckBoxAutoHide_clicked()
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pCheckBoxMinimizeToTray_clicked()
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pCheckBoxAutoConfig_clicked()
+{
+   buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pLineEditCertificatePath_textChanged(const QString &arg1)
+{
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pComboLogLevel_currentIndexChanged(int index)
+{
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pCheckBoxLogToFile_clicked()
+{
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+}
+
+void SettingsDialog::on_m_pLineEditLogFilename_textChanged(const QString &arg1)
+{
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
 }

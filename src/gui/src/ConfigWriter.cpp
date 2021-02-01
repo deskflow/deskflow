@@ -131,22 +131,10 @@ namespace GUI {
 
             //Save if there are any unsaved changes otherwise skip
             if (unsavedChanges()) {
-                auto choice = checkSystemSave();
-
-                switch (choice) {
-                    case kSaveToUser:
-                        //Switch to local and overrun into the save case without reloading
-                        m_CurrentScope = kUser;
-                        m_pSettingsCurrent = m_pSettingsUser;
-                    case kSave:
-                        for (auto &i : m_pCallerList) {
-                            i->saveSettings();
-                        }
-                        save();
-                        break;
-                    default:
-                        break;
-                }
+               for (auto &i : m_pCallerList) {
+                   i->saveSettings();
+               }
+               m_unsavedChanges = false;
             }
         }
 
@@ -195,38 +183,6 @@ namespace GUI {
 
         void ConfigWriter::markUnsaved() {
             m_unsavedChanges = true;
-        }
-
-        ConfigWriter::SaveChoice ConfigWriter::checkSystemSave() const {
-            if (m_CurrentScope == kSystem) {
-
-                QMessageBox query;
-                query.setWindowTitle(tr("Save global settings."));
-                query.setText(tr("This will overwrite the settings of anybody else that uses this computer."));
-
-                query.addButton(QMessageBox::Save);
-                const auto* pBtnCancel    =  query.addButton(QMessageBox::Cancel);
-                const auto* pBtnSaveLocal =  query.addButton(tr("Save to user"), QMessageBox::ActionRole);
-
-                query.setDefaultButton(QMessageBox::Cancel);
-
-                query.exec();
-
-                if(query.clickedButton() == pBtnSaveLocal)
-                {
-                    return kSaveToUser;
-                }
-                else if(query.clickedButton() == pBtnCancel)
-                {
-                    return kCancel;
-                }
-            }
-            return kSave;
-        }
-
-        void ConfigWriter::save() {
-            m_pSettingsCurrent->sync();
-            m_unsavedChanges = false;
         }
     }
 }

@@ -27,6 +27,7 @@
 #include <shared/EditionType.h>
 #include <mutex>
 #include "ConfigBase.h"
+#include "ConfigWriter.h"
 #include "CoreInterface.h"
 
 // this should be incremented each time a new page is added. this is
@@ -64,7 +65,6 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
 
     public:
         AppConfig();
-        ~AppConfig() override;
 
     public:
 
@@ -116,8 +116,8 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
 #endif
         /// @brief Sets the user preference to load from SystemScope.
         /// @param [in] value
-        ///             True - This will set the variable, and save the user settings before loading the global scope settings
-        ///             False - This will load the UserScope then set the variable and save.
+        ///             True - This will set the variable and load the global scope settings.
+        ///             False - This will set the variable and load the user scope settings.
         void setLoadFromSystemScope(bool value);
 
 
@@ -289,6 +289,10 @@ protected:
         /// @param [in] newValue The new value of the setting
         template <typename T>
         void setSettingModified(T& variable,const T& newValue);
+
+        /// @brief This method loads config from specified scope
+        /// @param [in] scope which should be loaded.
+        void loadScope(GUI::Config::ConfigWriter::Scope scope);
 
     signals:
         void sslToggled() const;
