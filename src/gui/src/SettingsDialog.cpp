@@ -59,6 +59,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pLineEditInterface,       SIGNAL(textEdited(const QString&)),  this, SLOT(onChange()));
     connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),           this, SLOT(onChange()));
     connect(m_pLineEditScreenName,      SIGNAL(textEdited(const QString&)),  this, SLOT(onChange()));
+    connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
 }
 
 void SettingsDialog::accept()
