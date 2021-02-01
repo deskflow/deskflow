@@ -18,9 +18,9 @@ file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (WIN32)
-  add_executable (synergyd WIN32 ${sources})
+    add_executable (synergyd WIN32 ${sources})
 else()
-  add_executable (synergyd ${sources})
+    add_executable (synergyd ${sources})
 endif()
 
 target_link_libraries (synergyd

@@ -10,10 +10,10 @@ jobs:
 
     strategy:
       matrix:
-        ubuntu1604:
-          image: symless/synergy-core:ubuntu16.04
-          packager: deb
-          name: ubuntu16
+        # ubuntu1604:
+        #   image: symless/synergy-core:ubuntu16.04
+        #   packager: deb
+        #   name: ubuntu16
         ubuntu1804:
           image: symless/synergy-core:ubuntu18.04
           packager: deb
@@ -46,10 +46,10 @@ jobs:
           image: symless/synergy-core:fedora30
           packager: rpm
           name: fedora30
-        centos7.6:
-          image: symless/synergy-core:centos7.6
-          packager: rpm
-          name: centos76
+        # centos7.6:
+        #   image: symless/synergy-core:centos7.6
+        #   packager: rpm
+        #   name: centos76
         centos8:
           image: sgad/synergy-core:centos8
           packager: rpm

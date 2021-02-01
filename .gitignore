@@ -8,7 +8,7 @@ config.h
 *build-gui-Desktop_Qt*
 /bin
 /lib
-/build
+/build*
 /CMakeFiles
 /ext/cryptopp562
 /ext/openssl
@@ -26,3 +26,4 @@ src/setup/win32/synergy.suo
 /.vs
 /CMakeLists.txt.*
 /doxygen/
+/deps

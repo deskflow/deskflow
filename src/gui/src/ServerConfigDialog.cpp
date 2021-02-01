@@ -39,7 +39,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
 
     m_pCheckBoxRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
-    m_pCheckBoxScreenSaverSync->setChecked(serverConfig().screenSaverSync());
     m_pCheckBoxWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
 
     m_pCheckBoxSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
@@ -56,8 +55,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
     m_pCheckBoxDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
 
     m_pCheckBoxIgnoreAutoConfigClient->setChecked(serverConfig().ignoreAutoConfigClient());
-
-    m_pCheckBoxEnableDragAndDrop->setChecked(serverConfig().enableDragAndDrop());
 
     m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
 	int clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
@@ -90,7 +87,6 @@ void ServerConfigDialog::accept()
     serverConfig().setHeartbeat(m_pSpinBoxHeartbeat->value());
 
     serverConfig().setRelativeMouseMoves(m_pCheckBoxRelativeMouseMoves->isChecked());
-    serverConfig().setScreenSaverSync(m_pCheckBoxScreenSaverSync->isChecked());
     serverConfig().setWin32KeepForeground(m_pCheckBoxWin32KeepForeground->isChecked());
 
     serverConfig().haveSwitchDelay(m_pCheckBoxSwitchDelay->isChecked());
@@ -105,7 +101,6 @@ void ServerConfigDialog::accept()
     serverConfig().setSwitchCorner(BaseConfig::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
     serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
     serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
-    serverConfig().setEnableDragAndDrop(m_pCheckBoxEnableDragAndDrop->isChecked());
     serverConfig().setDisableLockToScreen(m_pCheckBoxDisableLockToScreen->isChecked());
     serverConfig().setClipboardSharingSize(m_pSpinBoxClipboardSizeLimit->value() * 1024);
 	serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked() 

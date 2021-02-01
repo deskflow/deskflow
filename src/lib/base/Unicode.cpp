@@ -297,7 +297,7 @@ Unicode::UTF32ToUTF8(const String& src, bool* errors)
 }
 
 String
-Unicode::textToUTF8(const String& src, bool* errors)
+Unicode::textToUTF8(const String& src, bool* errors, IArchString::EWideCharEncoding encoding)
 {
     // default to success
     resetError(errors);
@@ -309,7 +309,7 @@ Unicode::textToUTF8(const String& src, bool* errors)
     ARCH->convStringMBToWC(wcs, src.c_str(), n, errors);
 
     // convert to UTF8
-    String utf8 = wideCharToUTF8(wcs, len, errors);
+    String utf8 = wideCharToUTF8(wcs, len, errors, encoding);
 
     // clean up
     delete[] wcs;
@@ -354,12 +354,15 @@ Unicode::UTF8ToWideChar(const String& src, UInt32& size, bool* errors)
 }
 
 String
-Unicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
+Unicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors, IArchString::EWideCharEncoding encoding)
 {
+    if (encoding == IArchString::kPlatformDetermined) {
+        encoding = ARCH->getWideCharEncoding();
+    }
     // convert from platform's wide character encoding.
     // note -- this must include a wide nul character (independent of
     // the String's nul character).
-    switch (ARCH->getWideCharEncoding()) {
+    switch (encoding) {
     case IArchString::kUCS2:
         return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
 
@@ -406,9 +409,10 @@ Unicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 2, --n) {
+    for (; n > 0; --n) {
         UInt32 c = decode16(data, byteSwapped);
         toUTF8(dst, c, errors);
+        data += 2;
     }
 
     return dst;
@@ -442,9 +446,10 @@ Unicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 4, --n) {
+    for (; n > 0; --n) {
         UInt32 c = decode32(data, byteSwapped);
         toUTF8(dst, c, errors);
+        data += 4;
     }
 
     return dst;
@@ -478,7 +483,7 @@ Unicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 2, --n) {
+    while (n > 0) {
         UInt32 c = decode16(data, byteSwapped);
         if (c < 0x0000d800 || c > 0x0000dfff) {
             toUTF8(dst, c, errors);
@@ -507,6 +512,8 @@ Unicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
             setError(errors);
             toUTF8(dst, s_replacement, NULL);
         }
+        data += 2;
+        --n;
     }
 
     return dst;
@@ -540,13 +547,14 @@ Unicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
     }
 
     // convert each character
-    for (; n > 0; data += 4, --n) {
+    for (; n > 0; --n) {
         UInt32 c = decode32(data, byteSwapped);
         if (c >= 0x00110000) {
             setError(errors);
             c = s_replacement;
         }
         toUTF8(dst, c, errors);
+        data += 4;
     }
 
     return dst;

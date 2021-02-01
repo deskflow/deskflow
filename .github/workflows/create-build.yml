@@ -32,7 +32,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.build.outputs.next-build }}
-          release_name: Version ${{ steps.build.outputs.next-build }}
+          release_name: ${{ steps.build.outputs.next-build }}
           commitish: master
           draft: false
           prerelease: true

@@ -15,7 +15,7 @@
 			<ComponentGroupRef Id="ProductQtStylesComponents"/>
 			<ComponentGroupRef Id="ProductQtPluginComponents"/>
 			<ComponentRef Id="RegistryEntries"/>
-      <MergeRef Id="VC_Redist"/>
+			<MergeRef Id="VC_Redist"/>
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
@@ -37,11 +37,11 @@
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
-      <?if $(var.Platform) = x64 ?>
-        <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
-      <?else ?>
-        <Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
-      <?endif ?>
+			<?if $(var.Platform) = x64 ?>
+				<Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+			<?else ?>
+				<Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+			<?endif ?>
 		</DirectoryRef>
 		<Property Id="SynergyCommonBackground">common_background</Property>
 		<Binary Id="common_background" SourceFile="$(var.ResPath)\common_background.png"/>
@@ -56,7 +56,7 @@
 			</RegistrySearch>
 		</Property>
 		<Condition Message="An existing installation of $(var.Name) was detected, please uninstall it before continuing.">NOT LEGACY_UNINSTALL_EXISTS
-    </Condition>
+		</Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>
 			<UIRef Id="SynergyDlgSequence" />
@@ -87,13 +87,13 @@
 				</File>
 				<File Source="$(var.BinPath)/synergyc.exe"/>
 				<File Source="$(var.BinPath)/syntool.exe"/>
-        <?if $(var.Platform) = x64 ?>
-				  <File Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
-				  <File Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
-        <?else ?>
-          <File Source="$(var.OpenSSLBinPath)/libssl-1_1.dll"/>
-          <File Source="$(var.OpenSSLBinPath)/libcrypto-1_1.dll"/>
-        <?endif ?>
+				<?if $(var.Platform) = x64 ?>
+					<File Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
+					<File Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
+				<?else ?>
+					<File Source="$(var.OpenSSLBinPath)/libssl-1_1.dll"/>
+					<File Source="$(var.OpenSSLBinPath)/libcrypto-1_1.dll"/>
+				<?endif ?>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
 				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/synergy.exe">
@@ -124,9 +124,9 @@
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
-      <Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
-        <File Id="qwindowsvistastyle" Source="$(var.BinPath)\styles\qwindowsvistastyle.dll"/>
-      </Component>
+			<Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
+				<File Id="qwindowsvistastyle" Source="$(var.BinPath)\styles\qwindowsvistastyle.dll"/>
+			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
 			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
@@ -139,14 +139,14 @@
 		</ComponentGroup>
 		<ComponentGroup Directory="OpenSSLDir" Id="OpenSSLComponents">
 			<Component Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1" Id="OpenSSL">
-        <?if $(var.Platform) = x64 ?>
-          <File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
-          <File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
-        <?else ?>
-          <File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-1_1.dll"/>
-          <File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-1_1.dll"/>
-        <?endif ?>
-        <File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
+				<?if $(var.Platform) = x64 ?>
+					<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
+					<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
+				<?else ?>
+					<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-1_1.dll"/>
+					<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-1_1.dll"/>
+				<?endif ?>
+				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
 				<File Source="$(var.ResPath)/openssl/synergy.conf"/>
 			</Component>
 		</ComponentGroup>

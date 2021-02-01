@@ -42,15 +42,18 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
 {
     setArgsBase(args);
     updateCommonArgs(argv);
-
-    for (int i = 1; i < argc; ++i) {
+    int i = 1;
+    while ( i < argc) {
         if (parsePlatformArg(args, argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseGenericArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseDeprecatedArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (isArg(i, argc, argv, "-a", "--address", 1)) {
@@ -68,6 +71,7 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
+        ++i;
     }
 
     if (checkUnexpectedArgs()) {
@@ -83,15 +87,18 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
     setArgsBase(args);
     updateCommonArgs(argv);
 
-    int i;
-    for (i = 1; i < argc; ++i) {
+    int i {1};
+    while (i < argc) {
         if (parsePlatformArg(args, argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseGenericArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (parseDeprecatedArgs(argc, argv, i)) {
+            ++i;
             continue;
         }
         else if (isArg(i, argc, argv, NULL, "--camp")) {
@@ -113,6 +120,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
+        ++i;
     }
 
     // exactly one non-option argument (server-address)
@@ -224,9 +232,6 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
     else if (isArg(i, argc, argv, NULL, "--restart")) {
         // try to restart
         argsBase().m_restartable = true;
-    }
-    else if (isArg(i, argc, argv, "-z", NULL)) {
-        argsBase().m_backend = true;
     }
     else if (isArg(i, argc, argv, NULL, "--no-hooks")) {
         argsBase().m_noHooks = true;

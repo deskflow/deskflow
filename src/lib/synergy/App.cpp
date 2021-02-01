@@ -208,10 +208,6 @@ App::initApp(int argc, const char** argv)
         m_bye(kExitArgs);
     }
     loggingFilterWarning();
-    
-    if (argsBase().m_enableDragDrop) {
-        LOG((CLOG_INFO "drag and drop enabled"));
-    }
 
     // setup file logging after parsing args
     setupFileLogging();

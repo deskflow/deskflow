@@ -463,6 +463,22 @@ TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse)
     ASSERT_FALSE(actual);
 }
 
+TEST(KeyStateTests, updateKeyMap_exercised)
+{
+    synergy::KeyMap keyMap;
+    synergy::KeyMap::KeyItem keyItem;
+    keyItem.m_button = 'A';
+    keyItem.m_group = 1;
+    keyItem.m_id = 'A';
+    keyMap.addKeyEntry(keyItem);
+    keyMap.finish();
+    MockEventQueue eventQueue;
+    KeyStateImpl keyState(eventQueue, keyMap);
+
+    keyState.updateKeyMap(&keyMap);
+}
+
+
 void
 stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
 {

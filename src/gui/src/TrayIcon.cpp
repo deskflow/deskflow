@@ -12,8 +12,3 @@ void TrayIcon::tryCreate() const
         QTimer::singleShot(2500, this, &TrayIcon::tryCreate);
     }
 }
-
-void TrayIcon::set(const QIcon& icon) const
-{
-    m_pTrayIcon->setIcon(icon);
-}

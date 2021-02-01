@@ -71,9 +71,6 @@ AppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
     app().initApp(argc, argv);
     debugServiceWait();
-
-    // NB: what the hell does this do?!
-    app().argsBase().m_backend = false;
     
     return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
