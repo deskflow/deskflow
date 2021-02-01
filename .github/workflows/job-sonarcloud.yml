@@ -24,10 +24,7 @@ jobs:
     - name: Installing gcovr
       run: |
         apt-get update
-        apt-get install -y python
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        python get-pip.py
-        rm get-pip.py
+        apt-get install -y python python-pip
         pip install gcovr
     - name: Installing Sonar Scanner
       run: |

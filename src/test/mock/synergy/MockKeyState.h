@@ -35,7 +35,7 @@ public:
     {
     }
 
-    MockKeyState(const MockEventQueue& eventQueue, const MockKeyMap& keyMap) :
+    MockKeyState(const MockEventQueue& eventQueue, const synergy::KeyMap& keyMap) :
         KeyState((IEventQueue*)&eventQueue, (synergy::KeyMap&)keyMap)
     {
     }

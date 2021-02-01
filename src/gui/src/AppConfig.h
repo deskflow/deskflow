@@ -297,6 +297,7 @@ protected:
     signals:
         void sslToggled() const;
         void zeroConfToggled();
+        void screenNameChanged() const;
 };
 
 #endif

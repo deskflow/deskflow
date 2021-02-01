@@ -171,7 +171,7 @@ NetworkAddress::resolve()
 bool
 NetworkAddress::operator==(const NetworkAddress& addr) const
 {
-    return ARCH->isEqualAddr(m_address, addr.m_address);
+    return m_address == addr.m_address || ARCH->isEqualAddr(m_address, addr.m_address);
 }
 
 bool

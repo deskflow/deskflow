@@ -30,7 +30,13 @@ steps:
         export PATH="$(Qt5_DIR)/bin:$PATH"
         mkdir build
         cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release ..
+        cmake \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) \
+          -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CONFIGURATION_TYPES=Release \
+          -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
+          -DOPENSSL_LIBRARIES=/usr/local/opt/openssl/lib ..
     displayName: 'Cmake standard'
     condition: eq(variables['buildType'], 'standard')
     env:
@@ -43,7 +49,14 @@ steps:
         export SYNERGY_ENTERPRISE=1
         mkdir build
         cd build
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CONFIGURATION_TYPES=Release -DSYNERGY_ENTERPRISE=ON ..
+        cmake \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
+          -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CONFIGURATION_TYPES=Release \
+          -DSYNERGY_ENTERPRISE=ON \
+          -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
+          -DOPENSSL_LIBRARIES=/usr/local/opt/openssl/lib ..
     displayName: 'Cmake enterprise'
     condition: eq(variables['buildType'], 'enterprise')
     env:

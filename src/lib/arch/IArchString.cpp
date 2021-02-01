@@ -48,6 +48,7 @@ IArchString::convStringWCToMB(char* dst,
     if (errors == NULL) {
         errors = &dummyErrors;
     }
+    *errors = false;
 
     if (s_mutex == NULL) {
         s_mutex = ARCH->newMutex();
@@ -57,13 +58,15 @@ IArchString::convStringWCToMB(char* dst,
 
     if (dst == NULL) {
         char dummy[MB_LEN_MAX];
-        for (const wchar_t* scan = src; n > 0; ++scan, --n) {
+        const wchar_t* scan = src;
+        for (; n > 0; --n) {
             ptrdiff_t mblen = wctomb(dummy, *scan);
             if (mblen == -1) {
                 *errors = true;
                 mblen   = 1;
             }
             len += mblen;
+            ++scan;
         }
         ptrdiff_t mblen = wctomb(dummy, L'\0');
         if (mblen != -1) {
@@ -72,7 +75,8 @@ IArchString::convStringWCToMB(char* dst,
     }
     else {
         char* dst0 = dst;
-        for (const wchar_t* scan = src; n > 0; ++scan, --n) {
+        const wchar_t* scan = src;
+        for (; n > 0; --n) {
             ptrdiff_t mblen = wctomb(dst, *scan);
             if (mblen == -1) {
                 *errors = true;
@@ -81,6 +85,7 @@ IArchString::convStringWCToMB(char* dst,
             else {
                 dst    += mblen;
             }
+            ++scan;
         }
         ptrdiff_t mblen = wctomb(dst, L'\0');
         if (mblen != -1) {
@@ -105,6 +110,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
     if (errors == NULL) {
         errors = &dummyErrors;
     }
+    *errors = false;
 
     if (s_mutex == NULL) {
         s_mutex = ARCH->newMutex();
@@ -113,7 +119,8 @@ IArchString::convStringMBToWC(wchar_t* dst,
     ARCH->lockMutex(s_mutex);
 
     if (dst == NULL) {
-        for (const char* scan = src; n > 0; ) {
+        const char* scan = src;
+        while (n > 0) {
             ptrdiff_t mblen = mbtowc(&dummy, scan, n);
             switch (mblen) {
             case -2:
@@ -149,7 +156,8 @@ IArchString::convStringMBToWC(wchar_t* dst,
     }
     else {
         wchar_t* dst0 = dst;
-        for (const char* scan = src; n > 0; ++dst) {
+        const char* scan = src;
+        while (n > 0) {
             ptrdiff_t mblen = mbtowc(dst, scan, n);
             switch (mblen) {
             case -2:
@@ -180,6 +188,7 @@ IArchString::convStringMBToWC(wchar_t* dst,
                 n      -= static_cast<int>(mblen);
                 break;
             }
+            ++dst;
         }
         len = dst - dst0;
     }

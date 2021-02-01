@@ -1,8 +1,23 @@
 v1.13.1-snapshot
 ===========
+Bug fixes:
+- #6900 Remaining SonarCloud reported bug items
+- #6903 Save global settings
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 - #6907 Saving configuration on apply
-===========
+- #6914 Fix for Qt Word Wrap on Mac
+- #6920 Windows Installer checksums
+- #6921 Handling pre-main window creation status notifications
+- #6922 macOS CI build
+- #6927 Text copied and pasted between Windows and Mac OS converts to japanese
+
+Enhancements:
+- #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
+- #6909 Document CLI Arguments
+- #6916 Main Window receives screen name change
+- #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
+- #6918 Removing positional union initialisation
+
 
 v1.13.0-stable
 ===========
