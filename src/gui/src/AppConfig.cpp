@@ -581,8 +581,8 @@ void AppConfig::setTLSKeyLength(const QString& length) {
 }
 
 void AppConfig::generateCertificate(bool forceGeneration) const {
-    /*SslCertificate sslCertificate;
-    sslCertificate.generateCertificate(getTLSCertPath(), getTLSKeyLength(), forceGeneration);*/
+    SslCertificate sslCertificate;
+    sslCertificate.generateCertificate(getTLSCertPath(), getTLSKeyLength(), forceGeneration);
     emit sslToggled();
 }
 
