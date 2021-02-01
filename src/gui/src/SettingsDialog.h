@@ -40,9 +40,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         void allowAutoConfig();
 
     protected:
-        void accept();
-        void reject();
-        void changeEvent(QEvent* event);
+        void accept() override;
+        void reject() override;
+        void changeEvent(QEvent* event) override;
         AppConfig& appConfig() { return m_appConfig; }
 
         /// @brief Causes the dialog to load all the settings from m_appConfig
@@ -55,12 +55,21 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @param [in] QString path The path to the file to test
         void updateKeyLengthOnFile(const QString& path);
 
+        /// @brief Check if there are modifications.
+        /// @return true if there are modifications.
+        bool isModified();
+
     private:
         MainWindow* m_pMainWindow;
         AppConfig& m_appConfig;
         SynergyLocale m_Locale;
         CoreInterface m_CoreInterface;
         BonjourWindows* m_pBonjourWindows;
+
+        /// @brief Stores settings scope at start of settings dialog
+        /// This is neccessary to restore state if user changes
+        /// the scope and doesn't save changes
+        bool m_isSystemAtStart = false;
 
     private slots:
         void on_m_pCheckBoxEnableCrypto_toggled(bool checked);
@@ -83,6 +92,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief handels the regenerate cert button event
         ///         This will regenerate the TLS certificate as long as the settings haven't changed
         void on_m_pPushButtonRegenCert_clicked();
+
+        /// @brief This slot handles common functionality for all fields.
+        void onChange();
 };
 
 #endif

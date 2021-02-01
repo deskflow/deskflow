@@ -137,11 +137,6 @@ AppConfig::AppConfig() :
 
 }
 
-AppConfig::~AppConfig()
-{
-    saveSettings();
-}
-
 const QString &AppConfig::screenName() const { return m_ScreenName; }
 
 int AppConfig::port() const { return m_Port; }
@@ -423,6 +418,9 @@ void AppConfig::setCryptoEnabled(bool newValue) {
     if (m_CryptoEnabled != newValue && newValue){
         generateCertificate();
     }
+    else {
+        emit sslToggled();
+    }
     setSettingModified(m_CryptoEnabled, newValue);
 }
 
@@ -467,35 +465,40 @@ QVariant AppConfig::loadSetting(AppConfig::Setting name, const QVariant& default
     return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
 }
 
+void AppConfig::loadScope(GUI::Config::ConfigWriter::Scope scope) const {
+   auto writer = GUI::Config::ConfigWriter::make();
+
+   if (writer->getScope() != scope) {
+      writer->setScope(scope);
+      if (writer->hasSetting(settingName(kScreenName), writer->getScope())) {
+          //If the user already has settings, then load them up now.
+          writer->globalLoad();
+      }
+   }
+}
 
 void AppConfig::setLoadFromSystemScope(bool value) {
-    using GUI::Config::ConfigWriter;
 
-    auto writer = ConfigWriter::make();
+   if (value) {
+      /* Before switching to system scope we should store
+       * m_LoadFromSystemScope with the new value into user scope.
+       * It's neccessary because constructor of ConfigWriter
+       * loads user scope by default and we should know in this
+       * scope if we should switch to system scope.
+      */
+      m_LoadFromSystemScope = value;
+      saveSettings();
+      loadScope(GUI::Config::ConfigWriter::kSystem);
+   }
+   else {
+      loadScope(GUI::Config::ConfigWriter::kUser);
+   }
 
-    if (value && writer->getScope() != ConfigWriter::kSystem)
-    {
-        m_LoadFromSystemScope = value;
-        m_unsavedChanges = true;
-        writer->globalSave();     //Save user prefs
-        writer->setScope(ConfigWriter::kSystem);   //Switch the the System Scope
-        //If the system scope has settings, trigger a global reload, otherwise keep the current users settings
-        if (writer->hasSetting(settingName(kScreenName), ConfigWriter::kUser)) {
-            // If the system already has settings, then load them up now.
-            writer->globalLoad();
-        }
-    }
-    else if (!value && writer->getScope() == ConfigWriter::kSystem)
-    {
-        writer->setScope(ConfigWriter::kUser);      // Switch to UserScope
-        if (writer->hasSetting(settingName(kScreenName), ConfigWriter::kUser)) {
-            // If the user already has settings, then load them up now.
-            writer->globalLoad();
-        }
-        m_LoadFromSystemScope = value;
-        m_unsavedChanges = true;
-        writer->globalSave();                // Save user prefs
-    }
+   /*
+    * It's very imprortant to set this variable after loadScope
+    * because during scope loading this variable can be rewritten with old value
+   */
+   m_LoadFromSystemScope = value;
 }
 
 bool AppConfig::isSystemScoped() const {

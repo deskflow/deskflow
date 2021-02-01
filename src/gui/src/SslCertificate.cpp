@@ -150,10 +150,9 @@ void SslCertificate::generateCertificate(const QString& path, const QString& key
             return;
         }
 
+        generateFingerprint(pathToUse);
         emit info(tr("SSL certificate generated."));
     }
-
-    generateFingerprint(pathToUse);
 
     emit generateFinished();
 }

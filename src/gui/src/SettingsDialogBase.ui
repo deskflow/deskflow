@@ -17,13 +17,13 @@
    <item row="0" column="0">
     <widget class="QGroupBox" name="m_pGroupScope">
      <property name="title">
-      <string>&amp;Settings Scope</string>
+      <string>Use &amp;settings profile from:</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="1" column="0">
        <widget class="QRadioButton" name="m_pRadioSystemScope">
         <property name="text">
-         <string>System</string>
+         <string>All users</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -33,7 +33,7 @@
       <item row="1" column="1">
        <widget class="QRadioButton" name="m_pRadioUserScope">
         <property name="text">
-         <string>User</string>
+         <string>Current user</string>
         </property>
        </widget>
       </item>
@@ -489,7 +489,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
