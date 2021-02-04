@@ -11,7 +11,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+        include:
+          - os: [self-hosted, linux, ARM, pi-3]
+            name: pi-3
+          - os: [self-hosted, linux, ARM64, pi-4]
+            name: pi-4
     env:
       GIT_COMMIT: ${{ github.sha }}
 
@@ -32,5 +36,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: pi-builds-${{ matrix.os }}
+        name: ${{ matrix.name }}
         path: ./build/bin/
