@@ -18,8 +18,7 @@
 #include <cassert>
 
 #include <QCoreApplication>
-#include <QMessageBox>
-#include <QPushButton>
+#include <QFile>
 
 #include "ConfigWriter.h"
 #include "ConfigBase.h"
@@ -38,6 +37,18 @@ namespace GUI {
             return s_pConfiguration;
         }
 
+        void loadOldSystemSettings(QSettings& settings)
+        {
+            if (!QFile(settings.fileName()).exists()) {
+                QFile oldSystemSettings("SystemConfig.ini");
+                if (oldSystemSettings.exists()) {
+                    QSettings oldSettings(oldSystemSettings.fileName(), QSettings::Format::IniFormat);
+                    for (const auto& key : oldSettings.allKeys()) {
+                        settings.setValue(key, oldSettings.value(key));
+                    }
+                }
+            }
+        }
 
         ConfigWriter::ConfigWriter() {
             QSettings::setPath(QSettings::Format::IniFormat,
@@ -50,6 +61,9 @@ namespace GUI {
                                         QSettings::Scope::SystemScope,
                                              QCoreApplication::organizationName(),
                                              QCoreApplication::applicationName());
+
+            //This call is needed for backwardcapability with old settings.
+            loadOldSystemSettings(*m_pSettingsSystem);
 
             //defaults to user scope, if we set the scope specifically then we also have to set
             // the application name and the organisation name which breaks backwards compatibility
@@ -86,7 +100,9 @@ namespace GUI {
             }
         }
 
-
+        bool ConfigWriter::isWritable() const {
+            return m_pSettingsCurrent->isWritable();
+        }
 
         QVariant ConfigWriter::loadSetting(const QString& name, const QVariant &defaultValue, Scope scope) {
             switch (scope){
@@ -151,7 +167,7 @@ namespace GUI {
             QString path;
 #if defined(Q_OS_WIN)
             // Program file
-            path = "";
+            path = QCoreApplication::applicationDirPath() + "\\";
 #elif defined(Q_OS_DARWIN)
             //Global preferances dir
             // Would be nice to use /library, but QT has no elevate system in place

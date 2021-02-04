@@ -51,6 +51,10 @@ namespace GUI {
             /// @return bool True if the current scope has the named setting
             bool hasSetting(const QString& name, Scope scope = kCurrent) const;
 
+            /// @brief Checks if the current scope settings writable
+            /// @return bool True if the current scope writable
+            bool isWritable() const;
+
             /// @brief Sets the value of a setting
             /// @param [in] name The Setting to be saved
             /// @param [in] value The Value to be saved (Templated)

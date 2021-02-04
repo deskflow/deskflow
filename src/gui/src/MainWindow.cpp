@@ -120,7 +120,6 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pMenuHelp(NULL),
     m_pCancelButton(NULL),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL),
     m_SecureSocket(false)
 {
 #ifndef SYNERGY_ENTERPRISE
@@ -222,8 +221,6 @@ MainWindow::~MainWindow()
 #ifndef SYNERGY_ENTERPRISE
     delete m_pZeroconf;
 #endif
-
-    delete m_pSslCertificate;
 }
 
 void MainWindow::open()
