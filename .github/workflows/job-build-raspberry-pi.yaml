@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM, pi-4]]
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
     env:
       GIT_COMMIT: ${{ github.sha }}
 
