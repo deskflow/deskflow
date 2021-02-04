@@ -67,7 +67,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         AppConfig();
 
     public:
-
+        bool isWritable() const;
         bool isSystemScoped() const;
 
         const QString& screenName() const;
@@ -273,10 +273,22 @@ protected:
         template <typename T>
         void setSetting(AppConfig::Setting name, T value);
 
+        /// @brief Sets the value of a common setting
+        /// which should have the same value for all scopes
+        /// @param [in] name The Setting to be saved
+        /// @param [in] value The Value to be saved
+        template <typename T>
+        void setCommonSetting(AppConfig::Setting name, T value);
+
         /// @brief Loads a setting
         /// @param [in] name The setting to be loaded
         /// @param [in] defaultValue The default value of the setting
         QVariant loadSetting(AppConfig::Setting name, const QVariant& defaultValue = QVariant());
+
+        /// @brief Loads a common setting
+        /// @param [in] name The setting to be loaded
+        /// @param [in] defaultValue The default value of the setting
+        QVariant loadCommonSetting(AppConfig::Setting name, const QVariant& defaultValue = QVariant()) const;
 
         /// @brief As the settings will be accessible by multiple objects this lock will ensure that
         ///         it cant be modified by more that one object at a time if the setting is being switched

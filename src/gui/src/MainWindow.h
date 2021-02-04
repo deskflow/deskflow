@@ -236,7 +236,6 @@ public slots:
         TrayIcon            m_trayIcon;
         qRuningState        m_ExpectedRunningState;
         QMutex              m_StopDesktopMutex;
-        SslCertificate*     m_pSslCertificate;
         bool                m_SecureSocket;             // brief Is the program running a secure socket protocol (SSL/TLS)
         QString             m_SecureSocketVersion;      // brief Contains the version of the Secure Socket currently active
 
