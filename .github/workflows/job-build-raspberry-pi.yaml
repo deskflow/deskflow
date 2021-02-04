@@ -1,4 +1,4 @@
-name: Ubuntu
+name: Raspberry Pi
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-arch64:
+  build-pi:
     runs-on: [self-hosted, linux, ARM, pi-3]
     env:
       GIT_COMMIT: ${{ github.sha }}
