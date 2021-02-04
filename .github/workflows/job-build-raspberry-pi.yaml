@@ -1,0 +1,33 @@
+name: Ubuntu
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-arch64:
+    runs-on: [self-hosted, linux, ARM, pi-3]
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        . ./version
+        make
+
+    - name: Run unit test
+      run: ./build/bin/unittests
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: ./build/bin/
