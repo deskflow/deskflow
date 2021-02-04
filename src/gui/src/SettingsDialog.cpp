@@ -49,7 +49,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     loadFromConfig();
     m_isSystemAtStart = appConfig().isSystemScoped();
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
-    setEnabled(appConfig().isWritable());
+    enableControls(appConfig().isWritable());
 
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
     connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
@@ -251,7 +251,7 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
     appConfig().setLoadFromSystemScope(checked);
     loadFromConfig();
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(m_isSystemAtStart != checked);
-    setEnabled(appConfig().isWritable());
+    enableControls(appConfig().isWritable());
 }
 
 void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
@@ -320,7 +320,7 @@ bool SettingsDialog::isModified()
    );
 }
 
-void SettingsDialog::setEnabled(bool enable) {
+void SettingsDialog::enableControls(bool enable) {
     m_pLineEditScreenName->setEnabled(enable);
     m_pSpinBoxPort->setEnabled(enable);
     m_pLineEditInterface->setEnabled(enable);

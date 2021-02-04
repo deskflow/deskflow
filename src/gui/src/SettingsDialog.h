@@ -60,7 +60,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         bool isModified();
 
         /// @brief Enables\disables all controls.
-        void setEnabled(bool enabled);
+        void enableControls(bool enabled);
 
     private:
         MainWindow* m_pMainWindow;

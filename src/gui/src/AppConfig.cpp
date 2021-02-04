@@ -119,18 +119,12 @@ AppConfig::AppConfig() :
     writer->globalLoad();
 
     //User settings exist and the load from system scope variable is true
-    if (writer->hasSetting(settingName(kLoadSystemSettings), ConfigWriter::kUser) &&
-        writer->loadSetting(settingName(kLoadSystemSettings), false, ConfigWriter::kUser).toBool())
-    {
-        writer->setScope(ConfigWriter::kSystem);
-        writer->globalLoad();
+    if (writer->hasSetting(settingName(kLoadSystemSettings), ConfigWriter::kUser)) {
+        setLoadFromSystemScope(m_LoadFromSystemScope);
     }
     //If user setting don't exist but system ones do, load the system settings
-    else if (!writer->hasSetting(settingName(kScreenName), ConfigWriter::kUser) &&
-             writer->hasSetting(settingName(kScreenName), ConfigWriter::kSystem))
-    {
-        writer->setScope(ConfigWriter::kSystem);
-        writer->globalLoad();
+    else if (writer->hasSetting(settingName(kScreenName), ConfigWriter::kSystem)) {
+        setLoadFromSystemScope(true);
     }
 }
 
