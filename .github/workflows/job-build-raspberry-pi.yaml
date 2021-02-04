@@ -8,7 +8,10 @@ on:
 
 jobs:
   build-pi:
-    runs-on: [self-hosted, linux, ARM, pi-3]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM, pi-4]]
     env:
       GIT_COMMIT: ${{ github.sha }}
 
