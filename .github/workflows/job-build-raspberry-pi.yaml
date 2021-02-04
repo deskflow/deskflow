@@ -32,5 +32,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
+        name: pi-builds-${{ matrix.os }}
         path: ./build/bin/
