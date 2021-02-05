@@ -263,36 +263,38 @@ void AppConfig::loadSettings()
 
 void AppConfig::saveSettings()
 {
-    setCommonSetting(kWizardLastRun, kWizardVersion);
-    setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
-    setSetting(kScreenName, m_ScreenName);
-    setSetting(kPort, m_Port);
-    setSetting(kInterfaceSetting, m_Interface);
-    setSetting(kLogLevel, m_LogLevel);
-    setSetting(kLogToFile, m_LogToFile);
-    setSetting(kLogFilename, m_LogFilename);
-    setSetting(kLanguage, m_Language);
-    setSetting(kStartedBefore, m_StartedBefore);
-    setSetting(kAutoConfig, m_AutoConfig);
-    setSetting(kAutoConfigServer, m_AutoConfigServer);
-    // Refer to enum ElevateMode declaration for insight in to why this
-    // flag is mapped this way
-    setSetting(kElevateModeSetting, m_ElevateMode == ElevateAlways);
-    setSetting(kElevateModeEnum, static_cast<int>(m_ElevateMode));
-    setSetting(kEditionSetting, m_Edition);
-    setSetting(kCryptoEnabled, m_CryptoEnabled);
-    setSetting(kAutoHide, m_AutoHide);
-    setSetting(kSerialKey, m_Serialkey);
-    setSetting(kLastVersion, m_lastVersion);
-    setSetting(kLastExpireWarningTime, m_LastExpiringWarningTime);
-    setSetting(kActivationHasRun, m_ActivationHasRun);
-    setSetting(kMinimizeToTray, m_MinimizeToTray);
-    setSetting(kGroupServerCheck, m_ServerGroupChecked);
-    setSetting(kUseExternalConfig, m_UseExternalConfig);
-    setSetting(kConfigFile, m_ConfigFile);
-    setSetting(kUseInternalConfig, m_UseInternalConfig);
-    setSetting(kGroupClientCheck, m_ClientGroupChecked);
-    setSetting(kServerHostname, m_ServerHostname);
+    if (isWritable()) {
+        setCommonSetting(kWizardLastRun, kWizardVersion);
+        setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
+        setSetting(kScreenName, m_ScreenName);
+        setSetting(kPort, m_Port);
+        setSetting(kInterfaceSetting, m_Interface);
+        setSetting(kLogLevel, m_LogLevel);
+        setSetting(kLogToFile, m_LogToFile);
+        setSetting(kLogFilename, m_LogFilename);
+        setSetting(kLanguage, m_Language);
+        setSetting(kStartedBefore, m_StartedBefore);
+        setSetting(kAutoConfig, m_AutoConfig);
+        setSetting(kAutoConfigServer, m_AutoConfigServer);
+        // Refer to enum ElevateMode declaration for insight in to why this
+        // flag is mapped this way
+        setSetting(kElevateModeSetting, m_ElevateMode == ElevateAlways);
+        setSetting(kElevateModeEnum, static_cast<int>(m_ElevateMode));
+        setSetting(kEditionSetting, m_Edition);
+        setSetting(kCryptoEnabled, m_CryptoEnabled);
+        setSetting(kAutoHide, m_AutoHide);
+        setSetting(kSerialKey, m_Serialkey);
+        setSetting(kLastVersion, m_lastVersion);
+        setSetting(kLastExpireWarningTime, m_LastExpiringWarningTime);
+        setSetting(kActivationHasRun, m_ActivationHasRun);
+        setSetting(kMinimizeToTray, m_MinimizeToTray);
+        setSetting(kGroupServerCheck, m_ServerGroupChecked);
+        setSetting(kUseExternalConfig, m_UseExternalConfig);
+        setSetting(kConfigFile, m_ConfigFile);
+        setSetting(kUseInternalConfig, m_UseInternalConfig);
+        setSetting(kGroupClientCheck, m_ClientGroupChecked);
+        setSetting(kServerHostname, m_ServerHostname);
+    }
 
     m_unsavedChanges = false;
 }
