@@ -95,6 +95,9 @@ void SetupWizard::changeEvent(QEvent* event)
                 m_pComboLanguage->blockSignals(true);
                 retranslateUi(this);
                 m_pComboLanguage->blockSignals(false);
+                #if defined(Q_OS_MAC)
+                  duplicateSpaces();
+                #endif // defined(Q_OS_MAC)
                 break;
             }
 
@@ -149,9 +152,6 @@ void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
 {
     QString ietfCode = m_pComboLanguage->itemData(index).toString();
     QSynergyApplication::getInstance()->switchTranslator(ietfCode);
-#if defined(Q_OS_MAC)
-    duplicateSpaces();
-#endif // defined(Q_OS_MAC)
 }
 
 #if defined(Q_OS_MAC)
@@ -160,7 +160,8 @@ void SetupWizard::duplicateSpaces()
     auto list = this->findChildren<QLabel *>();
     foreach(QLabel *l, list) {
         if (l->wordWrap()) {
-            l->setText(l->text().replace(". ", ".  "));
+           l->setText(l->text().replace(". ", ".  "));
+           l->setText(l->text().replace(", ", ",  "));
         }
     }
 }

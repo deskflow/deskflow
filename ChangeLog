@@ -5,7 +5,7 @@ Bug fixes:
 - #6903 Save global settings
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 - #6907 Saving configuration on apply
-- #6914 Fix for Qt Word Wrap on Mac
+- #6934 Text on welcome screen on macOS is shown without spaces
 - #6920 Windows Installer checksums
 - #6921 Handling pre-main window creation status notifications
 - #6922 macOS CI build
