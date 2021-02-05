@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-pi:
+  build-on-pi:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -24,17 +24,29 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        . ./version
-        make
-
-    - name: Run unit test
-      run: ./build/bin/unittests
+        mkdir -p build-release; cd build-release
+        cmake ..
+        cd ..
+        . ./build-release/version
+        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        export GPG_TTY=$(tty)
+        debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
+        mkdir standard_package
+        cd ..
+        filename=$(ls synergy_*.deb)
+        filename_new="synergy_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_$(name)${filename##*${SYNERGY_REVISION}}"
+        mv $filename ${{ github.workspace }}/standard_package/$filename_new
+        cd ${{ github.workspace }}/standard_package
+        md5sum $filename_new >> ${filename_new}.checksum.txt
+        sha1sum $filename_new >> ${filename_new}.checksum.txt
+        sha256sum $filename_new >> ${filename_new}.checksum.txt
+        ls -la
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.name }}
-        path: ./build/bin/
+        path: ./standard_package

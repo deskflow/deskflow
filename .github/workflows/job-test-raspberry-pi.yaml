@@ -1,0 +1,40 @@
+name: Raspberry Pi
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-on-pi:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: [self-hosted, linux, ARM, pi-3]
+            name: pi-3
+          - os: [self-hosted, linux, ARM64, pi-4]
+            name: pi-4
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        . ./version
+        make
+
+    - name: Run unit test
+      run: ./build/bin/unittests
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.name }}
+        path: ./build/bin/
