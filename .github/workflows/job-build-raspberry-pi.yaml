@@ -35,7 +35,7 @@ jobs:
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
-        mkdir standard_package
+        mkdir -p standard_package
         cd ..
         filename=$(ls synergy_*.deb)
         filename_new="synergy_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_${{ matrix.name }}${filename##*${SYNERGY_REVISION}}"

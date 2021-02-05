@@ -3,8 +3,8 @@ name: Ubuntu
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  # pull_request:
+  #   branches: [ master ]
 
 jobs:
   build-arch64:
