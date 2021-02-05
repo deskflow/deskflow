@@ -263,9 +263,10 @@ void AppConfig::loadSettings()
 
 void AppConfig::saveSettings()
 {
+    setCommonSetting(kWizardLastRun, kWizardVersion);
+    setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
+
     if (isWritable()) {
-        setCommonSetting(kWizardLastRun, kWizardVersion);
-        setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
         setSetting(kScreenName, m_ScreenName);
         setSetting(kPort, m_Port);
         setSetting(kInterfaceSetting, m_Interface);
