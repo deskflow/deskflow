@@ -37,8 +37,8 @@ jobs:
         debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
         mkdir -p standard_package
         cd ..
-        filename=$(ls synergy_*.deb)
-        filename_new="synergy_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_${{ matrix.name }}${filename##*${SYNERGY_REVISION}}"
+        filename=$(ls synergy_*${SYNERGY_REVISION}*.deb)
+        filename_new="synergy_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
         echo $filename
         echo $filename_new
         ls -la ${{ github.workspace }}
