@@ -1,4 +1,4 @@
-name: Raspberry Pi
+name: Test Raspberry Pi
 
 on:
   push:
@@ -13,9 +13,9 @@ jobs:
       matrix:
         include:
           - os: [self-hosted, linux, ARM, pi-3]
-            name: pi-3
+            name: raspios-pi-3
           - os: [self-hosted, linux, ARM64, pi-4]
-            name: pi-4
+            name: raspios-pi-4
     env:
       GIT_COMMIT: ${{ github.sha }}
 
