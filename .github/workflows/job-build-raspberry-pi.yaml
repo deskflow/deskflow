@@ -18,6 +18,7 @@ jobs:
             name: raspios-pi-4
     env:
       GIT_COMMIT: ${{ github.sha }}
+      DEB_BUILD_OPTIONS: parallel=1
 
     steps:
     - uses: actions/checkout@v2
@@ -39,10 +40,6 @@ jobs:
         cd ..
         filename=$(ls synergy_*${SYNERGY_REVISION}*.deb)
         filename_new="synergy_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
-        echo $filename
-        echo $filename_new
-        ls -la ${{ github.workspace }}
-        ls -la ${{ github.workspace }}/standard_package
         mv $filename ${{ github.workspace }}/standard_package/$filename_new
         cd ${{ github.workspace }}/standard_package
         md5sum $filename_new >> ${filename_new}.checksum.txt
