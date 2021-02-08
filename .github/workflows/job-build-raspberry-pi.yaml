@@ -23,16 +23,31 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build deb
-      shell: bash
+    - name: Version Info
+      id: version
       run: |
-        mkdir -p build-release; cd build-release
+        mkdir -p version-info; cd version-info
         cmake ..
         cd ..
-        . ./build-release/version
+        . ./version-info/version
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
         SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
         SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
+        echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
+        echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
+        echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
+        echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
+        echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
+        echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+
+    - name: Build deb
+      env:
+        SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+        SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+        SYNERGY_DEB_VERSION: ${{ steps.version.outputs.SYNERGY_DEB_VERSION }}
+      run: |
         dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
@@ -52,3 +67,12 @@ jobs:
       with:
         name: ${{ matrix.name }}
         path: ./standard_package
+
+    - name: Send standard package to sandor
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SANDOR_HOST }}
+        username: ${{ secrets.SANDOR_USERNAME }}
+        key: ${{ secrets.SANDOR_KEY }}
+        source: "./standard_package/*"
+        target: "synergy-core/v1-core-standard/${{ steps.version.outputs.SYNERGY_VERSION }}/${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}/b${{ steps.version.outputs.SYNERGY_VERSION_BUILD }}-${{ steps.version.outputs.SYNERGY_REVISION }}/"
