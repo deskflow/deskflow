@@ -19,6 +19,5 @@
         <file>icons/64x64/synergy-light-transfering.png</file>
         <file>icons/64x64/synergy-light-disconnected.png</file>
         <file>icons/64x64/synergy-light-connected.png</file>
-        <file>icons/16x16/auto-config.png</file>
     </qresource>
 </RCC>
