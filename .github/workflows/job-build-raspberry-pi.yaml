@@ -69,10 +69,10 @@ jobs:
         path: ./standard_package
 
     - name: Send standard package to sandor
-      uses: appleboy/scp-action@master
+      uses: garygrossgarten/github-action-scp@release
       with:
         host: ${{ secrets.SANDOR_HOST }}
         username: ${{ secrets.SANDOR_USERNAME }}
-        key: ${{ secrets.SANDOR_KEY }}
-        source: "./standard_package/*"
-        target: "synergy-core/v1-core-standard/${{ steps.version.outputs.SYNERGY_VERSION }}/${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}/b${{ steps.version.outputs.SYNERGY_VERSION_BUILD }}-${{ steps.version.outputs.SYNERGY_REVISION }}/"
+        privateKey: ${{ secrets.SANDOR_KEY }}
+        local: "./standard_package"
+        target: "synergy-core/v1-core-standard/${{ steps.version.outputs.SYNERGY_VERSION }}/${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}/b${{ steps.version.outputs.SYNERGY_VERSION_BUILD }}-${{ steps.version.outputs.SYNERGY_REVISION }}"
