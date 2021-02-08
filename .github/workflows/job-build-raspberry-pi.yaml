@@ -73,6 +73,7 @@ jobs:
       with:
         host: ${{ secrets.SANDOR_HOST }}
         username: ${{ secrets.SANDOR_USERNAME }}
+        passphrase: ${{ secrets.SANDOR_PASSPHRASE}}
         privateKey: ${{ secrets.SANDOR_KEY }}
         local: "./standard_package"
-        target: "synergy-core/v1-core-standard/${{ steps.version.outputs.SYNERGY_VERSION }}/${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}/b${{ steps.version.outputs.SYNERGY_VERSION_BUILD }}-${{ steps.version.outputs.SYNERGY_REVISION }}"
+        remote: "synergy-core/v1-core-standard/${{ steps.version.outputs.SYNERGY_VERSION }}/${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}/b${{ steps.version.outputs.SYNERGY_VERSION_BUILD }}-${{ steps.version.outputs.SYNERGY_REVISION }}"
