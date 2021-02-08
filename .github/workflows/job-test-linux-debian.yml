@@ -1,10 +1,10 @@
-name: Fedora
+name: Debian
 
 on:
   push:
     branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build-arch64:
@@ -15,9 +15,8 @@ jobs:
     strategy:
       matrix:
         include:
-#          - distro: fedora28 #Need to install git 2.18+
-          - distro: fedora29
-          - distro: fedora30
+#          - distro: debian9 #Need to install git 2.18+
+          - distro: debian10
 
     name: ${{ matrix.distro }}
 
@@ -28,7 +27,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
+        cmake -DCMAKE_BUILD_TYPE=Release ..
         . ./version
         make -j
 
