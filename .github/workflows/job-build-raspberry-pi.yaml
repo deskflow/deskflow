@@ -14,11 +14,13 @@ jobs:
         include:
           - os: [self-hosted, linux, ARM, pi-3]
             name: raspios-pi-3
+            build-options: parallel=1
           - os: [self-hosted, linux, ARM64, pi-4]
             name: raspios-pi-4
+            build-options: ''
     env:
       GIT_COMMIT: ${{ github.sha }}
-      DEB_BUILD_OPTIONS: parallel=1
+      DEB_BUILD_OPTIONS: ${{ matrix.build-options }}
 
     steps:
     - uses: actions/checkout@v2
