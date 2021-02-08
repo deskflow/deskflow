@@ -13,14 +13,14 @@ jobs:
     - run: echo 'Test123' > text.txt
     - run: cat text.txt
     - name: Send standard package to sandor
-      uses: garygrossgarten/github-action-scp@release
+      uses: horochx/deploy-via-scp@master
       with:
         host: ${{ secrets.SANDOR_HOST }}
-        username: ${{ secrets.SANDOR_USERNAME }}
-        passphrase: ${{ secrets.SANDOR_PASSPHRASE}}
-        privateKey: ${{ secrets.SANDOR_KEY }}
-        local: "./text.txt"
-        remote: "text.txt"
+        user: ${{ secrets.SANDOR_USERNAME }}
+        key: ${{ secrets.SANDOR_KEY }}
+        local: "./standard_package"
+        remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
+
   build-on-pi:
     needs: upload-test
     runs-on: ${{ matrix.os }}
@@ -85,11 +85,10 @@ jobs:
         path: ./standard_package
 
     - name: Send standard package to sandor
-      uses: garygrossgarten/github-action-scp@release
+      uses: horochx/deploy-via-scp@master
       with:
         host: ${{ secrets.SANDOR_HOST }}
-        username: ${{ secrets.SANDOR_USERNAME }}
-        passphrase: ${{ secrets.SANDOR_PASSPHRASE}}
-        privateKey: ${{ secrets.SANDOR_KEY }}
+        user: ${{ secrets.SANDOR_USERNAME }}
+        key: ${{ secrets.SANDOR_KEY }}
         local: "./standard_package"
         remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
