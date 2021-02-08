@@ -11,6 +11,7 @@ jobs:
     runs-on: [self-hosted, linux, ARM, pi-3]
     steps:
     - run: echo 'Test' >> text.txt
+    - run: cat text.txt
     - name: Send standard package to sandor
       uses: garygrossgarten/github-action-scp@release
       with:
