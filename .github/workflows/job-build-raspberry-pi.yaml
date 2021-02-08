@@ -7,22 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  upload-test:
-    runs-on: [self-hosted, linux, ARM, pi-3]
-    steps:
-    - run: echo 'Test123' > text.txt
-    - run: cat text.txt
-    - name: Send standard package to sandor
-      uses: horochx/deploy-via-scp@master
-      with:
-        host: ${{ secrets.SANDOR_HOST }}
-        user: ${{ secrets.SANDOR_USERNAME }}
-        key: ${{ secrets.SANDOR_KEY }}
-        local: "./text.txt"
-        remote: "text.txt"
-
   build-on-pi:
-    needs: upload-test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
