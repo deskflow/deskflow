@@ -11,6 +11,7 @@ Bug fixes:
 - #6922 macOS CI build
 - #6927 Text copied and pasted between Windows and Mac OS converts to japanese
 - #6936 Application loses settings
+- #6939 Update pipelines to use correct credentials
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
