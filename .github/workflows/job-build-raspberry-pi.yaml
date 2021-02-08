@@ -7,7 +7,21 @@ on:
     branches: [ master ]
 
 jobs:
+  upload-test:
+    runs-on: [self-hosted, linux, ARM, pi-3]
+    steps:
+    - run: echo 'Test' >> text.txt
+    - name: Send standard package to sandor
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        host: ${{ secrets.SANDOR_HOST }}
+        username: ${{ secrets.SANDOR_USERNAME }}
+        passphrase: ${{ secrets.SANDOR_PASSPHRASE}}
+        privateKey: ${{ secrets.SANDOR_KEY }}
+        local: "./text.txt"
+        remote: "text.txt"
   build-on-pi:
+    needs: upload-test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -41,6 +55,8 @@ jobs:
         echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
         echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
         echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+        echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+        rm -rf version-info
 
     - name: Build deb
       env:
@@ -60,7 +76,6 @@ jobs:
         md5sum $filename_new >> ${filename_new}.checksum.txt
         sha1sum $filename_new >> ${filename_new}.checksum.txt
         sha256sum $filename_new >> ${filename_new}.checksum.txt
-        ls -la
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
@@ -76,4 +91,4 @@ jobs:
         passphrase: ${{ secrets.SANDOR_PASSPHRASE}}
         privateKey: ${{ secrets.SANDOR_KEY }}
         local: "./standard_package"
-        remote: "synergy-core/v1-core-standard/${{ steps.version.outputs.SYNERGY_VERSION }}/${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}/b${{ steps.version.outputs.SYNERGY_VERSION_BUILD }}-${{ steps.version.outputs.SYNERGY_REVISION }}"
+        remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
