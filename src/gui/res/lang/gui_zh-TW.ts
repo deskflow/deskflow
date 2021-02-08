@@ -502,11 +502,6 @@ To automatically trust this fingerprint for future connections, click Yes. To re
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindowBase.ui" line="184"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual Config mode active, consider using Auto Config instead (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/MainWindowBase.ui" line="257"/>
         <source>SSL Fingerprint:</source>
         <translation type="unfinished"></translation>
