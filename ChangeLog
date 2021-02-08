@@ -20,6 +20,7 @@ Enhancements:
 - #6918 Removing positional union initialisation
 - #6931 Update build pipeline to support macOS 10.13
 - #6937 Modern C++ compiler for centOS7
+- #6938 Remove auto config message from the main window
 
 
 v1.13.0-stable
