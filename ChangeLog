@@ -19,6 +19,7 @@ Enhancements:
 - #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
 - #6918 Removing positional union initialisation
 - #6931 Update build pipeline to support macOS 10.13
+- #6937 Modern C++ compiler for centOS7
 
 
 v1.13.0-stable
