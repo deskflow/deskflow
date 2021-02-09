@@ -144,7 +144,7 @@
       </property>
       <property name="styleSheet">
        <string notr="true">QGroupBox::title {
-    subcontrol-origin: margin;
+    subcontrol-origin: padding;
     left: 7px;
 }
 </string>
@@ -294,7 +294,7 @@
       </property>
       <property name="styleSheet">
        <string notr="true">QGroupBox::title {
-    subcontrol-origin: margin;
+    subcontrol-origin: padding;
     left: 7px;
 }
 </string>
