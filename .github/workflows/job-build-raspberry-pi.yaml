@@ -26,6 +26,7 @@ jobs:
     - name: Version Info
       id: version
       run: |
+        command -v python3 >/dev/null 2>&1 && python3 CI/build_version.py || python CI/build_version.py
         mkdir -p version-info; cd version-info
         cmake ..
         cd ..
