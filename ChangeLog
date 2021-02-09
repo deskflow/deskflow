@@ -5,11 +5,13 @@ Bug fixes:
 - #6903 Save global settings
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
 - #6907 Saving configuration on apply
-- #6914 Fix for Qt Word Wrap on Mac
+- #6934 Text on welcome screen on macOS is shown without spaces
 - #6920 Windows Installer checksums
 - #6921 Handling pre-main window creation status notifications
 - #6922 macOS CI build
 - #6927 Text copied and pasted between Windows and Mac OS converts to japanese
+- #6936 Application loses settings
+- #6939 Update pipelines to use correct credentials
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
@@ -18,8 +20,9 @@ Enhancements:
 - #6910 Don't use the word “Version” for release names because it can lead to errors during update checking.
 - #6918 Removing positional union initialisation
 - #6931 Update build pipeline to support macOS 10.13
-- #6xxx Add Raspberry Pi Builds
-
+- #6937 Modern C++ compiler for centOS7
+- #6938 Remove auto config message from the main window
+- #6941 Add Raspberry Pi Builds
 
 v1.13.0-stable
 ===========

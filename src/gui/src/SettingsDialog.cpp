@@ -45,10 +45,11 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_pMainWindow = dynamic_cast<MainWindow*>(parent);
 
     m_Locale.fillLanguageComboBox(m_pComboLanguage);
-    m_isSystemAtStart = appConfig().isSystemScoped();
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
 
     loadFromConfig();
+    m_isSystemAtStart = appConfig().isSystemScoped();
+    buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
+    enableControls(appConfig().isWritable());
 
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
     connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
@@ -250,6 +251,7 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
     appConfig().setLoadFromSystemScope(checked);
     loadFromConfig();
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(m_isSystemAtStart != checked);
+    enableControls(appConfig().isWritable());
 }
 
 void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
@@ -316,6 +318,37 @@ bool SettingsDialog::isModified()
       || appConfig().getTLSKeyLength()   != m_pComboBoxKeyLength->currentText()
       || appConfig().getCryptoEnabled()  != m_pCheckBoxEnableCrypto->isChecked()
    );
+}
+
+void SettingsDialog::enableControls(bool enable) {
+    m_pLineEditScreenName->setEnabled(enable);
+    m_pSpinBoxPort->setEnabled(enable);
+    m_pLineEditInterface->setEnabled(enable);
+    m_pComboLogLevel->setEnabled(enable);
+    m_pCheckBoxLogToFile->setEnabled(enable);
+    m_pComboLanguage->setEnabled(enable);
+    m_pComboElevate->setEnabled(enable);
+    m_pCheckBoxAutoHide->setEnabled(enable);
+    m_pCheckBoxAutoConfig->setEnabled(enable);
+    m_pCheckBoxMinimizeToTray->setEnabled(enable);
+    m_pLineEditCertificatePath->setEnabled(enable);
+    m_pComboBoxKeyLength->setEnabled(enable);
+    m_pPushButtonBrowseCert->setEnabled(enable);
+    m_labelAdminRightsMessage->setVisible(!enable);
+
+    if (enable) {
+        m_pLineEditLogFilename->setEnabled(m_pCheckBoxLogToFile->isChecked());
+        m_pButtonBrowseLog->setEnabled(m_pCheckBoxLogToFile->isChecked());
+        m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
+        updateRegenButton();
+    }
+    else {
+        m_pLineEditLogFilename->setEnabled(enable);
+        m_pButtonBrowseLog->setEnabled(enable);
+        m_pCheckBoxEnableCrypto->setEnabled(enable);
+        m_pPushButtonRegenCert->setEnabled(enable);
+    }
+
 }
 
 void SettingsDialog::onChange()

@@ -15,7 +15,7 @@ steps:
     inputs:
       script: | 
         python3 -m pip install dmgbuild
-        python3 -m pip install aqtinstall
+        python3 -m pip install aqtinstall==0.11.1
     displayName: 'Installing utilities'
 
   - task: CmdLine@2
@@ -50,7 +50,7 @@ steps:
         mkdir build
         cd build
         cmake \
-          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) \
           -DCMAKE_OSX_ARCHITECTURES=x86_64 \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CONFIGURATION_TYPES=Release \
@@ -65,6 +65,7 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         cd build
         . ./version
         make -j
@@ -76,7 +77,7 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
-        export PATH="$(QT_PATH):$PATH"
+        export PATH="$(QT_PATH):$(Qt5_DIR)/bin:$PATH"
         macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
         codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
         ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications

@@ -120,7 +120,6 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pMenuHelp(NULL),
     m_pCancelButton(NULL),
     m_ExpectedRunningState(kStopped),
-    m_pSslCertificate(NULL),
     m_SecureSocket(false)
 {
 #ifndef SYNERGY_ENTERPRISE
@@ -222,8 +221,6 @@ MainWindow::~MainWindow()
 #ifndef SYNERGY_ENTERPRISE
     delete m_pZeroconf;
 #endif
-
-    delete m_pSslCertificate;
 }
 
 void MainWindow::open()
@@ -1251,8 +1248,6 @@ void MainWindow::updateAutoConfigWidgets()
 
         m_pLabelServerName->hide();
         m_pLineEditHostname->hide();
-
-        m_pWidgetAutoConfig->hide();
     }
     else {
         m_pLabelServerName->show();
@@ -1260,12 +1255,6 @@ void MainWindow::updateAutoConfigWidgets()
 
         m_pLabelAutoDetected->hide();
         m_pComboServerList->hide();
-
-#ifndef SYNERGY_ENTERPRISE
-        m_pWidgetAutoConfig->show();
-#else
-        m_pWidgetAutoConfig->hide();
-#endif
     }
 }
 
@@ -1342,8 +1331,6 @@ int MainWindow::raiseActivationDialog()
     }
     ActivationDialog activationDialog (this, appConfig(), licenseManager());
     m_ActivationDialogRunning = true;
-    connect (&activationDialog, SIGNAL(finished(int)),
-             this, SLOT(on_activationDialogFinish()), Qt::QueuedConnection);
     int result = activationDialog.exec();
     m_ActivationDialogRunning = false;
     if (!m_PendingClientNames.empty()) {
@@ -1391,11 +1378,6 @@ void MainWindow::secureSocket(bool secureSocket)
     else {
         m_pLabelPadlock->hide();
     }
-}
-
-void MainWindow::on_m_pLabelAutoConfig_linkActivated(const QString &)
-{
-    m_pActionSettings->trigger();
 }
 
 void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
