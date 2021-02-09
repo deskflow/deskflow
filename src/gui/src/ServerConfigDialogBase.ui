@@ -159,6 +159,11 @@ Double click on a screen to edit its settings.</string>
       <layout class="QHBoxLayout">
        <item>
         <widget class="QGroupBox" name="groupBox">
+         <property name="font">
+          <font>
+           <kerning>false</kerning>
+          </font>
+         </property>
          <property name="title">
           <string>&amp;Hotkeys</string>
          </property>
@@ -214,6 +219,11 @@ Double click on a screen to edit its settings.</string>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_2">
+         <property name="font">
+          <font>
+           <kerning>true</kerning>
+          </font>
+         </property>
          <property name="title">
           <string>A&amp;ctions</string>
          </property>
@@ -276,6 +286,11 @@ Double click on a screen to edit its settings.</string>
       <layout class="QGridLayout">
        <item row="0" column="0">
         <widget class="QGroupBox" name="m_pGroupSwitch">
+         <property name="font">
+          <font>
+           <kerning>true</kerning>
+          </font>
+         </property>
          <property name="title">
           <string>&amp;Switch</string>
          </property>
@@ -404,6 +419,11 @@ Double click on a screen to edit its settings.</string>
        </item>
        <item row="0" column="1">
         <widget class="QGroupBox" name="m_pGroupOptions">
+         <property name="font">
+          <font>
+           <kerning>false</kerning>
+          </font>
+         </property>
          <property name="title">
           <string>&amp;Options</string>
          </property>
@@ -560,6 +580,11 @@ Double click on a screen to edit its settings.</string>
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QGroupBox" name="m_pGroupSwitchCorners">
+         <property name="font">
+          <font>
+           <kerning>true</kerning>
+          </font>
+         </property>
          <property name="title">
           <string>&amp;Dead corners</string>
          </property>

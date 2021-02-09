@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>437</height>
+    <width>442</width>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,6 +37,11 @@
       <widget class="QGroupBox" name="m_pGroupAliases">
        <property name="enabled">
         <bool>true</bool>
+       </property>
+       <property name="font">
+        <font>
+         <kerning>false</kerning>
+        </font>
        </property>
        <property name="title">
         <string>A&amp;liases</string>
@@ -93,6 +98,11 @@
      </item>
      <item>
       <widget class="QGroupBox" name="m_pGroupModifiers">
+       <property name="font">
+        <font>
+         <kerning>true</kerning>
+        </font>
+       </property>
        <property name="title">
         <string>&amp;Modifier keys</string>
        </property>
@@ -354,6 +364,11 @@
     <layout class="QHBoxLayout">
      <item>
       <widget class="QGroupBox" name="m_pGroupSwitchCorners">
+       <property name="font">
+        <font>
+         <kerning>true</kerning>
+        </font>
+       </property>
        <property name="title">
         <string>&amp;Dead corners</string>
        </property>
@@ -424,6 +439,11 @@
      </item>
      <item>
       <widget class="QGroupBox" name="m_pGroupFixes">
+       <property name="font">
+        <font>
+         <kerning>true</kerning>
+        </font>
+       </property>
        <property name="title">
         <string>&amp;Fixes</string>
        </property>

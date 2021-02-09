@@ -137,6 +137,18 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 7px;
+}
+</string>
+      </property>
       <property name="title">
        <string>Ser&amp;ver (share this computer's mouse and keyboard):</string>
       </property>
@@ -275,6 +287,18 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 7px;
+}
+</string>
+      </property>
       <property name="title">
        <string>&amp;Client (use another computer's mouse and keyboard):</string>
       </property>
@@ -290,6 +314,11 @@
        </property>
        <item row="0" column="0">
         <widget class="QLabel" name="m_pLabelComputerName">
+         <property name="font">
+          <font>
+           <kerning>true</kerning>
+          </font>
+         </property>
          <property name="text">
           <string>Client name:</string>
          </property>
@@ -359,6 +388,11 @@
     </item>
     <item>
      <widget class="QGroupBox" name="m_pGroupLog">
+      <property name="font">
+       <font>
+        <kerning>true</kerning>
+       </font>
+      </property>
       <property name="title">
        <string>Log</string>
       </property>
@@ -374,6 +408,7 @@
          <property name="font">
           <font>
            <family>Courier</family>
+           <kerning>true</kerning>
           </font>
          </property>
          <property name="autoFillBackground">

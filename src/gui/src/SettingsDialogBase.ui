@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>378</width>
-    <height>770</height>
+    <width>382</width>
+    <height>823</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,11 @@
   <layout class="QGridLayout" name="gridLayout_5">
    <item row="0" column="0">
     <widget class="QGroupBox" name="m_pGroupScope">
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>Use &amp;settings profile from:</string>
      </property>
@@ -52,6 +57,11 @@
    </item>
    <item row="6" column="0">
     <widget class="QGroupBox" name="m_pGroupBoxTLS">
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>TLS/SSL Settings</string>
      </property>
@@ -187,6 +197,11 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>&amp;Network</string>
      </property>
@@ -261,6 +276,11 @@
    </item>
    <item row="2" column="0">
     <widget class="QGroupBox" name="m_pGroupAdvanced">
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>&amp;Miscellaneous</string>
      </property>
@@ -416,6 +436,11 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>Logging</string>
      </property>
@@ -495,8 +520,14 @@
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="m_labelAdminRightsMessage">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:7pt; font-weight:600;&quot;&gt;To edit settings for all users, Admin privileges are required.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>To edit settings for all users, Admin privileges are required.</string>
      </property>
     </widget>
    </item>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>372</width>
-    <height>484</height>
+    <width>375</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,11 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QGroupBox" name="m_pGroupType">
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>Choose the action to perform</string>
      </property>
@@ -255,6 +260,11 @@
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox_2">
+     <property name="font">
+      <font>
+       <kerning>false</kerning>
+      </font>
+     </property>
      <property name="title">
       <string>This action is performed when</string>
      </property>
