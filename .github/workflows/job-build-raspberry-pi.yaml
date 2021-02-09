@@ -76,5 +76,5 @@ jobs:
         host: ${{ secrets.SANDOR_HOST }}
         user: ${{ secrets.SANDOR_USERNAME }}
         key: ${{ secrets.SANDOR_KEY }}
-        local: "./standard_package"
+        local: "./standard_package/*"
         remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
