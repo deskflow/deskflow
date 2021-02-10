@@ -1,4 +1,4 @@
-name: Build Raspberry Pi
+name: Raspberry Pi
 
 on:
   push:
@@ -9,16 +9,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-          - os: [self-hosted, linux, ARM, pi-3]
-            name: raspios-pi-3
-            build-options: parallel=1
-          - os: [self-hosted, linux, ARM64, pi-4]
-            name: raspios-pi-4
-            build-options: ''
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+        enterprise: ['1', '']
     env:
       GIT_COMMIT: ${{ github.sha }}
-      DEB_BUILD_OPTIONS: ${{ matrix.build-options }}
+      DEB_BUILD_OPTIONS: parallel=1
+      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
 
     steps:
     - uses: actions/checkout@v2
@@ -26,7 +22,7 @@ jobs:
     - name: Version Info
       id: version
       run: |
-        command -v python3 >/dev/null 2>&1 && python3 CI/build_version.py || python CI/build_version.py
+        python3 CI/build_version.py
         mkdir -p version-info; cd version-info
         cmake ..
         cd ..
@@ -42,7 +38,14 @@ jobs:
         echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
         echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
         echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
-        echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+        if [$SYNERGY_ENTERPRISE == '1']
+        then
+            echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+            echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy-enterprise"
+        else
+            echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+            echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy"
+        fi
         rm -rf version-info
 
     - name: Build deb
@@ -50,31 +53,26 @@ jobs:
         SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
         SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
         SYNERGY_DEB_VERSION: ${{ steps.version.outputs.SYNERGY_DEB_VERSION }}
+        PACKAGE_NAME: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}
       run: |
-        dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        dch --create --package "${PACKAGE_NAME}" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
-        mkdir -p standard_package
+        mkdir -p package
         cd ..
-        filename=$(ls synergy_*${SYNERGY_REVISION}*.deb)
-        filename_new="synergy_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
-        mv $filename ${{ github.workspace }}/standard_package/$filename_new
-        cd ${{ github.workspace }}/standard_package
+        filename=$(ls synergy*${SYNERGY_REVISION}*.deb)
+        filename_new="${PACKAGE_NAME}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
+        mv $filename ${{ github.workspace }}/package/$filename_new
+        cd ${{ github.workspace }}/package
         md5sum $filename_new >> ${filename_new}.checksum.txt
         sha1sum $filename_new >> ${filename_new}.checksum.txt
         sha256sum $filename_new >> ${filename_new}.checksum.txt
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.name }}
-        path: ./standard_package
-
-    - name: Send standard package to sandor
+    - name: Send package to Sandor
       uses: horochx/deploy-via-scp@master
       with:
         host: ${{ secrets.SANDOR_HOST }}
         user: ${{ secrets.SANDOR_USERNAME }}
         key: ${{ secrets.SANDOR_KEY }}
-        local: "./standard_package/*"
+        local: "./package/*"
         remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
