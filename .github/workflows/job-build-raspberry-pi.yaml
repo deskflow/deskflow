@@ -56,8 +56,8 @@ jobs:
         PACKAGE_NAME: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}
         SYNERGY_VERSION_STAGE: ${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}
       run: |
+        sed -i "s/ synergy/ ${PACKAGE_NAME}/g" ./debian/control
         dch --create --package "${PACKAGE_NAME}" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
-        export GPG_TTY=$(tty)
         debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
         mkdir -p package
         cd ..
