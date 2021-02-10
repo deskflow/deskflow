@@ -1,0 +1,78 @@
+name: Raspberry Pi
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-on-pi:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+        enterprise: ['1', '']
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      DEB_BUILD_OPTIONS: parallel=1
+      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Version Info
+      id: version
+      run: |
+        python3 CI/build_version.py
+        mkdir -p version-info; cd version-info
+        cmake ..
+        cd ..
+        . ./version-info/version
+        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
+        echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
+        echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
+        echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
+        echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
+        echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
+        echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+        if [$SYNERGY_ENTERPRISE == '1']
+        then
+            echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+            echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy-enterprise"
+        else
+            echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+            echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy"
+        fi
+        rm -rf version-info
+
+    - name: Build deb
+      env:
+        SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+        SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+        SYNERGY_DEB_VERSION: ${{ steps.version.outputs.SYNERGY_DEB_VERSION }}
+        PACKAGE_NAME: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}
+      run: |
+        dch --create --package "${PACKAGE_NAME}" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+        export GPG_TTY=$(tty)
+        debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
+        mkdir -p package
+        cd ..
+        filename=$(ls synergy*${SYNERGY_REVISION}*.deb)
+        filename_new="${PACKAGE_NAME}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
+        mv $filename ${{ github.workspace }}/package/$filename_new
+        cd ${{ github.workspace }}/package
+        md5sum $filename_new >> ${filename_new}.checksum.txt
+        sha1sum $filename_new >> ${filename_new}.checksum.txt
+        sha256sum $filename_new >> ${filename_new}.checksum.txt
+
+    - name: Send package to Sandor
+      uses: horochx/deploy-via-scp@master
+      with:
+        host: ${{ secrets.SANDOR_HOST }}
+        user: ${{ secrets.SANDOR_USERNAME }}
+        key: ${{ secrets.SANDOR_KEY }}
+        local: "./package/*"
+        remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"

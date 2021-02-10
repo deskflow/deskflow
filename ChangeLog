@@ -24,7 +24,7 @@ Enhancements:
 - #6931 Update build pipeline to support macOS 10.13
 - #6937 Modern C++ compiler for centOS7
 - #6938 Remove auto config message from the main window
-
+- #6941 Add Raspberry Pi Builds
 
 v1.13.0-stable
 ===========
