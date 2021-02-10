@@ -60,7 +60,7 @@ jobs:
         debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
         mkdir -p package
         cd ..
-        filename=$(ls synergy*${SYNERGY_REVISION}*.deb)
+        filename=$(ls ${PACKAGE_NAME}_*${SYNERGY_REVISION}*.deb)
         filename_new="${PACKAGE_NAME}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
         mv $filename ${{ github.workspace }}/package/$filename_new
         cd ${{ github.workspace }}/package
