@@ -23,12 +23,11 @@ jobs:
       id: version
       run: |
         python3 CI/build_version.py
-        mkdir -p version-info; cd version-info
-        cmake ..
-        cd ..
+        mkdir -p version-info && cd version-info && cmake .. && cd ..
         . ./version-info/version
+        rm -rf version-info
         SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
+        SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
         SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
         echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
         echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
@@ -38,7 +37,7 @@ jobs:
         echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
         echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
         echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
-        if [$SYNERGY_ENTERPRISE == '1']
+        if [ "$SYNERGY_ENTERPRISE" == '1' ]
         then
             echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
             echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy-enterprise"
@@ -46,7 +45,6 @@ jobs:
             echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
             echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy"
         fi
-        rm -rf version-info
 
     - name: Build deb
       env:
