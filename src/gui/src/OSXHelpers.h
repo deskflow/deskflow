@@ -20,5 +20,6 @@
 #define OSXHELPERS__H
 
 bool isOSXInterfaceStyleDark();
+bool isOSXUseDarkIcons();
 
 #endif

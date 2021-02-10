@@ -13,6 +13,7 @@ Bug fixes:
 - #6936 Application loses settings
 - #6939 Update pipelines to use correct credentials
 - #6942 All the text in all the windows should have the same font and size
+- #6944 Systray icon is incorrect for macOS Big Sur
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
