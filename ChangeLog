@@ -16,6 +16,7 @@ Bug fixes:
 - #6944 Systray icon is incorrect for macOS Big Sur
 - #6941 The application doesn't recognize old settings
 - #6945 Fix build for Raspberry Pi
+- #6946 Add build stage to filename
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
