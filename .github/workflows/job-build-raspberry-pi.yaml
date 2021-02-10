@@ -1,8 +1,8 @@
 name: Raspberry Pi
 
 on:
-  push:
-    branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   build-on-pi:
