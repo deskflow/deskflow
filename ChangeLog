@@ -14,6 +14,7 @@ Bug fixes:
 - #6939 Update pipelines to use correct credentials
 - #6942 All the text in all the windows should have the same font and size
 - #6944 Systray icon is incorrect for macOS Big Sur
+- #6941 The application doesn't recognize old settings
 - #6945 Fix build for Raspberry Pi
 
 Enhancements:

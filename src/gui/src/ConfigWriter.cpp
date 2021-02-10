@@ -23,6 +23,53 @@
 #include "ConfigWriter.h"
 #include "ConfigBase.h"
 
+namespace {
+
+QString getSystemSettingPath()
+{
+    const QString settingFilename("SystemConfig.ini");
+    QString path;
+#if defined(Q_OS_WIN)
+    // Program file
+    path = QCoreApplication::applicationDirPath() + "\\";
+#elif defined(Q_OS_DARWIN)
+    //Global preferances dir
+    // Would be nice to use /library, but QT has no elevate system in place
+    path = "/usr/local/etc/symless/";
+#elif defined(Q_OS_LINUX)
+    // QT adds application and filename to the end of the path already on linux
+    path = "/usr/local/etc/symless/";
+    return path;
+#else
+    assert("OS not supported");
+#endif
+    return path + settingFilename;
+}
+
+#if defined(Q_OS_WIN)
+void loadOldSystemSettings(QSettings& settings)
+{
+   if (!QFile(settings.fileName()).exists()) {
+        QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, "SystemConfig.ini");
+        QSettings oldSystemSettings (QSettings::IniFormat,
+                                     QSettings::SystemScope,
+                                     QCoreApplication::organizationName(),
+                                     QCoreApplication::applicationName());
+
+        if (QFile(oldSystemSettings.fileName()).exists()) {
+            for (const auto& key : oldSystemSettings.allKeys()) {
+                settings.setValue(key, oldSystemSettings.value(key));
+            }
+        }
+
+        //Restore system settings path
+        QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
+    }
+}
+#endif
+
+}
+
 namespace GUI {
     namespace Config {
         //Assignment of static variable
@@ -37,19 +84,6 @@ namespace GUI {
             return s_pConfiguration;
         }
 
-        void loadOldSystemSettings(QSettings& settings)
-        {
-            if (!QFile(settings.fileName()).exists()) {
-                QFile oldSystemSettings("SystemConfig.ini");
-                if (oldSystemSettings.exists()) {
-                    QSettings oldSettings(oldSystemSettings.fileName(), QSettings::Format::IniFormat);
-                    for (const auto& key : oldSettings.allKeys()) {
-                        settings.setValue(key, oldSettings.value(key));
-                    }
-                }
-            }
-        }
-
         ConfigWriter::ConfigWriter() {
             QSettings::setPath(QSettings::Format::IniFormat,
                                QSettings::Scope::SystemScope,
@@ -62,8 +96,10 @@ namespace GUI {
                                              QCoreApplication::organizationName(),
                                              QCoreApplication::applicationName());
 
+            #if defined(Q_OS_WIN)
             //This call is needed for backwardcapability with old settings.
             loadOldSystemSettings(*m_pSettingsSystem);
+            #endif
 
             //defaults to user scope, if we set the scope specifically then we also have to set
             // the application name and the organisation name which breaks backwards compatibility
@@ -162,25 +198,7 @@ namespace GUI {
             m_pCallerList.push_back(receiver);
         }
 
-        QString ConfigWriter::getSystemSettingPath()             {
-            const QString settingFilename("SystemConfig.ini");
-            QString path;
-#if defined(Q_OS_WIN)
-            // Program file
-            path = QCoreApplication::applicationDirPath() + "\\";
-#elif defined(Q_OS_DARWIN)
-            //Global preferances dir
-            // Would be nice to use /library, but QT has no elevate system in place
-            path = "/usr/local/etc/symless/";
-#elif defined(Q_OS_LINUX)
-            // QT adds application and filename to the end of the path already on linux
-            path = "/usr/local/etc/symless/";
-            return path;
-#else
-            assert("OS not supported");
-#endif
-            return path + settingFilename;
-        }
+
 
         bool ConfigWriter::unsavedChanges() const {
             if (m_unsavedChanges) {

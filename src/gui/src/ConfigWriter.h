@@ -123,10 +123,6 @@ namespace GUI {
             /// @brief the pointer of the ConfigWriter for singolton use
             static ConfigWriter* s_pConfiguration;
 
-            /// @brief Returns the OS specific settings ini file location
-            static QString getSystemSettingPath();
-
-
             /// @brief deletes pointers and sets the value to null
             template<class T> static inline void destroy(T*& p) { delete p; p = 0; }
         };
