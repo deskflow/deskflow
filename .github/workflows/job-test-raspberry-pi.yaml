@@ -1,4 +1,4 @@
-name: Test Raspberry Pi
+name: Raspberry Pi
 
 on:
   push:
@@ -11,11 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-          - os: [self-hosted, linux, ARM, pi-3]
-            name: raspios-pi-3
-          - os: [self-hosted, linux, ARM64, pi-4]
-            name: raspios-pi-4
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
     env:
       GIT_COMMIT: ${{ github.sha }}
 
@@ -24,17 +20,9 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build
-        cd build
+        mkdir -p build; cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
-        . ./version
         make
 
     - name: Run unit test
       run: ./build/bin/unittests
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.name }}
-        path: ./build/bin/
