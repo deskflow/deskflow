@@ -15,7 +15,7 @@ Bug fixes:
 - #6942 All the text in all the windows should have the same font and size
 - #6944 Systray icon is incorrect for macOS Big Sur
 - #6945 Fix build for Raspberry Pi
-- #6xxx Add build stage to filename
+- #6946 Add build stage to filename
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
