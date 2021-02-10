@@ -54,6 +54,7 @@ jobs:
         SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
         SYNERGY_DEB_VERSION: ${{ steps.version.outputs.SYNERGY_DEB_VERSION }}
         PACKAGE_NAME: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}
+        SYNERGY_VERSION_STAGE: ${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}
       run: |
         dch --create --package "${PACKAGE_NAME}" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
         export GPG_TTY=$(tty)
