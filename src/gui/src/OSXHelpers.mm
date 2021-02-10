@@ -24,8 +24,19 @@
 bool
 isOSXInterfaceStyleDark()
 {
-	// Implementation from http://stackoverflow.com/a/26472651
-	NSDictionary* dict = [[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain];
-	id style = [dict objectForKey:@"AppleInterfaceStyle"];
-	return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
+   // Implementation from http://stackoverflow.com/a/26472651
+   NSDictionary* dict = [[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain];
+   id style = [dict objectForKey:@"AppleInterfaceStyle"];
+   return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
+}
+
+bool
+isOSXUseDarkIcons()
+{
+   if (@available(macOS 11, *)) {
+      return true;
+   }
+   else {
+      return isOSXInterfaceStyleDark();
+   }
 }

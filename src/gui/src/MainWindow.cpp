@@ -360,7 +360,7 @@ void MainWindow::setIcon(qSynergyState state) const
     QIcon icon;
 
 #ifdef Q_OS_MAC
-    if (isOSXInterfaceStyleDark())
+    if (isOSXUseDarkIcons())
         icon.addFile(synergyDarkIconFiles[state]);
     else
         icon.addFile(synergyLightIconFiles[state]);
