@@ -10,10 +10,10 @@ jobs:
 
     strategy:
       matrix:
-        # ubuntu1604:
-        #   image: symless/synergy-core:ubuntu16.04
-        #   packager: deb
-        #   name: ubuntu16
+        ubuntu1604:
+          image: symless/synergy-core:ubuntu16.04
+          packager: deb
+          name: ubuntu16
         ubuntu1804:
           image: symless/synergy-core:ubuntu18.04
           packager: deb
