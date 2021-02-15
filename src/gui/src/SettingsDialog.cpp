@@ -177,17 +177,20 @@ void SettingsDialog::loadFromConfig() {
     m_pCheckBoxEnableCrypto->setEnabled(true);
      m_pLabelProUpgrade->hide();
 
-     m_pCheckBoxAutoConfig->hide();
-     m_pLabelInstallBonjour->hide();
-
 #else
 
     m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
     m_pLabelProUpgrade->setVisible(!m_appConfig.isCryptoAvailable());
 
-    m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
-
 #endif
+
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+    m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
+#else
+    m_pCheckBoxAutoConfig->hide();
+    m_pLabelInstallBonjour->hide();
+#endif
+
     adjustSize();
 }
 
