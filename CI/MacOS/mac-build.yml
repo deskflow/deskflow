@@ -27,25 +27,22 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
-        export PATH="$(Qt5_DIR)/bin:$PATH"
         mkdir build
         cd build
         cmake \
           -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) \
           -DCMAKE_OSX_ARCHITECTURES=x86_64 \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_CONFIGURATION_TYPES=Release \
-          -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
-          -DOPENSSL_LIBRARIES=/usr/local/opt/openssl/lib ..
+          -DCMAKE_CONFIGURATION_TYPES=Release ..
     displayName: 'Cmake standard'
     condition: eq(variables['buildType'], 'standard')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
+      CMAKE_PREFIX_PATH: "$(QT_PATH);/usr/local/opt/openssl"
 
   - task: CmdLine@2
     inputs:
       script: |
-        export PATH="$(Qt5_DIR)/bin:$PATH"
         export SYNERGY_ENTERPRISE=1
         mkdir build
         cd build
@@ -54,13 +51,12 @@ steps:
           -DCMAKE_OSX_ARCHITECTURES=x86_64 \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CONFIGURATION_TYPES=Release \
-          -DSYNERGY_ENTERPRISE=ON \
-          -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl \
-          -DOPENSSL_LIBRARIES=/usr/local/opt/openssl/lib ..
+          -DSYNERGY_ENTERPRISE=ON ..
     displayName: 'Cmake enterprise'
     condition: eq(variables['buildType'], 'enterprise')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
+      CMAKE_PREFIX_PATH: "$(QT_PATH);/usr/local/opt/openssl"
 
   - task: CmdLine@2
     inputs:
@@ -77,7 +73,7 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
-        export PATH="$(QT_PATH):$(Qt5_DIR)/bin:$PATH"
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
         codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
         ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
