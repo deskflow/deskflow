@@ -38,7 +38,7 @@ steps:
     condition: eq(variables['buildType'], 'standard')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
-      CMAKE_PREFIX_PATH: "$(QT_PATH);/usr/local/opt/openssl"
+      CMAKE_PREFIX_PATH: "$(Qt5_DIR);/usr/local/opt/openssl"
 
   - task: CmdLine@2
     inputs:
@@ -56,7 +56,7 @@ steps:
     condition: eq(variables['buildType'], 'enterprise')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
-      CMAKE_PREFIX_PATH: "$(QT_PATH);/usr/local/opt/openssl"
+      CMAKE_PREFIX_PATH: "$(Qt5_DIR);/usr/local/opt/openssl"
 
   - task: CmdLine@2
     inputs:
