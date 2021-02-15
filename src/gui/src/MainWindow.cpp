@@ -122,7 +122,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_ExpectedRunningState(kStopped),
     m_SecureSocket(false)
 {
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     m_pZeroconf = new Zeroconf(this);
 #endif
 
@@ -202,7 +202,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pActivate->setVisible(false);
 #endif
 
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     updateZeroconfService();
 
     addZeroconfServer(m_AppConfig->autoConfigServer());
@@ -218,7 +218,7 @@ MainWindow::~MainWindow()
         stopDesktop();
     }
 
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     delete m_pZeroconf;
 #endif
 }
@@ -346,7 +346,7 @@ void MainWindow::saveSettings()
 }
 
 void MainWindow::zeroConfToggled() {
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     updateZeroconfService();
 
     addZeroconfServer(m_AppConfig->autoConfigServer());
@@ -754,7 +754,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--log" << appConfig().logFilenameCmd();
     }
 
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     // check auto config first, if it is disabled or no server detected,
     // use line edit host name if it is not empty
     if (appConfig().autoConfig()) {
@@ -775,7 +775,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
     if (m_pLineEditHostname->text().isEmpty())
     {
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
         //check if autoconfig mode is enabled
         if (!appConfig().autoConfig())
         {
@@ -786,7 +786,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
                 tr("Please fill in a hostname for the synergy client to connect to."));
             return false;
 
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
         }
         else
         {
@@ -1223,7 +1223,7 @@ void MainWindow::on_m_pActionHelp_triggered()
 
 void MainWindow::updateZeroconfService()
 {
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
 
     // reset the server list in case one has gone away.
     // it'll be re-added after the zeroconf service restarts.

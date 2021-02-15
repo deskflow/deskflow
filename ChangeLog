@@ -28,6 +28,7 @@ Enhancements:
 - #6937 Modern C++ compiler for centOS7
 - #6938 Remove auto config message from the main window
 - #6941 Add Raspberry Pi Builds
+- #6949 Add a new option SYNERGY_AUTOCONFIG to exclude autoconfig from the standard version
 
 v1.13.0-stable
 ===========
