@@ -1,4 +1,4 @@
-v1.13.1-snapshot
+v1.13.1-rc1
 ===========
 Bug fixes:
 - #6900 Remaining SonarCloud reported bug items
