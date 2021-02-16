@@ -309,7 +309,10 @@ endif()
 #
 # OpenSSL
 #
-if(__APPLE__)
+# Apple has to use static libraries because
+# "Use of the Apple-provided OpenSSL libraries by apps is strongly discouraged."
+# https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
+if(APPLE)
     set(OPENSSL_USE_STATIC_LIBS TRUE)
 endif()
 find_package(OpenSSL REQUIRED)
