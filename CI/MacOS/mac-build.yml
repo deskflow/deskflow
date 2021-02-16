@@ -27,6 +27,7 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         mkdir build
         cd build
         cmake \
@@ -43,6 +44,7 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         export SYNERGY_ENTERPRISE=1
         mkdir build
         cd build
