@@ -186,6 +186,10 @@ namespace GUI {
                for (auto &i : m_pCallerList) {
                    i->saveSettings();
                }
+
+               m_pSettingsUser->sync();
+               m_pSettingsSystem->sync();
+
                m_unsavedChanges = false;
             }
         }
