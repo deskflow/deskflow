@@ -38,6 +38,10 @@ if (SYNERGY_ENTERPRISE)
     list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ZEROCONF_FILES})
 endif ()
 
+if (NOT SYNERGY_AUTOCONFIG)
+   list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ZEROCONF_FILES})
+endif ()
+
 if (WIN32)
     set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
 endif()
@@ -54,7 +58,7 @@ add_executable (synergy WIN32
 include_directories (./src)
 target_link_libraries (synergy shared)
 
-if (NOT SYNERGY_ENTERPRISE)
+if (NOT SYNERGY_ENTERPRISE AND SYNERGY_AUTOCONFIG)
 if (WIN32)
     include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -80,7 +84,7 @@ target_compile_definitions (synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_V
 target_compile_definitions (synergy PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
 
 if (WIN32)
-if (NOT SYNERGY_ENTERPRISE)
+if (NOT SYNERGY_ENTERPRISE AND SYNERGY_AUTOCONFIG)
     target_link_libraries (synergy ${DNSSD_LIB})
 endif ()
     set_target_properties (synergy PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")

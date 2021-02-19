@@ -187,7 +187,7 @@ const QString &AppConfig::language() const { return m_Language; }
 bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 bool AppConfig::autoConfig() const {
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     return m_AutoConfig;
 #else
     // always disable auto config for enterprise edition.

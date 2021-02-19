@@ -17,6 +17,7 @@ Bug fixes:
 - #6941 The application doesn't recognize old settings
 - #6945 Fix build for Raspberry Pi
 - #6946 Add build stage to filename
+- #6951 Fix issue creating standard version for Raspberry Pi
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
@@ -28,6 +29,7 @@ Enhancements:
 - #6937 Modern C++ compiler for centOS7
 - #6938 Remove auto config message from the main window
 - #6941 Add Raspberry Pi Builds
+- #6949 Add a new option SYNERGY_AUTOCONFIG to exclude autoconfig from the standard version
 - #6952 Change OpenSSL logic to use find_package
 
 v1.13.0-stable
