@@ -12,7 +12,6 @@ jobs:
 
     env:
       GIT_COMMIT: ${{ github.sha }}
-      CMAKE_PREFIX_PATH: "/usr/local/opt/qt;/usr/local/qt/bin;/usr/local/opt/openssl"
 
     steps:
     - uses: actions/checkout@v2
@@ -24,7 +23,9 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
         . ./version
         make -j
 
