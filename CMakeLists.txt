@@ -29,7 +29,7 @@ endif()
 option (BUILD_TESTS "Override building of tests" ON)
 option (ENABLE_COVERAGE "Build with coverage")
 
-if (DEFINED ENV{SYNERGY_ENTERPRISE} AND NOT "$ENV{SYNERGY_ENTERPRISE}" STREQUAL "")
+if ($ENV{SYNERGY_ENTERPRISE})
     option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
 else()
     option (SYNERGY_ENTERPRISE "Build Enterprise" OFF)
