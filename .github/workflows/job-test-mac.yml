@@ -12,7 +12,7 @@ jobs:
 
     env:
       GIT_COMMIT: ${{ github.sha }}
-      CMAKE_PREFIX_PATH: "/usr/local/opt/qt;/usr/local/opt/openssl"
+      CMAKE_PREFIX_PATH: "/usr/local/opt/qt;/usr/local/qt/bin;/usr/local/opt/openssl"
 
     steps:
     - uses: actions/checkout@v2
