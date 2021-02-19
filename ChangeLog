@@ -28,6 +28,7 @@ Enhancements:
 - #6937 Modern C++ compiler for centOS7
 - #6938 Remove auto config message from the main window
 - #6941 Add Raspberry Pi Builds
+- #6952 Change OpenSSL logic to use find_package
 
 v1.13.0-stable
 ===========
