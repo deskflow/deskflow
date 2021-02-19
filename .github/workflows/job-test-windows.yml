@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
-  QT_VERSION: 5.12.6
-  QT_BASE_URL: http://qt.mirror.constant.com/
-
 jobs:
   build-arch64:
     runs-on: windows-2019
@@ -18,7 +13,10 @@ jobs:
     env:
       GIT_COMMIT: ${{ github.sha }}
       BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
-      QT_LIB_DIR: ${{ env.QT_BASE_DIR }}\${{ env.QT_VERSION }}
+      QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+      QT_VERSION: 5.12.6
+      QT_BASE_URL: http://qt.mirror.constant.com/
+      QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.12.6
       OPENSSL_LIB_DIR: ${{ github.workspace }}\ext\openssl\windows
 
     steps:
