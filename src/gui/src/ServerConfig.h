@@ -20,7 +20,6 @@
 
 #define SERVERCONFIG__H
 
-#include <QObject>
 #include <QList>
 
 #include "Screen.h"
