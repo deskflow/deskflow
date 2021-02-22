@@ -305,11 +305,12 @@ int ServerConfig::autoAddScreen(const QString name)
 {
     int serverIndex = -1;
     int targetIndex = -1;
-    if (!findScreenName(m_pAppConfig->screenName(), serverIndex)) {
-        if (!fixNoServer(m_pAppConfig->screenName(), serverIndex)) {
-            return kAutoAddScreenManualServer;
-        }
+    if (!findScreenName(m_pAppConfig->screenName(), serverIndex) &&
+        !fixNoServer(m_pAppConfig->screenName(), serverIndex))
+    {
+        return kAutoAddScreenManualServer;
     }
+
     if (findScreenName(name, targetIndex)) {
         m_pMainWindow->appendLogDebug(QString("ignoring screen already in config: %1").arg(name));
         return kAutoAddScreenIgnore;

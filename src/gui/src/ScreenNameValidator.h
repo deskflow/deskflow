@@ -23,7 +23,7 @@
 class ScreenNameValidator : public QRegExpValidator
 {
 public:
-   ScreenNameValidator(QObject *parent = nullptr);
+   explicit ScreenNameValidator(QObject *parent = nullptr);
 };
 
 #endif // SCREENNAMEVALIDATOR_H

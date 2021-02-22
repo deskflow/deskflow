@@ -66,7 +66,7 @@ class Screen : public BaseConfig
         bool swapped() const { return m_Swapped; }
         QString& name() { return m_Name; }
         void setName(const QString& name) { m_Name = name; }
-        bool isServer() { return m_isServer;}
+        bool isServer() const { return m_isServer;}
         void markAsServer() { m_isServer = true; }
 
     protected:
