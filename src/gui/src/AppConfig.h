@@ -49,6 +49,7 @@ const int kWizardVersion = 8;
 
 class QSettings;
 class SettingsDialog;
+class ServerConfig;
 
 enum ProcessMode {
     Service,
@@ -62,6 +63,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
     friend class SettingsDialog;
     friend class MainWindow;
     friend class SetupWizard;
+    friend class ServerConfig;
 
     public:
         AppConfig();
