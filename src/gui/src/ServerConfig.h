@@ -20,6 +20,7 @@
 
 #define SERVERCONFIG__H
 
+#include <QObject>
 #include <QList>
 
 #include "Screen.h"
@@ -41,8 +42,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
     friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
     public:
-        ServerConfig(int numColumns, int numRows,
-            QString serverName, MainWindow* mainWindow);
+        ServerConfig(int numColumns, int numRows, AppConfig* appConfig, MainWindow* mainWindow);
 
         ServerConfig(const ServerConfig &src) =default;
         ServerConfig(ServerConfig &&) =default;
@@ -80,6 +80,8 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         void save(QFile& file) const;
         int numScreens() const;
         int autoAddScreen(const QString name);
+        const QString& getServerName() const;
+        void updateServerName();
 
     protected:
         QSettings& settings();
@@ -132,7 +134,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         int m_SwitchCornerSize;
         QList<bool> m_SwitchCorners;
         HotkeyList m_Hotkeys;
-        QString m_ServerName;
+        AppConfig* m_pAppConfig;
         bool m_IgnoreAutoConfigClient;
         bool m_EnableDragAndDrop;
         bool m_DisableLockToScreen;

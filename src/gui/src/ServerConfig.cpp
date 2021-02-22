@@ -42,13 +42,12 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(int numColumns, int numRows ,
-                QString serverName, MainWindow* mainWindow) :
+ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, MainWindow* mainWindow) :
 
         m_Screens(),
         m_NumColumns(numColumns),
         m_NumRows(numRows),
-        m_ServerName(serverName),
+        m_pAppConfig(appConfig),
         m_IgnoreAutoConfigClient(false),
         m_EnableDragAndDrop(false),
         m_DisableLockToScreen(false),
@@ -119,8 +118,8 @@ void ServerConfig::saveSettings()
     settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
     settings().setValue("disableLockToScreen", disableLockToScreen());
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
-	settings().setValue("clipboardSharing", clipboardSharing());
-	settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
+    settings().setValue("clipboardSharing", clipboardSharing());
+    settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
 
     writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -128,7 +127,11 @@ void ServerConfig::saveSettings()
     for (int i = 0; i < screens().size(); i++)
     {
         settings().setArrayIndex(i);
-        screens()[i].saveSettings(settings());
+        auto& screen = screens()[i];
+        screen.saveSettings(settings());
+        if (screen.isServer() && m_pAppConfig->screenName() != screen.name()){
+           m_pAppConfig->setScreenName(screen.name());
+        }
     }
     settings().endArray();
 
@@ -181,6 +184,9 @@ void ServerConfig::loadSettings()
     {
         settings().setArrayIndex(i);
         screens()[i].loadSettings(settings());
+        if (getServerName() == screens()[i].name()) {
+            screens()[i].markAsServer();
+        }
     }
     settings().endArray();
 
@@ -299,8 +305,8 @@ int ServerConfig::autoAddScreen(const QString name)
 {
     int serverIndex = -1;
     int targetIndex = -1;
-    if (!findScreenName(m_ServerName, serverIndex)) {
-        if (!fixNoServer(m_ServerName, serverIndex)) {
+    if (!findScreenName(m_pAppConfig->screenName(), serverIndex)) {
+        if (!fixNoServer(m_pAppConfig->screenName(), serverIndex)) {
             return kAutoAddScreenManualServer;
         }
     }
@@ -360,6 +366,21 @@ int ServerConfig::autoAddScreen(const QString name)
 
     saveSettings();
     return kAutoAddScreenOk;
+}
+
+const QString& ServerConfig::getServerName() const
+{
+   return m_pAppConfig->screenName();
+}
+
+void ServerConfig::updateServerName()
+{
+   for (auto& screen : screens()) {
+      if (screen.isServer()) {
+         screen.setName(m_pAppConfig->screenName());
+         break;
+      }
+   }
 }
 
 bool ServerConfig::findScreenName(const QString& name, int& index)

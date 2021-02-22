@@ -22,6 +22,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QMessageBox>
+#include <ScreenNameValidator.h>
 
 ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -30,13 +31,11 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
 {
     setupUi(this);
 
-    QRegExp validScreenName("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive);
-
     m_pLineEditName->setText(m_pScreen->name());
-    m_pLineEditName->setValidator(new QRegExpValidator(validScreenName, m_pLineEditName));
+    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName));
     m_pLineEditName->selectAll();
 
-    m_pLineEditAlias->setValidator(new QRegExpValidator(validScreenName, m_pLineEditName));
+    m_pLineEditAlias->setValidator(new ScreenNameValidator(m_pLineEditName));
 
     for (int i = 0; i < m_pScreen->aliases().count(); i++)
         new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);

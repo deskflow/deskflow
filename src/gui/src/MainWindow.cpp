@@ -111,7 +111,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_AppConfig(&appConfig),
     m_pSynergy(NULL),
     m_SynergyState(synergyDisconnected),
-    m_ServerConfig(5, 3, m_AppConfig->screenName(), this),
+    m_ServerConfig(5, 3, m_AppConfig, this),
     m_AlreadyHidden(false),
     m_pMenuBar(NULL),
     m_pMenuFile(NULL),
@@ -135,7 +135,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
     
-    m_pLabelScreenName->setText(getScreenName());
+    m_pLabelScreenName->setText(appConfig.screenName());
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
     m_pLabelIpAddresses->setText(getIPAddresses());
 
@@ -617,7 +617,7 @@ void MainWindow::startSynergy()
     args << "-f" << "--no-tray" << "--debug" << appConfig().logLevelText();
 
 
-    args << "--name" << getScreenName();
+    args << "--name" << appConfig().screenName();
 
     if (desktopMode)
     {
@@ -1074,16 +1074,6 @@ QString MainWindow::getIPAddresses()
     return result;
 }
 
-QString MainWindow::getScreenName()
-{
-    if (appConfig().screenName() == "") {
-        return QHostInfo::localHostName();
-    }
-    else {
-        return appConfig().screenName();
-    }
-}
-
 void MainWindow::changeEvent(QEvent* event)
 {
     if (event != 0)
@@ -1301,7 +1291,7 @@ void MainWindow::autoAddScreen(const QString name)
 
 void MainWindow::showConfigureServer(const QString& message)
 {
-    ServerConfigDialog dlg(this, serverConfig(), appConfig().screenName());
+    ServerConfigDialog dlg(this, serverConfig());
     dlg.message(message);
     dlg.exec();
 }
@@ -1391,7 +1381,8 @@ void MainWindow::windowStateChanged()
         hide();
 }
 
-void MainWindow::updateScreenName() 
+void MainWindow::updateScreenName()
 {
-    m_pLabelScreenName->setText(getScreenName());
+    m_pLabelScreenName->setText(appConfig().screenName());
+    serverConfig().updateServerName();
 }
