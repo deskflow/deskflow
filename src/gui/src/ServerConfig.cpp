@@ -379,6 +379,7 @@ void ServerConfig::updateServerName()
    for (auto& screen : screens()) {
       if (screen.isServer()) {
          screen.setName(m_pAppConfig->screenName());
+         screen.saveSettings(settings());
          break;
       }
    }
