@@ -1,3 +1,9 @@
+v1.13.2-snapshot
+===========
+Bug fixes:
+- #6953 The system does not update server name in Server configuration
+===========
+
 v1.13.1-snapshot
 ===========
 Bug fixes:
