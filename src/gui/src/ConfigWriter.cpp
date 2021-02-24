@@ -22,6 +22,7 @@
 
 #include "ConfigWriter.h"
 #include "ConfigBase.h"
+#include <iostream>
 
 namespace {
 
@@ -105,7 +106,8 @@ namespace GUI {
             // the application name and the organisation name which breaks backwards compatibility
             // See #6730
             m_pSettingsUser = new QSettings();
-
+std::cout<<m_pSettingsSystem->fileName().toStdString()<<std::endl;
+std::cout<<m_pSettingsUser->fileName().toStdString()<<std::endl;
             //Set scope to user for initially
             m_pSettingsCurrent = m_pSettingsUser;
         }
