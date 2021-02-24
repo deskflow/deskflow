@@ -531,6 +531,18 @@
      </property>
     </widget>
    </item>
+   <item row="9" column="0">
+     <widget class="QGroupBox" name="groupBox_Advanced">
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
+      <property name="title">
+       <string>Advanced</string>
+      </property>
+     </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
