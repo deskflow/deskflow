@@ -39,7 +39,6 @@ public:
     bool validateCurrentPage();
 
 protected:
-    void changeEvent(QEvent* event);
     void accept();
     void reject();
 
@@ -51,7 +50,4 @@ private:
 #if defined(Q_OS_MAC)
     void duplicateSpaces();
 #endif // defined(Q_OS_MAC)
-
-private slots:
-    void on_m_pComboLanguage_currentIndexChanged(int index);
 };
