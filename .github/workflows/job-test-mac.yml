@@ -16,14 +16,17 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: install qt
-      run: brew install qt
+    - name: Install brew dependencies
+      run: |
+        brew list qt5 &>/dev/null || brew install qt5
+        brew list openssl &>/dev/null || brew install openssl
 
     - name: Build
       run: |
         mkdir build
         cd build
         cmake \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
         . ./version
