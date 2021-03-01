@@ -1,3 +1,12 @@
+v1.13.2-snapshot
+===========
+Bug fixes:
+- #6953 The system does not update server name in Server configuration
+
+Enhancements:
+- #6954 Move language selection to advanced section 
+===========
+
 v1.13.1-stable
 ===========
 Bug fixes:

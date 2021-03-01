@@ -200,6 +200,10 @@ QString AppConfig::autoConfigServer() const { return m_AutoConfigServer; }
 void AppConfig::loadSettings()
 {
     m_ScreenName        = loadSetting(kScreenName, QHostInfo::localHostName()).toString();
+    if (m_ScreenName.isEmpty()) {
+       m_ScreenName = QHostInfo::localHostName();
+    }
+
     m_Port              = loadSetting(kPort, 24800).toInt();
     m_Interface         = loadSetting(kInterfaceSetting).toString();
     m_LogLevel          = loadSetting(kLogLevel, 0).toInt();

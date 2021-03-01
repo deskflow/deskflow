@@ -25,7 +25,7 @@
 #include <QtGui>
 #include <QMessageBox>
 
-ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, const QString& defaultScreenName) :
+ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::ServerConfigDialogBase(),
     m_OrigServerConfig(config),
@@ -66,8 +66,19 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config, co
 
     m_pScreenSetupView->setModel(&m_ScreenSetupModel);
 
-    if (serverConfig().numScreens() == 0)
-        model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = Screen(defaultScreenName);
+    if (serverConfig().numScreens() == 0) {
+        Screen serverScreen(serverConfig().getServerName());
+        serverScreen.markAsServer();
+        model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = serverScreen;
+    }
+    else {
+       for (auto& screen : serverConfig().screens()) {
+          if (screen.name() == serverConfig().getServerName()) {
+             screen.markAsServer();
+             break;
+          }
+       }
+    }
 }
 
 void ServerConfigDialog::showEvent(QShowEvent* event)
@@ -103,8 +114,8 @@ void ServerConfigDialog::accept()
     serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
     serverConfig().setDisableLockToScreen(m_pCheckBoxDisableLockToScreen->isChecked());
     serverConfig().setClipboardSharingSize(m_pSpinBoxClipboardSizeLimit->value() * 1024);
-	serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked() 
-					&& m_pSpinBoxClipboardSizeLimit->value());
+    serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked()
+               && m_pSpinBoxClipboardSizeLimit->value());
 
     // now that the dialog has been accepted, copy the new server config to the original one,
     // which is a reference to the one in MainWindow.

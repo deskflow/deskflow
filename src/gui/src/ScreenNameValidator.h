@@ -1,11 +1,12 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
- * 
+ * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -14,40 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef SCREENNAMEVALIDATOR_H
+#define SCREENNAMEVALIDATOR_H
 
-#pragma once
+#include <qvalidator.h>
 
-#include "ui_SetupWizardBase.h"
-#include "SynergyLocale.h"
-
-#include <QWizard>
-#include <QNetworkAccessManager>
-
-class MainWindow;
-
-class SetupWizard : public QWizard, public Ui::SetupWizardBase
+class ScreenNameValidator : public QRegExpValidator
 {
-    Q_OBJECT
 public:
-    enum {
-        kMaximiumLoginAttemps = 3
-    };
-
-public:
-    SetupWizard(MainWindow& mainWindow, bool startMain);
-    virtual ~SetupWizard();
-    bool validateCurrentPage();
-
-protected:
-    void accept();
-    void reject();
-
-private:
-    MainWindow& m_MainWindow;
-    bool m_StartMain;
-    SynergyLocale m_Locale;
-
-#if defined(Q_OS_MAC)
-    void duplicateSpaces();
-#endif // defined(Q_OS_MAC)
+   explicit ScreenNameValidator(QObject *parent = nullptr);
 };
+
+#endif // SCREENNAMEVALIDATOR_H

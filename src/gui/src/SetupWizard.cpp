@@ -53,9 +53,6 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
     connect(m_pServerRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupServer, SLOT(setChecked(bool)));
     connect(m_pClientRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupClient, SLOT(setChecked(bool)));
-
-    m_Locale.fillLanguageComboBox(m_pComboLanguage);
-    setIndexFromItemData(m_pComboLanguage, m_MainWindow.appConfig().language());
 }
 
 SetupWizard::~SetupWizard()
@@ -84,34 +81,9 @@ bool SetupWizard::validateCurrentPage()
     return true;
 }
 
-void SetupWizard::changeEvent(QEvent* event)
-{
-    if (event != 0)
-    {
-        switch (event->type())
-        {
-        case QEvent::LanguageChange:
-            {
-                m_pComboLanguage->blockSignals(true);
-                retranslateUi(this);
-                m_pComboLanguage->blockSignals(false);
-                #if defined(Q_OS_MAC)
-                  duplicateSpaces();
-                #endif // defined(Q_OS_MAC)
-                break;
-            }
-
-        default:
-            QWizard::changeEvent(event);
-        }
-    }
-}
-
 void SetupWizard::accept()
 {
     AppConfig& appConfig = m_MainWindow.appConfig();
-
-    appConfig.setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
 
     appConfig.setWizardHasRun();
     appConfig.saveSettings();
@@ -146,12 +118,6 @@ void SetupWizard::reject()
     }
 
     QWizard::reject();
-}
-
-void SetupWizard::on_m_pComboLanguage_currentIndexChanged(int index)
-{
-    QString ietfCode = m_pComboLanguage->itemData(index).toString();
-    QSynergyApplication::getInstance()->switchTranslator(ietfCode);
 }
 
 #if defined(Q_OS_MAC)

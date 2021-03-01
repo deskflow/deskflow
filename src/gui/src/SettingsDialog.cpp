@@ -26,6 +26,7 @@
 #include "MainWindow.h"
 #include "BonjourWindows.h"
 #include "Zeroconf.h"
+#include "ScreenNameValidator.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -50,6 +51,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_isSystemAtStart = appConfig().isSystemScoped();
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
+    m_pLineEditScreenName->setValidator(new ScreenNameValidator(m_pLineEditScreenName));
 
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
     connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
@@ -305,8 +307,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
 
 bool SettingsDialog::isModified()
 {
-   return (
-      appConfig().screenName()           != m_pLineEditScreenName->text()
+   return (!m_pLineEditScreenName->text().isEmpty() &&
+      (appConfig().screenName()          != m_pLineEditScreenName->text()
       || appConfig().port()              != m_pSpinBoxPort->value()
       || appConfig().networkInterface()  != m_pLineEditInterface->text()
       || appConfig().logLevel()          != m_pComboLogLevel->currentIndex()
@@ -320,6 +322,7 @@ bool SettingsDialog::isModified()
       || appConfig().getTLSCertPath()    != m_pLineEditCertificatePath->text()
       || appConfig().getTLSKeyLength()   != m_pComboBoxKeyLength->currentText()
       || appConfig().getCryptoEnabled()  != m_pCheckBoxEnableCrypto->isChecked()
+      || appConfig().isSystemScoped()    != m_isSystemAtStart)
    );
 }
 
