@@ -7,7 +7,7 @@ Enhancements:
 - #6954 Move language selection to advanced section 
 ===========
 
-v1.13.1-snapshot
+v1.13.1-stable
 ===========
 Bug fixes:
 - #6900 Remaining SonarCloud reported bug items
@@ -26,6 +26,7 @@ Bug fixes:
 - #6941 The application doesn't recognize old settings
 - #6945 Fix build for Raspberry Pi
 - #6946 Add build stage to filename
+- #6950 Synergy client doesn't save the server address when rebooted
 - #6951 Fix issue creating standard version for Raspberry Pi
 
 Enhancements:

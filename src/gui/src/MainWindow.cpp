@@ -336,13 +336,8 @@ void MainWindow::saveSettings()
     appConfig().setConfigFile(m_pLineEditConfigFile->text());
     appConfig().setServerHostname(m_pLineEditHostname->text());
 
-    /* Save everything
-     * ConfigWriter is a singlethon hence we should call destroy
-     * During destroy the ConfigWriter destroys QSetting which saves all settings to file.
-     * Before destroy all settings are stored only in memmory.
-    */
+    /* Save everything */
     GUI::Config::ConfigWriter::make()->globalSave();
-    GUI::Config::ConfigWriter::destroy();
 }
 
 void MainWindow::zeroConfToggled() {
@@ -596,6 +591,8 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
+    saveSettings();
+
 #ifndef SYNERGY_ENTERPRISE
     SerialKey serialKey = m_LicenseManager->serialKey();
     if (!serialKey.isValid()) {
