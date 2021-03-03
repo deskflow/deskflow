@@ -51,17 +51,17 @@ steps:
       mkdir build64
       cd build64
       IF "$(buildType)"=="enterprise" (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
       ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release ..
       )
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_BIN_PATH)
       MSARCH: 'x64'
       GIT_COMMIT: $(Build.SourceVersion)
+      CMAKE_PREFIX_PATH: "$(QT_BIN_PATH);$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64"
 
   - script: |
       call "%ENV_BAT%" -arch=x64
@@ -79,17 +79,17 @@ steps:
       mkdir build32
       cd build32
       IF "$(buildType)"=="enterprise" (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
       ) else (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release ..
       )
     displayName: 'Cmake x32 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
       BONJOUR_SDK_DIR: $(BONJOUR_SDK_DIR)
-      QT_PATH: $(QT_BIN_PATH_32)
       MSARCH: 'Win32'
       GIT_COMMIT: $(Build.SourceVersion)
+      CMAKE_PREFIX_PATH: "$(QT_BIN_PATH_32);$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x86"
 
   - script: |
       call "%ENV_BAT%" -arch=x86

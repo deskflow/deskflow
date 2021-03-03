@@ -315,31 +315,13 @@ endif()
 #
 # OpenSSL
 #
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set (OPENSSL_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl/windows)
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set (OPENSSL_ROOT "${OPENSSL_ROOT}/x64")
-    else()
-        set (OPENSSL_ROOT "${OPENSSL_ROOT}/x86")
-    endif()
-
-    include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-    set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libssl.lib
-        ${OPENSSL_ROOT}/lib/libcrypto.lib
-    )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set (OPENSSL_ROOT /usr/local/opt/openssl)
-    include_directories (BEFORE SYSTEM ${OPENSSL_ROOT}/include)
-    set (OPENSSL_LIBS
-        ${OPENSSL_ROOT}/lib/libssl.a
-        ${OPENSSL_ROOT}/lib/libcrypto.a
-    )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-    set (OPENSSL_LIBS ssl crypto)
-else()
-    message (FATAL_ERROR "Couldn't find OpenSSL")
+# Apple has to use static libraries because
+# "Use of the Apple-provided OpenSSL libraries by apps is strongly discouraged."
+# https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
+if(APPLE)
+    set(OPENSSL_USE_STATIC_LIBS TRUE)
 endif()
+find_package(OpenSSL REQUIRED)
 
 #
 # Check submodules
