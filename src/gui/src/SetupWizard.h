@@ -18,25 +18,17 @@
 #pragma once
 
 #include "ui_SetupWizardBase.h"
-#include "SynergyLocale.h"
-
-#include <QWizard>
-#include <QNetworkAccessManager>
+#include <QDialog>
 
 class MainWindow;
 
-class SetupWizard : public QWizard, public Ui::SetupWizardBase
+class SetupWizard : public QDialog, public Ui::SetupWizardBase
 {
     Q_OBJECT
-public:
-    enum {
-        kMaximiumLoginAttemps = 3
-    };
 
 public:
-    SetupWizard(MainWindow& mainWindow, bool startMain);
+    SetupWizard(MainWindow& mainWindow);
     virtual ~SetupWizard();
-    bool validateCurrentPage();
 
 protected:
     void accept();
@@ -44,8 +36,6 @@ protected:
 
 private:
     MainWindow& m_MainWindow;
-    bool m_StartMain;
-    SynergyLocale m_Locale;
 
 #if defined(Q_OS_MAC)
     void duplicateSpaces();

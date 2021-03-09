@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<SetupWizard> setupWizard;
     if (appConfig.wizardShouldRun())
     {
-        setupWizard.reset(new SetupWizard(mainWindow, true));
+        setupWizard.reset(new SetupWizard(mainWindow));
         setupWizard->show();
     }
     else
