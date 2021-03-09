@@ -22,6 +22,12 @@
     <height>580</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>720</width>
+    <height>580</height>
+   </size>
+  </property>
   <property name="baseSize">
    <size>
     <width>720</width>
@@ -34,7 +40,7 @@
   <property name="windowTitle">
    <string>Setup Synergy</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_Image">
    <property name="geometry">
     <rect>
      <x>270</x>
@@ -48,6 +54,27 @@
    </property>
    <property name="pixmap">
     <pixmap resource="../res/Synergy.qrc">:/res/image/welcome.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Title">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>280</y>
+     <width>181</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>18</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Name your computer</string>
    </property>
   </widget>
  </widget>
