@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>580</height>
+    <height>552</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,19 +19,19 @@
   <property name="minimumSize">
    <size>
     <width>720</width>
-    <height>580</height>
+    <height>552</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>720</width>
-    <height>580</height>
+    <height>552</height>
    </size>
   </property>
   <property name="baseSize">
    <size>
     <width>720</width>
-    <height>580</height>
+    <height>552</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -40,11 +40,14 @@
   <property name="windowTitle">
    <string>Setup Synergy</string>
   </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
   <widget class="QLabel" name="label_Image">
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>90</y>
+     <y>70</y>
      <width>181</width>
      <height>161</height>
     </rect>
@@ -60,7 +63,7 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>280</y>
+     <y>253</y>
      <width>181</width>
      <height>21</height>
     </rect>
@@ -75,6 +78,106 @@
    </property>
    <property name="text">
     <string>Name your computer</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Name">
+   <property name="geometry">
+    <rect>
+     <x>184</x>
+     <y>294</y>
+     <width>100</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Computer name</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_Name">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>293</y>
+     <width>230</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>230</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_HelpTitle">
+   <property name="geometry">
+    <rect>
+     <x>132</x>
+     <y>354</y>
+     <width>461</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>You can call your computer almost what ever you feel like, but must have:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_HelpInfo">
+   <property name="geometry">
+    <rect>
+     <x>193</x>
+     <y>380</y>
+     <width>311</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;list-style-type:none; font-size: 13px;&quot;&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- A different name from other computers &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- No special characters or spaces&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only english characters and numbers&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- 15 characters max&lt;/li&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_Apply">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>510</y>
+     <width>56</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Apply</string>
    </property>
   </widget>
  </widget>
