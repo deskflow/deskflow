@@ -23,8 +23,10 @@ SetupWizard::SetupWizard(MainWindow& mainWindow) :
     m_MainWindow(mainWindow)
 {
     setupUi(this);
+
     m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
     m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName));
+
     connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
 }
 
@@ -34,17 +36,22 @@ SetupWizard::~SetupWizard()
 
 void SetupWizard::accept()
 {
-    AppConfig& appConfig = m_MainWindow.appConfig();
+   ScreenNameValidator validator(m_pLineEditName);
+   if (validator.validate())
+   {
+      AppConfig& appConfig = m_MainWindow.appConfig();
 
-    appConfig.setWizardHasRun();
-    appConfig.saveSettings();
+      appConfig.setWizardHasRun();
+      appConfig.setScreenName(m_pLineEditName->text());
+      appConfig.saveSettings();
 
-    m_MainWindow.open();
-    QDialog::accept();
+      m_MainWindow.open();
+      QDialog::accept();
+   }
 }
 
 void SetupWizard::reject()
 {
-    m_MainWindow.open();
-    QDialog::reject();
+   m_MainWindow.open();
+   QDialog::reject();
 }

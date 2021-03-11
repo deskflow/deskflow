@@ -17,8 +17,45 @@
  */
 #include "ScreenNameValidator.h"
 
-ScreenNameValidator::ScreenNameValidator(QObject *parent) :
-    QRegExpValidator(QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive), parent)
+ScreenNameValidator::ScreenNameValidator(QLineEdit* parent) :
+    QRegExpValidator(QRegExp("[a-z0-9\\._-]{,15}", Qt::CaseInsensitive), parent),
+    m_pControl(parent)
 {
 
+}
+
+QValidator::State ScreenNameValidator::validate(QString& input, int& pos) const
+{
+   isValid(input, pos);
+   return  Acceptable;
+}
+
+bool ScreenNameValidator::validate() const
+{
+   bool result = true;
+
+   if (m_pControl) {
+      int pos = 0;
+      QString text(m_pControl->text());
+      result = isValid(text, pos);
+   }
+
+   return result;
+}
+
+bool ScreenNameValidator::isValid(QString& input, int& pos) const
+{
+   bool result = true;
+
+   if (m_pControl) {
+      if (input.isEmpty() || QRegExpValidator::validate(input, pos) == Invalid) {
+         m_pControl->setStyleSheet("border: 1px solid #EC4C47");
+         result = false;
+      }
+      else {
+         m_pControl->setStyleSheet("");
+      }
+   }
+
+   return result;
 }

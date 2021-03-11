@@ -36,5 +36,4 @@ protected:
 
 private:
     MainWindow& m_MainWindow;
-
 };

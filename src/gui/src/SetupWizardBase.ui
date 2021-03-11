@@ -120,6 +120,9 @@
      <height>20</height>
     </size>
    </property>
+   <property name="maxLength">
+    <number>15</number>
+   </property>
   </widget>
   <widget class="QLabel" name="label_HelpTitle">
    <property name="geometry">
