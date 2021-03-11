@@ -64,20 +64,22 @@
     <rect>
      <x>270</x>
      <y>253</y>
-     <width>181</width>
+     <width>261</width>
      <height>21</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>18</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>Name your computer</string>
+    <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:18px&quot;&gt;Name your computer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label_Name">
@@ -85,7 +87,7 @@
     <rect>
      <x>184</x>
      <y>294</y>
-     <width>100</width>
+     <width>111</width>
      <height>16</height>
     </rect>
    </property>
@@ -97,7 +99,10 @@
     </font>
    </property>
    <property name="text">
-    <string>Computer name</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:13px;&quot;&gt;Computer name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_Name">
@@ -121,7 +126,7 @@
     <rect>
      <x>132</x>
      <y>354</y>
-     <width>461</width>
+     <width>481</width>
      <height>16</height>
     </rect>
    </property>
@@ -133,7 +138,10 @@
     </font>
    </property>
    <property name="text">
-    <string>You can call your computer almost what ever you feel like, but must have:</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;&quot;&gt;You can call your computer almost what ever you feel like, but must have: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label_HelpInfo">
