@@ -26,7 +26,7 @@ class ScreenNameValidator : public QRegExpValidator
 {
 public:
    explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr);
-   virtual QValidator::State validate(QString& input, int& pos) const override;
+   QValidator::State validate(QString& input, int& pos) const override;
 
 private:
    QLabel* m_pErrors = nullptr;

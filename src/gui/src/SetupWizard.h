@@ -27,7 +27,7 @@ class SetupWizard : public QDialog, public Ui::SetupWizardBase
     Q_OBJECT
 
 public:
-    SetupWizard(MainWindow& mainWindow);
+    explicit SetupWizard(MainWindow& mainWindow);
     virtual ~SetupWizard();
 
 protected:
