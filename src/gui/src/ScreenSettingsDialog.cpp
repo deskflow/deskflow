@@ -32,7 +32,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     setupUi(this);
 
     m_pLineEditName->setText(m_pScreen->name());
-    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName));
+    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, m_pLabelNameError));
     m_pLineEditName->selectAll();
 
     m_pLineEditAlias->setValidator(new ScreenNameValidator(m_pLineEditName));
@@ -67,6 +67,9 @@ void ScreenSettingsDialog::accept()
             tr("The screen name cannot be empty. "
                "Please either fill in a name or cancel the dialog."));
         return;
+    }
+    else if (!m_pLabelNameError->text().isEmpty()) {
+       return;
     }
 
     m_pScreen->init();

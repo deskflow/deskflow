@@ -22,50 +22,36 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors) :
     m_pErrors(errors),
     m_pControl(parent)
 {
-
+   if (m_pErrors) {
+      m_pErrors->hide();
+   }
 }
 
 QValidator::State ScreenNameValidator::validate(QString& input, int& pos) const
 {
-   isValid(input, pos);
-   return  Acceptable;
-}
-
-bool ScreenNameValidator::validate() const
-{
-   bool result = true;
-
-   if (m_pControl) {
-      int pos = 0;
-      QString text(m_pControl->text());
-      result = isValid(text, pos);
-   }
-
-   return result;
-}
-
-bool ScreenNameValidator::isValid(QString& input, int& pos) const
-{
-   bool result = true;
-
    if (m_pControl) {
       if (input.isEmpty() || QRegExpValidator::validate(input, pos) == Invalid) {
          m_pControl->setStyleSheet("border: 1px solid #EC4C47");
-         result = false;
       }
       else {
          m_pControl->setStyleSheet("");
       }
-      showError(input);
+      showError(getErrorMessage(input));
    }
 
-   return result;
+   return  Acceptable;
 }
 
-void ScreenNameValidator::showError(const QString& text) const
+void ScreenNameValidator::showError(const QString& message) const
 {
    if (m_pErrors) {
-      m_pErrors->setText(getErrorMessage(text));
+      m_pErrors->setText(message);
+      if (m_pErrors->text().isEmpty()) {
+         m_pErrors->hide();
+      }
+      else {
+         m_pErrors->show();
+      }
    }
 }
 
@@ -87,6 +73,4 @@ QString ScreenNameValidator::getErrorMessage(const QString& text) const
 
    return message;
 }
-
-
 

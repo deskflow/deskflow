@@ -36,8 +36,7 @@ SetupWizard::~SetupWizard()
 
 void SetupWizard::accept()
 {
-   ScreenNameValidator validator(m_pLineEditName);
-   if (validator.validate())
+   if (label_ErrorMessage->text().isEmpty())
    {
       AppConfig& appConfig = m_MainWindow.appConfig();
 
