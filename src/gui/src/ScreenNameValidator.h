@@ -18,19 +18,23 @@
 #ifndef SCREENNAMEVALIDATOR_H
 #define SCREENNAMEVALIDATOR_H
 
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <qvalidator.h>
 
 class ScreenNameValidator : public QRegExpValidator
 {
 public:
-   explicit ScreenNameValidator(QLineEdit* parent = nullptr);
+   explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr);
    virtual QValidator::State validate(QString& input, int& pos) const override;
    bool validate() const;
 private:
+   QLabel* m_pErrors = nullptr;
    QLineEdit* m_pControl = nullptr;
 
    bool isValid(QString& input, int& pos) const;
+   void showError(const QString& message) const;
+   QString getErrorMessage(const QString& text) const;
 };
 
 #endif // SCREENNAMEVALIDATOR_H

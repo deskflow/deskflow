@@ -25,7 +25,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow) :
     setupUi(this);
 
     m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
-    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName));
+    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
 
     connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
 }
