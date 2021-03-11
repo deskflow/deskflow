@@ -37,7 +37,4 @@ protected:
 private:
     MainWindow& m_MainWindow;
 
-#if defined(Q_OS_MAC)
-    void duplicateSpaces();
-#endif // defined(Q_OS_MAC)
 };

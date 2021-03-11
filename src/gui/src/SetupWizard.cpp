@@ -23,14 +23,9 @@ SetupWizard::SetupWizard(MainWindow& mainWindow) :
     m_MainWindow(mainWindow)
 {
     setupUi(this);
-    lineEdit_Name->setText(m_MainWindow.appConfig().screenName());
-    lineEdit_Name->setValidator(new ScreenNameValidator(lineEdit_Name));
-    connect(pushButton_Apply, SIGNAL(clicked()), this, SLOT(accept()));
-
-#if defined(Q_OS_MAC)
-    // we identified an issue with presenting dots, see SYNERGY-719
-    duplicateSpaces();
-#endif
+    m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
+    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName));
+    connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
 }
 
 SetupWizard::~SetupWizard()
@@ -53,16 +48,3 @@ void SetupWizard::reject()
     m_MainWindow.open();
     QDialog::reject();
 }
-
-#if defined(Q_OS_MAC)
-void SetupWizard::duplicateSpaces()
-{
-    auto list = this->findChildren<QLabel *>();
-    foreach(QLabel *l, list) {
-        if (l->wordWrap()) {
-           l->setText(l->text().replace(". ", ".  "));
-           l->setText(l->text().replace(", ", ",  "));
-        }
-    }
-}
-#endif // defined(Q_OS_MAC)

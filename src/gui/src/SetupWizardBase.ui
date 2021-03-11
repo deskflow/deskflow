@@ -105,7 +105,7 @@
     <enum>Qt::RichText</enum>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_Name">
+  <widget class="QLineEdit" name="m_pLineEditName">
    <property name="geometry">
     <rect>
      <x>300</x>
@@ -168,7 +168,7 @@
     <enum>Qt::RichText</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_Apply">
+  <widget class="QPushButton" name="m_pButtonApply">
    <property name="geometry">
     <rect>
      <x>650</x>
