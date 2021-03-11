@@ -17,11 +17,15 @@
 
 #include "SetupWizard.h"
 #include "MainWindow.h"
+#include "ScreenNameValidator.h"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow) :
     m_MainWindow(mainWindow)
 {
     setupUi(this);
+    lineEdit_Name->setText(m_MainWindow.appConfig().screenName());
+    lineEdit_Name->setValidator(new ScreenNameValidator(lineEdit_Name));
+    connect(pushButton_Apply, SIGNAL(clicked()), this, SLOT(accept()));
 
 #if defined(Q_OS_MAC)
     // we identified an issue with presenting dots, see SYNERGY-719
@@ -40,8 +44,8 @@ void SetupWizard::accept()
     appConfig.setWizardHasRun();
     appConfig.saveSettings();
 
-    QDialog::accept();
     m_MainWindow.open();
+    QDialog::accept();
 }
 
 void SetupWizard::reject()
