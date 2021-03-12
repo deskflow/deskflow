@@ -47,7 +47,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - run: |
-        sudo sh -c 'export DEBIAN_FRONTEND=noninteractive && apt-get install -y \
+        sudo sh -c 'export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y \
           git \
           cmake \
           qtbase5-dev \
