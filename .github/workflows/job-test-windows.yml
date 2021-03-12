@@ -47,10 +47,10 @@ jobs:
     - name: Install Bonjour SDK
       if: steps.cache-bonjour.outputs.cache-hit != 'true'
       run: |
-        New-Item -Force -ItemType Directory -Path $env:BONJOUR_BASE_DIR"
+        New-Item -Force -ItemType Directory -Path "$env:BONJOUR_BASE_DIR"
         $client = new-object System.Net.WebClient
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
-        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", $env:BONJOUR_BASE_DIR)
+        [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
