@@ -145,6 +145,7 @@ void ServerConfig::saveSettings()
 
     settings().endGroup();
 
+    m_pAppConfig->saveSettings();
     //Tell the config writer there are changes
     GUI::Config::ConfigWriter::make()->markUnsaved();
 }
