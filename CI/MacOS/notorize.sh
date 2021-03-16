@@ -1,3 +1,5 @@
+#! /bin/bash
+
 #Notarization script from https://github.com/rednoah/notarize-app/blob/master/notarize-app
 
 BUNDLE_ID=com.symless.synergy.${SYNERGY_VERSION}.${SYNERGY_REVISION}

@@ -1,0 +1,119 @@
+name: Mac
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-on-mac-10_13:
+    runs-on: [self-hosted, macOS, X64, 10.13]
+
+    strategy:
+      matrix:
+        enterprise: ['1', '']
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
+      Qt5_DIR: /usr/local/opt/qt/5.15.2/clang_64
+      OpenSSL_DIR: /usr/local/ssl
+      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Environment
+        run: |
+          git fetch
+          python3 -m pip install dmgbuild
+      
+      - name: Build SYNERGY
+        env:
+          CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
+        run: |
+          export PATH="$Qt5_DIR/bin:$PATH"
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CONFIGURATION_TYPES=Release ..
+          . ./version
+          make -j
+      
+      - name: Version Info
+        id: version
+        run: |
+          python3 CI/build_version.py
+          . ./build/version
+          SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_VERSION_MAJOR::$SYNERGY_VERSION_MAJOR"
+          echo "::set-output name=SYNERGY_VERSION_MINOR::$SYNERGY_VERSION_MINOR"
+          echo "::set-output name=SYNERGY_VERSION_PATCH::$SYNERGY_VERSION_PATCH"
+          echo "::set-output name=SYNERGY_VERSION_STAGE::$SYNERGY_VERSION_STAGE"
+          echo "::set-output name=SYNERGY_VERSION_BUILD::$SYNERGY_VERSION_BUILD"
+          echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
+          echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
+          echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
+          if [ "$SYNERGY_ENTERPRISE" == '1' ]
+          then
+            SYNERGY_PACKAGE_NAME='synergy-enterprise'
+            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          else
+            SYNERGY_PACKAGE_NAME='synergy'
+            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          fi
+          SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos_x86-64.dmg"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
+          echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
+          echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
+        
+      - name: Sign applicaiton
+        run: |
+          export PATH="$Qt5_DIR/bin:$PATH"
+          macdeployqt ${{ github.workspace }}/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
+          codesign -f --options runtime --deep -s "$CODESIGN_ID" ${{ github.workspace }}/build/bundle/Synergy.app
+          ln -s /Applications ${{ github.workspace }}/build/bundle/Applications
+
+      - name: Create Installer
+        env:
+          SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+        run: |
+          dmgbuild \
+            -s CI/MacOS/installator_settings.py \
+            -D app=${{ github.workspace }}/build/bundle/Synergy.app \
+            -D background=${{ github.workspace }}/build/bundle/Synergy.app/Contents/Resources/.installer_background.tiff \
+            "Synergy" \
+            $SYNERGY_DMG_FILENAME
+          mkdir pkg
+          mv $SYNERGY_DMG_FILENAME pkg/
+          cd pkg
+          md5 -r $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+          shasum $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+          shasum -a 256 $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+        
+      - name: Submit for Notarization
+        env:
+          ASC_USERNAME: ${{ secrets.ASC_USERNAME }}
+          NOTORY_APP_PASSWORD: ${{ secrets.NOTORY_APP_PASSWORD }}
+          SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+          SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+          SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+        run: |
+          cd pkg
+          ../CI/MacOS/notorize.sh
+        
+      - name: Send package to Sandor
+        env:
+          HOST: ${{ secrets.SANDOR_HOST }}
+          USER: ${{ secrets.SANDOR_USERNAME }}
+          KEY: ${{ secrets.SANDOR_KEY }}
+          LOCAL: "${{ github.workspace }}/pkg/*"
+          REMOTE: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
+        run: |
+          echo -e "${KEY}" >__TEMP_INPUT_KEY_FILE
+          chmod 600 __TEMP_INPUT_KEY_FILE
+          ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
+          scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
