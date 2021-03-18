@@ -1,8 +1,6 @@
 name: Mac
 
 on:
-  pull_request:
-    branches: [master]
   release:
     types: [created]
 
@@ -42,81 +40,80 @@ jobs:
             -DCMAKE_CONFIGURATION_TYPES=Release ..
           . ./version
           make -j
-          ./bin/synergyc --version
 
-      # - name: Version Info
-      #   id: version
-      #   run: |
-      #     . ./build/version
-      #     SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
-      #     SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
-      #     SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
-      #     echo "::set-output name=SYNERGY_VERSION_MAJOR::$SYNERGY_VERSION_MAJOR"
-      #     echo "::set-output name=SYNERGY_VERSION_MINOR::$SYNERGY_VERSION_MINOR"
-      #     echo "::set-output name=SYNERGY_VERSION_PATCH::$SYNERGY_VERSION_PATCH"
-      #     echo "::set-output name=SYNERGY_VERSION_STAGE::$SYNERGY_VERSION_STAGE"
-      #     echo "::set-output name=SYNERGY_VERSION_BUILD::$SYNERGY_VERSION_BUILD"
-      #     echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
-      #     echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
-      #     echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
-      #     if [ "$SYNERGY_ENTERPRISE" == '1' ]
-      #     then
-      #       SYNERGY_PACKAGE_NAME='synergy-enterprise'
-      #       SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
-      #     else
-      #       SYNERGY_PACKAGE_NAME='synergy'
-      #       SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
-      #     fi
-      #     SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-10.13_x86-64.dmg"
-      #     echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
-      #     echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
-      #     echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
-      #     echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
+      - name: Version Info
+        id: version
+        run: |
+          . ./build/version
+          SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_VERSION_MAJOR::$SYNERGY_VERSION_MAJOR"
+          echo "::set-output name=SYNERGY_VERSION_MINOR::$SYNERGY_VERSION_MINOR"
+          echo "::set-output name=SYNERGY_VERSION_PATCH::$SYNERGY_VERSION_PATCH"
+          echo "::set-output name=SYNERGY_VERSION_STAGE::$SYNERGY_VERSION_STAGE"
+          echo "::set-output name=SYNERGY_VERSION_BUILD::$SYNERGY_VERSION_BUILD"
+          echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
+          echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
+          echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
+          if [ "$SYNERGY_ENTERPRISE" == '1' ]
+          then
+            SYNERGY_PACKAGE_NAME='synergy-enterprise'
+            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          else
+            SYNERGY_PACKAGE_NAME='synergy'
+            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          fi
+          SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-10.13_x86-64.dmg"
+          echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
+          echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
+          echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
 
-      # - name: Sign applicaiton
-      #   run: |
-      #     export PATH="$Qt5_DIR/bin:$PATH"
-      #     macdeployqt ${{ github.workspace }}/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
-      #     codesign -f --options runtime --deep -s "$CODESIGN_ID" ${{ github.workspace }}/build/bundle/Synergy.app
-      #     ln -s /Applications ${{ github.workspace }}/build/bundle/Applications
+      - name: Sign applicaiton
+        run: |
+          export PATH="$Qt5_DIR/bin:$PATH"
+          macdeployqt ${{ github.workspace }}/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
+          codesign -f --options runtime --deep -s "$CODESIGN_ID" ${{ github.workspace }}/build/bundle/Synergy.app
+          ln -s /Applications ${{ github.workspace }}/build/bundle/Applications
 
-      # - name: Create Installer
-      #   env:
-      #     SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
-      #   run: |
-      #     dmgbuild \
-      #       -s CI/MacOS/installator_settings.py \
-      #       -D app=${{ github.workspace }}/build/bundle/Synergy.app \
-      #       -D background=${{ github.workspace }}/build/bundle/Synergy.app/Contents/Resources/.installer_background.tiff \
-      #       "Synergy" \
-      #       $SYNERGY_DMG_FILENAME
-      #     mkdir pkg
-      #     mv $SYNERGY_DMG_FILENAME pkg/
-      #     cd pkg
-      #     md5 -r $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
-      #     shasum $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
-      #     shasum -a 256 $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+      - name: Create Installer
+        env:
+          SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+        run: |
+          dmgbuild \
+            -s CI/MacOS/installator_settings.py \
+            -D app=${{ github.workspace }}/build/bundle/Synergy.app \
+            -D background=${{ github.workspace }}/build/bundle/Synergy.app/Contents/Resources/.installer_background.tiff \
+            "Synergy" \
+            $SYNERGY_DMG_FILENAME
+          mkdir pkg
+          mv $SYNERGY_DMG_FILENAME pkg/
+          cd pkg
+          md5 -r $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+          shasum $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+          shasum -a 256 $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
 
-      # - name: Submit for Notarization
-      #   env:
-      #     ASC_USERNAME: ${{ secrets.ASC_USERNAME }}
-      #     NOTORY_APP_PASSWORD: ${{ secrets.NOTORY_APP_PASSWORD }}
-      #     SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
-      #     SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
-      #     SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
-      #   run: |
-      #     cd pkg
-      #     ../CI/MacOS/notorize.sh
+      - name: Submit for Notarization
+        env:
+          ASC_USERNAME: ${{ secrets.ASC_USERNAME }}
+          NOTORY_APP_PASSWORD: ${{ secrets.NOTORY_APP_PASSWORD }}
+          SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+          SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+          SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+        run: |
+          cd pkg
+          ../CI/MacOS/notorize.sh
 
-      # - name: Send package to Sandor
-      #   env:
-      #     HOST: ${{ secrets.SANDOR_HOST }}
-      #     USER: ${{ secrets.SANDOR_USERNAME }}
-      #     KEY: ${{ secrets.SANDOR_KEY }}
-      #     LOCAL: "${{ github.workspace }}/pkg/*"
-      #     REMOTE: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
-      #   run: |
-      #     echo -e "${KEY}" >__TEMP_INPUT_KEY_FILE
-      #     chmod 600 __TEMP_INPUT_KEY_FILE
-      #     ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
-      #     scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
+      - name: Send package to Sandor
+        env:
+          HOST: ${{ secrets.SANDOR_HOST }}
+          USER: ${{ secrets.SANDOR_USERNAME }}
+          KEY: ${{ secrets.SANDOR_KEY }}
+          LOCAL: "${{ github.workspace }}/pkg/*"
+          REMOTE: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
+        run: |
+          echo -e "${KEY}" >__TEMP_INPUT_KEY_FILE
+          chmod 600 __TEMP_INPUT_KEY_FILE
+          ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
+          scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
