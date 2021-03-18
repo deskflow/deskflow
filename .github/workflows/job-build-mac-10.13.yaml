@@ -118,3 +118,10 @@ jobs:
       #     chmod 600 __TEMP_INPUT_KEY_FILE
       #     ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
       #     scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+          path: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+          retention-days: 2
