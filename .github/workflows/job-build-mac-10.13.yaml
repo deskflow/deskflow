@@ -123,5 +123,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
-          path: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+          path: pkg
           retention-days: 2
