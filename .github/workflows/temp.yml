@@ -1,0 +1,60 @@
+name: Mac
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-on-mac-10_13:
+    runs-on: [self-hosted, macOS, X64, 10.13]
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      Qt5_DIR: /usr/local/opt/qt/5.15.2/clang_64
+      OpenSSL_DIR: /usr/local/ssl
+      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build SYNERGY
+        env:
+          CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
+        run: |
+          export PATH="$Qt5_DIR/bin:$PATH"
+          python3 CI/build_version.py
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CONFIGURATION_TYPES=Release ..
+
+      - name: Version Info
+        id: version
+        run: |
+          . ./build/version
+          SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "$SYNERGY_VERSION_MAJOR"
+          echo "$SYNERGY_VERSION_MINOR"
+          echo "$SYNERGY_VERSION_PATCH"
+          echo "$SYNERGY_VERSION_STAGE"
+          echo "$SYNERGY_VERSION_BUILD"
+          echo "$SYNERGY_VERSION"
+          echo "$SYNERGY_REVISION"
+          echo "$SYNERGY_DMG_VERSION"
+          if [ "$SYNERGY_ENTERPRISE" == '1' ]
+          then
+            SYNERGY_PACKAGE_NAME='synergy-enterprise'
+            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          else
+            SYNERGY_PACKAGE_NAME='synergy'
+            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          fi
+          SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-10.13_x86-64.dmg"
+          echo "$SYNERGY_REMOTE_FOLDER"
+          echo "$SYNERGY_PACKAGE_NAME"
+          echo "$SYNERGY_DMG_FILENAME"

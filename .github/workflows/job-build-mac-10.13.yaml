@@ -1,8 +1,6 @@
 name: Mac
 
 on:
-  pull_request:
-    branches: [master]
   release:
     types: [created]
 
@@ -42,7 +40,7 @@ jobs:
             -DCMAKE_CONFIGURATION_TYPES=Release ..
           . ./version
           make -j
-      
+
       - name: Version Info
         id: version
         run: |
@@ -70,7 +68,7 @@ jobs:
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
           echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
           echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
-        
+
       - name: Sign applicaiton
         run: |
           export PATH="$Qt5_DIR/bin:$PATH"
@@ -94,34 +92,27 @@ jobs:
           md5 -r $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
           shasum $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
           shasum -a 256 $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
-        
-      # - name: Submit for Notarization
-      #   env:
-      #     ASC_USERNAME: ${{ secrets.ASC_USERNAME }}
-      #     NOTORY_APP_PASSWORD: ${{ secrets.NOTORY_APP_PASSWORD }}
-      #     SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
-      #     SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
-      #     SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
-      #   run: |
-      #     cd pkg
-      #     ../CI/MacOS/notorize.sh
-        
-      # - name: Send package to Sandor
-      #   env:
-      #     HOST: ${{ secrets.SANDOR_HOST }}
-      #     USER: ${{ secrets.SANDOR_USERNAME }}
-      #     KEY: ${{ secrets.SANDOR_KEY }}
-      #     LOCAL: "${{ github.workspace }}/pkg/*"
-      #     REMOTE: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
-      #   run: |
-      #     echo -e "${KEY}" >__TEMP_INPUT_KEY_FILE
-      #     chmod 600 __TEMP_INPUT_KEY_FILE
-      #     ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
-      #     scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
 
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
-          path: pkg
-          retention-days: 2
+      - name: Submit for Notarization
+        env:
+          ASC_USERNAME: ${{ secrets.ASC_USERNAME }}
+          NOTORY_APP_PASSWORD: ${{ secrets.NOTORY_APP_PASSWORD }}
+          SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+          SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+          SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+        run: |
+          cd pkg
+          ../CI/MacOS/notorize.sh
+
+      - name: Send package to Sandor
+        env:
+          HOST: ${{ secrets.SANDOR_HOST }}
+          USER: ${{ secrets.SANDOR_USERNAME }}
+          KEY: ${{ secrets.SANDOR_KEY }}
+          LOCAL: "${{ github.workspace }}/pkg/*"
+          REMOTE: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
+        run: |
+          echo -e "${KEY}" >__TEMP_INPUT_KEY_FILE
+          chmod 600 __TEMP_INPUT_KEY_FILE
+          ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
+          scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
