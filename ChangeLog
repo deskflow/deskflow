@@ -5,7 +5,7 @@ Bug fixes:
 
 Enhancements:
 - #6954 Move language selection to advanced section
-- #6962 Add macos10.13 builder
+- #6962 | #6965 Add macos10.13 builder
 ===========
 
 v1.13.1-stable
