@@ -32,6 +32,7 @@ jobs:
           CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
         run: |
           export PATH="$Qt5_DIR/bin:$PATH"
+          python3 CI/build_version.py
           mkdir build
           cd build
           cmake \
@@ -45,7 +46,6 @@ jobs:
       - name: Version Info
         id: version
         run: |
-          python3 CI/build_version.py
           . ./build/version
           SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
           SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
