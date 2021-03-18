@@ -1,6 +1,8 @@
 name: Mac
 
 on:
+  pull_request:
+    branches: [master]
   release:
     types: [created]
 
@@ -23,7 +25,6 @@ jobs:
 
       - name: Setup Environment
         run: |
-          git fetch
           python3 -m pip install dmgbuild
       
       - name: Build SYNERGY
