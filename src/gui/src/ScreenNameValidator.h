@@ -21,7 +21,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <qvalidator.h>
-#include <array>
+#include <memory>
+#include <vector>
 #include "Screen.h"
 
 class INameValidator
