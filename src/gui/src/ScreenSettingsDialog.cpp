@@ -24,7 +24,7 @@
 #include <QMessageBox>
 #include <ScreenNameValidator.h>
 
-ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
+ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,const ScreenList* pScreens) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::ScreenSettingsDialogBase(),
     m_pScreen(pScreen)
@@ -32,7 +32,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     setupUi(this);
 
     m_pLineEditName->setText(m_pScreen->name());
-    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, m_pLabelNameError));
+    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, m_pLabelNameError, pScreens));
     m_pLineEditName->selectAll();
 
     m_pLineEditAlias->setValidator(new ScreenNameValidator(m_pLineEditName));

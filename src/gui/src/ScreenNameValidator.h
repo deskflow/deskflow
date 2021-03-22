@@ -21,19 +21,29 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <qvalidator.h>
+#include <array>
+#include "Screen.h"
 
-class ScreenNameValidator : public QRegExpValidator
+class INameValidator
 {
 public:
-   explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr);
+   virtual bool validate(const QString& input) const = 0;
+   virtual QString getMessage() const = 0;
+   virtual ~INameValidator() {};
+};
+
+class ScreenNameValidator : public QValidator
+{
+public:
+   explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr, const ScreenList* pScreens = nullptr);
    QValidator::State validate(QString& input, int& pos) const override;
 
 private:
    QLabel* m_pErrors = nullptr;
    QLineEdit* m_pControl = nullptr;
+   std::vector<std::unique_ptr<INameValidator>> m_Validators;
 
    void showError(const QString& message) const;
-   QString getErrorMessage(const QString& text) const;
 };
 
 #endif // SCREENNAMEVALIDATOR_H
