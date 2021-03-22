@@ -141,7 +141,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;&quot;&gt;You can call your computer almost what ever you feel like, but must have: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;&quot;&gt;Call your computer something short and meaningful, but it must have: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
@@ -165,7 +165,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;list-style-type:none; font-size: 13px;&quot;&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- A different name from other computers &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- No special characters or spaces&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only english characters and numbers&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- 15 characters max&lt;/li&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;list-style-type:none; font-size: 13px;&quot;&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- A different name from other computers &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only these special characters _ - .&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- No spaces &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only english characters and numbers&lt;/li&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>

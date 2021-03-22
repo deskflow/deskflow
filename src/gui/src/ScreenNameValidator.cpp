@@ -67,7 +67,7 @@ QString ScreenNameValidator::getErrorMessage(const QString& text) const
       int pos = 0;
       QString data(text);
       if (QRegExpValidator::validate(data, pos) == Invalid) {
-         message = "Please, use only english characters and numbers";
+         message = "Remove unsupported characters";
       }
    }
 
