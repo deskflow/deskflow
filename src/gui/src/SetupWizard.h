@@ -24,16 +24,18 @@ class MainWindow;
 
 class SetupWizard : public QDialog, public Ui::SetupWizardBase
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    explicit SetupWizard(MainWindow& mainWindow);
-    virtual ~SetupWizard();
+   explicit SetupWizard(MainWindow& mainWindow);
 
 protected:
-    void accept();
-    void reject();
+   void accept();
+   void reject();
 
 private:
-    MainWindow& m_MainWindow;
+   MainWindow& m_MainWindow;
+
+private slots:
+   void onNameChanged();
 };

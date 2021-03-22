@@ -20,33 +20,32 @@
 #include "ScreenNameValidator.h"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow) :
-    m_MainWindow(mainWindow)
+   m_MainWindow(mainWindow)
 {
-    setupUi(this);
+   setupUi(this);
 
-    m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
-    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
+   m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
+   m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
 
-    connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
-}
-
-SetupWizard::~SetupWizard()
-{
+   connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
+   connect(m_pLineEditName, SIGNAL(textEdited(QString)), this, SLOT(onNameChanged()));
 }
 
 void SetupWizard::accept()
 {
-   if (label_ErrorMessage->text().isEmpty())
-   {
-      AppConfig& appConfig = m_MainWindow.appConfig();
+   AppConfig& appConfig = m_MainWindow.appConfig();
 
-      appConfig.setWizardHasRun();
-      appConfig.setScreenName(m_pLineEditName->text());
-      appConfig.saveSettings();
+   appConfig.setWizardHasRun();
+   appConfig.setScreenName(m_pLineEditName->text());
+   appConfig.saveSettings();
 
-      m_MainWindow.open();
-      QDialog::accept();
-   }
+   m_MainWindow.open();
+   QDialog::accept();
+}
+
+void SetupWizard::onNameChanged()
+{
+   m_pButtonApply->setEnabled(label_ErrorMessage->text().isEmpty());
 }
 
 void SetupWizard::reject()

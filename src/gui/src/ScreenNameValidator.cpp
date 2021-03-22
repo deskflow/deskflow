@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "ScreenNameValidator.h"
+#include <iostream>
 
 ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors) :
     QRegExpValidator(QRegExp("[a-z0-9\\._-]{,15}", Qt::CaseInsensitive), parent),
@@ -30,7 +31,8 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors) :
 QValidator::State ScreenNameValidator::validate(QString& input, int& pos) const
 {
    if (m_pControl) {
-      if (input.isEmpty() || QRegExpValidator::validate(input, pos) == Invalid) {
+      int currentPos = pos;
+      if (input.isEmpty() || QRegExpValidator::validate(input, currentPos) == Invalid) {
          m_pControl->setStyleSheet("border: 1px solid #EC4C47");
       }
       else {
@@ -39,7 +41,7 @@ QValidator::State ScreenNameValidator::validate(QString& input, int& pos) const
       showError(getErrorMessage(input));
    }
 
-   return  Acceptable;
+   return Acceptable;
 }
 
 void ScreenNameValidator::showError(const QString& message) const
