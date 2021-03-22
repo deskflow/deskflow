@@ -145,6 +145,7 @@ void ServerConfig::saveSettings()
 
     settings().endGroup();
 
+    m_pAppConfig->saveSettings();
     //Tell the config writer there are changes
     GUI::Config::ConfigWriter::make()->markUnsaved();
 }
@@ -379,7 +380,7 @@ void ServerConfig::updateServerName()
    for (auto& screen : screens()) {
       if (screen.isServer()) {
          screen.setName(m_pAppConfig->screenName());
-         screen.saveSettings(settings());
+         saveSettings();
          break;
       }
    }
