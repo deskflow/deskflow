@@ -50,6 +50,6 @@ void SetupWizard::onNameChanged()
 
 void SetupWizard::reject()
 {
-   m_MainWindow.open();
    QDialog::reject();
+   QApplication::exit();
 }

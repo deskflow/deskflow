@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "ScreenNameValidator.h"
-#include <iostream>
 
 ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors) :
     QRegExpValidator(QRegExp("[a-z0-9\\._-]{,15}", Qt::CaseInsensitive), parent),
@@ -66,10 +65,17 @@ QString ScreenNameValidator::getErrorMessage(const QString& text) const
    }
    else
    {
-      int pos = 0;
-      QString data(text);
-      if (QRegExpValidator::validate(data, pos) == Invalid) {
-         message = "Remove unsupported characters";
+      if (text.contains(' '))
+      {
+         message = "Remove spaces";
+      }
+      else
+      {
+         int pos = 0;
+         QString data(text);
+         if (QRegExpValidator::validate(data, pos) == Invalid) {
+            message = "Remove unsupported characters";
+         }
       }
    }
 
