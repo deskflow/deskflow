@@ -30,7 +30,7 @@ class INameValidator
 public:
    virtual bool validate(const QString& input) const = 0;
    virtual QString getMessage() const = 0;
-   virtual ~INameValidator() {};
+   virtual ~INameValidator() = default;
 };
 
 class ScreenNameValidator : public QValidator

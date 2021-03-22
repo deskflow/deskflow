@@ -28,7 +28,7 @@ class QWidget;
 class QString;
 
 class Screen;
-typedef QList<Screen> ScreenList;
+using ScreenList = QList<Screen>;
 
 class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
 {
