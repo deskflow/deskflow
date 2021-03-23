@@ -51,18 +51,20 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     m_isSystemAtStart = appConfig().isSystemScoped();
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
-    m_pLineEditScreenName->setValidator(new ScreenNameValidator(m_pLineEditScreenName));
 
-    connect(m_pLineEditLogFilename,     SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
-    connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
-    connect(m_pLineEditCertificatePath, SIGNAL(textChanged(const QString&)), this, SLOT(onChange()));
-    connect(m_pCheckBoxAutoConfig,      SIGNAL(clicked()),                   this, SLOT(onChange()));
-    connect(m_pCheckBoxMinimizeToTray,  SIGNAL(clicked()),                   this, SLOT(onChange()));
-    connect(m_pCheckBoxAutoHide,        SIGNAL(clicked()),                   this, SLOT(onChange()));
-    connect(m_pLineEditInterface,       SIGNAL(textEdited(const QString&)),  this, SLOT(onChange()));
-    connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),           this, SLOT(onChange()));
-    connect(m_pLineEditScreenName,      SIGNAL(textEdited(const QString&)),  this, SLOT(onChange()));
-    connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)),    this, SLOT(onChange()));
+    const auto& serveConfig = m_pMainWindow->serverConfig();
+    m_pLineEditScreenName->setValidator(new ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
+
+    connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
+    connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
+    connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
+    connect(m_pCheckBoxAutoConfig,      SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxMinimizeToTray,  SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxAutoHide,        SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pLineEditInterface,       SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
+    connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),        this, SLOT(onChange()));
+    connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
+    connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
 }
 
 void SettingsDialog::accept()
@@ -308,6 +310,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
 bool SettingsDialog::isModified()
 {
    return (!m_pLineEditScreenName->text().isEmpty() &&
+      m_pLabelNameError->text().isEmpty() &&
       (appConfig().screenName()          != m_pLineEditScreenName->text()
       || appConfig().port()              != m_pSpinBoxPort->value()
       || appConfig().networkInterface()  != m_pLineEditInterface->text()

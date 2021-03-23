@@ -32,6 +32,22 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="m_pLabelNameError">
+     <property name="styleSheet">
+      <string notr="true">color: #EC4C47; 
+font-size: 13px; 
+font-family: Arial; 
+font-weight: bold;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout">
      <item>
       <widget class="QGroupBox" name="m_pGroupAliases">

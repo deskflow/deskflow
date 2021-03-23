@@ -7,6 +7,7 @@ Bug fixes:
 
 Enhancements:
 - #6954 Move language selection to advanced section
+- #6959 Update synergy UI. Setup wizard
 - #6962 | #6965 Add macOS 10.13 builder
 ===========
 

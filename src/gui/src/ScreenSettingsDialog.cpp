@@ -24,7 +24,7 @@
 #include <QMessageBox>
 #include <ScreenNameValidator.h>
 
-ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
+ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,const ScreenList* pScreens) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::ScreenSettingsDialogBase(),
     m_pScreen(pScreen)
@@ -32,7 +32,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen) :
     setupUi(this);
 
     m_pLineEditName->setText(m_pScreen->name());
-    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName));
+    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, m_pLabelNameError, pScreens));
     m_pLineEditName->selectAll();
 
     m_pLineEditAlias->setValidator(new ScreenNameValidator(m_pLineEditName));
@@ -67,6 +67,9 @@ void ScreenSettingsDialog::accept()
             tr("The screen name cannot be empty. "
                "Please either fill in a name or cancel the dialog."));
         return;
+    }
+    else if (!m_pLabelNameError->text().isEmpty()) {
+       return;
     }
 
     m_pScreen->init();

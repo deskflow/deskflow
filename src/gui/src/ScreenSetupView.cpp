@@ -74,7 +74,7 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent* event)
 
         if (!model()->screen(col, row).isNull())
         {
-            ScreenSettingsDialog dlg(this, &model()->screen(col, row));
+            ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
             dlg.exec();
         }
     }

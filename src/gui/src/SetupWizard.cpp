@@ -17,118 +17,39 @@
 
 #include "SetupWizard.h"
 #include "MainWindow.h"
-#include "ActivationNotifier.h"
-#include "LicenseManager.h"
-#include "QSynergyApplication.h"
-#include "QUtility.h"
+#include "ScreenNameValidator.h"
 
-#include <QMessageBox>
-
-SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
-    m_MainWindow(mainWindow),
-    m_StartMain(startMain)
+SetupWizard::SetupWizard(MainWindow& mainWindow) :
+   m_MainWindow(mainWindow)
 {
-    setupUi(this);
+   setupUi(this);
 
-#if defined(Q_OS_MAC)
+   m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
+   m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
 
-    // the mac style needs a little more room because of the
-    // graphic on the left.
-    resize(600, 500);
-    setMinimumSize(size());
-
-    // additionally, we identified an issue with presenting dots, see SYNERGY-719
-    duplicateSpaces();
-
-#elif defined(Q_OS_WIN)
-
-    // when areo is disabled on windows, the next/back buttons
-    // are hidden (must be a qt bug) -- resizing the window
-    // to +1 of the original height seems to fix this.
-    // NOTE: calling setMinimumSize after this will break
-    // it again, so don't do that.
-    resize(size().width(), size().height() + 1);
-
-#endif
-
-    connect(m_pServerRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupServer, SLOT(setChecked(bool)));
-    connect(m_pClientRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupClient, SLOT(setChecked(bool)));
-}
-
-SetupWizard::~SetupWizard()
-{
-}
-
-bool SetupWizard::validateCurrentPage()
-{
-    QMessageBox message;
-    message.setWindowTitle(tr("Setup Synergy"));
-    message.setIcon(QMessageBox::Information);
-
-    if (currentPage() == m_pNodePage)
-    {
-        bool result = m_pClientRadioButton->isChecked() ||
-                 m_pServerRadioButton->isChecked();
-
-        if (!result)
-        {
-            message.setText(tr("Please select an option."));
-            message.exec();
-            return false;
-        }
-    }
-
-    return true;
+   connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
+   connect(m_pLineEditName, SIGNAL(textEdited(QString)), this, SLOT(onNameChanged()));
 }
 
 void SetupWizard::accept()
 {
-    AppConfig& appConfig = m_MainWindow.appConfig();
+   AppConfig& appConfig = m_MainWindow.appConfig();
 
-    appConfig.setWizardHasRun();
-    appConfig.saveSettings();
+   appConfig.setWizardHasRun();
+   appConfig.setScreenName(m_pLineEditName->text());
+   appConfig.saveSettings();
 
-    QSettings& settings = m_MainWindow.settings();
-    if (m_pServerRadioButton->isChecked())
-    {
-        settings.setValue("groupServerChecked", true);
-        settings.setValue("groupClientChecked", false);
-    }
-    if (m_pClientRadioButton->isChecked())
-    {
-        settings.setValue("groupClientChecked", true);
-        settings.setValue("groupServerChecked", false);
-    }
+   m_MainWindow.open();
+   QDialog::accept();
+}
 
-    QWizard::accept();
-
-    if (m_StartMain)
-    {
-        m_MainWindow.open();
-    }
+void SetupWizard::onNameChanged()
+{
+   m_pButtonApply->setEnabled(label_ErrorMessage->text().isEmpty());
 }
 
 void SetupWizard::reject()
 {
-    QSynergyApplication::getInstance()->switchTranslator(m_MainWindow.appConfig().language());
-
-    if (m_StartMain)
-    {
-        m_MainWindow.open();
-    }
-
-    QWizard::reject();
+   QDialog::reject();
+   QApplication::exit();
 }
-
-#if defined(Q_OS_MAC)
-void SetupWizard::duplicateSpaces()
-{
-    auto list = this->findChildren<QLabel *>();
-    foreach(QLabel *l, list) {
-        if (l->wordWrap()) {
-           l->setText(l->text().replace(". ", ".  "));
-           l->setText(l->text().replace(", ", ",  "));
-        }
-    }
-}
-#endif // defined(Q_OS_MAC)

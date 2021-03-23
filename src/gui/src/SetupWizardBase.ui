@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SetupWizardBase</class>
- <widget class="QWizard" name="SetupWizardBase">
+ <widget class="QDialog" name="SetupWizardBase">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
-    <height>464</height>
+    <width>720</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,173 +18,201 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
-    <height>390</height>
+    <width>720</width>
+    <height>552</height>
    </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>720</width>
+    <height>552</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>720</width>
+    <height>552</height>
+   </size>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>Setup Synergy</string>
   </property>
-  <widget class="QWizardPage" name="m_pWelcomePage">
-   <property name="title">
-    <string>Welcome</string>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <widget class="QLabel" name="label_Image">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>70</y>
+     <width>181</width>
+     <height>161</height>
+    </rect>
    </property>
-   <property name="subTitle">
-    <string notr="true"/>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Thanks for installing Synergy!</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_6">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>10</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="locale">
-       <locale language="English" country="UnitedKingdom"/>
-      </property>
-      <property name="text">
-       <string>Synergy lets you easily share your mouse and keyboard between multiple computers on your desk. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, macOS and Linux).</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWizardPage" name="m_pNodePage">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="title">
-    <string>Server or Client?</string>
-   </property>
-   <property name="subTitle">
+   <property name="text">
     <string/>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QRadioButton" name="m_pServerRadioButton">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>&amp;Server (share this computer's mouse and keyboard)</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="m_pClientLabel">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>My main mouse and keyboard are connected to this computer. This will allow you to move your mouse over to another computer's screen. There can only be one server in your setup.</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="m_pClientRadioButton">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>&amp;Client (use another computer's mouse and keyboard)</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="m_pServerLabel">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>You have already set up a server. This computer will be controlled using the server's mouse and keyboard. There can be many clients in your setup.</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::MinimumExpanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-   </layout>
+   <property name="pixmap">
+    <pixmap resource="../res/Synergy.qrc">:/res/image/welcome.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Title">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>253</y>
+     <width>261</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:18px&quot;&gt;Name your computer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Name">
+   <property name="geometry">
+    <rect>
+     <x>184</x>
+     <y>294</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:13px;&quot;&gt;Computer name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="m_pLineEditName">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>293</y>
+     <width>230</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>230</width>
+     <height>20</height>
+    </size>
+   </property>
+   <property name="maxLength">
+    <number>255</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_HelpTitle">
+   <property name="geometry">
+    <rect>
+     <x>132</x>
+     <y>354</y>
+     <width>481</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;&quot;&gt;Call your computer something short and meaningful, but it must have: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_HelpInfo">
+   <property name="geometry">
+    <rect>
+     <x>193</x>
+     <y>380</y>
+     <width>311</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;list-style-type:none; font-size: 13px;&quot;&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- A different name from other computers &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only these special characters _ - .&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- No spaces &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only english characters and numbers&lt;/li&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::RichText</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="m_pButtonApply">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>510</y>
+     <width>56</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Apply</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_ErrorMessage">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>320</y>
+     <width>391</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #EC4C47; 
+font-size: 13px; 
+font-family: Arial; 
+font-weight: bold;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
  </widget>
- <tabstops>
-  <tabstop>m_pServerRadioButton</tabstop>
-  <tabstop>m_pClientRadioButton</tabstop>
- </tabstops>
- <resources/>
+ <resources>
+  <include location="../res/Synergy.qrc"/>
+ </resources>
  <connections/>
 </ui>

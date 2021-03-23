@@ -267,7 +267,7 @@ void AppConfig::loadSettings()
 
 void AppConfig::saveSettings()
 {
-    setCommonSetting(kWizardLastRun, kWizardVersion);
+    setCommonSetting(kWizardLastRun, m_WizardLastRun);
     setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
 
     if (isWritable()) {
