@@ -16,7 +16,7 @@ jobs:
     steps:
     - id: file_changes
       name: Get changed files
-      uses: trilom/file-changes-action@v1.2.3
+      uses: trilom/file-changes-action@v1.2.4
       with:
         output: ','
     - name: echo changes
