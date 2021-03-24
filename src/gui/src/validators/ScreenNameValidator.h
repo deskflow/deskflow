@@ -21,7 +21,7 @@
 #include "Screen.h"
 #include "LineEditValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 class ScreenNameValidator : public LineEditValidator

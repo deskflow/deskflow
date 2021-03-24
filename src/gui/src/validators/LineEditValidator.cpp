@@ -17,7 +17,7 @@
  */
 #include "LineEditValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 LineEditValidator::LineEditValidator(QLineEdit* parent, QLabel* errors) :

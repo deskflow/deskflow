@@ -20,7 +20,7 @@
 
 #include <QString>
 
-namespace Validators
+namespace validators
 {
 
 class IStringValidator
@@ -29,7 +29,7 @@ class IStringValidator
 
 public:
    IStringValidator() = default;
-   IStringValidator(const QString& message);
+   explicit IStringValidator(const QString& message);
    const QString& getMessage() const;
 
    virtual bool validate(const QString& input) const = 0;

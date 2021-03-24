@@ -20,7 +20,7 @@
 
 #include "LineEditValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 class AliasValidator : public LineEditValidator

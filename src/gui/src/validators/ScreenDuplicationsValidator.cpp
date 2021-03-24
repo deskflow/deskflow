@@ -17,11 +17,11 @@
  */
 #include "ScreenDuplicationsValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 ScreenDuplicationsValidator::ScreenDuplicationsValidator(const QString& message, const QString& defaultName,const ScreenList* pScreens) :
-   Validators::IStringValidator(message),
+   IStringValidator(message),
    m_defaultName(defaultName),
    m_pScreenList(pScreens)
 {

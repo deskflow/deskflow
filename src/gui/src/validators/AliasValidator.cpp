@@ -20,7 +20,7 @@
 
 #include "AliasValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 AliasValidator::AliasValidator(QLineEdit* parent, QLabel* errors) :

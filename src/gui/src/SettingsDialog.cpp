@@ -52,7 +52,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     enableControls(appConfig().isWritable());
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
-    m_ScreenNameValidator = std::make_unique<Validators::ScreenNameValidator>(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens()));
+    m_ScreenNameValidator = std::make_unique<validators::ScreenNameValidator>(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens()));
     m_pLineEditScreenName->setValidator(m_ScreenNameValidator.get());
 
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));

@@ -17,7 +17,7 @@
  */
 #include "SpacesValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 SpacesValidator::SpacesValidator(const QString& message) :

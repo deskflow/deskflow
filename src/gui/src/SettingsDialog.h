@@ -70,7 +70,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         SynergyLocale m_Locale;
         CoreInterface m_CoreInterface;
         BonjourWindows* m_pBonjourWindows;
-        std::unique_ptr<Validators::ScreenNameValidator> m_ScreenNameValidator;
+        std::unique_ptr<validators::ScreenNameValidator> m_ScreenNameValidator;
 
         /// @brief Stores settings scope at start of settings dialog
         /// This is neccessary to restore state if user changes

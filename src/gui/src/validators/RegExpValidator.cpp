@@ -17,7 +17,7 @@
  */
 #include "RegExpValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 RegExpValidator::RegExpValidator(const QString& message, const QRegExp& validator) :

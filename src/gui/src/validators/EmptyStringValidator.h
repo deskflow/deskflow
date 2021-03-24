@@ -20,13 +20,13 @@
 
 #include "IStringValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 class EmptyStringValidator : public IStringValidator
 {
 public:
-   EmptyStringValidator(const QString& message);
+   explicit EmptyStringValidator(const QString& message);
    bool validate(const QString& input) const override;
 };
 

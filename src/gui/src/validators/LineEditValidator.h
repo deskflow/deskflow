@@ -27,7 +27,7 @@
 
 #include "IStringValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 class LineEditValidator : public QValidator

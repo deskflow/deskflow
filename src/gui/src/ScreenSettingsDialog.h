@@ -51,8 +51,8 @@ class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
 
     private:
         Screen* m_pScreen;
-        std::unique_ptr<Validators::ScreenNameValidator> m_NameValidator;
-        std::unique_ptr<Validators::AliasValidator> m_AliasValidator;
+        std::unique_ptr<validators::ScreenNameValidator> m_NameValidator;
+        std::unique_ptr<validators::AliasValidator> m_AliasValidator;
 
 };
 

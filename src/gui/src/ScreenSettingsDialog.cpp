@@ -31,11 +31,11 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,cons
     setupUi(this);
 
     m_pLineEditName->setText(m_pScreen->name());
-    m_NameValidator = std::make_unique<Validators::ScreenNameValidator>(m_pLineEditName, m_pLabelNameError, pScreens);
+    m_NameValidator = std::make_unique<validators::ScreenNameValidator>(m_pLineEditName, m_pLabelNameError, pScreens);
     m_pLineEditName->setValidator(m_NameValidator.get());
     m_pLineEditName->selectAll();
 
-    m_AliasValidator = std::make_unique<Validators::AliasValidator>(m_pLineEditAlias, m_pLabelAliasError);
+    m_AliasValidator = std::make_unique<validators::AliasValidator>(m_pLineEditAlias, m_pLabelAliasError);
     m_pLineEditAlias->setValidator(m_AliasValidator.get());
 
     for (int i = 0; i < m_pScreen->aliases().count(); i++)

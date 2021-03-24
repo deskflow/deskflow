@@ -23,7 +23,7 @@
 #include "validators/ScreenDuplicationsValidator.h"
 #include "ScreenNameValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors, const ScreenList* pScreens) :

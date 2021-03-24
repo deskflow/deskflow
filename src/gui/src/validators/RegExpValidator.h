@@ -21,7 +21,7 @@
 #include <qregexp.h>
 #include "IStringValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 class RegExpValidator : public IStringValidator

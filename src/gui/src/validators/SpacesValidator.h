@@ -20,13 +20,13 @@
 
 #include "IStringValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 class SpacesValidator : public IStringValidator
 {
 public:
-   SpacesValidator(const QString& message);
+   explicit SpacesValidator(const QString& message);
    bool validate(const QString& input) const override;
 };
 

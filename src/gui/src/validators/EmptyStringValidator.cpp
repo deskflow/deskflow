@@ -17,7 +17,7 @@
  */
 #include "EmptyStringValidator.h"
 
-namespace Validators
+namespace validators
 {
 
 EmptyStringValidator::EmptyStringValidator(const QString& message) :

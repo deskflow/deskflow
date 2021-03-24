@@ -36,7 +36,7 @@ protected:
 
 private:
    MainWindow& m_MainWindow;
-   std::unique_ptr<Validators::ScreenNameValidator> m_ScreenNameValidator;
+   std::unique_ptr<validators::ScreenNameValidator> m_ScreenNameValidator;
 
 private slots:
    void onNameChanged();
