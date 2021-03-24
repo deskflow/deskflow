@@ -27,7 +27,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="m_pLineEditName"/>
+      <widget class="QLineEdit" name="m_pLineEditName">
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -67,7 +71,11 @@ font-weight: bold;</string>
        </property>
        <layout class="QGridLayout">
         <item row="0" column="0">
-         <widget class="QLineEdit" name="m_pLineEditAlias"/>
+         <widget class="QLineEdit" name="m_pLineEditAlias">
+          <property name="maxLength">
+           <number>255</number>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="m_pButtonAddAlias">
@@ -79,24 +87,7 @@ font-weight: bold;</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="0" rowspan="2">
-         <widget class="QListWidget" name="m_pListAliases">
-          <property name="selectionMode">
-           <enum>QAbstractItemView::ExtendedSelection</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="m_pButtonRemoveAlias">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>&amp;Remove</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <spacer>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -108,6 +99,36 @@ font-weight: bold;</string>
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="2" column="0" rowspan="2">
+         <widget class="QListWidget" name="m_pListAliases">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="m_pButtonRemoveAlias">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>&amp;Remove</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QLabel" name="m_pLabelAliasError">
+          <property name="styleSheet">
+           <string notr="true">color: #EC4C47; 
+font-size: 13px; 
+font-family: Arial; 
+font-weight: bold;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

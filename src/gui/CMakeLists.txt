@@ -6,7 +6,12 @@ set (CMAKE_AUTORCC ON)
 set (CMAKE_AUTOUIC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file (GLOB LEGACY_GUI_SOURCE_FILES src/*.cpp src/*.h)
+file (GLOB LEGACY_GUI_SOURCE_FILES
+   src/*.cpp
+   src/*.h
+   src/validators/*
+   src/validators/*.h
+)
 file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
 file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
 file (GLOB LEGACY_ZEROCONF_FILES src/Zeroconf*)

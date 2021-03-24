@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012-2021 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -15,36 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SCREENNAMEVALIDATOR_H
-#define SCREENNAMEVALIDATOR_H
+#ifndef LINEEDITVALIDATOR_H
+#define LINEEDITVALIDATOR_H
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <qvalidator.h>
 #include <memory>
 #include <vector>
-#include "Screen.h"
 
-class INameValidator
+#include <qvalidator.h>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+
+#include "IStringValidator.h"
+
+namespace validators
+{
+
+class LineEditValidator : public QValidator
 {
 public:
-   virtual bool validate(const QString& input) const = 0;
-   virtual QString getMessage() const = 0;
-   virtual ~INameValidator() = default;
-};
-
-class ScreenNameValidator : public QValidator
-{
-public:
-   explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr, const ScreenList* pScreens = nullptr);
+   explicit LineEditValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr);
    QValidator::State validate(QString& input, int& pos) const override;
+   void addValidator(std::unique_ptr<IStringValidator> validator);
 
 private:
    QLabel* m_pErrors = nullptr;
    QLineEdit* m_pControl = nullptr;
-   std::vector<std::unique_ptr<INameValidator>> m_Validators;
+   std::vector<std::unique_ptr<IStringValidator>> m_Validators;
 
    void showError(const QString& message) const;
+
 };
 
-#endif // SCREENNAMEVALIDATOR_H
+}
+
+#endif // LINEEDITVALIDATOR_H

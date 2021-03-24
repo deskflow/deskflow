@@ -20,8 +20,10 @@
 
 #define SETTINGSDIALOG_H
 
+#include <memory>
 #include <QDialog>
 #include "ui_SettingsDialogBase.h"
+#include "validators/ScreenNameValidator.h"
 #include "SynergyLocale.h"
 #include "CoreInterface.h"
 
@@ -68,6 +70,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         SynergyLocale m_Locale;
         CoreInterface m_CoreInterface;
         BonjourWindows* m_pBonjourWindows;
+        std::unique_ptr<validators::ScreenNameValidator> m_ScreenNameValidator;
 
         /// @brief Stores settings scope at start of settings dialog
         /// This is neccessary to restore state if user changes

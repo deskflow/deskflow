@@ -92,7 +92,7 @@
          <bool>true</bool>
         </property>
         <property name="maxLength">
-         <number>15</number>
+         <number>255</number>
         </property>
        </widget>
       </item>

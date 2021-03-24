@@ -26,7 +26,6 @@
 #include "MainWindow.h"
 #include "BonjourWindows.h"
 #include "Zeroconf.h"
-#include "ScreenNameValidator.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -53,7 +52,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     enableControls(appConfig().isWritable());
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
-    m_pLineEditScreenName->setValidator(new ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
+    m_ScreenNameValidator = std::make_unique<validators::ScreenNameValidator>(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens()));
+    m_pLineEditScreenName->setValidator(m_ScreenNameValidator.get());
 
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
     connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
