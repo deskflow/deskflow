@@ -17,7 +17,7 @@
 
 #include "SetupWizard.h"
 #include "MainWindow.h"
-#include "ScreenNameValidator.h"
+#include "validators/ScreenNameValidator.h"
 
 SetupWizard::SetupWizard(MainWindow& mainWindow) :
    m_MainWindow(mainWindow)
@@ -25,7 +25,8 @@ SetupWizard::SetupWizard(MainWindow& mainWindow) :
    setupUi(this);
 
    m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
-   m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
+   m_ScreenNameValidator = std::make_unique<Validators::ScreenNameValidator>(m_pLineEditName, label_ErrorMessage);
+   m_pLineEditName->setValidator(m_ScreenNameValidator.get());
 
    connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
    connect(m_pLineEditName, SIGNAL(textEdited(QString)), this, SLOT(onNameChanged()));

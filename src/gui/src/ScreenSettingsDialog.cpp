@@ -22,7 +22,6 @@
 #include <QtCore>
 #include <QtGui>
 #include <QMessageBox>
-#include <ScreenNameValidator.h>
 
 ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,const ScreenList* pScreens) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -32,10 +31,12 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,cons
     setupUi(this);
 
     m_pLineEditName->setText(m_pScreen->name());
-    m_pLineEditName->setValidator(new ScreenNameValidator(m_pLineEditName, m_pLabelNameError, pScreens));
+    m_NameValidator = std::make_unique<Validators::ScreenNameValidator>(m_pLineEditName, m_pLabelNameError, pScreens);
+    m_pLineEditName->setValidator(m_NameValidator.get());
     m_pLineEditName->selectAll();
 
-    m_pLineEditAlias->setValidator(new ScreenNameValidator(m_pLineEditName));
+    m_AliasValidator = std::make_unique<Validators::AliasValidator>(m_pLineEditAlias, m_pLabelAliasError);
+    m_pLineEditAlias->setValidator(m_AliasValidator.get());
 
     for (int i = 0; i < m_pScreen->aliases().count(); i++)
         new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);
@@ -121,7 +122,7 @@ void ScreenSettingsDialog::on_m_pButtonAddAlias_clicked()
 
 void ScreenSettingsDialog::on_m_pLineEditAlias_textChanged(const QString& text)
 {
-    m_pButtonAddAlias->setEnabled(!text.isEmpty());
+    m_pButtonAddAlias->setEnabled(!text.isEmpty() && m_pLabelAliasError->text().isEmpty());
 }
 
 void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked()

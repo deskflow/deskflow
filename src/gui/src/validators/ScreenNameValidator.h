@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012-2021 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -18,33 +18,18 @@
 #ifndef SCREENNAMEVALIDATOR_H
 #define SCREENNAMEVALIDATOR_H
 
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <qvalidator.h>
-#include <memory>
-#include <vector>
 #include "Screen.h"
+#include "LineEditValidator.h"
 
-class INameValidator
+namespace Validators
 {
-public:
-   virtual bool validate(const QString& input) const = 0;
-   virtual QString getMessage() const = 0;
-   virtual ~INameValidator() = default;
-};
 
-class ScreenNameValidator : public QValidator
+class ScreenNameValidator : public LineEditValidator
 {
 public:
    explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr, const ScreenList* pScreens = nullptr);
-   QValidator::State validate(QString& input, int& pos) const override;
-
-private:
-   QLabel* m_pErrors = nullptr;
-   QLineEdit* m_pControl = nullptr;
-   std::vector<std::unique_ptr<INameValidator>> m_Validators;
-
-   void showError(const QString& message) const;
 };
+
+}
 
 #endif // SCREENNAMEVALIDATOR_H

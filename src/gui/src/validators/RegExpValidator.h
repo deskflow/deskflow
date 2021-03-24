@@ -1,11 +1,12 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * 
+ * Copyright (C) 2012-2021 Symless Ltd.
+ * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -14,30 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef REGEXPVALIDATOR_H
+#define REGEXPVALIDATOR_H
 
-#pragma once
-#include <memory>
-#include "ui_SetupWizardBase.h"
-#include <QDialog>
-#include "validators/ScreenNameValidator.h"
+#include <qregexp.h>
+#include "IStringValidator.h"
 
-class MainWindow;
-
-class SetupWizard : public QDialog, public Ui::SetupWizardBase
+namespace Validators
 {
-   Q_OBJECT
 
+class RegExpValidator : public IStringValidator
+{
+   QRegExp m_Validator;
 public:
-   explicit SetupWizard(MainWindow& mainWindow);
-
-protected:
-   void accept();
-   void reject();
-
-private:
-   MainWindow& m_MainWindow;
-   std::unique_ptr<Validators::ScreenNameValidator> m_ScreenNameValidator;
-
-private slots:
-   void onNameChanged();
+   RegExpValidator(const QString& message, const QRegExp& validator);
+   bool validate(const QString& input) const override;
 };
+
+}
+
+#endif // REGEXPVALIDATOR_H

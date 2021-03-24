@@ -19,8 +19,11 @@
 #if !defined(SCREENSETTINGSDIALOG__H)
 
 #define SCREENSETTINGSDIALOG__H
+#include <memory>
 
 #include <QDialog>
+#include "validators/ScreenNameValidator.h"
+#include "validators/AliasValidator.h"
 
 #include "ui_ScreenSettingsDialogBase.h"
 
@@ -48,6 +51,9 @@ class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
 
     private:
         Screen* m_pScreen;
+        std::unique_ptr<Validators::ScreenNameValidator> m_NameValidator;
+        std::unique_ptr<Validators::AliasValidator> m_AliasValidator;
+
 };
 
 #endif
