@@ -1367,6 +1367,11 @@ void MainWindow::secureSocket(bool secureSocket)
     }
 }
 
+void MainWindow::on_m_pSettingsLink_linkActivated(const QString &link)
+{
+   m_pActionSettings->trigger();
+}
+
 void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
 {
     appConfig().setAutoConfigServer(server);
