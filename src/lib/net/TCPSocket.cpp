@@ -77,10 +77,11 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
 TCPSocket::~TCPSocket()
 {
     try {
+        // warning virtual function in destructor is very danger practice
         close();
     }
     catch (...) {
-        // ignore
+        LOG((CLOG_DEBUG "error while TCP socket destruction"));
     }
 }
 
@@ -209,8 +210,9 @@ TCPSocket::shutdownInput()
         try {
             ARCH->closeSocketForRead(m_socket);
         }
-        catch (XArchNetwork&) {
-            // ignore
+        catch (XArchNetwork& e) {
+            // ignore, there's not much we can do
+            LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
 
         // shutdown buffer for reading
@@ -236,8 +238,9 @@ TCPSocket::shutdownOutput()
         try {
             ARCH->closeSocketForWrite(m_socket);
         }
-        catch (XArchNetwork&) {
-            // ignore
+        catch (XArchNetwork& e) {
+            // ignore, there's not much we can do
+            LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
 
         // shutdown buffer for writing
@@ -322,8 +325,9 @@ TCPSocket::init()
             ARCH->closeSocket(m_socket);
             m_socket = NULL;
         }
-        catch (XArchNetwork&) {
-            // ignore
+        catch (XArchNetwork& e) {
+            // ignore, there's not much we can do
+            LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
         throw XSocketCreate(e.what());
     }

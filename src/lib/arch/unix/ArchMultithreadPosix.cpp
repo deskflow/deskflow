@@ -728,6 +728,8 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
 
     catch (XThreadCancel&) {
         // client called cancel()
+        // set base value
+        result = NULL;
     }
     catch (...) {
         // note -- don't catch (...) to avoid masking bugs

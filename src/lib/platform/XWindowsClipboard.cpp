@@ -188,6 +188,7 @@ XWindowsClipboard::addSimpleRequest(Window requestor,
                 }
                 catch (...) {
                     // ignore -- cannot convert
+                    LOG((CLOG_WARN "error while converting clipboard data"));
                 }
             }
         }
