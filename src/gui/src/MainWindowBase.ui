@@ -133,11 +133,17 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="QWidgetComputerName" native="true">
+     <widget class="QWidget" name="m_pWidgetComputerName" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>582</width>
-        <height>30</height>
+        <height>15</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -160,14 +166,14 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="m_pLabelComputerName">
          <property name="minimumSize">
           <size>
            <width>135</width>
-           <height>20</height>
+           <height>15</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -198,7 +204,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>20</height>
+           <height>15</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -225,7 +231,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>20</height>
+           <height>15</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -250,6 +256,65 @@
          </property>
          <property name="margin">
           <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="m_pWidgetIPAddress" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>20</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>190</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>This computers IP addresses:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_pLabelIpAddresses">
+         <property name="text">
+          <string notr="true"/>
          </property>
         </widget>
        </item>
@@ -286,27 +351,6 @@
        <bool>true</bool>
       </property>
       <layout class="QVBoxLayout">
-       <item>
-        <layout class="QFormLayout" name="formLayout">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>IP addresses:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="m_pLabelIpAddresses">
-           <property name="text">
-            <string notr="true"/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
@@ -438,6 +482,9 @@
       <layout class="QFormLayout" name="formLayout_3">
        <property name="fieldGrowthPolicy">
         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <property name="leftMargin">
+        <number>9</number>
        </property>
        <item row="2" column="0">
         <widget class="QLabel" name="m_pLabelServerName">
