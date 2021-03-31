@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>720</width>
     <height>797</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>720</width>
     <height>0</height>
    </size>
   </property>
@@ -323,16 +323,22 @@
     </item>
     <item>
      <widget class="QWidget" name="m_pMainWidgets" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>248</height>
+        <height>270</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>248</height>
+        <height>270</height>
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -343,7 +349,7 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>22</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
@@ -361,7 +367,7 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>340</width>
            <height>248</height>
           </size>
          </property>
@@ -378,13 +384,13 @@
 </string>
          </property>
          <property name="title">
-          <string>Ser&amp;ver (share this computer's mouse and keyboard):</string>
+          <string/>
          </property>
          <property name="checkable">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <layout class="QVBoxLayout">
           <item>
@@ -511,7 +517,7 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>340</width>
            <height>248</height>
           </size>
          </property>
@@ -528,13 +534,13 @@
 </string>
          </property>
          <property name="title">
-          <string>&amp;Client (use another computer's mouse and keyboard):</string>
+          <string/>
          </property>
          <property name="checkable">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <layout class="QFormLayout" name="formLayout_3">
           <property name="fieldGrowthPolicy">
