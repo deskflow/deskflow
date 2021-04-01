@@ -47,7 +47,7 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
     try {
         m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
     }
-    catch (XArchNetwork& e) {
+    catch (const XArchNetwork& e) {
         throw XSocketCreate(e.what());
     }
 
@@ -64,7 +64,7 @@ TCPSocket::TCPSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, 
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
-    assert(m_socket != NULL);
+    assert(m_socket != nullptr);
 
     LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
 
@@ -91,10 +91,10 @@ TCPSocket::bind(const NetworkAddress& addr)
     try {
         ARCH->bindSocket(m_socket, addr.getAddress());
     }
-    catch (XArchNetworkAddressInUse& e) {
+    catch (const XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
     }
-    catch (XArchNetwork& e) {
+    catch (const XArchNetwork& e) {
         throw XSocketBind(e.what());
     }
 }
@@ -105,7 +105,7 @@ TCPSocket::close()
     LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
 
     // remove ourself from the multiplexer
-    setJob(NULL);
+    setJob(nullptr);
 
     Lock lock(&m_mutex);
 
@@ -116,13 +116,13 @@ TCPSocket::close()
     onDisconnected();
 
     // close the socket
-    if (m_socket != NULL) {
+    if (m_socket != nullptr) {
         ArchSocket socket = m_socket;
-        m_socket = NULL;
+        m_socket = nullptr;
         try {
             ARCH->closeSocket(socket);
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             // ignore, there's not much we can do
             LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
@@ -144,7 +144,7 @@ TCPSocket::read(void* buffer, UInt32 n)
     if (n > size) {
         n = size;
     }
-    if (buffer != NULL && n != 0) {
+    if (buffer != nullptr && n != 0) {
         memcpy(buffer, m_inputBuffer.peek(n), n);
     }
     m_inputBuffer.pop(n);
@@ -210,7 +210,7 @@ TCPSocket::shutdownInput()
         try {
             ARCH->closeSocketForRead(m_socket);
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             // ignore, there's not much we can do
             LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
@@ -238,7 +238,7 @@ TCPSocket::shutdownOutput()
         try {
             ARCH->closeSocketForWrite(m_socket);
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             // ignore, there's not much we can do
             LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
@@ -284,7 +284,7 @@ TCPSocket::connect(const NetworkAddress& addr)
         Lock lock(&m_mutex);
 
         // fail on attempts to reconnect
-        if (m_socket == NULL || m_connected) {
+        if (m_socket == nullptr || m_connected) {
             sendConnectionFailedEvent("busy");
             return;
         }
@@ -299,7 +299,7 @@ TCPSocket::connect(const NetworkAddress& addr)
                 m_writable = true;
             }
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             throw XSocketConnect(e.what());
         }
     }
@@ -320,12 +320,12 @@ TCPSocket::init()
         // mouse motion messages are much less useful if they're delayed.
         ARCH->setNoDelayOnSocket(m_socket, true);
     }
-    catch (XArchNetwork& e) {
+    catch (const XArchNetwork& e) {
         try {
             ARCH->closeSocket(m_socket);
-            m_socket = NULL;
+            m_socket = nullptr;
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             // ignore, there's not much we can do
             LOG((CLOG_WARN "error closing socket: %s", e.what()));
         }
@@ -396,7 +396,7 @@ void
 TCPSocket::setJob(ISocketMultiplexerJob* job)
 {
     // multiplexer will delete the old job
-    if (job == NULL) {
+    if (job == nullptr) {
         m_socketMultiplexer->removeSocket(this);
     }
     else {
@@ -409,13 +409,13 @@ TCPSocket::newJob()
 {
     // note -- must have m_mutex locked on entry
 
-    if (m_socket == NULL) {
-        return NULL;
+    if (m_socket == nullptr) {
+        return nullptr;
     }
     else if (!m_connected) {
         assert(!m_readable);
         if (!(m_readable || m_writable)) {
-            return NULL;
+            return nullptr;
         }
         return new TSocketMultiplexerMethodJob<TCPSocket>(
                                 this, &TCPSocket::serviceConnecting,
@@ -423,7 +423,7 @@ TCPSocket::newJob()
     }
     else {
         if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
-            return NULL;
+            return nullptr;
         }
         return new TSocketMultiplexerMethodJob<TCPSocket>(
                                 this, &TCPSocket::serviceConnected,
@@ -443,7 +443,7 @@ TCPSocket::sendConnectionFailedEvent(const char* msg)
 void
 TCPSocket::sendEvent(Event::Type type)
 {
-    m_events->addEvent(Event(type, getEventTarget(), NULL));
+    m_events->addEvent(Event(type, getEventTarget(), nullptr));
 }
 
 void
@@ -520,7 +520,7 @@ TCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
             // connection may have failed or succeeded
             ARCH->throwErrorOnSocket(m_socket);
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             sendConnectionFailedEvent(e.what());
             onDisconnected();
             return newJob();
@@ -596,5 +596,5 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
     }
 
-    return result == kBreak ? NULL : result == kNew ? newJob() : job;
+    return result == kBreak ? nullptr : result == kNew ? newJob() : job;
 }

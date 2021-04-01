@@ -720,7 +720,7 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     lockMutex(m_threadMutex);
     unlockMutex(m_threadMutex);
 
-    void* result = NULL;
+    void* result = nullptr;
     try {
         // go
         result = (*thread->m_func)(thread->m_userData);
@@ -729,7 +729,7 @@ ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     catch (XThreadCancel&) {
         // client called cancel()
         // set base value
-        result = NULL;
+        result = nullptr;
     }
     catch (...) {
         // note -- don't catch (...) to avoid masking bugs
