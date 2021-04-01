@@ -515,7 +515,7 @@ XWindowsClipboard::icccmFillCache()
     }
 
     XWindowsUtil::convertAtomProperty(data);
-    auto targets = static_cast<const Atom*>(data.data());
+    auto targets = static_cast<const Atom*>(static_cast<const void*>(data.data()));
     const UInt32 numTargets = data.size() / sizeof(Atom);
     LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
@@ -593,7 +593,7 @@ XWindowsClipboard::icccmGetTime() const
     String data;
     if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
         actualTarget == m_atomInteger) {
-        Time time = *static_cast<const Time*>(data.data());
+        Time time = *static_cast<const Time*>(static_cast<const void*>(data.data()));
         LOG((CLOG_DEBUG1 "got ICCCM time %d", time));
         return time;
     }
@@ -731,7 +731,7 @@ XWindowsClipboard::motifFillCache()
 
     // format list is after static item structure elements
     const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
-    const SInt32* formats   = static_cast<const SInt32*>(item.m_size + data.data());
+    const SInt32* formats   = static_cast<const SInt32*>(static_cast<const void*>(item.m_size + data.data()));
 
     // get the available formats
     typedef std::map<Atom, String> MotifFormatMap;
@@ -857,7 +857,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
     // data is a list of atom pairs:  target, property
     XWindowsUtil::convertAtomProperty(data);
-    auto targets = static_cast<const Atom*>(data.data());
+    auto targets = static_cast<const Atom*>(static_cast<const void*>(data.data()));
     const UInt32 numTargets = data.size() / sizeof(Atom);
 
     // add replies for each target
