@@ -516,7 +516,7 @@ XWindowsClipboard::icccmFillCache()
     }
 
     XWindowsUtil::convertAtomProperty(data);
-    auto targets            = reinterpret_cast<const Atom*>(data.data());
+    auto targets            = static_cast<const Atom*>(static_cast<const void*>(data.data()));
     const UInt32 numTargets = data.size() / sizeof(Atom);
     LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
@@ -594,7 +594,7 @@ XWindowsClipboard::icccmGetTime() const
     String data;
     if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
         actualTarget == m_atomInteger) {
-        Time time = *reinterpret_cast<const Time*>(data.data());
+        Time time = *static_cast<const Time*>(static_cast<const void*>(data.data()));
         LOG((CLOG_DEBUG1 "got ICCCM time %d", time));
         return time;
     }
@@ -732,7 +732,7 @@ XWindowsClipboard::motifFillCache()
 
     // format list is after static item structure elements
     const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
-    auto formats            = reinterpret_cast<const SInt32*>(item.m_size + data.data());
+    auto formats            = static_cast<const SInt32*>(static_cast<const void*>(item.m_size + data.data()));
 
     // get the available formats
     typedef std::map<Atom, String> MotifFormatMap;
@@ -858,7 +858,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
     // data is a list of atom pairs:  target, property
     XWindowsUtil::convertAtomProperty(data);
-    auto targets = reinterpret_cast<const Atom*>(data.data());
+    auto targets = static_cast<const Atom*>(static_cast<const void*>(data.data()));
     const UInt32 numTargets = data.size() / sizeof(Atom);
 
     // add replies for each target
@@ -1092,7 +1092,7 @@ XWindowsClipboard::sendReply(Reply* reply)
     if (CLOG->getFilter() < kDEBUG2) {
         sendNotify(reply->m_requestor, m_selection,
                         reply->m_target, reply->m_property,
-                        reply->m_time);
+                        static_cast<unsigned int>(reply->m_time));
 
         // wait for delete notify
         return false;
@@ -1120,8 +1120,8 @@ XWindowsClipboard::sendReply(Reply* reply)
             // convert to hex if contains non ascii symbols
             if (std::find_if(data.begin(), data.end(),
                                     [](const unsigned char& c) { return c < 32 || c > 126; }) != data.end()) {
-                const char hex_digits[] = "0123456789abcdef";
-                std::string tmp;
+                const String hex_digits[] = "0123456789abcdef";
+                String tmp;
                 tmp.reserve(data.length() * 3);
                 std::for_each(data.begin(), data.end(), [hex_digits, &tmp](const unsigned char& c)
                     {
