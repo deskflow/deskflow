@@ -1120,7 +1120,7 @@ XWindowsClipboard::sendReply(Reply* reply)
             // convert to hex if contains non ascii symbols
             if (std::find_if(data.begin(), data.end(),
                                     [](const unsigned char& c) { return c < 32 || c > 126; }) != data.end()) {
-                const String hex_digits[] = "0123456789abcdef";
+                const String hex_digits = "0123456789abcdef";
                 String tmp;
                 tmp.reserve(data.length() * 3);
                 std::for_each(data.begin(), data.end(), [hex_digits, &tmp](const unsigned char& c)
