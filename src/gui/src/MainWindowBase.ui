@@ -392,7 +392,80 @@
          <property name="checked">
           <bool>false</bool>
          </property>
-         <layout class="QVBoxLayout">
+         <layout class="QVBoxLayout" name="ServerLayout">
+          <property name="spacing">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>11</number>
+          </property>
+          <item>
+           <layout class="QVBoxLayout" name="m_pLayoutRadioGroupServer">
+            <property name="spacing">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="m_pRadioGroupServer">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Use this computers keyboard and mouse</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_pLabelRadioGroupServer">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>(Make this computer the server).</string>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <property name="indent">
+               <number>19</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
@@ -517,6 +590,12 @@
          </property>
          <property name="minimumSize">
           <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="baseSize">
+          <size>
            <width>340</width>
            <height>248</height>
           </size>
@@ -542,64 +621,162 @@
          <property name="checked">
           <bool>false</bool>
          </property>
-         <layout class="QFormLayout" name="formLayout_3">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         <layout class="QVBoxLayout" name="ClientLayout">
+          <property name="spacing">
+           <number>9</number>
           </property>
           <property name="leftMargin">
            <number>9</number>
           </property>
-          <item row="2" column="0">
-           <widget class="QLabel" name="m_pLabelServerName">
-            <property name="text">
-             <string>&amp;Server:</string>
+          <property name="topMargin">
+           <number>11</number>
+          </property>
+          <item>
+           <layout class="QVBoxLayout" name="m_pLayoutRadioGroupClient">
+            <property name="spacing">
+             <number>5</number>
             </property>
-            <property name="buddy">
-             <cstring>m_pLineEditHostname</cstring>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-           </widget>
+            <item>
+             <widget class="QRadioButton" name="m_pRadioGroupClient">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Use another computer’s mouse and keyboard</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_pLabelRadioGroupClient">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>(Make this computer the client).</string>
+              </property>
+              <property name="indent">
+               <number>19</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="m_pLineEditHostname">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="leftMargin">
+             <number>19</number>
             </property>
-            <property name="minimumSize">
+            <property name="topMargin">
+             <number>10</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="m_pLabelServerName">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>&amp;Server IP address or name:</string>
+              </property>
+              <property name="buddy">
+               <cstring>m_pLineEditHostname</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="m_pLineEditHostname">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Hostname or IP address of the server computer.</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_pLabelAutoDetected">
+              <property name="text">
+               <string>Server:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="m_pComboServerList">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::MinimumExpanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>200</width>
-              <height>0</height>
+              <width>20</width>
+              <height>40</height>
              </size>
             </property>
-            <property name="toolTip">
-             <string>Hostname or IP address of the server computer.</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="m_pLabelAutoDetected">
-            <property name="text">
-             <string>Server:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QComboBox" name="m_pComboServerList">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>200</width>
-              <height>0</height>
-             </size>
-            </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </widget>
