@@ -596,5 +596,9 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
     }
 
-    return result == kBreak ? nullptr : result == kNew ? newJob() : job;
+    if (result == kBreak) {
+        return nullptr;
+    }
+
+    return result == kNew ? newJob() : job;
 }

@@ -30,6 +30,7 @@
 #include "base/Stopwatch.h"
 #include "common/stdvector.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <X11/Xatom.h>
@@ -515,7 +516,7 @@ XWindowsClipboard::icccmFillCache()
     }
 
     XWindowsUtil::convertAtomProperty(data);
-    auto targets = static_cast<const Atom*>(static_cast<const void*>(data.data()));
+    auto targets            = reinterpret_cast<const Atom*>(data.data());
     const UInt32 numTargets = data.size() / sizeof(Atom);
     LOG((CLOG_DEBUG "  available targets: %s", XWindowsUtil::atomsToString(m_display, targets, numTargets).c_str()));
 
@@ -593,7 +594,7 @@ XWindowsClipboard::icccmGetTime() const
     String data;
     if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
         actualTarget == m_atomInteger) {
-        Time time = *static_cast<const Time*>(static_cast<const void*>(data.data()));
+        Time time = *reinterpret_cast<const Time*>(data.data());
         LOG((CLOG_DEBUG1 "got ICCCM time %d", time));
         return time;
     }
@@ -731,7 +732,7 @@ XWindowsClipboard::motifFillCache()
 
     // format list is after static item structure elements
     const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
-    const SInt32* formats   = static_cast<const SInt32*>(static_cast<const void*>(item.m_size + data.data()));
+    auto formats            = reinterpret_cast<const SInt32*>(item.m_size + data.data());
 
     // get the available formats
     typedef std::map<Atom, String> MotifFormatMap;
@@ -857,7 +858,7 @@ XWindowsClipboard::insertMultipleReply(Window requestor,
 
     // data is a list of atom pairs:  target, property
     XWindowsUtil::convertAtomProperty(data);
-    auto targets = static_cast<const Atom*>(static_cast<const void*>(data.data()));
+    auto targets = reinterpret_cast<const Atom*>(data.data());
     const UInt32 numTargets = data.size() / sizeof(Atom);
 
     // add replies for each target
@@ -1078,68 +1079,75 @@ XWindowsClipboard::sendReply(Reply* reply)
         }
     }
 
-    // send notification if we haven't yet
+    // notification already sended
     if (!reply->m_replied) {
-        LOG((CLOG_DEBUG1 "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
-        reply->m_replied = true;
+        return false;
+        
+    }
 
-        // dump every property on the requestor window to the debug2
-        // log.  we've seen what appears to be a bug in lesstif and
-        // knowing the properties may help design a workaround, if
-        // it becomes necessary.
-        if (CLOG->getFilter() >= kDEBUG2) {
-            XWindowsUtil::ErrorLock lock(m_display);
-            int n;
-            Atom* props = XListProperties(m_display, reply->m_requestor, &n);
-            LOG((CLOG_DEBUG2 "properties of 0x%08x:", reply->m_requestor));
-            for (int i = 0; i < n; ++i) {
-                Atom target;
-                String data;
-                char* name = XGetAtomName(m_display, props[i]);
-                if (!XWindowsUtil::getWindowProperty(m_display,
-                                reply->m_requestor,
-                                props[i], &data, &target, nullptr, False)) {
-                    LOG((CLOG_DEBUG2 "  %s: <can't read property>", name));
-                }
-                else {
-                    // if there are any non-ascii characters in string
-                    // then print the binary data.
-                    static const char* hex = "0123456789abcdef";
-                    String::size_type j = 0;
-                    while (j < data.size()) {
-                        if (data[j] < 32 || data[j] > 126) {
-                            String tmp;
-                            tmp.reserve(data.size() * 3);
-                            for (j = 0; j < data.size(); ++j) {
-                                auto v = (unsigned char)data[j];
-                                tmp += hex[v >> 16];
-                                tmp += hex[v & 15];
-                                tmp += ' ';
-                            }
-                            data = tmp;
-                            break;
-                        }
-                        ++j;
-                    }
-                    char* type = XGetAtomName(m_display, target);
-                    LOG((CLOG_DEBUG2 "  %s (%s): %s", name, type, data.c_str()));
-                    if (type != nullptr) {
-                        XFree(type);
-                    }
-                }
-                if (name != nullptr) {
-                    XFree(name);
-                }
+    LOG((CLOG_DEBUG1 "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
+    reply->m_replied = true;
+
+    // nothing to log
+    if (CLOG->getFilter() < kDEBUG2) {
+        sendNotify(reply->m_requestor, m_selection,
+                        reply->m_target, reply->m_property,
+                        reply->m_time);
+
+        // wait for delete notify
+        return false;
+        
+    }
+
+    // dump every property on the requestor window to the debug2
+    // log.  we've seen what appears to be a bug in lesstif and
+    // knowing the properties may help design a workaround, if
+    // it becomes necessary.
+    XWindowsUtil::ErrorLock lock(m_display);
+    int n;
+    Atom* props = XListProperties(m_display, reply->m_requestor, &n);
+    LOG((CLOG_DEBUG2 "properties of 0x%08x:", reply->m_requestor));
+    for (int i = 0; i < n; ++i) {
+        Atom target;
+        String data;
+        char* name = XGetAtomName(m_display, props[i]);
+        if (!XWindowsUtil::getWindowProperty(m_display,
+                        reply->m_requestor,
+                        props[i], &data, &target, nullptr, False)) {
+            LOG((CLOG_DEBUG2 "  %s: <can't read property>", name));
+        }
+        else {
+            // convert to hex if contains non ascii symbols
+            if (std::find_if(data.begin(), data.end(),
+                                    [](const unsigned char& c) { return c < 32 || c > 126; }) != data.end()) {
+                const char hex_digits[] = "0123456789abcdef";
+                std::string tmp;
+                tmp.reserve(data.length() * 3);
+                std::for_each(data.begin(), data.end(), [hex_digits, &tmp](const unsigned char& c)
+                    {
+                        tmp += hex_digits[c >> 16];
+                        tmp += hex_digits[c & 15];
+                        tmp += ' ';
+                    });
+                data = tmp;
             }
-            if (props != nullptr) {
-                XFree(props);
+            char* type = XGetAtomName(m_display, target);
+            LOG((CLOG_DEBUG2 "  %s (%s): %s", name, type, data.c_str()));
+            if (type != nullptr) {
+                XFree(type);
             }
         }
-
-        sendNotify(reply->m_requestor, m_selection,
-                                reply->m_target, reply->m_property,
-                                reply->m_time);
+        if (name != nullptr) {
+            XFree(name);
+        }
     }
+    if (props != nullptr) {
+        XFree(props);
+    }
+
+    sendNotify(reply->m_requestor, m_selection,
+                            reply->m_target, reply->m_property,
+                            reply->m_time);
 
     // wait for delete notify
     return false;
@@ -1266,8 +1274,6 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
     m_failed(false),
     m_done(false),
     m_reading(false),
-    m_data(nullptr),
-    m_actualTarget(nullptr),
     m_error(false)
 {
     // do nothing

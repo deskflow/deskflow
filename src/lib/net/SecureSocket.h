@@ -44,7 +44,7 @@ public:
     SecureSocket& operator=(SecureSocket &&) =delete;
 
     // ISocket overrides
-    virtual void        close() override;
+    void                close() override;
 
     // IDataSocket overrides
     virtual void        connect(const NetworkAddress&);
