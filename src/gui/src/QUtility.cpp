@@ -49,20 +49,6 @@ QString hash(const QString& string)
     return hash.toHex();
 }
 
-QString getFirstMacAddress()
-{
-    QString mac;
-    foreach (const QNetworkInterface &interface,  QNetworkInterface::allInterfaces())
-    {
-        mac = interface.hardwareAddress();
-        if (mac.size() != 0)
-        {
-            break;
-        }
-    }
-    return mac;
-}
-
 qProcessorArch getProcessorArch()
 {
 #if defined(Q_OS_WIN)
