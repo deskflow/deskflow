@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
     QCoreApplication::setOrganizationName("Synergy");
-    QCoreApplication::setOrganizationDomain("http://symless.com/");
+    QCoreApplication::setOrganizationDomain("https://symless.com/");
     QCoreApplication::setApplicationName("Synergy");
 
     QSynergyApplication app(argc, argv);
