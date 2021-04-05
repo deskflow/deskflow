@@ -91,23 +91,3 @@ qProcessorArch getProcessorArch()
 
     return kProcessorArchUnknown;
 }
-
-QString getOSInformation()
-{
-    QString result;
-
-#if defined(Q_OS_LINUX)
-    result = "Linux";
-
-    QFile paramFile("/etc/os-release");
-    if(paramFile.open(QFile::ReadOnly | QFile::Text)) {
-        const QString fileStrings = QTextStream(&paramFile).readAll();
-        QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
-        if (resultRegex.exactMatch(fileStrings)) {
-            result = resultRegex.cap(1);
-        }
-    }
-#endif
-
-    return result;
-}

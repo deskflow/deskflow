@@ -58,7 +58,7 @@ TCPListenSocket::~TCPListenSocket()
     }
     catch (...) {
         // ignore
-        LOG((CLOG_INFO "error while closing TCP socket"));
+        LOG((CLOG_WARN "error while closing TCP socket"));
     }
     delete m_mutex;
 }
