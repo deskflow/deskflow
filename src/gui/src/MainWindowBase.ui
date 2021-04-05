@@ -324,7 +324,7 @@
     <item>
      <widget class="QWidget" name="m_pMainWidgets" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -360,7 +360,7 @@
        <item>
         <widget class="QGroupBox" name="m_pGroupServer">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -400,58 +400,35 @@
            <number>11</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="m_pLayoutRadioGroupServer">
-            <property name="spacing">
-             <number>5</number>
+           <widget class="QRadioButton" name="m_pRadioGroupServer">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="topMargin">
-             <number>0</number>
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>30</height>
+             </size>
             </property>
-            <item>
-             <widget class="QRadioButton" name="m_pRadioGroupServer">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>300</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Use this computers keyboard and mouse</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="m_pLabelRadioGroupServer">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>(Make this computer the server).</string>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <property name="indent">
-               <number>19</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="maximumSize">
+             <size>
+              <width>65535</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QRadioButton::indicator{
+   top: -7px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Use this computers keyboard and mouse 
+(Make this computer the server).</string>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="verticalSpacer_2">
@@ -583,21 +560,21 @@
        <item>
         <widget class="QGroupBox" name="m_pGroupClient">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>340</width>
+           <height>248</height>
           </size>
          </property>
          <property name="baseSize">
           <size>
-           <width>340</width>
-           <height>248</height>
+           <width>0</width>
+           <height>0</height>
           </size>
          </property>
          <property name="font">
@@ -632,67 +609,35 @@
            <number>11</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="m_pLayoutRadioGroupClient">
-            <property name="spacing">
-             <number>5</number>
+           <widget class="QRadioButton" name="m_pRadioGroupClient">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="topMargin">
-             <number>0</number>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
             </property>
-            <item>
-             <widget class="QRadioButton" name="m_pRadioGroupClient">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>300</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Use another computer’s mouse and keyboard</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="m_pLabelRadioGroupClient">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>18</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>(Make this computer the client).</string>
-              </property>
-              <property name="indent">
-               <number>19</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QRadioButton::indicator{
+     top: -7px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Use another computer’s mouse and keyboard
+(Make this computer the client).</string>
+            </property>
+           </widget>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
