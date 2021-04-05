@@ -2350,7 +2350,7 @@ Server::SwitchToScreenInfo::alloc(const String& screen)
 	SwitchToScreenInfo* info =
 		(SwitchToScreenInfo*)malloc(sizeof(SwitchToScreenInfo) +
 								screen.size());
-	strcpy(info->m_screen, screen.c_str());
+	strcpy(info->m_screen, screen.c_str()); // Compliant: we made sure the buffer is large enough
 	return info;
 }
 
