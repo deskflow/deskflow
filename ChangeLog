@@ -4,6 +4,8 @@ Bug fixes:
 - #6953 | #6961 The system does not update server name in Server configuration
 - #6966 macOS 10.13 missing build number
 - #6968 System loses synchronisation between settings and configuration
+- #6972 Fix SonarCloud security hotspots
+- #6971 Fix vulnerabilities from SonarCloud
 
 Enhancements:
 - #6954 Move language selection to advanced section
@@ -33,7 +35,6 @@ Bug fixes:
 - #6946 Add build stage to filename
 - #6950 Synergy client doesn't save the server address when rebooted
 - #6951 Fix issue creating standard version for Raspberry Pi
-- #6972 Fix SonarCloud security hotspots
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop

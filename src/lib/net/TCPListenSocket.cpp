@@ -28,6 +28,7 @@
 #include "mt/Mutex.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
+#include "base/Log.h"
 #include "base/IEventQueue.h"
 
 //
@@ -57,6 +58,7 @@ TCPListenSocket::~TCPListenSocket()
     }
     catch (...) {
         // ignore
+        LOG((CLOG_WARN "error while closing TCP socket"));
     }
     delete m_mutex;
 }

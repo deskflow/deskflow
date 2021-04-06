@@ -26,6 +26,4 @@
 
 void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData);
 QString hash(const QString& string);
-QString getFirstMacAddress();
 qProcessorArch getProcessorArch();
-QString getOSInformation();

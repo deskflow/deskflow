@@ -69,6 +69,7 @@ XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
     }
     catch (...) {
         // ignore
+        result.clear();
     }
     va_end(args);
 
