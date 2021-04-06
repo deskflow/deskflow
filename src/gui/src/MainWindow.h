@@ -105,7 +105,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
     public:
         void setVisible(bool visible);
-        int synergyType() const { return m_pGroupClient->isChecked() ? synergyClient : synergyServer; }
+        int synergyType() const { return m_pRadioGroupClient->isChecked() ? synergyClient : synergyServer; }
         int synergyState() const { return m_SynergyState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
         QString configFilename();
@@ -143,8 +143,8 @@ public slots:
     protected slots:
         void updateLocalFingerprint();
         void updateScreenName();
-        void on_m_pGroupClient_toggled(bool on);
-        void on_m_pGroupServer_toggled(bool on);
+        void on_m_pRadioGroupServer_clicked(bool on);
+        void on_m_pRadioGroupClient_clicked(bool on);
         bool on_m_pButtonBrowseConfigFile_clicked();
         void on_m_pButtonConfigureServer_clicked();
         bool on_m_pActionSave_triggered();

@@ -127,6 +127,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
 #endif
 
     setupUi(this);
+    updateAutoConfigWidgets();
+    m_pRadioGroupServer->setAutoExclusive(false);
+    m_pRadioGroupClient->setAutoExclusive(false);
 
     createMenuBar();
     loadSettings();
@@ -161,7 +164,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     // hide padlock icon
     secureSocket(false);
 
-    updateLocalFingerprint();
+
 
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
@@ -206,9 +209,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
     updateZeroconfService();
 
     addZeroconfServer(m_AppConfig->autoConfigServer());
-#endif
 
     updateAutoConfigWidgets();
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -305,14 +308,12 @@ void MainWindow::createMenuBar()
 
 void MainWindow::loadSettings()
 {
-    // the next two must come BEFORE loading groupServerChecked and groupClientChecked or
-    // disabling and/or enabling the right widgets won't automatically work
+    on_m_pRadioGroupServer_clicked(appConfig().getServerGroupChecked());
+
     m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
     m_pRadioInternalConfig->setChecked(appConfig().getUseInternalConfig());
 
-    m_pGroupServer->setChecked(appConfig().getServerGroupChecked());
     m_pLineEditConfigFile->setText(appConfig().getConfigFile());
-    m_pGroupClient->setChecked(appConfig().getClientGroupChecked());
     m_pLineEditHostname->setText(appConfig().getServerHostname());
 }
 
@@ -329,8 +330,8 @@ void MainWindow::initConnections()
 void MainWindow::saveSettings()
 {
     // program settings
-    appConfig().setServerGroupChecked(m_pGroupServer->isChecked());
-    appConfig().setClientGroupChecked(m_pGroupClient->isChecked());
+    appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
+    appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
     appConfig().setUseExternalConfig(m_pRadioExternalConfig->isChecked());
     appConfig().setUseInternalConfig(m_pRadioInternalConfig->isChecked());
     appConfig().setConfigFile(m_pLineEditConfigFile->text());
@@ -1157,20 +1158,6 @@ MainWindow::licenseManager() const
 }
 #endif
 
-void MainWindow::on_m_pGroupClient_toggled(bool on)
-{
-    m_pGroupServer->setChecked(!on);
-
-    // only call in either client or server toggle, but not both
-    // since the toggle functions call eachother indirectly.
-    updateZeroconfService();
-}
-
-void MainWindow::on_m_pGroupServer_toggled(bool on)
-{
-    m_pGroupClient->setChecked(!on);
-}
-
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
@@ -1229,20 +1216,11 @@ void MainWindow::updateZeroconfService()
 
 void MainWindow::updateAutoConfigWidgets()
 {
-    if (appConfig().autoConfig()) {
-        m_pLabelAutoDetected->show();
-        m_pComboServerList->show();
+   m_pLabelServerName->show();
+   m_pLineEditHostname->show();
 
-        m_pLabelServerName->hide();
-        m_pLineEditHostname->hide();
-    }
-    else {
-        m_pLabelServerName->show();
-        m_pLineEditHostname->show();
-
-        m_pLabelAutoDetected->hide();
-        m_pComboServerList->hide();
-    }
+   m_pLabelAutoDetected->hide();
+   m_pComboServerList->hide();
 }
 
 void MainWindow::on_m_pActionSettings_triggered()
@@ -1387,4 +1365,48 @@ void MainWindow::updateScreenName()
 {
     m_pLabelScreenName->setText(appConfig().screenName());
     serverConfig().updateServerName();
+}
+
+void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
+{
+   if (on)
+   {
+      //show server controls
+      m_pRadioGroupServer->setChecked(true);
+      m_pRadioInternalConfig->show();
+      m_pRadioExternalConfig->show();
+      m_pLabelConfigurationFile->show();
+      m_pLineEditConfigFile->show();
+      m_pButtonBrowseConfigFile->show();
+      m_pButtonConfigureServer->show();
+      updateLocalFingerprint();
+
+      //hide client controls
+      m_pRadioGroupClient->setChecked(false);
+      m_pLabelServerName->hide();
+      m_pLineEditHostname->hide();
+   }
+   else
+   {
+      //show client controls
+      m_pRadioGroupClient->setChecked(true);
+      m_pLabelServerName->show();
+      m_pLineEditHostname->show();
+
+      //hide server controls
+      m_pRadioGroupServer->setChecked(false);
+      m_pLabelFingerprint->hide();
+      m_pLabelLocalFingerprint->hide();
+      m_pRadioInternalConfig->hide();
+      m_pRadioExternalConfig->hide();
+      m_pLabelConfigurationFile->hide();
+      m_pLineEditConfigFile->hide();
+      m_pButtonBrowseConfigFile->hide();
+      m_pButtonConfigureServer->hide();
+   }
+}
+
+void MainWindow::on_m_pRadioGroupClient_clicked(bool on)
+{
+   on_m_pRadioGroupServer_clicked(!on);
 }
