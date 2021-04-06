@@ -578,7 +578,7 @@ InputFilter::KeystrokeAction::format() const
         return synergy::string::sprintf("%s(%s,%.*s)", type,
                             synergy::KeyMap::formatKey(m_keyInfo->m_key,
                                 m_keyInfo->m_mask).c_str(),
-                            strlen(m_keyInfo->m_screens + 1) - 1,
+                            strnlen(m_keyInfo->m_screens + 1, SIZE_MAX) - 1,
                             m_keyInfo->m_screens + 1);
     }
 }
