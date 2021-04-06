@@ -692,7 +692,7 @@ SecureSocket::verifyCertFingerprint()
     }
 
     // format fingerprint into hexdecimal format with colon separator
-    String fingerprint(reinterpret_cast<char*>(tempFingerprint), tempFingerprintLen);
+    String fingerprint(static_cast<char*>(static_cast<void*>(tempFingerprint)), tempFingerprintLen);
     formatFingerprint(fingerprint);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 

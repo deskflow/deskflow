@@ -70,7 +70,7 @@ IKeyState::KeyInfo*
 IKeyState::KeyInfo::alloc(const KeyInfo& x)
 {
     auto bufferLen  = strnlen(x.m_screensBuffer, SIZE_MAX);
-    KeyInfo* info   = (KeyInfo*)malloc(sizeof(KeyInfo) + bufferLen);
+    auto info       = (KeyInfo*)malloc(sizeof(KeyInfo) + bufferLen);
     info->m_key     = x.m_key;
     info->m_mask    = x.m_mask;
     info->m_button  = x.m_button;
