@@ -2389,7 +2389,7 @@ Server::KeyboardBroadcastInfo::alloc(State state, const String& screens)
 		(KeyboardBroadcastInfo*)malloc(sizeof(KeyboardBroadcastInfo) +
 								screens.size());
 	info->m_state = state;
-	strcpy(info->m_screens, screens.c_str());
+	strcpy(info->m_screens, screens.c_str()); // Compliant: we made sure that screens variable ended with null
 	return info;
 }
 

@@ -553,7 +553,7 @@ void MainWindow::checkSecureSocket(const QString& line)
         secureSocket(true);
 
         //Get the protocol version from the line
-        m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString));
+        m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString)); // Compliant: we made sure that tlsCheckString variable ended with null(static const char* declaration)
     }
 }
 QString MainWindow::getTimeStamp()
