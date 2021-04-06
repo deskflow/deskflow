@@ -33,6 +33,7 @@ Bug fixes:
 - #6946 Add build stage to filename
 - #6950 Synergy client doesn't save the server address when rebooted
 - #6951 Fix issue creating standard version for Raspberry Pi
+- #6971 Fix vulnerabilities from SonarCloud
 
 Enhancements:
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop

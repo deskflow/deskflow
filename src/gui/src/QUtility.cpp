@@ -22,6 +22,7 @@
 
 #if defined(Q_OS_LINUX)
 #include <QProcess>
+#include <QFile>
 #endif
 
 #if defined(Q_OS_WIN)
@@ -46,20 +47,6 @@ QString hash(const QString& string)
     QByteArray data = string.toUtf8();
     QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
     return hash.toHex();
-}
-
-QString getFirstMacAddress()
-{
-    QString mac;
-    foreach (const QNetworkInterface &interface,  QNetworkInterface::allInterfaces())
-    {
-        mac = interface.hardwareAddress();
-        if (mac.size() != 0)
-        {
-            break;
-        }
-    }
-    return mac;
 }
 
 qProcessorArch getProcessorArch()
@@ -89,27 +76,4 @@ qProcessorArch getProcessorArch()
 #endif
 
     return kProcessorArchUnknown;
-}
-
-QString getOSInformation()
-{
-    QString result;
-
-#if defined(Q_OS_LINUX)
-    result = "Linux";
-    try {
-        QStringList arguments;
-        arguments.append("/etc/os-release");
-        CommandProcess cp("/bin/cat", arguments);
-        QString output = cp.run();
-
-        QRegExp resultRegex(".*PRETTY_NAME=\"([^\"]+)\".*");
-        if (resultRegex.exactMatch(output)) {
-            result = resultRegex.cap(1);
-        }
-    } catch (...) {
-    }
-#endif
-
-    return result;
 }

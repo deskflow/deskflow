@@ -172,11 +172,11 @@ private:
         bool            m_reading;
 
         // the converted selection data
-        String*        m_data;
+        String*        m_data = nullptr;
 
         // the actual type of the data.  if this is None then the
         // selection owner cannot convert to the requested type.
-        Atom*            m_actualTarget;
+        Atom*            m_actualTarget = nullptr;
 
     public:
         // true iff the selection owner didn't follow ICCCM conventions
