@@ -399,6 +399,12 @@
           <property name="topMargin">
            <number>11</number>
           </property>
+          <property name="rightMargin">
+           <number>5</number>
+          </property>
+          <property name="bottomMargin">
+           <number>5</number>
+          </property>
           <item>
            <widget class="QRadioButton" name="m_pRadioGroupServer">
             <property name="sizePolicy">
@@ -483,40 +489,6 @@
            </layout>
           </item>
           <item>
-           <widget class="QRadioButton" name="m_pRadioInternalConfig">
-            <property name="text">
-             <string>Configure interactively:</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <widget class="QPushButton" name="m_pButtonConfigureServer">
-              <property name="text">
-               <string>&amp;Configure Server...</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
            <widget class="QRadioButton" name="m_pRadioExternalConfig">
             <property name="text">
              <string>Use existing configuration:</string>
@@ -549,6 +521,42 @@
               </property>
               <property name="text">
                <string>&amp;Browse...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_pButtonConfigureServer">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>&amp;Configure server</string>
               </property>
              </widget>
             </item>
@@ -979,22 +987,6 @@
     <hint type="destinationlabel">
      <x>356</x>
      <y>211</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioInternalConfig</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_pButtonConfigureServer</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>204</x>
-     <y>244</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>212</x>
-     <y>274</y>
     </hint>
    </hints>
   </connection>

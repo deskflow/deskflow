@@ -311,7 +311,6 @@ void MainWindow::loadSettings()
     on_m_pRadioGroupServer_clicked(appConfig().getServerGroupChecked());
 
     m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
-    m_pRadioInternalConfig->setChecked(appConfig().getUseInternalConfig());
 
     m_pLineEditConfigFile->setText(appConfig().getConfigFile());
     m_pLineEditHostname->setText(appConfig().getServerHostname());
@@ -333,7 +332,7 @@ void MainWindow::saveSettings()
     appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
     appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
     appConfig().setUseExternalConfig(m_pRadioExternalConfig->isChecked());
-    appConfig().setUseInternalConfig(m_pRadioInternalConfig->isChecked());
+    appConfig().setUseInternalConfig(!m_pRadioExternalConfig->isChecked());
     appConfig().setConfigFile(m_pLineEditConfigFile->text());
     appConfig().setServerHostname(m_pLineEditHostname->text());
 
@@ -799,7 +798,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 QString MainWindow::configFilename()
 {
     QString filename;
-    if (m_pRadioInternalConfig->isChecked())
+    if (appConfig().getUseInternalConfig())
     {
         // TODO: no need to use a temporary file, since we need it to
         // be permenant (since it'll be used for Windows services, etc).
@@ -1373,7 +1372,6 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
    {
       //show server controls
       m_pRadioGroupServer->setChecked(true);
-      m_pRadioInternalConfig->show();
       m_pRadioExternalConfig->show();
       m_pLabelConfigurationFile->show();
       m_pLineEditConfigFile->show();
@@ -1397,7 +1395,6 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       m_pRadioGroupServer->setChecked(false);
       m_pLabelFingerprint->hide();
       m_pLabelLocalFingerprint->hide();
-      m_pRadioInternalConfig->hide();
       m_pRadioExternalConfig->hide();
       m_pLabelConfigurationFile->hide();
       m_pLineEditConfigFile->hide();
