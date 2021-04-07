@@ -386,6 +386,26 @@ void ServerConfig::updateServerName()
    }
 }
 
+const QString& ServerConfig::getConfigFile() const
+{
+   return m_pAppConfig->getConfigFile();
+}
+
+bool ServerConfig::getUseExternalConfig() const
+{
+   return m_pAppConfig->getUseExternalConfig();
+}
+
+void ServerConfig::setConfigFile(const QString& configFile)
+{
+   m_pAppConfig->setConfigFile(configFile);
+}
+
+void ServerConfig::setUseExternalConfig(bool useExternalConfig)
+{
+   m_pAppConfig->setUseExternalConfig(useExternalConfig);
+}
+
 bool ServerConfig::findScreenName(const QString& name, int& index)
 {
     bool found = false;

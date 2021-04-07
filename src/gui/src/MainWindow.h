@@ -145,7 +145,6 @@ public slots:
         void updateScreenName();
         void on_m_pRadioGroupServer_clicked(bool on);
         void on_m_pRadioGroupClient_clicked(bool on);
-        bool on_m_pButtonBrowseConfigFile_clicked();
         void on_m_pButtonConfigureServer_clicked();
         bool on_m_pActionSave_triggered();
         void on_m_pActionAbout_triggered();

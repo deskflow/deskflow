@@ -489,44 +489,6 @@
            </layout>
           </item>
           <item>
-           <widget class="QRadioButton" name="m_pRadioExternalConfig">
-            <property name="text">
-             <string>Use existing configuration:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout">
-            <item>
-             <widget class="QLabel" name="m_pLabelConfigurationFile">
-              <property name="text">
-               <string>&amp;Configuration file:</string>
-              </property>
-              <property name="buddy">
-               <cstring>m_pLineEditConfigFile</cstring>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="m_pLineEditConfigFile">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="m_pButtonBrowseConfigFile">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>&amp;Browse...</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <spacer>
@@ -958,38 +920,6 @@
   <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>m_pRadioExternalConfig</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_pLineEditConfigFile</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>156</x>
-     <y>179</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>169</x>
-     <y>209</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioExternalConfig</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_pButtonBrowseConfigFile</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>353</x>
-     <y>182</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>356</x>
-     <y>211</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>m_pButtonToggleStart</sender>
    <signal>clicked()</signal>

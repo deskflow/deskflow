@@ -57,14 +57,6 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#if defined(Q_OS_WIN)
-static const char synergyConfigName[] = "synergy.sgc";
-static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-#else
-static const char synergyConfigName[] = "synergy.conf";
-static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
-#endif
-
 static const char* tlsCheckString = "network encryption protocol: ";
 
 static const int debugLogLevel = 1;
@@ -309,10 +301,6 @@ void MainWindow::createMenuBar()
 void MainWindow::loadSettings()
 {
     on_m_pRadioGroupServer_clicked(appConfig().getServerGroupChecked());
-
-    m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
-
-    m_pLineEditConfigFile->setText(appConfig().getConfigFile());
     m_pLineEditHostname->setText(appConfig().getServerHostname());
 }
 
@@ -331,9 +319,6 @@ void MainWindow::saveSettings()
     // program settings
     appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
     appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
-    appConfig().setUseExternalConfig(m_pRadioExternalConfig->isChecked());
-    appConfig().setUseInternalConfig(!m_pRadioExternalConfig->isChecked());
-    appConfig().setConfigFile(m_pLineEditConfigFile->text());
     appConfig().setServerHostname(m_pLineEditHostname->text());
 
     /* Save everything */
@@ -798,37 +783,29 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 QString MainWindow::configFilename()
 {
     QString filename;
-    if (appConfig().getUseInternalConfig())
+    if (appConfig().getUseExternalConfig())
     {
-        // TODO: no need to use a temporary file, since we need it to
-        // be permenant (since it'll be used for Windows services, etc).
-        QTemporaryFile tempConfigFile;
-        tempConfigFile.setAutoRemove(false);
-
-        if (!tempConfigFile.open())
-        {
-            QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
-            return "";
-        }
-
-        serverConfig().save(tempConfigFile);
-        filename = tempConfigFile.fileName();
-
-        tempConfigFile.close();
+        filename = appConfig().getConfigFile();
     }
     else
     {
-        if (!QFile::exists(m_pLineEditConfigFile->text()))
-        {
-            if (QMessageBox::warning(this, tr("Configuration filename invalid"),
-                tr("You have not filled in a valid configuration file for the synergy server. "
-                        "Do you want to browse for the configuration file now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes
-                    || !on_m_pButtonBrowseConfigFile_clicked())
-                return "";
-        }
+       // TODO: no need to use a temporary file, since we need it to
+       // be permenant (since it'll be used for Windows services, etc).
+       QTemporaryFile tempConfigFile;
+       tempConfigFile.setAutoRemove(false);
 
-        filename = m_pLineEditConfigFile->text();
+       if (!tempConfigFile.open())
+       {
+           QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
+           return "";
+       }
+
+       serverConfig().save(tempConfigFile);
+       filename = tempConfigFile.fileName();
+
+       tempConfigFile.close();
     }
+
     return filename;
 }
 
@@ -1157,19 +1134,6 @@ MainWindow::licenseManager() const
 }
 #endif
 
-bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
-{
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
-
-    if (!fileName.isEmpty())
-    {
-        m_pLineEditConfigFile->setText(fileName);
-        return true;
-    }
-
-    return false;
-}
-
 bool  MainWindow::on_m_pActionSave_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
@@ -1372,10 +1336,6 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
    {
       //show server controls
       m_pRadioGroupServer->setChecked(true);
-      m_pRadioExternalConfig->show();
-      m_pLabelConfigurationFile->show();
-      m_pLineEditConfigFile->show();
-      m_pButtonBrowseConfigFile->show();
       m_pButtonConfigureServer->show();
       updateLocalFingerprint();
 
@@ -1395,10 +1355,6 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       m_pRadioGroupServer->setChecked(false);
       m_pLabelFingerprint->hide();
       m_pLabelLocalFingerprint->hide();
-      m_pRadioExternalConfig->hide();
-      m_pLabelConfigurationFile->hide();
-      m_pLineEditConfigFile->hide();
-      m_pButtonBrowseConfigFile->hide();
       m_pButtonConfigureServer->hide();
    }
 }
