@@ -10,7 +10,7 @@ file (GLOB LEGACY_GUI_SOURCE_FILES
    src/*.cpp
    src/*.h
    src/validators/*
-   src/validators/*.h
+   src/widgets/*
 )
 file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
 file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)

@@ -129,7 +129,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
-    
+
     m_pLabelScreenName->setText(appConfig.screenName());
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
     m_pLabelIpAddresses->setText(getIPAddresses());
@@ -447,6 +447,7 @@ void MainWindow::updateFromLogLine(const QString &line)
 
 void MainWindow::checkConnected(const QString& line)
 {
+    m_pLabelServerState->update(line);
     // TODO: implement ipc connection state messages to replace this hack.
     if (line.contains("connected to server") ||
         line.contains("accepted client connection"))
@@ -1337,6 +1338,7 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       //show server controls
       m_pRadioGroupServer->setChecked(true);
       m_pButtonConfigureServer->show();
+      m_pLabelServerState->show();
       updateLocalFingerprint();
 
       //hide client controls
@@ -1356,6 +1358,7 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       m_pLabelFingerprint->hide();
       m_pLabelLocalFingerprint->hide();
       m_pButtonConfigureServer->hide();
+      m_pLabelServerState->hide();
    }
 }
 
