@@ -447,8 +447,16 @@ void MainWindow::updateFromLogLine(const QString &line)
 
 void MainWindow::checkConnected(const QString& line)
 {
-    m_pLabelServerState->update(line);
     // TODO: implement ipc connection state messages to replace this hack.
+    if (m_pRadioGroupServer->isChecked())
+    {
+        m_pLabelServerState->update(line);
+    }
+    else
+    {
+        m_pLabelClientState->update(line);
+    }
+
     if (line.contains("connected to server") ||
         line.contains("accepted client connection"))
     {
@@ -1343,6 +1351,7 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
 
       //hide client controls
       m_pRadioGroupClient->setChecked(false);
+      m_pLabelClientState->hide();
       m_pLabelServerName->hide();
       m_pLineEditHostname->hide();
    }

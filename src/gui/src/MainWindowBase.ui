@@ -704,6 +704,16 @@
            </layout>
           </item>
           <item>
+           <widget class="synergy_widgets::ClientStateLabel" name="m_pLabelClientState">
+            <property name="text">
+             <string>Connected to server</string>
+            </property>
+            <property name="indent">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -947,6 +957,11 @@
    <class>synergy_widgets::ServerStateLabel</class>
    <extends>QLabel</extends>
    <header>widgets/ServerStateLabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>synergy_widgets::ClientStateLabel</class>
+   <extends>QLabel</extends>
+   <header>widgets/ClientStateLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>
