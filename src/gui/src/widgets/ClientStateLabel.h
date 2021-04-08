@@ -28,7 +28,7 @@ class ClientStateLabel : public QLabel
 {
 public:
    explicit ClientStateLabel(QWidget* parent = nullptr);
-   void update(const QString& line);
+   void updateClientState(const QString& line);
 };
 
 } // namespace synergy_widgets

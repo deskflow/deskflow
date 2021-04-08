@@ -452,11 +452,11 @@ void MainWindow::checkConnected(const QString& line)
     // TODO: implement ipc connection state messages to replace this hack.
     if (m_pRadioGroupServer->isChecked())
     {
-        m_pLabelServerState->update(line);
+        m_pLabelServerState->updateServerState(line);
     }
     else
     {
-        m_pLabelClientState->update(line);
+        m_pLabelClientState->updateClientState(line);
     }
 
     if (line.contains("connected to server") ||
@@ -1320,12 +1320,12 @@ void MainWindow::secureSocket(bool secureSocket)
     }
 }
 
-void MainWindow::on_m_pSettingsLink_linkActivated(const QString &link)
+void MainWindow::on_m_pSettingsLink_linkActivated(const QString&)
 {
    m_pActionSettings->trigger();
 }
 
-void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString& link)
+void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString&)
 {
     QMessageBox::information(this, "SSL/TLS fingerprint", Fingerprint::local().readFirst());
 }

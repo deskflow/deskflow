@@ -97,13 +97,20 @@ void ServerConfigDialog::showEvent(QShowEvent* event)
 
 void ServerConfigDialog::accept()
 {
-    if (m_pCheckBoxUseExternalConfig->isChecked() && !QFile::exists(m_pEditConfigFile->text()))
+    if (m_pCheckBoxUseExternalConfig->isChecked() &&
+        !QFile::exists(m_pEditConfigFile->text()))
     {
-        if (QMessageBox::warning(this, tr("Configuration filename invalid"),
-            tr("You have not filled in a valid configuration file for the synergy server. "
-                   "Do you want to browse for the configuration file now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes
-               || !on_m_pButtonBrowseConfigFile_clicked())
+        auto title = tr("Configuration filename invalid");
+        auto description = tr("You have not filled in a valid configuration file for the synergy server. "
+                              "Do you want to browse for the configuration file now?");
+
+        auto selectedButton = QMessageBox::warning(this, title, description, QMessageBox::Yes | QMessageBox::No);
+
+        if (selectedButton != QMessageBox::Yes ||
+            !on_m_pButtonBrowseConfigFile_clicked())
+        {
            return;
+        }
     }
 
     serverConfig().setConfigFile(m_pEditConfigFile->text());

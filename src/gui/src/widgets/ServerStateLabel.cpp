@@ -26,7 +26,7 @@ ServerStateLabel::ServerStateLabel(QWidget* parent) :
 {
 }
 
-void ServerStateLabel::update(const QString& line)
+void ServerStateLabel::updateServerState(const QString& line)
 {
    if (line.contains("process exited"))
    {

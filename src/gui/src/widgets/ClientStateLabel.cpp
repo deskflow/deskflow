@@ -26,7 +26,7 @@ ClientStateLabel::ClientStateLabel(QWidget* parent) :
     hide();
 }
 
-void ClientStateLabel::update(const QString& line)
+void ClientStateLabel::updateClientState(const QString& line)
 {
    if (line.contains("connected to server"))
    {

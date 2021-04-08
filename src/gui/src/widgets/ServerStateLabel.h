@@ -28,7 +28,7 @@ class ServerStateLabel : public QLabel
 {
 public:
    explicit ServerStateLabel(QWidget* parent = nullptr);
-   void update(const QString& line);
+   void updateServerState(const QString& line);
 
 private:
    unsigned int m_clientsCounter = 0;
