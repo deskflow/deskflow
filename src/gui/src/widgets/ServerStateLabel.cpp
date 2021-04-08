@@ -28,7 +28,11 @@ ServerStateLabel::ServerStateLabel(QWidget* parent) :
 
 void ServerStateLabel::update(const QString& line)
 {
-   if (line.contains("has connected"))
+   if (line.contains("process exited"))
+   {
+      m_clientsCounter = 0;
+   }
+   else if (line.contains("has connected"))
    {
       ++m_clientsCounter;
    }

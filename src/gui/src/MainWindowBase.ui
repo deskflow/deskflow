@@ -715,7 +715,7 @@
           <item>
            <widget class="synergy_widgets::ClientStateLabel" name="m_pLabelClientState">
             <property name="text">
-             <string>Connected to server</string>
+             <string>Connected to the server</string>
             </property>
             <property name="indent">
              <number>20</number>
