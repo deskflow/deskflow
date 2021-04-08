@@ -1126,12 +1126,9 @@ void MainWindow::updateLocalFingerprint()
 {
     if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
         m_pLabelFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
     }
     else {
         m_pLabelFingerprint->setVisible(false);
-        m_pLabelLocalFingerprint->setVisible(false);
     }
 }
 
@@ -1322,6 +1319,11 @@ void MainWindow::on_m_pSettingsLink_linkActivated(const QString &link)
    m_pActionSettings->trigger();
 }
 
+void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString& link)
+{
+    QMessageBox::information(this, "SSL/TLS fingerprint", Fingerprint::local().readFirst());
+}
+
 void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
 {
     appConfig().setAutoConfigServer(server);
@@ -1367,7 +1369,6 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       //hide server controls
       m_pRadioGroupServer->setChecked(false);
       m_pLabelFingerprint->hide();
-      m_pLabelLocalFingerprint->hide();
       m_pButtonConfigureServer->hide();
       m_pLabelServerState->hide();
    }
