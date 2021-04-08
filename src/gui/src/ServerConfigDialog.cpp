@@ -260,6 +260,10 @@ void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked)
     m_pLabelConfigFile->setEnabled(checked);
     m_pEditConfigFile->setEnabled(checked);
     m_pButtonBrowseConfigFile->setEnabled(checked);
+
+    m_pTabWidget->setTabEnabled(0, !checked);
+    m_pTabWidget->setTabEnabled(1, !checked);
+    m_pTabWidget->setTabEnabled(2, !checked);
 }
 
 bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
