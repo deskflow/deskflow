@@ -1354,6 +1354,7 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       m_pLabelClientState->hide();
       m_pLabelServerName->hide();
       m_pLineEditHostname->hide();
+      m_pButtonConnect->hide();
    }
    else
    {
@@ -1361,6 +1362,7 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
       m_pRadioGroupClient->setChecked(true);
       m_pLabelServerName->show();
       m_pLineEditHostname->show();
+       m_pButtonConnect->show();
 
       //hide server controls
       m_pRadioGroupServer->setChecked(false);
@@ -1374,4 +1376,9 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
 void MainWindow::on_m_pRadioGroupClient_clicked(bool on)
 {
    on_m_pRadioGroupServer_clicked(!on);
+}
+
+void MainWindow::on_m_pButtonConnect_clicked()
+{
+   restartSynergy();
 }
