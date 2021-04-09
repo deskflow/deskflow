@@ -38,6 +38,9 @@
        </property>
        <item>
         <layout class="QHBoxLayout">
+         <property name="spacing">
+          <number>6</number>
+         </property>
          <item>
           <widget class="TrashScreenWidget" name="m_pTrashScreenWidget">
            <property name="acceptDrops">
@@ -115,23 +118,40 @@
           </spacer>
          </item>
          <item>
-          <widget class="NewScreenWidget" name="m_pLabelNewScreenWidget">
-           <property name="toolTip">
-            <string>Drag this button to the grid to add a new screen.</string>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="spacing">
+            <number>0</number>
            </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+           <property name="leftMargin">
+            <number>0</number>
            </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="../res/Synergy.qrc">:/res/icons/64x64/video-display.png</pixmap>
-           </property>
-          </widget>
+           <item>
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="m_pButtonAddComputer">
+             <property name="text">
+              <string>Add computer</string>
+             </property>
+             <property name="default">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -736,11 +756,6 @@
    <extends>QTableView</extends>
    <header>ScreenSetupView.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>NewScreenWidget</class>
-   <extends>QLabel</extends>
-   <header>NewScreenWidget.h</header>
   </customwidget>
   <customwidget>
    <class>TrashScreenWidget</class>
