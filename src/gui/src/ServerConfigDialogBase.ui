@@ -49,6 +49,19 @@
           </widget>
          </item>
          <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="QLabel" name="label_2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -56,8 +69,14 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>310</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Configure the layout of your synergy server configuration.</string>
+            <string>Configure the layout of your computer dispalys by dragging to where you want.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -65,7 +84,23 @@
            <property name="wordWrap">
             <bool>true</bool>
            </property>
+           <property name="indent">
+            <number>-1</number>
+           </property>
           </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
           <widget class="NewScreenWidget" name="m_pLabelNewScreenWidget">
