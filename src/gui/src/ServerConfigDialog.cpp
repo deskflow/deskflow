@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "ScreenSettingsDialog.h"
 #include "ServerConfigDialog.h"
 #include "ServerConfig.h"
 #include "HotkeyDialog.h"
@@ -79,6 +80,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
           }
        }
     }
+
+    m_pButtonAddComputer->setEnabled(!model().isFull());
+    connect(m_pTrashScreenWidget, SIGNAL(screenRemoved()), this, SLOT(onScreenRemoved()));
 }
 
 void ServerConfigDialog::showEvent(QShowEvent* event)
@@ -238,4 +242,22 @@ void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
 {
     m_pButtonEditAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
     m_pButtonRemoveAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
+}
+
+void ServerConfigDialog::on_m_pButtonAddComputer_clicked()
+{
+    Screen newScreen("");
+
+    ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens);
+    if (dlg.exec() == QDialog::Accepted)
+    {
+        model().addScreen(newScreen);
+    }
+
+    m_pButtonAddComputer->setEnabled(!model().isFull());
+}
+
+void ServerConfigDialog::onScreenRemoved()
+{
+    m_pButtonAddComputer->setEnabled(true);
 }

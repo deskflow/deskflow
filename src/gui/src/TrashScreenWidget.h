@@ -36,6 +36,10 @@ class TrashScreenWidget : public QLabel
     public:
         void dragEnterEvent(QDragEnterEvent* event);
         void dropEvent(QDropEvent* event);
+
+    signals:
+        void screenRemoved();
+
 };
 
 #endif
