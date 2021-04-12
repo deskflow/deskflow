@@ -125,7 +125,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
 
         bool    getServerGroupChecked() const;
         bool    getUseExternalConfig() const;
-        QString getConfigFile() const;
+        const QString& getConfigFile() const;
         bool    getUseInternalConfig() const;
         bool    getClientGroupChecked() const;
         QString getServerHostname() const;
