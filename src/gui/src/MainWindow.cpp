@@ -800,7 +800,7 @@ QString MainWindow::configFilename()
     QString filename;
     if (m_pRadioInternalConfig->isChecked())
     {
-        QFile configFile(qApp->applicationDirPath() + "/LastConfig");
+        QFile configFile(QCoreApplication::applicationDirPath() + "/LastConfig");
         configFile.remove();
 
         if (!configFile.open(QIODevice::WriteOnly))
