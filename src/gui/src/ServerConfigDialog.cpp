@@ -24,6 +24,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QMessageBox>
+#include <QFileDialog>
 
 ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -35,6 +36,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
 {
     setupUi(this);
 
+    m_pEditConfigFile->setText(serverConfig().getConfigFile());
+    m_pCheckBoxUseExternalConfig->setChecked(serverConfig().getUseExternalConfig());
     m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
     m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
 
@@ -94,6 +97,25 @@ void ServerConfigDialog::showEvent(QShowEvent* event)
 
 void ServerConfigDialog::accept()
 {
+    if (m_pCheckBoxUseExternalConfig->isChecked() &&
+        !QFile::exists(m_pEditConfigFile->text()))
+    {
+        auto title = tr("Configuration filename invalid");
+        auto description = tr("You have not filled in a valid configuration file for the synergy server. "
+                              "Do you want to browse for the configuration file now?");
+
+        auto selectedButton = QMessageBox::warning(this, title, description, QMessageBox::Yes | QMessageBox::No);
+
+        if (selectedButton != QMessageBox::Yes ||
+            !on_m_pButtonBrowseConfigFile_clicked())
+        {
+           return;
+        }
+    }
+
+    serverConfig().setConfigFile(m_pEditConfigFile->text());
+    serverConfig().setUseExternalConfig(m_pCheckBoxUseExternalConfig->isChecked());
+
     serverConfig().haveHeartbeat(m_pCheckBoxHeartbeat->isChecked());
     serverConfig().setHeartbeat(m_pSpinBoxHeartbeat->value());
 
@@ -238,4 +260,34 @@ void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
 {
     m_pButtonEditAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
     m_pButtonRemoveAction->setEnabled(!m_pListActions->selectedItems().isEmpty());
+}
+
+void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked)
+{
+    m_pLabelConfigFile->setEnabled(checked);
+    m_pEditConfigFile->setEnabled(checked);
+    m_pButtonBrowseConfigFile->setEnabled(checked);
+
+    m_pTabWidget->setTabEnabled(0, !checked);
+    m_pTabWidget->setTabEnabled(1, !checked);
+    m_pTabWidget->setTabEnabled(2, !checked);
+}
+
+bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
+{
+#if defined(Q_OS_WIN)
+    const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
+#else
+    const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
+#endif
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
+
+    if (!fileName.isEmpty())
+    {
+        m_pEditConfigFile->setText(fileName);
+        return true;
+    }
+
+    return false;
 }
