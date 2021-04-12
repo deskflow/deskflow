@@ -800,21 +800,19 @@ QString MainWindow::configFilename()
     QString filename;
     if (m_pRadioInternalConfig->isChecked())
     {
-        // TODO: no need to use a temporary file, since we need it to
-        // be permenant (since it'll be used for Windows services, etc).
-        QTemporaryFile tempConfigFile;
-        tempConfigFile.setAutoRemove(false);
+        QFile configFile(qApp->applicationDirPath() + "/LastConfig");
+        configFile.remove();
 
-        if (!tempConfigFile.open())
+        if (!configFile.open(QIODevice::WriteOnly))
         {
             QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
             return "";
         }
 
-        serverConfig().save(tempConfigFile);
-        filename = tempConfigFile.fileName();
+        serverConfig().save(configFile);
+        filename = configFile.fileName();
 
-        tempConfigFile.close();
+        configFile.close();
     }
     else
     {
