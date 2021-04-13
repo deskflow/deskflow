@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>778</width>
-    <height>453</height>
+    <height>508</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Server Configuration</string>
@@ -16,6 +22,12 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="m_pTabWidget">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="currentIndex">
       <number>2</number>
      </property>
@@ -339,12 +351,21 @@
        <string>Advanced server settings</string>
       </attribute>
       <layout class="QGridLayout">
+       <property name="leftMargin">
+        <number>9</number>
+       </property>
+       <property name="rightMargin">
+        <number>9</number>
+       </property>
        <item row="1" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
           <number>0</number>
          </property>
          <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -354,10 +375,25 @@
              <kerning>true</kerning>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QGroupBox::title{
+   left: -5px;
+   top: -2px;
+}</string>
+           </property>
            <property name="title">
             <string>&amp;Switch computer</string>
            </property>
            <layout class="QVBoxLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
             <item>
              <layout class="QHBoxLayout">
               <item>
@@ -468,18 +504,46 @@
           </widget>
          </item>
          <item>
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>13</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="QGroupBox" name="groupBox_3">
            <property name="font">
             <font>
              <kerning>true</kerning>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QGroupBox::title{
+   left: -2px;
+   top: -2px;
+}</string>
+           </property>
            <property name="title">
             <string>Clipboard sharing</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="topMargin">
+             <number>6</number>
+            </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
+              <property name="spacing">
+               <number>6</number>
+              </property>
               <item>
                <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
                 <property name="sizePolicy">
@@ -539,7 +603,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>23</height>
+                <height>60</height>
                </size>
               </property>
              </spacer>
@@ -569,13 +633,22 @@
            <kerning>true</kerning>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">QGroupBox::title{
+   left: -5px;
+   top: -2px;
+}</string>
+         </property>
          <property name="title">
-          <string>&amp;Dead corners</string>
+          <string>&amp;Dead corners for this computer</string>
          </property>
          <property name="checked">
           <bool>false</bool>
          </property>
          <layout class="QGridLayout">
+          <property name="topMargin">
+           <number>6</number>
+          </property>
           <item row="1" column="0" colspan="3">
            <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
             <property name="text">
@@ -650,10 +723,19 @@
              <kerning>false</kerning>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QGroupBox::title{
+   left: -5px;
+   top: -2px;
+}</string>
+           </property>
            <property name="title">
             <string>&amp;Options</string>
            </property>
            <layout class="QGridLayout">
+            <property name="verticalSpacing">
+             <number>12</number>
+            </property>
             <item row="11" column="0">
              <spacer>
               <property name="orientation">
@@ -672,6 +754,9 @@
               <property name="enabled">
                <bool>true</bool>
               </property>
+              <property name="styleSheet">
+               <string notr="true">padding-left: 2px;</string>
+              </property>
               <property name="text">
                <string>Use &amp;relative mouse moves</string>
               </property>
@@ -680,12 +765,18 @@
             <item row="0" column="0">
              <layout class="QHBoxLayout">
               <property name="spacing">
+               <number>9</number>
+              </property>
+              <property name="leftMargin">
                <number>0</number>
               </property>
               <item>
                <widget class="QCheckBox" name="m_pCheckBoxHeartbeat">
                 <property name="enabled">
                  <bool>true</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">left: -2px;</string>
                 </property>
                 <property name="text">
                  <string>&amp;Check clients every</string>
@@ -709,6 +800,12 @@
                <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                 <property name="minimum">
                  <number>1000</number>
@@ -735,6 +832,9 @@
             </item>
             <item row="4" column="0">
              <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
+              <property name="styleSheet">
+               <string notr="true">padding-left: 2px;</string>
+              </property>
               <property name="text">
                <string>Ignore auto config clients</string>
               </property>
@@ -742,6 +842,9 @@
             </item>
             <item row="6" column="0">
              <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
+              <property name="styleSheet">
+               <string notr="true">padding-left: 2px;</string>
+              </property>
               <property name="text">
                <string>Disable lock to screen</string>
               </property>
@@ -752,6 +855,9 @@
               <property name="enabled">
                <bool>true</bool>
               </property>
+              <property name="styleSheet">
+               <string notr="true">padding-left: 2px;</string>
+              </property>
               <property name="text">
                <string>Don't take &amp;foreground window on Windows servers</string>
               </property>
@@ -761,6 +867,22 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="3" column="0">
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>13</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
