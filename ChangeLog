@@ -6,6 +6,7 @@ Bug fixes:
 - #6968 System loses synchronisation between settings and configuration
 - #6972 Fix SonarCloud security hotspots
 - #6971 Fix vulnerabilities from SonarCloud
+- #6974 Fix macOS 10.13 application filess
 - #6975 Fix server stop working
 
 Enhancements:

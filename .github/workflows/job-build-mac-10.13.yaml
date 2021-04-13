@@ -40,6 +40,7 @@ jobs:
             -DCMAKE_CONFIGURATION_TYPES=Release ..
           . ./version
           make -j
+          make install/strip
 
       - name: Version Info
         id: version
