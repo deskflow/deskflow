@@ -793,10 +793,10 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 QString MainWindow::configFilename()
 {
-    QString fileName;
+    QString configFullPath;
     if (appConfig().getUseExternalConfig())
     {
-        fileName = appConfig().getConfigFile();
+        configFullPath = appConfig().getConfigFile();
     }
     else
     {
@@ -820,18 +820,18 @@ QString MainWindow::configFilename()
 
             serverConfig().save(configFile);
             configFile.close();
-            fileName = configFile.fileName();
+            configFullPath = configFile.fileName();
 
             break;
         }
 
-        if (fileName.isEmpty())
+        if (configFullPath.isEmpty())
         {
             QMessageBox::critical(this, tr("Cannot write configuration file"), errors.join('\n'));
         }
     }
 
-    return fileName;
+    return configFullPath;
 }
 
 QString MainWindow::address() const
