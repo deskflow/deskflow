@@ -51,9 +51,9 @@ steps:
       mkdir build64
       cd build64
       IF "$(buildType)"=="enterprise" (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
       ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release ..
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release ..
       )
     displayName: 'Cmake x64 Standard'
     env:
@@ -79,9 +79,9 @@ steps:
       mkdir build32
       cd build32
       IF "$(buildType)"=="enterprise" (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
       ) else (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release ..
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release ..
       )
     displayName: 'Cmake x32 Standard'
     env:
