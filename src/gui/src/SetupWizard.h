@@ -19,7 +19,6 @@
 #include <memory>
 #include "ui_SetupWizardBase.h"
 #include <QDialog>
-#include "validators/ScreenNameValidator.h"
 
 class MainWindow;
 
@@ -36,7 +35,6 @@ protected:
 
 private:
    MainWindow& m_MainWindow;
-   std::unique_ptr<validators::ScreenNameValidator> m_ScreenNameValidator;
 
 private slots:
    void onNameChanged();

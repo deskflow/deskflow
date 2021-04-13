@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "validators/ScreenNameValidator.h"
+#include "validators/AliasValidator.h"
 #include "ScreenSettingsDialog.h"
 #include "Screen.h"
 
@@ -31,12 +33,10 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,cons
     setupUi(this);
 
     m_pLineEditName->setText(m_pScreen->name());
-    m_NameValidator = std::make_unique<validators::ScreenNameValidator>(m_pLineEditName, m_pLabelNameError, pScreens);
-    m_pLineEditName->setValidator(m_NameValidator.get());
+    m_pLineEditName->setValidator(new validators::ScreenNameValidator(m_pLineEditName, m_pLabelNameError, pScreens));
     m_pLineEditName->selectAll();
 
-    m_AliasValidator = std::make_unique<validators::AliasValidator>(m_pLineEditAlias, m_pLabelAliasError);
-    m_pLineEditAlias->setValidator(m_AliasValidator.get());
+    m_pLineEditAlias->setValidator(new validators::AliasValidator(m_pLineEditAlias, m_pLabelAliasError));
 
     for (int i = 0; i < m_pScreen->aliases().count(); i++)
         new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);
@@ -57,6 +57,8 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,cons
     m_pCheckBoxNumLock->setChecked(m_pScreen->fix(Screen::NumLock));
     m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(Screen::ScrollLock));
     m_pCheckBoxXTest->setChecked(m_pScreen->fix(Screen::XTest));
+
+    resize(400, 625);
 }
 
 void ScreenSettingsDialog::accept()
