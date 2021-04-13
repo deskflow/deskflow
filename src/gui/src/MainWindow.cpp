@@ -57,14 +57,6 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#if defined(Q_OS_WIN)
-static const char synergyConfigName[] = "synergy.sgc";
-static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
-#else
-static const char synergyConfigName[] = "synergy.conf";
-static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
-#endif
-
 static const char* tlsCheckString = "network encryption protocol: ";
 
 static const int debugLogLevel = 1;
@@ -127,6 +119,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
 #endif
 
     setupUi(this);
+    updateAutoConfigWidgets();
 
     createMenuBar();
     loadSettings();
@@ -134,7 +127,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
-    
+
     m_pLabelScreenName->setText(appConfig.screenName());
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
     m_pLabelIpAddresses->setText(getIPAddresses());
@@ -161,7 +154,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     // hide padlock icon
     secureSocket(false);
 
-    updateLocalFingerprint();
+
 
     connect (this, SIGNAL(windowShown()),
              this, SLOT(on_windowShown()), Qt::QueuedConnection);
@@ -206,9 +199,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
     updateZeroconfService();
 
     addZeroconfServer(m_AppConfig->autoConfigServer());
-#endif
 
     updateAutoConfigWidgets();
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -305,14 +298,11 @@ void MainWindow::createMenuBar()
 
 void MainWindow::loadSettings()
 {
-    // the next two must come BEFORE loading groupServerChecked and groupClientChecked or
-    // disabling and/or enabling the right widgets won't automatically work
-    m_pRadioExternalConfig->setChecked(appConfig().getUseExternalConfig());
-    m_pRadioInternalConfig->setChecked(appConfig().getUseInternalConfig());
+    on_m_pRadioGroupServer_clicked(appConfig().getServerGroupChecked());
+    on_m_pRadioGroupClient_clicked(appConfig().getClientGroupChecked());
+    m_pRadioGroupServer->setChecked(appConfig().getServerGroupChecked());
+    m_pRadioGroupClient->setChecked(appConfig().getClientGroupChecked());
 
-    m_pGroupServer->setChecked(appConfig().getServerGroupChecked());
-    m_pLineEditConfigFile->setText(appConfig().getConfigFile());
-    m_pGroupClient->setChecked(appConfig().getClientGroupChecked());
     m_pLineEditHostname->setText(appConfig().getServerHostname());
 }
 
@@ -329,11 +319,8 @@ void MainWindow::initConnections()
 void MainWindow::saveSettings()
 {
     // program settings
-    appConfig().setServerGroupChecked(m_pGroupServer->isChecked());
-    appConfig().setClientGroupChecked(m_pGroupClient->isChecked());
-    appConfig().setUseExternalConfig(m_pRadioExternalConfig->isChecked());
-    appConfig().setUseInternalConfig(m_pRadioInternalConfig->isChecked());
-    appConfig().setConfigFile(m_pLineEditConfigFile->text());
+    appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
+    appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
     appConfig().setServerHostname(m_pLineEditHostname->text());
 
     /* Save everything */
@@ -463,6 +450,15 @@ void MainWindow::updateFromLogLine(const QString &line)
 void MainWindow::checkConnected(const QString& line)
 {
     // TODO: implement ipc connection state messages to replace this hack.
+    if (m_pRadioGroupServer->isChecked())
+    {
+        m_pLabelServerState->updateServerState(line);
+    }
+    else
+    {
+        m_pLabelClientState->updateClientState(line);
+    }
+
     if (line.contains("connected to server") ||
         line.contains("accepted client connection"))
     {
@@ -798,37 +794,29 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 QString MainWindow::configFilename()
 {
     QString filename;
-    if (m_pRadioInternalConfig->isChecked())
+    if (appConfig().getUseExternalConfig())
     {
-        // TODO: no need to use a temporary file, since we need it to
-        // be permenant (since it'll be used for Windows services, etc).
-        QTemporaryFile tempConfigFile;
-        tempConfigFile.setAutoRemove(false);
-
-        if (!tempConfigFile.open())
-        {
-            QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
-            return "";
-        }
-
-        serverConfig().save(tempConfigFile);
-        filename = tempConfigFile.fileName();
-
-        tempConfigFile.close();
+        filename = appConfig().getConfigFile();
     }
     else
     {
-        if (!QFile::exists(m_pLineEditConfigFile->text()))
-        {
-            if (QMessageBox::warning(this, tr("Configuration filename invalid"),
-                tr("You have not filled in a valid configuration file for the synergy server. "
-                        "Do you want to browse for the configuration file now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes
-                    || !on_m_pButtonBrowseConfigFile_clicked())
-                return "";
-        }
+       // TODO: no need to use a temporary file, since we need it to
+       // be permenant (since it'll be used for Windows services, etc).
+       QTemporaryFile tempConfigFile;
+       tempConfigFile.setAutoRemove(false);
 
-        filename = m_pLineEditConfigFile->text();
+       if (!tempConfigFile.open())
+       {
+           QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
+           return "";
+       }
+
+       serverConfig().save(tempConfigFile);
+       filename = tempConfigFile.fileName();
+
+       tempConfigFile.close();
     }
+
     return filename;
 }
 
@@ -1138,14 +1126,15 @@ void MainWindow::showLicenseNotice(const QString& notice)
 
 void MainWindow::updateLocalFingerprint()
 {
-    if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists()) {
+    if (m_AppConfig->getCryptoEnabled() &&
+        Fingerprint::local().fileExists() &&
+        m_pRadioGroupServer->isChecked())
+    {
         m_pLabelFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setVisible(true);
-        m_pLabelLocalFingerprint->setText(Fingerprint::local().readFirst());
     }
-    else {
+    else
+    {
         m_pLabelFingerprint->setVisible(false);
-        m_pLabelLocalFingerprint->setVisible(false);
     }
 }
 
@@ -1156,33 +1145,6 @@ MainWindow::licenseManager() const
     return *m_LicenseManager;
 }
 #endif
-
-void MainWindow::on_m_pGroupClient_toggled(bool on)
-{
-    m_pGroupServer->setChecked(!on);
-
-    // only call in either client or server toggle, but not both
-    // since the toggle functions call eachother indirectly.
-    updateZeroconfService();
-}
-
-void MainWindow::on_m_pGroupServer_toggled(bool on)
-{
-    m_pGroupClient->setChecked(!on);
-}
-
-bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
-{
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
-
-    if (!fileName.isEmpty())
-    {
-        m_pLineEditConfigFile->setText(fileName);
-        return true;
-    }
-
-    return false;
-}
 
 bool  MainWindow::on_m_pActionSave_triggered()
 {
@@ -1229,20 +1191,11 @@ void MainWindow::updateZeroconfService()
 
 void MainWindow::updateAutoConfigWidgets()
 {
-    if (appConfig().autoConfig()) {
-        m_pLabelAutoDetected->show();
-        m_pComboServerList->show();
+   m_pLabelServerName->show();
+   m_pLineEditHostname->show();
 
-        m_pLabelServerName->hide();
-        m_pLineEditHostname->hide();
-    }
-    else {
-        m_pLabelServerName->show();
-        m_pLineEditHostname->show();
-
-        m_pLabelAutoDetected->hide();
-        m_pComboServerList->hide();
-    }
+   m_pLabelAutoDetected->hide();
+   m_pComboServerList->hide();
 }
 
 void MainWindow::on_m_pActionSettings_triggered()
@@ -1367,6 +1320,16 @@ void MainWindow::secureSocket(bool secureSocket)
     }
 }
 
+void MainWindow::on_m_pSettingsLink_linkActivated(const QString&)
+{
+   m_pActionSettings->trigger();
+}
+
+void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString&)
+{
+    QMessageBox::information(this, "SSL/TLS fingerprint", Fingerprint::local().readFirst());
+}
+
 void MainWindow::on_m_pComboServerList_currentIndexChanged(const QString &server)
 {
     appConfig().setAutoConfigServer(server);
@@ -1382,4 +1345,46 @@ void MainWindow::updateScreenName()
 {
     m_pLabelScreenName->setText(appConfig().screenName());
     serverConfig().updateServerName();
+}
+
+void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
+{
+    m_pRadioGroupServer->setChecked(true);
+    if (on)
+    {
+        //show server controls
+        m_pButtonConfigureServer->show();
+        m_pLabelServerState->show();
+        updateLocalFingerprint();
+
+        //hide client controls
+        m_pRadioGroupClient->setChecked(false);
+        m_pLabelClientState->hide();
+        m_pLabelServerName->hide();
+        m_pLineEditHostname->hide();
+        m_pButtonConnect->hide();
+    }
+}
+
+void MainWindow::on_m_pRadioGroupClient_clicked(bool on)
+{
+    m_pRadioGroupClient->setChecked(true);
+    if (on)
+    {
+        //show client controls
+        m_pLabelServerName->show();
+        m_pLineEditHostname->show();
+        m_pButtonConnect->show();
+
+        //hide server controls
+        m_pRadioGroupServer->setChecked(false);
+        m_pLabelFingerprint->hide();
+        m_pButtonConfigureServer->hide();
+        m_pLabelServerState->hide();
+    }
+}
+
+void MainWindow::on_m_pButtonConnect_clicked()
+{
+   restartSynergy();
 }

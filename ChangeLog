@@ -6,11 +6,13 @@ Bug fixes:
 - #6968 System loses synchronisation between settings and configuration
 - #6972 Fix SonarCloud security hotspots
 - #6971 Fix vulnerabilities from SonarCloud
+- #6974 Fix macOS 10.13 application filess
 
 Enhancements:
 - #6954 Move language selection to advanced section
 - #6959 Update synergy UI. Setup wizard
 - #6969 Update synergy UI. Validation for aliases.
+- #6973 Update synergy UI. Main window
 - #6962 | #6965 Add macOS 10.13 builder
 ===========
 

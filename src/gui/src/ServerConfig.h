@@ -81,6 +81,8 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         int autoAddScreen(const QString name);
         const QString& getServerName() const;
         void updateServerName();
+        const QString& getConfigFile() const;
+        bool getUseExternalConfig() const;
 
     protected:
         QSettings& settings();
@@ -104,6 +106,8 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
         void setDisableLockToScreen(bool on) { m_DisableLockToScreen = on; }
         void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
+        void setConfigFile(const QString& configFile);
+        void setUseExternalConfig(bool useExternalConfig);
         size_t setClipboardSharingSize(size_t size);
         QList<bool>& switchCorners() { return m_SwitchCorners; }
         HotkeyList& hotkeys() { return m_Hotkeys; }

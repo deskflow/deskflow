@@ -533,7 +533,7 @@ bool AppConfig::getUseExternalConfig() const {
     return m_UseExternalConfig;
 }
 
-QString AppConfig::getConfigFile() const {
+const QString& AppConfig::getConfigFile() const {
     return m_ConfigFile;
 }
 
