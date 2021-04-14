@@ -174,17 +174,14 @@ void SettingsDialog::loadFromConfig() {
 #endif
 
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-    m_pGroupBoxTLS->setVisible(m_appConfig.getCryptoEnabled());
 
 #ifdef SYNERGY_ENTERPRISE
 
     m_pCheckBoxEnableCrypto->setEnabled(true);
-     m_pLabelProUpgrade->hide();
 
 #else
 
     m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
-    m_pLabelProUpgrade->setVisible(!m_appConfig.isCryptoAvailable());
 
 #endif
 
