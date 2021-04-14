@@ -50,6 +50,8 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         void on_m_pButtonEditAction_clicked();
         void on_m_pButtonRemoveAction_clicked();
         void on_m_pCheckBoxEnableClipboard_stateChanged(int state);
+        void on_m_pButtonAddComputer_clicked();
+        void onScreenRemoved();
         void on_m_pCheckBoxUseExternalConfig_toggled(bool checked = false);
         bool on_m_pButtonBrowseConfigFile_clicked();
 

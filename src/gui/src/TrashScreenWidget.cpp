@@ -36,8 +36,13 @@ void TrashScreenWidget::dragEnterEvent(QDragEnterEvent* event)
 void TrashScreenWidget::dropEvent(QDropEvent* event)
 {
     if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType()))
+    {
         event->acceptProposedAction();
+        emit screenRemoved();
+    }
     else
+    {
         event->ignore();
+    }
 }
 

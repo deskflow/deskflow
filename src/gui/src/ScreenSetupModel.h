@@ -51,6 +51,7 @@ class ScreenSetupModel : public QAbstractTableModel
         Qt::ItemFlags flags(const QModelIndex& index) const;
         QStringList mimeTypes() const;
         QMimeData* mimeData(const QModelIndexList& indexes) const;
+        bool isFull() const;
 
     protected:
         bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
@@ -58,6 +59,7 @@ class ScreenSetupModel : public QAbstractTableModel
         Screen& screen(const QModelIndex& index) { return screen(index.column(), index.row()); }
         const Screen& screen(int column, int row) const { return m_Screens[row * m_NumColumns + column]; }
         Screen& screen(int column, int row) { return m_Screens[row * m_NumColumns + column]; }
+        void addScreen(const Screen& newScreen);
 
     private:
         ScreenList& m_Screens;

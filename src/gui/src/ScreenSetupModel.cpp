@@ -141,3 +141,22 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
     return true;
 }
 
+void ScreenSetupModel::addScreen(const Screen& newScreen)
+{
+    auto screenTest = std::find_if(m_Screens.begin(), m_Screens.end(),
+                                   [](const Screen& item) { return item.isNull(); });
+
+    if (screenTest != m_Screens.end())
+    {
+       (*screenTest) = newScreen;
+    }
+}
+
+bool ScreenSetupModel::isFull() const
+{
+   auto emptyScreen = std::find_if(m_Screens.cbegin(), m_Screens.cend(),
+                                   [](const Screen& item) { return item.isNull(); });
+
+   return (emptyScreen == m_Screens.cend());
+}
+
