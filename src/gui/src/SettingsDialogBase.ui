@@ -29,7 +29,7 @@
    <property name="rightMargin">
     <number>11</number>
    </property>
-   <item row="11" column="0">
+   <item row="10" column="0">
     <widget class="QGroupBox" name="gridGroupBox">
      <property name="font">
       <font>
@@ -74,6 +74,12 @@
       <string/>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>13</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -142,10 +148,123 @@ font-weight: bold;</string>
         </property>
        </widget>
       </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="m_pLabel_20">
+          <property name="text">
+           <string>P&amp;ort</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pSpinBoxPort</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="m_pSpinBoxPort">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximum">
+           <number>65535</number>
+          </property>
+          <property name="value">
+           <number>24800</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="m_pLabel_21">
+          <property name="text">
+           <string>Network IP</string>
+          </property>
+          <property name="buddy">
+           <cstring>m_pLineEditInterface</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="m_pLineEditInterface">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+          <property name="text">
+           <string>&amp;Hide on startup</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="m_pCheckBoxMinimizeToTray">
+          <property name="text">
+           <string>Minimize to system &amp;tray</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="m_pLabelElevate">
+          <property name="text">
+           <string>Elevate</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="m_pComboElevate">
+          <property name="toolTip">
+           <string>Specify when the Synergy service should run at an elevated privilege level</string>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>As Needed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Always</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Never</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="9" column="0">
+   <item row="8" column="0">
     <widget class="QGroupBox" name="m_pGroupLog">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -248,7 +367,7 @@ font-weight: bold;</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="3" column="0">
     <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -264,7 +383,7 @@ font-weight: bold;</string>
      </property>
     </spacer>
    </item>
-   <item row="10" column="0">
+   <item row="9" column="0">
     <spacer name="verticalSpacer_5">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -280,7 +399,7 @@ font-weight: bold;</string>
      </property>
     </spacer>
    </item>
-   <item row="12" column="0">
+   <item row="11" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -296,113 +415,7 @@ font-weight: bold;</string>
      </property>
     </spacer>
    </item>
-   <item row="3" column="0">
-    <widget class="QGroupBox" name="m_pGroupAdvanced">
-     <property name="font">
-      <font>
-       <kerning>true</kerning>
-      </font>
-     </property>
-     <property name="title">
-      <string>&amp;Miscellaneous</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="4" column="0">
-       <widget class="QLabel" name="m_pLabelElevate">
-        <property name="text">
-         <string>Elevate</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxMinimizeToTray">
-        <property name="text">
-         <string>Minimize to System &amp;Tray</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="m_pComboElevate">
-        <property name="toolTip">
-         <string>Specify when the Synergy service should run at an elevated privilege level</string>
-        </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>As Needed</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Always</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Never</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
-        <property name="text">
-         <string>&amp;Hide on startup</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="m_pLabel_20">
-        <property name="text">
-         <string>P&amp;ort:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pSpinBoxPort</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="m_pSpinBoxPort">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximum">
-         <number>65535</number>
-        </property>
-        <property name="value">
-         <number>24800</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="m_pLineEditInterface">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="m_pLabel_21">
-        <property name="text">
-         <string>&amp;Interface:</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pLineEditInterface</cstring>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="5" column="0">
+   <item row="4" column="0">
     <widget class="QGroupBox" name="m_pGroupNetwork">
      <property name="enabled">
       <bool>true</bool>
@@ -496,7 +509,7 @@ font-weight: bold;</string>
      </layout>
     </widget>
    </item>
-   <item row="13" column="0">
+   <item row="12" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -506,7 +519,7 @@ font-weight: bold;</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="6" column="0">
     <widget class="QGroupBox" name="m_pGroupBoxTLS">
      <property name="font">
       <font>
@@ -573,7 +586,7 @@ font-weight: bold;</string>
      </layout>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="5" column="0">
     <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -620,7 +633,7 @@ font-weight: bold;</string>
      </layout>
     </widget>
    </item>
-   <item row="8" column="0">
+   <item row="7" column="0">
     <spacer name="verticalSpacer_4">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -641,11 +654,6 @@ font-weight: bold;</string>
  <tabstops>
   <tabstop>m_pRadioSystemScope</tabstop>
   <tabstop>m_pRadioUserScope</tabstop>
-  <tabstop>m_pSpinBoxPort</tabstop>
-  <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pComboElevate</tabstop>
-  <tabstop>m_pCheckBoxAutoHide</tabstop>
-  <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
   <tabstop>m_pCheckBoxAutoConfig</tabstop>
   <tabstop>m_pCheckBoxEnableCrypto</tabstop>
   <tabstop>m_pComboBoxKeyLength</tabstop>
