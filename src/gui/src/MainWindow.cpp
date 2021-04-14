@@ -793,31 +793,45 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 QString MainWindow::configFilename()
 {
-    QString filename;
+    QString configFullPath;
     if (appConfig().getUseExternalConfig())
     {
-        filename = appConfig().getConfigFile();
+        configFullPath = appConfig().getConfigFile();
     }
     else
     {
-       // TODO: no need to use a temporary file, since we need it to
-       // be permenant (since it'll be used for Windows services, etc).
-       QTemporaryFile tempConfigFile;
-       tempConfigFile.setAutoRemove(false);
+        QStringList errors;
+        for (auto path : {QStandardPaths::AppDataLocation,
+                          QStandardPaths::AppConfigLocation})
+        {
+            auto configDirPath = QStandardPaths::writableLocation(path);
+            if (!QDir().mkpath(configDirPath))
+            {
+                errors.push_back(tr("Failed to create config folder \"%1\"").arg(configDirPath));
+                continue;
+            }
 
-       if (!tempConfigFile.open())
-       {
-           QMessageBox::critical(this, tr("Cannot write configuration file"), tr("The temporary configuration file required to start synergy can not be written."));
-           return "";
-       }
+            QFile configFile(configDirPath + "/LastConfig.cfg");
+            if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+            {
+                errors.push_back(tr("File:\"%1\" Error:%2").arg(configFile.fileName(), configFile.errorString()));
+                continue;
+            }
 
-       serverConfig().save(tempConfigFile);
-       filename = tempConfigFile.fileName();
+            serverConfig().save(configFile);
+            configFile.close();
+            configFullPath = configFile.fileName();
 
-       tempConfigFile.close();
+            break;
+        }
+
+        if (configFullPath.isEmpty())
+        {
+            QMessageBox::critical(this, tr("Cannot write configuration file"), errors.join('\n'));
+        }
     }
 
-    return filename;
+    return configFullPath;
 }
 
 QString MainWindow::address() const
@@ -855,6 +869,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     }
 
     QString configFilename = this->configFilename();
+    if (configFilename.isEmpty())
+    {
+        return false;
+    }
 #if defined(Q_OS_WIN)
     // wrap in quotes in case username contains spaces.
     configFilename = QString("\"%1\"").arg(configFilename);
