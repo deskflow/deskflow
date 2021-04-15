@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="m_pTabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
@@ -823,7 +823,7 @@ Double click on a screen to edit its settings.</string>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <property name="leftMargin">
-            <number>95</number>
+            <number>40</number>
            </property>
            <property name="topMargin">
             <number>0</number>
@@ -867,6 +867,22 @@ Double click on a screen to edit its settings.</string>
             </widget>
            </item>
            <item>
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QLineEdit" name="m_pEditConfigFile">
              <property name="enabled">
               <bool>false</bool>
@@ -898,12 +914,31 @@ Double click on a screen to edit its settings.</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">margin: 0px; padding: 0px;</string>
+             </property>
              <property name="text">
-              <string>&amp;Browse...</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../res/Synergy.qrc">
+               <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>20</width>
+               <height>13</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
