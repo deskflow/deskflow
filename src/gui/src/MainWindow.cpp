@@ -298,10 +298,8 @@ void MainWindow::createMenuBar()
 
 void MainWindow::loadSettings()
 {
-    on_m_pRadioGroupServer_clicked(appConfig().getServerGroupChecked());
-    on_m_pRadioGroupClient_clicked(appConfig().getClientGroupChecked());
-    m_pRadioGroupServer->setChecked(appConfig().getServerGroupChecked());
-    m_pRadioGroupClient->setChecked(appConfig().getClientGroupChecked());
+    enableServer(appConfig().getServerGroupChecked());
+    enableClient(appConfig().getClientGroupChecked());
 
     m_pLineEditHostname->setText(appConfig().getServerHostname());
 }
@@ -1365,18 +1363,38 @@ void MainWindow::updateScreenName()
     serverConfig().updateServerName();
 }
 
-void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
+void MainWindow::enableServer(bool enable)
 {
-    m_pRadioGroupServer->setChecked(true);
-    if (on)
+    m_pRadioGroupServer->setChecked(enable);
+
+    if (enable)
     {
-        //show server controls
         m_pButtonConfigureServer->show();
         m_pLabelServerState->show();
         updateLocalFingerprint();
+        m_pButtonToggleStart->setEnabled(enable);
+    }
+    else
+    {
+        m_pLabelFingerprint->hide();
+        m_pButtonConfigureServer->hide();
+        m_pLabelServerState->hide();
+    }
+}
 
-        //hide client controls
-        m_pRadioGroupClient->setChecked(false);
+void MainWindow::enableClient(bool enable)
+{
+    m_pRadioGroupClient->setChecked(enable);
+
+    if (enable)
+    {
+        m_pLabelServerName->show();
+        m_pLineEditHostname->show();
+        m_pButtonConnect->show();
+        m_pButtonToggleStart->setEnabled(enable);
+    }
+    else
+    {
         m_pLabelClientState->hide();
         m_pLabelServerName->hide();
         m_pLineEditHostname->hide();
@@ -1384,25 +1402,21 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool on)
     }
 }
 
-void MainWindow::on_m_pRadioGroupClient_clicked(bool on)
-{
-    m_pRadioGroupClient->setChecked(true);
-    if (on)
-    {
-        //show client controls
-        m_pLabelServerName->show();
-        m_pLineEditHostname->show();
-        m_pButtonConnect->show();
 
-        //hide server controls
-        m_pRadioGroupServer->setChecked(false);
-        m_pLabelFingerprint->hide();
-        m_pButtonConfigureServer->hide();
-        m_pLabelServerState->hide();
-    }
+void MainWindow::on_m_pRadioGroupServer_clicked(bool)
+{
+    enableServer(true);
+    enableClient(false);
+}
+
+void MainWindow::on_m_pRadioGroupClient_clicked(bool)
+{
+    enableClient(true);
+    enableServer(false);
 }
 
 void MainWindow::on_m_pButtonConnect_clicked()
 {
    restartSynergy();
 }
+
