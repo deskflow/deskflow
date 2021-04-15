@@ -22,8 +22,6 @@
 #include <memory>
 
 #include <QDialog>
-#include "validators/ScreenNameValidator.h"
-#include "validators/AliasValidator.h"
 
 #include "ui_ScreenSettingsDialogBase.h"
 
@@ -51,8 +49,6 @@ class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
 
     private:
         Screen* m_pScreen;
-        std::unique_ptr<validators::ScreenNameValidator> m_NameValidator;
-        std::unique_ptr<validators::AliasValidator> m_AliasValidator;
 
 };
 

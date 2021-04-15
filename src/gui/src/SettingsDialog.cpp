@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "SettingsDialog.h"
+#include "validators/ScreenNameValidator.h"
 
 #include "CoreInterface.h"
 #include "SynergyLocale.h"
@@ -52,8 +53,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     enableControls(appConfig().isWritable());
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
-    m_ScreenNameValidator = std::make_unique<validators::ScreenNameValidator>(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens()));
-    m_pLineEditScreenName->setValidator(m_ScreenNameValidator.get());
+    m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
     connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
