@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>708</height>
+    <height>757</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>620</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
@@ -29,36 +35,17 @@
    <property name="rightMargin">
     <number>11</number>
    </property>
-   <item row="4" column="0">
-    <spacer name="verticalSpacer_4">
+   <item row="16" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Minimum</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>16</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="m_labelAdminRightsMessage">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>To edit settings for all users, Admin privileges are required.</string>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
+   <item row="7" column="0">
     <spacer name="verticalSpacer_5">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -69,28 +56,18 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>10</height>
+       <height>6</height>
       </size>
      </property>
     </spacer>
    </item>
-   <item row="15" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="0">
-    <spacer name="verticalSpacer">
+   <item row="9" column="0">
+    <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
+      <enum>QSizePolicy::Minimum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -100,18 +77,72 @@
      </property>
     </spacer>
    </item>
-   <item row="7" column="0">
+   <item row="6" column="0">
+    <layout class="QGridLayout" name="m_pGridLayoutNetwork">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>1</number>
+     </property>
+     <property name="horizontalSpacing">
+      <number>0</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>6</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Enable Auto Config</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="m_pLabelInstallBonjour">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="8" column="0">
     <widget class="QGroupBox" name="m_pGroupScope">
      <property name="font">
       <font>
        <kerning>true</kerning>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox::title {
+   left: -3px;
+   top: -2px;
+}</string>
+     </property>
      <property name="title">
-      <string>Use &amp;settings profile from:</string>
+      <string>Use &amp;settings profile from</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="1" column="0">
+      <item row="1" column="2">
        <widget class="QRadioButton" name="m_pRadioSystemScope">
         <property name="text">
          <string>All users</string>
@@ -128,15 +159,37 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QLabel" name="m_labelAdminRightsMessage">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Note: Only Admins can edit settings for all users.</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="13" column="0">
+   <item row="14" column="0">
     <widget class="QGroupBox" name="gridGroupBox">
      <property name="font">
       <font>
        <kerning>true</kerning>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox::title {
+   left: 0px;
+   top: -2px;
+}</string>
      </property>
      <property name="title">
       <string>Advanced</string>
@@ -157,7 +210,7 @@
          </size>
         </property>
         <property name="text">
-         <string>&amp;Language:</string>
+         <string>&amp;Language</string>
         </property>
         <property name="buddy">
          <cstring>m_pComboLanguage</cstring>
@@ -369,195 +422,6 @@ font-weight: bold;</string>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Minimum</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>8</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="6" column="0">
-    <layout class="QGridLayout" name="m_pGridLayoutNetwork">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>1</number>
-     </property>
-     <property name="horizontalSpacing">
-      <number>0</number>
-     </property>
-     <property name="verticalSpacing">
-      <number>6</number>
-     </property>
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="m_pCheckBoxAutoConfig">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Enable Auto Config</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="m_pLabelInstallBonjour">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Install Bonjour&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::RichText</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="5" column="0">
-    <widget class="QGroupBox" name="m_pGroupLog">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <kerning>true</kerning>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QGroupBox::title {
-   left: 0px;
-   top: -2px;
-}</string>
-     </property>
-     <property name="title">
-      <string>Logs</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>16</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>6</number>
-      </property>
-      <item row="0" column="1">
-       <spacer name="horizontalSpacer_5">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="m_pLabel_3">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>&amp;Level</string>
-        </property>
-        <property name="buddy">
-         <cstring>m_pComboLogLevel</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="m_pCheckBoxLogToFile">
-        <property name="text">
-         <string>Log to file</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QComboBox" name="m_pComboLogLevel">
-        <item>
-         <property name="text">
-          <string>Info</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Debug</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Debug1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Debug2</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="m_pButtonBrowseLog">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Browse...</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="m_pLineEditLogFilename">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Log path</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="2" column="0" rowspan="2">
     <widget class="QGroupBox" name="m_pGroupNetwork">
      <property name="enabled">
@@ -728,10 +592,179 @@ font-weight: bold;</string>
      </layout>
     </widget>
    </item>
+   <item row="5" column="0">
+    <widget class="QGroupBox" name="m_pGroupLog">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox::title {
+   left: 0px;
+   top: -2px;
+}</string>
+     </property>
+     <property name="title">
+      <string>Logs</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>16</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>6</number>
+      </property>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="m_pLabel_3">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&amp;Level</string>
+        </property>
+        <property name="buddy">
+         <cstring>m_pComboLogLevel</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxLogToFile">
+        <property name="text">
+         <string>Log to file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QComboBox" name="m_pComboLogLevel">
+        <item>
+         <property name="text">
+          <string>Info</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Debug</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Debug1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Debug2</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="m_pButtonBrowseLog">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Browse...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="m_pLineEditLogFilename">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Log path</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>16</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>8</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="15" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>m_pRadioSystemScope</tabstop>
   <tabstop>m_pRadioUserScope</tabstop>
   <tabstop>m_pCheckBoxAutoConfig</tabstop>
   <tabstop>m_pLineEditLogFilename</tabstop>
