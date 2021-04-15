@@ -36,9 +36,8 @@ bool ScreenDuplicationsValidator::validate(const QString& input) const
    {
       for (const auto& screen : (*m_pScreenList))
       {
-         if (!screen.isNull() &&
-             input != m_defaultName &&
-             input == screen.name())
+         if (!screen.isNull() && !screen.isServer() &&
+             input != m_defaultName && input == screen.name())
          {
             result = false;
             break;
