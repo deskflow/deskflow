@@ -115,7 +115,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="m_pLabel_29">
+         <widget class="QLabel" name="m_pLabelKeyLength">
           <property name="text">
            <string>Key length</string>
           </property>
@@ -151,7 +151,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="m_pLabel_30">
+         <widget class="QLabel" name="m_pLabelCertificate">
           <property name="text">
            <string>Certificate</string>
           </property>
@@ -776,7 +776,7 @@ font-weight: bold;</string>
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="m_pLabelLogPath">
           <property name="text">
            <string>Log path</string>
           </property>
