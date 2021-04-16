@@ -130,6 +130,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     m_pLabelScreenName->setText(appConfig.screenName());
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
+    m_pLabelIpAddresses->setText(getIPAddresses());
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -1038,6 +1039,38 @@ void MainWindow::setVisible(bool visible)
 #endif
 }
 
+QString MainWindow::getIPAddresses()
+{
+    QStringList result;
+    bool hinted = false;
+    const auto localnet = QHostAddress::parseSubnet("192.168.0.0/16");
+    const QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+
+    for (const auto& address : addresses) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol &&
+            address != QHostAddress(QHostAddress::LocalHost) &&
+            !address.isLinkLocal()) {
+
+            // usually 192.168.x.x is a useful ip for the user, so indicate
+            // this by making it bold.
+            if (!hinted && address.isInSubnet(localnet)) {
+                QString format = "<b>%1</b>";
+                result.append(format.arg(address.toString()));
+                hinted = true;
+            }
+            else {
+                result.append(address.toString());
+            }
+        }
+    }
+
+    if (result.isEmpty()) {
+        result.append(tr("Unknown"));
+    }
+
+    return result.join(", ");
+}
+
 void MainWindow::changeEvent(QEvent* event)
 {
     if (event != 0)
@@ -1066,6 +1099,11 @@ void MainWindow::changeEvent(QEvent* event)
 
 void MainWindow::addZeroconfServer(const QString name)
 {
+    // don't add yourself to the server list.
+    if (getIPAddresses().contains(name)) {
+        return;
+    }
+
     if (m_pComboServerList->findText(name) == -1) {
         m_pComboServerList->addItem(name);
     }

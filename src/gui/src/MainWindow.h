@@ -182,6 +182,7 @@ public slots:
         void setStatus(const QString& status);
         void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
         void updateFromLogLine(const QString& line);
+        QString getIPAddresses();
         void stopService();
         void stopDesktop();
         void changeEvent(QEvent* event);
