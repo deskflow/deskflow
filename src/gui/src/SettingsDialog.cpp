@@ -65,6 +65,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),        this, SLOT(onChange()));
     connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
     connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
+
+    resize(400, 620);
 }
 
 void SettingsDialog::accept()
@@ -174,17 +176,14 @@ void SettingsDialog::loadFromConfig() {
 #endif
 
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-    m_pGroupBoxTLS->setVisible(m_appConfig.getCryptoEnabled());
 
 #ifdef SYNERGY_ENTERPRISE
 
     m_pCheckBoxEnableCrypto->setEnabled(true);
-     m_pLabelProUpgrade->hide();
 
 #else
 
     m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
-    m_pLabelProUpgrade->setVisible(!m_appConfig.isCryptoAvailable());
 
 #endif
 
@@ -209,6 +208,7 @@ void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
 {
     bool checked = i == 2;
 
+    m_pLabelLogPath->setEnabled(checked);
     m_pLineEditLogFilename->setEnabled(checked);
     m_pButtonBrowseLog->setEnabled(checked);
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
@@ -236,13 +236,14 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
 {
+    m_pLabelKeyLength->setEnabled(checked);
+    m_pComboBoxKeyLength->setEnabled(checked);
+    m_pLabelCertificate->setEnabled(checked);
+    m_pLineEditCertificatePath->setEnabled(checked);
+    m_pPushButtonBrowseCert->setEnabled(checked);
+    m_pPushButtonRegenCert->setEnabled(checked);
+
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
-    if (checked) {
-        verticalSpacer_4->changeSize(10, 10, QSizePolicy::Minimum);
-    } else {
-        verticalSpacer_4->changeSize(10, 0, QSizePolicy::Ignored);
-    }
-    adjustSize();
 }
 
 void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
@@ -288,10 +289,9 @@ void SettingsDialog::updateRegenButton() {
     // Disable the Regenerate cert button if the key length is different to saved
     auto keyChanged = appConfig().getTLSKeyLength() != m_pComboBoxKeyLength->currentText();
     auto pathChanged = appConfig().getTLSCertPath() != m_pLineEditCertificatePath->text();
-    auto cryptoChanged = appConfig().getCryptoEnabled() != m_pCheckBoxEnableCrypto->isChecked();
     //NOR the above bools, if any have changed regen should be disabled as it will be done on save
-    auto nor = !(keyChanged || pathChanged || cryptoChanged);
-    m_pPushButtonRegenCert->setEnabled(nor);
+    auto nor = !(keyChanged || pathChanged);
+    m_pPushButtonRegenCert->setEnabled(nor && m_pCheckBoxEnableCrypto->isChecked());
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
@@ -346,18 +346,29 @@ void SettingsDialog::enableControls(bool enable) {
     m_labelAdminRightsMessage->setVisible(!enable);
 
     if (enable) {
+        m_pLabelLogPath->setEnabled(m_pCheckBoxLogToFile->isChecked());
         m_pLineEditLogFilename->setEnabled(m_pCheckBoxLogToFile->isChecked());
         m_pButtonBrowseLog->setEnabled(m_pCheckBoxLogToFile->isChecked());
         m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
+        m_pLabelKeyLength->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
+        m_pComboBoxKeyLength->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
+        m_pLabelCertificate->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
+        m_pLineEditCertificatePath->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
+        m_pPushButtonBrowseCert->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
         updateRegenButton();
     }
     else {
+        m_pLabelLogPath->setEnabled(enable);
         m_pLineEditLogFilename->setEnabled(enable);
         m_pButtonBrowseLog->setEnabled(enable);
         m_pCheckBoxEnableCrypto->setEnabled(enable);
+        m_pLabelKeyLength->setEnabled(enable);
+        m_pComboBoxKeyLength->setEnabled(enable);
+        m_pLabelCertificate->setEnabled(enable);
+        m_pLineEditCertificatePath->setEnabled(enable);
+        m_pPushButtonBrowseCert->setEnabled(enable);
         m_pPushButtonRegenCert->setEnabled(enable);
     }
-
 }
 
 void SettingsDialog::onChange()

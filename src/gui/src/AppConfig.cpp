@@ -237,7 +237,7 @@ void AppConfig::loadSettings()
     m_UseExternalConfig         = loadSetting(kUseExternalConfig, false).toBool();
     m_ConfigFile                = loadSetting(kConfigFile, QDir::homePath() + "/" + synergyConfigName).toString();
     m_UseInternalConfig         = loadSetting(kUseInternalConfig, false).toBool();
-    m_ClientGroupChecked        = loadSetting(kGroupClientCheck, true).toBool();
+    m_ClientGroupChecked        = loadSetting(kGroupClientCheck, false).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
 
     //only change the serial key if the settings being loaded contains a key

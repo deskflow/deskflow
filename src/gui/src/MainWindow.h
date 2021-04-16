@@ -143,8 +143,8 @@ public slots:
     protected slots:
         void updateLocalFingerprint();
         void updateScreenName();
-        void on_m_pRadioGroupServer_clicked(bool on);
-        void on_m_pRadioGroupClient_clicked(bool on);
+        void on_m_pRadioGroupServer_clicked(bool);
+        void on_m_pRadioGroupClient_clicked(bool);
         void on_m_pButtonConfigureServer_clicked();
         bool on_m_pActionSave_triggered();
         void on_m_pActionAbout_triggered();
@@ -187,6 +187,8 @@ public slots:
         void stopDesktop();
         void changeEvent(QEvent* event);
         void retranslateMenuBar();
+        void enableServer(bool enable);
+        void enableClient(bool enable);
 
 #if defined(Q_OS_WIN)
         bool isServiceRunning(QString name);

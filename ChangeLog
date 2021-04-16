@@ -16,6 +16,7 @@ Enhancements:
 - #6969 Update synergy UI. Validation for aliases.
 - #6973 Update synergy UI. Main window
 - #6977 Update synergy UI. Configure server
+- #6978 Update synergy UI. Settings window
 - #6962 | #6965 Add macOS 10.13 builder
 ===========
 
