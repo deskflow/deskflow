@@ -9,6 +9,7 @@ Bug fixes:
 - #6974 Fix macOS 10.13 application filess
 - #6975 Fix server stop working
 - #6976 Fix windows builds
+- #6979 Manual config error in client mode
 
 Enhancements:
 - #6954 Move language selection to advanced section
