@@ -661,6 +661,12 @@ void MainWindow::startSynergy()
     }
 #endif
 
+    // put a space between last log output and new instance.
+    if (!m_pLogOutput->toPlainText().isEmpty())
+        appendLogRaw("");
+
+    appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+
     if ((synergyType() == synergyClient && !clientArgs(args, app))
         || (synergyType() == synergyServer && !serverArgs(args, app)))
     {
@@ -675,12 +681,6 @@ void MainWindow::startSynergy()
         connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
     }
 
-    // put a space between last log output and new instance.
-    if (!m_pLogOutput->toPlainText().isEmpty())
-        appendLogRaw("");
-
-    appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
-
     qDebug() << args;
 
     // show command if debug log level...
@@ -688,7 +688,6 @@ void MainWindow::startSynergy()
         appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
     }
 
-    appendLogInfo("config file: " + configFilename());
     appendLogInfo("log level: " + appConfig().logLevelText());
 
     if (appConfig().logToFile())
@@ -876,6 +875,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     configFilename = QString("\"%1\"").arg(configFilename);
 #endif
     args << "-c" << configFilename << "--address" << address();
+    appendLogInfo("config file: " + configFilename);
 
 #ifndef SYNERGY_ENTERPRISE
     if (!appConfig().serialKey().isEmpty()) {
