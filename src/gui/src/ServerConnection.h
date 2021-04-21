@@ -16,27 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERVERSTATELABEL_H
-#define SERVERSTATELABEL_H
+#ifndef SERVERCONNECTION_H
+#define SERVERCONNECTION_H
 
-#include <QLabel>
+#include <QString>
 #include <QStringList>
 
-namespace synergy_widgets
-{
+class MainWindow;
 
-class ServerStateLabel : public QLabel
+class ServerConnection
 {
+    MainWindow& m_parent;
+    QStringList m_ignoredClients;
+
 public:
-   explicit ServerStateLabel(QWidget* parent = nullptr);
-   void updateServerState(const QString& line);
+    explicit ServerConnection(MainWindow& parent);
+    void update(const QString& line);
 
 private:
-   QStringList m_clients;
-
-   void updateState();
+    void addClient(const QString& clientName);
+    void configureClient(const QString& clientName);
 };
 
-} //namespace synergy_widgets
-
-#endif // SERVERSTATELABEL_H
+#endif // SERVERCONNECTION_H

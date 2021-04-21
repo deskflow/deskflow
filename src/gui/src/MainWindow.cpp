@@ -112,7 +112,8 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pMenuHelp(NULL),
     m_pCancelButton(NULL),
     m_ExpectedRunningState(kStopped),
-    m_SecureSocket(false)
+    m_SecureSocket(false),
+    m_serverConnection(*this)
 {
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     m_pZeroconf = new Zeroconf(this);
@@ -450,6 +451,7 @@ void MainWindow::checkConnected(const QString& line)
     // TODO: implement ipc connection state messages to replace this hack.
     if (m_pRadioGroupServer->isChecked())
     {
+        m_serverConnection.update(line);
         m_pLabelServerState->updateServerState(line);
     }
     else
