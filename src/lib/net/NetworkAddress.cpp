@@ -103,6 +103,27 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
             // save port
             m_port = static_cast<int>(suffixPort);
         }
+        else if (colonNotation && m_hostname[0] == '[') {
+            String portDelimeter = "]:";
+            auto hostIt          = m_hostname.find(portDelimeter);
+            if (hostIt == String::npos) {
+                throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
+            }
+            auto portSuffix = m_hostname.substr(hostIt + portDelimeter.size());
+            if (portSuffix.empty()) {
+                throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+            }
+            try {
+                m_port = std::stoi(portSuffix);
+            } catch(...) {
+                throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+            }
+
+            m_hostname = m_hostname.substr(1, hostIt - 1);
+        }
+        else {
+            throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+        }
     }
 
     // check port number

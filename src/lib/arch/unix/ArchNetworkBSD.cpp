@@ -679,10 +679,22 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     char ipstr[INET6_ADDRSTRLEN];
     struct addrinfo hints;
     struct addrinfo *p;
+    struct in6_addr serveraddr;
     int ret;
 
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_flags    = AI_NUMERICSERV;
+    hints.ai_family   = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    if ((ret = inet_pton(AF_INET, name.c_str(), &serveraddr)) == 1) {
+        hints.ai_family = AF_INET;
+        hints.ai_flags |= AI_NUMERICHOST;
+    }
+    else if ((ret = inet_pton(AF_INET6, name.c_str(), &serveraddr)) == 1) {
+        hints.ai_family = AF_INET6;
+        hints.ai_flags |= AI_NUMERICHOST;
+    }
 
     // done with static buffer
     ARCH->lockMutex(m_mutex);
@@ -697,6 +709,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     } else {
         addr->m_len = (socklen_t)sizeof(struct sockaddr_in6);
     }
+
     memcpy(&addr->m_addr, p->ai_addr, addr->m_len);
     freeaddrinfo(p);
     ARCH->unlockMutex(m_mutex);
