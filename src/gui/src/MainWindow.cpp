@@ -834,6 +834,15 @@ QString MainWindow::configFilename()
 QString MainWindow::address() const
 {
     QString i = appConfig().networkInterface();
+    // if interface is IPv6 - ensure that ip is in square brackets
+    if (i.count(':') > 1) {
+        if(i[0] != '[') {
+            i.insert(0, '[');
+        }
+        if(i[i.size() - 1] != ']') {
+            i.push_back(']');
+        }
+    }
     return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
