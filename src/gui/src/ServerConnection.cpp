@@ -36,7 +36,6 @@ void ServerConnection::update(const QString& line)
     ServerMessage message(line);
 
     if (!m_parent.appConfig().getUseExternalConfig() &&
-        m_parent.isActiveWindow() &&
         message.isNewClientMessage() &&
         !m_ignoredClients.contains(message.getClientName()))
     {
@@ -44,9 +43,20 @@ void ServerConnection::update(const QString& line)
     }
 }
 
+bool ServerConnection::checkMainWindow()
+{
+    if (m_parent.isMinimized() || m_parent.isHidden())
+    {
+        m_parent.showNormal();
+        m_parent.activateWindow();
+    }
+
+    return m_parent.isActiveWindow();
+}
+
 void ServerConnection::addClient(const QString& clientName)
 {
-    if (!m_parent.serverConfig().isFull())
+    if (!m_parent.serverConfig().isFull() && checkMainWindow())
     {
         QMessageBox message(&m_parent);
         message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);

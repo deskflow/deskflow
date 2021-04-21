@@ -36,6 +36,7 @@ public:
 private:
     void addClient(const QString& clientName);
     void configureClient(const QString& clientName);
+    bool checkMainWindow();
 };
 
 #endif // SERVERCONNECTION_H
