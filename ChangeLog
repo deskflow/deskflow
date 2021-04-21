@@ -17,6 +17,7 @@ Enhancements:
 - #6973 Update synergy UI. Main window
 - #6977 Update synergy UI. Configure server
 - #6978 Update synergy UI. Settings window
+- #6981 Update synergy UI. Setup client configuration
 - #6962 | #6965 Add macOS 10.13 builder
 ===========
 
