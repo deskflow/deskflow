@@ -76,7 +76,7 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
             throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
         }
 
-        m_hostname = m_hostname.substr(0, hostIt - 1);
+        m_hostname = m_hostname.substr(0, max(static_cast<int>(hostIt) - 1, 0));
     }
     else if (colomCount > 1) {
         //ipv6 part
