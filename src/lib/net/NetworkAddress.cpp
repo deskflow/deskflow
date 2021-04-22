@@ -22,8 +22,8 @@
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 
-#include <cstdlib>
 #include <algorithm>
+#include <cstdlib>
 
 //
 // NetworkAddress
@@ -76,7 +76,8 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
             throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
         }
 
-        m_hostname = m_hostname.substr(0, max(static_cast<int>(hostIt) - 1, 0));
+        auto endHostnameIt = static_cast<int>(hostIt) - 1;
+        m_hostname = m_hostname.substr(0, endHostnameIt > 0 ? endHostnameIt : 0);
     }
     else if (colomCount > 1) {
         //ipv6 part
@@ -102,7 +103,8 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
                 throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
             }
 
-            m_hostname = m_hostname.substr(1, hostIt - 1);
+            auto endHostnameIt = static_cast<int>(hostIt) - 1;
+            m_hostname = m_hostname.substr(0, endHostnameIt > 0 ? endHostnameIt : 0);
         }
 
         // ensure that ipv6 link-local adress ended with scope id
