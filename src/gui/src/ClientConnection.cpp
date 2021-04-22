@@ -28,10 +28,10 @@ ClientConnection::ClientConnection(MainWindow& parent) :
 {
 }
 
-void ClientConnection::update(const QString& line) const
+void ClientConnection::update(const QString& line)
 {
-    if (m_parent.isActiveWindow() &&
-        line.contains("failed to connect to server") )
+    if (line.contains("failed to connect to server") &&
+        checkMainWindow())
     {
         m_parent.stopSynergy();
 
@@ -40,6 +40,20 @@ void ClientConnection::update(const QString& line) const
         message.setText(getMessage());
         message.exec();
     }
+}
+
+bool ClientConnection::checkMainWindow()
+{
+    bool result = m_parent.isActiveWindow();
+
+    if (m_parent.isMinimized() || m_parent.isHidden())
+    {
+        m_parent.showNormal();
+        m_parent.activateWindow();
+        result = true;
+    }
+
+    return result;
 }
 
 QString ClientConnection::getMessage() const

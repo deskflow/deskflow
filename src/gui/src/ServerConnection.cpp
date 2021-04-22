@@ -45,13 +45,16 @@ void ServerConnection::update(const QString& line)
 
 bool ServerConnection::checkMainWindow()
 {
+    bool result = m_parent.isActiveWindow();
+
     if (m_parent.isMinimized() || m_parent.isHidden())
     {
         m_parent.showNormal();
         m_parent.activateWindow();
+        result = true;
     }
 
-    return m_parent.isActiveWindow();
+    return result;
 }
 
 void ServerConnection::addClient(const QString& clientName)

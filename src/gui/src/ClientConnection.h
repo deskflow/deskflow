@@ -29,10 +29,11 @@ class ClientConnection
 
 public:
     explicit ClientConnection(MainWindow& parent);
-    void update(const QString& line) const;
+    void update(const QString& line);
 
 private:
     QString getMessage() const;
+    bool checkMainWindow();
 };
 
 #endif // CLIENTCONNECTION_H
