@@ -27,7 +27,8 @@
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+-[a-z1-9]*)"
 #define VERSION_REGEX_SECTIONED "(\\d+)\\.(\\d+)\\.(\\d+)-([a-z1-9]*)"
 #define VERSION_SEGMENT_COUNT 4
-#define VERSION_URL "https://version.symless.com/synergy"
+// #define VERSION_URL "https://version.symless.com/synergy"
+#define VERSION_URL "http://127.0.0.1:3000/version"
 
 
 VersionChecker::VersionChecker()
@@ -46,8 +47,10 @@ VersionChecker::~VersionChecker()
 void VersionChecker::checkLatest()
 {
     auto request = QNetworkRequest(QUrl(VERSION_URL));
+    // TODO: throw in a header that indicates system language
     request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy (") + getVersion() + ") " + QSysInfo::prettyProductName());
     request.setRawHeader("X-Synergy-Version", getVersion().toStdString().c_str() );
+    request.setRawHeader("X-Synergy-Language", QLocale::system().name().toStdString().c_str() );
     m_manager->get(request);
 }
 
