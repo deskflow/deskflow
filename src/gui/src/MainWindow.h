@@ -29,6 +29,7 @@
 
 #include "ServerConfig.h"
 #include "ServerConnection.h"
+#include "ClientConnection.h"
 #include "AppConfig.h"
 #include "VersionChecker.h"
 #include "IpcClient.h"
@@ -69,6 +70,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
     friend class ActivationDialog;
     friend class SettingsDialog;
     friend class ServerConnection;
+    friend class ClientConnection;
 
     public:
         enum qSynergyState
@@ -241,6 +243,7 @@ public slots:
         bool                m_SecureSocket;             // brief Is the program running a secure socket protocol (SSL/TLS)
         QString             m_SecureSocketVersion;      // brief Contains the version of the Secure Socket currently active
         ServerConnection    m_serverConnection;
+        ClientConnection    m_clientConnection;
 
         void                updateAutoConfigWidgets();
         

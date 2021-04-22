@@ -113,7 +113,8 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pCancelButton(NULL),
     m_ExpectedRunningState(kStopped),
     m_SecureSocket(false),
-    m_serverConnection(*this)
+    m_serverConnection(*this),
+    m_clientConnection(*this)
 {
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     m_pZeroconf = new Zeroconf(this);
@@ -456,6 +457,7 @@ void MainWindow::checkConnected(const QString& line)
     }
     else
     {
+        m_clientConnection.update(line);
         m_pLabelClientState->updateClientState(line);
     }
 
