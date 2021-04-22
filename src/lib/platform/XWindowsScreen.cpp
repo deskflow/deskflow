@@ -1222,6 +1222,8 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			filter.m_time    = xevent->xkey.time;
 			filter.m_keycode = xevent->xkey.keycode;
 			XEvent xevent2;
+			if(!XQLength(m_display))
+				XSync(m_display, False);
 			isRepeat = (XCheckIfEvent(m_display, &xevent2,
 							&XWindowsScreen::findKeyEvent,
 							(XPointer)&filter) == True);
