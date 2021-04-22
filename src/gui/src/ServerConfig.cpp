@@ -396,6 +396,22 @@ bool ServerConfig::getUseExternalConfig() const
    return m_pAppConfig->getUseExternalConfig();
 }
 
+bool ServerConfig::isFull() const
+{
+    bool isFull = true;
+
+    for (const auto& screen : screens())
+    {
+        if (screen.isNull())
+        {
+            isFull = false;
+            break;
+        }
+    }
+
+    return isFull;
+}
+
 void ServerConfig::setConfigFile(const QString& configFile)
 {
    m_pAppConfig->setConfigFile(configFile);

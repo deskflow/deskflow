@@ -18,6 +18,8 @@
 
 #include "ServerStateLabel.h"
 
+#include "ServerMessage.h"
+
 namespace synergy_widgets
 {
 
@@ -28,17 +30,19 @@ ServerStateLabel::ServerStateLabel(QWidget* parent) :
 
 void ServerStateLabel::updateServerState(const QString& line)
 {
-   if (line.contains("process exited"))
+   ServerMessage message(line);
+
+   if (message.isExitMessage())
    {
-      m_clientsCounter = 0;
+      m_clients.clear();
    }
-   else if (line.contains("has connected"))
+   else if (message.isConnectedMessage())
    {
-      ++m_clientsCounter;
+       m_clients.append(message.getClientName());
    }
-   else if (line.contains("has disconnected") && m_clientsCounter)
+   else if (message.isDisconnectedMessage())
    {
-      --m_clientsCounter;
+       m_clients.removeAll(message.getClientName());
    }
 
    updateState();
@@ -46,13 +50,13 @@ void ServerStateLabel::updateServerState(const QString& line)
 
 void ServerStateLabel::updateState()
 {
-   if (m_clientsCounter)
+   if (m_clients.isEmpty())
    {
-      hide();
+      show();
    }
    else
    {
-      show();
+      hide();
    }
 }
 

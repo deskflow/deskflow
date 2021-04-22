@@ -16,27 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERVERSTATELABEL_H
-#define SERVERSTATELABEL_H
+#ifndef SERVERMESSAGE_H
+#define SERVERMESSAGE_H
 
-#include <QLabel>
-#include <QStringList>
+#include <QString>
 
-namespace synergy_widgets
+class ServerMessage
 {
+    QString m_message;
+    QString m_clienName;
 
-class ServerStateLabel : public QLabel
-{
 public:
-   explicit ServerStateLabel(QWidget* parent = nullptr);
-   void updateServerState(const QString& line);
+    explicit ServerMessage(const QString& message);
+
+    bool isNewClientMessage() const;
+    bool isExitMessage() const;
+    bool isConnectedMessage() const;
+    bool isDisconnectedMessage() const;
+
+    const QString& getClientName() const;
 
 private:
-   QStringList m_clients;
+    QString parseClientName(const QString& line) const;
 
-   void updateState();
 };
 
-} //namespace synergy_widgets
-
-#endif // SERVERSTATELABEL_H
+#endif // SERVERMESSAGE_H

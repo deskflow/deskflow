@@ -38,6 +38,7 @@ class AppConfig;
 class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
 {
     friend class ServerConfigDialog;
+    friend class ServerConnection;
     friend QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config);
 
     public:
@@ -83,6 +84,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         void updateServerName();
         const QString& getConfigFile() const;
         bool getUseExternalConfig() const;
+        bool isFull() const;
 
     protected:
         QSettings& settings();
