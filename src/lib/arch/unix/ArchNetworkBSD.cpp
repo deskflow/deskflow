@@ -698,7 +698,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     // done with static buffer
     ARCH->lockMutex(m_mutex);
-    ret = getaddrinfo(name.c_str(), NULL, &hints, &p);
+    ret = getaddrinfo(name.c_str(), nullptr, &hints, &p);
     if (ret != 0) {
         ARCH->unlockMutex(m_mutex);
         delete addr;
