@@ -687,18 +687,19 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    if ((ret = inet_pton(AF_INET, name.c_str(), &serveraddr)) == 1) {
+    if (inet_pton(AF_INET, name.c_str(), &serveraddr) == 1) {
         hints.ai_family = AF_INET;
         hints.ai_flags |= AI_NUMERICHOST;
     }
-    else if ((ret = inet_pton(AF_INET6, name.c_str(), &serveraddr)) == 1) {
+    else if (inet_pton(AF_INET6, name.c_str(), &serveraddr) == 1) {
         hints.ai_family = AF_INET6;
         hints.ai_flags |= AI_NUMERICHOST;
     }
 
     // done with static buffer
     ARCH->lockMutex(m_mutex);
-    if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &p)) != 0) {
+    ret = getaddrinfo(name.c_str(), NULL, &hints, &p)
+    if (ret != 0) {
         ARCH->unlockMutex(m_mutex);
         delete addr;
         throwNameError(ret);
