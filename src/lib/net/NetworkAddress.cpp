@@ -76,7 +76,7 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
             throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
         }
 
-        auto endHostnameIt = static_cast<int>(hostIt) - 1;
+        auto endHostnameIt = static_cast<int>(hostIt);
         m_hostname = m_hostname.substr(0, endHostnameIt > 0 ? endHostnameIt : 0);
     }
     else if (colomCount > 1) {
@@ -104,7 +104,7 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
             }
 
             auto endHostnameIt = static_cast<int>(hostIt) - 1;
-            m_hostname = m_hostname.substr(0, endHostnameIt > 0 ? endHostnameIt : 0);
+            m_hostname = m_hostname.substr(1, endHostnameIt > 0 ? endHostnameIt : 0);
         }
 
         // ensure that ipv6 link-local adress ended with scope id

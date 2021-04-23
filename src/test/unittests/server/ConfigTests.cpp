@@ -84,6 +84,36 @@ TEST(ServerConfigTests, serverconfig_will_deem_equal_configs_with_same_cell_name
     EXPECT_TRUE(b == a);
 }
 
+TEST(NetworkAddress, hostname_valid_parsing)
+{
+    const int validPort  = 24900;
+    const String portStr = std::to_string(validPort);
+
+    //list of test cases. 1 param - hostname for parsing, 2 param - port, 3 param - expected hostname
+    std::initializer_list<std::tuple<String, int, String>> validTestCases = {
+        std::make_tuple(String("127.0.0.1"),                                 validPort, "127.0.0.1"),
+        std::make_tuple(String("127.0.0.1:") + portStr,                      0,         "127.0.0.1"),
+        std::make_tuple(String(":") + portStr,                               0,         ""),
+        std::make_tuple(String("localhost"),                                 validPort, "localhost"),
+        std::make_tuple(String("localhost:") + portStr,                      0,         "localhost"),
+        std::make_tuple(String(""),                                          validPort, ""),
+        std::make_tuple(String("[::1]:") + portStr,                          0,         "::1"),
+        std::make_tuple(String("[fe80::a156:9f36:793:7bfb%14]:") + portStr,  0,         "fe80::a156:9f36:793:7bfb%14"),
+        std::make_tuple(String("::1"),                                       validPort, "::1"),
+        std::make_tuple(String("fe80::a156:9f36:793:7bfb%14"),               validPort, "fe80::a156:9f36:793:7bfb%14"),
+        std::make_tuple(String("fe80:0000:0000:0000:a156:9f36:793:7bfb%14"), validPort, "fe80:0000:0000:0000:a156:9f36:793:7bfb%14"),
+    };
+
+    for (auto caseParams : validTestCases) {
+        NetworkAddress addr(std::get<0>(caseParams), std::get<1>(caseParams));
+        addr.resolve();
+
+        EXPECT_TRUE(addr.getHostname() == std::get<2>(caseParams));
+        EXPECT_TRUE(addr.getPort() == validPort);
+        EXPECT_TRUE(addr.getAddress() != nullptr);
+    }
+}
+
 TEST(ServerConfigTests, serverconfig_will_deem_different_configs_with_same_cell_names_different_options)
 {
     Config a(nullptr);
