@@ -112,6 +112,28 @@ TEST(NetworkAddress, hostname_valid_parsing)
         EXPECT_TRUE(addr.getPort() == validPort);
         EXPECT_TRUE(addr.getAddress() != nullptr);
     }
+
+    //list of test cases. 1 param - hostname for parsing, 2 param - port, 3 param - expected hostname
+    std::initializer_list<String> nonValidTestCases = {
+        ":nonValidPort",
+        ":",
+        "[::1]:",
+        "[::1]:nonValidPort",
+        "fe80::1",
+        "[::1]:-1",
+        "[::1]:65536"
+    };
+
+    for (auto caseParam : nonValidTestCases) {
+        bool flag = false;
+        try {
+            NetworkAddress addr(caseParam, validPort);
+        }  catch (...) {
+            flag = true;
+        }
+
+        EXPECT_TRUE(flag);
+    }
 }
 
 TEST(ServerConfigTests, serverconfig_will_deem_different_configs_with_same_cell_names_different_options)
