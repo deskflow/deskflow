@@ -16,6 +16,7 @@
  */
 
 #include "lib/server/Config.h"
+#include "net/XSocket.h"
 #include "test/global/gtest.h"
 
 class OnlySystemFilter: public InputFilter::Condition {
@@ -90,7 +91,7 @@ TEST(NetworkAddress, hostname_valid_parsing)
     const String portStr = std::to_string(validPort);
 
     //list of test cases. 1 param - hostname for parsing, 2 param - port, 3 param - expected hostname
-    std::initializer_list<std::tuple<String, int, String>> validTestCases = {
+    const std::initializer_list<std::tuple<String, int, String>> validTestCases = {
         std::make_tuple(String("127.0.0.1"),                                 validPort, "127.0.0.1"),
         std::make_tuple(String("127.0.0.1:") + portStr,                      0,         "127.0.0.1"),
         std::make_tuple(String(":") + portStr,                               0,         ""),
@@ -104,7 +105,7 @@ TEST(NetworkAddress, hostname_valid_parsing)
         std::make_tuple(String("fe80:0000:0000:0000:a156:9f36:793:7bfb%14"), validPort, "fe80:0000:0000:0000:a156:9f36:793:7bfb%14"),
     };
 
-    for (auto caseParams : validTestCases) {
+    for (const auto &caseParams : validTestCases) {
         NetworkAddress addr(std::get<0>(caseParams), std::get<1>(caseParams));
         addr.resolve();
 
@@ -114,7 +115,7 @@ TEST(NetworkAddress, hostname_valid_parsing)
     }
 
     //list of test cases. 1 param - hostname for parsing, 2 param - port, 3 param - expected hostname
-    std::initializer_list<String> nonValidTestCases = {
+    const std::initializer_list<String> nonValidTestCases = {
         ":nonValidPort",
         ":",
         "[::1]:",
@@ -124,11 +125,12 @@ TEST(NetworkAddress, hostname_valid_parsing)
         "[::1]:65536"
     };
 
-    for (auto caseParam : nonValidTestCases) {
+    for (const auto &caseParam : nonValidTestCases) {
         bool flag = false;
         try {
             NetworkAddress addr(caseParam, validPort);
-        }  catch (...) {
+        }  catch (XSocketAddress&) {
+
             flag = true;
         }
 
