@@ -114,7 +114,7 @@ TEST(NetworkAddress, hostname_valid_parsing)
         EXPECT_TRUE(addr.getAddress() != nullptr);
     }
 
-    //list of test cases. 1 param - hostname for parsing, 2 param - port, 3 param - expected hostname
+    //list of non valid hostnames
     const std::initializer_list<String> nonValidTestCases = {
         ":nonValidPort",
         ":",
