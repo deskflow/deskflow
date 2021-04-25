@@ -129,7 +129,7 @@ TEST(NetworkAddress, hostname_valid_parsing)
         bool flag = false;
         try {
             NetworkAddress addr(caseParam, validPort);
-        }  catch (XSocketAddress&) {
+        }  catch (const XSocketAddress&) {
 
             flag = true;
         }
