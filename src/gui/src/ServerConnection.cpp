@@ -61,6 +61,8 @@ void ServerConnection::addClient(const QString& clientName)
 {
     if (!m_parent.serverConfig().isFull() && checkMainWindow())
     {
+        m_parent.stopSynergy();
+
         QMessageBox message(&m_parent);
         message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
         message.addButton(QObject::tr("Accept and configure"), QMessageBox::AcceptRole);
@@ -74,6 +76,8 @@ void ServerConnection::addClient(const QString& clientName)
         {
             m_ignoredClients.append(clientName);
         }
+
+        m_parent.startSynergy();
     }
 }
 
@@ -84,6 +88,4 @@ void ServerConnection::configureClient(const QString& clientName)
 
     ServerConfigDialog dlg(&m_parent, config);
     dlg.exec();
-
-    m_parent.restartSynergy();
 }
