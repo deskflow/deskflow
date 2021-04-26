@@ -10,6 +10,7 @@ Bug fixes:
 - #6975 Fix server stop working
 - #6976 Fix windows builds
 - #6979 Manual config error in client mode
+- #6983 Fix that mac client listens on ipv4 only
 
 Enhancements:
 - #6954 Move language selection to advanced section

@@ -22,6 +22,7 @@
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 
+#include <algorithm>
 #include <cstdlib>
 
 //
@@ -62,46 +63,53 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
     m_hostname(hostname),
     m_port(port)
 {
-    // check for port suffix
-    String::size_type i = m_hostname.rfind(':');
-    if (i != String::npos && i + 1 < m_hostname.size()) {
-        // found a colon.  see if it looks like an IPv6 address.
-        bool colonNotation = false;
-        bool dotNotation   = false;
-        bool doubleColon   = false;
-        for (String::size_type j = 0; j < i; ++j) {
-            if (m_hostname[j] == ':') {
-                colonNotation = true;
-                dotNotation   = false;
-                if (m_hostname[j + 1] == ':') {
-                    doubleColon = true;
-                }
-            }
-            else if (m_hostname[j] == '.' && colonNotation) {
-                dotNotation = true;
-            }
+    //detect internet protocol version with colom count
+    auto isColomPredicate = [](char c){return c == ':';};
+    auto colomCount = std::count_if(m_hostname.begin(), m_hostname.end(), isColomPredicate);
+
+    if(colomCount == 1) {
+        //ipv4 with port part
+        auto hostIt = m_hostname.find(':');
+        try {
+            m_port = std::stoi(m_hostname.substr(hostIt + 1));
+        } catch(...) {
+            throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
         }
 
-        // port suffix is ambiguous with IPv6 notation if there's
-        // a double colon and the end of the address is not in dot
-        // notation.  in that case we assume it's not a port suffix.
-        // the user can replace the double colon with zeros to
-        // disambiguate.
-        if ((!doubleColon || dotNotation) && !colonNotation) {
-            // parse port from hostname
-            char* end;
-            const char* chostname = m_hostname.c_str();
-            long suffixPort = strtol(chostname + i + 1, &end, 10);
-            if (end == chostname + i + 1 || *end != '\0') {
-                throw XSocketAddress(XSocketAddress::kBadPort,
-                                            m_hostname, m_port);
+        auto endHostnameIt = static_cast<int>(hostIt);
+        m_hostname = m_hostname.substr(0, endHostnameIt > 0 ? endHostnameIt : 0);
+    }
+    else if (colomCount > 1) {
+        //ipv6 part
+        if (m_hostname[0] == '[') {
+            //ipv6 with port part
+            String portDelimeter = "]:";
+            auto   hostIt        = m_hostname.find(portDelimeter);
+
+            //bad syntax of ipv6 with port
+            if (hostIt == String::npos) {
+                throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
             }
 
-            // trim port from hostname
-            m_hostname.erase(i);
+            auto portSuffix = m_hostname.substr(hostIt + portDelimeter.size());
+            //port is implied but omitted
+            if (portSuffix.empty()) {
+                throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+            }
+            try {
+                m_port = std::stoi(portSuffix);
+            } catch(...) {
+                //port is not a number
+                throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+            }
 
-            // save port
-            m_port = static_cast<int>(suffixPort);
+            auto endHostnameIt = static_cast<int>(hostIt) - 1;
+            m_hostname = m_hostname.substr(1, endHostnameIt > 0 ? endHostnameIt : 0);
+        }
+
+        // ensure that ipv6 link-local adress ended with scope id
+        if (m_hostname.rfind("fe80:", 0) == 0 && m_hostname.find('%') == String::npos) {
+            throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
         }
     }
 
