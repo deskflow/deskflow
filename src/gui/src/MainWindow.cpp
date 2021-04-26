@@ -461,8 +461,7 @@ void MainWindow::checkConnected(const QString& line)
         m_pLabelClientState->updateClientState(line);
     }
 
-    if (line.contains("connected to server") ||
-        line.contains("accepted client connection"))
+    if (line.contains("connected to server") || line.contains("has connected"))
     {
         setSynergyState(synergyConnected);
 
