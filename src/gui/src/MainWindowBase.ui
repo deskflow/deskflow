@@ -28,57 +28,6 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QWidget" name="m_trialWidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <property name="leftMargin">
-        <number>2</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>8</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_trialLabel">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="openExternalLinks">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
      <widget class="QWidget" name="m_pWidgetUpdate" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="spacing">
@@ -252,7 +201,7 @@
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;margin-left: 5px;&quot;&gt;(&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: none; font-size: 13px; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;margin-left: 5px;&quot;&gt;(&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: none; font-size: 13px; color:#007af4;&quot;&gt;Preferences&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="margin">
           <number>0</number>
@@ -818,6 +767,9 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -849,6 +801,58 @@
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="m_trialLabel">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>-1</pointsize>
+          <weight>87</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 13px;
+font-weight: 700;
+padding: 3px 5px;
+border-radius: 3px;
+background-color: #EC4C47;
+color: #ffffff;
+top: 3px;</string>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
           <height>20</height>
          </size>
         </property>

@@ -151,7 +151,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     setMinimumSize(size());
 #endif
 
-    m_trialWidget->hide();
+    m_trialLabel->hide();
 
     // hide padlock icon
     secureSocket(false);
@@ -1129,11 +1129,11 @@ void MainWindow::InvalidLicense()
 
 void MainWindow::showLicenseNotice(const QString& notice)
 {
-    this->m_trialWidget->hide();
+    this->m_trialLabel->hide();
 
     if (!notice.isEmpty()) {
         this->m_trialLabel->setText(notice);
-        this->m_trialWidget->show();
+        this->m_trialLabel->show();
     }
 
     setWindowTitle (m_LicenseManager->activeEditionName());
