@@ -1432,7 +1432,6 @@ void MainWindow::on_m_pRadioGroupClient_clicked(bool)
 
 void MainWindow::on_m_pButtonConnect_clicked()
 {
-    m_clientConnection.setCheckConnection(true);
-    restartSynergy();
+    on_m_pButtonApply_clicked();
 }
 
