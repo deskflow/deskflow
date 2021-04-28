@@ -461,8 +461,7 @@ void MainWindow::checkConnected(const QString& line)
         m_pLabelClientState->updateClientState(line);
     }
 
-    if (line.contains("connected to server") ||
-        line.contains("accepted client connection"))
+    if (line.contains("connected to server") || line.contains("has connected"))
     {
         setSynergyState(synergyConnected);
 
@@ -838,6 +837,15 @@ QString MainWindow::configFilename()
 QString MainWindow::address() const
 {
     QString i = appConfig().networkInterface();
+    // if interface is IPv6 - ensure that ip is in square brackets
+    if (i.count(':') > 1) {
+        if(i[0] != '[') {
+            i.insert(0, '[');
+        }
+        if(i[i.size() - 1] != ']') {
+            i.push_back(']');
+        }
+    }
     return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
@@ -1053,7 +1061,7 @@ QString MainWindow::getIPAddresses()
     for (const auto& address : addresses) {
         if (address.protocol() == QAbstractSocket::IPv4Protocol &&
             address != QHostAddress(QHostAddress::LocalHost) &&
-            !address.isLinkLocal()) {
+            !address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16"))) {
 
             // usually 192.168.x.x is a useful ip for the user, so indicate
             // this by making it bold.
