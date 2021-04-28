@@ -26,14 +26,17 @@ class MainWindow;
 class ClientConnection
 {
     MainWindow& m_parent;
+    bool m_checkConnection = false;
 
 public:
     explicit ClientConnection(MainWindow& parent);
     void update(const QString& line);
+    void setCheckConnection(bool checkConnection);
 
 private:
     QString getMessage() const;
     bool checkMainWindow();
+    void showMessage();
 };
 
 #endif // CLIENTCONNECTION_H

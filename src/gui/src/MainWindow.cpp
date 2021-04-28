@@ -310,7 +310,7 @@ void MainWindow::initConnections()
 {
     connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(startSynergy()));
+    connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(actionStart()));
     connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(&m_VersionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
@@ -712,6 +712,12 @@ void MainWindow::startSynergy()
         QString command(app + " " + args.join(" "));
         m_IpcClient.sendCommand(command, appConfig().elevateMode());
     }
+}
+
+void MainWindow::actionStart()
+{
+    m_clientConnection.setCheckConnection(true);
+    startSynergy();
 }
 
 void MainWindow::retryStart()
@@ -1284,6 +1290,7 @@ void MainWindow::on_m_pActivate_triggered()
 
 void MainWindow::on_m_pButtonApply_clicked()
 {
+    m_clientConnection.setCheckConnection(true);
     restartSynergy();
 }
 
@@ -1425,6 +1432,7 @@ void MainWindow::on_m_pRadioGroupClient_clicked(bool)
 
 void MainWindow::on_m_pButtonConnect_clicked()
 {
-   restartSynergy();
+    m_clientConnection.setCheckConnection(true);
+    restartSynergy();
 }
 
