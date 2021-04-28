@@ -461,8 +461,7 @@ void MainWindow::checkConnected(const QString& line)
         m_pLabelClientState->updateClientState(line);
     }
 
-    if (line.contains("connected to server") ||
-        line.contains("accepted client connection"))
+    if (line.contains("connected to server") || line.contains("has connected"))
     {
         setSynergyState(synergyConnected);
 
@@ -1062,7 +1061,7 @@ QString MainWindow::getIPAddresses()
     for (const auto& address : addresses) {
         if (address.protocol() == QAbstractSocket::IPv4Protocol &&
             address != QHostAddress(QHostAddress::LocalHost) &&
-            !address.isLinkLocal()) {
+            !address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16"))) {
 
             // usually 192.168.x.x is a useful ip for the user, so indicate
             // this by making it bold.
