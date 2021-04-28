@@ -412,6 +412,23 @@ bool ServerConfig::isFull() const
     return isFull;
 }
 
+bool ServerConfig::isScreenExists(const QString& screenName) const
+{
+    bool isExists = false;
+
+    for (const auto& screen : screens())
+    {
+        if (!screen.isNull() &&
+            screen.name() == screenName)
+        {
+            isExists = true;
+            break;
+        }
+    }
+
+    return isExists;
+}
+
 void ServerConfig::setConfigFile(const QString& configFile)
 {
    m_pAppConfig->setConfigFile(configFile);
