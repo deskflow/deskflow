@@ -1374,7 +1374,7 @@ void MainWindow::windowStateChanged()
 
 void MainWindow::updateScreenName()
 {
-    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none;\">Preferences</a>)").arg(appConfig().screenName()));
+    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none; color: #4285F4;\">Preferences</a>)").arg(appConfig().screenName()));
     serverConfig().updateServerName();
 }
 
