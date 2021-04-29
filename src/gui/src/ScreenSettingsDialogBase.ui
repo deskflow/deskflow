@@ -693,21 +693,21 @@ font-weight: bold;</string>
       <item row="0" column="1">
        <widget class="QCheckBox" name="m_pCheckBoxScrollLock">
         <property name="text">
-         <string>Fix SCROLL LOCK key</string>
+         <string>SCROLL LOCK key</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxCapsLock">
         <property name="text">
-         <string>Fix CAPS LOCK key</string>
+         <string>CAPS LOCK key</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QCheckBox" name="m_pCheckBoxXTest">
         <property name="text">
-         <string>Fix XTest for Xinerama</string>
+         <string>XTest for Xinerama</string>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -717,7 +717,7 @@ font-weight: bold;</string>
       <item row="1" column="0">
        <widget class="QCheckBox" name="m_pCheckBoxNumLock">
         <property name="text">
-         <string>Fix NUM LOCK key</string>
+         <string>NUM LOCK key</string>
         </property>
        </widget>
       </item>
