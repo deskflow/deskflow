@@ -85,6 +85,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         const QString& getConfigFile() const;
         bool getUseExternalConfig() const;
         bool isFull() const;
+        bool isScreenExists(const QString& screenName) const;
 
     protected:
         QSettings& settings();
