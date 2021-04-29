@@ -163,13 +163,13 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>22</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>18</number>
        </property>
        <item>
         <widget class="QGroupBox" name="m_pGroupServer">
@@ -584,22 +584,6 @@
        </item>
       </layout>
      </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_6">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>8</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelLogs">
