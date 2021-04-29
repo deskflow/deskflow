@@ -132,7 +132,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     updateScreenName();
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
-    m_pLabelIpAddresses->setText(getIPAddresses());
+    m_pLabelIpAddresses->setText(tr("This computers IP addresses: %1").arg(getIPAddresses()));
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -1072,7 +1072,7 @@ QString MainWindow::getIPAddresses()
             // usually 192.168.x.x is a useful ip for the user, so indicate
             // this by making it bold.
             if (!hinted && address.isInSubnet(localnet)) {
-                QString format = "<b>%1</b>";
+                QString format = "<span style=\"color:#4285F4;\">%1</span>";
                 result.append(format.arg(address.toString()));
                 hinted = true;
             }
@@ -1374,7 +1374,7 @@ void MainWindow::windowStateChanged()
 
 void MainWindow::updateScreenName()
 {
-    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none; color:#007af4;\">Preferences</a>)").arg(appConfig().screenName()));
+    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none;\">Preferences</a>)").arg(appConfig().screenName()));
     serverConfig().updateServerName();
 }
 

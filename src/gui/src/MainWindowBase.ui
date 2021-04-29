@@ -107,62 +107,10 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="m_pWidgetIPAddress" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+     <widget class="QLabel" name="m_pLabelIpAddresses">
+      <property name="text">
+       <string notr="true">This computers IP addresses:</string>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>20</height>
-       </size>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>190</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>This computers IP addresses:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_pLabelIpAddresses">
-         <property name="text">
-          <string notr="true"/>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </item>
     <item>
