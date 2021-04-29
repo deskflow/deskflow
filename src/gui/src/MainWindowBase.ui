@@ -27,6 +27,12 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>5</number>
+    </property>
+    <property name="topMargin">
+     <number>20</number>
+    </property>
     <item>
      <widget class="QWidget" name="m_pWidgetUpdate" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -105,6 +111,22 @@
        <string notr="true">This computers name:</string>
       </property>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_5">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelIpAddresses">
@@ -564,6 +586,29 @@
      </widget>
     </item>
     <item>
+     <spacer name="verticalSpacer_6">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>6</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="m_pLabelLogs">
+      <property name="text">
+       <string>Logs</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QGroupBox" name="m_pGroupLog">
       <property name="font">
        <font>
@@ -571,7 +616,10 @@
        </font>
       </property>
       <property name="title">
-       <string>Log</string>
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
