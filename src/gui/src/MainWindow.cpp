@@ -130,7 +130,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
 
-    m_pLabelScreenName->setText(appConfig.screenName());
+    updateScreenName();
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
     m_pLabelIpAddresses->setText(getIPAddresses());
 
@@ -1351,7 +1351,7 @@ void MainWindow::secureSocket(bool secureSocket)
     }
 }
 
-void MainWindow::on_m_pSettingsLink_linkActivated(const QString&)
+void MainWindow::on_m_pLabelComputerName_linkActivated(const QString&)
 {
    m_pActionSettings->trigger();
 }
@@ -1374,7 +1374,7 @@ void MainWindow::windowStateChanged()
 
 void MainWindow::updateScreenName()
 {
-    m_pLabelScreenName->setText(appConfig().screenName());
+    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none; color:#007af4;\">Preferences</a>)").arg(appConfig().screenName()));
     serverConfig().updateServerName();
 }
 
