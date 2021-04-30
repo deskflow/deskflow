@@ -21,5 +21,6 @@
         <file>icons/64x64/synergy-light-connected.png</file>
         <file>image/welcome.png</file>
         <file>icons/64x64/folder.png</file>
+        <file>fonts/Arial.ttf</file>
     </qresource>
 </RCC>

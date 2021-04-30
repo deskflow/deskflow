@@ -29,6 +29,11 @@ QSynergyApplication::QSynergyApplication(int& argc, char** argv) :
     m_Translator(NULL)
 {
     s_Instance = this;
+
+    QFontDatabase::addApplicationFont(":/res/fonts/Arial.ttf");
+    QFont Arial("Arial", 13);
+    Arial.setStyleHint(QFont::Monospace);
+    setFont(Arial);
 }
 
 QSynergyApplication::~QSynergyApplication()
