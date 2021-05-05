@@ -123,7 +123,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>12</height>
+        <height>14</height>
        </size>
       </property>
      </spacer>
@@ -146,13 +146,13 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>270</height>
+        <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>270</height>
+        <height>16777215</height>
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -163,13 +163,13 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>12</number>
+        <number>28</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>18</number>
+        <number>12</number>
        </property>
        <item>
         <widget class="QGroupBox" name="m_pGroupServer">
@@ -214,10 +214,10 @@
            <number>11</number>
           </property>
           <property name="rightMargin">
-           <number>5</number>
+           <number>9</number>
           </property>
           <property name="bottomMargin">
-           <number>5</number>
+           <number>9</number>
           </property>
           <item>
            <widget class="QRadioButton" name="m_pRadioGroupServer">
@@ -587,6 +587,9 @@
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelLogs">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="text">
        <string>Logs</string>
       </property>
@@ -609,19 +612,32 @@
      </spacer>
     </item>
     <item>
-     <widget class="QGroupBox" name="m_pGroupLog">
-      <property name="font">
-       <font>
-        <kerning>true</kerning>
-       </font>
+     <widget class="QFrame" name="m_pGroupLog">
+      <property name="styleSheet">
+       <string notr="true">QFrame{
+border: 1px solid #DADADA;
+border-radius: 4px;
+}</string>
       </property>
-      <property name="title">
-       <string/>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="leftMargin">
+        <number>8</number>
+       </property>
+       <property name="topMargin">
+        <number>8</number>
+       </property>
+       <property name="rightMargin">
+        <number>8</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
        <item>
         <widget class="QPlainTextEdit" name="m_pLogOutput">
          <property name="sizePolicy">
@@ -663,6 +679,9 @@
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="topMargin">
+       <number>16</number>
       </property>
       <item>
        <widget class="QLabel" name="m_pLabelPadlock">
