@@ -30,9 +30,11 @@ QSynergyApplication::QSynergyApplication(int& argc, char** argv) :
 {
     s_Instance = this;
 
+    setAttribute(Qt::AA_EnableHighDpiScaling);
     QFontDatabase::addApplicationFont(":/res/fonts/Arial.ttf");
-    QFont Arial("Arial", 13);
-    Arial.setStyleHint(QFont::Monospace);
+    QFont Arial("Arial");
+    Arial.setPixelSize(13);
+    Arial.setStyleHint(QFont::SansSerif);
     setFont(Arial);
 }
 
