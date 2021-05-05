@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>491</width>
-    <height>751</height>
+    <width>400</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -133,20 +133,11 @@ font-weight: bold;</string>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_4">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+    <widget class="QLabel" name="m_pLlabelModifierKeys">
+     <property name="text">
+      <string>Modifier keys</string>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>10</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="m_pGroupModifiers">
@@ -174,13 +165,10 @@ font-weight: bold;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -3px;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="title">
-      <string>&amp;Modifier keys</string>
+      <string/>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -462,20 +450,11 @@ font-weight: bold;</string>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_5">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+    <widget class="QLabel" name="m_pLabelDeadCorners">
+     <property name="text">
+      <string>Dead corners defaults</string>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>10</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="m_pGroupSwitchCorners">
@@ -497,13 +476,10 @@ font-weight: bold;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -3px;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="title">
-      <string>&amp;Dead corners defaults</string>
+      <string/>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -631,20 +607,11 @@ font-weight: bold;</string>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_6">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+    <widget class="QLabel" name="m_LabelFixes">
+     <property name="text">
+      <string>Fixes</string>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>10</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="m_pGroupFixes">
@@ -666,13 +633,10 @@ font-weight: bold;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -3px;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="title">
-      <string>&amp;Fixes</string>
+      <string/>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -725,20 +689,11 @@ font-weight: bold;</string>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer_8">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+    <widget class="QLabel" name="m_pLabelAliases">
+     <property name="text">
+      <string>Aliases</string>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>10</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="m_pGroupAliases">
@@ -763,13 +718,10 @@ font-weight: bold;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -3px;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="title">
-      <string>A&amp;liases</string>
+      <string/>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -1032,11 +984,17 @@ left: 30px;
    </item>
    <item>
     <widget class="QDialogButtonBox" name="m_pButtonBox">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
