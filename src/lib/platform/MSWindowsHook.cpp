@@ -159,7 +159,6 @@ static
 void
 keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 {
-    LOG((CLOG_ERR "test output for code covarage generation %s", std::to_string(vkCode).c_str()));
     // we have to use GetAsyncKeyState() rather than GetKeyState() because
     // we don't pass through most keys so the event synchronous state
     // doesn't get updated.  we do that because certain modifier keys have
