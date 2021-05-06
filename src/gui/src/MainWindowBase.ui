@@ -169,55 +169,32 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>12</number>
+        <number>18</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="m_pGroupServer">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+        <widget class="QFrame" name="m_pGroupServer">
          <property name="minimumSize">
           <size>
-           <width>340</width>
-           <height>248</height>
+           <width>0</width>
+           <height>250</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <kerning>true</kerning>
-          </font>
-         </property>
          <property name="styleSheet">
-          <string notr="true">QGroupBox::title {
-    subcontrol-origin: padding;
-    left: 7px;
-}
-</string>
+          <string notr="true">.QFrame{
+border: 1px solid  rgba(192,192,192, 0.2);;
+border-radius: 4px;
+background-color: rgba(192,192,192, 0.1);
+}</string>
          </property>
-         <property name="title">
-          <string/>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="checkable">
-          <bool>false</bool>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="ServerLayout">
-          <property name="spacing">
-           <number>9</number>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
           <property name="topMargin">
            <number>11</number>
-          </property>
-          <property name="rightMargin">
-           <number>9</number>
-          </property>
-          <property name="bottomMargin">
-           <number>9</number>
           </property>
           <item>
            <widget class="QRadioButton" name="m_pRadioGroupServer">
@@ -354,53 +331,27 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupClient">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+        <widget class="QFrame" name="m_pGroupClient">
          <property name="minimumSize">
           <size>
-           <width>340</width>
-           <height>248</height>
-          </size>
-         </property>
-         <property name="baseSize">
-          <size>
            <width>0</width>
-           <height>0</height>
+           <height>250</height>
           </size>
-         </property>
-         <property name="font">
-          <font>
-           <kerning>true</kerning>
-          </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">QGroupBox::title {
-    subcontrol-origin: padding;
-    left: 7px;
-}
-</string>
+          <string notr="true">.QFrame{
+border: 1px solid  rgba(192,192,192, 0.2);
+border-radius: 4px;
+background-color: rgba(192,192,192, 0.1);
+}</string>
          </property>
-         <property name="title">
-          <string/>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="checkable">
-          <bool>false</bool>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="ClientLayout">
-          <property name="spacing">
-           <number>9</number>
-          </property>
-          <property name="leftMargin">
-           <number>9</number>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <property name="topMargin">
            <number>11</number>
           </property>
@@ -606,6 +557,12 @@
     </item>
     <item>
      <widget class="QFrame" name="m_pGroupLog">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>129</height>
+       </size>
+      </property>
       <property name="styleSheet">
        <string notr="true">.QFrame{
 border: 1px solid  rgba(192,192,192, 0.2);;
