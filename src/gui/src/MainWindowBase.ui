@@ -607,9 +607,10 @@
     <item>
      <widget class="QFrame" name="m_pGroupLog">
       <property name="styleSheet">
-       <string notr="true">QFrame{
-border: 1px solid #DADADA;
+       <string notr="true">.QFrame{
+border: 1px solid  rgba(192,192,192, 0.2);;
 border-radius: 4px;
+background-color: rgba(192,192,192, 0.1);
 }</string>
       </property>
       <property name="frameShape">
