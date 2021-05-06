@@ -748,6 +748,12 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--log" << appConfig().logFilenameCmd();
     }
 
+    if (appConfig().getLanguageSync())
+    {
+        args << "--sync-language";
+    }
+
+
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     // check auto config first, if it is disabled or no server detected,
     // use line edit host name if it is not empty

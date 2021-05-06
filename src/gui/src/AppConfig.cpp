@@ -102,6 +102,7 @@ AppConfig::AppConfig() :
     m_AutoConfigServer(),
     m_MinimizeToTray(false),
     m_Edition(kUnregistered),
+    m_LanguageSync(true),
     m_LogToFile(),
     m_StartedBefore(),
     m_ActivationHasRun(),
@@ -239,6 +240,7 @@ void AppConfig::loadSettings()
     m_UseInternalConfig         = loadSetting(kUseInternalConfig, false).toBool();
     m_ClientGroupChecked        = loadSetting(kGroupClientCheck, false).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
+    m_LanguageSync              = loadSetting(kLanguageSync, true).toBool();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -299,6 +301,7 @@ void AppConfig::saveSettings()
         setSetting(kUseInternalConfig, m_UseInternalConfig);
         setSetting(kGroupClientCheck, m_ClientGroupChecked);
         setSetting(kServerHostname, m_ServerHostname);
+        setSetting(kLanguageSync, m_LanguageSync);
     }
 
     m_unsavedChanges = false;
@@ -446,6 +449,12 @@ bool AppConfig::getAutoHide() { return m_AutoHide; }
 
 void AppConfig::setMinimizeToTray(bool newValue) {
     setSettingModified(m_MinimizeToTray, newValue);
+}
+
+bool AppConfig::getLanguageSync() { return m_LanguageSync; }
+
+void AppConfig::setLanguageSync(bool newValue) {
+    setSettingModified(m_LanguageSync, newValue);
 }
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
