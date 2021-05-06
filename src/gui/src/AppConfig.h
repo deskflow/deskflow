@@ -113,7 +113,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setAutoHide(bool b);
         bool getAutoHide();
         void setLanguageSync(bool b);
-        bool getLanguageSync();
+        bool getLanguageSync() const;
 #ifndef SYNERGY_ENTERPRISE
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
@@ -245,7 +245,7 @@ protected:
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
-        bool m_LanguageSync;
+        bool m_LanguageSync           = true;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;

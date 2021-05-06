@@ -102,7 +102,6 @@ AppConfig::AppConfig() :
     m_AutoConfigServer(),
     m_MinimizeToTray(false),
     m_Edition(kUnregistered),
-    m_LanguageSync(true),
     m_LogToFile(),
     m_StartedBefore(),
     m_ActivationHasRun(),
@@ -451,7 +450,7 @@ void AppConfig::setMinimizeToTray(bool newValue) {
     setSettingModified(m_MinimizeToTray, newValue);
 }
 
-bool AppConfig::getLanguageSync() { return m_LanguageSync; }
+bool AppConfig::getLanguageSync() const { return m_LanguageSync; }
 
 void AppConfig::setLanguageSync(bool newValue) {
     setSettingModified(m_LanguageSync, newValue);
