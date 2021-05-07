@@ -524,11 +524,6 @@ background-color: rgba(192,192,192, 0.1);
           <height>0</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
         <property name="text">
          <string>Top-left</string>
         </property>
@@ -547,11 +542,6 @@ background-color: rgba(192,192,192, 0.1);
           <width>0</width>
           <height>0</height>
          </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
         </property>
         <property name="text">
          <string>Bottom-right</string>
@@ -572,11 +562,6 @@ background-color: rgba(192,192,192, 0.1);
           <height>0</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
         <property name="text">
          <string>Top-right</string>
         </property>
@@ -592,11 +577,6 @@ background-color: rgba(192,192,192, 0.1);
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
         </property>
         <property name="text">
          <string>Corner si&amp;ze</string>
@@ -620,11 +600,6 @@ background-color: rgba(192,192,192, 0.1);
           <height>0</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
         <property name="text">
          <string>Bottom-left</string>
         </property>
@@ -643,11 +618,6 @@ background-color: rgba(192,192,192, 0.1);
           <width>70</width>
           <height>0</height>
          </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
         </property>
        </widget>
       </item>
