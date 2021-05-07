@@ -46,7 +46,6 @@ VersionChecker::~VersionChecker()
 void VersionChecker::checkLatest()
 {
     auto request = QNetworkRequest(QUrl(VERSION_URL));
-    // TODO: throw in a header that indicates system language
     request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy (") + getVersion() + ") " + QSysInfo::prettyProductName());
     request.setRawHeader("X-Synergy-Version", getVersion().toStdString().c_str() );
     request.setRawHeader("X-Synergy-Language", QLocale::system().name().toStdString().c_str() );
