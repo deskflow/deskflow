@@ -20,6 +20,7 @@ Enhancements:
 - #6978 Update synergy UI. Settings window
 - #6981 Update synergy UI. Setup client configuration
 - #6962 | #6965 Add macOS 10.13 builder
+- #6990 Change VersionChecker URL and include system language in the header
 ===========
 
 v1.13.1-stable
@@ -56,7 +57,6 @@ Enhancements:
 - #6941 Add Raspberry Pi Builds
 - #6949 Add a new option SYNERGY_AUTOCONFIG to exclude autoconfig from the standard version
 - #6952 Change OpenSSL logic to use find_package
-- #6990 Change VersionChecker URL and include system language in the header
 
 v1.13.0-stable
 ===========
