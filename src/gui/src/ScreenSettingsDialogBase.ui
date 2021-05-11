@@ -13,7 +13,7 @@
   <property name="sizePolicy">
    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
     <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
+    <verstretch>1</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
@@ -779,7 +779,7 @@ background-color: rgba(192,192,192, 0.1);
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_6" rowminimumheight="0,1,0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_6" rowstretch="0,0,1,0,0" rowminimumheight="0,1,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -885,7 +885,7 @@ left: 30px;
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -936,7 +936,7 @@ font-weight: bold;</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" rowspan="2" colspan="2">
+      <item row="4" column="0" colspan="2">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -944,7 +944,7 @@ font-weight: bold;</string>
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>40</height>
+          <height>0</height>
          </size>
         </property>
        </spacer>
