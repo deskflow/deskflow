@@ -22,6 +22,7 @@ Enhancements:
 - #6981 | #6987 | #6988 Update synergy UI. Setup client configuration
 - #6984 Update synergy UI. Client error messages
 - #6962 | #6965 Add macOS 10.13 builder
+- #6990 Change VersionChecker URL and include system language in the header
 ===========
 
 v1.13.1-stable
