@@ -789,7 +789,7 @@ background-color: rgba(192,192,192, 0.1);
          <number>0</number>
         </property>
         <property name="verticalSpacing">
-         <number>4</number>
+         <number>6</number>
         </property>
         <item row="2" column="0">
          <spacer name="horizontalSpacer_3">
@@ -911,7 +911,7 @@ font-weight: bold;</string>
          <number>0</number>
         </property>
         <property name="verticalSpacing">
-         <number>4</number>
+         <number>6</number>
         </property>
         <item row="0" column="0" colspan="2">
          <widget class="QListWidget" name="m_pListAliases">
