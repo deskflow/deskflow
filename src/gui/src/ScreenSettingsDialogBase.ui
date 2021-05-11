@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>472</width>
-    <height>722</height>
+    <width>400</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>620</height>
+    <height>650</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -804,6 +804,12 @@ background-color: rgba(192,192,192, 0.1);
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>23</height>
+         </size>
+        </property>
         <property name="text">
          <string>&amp;Remove</string>
         </property>
@@ -833,7 +839,7 @@ background-color: rgba(192,192,192, 0.1);
         <property name="minimumSize">
          <size>
           <width>168</width>
-          <height>0</height>
+          <height>23</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -936,19 +942,6 @@ font-weight: bold;</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </widget>
    </item>
@@ -963,7 +956,7 @@ font-weight: bold;</string>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>10</height>
+       <height>0</height>
       </size>
      </property>
     </spacer>
