@@ -973,10 +973,10 @@
   </action>
   <action name="m_pActionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Preferences</string>
    </property>
-   <property name="statusTip">
-    <string>Edit settings</string>
+   <property name="toolTip">
+    <string>Preferences</string>
    </property>
    <property name="shortcut">
     <string notr="true"/>
