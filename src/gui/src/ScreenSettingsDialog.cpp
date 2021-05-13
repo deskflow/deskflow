@@ -57,8 +57,6 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget* parent, Screen* pScreen,cons
     m_pCheckBoxNumLock->setChecked(m_pScreen->fix(Screen::NumLock));
     m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(Screen::ScrollLock));
     m_pCheckBoxXTest->setChecked(m_pScreen->fix(Screen::XTest));
-
-    resize(400, 625);
 }
 
 void ScreenSettingsDialog::accept()

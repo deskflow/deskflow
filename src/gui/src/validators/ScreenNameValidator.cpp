@@ -29,7 +29,7 @@ namespace validators
 ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors, const ScreenList* pScreens) :
    LineEditValidator(parent, errors)
 {
-   addValidator(std::make_unique<EmptyStringValidator>("Computer name can't be empty"));
+   addValidator(std::make_unique<EmptyStringValidator>("Computer name is required"));
    addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
    addValidator(std::make_unique<RegExpValidator>("Remove unsupported characters", QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
    addValidator(std::make_unique<ScreenDuplicationsValidator>("A computer with this name already exists", parent ? parent->text() : "", pScreens));
