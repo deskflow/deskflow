@@ -130,9 +130,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
 
-    m_pLabelScreenName->setText(appConfig.screenName());
+    updateScreenName();
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
-    m_pLabelIpAddresses->setText(getIPAddresses());
+    m_pLabelIpAddresses->setText(tr("This computers IP addresses: %1").arg(getIPAddresses()));
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -151,7 +151,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     setMinimumSize(size());
 #endif
 
-    m_trialWidget->hide();
+    m_trialLabel->hide();
 
     // hide padlock icon
     secureSocket(false);
@@ -1072,7 +1072,7 @@ QString MainWindow::getIPAddresses()
             // usually 192.168.x.x is a useful ip for the user, so indicate
             // this by making it bold.
             if (!hinted && address.isInSubnet(localnet)) {
-                QString format = "<b>%1</b>";
+                QString format = "<span style=\"color:#4285F4;\">%1</span>";
                 result.append(format.arg(address.toString()));
                 hinted = true;
             }
@@ -1143,11 +1143,11 @@ void MainWindow::InvalidLicense()
 
 void MainWindow::showLicenseNotice(const QString& notice)
 {
-    this->m_trialWidget->hide();
+    this->m_trialLabel->hide();
 
     if (!notice.isEmpty()) {
         this->m_trialLabel->setText(notice);
-        this->m_trialWidget->show();
+        this->m_trialLabel->show();
     }
 
     setWindowTitle (m_LicenseManager->activeEditionName());
@@ -1351,7 +1351,7 @@ void MainWindow::secureSocket(bool secureSocket)
     }
 }
 
-void MainWindow::on_m_pSettingsLink_linkActivated(const QString&)
+void MainWindow::on_m_pLabelComputerName_linkActivated(const QString&)
 {
    m_pActionSettings->trigger();
 }
@@ -1374,7 +1374,7 @@ void MainWindow::windowStateChanged()
 
 void MainWindow::updateScreenName()
 {
-    m_pLabelScreenName->setText(appConfig().screenName());
+    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none; color: #4285F4;\">Preferences</a>)").arg(appConfig().screenName()));
     serverConfig().updateServerName();
 }
 
