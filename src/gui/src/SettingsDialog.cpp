@@ -52,6 +52,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
 
+    m_pCheckBoxLanguageSync->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
@@ -61,6 +62,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pCheckBoxAutoConfig,      SIGNAL(clicked()),                this, SLOT(onChange()));
     connect(m_pCheckBoxMinimizeToTray,  SIGNAL(clicked()),                this, SLOT(onChange()));
     connect(m_pCheckBoxAutoHide,        SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxLanguageSync,    SIGNAL(clicked()),                this, SLOT(onChange()));
     connect(m_pLineEditInterface,       SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
     connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),        this, SLOT(onChange()));
     connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
@@ -81,6 +83,7 @@ void SettingsDialog::accept()
    appConfig().setLanguage(m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
    appConfig().setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
    appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
    appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
    appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
    appConfig().setTLSCertPath(m_pLineEditCertificatePath->text());
@@ -139,6 +142,7 @@ void SettingsDialog::loadFromConfig() {
     m_pLineEditLogFilename->setText(appConfig().logFilename());
     setIndexFromItemData(m_pComboLanguage, appConfig().language());
     m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
+    m_pCheckBoxLanguageSync->setChecked(appConfig().getLanguageSync());
     m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
     m_pLineEditCertificatePath->setText(appConfig().getTLSCertPath());
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
@@ -326,6 +330,7 @@ bool SettingsDialog::isModified()
       || appConfig().language()          != m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()
       || appConfig().elevateMode()       != static_cast<ElevateMode>(m_pComboElevate->currentIndex())
       || appConfig().getAutoHide()       != m_pCheckBoxAutoHide->isChecked()
+      || appConfig().getLanguageSync()   != m_pCheckBoxLanguageSync->isChecked()
       || appConfig().autoConfig()        != m_pCheckBoxAutoConfig->isChecked()
       || appConfig().getMinimizeToTray() != m_pCheckBoxMinimizeToTray->isChecked()
       || appConfig().getTLSCertPath()    != m_pLineEditCertificatePath->text()
@@ -344,6 +349,7 @@ void SettingsDialog::enableControls(bool enable) {
     m_pComboLanguage->setEnabled(enable);
     m_pComboElevate->setEnabled(enable);
     m_pCheckBoxAutoHide->setEnabled(enable);
+    m_pCheckBoxLanguageSync->setEnabled(enable);
     m_pCheckBoxAutoConfig->setEnabled(enable);
     m_pCheckBoxMinimizeToTray->setEnabled(enable);
     m_pLineEditCertificatePath->setEnabled(enable);

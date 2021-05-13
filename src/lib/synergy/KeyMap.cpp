@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "synergy/App.h"
+#include "synergy/ArgsBase.h"
 #include "synergy/KeyMap.h"
 #include "synergy/key_types.h"
 #include "base/Log.h"
@@ -761,7 +763,8 @@ KeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
         KeyModifierAltGr | KeyModifierNumLock | KeyModifierScrollLock;
 
     // add keystrokes to adjust the group
-    if (group != keyItem.m_group) {
+    if (App::instance().argsBase().m_enableLangSync &&
+            group != keyItem.m_group) {
         group = keyItem.m_group;
         keystrokes.push_back(Keystroke(group, true, false));
     }
