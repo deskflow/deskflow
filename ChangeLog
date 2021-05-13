@@ -14,6 +14,7 @@ Bug fixes:
 - #6989 Fix client tray language switcher reverts to EN
 - #6993 Fix issues with prefences UI
 - #6992 UI issues and use cases
+- #6997 Allow Windows to go to sleep depending on system preferences
 ===========
 
 Enhancements:
