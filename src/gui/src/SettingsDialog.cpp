@@ -52,6 +52,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
 
+    m_pCheckBoxLanguageSync->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
