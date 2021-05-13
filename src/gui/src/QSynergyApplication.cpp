@@ -29,6 +29,12 @@ QSynergyApplication::QSynergyApplication(int& argc, char** argv) :
     m_Translator(NULL)
 {
     s_Instance = this;
+
+    QFontDatabase::addApplicationFont(":/res/fonts/Arial.ttf");
+    QFont Arial("Arial");
+    Arial.setPixelSize(13);
+    Arial.setStyleHint(QFont::SansSerif);
+    setFont(Arial);
 }
 
 QSynergyApplication::~QSynergyApplication()

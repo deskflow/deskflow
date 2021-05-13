@@ -143,6 +143,7 @@ public slots:
         void appendLogError(const QString& text);
         void startSynergy();
         void retryStart(); // If the connection failed this will retry a startSynergy
+        void actionStart();
 
     protected slots:
         void updateLocalFingerprint();
@@ -251,7 +252,7 @@ private slots:
     void on_m_pButtonApply_clicked();
     void on_windowShown();
 
-    void on_m_pSettingsLink_linkActivated(const QString &link);
+    void on_m_pLabelComputerName_linkActivated(const QString &link);
     void on_m_pLabelFingerprint_linkActivated(const QString& link);
     void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 

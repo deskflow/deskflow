@@ -174,27 +174,19 @@ LicenseManager::getTrialNotice() const
     QString Notice;
 
     if (m_serialKey.isExpired(::time(0))){
-        Notice = "<html><head/><body><p>Your %1 trial has expired. <a href="
-                 "\"https://members.symless.com/purchase\">"
-                 "<span style=\"text-decoration: underline;color:#0000ff;\">"
-                 "Buy now!</span></a></p></body></html>";
-        Notice = Notice.arg(LicenseManager::getEditionName(activeEdition()));
+        Notice = "<html><head/><body><p>"
+                 "Trial expired - "
+                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Buy now</a>"
+                 "</p></body></html>";
     }
     else{
-        Notice = "<html><head/><body><p><span style=\""
-                 "font-weight:600;\">%1</span> day%3 of "
-                 "your %2 trial remain%5. <a href="
-                 "\"https://members.symless.com/purchase\">"
-                 "<span style=\"text-decoration: underline;"
-                 " color:#0000ff;\">Buy now!</span></a>"
+        Notice = "<html><head/><body><p>"
+                 "Trial expires in %1 day%2 - "
+                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Buy now</a>"
                  "</p></body></html>";
 
         time_t daysLeft = m_serialKey.daysLeft(::time(0));
-        Notice = Notice
-                .arg (daysLeft)
-                .arg (LicenseManager::getEditionName(activeEdition()))
-                .arg ((daysLeft == 1) ? "" : "s")
-                .arg ((daysLeft == 1) ? "s" : "");
+        Notice = Notice.arg (daysLeft).arg ((daysLeft == 1) ? "" : "s");
     }
 
     return Notice;
@@ -206,18 +198,15 @@ LicenseManager::getTemporaryNotice() const
     QString Notice;
 
     if (m_serialKey.isExpired(::time(0))) {
-        Notice = "<html><head/><body><p>Your license has expired. <a href="
-                 "\"https://members.symless.com/purchase\">"
-                 "<span style=\"text-decoration: underline;color:#0000ff;\">"
-                 "Renew now!</span></a></p></body></html>";
+        Notice = "<html><head/><body><p>"
+                 "License expired - "
+                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Renew now</a>"
+                 "</p></body></html>";
     }
     else if (m_serialKey.isExpiring(::time(0))) {
-        Notice = "<html><head/><body><p><span style=\""
-                 "font-weight:600;\">%1</span> day%2 "
-                 "before your license expires.<a href="
-                 "\"https://members.symless.com/purchase\">"
-                 "<span style=\"text-decoration: underline;"
-                 " color:#0000ff;\">Renew now!</span></a>"
+        Notice = "<html><head/><body><p>"
+                 "License expires in %1 day%2 - "
+                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Renew now</a>"
                  "</p></body></html>";
 
         time_t daysLeft = m_serialKey.daysLeft(::time(0));

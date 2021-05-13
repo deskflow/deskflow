@@ -30,15 +30,20 @@ ClientConnection::ClientConnection(MainWindow& parent) :
 
 void ClientConnection::update(const QString& line)
 {
-    if (line.contains("failed to connect to server") &&
-        checkMainWindow())
+    if (m_checkConnection && checkMainWindow())
     {
-        m_parent.stopSynergy();
-
-        QMessageBox message(&m_parent);
-        message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-        message.setText(getMessage());
-        message.exec();
+        if (line.contains("failed to connect to server"))
+        {
+            m_checkConnection = false;
+            if (!line.contains("server refused client with our name"))
+            {
+                showMessage();
+            }
+        }
+        else if (line.contains("connected to server"))
+        {
+            m_checkConnection = false;
+        }
     }
 }
 
@@ -68,4 +73,17 @@ QString ClientConnection::getMessage() const
     }
 
     return message;
+}
+
+void ClientConnection::showMessage()
+{
+    QMessageBox message(&m_parent);
+    message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+    message.setText(getMessage());
+    message.exec();
+}
+
+void ClientConnection::setCheckConnection(bool checkConnection)
+{
+    m_checkConnection = checkConnection;
 }

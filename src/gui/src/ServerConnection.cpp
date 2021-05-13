@@ -59,7 +59,9 @@ bool ServerConnection::checkMainWindow()
 
 void ServerConnection::addClient(const QString& clientName)
 {
-    if (!m_parent.serverConfig().isFull() && checkMainWindow())
+    if (!m_parent.serverConfig().isFull() &&
+        !m_parent.serverConfig().isScreenExists(clientName) &&
+        checkMainWindow())
     {
         QMessageBox message(&m_parent);
         message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);

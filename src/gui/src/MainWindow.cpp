@@ -130,9 +130,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
     m_pWidgetUpdate->hide();
     m_VersionChecker.setApp(appPath(appConfig.synergycName()));
 
-    m_pLabelScreenName->setText(appConfig.screenName());
+    updateScreenName();
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
-    m_pLabelIpAddresses->setText(getIPAddresses());
+    m_pLabelIpAddresses->setText(tr("This computers IP addresses: %1").arg(getIPAddresses()));
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -151,7 +151,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     setMinimumSize(size());
 #endif
 
-    m_trialWidget->hide();
+    m_trialLabel->hide();
 
     // hide padlock icon
     secureSocket(false);
@@ -310,7 +310,7 @@ void MainWindow::initConnections()
 {
     connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
     connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(startSynergy()));
+    connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(actionStart()));
     connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
     connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(&m_VersionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
@@ -461,8 +461,7 @@ void MainWindow::checkConnected(const QString& line)
         m_pLabelClientState->updateClientState(line);
     }
 
-    if (line.contains("connected to server") ||
-        line.contains("accepted client connection"))
+    if (line.contains("connected to server") || line.contains("has connected"))
     {
         setSynergyState(synergyConnected);
 
@@ -713,6 +712,12 @@ void MainWindow::startSynergy()
         QString command(app + " " + args.join(" "));
         m_IpcClient.sendCommand(command, appConfig().elevateMode());
     }
+}
+
+void MainWindow::actionStart()
+{
+    m_clientConnection.setCheckConnection(true);
+    startSynergy();
 }
 
 void MainWindow::retryStart()
@@ -1068,12 +1073,12 @@ QString MainWindow::getIPAddresses()
     for (const auto& address : addresses) {
         if (address.protocol() == QAbstractSocket::IPv4Protocol &&
             address != QHostAddress(QHostAddress::LocalHost) &&
-            !address.isLinkLocal()) {
+            !address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16"))) {
 
             // usually 192.168.x.x is a useful ip for the user, so indicate
             // this by making it bold.
             if (!hinted && address.isInSubnet(localnet)) {
-                QString format = "<b>%1</b>";
+                QString format = "<span style=\"color:#4285F4;\">%1</span>";
                 result.append(format.arg(address.toString()));
                 hinted = true;
             }
@@ -1144,11 +1149,11 @@ void MainWindow::InvalidLicense()
 
 void MainWindow::showLicenseNotice(const QString& notice)
 {
-    this->m_trialWidget->hide();
+    this->m_trialLabel->hide();
 
     if (!notice.isEmpty()) {
         this->m_trialLabel->setText(notice);
-        this->m_trialWidget->show();
+        this->m_trialLabel->show();
     }
 
     setWindowTitle (m_LicenseManager->activeEditionName());
@@ -1291,6 +1296,7 @@ void MainWindow::on_m_pActivate_triggered()
 
 void MainWindow::on_m_pButtonApply_clicked()
 {
+    m_clientConnection.setCheckConnection(true);
     restartSynergy();
 }
 
@@ -1351,7 +1357,7 @@ void MainWindow::secureSocket(bool secureSocket)
     }
 }
 
-void MainWindow::on_m_pSettingsLink_linkActivated(const QString&)
+void MainWindow::on_m_pLabelComputerName_linkActivated(const QString&)
 {
    m_pActionSettings->trigger();
 }
@@ -1374,7 +1380,7 @@ void MainWindow::windowStateChanged()
 
 void MainWindow::updateScreenName()
 {
-    m_pLabelScreenName->setText(appConfig().screenName());
+    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none; color: #4285F4;\">Preferences</a>)").arg(appConfig().screenName()));
     serverConfig().updateServerName();
 }
 
@@ -1432,6 +1438,6 @@ void MainWindow::on_m_pRadioGroupClient_clicked(bool)
 
 void MainWindow::on_m_pButtonConnect_clicked()
 {
-   restartSynergy();
+    on_m_pButtonApply_clicked();
 }
 
