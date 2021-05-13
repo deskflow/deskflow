@@ -758,9 +758,6 @@ Config::readSectionOptions(ConfigReadContext& s)
 		else if (name == "switchNeedsAlt") {
 			addOption("", kOptionScreenSwitchNeedsAlt, s.parseBoolean(value));
 		}
-		else if (name == "screenSaverSync") {
-			addOption("", kOptionScreenSaverSync, s.parseBoolean(value));
-		}
 		else if (name == "relativeMouseMoves") {
 			addOption("", kOptionRelativeMouseMoves, s.parseBoolean(value));
 		}
@@ -1391,10 +1388,7 @@ Config::getOptionName(OptionID id)
 	}
 	if (id == kOptionScreenSwitchNeedsAlt) {
 		return "switchNeedsAlt";
-	}
-	if (id == kOptionScreenSaverSync) {
-		return "screenSaverSync";
-	}
+    }
 	if (id == kOptionXTestXineramaUnaware) {
 		return "xtestIsXineramaUnaware";
 	}
@@ -1428,7 +1422,6 @@ Config::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionScreenSwitchNeedsShift ||
 		id == kOptionScreenSwitchNeedsControl ||
 		id == kOptionScreenSwitchNeedsAlt ||
-		id == kOptionScreenSaverSync ||
 		id == kOptionXTestXineramaUnaware ||
 		id == kOptionRelativeMouseMoves ||
 		id == kOptionWin32KeepForeground ||

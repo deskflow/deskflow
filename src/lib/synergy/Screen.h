@@ -331,9 +331,6 @@ private:
     // true if the cursor is on this screen
     bool                m_entered;
 
-    // true if screen saver should be synchronized to server
-    bool                m_screenSaverSync;
-
     // note toggle keys that toggles on up/down (false) or on
     // transition (true)
     KeyModifierMask        m_halfDuplex;
