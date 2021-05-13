@@ -68,7 +68,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
     connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
 
-    resize(400, 620);
+    adjustSize();
 }
 
 void SettingsDialog::accept()
@@ -181,16 +181,6 @@ void SettingsDialog::loadFromConfig() {
 
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
 
-#ifdef SYNERGY_ENTERPRISE
-
-    m_pCheckBoxEnableCrypto->setEnabled(true);
-
-#else
-
-    m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
-
-#endif
-
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
 #else
@@ -198,7 +188,6 @@ void SettingsDialog::loadFromConfig() {
     m_pLabelInstallBonjour->hide();
 #endif
 
-    adjustSize();
 }
 
 void SettingsDialog::allowAutoConfig()
@@ -238,16 +227,33 @@ void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index)
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_toggled(bool checked)
+void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
 {
-    m_pLabelKeyLength->setEnabled(checked);
-    m_pComboBoxKeyLength->setEnabled(checked);
-    m_pLabelCertificate->setEnabled(checked);
-    m_pLineEditCertificatePath->setEnabled(checked);
-    m_pPushButtonBrowseCert->setEnabled(checked);
-    m_pPushButtonRegenCert->setEnabled(checked);
+    if (appConfig().isCryptoAvailable())
+    {
+        m_pLabelKeyLength->setEnabled(checked);
+        m_pComboBoxKeyLength->setEnabled(checked);
+        m_pLabelCertificate->setEnabled(checked);
+        m_pLineEditCertificatePath->setEnabled(checked);
+        m_pPushButtonBrowseCert->setEnabled(checked);
+        m_pPushButtonRegenCert->setEnabled(checked);
 
-    buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+        buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
+    }
+    else
+    {
+        m_pCheckBoxEnableCrypto->setChecked(false);
+
+        QMessageBox message(this);
+        message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+        message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
+        message.setText(QObject::tr("TLS encryption is Synergy Pro feature.\nPlease upgrade if this is important to you"));
+
+        if (message.exec() == QMessageBox::Accepted)
+        {
+            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "account"));
+        }
+    }
 }
 
 void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString&)
@@ -349,13 +355,13 @@ void SettingsDialog::enableControls(bool enable) {
     m_pLineEditCertificatePath->setEnabled(enable);
     m_pComboBoxKeyLength->setEnabled(enable);
     m_pPushButtonBrowseCert->setEnabled(enable);
+    m_pCheckBoxEnableCrypto->setEnabled(enable);
     m_labelAdminRightsMessage->setVisible(!enable);
 
     if (enable) {
         m_pLabelLogPath->setEnabled(m_pCheckBoxLogToFile->isChecked());
         m_pLineEditLogFilename->setEnabled(m_pCheckBoxLogToFile->isChecked());
         m_pButtonBrowseLog->setEnabled(m_pCheckBoxLogToFile->isChecked());
-        m_pCheckBoxEnableCrypto->setEnabled(m_appConfig.isCryptoAvailable());
         m_pLabelKeyLength->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
         m_pComboBoxKeyLength->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
         m_pLabelCertificate->setEnabled(m_pCheckBoxEnableCrypto->isChecked());
@@ -367,7 +373,6 @@ void SettingsDialog::enableControls(bool enable) {
         m_pLabelLogPath->setEnabled(enable);
         m_pLineEditLogFilename->setEnabled(enable);
         m_pButtonBrowseLog->setEnabled(enable);
-        m_pCheckBoxEnableCrypto->setEnabled(enable);
         m_pLabelKeyLength->setEnabled(enable);
         m_pComboBoxKeyLength->setEnabled(enable);
         m_pLabelCertificate->setEnabled(enable);

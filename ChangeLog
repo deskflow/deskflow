@@ -12,7 +12,9 @@ Bug fixes:
 - #6979 Manual config error in client mode
 - #6983 Fix that mac client listens on ipv4 only
 - #6989 Fix client tray language switcher reverts to EN
+- #6993 Fix issues with prefences UI
 - #6992 UI issues and use cases
+===========
 
 Enhancements:
 - #6954 Move language selection to advanced section
