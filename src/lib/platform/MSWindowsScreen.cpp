@@ -247,12 +247,6 @@ MSWindowsScreen::enable()
         // watch jump zones
         m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
     }
-    else {
-        // prevent the system from entering power saving modes.  if
-        // it did we'd be forced to disconnect from the server and
-        // the server would not be able to wake us up.
-        ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
-    }
 }
 
 void

@@ -129,9 +129,6 @@ MSWindowsScreenSaver::disable()
     if (m_wasSecure) {
         setSecure(false, m_wasSecureAnInt);
     }
-
-    // disable display power down
-    ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
 }
 
 void
@@ -148,9 +145,6 @@ MSWindowsScreenSaver::activate()
             // no foreground window.  pretend we got the event instead.
             DefWindowProc(NULL, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
         }
-
-        // restore power save when screen saver activates
-        ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
     }
 }
 
