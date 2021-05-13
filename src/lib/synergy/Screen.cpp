@@ -175,7 +175,7 @@ Screen::grabClipboard(ClipboardID id)
 }
 
 void
-Screen::screensaver(bool activate)
+Screen::screensaver(bool) const
 {
     // do nothing
 }

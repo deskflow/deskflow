@@ -116,7 +116,7 @@ public:
     Forcibly activates the screen saver if \c activate is true otherwise
     forcibly deactivates it.
     */
-    void                screensaver(bool activate);
+    void                screensaver(bool activate) const;
 
     //! Notify of key press
     /*!

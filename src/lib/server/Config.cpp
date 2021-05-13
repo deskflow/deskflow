@@ -1388,7 +1388,7 @@ Config::getOptionName(OptionID id)
 	}
 	if (id == kOptionScreenSwitchNeedsAlt) {
 		return "switchNeedsAlt";
-    }
+	}
 	if (id == kOptionXTestXineramaUnaware) {
 		return "xtestIsXineramaUnaware";
 	}
