@@ -26,7 +26,7 @@ class SetupWizardBlocker : public QDialog, public Ui::SetupWizardBlocker
     Q_OBJECT
 
 public:
-    enum qBlockerType
+    enum class qBlockerType
     {
         waylandDetected
     };

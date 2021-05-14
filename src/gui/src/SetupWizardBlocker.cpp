@@ -21,11 +21,11 @@
 #include "SetupWizardBlocker.h"
 #include "MainWindow.h"
 
-static const char* blockerTitels[] = {
+static const std::vector<const char *> blockerTitels = {
     "No Wayland support",
 };
 
-static const char* blockerText[] = {
+static const std::vector<const char *> blockerText = {
     "We have detected your system is using Wayland. It is not currently \n"
     "supported, but we are working on it. It's top of our priority list. \n"
     "\n"
@@ -37,9 +37,9 @@ SetupWizardBlocker::SetupWizardBlocker(MainWindow& mainWindow, qBlockerType type
 {
     setupUi(this);
 
-    label_Title->setText(blockerTitels[type]);
+    label_Title->setText(blockerTitels[static_cast<int>(type)]);
 
-    label_HelpInfo->setText(blockerText[type]);
+    label_HelpInfo->setText(blockerText[static_cast<int>(type)]);
 
     connect(m_pButtonSupport, &QPushButton::released, this, &SetupWizardBlocker::onlineSupport);
     connect(m_pButtonCancel, &QPushButton::released, this, &SetupWizardBlocker::cancel);

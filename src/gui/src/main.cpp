@@ -102,9 +102,9 @@ int main(int argc, char* argv[])
     std::unique_ptr<SetupWizardBlocker> setupBlocker;
     if (qgetenv("XDG_SESSION_TYPE") == "wayland")
     {
-        setupBlocker.reset(new SetupWizardBlocker(mainWindow, SetupWizardBlocker::waylandDetected));
+        setupBlocker.reset(new SetupWizardBlocker(mainWindow, SetupWizardBlocker::qBlockerType::waylandDetected));
         setupBlocker->show();
-        return app.exec();
+        return QApplication::exec();
     }
 
     std::unique_ptr<SetupWizard> setupWizard;
