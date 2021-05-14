@@ -34,9 +34,9 @@ public:
     void setCheckConnection(bool checkConnection);
 
 private:
-    QString getMessage() const;
+    QString getMessage(const QString& line) const;
     bool checkMainWindow();
-    void showMessage();
+    void showMessage(const QString& message) const;
 };
 
 #endif // CLIENTCONNECTION_H
