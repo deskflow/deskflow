@@ -21,5 +21,6 @@
         <file>image/welcome.png</file>
         <file>icons/64x64/folder.png</file>
         <file>fonts/Arial.ttf</file>
+        <file>image/setupBlocker.png</file>
     </qresource>
 </RCC>
