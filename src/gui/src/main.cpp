@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
                 &mainWindow, SLOT(saveSettings()));
 
     std::unique_ptr<SetupWizardBlocker> setupBlocker;
-    //if (qgetenv("XDG_SESSION_TYPE") == "wayland")
+    if (qgetenv("XDG_SESSION_TYPE") == "wayland")
     {
         setupBlocker.reset(new SetupWizardBlocker(mainWindow, SetupWizardBlocker::waylandDetected));
         setupBlocker->show();
