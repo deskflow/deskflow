@@ -21,6 +21,7 @@
 #include "MainWindow.h"
 #include "AppConfig.h"
 #include "SetupWizard.h"
+#include "SetupWizardBlocker.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -97,6 +98,14 @@ int main(int argc, char* argv[])
 
     QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),
                 &mainWindow, SLOT(saveSettings()));
+
+    std::unique_ptr<SetupWizardBlocker> setupBlocker;
+    if (qgetenv("XDG_SESSION_TYPE") == "wayland")
+    {
+        setupBlocker.reset(new SetupWizardBlocker(mainWindow, SetupWizardBlocker::qBlockerType::waylandDetected));
+        setupBlocker->show();
+        return QApplication::exec();
+    }
 
     std::unique_ptr<SetupWizard> setupWizard;
     if (appConfig.wizardShouldRun())
