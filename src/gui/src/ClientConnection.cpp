@@ -63,11 +63,11 @@ bool ClientConnection::checkMainWindow()
 
 QString ClientConnection::getMessage(const QString& line) const
 {
-    QString message(QObject::tr("We can’t connect to the server IP address.\nCheck your IP on your server and your firewall settings."));
+    QString message(QObject::tr("Connection failed.\nCheck the IP address on the server, your TLS and firewall settings."));
 
     if (line.contains("server already has a connected client with our name"))
     {
-        message = QObject::tr("Connection failed.\nYou can’t name 2 computers the same");
+        message = QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
     }
     else
     {

@@ -108,7 +108,7 @@
        </font>
       </property>
       <property name="text">
-       <string notr="true">This computers name:</string>
+       <string notr="true">This computer's name:</string>
       </property>
      </widget>
     </item>
@@ -131,7 +131,7 @@
     <item>
      <widget class="QLabel" name="m_pLabelIpAddresses">
       <property name="text">
-       <string notr="true">This computers IP addresses:</string>
+       <string notr="true">This computer's IP addresses:</string>
       </property>
      </widget>
     </item>
@@ -228,7 +228,7 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
             </property>
             <property name="text">
-             <string>Use this computers keyboard and mouse 
+             <string>Use this computer's keyboard and mouse 
 (Make this computer the server).</string>
             </property>
            </widget>

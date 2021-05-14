@@ -33,7 +33,7 @@
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
-       <string>Screens and links</string>
+       <string>Computers</string>
       </attribute>
       <layout class="QVBoxLayout">
        <property name="leftMargin">
@@ -894,7 +894,7 @@
        </sizepolicy>
       </property>
       <attribute name="title">
-       <string>Advance config</string>
+       <string>Advanced config</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
