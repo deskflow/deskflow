@@ -253,6 +253,11 @@ MSWindowsScreen::enable()
         // the server would not be able to wake us up.
         ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
     }
+
+    if (App::instance().argsBase().m_preventSleep) {
+        ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
+        ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
+    }
 }
 
 void

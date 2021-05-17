@@ -758,6 +758,11 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--sync-language";
     }
 
+    if (appConfig().getPreventSleep())
+    {
+        args << "--prevent-sleep";
+    }
+
 
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     // check auto config first, if it is disabled or no server detected,

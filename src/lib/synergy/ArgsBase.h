@@ -58,6 +58,7 @@ namespace lib {
             String               m_pluginDirectory;                /// @brief //TODO Plugins? Get set in ARCH but doesn't seem to get used
             String               m_tlsCertFile;                    /// @brief Contains the location of the TLS certificate file
             bool                 m_enableLangSync    = false;      /// @brief Should keyboard input be in same language as on server
+            bool                 m_preventSleep      = false;      /// @brief Stop this computer from sleeping
 
 #if SYSAPI_WIN32
             bool                 m_debugServiceWait  = false;
