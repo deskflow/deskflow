@@ -664,6 +664,11 @@ void MainWindow::startSynergy()
     }
 #endif
 
+    if (m_AppConfig->getPreventSleep())
+    {
+        args << "--prevent-sleep";
+    }
+
     // put a space between last log output and new instance.
     if (!m_pLogOutput->toPlainText().isEmpty())
         appendLogRaw("");
@@ -710,6 +715,7 @@ void MainWindow::startSynergy()
     if (serviceMode)
     {
         QString command(app + " " + args.join(" "));
+        appendLogInfo(command);
         m_IpcClient.sendCommand(command, appConfig().elevateMode());
     }
 }
@@ -756,11 +762,6 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     if (appConfig().getLanguageSync())
     {
         args << "--sync-language";
-    }
-
-    if (appConfig().getPreventSleep())
-    {
-        args << "--prevent-sleep";
     }
 
 

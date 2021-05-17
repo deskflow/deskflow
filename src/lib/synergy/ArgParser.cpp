@@ -104,9 +104,6 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         else if (isArg(i, argc, argv, nullptr, "--sync-language")) {
             argsBase().m_enableLangSync = true;
         }
-        else if (isArg(i, argc, argv, nullptr, "--prevent-sleep")) {
-            argsBase().m_preventSleep = true;
-        }
         else if (isArg(i, argc, argv, nullptr, "--camp")) {
             // ignore -- included for backwards compatibility
         }
@@ -299,6 +296,9 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
     }
     else if (isArg(i, argc, argv, NULL, "--tls-cert", 1)) {
         argsBase().m_tlsCertFile = argv[++i];
+    }
+    else if (isArg(i, argc, argv, NULL, "--prevent-sleep")) {
+        argsBase().m_preventSleep = true;
     }
     else {
         // option not supported here
