@@ -256,7 +256,6 @@ MSWindowsScreen::enable()
 
     if (App::instance().argsBase().m_preventSleep) {
         ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
-        ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
     }
 }
 
@@ -272,6 +271,10 @@ MSWindowsScreen::disable()
 
         // enable special key sequences on win95 family
         enableSpecialKeys(true);
+    }
+    else if (App::instance().argsBase().m_preventSleep){
+        // allow the system to turn off the display
+        ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
     }
     else {
         // allow the system to enter power saving mode
