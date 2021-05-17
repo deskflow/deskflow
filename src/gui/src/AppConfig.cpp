@@ -103,7 +103,6 @@ AppConfig::AppConfig() :
     m_LastExpiringWarningTime(0),
     m_AutoConfigServer(),
     m_MinimizeToTray(false),
-    m_PreventSleep(false),
     m_Edition(kUnregistered),
     m_LogToFile(),
     m_StartedBefore(),

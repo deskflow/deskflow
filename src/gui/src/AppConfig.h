@@ -249,7 +249,7 @@ protected:
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
         bool m_LanguageSync           = false;
-        bool m_PreventSleep;
+        bool m_PreventSleep           = false;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;
