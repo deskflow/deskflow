@@ -262,11 +262,6 @@ MSWindowsScreen::disable()
         // enable special key sequences on win95 family
         enableSpecialKeys(true);
     }
-    else {
-        // allow the system to enter power saving mode
-        ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM |
-                            ArchMiscWindows::kDISPLAY);
-    }
 
     // tell key state
     m_keyState->disable();
@@ -1497,18 +1492,12 @@ MSWindowsScreen::onScreensaver(bool activated)
             m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
             m_screensaverActive = true;
             sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
-
-            // enable display power down
-            ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
         }
     }
     else {
         if (m_screensaverActive) {
             m_screensaverActive = false;
             sendEvent(m_events->forIPrimaryScreen().screensaverDeactivated());
-
-            // disable display power down
-            ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
         }
     }
 

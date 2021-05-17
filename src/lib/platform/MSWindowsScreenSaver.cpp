@@ -113,9 +113,6 @@ MSWindowsScreenSaver::enable()
     if (m_wasSecure) {
         setSecure(true, m_wasSecureAnInt);
     }
-
-    // restore display power down
-    ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }
 
 void
@@ -182,9 +179,6 @@ MSWindowsScreenSaver::deactivate()
                                 !m_wasEnabled, 0, SPIF_SENDWININICHANGE);
     SystemParametersInfo(SPI_SETSCREENSAVEACTIVE,
                                  m_wasEnabled, 0, SPIF_SENDWININICHANGE);
-
-    // disable display power down
-    ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }
 
 bool
