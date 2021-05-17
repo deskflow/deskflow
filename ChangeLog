@@ -14,6 +14,7 @@ Bug fixes:
 - #6989 Fix client tray language switcher reverts to EN
 - #6993 Fix issues with prefences UI
 - #6992 UI issues and use cases
+- #7000 Additional UI tweaks
 - #6997 Allow Windows to go to sleep depending on system preferences
 ===========
 
@@ -24,10 +25,11 @@ Enhancements:
 - #6973 Update synergy UI. Main window
 - #6977 Update synergy UI. Configure server
 - #6978 Update synergy UI. Settings window
-- #6981 | #6987 | #6988 Update synergy UI. Setup client configuration
+- #6981 | #6987 | #6988 | #6996 Update synergy UI. Setup client configuration
 - #6984 Update synergy UI. Client error messages
 - #6962 | #6965 Add macOS 10.13 builder
 - #6990 Change VersionChecker URL and include system language in the header
+- #6999 Detect if Linux is running with Wayland, and display a warning message
 - #7001 Add option to prevent computer from going to sleep
 ===========
 

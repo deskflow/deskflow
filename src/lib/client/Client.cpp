@@ -534,7 +534,7 @@ Client::setupTimer()
 {
     assert(m_timer == NULL);
 
-    m_timer = m_events->newOneShotTimer(15.0, NULL);
+    m_timer = m_events->newOneShotTimer(2.0, NULL);
     m_events->adoptHandler(Event::kTimer, m_timer,
                             new TMethodEventJob<Client>(this,
                                 &Client::handleConnectTimeout));

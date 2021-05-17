@@ -132,7 +132,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     updateScreenName();
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
-    m_pLabelIpAddresses->setText(tr("This computers IP addresses: %1").arg(getIPAddresses()));
+    m_pLabelIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -1386,7 +1386,7 @@ void MainWindow::windowStateChanged()
 
 void MainWindow::updateScreenName()
 {
-    m_pLabelComputerName->setText(tr("This computers name: %1 (<a href=\"#\" style=\"text-decoration: none; color: #4285F4;\">Preferences</a>)").arg(appConfig().screenName()));
+    m_pLabelComputerName->setText(tr("This computer's name: %1 (<a href=\"#\" style=\"text-decoration: none; color: #4285F4;\">Preferences</a>)").arg(appConfig().screenName()));
     serverConfig().updateServerName();
 }
 
