@@ -311,30 +311,20 @@ ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 bool
 ArgParser::parseDeprecatedArgs(int argc, const char* const* argv, int& i)
 {
-    if (isArg(i, argc, argv, nullptr, "--crypto-pass")) {
-        LOG((CLOG_NOTE "--crypto-pass is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--res-w")) {
-        LOG((CLOG_NOTE "--res-w is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--res-h")) {
-        LOG((CLOG_NOTE "--res-h is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--prm-wc")) {
-        LOG((CLOG_NOTE "--prm-wc is deprecated"));
-        i++;
-        return true;
-    }
-    else if (isArg(i, argc, argv, nullptr, "--prm-hc")) {
-        LOG((CLOG_NOTE "--prm-hc is deprecated"));
-        i++;
-        return true;
+    static const std::vector<const char*> deprecatedArgs = {
+        "--crypto-pass",
+        "--res-w",
+        "--res-h",
+        "--prm-wc",
+        "--prm-hc"
+    };
+
+    for (auto& arg : deprecatedArgs) {
+        if (isArg(i, argc, argv, nullptr, arg)) {
+            LOG((CLOG_NOTE "%s is deprecated", arg));
+            i++;
+            return true;
+        }
     }
 
     return false;
