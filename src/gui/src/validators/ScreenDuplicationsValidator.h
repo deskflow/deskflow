@@ -18,7 +18,7 @@
 #ifndef SCREENDUPLICATIONSVALIDATOR_H
 #define SCREENDUPLICATIONSVALIDATOR_H
 
-#include "Screen.h"
+#include "ScreenList.h"
 #include "IStringValidator.h"
 
 namespace validators
