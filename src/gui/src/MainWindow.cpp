@@ -1106,12 +1106,7 @@ QString MainWindow::getIPAddresses()
             // normolize ipv6 scopeID
             if (!address.toIPv4Address()) {
                 auto temp = ip.split('%');
-                if (temp.size() == 1) {
-                    temp.push_back(QString::number(iface.index()));
-                }
-                else {
-                    temp.last() = QString::number(iface.index());
-                }
+                temp.last() = QString::number(iface.index());
                 ip = temp.join('%');
             }
 
