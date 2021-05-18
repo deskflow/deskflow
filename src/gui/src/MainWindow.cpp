@@ -1082,52 +1082,39 @@ void MainWindow::setVisible(bool visible)
 QString MainWindow::getIPAddresses()
 {
     QList<QString> possibleMatches;
-    QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
-    if ( !ifaces.isEmpty() )
+    for(auto iface : QNetworkInterface::allInterfaces())
     {
-      for(int i=0; i < ifaces.size(); i++)
-      {
-        unsigned int flags = ifaces[i].flags();
-        bool isLoopback = (bool)(flags & QNetworkInterface::IsLoopBack);
-        bool isP2P = (bool)(flags & QNetworkInterface::IsPointToPoint);
-        bool isRunning = (bool)(flags & QNetworkInterface::IsRunning);
+        // We only want valid interfaces that are running and aren't loopback/virtual/point to point
+        if ( !iface.isValid() ||
+             !(iface.flags() & QNetworkInterface::IsRunning) ||
+             iface.flags() & QNetworkInterface::IsLoopBack ||
+             iface.flags() & QNetworkInterface::IsPointToPoint ) {
+            continue;
+        }
 
-        // If this interface isn't running, we don't care about it
-        if ( !isRunning ) {
-            continue;
-        }
-        // We only want valid interfaces that aren't loopback/virtual and not point to point
-        if ( !ifaces[i].isValid() || isLoopback || isP2P ) {
-            continue;
-        }
-        QList<QHostAddress> addresses = ifaces[i].allAddresses();
-        for(int a=0; a < addresses.size(); a++)
+        QList<QHostAddress> addresses = iface.allAddresses();
+        for(auto address : addresses)
         {
-          // Ignore local host
-          if ( addresses[a] == QHostAddress::LocalHost ) {
-              continue;
-         }
+            QString ip = address.toString();
+            if ( ip.isEmpty() ||
+                 address == QHostAddress::Null ||
+                 address == QHostAddress::LocalHost ||
+                 address == QHostAddress::LocalHostIPv6 ) {
+                continue;
+            }
 
-          QString ip = addresses[a].toString();
-          if ( ip.isEmpty() ) {
-              continue;
-          }
+            // hide scopeID from ipv6 addresses
+            if ( !address.toIPv4Address() ) {
+                ip = ip.split('%').first();
+            }
 
-          if ( !addresses[a].toIPv4Address() ) {
-               ip = ip.split('%').first();
-          }
+            //do not add already added ip
+            if (std::find(possibleMatches.begin(), possibleMatches.end(), ip) != possibleMatches.end()) {
+                continue;
+            }
 
-          bool foundMatch = false;
-          for (int j=0; j < possibleMatches.size(); j++) {
-              if ( ip == possibleMatches[j] ) {
-                  foundMatch = true; break;
-              }
-          }
-          if ( !foundMatch ) {
-              possibleMatches.push_back( ip );
-          }
+            possibleMatches.push_back( ip );
         }
-      }
     }
 
     if (possibleMatches.isEmpty()) {
