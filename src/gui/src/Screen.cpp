@@ -131,6 +131,7 @@ QDataStream& operator<<(QDataStream& outStream, const Screen& screen)
         << screen.modifiers()
         << screen.switchCorners()
         << screen.fixes()
+        << screen.isServer()
         ;
 }
 
@@ -143,5 +144,6 @@ QDataStream& operator>>(QDataStream& inStream, Screen& screen)
         >> screen.m_Modifiers
         >> screen.m_SwitchCorners
         >> screen.m_Fixes
+        >> screen.m_isServer
         ;
 }

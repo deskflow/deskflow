@@ -99,8 +99,6 @@ class Screen : public BaseConfig
         bool m_isServer = false;
 };
 
-typedef QList<Screen> ScreenList;
-
 QDataStream& operator<<(QDataStream& outStream, const Screen& screen);
 QDataStream& operator>>(QDataStream& inStream, Screen& screen);
 
