@@ -40,6 +40,15 @@ TEST(ServerConfigTests, serverconfig_will_deem_inequal_configs_with_different_ma
     a.addScreen("screenA");
     EXPECT_FALSE(a == b);
     EXPECT_FALSE(b == a);
+    EXPECT_FALSE(a.addScreen("screenA"));
+}
+
+TEST(ServerConfigTests, serverconfig_screen_rename)
+{
+    Config a(nullptr);
+    EXPECT_TRUE(a.addScreen("screenA"));
+    EXPECT_TRUE(a.renameScreen("screenA", "screenB"));
+    EXPECT_TRUE(a.getCanonicalName("screenB") == "screenB");
 }
 
 TEST(ServerConfigTests, serverconfig_will_deem_inequal_configs_with_different_cell_names)

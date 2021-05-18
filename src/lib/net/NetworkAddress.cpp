@@ -31,18 +31,13 @@
 
 // name re-resolution adapted from a patch by Brent Priddy.
 
-NetworkAddress::NetworkAddress() :
-    m_address(nullptr),
-    m_hostname(),
-    m_port(0)
+NetworkAddress::NetworkAddress()
 {
     // note -- make no calls to Network socket interface here;
     // we're often called prior to Network::init().
 }
 
 NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
-    m_address(nullptr),
-    m_hostname(),
     m_port(port)
 {
     checkPort();
@@ -50,10 +45,7 @@ NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
     ARCH->setAddrPort(m_address, m_port);
 }
 
-NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
-    m_address(nullptr),
-    m_hostname(),
-    m_port(0)
+NetworkAddress::NetworkAddress(const NetworkAddress& addr)
 {
     *this = addr;
 }

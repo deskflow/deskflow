@@ -117,7 +117,7 @@ private:
     void                checkPort();
 
 private:
-    ArchNetAddress        m_address;
-    String                m_hostname;
-    int                    m_port;
+    ArchNetAddress        m_address  = nullptr;
+    String                m_hostname = "";
+    int                   m_port     = 0;
 };
