@@ -528,7 +528,7 @@ Config::endNeighbor(const String& srcName) const
 	return index->second.end();
 }
 
-const std::vector<NetworkAddress>
+std::vector<NetworkAddress>
 Config::getSynergyAddresses() const
 {
     return m_synergyAddresses;
@@ -726,7 +726,7 @@ Config::readSectionOptions(ConfigReadContext& s)
 		bool handled = true;
 		if (name == "address") {
 			try {
-                m_synergyAddresses.push_back(NetworkAddress(value, kDefaultPort));
+                m_synergyAddresses.emplace_back(NetworkAddress(value, kDefaultPort));
                 m_synergyAddresses.back().resolve();
 			}
 			catch (XSocketAddress& e) {
@@ -1897,7 +1897,7 @@ operator<<(std::ostream& s, const Config& config)
 			}
 		}
 	}
-    for(auto adress : config.m_synergyAddresses) {
+    for(const auto &adress : config.m_synergyAddresses) {
         if (adress.isValid()) {
             s << "\taddress = " <<
                 adress.getHostname().c_str() << std::endl;

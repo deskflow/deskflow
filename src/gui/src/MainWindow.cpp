@@ -132,7 +132,9 @@ MainWindow::MainWindow (AppConfig& appConfig,
 
     updateScreenName();
     connect(m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
-    m_pLabelIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
+    auto synergyIpAddresses = getIPAddresses();
+    appendLogDebug(synergyIpAddresses);
+    m_pLabelIpAddresses->setText(tr("This computer's IP addresses: %1").arg(synergyIpAddresses));
 
 #if defined(Q_OS_WIN)
     // ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -1082,20 +1084,18 @@ void MainWindow::setVisible(bool visible)
 QString MainWindow::getIPAddresses()
 {
     QList<QString> possibleMatches;
-    for(auto iface : QNetworkInterface::allInterfaces())
-    {
+    for(auto iface : QNetworkInterface::allInterfaces()) {
         // We only want valid interfaces that are running and aren't loopback/virtual/point to point
         if ( !iface.isValid() ||
              !(iface.flags() & QNetworkInterface::IsRunning) ||
              iface.flags() & QNetworkInterface::IsLoopBack ||
-             iface.flags() & QNetworkInterface::IsPointToPoint ) {
+             iface.flags() & QNetworkInterface::IsPointToPoint) {
             continue;
         }
 
-        QList<QHostAddress> addresses = iface.allAddresses();
-        for(auto address : addresses)
-        {
-            QString ip = address.toString();
+        for(auto addressEntry : iface.addressEntries()) {
+            auto address = addressEntry.ip();
+            auto ip = address.toString();
             if ( ip.isEmpty() ||
                  address == QHostAddress::Null ||
                  address == QHostAddress::LocalHost ||
@@ -1103,17 +1103,19 @@ QString MainWindow::getIPAddresses()
                 continue;
             }
 
-            // hide scopeID from ipv6 addresses
-            if ( !address.toIPv4Address() ) {
-                ip = ip.split('%').first();
+            // normolize ipv6 scopeID
+            if (!address.toIPv4Address()) {
+                auto temp = ip.split('%');
+                if (temp.size() == 1) {
+                    temp.push_back(QString::number(iface.index()));
+                }
+                else {
+                    temp.last() = QString::number(iface.index());
+                }
+                ip = temp.join('%');
             }
 
-            //do not add already added ip
-            if (std::find(possibleMatches.begin(), possibleMatches.end(), ip) != possibleMatches.end()) {
-                continue;
-            }
-
-            possibleMatches.push_back( ip );
+            possibleMatches.push_back(ip);
         }
     }
 

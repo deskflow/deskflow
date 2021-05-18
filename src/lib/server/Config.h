@@ -393,7 +393,7 @@ public:
     link_const_iterator    endNeighbor(const String&) const;
 
     //! Get the server addresses
-    const std::vector<NetworkAddress>
+    std::vector<NetworkAddress>
                         getSynergyAddresses() const;
 
     //! Get the screen options

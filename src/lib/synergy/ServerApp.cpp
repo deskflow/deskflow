@@ -541,7 +541,7 @@ ServerApp::startServer()
     double retryTime {};
     try {
         m_server = openServer(*args().m_config, m_primaryClient);
-        for (auto address : args().m_config->getSynergyAddresses()) {
+        for (const auto &address : args().m_config->getSynergyAddresses()) {
             m_listeners.push_back(openClientListener(address));
             m_listeners.front()->setServer(m_server);
         }
@@ -703,11 +703,10 @@ ServerApp::mainLoop()
     }
     else {
         auto synergyAddresses = args().m_config->getSynergyAddresses();
-        bool isAllValid = false;
-        for (auto it = synergyAddresses.begin(); it != synergyAddresses.end() && isAllValid; it++) {
-            isAllValid = it->isValid();
-        }
-        if (!isAllValid) {
+        auto invalidAddressIt = std::find_if(synergyAddresses.begin(),
+                                             synergyAddresses.end(),
+                                             [](const auto & address){ return !address.isValid(); });
+        if (invalidAddressIt != synergyAddresses.end()) {
             args().m_config->setSynergyAddresses({NetworkAddress(kDefaultPort, IArchNetwork::kINET6),
                                                   NetworkAddress(kDefaultPort, IArchNetwork::kINET6)});
         }
