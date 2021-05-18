@@ -32,7 +32,7 @@
 // name re-resolution adapted from a patch by Brent Priddy.
 
 NetworkAddress::NetworkAddress() :
-    m_address(NULL),
+    m_address(nullptr),
     m_hostname(),
     m_port(0)
 {
@@ -41,7 +41,7 @@ NetworkAddress::NetworkAddress() :
 }
 
 NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
-    m_address(NULL),
+    m_address(nullptr),
     m_hostname(),
     m_port(port)
 {
@@ -51,15 +51,15 @@ NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
 }
 
 NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
-    m_address(addr.m_address != NULL ? ARCH->copyAddr(addr.m_address) : NULL),
-    m_hostname(addr.m_hostname),
-    m_port(addr.m_port)
+    m_address(nullptr),
+    m_hostname(),
+    m_port(0)
 {
-    // do nothing
+    *this = addr;
 }
 
 NetworkAddress::NetworkAddress(const String& hostname, int port) :
-    m_address(NULL),
+    m_address(nullptr),
     m_hostname(hostname),
     m_port(port)
 {
@@ -119,7 +119,7 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
 
 NetworkAddress::~NetworkAddress()
 {
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
     }
 }
@@ -127,14 +127,13 @@ NetworkAddress::~NetworkAddress()
 NetworkAddress&
 NetworkAddress::operator=(const NetworkAddress& addr)
 {
-    ArchNetAddress newAddr = NULL;
-    if (addr.m_address != NULL) {
-        newAddr = ARCH->copyAddr(addr.m_address);
-    }
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
+        m_address = nullptr;
     }
-    m_address  = newAddr;
+    if (addr.m_address != nullptr) {
+        m_address = ARCH->copyAddr(addr.m_address);
+    }
     m_hostname = addr.m_hostname;
     m_port     = addr.m_port;
     return *this;
@@ -143,11 +142,8 @@ NetworkAddress::operator=(const NetworkAddress& addr)
 void
 NetworkAddress::resolve()
 {
-    // discard previous address
-    if (m_address != NULL) {
-        ARCH->closeAddr(m_address);
-        m_address = NULL;
-    }
+    //ensure that address is already relosved
+    assert(m_address == nullptr);
 
     try {
         // if hostname is empty then use wildcard address otherwise look

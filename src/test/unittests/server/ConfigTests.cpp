@@ -85,6 +85,22 @@ TEST(ServerConfigTests, serverconfig_will_deem_equal_configs_with_same_cell_name
     EXPECT_TRUE(b == a);
 }
 
+TEST(ServerConfigTests, hostname_null_copy_test)
+{
+    NetworkAddress empty;
+    NetworkAddress copyEmpty(empty);
+
+    EXPECT_TRUE(copyEmpty.getAddress() == nullptr);
+    EXPECT_TRUE(copyEmpty.getPort() == 0);
+
+
+    NetworkAddress addr1("localhost", 3060);
+    NetworkAddress addr2("::1", 4090);
+    addr1 = addr2;
+
+    EXPECT_TRUE(addr1 == addr2);
+}
+
 TEST(NetworkAddress, hostname_valid_parsing)
 {
     const int validPort  = 24900;
