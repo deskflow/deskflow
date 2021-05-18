@@ -288,7 +288,7 @@ public:
     Set the synergy listen addresses.  There is no default address so
     this must be called to run a server using this configuration.
     */
-    void                setSynergyAddress(const NetworkAddress&);
+    void                setSynergyAddresses(const std::vector<NetworkAddress>);
 
     //! Add a screen option
     /*!
@@ -392,9 +392,9 @@ public:
     //! Get ending neighbor iterator
     link_const_iterator    endNeighbor(const String&) const;
 
-    //! Get the server address
-    const NetworkAddress&
-                        getSynergyAddress() const;
+    //! Get the server addresses
+    const std::vector<NetworkAddress>
+                        getSynergyAddresses() const;
 
     //! Get the screen options
     /*!
@@ -474,13 +474,13 @@ private:
     static String        getOptionValue(OptionID, OptionValue);
 
 private:
-    CellMap                m_map;
-    NameMap                m_nameToCanonicalName;
-    NetworkAddress        m_synergyAddress;
-    ScreenOptions        m_globalOptions;
-    InputFilter            m_inputFilter;
-    bool                m_hasLockToScreenAction;
-    IEventQueue*        m_events;
+    CellMap                     m_map;
+    NameMap                     m_nameToCanonicalName;
+    std::vector<NetworkAddress> m_synergyAddresses;
+    ScreenOptions               m_globalOptions;
+    InputFilter                 m_inputFilter;
+    bool                        m_hasLockToScreenAction;
+    IEventQueue*                m_events;
 };
 
 //! Configuration read context

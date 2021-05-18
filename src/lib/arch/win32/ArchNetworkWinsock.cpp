@@ -694,6 +694,7 @@ ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
     case kINET6: {
         addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in6));
         struct sockaddr_in6* ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
+        memset(ipAddr, 0, sizeof(sockaddr_in6));
         ipAddr->sin6_family         = AF_INET6;
         ipAddr->sin6_port           = 0;
         memcpy(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any));
@@ -725,12 +726,25 @@ ArchNetworkWinsock::nameToAddr(const std::string& name)
 
     struct addrinfo hints;
     struct addrinfo *p;
+    struct in6_addr serveraddr;
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_flags    = AI_NUMERICSERV;
+    hints.ai_family   = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
     int ret = -1;
 
+    if (inet_pton(AF_INET, name.c_str(), &serveraddr) == 1) {
+        hints.ai_family = AF_INET;
+        hints.ai_flags |= AI_NUMERICHOST;
+    }
+    else if (inet_pton(AF_INET6, name.c_str(), &serveraddr) == 1) {
+        hints.ai_family = AF_INET6;
+        hints.ai_flags |= AI_NUMERICHOST;
+    }
+
     ARCH->lockMutex(m_mutex);
-    if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &p)) != 0) {
+    ret = getaddrinfo(name.c_str(), nullptr, &hints, &p);
+    if (ret != 0) {
         ARCH->unlockMutex(m_mutex);
         delete addr;
         throwNameError(ret);

@@ -799,7 +799,19 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         }
 #endif
     }
-    args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+
+    QString hostName = m_pLineEditHostname->text();
+    // if interface is IPv6 - ensure that ip is in square brackets
+    if (hostName.count(':') > 1) {
+        if(hostName[0] != '[') {
+            hostName.insert(0, '[');
+        }
+        if(hostName[hostName.size() - 1] != ']') {
+            hostName.push_back(']');
+        }
+    }
+
+    args << hostName + ":" + QString::number(appConfig().port());
     return true;
 }
 
@@ -898,7 +910,11 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     // wrap in quotes in case username contains spaces.
     configFilename = QString("\"%1\"").arg(configFilename);
 #endif
-    args << "-c" << configFilename << "--address" << address();
+    args << "-c" << configFilename;
+
+    if (!appConfig().networkInterface().isEmpty()) {
+        args << "--address " << address();
+    }
     appendLogInfo("config file: " + configFilename);
 
 #ifndef SYNERGY_ENTERPRISE
@@ -1065,34 +1081,60 @@ void MainWindow::setVisible(bool visible)
 
 QString MainWindow::getIPAddresses()
 {
-    QStringList result;
-    bool hinted = false;
-    const auto localnet = QHostAddress::parseSubnet("192.168.0.0/16");
-    const QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+    QList<QString> possibleMatches;
+    QList<QNetworkInterface> ifaces = QNetworkInterface::allInterfaces();
+    if ( !ifaces.isEmpty() )
+    {
+      for(int i=0; i < ifaces.size(); i++)
+      {
+        unsigned int flags = ifaces[i].flags();
+        bool isLoopback = (bool)(flags & QNetworkInterface::IsLoopBack);
+        bool isP2P = (bool)(flags & QNetworkInterface::IsPointToPoint);
+        bool isRunning = (bool)(flags & QNetworkInterface::IsRunning);
 
-    for (const auto& address : addresses) {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol &&
-            address != QHostAddress(QHostAddress::LocalHost) &&
-            !address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16"))) {
-
-            // usually 192.168.x.x is a useful ip for the user, so indicate
-            // this by making it bold.
-            if (!hinted && address.isInSubnet(localnet)) {
-                QString format = "<span style=\"color:#4285F4;\">%1</span>";
-                result.append(format.arg(address.toString()));
-                hinted = true;
-            }
-            else {
-                result.append(address.toString());
-            }
+        // If this interface isn't running, we don't care about it
+        if ( !isRunning ) {
+            continue;
         }
+        // We only want valid interfaces that aren't loopback/virtual and not point to point
+        if ( !ifaces[i].isValid() || isLoopback || isP2P ) {
+            continue;
+        }
+        QList<QHostAddress> addresses = ifaces[i].allAddresses();
+        for(int a=0; a < addresses.size(); a++)
+        {
+          // Ignore local host
+          if ( addresses[a] == QHostAddress::LocalHost ) {
+              continue;
+         }
+
+          QString ip = addresses[a].toString();
+          if ( ip.isEmpty() ) {
+              continue;
+          }
+
+          if ( !addresses[a].toIPv4Address() ) {
+               ip = ip.split('%').first();
+          }
+
+          bool foundMatch = false;
+          for (int j=0; j < possibleMatches.size(); j++) {
+              if ( ip == possibleMatches[j] ) {
+                  foundMatch = true; break;
+              }
+          }
+          if ( !foundMatch ) {
+              possibleMatches.push_back( ip );
+          }
+        }
+      }
     }
 
-    if (result.isEmpty()) {
-        result.append(tr("Unknown"));
+    if (possibleMatches.isEmpty()) {
+        possibleMatches.append(tr("Unknown"));
     }
 
-    return result.join(", ");
+    return possibleMatches.join(", ");
 }
 
 void MainWindow::changeEvent(QEvent* event)

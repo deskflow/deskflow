@@ -280,9 +280,9 @@ Config::disconnect(const String& srcName, EDirection srcSide, float position)
 }
 
 void
-Config::setSynergyAddress(const NetworkAddress& addr)
+Config::setSynergyAddresses(const std::vector<NetworkAddress> addresses)
 {
-	m_synergyAddress = addr;
+    m_synergyAddresses = addresses;
 }
 
 bool
@@ -528,10 +528,10 @@ Config::endNeighbor(const String& srcName) const
 	return index->second.end();
 }
 
-const NetworkAddress&
-Config::getSynergyAddress() const
+const std::vector<NetworkAddress>
+Config::getSynergyAddresses() const
 {
-	return m_synergyAddress;
+    return m_synergyAddresses;
 }
 
 const Config::ScreenOptions*
@@ -562,7 +562,7 @@ Config::hasLockToScreenAction() const
 bool
 Config::operator==(const Config& x) const
 {
-	if (m_synergyAddress != x.m_synergyAddress) {
+    if (m_synergyAddresses != x.m_synergyAddresses) {
 		return false;
 	}
 	if (m_map.size() != x.m_map.size()) {
@@ -726,8 +726,8 @@ Config::readSectionOptions(ConfigReadContext& s)
 		bool handled = true;
 		if (name == "address") {
 			try {
-				m_synergyAddress = NetworkAddress(value, kDefaultPort);
-				m_synergyAddress.resolve();
+                m_synergyAddresses.push_back(NetworkAddress(value, kDefaultPort));
+                m_synergyAddresses.back().resolve();
 			}
 			catch (XSocketAddress& e) {
 				throw XConfigRead(s,
@@ -1897,10 +1897,12 @@ operator<<(std::ostream& s, const Config& config)
 			}
 		}
 	}
-	if (config.m_synergyAddress.isValid()) {
-		s << "\taddress = " <<
-			config.m_synergyAddress.getHostname().c_str() << std::endl;
-	}
+    for(auto adress : config.m_synergyAddresses) {
+        if (adress.isValid()) {
+            s << "\taddress = " <<
+                adress.getHostname().c_str() << std::endl;
+        }
+    }
 	s << config.m_inputFilter.format("\t");
 	s << "end" << std::endl;
 

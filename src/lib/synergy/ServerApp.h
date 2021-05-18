@@ -106,16 +106,14 @@ public:
     void startNode();
 
     static ServerApp& instance() { return (ServerApp&)App::instance(); }
-
-    Server* getServerPtr() { return m_server; }
     
-    Server*                m_server;
-    EServerState        m_serverState;
-    synergy::Screen*    m_serverScreen;
-    PrimaryClient*        m_primaryClient;
-    ClientListener*        m_listener;
-    EventQueueTimer*    m_timer;
-    NetworkAddress*        m_synergyAddress;
+    Server*                      m_server;
+    EServerState                 m_serverState;
+    synergy::Screen*             m_serverScreen;
+    PrimaryClient*               m_primaryClient;
+    std::vector<ClientListener*> m_listeners;
+    EventQueueTimer*             m_timer;
+    NetworkAddress*              m_synergyAddress;
 
 private:
     void handleScreenSwitched(const Event&, void*  data);

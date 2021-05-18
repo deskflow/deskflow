@@ -152,9 +152,6 @@ public:
 
     //! Received dragging information from client
     void                dragInfoReceived(UInt32 fileNum, String content);
-
-    //! Store ClientListener pointer
-    void                setListener(ClientListener* p) { m_clientListener = p; }
     
     //@}
     //! @name accessors
@@ -485,6 +482,5 @@ private:
     Thread*                m_sendDragInfoThread;
     bool                m_waitDragInfoThread;
 
-    ClientListener*        m_clientListener;
     lib::synergy::ServerArgs            m_args;
 };

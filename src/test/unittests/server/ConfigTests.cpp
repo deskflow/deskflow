@@ -78,8 +78,8 @@ TEST(ServerConfigTests, serverconfig_will_deem_equal_configs_with_same_cell_name
     addr1.resolve();
     NetworkAddress addr2("localhost", 8080);
     addr2.resolve();
-    a.setSynergyAddress(addr1);
-    b.setSynergyAddress(addr2);
+    a.setSynergyAddresses({addr1});
+    b.setSynergyAddresses({addr2});
 
     EXPECT_TRUE(a == b);
     EXPECT_TRUE(b == a);
@@ -202,8 +202,8 @@ TEST(ServerConfigTests, serverconfig_will_deem_different_configs_with_different_
     Config b(nullptr);
     a.addScreen("screenA");
     b.addScreen("screenA");
-    a.setSynergyAddress(NetworkAddress(8080));
-    b.setSynergyAddress(NetworkAddress(1010));
+    a.setSynergyAddresses({NetworkAddress(8080, IArchNetwork::kINET), NetworkAddress(8080, IArchNetwork::kINET6)});
+    b.setSynergyAddresses({NetworkAddress(1010, IArchNetwork::kINET), NetworkAddress(1010, IArchNetwork::kINET6)});
     EXPECT_FALSE(a == b);
     EXPECT_FALSE(b == a);
 }

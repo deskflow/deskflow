@@ -40,13 +40,13 @@ NetworkAddress::NetworkAddress() :
     // we're often called prior to Network::init().
 }
 
-NetworkAddress::NetworkAddress(int port) :
+NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
     m_address(NULL),
     m_hostname(),
     m_port(port)
 {
     checkPort();
-    m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+    m_address = ARCH->newAnyAddr(family);
     ARCH->setAddrPort(m_address, m_port);
 }
 

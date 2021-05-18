@@ -66,11 +66,9 @@
 
 ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
     App(events, createTaskBarReceiver, new lib::synergy::ServerArgs()),
-    m_server(NULL),
     m_serverState(kUninitialized),
     m_serverScreen(NULL),
     m_primaryClient(NULL),
-    m_listener(NULL),
     m_timer(NULL),
     m_synergyAddress(NULL)
 {
@@ -92,7 +90,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
     else {
         if (!args().m_synergyAddress.empty()) {
             try {
-                *m_synergyAddress = NetworkAddress(args().m_synergyAddress, 
+                *m_synergyAddress = NetworkAddress(args().m_synergyAddress,
                     kDefaultPort);
                 m_synergyAddress->resolve();
             }
@@ -340,17 +338,19 @@ ServerApp::stopServer()
 {
     if (m_serverState == kStarted) {
         closeServer(m_server);
-        closeClientListener(m_listener);
-        m_server      = NULL;
-        m_listener    = NULL;
+        for(auto listner : m_listeners) {
+            closeClientListener(listner);
+        }
+        m_server = nullptr;
+        m_listeners.clear();
         m_serverState = kInitialized;
     }
     else if (m_serverState == kStarting) {
         stopRetryTimer();
         m_serverState = kInitialized;
     }
-    assert(m_server == NULL);
-    assert(m_listener == NULL);
+    assert(m_server == nullptr);
+    assert(m_listeners.empty() == true);
 }
 
 void
@@ -539,13 +539,13 @@ ServerApp::startServer()
     }
 
     double retryTime {};
-    ClientListener* listener = NULL;
     try {
-        listener   = openClientListener(args().m_config->getSynergyAddress());
-        m_server   = openServer(*args().m_config, m_primaryClient);
-        listener->setServer(m_server);
-        m_server->setListener(listener);
-        m_listener = listener;
+        m_server = openServer(*args().m_config, m_primaryClient);
+        for (auto address : args().m_config->getSynergyAddresses()) {
+            m_listeners.push_back(openClientListener(address));
+            m_listeners.front()->setServer(m_server);
+        }
+
         updateStatus();
         LOG((CLOG_NOTE "started server, waiting for clients"));
         m_serverState = kStarted;
@@ -553,13 +553,17 @@ ServerApp::startServer()
     }
     catch (XSocketAddressInUse& e) {
         LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
-        closeClientListener(listener);
+        for(auto listner : m_listeners) {
+            closeClientListener(listner);
+        }
         updateStatus(String("cannot listen for clients: ") + e.what());
         retryTime = 10.0;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
-        closeClientListener(listener);
+        for(auto listner : m_listeners) {
+            closeClientListener(listner);
+        }
         return false;
     }
 
@@ -695,10 +699,18 @@ ServerApp::mainLoop()
     // otherwise, if the config doesn't have an address, use
     // the default.
     if (m_synergyAddress->isValid()) {
-        args().m_config->setSynergyAddress(*m_synergyAddress);
+        args().m_config->setSynergyAddresses({*m_synergyAddress});
     }
-    else if (!args().m_config->getSynergyAddress().isValid()) {
-        args().m_config->setSynergyAddress(NetworkAddress(kDefaultPort));
+    else {
+        auto synergyAddresses = args().m_config->getSynergyAddresses();
+        bool isAllValid = false;
+        for (auto it = synergyAddresses.begin(); it != synergyAddresses.end() && isAllValid; it++) {
+            isAllValid = it->isValid();
+        }
+        if (!isAllValid) {
+            args().m_config->setSynergyAddresses({NetworkAddress(kDefaultPort, IArchNetwork::kINET6),
+                                                  NetworkAddress(kDefaultPort, IArchNetwork::kINET6)});
+        }
     }
 
     // canonicalize the primary screen name
