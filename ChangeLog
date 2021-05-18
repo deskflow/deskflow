@@ -15,7 +15,6 @@ Bug fixes:
 - #6993 Fix issues with prefences UI
 - #6992 UI issues and use cases
 - #7000 Additional UI tweaks
-===========
 
 Enhancements:
 - #6954 Move language selection to advanced section
@@ -30,6 +29,7 @@ Enhancements:
 - #6990 Change VersionChecker URL and include system language in the header
 - #6999 Detect if Linux is running with Wayland, and display a warning message
 - #7002 Add ipv6 support on windows and Linux
+- #7003 Prioritization rules server config
 
 v1.13.1-stable
 ===========

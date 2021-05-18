@@ -22,7 +22,7 @@
 
 #include <QList>
 
-#include "Screen.h"
+#include "ScreenList.h"
 #include "BaseConfig.h"
 #include "Hotkey.h"
 #include "ConfigBase.h"
@@ -86,6 +86,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool getUseExternalConfig() const;
         bool isFull() const;
         bool isScreenExists(const QString& screenName) const;
+        void addClient(const QString& clientName);
 
     protected:
         QSettings& settings();
