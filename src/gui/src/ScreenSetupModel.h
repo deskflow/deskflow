@@ -25,7 +25,7 @@
 #include <QString>
 #include <QStringList>
 
-#include "Screen.h"
+#include "ScreenList.h"
 
 class ScreenSetupView;
 class ServerConfigDialog;
