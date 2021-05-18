@@ -30,19 +30,28 @@ namespace {
  */
 std::array<int, 8> getNeighborsIndexes(int serverIndex, int width, int size)
 {
-    enum{kLEFT, kRIGHT, kTOP, kBOTTOM, kTOP_LEFT, kTOP_RIGHT, kBOTTOM_RIGHT, kBOTTOM_LEFT};
-    std::array<int, 8> indexes = { -1 };
+    const int UNSET        = -1;
+    const int LEFT         = 0;
+    const int RIGHT        = 1;
+    const int TOP          = 2;
+    const int BOTTOM       = 3;
+    const int TOP_LEFT     = 4;
+    const int TOP_RIGHT    = 5;
+    const int BOTTOM_RIGHT = 6;
+    const int BOTTOM_LEFT  = 7;
+
+    std::array<int, 8> indexes = { UNSET };
 
     if (serverIndex >= 0 && serverIndex < size)
     {
-        indexes[kLEFT] = (serverIndex - 1) % width != width - 1 ? (serverIndex - 1) : -1;
-        indexes[kRIGHT] = (serverIndex + 1) % width != 0 ? (serverIndex + 1) : -1;
-        indexes[kTOP] = (serverIndex - width) >= 0 ? (serverIndex - width) : -1;
-        indexes[kBOTTOM] = (serverIndex + width) < size ? (serverIndex + width) : -1;
-        indexes[kTOP_LEFT] = (indexes[kTOP] != - 1 && indexes[kLEFT] != -1) ? indexes[kTOP] - 1 : -1;
-        indexes[kTOP_RIGHT] = (indexes[kTOP] != -1 && indexes[kRIGHT] != -1) ? indexes[kTOP] + 1 : -1;
-        indexes[kBOTTOM_RIGHT] = (indexes[kBOTTOM] != -1 && indexes[kRIGHT] != -1) ? indexes[kBOTTOM] + 1 : -1;
-        indexes[kBOTTOM_LEFT] = (indexes[kBOTTOM] != -1 && indexes[kLEFT] != -1) ? indexes[kBOTTOM] - 1 : -1;
+        indexes[LEFT]         = (serverIndex - 1) % width != width - 1 ? (serverIndex - 1) : UNSET;
+        indexes[RIGHT]        = (serverIndex + 1) % width != 0 ? (serverIndex + 1) : UNSET;
+        indexes[TOP]          = (serverIndex - width) >= 0 ? (serverIndex - width) : UNSET;
+        indexes[BOTTOM]       = (serverIndex + width) < size ? (serverIndex + width) : UNSET;
+        indexes[TOP_LEFT]     = (indexes[TOP] != UNSET && indexes[LEFT] != UNSET) ? indexes[TOP] - 1 : UNSET;
+        indexes[TOP_RIGHT]    = (indexes[TOP] != UNSET && indexes[RIGHT] != UNSET) ? indexes[TOP] + 1 : UNSET;
+        indexes[BOTTOM_RIGHT] = (indexes[BOTTOM] != UNSET && indexes[RIGHT] != UNSET) ? indexes[BOTTOM] + 1 : UNSET;
+        indexes[BOTTOM_LEFT]  = (indexes[BOTTOM] != UNSET && indexes[LEFT] != UNSET) ? indexes[BOTTOM] - 1 : UNSET;
     }
 
     return indexes;
