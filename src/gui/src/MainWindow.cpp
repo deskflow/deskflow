@@ -715,7 +715,6 @@ void MainWindow::startSynergy()
     if (serviceMode)
     {
         QString command(app + " " + args.join(" "));
-        appendLogInfo(command);
         m_IpcClient.sendCommand(command, appConfig().elevateMode());
     }
 }

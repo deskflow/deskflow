@@ -345,5 +345,8 @@ private:
     CondVar<bool>*            m_carbonLoopReady;
 #endif
 
+    // handler for assertion preventing the system from going to sleep
+    IOPMAssertionID           m_sleepPreventionAssertionID = 0;
+
     class OSXScreenImpl*    m_impl;
 };
