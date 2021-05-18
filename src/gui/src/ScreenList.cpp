@@ -35,14 +35,14 @@ std::array<int, 8> getNeighborsIndexes(int serverIndex, int width, int size)
 
     if (serverIndex >= 0 && serverIndex < size)
     {
-        indexes[kLEFT] = (serverIndex - 1) % width != width - 1 ? (serverIndex - 1) : -1;;
+        indexes[kLEFT] = (serverIndex - 1) % width != width - 1 ? (serverIndex - 1) : -1;
         indexes[kRIGHT] = (serverIndex + 1) % width != 0 ? (serverIndex + 1) : -1;
         indexes[kTOP] = (serverIndex - width) >= 0 ? (serverIndex - width) : -1;
         indexes[kBOTTOM] = (serverIndex + width) < size ? (serverIndex + width) : -1;
         indexes[kTOP_LEFT] = (indexes[kTOP] != - 1 && indexes[kLEFT] != -1) ? indexes[kTOP] - 1 : -1;
-        indexes[kTOP_RIGHT] = (indexes[kTOP] != -1 && indexes[kRIGHT] != -1) ? indexes[kTOP] + 1 : -1;;
-        indexes[kBOTTOM_RIGHT] = (indexes[kBOTTOM] != -1 && indexes[kRIGHT] != -1) ? indexes[kBOTTOM] + 1 : -1;;
-        indexes[kBOTTOM_LEFT] = (indexes[kBOTTOM] != -1 && indexes[kLEFT] != -1) ? indexes[kBOTTOM] - 1 : -1;;
+        indexes[kTOP_RIGHT] = (indexes[kTOP] != -1 && indexes[kRIGHT] != -1) ? indexes[kTOP] + 1 : -1;
+        indexes[kBOTTOM_RIGHT] = (indexes[kBOTTOM] != -1 && indexes[kRIGHT] != -1) ? indexes[kBOTTOM] + 1 : -1;
+        indexes[kBOTTOM_LEFT] = (indexes[kBOTTOM] != -1 && indexes[kLEFT] != -1) ? indexes[kBOTTOM] - 1 : -1;
     }
 
     return indexes;
