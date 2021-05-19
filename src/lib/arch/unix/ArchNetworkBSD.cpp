@@ -701,7 +701,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     // done with static buffer
     ARCH->lockMutex(m_mutex);
     ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult);
-    if (ret != 0) {
+    if (ret != 0 || !pResult) {
         ARCH->unlockMutex(m_mutex);
         delete addr;
         throwNameError(ret);
@@ -709,7 +709,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     std::vector<String> ipList;
     for( struct addrinfo * pNextResult = pResult; pNextResult != nullptr; pNextResult = pNextResult->ai_next ){
-        ipList.push_back("");
+        ipList.emplace_back("");
         ipList.back().resize(INET6_ADDRSTRLEN);
         auto h = ((struct sockaddr_in *)pNextResult->ai_addr);
         if (!inet_ntop(h->sin_family, &h->sin_addr, &ipList.back()[0], INET6_ADDRSTRLEN)) {
