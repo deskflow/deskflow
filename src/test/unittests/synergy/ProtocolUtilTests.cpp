@@ -56,7 +56,7 @@ MATCHER_P(EqVoidPointeeInt32, expected, "")
 MATCHER_P(EqVoidVectorInt1byte, expected, "")
 {
     bool Result = true;
-    const UInt8* Actual = (static_cast<const UInt8*>(arg)) + sizeof (UInt32);
+    const UInt8* Actual = (static_cast<const UInt8*>(arg)) + 4;
     const size_t Size = *(Actual - 1);
 
     if (Size == expected.size()){
@@ -77,7 +77,7 @@ MATCHER_P(EqVoidVectorInt1byte, expected, "")
 MATCHER_P(EqVoidVectorInt2bytes, expected, "")
 {
     bool Result = true;
-    const UInt16* Actual = (static_cast<const UInt16*>(arg)) + sizeof (UInt16);
+    const UInt16* Actual = (static_cast<const UInt16*>(arg)) + 2;
     const size_t Size = *(Actual - 1) >> 8;
 
     if (Size == expected.size()){
