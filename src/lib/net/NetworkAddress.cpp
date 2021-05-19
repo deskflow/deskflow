@@ -31,12 +31,6 @@
 
 // name re-resolution adapted from a patch by Brent Priddy.
 
-NetworkAddress::NetworkAddress()
-{
-    // note -- make no calls to Network socket interface here;
-    // we're often called prior to Network::init().
-}
-
 NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
     m_port(port)
 {
@@ -51,7 +45,6 @@ NetworkAddress::NetworkAddress(const NetworkAddress& addr)
 }
 
 NetworkAddress::NetworkAddress(const String& hostname, int port) :
-    m_address(nullptr),
     m_hostname(hostname),
     m_port(port)
 {

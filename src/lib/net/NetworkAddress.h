@@ -31,7 +31,7 @@ public:
     /*!
     Constructs the invalid address
     */
-    NetworkAddress();
+    NetworkAddress() = default;
 
     /*!
     Construct the wildcard address with the given port.  \c port must

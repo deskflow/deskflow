@@ -195,7 +195,7 @@ public:
     //! Rename screen
     /*!
     Renames a screen.  All references to the name are updated.
-    Returns true iff successful.
+    Returns true if successful.
     */
     bool                renameScreen(const String& oldName,
                             const String& newName);
@@ -205,8 +205,9 @@ public:
     Removes a screen.  This also removes aliases for the screen and
     disconnects any connections to the screen.  \c name may be an
     alias.
+    Returns true if successful.
     */
-    void                removeScreen(const String& name);
+    bool                removeScreen(const String& name);
 
     //! Remove all screens
     /*!

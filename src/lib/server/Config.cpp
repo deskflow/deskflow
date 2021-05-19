@@ -111,14 +111,14 @@ Config::renameScreen(const String& oldName,
 	return true;
 }
 
-void
+bool
 Config::removeScreen(const String& name)
 {
 	// get canonical name and find cell
 	String canonical = getCanonicalName(name);
 	CellMap::iterator index = m_map.find(canonical);
 	if (index == m_map.end()) {
-		return;
+        return false;
 	}
 
 	// remove from map
@@ -140,6 +140,8 @@ Config::removeScreen(const String& name)
 			++index;
 		}
 	}
+
+    return true;
 }
 
 void

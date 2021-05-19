@@ -49,6 +49,30 @@ TEST(ServerConfigTests, serverconfig_screen_rename)
     EXPECT_TRUE(a.addScreen("screenA"));
     EXPECT_TRUE(a.renameScreen("screenA", "screenB"));
     EXPECT_TRUE(a.getCanonicalName("screenB") == "screenB");
+
+    Config b(nullptr);
+    EXPECT_FALSE(b.removeScreen("screenA"));
+    EXPECT_FALSE(b.renameScreen("screenA", "screenB"));
+    EXPECT_TRUE(b.addScreen("screenA"));
+    EXPECT_TRUE(b.addScreen("screenB"));
+    EXPECT_FALSE(b.renameScreen("screenA", "screenB"));
+    EXPECT_TRUE(b.renameScreen("screenA", "screena"));
+
+    EXPECT_FALSE(b.addAlias("screena", "screena"));
+    EXPECT_FALSE(b.addAlias("screenC", "screenA_Alias"));
+    EXPECT_TRUE(b.addAlias("screenA", "screenA_Alias1"));
+    EXPECT_TRUE(b.addAlias("screenA", "screenA_Alias2"));
+    EXPECT_FALSE(b.removeAlias("screenA"));
+    EXPECT_FALSE(b.removeAlias("missed_Alias"));
+    EXPECT_TRUE(b.removeAlias("screenA_Alias1"));
+    EXPECT_FALSE(b.removeAliases("screenC"));
+    EXPECT_FALSE(b.removeAliases("screenA"));
+
+    b.removeAllAliases();
+    b.removeAllScreens();
+
+    EXPECT_TRUE(b.getCanonicalName("screena") == "");
+    EXPECT_TRUE(b.getCanonicalName("screenB") == "");
 }
 
 TEST(ServerConfigTests, serverconfig_will_deem_inequal_configs_with_different_cell_names)
