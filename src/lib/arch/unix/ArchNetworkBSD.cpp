@@ -39,6 +39,7 @@
 #if !HAVE_INET_ATON
 #    include <stdio.h>
 #endif
+#include <algorithm>
 
 static const int s_family[] = {
     PF_UNSPEC,
