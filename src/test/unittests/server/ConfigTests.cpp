@@ -93,6 +93,7 @@ TEST(ServerConfigTests, serverconfig_will_deem_equal_configs_with_same_cell_name
     EXPECT_TRUE(a.addScreen("screenA"));
     EXPECT_TRUE(a.addScreen("screenB"));
     EXPECT_TRUE(a.addScreen("screenC"));
+    EXPECT_FALSE(a.connect("screenD", EDirection::kBottom, 0.0f, 0.5f, "screenC", 0.5f, 1.0f));
     EXPECT_TRUE(a.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
     EXPECT_TRUE(a.connect("screenB", EDirection::kLeft, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
     EXPECT_TRUE(b.addScreen("screenA"));
@@ -117,6 +118,11 @@ TEST(ServerConfigTests, serverconfig_will_deem_equal_configs_with_same_cell_name
 
     EXPECT_TRUE(a == b);
     EXPECT_TRUE(b == a);
+
+    EXPECT_FALSE(a.disconnect("screenD", EDirection::kBottom));
+    EXPECT_TRUE(a.disconnect("screenC", EDirection::kBottom));
+    EXPECT_TRUE(a.removeOption("screenA", kOptionClipboardSharing));
+    EXPECT_TRUE(a.removeOptions("screenA"));
 }
 
 TEST(ServerConfigTests, hostname_null_copy_test)
