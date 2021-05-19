@@ -31,6 +31,7 @@ Enhancements:
 - #6999 Detect if Linux is running with Wayland, and display a warning message
 - #7003 Prioritization rules server config
 - #7004 Add openssl dependency for rpm
+- #7007 Add logging when hostname have several IP
 ===========
 
 v1.13.1-stable
