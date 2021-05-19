@@ -15,6 +15,7 @@ Bug fixes:
 - #6993 Fix issues with prefences UI
 - #6992 UI issues and use cases
 - #7000 Additional UI tweaks
+- #7006 Resolve code scanning issues
 
 Enhancements:
 - #6954 Move language selection to advanced section
