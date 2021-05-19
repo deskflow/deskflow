@@ -137,7 +137,7 @@ Config::removeScreen(const String& name)
 			m_nameToCanonicalName.erase(iter++);
 		}
 		else {
-			++index;
+            ++iter;
 		}
 	}
 
