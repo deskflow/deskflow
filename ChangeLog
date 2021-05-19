@@ -15,6 +15,7 @@ Bug fixes:
 - #6993 Fix issues with prefences UI
 - #6992 UI issues and use cases
 - #7000 Additional UI tweaks
+- #7005 Fix User is not able to connect to server using ipv6 without wrapping IP in square quotes
 
 Enhancements:
 - #6954 Move language selection to advanced section
