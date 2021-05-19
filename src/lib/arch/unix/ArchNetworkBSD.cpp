@@ -21,6 +21,7 @@
 #include "arch/Arch.h"
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/XArchUnix.h"
+#include "base/Log.h"
 
 #if HAVE_UNISTD_H
 #    include <unistd.h>
@@ -678,7 +679,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     char ipstr[INET6_ADDRSTRLEN];
     struct addrinfo hints;
-    struct addrinfo *p;
+    struct addrinfo *pResult, *pNextResult;
     struct in6_addr serveraddr;
     int ret;
 
@@ -698,21 +699,41 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     // done with static buffer
     ARCH->lockMutex(m_mutex);
-    ret = getaddrinfo(name.c_str(), nullptr, &hints, &p);
+    ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult);
     if (ret != 0) {
         ARCH->unlockMutex(m_mutex);
         delete addr;
         throwNameError(ret);
     }
 
-    if (p->ai_family == AF_INET) {
+    std::vector<String> ipList;
+    for( pNextResult = pResult; pNextResult != NULL; pNextResult = pNextResult->ai_next ){
+        char buf[INET6_ADDRSTRLEN];
+        auto h = ((struct sockaddr_in *)pNextResult->ai_addr);
+        if (!inet_ntop(h->sin_family, &h->sin_addr, buf, sizeof(buf))) {
+            continue;
+        }
+        ipList.push_back(buf);
+    }
+
+    if (!ipList.empty()) {
+        String summary = ipList.front();
+        for(size_t i = 1; i < ipList.size(); i++) {
+            summary += ", ";
+            summary += ipList[i];
+        }
+        LOG((CLOG_NOTE "For hostname \"%s\" detected several adresses: %s", name.c_str(), summary.c_str()));
+        LOG((CLOG_NOTE "First one is choosed."));
+    }
+
+    if (pResult->ai_family == AF_INET) {
         addr->m_len = (socklen_t)sizeof(struct sockaddr_in);
     } else {
         addr->m_len = (socklen_t)sizeof(struct sockaddr_in6);
     }
 
-    memcpy(&addr->m_addr, p->ai_addr, addr->m_len);
-    freeaddrinfo(p);
+    memcpy(&addr->m_addr, pResult->ai_addr, addr->m_len);
+    freeaddrinfo(pResult);
     ARCH->unlockMutex(m_mutex);
 
     return addr;
