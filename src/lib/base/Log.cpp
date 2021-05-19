@@ -182,7 +182,11 @@ Log::print(const char* file, int line, const char* fmt, ...)
         char timestamp[timestamp_size];
         time_t t;
         time(&t);
+#if WINAPI_MSWINDOWS
         localtime_s(&tm, &t);
+#else
+        localtime_r(&tm, &t);
+#endif
         snprintf(timestamp, timestamp_size, "%04i-%02i-%02iT%02i:%02i:%02i", tm.tm_year + 1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
         // square brackets, spaces, comma and null terminator take about 10
