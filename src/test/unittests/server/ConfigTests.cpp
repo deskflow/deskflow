@@ -66,7 +66,7 @@ TEST(ServerConfigTests, serverconfig_screen_rename)
     EXPECT_FALSE(b.removeAlias("missed_Alias"));
     EXPECT_TRUE(b.removeAlias("screenA_Alias1"));
     EXPECT_FALSE(b.removeAliases("screenC"));
-    EXPECT_FALSE(b.removeAliases("screenA"));
+    EXPECT_TRUE(b.removeAliases("screenA"));
 
     b.removeAllAliases();
     b.removeAllScreens();
