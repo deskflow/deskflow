@@ -679,7 +679,7 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     char ipstr[INET6_ADDRSTRLEN];
     struct addrinfo hints;
-    struct addrinfo *pResult, *pNextResult;
+    struct addrinfo *pResult;
     struct in6_addr serveraddr;
     int ret;
 
@@ -707,13 +707,15 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     }
 
     std::vector<String> ipList;
-    for( pNextResult = pResult; pNextResult != NULL; pNextResult = pNextResult->ai_next ){
-        char buf[INET6_ADDRSTRLEN];
+    for( struct addrinfo * pNextResult = pResult; pNextResult != nullptr; pNextResult = pNextResult->ai_next ){
+        ipList.push_back("");
+        ipList.back().resize(INET6_ADDRSTRLEN);
         auto h = ((struct sockaddr_in *)pNextResult->ai_addr);
-        if (!inet_ntop(h->sin_family, &h->sin_addr, buf, sizeof(buf))) {
+        if (!inet_ntop(h->sin_family, &h->sin_addr, &ipList.back()[0], INET6_ADDRSTRLEN)) {
             continue;
         }
-        ipList.push_back(buf);
+        //shrinking all unnecessary termination characters
+        ipList.back().erase(std::find(ipList.back().begin(), ipList.back().end(), '\0'), ipList.back().end());
     }
 
     if (!ipList.empty()) {
