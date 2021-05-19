@@ -10,6 +10,7 @@ Vendor: Symless
 Packager: Symless <engineering@symless.com>
 License: GPLv2
 Release: @SYNERGY_SNAPSHOT_INFO@%{?dist}
+Requires: openssl
 
 %description
 Synergy allows you to share one mouse and keyboard between multiple computers.
