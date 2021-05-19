@@ -30,6 +30,7 @@ Enhancements:
 - #6990 Change VersionChecker URL and include system language in the header
 - #6999 Detect if Linux is running with Wayland, and display a warning message
 - #7003 Prioritization rules server config
+- #7004 Add openssl dependency for rpm
 ===========
 
 v1.13.1-stable
