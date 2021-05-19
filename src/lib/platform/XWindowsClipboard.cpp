@@ -1080,7 +1080,7 @@ XWindowsClipboard::sendReply(Reply* reply)
     }
 
     // notification already sended
-    if (!reply->m_replied) {
+    if (reply->m_replied) {
         return false;
         
     }
