@@ -82,6 +82,7 @@ public:
 
 private:
     Client*            m_client;
-    synergy::Screen*m_clientScreen;
+    synergy::Screen*   m_clientScreen;
     NetworkAddress*    m_serverAddress;
+    int                m_lastServerAddressIndex = 0;
 };

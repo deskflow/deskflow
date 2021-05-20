@@ -32,16 +32,13 @@
 // name re-resolution adapted from a patch by Brent Priddy.
 
 NetworkAddress::NetworkAddress() :
-    m_address(NULL),
-    m_hostname(),
-    m_port(0)
+    m_hostname()
 {
     // note -- make no calls to Network socket interface here;
     // we're often called prior to Network::init().
 }
 
 NetworkAddress::NetworkAddress(int port) :
-    m_address(NULL),
     m_hostname(),
     m_port(port)
 {
@@ -51,15 +48,13 @@ NetworkAddress::NetworkAddress(int port) :
 }
 
 NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
-    m_address(addr.m_address != NULL ? ARCH->copyAddr(addr.m_address) : NULL),
     m_hostname(addr.m_hostname),
     m_port(addr.m_port)
 {
-    // do nothing
+    *this = addr;
 }
 
 NetworkAddress::NetworkAddress(const String& hostname, int port) :
-    m_address(NULL),
     m_hostname(hostname),
     m_port(port)
 {
@@ -119,34 +114,39 @@ NetworkAddress::NetworkAddress(const String& hostname, int port) :
 
 NetworkAddress::~NetworkAddress()
 {
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
+        m_address = nullptr;
     }
 }
 
 NetworkAddress&
 NetworkAddress::operator=(const NetworkAddress& addr)
 {
-    ArchNetAddress newAddr = NULL;
-    if (addr.m_address != NULL) {
+    if (m_address != nullptr) {
+        ARCH->closeAddr(m_address);
+        m_address = nullptr;
+    }
+
+    ArchNetAddress newAddr = nullptr;
+    if (addr.m_address != nullptr) {
         newAddr = ARCH->copyAddr(addr.m_address);
     }
-    if (m_address != NULL) {
-        ARCH->closeAddr(m_address);
-    }
-    m_address  = newAddr;
+    m_address = newAddr;
+
     m_hostname = addr.m_hostname;
     m_port     = addr.m_port;
     return *this;
 }
 
-void
-NetworkAddress::resolve()
+int
+NetworkAddress::resolve(size_t index)
 {
+    int resolvedAddressesCount = 0;
     // discard previous address
-    if (m_address != NULL) {
+    if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
-        m_address = NULL;
+        m_address = nullptr;
     }
 
     try {
@@ -154,9 +154,13 @@ NetworkAddress::resolve()
         // up the name.
         if (m_hostname.empty()) {
             m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+            resolvedAddressesCount = 1;
         }
         else {
-            m_address = ARCH->nameToAddr(m_hostname);
+            auto adresses = ARCH->nameToAddr(m_hostname);
+            resolvedAddressesCount = adresses.size();
+            assert(resolvedAddressesCount > 0);
+            m_address = adresses[min(static_cast<int>(index), resolvedAddressesCount - 1)];
         }
     }
     catch (XArchNetworkNameUnknown&) {
@@ -174,6 +178,8 @@ NetworkAddress::resolve()
 
     // set port in address
     ARCH->setAddrPort(m_address, m_port);
+
+    return resolvedAddressesCount;
 }
 
 bool
@@ -191,7 +197,7 @@ NetworkAddress::operator!=(const NetworkAddress& addr) const
 bool
 NetworkAddress::isValid() const
 {
-    return (m_address != NULL);
+    return (m_address != nullptr);
 }
 
 const ArchNetAddress&

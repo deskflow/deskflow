@@ -75,7 +75,7 @@ public:
     Starts an attempt to connect to the server.  This is ignored if
     the client is trying to connect or is already connected.
     */
-    void                connect();
+    void                connect(size_t addressIndex = 0);
 
     //! Disconnect
     /*!
@@ -134,6 +134,9 @@ public:
 
     //! Return drag file list
     DragFileList        getDragFileList() { return m_dragFileList; }
+
+    //! Return last resolved adresses count
+    int                 getLastResolvedAddressesCount() { return m_resolvedAddressesCount; }
 
     //@}
 
@@ -229,4 +232,5 @@ private:
     bool                m_enableClipboard;
     size_t              m_maximumClipboardSize;
     lib::synergy::ClientArgs          m_args;
+    int                 m_resolvedAddressesCount = 0;
 };

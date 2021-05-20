@@ -21,7 +21,6 @@
 #include "arch/Arch.h"
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/XArchUnix.h"
-#include "base/Log.h"
 
 #if HAVE_UNISTD_H
 #    include <unistd.h>
@@ -672,11 +671,11 @@ ArchNetworkBSD::copyAddr(ArchNetAddress addr)
     return new ArchNetAddressImpl(*addr);
 }
 
-ArchNetAddress
+std::vector<ArchNetAddress>
 ArchNetworkBSD::nameToAddr(const std::string& name)
 {
     // allocate address
-    auto* addr = new ArchNetAddressImpl;
+    std::vector<ArchNetAddressImpl*> addresses;
 
     char ipstr[INET6_ADDRSTRLEN];
     struct addrinfo hints;
@@ -707,39 +706,21 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
         throwNameError(ret);
     }
 
-    std::vector<String> ipList;
-    for( struct addrinfo * pNextResult = pResult; pNextResult != nullptr; pNextResult = pNextResult->ai_next ){
-        ipList.emplace_back("");
-        ipList.back().resize(INET6_ADDRSTRLEN);
-        auto h = ((struct sockaddr_in *)pNextResult->ai_addr);
-        if (!inet_ntop(h->sin_family, &h->sin_addr, &ipList.back()[0], INET6_ADDRSTRLEN)) {
-            continue;
+    for(; pResult != nullptr; pResult = pResult->ai_next ) {
+        addresses.push_back(new ArchNetAddressImpl);
+        if (pResult->ai_family == AF_INET) {
+            addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in);
+        } else {
+            addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
         }
-        //shrinking all unnecessary termination characters
-        ipList.back().erase(std::find(ipList.back().begin(), ipList.back().end(), '\0'), ipList.back().end());
+
+        memcpy(&addresses.back()->m_addr, pResult->ai_addr, addresses.back()->m_len);
     }
 
-    if (!ipList.empty()) {
-        String summary = ipList.front();
-        for(size_t i = 1; i < ipList.size(); i++) {
-            summary += ", ";
-            summary += ipList[i];
-        }
-        LOG((CLOG_NOTE "For hostname \"%s\" detected several adresses: %s", name.c_str(), summary.c_str()));
-        LOG((CLOG_NOTE "First one is choosed."));
-    }
-
-    if (pResult->ai_family == AF_INET) {
-        addr->m_len = (socklen_t)sizeof(struct sockaddr_in);
-    } else {
-        addr->m_len = (socklen_t)sizeof(struct sockaddr_in6);
-    }
-
-    memcpy(&addr->m_addr, pResult->ai_addr, addr->m_len);
     freeaddrinfo(pResult);
     ARCH->unlockMutex(m_mutex);
 
-    return addr;
+    return addresses;
 }
 
 void
