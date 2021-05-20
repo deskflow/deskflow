@@ -158,6 +158,12 @@ NetworkAddress::resolve(size_t index)
             else {
                 m_address = adresses[resolvedAddressesCount - 1];
             }
+
+            for(auto address : adresses) {
+                if(m_address != address) {
+                    ARCH->closeAddr(address);
+                }
+            }
         }
     }
     catch (XArchNetworkNameUnknown&) {
