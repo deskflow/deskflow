@@ -153,10 +153,10 @@ NetworkAddress::resolve(size_t index)
             resolvedAddressesCount = adresses.size();
             assert(resolvedAddressesCount > 0);
             if (index < resolvedAddressesCount - 1) {
-                m_address = adresses[index].get();
+                m_address = adresses[index];
             }
             else {
-                m_address = adresses[resolvedAddressesCount - 1].get();
+                m_address = adresses[resolvedAddressesCount - 1];
             }
         }
     }
