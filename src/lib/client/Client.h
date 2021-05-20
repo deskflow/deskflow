@@ -136,7 +136,7 @@ public:
     DragFileList        getDragFileList() { return m_dragFileList; }
 
     //! Return last resolved adresses count
-    int                 getLastResolvedAddressesCount() { return m_resolvedAddressesCount; }
+    size_t              getLastResolvedAddressesCount() const { return m_resolvedAddressesCount; }
 
     //@}
 
@@ -232,5 +232,5 @@ private:
     bool                m_enableClipboard;
     size_t              m_maximumClipboardSize;
     lib::synergy::ClientArgs          m_args;
-    int                 m_resolvedAddressesCount = 0;
+    size_t              m_resolvedAddressesCount = 0;
 };

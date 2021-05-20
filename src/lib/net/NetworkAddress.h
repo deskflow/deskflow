@@ -31,7 +31,7 @@ public:
     /*!
     Constructs the invalid address
     */
-    NetworkAddress();
+    NetworkAddress() = default;
 
     /*!
     Construct the wildcard address with the given port.  \c port must
@@ -69,7 +69,7 @@ public:
     index - determine index of IP we would like to use from resolved addresses
     Returns count of successfully resolved addressed.
     */
-    int                resolve(size_t index = 0);
+    size_t              resolve(size_t index = 0);
 
     //@}
     //! @name accessors

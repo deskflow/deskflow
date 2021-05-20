@@ -31,15 +31,7 @@
 
 // name re-resolution adapted from a patch by Brent Priddy.
 
-NetworkAddress::NetworkAddress() :
-    m_hostname()
-{
-    // note -- make no calls to Network socket interface here;
-    // we're often called prior to Network::init().
-}
-
 NetworkAddress::NetworkAddress(int port) :
-    m_hostname(),
     m_port(port)
 {
     checkPort();
@@ -139,10 +131,10 @@ NetworkAddress::operator=(const NetworkAddress& addr)
     return *this;
 }
 
-int
+size_t
 NetworkAddress::resolve(size_t index)
 {
-    int resolvedAddressesCount = 0;
+    size_t resolvedAddressesCount = 0;
     // discard previous address
     if (m_address != nullptr) {
         ARCH->closeAddr(m_address);
@@ -160,11 +152,11 @@ NetworkAddress::resolve(size_t index)
             auto adresses = ARCH->nameToAddr(m_hostname);
             resolvedAddressesCount = adresses.size();
             assert(resolvedAddressesCount > 0);
-            if (static_cast<int>(index) < resolvedAddressesCount - 1) {
-                m_address = adresses[static_cast<int>(index)];
+            if (index < resolvedAddressesCount - 1) {
+                m_address = adresses[index].get();
             }
             else {
-                m_address = adresses[resolvedAddressesCount - 1];
+                m_address = adresses[resolvedAddressesCount - 1].get();
             }
         }
     }
