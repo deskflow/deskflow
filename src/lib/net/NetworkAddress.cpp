@@ -149,17 +149,27 @@ NetworkAddress::resolve(size_t index)
             resolvedAddressesCount = 1;
         }
         else {
-            auto adresses = ARCH->nameToAddr(m_hostname);
-            resolvedAddressesCount = adresses.size();
-            assert(resolvedAddressesCount > 0);
-            if (index < resolvedAddressesCount - 1) {
-                m_address = adresses[index];
-            }
-            else {
-                m_address = adresses[resolvedAddressesCount - 1];
+            // Logic for temporary filtring only ipv4 addresses
+            std::vector<ArchNetAddress> ipv4OnlyAddresses;
+            {
+                auto adresses = ARCH->nameToAddr(m_hostname);
+                for (auto address : adresses) {
+                    if (ARCH->getAddrFamily(address) == IArchNetwork::kINET) {
+                        ipv4OnlyAddresses.emplace_back(address);
+                    }
+                }
             }
 
-            for(auto address : adresses) {
+            resolvedAddressesCount = ipv4OnlyAddresses.size();
+            assert(resolvedAddressesCount > 0);
+            if (index < resolvedAddressesCount - 1) {
+                m_address = ipv4OnlyAddresses[index];
+            }
+            else {
+                m_address = ipv4OnlyAddresses[resolvedAddressesCount - 1];
+            }
+
+            for(auto address : ipv4OnlyAddresses) {
                 if(m_address != address) {
                     ARCH->closeAddr(address);
                 }
