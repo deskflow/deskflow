@@ -160,7 +160,12 @@ NetworkAddress::resolve(size_t index)
             auto adresses = ARCH->nameToAddr(m_hostname);
             resolvedAddressesCount = adresses.size();
             assert(resolvedAddressesCount > 0);
-            m_address = adresses[min(static_cast<int>(index), resolvedAddressesCount - 1)];
+            if (static_cast<int>(index) < resolvedAddressesCount - 1) {
+                m_address = adresses[static_cast<int>(index)];
+            }
+            else {
+                m_address = adresses[resolvedAddressesCount - 1];
+            }
         }
     }
     catch (XArchNetworkNameUnknown&) {
