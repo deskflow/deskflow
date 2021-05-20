@@ -122,7 +122,7 @@ Client::~Client()
 }
 
 void
-Client::connect()
+Client::connect(size_t addressIndex)
 {
     if (m_stream != NULL) {
         return;
@@ -138,10 +138,10 @@ Client::connect()
         // has changed (which can happen frequently if this is a laptop
         // being shuttled between various networks).  patch by Brent
         // Priddy.
-        m_serverAddress.resolve();
+        m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
         
         // m_serverAddress will be null if the hostname address is not reolved
-        if (m_serverAddress.getAddress() != NULL) {
+        if (m_serverAddress.getAddress() != nullptr) {
           // to help users troubleshoot, show server host name (issue: 60)
           LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
           m_serverAddress.getHostname().c_str(),

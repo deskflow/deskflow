@@ -304,15 +304,26 @@ ClientApp::handleClientFailed(const Event& e, void*)
     Client::FailInfo* info =
         static_cast<Client::FailInfo*>(e.getData());
 
-    updateStatus(String("Failed to connect to server: ") + info->m_what);
-    if (!args().m_restartable || !info->m_retry) {
-        LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
-        m_events->addEvent(Event(Event::kQuit));
-    }
-    else {
-        LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
+    if (m_lastServerAddressIndex + 1 < m_client->getLastResolvedAddressesCount()) {
+        m_lastServerAddressIndex++;
+        updateStatus(String("Failed to connect to server: ") + info->m_what + " Trying next address...");
+        LOG((CLOG_NOTE "Failed to connect to server: %s. Trying next address...", info->m_what.c_str()));
         if (!m_suspended) {
             scheduleClientRestart(nextRestartTimeout());
+        }
+    }
+    else {
+        m_lastServerAddressIndex = 0;
+        updateStatus(String("Failed to connect to server: ") + info->m_what);
+        if (!args().m_restartable || !info->m_retry) {
+            LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
+            m_events->addEvent(Event(Event::kQuit));
+        }
+        else {
+            LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
+            if (!m_suspended) {
+                scheduleClientRestart(nextRestartTimeout());
+            }
         }
     }
     delete info;
@@ -405,7 +416,7 @@ ClientApp::startClient()
             LOG((CLOG_NOTE "started client"));
         }
 
-        m_client->connect();
+        m_client->connect(m_lastServerAddressIndex);
 
         updateStatus();
         return true;
