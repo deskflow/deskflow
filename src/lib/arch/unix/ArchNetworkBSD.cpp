@@ -38,7 +38,6 @@
 #if !HAVE_INET_ATON
 #    include <stdio.h>
 #endif
-#include <algorithm>
 
 static const int s_family[] = {
     PF_UNSPEC,
@@ -700,9 +699,8 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
     // done with static buffer
     ARCH->lockMutex(m_mutex);
     ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult);
-    if (ret != 0 || !pResult) {
+    if (ret != 0) {
         ARCH->unlockMutex(m_mutex);
-        delete addr;
         throwNameError(ret);
     }
 
