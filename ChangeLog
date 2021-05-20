@@ -16,6 +16,7 @@ Bug fixes:
 - #6992 UI issues and use cases
 - #7000 Additional UI tweaks
 - #7005 Fix User is not able to connect to server using ipv6 without wrapping IP in square quotes
+- #7009 Clipboard sharing doesn't work on Linux system
 - #7006 Resolve code scanning issues
 
 Enhancements:
