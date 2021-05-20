@@ -799,7 +799,19 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         }
 #endif
     }
-    args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+
+    QString hostName = m_pLineEditHostname->text();
+    // if interface is IPv6 - ensure that ip is in square brackets
+    if (hostName.count(':') > 1) {
+        if(hostName[0] != '[') {
+            hostName.insert(0, '[');
+        }
+        if(hostName[hostName.size() - 1] != ']') {
+            hostName.push_back(']');
+        }
+    }
+
+    args << hostName + ":" + QString::number(appConfig().port());
     return true;
 }
 
