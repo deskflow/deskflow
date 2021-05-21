@@ -17,6 +17,7 @@ Bug fixes:
 - #7000 Additional UI tweaks
 - #7005 Fix User is not able to connect to server using ipv6 without wrapping IP in square quotes
 - #7009 Clipboard sharing doesn't work on Linux system
+- #7010 Fix Ubuntu 16.04 pipeline in Azure
 
 Enhancements:
 - #6954 Move language selection to advanced section
@@ -32,6 +33,7 @@ Enhancements:
 - #6999 Detect if Linux is running with Wayland, and display a warning message
 - #7003 Prioritization rules server config
 - #7004 Add openssl dependency for rpm
+- #7008 Add logging when hostname have several IP
 ===========
 
 v1.13.1-stable

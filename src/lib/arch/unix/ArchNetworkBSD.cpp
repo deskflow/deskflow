@@ -670,15 +670,15 @@ ArchNetworkBSD::copyAddr(ArchNetAddress addr)
     return new ArchNetAddressImpl(*addr);
 }
 
-ArchNetAddress
+std::vector<ArchNetAddress>
 ArchNetworkBSD::nameToAddr(const std::string& name)
 {
     // allocate address
-    auto* addr = new ArchNetAddressImpl;
+    std::vector<ArchNetAddressImpl*> addresses;
 
     char ipstr[INET6_ADDRSTRLEN];
     struct addrinfo hints;
-    struct addrinfo *p;
+    struct addrinfo *pResult;
     struct in6_addr serveraddr;
     int ret;
 
@@ -698,24 +698,27 @@ ArchNetworkBSD::nameToAddr(const std::string& name)
 
     // done with static buffer
     ARCH->lockMutex(m_mutex);
-    ret = getaddrinfo(name.c_str(), nullptr, &hints, &p);
+    ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult);
     if (ret != 0) {
         ARCH->unlockMutex(m_mutex);
-        delete addr;
         throwNameError(ret);
     }
 
-    if (p->ai_family == AF_INET) {
-        addr->m_len = (socklen_t)sizeof(struct sockaddr_in);
-    } else {
-        addr->m_len = (socklen_t)sizeof(struct sockaddr_in6);
+    for(; pResult != nullptr; pResult = pResult->ai_next ) {
+        addresses.push_back(new ArchNetAddressImpl);
+        if (pResult->ai_family == AF_INET) {
+            addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in);
+        } else {
+            addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
+        }
+
+        memcpy(&addresses.back()->m_addr, pResult->ai_addr, addresses.back()->m_len);
     }
 
-    memcpy(&addr->m_addr, p->ai_addr, addr->m_len);
-    freeaddrinfo(p);
+    freeaddrinfo(pResult);
     ARCH->unlockMutex(m_mutex);
 
-    return addr;
+    return addresses;
 }
 
 void

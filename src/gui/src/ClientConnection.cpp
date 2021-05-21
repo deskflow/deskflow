@@ -35,7 +35,8 @@ void ClientConnection::update(const QString& line)
         if (line.contains("failed to connect to server"))
         {
             m_checkConnection = false;
-            if (!line.contains("server refused client with our name"))
+            if (!line.contains("server refused client with our name") &&
+                !line.contains("Trying next address"))
             {
                 showMessage(getMessage(line));
             }
