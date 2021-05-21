@@ -681,7 +681,7 @@ OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 		CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
 			NULL, kCGScrollEventUnitLine, 2,
 			mapScrollWheelFromSynergy(yDelta),
-			-mapScrollWheelFromSynergy(xDelta));
+			m_scrollDirection * mapScrollWheelFromSynergy(xDelta));
 		
         // Fix for sticky keys
         CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
@@ -840,6 +840,8 @@ OSXScreen::enter()
 		setZeroSuppressionInterval();
 	}
 	else {
+		m_scrollDirection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue] ? -1 : 1;
+
 		// reset buttons
 		m_buttonState.reset();
 

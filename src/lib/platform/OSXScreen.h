@@ -339,6 +339,9 @@ private:
     
     Thread*                m_getDropTargetThread;
     String                    m_dropTarget;
+
+    // -1 for natural scrolling direction, 1 otherwise
+    SInt32                    m_scrollDirection = -1;
     
 #if defined(MAC_OS_X_VERSION_10_7)
     Mutex*                    m_carbonLoopMutex;
