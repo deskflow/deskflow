@@ -18,6 +18,7 @@ Bug fixes:
 - #7005 Fix User is not able to connect to server using ipv6 without wrapping IP in square quotes
 - #7009 Clipboard sharing doesn't work on Linux system
 - #7010 Fix Ubuntu 16.04 pipeline in Azure
+- #7012 Fix natural horizontal scrolling on Mac client
 
 Enhancements:
 - #6954 Move language selection to advanced section
