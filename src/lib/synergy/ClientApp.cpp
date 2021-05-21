@@ -57,6 +57,7 @@
 #include "platform/OSXDragSimulator.h"
 #endif
 
+#include <memory>
 #include <iostream>
 #include <stdio.h>
 
