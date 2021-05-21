@@ -192,7 +192,7 @@ Client::refuseConnection(const char* msg)
     cleanup();
 
     if (msg) {
-        FailInfo* info = new FailInfo(msg);
+        auto info = new FailInfo(msg);
         info->m_retry = true;
         Event event(m_events->forClient().connectionRefused(), getEventTarget(), info, Event::kDontFreeData);
         m_events->addEvent(event);

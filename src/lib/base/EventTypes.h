@@ -42,12 +42,6 @@ type_##Events::name_()                                                    \
 
 class ClientEvents : public EventTypes {
 public:
-    ClientEvents() :
-        m_connected(Event::kUnknown),
-        m_connectionFailed(Event::kUnknown),
-        m_connectionRefused(Event::kUnknown),
-        m_disconnected(Event::kUnknown) { }
-
     //! @name accessors
     //@{
 
@@ -83,10 +77,10 @@ public:
     //@}
 
 private:
-    Event::Type        m_connected;
-    Event::Type        m_connectionFailed;
-    Event::Type        m_connectionRefused;
-    Event::Type        m_disconnected;
+    Event::Type        m_connected = Event::kUnknown;
+    Event::Type        m_connectionFailed = Event::kUnknown;
+    Event::Type        m_connectionRefused = Event::kUnknown;
+    Event::Type        m_disconnected = Event::kUnknown;
 };
 
 class IStreamEvents : public EventTypes {
