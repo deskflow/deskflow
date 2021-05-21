@@ -301,11 +301,9 @@ ClientApp::handleClientConnected(const Event&, void*)
 void
 ClientApp::handleClientFailed(const Event& e, void*)
 {
-    Client::FailInfo* info =
-        static_cast<Client::FailInfo*>(e.getData());
+    if ( (++m_lastServerAddressIndex) < m_client->getLastResolvedAddressesCount()) {
+        std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo*>(e.getData()));
 
-    if (m_lastServerAddressIndex + 1 < m_client->getLastResolvedAddressesCount()) {
-        m_lastServerAddressIndex++;
         updateStatus(String("Failed to connect to server: ") + info->m_what + " Trying next address...");
         LOG((CLOG_NOTE "Failed to connect to server: %s. Trying next address...", info->m_what.c_str()));
         if (!m_suspended) {
@@ -314,19 +312,27 @@ ClientApp::handleClientFailed(const Event& e, void*)
     }
     else {
         m_lastServerAddressIndex = 0;
-        updateStatus(String("Failed to connect to server: ") + info->m_what);
-        if (!args().m_restartable || !info->m_retry) {
-            LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
-            m_events->addEvent(Event(Event::kQuit));
-        }
-        else {
-            LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
-            if (!m_suspended) {
-                scheduleClientRestart(nextRestartTimeout());
-            }
+        handleClientRefused(e, nullptr);
+    }
+
+}
+
+void
+ClientApp::handleClientRefused(const Event& e, void*)
+{
+    std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo*>(e.getData()));
+
+    updateStatus(String("Failed to connect to server: ") + info->m_what);
+    if (!args().m_restartable || !info->m_retry) {
+        LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
+        m_events->addEvent(Event(Event::kQuit));
+    }
+    else {
+        LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
+        if (!m_suspended) {
+            scheduleClientRestart(nextRestartTimeout());
         }
     }
-    delete info;
 }
 
 
@@ -367,6 +373,11 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
             new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientFailed));
 
         m_events->adoptHandler(
+            m_events->forClient().connectionRefused(),
+            client->getEventTarget(),
+            new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRefused));
+
+        m_events->adoptHandler(
             m_events->forClient().disconnected(),
             client->getEventTarget(),
             new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientDisconnected));
@@ -389,6 +400,7 @@ ClientApp::closeClient(Client* client)
 
     m_events->removeHandler(m_events->forClient().connected(), client);
     m_events->removeHandler(m_events->forClient().connectionFailed(), client);
+    m_events->removeHandler(m_events->forClient().connectionRefused(), client);
     m_events->removeHandler(m_events->forClient().disconnected(), client);
     delete client;
 }
