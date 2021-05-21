@@ -1034,7 +1034,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 			}
 
 			if (xScroll != 0 || yScroll != 0) {
-				onMouseWheel(-mapScrollWheelToSynergy(xScroll),
+				onMouseWheel(mapScrollWheelToSynergy(xScroll),
 								mapScrollWheelToSynergy(yScroll));
 			}
 		}
