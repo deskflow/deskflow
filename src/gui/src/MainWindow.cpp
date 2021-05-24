@@ -439,11 +439,9 @@ void MainWindow::appendLogRaw(const QString& text)
 void MainWindow::handleIdleService(const QString& text)
 {
     foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
-        if (!line.isEmpty()) {
-            // only start if there is no active service running
-            if (line.contains("service status: idle") && appConfig().startedBefore()) {
-                startSynergy();
-            }
+        // only start if there is no active service running
+        if (!line.isEmpty() && line.contains("service status: idle") && appConfig().startedBefore()) {
+            startSynergy();
         }
     }
 }
