@@ -188,25 +188,25 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
         ProtocolUtil::readf(m_stream,
                         kMsgEIncompatible + 4, &major, &minor);
         LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
-        m_client->disconnect("server has incompatible version");
+        m_client->refuseConnection("server has incompatible version");
         return kDisconnect;
     }
 
     else if (memcmp(code, kMsgEBusy, 4) == 0) {
         LOG((CLOG_ERR "server already has a connected client with name \"%s\"", m_client->getName().c_str()));
-        m_client->disconnect("server already has a connected client with our name");
+        m_client->refuseConnection("server already has a connected client with our name");
         return kDisconnect;
     }
 
     else if (memcmp(code, kMsgEUnknown, 4) == 0) {
         LOG((CLOG_ERR "server refused client with name \"%s\"", m_client->getName().c_str()));
-        m_client->disconnect("server refused client with our name");
+        m_client->refuseConnection("server refused client with our name");
         return kDisconnect;
     }
 
     else if (memcmp(code, kMsgEBad, 4) == 0) {
         LOG((CLOG_ERR "server disconnected due to a protocol error"));
-        m_client->disconnect("server reported a protocol error");
+        m_client->refuseConnection("server reported a protocol error");
         return kDisconnect;
     }
     else {
