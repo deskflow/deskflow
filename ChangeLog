@@ -19,6 +19,7 @@ Bug fixes:
 - #7009 Clipboard sharing doesn't work on Linux system
 - #7010 Fix Ubuntu 16.04 pipeline in Azure
 - #7011 Fix language synchronisation checkbox spelling
+- #7015 Fix Windows service not starting up after sleep
 
 Enhancements:
 - #6954 Move language selection to advanced section
