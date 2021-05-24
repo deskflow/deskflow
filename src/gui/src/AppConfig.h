@@ -202,8 +202,6 @@ protected:
         kServerHostname,
         kTLSCertPath,
         kTLSKeyLength,
-        //temporary disable language sync logic
-        //kLanguageSync
     };
 
         void setScreenName(const QString& s);
