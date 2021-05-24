@@ -101,9 +101,10 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             ++i;
             continue;
         }
-        else if (isArg(i, argc, argv, nullptr, "--sync-language")) {
-            argsBase().m_enableLangSync = true;
-        }
+        //temporary disable language sync logic
+        //else if (isArg(i, argc, argv, nullptr, "--sync-language")) {
+        //    argsBase().m_enableLangSync = true;
+        //}
         else if (isArg(i, argc, argv, nullptr, "--camp")) {
             // ignore -- included for backwards compatibility
         }

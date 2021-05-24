@@ -77,7 +77,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "serverHostname",
         "tlsCertPath",
         "tlsKeyLength",
-        "languageSync",
+        //temporary disable language sync logic
+        //"languageSync",
 };
 
 static const char* logLevelNames[] =
@@ -240,7 +241,8 @@ void AppConfig::loadSettings()
     m_UseInternalConfig         = loadSetting(kUseInternalConfig, false).toBool();
     m_ClientGroupChecked        = loadSetting(kGroupClientCheck, false).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
-    m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
+    //temporary disable language sync logic
+    //m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -301,7 +303,8 @@ void AppConfig::saveSettings()
         setSetting(kUseInternalConfig, m_UseInternalConfig);
         setSetting(kGroupClientCheck, m_ClientGroupChecked);
         setSetting(kServerHostname, m_ServerHostname);
-        setSetting(kLanguageSync, m_LanguageSync);
+        //temporary disable language sync logic
+        //setSetting(kLanguageSync, m_LanguageSync);
     }
 
     m_unsavedChanges = false;

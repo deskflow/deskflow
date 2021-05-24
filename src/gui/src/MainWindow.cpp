@@ -755,7 +755,8 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
     if (appConfig().getLanguageSync())
     {
-        args << "--sync-language";
+        //temporary disable language sync logic
+        //args << "--sync-language";
     }
 
 
