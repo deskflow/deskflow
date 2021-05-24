@@ -202,7 +202,6 @@ protected:
         kServerHostname,
         kTLSCertPath,
         kTLSKeyLength,
-        kLanguageSync
     };
 
         void setScreenName(const QString& s);
@@ -245,7 +244,7 @@ protected:
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
-        bool m_LanguageSync           = false;
+        bool m_LanguageSync           = true;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;
