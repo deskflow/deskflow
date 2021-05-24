@@ -19,6 +19,7 @@ Bug fixes:
 - #7009 Clipboard sharing doesn't work on Linux system
 - #7010 Fix Ubuntu 16.04 pipeline in Azure
 - #7011 Fix language synchronisation checkbox spelling
+- #7013 Wrong connection pop up appears if the user connects using a domain name which is assigned to list of IP's
 
 Enhancements:
 - #6954 Move language selection to advanced section
