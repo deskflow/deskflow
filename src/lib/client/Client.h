@@ -145,6 +145,9 @@ public:
     //! Return last resolved adresses count
     size_t              getLastResolvedAddressesCount() const { return m_resolvedAddressesCount; }
 
+    //! Return client settings
+    lib::synergy::ClientArgs    getClientArgs() const { return m_args; }
+
     //@}
 
     // IScreen overrides

@@ -391,6 +391,16 @@ ServerProxy::sendInfo(const ClientInfo& info)
                                 info.m_mx, info.m_my);
 }
 
+void
+ServerProxy::sendWakeOnLanInfo(const ClientWakeOnLanInfo& info)
+{
+    LOG((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d", info.m_mac12, info.m_mac34, info.m_mac56));
+    ProtocolUtil::writef(m_stream, kMsgDWol,
+        info.m_mac12,
+        info.m_mac34,
+        info.m_mac56);
+}
+
 KeyID
 ServerProxy::translateKey(KeyID id) const
 {
@@ -842,6 +852,14 @@ ServerProxy::setOptions()
     }
 }
 
+ClientWakeOnLanInfo wolFromString(const std::string& ether_addr) {
+    ClientWakeOnLanInfo result;
+    result.m_mac12 = ether_addr[0] << 1 + ether_addr[1];
+    result.m_mac34 = ether_addr[2] << 1 + ether_addr[3];
+    result.m_mac56 = ether_addr[4] << 1 + ether_addr[5];
+    return result;
+}
+
 void
 ServerProxy::queryInfo()
 {
@@ -849,6 +867,12 @@ ServerProxy::queryInfo()
     m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
     m_client->getCursorPos(info.m_mx, info.m_my);
     sendInfo(info);
+
+    ClientWakeOnLanInfo wolInfo;
+    auto args = m_client->getClientArgs();
+    for (auto& mac : args.m_macAddresses) {
+        sendWakeOnLanInfo(wolFromString(mac));
+    }
 }
 
 void

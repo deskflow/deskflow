@@ -263,7 +263,7 @@ extern const char*        kMsgDInfo;
 // the secondary screen must send this message in response to the
 // kMsgQInfo message. if older client/server version is connecting
 // then this message may be missing and should be ignored.
-extern const char* kMsgDMac;
+extern const char*        kMsgDWol;
 
 // set options:  primary -> secondary
 // client should set the given option/value pairs.  $1 = option/value

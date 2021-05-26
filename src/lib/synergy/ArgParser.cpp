@@ -160,7 +160,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         else if (isArg(i, argc, argv, nullptr, "--mac-addr", 1)) {
             std::string ether_addr;
             if (get_ether(std::string(argv[++i]), ether_addr)) {
-                argsBase().m_macAddresses.push_back(ether_addr);
+                args.m_macAddresses.push_back(ether_addr);
                 std::string ether_addr_num;
                 for (size_t j = 0; j < ether_addr.length(); ++j) {
                     ether_addr_num += std::to_string(int(ether_addr[j])) + " ";

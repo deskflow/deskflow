@@ -19,6 +19,7 @@
 #pragma once
 
 #include "synergy/clipboard_types.h"
+#include "synergy/protocol_types.h"
 #include "synergy/key_types.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
@@ -79,6 +80,8 @@ private:
     void                flushCompressedMouse();
 
     void                sendInfo(const ClientInfo&);
+
+    void                sendWakeOnLanInfo(const ClientWakeOnLanInfo&);
 
     void                resetKeepAliveAlarm();
     void                setKeepAliveRate(double);
