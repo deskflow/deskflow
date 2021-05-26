@@ -255,6 +255,16 @@ extern const char*        kMsgDClipboard;
 // the new screen area.
 extern const char*        kMsgDInfo;
 
+// client data:  secondary -> primary
+// $1 = octets 1 and 2 of client MAC address,
+// $2 = octets 3 and 4 of client MAC address,
+// $3 = octets 5 and 6 of client MAC address,
+//
+// the secondary screen must send this message in response to the
+// kMsgQInfo message. if older client/server version is connecting
+// then this message may be missing and should be ignored.
+extern const char* kMsgDMac;
+
 // set options:  primary -> secondary
 // client should set the given option/value pairs.  $1 = option/value
 // pairs.
@@ -334,4 +344,18 @@ public:
     The current location of the mouse cursor.
     */
     SInt32                m_mx, m_my;
+};
+
+//! Screen information
+/*!
+This class contains information about a screen.
+*/
+class ClientWakeOnLanInfo {
+public:
+    //! Screen position
+    /*!
+    The position of the upper-left corner of the screen.  This is
+    typically 0,0.
+    */
+    SInt16                m_mac12, m_mac34, m_mac56;
 };

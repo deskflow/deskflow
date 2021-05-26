@@ -81,6 +81,52 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
     return true;
 }
 
+// Attempts to extract hexadecimal from ASCII string.
+unsigned get_hex_from_string(const std::string& s)
+{
+    unsigned hex{ 0 };
+
+    for (size_t i = 0; i < s.length(); ++i) {
+        hex <<= 4;
+        if (isdigit(s[i])) {
+            hex |= s[i] - '0';
+        }
+        else if (s[i] >= 'a' && s[i] <= 'f') {
+            hex |= s[i] - 'a' + 10;
+        }
+        else if (s[i] >= 'A' && s[i] <= 'F') {
+            hex |= s[i] - 'A' + 10;
+        }
+        else {
+            throw std::runtime_error("Failed to parse hexadecimal " + s);
+        }
+    }
+    return hex;
+}
+
+bool get_ether(const std::string& hardware_addr, std::string& ether_addr)
+{
+    LOG((CLOG_PRINT "mac: %s", hardware_addr.c_str()));
+    ether_addr = std::string();
+
+    for (size_t i = 0; i < hardware_addr.length();) {
+        // Parse two characters at a time.
+        unsigned hex = get_hex_from_string(hardware_addr.substr(i, 2));
+        i += 2;
+
+        ether_addr += static_cast<char>(hex & 0xFF);
+
+        // We might get a colon here, but it is not required.
+        if (hardware_addr[i] == ':')
+            ++i;
+    }
+
+    if (ether_addr.length() != 6)
+        return false;
+
+    return true;
+}
+
 bool
 ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char* const* argv)
 {
@@ -110,6 +156,17 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         else if (isArg(i, argc, argv, nullptr, "--yscroll", 1)) {
             // define scroll
             args.m_yscroll = atoi(argv[++i]);
+        }
+        else if (isArg(i, argc, argv, nullptr, "--mac-addr", 1)) {
+            std::string ether_addr;
+            if (get_ether(std::string(argv[++i]), ether_addr)) {
+                argsBase().m_macAddresses.push_back(ether_addr);
+                std::string ether_addr_num;
+                for (size_t j = 0; j < ether_addr.length(); ++j) {
+                    ether_addr_num += std::to_string(int(ether_addr[j])) + " ";
+                }
+                LOG((CLOG_PRINT "ether: %s", ether_addr_num.c_str()));
+            }
         }
         else {
             if (i + 1 == argc) {
