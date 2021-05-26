@@ -2,6 +2,7 @@ v1.14.1-snapshot
 ===========
 Bug fixes:
 - #7016 Fix script that generates version number
+- #7006 Resolve code scanning issues
 
 Enhancements:
 
