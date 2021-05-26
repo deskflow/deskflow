@@ -57,7 +57,7 @@ namespace lib {
             String               m_profileDirectory;               /// @brief The profile DIR to use for the application
             String               m_pluginDirectory;                /// @brief //TODO Plugins? Get set in ARCH but doesn't seem to get used
             String               m_tlsCertFile;                    /// @brief Contains the location of the TLS certificate file
-            bool                 m_enableLangSync    = false;      /// @brief Should keyboard input be in same language as on server
+            bool                 m_enableLangSync    = true;       /// @brief Should keyboard input be in same language as on server
 
 #if SYSAPI_WIN32
             bool                 m_debugServiceWait  = false;

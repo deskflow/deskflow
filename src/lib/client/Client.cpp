@@ -122,7 +122,7 @@ Client::~Client()
 }
 
 void
-Client::connect()
+Client::connect(size_t addressIndex)
 {
     if (m_stream != NULL) {
         return;
@@ -138,10 +138,10 @@ Client::connect()
         // has changed (which can happen frequently if this is a laptop
         // being shuttled between various networks).  patch by Brent
         // Priddy.
-        m_serverAddress.resolve();
+        m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
         
         // m_serverAddress will be null if the hostname address is not reolved
-        if (m_serverAddress.getAddress() != NULL) {
+        if (m_serverAddress.getAddress() != nullptr) {
           // to help users troubleshoot, show server host name (issue: 60)
           LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
           m_serverAddress.getHostname().c_str(),
@@ -176,16 +176,26 @@ Client::connect()
 void
 Client::disconnect(const char* msg)
 {
-    m_connectOnResume = false;
-    cleanupTimer();
-    cleanupScreen();
-    cleanupConnecting();
-    cleanupConnection();
-    if (msg != NULL) {
+    cleanup();
+
+    if (msg) {
         sendConnectionFailedEvent(msg);
     }
     else {
         sendEvent(m_events->forClient().disconnected(), NULL);
+    }
+}
+
+void
+Client::refuseConnection(const char* msg)
+{
+    cleanup();
+
+    if (msg) {
+        auto info = new FailInfo(msg);
+        info->m_retry = true;
+        Event event(m_events->forClient().connectionRefused(), getEventTarget(), info, Event::kDontFreeData);
+        m_events->addEvent(event);
     }
 }
 
@@ -538,6 +548,16 @@ Client::setupTimer()
     m_events->adoptHandler(Event::kTimer, m_timer,
                             new TMethodEventJob<Client>(this,
                                 &Client::handleConnectTimeout));
+}
+
+void
+Client::cleanup()
+{
+    m_connectOnResume = false;
+    cleanupTimer();
+    cleanupScreen();
+    cleanupConnecting();
+    cleanupConnection();
 }
 
 void
