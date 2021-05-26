@@ -21,6 +21,7 @@ Bug fixes:
 - #7011 Fix language synchronisation checkbox spelling
 - #7013 Wrong connection pop up appears if the user connects using a domain name which is assigned to list of IP's
 - #7014 Temporary disable language sync logic
+- #7020 Remove cmake option for autoconfig
 
 Enhancements:
 - #6954 Move language selection to advanced section
