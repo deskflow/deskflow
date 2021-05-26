@@ -40,12 +40,10 @@ find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
 if (SYNERGY_ENTERPRISE)
     list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ACTIVATION_FILES})
     list (REMOVE_ITEM LEGACY_GUI_UI_FILES ${LEGACY_ACTIVATION_FILES})
-    list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ZEROCONF_FILES})
 endif ()
 
-if (NOT SYNERGY_AUTOCONFIG)
-   list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ZEROCONF_FILES})
-endif ()
+list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ZEROCONF_FILES})
+
 
 if (WIN32)
     set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
@@ -63,35 +61,11 @@ add_executable (synergy WIN32
 include_directories (./src)
 target_link_libraries (synergy shared)
 
-if (NOT SYNERGY_ENTERPRISE AND SYNERGY_AUTOCONFIG)
-if (WIN32)
-    include_directories ($ENV{BONJOUR_SDK_HOME}/Include)
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        find_library (
-            DNSSD_LIB dnssd.lib
-            HINTS ENV BONJOUR_SDK_HOME
-            PATH_SUFFIXES "Lib/x64"
-        )
-    else()
-        find_library (
-            DNSSD_LIB dnssd.lib
-            HINTS ENV BONJOUR_SDK_HOME
-            PATH_SUFFIXES "Lib/Win32"
-        )
-    endif()
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    target_link_libraries (synergy dns_sd)
-endif()
-endif()
-
 qt5_use_modules (synergy Core Widgets Network)
 target_compile_definitions (synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions (synergy PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
 
 if (WIN32)
-if (NOT SYNERGY_ENTERPRISE AND SYNERGY_AUTOCONFIG)
-    target_link_libraries (synergy ${DNSSD_LIB})
-endif ()
     set_target_properties (synergy PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 endif()
 
