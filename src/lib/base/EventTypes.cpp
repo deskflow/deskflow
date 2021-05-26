@@ -45,6 +45,7 @@ EventTypes::setEvents(IEventQueue* events)
 
 REGISTER_EVENT(Client, connected)
 REGISTER_EVENT(Client, connectionFailed)
+REGISTER_EVENT(Client, connectionRefused)
 REGISTER_EVENT(Client, disconnected)
 
 //

@@ -42,11 +42,6 @@ type_##Events::name_()                                                    \
 
 class ClientEvents : public EventTypes {
 public:
-    ClientEvents() :
-        m_connected(Event::kUnknown),
-        m_connectionFailed(Event::kUnknown),
-        m_disconnected(Event::kUnknown) { }
-
     //! @name accessors
     //@{
 
@@ -64,6 +59,13 @@ public:
     */
     Event::Type        connectionFailed();
 
+    //! Get connection refused event type
+    /*!
+    Returns the connection refused event type.  This is sent when the
+    server refuses for some reason.  The event data is a FailInfo*.
+    */
+    Event::Type        connectionRefused();
+
     //! Get disconnected event type
     /*!
     Returns the disconnected event type.  This is sent when the client
@@ -75,9 +77,10 @@ public:
     //@}
 
 private:
-    Event::Type        m_connected;
-    Event::Type        m_connectionFailed;
-    Event::Type        m_disconnected;
+    Event::Type        m_connected = Event::kUnknown;
+    Event::Type        m_connectionFailed = Event::kUnknown;
+    Event::Type        m_connectionRefused = Event::kUnknown;
+    Event::Type        m_disconnected = Event::kUnknown;
 };
 
 class IStreamEvents : public EventTypes {

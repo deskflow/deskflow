@@ -83,6 +83,13 @@ public:
     */
     void                disconnect(const char* msg);
 
+    //! Refuse connection
+    /*!
+    Disconnects from the server with an optional error message.
+    Unlike disconnect this function doesn't try to use other ip addresses
+    */
+    void                refuseConnection(const char* msg);
+
     //! Notify of handshake complete
     /*!
     Notifies the client that the connection handshake has completed.
@@ -180,6 +187,7 @@ private:
     void                setupConnection();
     void                setupScreen();
     void                setupTimer();
+    void                cleanup();
     void                cleanupConnecting();
     void                cleanupConnection();
     void                cleanupScreen();

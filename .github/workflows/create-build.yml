@@ -12,18 +12,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 'Get Previous tag'
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
-
       - name: 'Install git core'
-        run: npm install @actions/core
+        run: |
+          npm install @actions/core
+          npm install @octokit/core
 
       - name: 'Generate next build number'
         id: build
         uses: "./.github/actions/build-number"
-        with:
-           previous-build: ${{ steps.previoustag.outputs.tag }}
 
       - name: Create Release
         id: create_release
