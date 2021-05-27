@@ -38,6 +38,7 @@ Enhancements:
 - #7003 Prioritization rules server config
 - #7004 Add openssl dependency for rpm
 - #7008 Add logging when hostname have several IP
+- #7022 Add Fedora 33 to build and release pipeline
 ===========
 
 v1.13.1-stable
