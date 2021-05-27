@@ -35,9 +35,10 @@ void ClientConnection::update(const QString& line)
         if (line.contains("failed to connect to server"))
         {
             m_checkConnection = false;
-            if (!line.contains("server refused client with our name"))
+            if (!line.contains("server refused client with our name") &&
+                !line.contains("Trying next address"))
             {
-                showMessage();
+                showMessage(getMessage(line));
             }
         }
         else if (line.contains("connected to server"))
@@ -61,26 +62,33 @@ bool ClientConnection::checkMainWindow()
     return result;
 }
 
-QString ClientConnection::getMessage() const
+QString ClientConnection::getMessage(const QString& line) const
 {
-    QString message(QObject::tr("We can’t connect to the server IP address.\nCheck your IP on your server and your firewall settings."));
+    QString message(QObject::tr("Connection failed.\nCheck the IP address on the server, your TLS and firewall settings."));
 
-    QHostAddress address(m_parent.appConfig().getServerHostname());
-    if (address.isNull())
+    if (line.contains("server already has a connected client with our name"))
     {
-        message = QObject::tr("We can’t connect to the server \"%1\" try to connect using the server IP address and check your firewall settings.")
-                           .arg(m_parent.appConfig().getServerHostname());
+        message = QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
+    }
+    else
+    {
+        QHostAddress address(m_parent.appConfig().getServerHostname());
+        if (address.isNull())
+        {
+            message = QObject::tr("We can’t connect to the server \"%1\" try to connect using the server IP address and check your firewall settings.")
+                               .arg(m_parent.appConfig().getServerHostname());
+        }
     }
 
     return message;
 }
 
-void ClientConnection::showMessage()
+void ClientConnection::showMessage(const QString& message) const
 {
-    QMessageBox message(&m_parent);
-    message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-    message.setText(getMessage());
-    message.exec();
+    QMessageBox dialog(&m_parent);
+    dialog.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+    dialog.setText(message);
+    dialog.exec();
 }
 
 void ClientConnection::setCheckConnection(bool checkConnection)

@@ -177,13 +177,17 @@ Log::print(const char* file, int line, const char* fmt, ...)
     // do not prefix time and file for kPRINT (CLOG_PRINT)
     if (priority != kPRINT) {
 
-        struct tm *tm;
+        struct tm tm;
         static const int timestamp_size = 50;
         char timestamp[timestamp_size];
         time_t t;
         time(&t);
-        tm = localtime(&t);
-        snprintf(timestamp, timestamp_size, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+#if WINAPI_MSWINDOWS
+        localtime_s(&tm, &t);
+#else
+        localtime_r(&t, &tm);
+#endif
+        snprintf(timestamp, timestamp_size, "%04i-%02i-%02iT%02i:%02i:%02i", tm.tm_year + 1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
         // square brackets, spaces, comma and null terminator take about 10
         int size = 10;

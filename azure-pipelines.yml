@@ -14,6 +14,7 @@ jobs:
           image: symless/synergy-core:ubuntu16.04
           packager: deb
           name: ubuntu16
+          makeJobsLimit: 1
         ubuntu1804:
           image: symless/synergy-core:ubuntu18.04
           packager: deb

@@ -44,7 +44,7 @@ const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, MainWindow* mainWindow) :
 
-        m_Screens(),
+        m_Screens(numColumns),
         m_NumColumns(numColumns),
         m_NumRows(numRows),
         m_pAppConfig(appConfig),
@@ -424,6 +424,11 @@ bool ServerConfig::isScreenExists(const QString& screenName) const
     }
 
     return isExists;
+}
+
+void ServerConfig::addClient(const QString& clientName)
+{
+    m_Screens.addScreenByPriority(clientName);
 }
 
 void ServerConfig::setConfigFile(const QString& configFile)
