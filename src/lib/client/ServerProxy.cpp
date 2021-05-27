@@ -154,6 +154,10 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
         infoAcknowledgment();
     }
 
+    else if (memcmp(code, kMsgQWol, 4) == 0) {
+        queryWakeOnLanInfo();
+    }
+
     else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
         setOptions();
 
@@ -283,6 +287,10 @@ ServerProxy::parseMessage(const UInt8* code)
 
     else if (memcmp(code, kMsgCInfoAck, 4) == 0) {
         infoAcknowledgment();
+    }
+
+    else if (memcmp(code, kMsgQWol, 4) == 0) {
+        queryWakeOnLanInfo();
     }
 
     else if (memcmp(code, kMsgDClipboard, 4) == 0) {
@@ -852,7 +860,24 @@ ServerProxy::setOptions()
     }
 }
 
-ClientWakeOnLanInfo wolFromString(const std::string& ether_addr) {
+void
+ServerProxy::queryInfo()
+{
+    ClientInfo info;
+    m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
+    m_client->getCursorPos(info.m_mx, info.m_my);
+    sendInfo(info);
+}
+
+void
+ServerProxy::infoAcknowledgment()
+{
+    LOG((CLOG_DEBUG1 "recv info acknowledgment"));
+    m_ignoreMouse = false;
+}
+
+ClientWakeOnLanInfo
+wolFromString(const std::string& ether_addr) {
     ClientWakeOnLanInfo result;
     result.m_mac12 = ether_addr[0] << 1 + ether_addr[1];
     result.m_mac34 = ether_addr[2] << 1 + ether_addr[3];
@@ -861,24 +886,12 @@ ClientWakeOnLanInfo wolFromString(const std::string& ether_addr) {
 }
 
 void
-ServerProxy::queryInfo()
+ServerProxy::queryWakeOnLanInfo()
 {
-    ClientInfo info;
-    m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
-    m_client->getCursorPos(info.m_mx, info.m_my);
-    sendInfo(info);
-
-    //auto args = m_client->getClientArgs();
-    //for (auto& mac : args.m_macAddresses) {
-    //    sendWakeOnLanInfo(wolFromString(mac));
-    //}
-}
-
-void
-ServerProxy::infoAcknowledgment()
-{
-    LOG((CLOG_DEBUG1 "recv info acknowledgment"));
-    m_ignoreMouse = false;
+    auto args = m_client->getClientArgs();
+    for (auto& mac : args.m_macAddresses) {
+        sendWakeOnLanInfo(wolFromString(mac));
+    }
 }
 
 void

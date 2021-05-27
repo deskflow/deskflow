@@ -679,8 +679,12 @@ void MainWindow::startSynergy()
         foreach(QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
         {
             // Return only the first non-loopback MAC Address
-            if (!(netInterface.flags() & QNetworkInterface::IsLoopBack) && (netInterface.flags() & QNetworkInterface::IsUp))
+            if (!(netInterface.flags() & QNetworkInterface::IsLoopBack) &&
+                (netInterface.flags() & QNetworkInterface::IsUp) &&
+                !netInterface.hardwareAddress().isEmpty())
+            {
                 args << "--mac-addr" << netInterface.hardwareAddress();
+            }
         }
     }
 

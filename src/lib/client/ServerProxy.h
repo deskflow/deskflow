@@ -112,6 +112,7 @@ private:
     void                setOptions();
     void                queryInfo();
     void                infoAcknowledgment();
+    void                queryWakeOnLanInfo();
     void                fileChunkReceived();
     void                dragInfoReceived();
     void                handleClipboardSendingEvent(const Event&, void*);
