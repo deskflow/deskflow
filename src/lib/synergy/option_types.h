@@ -62,7 +62,6 @@ static const OptionID    kOptionScreenSwitchTwoTap        = OPTION_CODE("SSTT");
 static const OptionID    kOptionScreenSwitchNeedsShift   = OPTION_CODE("SSNS");
 static const OptionID    kOptionScreenSwitchNeedsControl = OPTION_CODE("SSNC");
 static const OptionID    kOptionScreenSwitchNeedsAlt     = OPTION_CODE("SSNA");
-static const OptionID    kOptionScreenSaverSync            = OPTION_CODE("SSVR");
 static const OptionID    kOptionXTestXineramaUnaware        = OPTION_CODE("XTXU");
 static const OptionID    kOptionScreenPreserveFocus        = OPTION_CODE("SFOC");
 static const OptionID    kOptionRelativeMouseMoves        = OPTION_CODE("MDLT");
