@@ -402,11 +402,14 @@ ServerProxy::sendInfo(const ClientInfo& info)
 void
 ServerProxy::sendWakeOnLanInfo(const ClientWakeOnLanInfo& info)
 {
-    LOG((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d", info.m_mac12, info.m_mac34, info.m_mac56));
+    LOG((CLOG_DEBUG1 "sending info %d,%d,%d,%d,%d,%d", info.m_mac[0], info.m_mac[1], info.m_mac[2], info.m_mac[3], info.m_mac[4], info.m_mac[5]));
     ProtocolUtil::writef(m_stream, kMsgDWol,
-        info.m_mac12,
-        info.m_mac34,
-        info.m_mac56);
+        info.m_mac[0],
+        info.m_mac[1],
+        info.m_mac[2],
+        info.m_mac[3],
+        info.m_mac[4],
+        info.m_mac[5]);
 }
 
 KeyID
@@ -879,9 +882,10 @@ ServerProxy::infoAcknowledgment()
 ClientWakeOnLanInfo
 wolFromString(const std::string& ether_addr) {
     ClientWakeOnLanInfo result;
-    result.m_mac12 = ether_addr[0] << 1 + ether_addr[1];
-    result.m_mac34 = ether_addr[2] << 1 + ether_addr[3];
-    result.m_mac56 = ether_addr[4] << 1 + ether_addr[5];
+    for (size_t i = 0; i < 6; ++i)
+    {
+        result.m_mac[i] = ether_addr[i];
+    }
     return result;
 }
 

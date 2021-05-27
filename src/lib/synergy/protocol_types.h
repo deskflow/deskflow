@@ -361,5 +361,5 @@ public:
     The position of the upper-left corner of the screen.  This is
     typically 0,0.
     */
-    SInt16                m_mac12, m_mac34, m_mac56;
+    SInt8                 m_mac[6];
 };

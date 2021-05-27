@@ -46,16 +46,40 @@ ClientProxy1_7::~ClientProxy1_7()
 {
 }
 
-//bool
-//ClientProxy1_7::parseMessage(const UInt8* code)
-//{
-//    // process message
-//    if (memcmp(code, kMsgQWol, 4) == 0) {
-//        // reset alarm
-//        resetHeartbeatTimer();
-//        return true;
-//    }
-//    else {
-//        return ClientProxy1_2::parseMessage(code);
-//    }
-//}
+bool
+ClientProxy1_7::parseMessage(const UInt8* code)
+{
+    // process message
+    if (memcmp(code, kMsgDWol, 4) == 0) {
+        recvWakeOnLan();
+        return true;
+    }
+    else {
+        return ClientProxy1_6::parseMessage(code);
+    }
+}
+
+bool
+ClientProxy1_7::recvWakeOnLan()
+{
+    // parse the message
+    ClientWakeOnLanInfo wol;
+    if (!ProtocolUtil::readf(getStream(), kMsgDWol + 4,
+        &wol.m_mac[0],
+        &wol.m_mac[1],
+        &wol.m_mac[2],
+        &wol.m_mac[3],
+        &wol.m_mac[4],
+        &wol.m_mac[5])) {
+        return false;
+    }
+    //LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w, h, mx, my));
+    LOG((CLOG_INFO "received client \"%s\" info %d,%d,%d,%d,%d,%d", getName().c_str(), wol.m_mac[0], wol.m_mac[1], wol.m_mac[2], wol.m_mac[3], wol.m_mac[4], wol.m_mac[5]));
+
+    // validate
+
+    // save
+    m_macAddresses.push_back("");
+
+    return true;
+}

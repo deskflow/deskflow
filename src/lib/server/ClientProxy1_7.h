@@ -30,8 +30,11 @@ public:
 
 protected:
     // ClientProxy overrides
-    //virtual bool        parseMessage(const UInt8* code);
+    virtual bool        parseMessage(const UInt8* code);
 
 private:
+    bool                recvWakeOnLan();
+
+    std::vector<String> m_macAddresses;
     IEventQueue*        m_events;
 };
