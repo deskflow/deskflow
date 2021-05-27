@@ -37,6 +37,9 @@ ClientProxy1_7::ClientProxy1_7(const String& name, synergy::IStream* stream, Ser
                                 this,
                                 new TMethodEventJob<ClientProxy1_6>(this,
                                     &ClientProxy1_6::handleClipboardSendingEvent));*/
+
+    LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
+    ProtocolUtil::writef(getStream(), kMsgQInfo);
 }
 
 ClientProxy1_7::~ClientProxy1_7()

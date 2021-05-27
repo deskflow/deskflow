@@ -868,11 +868,10 @@ ServerProxy::queryInfo()
     m_client->getCursorPos(info.m_mx, info.m_my);
     sendInfo(info);
 
-    ClientWakeOnLanInfo wolInfo;
-    auto args = m_client->getClientArgs();
-    for (auto& mac : args.m_macAddresses) {
-        sendWakeOnLanInfo(wolFromString(mac));
-    }
+    //auto args = m_client->getClientArgs();
+    //for (auto& mac : args.m_macAddresses) {
+    //    sendWakeOnLanInfo(wolFromString(mac));
+    //}
 }
 
 void
