@@ -6,7 +6,7 @@ Bug fixes:
 - #7012 Fix natural horizontal scrolling on Mac client
 
 Enhancements:
-
+- #6998 Remove functionality related to the screen saver synchronisation
 ===========
 
 v1.14.0-rc1
