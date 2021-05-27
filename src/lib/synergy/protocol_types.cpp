@@ -48,6 +48,7 @@ const char*                kMsgDSetOptions        = "DSOP%4I";
 const char*                kMsgDFileTransfer    = "DFTR%1i%s";
 const char*                kMsgDDragInfo        = "DDRG%2i%s";
 const char*                kMsgQInfo            = "QINF";
+const char*                kMsgQWol             = "QWOL";
 const char*                kMsgEIncompatible    = "EICV%2i%2i";
 const char*                kMsgEBusy             = "EBSY";
 const char*                kMsgEUnknown        = "EUNK";

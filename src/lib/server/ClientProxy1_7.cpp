@@ -38,66 +38,24 @@ ClientProxy1_7::ClientProxy1_7(const String& name, synergy::IStream* stream, Ser
                                 new TMethodEventJob<ClientProxy1_6>(this,
                                     &ClientProxy1_6::handleClipboardSendingEvent));*/
 
-    LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
-    ProtocolUtil::writef(getStream(), kMsgQInfo);
+    LOG((CLOG_DEBUG1 "querying client \"%s\" wake-on-lan info", getName().c_str()));
+    ProtocolUtil::writef(getStream(), kMsgQWol);
 }
 
 ClientProxy1_7::~ClientProxy1_7()
 {
 }
 
-//void
-//ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard* clipboard)
-//{
-//    // ignore if this clipboard is already clean
-//    if (m_clipboard[id].m_dirty) {
-//        // this clipboard is now clean
-//        m_clipboard[id].m_dirty = false;
-//        Clipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
-//
-//        String data = m_clipboard[id].m_clipboard.marshall();
-//
-//        size_t size = data.size();
-//        LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
-//
-//        StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
-//    }
-//}
-//
-//void
-//ClientProxy1_6::handleClipboardSendingEvent(const Event& event, void*)
-//{
-//    ClipboardChunk::send(getStream(), event.getData());
-//}
-//
 //bool
-//ClientProxy1_6::recvClipboard()
+//ClientProxy1_7::parseMessage(const UInt8* code)
 //{
-//    // parse message
-//    static String dataCached;
-//    ClipboardID id;
-//    UInt32 seq;
-//
-//    int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
-//
-//    if (r == kStart) {
-//        size_t size = ClipboardChunk::getExpectedSize();
-//        LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+//    // process message
+//    if (memcmp(code, kMsgQWol, 4) == 0) {
+//        // reset alarm
+//        resetHeartbeatTimer();
+//        return true;
 //    }
-//    else if (r == kFinish) {
-//        LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
-//                getName().c_str(), id, seq, dataCached.size()));
-//        // save clipboard
-//        m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
-//        m_clipboard[id].m_sequenceNumber = seq;
-//        
-//        // notify
-//        ClipboardInfo* info = new ClipboardInfo;
-//        info->m_id = id;
-//        info->m_sequenceNumber = seq;
-//        m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
-//                                 getEventTarget(), info));
+//    else {
+//        return ClientProxy1_2::parseMessage(code);
 //    }
-//
-//    return true;
 //}

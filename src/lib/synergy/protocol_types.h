@@ -292,6 +292,9 @@ extern const char*        kMsgDDragInfo;
 // client should reply with a kMsgDInfo.
 extern const char*        kMsgQInfo;
 
+// query wake-on-lan info:  primary -> secondary
+// client should reply with a kMsgDWol.
+extern const char*        kMsgQWol;
 
 //
 // error codes

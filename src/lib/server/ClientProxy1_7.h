@@ -28,11 +28,9 @@ public:
     ClientProxy1_7(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
     ~ClientProxy1_7();
 
-    //virtual void        setClipboard(ClipboardID id, const IClipboard* clipboard);
-    //virtual bool        recvClipboard();
-
-private:
-    //void                handleClipboardSendingEvent(const Event&, void*);
+protected:
+    // ClientProxy overrides
+    //virtual bool        parseMessage(const UInt8* code);
 
 private:
     IEventQueue*        m_events;
