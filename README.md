@@ -14,7 +14,8 @@ Things most people will need.
 * [Contact Support](https://symless.com/contact-support) - Open a support ticket and talk directly to the Synergy team.
 * [Help Guides](https://symless.com/help) - Self-help guides and information for when you don't want to talk to people.
 * [Join us on Slack](https://bit.ly/synergy-slack-2020) - Talk to other Synergy users in real time using instant messaging.
-* [Symless Forums](https://members.symless.com/forums/) - Discuss Synergy issues on the Symless Forums.
+* [Symless Forums](https://forums.symless.com/) - Discuss Synergy issues on the Symless Forums.
+* [Symless Blog](https://symless.com/blog/) - Find out what's happening at Symless and with Synergy development.
 
 ## Advanced Users
 
