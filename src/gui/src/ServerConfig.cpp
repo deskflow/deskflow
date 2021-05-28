@@ -431,6 +431,17 @@ bool ServerConfig::isScreenExists(const QString& screenName) const
 
 void ServerConfig::addClient(const QString& clientName)
 {
+    int serverIndex = -1;
+
+    if (findScreenName(m_pAppConfig->screenName(), serverIndex))
+    {
+        m_Screens[serverIndex].markAsServer();
+    }
+    else
+    {
+        fixNoServer(m_pAppConfig->screenName(), serverIndex);
+    }
+
     m_Screens.addScreenByPriority(clientName);
 }
 
@@ -463,6 +474,7 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
     bool fixed = false;
     if (screens()[serverDefaultIndex].isNull()) {
         m_Screens[serverDefaultIndex].setName(name);
+        m_Screens[serverDefaultIndex].markAsServer();
         index = serverDefaultIndex;
         fixed = true;
     }
