@@ -681,8 +681,8 @@ OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 		CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
 			NULL, kCGScrollEventUnitLine, 2,
 			mapScrollWheelFromSynergy(yDelta),
-			-mapScrollWheelFromSynergy(xDelta));
-		
+			mapScrollWheelFromSynergy(xDelta));
+
         // Fix for sticky keys
         CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
         CGEventSetFlags(scrollEvent, modifiers);
@@ -854,6 +854,8 @@ OSXScreen::enter()
 		setZeroSuppressionInterval();
 	}
 	else {
+		m_scrollDirection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue] ? -1 : 1;
+
 		// reset buttons
 		m_buttonState.reset();
 
@@ -1462,7 +1464,7 @@ OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
-	return static_cast<SInt32>(3.0 * x / 120.0);
+	return static_cast<SInt32>(m_scrollDirection * 3.0 * x / 120.0);
 }
 
 double

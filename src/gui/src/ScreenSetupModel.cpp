@@ -143,13 +143,7 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
 
 void ScreenSetupModel::addScreen(const Screen& newScreen)
 {
-    auto screenTest = std::find_if(m_Screens.begin(), m_Screens.end(),
-                                   [](const Screen& item) { return item.isNull(); });
-
-    if (screenTest != m_Screens.end())
-    {
-       (*screenTest) = newScreen;
-    }
+    m_Screens.addScreenByPriority(newScreen);
 }
 
 bool ScreenSetupModel::isFull() const

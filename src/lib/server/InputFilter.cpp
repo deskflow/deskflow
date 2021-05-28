@@ -497,7 +497,7 @@ InputFilter::KeyboardBroadcastAction::format() const
     }
     else {
         return synergy::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
-                            m_screens.size() - 2,
+                            static_cast<int>(m_screens.size() >= 2 ? m_screens.size() - 2 : 0),
                             m_screens.c_str() + 1);
     }
 }

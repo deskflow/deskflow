@@ -139,6 +139,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
     connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
     connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
+    connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(handleIdleService(const QString&)));
     m_IpcClient.connectToHost();
 #endif
 
@@ -246,7 +247,7 @@ void MainWindow::open()
     // only start if user has previously started. this stops the gui from
     // auto hiding before the user has configured synergy (which of course
     // confuses first time users, who think synergy has crashed).
-    if (appConfig().startedBefore() && appConfig().processMode() == Desktop) {
+    if (appConfig().startedBefore() && appConfig().processMode() == ProcessMode::Desktop) {
         startSynergy();
     }
 }
@@ -431,6 +432,16 @@ void MainWindow::appendLogRaw(const QString& text)
 
             m_pLogOutput->appendPlainText(line);
             updateFromLogLine(line);
+        }
+    }
+}
+
+void MainWindow::handleIdleService(const QString& text)
+{
+    foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+        // only start if there is no active service running
+        if (!line.isEmpty() && line.contains("service status: idle") && appConfig().startedBefore()) {
+            startSynergy();
         }
     }
 }
@@ -758,11 +769,6 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--log" << appConfig().logFilenameCmd();
     }
 
-    if (appConfig().getLanguageSync())
-    {
-        args << "--sync-language";
-    }
-
 
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     // check auto config first, if it is disabled or no server detected,
@@ -804,7 +810,19 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         }
 #endif
     }
-    args << m_pLineEditHostname->text() + ":" + QString::number(appConfig().port());
+
+    QString hostName = m_pLineEditHostname->text();
+    // if interface is IPv6 - ensure that ip is in square brackets
+    if (hostName.count(':') > 1) {
+        if(hostName[0] != '[') {
+            hostName.insert(0, '[');
+        }
+        if(hostName[hostName.size() - 1] != ']') {
+            hostName.push_back(']');
+        }
+    }
+
+    args << hostName + ":" + QString::number(appConfig().port());
     return true;
 }
 

@@ -716,36 +716,38 @@ ArchNetworkWinsock::copyAddr(ArchNetAddress addr)
     return copy;
 }
 
-ArchNetAddress
+std::vector<ArchNetAddress>
 ArchNetworkWinsock::nameToAddr(const std::string& name)
 {
     // allocate address
-
-    ArchNetAddressImpl* addr = new ArchNetAddressImpl;
+    std::vector<ArchNetAddressImpl*> addresses;
 
     struct addrinfo hints;
-    struct addrinfo *p;
+    struct addrinfo *pResult;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     int ret = -1;
 
     ARCH->lockMutex(m_mutex);
-    if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &p)) != 0) {
+    if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &pResult)) != 0) {
         ARCH->unlockMutex(m_mutex);
-        delete addr;
         throwNameError(ret);
     }
 
-    if (p->ai_family == AF_INET) {
-        addr->m_len = (socklen_t)sizeof(struct sockaddr_in);
-    } else {
-        addr->m_len = (socklen_t)sizeof(struct sockaddr_in6);
+    for(; pResult != nullptr; pResult = pResult->ai_next ){
+        addresses.push_back(new ArchNetAddressImpl);
+        if (pResult->ai_family == AF_INET) {
+            addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in);
+        } else {
+            addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
+        }
+
+        memcpy(&addresses.back()->m_addr, pResult->ai_addr, addresses.back()->m_len);
     }
 
-    memcpy(&addr->m_addr, p->ai_addr, addr->m_len);
-    freeaddrinfo(p);
+    freeaddrinfo(pResult);
     ARCH->unlockMutex(m_mutex);
-    return addr;
+    return addresses;
 }
 
 void

@@ -1,4 +1,5 @@
 const core = require('@actions/core');
+const { Octokit } = require("@octokit/core");
 const fs = require('fs');
 
 function VersionPart(part) {
@@ -85,28 +86,35 @@ function Version(version) {
                m_build.toString());
    }
 
+   this.isEmpty = function(){
+      return (!this.getMajor() && !this.getMinor() && !this.getPatch());
+   }
+
    this.nextBuild = function() {
       m_build.next();
    }
 
    function init() {
-      let versionParts = version.split(PARTS_DELIMITER);
+      if (version)
+      {
+         let versionParts = version.split(PARTS_DELIMITER);
 
-      if (versionParts.length == 3) {
-         m_major.setPart(versionParts[0]);
-         m_minor.setPart(versionParts[1]);
-         m_build.setPart(versionParts[2]);
-         m_patch.setNumber(m_build.getNumber());
-         m_build.setNumber(0);
-      }
-      else if (versionParts.length == 4) {
-         m_major.setPart(versionParts[0]);
-         m_minor.setPart(versionParts[1]);
-         m_patch.setPart(versionParts[2]);
-         m_build.setPart(versionParts[3]);
-      }
-      else {
-         core.setFailed('ERROR: previous-build contains wrong version number <' + version + '>');
+         if (versionParts.length == 3) {
+            m_major.setPart(versionParts[0]);
+            m_minor.setPart(versionParts[1]);
+            m_build.setPart(versionParts[2]);
+            m_patch.setNumber(m_build.getNumber());
+            m_build.setNumber(0);
+         }
+         else if (versionParts.length == 4) {
+            m_major.setPart(versionParts[0]);
+            m_minor.setPart(versionParts[1]);
+            m_patch.setPart(versionParts[2]);
+            m_build.setPart(versionParts[3]);
+         }
+         else {
+            core.setFailed('ERROR: wrong version number <' + version + '>');
+         }
       }
    }
 
@@ -129,8 +137,7 @@ function Version(version) {
    this.isSamePatch = function(version) {
       return (this.getMajor() == version.getMajor() &&
               this.getMinor() == version.getMinor() &&
-              this.getPatch() == version.getPatch() &&
-              this.getStage() == version.getStage());
+              this.getPatch() == version.getPatch());
    }
 
    init();
@@ -148,35 +155,68 @@ function getOptionValue(source, option) {
    }
 }
 
-function getVersionFromFile(){
-      let options = fs.readFileSync('cmake/Version.cmake');
-      let major = getOptionValue(options, 'SYNERGY_VERSION_MAJOR');
-      let minor = getOptionValue(options, 'SYNERGY_VERSION_MINOR');
-      let patch = getOptionValue(options, 'SYNERGY_VERSION_PATCH');
-      let stage = getOptionValue(options, 'SYNERGY_VERSION_STAGE');
+async function getVersionApi()
+{
+   const octokit = new Octokit({});
 
-      return (major + '.' + minor + '.' + patch + '-' + stage);
+   let response = await octokit.request('GET /repos/{owner}/{repo}/releases?per_page=100', {
+         owner: 'symless',
+         repo: 'synergy-core'
+   });
+
+   return response.data;
 }
 
-try {
-   let version = null;
-   let gitVersion = new Version(core.getInput('previous-build'));
-   let cmakeVersion = new Version(getVersionFromFile());
+async function getVersionsFromGithub(cmakeVersion)
+{
+   let gitVersion = new Version();
+   let versions = await getVersionApi();
 
-   console.log('INFO: Version from Git: <' + gitVersion.toString() + '>');
-   console.log('INFO: Version from cmake: <' + cmakeVersion.toString() + '>');
-
-   if (cmakeVersion.isSamePatch(gitVersion)) {
-      gitVersion.nextBuild();
-      version = gitVersion;
-   }
-   else {
-      version = cmakeVersion;
+   for (let i = 0; i < versions.length; ++i) {
+      let version = new Version(versions[i].tag_name);
+      if (version.isSamePatch(cmakeVersion)) {
+         gitVersion = version;
+         break;
+      }
    }
 
-   console.log('INFO: Generate build version: <' + version.toString() + '>');
-   core.setOutput('next-build', version.toString());
+   return gitVersion;
+}
 
-  } catch (error) {
-    core.setFailed(error.message);
-  }
+function getVersionFromFile(){
+   let options = fs.readFileSync('cmake/Version.cmake');
+   let major = getOptionValue(options, 'SYNERGY_VERSION_MAJOR');
+   let minor = getOptionValue(options, 'SYNERGY_VERSION_MINOR');
+   let patch = getOptionValue(options, 'SYNERGY_VERSION_PATCH');
+   let stage = getOptionValue(options, 'SYNERGY_VERSION_STAGE');
+
+   return new Version(major + '.' + minor + '.' + patch + '-' + stage);
+}
+
+async function main()
+{
+   try {
+      let version = null;
+      let cmakeVersion = getVersionFromFile();
+      let gitVersion = await getVersionsFromGithub(cmakeVersion);
+
+      console.log('INFO: Version from Git: <' + gitVersion.toString() + '>');
+      console.log('INFO: Version from cmake: <' + cmakeVersion.toString() + '>');
+
+      if (gitVersion.isEmpty()) {
+         version = cmakeVersion;
+      }
+      else {
+         gitVersion.nextBuild();
+         version = gitVersion;
+      }
+
+      console.log('INFO: Generate build version: <' + version.toString() + '>');
+      core.setOutput('next-build', version.toString());
+
+   } catch (error) {
+      core.setFailed(error.message);
+   }
+};
+
+main();

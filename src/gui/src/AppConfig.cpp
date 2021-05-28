@@ -77,7 +77,6 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "serverHostname",
         "tlsCertPath",
         "tlsKeyLength",
-        "languageSync",
         "preventSleep"
 };
 
@@ -241,7 +240,6 @@ void AppConfig::loadSettings()
     m_UseInternalConfig         = loadSetting(kUseInternalConfig, false).toBool();
     m_ClientGroupChecked        = loadSetting(kGroupClientCheck, false).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
-    m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
     m_PreventSleep              = loadSetting(kPreventSleep, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
@@ -303,7 +301,6 @@ void AppConfig::saveSettings()
         setSetting(kUseInternalConfig, m_UseInternalConfig);
         setSetting(kGroupClientCheck, m_ClientGroupChecked);
         setSetting(kServerHostname, m_ServerHostname);
-        setSetting(kLanguageSync, m_LanguageSync);
         setSetting(kPreventSleep, m_PreventSleep);
     }
 

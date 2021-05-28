@@ -18,7 +18,7 @@
 #ifndef SCREENNAMEVALIDATOR_H
 #define SCREENNAMEVALIDATOR_H
 
-#include "Screen.h"
+#include "ScreenList.h"
 #include "LineEditValidator.h"
 
 namespace validators

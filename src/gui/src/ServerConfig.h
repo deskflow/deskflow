@@ -22,7 +22,7 @@
 
 #include <QList>
 
-#include "Screen.h"
+#include "ScreenList.h"
 #include "BaseConfig.h"
 #include "Hotkey.h"
 #include "ConfigBase.h"
@@ -57,7 +57,6 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool hasHeartbeat() const { return m_HasHeartbeat; }
         int heartbeat() const { return m_Heartbeat; }
         bool relativeMouseMoves() const { return m_RelativeMouseMoves; }
-        bool screenSaverSync() const { return m_ScreenSaverSync; }
         bool win32KeepForeground() const { return m_Win32KeepForeground; }
         bool hasSwitchDelay() const { return m_HasSwitchDelay; }
         int switchDelay() const { return m_SwitchDelay; }
@@ -86,6 +85,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool getUseExternalConfig() const;
         bool isFull() const;
         bool isScreenExists(const QString& screenName) const;
+        void addClient(const QString& clientName);
 
     protected:
         QSettings& settings();
@@ -97,7 +97,6 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         void haveHeartbeat(bool on) { m_HasHeartbeat = on; }
         void setHeartbeat(int val) { m_Heartbeat = val; }
         void setRelativeMouseMoves(bool on) { m_RelativeMouseMoves = on; }
-        void setScreenSaverSync(bool on) { m_ScreenSaverSync = on; }
         void setWin32KeepForeground(bool on) { m_Win32KeepForeground = on; }
         void haveSwitchDelay(bool on) { m_HasSwitchDelay = on; }
         void setSwitchDelay(int val) { m_SwitchDelay = val; }
@@ -131,7 +130,6 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool m_HasHeartbeat;
         int m_Heartbeat;
         bool m_RelativeMouseMoves;
-        bool m_ScreenSaverSync;
         bool m_Win32KeepForeground;
         bool m_HasSwitchDelay;
         int m_SwitchDelay;

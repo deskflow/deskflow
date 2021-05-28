@@ -343,7 +343,7 @@ background-color: rgba(192,192,192, 0.1);
       <item row="1" column="0" colspan="3">
        <widget class="QCheckBox" name="m_pCheckBoxLanguageSync">
         <property name="text">
-         <string>&amp;Use server's keyboard language on this machines </string>
+         <string>&amp;Use server's keyboard language on this machine</string>
         </property>
        </widget>
       </item>
