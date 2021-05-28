@@ -4,6 +4,7 @@ Bug fixes:
 - #7016 Fix script that generates version number
 - #7006 Resolve code scanning issues
 - #7012 Fix natural horizontal scrolling on Mac client
+- #6997 Allow Windows to go to sleep depending on system preferences
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
