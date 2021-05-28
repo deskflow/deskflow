@@ -85,7 +85,7 @@ public:
     virtual std::string        getHostName();
     virtual ArchNetAddress    newAnyAddr(EAddressFamily);
     virtual ArchNetAddress    copyAddr(ArchNetAddress);
-    virtual ArchNetAddress    nameToAddr(const std::string&);
+    virtual std::vector<ArchNetAddress> nameToAddr(const std::string&);
     virtual void            closeAddr(ArchNetAddress);
     virtual std::string        addrToName(ArchNetAddress);
     virtual std::string        addrToString(ArchNetAddress);

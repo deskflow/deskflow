@@ -612,6 +612,8 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
     if (i == m_keyIDMap.end()) {
         // unknown key
         LOG((CLOG_DEBUG1 "key %04x is not on keyboard", id));
+
+
         return NULL;
     }
     const KeyGroupTable& keyGroupTable = i->second;
@@ -763,6 +765,7 @@ KeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
         KeyModifierAltGr | KeyModifierNumLock | KeyModifierScrollLock;
 
     // add keystrokes to adjust the group
+
     if (App::instance().argsBase().m_enableLangSync &&
             group != keyItem.m_group) {
         group = keyItem.m_group;

@@ -82,7 +82,7 @@ void ServerConnection::addClient(const QString& clientName)
 void ServerConnection::configureClient(const QString& clientName)
 {
     auto& config = m_parent.serverConfig();
-    config.addToFirstEmptyGrid(clientName);
+    config.addClient(clientName);
 
     ServerConfigDialog dlg(&m_parent, config);
     dlg.exec();

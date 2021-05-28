@@ -21,6 +21,8 @@
 #include "common/IInterface.h"
 #include "common/stdstring.h"
 
+#include <vector>
+
 class ArchThreadImpl;
 typedef ArchThreadImpl* ArchThread;
 
@@ -247,7 +249,8 @@ public:
     virtual ArchNetAddress    copyAddr(ArchNetAddress) = 0;
 
     //! Convert a name to a network address
-    virtual ArchNetAddress    nameToAddr(const std::string&) = 0;
+    virtual std::vector<ArchNetAddress>
+                              nameToAddr(const std::string&) = 0;
 
     //! Destroy a network address
     virtual void            closeAddr(ArchNetAddress) = 0;

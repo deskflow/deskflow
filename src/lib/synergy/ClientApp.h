@@ -67,6 +67,7 @@ public:
     void scheduleClientRestart(double retryTime);
     void handleClientConnected(const Event&, void*);
     void handleClientFailed(const Event& e, void*);
+    void handleClientRefused(const Event& e, void*);
     void handleClientDisconnected(const Event&, void*);
     Client* openClient(const String& name, const NetworkAddress& address, 
                 synergy::Screen* screen);
@@ -82,6 +83,7 @@ public:
 
 private:
     Client*            m_client;
-    synergy::Screen*m_clientScreen;
+    synergy::Screen*   m_clientScreen;
     NetworkAddress*    m_serverAddress;
+    size_t             m_lastServerAddressIndex = 0;
 };
