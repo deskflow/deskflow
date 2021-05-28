@@ -20,6 +20,7 @@
 #define HELP_URL     "http://symless.com/help?source=gui"
 
 #include <array>
+#include <set>
 
 #include "MainWindow.h"
 
@@ -676,15 +677,21 @@ void MainWindow::startSynergy()
 #endif
 
     if (synergyType() == synergyClient) {
+        std::set<QString> macAddresses;
         foreach(QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
         {
-            // Return only the first non-loopback MAC Address
+            // Return only non-loopback MAC addresses
             if (!(netInterface.flags() & QNetworkInterface::IsLoopBack) &&
                 (netInterface.flags() & QNetworkInterface::IsUp) &&
                 !netInterface.hardwareAddress().isEmpty())
             {
-                args << "--mac-addr" << netInterface.hardwareAddress();
+                macAddresses.insert(netInterface.hardwareAddress());
             }
+        }
+
+        for (auto& mac : macAddresses)
+        {
+            args << "--mac-addr" << mac;
         }
     }
 
