@@ -83,15 +83,13 @@ ClientProxy1_7::recvWakeOnLan()
         m_macAddresses.back() += static_cast<char>(wol.m_mac[i]);
     }
 
-    m_ipAddress = getStream()->getSource();
-    LOG((CLOG_INFO "received client IP %s", m_ipAddress.c_str()));
-
     return true;
 }
 
 void
 ClientProxy1_7::handleDisconnect(const Event& e, void* c)
 {
-    LOG((CLOG_NOTE "client \"%s\" has disconnected 1.7", m_ipAddress.c_str()));
+    std::string ip = getStream()->getSource();
+    LOG((CLOG_NOTE "client \"%s\" has disconnected 1.7", ip.c_str()));
     ClientProxy1_0::handleDisconnect(e, c);
 }

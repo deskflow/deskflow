@@ -875,6 +875,24 @@ ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
             memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
+std::string
+ArchNetworkBSD::getConnectionName(ArchSocket s)
+{
+    struct sockaddr peer;
+    socklen_t peer_len = sizeof(peer);
+    /* Ask getpeername to fill in peer's socket address.  */
+    if (getpeername(s->m_fd, &peer, &peer_len) == -1) {
+        return "";
+    }
+
+    socklen_t client_len = sizeof(struct sockaddr_storage);
+    char hoststr[NI_MAXHOST];
+    char portstr[NI_MAXSERV];
+    int rc = getnameinfo(&peer, client_len, hoststr, sizeof(hoststr), portstr, sizeof(portstr), NI_NUMERICHOST | NI_NUMERICSERV);
+    if (rc == 0) return hoststr;
+    return "";
+}
+
 const int*
 ArchNetworkBSD::getUnblockPipe()
 {

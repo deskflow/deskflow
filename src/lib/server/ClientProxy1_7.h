@@ -36,7 +36,6 @@ private:
     bool                recvWakeOnLan();
     void                handleDisconnect(const Event&, void*);
 
-    String              m_ipAddress;
     std::vector<String> m_macAddresses;
     IEventQueue*        m_events;
 };
