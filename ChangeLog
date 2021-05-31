@@ -5,6 +5,7 @@ Bug fixes:
 - #7006 Resolve code scanning issues
 - #7012 Fix natural horizontal scrolling on Mac client
 - #6997 Allow Windows to go to sleep depending on system preferences
+- #7001 Add option to prevent computer from going to sleep
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation

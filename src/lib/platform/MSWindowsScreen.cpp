@@ -247,6 +247,10 @@ MSWindowsScreen::enable()
         // watch jump zones
         m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
     }
+
+    if (App::instance().argsBase().m_preventSleep) {
+        ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
+    }
 }
 
 void
@@ -261,6 +265,10 @@ MSWindowsScreen::disable()
 
         // enable special key sequences on win95 family
         enableSpecialKeys(true);
+    }
+    else {
+        // allow the system to enter power saving mode
+        ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM);
     }
 
     // tell key state
