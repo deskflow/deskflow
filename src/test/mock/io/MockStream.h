@@ -41,4 +41,5 @@ public:
     MOCK_METHOD(void*, getEventTarget, (), (const, override));
     MOCK_METHOD(bool, isReady, (), (const, override));
     MOCK_METHOD(UInt32, getSize, (), (const, override));
+    MOCK_METHOD(String, getSource, (), (const, override));
 };

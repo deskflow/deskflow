@@ -280,6 +280,9 @@ public:
     */
     virtual bool            isAnyAddr(ArchNetAddress addr) = 0;
 
+    //! Get the host name of the connected socket
+    virtual std::string     getConnectionName(ArchSocket s) = 0;
+
     //@}
 
     virtual void init() = 0;

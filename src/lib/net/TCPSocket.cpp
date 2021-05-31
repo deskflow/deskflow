@@ -602,3 +602,8 @@ TCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 
     return result == kNew ? newJob() : job;
 }
+
+String TCPSocket::getSource() const
+{
+    return ARCH->getConnectionName(m_socket);
+}

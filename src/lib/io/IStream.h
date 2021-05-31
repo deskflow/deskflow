@@ -114,6 +114,13 @@ public:
     */
     virtual UInt32        getSize() const = 0;
 
+    //! Get name of the stream source if available
+    /*!
+    Returns a string containing a name of the source that provides
+    the data. For network connections will return the host name.
+    */
+    virtual String        getSource() const = 0;
+
     //@}
 };
 

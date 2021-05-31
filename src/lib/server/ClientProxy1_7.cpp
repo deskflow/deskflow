@@ -16,7 +16,6 @@
  */
 
 #include "server/ClientProxy1_7.h"
-
 #include "server/Server.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/StreamChunker.h"
@@ -33,6 +32,11 @@ ClientProxy1_7::ClientProxy1_7(const String& name, synergy::IStream* stream, Ser
     ClientProxy1_6(name, stream, server, events),
     m_events(events)
 {
+    m_events->adoptHandler(m_events->forIStream().inputShutdown(),
+        stream->getEventTarget(),
+        new TMethodEventJob<ClientProxy1_7>(this,
+            &ClientProxy1_7::handleDisconnect, NULL));
+
     LOG((CLOG_DEBUG1 "querying client \"%s\" wake-on-lan info", getName().c_str()));
     ProtocolUtil::writef(getStream(), kMsgQWol);
 }
@@ -79,5 +83,15 @@ ClientProxy1_7::recvWakeOnLan()
         m_macAddresses.back() += static_cast<char>(wol.m_mac[i]);
     }
 
+    m_ipAddress = getStream()->getSource();
+    LOG((CLOG_INFO "received client IP %s", m_ipAddress.c_str()));
+
     return true;
+}
+
+void
+ClientProxy1_7::handleDisconnect(const Event& e, void* c)
+{
+    LOG((CLOG_NOTE "client \"%s\" has disconnected 1.7", m_ipAddress.c_str()));
+    ClientProxy1_0::handleDisconnect(e, c);
 }

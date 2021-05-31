@@ -40,6 +40,7 @@ public:
     virtual void        shutdownInput();
     virtual bool        isReady() const;
     virtual UInt32        getSize() const;
+    virtual String      getSource() const;
 
 protected:
     // StreamFilter overrides

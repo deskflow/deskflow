@@ -65,6 +65,7 @@ public:
     virtual void        setOptions(const OptionsList& options);
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+    virtual void        handleDisconnect(const Event&, void*);
 
 protected:
     virtual bool        parseHandshakeMessage(const UInt8* code);
@@ -81,7 +82,6 @@ private:
     void                removeHandlers();
 
     void                handleData(const Event&, void*);
-    void                handleDisconnect(const Event&, void*);
     void                handleWriteError(const Event&, void*);
     void                handleFlatline(const Event&, void*);
 

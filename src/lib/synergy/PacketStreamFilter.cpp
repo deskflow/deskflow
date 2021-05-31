@@ -127,6 +127,12 @@ PacketStreamFilter::getSize() const
     return isReadyNoLock() ? m_size : 0;
 }
 
+String
+PacketStreamFilter::getSource() const
+{
+    return getStream()->getSource();
+}
+
 bool
 PacketStreamFilter::isReadyNoLock() const
 {
