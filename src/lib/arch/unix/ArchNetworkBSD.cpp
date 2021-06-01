@@ -887,15 +887,15 @@ ArchNetworkBSD::getConnectionName(ArchSocket s)
     }
 
     socklen_t client_len = sizeof(struct sockaddr_storage);
-    char hoststr[NI_MAXHOST];
-    char portstr[NI_MAXSERV];
-    int rc = getnameinfo(&peer, client_len, hoststr, sizeof(hoststr), portstr, sizeof(portstr), NI_NUMERICHOST | NI_NUMERICSERV);
+    std::string hoststr(NI_MAXHOST, '\0');
+    std::string portstr(NI_MAXSERV, '\0');
+    int rc = getnameinfo(&peer, client_len, &hoststr[0], hoststr.size(), &portstr[0], portstr.size(), NI_NUMERICHOST | NI_NUMERICSERV);
     if (rc == 0) return hoststr;
     return "";
 }
 
 bool
-sendWakeOnLanSingle(std::string ethernetAddress, unsigned int port, unsigned long bcast)
+sendWakeOnLanSingle(std::string ethernetAddress, unsigned short port, unsigned int bcast)
 {
     LOG((CLOG_INFO "sendWakeOnLanSingle %s %u %u", ethernetAddress.c_str(), port, bcast));
     LOG((CLOG_INFO "ethernetAddress %d,%d,%d,%d,%d,%d", ethernetAddress[0], ethernetAddress[1], ethernetAddress[2], ethernetAddress[3], ethernetAddress[4], ethernetAddress[5]));
@@ -909,7 +909,7 @@ sendWakeOnLanSingle(std::string ethernetAddress, unsigned int port, unsigned lon
     }
 
     // Set socket options.
-    const int optval = 1;
+    int optval = 1;
     if (setsockopt(packet, SOL_SOCKET, SO_BROADCAST, (char*)&optval, sizeof(optval)) < 0) {
         close(packet);
         LOG((CLOG_INFO "failed to set sock options"));
@@ -935,9 +935,9 @@ sendWakeOnLanSingle(std::string ethernetAddress, unsigned int port, unsigned lon
 }
 
 bool
-ArchNetworkBSD::sendWakeOnLan(std::string ethernetAddress, std::string ipAddress)
+ArchNetworkBSD::sendWakeOnLan(const std::string& ethernetAddress, const std::string& ipAddress)
 {
-    unsigned long bcast;
+    unsigned int bcast;
     bool sendResult = false;
 
     if (!ipAddress.empty())
