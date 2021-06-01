@@ -4,6 +4,8 @@ Bug fixes:
 - #7016 Fix script that generates version number
 - #7006 Resolve code scanning issues
 - #7012 Fix natural horizontal scrolling on Mac client
+- #6997 Allow Windows to go to sleep depending on system preferences
+- #7001 Add option to prevent computer from going to sleep
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
@@ -49,6 +51,7 @@ Enhancements:
 - #7003 Prioritization rules server config
 - #7004 Add openssl dependency for rpm
 - #7008 Add logging when hostname have several IP
+- #7022 Add Fedora 33 to build and release pipeline
 ===========
 
 v1.13.1-stable

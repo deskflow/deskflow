@@ -749,6 +749,16 @@ OSXScreen::hideCursor()
 void
 OSXScreen::enable()
 {
+    if(App::instance().argsBase().m_preventSleep) {
+        CFStringRef reasonForActivity = CFSTR("Synergy application");
+        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoIdleSleep,
+                                                        kIOPMAssertionLevelOn, reasonForActivity, &m_sleepPreventionAssertionID);
+        if(result != kIOReturnSuccess) {
+            m_sleepPreventionAssertionID = 0;
+            LOG((CLOG_ERR "failed to disable system idle sleep"));
+        }
+    }
+
 	// watch the clipboard
 	m_clipboardTimer = m_events->newTimer(1.0, NULL);
 	m_events->adoptHandler(Event::kTimer, m_clipboardTimer,
@@ -798,6 +808,10 @@ OSXScreen::enable()
 void
 OSXScreen::disable()
 {
+    if(App::instance().argsBase().m_preventSleep && m_sleepPreventionAssertionID) {
+        IOPMAssertionRelease(m_sleepPreventionAssertionID);
+    }
+
 	if (m_autoShowHideCursor) {
 		showCursor();
 	}

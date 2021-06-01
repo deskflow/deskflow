@@ -695,6 +695,11 @@ void MainWindow::startSynergy()
         }
     }
 
+    if (m_AppConfig->getPreventSleep())
+    {
+        args << "--prevent-sleep";
+    }
+
     // put a space between last log output and new instance.
     if (!m_pLogOutput->toPlainText().isEmpty())
         appendLogRaw("");

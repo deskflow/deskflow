@@ -10,12 +10,12 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 
 Things most people will need.
 
-* [Download](https://symless.com/synergy/downloads) - Get the compiled version of Synergy 1 or Synergy 2.
-* [Contact Support](https://symless.com/contact/customer-support) - Open a support ticket and talk directly to the Synergy team.
-* [Help Guides](https://support.symless.com/) - Self-help guides and information for when you don't want to talk to people.
+* [Download](https://members.symless.com/download-authentication) - Get the compiled version of Synergy 1 or Synergy 2.
+* [Contact Support](https://symless.com/contact-support) - Open a support ticket and talk directly to the Synergy team.
+* [Help Guides](https://symless.com/help) - Self-help guides and information for when you don't want to talk to people.
 * [Join us on Slack](https://bit.ly/synergy-slack-2020) - Talk to other Synergy users in real time using instant messaging.
-* [Symless Forums](https://members.symless.com/forums/) - Discuss Synergy issues on the Symless Forums.
-* [Symless Blog](https://symless.com/blog/) - Find out what's happening with Synergy development.
+* [Symless Forums](https://forums.symless.com/) - Discuss Synergy issues on the Symless Forums.
+* [Symless Blog](https://symless.com/blog/) - Find out what's happening at Symless and with Synergy development.
 
 ## Advanced Users
 
