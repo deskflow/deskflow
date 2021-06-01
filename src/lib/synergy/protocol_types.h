@@ -350,16 +350,15 @@ public:
     SInt32                m_mx, m_my;
 };
 
-//! Screen information
+//! Wake-on-LAN information
 /*!
-This class contains information about a screen.
+This class contains information about client connection for Wake-on-LAN support
 */
 class ClientWakeOnLanInfo {
 public:
-    //! Screen position
+    //! Client MAC address
     /*!
-    The position of the upper-left corner of the screen.  This is
-    typically 0,0.
+    6 bytes storage of connecting client MAC address
     */
     SInt8                 m_mac[6];
 };

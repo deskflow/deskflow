@@ -893,7 +893,7 @@ void
 ServerProxy::queryWakeOnLanInfo()
 {
     auto args = m_client->getClientArgs();
-    for (auto& mac : args.m_macAddresses) {
+    for (const auto& mac : args.m_macAddresses) {
         sendWakeOnLanInfo(wolFromString(mac));
     }
 }

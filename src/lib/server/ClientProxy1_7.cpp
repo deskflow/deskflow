@@ -91,7 +91,7 @@ ClientProxy1_7::handleDisconnect(const Event& e, void* c)
     LOG((CLOG_INFO "client \"%s\" has disconnected", ip.c_str()));
     ClientProxy1_0::handleDisconnect(e, c);
 
-    for (auto& mac : m_macAddresses)
+    for (const auto& mac : m_macAddresses)
     {
         LOG((CLOG_INFO "sending wake-on-lan packet to %s", mac.c_str()));
         ARCH->sendWakeOnLan(mac, ip);

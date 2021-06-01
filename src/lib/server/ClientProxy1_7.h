@@ -26,15 +26,15 @@ class IEventQueue;
 class ClientProxy1_7 : public ClientProxy1_6 {
 public:
     ClientProxy1_7(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-    ~ClientProxy1_7();
+    ~ClientProxy1_7() override;
 
 protected:
     // ClientProxy overrides
-    virtual bool        parseMessage(const UInt8* code);
+    virtual bool        parseMessage(const UInt8* code) override;
 
 private:
     bool                recvWakeOnLan();
-    void                handleDisconnect(const Event&, void*);
+    void                handleDisconnect(const Event&, void*) override;
 
     std::vector<String> m_macAddresses;
     IEventQueue*        m_events;
