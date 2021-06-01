@@ -134,6 +134,10 @@ bool get_ether(const std::string& hardwareAddress, std::vector<String>& etherAdd
         return false;
     }
     etherAddresses.emplace_back(etherAddr);
+
+    // TODO: remove later
+    LOG((CLOG_PRINT "ether: %d,%d,%d,%d,%d,%d", etherAddr[0], etherAddr[1], etherAddr[2], etherAddr[3], etherAddr[4], etherAddr[5]));
+
     return true;
 }
 
@@ -169,10 +173,6 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         }
         else if (isArg(i, argc, argv, nullptr, "--mac-addr", 1)) {
             get_ether(std::string(argv[++i]), args.m_macAddresses);
-
-            // TODO: remove later
-            std::string ether_addr = args.m_macAddresses.back();
-            LOG((CLOG_PRINT "ether: %d,%d,%d,%d,%d,%d", ether_addr[0], ether_addr[1], ether_addr[2], ether_addr[3], ether_addr[4], ether_addr[5]));
         }
         else {
             if (i + 1 == argc) {
