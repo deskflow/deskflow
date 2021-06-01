@@ -47,19 +47,19 @@ public:
     void                close() override;
 
     // IDataSocket overrides
-    virtual void        connect(const NetworkAddress&);
+    void                connect(const NetworkAddress&) override;
     
     ISocketMultiplexerJob*
-                        newJob();
-    bool                isFatal() const { return m_fatal; }
+                        newJob() override;
+    bool                isFatal() const override { return m_fatal; }
     void                isFatal(bool b) { m_fatal = b; }
     bool                isSecureReady();
     void                secureConnect();
     void                secureAccept();
     int                 secureRead(void* buffer, int size, int& read);
     int                 secureWrite(const void* buffer, int size, int& wrote);
-    EJobResult          doRead();
-    EJobResult          doWrite();
+    EJobResult          doRead() override;
+    EJobResult          doWrite() override;
     void                initSsl(bool server);
     bool                loadCertificates(String& CertFile);
 

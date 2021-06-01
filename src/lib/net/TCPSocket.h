@@ -46,23 +46,23 @@ public:
     TCPSocket& operator=(TCPSocket &&) =delete;
 
     // ISocket overrides
-    virtual void        bind(const NetworkAddress&);
-    virtual void        close();
-    virtual void*        getEventTarget() const;
+    void                bind(const NetworkAddress&) override;
+    void                close() override;
+    void*               getEventTarget() const override;
 
     // IStream overrides
-    virtual UInt32        read(void* buffer, UInt32 n);
-    virtual void        write(const void* buffer, UInt32 n);
-    virtual void        flush();
-    virtual void        shutdownInput();
-    virtual void        shutdownOutput();
-    virtual bool        isReady() const;
-    virtual bool        isFatal() const;
-    virtual UInt32        getSize() const;
+    UInt32              read(void* buffer, UInt32 n) override;
+    void                write(const void* buffer, UInt32 n) override;
+    void                flush() override;
+    void                shutdownInput() override;
+    void                shutdownOutput() override;
+    bool                isReady() const override;
+    bool                isFatal() const override;
+    UInt32              getSize() const override;
     String              getSource() const override;
 
     // IDataSocket overrides
-    virtual void        connect(const NetworkAddress&);
+    void                connect(const NetworkAddress&) override;
 
     
     virtual ISocketMultiplexerJob*
