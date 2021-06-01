@@ -9,6 +9,7 @@ Bug fixes:
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
+- #7026 Update the way we package OpenSSL for Windows build
 ===========
 
 v1.14.0-rc1
