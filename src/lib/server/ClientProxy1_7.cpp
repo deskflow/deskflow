@@ -35,14 +35,10 @@ ClientProxy1_7::ClientProxy1_7(const String& name, synergy::IStream* stream, Ser
     m_events->adoptHandler(m_events->forIStream().inputShutdown(),
         stream->getEventTarget(),
         new TMethodEventJob<ClientProxy1_7>(this,
-            &ClientProxy1_7::handleDisconnect, NULL));
+            &ClientProxy1_7::handleDisconnect, nullptr));
 
     LOG((CLOG_DEBUG1 "querying client \"%s\" wake-on-lan info", getName().c_str()));
     ProtocolUtil::writef(getStream(), kMsgQWol);
-}
-
-ClientProxy1_7::~ClientProxy1_7()
-{
 }
 
 bool
@@ -85,11 +81,11 @@ ClientProxy1_7::recvWakeOnLan()
 }
 
 void
-ClientProxy1_7::handleDisconnect(const Event& e, void* c)
+ClientProxy1_7::handleDisconnect(const Event& e, void*)
 {
     std::string ip = getStream()->getSource();
     LOG((CLOG_INFO "client \"%s\" has disconnected", ip.c_str()));
-    ClientProxy1_0::handleDisconnect(e, c);
+    ClientProxy1_0::handleDisconnect(e, nullptr);
 
     for (const auto& mac : m_macAddresses)
     {

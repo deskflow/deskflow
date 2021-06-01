@@ -907,7 +907,10 @@ std::string ArchNetworkWinsock::getConnectionName(ArchSocket s)
     socklen_t client_len = sizeof(struct sockaddr_storage);
     std::string hoststr(NI_MAXHOST, '\0');
     std::string portstr(NI_MAXSERV, '\0');
-    int rc = getnameinfo(&peer, client_len, &hoststr[0], hoststr.size(), &portstr[0], portstr.size(), NI_NUMERICHOST | NI_NUMERICSERV);
+    int rc = getnameinfo(&peer, client_len,
+                         &hoststr[0], static_cast<unsigned int>(hoststr.size()),
+                         &portstr[0], static_cast<unsigned int>(portstr.size()), 
+                         NI_NUMERICHOST | NI_NUMERICSERV);
     if (rc == 0) return hoststr;
     return "";
 }

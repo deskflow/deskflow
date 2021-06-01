@@ -598,6 +598,26 @@ void MainWindow::clearLog()
     m_pLogOutput->clear();
 }
 
+void appendWakeOnLanArgs(QStringList& args)
+{
+    std::set<QString> macAddresses;
+    foreach(QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
+    {
+        // Return only non-loopback MAC addresses
+        if (!(netInterface.flags() & QNetworkInterface::IsLoopBack) &&
+            (netInterface.flags() & QNetworkInterface::IsUp) &&
+            !netInterface.hardwareAddress().isEmpty())
+        {
+            macAddresses.insert(netInterface.hardwareAddress());
+        }
+    }
+
+    for (auto& mac : macAddresses)
+    {
+        args << "--mac-addr" << mac;
+    }
+}
+
 void MainWindow::startSynergy()
 {
     saveSettings();
@@ -677,22 +697,7 @@ void MainWindow::startSynergy()
 #endif
 
     if (synergyType() == synergyClient) {
-        std::set<QString> macAddresses;
-        foreach(QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
-        {
-            // Return only non-loopback MAC addresses
-            if (!(netInterface.flags() & QNetworkInterface::IsLoopBack) &&
-                (netInterface.flags() & QNetworkInterface::IsUp) &&
-                !netInterface.hardwareAddress().isEmpty())
-            {
-                macAddresses.insert(netInterface.hardwareAddress());
-            }
-        }
-
-        for (auto& mac : macAddresses)
-        {
-            args << "--mac-addr" << mac;
-        }
+        appendWakeOnLanArgs(args);
     }
 
     if (m_AppConfig->getPreventSleep())

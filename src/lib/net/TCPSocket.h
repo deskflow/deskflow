@@ -59,7 +59,7 @@ public:
     virtual bool        isReady() const;
     virtual bool        isFatal() const;
     virtual UInt32        getSize() const;
-    virtual String      getSource() const;
+    String              getSource() const override;
 
     // IDataSocket overrides
     virtual void        connect(const NetworkAddress&);
