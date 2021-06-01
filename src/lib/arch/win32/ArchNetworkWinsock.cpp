@@ -916,6 +916,7 @@ bool
 sendWakeOnLanSingle(std::string ethernetAddress, unsigned int port, unsigned long bcast)
 {
     LOG((CLOG_INFO "sendWakeOnLanSingle %s %u %u", ethernetAddress.c_str(), port, bcast));
+    LOG((CLOG_INFO "ethernetAddress %d,%d,%d,%d,%d,%d", ethernetAddress[0], ethernetAddress[1], ethernetAddress[2], ethernetAddress[3], ethernetAddress[4], ethernetAddress[5]));
     auto packet = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     // Build the message to send.
