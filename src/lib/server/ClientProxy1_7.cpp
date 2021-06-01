@@ -74,8 +74,6 @@ ClientProxy1_7::recvWakeOnLan()
     }
     LOG((CLOG_INFO "received client \"%s\" info %d,%d,%d,%d,%d,%d", getName().c_str(), wol.m_mac[0], wol.m_mac[1], wol.m_mac[2], wol.m_mac[3], wol.m_mac[4], wol.m_mac[5]));
 
-    // validate
-
     // save
     m_macAddresses.emplace_back();
     for (size_t i = 0; i < 6; ++i)
@@ -90,6 +88,12 @@ void
 ClientProxy1_7::handleDisconnect(const Event& e, void* c)
 {
     std::string ip = getStream()->getSource();
-    LOG((CLOG_NOTE "client \"%s\" has disconnected 1.7", ip.c_str()));
+    LOG((CLOG_INFO "client \"%s\" has disconnected", ip.c_str()));
     ClientProxy1_0::handleDisconnect(e, c);
+
+    for (auto& mac : m_macAddresses)
+    {
+        LOG((CLOG_INFO "sending wake-on-lan packet to %s", mac.c_str()));
+        ARCH->sendWakeOnLan(mac, ip);
+    }
 }

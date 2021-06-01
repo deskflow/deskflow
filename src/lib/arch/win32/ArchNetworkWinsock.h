@@ -95,6 +95,7 @@ public:
     virtual bool            isAnyAddr(ArchNetAddress);
     virtual bool            isEqualAddr(ArchNetAddress, ArchNetAddress);
     virtual std::string     getConnectionName(ArchSocket s);
+    virtual bool            sendWakeOnLan(std::string, std::string);
 
 private:
     void                initModule(HMODULE);
