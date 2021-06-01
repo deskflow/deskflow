@@ -82,26 +82,28 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
 }
 
 // Attempts to extract hexadecimal from ASCII string.
-unsigned get_hex_from_string(const std::string& s)
+bool get_hex_from_string(const std::string& s, unsigned& hex)
 {
-    unsigned hex{ 0 };
-
-    for (size_t i = 0; i < s.length(); ++i) {
+    for (size_t i = 0; i < s.length(); ++i)
+    {
         hex <<= 4;
         if (isdigit(s[i])) {
             hex |= s[i] - '0';
         }
-        else if (s[i] >= 'a' && s[i] <= 'f') {
+        else if (s[i] >= 'a' && s[i] <= 'f')
+        {
             hex |= s[i] - 'a' + 10;
         }
-        else if (s[i] >= 'A' && s[i] <= 'F') {
+        else if (s[i] >= 'A' && s[i] <= 'F')
+        {
             hex |= s[i] - 'A' + 10;
         }
-        else {
-            throw std::runtime_error("Failed to parse hexadecimal " + s);
+        else
+        {
+            return false;
         }
     }
-    return hex;
+    return true;
 }
 
 bool get_ether(const std::string& hardware_addr, std::string& ether_addr)
@@ -109,9 +111,15 @@ bool get_ether(const std::string& hardware_addr, std::string& ether_addr)
     LOG((CLOG_PRINT "mac: %s", hardware_addr.c_str()));
     ether_addr = std::string();
 
-    for (size_t i = 0; i < hardware_addr.length();) {
+    for (size_t i = 0; i < hardware_addr.length();)
+    {
         // Parse two characters at a time.
-        unsigned hex = get_hex_from_string(hardware_addr.substr(i, 2));
+        unsigned hex = 0;
+        if (!get_hex_from_string(hardware_addr.substr(i, 2), hex))
+        {
+            return false;
+        }
+
         i += 2;
 
         ether_addr += static_cast<char>(hex & 0xFF);
@@ -122,7 +130,9 @@ bool get_ether(const std::string& hardware_addr, std::string& ether_addr)
     }
 
     if (ether_addr.length() != 6)
+    {
         return false;
+    }
 
     return true;
 }

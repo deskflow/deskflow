@@ -284,7 +284,7 @@ public:
     virtual std::string     getConnectionName(ArchSocket s) = 0;
 
     //! Create and send a magic packet for Wake on LAN functionality
-    virtual bool            sendWakeOnLan(std::string, std::string) = 0;
+    virtual bool            sendWakeOnLan(const std::string&, const std::string&) = 0;
 
     //@}
 
