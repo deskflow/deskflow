@@ -103,7 +103,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Configure the layout of your computer dispalys by dragging to where you want.</string>
+            <string>Configure the layout of your computer displays by dragging to where you want.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
