@@ -46,6 +46,11 @@
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <AppKit/NSEvent.h>
+#include <UserNotifications/UNNotification.h>
+#include <UserNotifications/UNNotificationContent.h>
+#include <UserNotifications/UNNotificationSound.h>
+#include <UserNotifications/UNNotificationTrigger.h>
+#include <UserNotifications/UNUserNotificationCenter.h>
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
@@ -919,7 +924,24 @@ void
 OSXScreen::enter()
 {
 
-	bool secure = isSecureInput();
+    // Configure the notification's payload.
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = [NSString localizedUserNotificationStringForKey:@"Hello!" arguments:nil];
+    content.body = [NSString localizedUserNotificationStringForKey:@"Hello_message_body"
+                arguments:nil];
+    content.sound = [UNNotificationSound defaultSound];
+
+    // Deliver the notification in five seconds.
+    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+                triggerWithTimeInterval:5 repeats:NO];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"FiveSecond"
+                content:content trigger:trigger];
+
+    // Schedule the notification.
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request];
+
+    bool secure = isSecureInput();
 
 	showCursor();
 
