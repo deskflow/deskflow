@@ -845,9 +845,82 @@ OSXScreen::disable()
 	m_isOnScreen = m_isPrimary;
 }
 
+std::string  CFStringRefToStdString(const CFStringRef pCFStringRef)
+{
+    const char* pCStr = NULL;
+
+    std::string sRet;
+
+    if (pCFStringRef)
+        {
+        pCStr = CFStringGetCStringPtr(pCFStringRef, kCFStringEncodingMacRoman);
+        if(pCStr)
+            sRet.assign(pCStr);
+        }
+    return sRet;
+}
+
+bool isSecureInput() {
+    NXEventHandle 		handle = MACH_PORT_NULL;
+    io_service_t		service = MACH_PORT_NULL, service_p = MACH_PORT_NULL;
+    mach_port_t			masterPort;
+    io_name_t n;
+    char buf[4096];
+    uint32_t s = sizeof(buf);
+
+	kern_return_t kr = IOMasterPort( MACH_PORT_NULL, &masterPort );
+	if(kr != KERN_SUCCESS) return false;
+
+	service = IORegistryEntryFromPath( masterPort, kIOServicePlane ":/" );
+	IORegistryEntryGetParentEntry(service, kIOServicePlane, &service_p);
+	CFTypeRef consoleUsers = IORegistryEntrySearchCFProperty(service_p, kIOServicePlane, CFSTR("IOConsoleUsers"), NULL, kIORegistryIterateParents | kIORegistryIterateRecursively);
+	if(!consoleUsers) return false;
+
+	CFTypeID type = CFGetTypeID(consoleUsers);
+	if(type != CFArrayGetTypeID())
+	{
+		CFRelease(consoleUsers);
+		return false;
+	}
+	CFTypeRef dict = CFArrayGetValueAtIndex((CFArrayRef)consoleUsers, 0);
+	if(!dict)
+	{
+		CFRelease(consoleUsers);
+		return false;
+	}
+	type = CFGetTypeID(dict);
+	if(type != CFDictionaryGetTypeID())
+	{
+		CFRelease(consoleUsers);
+		return false;
+	}
+
+	CFIndex count = CFDictionaryGetCount((CFDictionaryRef)dict);
+	const void * keys [count];
+	const void * values [count];
+	CFDictionaryGetKeysAndValues((CFDictionaryRef)dict, reinterpret_cast<const void **>(keys), reinterpret_cast<const void **>(values));
+	for(CFIndex i = 0; i < count; ++i) {
+		CFIndex keySize = CFStringGetMaximumSizeForEncoding(CFStringGetLength(reinterpret_cast<CFStringRef>(keys[i])), kCFStringEncodingASCII);
+		char key [keySize + 1];
+
+		if(!CFStringGetCString(reinterpret_cast<CFStringRef>(keys[i]), key, keySize + 1, kCFStringEncodingASCII)) {
+			continue;
+		}
+		LOG((CLOG_INFO "registry %s", key));
+	}
+
+
+	CFIndex secureInputCount = CFDictionaryGetCountOfKey((CFDictionaryRef)dict, CFSTR("kCGSSessionSecureInputPID"));
+	CFRelease(consoleUsers);
+	return secureInputCount > 0;
+}
+
 void
 OSXScreen::enter()
 {
+
+	bool secure = isSecureInput();
+
 	showCursor();
 
 	if (m_isPrimary) {

@@ -32,6 +32,7 @@
 #include <mach/mach_init.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
 #include <IOKit/IOMessage.h>
+#include <IOKit/IOKitLib.h>
 
 extern "C" {
     typedef int CGSConnectionID;
