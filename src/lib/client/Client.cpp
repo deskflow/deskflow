@@ -19,6 +19,7 @@
 #include "client/Client.h"
 
 #include "client/ServerProxy.h"
+#include "synergy/AppUtil.h"
 #include "synergy/Screen.h"
 #include "synergy/FileChunk.h"
 #include "synergy/DropHelper.h"
@@ -727,6 +728,17 @@ Client::handleHello(const Event&, void*)
         cleanupTimer();
         cleanupConnection();
         return;
+    }
+
+    auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
+    for(size_t i = 0; i <= keyboardLayoutList.size() - 2; i +=2) {
+        auto serverLayout = keyboardLayoutList.substr(i, 2);
+        if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
+            LOG((CLOG_ERR "_________________Client missed server language %s", &serverLayout));
+        }
+        else {
+            LOG((CLOG_NOTE "_______________Server language %s is supported", &serverLayout));
+        }
     }
 
     // check versions
