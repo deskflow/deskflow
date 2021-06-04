@@ -57,10 +57,14 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
+    String allLayoutsStr;
+    for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
+        allLayoutsStr += layout;
+    }
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion,
-                            AppUtil::instance().getKeyboardLayoutList().c_str());
+                            allLayoutsStr.c_str());
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()

@@ -31,4 +31,5 @@ public:
     
     int run(int argc, char** argv);
     void startNode();
+    std::vector<std::string> getKeyboardLayoutList();
 };

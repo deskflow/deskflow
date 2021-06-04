@@ -184,7 +184,7 @@ AppUtilWindows::startNode()
 String
 AppUtilWindows::getKeyboardLayoutList()
 {
-    std::string layoutLangCodes;
+    std::vector<std::string> layoutLangCodes;
     {
         auto uLayouts = GetKeyboardLayoutList(0, NULL);
         auto lpList = (HKL*)LocalAlloc(LPTR, (uLayouts * sizeof(HKL)));
@@ -193,7 +193,7 @@ AppUtilWindows::getKeyboardLayoutList()
         for (int i = 0; i < uLayouts; ++i){
             std::string code("", 2);
             GetLocaleInfoA(MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT), LOCALE_SISO639LANGNAME, &code[0], code.size());
-            layoutLangCodes += code;
+            layoutLangCodes.push_back(code);
         }
 
         if (lpList) {

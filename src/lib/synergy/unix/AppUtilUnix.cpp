@@ -18,6 +18,7 @@
 
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
+#include <Carbon/Carbon.h>
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
@@ -43,4 +44,35 @@ void
 AppUtilUnix::startNode()
 {
     app().startNode();
+}
+
+std::vector<std::string>
+AppUtilUnix::getKeyboardLayoutList()
+{
+    std::vector<std::string> layoutLangCodes;
+    CFStringRef keys[] = { kTISPropertyInputSourceCategory };
+    CFStringRef values[] = { kTISCategoryKeyboardInputSource };
+    CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
+    CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+
+    for (CFIndex i = 0; i < CFArrayGetCount(kbds); ++i) {
+        TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
+        auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
+        char temporaryCString[128] = {0};
+        for(CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+            auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
+            if(!languageCode ||
+               !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
+                continue;
+            }
+
+            std::string langCode(temporaryCString);
+            if(langCode.size() == 2 &&
+               std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) == layoutLangCodes.end()){
+                layoutLangCodes.push_back(langCode);
+            }
+        }
+    }
+
+    return layoutLangCodes;
 }

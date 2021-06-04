@@ -29,5 +29,5 @@ public:
     virtual int run(int argc, char** argv) = 0;
     virtual void beforeAppExit() = 0;
     virtual void startNode() = 0;
-    virtual String getKeyboardLayoutList() = 0;
+    virtual std::vector<std::string> getKeyboardLayoutList() = 0;
 };

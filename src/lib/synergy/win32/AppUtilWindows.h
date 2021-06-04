@@ -53,7 +53,7 @@ public:
 
     void startNode();
 
-    String getKeyboardLayoutList();
+    std::vector<std::string> getKeyboardLayoutList();
 
 private:
     AppExitMode            m_exitMode;
