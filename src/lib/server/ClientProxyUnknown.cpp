@@ -33,7 +33,6 @@
 #include "io/IStream.h"
 #include "io/XIO.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
@@ -57,14 +56,15 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    String allLayoutsStr;
+    String allKeyboardLayoutsStr;
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
-        allLayoutsStr += layout;
+        allKeyboardLayoutsStr += layout;
     }
+    LOG((CLOG_NOTE "___________Language list to client %s", &allKeyboardLayoutsStr));
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion,
-                            allLayoutsStr.c_str());
+                            &allKeyboardLayoutsStr);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()

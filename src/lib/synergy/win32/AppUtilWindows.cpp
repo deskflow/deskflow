@@ -181,7 +181,7 @@ AppUtilWindows::startNode()
     app().startNode();
 }
 
-String
+std::vector<std::string>
 AppUtilWindows::getKeyboardLayoutList()
 {
     std::vector<std::string> layoutLangCodes;
