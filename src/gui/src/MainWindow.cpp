@@ -338,7 +338,7 @@ void MainWindow::checkSystemInterruptions()
             m_isSecureInputNotificationShown = true;
             QMessageBox message(this);
             message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
-            message.setText(QObject::tr("Secure input was enabled in your system by another application, synergy will not be able to send keyboard strikes while the secure input is enabled"));
+            message.setText(QObject::tr("Secure input was enabled in your system by another application. Synergy will not be able to send keyboard strokes while the secure input is enabled"));
             message.exec();
         }
 #endif
