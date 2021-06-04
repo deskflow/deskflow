@@ -328,6 +328,23 @@ void MainWindow::saveSettings()
     GUI::Config::ConfigWriter::make()->globalSave();
 }
 
+void MainWindow::checkSystemInterruptions()
+{
+    if(synergyType() == synergyServer)
+    {
+#if defined(Q_OS_MAC)
+        if(!m_isSecureInputNotificationShown && isOSXSecureInputEnabled())
+        {
+            m_isSecureInputNotificationShown = true;
+            QMessageBox message(this);
+            message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
+            message.setText(QObject::tr("Secure input was enabled in your system by another application, synergy will not be able to send keyboard strikes while the secure input is enabled"));
+            message.exec();
+        }
+#endif
+    }
+}
+
 void MainWindow::zeroConfToggled() {
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     updateZeroconfService();
@@ -698,6 +715,7 @@ void MainWindow::startSynergy()
         connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(synergyFinished(int, QProcess::ExitStatus)));
         connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
         connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
+        connect(&m_systemInterruptionCheckTimer, SIGNAL(timeout()), this, SLOT(checkSystemInterruptions()));
     }
 
     qDebug() << args;
@@ -1015,6 +1033,7 @@ void MainWindow::setSynergyState(qSynergyState state)
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Stop"));
         m_pButtonApply->setEnabled(true);
+        m_systemInterruptionCheckTimer.start(5000); // check every 5 seconds
     }
     else if (state == synergyDisconnected)
     {
@@ -1022,6 +1041,7 @@ void MainWindow::setSynergyState(qSynergyState state)
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Start"));
         m_pButtonApply->setEnabled(false);
+        m_systemInterruptionCheckTimer.stop();
     }
 
     bool running = false;
