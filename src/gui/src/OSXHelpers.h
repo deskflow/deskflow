@@ -20,7 +20,6 @@
 #define OSXHELPERS__H
 
 bool isOSXSecureInputEnabled();
-void OSXSendSecureInputNotification();
 bool isOSXInterfaceStyleDark();
 bool isOSXUseDarkIcons();
 
