@@ -19,7 +19,6 @@
 #pragma once
 
 #include "synergy/AppUtil.h"
-#include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
@@ -53,6 +52,8 @@ public:
     static AppUtilWindows& instance();
 
     void startNode();
+
+    String getKeyboardLayoutList();
 
 private:
     AppExitMode            m_exitMode;

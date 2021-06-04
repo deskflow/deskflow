@@ -932,6 +932,7 @@ MSWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 			m_groupMap[m_groups[g]] = g;
 		}
 	}
+
 	HKL activeLayout = GetKeyboardLayout(0);
 
 	// clear table

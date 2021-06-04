@@ -102,7 +102,8 @@ enum EDataReceived {
 
 // say hello to client;  primary -> secondary
 // $1 = protocol major version number supported by server.  $2 =
-// protocol minor version number supported by server.
+// protocol minor version number supported by server. $3 = server
+// keyboard layout list.
 extern const char*        kMsgHello;
 
 // respond to hello from server;  secondary -> primary

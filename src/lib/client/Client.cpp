@@ -721,7 +721,8 @@ void
 Client::handleHello(const Event&, void*)
 {
     SInt16 major, minor;
-    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
+    String keyboardLayoutList;
+    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor, &keyboardLayoutList)) {
         sendConnectionFailedEvent("Protocol error from server, check encryption settings");
         cleanupTimer();
         cleanupConnection();

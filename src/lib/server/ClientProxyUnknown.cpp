@@ -28,6 +28,7 @@
 #include "server/ClientProxy1_6.h"
 #include "synergy/protocol_types.h"
 #include "synergy/ProtocolUtil.h"
+#include "synergy/AppUtil.h"
 #include "synergy/XSynergy.h"
 #include "io/IStream.h"
 #include "io/XIO.h"
@@ -58,7 +59,8 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     LOG((CLOG_DEBUG1 "saying hello"));
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
-                            kProtocolMinorVersion);
+                            kProtocolMinorVersion,
+                            AppUtil::instance().getKeyboardLayoutList().c_str());
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
