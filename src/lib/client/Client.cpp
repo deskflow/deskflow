@@ -729,7 +729,7 @@ Client::handleHello(const Event&, void*)
         cleanupConnection();
         return;
     }
-    LOG((CLOG_ERR "_________________Server all language %s", keyboardLayoutList.c_str()));
+    //LOG((CLOG_ERR "_________________Server all language %s", keyboardLayoutList.c_str()));
 
     auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
     for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
@@ -758,7 +758,7 @@ Client::handleHello(const Event&, void*)
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
         allKeyboardLayoutsStr += layout;
     }
-    LOG((CLOG_NOTE "___________Language list to server %s", allKeyboardLayoutsStr.c_str()));
+    //((CLOG_NOTE "___________Language list to server %s", allKeyboardLayoutsStr.c_str()));
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion, &m_name, &allKeyboardLayoutsStr);

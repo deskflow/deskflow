@@ -60,7 +60,7 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
         allKeyboardLayoutsStr += layout;
     }
-    LOG((CLOG_NOTE "___________Language list to client %s", allKeyboardLayoutsStr.c_str()));
+    //LOG((CLOG_NOTE "___________Language list to client %s", allKeyboardLayoutsStr.c_str()));
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion,
@@ -204,7 +204,7 @@ ClientProxyUnknown::handleData(const Event&, void*)
             throw XIncompatibleClient(major, minor);
         }
 
-        LOG((CLOG_ERR "_________________Client all language %s", keyboardLayoutList.c_str()));
+        //LOG((CLOG_ERR "_________________Client all language %s", keyboardLayoutList.c_str()));
 
         auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
         for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
