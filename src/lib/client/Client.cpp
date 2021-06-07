@@ -722,7 +722,7 @@ void
 Client::handleHello(const Event&, void*)
 {
     SInt16 major, minor;
-    String keyboardLayoutList;
+    String keyboardLayoutList("<unknown>");
     if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor, &keyboardLayoutList)) {
         sendConnectionFailedEvent("Protocol error from server, check encryption settings");
         cleanupTimer();
@@ -731,14 +731,14 @@ Client::handleHello(const Event&, void*)
     }
 
     auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
-    LOG((CLOG_ERR "_________________Server all language %s", keyboardLayoutList.c_str()));
-    for(size_t i = 0; i <= keyboardLayoutList.size() - 2; i +=2) {
+    LOG((CLOG_ERR "_________________Server all language %s   %i", &keyboardLayoutList, keyboardLayoutList.size()));
+    for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
         auto serverLayout = keyboardLayoutList.substr(i, 2);
         if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
-            LOG((CLOG_ERR "_________________Client missed server language %s", &serverLayout));
+            LOG((CLOG_ERR "_________________Client missed server language %s", serverLayout.c_str()));
         }
         else {
-            LOG((CLOG_NOTE "_______________Server language %s is supported", &serverLayout));
+            LOG((CLOG_NOTE "_______________Server language %s is supported", serverLayout.c_str()));
         }
     }
 
