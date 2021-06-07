@@ -731,6 +731,7 @@ Client::handleHello(const Event&, void*)
     }
 
     auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
+    LOG((CLOG_ERR "_________________Server all language %s", keyboardLayoutList.c_str()));
     for(size_t i = 0; i <= keyboardLayoutList.size() - 2; i +=2) {
         auto serverLayout = keyboardLayoutList.substr(i, 2);
         if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
