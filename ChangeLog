@@ -39,6 +39,7 @@ Enhancements:
 - #7004 Add openssl dependency for rpm
 - #7008 Add logging when hostname have several IP
 - #7022 Add Fedora 33 to build and release pipeline
+- #7031 New china licenses
 ===========
 
 v1.13.1-stable
