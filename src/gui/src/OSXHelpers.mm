@@ -20,8 +20,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
-#import <array>
-#import <string>
 #import <Carbon/Carbon.h>
 
 
