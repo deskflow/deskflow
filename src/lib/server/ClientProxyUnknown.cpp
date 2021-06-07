@@ -60,11 +60,11 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
         m_allKeyboardLayoutsStr += layout;
     }
-    LOG((CLOG_NOTE "___________Language list to client %s", m_allKeyboardLayoutsStr.c_str()));
+    LOG((CLOG_NOTE "___________Language list to client %s", &m_allKeyboardLayoutsStr));
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion,
-                            m_allKeyboardLayoutsStr.c_str());
+                            &m_allKeyboardLayoutsStr);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
@@ -183,6 +183,7 @@ ClientProxyUnknown::handleData(const Event&, void*)
     LOG((CLOG_DEBUG1 "parsing hello reply"));
 
     String name("<unknown>");
+    String keyboardLayoutList("<unknown>");
     try {
         // limit the maximum length of the hello
         UInt32 n = m_stream->getSize();
@@ -194,13 +195,26 @@ ClientProxyUnknown::handleData(const Event&, void*)
         // parse the reply to hello
         SInt16 major, minor;
         if (!ProtocolUtil::readf(m_stream, kMsgHelloBack,
-                                    &major, &minor, &name)) {
+                                    &major, &minor, &name, &keyboardLayoutList)) {
             throw XBadClient();
         }
 
         // disallow invalid version numbers
         if (major <= 0 || minor < 0) {
             throw XIncompatibleClient(major, minor);
+        }
+
+        LOG((CLOG_ERR "_________________Client all language %s", keyboardLayoutList.c_str()));
+
+        auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
+        for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
+            auto serverLayout = keyboardLayoutList.substr(i, 2);
+            if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
+                LOG((CLOG_ERR "_________________Server missed client language %s", serverLayout.c_str()));
+            }
+            else {
+                LOG((CLOG_NOTE "_______________Client language %s is supported", serverLayout.c_str()));
+            }
         }
 
         // remove stream event handlers.  the proxy we're about to create

@@ -729,9 +729,9 @@ Client::handleHello(const Event&, void*)
         cleanupConnection();
         return;
     }
+    LOG((CLOG_ERR "_________________Server all language %s", keyboardLayoutList.c_str()));
 
     auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
-    LOG((CLOG_ERR "_________________Server all language %s   %i", &keyboardLayoutList, keyboardLayoutList.size()));
     for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
         auto serverLayout = keyboardLayoutList.substr(i, 2);
         if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
@@ -754,9 +754,14 @@ Client::handleHello(const Event&, void*)
 
     // say hello back
     LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
+    m_allKeyboardLayoutsStr.clear();
+    for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
+        m_allKeyboardLayoutsStr += layout;
+    }
+    LOG((CLOG_NOTE "___________Language list to server %s", &m_allKeyboardLayoutsStr));
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             kProtocolMajorVersion,
-                            kProtocolMinorVersion, &m_name);
+                            kProtocolMinorVersion, &m_name, &m_allKeyboardLayoutsStr);
 
     // now connected but waiting to complete handshake
     setupScreen();
