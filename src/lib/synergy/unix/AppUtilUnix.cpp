@@ -71,6 +71,9 @@ AppUtilUnix::getKeyboardLayoutList()
                std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) == layoutLangCodes.end()){
                 layoutLangCodes.push_back(langCode);
             }
+
+            //Save only first language code
+            break;
         }
     }
 
