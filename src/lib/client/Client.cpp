@@ -754,14 +754,14 @@ Client::handleHello(const Event&, void*)
 
     // say hello back
     LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
-    m_allKeyboardLayoutsStr.clear();
+    String allKeyboardLayoutsStr;
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
-        m_allKeyboardLayoutsStr += layout;
+        allKeyboardLayoutsStr += layout;
     }
-    LOG((CLOG_NOTE "___________Language list to server %s", &m_allKeyboardLayoutsStr));
+    LOG((CLOG_NOTE "___________Language list to server %s", allKeyboardLayoutsStr.c_str()));
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             kProtocolMajorVersion,
-                            kProtocolMinorVersion, &m_name, &m_allKeyboardLayoutsStr);
+                            kProtocolMinorVersion, &m_name, &allKeyboardLayoutsStr);
 
     // now connected but waiting to complete handshake
     setupScreen();

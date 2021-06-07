@@ -56,15 +56,15 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    m_allKeyboardLayoutsStr.clear();
+    String allKeyboardLayoutsStr;
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
-        m_allKeyboardLayoutsStr += layout;
+        allKeyboardLayoutsStr += layout;
     }
-    LOG((CLOG_NOTE "___________Language list to client %s", &m_allKeyboardLayoutsStr));
+    LOG((CLOG_NOTE "___________Language list to client %s", allKeyboardLayoutsStr.c_str()));
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion,
-                            &m_allKeyboardLayoutsStr);
+                            &allKeyboardLayoutsStr);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()

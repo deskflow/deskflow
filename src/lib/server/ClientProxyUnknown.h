@@ -74,5 +74,4 @@ private:
     bool                m_ready;
     Server*                m_server;
     IEventQueue*        m_events;
-    String              m_allKeyboardLayoutsStr;
 };

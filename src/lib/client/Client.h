@@ -214,7 +214,6 @@ public:
 
 private:
     String              m_name;
-    String              m_allKeyboardLayoutsStr = "";
     NetworkAddress      m_serverAddress;
     ISocketFactory*     m_socketFactory;
     synergy::Screen*    m_screen;
