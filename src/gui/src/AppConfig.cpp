@@ -428,7 +428,7 @@ bool AppConfig::isCryptoAvailable() const {
     bool result {true};
 
 #ifndef SYNERGY_ENTERPRISE
-    result = (edition() == kPro || edition() == kBusiness);
+    result = (edition() == kPro || edition() == kPro_China || edition() == kBusiness);
 #endif
 
     return result;
