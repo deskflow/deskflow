@@ -164,7 +164,7 @@ public slots:
         void logError();
         void updateFound(const QString& version);
         void saveSettings();
-        void checkSystemInterruptions() const;
+        void checkSystemInterruptions();
 
         /// @brief Receives the signal that the auto config option has changed
         void zeroConfToggled();

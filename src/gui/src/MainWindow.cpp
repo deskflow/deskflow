@@ -328,7 +328,7 @@ void MainWindow::saveSettings()
     GUI::Config::ConfigWriter::make()->globalSave();
 }
 
-void MainWindow::checkSystemInterruptions() const
+void MainWindow::checkSystemInterruptions()
 {
     if(synergyType() == synergyServer)
     {
