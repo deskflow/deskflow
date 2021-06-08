@@ -1,4 +1,4 @@
-v1.14.0-rc
+v1.14.0-stable
 ===========
 Bug fixes:
 - #6953 | #6961 The system does not update server name in Server configuration
