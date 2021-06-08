@@ -19,7 +19,11 @@
 
 #define OSXHELPERS__H
 
+#include <string>
+
 bool isOSXSecureInputEnabled();
+int getOSXSecureInputEventPID();
+std::string getOSXProcessName(int pid);
 bool isOSXInterfaceStyleDark();
 bool isOSXUseDarkIcons();
 

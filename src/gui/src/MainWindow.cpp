@@ -333,13 +333,32 @@ void MainWindow::checkSystemInterruptions()
     if(synergyType() == synergyServer)
     {
 #if defined(Q_OS_MAC)
-        if(!m_isSecureInputNotificationShown && isOSXSecureInputEnabled())
+        if(!isOSXSecureInputEnabled())
         {
+            m_isSecureInputNotificationShown = false;
+        }
+        else if(!m_isSecureInputNotificationShown)
+        {
+            // avoid showing multiple duplicate messages
             m_isSecureInputNotificationShown = true;
+
             QMessageBox message(this);
             message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
-            message.setText(QObject::tr("Secure input was enabled in your system by another application. Synergy will not be able to send keyboard strokes while the secure input is enabled"));
-            message.exec();
+            std::string messageText =
+                    "Secure input was enabled in your system by another application. " \
+                    "Synergy will not be able to send keyboard strokes while the secure input is enabled\n\n";
+            int secureInputProcessPID = getOSXSecureInputEventPID();
+            std::string infringingProcessName = getOSXProcessName(secureInputProcessPID);
+
+            // IO registry may not contain the secure input process PID
+            // in this case don't add an option to quit the infringing app
+            if(secureInputProcessPID == 0) infringingProcessName = "unknown";
+            else message.addButton(QString("Quit %1").arg(infringingProcessName.c_str()), QMessageBox::ApplyRole);
+            messageText += "Infringing process is " + infringingProcessName;
+            message.setText(QObject::tr(messageText.c_str()));
+
+            // if user decides to stop the app send the SIGTERM signal
+            if (message.exec() == QMessageBox::Accepted && secureInputProcessPID) kill(secureInputProcessPID, SIGTERM);
         }
 #endif
     }
