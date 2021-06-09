@@ -23,6 +23,8 @@
 #include "mt/Lock.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
+#include "synergy/ArgParser.h"
+#include "synergy/ArgsBase.h"
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -696,6 +698,41 @@ SecureSocket::verifyCertFingerprint()
     formatFingerprint(fingerprint);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
+    std::ifstream file;
+
+    // if the --tls-cert option is set, check the fingerprint against that first
+    if (!ArgParser::argsBase().m_tlsCertFile.empty()) {
+        String certificateFilename = ArgParser::argsBase().m_tlsCertFile;
+
+        FILE *fp = fopen(certificateFilename.c_str(), "r");
+        if (!fp) {
+            LOG((CLOG_ERR "unable to open tls-cert file: %s", certificateFilename.c_str()));
+            return false;
+        }
+
+        X509 *trustedCert = PEM_read_X509(fp, NULL, NULL, NULL);
+        fclose(fp);
+        if (!trustedCert) {
+            LOG((CLOG_ERR "unable to parse PEM certificate from tls-cert file: %s", certificateFilename.c_str()));
+            return false;
+        }
+
+        digestResult = X509_digest(cert, EVP_sha256(), tempFingerprint, &tempFingerprintLen);
+        if (digestResult <= 0) {
+            LOG((CLOG_ERR "failed to calculate trusted fingerprint, digest result: %d", digestResult));
+            return false;
+        }
+
+        // format fingerprint into hexdecimal format with colon separator
+        String trustedFingerprint(static_cast<char*>(static_cast<void*>(tempFingerprint)), tempFingerprintLen);
+        formatFingerprint(trustedFingerprint);
+        LOG((CLOG_NOTE "trusted fingerprint: %s", fingerprint.c_str()));
+
+        if (trustedFingerprint == fingerprint) {
+            return true;
+        }
+    }
+
     String trustedServersFilename;
     trustedServersFilename = synergy::string::sprintf(
         "%s/%s/%s",
@@ -705,7 +742,6 @@ SecureSocket::verifyCertFingerprint()
 
     // check if this fingerprint exist
     String fileLine;
-    std::ifstream file;
     file.open(trustedServersFilename.c_str());
 
     bool isValid = false;
