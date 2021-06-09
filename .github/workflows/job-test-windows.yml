@@ -17,7 +17,6 @@ jobs:
       QT_VERSION: 5.12.6
       QT_BASE_URL: http://qt.mirror.constant.com/
       QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.12.6
-      OPENSSL_LIB_DIR: ${{ github.workspace }}\ext\openssl\windows
 
     steps:
     - uses: actions/checkout@v2
@@ -52,12 +51,15 @@ jobs:
         $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
+    - name: Install OpenSSL 
+      run: choco install openssl -y --no-progress
+
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Build
       env:
-        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\msvc2017_64\\;${{ env.OPENSSL_LIB_DIR }}\\x64"
+        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\msvc2017_64\\"
       run: |
         mkdir build
         cd build

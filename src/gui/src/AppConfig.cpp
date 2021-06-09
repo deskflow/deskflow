@@ -77,6 +77,7 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "serverHostname",
         "tlsCertPath",
         "tlsKeyLength",
+        "preventSleep"
 };
 
 static const char* logLevelNames[] =
@@ -239,6 +240,7 @@ void AppConfig::loadSettings()
     m_UseInternalConfig         = loadSetting(kUseInternalConfig, false).toBool();
     m_ClientGroupChecked        = loadSetting(kGroupClientCheck, false).toBool();
     m_ServerHostname            = loadSetting(kServerHostname).toString();
+    m_PreventSleep              = loadSetting(kPreventSleep, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -299,6 +301,7 @@ void AppConfig::saveSettings()
         setSetting(kUseInternalConfig, m_UseInternalConfig);
         setSetting(kGroupClientCheck, m_ClientGroupChecked);
         setSetting(kServerHostname, m_ServerHostname);
+        setSetting(kPreventSleep, m_PreventSleep);
     }
 
     m_unsavedChanges = false;
@@ -452,6 +455,12 @@ bool AppConfig::getLanguageSync() const { return m_LanguageSync; }
 
 void AppConfig::setLanguageSync(bool newValue) {
     setSettingModified(m_LanguageSync, newValue);
+}
+
+bool AppConfig::getPreventSleep() const { return m_PreventSleep; }
+
+void AppConfig::setPreventSleep(bool newValue) {
+    setSettingModified(m_PreventSleep, newValue);
 }
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
