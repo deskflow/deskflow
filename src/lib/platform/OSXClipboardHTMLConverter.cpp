@@ -83,13 +83,18 @@ OSXClipboardHTMLConverter::convertString(
 String
 OSXClipboardHTMLConverter::doFromIClipboard(const String& data) const
 {
-    return convertString(data, kCFStringEncodingUTF8,
-                CFStringGetSystemEncoding());
+    return data;
 }
 
 String
 OSXClipboardHTMLConverter::doToIClipboard(const String& data) const
 {
-    return convertString(data, CFStringGetSystemEncoding(),
-                kCFStringEncodingUTF8);
+    if (Unicode::isUTF8(data))
+    {
+        return data;
+    }
+    else
+    {
+        return convertString(data, CFStringGetSystemEncoding(), kCFStringEncodingUTF8);
+    }
 }
