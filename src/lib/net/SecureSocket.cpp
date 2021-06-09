@@ -682,11 +682,9 @@ SecureSocket::verifyCertFingerprint()
 {
     // calculate received certificate fingerprint
     X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    EVP_MD* tempDigest;
     unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
     unsigned int tempFingerprintLen;
-    tempDigest = (EVP_MD*)EVP_sha256();
-    int digestResult = X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen);
+    int digestResult = X509_digest(cert, EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
     if (digestResult <= 0) {
         LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
@@ -697,8 +695,6 @@ SecureSocket::verifyCertFingerprint()
     String fingerprint(static_cast<char*>(static_cast<void*>(tempFingerprint)), tempFingerprintLen);
     formatFingerprint(fingerprint);
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
-
-    std::ifstream file;
 
     // if the --tls-cert option is set, check the fingerprint against that first
     if (!ArgParser::argsBase().m_tlsCertFile.empty()) {
@@ -742,6 +738,7 @@ SecureSocket::verifyCertFingerprint()
 
     // check if this fingerprint exist
     String fileLine;
+    std::ifstream file;
     file.open(trustedServersFilename.c_str());
 
     bool isValid = false;
