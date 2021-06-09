@@ -6,7 +6,7 @@ Bug fixes:
 - #7012 Fix natural horizontal scrolling on Mac client
 - #6997 Allow Windows to go to sleep depending on system preferences
 - #7001 Add option to prevent computer from going to sleep
-- #7029 Wrong encoding for text copied between linux and windows
+- #7029 | #7033 Wrong encoding for text copied between linux and windows
 - #7015 Fix Windows service not starting up after sleep
 
 Enhancements:
