@@ -713,7 +713,7 @@ SecureSocket::verifyCertFingerprint()
             return false;
         }
 
-        digestResult = X509_digest(cert, EVP_sha256(), tempFingerprint, &tempFingerprintLen);
+        digestResult = X509_digest(trustedCert, EVP_sha256(), tempFingerprint, &tempFingerprintLen);
         if (digestResult <= 0) {
             LOG((CLOG_ERR "failed to calculate trusted fingerprint, digest result: %d", digestResult));
             return false;
@@ -722,7 +722,7 @@ SecureSocket::verifyCertFingerprint()
         // format fingerprint into hexdecimal format with colon separator
         String trustedFingerprint(static_cast<char*>(static_cast<void*>(tempFingerprint)), tempFingerprintLen);
         formatFingerprint(trustedFingerprint);
-        LOG((CLOG_NOTE "trusted fingerprint: %s", fingerprint.c_str()));
+        LOG((CLOG_NOTE "trusted fingerprint: %s", trustedFingerprint.c_str()));
 
         if (trustedFingerprint == fingerprint) {
             return true;
