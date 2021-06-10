@@ -8,12 +8,14 @@ Bug fixes:
 - #7001 Add option to prevent computer from going to sleep
 - #7029 | #7033 Wrong encoding for text copied between linux and windows
 - #7015 Fix Windows service not starting up after sleep
+- #7036 Fix tray icon not changing theme on Big Sur
 - #7038 Fix different keyboard layout notification
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
 - #7026 Update the way we package OpenSSL for Windows build
 - #7037 Add Ubuntu 21.04 build
+- #7030 Add user nofication for secure input on Mac
 ===========
 
 v1.14.0-stable
