@@ -343,10 +343,19 @@ void MainWindow::setIcon(qSynergyState state) const
     QIcon icon;
 
 #ifdef Q_OS_MAC
-    if (isOSXUseDarkIcons())
-        icon.addFile(synergyDarkIconFiles[state]);
-    else
-        icon.addFile(synergyLightIconFiles[state]);
+    switch(getOSXIconsTheme()) {
+        case IconsTheme::ICONS_DARK:
+            icon.addFile(synergyDarkIconFiles[state]);
+            break;
+        case IconsTheme::ICONS_LIGHT:
+            icon.addFile(synergyLightIconFiles[state]);
+            break;
+        case IconsTheme::ICONS_TEMPLATE:
+        default:
+            icon.addFile(synergyDarkIconFiles[state]);
+            icon.setIsMask(true);
+            break;
+    }
 #else
     icon.addFile(synergyDefaultIconFiles[state]);
 #endif
