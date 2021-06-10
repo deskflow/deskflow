@@ -24,6 +24,7 @@
 bool isOSXSecureInputEnabled();
 int getOSXSecureInputEventPID();
 std::string getOSXProcessName(int pid);
+void OSXShowNotification();
 bool isOSXInterfaceStyleDark();
 bool isOSXUseDarkIcons();
 

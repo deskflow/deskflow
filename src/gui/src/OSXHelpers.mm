@@ -92,6 +92,20 @@ getOSXProcessName(int pid)
     return buf;
 }
 
+void
+OSXShowNotification()
+{
+    NSLog(@"Showing notification");
+
+    NSUserNotification *notification = [[NSUserNotification alloc] init];
+    notification.title = @"Hello, World!";
+    notification.informativeText = @"A notification";
+    notification.soundName = NSUserNotificationDefaultSoundName;
+
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+    [notification release];
+}
+
 bool
 isOSXInterfaceStyleDark()
 {

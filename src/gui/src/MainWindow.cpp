@@ -341,7 +341,9 @@ void MainWindow::checkSystemInterruptions()
         {
             // avoid showing multiple duplicate messages
             m_isSecureInputNotificationShown = true;
+            OSXShowNotification();
 
+            /*
             QMessageBox message(this);
             message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
             std::string messageText =
@@ -359,6 +361,7 @@ void MainWindow::checkSystemInterruptions()
 
             // if user decides to stop the app send the SIGTERM signal
             if (message.exec() == QMessageBox::Accepted && secureInputProcessPID) kill(secureInputProcessPID, SIGTERM);
+            */
         }
 #endif
     }
