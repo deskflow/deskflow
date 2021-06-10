@@ -343,7 +343,6 @@ void MainWindow::setIcon(qSynergyState state) const
     QIcon icon;
 
 #ifdef Q_OS_MAC
-    IconsTheme theme = getOSXIconsTheme();
     switch(getOSXIconsTheme()) {
         case IconsTheme::ICONS_DARK:
             icon.addFile(synergyDarkIconFiles[state]);
