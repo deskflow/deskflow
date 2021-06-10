@@ -19,7 +19,7 @@
 
 #define OSXHELPERS__H
 
-enum IconsTheme {
+enum class IconsTheme {
     ICONS_DARK,
     ICONS_LIGHT,
     ICONS_TEMPLATE
