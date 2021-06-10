@@ -207,7 +207,7 @@ AppUtilWindows::getKeyboardLayoutList()
 }
 
 void
-AppUtilWindows::showMessageBox(String title, String text)
+AppUtilWindows::showMessageBox(const String& title, const String& text)
 {
     auto thr = std::thread([=]{MessageBox(NULL, text.c_str(), title.c_str(), MB_OK | MB_ICONERROR);});
     thr.detach();

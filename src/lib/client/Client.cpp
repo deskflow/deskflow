@@ -762,7 +762,7 @@ Client::handleHello(const Event&, void*)
     // say hello back
     LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
     String allKeyboardLayoutsStr;
-    for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
+    for (const auto& layout : AppUtil::instance().getKeyboardLayoutList()) {
         allKeyboardLayoutsStr += layout;
     }
     ProtocolUtil::writef(m_stream, kMsgHelloBack,

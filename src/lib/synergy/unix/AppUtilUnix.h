@@ -31,6 +31,6 @@ public:
     
     int run(int argc, char** argv);
     void startNode();
-    std::vector<String> getKeyboardLayoutList();
-    void showMessageBox(String title, String text);
+    std::vector<String> getKeyboardLayoutList() override;
+    void showMessageBox(const String& title, const String& text) override;
 };

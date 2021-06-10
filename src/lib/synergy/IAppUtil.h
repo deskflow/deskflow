@@ -30,5 +30,5 @@ public:
     virtual void beforeAppExit() = 0;
     virtual void startNode() = 0;
     virtual std::vector<String> getKeyboardLayoutList() = 0;
-    virtual void showMessageBox(String title, String text) = 0;
+    virtual void showMessageBox(const String& title, const String& text) = 0;
 };

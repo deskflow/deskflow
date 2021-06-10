@@ -59,7 +59,7 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
 
     LOG((CLOG_DEBUG1 "saying hello"));
     String allKeyboardLayoutsStr;
-    for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
+    for (const auto& layout : AppUtil::instance().getKeyboardLayoutList()) {
         allKeyboardLayoutsStr += layout;
     }
     ProtocolUtil::writef(m_stream, kMsgHello,
