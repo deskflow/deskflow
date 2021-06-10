@@ -36,6 +36,8 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
+#include <algorithm>
+
 //
 // ClientProxyUnknown
 //

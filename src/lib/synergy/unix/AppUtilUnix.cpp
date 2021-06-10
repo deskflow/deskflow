@@ -18,8 +18,14 @@
 
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
-#include <Carbon/Carbon.h>
 #include <thread>
+
+#if WINAPI_XWINDOWS
+#elif WINAPI_CARBON
+#include <Carbon/Carbon.h>
+#else
+#error Platform not supported.
+#endif
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
@@ -51,6 +57,10 @@ std::vector<String>
 AppUtilUnix::getKeyboardLayoutList()
 {
     std::vector<String> layoutLangCodes;
+
+#if WINAPI_XWINDOWS
+    //TODO implement for X11
+#elif WINAPI_CARBON
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
     CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
@@ -77,6 +87,7 @@ AppUtilUnix::getKeyboardLayoutList()
             break;
         }
     }
+#endif
 
     return layoutLangCodes;
 }
@@ -86,6 +97,9 @@ AppUtilUnix::showMessageBox(String title, String text)
 {
     auto thr = std::thread([=]
     {
+#if WINAPI_XWINDOWS
+    //TODO implement for X11
+#elif WINAPI_CARBON
         CFStringRef titleStrRef = CFStringCreateWithCString(kCFAllocatorDefault, title.c_str(), kCFStringEncodingMacRoman);
         CFStringRef textStrRef = CFStringCreateWithCString(kCFAllocatorDefault, text.c_str(), kCFStringEncodingMacRoman);
 
@@ -93,6 +107,7 @@ AppUtilUnix::showMessageBox(String title, String text)
 
         CFRelease(titleStrRef);
         CFRelease(textStrRef);
+#endif
     });
     thr.detach();
 }
