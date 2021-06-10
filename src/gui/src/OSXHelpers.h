@@ -19,7 +19,13 @@
 
 #define OSXHELPERS__H
 
+enum IconsTheme {
+    ICONS_DARK,
+    ICONS_LIGHT,
+    ICONS_TEMPLATE
+};
+
 bool isOSXInterfaceStyleDark();
-bool isOSXUseDarkIcons();
+IconsTheme getOSXIconsTheme();
 
 #endif
