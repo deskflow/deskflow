@@ -93,7 +93,7 @@ AppUtilUnix::getKeyboardLayoutList()
 }
 
 void
-AppUtilUnix::showMessageBox(String title, String text)
+AppUtilUnix::showMessageBox(const String& title, const String& text)
 {
     auto thr = std::thread([=]
     {
