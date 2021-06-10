@@ -30,6 +30,8 @@
 #import <IOKit/IOKitLib.h>
 #import <libproc.h>
 
+#import <UserNotifications/UNNotification.h>
+#import <UserNotifications/UNUserNotificationCenter.h>
 
 bool
 isOSXSecureInputEnabled()
@@ -97,13 +99,41 @@ OSXShowNotification()
 {
     NSLog(@"Showing notification");
 
-    NSUserNotification *notification = [[NSUserNotification alloc] init];
-    notification.title = @"Hello, World!";
-    notification.informativeText = @"A notification";
-    notification.soundName = NSUserNotificationDefaultSoundName;
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+       completionHandler:^(BOOL granted, NSError * _Nullable error) {
+          // Enable or disable features based on authorization.
+        NSLog(@"granted %d", granted);
+    }];
 
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-    [notification release];
+    /*
+    NSUserNotification* notification = [[NSUserNotification alloc] init];
+    notification.title = @"title";
+    notification.informativeText = @"message";
+    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+    [notification autorelease];
+    */
+
+    /*
+    if (NSClassFromString(@"UNUserNotificationCenter")) {
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        UNAuthorizationOptions options = (UNAuthorizationOptionBadge | UNAuthorizationOptionAlert | UNAuthorizationOptionSound);
+
+        [center requestAuthorizationWithOptions: options
+                              completionHandler: ^(BOOL granted, NSError * _Nullable error) {
+                                  if (granted) {
+                                      NSLog(@"Granted notifications!");
+                                  }
+                              }];
+    }
+    else {
+        NSLog(@"No notifications");
+        //UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound);
+        //UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes: userNotificationTypes categories: nil];
+        //[[UIApplication sharedApplication] registerUserNotificationSettings: settings];
+    }
+    */
 }
 
 bool
