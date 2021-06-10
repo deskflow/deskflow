@@ -77,7 +77,3 @@ endif()
 if (SYNERGY_ENTERPRISE)
     add_definitions (-DSYNERGY_ENTERPRISE=1)
 endif()
-
-if (SYNERGY_AUTOCONFIG)
-   add_definitions (-DSYNERGY_AUTOCONFIG=1)
-endif()

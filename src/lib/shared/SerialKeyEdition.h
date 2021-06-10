@@ -35,7 +35,9 @@ public:
 	void setType(const std::string& type);
 
 	static const std::string PRO;
+	static const std::string PRO_CHINA;
 	static const std::string BASIC;
+	static const std::string BASIC_CHINA;
 	static const std::string BUSINESS;
 	static const std::string UNREGISTERED;
 
