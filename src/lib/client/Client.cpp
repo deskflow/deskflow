@@ -749,11 +749,6 @@ Client::handleHello(const Event&, void*)
         LOG((CLOG_DEBUG "Supported server languages: %s", supportedLanguages.c_str()));
     }
 
-    if(!missedLanguages.empty()) {
-        AppUtil::instance().showMessageBox("Language synchronization error",
-                                           String("This languages are required for client proper work: ") + missedLanguages);
-    }
-
     // check versions
     LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
     if (major < kProtocolMajorVersion ||
@@ -773,6 +768,11 @@ Client::handleHello(const Event&, void*)
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion, &m_name, &allKeyboardLayoutsStr);
+
+    if(!missedLanguages.empty()) {
+        AppUtil::instance().showMessageBox("Language synchronization error",
+                                           String("This languages are required for client proper work: ") + missedLanguages);
+    }
 
     // now connected but waiting to complete handshake
     setupScreen();

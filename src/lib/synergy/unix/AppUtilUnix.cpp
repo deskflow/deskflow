@@ -19,6 +19,7 @@
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
 #include <Carbon/Carbon.h>
+#include <thread>
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
@@ -83,6 +84,15 @@ AppUtilUnix::getKeyboardLayoutList()
 void
 AppUtilUnix::showMessageBox(String title, String text)
 {
+    auto thr = std::thread([=]
+    {
+        CFStringRef titleStrRef = CFStringCreateWithCString(kCFAllocatorDefault, title.c_str(), kCFStringEncodingMacRoman);
+        CFStringRef textStrRef = CFStringCreateWithCString(kCFAllocatorDefault, title.c_str(), kCFStringEncodingMacRoman);
 
+        CFUserNotificationDisplayNotice(0, kCFUserNotificationNoteAlertLevel, NULL, NULL, NULL, titleStrRef, textStrRef, CFSTR("OK"));
+
+        CFRelease(titleStrRef);
+        CFRelease(textStrRef);
+    });
+    thr.detach();
 }
-

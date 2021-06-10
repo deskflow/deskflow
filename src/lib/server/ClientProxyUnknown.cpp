@@ -222,11 +222,6 @@ ClientProxyUnknown::handleData(const Event&, void*)
             LOG((CLOG_DEBUG "Supported client languages: %s", supportedLanguages.c_str()));
         }
 
-        if(!missedLanguages.empty()) {
-            AppUtil::instance().showMessageBox("Language synchronization error",
-                                               String("This languages are required for server proper work: ") + missedLanguages);
-        }
-
         // remove stream event handlers.  the proxy we're about to create
         // may install its own handlers and we don't want to accidentally
         // remove those later.
@@ -268,6 +263,11 @@ ClientProxyUnknown::handleData(const Event&, void*)
         // hangup (with error) if version isn't supported
         if (m_proxy == NULL) {
             throw XIncompatibleClient(major, minor);
+        }
+
+        if(!missedLanguages.empty()) {
+            AppUtil::instance().showMessageBox("Language synchronization error",
+                                               String("This languages are required for server proper work: ") + missedLanguages);
         }
 
         // the proxy is created and now proxy now owns the stream
