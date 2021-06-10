@@ -53,7 +53,9 @@ public:
 
     void startNode();
 
-    std::vector<std::string> getKeyboardLayoutList();
+    std::vector<String> getKeyboardLayoutList();
+
+    void showMessageBox(String title, String text);
 
 private:
     AppExitMode            m_exitMode;

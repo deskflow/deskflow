@@ -46,10 +46,10 @@ AppUtilUnix::startNode()
     app().startNode();
 }
 
-std::vector<std::string>
+std::vector<String>
 AppUtilUnix::getKeyboardLayoutList()
 {
-    std::vector<std::string> layoutLangCodes;
+    std::vector<String> layoutLangCodes;
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
     CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
@@ -79,3 +79,10 @@ AppUtilUnix::getKeyboardLayoutList()
 
     return layoutLangCodes;
 }
+
+void
+AppUtilUnix::showMessageBox(String title, String text)
+{
+
+}
+

@@ -280,7 +280,7 @@ ProtocolUtil::getLength(const char* fmt, va_list args)
             {
                 assert(len == 0);
                 len = (UInt32)(va_arg(args, String*))->size() + 4;
-                //(void)va_arg(args, UInt8*);
+                (void)va_arg(args, UInt8*);
                 break;
 
             }

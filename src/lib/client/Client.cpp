@@ -729,17 +729,29 @@ Client::handleHello(const Event&, void*)
         cleanupConnection();
         return;
     }
-    //LOG((CLOG_ERR "_________________Server all language %s", keyboardLayoutList.c_str()));
 
+    String missedLanguages;
+    String supportedLanguages;
     auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
     for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
         auto serverLayout = keyboardLayoutList.substr(i, 2);
         if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
-            LOG((CLOG_ERR "_________________Client missed server language %s", serverLayout.c_str()));
+            missedLanguages += serverLayout;
+            missedLanguages += ' ';
         }
         else {
-            LOG((CLOG_NOTE "_______________Server language %s is supported", serverLayout.c_str()));
+            supportedLanguages += serverLayout;
+            supportedLanguages += ' ';
         }
+    }
+
+    if(!supportedLanguages.empty()) {
+        LOG((CLOG_DEBUG "Supported server languages: %s", supportedLanguages.c_str()));
+    }
+
+    if(!missedLanguages.empty()) {
+        AppUtil::instance().showMessageBox("Language synchronization error",
+                                           String("This languages are required for client proper work: ") + missedLanguages);
     }
 
     // check versions
@@ -758,7 +770,6 @@ Client::handleHello(const Event&, void*)
     for (auto layout : AppUtil::instance().getKeyboardLayoutList()) {
         allKeyboardLayoutsStr += layout;
     }
-    //((CLOG_NOTE "___________Language list to server %s", allKeyboardLayoutsStr.c_str()));
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion, &m_name, &allKeyboardLayoutsStr);

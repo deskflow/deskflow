@@ -32,10 +32,13 @@
 #include "base/EventQueue.h"
 #include "common/Version.h"
 
+#include <thread>
 #include <sstream>
 #include <iostream>
 #include <conio.h>
 #include <VersionHelpers.h>
+
+#include <Windows.h>
 
 AppUtilWindows::AppUtilWindows(IEventQueue* events) :
     m_events(events),
@@ -181,17 +184,17 @@ AppUtilWindows::startNode()
     app().startNode();
 }
 
-std::vector<std::string>
+std::vector<String>
 AppUtilWindows::getKeyboardLayoutList()
 {
-    std::vector<std::string> layoutLangCodes;
+    std::vector<String> layoutLangCodes;
     {
         auto uLayouts = GetKeyboardLayoutList(0, NULL);
         auto lpList = (HKL*)LocalAlloc(LPTR, (uLayouts * sizeof(HKL)));
         uLayouts = GetKeyboardLayoutList(uLayouts, lpList);
 
         for (int i = 0; i < uLayouts; ++i){
-            std::string code("", 2);
+            String code("", 2);
             GetLocaleInfoA(MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT), LOCALE_SISO639LANGNAME, &code[0], code.size());
             layoutLangCodes.push_back(code);
         }
@@ -201,5 +204,12 @@ AppUtilWindows::getKeyboardLayoutList()
         }
     }
     return layoutLangCodes;
+}
+
+void
+AppUtilWindows::showMessageBox(String title, String text)
+{
+    auto thr = std::thread([=]{MessageBox(NULL, text.c_str(), title.c_str(), MB_OK | MB_ICONERROR);});
+    thr.detach();
 }
 

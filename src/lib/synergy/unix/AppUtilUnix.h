@@ -31,5 +31,6 @@ public:
     
     int run(int argc, char** argv);
     void startNode();
-    std::vector<std::string> getKeyboardLayoutList();
+    std::vector<String> getKeyboardLayoutList();
+    void showMessageBox(String title, String text);
 };
