@@ -21,10 +21,16 @@
 
 #include <string>
 
+enum class IconsTheme {
+    ICONS_DARK,
+    ICONS_LIGHT,
+    ICONS_TEMPLATE
+};
+
 bool isOSXSecureInputEnabled();
 int getOSXSecureInputEventPID();
 std::string getOSXProcessName(int pid);
 bool isOSXInterfaceStyleDark();
-bool isOSXUseDarkIcons();
+IconsTheme getOSXIconsTheme();
 
 #endif
