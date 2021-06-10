@@ -108,7 +108,6 @@ void ServerConfig::saveSettings()
     settings().setValue("hasHeartbeat", hasHeartbeat());
     settings().setValue("heartbeat", heartbeat());
     settings().setValue("relativeMouseMoves", relativeMouseMoves());
-    settings().setValue("screenSaverSync", screenSaverSync());
     settings().setValue("win32KeepForeground", win32KeepForeground());
     settings().setValue("hasSwitchDelay", hasSwitchDelay());
     settings().setValue("switchDelay", switchDelay());
@@ -163,7 +162,6 @@ void ServerConfig::loadSettings()
     haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
     setHeartbeat(settings().value("heartbeat", 5000).toInt());
     setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
-    setScreenSaverSync(settings().value("screenSaverSync", true).toBool());
     setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
     haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
     setSwitchDelay(settings().value("switchDelay", 250).toInt());
@@ -263,7 +261,6 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
         outStream << "\t" << "heartbeat = " << config.heartbeat() << endl;
 
     outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << endl;
-    outStream << "\t" << "screenSaverSync = " << (config.screenSaverSync() ? "true" : "false") << endl;
     outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << endl;
     outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << endl;
     outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
@@ -431,6 +428,17 @@ bool ServerConfig::isScreenExists(const QString& screenName) const
 
 void ServerConfig::addClient(const QString& clientName)
 {
+    int serverIndex = -1;
+
+    if (findScreenName(m_pAppConfig->screenName(), serverIndex))
+    {
+        m_Screens[serverIndex].markAsServer();
+    }
+    else
+    {
+        fixNoServer(m_pAppConfig->screenName(), serverIndex);
+    }
+
     m_Screens.addScreenByPriority(clientName);
 }
 
@@ -463,6 +471,7 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
     bool fixed = false;
     if (screens()[serverDefaultIndex].isNull()) {
         m_Screens[serverDefaultIndex].setName(name);
+        m_Screens[serverDefaultIndex].markAsServer();
         index = serverDefaultIndex;
         fixed = true;
     }

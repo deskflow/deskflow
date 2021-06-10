@@ -991,6 +991,13 @@ font-weight: bold;</string>
         </item>
        </layout>
       </item>
+      <item>
+       <widget class="QCheckBox" name="m_pCheckBoxPreventSleep">
+        <property name="text">
+         <string>Stop this computer from sleeping</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -1000,6 +1007,7 @@ font-weight: bold;</string>
   <tabstop>m_pCheckBoxAutoConfig</tabstop>
  </tabstops>
  <resources>
+  <include location="../res/Synergy.qrc"/>
   <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>

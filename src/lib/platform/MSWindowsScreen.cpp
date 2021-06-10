@@ -247,10 +247,8 @@ MSWindowsScreen::enable()
         // watch jump zones
         m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
     }
-    else {
-        // prevent the system from entering power saving modes.  if
-        // it did we'd be forced to disconnect from the server and
-        // the server would not be able to wake us up.
+
+    if (App::instance().argsBase().m_preventSleep) {
         ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
     }
 }
@@ -270,8 +268,7 @@ MSWindowsScreen::disable()
     }
     else {
         // allow the system to enter power saving mode
-        ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM |
-                            ArchMiscWindows::kDISPLAY);
+        ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM);
     }
 
     // tell key state
@@ -1503,18 +1500,12 @@ MSWindowsScreen::onScreensaver(bool activated)
             m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
             m_screensaverActive = true;
             sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
-
-            // enable display power down
-            ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
         }
     }
     else {
         if (m_screensaverActive) {
             m_screensaverActive = false;
             sendEvent(m_events->forIPrimaryScreen().screensaverDeactivated());
-
-            // disable display power down
-            ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
         }
     }
 

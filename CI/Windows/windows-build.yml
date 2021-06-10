@@ -45,6 +45,14 @@ steps:
         msiexec.exe /i ${pwd}\deps\Bonjour64.msi INSTALLDIR="${pwd}\deps\Bonjour" /qb
     displayName: 'Installing bonjour SDK'
 
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        choco install openssl -y --forcex64 --no-progress
+        Copy-Item -Path "C:\\Program Files\\OpenSSL-Win64" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64" -Recurse
+    displayName: 'Installing OpenSSL (x64)'
+
   - script: |
       call "%ENV_BAT%" -arch=x64
       set BONJOUR_SDK_HOME=%cd%\%BONJOUR_SDK_DIR%
@@ -72,6 +80,15 @@ steps:
     env:
       ENV_BAT: $(ENV_BAT)
       GIT_COMMIT: $(Build.SourceVersion)
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
+        choco install openssl -y --forcex86 --no-progress
+        Copy-Item -Path "C:\\Program Files (x86)\\OpenSSL-Win32" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x86" -Recurse
+    displayName: 'Installing OpenSSL (x86)'
 
   - script: |
       call "%ENV_BAT%" -arch=x86

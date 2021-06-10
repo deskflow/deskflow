@@ -114,6 +114,8 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         bool getAutoHide();
         void setLanguageSync(bool b);
         bool getLanguageSync() const;
+        void setPreventSleep(bool b);
+        bool getPreventSleep() const;
 #ifndef SYNERGY_ENTERPRISE
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
@@ -202,6 +204,7 @@ protected:
         kServerHostname,
         kTLSCertPath,
         kTLSKeyLength,
+        kPreventSleep
     };
 
         void setScreenName(const QString& s);
@@ -245,6 +248,7 @@ protected:
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
         bool m_LanguageSync           = true;
+        bool m_PreventSleep           = false;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;
