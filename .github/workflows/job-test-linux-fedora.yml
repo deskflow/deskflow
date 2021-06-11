@@ -19,6 +19,7 @@ jobs:
           - distro: fedora29
           - distro: fedora30
           - distro: fedora33
+          - distro: fedora34
 
     name: ${{ matrix.distro }}
 

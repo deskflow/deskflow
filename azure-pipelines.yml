@@ -55,6 +55,10 @@ jobs:
           image: symless/synergy-core:fedora33
           packager: rpm
           name: fedora33
+        fedora34:
+          image: symless/synergy-core:fedora34
+          packager: rpm
+          name: fedora34
         centos7.6:
           image: symless/synergy-core:centos7.6
           packager: rpm
