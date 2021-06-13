@@ -84,9 +84,13 @@ XWindowsClipboard::XWindowsClipboard(IXWindowsImpl* impl, Display* display,
     // add converters, most desired first
     m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display,
                                 "text/html"));
+    m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display,
+                                "application/x-moz-nativehtml"));
     m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
     m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
                                 "text/plain;charset=UTF-8"));
+    m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
+                                "text/plain;charset=utf-8"));
     m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display,
                                 "UTF8_STRING"));
     m_converters.push_back(new XWindowsClipboardUCS2Converter(m_display,
