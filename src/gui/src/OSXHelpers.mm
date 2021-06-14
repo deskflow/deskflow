@@ -108,14 +108,14 @@ OSXShowNotification()
 
     NSLog(@"Showed notification");
 
-    /*
     NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";
     notification.informativeText = @"message";
     notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
     [notification autorelease];
-    */
+
+    NSLog(@"Showed notification 2");
 
     /*
     if (NSClassFromString(@"UNUserNotificationCenter")) {
