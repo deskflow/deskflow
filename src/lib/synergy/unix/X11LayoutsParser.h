@@ -32,6 +32,12 @@ private:
         std::vector<Lang>   variants;
     };
 
+    static void              tryReadAllXMLLanguageList(std::ifstream& file, String& line,
+                                                       std::vector<String>& result);
+
+    static void              readXMLLangData(std::ifstream& file,  String& line,
+                                             std::vector<Lang>& langList);
+
     static bool              readAndTrimString(std::ifstream& file, String& line);
 
     static std::vector<Lang> getAllLanguageData();

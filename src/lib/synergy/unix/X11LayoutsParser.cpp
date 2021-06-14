@@ -19,7 +19,6 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <functional>
 
 #include "base/Log.h"
 #include "synergy/unix/X11LayoutsParser.h"
@@ -35,6 +34,53 @@ X11LayoutsParser::readAndTrimString(std::ifstream& file, String& line)
     return result;
 }
 
+void
+X11LayoutsParser::tryReadAllXMLLanguageList(std::ifstream& file, String& line, std::vector<String>& result)
+{
+    if(line != "<languageList>") {
+        return;
+    }
+
+    String isoTag = "<iso639Id>";
+    while (readAndTrimString(file, line) && line != "</languageList>") {
+        auto strat = line.rfind(isoTag, 0);
+        if (strat == 0) {
+            result.push_back(line.substr(isoTag.size(), line.find("</", strat) - isoTag.size()));
+        }
+    }
+};
+
+void
+X11LayoutsParser::readXMLLangData(std::ifstream& file, String& line, std::vector<Lang>& langList)
+{
+    std::vector<std::pair<const String, String*>> searchedTags = {std::make_pair("<name>", nullptr),
+                                                                  std::make_pair("<shortDescription>", nullptr),
+                                                                  std::make_pair("<description>", nullptr)};
+    if(line == "<configItem>") {
+        langList.emplace_back(Lang());
+        searchedTags[0].second = &langList.back().name;
+        searchedTags[1].second = &langList.back().shortDescr;
+        searchedTags[2].second = &langList.back().descr;
+        while (readAndTrimString(file, line) && line != "</configItem>") {
+            for(auto temp : searchedTags) {
+                auto strat = line.rfind(temp.first, 0);
+                if (strat == 0 && temp.second->empty()) {
+                    *temp.second = line.substr(temp.first.size(), line.find("</", strat) - temp.first.size());
+                }
+            }
+
+            tryReadAllXMLLanguageList(file, line, langList.back().layoutBaseISO639_2);
+        }
+    }
+    if(line != "<variantList>") {
+        return;
+    }
+
+    while (readAndTrimString(file, line) && line != "</variantList>") {
+        readXMLLangData(file, line, langList.back().variants);
+    }
+};
+
 std::vector<X11LayoutsParser::Lang>
 X11LayoutsParser::getAllLanguageData()
 {
@@ -45,57 +91,13 @@ X11LayoutsParser::getAllLanguageData()
     }
 
     String line;
-    std::vector<std::pair<String, String*>> searchedTags = {std::make_pair("<name>", nullptr),
-                                                                      std::make_pair("<shortDescription>", nullptr),
-                                                                      std::make_pair("<description>", nullptr)};
-
-    auto tryReadAllLanguageList = [&file, &line](std::vector<String>& result) {
-        if(line != "<languageList>") {
-            return;
-        }
-
-        String isoTag = "<iso639Id>";
-        while (readAndTrimString(file, line) && line != "</languageList>") {
-            auto strat = line.rfind(isoTag, 0);
-            if (strat == 0) {
-                result.push_back(line.substr(isoTag.size(), line.find("</", strat) - isoTag.size()));
-            }
-        }
-    };
-
-    std::function<void(std::vector<Lang>&)> readLangData = [&](std::vector<Lang>& langList) {
-        if(line == "<configItem>") {
-            langList.emplace_back(Lang());
-            searchedTags[0].second = &langList.back().name;
-            searchedTags[1].second = &langList.back().shortDescr;
-            searchedTags[2].second = &langList.back().descr;
-            while (readAndTrimString(file, line) && line != "</configItem>") {
-                for(auto temp : searchedTags) {
-                    auto strat = line.rfind(temp.first, 0);
-                    if (strat == 0 && temp.second->empty()) {
-                        *temp.second = line.substr(temp.first.size(), line.find("</", strat) - temp.first.size());
-                    }
-                }
-
-                tryReadAllLanguageList(langList.back().layoutBaseISO639_2);
-            }
-        }
-        if(line != "<variantList>") {
-            return;
-        }
-
-        while (readAndTrimString(file, line) && line != "</variantList>") {
-            readLangData(langList.back().variants);
-        }
-    };
-
     while (readAndTrimString(file, line)) {
         if(line != "<layoutList>") {
             continue;
         }
 
         while (readAndTrimString(file, line) && line != "</layoutList>") {
-            readLangData(allCodes);
+            readXMLLangData(file, line, allCodes);
         }
     }
 
