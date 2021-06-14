@@ -106,6 +106,8 @@ OSXShowNotification()
         NSLog(@"granted %d", granted);
     }];
 
+    NSLog(@"Showed notification");
+
     /*
     NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";
