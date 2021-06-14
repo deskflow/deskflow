@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -53,25 +53,28 @@ X11LayoutsParser::tryReadAllXMLLanguageList(std::ifstream& file, String& line, s
 void
 X11LayoutsParser::readXMLLangData(std::ifstream& file, String& line, std::vector<Lang>& langList)
 {
-    std::vector<std::pair<const String, String*>> searchedTags = {std::make_pair("<name>", nullptr),
-                                                                  std::make_pair("<shortDescription>", nullptr),
-                                                                  std::make_pair("<description>", nullptr)};
+    const String nameTag = "<name>";
+    const String shortDescrTag = "<shortDescription>";
+    const String descrTag = "<description>";
+
     if(line == "<configItem>") {
         langList.emplace_back(Lang());
-        searchedTags[0].second = &langList.back().name;
-        searchedTags[1].second = &langList.back().shortDescr;
-        searchedTags[2].second = &langList.back().descr;
         while (readAndTrimString(file, line) && line != "</configItem>") {
-            for(auto temp : searchedTags) {
-                auto strat = line.rfind(temp.first, 0);
-                if (strat == 0 && temp.second->empty()) {
-                    *temp.second = line.substr(temp.first.size(), line.find("</", strat) - temp.first.size());
-                }
+
+            if (line.rfind(nameTag, 0) == 0) {
+                langList.back().name = line.substr(nameTag.size(), line.find("</", 0) - nameTag.size());
+            }
+            else if (line.rfind(shortDescrTag, 0) == 0) {
+                langList.back().shortDescr = line.substr(shortDescrTag.size(), line.find("</", 0) - shortDescrTag.size());
+            }
+            else if (line.rfind(descrTag, 0) == 0) {
+                langList.back().descr = line.substr(descrTag.size(), line.find("</", 0) - descrTag.size());
             }
 
             tryReadAllXMLLanguageList(file, line, langList.back().layoutBaseISO639_2);
         }
     }
+
     if(line != "<variantList>") {
         return;
     }
@@ -120,47 +123,50 @@ X11LayoutsParser::convertLayoutToISO639_2(std::vector<String> layoutNames,
                                           std::vector<String> layoutVariantNames,
                                           std::vector<String>& iso639_2Codes)
 {
+    if(layoutNames.size() != layoutVariantNames.size()) {
+        LOG((CLOG_WARN "Error in language layout or language layout variants list"));
+        return;
+    }
+
     auto allLang = getAllLanguageData();
-    if(layoutNames.size() == layoutVariantNames.size()) {
-        for (size_t i = 0; i < layoutNames.size(); i++) {
-            auto langIter = std::find_if(allLang.begin(), allLang.end(), [n=layoutNames[i]](const Lang& l) {return l.name == n;});
+    for (size_t i = 0; i < layoutNames.size(); i++) {
+        auto langIter = std::find_if(allLang.begin(), allLang.end(), [n=layoutNames[i]](const Lang& l) {return l.name == n;});
+        if(langIter == allLang.end()) {
+            LOG((CLOG_WARN "Language \"%s\" is unknown", layoutNames[i].c_str()));
+            continue;
+        }
+
+        const std::vector<String>* toCopy = nullptr;
+        if(layoutVariantNames[i].empty()) {
+            toCopy = &langIter->layoutBaseISO639_2;
+        }
+        else {
+            auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
+                                                [n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
             if(langIter == allLang.end()) {
-                LOG((CLOG_WARN "Language \"%s\" is unknown", layoutNames[i].c_str()));
+                LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
                 continue;
             }
 
-            std::vector<String>* toCopy = nullptr;
-            if(layoutVariantNames[i].empty()) {
+            if(langVariantIter->layoutBaseISO639_2.empty()) {
                 toCopy = &langIter->layoutBaseISO639_2;
             }
             else {
-                auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
-                                                    [n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
-                if(langIter == allLang.end()) {
-                    LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
-                    continue;
-                }
-
-                if(langVariantIter->layoutBaseISO639_2.empty()) {
-                    toCopy = &langIter->layoutBaseISO639_2;
-                }
-                else {
-                    toCopy = &langVariantIter->layoutBaseISO639_2;
-                }
+                toCopy = &langVariantIter->layoutBaseISO639_2;
             }
-
-            if(!toCopy) {
-                LOG((CLOG_WARN "Logical error in X11 parser"));
-                continue;
-            }
-
-            if(toCopy->empty()) {
-                LOG((CLOG_WARN "Missed ISO 639-2 code for language \"%s\"", layoutNames[i].c_str()));
-                continue;
-            }
-
-            appendVectorUniq(*toCopy, iso639_2Codes);
         }
+
+        if(!toCopy) {
+            LOG((CLOG_WARN "Logical error in X11 parser"));
+            continue;
+        }
+
+        if(toCopy->empty()) {
+            LOG((CLOG_WARN "Missed ISO 639-2 code for language \"%s\"", layoutNames[i].c_str()));
+            continue;
+        }
+
+        appendVectorUniq(*toCopy, iso639_2Codes);
     }
 }
 
@@ -177,12 +183,12 @@ X11LayoutsParser::getX11LanguageList()
     const String layoutLinePrefix = "XKBLAYOUT=";
     const String variantLinePrefix = "XKBVARIANT=";
 
-    auto splitLine = [](std::vector<String>& result, const String& line, char delim) {
+    auto splitLine = [](std::vector<String>& splitted, const String& line, char delim) {
         std::stringstream ss(line);
         String code;
         while(ss.good()) {
             getline(ss, code, delim);
-            result.push_back(code);
+            splitted.push_back(code);
         }
     };
 
@@ -201,11 +207,11 @@ X11LayoutsParser::getX11LanguageList()
     std::vector<String> iso639_2Codes;
     convertLayoutToISO639_2(layoutNames, layoutVariantNames, iso639_2Codes);
 
-    for (size_t i = 0; i < iso639_2Codes.size(); i++) {
+    for (const auto& isoCode : iso639_2Codes) {
         auto tableIter = std::find_if(ISO_Table.begin(), ISO_Table.end(),
-                                            [n=iso639_2Codes[i]](const std::pair<String, String>& c) {return c.first == n;});
+                                            [&isoCode](const std::pair<String, String>& c) {return c.first == isoCode;});
         if(tableIter == ISO_Table.end()) {
-            LOG((CLOG_WARN "ISO 639-2 code \"%s\" is missed in table", iso639_2Codes[i].c_str()));
+            LOG((CLOG_WARN "ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));
             continue;
         }
 
