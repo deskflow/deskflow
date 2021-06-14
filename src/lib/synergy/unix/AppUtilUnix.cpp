@@ -21,6 +21,7 @@
 #include <thread>
 
 #if WINAPI_XWINDOWS
+#include "synergy/unix/X11LayoutsParser.h"
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
 #else
@@ -59,7 +60,7 @@ AppUtilUnix::getKeyboardLayoutList()
     std::vector<String> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-    //TODO implement for X11
+    layoutLangCodes = X11LayoutsParser::getX11LanguageList();
 #elif WINAPI_CARBON
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
@@ -98,7 +99,7 @@ AppUtilUnix::showMessageBox(const String& title, const String& text)
     auto thr = std::thread([=]
     {
 #if WINAPI_XWINDOWS
-    //TODO implement for X11
+        system(String("DISPLAY=:0.0 /usr/bin/notify-send \"" + title + "\" \"" + text + "\"").c_str());
 #elif WINAPI_CARBON
         CFStringRef titleStrRef = CFStringCreateWithCString(kCFAllocatorDefault, title.c_str(), kCFStringEncodingMacRoman);
         CFStringRef textStrRef = CFStringCreateWithCString(kCFAllocatorDefault, text.c_str(), kCFStringEncodingMacRoman);
