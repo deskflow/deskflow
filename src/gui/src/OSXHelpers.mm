@@ -21,6 +21,9 @@
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
 
+#import <UserNotifications/UNNotification.h>
+#import <UserNotifications/UNUserNotificationCenter.h>
+
 bool
 isOSXInterfaceStyleDark()
 {
@@ -33,6 +36,13 @@ isOSXInterfaceStyleDark()
 bool
 isOSXUseDarkIcons()
 {
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+       completionHandler:^(BOOL granted, NSError * _Nullable error) {
+          // Enable or disable features based on authorization.
+        NSLog(@"granted %d", granted);
+    }];
+
    if (@available(macOS 11, *)) {
       return true;
    }
