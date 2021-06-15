@@ -40,13 +40,7 @@ isOSXUseDarkIcons()
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        LOG((CLOG_INFO "Permission granted: %d. Error: %s",
-             granted,
-             String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str())
-        );
     }];
-
-    LOG((CLOG_INFO "Showing notification from main"));
 
     NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";
