@@ -889,7 +889,8 @@ OSXScreen::enter()
 bool
 OSXScreen::leave()
 {
-    if(m_isPrimary && IsSecureEventInputEnabled()) {
+    //if(m_isPrimary && IsSecureEventInputEnabled()) {
+    if(m_isPrimary) {
         createSecureInputNotification();
     }
 
@@ -2177,7 +2178,13 @@ OSXScreen::requestNotificationPermissions() const
 	{
 		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
 		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-		   completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
+			completionHandler:^(BOOL granted, NSError * _Nullable error) {
+			LOG((CLOG_INFO "Permission granted: %d. Error: %s",
+				 granted,
+				 String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str())
+			);
+		}];
+		LOG((CLOG_INFO "Asked for user permission to show notifications"));
 	}
 	return true;
 }
@@ -2185,6 +2192,8 @@ OSXScreen::requestNotificationPermissions() const
 void
 OSXScreen::createNotification(const String& title, const String& content) const
 {
+    LOG((CLOG_INFO "Showing notification"));
+
     NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";
     notification.informativeText = @"message";
