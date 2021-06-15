@@ -2192,7 +2192,7 @@ OSXScreen::requestNotificationPermissions() const
 void
 OSXScreen::createNotification(const String& title, const String& content) const
 {
-    LOG((CLOG_INFO "Showing notification"));
+    LOG((CLOG_INFO "Showing notification from server"));
 
     NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";

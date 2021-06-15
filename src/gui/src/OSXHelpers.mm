@@ -23,6 +23,7 @@
 
 #import <UserNotifications/UNNotification.h>
 #import <UserNotifications/UNUserNotificationCenter.h>
+#import <base/Log.h>
 
 bool
 isOSXInterfaceStyleDark()
@@ -36,12 +37,23 @@ isOSXInterfaceStyleDark()
 bool
 isOSXUseDarkIcons()
 {
-    /*UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-       completionHandler:^(BOOL granted, NSError * _Nullable error) {
-          // Enable or disable features based on authorization.
-        NSLog(@"granted %d", granted);
-    }];*/
+        completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        LOG((CLOG_INFO "Permission granted: %d. Error: %s",
+             granted,
+             String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str())
+        );
+    }];
+
+    LOG((CLOG_INFO "Showing notification from main"));
+
+    NSUserNotification* notification = [[NSUserNotification alloc] init];
+    notification.title = @"title";
+    notification.informativeText = @"message";
+    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+    [notification autorelease];
 
    if (@available(macOS 11, *)) {
       return true;
