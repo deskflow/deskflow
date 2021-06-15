@@ -501,6 +501,12 @@ ServerApp::openServerScreen()
 {
     synergy::Screen* screen = createScreen();
     screen->setEnableDragDrop(argsBase().m_enableDragDrop);
+
+    if (!screen->requestNotificationPermissions())
+    {
+        LOG((CLOG_CRIT "Failed to request user permission to show notifications"));
+    }
+
     m_events->adoptHandler(m_events->forIScreen().error(),
         screen->getEventTarget(),
         new TMethodEventJob<ServerApp>(

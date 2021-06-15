@@ -133,6 +133,20 @@ public:
     //! Change dragging status
     virtual void        setDraggingStarted(bool started) = 0;
 
+    //! Request a user pemission to send desktop notifications
+    /*!
+    Sends a platform dependant permission request to allow clients and servers
+    to show notifications. Returns true if succesfully sent a request.
+    In case user declines the permission true will still be returned.
+    */
+    virtual bool        requestNotificationPermissions() const = 0;
+
+    //! Send desktop user notification
+    /*!
+    Creates a platform dependant user notificaiton using native APIs
+    */
+    virtual void        createNotification(const String& title, const String& content) const = 0;
+
     //@}
     //! @name accessors
     //@{

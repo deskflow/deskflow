@@ -1,6 +1,4 @@
-#import "AppDelegate.h"
-
-#import "AppDelegate.h"
+#import "OSXAppDelegate.h"
 
 @interface AppDelegate ()
 

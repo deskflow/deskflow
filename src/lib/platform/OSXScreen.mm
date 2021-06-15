@@ -46,6 +46,10 @@
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <AppKit/NSEvent.h>
+#include <libproc.h>
+
+#include <UserNotifications/UNNotification.h>
+#include <UserNotifications/UNUserNotificationCenter.h>
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
@@ -57,6 +61,9 @@ enum {
 enum {
 	kCarbonLoopWaitTimeout = 10
 };
+
+int getSecureInputEventPID();
+String getProcessName(int pid);
 
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
@@ -881,6 +888,10 @@ OSXScreen::enter()
 bool
 OSXScreen::leave()
 {
+    if(m_isPrimary && IsSecureEventInputEnabled()) {
+        createSecureInputNotification();
+    }
+
     hideCursor();
     
 	if (isDraggingStarted()) {
@@ -2147,6 +2158,93 @@ OSXScreen::waitForCarbonLoop() const
 
 	LOG((CLOG_DEBUG "carbon loop ready"));
 #endif
+
+}
+
+bool
+OSXScreen::requestNotificationPermissions() const
+{
+	@try
+	{
+		NSURL* url = [[NSBundle mainBundle] bundleURL];
+		NSString* s = url.absoluteString;
+		const char* cs = [s UTF8String];
+		LOG((CLOG_WARN "bundle %s", cs));
+		//UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+		//[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+		//   completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
+	}
+	@catch (NSException* exception)
+	{
+		return false;
+	}
+	return true;
+}
+
+void
+OSXScreen::createNotification(const String& title, const String& content) const
+{
+
+}
+
+int
+getOSXSecureInputEventPID()
+{
+    io_service_t		service = MACH_PORT_NULL, service_root = MACH_PORT_NULL;
+    mach_port_t			masterPort;
+
+    kern_return_t kr = IOMasterPort( MACH_PORT_NULL, &masterPort );
+    if(kr != KERN_SUCCESS) return 0;
+
+    // IO registry refuses to tap into the root level directly
+    // as a workaround access the parent of the top user level
+    service = IORegistryEntryFromPath( masterPort, kIOServicePlane ":/" );
+    IORegistryEntryGetParentEntry(service, kIOServicePlane, &service_root);
+
+    std::unique_ptr<std::remove_pointer<CFTypeRef>::type, decltype(&CFRelease)> consoleUsers(
+        IORegistryEntrySearchCFProperty(service_root, kIOServicePlane, CFSTR("IOConsoleUsers"), NULL, kIORegistryIterateParents | kIORegistryIterateRecursively),
+        CFRelease
+    );
+    if(!consoleUsers) return 0;
+
+    CFTypeID type = CFGetTypeID(consoleUsers.get());
+    if(type != CFArrayGetTypeID()) return 0;
+
+    CFTypeRef dict = CFArrayGetValueAtIndex((CFArrayRef)consoleUsers.get(), 0);
+    if(!dict) return 0;
+
+    type = CFGetTypeID(dict);
+    if(type != CFDictionaryGetTypeID()) return 0;
+
+    CFTypeRef secureInputPID = nullptr;
+    CFDictionaryGetValueIfPresent((CFDictionaryRef)dict, CFSTR("kCGSSessionSecureInputPID"), &secureInputPID);
+
+    if(secureInputPID == nullptr) return 0;
+
+    type = CFGetTypeID(secureInputPID);
+    if(type != CFNumberGetTypeID()) return 0;
+
+    auto pidRef = (CFNumberRef)secureInputPID;
+    CFNumberType numberType = CFNumberGetType(pidRef);
+    if(numberType != kCFNumberSInt32Type) return 0;
+
+    int pid;
+    CFNumberGetValue(pidRef, kCFNumberSInt32Type, &pid);
+    return pid;
+}
+
+String
+getOSXProcessName(int pid)
+{
+    if(!pid) return "";
+    char buf[128];
+    proc_name(pid, buf, sizeof(buf));
+    return buf;
+}
+
+void
+OSXScreen::createSecureInputNotification()
+{
 
 }
 

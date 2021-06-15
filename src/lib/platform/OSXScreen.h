@@ -101,6 +101,8 @@ public:
     
     const String&        getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
+    virtual bool        requestNotificationPermissions() const;
+    virtual void        createNotification(const String& title, const String& content) const;
     
 protected:
     // IPlatformScreen overrides
@@ -202,6 +204,8 @@ private:
     static char*        CFStringRefToUTF8String(CFStringRef aString);
     
     void                getDropTargetThread(void*);
+
+    void                createSecureInputNotification();
     
 private:
     struct HotKeyItem {
