@@ -2165,26 +2165,19 @@ OSXScreen::waitForCarbonLoop() const
 bool
 OSXScreen::requestNotificationPermissions() const
 {
-	@try
+	// accessing notification center on unsigned build causes an immidiate
+	// application shutodown (in this case synergys) and cannot be caught
+	// to avoid issues with it need to first check if this is a dev build
+	if (isDevelopmentBuild())
 	{
-		// accessing notification center on unsigned build causes an immidiate
-		// application shutodown (in this case synergys) and cannot be caught
-		// to avoid issues with it need to first check if this is a dev build
-		if (isDevelopmentBuild())
-		{
-			LOG((CLOG_WARN "Not showing notifications permission request on development builds"));
-			return false;
-		}
-		else
-		{
-			UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-			[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-			   completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
-		}
-	}
-	@catch (NSException* exception)
-	{
+		LOG((CLOG_WARN "Not showing notifications permission request on development builds"));
 		return false;
+	}
+	else
+	{
+		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+		   completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
 	}
 	return true;
 }
@@ -2192,13 +2185,37 @@ OSXScreen::requestNotificationPermissions() const
 void
 OSXScreen::createNotification(const String& title, const String& content) const
 {
-
+    NSUserNotification* notification = [[NSUserNotification alloc] init];
+    notification.title = @"title";
+    notification.informativeText = @"message";
+    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+    [notification autorelease];
 }
 
 void
 OSXScreen::createSecureInputNotification()
 {
+    createNotification("a", "b");
+    /*
+    QMessageBox message(this);
+    message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
+    std::string messageText =
+            "Secure input was enabled in your system by another application. " \
+            "Synergy will not be able to send keyboard strokes while the secure input is enabled\n\n";
+    int secureInputProcessPID = getOSXSecureInputEventPID();
+    std::string infringingProcessName = getOSXProcessName(secureInputProcessPID);
 
+    // IO registry may not contain the secure input process PID
+    // in this case don't add an option to quit the infringing app
+    if(secureInputProcessPID == 0) infringingProcessName = "unknown";
+    else message.addButton(QString("Quit %1").arg(infringingProcessName.c_str()), QMessageBox::ApplyRole);
+    messageText += "Infringing process is " + infringingProcessName;
+    message.setText(QObject::tr(messageText.c_str()));
+
+    // if user decides to stop the app send the SIGTERM signal
+    if (message.exec() == QMessageBox::Accepted && secureInputProcessPID) kill(secureInputProcessPID, SIGTERM);
+    */
 }
 
 int
