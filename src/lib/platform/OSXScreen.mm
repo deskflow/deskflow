@@ -64,6 +64,7 @@ enum {
 
 int getSecureInputEventPID();
 String getProcessName(int pid);
+bool isDevelopmentBuild();
 
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
@@ -2166,13 +2167,20 @@ OSXScreen::requestNotificationPermissions() const
 {
 	@try
 	{
-		NSURL* url = [[NSBundle mainBundle] bundleURL];
-		NSString* s = url.absoluteString;
-		const char* cs = [s UTF8String];
-		LOG((CLOG_WARN "bundle %s", cs));
-		//UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-		//[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-		//   completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
+		// accessing notification center on unsigned build causes an immidiate
+		// application shutodown (in this case synergys) and cannot be caught
+		// to avoid issues with it need to first check if this is a dev build
+		if (isDevelopmentBuild())
+		{
+			LOG((CLOG_WARN "Not showing notifications permission request on development builds"));
+			return false;
+		}
+		else
+		{
+			UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+			[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+			   completionHandler:^(BOOL granted, NSError * _Nullable error) {}];
+		}
 	}
 	@catch (NSException* exception)
 	{
@@ -2187,8 +2195,14 @@ OSXScreen::createNotification(const String& title, const String& content) const
 
 }
 
+void
+OSXScreen::createSecureInputNotification()
+{
+
+}
+
 int
-getOSXSecureInputEventPID()
+getSecureInputEventPID()
 {
     io_service_t		service = MACH_PORT_NULL, service_root = MACH_PORT_NULL;
     mach_port_t			masterPort;
@@ -2234,7 +2248,7 @@ getOSXSecureInputEventPID()
 }
 
 String
-getOSXProcessName(int pid)
+getProcessName(int pid)
 {
     if(!pid) return "";
     char buf[128];
@@ -2242,10 +2256,12 @@ getOSXProcessName(int pid)
     return buf;
 }
 
-void
-OSXScreen::createSecureInputNotification()
+bool
+isDevelopmentBuild()
 {
-
+	NSURL* url = [[NSBundle mainBundle] bundleURL];
+	String bundleURL = [url.absoluteString UTF8String];
+	return (bundleURL.find("Applications/Synergy.app") == String::npos);
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

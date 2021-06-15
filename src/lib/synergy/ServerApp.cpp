@@ -504,7 +504,7 @@ ServerApp::openServerScreen()
 
     if (!screen->requestNotificationPermissions())
     {
-        LOG((CLOG_CRIT "Failed to request user permission to show notifications"));
+        LOG((CLOG_WARN "Failed to request user permission to show notifications"));
     }
 
     m_events->adoptHandler(m_events->forIScreen().error(),
