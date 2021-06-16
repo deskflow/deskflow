@@ -23,88 +23,68 @@
 #include "base/Log.h"
 #include "synergy/unix/X11LayoutsParser.h"
 #include "ISO639Table.h"
+#include "tinyxml2.h"
 
 bool
-X11LayoutsParser::readAndTrimString(std::ifstream& file, String& line)
+X11LayoutsParser::readXMLConfigItemElem(tinyxml2::XMLElement* root, std::vector<Lang>& langList)
 {
-    auto result = (bool)std::getline(file, line);
-    if(result) {
-        line.erase(line.begin(), std::find_if(line.begin(), line.end(), [](char ch) { return !std::isspace(ch); }));
+    auto configItemElem = root->FirstChildElement("configItem");
+    if(!configItemElem) {
+        LOG((CLOG_WARN "Failed to read configItem in evdev.xml"));
+        return false;
     }
-    return result;
+
+    langList.emplace_back(Lang());
+    for(auto keyPair : {std::make_pair("name", &langList.back().name),
+                        std::make_pair("shortDescription", &langList.back().shortDescr),
+                        std::make_pair("description", &langList.back().descr)}) {
+        auto elem = configItemElem->FirstChildElement(keyPair.first);
+        if(!elem) {
+            continue;
+        }
+        *keyPair.second = elem->GetText();
+    }
+
+    auto languageListElem = configItemElem->FirstChildElement("languageList");
+    if(languageListElem) {
+        for(auto isoElem = languageListElem->FirstChildElement("iso639Id"); isoElem; isoElem = isoElem->NextSiblingElement("iso639Id")) {
+            langList.back().layoutBaseISO639_2.push_back(isoElem->GetText());
+        }
+    }
+
+    return true;
 }
-
-void
-X11LayoutsParser::tryReadAllXMLLanguageList(std::ifstream& file, String& line, std::vector<String>& result)
-{
-    if(line != "<languageList>") {
-        return;
-    }
-
-    String isoTag = "<iso639Id>";
-    while (readAndTrimString(file, line) && line != "</languageList>") {
-        auto strat = line.rfind(isoTag, 0);
-        if (strat == 0) {
-            result.push_back(line.substr(isoTag.size(), line.find("</", strat) - isoTag.size()));
-        }
-    }
-};
-
-void
-X11LayoutsParser::readXMLLangData(std::ifstream& file, String& line, std::vector<Lang>& langList)
-{
-    const String nameTag = "<name>";
-    const String shortDescrTag = "<shortDescription>";
-    const String descrTag = "<description>";
-
-    if(line == "<configItem>") {
-        langList.emplace_back(Lang());
-        while (readAndTrimString(file, line) && line != "</configItem>") {
-
-            if (line.rfind(nameTag, 0) == 0) {
-                langList.back().name = line.substr(nameTag.size(), line.find("</", 0) - nameTag.size());
-            }
-            else if (line.rfind(shortDescrTag, 0) == 0) {
-                langList.back().shortDescr = line.substr(shortDescrTag.size(), line.find("</", 0) - shortDescrTag.size());
-            }
-            else if (line.rfind(descrTag, 0) == 0) {
-                langList.back().descr = line.substr(descrTag.size(), line.find("</", 0) - descrTag.size());
-            }
-
-            tryReadAllXMLLanguageList(file, line, langList.back().layoutBaseISO639_2);
-        }
-    }
-
-    if(line != "<variantList>") {
-        return;
-    }
-
-    while (readAndTrimString(file, line) && line != "</variantList>") {
-        readXMLLangData(file, line, langList.back().variants);
-    }
-};
 
 std::vector<X11LayoutsParser::Lang>
 X11LayoutsParser::getAllLanguageData()
 {
     std::vector<Lang> allCodes;
-    std::ifstream file("/usr/share/X11/xkb/rules/evdev.xml");
-    if (!file.is_open()) {
+    tinyxml2::XMLDocument doc;
+    doc.LoadFile("/usr/share/X11/xkb/rules/evdev.xml");
+
+    if(doc.ErrorID() != tinyxml2::XML_SUCCESS) {
+        LOG((CLOG_WARN "Failed to open evdev.xml"));
         return allCodes;
     }
 
-    String line;
-    while (readAndTrimString(file, line)) {
-        if(line != "<layoutList>") {
+    auto layoutListElem = doc.FirstChildElement("xkbConfigRegistry")->FirstChildElement("layoutList");
+    if(!layoutListElem) {
+        LOG((CLOG_WARN "Failed to read layoutList in evdev.xml"));
+        return allCodes;
+    }
+
+    for(auto layoutElem = layoutListElem->FirstChildElement("layout"); layoutElem; layoutElem = layoutElem->NextSiblingElement("layout")) {
+        if (!readXMLConfigItemElem(layoutElem, allCodes)) {
             continue;
         }
 
-        while (readAndTrimString(file, line) && line != "</layoutList>") {
-            readXMLLangData(file, line, allCodes);
+        auto variantListElem = layoutElem->FirstChildElement("variantList");
+        if (variantListElem) {
+            for(auto variantElem = variantListElem->FirstChildElement("variant"); variantElem; variantElem = variantElem->NextSiblingElement("variant")) {
+                readXMLConfigItemElem(variantElem, allCodes.back().variants);
+            }
         }
     }
-
-    file.close();
 
     return allCodes;
 }
@@ -195,7 +175,7 @@ X11LayoutsParser::getX11LanguageList()
     String line;
     std::vector<String> layoutNames;
     std::vector<String> layoutVariantNames;
-    while (readAndTrimString(file, line)) {
+    while (std::getline(file, line)) {
         if (line.rfind(layoutLinePrefix, 0) == 0) {
             splitLine(layoutNames, line.substr(layoutLinePrefix.size()), ',');
         }

@@ -19,6 +19,11 @@
 #pragma once
 #include "base/String.h"
 
+namespace tinyxml2
+{
+    class XMLElement;
+}
+
 class X11LayoutsParser {
 public:
     static std::vector<String> getX11LanguageList();
@@ -32,13 +37,8 @@ private:
         std::vector<Lang>   variants;
     };
 
-    static void              tryReadAllXMLLanguageList(std::ifstream& file, String& line,
-                                                       std::vector<String>& result);
-
-    static void              readXMLLangData(std::ifstream& file,  String& line,
-                                             std::vector<Lang>& langList);
-
-    static bool              readAndTrimString(std::ifstream& file, String& line);
+    static bool              readXMLConfigItemElem(tinyxml2::XMLElement* root,
+                                                   std::vector<Lang>& langList);
 
     static std::vector<Lang> getAllLanguageData();
 
