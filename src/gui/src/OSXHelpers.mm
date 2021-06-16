@@ -35,7 +35,6 @@ testNotification()
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
 
         UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-        [content setValue:@YES forKey:@"shouldAlwaysAlertWhileAppIsForeground"];
         content.title = @"Wake up!";
         content.body = @"Rise and shine! It's morning time!";
 
