@@ -712,8 +712,6 @@ void MainWindow::startSynergy()
     if (appConfig().logToFile())
         appendLogInfo("log file: " + appConfig().logFilename());
 
-    testNotification();
-
     if (desktopMode)
     {
         synergyProcess()->start(app, args);
@@ -937,6 +935,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
+    testNotification();
     appendLogDebug("stopping process");
 
     m_ExpectedRunningState = kStopped;

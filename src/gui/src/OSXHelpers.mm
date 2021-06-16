@@ -30,19 +30,19 @@
 void
 testNotification()
 {
-    /*UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
-    }];*/
+    }];
 
-    /*NSUserNotification* notification = [[NSUserNotification alloc] init];
+    NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";
     notification.informativeText = @"message";
     notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
-    [notification autorelease];*/
+    [notification autorelease];
 
-    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    /*UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
     content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
     content.body = [NSString localizedUserNotificationStringForKey:@"Rise and shine! It's morning time!"
             arguments:nil];
@@ -59,7 +59,7 @@ testNotification()
        if (error != nil) {
            NSLog(@"%@", error.localizedDescription);
        }
-    }];
+    }];*/
 }
 
 bool
