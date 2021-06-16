@@ -2166,6 +2166,16 @@ OSXScreen::waitForCarbonLoop() const
 bool
 OSXScreen::requestNotificationPermissions() const
 {
+	NSBundle *bundle = [NSBundle mainBundle];
+	NSDictionary *info = [bundle infoDictionary];
+	NSString *prodName = [info objectForKey:@"CFBundleName"];
+	if(prodName != nil)
+		LOG((CLOG_INFO "CFBundleName server: %s",
+			 String([prodName UTF8String]).c_str())
+		);
+	else
+		LOG((CLOG_INFO "CFBundleName server is nil"));
+
 	// accessing notification center on unsigned build causes an immidiate
 	// application shutodown (in this case synergys) and cannot be caught
 	// to avoid issues with it need to first check if this is a dev build

@@ -31,6 +31,12 @@
 void
 testNotification()
 {
+	NSBundle *bundle = [NSBundle mainBundle];
+	NSDictionary *info = [bundle infoDictionary];
+	NSString *prodName = [info objectForKey:@"CFBundleName"];
+	if(prodName != nil) qWarning("CFBundleName gui %s", String([prodName UTF8String]).c_str());
+	else qWarning("CFBundleName gui is nil");
+
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
