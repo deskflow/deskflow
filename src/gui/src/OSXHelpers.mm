@@ -26,6 +26,7 @@
 #import <UserNotifications/UNNotificationContent.h>
 #import <UserNotifications/UNNotificationTrigger.h>
 #import <base/Log.h>
+#import <QtGlobal>
 
 void
 testNotification()
@@ -33,6 +34,8 @@ testNotification()
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
+
+        qWarning("granter: %d, error: %s", granted, String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
 
         UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
         content.title = @"Wake up!";
@@ -47,7 +50,7 @@ testNotification()
 
         [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
            if (error != nil) {
-               NSLog(@"%@", error.localizedDescription);
+               qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
            }
         }];
 
