@@ -935,6 +935,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
+    appendLogInfo("showing notification");
     testNotification();
     appendLogDebug("stopping process");
 

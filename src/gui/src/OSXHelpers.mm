@@ -35,14 +35,20 @@ testNotification()
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
 
-        qWarning("granter: %d, error: %s", granted, String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+        qWarning("granter: %d", granted);
+
+        if(error != nil)
+        {
+            qWarning("error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+        }
 
         UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
         content.title = @"Wake up!";
         content.body = @"Rise and shine! It's morning time!";
 
+        // show after 5 seconds
         UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-                             triggerWithTimeInterval:(1) repeats: NO];
+                             triggerWithTimeInterval:(5) repeats: NO];
 
         // Create the request object.
         UNNotificationRequest* request = [UNNotificationRequest

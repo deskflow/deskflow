@@ -12,6 +12,7 @@
 -(void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
+    [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
 }
 
 -(BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification{
@@ -27,8 +28,6 @@
     | UNNotificationPresentationOptionBadge;
 
     completionHandler(presentationOptions);
-
-    [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
 }
 
 @end
