@@ -23,6 +23,8 @@
 
 #import <UserNotifications/UNNotification.h>
 #import <UserNotifications/UNUserNotificationCenter.h>
+#import <UserNotifications/UNNotificationContent.h>
+#import <UserNotifications/UNNotificationTrigger.h>
 #import <base/Log.h>
 
 bool
@@ -37,17 +39,36 @@ isOSXInterfaceStyleDark()
 bool
 isOSXUseDarkIcons()
 {
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    /*UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
-    }];
+    }];*/
 
-    NSUserNotification* notification = [[NSUserNotification alloc] init];
+    /*NSUserNotification* notification = [[NSUserNotification alloc] init];
     notification.title = @"title";
     notification.informativeText = @"message";
     notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
-    [notification autorelease];
+    [notification autorelease];*/
+
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
+    content.body = [NSString localizedUserNotificationStringForKey:@"Rise and shine! It's morning time!"
+            arguments:nil];
+
+    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+                         triggerWithTimeInterval:(1) repeats: NO];
+
+    // Create the request object.
+    UNNotificationRequest* request = [UNNotificationRequest
+           requestWithIdentifier:@"MorningAlarm" content:content trigger:trigger];
+
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+       if (error != nil) {
+           NSLog(@"%@", error.localizedDescription);
+       }
+    }];
 
    if (@available(macOS 11, *)) {
       return true;
