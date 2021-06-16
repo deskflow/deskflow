@@ -27,17 +27,8 @@
 #import <UserNotifications/UNNotificationTrigger.h>
 #import <base/Log.h>
 
-bool
-isOSXInterfaceStyleDark()
-{
-   // Implementation from http://stackoverflow.com/a/26472651
-   NSDictionary* dict = [[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain];
-   id style = [dict objectForKey:@"AppleInterfaceStyle"];
-   return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
-}
-
-bool
-isOSXUseDarkIcons()
+void
+testNotification()
 {
     /*UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
@@ -69,7 +60,20 @@ isOSXUseDarkIcons()
            NSLog(@"%@", error.localizedDescription);
        }
     }];
+}
 
+bool
+isOSXInterfaceStyleDark()
+{
+   // Implementation from http://stackoverflow.com/a/26472651
+   NSDictionary* dict = [[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain];
+   id style = [dict objectForKey:@"AppleInterfaceStyle"];
+   return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
+}
+
+bool
+isOSXUseDarkIcons()
+{
    if (@available(macOS 11, *)) {
       return true;
    }

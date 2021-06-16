@@ -712,6 +712,8 @@ void MainWindow::startSynergy()
     if (appConfig().logToFile())
         appendLogInfo("log file: " + appConfig().logFilename());
 
+    testNotification();
+
     if (desktopMode)
     {
         synergyProcess()->start(app, args);

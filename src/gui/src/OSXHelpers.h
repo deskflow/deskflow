@@ -19,6 +19,7 @@
 
 #define OSXHELPERS__H
 
+void testNotification();
 bool isOSXInterfaceStyleDark();
 bool isOSXUseDarkIcons();
 
