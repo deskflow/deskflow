@@ -33,6 +33,24 @@ testNotification()
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
         completionHandler:^(BOOL granted, NSError * _Nullable error) {
+
+        UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+        content.title = @"Wake up!";
+        content.body = @"Rise and shine! It's morning time!";
+
+        UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+                             triggerWithTimeInterval:(1) repeats: NO];
+
+        // Create the request object.
+        UNNotificationRequest* request = [UNNotificationRequest
+               requestWithIdentifier:@"MorningAlarm" content:content trigger:trigger];
+
+        [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+           if (error != nil) {
+               NSLog(@"%@", error.localizedDescription);
+           }
+        }];
+
     }];
 
     /*NSUserNotification* notification = [[NSUserNotification alloc] init];
@@ -41,24 +59,6 @@ testNotification()
     notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
     [notification autorelease];*/
-
-    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-    content.title = [NSString localizedUserNotificationStringForKey:@"Wake up!" arguments:nil];
-    content.body = [NSString localizedUserNotificationStringForKey:@"Rise and shine! It's morning time!"
-            arguments:nil];
-
-    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-                         triggerWithTimeInterval:(1) repeats: NO];
-
-    // Create the request object.
-    UNNotificationRequest* request = [UNNotificationRequest
-           requestWithIdentifier:@"MorningAlarm" content:content trigger:trigger];
-
-    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-       if (error != nil) {
-           NSLog(@"%@", error.localizedDescription);
-       }
-    }];
 }
 
 bool
