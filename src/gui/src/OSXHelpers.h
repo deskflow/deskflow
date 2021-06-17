@@ -21,6 +21,7 @@
 
 #include <QString>
 
+void requestOSXNotificationPermission();
 bool isOSXDevelopmentBuild();
 bool showOSXNotification(const QString& title, const QString& body);
 bool isOSXInterfaceStyleDark();

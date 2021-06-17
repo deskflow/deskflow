@@ -27,6 +27,28 @@
 #import <UserNotifications/UNNotificationTrigger.h>
 #import <base/Log.h>
 #import <QtGlobal>
+#import <base/Log.h>
+
+void requestOSXNotificationPermission()
+{
+	if (@available(macOS 10.14, *))
+	{
+		if (isOSXDevelopmentBuild())
+		{
+			qWarning("Not requesting notification permission in dev build");
+			return;
+		}
+
+		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+			completionHandler:^(BOOL granted, NSError * _Nullable error) {
+			if(error != nil)
+			{
+				qWarning("Notification permission request error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+			}
+		}];
+	}
+}
 
 bool
 isOSXDevelopmentBuild()
@@ -50,16 +72,9 @@ showOSXNotification(const QString& title, const QString& body)
 			return false;
 		}
 
-		qWarning("requesting permission");
+		requestOSXNotificationPermission();
+
 		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-			completionHandler:^(BOOL granted, NSError * _Nullable error) {
-			qWarning("granter: %d", granted);
-			if(error != nil)
-			{
-				qWarning("error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
-			}
-		}];
 
 		UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 		content.title = title.toNSString();
@@ -69,10 +84,9 @@ showOSXNotification(const QString& title, const QString& body)
 		UNNotificationRequest* request = [UNNotificationRequest
 			   requestWithIdentifier:@"SecureInput" content:content trigger:nil];
 
-		qWarning("creating notification");
 		[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
 		   if (error != nil) {
-			   qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+			   qWarning("Notification display request error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
 		   }
 		}];
 	}

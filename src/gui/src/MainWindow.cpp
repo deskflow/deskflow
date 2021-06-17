@@ -631,6 +631,10 @@ void MainWindow::startSynergy()
 {
     saveSettings();
 
+#ifdef Q_OS_MAC
+    requestOSXNotificationPermission();
+#endif
+
 #ifndef SYNERGY_ENTERPRISE
     SerialKey serialKey = m_LicenseManager->serialKey();
     if (!serialKey.isValid()) {
