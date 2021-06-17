@@ -206,6 +206,9 @@ public slots:
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
         void checkSecureSocket(const QString& line);
+#ifdef Q_OS_MAC
+        void checkOSXNotification(const QString& line);
+#endif
 #ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
 #endif

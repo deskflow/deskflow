@@ -2163,59 +2163,19 @@ OSXScreen::waitForCarbonLoop() const
 
 }
 
-bool
-OSXScreen::requestNotificationPermissions() const
-{
-	NSBundle *bundle = [NSBundle mainBundle];
-	NSDictionary *info = [bundle infoDictionary];
-	NSString *prodName = [info objectForKey:@"CFBundleName"];
-	if(prodName != nil)
-		LOG((CLOG_INFO "CFBundleName server: %s",
-			 String([prodName UTF8String]).c_str())
-		);
-	else
-		LOG((CLOG_INFO "CFBundleName server is nil"));
-
-	// accessing notification center on unsigned build causes an immidiate
-	// application shutodown (in this case synergys) and cannot be caught
-	// to avoid issues with it need to first check if this is a dev build
-	if (isDevelopmentBuild())
-	{
-		LOG((CLOG_WARN "Not showing notifications permission request on development builds"));
-		return false;
-	}
-	else
-	{
-		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-			completionHandler:^(BOOL granted, NSError * _Nullable error) {
-			LOG((CLOG_INFO "Permission granted: %d. Error: %s",
-				 granted,
-				 String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str())
-			);
-		}];
-		LOG((CLOG_INFO "Asked for user permission to show notifications"));
-	}
-	return true;
-}
-
 void
 OSXScreen::createNotification(const String& title, const String& content) const
 {
-    LOG((CLOG_INFO "Showing notification from server"));
-
-    NSUserNotification* notification = [[NSUserNotification alloc] init];
-    notification.title = @"title";
-    notification.informativeText = @"message";
-    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
-    [notification autorelease];
+    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), content.c_str()));
 }
 
 void
 OSXScreen::createSecureInputNotification()
 {
-    createNotification("a", "b");
+    createNotification(
+                "Keyboard may not work correctly",
+                "Secure input was enabled in your system by another application." \
+                "Synergy will not be able to send keyboard strokes while the secure input is enabled\n\n");
     /*
     QMessageBox message(this);
     message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);

@@ -453,6 +453,12 @@ void MainWindow::updateFromLogLine(const QString &line)
     checkFingerprint(line);
     checkSecureSocket(line);
 
+    // subprocess (synergys, synergyc) is not allowed to show notifications
+    // process the log from it and show notificatino from synergy instead
+#ifdef Q_OS_MAC
+    checkOSXNotification(line);
+#endif
+
 #ifndef SYNERGY_ENTERPRISE
     checkLicense(line);
 #endif
@@ -564,6 +570,30 @@ void MainWindow::checkSecureSocket(const QString& line)
         m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString)); // Compliant: we made sure that tlsCheckString variable ended with null(static const char* declaration)
     }
 }
+
+#ifdef Q_OS_MAC
+void MainWindow::checkOSXNotification(const QString& line)
+{
+    static const QString OSXNotificationSubstring = "OSX Notification: ";
+    if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
+        appendLogDebug("Recieved OSX notification to show");
+        int delimterPosition = line.indexOf('|');
+        int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
+        QString title =
+                line.mid(notificationStartPosition + OSXNotificationSubstring.length(),
+                         delimterPosition - notificationStartPosition - OSXNotificationSubstring.length());
+        QString body =
+                line.mid(delimterPosition + 1,
+                         line.length() - delimterPosition);
+        appendLogDebug(title);
+        appendLogDebug(body);
+        if (!showOSXNotification(title.toStdString(), body.toStdString())) {
+            appendLogInfo("OSX notification was not shown");
+        }
+    }
+}
+#endif
+
 QString MainWindow::getTimeStamp()
 {
     QDateTime current = QDateTime::currentDateTime();
@@ -936,7 +966,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 void MainWindow::stopSynergy()
 {
     appendLogInfo("showing notification");
-    testNotification();
+    showOSXNotification("stopping", "synergy");
     appendLogDebug("stopping process");
 
     m_ExpectedRunningState = kStopped;

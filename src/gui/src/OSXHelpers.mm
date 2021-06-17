@@ -28,14 +28,25 @@
 #import <base/Log.h>
 #import <QtGlobal>
 
-void
-testNotification()
+bool
+isOSXDevelopmentBuild()
 {
-	NSBundle *bundle = [NSBundle mainBundle];
-	NSDictionary *info = [bundle infoDictionary];
-	NSString *prodName = [info objectForKey:@"CFBundleName"];
-	if(prodName != nil) qWarning("CFBundleName gui %s", String([prodName UTF8String]).c_str());
-	else qWarning("CFBundleName gui is nil");
+	NSURL* url = [[NSBundle mainBundle] bundleURL];
+	String bundleURL = [url.absoluteString UTF8String];
+	return (bundleURL.find("Applications/Synergy.app") == String::npos);
+}
+
+bool
+showOSXNotification(const String& title, const String& body)
+{
+	// accessing notification center on unsigned build causes an immidiate
+	// application shutodown (in this case synergys) and cannot be caught
+	// to avoid issues with it need to first check if this is a dev build
+	if (isOSXDevelopmentBuild())
+	{
+		qWarning("Not showing notification in dev build");
+		return false;
+	}
 
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
@@ -49,8 +60,8 @@ testNotification()
         }
 
         UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-        content.title = @"Wake up!";
-        content.body = @"Rise and shine! It's morning time!";
+        content.title = [NSString stringWithCString:title.c_str() encoding:[NSString defaultCStringEncoding]];
+        content.body = [NSString stringWithCString:body.c_str() encoding:[NSString defaultCStringEncoding]];
 
         // show after 5 seconds
         UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
@@ -58,22 +69,15 @@ testNotification()
 
         // Create the request object.
         UNNotificationRequest* request = [UNNotificationRequest
-               requestWithIdentifier:@"MorningAlarm" content:content trigger:trigger];
+               requestWithIdentifier:@"SecureInput" content:content trigger:trigger];
 
         [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
            if (error != nil) {
                qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
            }
         }];
-
     }];
-
-    /*NSUserNotification* notification = [[NSUserNotification alloc] init];
-    notification.title = @"title";
-    notification.informativeText = @"message";
-    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
-    [notification autorelease];*/
+    return true;
 }
 
 bool

@@ -522,12 +522,6 @@ Screen::leaveSecondary()
     m_screen->fakeAllKeysUp();
 }
 
-bool
-Screen::requestNotificationPermissions() const
-{
-    return m_screen->requestNotificationPermissions();
-}
-
 void
 Screen::createNotification(const String& title, const String& content) const
 {

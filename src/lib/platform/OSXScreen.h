@@ -101,7 +101,6 @@ public:
     
     const String&        getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
-    virtual bool        requestNotificationPermissions() const;
     virtual void        createNotification(const String& title, const String& content) const;
     
 protected:
