@@ -58,24 +58,26 @@ showOSXNotification(const QString& title, const QString& body)
 			{
 				qWarning("error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
 			}
-		}];
 
-		UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-		content.title = title.toNSString();
-		content.body = body.toNSString();
+			UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+			//content.title = title.toNSString();
+			//content.body = body.toNSString();
+			content.title = @"title";
+			content.body = @"body";
 
-		// show after no delay
-		UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-							 triggerWithTimeInterval:(0) repeats: NO];
+			// show after no delay
+			UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+								 triggerWithTimeInterval:(0) repeats: NO];
 
-		// Create the request object.
-		UNNotificationRequest* request = [UNNotificationRequest
-			   requestWithIdentifier:@"SecureInput" content:content trigger:trigger];
+			// Create the request object.
+			UNNotificationRequest* request = [UNNotificationRequest
+				   requestWithIdentifier:@"SecureInput" content:content trigger:trigger];
 
-		[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-		   if (error != nil) {
-			   qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
-		   }
+			[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+			   if (error != nil) {
+				   qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+			   }
+			}];
 		}];
 	}
 	else
