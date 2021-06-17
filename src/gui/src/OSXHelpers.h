@@ -19,10 +19,10 @@
 
 #define OSXHELPERS__H
 
-#include <string>
+#include <QString>
 
 bool isOSXDevelopmentBuild();
-bool showOSXNotification(const std::string& title, const std::string& body);
+bool showOSXNotification(const QString& title, const QString& body);
 bool isOSXInterfaceStyleDark();
 bool isOSXUseDarkIcons();
 

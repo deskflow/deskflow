@@ -37,47 +37,59 @@ isOSXDevelopmentBuild()
 }
 
 bool
-showOSXNotification(const String& title, const String& body)
+showOSXNotification(const QString& title, const QString& body)
 {
-	// accessing notification center on unsigned build causes an immidiate
-	// application shutodown (in this case synergys) and cannot be caught
-	// to avoid issues with it need to first check if this is a dev build
-	if (isOSXDevelopmentBuild())
+	if (@available(macOS 10.14, *))
 	{
-		qWarning("Not showing notification in dev build");
-		return false;
+		// accessing notification center on unsigned build causes an immidiate
+		// application shutodown (in this case synergys) and cannot be caught
+		// to avoid issues with it need to first check if this is a dev build
+		if (isOSXDevelopmentBuild())
+		{
+			qWarning("Not showing notification in dev build");
+			return false;
+		}
+
+		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+			completionHandler:^(BOOL granted, NSError * _Nullable error) {
+
+			qWarning("granter: %d", granted);
+
+			if(error != nil)
+			{
+				qWarning("error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+			}
+
+			UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+			content.title = title.toNSString();
+			content.body = body.toNSString();
+
+			// show after 5 seconds
+			UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+								 triggerWithTimeInterval:(5) repeats: NO];
+
+			// Create the request object.
+			UNNotificationRequest* request = [UNNotificationRequest
+				   requestWithIdentifier:@"SecureInput" content:content trigger:trigger];
+
+			[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+			   if (error != nil) {
+				   qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+			   }
+			}];
+		}];
 	}
-
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-        completionHandler:^(BOOL granted, NSError * _Nullable error) {
-
-        qWarning("granter: %d", granted);
-
-        if(error != nil)
-        {
-            qWarning("error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
-        }
-
-        UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-        content.title = [NSString stringWithCString:title.c_str() encoding:[NSString defaultCStringEncoding]];
-        content.body = [NSString stringWithCString:body.c_str() encoding:[NSString defaultCStringEncoding]];
-
-        // show after 5 seconds
-        UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-                             triggerWithTimeInterval:(5) repeats: NO];
-
-        // Create the request object.
-        UNNotificationRequest* request = [UNNotificationRequest
-               requestWithIdentifier:@"SecureInput" content:content trigger:trigger];
-
-        [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-           if (error != nil) {
-               qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
-           }
-        }];
-    }];
-    return true;
+	else
+	{
+		NSUserNotification* notification = [[NSUserNotification alloc] init];
+		notification.title = title.toNSString();
+		notification.informativeText = body.toNSString();
+		notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+		[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+		[notification autorelease];
+	}
+	return true;
 }
 
 bool

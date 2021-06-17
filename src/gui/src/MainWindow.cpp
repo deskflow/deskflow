@@ -587,7 +587,7 @@ void MainWindow::checkOSXNotification(const QString& line)
                          line.length() - delimterPosition);
         appendLogDebug(title);
         appendLogDebug(body);
-        if (!showOSXNotification(title.toStdString(), body.toStdString())) {
+        if (!showOSXNotification(title, body)) {
             appendLogInfo("OSX notification was not shown");
         }
     }
