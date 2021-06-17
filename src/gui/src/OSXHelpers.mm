@@ -64,9 +64,9 @@ showOSXNotification(const QString& title, const QString& body)
 		content.title = title.toNSString();
 		content.body = body.toNSString();
 
-		// show after 5 seconds
+		// show after no delay
 		UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-							 triggerWithTimeInterval:(5) repeats: NO];
+							 triggerWithTimeInterval:(0) repeats: NO];
 
 		// Create the request object.
 		UNNotificationRequest* request = [UNNotificationRequest

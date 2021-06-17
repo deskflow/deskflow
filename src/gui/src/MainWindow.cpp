@@ -965,8 +965,6 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
-    appendLogInfo("showing notification");
-    showOSXNotification("stopping", "synergy");
     appendLogDebug("stopping process");
 
     m_ExpectedRunningState = kStopped;

@@ -885,8 +885,7 @@ OSXScreen::enter()
 bool
 OSXScreen::leave()
 {
-    //if(m_isPrimary && IsSecureEventInputEnabled()) {
-    if(m_isPrimary) {
+    if(m_isPrimary && IsSecureEventInputEnabled()) {
         createSecureInputNotification();
     }
 
@@ -2169,8 +2168,8 @@ void
 OSXScreen::createSecureInputNotification()
 {
     std::string secureInputNotificationBody =
-            "Secure input was enabled in your system by another application. " \
-            "Synergy will not be able to send keyboard strokes while the secure input is enabled. ";
+            "Secure input was enabled in your system. " \
+            "Synergy may not be able to send keyboard strokes. ";
 
     int secureInputProcessPID = getSecureInputEventPID();
     std::string infringingProcessName = getProcessName(secureInputProcessPID);
