@@ -48,9 +48,6 @@
 #include <AppKit/NSEvent.h>
 #include <libproc.h>
 
-#include <UserNotifications/UNNotification.h>
-#include <UserNotifications/UNUserNotificationCenter.h>
-
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
 	kSynergyEventMouseScroll = 11,
@@ -64,7 +61,6 @@ enum {
 
 int getSecureInputEventPID();
 String getProcessName(int pid);
-bool isDevelopmentBuild();
 
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
@@ -2172,29 +2168,18 @@ OSXScreen::createNotification(const String& title, const String& content) const
 void
 OSXScreen::createSecureInputNotification()
 {
+    std::string secureInputNotificationBody =
+            "Secure input was enabled in your system by another application. " \
+            "Synergy will not be able to send keyboard strokes while the secure input is enabled. ";
+
+    int secureInputProcessPID = getSecureInputEventPID();
+    std::string infringingProcessName = getProcessName(secureInputProcessPID);
+    if(secureInputProcessPID == 0) infringingProcessName = "unknown";
+    secureInputNotificationBody += "Infringing process is " + infringingProcessName;
+
     createNotification(
                 "Keyboard may not work correctly",
-                "Secure input was enabled in your system by another application." \
-                "Synergy will not be able to send keyboard strokes while the secure input is enabled\n\n");
-    /*
-    QMessageBox message(this);
-    message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
-    std::string messageText =
-            "Secure input was enabled in your system by another application. " \
-            "Synergy will not be able to send keyboard strokes while the secure input is enabled\n\n";
-    int secureInputProcessPID = getOSXSecureInputEventPID();
-    std::string infringingProcessName = getOSXProcessName(secureInputProcessPID);
-
-    // IO registry may not contain the secure input process PID
-    // in this case don't add an option to quit the infringing app
-    if(secureInputProcessPID == 0) infringingProcessName = "unknown";
-    else message.addButton(QString("Quit %1").arg(infringingProcessName.c_str()), QMessageBox::ApplyRole);
-    messageText += "Infringing process is " + infringingProcessName;
-    message.setText(QObject::tr(messageText.c_str()));
-
-    // if user decides to stop the app send the SIGTERM signal
-    if (message.exec() == QMessageBox::Accepted && secureInputProcessPID) kill(secureInputProcessPID, SIGTERM);
-    */
+                secureInputNotificationBody);
 }
 
 int
@@ -2250,14 +2235,6 @@ getProcessName(int pid)
     char buf[128];
     proc_name(pid, buf, sizeof(buf));
     return buf;
-}
-
-bool
-isDevelopmentBuild()
-{
-	NSURL* url = [[NSBundle mainBundle] bundleURL];
-	String bundleURL = [url.absoluteString UTF8String];
-	return (bundleURL.find("Applications/Synergy.app") == String::npos);
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
