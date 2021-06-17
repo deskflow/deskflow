@@ -50,6 +50,7 @@ showOSXNotification(const QString& title, const QString& body)
 			return false;
 		}
 
+		qWarning("requesting permission");
 		UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
 		[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
 			completionHandler:^(BOOL granted, NSError * _Nullable error) {
@@ -58,26 +59,21 @@ showOSXNotification(const QString& title, const QString& body)
 			{
 				qWarning("error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
 			}
+		}];
 
-			UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-			//content.title = title.toNSString();
-			//content.body = body.toNSString();
-			content.title = @"title";
-			content.body = @"body";
+		UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+		content.title = title.toNSString();
+		content.body = body.toNSString();
 
-			// show after no delay
-			UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-								 triggerWithTimeInterval:(0) repeats: NO];
+		// Create the request object.
+		UNNotificationRequest* request = [UNNotificationRequest
+			   requestWithIdentifier:@"SecureInput" content:content trigger:nil];
 
-			// Create the request object.
-			UNNotificationRequest* request = [UNNotificationRequest
-				   requestWithIdentifier:@"SecureInput" content:content trigger:trigger];
-
-			[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-			   if (error != nil) {
-				   qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
-			   }
-			}];
+		qWarning("creating notification");
+		[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+		   if (error != nil) {
+			   qWarning("notification: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+		   }
 		}];
 	}
 	else
