@@ -101,7 +101,7 @@ public:
     
     const String&        getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
-    virtual void        createNotification(const String& title, const String& content) const;
+    void                createNotification(const String& title, const String& content) const override;
     
 protected:
     // IPlatformScreen overrides
