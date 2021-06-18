@@ -585,7 +585,6 @@ void MainWindow::checkOSXNotification(const QString& line)
 {
     static const QString OSXNotificationSubstring = "OSX Notification: ";
     if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
-        appendLogDebug("Recieved OSX notification to show");
         int delimterPosition = line.indexOf('|');
         int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
         QString title =
@@ -594,8 +593,6 @@ void MainWindow::checkOSXNotification(const QString& line)
         QString body =
                 line.mid(delimterPosition + 1,
                          line.length() - delimterPosition);
-        appendLogDebug(title);
-        appendLogDebug(body);
         if (!showOSXNotification(title, body)) {
             appendLogInfo("OSX notification was not shown");
         }
