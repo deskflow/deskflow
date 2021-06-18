@@ -475,6 +475,12 @@ XWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
+void
+XWindowsScreen::createNotification(const String& title, const String& content) const
+{
+	// TODO: implement notification
+}
+
 void*
 XWindowsScreen::getEventTarget() const
 {

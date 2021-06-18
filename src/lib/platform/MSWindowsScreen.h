@@ -139,6 +139,7 @@ public:
     virtual String&    getDraggingFilename();
     virtual const String&    
                         getDropTarget() const;
+    virtual void        createNotification(const String& title, const String& content) const;
 
 protected:
     // IPlatformScreen overrides
