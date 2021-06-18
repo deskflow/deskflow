@@ -20,14 +20,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
-
 #import <UserNotifications/UNNotification.h>
 #import <UserNotifications/UNUserNotificationCenter.h>
 #import <UserNotifications/UNNotificationContent.h>
 #import <UserNotifications/UNNotificationTrigger.h>
-#import <base/Log.h>
+
 #import <QtGlobal>
-#import <base/Log.h>
 
 void requestOSXNotificationPermission()
 {
@@ -44,7 +42,7 @@ void requestOSXNotificationPermission()
 			completionHandler:^(BOOL granted, NSError * _Nullable error) {
 			if(error != nil)
 			{
-				qWarning("Notification permission request error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+				qWarning("Notification permission request error: %s", [[NSString stringWithFormat:@"%@", error] UTF8String]);
 			}
 		}];
 	}
@@ -53,9 +51,8 @@ void requestOSXNotificationPermission()
 bool
 isOSXDevelopmentBuild()
 {
-	NSURL* url = [[NSBundle mainBundle] bundleURL];
-	String bundleURL = [url.absoluteString UTF8String];
-	return (bundleURL.find("Applications/Synergy.app") == String::npos);
+	std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
+	return (bundleURL.find("Applications/Synergy.app") == std::string::npos);
 }
 
 bool
@@ -86,7 +83,7 @@ showOSXNotification(const QString& title, const QString& body)
 
 		[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
 		   if (error != nil) {
-			   qWarning("Notification display request error: %s", String([[NSString stringWithFormat:@"%@", error] UTF8String]).c_str());
+			   qWarning("Notification display request error: %s", [[NSString stringWithFormat:@"%@", error] UTF8String]);
 		   }
 		}];
 	}
