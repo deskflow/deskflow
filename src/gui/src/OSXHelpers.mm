@@ -108,13 +108,12 @@ isOSXInterfaceStyleDark()
    return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
 }
 
-bool
-isOSXUseDarkIcons()
+IconsTheme
+getOSXIconsTheme()
 {
-   if (@available(macOS 11, *)) {
-      return true;
-   }
-   else {
-      return isOSXInterfaceStyleDark();
-   }
+   if (@available(macOS 11, *))
+      return IconsTheme::ICONS_TEMPLATE;
+   else if(isOSXInterfaceStyleDark())
+      return IconsTheme::ICONS_DARK;
+   return IconsTheme::ICONS_LIGHT;
 }

@@ -6,7 +6,7 @@ jobs:
 
   - job: Linux
     pool:
-      vmImage: 'ubuntu-16.04'
+      vmImage: 'ubuntu-latest'
 
     strategy:
       matrix:
@@ -27,6 +27,10 @@ jobs:
           image: symless/synergy-core:ubuntu20.04
           packager: deb
           name: ubuntu20
+        ubuntu2104:
+          image: symless/synergy-core:ubuntu21.04
+          packager: deb
+          name: ubuntu21
         debian9:
           image: symless/synergy-core:debian9
           packager: deb
@@ -51,6 +55,10 @@ jobs:
           image: symless/synergy-core:fedora33
           packager: rpm
           name: fedora33
+        fedora34:
+          image: symless/synergy-core:fedora34
+          packager: rpm
+          name: fedora34
         centos7.6:
           image: symless/synergy-core:centos7.6
           packager: rpm
