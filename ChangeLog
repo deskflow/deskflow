@@ -14,6 +14,7 @@ Bug fixes:
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
 - #7026 Update the way we package OpenSSL for Windows build
+- #7035 Add Fedora 34 build
 - #7037 Add Ubuntu 21.04 build
 - #7030 Add user nofication for secure input on Mac
 ===========
