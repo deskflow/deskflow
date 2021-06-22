@@ -98,6 +98,8 @@ public:
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual String&    getDraggingFilename();
+    String              getSecureInputApp() const override;
+    void                createSecureInputNotification() const override;
     
     const String&        getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
@@ -203,8 +205,6 @@ private:
     static char*        CFStringRefToUTF8String(CFStringRef aString);
     
     void                getDropTargetThread(void*);
-
-    void                createSecureInputNotification();
     
 private:
     struct HotKeyItem {

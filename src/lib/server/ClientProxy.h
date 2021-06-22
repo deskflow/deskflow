@@ -90,6 +90,7 @@ public:
     virtual void        sendDragInfo(UInt32 fileCount, const char* info,
                             size_t size) = 0;
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
+    virtual void        secureInputNotification(const String& app) = 0;
 
 private:
     synergy::IStream*    m_stream;

@@ -261,6 +261,18 @@ PrimaryClient::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
     // ignore
 }
 
+String
+PrimaryClient::getSecureInputApp()
+{
+    return m_screen->getSecureInputApp();
+}
+
+void
+PrimaryClient::secureInputNotification(const String& app)
+{
+    // ignore
+}
+
 void
 PrimaryClient::resetOptions()
 {

@@ -145,6 +145,8 @@ public:
     virtual void        setOptions(const OptionsList& options);
     virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
+    virtual String      getSecureInputApp();
+    virtual void        secureInputNotification(const String& app);
 
     virtual synergy::IStream*
                         getStream() const { return NULL; }

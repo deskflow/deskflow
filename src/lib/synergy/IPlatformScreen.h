@@ -133,6 +133,12 @@ public:
     //! Change dragging status
     virtual void        setDraggingStarted(bool started) = 0;
 
+    //! Determine the name of the app causing a secure input state
+    /*!
+    On MacOS check which app causes a secure input state to be enabled. No alternative on other platforms
+    */
+    virtual String      getSecureInputApp() const = 0;
+
     //! Send desktop user notification
     /*!
     Creates a platform dependant user notificaiton using native APIs

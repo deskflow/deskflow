@@ -1988,6 +1988,13 @@ MSWindowsScreen::getDropTarget() const
     return m_desktopPath;
 }
 
+String
+MSWindowsScreen::getSecureInputApp() const
+{
+    // ignore on Windows
+    return "";
+}
+
 void
 MSWindowsScreen::createNotification(const String& title, const String& content) const
 {

@@ -2158,6 +2158,17 @@ OSXScreen::waitForCarbonLoop() const
 
 }
 
+String
+OSXScreen::getSecureInputApp() const
+{
+	if(IsSecureEventInputEnabled()) {
+		int secureInputProcessPID = getSecureInputEventPID();
+		if(secureInputProcessPID == 0) return "unknown";
+		return getProcessName(secureInputProcessPID);
+	}
+	return "";
+}
+
 void
 OSXScreen::createNotification(const String& title, const String& content) const
 {

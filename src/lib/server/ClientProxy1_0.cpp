@@ -365,6 +365,21 @@ ClientProxy1_0::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
     LOG((CLOG_DEBUG "fileChunkSending not supported"));
 }
 
+String
+ClientProxy1_0::getSecureInputApp()
+{
+    // ignore -- not supported on clients
+    LOG((CLOG_DEBUG "getSecureInputApp not supported"));
+    return "";
+}
+
+void
+ClientProxy1_0::secureInputNotification(const String& app)
+{
+    // ignore -- not supported in protocol 1.0
+    LOG((CLOG_DEBUG "secureInputNotification not supported"));
+}
+
 void
 ClientProxy1_0::screensaver(bool on)
 {
