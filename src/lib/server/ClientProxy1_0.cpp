@@ -150,8 +150,9 @@ ClientProxy1_0::handleData(const Event&, void*)
         LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
         if (!(this->*m_parser)(code)) {
             LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
-            disconnect();
-            return;
+            // not possible to determine message boundaries
+            // read the whole stream to discard unkonwn data
+            while (getStream()->read(NULL, 4));
         }
 
         // next message
