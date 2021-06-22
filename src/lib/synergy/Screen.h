@@ -240,12 +240,6 @@ public:
     */
     String              getSecureInputApp() const;
 
-    //! Send desktop user notification
-    /*!
-    Creates a platform dependant user notificaiton using native APIs
-    */
-    void                createNotification(const String& title, const String& content) const;
-
     //@}
     //! @name accessors
     //@{

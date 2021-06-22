@@ -528,10 +528,4 @@ Screen::getSecureInputApp() const
     return m_screen->getSecureInputApp();
 }
 
-void
-Screen::createNotification(const String& title, const String& content) const
-{
-    m_screen->createNotification(title, content);
-}
-
 }

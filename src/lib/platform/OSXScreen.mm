@@ -59,6 +59,7 @@ enum {
 	kCarbonLoopWaitTimeout = 10
 };
 
+void createSecureInputNotification();
 int getSecureInputEventPID();
 String getProcessName(int pid);
 
@@ -2170,13 +2171,7 @@ OSXScreen::getSecureInputApp() const
 }
 
 void
-OSXScreen::createNotification(const String& title, const String& content) const
-{
-    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), content.c_str()));
-}
-
-void
-OSXScreen::createSecureInputNotification() const
+createSecureInputNotification()
 {
     std::string secureInputNotificationBody =
             "Secure input was enabled in your system. " \
@@ -2187,7 +2182,7 @@ OSXScreen::createSecureInputNotification() const
     if(secureInputProcessPID == 0) infringingProcessName = "unknown";
     secureInputNotificationBody += "Infringing process is " + infringingProcessName;
 
-    createNotification(
+    AppUtil::instance().showNotification(
                 "Keyboard may not work correctly",
                 secureInputNotificationBody);
 }

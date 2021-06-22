@@ -44,36 +44,3 @@ ClientProxy1_7::secureInputNotification(const String& app)
     LOG((CLOG_DEBUG2 "send secure input notification to \"%s\" %s", getName().c_str(), app.c_str()));
     ProtocolUtil::writef(getStream(), kMsgDSecureInputNotification, &app);
 }
-
-/*
-void
-ClientProxy1_7::langInfoReceived()
-{
-    String clientLayoutList = "";
-    ProtocolUtil::readf(getStream(), kMsgLanguageList + 4, &clientLayoutList);
-
-    String missedLanguages;
-    String supportedLanguages;
-    auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
-    for(int i = 0; i <= (int)clientLayoutList.size() - 2; i +=2) {
-        auto layout = clientLayoutList.substr(i, 2);
-        if (std::find(localLayouts.begin(), localLayouts.end(), layout) == localLayouts.end()) {
-            missedLanguages += layout;
-            missedLanguages += ' ';
-        }
-        else {
-            supportedLanguages += layout;
-            supportedLanguages += ' ';
-        }
-    }
-
-    if(!supportedLanguages.empty()) {
-        LOG((CLOG_DEBUG "Supported client languages: %s", supportedLanguages.c_str()));
-    }
-
-    if(!missedLanguages.empty()) {
-        AppUtil::instance().showMessageBox("Language synchronization error",
-                                           String("This languages are required for server proper work: ") + missedLanguages);
-    }
-}
-*/

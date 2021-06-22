@@ -1995,12 +1995,6 @@ MSWindowsScreen::getSecureInputApp() const
     return "";
 }
 
-void
-MSWindowsScreen::createNotification(const String& title, const String& content) const
-{
-    // TODO: implement notification
-}
-
 bool
 MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const
 {

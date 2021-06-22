@@ -99,11 +99,9 @@ public:
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual String&    getDraggingFilename();
     virtual String      getSecureInputApp() const;
-    virtual void        createSecureInputNotification() const;
     
     const String&        getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;
-    void                createNotification(const String& title, const String& content) const override;
     
 protected:
     // IPlatformScreen overrides

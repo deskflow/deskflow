@@ -482,12 +482,6 @@ XWindowsScreen::getSecureInputApp() const
 	return "";
 }
 
-void
-XWindowsScreen::createNotification(const String& title, const String& content) const
-{
-	// TODO: implement notification
-}
-
 void*
 XWindowsScreen::getEventTarget() const
 {
