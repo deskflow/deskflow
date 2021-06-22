@@ -152,7 +152,7 @@ ClientProxy1_0::handleData(const Event&, void*)
             LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
             // not possible to determine message boundaries
             // read the whole stream to discard unkonwn data
-            while (getStream()->read(NULL, 4));
+            while (getStream()->read(nullptr, 4));
         }
 
         // next message
@@ -367,7 +367,7 @@ ClientProxy1_0::fileChunkSending(UInt8 mark, char* data, size_t dataSize)
 }
 
 String
-ClientProxy1_0::getSecureInputApp()
+ClientProxy1_0::getSecureInputApp() const
 {
     // ignore -- not supported on clients
     LOG((CLOG_DEBUG "getSecureInputApp not supported"));
@@ -375,7 +375,7 @@ ClientProxy1_0::getSecureInputApp()
 }
 
 void
-ClientProxy1_0::secureInputNotification(const String& app)
+ClientProxy1_0::secureInputNotification(const String& app) const
 {
     // ignore -- not supported in protocol 1.0
     LOG((CLOG_DEBUG "secureInputNotification not supported"));

@@ -33,13 +33,8 @@ ClientProxy1_7::ClientProxy1_7(const String& name, synergy::IStream* stream, Ser
 
 }
 
-ClientProxy1_7::~ClientProxy1_7()
-{
-
-}
-
 void
-ClientProxy1_7::secureInputNotification(const String& app)
+ClientProxy1_7::secureInputNotification(const String& app) const
 {
     LOG((CLOG_DEBUG2 "send secure input notification to \"%s\" %s", getName().c_str(), app.c_str()));
     ProtocolUtil::writef(getStream(), kMsgDSecureInputNotification, &app);

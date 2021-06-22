@@ -132,7 +132,7 @@ ServerProxy::handleData(const Event&, void*)
             LOG((CLOG_ERR "invalid message from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
             // not possible to determine message boundaries
             // read the whole stream to discard unkonwn data
-            while (m_stream->read(NULL, 4));
+            while (m_stream->read(nullptr, 4));
             break;
 
         case kDisconnect:

@@ -38,35 +38,35 @@ public:
     ClientProxy1_0& operator=(ClientProxy1_0 &&) =delete;
 
     // IScreen
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const;
+    bool        getClipboard(ClipboardID id, IClipboard*) const override;
+    void        getShape(SInt32& x, SInt32& y,
+                            SInt32& width, SInt32& height) const override;
+    void        getCursorPos(SInt32& x, SInt32& y) const override;
 
     // IClient overrides
-    virtual void        enter(SInt32 xAbs, SInt32 yAbs,
+    void        enter(SInt32 xAbs, SInt32 yAbs,
                             UInt32 seqNum, KeyModifierMask mask,
-                            bool forScreensaver);
-    virtual bool        leave();
-    virtual void        setClipboard(ClipboardID, const IClipboard*);
-    virtual void        grabClipboard(ClipboardID);
-    virtual void        setClipboardDirty(ClipboardID, bool);
-    virtual void        keyDown(KeyID, KeyModifierMask, KeyButton);
-    virtual void        keyRepeat(KeyID, KeyModifierMask,
-                            SInt32 count, KeyButton);
-    virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
-    virtual void        mouseDown(ButtonID);
-    virtual void        mouseUp(ButtonID);
-    virtual void        mouseMove(SInt32 xAbs, SInt32 yAbs);
-    virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel);
-    virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta);
-    virtual void        screensaver(bool activate);
-    virtual void        resetOptions();
-    virtual void        setOptions(const OptionsList& options);
-    virtual void        sendDragInfo(UInt32 fileCount, const char* info, size_t size);
-    virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize);
-    virtual String      getSecureInputApp();
-    virtual void        secureInputNotification(const String& app);
+                            bool forScreensaver) override;
+    bool        leave() override;
+    void        setClipboard(ClipboardID, const IClipboard*) override;
+    void        grabClipboard(ClipboardID) override;
+    void        setClipboardDirty(ClipboardID, bool) override;
+    void        keyDown(KeyID, KeyModifierMask, KeyButton) override;
+    void        keyRepeat(KeyID, KeyModifierMask,
+                            SInt32 count, KeyButton) override;
+    void        keyUp(KeyID, KeyModifierMask, KeyButton) override;
+    void        mouseDown(ButtonID) override;
+    void        mouseUp(ButtonID) override;
+    void        mouseMove(SInt32 xAbs, SInt32 yAbs) override;
+    void        mouseRelativeMove(SInt32 xRel, SInt32 yRel) override;
+    void        mouseWheel(SInt32 xDelta, SInt32 yDelta) override;
+    void        screensaver(bool activate) override;
+    void        resetOptions() override;
+    void        setOptions(const OptionsList& options) override;
+    void        sendDragInfo(UInt32 fileCount, const char* info, size_t size) override;
+    void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) override;
+    String      getSecureInputApp() const override;
+    void        secureInputNotification(const String& app) const override;
 
 protected:
     virtual bool        parseHandshakeMessage(const UInt8* code);
