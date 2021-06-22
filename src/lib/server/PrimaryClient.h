@@ -149,7 +149,7 @@ public:
     void        secureInputNotification(const String& app) const override;
 
     synergy::IStream*
-                        getStream() const override { return NULL; }
+                        getStream() const override { return nullptr; }
     bool                isPrimary() const override { return true; }
 private:
     synergy::Screen*    m_screen;
