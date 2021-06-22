@@ -18,6 +18,8 @@
 
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
+#include "base/Log.h"
+#include "base/log_outputters.h"
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
@@ -46,7 +48,7 @@ AppUtilUnix::startNode()
 }
 
 void
-AppUtilUnix::showNotification(const String & title, const String & text)
+AppUtilUnix::showNotification(const String & title, const String & text) const
 {
     LOG((CLOG_DEBUG "Showing notification title: %s. text: %s", title.c_str(), text.c_str()));
 #if WINAPI_XWINDOWS
