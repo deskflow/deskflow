@@ -2173,17 +2173,17 @@ OSXScreen::getSecureInputApp() const
 void
 createSecureInputNotification()
 {
-    std::string secureInputNotificationBody =
-            "Secure input was enabled in your system. " \
-            "Synergy may not be able to send keyboard strokes. ";
-
     int secureInputProcessPID = getSecureInputEventPID();
-    std::string infringingProcessName = getProcessName(secureInputProcessPID);
-    if(secureInputProcessPID == 0) infringingProcessName = "unknown";
-    secureInputNotificationBody += "Infringing process is " + infringingProcessName;
+    String app = getProcessName(secureInputProcessPID);
+    if(secureInputProcessPID == 0) app = "unknown";
 
+    String secureInputNotificationBody =
+            "'Secure input' enabled by " + app + ". " \
+            "Close " + app + " to continue using keyboards on the clients.";
+
+    // display this notification on the server
     AppUtil::instance().showNotification(
-                "Keyboard may not work correctly",
+                "The client keyboards may stop working.",
                 secureInputNotificationBody);
 }
 
