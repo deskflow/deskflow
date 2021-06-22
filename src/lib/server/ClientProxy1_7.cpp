@@ -54,7 +54,8 @@ ClientProxy1_7::parseMessage(const UInt8* code)
 void
 ClientProxy1_7::secureInputNotification(const String& app)
 {
-    // TODO
+    LOG((CLOG_DEBUG2 "send secure input notification to \"%s\" %s", getName().c_str(), app.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDSecureInputNotification, app.c_str());
 }
 
 /*

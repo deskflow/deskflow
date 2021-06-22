@@ -98,8 +98,8 @@ public:
     virtual bool        isPrimary() const;
     virtual void        fakeDraggingFiles(DragFileList fileList);
     virtual String&    getDraggingFilename();
-    String              getSecureInputApp() const override;
-    void                createSecureInputNotification() const override;
+    virtual String      getSecureInputApp() const;
+    virtual void        createSecureInputNotification() const;
     
     const String&        getDropTarget() const { return m_dropTarget; }
     void                waitForCarbonLoop() const;

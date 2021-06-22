@@ -273,6 +273,11 @@ extern const char*        kMsgDFileTransfer;
 // of each object's directory.
 extern const char*        kMsgDDragInfo;
 
+// secure input notification:  primary -> secondary
+// $1 = app. app only obtainable on MacOS since that's the only
+// platform facing secure input problems
+extern const char*        kMsgDSecureInputNotification;
+
 //
 // query codes
 //

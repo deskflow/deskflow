@@ -2176,7 +2176,7 @@ OSXScreen::createNotification(const String& title, const String& content) const
 }
 
 void
-OSXScreen::createSecureInputNotification()
+OSXScreen::createSecureInputNotification() const
 {
     std::string secureInputNotificationBody =
             "Secure input was enabled in your system. " \
