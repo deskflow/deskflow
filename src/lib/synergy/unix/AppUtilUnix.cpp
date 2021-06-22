@@ -44,3 +44,16 @@ AppUtilUnix::startNode()
 {
     app().startNode();
 }
+
+void
+AppUtilUnix::showNotification(const String & title, const String & text)
+{
+    LOG((CLOG_DEBUG "Showing notification title: %s. text: %s", title.c_str(), text.c_str()));
+#if WINAPI_XWINDOWS
+
+#elif WINAPI_CARBON
+    // synergys and synergyc are not allowed to send native notifications on MacOS
+    // instead ask main synergy process to show them instead
+    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), text.c_str()));
+#endif
+}

@@ -25,7 +25,6 @@ public:
     ClientProxy1_7(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
     ~ClientProxy1_7();
 
-    virtual bool        parseMessage(const UInt8* code);
     virtual void        secureInputNotification(const String& app);
 
 private:

@@ -31,4 +31,5 @@ public:
     
     int run(int argc, char** argv);
     void startNode();
+    void showNotification(const String& title, const String& text) const override;
 };
