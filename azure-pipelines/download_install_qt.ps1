@@ -21,6 +21,6 @@ Write-Output 'Installed QLI Installer Dependencies'
 
 Write-Output 'Starting QT Installer'
 $Env:QLI_OUT_DIR = ".\deps\Qt\Qt$qt_version"
-$Env:QLI_BASE_URL = "http://mirrors.ocf.berkeley.edu/qt/online/qtsdkrepository/"
+$Env:QLI_BASE_URL = "https://download.qt.io/online/qtsdkrepository/"
 python .\deps\qli-installer\qli-installer.py $qt_version windows desktop win64_msvc2017_64
 Write-Output 'Installed QT Installer'
