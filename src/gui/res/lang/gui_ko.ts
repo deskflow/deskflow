@@ -204,7 +204,7 @@ Visit our website for help and info (symless.com).
         <location filename="src/MainWindow.cpp" line="364"/>
         <source>&lt;p&gt;Your version of Barrier is out of date. Version &lt;b&gt;%1&lt;/b&gt; is now available to &lt;a href=&quot;%2&quot;&gt;download&lt;/a&gt;.&lt;/p&gt;</source>
         <oldsource>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</oldsource>
-        <translation type="finished">&lt;p&gt;사용 중인 시너지는 최신 버전이 아닙니다. 새 버전(&lt;b&gt;%1&lt;/b&gt;)을 &lt;a href=&quot;%2&quot;&gt;다운로드&lt;/a&gt; 받을 수 있습니다.&lt;/p&gt;</translation>
+        <translation type="finished">&lt;p&gt;사용 중인 배리어는 최신 버전이 아닙니다. 새 버전(&lt;b&gt;%1&lt;/b&gt;)을 &lt;a href=&quot;%2&quot;&gt;다운로드&lt;/a&gt; 받을 수 있습니다.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="src/MainWindow.cpp" line="577"/>
@@ -600,7 +600,7 @@ To automatically trust this fingerprint for future connections, click Yes. To re
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="14"/>
         <source>Setup Barrier</source>
-        <translation type="finished">시너지 설정</translation>
+        <translation type="finished">배리어 설정</translation>
     </message>
     <message>
         <location filename="res/PluginWizardPageBase.ui" line="101"/>
@@ -1176,7 +1176,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="src/SetupWizard.cpp" line="72"/>
         <source>Setup Barrier</source>
-        <translation type="finished">시너지 설정</translation>
+        <translation type="finished">배리어 설정</translation>
     </message>
     <message>
         <location filename="src/SetupWizard.cpp" line="113"/>
@@ -1194,7 +1194,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="26"/>
         <source>Setup Barrier</source>
-        <translation type="finished">시너지 설정</translation>
+        <translation type="finished">배리어 설정</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="30"/>
@@ -1204,7 +1204,7 @@ This allows Barrier to interact with elevated processes and the UAC dialog, but 
     <message>
         <location filename="res/SetupWizardBase.ui" line="39"/>
         <source>Thanks for installing Barrier!</source>
-        <translation type="finished">시너지를 설치하여 주셔서 감사합니다.</translation>
+        <translation type="finished">배리어를 설치하여 주셔서 감사합니다.</translation>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="114"/>
