@@ -850,12 +850,14 @@ OSXScreen::enter()
 {
 	showCursor();
 
+	// forcefully update scrolling direction
+	allowScrollDirectionUpdate();
+	updateScrollDirection();
+
 	if (m_isPrimary) {
 		setZeroSuppressionInterval();
 	}
 	else {
-		m_scrollDirection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue] ? -1 : 1;
-
 		// reset buttons
 		m_buttonState.reset();
 
@@ -1456,7 +1458,7 @@ OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 	// return accelerated scrolling but not exponentially scaled as it is
 	// on the mac.
 	double d = (1.0 + getScrollSpeed()) * x / getScrollSpeedFactor();
-	return static_cast<SInt32>(120.0 * d);
+	return static_cast<SInt32>(m_scrollDirection * 120.0 * d);
 }
 
 SInt32
@@ -2148,6 +2150,23 @@ OSXScreen::waitForCarbonLoop() const
 	LOG((CLOG_DEBUG "carbon loop ready"));
 #endif
 
+}
+
+void
+OSXScreen::allowScrollDirectionUpdate()
+{
+	m_shouldUpdateScrollDirection = true;
+}
+
+void
+OSXScreen::updateScrollDirection()
+{
+	if(m_shouldUpdateScrollDirection)
+	{
+		LOG((CLOG_INFO "updated scrolling direction"));
+		m_scrollDirection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue] ? -1 : 1;
+		m_shouldUpdateScrollDirection = false;
+	}
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

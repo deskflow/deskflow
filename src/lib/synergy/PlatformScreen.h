@@ -102,6 +102,9 @@ public:
     virtual const String&
                         getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
 
+    virtual void        allowScrollDirectionUpdate() = 0;
+    virtual void        updateScrollDirection() = 0;
+
 protected:
     //! Update mouse buttons
     /*!

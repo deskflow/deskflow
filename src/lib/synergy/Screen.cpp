@@ -212,6 +212,11 @@ Screen::keyUp(KeyID, KeyModifierMask, KeyButton button)
 void
 Screen::mouseDown(ButtonID button)
 {
+	// No other convinient way to check if scroll direction was changed
+	// If mouse button is pressed is good enough indication to allow checking
+	// for scroll direction
+	m_screen->allowScrollDirectionUpdate();
+
     m_screen->fakeMouseButton(button, true);
 }
 
@@ -239,6 +244,9 @@ void
 Screen::mouseWheel(SInt32 xDelta, SInt32 yDelta)
 {
     assert(!m_isPrimary);
+    // update scroll direction if necessary
+    m_screen->updateScrollDirection();
+
     m_screen->fakeMouseWheel(xDelta, yDelta);
 }
 

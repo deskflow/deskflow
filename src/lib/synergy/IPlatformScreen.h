@@ -133,6 +133,20 @@ public:
     //! Change dragging status
     virtual void        setDraggingStarted(bool started) = 0;
 
+    //! Allow updating wheel scrolling direction
+    /*!
+    Sets a flag to allow updating the scrolling direction automatically
+    when scrolling
+    */
+    virtual void        allowScrollDirectionUpdate() = 0;
+
+    //! Update the scrolling direction if allowed
+    /*!
+    If relevant flag is set should read a system settings to apply a
+    correct scrolling direction
+    */
+    virtual void        updateScrollDirection() = 0;
+
     //@}
     //! @name accessors
     //@{
