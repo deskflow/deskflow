@@ -8,7 +8,7 @@ and a [snap](https://snapcraft.io/barrier).
 
 ### Contact info:
 
-- `#barrier` on freenode
+- `#barrier` on libera IRC network
 
 #### CI Build Status
 
