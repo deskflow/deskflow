@@ -344,6 +344,11 @@ MSWindowsScreen::leave()
     // tell desk that we're leaving and tell it the keyboard layout
     m_desks->leave(m_keyLayout);
 
+    // Forcefully update scrolling direction
+    // Will keep server updated when moving cursor
+    allowScrollDirectionUpdate();
+    updateScrollDirection();
+
     if (m_isPrimary) {
 
         // warp to center
@@ -829,6 +834,8 @@ MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
+    xDelta = mapScrollFromSynergy(xDelta);
+    yDelta = mapScrollFromSynergy(yDelta);
     m_desks->fakeMouseWheel(xDelta, yDelta);
 }
 
@@ -1470,9 +1477,13 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 bool
 MSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 {
+    LOG((CLOG_INFO "onMouseWheel delta=%+d,%+d", xDelta, yDelta));
     // ignore message if posted prior to last mark change
     if (!ignore()) {
         LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
+        xDelta = mapScrollToSynergy(xDelta);
+        yDelta = mapScrollToSynergy(yDelta);
+        LOG((CLOG_DEBUG1 "adjusted wheel delta=%+d,%+d", xDelta, yDelta));
         sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
     }
     return true;
@@ -2014,4 +2025,48 @@ MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask stat
     }
 
     return result;
+}
+
+SInt32
+MSWindowsScreen::mapScrollToSynergy(SInt32 delta) const
+{
+    // for mouse wheel the delta will be a multiple of WHEEL_DELTA
+    if (delta % WHEEL_DELTA == 0)
+    {
+        return delta * m_scrollDirectionMouse;
+    }
+    else
+    {
+        return delta * m_scrollDirectionTrackpad;
+    }
+}
+
+SInt32
+MSWindowsScreen::mapScrollFromSynergy(SInt32 delta) const
+{
+    return mapScrollToSynergy(delta);
+}
+
+void
+MSWindowsScreen::updateScrollDirection()
+{
+    static const TCHAR* const touchpadScrollDirectionNames[] = {
+        _T("SOFTWARE"),
+        _T("Microsoft"),
+        _T("Windows"),
+        _T("CurrentVersion"),
+        _T("PrecisionTouchPad"),
+        NULL
+    };
+
+    if (m_shouldUpdateScrollDirection)
+    {
+        HKEY key = ArchMiscWindows::openKey(HKEY_CURRENT_USER, touchpadScrollDirectionNames);
+        DWORD scroll = ArchMiscWindows::readValueInt(key, _T("ScrollDirection"));
+        ArchMiscWindows::closeKey(key);
+        if (scroll == 0) m_scrollDirectionTrackpad = 1;
+        else m_scrollDirectionTrackpad = -1;
+
+
+    }
 }

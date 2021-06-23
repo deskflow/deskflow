@@ -850,10 +850,6 @@ OSXScreen::enter()
 {
 	showCursor();
 
-	// forcefully update scrolling direction
-	allowScrollDirectionUpdate();
-	updateScrollDirection();
-
 	if (m_isPrimary) {
 		setZeroSuppressionInterval();
 	}
@@ -2150,12 +2146,6 @@ OSXScreen::waitForCarbonLoop() const
 	LOG((CLOG_DEBUG "carbon loop ready"));
 #endif
 
-}
-
-void
-OSXScreen::allowScrollDirectionUpdate()
-{
-	m_shouldUpdateScrollDirection = true;
 }
 
 void

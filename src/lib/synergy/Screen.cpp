@@ -114,6 +114,11 @@ Screen::enter(KeyModifierMask toggleMask)
     // now on screen
     m_entered = true;
 
+    // Forcefully update scrolling direction
+    // Will keep clients updated when moving cursor
+    m_screen->allowScrollDirectionUpdate();
+    m_screen->updateScrollDirection();
+
     m_screen->enter();
     if (m_isPrimary) {
         enterPrimary();
@@ -128,6 +133,11 @@ Screen::leave()
 {
     assert(m_entered == true);
     LOG((CLOG_INFO "leaving screen"));
+
+    // Forcefully update scrolling direction
+    // Will keep server updated when moving cursor
+    m_screen->allowScrollDirectionUpdate();
+    m_screen->updateScrollDirection();
 
     if (!m_screen->leave()) {
         return false;
