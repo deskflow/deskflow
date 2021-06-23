@@ -100,3 +100,14 @@ A:
 Q: Are 32-bit versions of Windows supported?
 
 A: No
+
+Q: How do I load my configuration on startup?
+
+A: Start the binary with the argument `--config <path_to_saved_configuration>`
+
+Q: After loading my configuration on the client the field 'Server IP' is still empty!
+
+A: Edit your configuration to include the servers ip adress manually with 
+	(...)
+	section: options
+		serverhostname=<AAA.BBB.CCC.DDD>
