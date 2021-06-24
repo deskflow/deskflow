@@ -46,6 +46,7 @@
 #include <Shlobj.h>
 #include <comutil.h>
 #include <algorithm>
+#include <thread>
 
 // suppress warning about GetVersionEx, which is used indirectly in this compilation unit.
 #pragma warning(disable: 4996)
@@ -2044,7 +2045,10 @@ MSWindowsScreen::mapScrollToSynergy(SInt32 delta) const
 SInt32
 MSWindowsScreen::mapScrollFromSynergy(SInt32 delta) const
 {
-    return mapScrollToSynergy(delta);
+    // use mouse scrolling direction to invert
+    if (m_scrollDirectionMouse < 0)
+        return -delta;
+    return delta;
 }
 
 void
@@ -2061,13 +2065,18 @@ MSWindowsScreen::updateScrollDirection()
 
     if (m_shouldUpdateScrollDirection)
     {
-        HKEY key = ArchMiscWindows::openKey(HKEY_CURRENT_USER, touchpadScrollDirectionNames);
-        if (key)
-        {
-            DWORD scroll = ArchMiscWindows::readValueInt(key, _T("ScrollDirection"));
-            ArchMiscWindows::closeKey(key);
-            if (scroll == 0) m_scrollDirectionTouchpad = 1;
-            else m_scrollDirectionTouchpad = -1;
-        }
+        m_shouldUpdateScrollDirection = false;
+
+        std::thread scrollDirectionUpdateThread([&] {
+            HKEY key = ArchMiscWindows::openKey(HKEY_CURRENT_USER, touchpadScrollDirectionNames);
+            if (key)
+            {
+                DWORD scroll = ArchMiscWindows::readValueInt(key, _T("ScrollDirection"));
+                ArchMiscWindows::closeKey(key);
+                if (scroll == 0) m_scrollDirectionTouchpad = 1;
+                else m_scrollDirectionTouchpad = -1;
+            }
+        });
+        scrollDirectionUpdateThread.detach();
     }
 }
