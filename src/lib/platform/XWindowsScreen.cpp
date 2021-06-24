@@ -37,6 +37,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <algorithm>
+#include <thread>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -858,6 +859,12 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 	// XXX -- support x-axis scrolling
 	if (yDelta == 0) {
 		return;
+	}
+
+	// use mouse scroll direction for inversion
+	if( m_scrollDirectionMouse < 0 )
+	{
+		yDelta = -yDelta;
 	}
 
 	// choose button depending on rotation direction
@@ -2146,3 +2153,27 @@ XWindowsScreen::selectXIRawMotion()
 	free(mask.mask);
 }
 #endif
+
+void
+XWindowsScreen::updateScrollDirection()
+{
+	if (m_shouldUpdateScrollDirection)
+	{
+		m_shouldUpdateScrollDirection = false;
+
+		std::thread scrollDirectionUpdateThread([&]{
+			std::string mouseScroll = ArchSystemUnix::runCommand("gsettings get org.gnome.desktop.peripherals.mouse natural-scroll");
+			if(mouseScroll == "false\n")
+				m_scrollDirectionMouse = 1;
+			else if(mouseScroll == "true\n")
+				m_scrollDirectionMouse = -1;
+
+			std::string touchpadScroll = ArchSystemUnix::runCommand("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
+			if(touchpadScroll == "false\n")
+				m_scrollDirectionTouchpad = 1;
+			else if(touchpadScroll == "true\n")
+				m_scrollDirectionTouchpad = -1;
+		});
+		scrollDirectionUpdateThread.detach();
+	}
+}

@@ -84,6 +84,7 @@ public:
     virtual void        setOptions(const OptionsList& options);
     virtual void        setSequenceNumber(UInt32);
     virtual bool        isPrimary() const;
+    virtual void        updateScrollDirection();
 
 protected:
     // IPlatformScreen overrides
@@ -250,4 +251,8 @@ private:
     // pointer to (singleton) screen.  this is only needed by
     // ioErrorHandler().
     static XWindowsScreen*    s_screen;
+
+    // -1 for natural scrolling direction, 1 otherwise
+    SInt32                    m_scrollDirectionMouse = 1;
+    SInt32                    m_scrollDirectionTouchpad = 1;
 };
