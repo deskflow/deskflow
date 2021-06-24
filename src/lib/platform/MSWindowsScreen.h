@@ -372,5 +372,5 @@ private:
 
     // -1 for natural scrolling direction, 1 otherwise
     SInt32                    m_scrollDirectionMouse = 1;
-    SInt32                    m_scrollDirectionTrackpad = 1;
+    SInt32                    m_scrollDirectionTouchpad = 1;
 };

@@ -2037,7 +2037,7 @@ MSWindowsScreen::mapScrollToSynergy(SInt32 delta) const
     }
     else
     {
-        return delta * m_scrollDirectionTrackpad;
+        return delta * m_scrollDirectionTouchpad;
     }
 }
 
@@ -2062,11 +2062,12 @@ MSWindowsScreen::updateScrollDirection()
     if (m_shouldUpdateScrollDirection)
     {
         HKEY key = ArchMiscWindows::openKey(HKEY_CURRENT_USER, touchpadScrollDirectionNames);
-        DWORD scroll = ArchMiscWindows::readValueInt(key, _T("ScrollDirection"));
-        ArchMiscWindows::closeKey(key);
-        if (scroll == 0) m_scrollDirectionTrackpad = 1;
-        else m_scrollDirectionTrackpad = -1;
-
-
+        if (key)
+        {
+            DWORD scroll = ArchMiscWindows::readValueInt(key, _T("ScrollDirection"));
+            ArchMiscWindows::closeKey(key);
+            if (scroll == 0) m_scrollDirectionTouchpad = 1;
+            else m_scrollDirectionTouchpad = -1;
+        }
     }
 }
