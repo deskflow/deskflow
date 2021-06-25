@@ -2161,7 +2161,7 @@ XWindowsScreen::updateScrollDirection()
 	{
 		m_shouldUpdateScrollDirection = false;
 
-		std::thread scrollDirectionUpdateThread([&]{
+		std::thread scrollDirectionUpdateThread([this]{
 			std::string mouseScroll = ArchSystemUnix::runCommand("gsettings get org.gnome.desktop.peripherals.mouse natural-scroll");
 			if(mouseScroll == "false\n")
 				m_scrollDirectionMouse = 1;

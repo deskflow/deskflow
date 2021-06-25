@@ -84,7 +84,8 @@ public:
     virtual void        setOptions(const OptionsList& options);
     virtual void        setSequenceNumber(UInt32);
     virtual bool        isPrimary() const;
-    virtual void        updateScrollDirection();
+
+    void                updateScrollDirection() override;
 
 protected:
     // IPlatformScreen overrides
