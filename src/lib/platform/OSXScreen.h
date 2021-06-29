@@ -203,8 +203,6 @@ private:
     static char*        CFStringRefToUTF8String(CFStringRef aString);
     
     void                getDropTargetThread(void*);
-
-    void                createSecureInputNotification();
     
 private:
     struct HotKeyItem {
