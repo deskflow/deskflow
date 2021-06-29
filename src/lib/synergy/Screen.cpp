@@ -522,10 +522,10 @@ Screen::leaveSecondary()
     m_screen->fakeAllKeysUp();
 }
 
-void
-Screen::createNotification(const String& title, const String& content) const
+String
+Screen::getSecureInputApp() const
 {
-    m_screen->createNotification(title, content);
+    return m_screen->getSecureInputApp();
 }
 
 }

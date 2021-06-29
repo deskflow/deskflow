@@ -112,6 +112,7 @@ private:
     void                fileChunkReceived();
     void                dragInfoReceived();
     void                handleClipboardSendingEvent(const Event&, void*);
+    void                secureInputNotification();
 
 private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);

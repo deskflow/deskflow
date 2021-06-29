@@ -234,11 +234,11 @@ public:
 
     void                setEnableDragDrop(bool enabled);
 
-    //! Send desktop user notification
+    //! Determine the name of the app causing a secure input state
     /*!
-    Creates a platform dependant user notificaiton using native APIs
+    On MacOS check which app causes a secure input state to be enabled. No alternative on other platforms
     */
-    virtual void        createNotification(const String& title, const String& content) const;
+    String              getSecureInputApp() const;
 
     //@}
     //! @name accessors

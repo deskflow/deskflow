@@ -84,7 +84,7 @@ public:
     virtual void        setOptions(const OptionsList& options);
     virtual void        setSequenceNumber(UInt32);
     virtual bool        isPrimary() const;
-    void                createNotification(const String& title, const String& content) const override;
+    String              getSecureInputApp() const override;
 
 protected:
     // IPlatformScreen overrides

@@ -1988,10 +1988,11 @@ MSWindowsScreen::getDropTarget() const
     return m_desktopPath;
 }
 
-void
-MSWindowsScreen::createNotification(const String& title, const String& content) const
+String
+MSWindowsScreen::getSecureInputApp() const
 {
-    // TODO: implement notification
+    // ignore on Windows
+    return "";
 }
 
 bool

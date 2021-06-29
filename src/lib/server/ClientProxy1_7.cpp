@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2015-2016 Symless Ltd.
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,20 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
+#include "server/ClientProxy1_7.h"
+#include "server/Server.h"
 #include "synergy/AppUtil.h"
+#include "synergy/ProtocolUtil.h"
+#include "base/TMethodEventJob.h"
+#include "base/Log.h"
 
-#define ARCH_APP_UTIL AppUtilUnix
+//
+// ClientProxy1_7
+//
 
-class IEventQueue;
+ClientProxy1_7::ClientProxy1_7(const String& name, synergy::IStream* stream, Server* server, IEventQueue* events) :
+    ClientProxy1_6(name, stream, server, events),
+    m_events(events)
+{
 
-class AppUtilUnix : public AppUtil {
-public:
-    AppUtilUnix(IEventQueue* events);
-    virtual ~AppUtilUnix();
-    
-    int run(int argc, char** argv);
-    void startNode();
-    void showNotification(const String& title, const String& text) const override;
-};
+}
+
+void
+ClientProxy1_7::secureInputNotification(const String& app) const
+{
+    LOG((CLOG_DEBUG2 "send secure input notification to \"%s\" %s", getName().c_str(), app.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDSecureInputNotification, &app);
+}

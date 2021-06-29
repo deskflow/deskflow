@@ -475,10 +475,11 @@ XWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
-void
-XWindowsScreen::createNotification(const String& title, const String& content) const
+String
+XWindowsScreen::getSecureInputApp() const
 {
-	// TODO: implement notification
+	// ignore on Linux
+	return "";
 }
 
 void*

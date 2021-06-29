@@ -139,7 +139,7 @@ public:
     virtual String&    getDraggingFilename();
     virtual const String&    
                         getDropTarget() const;
-    void                createNotification(const String& title, const String& content) const override;
+    String              getSecureInputApp() const override;
 
 protected:
     // IPlatformScreen overrides

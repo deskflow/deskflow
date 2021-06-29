@@ -59,6 +59,7 @@ enum {
 	kCarbonLoopWaitTimeout = 10
 };
 
+void createSecureInputNotification();
 int getSecureInputEventPID();
 String getProcessName(int pid);
 
@@ -2158,26 +2159,31 @@ OSXScreen::waitForCarbonLoop() const
 
 }
 
-void
-OSXScreen::createNotification(const String& title, const String& content) const
+String
+OSXScreen::getSecureInputApp() const
 {
-    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), content.c_str()));
+	if(IsSecureEventInputEnabled()) {
+		int secureInputProcessPID = getSecureInputEventPID();
+		if(secureInputProcessPID == 0) return "unknown";
+		return getProcessName(secureInputProcessPID);
+	}
+	return "";
 }
 
 void
-OSXScreen::createSecureInputNotification()
+createSecureInputNotification()
 {
-    std::string secureInputNotificationBody =
-            "Secure input was enabled in your system. " \
-            "Synergy may not be able to send keyboard strokes. ";
-
     int secureInputProcessPID = getSecureInputEventPID();
-    std::string infringingProcessName = getProcessName(secureInputProcessPID);
-    if(secureInputProcessPID == 0) infringingProcessName = "unknown";
-    secureInputNotificationBody += "Infringing process is " + infringingProcessName;
+    String app = getProcessName(secureInputProcessPID);
+    if(secureInputProcessPID == 0) app = "unknown";
 
-    createNotification(
-                "Keyboard may not work correctly",
+    String secureInputNotificationBody =
+            "'Secure input' enabled by " + app + ". " \
+            "Close " + app + " to continue using keyboards on the clients.";
+
+    // display this notification on the server
+    AppUtil::instance().showNotification(
+                "The client keyboards may stop working.",
                 secureInputNotificationBody);
 }
 
