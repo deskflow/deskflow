@@ -250,6 +250,7 @@ MSWindowsScreen::enable()
 
     if (App::instance().argsBase().m_preventSleep) {
         ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
+        ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
     }
 }
 
@@ -269,6 +270,7 @@ MSWindowsScreen::disable()
     else {
         // allow the system to enter power saving mode
         ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM);
+        ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
     }
 
     // tell key state
