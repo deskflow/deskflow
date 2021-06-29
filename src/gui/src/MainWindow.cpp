@@ -743,7 +743,7 @@ void MainWindow::startSynergy()
     qDebug() << args;
 
     // show command if debug log level...
-    if (appConfig().logLevel() >= 0) {
+    if (appConfig().logLevel() >= 4) {
         appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
     }
 
