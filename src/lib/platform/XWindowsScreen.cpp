@@ -1624,11 +1624,13 @@ XWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, 120));
+		// invert for natural scroll setting
+		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, 120 * m_scrollDirectionMouse));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, -120));
+		// invert for natural scroll setting
+		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, -120 * m_scrollDirectionMouse));
 	}
 	// XXX -- support x-axis scrolling
 }
