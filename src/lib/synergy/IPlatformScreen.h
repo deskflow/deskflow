@@ -133,6 +133,12 @@ public:
     //! Change dragging status
     virtual void        setDraggingStarted(bool started) = 0;
 
+    //! Send desktop user notification
+    /*!
+    Creates a platform dependant user notificaiton using native APIs
+    */
+    virtual void        createNotification(const String& title, const String& content) const = 0;
+
     //@}
     //! @name accessors
     //@{

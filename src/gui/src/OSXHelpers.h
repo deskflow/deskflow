@@ -19,7 +19,7 @@
 
 #define OSXHELPERS__H
 
-#include <string>
+#include <QString>
 
 enum class IconsTheme {
     ICONS_DARK,
@@ -27,9 +27,9 @@ enum class IconsTheme {
     ICONS_TEMPLATE
 };
 
-bool isOSXSecureInputEnabled();
-int getOSXSecureInputEventPID();
-std::string getOSXProcessName(int pid);
+void requestOSXNotificationPermission();
+bool isOSXDevelopmentBuild();
+bool showOSXNotification(const QString& title, const QString& body);
 bool isOSXInterfaceStyleDark();
 IconsTheme getOSXIconsTheme();
 

@@ -15,7 +15,7 @@ Enhancements:
 - #7026 Update the way we package OpenSSL for Windows build
 - #7035 Add Fedora 34 build
 - #7037 Add Ubuntu 21.04 build
-- #7030 Add user nofication for secure input on Mac
+- #7030 | #7041 Add user nofication for secure input on Mac
 ===========
 
 v1.14.0-stable

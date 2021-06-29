@@ -233,6 +233,13 @@ public:
     void                startDraggingFiles(DragFileList& fileList);
 
     void                setEnableDragDrop(bool enabled);
+
+    //! Send desktop user notification
+    /*!
+    Creates a platform dependant user notificaiton using native APIs
+    */
+    virtual void        createNotification(const String& title, const String& content) const;
+
     //@}
     //! @name accessors
     //@{

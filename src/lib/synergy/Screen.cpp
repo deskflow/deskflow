@@ -522,4 +522,10 @@ Screen::leaveSecondary()
     m_screen->fakeAllKeysUp();
 }
 
+void
+Screen::createNotification(const String& title, const String& content) const
+{
+    m_screen->createNotification(title, content);
+}
+
 }
