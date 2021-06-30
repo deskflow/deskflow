@@ -16,6 +16,7 @@ Enhancements:
 - #7035 Add Fedora 34 build
 - #7037 Add Ubuntu 21.04 build
 - #7030 | #7041 | #7043 Add user notification for secure input on Mac
+- #7044 Apply natural scroll setting independently on each client
 - #7040 Support "Kana" and "Eisu" keys on Japanese Apple Pro Keyboard (JIS)
 ===========
 

@@ -140,6 +140,7 @@ public:
     virtual const String&    
                         getDropTarget() const;
     String              getSecureInputApp() const override;
+    void                updateScrollDirection() override;
 
 protected:
     // IPlatformScreen overrides
@@ -246,6 +247,9 @@ private: // HACK
 
     // send drag info and data back to server
     void                sendDragThread(void*);
+
+    SInt32              mapScrollToSynergy(SInt32 delta) const;
+    SInt32              mapScrollFromSynergy(SInt32 delta) const;
 
 private:
     struct HotKeyItem {
@@ -366,4 +370,8 @@ private:
     Thread*            m_sendDragThread;
 
     PrimaryKeyDownList    m_primaryKeyDownList;
+
+    // -1 for natural scrolling direction, 1 otherwise
+    SInt32                    m_scrollDirectionMouse = 1;
+    SInt32                    m_scrollDirectionTouchpad = 1;
 };

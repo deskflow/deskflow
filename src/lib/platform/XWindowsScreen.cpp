@@ -37,6 +37,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <algorithm>
+#include <thread>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -867,6 +868,12 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 		return;
 	}
 
+	// use mouse scroll direction for inversion
+	if( m_scrollDirectionMouse < 0 )
+	{
+		yDelta = -yDelta;
+	}
+
 	// choose button depending on rotation direction
 	const unsigned int xButton = mapButtonToX(static_cast<ButtonID>(
 												(yDelta >= 0) ? -1 : -2));
@@ -1624,11 +1631,13 @@ XWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, 120));
+		// invert for natural scroll setting
+		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, 120 * m_scrollDirectionMouse));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, -120));
+		// invert for natural scroll setting
+		sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, -120 * m_scrollDirectionMouse));
 	}
 	// XXX -- support x-axis scrolling
 }
@@ -2153,3 +2162,27 @@ XWindowsScreen::selectXIRawMotion()
 	free(mask.mask);
 }
 #endif
+
+void
+XWindowsScreen::updateScrollDirection()
+{
+	if (m_shouldUpdateScrollDirection)
+	{
+		m_shouldUpdateScrollDirection = false;
+
+		std::thread scrollDirectionUpdateThread([this]{
+			std::string mouseScroll = ArchSystemUnix::runCommand("gsettings get org.gnome.desktop.peripherals.mouse natural-scroll");
+			if(mouseScroll == "false\n")
+				m_scrollDirectionMouse = 1;
+			else if(mouseScroll == "true\n")
+				m_scrollDirectionMouse = -1;
+
+			std::string touchpadScroll = ArchSystemUnix::runCommand("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
+			if(touchpadScroll == "false\n")
+				m_scrollDirectionTouchpad = 1;
+			else if(touchpadScroll == "true\n")
+				m_scrollDirectionTouchpad = -1;
+		});
+		scrollDirectionUpdateThread.detach();
+	}
+}

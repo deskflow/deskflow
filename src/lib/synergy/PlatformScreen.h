@@ -102,6 +102,9 @@ public:
     virtual const String&
                         getDropTarget() const { throw std::runtime_error("getDropTarget not implemented"); }
 
+    void                allowScrollDirectionUpdate() override { m_shouldUpdateScrollDirection = true; }
+    void                updateScrollDirection() override = 0;
+
 protected:
     //! Update mouse buttons
     /*!
@@ -124,4 +127,5 @@ protected:
     String                m_draggingFilename;
     bool                m_draggingStarted;
     bool                m_fakeDraggingStarted;
+    bool                m_shouldUpdateScrollDirection = false;
 };

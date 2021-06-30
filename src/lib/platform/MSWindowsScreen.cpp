@@ -46,6 +46,7 @@
 #include <Shlobj.h>
 #include <comutil.h>
 #include <algorithm>
+#include <thread>
 
 // suppress warning about GetVersionEx, which is used indirectly in this compilation unit.
 #pragma warning(disable: 4996)
@@ -343,6 +344,11 @@ MSWindowsScreen::leave()
 
     // tell desk that we're leaving and tell it the keyboard layout
     m_desks->leave(m_keyLayout);
+
+    // Forcefully update scrolling direction
+    // Will keep server updated when moving cursor
+    allowScrollDirectionUpdate();
+    updateScrollDirection();
 
     if (m_isPrimary) {
 
@@ -829,6 +835,8 @@ MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
+    xDelta = mapScrollFromSynergy(xDelta);
+    yDelta = mapScrollFromSynergy(yDelta);
     m_desks->fakeMouseWheel(xDelta, yDelta);
 }
 
@@ -1473,6 +1481,8 @@ MSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
     // ignore message if posted prior to last mark change
     if (!ignore()) {
         LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
+        xDelta = mapScrollToSynergy(xDelta);
+        yDelta = mapScrollToSynergy(yDelta);
         sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
     }
     return true;
@@ -2021,4 +2031,57 @@ MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask stat
     }
 
     return result;
+}
+
+SInt32
+MSWindowsScreen::mapScrollToSynergy(SInt32 delta) const
+{
+    // for mouse wheel the delta will be a multiple of WHEEL_DELTA
+    if (delta % WHEEL_DELTA == 0)
+    {
+        return delta * m_scrollDirectionMouse;
+    }
+    else
+    {
+        return delta * m_scrollDirectionTouchpad;
+    }
+}
+
+SInt32
+MSWindowsScreen::mapScrollFromSynergy(SInt32 delta) const
+{
+    // use mouse scrolling direction to invert
+    if (m_scrollDirectionMouse < 0)
+        return -delta;
+    return delta;
+}
+
+void
+MSWindowsScreen::updateScrollDirection()
+{
+    static const TCHAR* const touchpadScrollDirectionNames[] = {
+        _T("SOFTWARE"),
+        _T("Microsoft"),
+        _T("Windows"),
+        _T("CurrentVersion"),
+        _T("PrecisionTouchPad"),
+        NULL
+    };
+
+    if (m_shouldUpdateScrollDirection)
+    {
+        m_shouldUpdateScrollDirection = false;
+
+        std::thread scrollDirectionUpdateThread([&] {
+            HKEY key = ArchMiscWindows::openKey(HKEY_CURRENT_USER, touchpadScrollDirectionNames);
+            if (key)
+            {
+                DWORD scroll = ArchMiscWindows::readValueInt(key, _T("ScrollDirection"));
+                ArchMiscWindows::closeKey(key);
+                if (scroll == 0) m_scrollDirectionTouchpad = 1;
+                else m_scrollDirectionTouchpad = -1;
+            }
+        });
+        scrollDirectionUpdateThread.detach();
+    }
 }
