@@ -164,7 +164,6 @@ public slots:
         void logError();
         void updateFound(const QString& version);
         void saveSettings();
-        void checkSystemInterruptions();
 
         /// @brief Receives the signal that the auto config option has changed
         void zeroConfToggled();
@@ -207,6 +206,9 @@ public slots:
         void checkConnected(const QString& line);
         void checkFingerprint(const QString& line);
         void checkSecureSocket(const QString& line);
+#ifdef Q_OS_MAC
+        void checkOSXNotification(const QString& line);
+#endif
 #ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
 #endif
@@ -247,11 +249,6 @@ public slots:
         QString             m_SecureSocketVersion;      // brief Contains the version of the Secure Socket currently active
         ServerConnection    m_serverConnection;
         ClientConnection    m_clientConnection;
-        QTimer              m_systemInterruptionCheckTimer; // Timer used for sceduling a task for detecting the system
-                                                            // operations preventing the Synergy from working properly
-#if defined(Q_OS_MAC)
-        bool                m_isSecureInputNotificationShown = false;
-#endif
 
         void                updateAutoConfigWidgets();
         

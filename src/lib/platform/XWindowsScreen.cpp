@@ -476,6 +476,13 @@ XWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
+String
+XWindowsScreen::getSecureInputApp() const
+{
+	// ignore on Linux
+	return "";
+}
+
 void*
 XWindowsScreen::getEventTarget() const
 {

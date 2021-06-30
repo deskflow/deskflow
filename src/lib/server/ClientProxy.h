@@ -56,40 +56,41 @@ public:
     /*!
     Returns the original stream passed to the c'tor.
     */
-    synergy::IStream*    getStream() const;
+    synergy::IStream*    getStream() const override;
 
     //@}
 
     // IScreen
-    virtual void*        getEventTarget() const;
-    virtual bool        getClipboard(ClipboardID id, IClipboard*) const = 0;
-    virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const = 0;
-    virtual void        getCursorPos(SInt32& x, SInt32& y) const = 0;
+    void*       getEventTarget() const override;
+    bool        getClipboard(ClipboardID id, IClipboard*) const override = 0;
+    void        getShape(SInt32& x, SInt32& y,
+                            SInt32& width, SInt32& height) const override = 0;
+    void        getCursorPos(SInt32& x, SInt32& y) const override = 0;
 
     // IClient overrides
-    virtual void        enter(SInt32 xAbs, SInt32 yAbs,
+    void        enter(SInt32 xAbs, SInt32 yAbs,
                             UInt32 seqNum, KeyModifierMask mask,
-                            bool forScreensaver) = 0;
-    virtual bool        leave() = 0;
-    virtual void        setClipboard(ClipboardID, const IClipboard*) = 0;
-    virtual void        grabClipboard(ClipboardID) = 0;
-    virtual void        setClipboardDirty(ClipboardID, bool) = 0;
-    virtual void        keyDown(KeyID, KeyModifierMask, KeyButton) = 0;
-    virtual void        keyRepeat(KeyID, KeyModifierMask,
-                            SInt32 count, KeyButton) = 0;
-    virtual void        keyUp(KeyID, KeyModifierMask, KeyButton) = 0;
-    virtual void        mouseDown(ButtonID) = 0;
-    virtual void        mouseUp(ButtonID) = 0;
-    virtual void        mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
-    virtual void        mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
-    virtual void        mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
-    virtual void        screensaver(bool activate) = 0;
-    virtual void        resetOptions() = 0;
-    virtual void        setOptions(const OptionsList& options) = 0;
-    virtual void        sendDragInfo(UInt32 fileCount, const char* info,
-                            size_t size) = 0;
-    virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
+                            bool forScreensaver) override = 0;
+    bool        leave() override = 0;
+    void        setClipboard(ClipboardID, const IClipboard*) override = 0;
+    void        grabClipboard(ClipboardID) override = 0;
+    void        setClipboardDirty(ClipboardID, bool) override = 0;
+    void        keyDown(KeyID, KeyModifierMask, KeyButton) override = 0;
+    void        keyRepeat(KeyID, KeyModifierMask,
+                            SInt32 count, KeyButton) override = 0;
+    void        keyUp(KeyID, KeyModifierMask, KeyButton) override = 0;
+    void        mouseDown(ButtonID) override = 0;
+    void        mouseUp(ButtonID) override = 0;
+    void        mouseMove(SInt32 xAbs, SInt32 yAbs) override = 0;
+    void        mouseRelativeMove(SInt32 xRel, SInt32 yRel) override = 0;
+    void        mouseWheel(SInt32 xDelta, SInt32 yDelta) override = 0;
+    void        screensaver(bool activate) override = 0;
+    void        resetOptions() override = 0;
+    void        setOptions(const OptionsList& options) override = 0;
+    void        sendDragInfo(UInt32 fileCount, const char* info,
+                            size_t size) override = 0;
+    void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) override = 0;
+    void        secureInputNotification(const String& app) const override = 0;
 
 private:
     synergy::IStream*    m_stream;
