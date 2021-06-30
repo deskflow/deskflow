@@ -16,6 +16,7 @@ Enhancements:
 - #7035 Add Fedora 34 build
 - #7037 Add Ubuntu 21.04 build
 - #7030 Add user nofication for secure input on Mac
+- #7040 Support "Kana" and "Eisu" keys on Japanese Apple Pro Keyboard (JIS)
 ===========
 
 v1.14.0-stable
