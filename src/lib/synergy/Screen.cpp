@@ -522,4 +522,10 @@ Screen::leaveSecondary()
     m_screen->fakeAllKeysUp();
 }
 
+String
+Screen::getSecureInputApp() const
+{
+    return m_screen->getSecureInputApp();
+}
+
 }

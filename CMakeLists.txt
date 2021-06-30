@@ -167,6 +167,7 @@ if (UNIX)
         find_library (lib_ApplicationServices ApplicationServices)
         find_library (lib_Foundation Foundation)
         find_library (lib_Carbon Carbon)
+        find_library (lib_UserNotifications UserNotifications)
 
         list (APPEND libs
             ${lib_ScreenSaver}
@@ -174,6 +175,7 @@ if (UNIX)
             ${lib_ApplicationServices}
             ${lib_Foundation}
             ${lib_Carbon}
+            ${lib_UserNotifications}
         )
 
     else() # not-apple

@@ -139,6 +139,7 @@ public:
     virtual String&    getDraggingFilename();
     virtual const String&    
                         getDropTarget() const;
+    String              getSecureInputApp() const override;
 
 protected:
     // IPlatformScreen overrides

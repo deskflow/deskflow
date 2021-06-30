@@ -18,6 +18,8 @@
 
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
+#include "base/Log.h"
+#include "base/log_outputters.h"
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
@@ -43,4 +45,17 @@ void
 AppUtilUnix::startNode()
 {
     app().startNode();
+}
+
+void
+AppUtilUnix::showNotification(const String & title, const String & text) const
+{
+    LOG((CLOG_DEBUG "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+#if WINAPI_XWINDOWS
+
+#elif WINAPI_CARBON
+    // synergys and synergyc are not allowed to send native notifications on MacOS
+    // instead ask main synergy process to show them instead
+    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), text.c_str()));
+#endif
 }

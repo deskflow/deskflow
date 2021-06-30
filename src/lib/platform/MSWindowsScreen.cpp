@@ -1988,6 +1988,13 @@ MSWindowsScreen::getDropTarget() const
     return m_desktopPath;
 }
 
+String
+MSWindowsScreen::getSecureInputApp() const
+{
+    // ignore on Windows
+    return "";
+}
+
 bool
 MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const
 {
