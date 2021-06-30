@@ -2245,7 +2245,7 @@ OSXScreen::updateScrollDirection()
 {
 	if(m_shouldUpdateScrollDirection)
 	{
-		LOG((CLOG_INFO "updated scrolling direction"));
+		LOG((CLOG_DEBUG "updated scrolling direction"));
 		m_scrollDirection = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue] ? -1 : 1;
 		m_shouldUpdateScrollDirection = false;
 	}

@@ -1478,13 +1478,11 @@ MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 bool
 MSWindowsScreen::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 {
-    LOG((CLOG_INFO "onMouseWheel delta=%+d,%+d", xDelta, yDelta));
     // ignore message if posted prior to last mark change
     if (!ignore()) {
         LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
         xDelta = mapScrollToSynergy(xDelta);
         yDelta = mapScrollToSynergy(yDelta);
-        LOG((CLOG_DEBUG1 "adjusted wheel delta=%+d,%+d", xDelta, yDelta));
         sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
     }
     return true;
