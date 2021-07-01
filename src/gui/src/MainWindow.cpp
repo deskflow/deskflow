@@ -38,6 +38,10 @@
 #include "Zeroconf.h"
 #include <QPushButton>
 
+#if defined(Q_OS_LINUX)
+#include <QtDBus/QtDBus>
+#endif
+
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
 #endif
@@ -661,7 +665,6 @@ void MainWindow::startSynergy()
 
     args << "-f" << "--no-tray" << "--debug" << appConfig().logLevelText();
 
-
     args << "--name" << appConfig().screenName();
 
     if (desktopMode)
@@ -718,6 +721,9 @@ void MainWindow::startSynergy()
     if (m_AppConfig->getPreventSleep())
     {
         args << "--prevent-sleep";
+#ifdef Q_OS_LINUX
+        setSleepPreventionState(true);
+#endif
     }
 
     // put a space between last log output and new instance.
@@ -987,6 +993,10 @@ void MainWindow::stopSynergy()
     {
         stopDesktop();
     }
+
+#ifdef Q_OS_LINUX
+    setSleepPreventionState(false);
+#endif
 
     setSynergyState(synergyDisconnected);
 
@@ -1504,3 +1514,54 @@ void MainWindow::on_m_pButtonConnect_clicked()
     on_m_pButtonApply_clicked();
 }
 
+#ifdef Q_OS_LINUX
+void
+MainWindow::setSleepPreventionState(bool state)
+{
+    static const std::array<QString, 2> services =
+    {
+        "org.freedesktop.ScreenSaver",
+        "org.gnome.SessionManager"
+    };
+    static const std::array<QString, 2> paths =
+    {
+        "/org/freedesktop/ScreenSaver",
+        "/org/gnome/SessionManager"
+    };
+
+    static std::array<uint, 2> cookies;
+
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if(bus.isConnected())
+    {
+        for(int i = 0; i < services.size() ; i++)
+        {
+            QDBusInterface screenSaverInterface( services[i], paths[i],services[i], bus);
+
+            if (!screenSaverInterface.isValid())
+                continue;
+
+            QDBusReply<uint> reply;
+
+            if(state)
+            {
+                reply = screenSaverInterface.call("Inhibit", "nzuri-video Downloader", "REASON");
+            }
+            else
+            {
+                reply  = screenSaverInterface.call("UnInhibit", cookies[i]);
+            }
+
+            if (reply.isValid())
+            {
+                cookies[i] = reply.value();
+            }
+            else
+            {
+                QDBusError error =reply.error();
+                appendLogDebug(error.message() + " : " + error.name());
+            }
+        }
+    }
+}
+#endif
