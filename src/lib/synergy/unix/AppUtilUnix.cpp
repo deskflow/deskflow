@@ -27,6 +27,8 @@
 #else
 #error Platform not supported.
 #endif
+#include "base/Log.h"
+#include "base/log_outputters.h"
 
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
@@ -111,4 +113,17 @@ AppUtilUnix::showMessageBox(const String& title, const String& text)
 #endif
     });
     thr.detach();
+}
+	
+void
+AppUtilUnix::showNotification(const String & title, const String & text) const
+{
+    LOG((CLOG_DEBUG "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+#if WINAPI_XWINDOWS
+
+#elif WINAPI_CARBON
+    // synergys and synergyc are not allowed to send native notifications on MacOS
+    // instead ask main synergy process to show them instead
+    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), text.c_str()));
+#endif
 }

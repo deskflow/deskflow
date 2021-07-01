@@ -133,6 +133,26 @@ public:
     //! Change dragging status
     virtual void        setDraggingStarted(bool started) = 0;
 
+    //! Determine the name of the app causing a secure input state
+    /*!
+    On MacOS check which app causes a secure input state to be enabled. No alternative on other platforms
+    */
+    virtual String      getSecureInputApp() const = 0;
+
+    //! Allow updating wheel scrolling direction
+    /*!
+    Sets a flag to allow updating the scrolling direction automatically
+    when scrolling
+    */
+    virtual void        allowScrollDirectionUpdate() = 0;
+
+    //! Update the scrolling direction if allowed
+    /*!
+    If relevant flag is set should read a system settings to apply a
+    correct scrolling direction
+    */
+    virtual void        updateScrollDirection() = 0;
+
     //@}
     //! @name accessors
     //@{

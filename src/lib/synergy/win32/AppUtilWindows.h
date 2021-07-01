@@ -57,6 +57,9 @@ public:
 
     void showMessageBox(const String& title, const String& text) override;
 
+    void showNotification(const String& title, const String& text) const override;
+
+
 private:
     AppExitMode            m_exitMode;
     IEventQueue*        m_events;

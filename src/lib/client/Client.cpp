@@ -751,7 +751,14 @@ Client::handleHello(const Event&, void*)
 
     // check versions
     LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
-    if (major < kProtocolMajorVersion ||
+    SInt16 helloBackMajor = kProtocolMajorVersion;
+    SInt16 helloBackMinor = kProtocolMinorVersion;
+    if (major == kProtocolMajorVersion && minor == 6 && kProtocolMinorVersion == 7) {
+        //because 1.6 and 1.7 is comptable - downgrading protocol for server
+        LOG((CLOG_NOTE "Downgrading protocol version for server"));
+        helloBackMinor = minor;
+    }
+    else if (major < kProtocolMajorVersion ||
         (major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
         sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
         cleanupTimer();
@@ -765,9 +772,12 @@ Client::handleHello(const Event&, void*)
     for (const auto& layout : AppUtil::instance().getKeyboardLayoutList()) {
         allKeyboardLayoutsStr += layout;
     }
+
+
+    LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
-                            kProtocolMajorVersion,
-                            kProtocolMinorVersion, &m_name, &allKeyboardLayoutsStr);
+                            helloBackMajor,
+                            helloBackMinor, & m_name, &allKeyboardLayoutsStr);
 
     if(!missedLanguages.empty()) {
         AppUtil::instance().showMessageBox("Language synchronization error",

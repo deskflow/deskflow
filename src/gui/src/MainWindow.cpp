@@ -328,42 +328,6 @@ void MainWindow::saveSettings()
     GUI::Config::ConfigWriter::make()->globalSave();
 }
 
-void MainWindow::checkSystemInterruptions()
-{
-    if(synergyType() == synergyServer)
-    {
-#if defined(Q_OS_MAC)
-        if(!isOSXSecureInputEnabled())
-        {
-            m_isSecureInputNotificationShown = false;
-        }
-        else if(!m_isSecureInputNotificationShown)
-        {
-            // avoid showing multiple duplicate messages
-            m_isSecureInputNotificationShown = true;
-
-            QMessageBox message(this);
-            message.addButton(QObject::tr("Accept"), QMessageBox::AcceptRole);
-            std::string messageText =
-                    "Secure input was enabled in your system by another application. " \
-                    "Synergy will not be able to send keyboard strokes while the secure input is enabled\n\n";
-            int secureInputProcessPID = getOSXSecureInputEventPID();
-            std::string infringingProcessName = getOSXProcessName(secureInputProcessPID);
-
-            // IO registry may not contain the secure input process PID
-            // in this case don't add an option to quit the infringing app
-            if(secureInputProcessPID == 0) infringingProcessName = "unknown";
-            else message.addButton(QString("Quit %1").arg(infringingProcessName.c_str()), QMessageBox::ApplyRole);
-            messageText += "Infringing process is " + infringingProcessName;
-            message.setText(QObject::tr(messageText.c_str()));
-
-            // if user decides to stop the app send the SIGTERM signal
-            if (message.exec() == QMessageBox::Accepted && secureInputProcessPID) kill(secureInputProcessPID, SIGTERM);
-        }
-#endif
-    }
-}
-
 void MainWindow::zeroConfToggled() {
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     updateZeroconfService();
@@ -498,6 +462,12 @@ void MainWindow::updateFromLogLine(const QString &line)
     checkFingerprint(line);
     checkSecureSocket(line);
 
+    // subprocess (synergys, synergyc) is not allowed to show notifications
+    // process the log from it and show notificatino from synergy instead
+#ifdef Q_OS_MAC
+    checkOSXNotification(line);
+#endif
+
 #ifndef SYNERGY_ENTERPRISE
     checkLicense(line);
 #endif
@@ -609,6 +579,27 @@ void MainWindow::checkSecureSocket(const QString& line)
         m_SecureSocketVersion = line.mid(index + strlen(tlsCheckString)); // Compliant: we made sure that tlsCheckString variable ended with null(static const char* declaration)
     }
 }
+
+#ifdef Q_OS_MAC
+void MainWindow::checkOSXNotification(const QString& line)
+{
+    static const QString OSXNotificationSubstring = "OSX Notification: ";
+    if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
+        int delimterPosition = line.indexOf('|');
+        int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
+        QString title =
+                line.mid(notificationStartPosition + OSXNotificationSubstring.length(),
+                         delimterPosition - notificationStartPosition - OSXNotificationSubstring.length());
+        QString body =
+                line.mid(delimterPosition + 1,
+                         line.length() - delimterPosition);
+        if (!showOSXNotification(title, body)) {
+            appendLogInfo("OSX notification was not shown");
+        }
+    }
+}
+#endif
+
 QString MainWindow::getTimeStamp()
 {
     QDateTime current = QDateTime::currentDateTime();
@@ -645,6 +636,10 @@ void MainWindow::clearLog()
 void MainWindow::startSynergy()
 {
     saveSettings();
+
+#ifdef Q_OS_MAC
+    requestOSXNotificationPermission();
+#endif
 
 #ifndef SYNERGY_ENTERPRISE
     SerialKey serialKey = m_LicenseManager->serialKey();
@@ -743,7 +738,6 @@ void MainWindow::startSynergy()
         connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(synergyFinished(int, QProcess::ExitStatus)));
         connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
         connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
-        connect(&m_systemInterruptionCheckTimer, SIGNAL(timeout()), this, SLOT(checkSystemInterruptions()));
     }
 
     qDebug() << args;
@@ -1061,7 +1055,6 @@ void MainWindow::setSynergyState(qSynergyState state)
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Stop"));
         m_pButtonApply->setEnabled(true);
-        m_systemInterruptionCheckTimer.start(5000); // check every 5 seconds
     }
     else if (state == synergyDisconnected)
     {
@@ -1069,7 +1062,6 @@ void MainWindow::setSynergyState(qSynergyState state)
         connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
         m_pButtonToggleStart->setText(tr("&Start"));
         m_pButtonApply->setEnabled(false);
-        m_systemInterruptionCheckTimer.stop();
     }
 
     bool running = false;

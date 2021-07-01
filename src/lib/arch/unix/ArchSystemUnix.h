@@ -35,4 +35,5 @@ public:
     virtual void setting(const std::string&, const std::string&) const;
     virtual std::string getLibsUsed(void) const;
 
+    static std::string  runCommand(const std::string& cmd);
 };

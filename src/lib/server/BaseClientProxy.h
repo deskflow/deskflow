@@ -89,6 +89,8 @@ public:
     virtual void        sendDragInfo(UInt32 fileCount, const char* info,
                             size_t size) = 0;
     virtual void        fileChunkSending(UInt8 mark, char* data, size_t dataSize) = 0;
+    virtual String      getSecureInputApp() const = 0;
+    virtual void        secureInputNotification(const String& app) const = 0;
     virtual String        getName() const;
     virtual synergy::IStream*
                         getStream() const = 0;
