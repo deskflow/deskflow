@@ -756,7 +756,7 @@ OSXScreen::enable()
 {
     if(App::instance().argsBase().m_preventSleep) {
         CFStringRef reasonForActivity = CFSTR("Synergy application");
-        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoIdleSleep,
+        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
                                                         kIOPMAssertionLevelOn, reasonForActivity, &m_sleepPreventionAssertionID);
         if(result != kIOReturnSuccess) {
             m_sleepPreventionAssertionID = 0;
