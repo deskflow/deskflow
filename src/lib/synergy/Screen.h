@@ -233,6 +233,13 @@ public:
     void                startDraggingFiles(DragFileList& fileList);
 
     void                setEnableDragDrop(bool enabled);
+
+    //! Determine the name of the app causing a secure input state
+    /*!
+    On MacOS check which app causes a secure input state to be enabled. No alternative on other platforms
+    */
+    String              getSecureInputApp() const;
+
     //@}
     //! @name accessors
     //@{

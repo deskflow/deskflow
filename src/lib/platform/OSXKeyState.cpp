@@ -118,6 +118,11 @@ static const KeyEntry    s_controlKeys[] = {
     // toggle modifiers
     { kKeyNumLock,        s_numLockVK },
     { kKeyCapsLock,        s_capsLockVK },
+
+    // for Apple Pro JIS Keyboard, map Kana (IME activate) to Henkan (show next IME conversion), and 
+    // Eisu (IME deactivate) to Zenkaku (IME activation toggle) on Windows Japanese keyboard (OADG109A)
+    { kKeyHenkan,        kVK_JIS_Kana },
+    { kKeyZenkaku,        kVK_JIS_Eisu },
     
     { kKeyMissionControl, s_missionControlVK },
     { kKeyLaunchpad, s_launchpadVK },
