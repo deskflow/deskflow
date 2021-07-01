@@ -29,7 +29,6 @@
 
 void requestOSXNotificationPermission()
 {
-	qWarning("Requesting notification permission");
 #if OSX_DEPLOYMENT_TARGET >= 1014
 	if (isOSXDevelopmentBuild())
 	{
