@@ -9,6 +9,7 @@ Bug fixes:
 - #7029 | #7033 Wrong encoding for text copied between linux and windows
 - #7015 Fix Windows service not starting up after sleep
 - #7036 Fix tray icon not changing theme on Big Sur
+- #7047 Fix prevent sleep option on Mac and Windows
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
@@ -18,6 +19,7 @@ Enhancements:
 - #7030 | #7041 | #7043 Add user notification for secure input on Mac
 - #7044 Apply natural scroll setting independently on each client
 - #7040 Support "Kana" and "Eisu" keys on Japanese Apple Pro Keyboard (JIS)
+- #7047 Add prevent sleep option support to Linux
 ===========
 
 v1.14.0-stable
