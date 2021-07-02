@@ -80,13 +80,13 @@ jobs:
         catalina-std:
           image: macOS-10.15
           platform: x86-64
-          version: 10.15
+          version: 10.14
           buildType: "standard"
           prefix: "synergy"
         catalina-ent:
           image: macOS-10.15
           platform: x86-64
-          version: 10.15
+          version: 10.14
           buildType: "enterprise"
           prefix: "synergy-enterprise"
     pool:
