@@ -9,7 +9,7 @@ Bug fixes:
 - #7029 | #7033 Wrong encoding for text copied between linux and windows
 - #7015 Fix Windows service not starting up after sleep
 - #7036 Fix tray icon not changing theme on Big Sur
-- #7038 Fix different keyboard layout notification
+- #7046 Fix MacOS 10.13 build
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
