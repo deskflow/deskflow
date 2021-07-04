@@ -18,6 +18,8 @@
  
 #include "synergy/AppUtil.h"
 
+#include "algorithm"
+
 AppUtil* AppUtil::s_instance = nullptr;
  
 AppUtil::AppUtil() :
