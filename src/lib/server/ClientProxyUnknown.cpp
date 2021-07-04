@@ -38,6 +38,7 @@
 #include "base/TMethodEventJob.h"
 
 #include <sstream>
+#include <iterator>
 
 //
 // ClientProxyUnknown
