@@ -37,7 +37,7 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 
-#include <algorithm>
+#include <sstream>
 
 //
 // ClientProxyUnknown
@@ -206,25 +206,6 @@ ClientProxyUnknown::handleData(const Event&, void*)
             throw XIncompatibleClient(major, minor);
         }
 
-        String missedLanguages;
-        String supportedLanguages;
-        auto localLayouts = AppUtil::instance().getKeyboardLayoutList();
-        for(int i = 0; i <= (int)keyboardLayoutList.size() - 2; i +=2) {
-            auto serverLayout = keyboardLayoutList.substr(i, 2);
-            if (std::find(localLayouts.begin(), localLayouts.end(), serverLayout) == localLayouts.end()) {
-                missedLanguages += serverLayout;
-                missedLanguages += ' ';
-            }
-            else {
-                supportedLanguages += serverLayout;
-                supportedLanguages += ' ';
-            }
-        }
-
-        if(!supportedLanguages.empty()) {
-            LOG((CLOG_DEBUG "Supported client languages: %s", supportedLanguages.c_str()));
-        }
-
         // remove stream event handlers.  the proxy we're about to create
         // may install its own handlers and we don't want to accidentally
         // remove those later.
@@ -272,9 +253,20 @@ ClientProxyUnknown::handleData(const Event&, void*)
             throw XIncompatibleClient(major, minor);
         }
 
-        if(!missedLanguages.empty()) {
+        std::vector<String> missed, supported;
+        AppUtil::instance().getKeyboardLayoutsDiff(keyboardLayoutList, missed, supported);
+
+        if(!supported.empty()) {
+            std::ostringstream result;
+            std::copy(supported.begin(), supported.end(), std::ostream_iterator<String>(result, ", "));
+            LOG((CLOG_DEBUG "Supported client languages: %s",  result.str().c_str()));
+        }
+
+        if(!missed.empty()) {
+            std::ostringstream result;
+            std::copy(missed.begin(), missed.end(), std::ostream_iterator<String>(result, ", "));
             AppUtil::instance().showMessageBox("Language synchronization error",
-                                               String("This languages are required for server proper work: ") + missedLanguages);
+                                               "These languages are required for server proper work: " + result.str());
         }
 
         // the proxy is created and now proxy now owns the stream

@@ -32,7 +32,8 @@ namespace lib {
             ~ClientArgs() override;
 
         public:
-            int                  m_yscroll      = 0;
+            int                  m_yscroll           = 0;
+            bool                 m_enableLangSync    = true;       /// @brief Should keyboard input be in same language as on server
 
         private:
 

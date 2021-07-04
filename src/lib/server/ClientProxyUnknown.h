@@ -20,7 +20,6 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "base/String.h"
 
 class ClientProxy;
 class EventQueueTimer;

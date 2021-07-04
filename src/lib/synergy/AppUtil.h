@@ -33,6 +33,9 @@ public:
     static AppUtil& instance();
     static void exitAppStatic(int code) { instance().exitApp(code); }
     virtual void beforeAppExit() {}
+    void getKeyboardLayoutsDiff(const String& compressedLanguages,
+                                std::vector<String>& missedLang,
+                                std::vector<String>& supportedLang) override;
     
 private:
     IApp* m_app;

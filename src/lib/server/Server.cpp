@@ -100,7 +100,7 @@ Server::Server(
 	m_waitDragInfoThread(true),
 	m_args(args)
 {
-    // must have a primary client and it must have a canonical name
+     // must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
 	assert(config.isScreen(primaryClient->getName()));
 	assert(m_screen != NULL);

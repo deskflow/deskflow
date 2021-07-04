@@ -111,6 +111,9 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             // define scroll
             args.m_yscroll = atoi(argv[++i]);
         }
+        else if (isArg(i, argc, argv, nullptr, "--sync-language", 1)) {
+            args.m_enableLangSync = true;
+        }
         else {
             if (i + 1 == argc) {
                 args.m_synergyAddress = argv[i];

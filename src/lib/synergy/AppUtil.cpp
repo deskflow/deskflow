@@ -50,3 +50,20 @@ AppUtil::instance()
     assert(s_instance != nullptr);
     return *s_instance;
 }
+
+void
+AppUtil::getKeyboardLayoutsDiff(const String& compressedLanguages,
+                                std::vector<String>& missedLang,
+                                std::vector<String>& supportedLang)
+{
+    auto localLayouts = getKeyboardLayoutList();
+    for(int i = 0; i <= (int)compressedLanguages.size() - 2; i +=2) {
+        auto layout = compressedLanguages.substr(i, 2);
+        if (std::find(localLayouts.begin(), localLayouts.end(), layout) == localLayouts.end()) {
+            missedLang.push_back(layout);
+        }
+        else {
+            supportedLang.push_back(layout);
+        }
+    }
+}

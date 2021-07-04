@@ -766,8 +766,7 @@ KeyMap::keysForKeyItem(const KeyItem& keyItem, SInt32& group,
 
     // add keystrokes to adjust the group
 
-    if (App::instance().argsBase().m_enableLangSync &&
-            group != keyItem.m_group) {
+    if (group != keyItem.m_group) {
         group = keyItem.m_group;
         keystrokes.push_back(Keystroke(group, true, false));
     }
