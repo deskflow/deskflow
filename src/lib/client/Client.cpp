@@ -761,7 +761,8 @@ Client::handleHello(const Event&, void*)
                             helloBackMinor, & m_name, &allKeyboardLayoutsStr);
 
     if(m_args.m_enableLangSync) {
-        std::vector<String> missed, supported;
+        std::vector<String> missed;
+        std::vector<String> supported;
         AppUtil::instance().getKeyboardLayoutsDiff(keyboardLayoutList, missed, supported);
 
         if(!supported.empty()) {

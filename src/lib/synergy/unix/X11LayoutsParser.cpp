@@ -48,7 +48,7 @@ X11LayoutsParser::readXMLConfigItemElem(tinyxml2::XMLElement* root, std::vector<
     auto languageListElem = configItemElem->FirstChildElement("languageList");
     if(languageListElem) {
         for(auto isoElem = languageListElem->FirstChildElement("iso639Id"); isoElem; isoElem = isoElem->NextSiblingElement("iso639Id")) {
-            langList.back().layoutBaseISO639_2.push_back(isoElem->GetText());
+            langList.back().layoutBaseISO639_2.emplace_back(isoElem->GetText());
         }
     }
 

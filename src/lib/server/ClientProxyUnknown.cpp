@@ -254,7 +254,8 @@ ClientProxyUnknown::handleData(const Event&, void*)
             throw XIncompatibleClient(major, minor);
         }
 
-        std::vector<String> missed, supported;
+        std::vector<String> missed;
+        std::vector<String> supported;
         AppUtil::instance().getKeyboardLayoutsDiff(keyboardLayoutList, missed, supported);
 
         if(!supported.empty()) {
