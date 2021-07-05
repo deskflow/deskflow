@@ -31,6 +31,7 @@
 #include "base/Event.h"
 #include "base/EventQueue.h"
 #include "common/Version.h"
+#include "wintoastlib.h"
 
 #include <sstream>
 #include <iostream>
@@ -181,8 +182,46 @@ AppUtilWindows::startNode()
     app().startNode();
 }
 
+class WinToastHandler : public WinToastLib::IWinToastHandler {
+public:
+    WinToastHandler() {}
+    // Public interfaces
+    void toastActivated() const override {}
+    void toastActivated(int actionIndex) const override {}
+    void toastDismissed(WinToastDismissalReason state) const override {}
+    void toastFailed() const override {}
+};
+
 void
 AppUtilWindows::showNotification(const String & title, const String & text) const
 {
     LOG((CLOG_DEBUG "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+    if (!WinToastLib::WinToast::isCompatible()) {
+        LOG((CLOG_INFO "This system does not support toast notifications"));
+        return;
+    }
+    if (!WinToastLib::WinToast::instance()->isInitialized())
+    {
+        WinToastLib::WinToast::instance()->setAppName(L"WinToastExample");
+        const auto aumi = WinToastLib::WinToast::configureAUMI(L"Symless", L"Synergy", L"Synergy App", L"1.14.1+");
+        WinToastLib::WinToast::instance()->setAppUserModelId(aumi);
+
+        if (!WinToastLib::WinToast::instance()->initialize())
+        {
+            LOG((CLOG_DEBUG "Failed to initialize toast notifications"));
+            return;
+        }
+    }
+
+    WinToastLib::WinToast::WinToastError error;
+    WinToastHandler* handler = new WinToastHandler;
+    WinToastLib::WinToastTemplate templ = WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
+    templ.setTextField(std::wstring(title.begin(), title.end()), WinToastLib::WinToastTemplate::FirstLine);
+    templ.setTextField(std::wstring(text.begin(), text.end()), WinToastLib::WinToastTemplate::SecondLine);
+
+    const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler, &error);
+    if (!launched) {
+        LOG((CLOG_DEBUG "Failed to show toast notification. Error code: %d", error));
+        return;
+    }
 }
