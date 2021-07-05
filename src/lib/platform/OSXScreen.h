@@ -153,9 +153,6 @@ private:
     // get the current scroll wheel speed
     double                getScrollSpeed() const;
 
-    // get the current scroll wheel speed
-    double                getScrollSpeedFactor() const;
-
     // enable/disable drag handling for buttons 3 and up
     void                enableDragTimer(bool enable);
 
