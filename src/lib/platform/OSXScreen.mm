@@ -1462,9 +1462,8 @@ OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 SInt32
 OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 {
-	// return accelerated scrolling but not exponentially scaled as it is
-	// on the mac.
-	double d = (1.0 + getScrollSpeed()) * x / getScrollSpeedFactor();
+	// return accelerated scrolling
+	double d = (1.0 + getScrollSpeed()) * x;
 	return static_cast<SInt32>(m_scrollDirection * 120.0 * d);
 }
 
@@ -1500,12 +1499,6 @@ OSXScreen::getScrollSpeed() const
 	}
 
 	return scaling;
-}
-
-double
-OSXScreen::getScrollSpeedFactor() const
-{
-	return pow(10.0, getScrollSpeed());
 }
 
 void
