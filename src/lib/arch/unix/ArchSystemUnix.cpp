@@ -23,7 +23,9 @@
 #include <array>
 #include <memory>
 #include <string>
+#ifndef __APPLE__
 #include <QtDBus>
+#endif
 
 //
 // ArchSystemUnix
@@ -102,6 +104,7 @@ ArchSystemUnix::runCommand(const std::string& cmd)
     return result;
 }
 
+#ifndef __APPLE__
 bool
 ArchSystemUnix::DBusInhibitScreenCall(bool state)
 {
@@ -164,3 +167,4 @@ ArchSystemUnix::enableSleep()
 {
     return DBusInhibitScreenCall(false);
 }
+#endif

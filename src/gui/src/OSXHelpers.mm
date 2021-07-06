@@ -24,6 +24,7 @@
 #import <UserNotifications/UNUserNotificationCenter.h>
 #import <UserNotifications/UNNotificationContent.h>
 #import <UserNotifications/UNNotificationTrigger.h>
+#import "AppDelegate.h"
 
 #import <QtGlobal>
 

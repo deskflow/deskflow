@@ -36,7 +36,10 @@ public:
     virtual std::string getLibsUsed(void) const;
 
     static std::string  runCommand(const std::string& cmd);
+
+#ifndef __APPLE__
     static bool         DBusInhibitScreenCall(bool state);
     static bool         enableSleep();
     static bool         disableSleep();
+#endif
 };
