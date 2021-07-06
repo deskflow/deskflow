@@ -209,9 +209,6 @@ public slots:
 #ifdef Q_OS_MAC
         void checkOSXNotification(const QString& line);
 #endif
-#ifdef Q_OS_LINUX
-        void setSleepPreventionState(bool state);
-#endif
 #ifndef SYNERGY_ENTERPRISE
         void checkLicense(const QString& line);
 #endif

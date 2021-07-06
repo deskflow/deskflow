@@ -255,11 +255,6 @@ if (UNIX)
         if (HAVE_Xi)
             list (APPEND libs Xi)
         endif()
-
-        list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-        find_package(DBus REQUIRED)
-        include_directories(${DBUS_INCLUDE_DIRS})
-        list (APPEND libs ${DBUS_LIBRARIES})
     endif()
 
     # For config.h, set some static values; it may be a good idea to make

@@ -62,10 +62,6 @@ include_directories (./src)
 target_link_libraries (synergy shared)
 
 qt5_use_modules (synergy Core Widgets Network)
-if (UNIX AND NOT APPLE)
-    find_package (Qt5 COMPONENTS DBus)
-    qt5_use_modules (synergy DBus)
-endif()
 
 target_compile_definitions (synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions (synergy PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")

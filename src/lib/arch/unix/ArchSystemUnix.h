@@ -36,7 +36,7 @@ public:
     virtual std::string getLibsUsed(void) const;
 
     static std::string  runCommand(const std::string& cmd);
-    static bool         DBusCall(const char* service, const char* path, const char* param);
+    static bool         DBusInhibitScreenCall(bool state);
     static bool         enableSleep();
     static bool         disableSleep();
 };
