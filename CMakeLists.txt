@@ -162,12 +162,26 @@ if (UNIX)
     if (APPLE)
         set (CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1")
 
+		if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+            set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
+        endif()
+
+        if(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 11.0)
+            set(SYNERGY_OSX_DEPLOYMENT_TARGET 1100)
+        elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.15)
+            set(SYNERGY_OSX_DEPLOYMENT_TARGET 1015)
+        elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.14)
+            set(SYNERGY_OSX_DEPLOYMENT_TARGET 1014)
+        else()
+            set(SYNERGY_OSX_DEPLOYMENT_TARGET 1013)
+        endif()
+        add_compile_definitions(OSX_DEPLOYMENT_TARGET=${SYNERGY_OSX_DEPLOYMENT_TARGET})
+
         find_library (lib_ScreenSaver ScreenSaver)
         find_library (lib_IOKit IOKit)
         find_library (lib_ApplicationServices ApplicationServices)
         find_library (lib_Foundation Foundation)
         find_library (lib_Carbon Carbon)
-        find_library (lib_UserNotifications UserNotifications)
 
         list (APPEND libs
             ${lib_ScreenSaver}
@@ -175,8 +189,14 @@ if (UNIX)
             ${lib_ApplicationServices}
             ${lib_Foundation}
             ${lib_Carbon}
-            ${lib_UserNotifications}
         )
+
+		if(SYNERGY_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 1014)
+            find_library (lib_UserNotifications UserNotifications)
+            list (APPEND libs
+                ${lib_UserNotifications}
+            )
+        endif()
 
     else() # not-apple
 
@@ -255,6 +275,7 @@ if (UNIX)
         if (HAVE_Xi)
             list (APPEND libs Xi)
         endif()
+
     endif()
 
     # For config.h, set some static values; it may be a good idea to make

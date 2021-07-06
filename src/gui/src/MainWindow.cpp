@@ -665,6 +665,7 @@ void MainWindow::startSynergy()
 
     args << "-f" << "--no-tray" << "--debug" << appConfig().logLevelText();
 
+
     args << "--name" << appConfig().screenName();
 
     if (desktopMode)
@@ -1506,3 +1507,4 @@ void MainWindow::on_m_pButtonConnect_clicked()
 {
     on_m_pButtonApply_clicked();
 }
+
