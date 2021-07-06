@@ -721,9 +721,6 @@ void MainWindow::startSynergy()
     if (m_AppConfig->getPreventSleep())
     {
         args << "--prevent-sleep";
-#ifdef Q_OS_LINUX
-        setSleepPreventionState(true);
-#endif
     }
 
     // put a space between last log output and new instance.
@@ -993,10 +990,6 @@ void MainWindow::stopSynergy()
     {
         stopDesktop();
     }
-
-#ifdef Q_OS_LINUX
-    setSleepPreventionState(false);
-#endif
 
     setSynergyState(synergyDisconnected);
 

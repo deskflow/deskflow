@@ -50,6 +50,11 @@ add_executable(synergys ${sources})
 target_link_libraries(synergys
     arch base client common io mt net ipc platform server synlib ${libs})
 
+if (UNIX AND NOT APPLE)
+    find_package (Qt5 COMPONENTS DBus)
+    qt5_use_modules (synergys DBus)
+endif()
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install (TARGETS synergys DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
