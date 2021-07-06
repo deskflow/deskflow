@@ -162,7 +162,7 @@ if (UNIX)
     if (APPLE)
         set (CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1")
 
-		if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+        if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
             set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
         endif()
 
@@ -191,7 +191,7 @@ if (UNIX)
             ${lib_Carbon}
         )
 
-		if(SYNERGY_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 1014)
+        if(SYNERGY_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 1014)
             find_library (lib_UserNotifications UserNotifications)
             list (APPEND libs
                 ${lib_UserNotifications}

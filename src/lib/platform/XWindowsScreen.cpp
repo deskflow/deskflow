@@ -310,7 +310,7 @@ XWindowsScreen::enter()
 			DPMSForceLevel(m_display, DPMSModeOn);
 	}
 	#endif
-    
+	
 	// unmap the hider/grab window.  this also ungrabs the mouse and
 	// keyboard if they're grabbed.
 	XUnmapWindow(m_display, m_window);
