@@ -214,12 +214,12 @@ AppUtilWindows::showNotification(const String & title, const String & text) cons
     }
 
     WinToastLib::WinToast::WinToastError error;
-    WinToastHandler* handler = new WinToastHandler;
+    auto handler = std::make_unique<WinToastHandler>();
     WinToastLib::WinToastTemplate templ = WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
     templ.setTextField(std::wstring(title.begin(), title.end()), WinToastLib::WinToastTemplate::FirstLine);
     templ.setTextField(std::wstring(text.begin(), text.end()), WinToastLib::WinToastTemplate::SecondLine);
 
-    const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler, &error);
+    const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler.get(), &error);
     if (!launched) {
         LOG((CLOG_DEBUG "Failed to show toast notification. Error code: %d", error));
         return;
