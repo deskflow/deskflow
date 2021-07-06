@@ -249,10 +249,9 @@ XWindowsScreen::enable()
 	}
 
 	// disable sleep if the flag is set
-	if (App::instance().argsBase().m_preventSleep) {
-		if (!ArchSystemUnix::disableSleep()) {
-			LOG((CLOG_INFO "Failed to prevent system from going to sleep"));
-		}
+	if (App::instance().argsBase().m_preventSleep &&
+		!ArchSystemUnix::disableSleep()) {
+		LOG((CLOG_INFO "Failed to prevent system from going to sleep"));
 	}
 }
 

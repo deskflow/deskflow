@@ -122,35 +122,35 @@ ArchSystemUnix::DBusInhibitScreenCall(bool state)
     static std::array<uint, 2> cookies;
 
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if (bus.isConnected())
+
+    if (bus.isConnected()) return false;
+
+    for (int i = 0; i < services.size() ; i++)
     {
-        for (int i = 0; i < services.size() ; i++)
+        QDBusInterface screenSaverInterface( services[i], paths[i],services[i], bus);
+
+        if (!screenSaverInterface.isValid())
+            continue;
+
+        QDBusReply<uint> reply;
+
+        if(state)
         {
-            QDBusInterface screenSaverInterface( services[i], paths[i],services[i], bus);
+            if (cookies[i])
+                return false;
 
-            if (!screenSaverInterface.isValid())
-                continue;
-
-            QDBusReply<uint> reply;
-
-            if(state)
-            {
-                if (cookies[i])
-                    return false;
-
-                reply = screenSaverInterface.call("Inhibit", "Synergy", "Sleep is manually prevented by the Synergy preferences");
-                if (reply.isValid())
-                    cookies[i] = reply.value();
-                else
-                    return false;
-            }
+            reply = screenSaverInterface.call("Inhibit", "Synergy", "Sleep is manually prevented by the Synergy preferences");
+            if (reply.isValid())
+                cookies[i] = reply.value();
             else
-            {
-                reply  = screenSaverInterface.call("UnInhibit", cookies[i]);
-                cookies[i] = 0;
-                if (!reply.isValid())
-                    return false;
-            }
+                return false;
+        }
+        else
+        {
+            reply  = screenSaverInterface.call("UnInhibit", cookies[i]);
+            cookies[i] = 0;
+            if (!reply.isValid())
+                return false;
         }
     }
     return true;
