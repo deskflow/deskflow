@@ -118,22 +118,17 @@ ArchSystemUnix::DBusInhibitScreenCall(bool state)
         "/org/freedesktop/ScreenSaver",
         "/org/gnome/SessionManager"
     };
-
     static std::array<uint, 2> cookies;
 
     QDBusConnection bus = QDBusConnection::sessionBus();
-
     if (bus.isConnected()) return false;
-
     for (int i = 0; i < services.size() ; i++)
     {
         QDBusInterface screenSaverInterface( services[i], paths[i],services[i], bus);
-
         if (!screenSaverInterface.isValid())
             continue;
 
         QDBusReply<uint> reply;
-
         if(state)
         {
             if (cookies[i])
