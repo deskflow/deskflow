@@ -102,16 +102,6 @@ showOSXNotification(const QString& title, const QString& body)
 {
 	NotificationCenterDelegate* delegate = [NotificationCenterDelegate alloc];
 	NSLog(@"test");
-
-	NSUserNotification* notification = [[NSUserNotification alloc] init];
-	notification.title = title.toNSString();
-	notification.informativeText = body.toNSString();
-	notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
-	NSUserNotificationCenter* ns_center = [NSUserNotificationCenter defaultUserNotificationCenter];
-	ns_center.delegate = delegate;
-	[ns_center deliverNotification: notification];
-	[notification autorelease];
-
 #if OSX_DEPLOYMENT_TARGET >= 1014
 	// accessing notification center on unsigned build causes an immidiate
 	// application shutodown (in this case synergys) and cannot be caught
@@ -125,8 +115,7 @@ showOSXNotification(const QString& title, const QString& body)
 
 	requestOSXNotificationPermission();
 
-	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-	center.delegate = delegate;
+	[[UNUserNotificationCenter currentNotificationCenter] setDelegate:delegate];
 
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.title = title.toNSString();
@@ -136,21 +125,21 @@ showOSXNotification(const QString& title, const QString& body)
 	UNNotificationRequest* request = [UNNotificationRequest
 		   requestWithIdentifier:@"SecureInput" content:content trigger:nil];
 
-	[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+	[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
 	   if (error != nil) {
 		   qWarning("Notification display request error: %s", [[NSString stringWithFormat:@"%@", error] UTF8String]);
 	   }
 	}];
 
 	[request autorelease];
+	[content autorelease];
 #else
 	NSUserNotification* notification = [[NSUserNotification alloc] init];
 	notification.title = title.toNSString();
 	notification.informativeText = body.toNSString();
 	notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
-	NSUserNotificationCenter* ns_center = [NSUserNotificationCenter defaultUserNotificationCenter];
-	ns_center.delegate = delegate;
-	[ns_center deliverNotification: notification];
+	[[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:delegate];
+	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
 	[notification autorelease];
 #endif
 	[delegate autorelease];
