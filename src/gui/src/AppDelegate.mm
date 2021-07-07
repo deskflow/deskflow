@@ -11,6 +11,7 @@
 
 -(void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    NSLog(@"applicationDidFinishLaunching");
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 #if OSX_DEPLOYMENT_TARGET >= 1014
     [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
@@ -18,6 +19,7 @@
 }
 
 -(BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification{
+    NSLog(@"shouldPresentNotification");
     return YES;
 }
 
@@ -25,6 +27,7 @@
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
+    NSLog(@"completionHandler");
     UNNotificationPresentationOptions presentationOptions =
     UNNotificationPresentationOptionSound
     | UNNotificationPresentationOptionAlert

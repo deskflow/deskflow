@@ -27,6 +27,49 @@
 
 #import <QtGlobal>
 
+#import <Cocoa/Cocoa.h>
+#if OSX_DEPLOYMENT_TARGET >= 1014
+#import <UserNotifications/UNUserNotificationCenter.h>
+@interface NotificationCenterDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate, UNUserNotificationCenterDelegate>
+{
+}
+#else
+@interface NotificationCenterDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>
+{
+}
+#endif
+@end
+
+@implementation NotificationCenterDelegate
+-(void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+    NSLog(@"applicationDidFinishLaunching");
+    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
+#if OSX_DEPLOYMENT_TARGET >= 1014
+    [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
+#endif
+}
+
+-(BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification{
+    NSLog(@"shouldPresentNotification");
+    return YES;
+}
+
+#if OSX_DEPLOYMENT_TARGET >= 1014
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center
+     willPresentNotification:(UNNotification *)notification
+       withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
+    NSLog(@"completionHandler");
+    UNNotificationPresentationOptions presentationOptions =
+    UNNotificationPresentationOptionSound
+    | UNNotificationPresentationOptionAlert
+    | UNNotificationPresentationOptionBadge;
+
+    completionHandler(presentationOptions);
+}
+#endif
+@end
+
 void requestOSXNotificationPermission()
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
@@ -57,12 +100,25 @@ isOSXDevelopmentBuild()
 bool
 showOSXNotification(const QString& title, const QString& body)
 {
+	NotificationCenterDelegate* delegate = [NotificationCenterDelegate alloc];
+	NSLog(@"test");
+
+	NSUserNotification* notification = [[NSUserNotification alloc] init];
+	notification.title = title.toNSString();
+	notification.informativeText = body.toNSString();
+	notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+	NSUserNotificationCenter* ns_center = [NSUserNotificationCenter defaultUserNotificationCenter];
+	ns_center.delegate = delegate;
+	[ns_center deliverNotification: notification];
+	[notification autorelease];
+
 #if OSX_DEPLOYMENT_TARGET >= 1014
 	// accessing notification center on unsigned build causes an immidiate
 	// application shutodown (in this case synergys) and cannot be caught
 	// to avoid issues with it need to first check if this is a dev build
 	if (isOSXDevelopmentBuild())
 	{
+		[delegate autorelease];
 		qWarning("Not showing notification in dev build");
 		return false;
 	}
@@ -70,6 +126,7 @@ showOSXNotification(const QString& title, const QString& body)
 	requestOSXNotificationPermission();
 
 	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+	center.delegate = delegate;
 
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.title = title.toNSString();
@@ -84,14 +141,19 @@ showOSXNotification(const QString& title, const QString& body)
 		   qWarning("Notification display request error: %s", [[NSString stringWithFormat:@"%@", error] UTF8String]);
 	   }
 	}];
+
+	[request autorelease];
 #else
 	NSUserNotification* notification = [[NSUserNotification alloc] init];
 	notification.title = title.toNSString();
 	notification.informativeText = body.toNSString();
 	notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
-	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+	NSUserNotificationCenter* ns_center = [NSUserNotificationCenter defaultUserNotificationCenter];
+	ns_center.delegate = delegate;
+	[ns_center deliverNotification: notification];
 	[notification autorelease];
 #endif
+	[delegate autorelease];
 	return true;
 }
 
