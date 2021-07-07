@@ -21,6 +21,10 @@
 #include "base/Log.h"
 #include "base/log_outputters.h"
 
+#if WINAPI_XWINDOWS
+#include <libnotify/notify.h>
+#endif
+
 AppUtilUnix::AppUtilUnix(IEventQueue* events)
 {
 }
@@ -52,7 +56,14 @@ AppUtilUnix::showNotification(const String & title, const String & text) const
 {
     LOG((CLOG_DEBUG "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
 #if WINAPI_XWINDOWS
+    notify_init("Synergy");
+    NotifyNotification* n = notify_notification_new (title.c_str(), text.c_str(), nullptr);
+    notify_notification_set_timeout(n, 10000);
 
+    if (!notify_notification_show(n, 0))
+    {
+        LOG((CLOG_INFO "Failed to show notification"));
+    }
 #elif WINAPI_CARBON
     // synergys and synergyc are not allowed to send native notifications on MacOS
     // instead ask main synergy process to show them instead
