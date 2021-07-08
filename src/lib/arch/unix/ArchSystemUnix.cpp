@@ -106,8 +106,9 @@ ArchSystemUnix::runCommand(const std::string& cmd)
 
 #ifndef __APPLE__
 bool
-ArchSystemUnix::DBusInhibitScreenCall(bool state)
+ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string& error)
 {
+    error = "";
     static const std::array<QString, 2> services =
     {
         "org.freedesktop.ScreenSaver",
@@ -120,46 +121,58 @@ ArchSystemUnix::DBusInhibitScreenCall(bool state)
     };
     static std::array<uint, 2> cookies;
 
+    auto serviceNum = static_cast<uint8_t>(serviceID);
+
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if (bus.isConnected()) return false;
-    for (int i = 0; i < services.size() ; i++)
+    if (!bus.isConnected())
     {
-        QDBusInterface screenSaverInterface( services[i], paths[i],services[i], bus);
-        if (!screenSaverInterface.isValid())
-            continue;
-
-        QDBusReply<uint> reply;
-        if(state)
-        {
-            if (cookies[i])
-                return false;
-
-            reply = screenSaverInterface.call("Inhibit", "Synergy", "Sleep is manually prevented by the Synergy preferences");
-            if (reply.isValid())
-                cookies[i] = reply.value();
-            else
-                return false;
-        }
-        else
-        {
-            reply  = screenSaverInterface.call("UnInhibit", cookies[i]);
-            cookies[i] = 0;
-            if (!reply.isValid())
-                return false;
-        }
+        error = "bus failed to connect";
+        return false;
     }
+
+    QDBusInterface screenSaverInterface(
+                services[serviceNum],
+                paths[serviceNum],
+                services[serviceNum],
+                bus);
+
+    if (!screenSaverInterface.isValid())
+    {
+        error = "screen saver interface failed to initialize";
+        return false;
+    }
+
+    QDBusReply<uint> reply;
+    if(state)
+    {
+        if (cookies[serviceNum])
+        {
+            error = "coockies are not empty";
+            return false;
+        }
+
+        reply = screenSaverInterface.call("Inhibit", "Synergy", "Sleep is manually prevented by the Synergy preferences");
+        if (reply.isValid())
+            cookies[serviceNum] = reply.value();
+    }
+    else
+    {
+        if(!cookies[serviceNum])
+        {
+            error = "coockies are empty";
+            return false;
+        }
+        reply  = screenSaverInterface.call("UnInhibit", cookies[serviceNum]);
+        cookies[serviceNum] = 0;
+    }
+
+    if(!reply.isValid())
+    {
+        QDBusError qerror = reply.error();
+        error = qerror.name().toStdString() + " : " + qerror.message().toStdString();
+        return false;
+    }
+
     return true;
-}
-
-bool
-ArchSystemUnix::disableSleep()
-{
-    return DBusInhibitScreenCall(true);
-}
-
-bool
-ArchSystemUnix::enableSleep()
-{
-    return DBusInhibitScreenCall(false);
 }
 #endif

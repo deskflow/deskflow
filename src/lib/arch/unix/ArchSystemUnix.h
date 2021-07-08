@@ -38,8 +38,10 @@ public:
     static std::string  runCommand(const std::string& cmd);
 
 #ifndef __APPLE__
-    static bool         DBusInhibitScreenCall(bool state);
-    static bool         enableSleep();
-    static bool         disableSleep();
+    enum class InhibitScreenServices {
+        kScreenSaver,
+        kSessionManager
+    };
+    static bool DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string& error);
 #endif
 };

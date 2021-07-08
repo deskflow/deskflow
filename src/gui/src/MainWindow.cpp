@@ -38,10 +38,6 @@
 #include "Zeroconf.h"
 #include <QPushButton>
 
-#if defined(Q_OS_LINUX)
-#include <QtDBus/QtDBus>
-#endif
-
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
 #endif
