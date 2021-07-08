@@ -60,7 +60,7 @@ AppUtilUnix::showNotification(const String & title, const String & text) const
     NotifyNotification* n = notify_notification_new (title.c_str(), text.c_str(), nullptr);
     notify_notification_set_timeout(n, 10000);
 
-    if (!notify_notification_show(n, 0))
+    if (!notify_notification_show(n, nullptr))
     {
         LOG((CLOG_INFO "Failed to show notification"));
     }
