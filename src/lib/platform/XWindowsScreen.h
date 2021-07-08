@@ -119,9 +119,9 @@ private:
     static int            ioErrorHandler(Display*);
 
     // sleep management
-    bool                sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceID);
-    bool                disableIdleSleep();
-    bool                enableIdleSleep();
+    static bool         sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceID);
+    static bool         disableIdleSleep();
+    static bool         enableIdleSleep();
 
 private:
     class KeyEventFilter {
