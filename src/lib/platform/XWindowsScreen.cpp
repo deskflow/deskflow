@@ -227,9 +227,6 @@ XWindowsScreen::~XWindowsScreen()
 	s_screen = NULL;
 }
 
-bool disableSleep();
-bool enableSleep();
-
 void
 XWindowsScreen::enable()
 {
