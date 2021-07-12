@@ -756,8 +756,10 @@ OSXScreen::enable()
 {
     if(App::instance().argsBase().m_preventSleep) {
         CFStringRef reasonForActivity = CFSTR("Synergy application");
-        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoIdleSleep,
-                                                        kIOPMAssertionLevelOn, reasonForActivity, &m_sleepPreventionAssertionID);
+
+        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertPreventUserIdleDisplaySleep,
+                                                        kIOPMAssertionLevelOn, reasonForActivity,
+                                                        &m_sleepPreventionAssertionID);
         if(result != kIOReturnSuccess) {
             m_sleepPreventionAssertionID = 0;
             LOG((CLOG_ERR "failed to disable system idle sleep"));

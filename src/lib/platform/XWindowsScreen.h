@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "arch/Arch.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/KeyMap.h"
 #include "common/stdset.h"
@@ -116,6 +117,11 @@ private:
     // X I/O error handler
     void                onError();
     static int            ioErrorHandler(Display*);
+
+    // sleep management
+    static bool         sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceID);
+    static bool         disableIdleSleep();
+    static bool         enableIdleSleep();
 
 private:
     class KeyEventFilter {
