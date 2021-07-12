@@ -202,7 +202,7 @@ AppUtilWindows::showNotification(const String & title, const String & text) cons
     }
     if (!WinToastLib::WinToast::instance()->isInitialized())
     {
-        WinToastLib::WinToast::instance()->setAppName(L"WinToastExample");
+        WinToastLib::WinToast::instance()->setAppName(L"Synergy");
         const auto aumi = WinToastLib::WinToast::configureAUMI(L"Symless", L"Synergy", L"Synergy App", L"1.14.1+");
         WinToastLib::WinToast::instance()->setAppUserModelId(aumi);
 
