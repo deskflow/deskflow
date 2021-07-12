@@ -19,10 +19,6 @@ jobs:
           image: symless/synergy-core:ubuntu18.04
           packager: deb
           name: ubuntu18
-        ubuntu1910:
-          image: symless/synergy-core:ubuntu19.10
-          packager: deb
-          name: ubuntu19
         ubuntu2004:
           image: symless/synergy-core:ubuntu20.04
           packager: deb
