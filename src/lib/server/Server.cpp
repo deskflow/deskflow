@@ -1302,6 +1302,13 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 			client->grabClipboard(info->m_id);
 		}
 	}
+
+    if (m_active != m_primaryClient) {
+        LOG((CLOG_INFO "clipboard grabbed, but we are already changed active screen. Resend clipboard data"));
+        for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+            onClipboardChanged(m_primaryClient, id, m_clipboards[id].m_clipboardSeqNum);
+        }
+    }
 }
 
 void
@@ -1570,7 +1577,6 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 	// get data
 	sender->getClipboard(id, &clipboard.m_clipboard);
 
-	// ignore if data hasn't changed
 	String data = clipboard.m_clipboard.marshall();
 	if (data.size() > m_maximumClipboardSize * 1024) {
 		LOG((CLOG_NOTE "not updating clipboard because it's over the size limit (%i KB) configured by the server",
@@ -1578,6 +1584,7 @@ Server::onClipboardChanged(BaseClientProxy* sender,
 		return;
 	}
 
+    // ignore if data hasn't changed
 	if (data == clipboard.m_clipboardData) {
 		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
 		return;

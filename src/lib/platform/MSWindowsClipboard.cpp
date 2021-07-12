@@ -100,8 +100,7 @@ MSWindowsClipboard::empty()
 void
 MSWindowsClipboard::add(EFormat format, const String& data)
 {
-    LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
-
+    bool isSucceeded = false;
     // convert data to win32 form
     for (ConverterList::const_iterator index = m_converters.begin();
                                 index != m_converters.end(); ++index) {
@@ -111,10 +110,19 @@ MSWindowsClipboard::add(EFormat format, const String& data)
         if (converter->getFormat() == format) {
             HANDLE win32Data = converter->fromIClipboard(data);
             if (win32Data != NULL) {
-                UINT win32Format = converter->getWin32Format();
-                m_facade->write(win32Data, win32Format);
+                LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
+                m_facade->write(win32Data, converter->getWin32Format());
+                isSucceeded = true;
+                break;
+            }
+            else {
+                LOG((CLOG_DEBUG "failed to convert clipboard data to platform format"));
             }
         }
+    }
+
+    if(!isSucceeded){
+        LOG((CLOG_DEBUG "missed clipboard data convert for format: %d", format));
     }
 }
 
