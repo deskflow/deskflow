@@ -23,6 +23,9 @@
 #include <array>
 #include <memory>
 #include <string>
+#ifndef __APPLE__
+#include <QtDBus>
+#endif
 
 //
 // ArchSystemUnix
@@ -100,3 +103,76 @@ ArchSystemUnix::runCommand(const std::string& cmd)
     }
     return result;
 }
+
+#ifndef __APPLE__
+bool
+ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string& error)
+{
+    error = "";
+    static const std::array<QString, 2> services =
+    {
+        "org.freedesktop.ScreenSaver",
+        "org.gnome.SessionManager"
+    };
+    static const std::array<QString, 2> paths =
+    {
+        "/org/freedesktop/ScreenSaver",
+        "/org/gnome/SessionManager"
+    };
+    static std::array<uint, 2> cookies;
+
+    auto serviceNum = static_cast<uint8_t>(serviceID);
+
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected())
+    {
+        error = "bus failed to connect";
+        return false;
+    }
+
+    QDBusInterface screenSaverInterface(
+                services[serviceNum],
+                paths[serviceNum],
+                services[serviceNum],
+                bus);
+
+    if (!screenSaverInterface.isValid())
+    {
+        error = "screen saver interface failed to initialize";
+        return false;
+    }
+
+    QDBusReply<uint> reply;
+    if(state)
+    {
+        if (cookies[serviceNum])
+        {
+            error = "coockies are not empty";
+            return false;
+        }
+
+        reply = screenSaverInterface.call("Inhibit", "Synergy", "Sleep is manually prevented by the Synergy preferences");
+        if (reply.isValid())
+            cookies[serviceNum] = reply.value();
+    }
+    else
+    {
+        if(!cookies[serviceNum])
+        {
+            error = "coockies are empty";
+            return false;
+        }
+        reply  = screenSaverInterface.call("UnInhibit", cookies[serviceNum]);
+        cookies[serviceNum] = 0;
+    }
+
+    if(!reply.isValid())
+    {
+        QDBusError qerror = reply.error();
+        error = qerror.name().toStdString() + " : " + qerror.message().toStdString();
+        return false;
+    }
+
+    return true;
+}
+#endif
