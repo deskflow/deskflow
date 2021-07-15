@@ -11,7 +11,10 @@ Bug fixes:
 - #7036 Fix tray icon not changing theme on Big Sur
 - #7046 Fix MacOS 10.13 build
 - #7049 Scroll doesn't work in case of macOS is server
-- #7057 Fix copy paste logic, when OS reported about clipboard update too late
+- #7057 | #7058 Fix copy paste logic, when OS reported about clipboard update too late
+- #7055 Add secure input notification on Linux
+- #7052 Add secure input notification on Windows
+- #7047 Fix prevent sleep option on Mac and Windows
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
@@ -21,6 +24,7 @@ Enhancements:
 - #7030 | #7041 | #7043 Add user notification for secure input on Mac
 - #7044 Apply natural scroll setting independently on each client
 - #7040 Support "Kana" and "Eisu" keys on Japanese Apple Pro Keyboard (JIS)
+- #7047 Add prevent sleep option support to Linux
 ===========
 
 v1.14.0-stable

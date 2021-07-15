@@ -16,7 +16,6 @@ jobs:
       matrix:
         include:
           - distro: ubuntu20.04
-          - distro: ubuntu19.10
           - distro: ubuntu21.04
 #          - distro: ubuntu18.04 #Need to install git 2.18+
 #          - distro: ubuntu16.04 #Need to install git 2.18+
