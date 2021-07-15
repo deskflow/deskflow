@@ -1303,7 +1303,7 @@ Server::handleClipboardGrabbed(const Event& event, void* vclient)
 		}
 	}
 
-    if (m_active != m_primaryClient) {
+    if (grabber == m_primaryClient && m_active != m_primaryClient) {
         LOG((CLOG_INFO "clipboard grabbed, but we are already changed active screen. Resend clipboard data"));
         for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
             onClipboardChanged(m_primaryClient, id, m_clipboards[id].m_clipboardSeqNum);
