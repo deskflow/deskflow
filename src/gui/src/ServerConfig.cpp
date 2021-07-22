@@ -44,7 +44,7 @@ const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, MainWindow* mainWindow) :
 
-        m_Screens(),
+        m_Screens(numColumns),
         m_NumColumns(numColumns),
         m_NumRows(numRows),
         m_pAppConfig(appConfig),
@@ -412,6 +412,39 @@ bool ServerConfig::isFull() const
     return isFull;
 }
 
+bool ServerConfig::isScreenExists(const QString& screenName) const
+{
+    bool isExists = false;
+
+    for (const auto& screen : screens())
+    {
+        if (!screen.isNull() &&
+            screen.name() == screenName)
+        {
+            isExists = true;
+            break;
+        }
+    }
+
+    return isExists;
+}
+
+void ServerConfig::addClient(const QString& clientName)
+{
+    int serverIndex = -1;
+
+    if (findScreenName(m_pAppConfig->screenName(), serverIndex))
+    {
+        m_Screens[serverIndex].markAsServer();
+    }
+    else
+    {
+        fixNoServer(m_pAppConfig->screenName(), serverIndex);
+    }
+
+    m_Screens.addScreenByPriority(clientName);
+}
+
 void ServerConfig::setConfigFile(const QString& configFile)
 {
    m_pAppConfig->setConfigFile(configFile);
@@ -441,6 +474,7 @@ bool ServerConfig::fixNoServer(const QString& name, int& index)
     bool fixed = false;
     if (screens()[serverDefaultIndex].isNull()) {
         m_Screens[serverDefaultIndex].setName(name);
+        m_Screens[serverDefaultIndex].markAsServer();
         index = serverDefaultIndex;
         fixed = true;
     }

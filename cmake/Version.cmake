@@ -5,10 +5,10 @@ cmake_minimum_required (VERSION 3.4)
 #
 
 set (SYNERGY_VERSION_MAJOR 1)
-set (SYNERGY_VERSION_MINOR 13)
-set (SYNERGY_VERSION_PATCH 2)
+set (SYNERGY_VERSION_MINOR 14)
+set (SYNERGY_VERSION_PATCH 0)
 set (SYNERGY_VERSION_BUILD 1)
-set (SYNERGY_VERSION_STAGE "snapshot")
+set (SYNERGY_VERSION_STAGE "stable")
 
 #
 # Version from CI
@@ -76,8 +76,4 @@ endif()
 
 if (SYNERGY_ENTERPRISE)
     add_definitions (-DSYNERGY_ENTERPRISE=1)
-endif()
-
-if (SYNERGY_AUTOCONFIG)
-   add_definitions (-DSYNERGY_AUTOCONFIG=1)
 endif()

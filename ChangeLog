@@ -1,4 +1,4 @@
-v1.13.2-snapshot
+v1.14.0-stable
 ===========
 Bug fixes:
 - #6953 | #6961 The system does not update server name in Server configuration
@@ -10,6 +10,18 @@ Bug fixes:
 - #6975 Fix server stop working
 - #6976 Fix windows builds
 - #6979 Manual config error in client mode
+- #6983 Fix that mac client listens on ipv4 only
+- #6989 Fix client tray language switcher reverts to EN
+- #6993 Fix issues with prefences UI
+- #6992 UI issues and use cases
+- #7000 Additional UI tweaks
+- #7005 Fix User is not able to connect to server using ipv6 without wrapping IP in square quotes
+- #7009 Clipboard sharing doesn't work on Linux system
+- #7010 Fix Ubuntu 16.04 pipeline in Azure
+- #7011 Fix language synchronisation checkbox spelling
+- #7013 Wrong connection pop up appears if the user connects using a domain name which is assigned to list of IP's
+- #7014 Temporary disable language sync logic
+- #7020 Remove cmake option for autoconfig
 
 Enhancements:
 - #6954 Move language selection to advanced section
@@ -18,8 +30,16 @@ Enhancements:
 - #6973 Update synergy UI. Main window
 - #6977 Update synergy UI. Configure server
 - #6978 Update synergy UI. Settings window
-- #6981 Update synergy UI. Setup client configuration
+- #6981 | #6987 | #6988 | #6996 Update synergy UI. Setup client configuration
+- #6984 Update synergy UI. Client error messages
 - #6962 | #6965 Add macOS 10.13 builder
+- #6990 Change VersionChecker URL and include system language in the header
+- #6999 Detect if Linux is running with Wayland, and display a warning message
+- #7003 | #7024 Prioritization rules server config
+- #7004 Add openssl dependency for rpm
+- #7008 Add logging when hostname have several IP
+- #7022 Add Fedora 33 to build and release pipeline
+- #7031 New china licenses
 ===========
 
 v1.13.1-stable

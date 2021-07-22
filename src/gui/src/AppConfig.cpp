@@ -428,7 +428,7 @@ bool AppConfig::isCryptoAvailable() const {
     bool result {true};
 
 #ifndef SYNERGY_ENTERPRISE
-    result = (edition() == kPro || edition() == kBusiness);
+    result = (edition() == kPro || edition() == kPro_China || edition() == kBusiness);
 #endif
 
     return result;
@@ -446,6 +446,12 @@ bool AppConfig::getAutoHide() { return m_AutoHide; }
 
 void AppConfig::setMinimizeToTray(bool newValue) {
     setSettingModified(m_MinimizeToTray, newValue);
+}
+
+bool AppConfig::getLanguageSync() const { return m_LanguageSync; }
+
+void AppConfig::setLanguageSync(bool newValue) {
+    setSettingModified(m_LanguageSync, newValue);
 }
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }

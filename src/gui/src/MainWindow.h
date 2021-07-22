@@ -29,6 +29,7 @@
 
 #include "ServerConfig.h"
 #include "ServerConnection.h"
+#include "ClientConnection.h"
 #include "AppConfig.h"
 #include "VersionChecker.h"
 #include "IpcClient.h"
@@ -69,6 +70,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
     friend class ActivationDialog;
     friend class SettingsDialog;
     friend class ServerConnection;
+    friend class ClientConnection;
 
     public:
         enum qSynergyState
@@ -141,6 +143,7 @@ public slots:
         void appendLogError(const QString& text);
         void startSynergy();
         void retryStart(); // If the connection failed this will retry a startSynergy
+        void actionStart();
 
     protected slots:
         void updateLocalFingerprint();
@@ -241,6 +244,7 @@ public slots:
         bool                m_SecureSocket;             // brief Is the program running a secure socket protocol (SSL/TLS)
         QString             m_SecureSocketVersion;      // brief Contains the version of the Secure Socket currently active
         ServerConnection    m_serverConnection;
+        ClientConnection    m_clientConnection;
 
         void                updateAutoConfigWidgets();
         
@@ -248,7 +252,7 @@ private slots:
     void on_m_pButtonApply_clicked();
     void on_windowShown();
 
-    void on_m_pSettingsLink_linkActivated(const QString &link);
+    void on_m_pLabelComputerName_linkActivated(const QString &link);
     void on_m_pLabelFingerprint_linkActivated(const QString& link);
     void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 

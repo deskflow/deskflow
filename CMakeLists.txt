@@ -35,12 +35,6 @@ else()
     option (SYNERGY_ENTERPRISE "Build Enterprise" OFF)
 endif()
 
-if (DEFINED ENV{SYNERGY_AUTOCONFIG})
-    option (SYNERGY_AUTOCONFIG "Build with Autoconfig" ON)
-else()
-    option (SYNERGY_AUTOCONFIG "Build without Autoconfig" OFF)
-endif()
-
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -260,14 +254,6 @@ if (UNIX)
             list (APPEND libs Xi)
         endif()
 
-        if (NOT SYNERGY_ENTERPRISE AND SYNERGY_BUILD_LEGACY_GUI AND SYNERGY_AUTOCONFIG)
-            set (DnsSdlib "dns_sd.h")
-            set (CMAKE_EXTRA_INCLUDE_FILES "${CMAKE_EXTRA_INCLUDE_FILES};${DnsSdlib}")
-            check_include_files ("${DnsSdlib}" HAVE_DNS_SD)
-            if (NOT HAVE_DNS_SD)
-                message (FATAL_ERROR "Missing header: " ${DnsSdlib})
-            endif()
-        endif()
     endif()
 
     # For config.h, set some static values; it may be a good idea to make

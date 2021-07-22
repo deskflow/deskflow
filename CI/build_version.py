@@ -35,7 +35,6 @@ class VersionPart:
 
    def __str__(self):
       return self.prefix + str(self.number) + self.suffix
-
 class Version:
 
    def __init__(self, version):
@@ -54,6 +53,11 @@ class Version:
          self.build = VersionPart(versionParts[3])
       else:
          print('ERROR: Wrong version number')
+
+   def isSamePatch(self, version):
+      return (self.major.number == version.major.number and
+              self.minor.number == version.minor.number and
+              self.patch.number == version.patch.number)
 
    def __str__(self):
       result  = str(self.major) + '.'
@@ -77,14 +81,22 @@ class VersionFile:
       fp.write(content)
       fp.close()
 
+def findVersion(versions, cmakeVersion):
+   gitVersion = Version(versions[0])
+   for version in versions:
+      ver = Version(version)
+      if ver.isSamePatch(cmakeVersion):
+         gitVersion = ver
+         break
+   print('INFO: Version '+ str(gitVersion) + ' has been read from git')
+   return gitVersion
 
-def getVesionFromGit():
+def getVesionFromGit(cmakeVersion):
    try:
-      taggedRevision = subprocess.check_output(('git rev-list --tags --max-count=1').split(), universal_newlines=True)
+      taggedRevision = subprocess.check_output(('git rev-list --tags --max-count=100').split(), universal_newlines=True)
       cmd = ('git describe --tags ' + taggedRevision).split()
       versions = subprocess.check_output(cmd, universal_newlines=True).split()
-      print('INFO: Version '+ versions[0] + ' has been read from git')
-      return versions[0]
+      return findVersion(versions, cmakeVersion)
    except subprocess.CalledProcessError:
       print('ERROR: Unable to get version from git')
       exit(1)
@@ -98,7 +110,28 @@ def updateVersionFile(number):
    fp.write(content.replace('set (SYNERGY_VERSION_BUILD 1)', 'set (SYNERGY_VERSION_BUILD ' + str(number) + ')'))
    fp.close()
 
+def getOptionValue(source, option):
+   start = source.find(option)
+   if (start != -1):
+      start += len(option) + 1
+      end = source.find(')', start)
+      return source[start : end]
+   else:
+      print("ERROR: Can't find option <" + option + ">");
+
+def getVersionFromFile():
+   fp = open('cmake/Version.cmake')
+   content = fp.read()
+   fp.close()
+
+   major = getOptionValue(content, 'SYNERGY_VERSION_MAJOR')
+   minor = getOptionValue(content, 'SYNERGY_VERSION_MINOR')
+   patch = getOptionValue(content, 'SYNERGY_VERSION_PATCH')
+
+   return Version(major + '.' + minor + '.' + patch)
+
 if __name__ == '__main__':
-   version = Version(getVesionFromGit())
-   updateVersionFile(version.build.number)
-   print('INFO: Generate build number is: <' + str(version) + '>')
+   cmakeVersion = getVersionFromFile()
+   gitVersion = getVesionFromGit(cmakeVersion)
+   updateVersionFile(gitVersion.build.number)
+   print('INFO: Build number is: <' + str(gitVersion) + '>')

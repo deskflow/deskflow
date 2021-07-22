@@ -75,13 +75,20 @@ public:
     Starts an attempt to connect to the server.  This is ignored if
     the client is trying to connect or is already connected.
     */
-    void                connect();
+    void                connect(size_t addressIndex = 0);
 
     //! Disconnect
     /*!
     Disconnects from the server with an optional error message.
     */
     void                disconnect(const char* msg);
+
+    //! Refuse connection
+    /*!
+    Disconnects from the server with an optional error message.
+    Unlike disconnect this function doesn't try to use other ip addresses
+    */
+    void                refuseConnection(const char* msg);
 
     //! Notify of handshake complete
     /*!
@@ -135,6 +142,9 @@ public:
     //! Return drag file list
     DragFileList        getDragFileList() { return m_dragFileList; }
 
+    //! Return last resolved adresses count
+    size_t              getLastResolvedAddressesCount() const { return m_resolvedAddressesCount; }
+
     //@}
 
     // IScreen overrides
@@ -177,6 +187,7 @@ private:
     void                setupConnection();
     void                setupScreen();
     void                setupTimer();
+    void                cleanup();
     void                cleanupConnecting();
     void                cleanupConnection();
     void                cleanupScreen();
@@ -229,4 +240,5 @@ private:
     bool                m_enableClipboard;
     size_t              m_maximumClipboardSize;
     lib::synergy::ClientArgs          m_args;
+    size_t              m_resolvedAddressesCount = 0;
 };

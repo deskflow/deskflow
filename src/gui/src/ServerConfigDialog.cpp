@@ -70,18 +70,16 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
 
     m_pScreenSetupView->setModel(&m_ScreenSetupModel);
 
-    if (serverConfig().numScreens() == 0) {
+    auto& screens = serverConfig().screens();
+    auto server = std::find_if(screens.begin(), screens.end(), [this](const Screen& screen){ return (screen.name() == serverConfig().getServerName());});
+
+    if (server == screens.end()) {
         Screen serverScreen(serverConfig().getServerName());
         serverScreen.markAsServer();
         model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = serverScreen;
     }
     else {
-       for (auto& screen : serverConfig().screens()) {
-          if (screen.name() == serverConfig().getServerName()) {
-             screen.markAsServer();
-             break;
-          }
-       }
+        server->markAsServer();
     }
 
     m_pButtonAddComputer->setEnabled(!model().isFull());

@@ -33,7 +33,7 @@
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
-       <string>Screens and links</string>
+       <string>Computers</string>
       </attribute>
       <layout class="QVBoxLayout">
        <property name="leftMargin">
@@ -103,7 +103,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Configure the layout of your computer dispalys by dragging to where you want.</string>
+            <string>Configure the layout of your computer displays by dragging to where you want.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -894,7 +894,7 @@
        </sizepolicy>
       </property>
       <attribute name="title">
-       <string>Advance config</string>
+       <string>Advanced config</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>

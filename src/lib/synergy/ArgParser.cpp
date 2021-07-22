@@ -101,13 +101,13 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             ++i;
             continue;
         }
-        else if (isArg(i, argc, argv, NULL, "--camp")) {
+        else if (isArg(i, argc, argv, nullptr, "--camp")) {
             // ignore -- included for backwards compatibility
         }
-        else if (isArg(i, argc, argv, NULL, "--no-camp")) {
+        else if (isArg(i, argc, argv, nullptr, "--no-camp")) {
             // ignore -- included for backwards compatibility
         }
-        else if (isArg(i, argc, argv, NULL, "--yscroll", 1)) {
+        else if (isArg(i, argc, argv, nullptr, "--yscroll", 1)) {
             // define scroll
             args.m_yscroll = atoi(argv[++i]);
         }

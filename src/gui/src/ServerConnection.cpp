@@ -45,18 +45,23 @@ void ServerConnection::update(const QString& line)
 
 bool ServerConnection::checkMainWindow()
 {
+    bool result = m_parent.isActiveWindow();
+
     if (m_parent.isMinimized() || m_parent.isHidden())
     {
         m_parent.showNormal();
         m_parent.activateWindow();
+        result = true;
     }
 
-    return m_parent.isActiveWindow();
+    return result;
 }
 
 void ServerConnection::addClient(const QString& clientName)
 {
-    if (!m_parent.serverConfig().isFull() && checkMainWindow())
+    if (!m_parent.serverConfig().isFull() &&
+        !m_parent.serverConfig().isScreenExists(clientName) &&
+        checkMainWindow())
     {
         QMessageBox message(&m_parent);
         message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
@@ -77,7 +82,7 @@ void ServerConnection::addClient(const QString& clientName)
 void ServerConnection::configureClient(const QString& clientName)
 {
     auto& config = m_parent.serverConfig();
-    config.addToFirstEmptyGrid(clientName);
+    config.addClient(clientName);
 
     ServerConfigDialog dlg(&m_parent, config);
     dlg.exec();

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>797</height>
+    <height>658</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>720</width>
-    <height>0</height>
+    <height>552</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -27,57 +27,12 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QWidget" name="m_trialWidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <property name="leftMargin">
-        <number>2</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>8</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_trialLabel">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; days of your Synergy Pro trial remain. &lt;a href=&quot;http://symless.com/pricing?src=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="openExternalLinks">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>20</number>
+    </property>
     <item>
      <widget class="QWidget" name="m_pWidgetUpdate" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -133,192 +88,51 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="m_pWidgetComputerName" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+     <widget class="QLabel" name="m_pLabelComputerName">
       <property name="minimumSize">
        <size>
-        <width>582</width>
-        <height>15</height>
+        <width>0</width>
+        <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
-        <height>20</height>
+        <width>65535</width>
+        <height>65535</height>
        </size>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_7">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="m_pLabelComputerName">
-         <property name="minimumSize">
-          <size>
-           <width>135</width>
-           <height>15</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>135</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <kerning>true</kerning>
-          </font>
-         </property>
-         <property name="text">
-          <string>This computers name:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_pLabelScreenName">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>15</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-          </font>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::AutoText</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_pSettingsLink">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>15</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <weight>50</weight>
-           <italic>false</italic>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;margin-left: 5px;&quot;&gt;(&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: none; font-size: 13px; color:#007af4;&quot;&gt;Settings&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="margin">
-          <number>0</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="text">
+       <string notr="true">This computer's name:</string>
+      </property>
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="m_pWidgetIPAddress" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+     <spacer name="verticalSpacer_5">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <property name="minimumSize">
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
        <size>
-        <width>0</width>
-        <height>20</height>
+        <width>20</width>
+        <height>14</height>
        </size>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>190</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>This computers IP addresses:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_pLabelIpAddresses">
-         <property name="text">
-          <string notr="true"/>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="m_pLabelIpAddresses">
+      <property name="text">
+       <string notr="true">This computer's IP addresses:</string>
+      </property>
      </widget>
     </item>
     <item>
@@ -332,13 +146,13 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>270</height>
+        <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>270</height>
+        <height>16777215</height>
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -349,61 +163,44 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>22</number>
+        <number>28</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>8</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="m_pGroupServer">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+        <widget class="QFrame" name="m_pGroupServer">
          <property name="minimumSize">
           <size>
-           <width>340</width>
-           <height>248</height>
+           <width>0</width>
+           <height>250</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <kerning>true</kerning>
-          </font>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>250</height>
+          </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QGroupBox::title {
-    subcontrol-origin: padding;
-    left: 7px;
-}
-</string>
+          <string notr="true">.QFrame{
+border: 1px solid  rgba(192,192,192, 0.2);;
+border-radius: 4px;
+background-color: rgba(192,192,192, 0.1);
+}</string>
          </property>
-         <property name="title">
-          <string/>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="checkable">
-          <bool>false</bool>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="ServerLayout">
-          <property name="spacing">
-           <number>9</number>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
           <property name="topMargin">
            <number>11</number>
-          </property>
-          <property name="rightMargin">
-           <number>5</number>
-          </property>
-          <property name="bottomMargin">
-           <number>5</number>
           </property>
           <item>
            <widget class="QRadioButton" name="m_pRadioGroupServer">
@@ -431,7 +228,7 @@
 }</string>
             </property>
             <property name="text">
-             <string>Use this computers keyboard and mouse 
+             <string>Use this computer's keyboard and mouse 
 (Make this computer the server).</string>
             </property>
            </widget>
@@ -463,36 +260,29 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="spacing">
-             <number>6</number>
+           <widget class="QLabel" name="m_pLabelFingerprint">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <item>
-             <widget class="QLabel" name="m_pLabelFingerprint">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS/SSL active - &lt;a href=&quot;#&quot;&gt;view&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="textFormat">
-               <enum>Qt::RichText</enum>
-              </property>
-              <property name="indent">
-               <number>20</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS/SSL active - &lt;a href=&quot;#&quot; style=&quot;text-decoration:none; color: #4285F4;&quot;&gt;view&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="indent">
+             <number>20</number>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="verticalSpacer_2">
@@ -547,53 +337,33 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupClient">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+        <widget class="QFrame" name="m_pGroupClient">
          <property name="minimumSize">
           <size>
-           <width>340</width>
-           <height>248</height>
-          </size>
-         </property>
-         <property name="baseSize">
-          <size>
            <width>0</width>
-           <height>0</height>
+           <height>250</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <kerning>true</kerning>
-          </font>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>250</height>
+          </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QGroupBox::title {
-    subcontrol-origin: padding;
-    left: 7px;
-}
-</string>
+          <string notr="true">.QFrame{
+border: 1px solid  rgba(192,192,192, 0.2);
+border-radius: 4px;
+background-color: rgba(192,192,192, 0.1);
+}</string>
          </property>
-         <property name="title">
-          <string/>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
          </property>
-         <property name="checkable">
-          <bool>false</bool>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="ClientLayout">
-          <property name="spacing">
-           <number>9</number>
-          </property>
-          <property name="leftMargin">
-           <number>9</number>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <property name="topMargin">
            <number>11</number>
           </property>
@@ -772,16 +542,65 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="m_pGroupLog">
-      <property name="font">
-       <font>
-        <kerning>true</kerning>
-       </font>
+     <widget class="QLabel" name="m_pLabelLogs">
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
-      <property name="title">
-       <string>Log</string>
+      <property name="text">
+       <string>Logs</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_7">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>5</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QFrame" name="m_pGroupLog">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">.QFrame{
+border: 1px solid  rgba(192,192,192, 0.2);;
+border-radius: 4px;
+background-color: rgba(192,192,192, 0.1);
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="leftMargin">
+        <number>8</number>
+       </property>
+       <property name="topMargin">
+        <number>8</number>
+       </property>
+       <property name="rightMargin">
+        <number>8</number>
+       </property>
+       <property name="bottomMargin">
+        <number>8</number>
+       </property>
        <item>
         <widget class="QPlainTextEdit" name="m_pLogOutput">
          <property name="sizePolicy">
@@ -818,8 +637,14 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="topMargin">
+       <number>16</number>
       </property>
       <item>
        <widget class="QLabel" name="m_pLabelPadlock">
@@ -849,6 +674,58 @@
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="m_trialLabel">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>-1</pointsize>
+          <weight>87</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-size: 13px;
+font-weight: 700;
+padding: 3px 5px;
+border-radius: 3px;
+background-color: #EC4C47;
+color: #ffffff;
+top: 3px;</string>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
           <height>20</height>
          </size>
         </property>
@@ -973,10 +850,10 @@
   </action>
   <action name="m_pActionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Preferences</string>
    </property>
-   <property name="statusTip">
-    <string>Edit settings</string>
+   <property name="toolTip">
+    <string>Preferences</string>
    </property>
    <property name="shortcut">
     <string notr="true"/>

@@ -31,7 +31,7 @@ public:
     /*!
     Constructs the invalid address
     */
-    NetworkAddress();
+    NetworkAddress() = default;
 
     /*!
     Construct the wildcard address with the given port.  \c port must
@@ -66,8 +66,10 @@ public:
     times and is done automatically by the c'tor taking a hostname.
     Throws XSocketAddress if resolution is unsuccessful, after which
     \c isValid returns false until the next call to this method.
+    index - determine index of IP we would like to use from resolved addresses
+    Returns count of successfully resolved addressed.
     */
-    void                resolve();
+    size_t              resolve(size_t index = 0);
 
     //@}
     //! @name accessors
@@ -117,7 +119,7 @@ private:
     void                checkPort();
 
 private:
-    ArchNetAddress        m_address;
-    String                m_hostname;
-    int                    m_port;
+    ArchNetAddress m_address = nullptr;
+    String         m_hostname;
+    int            m_port = 0;
 };
