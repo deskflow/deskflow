@@ -36,12 +36,17 @@ bool sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceI
 
 }
 
+XWindowsPowerManager::XWindowsPowerManager()
+{
+
+}
+
 XWindowsPowerManager::~XWindowsPowerManager()
 {
     enableSleep();
 }
 
-void XWindowsPowerManager::disableSleep()
+void XWindowsPowerManager::disableSleep() const
 {
     if (!sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
         !sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kSessionManager))
@@ -50,7 +55,7 @@ void XWindowsPowerManager::disableSleep()
     }
 }
 
-void XWindowsPowerManager::enableSleep()
+void XWindowsPowerManager::enableSleep() const
 {
     if (!sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
         !sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kSessionManager))

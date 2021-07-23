@@ -22,9 +22,18 @@
 class XWindowsPowerManager
 {
 public:
+     XWindowsPowerManager();
     ~XWindowsPowerManager();
-    void disableSleep();
-    void enableSleep();
+
+    /**
+     * @brief Prevent the system from sleep
+     */
+    void disableSleep() const;
+
+    /**
+     * @brief Enables automatical sleep
+     */
+    void enableSleep() const;
 };
 
 #endif // XWINDOWSPOWERMANAGER_H
