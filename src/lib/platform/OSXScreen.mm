@@ -119,7 +119,11 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	try {
 		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
 		m_keyState	  = new OSXKeyState(m_events);
-		
+
+        if (App::instance().argsBase().m_preventSleep) {
+            m_powerManager.disableSleep();
+        }
+
 		// only needed when running as a server.
 		if (m_isPrimary) {
 		
@@ -175,7 +179,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
-		
+
 		CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
 		delete m_keyState;
@@ -195,6 +199,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 OSXScreen::~OSXScreen()
 {
 	disable();
+
 	m_events->adoptBuffer(NULL);
 	m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
 
@@ -754,18 +759,6 @@ OSXScreen::hideCursor()
 void
 OSXScreen::enable()
 {
-    if(App::instance().argsBase().m_preventSleep) {
-        CFStringRef reasonForActivity = CFSTR("Synergy application");
-
-        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertPreventUserIdleDisplaySleep,
-                                                        kIOPMAssertionLevelOn, reasonForActivity,
-                                                        &m_sleepPreventionAssertionID);
-        if(result != kIOReturnSuccess) {
-            m_sleepPreventionAssertionID = 0;
-            LOG((CLOG_ERR "failed to disable system idle sleep"));
-        }
-    }
-
 	// watch the clipboard
 	m_clipboardTimer = m_events->newTimer(1.0, NULL);
 	m_events->adoptHandler(Event::kTimer, m_clipboardTimer,
@@ -815,10 +808,6 @@ OSXScreen::enable()
 void
 OSXScreen::disable()
 {
-    if(App::instance().argsBase().m_preventSleep && m_sleepPreventionAssertionID) {
-        IOPMAssertionRelease(m_sleepPreventionAssertionID);
-    }
-
 	if (m_autoShowHideCursor) {
 		showCursor();
 	}
