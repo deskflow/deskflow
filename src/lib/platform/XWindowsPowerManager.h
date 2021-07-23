@@ -22,7 +22,7 @@
 class XWindowsPowerManager
 {
 public:
-     XWindowsPowerManager();
+     XWindowsPowerManager() = default;
     ~XWindowsPowerManager();
 
     /**
@@ -34,6 +34,9 @@ public:
      * @brief Enables automatical sleep
      */
     void enableSleep() const;
+
+    XWindowsPowerManager(const XWindowsPowerManager&) = delete;
+    XWindowsPowerManager& operator=(const XWindowsPowerManager&) = delete;
 };
 
 #endif // XWINDOWSPOWERMANAGER_H

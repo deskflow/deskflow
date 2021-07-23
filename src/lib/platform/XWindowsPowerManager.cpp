@@ -36,11 +36,6 @@ bool sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceI
 
 }
 
-XWindowsPowerManager::XWindowsPowerManager()
-{
-
-}
-
 XWindowsPowerManager::~XWindowsPowerManager()
 {
     enableSleep();
