@@ -182,6 +182,11 @@ XWindowsScreen::XWindowsScreen(
 		XTestGrabControl(m_display, True);
 	}
 
+    // disable sleep if the flag is set
+    if (App::instance().argsBase().m_preventSleep) {
+        m_powerManager.disableSleep();
+    }
+
 	// initialize the clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		m_clipboard[id] = new XWindowsClipboard(m_display, m_window, id);
@@ -247,12 +252,6 @@ XWindowsScreen::enable()
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
 	}
-
-	// disable sleep if the flag is set
-	if (App::instance().argsBase().m_preventSleep &&
-			!disableIdleSleep()) {
-		LOG((CLOG_INFO "Failed to prevent system from going to sleep"));
-	}
 }
 
 void
@@ -270,12 +269,6 @@ XWindowsScreen::disable()
 	// restore auto-repeat state
 	if (!m_isPrimary && m_autoRepeat) {
 		//XAutoRepeatOn(m_display);
-	}
-
-	// enable sleep when the display is disabled
-	if (App::instance().argsBase().m_preventSleep &&
-			!enableIdleSleep()) {
-		LOG((CLOG_INFO "Failed to enable system idle sleep"));
 	}
 }
 
@@ -2201,25 +2194,3 @@ XWindowsScreen::updateScrollDirection()
 	}
 }
 
-bool XWindowsScreen::sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceID)
-{
-	std::string error;
-	if(!ArchSystemUnix::DBusInhibitScreenCall(serviceID, state, error))
-	{
-		LOG((CLOG_DEBUG "DBus inhibit error %s", error.c_str()));
-		return false;
-	}
-	return true;
-}
-
-bool XWindowsScreen::disableIdleSleep()
-{
-	return  sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kScreenSaver) ||
-			sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kSessionManager);
-}
-
-bool XWindowsScreen::enableIdleSleep()
-{
-	return  sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kScreenSaver) ||
-			sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kSessionManager);
-}

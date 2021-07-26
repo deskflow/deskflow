@@ -19,6 +19,7 @@
 #pragma once
 
 #include "platform/MSWindowsHook.h"
+#include "platform/MSWindowsPowerManager.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/DragInformation.h"
 #include "platform/synwinhk.h"
@@ -374,4 +375,5 @@ private:
     // -1 for natural scrolling direction, 1 otherwise
     SInt32                    m_scrollDirectionMouse = 1;
     SInt32                    m_scrollDirectionTouchpad = 1;
+    MSWindowsPowerManager     m_powerManager;
 };

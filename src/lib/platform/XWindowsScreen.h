@@ -23,6 +23,7 @@
 #include "synergy/KeyMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
+#include "platform/XWindowsPowerManager.h"
 
 #if X_DISPLAY_MISSING
 #    error X11 is required to build synergy
@@ -117,11 +118,6 @@ private:
     // X I/O error handler
     void                onError();
     static int            ioErrorHandler(Display*);
-
-    // sleep management
-    static bool         sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceID);
-    static bool         disableIdleSleep();
-    static bool         enableIdleSleep();
 
 private:
     class KeyEventFilter {
@@ -263,4 +259,5 @@ private:
     // -1 for natural scrolling direction, 1 otherwise
     SInt32                    m_scrollDirectionMouse = 1;
     SInt32                    m_scrollDirectionTouchpad = 1;
+    XWindowsPowerManager      m_powerManager;
 };
