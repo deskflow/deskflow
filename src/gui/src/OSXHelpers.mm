@@ -31,29 +31,29 @@ OSXNotificationDelegate* notifDelegate = nil;
 void requestOSXNotificationPermission(MainWindow* window)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
-	if (isOSXDevelopmentBuild()) {
+    if (isOSXDevelopmentBuild()) {
         window->appendLogInfo("Not requesting notification permission in dev build");
-		return;
-	}
+        return;
+    }
 
-	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     if(notifDelegate == nil){
-		notifDelegate = [OSXNotificationDelegate new];
+        notifDelegate = [OSXNotificationDelegate new];
         center.delegate = notifDelegate;
     }
-	[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-		completionHandler:^(BOOL granted, NSError * _Nullable error) {
-		if(error != nil) {
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
+        completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if(error != nil) {
             window->appendLogInfo(QString("Notification permission request error: ") + [[NSString stringWithFormat:@"%@", error] UTF8String]);
-		}
-	}];
+        }
+    }];
 #endif
 }
 
 bool
 isOSXDevelopmentBuild()
 {
-	std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
+    std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
     return (bundleURL.find("Synergy.app") == std::string::npos);
 }
 
@@ -61,38 +61,38 @@ bool
 showOSXNotification(MainWindow* window, const QString& title, const QString& body)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
-	// accessing notification center on unsigned build causes an immidiate
-	// application shutodown (in this case synergys) and cannot be caught
-	// to avoid issues with it need to first check if this is a dev build
+    // accessing notification center on unsigned build causes an immidiate
+    // application shutodown (in this case synergys) and cannot be caught
+    // to avoid issues with it need to first check if this is a dev build
     if (isOSXDevelopmentBuild()) {
         window->appendLogInfo("Not showing notification in dev build");
-		return false;
+        return false;
     }
 
     requestOSXNotificationPermission(window);
 
-	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-	content.title = title.toNSString();
-	content.body = body.toNSString();
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = title.toNSString();
+    content.body = body.toNSString();
     content.sound = [UNNotificationSound defaultSound];
 
-	// Create the request object.
+    // Create the request object.
     UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"SecureInput" content:content trigger:nil];
 
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-	   if (error != nil) {
+       if (error != nil) {
            window->appendLogInfo(QString("Notification display request error: ") + [[NSString stringWithFormat:@"%@", error] UTF8String]);
-	   }
+       }
     }];
 #else
-	NSUserNotification* notification = [[NSUserNotification alloc] init];
-	notification.title = title.toNSString();
-	notification.informativeText = body.toNSString();
-	notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
-	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
-	[notification autorelease];
+    NSUserNotification* notification = [[NSUserNotification alloc] init];
+    notification.title = title.toNSString();
+    notification.informativeText = body.toNSString();
+    notification.soundName = NSUserNotificationDefaultSoundName;   //Will play a default sound
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification: notification];
+    [notification autorelease];
 #endif
-	return true;
+    return true;
 }
 
 bool
