@@ -593,7 +593,7 @@ void MainWindow::checkOSXNotification(const QString& line)
         QString body =
                 line.mid(delimterPosition + 1,
                          line.length() - delimterPosition);
-        if (!showOSXNotification(title, body)) {
+        if (!showOSXNotification(this, title, body)) {
             appendLogInfo("OSX notification was not shown");
         }
     }
@@ -638,7 +638,7 @@ void MainWindow::startSynergy()
     saveSettings();
 
 #ifdef Q_OS_MAC
-    requestOSXNotificationPermission();
+    requestOSXNotificationPermission(this);
 #endif
 
 #ifndef SYNERGY_ENTERPRISE

@@ -24,24 +24,27 @@
 #import <UserNotifications/UNUserNotificationCenter.h>
 #import <UserNotifications/UNNotificationContent.h>
 #import <UserNotifications/UNNotificationTrigger.h>
+#import <OSXNotificationDelegate.h>
 
-#import <QtGlobal>
+OSXNotificationDelegate* notifDelegate = nil;
 
-void requestOSXNotificationPermission()
+void requestOSXNotificationPermission(MainWindow* window)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
-	if (isOSXDevelopmentBuild())
-	{
-		qWarning("Not requesting notification permission in dev build");
+	if (isOSXDevelopmentBuild()) {
+        window->appendLogInfo("Not requesting notification permission in dev build");
 		return;
 	}
 
 	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    if(notifDelegate == nil){
+		notifDelegate = [OSXNotificationDelegate new];
+        center.delegate = notifDelegate;
+    }
 	[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
 		completionHandler:^(BOOL granted, NSError * _Nullable error) {
-		if(error != nil)
-		{
-			qWarning("Notification permission request error: %s", [[NSString stringWithFormat:@"%@", error] UTF8String]);
+		if(error != nil) {
+            window->appendLogInfo(QString("Notification permission request error: ") + [[NSString stringWithFormat:@"%@", error] UTF8String]);
 		}
 	}];
 #endif
@@ -51,39 +54,36 @@ bool
 isOSXDevelopmentBuild()
 {
 	std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
-	return (bundleURL.find("Applications/Synergy.app") == std::string::npos);
+    return (bundleURL.find("Synergy.app") == std::string::npos);
 }
 
 bool
-showOSXNotification(const QString& title, const QString& body)
+showOSXNotification(MainWindow* window, const QString& title, const QString& body)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
 	// accessing notification center on unsigned build causes an immidiate
 	// application shutodown (in this case synergys) and cannot be caught
 	// to avoid issues with it need to first check if this is a dev build
-	if (isOSXDevelopmentBuild())
-	{
-		qWarning("Not showing notification in dev build");
+    if (isOSXDevelopmentBuild()) {
+        window->appendLogInfo("Not showing notification in dev build");
 		return false;
-	}
+    }
 
-	requestOSXNotificationPermission();
-
-	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    requestOSXNotificationPermission(window);
 
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.title = title.toNSString();
 	content.body = body.toNSString();
+    content.sound = [UNNotificationSound defaultSound];
 
 	// Create the request object.
-	UNNotificationRequest* request = [UNNotificationRequest
-		   requestWithIdentifier:@"SecureInput" content:content trigger:nil];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"SecureInput" content:content trigger:nil];
 
-	[center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
 	   if (error != nil) {
-		   qWarning("Notification display request error: %s", [[NSString stringWithFormat:@"%@", error] UTF8String]);
+           window->appendLogInfo(QString("Notification display request error: ") + [[NSString stringWithFormat:@"%@", error] UTF8String]);
 	   }
-	}];
+    }];
 #else
 	NSUserNotification* notification = [[NSUserNotification alloc] init];
 	notification.title = title.toNSString();

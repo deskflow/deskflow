@@ -15,23 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(OSXHELPERS__H)
-
-#define OSXHELPERS__H
-
-#include <QString>
-#include <MainWindow.h>
-
-enum class IconsTheme {
-    ICONS_DARK,
-    ICONS_LIGHT,
-    ICONS_TEMPLATE
-};
-
-void requestOSXNotificationPermission(MainWindow* window);
-bool isOSXDevelopmentBuild();
-bool showOSXNotification(MainWindow* window, const QString& title, const QString& body);
-bool isOSXInterfaceStyleDark();
-IconsTheme getOSXIconsTheme();
-
-#endif
+#import <Foundation/Foundation.h>
+#import <UserNotifications/UserNotifications.h>
+@interface OSXNotificationDelegate : NSObject <UNUserNotificationCenterDelegate>
+@end
