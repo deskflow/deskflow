@@ -59,7 +59,6 @@ enum {
 	kCarbonLoopWaitTimeout = 10
 };
 
-void createSecureInputNotification();
 int getSecureInputEventPID();
 String getProcessName(int pid);
 
@@ -875,12 +874,8 @@ OSXScreen::enter()
 bool
 OSXScreen::leave()
 {
-    if(m_isPrimary && IsSecureEventInputEnabled()) {
-        createSecureInputNotification();
-    }
-
     hideCursor();
-    
+
 	if (isDraggingStarted()) {
 		String& fileList = getDraggingFilename();
 		
@@ -2150,23 +2145,6 @@ OSXScreen::getSecureInputApp() const
 		return getProcessName(secureInputProcessPID);
 	}
 	return "";
-}
-
-void
-createSecureInputNotification()
-{
-    int secureInputProcessPID = getSecureInputEventPID();
-    String app = getProcessName(secureInputProcessPID);
-    if(secureInputProcessPID == 0) app = "unknown";
-
-    String secureInputNotificationBody =
-            "'Secure input' enabled by " + app + ". " \
-            "Close " + app + " to continue using keyboards on the clients.";
-
-    // display this notification on the server
-    AppUtil::instance().showNotification(
-                "The client keyboards may stop working.",
-                secureInputNotificationBody);
 }
 
 int
