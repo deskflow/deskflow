@@ -15,6 +15,7 @@ Bug fixes:
 - #7055 Add secure input notification on Linux
 - #7052 Add secure input notification on Windows
 - #7047 | #7060 Fix prevent sleep option on Mac and Windows
+- #7064 There is no secure input notification if user moves pointer between clients
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
