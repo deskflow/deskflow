@@ -1084,6 +1084,8 @@ void MainWindow::setVisible(bool visible)
 QString MainWindow::getIPAddresses()
 {
     QList<QString> possibleMatches;
+    bool hinted = false;
+    const auto localnet = QHostAddress::parseSubnet("192.168.0.0/16");
     for(auto iface : QNetworkInterface::allInterfaces()) {
         // We only want valid interfaces that are running and aren't loopback/virtual/point to point
         if ( !iface.isValid() ||
@@ -1097,20 +1099,23 @@ QString MainWindow::getIPAddresses()
             auto address = addressEntry.ip();
             auto ip = address.toString();
             if ( ip.isEmpty() ||
+                 address.protocol() == QAbstractSocket::IPv6Protocol ||
+                 address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16")) ||
                  address == QHostAddress::Null ||
-                 address == QHostAddress::LocalHost ||
-                 address == QHostAddress::LocalHostIPv6 ) {
+                 address == QHostAddress::LocalHost ) {
                 continue;
             }
 
-            // normolize ipv6 scopeID
-            if (!address.toIPv4Address()) {
-                auto temp = ip.split('%');
-                temp.last() = QString::number(iface.index());
-                ip = temp.join('%');
+            // usually 192.168.x.x is a useful ip for the user, so indicate
+            // this by making it bold.
+            if (!hinted && address.isInSubnet(localnet)) {
+                QString format = "<span style=\"color:#4285F4;\">%1</span>";
+                possibleMatches.append(format.arg(ip));
+                hinted = true;
             }
-
-            possibleMatches.push_back(ip);
+            else {
+                possibleMatches.append(ip);
+            }
         }
     }
 

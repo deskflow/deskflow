@@ -39,9 +39,13 @@ NetworkAddress::NetworkAddress(int port, IArchNetwork::EAddressFamily family) :
     ARCH->setAddrPort(m_address, m_port);
 }
 
-NetworkAddress::NetworkAddress(const NetworkAddress& addr)
+NetworkAddress::NetworkAddress(const NetworkAddress& addr) :
+    m_hostname(addr.getHostname()),
+    m_port(addr.getPort())
 {
-    *this = addr;
+    if (addr.m_address != nullptr) {
+        m_address = ARCH->copyAddr(addr.m_address);
+    }
 }
 
 NetworkAddress::NetworkAddress(const String& hostname, int port) :
@@ -127,8 +131,9 @@ NetworkAddress::operator=(const NetworkAddress& addr)
 void
 NetworkAddress::resolve()
 {
-    //ensure that address is already relosved
-    assert(m_address == nullptr);
+    if (m_address != nullptr) {
+        ARCH->closeAddr(m_address);
+    }
 
     try {
         // if hostname is empty then use wildcard address otherwise look
