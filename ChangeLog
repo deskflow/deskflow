@@ -26,6 +26,7 @@ Enhancements:
 - #7044 Apply natural scroll setting independently on each client
 - #7040 Support "Kana" and "Eisu" keys on Japanese Apple Pro Keyboard (JIS)
 - #7047 Add prevent sleep option support to Linux
+- #7068 Add Synergy restart when settings changed
 ===========
 
 v1.14.0-stable
