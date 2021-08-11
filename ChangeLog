@@ -1,4 +1,4 @@
-v1.14.1-snapshot
+v1.14.1-rc
 ===========
 Bug fixes:
 - #7016 Fix script that generates version number
