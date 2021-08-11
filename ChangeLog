@@ -16,6 +16,7 @@ Bug fixes:
 - #7052 Add secure input notification on Windows
 - #7047 | #7060 Fix prevent sleep option on Mac and Windows
 - #7064 There is no secure input notification if user moves pointer between clients
+- #7070 Fix radio button shifted focus on macOS 
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
