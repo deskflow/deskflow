@@ -121,6 +121,12 @@ MainWindow::MainWindow (AppConfig& appConfig,
 #endif
 
     setupUi(this);
+
+#if defined(Q_OS_MAC)
+    m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect,0);
+    m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect,0);
+#endif
+
     updateAutoConfigWidgets();
 
     createMenuBar();
