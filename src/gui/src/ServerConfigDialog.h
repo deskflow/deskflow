@@ -65,6 +65,9 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         ServerConfig m_ServerConfig;
         ScreenSetupModel m_ScreenSetupModel;
         QString m_Message;
+
+    private slots:
+        void onChange();
 };
 
 #endif

@@ -76,6 +76,30 @@ bool ServerConfig::save(const QString& fileName) const
     return true;
 }
 
+bool ServerConfig::operator==(const ServerConfig& sc) const
+{
+    return m_Screens                == sc.m_Screens                &&
+           m_NumColumns             == sc.m_NumColumns             &&
+           m_NumRows                == sc.m_NumRows                &&
+           m_HasHeartbeat           == sc.m_HasHeartbeat           &&
+           m_Heartbeat              == sc.m_Heartbeat              &&
+           m_RelativeMouseMoves     == sc.m_RelativeMouseMoves     &&
+           m_Win32KeepForeground    == sc.m_Win32KeepForeground    &&
+           m_HasSwitchDelay         == sc.m_HasSwitchDelay         &&
+           m_HasSwitchDoubleTap     == sc.m_HasSwitchDoubleTap     &&
+           m_SwitchDoubleTap        == sc.m_SwitchDoubleTap        &&
+           m_SwitchCornerSize       == sc.m_SwitchCornerSize       &&
+           m_SwitchCorners          == sc.m_SwitchCorners          &&
+           m_Hotkeys                == sc.m_Hotkeys                &&
+           m_pAppConfig             == sc.m_pAppConfig             &&
+           m_IgnoreAutoConfigClient == sc.m_IgnoreAutoConfigClient &&
+           m_EnableDragAndDrop      == sc.m_EnableDragAndDrop      &&
+           m_DisableLockToScreen    == sc.m_DisableLockToScreen    &&
+           m_ClipboardSharing       == sc.m_ClipboardSharing       &&
+           m_ClipboardSharingSize   == sc.m_ClipboardSharingSize   &&
+           m_pMainWindow            == sc.m_pMainWindow;
+}
+
 void ServerConfig::save(QFile& file) const
 {
     QTextStream outStream(&file);

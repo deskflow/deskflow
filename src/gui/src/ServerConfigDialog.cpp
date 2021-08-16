@@ -84,6 +84,22 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
 
     m_pButtonAddComputer->setEnabled(!model().isFull());
     connect(m_pTrashScreenWidget, SIGNAL(screenRemoved()), this, SLOT(onScreenRemoved()));
+
+
+    onChange();
+    /*
+     * connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
+      connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
+      connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
+      connect(m_pCheckBoxAutoConfig,      SIGNAL(clicked()),                this, SLOT(onChange()));
+      connect(m_pCheckBoxMinimizeToTray,  SIGNAL(clicked()),                this, SLOT(onChange()));
+      connect(m_pCheckBoxAutoHide,        SIGNAL(clicked()),                this, SLOT(onChange()));
+      connect(m_pCheckBoxPreventSleep,    SIGNAL(clicked()),                this, SLOT(onChange()));
+      connect(m_pLineEditInterface,       SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
+      connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),        this, SLOT(onChange()));
+      connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
+      connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
+    */
 }
 
 void ServerConfigDialog::showEvent(QShowEvent* event)
@@ -310,4 +326,9 @@ bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
     }
 
     return false;
+}
+
+void ServerConfigDialog::onChange()
+{
+    m_pButtonBox->button(QDialogButtonBox::Ok)->setEnabled(m_OrigServerConfig == m_ServerConfig);
 }

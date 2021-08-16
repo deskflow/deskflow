@@ -77,6 +77,8 @@ class Action
         bool haveScreens() const { return m_HasScreens; }
         bool restartServer() const { return m_restartServer; }
 
+        bool operator==(const Action& a) const;
+
     protected:
         KeySequence& keySequence() { return m_KeySequence; }
         void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }
@@ -100,9 +102,9 @@ class Action
         bool m_HasScreens;
         bool m_restartServer;
 
-        static const char* m_ActionTypeNames[];
-        static const char* m_SwitchDirectionNames[];
-        static const char* m_LockCursorModeNames[];
+        const static const char* m_ActionTypeNames[];
+        const static const char* m_SwitchDirectionNames[];
+        const static const char* m_LockCursorModeNames[];
 };
 
 typedef QList<Action> ActionList;
