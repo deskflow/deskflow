@@ -1,4 +1,13 @@
-v1.14.1-snapshot
+v1.14.2-snapshot
+===========
+Bug fixes:
+- #7070 Fix radio button shifted focus on macOS
+
+Enhancements:
+- #7068 Add Synergy restart when settings changed
+===========
+
+v1.14.1-rc
 ===========
 Bug fixes:
 - #7016 Fix script that generates version number
@@ -16,7 +25,6 @@ Bug fixes:
 - #7052 Add secure input notification on Windows
 - #7047 | #7060 Fix prevent sleep option on Mac and Windows
 - #7064 There is no secure input notification if user moves pointer between clients
-- #7070 Fix radio button shifted focus on macOS 
 
 Enhancements:
 - #6998 Remove functionality related to the screen saver synchronisation
