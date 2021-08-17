@@ -23,7 +23,6 @@
 #include "base/Log.h"
 
 #include <Carbon/Carbon.h>
-#include <IOKit/hidsystem/IOHIDLib.h>
 
 // Note that some virtual keys codes appear more than once.  The
 // first instance of a virtual key code maps to the KeyID that we
@@ -476,102 +475,72 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
     }
 }
 
-static io_connect_t getEventDriver(void)
+CGEventFlags
+OSXKeyState::getKeyboardEventFlags()
 {
-    static mach_port_t sEventDrvrRef = 0;
-    mach_port_t masterPort, service, iter;
-    kern_return_t kr;
-    
-    if (!sEventDrvrRef) {
-        // Get master device port
-        kr = IOMasterPort(bootstrap_port, &masterPort);
-        assert(KERN_SUCCESS == kr);
-        
-        kr = IOServiceGetMatchingServices(masterPort,
-                IOServiceMatching(kIOHIDSystemClass), &iter);
-        assert(KERN_SUCCESS == kr);
-        
-        service = IOIteratorNext(iter);
-        assert(service);
-        
-        kr = IOServiceOpen(service, mach_task_self(),
-                kIOHIDParamConnectType, &sEventDrvrRef);
-        assert(KERN_SUCCESS == kr);
+    // set the event flags for special keys
+    // http://tinyurl.com/pxl742y
+    CGEventFlags modifiers = 0;
 
-        IOObjectRelease(service);
-        IOObjectRelease(iter);
+    if (m_shiftPressed) {
+        modifiers |= kCGEventFlagMaskShift;
     }
-    
-    return sEventDrvrRef;
+
+    if (m_controlPressed) {
+        modifiers |= kCGEventFlagMaskControl;
+    }
+
+    if (m_altPressed) {
+        modifiers |= kCGEventFlagMaskAlternate;
+    }
+
+    if (m_superPressed) {
+        modifiers |= kCGEventFlagMaskCommand;
+    }
+
+    if (m_capsPressed) {
+        modifiers |= kCGEventFlagMaskAlphaShift;
+    }
+
+    return modifiers;
 }
 
-void
-OSXKeyState::postHIDVirtualKey(const UInt8 virtualKeyCode,
-                const bool postDown)
+void 
+OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
 {
-    static UInt32 modifiers = 0;
-    
-    NXEventData event;
-    IOGPoint loc = { 0, 0 };
-    UInt32 modifiersDelta = 0;
-
-    bzero(&event, sizeof(NXEventData));
-
-    switch (virtualKeyCode)
-    {
-    case s_shiftVK:
-    case s_superVK:
-    case s_altVK:
-    case s_controlVK:
-    case s_capsLockVK:
-        switch (virtualKeyCode)
-        {
+    switch(virtualKey) {
         case s_shiftVK:
-                modifiersDelta = NX_SHIFTMASK;
-                m_shiftPressed = postDown;
-                break;
-        case s_superVK:
-                modifiersDelta = NX_COMMANDMASK;
-                m_superPressed = postDown;
-                break;
-        case s_altVK:
-                modifiersDelta = NX_ALTERNATEMASK;
-                m_altPressed = postDown;
-                break;
+            m_shiftPressed = keyDown;
+            break;
         case s_controlVK:
-                modifiersDelta = NX_CONTROLMASK;
-                m_controlPressed = postDown;
-                break;
+            m_controlPressed = keyDown;
+            break;
+        case s_altVK:
+            m_altPressed = keyDown;
+            break;
+        case s_superVK:
+            m_superPressed = keyDown;
+            break;
         case s_capsLockVK:
-                modifiersDelta = NX_ALPHASHIFTMASK;
-                m_capsPressed = postDown;
-                break;
-        }
-        
-        // update the modifier bit
-        if (postDown) {
-            modifiers |= modifiersDelta;
-        }
-        else {
-            modifiers &= ~modifiersDelta;
-        }
-            
-        kern_return_t kr;
-        kr = IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, loc,
-                &event, kNXEventDataVersion, modifiers, true);
-        assert(KERN_SUCCESS == kr);
-        break;
+            m_capsPressed = keyDown;
+            break;
+        default:
+            LOG((CLOG_DEBUG1 "The key is not a modifier"));
+            break;
+    }
+}
 
-    default:
-        event.key.repeat = false;
-        event.key.keyCode = virtualKeyCode;
-        event.key.origCharSet = event.key.charSet = NX_ASCIISET;
-        event.key.origCharCode = event.key.charCode = 0;
-        kr = IOHIDPostEvent(getEventDriver(),
-                postDown ? NX_KEYDOWN : NX_KEYUP,
-                loc, &event, kNXEventDataVersion, 0, false);
-        assert(KERN_SUCCESS == kr);
-        break;
+void 
+OSXKeyState::postKeyboardKey(CGKeyCode virtualKey, bool keyDown)
+{
+    CGEventRef event = CGEventCreateKeyboardEvent(nullptr, virtualKey, keyDown);
+    if (event) {
+        CGEventSetFlags(event, getKeyboardEventFlags());
+        CGEventPost(kCGHIDEventTap, event);
+        CFRelease(event);
+    }
+    else {
+        LOG((CLOG_CRIT "unable to create keyboard event for keystroke"));
     }
 }
 
@@ -579,33 +548,33 @@ void
 OSXKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
-    case Keystroke::kButton: {
-        
-        KeyButton button = keystroke.m_data.m_button.m_button;
-        bool keyDown = keystroke.m_data.m_button.m_press;
-        CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
-        
-        LOG((CLOG_DEBUG1
-            "  button=0x%04x virtualKey=0x%04x keyDown=%s",
-            button, virtualKey, keyDown ? "down" : "up"));
+        case Keystroke::kButton: {
+            bool keyDown = keystroke.m_data.m_button.m_press;
+            UInt32 client = keystroke.m_data.m_button.m_client;
+            KeyButton button = keystroke.m_data.m_button.m_button;
+            CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
 
-        postHIDVirtualKey(virtualKey, keyDown);
+            LOG((CLOG_DEBUG1
+                 "  button=0x%04x virtualKey=0x%04x keyDown=%s client=0x%04x",
+                    button, virtualKey, keyDown ? "down" : "up", client));
 
-        break;
-    }
-
-    case Keystroke::kGroup: {
-        SInt32 group = keystroke.m_data.m_group.m_group;
-        if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_DEBUG1 "  group %d", group));
-            setGroup(group);
+            setKeyboardModifiers(virtualKey, keyDown);
+            postKeyboardKey(virtualKey, keyDown);
+            break;
         }
-        else {
-            LOG((CLOG_DEBUG1 "  group %+d", group));
-            setGroup(getEffectiveGroup(pollActiveGroup(), group));
+
+        case Keystroke::kGroup: {
+            SInt32 group = keystroke.m_data.m_group.m_group;
+            if (keystroke.m_data.m_group.m_absolute) {
+                LOG((CLOG_DEBUG1 "  group %d", group));
+                setGroup(group);
+            }
+            else {
+                LOG((CLOG_DEBUG1 "  group %+d", group));
+                setGroup(getEffectiveGroup(pollActiveGroup(), group));
+            }
+            break;
         }
-        break;
-    }
     }
 }
 
