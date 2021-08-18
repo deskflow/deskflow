@@ -86,6 +86,7 @@ bool ServerConfig::operator==(const ServerConfig& sc) const
            m_RelativeMouseMoves     == sc.m_RelativeMouseMoves     &&
            m_Win32KeepForeground    == sc.m_Win32KeepForeground    &&
            m_HasSwitchDelay         == sc.m_HasSwitchDelay         &&
+           m_SwitchDelay            == sc.m_SwitchDelay            &&
            m_HasSwitchDoubleTap     == sc.m_HasSwitchDoubleTap     &&
            m_SwitchDoubleTap        == sc.m_SwitchDoubleTap        &&
            m_SwitchCornerSize       == sc.m_SwitchCornerSize       &&

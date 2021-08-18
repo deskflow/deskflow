@@ -37,6 +37,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
 {
     setupUi(this);
 
+    m_OrigServerAppConfigUseExternalConfig = config.getUseExternalConfig();
+    m_OrigServerAppConfigExternalConfigFile = config.getConfigFile();
+
     m_pEditConfigFile->setText(serverConfig().getConfigFile());
     m_pCheckBoxUseExternalConfig->setChecked(serverConfig().getUseExternalConfig());
     m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
@@ -85,21 +88,50 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
     m_pButtonAddComputer->setEnabled(!model().isFull());
     connect(m_pTrashScreenWidget, SIGNAL(screenRemoved()), this, SLOT(onScreenRemoved()));
 
-
     onChange();
-    /*
-     * connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
-      connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
-      connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
-      connect(m_pCheckBoxAutoConfig,      SIGNAL(clicked()),                this, SLOT(onChange()));
-      connect(m_pCheckBoxMinimizeToTray,  SIGNAL(clicked()),                this, SLOT(onChange()));
-      connect(m_pCheckBoxAutoHide,        SIGNAL(clicked()),                this, SLOT(onChange()));
-      connect(m_pCheckBoxPreventSleep,    SIGNAL(clicked()),                this, SLOT(onChange()));
-      connect(m_pLineEditInterface,       SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
-      connect(m_pSpinBoxPort,             SIGNAL(valueChanged(int)),        this, SLOT(onChange()));
-      connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
-      connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
-    */
+
+    //computers
+    connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, [&]() { onChange();});
+
+    //advanced
+    connect(m_pCheckBoxSwitchDelay,                               &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().haveSwitchDelay(v);                          onChange();});
+    connect(m_pSpinBoxSwitchDelay,             QOverload<int>::of(&QSpinBox::valueChanged),
+            [&]( const auto& v ) { serverConfig().setSwitchDelay(v);                           onChange();});
+    connect(m_pCheckBoxSwitchDoubleTap,                           &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().haveSwitchDoubleTap(v);                      onChange();});
+    connect(m_pSpinBoxSwitchDoubleTap,         QOverload<int>::of(&QSpinBox::valueChanged),
+            [&]( const auto& v ) { serverConfig().setSwitchDoubleTap(v);                       onChange();});
+    connect(m_pCheckBoxEnableClipboard,                           &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setClipboardSharing(v);                      onChange();});
+    connect(m_pSpinBoxClipboardSizeLimit,      QOverload<int>::of(&QSpinBox::valueChanged),
+            [&]( const auto& v ) { serverConfig().setClipboardSharingSize(v * 1024);           onChange();});
+    connect(m_pCheckBoxHeartbeat,                                 &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().haveHeartbeat(v);                            onChange();});
+    connect(m_pSpinBoxHeartbeat,               QOverload<int>::of(&QSpinBox::valueChanged),
+            [&]( const auto& v ) { serverConfig().setHeartbeat(v);                             onChange();});
+    connect(m_pCheckBoxRelativeMouseMoves,                        &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setRelativeMouseMoves(v);                    onChange();});
+    connect(m_pCheckBoxWin32KeepForeground,                       &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setWin32KeepForeground(v);                   onChange();});
+    connect(m_pCheckBoxIgnoreAutoConfigClient,                    &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setIgnoreAutoConfigClient(v);                onChange();});
+    connect(m_pCheckBoxDisableLockToScreen,                       &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setDisableLockToScreen(v);                   onChange();});
+    connect(m_pCheckBoxCornerTopLeft,                             &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::TopLeft, v);     onChange();});
+    connect(m_pCheckBoxCornerTopRight,                            &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::TopRight, v);    onChange();});
+    connect(m_pCheckBoxCornerBottomLeft,                          &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::BottomLeft, v);  onChange();});
+    connect(m_pCheckBoxCornerBottomRight,                         &QCheckBox::stateChanged,
+            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::BottomRight, v); onChange();});
+    connect(m_pSpinBoxSwitchCornerSize,        QOverload<int>::of(&QSpinBox::valueChanged),
+            [&]( const auto& v ) { serverConfig().setSwitchCornerSize(v);                      onChange();});
+
+    //config
+    connect(m_pCheckBoxUseExternalConfig, &QCheckBox::stateChanged, [&]( const auto& v ) { serverConfig().setUseExternalConfig(v); onChange();});
+    connect(m_pEditConfigFile,            &QLineEdit::textChanged,  [&]() { serverConfig().setConfigFile(m_pEditConfigFile->text()); onChange();});
 }
 
 void ServerConfigDialog::showEvent(QShowEvent* event)
@@ -131,32 +163,6 @@ void ServerConfigDialog::accept()
         }
     }
 
-    serverConfig().setConfigFile(m_pEditConfigFile->text());
-    serverConfig().setUseExternalConfig(m_pCheckBoxUseExternalConfig->isChecked());
-
-    serverConfig().haveHeartbeat(m_pCheckBoxHeartbeat->isChecked());
-    serverConfig().setHeartbeat(m_pSpinBoxHeartbeat->value());
-
-    serverConfig().setRelativeMouseMoves(m_pCheckBoxRelativeMouseMoves->isChecked());
-    serverConfig().setWin32KeepForeground(m_pCheckBoxWin32KeepForeground->isChecked());
-
-    serverConfig().haveSwitchDelay(m_pCheckBoxSwitchDelay->isChecked());
-    serverConfig().setSwitchDelay(m_pSpinBoxSwitchDelay->value());
-
-    serverConfig().haveSwitchDoubleTap(m_pCheckBoxSwitchDoubleTap->isChecked());
-    serverConfig().setSwitchDoubleTap(m_pSpinBoxSwitchDoubleTap->value());
-
-    serverConfig().setSwitchCorner(BaseConfig::TopLeft, m_pCheckBoxCornerTopLeft->isChecked());
-    serverConfig().setSwitchCorner(BaseConfig::TopRight, m_pCheckBoxCornerTopRight->isChecked());
-    serverConfig().setSwitchCorner(BaseConfig::BottomLeft, m_pCheckBoxCornerBottomLeft->isChecked());
-    serverConfig().setSwitchCorner(BaseConfig::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
-    serverConfig().setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
-    serverConfig().setIgnoreAutoConfigClient(m_pCheckBoxIgnoreAutoConfigClient->isChecked());
-    serverConfig().setDisableLockToScreen(m_pCheckBoxDisableLockToScreen->isChecked());
-    serverConfig().setClipboardSharingSize(m_pSpinBoxClipboardSizeLimit->value() * 1024);
-    serverConfig().setClipboardSharing(m_pCheckBoxEnableClipboard->isChecked()
-               && m_pSpinBoxClipboardSizeLimit->value());
-
     // now that the dialog has been accepted, copy the new server config to the original one,
     // which is a reference to the one in MainWindow.
     setOrigServerConfig(serverConfig());
@@ -164,14 +170,22 @@ void ServerConfigDialog::accept()
     QDialog::accept();
 }
 
+void ServerConfigDialog::reject()
+{
+    serverConfig().setUseExternalConfig(m_OrigServerAppConfigUseExternalConfig);
+    serverConfig().setConfigFile(m_OrigServerAppConfigExternalConfigFile);
+
+    QDialog::reject();
+}
+
 void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
 {
     Hotkey hotkey;
     HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted)
-    {
+    if (dlg.exec() == QDialog::Accepted) {
         serverConfig().hotkeys().append(hotkey);
         m_pListHotkeys->addItem(hotkey.text());
+        onChange();
     }
 }
 
@@ -181,8 +195,10 @@ void ServerConfigDialog::on_m_pButtonEditHotkey_clicked()
     Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
     Hotkey& hotkey = serverConfig().hotkeys()[idx];
     HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted)
+    if (dlg.exec() == QDialog::Accepted) {
         m_pListHotkeys->currentItem()->setText(hotkey.text());
+        onChange();
+    }
 }
 
 void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
@@ -192,6 +208,7 @@ void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
     serverConfig().hotkeys().removeAt(idx);
     m_pListActions->clear();
     delete m_pListHotkeys->item(idx);
+    onChange();
 }
 
 void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
@@ -234,6 +251,7 @@ void ServerConfigDialog::on_m_pButtonNewAction_clicked()
     {
         hotkey.actions().append(action);
         m_pListActions->addItem(action.text());
+        onChange();
     }
 }
 
@@ -248,8 +266,10 @@ void ServerConfigDialog::on_m_pButtonEditAction_clicked()
     Action& action = hotkey.actions()[idxAction];
 
     ActionDialog dlg(this, serverConfig(), hotkey, action);
-    if (dlg.exec() == QDialog::Accepted)
+    if (dlg.exec() == QDialog::Accepted) {
         m_pListActions->currentItem()->setText(action.text());
+        onChange();
+    }
 }
 
 void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
@@ -263,6 +283,7 @@ void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
 
     hotkey.actions().removeAt(idxAction);
     delete m_pListActions->currentItem();
+    onChange();
 }
 
 void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int const state)
@@ -296,6 +317,7 @@ void ServerConfigDialog::on_m_pButtonAddComputer_clicked()
 void ServerConfigDialog::onScreenRemoved()
 {
     m_pButtonAddComputer->setEnabled(true);
+    onChange();
 }
 
 void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked)
@@ -330,5 +352,7 @@ bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
 
 void ServerConfigDialog::onChange()
 {
-    m_pButtonBox->button(QDialogButtonBox::Ok)->setEnabled(m_OrigServerConfig == m_ServerConfig);
+    bool isAppConfigDataEqual = m_OrigServerAppConfigUseExternalConfig  == serverConfig().getUseExternalConfig() &&
+                                m_OrigServerAppConfigExternalConfigFile == serverConfig().getConfigFile();
+    m_pButtonBox->button(QDialogButtonBox::Ok)->setEnabled(!isAppConfigDataEqual || !(m_OrigServerConfig == m_ServerConfig));
 }
