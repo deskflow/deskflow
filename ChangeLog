@@ -2,6 +2,7 @@ v1.14.2-snapshot
 ===========
 Bug fixes:
 - #7070 Fix radio button shifted focus on macOS
+- #7038 Fix client and server different keyboard layout errors
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
@@ -19,7 +20,6 @@ Bug fixes:
 - #7029 | #7033 Wrong encoding for text copied between linux and windows
 - #7015 Fix Windows service not starting up after sleep
 - #7036 Fix tray icon not changing theme on Big Sur
-- #7038 Fix client and server different keyboard layout errors
 - #7046 Fix MacOS 10.13 build
 - #7049 Scroll doesn't work in case of macOS is server
 - #7057 | #7058 Fix copy paste logic, when OS reported about clipboard update too late
