@@ -164,6 +164,10 @@ MSWindowsScreen::MSWindowsScreen(
             LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
         }
 
+        if (App::instance().argsBase().m_preventSleep) {
+            m_powerManager.disableSleep();
+        }
+
         OleInitialize(0);
         m_dropWindow = createDropWindow(m_class, "DropWindow");
         m_dropTarget = new MSWindowsDropTarget();
@@ -248,10 +252,6 @@ MSWindowsScreen::enable()
         // watch jump zones
         m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
     }
-
-    if (App::instance().argsBase().m_preventSleep) {
-        ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
-    }
 }
 
 void
@@ -266,10 +266,6 @@ MSWindowsScreen::disable()
 
         // enable special key sequences on win95 family
         enableSpecialKeys(true);
-    }
-    else {
-        // allow the system to enter power saving mode
-        ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM);
     }
 
     // tell key state

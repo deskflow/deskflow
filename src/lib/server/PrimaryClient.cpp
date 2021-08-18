@@ -21,7 +21,7 @@
 #include "synergy/Screen.h"
 #include "synergy/Clipboard.h"
 #include "base/Log.h"
-
+#include "synergy/AppUtil.h"
 //
 // PrimaryClient
 //
@@ -270,7 +270,18 @@ PrimaryClient::getSecureInputApp() const
 void
 PrimaryClient::secureInputNotification(const String& app) const
 {
-    // ignore
+    if (app != "unknown") {
+        AppUtil::instance().showNotification(
+                    "The client keyboards may stop working.",
+                    "'Secure input' enabled by " + app + ". " \
+                    "Close " + app + " to continue using keyboards on the clients.");
+    }
+    else {
+        AppUtil::instance().showNotification(
+                    "The client keyboards may stop working.",
+                    "'Secure input' enabled by an application. " \
+                    "Close the application to continue using keyboards on the clients.");
+    }
 }
 
 void

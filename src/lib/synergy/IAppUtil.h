@@ -33,6 +33,5 @@ public:
     virtual void getKeyboardLayoutsDiff(const String& compressedLanguages,
                                         std::vector<String>& missedLang,
                                         std::vector<String>& supportedLang) = 0;
-    virtual void showMessageBox(const String& title, const String& text) = 0;
     virtual void showNotification(const String& title, const String& text) const = 0;
 };

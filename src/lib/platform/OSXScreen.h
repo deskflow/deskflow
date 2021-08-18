@@ -19,6 +19,7 @@
 #pragma once
 
 #include "platform/OSXClipboard.h"
+#include "platform/OSXPowerManager.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/DragInformation.h"
 #include "base/EventTypes.h"
@@ -30,7 +31,6 @@
 #include <mach/mach_port.h>
 #include <mach/mach_interface.h>
 #include <mach/mach_init.h>
-#include <IOKit/pwr_mgt/IOPMLib.h>
 #include <IOKit/IOMessage.h>
 
 extern "C" {
@@ -152,9 +152,6 @@ private:
 
     // get the current scroll wheel speed
     double                getScrollSpeed() const;
-
-    // get the current scroll wheel speed
-    double                getScrollSpeedFactor() const;
 
     // enable/disable drag handling for buttons 3 and up
     void                enableDragTimer(bool enable);
@@ -350,8 +347,7 @@ private:
     CondVar<bool>*            m_carbonLoopReady;
 #endif
 
-    // handler for assertion preventing the system from going to sleep
-    IOPMAssertionID           m_sleepPreventionAssertionID = 0;
+    OSXPowerManager m_powerManager;
 
     class OSXScreenImpl*    m_impl;
 };

@@ -55,8 +55,6 @@ public:
 
     std::vector<String> getKeyboardLayoutList() override;
 
-    void showMessageBox(const String& title, const String& text) override;
-
     void showNotification(const String& title, const String& text) const override;
 
 

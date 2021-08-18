@@ -774,8 +774,8 @@ Client::handleHello(const Event&, void*)
         if(!missed.empty()) {
             std::ostringstream result;
             std::copy(missed.begin(), missed.end(), std::ostream_iterator<String>(result, ", "));
-            AppUtil::instance().showMessageBox("Language synchronization error",
-                                               "These languages are required for client proper work: " + result.str());
+            AppUtil::instance().showNotification("Language synchronization error",
+                                                 "These languages are required for client proper work: " + result.str());
         }
     }
     else {

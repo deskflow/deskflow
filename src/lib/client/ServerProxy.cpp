@@ -919,12 +919,17 @@ ServerProxy::secureInputNotification()
     String app;
     ProtocolUtil::readf(m_stream, kMsgDSecureInputNotification + 4, &app);
 
-    String secureInputNotificationBody =
-        "'Secure input' enabled by " + app + " on the server. " \
-        "To fix the keyboard, " + app + " must be closed.";
-
     // display this notification on the client
-    AppUtil::instance().showNotification(
-                "The keyboard may stop working.",
-                secureInputNotificationBody);
+    if (app != "unknown") {
+        AppUtil::instance().showNotification(
+                    "The keyboard may stop working.",
+                    "'Secure input' enabled by " + app + " on the server. " \
+                    "To fix the keyboard, " + app + " must be closed.");
+    }
+    else {
+        AppUtil::instance().showNotification(
+                    "The keyboard may stop working.",
+                    "'Secure input' enabled by an application on the server. " \
+                    "To fix the keyboard, the application must be closed.");
+    }
 }

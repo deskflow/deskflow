@@ -48,6 +48,14 @@
 #include <AppKit/NSEvent.h>
 #include <libproc.h>
 
+// The following creates a section that tells Mac OS X
+// that it is OK to let us inject input in the login screen.
+// Just the name of the section is important, not its contents.
+__attribute__((used))
+__attribute__((section ("__CGPreLoginApp,__cgpreloginapp")))
+static const char magic_section[] = "";
+////////////////////////////////////////////////////////////
+
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
 	kSynergyEventMouseScroll = 11,
@@ -59,7 +67,6 @@ enum {
 	kCarbonLoopWaitTimeout = 10
 };
 
-void createSecureInputNotification();
 int getSecureInputEventPID();
 String getProcessName(int pid);
 
@@ -119,7 +126,11 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	try {
 		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
 		m_keyState	  = new OSXKeyState(m_events);
-		
+
+        if (App::instance().argsBase().m_preventSleep) {
+            m_powerManager.disableSleep();
+        }
+
 		// only needed when running as a server.
 		if (m_isPrimary) {
 		
@@ -175,7 +186,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
-		
+
 		CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
 		delete m_keyState;
@@ -195,6 +206,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 OSXScreen::~OSXScreen()
 {
 	disable();
+
 	m_events->adoptBuffer(NULL);
 	m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
 
@@ -754,16 +766,6 @@ OSXScreen::hideCursor()
 void
 OSXScreen::enable()
 {
-    if(App::instance().argsBase().m_preventSleep) {
-        CFStringRef reasonForActivity = CFSTR("Synergy application");
-        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoIdleSleep,
-                                                        kIOPMAssertionLevelOn, reasonForActivity, &m_sleepPreventionAssertionID);
-        if(result != kIOReturnSuccess) {
-            m_sleepPreventionAssertionID = 0;
-            LOG((CLOG_ERR "failed to disable system idle sleep"));
-        }
-    }
-
 	// watch the clipboard
 	m_clipboardTimer = m_events->newTimer(1.0, NULL);
 	m_events->adoptHandler(Event::kTimer, m_clipboardTimer,
@@ -798,25 +800,23 @@ OSXScreen::enable()
 										this);
 	}
 
-	if (!m_eventTapPort) {
+	if (m_eventTapPort) {
+		m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+		if (m_eventTapRLSR) {
+			CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+		}
+		else{
+			LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
+		}
+	}
+	else{
 		LOG((CLOG_ERR "failed to create quartz event tap"));
 	}
-
-	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-	if (!m_eventTapRLSR) {
-		LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
-	}
-
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 void
 OSXScreen::disable()
 {
-    if(App::instance().argsBase().m_preventSleep && m_sleepPreventionAssertionID) {
-        IOPMAssertionRelease(m_sleepPreventionAssertionID);
-    }
-
 	if (m_autoShowHideCursor) {
 		showCursor();
 	}
@@ -884,12 +884,8 @@ OSXScreen::enter()
 bool
 OSXScreen::leave()
 {
-    if(m_isPrimary && IsSecureEventInputEnabled()) {
-        createSecureInputNotification();
-    }
-
     hideCursor();
-    
+
 	if (isDraggingStarted()) {
 		String& fileList = getDraggingFilename();
 		
@@ -1460,9 +1456,8 @@ OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 SInt32
 OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 {
-	// return accelerated scrolling but not exponentially scaled as it is
-	// on the mac.
-	double d = (1.0 + getScrollSpeed()) * x / getScrollSpeedFactor();
+	// return accelerated scrolling
+	double d = (1.0 + getScrollSpeed()) * x;
 	return static_cast<SInt32>(m_scrollDirection * 120.0 * d);
 }
 
@@ -1498,12 +1493,6 @@ OSXScreen::getScrollSpeed() const
 	}
 
 	return scaling;
-}
-
-double
-OSXScreen::getScrollSpeedFactor() const
-{
-	return pow(10.0, getScrollSpeed());
 }
 
 void
@@ -2166,23 +2155,6 @@ OSXScreen::getSecureInputApp() const
 		return getProcessName(secureInputProcessPID);
 	}
 	return "";
-}
-
-void
-createSecureInputNotification()
-{
-    int secureInputProcessPID = getSecureInputEventPID();
-    String app = getProcessName(secureInputProcessPID);
-    if(secureInputProcessPID == 0) app = "unknown";
-
-    String secureInputNotificationBody =
-            "'Secure input' enabled by " + app + ". " \
-            "Close " + app + " to continue using keyboards on the clients.";
-
-    // display this notification on the server
-    AppUtil::instance().showNotification(
-                "The client keyboards may stop working.",
-                secureInputNotificationBody);
 }
 
 int

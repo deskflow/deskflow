@@ -121,6 +121,12 @@ MainWindow::MainWindow (AppConfig& appConfig,
 #endif
 
     setupUi(this);
+
+#if defined(Q_OS_MAC)
+    m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect,0);
+    m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect,0);
+#endif
+
     updateAutoConfigWidgets();
 
     createMenuBar();
@@ -1303,7 +1309,14 @@ void MainWindow::updateAutoConfigWidgets()
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
-    SettingsDialog(this, appConfig()).exec();
+    auto result = SettingsDialog(this, appConfig()).exec();
+    if(result == QDialog::Accepted)
+    {
+        auto state = synergyState();
+        if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening)) {
+            restartSynergy();
+        }
+    }
 }
 
 void MainWindow::autoAddScreen(const QString name)
