@@ -5,6 +5,7 @@ Bug fixes:
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
+- #7074 Add Synergy restart when server settings changed
 ===========
 
 v1.14.1-rc
