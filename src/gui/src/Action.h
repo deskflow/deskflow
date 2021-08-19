@@ -102,9 +102,9 @@ class Action
         bool m_HasScreens;
         bool m_restartServer;
 
-        const static const char* m_ActionTypeNames[];
-        const static const char* m_SwitchDirectionNames[];
-        const static const char* m_LockCursorModeNames[];
+        static const char* m_ActionTypeNames[];
+        static const char* m_SwitchDirectionNames[];
+        static const char* m_LockCursorModeNames[];
 };
 
 typedef QList<Action> ActionList;
