@@ -1357,8 +1357,7 @@ void MainWindow::showConfigureServer(const QString& message)
     dlg.message(message);
     auto result = dlg.exec();
 
-    if(result == QDialog::Accepted)
-    {
+    if(result == QDialog::Accepted) {
         auto state = synergyState();
         if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening)) {
             restartSynergy();
