@@ -31,14 +31,13 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::ServerConfigDialogBase(),
     m_OrigServerConfig(config),
+    m_OrigServerAppConfigUseExternalConfig(config.getUseExternalConfig()),
+    m_OrigServerAppConfigExternalConfigFile(config.getConfigFile()),
     m_ServerConfig(config),
     m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
     m_Message("")
 {
     setupUi(this);
-
-    m_OrigServerAppConfigUseExternalConfig = config.getUseExternalConfig();
-    m_OrigServerAppConfigExternalConfigFile = config.getConfigFile();
 
     m_pEditConfigFile->setText(serverConfig().getConfigFile());
     m_pCheckBoxUseExternalConfig->setChecked(serverConfig().getUseExternalConfig());
@@ -91,47 +90,49 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
     onChange();
 
     //computers
-    connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, [&]() { onChange();});
+    connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
 
     //advanced
     connect(m_pCheckBoxSwitchDelay,                               &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().haveSwitchDelay(v);                          onChange();});
+            this, [this]( const auto& v ) { serverConfig().haveSwitchDelay(v);                          onChange();});
     connect(m_pSpinBoxSwitchDelay,             QOverload<int>::of(&QSpinBox::valueChanged),
-            [&]( const auto& v ) { serverConfig().setSwitchDelay(v);                           onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchDelay(v);                           onChange();});
     connect(m_pCheckBoxSwitchDoubleTap,                           &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().haveSwitchDoubleTap(v);                      onChange();});
+            this, [this]( const auto& v ) { serverConfig().haveSwitchDoubleTap(v);                      onChange();});
     connect(m_pSpinBoxSwitchDoubleTap,         QOverload<int>::of(&QSpinBox::valueChanged),
-            [&]( const auto& v ) { serverConfig().setSwitchDoubleTap(v);                       onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchDoubleTap(v);                       onChange();});
     connect(m_pCheckBoxEnableClipboard,                           &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setClipboardSharing(v);                      onChange();});
+            this, [this]( const auto& v ) { serverConfig().setClipboardSharing(v);                      onChange();});
     connect(m_pSpinBoxClipboardSizeLimit,      QOverload<int>::of(&QSpinBox::valueChanged),
-            [&]( const auto& v ) { serverConfig().setClipboardSharingSize(v * 1024);           onChange();});
+            this, [this]( const auto& v ) { serverConfig().setClipboardSharingSize(v * 1024);           onChange();});
     connect(m_pCheckBoxHeartbeat,                                 &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().haveHeartbeat(v);                            onChange();});
+            this, [this]( const auto& v ) { serverConfig().haveHeartbeat(v);                            onChange();});
     connect(m_pSpinBoxHeartbeat,               QOverload<int>::of(&QSpinBox::valueChanged),
-            [&]( const auto& v ) { serverConfig().setHeartbeat(v);                             onChange();});
+            this, [this]( const auto& v ) { serverConfig().setHeartbeat(v);                             onChange();});
     connect(m_pCheckBoxRelativeMouseMoves,                        &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setRelativeMouseMoves(v);                    onChange();});
+            this, [this]( const auto& v ) { serverConfig().setRelativeMouseMoves(v);                    onChange();});
     connect(m_pCheckBoxWin32KeepForeground,                       &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setWin32KeepForeground(v);                   onChange();});
+            this, [this]( const auto& v ) { serverConfig().setWin32KeepForeground(v);                   onChange();});
     connect(m_pCheckBoxIgnoreAutoConfigClient,                    &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setIgnoreAutoConfigClient(v);                onChange();});
+            this, [this]( const auto& v ) { serverConfig().setIgnoreAutoConfigClient(v);                onChange();});
     connect(m_pCheckBoxDisableLockToScreen,                       &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setDisableLockToScreen(v);                   onChange();});
+            this, [this]( const auto& v ) { serverConfig().setDisableLockToScreen(v);                   onChange();});
     connect(m_pCheckBoxCornerTopLeft,                             &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::TopLeft, v);     onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::TopLeft, v);     onChange();});
     connect(m_pCheckBoxCornerTopRight,                            &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::TopRight, v);    onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::TopRight, v);    onChange();});
     connect(m_pCheckBoxCornerBottomLeft,                          &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::BottomLeft, v);  onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::BottomLeft, v);  onChange();});
     connect(m_pCheckBoxCornerBottomRight,                         &QCheckBox::stateChanged,
-            [&]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::BottomRight, v); onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchCorner(BaseConfig::BottomRight, v); onChange();});
     connect(m_pSpinBoxSwitchCornerSize,        QOverload<int>::of(&QSpinBox::valueChanged),
-            [&]( const auto& v ) { serverConfig().setSwitchCornerSize(v);                      onChange();});
+            this, [this]( const auto& v ) { serverConfig().setSwitchCornerSize(v);                      onChange();});
 
     //config
-    connect(m_pCheckBoxUseExternalConfig, &QCheckBox::stateChanged, [&]( const auto& v ) { serverConfig().setUseExternalConfig(v); onChange();});
-    connect(m_pEditConfigFile,            &QLineEdit::textChanged,  [&]() { serverConfig().setConfigFile(m_pEditConfigFile->text()); onChange();});
+    connect(m_pCheckBoxUseExternalConfig, &QCheckBox::stateChanged,
+            this, [this]( const auto& v ) { serverConfig().setUseExternalConfig(v); onChange();});
+    connect(m_pEditConfigFile,            &QLineEdit::textChanged,
+            this, [this]() { serverConfig().setConfigFile(m_pEditConfigFile->text()); onChange();});
 }
 
 void ServerConfigDialog::showEvent(QShowEvent* event)

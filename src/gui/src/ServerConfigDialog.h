@@ -36,7 +36,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 
     public slots:
         void accept();
-        void reject();
+        void reject() override;
         void showEvent(QShowEvent* event);
         void message(const QString& message) { m_Message = message; }
 
