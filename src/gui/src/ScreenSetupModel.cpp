@@ -138,12 +138,15 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
 
     screen(parent.column(), parent.row()) = droppedScreen;
 
+    emit screensChanged();
+
     return true;
 }
 
 void ScreenSetupModel::addScreen(const Screen& newScreen)
 {
     m_Screens.addScreenByPriority(newScreen);
+    emit screensChanged();
 }
 
 bool ScreenSetupModel::isFull() const

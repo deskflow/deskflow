@@ -1355,7 +1355,14 @@ void MainWindow::showConfigureServer(const QString& message)
 {
     ServerConfigDialog dlg(this, serverConfig());
     dlg.message(message);
-    dlg.exec();
+    auto result = dlg.exec();
+
+    if(result == QDialog::Accepted) {
+        auto state = synergyState();
+        if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening)) {
+            restartSynergy();
+        }
+    }
 }
 
 void MainWindow::on_m_pButtonConfigureServer_clicked()

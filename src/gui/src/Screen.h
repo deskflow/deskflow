@@ -69,6 +69,8 @@ class Screen : public BaseConfig
         bool isServer() const { return m_isServer;}
         void markAsServer() { m_isServer = true; }
 
+        bool operator==(const Screen& screen) const;
+
     protected:
         void init();
         QPixmap* pixmap() { return &m_Pixmap; }
