@@ -171,9 +171,9 @@ void ServerConfig::loadSettings()
     setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
     setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
     setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
-	setClipboardSharing(settings().value("clipboardSharing", true).toBool());
 	setClipboardSharingSize(settings().value("clipboardSharingSize",
 						(int) ServerConfig::defaultClipboardSharingSize()).toULongLong());
+    setClipboardSharing(settings().value("clipboardSharing", true).toBool());
 
     readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
