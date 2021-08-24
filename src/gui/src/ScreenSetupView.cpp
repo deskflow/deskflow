@@ -132,7 +132,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     if (pData == NULL)
         return;
 
-    QPixmap pixmap = *model()->screen(indexes[0]).pixmap();
+    const QPixmap& pixmap = model()->screen(indexes[0]).pixmap();
     QDrag* pDrag = new QDrag(this);
     pDrag->setPixmap(pixmap);
     pDrag->setMimeData(pData);
