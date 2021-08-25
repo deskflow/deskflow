@@ -77,6 +77,8 @@ class Action
         bool haveScreens() const { return m_HasScreens; }
         bool restartServer() const { return m_restartServer; }
 
+        bool operator==(const Action& a) const;
+
     protected:
         KeySequence& keySequence() { return m_KeySequence; }
         void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }
