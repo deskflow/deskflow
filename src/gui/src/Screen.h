@@ -45,7 +45,7 @@ class Screen : public BaseConfig
         Screen(const QString& name);
 
     public:
-        const QPixmap* pixmap() const { return &m_Pixmap; }
+        const QPixmap& pixmap() const { return m_Pixmap; }
         const QString& name() const { return m_Name; }
         const QStringList& aliases() const { return m_Aliases; }
 
@@ -73,9 +73,7 @@ class Screen : public BaseConfig
 
     protected:
         void init();
-        QPixmap* pixmap() { return &m_Pixmap; }
 
-        void setPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }
         QStringList& aliases() { return m_Aliases; }
         void setModifier(int m, int n) { m_Modifiers[m] = n; }
         QList<int>& modifiers() { return m_Modifiers; }

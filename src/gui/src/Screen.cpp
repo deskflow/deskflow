@@ -124,8 +124,7 @@ QTextStream& Screen::writeAliasesSection(QTextStream& outStream) const
 
 bool Screen::operator==(const Screen& screen) const
 {
-    return m_Pixmap           == screen.m_Pixmap           &&
-           m_Name             == screen.m_Name             &&
+    return m_Name             == screen.m_Name             &&
            m_Aliases          == screen.m_Aliases          &&
            m_Modifiers        == screen.m_Modifiers        &&
            m_SwitchCorners    == screen.m_SwitchCorners    &&
