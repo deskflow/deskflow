@@ -19,9 +19,9 @@
 #pragma once
 #include "base/String.h"
 
-namespace tinyxml2
+namespace pugi
 {
-    class XMLElement;
+    class xml_node;
 }
 
 class X11LayoutsParser {
@@ -37,7 +37,7 @@ private:
         std::vector<Lang>   variants;
     };
 
-    static bool              readXMLConfigItemElem(tinyxml2::XMLElement* root,
+    static bool              readXMLConfigItemElem(pugi::xml_node* root,
                                                    std::vector<Lang>& langList);
 
     static std::vector<Lang> getAllLanguageData();

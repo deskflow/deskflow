@@ -23,12 +23,12 @@
 #include "base/Log.h"
 #include "synergy/unix/X11LayoutsParser.h"
 #include "ISO639Table.h"
-#include "tinyxml2.h"
+#include "pugixml.hpp"
 
 bool
-X11LayoutsParser::readXMLConfigItemElem(tinyxml2::XMLElement* root, std::vector<Lang>& langList)
+X11LayoutsParser::readXMLConfigItemElem(pugi::xml_node* root, std::vector<Lang>& langList)
 {
-    auto configItemElem = root->FirstChildElement("configItem");
+    auto configItemElem = root->child("configItem");
     if(!configItemElem) {
         LOG((CLOG_WARN "Failed to read configItem in evdev.xml"));
         return false;
@@ -38,17 +38,17 @@ X11LayoutsParser::readXMLConfigItemElem(tinyxml2::XMLElement* root, std::vector<
     for(auto keyPair : {std::make_pair("name", &langList.back().name),
                         std::make_pair("shortDescription", &langList.back().shortDescr),
                         std::make_pair("description", &langList.back().descr)}) {
-        auto elem = configItemElem->FirstChildElement(keyPair.first);
+        auto elem = configItemElem.child(keyPair.first);
         if(!elem) {
             continue;
         }
-        *keyPair.second = elem->GetText();
+        *keyPair.second = elem.text().as_string();
     }
 
-    auto languageListElem = configItemElem->FirstChildElement("languageList");
+    auto languageListElem = configItemElem.child("languageList");
     if(languageListElem) {
-        for(auto isoElem = languageListElem->FirstChildElement("iso639Id"); isoElem; isoElem = isoElem->NextSiblingElement("iso639Id")) {
-            langList.back().layoutBaseISO639_2.emplace_back(isoElem->GetText());
+        for (pugi::xml_node isoElem : languageListElem.children("iso639Id")) {
+            langList.back().layoutBaseISO639_2.push_back(isoElem.text().as_string());
         }
     }
 
@@ -59,29 +59,33 @@ std::vector<X11LayoutsParser::Lang>
 X11LayoutsParser::getAllLanguageData()
 {
     std::vector<Lang> allCodes;
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile("/usr/share/X11/xkb/rules/evdev.xml");
-
-    if(doc.ErrorID() != tinyxml2::XML_SUCCESS) {
+    pugi::xml_document doc;
+    if(!doc.load_file("/usr/share/X11/xkb/rules/evdev.xml")) {
         LOG((CLOG_WARN "Failed to open evdev.xml"));
         return allCodes;
     }
 
-    auto layoutListElem = doc.FirstChildElement("xkbConfigRegistry")->FirstChildElement("layoutList");
+    auto xkbConfigElem = doc.child("xkbConfigRegistry");
+    if(!xkbConfigElem) {
+        LOG((CLOG_WARN "Failed to read xkbConfigRegistry in evdev.xml"));
+        return allCodes;
+    }
+
+    auto layoutListElem = xkbConfigElem.child("layoutList");
     if(!layoutListElem) {
         LOG((CLOG_WARN "Failed to read layoutList in evdev.xml"));
         return allCodes;
     }
 
-    for(auto layoutElem = layoutListElem->FirstChildElement("layout"); layoutElem; layoutElem = layoutElem->NextSiblingElement("layout")) {
-        if (!readXMLConfigItemElem(layoutElem, allCodes)) {
+    for (pugi::xml_node layoutElem : layoutListElem.children("layout")) {
+        if (!readXMLConfigItemElem(&layoutElem, allCodes)) {
             continue;
         }
 
-        auto variantListElem = layoutElem->FirstChildElement("variantList");
+        auto variantListElem = layoutElem.child("variantList");
         if (variantListElem) {
-            for(auto variantElem = variantListElem->FirstChildElement("variant"); variantElem; variantElem = variantElem->NextSiblingElement("variant")) {
-                readXMLConfigItemElem(variantElem, allCodes.back().variants);
+            for (pugi::xml_node variantElem : variantListElem.children("variant")) {
+                readXMLConfigItemElem(&variantElem, allCodes.back().variants);
             }
         }
     }
