@@ -712,11 +712,9 @@ SecureSocket::verifyCertFingerprint()
     if (file.is_open()) {
         while (!file.eof()) {
             getline(file,fileLine);
-            if (!fileLine.empty()) {
-                if (fileLine.compare(fingerprint) == 0) {
-                    isValid = true;
-                    break;
-                }
+            if (!fileLine.empty() && !fileLine.compare(fingerprint)) {
+                isValid = true;
+                break;
             }
         }
     }
