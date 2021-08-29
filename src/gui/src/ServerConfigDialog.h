@@ -33,6 +33,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 
     public:
         ServerConfigDialog(QWidget* parent, ServerConfig& config);
+        bool addClient(const QString& clientName);
 
     public slots:
         void accept();
@@ -57,6 +58,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         bool on_m_pButtonBrowseConfigFile_clicked();
 
     protected:
+        bool addComputer(const QString& clientName);
         ServerConfig& serverConfig() { return m_ServerConfig; }
         void setOrigServerConfig(const ServerConfig& s) { m_OrigServerConfig = s; }
         ScreenSetupModel& model() { return m_ScreenSetupModel; }
