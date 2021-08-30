@@ -58,7 +58,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         bool on_m_pButtonBrowseConfigFile_clicked();
 
     protected:
-        bool addComputer(const QString& clientName);
+        bool addComputer(const QString& clientName, bool doSilent);
         ServerConfig& serverConfig() { return m_ServerConfig; }
         void setOrigServerConfig(const ServerConfig& s) { m_OrigServerConfig = s; }
         ScreenSetupModel& model() { return m_ScreenSetupModel; }

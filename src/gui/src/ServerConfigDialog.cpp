@@ -137,7 +137,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
 
 bool ServerConfigDialog::addClient(const QString& clientName)
 {
-    return addComputer(clientName);
+    return addComputer(clientName, true);
 }
 
 void ServerConfigDialog::showEvent(QShowEvent* event)
@@ -309,7 +309,7 @@ void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
 
 void ServerConfigDialog::on_m_pButtonAddComputer_clicked()
 {
-    addComputer("");
+    addComputer("", false);
 }
 
 void ServerConfigDialog::onScreenRemoved()
@@ -348,13 +348,14 @@ bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
     return false;
 }
 
-bool ServerConfigDialog::addComputer(const QString& clientName)
+bool ServerConfigDialog::addComputer(const QString& clientName, bool doSilent)
 {
     bool isAccepted = false;
     Screen newScreen(clientName);
 
+
     ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens);
-    if (dlg.exec() == QDialog::Accepted)
+    if (doSilent || dlg.exec() == QDialog::Accepted)
     {
         model().addScreen(newScreen);
         isAccepted = true;
