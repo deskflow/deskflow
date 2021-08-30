@@ -122,6 +122,18 @@ QTextStream& Screen::writeAliasesSection(QTextStream& outStream) const
     return outStream;
 }
 
+bool Screen::operator==(const Screen& screen) const
+{
+    return m_Name             == screen.m_Name             &&
+           m_Aliases          == screen.m_Aliases          &&
+           m_Modifiers        == screen.m_Modifiers        &&
+           m_SwitchCorners    == screen.m_SwitchCorners    &&
+           m_SwitchCornerSize == screen.m_SwitchCornerSize &&
+           m_Fixes            == screen.m_Fixes            &&
+           m_Swapped          == screen.m_Swapped          &&
+           m_isServer         == screen.m_isServer;
+}
+
 QDataStream& operator<<(QDataStream& outStream, const Screen& screen)
 {
     return outStream

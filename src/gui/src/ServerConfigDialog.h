@@ -36,6 +36,7 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 
     public slots:
         void accept();
+        void reject() override;
         void showEvent(QShowEvent* event);
         void message(const QString& message) { m_Message = message; }
 
@@ -62,9 +63,14 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
 
     private:
         ServerConfig& m_OrigServerConfig;
+        bool m_OrigServerAppConfigUseExternalConfig;
+        QString m_OrigServerAppConfigExternalConfigFile;
         ServerConfig m_ServerConfig;
         ScreenSetupModel m_ScreenSetupModel;
         QString m_Message;
+
+    private slots:
+        void onChange();
 };
 
 #endif

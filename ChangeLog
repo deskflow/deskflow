@@ -3,10 +3,13 @@ v1.14.2-snapshot
 Bug fixes:
 - #7070 Fix radio button shifted focus on macOS
 - #7038 Fix client and server different keyboard layout errors
+- #7078 Fix clipboard re-enables automatically
+- #7077 Fix Ubuntu, CentOS and Debian build after SYNERGY-1161
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
 - #7072 Ability to run synergy as a pre-login agent
+- #7074 Add Synergy restart when server settings changed
 ===========
 
 v1.14.1-rc

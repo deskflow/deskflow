@@ -41,6 +41,8 @@ class KeySequence
         void loadSettings(QSettings& settings);
         const QList<int>& sequence() const { return m_Sequence; }
 
+        bool operator==(const KeySequence& ks) const;
+
     private:
         void setValid(bool b) { m_IsValid = b; }
         void setModifiers(int i) { m_Modifiers = i; }
