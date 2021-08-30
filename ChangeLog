@@ -4,6 +4,7 @@ Bug fixes:
 - #7070 Fix radio button shifted focus on macOS
 - #7078 Fix clipboard re-enables automatically
 - #7077 Fix Ubuntu, CentOS and Debian build after SYNERGY-1161
+- #7081 Fix autoconfig after SYNERGY-1161
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
