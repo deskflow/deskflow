@@ -84,7 +84,6 @@ void ServerConnection::configureClient(const QString& clientName)
     ServerConfigDialog dlg(&m_parent, m_parent.serverConfig());
 
     if(dlg.addClient(clientName) && dlg.exec() == QDialog::Accepted) {
-            m_parent.restartSynergy();
-        }
+        m_parent.restartSynergy();
     }
 }
