@@ -26,7 +26,7 @@
 #include "pugixml.hpp"
 
 bool
-X11LayoutsParser::readXMLConfigItemElem(pugi::xml_node* root, std::vector<Lang>& langList)
+X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<Lang>& langList)
 {
     auto configItemElem = root->child("configItem");
     if(!configItemElem) {
@@ -48,7 +48,7 @@ X11LayoutsParser::readXMLConfigItemElem(pugi::xml_node* root, std::vector<Lang>&
     auto languageListElem = configItemElem.child("languageList");
     if(languageListElem) {
         for (pugi::xml_node isoElem : languageListElem.children("iso639Id")) {
-            langList.back().layoutBaseISO639_2.push_back(isoElem.text().as_string());
+            langList.back().layoutBaseISO639_2.emplace_back(isoElem.text().as_string());
         }
     }
 

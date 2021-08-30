@@ -37,7 +37,7 @@ private:
         std::vector<Lang>   variants;
     };
 
-    static bool              readXMLConfigItemElem(pugi::xml_node* root,
+    static bool              readXMLConfigItemElem(const pugi::xml_node* root,
                                                    std::vector<Lang>& langList);
 
     static std::vector<Lang> getAllLanguageData();
