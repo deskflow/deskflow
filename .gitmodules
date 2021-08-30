@@ -4,3 +4,6 @@
 [submodule "ext/WinToast"]
 	path = ext/WinToast
 	url = https://github.com/mohabouje/WinToast
+[submodule "ext/pugixml"]
+	path = ext/pugixml
+	url = https://github.com/zeux/pugixml
