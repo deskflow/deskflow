@@ -766,16 +766,13 @@ Client::handleHello(const Event&, void*)
         AppUtil::instance().getKeyboardLayoutsDiff(keyboardLayoutList, missed, supported);
 
         if(!supported.empty()) {
-            std::ostringstream result;
-            std::copy(supported.begin(), supported.end(), std::ostream_iterator<String>(result, ", "));
-            LOG((CLOG_DEBUG "Supported server languages: %s",  result.str().c_str()));
+            LOG((CLOG_DEBUG "Supported server languages: %s",  AppUtil::joinStrVector(supported, ", ").c_str()));
         }
 
         if(!missed.empty()) {
-            std::ostringstream result;
-            std::copy(missed.begin(), missed.end(), std::ostream_iterator<String>(result, ", "));
+            auto result = AppUtil::joinStrVector(missed, ", ");
             AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for client proper work: " + result.str());
+                                                 "These languages are required for client proper work: " + result);
         }
     }
     else {

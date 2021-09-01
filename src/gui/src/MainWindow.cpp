@@ -726,10 +726,6 @@ void MainWindow::startSynergy()
         args << "--prevent-sleep";
     }
 
-    if (appConfig().getLanguageSync()) {
-        args << "--sync-language";
-    }
-
     // put a space between last log output and new instance.
     if (!m_pLogOutput->toPlainText().isEmpty())
         appendLogRaw("");
@@ -817,6 +813,10 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     {
         appConfig().persistLogDir();
         args << "--log" << appConfig().logFilenameCmd();
+    }
+
+    if (appConfig().getLanguageSync()) {
+        args << "--sync-language";
     }
 
 

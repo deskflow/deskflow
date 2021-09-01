@@ -111,7 +111,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             // define scroll
             args.m_yscroll = atoi(argv[++i]);
         }
-        else if (isArg(i, argc, argv, nullptr, "--sync-language", 1)) {
+        else if (isArg(i, argc, argv, nullptr, "--sync-language")) {
             args.m_enableLangSync = true;
         }
         else {

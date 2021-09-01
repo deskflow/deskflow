@@ -126,6 +126,7 @@ ClientApp::help()
         buffer_size,
         "Usage: %s"
         " [--yscroll <delta>]"
+        " [--sync-language]"
         WINAPI_ARG
         HELP_SYS_ARGS
         HELP_COMMON_ARGS
@@ -138,6 +139,7 @@ ClientApp::help()
         HELP_SYS_INFO
         "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
         "                             120 by default.\n"
+        "      --sync-language      set this parameter to enable language synchronization.\n"
         HELP_COMMON_INFO_2
         "\n"
         "* marks defaults.\n"

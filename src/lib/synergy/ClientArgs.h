@@ -33,7 +33,7 @@ namespace lib {
 
         public:
             int                  m_yscroll           = 0;
-            bool                 m_enableLangSync    = true;       /// @brief Should keyboard input be in same language as on server
+            bool                 m_enableLangSync    = false;       /// @brief Should keyboard input be in same language as on server
 
         private:
 
