@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-arch64-ubuntu:
+  build-arch64:
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
     env:
