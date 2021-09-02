@@ -5,6 +5,9 @@ on:
   #   types: [created]
   push:
     branches: [master]
+  pull_request:
+    branches: [ master ]
+
 
 jobs:
   upload-to-s3:
