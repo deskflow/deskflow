@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-arch64:
+  build-arch64-ubuntu:
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
     env:
@@ -27,6 +27,8 @@ jobs:
 
     - name: Build
       run: |
+        curl -sL https://deb.nodesource.com/setup_14.x | bash -
+        apt-get install -y nodejs
         mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -35,3 +37,12 @@ jobs:
 
     - name: Run unit test
       run: ./build/bin/unittests
+
+    - uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.AWS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_bucket: ${{ secrets.AWS_BUKET }}
+        source_dir: ./build/bin
+        destination_dir: "./synergy3/latest/${{matrix.distro}}/"
+
