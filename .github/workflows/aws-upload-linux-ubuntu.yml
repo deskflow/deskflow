@@ -1,10 +1,10 @@
-name: Ubuntu
+name: Ubuntu-Upload
 
 on:
   # release:
   #   types: [created]
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
