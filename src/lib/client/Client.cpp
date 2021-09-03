@@ -767,21 +767,25 @@ Client::handleHello(const Event&, void*)
 void
 Client::handleSuspend(const Event&, void*)
 {
-    LOG((CLOG_INFO "suspend"));
-    m_suspended       = true;
-    bool wasConnected = isConnected();
-    disconnect(NULL);
-    m_connectOnResume = wasConnected;
+    if (!m_suspended) {
+        LOG((CLOG_INFO "suspend"));
+        m_suspended       = true;
+        bool wasConnected = isConnected();
+        disconnect(NULL);
+        m_connectOnResume = wasConnected;
+    }
 }
 
 void
 Client::handleResume(const Event&, void*)
 {
-    LOG((CLOG_INFO "resume"));
-    m_suspended = false;
-    if (m_connectOnResume) {
-        m_connectOnResume = false;
-        connect();
+    if (m_suspended) {
+        LOG((CLOG_INFO "resume"));
+        m_suspended = false;
+        if (m_connectOnResume) {
+            m_connectOnResume = false;
+            connect();
+        }
     }
 }
 
