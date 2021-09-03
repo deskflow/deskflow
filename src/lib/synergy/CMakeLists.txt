@@ -26,10 +26,10 @@ if (WIN32)
 elseif (UNIX)
     file(GLOB arch_headers "unix/*.h")
     file(GLOB arch_sources "unix/*.cpp")
-    include_directories("../../../ext/pugixml/src")
-    list(APPEND arch_sources "../../../ext/pugixml/src/pugixml.cpp")
-
 endif()
+
+include_directories("../../../ext/pugixml/src")
+list(APPEND arch_sources "../../../ext/pugixml/src/pugixml.cpp")
 
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})

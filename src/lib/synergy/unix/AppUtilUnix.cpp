@@ -66,7 +66,7 @@ AppUtilUnix::getKeyboardLayoutList()
     std::vector<String> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-    layoutLangCodes = X11LayoutsParser::getX11LanguageList();
+    layoutLangCodes = X11LayoutsParser::getX11LanguageList("/etc/default/keyboard", "/usr/share/X11/xkb/rules/evdev.xml");
 #elif WINAPI_CARBON
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };

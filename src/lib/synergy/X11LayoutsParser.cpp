@@ -21,7 +21,7 @@
 #include <algorithm>
 
 #include "base/Log.h"
-#include "synergy/unix/X11LayoutsParser.h"
+#include "synergy/X11LayoutsParser.h"
 #include "ISO639Table.h"
 #include "pugixml.hpp"
 
@@ -56,11 +56,11 @@ X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<
 }
 
 std::vector<X11LayoutsParser::Lang>
-X11LayoutsParser::getAllLanguageData()
+X11LayoutsParser::getAllLanguageData(String pathToEvdevFile)
 {
     std::vector<Lang> allCodes;
     pugi::xml_document doc;
-    if(!doc.load_file("/usr/share/X11/xkb/rules/evdev.xml")) {
+    if(!doc.load_file(pathToEvdevFile.c_str())) {
         LOG((CLOG_WARN "Failed to open evdev.xml"));
         return allCodes;
     }
@@ -103,7 +103,8 @@ X11LayoutsParser::appendVectorUniq(const std::vector<String>& source, std::vecto
 };
 
 void
-X11LayoutsParser::convertLayoutToISO639_2(std::vector<String> layoutNames,
+X11LayoutsParser::convertLayoutToISO639_2(String pathToEvdevFile,
+                                          std::vector<String> layoutNames,
                                           std::vector<String> layoutVariantNames,
                                           std::vector<String>& iso639_2Codes)
 {
@@ -112,7 +113,7 @@ X11LayoutsParser::convertLayoutToISO639_2(std::vector<String> layoutNames,
         return;
     }
 
-    auto allLang = getAllLanguageData();
+    auto allLang = getAllLanguageData(pathToEvdevFile);
     for (size_t i = 0; i < layoutNames.size(); i++) {
         auto langIter = std::find_if(allLang.begin(), allLang.end(), [n=layoutNames[i]](const Lang& l) {return l.name == n;});
         if(langIter == allLang.end()) {
@@ -155,10 +156,10 @@ X11LayoutsParser::convertLayoutToISO639_2(std::vector<String> layoutNames,
 }
 
 std::vector<String>
-X11LayoutsParser::getX11LanguageList()
+X11LayoutsParser::getX11LanguageList(String pathToKeyboardFile, String pathToEvdevFile)
 {
     std::vector<String> result;
-    std::ifstream file("/etc/default/keyboard");
+    std::ifstream file(pathToKeyboardFile);
     if (!file.is_open()) {
         LOG((CLOG_WARN "Default x11 keyboard layouts file is missed."));
         return result;
@@ -189,7 +190,7 @@ X11LayoutsParser::getX11LanguageList()
     }
 
     std::vector<String> iso639_2Codes;
-    convertLayoutToISO639_2(layoutNames, layoutVariantNames, iso639_2Codes);
+    convertLayoutToISO639_2(pathToEvdevFile, layoutNames, layoutVariantNames, iso639_2Codes);
 
     for (const auto& isoCode : iso639_2Codes) {
         auto tableIter = std::find_if(ISO_Table.begin(), ISO_Table.end(),
