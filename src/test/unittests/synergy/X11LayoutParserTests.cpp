@@ -27,7 +27,7 @@ void createTestFiles()
     }
 
     correctKeyboardFile << "XKBLAYOUT=us,ru" << std::endl;
-    correctKeyboardFile << "XKBVARIANT=chr," << std::endl;
+    correctKeyboardFile << "XKBVARIANT=eng," << std::endl;
     correctKeyboardFile << "BACKSPACE=guess" << std::endl;
     correctKeyboardFile.close();
 
@@ -37,7 +37,7 @@ void createTestFiles()
     }
 
     incorrectKeyboardFile1 << "XKBLAYOUT=unknownLangCode" << std::endl;
-    incorrectKeyboardFile1 << "XKBVARIANT=chr" << std::endl;
+    incorrectKeyboardFile1 << "XKBVARIANT=eng" << std::endl;
     incorrectKeyboardFile1 << "BACKSPACE=guess" << std::endl;
     incorrectKeyboardFile1.close();
 
@@ -72,12 +72,11 @@ void createTestFiles()
     correctEvdevFile << "      <variantList>" << std::endl;
     correctEvdevFile << "        <variant>" << std::endl;
     correctEvdevFile << "          <configItem>" << std::endl;
-    correctEvdevFile << "            <name>chr</name>" << std::endl;
-    correctEvdevFile << "            <!-- Keyboard indicator for Cherokee layouts -->" << std::endl;
-    correctEvdevFile << "            <shortDescription>chr</shortDescription>" << std::endl;
+    correctEvdevFile << "            <name>eng</name>" << std::endl;
+    correctEvdevFile << "            <shortDescription>eng</shortDescription>" << std::endl;
     correctEvdevFile << "            <description>Cherokee</description>" << std::endl;
     correctEvdevFile << "            <languageList>" << std::endl;
-    correctEvdevFile << "              <iso639Id>chr</iso639Id>" << std::endl;
+    correctEvdevFile << "              <iso639Id>eng</iso639Id>" << std::endl;
     correctEvdevFile << "            </languageList>" << std::endl;
     correctEvdevFile << "          </configItem>" << std::endl;
     correctEvdevFile << "        </variant>" << std::endl;

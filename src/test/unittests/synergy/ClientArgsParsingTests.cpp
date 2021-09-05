@@ -51,6 +51,21 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
     EXPECT_EQ(1, clientArgs.m_yscroll);
 }
 
+TEST(ClientArgsParsingTests, parseClientArgs_setLangSync)
+{
+    NiceMock<MockArgParser> argParser;
+    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+    lib::synergy::ClientArgs clientArgs;
+    clientArgs.m_enableLangSync = false;
+    const int argc = 2;
+    const char* kYScrollCmd[argc] = { "stub", "--sync-language" };
+
+    argParser.parseClientArgs(clientArgs, argc, kYScrollCmd);
+
+    EXPECT_TRUE(clientArgs.m_enableLangSync);
+}
+
 TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setSynergyAddress)
 {
     NiceMock<MockArgParser> argParser;
