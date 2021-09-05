@@ -26,13 +26,11 @@ namespace pugi
 
 class X11LayoutsParser {
 public:
-    static std::vector<String> getX11LanguageList(String pathToKeyboardFile, String pathToEvdevFile);
+    static std::vector<String> getX11LanguageList(const String& pathToKeyboardFile, const String& pathToEvdevFile);
 
 private:
     struct Lang {
         String              name = "";
-        String              shortDescr = "";
-        String              descr = "";
         std::vector<String> layoutBaseISO639_2;
         std::vector<Lang>   variants;
     };
@@ -40,12 +38,12 @@ private:
     static bool              readXMLConfigItemElem(const pugi::xml_node* root,
                                                    std::vector<Lang>& langList);
 
-    static std::vector<Lang> getAllLanguageData(String pathToEvdevFile);
+    static std::vector<Lang> getAllLanguageData(const String& pathToEvdevFile);
 
     static void              appendVectorUniq(const std::vector<String>& source,
                                                     std::vector<String>& dst);
 
-    static void              convertLayoutToISO639_2(String pathToEvdevFile,
+    static void              convertLayoutToISO639_2(const String& pathToEvdevFile,
                                                      std::vector<String> layoutNames,
                                                      std::vector<String> layoutVariantNames,
                                                      std::vector<String>& iso639_2Codes);

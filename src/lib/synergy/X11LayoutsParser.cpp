@@ -30,19 +30,14 @@ X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<
 {
     auto configItemElem = root->child("configItem");
     if(!configItemElem) {
-        LOG((CLOG_WARN "Failed to read configItem in evdev.xml"));
+        LOG((CLOG_WARN "Failed to read \"configItem\" in xml file"));
         return false;
     }
 
     langList.emplace_back(Lang());
-    for(auto keyPair : {std::make_pair("name", &langList.back().name),
-                        std::make_pair("shortDescription", &langList.back().shortDescr),
-                        std::make_pair("description", &langList.back().descr)}) {
-        auto elem = configItemElem.child(keyPair.first);
-        if(!elem) {
-            continue;
-        }
-        *keyPair.second = elem.text().as_string();
+    auto nameElem = configItemElem.child("name");
+    if(nameElem) {
+        langList.back().name = nameElem.text().as_string();
     }
 
     auto languageListElem = configItemElem.child("languageList");
@@ -56,24 +51,24 @@ X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<
 }
 
 std::vector<X11LayoutsParser::Lang>
-X11LayoutsParser::getAllLanguageData(String pathToEvdevFile)
+X11LayoutsParser::getAllLanguageData(const String& pathToEvdevFile)
 {
     std::vector<Lang> allCodes;
     pugi::xml_document doc;
     if(!doc.load_file(pathToEvdevFile.c_str())) {
-        LOG((CLOG_WARN "Failed to open evdev.xml"));
+        LOG((CLOG_WARN "Failed to open %s", pathToEvdevFile.c_str()));
         return allCodes;
     }
 
     auto xkbConfigElem = doc.child("xkbConfigRegistry");
     if(!xkbConfigElem) {
-        LOG((CLOG_WARN "Failed to read xkbConfigRegistry in evdev.xml"));
+        LOG((CLOG_WARN "Failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str()));
         return allCodes;
     }
 
     auto layoutListElem = xkbConfigElem.child("layoutList");
     if(!layoutListElem) {
-        LOG((CLOG_WARN "Failed to read layoutList in evdev.xml"));
+        LOG((CLOG_WARN "Failed to read layoutList in %s", pathToEvdevFile.c_str()));
         return allCodes;
     }
 
@@ -103,7 +98,7 @@ X11LayoutsParser::appendVectorUniq(const std::vector<String>& source, std::vecto
 };
 
 void
-X11LayoutsParser::convertLayoutToISO639_2(String pathToEvdevFile,
+X11LayoutsParser::convertLayoutToISO639_2(const String& pathToEvdevFile,
                                           std::vector<String> layoutNames,
                                           std::vector<String> layoutVariantNames,
                                           std::vector<String>& iso639_2Codes)
@@ -128,7 +123,7 @@ X11LayoutsParser::convertLayoutToISO639_2(String pathToEvdevFile,
         else {
             auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
                                                 [n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
-            if(langIter == allLang.end()) {
+            if(langVariantIter == langIter->variants.end()) {
                 LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
                 continue;
             }
@@ -156,12 +151,12 @@ X11LayoutsParser::convertLayoutToISO639_2(String pathToEvdevFile,
 }
 
 std::vector<String>
-X11LayoutsParser::getX11LanguageList(String pathToKeyboardFile, String pathToEvdevFile)
+X11LayoutsParser::getX11LanguageList(const String& pathToKeyboardFile, const String& pathToEvdevFile)
 {
     std::vector<String> result;
     std::ifstream file(pathToKeyboardFile);
     if (!file.is_open()) {
-        LOG((CLOG_WARN "Default x11 keyboard layouts file is missed."));
+        LOG((CLOG_WARN "x11 keyboard layouts file \"%s\" is missed.", pathToKeyboardFile.c_str()));
         return result;
     }
 
