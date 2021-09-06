@@ -30,8 +30,6 @@ jobs:
 
       - name: Build
         run: |
-          curl -sL https://deb.nodesource.com/setup_14.x | bash -
-          apt-get install -y nodejs
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
