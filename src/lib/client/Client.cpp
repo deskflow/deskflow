@@ -80,7 +80,6 @@ Client::Client(
     m_enableClipboard(true),
 	m_maximumClipboardSize(INT_MAX)
 {
-    AppUtil::instance().getCurrentLanguageCode();
     assert(m_socketFactory != NULL);
     assert(m_screen        != NULL);
 
