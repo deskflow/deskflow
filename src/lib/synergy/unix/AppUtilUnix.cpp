@@ -154,6 +154,17 @@ AppUtilUnix::getCurrentLanguageCode()
       result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
 
 #elif WINAPI_CARBON
+    auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
+    char temporaryCString[128] = {0};
+    for(CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+        auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
+        if(!languageCode || !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
+            continue;
+        }
+
+        result = std::string(temporaryCString);
+        break;
+    }
 #endif
     return result;
 }
