@@ -135,6 +135,11 @@ ServerConfigDialog::ServerConfigDialog(QWidget* parent, ServerConfig& config) :
             this, [this]() { serverConfig().setConfigFile(m_pEditConfigFile->text()); onChange();});
 }
 
+bool ServerConfigDialog::addClient(const QString& clientName)
+{
+    return addComputer(clientName, true);
+}
+
 void ServerConfigDialog::showEvent(QShowEvent* event)
 {
     QDialog::show();
@@ -304,15 +309,7 @@ void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
 
 void ServerConfigDialog::on_m_pButtonAddComputer_clicked()
 {
-    Screen newScreen("");
-
-    ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens);
-    if (dlg.exec() == QDialog::Accepted)
-    {
-        model().addScreen(newScreen);
-    }
-
-    m_pButtonAddComputer->setEnabled(!model().isFull());
+    addComputer("", false);
 }
 
 void ServerConfigDialog::onScreenRemoved()
@@ -349,6 +346,23 @@ bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
     }
 
     return false;
+}
+
+bool ServerConfigDialog::addComputer(const QString& clientName, bool doSilent)
+{
+    bool isAccepted = false;
+    Screen newScreen(clientName);
+
+
+    ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens);
+    if (doSilent || dlg.exec() == QDialog::Accepted)
+    {
+        model().addScreen(newScreen);
+        isAccepted = true;
+    }
+
+    m_pButtonAddComputer->setEnabled(!model().isFull());
+    return isAccepted;
 }
 
 void ServerConfigDialog::onChange()

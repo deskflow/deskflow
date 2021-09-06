@@ -5,6 +5,7 @@ Bug fixes:
 - #7078 Fix clipboard re-enables automatically
 - #7077 Fix Ubuntu, CentOS and Debian build after SYNERGY-1161
 - #7080 Add trace if the system can't open file with trusted fingerprints
+- #7081 Fix autoconfig after SYNERGY-1161
 - #7082 Windows client doesn't resume connection after sleep
 
 Enhancements:
