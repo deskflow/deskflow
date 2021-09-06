@@ -1,4 +1,4 @@
-name: Debian
+name: CentOS
 
 on:
   push:
@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: debian9 #Need to install git 2.18+
-          - distro: debian10
+          - distro: centos7.6 #Need to install git 2.18+
+          - distro: centos8
 
     name: ${{ matrix.distro }}
 
@@ -27,7 +27,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
         . ./version
         make -j
 
