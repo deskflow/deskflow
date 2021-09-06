@@ -54,14 +54,16 @@ AppUtil::instance()
 }
 
 void
-AppUtil::getKeyboardLayoutsDiff(const String& compressedLanguages,
+AppUtil::getKeyboardLayoutsDiff(const String& remoteCompressedLanguages,
+                                const std::vector<String>& localLanguages,
                                 std::vector<String>& missedLang,
                                 std::vector<String>& supportedLang)
 {
-    auto localLayouts = getKeyboardLayoutList();
-    for(int i = 0; i <= (int)compressedLanguages.size() - 2; i +=2) {
-        auto layout = compressedLanguages.substr(i, 2);
-        if (std::find(localLayouts.begin(), localLayouts.end(), layout) == localLayouts.end()) {
+    missedLang.clear();
+    supportedLang.clear();
+    for(int i = 0; i <= (int)remoteCompressedLanguages.size() - 2; i +=2) {
+        auto layout = remoteCompressedLanguages.substr(i, 2);
+        if (std::find(localLanguages.begin(), localLanguages.end(), layout) == localLanguages.end()) {
             missedLang.push_back(layout);
         }
         else {

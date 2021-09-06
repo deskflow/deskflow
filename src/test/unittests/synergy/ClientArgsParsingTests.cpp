@@ -21,6 +21,8 @@
 
 #include "test/global/gtest.h"
 
+#include <array>
+
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
@@ -59,9 +61,9 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync)
     lib::synergy::ClientArgs clientArgs;
     clientArgs.m_enableLangSync = false;
     const int argc = 2;
-    const char* kYScrollCmd[argc] = { "stub", "--sync-language" };
+    std::array<const char*, argc> kLangCmd = { "stub", "--sync-language" };
 
-    argParser.parseClientArgs(clientArgs, argc, kYScrollCmd);
+    argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 
     EXPECT_TRUE(clientArgs.m_enableLangSync);
 }

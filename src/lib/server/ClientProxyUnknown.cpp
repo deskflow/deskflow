@@ -256,7 +256,9 @@ ClientProxyUnknown::handleData(const Event&, void*)
 
         std::vector<String> missed;
         std::vector<String> supported;
-        AppUtil::instance().getKeyboardLayoutsDiff(keyboardLayoutList, missed, supported);
+        AppUtil::getKeyboardLayoutsDiff(keyboardLayoutList,
+                                        AppUtil::instance().getKeyboardLayoutList(),
+                                        missed, supported);
 
         if(!supported.empty()) {
             LOG((CLOG_DEBUG "Supported client languages: %s",  AppUtil::joinStrVector(supported, ", ").c_str()));

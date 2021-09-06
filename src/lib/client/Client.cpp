@@ -763,7 +763,9 @@ Client::handleHello(const Event&, void*)
     if(m_args.m_enableLangSync) {
         std::vector<String> missed;
         std::vector<String> supported;
-        AppUtil::instance().getKeyboardLayoutsDiff(keyboardLayoutList, missed, supported);
+        AppUtil::getKeyboardLayoutsDiff(keyboardLayoutList,
+                                        AppUtil::instance().getKeyboardLayoutList(),
+                                        missed, supported);
 
         if(!supported.empty()) {
             LOG((CLOG_DEBUG "Supported server languages: %s",  AppUtil::joinStrVector(supported, ", ").c_str()));
