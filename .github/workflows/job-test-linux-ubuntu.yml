@@ -31,7 +31,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
-          make -j
+          make -j1
 
       - name: Run unit test
         run: ./build/bin/unittests
