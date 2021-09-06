@@ -83,9 +83,9 @@ TEST(ServerArgsParsingTests, parseServerArgs_checkSerialKeyParams)
     lib::synergy::ServerArgs serverArgs;
     const int argc = 3;
     const char* serial = "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D";
-    std::array<const char*, argc> kSerialCmd[argc] = { "stub", "--serial-key", serial };
+    std::array<const char*, argc> kSerialCmd = { "stub", "--serial-key", serial };
 
-    argParser.parseServerArgs(serverArgs, argc, kSerialCmd->data());
+    argParser.parseServerArgs(serverArgs, argc, kSerialCmd.data());
     EXPECT_EQ(serial, serverArgs.m_serial.toString());
 }
 
@@ -96,7 +96,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams)
     ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
     lib::synergy::ServerArgs serverArgs;
     const int argc = 2;
-    std::array<const char*, argc> kUnknownCmd[argc] = { "stub", "--unknown" };
+    std::array<const char*, argc> kUnknownCmd = { "stub", "--unknown" };
 
-    EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kUnknownCmd->data()));
+    EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kUnknownCmd.data()));
 }

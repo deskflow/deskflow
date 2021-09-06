@@ -136,17 +136,9 @@ X11LayoutsParser::convertLayoutToISO639_2(const String& pathToEvdevFile,
             }
         }
 
-        if(!toCopy) {
-            LOG((CLOG_WARN "Logical error in X11 parser"));
-            continue;
+        if(toCopy) {
+            appendVectorUniq(*toCopy, iso639_2Codes);
         }
-
-        if(toCopy->empty()) {
-            LOG((CLOG_WARN "Missed ISO 639-2 code for language \"%s\"", layoutNames[i].c_str()));
-            continue;
-        }
-
-        appendVectorUniq(*toCopy, iso639_2Codes);
     }
 }
 

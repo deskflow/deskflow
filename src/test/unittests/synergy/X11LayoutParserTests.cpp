@@ -31,6 +31,15 @@ void createTestFiles()
     correctKeyboardFile << "BACKSPACE=guess" << std::endl;
     correctKeyboardFile.close();
 
+    std::ofstream keyboardFromFutureFile ("keyboardFromFuture");
+    if(!keyboardFromFutureFile.is_open()) {
+        FAIL();
+    }
+
+    keyboardFromFutureFile << "XKBLAYOUT=futureLangName" << std::endl;
+    keyboardFromFutureFile << "XKBVARIANT=" << std::endl;
+    keyboardFromFutureFile.close();
+
     std::ofstream incorrectKeyboardFile1 ("incorrectKeyboard1");
     if(!incorrectKeyboardFile1.is_open()) {
         FAIL();
@@ -50,6 +59,15 @@ void createTestFiles()
     incorrectKeyboardFile2 << "XKBVARIANT=unknownLangVariant" << std::endl;
     incorrectKeyboardFile2 << "BACKSPACE=guess" << std::endl;
     incorrectKeyboardFile2.close();
+
+    std::ofstream incorrectKeyboardFile3 ("incorrectKeyboard3");
+    if(!incorrectKeyboardFile3.is_open()) {
+        FAIL();
+    }
+
+    incorrectKeyboardFile3 << "XKBLAYOUT=us,ru,by" << std::endl;
+    incorrectKeyboardFile3 << "XKBVARIANT=," << std::endl;
+    incorrectKeyboardFile3.close();
 
     std::ofstream correctEvdevFile ("correctEvdev.xml");
     if(!correctEvdevFile.is_open()) {
@@ -96,6 +114,26 @@ void createTestFiles()
     correctEvdevFile << "  </layoutList>" << std::endl;
     correctEvdevFile << "</xkbConfigRegistry>" << std::endl;
     correctEvdevFile.close();
+
+    std::ofstream evdevFromFutureFile ("evdevFromFuture.xml");
+    if(!evdevFromFutureFile.is_open()) {
+        FAIL();
+    }
+
+    evdevFromFutureFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+    evdevFromFutureFile << "<xkbConfigRegistry version=\"1.1\">" << std::endl;
+    evdevFromFutureFile << "  <layoutList>" << std::endl;
+    evdevFromFutureFile << "    <layout>" << std::endl;
+    evdevFromFutureFile << "      <configItem>" << std::endl;
+    evdevFromFutureFile << "        <name>futureLangName</name>" << std::endl;
+    evdevFromFutureFile << "        <languageList>" << std::endl;
+    evdevFromFutureFile << "          <iso639Id>fln</iso639Id>" << std::endl;
+    evdevFromFutureFile << "        </languageList>" << std::endl;
+    evdevFromFutureFile << "      </configItem>" << std::endl;
+    evdevFromFutureFile << "    </layout>" << std::endl;
+    evdevFromFutureFile << "  </layoutList>" << std::endl;
+    evdevFromFutureFile << "</xkbConfigRegistry>" << std::endl;
+    evdevFromFutureFile.close();
 
     std::ofstream incorrectEvdevFile1 ("incorrectEvdev1.xml");
     if(!incorrectEvdevFile1.is_open()) {
@@ -168,5 +206,9 @@ TEST(X11LayoutsParsingTests, xmlParsingIncorrectKeyboardFileTest)
     parsedResult = X11LayoutsParser::getX11LanguageList("incorrectKeyboard1", "correctEvdev.xml");
     EXPECT_TRUE(parsedResult.empty());
     parsedResult = X11LayoutsParser::getX11LanguageList("incorrectKeyboard2", "correctEvdev.xml");
+    EXPECT_TRUE(parsedResult.empty());
+    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectKeyboard3", "correctEvdev.xml");
+    EXPECT_TRUE(parsedResult.empty());
+    parsedResult = X11LayoutsParser::getX11LanguageList("keyboardFromFuture", "evdevFromFuture.xml");
     EXPECT_TRUE(parsedResult.empty());
 }
