@@ -34,6 +34,7 @@
 #include "base/XBase.h"
 
 #include <memory>
+#include <algorithm>
 
 //
 // ServerProxy

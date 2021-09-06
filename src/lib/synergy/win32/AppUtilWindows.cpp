@@ -210,7 +210,10 @@ AppUtilWindows::getKeyboardLayoutList()
 String
 AppUtilWindows::getCurrentLanguageCode()
 {
-    return "";
+    String code("", 2);
+    GetLocaleInfoA(MAKELCID(((UINT)GetKeyboardLayout(0) & 0xffffffff), SORT_DEFAULT),
+                   LOCALE_SISO639LANGNAME, &code[0], code.size());
+    return code;
 }
 
 class WinToastHandler : public WinToastLib::IWinToastHandler {
