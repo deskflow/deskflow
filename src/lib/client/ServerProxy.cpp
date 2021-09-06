@@ -528,11 +528,13 @@ ServerProxy::enter()
     LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
 
     // discard old compressed mouse motion, if any
-    m_compressMouse         = false;
-    m_compressMouseRelative = false;
-    m_dxMouse               = 0;
-    m_dyMouse               = 0;
-    m_seqNum                = seqNum;
+    m_compressMouse                        = false;
+    m_compressMouseRelative                = false;
+    m_dxMouse                              = 0;
+    m_dyMouse                              = 0;
+    m_seqNum                               = seqNum;
+    m_serverLanguage                       = "";
+    m_isUserNotifiedAboutLanguageSyncError = false;
 
     // forward
     m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
@@ -603,8 +605,25 @@ ServerProxy::keyDown()
 
     // parse
     UInt16 id, mask, button;
-    ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
-    LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
+    String lang;
+    ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button, &lang);
+    LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str()));
+
+    if(m_serverLanguage != lang) {
+        m_isUserNotifiedAboutLanguageSyncError = false;
+        m_serverLanguage = lang;
+    }
+
+    auto localList = AppUtil::instance().getKeyboardLayoutList();
+    if(std::find(localList.begin(), localList.end(), lang) == localList.end()) {
+        if(!m_isUserNotifiedAboutLanguageSyncError) {
+            AppUtil::instance().showNotification("Language error", "Current server language is not installed on client!");
+            m_isUserNotifiedAboutLanguageSyncError = true;
+        }
+    }
+    else {
+        m_isUserNotifiedAboutLanguageSyncError = false;
+    }
 
     // translate
     KeyID id2             = translateKey(static_cast<KeyID>(id));

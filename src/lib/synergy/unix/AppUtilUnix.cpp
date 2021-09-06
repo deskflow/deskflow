@@ -98,6 +98,16 @@ AppUtilUnix::getKeyboardLayoutList()
 
     return layoutLangCodes;
 }
+
+String
+AppUtilUnix::getCurrentLanguageCode()
+{
+    String result = "";
+#if WINAPI_XWINDOWS
+#elif WINAPI_CARBON
+#endif
+    return result;
+}
 	
 void
 AppUtilUnix::showNotification(const String & title, const String & text) const

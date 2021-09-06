@@ -207,6 +207,12 @@ AppUtilWindows::getKeyboardLayoutList()
     return layoutLangCodes;
 }
 
+String
+AppUtilWindows::getCurrentLanguageCode()
+{
+    return "";
+}
+
 class WinToastHandler : public WinToastLib::IWinToastHandler {
 public:
     WinToastHandler() {}

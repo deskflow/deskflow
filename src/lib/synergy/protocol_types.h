@@ -178,7 +178,7 @@ extern const char* const       kMsgCKeepAlive;
 //
 
 // key pressed:  primary -> secondary
-// $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
+// $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton, $4 = languageCode
 // the KeyButton identifies the physical key on the primary used to
 // generate this key.  the secondary should note the KeyButton along
 // with the physical key it uses to generate the key press.  on
@@ -188,6 +188,8 @@ extern const char* const       kMsgCKeepAlive;
 // the press.  this can happen with combining (dead) keys or if
 // the keyboard layouts are not identical and the user releases
 // a modifier key before releasing the modified key.
+// languageCode is parameter which helps client to react on unknwon
+// language letters
 extern const char* const       kMsgDKeyDown;
 
 // key pressed 1.0:  same as above but without KeyButton

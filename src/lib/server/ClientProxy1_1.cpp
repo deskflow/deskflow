@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "synergy/AppUtil.h"
 #include "server/ClientProxy1_1.h"
 
 #include "synergy/ProtocolUtil.h"
@@ -41,8 +42,9 @@ ClientProxy1_1::~ClientProxy1_1()
 void
 ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
+    auto code = AppUtil::instance().getCurrentLanguageCode();
+    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, lang=\"%s\"", getName().c_str(), key, mask, button, code.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button, &code);
 }
 
 void

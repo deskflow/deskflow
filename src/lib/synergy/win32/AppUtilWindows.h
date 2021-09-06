@@ -55,6 +55,8 @@ public:
 
     std::vector<String> getKeyboardLayoutList() override;
 
+    String getCurrentLanguageCode() override;
+
     void showNotification(const String& title, const String& text) const override;
 
 

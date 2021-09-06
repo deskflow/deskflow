@@ -136,4 +136,6 @@ private:
 
     MessageParser        m_parser;
     IEventQueue*        m_events;
+    String              m_serverLanguage = "";
+    bool                m_isUserNotifiedAboutLanguageSyncError = false;
 };
