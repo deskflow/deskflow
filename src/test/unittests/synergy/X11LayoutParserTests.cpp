@@ -174,7 +174,7 @@ TEST(X11LayoutsParsingTests, xmlCorrectParsingTest)
     std::vector<String> expectedResult = { "en", "ru" };
     auto parsedResult = X11LayoutsParser::getX11LanguageList("correctKeyboard", "correctEvdev.xml");
 
-    EXPECT_TRUE(parsedResult == expectedResult);
+    EXPECT_EQ(parsedResult, parsedResult);
 }
 
 TEST(X11LayoutsParsingTests, xmlParsingMissedKeyboardFileTest)
@@ -211,4 +211,11 @@ TEST(X11LayoutsParsingTests, xmlParsingIncorrectKeyboardFileTest)
     EXPECT_TRUE(parsedResult.empty());
     parsedResult = X11LayoutsParser::getX11LanguageList("keyboardFromFuture", "evdevFromFuture.xml");
     EXPECT_TRUE(parsedResult.empty());
+}
+
+TEST(X11LayoutsParsingTests, layoutConvertTest)
+{
+    EXPECT_EQ(X11LayoutsParser::convertLayotToISO("correctEvdev.xml", "us", true), "en");
+    EXPECT_EQ(X11LayoutsParser::convertLayotToISO("incorrectEvdev1.xml", "us", true), "");
+    EXPECT_EQ(X11LayoutsParser::convertLayotToISO("evdevFromFuture.xml", "us", true), "");
 }

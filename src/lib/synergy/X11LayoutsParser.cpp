@@ -98,9 +98,10 @@ X11LayoutsParser::appendVectorUniq(const std::vector<String>& source, std::vecto
 };
 
 void
-X11LayoutsParser::convertLayoutToISO639_2(const String& pathToEvdevFile,
-                                          std::vector<String> layoutNames,
-                                          std::vector<String> layoutVariantNames,
+X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
+                                          bool                 needToReloadEvdev,
+                                          std::vector<String>  layoutNames,
+                                          std::vector<String>  layoutVariantNames,
                                           std::vector<String>& iso639_2Codes)
 {
     if(layoutNames.size() != layoutVariantNames.size()) {
@@ -108,7 +109,10 @@ X11LayoutsParser::convertLayoutToISO639_2(const String& pathToEvdevFile,
         return;
     }
 
-    auto allLang = getAllLanguageData(pathToEvdevFile);
+    static std::vector<X11LayoutsParser::Lang> allLang;
+    if(allLang.empty() || needToReloadEvdev) {
+        allLang = getAllLanguageData(pathToEvdevFile);
+    }
     for (size_t i = 0; i < layoutNames.size(); i++) {
         auto langIter = std::find_if(allLang.begin(), allLang.end(), [n=layoutNames[i]](const Lang& l) {return l.name == n;});
         if(langIter == allLang.end()) {
@@ -145,11 +149,46 @@ X11LayoutsParser::convertLayoutToISO639_2(const String& pathToEvdevFile,
 std::vector<String>
 X11LayoutsParser::getX11LanguageList(const String& pathToKeyboardFile, const String& pathToEvdevFile)
 {
-    std::vector<String> result;
+    std::vector<String> layoutNames;
+    std::vector<String> layoutVariantNames;
+    std::vector<String> iso639_2Codes;
+
+    parseKeyboardFile(pathToKeyboardFile, layoutNames, layoutVariantNames);
+    convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
+    return convertISO639_2ToISO639_1(iso639_2Codes);
+}
+
+String
+X11LayoutsParser::convertLayotToISO(const String& pathToEvdevFile, const String& layoutLangCode, bool needToReloadFiles)
+{
+    std::vector<String> iso639_2Codes;
+    convertLayoutToISO639_2(pathToEvdevFile, needToReloadFiles, {layoutLangCode}, {""}, iso639_2Codes);
+    if(iso639_2Codes.empty()) {
+        LOG((CLOG_WARN "Failed to convert layout lang code! Code: \"%s\"", layoutLangCode.c_str()));
+        return "";
+    }
+
+    auto iso639_1Codes = convertISO639_2ToISO639_1(iso639_2Codes);
+    if(iso639_1Codes.empty()) {
+        LOG((CLOG_WARN "Failed to convert ISO639/2 lang code to ISO639/1!"));
+        return "";
+    }
+
+    return *iso639_1Codes.begin();
+}
+
+void
+X11LayoutsParser::parseKeyboardFile(const String&        pathToKeyboardFile,
+                                    std::vector<String>& layoutNames,
+                                    std::vector<String>& layoutVariantNames)
+{
+    layoutNames.clear();
+    layoutVariantNames.clear();
+
     std::ifstream file(pathToKeyboardFile);
     if (!file.is_open()) {
         LOG((CLOG_WARN "x11 keyboard layouts file \"%s\" is missed.", pathToKeyboardFile.c_str()));
-        return result;
+        return;
     }
 
     const String layoutLinePrefix = "XKBLAYOUT=";
@@ -165,8 +204,6 @@ X11LayoutsParser::getX11LanguageList(const String& pathToKeyboardFile, const Str
     };
 
     String line;
-    std::vector<String> layoutNames;
-    std::vector<String> layoutVariantNames;
     while (std::getline(file, line)) {
         if (line.rfind(layoutLinePrefix, 0) == 0) {
             splitLine(layoutNames, line.substr(layoutLinePrefix.size()), ',');
@@ -175,12 +212,14 @@ X11LayoutsParser::getX11LanguageList(const String& pathToKeyboardFile, const Str
             splitLine(layoutVariantNames, line.substr(variantLinePrefix.size()), ',');
         }
     }
+}
 
-    std::vector<String> iso639_2Codes;
-    convertLayoutToISO639_2(pathToEvdevFile, layoutNames, layoutVariantNames, iso639_2Codes);
-
+std::vector<String>
+X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<String>& iso639_2Codes)
+{
+    std::vector<String> result;
     for (const auto& isoCode : iso639_2Codes) {
-        auto tableIter = std::find_if(ISO_Table.begin(), ISO_Table.end(),
+        const auto& tableIter = std::find_if(ISO_Table.begin(), ISO_Table.end(),
                                             [&isoCode](const std::pair<String, String>& c) {return c.first == isoCode;});
         if(tableIter == ISO_Table.end()) {
             LOG((CLOG_WARN "ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));

@@ -22,6 +22,7 @@
 
 #if WINAPI_XWINDOWS
 #include "synergy/X11LayoutsParser.h"
+#include <X11/XKBlib.h>
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
 #else
@@ -104,6 +105,54 @@ AppUtilUnix::getCurrentLanguageCode()
 {
     String result = "";
 #if WINAPI_XWINDOWS
+
+    auto display = XOpenDisplay(nullptr);
+      if (!display) {
+          LOG((CLOG_WARN "Failed to open x11 default display"));
+          return result;
+      }
+
+      auto kbdDescr= XkbAllocKeyboard();
+      if (!kbdDescr) {
+          LOG((CLOG_WARN "Failed to get x11 keyboard description"));
+          return result;
+      }
+      XkbGetNames(display, XkbSymbolsNameMask, kbdDescr);
+
+      Atom symNameAtom = kbdDescr->names->symbols;
+      auto rawLayouts = std::string(XGetAtomName(display, symNameAtom));
+
+      XkbStateRec state;
+      XkbGetState(display, XkbUseCoreKbd, &state);
+      auto nedeedGroupIndex = static_cast<int>(state.group);
+
+      size_t groupIdx = 0;
+      size_t groupStartI = 0;
+      for(size_t strI = 0; strI < rawLayouts.size(); strI++) {
+          if(rawLayouts[strI] != '+') {
+              continue;
+          }
+
+          auto group = rawLayouts.substr(groupStartI, strI - groupStartI);
+          if(group.find("group", 0, 5) == std::string::npos &&
+             group.find("inet", 0, 4)  == std::string::npos &&
+             group.find("pc", 0, 2)    == std::string::npos) {
+              if(nedeedGroupIndex == groupIdx) {
+                  result = group.substr(0, std::min(group.find('(', 0), group.find(':', 0)));
+                  break;
+              }
+              groupIdx++;
+          }
+
+          groupStartI = strI + 1;
+      }
+
+      XFree(kbdDescr);
+      XkbFreeNames(kbdDescr, XkbSymbolsNameMask, true);
+      XCloseDisplay(display);
+
+      result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
+
 #elif WINAPI_CARBON
 #endif
     return result;
