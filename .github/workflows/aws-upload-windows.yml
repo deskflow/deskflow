@@ -37,6 +37,7 @@ jobs:
           Write-Output "::set-output name=QT_ARCH::win32_msvc2017"
           Write-Output "::set-output name=QT_DIR::msvc2017"
         }
+      id: qt-setup
 
     - name: Cache Qt
       id: cache-qt
@@ -48,7 +49,6 @@ jobs:
     - name: LOG Qt
       run: |
         Write-Output "matrix arch ${{ matrix.arch }}"
-        Write-Output "QT_DIR ${{ steps. }}"
         Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.qt-setup.outputs.QT_ARCH }}"
         
 
