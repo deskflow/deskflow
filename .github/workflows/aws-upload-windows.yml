@@ -27,7 +27,7 @@ jobs:
 
     - name: arch
       run: |
-        if (${{ matrix.arch }} -eq 'x64')
+        if ('${{ matrix.arch }}' -eq 'x64')
         {
           Write-Output "::set-output name=QT_ARCH::win64_msvc2017_64"
           Write-Output "::set-output name=QT_DIR::msvc2017_64"
