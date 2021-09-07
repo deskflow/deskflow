@@ -80,6 +80,12 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
+    - name: LOG Build
+      run: |
+        Write-Output "matrix arch ${{ matrix.arch }}"
+        Write-Output "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\"
+        
+
     - name: Build
       env:
         CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\"
