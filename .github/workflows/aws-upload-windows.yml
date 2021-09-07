@@ -17,24 +17,39 @@ jobs:
       QT_VERSION: 5.12.6
       QT_BASE_URL: http://qt.mirror.constant.com/
       QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.12.6
+      
+    strategy:
+      matrix:
+        arch: ['x32', 'x64']
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: arch
+      run: |
+        if (${{ matrix.arch }} -eq 'x64')
+        {
+          Write-Output "::set-output name=QT_ARCH::win64_msvc2017_64"
+          Write-Output "::set-output name=QT_DIR::msvc2017_64"
+        }
+        else
+        {
+          Write-Output "::set-output name=QT_ARCH::win32_msvc2017"
+          Write-Output "::set-output name=QT_DIR::msvc2017"
+        }
 
     - name: Cache Qt
       id: cache-qt
       uses: actions/cache@v1
       with:
         path: ${{ env.QT_BASE_DIR }}
-        key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
+        key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}-${{ steps.arch.outputs.QT_ARCH }}
 
     - name: Install Qt
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         pip install aqtinstall
-        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2017_64
-        cd $env:QT_LIB_DIR\msvc2017_64
-        dir
+        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.arch.outputs.QT_ARCH }}
 
     - name: Cache Bonjour
       id: cache-bonjour
@@ -59,7 +74,7 @@ jobs:
 
     - name: Build
       env:
-        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\msvc2017_64\\"
+        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.arch.outputs.QT_DIR }}\\"
       run: |
         mkdir build
         cd build
@@ -73,4 +88,4 @@ jobs:
         aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
         aws_bucket: ${{ secrets.AWS_BUCKET }}
         source_dir: ./build/bin
-        destination_dir: "./synergy3/latest/Windows_2019/"
+        destination_dir: "./synergy3/latest/Windows_${{ matrix.arch }}/"
