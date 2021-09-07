@@ -37,7 +37,6 @@ jobs:
           Write-Output "::set-output name=QT_ARCH::win32_msvc2017"
           Write-Output "::set-output name=QT_DIR::msvc2017"
         }
-      id: qt-setup
 
     - name: Cache Qt
       id: cache-qt
