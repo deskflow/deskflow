@@ -85,7 +85,7 @@ jobs:
 
     - name: Build
       env:
-        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\;${{ steps.qt-setup.OPEN_SSL_DIR}}"
+        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\;${{ steps.qt-setup.outputs.OPEN_SSL_DIR }}"
       run: |
         mkdir build
         cd build
