@@ -67,7 +67,7 @@ jobs:
         . ./version
         msbuild synergy-core.sln /p:Configuration=Release
 
-    - uses: anshulrgoyal/s3-upload-action@master
+    - uses: anshulrgoyal/upload-s3-action@master
       with:
         aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
