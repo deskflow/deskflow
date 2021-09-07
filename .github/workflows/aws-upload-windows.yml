@@ -1,4 +1,4 @@
-name: Windows
+name: Windows-Upload
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CentOS
+name: CentOS-Upload
 
 on:
   push:
