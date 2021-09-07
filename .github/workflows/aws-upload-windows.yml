@@ -25,49 +25,39 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set QT architecture
+    - name: Set up QT variables
       run: |
         if ('${{ matrix.arch }}' -eq 'x64')
         {
           Write-Output "::set-output name=QT_ARCH::win64_msvc2017_64"
-        }
-        else
-        {
-          Write-Output "::set-output name=QT_ARCH::win32_msvc2017"
-        }
-      id: qt-arch
-
-    - name: Set QT directory
-      run: |
-        if ('${{ matrix.arch }}' -eq 'x64')
-        {
           Write-Output "::set-output name=QT_DIR::msvc2017_64"
         }
         else
         {
+          Write-Output "::set-output name=QT_ARCH::win32_msvc2017"
           Write-Output "::set-output name=QT_DIR::msvc2017"
         }
-      id: qt-dir
+      id: qt-setup
 
     - name: Cache Qt
       id: cache-qt
       uses: actions/cache@v1
       with:
         path: ${{ env.QT_BASE_DIR }}
-        key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}-${{ steps.qt-arch.outputs.QT_ARCH }}
+        key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}-${{ steps.qt-setup.outputs.QT_ARCH }}
 
     - name: LOG Qt
       run: |
         Write-Output "matrix arch ${{ matrix.arch }}"
         Write-Output "QT_DIR ${{ steps. }}"
-        Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.qt-arch.outputs.QT_ARCH }}"
+        Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.qt-setup.outputs.QT_ARCH }}"
         
 
     - name: Install Qt
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         pip install aqtinstall
-        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.qt-arch.outputs.QT_ARCH }}
+        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.qt-setup.outputs.QT_ARCH }}
         
 
     - name: Cache Bonjour
@@ -93,7 +83,7 @@ jobs:
 
     - name: Build
       env:
-        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-dir.outputs.QT_DIR }}\\"
+        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\"
       run: |
         mkdir build
         cd build
