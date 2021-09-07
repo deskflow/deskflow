@@ -1,4 +1,4 @@
-name: Raspberry Pi
+name: Raspberry Pi - Upload
 
 on:
   push:
