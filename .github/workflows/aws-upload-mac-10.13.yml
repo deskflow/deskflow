@@ -1,8 +1,11 @@
-name: Mac
+name: Mac-10.13
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 
 jobs:
   build-on-mac-10_13:
