@@ -45,12 +45,18 @@ jobs:
         path: ${{ env.QT_BASE_DIR }}
         key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}-${{ steps.arch.outputs.QT_ARCH }}
 
+    - name: LOG Qt
+      run: |
+        Write-Output "AQT COMMAND"
+        Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{steps.arch.outputs.QT_ARCH}}"
+        
+
     - name: Install Qt
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         pip install aqtinstall
-        Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.arch.outputs.QT_ARCH }}"
-        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.arch.outputs.QT_ARCH }}
+        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{steps.arch.outputs.QT_ARCH}}
+        
 
     - name: Cache Bonjour
       id: cache-bonjour
