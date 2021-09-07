@@ -30,11 +30,20 @@ jobs:
         if ('${{ matrix.arch }}' -eq 'x64')
         {
           Write-Output "::set-output name=QT_ARCH::win64_msvc2017_64"
-          Write-Output "::set-output name=QT_DIR::msvc2017_64"
         }
         else
         {
           Write-Output "::set-output name=QT_ARCH::win32_msvc2017"
+        }
+
+    - name: dir
+      run: |
+        if ('${{ matrix.arch }}' -eq 'x64')
+        {
+          Write-Output "::set-output name=QT_DIR::msvc2017_64"
+        }
+        else
+        {
           Write-Output "::set-output name=QT_DIR::msvc2017"
         }
 
@@ -47,15 +56,15 @@ jobs:
 
     - name: LOG Qt
       run: |
-        Write-Output "AQT COMMAND"
-        Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{steps.arch.outputs.QT_ARCH}}"
+        Write-Output "matrix arch ${{ matrix.arch }}"
+        Write-Output "python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.arch.outputs.QT_ARCH }}"
         
 
     - name: Install Qt
       if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
         pip install aqtinstall
-        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{steps.arch.outputs.QT_ARCH}}
+        python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop ${{ steps.arch.outputs.QT_ARCH }}
         
 
     - name: Cache Bonjour
@@ -81,7 +90,7 @@ jobs:
 
     - name: Build
       env:
-        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.arch.outputs.QT_DIR }}\\"
+        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.dir.outputs.QT_DIR }}\\"
       run: |
         mkdir build
         cd build
