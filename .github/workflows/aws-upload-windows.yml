@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-arch64:
+  build:
     runs-on: windows-2019
 
     env:
@@ -20,7 +20,7 @@ jobs:
       
     strategy:
       matrix:
-        arch: ['x32']
+        arch: ['x86']
         # arch: ['x64']
 
     steps:
@@ -76,7 +76,7 @@ jobs:
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
     - name: Install OpenSSL 
-      run: choco install openssl -y --no-progress
+      run: choco install openssl -y --force${{ matrix.arch }} --no-progress
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
