@@ -20,8 +20,8 @@ jobs:
       
     strategy:
       matrix:
-        arch: ['x86']
-        # arch: ['x64']
+        # arch: ['x86']
+        arch: ['x64']
 
     steps:
     - uses: actions/checkout@v2
