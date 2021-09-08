@@ -79,9 +79,9 @@ jobs:
 
     - name: Install OpenSSL 
       run: |
-      choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
-      choco install openssl -y --force${{ matrix.arch }} --no-progress
-      Copy-Item -Path "C:\\Program Files (x86)\\OpenSSL-Win32" -Destination ".\\ext\\openssl\\windows\\x86" -Recurse
+        choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
+        choco install openssl -y --force${{ matrix.arch }} --no-progress
+        Copy-Item -Path "C:\\Program Files (x86)\\OpenSSL-Win32" -Destination ".\\ext\\openssl\\windows\\x86" -Recurse
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
