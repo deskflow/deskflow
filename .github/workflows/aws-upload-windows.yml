@@ -78,14 +78,17 @@ jobs:
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
     - name: Install OpenSSL 
-      run: choco install openssl -y --force${{ matrix.arch }} --no-progress
+      run: |
+      choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
+      choco install openssl -y --force${{ matrix.arch }} --no-progress
+      Copy-Item -Path "C:\\Program Files (x86)\\OpenSSL-Win32" -Destination ".\\ext\\openssl\\windows\\x86" -Recurse
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Build
       env:
-        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\;${{ steps.qt-setup.outputs.OPEN_SSL_DIR }}"
+        CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\${{ steps.qt-setup.outputs.QT_DIR }}\\;.\\ext\\openssl\\windows\\x86"
       run: |
         mkdir build
         cd build

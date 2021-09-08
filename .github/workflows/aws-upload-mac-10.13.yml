@@ -1,4 +1,4 @@
-name: Mac-10.13
+name: Mac-10.13-Upload
 
 on:
   push:
