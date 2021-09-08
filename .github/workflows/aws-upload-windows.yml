@@ -79,8 +79,8 @@ jobs:
 
     - name: Install OpenSSL 
       run: |
-      choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
-      choco install openssl -y --force${{ matrix.arch }} --no-progress
+        choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
+        choco install openssl -y --force${{ matrix.arch }} --no-progress
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
