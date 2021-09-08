@@ -1,10 +1,8 @@
 name: Raspberry Pi - Upload
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   test-on-pi:
