@@ -1,8 +1,12 @@
 name: Ubuntu-Upload
 
 on:
-  release:
-    types: [created]
+  # release:
+  #   types: [created]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   upload-to-s3:
