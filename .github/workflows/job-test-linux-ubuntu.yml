@@ -9,18 +9,19 @@ on:
 jobs:
   build-arch64:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    container: symless/synergy-core:ubuntu${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
     strategy:
       matrix:
+        distro: ['20.04', '21.04', '18.04']
+        flag: ['-j']
         include:
-          - distro: ubuntu20.04
-          - distro: ubuntu21.04
-          - distro: ubuntu18.04
-          - distro: ubuntu16.04
+          - distro: '16.04'
+            flag: '-j1'
 
-    name: ${{ matrix.distro }}
+
+    name: ubuntu${{ matrix.distro }}
 
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +32,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
-          make -j1
+          make ${{ matrix.flag }}
 
       - name: Run unit test
         run: ./build/bin/unittests
