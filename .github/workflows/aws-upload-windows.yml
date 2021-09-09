@@ -1,10 +1,8 @@
 name: Windows-Upload
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -77,7 +75,9 @@ jobs:
         [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
     - name: Install OpenSSL 
-      run: choco install openssl -y --force${{ matrix.arch }} --no-progress
+      run: |
+        choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
+        choco install openssl -y --force${{ matrix.arch }} --no-progress
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
