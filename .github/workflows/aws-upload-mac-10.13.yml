@@ -13,10 +13,8 @@ jobs:
         enterprise: ['1', '']
     env:
       GIT_COMMIT: ${{ github.sha }}
-      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
       Qt5_DIR: /usr/local/opt/qt/5.15.2/clang_64
       OpenSSL_DIR: /usr/local/ssl
-      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
 
     steps:
       - uses: actions/checkout@v2
