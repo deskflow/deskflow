@@ -12,18 +12,18 @@ on:
 jobs:
   upload-to-s3:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    container: symless/synergy-core:ubuntu${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
     strategy:
       matrix:
+        distro: ['20.04', '21.04', '18.04']
+        flag: ['-j']
         include:
-          - distro: ubuntu20.04
-          - distro: ubuntu21.04
-          - distro: ubuntu18.04 #Need to install git 2.18+
-          - distro: ubuntu16.04 #Need to install git 2.18+
+          - distro: '16.04'
+            flag: '-j1'
 
-    name: ${{ matrix.distro }}
+    name: ubuntu${{ matrix.distro }}
 
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
-          make -j1
+          make ${{ matrix.flag }}
 
       - uses: shallwefootball/s3-upload-action@master
         with:
@@ -42,4 +42,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: ./build/bin
-          destination_dir: "./synergy3/latest/${{matrix.distro}}/"
+          destination_dir: "./synergy3/latest/Ubuntu_${{matrix.distro}}/"
