@@ -1,13 +1,8 @@
 name: Raspberry Pi - Upload
 
 on:
-  # release:
-  #   types: [created]
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+  release:
+    types: [created]
 jobs:
   test-on-pi:
     runs-on: ${{ matrix.os }}

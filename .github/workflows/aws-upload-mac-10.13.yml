@@ -1,13 +1,8 @@
 name: Mac-10.13-Upload
 
 on:
-  # release:
-  #   types: [created]
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+  release:
+    types: [created]
 
 jobs:
   build-on-mac-10_13:

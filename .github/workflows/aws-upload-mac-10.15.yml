@@ -1,12 +1,8 @@
 name: Mac-10.15-Upload
 
 on:
-  # release:
-  #   types: [created]
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   build-arch64:
