@@ -192,6 +192,7 @@ public slots:
         void stopService();
         void stopDesktop();
         void changeEvent(QEvent* event);
+        void closeEvent (QCloseEvent *event) override;
         void retranslateMenuBar();
         void enableServer(bool enable);
         void enableClient(bool enable);

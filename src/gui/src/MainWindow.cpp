@@ -1190,6 +1190,17 @@ void MainWindow::changeEvent(QEvent* event)
     QMainWindow::changeEvent(event);
 }
 
+void MainWindow::closeEvent (QCloseEvent *event)
+{
+    if(appConfig().getMinimizeToTray()) {
+        hide();
+        event->ignore();
+    }
+    else {
+        event->accept();
+    }
+}
+
 void MainWindow::addZeroconfServer(const QString name)
 {
     // don't add yourself to the server list.
