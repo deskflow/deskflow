@@ -565,13 +565,15 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 
         case Keystroke::kGroup: {
             SInt32 group = keystroke.m_data.m_group.m_group;
-            if (keystroke.m_data.m_group.m_absolute) {
-                LOG((CLOG_DEBUG1 "  group %d", group));
-                setGroup(group);
-            }
-            else {
-                LOG((CLOG_DEBUG1 "  group %+d", group));
-                setGroup(getEffectiveGroup(pollActiveGroup(), group));
+            if (!keystroke.m_data.m_group.m_restore) {
+                if (keystroke.m_data.m_group.m_absolute) {
+                    LOG((CLOG_DEBUG1 "  group %d", group));
+                    setGroup(group);
+                }
+                else {
+                    LOG((CLOG_DEBUG1 "  group %+d", group));
+                    setGroup(getEffectiveGroup(pollActiveGroup(), group));
+                }
             }
             break;
         }

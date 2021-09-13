@@ -260,35 +260,37 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         break;
 
     case Keystroke::kGroup:
-        if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+        if (!keystroke.m_data.m_group.m_restore) {
+            if (keystroke.m_data.m_group.m_absolute) {
+                LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
-            if (m_xkb != NULL) {
-                if (XkbLockGroup(m_display, XkbUseCoreKbd,
-                            keystroke.m_data.m_group.m_group) == False) {
-                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                if (m_xkb != NULL) {
+                    if (XkbLockGroup(m_display, XkbUseCoreKbd,
+                                keystroke.m_data.m_group.m_group) == False) {
+                        LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                    }
+                }
+                else
+#endif
+                {
+                    LOG((CLOG_DEBUG1 "  ignored"));
                 }
             }
-            else
-#endif
-            {
-                LOG((CLOG_DEBUG1 "  ignored"));
-            }
-        }
-        else {
-            LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+            else {
+                LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
-            if (m_xkb != NULL) {
-                if (XkbLockGroup(m_display, XkbUseCoreKbd,
-                            getEffectiveGroup(pollActiveGroup(),
-                                keystroke.m_data.m_group.m_group)) == False) {
-                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                if (m_xkb != NULL) {
+                    if (XkbLockGroup(m_display, XkbUseCoreKbd,
+                                getEffectiveGroup(pollActiveGroup(),
+                                    keystroke.m_data.m_group.m_group)) == False) {
+                        LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                    }
                 }
-            }
-            else
+                else
 #endif
-            {
-                LOG((CLOG_DEBUG1 "  ignored"));
+                {
+                    LOG((CLOG_DEBUG1 "  ignored"));
+                }
             }
         }
         break;
