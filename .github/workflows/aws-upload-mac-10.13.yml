@@ -7,10 +7,6 @@ on:
 jobs:
   build-on-mac-10_13:
     runs-on: [self-hosted, macOS, X64, 10.13]
-
-    strategy:
-      matrix:
-        enterprise: ['1', '']
     env:
       GIT_COMMIT: ${{ github.sha }}
       Qt5_DIR: /usr/local/opt/qt/5.15.2/clang_64
