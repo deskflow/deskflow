@@ -1,0 +1,41 @@
+name: Fedora-Upload
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  upload-to-s3:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:${{ matrix.distro }}
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+    strategy:
+      matrix:
+        include:
+          #          - distro: fedora28 #Need to install git 2.18+
+          - distro: fedora29
+          - distro: fedora30
+          - distro: fedora33
+          - distro: fedora34
+
+    name: ${{ matrix.distro }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
+          . ./version
+          make -j
+
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: ./build/bin
+          destination_dir: "./synergy3/latest/${{matrix.distro}}/"
