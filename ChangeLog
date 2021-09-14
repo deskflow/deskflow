@@ -7,6 +7,7 @@ Bug fixes:
 - #7080 Add trace if the system can't open file with trusted fingerprints
 - #7081 Fix autoconfig after SYNERGY-1161
 - #7082 Windows client doesn't resume connection after sleep
+- #7085 Fix SYNERGY-810(tray on windows is inconsistent with other OS)
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
