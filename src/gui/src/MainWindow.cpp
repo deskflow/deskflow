@@ -1198,7 +1198,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
     else {
         event->accept();
-        qApp->quit();
+        QCoreApplication::quit();
     }
 }
 
