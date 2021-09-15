@@ -47,6 +47,12 @@ public:
      * @param newScreen
      */
     void addScreenToFirstEmpty(const Screen& newScreen);
+
+    /**
+     * @brief Returns true if screens are equal
+     * @param sc
+     */
+    bool operator==(const ScreenList& sc) const;
 };
 
 #endif // SCREENLIST_H

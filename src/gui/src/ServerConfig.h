@@ -50,6 +50,8 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         ServerConfig& operator=(const ServerConfig &src) =default;
         ServerConfig& operator=(ServerConfig &&) =delete;
 
+        bool          operator==(const ServerConfig& sc) const;
+
     public:
         const ScreenList& screens() const { return m_Screens; }
         int numColumns() const { return m_NumColumns; }

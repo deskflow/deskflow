@@ -43,7 +43,7 @@ QVariant ScreenSetupModel::data(const QModelIndex& index, int role) const
             case Qt::DecorationRole:
                 if (screen(index).isNull())
                     break;
-                return QIcon(*screen(index).pixmap());
+                return QIcon(screen(index).pixmap());
 
             case Qt::ToolTipRole:
                 if (screen(index).isNull())
@@ -138,12 +138,15 @@ bool ScreenSetupModel::dropMimeData(const QMimeData* data, Qt::DropAction action
 
     screen(parent.column(), parent.row()) = droppedScreen;
 
+    emit screensChanged();
+
     return true;
 }
 
 void ScreenSetupModel::addScreen(const Screen& newScreen)
 {
     m_Screens.addScreenByPriority(newScreen);
+    emit screensChanged();
 }
 
 bool ScreenSetupModel::isFull() const

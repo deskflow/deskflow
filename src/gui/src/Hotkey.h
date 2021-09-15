@@ -48,6 +48,8 @@ class Hotkey
         void loadSettings(QSettings& settings);
         void saveSettings(QSettings& settings) const;
 
+        bool operator==(const Hotkey& hk) const;
+
     protected:
         KeySequence& keySequence() { return m_KeySequence; }
         void setKeySequence(const KeySequence& seq) { m_KeySequence = seq; }

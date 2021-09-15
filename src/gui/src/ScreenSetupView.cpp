@@ -76,6 +76,7 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent* event)
         {
             ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
             dlg.exec();
+            emit model()->screensChanged();
         }
     }
     else
@@ -131,7 +132,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     if (pData == NULL)
         return;
 
-    QPixmap pixmap = *model()->screen(indexes[0]).pixmap();
+    const QPixmap& pixmap = model()->screen(indexes[0]).pixmap();
     QDrag* pDrag = new QDrag(this);
     pDrag->setPixmap(pixmap);
     pDrag->setMimeData(pData);
@@ -147,6 +148,8 @@ void ScreenSetupView::startDrag(Qt::DropActions)
             model()->screen(indexes[0]) = Screen();
         else
             model()->screen(indexes[0]).setSwapped(false);
+
+        emit model()->screensChanged();
     }
 }
 

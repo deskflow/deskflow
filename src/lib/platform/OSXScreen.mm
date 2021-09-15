@@ -48,6 +48,14 @@
 #include <AppKit/NSEvent.h>
 #include <libproc.h>
 
+// The following creates a section that tells Mac OS X
+// that it is OK to let us inject input in the login screen.
+// Just the name of the section is important, not its contents.
+__attribute__((used))
+__attribute__((section ("__CGPreLoginApp,__cgpreloginapp")))
+static const char magic_section[] = "";
+////////////////////////////////////////////////////////////
+
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
 	kSynergyEventMouseScroll = 11,
@@ -792,16 +800,18 @@ OSXScreen::enable()
 										this);
 	}
 
-	if (!m_eventTapPort) {
+	if (m_eventTapPort) {
+		m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+		if (m_eventTapRLSR) {
+			CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+		}
+		else{
+			LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
+		}
+	}
+	else{
 		LOG((CLOG_ERR "failed to create quartz event tap"));
 	}
-
-	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-	if (!m_eventTapRLSR) {
-		LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
-	}
-
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 void

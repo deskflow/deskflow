@@ -709,14 +709,17 @@ SecureSocket::verifyCertFingerprint()
     file.open(trustedServersFilename.c_str());
 
     bool isValid = false;
-    while (!file.eof() && file.is_open()) {
-        getline(file,fileLine);
-        if (!fileLine.empty()) {
-            if (fileLine.compare(fingerprint) == 0) {
+    if (file.is_open()) {
+        while (!file.eof()) {
+            getline(file,fileLine);
+            if (!fileLine.empty() && !fileLine.compare(fingerprint)) {
                 isValid = true;
                 break;
             }
         }
+    }
+    else {
+        LOG((CLOG_ERR "Fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
     }
 
     file.close();

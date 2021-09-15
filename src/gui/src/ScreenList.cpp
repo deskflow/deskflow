@@ -125,3 +125,8 @@ void ScreenList::addScreenToFirstEmpty(const Screen& newScreen)
     }
 }
 
+bool ScreenList::operator==(const ScreenList& sc) const
+{
+    return m_width == sc.m_width && QList::operator==(sc);
+}
+

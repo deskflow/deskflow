@@ -1138,6 +1138,14 @@ MSWindowsScreen::onEvent(HWND, UINT msg,
     case WM_DISPLAYCHANGE:
         return onDisplayChange();
 
+    /* On windows 10 we don't receive WM_POWERBROADCAST after sleep.
+     We receive only WM_TIMECHANGE hence this message is used to resume.*/
+    case WM_TIMECHANGE:
+        m_events->addEvent(Event(m_events->forIScreen().resume(),
+                        getEventTarget(), NULL,
+                        Event::kDeliverImmediately));
+        break;
+
     case WM_POWERBROADCAST:
         switch (wParam) {
         case PBT_APMRESUMEAUTOMATIC:

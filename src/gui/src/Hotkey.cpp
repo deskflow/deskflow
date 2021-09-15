@@ -66,6 +66,11 @@ void Hotkey::saveSettings(QSettings& settings) const
     settings.endArray();
 }
 
+bool Hotkey::operator==(const Hotkey& hk) const
+{
+    return m_KeySequence == hk.m_KeySequence && m_Actions == hk.m_Actions;
+}
+
 QTextStream& operator<<(QTextStream& outStream, const Hotkey& hotkey)
 {
     for (int i = 0; i < hotkey.actions().size(); i++)
