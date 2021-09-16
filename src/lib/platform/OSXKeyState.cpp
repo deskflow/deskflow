@@ -483,19 +483,19 @@ OSXKeyState::getKeyboardEventFlags()
     CGEventFlags modifiers = 0;
 
     if (m_shiftPressed) {
-        modifiers |= kCGEventFlagMaskShift;
+        modifiers |= kCGEventFlagMaskShift | NX_DEVICELSHIFTKEYMASK;
     }
 
     if (m_controlPressed) {
-        modifiers |= kCGEventFlagMaskControl;
+        modifiers |= kCGEventFlagMaskControl | NX_DEVICELCTLKEYMASK;
     }
 
     if (m_altPressed) {
-        modifiers |= kCGEventFlagMaskAlternate;
+        modifiers |= kCGEventFlagMaskAlternate | NX_DEVICELALTKEYMASK;
     }
 
     if (m_superPressed) {
-        modifiers |= kCGEventFlagMaskCommand;
+        modifiers |= kCGEventFlagMaskCommand | NX_DEVICELCMDKEYMASK;
     }
 
     if (m_capsPressed) {
