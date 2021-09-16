@@ -1,8 +1,10 @@
 name: Windows-Upload
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -15,6 +17,7 @@ jobs:
       QT_VERSION: 5.12.6
       QT_BASE_URL: http://qt.mirror.constant.com/
       QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.12.6
+      SYNERGY_NO_LEGACY: 1
       
     strategy:
       matrix:
