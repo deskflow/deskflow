@@ -18,6 +18,8 @@
 
 #include "synergy/KeyState.h"
 #include "base/Log.h"
+#include "synergy/ClientApp.h"
+#include "synergy/ClientArgs.h"
 
 #include <cstring>
 #include <algorithm>
@@ -874,11 +876,16 @@ KeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
             // note -- k is now on the first non-repeat key after the
             // repeat keys, exactly where we'd like to continue from.
         }
-        else {
+        else if (k->m_type != Keystroke::kGroup ||
+                 (!k->m_data.m_group.m_restore && ClientApp::instance().args().m_enableLangSync)) {
             // send event
             fakeKey(*k);
 
             // next key
+            ++k;
+        }
+        else {
+            LOG((CLOG_DEBUG1 "Skipping keystroke (because language sync is disabled)"));
             ++k;
         }
     }
