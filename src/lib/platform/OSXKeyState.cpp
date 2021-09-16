@@ -832,7 +832,19 @@ void
 OSXKeyState::setGroup(SInt32 group)
 {
     TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
-    TISSetInputMethodKeyboardLayoutOverride(keyboardLayout);
+    if(!keyboardLayout) {
+        LOG((CLOG_WARN "Nedeed keyboard layout is null"));
+        return;
+    }
+    auto canBeSetted = (CFBooleanRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
+    if(!canBeSetted || canBeSetted == FALSE) {
+        LOG((CLOG_WARN "Nedeed keyboard layout is disabled for programmatically selection"));
+        return;
+    }
+
+    if(TISSelectInputSource(keyboardLayout) != noErr) {
+        LOG((CLOG_WARN "Failed to set nedeed keyboard layout"));
+    }
 }
 
 void
