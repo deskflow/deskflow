@@ -100,5 +100,5 @@ jobs:
         aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
         aws_bucket: ${{ secrets.AWS_BUCKET }}
-        source_dir: ./build/bin
+        source_dir: ./build/bin/Release
         destination_dir: "./synergy3/latest/Windows_${{ matrix.arch }}/"
