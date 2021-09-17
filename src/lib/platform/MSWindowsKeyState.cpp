@@ -577,8 +577,9 @@ static const Win32Modifiers s_modifiers[] =
 };
 
 MSWindowsKeyState::MSWindowsKeyState(
-	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events) :
-	KeyState(events),
+    MSWindowsDesks* desks, void* eventTarget, IEventQueue* events,
+        std::vector<String> layouts, bool isLangSyncEnabled) :
+    KeyState(events, layouts, isLangSyncEnabled),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -593,8 +594,9 @@ MSWindowsKeyState::MSWindowsKeyState(
 }
 
 MSWindowsKeyState::MSWindowsKeyState(
-	MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap) :
-	KeyState(events, keyMap),
+    MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap,
+        std::vector<String> layouts, bool isLangSyncEnabled) :
+    KeyState(events, keyMap, layouts, isLangSyncEnabled),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),

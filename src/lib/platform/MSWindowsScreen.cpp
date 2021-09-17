@@ -145,7 +145,9 @@ MSWindowsScreen::MSWindowsScreen(
                             new TMethodJob<MSWindowsScreen>(
                                 this, &MSWindowsScreen::updateKeysCB),
                             stopOnDeskSwitch);
-        m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
+        m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events,
+                                              AppUtil::instance().getKeyboardLayoutList(),
+                                              ClientApp::instance().args().m_enableLangSync);
 
         updateScreenShape();
         m_class       = createWindowClass();

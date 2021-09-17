@@ -36,8 +36,10 @@ This class maps KeyIDs to keystrokes.
 */
 class MSWindowsKeyState : public KeyState {
 public:
-	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events);
-	MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap);
+    MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events,
+                      std::vector<String> layouts, bool isLangSyncEnabled);
+    MSWindowsKeyState(MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap,
+                      std::vector<String> layouts, bool isLangSyncEnabled);
 	virtual ~MSWindowsKeyState();
 
 	//! @name manipulators
