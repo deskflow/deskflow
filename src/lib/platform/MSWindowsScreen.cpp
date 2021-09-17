@@ -844,9 +844,9 @@ MSWindowsScreen::updateKeys()
 
 void
 MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
-                KeyButton button)
+                KeyButton button, const String& lang)
 {
-    PlatformScreen::fakeKeyDown(id, mask, button);
+    PlatformScreen::fakeKeyDown(id, mask, button, lang);
     updateForceShowCursor();
 }
 
@@ -1955,7 +1955,7 @@ MSWindowsScreen::getDraggingFilename()
             SWP_SHOWWINDOW);
 
         // TODO: fake these keys properly
-        fakeKeyDown(kKeyEscape, 8192, 1);
+        fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
         fakeKeyUp(1);
         fakeMouseButton(kButtonLeft, false);
 

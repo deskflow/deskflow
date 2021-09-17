@@ -794,9 +794,9 @@ MSWindowsKeyState::sendKeyEvent(void* target,
 
 void
 MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
-				KeyButton button)
+                KeyButton button, const String& lang)
 {
-	KeyState::fakeKeyDown(id, mask, button);
+    KeyState::fakeKeyDown(id, mask, button, lang);
 }
 
 bool

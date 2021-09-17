@@ -2113,7 +2113,7 @@ OSXScreen::getDraggingFilename()
 		}
 
 		// fake a escape key down and up then left mouse button up
-		fakeKeyDown(kKeyEscape, 8192, 1);
+        fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
 		fakeKeyUp(1);
 		fakeMouseButton(kButtonLeft, false);
 	}

@@ -136,7 +136,7 @@ public:
 
 	// IKeyState overrides
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
-							KeyButton button);
+                            KeyButton button, const String& lang);
 	virtual bool		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
 	virtual bool		fakeCtrlAltDel();

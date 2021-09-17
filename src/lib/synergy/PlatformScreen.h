@@ -63,7 +63,7 @@ public:
     virtual void        updateKeyState();
     virtual void        setHalfDuplexMask(KeyModifierMask);
     virtual void        fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button);
+                            KeyButton button, const String&);
     virtual bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
                             SInt32 count, KeyButton button);
     virtual bool        fakeKeyUp(KeyButton button);

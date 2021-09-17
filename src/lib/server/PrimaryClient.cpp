@@ -184,7 +184,7 @@ PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 }
 
 void
-PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String&)
 {
     if (m_fakeInputCount > 0) {
 // XXX -- don't forward keystrokes to primary screen for now

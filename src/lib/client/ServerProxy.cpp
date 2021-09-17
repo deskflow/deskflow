@@ -635,7 +635,7 @@ ServerProxy::keyDown()
         LOG((CLOG_DEBUG1 "key down translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
     // forward
-    m_client->keyDown(id2, mask2, button);
+    m_client->keyDown(id2, mask2, button, lang);
 }
 
 void

@@ -100,7 +100,7 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
     KeyStateImpl keyState(eventQueue, keyMap);
     IKeyStateEvents keyStateEvents;
     keyStateEvents.setEvents(&eventQueue);
-    
+
     ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
     ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
@@ -116,7 +116,7 @@ TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
     KeyStateImpl keyState(eventQueue, keyMap);
     IKeyStateEvents keyStateEvents;
     keyStateEvents.setEvents(&eventQueue);
-    
+
     ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
@@ -131,7 +131,7 @@ TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
     KeyStateImpl keyState(eventQueue, keyMap);
     IKeyStateEvents keyStateEvents;
     keyStateEvents.setEvents(&eventQueue);
-    
+
     ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
@@ -146,7 +146,7 @@ TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
     KeyStateImpl keyState(eventQueue, keyMap);
     IKeyStateEvents keyStateEvents;
     keyStateEvents.setEvents(&eventQueue);
-    
+
     ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
 
     EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
@@ -277,8 +277,8 @@ TEST(KeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyCalledTwice)
     EXPECT_CALL(keyState, fakeKey(_)).Times(2);
 
     // call twice to simulate server key already down (a misreported autorepeat).
-    keyState.fakeKeyDown(1, 0, 0);
-    keyState.fakeKeyDown(1, 0, 0);
+    keyState.fakeKeyDown(1, 0, 0, "en");
+    keyState.fakeKeyDown(1, 0, 0, "en");
 }
 
 TEST(KeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
@@ -289,7 +289,7 @@ TEST(KeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
 
     EXPECT_CALL(keyState, fakeKey(_)).Times(0);
 
-    keyState.fakeKeyDown(kKeyCapsLock, 0, 0);
+    keyState.fakeKeyDown(kKeyCapsLock, 0, 0, "en");
 }
 
 TEST(KeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
@@ -303,7 +303,7 @@ TEST(KeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
 
     EXPECT_CALL(keyState, fakeKey(_)).Times(1);
 
-    keyState.fakeKeyDown(1, 0, 0);
+    keyState.fakeKeyDown(1, 0, 0, "en");
 }
 
 TEST(KeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse)
@@ -328,7 +328,7 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
     keyItem.m_client = 0;
     keyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
-    keyState.fakeKeyDown(1, 0, 0);
+    keyState.fakeKeyDown(1, 0, 0, "en");
 
     // change mapKey to return NULL so that fakeKeyRepeat exits early.
     synergy::KeyMap::KeyItem* nullKeyItem = NULL;
@@ -350,7 +350,7 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse)
     keyItem.m_client = 0;
     keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
-    keyState.fakeKeyDown(1, 0, 0);
+    keyState.fakeKeyDown(1, 0, 0, "en");
 
     // change button to 0 so that fakeKeyRepeat will return early.
     keyItem.m_button = 0;
@@ -373,7 +373,7 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
     // set the button to 1 for fakeKeyDown call
     s_stubKeyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
-    keyState.fakeKeyDown(1, 0, 0);
+    keyState.fakeKeyDown(1, 0, 0, "en");
 
     // change the button to 2
     s_stubKeyItem.m_button = 2;
@@ -408,7 +408,7 @@ TEST(KeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue)
     // press button 1 down.
     s_stubKeyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
-    keyState.fakeKeyDown(1, 0, 1);
+    keyState.fakeKeyDown(1, 0, 1, "en");
 
     // this takes the button id, which is the 3rd arg of fakeKeyDown
     bool actual = keyState.fakeKeyUp(1);
@@ -425,7 +425,7 @@ TEST(KeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp)
     // press button 1 down.
     s_stubKeyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
-    keyState.fakeKeyDown(1, 0, 1);
+    keyState.fakeKeyDown(1, 0, 1, "en");
 
     // method under test
     keyState.fakeAllKeysUp();
@@ -443,7 +443,7 @@ TEST(KeyStateTests, isKeyDown_keyDown_returnsTrue)
     // press button 1 down.
     s_stubKeyItem.m_button = 1;
     ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
-    keyState.fakeKeyDown(1, 0, 1);
+    keyState.fakeKeyDown(1, 0, 1, "en");
 
     // method under test
     bool actual = keyState.isKeyDown(1);

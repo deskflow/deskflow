@@ -325,7 +325,7 @@ private:
     void                onClipboardChanged(BaseClientProxy* sender,
                             ClipboardID id, UInt32 seqNum);
     void                onScreensaver(bool activated);
-    void                onKeyDown(KeyID, KeyModifierMask, KeyButton,
+    void                onKeyDown(KeyID, KeyModifierMask, KeyButton, const String&,
                             const char* screens);
     void                onKeyUp(KeyID, KeyModifierMask, KeyButton,
                             const char* screens);

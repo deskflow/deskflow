@@ -385,22 +385,26 @@ static const KeyID s_numpadTable[] = {
 // KeyState
 //
 
-KeyState::KeyState(IEventQueue* events) :
+KeyState::KeyState(IEventQueue* events, std::vector<String> layouts, bool isLangSyncEnabled) :
     IKeyState(events),
     m_keyMapPtr(new synergy::KeyMap()),
     m_keyMap(*m_keyMapPtr),
     m_mask(0),
-    m_events(events)
+    m_events(events),
+    m_keyboardLayouts(layouts),
+    m_isLangSyncEnabled(isLangSyncEnabled)
 {
     init();
 }
 
-KeyState::KeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
+KeyState::KeyState(IEventQueue* events, synergy::KeyMap& keyMap, std::vector<String> layouts, bool isLangSyncEnabled) :
     IKeyState(events),
     m_keyMapPtr(0),
     m_keyMap(keyMap),
     m_mask(0),
-    m_events(events)
+    m_events(events),
+    m_keyboardLayouts(layouts),
+    m_isLangSyncEnabled(isLangSyncEnabled)
 {
     init();
 }
@@ -555,7 +559,7 @@ KeyState::setHalfDuplexMask(KeyModifierMask mask)
 }
 
 void
-KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
+KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const String& lang)
 {
     // if this server key is already down then this is probably a
     // mis-reported autorepeat.
@@ -571,13 +575,28 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
         return;
     }
 
-    // get keys for key press
     Keystrokes keys;
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
-    const synergy::KeyMap::KeyItem* keyItem =
-        m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
-                                getActiveModifiersRValue(), mask, false);
-    if (keyItem == NULL) {
+    const synergy::KeyMap::KeyItem* keyItem = nullptr;
+    SInt32 group = pollActiveGroup();
+    auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
+    if (it != m_keyboardLayouts.end()) {
+        LOG((CLOG_DEBUG1 "switching to layout %s", lang.c_str()));
+        group = std::distance(m_keyboardLayouts.begin(), it);
+        // get keys for key press, by guessing approximate layout
+        keyItem =
+            m_keyMap.mapKey(keys, id, group, m_activeModifiers,
+                                    getActiveModifiersRValue(), mask, false);
+    }
+    else {
+        LOG((CLOG_DEBUG1 "could not found requested language, guessing"));
+        // get keys for key press, by guessing approximate layout
+        keyItem =
+            m_keyMap.mapKey(keys, id, group, m_activeModifiers,
+                                    getActiveModifiersRValue(), mask, false);
+    }
+
+    if (keyItem == nullptr) {
         // a media key won't be mapped on mac, so we need to fake it in a
         // special way
         if (id == kKeyAudioDown || id == kKeyAudioUp ||
@@ -588,10 +607,10 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
             LOG((CLOG_DEBUG1 "emulating media key"));
             fakeMediaKey(id);
         }
-        
+
         return;
     }
-    
+
     KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
     updateModifierKeyState(localID, oldActiveModifiers, m_activeModifiers);
     if (localID != 0) {
@@ -877,7 +896,7 @@ KeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
             // repeat keys, exactly where we'd like to continue from.
         }
         else if (k->m_type != Keystroke::kGroup ||
-                 (!k->m_data.m_group.m_restore && ClientApp::instance().args().m_enableLangSync)) {
+                 (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
             // send event
             fakeKey(*k);
 

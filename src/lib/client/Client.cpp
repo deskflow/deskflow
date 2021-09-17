@@ -306,9 +306,9 @@ Client::setClipboardDirty(ClipboardID, bool)
 }
 
 void
-Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
+Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
 {
-     m_screen->keyDown(id, mask, button);
+     m_screen->keyDown(id, mask, button, lang);
 }
 
 void

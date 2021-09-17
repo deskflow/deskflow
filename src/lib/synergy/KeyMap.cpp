@@ -266,7 +266,8 @@ KeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
                 KeyModifierMask desiredMask,
                 bool isAutoRepeat) const
 {
-    LOG((CLOG_DEBUG1 "mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask, currentState));
+    LOG((CLOG_DEBUG1 "mapKey %04x (%d) with mask %04x, start state: %04x, group: %d",
+         id, id, desiredMask, currentState, group));
 
     // handle group change
     if (id == kKeyNextGroup) {

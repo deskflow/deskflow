@@ -131,7 +131,7 @@ public:
     void        setClipboard(ClipboardID, const IClipboard*) override;
     void        grabClipboard(ClipboardID) override;
     void        setClipboardDirty(ClipboardID, bool) override;
-    void        keyDown(KeyID, KeyModifierMask, KeyButton) override;
+    void        keyDown(KeyID, KeyModifierMask, KeyButton, const String&) override;
     void        keyRepeat(KeyID, KeyModifierMask,
                             SInt32 count, KeyButton) override;
     void        keyUp(KeyID, KeyModifierMask, KeyButton) override;

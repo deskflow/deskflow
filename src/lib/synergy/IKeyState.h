@@ -94,7 +94,7 @@ public:
     Synthesizes a key press event and updates the key state.
     */
     virtual void        fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button) = 0;
+                            KeyButton button, const String& lang) = 0;
 
     //! Fake a key repeat
     /*!

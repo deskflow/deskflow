@@ -22,6 +22,9 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/stdmap.h"
+#include "synergy/AppUtil.h"
+#include "synergy/ClientApp.h"
+#include "synergy/ClientArgs.h"
 
 #include <cstddef>
 #include <algorithm>
@@ -43,7 +46,7 @@ static const size_t ModifiersFromXDefaultSize = 32;
 XWindowsKeyState::XWindowsKeyState(
         Display* display, bool useXKB,
         IEventQueue* events) :
-    KeyState(events),
+    KeyState(events, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
 {
@@ -53,7 +56,7 @@ XWindowsKeyState::XWindowsKeyState(
 XWindowsKeyState::XWindowsKeyState(
     Display* display, bool useXKB,
     IEventQueue* events, synergy::KeyMap& keyMap) :
-    KeyState(events, keyMap),
+    KeyState(events, keyMap, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
 {

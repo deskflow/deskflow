@@ -33,6 +33,7 @@
 #include "synergy/KeyState.h"
 #include "synergy/Screen.h"
 #include "synergy/PacketStreamFilter.h"
+#include "synergy/AppUtil.h"
 #include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
@@ -1334,7 +1335,8 @@ Server::handleKeyDownEvent(const Event& event, void*)
 {
 	IPlatformScreen::KeyInfo* info =
 		static_cast<IPlatformScreen::KeyInfo*>(event.getData());
-	onKeyDown(info->m_key, info->m_mask, info->m_button, info->m_screens);
+    auto lang = AppUtil::instance().getCurrentLanguageCode();
+    onKeyDown(info->m_key, info->m_mask, info->m_button, lang, info->m_screens);
 }
 
 void
@@ -1666,15 +1668,15 @@ Server::onScreensaver(bool activated)
 }
 
 void
-Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
+Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String& lang,
 				const char* screens)
 {
-	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x", id, mask, button));
+    LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x lang=%s", id, mask, button, lang.c_str()));
 	assert(m_active != NULL);
 
 	// relay
 	if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(screens)) {
-		m_active->keyDown(id, mask, button);
+        m_active->keyDown(id, mask, button, lang);
 	}
 	else {
 		if (!screens && m_keyboardBroadcasting) {
@@ -1686,7 +1688,7 @@ Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
 		for (ClientList::const_iterator index = m_clients.begin();
 								index != m_clients.end(); ++index) {
 			if (IKeyState::KeyInfo::contains(screens, index->first)) {
-				index->second->keyDown(id, mask, button);
+                index->second->keyDown(id, mask, button, lang);
 			}
 		}
 	}

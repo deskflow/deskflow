@@ -127,7 +127,7 @@ public:
     synthesize an up or repeat for the same client key synthesized by
     keyDown().
     */
-    void                keyDown(KeyID id, KeyModifierMask, KeyButton);
+    void                keyDown(KeyID id, KeyModifierMask, KeyButton, const String&);
 
     //! Notify of key repeat
     /*!
