@@ -42,7 +42,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
     keyState.updateKeyMap();
 
     keyState.fakeKeyDown(SHIFT_ID_L, 0, 1, "en");
@@ -62,7 +62,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
     keyState.updateKeyMap();
 
     keyState.fakeKeyDown(A_CHAR_ID, 0, 1, "en");
@@ -81,7 +81,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
     keyState.updateKeyMap();
 
     keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1, "en");
