@@ -8,6 +8,7 @@ Bug fixes:
 - #7081 Fix autoconfig after SYNERGY-1161
 - #7082 Windows client doesn't resume connection after sleep
 - #7089 Modifier keys don't work on Microsoft Remote Desktop
+- #7091 Fix CMakeFileList for unittests
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
