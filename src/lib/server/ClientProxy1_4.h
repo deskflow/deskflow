@@ -38,7 +38,8 @@ public:
 
     // IClient overrides
     virtual void        keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String&);
-    virtual void        keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button);
+    virtual void        keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button,
+                                  const String& lang);
     virtual void        keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
     virtual void        keepAlive();
 

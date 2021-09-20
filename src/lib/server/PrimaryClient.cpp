@@ -196,7 +196,7 @@ PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const 
 }
 
 void
-PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
+PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const String&)
 {
     // ignore
 }

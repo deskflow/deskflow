@@ -164,7 +164,7 @@ public:
     virtual void        setClipboardDirty(ClipboardID, bool);
     virtual void        keyDown(KeyID, KeyModifierMask, KeyButton, const String&);
     virtual void        keyRepeat(KeyID, KeyModifierMask,
-                            SInt32 count, KeyButton);
+                            SInt32 count, KeyButton, const String& lang);
     virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
     virtual void        mouseDown(ButtonID);
     virtual void        mouseUp(ButtonID);

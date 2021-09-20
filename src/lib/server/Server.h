@@ -329,7 +329,7 @@ private:
                             const char* screens);
     void                onKeyUp(KeyID, KeyModifierMask, KeyButton,
                             const char* screens);
-    void                onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton);
+    void                onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const String&);
     void                onMouseDown(ButtonID);
     void                onMouseUp(ButtonID);
     bool                onMouseMovePrimary(SInt32 x, SInt32 y);

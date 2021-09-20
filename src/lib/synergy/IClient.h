@@ -95,7 +95,7 @@ public:
     \c count times.  If possible match the given modifier mask.
     */
     virtual void        keyRepeat(KeyID id, KeyModifierMask,
-                            SInt32 count, KeyButton) = 0;
+                            SInt32 count, KeyButton, const String& lang) = 0;
 
     //! Notify of key release
     /*!

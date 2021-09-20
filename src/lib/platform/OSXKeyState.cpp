@@ -135,14 +135,14 @@ static const KeyEntry    s_controlKeys[] = {
 //
 
 OSXKeyState::OSXKeyState(IEventQueue* events, std::vector<String> layouts, bool isLangSyncEnabled) :
-    KeyState(events, layouts, isLangSyncEnabled)
+    KeyState(events, std::move(layouts), isLangSyncEnabled)
 {
     init();
 }
 
 OSXKeyState::OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap,
                          std::vector<String> layouts, bool isLangSyncEnabled) :
-    KeyState(events, keyMap, layouts, isLangSyncEnabled)
+    KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled)
 {
     init();
 }

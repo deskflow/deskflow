@@ -101,7 +101,7 @@ public:
     Synthesizes a key repeat event and updates the key state.
     */
     virtual bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                            SInt32 count, KeyButton button) = 0;
+                            SInt32 count, KeyButton button, const String& lang) = 0;
 
     //! Fake a key release
     /*!

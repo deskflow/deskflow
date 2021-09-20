@@ -72,7 +72,7 @@ public:
     void        fakeKeyDown(KeyID id, KeyModifierMask mask,
                             KeyButton button, const String& lang) override;
     bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                            SInt32 count, KeyButton button) override;
+                            SInt32 count, KeyButton button, const String& lang) override;
     bool        fakeKeyUp(KeyButton button) override;
     void        fakeAllKeysUp() override;
     bool        fakeMediaKey(KeyID id) override;
@@ -234,6 +234,5 @@ private:
 
     IEventQueue*        m_events;
 
-    std::vector<String> m_keyboardLayouts;
     bool                m_isLangSyncEnabled;
 };

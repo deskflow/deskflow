@@ -304,7 +304,7 @@ ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton, const String
 
 void
 ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask,
-                SInt32 count, KeyButton)
+                SInt32 count, KeyButton, const String&)
 {
     LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
     ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);

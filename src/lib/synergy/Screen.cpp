@@ -207,10 +207,10 @@ Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &
 
 void
 Screen::keyRepeat(KeyID id,
-                KeyModifierMask mask, SInt32 count, KeyButton button)
+                KeyModifierMask mask, SInt32 count, KeyButton button, const String& lang)
 {
     assert(!m_isPrimary);
-    m_screen->fakeKeyRepeat(id, mask, count, button);
+    m_screen->fakeKeyRepeat(id, mask, count, button, lang);
 }
 
 void

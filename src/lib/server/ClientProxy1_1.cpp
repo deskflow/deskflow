@@ -49,10 +49,10 @@ ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const
 
 void
 ClientProxy1_1::keyRepeat(KeyID key, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x", getName().c_str(), key, mask, count, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button);
+    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x, lang=\"%s\"", getName().c_str(), key, mask, count, button, lang.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button, &lang);
 }
 
 void

@@ -85,7 +85,7 @@ XWindowsKeyState::init(Display* display, bool useXKB)
         m_xkb = NULL;
     }
 #endif
-    setActiveGroup(kGroupPollAndSet);
+    setActiveGroup(kGroupPoll);
 }
 
 void

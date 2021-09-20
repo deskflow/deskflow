@@ -197,6 +197,7 @@ extern const char* const       kMsgDKeyDown1_0;
 
 // key auto-repeat:  primary -> secondary
 // $1 = KeyID, $2 = KeyModifierMask, $3 = number of repeats, $4 = KeyButton
+// $5 =language code
 extern const char* const       kMsgDKeyRepeat;
 
 // key auto-repeat 1.0:  same as above but without KeyButton

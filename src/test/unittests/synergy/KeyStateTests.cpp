@@ -42,7 +42,8 @@ stubMapKey(
            synergy::KeyMap::ModifierToKeys& activeModifiers,
            KeyModifierMask& currentState,
            KeyModifierMask desiredMask,
-           bool isAutoRepeat);
+           bool isAutoRepeat,
+           const String& lang);
 
 synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
 synergy::KeyMap::KeyItem s_stubKeyItem;
@@ -270,7 +271,7 @@ TEST(KeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyCalledTwice)
     KeyStateImpl keyState(eventQueue, keyMap);
     s_stubKeyItem.m_client = 0;
     s_stubKeyItem.m_button = 1;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
     // 2 calls to fakeKeyDown should still call fakeKey, even though
     // repeated keys are handled differently.
@@ -299,7 +300,7 @@ TEST(KeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
     KeyStateImpl keyState(eventQueue, keyMap);
     s_stubKeyItem.m_button = 0;
     s_stubKeyItem.m_client = 0;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
     EXPECT_CALL(keyState, fakeKey(_)).Times(1);
 
@@ -312,7 +313,7 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse)
     MockEventQueue eventQueue;
     KeyStateImpl keyState(eventQueue, keyMap);
 
-    bool actual = keyState.fakeKeyRepeat(0, 0, 0, 0);
+    bool actual = keyState.fakeKeyRepeat(0, 0, 0, 0, "en");
 
     ASSERT_FALSE(actual);
 }
@@ -327,14 +328,14 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
     synergy::KeyMap::KeyItem keyItem;
     keyItem.m_client = 0;
     keyItem.m_button = 1;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
     keyState.fakeKeyDown(1, 0, 0, "en");
 
     // change mapKey to return NULL so that fakeKeyRepeat exits early.
     synergy::KeyMap::KeyItem* nullKeyItem = NULL;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
 
-    bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0);
+    bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0, "en");
 
     ASSERT_FALSE(actual);
 }
@@ -349,14 +350,14 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse)
     synergy::KeyMap::KeyItem keyItem;
     keyItem.m_client = 0;
     keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
     keyState.fakeKeyDown(1, 0, 0, "en");
 
     // change button to 0 so that fakeKeyRepeat will return early.
     keyItem.m_button = 0;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 
-    bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0);
+    bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0, "en");
 
     ASSERT_FALSE(actual);
 }
@@ -372,14 +373,14 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
 
     // set the button to 1 for fakeKeyDown call
     s_stubKeyItem.m_button = 1;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
     keyState.fakeKeyDown(1, 0, 0, "en");
 
     // change the button to 2
     s_stubKeyItem.m_button = 2;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
-    bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0);
+    bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0, "en");
 
     ASSERT_TRUE(actual);
 }
@@ -407,7 +408,7 @@ TEST(KeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue)
 
     // press button 1 down.
     s_stubKeyItem.m_button = 1;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
     keyState.fakeKeyDown(1, 0, 1, "en");
 
     // this takes the button id, which is the 3rd arg of fakeKeyDown
@@ -424,7 +425,7 @@ TEST(KeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp)
 
     // press button 1 down.
     s_stubKeyItem.m_button = 1;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
     keyState.fakeKeyDown(1, 0, 1, "en");
 
     // method under test
@@ -442,7 +443,7 @@ TEST(KeyStateTests, isKeyDown_keyDown_returnsTrue)
 
     // press button 1 down.
     s_stubKeyItem.m_button = 1;
-    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+    ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
     keyState.fakeKeyDown(1, 0, 1, "en");
 
     // method under test
@@ -497,7 +498,8 @@ stubMapKey(
     synergy::KeyMap::ModifierToKeys& activeModifiers,
     KeyModifierMask& currentState,
     KeyModifierMask desiredMask,
-    bool isAutoRepeat)
+    bool isAutoRepeat,
+    const String& lang)
 {
     keys.push_back(s_stubKeystroke);
     return &s_stubKeyItem;

@@ -313,9 +313,9 @@ Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &
 
 void
 Client::keyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-     m_screen->keyRepeat(id, mask, count, button);
+     m_screen->keyRepeat(id, mask, count, button, lang);
 }
 
 void

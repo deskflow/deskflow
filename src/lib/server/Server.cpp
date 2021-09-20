@@ -1352,7 +1352,8 @@ Server::handleKeyRepeatEvent(const Event& event, void*)
 {
 	IPlatformScreen::KeyInfo* info =
 		static_cast<IPlatformScreen::KeyInfo*>(event.getData());
-	onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button);
+    auto lang = AppUtil::instance().getCurrentLanguageCode();
+    onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button, lang);
 }
 
 void
@@ -1723,13 +1724,13 @@ Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button,
 
 void
 Server::onKeyRepeat(KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
+    LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x lang=\"%s\"", id, mask, count, button, lang.c_str()));
 	assert(m_active != NULL);
 
 	// relay
-	m_active->keyRepeat(id, mask, count, button);
+    m_active->keyRepeat(id, mask, count, button, lang);
 }
 
 void

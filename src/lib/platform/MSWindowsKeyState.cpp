@@ -579,7 +579,7 @@ static const Win32Modifiers s_modifiers[] =
 MSWindowsKeyState::MSWindowsKeyState(
     MSWindowsDesks* desks, void* eventTarget, IEventQueue* events,
         std::vector<String> layouts, bool isLangSyncEnabled) :
-    KeyState(events, layouts, isLangSyncEnabled),
+    KeyState(events, std::move(layouts), isLangSyncEnabled),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -596,7 +596,7 @@ MSWindowsKeyState::MSWindowsKeyState(
 MSWindowsKeyState::MSWindowsKeyState(
     MSWindowsDesks* desks, void* eventTarget, IEventQueue* events, synergy::KeyMap& keyMap,
         std::vector<String> layouts, bool isLangSyncEnabled) :
-    KeyState(events, keyMap, layouts, isLangSyncEnabled),
+    KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0)),
@@ -803,9 +803,9 @@ MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
 
 bool
 MSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
+                                SInt32 count, KeyButton button, const String& lang)
 {
-	return KeyState::fakeKeyRepeat(id, mask, count, button);
+        return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
 }
 
 bool

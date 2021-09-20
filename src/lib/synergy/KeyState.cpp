@@ -391,9 +391,9 @@ KeyState::KeyState(IEventQueue* events, std::vector<String> layouts, bool isLang
     m_keyMap(*m_keyMapPtr),
     m_mask(0),
     m_events(events),
-    m_keyboardLayouts(layouts),
     m_isLangSyncEnabled(isLangSyncEnabled)
 {
+    m_keyMap.setLanguageData(std::move(layouts));
     init();
 }
 
@@ -403,9 +403,9 @@ KeyState::KeyState(IEventQueue* events, synergy::KeyMap& keyMap, std::vector<Str
     m_keyMap(keyMap),
     m_mask(0),
     m_events(events),
-    m_keyboardLayouts(layouts),
     m_isLangSyncEnabled(isLangSyncEnabled)
 {
+    m_keyMap.setLanguageData(std::move(layouts));
     init();
 }
 
@@ -565,7 +565,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const 
     // mis-reported autorepeat.
     serverID &= kButtonMask;
     if (m_serverKeys[serverID] != 0) {
-        fakeKeyRepeat(id, mask, 1, serverID);
+        fakeKeyRepeat(id, mask, 1, serverID, lang);
         return;
     }
 
@@ -577,24 +577,9 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const 
 
     Keystrokes keys;
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
-    const synergy::KeyMap::KeyItem* keyItem = nullptr;
-    SInt32 group = pollActiveGroup();
-    auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
-    if (it != m_keyboardLayouts.end()) {
-        LOG((CLOG_DEBUG1 "switching to layout %s", lang.c_str()));
-        group = std::distance(m_keyboardLayouts.begin(), it);
-        // get keys for key press, by guessing approximate layout
-        keyItem =
-            m_keyMap.mapKey(keys, id, group, m_activeModifiers,
-                                    getActiveModifiersRValue(), mask, false);
-    }
-    else {
-        LOG((CLOG_DEBUG1 "could not found requested language, guessing"));
-        // get keys for key press, by guessing approximate layout
-        keyItem =
-            m_keyMap.mapKey(keys, id, group, m_activeModifiers,
-                                    getActiveModifiersRValue(), mask, false);
-    }
+    const synergy::KeyMap::KeyItem* keyItem =
+            m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
+                                getActiveModifiersRValue(), mask, false, lang);
 
     if (keyItem == nullptr) {
         // a media key won't be mapped on mac, so we need to fake it in a
@@ -628,7 +613,7 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const 
 bool
 KeyState::fakeKeyRepeat(
                 KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton serverID)
+                SInt32 count, KeyButton serverID, const String& lang)
 {
     serverID &= kButtonMask;
 
@@ -643,7 +628,7 @@ KeyState::fakeKeyRepeat(
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
     const synergy::KeyMap::KeyItem* keyItem =
         m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
-                                getActiveModifiersRValue(), mask, true);
+                                getActiveModifiersRValue(), mask, true, lang);
     if (keyItem == NULL) {
         return false;
     }

@@ -77,7 +77,7 @@ public:
     void        setClipboardDirty(ClipboardID, bool) override = 0;
     void        keyDown(KeyID, KeyModifierMask, KeyButton, const String&) override = 0;
     void        keyRepeat(KeyID, KeyModifierMask,
-                            SInt32 count, KeyButton) override = 0;
+                            SInt32 count, KeyButton, const String& lang) override = 0;
     void        keyUp(KeyID, KeyModifierMask, KeyButton) override = 0;
     void        mouseDown(ButtonID) override = 0;
     void        mouseUp(ButtonID) override = 0;

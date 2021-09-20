@@ -646,9 +646,10 @@ ServerProxy::keyRepeat()
 
     // parse
     UInt16 id, mask, count, button;
+    String lang;
     ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
-                                &id, &mask, &count, &button);
-    LOG((CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button));
+                                &id, &mask, &count, &button, &lang);
+    LOG((CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x, lang=\"%s\"", id, mask, count, button, lang.c_str()));
 
     // translate
     KeyID id2             = translateKey(static_cast<KeyID>(id));
@@ -659,7 +660,7 @@ ServerProxy::keyRepeat()
         LOG((CLOG_DEBUG1 "key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
     // forward
-    m_client->keyRepeat(id2, mask2, count, button);
+    m_client->keyRepeat(id2, mask2, count, button, lang);
 }
 
 void

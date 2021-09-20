@@ -854,9 +854,9 @@ MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 
 bool
 MSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-    bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button);
+    bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button, lang);
     updateForceShowCursor();
     return result;
 }
