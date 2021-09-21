@@ -42,7 +42,6 @@ ClientProxy1_1::~ClientProxy1_1()
 void
 ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String& lang)
 {
-//    auto code = AppUtil::instance().getCurrentLanguageCode();
     LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, lang=\"%s\"", getName().c_str(), key, mask, button, lang.c_str()));
     ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button, &lang);
 }

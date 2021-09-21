@@ -693,7 +693,7 @@ KeyMap::addGroupToKeystroke(Keystrokes& keys, SInt32& group, const String& lang)
     auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
     if (it != m_keyboardLayouts.end()) {
         LOG((CLOG_DEBUG2 "keystroke group detected as %s, group is %d", lang.c_str(), group));
-        group = std::distance(m_keyboardLayouts.begin(), it);
+        group = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
     }
     else {
         LOG((CLOG_DEBUG2 "could not found requested language, guessing that correct is %d", group));

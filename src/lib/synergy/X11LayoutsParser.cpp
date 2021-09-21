@@ -34,7 +34,7 @@ X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<
         return false;
     }
 
-    langList.emplace_back(Lang());
+    langList.emplace_back();
     auto nameElem = configItemElem.child("name");
     if(nameElem) {
         langList.back().name = nameElem.text().as_string();
