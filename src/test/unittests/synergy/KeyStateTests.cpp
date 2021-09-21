@@ -494,7 +494,7 @@ assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 
 const synergy::KeyMap::KeyItem*
 stubMapKey(synergy::KeyMap::Keystrokes& keys, KeyID, SInt32,
-           const synergy::KeyMap::ModifierToKeys&, const KeyModifierMask&,
+           synergy::KeyMap::ModifierToKeys&, KeyModifierMask&,
            KeyModifierMask, bool, const String&)
 {
     keys.push_back(s_stubKeystroke);
