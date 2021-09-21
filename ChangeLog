@@ -8,6 +8,7 @@ Bug fixes:
 - #7081 Fix autoconfig after SYNERGY-1161
 - #7082 Windows client doesn't resume connection after sleep
 - #7089 Modifier keys don't work on Microsoft Remote Desktop
+- #7091 Fix CMakeFileList for unittests
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
@@ -18,7 +19,7 @@ Github Actions:
 - #1043 Adding upload to s3 feature on all OSes
 ===========
 
-v1.14.1-rc
+v1.14.1-stable
 ===========
 Bug fixes:
 - #7016 Fix script that generates version number
