@@ -675,11 +675,6 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
         return NULL;
     }
 
-    // add keystrokes to restore group
-    if (newGroup != group) {
-        addGroupToKeystroke(keys, group, lang);
-    }
-
     // save new modifiers
     activeModifiers = newModifiers;
     currentState    = newState;
