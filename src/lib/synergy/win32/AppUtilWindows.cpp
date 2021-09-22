@@ -211,8 +211,17 @@ String
 AppUtilWindows::getCurrentLanguageCode()
 {
     String code("", 2);
-    GetLocaleInfoA(MAKELCID(((UINT)GetKeyboardLayout(0) & 0xffffffff), SORT_DEFAULT),
-                   LOCALE_SISO639LANGNAME, &code[0], code.size());
+
+    GUITHREADINFO gti = { sizeof(GUITHREADINFO) };
+    if(!GetGUIThreadInfo(0, &gti) || !gti.hwndActive) {
+        LOG((CLOG_WARN "Failed to determine correct keyboard layout"));
+        return code;
+    }
+
+    auto hklLayout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
+    auto localLayoutID = MAKELCID(((UINT)hklLayout & 0xffffffff), SORT_DEFAULT);
+    GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0], code.size());
+
     return code;
 }
 

@@ -333,9 +333,13 @@ MSWindowsScreen::leave()
     }
     // get keyboard layout of foreground window.  we'll use this
     // keyboard layout for translating keys sent to clients.
-    HWND window  = GetForegroundWindow();
-    DWORD thread = GetWindowThreadProcessId(window, NULL);
-    m_keyLayout  = GetKeyboardLayout(thread);
+    GUITHREADINFO gti = { sizeof(GUITHREADINFO) };
+    if(GetGUIThreadInfo(0, &gti) && gti.hwndActive) {
+        m_keyLayout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
+    }
+    else {
+        LOG((CLOG_WARN "Failed to determine correct keyboard layout"));
+    }
 
     // tell the key mapper about the keyboard layout
     m_keyState->setKeyLayout(m_keyLayout);

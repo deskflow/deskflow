@@ -1333,8 +1333,10 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 	// XXX -- determine if m_groups[group] can be used with the system
 	// character set.
 
-	PostMessage(targetWindow, WM_INPUTLANGCHANGEREQUEST,
-								sysCharSet ? 1 : 0, (LPARAM)m_groups[group]);
+    if(!PostMessage(targetWindow, WM_INPUTLANGCHANGEREQUEST,
+                                sysCharSet ? 1 : 0, (LPARAM)m_groups[group])) {
+        LOG((CLOG_WARN "Failed to post change language message!"));
+    }
 
 	// XXX -- use a short delay to let the target window process the message
 	// before it sees the keyboard events.  i'm not sure why this is
