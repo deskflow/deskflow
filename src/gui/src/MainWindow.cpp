@@ -1506,6 +1506,13 @@ void MainWindow::enableClient(bool enable)
     }
 }
 
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+#if defined (Q_OS_LINUX)
+    qApp->quit();
+#endif
+    QWidget::closeEvent(event);
+}
 
 void MainWindow::on_m_pRadioGroupServer_clicked(bool)
 {
