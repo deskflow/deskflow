@@ -1509,7 +1509,7 @@ void MainWindow::enableClient(bool enable)
 void MainWindow::closeEvent(QCloseEvent* event)
 {
 #if defined (Q_OS_LINUX)
-    qApp->quit();
+    QCoreApplication::quit();
 #endif
     QWidget::closeEvent(event);
 }
