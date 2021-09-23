@@ -145,7 +145,13 @@ MSWindowsDesks::MSWindowsDesks(
 
     m_cursor    = createBlankCursor();
     m_deskClass = createDeskWindowClass(m_isPrimary);
-    m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());
+    GUITHREADINFO gti = { sizeof(GUITHREADINFO) };
+    if(GetGUIThreadInfo(0, &gti) && gti.hwndActive) {
+        m_keyLayout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
+    }
+    else {
+        LOG((CLOG_WARN "Failed to determine correct keyboard layout"));
+    }
     resetOptions();
 }
 
@@ -613,9 +619,6 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
                 AttachThreadInput(thatThread, thisThread, FALSE);
             }
         }
-
-        // switch to requested keyboard layout
-        ActivateKeyboardLayout(keyLayout, 0);
     }
     else {
         // move hider window under the cursor center, raise, and show it
