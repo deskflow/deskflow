@@ -1,10 +1,8 @@
-name: CentOS
+name: CentOS-Upload
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [created]
 
 jobs:
   build-arch64:
@@ -31,5 +29,10 @@ jobs:
         . ./version
         make -j
 
-    - name: Run unit test
-      run: ./build/bin/unittests
+    - uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+        aws_bucket: ${{ secrets.AWS_BUCKET }}
+        source_dir: ./build/bin
+        destination_dir: "./synergy3/latest/${{matrix.distro}}/"

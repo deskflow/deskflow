@@ -45,8 +45,8 @@ elseif (UNIX)
     file(GLOB platform_headers "platform/XWindows*.h")
 endif()
 
-list(APPEND sources ${platform_headers})
-list(APPEND headers ${platform_sources})
+list(APPEND sources ${platform_sources})
+list(APPEND headers ${platform_headers})
 
 include_directories(
     ../../
