@@ -198,9 +198,13 @@ XWindowsKeyState::pollActiveGroup() const
 #if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         XkbStateRec state;
+        XSync(m_display, False);
         if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
+            LOG((CLOG_WARN "LANGUAGE_DEBUG Poll result %d", state.group));
             return state.group;
         }
+
+        LOG((CLOG_WARN "Failed to poll active group"));
     }
 #endif
     return 0;
@@ -244,22 +248,9 @@ XWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
 void
 XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
-    auto changeLanguage = [](SInt32 group)
-    {
-        auto langList = AppUtil::instance().getKeyboardLayoutList();
-        if(group >= langList.size()) {
-            LOG((CLOG_WARN "Failed to change keyboard layout to %d", group));
-        }
-
-        auto langName = langList[group];
-        auto command = "setxkbmap " + langName;
-        LOG((CLOG_WARN "Changing keyboard layout to %s", command.c_str()));
-        system(command.c_str());
-    };
-
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+        LOG((CLOG_WARN "LANGUAGE_DEBUG  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
         if (keystroke.m_data.m_button.m_repeat) {
             int c = keystroke.m_data.m_button.m_button;
             int i = (c >> 3);
@@ -281,10 +272,15 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         }
 
         if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
-                changeLanguage(keystroke.m_data.m_group.m_group);
+                XSync(m_display, False);
+                if (XkbLockGroup(m_display, XkbUseCoreKbd,
+                            keystroke.m_data.m_group.m_group) == False) {
+                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                }
+                XSync(m_display, False);
             }
             else
 #endif
@@ -293,10 +289,16 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             }
         }
         else {
-            LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %+d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
-                changeLanguage(getEffectiveGroup(pollActiveGroup(), keystroke.m_data.m_group.m_group));
+                XSync(m_display, False);
+                if (XkbLockGroup(m_display, XkbUseCoreKbd,
+                            getEffectiveGroup(pollActiveGroup(),
+                                keystroke.m_data.m_group.m_group)) == False) {
+                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                }
+                XSync(m_display, False);
             }
             else
 #endif
