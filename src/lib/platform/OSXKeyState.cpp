@@ -476,30 +476,66 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 }
 
 CGEventFlags
-OSXKeyState::getKeyboardEventFlags()
+OSXKeyState::getDeviceIndependedFlags() const
 {
-    // set the event flags for special keys
-    // http://tinyurl.com/pxl742y
     CGEventFlags modifiers = 0;
 
     if (m_shiftPressed) {
-        modifiers |= kCGEventFlagMaskShift | NX_DEVICELSHIFTKEYMASK;
+        modifiers |= kCGEventFlagMaskShift;
     }
 
     if (m_controlPressed) {
-        modifiers |= kCGEventFlagMaskControl | NX_DEVICELCTLKEYMASK;
+        modifiers |= kCGEventFlagMaskControl;
     }
 
     if (m_altPressed) {
-        modifiers |= kCGEventFlagMaskAlternate | NX_DEVICELALTKEYMASK;
+        modifiers |= kCGEventFlagMaskAlternate;
     }
 
     if (m_superPressed) {
-        modifiers |= kCGEventFlagMaskCommand | NX_DEVICELCMDKEYMASK;
+        modifiers |= kCGEventFlagMaskCommand;
     }
+
+    return modifiers;
+}
+
+CGEventFlags
+OSXKeyState::getDeviceDependedFlags() const
+{
+    CGEventFlags modifiers = 0;
+
+    if (m_shiftPressed) {
+        modifiers |= NX_DEVICELSHIFTKEYMASK;
+    }
+
+    if (m_controlPressed) {
+        modifiers |= NX_DEVICELCTLKEYMASK;
+    }
+
+    if (m_altPressed) {
+        modifiers |= NX_DEVICELALTKEYMASK;
+    }
+
+    if (m_superPressed) {
+        modifiers |= NX_DEVICELCMDKEYMASK;
+    }
+
+    return modifiers;
+}
+
+
+CGEventFlags
+OSXKeyState::getKeyboardEventFlags() const
+{
+    // set the event flags for special keys
+    // http://tinyurl.com/pxl742y
+    CGEventFlags modifiers = getDeviceIndependedFlags();
 
     if (m_capsPressed) {
         modifiers |= kCGEventFlagMaskAlphaShift;
+    }
+    else {
+        modifiers |= getDeviceDependedFlags();
     }
 
     return modifiers;
