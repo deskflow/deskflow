@@ -166,8 +166,8 @@ Visita il nostro sito Web per assistenza e informazioni (symless.com).
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
-      <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Questo può essere trovato sulla tua &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;pagina&lt;/span&gt;&lt;/a&gt; dell'account.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/synergy/account-login&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+      <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Questo può essere trovato sulla tua &lt;a href=&quot;https://symless.com/synergy/account-login&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;pagina&lt;/span&gt;&lt;/a&gt; dell'account.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="49"/>
