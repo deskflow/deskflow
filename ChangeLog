@@ -11,6 +11,7 @@ Bug fixes:
 - #7091 Fix CMakeFileList for unittests
 - #7092 Synergy is running after quit on Linux
 - #7095 Update account and upgrade links
+- #7096 The system duplicates hotkeys in setup
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
