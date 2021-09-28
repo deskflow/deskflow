@@ -184,12 +184,7 @@ MainWindow::MainWindow (AppConfig& appConfig,
     connect (m_AppConfig, SIGNAL(zeroConfToggled()),
              this, SLOT(zeroConfToggled()), Qt::QueuedConnection);
 
-#ifdef SYNERGY_ENTERPRISE
-    setWindowTitle ("Synergy 1 Enterprise");
-#else
-    setWindowTitle (m_LicenseManager->activeEditionName());
-    m_LicenseManager->refresh();
-#endif
+    updateWindowTitle();
 
     QString lastVersion = m_AppConfig->lastVersion();
     QString currentVersion = m_VersionChecker.getVersion();
@@ -620,9 +615,6 @@ void MainWindow::restartSynergy()
 
 void MainWindow::proofreadInfo()
 {
-#ifndef SYNERGY_ENTERPRISE
-    setEdition(m_AppConfig->edition()); // Why is this here?
-#endif
     int oldState = m_SynergyState;
     m_SynergyState = synergyDisconnected;
     setSynergyState((qSynergyState)oldState);
@@ -1174,7 +1166,7 @@ void MainWindow::changeEvent(QEvent* event)
         {
             retranslateUi(this);
             retranslateMenuBar();
-
+            updateWindowTitle();
             proofreadInfo();
 
             break;
@@ -1301,6 +1293,16 @@ void MainWindow::updateAutoConfigWidgets()
 
    m_pLabelAutoDetected->hide();
    m_pComboServerList->hide();
+}
+
+void MainWindow::updateWindowTitle()
+{
+#ifdef SYNERGY_ENTERPRISE
+    setWindowTitle ("Synergy 1 Enterprise");
+#else
+    setWindowTitle (m_LicenseManager->activeEditionName());
+    m_LicenseManager->refresh();
+#endif
 }
 
 void MainWindow::on_m_pActionSettings_triggered()

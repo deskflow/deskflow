@@ -252,6 +252,7 @@ public slots:
         ClientConnection    m_clientConnection;
 
         void                updateAutoConfigWidgets();
+        void updateWindowTitle();
         
 private slots:
     void on_m_pButtonApply_clicked();
