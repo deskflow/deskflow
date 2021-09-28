@@ -168,8 +168,8 @@ Visite nosso site para obter ajuda e informações (symless.com).
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="33"/>
-      <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/account/?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+      <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/synergy/account-login&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+      <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/synergy/account-login&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
       <location filename="src/ActivationDialog.ui" line="49"/>
