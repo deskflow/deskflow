@@ -2,35 +2,44 @@ name: Mac
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-  build-arch64:
-    runs-on: macos-10.15
+  test-macos:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: "macos-10.15"
+            target: "10.14"
+          - os: [self-hosted, macOS, arm64]
+            target: ""
 
     env:
       GIT_COMMIT: ${{ github.sha }}
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install brew dependencies
-      run: |
-        brew list qt5 &>/dev/null || brew install qt5
-        brew list openssl &>/dev/null || brew install openssl
+      - name: Install brew dependencies
+        run: |
+          brew list qt5 &>/dev/null || brew install qt5
+          brew list openssl &>/dev/null || brew install openssl
 
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake \
-          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
-        . ./version
-        make -j
+      - name: Build
+        env:
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target }}
+        run: |
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
+          . ./version
+          make -j
 
-    - name: Run unit test
-      run: ./build/bin/unittests
+      - name: Run unit test
+        run: ./build/bin/unittests
