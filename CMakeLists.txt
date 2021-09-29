@@ -405,6 +405,7 @@ macro(generate_versionfile)
     endif()
 endmacro(generate_versionfile)
 
+generate_versionfile()
 
 if (${SYNERGY_BUILD_LEGACY_INSTALLER})
 #
@@ -416,8 +417,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
-
-    generate_versionfile()
     configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
 endif()
 
@@ -426,7 +425,6 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
-        generate_versionfile()
         set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
@@ -442,7 +440,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
     endif()
-    generate_versionfile()
 endif()
 
 else()
