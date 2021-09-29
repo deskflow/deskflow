@@ -18,10 +18,11 @@ jobs:
 
     strategy:
       matrix:
-        enterprise: ["1", ""]
+        # enterprise: ["1", ""]
+        enterprise: [""]
     env:
       GIT_COMMIT: ${{ github.sha }}
-      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}ß
+      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
 
     steps:
@@ -33,13 +34,14 @@ jobs:
           brew list qt5 &>/dev/null || brew install qt5
           brew list openssl &>/dev/null || brew install openssl
 
-      - name: Build SYNERGYß
+      - name: Build SYNERGY
+        env:
+          CMAKE_BUILD_TYPE: Release
         run: |
+          export CMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)"
           mkdir build
           cd build
-          cmake \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
+          cmake ..
           . ./version
           make -j
           make install/strip
@@ -67,7 +69,7 @@ jobs:
             SYNERGY_PACKAGE_NAME='synergy'
             SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
           fi
-          SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-10.13_x86-64.dmg"
+          SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-arm64.dmg"
           echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
           echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
