@@ -1,4 +1,4 @@
-name: Build Core macOS
+name: macOS - Core
 
 on:
   release:
@@ -58,4 +58,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: ./build/bin
-          destination_dir: "./synergy3/beta/${{ matrix.destination }}/"
+          destination_dir: "./synergy3/latest/${{ matrix.destination }}/"

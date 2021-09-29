@@ -1,22 +1,24 @@
-name: Ubuntu-Upload
+name: Ubuntu - Core
 
 on:
   release:
     types: [created]
 
 jobs:
-  upload-to-s3:
+  build-core-ubuntu:
     runs-on: ubuntu-latest
     container: symless/synergy-core:ubuntu${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
+      SYNERGY_NO_LEGACY: "1"
+      SYNERGY_NO_TESTS: "1"
     strategy:
       matrix:
-        distro: ['20.04', '21.04', '18.04']
-        flag: ['-j']
+        distro: ["20.04", "21.04", "18.04"]
+        flag: ["-j"]
         include:
-          - distro: '16.04'
-            flag: '-j1'
+          - distro: "16.04"
+            flag: "-j1"
 
     name: ubuntu${{ matrix.distro }}
 
