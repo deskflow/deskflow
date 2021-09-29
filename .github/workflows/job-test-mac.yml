@@ -10,13 +10,19 @@ jobs:
   test-macos:
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
     strategy:
       matrix:
         include:
           - os: "macos-10.15"
             target: "10.14"
+            shell: "bash"
           - os: [self-hosted, macOS, arm64]
             target: ""
+            shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
     env:
       GIT_COMMIT: ${{ github.sha }}
