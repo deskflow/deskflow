@@ -19,20 +19,19 @@ project (synergy-core C CXX)
 
 if (DEFINED ENV{SYNERGY_NO_LEGACY})
     option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" OFF)
-    option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" OFF)
     option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" OFF)
 else()
     option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-    option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
     option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 endif()
 
+option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
+
 if (DEFINED ENV{SYNERGY_NO_TESTS})
     option (BUILD_TESTS "Override building of tests" OFF)
-    option (ENABLE_COVERAGE "Build with coverage" OFF)
 else()
     option (BUILD_TESTS "Override building of tests" ON)
-    option (ENABLE_COVERAGE "Build with coverage" ON)
+    option (ENABLE_COVERAGE "Build with coverage")
 endif()
 
 if ($ENV{SYNERGY_ENTERPRISE})
