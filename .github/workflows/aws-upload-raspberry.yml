@@ -8,7 +8,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+        include:
+          - os: [self-hosted, linux, ARM, pi-3]
+            destination: "raspberry-pi-3_arm"
+          - os: [self-hosted, linux, ARM64, pi-4]
+            destination: "raspberry-pi-4_arm64"
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
@@ -30,4 +34,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: ./build/bin
-          destination_dir: "./synergy3/latest/Raspberry/${{ matrix.os[3] }}_${{ matrix.os[2]}}/"
+          destination_dir: "./synergy3/latest/${{ matrix.destination }}"
