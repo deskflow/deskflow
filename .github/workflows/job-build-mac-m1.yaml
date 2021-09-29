@@ -38,10 +38,12 @@ jobs:
         env:
           CMAKE_BUILD_TYPE: Release
         run: |
-          export CMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)"
+          export 
           mkdir build
           cd build
-          cmake ..
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
           . ./version
           make -j
           make install/strip
