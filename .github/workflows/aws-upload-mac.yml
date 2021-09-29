@@ -1,0 +1,61 @@
+name: Build Core macOS
+
+on:
+  release:
+    types: [created]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-core-macos:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    strategy:
+      matrix:
+        include:
+          - os: "macos-10.15"
+            target: "10.14"
+            shell: "bash"
+            destination: macOS_x64
+          - os: [self-hosted, macOS, arm64]
+            target: ""
+            shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+            destination: macOS_arm64
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      SYNERGY_NO_LEGACY: 1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install brew dependencies
+        run: |
+          brew list qt5 &>/dev/null || brew install qt5
+          brew list openssl &>/dev/null || brew install openssl
+
+      - name: Build
+        env:
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target }}
+        run: |
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
+          . ./version
+          make -j
+
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: ./build/bin
+          destination_dir: "./synergy3/beta/${{ matrix.destination }}/"
