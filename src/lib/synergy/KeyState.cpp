@@ -615,6 +615,7 @@ KeyState::fakeKeyRepeat(
                 KeyID id, KeyModifierMask mask,
                 SInt32 count, KeyButton serverID, const String& lang)
 {
+    LOG((CLOG_DEBUG2 "fakeKeyRepeat"));
     serverID &= kButtonMask;
 
     // if we haven't seen this button go down then ignore it

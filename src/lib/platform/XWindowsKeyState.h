@@ -122,6 +122,7 @@ private:
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
     UInt32                getGroupFromState(unsigned int state) const;
+    bool                setCurrentLanguageWithDBus(SInt32 group) const;
 
     static void            remapKeyModifiers(KeyID, SInt32,
                             synergy::KeyMap::KeyItem&, void*);
