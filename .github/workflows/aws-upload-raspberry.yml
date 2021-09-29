@@ -13,6 +13,7 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
       SYNERGY_NO_TESTS: "1"
+      SYNERGY_STATIC_OPENSSL: "1"
 
     steps:
       - uses: actions/checkout@v2

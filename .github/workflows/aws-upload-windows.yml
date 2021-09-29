@@ -17,6 +17,7 @@ jobs:
       BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       SYNERGY_NO_LEGACY: "1"
       SYNERGY_NO_TESTS: "1"
+      SYNERGY_STATIC_OPENSSL: "1"
 
     strategy:
       matrix:
