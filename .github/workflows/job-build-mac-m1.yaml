@@ -8,6 +8,10 @@ on:
   pull_request:
     branches: [master]
 
+defaults:
+  run:
+    shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+
 jobs:
   build-on-mac-m1:
     runs-on: [self-hosted, macOS, arm64]
