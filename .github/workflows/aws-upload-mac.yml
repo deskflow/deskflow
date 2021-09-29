@@ -30,7 +30,8 @@ jobs:
 
     env:
       GIT_COMMIT: ${{ github.sha }}
-      SYNERGY_NO_LEGACY: 1
+      SYNERGY_NO_LEGACY: "1"
+      SYNERGY_NO_TESTS: "1"
 
     steps:
       - uses: actions/checkout@v2
