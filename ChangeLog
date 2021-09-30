@@ -12,6 +12,7 @@ Bug fixes:
 - #7092 Synergy is running after quit on Linux
 - #7095 Update account and upgrade links
 - #7096 The system duplicates hotkeys in setup
+- #7099 SYNERGY-854 Fix compilation with msvc 2014
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
