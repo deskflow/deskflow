@@ -111,6 +111,7 @@ void ServerConfig::init()
 {
     switchCorners().clear();
     screens().clear();
+    hotkeys().clear();
 
     // m_NumSwitchCorners is used as a fixed size array. See Screen::init()
     for (int i = 0; i < NumSwitchCorners; i++)

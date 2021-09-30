@@ -255,7 +255,7 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
 
         if (message.exec() == QMessageBox::Accepted)
         {
-            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "account"));
+            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/upgrade"));
         }
     }
 }

@@ -195,6 +195,7 @@ public slots:
         void retranslateMenuBar();
         void enableServer(bool enable);
         void enableClient(bool enable);
+        void closeEvent(QCloseEvent* event) override;
 
 #if defined(Q_OS_WIN)
         bool isServiceRunning(QString name);
