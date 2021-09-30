@@ -614,9 +614,10 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
                     GetWindowThreadProcessId(desk->m_window, NULL);
                 DWORD thatThread =
                     GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
-                AttachThreadInput(thatThread, thisThread, TRUE);
-                SetForegroundWindow(desk->m_window);
-                AttachThreadInput(thatThread, thisThread, FALSE);
+
+                if(!SetForegroundWindow(desk->m_window)) {
+                    LOG((CLOG_WARN "Failed to activate window for input capturing!"));
+                }
             }
         }
     }
