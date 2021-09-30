@@ -122,6 +122,11 @@ private:
     bool                hasModifiersXKB() const;
     int                    getEffectiveGroup(KeyCode, int group) const;
     UInt32                getGroupFromState(unsigned int state) const;
+
+    //! Create and send language change request to \p group by DBus interface
+    /*!
+    Returns the existance of nedeed DBus interface.
+    */
     bool                setCurrentLanguageWithDBus(SInt32 group) const;
 
     static void            remapKeyModifiers(KeyID, SInt32,

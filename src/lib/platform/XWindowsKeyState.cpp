@@ -265,7 +265,7 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
     QDBusInterface screenSaverInterface(service, path, service, bus);
     if (!screenSaverInterface.isValid()) {
         LOG((CLOG_WARN "Keyboard layout fail. DBus interface is invalid"));
-        return true;
+        return false;
     }
 
     QDBusPendingReply<bool, QString> reply = screenSaverInterface.call(method, param);
@@ -321,9 +321,11 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         if (keystroke.m_data.m_group.m_absolute) {
             LOG((CLOG_WARN "LANGUAGE_DEBUG  group %d", keystroke.m_data.m_group.m_group));
 
+#ifndef __APPLE__
             if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
                 break;
             }
+#endif
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
@@ -340,10 +342,11 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         else {
             LOG((CLOG_WARN "LANGUAGE_DEBUG  group %+d", keystroke.m_data.m_group.m_group));
 
+#ifndef __APPLE__
             if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
                 break;
             }
-
+#endif
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
