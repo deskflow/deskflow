@@ -3,6 +3,8 @@ name: Windows - Core
 on:
   release:
     types: [created]
+  pull_request:
+    branches: [master]
 
 jobs:
   build-core-windows:
