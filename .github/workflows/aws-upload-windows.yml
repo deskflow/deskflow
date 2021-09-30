@@ -15,24 +15,8 @@ jobs:
       SYNERGY_NO_TESTS: "1"
       SYNERGY_STATIC_OPENSSL: "1"
 
-    strategy:
-      matrix:
-        arch: ["x64"]
-
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up OpenSSL variables
-        run: |
-          if ('${{ matrix.arch }}' -eq 'x64')
-          {
-            Write-Output "::set-output name=OPEN_SSL_DIR::C:\\Program Files\\OpenSSL-Win64"
-          }
-          else
-          {
-            Write-Output "::set-output name=OPEN_SSL_DIR::C:\\Program Files (x86)\\OpenSSL-Win32"
-          }
-        id: openssl-setup
 
       - name: Cache Bonjour
         id: cache-bonjour
@@ -52,14 +36,14 @@ jobs:
       - name: Install OpenSSL
         run: |
           choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
-          choco install openssl -y --force${{ matrix.arch }} --no-progress
+          choco install openssl -y --no-progress
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Build
         env:
-          CMAKE_PREFIX_PATH: "${{ steps.openssl-setup.outputs.OPEN_SSL_DIR }}"
+          CMAKE_PREFIX_PATH: "C:\\Program Files\\OpenSSL-Win64"
         run: |
           mkdir build
           cd build
@@ -73,4 +57,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: ./build/bin/Release
-          destination_dir: "./synergy3/latest/Windows_${{ matrix.arch }}/"
+          destination_dir: "./synergy3/latest/Windows_x64/"
