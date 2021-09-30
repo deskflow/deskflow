@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up QT variables
+      - name: Set up OpenSSL variables
         run: |
           if ('${{ matrix.arch }}' -eq 'x64')
           {
@@ -32,7 +32,7 @@ jobs:
           {
             Write-Output "::set-output name=OPEN_SSL_DIR::C:\\Program Files (x86)\\OpenSSL-Win32"
           }
-        id: qt-setup
+        id: openssl-setup
 
       - name: Cache Bonjour
         id: cache-bonjour
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build
         env:
-          CMAKE_PREFIX_PATH: "${{ steps.qt-setup.outputs.OPEN_SSL_DIR }}"
+          CMAKE_PREFIX_PATH: "${{ steps.openssl-setup.outputs.OPEN_SSL_DIR }}"
         run: |
           mkdir build
           cd build
