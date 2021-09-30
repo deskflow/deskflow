@@ -25,8 +25,6 @@ else()
     option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 endif()
 
-option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
-
 if (DEFINED ENV{SYNERGY_NO_TESTS})
     option (BUILD_TESTS "Override building of tests" OFF)
 else()
