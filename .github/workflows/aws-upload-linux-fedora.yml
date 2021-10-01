@@ -1,15 +1,18 @@
-name: Fedora-Upload
+name: Fedora - Core
 
 on:
   release:
     types: [created]
 
 jobs:
-  upload-to-s3:
+  build-core-fedora:
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
+      SYNERGY_NO_LEGACY: "1"
+      SYNERGY_NO_TESTS: "1"
+      SYNERGY_STATIC_OPENSSL: "1"
     strategy:
       matrix:
         include:
