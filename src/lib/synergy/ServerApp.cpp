@@ -39,6 +39,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/Version.h"
+#include "base/Path.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -228,7 +229,7 @@ ServerApp::loadConfig(const String& pathname)
     try {
         // load configuration
         LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
-        std::ifstream configStream(pathname.c_str());
+        std::ifstream configStream(synergy::filesystem::path(pathname));
         if (!configStream.is_open()) {
             // report failure to open configuration as a debug message
             // since we try several paths and we expect some to be
