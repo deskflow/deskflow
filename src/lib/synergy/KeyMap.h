@@ -104,7 +104,7 @@ public:
 		union Data {
 		public:
 			Data() {}
-			Data(Data &&) {}
+			Data(Data &&) = default;
 			Data(const Data&) = default;
 			Data& operator=(const Data&) = default;
 
