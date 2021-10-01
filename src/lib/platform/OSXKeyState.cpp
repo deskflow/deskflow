@@ -411,7 +411,7 @@ OSXKeyState::pollActiveGroup() const
         return i->second;
     }
     
-    LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
+    LOG((CLOG_WARN "can't get the active group, use the first group instead"));
 
     return 0;
 }
@@ -610,6 +610,17 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
                 else {
                     LOG((CLOG_DEBUG1 "  group %+d", group));
                     setGroup(getEffectiveGroup(pollActiveGroup(), group));
+                }
+
+                //A minimal delay is needed after a group change because the
+                //keyboard key event often happens immediately after.
+                //Language (TIS) and event (CG) systems are not in the mutual
+                //event queue and without a delay the subsequent key press
+                //event could be applied before the keyboard layout would
+                //actually be changed.
+                ARCH->sleep(.01);
+                if(pollActiveGroup() != group) {
+                    LOG((CLOG_WARN "Failed to set new keyboard layout!"));
                 }
             }
             break;
@@ -882,6 +893,8 @@ OSXKeyState::setGroup(SInt32 group)
     if(TISSelectInputSource(keyboardLayout) != noErr) {
         LOG((CLOG_WARN "Failed to set nedeed keyboard layout"));
     }
+
+    LOG((CLOG_DEBUG1 "Keyboard layout change to %d", group));
 }
 
 void
