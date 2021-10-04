@@ -18,6 +18,16 @@
 
 #include "synergy/unix/AppUtilUnix.h"
 #include "synergy/ArgsBase.h"
+#include <thread>
+
+#if WINAPI_XWINDOWS
+#include "synergy/X11LayoutsParser.h"
+#include <X11/XKBlib.h>
+#elif WINAPI_CARBON
+#include <Carbon/Carbon.h>
+#else
+#error Platform not supported.
+#endif
 #include "base/Log.h"
 #include "base/log_outputters.h"
 
@@ -51,6 +61,114 @@ AppUtilUnix::startNode()
     app().startNode();
 }
 
+std::vector<String>
+AppUtilUnix::getKeyboardLayoutList()
+{
+    std::vector<String> layoutLangCodes;
+
+#if WINAPI_XWINDOWS
+    layoutLangCodes = X11LayoutsParser::getX11LanguageList("/etc/default/keyboard", "/usr/share/X11/xkb/rules/evdev.xml");
+#elif WINAPI_CARBON
+    CFStringRef keys[] = { kTISPropertyInputSourceCategory };
+    CFStringRef values[] = { kTISCategoryKeyboardInputSource };
+    CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
+    CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+
+    for (CFIndex i = 0; i < CFArrayGetCount(kbds); ++i) {
+        TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
+        auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
+        char temporaryCString[128] = {0};
+        for(CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+            auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
+            if(!languageCode ||
+               !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
+                continue;
+            }
+
+            std::string langCode(temporaryCString);
+            if(langCode.size() == 2 &&
+               std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) == layoutLangCodes.end()){
+                layoutLangCodes.push_back(langCode);
+            }
+
+            //Save only first language code
+            break;
+        }
+    }
+#endif
+
+    return layoutLangCodes;
+}
+
+String
+AppUtilUnix::getCurrentLanguageCode()
+{
+    String result = "";
+#if WINAPI_XWINDOWS
+
+    auto display = XOpenDisplay(nullptr);
+      if (!display) {
+          LOG((CLOG_WARN "Failed to open x11 default display"));
+          return result;
+      }
+
+      auto kbdDescr= XkbAllocKeyboard();
+      if (!kbdDescr) {
+          LOG((CLOG_WARN "Failed to get x11 keyboard description"));
+          return result;
+      }
+      XkbGetNames(display, XkbSymbolsNameMask, kbdDescr);
+
+      Atom symNameAtom = kbdDescr->names->symbols;
+      auto rawLayouts = std::string(XGetAtomName(display, symNameAtom));
+
+      XkbStateRec state;
+      XkbGetState(display, XkbUseCoreKbd, &state);
+      auto nedeedGroupIndex = static_cast<int>(state.group);
+
+      size_t groupIdx = 0;
+      size_t groupStartI = 0;
+      for(size_t strI = 0; strI < rawLayouts.size(); strI++) {
+          if(rawLayouts[strI] != '+') {
+              continue;
+          }
+
+          auto group = rawLayouts.substr(groupStartI, strI - groupStartI);
+          if(group.find("group", 0, 5) == std::string::npos &&
+             group.find("inet", 0, 4)  == std::string::npos &&
+             group.find("pc", 0, 2)    == std::string::npos) {
+              if(nedeedGroupIndex == groupIdx) {
+                  result = group.substr(0, std::min(group.find('(', 0), group.find(':', 0)));
+                  break;
+              }
+              groupIdx++;
+          }
+
+          groupStartI = strI + 1;
+      }
+
+      XFree(kbdDescr);
+      XkbFreeNames(kbdDescr, XkbSymbolsNameMask, true);
+      XCloseDisplay(display);
+
+      result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
+
+#elif WINAPI_CARBON
+    auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
+    char temporaryCString[128] = {0};
+    for(CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+        auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
+        if(!languageCode || !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
+            continue;
+        }
+
+        result = std::string(temporaryCString);
+        break;
+    }
+#endif
+    return result;
+}
+	
 void
 AppUtilUnix::showNotification(const String & title, const String & text) const
 {

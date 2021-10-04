@@ -204,7 +204,8 @@ protected:
         kServerHostname,
         kTLSCertPath,
         kTLSKeyLength,
-        kPreventSleep
+        kPreventSleep,
+        kLanguageSync
     };
 
         void setScreenName(const QString& s);

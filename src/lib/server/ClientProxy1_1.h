@@ -27,8 +27,8 @@ public:
     ~ClientProxy1_1();
 
     // IClient overrides
-    virtual void        keyDown(KeyID, KeyModifierMask, KeyButton);
+    virtual void        keyDown(KeyID, KeyModifierMask, KeyButton, const String&);
     virtual void        keyRepeat(KeyID, KeyModifierMask,
-                            SInt32 count, KeyButton);
+                            SInt32 count, KeyButton, const String&);
     virtual void        keyUp(KeyID, KeyModifierMask, KeyButton);
 };

@@ -21,6 +21,8 @@
 
 #include "test/global/gtest.h"
 
+#include <array>
+
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
@@ -49,6 +51,42 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
     argParser.parseClientArgs(clientArgs, argc, kYScrollCmd);
 
     EXPECT_EQ(1, clientArgs.m_yscroll);
+}
+
+TEST(ClientArgsParsingTests, parseClientArgs_setLangSync)
+{
+    NiceMock<MockArgParser> argParser;
+    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+    lib::synergy::ClientArgs clientArgs;
+    clientArgs.m_enableLangSync = false;
+    const int argc = 2;
+    std::array<const char*, argc> kLangCmd = { "stub", "--sync-language" };
+
+    argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
+
+    EXPECT_TRUE(clientArgs.m_enableLangSync);
+}
+
+TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs)
+{
+    NiceMock<MockArgParser> argParser;
+    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+    lib::synergy::ClientArgs clientArgs;
+    clientArgs.m_enableLangSync = false;
+    const int argc = 9;
+    std::array<const char*, argc> kLangCmd = { "stub", "--enable-crypto", "--profile-dir", "profileDir",
+                                               "--plugin-dir", "pluginDir", "--tls-cert", "tlsCertPath",
+                                               "--prevent-sleep" };
+
+    argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
+
+    EXPECT_TRUE(clientArgs.m_enableCrypto);
+    EXPECT_EQ(clientArgs.m_profileDirectory, "profileDir");
+    EXPECT_EQ(clientArgs.m_pluginDirectory, "pluginDir");
+    EXPECT_EQ(clientArgs.m_tlsCertFile, "tlsCertPath");
+    EXPECT_TRUE(clientArgs.m_preventSleep);
 }
 
 TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setSynergyAddress)

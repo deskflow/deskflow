@@ -42,16 +42,16 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
     keyState.updateKeyMap();
 
-    keyState.fakeKeyDown(SHIFT_ID_L, 0, 1);
+    keyState.fakeKeyDown(SHIFT_ID_L, 0, 1, "en");
     EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
 
     keyState.fakeKeyUp(1);
     EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 
-    keyState.fakeKeyDown(SHIFT_ID_R, 0, 2);
+    keyState.fakeKeyDown(SHIFT_ID_R, 0, 2, "en");
     EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
 
     keyState.fakeKeyUp(2);
@@ -62,10 +62,10 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
     keyState.updateKeyMap();
 
-    keyState.fakeKeyDown(A_CHAR_ID, 0, 1);
+    keyState.fakeKeyDown(A_CHAR_ID, 0, 1, "en");
     EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
 
     keyState.fakeKeyUp(1);
@@ -73,7 +73,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
 
     // HACK: delete the key in case it was typed into a text editor.
     // we should really set focus to an invisible window.
-    keyState.fakeKeyDown(kKeyBackSpace, 0, 2);
+    keyState.fakeKeyDown(kKeyBackSpace, 0, 2, "en");
     keyState.fakeKeyUp(2);
 }
 
@@ -81,10 +81,10 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
     keyState.updateKeyMap();
 
-    keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1);
+    keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1, "en");
     EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
 
     keyState.fakeKeyUp(1);
@@ -92,7 +92,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
 
     // HACK: delete the key in case it was typed into a text editor.
     // we should really set focus to an invisible window.
-    keyState.fakeKeyDown(kKeyBackSpace, 0, 2);
+    keyState.fakeKeyDown(kKeyBackSpace, 0, 2, "en");
     keyState.fakeKeyUp(2);
 }
 

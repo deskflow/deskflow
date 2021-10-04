@@ -73,7 +73,7 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+    MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 	
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
 
@@ -86,7 +86,7 @@ TEST_F(MSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsTr
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+    MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 	keyState.setLastDown(1);
 
 	bool actual = keyState.testAutoRepeat(true, false, 1);
@@ -100,7 +100,7 @@ TEST_F(MSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+    MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 	keyState.setLastDown(1);
 
 	keyState.testAutoRepeat(false, false, 1);
@@ -114,7 +114,7 @@ TEST_F(MSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+    MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 
 	keyState.saveModifiers();
 
@@ -127,7 +127,7 @@ TEST_F(MSWindowsKeyStateTests, testKoreanLocale_inputModeKey_resultCorrectKeyID)
 	NiceMock<MockEventQueue> eventQueue;
 	MSWindowsDesks* desks = newDesks(&eventQueue);
 	MockKeyMap keyMap;
-	MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap);
+    MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 
 	keyState.setKeyLayout((HKL)0x00000412u);	// for ko-KR local ID
 	ASSERT_EQ(0xEF31, keyState.getKeyID(0x15u, 0x1f2u));	// VK_HANGUL from Hangul key

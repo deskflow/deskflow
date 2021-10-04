@@ -102,13 +102,14 @@ enum EDataReceived {
 
 // say hello to client;  primary -> secondary
 // $1 = protocol major version number supported by server.  $2 =
-// protocol minor version number supported by server.
+// protocol minor version number supported by server. $3 = server
+// keyboard layout list.
 extern const char* const       kMsgHello;
 
 // respond to hello from server;  secondary -> primary
 // $1 = protocol major version number supported by client.  $2 =
 // protocol minor version number supported by client.  $3 = client
-// name.
+// name. $4 = client language list
 extern const char* const       kMsgHelloBack;
 
 
@@ -177,7 +178,7 @@ extern const char* const       kMsgCKeepAlive;
 //
 
 // key pressed:  primary -> secondary
-// $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
+// $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton, $4 = languageCode
 // the KeyButton identifies the physical key on the primary used to
 // generate this key.  the secondary should note the KeyButton along
 // with the physical key it uses to generate the key press.  on
@@ -187,6 +188,8 @@ extern const char* const       kMsgCKeepAlive;
 // the press.  this can happen with combining (dead) keys or if
 // the keyboard layouts are not identical and the user releases
 // a modifier key before releasing the modified key.
+// languageCode is parameter which helps client to react on unknwon
+// language letters
 extern const char* const       kMsgDKeyDown;
 
 // key pressed 1.0:  same as above but without KeyButton
@@ -194,6 +197,7 @@ extern const char* const       kMsgDKeyDown1_0;
 
 // key auto-repeat:  primary -> secondary
 // $1 = KeyID, $2 = KeyModifierMask, $3 = number of repeats, $4 = KeyButton
+// $5 =language code
 extern const char* const       kMsgDKeyRepeat;
 
 // key auto-repeat 1.0:  same as above but without KeyButton

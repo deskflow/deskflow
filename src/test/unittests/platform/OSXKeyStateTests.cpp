@@ -27,7 +27,7 @@ TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask)
 {
     synergy::KeyMap keyMap;
     MockEventQueue eventQueue;
-    OSXKeyState keyState(&eventQueue, keyMap);
+    OSXKeyState keyState(&eventQueue, keyMap, { "en" }, true);
 
     KeyModifierMask outMask = 0;
     

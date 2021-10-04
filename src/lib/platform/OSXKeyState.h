@@ -36,8 +36,9 @@ class OSXKeyState : public KeyState {
 public:
     typedef std::vector<KeyID> KeyIDs;
 
-    OSXKeyState(IEventQueue* events);
-    OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap);
+    OSXKeyState(IEventQueue* events, std::vector<String> layouts, bool isLangSyncEnabled);
+    OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap,
+                std::vector<String> layouts, bool isLangSyncEnabled);
     virtual ~OSXKeyState();
 
     //! @name modifiers

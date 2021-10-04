@@ -325,11 +325,11 @@ private:
     void                onClipboardChanged(BaseClientProxy* sender,
                             ClipboardID id, UInt32 seqNum);
     void                onScreensaver(bool activated);
-    void                onKeyDown(KeyID, KeyModifierMask, KeyButton,
+    void                onKeyDown(KeyID, KeyModifierMask, KeyButton, const String&,
                             const char* screens);
     void                onKeyUp(KeyID, KeyModifierMask, KeyButton,
                             const char* screens);
-    void                onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton);
+    void                onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const String&);
     void                onMouseDown(ButtonID);
     void                onMouseUp(ButtonID);
     bool                onMouseMovePrimary(SInt32 x, SInt32 y);

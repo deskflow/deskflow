@@ -145,7 +145,9 @@ MSWindowsScreen::MSWindowsScreen(
                             new TMethodJob<MSWindowsScreen>(
                                 this, &MSWindowsScreen::updateKeysCB),
                             stopOnDeskSwitch);
-        m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events);
+        m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events,
+                                              AppUtil::instance().getKeyboardLayoutList(),
+                                              ClientApp::instance().args().m_enableLangSync);
 
         updateScreenShape();
         m_class       = createWindowClass();
@@ -331,9 +333,7 @@ MSWindowsScreen::leave()
     }
     // get keyboard layout of foreground window.  we'll use this
     // keyboard layout for translating keys sent to clients.
-    HWND window  = GetForegroundWindow();
-    DWORD thread = GetWindowThreadProcessId(window, NULL);
-    m_keyLayout  = GetKeyboardLayout(thread);
+    m_keyLayout = AppUtilWindows::instance().getCurrentKeyboardLayout();
 
     // tell the key mapper about the keyboard layout
     m_keyState->setKeyLayout(m_keyLayout);
@@ -844,17 +844,17 @@ MSWindowsScreen::updateKeys()
 
 void
 MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
-                KeyButton button)
+                KeyButton button, const String& lang)
 {
-    PlatformScreen::fakeKeyDown(id, mask, button);
+    PlatformScreen::fakeKeyDown(id, mask, button, lang);
     updateForceShowCursor();
 }
 
 bool
 MSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-    bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button);
+    bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button, lang);
     updateForceShowCursor();
     return result;
 }
@@ -1963,7 +1963,7 @@ MSWindowsScreen::getDraggingFilename()
             SWP_SHOWWINDOW);
 
         // TODO: fake these keys properly
-        fakeKeyDown(kKeyEscape, 8192, 1);
+        fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
         fakeKeyUp(1);
         fakeMouseButton(kButtonLeft, false);
 

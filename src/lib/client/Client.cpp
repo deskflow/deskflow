@@ -19,6 +19,7 @@
 #include "client/Client.h"
 
 #include "client/ServerProxy.h"
+#include "synergy/AppUtil.h"
 #include "synergy/Screen.h"
 #include "synergy/FileChunk.h"
 #include "synergy/DropHelper.h"
@@ -46,6 +47,7 @@
 #include <fstream>
 #include <algorithm>
 #include <climits>
+#include <iterator>
 
 //
 // Client
@@ -304,16 +306,16 @@ Client::setClipboardDirty(ClipboardID, bool)
 }
 
 void
-Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
+Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
 {
-     m_screen->keyDown(id, mask, button);
+     m_screen->keyDown(id, mask, button, lang);
 }
 
 void
 Client::keyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-     m_screen->keyRepeat(id, mask, count, button);
+     m_screen->keyRepeat(id, mask, count, button, lang);
 }
 
 void
@@ -721,7 +723,8 @@ void
 Client::handleHello(const Event&, void*)
 {
     SInt16 major, minor;
-    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
+    String keyboardLayoutList("<unknown>");
+    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor, &keyboardLayoutList)) {
         sendConnectionFailedEvent("Protocol error from server, check encryption settings");
         cleanupTimer();
         cleanupConnection();
@@ -746,10 +749,37 @@ Client::handleHello(const Event&, void*)
     }
 
     // say hello back
+    LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
+    String allKeyboardLayoutsStr;
+    for (const auto& layout : AppUtil::instance().getKeyboardLayoutList()) {
+        allKeyboardLayoutsStr += layout;
+    }
+
     LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             helloBackMajor,
-                            helloBackMinor, & m_name);
+                            helloBackMinor, & m_name, &allKeyboardLayoutsStr);
+
+    if(m_args.m_enableLangSync) {
+        std::vector<String> missed;
+        std::vector<String> supported;
+        AppUtil::getKeyboardLayoutsDiff(keyboardLayoutList,
+                                        AppUtil::instance().getKeyboardLayoutList(),
+                                        missed, supported);
+
+        if(!supported.empty()) {
+            LOG((CLOG_DEBUG "Supported server languages: %s",  AppUtil::joinStrVector(supported, ", ").c_str()));
+        }
+
+        if(!missed.empty()) {
+            auto result = AppUtil::joinStrVector(missed, ", ");
+            AppUtil::instance().showNotification("Language synchronization error",
+                                                 "These languages are required for client proper work: " + result);
+        }
+    }
+    else {
+        LOG((CLOG_DEBUG "Language sync logic is disabled."));
+    }
 
     // now connected but waiting to complete handshake
     setupScreen();

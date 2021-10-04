@@ -18,6 +18,8 @@
  
 #include "synergy/AppUtil.h"
 
+#include "algorithm"
+
 AppUtil* AppUtil::s_instance = nullptr;
  
 AppUtil::AppUtil() :
@@ -49,4 +51,23 @@ AppUtil::instance()
 {
     assert(s_instance != nullptr);
     return *s_instance;
+}
+
+void
+AppUtil::getKeyboardLayoutsDiff(const String& remoteCompressedLanguages,
+                                const std::vector<String>& localLanguages,
+                                std::vector<String>& missedLang,
+                                std::vector<String>& supportedLang)
+{
+    missedLang.clear();
+    supportedLang.clear();
+    for(int i = 0; i <= (int)remoteCompressedLanguages.size() - 2; i +=2) {
+        auto layout = remoteCompressedLanguages.substr(i, 2);
+        if (std::find(localLanguages.begin(), localLanguages.end(), layout) == localLanguages.end()) {
+            missedLang.push_back(layout);
+        }
+        else {
+            supportedLang.push_back(layout);
+        }
+    }
 }

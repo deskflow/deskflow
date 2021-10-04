@@ -87,7 +87,7 @@ public:
     synthesize an up or repeat for the same client key synthesized by
     keyDown().
     */
-    virtual void        keyDown(KeyID id, KeyModifierMask, KeyButton) = 0;
+    virtual void        keyDown(KeyID id, KeyModifierMask, KeyButton, const String&) = 0;
 
     //! Notify of key repeat
     /*!
@@ -95,7 +95,7 @@ public:
     \c count times.  If possible match the given modifier mask.
     */
     virtual void        keyRepeat(KeyID id, KeyModifierMask,
-                            SInt32 count, KeyButton) = 0;
+                            SInt32 count, KeyButton, const String& lang) = 0;
 
     //! Notify of key release
     /*!

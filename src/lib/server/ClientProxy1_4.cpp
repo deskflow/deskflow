@@ -42,15 +42,15 @@ ClientProxy1_4::~ClientProxy1_4()
 }
 
 void
-ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String& lang)
 {
-    ClientProxy1_3::keyDown(key, mask, button);
+    ClientProxy1_3::keyDown(key, mask, button, lang);
 }
 
 void
-ClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
+ClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button, const String& lang)
 {
-    ClientProxy1_3::keyRepeat(key, mask, count, button);
+    ClientProxy1_3::keyRepeat(key, mask, count, button, lang);
 }
 
 void

@@ -224,7 +224,9 @@ public:
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+                            bool isAutoRepeat, const String& lang) const;
+
+    void                    setLanguageData(std::vector<String> layouts);
 
 	//! Get number of groups
 	/*!
@@ -375,7 +377,8 @@ private:
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+                            bool isAutoRepeat,
+                            const String& lang) const;
 
 	// maps a character key.  a character key is trying to synthesize a
 	// particular KeyID and isn't entirely concerned with the modifiers
@@ -385,15 +388,17 @@ private:
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+                            bool isAutoRepeat,
+                            const String& lang) const;
 
 	// maps a modifier key
-	const KeyItem*		mapModifierKey(Keystrokes& keys,
+    const KeyItem*		mapModifierKey(Keystrokes& keys,
 							KeyID id, SInt32 group,
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+                            bool isAutoRepeat,
+                            const String& lang) const;
 
 	// returns the index into \p entryList of the KeyItemList requiring
 	// the fewest modifier changes between \p currentState and
@@ -419,7 +424,8 @@ private:
 							KeyModifierMask desiredState,
 							KeyModifierMask overrideModifiers,
 							bool isAutoRepeat,
-							Keystrokes& keystrokes) const;
+                            Keystrokes& keystrokes,
+                            const String& lang) const;
 
 	// fills \p keystrokes with the keys to synthesize the modifiers
 	// in \p desiredModifiers from the active modifiers listed in
@@ -458,6 +464,8 @@ private:
 
 	// Initialize key name/id maps
 	static void			initKeyNameMaps();
+
+    void addGroupToKeystroke(Keystrokes& keys, SInt32& group, const String& lang) const;
 
 	// not implemented
 	KeyMap(const KeyMap&);
@@ -504,6 +512,9 @@ private:
 
 	// dummy KeyItem for changing modifiers
 	KeyItem				m_modifierKeyItem;
+
+    //Language sync data
+    std::vector<String> m_keyboardLayouts;
 
 	// parsing/formatting tables
 	static NameToKeyMap*		s_nameToKeyMap;

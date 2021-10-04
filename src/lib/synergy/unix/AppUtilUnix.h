@@ -31,5 +31,7 @@ public:
     
     int run(int argc, char** argv);
     void startNode();
+    std::vector<String> getKeyboardLayoutList() override;
+    String getCurrentLanguageCode() override;
     void showNotification(const String& title, const String& text) const override;
 };
