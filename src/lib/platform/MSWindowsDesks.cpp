@@ -558,7 +558,6 @@ MSWindowsDesks::deskEnter(Desk* desk)
 void
 MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 {
-    LOG((CLOG_INFO "SGADTRACE: MSWindowsDesks::deskLeave = <%d>", keyLayout));
     ShowCursor(FALSE);
     if (m_isPrimary) {
         // map a window to hide the cursor and to use whatever keyboard
