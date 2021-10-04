@@ -612,13 +612,6 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
                     setGroup(getEffectiveGroup(pollActiveGroup(), group));
                 }
 
-                //A minimal delay is needed after a group change because the
-                //keyboard key event often happens immediately after.
-                //Language (TIS) and event (CG) systems are not in the mutual
-                //event queue and without a delay the subsequent key press
-                //event could be applied before the keyboard layout would
-                //actually be changed.
-                ARCH->sleep(.01);
                 if(pollActiveGroup() != group) {
                     LOG((CLOG_WARN "Failed to set new keyboard layout!"));
                 }
@@ -885,7 +878,7 @@ OSXKeyState::setGroup(SInt32 group)
         return;
     }
     auto canBeSetted = (CFBooleanRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
-    if(!canBeSetted || canBeSetted == FALSE) {
+    if(!canBeSetted) {
         LOG((CLOG_WARN "Nedeed keyboard layout is disabled for programmatically selection"));
         return;
     }
@@ -895,6 +888,14 @@ OSXKeyState::setGroup(SInt32 group)
     }
 
     LOG((CLOG_DEBUG1 "Keyboard layout change to %d", group));
+
+    //A minimal delay is needed after a group change because the
+    //keyboard key event often happens immediately after.
+    //Language (TIS) and event (CG) systems are not in the mutual
+    //event queue and without a delay the subsequent key press
+    //event could be applied before the keyboard layout would
+    //actually be changed.
+    ARCH->sleep(.01);
 }
 
 void
