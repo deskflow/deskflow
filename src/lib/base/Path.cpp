@@ -18,24 +18,6 @@
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
-
-namespace {
-
-std::wstring ToUtf16(const std::string& path)
-{
-    std::wstring result;
-
-    auto lenght = MultiByteToWideChar(CP_UTF8, 0, path.c_str(), path.length(), NULL, 0);
-    if (lenght > 0)
-    {
-        result.resize(lenght);
-        MultiByteToWideChar(CP_UTF8, 0, path.c_str(), path.length(), &result[0], lenght);
-    }
-
-    return result;
-}
-
-}
 #endif
 
 namespace synergy {
@@ -46,7 +28,16 @@ namespace filesystem {
 
 std::wstring path(const String& filePath)
 {
-    return ToUtf16(filePath);
+    std::wstring result;
+
+    auto lenght = MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), filePath.length(), NULL, 0);
+    if (lenght > 0)
+    {
+        result.resize(lenght);
+        MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), filePath.length(), &result[0], lenght);
+    }
+
+    return result;
 }
 
 #else
