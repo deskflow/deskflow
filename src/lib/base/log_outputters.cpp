@@ -18,6 +18,7 @@
 
 #include "base/log_outputters.h"
 #include "base/TMethodJob.h"
+#include "base/Path.h"
 #include "arch/Arch.h"
 
 #include <fstream>
@@ -259,7 +260,7 @@ FileLogOutputter::write(ELevel level, const char *message)
     bool moveFile = false;
 
     std::ofstream m_handle;
-    m_handle.open(m_fileName.c_str(), std::fstream::app);
+    m_handle.open(synergy::filesystem::path(m_fileName), std::fstream::app);
     if (m_handle.is_open() && m_handle.fail() != true) {
         m_handle << message << std::endl;
 
