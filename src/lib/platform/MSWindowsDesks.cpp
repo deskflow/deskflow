@@ -31,6 +31,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
+#include "synergy/win32/AppUtilWindows.h"
 
 #include <malloc.h>
 
@@ -145,13 +146,7 @@ MSWindowsDesks::MSWindowsDesks(
 
     m_cursor    = createBlankCursor();
     m_deskClass = createDeskWindowClass(m_isPrimary);
-    GUITHREADINFO gti = { sizeof(GUITHREADINFO) };
-    if(GetGUIThreadInfo(0, &gti) && gti.hwndActive) {
-        m_keyLayout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
-    }
-    else {
-        LOG((CLOG_WARN "Failed to determine correct keyboard layout"));
-    }
+    m_keyLayout = AppUtilWindows::instance().getCurrentKeyboardLayout();
     resetOptions();
 }
 
@@ -563,6 +558,7 @@ MSWindowsDesks::deskEnter(Desk* desk)
 void
 MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
 {
+    LOG((CLOG_INFO "SGADTRACE: MSWindowsDesks::deskLeave = <%d>", keyLayout));
     ShowCursor(FALSE);
     if (m_isPrimary) {
         // map a window to hide the cursor and to use whatever keyboard
@@ -588,6 +584,9 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         }
         SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h,
                             SWP_NOACTIVATE | SWP_SHOWWINDOW);
+
+        // switch to requested keyboard layout
+        ActivateKeyboardLayout(keyLayout, 0);
 
         // if not using low-level hooks we have to also activate the
         // window to ensure we don't lose keyboard focus.
@@ -615,9 +614,9 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
                 DWORD thatThread =
                     GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
 
-                if(!SetForegroundWindow(desk->m_window)) {
-                    LOG((CLOG_WARN "Failed to activate window for input capturing!"));
-                }
+                AttachThreadInput(thatThread, thisThread, TRUE);
+                SetForegroundWindow(desk->m_window);
+                AttachThreadInput(thatThread, thisThread, FALSE);
             }
         }
     }

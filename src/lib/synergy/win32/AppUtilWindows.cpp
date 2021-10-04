@@ -212,17 +212,28 @@ AppUtilWindows::getCurrentLanguageCode()
 {
     String code("", 2);
 
-    GUITHREADINFO gti = { sizeof(GUITHREADINFO) };
-    if(!GetGUIThreadInfo(0, &gti) || !gti.hwndActive) {
-        LOG((CLOG_WARN "Failed to determine correct keyboard layout"));
-        return code;
+    auto hklLayout = getCurrentKeyboardLayout();
+    if (hklLayout) {
+        auto localLayoutID = MAKELCID(LOWORD(hklLayout), SORT_DEFAULT);
+        GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0], code.size());
     }
 
-    auto hklLayout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
-    auto localLayoutID = MAKELCID(((UINT)hklLayout & 0xffffffff), SORT_DEFAULT);
-    GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0], code.size());
-
     return code;
+}
+
+HKL AppUtilWindows::getCurrentKeyboardLayout() const
+{
+    HKL layout = nullptr;
+
+    GUITHREADINFO gti = {sizeof(GUITHREADINFO)};
+    if (GetGUIThreadInfo(0, &gti) && gti.hwndActive) {
+        layout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
+    }
+    else {
+        LOG((CLOG_WARN "Failed to determine current keyboard layout"));
+    }
+
+    return layout;
 }
 
 class WinToastHandler : public WinToastLib::IWinToastHandler {

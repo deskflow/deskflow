@@ -57,6 +57,8 @@ public:
 
     String getCurrentLanguageCode() override;
 
+    HKL getCurrentKeyboardLayout() const;
+
     void showNotification(const String& title, const String& text) const override;
 
 
