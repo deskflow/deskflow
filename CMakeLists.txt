@@ -19,15 +19,18 @@ project (synergy-core C CXX)
 
 if (DEFINED ENV{SYNERGY_NO_LEGACY})
     option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" OFF)
-    option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" OFF)
     option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" OFF)
 else()
     option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-    option (SYNERGY_BUILD_LEGACY_SERVICE "Build the legacy service (synergyd)" ON)
     option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
 endif()
-option (BUILD_TESTS "Override building of tests" ON)
-option (ENABLE_COVERAGE "Build with coverage")
+
+if (DEFINED ENV{SYNERGY_NO_TESTS})
+    option (BUILD_TESTS "Override building of tests" OFF)
+else()
+    option (BUILD_TESTS "Override building of tests" ON)
+    option (ENABLE_COVERAGE "Build with coverage")
+endif()
 
 if ($ENV{SYNERGY_ENTERPRISE})
     option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
@@ -326,7 +329,7 @@ endif()
 # Apple has to use static libraries because
 # "Use of the Apple-provided OpenSSL libraries by apps is strongly discouraged."
 # https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
-if(APPLE)
+if(APPLE OR DEFINED ENV{SYNERGY_STATIC_OPENSSL})
     set(OPENSSL_USE_STATIC_LIBS TRUE)
 endif()
 find_package(OpenSSL REQUIRED)
@@ -405,6 +408,7 @@ macro(generate_versionfile)
     endif()
 endmacro(generate_versionfile)
 
+generate_versionfile()
 
 if (${SYNERGY_BUILD_LEGACY_INSTALLER})
 #
@@ -416,8 +420,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
-
-    generate_versionfile()
     configure_files (${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
 endif()
 
@@ -426,7 +428,6 @@ endif()
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
-        generate_versionfile()
         set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
         configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
@@ -442,7 +443,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
     else()
         install(FILES res/synergy.desktop DESTINATION share/applications)
     endif()
-    generate_versionfile()
 endif()
 
 else()

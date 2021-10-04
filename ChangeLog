@@ -13,6 +13,7 @@ Bug fixes:
 - #7095 Update account and upgrade links
 - #7096 The system duplicates hotkeys in setup
 - #7100 No configuration available on Windows
+- #7097 The title "Enterprise" disappeares after clicking on "Preferences"
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
@@ -21,6 +22,7 @@ Enhancements:
 
 Github Actions:
 - #1043 Adding upload to s3 feature on all OSes
+- #7098 Add Apple M1 runner
 ===========
 
 v1.14.1-stable
