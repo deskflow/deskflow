@@ -191,7 +191,7 @@ Screen::screensaver(bool) const
 }
 
 void
-Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
+Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
 {
     // check for ctrl+alt+del emulation
     if (id == kKeyDelete &&
@@ -202,15 +202,15 @@ Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
             return;
         }
     }
-    m_screen->fakeKeyDown(id, mask, button);
+    m_screen->fakeKeyDown(id, mask, button, lang);
 }
 
 void
 Screen::keyRepeat(KeyID id,
-                KeyModifierMask mask, SInt32 count, KeyButton button)
+                KeyModifierMask mask, SInt32 count, KeyButton button, const String& lang)
 {
     assert(!m_isPrimary);
-    m_screen->fakeKeyRepeat(id, mask, count, button);
+    m_screen->fakeKeyRepeat(id, mask, count, button, lang);
 }
 
 void

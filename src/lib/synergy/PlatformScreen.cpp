@@ -53,16 +53,16 @@ PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
 
 void
 PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
-                KeyButton button)
+                KeyButton button, const String& lang)
 {
-    getKeyState()->fakeKeyDown(id, mask, button);
+    getKeyState()->fakeKeyDown(id, mask, button, lang);
 }
 
 bool
 PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-    return getKeyState()->fakeKeyRepeat(id, mask, count, button);
+    return getKeyState()->fakeKeyRepeat(id, mask, count, button, lang);
 }
 
 bool

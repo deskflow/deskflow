@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "synergy/AppUtil.h"
 #include "server/ClientProxy1_1.h"
 
 #include "synergy/ProtocolUtil.h"
@@ -39,18 +40,18 @@ ClientProxy1_1::~ClientProxy1_1()
 }
 
 void
-ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String& lang)
 {
-    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
+    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, lang=\"%s\"", getName().c_str(), key, mask, button, lang.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button, &lang);
 }
 
 void
 ClientProxy1_1::keyRepeat(KeyID key, KeyModifierMask mask,
-                SInt32 count, KeyButton button)
+                SInt32 count, KeyButton button, const String& lang)
 {
-    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x", getName().c_str(), key, mask, count, button));
-    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button);
+    LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x, lang=\"%s\"", getName().c_str(), key, mask, count, button, lang.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button, &lang);
 }
 
 void

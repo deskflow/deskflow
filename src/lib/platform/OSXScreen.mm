@@ -125,7 +125,9 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 
 	try {
 		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
-		m_keyState	  = new OSXKeyState(m_events);
+		m_keyState	  = new OSXKeyState(m_events,
+						AppUtil::instance().getKeyboardLayoutList(),
+						ClientApp::instance().args().m_enableLangSync);
 
         if (App::instance().argsBase().m_preventSleep) {
             m_powerManager.disableSleep();
@@ -2113,7 +2115,7 @@ OSXScreen::getDraggingFilename()
 		}
 
 		// fake a escape key down and up then left mouse button up
-		fakeKeyDown(kKeyEscape, 8192, 1);
+        fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
 		fakeKeyUp(1);
 		fakeMouseButton(kButtonLeft, false);
 	}

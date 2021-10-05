@@ -2,6 +2,7 @@ v1.14.2-snapshot
 ===========
 Bug fixes:
 - #7070 Fix radio button shifted focus on macOS
+- #7038 Fix client and server different keyboard layout errors
 - #7078 Fix clipboard re-enables automatically
 - #7077 Fix Ubuntu, CentOS and Debian build after SYNERGY-1161
 - #7080 Add trace if the system can't open file with trusted fingerprints
@@ -13,6 +14,7 @@ Bug fixes:
 - #7095 Update account and upgrade links
 - #7096 The system duplicates hotkeys in setup
 - #7099 SYNERGY-854 Fix compilation with msvc 2014
+- #7100 No configuration available on Windows
 - #7097 The title "Enterprise" disappeares after clicking on "Preferences"
 
 Enhancements:

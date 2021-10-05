@@ -19,7 +19,6 @@
 #pragma once
 
 #include "synergy/AppUtil.h"
-#include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
@@ -54,7 +53,14 @@ public:
 
     void startNode();
 
+    std::vector<String> getKeyboardLayoutList() override;
+
+    String getCurrentLanguageCode() override;
+
+    HKL getCurrentKeyboardLayout() const;
+
     void showNotification(const String& title, const String& text) const override;
+
 
 private:
     AppExitMode            m_exitMode;

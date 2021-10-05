@@ -18,8 +18,8 @@
 
 #include "synergy/protocol_types.h"
 
-const char* const               kMsgHello            = "Synergy%2i%2i";
-const char* const               kMsgHelloBack        = "Synergy%2i%2i%s";
+const char* const               kMsgHello            = "Synergy%2i%2i%s";
+const char* const               kMsgHelloBack        = "Synergy%2i%2i%s%s";
 const char* const               kMsgCNoop             = "CNOP";
 const char* const               kMsgCClose             = "CBYE";
 const char* const               kMsgCEnter             = "CINN%2i%2i%4i%2i";
@@ -29,9 +29,9 @@ const char* const               kMsgCScreenSaver     = "CSEC%1i";
 const char* const               kMsgCResetOptions    = "CROP";
 const char* const               kMsgCInfoAck        = "CIAK";
 const char* const               kMsgCKeepAlive        = "CALV";
-const char* const               kMsgDKeyDown        = "DKDN%2i%2i%2i";
+const char* const               kMsgDKeyDown        = "DKDN%2i%2i%2i%s";
 const char* const               kMsgDKeyDown1_0        = "DKDN%2i%2i";
-const char* const               kMsgDKeyRepeat        = "DKRP%2i%2i%2i%2i";
+const char* const               kMsgDKeyRepeat        = "DKRP%2i%2i%2i%2i%s";
 const char* const               kMsgDKeyRepeat1_0    = "DKRP%2i%2i%2i";
 const char* const               kMsgDKeyUp            = "DKUP%2i%2i%2i";
 const char* const               kMsgDKeyUp1_0        = "DKUP%2i%2i";

@@ -18,6 +18,8 @@
 
 #include "synergy/KeyState.h"
 #include "base/Log.h"
+#include "synergy/ClientApp.h"
+#include "synergy/ClientArgs.h"
 
 #include <cstring>
 #include <algorithm>
@@ -383,23 +385,27 @@ static const KeyID s_numpadTable[] = {
 // KeyState
 //
 
-KeyState::KeyState(IEventQueue* events) :
+KeyState::KeyState(IEventQueue* events, std::vector<String> layouts, bool isLangSyncEnabled) :
     IKeyState(events),
     m_keyMapPtr(new synergy::KeyMap()),
     m_keyMap(*m_keyMapPtr),
     m_mask(0),
-    m_events(events)
+    m_events(events),
+    m_isLangSyncEnabled(isLangSyncEnabled)
 {
+    m_keyMap.setLanguageData(std::move(layouts));
     init();
 }
 
-KeyState::KeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
+KeyState::KeyState(IEventQueue* events, synergy::KeyMap& keyMap, std::vector<String> layouts, bool isLangSyncEnabled) :
     IKeyState(events),
     m_keyMapPtr(0),
     m_keyMap(keyMap),
     m_mask(0),
-    m_events(events)
+    m_events(events),
+    m_isLangSyncEnabled(isLangSyncEnabled)
 {
+    m_keyMap.setLanguageData(std::move(layouts));
     init();
 }
 
@@ -553,13 +559,13 @@ KeyState::setHalfDuplexMask(KeyModifierMask mask)
 }
 
 void
-KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
+KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const String& lang)
 {
     // if this server key is already down then this is probably a
     // mis-reported autorepeat.
     serverID &= kButtonMask;
     if (m_serverKeys[serverID] != 0) {
-        fakeKeyRepeat(id, mask, 1, serverID);
+        fakeKeyRepeat(id, mask, 1, serverID, lang);
         return;
     }
 
@@ -569,13 +575,13 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
         return;
     }
 
-    // get keys for key press
     Keystrokes keys;
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
     const synergy::KeyMap::KeyItem* keyItem =
-        m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
-                                getActiveModifiersRValue(), mask, false);
-    if (keyItem == NULL) {
+            m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
+                                getActiveModifiersRValue(), mask, false, lang);
+
+    if (keyItem == nullptr) {
         // a media key won't be mapped on mac, so we need to fake it in a
         // special way
         if (id == kKeyAudioDown || id == kKeyAudioUp ||
@@ -586,10 +592,10 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
             LOG((CLOG_DEBUG1 "emulating media key"));
             fakeMediaKey(id);
         }
-        
+
         return;
     }
-    
+
     KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
     updateModifierKeyState(localID, oldActiveModifiers, m_activeModifiers);
     if (localID != 0) {
@@ -607,8 +613,9 @@ KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 bool
 KeyState::fakeKeyRepeat(
                 KeyID id, KeyModifierMask mask,
-                SInt32 count, KeyButton serverID)
+                SInt32 count, KeyButton serverID, const String& lang)
 {
+    LOG((CLOG_DEBUG2 "fakeKeyRepeat"));
     serverID &= kButtonMask;
 
     // if we haven't seen this button go down then ignore it
@@ -622,7 +629,7 @@ KeyState::fakeKeyRepeat(
     ModifierToKeys oldActiveModifiers = m_activeModifiers;
     const synergy::KeyMap::KeyItem* keyItem =
         m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
-                                getActiveModifiersRValue(), mask, true);
+                                getActiveModifiersRValue(), mask, true, lang);
     if (keyItem == NULL) {
         return false;
     }
@@ -874,11 +881,16 @@ KeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
             // note -- k is now on the first non-repeat key after the
             // repeat keys, exactly where we'd like to continue from.
         }
-        else {
+        else if (k->m_type != Keystroke::kGroup ||
+                 (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
             // send event
             fakeKey(*k);
 
             // next key
+            ++k;
+        }
+        else {
+            LOG((CLOG_DEBUG1 "Skipping keystroke (because language sync is disabled)"));
             ++k;
         }
     }

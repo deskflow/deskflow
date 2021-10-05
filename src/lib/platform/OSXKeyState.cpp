@@ -134,14 +134,15 @@ static const KeyEntry    s_controlKeys[] = {
 // OSXKeyState
 //
 
-OSXKeyState::OSXKeyState(IEventQueue* events) :
-    KeyState(events)
+OSXKeyState::OSXKeyState(IEventQueue* events, std::vector<String> layouts, bool isLangSyncEnabled) :
+    KeyState(events, std::move(layouts), isLangSyncEnabled)
 {
     init();
 }
 
-OSXKeyState::OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap) :
-    KeyState(events, keyMap)
+OSXKeyState::OSXKeyState(IEventQueue* events, synergy::KeyMap& keyMap,
+                         std::vector<String> layouts, bool isLangSyncEnabled) :
+    KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled)
 {
     init();
 }
@@ -410,7 +411,7 @@ OSXKeyState::pollActiveGroup() const
         return i->second;
     }
     
-    LOG((CLOG_DEBUG "can't get the active group, use the first group instead"));
+    LOG((CLOG_WARN "can't get the active group, use the first group instead"));
 
     return 0;
 }
@@ -601,13 +602,19 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 
         case Keystroke::kGroup: {
             SInt32 group = keystroke.m_data.m_group.m_group;
-            if (keystroke.m_data.m_group.m_absolute) {
-                LOG((CLOG_DEBUG1 "  group %d", group));
-                setGroup(group);
-            }
-            else {
-                LOG((CLOG_DEBUG1 "  group %+d", group));
-                setGroup(getEffectiveGroup(pollActiveGroup(), group));
+            if (!keystroke.m_data.m_group.m_restore) {
+                if (keystroke.m_data.m_group.m_absolute) {
+                    LOG((CLOG_DEBUG1 "  group %d", group));
+                    setGroup(group);
+                }
+                else {
+                    LOG((CLOG_DEBUG1 "  group %+d", group));
+                    setGroup(getEffectiveGroup(pollActiveGroup(), group));
+                }
+
+                if(pollActiveGroup() != group) {
+                    LOG((CLOG_WARN "Failed to set new keyboard layout!"));
+                }
             }
             break;
         }
@@ -866,7 +873,29 @@ void
 OSXKeyState::setGroup(SInt32 group)
 {
     TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
-    TISSetInputMethodKeyboardLayoutOverride(keyboardLayout);
+    if(!keyboardLayout) {
+        LOG((CLOG_WARN "Nedeed keyboard layout is null"));
+        return;
+    }
+    auto canBeSetted = (CFBooleanRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
+    if(!canBeSetted) {
+        LOG((CLOG_WARN "Nedeed keyboard layout is disabled for programmatically selection"));
+        return;
+    }
+
+    if(TISSelectInputSource(keyboardLayout) != noErr) {
+        LOG((CLOG_WARN "Failed to set nedeed keyboard layout"));
+    }
+
+    LOG((CLOG_DEBUG1 "Keyboard layout change to %d", group));
+
+    //A minimal delay is needed after a group change because the
+    //keyboard key event often happens immediately after.
+    //Language (TIS) and event (CG) systems are not in the mutual
+    //event queue and without a delay the subsequent key press
+    //event could be applied before the keyboard layout would
+    //actually be changed.
+    ARCH->sleep(.01);
 }
 
 void

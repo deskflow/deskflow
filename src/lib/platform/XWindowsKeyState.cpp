@@ -16,12 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __APPLE__
+#include <QtDBus>
+#endif
+
 #include "platform/XWindowsKeyState.h"
 
 #include "platform/XWindowsUtil.h"
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/stdmap.h"
+#include "synergy/AppUtil.h"
+#include "synergy/ClientApp.h"
+#include "synergy/ClientArgs.h"
 
 #include <cstddef>
 #include <algorithm>
@@ -43,7 +50,7 @@ static const size_t ModifiersFromXDefaultSize = 32;
 XWindowsKeyState::XWindowsKeyState(
         Display* display, bool useXKB,
         IEventQueue* events) :
-    KeyState(events),
+    KeyState(events, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
 {
@@ -53,7 +60,7 @@ XWindowsKeyState::XWindowsKeyState(
 XWindowsKeyState::XWindowsKeyState(
     Display* display, bool useXKB,
     IEventQueue* events, synergy::KeyMap& keyMap) :
-    KeyState(events, keyMap),
+    KeyState(events, keyMap, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
     m_display(display),
     m_modifierFromX(ModifiersFromXDefaultSize)
 {
@@ -82,7 +89,7 @@ XWindowsKeyState::init(Display* display, bool useXKB)
         m_xkb = NULL;
     }
 #endif
-    setActiveGroup(kGroupPollAndSet);
+    setActiveGroup(kGroupPoll);
 }
 
 void
@@ -195,9 +202,13 @@ XWindowsKeyState::pollActiveGroup() const
 #if HAVE_XKB_EXTENSION
     if (m_xkb != NULL) {
         XkbStateRec state;
+        XSync(m_display, False);
         if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
+            LOG((CLOG_WARN "LANGUAGE_DEBUG Poll result %d", state.group));
             return state.group;
         }
+
+        LOG((CLOG_WARN "Failed to poll active group"));
     }
 #endif
     return 0;
@@ -238,12 +249,55 @@ XWindowsKeyState::getKeyMap(synergy::KeyMap& keyMap)
     updateKeysymMap(keyMap);
 }
 
+bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
+{
+    QString service = "org.gnome.Shell";
+    QString path    = "/org/gnome/Shell";
+    QString method  = "Eval";
+    QString param   = "imports.ui.status.keyboard.getInputSourceManager().inputSources[" +
+                      QString::number(group) + "].activate()";
+
+    auto bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected()) {
+        return false;
+    }
+
+    QDBusInterface screenSaverInterface(service, path, service, bus);
+    if (!screenSaverInterface.isValid()) {
+        LOG((CLOG_WARN "Keyboard layout fail. DBus interface is invalid"));
+        return false;
+    }
+
+    QDBusPendingReply<bool, QString> reply = screenSaverInterface.call(method, param);
+    reply.waitForFinished();
+
+    if(!reply.isValid()) {
+        auto qerror = reply.error();
+        LOG((CLOG_WARN "Keyboard layout fail %s : %s", qerror.name().toStdString(), qerror.message().toStdString()));
+        return true;
+    }
+
+    if(reply.isError()) {
+        LOG((CLOG_WARN "Keyboard layout fail. reply contains error"));
+        return true;
+    }
+
+    if(!reply.argumentAt<0>() || reply.argumentAt<1>() != QString("")) {
+        LOG((CLOG_WARN "Keyboard layout fail. Reply is unexpected!"));
+        return true;
+    }
+
+    return true;
+}
+
 void
 XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+        LOG((CLOG_WARN "LANGUAGE_DEBUG  %03x (%08x) %s %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
+             keystroke.m_data.m_button.m_press ? "down" : "up",
+             keystroke.m_data.m_button.m_repeat ? "Repeat" : "New"));
         if (keystroke.m_data.m_button.m_repeat) {
             int c = keystroke.m_data.m_button.m_button;
             int i = (c >> 3);
@@ -260,8 +314,18 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         break;
 
     case Keystroke::kGroup:
+        if (keystroke.m_data.m_group.m_restore) {
+            break;
+        }
+
         if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %d", keystroke.m_data.m_group.m_group));
+
+#ifndef __APPLE__
+            if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
+                break;
+            }
+#endif
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
@@ -276,7 +340,13 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             }
         }
         else {
-            LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %+d", keystroke.m_data.m_group.m_group));
+
+#ifndef __APPLE__
+            if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
+                break;
+            }
+#endif
 #if HAVE_XKB_EXTENSION
             if (m_xkb != NULL) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
@@ -291,6 +361,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
                 LOG((CLOG_DEBUG1 "  ignored"));
             }
         }
+
         break;
     }
     XFlush(m_display);

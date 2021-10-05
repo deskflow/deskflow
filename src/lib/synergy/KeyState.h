@@ -28,8 +28,8 @@ platform specific methods.
 */
 class KeyState : public IKeyState {
 public:
-    KeyState(IEventQueue* events);
-    KeyState(IEventQueue* events, synergy::KeyMap& keyMap);
+    KeyState(IEventQueue* events, std::vector<String> layouts, bool isLangSyncEnabled);
+    KeyState(IEventQueue* events, synergy::KeyMap& keyMap, std::vector<String> layouts, bool isLangSyncEnabled);
     virtual ~KeyState();
 
     //! @name manipulators
@@ -70,9 +70,9 @@ public:
     void        updateKeyState() override;
     void        setHalfDuplexMask(KeyModifierMask) override;
     void        fakeKeyDown(KeyID id, KeyModifierMask mask,
-                            KeyButton button) override;
+                            KeyButton button, const String& lang) override;
     bool        fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                            SInt32 count, KeyButton button) override;
+                            SInt32 count, KeyButton button, const String& lang) override;
     bool        fakeKeyUp(KeyButton button) override;
     void        fakeAllKeysUp() override;
     bool        fakeMediaKey(KeyID id) override;
@@ -233,4 +233,6 @@ private:
     KeyButton            m_serverKeys[kNumButtons];
 
     IEventQueue*        m_events;
+
+    bool                m_isLangSyncEnabled;
 };

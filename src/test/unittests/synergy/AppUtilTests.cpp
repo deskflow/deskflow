@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,29 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SYNERGY_CORE_CLIENTARGS_H
-#define SYNERGY_CORE_CLIENTARGS_H
+#include "test/global/gtest.h"
+#include "synergy/AppUtil.h"
 
-#include "ArgsBase.h"
+TEST(AppUtilTests, keyboardLayoutTest)
+{
+    String layoutList1 = "ruenby";
+    std::vector<String> layoutList2 = { "ru", "en" };
+    std::vector<String> missed;
+    std::vector<String> supported;
+    AppUtil::getKeyboardLayoutsDiff(layoutList1, layoutList2, missed, supported);
 
-
-namespace lib {
-    namespace synergy {
-        class ClientArgs : public ArgsBase {
-
-            /// Public functions
-        public:
-            ClientArgs();
-
-            ~ClientArgs() override;
-
-        public:
-            int                  m_yscroll           = 0;
-            bool                 m_enableLangSync    = false;       /// @brief Should keyboard input be in same language as on server
-
-        private:
-
-        };
-    }
+    EXPECT_EQ(missed, std::vector<String>{ "by" });
+    EXPECT_EQ(supported, layoutList2);
 }
-#endif //SYNERGY_CORE_CLIENTARGS_H
+
+TEST(AppUtilTests, joinVectorTest)
+{
+    std::vector<String> layouts = { "ru", "en" };
+    auto result = AppUtil::joinStrVector(layouts, ", ");
+
+    EXPECT_EQ(result, "ru, en");
+}

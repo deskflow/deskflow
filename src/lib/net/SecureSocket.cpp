@@ -23,6 +23,7 @@
 #include "mt/Lock.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
+#include "base/Path.h"
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -333,7 +334,7 @@ SecureSocket::loadCertificates(String& filename)
         return false;
     }
     else {
-        std::ifstream file(filename.c_str());
+        std::ifstream file(synergy::filesystem::path(filename));
         bool exist = file.good();
         file.close();
 
@@ -706,7 +707,7 @@ SecureSocket::verifyCertFingerprint()
     // check if this fingerprint exist
     String fileLine;
     std::ifstream file;
-    file.open(trustedServersFilename.c_str());
+    file.open(synergy::filesystem::path(trustedServersFilename));
 
     bool isValid = false;
     if (file.is_open()) {

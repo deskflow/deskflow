@@ -31,6 +31,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "base/IEventQueue.h"
+#include "synergy/win32/AppUtilWindows.h"
 
 #include <malloc.h>
 
@@ -145,7 +146,7 @@ MSWindowsDesks::MSWindowsDesks(
 
     m_cursor    = createBlankCursor();
     m_deskClass = createDeskWindowClass(m_isPrimary);
-    m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());
+    m_keyLayout = AppUtilWindows::instance().getCurrentKeyboardLayout();
     resetOptions();
 }
 
@@ -583,6 +584,9 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
         SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h,
                             SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
+        // switch to requested keyboard layout
+        ActivateKeyboardLayout(keyLayout, 0);
+
         // if not using low-level hooks we have to also activate the
         // window to ensure we don't lose keyboard focus.
         // FIXME -- see if this can be avoided.  if so then always
@@ -608,14 +612,12 @@ MSWindowsDesks::deskLeave(Desk* desk, HKL keyLayout)
                     GetWindowThreadProcessId(desk->m_window, NULL);
                 DWORD thatThread =
                     GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+
                 AttachThreadInput(thatThread, thisThread, TRUE);
                 SetForegroundWindow(desk->m_window);
                 AttachThreadInput(thatThread, thisThread, FALSE);
             }
         }
-
-        // switch to requested keyboard layout
-        ActivateKeyboardLayout(keyLayout, 0);
     }
     else {
         // move hider window under the cursor center, raise, and show it
