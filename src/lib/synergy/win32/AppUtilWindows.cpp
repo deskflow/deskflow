@@ -33,7 +33,7 @@
 #include "common/Version.h"
 #include "wintoastlib.h"
 
-#include <thread>
+#include <memory>
 #include <sstream>
 #include <iostream>
 #include <conio.h>
