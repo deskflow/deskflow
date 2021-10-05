@@ -103,7 +103,7 @@ public:
 		};
 		union Data {
 		public:
-			Data() {}
+			Data() = default;
 			Data(Data &&) = default;
 			Data(const Data&) = default;
 			Data& operator=(const Data&) = default;
