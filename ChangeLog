@@ -14,7 +14,7 @@ Bug fixes:
 - #7095 Update account and upgrade links
 - #7096 The system duplicates hotkeys in setup
 - #7099 SYNERGY-854 Fix compilation with msvc 2014
-- #7100 No configuration available on Windows
+- #7100 | #7101 No configuration available on Windows
 - #7097 The title "Enterprise" disappeares after clicking on "Preferences"
 
 Enhancements:
