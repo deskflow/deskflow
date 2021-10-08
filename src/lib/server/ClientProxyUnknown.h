@@ -20,6 +20,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
+#include "synergy/languages/LanguageManager.h"
 
 class ClientProxy;
 class EventQueueTimer;
@@ -73,4 +74,5 @@ private:
     bool                m_ready;
     Server*                m_server;
     IEventQueue*        m_events;
+    synergy::languages::LanguageManager m_languageManager;
 };
