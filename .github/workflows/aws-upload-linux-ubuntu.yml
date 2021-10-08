@@ -2,42 +2,78 @@ name: Ubuntu - Core
 
 on:
   release:
-    types: [created]
+    types: [published]
+  pull_request:
 
 jobs:
   build-core-ubuntu:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:ubuntu${{ matrix.distro }}
+    container: symless/synergy-core:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
       SYNERGY_NO_TESTS: "1"
       SYNERGY_STATIC_OPENSSL: "1"
+      VCPKG_LIBRARY_LINKAGE: "static"
+      VCPKG_INSTALLATION_ROOT: /usr/local/share/vcpkg
     strategy:
       matrix:
-        distro: ["20.04", "21.04", "18.04"]
-        flag: ["-j"]
-        include:
-          - distro: "16.04"
-            flag: "-j1"
+        distro:
+          - ubuntu16.04
+          - ubuntu18.04
+          - ubuntu20.04
+          - ubuntu21.04
 
-    name: ubuntu${{ matrix.distro }}
+    name: ${{ matrix.distro }}
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Old Setup
+        if: ${{ matrix.distro == 'ubuntu16.04' }}
+        run: |
+          add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          apt-get update -y
+          apt-get upgrade openssl -y
+          apt-get install g++-7 -y
+          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+          update-alternatives --config gcc
+          gcc --version
+          g++ --version
+
+      - name: Setup
+        run: |
+          # Install vcpkg
+          git clone --depth=1 https://github.com/Microsoft/vcpkg $VCPKG_INSTALLATION_ROOT
+
+          $VCPKG_INSTALLATION_ROOT/bootstrap-vcpkg.sh
+          $VCPKG_INSTALLATION_ROOT/vcpkg integrate install
+          chmod 0777 -R $VCPKG_INSTALLATION_ROOT
+          ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
+
+          vcpkg install openssl
 
       - name: Build
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake \
+            ..
           . ./version
-          make ${{ matrix.flag }}
+          make -j
 
-      - uses: shallwefootball/s3-upload-action@master
+      # - uses: shallwefootball/s3-upload-action@master
+      #   with:
+      #     aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+      #     aws_bucket: ${{ secrets.AWS_BUCKET }}
+      #     source_dir: ./build/bin
+      #     destination_dir: "./synergy3/latest/${{matrix.distro}}/"
+
+      - uses: actions/upload-artifact@v2
         with:
-          aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
-          aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: ./build/bin
-          destination_dir: "./synergy3/latest/Ubuntu_${{matrix.distro}}/"
+          name: ${{ matrix.distro }}
+          path: build/bin/*
+          retention-days: 1

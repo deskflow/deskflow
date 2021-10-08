@@ -2,7 +2,8 @@ name: Windows - Core
 
 on:
   release:
-    types: [created]
+    types: [published]
+  pull_request:
 
 jobs:
   build-core-windows:
@@ -51,10 +52,16 @@ jobs:
           . ./version
           msbuild synergy-core.sln /p:Configuration=Release
 
-      - uses: anshulrgoyal/upload-s3-action@master
+      # - uses: anshulrgoyal/upload-s3-action@master
+      #   with:
+      #     aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+      #     aws_bucket: ${{ secrets.AWS_BUCKET }}
+      #     source_dir: ./build/bin/Release
+      #     destination_dir: "./synergy3/latest/Windows_x64/"
+
+      - uses: actions/upload-artifact@v2
         with:
-          aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
-          aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: ./build/bin/Release
-          destination_dir: "./synergy3/latest/Windows_x64/"
+          name: ${{ matrix.distro }}
+          path: build/bin/Release/*
+          retention-days: 1

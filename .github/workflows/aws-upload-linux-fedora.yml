@@ -2,7 +2,8 @@ name: Fedora - Core
 
 on:
   release:
-    types: [created]
+    types: [published]
+  pull_request:
 
 jobs:
   build-core-fedora:
@@ -13,32 +14,58 @@ jobs:
       SYNERGY_NO_LEGACY: "1"
       SYNERGY_NO_TESTS: "1"
       SYNERGY_STATIC_OPENSSL: "1"
+      VCPKG_LIBRARY_LINKAGE: "static"
+      VCPKG_INSTALLATION_ROOT: /usr/local/share/vcpkg
     strategy:
       matrix:
-        include:
-          #          - distro: fedora28 #Need to install git 2.18+
-          - distro: fedora29
-          - distro: fedora30
-          - distro: fedora33
-          - distro: fedora34
+        distro:
+          - fedora29
+          - fedora30
+          - fedora33
+          - fedora34
 
     name: ${{ matrix.distro }}
 
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup
+        run: |
+          dnf install perl -y
+          # Install vcpkg
+          git clone --depth=1 https://github.com/Microsoft/vcpkg $VCPKG_INSTALLATION_ROOT
+
+          $VCPKG_INSTALLATION_ROOT/bootstrap-vcpkg.sh
+          $VCPKG_INSTALLATION_ROOT/vcpkg integrate install
+          chmod 0777 -R $VCPKG_INSTALLATION_ROOT
+          ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
+
+          vcpkg --version
+
+          vcpkg install openssl
+
       - name: Build
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr \
+            -DCMAKE_TOOLCHAIN_FILE=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake \
+            ..
           . ./version
           make -j
 
-      - uses: shallwefootball/s3-upload-action@master
+      # - uses: shallwefootball/s3-upload-action@master
+      #   with:
+      #     aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+      #     aws_bucket: ${{ secrets.AWS_BUCKET }}
+      #     source_dir: ./build/bin
+      #     destination_dir: "./synergy3/latest/${{matrix.distro}}/"
+
+      - uses: actions/upload-artifact@v2
         with:
-          aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
-          aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: ./build/bin
-          destination_dir: "./synergy3/latest/${{matrix.distro}}/"
+          name: ${{ matrix.distro }}
+          path: build/bin/*
+          retention-days: 1
