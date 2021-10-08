@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         distro:
-          # - debian9
+          - debian9
           - debian10
 
     name: ${{ matrix.distro }}
