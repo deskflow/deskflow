@@ -40,6 +40,6 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.distro }}
+          name: ${{ matrix.destination }}
           path: build/bin/*
           retention-days: 1
