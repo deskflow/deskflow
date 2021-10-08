@@ -1,4 +1,4 @@
-name: Debian- Core
+name: Debian - Core
 
 on:
   release:
