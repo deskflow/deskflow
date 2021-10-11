@@ -18,6 +18,8 @@
 #include "base/Log.h"
 #include "synergy/AppUtil.h"
 
+#include <algorithm>
+
 namespace  {
 
 String vectorToString(const std::vector<String>& vector, String delimiter)
