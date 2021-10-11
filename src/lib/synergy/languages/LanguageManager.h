@@ -17,6 +17,7 @@
 #ifndef SYNERGY_LANGUAGESLANGUAGEMANAGER_H
 #define SYNERGY_LANGUAGESLANGUAGEMANAGER_H
 
+#include "synergy/AppUtil.h"
 #include "base/String.h"
 #include <vector>
 
@@ -30,8 +31,7 @@ class LanguageManager
     std::vector<String> m_localLanguages;
 
 public:
-    LanguageManager();
-    explicit LanguageManager(const std::vector<String>& localLanguages);
+    explicit LanguageManager(const std::vector<String>& localLanguages = AppUtil::instance().getKeyboardLayoutList());
 
     /**
      * @brief setRemoteLanguages sets remote languages

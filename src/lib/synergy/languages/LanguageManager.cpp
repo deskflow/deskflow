@@ -16,13 +16,12 @@
  */
 #include "LanguageManager.h"
 #include "base/Log.h"
-#include "synergy/AppUtil.h"
 
 #include <algorithm>
 
 namespace  {
 
-String vectorToString(const std::vector<String>& vector, String delimiter)
+String vectorToString(const std::vector<String>& vector, const String& delimiter = "")
 {
     String string;
     for (const auto& item : vector) {
@@ -39,12 +38,6 @@ String vectorToString(const std::vector<String>& vector, String delimiter)
 namespace synergy {
 
 namespace languages {
-
-LanguageManager::LanguageManager() :
-    m_localLanguages(AppUtil::instance().getKeyboardLayoutList())
-{
-    LOG((CLOG_DEBUG1 "Local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
-}
 
 LanguageManager::LanguageManager(const std::vector<String>& localLanguages) :
     m_localLanguages(localLanguages)
@@ -91,7 +84,7 @@ String LanguageManager::getMissedLanguages() const
 
 String LanguageManager::getSerializedLocalLanguages() const
 {
-    return  vectorToString(m_localLanguages, "");
+    return  vectorToString(m_localLanguages);
 }
 
 } //namespace languages
