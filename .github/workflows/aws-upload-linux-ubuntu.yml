@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         distro:
-          - ubuntu16.04
+          # - ubuntu16.04
           - ubuntu18.04
           - ubuntu20.04
           - ubuntu21.04
@@ -29,17 +29,40 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Old Setup
-        if: ${{ matrix.distro == 'ubuntu16.04' }}
+      # - name: 16.04 Setup
+      #   if: ${{ matrix.distro == 'ubuntu16.04' }}
+      #   run: |
+      #     add-apt-repository ppa:ubuntu-toolchain-r/test -y
+      #     apt-get update
+      #     apt-get upgrade openssl -y
+      #     apt-get install g++-7 -y
+      #     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+      #     update-alternatives --config gcc
+
+      - name: Update Packages
         run: |
-          add-apt-repository ppa:ubuntu-toolchain-r/test -y
-          apt-get update -y
-          apt-get upgrade openssl -y
-          apt-get install g++-7 -y
-          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-          update-alternatives --config gcc
-          gcc --version
-          g++ --version
+          apt-get update
+          # apt-get upgrade -y
+          # Install common build dependencies
+          APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
+            build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
+            libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev \
+            libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
+            flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
+            xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config"
+
+          # Additionally required by qt5-base
+          APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
+            libxcb1-dev libx11-xcb-dev libxcb-glx0-dev"
+
+          # Additionally required by qt5-base for qt5-x11extras
+          APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
+            libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
+            libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
+            libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
+            
+
+          apt-get install -y '^libxcb.*-dev' $APT_PACKAGES
 
       - name: Setup
         run: |
@@ -51,7 +74,7 @@ jobs:
           chmod 0777 -R $VCPKG_INSTALLATION_ROOT
           ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
 
-          vcpkg install openssl
+          vcpkg install openssl qt5-base
 
       - name: Build
         run: |
