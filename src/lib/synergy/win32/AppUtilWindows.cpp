@@ -249,7 +249,7 @@ public:
 void
 AppUtilWindows::showNotification(const String & title, const String & text) const
 {
-    LOG((CLOG_DEBUG "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+    LOG((CLOG_INFO "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
     if (!WinToastLib::WinToast::isCompatible()) {
         LOG((CLOG_INFO "This system does not support toast notifications"));
         return;
