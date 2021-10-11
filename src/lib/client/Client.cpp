@@ -103,8 +103,6 @@ Client::Client(
                                 new TMethodEventJob<Client>(this,
                                     &Client::handleFileRecieveCompleted));
     }
-
-    m_languageManager.setLocalLanguages(AppUtil::instance().getKeyboardLayoutList());
 }
 
 Client::~Client()

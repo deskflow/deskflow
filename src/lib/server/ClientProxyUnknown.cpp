@@ -60,7 +60,6 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    m_languageManager.setLocalLanguages(AppUtil::instance().getKeyboardLayoutList());
     auto localLanguages = m_languageManager.getSerializedLocalLanguages();
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
@@ -201,6 +200,7 @@ ClientProxyUnknown::handleData(const Event&, void*)
             throw XBadClient();
         }
         m_languageManager.setRemoteLanguages(remoteLanguages);
+        m_server->setLanguageManager(m_languageManager);
 
         // disallow invalid version numbers
         if (major <= 0 || minor < 0) {
@@ -252,13 +252,6 @@ ClientProxyUnknown::handleData(const Event&, void*)
         // hangup (with error) if version isn't supported
         if (m_proxy == NULL) {
             throw XIncompatibleClient(major, minor);
-        }
-
-        auto missedLanguages = m_languageManager.getMissedLanguages();
-
-        if(!missedLanguages.empty()) {
-            AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for server proper work: " + missedLanguages);
         }
 
         // the proxy is created and now proxy now owns the stream

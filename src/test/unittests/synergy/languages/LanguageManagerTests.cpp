@@ -19,11 +19,10 @@
 #include "test/global/gtest.h"
 
 
-
 TEST(LanguageManager, RemoteLanguagesTest)
 {
     std::string remoteLanguages = "ruenuk";
-    synergy::languages::LanguageManager manager;
+    synergy::languages::LanguageManager manager({"ru", "en", "uk"});
 
     manager.setRemoteLanguages(remoteLanguages);
     EXPECT_EQ((std::vector<std::string> {"ru", "en", "uk"}), manager.getRemoteLanguages());
@@ -35,31 +34,25 @@ TEST(LanguageManager, RemoteLanguagesTest)
 TEST(LanguageManager, LocalLanguagesTest)
 {
     std::vector<String> localLanguages = {"ru", "en", "uk"};
-    synergy::languages::LanguageManager manager;
+    synergy::languages::LanguageManager manager(localLanguages);
 
-    manager.setLocalLanguages(localLanguages);
     EXPECT_EQ((std::vector<std::string> {"ru", "en", "uk"}), manager.getLocalLanguages());
-
-    manager.setLocalLanguages(std::vector<String>());
-    EXPECT_TRUE(manager.getLocalLanguages().empty());
 }
 
 TEST(LanguageManager, MissedLanguagesTest)
 {
     String remoteLanguages = "ruenuk";
     std::vector<String> localLanguages = {"en"};
-    synergy::languages::LanguageManager manager;
+    synergy::languages::LanguageManager manager(localLanguages);
 
     manager.setRemoteLanguages(remoteLanguages);
-    manager.setLocalLanguages(localLanguages);
     EXPECT_EQ("ru, uk", manager.getMissedLanguages());
 }
 
 TEST(LanguageManager, SerializeLocalLanguagesTest)
 {
     std::vector<String> localLanguages = {"ru", "en", "uk"};
-    synergy::languages::LanguageManager manager;
+    synergy::languages::LanguageManager manager(localLanguages);
 
-    manager.setLocalLanguages(localLanguages);
     EXPECT_EQ("ruenuk", manager.getSerializedLocalLanguages());
 }

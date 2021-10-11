@@ -348,6 +348,8 @@ Server::adoptClient(BaseClientProxy* client)
 		client->screensaver(true);
 	}
 
+	checkMissedLanguages();
+
 	// send notification
 	Server::ScreenConnectedInfo* info =
 		new Server::ScreenConnectedInfo(getName(client));
@@ -1928,6 +1930,16 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
 		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
 		newScreen->sendDragInfo(fileCount, info, size);
+	}
+}
+
+void
+Server::checkMissedLanguages() const
+{
+	auto missedLanguages = m_languageManager.getMissedLanguages();
+	if (!missedLanguages.empty()) {
+		AppUtil::instance().showNotification("Language synchronization error",
+											"These languages are required for server proper work: " + missedLanguages);
 	}
 }
 

@@ -30,6 +30,8 @@ class LanguageManager
     std::vector<String> m_localLanguages;
 
 public:
+    LanguageManager();
+    explicit LanguageManager(const std::vector<String>& localLanguages);
 
     /**
      * @brief setRemoteLanguages sets remote languages
@@ -42,12 +44,6 @@ public:
      * @return vector of remote languages
      */
     const std::vector<String>& getRemoteLanguages() const;
-
-    /**
-     * @brief setLocalLanguages setter for local languages
-     * @param localLanguages is a vector of local languages
-     */
-    void setLocalLanguages(const std::vector<String>& localLanguages);
 
     /**
      * @brief getLocalLanguages getter for local languages

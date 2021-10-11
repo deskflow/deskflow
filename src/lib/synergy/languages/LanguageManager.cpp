@@ -16,6 +16,7 @@
  */
 #include "LanguageManager.h"
 #include "base/Log.h"
+#include "synergy/AppUtil.h"
 
 namespace  {
 
@@ -37,6 +38,18 @@ namespace synergy {
 
 namespace languages {
 
+LanguageManager::LanguageManager() :
+    m_localLanguages(AppUtil::instance().getKeyboardLayoutList())
+{
+    LOG((CLOG_DEBUG1 "Local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
+}
+
+LanguageManager::LanguageManager(const std::vector<String>& localLanguages) :
+    m_localLanguages(localLanguages)
+{
+    LOG((CLOG_DEBUG1 "Local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
+}
+
 void LanguageManager::setRemoteLanguages(const String& remoteLanguages)
 {
     m_remoteLanguages.clear();
@@ -51,12 +64,6 @@ void LanguageManager::setRemoteLanguages(const String& remoteLanguages)
 const std::vector<String>& LanguageManager::getRemoteLanguages() const
 {
     return m_remoteLanguages;
-}
-
-void LanguageManager::setLocalLanguages(const std::vector<String>& localLanguages)
-{
-    m_localLanguages = localLanguages;
-    LOG((CLOG_DEBUG1 "Local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
 }
 
 const std::vector<String>& LanguageManager::getLocalLanguages() const
