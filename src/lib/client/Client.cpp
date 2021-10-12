@@ -824,7 +824,7 @@ Client::checkMissedLanguages() const
         auto missedLanguages = m_languageManager.getMissedLanguages();
         if (!missedLanguages.empty()) {
             AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for client proper work: " + missedLanguages);
+                                                 "These languages are required for the client to work: " + missedLanguages);
         }
     }
     else {

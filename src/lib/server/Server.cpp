@@ -1939,7 +1939,7 @@ Server::checkMissedLanguages() const
 	auto missedLanguages = m_languageManager.getMissedLanguages();
 	if (!missedLanguages.empty()) {
 		AppUtil::instance().showNotification("Language synchronization error",
-											"These languages are required for server proper work: " + missedLanguages);
+											"These languages are required for the server to work: " + missedLanguages);
 	}
 }
 
