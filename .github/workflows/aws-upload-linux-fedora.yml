@@ -19,8 +19,6 @@ jobs:
     strategy:
       matrix:
         distro:
-          - fedora29
-          - fedora30
           - fedora33
           - fedora34
 
