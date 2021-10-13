@@ -19,7 +19,6 @@ jobs:
     strategy:
       matrix:
         distro:
-          # - ubuntu16.04
           - ubuntu18.04
           - ubuntu20.04
           - ubuntu21.04
@@ -28,16 +27,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      # - name: 16.04 Setup
-      #   if: ${{ matrix.distro == 'ubuntu16.04' }}
-      #   run: |
-      #     add-apt-repository ppa:ubuntu-toolchain-r/test -y
-      #     apt-get update
-      #     apt-get upgrade openssl -y
-      #     apt-get install g++-7 -y
-      #     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-      #     update-alternatives --config gcc
 
       - name: Update Packages
         run: |
@@ -60,8 +49,6 @@ jobs:
             libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
             libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
             libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
-            
-
           apt-get install -y '^libxcb.*-dev' $APT_PACKAGES
 
       - name: Setup
