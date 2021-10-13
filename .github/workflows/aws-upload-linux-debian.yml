@@ -8,7 +8,7 @@ on:
 jobs:
   build-core-debian:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    container: symless/synergy-vcpkg:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
@@ -21,6 +21,7 @@ jobs:
         distro:
           - debian9
           - debian10
+          # - debian11
 
     name: ${{ matrix.distro }}
 

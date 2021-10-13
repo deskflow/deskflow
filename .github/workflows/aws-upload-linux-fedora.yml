@@ -8,7 +8,7 @@ on:
 jobs:
   build-core-fedora:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    container: symless/synergy-vcpkg:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
@@ -26,21 +26,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup
-        run: |
-          dnf install perl -y
-          # Install vcpkg
-          git clone --depth=1 https://github.com/Microsoft/vcpkg $VCPKG_INSTALLATION_ROOT
-
-          $VCPKG_INSTALLATION_ROOT/bootstrap-vcpkg.sh
-          $VCPKG_INSTALLATION_ROOT/vcpkg integrate install
-          chmod 0777 -R $VCPKG_INSTALLATION_ROOT
-          ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
-
-          vcpkg --version
-
-          vcpkg install openssl
 
       - name: Build
         run: |

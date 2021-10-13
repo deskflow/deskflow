@@ -3,12 +3,12 @@ name: Ubuntu - Core
 on:
   release:
     types: [published]
-  pull_request:
+  # pull_request:
 
 jobs:
   build-core-ubuntu:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    container: symless/synergy-vcpkg:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
@@ -27,41 +27,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Update Packages
-        run: |
-          apt-get update
-          # apt-get upgrade -y
-          # Install common build dependencies
-          APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
-            build-essential g++ gfortran zip libx11-dev libxkbcommon-x11-dev libxi-dev \
-            libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev \
-            libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python3-yaml \
-            flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
-            xutils-dev dh-autoreconf libgles2-mesa-dev ruby-full pkg-config"
-
-          # Additionally required by qt5-base
-          APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
-            libxcb1-dev libx11-xcb-dev libxcb-glx0-dev"
-
-          # Additionally required by qt5-base for qt5-x11extras
-          APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
-            libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev \
-            libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
-            libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
-          apt-get install -y '^libxcb.*-dev' $APT_PACKAGES
-
-      - name: Setup
-        run: |
-          # Install vcpkg
-          git clone --depth=1 https://github.com/Microsoft/vcpkg $VCPKG_INSTALLATION_ROOT
-
-          $VCPKG_INSTALLATION_ROOT/bootstrap-vcpkg.sh
-          $VCPKG_INSTALLATION_ROOT/vcpkg integrate install
-          chmod 0777 -R $VCPKG_INSTALLATION_ROOT
-          ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
-
-          vcpkg install openssl qt5-base
 
       - name: Build
         run: |
