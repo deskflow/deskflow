@@ -60,14 +60,11 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    String allKeyboardLayoutsStr;
-    for (const auto& layout : AppUtil::instance().getKeyboardLayoutList()) {
-        allKeyboardLayoutsStr += layout;
-    }
+    auto localLanguages = m_languageManager.getSerializedLocalLanguages();
     ProtocolUtil::writef(m_stream, kMsgHello,
                             kProtocolMajorVersion,
                             kProtocolMinorVersion,
-                            &allKeyboardLayoutsStr);
+                            &localLanguages);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
@@ -186,7 +183,7 @@ ClientProxyUnknown::handleData(const Event&, void*)
     LOG((CLOG_DEBUG1 "parsing hello reply"));
 
     String name("<unknown>");
-    String keyboardLayoutList("<unknown>");
+
     try {
         // limit the maximum length of the hello
         UInt32 n = m_stream->getSize();
@@ -197,10 +194,13 @@ ClientProxyUnknown::handleData(const Event&, void*)
 
         // parse the reply to hello
         SInt16 major, minor;
+        String remoteLanguages;
         if (!ProtocolUtil::readf(m_stream, kMsgHelloBack,
-                                    &major, &minor, &name, &keyboardLayoutList)) {
+                                    &major, &minor, &name, &remoteLanguages)) {
             throw XBadClient();
         }
+        m_languageManager.setRemoteLanguages(remoteLanguages);
+        m_server->setLanguageManager(m_languageManager);
 
         // disallow invalid version numbers
         if (major <= 0 || minor < 0) {
@@ -252,22 +252,6 @@ ClientProxyUnknown::handleData(const Event&, void*)
         // hangup (with error) if version isn't supported
         if (m_proxy == NULL) {
             throw XIncompatibleClient(major, minor);
-        }
-
-        std::vector<String> missed;
-        std::vector<String> supported;
-        AppUtil::getKeyboardLayoutsDiff(keyboardLayoutList,
-                                        AppUtil::instance().getKeyboardLayoutList(),
-                                        missed, supported);
-
-        if(!supported.empty()) {
-            LOG((CLOG_DEBUG "Supported client languages: %s",  AppUtil::joinStrVector(supported, ", ").c_str()));
-        }
-
-        if(!missed.empty()) {
-            auto result = AppUtil::joinStrVector(missed, ", ");
-            AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for server proper work: " + result);
         }
 
         // the proxy is created and now proxy now owns the stream

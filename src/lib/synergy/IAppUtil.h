@@ -32,18 +32,4 @@ public:
     virtual std::vector<String> getKeyboardLayoutList() = 0;
     virtual String getCurrentLanguageCode() = 0;
     virtual void showNotification(const String& title, const String& text) const = 0;
-
-    static String joinStrVector(const std::vector<String>& source, const String& delim)
-    {
-        String result;
-        for(size_t i = 0; i < source.size(); i++)
-        {
-          result += source[i];
-
-          if(i < source.size() - 1) {
-              result += delim;
-          }
-        }
-        return std::move(result);
-    }
 };

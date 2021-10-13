@@ -26,6 +26,7 @@
 #include "synergy/INode.h"
 #include "synergy/DragInformation.h"
 #include "synergy/ServerArgs.h"
+#include "synergy/languages/LanguageManager.h"
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/EventTypes.h"
@@ -155,7 +156,10 @@ public:
 
     //! Store ClientListener pointer
     void                setListener(ClientListener* p) { m_clientListener = p; }
-    
+
+    //! Set language manager
+    void                setLanguageManager(const synergy::languages::LanguageManager& manager) { m_languageManager = manager; }
+
     //@}
     //! @name accessors
     //@{
@@ -373,6 +377,9 @@ private:
     // send drag info to new client screen
     void                sendDragInfo(BaseClientProxy* newScreen);
 
+    //Shows notification if there are missed languages
+    void                checkMissedLanguages() const;
+
 public:
     bool                m_mock;
 
@@ -487,4 +494,5 @@ private:
 
     ClientListener*        m_clientListener;
     lib::synergy::ServerArgs            m_args;
+    synergy::languages::LanguageManager m_languageManager;
 };
