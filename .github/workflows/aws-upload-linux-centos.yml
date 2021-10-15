@@ -8,7 +8,7 @@ on:
 jobs:
   build-core-centos:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:${{ matrix.distro }}
+    container: synergy-vcpkg:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         distro:
-          - centos7.6
+          # - centos7.6
           - centos8
 
     name: ${{ matrix.distro }}
@@ -30,23 +30,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup
-        run: |
-          export PATH="/opt/rh/devtoolset-9/root/usr/bin:$PATH"
-
-          # Install vcpkg
-          git clone --depth=1 https://github.com/Microsoft/vcpkg $VCPKG_INSTALLATION_ROOT
-
-          $VCPKG_INSTALLATION_ROOT/bootstrap-vcpkg.sh
-          $VCPKG_INSTALLATION_ROOT/vcpkg integrate install
-          chmod 0777 -R $VCPKG_INSTALLATION_ROOT
-          ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
-
-          vcpkg install openssl
-
       - name: Build
         run: |
-          export PATH="/opt/rh/devtoolset-9/root/usr/bin:$PATH"
+          export PATH=/opt/rh/gcc-toolset-10/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          export LD_LIBRARY_PATH=/opt/rh/gcc-toolset-10/root/usr/lib64:/opt/rh/gcc-toolset-10/root/usr/lib:/opt/rh/gcc-toolset-10/root/usr/lib64/dyninst:/opt/rh/gcc-toolset-10/root/usr/lib/dyninst
           mkdir build
           cd build
           cmake3 \
