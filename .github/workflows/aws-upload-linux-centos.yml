@@ -8,7 +8,7 @@ on:
 jobs:
   build-core-centos:
     runs-on: ubuntu-latest
-    container: synergy-vcpkg:${{ matrix.distro }}
+    container: symless/synergy-vcpkg:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_NO_LEGACY: "1"
