@@ -3,7 +3,7 @@ name: Fedora - Core
 on:
   release:
     types: [published]
-  # pull_request:
+  pull_request:
 
 jobs:
   build-core-fedora:
@@ -39,15 +39,17 @@ jobs:
           . ./version
           make -j
 
-      # - uses: shallwefootball/s3-upload-action@master
-      #   with:
-      #     aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
-      #     aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
-      #     aws_bucket: ${{ secrets.AWS_BUCKET }}
-      #     source_dir: ./build/bin
-      #     destination_dir: "./synergy3/latest/${{matrix.distro}}/"
+      - uses: shallwefootball/s3-upload-action@master
+        if: "github.event_name == 'release'"
+        with:
+          aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: ./build/bin
+          destination_dir: "./synergy3/latest/${{matrix.distro}}/"
 
       - uses: actions/upload-artifact@v2
+        if: "github.event_name == 'pull_request'"
         with:
           name: ${{ matrix.distro }}
           path: build/bin/*
