@@ -198,9 +198,30 @@ keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 
 static
 WPARAM
-makeKeyMsg(UINT virtKey, char c, bool noAltGr)
+makeKeyMsg(UINT virtKey, WCHAR wc, bool noAltGr)
 {
-    return MAKEWPARAM(MAKEWORD(virtKey & 0xff, (BYTE)c), noAltGr ? 1 : 0);
+    return MAKEWPARAM((WORD)wc, MAKEWORD(virtKey & 0xff, noAltGr ? 1 : 0));
+}
+
+static
+void setDeadKey(WCHAR wc[], int size, UINT flags)
+{
+    if (g_deadVirtKey != 0) {
+        auto virtualKey = static_cast<UINT>(g_deadVirtKey);
+        auto scanCode = static_cast<UINT>((g_deadLParam & 0x10ff0000u) >> 16);
+        if (ToUnicode(virtualKey, scanCode, g_deadKeyState, wc, size, flags) >= 2) {
+            // If ToUnicode returned >=2, it means that we accidentally removed
+            // a double dead key instead of restoring it. Thus, we call
+            // ToUnicode again with the same parameters to restore the
+            // internal dead key state.
+            ToUnicode(virtualKey, scanCode, g_deadKeyState, wc, size, flags);
+
+            // We need to keep track of this because g_deadVirtKey will be
+            // cleared later on; this would cause the dead key release to
+            // incorrectly restore the dead key state.
+            g_deadRelease = g_deadVirtKey;
+        }
+    }
 }
 
 static
@@ -300,30 +321,13 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
         }
     }
 
-    WORD c        = 0;
-
     // map the key event to a character.  we have to put the dead
     // key back first and this has the side effect of removing it.
-    if (g_deadVirtKey != 0) {
-        if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-                    g_deadKeyState, &c, flags) == 2)
-        {
-            // If ToAscii returned 2, it means that we accidentally removed
-            // a double dead key instead of restoring it. Thus, we call
-            // ToAscii again with the same parameters to restore the
-            // internal dead key state.
-            ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-                    g_deadKeyState, &c, flags);
-
-            // We need to keep track of this because g_deadVirtKey will be
-            // cleared later on; this would cause the dead key release to
-            // incorrectly restore the dead key state.
-            g_deadRelease = g_deadVirtKey;
-        }
-    }
+    WCHAR wc[] = {0, 0};
+    setDeadKey(wc, 2, flags);
 
     UINT scanCode = ((lParam & 0x10ff0000u) >> 16);
-    int n         = ToAscii((UINT)wParam, scanCode, keys, &c, flags);
+    int n         = ToUnicode((UINT)wParam, scanCode, keys, wc, 2, flags);
 
     // if mapping failed and ctrl and alt are pressed then try again
     // with both not pressed.  this handles the case where ctrl and
@@ -334,17 +338,9 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     bool noAltGr = false;
     if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
         noAltGr = true;
-        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
-                            wParam | 0x05000000, lParam);
-        if (g_deadVirtKey != 0) {
-            if (ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-                            g_deadKeyState, &c, flags) == 2)
-            {
-                ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-                            g_deadKeyState, &c, flags);
-                g_deadRelease = g_deadVirtKey;
-            }
-        }
+        PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG, wParam | 0x05000000, lParam);
+        setDeadKey(wc, 2, flags);
+
         BYTE keys2[256];
         for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
             keys2[i] = keys[i];
@@ -355,12 +351,12 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
         keys2[VK_LMENU]    = 0;
         keys2[VK_RMENU]    = 0;
         keys2[VK_MENU]     = 0;
-        n = ToAscii((UINT)wParam, scanCode, keys2, &c, flags);
+        n = ToUnicode((UINT)wParam, scanCode, keys2, wc, 2, flags);
     }
 
     PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
-                            wParam | ((c & 0xff) << 8) |
-                            ((n & 0xff) << 16) | 0x06000000,
+                            (wc[0] & 0xffff) | ((wParam & 0xff) << 16) |
+                            ((n & 0xf) << 24) | 0x60000000,
                             lParam);
     WPARAM charAndVirtKey = 0;
     bool clearDeadKey = false;
@@ -386,12 +382,12 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     case 0:
         // key doesn't map to a character.  this can happen if
         // non-character keys are pressed after a dead key.
-        charAndVirtKey = makeKeyMsg((UINT)wParam, (char)0, noAltGr);
+        charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
         break;
 
     case 1:
         // key maps to a character composed with dead key
-        charAndVirtKey = makeKeyMsg((UINT)wParam, (char)LOBYTE(c), noAltGr);
+        charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
         clearDeadKey   = true;
         break;
 
@@ -399,14 +395,14 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
         // previous dead key not composed.  send a fake key press
         // and release for the dead key to our window.
         WPARAM deadCharAndVirtKey =
-                            makeKeyMsg((UINT)g_deadVirtKey, (char)LOBYTE(c), noAltGr);
+                            makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
         PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
                             deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
         PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
                             deadCharAndVirtKey, g_deadLParam | 0x80000000u);
 
         // use uncomposed character
-        charAndVirtKey = makeKeyMsg((UINT)wParam, (char)HIBYTE(c), noAltGr);
+        charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
         clearDeadKey   = true;
         break;
     }
@@ -414,8 +410,8 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
     // put back the dead key, if any, for the application to use
     if (g_deadVirtKey != 0) {
-        ToAscii((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-                            g_deadKeyState, &c, flags);
+        ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+                            g_deadKeyState, wc, 2, flags);
     }
 
     // clear out old dead key state
