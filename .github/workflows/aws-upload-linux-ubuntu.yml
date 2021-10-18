@@ -25,6 +25,13 @@ jobs:
     name: ${{ matrix.distro }}
 
     steps:
+      - name: Setup git
+        run: |
+          apt-get update
+          apt-get install -y software-properties-common
+          apt-add-repository ppa:git-core/ppa
+          apt-get upgrade -y git
+
       - uses: actions/checkout@v2
         with:
           submodules: recursive
