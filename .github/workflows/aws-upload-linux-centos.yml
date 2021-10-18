@@ -15,7 +15,6 @@ jobs:
       SYNERGY_NO_TESTS: "1"
       SYNERGY_STATIC_OPENSSL: "1"
       VCPKG_LIBRARY_LINKAGE: "static"
-      VCPKG_INSTALLATION_ROOT: /usr/local/share/vcpkg
     defaults:
       run:
         shell: bash
@@ -32,8 +31,6 @@ jobs:
 
       - name: Build
         run: |
-          export PATH=/opt/rh/gcc-toolset-10/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-          export LD_LIBRARY_PATH=/opt/rh/gcc-toolset-10/root/usr/lib64:/opt/rh/gcc-toolset-10/root/usr/lib:/opt/rh/gcc-toolset-10/root/usr/lib64/dyninst:/opt/rh/gcc-toolset-10/root/usr/lib/dyninst
           mkdir build
           cd build
           cmake3 \

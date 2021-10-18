@@ -15,7 +15,6 @@ jobs:
       SYNERGY_NO_TESTS: "1"
       SYNERGY_STATIC_OPENSSL: "1"
       VCPKG_LIBRARY_LINKAGE: "static"
-      VCPKG_INSTALLATION_ROOT: /usr/local/share/vcpkg
     strategy:
       matrix:
         distro:
