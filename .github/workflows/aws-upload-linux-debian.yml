@@ -15,7 +15,6 @@ jobs:
       SYNERGY_NO_TESTS: "1"
       SYNERGY_STATIC_OPENSSL: "1"
       VCPKG_LIBRARY_LINKAGE: "static"
-      VCPKG_INSTALLATION_ROOT: /usr/local/share/vcpkg
     strategy:
       matrix:
         distro:
@@ -27,18 +26,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup
-        run: |
-          # Install vcpkg
-          git clone --depth=1 https://github.com/Microsoft/vcpkg $VCPKG_INSTALLATION_ROOT
-
-          $VCPKG_INSTALLATION_ROOT/bootstrap-vcpkg.sh
-          $VCPKG_INSTALLATION_ROOT/vcpkg integrate install
-          chmod 0777 -R $VCPKG_INSTALLATION_ROOT
-          ln -sf $VCPKG_INSTALLATION_ROOT/vcpkg /usr/local/bin
-
-          vcpkg install openssl
 
       - name: Build
         run: |
