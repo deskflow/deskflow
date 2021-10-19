@@ -3,7 +3,7 @@ name: Debian - Core
 on:
   release:
     types: [published]
-  pull_request:
+  # pull_request:
 
 jobs:
   build-core-debian:
