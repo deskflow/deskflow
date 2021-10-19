@@ -339,6 +339,22 @@ void KeyMap::setLanguageData(std::vector<String> layouts)
     m_keyboardLayouts = std::move(layouts);
 }
 
+SInt32 KeyMap::getLanguageGroupID(SInt32 group, const String& lang) const
+{
+    SInt32 id = group;
+
+    auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
+    if (it != m_keyboardLayouts.end()) {
+        id = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
+        LOG((CLOG_DEBUG1 "Language %s has group id %d", lang.c_str(), id));
+    }
+    else {
+        LOG((CLOG_DEBUG1 "Could not found requested language"));
+    }
+
+    return id;
+}
+
 SInt32
 KeyMap::getNumGroups() const
 {
@@ -601,6 +617,25 @@ KeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
     return keyItem;
 }
 
+const KeyMap::KeyItemList*
+KeyMap::getKeyItemList(const KeyMap::KeyGroupTable& keyGroupTable, SInt32 group, KeyModifierMask desiredMask) const
+{
+    const KeyItemList* itemList = nullptr;
+
+    // find best key in any group, starting with the active group
+    for (SInt32 groupOffset = 0; groupOffset < getNumGroups(); ++groupOffset) {
+        auto effectiveGroup = getEffectiveGroup(group, groupOffset);
+        auto keyIndex = findBestKey(keyGroupTable[effectiveGroup], desiredMask);
+        if (keyIndex != -1) {
+            LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
+            itemList = &keyGroupTable[effectiveGroup][keyIndex];
+            break;
+        }
+    }
+
+    return itemList;
+}
+
 const KeyMap::KeyItem*
 KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
                 ModifierToKeys& activeModifiers,
@@ -616,35 +651,16 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
 
         return NULL;
     }
-    const KeyGroupTable& keyGroupTable = i->second;
 
-    // find best key in any group, starting with the active group
-    SInt32 keyIndex  = -1;
-    SInt32 numGroups = getNumGroups();
-    SInt32 groupOffset;
-    LOG((CLOG_DEBUG1 "find best:  %04x %04x", currentState, desiredMask));
-    for (groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
-        SInt32 effectiveGroup = getEffectiveGroup(group, groupOffset);
-        keyIndex = findBestKey(keyGroupTable[effectiveGroup],
-                                currentState, desiredMask);
-        if (keyIndex != -1) {
-            LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
-            break;
-        }
-    }
-    if (keyIndex == -1) {
+    // get keys to press for key
+    auto itemList = getKeyItemList(i->second, getLanguageGroupID(group, lang), desiredMask);
+    if (!itemList || itemList->empty()) {
         // no mapping for this keysym
         LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
         return NULL;
     }
 
-    // get keys to press for key
-    SInt32 effectiveGroup = getEffectiveGroup(group, groupOffset);
-    const KeyItemList& itemList = keyGroupTable[effectiveGroup][keyIndex];
-    if (itemList.empty()) {
-        return NULL;
-    }
-    const KeyItem& keyItem = itemList.back();
+    const KeyItem& keyItem = itemList->back();
 
     // make working copy of modifiers
     ModifierToKeys newModifiers = activeModifiers;
@@ -652,8 +668,8 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
     SInt32 newGroup             = group;
 
     // add each key
-    for (size_t j = 0; j < itemList.size(); ++j) {
-        if (!keysForKeyItem(itemList[j], newGroup, newModifiers,
+    for (size_t j = 0; j < itemList->size(); ++j) {
+        if (!keysForKeyItem(itemList->at(j), newGroup, newModifiers,
                             newState, desiredMask,
                             0, isAutoRepeat, keys, lang)) {
             LOG((CLOG_DEBUG1 "can't map key"));
@@ -680,14 +696,7 @@ KeyMap::mapCharacterKey(Keystrokes& keys, KeyID id, SInt32 group,
 void
 KeyMap::addGroupToKeystroke(Keystrokes& keys, SInt32& group, const String& lang) const
 {
-    auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
-    if (it != m_keyboardLayouts.end()) {
-        LOG((CLOG_DEBUG2 "keystroke group detected as %s, group is %d", lang.c_str(), group));
-        group = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
-    }
-    else {
-        LOG((CLOG_DEBUG2 "could not found requested language, guessing that correct is %d", group));
-    }
+    group = getLanguageGroupID(group, lang);
     keys.push_back(Keystroke(group, true, false));
 }
 
@@ -703,9 +712,7 @@ KeyMap::mapModifierKey(Keystrokes& keys, KeyID id, SInt32 group,
 }
 
 SInt32
-KeyMap::findBestKey(const KeyEntryList& entryList,
-                KeyModifierMask /*currentState*/,
-                KeyModifierMask desiredState) const
+KeyMap::findBestKey(const KeyEntryList& entryList, KeyModifierMask desiredState) const
 {
     // check for an item that can accommodate the desiredState exactly
     for (SInt32 i = 0; i < (SInt32)entryList.size(); ++i) {

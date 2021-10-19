@@ -39,12 +39,11 @@ TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem)
     KeyMap::KeyItem item;
     item.m_required = KeyModifierShift;
     item.m_sensitive = KeyModifierShift;
-    KeyModifierMask currentState = KeyModifierShift;
     KeyModifierMask desiredState = KeyModifierShift;
     itemList.push_back(item);
     entryList.push_back(itemList);
 
-    EXPECT_EQ(0, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(0, keyMap.findBestKey(entryList, desiredState));
 }
     
 TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem)
@@ -55,12 +54,11 @@ TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem)
     KeyMap::KeyItem item;
     item.m_required = KeyModifierShift;
     item.m_sensitive = KeyModifierShift | KeyModifierAlt;
-    KeyModifierMask currentState = KeyModifierShift;
     KeyModifierMask desiredState = KeyModifierShift;
     itemList.push_back(item);
     entryList.push_back(itemList);
 
-    EXPECT_EQ(0, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(0, keyMap.findBestKey(entryList, desiredState));
 }
 
 TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem)
@@ -75,14 +73,13 @@ TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem
     KeyMap::KeyItem item2;
     item2.m_required = KeyModifierShift;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt;
-    KeyModifierMask currentState = KeyModifierShift;
     KeyModifierMask desiredState = KeyModifierShift;
     itemList1.push_back(item1);
     itemList2.push_back(item2);
     entryList.push_back(itemList1);
     entryList.push_back(itemList2);
 
-    EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(1, keyMap.findBestKey(entryList, desiredState));
 }
     
 TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem)
@@ -97,14 +94,13 @@ TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem)
     KeyMap::KeyItem item2;
     item2.m_required = 0;
     item2.m_sensitive = KeyModifierShift;
-    KeyModifierMask currentState = KeyModifierAlt;
     KeyModifierMask desiredState = KeyModifierAlt;
     itemList1.push_back(item1);
     itemList2.push_back(item2);
     entryList.push_back(itemList1);
     entryList.push_back(itemList2);
         
-    EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(1, keyMap.findBestKey(entryList, desiredState));
 }
 
 TEST(KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem)
@@ -119,14 +115,13 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem)
     KeyMap::KeyItem item2;
     item2.m_required = KeyModifierShift;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt;
-    KeyModifierMask currentState = 0;
     KeyModifierMask desiredState = 0;
     itemList1.push_back(item1);
     itemList2.push_back(item2);
     entryList.push_back(itemList1);
     entryList.push_back(itemList2);
     
-    EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(1, keyMap.findBestKey(entryList, desiredState));
 }
 
 TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem)
@@ -141,14 +136,13 @@ TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem)
     KeyMap::KeyItem item2;
     item2.m_required = KeyModifierShift| KeyModifierAlt;
     item2.m_sensitive = KeyModifierShift | KeyModifierAlt | KeyModifierControl;
-    KeyModifierMask currentState = 0;
     KeyModifierMask desiredState = 0;
     itemList1.push_back(item1);
     itemList2.push_back(item2);
     entryList.push_back(itemList1);
     entryList.push_back(itemList2);
 
-    EXPECT_EQ(1, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(1, keyMap.findBestKey(entryList, desiredState));
 }
     
 TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch)
@@ -159,12 +153,11 @@ TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch)
     KeyMap::KeyItem item;
     item.m_required = 0xffffffff;
     item.m_sensitive = 0xffffffff;
-    KeyModifierMask currentState = 0;
     KeyModifierMask desiredState = 0;
     itemList.push_back(item);
     entryList.push_back(itemList);
     
-    EXPECT_EQ(-1, keyMap.findBestKey(entryList, currentState, desiredState));
+    EXPECT_EQ(-1, keyMap.findBestKey(entryList, desiredState));
 }
     
 TEST(KeyMapTests, isCommand_shiftMask_returnFalse)
@@ -235,6 +228,5 @@ TEST(KeyMapTests, mapkey_handles_setmodifier_with_no_mapped)
     result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask, false, "en");
     EXPECT_TRUE(result == nullptr);
 }
-    
 
 }

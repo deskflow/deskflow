@@ -408,9 +408,7 @@ private:
 	// returns the index into \p entryList of the KeyItemList requiring
 	// the fewest modifier changes between \p currentState and
 	// \p desiredState.
-	SInt32				findBestKey(const KeyEntryList& entryList,
-							KeyModifierMask currentState,
-							KeyModifierMask desiredState) const;
+    SInt32				findBestKey(const KeyEntryList& entryList, KeyModifierMask desiredState) const;
 
 	// gets the \c KeyItem used to synthesize the modifier who's bit is
 	// given by \p modifierBit in group \p group and does not synthesize
@@ -470,16 +468,19 @@ private:
 	// Initialize key name/id maps
 	static void			initKeyNameMaps();
 
+	// Ways to synthesize a KeyID over multiple keyboard groups
+	typedef std::vector<KeyEntryList> KeyGroupTable;
+
     void addGroupToKeystroke(Keystrokes& keys, SInt32& group, const String& lang) const;
+
+	SInt32 getLanguageGroupID(SInt32 group, const String& lang) const;
+	const KeyItemList* getKeyItemList(const KeyGroupTable& keyGroupTable, SInt32 group, KeyModifierMask desiredMask) const;
 
 	// not implemented
 	KeyMap(const KeyMap&);
 	KeyMap&			operator=(const KeyMap&);
 
 private:
-	// Ways to synthesize a KeyID over multiple keyboard groups
-	typedef std::vector<KeyEntryList> KeyGroupTable;
-
 	// Table of KeyID to ways to synthesize that KeyID
 	typedef std::map<KeyID, KeyGroupTable> KeyIDMap;
 
