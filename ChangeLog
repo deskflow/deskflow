@@ -16,6 +16,7 @@ Bug fixes:
 - #7099 SYNERGY-854 Fix compilation with msvc 2014
 - #7100 | #7101 No configuration available on Windows
 - #7097 The title "Enterprise" disappeares after clicking on "Preferences"
+- #7108 Wrong characters on client for unicode
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed
