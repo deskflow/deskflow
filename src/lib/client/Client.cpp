@@ -206,6 +206,7 @@ Client::handshakeComplete()
 {
     m_ready = true;
     m_screen->enable();
+    checkMissedLanguages();
     sendEvent(m_events->forClient().connected(), NULL);
 }
 
@@ -723,13 +724,14 @@ void
 Client::handleHello(const Event&, void*)
 {
     SInt16 major, minor;
-    String keyboardLayoutList("<unknown>");
-    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor, &keyboardLayoutList)) {
+    String remoteLanguages;
+    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor, &remoteLanguages)) {
         sendConnectionFailedEvent("Protocol error from server, check encryption settings");
         cleanupTimer();
         cleanupConnection();
         return;
     }
+    m_languageManager.setRemoteLanguages(remoteLanguages);
 
     // check versions
     LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
@@ -749,37 +751,11 @@ Client::handleHello(const Event&, void*)
     }
 
     // say hello back
-    LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
-    String allKeyboardLayoutsStr;
-    for (const auto& layout : AppUtil::instance().getKeyboardLayoutList()) {
-        allKeyboardLayoutsStr += layout;
-    }
-
     LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
+    auto localLanguages = m_languageManager.getSerializedLocalLanguages();
     ProtocolUtil::writef(m_stream, kMsgHelloBack,
                             helloBackMajor,
-                            helloBackMinor, & m_name, &allKeyboardLayoutsStr);
-
-    if(m_args.m_enableLangSync) {
-        std::vector<String> missed;
-        std::vector<String> supported;
-        AppUtil::getKeyboardLayoutsDiff(keyboardLayoutList,
-                                        AppUtil::instance().getKeyboardLayoutList(),
-                                        missed, supported);
-
-        if(!supported.empty()) {
-            LOG((CLOG_DEBUG "Supported server languages: %s",  AppUtil::joinStrVector(supported, ", ").c_str()));
-        }
-
-        if(!missed.empty()) {
-            auto result = AppUtil::joinStrVector(missed, ", ");
-            AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for client proper work: " + result);
-        }
-    }
-    else {
-        LOG((CLOG_DEBUG "Language sync logic is disabled."));
-    }
+                            helloBackMinor, & m_name, &localLanguages);
 
     // now connected but waiting to complete handshake
     setupScreen();
@@ -838,6 +814,21 @@ Client::onFileRecieveCompleted()
         m_writeToDropDirThread = new Thread(
             new TMethodJob<Client>(
                 this, &Client::writeToDropDirThread));
+    }
+}
+
+void
+Client::checkMissedLanguages() const
+{
+    if (m_args.m_enableLangSync) {
+        auto missedLanguages = m_languageManager.getMissedLanguages();
+        if (!missedLanguages.empty()) {
+            AppUtil::instance().showNotification("Language synchronization error",
+                                                 "These languages are required for the client to work: " + missedLanguages);
+        }
+    }
+    else {
+        LOG((CLOG_DEBUG "Language sync logic is disabled."));
     }
 }
 

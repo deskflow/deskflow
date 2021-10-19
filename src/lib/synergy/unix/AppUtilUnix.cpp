@@ -172,8 +172,8 @@ AppUtilUnix::getCurrentLanguageCode()
 void
 AppUtilUnix::showNotification(const String & title, const String & text) const
 {
-    LOG((CLOG_DEBUG "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
 #if WINAPI_XWINDOWS
+    LOG((CLOG_INFO "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
     if (!notify_init("Synergy"))
     {
         LOG((CLOG_INFO "Failed to initialize libnotify"));

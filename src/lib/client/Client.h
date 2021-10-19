@@ -24,6 +24,7 @@
 #include "synergy/DragInformation.h"
 #include "synergy/INode.h"
 #include "synergy/ClientArgs.h"
+#include "synergy/languages/LanguageManager.h"
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"
@@ -208,6 +209,7 @@ private:
     void                handleStopRetry(const Event&, void*);
     void                onFileRecieveCompleted();
     void                sendClipboardThread(void*);
+    void                checkMissedLanguages() const;
 
 public:
     bool                m_mock;
@@ -241,4 +243,5 @@ private:
     size_t              m_maximumClipboardSize;
     lib::synergy::ClientArgs          m_args;
     size_t              m_resolvedAddressesCount = 0;
+    synergy::languages::LanguageManager m_languageManager;
 };

@@ -33,7 +33,7 @@ jobs:
         env:
           CMAKE_BUILD_TYPE: Release
         run: |
-          export 
+          python3 CI/build_version.py
           mkdir build
           cd build
           cmake \
