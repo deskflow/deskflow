@@ -752,10 +752,7 @@ Client::handleHello(const Event&, void*)
 
     // say hello back
     LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
-    auto localLanguages = m_languageManager.getSerializedLocalLanguages();
-    ProtocolUtil::writef(m_stream, kMsgHelloBack,
-                            helloBackMajor,
-                            helloBackMinor, & m_name, &localLanguages);
+    ProtocolUtil::writef(m_stream, kMsgHelloBack, helloBackMajor, helloBackMinor, &m_name);
 
     // now connected but waiting to complete handshake
     setupScreen();
@@ -820,15 +817,11 @@ Client::onFileRecieveCompleted()
 void
 Client::checkMissedLanguages() const
 {
-    if (m_args.m_enableLangSync) {
-        auto missedLanguages = m_languageManager.getMissedLanguages();
-        if (!missedLanguages.empty()) {
-            AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for the client to work: " + missedLanguages);
-        }
-    }
-    else {
-        LOG((CLOG_DEBUG "Language sync logic is disabled."));
+    auto missedLanguages = m_languageManager.getMissedLanguages();
+    if (!missedLanguages.empty()) {
+        AppUtil::instance().showNotification("Language synchronization error",
+              "You need to install these languages on this computer to enable support for multiple languages: "
+              + missedLanguages);
     }
 }
 

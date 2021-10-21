@@ -194,13 +194,9 @@ ClientProxyUnknown::handleData(const Event&, void*)
 
         // parse the reply to hello
         SInt16 major, minor;
-        String remoteLanguages;
-        if (!ProtocolUtil::readf(m_stream, kMsgHelloBack,
-                                    &major, &minor, &name, &remoteLanguages)) {
+        if (!ProtocolUtil::readf(m_stream, kMsgHelloBack, &major, &minor, &name)) {
             throw XBadClient();
         }
-        m_languageManager.setRemoteLanguages(remoteLanguages);
-        m_server->setLanguageManager(m_languageManager);
 
         // disallow invalid version numbers
         if (major <= 0 || minor < 0) {

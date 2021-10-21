@@ -109,7 +109,7 @@ extern const char* const       kMsgHello;
 // respond to hello from server;  secondary -> primary
 // $1 = protocol major version number supported by client.  $2 =
 // protocol minor version number supported by client.  $3 = client
-// name. $4 = client language list
+// name.
 extern const char* const       kMsgHelloBack;
 
 
