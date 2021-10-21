@@ -19,7 +19,7 @@
 #include "synergy/protocol_types.h"
 
 const char* const               kMsgHello            = "Synergy%2i%2i%s";
-const char* const               kMsgHelloBack        = "Synergy%2i%2i%s%s";
+const char* const               kMsgHelloBack        = "Synergy%2i%2i%s";
 const char* const               kMsgCNoop             = "CNOP";
 const char* const               kMsgCClose             = "CBYE";
 const char* const               kMsgCEnter             = "CINN%2i%2i%4i%2i";
