@@ -817,15 +817,11 @@ Client::onFileRecieveCompleted()
 void
 Client::checkMissedLanguages() const
 {
-    if (m_args.m_enableLangSync) {
-        auto missedLanguages = m_languageManager.getMissedLanguages();
-        if (!missedLanguages.empty()) {
-            AppUtil::instance().showNotification("Language synchronization error",
-                                                 "These languages are required for the client to work: " + missedLanguages);
-        }
-    }
-    else {
-        LOG((CLOG_DEBUG "Language sync logic is disabled."));
+    auto missedLanguages = m_languageManager.getMissedLanguages();
+    if (!missedLanguages.empty()) {
+        AppUtil::instance().showNotification("Language synchronization error",
+              "You need to install these languages on this computer to enable support for multiple languages: "
+              + missedLanguages);
     }
 }
 
