@@ -26,6 +26,7 @@ Enhancements:
 Github Actions:
 - #1043 Adding upload to s3 feature on all OSes
 - #7098 Add Apple M1 runner
+- #7103 Fix core builds
 - #7109 Fix build version for M1 builds
 ===========
 

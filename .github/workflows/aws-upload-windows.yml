@@ -2,7 +2,8 @@ name: Windows - Core
 
 on:
   release:
-    types: [created]
+    types: [published]
+  # pull_request:
 
 jobs:
   build-core-windows:
@@ -52,9 +53,17 @@ jobs:
           msbuild synergy-core.sln /p:Configuration=Release
 
       - uses: anshulrgoyal/upload-s3-action@master
+        if: "github.event_name == 'release'"
         with:
           aws_key_id: ${{ secrets.AWS_S3_UPLOAD_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_S3_UPLOAD_SECRET }}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
           source_dir: ./build/bin/Release
           destination_dir: "./synergy3/latest/Windows_x64/"
+
+      - uses: actions/upload-artifact@v2
+        if: "github.event_name == 'pull_request'"
+        with:
+          name: windows
+          path: build/bin/Release/*
+          retention-days: 1
