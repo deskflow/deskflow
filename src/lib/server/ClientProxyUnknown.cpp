@@ -60,11 +60,7 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    auto localLanguages = m_languageManager.getSerializedLocalLanguages();
-    ProtocolUtil::writef(m_stream, kMsgHello,
-                            kProtocolMajorVersion,
-                            kProtocolMinorVersion,
-                            &localLanguages);
+    ProtocolUtil::writef(m_stream, kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()

@@ -724,14 +724,12 @@ void
 Client::handleHello(const Event&, void*)
 {
     SInt16 major, minor;
-    String remoteLanguages;
-    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor, &remoteLanguages)) {
+    if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
         sendConnectionFailedEvent("Protocol error from server, check encryption settings");
         cleanupTimer();
         cleanupConnection();
         return;
     }
-    m_languageManager.setRemoteLanguages(remoteLanguages);
 
     // check versions
     LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
