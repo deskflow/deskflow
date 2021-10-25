@@ -27,6 +27,7 @@
 #include "server/ClientProxy1_5.h"
 #include "server/ClientProxy1_6.h"
 #include "server/ClientProxy1_7.h"
+#include "server/ClientProxy1_8.h"
 #include "synergy/protocol_types.h"
 #include "synergy/ProtocolUtil.h"
 #include "synergy/AppUtil.h"
@@ -60,11 +61,7 @@ ClientProxyUnknown::ClientProxyUnknown(synergy::IStream* stream, double timeout,
     addStreamHandlers();
 
     LOG((CLOG_DEBUG1 "saying hello"));
-    auto localLanguages = m_languageManager.getSerializedLocalLanguages();
-    ProtocolUtil::writef(m_stream, kMsgHello,
-                            kProtocolMajorVersion,
-                            kProtocolMinorVersion,
-                            &localLanguages);
+    ProtocolUtil::writef(m_stream, kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
@@ -178,6 +175,55 @@ ClientProxyUnknown::removeTimer()
 }
 
 void
+ClientProxyUnknown::initProxy(const String& name, int major, int minor)
+{
+    if (major == 1) {
+        switch (minor) {
+        case 0:
+            m_proxy = new ClientProxy1_0(name, m_stream, m_events);
+            break;
+
+        case 1:
+            m_proxy = new ClientProxy1_1(name, m_stream, m_events);
+            break;
+
+        case 2:
+            m_proxy = new ClientProxy1_2(name, m_stream, m_events);
+            break;
+
+        case 3:
+            m_proxy = new ClientProxy1_3(name, m_stream, m_events);
+            break;
+
+        case 4:
+            m_proxy = new ClientProxy1_4(name, m_stream, m_server, m_events);
+            break;
+
+        case 5:
+            m_proxy = new ClientProxy1_5(name, m_stream, m_server, m_events);
+            break;
+
+        case 6:
+            m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
+            break;
+
+        case 7:
+            m_proxy = new ClientProxy1_7(name, m_stream, m_server, m_events);
+            break;
+
+        case 8:
+            m_proxy = new ClientProxy1_8(name, m_stream, m_server, m_events);
+            break;
+        }
+    }
+
+    // hangup (with error) if version isn't supported
+    if (m_proxy == NULL) {
+        throw XIncompatibleClient(major, minor);
+    }
+}
+
+void
 ClientProxyUnknown::handleData(const Event&, void*)
 {
     LOG((CLOG_DEBUG1 "parsing hello reply"));
@@ -209,46 +255,7 @@ ClientProxyUnknown::handleData(const Event&, void*)
         removeHandlers();
 
         // create client proxy for highest version supported by the client
-        if (major == 1) {
-            switch (minor) {
-            case 0:
-                m_proxy = new ClientProxy1_0(name, m_stream, m_events);
-                break;
-
-            case 1:
-                m_proxy = new ClientProxy1_1(name, m_stream, m_events);
-                break;
-
-            case 2:
-                m_proxy = new ClientProxy1_2(name, m_stream, m_events);
-                break;
-
-            case 3:
-                m_proxy = new ClientProxy1_3(name, m_stream, m_events);
-                break;
-
-            case 4:
-                m_proxy = new ClientProxy1_4(name, m_stream, m_server, m_events);
-                break;
-
-            case 5:
-                m_proxy = new ClientProxy1_5(name, m_stream, m_server, m_events);
-                break;
-
-            case 6:
-                m_proxy = new ClientProxy1_6(name, m_stream, m_server, m_events);
-                break;
-
-            case 7:
-                m_proxy = new ClientProxy1_7(name, m_stream, m_server, m_events);
-                break;
-            }
-        }
-
-        // hangup (with error) if version isn't supported
-        if (m_proxy == NULL) {
-            throw XIncompatibleClient(major, minor);
-        }
+        initProxy(name, major, minor);
 
         // the proxy is created and now proxy now owns the stream
         LOG((CLOG_DEBUG1 "created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));

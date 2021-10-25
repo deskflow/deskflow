@@ -18,7 +18,7 @@
 
 #include "synergy/protocol_types.h"
 
-const char* const               kMsgHello            = "Synergy%2i%2i%s";
+const char* const               kMsgHello            = "Synergy%2i%2i";
 const char* const               kMsgHelloBack        = "Synergy%2i%2i%s";
 const char* const               kMsgCNoop             = "CNOP";
 const char* const               kMsgCClose             = "CBYE";
@@ -29,7 +29,8 @@ const char* const               kMsgCScreenSaver     = "CSEC%1i";
 const char* const               kMsgCResetOptions    = "CROP";
 const char* const               kMsgCInfoAck        = "CIAK";
 const char* const               kMsgCKeepAlive        = "CALV";
-const char* const               kMsgDKeyDown        = "DKDN%2i%2i%2i%s";
+const char* const               kMsgDKeyDownLang    = "DKDL%2i%2i%2i%s";
+const char* const               kMsgDKeyDown        = "DKDN%2i%2i%2i";
 const char* const               kMsgDKeyDown1_0        = "DKDN%2i%2i";
 const char* const               kMsgDKeyRepeat        = "DKRP%2i%2i%2i%2i%s";
 const char* const               kMsgDKeyRepeat1_0    = "DKRP%2i%2i%2i";
@@ -47,6 +48,7 @@ const char* const               kMsgDSetOptions        = "DSOP%4I";
 const char* const               kMsgDFileTransfer    = "DFTR%1i%s";
 const char* const               kMsgDDragInfo        = "DDRG%2i%s";
 const char* const               kMsgDSecureInputNotification = "SECN%s";
+const char* const               kMsgDLanguageSynchronisation = "LSYN%s";
 const char* const               kMsgQInfo            = "QINF";
 const char* const               kMsgEIncompatible    = "EICV%2i%2i";
 const char* const               kMsgEBusy             = "EBSY";

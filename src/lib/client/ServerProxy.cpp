@@ -213,6 +213,9 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
         m_client->refuseConnection("server reported a protocol error");
         return kDisconnect;
     }
+    else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
+        setServerLanguages();
+    }
     else {
         return kUnknown;
     }
@@ -236,7 +239,25 @@ ServerProxy::parseMessage(const UInt8* code)
     }
 
     else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
-        keyDown();
+        UInt16 id = 0;
+        UInt16 mask = 0;
+        UInt16 button = 0;
+        ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
+        LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
+
+        keyDown(id, mask, button, "");
+    }
+
+    else if (memcmp(code, kMsgDKeyDownLang, 4) == 0) {
+        String lang;
+        UInt16 id = 0;
+        UInt16 mask = 0;
+        UInt16 button = 0;
+
+        ProtocolUtil::readf(m_stream, kMsgDKeyDownLang + 4, &id, &mask, &button, &lang);
+        LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str()));
+
+        keyDown(id, mask, button, lang);
     }
 
     else if (memcmp(code, kMsgDKeyUp, 4) == 0) {
@@ -599,32 +620,11 @@ ServerProxy::grabClipboard()
 }
 
 void
-ServerProxy::keyDown()
+ServerProxy::keyDown(UInt16 id, UInt16 mask, UInt16 button, const String& lang)
 {
     // get mouse up to date
     flushCompressedMouse();
-
-    // parse
-    UInt16 id, mask, button;
-    String lang;
-    ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button, &lang);
-    LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str()));
-
-    if(m_serverLanguage != lang) {
-        m_isUserNotifiedAboutLanguageSyncError = false;
-        m_serverLanguage = lang;
-    }
-
-    auto localList = AppUtil::instance().getKeyboardLayoutList();
-    if(std::find(localList.begin(), localList.end(), lang) == localList.end()) {
-        if(!m_isUserNotifiedAboutLanguageSyncError) {
-            AppUtil::instance().showNotification("Language error", "Current server language is not installed on client!");
-            m_isUserNotifiedAboutLanguageSyncError = true;
-        }
-    }
-    else {
-        m_isUserNotifiedAboutLanguageSyncError = false;
-    }
+    setActiveServerLanguage(lang);
 
     // translate
     KeyID id2             = translateKey(static_cast<KeyID>(id));
@@ -952,5 +952,44 @@ ServerProxy::secureInputNotification()
                     "The keyboard may stop working.",
                     "'Secure input' enabled by an application on the server. " \
                     "To fix the keyboard, the application must be closed.");
+    }
+}
+
+void
+ServerProxy::setServerLanguages()
+{
+    String serverLanguages;
+    ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
+    m_languageManager.setRemoteLanguages(serverLanguages);
+
+    auto missedLanguages = m_languageManager.getMissedLanguages();
+    if (!missedLanguages.empty()) {
+        AppUtil::instance().showNotification("Language synchronization error",
+              "You need to install these languages on this computer to enable support for multiple languages: "
+              + missedLanguages);
+    }
+}
+
+void
+ServerProxy::setActiveServerLanguage(const String& language)
+{
+    if (!language.empty()) {
+        if(m_serverLanguage != language) {
+            m_isUserNotifiedAboutLanguageSyncError = false;
+            m_serverLanguage = language;
+        }
+
+        if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
+            if(!m_isUserNotifiedAboutLanguageSyncError) {
+                AppUtil::instance().showNotification("Language error", "Current server language is not installed on client!");
+                m_isUserNotifiedAboutLanguageSyncError = true;
+            }
+        }
+        else {
+            m_isUserNotifiedAboutLanguageSyncError = false;
+        }
+    }
+    else {
+        LOG((CLOG_DEBUG1 "Active server langauge is empty!"));
     }
 }

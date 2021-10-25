@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "synergy/languages/LanguageManager.h"
 #include "synergy/clipboard_types.h"
 #include "synergy/key_types.h"
 #include "base/Event.h"
@@ -96,7 +97,7 @@ private:
     void                leave();
     void                setClipboard();
     void                grabClipboard();
-    void                keyDown();
+    void                keyDown(UInt16 id, UInt16 mask, UInt16 button, const String& lang);
     void                keyRepeat();
     void                keyUp();
     void                mouseDown();
@@ -113,6 +114,8 @@ private:
     void                dragInfoReceived();
     void                handleClipboardSendingEvent(const Event&, void*);
     void                secureInputNotification();
+    void                setServerLanguages();
+    void                setActiveServerLanguage(const String& language);
 
 private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
@@ -138,4 +141,5 @@ private:
     IEventQueue*        m_events;
     String              m_serverLanguage = "";
     bool                m_isUserNotifiedAboutLanguageSyncError = false;
+    synergy::languages::LanguageManager m_languageManager;
 };
