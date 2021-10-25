@@ -213,6 +213,9 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
         m_client->refuseConnection("server reported a protocol error");
         return kDisconnect;
     }
+    else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
+        setServerLanguages();
+    }
     else {
         return kUnknown;
     }
@@ -327,9 +330,6 @@ ServerProxy::parseMessage(const UInt8* code)
     }
     else if (memcmp(code, kMsgDSecureInputNotification, 4) == 0) {
         secureInputNotification();
-    }
-    else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
-        setServerLanguages();
     }
 
     else if (memcmp(code, kMsgCClose, 4) == 0) {
