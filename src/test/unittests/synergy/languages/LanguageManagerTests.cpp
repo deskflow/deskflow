@@ -56,3 +56,12 @@ TEST(LanguageManager, SerializeLocalLanguagesTest)
 
     EXPECT_EQ("ruenuk", manager.getSerializedLocalLanguages());
 }
+
+TEST(LanguageManager, LanguageInstalledTest)
+{
+    std::vector<String> localLanguages = {"ru", "en", "uk"};
+    synergy::languages::LanguageManager manager(localLanguages);
+
+    EXPECT_FALSE(manager.isLanguageInstalled("us"));
+    EXPECT_TRUE(manager.isLanguageInstalled("en"));
+}

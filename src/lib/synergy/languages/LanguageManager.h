@@ -62,6 +62,13 @@ public:
      * @return serialized local languages as a string
      */
     String getSerializedLocalLanguages() const;
+
+    /**
+     * @brief isLanguageInstalled checks if language is installed
+     * @param language which should be checked
+     * @return true if the specified language is installed
+     */
+    bool isLanguageInstalled(const String& language) const;
 };
 
 } //namespace languages

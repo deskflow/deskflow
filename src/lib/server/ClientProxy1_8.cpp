@@ -40,3 +40,10 @@ void ClientProxy1_8::synchronizeLanguages()
     }
 }
 
+void
+ClientProxy1_8::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String& language)
+{
+    LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, language=%s", getName().c_str(), key, mask, button, language.c_str()));
+    ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button, &language);
+}
+

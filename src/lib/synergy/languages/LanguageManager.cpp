@@ -71,7 +71,7 @@ String LanguageManager::getMissedLanguages() const
     String missedLanguages;
 
     for (const auto& language : m_remoteLanguages) {
-        if (std::find(m_localLanguages.begin(), m_localLanguages.end(), language) == m_localLanguages.end()) {
+        if (!isLanguageInstalled(language)) {
             if (!missedLanguages.empty()) {
                 missedLanguages += ", ";
             }
@@ -85,6 +85,11 @@ String LanguageManager::getMissedLanguages() const
 String LanguageManager::getSerializedLocalLanguages() const
 {
     return  vectorToString(m_localLanguages);
+}
+
+bool LanguageManager::isLanguageInstalled(const String& language) const
+{
+    return (std::find(m_localLanguages.begin(), m_localLanguages.end(), language) != m_localLanguages.end());
 }
 
 } //namespace languages

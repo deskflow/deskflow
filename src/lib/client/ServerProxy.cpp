@@ -27,7 +27,6 @@
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "synergy/AppUtil.h"
-#include "synergy/languages/LanguageManager.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
@@ -312,7 +311,7 @@ ServerProxy::parseMessage(const UInt8* code)
         secureInputNotification();
     }
     else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
-        checkLanguages();
+        setServerLanguages();
     }
 
     else if (memcmp(code, kMsgCClose, 4) == 0) {
@@ -614,21 +613,7 @@ ServerProxy::keyDown()
     ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button, &lang);
     LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str()));
 
-    if(m_serverLanguage != lang) {
-        m_isUserNotifiedAboutLanguageSyncError = false;
-        m_serverLanguage = lang;
-    }
-
-    auto localList = AppUtil::instance().getKeyboardLayoutList();
-    if(std::find(localList.begin(), localList.end(), lang) == localList.end()) {
-        if(!m_isUserNotifiedAboutLanguageSyncError) {
-            AppUtil::instance().showNotification("Language error", "Current server language is not installed on client!");
-            m_isUserNotifiedAboutLanguageSyncError = true;
-        }
-    }
-    else {
-        m_isUserNotifiedAboutLanguageSyncError = false;
-    }
+    setActiveServerLanguage(lang);
 
     // translate
     KeyID id2             = translateKey(static_cast<KeyID>(id));
@@ -960,18 +945,40 @@ ServerProxy::secureInputNotification()
 }
 
 void
-ServerProxy::checkLanguages() const
+ServerProxy::setServerLanguages()
 {
     String serverLanguages;
     ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
+    m_languageManager.setRemoteLanguages(serverLanguages);
 
-    synergy::languages::LanguageManager clientLanguages;
-    clientLanguages.setRemoteLanguages(serverLanguages);
-
-    auto missedLanguages = clientLanguages.getMissedLanguages();
+    auto missedLanguages = m_languageManager.getMissedLanguages();
     if (!missedLanguages.empty()) {
         AppUtil::instance().showNotification("Language synchronization error",
               "You need to install these languages on this computer to enable support for multiple languages: "
               + missedLanguages);
+    }
+}
+
+void
+ServerProxy::setActiveServerLanguage(const String& language)
+{
+    if (!language.empty()) {
+        if(m_serverLanguage != language) {
+            m_isUserNotifiedAboutLanguageSyncError = false;
+            m_serverLanguage = language;
+        }
+
+        if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
+            if(!m_isUserNotifiedAboutLanguageSyncError) {
+                AppUtil::instance().showNotification("Language error", "Current server language is not installed on client!");
+                m_isUserNotifiedAboutLanguageSyncError = true;
+            }
+        }
+        else {
+            m_isUserNotifiedAboutLanguageSyncError = false;
+        }
+    }
+    else {
+        LOG((CLOG_DEBUG1 "Active server langauge is empty!"));
     }
 }
