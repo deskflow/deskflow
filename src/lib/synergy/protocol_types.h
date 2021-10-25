@@ -178,9 +178,9 @@ extern const char* const       kMsgCKeepAlive;
 //
 // data codes
 //
-// The same as kMsgDKeyDown2_0 but with languageCode
+// The same as kMsgDKeyDown but with languageCode
 // $4 = languageCode
-extern const char* const       kMsgDKeyDown;
+extern const char* const       kMsgDKeyDownLang;
 
 // key pressed:  primary -> secondary
 // $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
@@ -195,7 +195,7 @@ extern const char* const       kMsgDKeyDown;
 // a modifier key before releasing the modified key.
 // languageCode is parameter which helps client to react on unknwon
 // language letters
-extern const char* const       kMsgDKeyDown2_0;
+extern const char* const       kMsgDKeyDown;
 
 // key pressed 1.0:  same as above but without KeyButton
 extern const char* const       kMsgDKeyDown1_0;

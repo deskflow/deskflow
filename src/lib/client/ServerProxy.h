@@ -97,7 +97,7 @@ private:
     void                leave();
     void                setClipboard();
     void                grabClipboard();
-    void                keyDown();
+    void                keyDown(UInt16 id, UInt16 mask, UInt16 button, const String& lang);
     void                keyRepeat();
     void                keyUp();
     void                mouseDown();
