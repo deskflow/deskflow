@@ -28,7 +28,7 @@ public:
     void        keyDown(KeyID, KeyModifierMask, KeyButton, const String&) override;
 
 private:
-    void synchronizeLanguages();
+    void synchronizeLanguages() const;
 
 };
 

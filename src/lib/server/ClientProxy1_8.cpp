@@ -27,7 +27,7 @@ ClientProxy1_8::ClientProxy1_8(const String& name, synergy::IStream* adoptedStre
     synchronizeLanguages();
 }
 
-void ClientProxy1_8::synchronizeLanguages()
+void ClientProxy1_8::synchronizeLanguages() const
 {
     synergy::languages::LanguageManager languageManager;
     auto localLanguages = languageManager.getSerializedLocalLanguages();
