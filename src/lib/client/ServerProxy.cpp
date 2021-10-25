@@ -27,6 +27,7 @@
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 #include "synergy/AppUtil.h"
+#include "synergy/languages/LanguageManager.h"
 #include "io/IStream.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
@@ -309,6 +310,9 @@ ServerProxy::parseMessage(const UInt8* code)
     }
     else if (memcmp(code, kMsgDSecureInputNotification, 4) == 0) {
         secureInputNotification();
+    }
+    else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
+        checkLanguages();
     }
 
     else if (memcmp(code, kMsgCClose, 4) == 0) {
@@ -952,5 +956,22 @@ ServerProxy::secureInputNotification()
                     "The keyboard may stop working.",
                     "'Secure input' enabled by an application on the server. " \
                     "To fix the keyboard, the application must be closed.");
+    }
+}
+
+void
+ServerProxy::checkLanguages() const
+{
+    String serverLanguages;
+    ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
+
+    synergy::languages::LanguageManager clientLanguages;
+    clientLanguages.setRemoteLanguages(serverLanguages);
+
+    auto missedLanguages = clientLanguages.getMissedLanguages();
+    if (!missedLanguages.empty()) {
+        AppUtil::instance().showNotification("Language synchronization error",
+              "You need to install these languages on this computer to enable support for multiple languages: "
+              + missedLanguages);
     }
 }

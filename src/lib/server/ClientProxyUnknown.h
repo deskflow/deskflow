@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/Event.h"
+#include "base/String.h"
 #include "base/EventTypes.h"
-#include "synergy/languages/LanguageManager.h"
 
 class ClientProxy;
 class EventQueueTimer;
@@ -60,6 +60,7 @@ private:
     void                addStreamHandlers();
     void                addProxyHandlers();
     void                removeHandlers();
+    void                initProxy(const String& name, int major, int minor);
     void                removeTimer();
     void                handleData(const Event&, void*);
     void                handleWriteError(const Event&, void*);
@@ -74,5 +75,4 @@ private:
     bool                m_ready;
     Server*                m_server;
     IEventQueue*        m_events;
-    synergy::languages::LanguageManager m_languageManager;
 };

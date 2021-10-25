@@ -29,9 +29,11 @@
 // 1.4:  adds crypto support
 // 1.5:  adds file transfer and removes home brew crypto
 // 1.6:  adds clipboard streaming
+// 1.7   adds security input notifications
+// 1.8   adds language synchronization functionality
 // NOTE: with new version, synergy minor version should increment
 static const SInt16        kProtocolMajorVersion = 1;
-static const SInt16        kProtocolMinorVersion = 7;
+static const SInt16        kProtocolMinorVersion = 8;
 
 // default contact port number
 static const UInt16        kDefaultPort = 24800;
@@ -281,6 +283,10 @@ extern const char* const       kMsgDDragInfo;
 // $1 = app. app only obtainable on MacOS since that's the only
 // platform facing secure input problems
 extern const char* const       kMsgDSecureInputNotification;
+
+// language synchronization:  primary -> secondary
+// $1 = List of server languages
+extern const char* const       kMsgDLanguageSynchronisation;
 
 //
 // query codes

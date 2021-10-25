@@ -206,7 +206,6 @@ Client::handshakeComplete()
 {
     m_ready = true;
     m_screen->enable();
-    checkMissedLanguages();
     sendEvent(m_events->forClient().connected(), NULL);
 }
 
@@ -720,6 +719,27 @@ Client::handleClipboardGrabbed(const Event& event, void*)
     }
 }
 
+bool
+Client::isCompatible(int major, int minor) const
+{
+    const std::map< int, std::set<int> > compatibleTable {
+        {6, {7, 8}}, //1.6 is compatible with 1.7 and 1.8
+        {7, {8}} //1.7 is compatible with 1.8
+    };
+
+    bool isCompatible = false;
+
+    if (major == kProtocolMajorVersion) {
+        auto versions = compatibleTable.find(minor);
+        if (versions != compatibleTable.end()) {
+            auto compatibleVersions = versions->second;
+            isCompatible = compatibleVersions.find(kProtocolMinorVersion) != compatibleVersions.end();
+        }
+    }
+
+    return isCompatible;
+}
+
 void
 Client::handleHello(const Event&, void*)
 {
@@ -735,8 +755,9 @@ Client::handleHello(const Event&, void*)
     LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
     SInt16 helloBackMajor = kProtocolMajorVersion;
     SInt16 helloBackMinor = kProtocolMinorVersion;
-    if (major == kProtocolMajorVersion && minor == 6 && kProtocolMinorVersion == 7) {
-        //because 1.6 and 1.7 is comptable - downgrading protocol for server
+
+    if (isCompatible(major, minor)) {
+        //because 1.6 is comptable with 1.7 and 1.8 - downgrading protocol for server
         LOG((CLOG_NOTE "Downgrading protocol version for server"));
         helloBackMinor = minor;
     }
@@ -809,17 +830,6 @@ Client::onFileRecieveCompleted()
         m_writeToDropDirThread = new Thread(
             new TMethodJob<Client>(
                 this, &Client::writeToDropDirThread));
-    }
-}
-
-void
-Client::checkMissedLanguages() const
-{
-    auto missedLanguages = m_languageManager.getMissedLanguages();
-    if (!missedLanguages.empty()) {
-        AppUtil::instance().showNotification("Language synchronization error",
-              "You need to install these languages on this computer to enable support for multiple languages: "
-              + missedLanguages);
     }
 }
 

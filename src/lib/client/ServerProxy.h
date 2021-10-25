@@ -113,6 +113,7 @@ private:
     void                dragInfoReceived();
     void                handleClipboardSendingEvent(const Event&, void*);
     void                secureInputNotification();
+    void                checkLanguages() const;
 
 private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);
