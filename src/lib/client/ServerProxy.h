@@ -116,7 +116,7 @@ private:
     void                secureInputNotification();
     void                setServerLanguages();
     void                setActiveServerLanguage(const String& language);
-    void                checkMissedLanguages();
+    void                checkMissedLanguages() const;
 
 private:
     typedef EResult (ServerProxy::*MessageParser)(const UInt8*);

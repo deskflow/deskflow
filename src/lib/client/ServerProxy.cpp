@@ -988,7 +988,8 @@ ServerProxy::setActiveServerLanguage(const String& language)
     }
 }
 
-void ServerProxy::checkMissedLanguages()
+void
+ServerProxy::checkMissedLanguages() const
 {
     auto missedLanguages = m_languageManager.getMissedLanguages();
     if (!missedLanguages.empty()) {
