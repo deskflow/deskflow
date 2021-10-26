@@ -163,6 +163,7 @@ ServerProxy::parseHandshakeMessage(const UInt8* code)
 
         // handshake is complete
         m_parser = &ServerProxy::parseMessage;
+        checkMissedLanguages();
         m_client->handshakeComplete();
     }
 
@@ -961,13 +962,6 @@ ServerProxy::setServerLanguages()
     String serverLanguages;
     ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
     m_languageManager.setRemoteLanguages(serverLanguages);
-
-    auto missedLanguages = m_languageManager.getMissedLanguages();
-    if (!missedLanguages.empty()) {
-        AppUtil::instance().showNotification("Language synchronization error",
-              "You need to install these languages on this computer to enable support for multiple languages: "
-              + missedLanguages);
-    }
 }
 
 void
@@ -991,5 +985,15 @@ ServerProxy::setActiveServerLanguage(const String& language)
     }
     else {
         LOG((CLOG_DEBUG1 "Active server langauge is empty!"));
+    }
+}
+
+void ServerProxy::checkMissedLanguages()
+{
+    auto missedLanguages = m_languageManager.getMissedLanguages();
+    if (!missedLanguages.empty()) {
+        AppUtil::instance().showNotification("Language synchronization error",
+              "You need to install these languages on this computer to enable support for multiple languages: "
+              + missedLanguages);
     }
 }
