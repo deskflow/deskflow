@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: Client goes crazy when I mash the keyboard
+title: [A concise title that explains your bug simply]
 labels: bug, triage
 assignees: ''
 
