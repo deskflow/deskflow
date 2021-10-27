@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: Make beep sound when moving from client to server
+title: Replace with a short title that explains your enhancement simply
 labels: enhancement, triage
 assignees: ''
 
