@@ -46,13 +46,9 @@ void splitLine(std::vector<String>& parts, const String& line, char delimiter)
 // See also https://gitlab.freedesktop.org/xorg/lib/libxkbfile/issues/6
 class AutoXkbRF_VarDefsRec {
 
-    XkbRF_VarDefsRec m_data;
+    XkbRF_VarDefsRec m_data = {};
 
 public:
-    AutoXkbRF_VarDefsRec() : m_data() {
-
-    }
-
     XkbRF_VarDefsRec* get() {
         return &m_data;
     }
