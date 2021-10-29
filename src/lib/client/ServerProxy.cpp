@@ -994,7 +994,7 @@ ServerProxy::checkMissedLanguages() const
     auto missedLanguages = m_languageManager.getMissedLanguages();
     if (!missedLanguages.empty()) {
         AppUtil::instance().showNotification("Language synchronization error",
-              "You need to install these languages on this computer to enable support for multiple languages: "
+              "You need to install these languages on this computer and restart synergy app to enable support for multiple languages: "
               + missedLanguages);
     }
 }

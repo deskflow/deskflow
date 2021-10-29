@@ -24,6 +24,8 @@
 #include "synergy/X11LayoutsParser.h"
 #include "ISO639Table.h"
 #include "pugixml.hpp"
+#include <X11/XKBlib.h>
+#include <X11/extensions/XKBrules.h>
 
 bool
 X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<Lang>& langList)
@@ -185,33 +187,31 @@ X11LayoutsParser::parseKeyboardFile(const String&        pathToKeyboardFile,
     layoutNames.clear();
     layoutVariantNames.clear();
 
-    std::ifstream file(pathToKeyboardFile);
-    if (!file.is_open()) {
-        LOG((CLOG_WARN "x11 keyboard layouts file \"%s\" is missed.", pathToKeyboardFile.c_str()));
-        return;
-    }
-
-    const String layoutLinePrefix = "XKBLAYOUT=";
-    const String variantLinePrefix = "XKBVARIANT=";
+    XkbRF_VarDefsRec vd;
+    char *tmp = NULL;
+    auto dpy = XkbOpenDisplay(NULL, NULL, NULL, NULL, NULL, NULL);
 
     auto splitLine = [](std::vector<String>& splitted, const String& line, char delim) {
-        std::stringstream ss(line);
-        String code;
-        while(ss.good()) {
-            getline(ss, code, delim);
-            splitted.push_back(code);
-        }
-    };
+            std::stringstream ss(line);
+            String code;
+            while(ss.good()) {
+                getline(ss, code, delim);
+                splitted.push_back(code);
+            }
+        };
 
-    String line;
-    while (std::getline(file, line)) {
-        if (line.rfind(layoutLinePrefix, 0) == 0) {
-            splitLine(layoutNames, line.substr(layoutLinePrefix.size()), ',');
-        }
-        else if (line.rfind(variantLinePrefix, 0) == 0) {
-            splitLine(layoutVariantNames, line.substr(variantLinePrefix.size()), ',');
-        }
+
+    if (XkbRF_GetNamesProp(dpy, &tmp, &vd))
+    {
+        splitLine(layoutNames, vd.layout, ',');
+        splitLine(layoutVariantNames, vd.variant, ',');
+        LOG((CLOG_INFO "Layouts: %s", vd.layout));
+        LOG((CLOG_INFO "Variants: %s", vd.variant));
     }
+    else {
+        LOG((CLOG_INFO "Error reading languages"));
+    }
+
 }
 
 std::vector<String>

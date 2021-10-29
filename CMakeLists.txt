@@ -248,7 +248,7 @@ if (UNIX)
 
             # Xtxt depends on X11.
             set (HAVE_X11)
-            list (APPEND libs Xtst X11)
+            list (APPEND libs Xtst X11 xkbfile)
 
         else()
 
