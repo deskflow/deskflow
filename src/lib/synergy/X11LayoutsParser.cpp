@@ -19,6 +19,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <memory>
 
 #include "base/Log.h"
 #include "synergy/X11LayoutsParser.h"
@@ -26,6 +27,53 @@
 #include "pugixml.hpp"
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
+
+namespace
+{
+
+void splitLine(std::vector<String>& parts, const String& line, char delimiter)
+{
+    std::stringstream stream(line);
+    while (stream.good()) {
+        String part;
+        getline(stream, part, delimiter);
+        parts.push_back(part);
+    }
+}
+
+// XkbRF_VarDefsRec contains heap-allocated C strings, but doesn't provide a
+// direct cleanup method. This wrapper implements RAII for the XkbRF_VarDefsRec.
+// See also https://gitlab.freedesktop.org/xorg/lib/libxkbfile/issues/6
+class AutoXkbRF_VarDefsRec {
+
+    XkbRF_VarDefsRec m_data;
+
+public:
+    AutoXkbRF_VarDefsRec() : m_data() {
+
+    }
+
+    XkbRF_VarDefsRec* get() {
+        return &m_data;
+    }
+
+    const char* getLayout() const {
+        return m_data.layout ? m_data.layout : "us";
+    }
+
+    const char* getVariant() const {
+        return m_data.variant ? m_data.variant : "";
+    }
+
+    ~AutoXkbRF_VarDefsRec() {
+        std::free(m_data.model);
+        std::free(m_data.layout);
+        std::free(m_data.variant);
+        std::free(m_data.options);
+    }
+};
+
+} //namespace
 
 bool
 X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<Lang>& langList)
@@ -149,13 +197,13 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
 }
 
 std::vector<String>
-X11LayoutsParser::getX11LanguageList(const String& pathToKeyboardFile, const String& pathToEvdevFile)
+X11LayoutsParser::getX11LanguageList(const String& pathToEvdevFile)
 {
     std::vector<String> layoutNames;
     std::vector<String> layoutVariantNames;
     std::vector<String> iso639_2Codes;
 
-    parseKeyboardFile(pathToKeyboardFile, layoutNames, layoutVariantNames);
+    getKeyboardLayouts(layoutNames, layoutVariantNames);
     convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
     return convertISO639_2ToISO639_1(iso639_2Codes);
 }
@@ -180,38 +228,27 @@ X11LayoutsParser::convertLayotToISO(const String& pathToEvdevFile, const String&
 }
 
 void
-X11LayoutsParser::parseKeyboardFile(const String&        pathToKeyboardFile,
-                                    std::vector<String>& layoutNames,
-                                    std::vector<String>& layoutVariantNames)
+X11LayoutsParser::getKeyboardLayouts(std::vector<String>& layoutNames,
+                                     std::vector<String>& layoutVariantNames)
 {
-    layoutNames.clear();
-    layoutVariantNames.clear();
+    using DisplayCloser = int(*)(Display*);
+    using XkbDisplay = std::unique_ptr<Display, DisplayCloser>;
+    XkbDisplay display(XkbOpenDisplay(NULL, NULL, NULL, NULL, NULL, NULL), XCloseDisplay);
 
-    XkbRF_VarDefsRec vd;
-    char *tmp = NULL;
-    auto dpy = XkbOpenDisplay(NULL, NULL, NULL, NULL, NULL, NULL);
-
-    auto splitLine = [](std::vector<String>& splitted, const String& line, char delim) {
-            std::stringstream ss(line);
-            String code;
-            while(ss.good()) {
-                getline(ss, code, delim);
-                splitted.push_back(code);
-            }
-        };
-
-
-    if (XkbRF_GetNamesProp(dpy, &tmp, &vd))
-    {
-        splitLine(layoutNames, vd.layout, ',');
-        splitLine(layoutVariantNames, vd.variant, ',');
-        LOG((CLOG_INFO "Layouts: %s", vd.layout));
-        LOG((CLOG_INFO "Variants: %s", vd.variant));
+    if (display) {
+        AutoXkbRF_VarDefsRec keyboard{};
+        if (XkbRF_GetNamesProp(display.get(), nullptr, keyboard.get()))
+        {
+            splitLine(layoutNames, keyboard.getLayout(), ',');
+            splitLine(layoutVariantNames, keyboard.getVariant(), ',');
+        }
+        else {
+            LOG((CLOG_WARN "Error reading keyboard layouts"));
+        }
     }
     else {
-        LOG((CLOG_INFO "Error reading languages"));
+        LOG((CLOG_WARN "Can't open Xkb diaplay during reading languages"));
     }
-
 }
 
 std::vector<String>

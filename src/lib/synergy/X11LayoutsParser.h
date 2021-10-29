@@ -26,7 +26,7 @@ namespace pugi
 
 class X11LayoutsParser {
 public:
-    static std::vector<String> getX11LanguageList(const String& pathToKeyboardFile, const String& pathToEvdevFile);
+    static std::vector<String> getX11LanguageList(const String& pathToEvdevFile);
     static String              convertLayotToISO(const String& pathToEvdevFile, const String& layoutLangCode, bool needToReloadFiles = false);
 
 private:
@@ -50,9 +50,8 @@ private:
                                                        std::vector<String>  layoutVariantNames,
                                                        std::vector<String>& iso639_2Codes);
 
-    static void                parseKeyboardFile(const String&        pathToKeyboardFile,
-                                                 std::vector<String>& layoutNames,
-                                                 std::vector<String>& layoutVariantNames);
+    static void                getKeyboardLayouts(std::vector<String>& layoutNames,
+                                                  std::vector<String>& layoutVariantNames);
 
     static std::vector<String> convertISO639_2ToISO639_1(const std::vector<String>& iso639_2Codes);
 };
