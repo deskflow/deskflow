@@ -231,14 +231,13 @@ void
 X11LayoutsParser::getKeyboardLayouts(std::vector<String>& layoutNames,
                                      std::vector<String>& layoutVariantNames)
 {
-    using DisplayCloser = int(*)(Display*);
-    using XkbDisplay = std::unique_ptr<Display, DisplayCloser>;
-    XkbDisplay display(XkbOpenDisplay(NULL, NULL, NULL, NULL, NULL, NULL), XCloseDisplay);
+    using DisplayDestructor = int(*)(Display*);
+    using XkbDisplay = std::unique_ptr<Display, DisplayDestructor>;
+    XkbDisplay display(XkbOpenDisplay(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr), XCloseDisplay);
 
     if (display) {
         AutoXkbRF_VarDefsRec keyboard{};
-        if (XkbRF_GetNamesProp(display.get(), nullptr, keyboard.get()))
-        {
+        if (XkbRF_GetNamesProp(display.get(), nullptr, keyboard.get())) {
             splitLine(layoutNames, keyboard.getLayout(), ',');
             splitLine(layoutVariantNames, keyboard.getVariant(), ',');
         }
