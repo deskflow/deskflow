@@ -244,6 +244,10 @@ if (UNIX)
 
         endif()
 
+        if (!X11_xkbfile_FOUND)
+            message (FATAL_ERROR "Missing library: xkbfile")
+        endif()
+
         if (HAVE_Xtst)
 
             # Xtxt depends on X11.
