@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#if WINAPI_XWINDOWS
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -216,3 +216,5 @@ X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<String>& iso639_2C
 
     return result;
 }
+
+#endif //WINAPI_XWINDOWS

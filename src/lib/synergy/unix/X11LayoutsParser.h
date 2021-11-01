@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if WINAPI_XWINDOWS
 #pragma once
 #include "base/String.h"
 
@@ -52,3 +53,5 @@ private:
 
     static std::vector<String> convertISO639_2ToISO639_1(const std::vector<String>& iso639_2Codes);
 };
+
+#endif //WINAPI_XWINDOWS

@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#if WINAPI_XWINDOWS
 
 #ifndef XKBKEYBOARD_H
 #define XKBKEYBOARD_H
+
 
 #include <cstdio>
 #include <X11/XKBlib.h>
@@ -47,3 +49,7 @@ public:
 } //namespace synergy
 
 #endif // XKBKEYBOARD_H
+
+#endif //WINAPI_XWINDOWS
+
+

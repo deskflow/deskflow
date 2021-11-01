@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if WINAPI_XWINDOWS
 #include <memory>
 
 #include "base/Log.h"
@@ -62,3 +63,5 @@ SynergyXkbKeyboard::~SynergyXkbKeyboard()
 } //namespace Unix
 
 } //namespace synergy
+
+#endif //WINAPI_XWINDOWS
