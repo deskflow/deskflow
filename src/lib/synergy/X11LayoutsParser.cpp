@@ -130,7 +130,7 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
         allLang = getAllLanguageData(pathToEvdevFile);
     }
     for (size_t i = 0; i < layoutNames.size(); i++) {
-        auto langIter = std::find_if(allLang.begin(), allLang.end(), [n=layoutNames[i]](const Lang& l) {return l.name == n;});
+        auto langIter = std::find_if(allLang.begin(), allLang.end(), [&n=layoutNames[i]](const Lang& l) {return l.name == n;});
         if(langIter == allLang.end()) {
             LOG((CLOG_WARN "Language \"%s\" is unknown", layoutNames[i].c_str()));
             continue;
@@ -142,7 +142,7 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
         }
         else {
             auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
-                                                [n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
+                                                [&n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
             if(langVariantIter == langIter->variants.end()) {
                 LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
                 continue;
@@ -168,11 +168,12 @@ X11LayoutsParser::getX11LanguageList(const String& pathToEvdevFile)
     std::vector<String> layoutNames;
     std::vector<String> layoutVariantNames;
 
-    synergy::Unix::SynergyXkbKeyboard keyboard;
+    synergy::linux::SynergyXkbKeyboard keyboard;
     splitLine(layoutNames, keyboard.getLayout(), ',');
     splitLine(layoutVariantNames, keyboard.getVariant(), ',');
 
-    std::vector<String> iso639_2Codes(layoutNames.size());
+    std::vector<String> iso639_2Codes;
+    iso639_2Codes.reserve(layoutNames.size());
     convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
     return convertISO639_2ToISO639_1(iso639_2Codes);
 }

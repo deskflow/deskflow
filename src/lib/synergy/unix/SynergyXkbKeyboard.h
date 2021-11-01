@@ -25,7 +25,7 @@
 
 namespace synergy {
 
-namespace Unix {
+namespace linux {
 
 class SynergyXkbKeyboard
 {

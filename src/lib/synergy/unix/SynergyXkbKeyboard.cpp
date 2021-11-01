@@ -23,7 +23,7 @@
 
 namespace synergy {
 
-namespace Unix {
+namespace linux {
 
 SynergyXkbKeyboard::SynergyXkbKeyboard()
 {
