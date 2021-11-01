@@ -46,12 +46,9 @@ private:
 
     static void                convertLayoutToISO639_2(const String&        pathToEvdevFile,
                                                        bool                 needToReloadEvdev,
-                                                       std::vector<String>  layoutNames,
-                                                       std::vector<String>  layoutVariantNames,
+                                                       const std::vector<String>& layoutNames,
+                                                       const std::vector<String>& layoutVariantNames,
                                                        std::vector<String>& iso639_2Codes);
-
-    static void                getKeyboardLayouts(std::vector<String>& layoutNames,
-                                                  std::vector<String>& layoutVariantNames);
 
     static std::vector<String> convertISO639_2ToISO639_1(const std::vector<String>& iso639_2Codes);
 };

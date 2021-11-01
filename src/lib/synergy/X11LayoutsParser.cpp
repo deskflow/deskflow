@@ -19,14 +19,12 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <memory>
 
 #include "base/Log.h"
 #include "synergy/X11LayoutsParser.h"
 #include "ISO639Table.h"
 #include "pugixml.hpp"
-#include <X11/XKBlib.h>
-#include <X11/extensions/XKBrules.h>
+#include "unix/SynergyXkbKeyboard.h"
 
 namespace
 {
@@ -40,34 +38,6 @@ void splitLine(std::vector<String>& parts, const String& line, char delimiter)
         parts.push_back(part);
     }
 }
-
-// XkbRF_VarDefsRec contains heap-allocated C strings, but doesn't provide a
-// direct cleanup method. This wrapper implements RAII for the XkbRF_VarDefsRec.
-// See also https://gitlab.freedesktop.org/xorg/lib/libxkbfile/issues/6
-class AutoXkbRF_VarDefsRec {
-
-    XkbRF_VarDefsRec m_data = {};
-
-public:
-    XkbRF_VarDefsRec* get() {
-        return &m_data;
-    }
-
-    const char* getLayout() const {
-        return m_data.layout ? m_data.layout : "us";
-    }
-
-    const char* getVariant() const {
-        return m_data.variant ? m_data.variant : "";
-    }
-
-    ~AutoXkbRF_VarDefsRec() {
-        std::free(m_data.model);
-        std::free(m_data.layout);
-        std::free(m_data.variant);
-        std::free(m_data.options);
-    }
-};
 
 } //namespace
 
@@ -146,8 +116,8 @@ X11LayoutsParser::appendVectorUniq(const std::vector<String>& source, std::vecto
 void
 X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
                                           bool                 needToReloadEvdev,
-                                          std::vector<String>  layoutNames,
-                                          std::vector<String>  layoutVariantNames,
+                                          const std::vector<String>&  layoutNames,
+                                          const std::vector<String>&  layoutVariantNames,
                                           std::vector<String>& iso639_2Codes)
 {
     if(layoutNames.size() != layoutVariantNames.size()) {
@@ -197,9 +167,12 @@ X11LayoutsParser::getX11LanguageList(const String& pathToEvdevFile)
 {
     std::vector<String> layoutNames;
     std::vector<String> layoutVariantNames;
-    std::vector<String> iso639_2Codes;
 
-    getKeyboardLayouts(layoutNames, layoutVariantNames);
+    synergy::Unix::SynergyXkbKeyboard keyboard;
+    splitLine(layoutNames, keyboard.getLayout(), ',');
+    splitLine(layoutVariantNames, keyboard.getVariant(), ',');
+
+    std::vector<String> iso639_2Codes(layoutNames.size());
     convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
     return convertISO639_2ToISO639_1(iso639_2Codes);
 }
@@ -221,29 +194,6 @@ X11LayoutsParser::convertLayotToISO(const String& pathToEvdevFile, const String&
     }
 
     return *iso639_1Codes.begin();
-}
-
-void
-X11LayoutsParser::getKeyboardLayouts(std::vector<String>& layoutNames,
-                                     std::vector<String>& layoutVariantNames)
-{
-    using DisplayDestructor = int(*)(Display*);
-    using XkbDisplay = std::unique_ptr<Display, DisplayDestructor>;
-    XkbDisplay display(XkbOpenDisplay(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr), XCloseDisplay);
-
-    if (display) {
-        AutoXkbRF_VarDefsRec keyboard{};
-        if (XkbRF_GetNamesProp(display.get(), nullptr, keyboard.get())) {
-            splitLine(layoutNames, keyboard.getLayout(), ',');
-            splitLine(layoutVariantNames, keyboard.getVariant(), ',');
-        }
-        else {
-            LOG((CLOG_WARN "Error reading keyboard layouts"));
-        }
-    }
-    else {
-        LOG((CLOG_WARN "Can't open Xkb diaplay during reading languages"));
-    }
 }
 
 std::vector<String>
