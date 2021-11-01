@@ -21,10 +21,10 @@
 #include <algorithm>
 
 #include "base/Log.h"
-#include "synergy/unix/X11LayoutsParser.h"
+#include "X11LayoutsParser.h"
 #include "ISO639Table.h"
 #include "pugixml.hpp"
-#include "unix/SynergyXkbKeyboard.h"
+#include "SynergyXkbKeyboard.h"
 
 namespace
 {
