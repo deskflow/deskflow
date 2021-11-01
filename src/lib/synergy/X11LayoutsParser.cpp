@@ -130,7 +130,8 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
         allLang = getAllLanguageData(pathToEvdevFile);
     }
     for (size_t i = 0; i < layoutNames.size(); i++) {
-        auto langIter = std::find_if(allLang.begin(), allLang.end(), [&n=layoutNames[i]](const Lang& l) {return l.name == n;});
+        const auto& n = layoutNames[i];
+        auto langIter = std::find_if(allLang.begin(), allLang.end(), [&n](const Lang& l) {return l.name == n;});
         if(langIter == allLang.end()) {
             LOG((CLOG_WARN "Language \"%s\" is unknown", layoutNames[i].c_str()));
             continue;
@@ -141,8 +142,9 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
             toCopy = &langIter->layoutBaseISO639_2;
         }
         else {
+            const auto& n = layoutVariantNames[i];
             auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
-                                                [&n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
+                                                [&n](const Lang& l) {return l.name == n;});
             if(langVariantIter == langIter->variants.end()) {
                 LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
                 continue;
