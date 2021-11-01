@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/X11LayoutsParser.h"
+#if WINAPI_XWINDOWS
+#include "synergy/unix/X11LayoutsParser.h"
 #include "test/global/gtest.h"
 #include <fstream>
 
@@ -152,3 +153,5 @@ TEST(X11LayoutsParsingTests, layoutConvertTest)
     EXPECT_EQ(X11LayoutsParser::convertLayotToISO("incorrectEvdev1.xml", "us", true), "");
     EXPECT_EQ(X11LayoutsParser::convertLayotToISO("evdevFromFuture.xml", "us", true), "");
 }
+
+#endif

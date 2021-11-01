@@ -21,7 +21,7 @@
 #include <algorithm>
 
 #include "base/Log.h"
-#include "synergy/X11LayoutsParser.h"
+#include "synergy/unix/X11LayoutsParser.h"
 #include "ISO639Table.h"
 #include "pugixml.hpp"
 #include "unix/SynergyXkbKeyboard.h"
