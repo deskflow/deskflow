@@ -21,7 +21,7 @@
 #include <thread>
 
 #if WINAPI_XWINDOWS
-#include "synergy/X11LayoutsParser.h"
+#include "synergy/unix/X11LayoutsParser.h"
 #include <X11/XKBlib.h>
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
