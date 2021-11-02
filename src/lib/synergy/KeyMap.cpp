@@ -1348,7 +1348,7 @@ KeyMap::KeyItem::operator==(const KeyItem& x) const
 
 KeyMap::Keystroke::Keystroke(KeyButton button,
                 bool press, bool repeat, UInt32 data) :
-    m_type(kButton), m_data{}
+    m_type(kButton)
 {
     m_data.m_button.m_button = button;
     m_data.m_button.m_press = press;
@@ -1357,7 +1357,7 @@ KeyMap::Keystroke::Keystroke(KeyButton button,
 }
 
 KeyMap::Keystroke::Keystroke(SInt32 group, bool absolute, bool restore) :
-    m_type(kGroup), m_data{}
+    m_type(kGroup)
 {
     m_data.m_group.m_group = group;
     m_data.m_group.m_absolute = absolute;

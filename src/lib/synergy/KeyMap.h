@@ -103,17 +103,12 @@ public:
 		};
 		union Data {
 		public:
-			Data() = default;
-			Data(Data &&) = default;
-			Data(const Data&) = default;
-			Data& operator=(const Data&) = default;
-
-			Button		m_button {};
+			Button		m_button;
 			Group		m_group;
 		};
 
 		EType			m_type {};
-		Data			m_data;
+		Data			m_data {};
 	};
 
 	//! A sequence of keystrokes

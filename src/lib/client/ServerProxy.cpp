@@ -975,7 +975,7 @@ ServerProxy::setActiveServerLanguage(const String& language)
 
         if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
             if(!m_isUserNotifiedAboutLanguageSyncError) {
-                AppUtil::instance().showNotification("Language error", "Current server language is not installed on client!");
+                AppUtil::instance().showNotification("Language error", "Current server language is not installed on client.");
                 m_isUserNotifiedAboutLanguageSyncError = true;
             }
         }
