@@ -15,60 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/X11LayoutsParser.h"
+#if WINAPI_XWINDOWS
+#include "synergy/unix/X11LayoutsParser.h"
 #include "test/global/gtest.h"
 #include <fstream>
 
 void createTestFiles()
 {
-    std::ofstream correctKeyboardFile ("correctKeyboard");
-    if(!correctKeyboardFile.is_open()) {
-        FAIL();
-    }
-
-    correctKeyboardFile << "XKBLAYOUT=us,ru" << std::endl;
-    correctKeyboardFile << "XKBVARIANT=eng," << std::endl;
-    correctKeyboardFile << "BACKSPACE=guess" << std::endl;
-    correctKeyboardFile.close();
-
-    std::ofstream keyboardFromFutureFile ("keyboardFromFuture");
-    if(!keyboardFromFutureFile.is_open()) {
-        FAIL();
-    }
-
-    keyboardFromFutureFile << "XKBLAYOUT=futureLangName" << std::endl;
-    keyboardFromFutureFile << "XKBVARIANT=" << std::endl;
-    keyboardFromFutureFile.close();
-
-    std::ofstream incorrectKeyboardFile1 ("incorrectKeyboard1");
-    if(!incorrectKeyboardFile1.is_open()) {
-        FAIL();
-    }
-
-    incorrectKeyboardFile1 << "XKBLAYOUT=unknownLangCode" << std::endl;
-    incorrectKeyboardFile1 << "XKBVARIANT=eng" << std::endl;
-    incorrectKeyboardFile1 << "BACKSPACE=guess" << std::endl;
-    incorrectKeyboardFile1.close();
-
-    std::ofstream incorrectKeyboardFile2 ("incorrectKeyboard2");
-    if(!incorrectKeyboardFile2.is_open()) {
-        FAIL();
-    }
-
-    incorrectKeyboardFile2 << "XKBLAYOUT=us" << std::endl;
-    incorrectKeyboardFile2 << "XKBVARIANT=unknownLangVariant" << std::endl;
-    incorrectKeyboardFile2 << "BACKSPACE=guess" << std::endl;
-    incorrectKeyboardFile2.close();
-
-    std::ofstream incorrectKeyboardFile3 ("incorrectKeyboard3");
-    if(!incorrectKeyboardFile3.is_open()) {
-        FAIL();
-    }
-
-    incorrectKeyboardFile3 << "XKBLAYOUT=us,ru,by" << std::endl;
-    incorrectKeyboardFile3 << "XKBVARIANT=," << std::endl;
-    incorrectKeyboardFile3.close();
-
     std::ofstream correctEvdevFile ("correctEvdev.xml");
     if(!correctEvdevFile.is_open()) {
         FAIL();
@@ -172,44 +125,25 @@ TEST(X11LayoutsParsingTests, xmlCorrectParsingTest)
 {
     createTestFiles();
     std::vector<String> expectedResult = { "en", "ru" };
-    auto parsedResult = X11LayoutsParser::getX11LanguageList("correctKeyboard", "correctEvdev.xml");
+    auto parsedResult = X11LayoutsParser::getX11LanguageList("correctEvdev.xml");
 
     EXPECT_EQ(parsedResult, parsedResult);
 }
 
-TEST(X11LayoutsParsingTests, xmlParsingMissedKeyboardFileTest)
-{
-    auto parsedResult = X11LayoutsParser::getX11LanguageList("missedFile", "correctEvdev.xml");
-    EXPECT_TRUE(parsedResult.empty());
-}
-
 TEST(X11LayoutsParsingTests, xmlParsingMissedEvdevFileTest)
 {
-    auto parsedResult = X11LayoutsParser::getX11LanguageList("correctKeyboard", "missedFile");
+    auto parsedResult = X11LayoutsParser::getX11LanguageList("missedFile");
     EXPECT_TRUE(parsedResult.empty());
 }
 
 TEST(X11LayoutsParsingTests, xmlParsingIncorrectEvdevFileTest)
 {
     std::vector<String> parsedResult;
-    parsedResult = X11LayoutsParser::getX11LanguageList("correctKeyboard", "incorrectEvdev1.xml");
+    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectEvdev1.xml");
     EXPECT_TRUE(parsedResult.empty());
-    parsedResult = X11LayoutsParser::getX11LanguageList("correctKeyboard", "incorrectEvdev2.xml");
+    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectEvdev2.xml");
     EXPECT_TRUE(parsedResult.empty());
-    parsedResult = X11LayoutsParser::getX11LanguageList("correctKeyboard", "incorrectEvdev3.xml");
-    EXPECT_TRUE(parsedResult.empty());
-}
-
-TEST(X11LayoutsParsingTests, xmlParsingIncorrectKeyboardFileTest)
-{
-    std::vector<String> parsedResult;
-    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectKeyboard1", "correctEvdev.xml");
-    EXPECT_TRUE(parsedResult.empty());
-    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectKeyboard2", "correctEvdev.xml");
-    EXPECT_TRUE(parsedResult.empty());
-    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectKeyboard3", "correctEvdev.xml");
-    EXPECT_TRUE(parsedResult.empty());
-    parsedResult = X11LayoutsParser::getX11LanguageList("keyboardFromFuture", "evdevFromFuture.xml");
+    parsedResult = X11LayoutsParser::getX11LanguageList("incorrectEvdev3.xml");
     EXPECT_TRUE(parsedResult.empty());
 }
 
@@ -219,3 +153,5 @@ TEST(X11LayoutsParsingTests, layoutConvertTest)
     EXPECT_EQ(X11LayoutsParser::convertLayotToISO("incorrectEvdev1.xml", "us", true), "");
     EXPECT_EQ(X11LayoutsParser::convertLayotToISO("evdevFromFuture.xml", "us", true), "");
 }
+
+#endif

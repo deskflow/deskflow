@@ -21,7 +21,7 @@
 #include <thread>
 
 #if WINAPI_XWINDOWS
-#include "synergy/X11LayoutsParser.h"
+#include "synergy/unix/X11LayoutsParser.h"
 #include <X11/XKBlib.h>
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
@@ -67,7 +67,7 @@ AppUtilUnix::getKeyboardLayoutList()
     std::vector<String> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-    layoutLangCodes = X11LayoutsParser::getX11LanguageList("/etc/default/keyboard", "/usr/share/X11/xkb/rules/evdev.xml");
+    layoutLangCodes = X11LayoutsParser::getX11LanguageList("/usr/share/X11/xkb/rules/evdev.xml");
 #elif WINAPI_CARBON
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };

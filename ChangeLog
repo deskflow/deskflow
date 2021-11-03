@@ -17,6 +17,7 @@ Bug fixes:
 - #7100 | #7101 No configuration available on Windows
 - #7097 The title "Enterprise" disappeares after clicking on "Preferences"
 - #7108 Wrong characters on client for unicode
+- #7114 Fixed problem with reading languages on Linux system
 
 Enhancements:
 - #7068 Add Synergy restart when settings changed

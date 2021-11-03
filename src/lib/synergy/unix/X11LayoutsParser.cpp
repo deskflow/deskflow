@@ -15,15 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#if WINAPI_XWINDOWS
 #include <fstream>
 #include <sstream>
 #include <algorithm>
 
 #include "base/Log.h"
-#include "synergy/X11LayoutsParser.h"
+#include "X11LayoutsParser.h"
 #include "ISO639Table.h"
 #include "pugixml.hpp"
+#include "SynergyXkbKeyboard.h"
+
+namespace
+{
+
+void splitLine(std::vector<String>& parts, const String& line, char delimiter)
+{
+    std::stringstream stream(line);
+    while (stream.good()) {
+        String part;
+        getline(stream, part, delimiter);
+        parts.push_back(part);
+    }
+}
+
+} //namespace
 
 bool
 X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<Lang>& langList)
@@ -100,8 +116,8 @@ X11LayoutsParser::appendVectorUniq(const std::vector<String>& source, std::vecto
 void
 X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
                                           bool                 needToReloadEvdev,
-                                          std::vector<String>  layoutNames,
-                                          std::vector<String>  layoutVariantNames,
+                                          const std::vector<String>&  layoutNames,
+                                          const std::vector<String>&  layoutVariantNames,
                                           std::vector<String>& iso639_2Codes)
 {
     if(layoutNames.size() != layoutVariantNames.size()) {
@@ -114,7 +130,8 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
         allLang = getAllLanguageData(pathToEvdevFile);
     }
     for (size_t i = 0; i < layoutNames.size(); i++) {
-        auto langIter = std::find_if(allLang.begin(), allLang.end(), [n=layoutNames[i]](const Lang& l) {return l.name == n;});
+        const auto& layoutName = layoutNames[i];
+        auto langIter = std::find_if(allLang.begin(), allLang.end(), [&layoutName](const Lang& l) {return l.name == layoutName;});
         if(langIter == allLang.end()) {
             LOG((CLOG_WARN "Language \"%s\" is unknown", layoutNames[i].c_str()));
             continue;
@@ -125,8 +142,9 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
             toCopy = &langIter->layoutBaseISO639_2;
         }
         else {
+            const auto& variantName = layoutVariantNames[i];
             auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
-                                                [n=layoutVariantNames[i]](const Lang& l) {return l.name == n;});
+                                                [&variantName](const Lang& l) {return l.name == variantName;});
             if(langVariantIter == langIter->variants.end()) {
                 LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
                 continue;
@@ -147,13 +165,17 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
 }
 
 std::vector<String>
-X11LayoutsParser::getX11LanguageList(const String& pathToKeyboardFile, const String& pathToEvdevFile)
+X11LayoutsParser::getX11LanguageList(const String& pathToEvdevFile)
 {
     std::vector<String> layoutNames;
     std::vector<String> layoutVariantNames;
-    std::vector<String> iso639_2Codes;
 
-    parseKeyboardFile(pathToKeyboardFile, layoutNames, layoutVariantNames);
+    synergy::linux::SynergyXkbKeyboard keyboard;
+    splitLine(layoutNames, keyboard.getLayout(), ',');
+    splitLine(layoutVariantNames, keyboard.getVariant(), ',');
+
+    std::vector<String> iso639_2Codes;
+    iso639_2Codes.reserve(layoutNames.size());
     convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
     return convertISO639_2ToISO639_1(iso639_2Codes);
 }
@@ -177,43 +199,6 @@ X11LayoutsParser::convertLayotToISO(const String& pathToEvdevFile, const String&
     return *iso639_1Codes.begin();
 }
 
-void
-X11LayoutsParser::parseKeyboardFile(const String&        pathToKeyboardFile,
-                                    std::vector<String>& layoutNames,
-                                    std::vector<String>& layoutVariantNames)
-{
-    layoutNames.clear();
-    layoutVariantNames.clear();
-
-    std::ifstream file(pathToKeyboardFile);
-    if (!file.is_open()) {
-        LOG((CLOG_WARN "x11 keyboard layouts file \"%s\" is missed.", pathToKeyboardFile.c_str()));
-        return;
-    }
-
-    const String layoutLinePrefix = "XKBLAYOUT=";
-    const String variantLinePrefix = "XKBVARIANT=";
-
-    auto splitLine = [](std::vector<String>& splitted, const String& line, char delim) {
-        std::stringstream ss(line);
-        String code;
-        while(ss.good()) {
-            getline(ss, code, delim);
-            splitted.push_back(code);
-        }
-    };
-
-    String line;
-    while (std::getline(file, line)) {
-        if (line.rfind(layoutLinePrefix, 0) == 0) {
-            splitLine(layoutNames, line.substr(layoutLinePrefix.size()), ',');
-        }
-        else if (line.rfind(variantLinePrefix, 0) == 0) {
-            splitLine(layoutVariantNames, line.substr(variantLinePrefix.size()), ',');
-        }
-    }
-}
-
 std::vector<String>
 X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<String>& iso639_2Codes)
 {
@@ -231,3 +216,5 @@ X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<String>& iso639_2C
 
     return result;
 }
+
+#endif //WINAPI_XWINDOWS
