@@ -35,6 +35,7 @@
 
 #include <memory>
 #include <algorithm>
+#include <cstring>
 
 //
 // ServerProxy
@@ -967,7 +968,7 @@ ServerProxy::setServerLanguages()
 void
 ServerProxy::setActiveServerLanguage(const String& language)
 {
-    if (!language.empty()) {
+    if (!language.empty() && std::strlen(language.c_str()) > 0) {
         if(m_serverLanguage != language) {
             m_isUserNotifiedAboutLanguageSyncError = false;
             m_serverLanguage = language;
