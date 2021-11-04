@@ -89,7 +89,13 @@ String LanguageManager::getSerializedLocalLanguages() const
 
 bool LanguageManager::isLanguageInstalled(const String& language) const
 {
-    return (std::find(m_localLanguages.begin(), m_localLanguages.end(), language) != m_localLanguages.end());
+    bool isInstalled = true;
+
+    if (m_localLanguages.size() > 0) {
+        isInstalled = (std::find(m_localLanguages.begin(), m_localLanguages.end(), language) != m_localLanguages.end());
+    }
+
+    return isInstalled;
 }
 
 } //namespace languages
