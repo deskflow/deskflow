@@ -91,7 +91,7 @@ bool LanguageManager::isLanguageInstalled(const String& language) const
 {
     bool isInstalled = true;
 
-    if (m_localLanguages.size() > 0) {
+    if (!m_localLanguages.empty()) {
         isInstalled = (std::find(m_localLanguages.begin(), m_localLanguages.end(), language) != m_localLanguages.end());
     }
 
