@@ -1,4 +1,4 @@
-v1.14.2-rc
+v1.14.2-stable
 ===========
 Bug fixes:
 - #7070 Fix radio button shifted focus on macOS
