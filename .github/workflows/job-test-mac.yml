@@ -31,9 +31,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install brew dependencies
-        run: |
-          brew list qt5 &>/dev/null || brew install qt5
-          brew list openssl &>/dev/null || brew install openssl
+        run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
 
       - name: Build
         env:
