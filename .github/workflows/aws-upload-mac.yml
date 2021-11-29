@@ -35,8 +35,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install brew dependencies
-        run: |
-          brew list openssl &>/dev/null || brew install openssl
+        run: brew bundle --file=- <<< "brew 'openssl'"
 
       - name: Build
         env:
