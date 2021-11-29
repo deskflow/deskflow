@@ -26,8 +26,7 @@ jobs:
       - name: Setup Environment
         run: |
           python3 -m pip install dmgbuild
-          brew list qt5 &>/dev/null || brew install qt5
-          brew list openssl &>/dev/null || brew install openssl
+          brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
 
       - name: Build SYNERGY
         env:
