@@ -586,9 +586,6 @@ OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
     }
 }
 
-// Post a key event to HID manager. It posts an event to HID client, a
-// much lower level than window manager which's the target from carbon
-// CGEventPost
 kern_return_t
 OSXKeyState::postHIDVirtualKey(UInt8 virtualKey, bool postDown)
 {
