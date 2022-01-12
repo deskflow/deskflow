@@ -23,6 +23,7 @@
 #include "base/Log.h"
 
 #include <Carbon/Carbon.h>
+#include <IOKit/hidsystem/IOHIDLib.h>
 
 // Note that some virtual keys codes appear more than once.  The
 // first instance of a virtual key code maps to the KeyID that we
@@ -128,6 +129,51 @@ static const KeyEntry    s_controlKeys[] = {
     { kKeyBrightnessUp,  s_brightnessUp },
     { kKeyBrightnessDown, s_brightnessDown }
 };
+
+namespace {
+
+io_connect_t
+getEventDriver()
+{
+    static io_connect_t sEventDrvrRef = 0;
+
+    if (!sEventDrvrRef) {
+        // Get master device port
+        mach_port_t masterPort = 0;
+        kern_return_t kr = IOMasterPort(bootstrap_port, &masterPort);
+        assert(KERN_SUCCESS == kr);
+
+        io_iterator_t iter = 0;
+        kr = IOServiceGetMatchingServices(masterPort, IOServiceMatching(kIOHIDSystemClass), &iter);
+        assert(KERN_SUCCESS == kr);
+
+        io_object_t service = IOIteratorNext(iter);
+        assert(service);
+
+        kr = IOServiceOpen(service, mach_task_self(), kIOHIDParamConnectType, &sEventDrvrRef);
+        assert(KERN_SUCCESS == kr);
+
+        IOObjectRelease(service);
+        IOObjectRelease(iter);
+    }
+
+    return sEventDrvrRef;
+}
+
+bool
+isModifier(UInt8 virtualKey) {
+    static std::set<UInt8> modifiers {
+        s_shiftVK,
+        s_superVK,
+        s_altVK,
+        s_controlVK,
+        s_capsLockVK
+    };
+
+    return (modifiers.find(virtualKey) != modifiers.end());
+}
+
+} //namespace
 
 
 //
@@ -336,26 +382,26 @@ OSXKeyState::fakeCtrlAltDel()
 bool
 OSXKeyState::fakeMediaKey(KeyID id)
 {
-    return fakeNativeMediaKey(id);;
+    return fakeNativeMediaKey(id);
 }
 
 CGEventFlags
-OSXKeyState::getModifierStateAsOSXFlags()
+OSXKeyState::getModifierStateAsOSXFlags() const
 {
     CGEventFlags modifiers = 0;
-    
+
     if (m_shiftPressed) {
         modifiers |= kCGEventFlagMaskShift;
     }
-    
+
     if (m_controlPressed) {
         modifiers |= kCGEventFlagMaskControl;
     }
-    
+
     if (m_altPressed) {
         modifiers |= kCGEventFlagMaskAlternate;
     }
-    
+
     if (m_superPressed) {
         modifiers |= kCGEventFlagMaskCommand;
     }
@@ -363,7 +409,7 @@ OSXKeyState::getModifierStateAsOSXFlags()
     if (m_capsPressed) {
         modifiers |= kCGEventFlagMaskAlphaShift;
     }
-    
+
     return modifiers;
 }
 
@@ -477,30 +523,6 @@ OSXKeyState::getKeyMap(synergy::KeyMap& keyMap)
 }
 
 CGEventFlags
-OSXKeyState::getDeviceIndependedFlags() const
-{
-    CGEventFlags modifiers = 0;
-
-    if (m_shiftPressed) {
-        modifiers |= kCGEventFlagMaskShift;
-    }
-
-    if (m_controlPressed) {
-        modifiers |= kCGEventFlagMaskControl;
-    }
-
-    if (m_altPressed) {
-        modifiers |= kCGEventFlagMaskAlternate;
-    }
-
-    if (m_superPressed) {
-        modifiers |= kCGEventFlagMaskCommand;
-    }
-
-    return modifiers;
-}
-
-CGEventFlags
 OSXKeyState::getDeviceDependedFlags() const
 {
     CGEventFlags modifiers = 0;
@@ -530,12 +552,9 @@ OSXKeyState::getKeyboardEventFlags() const
 {
     // set the event flags for special keys
     // http://tinyurl.com/pxl742y
-    CGEventFlags modifiers = getDeviceIndependedFlags();
+    CGEventFlags modifiers = getModifierStateAsOSXFlags();
 
-    if (m_capsPressed) {
-        modifiers |= kCGEventFlagMaskAlphaShift;
-    }
-    else {
+    if (!m_capsPressed) {
         modifiers |= getDeviceDependedFlags();
     }
 
@@ -567,7 +586,26 @@ OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
     }
 }
 
-void 
+// Post a key event to HID manager. It posts an event to HID client, a
+// much lower level than window manager which's the target from carbon
+// CGEventPost
+kern_return_t
+OSXKeyState::postHIDVirtualKey(UInt8 virtualKey, bool postDown)
+{
+    NXEventData event;
+    bzero(&event, sizeof(NXEventData));
+
+    if (isModifier(virtualKey)) {
+        return IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, {0,0}, &event, kNXEventDataVersion, getKeyboardEventFlags(), true);
+    }
+    else {
+        event.key.keyCode = virtualKey;
+        const auto eventType = postDown ? NX_KEYDOWN : NX_KEYUP;
+        return IOHIDPostEvent(getEventDriver(), eventType, {0,0}, &event, kNXEventDataVersion, 0, false);
+    }
+}
+
+void
 OSXKeyState::postKeyboardKey(CGKeyCode virtualKey, bool keyDown)
 {
     CGEventRef event = CGEventCreateKeyboardEvent(nullptr, virtualKey, keyDown);
@@ -596,7 +634,10 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
                     button, virtualKey, keyDown ? "down" : "up", client));
 
             setKeyboardModifiers(virtualKey, keyDown);
-            postKeyboardKey(virtualKey, keyDown);
+            if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
+                postKeyboardKey(virtualKey, keyDown);
+            }
+
             break;
         }
 
