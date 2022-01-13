@@ -133,6 +133,19 @@ static const KeyEntry    s_controlKeys[] = {
 namespace {
 
 io_connect_t
+getService(io_iterator_t iter) {
+    io_connect_t service = 0;
+    auto nextIterator = IOIteratorNext(iter);
+
+    if (nextIterator) {
+        IOServiceOpen(nextIterator, mach_task_self(), kIOHIDParamConnectType, &service);
+        IOObjectRelease(nextIterator);
+    }
+
+    return service;
+}
+
+io_connect_t
 getEventDriver()
 {
     static io_connect_t sEventDrvrRef = 0;
@@ -140,21 +153,22 @@ getEventDriver()
     if (!sEventDrvrRef) {
         // Get master device port
         mach_port_t masterPort = 0;
-        kern_return_t kr = IOMasterPort(bootstrap_port, &masterPort);
-        assert(KERN_SUCCESS == kr);
+        if (!IOMasterPort(bootstrap_port, &masterPort)) {
+            io_iterator_t iter = 0;
+            auto dict = IOServiceMatching(kIOHIDSystemClass);
 
-        io_iterator_t iter = 0;
-        kr = IOServiceGetMatchingServices(masterPort, IOServiceMatching(kIOHIDSystemClass), &iter);
-        assert(KERN_SUCCESS == kr);
+            if (!IOServiceGetMatchingServices(masterPort, dict, &iter)) {
+                sEventDrvrRef = getService(iter);
+            }
+            else {
+                LOG((CLOG_DEBUG1, "IOService not found"));
+            }
 
-        io_object_t service = IOIteratorNext(iter);
-        assert(service);
-
-        kr = IOServiceOpen(service, mach_task_self(), kIOHIDParamConnectType, &sEventDrvrRef);
-        assert(KERN_SUCCESS == kr);
-
-        IOObjectRelease(service);
-        IOObjectRelease(iter);
+            IOObjectRelease(iter);
+        }
+        else {
+            LOG((CLOG_DEBUG1, "Couldn't obtain IO master port"));
+        }
     }
 
     return sEventDrvrRef;
@@ -591,15 +605,22 @@ OSXKeyState::postHIDVirtualKey(UInt8 virtualKey, bool postDown)
 {
     NXEventData event;
     bzero(&event, sizeof(NXEventData));
+    auto driver = getEventDriver();
+    kern_return_t result = KERN_FAILURE;
 
-    if (isModifier(virtualKey)) {
-        return IOHIDPostEvent(getEventDriver(), NX_FLAGSCHANGED, {0,0}, &event, kNXEventDataVersion, getKeyboardEventFlags(), true);
+    if (driver) {
+        if (isModifier(virtualKey)) {
+            result = IOHIDPostEvent(driver, NX_FLAGSCHANGED, {0,0}, &event, kNXEventDataVersion, getKeyboardEventFlags(), true);
+        }
+        else {
+            event.key.keyCode = virtualKey;
+            const auto eventType = postDown ? NX_KEYDOWN : NX_KEYUP;
+            result = IOHIDPostEvent(driver, eventType, {0,0}, &event, kNXEventDataVersion, 0, false);
+        }
+
     }
-    else {
-        event.key.keyCode = virtualKey;
-        const auto eventType = postDown ? NX_KEYDOWN : NX_KEYUP;
-        return IOHIDPostEvent(getEventDriver(), eventType, {0,0}, &event, kNXEventDataVersion, 0, false);
-    }
+
+    return result;
 }
 
 void
@@ -632,6 +653,7 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 
             setKeyboardModifiers(virtualKey, keyDown);
             if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
+                LOG((CLOG_DEBUG1, "Fail to post HID event"));
                 postKeyboardKey(virtualKey, keyDown);
             }
 
