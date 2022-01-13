@@ -1,3 +1,9 @@
+v1.14.3-snapshot
+===========
+Bug fixes:
+- #7135 Fix issue with function keys on macOS
+===========
+
 v1.14.2-stable
 ===========
 Bug fixes:

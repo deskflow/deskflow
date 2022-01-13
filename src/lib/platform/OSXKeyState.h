@@ -99,7 +99,7 @@ public:
     virtual SInt32        pollActiveGroup() const;
     virtual void        pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
-    CGEventFlags getModifierStateAsOSXFlags();
+    CGEventFlags getModifierStateAsOSXFlags() const;
 protected:
     // KeyState overrides
     virtual void        getKeyMap(synergy::KeyMap& keyMap);
@@ -151,9 +151,13 @@ private:
 
     void                init();
 
+    // Post a key event to HID manager. It posts an event to HID client, a
+    // much lower level than window manager which's the target from carbon
+    // CGEventPost
+    kern_return_t postHIDVirtualKey(UInt8 virtualKeyCode, bool postDown);
+
     // Get keyboard event flags accorfing to keyboard modifiers
     CGEventFlags getKeyboardEventFlags() const;
-    CGEventFlags getDeviceIndependedFlags() const;
     CGEventFlags getDeviceDependedFlags() const;
 
     void setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown);
