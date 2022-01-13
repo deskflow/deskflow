@@ -161,13 +161,13 @@ getEventDriver()
                 sEventDrvrRef = getService(iter);
             }
             else {
-                LOG((CLOG_DEBUG1, "IOService not found"));
+                LOG((CLOG_WARN, "IOService not found"));
             }
 
             IOObjectRelease(iter);
         }
         else {
-            LOG((CLOG_DEBUG1, "Couldn't obtain IO master port"));
+            LOG((CLOG_WARN, "Couldn't obtain IO master port"));
         }
     }
 
@@ -653,7 +653,7 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 
             setKeyboardModifiers(virtualKey, keyDown);
             if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
-                LOG((CLOG_DEBUG1, "Fail to post HID event"));
+                LOG((CLOG_WARN, "Fail to post HID event"));
                 postKeyboardKey(virtualKey, keyDown);
             }
 
