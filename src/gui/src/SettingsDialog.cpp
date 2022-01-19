@@ -53,6 +53,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     enableControls(appConfig().isWritable());
 
     m_pCheckBoxLanguageSync->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
+    m_pCheckBoxScrollDirection->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
@@ -69,6 +70,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pLineEditScreenName,      SIGNAL(textEdited(QString)),      this, SLOT(onChange()));
     connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
     connect(m_pCheckBoxLanguageSync,    SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxScrollDirection, SIGNAL(clicked()),                this, SLOT(onChange()));
 
     adjustSize();
 }
@@ -92,6 +94,7 @@ void SettingsDialog::accept()
    appConfig().setTLSKeyLength(m_pComboBoxKeyLength->currentText());
    appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
    appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
+   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
 
    appConfig().saveSettings();
    QDialog::accept();
@@ -150,6 +153,7 @@ void SettingsDialog::loadFromConfig() {
     m_pLineEditCertificatePath->setText(appConfig().getTLSCertPath());
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
     m_pCheckBoxLanguageSync->setChecked(m_appConfig.getLanguageSync());
+    m_pCheckBoxScrollDirection->setChecked(m_appConfig.getInvertScrollDirection());
 
     //If the tls file exists test its key length
     if (QFile(appConfig().getTLSCertPath()).exists()) {
@@ -341,7 +345,8 @@ bool SettingsDialog::isModified()
       || appConfig().getTLSKeyLength()   != m_pComboBoxKeyLength->currentText()
       || appConfig().getCryptoEnabled()  != m_pCheckBoxEnableCrypto->isChecked()
       || appConfig().isSystemScoped()    != m_isSystemAtStart
-      || appConfig().getLanguageSync()   != m_pCheckBoxLanguageSync->isChecked())
+      || appConfig().getLanguageSync()   != m_pCheckBoxLanguageSync->isChecked()
+      || appConfig().getInvertScrollDirection() != m_pCheckBoxScrollDirection->isChecked())
    );
 }
 
@@ -363,6 +368,7 @@ void SettingsDialog::enableControls(bool enable) {
     m_pCheckBoxEnableCrypto->setEnabled(enable);
     m_labelAdminRightsMessage->setVisible(!enable);
     m_pCheckBoxLanguageSync->setEnabled(enable);
+    m_pCheckBoxScrollDirection->setEnabled(enable);
 
     if (enable) {
         m_pLabelLogPath->setEnabled(m_pCheckBoxLogToFile->isChecked());
