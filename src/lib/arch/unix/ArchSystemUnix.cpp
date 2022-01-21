@@ -19,10 +19,6 @@
 #include "arch/unix/ArchSystemUnix.h"
 
 #include <sys/utsname.h>
-#include <stdio.h>
-#include <array>
-#include <memory>
-#include <string>
 #ifndef __APPLE__
 #include <QtDBus>
 #endif
@@ -84,24 +80,6 @@ std::string
 ArchSystemUnix::getLibsUsed(void) const
 {
     return "not implemented.\nuse lsof on shell";
-}
-
-std::string
-ArchSystemUnix::runCommand(const std::string& cmd)
-{
-    std::array<char, 128> buffer;
-    std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), &pclose);
-    if (!pipe)
-    {
-        return "";
-    }
-
-    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-    {
-        result += buffer.data();
-    }
-    return result;
 }
 
 #ifndef __APPLE__
