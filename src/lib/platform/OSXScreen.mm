@@ -1469,12 +1469,7 @@ OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
 	auto result = static_cast<SInt32>(3.0 * x / 120.0);
-
-	if (ClientApp::instance().args().m_inverScroll) {
-		result *= -1; //invert scroll direction
-	}
-
-	return result;
+   return (result * ClientApp::instance().args().m_clientScrollDirection);
 }
 
 double

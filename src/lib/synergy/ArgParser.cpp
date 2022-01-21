@@ -115,7 +115,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
             args.m_enableLangSync = true;
         }
         else if (isArg(i, argc, argv, nullptr, "--invert-scroll")) {
-            args.m_inverScroll = true;
+            args.m_clientScrollDirection = lib::synergy::ClientScrollDirection::INVERT_SERVER;
         }
         else {
             if (i + 1 == argc) {
