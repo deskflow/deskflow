@@ -875,9 +875,8 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 	if (yDelta == 0) {
 		return;
 	}
-	if (ClientApp::instance().args().m_inverScroll) {
-		yDelta *= -1;
-	}
+
+	yDelta *= ClientApp::instance().args().m_clientScrollDirection;
 
 	// choose button depending on rotation direction
 	const unsigned int xButton = mapButtonToX(static_cast<ButtonID>(
