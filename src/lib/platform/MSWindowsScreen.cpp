@@ -825,10 +825,8 @@ MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
-    if (ClientApp::instance().args().m_inverScroll){
-        xDelta *= -1;
-        yDelta *= -1;
-    }
+    xDelta *= ClientApp::instance().args().m_clientScrollDirection;
+    yDelta *= ClientApp::instance().args().m_clientScrollDirection;
     m_desks->fakeMouseWheel(xDelta, yDelta);
 }
 
