@@ -79,7 +79,7 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "tlsKeyLength",
         "preventSleep",
         "languageSync",
-        "InvertScrollDirection"
+        "invertScrollDirection"
 };
 
 static const char* logLevelNames[] =
