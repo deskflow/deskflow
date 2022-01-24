@@ -2,6 +2,7 @@ v1.14.3-snapshot
 ===========
 Bug fixes:
 - #7135 Fix issue with function keys on macOS
+- #7140 Configure scroll direction on a per-computer basis
 ===========
 
 v1.14.2-stable
