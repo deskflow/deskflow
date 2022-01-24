@@ -177,7 +177,7 @@ public:
     to the right and negative for motion towards the user or to the left.
     Each wheel click should generate a delta of +/-120.
     */
-    void                mouseWheel(SInt32 xDelta, SInt32 yDelta);
+    void                mouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
     //! Notify of options changes
     /*!

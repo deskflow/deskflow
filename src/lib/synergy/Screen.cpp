@@ -236,7 +236,7 @@ Screen::mouseRelativeMove(SInt32 dx, SInt32 dy)
 }
 
 void
-Screen::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+Screen::mouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
     assert(!m_isPrimary);
     m_screen->fakeMouseWheel(xDelta, yDelta);
