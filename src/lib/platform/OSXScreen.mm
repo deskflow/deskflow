@@ -1460,7 +1460,7 @@ OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 {
 	// return accelerated scrolling
 	double d = (1.0 + getScrollSpeed()) * x;
-   return static_cast<SInt32>(120.0 * d);
+	return static_cast<SInt32>(120.0 * d);
 }
 
 SInt32
@@ -1469,7 +1469,7 @@ OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
 	auto result = static_cast<SInt32>(3.0 * x / 120.0);
-   return (result * ClientApp::instance().args().m_clientScrollDirection);
+	return (result * ClientApp::instance().args().m_clientScrollDirection);
 }
 
 double
