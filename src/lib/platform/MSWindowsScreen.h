@@ -22,6 +22,7 @@
 #include "platform/MSWindowsPowerManager.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/DragInformation.h"
+#include "synergy/ClientArgs.h"
 #include "platform/synwinhk.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
@@ -44,7 +45,9 @@ public:
         bool isPrimary,
         bool noHooks,
         bool stopOnDeskSwitch,
-        IEventQueue* events);
+        IEventQueue* events,
+        bool enableLangSync = false,
+        lib::synergy::ClientScrollDirection scrollDirection = lib::synergy::ClientScrollDirection::SERVER);
     virtual ~MSWindowsScreen();
 
     //! @name manipulators
@@ -368,4 +371,11 @@ private:
 
     PrimaryKeyDownList    m_primaryKeyDownList;
     MSWindowsPowerManager m_powerManager;
+
+    /**
+     * @brief m_clientScrollDirection
+     * This  member contains client scroll direction.
+     * Tis member is used only on client side.
+     */
+    lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER;
 };

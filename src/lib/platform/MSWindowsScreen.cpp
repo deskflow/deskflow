@@ -96,7 +96,9 @@ MSWindowsScreen::MSWindowsScreen(
     bool isPrimary,
     bool noHooks,
     bool stopOnDeskSwitch,
-    IEventQueue* events) :
+    IEventQueue* events,
+    bool enableLangSync,
+    lib::synergy::ClientScrollDirection scrollDirection) :
     PlatformScreen(events),
     m_isPrimary(isPrimary),
     m_noHooks(noHooks),
@@ -124,7 +126,8 @@ MSWindowsScreen::MSWindowsScreen(
     m_showingMouse(false),
     m_events(events),
     m_dropWindow(NULL),
-    m_dropWindowSize(20)
+    m_dropWindowSize(20),
+    m_clientScrollDirection(scrollDirection)
 {
     assert(s_windowInstance != NULL);
     assert(s_screen   == NULL);
@@ -146,7 +149,7 @@ MSWindowsScreen::MSWindowsScreen(
                             stopOnDeskSwitch);
         m_keyState    = new MSWindowsKeyState(m_desks, getEventTarget(), m_events,
                                               AppUtil::instance().getKeyboardLayoutList(),
-                                              ClientApp::instance().args().m_enableLangSync);
+                                              enableLangSync);
 
         updateScreenShape();
         m_class       = createWindowClass();
@@ -825,8 +828,8 @@ MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
-    xDelta *= ClientApp::instance().args().m_clientScrollDirection;
-    yDelta *= ClientApp::instance().args().m_clientScrollDirection;
+    xDelta *= m_clientScrollDirection;
+    yDelta *= m_clientScrollDirection;
     m_desks->fakeMouseWheel(xDelta, yDelta);
 }
 
