@@ -100,7 +100,9 @@ XWindowsScreen::XWindowsScreen(
 		bool isPrimary,
 		bool disableXInitThreads,
 		int mouseScrollDelta,
-		IEventQueue* events) :
+		IEventQueue* events,
+		lib::synergy::ClientScrollDirection scrollDirection) :
+	PlatformScreen(events),
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(NULL),
@@ -126,7 +128,7 @@ XWindowsScreen::XWindowsScreen(
 	m_xi2detected(false),
 	m_xrandr(false),
 	m_events(events),
-	PlatformScreen(events)
+	m_clientScrollDirection(scrollDirection)
 {
 	assert(s_screen == NULL);
 
@@ -876,7 +878,7 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 		return;
 	}
 
-	yDelta *= ClientApp::instance().args().m_clientScrollDirection;
+	yDelta *= m_clientScrollDirection;
 
 	// choose button depending on rotation direction
 	const unsigned int xButton = mapButtonToX(static_cast<ButtonID>(

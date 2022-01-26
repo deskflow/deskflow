@@ -185,7 +185,7 @@ ClientApp::createScreen()
 #elif WINAPI_XWINDOWS
     return new synergy::Screen(new XWindowsScreen(
         args().m_display, false, args().m_disableXInitThreads,
-        args().m_yscroll, m_events), m_events);
+        args().m_yscroll, m_events, args().m_clientScrollDirection), m_events);
 #elif WINAPI_CARBON
 	 return new synergy::Screen(new OSXScreen(m_events, false,
                                               args().m_enableLangSync,

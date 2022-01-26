@@ -21,6 +21,7 @@
 #include "arch/Arch.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/KeyMap.h"
+#include "synergy/ClientArgs.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "platform/XWindowsPowerManager.h"
@@ -40,7 +41,8 @@ class XWindowsScreen : public PlatformScreen {
 public:
     XWindowsScreen(const char* displayName, bool isPrimary,
         bool disableXInitThreads, int mouseScrollDelta,
-        IEventQueue* events);
+        IEventQueue* events,
+        lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER);
     virtual ~XWindowsScreen();
 
     //! @name manipulators
@@ -254,4 +256,5 @@ private:
     // ioErrorHandler().
     static XWindowsScreen*    s_screen;
     XWindowsPowerManager      m_powerManager;
+    lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER;
 };
