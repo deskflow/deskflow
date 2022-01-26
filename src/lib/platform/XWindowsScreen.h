@@ -256,5 +256,10 @@ private:
     // ioErrorHandler().
     static XWindowsScreen*    s_screen;
     XWindowsPowerManager      m_powerManager;
+    /**
+     * @brief m_clientScrollDirection
+     * This member contains client scroll direction
+     * This member is used only on client side
+     */
     lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER;
 };

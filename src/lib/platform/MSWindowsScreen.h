@@ -374,8 +374,8 @@ private:
 
     /**
      * @brief m_clientScrollDirection
-     * This  member contains client scroll direction.
-     * Tis member is used only on client side.
+     * This member contains client scroll direction.
+     * This member is used only on client side.
      */
     lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER;
 };
