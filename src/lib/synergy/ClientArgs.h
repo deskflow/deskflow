@@ -23,6 +23,11 @@
 
 namespace lib {
     namespace synergy {
+        enum ClientScrollDirection {
+           SERVER = 1,
+           INVERT_SERVER = -1
+        };
+
         class ClientArgs : public ArgsBase {
 
             /// Public functions
@@ -32,10 +37,14 @@ namespace lib {
             ~ClientArgs() override;
 
         public:
-            int                  m_yscroll           = 0;
-            bool                 m_enableLangSync    = false;       /// @brief Should keyboard input be in same language as on server
+            int                   m_yscroll        = 0;
+            bool                  m_enableLangSync = false;       /// @brief Should keyboard input be in same language as on server
 
-        private:
+            /**
+             * @brief m_clientScrollDirection
+             * This option is responcible for scroll direction on client side.
+             */
+            ClientScrollDirection m_clientScrollDirection = ClientScrollDirection::SERVER;
 
         };
     }

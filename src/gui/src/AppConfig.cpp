@@ -78,7 +78,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "tlsCertPath",
         "tlsKeyLength",
         "preventSleep",
-        "languageSync"
+        "languageSync",
+        "invertScrollDirection"
 };
 
 static const char* logLevelNames[] =
@@ -243,6 +244,7 @@ void AppConfig::loadSettings()
     m_ServerHostname            = loadSetting(kServerHostname).toString();
     m_PreventSleep              = loadSetting(kPreventSleep, false).toBool();
     m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
+    m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -305,6 +307,7 @@ void AppConfig::saveSettings()
         setSetting(kServerHostname, m_ServerHostname);
         setSetting(kPreventSleep, m_PreventSleep);
         setSetting(kLanguageSync, m_LanguageSync);
+        setSetting(kInvertScrollDirection, m_InvertScrollDirection);
     }
 
     m_unsavedChanges = false;
@@ -454,7 +457,15 @@ void AppConfig::setMinimizeToTray(bool newValue) {
     setSettingModified(m_MinimizeToTray, newValue);
 }
 
+bool AppConfig::getInvertScrollDirection() const {
+    return m_InvertScrollDirection;
+}
+
 bool AppConfig::getLanguageSync() const { return m_LanguageSync; }
+
+void AppConfig::setInvertScrollDirection(bool newValue) {
+    setSettingModified(m_InvertScrollDirection, newValue);
+}
 
 void AppConfig::setLanguageSync(bool newValue) {
     setSettingModified(m_LanguageSync, newValue);

@@ -811,6 +811,9 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
         args << "--sync-language";
     }
 
+    if (appConfig().getInvertScrollDirection()) {
+        args <<"--invert-scroll";
+    }
 
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     // check auto config first, if it is disabled or no server detected,

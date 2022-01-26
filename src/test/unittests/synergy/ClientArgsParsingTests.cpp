@@ -68,6 +68,17 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync)
     EXPECT_TRUE(clientArgs.m_enableLangSync);
 }
 
+TEST(ClientArgsParsingTests, parseClientArgs_setInvertScroll)
+{
+    NiceMock<MockArgParser> argParser;
+    lib::synergy::ClientArgs clientArgs;
+    const int argc = 2;
+    std::array<const char*, argc> kLangCmd = { "stub", "--invert-scroll" };
+
+    argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
+    EXPECT_EQ(clientArgs.m_clientScrollDirection, lib::synergy::ClientScrollDirection::INVERT_SERVER);
+}
+
 TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs)
 {
     NiceMock<MockArgParser> argParser;

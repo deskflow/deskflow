@@ -337,10 +337,33 @@ background-color: rgba(192,192,192, 0.1);
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="1">
-       <widget class="QComboBox" name="m_pComboLanguage"/>
+      <item row="4" column="0">
+       <widget class="QLabel" name="m_pLabelElevate">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Elevate privileges</string>
+        </property>
+       </widget>
       </item>
-      <item row="1" column="0" colspan="3">
+      <item row="5" column="0">
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0" colspan="3">
        <widget class="QCheckBox" name="m_pCheckBoxLanguageSync">
         <property name="text">
          <string>&amp;Use server's keyboard language on this machine</string>
@@ -369,20 +392,7 @@ background-color: rgba(192,192,192, 0.1);
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="m_pLabelElevate">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Elevate privileges</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QComboBox" name="m_pComboElevate">
         <property name="toolTip">
          <string>Specify when the Synergy service should run at an elevated privilege level</string>
@@ -407,18 +417,15 @@ background-color: rgba(192,192,192, 0.1);
         </item>
        </widget>
       </item>
-      <item row="4" column="0">
-       <spacer name="verticalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="m_pComboLanguage"/>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QCheckBox" name="m_pCheckBoxScrollDirection">
+        <property name="text">
+         <string>Invert scroll direction on this computer</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -1007,7 +1014,6 @@ font-weight: bold;</string>
   <tabstop>m_pCheckBoxAutoConfig</tabstop>
  </tabstops>
  <resources>
-  <include location="../res/Synergy.qrc"/>
   <include location="../res/Synergy.qrc"/>
  </resources>
  <connections>
