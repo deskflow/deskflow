@@ -22,6 +22,7 @@
 #include "platform/OSXPowerManager.h"
 #include "synergy/PlatformScreen.h"
 #include "synergy/DragInformation.h"
+#include "synergy/ClientArgs.h"
 #include "base/EventTypes.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
@@ -53,7 +54,11 @@ class Mutex;
 //! Implementation of IPlatformScreen for OS X
 class OSXScreen : public PlatformScreen {
 public:
-    OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor=true);
+	 OSXScreen(IEventQueue* events,
+				bool isPrimary,
+				bool enableLangSync = false,
+				lib::synergy::ClientScrollDirection scrollDirection = lib::synergy::ClientScrollDirection::SERVER);
+
     virtual ~OSXScreen();
 
     IEventQueue*        getEvents() const { return m_events; }
@@ -330,9 +335,6 @@ private:
     SInt32                    m_lastSingleClickXCursor;
     SInt32                    m_lastSingleClickYCursor;
 
-    // cursor will hide and show on enable and disable if true.
-    bool                    m_autoShowHideCursor;
-
     IEventQueue*            m_events;
     
     Thread*                m_getDropTargetThread;
@@ -344,6 +346,13 @@ private:
 #endif
 
     OSXPowerManager m_powerManager;
+
+    /**
+     * @brief m_clientScrollDirection
+     * This  member contains client scroll direction.
+     * Tis member is used only on client side.
+     */
+    lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER;
 
     class OSXScreenImpl*    m_impl;
 };
