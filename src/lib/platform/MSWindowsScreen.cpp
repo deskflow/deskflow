@@ -99,7 +99,7 @@ MSWindowsScreen::MSWindowsScreen(
     IEventQueue* events,
     bool enableLangSync,
     lib::synergy::ClientScrollDirection scrollDirection) :
-    PlatformScreen(events),
+    PlatformScreen(events, scrollDirection),
     m_isPrimary(isPrimary),
     m_noHooks(noHooks),
     m_isOnScreen(m_isPrimary),
@@ -126,8 +126,7 @@ MSWindowsScreen::MSWindowsScreen(
     m_showingMouse(false),
     m_events(events),
     m_dropWindow(NULL),
-    m_dropWindowSize(20),
-    m_clientScrollDirection(scrollDirection)
+    m_dropWindowSize(20)
 {
     assert(s_windowInstance != NULL);
     assert(s_screen   == NULL);
@@ -828,8 +827,8 @@ MSWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 MSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
-    xDelta *= m_clientScrollDirection;
-    yDelta *= m_clientScrollDirection;
+    xDelta = mapClientScrollDirection(xDelta);
+    yDelta = mapClientScrollDirection(yDelta);
     m_desks->fakeMouseWheel(xDelta, yDelta);
 }
 
