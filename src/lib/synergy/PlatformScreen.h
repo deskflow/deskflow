@@ -132,6 +132,8 @@ protected:
     String                m_draggingFilename;
     bool                m_draggingStarted;
     bool                m_fakeDraggingStarted;
+
+private:
      /*!
      * \brief m_clientScrollDirection
      * This member contains client scroll direction.
