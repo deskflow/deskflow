@@ -87,7 +87,7 @@ OSXScreen::OSXScreen(IEventQueue* events,
 							bool isPrimary,
 							bool enableLangSync,
 							lib::synergy::ClientScrollDirection scrollDirection) :
-	PlatformScreen(events),
+	PlatformScreen(events, scrollDirection),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
 	m_cursorPosValid(false),
@@ -118,7 +118,6 @@ OSXScreen::OSXScreen(IEventQueue* events,
 	m_lastSingleClickYCursor(0),
 	m_events(events),
 	m_getDropTargetThread(NULL),
-	m_clientScrollDirection(scrollDirection),
 	m_impl(NULL)
 {
     m_displayID = CGMainDisplayID();
@@ -1468,7 +1467,7 @@ OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
 	auto result = static_cast<SInt32>(3.0 * x / 120.0);
-	return (result * m_clientScrollDirection);
+	return mapClientScrollDirection(result);
 }
 
 double

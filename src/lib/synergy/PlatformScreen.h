@@ -20,6 +20,7 @@
 
 #include "synergy/IPlatformScreen.h"
 #include "synergy/DragInformation.h"
+#include "synergy/ClientArgs.h"
 #include "common/stdexcept.h"
 
 //! Base screen implementation
@@ -30,7 +31,7 @@ subclasses to implement the rest.
 */
 class PlatformScreen : public IPlatformScreen {
 public:
-    PlatformScreen(IEventQueue* events);
+    PlatformScreen(IEventQueue* events, lib::synergy::ClientScrollDirection scrollDirection = lib::synergy::ClientScrollDirection::SERVER);
     virtual ~PlatformScreen();
 
     // IScreen overrides
@@ -120,8 +121,21 @@ protected:
     // IPlatformScreen overrides
     virtual void        handleSystemEvent(const Event& event, void*) = 0;
 
+    /*!
+     * \brief mapClientScrollDirection
+     * Convert scroll according to client scroll directio
+     * \return converted value according to the client scroll direction
+     */
+    virtual SInt32      mapClientScrollDirection(SInt32) const;
+
 protected:
     String                m_draggingFilename;
     bool                m_draggingStarted;
     bool                m_fakeDraggingStarted;
+     /*!
+     * \brief m_clientScrollDirection
+     * This member contains client scroll direction.
+     * This member is used only on client side.
+     */
+    lib::synergy::ClientScrollDirection m_clientScrollDirection = lib::synergy::ClientScrollDirection::SERVER;
 };
