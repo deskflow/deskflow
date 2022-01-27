@@ -180,13 +180,17 @@ ClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
     return new synergy::Screen(new MSWindowsScreen(
-        false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events);
+        false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events,
+        args().m_enableLangSync, args().m_clientScrollDirection), m_events);
 #elif WINAPI_XWINDOWS
     return new synergy::Screen(new XWindowsScreen(
         args().m_display, false, args().m_disableXInitThreads,
-        args().m_yscroll, m_events), m_events);
+        args().m_yscroll, m_events, args().m_clientScrollDirection), m_events);
 #elif WINAPI_CARBON
-    return new synergy::Screen(new OSXScreen(m_events, false), m_events);
+	 return new synergy::Screen(new OSXScreen(m_events, false,
+                                              args().m_enableLangSync,
+                                              args().m_clientScrollDirection),
+                                m_events);
 #endif
 }
 

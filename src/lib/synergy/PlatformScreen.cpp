@@ -20,10 +20,11 @@
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 
-PlatformScreen::PlatformScreen(IEventQueue* events) :
+PlatformScreen::PlatformScreen(IEventQueue* events, lib::synergy::ClientScrollDirection scrollDirection) :
     IPlatformScreen(events),
     m_draggingStarted(false),
-    m_fakeDraggingStarted(false)
+    m_fakeDraggingStarted(false),
+    m_clientScrollDirection(scrollDirection)
 {
 }
 
@@ -121,3 +122,10 @@ PlatformScreen::isDraggingStarted()
     }
     return false;
 }
+
+SInt32
+PlatformScreen::mapClientScrollDirection(SInt32 x) const
+{
+    return (x * m_clientScrollDirection);
+}
+

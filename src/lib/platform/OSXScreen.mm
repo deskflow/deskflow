@@ -83,8 +83,11 @@ void avoidHesitatingCursor();
 bool					OSXScreen::s_testedForGHOM = false;
 bool					OSXScreen::s_hasGHOM	    = false;
 
-OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor) :
-	PlatformScreen(events),
+OSXScreen::OSXScreen(IEventQueue* events,
+							bool isPrimary,
+							bool enableLangSync,
+							lib::synergy::ClientScrollDirection scrollDirection) :
+	PlatformScreen(events, scrollDirection),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
 	m_cursorPosValid(false),
@@ -113,7 +116,6 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 	m_clickState(1),
 	m_lastSingleClickXCursor(0),
 	m_lastSingleClickYCursor(0),
-	m_autoShowHideCursor(autoShowHideCursor),
 	m_events(events),
 	m_getDropTargetThread(NULL),
 	m_impl(NULL)
@@ -127,7 +129,7 @@ OSXScreen::OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCurso
 		m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
 		m_keyState	  = new OSXKeyState(m_events,
 						AppUtil::instance().getKeyboardLayoutList(),
-						ClientApp::instance().args().m_enableLangSync);
+						enableLangSync);
 
         if (App::instance().argsBase().m_preventSleep) {
             m_powerManager.disableSleep();
@@ -786,9 +788,7 @@ OSXScreen::enable()
 	else {
 		// FIXME -- prevent system from entering power save mode
 
-		if (m_autoShowHideCursor) {
-			hideCursor();
-		}
+		hideCursor();
 
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
@@ -819,10 +819,8 @@ OSXScreen::enable()
 void
 OSXScreen::disable()
 {
-	if (m_autoShowHideCursor) {
-		showCursor();
-	}
-    
+	showCursor();
+
 	// FIXME -- stop watching jump zones, stop capturing input
 	
 	if (m_eventTapRLSR) {
@@ -1469,7 +1467,7 @@ OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
 	auto result = static_cast<SInt32>(3.0 * x / 120.0);
-	return (result * ClientApp::instance().args().m_clientScrollDirection);
+	return mapClientScrollDirection(result);
 }
 
 double

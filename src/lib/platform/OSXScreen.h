@@ -53,7 +53,11 @@ class Mutex;
 //! Implementation of IPlatformScreen for OS X
 class OSXScreen : public PlatformScreen {
 public:
-    OSXScreen(IEventQueue* events, bool isPrimary, bool autoShowHideCursor=true);
+	 OSXScreen(IEventQueue* events,
+				bool isPrimary,
+				bool enableLangSync = false,
+				lib::synergy::ClientScrollDirection scrollDirection = lib::synergy::ClientScrollDirection::SERVER);
+
     virtual ~OSXScreen();
 
     IEventQueue*        getEvents() const { return m_events; }
@@ -329,9 +333,6 @@ private:
     int                     m_clickState;
     SInt32                    m_lastSingleClickXCursor;
     SInt32                    m_lastSingleClickYCursor;
-
-    // cursor will hide and show on enable and disable if true.
-    bool                    m_autoShowHideCursor;
 
     IEventQueue*            m_events;
     
