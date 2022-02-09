@@ -16,10 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ipc/Ipc.h"
+#pragma once
 
-const char*                kIpcMsgHello        = "IHEL%1i";
-const char*                kIpcMsgLogLine      = "ILOG%s";
-const char*                kIpcMsgCommand      = "ICMD%s%1i";
-const char*                kIpcMsgShutdown     = "ISDN";
-const char*                kIpcMsgSetting      = "SSET%s%s";
+#include <string>
+#include "IpcMessage.h"
+
+class IpcSettingMessage : public IpcMessage
+{
+public:
+    //!
+    //! \brief IpcSettingMessage constructor
+    //! \param name - setting name
+    //! \param value - setting value
+    //!
+    IpcSettingMessage(const std::string& name, const std::string& value);
+
+    //!
+    //! \brief getName is a getter for the setting name
+    //! \return setting name
+    //!
+    const std::string& getName() const;
+
+    //!
+    //! \brief getValue is a getter for the setting value
+    //! \return setting value
+    //!
+    const std::string& getValue() const;
+
+private:
+    std::string m_name;
+    std::string m_value;
+};
+

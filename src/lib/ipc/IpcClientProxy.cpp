@@ -20,6 +20,7 @@
 
 #include "ipc/Ipc.h"
 #include "ipc/IpcMessage.h"
+#include "ipc/IpcSettingMessage.h"
 #include "synergy/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "arch/Arch.h"
@@ -117,6 +118,9 @@ IpcClientProxy::handleData(const Event&, void*)
         else if (memcmp(code, kIpcMsgCommand, 4) == 0) {
             m = parseCommand();
         }
+        else if (memcmp(code, kIpcMsgSetting, 4) == 0) {
+            m = parseSetting();
+        }
         else {
             LOG((CLOG_ERR "invalid ipc message"));
             disconnect();
@@ -182,6 +186,18 @@ IpcClientProxy::parseCommand()
 
     // must be deleted by event handler.
     return new IpcCommandMessage(command, elevate != 0);
+}
+
+IpcSettingMessage*
+IpcClientProxy::parseSetting() const
+{
+    String name;
+    String value;
+
+    ProtocolUtil::readf(&m_stream, kIpcMsgSetting + 4, &name, &value);
+
+    // must be deleted by event handler.
+    return new IpcSettingMessage(name, value);
 }
 
 void

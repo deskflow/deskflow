@@ -26,6 +26,7 @@
 namespace synergy { class IStream; }
 class IpcMessage;
 class IpcCommandMessage;
+class IpcSettingMessage;
 class IpcHelloMessage;
 class IEventQueue;
 
@@ -47,7 +48,8 @@ private:
     void                handleDisconnect(const Event&, void*);
     void                handleWriteError(const Event&, void*);
     IpcHelloMessage*    parseHello();
-    IpcCommandMessage*    parseCommand();
+    IpcCommandMessage*  parseCommand();
+    IpcSettingMessage*  parseSetting() const;
     void                disconnect();
     
 private:
