@@ -64,10 +64,10 @@ void
 updateSetting(const IpcMessage& message)
 {
     try {
-        const IpcSettingMessage& setting = static_cast<const IpcSettingMessage&>(message);
+        auto setting = static_cast<const IpcSettingMessage&>(message);
         ARCH->setting(setting.getName(), setting.getValue());
     }
-    catch (XArch& e) {
+    catch (const XArch& e) {
         LOG((CLOG_ERR "failed to save setting: %s", e.what()));
     }
 }
