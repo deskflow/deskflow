@@ -96,12 +96,13 @@ private:
     ArchMutex           m_mutex;
     ArchCond            m_condVar;
     bool                m_ready;
-	bool				m_foreground;
+    bool                m_foreground;
+    std::string         m_activeDesktop;
 
     /// @brief Save the info of all process made
     ///         We will use this to track all processes we make and
     ///         kill off handels and children that we no longer need
-	std::map<unsigned long, PROCESS_INFORMATION>   m_children;
+    std::map<unsigned long, PROCESS_INFORMATION>   m_children;
 };
 
 //! Relauncher error

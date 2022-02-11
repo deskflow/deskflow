@@ -39,6 +39,42 @@
 
 #define CURRENT_PROCESS_ID 0
 #define MAXIMUM_WAIT_TIME 3
+
+namespace {
+std::string
+trimDesktopName(const std::string& nameFromTraces)
+{
+    std::string name;
+
+    for (const auto& symbol : nameFromTraces) {
+        if (std::isalpha(symbol)) {
+            name.push_back(symbol);
+        }
+        else {
+            break;
+        }
+    }
+
+    return name;
+}
+
+bool
+isDesktopRunnable(const std::string& desktopName)
+{
+    const std::string winlogon = "Winlogon";
+    bool isNotLoginScreen = std::strncmp(desktopName.c_str(),
+                                         winlogon.c_str(),
+                                         winlogon.length());
+
+    const auto setting = ARCH->setting("runOnLoginScreen");
+    bool runOnLoginScreen = (setting.empty() || setting == "true");
+
+    return (runOnLoginScreen || isNotLoginScreen);
+}
+
+}//namespace
+
+
 enum {
     kOutputBufferSize = 4096
 };
@@ -315,17 +351,22 @@ MSWindowsWatchdog::startProcess()
 
 		getActiveDesktop(&sa);
 
-		ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-		HANDLE userToken = getUserToken(&sa);
-		m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
-		m_autoElevated = false;
+        if (!isDesktopRunnable(m_activeDesktop)) {
+            LOG((CLOG_INFO, "Starting on the login screen is disabled!"));
+            return;
+        }
 
-		// patch by Jack Zhou and Henry Tung
-		// set UIAccess to fix Windows 8 GUI interaction
-		DWORD uiAccess = 1;
-		SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+        ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+        HANDLE userToken = getUserToken(&sa);
+        m_elevateProcess = m_autoElevated ? m_autoElevated : m_elevateProcess;
+        m_autoElevated = false;
 
-		createRet = startProcessAsUser(m_command, userToken, &sa);
+        // patch by Jack Zhou and Henry Tung
+        // set UIAccess to fix Windows 8 GUI interaction
+        DWORD uiAccess = 1;
+        SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+
+        createRet = startProcessAsUser(m_command, userToken, &sa);
 	}
 
     if (!createRet) {
@@ -636,7 +677,7 @@ MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
         ARCH->unlockMutex(m_mutex);
         closeProcessHandles(pid);
     }
-} 
+}
 
 void
 MSWindowsWatchdog::testOutput(String buffer)
@@ -645,11 +686,11 @@ MSWindowsWatchdog::testOutput(String buffer)
     size_t i = buffer.find(g_activeDesktop);
     if (i != String::npos) {
         size_t s = sizeof(g_activeDesktop);
-        String defaultDesktop("Default");
-        String sub = buffer.substr(i + s - 1, defaultDesktop.size());
-        if (sub != defaultDesktop) {
-            m_autoElevated = true;
-        }
+        std::string defaultScreen = "Default";
+        m_activeDesktop = trimDesktopName(buffer.substr(i + s - 1));
+        m_autoElevated = std::strncmp(m_activeDesktop.c_str(),
+                                      defaultScreen.c_str(),
+                                      defaultScreen.length());
 
         ARCH->lockMutex(m_mutex);
         m_ready = true;

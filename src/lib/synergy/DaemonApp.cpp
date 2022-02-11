@@ -27,6 +27,7 @@
 #include "synergy/ClientArgs.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
+#include "ipc/IpcSettingMessage.h"
 #include "ipc/IpcLogOutputter.h"
 #include "net/SocketMultiplexer.h"
 #include "arch/XArch.h"
@@ -57,6 +58,21 @@
 #include <sstream>
 
 using namespace std;
+
+namespace {
+void
+updateSetting(const IpcMessage& message)
+{
+    try {
+        auto setting = static_cast<const IpcSettingMessage&>(message);
+        ARCH->setting(setting.getName(), setting.getValue());
+    }
+    catch (const XArch& e) {
+        LOG((CLOG_ERR "failed to save setting: %s", e.what()));
+    }
+}
+
+}//namespace
 
 DaemonApp* DaemonApp::s_instance = NULL;
 
@@ -362,7 +378,7 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             break;
         }
 
-        case kIpcHello:
+        case kIpcHello: {
             IpcHelloMessage* hm = static_cast<IpcHelloMessage*>(m);
             String type;
             switch (hm->clientType()) {
@@ -379,6 +395,11 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
 #endif
 
             m_ipcLogOutputter->notifyBuffer();
+            break;
+        }
+
+        case kIpcSetting:
+            updateSetting(*m);
             break;
     }
 }

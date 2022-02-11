@@ -1,3 +1,9 @@
+v1.14.4-snapshot
+===========
+Enhancements:
+- #7143 Add ability to stop synergy on the login screen
+===========
+
 v1.14.3-snapshot
 ===========
 Bug fixes:

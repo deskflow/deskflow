@@ -26,6 +26,7 @@ enum EIpcMessage {
     kIpcLogLine,
     kIpcCommand,
     kIpcShutdown,
+    kIpcSetting
 };
 
 enum EIpcClientType {
@@ -50,3 +51,8 @@ extern const char*        kIpcMsgCommand;
 // shutdown: daemon -> node
 // the daemon tells synergys/c to shut down gracefully.
 extern const char*        kIpcMsgShutdown;
+
+// set setting: gui -> daemon
+// $1 = setting name
+// $2 = setting value
+extern const char*        kIpcMsgSetting;
