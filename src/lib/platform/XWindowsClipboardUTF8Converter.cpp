@@ -18,13 +18,15 @@
 
 #include "platform/XWindowsClipboardUTF8Converter.h"
 
+#include <algorithm>
+
 //
 // XWindowsClipboardUTF8Converter
 //
 
 XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(
-                Display* display, const char* name) :
-    m_atom(XInternAtom(display, name, False))
+                Display* display, const char* name, bool normalize) :
+    m_atom(XInternAtom(display, name, False)), m_normalize(normalize)
 {
     // do nothing
 }
@@ -52,6 +54,13 @@ XWindowsClipboardUTF8Converter::getDataSize() const
     return 8;
 }
 
+static
+bool
+isCR(char ch)
+{
+    return (ch == '\r');
+}
+
 String
 XWindowsClipboardUTF8Converter::fromIClipboard(const String& data) const
 {
@@ -61,5 +70,22 @@ XWindowsClipboardUTF8Converter::fromIClipboard(const String& data) const
 String
 XWindowsClipboardUTF8Converter::toIClipboard(const String& data) const
 {
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1547595
+    // GTK normalizes the clipboard's line endings to CRLF (\r\n) internally.
+    // When sending the raw data to other systems, like Windows, where \n is
+    // converted to \r\n we end up with \r\r\n, resulting in double lines when
+    // pasting.
+    //
+    // This seems to happen only when the clipboard format is
+    // text/plain;charset=utf8 and not when it's UTF8_STRING.
+    // When normalize clipboard is set, any \r present in the string is removed
+
+    if (m_normalize) {
+        String copy = data;
+
+        copy.erase(std::remove_if(copy.begin(), copy.end(), isCR), copy.end());
+        return copy;
+    }
+
     return data;
 }
