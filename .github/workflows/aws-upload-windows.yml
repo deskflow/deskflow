@@ -51,7 +51,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
           msbuild synergy-core.sln `
-            /p:Platform="x64"
+            /p:Platform="x64" `
             /p:Configuration=Release `
             /m
 
