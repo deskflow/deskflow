@@ -3,7 +3,7 @@ name: Windows - Core
 on:
   release:
     types: [published]
-  # pull_request:
+  pull_request:
 
 jobs:
   build-core-windows:
@@ -50,7 +50,10 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
-          msbuild synergy-core.sln /p:Configuration=Release
+          msbuild synergy-core.sln `
+            /p:Platform="x64"
+            /p:Configuration=Release `
+            /m
 
       - uses: anshulrgoyal/upload-s3-action@master
         if: "github.event_name == 'release'"
