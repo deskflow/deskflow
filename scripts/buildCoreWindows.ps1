@@ -100,8 +100,8 @@ Try {
   . ./version
   msbuild synergy-core.sln `
     /p:Configuration=$env:SYNERGY_BUILD_TYPE `
-    # /p:Platform="x64" `
-    # /m
+    /p:Platform="x64" `
+    /m
 
   Remove-Item -Force -Path "synergy-core-win-x64.zip" -ErrorAction SilentlyContinue
   Compress-Archive `
