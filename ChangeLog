@@ -2,6 +2,9 @@ v1.14.4-snapshot
 ===========
 Enhancements:
 - #7143 Add ability to stop synergy on the login screen
+
+Github Actions:
+- #7148 Fix unstable build for windows core
 ===========
 
 v1.14.3-snapshot
