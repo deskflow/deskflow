@@ -2,7 +2,7 @@
 
 This is the open source core component of Synergy, a keyboard and mouse sharing tool.
 
-**[We're hiring!](https://symless.com/careers)** *Join the Synergy Team (Node.js, React, C++)*
+[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
 
 **News:** Visit the [Symless blog](https://symless.com/blog/) for updates
 
