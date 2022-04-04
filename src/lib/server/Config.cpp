@@ -26,6 +26,8 @@
 #include "common/stdistream.h"
 #include "common/stdostream.h"
 
+#include "base/Log.h"
+
 #include <cstdlib>
 
 using namespace synergy::string;
@@ -1929,10 +1931,69 @@ ConfigReadContext::readLine(String& line)
 		}
 
 		// strip comments and then trailing whitespace
+        LOG((CLOG_DEBUG "reading line \"%s\"", line.c_str()));
+		
 		i = line.find('#');
+
+		
+		// DAUN: # in keystroke fix - begin
+		// handling cases where config might contain something like => "keystroke(Shift+#) = keystroke(Shift+#) # some comment"
+		// In above scenario, we should only remove last #.
+		// 1. check if "keystroke" exists in line.
+		// 2. If "keystroke" exist, then find ") = " *** which pretty much separates between first keystroke and second keystroke
+		// 3. check if any # exists after separator.
+		// 4. if # doesnt exist, move on.
+		// 5. if # does exist, check if second "keystroke" exist.
+		// 6. if second "keystroke" doesn't exist, remove everything from # onwards
+		// 7. if second "keystroke" exist, look for ")" after separator
+		// 8. if ")" found, find "#" afterwards.
+		// 9. if ")" not found, result keystroke is broken.
+		/* 
+			NOTE: the checks are here to relax the condition of config breaking when valid,
+			we will need to dig further in later if we want to allow users to setup other
+			special characters such as "+", ")", "("
+
+			NOTE 2: We do not consider case such as:
+			# keystroke(...) = ... => not sure if this is a thing, but...
+			keystroke(...) = # keystroke(...) => supposed to be broken anyway
+			
+			*** We are assuming that this keystroke() is VALID
+		*/
+		String::size_type keyStroke = line.find("keystroke(");
+		
+		// Ensure that first '#' found was after "keystroke("
+		if (i > keyStroke){
+			String::size_type halfLine = 0;
+			if (keyStroke != String::npos){
+				// we found keystroke entry, find the separator
+				halfLine = line.find(") = ");
+				if (halfLine != String::npos){
+					i = line.find('#', halfLine);
+					// check if there is another # after separator
+					if (i != String::npos){
+						String::size_type resultKeystroke = line.find("keystroke(", halfLine);
+						if (resultKeystroke != String::npos){
+							// we have second keystroke
+							String::size_type keystrokeEnd = line.find(')', halfLine+1);
+							if (keystrokeEnd != String::npos){
+								i = line.find('#',keystrokeEnd);
+							}
+						}
+						// second set of keystroke() found
+					}
+					// no second '#'
+				}
+				// separator not found, proceed as usual
+			}
+		}
+		// # in keystroke fix - end
+		
 		if (i != String::npos) {
 			line.erase(i);
 		}
+
+        LOG((CLOG_DEBUG "line after  \"%s\"", line.c_str()));
+
 		i = line.find_last_not_of(" \r\t");
 		if (i != String::npos) {
 			line.erase(i + 1);
