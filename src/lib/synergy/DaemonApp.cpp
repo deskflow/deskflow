@@ -36,7 +36,6 @@
 #include "base/TMethodEventJob.h"
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
-#include "base/Log.h"
 
 #if SYSAPI_WIN32
 
