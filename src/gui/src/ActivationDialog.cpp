@@ -68,8 +68,9 @@ void ActivationDialog::accept()
     catch (std::exception& e) {
         message.critical(this, "Unknown Error",
             tr("An error occurred while trying to activate Synergy. "
-                "Please contact the helpdesk, and provide the "
-                "following information:\n\n%1").arg(e.what()));
+                "<a href=\"https://symless.com/synergy/contact-support\" style=\"text-decoration: none; color: #4285F4;\">"
+                "Please contact the helpdesk</a>, and provide the following information:"
+                "<br><br>%1").arg(e.what()));
         refreshSerialKey();
         return;
     }
