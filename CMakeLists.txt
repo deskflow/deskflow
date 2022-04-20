@@ -38,6 +38,12 @@ else()
     option (SYNERGY_ENTERPRISE "Build Enterprise" OFF)
 endif()
 
+if ($ENV{SYNERGY_BUSINESS})
+    option (SYNERGY_BUSINESS "Build Business" ON)
+else()
+    option (SYNERGY_BUSINESS "Build Business" OFF)
+endif()
+
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)

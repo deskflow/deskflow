@@ -77,3 +77,7 @@ endif()
 if (SYNERGY_ENTERPRISE)
     add_definitions (-DSYNERGY_ENTERPRISE=1)
 endif()
+
+if (SYNERGY_BUSINESS)
+    add_definitions(-DSYNERGY_BUSINESS=1)
+endif()
