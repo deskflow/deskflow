@@ -125,9 +125,9 @@ steps:
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Azure on Sandor'
+      sshEndpoint: 'Binary Storage'
       sourceFolder: '$(Build.Repository.LocalPath)/pkg'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      targetFolder: '$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
-    displayName: 'Send Package to sandor'
+    displayName: 'Send package to Binary Storage'
