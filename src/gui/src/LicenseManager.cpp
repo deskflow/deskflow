@@ -28,16 +28,13 @@ LicenseManager::LicenseManager(AppConfig* appConfig) :
     m_serialKey(appConfig->edition()) {
 }
 
-std::pair<bool, QString>
+void
 LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 {
-    std::pair<bool, QString> ret (true, "");
     time_t currentTime = ::time(0);
 
     if (!acceptExpired && serialKey.isExpired(currentTime)) {
-        ret.first = false;
-        ret.second = "Serial key expired";
-        return ret;
+        throw std::runtime_error("Serial key expired");
     }
 
     if (!serialKey.isValid()) {
@@ -62,8 +59,6 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
             emit editionChanged(m_serialKey.edition());
         }
     }
-
-    return ret;
 }
 
 void

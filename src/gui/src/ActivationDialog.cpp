@@ -59,25 +59,17 @@ void ActivationDialog::accept()
     QMessageBox message;
     m_appConfig->activationHasRun(true);
 
-    std::pair<bool, QString> result;
     try {
         SerialKey serialKey (ui->m_pTextEditSerialKey->toPlainText().
                              trimmed().toStdString());
-        result = m_LicenseManager->setSerialKey(serialKey);
+        m_LicenseManager->setSerialKey(serialKey);
     }
     catch (std::exception& e) {
-        message.critical(this, "Unknown Error",
+        message.critical(this, "Activation failed",
             tr("An error occurred while trying to activate Synergy. "
                 "<a href=\"https://symless.com/synergy/contact-support\" style=\"text-decoration: none; color: #4285F4;\">"
                 "Please contact the helpdesk</a>, and provide the following information:"
                 "<br><br>%1").arg(e.what()));
-        refreshSerialKey();
-        return;
-    }
-
-    if (!result.first) {
-        message.critical(this, "Activation failed",
-                         tr("%1").arg(result.second));
         refreshSerialKey();
         return;
     }
