@@ -103,13 +103,18 @@ SerialKeyEdition::setType(Edition type)
 void
 SerialKeyEdition::setType(const std::string& type)
 {
+#ifdef SYNERGY_BUSINESS
+    static const std::map<std::string, Edition> types = {
+        {BUSINESS, kBusiness}
+    };
+#else
     static const std::map<std::string, Edition> types = {
         {BASIC, kBasic},
         {PRO, kPro},
-        {BUSINESS, kBusiness},
         {BASIC_CHINA, kBasic_China},
         {PRO_CHINA, kPro_China}
     };
+#endif
 
     const auto& pType = types.find(type);
 
