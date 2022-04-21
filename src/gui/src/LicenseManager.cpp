@@ -101,7 +101,7 @@ LicenseManager::activeEditionName() const
     return getEditionName(activeEdition(), m_serialKey.isTrial());
 }
 
-SerialKey
+const SerialKey&
 LicenseManager::serialKey() const
 {
     return m_serialKey;

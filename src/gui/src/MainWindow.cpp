@@ -1416,10 +1416,11 @@ int MainWindow::raiseActivationDialog()
 void MainWindow::on_windowShown()
 {
 #ifndef SYNERGY_ENTERPRISE
-	if (!m_AppConfig->activationHasRun() &&
-		!m_LicenseManager->serialKey().isValid()){
-			raiseActivationDialog();
-	}
+    auto serialKey = m_LicenseManager->serialKey();
+    if (!m_AppConfig->activationHasRun() && !serialKey.isValid()) {
+        setEdition(Edition::kUnregistered);
+        raiseActivationDialog();
+    }
 #endif
 }
 
