@@ -3,6 +3,7 @@ name: Raspberry Pi
 on:
   release:
     types: [created]
+  pull_request:
 
 jobs:
   build-on-pi:
