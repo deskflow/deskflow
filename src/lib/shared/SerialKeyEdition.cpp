@@ -12,21 +12,21 @@ const std::string SerialKeyEdition::UNREGISTERED = "unregistered";
 
 namespace {
 
-const std::map<std::string, Edition> getSerialTypes()
+const std::map<std::string, Edition>& getSerialTypes()
 {
 #ifdef SYNERGY_BUSINESS
-static const std::map<std::string, Edition> serialTypes = {
+    static const std::map<std::string, Edition> serialTypes = {
         {SerialKeyEdition::BUSINESS, kBusiness}
     };
 #else
-static const std::map<std::string, Edition> serialTypes {
+    static const std::map<std::string, Edition> serialTypes {
         {SerialKeyEdition::BASIC, kBasic},
         {SerialKeyEdition::PRO, kPro},
         {SerialKeyEdition::BASIC_CHINA, kBasic_China},
         {SerialKeyEdition::PRO_CHINA, kPro_China}
     };
 #endif
-return serialTypes;
+    return serialTypes;
 }
 
 } //namespace
@@ -124,7 +124,7 @@ SerialKeyEdition::setType(Edition type)
 void
 SerialKeyEdition::setType(const std::string& type)
 {
-    static auto types = getSerialTypes();
+    auto types = getSerialTypes();
     const auto& pType = types.find(type);
 
     if (pType != types.end()) {
@@ -137,6 +137,6 @@ SerialKeyEdition::setType(const std::string& type)
 
 bool SerialKeyEdition::isValid() const
 {
-    static auto types = getSerialTypes();
+    auto types = getSerialTypes();
     return (types.find(getName()) != types.end());
 }
