@@ -39,10 +39,10 @@ jobs:
         echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
         if [ "$SYNERGY_ENTERPRISE" == '1' ]
         then
-            echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+            echo "::set-output name=SYNERGY_REMOTE_FOLDER::v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
             echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy-enterprise"
         else
-            echo "::set-output name=SYNERGY_REMOTE_FOLDER::synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+            echo "::set-output name=SYNERGY_REMOTE_FOLDER::v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
             echo "::set-output name=SYNERGY_PACKAGE_NAME::synergy"
         fi
 
@@ -67,11 +67,11 @@ jobs:
         sha1sum $filename_new >> ${filename_new}.checksum.txt
         sha256sum $filename_new >> ${filename_new}.checksum.txt
 
-    - name: Send package to Sandor
-      uses: horochx/deploy-via-scp@master
+    - name: Send package to Binary Storage
+      uses: garygrossgarten/github-action-scp@v0.7.3
       with:
-        host: ${{ secrets.SANDOR_HOST }}
-        user: ${{ secrets.SANDOR_USERNAME }}
-        key: ${{ secrets.SANDOR_KEY }}
-        local: "./package/*"
-        remote: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
+        local: "${{ github.workspace }}/package/"
+        remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
+        host: ${{ secrets.BINARIES_SSH_HOST }}
+        username: ${{ secrets.BINARIES_SSH_USER }}
+        privateKey: ${{ secrets.BINARIES_SSH_KEY }}
