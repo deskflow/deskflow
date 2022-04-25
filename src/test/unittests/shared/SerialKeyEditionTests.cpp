@@ -74,3 +74,10 @@ TEST(SerialKeyEditionTests, SetEditionProChina)
     EXPECT_EQ(SerialKeyEdition::PRO_CHINA, edition.getName());
     EXPECT_EQ("Synergy Pro 中文版", edition.getDisplayName());
 }
+
+TEST(SerialKeyEditionTests, NameConstructor)
+{
+    SerialKeyEdition edition(SerialKeyEdition::BUSINESS);
+    EXPECT_EQ(kUnregistered, edition.getType());
+    EXPECT_FALSE(edition.isValid());
+}
