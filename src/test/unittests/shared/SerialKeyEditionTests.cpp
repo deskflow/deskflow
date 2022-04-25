@@ -81,3 +81,25 @@ TEST(SerialKeyEditionTests, NameConstructor)
     EXPECT_EQ(kUnregistered, edition.getType());
     EXPECT_FALSE(edition.isValid());
 }
+
+TEST(SerialKeyEditionTests, isValid)
+{
+    SerialKeyEdition edition;
+    edition.setType(Edition::kBasic);
+    EXPECT_TRUE(edition.isValid());
+
+    edition.setType(Edition::kBasic_China);
+    EXPECT_TRUE(edition.isValid());
+
+    edition.setType(Edition::kBusiness);
+    EXPECT_FALSE(edition.isValid());
+
+    edition.setType(Edition::kPro);
+    EXPECT_TRUE(edition.isValid());
+
+    edition.setType(Edition::kPro_China);
+    EXPECT_TRUE(edition.isValid());
+
+    edition.setType(Edition::kUnregistered);
+    EXPECT_FALSE(edition.isValid());
+}
