@@ -449,9 +449,9 @@ Screen::getClipboard(ClipboardID id, IClipboard* clipboard) const
 }
 
 void
-Screen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+Screen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h,SInt32 pos_x, SInt32 pos_y) const
 {
-    m_screen->getShape(x, y, w, h);
+    m_screen->getShape(x, y, w, h, pos_x, pos_y);
 }
 
 void

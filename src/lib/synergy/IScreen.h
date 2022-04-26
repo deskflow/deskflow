@@ -59,7 +59,7 @@ public:
     \c y and the size of the screen in \c width and \c height.
     */
     virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const = 0;
+                            SInt32& width, SInt32& height, SInt32 pos_x = INT_MIN, SInt32 pos_y = INT_MIN) const = 0;
 
     //! Get cursor position
     /*!

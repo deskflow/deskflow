@@ -238,7 +238,7 @@ ClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
 }
 
 void
-ClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+ClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
     x = m_info.m_x;
     y = m_info.m_y;

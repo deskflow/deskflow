@@ -524,7 +524,7 @@ MSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
 }
 
 void
-MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
     assert(m_class != 0);
 

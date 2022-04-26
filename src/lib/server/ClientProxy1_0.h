@@ -40,7 +40,7 @@ public:
     // IScreen
     bool        getClipboard(ClipboardID id, IClipboard*) const override;
     void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const override;
+                            SInt32& width, SInt32& height, SInt32 pos_x = INT_MIN, SInt32 pos_y = INT_MIN) const override;
     void        getCursorPos(SInt32& x, SInt32& y) const override;
 
     // IClient overrides

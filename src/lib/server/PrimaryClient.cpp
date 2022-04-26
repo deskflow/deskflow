@@ -114,9 +114,9 @@ PrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
 
 void
 PrimaryClient::getShape(SInt32& x, SInt32& y,
-                SInt32& width, SInt32& height) const
+                SInt32& width, SInt32& height, SInt32 pos_x, SInt32 pos_y) const
 {
-    m_screen->getShape(x, y, width, height);
+    m_screen->getShape(x, y, width, height, pos_x, pos_y);
 }
 
 void
@@ -141,6 +141,8 @@ void
 PrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
                 UInt32 seqNum, KeyModifierMask mask, bool screensaver)
 {
+
+    LOG((CLOG_DEBUG "DAUN - PRIMARY CLIENT - entering destination at pos(%d,%d)", xAbs, yAbs));
     m_screen->setSequenceNumber(seqNum);
     if (!screensaver) {
         m_screen->warpCursor(xAbs, yAbs);
@@ -228,6 +230,8 @@ PrimaryClient::mouseUp(ButtonID)
 void
 PrimaryClient::mouseMove(SInt32 x, SInt32 y)
 {
+    
+	LOG((CLOG_DEBUG "DAUN - mouse move %d, %d", x, y));
     m_screen->warpCursor(x, y);
 }
 

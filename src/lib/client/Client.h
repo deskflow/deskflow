@@ -151,7 +151,7 @@ public:
     virtual void*        getEventTarget() const;
     virtual bool        getClipboard(ClipboardID id, IClipboard*) const;
     virtual void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const;
+                            SInt32& width, SInt32& height, SInt32 pos_x = INT_MIN, SInt32 pos_y = INT_MIN) const;
     virtual void        getCursorPos(SInt32& x, SInt32& y) const;
 
     // IClient overrides

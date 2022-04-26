@@ -240,9 +240,9 @@ Client::getClipboard(ClipboardID id, IClipboard* clipboard) const
 }
 
 void
-Client::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+Client::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
-    m_screen->getShape(x, y, w, h);
+    m_screen->getShape(x, y, w, h, pos_x, pos_y);
 }
 
 void
@@ -254,6 +254,8 @@ Client::getCursorPos(SInt32& x, SInt32& y) const
 void
 Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 {
+    
+    LOG((CLOG_DEBUG "DAUN - entering client at pos(%d,%d)", xAbs, yAbs));
     m_active = true;
     m_screen->mouseMove(xAbs, yAbs);
     m_screen->enter(mask);

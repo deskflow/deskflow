@@ -65,8 +65,11 @@ public:
     // IScreen overrides
     void*       getEventTarget() const override;
     bool        getClipboard(ClipboardID id, IClipboard*) const override;
+    /* TODO: DAUN
+        we want to have a getShape() to accept pos_x, pos_y
+    */
     void        getShape(SInt32& x, SInt32& y,
-                            SInt32& width, SInt32& height) const override;
+                            SInt32& width, SInt32& height, SInt32 pos_x = INT_MIN, SInt32 pos_y = INT_MIN) const override;
     void        getCursorPos(SInt32& x, SInt32& y) const override;
 
     // IPrimaryScreen overrides

@@ -262,13 +262,113 @@ OSXScreen::getClipboard(ClipboardID, IClipboard* dst) const
 	return true;
 }
 
+
+/*
+	TODO: DAUN
+	below code is how we decide the 'total' shape of the screen.
+	here we can find out DEAD ZONEs
+
+	CGRect totalBounds = CGRectZero;
+	for (CGDisplayCount i = 0; i < displayCount; ++i) {
+		CGRect bounds = CGDisplayBounds(displays[i]);
+		totalBounds   = CGRectUnion(totalBounds, bounds);
+	}
+	// get shape of default screen
+	m_x = (SInt32)totalBounds.origin.x;
+	m_y = (SInt32)totalBounds.origin.y;
+	m_w = (SInt32)totalBounds.size.width;
+	m_h = (SInt32)totalBounds.size.height;
+
+*/
+
 void
-OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
-	x = m_x;
-	y = m_y;
-	w = m_w;
-	h = m_h;
+
+	// get info for each display
+	CGDisplayCount displayCount = 0;
+
+	if (CGGetActiveDisplayList(0, NULL, &displayCount) != CGDisplayNoErr) {
+		LOG((CLOG_DEBUG "DAUN - get active display list failed"));
+	}
+	
+	if (displayCount == 0) {
+		LOG((CLOG_DEBUG "DAUN - display count 0"));
+	}
+
+	CGDirectDisplayID* displays = new CGDirectDisplayID[displayCount];
+	if (displays == NULL) {
+		LOG((CLOG_DEBUG "DAUN - display null"));
+	}
+
+	if (CGGetActiveDisplayList(displayCount, displays, &displayCount) != CGDisplayNoErr) {
+		delete[] displays;
+	}
+
+	// LOG((CLOG_DEBUG "DAUN - looking for getshape matched by position (%d, %d)", pos_x, pos_y));
+	bool found = false;
+	if (pos_x > INT_MIN && pos_y > INT_MIN ){
+		// based on x and y, return current display's boundary
+		for (CGDisplayCount i = 0; i < displayCount; ++i) {
+			CGRect bounds = CGDisplayBounds(displays[i]);
+			SInt32 min_x = bounds.origin.x;
+			SInt32 max_x = bounds.size.width;
+			SInt32 min_y = bounds.origin.y;
+			SInt32 max_y = bounds.size.height;
+			if (pos_x >= min_x && pos_y >= min_y && pos_x <= (max_x+min_x) && pos_y <= (max_y + min_y )){
+				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				found = true;
+				x = min_x;
+				y = min_y;
+				w = max_x;
+				h = max_y;
+			}else{
+				// LOG((CLOG_DEBUG "DAUN - missed display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+			}
+		}
+	}
+	// 
+	else if (pos_x > INT_MIN){
+		for (CGDisplayCount i = 0; i < displayCount; ++i) {
+			CGRect bounds = CGDisplayBounds(displays[i]);
+			SInt32 min_x = bounds.origin.x;
+			SInt32 max_x = bounds.size.width;
+			SInt32 min_y = bounds.origin.y;
+			SInt32 max_y = bounds.size.height;
+			if (pos_y >= min_y && pos_y <= (max_y + min_y )){
+				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				found = true;
+				x = min_x;
+				y = min_y;
+				w = max_x;
+				h = max_y;
+			}
+		}
+	}
+	else if (pos_y > INT_MIN){
+		for (CGDisplayCount i = 0; i < displayCount; ++i) {
+			CGRect bounds = CGDisplayBounds(displays[i]);
+			SInt32 min_x = bounds.origin.x;
+			SInt32 max_x = bounds.size.width;
+			SInt32 min_y = bounds.origin.y;
+			SInt32 max_y = bounds.size.height;
+			if (pos_x >= min_x && pos_x <= (max_x+min_x)){
+				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				found = true;
+				x = min_x;
+				y = min_y;
+				w = max_x;
+				h = max_y;
+			}
+		}
+	}
+	if (!found){
+		LOG((CLOG_DEBUG "DAUN - couldn't find display mousePOS(%d,%d)", pos_x, pos_y));
+		x = m_x;
+		y = m_y;
+		w = m_w;
+		h = m_h;	
+	}
 }
 
 void
@@ -294,6 +394,8 @@ void
 OSXScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	// move cursor without generating events
+	// TODO: DAUN
+	// here we need some more information so that we can tell which direction the mouse should move to
 	CGPoint pos;
 	pos.x = x;
 	pos.y = y;
@@ -647,6 +749,9 @@ OSXScreen::getDropTargetThread(void*)
 void
 OSXScreen::fakeMouseMove(SInt32 x, SInt32 y)
 {
+
+
+	LOG((CLOG_DEBUG "DAUN - FAKE MOUSE MOVE? pos(%d,%d)", x, y));
 	if (m_fakeDraggingStarted) {
 		m_buttonState.set(0, kMouseButtonDown);
 	}
@@ -730,6 +835,7 @@ OSXScreen::showCursor()
 	CGError error = CGDisplayShowCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
 		LOG((CLOG_ERR "failed to show cursor, error=%d", error));
+		LOG((CLOG_DEBUG "failed to show cursor, error=%d", error));
 	}
 
 	// appears to fix "mouse randomly not showing" bug
@@ -738,6 +844,8 @@ OSXScreen::showCursor()
 	logCursorVisibility();
 
 	m_cursorHidden = false;
+
+	LOG((CLOG_DEBUG "showing cursor - done"));
 }
 
 void
@@ -757,6 +865,7 @@ OSXScreen::hideCursor()
 	CGError error = CGDisplayHideCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
 		LOG((CLOG_ERR "failed to hide cursor, error=%d", error));
+		LOG((CLOG_DEBUG "failed to hide cursor, error=%d", error));
 	}
 
 	// appears to fix "mouse randomly not hiding" bug
@@ -765,6 +874,7 @@ OSXScreen::hideCursor()
 	logCursorVisibility();
 
 	m_cursorHidden = true;
+	LOG((CLOG_DEBUG "hiding cursor - done"));
 }
 
 void
