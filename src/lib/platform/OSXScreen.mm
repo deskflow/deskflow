@@ -335,7 +335,7 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SI
 			SInt32 max_x = bounds.size.width;
 			SInt32 min_y = bounds.origin.y;
 			SInt32 max_y = bounds.size.height;
-			if (pos_y >= min_y && pos_y <= (max_y + min_y )){
+			if (pos_x >= min_x && pos_x <= (max_x+min_x)){
 				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
 				found = true;
 				x = min_x;
@@ -352,7 +352,7 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SI
 			SInt32 max_x = bounds.size.width;
 			SInt32 min_y = bounds.origin.y;
 			SInt32 max_y = bounds.size.height;
-			if (pos_x >= min_x && pos_x <= (max_x+min_x)){
+			if (pos_y >= min_y && pos_y <= (max_y + min_y)){
 				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
 				found = true;
 				x = min_x;

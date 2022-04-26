@@ -541,6 +541,9 @@ Server::switchScreen(BaseClientProxy* dst,
 								m_primaryClient->getToggleMask(),
 								forScreensaver);
 
+		LOG((CLOG_DEBUG "DAUN - entered destination"));
+
+
 		if (m_enableClipboard) {
 			// send the clipboard data to new active screen
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -552,9 +555,14 @@ Server::switchScreen(BaseClientProxy* dst,
 			}
 		}
 
+		LOG((CLOG_DEBUG "DAUN - some clipboard shit done"));
+
+
 		Server::SwitchToScreenInfo* info =
 			Server::SwitchToScreenInfo::alloc(m_active->getName());
+		LOG((CLOG_DEBUG "DAUN - info alloc"));
 		m_events->addEvent(Event(m_events->forServer().screenSwitched(), this, info));
+		LOG((CLOG_DEBUG "DAUN - info event"));
 	}
 	else {
 		m_active->mouseMove(x, y);
@@ -581,7 +589,7 @@ Server::mapToFraction(BaseClientProxy* client,
 				EDirection dir, SInt32 x, SInt32 y) const
 {
 	SInt32 sx, sy, sw, sh;
-	client->getShape(sx, sy, sw, sh, x, y);
+	client->getShape(sx, sy, sw, sh);
 	switch (dir) {
 	case kLeft:
 	case kRight:
@@ -1867,28 +1875,29 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 		// get jump destination
 		BaseClientProxy* newScreen = mapToNeighbor(m_active, dir, x, y);
-		SInt32 tx, ty, tw, th;
-		if (dir == kLeft || dir == kRight){
-			newScreen->getShape(tx,ty,tw,th,INT_MIN,y);
-			if (dir == kLeft) {
-				x = tw;
-			}else{
-				x = th;
-			}
-		}
-		if (dir == kTop || dir == kBottom){
-			newScreen->getShape(tx,ty,tw,th, x, INT_MIN);
-			if (dir == kTop) {
-				y = th;
-			}else{
-				y = ty;
-			}
-		}
-
 		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position (%d,%d)", x, y));
 		
 		// should we switch or not?
 		if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
+			LOG((CLOG_DEBUG "DAUN - newScreen exist"));
+			SInt32 tx, ty, tw, th;
+			if (dir == kLeft || dir == kRight){
+				newScreen->getShape(tx,ty,tw,th,INT_MIN,y);
+				if (dir == kLeft) {
+					x = (tw + tx) - 1;
+				}else{
+					x = tx + 1;
+				}
+			}
+			if (dir == kTop || dir == kBottom){
+				newScreen->getShape(tx,ty,tw,th, x, INT_MIN);
+				if (dir == kTop) {
+					y = (th + ty) - 1;
+				}else{
+					y = ty + 1;
+				}
+			}
+
 			if (m_args.m_enableDragDrop
 				&& m_screen->isDraggingStarted()
 				&& m_active != newScreen
@@ -2105,7 +2114,41 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 		}
 
 		// try to switch screen.  get the neighbor.
+		LOG((CLOG_DEBUG "DAUN - MAPPING NEIGHBOR"));
 		newScreen = mapToNeighbor(m_active, dir, m_x, m_y);
+		LOG((CLOG_DEBUG "DAUN - MAPPED NEIGHBOR"));
+
+		// TODO: DAUN
+		// mapping the neighbor's start position, skipping dead zone
+		if (newScreen != NULL) {
+			LOG((CLOG_DEBUG "DAUN - newScreen exists"));
+			SInt32 tx, ty, tw, th;
+			if (dir == kLeft || dir == kRight){
+				newScreen->getShape(tx,ty,tw,th,INT_MIN,m_y);
+				LOG((CLOG_DEBUG "DAUN - left right received screen (%d,%d,%d,%d)", tx, ty, tw, th));
+				if (dir == kLeft) {
+					m_x = (tw + tx) - 1;
+				}else{
+					m_x = tx + 1;
+				}
+			}
+			else if (dir == kTop || dir == kBottom){
+				newScreen->getShape(tx,ty,tw,th, m_x, INT_MIN);
+				LOG((CLOG_DEBUG "DAUN - up down received screen (%d,%d,%d,%d)", tx, ty, tw, th));
+				if (dir == kTop) {
+					m_y = (th + ty) - 1;
+				}else{
+					m_y = ty + 1;
+				}
+			}else{
+				LOG((CLOG_DEBUG "DAUN - DIRECTION F***ED UP"));
+			}
+		}else{
+			LOG((CLOG_DEBUG "DAUN - newScreen null"));
+		}
+
+		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position (%d,%d)", m_x, m_y));
+
 
 		// see if we should switch
 		if (!isSwitchOkay(newScreen, dir, m_x, m_y, xc, yc)) {
@@ -2123,7 +2166,15 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 		SInt32 newX = m_x;
 		SInt32 newY = m_y;
 
+		// TODO: DAUN
+		// newX = 1, newY = -548
+		// if LEFT, RIGHT, find boundary of the monitor on same Y axis
+		// if TOP, BOTTOM, find boundary of the monitor on same X axis
+
+
+
 		// switch screens
+		LOG((CLOG_DEBUG "DAUN - onMouseMoveSecondary jump %d,%d", newX, newY));
 		switchScreen(newScreen, newX, newY, false);
 	}
 	else {
