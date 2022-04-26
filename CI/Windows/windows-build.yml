@@ -60,9 +60,12 @@ steps:
       cd build64
       IF "$(buildType)"=="enterprise" (
           cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
+      ) else IF "$(buildType)"=="business" (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON ..
       ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release ..
+        cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release ..
       )
+
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
