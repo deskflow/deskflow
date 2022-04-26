@@ -55,7 +55,7 @@ steps:
       GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
-      mkdir build-bussiness
+      mkdir build-business
       cd build-business
       export SYNERGY_BUSINESS=1
       if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON ..; fi
