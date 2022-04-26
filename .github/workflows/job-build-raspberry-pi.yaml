@@ -6,9 +6,10 @@ on:
 
 jobs:
   build-on-pi:
-    runs-on: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
         include:
           - name: "synergy"
             remote_folder: "v1-core-standard"

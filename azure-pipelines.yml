@@ -85,7 +85,7 @@ jobs:
           version: 10.14
           buildType: "enterprise"
           prefix: "synergy-enterprise"
-        catalina-ent:
+        catalina-business:
           image: macOS-10.15
           platform: x86-64
           version: 10.14
