@@ -693,6 +693,39 @@ Server::mapToNeighbor(BaseClientProxy* src,
 
 	assert(src != NULL);
 
+	// TODO: DAUN
+	// maybe x and y are still inside source boundary;
+	// if x and y results to a valid destination,
+	// return self.
+
+
+	SInt32 sx, sy, sw, sh, tx, ty, tw, th;
+	SInt32 p_x = x;
+	SInt32 p_y = y;
+	switch (srcSide){
+		case kNoDirection:
+			// NO DIRECTION, return null
+			return NULL;
+		case kLeft:
+			p_x -= 5;
+		case kRight:
+			p_x += 5;
+		case kTop:
+			p_y -= 5;
+		case kBottom:
+			p_y += 5;
+		default:
+			src->getShape(sx, sy, sw, sh, p_x, p_y);
+			src->getShape(tx, ty, tw, th);
+		}
+
+	LOG((CLOG_DEBUG "DAUN - mouse position comparison (%d,%d)", p_x,p_y));
+	if (sx != tx || sy != ty || sw != tw || sh != th){
+		LOG((CLOG_DEBUG "DAUN - still inside source (%d,%d,%d,%d)", sx,sy,sw,sh));
+		LOG((CLOG_DEBUG "DAUN - still inside source (%d,%d,%d,%d)", tx,ty,tw,th));
+		return src;
+	}
+
 	// get the first neighbor
 	BaseClientProxy* dst = getNeighbor(src, srcSide, x, y);
 	if (dst == NULL) {
@@ -1815,7 +1848,6 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 	m_active->getShape(ax, ay, aw, ah, x, y);
 	SInt32 zoneSize = getJumpZoneSize(m_active);
 
-
 	// TODO: DAUN - getShape() returns the x, y, width and height of the TOTAL bound of the screen;
 	// this is the issue with the DEAD_ZONE, where jump is not allowed due to limitation.
 	// perhaps we can change getShape function to take in the position of the mouse, and return the size of the screen this mouse is in?
@@ -1876,10 +1908,15 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 		// get jump destination
 		BaseClientProxy* newScreen = mapToNeighbor(m_active, dir, x, y);
 		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position (%d,%d)", x, y));
+		if (newScreen == m_active){
+			LOG((CLOG_DEBUG "DAUN - still same screen"));
+			return false;
+		}
 		
 		// should we switch or not?
 		if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-			LOG((CLOG_DEBUG "DAUN - newScreen exist"));
+			// TODO: DAUN
+			// jump over dead zones.
 			SInt32 tx, ty, tw, th;
 			if (dir == kLeft || dir == kRight){
 				newScreen->getShape(tx,ty,tw,th,INT_MIN,y);

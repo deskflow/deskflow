@@ -530,31 +530,116 @@ MSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
  3. if not found, just return original shape...?
 
  EXAMPLE OF EnumDisplayMonitors():
-    BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
-    {
-        int *Count = (int*)dwData;
-        (*Count)++;
-        return TRUE;
-    }
 
-    int MonitorCount()
-    {
-        int Count = 0;
-        if (EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&Count))
-            return Count;
-        return -1;//signals an error
-    }
+struct cMonitorsVec
+{
+      std::vector<int>       iMonitors;
+      std::vector<HMONITOR>  hMonitors;
+      std::vector<HDC>       hdcMonitors;
+      std::vector<RECT>      rcMonitors;
+
+      static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData)
+      {
+              cMonitorsVec* pThis = reinterpret_cast<cMonitorsVec*>(pData);
+
+              pThis->hMonitors.push_back(hMon);
+              pThis->hdcMonitors.push_back(hdc);
+              pThis->rcMonitors.push_back(*lprcMonitor);
+              pThis->iMonitors.push_back(pThis->hdcMonitors.size());
+              return TRUE;
+      }
+
+      cMonitorsVec()
+      {
+              EnumDisplayMonitors(0, 0, MonitorEnum, (LPARAM)this);
+      }
+};
+
+int main()
+{
+      cMonitorsVec Monitors;
+
+      for (int monitorIndex=0;  monitorIndex < Monitors.iMonitors.size(); monitorIndex++)
+      {
+              std::wcout << "Screen id: " << monitorIndex << std::endl;
+              std::wcout << "-----------------------------------------------------" << std::endl;
+              std::wcout << " - screen left-top corner coordinates : (" << Monitors.rcMonitors[monitorIndex].left
+                                                                 << "," << Monitors.rcMonitors[monitorIndex].top
+                                                                 << ")" << std::endl;
+              std::wcout << " - screen dimensions (width x height) : (" << std::abs(Monitors.rcMonitors[monitorIndex].right - Monitors.rcMonitors[monitorIndex].left)
+                                                                 << "," << std::abs(Monitors.rcMonitors[monitorIndex].top - Monitors.rcMonitors[monitorIndex].bottom)
+                                                                 << ")" << std::endl;
+              std::wcout << "-----------------------------------------------------" << std::endl;
+      }
+}
 */
+
 
 void
 MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
     assert(m_class != 0);
 
-    x = m_x;
-    y = m_y;
-    w = m_w;
-    h = m_h;
+    if (pos_x > INT_MIN && pos_y > INT_MIN){
+        EnumDisplayMonitors(0, 0, (HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) => {
+            SInt32 min_x, min_y, max_x, max_y;
+            min_x = lprcMonitor.left;
+            min_y = lprcMonitor.top;
+            max_x = lprcMonitor.right;
+            max_y = lprcMonitor.bottom
+			if (pos_x >= min_x && pos_y >= min_y && pos_x <= (max_x+min_x) && pos_y <= (max_y + min_y )){
+				LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				found = true;
+				x = min_x;
+				y = min_y;
+				w = max_x;
+				h = max_y;
+			}
+        }, NULL);
+    }
+    else if (pos_x > INT_MIN){
+        EnumDisplayMonitors(0, 0, (HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) => {
+            SInt32 min_x, min_y, max_x, max_y;
+            min_x = lprcMonitor.left;
+            min_y = lprcMonitor.top;
+            max_x = lprcMonitor.right;
+            max_y = lprcMonitor.bottom
+			if (pos_x >= min_x && pos_x <= max_x){
+				LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				found = true;
+				x = min_x;
+				y = min_y;
+				w = max_x;
+				h = max_y;
+			}
+        }, NULL);
+	}
+	else if (pos_y > INT_MIN){
+		EnumDisplayMonitors(0, 0, (HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) => {
+            SInt32 min_x, min_y, max_x, max_y;
+            min_x = lprcMonitor.left;
+            min_y = lprcMonitor.top;
+            max_x = lprcMonitor.right;
+            max_y = lprcMonitor.bottom
+			if (pos_y >= min_y && pos_y <= max_y){
+				LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				found = true;
+				x = min_x;
+				y = min_y;
+				w = max_x;
+				h = max_y;
+			}
+        }, NULL);
+	}
+
+    if (!found){
+        LOG((CLOG_DEBUG "DAUN - couldn't find display mousePOS(%d,%d)", pos_x, pos_y));
+        x = m_x;
+        y = m_y;
+        w = m_w;
+        h = m_h;
+    }
+
 }
 
 void
