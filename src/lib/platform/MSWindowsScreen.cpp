@@ -523,6 +523,29 @@ MSWindowsScreen::getClipboard(ClipboardID, IClipboard* dst) const
     return true;
 }
 
+
+/* TODO: DAUN
+ 1. Enumerate Display Monitors using EnumDisplayMonitors();
+ 2. IF cursor position (pos_x and pos_y) is in the monitor, return the monitor boundary
+ 3. if not found, just return original shape...?
+
+ EXAMPLE OF EnumDisplayMonitors():
+    BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
+    {
+        int *Count = (int*)dwData;
+        (*Count)++;
+        return TRUE;
+    }
+
+    int MonitorCount()
+    {
+        int Count = 0;
+        if (EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)&Count))
+            return Count;
+        return -1;//signals an error
+    }
+*/
+
 void
 MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
@@ -1649,6 +1672,8 @@ MSWindowsScreen::ignore() const
 void
 MSWindowsScreen::updateScreenShape()
 {
+
+
     // get shape and center
     m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);

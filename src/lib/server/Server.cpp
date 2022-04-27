@@ -1920,21 +1920,21 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 			// 1. can we get the max size from client on left (or Top)?
 			//	  -> Left: fetch max_width from client on left, warp.
 			// 	  -> Right: fetch max_height from client on top, warp.
-			if (dirh == kRight){
-				LOG((CLOG_DEBUG "DAUN - Jump right"));
-				switchScreen(newScreen, 1, y, false);
-			}else if (dirv == kBottom){
-				LOG((CLOG_DEBUG "DAUN - Jump bottom"));
-				switchScreen(newScreen, x, 1, false);
-			}else if (dirh == kLeft){
-				LOG((CLOG_DEBUG "DAUN - Jump left"));
-				switchScreen(newScreen, tw-1, y, false);
-			}else if (dirv == kTop){
-				LOG((CLOG_DEBUG "DAUN - Jump top"));
-				switchScreen(newScreen, x, th-1, false);
-			}else{
+			// if (dirh == kRight){
+			// 	LOG((CLOG_DEBUG "DAUN - Jump right"));
+			// 	switchScreen(newScreen, x, y, false);
+			// }else if (dirv == kBottom){
+			// 	LOG((CLOG_DEBUG "DAUN - Jump bottom"));
+			// 	switchScreen(newScreen, x, y, false);
+			// }else if (dirh == kLeft){
+			// 	LOG((CLOG_DEBUG "DAUN - Jump left"));
+			// 	switchScreen(newScreen, tw-1, y, false);
+			// }else if (dirv == kTop){
+			// 	LOG((CLOG_DEBUG "DAUN - Jump top"));
+			// 	switchScreen(newScreen, x, th-1, false);
+			// }else{
 				switchScreen(newScreen, x, y, false);
-			}
+			// }
 			m_waitDragInfoThread = true;
 			return true;
 		}else{
