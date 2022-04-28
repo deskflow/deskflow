@@ -574,66 +574,99 @@ int main()
 }
 */
 
+struct cMonitorsVec
+{
+      std::vector<int>       iMonitors;
+      std::vector<HMONITOR>  hMonitors;
+      std::vector<HDC>       hdcMonitors;
+      std::vector<RECT>      rcMonitors;
+
+      static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData)
+      {
+              cMonitorsVec* pThis = reinterpret_cast<cMonitorsVec*>(pData);
+
+              pThis->hMonitors.push_back(hMon);
+              pThis->hdcMonitors.push_back(hdc);
+              pThis->rcMonitors.push_back(*lprcMonitor);
+              pThis->iMonitors.push_back(pThis->hdcMonitors.size());
+              return TRUE;
+      }
+
+      cMonitorsVec()
+      {
+              EnumDisplayMonitors(0, 0, MonitorEnum, (LPARAM)this);
+      }
+};
+
 
 void
 MSWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
     assert(m_class != 0);
 
+	bool found = false;
+
+     cMonitorsVec Monitors;
+
     if (pos_x > INT_MIN && pos_y > INT_MIN){
-        EnumDisplayMonitors(0, 0, (HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) => {
+      for (int monitorIndex=0;  monitorIndex < Monitors.iMonitors.size(); monitorIndex++)
+      {
             SInt32 min_x, min_y, max_x, max_y;
-            min_x = lprcMonitor.left;
-            min_y = lprcMonitor.top;
-            max_x = lprcMonitor.right;
-            max_y = lprcMonitor.bottom
-			if (pos_x >= min_x && pos_y >= min_y && pos_x <= (max_x+min_x) && pos_y <= (max_y + min_y )){
-				LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+            min_x = Monitors.rcMonitors[monitorIndex].left;
+            min_y = Monitors.rcMonitors[monitorIndex].top;
+            max_x = Monitors.rcMonitors[monitorIndex].right;
+            max_y = Monitors.rcMonitors[monitorIndex].bottom;
+            if (pos_x >= min_x && pos_y >= min_y && pos_x <= max_x && pos_y <= max_y ){
+				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
 				found = true;
 				x = min_x;
 				y = min_y;
-				w = max_x;
-				h = max_y;
-			}
-        }, NULL);
-    }
+				w = max_x - min_x;
+				h = max_y - min_y;
+			}else{
+				// LOG((CLOG_DEBUG "DAUN - missed display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+            }
+      }
+ }
     else if (pos_x > INT_MIN){
-        EnumDisplayMonitors(0, 0, (HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) => {
+         for (int monitorIndex=0;  monitorIndex < Monitors.iMonitors.size(); monitorIndex++)
+      {
             SInt32 min_x, min_y, max_x, max_y;
-            min_x = lprcMonitor.left;
-            min_y = lprcMonitor.top;
-            max_x = lprcMonitor.right;
-            max_y = lprcMonitor.bottom
+            min_x = Monitors.rcMonitors[monitorIndex].left;
+            min_y = Monitors.rcMonitors[monitorIndex].top;
+            max_x = Monitors.rcMonitors[monitorIndex].right;
+            max_y = Monitors.rcMonitors[monitorIndex].bottom;
 			if (pos_x >= min_x && pos_x <= max_x){
-				LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
 				found = true;
 				x = min_x;
 				y = min_y;
-				w = max_x;
-				h = max_y;
+				w = max_x - min_x;
+				h = max_y - min_y;
 			}
-        }, NULL);
-	}
+      }
+    }
 	else if (pos_y > INT_MIN){
-		EnumDisplayMonitors(0, 0, (HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) => {
+        for (int monitorIndex=0;  monitorIndex < Monitors.iMonitors.size(); monitorIndex++)
+      {
             SInt32 min_x, min_y, max_x, max_y;
-            min_x = lprcMonitor.left;
-            min_y = lprcMonitor.top;
-            max_x = lprcMonitor.right;
-            max_y = lprcMonitor.bottom
+            min_x = Monitors.rcMonitors[monitorIndex].left;
+            min_y = Monitors.rcMonitors[monitorIndex].top;
+            max_x = Monitors.rcMonitors[monitorIndex].right;
+            max_y = Monitors.rcMonitors[monitorIndex].bottom;
 			if (pos_y >= min_y && pos_y <= max_y){
-				LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
+				// LOG((CLOG_DEBUG "DAUN - found display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
 				found = true;
 				x = min_x;
 				y = min_y;
-				w = max_x;
-				h = max_y;
+				w = max_x - min_x;
+				h = max_y - min_y;
 			}
-        }, NULL);
+      }
 	}
 
     if (!found){
-        LOG((CLOG_DEBUG "DAUN - couldn't find display mousePOS(%d,%d)", pos_x, pos_y));
+        LOG((CLOG_DEBUG "DAUN - couldn't find display mousePOS(%d,%d) - return (%d,%d,%d,%d)", pos_x, pos_y, m_x, m_y, m_w, m_h));
         x = m_x;
         y = m_y;
         w = m_w;

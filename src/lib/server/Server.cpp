@@ -1432,6 +1432,9 @@ Server::handleMotionSecondaryEvent(const Event& event, void*)
 {
 	IPlatformScreen::MotionInfo* info =
 		static_cast<IPlatformScreen::MotionInfo*>(event.getData());
+	
+	// TODO: DAUN
+	// There is a bug that when window shape goes weird, this info->m_x or info->m_y returns weird.
 	onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
@@ -2036,6 +2039,7 @@ void
 Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 {
 	LOG((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
+	LOG((CLOG_DEBUG "DAUN - onMouseMoveSecondary %+d,%+d", dx, dy));
 
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
@@ -2151,7 +2155,7 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 		}
 
 		// try to switch screen.  get the neighbor.
-		LOG((CLOG_DEBUG "DAUN - MAPPING NEIGHBOR"));
+		LOG((CLOG_DEBUG "DAUN - MAPPING NEIGHBOR @(%d,%d)", m_x, m_y));
 		newScreen = mapToNeighbor(m_active, dir, m_x, m_y);
 		LOG((CLOG_DEBUG "DAUN - MAPPED NEIGHBOR"));
 
