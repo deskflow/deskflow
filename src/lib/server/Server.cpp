@@ -2039,7 +2039,6 @@ void
 Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 {
 	LOG((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
-	LOG((CLOG_DEBUG "DAUN - onMouseMoveSecondary %+d,%+d", dx, dy));
 
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
