@@ -875,6 +875,8 @@ void
 ServerProxy::queryInfo()
 {
     ClientInfo info;
+    
+    LOG((CLOG_DEBUG "Daun - server proxy query info"));
     m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
     m_client->getCursorPos(info.m_mx, info.m_my);
     sendInfo(info);

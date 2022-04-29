@@ -363,7 +363,7 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SI
 		}
 	}
 	if (!found){
-		LOG((CLOG_DEBUG "DAUN - couldn't find display mousePOS(%d,%d)", pos_x, pos_y));
+		LOG((CLOG_DEBUG "DAUN - OSX couldn't find display mousePOS(%d,%d)", pos_x, pos_y));
 		x = m_x;
 		y = m_y;
 		w = m_w;

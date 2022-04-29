@@ -744,11 +744,15 @@ Server::mapToNeighbor(BaseClientProxy* src,
 	// actual on exit from the search.
 	switch (srcSide) {
 	case kLeft:
+		LOG((CLOG_DEBUG "Daun - going left"));
 		x -= dx;
-		while (dst != NULL) {
+		LOG((CLOG_DEBUG "Daun - going left; move (%d)", x));
+		while (dst != NULL) {			
+			LOG((CLOG_DEBUG "Daun - going left, dst not null"));
 			lastGoodScreen = dst;
-			lastGoodScreen->getShape(dx, dy, dw, dh);
+			lastGoodScreen->getShape(dx, dy, dw, dh, INT_MIN, y);
 			x += dw;
+			LOG((CLOG_DEBUG "Daun - going left; move (%d)", x));
 			if (x >= 0) {
 				break;
 			}
@@ -757,6 +761,8 @@ Server::mapToNeighbor(BaseClientProxy* src,
 		}
 		assert(lastGoodScreen != NULL);
 		x += dx;
+		
+		LOG((CLOG_DEBUG "Daun - going left; over (%d)", x));
 		break;
 
 	case kRight:
@@ -764,7 +770,7 @@ Server::mapToNeighbor(BaseClientProxy* src,
 		while (dst != NULL) {
 			x -= dw;
 			lastGoodScreen = dst;
-			lastGoodScreen->getShape(dx, dy, dw, dh);
+			lastGoodScreen->getShape(dx, dy, dw, dh, INT_MIN, y);
 			if (x < dw) {
 				break;
 			}
@@ -779,7 +785,7 @@ Server::mapToNeighbor(BaseClientProxy* src,
 		y -= dy;
 		while (dst != NULL) {
 			lastGoodScreen = dst;
-			lastGoodScreen->getShape(dx, dy, dw, dh);
+			lastGoodScreen->getShape(dx, dy, dw, dh, x, INT_MIN);
 			y += dh;
 			if (y >= 0) {
 				break;
@@ -796,7 +802,7 @@ Server::mapToNeighbor(BaseClientProxy* src,
 		while (dst != NULL) {
 			y -= dh;
 			lastGoodScreen = dst;
-			lastGoodScreen->getShape(dx, dy, dw, dh);
+			lastGoodScreen->getShape(dx, dy, dw, dh, x, INT_MIN);
 			if (y < dh) {
 				break;
 			}
@@ -820,8 +826,12 @@ Server::mapToNeighbor(BaseClientProxy* src,
 	// to avoid the jump zone.  if entering a side that doesn't have
 	// a neighbor (i.e. an asymmetrical side) then we don't need to
 	// move inwards because that side can't provoke a jump.
+
+
+	LOG((CLOG_DEBUG "Daun - before avoiding JZ (%d,%d)", x, y));
 	avoidJumpZone(dst, srcSide, x, y);
 
+	LOG((CLOG_DEBUG "Daun - found neighbor (%d,%d)", x, y));
 	return dst;
 }
 
@@ -1435,7 +1445,7 @@ Server::handleMotionSecondaryEvent(const Event& event, void*)
 	
 	// TODO: DAUN
 	// There is a bug that when window shape goes weird, this info->m_x or info->m_y returns weird.
-	LOG((CLOG_DEBUG "DAUN - handling motion secondary event (%d,%d)", info->m_x, info->m_y));
+	// LOG((CLOG_DEBUG "DAUN - handling motion secondary event (%d,%d)", info->m_x, info->m_y));
 	onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
@@ -1910,8 +1920,9 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 		x = xs[i], y = ys[i];
 
 		// get jump destination
+		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position A (%d,%d)", x, y));
 		BaseClientProxy* newScreen = mapToNeighbor(m_active, dir, x, y);
-		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position (%d,%d)", x, y));
+		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position A (%d,%d)", x, y));
 		if (newScreen == m_active){
 			LOG((CLOG_DEBUG "DAUN - still same screen"));
 			return false;
@@ -2188,7 +2199,7 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 			LOG((CLOG_DEBUG "DAUN - newScreen null"));
 		}
 
-		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position (%d,%d)", m_x, m_y));
+		LOG((CLOG_DEBUG "DAUN - neighbour's mouse position B (%d,%d)", m_x, m_y));
 
 
 		// see if we should switch

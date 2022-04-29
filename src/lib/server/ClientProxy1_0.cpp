@@ -240,6 +240,8 @@ ClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
 void
 ClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SInt32 pos_y) const
 {
+    
+    // LOG((CLOG_DEBUG "Daun - client proxy 1_0 fetch"));
     x = m_info.m_x;
     y = m_info.m_y;
     w = m_info.m_w;
@@ -430,6 +432,7 @@ ClientProxy1_0::recvInfo()
         return false;
     }
     LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w, h, mx, my));
+// received client "ccc9675731c73cc73f14843f44d3ff58557134847dd5458560153c84522590e9" info shape=-1920,-1080 3600x2130 at 1679,0
 
     // validate
     if (w <= 0 || h <= 0) {
