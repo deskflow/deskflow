@@ -320,8 +320,8 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SI
 				found = true;
 				x = min_x;
 				y = min_y;
-				w = max_x;
-				h = max_y;
+				w = max_x + min_x;
+				h = max_y + min_y;
 			}else{
 				// LOG((CLOG_DEBUG "DAUN - missed display containing position %d, %d, %d, %d, mousePOS(%d, %d)", min_x, min_y, max_x, max_y, pos_x, pos_y));
 			}
@@ -340,8 +340,8 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SI
 				found = true;
 				x = min_x;
 				y = min_y;
-				w = max_x;
-				h = max_y;
+				w = max_x + min_x;
+				h = max_y + min_y;
 			}
 		}
 	}
@@ -357,8 +357,8 @@ OSXScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h, SInt32 pos_x, SI
 				found = true;
 				x = min_x;
 				y = min_y;
-				w = max_x;
-				h = max_y;
+				w = max_x + min_x;
+				h = max_y + min_y;
 			}
 		}
 	}
