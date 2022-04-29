@@ -1435,6 +1435,7 @@ Server::handleMotionSecondaryEvent(const Event& event, void*)
 	
 	// TODO: DAUN
 	// There is a bug that when window shape goes weird, this info->m_x or info->m_y returns weird.
+	LOG((CLOG_DEBUG "DAUN - handling motion secondary event (%d,%d)", info->m_x, info->m_y));
 	onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
