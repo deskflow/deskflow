@@ -6,6 +6,7 @@ Enhancements:
 
 Bug fixes:
 - #7144 Fix double lines when pasting text from Linux to Windows
+- #7149 Address issues with modifiers and dead keys
 
 Github Actions:
 - #7148 Fix unstable build for windows core

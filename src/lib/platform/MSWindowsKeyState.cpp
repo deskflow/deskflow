@@ -1367,9 +1367,20 @@ MSWindowsKeyState::getIDForKey(synergy::KeyMap::KeyItem& item,
 	KeyID id = static_cast<KeyID>(unicode[0]);
 
 	switch (n) {
-	case -1:
-		return synergy::KeyMap::getDeadKey(id);
+	case -1: {
+		// dead key. add an space to the keyboard so we exit
+		// the dead key mode and future calls to this function
+		// with different modifiers are not affected.
 
+		BYTE emptyState[256] = { };
+		n = m_ToUnicodeEx(VK_SPACE, 0, emptyState, unicode,
+			sizeof(unicode) / sizeof(unicode[0]), 0, hkl);
+
+		// as an alternative, we could use the returned
+		// buffer in unicode to look at the dead key character
+		// and not rely on getDeadKey to provide the mapping
+		return synergy::KeyMap::getDeadKey(id);
+	}
 	default:
 	case 0:
 		// unmapped
