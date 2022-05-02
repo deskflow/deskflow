@@ -2,6 +2,9 @@ v1.14.4-snapshot
 ===========
 Enhancements:
 - #7143 Add ability to stop synergy on the login screen
+
+Bug fixes:
+- #7149 Address issues with modifiers and dead keys
 ===========
 
 v1.14.3-snapshot
