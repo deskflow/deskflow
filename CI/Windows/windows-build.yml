@@ -60,9 +60,12 @@ steps:
       cd build64
       IF "$(buildType)"=="enterprise" (
           cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DSYNERGY_ENTERPRISE=ON ..
+      ) else IF "$(buildType)"=="business" (
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON ..
       ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release ..
+        cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release ..
       )
+
     displayName: 'Cmake x64 Standard'
     env:
       ENV_BAT: $(ENV_BAT)
@@ -212,29 +215,29 @@ steps:
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Azure on Sandor'
+      sshEndpoint: 'Binary Storage'
       sourceFolder: '$(Build.ArtifactStagingDirectory)/'
       contents: '*.zip'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      targetFolder: '$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
-    displayName: 'Send archives to sandor'
+    displayName: 'Send archives to Binary Storage'
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Azure on Sandor'
+      sshEndpoint: 'Binary Storage'
       sourceFolder: '$(Build.Repository.LocalPath)\build32\installer\bin\Release\'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      targetFolder: '$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
-    displayName: 'Send x86 Package to sandor'
+    displayName: 'Send x86 package to Binary Storage'
 
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Azure on Sandor'
+      sshEndpoint: 'Binary Storage'
       sourceFolder: '$(Build.Repository.LocalPath)\build64\installer\bin\Release\'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      targetFolder: '$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
-    displayName: 'Send x64 Package to sandor'
+    displayName: 'Send x64 package to Binary Storage'

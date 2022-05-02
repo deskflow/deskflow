@@ -10,6 +10,27 @@ const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
 const std::string SerialKeyEdition::BUSINESS = "business";
 const std::string SerialKeyEdition::UNREGISTERED = "unregistered";
 
+namespace {
+
+const std::map<std::string, Edition>& getSerialTypes()
+{
+#ifdef SYNERGY_BUSINESS
+    static const std::map<std::string, Edition> serialTypes = {
+        {SerialKeyEdition::BUSINESS, kBusiness}
+    };
+#else
+    static const std::map<std::string, Edition> serialTypes {
+        {SerialKeyEdition::BASIC, kBasic},
+        {SerialKeyEdition::PRO, kPro},
+        {SerialKeyEdition::BASIC_CHINA, kBasic_China},
+        {SerialKeyEdition::PRO_CHINA, kPro_China}
+    };
+#endif
+    return serialTypes;
+}
+
+} //namespace
+
 SerialKeyEdition::SerialKeyEdition()
 {
 
@@ -103,14 +124,7 @@ SerialKeyEdition::setType(Edition type)
 void
 SerialKeyEdition::setType(const std::string& type)
 {
-    static const std::map<std::string, Edition> types = {
-        {BASIC, kBasic},
-        {PRO, kPro},
-        {BUSINESS, kBusiness},
-        {BASIC_CHINA, kBasic_China},
-        {PRO_CHINA, kPro_China}
-    };
-
+    auto types = getSerialTypes();
     const auto& pType = types.find(type);
 
     if (pType != types.end()) {
@@ -119,4 +133,10 @@ SerialKeyEdition::setType(const std::string& type)
     else {
         m_Type = kUnregistered;
     }
+}
+
+bool SerialKeyEdition::isValid() const
+{
+    auto types = getSerialTypes();
+    return (types.find(getName()) != types.end());
 }

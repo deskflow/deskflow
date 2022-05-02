@@ -6,14 +6,27 @@ on:
 
 jobs:
   build-on-mac-10_13:
-    runs-on: [self-hosted, macOS, X64, 10.13]
+    runs-on: [self-hosted, macOS, X64, "10.13"]
 
     strategy:
       matrix:
-        enterprise: ['1', '']
+        include:
+          - name: "synergy"
+            remote_folder: "v1-core-standard"
+            enterprise: ""
+            business: ""
+          - name: "synergy-enterprise"
+            remote_folder: "v1-core-enterprise"
+            enterprise: "1"
+            business: ""
+          - name: "synergy-business"
+            remote_folder: "v1-core-business"
+            enterprise: ""
+            business: "1"
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
+      SYNERGY_BUSINESS: ${{ matrix.business }}
       Qt5_DIR: /usr/local/opt/qt/5.15.2/clang_64
       OpenSSL_DIR: /usr/local/ssl
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
@@ -24,7 +37,7 @@ jobs:
       - name: Setup Environment
         run: |
           python3 -m pip install dmgbuild
-      
+
       - name: Build SYNERGY
         env:
           CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
@@ -57,14 +70,8 @@ jobs:
           echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
           echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
           echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
-          if [ "$SYNERGY_ENTERPRISE" == '1' ]
-          then
-            SYNERGY_PACKAGE_NAME='synergy-enterprise'
-            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-enterprise/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
-          else
-            SYNERGY_PACKAGE_NAME='synergy'
-            SYNERGY_REMOTE_FOLDER="synergy-core/v1-core-standard/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
-          fi
+          SYNERGY_PACKAGE_NAME=${{ matrix.name }}
+          SYNERGY_REMOTE_FOLDER="${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
           SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-10.13_x86-64.dmg"
           echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
@@ -106,15 +113,11 @@ jobs:
           cd pkg
           ../CI/MacOS/notorize.sh
 
-      - name: Send package to Sandor
-        env:
-          HOST: ${{ secrets.SANDOR_HOST }}
-          USER: ${{ secrets.SANDOR_USERNAME }}
-          KEY: ${{ secrets.SANDOR_KEY }}
-          LOCAL: "${{ github.workspace }}/pkg/*"
-          REMOTE: "${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}"
-        run: |
-          echo -e "${KEY}" >__TEMP_INPUT_KEY_FILE
-          chmod 600 __TEMP_INPUT_KEY_FILE
-          ssh -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -p 22 "${USER}"@"${HOST}" "mkdir -p ${REMOTE}"
-          scp -o StrictHostKeyChecking=no -v -i __TEMP_INPUT_KEY_FILE -P 22 -r ${LOCAL} "${USER}"@"${HOST}":"${REMOTE}"
+      - name: Send package to Binary Storage
+        uses: garygrossgarten/github-action-scp@v0.7.3
+        with:
+          local: "${{ github.workspace }}/pkg/"
+          remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
+          host: ${{ secrets.BINARIES_SSH_HOST }}
+          username: ${{ secrets.BINARIES_SSH_USER }}
+          privateKey: ${{ secrets.BINARIES_SSH_KEY }}

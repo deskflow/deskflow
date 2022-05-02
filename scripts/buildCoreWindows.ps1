@@ -95,16 +95,15 @@ New-Item `
 Push-Location $env:SYNERGY_BUILD_DIRECTORY
 Try {
   cmake `
-    -G "Visual Studio 16 2019" `
     -DCMAKE_BUILD_TYPE=$env:SYNERGY_BUILD_TYPE `
     ..
-
+  . ./version
   msbuild synergy-core.sln `
-    /p:Platform="x64" `
     /p:Configuration=$env:SYNERGY_BUILD_TYPE `
-    /m `
-    /t:synergys `
-    /t:synergyc
+    /p:Platform="x64" `
+    /m
+
+  Remove-Item -Force -Path "synergy-core-win-x64.zip" -ErrorAction SilentlyContinue
   Compress-Archive `
     -Path ".\bin\${env:SYNERGY_BUILD_TYPE}\*" `
     -DestinationPath "synergy-core-win-x64.zip"

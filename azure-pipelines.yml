@@ -85,6 +85,12 @@ jobs:
           version: 10.14
           buildType: "enterprise"
           prefix: "synergy-enterprise"
+        catalina-business:
+          image: macOS-10.15
+          platform: x86-64
+          version: 10.14
+          buildType: "business"
+          prefix: "synergy-business"
     pool:
       vmImage: $[ variables['image'] ]
 
@@ -108,6 +114,10 @@ jobs:
           image: windows-2019
           buildType: "enterprise"
           prefix: "synergy-enterprise"
+        vs2019business:
+          image: windows-2019
+          buildType: "business"
+          prefix: "synergy-business"
 
     pool:
       vmImage: $[ variables['image'] ]
