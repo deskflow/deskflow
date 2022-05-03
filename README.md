@@ -29,5 +29,5 @@ Not for the faint hearted. Only use these if you know what you're doing.
 
 ## Synergy Vintage
 
-For vintage computer enthusiasts, [https://github.com/nbolton/synergy-vintage](Synergy Vintage) aims to keep the origins of Synergy alive.
+For vintage computer enthusiasts, [Synergy Vintage](https://github.com/nbolton/synergy-vintage) aims to keep the origins of Synergy alive.
 You can use Synergy Vintage on operating systems available from 1995 to 2006.
