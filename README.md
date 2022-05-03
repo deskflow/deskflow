@@ -27,3 +27,7 @@ Not for the faint hearted. Only use these if you know what you're doing.
 * [Text Config](https://github.com/symless/synergy-core/wiki/Text-Config) - Write a text config file when running Synergy Core manually.
 * [Command Line](https://github.com/symless/synergy-core/wiki/Command-Line) - Go full manual and run Synergy Core from the command line.
 
+## Synergy Vintage
+
+For vintage computer enthusiasts, [https://github.com/nbolton/synergy-vintage](Synergy Vintage) aims to keep the origins of Synergy alive.
+You can use Synergy Vintage on operating systems available from 1995 to 2006.
