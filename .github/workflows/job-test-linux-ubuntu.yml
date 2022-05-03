@@ -14,7 +14,7 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
     strategy:
       matrix:
-        distro: ['20.04', '21.04', '18.04']
+        distro: ['22.04', '20.04', '18.04']
         flag: ['-j']
         include:
           - distro: '16.04'

@@ -17,6 +17,7 @@ jobs:
         include:
           - distro: debian9
           - distro: debian10
+          - distro: debian11
 
     name: ${{ matrix.distro }}
 
