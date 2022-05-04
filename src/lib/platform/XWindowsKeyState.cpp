@@ -273,7 +273,9 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
 
     if(!reply.isValid()) {
         auto qerror = reply.error();
-        LOG((CLOG_WARN "Keyboard layout fail %s : %s", qerror.name().toStdString(), qerror.message().toStdString()));
+        LOG((CLOG_WARN "Keyboard layout fail %s : %s",
+                qerror.name().toStdString().c_str(),
+                qerror.message().toStdString().c_str()));
         return true;
     }
 
