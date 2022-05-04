@@ -15,11 +15,11 @@ jobs:
     strategy:
       matrix:
         include:
-#          - distro: fedora28 #Need to install git 2.18+
           - distro: fedora29
           - distro: fedora30
           - distro: fedora33
           - distro: fedora34
+          - distro: fedora35
 
     name: ${{ matrix.distro }}
 

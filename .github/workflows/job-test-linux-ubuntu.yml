@@ -14,7 +14,7 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
     strategy:
       matrix:
-        distro: ['20.04', '21.04', '18.04']
+        distro: ['22.04', '20.04', '18.04']
         flag: ['-j']
         include:
           - distro: '16.04'
@@ -25,6 +25,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      
+      - name: Work around https://github.com/actions/checkout/issues/766
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Build
         run: |

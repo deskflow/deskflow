@@ -27,6 +27,10 @@ jobs:
           image: symless/synergy-core:ubuntu21.04
           packager: deb
           name: ubuntu21
+        ubuntu2204:
+          image: symless/synergy-core:ubuntu22.04
+          packager: deb
+          name: ubuntu22
         debian9:
           image: symless/synergy-core:debian9
           packager: deb
@@ -35,6 +39,10 @@ jobs:
           image: symless/synergy-core:debian10
           packager: deb
           name: debian10
+        debian11:
+          image: symless/synergy-core:debian11
+          packager: deb
+          name: debian11
         fedora28:
           image: symless/synergy-core:fedora28
           packager: rpm
@@ -55,6 +63,10 @@ jobs:
           image: symless/synergy-core:fedora34
           packager: rpm
           name: fedora34
+        fedora35:
+          image: symless/synergy-core:fedora35
+          packager: rpm
+          name: fedora35
         centos7.6:
           image: symless/synergy-core:centos7.6
           packager: rpm
