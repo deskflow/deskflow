@@ -910,13 +910,13 @@ OSXKeyState::handleModifierKey(void* target,
 }
 
 bool
-OSXKeyState::getGroups(GroupList& groups) const
+OSXKeyState::getGroups(AutoCFArray& groups) const
 {
     // get number of layouts
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
     AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL), CFRelease);
-    GroupList kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
+    AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
     if (CFArrayGetCount(kbds.get()) > 0) {
         groups = std::move(kbds);

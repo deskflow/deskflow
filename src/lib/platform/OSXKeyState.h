@@ -22,6 +22,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
+#include "OSXAutoTypes.h"
 
 #include <Carbon/Carbon.h>
 
@@ -107,11 +108,6 @@ protected:
 
 private:
     class KeyResource;
-    typedef void(*CFDeallocator)(CFTypeRef);
-    typedef std::unique_ptr<const __CFArray, CFDeallocator> GroupList;
-    typedef std::unique_ptr<const __CFDictionary, CFDeallocator> AutoCFDictionary;
-    typedef std::unique_ptr<__TISInputSource, CFDeallocator> AutoTISInputSourceRef;
-
 
     // Add hard coded special keys to a synergy::KeyMap.
     void                getKeyMapForSpecialKeys(
@@ -122,7 +118,7 @@ private:
                             SInt32 group, const IOSXKeyResource& r) const;
 
     // Get the available keyboard groups
-    bool                getGroups(GroupList&) const;
+    bool                getGroups(AutoCFArray&) const;
 
     // Change active keyboard group to group
     void                setGroup(SInt32 group);
@@ -176,9 +172,9 @@ private:
     typedef std::map<CFDataRef, SInt32> GroupMap;
     typedef std::map<UInt32, KeyID> VirtualKeyMap;
 
-    VirtualKeyMap        m_virtualKeyMap;
-    mutable UInt32        m_deadKeyState;
-    GroupList           m_groups{nullptr, CFRelease};
+    VirtualKeyMap       m_virtualKeyMap;
+    mutable UInt32      m_deadKeyState;
+    AutoCFArray         m_groups{nullptr, CFRelease};
     GroupMap            m_groupMap;
     bool                m_shiftPressed;
     bool                m_controlPressed;
