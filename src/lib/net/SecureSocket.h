@@ -67,6 +67,7 @@ private:
     // SSL
     void                initContext(bool server);
     void                createSSL();
+    void                freeSSL();
     int                 secureAccept(int s);
     int                 secureConnect(int s);
     bool                showCertificate();
@@ -90,7 +91,7 @@ private:
     void                showSecureConnectInfo();
     void                showSecureLibInfo();
     void                showSecureCipherInfo();
-    
+
     void                handleTCPConnected(const Event& event, void*);
 
 private:
