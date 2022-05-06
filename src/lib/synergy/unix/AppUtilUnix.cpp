@@ -25,6 +25,7 @@
 #include <X11/XKBlib.h>
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
+#include <platform/OSXAutoTypes.h>
 #else
 #error Platform not supported.
 #endif
@@ -71,11 +72,11 @@ AppUtilUnix::getKeyboardLayoutList()
 #elif WINAPI_CARBON
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
-    CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
-    CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+    AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL), CFRelease);
+    AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
-    for (CFIndex i = 0; i < CFArrayGetCount(kbds); ++i) {
-        TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
+    for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
+        TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds.get(), i);
         auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
         char temporaryCString[128] = {0};
         for(CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
