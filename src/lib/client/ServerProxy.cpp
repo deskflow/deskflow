@@ -976,7 +976,7 @@ ServerProxy::setActiveServerLanguage(const String& language)
 
         if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
             if(!m_isUserNotifiedAboutLanguageSyncError) {
-                AppUtil::instance().showNotification("Language error", "Current server language is not installed on client.");
+                LOG((CLOG_WARN "Current server language is not installed on client."));
                 m_isUserNotifiedAboutLanguageSyncError = true;
             }
         }
@@ -994,8 +994,8 @@ ServerProxy::checkMissedLanguages() const
 {
     auto missedLanguages = m_languageManager.getMissedLanguages();
     if (!missedLanguages.empty()) {
-        AppUtil::instance().showNotification("Language synchronization error",
-              "You need to install these languages on this computer and restart Synergy to enable support for multiple languages: "
-              + missedLanguages);
+        LOG((CLOG_WARN
+             "You need to install these languages on this computer and restart Synergy to enable support for multiple languages: %s",
+             missedLanguages.c_str()));
     }
 }
