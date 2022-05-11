@@ -95,7 +95,7 @@ steps:
     displayName: "Setup variables"
 
   - script: |
-      dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+      python3 CI/deb_changelog.py synergy "$(SYNERGY_DEB_VERSION)" unstable
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir standard_package
@@ -115,7 +115,7 @@ steps:
 
   - script: |
       export SYNERGY_ENTERPRISE=1
-      dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
+      python3 CI/deb_changelog.py synergy-enterprise "$(SYNERGY_DEB_VERSION)" unstable
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir enterprise_package
@@ -135,7 +135,7 @@ steps:
 
   - script: |
       export SYNERGY_BUSINESS=1
-      dch --create --package "synergy-business_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
+      python3 CI/deb_changelog.py synergy-business "$(SYNERGY_DEB_VERSION)" unstable
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir business_package
