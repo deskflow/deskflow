@@ -16,6 +16,7 @@ Github Actions:
 - #7156 Change binary storage server
 - #7161 Use brew bundle to install dependencies
 - #7162 Add new distributions to CI
+- #7167 Use changelog when creating deb files
 ===========
 
 v1.14.3-snapshot
