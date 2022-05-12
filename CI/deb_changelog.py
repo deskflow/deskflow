@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from datetime import datetime, timezone
+import re
 
 IGNORE_SEGMENTS = ['Github Actions:']
 
@@ -11,6 +12,7 @@ if __name__ == '__main__':
   parser.add_argument('-u', '--urgency', type=str, default='low', help='Urgency of the package')
   args = parser.parse_args()
   build_time = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S %z') # day-of-week, dd month yyyy hh:mm:ss +zzzz
+  version_str = re.match('^(\d+.\d+.\d+).*$', args.version)[1]
   with open('ChangeLog', 'r') as in_file, open('debian/changelog', 'w+') as out_file:
     out_file.write(f'{args.name} ({args.version}) {args.distribution}; urgency={args.urgency}\n')
     in_section = False
@@ -18,7 +20,7 @@ if __name__ == '__main__':
     
     while line := in_file.readline():
       if line.startswith('v'):
-        if line.startswith(f'v{args.version}'):
+        if line.startswith(f'v{version_str}'):
           in_section = True
         elif in_section:
           break
