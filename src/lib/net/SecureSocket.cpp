@@ -684,12 +684,11 @@ SecureSocket::verifyCertFingerprint()
 {
     // calculate received certificate fingerprint
     using AutoX509 = std::unique_ptr<X509, decltype (&X509_free)>;
-    AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), X509_free);
+    AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), &X509_free);
 
     unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
     unsigned int tempFingerprintLen;
-    EVP_MD* tempDigest = (EVP_MD*)EVP_sha256();
-    int digestResult = X509_digest(cert.get(), tempDigest, tempFingerprint, &tempFingerprintLen);
+    int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
     if (digestResult <= 0) {
         LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
