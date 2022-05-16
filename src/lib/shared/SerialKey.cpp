@@ -217,9 +217,55 @@ SerialKey::decode(const std::string& serial)
 }
 
 bool
-SerialKey::parse(std::string plainSerial)
+SerialKey::parse(const std::string& plainSerial)
 {
     bool valid = false;
+    const auto parts = splitToParts(plainSerial);
+
+    if ((parts.size() == 8) && (parts.at(0).find("v1") != string::npos)) {
+        parseV1(parts);
+        valid = true;
+    }
+    else if ((parts.size() == 9) && (parts.at(0).find("v2") != string::npos)) {
+        parseV2(parts);
+        valid = true;
+    }
+
+    return valid;
+}
+
+void
+SerialKey::parseV1(const std::vector<std::string>& parts)
+{
+    // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
+    m_edition.setType(parts.at(1));
+    m_name = parts.at(2);
+    sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
+    m_email = parts.at(4);
+    m_company = parts.at(5);
+    sscanf(parts.at(6).c_str(), "%lld", &m_warnTime);
+    sscanf(parts.at(7).c_str(), "%lld", &m_expireTime);
+}
+
+void
+SerialKey::parseV2(const std::vector<std::string>& parts)
+{
+    // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
+    m_KeyType.setKeyType(parts.at(1));
+    m_edition.setType(parts.at(2));
+    m_name = parts.at(3);
+    sscanf(parts.at(4).c_str(), "%d", &m_userLimit);
+    m_email = parts.at(5);
+    m_company = parts.at(6);
+    sscanf(parts.at(7).c_str(), "%lld", &m_warnTime);
+    sscanf(parts.at(8).c_str(), "%lld", &m_expireTime);
+}
+
+std::vector<std::string>
+SerialKey::splitToParts(const std::string& plainSerial) const
+{
+    // tokenize serialised subscription.
+    vector<string> parts;
 
     if (!plainSerial.empty()) {
         string parityStart = plainSerial.substr(0, 1);
@@ -227,50 +273,22 @@ SerialKey::parse(std::string plainSerial)
 
         // check for parity chars { and }, record parity result, then remove them.
         if (parityStart == "{" && parityEnd == "}") {
-            plainSerial = plainSerial.substr(1, plainSerial.length() - 2);
+            const auto serialData = plainSerial.substr(1, plainSerial.length() - 2);
 
-            // tokenize serialised subscription.
-            vector<string> parts;
             std::string::size_type pos = 0;
             bool look = true;
             while (look) {
                 std::string::size_type start = pos;
-                pos = plainSerial.find(";", pos);
+                pos = serialData.find(";", pos);
                 if (pos == string::npos) {
-                    pos = plainSerial.length();
+                    pos = serialData.length();
                     look = false;
                 }
-                parts.push_back(plainSerial.substr(start, pos - start));
+                parts.push_back(serialData.substr(start, pos - start));
                 pos += 1;
-            }
-
-            if ((parts.size() == 8)
-                    && (parts.at(0).find("v1") != string::npos)) {
-                // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
-                m_edition.setType(parts.at(1));
-                m_name = parts.at(2);
-                sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
-                m_email = parts.at(4);
-                m_company = parts.at(5);
-                sscanf(parts.at(6).c_str(), "%lld", &m_warnTime);
-                sscanf(parts.at(7).c_str(), "%lld", &m_expireTime);
-                valid = true;
-            }
-            else if ((parts.size() == 9)
-                     && (parts.at(0).find("v2") != string::npos)) {
-                // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
-                m_KeyType.setKeyType(parts.at(1));
-                m_edition.setType(parts.at(2));
-                m_name = parts.at(3);
-                sscanf(parts.at(4).c_str(), "%d", &m_userLimit);
-                m_email = parts.at(5);
-                m_company = parts.at(6);
-                sscanf(parts.at(7).c_str(), "%lld", &m_warnTime);
-                sscanf(parts.at(8).c_str(), "%lld", &m_expireTime);
-                valid = true;
             }
         }
     }
 
-    return valid;
+    return parts;
 }

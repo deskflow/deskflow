@@ -46,7 +46,10 @@ public:
     static std::string  decode(const std::string& serial);
 
 private:
-    bool                parse(std::string plainSerial);
+    bool                parse(const std::string& plainSerial);
+    void                parseV1(const std::vector<std::string>& parts);
+    void                parseV2(const std::vector<std::string>& parts);
+    std::vector<std::string> splitToParts(const std::string& plainSerial) const;
 
 #ifdef TEST_ENV
 private:
