@@ -68,6 +68,7 @@ private:
     unsigned long long    m_expireTime;
     SerialKeyEdition      m_edition;
     SerialKeyType         m_KeyType;
+    std::string           m_serial;
 };
 
 

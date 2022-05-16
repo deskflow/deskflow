@@ -18,12 +18,9 @@
 #include "SerialKey.h"
 
 #include <vector>
-#include <sstream>
-#include <iomanip>
 #include "SerialKeyEdition.h"
 
 using namespace std;
-static std::string hexEncode (std::string const& str);
 
 SerialKey::SerialKey(Edition edition):
     m_userLimit(1),
@@ -37,9 +34,10 @@ SerialKey::SerialKey(const std::string& serial) :
     m_userLimit(1),
     m_warnTime(0),
     m_expireTime(0),
-    m_edition(kBasic)
+    m_edition(kBasic),
+    m_serial(serial)
 {
-    string plainText = decode(serial);
+    string plainText = decode(m_serial);
 
     if (!parse(plainText)) {
         throw std::runtime_error ("Invalid serial key");
@@ -107,43 +105,10 @@ SerialKey::edition() const
     return m_edition.getType();
 }
 
-static std::string
-hexEncode (std::string const& str) {
-    std::ostringstream oss;
-    for (size_t i = 0; i < str.size(); ++i) {
-        unsigned c = str[i];
-        c %= 256;
-        oss << std::setfill('0') << std::hex << std::setw(2)
-            << std::uppercase;
-        oss << c;
-    }
-    return oss.str();
-}
-
 std::string
 SerialKey::toString() const
 {
-    std::ostringstream oss;
-    oss << "{";
-    if (isTemporary()) {
-        if (isTrial()){
-            oss << "v2;" << SerialKeyType::TRIAL << ";";
-        }
-        else{
-            oss << "v2;" << SerialKeyType::SUBSCRIPTION << ";";
-        }
-    } else {
-        oss << "v1;";
-    }
-    oss << m_edition.getName() << ";";
-    oss << m_name << ";";
-    oss << m_userLimit << ";";
-    oss << m_email << ";";
-    oss << m_company << ";";
-    oss << (isTemporary() ? m_warnTime : 0) << ";";
-    oss << (isTemporary() ? m_expireTime : 0);
-    oss << "}";
-    return hexEncode(oss.str());
+    return m_serial;
 }
 
 time_t
