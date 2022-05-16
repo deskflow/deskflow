@@ -20,8 +20,6 @@
 #include <vector>
 #include "SerialKeyEdition.h"
 
-using namespace std;
-
 SerialKey::SerialKey(Edition edition):
     m_userLimit(1),
     m_warnTime(ULLONG_MAX),
@@ -37,7 +35,7 @@ SerialKey::SerialKey(const std::string& serial) :
     m_edition(kBasic),
     m_serial(serial)
 {
-    string plainText = decode(m_serial);
+    std::string plainText = decode(m_serial);
 
     if (!parse(plainText)) {
         throw std::runtime_error ("Invalid serial key");
@@ -151,7 +149,7 @@ std::string
 SerialKey::decode(const std::string& serial)
 {
     static const char* const lut = "0123456789ABCDEF";
-    string output;
+    std::string output;
     size_t len = serial.length();
     if (len & 1) {
         return output;
@@ -182,11 +180,11 @@ SerialKey::parse(const std::string& plainSerial)
     bool valid = false;
     const auto parts = splitToParts(plainSerial);
 
-    if ((parts.size() == 8) && (parts.at(0).find("v1") != string::npos)) {
+    if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
         parseV1(parts);
         valid = true;
     }
-    else if ((parts.size() == 9) && (parts.at(0).find("v2") != string::npos)) {
+    else if ((parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
         parseV2(parts);
         valid = true;
     }
@@ -225,11 +223,11 @@ std::vector<std::string>
 SerialKey::splitToParts(const std::string& plainSerial) const
 {
     // tokenize serialised subscription.
-    vector<string> parts;
+    std::vector<std::string> parts;
 
     if (!plainSerial.empty()) {
-        string parityStart = plainSerial.substr(0, 1);
-        string parityEnd = plainSerial.substr(plainSerial.length() - 1, 1);
+        std::string parityStart = plainSerial.substr(0, 1);
+        std::string parityEnd = plainSerial.substr(plainSerial.length() - 1, 1);
 
         // check for parity chars { and }, record parity result, then remove them.
         if (parityStart == "{" && parityEnd == "}") {
@@ -240,7 +238,7 @@ SerialKey::splitToParts(const std::string& plainSerial) const
             while (look) {
                 std::string::size_type start = pos;
                 pos = serialData.find(";", pos);
-                if (pos == string::npos) {
+                if (pos == std::string::npos) {
                     pos = serialData.length();
                     look = false;
                 }
