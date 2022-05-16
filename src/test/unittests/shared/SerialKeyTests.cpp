@@ -43,8 +43,8 @@ TEST(SerialKeyTests, decode_validSerial_returnPlainText)
 TEST(SerialKeyTests, parse_noParty_invalid)
 {
     SerialKey serial;
-    bool r = serial.parse("MOCK");
-    EXPECT_FALSE(r);
+    EXPECT_FALSE(serial.parse("MOCK"));
+    EXPECT_FALSE(serial.parse(""));
 }
 
 TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid)

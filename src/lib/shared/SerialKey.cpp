@@ -38,18 +38,15 @@ SerialKey::SerialKey(Edition edition):
 {
 }
 
-SerialKey::SerialKey(std::string serial) :
+SerialKey::SerialKey(const std::string& serial) :
     m_userLimit(1),
     m_warnTime(0),
     m_expireTime(0),
     m_edition(kBasic)
 {
     string plainText = decode(serial);
-    bool valid = false;
-    if (!plainText.empty()) {
-        valid = parse(plainText);
-    }
-    if (!valid) {
+
+    if (!parse(plainText)) {
         throw std::runtime_error ("Invalid serial key");
     }
 }
@@ -191,12 +188,6 @@ SerialKey::getSpanLeft(time_t time) const
 }
 
 std::string
-SerialKey::email() const
-{
-    return m_email;
-}
-
-std::string
 SerialKey::decode(const std::string& serial)
 {
     static const char* const lut = "0123456789ABCDEF";
@@ -228,54 +219,56 @@ SerialKey::decode(const std::string& serial)
 bool
 SerialKey::parse(std::string plainSerial)
 {
-    string parityStart = plainSerial.substr(0, 1);
-    string parityEnd = plainSerial.substr(plainSerial.length() - 1, 1);
-
     bool valid = false;
 
-    // check for parity chars { and }, record parity result, then remove them.
-    if (parityStart == "{" && parityEnd == "}") {
-        plainSerial = plainSerial.substr(1, plainSerial.length() - 2);
+    if (!plainSerial.empty()) {
+        string parityStart = plainSerial.substr(0, 1);
+        string parityEnd = plainSerial.substr(plainSerial.length() - 1, 1);
 
-        // tokenize serialised subscription.
-        vector<string> parts;
-        std::string::size_type pos = 0;
-        bool look = true;
-        while (look) {
-            std::string::size_type start = pos;
-            pos = plainSerial.find(";", pos);
-            if (pos == string::npos) {
-                pos = plainSerial.length();
-                look = false;
+        // check for parity chars { and }, record parity result, then remove them.
+        if (parityStart == "{" && parityEnd == "}") {
+            plainSerial = plainSerial.substr(1, plainSerial.length() - 2);
+
+            // tokenize serialised subscription.
+            vector<string> parts;
+            std::string::size_type pos = 0;
+            bool look = true;
+            while (look) {
+                std::string::size_type start = pos;
+                pos = plainSerial.find(";", pos);
+                if (pos == string::npos) {
+                    pos = plainSerial.length();
+                    look = false;
+                }
+                parts.push_back(plainSerial.substr(start, pos - start));
+                pos += 1;
             }
-            parts.push_back(plainSerial.substr(start, pos - start));
-            pos += 1;
-        }
 
-        if ((parts.size() == 8)
-                && (parts.at(0).find("v1") != string::npos)) {
-            // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
-            m_edition.setType(parts.at(1));
-            m_name = parts.at(2);
-            sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
-            m_email = parts.at(4);
-            m_company = parts.at(5);
-            sscanf(parts.at(6).c_str(), "%lld", &m_warnTime);
-            sscanf(parts.at(7).c_str(), "%lld", &m_expireTime);
-            valid = true;
-        }
-        else if ((parts.size() == 9)
-                 && (parts.at(0).find("v2") != string::npos)) {
-            // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
-            m_KeyType.setKeyType(parts.at(1));
-            m_edition.setType(parts.at(2));
-            m_name = parts.at(3);
-            sscanf(parts.at(4).c_str(), "%d", &m_userLimit);
-            m_email = parts.at(5);
-            m_company = parts.at(6);
-            sscanf(parts.at(7).c_str(), "%lld", &m_warnTime);
-            sscanf(parts.at(8).c_str(), "%lld", &m_expireTime);
-            valid = true;
+            if ((parts.size() == 8)
+                    && (parts.at(0).find("v1") != string::npos)) {
+                // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
+                m_edition.setType(parts.at(1));
+                m_name = parts.at(2);
+                sscanf(parts.at(3).c_str(), "%d", &m_userLimit);
+                m_email = parts.at(4);
+                m_company = parts.at(5);
+                sscanf(parts.at(6).c_str(), "%lld", &m_warnTime);
+                sscanf(parts.at(7).c_str(), "%lld", &m_expireTime);
+                valid = true;
+            }
+            else if ((parts.size() == 9)
+                     && (parts.at(0).find("v2") != string::npos)) {
+                // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
+                m_KeyType.setKeyType(parts.at(1));
+                m_edition.setType(parts.at(2));
+                m_name = parts.at(3);
+                sscanf(parts.at(4).c_str(), "%d", &m_userLimit);
+                m_email = parts.at(5);
+                m_company = parts.at(6);
+                sscanf(parts.at(7).c_str(), "%lld", &m_warnTime);
+                sscanf(parts.at(8).c_str(), "%lld", &m_expireTime);
+                valid = true;
+            }
         }
     }
 

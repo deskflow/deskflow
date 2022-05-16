@@ -31,7 +31,7 @@ class SerialKey {
     friend bool operator== (SerialKey const&, SerialKey const&);
 public:
     explicit SerialKey(Edition edition = kUnregistered);
-    explicit SerialKey(std::string serial);
+    explicit SerialKey(const std::string& serial);
 
     bool                isExpiring(time_t currentTime) const;
     bool                isExpired(time_t currentTime) const;
@@ -40,7 +40,6 @@ public:
     bool                isValid() const;
     time_t              daysLeft(time_t currentTime) const;
     int                 getSpanLeft(time_t time = ::time(0)) const;
-    std::string         email() const;
     Edition             edition() const;
     std::string         toString() const;
 
