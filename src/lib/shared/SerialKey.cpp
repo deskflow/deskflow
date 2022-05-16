@@ -17,14 +17,9 @@
 
 #include "SerialKey.h"
 
-#include <fstream>
-#include <iostream>
-#include <algorithm>
 #include <vector>
-#include <climits>
 #include <sstream>
 #include <iomanip>
-#include <stdexcept>
 #include "SerialKeyEdition.h"
 
 using namespace std;
