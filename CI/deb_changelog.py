@@ -12,7 +12,7 @@ if __name__ == '__main__':
   parser.add_argument('-u', '--urgency', type=str, default='low', help='Urgency of the package')
   args = parser.parse_args()
   build_time = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S %z') # day-of-week, dd month yyyy hh:mm:ss +zzzz
-  version_str = re.match('^(\d+.\d+.\d+).*$', args.version).group(1)
+  version_str = re.match('^\d+\.\d+\.\d+', args.version).group(0)
   with open('ChangeLog', 'r', encoding='utf8') as in_file, open('debian/changelog', 'w+', encoding='utf8') as out_file:
     out_file.write('{} ({}) {}; urgency={}\n'.format(args.name, args.version, args.distribution, args.urgency))
     in_section = False
@@ -25,7 +25,7 @@ if __name__ == '__main__':
         elif in_section:
           break
       elif not in_section:
-        continue
+        pass
       elif line.strip().replace('=', '') == '':
         ignore_segment = False
       elif line.strip() in IGNORE_SEGMENTS:
