@@ -25,6 +25,7 @@ if __name__ == '__main__':
         elif in_section:
           break
       elif not in_section:
+        # skip this line and read in the next
         pass
       elif line.strip().replace('=', '') == '':
         ignore_segment = False
