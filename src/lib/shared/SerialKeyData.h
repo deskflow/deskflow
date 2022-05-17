@@ -25,35 +25,35 @@
  * This is DTO which stores key data
  */
 struct SerialKeyData {
-    std::string           m_key;
-    std::string           m_name;
-    std::string           m_email;
-    std::string           m_company;
-    SerialKeyEdition      m_edition;
-    SerialKeyType         m_keyType;
-    unsigned              m_userLimit  = 1;
-    unsigned long long    m_warnTime   = 0;
-    unsigned long long    m_expireTime = 0;
+    std::string           key;
+    std::string           name;
+    std::string           email;
+    std::string           company;
+    SerialKeyEdition      edition;
+    SerialKeyType         keyType;
+    unsigned              userLimit  = 1;
+    unsigned long long    warnTime   = 0;
+    unsigned long long    expireTime = 0;
 
     SerialKeyData(const std::string& key) :
-        m_key(key)
+        key(key)
     {
     }
 
     SerialKeyData(Edition edition = kUnregistered) :
-        m_edition(edition)
+        edition(edition)
     {
     }
 };
 
 inline bool
 operator== (SerialKeyData const& lhs, SerialKeyData const& rhs) {
-    return (lhs.m_name == rhs.m_name) &&
-            (lhs.m_email == rhs.m_email) &&
-            (lhs.m_company == rhs.m_company) &&
-            (lhs.m_userLimit == rhs.m_userLimit) &&
-            (lhs.m_warnTime == rhs.m_warnTime) &&
-            (lhs.m_expireTime == rhs.m_expireTime) &&
-            (lhs.m_edition == rhs.m_edition) &&
-            (lhs.m_keyType == rhs.m_keyType);
+    return (lhs.name == rhs.name) &&
+            (lhs.email == rhs.email) &&
+            (lhs.company == rhs.company) &&
+            (lhs.userLimit == rhs.userLimit) &&
+            (lhs.warnTime == rhs.warnTime) &&
+            (lhs.expireTime == rhs.expireTime) &&
+            (lhs.edition == rhs.edition) &&
+            (lhs.keyType == rhs.keyType);
 }

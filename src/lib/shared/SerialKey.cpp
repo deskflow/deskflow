@@ -28,7 +28,7 @@ SerialKey::SerialKey(Edition edition):
 SerialKey::SerialKey(const std::string& serial) :
     m_data(serial)
 {
-    std::string plainText = decode(m_data.m_key);
+    std::string plainText = decode(m_data.key);
 
     if (!parse(plainText)) {
         throw std::runtime_error ("Invalid serial key");
@@ -42,7 +42,7 @@ SerialKey::isExpiring(time_t currentTime) const
 
     if (isTemporary()) {
         unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
-        if ((m_data.m_warnTime <= currentTimeAsLL) && (currentTimeAsLL < m_data.m_expireTime)) {
+        if ((m_data.warnTime <= currentTimeAsLL) && (currentTimeAsLL < m_data.expireTime)) {
             result = true;
         }
     }
@@ -57,7 +57,7 @@ SerialKey::isExpired(time_t currentTime) const
 
     if (isTemporary()) {
         unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
-        if (m_data.m_expireTime <= currentTimeAsLL) {
+        if (m_data.expireTime <= currentTimeAsLL) {
             result = true;
         }
     }
@@ -68,13 +68,13 @@ SerialKey::isExpired(time_t currentTime) const
 bool
 SerialKey::isTrial() const
 {
-    return m_data.m_keyType.isTrial();
+    return m_data.keyType.isTrial();
 }
 
 bool
 SerialKey::isTemporary() const
 {
-    return m_data.m_keyType.isTemporary();
+    return m_data.keyType.isTemporary();
 }
 
 bool
@@ -82,7 +82,7 @@ SerialKey::isValid() const
 {
     bool Valid = true;
 
-    if (!m_data.m_edition.isValid() || isExpired(::time(0)))
+    if (!m_data.edition.isValid() || isExpired(::time(0)))
     {
         Valid = false;
     }
@@ -93,13 +93,13 @@ SerialKey::isValid() const
 Edition
 SerialKey::edition() const
 {
-    return m_data.m_edition.getType();
+    return m_data.edition.getType();
 }
 
 std::string
 SerialKey::toString() const
 {
-    return m_data.m_key;
+    return m_data.key;
 }
 
 time_t
@@ -109,8 +109,8 @@ SerialKey::daysLeft(time_t currentTime) const
     unsigned long long const day = 60 * 60 * 24;
 
     unsigned long long currentTimeAsLL = static_cast<unsigned long long>(currentTime);
-    if (currentTimeAsLL < m_data.m_expireTime) {
-        timeLeft = m_data.m_expireTime - currentTimeAsLL;
+    if (currentTimeAsLL < m_data.expireTime) {
+        timeLeft = m_data.expireTime - currentTimeAsLL;
     }
 
     unsigned long long daysLeft = 0;
@@ -125,7 +125,7 @@ SerialKey::getSpanLeft(time_t time) const
     int result{-1};
 
     if (isTemporary() && !isExpired(time)){
-        auto timeLeft = (m_data.m_expireTime - time) * 1000;
+        auto timeLeft = (m_data.expireTime - time) * 1000;
 
         if (timeLeft < INT_MAX){
             result = static_cast<int>(timeLeft);
@@ -189,27 +189,27 @@ void
 SerialKey::parseV1(const std::vector<std::string>& parts)
 {
     // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
-    m_data.m_edition.setType(parts.at(1));
-    m_data.m_name = parts.at(2);
-    sscanf(parts.at(3).c_str(), "%d", &m_data.m_userLimit);
-    m_data.m_email = parts.at(4);
-    m_data.m_company = parts.at(5);
-    sscanf(parts.at(6).c_str(), "%lld", &m_data.m_warnTime);
-    sscanf(parts.at(7).c_str(), "%lld", &m_data.m_expireTime);
+    m_data.edition.setType(parts.at(1));
+    m_data.name = parts.at(2);
+    sscanf(parts.at(3).c_str(), "%d", &m_data.userLimit);
+    m_data.email = parts.at(4);
+    m_data.company = parts.at(5);
+    sscanf(parts.at(6).c_str(), "%lld", &m_data.warnTime);
+    sscanf(parts.at(7).c_str(), "%lld", &m_data.expireTime);
 }
 
 void
 SerialKey::parseV2(const std::vector<std::string>& parts)
 {
     // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
-    m_data.m_keyType.setKeyType(parts.at(1));
-    m_data.m_edition.setType(parts.at(2));
-    m_data.m_name = parts.at(3);
-    sscanf(parts.at(4).c_str(), "%d", &m_data.m_userLimit);
-    m_data.m_email = parts.at(5);
-    m_data.m_company = parts.at(6);
-    sscanf(parts.at(7).c_str(), "%lld", &m_data.m_warnTime);
-    sscanf(parts.at(8).c_str(), "%lld", &m_data.m_expireTime);
+    m_data.keyType.setKeyType(parts.at(1));
+    m_data.edition.setType(parts.at(2));
+    m_data.name = parts.at(3);
+    sscanf(parts.at(4).c_str(), "%d", &m_data.userLimit);
+    m_data.email = parts.at(5);
+    m_data.company = parts.at(6);
+    sscanf(parts.at(7).c_str(), "%lld", &m_data.warnTime);
+    sscanf(parts.at(8).c_str(), "%lld", &m_data.expireTime);
 }
 
 std::vector<std::string>
