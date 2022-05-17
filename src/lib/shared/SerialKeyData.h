@@ -39,4 +39,21 @@ struct SerialKeyData {
         m_key(key)
     {
     }
+
+    SerialKeyData(Edition edition = kUnregistered) :
+        m_edition(edition)
+    {
+    }
 };
+
+inline bool
+operator== (SerialKeyData const& lhs, SerialKeyData const& rhs) {
+    return (lhs.m_name == rhs.m_name) &&
+            (lhs.m_email == rhs.m_email) &&
+            (lhs.m_company == rhs.m_company) &&
+            (lhs.m_userLimit == rhs.m_userLimit) &&
+            (lhs.m_warnTime == rhs.m_warnTime) &&
+            (lhs.m_expireTime == rhs.m_expireTime) &&
+            (lhs.m_edition == rhs.m_edition) &&
+            (lhs.m_keyType == rhs.m_keyType);
+}

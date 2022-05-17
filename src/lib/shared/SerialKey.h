@@ -20,6 +20,7 @@
 #include <string>
 #include <ctime>
 #include "EditionType.h"
+#include "SerialKeyData.h"
 #include "SerialKeyType.h"
 #include "SerialKeyEdition.h"
 
@@ -60,28 +61,14 @@ private:
 #endif
 
 private:
-    std::string           m_name;
-    std::string           m_email;
-    std::string           m_company;
-    unsigned              m_userLimit;
-    unsigned long long    m_warnTime;
-    unsigned long long    m_expireTime;
-    SerialKeyEdition      m_edition;
-    SerialKeyType         m_KeyType;
-    std::string           m_serial;
+    SerialKeyData         m_data;
+
 };
 
 
 inline bool
 operator== (SerialKey const& lhs, SerialKey const& rhs) {
-    return (lhs.m_name == rhs.m_name) &&
-            (lhs.m_email == rhs.m_email) &&
-            (lhs.m_company == rhs.m_company) &&
-            (lhs.m_userLimit == rhs.m_userLimit) &&
-            (lhs.m_warnTime == rhs.m_warnTime) &&
-            (lhs.m_expireTime == rhs.m_expireTime) &&
-            (lhs.m_edition == rhs.m_edition) &&
-            (lhs.m_KeyType == rhs.m_KeyType);
+    return (lhs.m_data == rhs.m_data);
 }
 
 inline bool
