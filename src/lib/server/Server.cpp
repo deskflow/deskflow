@@ -1558,7 +1558,7 @@ Server::handleFakeInputEndEvent(const Event&, void*)
 void
 Server::handleFileChunkSendingEvent(const Event& event, void*)
 {
-	onFileChunkSending(event.getData());
+	onFileChunkSending(event.getDataObject());
 }
 
 void
