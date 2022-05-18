@@ -2057,6 +2057,7 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	if (jump) {
 		if (m_sendFileThread != NULL) {
 			StreamChunker::interruptFile();
+			delete m_sendFileThread;
 			m_sendFileThread = NULL;
 		}
 
@@ -2422,6 +2423,7 @@ Server::sendFileToClient(const char* filename)
 {
 	if (m_sendFileThread != NULL) {
 		StreamChunker::interruptFile();
+		delete m_sendFileThread;
 	}
 
 	m_sendFileThread = new Thread(
@@ -2442,7 +2444,10 @@ Server::sendFileThread(void* data)
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
 	}
 
-	m_sendFileThread = NULL;
+	if (m_sendFileThread != NULL) {
+		delete m_sendFileThread;
+		m_sendFileThread = NULL;
+	}
 }
 
 void
