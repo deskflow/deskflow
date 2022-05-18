@@ -1919,15 +1919,10 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 	UInt32 fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
 
 	if (fileCount > 0) {
-		char* info = NULL;
-		size_t size = infoString.size();
-		info = new char[size];
-		memcpy(info, infoString.c_str(), size);
-
 		LOG((CLOG_DEBUG2 "sending drag information to client"));
-		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
-		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
-		newScreen->sendDragInfo(fileCount, info, size);
+		LOG((CLOG_DEBUG3 "dragging file list: %s", infoString.c_str()));
+		LOG((CLOG_DEBUG3 "dragging file list string size: %i", infoString.size()));
+		newScreen->sendDragInfo(fileCount, infoString.c_str(), infoString.size());
 	}
 }
 
