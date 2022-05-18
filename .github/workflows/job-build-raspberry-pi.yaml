@@ -3,7 +3,6 @@ name: Raspberry Pi
 on:
   release:
     types: [created]
-  pull_request:
 
 jobs:
   build-on-pi:
@@ -85,11 +84,3 @@ jobs:
           host: ${{ secrets.BINARIES_SSH_HOST }}
           username: ${{ secrets.BINARIES_SSH_USER }}
           privateKey: ${{ secrets.BINARIES_SSH_KEY }}
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        if: "github.event_name == 'pull_request'"
-        with:
-          name: Windows
-          path: installers/*
-          retention-days: 1
