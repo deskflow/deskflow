@@ -25,7 +25,7 @@ public:
     Chunk(size_t size);
     Chunk(Chunk const &) =delete;
     Chunk(Chunk &&) =delete;
-    ~Chunk();
+    ~Chunk() override;
 
     Chunk& operator=(Chunk const &) =delete;
     Chunk& operator=(Chunk &&) =delete;

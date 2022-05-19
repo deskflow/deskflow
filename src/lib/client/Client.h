@@ -234,8 +234,9 @@ private:
     String              m_receivedFileData;
     DragFileList        m_dragFileList;
     String              m_dragFileExt;
-    Thread*             m_sendFileThread;
-    Thread*             m_writeToDropDirThread;
+    using AutoThread = std::unique_ptr<Thread>;
+    AutoThread          m_sendFileThread;
+    AutoThread          m_writeToDropDirThread;
     TCPSocket*          m_socket;
     bool                m_useSecureNetwork;
     bool                m_enableClipboard;

@@ -72,8 +72,8 @@ Client::Client(
     m_suspended(false),
     m_connectOnResume(false),
     m_events(events),
-    m_sendFileThread(NULL),
-    m_writeToDropDirThread(NULL),
+    m_sendFileThread(nullptr),
+    m_writeToDropDirThread(nullptr),
     m_socket(NULL),
     m_useSecureNetwork(args.m_enableCrypto),
     m_args(args),
@@ -258,9 +258,9 @@ Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
     m_screen->mouseMove(xAbs, yAbs);
     m_screen->enter(mask);
 
-    if (m_sendFileThread != NULL) {
+    if (m_sendFileThread) {
         StreamChunker::interruptFile();
-        m_sendFileThread = NULL;
+        m_sendFileThread.reset(nullptr);
     }
 }
 
@@ -827,9 +827,9 @@ void
 Client::onFileRecieveCompleted()
 {
     if (isReceivedFileSizeValid()) {
-        m_writeToDropDirThread = new Thread(
+        m_writeToDropDirThread.reset(new Thread(
             new TMethodJob<Client>(
-                this, &Client::writeToDropDirThread));
+                this, &Client::writeToDropDirThread)));
     }
 }
 
@@ -875,14 +875,14 @@ Client::isReceivedFileSizeValid()
 void
 Client::sendFileToServer(const char* filename)
 {
-    if (m_sendFileThread != NULL) {
+    if (m_sendFileThread) {
         StreamChunker::interruptFile();
     }
     
-    m_sendFileThread = new Thread(
+    m_sendFileThread.reset(new Thread(
         new TMethodJob<Client>(
             this, &Client::sendFileThread,
-            static_cast<void*>(const_cast<char*>(filename))));
+            static_cast<void*>(const_cast<char*>(filename)))));
 }
 
 void
@@ -896,7 +896,7 @@ Client::sendFileThread(void* filename)
         LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
     }
 
-    m_sendFileThread = NULL;
+    m_sendFileThread.reset(nullptr);
 }
 
 void
