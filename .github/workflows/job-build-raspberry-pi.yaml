@@ -10,17 +10,18 @@ jobs:
     strategy:
       matrix:
         os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+        name: [synergy, synergy-enterprise, synergy-business]
         include:
-          - name: "synergy"
-            remote_folder: "v1-core-standard"
+          - name: synergy
+            remote_folder: v1-core-standard
             enterprise: ""
             business: ""
-          - name: "synergy-enterprise"
-            remote_folder: "v1-core-enterprise"
+          - name: synergy-enterprise
+            remote_folder: v1-core-enterprise
             enterprise: "1"
             business: ""
-          - name: "synergy-business"
-            remote_folder: "v1-core-business"
+          - name: synergy-business
+            remote_folder: v1-core-business
             enterprise: ""
             business: "1"
     env:
@@ -75,6 +76,7 @@ jobs:
         sha256sum $filename_new >> ${filename_new}.checksum.txt
 
     - name: Send package to Binary Storage
+      if: "github.event_name == 'release'"
       uses: garygrossgarten/github-action-scp@v0.7.3
       with:
         local: "${{ github.workspace }}/package/"
