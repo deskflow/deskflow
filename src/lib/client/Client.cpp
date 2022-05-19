@@ -827,9 +827,8 @@ void
 Client::onFileRecieveCompleted()
 {
     if (isReceivedFileSizeValid()) {
-        m_writeToDropDirThread.reset(new Thread(
-            new TMethodJob<Client>(
-                this, &Client::writeToDropDirThread)));
+        auto method = new TMethodJob<Client>(this, &Client::writeToDropDirThread);
+        m_writeToDropDirThread.reset(new Thread(method));
     }
 }
 
@@ -878,11 +877,10 @@ Client::sendFileToServer(const char* filename)
     if (m_sendFileThread) {
         StreamChunker::interruptFile();
     }
-    
-    m_sendFileThread.reset(new Thread(
-        new TMethodJob<Client>(
-            this, &Client::sendFileThread,
-            static_cast<void*>(const_cast<char*>(filename)))));
+
+    auto data = static_cast<void*>(const_cast<char*>(filename));
+    auto method = new TMethodJob<Client>(this, &Client::sendFileThread, data);
+    m_sendFileThread.reset(new Thread(method));
 }
 
 void

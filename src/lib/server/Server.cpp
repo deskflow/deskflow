@@ -2122,9 +2122,8 @@ void
 Server::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_writeToDropDirThread.reset(new Thread(
-										new TMethodJob<Server>(
-											 this, &Server::writeToDropDirThread)));
+		auto method = new TMethodJob<Server>(this, &Server::writeToDropDirThread);
+		m_writeToDropDirThread.reset(new Thread(method));
 	}
 }
 
@@ -2425,10 +2424,9 @@ Server::sendFileToClient(const char* filename)
 		StreamChunker::interruptFile();
 	}
 
-	m_sendFileThread.reset(new Thread(
-		new TMethodJob<Server>(
-			this, &Server::sendFileThread,
-			static_cast<void*>(const_cast<char*>(filename)))));
+	auto data = static_cast<void*>(const_cast<char*>(filename));
+	auto method = new TMethodJob<Server>(this, &Server::sendFileThread, data);
+	m_sendFileThread.reset(new Thread(method));
 }
 
 void
