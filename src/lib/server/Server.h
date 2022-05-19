@@ -33,6 +33,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
+#include <memory>
 
 class BaseClientProxy;
 class EventQueueTimer;

@@ -27,6 +27,7 @@
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"
+#include <memory>
 
 class EventQueueTimer;
 namespace synergy { class Screen; }
