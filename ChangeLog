@@ -10,6 +10,7 @@ Bug fixes:
 - #7149 Address issues with modifiers and dead keys
 - #7163 Fix compilation issues for FreeBSD
 - #7172 Memory leaks in language sync and TLS functionality
+- #7175 Memory leaks in copy/paste and drag and drop functionality
 
 Github Actions:
 - #7148 Fix unstable build for windows core

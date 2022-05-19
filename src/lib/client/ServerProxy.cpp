@@ -920,7 +920,7 @@ ServerProxy::dragInfoReceived()
 void
 ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
 {
-    ClipboardChunk::send(m_stream, event.getData());
+    ClipboardChunk::send(m_stream, event.getDataObject());
 }
 
 void

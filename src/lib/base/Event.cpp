@@ -43,6 +43,16 @@ Event::Event(Type type, void* target, void* data, Flags flags) :
     // do nothing
 }
 
+Event::Event(Type type, void* target, EventData* dataObject) :
+    m_type(type),
+    m_target(target),
+    m_data(nullptr),
+    m_flags(kNone),
+    m_dataObject(dataObject)
+{
+
+}
+
 Event::Type
 Event::getType() const
 {

@@ -152,7 +152,7 @@ TCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
         return NULL;
     }
     if (read) {
-        m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this, NULL));
+        m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this));
         // stop polling on this socket until the client accepts
         return NULL;
     }
