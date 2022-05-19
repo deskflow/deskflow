@@ -1909,7 +1909,11 @@ Server::sendDragInfoThread(void* arg)
 		m_dragFileList.clear();
 	}
 	m_waitDragInfoThread = false;
-	m_sendDragInfoThread = NULL;
+	if (m_sendDragInfoThread != NULL) {
+		delete m_sendDragInfoThread;
+		m_sendDragInfoThread = NULL;
+	}
+
 }
 
 void
