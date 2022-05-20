@@ -27,3 +27,7 @@ src/setup/win32/synergy.suo
 /CMakeLists.txt.*
 /doxygen/
 /deps
+flatpak/.flatpak-builder
+flatpak/build
+flatpak/export
+flatpak/synergy.desktop
