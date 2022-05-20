@@ -1,4 +1,4 @@
-name: Ubuntu
+name: Ubuntu-flatpak
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
         distro: ['22.04']
         flag: ['-j']
 
-    name: ubuntu${{ matrix.distro }}
+    name: ubuntu-flatpak
 
     steps:
       - uses: actions/checkout@v2
@@ -43,6 +43,3 @@ jobs:
           mv com.symless.Synergy.desktop ./build/files/share/applications/com.symless.Synergy.desktop
           flatpak build-export export build
           flatpak build-bundle export synergy.flatpak com.symless.Synergy master --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
-
-      - name: Run unit test
-        run: ./build/bin/unittests
