@@ -21,8 +21,8 @@ jobs:
 
       - name: Install flatpak
         run: |
-          apt update
-          apt install flatpak
+          sudo apt-get update
+          sudo apt-get install flatpak
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install org.kde.Platform//5.15-21.08
           flatpak install org.kde.Sdk//5.15-21.08
