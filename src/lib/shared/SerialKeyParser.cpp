@@ -58,10 +58,12 @@ bool SerialKeyParser::parse(const std::string& plainSerial)
     const auto parts = splitToParts(key);
 
     if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
+        m_data.key = plainSerial;
         parseV1(parts);
         valid = true;
     }
     else if ((parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
+        m_data.key = plainSerial;
         parseV2(parts);
         valid = true;
     }
