@@ -8,13 +8,13 @@ on:
 
 jobs:
   flatpak:
+    name: ubuntu-flatpak
     runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:kde-5.15-21.08
       options: --privileged
     env:
       GIT_COMMIT: ${{ github.sha }}
-    name: ubuntu-flatpak
 
     steps:
       - uses: actions/checkout@v2
@@ -25,4 +25,4 @@ jobs:
         name: "Build"
         with:
           bundle: synergy.flatpak
-          manifest-path: ./com.symless.Synergy.yml
+          manifest-path: flatpak/com.symless.Synergy.yml
