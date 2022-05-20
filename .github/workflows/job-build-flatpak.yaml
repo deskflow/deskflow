@@ -9,13 +9,8 @@ on:
 jobs:
   build-arch64:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:ubuntu${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
-    strategy:
-      matrix:
-        distro: ['22.04']
-        flag: ['-j']
 
     name: ubuntu-flatpak
 
@@ -23,13 +18,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      
-      - name: Work around https://github.com/actions/checkout/issues/766
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Install flatpak
         run: |
+          apt update
           apt install flatpak
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install org.kde.Platform//5.15-21.08
