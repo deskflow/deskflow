@@ -26,3 +26,13 @@ jobs:
         with:
           bundle: synergy.flatpak
           manifest-path: flatpak/com.symless.Synergy.yml
+
+      - run: ls -lah
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        if: "github.event_name == 'pull_request'"
+        with:
+          name: Bundle
+          path: synergy.flatpak
+          retention-days: 1
