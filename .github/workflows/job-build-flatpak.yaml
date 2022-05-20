@@ -10,7 +10,7 @@ jobs:
   flatpak:
     runs-on: ubuntu-latest
     container:
-      image: bilemoussaoui/flatpak-github-action:kde-5.15-21.08
+      image: bilelmoussaoui/flatpak-github-action:kde-5.15-21.08
     env:
       GIT_COMMIT: ${{ github.sha }}
     name: ubuntu-flatpak
@@ -20,7 +20,7 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - uses: bilemoussaoui/flatpak-github-actions/flatpak-builder@v4
+      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
         name: "Build"
         with:
           bundle: synergy.flatpak
