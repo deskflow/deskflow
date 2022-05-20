@@ -10,7 +10,7 @@ jobs:
   flatpak:
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-action:kde-5.15-21.08
+      image: bilelmoussaoui/flatpak-github-actions:kde-5.15-21.08
     env:
       GIT_COMMIT: ${{ github.sha }}
     name: ubuntu-flatpak
