@@ -10,7 +10,9 @@ jobs:
   build-flatpak-bundle:
     name: ubuntu-flatpak
     runs-on: ubuntu-latest
-    container: symless/synergy-core:ubuntu20.04
+    container: 
+      image: symless/synergy-core:ubuntu20.04
+      options: --privileged
     strategy:
       matrix:
         name: [synergy]
