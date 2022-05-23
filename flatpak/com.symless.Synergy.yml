@@ -28,6 +28,8 @@ modules:
     sources:
       - type: dir
         path: ../
+      - type: patch
+        path: flatpak-desktop.patch
 command: synergy
 finish-args:
   - --share=ipc
