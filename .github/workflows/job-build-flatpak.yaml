@@ -51,17 +51,17 @@ jobs:
     - name: Install flatpak
       run: |
         echo "INstalling flatpak"
-        sudo apt update
+        apt update
         echo "Update Done"
-        sudo apt install flatpak
+        apt install flatpak
         echo "Flatpak install Done"
-        sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
         echo "Flatpak remote add flathub"
-        sudo flatpak install org.kde.Platform//5.15-21.08
+        flatpak install org.kde.Platform//5.15-21.08
         echo "Flatpak install Platform done"
-        sudo flatpak install org.kde.Sdk//5.15-21.08
+        flatpak install org.kde.Sdk//5.15-21.08
         echo "Flatpak install SDK done"
-        sudo flatpak install flatpak-builder
+        flatpak install flatpak-builder
         echo "Flatpak install flatpak-builder done"
 
     - name: Build
