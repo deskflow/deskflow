@@ -28,8 +28,8 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Git Part Call
-        id: git-precall
+      - name: Test call
+        id: test
         run: |
         git rev-list --tags --max-count=100
 
