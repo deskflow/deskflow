@@ -102,9 +102,9 @@ def getVesionFromGit(cmakeVersion):
       versions = subprocess.check_output(cmd, universal_newlines=True).split()
       print("D")
       return findVersion(versions, cmakeVersion)
-   except subprocess.CalledProcessError:
+   except subprocess.CalledProcessError, e:
       print('ERROR: Unable to get version from git')
-      print(subprocess.CalledProcessError.output)
+      print(e.output)
       exit(1)
 
 def updateVersionFile(number):
