@@ -50,9 +50,10 @@ jobs:
 
     - name: Install flatpak
       run: |
-        sudo apt-get update
+        echo "INstalling flatpak"
+        sudo apt update
         echo "Update Done"
-        sudo apt-get install flatpak
+        sudo apt install flatpak
         echo "Flatpak install Done"
         sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
         echo "Flatpak remote add flathub"
