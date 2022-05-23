@@ -98,7 +98,6 @@ def getVesionFromGit(cmakeVersion):
       print("B: ", taggedRevision)
       cmd = ('git describe --tags ' + taggedRevision).split()
       print("C: ", cmd)
-      print("C-2: ", subprocess.check_output(cmd, universal_newlines=True))
       versions = subprocess.check_output(cmd, universal_newlines=True).split()
       print("D")
       return findVersion(versions, cmakeVersion)
