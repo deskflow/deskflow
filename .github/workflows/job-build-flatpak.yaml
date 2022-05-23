@@ -1,4 +1,4 @@
-name: Ubuntu-flatpak
+name: Raspberry Pi Flatpak
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
     branches: [master]
 
 jobs:
-  build-flatpak-bundle:
-    name: ubuntu-flatpak
-    runs-on: ubuntu-latest
+  build-on-pi:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
         name: [synergy, synergy-enterprise, synergy-business]
         include:
           - name: synergy
@@ -26,39 +26,42 @@ jobs:
             remote_folder: v1-core-business
             enterprise: ""
             business: "1"
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:kde-5.15-21.08
-      options: --privileged
     env:
       GIT_COMMIT: ${{ github.sha }}
+      DEB_BUILD_OPTIONS: parallel=1
       SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
       SYNERGY_BUSINESS: ${{ matrix.business }}
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
+    - uses: actions/checkout@v2
 
-      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
-        name: "Build"
-        with:
-          bundle: ${{ matrix.name }}.flatpak
-          manifest-path: flatpak/com.symless.Synergy.yml
+    - name: Version Info
+      id: version
+      run: |
+        python3 CI/build_version.py
+        mkdir -p version-info && cd version-info && cmake .. && cd ..
+        . ./version-info/version
+        rm -rf version-info
+        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+        SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
+        echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
+        echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
+        echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
+        echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
+        echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
+        echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+        echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_PACKAGE_NAME::${{ matrix.name }}"
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        if: "github.event_name == 'pull_request'"
-        with:
-          name: Bundle
-          path: ${{ matrix.name }}.flatpak
-          retention-days: 1
-
-      - name: Send package to Binary Storage
-        if: "github.event_name == 'release'"
-        uses: garygrossgarten/github-action-scp@v0.7.3
-        with:
-          local: "${{ github.workspace }}/${{ matrix.name }}.flatpak"
-          remote: "${{ secrets.BINARIES_SSH_DIR }}/flatpak_builds/"
-          host: ${{ secrets.BINARIES_SSH_HOST }}
-          username: ${{ secrets.BINARIES_SSH_USER }}
-          privateKey: ${{ secrets.BINARIES_SSH_KEY }}
+    # - name: Send package to Binary Storage
+    #   if: "github.event_name == 'release'"
+    #   uses: garygrossgarten/github-action-scp@v0.7.3
+    #   with:
+    #     local: "${{ github.workspace }}/package/"
+    #     remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
+    #     host: ${{ secrets.BINARIES_SSH_HOST }}
+    #     username: ${{ secrets.BINARIES_SSH_USER }}
+    #     privateKey: ${{ secrets.BINARIES_SSH_KEY }}
