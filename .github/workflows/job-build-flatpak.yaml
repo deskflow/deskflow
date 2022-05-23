@@ -7,27 +7,64 @@ on:
     branches: [master]
 
 jobs:
-  flatpak:
+  build-flatpak-bundle:
     name: ubuntu-flatpak
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        name: [synergy, synergy-enterprise, synergy-business]
+        include:
+          - name: synergy
+            remote_folder: v1-core-standard
+            enterprise: ""
+            business: ""
+          - name: synergy-enterprise
+            remote_folder: v1-core-enterprise
+            enterprise: "1"
+            business: ""
+          - name: synergy-business
+            remote_folder: v1-core-business
+            enterprise: ""
+            business: "1"
     container:
       image: bilelmoussaoui/flatpak-github-actions:kde-5.15-21.08
       options: --privileged
     env:
       GIT_COMMIT: ${{ github.sha }}
+      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
+      SYNERGY_BUSINESS: ${{ matrix.business }}
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
 
+      - name: Version Info
+        id: version
+        run: |
+          . ./build/version
+          SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_VERSION_MAJOR::$SYNERGY_VERSION_MAJOR"
+          echo "::set-output name=SYNERGY_VERSION_MINOR::$SYNERGY_VERSION_MINOR"
+          echo "::set-output name=SYNERGY_VERSION_PATCH::$SYNERGY_VERSION_PATCH"
+          echo "::set-output name=SYNERGY_VERSION_STAGE::$SYNERGY_VERSION_STAGE"
+          echo "::set-output name=SYNERGY_VERSION_BUILD::$SYNERGY_VERSION_BUILD"
+          echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
+          echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
+          echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
+          SYNERGY_PACKAGE_NAME=${{ matrix.name }}
+          SYNERGY_REMOTE_FOLDER="${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
+          echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME-$SYNERGY_VERSION"
+
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
         name: "Build"
         with:
-          bundle: synergy.flatpak
+          bundle: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}.flatpak
           manifest-path: flatpak/com.symless.Synergy.yml
-
-      - run: ls -lah
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -36,3 +73,13 @@ jobs:
           name: Bundle
           path: synergy.flatpak
           retention-days: 1
+
+      - name: Send package to Binary Storage
+        if: "github.event_name == 'release'"
+        uses: garygrossgarten/github-action-scp@v0.7.3
+        with:
+          local: "${{ github.workspace }}/package/"
+          remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
+          host: ${{ secrets.BINARIES_SSH_HOST }}
+          username: ${{ secrets.BINARIES_SSH_USER }}
+          privateKey: ${{ secrets.BINARIES_SSH_KEY }}
