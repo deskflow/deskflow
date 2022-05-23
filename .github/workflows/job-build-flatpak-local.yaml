@@ -1,10 +1,10 @@
 name: Ubuntu-flatpak
 
 on:
-  # push:
-  #   branches: [master]
-  # pull_request:
-  #   branches: [master]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   build-flatpak-bundle:
@@ -26,9 +26,6 @@ jobs:
             remote_folder: v1-core-business
             enterprise: ""
             business: "1"
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:kde-5.15-21.08
-      options: --privileged
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
@@ -65,11 +62,34 @@ jobs:
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
           echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME-$SYNERGY_VERSION"
 
-      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
-        name: "Build"
-        with:
-          bundle: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}.flatpak
-          manifest-path: flatpak/com.symless.Synergy.yml
+      # - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
+      #   name: "Build"
+      #   with:
+      #     bundle: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}.flatpak
+      #     manifest-path: flatpak/com.symless.Synergy.yml
+
+      - name: Install flatpak
+        run: |
+          sudo apt-get update
+          echo "Update Done"
+          sudo apt-get install flatpak
+          echo "Flatpak install Done"
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          echo "Flatpak remote add flathub"
+          sudo flatpak install org.kde.Platform//5.15-21.08
+          echo "Flatpak install Platform done"
+          sudo flatpak install org.kde.Sdk//5.15-21.08
+          echo "Flatpak install SDK done"
+          sudo flatpak install flatpak-builder
+          echo "Flatpak install flatpak-builder done"
+      - name: Build
+        run: | 
+          cd flatpak
+          flatpak-builder build com.symless.Synergy.yml --disable-cache --force-clean
+          flatpak build-finish build
+          mv com.symless.Synergy.desktop ./build/files/share/applications/com.symless.Synergy.desktop
+          flatpak build-export export build
+          flatpak build-bundle export synergy.flatpak com.symless.Synergy master --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
