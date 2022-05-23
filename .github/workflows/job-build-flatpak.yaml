@@ -32,8 +32,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          apt-get update
+          apt-get install -y \
             cmake python3 g++ \
             libssl-dev libx11-dev xorg-dev qtbase5-dev \
             libglib2.0-dev libgdk-pixbuf2.0-dev libnotify-dev
