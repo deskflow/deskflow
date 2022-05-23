@@ -28,6 +28,11 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: Git Part Call
+        id: git-precall
+        run: |
+        git rev-list --tags --max-count=100
+
       - name: Version Info
         id: version
         run: |
