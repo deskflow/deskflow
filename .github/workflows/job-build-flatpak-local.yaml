@@ -28,9 +28,10 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Test call
+      - name: Calling info
         id: test
         run: |
+        echo bob
         git rev-list --tags --max-count=100
 
       - name: Version Info
