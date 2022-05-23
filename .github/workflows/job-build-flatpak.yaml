@@ -27,7 +27,7 @@ jobs:
       SYNERGY_BUSINESS: ${{ matrix.business }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'recursive'
           fetch-depth: '0'
