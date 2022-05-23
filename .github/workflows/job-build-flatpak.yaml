@@ -64,13 +64,9 @@ jobs:
 
       - name: Install flatpak
         run: |
-          echo "Flatpak install Done"
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          echo "Flatpak remote add flathub"
-          flatpak install org.kde.Platform//5.15-21.08
-          echo "Flatpak install Platform done"
-          flatpak install org.kde.Sdk//5.15-21.08
-          echo "Flatpak install SDK done"
+          flatpak install -y org.kde.Platform//5.15-21.08
+          flatpak install -y org.kde.Sdk//5.15-21.08
           flatpak install flatpak-builder
           echo "Flatpak install flatpak-builder done"
       - name: Build
