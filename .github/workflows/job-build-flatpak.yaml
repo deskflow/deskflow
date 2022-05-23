@@ -12,20 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: [synergy, synergy-enterprise, synergy-business]
+        name: [synergy]
         include:
           - name: synergy
             remote_folder: v1-core-standard
             enterprise: ""
             business: ""
-          - name: synergy-enterprise
-            remote_folder: v1-core-enterprise
-            enterprise: "1"
-            business: ""
-          - name: synergy-business
-            remote_folder: v1-core-business
-            enterprise: ""
-            business: "1"
     container:
       image: bilelmoussaoui/flatpak-github-actions:kde-5.15-21.08
       options: --privileged

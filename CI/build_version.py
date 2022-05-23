@@ -131,7 +131,10 @@ def getVersionFromFile():
    return Version(major + '.' + minor + '.' + patch)
 
 if __name__ == '__main__':
+   print('INFO: running build_version')
    cmakeVersion = getVersionFromFile()
+   print('INFO: completed cmakeVersion, running gitVersion')
    gitVersion = getVesionFromGit(cmakeVersion)
+   print('INFO: completed gitVersion, running updateVersionFile')
    updateVersionFile(gitVersion.build.number)
    print('INFO: Build number is: <' + str(gitVersion) + '>')
