@@ -51,8 +51,6 @@ jobs:
     - name: Install flatpak
       run: |
         echo "INstalling flatpak"
-        apt update
-        echo "Update Done"
         apt install flatpak
         echo "Flatpak install Done"
         flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
