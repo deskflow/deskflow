@@ -42,11 +42,15 @@ jobs:
       - name: Version Info
         id: version
         run: |
-          git config --global --add safe.directory /__w/synergy-core/synergy-core
+          echo running build_version
           python3 CI/build_version.py
+          echo finished running build_version
           mkdir -p version-info && cd version-info && cmake .. && cd ..
+          echo cmake in version-info sorted
           . ./version-info/version
+          echo version info entered
           rm -rf version-info
+          echo version info removed
           SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
           SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
           SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
