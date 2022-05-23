@@ -28,6 +28,10 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: Setup Environment
+        run: |
+          git rev-list --tags --max-count=100
+
       - name: Version Info
         id: version
         run: |
