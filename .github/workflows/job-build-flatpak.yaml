@@ -30,6 +30,28 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
+          fetch-depth: '0'
+
+      - name: Version Info
+        id: version
+        run: |
+          python3 CI/build_version.py
+          mkdir -p version-info && cd version-info && cmake .. && cd ..
+          . ./version-info/version
+          rm -rf version-info
+          SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
+          echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
+          echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
+          echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
+          echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
+          echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
+          echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_PACKAGE_NAME::${{ matrix.name }}"
 
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
         name: "Build"
