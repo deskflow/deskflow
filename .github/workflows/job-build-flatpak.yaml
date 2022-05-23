@@ -67,8 +67,8 @@ jobs:
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install -y org.kde.Platform//5.15-21.08
           flatpak install -y org.kde.Sdk//5.15-21.08
-          flatpak install flatpak-builder
-          echo "Flatpak install flatpak-builder done"
+          flatpak install flathub org.flatpak.Builder
+      
       - name: Build
         run: | 
           cd flatpak
