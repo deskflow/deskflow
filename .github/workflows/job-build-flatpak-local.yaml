@@ -28,12 +28,6 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Calling info
-        id: test
-        run: |
-        echo bob
-        git rev-list --tags --max-count=100
-
       - name: Version Info
         id: version
         run: |
