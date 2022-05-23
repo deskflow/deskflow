@@ -33,6 +33,7 @@ jobs:
       - name: Version Info
         id: version
         run: |
+          git config --global --add safe.directory /__w/synergy-core/synergy-core
           python3 CI/build_version.py
           mkdir -p version-info && cd version-info && cmake .. && cd ..
           . ./version-info/version
