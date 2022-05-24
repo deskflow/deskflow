@@ -92,7 +92,11 @@ jobs:
           path: flatpak/${{ matrix.name }}.flatpak
           retention-days: 1
 
-      - run: ls -lah
+      - run: |
+          pwd 
+          ls -lah
+          cd flatpak
+          ls -lah
 
       - name: Send package to Binary Storage
         if: "github.event_name == 'pull_request'"
