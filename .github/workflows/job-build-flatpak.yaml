@@ -31,7 +31,6 @@ jobs:
             remote_folder: v1-core-business
             enterprise: ""
             business: "1"
-
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
@@ -84,7 +83,6 @@ jobs:
         if: ${{ env.SYNERGY_ENTERPRISE == "1" }}
         run: |
           \cp synergy-enterprise.yml com.symless.Synergy.yml
-
 
       - name: Replace YAML to BUSINESS
         if: ${{ env.SYNERGY_BUSINESS == "1" }}
