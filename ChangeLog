@@ -11,6 +11,7 @@ Bug fixes:
 - #7163 Fix compilation issues for FreeBSD
 - #7172 Memory leaks in language sync and TLS functionality
 - #7175 | #7178 Memory leaks in copy/paste and drag and drop functionality
+- #7179 Disable drag and drop by default
 
 Github Actions:
 - #7148 Fix unstable build for windows core
