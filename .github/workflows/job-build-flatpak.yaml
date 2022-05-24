@@ -3,10 +3,6 @@ name: Ubuntu-flatpak
 on:
   release:
     types: [created]
-  # push:
-  #   branches: [master]
-  # pull_request:
-  #   branches: [master]
 
 jobs:
   build-flatpak-bundle:
@@ -21,16 +17,10 @@ jobs:
         include:
           - name: synergy
             remote_folder: v1-core-standard
-            enterprise: ""
-            business: ""
           - name: synergy-enterprise
             remote_folder: v1-core-enterprise
-            enterprise: "1"
-            business: ""
           - name: synergy-business
             remote_folder: v1-core-business
-            enterprise: ""
-            business: "1"
     env:
       GIT_COMMIT: ${{ github.sha }}
       SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
