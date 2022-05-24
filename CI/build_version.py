@@ -92,7 +92,7 @@ def findVersion(versions, cmakeVersion):
    return gitVersion
 
 def getVersionFromGit(cmakeVersion):
-   # try:
+   try:
       taggedRevision = subprocess.check_output(('git rev-list --tags --max-count=100').split(),  universal_newlines=True)
       cmd = ('git describe --tags ' + taggedRevision).split()
       versions = subprocess.check_output(cmd, universal_newlines=True).split()
