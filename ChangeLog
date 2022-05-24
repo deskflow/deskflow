@@ -14,6 +14,7 @@ Bug fixes:
 - #7179 Disable drag and drop by default
 
 Github Actions:
+- #7177 Create workflow for flatpak build support
 - #7148 Fix unstable build for windows core
 - #7156 Change binary storage server
 - #7161 Use brew bundle to install dependencies
