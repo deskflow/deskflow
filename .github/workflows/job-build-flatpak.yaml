@@ -1,12 +1,12 @@
 name: Ubuntu-flatpak
 
 on:
-  # release:
-  #   types: [created]
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+  release:
+    types: [created]
+  # push:
+  #   branches: [master]
+  # pull_request:
+  #   branches: [master]
 
 jobs:
   build-flatpak-bundle:
