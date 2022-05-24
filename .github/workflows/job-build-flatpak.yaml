@@ -82,12 +82,12 @@ jobs:
       - name: Replace YAML to ENTERPRISE
         if: ${{ env.SYNERGY_ENTERPRISE == '1' }}
         run: |
-          cp synergy-enterprise.yml com.symless.Synergy.yml
+          cp flatpak/synergy-enterprise.yml flatpak/com.symless.Synergy.yml
 
       - name: Replace YAML to BUSINESS
         if: ${{ env.SYNERGY_BUSINESS == '1' }}
         run: |
-          cp synergy-business.yml com.symless.Synergy.yml
+          cp flatpak/synergy-business.yml flatpak/com.symless.Synergy.yml
 
       - name: Build
         run: | 
