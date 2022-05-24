@@ -91,20 +91,15 @@ def findVersion(versions, cmakeVersion):
    print('INFO: Version '+ str(gitVersion) + ' has been read from git')
    return gitVersion
 
-def getVesionFromGit(cmakeVersion):
+def getVersionFromGit(cmakeVersion):
    # try:
-      print("A")
       taggedRevision = subprocess.check_output(('git rev-list --tags --max-count=100').split(),  universal_newlines=True)
-      print("B: ", taggedRevision)
       cmd = ('git describe --tags ' + taggedRevision).split()
-      print("C: ", cmd)
       versions = subprocess.check_output(cmd, universal_newlines=True).split()
-      print("D")
       return findVersion(versions, cmakeVersion)
-   # except subprocess.CalledProcessError, e:
-   #    print('ERROR: Unable to get version from git')
-   #    print(e.output)
-   #    exit(1)
+   except subprocess.CalledProcessError:
+      print('ERROR: Unable to get version from git')
+      exit(1)
 
 def updateVersionFile(number):
    fp = open('cmake/Version.cmake')
@@ -136,12 +131,7 @@ def getVersionFromFile():
    return Version(major + '.' + minor + '.' + patch)
 
 if __name__ == '__main__':
-   print('INFO: running build_version')
    cmakeVersion = getVersionFromFile()
-   print('RESULT: ', cmakeVersion)
-   print('INFO: completed cmakeVersion, running gitVersion')
-   gitVersion = getVesionFromGit(cmakeVersion)
-   print('RESULT: ', gitVersion)
-   print('INFO: completed gitVersion, running updateVersionFile')
+   gitVersion = getVersionFromGit(cmakeVersion)
    updateVersionFile(gitVersion.build.number)
    print('INFO: Build number is: <' + str(gitVersion) + '>')
