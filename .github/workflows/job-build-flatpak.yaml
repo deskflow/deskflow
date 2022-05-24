@@ -78,8 +78,7 @@ jobs:
         run: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install -y org.kde.Platform//5.15-21.08
-          flatpak install -y org.kde.Sdk//5.15-21.08f
-
+          flatpak install -y org.kde.Sdk//5.15-21.08
 
       - name: Replace YAML to ENTERPRISE
         if: ${{ env.SYNERGY_ENTERPRISE == "1" }}
