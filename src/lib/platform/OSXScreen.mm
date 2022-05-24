@@ -117,7 +117,7 @@ OSXScreen::OSXScreen(IEventQueue* events,
 	m_lastSingleClickXCursor(0),
 	m_lastSingleClickYCursor(0),
 	m_events(events),
-	m_getDropTargetThread(NULL),
+	m_getDropTargetThread(nullptr),
 	m_impl(NULL)
 {
     m_displayID = CGMainDisplayID();
@@ -602,8 +602,8 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     
 	if (!press && (id == kButtonLeft)) {
 		if (m_fakeDraggingStarted) {
-			m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
-				this, &OSXScreen::getDropTargetThread));
+			auto method = new TMethodJob<OSXScreen>(this, &OSXScreen::getDropTargetThread);
+			m_getDropTargetThread.reset(new Thread(method));
 		}
 		
 		m_draggingStarted = false;
@@ -1206,8 +1206,8 @@ OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		}
 		else {
 			if (m_fakeDraggingStarted) {
-				m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
-																			   this, &OSXScreen::getDropTargetThread));
+				auto method = new TMethodJob<OSXScreen>(this, &OSXScreen::getDropTargetThread);
+				m_getDropTargetThread.reset(new Thread(method));
 			}
 			
 			m_draggingStarted = false;

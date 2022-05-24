@@ -814,7 +814,7 @@ Client::handleResume(const Event&, void*)
 void
 Client::handleFileChunkSending(const Event& event, void*)
 {
-    sendFileChunk(event.getData());
+    sendFileChunk(event.getDataObject());
 }
 
 void
