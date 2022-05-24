@@ -103,7 +103,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@v0.7.3
         with:
           local: flatpak/${{ matrix.name }}.flatpak
-          remote: ${{ secrets.BINARIES_SSH_DIR }}/flatpak_builds/
+          remote: ${{ secrets.BINARIES_SSH_DIR }}/${{ matrix.name }}.flatpak
           host: ${{ secrets.BINARIES_SSH_HOST }}
           username: ${{ secrets.BINARIES_SSH_USER }}
           privateKey: ${{ secrets.BINARIES_SSH_KEY }}
