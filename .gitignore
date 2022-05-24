@@ -31,3 +31,4 @@ flatpak/.flatpak-builder
 flatpak/build
 flatpak/export
 flatpak/synergy.desktop
+flatpak/*.flatpak

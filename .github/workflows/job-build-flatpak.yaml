@@ -1,12 +1,12 @@
 name: Ubuntu-flatpak
 
 on:
-  release:
-    types: [created]
-  # push:
-  #   branches: [master]
-  # pull_request:
-  #   branches: [master]
+  # release:
+  #   types: [created]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   build-flatpak-bundle:
@@ -78,7 +78,19 @@ jobs:
         run: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install -y org.kde.Platform//5.15-21.08
-          flatpak install -y org.kde.Sdk//5.15-21.08
+          flatpak install -y org.kde.Sdk//5.15-21.08f
+
+
+      - name: Replace YAML to ENTERPRISE
+        if: ${{ env.SYNERGY_ENTERPRISE == "1" }}
+        run: |
+          \cp synergy-enterprise.yml com.symless.Synergy.yml
+
+
+      - name: Replace YAML to BUSINESS
+        if: ${{ env.SYNERGY_BUSINESS == "1" }}
+        run: |
+          \cp synergy-business.yml com.symless.Synergy.yml
 
       - name: Build
         run: | 
