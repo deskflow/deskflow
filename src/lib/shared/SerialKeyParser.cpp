@@ -17,11 +17,6 @@
 
 #include "SerialKeyParser.h"
 
-SerialKeyParser::SerialKeyParser()
-{
-
-}
-
 void
 SerialKeyParser::setKey(const std::string& key)
 {

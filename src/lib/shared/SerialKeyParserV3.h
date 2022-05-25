@@ -21,6 +21,10 @@
 class SerialKeyParserV3 : public SerialKeyParser
 {
 public:
-    SerialKeyParserV3();
+    /**
+     * @brief parse serial key
+     * @param plainSerial encoded serial key
+     * @return true if parsed
+     */
     bool parse(const std::string& plainSerial) override;
 };
