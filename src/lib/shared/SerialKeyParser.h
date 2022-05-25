@@ -28,6 +28,10 @@ public:
     const SerialKeyData& getData() const;
 
     void setKey(const std::string& key);
+    void setType(const std::string& type);
+    void setEdition(const std::string& edition);
+    void setWarningTime(const std::string& warnTime);
+    void setExpirationTime(const std::string& expTime);
 
 private:
     std::string decode(const std::string& serial) const;

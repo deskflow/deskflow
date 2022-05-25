@@ -26,12 +26,8 @@
  */
 struct SerialKeyData {
     std::string           key;
-    std::string           name;
-    std::string           email;
-    std::string           company;
     SerialKeyEdition      edition;
     SerialKeyType         keyType;
-    unsigned              userLimit  = 1;
     unsigned long long    warnTime   = 0;
     unsigned long long    expireTime = 0;
 
@@ -48,10 +44,7 @@ struct SerialKeyData {
 
 inline bool
 operator== (SerialKeyData const& lhs, SerialKeyData const& rhs) {
-    return (lhs.name == rhs.name) &&
-            (lhs.email == rhs.email) &&
-            (lhs.company == rhs.company) &&
-            (lhs.userLimit == rhs.userLimit) &&
+    return  (lhs.key == rhs.key) &&
             (lhs.warnTime == rhs.warnTime) &&
             (lhs.expireTime == rhs.expireTime) &&
             (lhs.edition == rhs.edition) &&

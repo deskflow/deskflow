@@ -28,6 +28,30 @@ SerialKeyParser::setKey(const std::string& key)
     m_data.key = key;
 }
 
+void
+SerialKeyParser::setType(const std::string& type)
+{
+    m_data.keyType.setKeyType(type);
+}
+
+void
+SerialKeyParser::setEdition(const std::string& edition)
+{
+    m_data.edition.setType(edition);
+}
+
+void
+SerialKeyParser::setWarningTime(const std::string& warnTime)
+{
+    sscanf(warnTime.c_str(), "%lld", &m_data.warnTime);
+}
+
+void
+SerialKeyParser::setExpirationTime(const std::string& expTime)
+{
+    sscanf(expTime.c_str(), "%lld", &m_data.expireTime);
+}
+
 std::string
 SerialKeyParser::decode(const std::string& serial) const
 {
@@ -65,12 +89,12 @@ SerialKeyParser::parse(const std::string& plainSerial)
     const auto parts = splitToParts(key);
 
     if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
-        m_data.key = plainSerial;
+        setKey(plainSerial);
         parseV1(parts);
         valid = true;
     }
     else if ((parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
-        m_data.key = plainSerial;
+        setKey(plainSerial);
         parseV2(parts);
         valid = true;
     }
@@ -88,27 +112,19 @@ void
 SerialKeyParser::parseV1(const std::vector<std::string>& parts)
 {
     // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
-    m_data.edition.setType(parts.at(1));
-    m_data.name = parts.at(2);
-    sscanf(parts.at(3).c_str(), "%d", &m_data.userLimit);
-    m_data.email = parts.at(4);
-    m_data.company = parts.at(5);
-    sscanf(parts.at(6).c_str(), "%lld", &m_data.warnTime);
-    sscanf(parts.at(7).c_str(), "%lld", &m_data.expireTime);
+    setEdition(parts.at(1));
+    setWarningTime(parts.at(6));
+    setExpirationTime(parts.at(7));
 }
 
 void
 SerialKeyParser::parseV2(const std::vector<std::string>& parts)
 {
     // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
-    m_data.keyType.setKeyType(parts.at(1));
-    m_data.edition.setType(parts.at(2));
-    m_data.name = parts.at(3);
-    sscanf(parts.at(4).c_str(), "%d", &m_data.userLimit);
-    m_data.email = parts.at(5);
-    m_data.company = parts.at(6);
-    sscanf(parts.at(7).c_str(), "%lld", &m_data.warnTime);
-    sscanf(parts.at(8).c_str(), "%lld", &m_data.expireTime);
+    setType(parts.at(1));
+    setEdition(parts.at(2));
+    setWarningTime(parts.at(7));
+    setExpirationTime(parts.at(8));
 }
 
 std::vector<std::string>
