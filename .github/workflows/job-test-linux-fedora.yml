@@ -34,7 +34,6 @@ jobs:
 
     - name: Build
       run: |
-        git config --global --add safe.directory /__w/synergy-core/synergy-core
         mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
