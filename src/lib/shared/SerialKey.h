@@ -36,7 +36,7 @@ public:
     time_t              daysLeft(time_t currentTime) const;
     int                 getSpanLeft(time_t time = ::time(0)) const;
     Edition             edition() const;
-    std::string         toString() const;
+    const std::string&  toString() const;
 
 private:
     SerialKeyData         m_data;

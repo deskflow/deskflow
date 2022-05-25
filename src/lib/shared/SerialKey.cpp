@@ -100,7 +100,7 @@ SerialKey::edition() const
     return m_data.edition.getType();
 }
 
-std::string
+const std::string&
 SerialKey::toString() const
 {
     return m_data.key;
