@@ -8,7 +8,7 @@ jobs:
   build-flatpak-bundle:
     name: ubuntu-flatpak
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: symless/synergy-core:ubuntu20.04
       options: --privileged
     strategy:
@@ -29,8 +29,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'recursive'
-          fetch-depth: '0'
+          submodules: "recursive"
+          fetch-depth: "0"
 
       - name: Install Dependencies
         run: |
@@ -41,10 +41,13 @@ jobs:
             libglib2.0-dev libgdk-pixbuf2.0-dev libnotify-dev \
             flatpak flatpak-builder
 
+      - name: Work around https://github.com/actions/checkout/issues/766
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Version Info
         id: version
         run: |
-          git config --global --add safe.directory /__w/synergy-core/synergy-core
           python3 CI/build_version.py
           mkdir -p version-info && cd version-info && cmake .. && cd ..
           . ./version-info/version
@@ -70,7 +73,7 @@ jobs:
           flatpak install -y org.kde.Sdk//5.15-21.08
 
       - name: Build
-        run: | 
+        run: |
           cd flatpak
           flatpak-builder build ${{ matrix.name }}.yml --disable-cache --force-clean
           flatpak build-export export build
