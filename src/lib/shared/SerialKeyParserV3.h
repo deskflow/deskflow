@@ -16,24 +16,11 @@
  */
 #pragma once
 
-#include <string>
-#include <vector>
-#include "SerialKeyData.h"
+#include "SerialKeyParser.h"
 
-class SerialKeyParser
+class SerialKeyParserV3 : public SerialKeyParser
 {
 public:
-    SerialKeyParser();
-    virtual bool parse(const std::string& plainSerial);
-    const SerialKeyData& getData() const;
-
-    void setKey(const std::string& key);
-
-private:
-    std::string decode(const std::string& serial) const;
-    void parseV1(const std::vector<std::string>& parts);
-    void parseV2(const std::vector<std::string>& parts);
-    std::vector<std::string> splitToParts(const std::string& plainSerial) const;
-
-    SerialKeyData m_data{};
+    SerialKeyParserV3();
+    bool parse(const std::string& plainSerial) override;
 };

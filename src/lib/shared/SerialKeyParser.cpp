@@ -22,8 +22,14 @@ SerialKeyParser::SerialKeyParser()
 
 }
 
+void
+SerialKeyParser::setKey(const std::string& key)
+{
+    m_data.key = key;
+}
+
 std::string
-SerialKeyParser::decode(const std::string& serial)
+SerialKeyParser::decode(const std::string& serial) const
 {
     static const char* const lut = "0123456789ABCDEF";
     std::string output;
@@ -51,7 +57,8 @@ SerialKeyParser::decode(const std::string& serial)
     return output;
 }
 
-bool SerialKeyParser::parse(const std::string& plainSerial)
+bool
+SerialKeyParser::parse(const std::string& plainSerial)
 {
     bool valid = false;
     auto key = decode(plainSerial);
@@ -71,12 +78,14 @@ bool SerialKeyParser::parse(const std::string& plainSerial)
     return valid;
 }
 
-const SerialKeyData& SerialKeyParser::getData() const
+const SerialKeyData&
+SerialKeyParser::getData() const
 {
     return m_data;
 }
 
-void SerialKeyParser::parseV1(const std::vector<std::string>& parts)
+void
+SerialKeyParser::parseV1(const std::vector<std::string>& parts)
 {
     // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
     m_data.edition.setType(parts.at(1));
@@ -88,7 +97,8 @@ void SerialKeyParser::parseV1(const std::vector<std::string>& parts)
     sscanf(parts.at(7).c_str(), "%lld", &m_data.expireTime);
 }
 
-void SerialKeyParser::parseV2(const std::vector<std::string>& parts)
+void
+SerialKeyParser::parseV2(const std::vector<std::string>& parts)
 {
     // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
     m_data.keyType.setKeyType(parts.at(1));
@@ -101,7 +111,8 @@ void SerialKeyParser::parseV2(const std::vector<std::string>& parts)
     sscanf(parts.at(8).c_str(), "%lld", &m_data.expireTime);
 }
 
-std::vector<std::string> SerialKeyParser::splitToParts(const std::string& plainSerial) const
+std::vector<std::string>
+SerialKeyParser::splitToParts(const std::string& plainSerial) const
 {
     // tokenize serialised subscription.
     std::vector<std::string> parts;
