@@ -88,7 +88,7 @@ jobs:
           retention-days: 1
 
       - name: Send package to Binary Storage
-        if: "github.event_name == 'pull_request'"
+        if: "github.event_name == 'release'"
         uses: garygrossgarten/github-action-scp@v0.7.3
         with:
           local: flatpak/${{ matrix.name }}.flatpak
