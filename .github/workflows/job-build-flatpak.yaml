@@ -1,0 +1,98 @@
+name: Ubuntu-flatpak
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-flatpak-bundle:
+    name: ubuntu-flatpak
+    runs-on: ubuntu-latest
+    container:
+      image: symless/synergy-core:ubuntu20.04
+      options: --privileged
+    strategy:
+      matrix:
+        name: [synergy, synergy-enterprise, synergy-business]
+        include:
+          - name: synergy
+            remote_folder: v1-core-standard
+          - name: synergy-enterprise
+            remote_folder: v1-core-enterprise
+          - name: synergy-business
+            remote_folder: v1-core-business
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
+      SYNERGY_BUSINESS: ${{ matrix.business }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+          fetch-depth: "0"
+
+      - name: Install Dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            cmake python3 g++ \
+            libssl-dev libx11-dev xorg-dev qtbase5-dev \
+            libglib2.0-dev libgdk-pixbuf2.0-dev libnotify-dev \
+            flatpak flatpak-builder
+
+      - name: Work around https://github.com/actions/checkout/issues/766
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Version Info
+        id: version
+        run: |
+          python3 CI/build_version.py
+          mkdir -p version-info && cd version-info && cmake .. && cd ..
+          . ./version-info/version
+          rm -rf version-info
+          SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
+          echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
+          echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
+          echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
+          echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
+          echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
+          echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_PACKAGE_NAME::${{ matrix.name }}"
+
+      - name: Install flatpak
+        run: |
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install -y org.kde.Platform//5.15-21.08
+          flatpak install -y org.kde.Sdk//5.15-21.08
+
+      - name: Build
+        run: |
+          cd flatpak
+          flatpak-builder build ${{ matrix.name }}.yml --disable-cache --force-clean
+          flatpak build-export export build
+          flatpak build-bundle export ${{ matrix.name }}.flatpak com.symless.Synergy master --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        if: "github.event_name == 'pull_request'"
+        with:
+          name: Bundle
+          path: flatpak/${{ matrix.name }}.flatpak
+          retention-days: 1
+
+      - name: Send package to Binary Storage
+        if: "github.event_name == 'pull_request'"
+        uses: garygrossgarten/github-action-scp@v0.7.3
+        with:
+          local: flatpak/${{ matrix.name }}.flatpak
+          remote: ${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/${{ matrix.name }}.flatpak
+          host: ${{ secrets.BINARIES_SSH_HOST }}
+          username: ${{ secrets.BINARIES_SSH_USER }}
+          privateKey: ${{ secrets.BINARIES_SSH_KEY }}
