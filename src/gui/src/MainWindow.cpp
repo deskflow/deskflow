@@ -1479,6 +1479,7 @@ void MainWindow::updateScreenName()
 
 void MainWindow::enableServer(bool enable)
 {
+    m_AppConfig->setServerGroupChecked(enable);
     m_pRadioGroupServer->setChecked(enable);
 
     if (enable)
@@ -1498,6 +1499,7 @@ void MainWindow::enableServer(bool enable)
 
 void MainWindow::enableClient(bool enable)
 {
+    m_AppConfig->setClientGroupChecked(enable);
     m_pRadioGroupClient->setChecked(enable);
 
     if (enable)

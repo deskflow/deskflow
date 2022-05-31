@@ -64,6 +64,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
         /// @brief Enables\disables all controls.
         void enableControls(bool enabled);
 
+        /// @brief This method setups security section in setting
+        void setupSeurity();
+
     private:
         MainWindow* m_pMainWindow;
         AppConfig& m_appConfig;
