@@ -1,5 +1,8 @@
 v1.14.5-snapshot
 ===========
+Enhancements:
+- #7183 Refactoring for v3 licenses
+
 Bug fixes:
 - #7182 Remove unused TLS options from the GUI on Synergy Client
 ===========
