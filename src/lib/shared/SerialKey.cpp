@@ -18,6 +18,8 @@
 #include "SerialKey.h"
 
 #include <vector>
+#include <stdexcept>
+#include <climits>
 #include "SerialKeyEdition.h"
 #include "SerialKeyParser.h"
 
