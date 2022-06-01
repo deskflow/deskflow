@@ -1,6 +1,13 @@
 v1.14.4-snapshot
 ===========
 Enhancements:
+- #7183 Refactoring for v3 licenses
+
+===========
+
+v1.14.4-snapshot
+===========
+Enhancements:
 - #7143 Add ability to stop synergy on the login screen
 - #7157 | #7160 Synergy business accepts only business licenses
 - #7166 Replace annoying language notifications with warnings in logs

@@ -88,7 +88,7 @@ SerialKey::isValid() const
 {
     bool Valid = true;
 
-    if (!m_data.edition.isValid() || isExpired(::time(0)))
+    if (!m_data.edition.isValid() || isExpired(::time(nullptr)))
     {
         Valid = false;
     }

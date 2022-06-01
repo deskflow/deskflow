@@ -35,7 +35,7 @@ struct SerialKeyData {
      * @brief SerialKeyData constructor
      * @param key encoded key
      */
-    SerialKeyData(const std::string& key) :
+    explicit SerialKeyData(const std::string& key) :
         key(key)
     {
     }
@@ -44,7 +44,7 @@ struct SerialKeyData {
      * @brief SerialKeyData default constructor
      * @param key edition. Unregistered by default
      */
-    SerialKeyData(Edition edition = kUnregistered) :
+    explicit SerialKeyData(Edition edition = kUnregistered) :
         edition(edition)
     {
     }

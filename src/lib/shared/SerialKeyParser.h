@@ -24,6 +24,10 @@ class SerialKeyParser
 {
 public:
     /**
+     * @brief ~SerialKeyParser destructor
+     */
+    virtual ~SerialKeyParser(){}
+    /**
      * @brief parse serial key
      * @param plainSerial encoded serial key
      * @return true if parsed

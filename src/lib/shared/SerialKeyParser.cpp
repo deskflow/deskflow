@@ -63,8 +63,8 @@ SerialKeyParser::decode(const std::string& serial) const
         char a = serial[i];
         char b = serial[i + 1];
 
-        const char* p = std::lower_bound(lut, lut + 16, a);
-        const char* q = std::lower_bound(lut, lut + 16, b);
+        const auto p = std::lower_bound(lut, lut + 16, a);
+        const auto q = std::lower_bound(lut, lut + 16, b);
 
         if (*q != b || *p != a) {
             return output;
