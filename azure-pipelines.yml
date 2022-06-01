@@ -6,7 +6,7 @@ jobs:
 
   - job: Linux
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: "ubuntu-latest"
 
     strategy:
       matrix:
@@ -67,6 +67,10 @@ jobs:
           image: symless/synergy-core:fedora35
           packager: rpm
           name: fedora35
+        fedora36:
+          image: symless/synergy-core:fedora36
+          packager: rpm
+          name: fedora36
         centos7.6:
           image: symless/synergy-core:centos7.6
           packager: rpm
@@ -107,9 +111,9 @@ jobs:
       vmImage: $[ variables['image'] ]
 
     variables:
-      QT_VERSION: '5.15.2'
-      QT_PATH: '/usr/local/opt/qt'
-      Qt5_DIR: '$(QT_PATH)/$(QT_VERSION)/clang_64'
+      QT_VERSION: "5.15.2"
+      QT_PATH: "/usr/local/opt/qt"
+      Qt5_DIR: "$(QT_PATH)/$(QT_VERSION)/clang_64"
 
     steps:
       - template: CI/checkout.yml
@@ -135,9 +139,9 @@ jobs:
       vmImage: $[ variables['image'] ]
 
     variables:
-      QT_VERSION: '5.12.6'
+      QT_VERSION: "5.12.6"
       QLI_OUT_DIR: '.\deps\Qt'
-      QLI_BASE_URL: 'http://qt.mirror.constant.com/'
+      QLI_BASE_URL: "http://qt.mirror.constant.com/"
       QT_BIN_PATH: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017_64'
       QT_BIN_PATH_32: '$(Build.Repository.LocalPath)\$(QLI_OUT_DIR)\$(QT_VERSION)\msvc2017'
       BONJOUR_SDK_DIR: 'deps\BonjourSDK'

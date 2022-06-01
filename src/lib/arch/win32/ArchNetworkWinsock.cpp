@@ -734,15 +734,15 @@ ArchNetworkWinsock::nameToAddr(const std::string& name)
         throwNameError(ret);
     }
 
-    for(; pResult != nullptr; pResult = pResult->ai_next ){
+    for(auto address = pResult; address != nullptr; address = address->ai_next ){
         addresses.push_back(new ArchNetAddressImpl);
-        if (pResult->ai_family == AF_INET) {
+        if (address->ai_family == AF_INET) {
             addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in);
         } else {
             addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
         }
 
-        memcpy(&addresses.back()->m_addr, pResult->ai_addr, addresses.back()->m_len);
+        memcpy(&addresses.back()->m_addr, address->ai_addr, addresses.back()->m_len);
     }
 
     freeaddrinfo(pResult);

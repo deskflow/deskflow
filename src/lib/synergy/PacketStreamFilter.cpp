@@ -83,7 +83,7 @@ PacketStreamFilter::read(void* buffer, UInt32 n)
 
     if (m_inputShutdown && m_size == 0) {
         m_events->addEvent(Event(m_events->forIStream().inputShutdown(),
-                        getEventTarget(), NULL));
+                        getEventTarget()));
     }
 
     return n;

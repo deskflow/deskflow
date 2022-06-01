@@ -3,26 +3,35 @@ v1.14.5-snapshot
 Enhancements:
 - #7183 Refactoring for v3 licenses
 
+Bug fixes:
+- #7182 Remove unused TLS options from the GUI on Synergy Client
 ===========
 
-v1.14.4-snapshot
+v1.14.4-rc
 ===========
 Enhancements:
 - #7143 Add ability to stop synergy on the login screen
 - #7157 | #7160 Synergy business accepts only business licenses
 - #7166 Replace annoying language notifications with warnings in logs
+- #7181 Add Fedora 36
 
 Bug fixes:
 - #7144 Fix double lines when pasting text from Linux to Windows
 - #7149 Address issues with modifiers and dead keys
 - #7163 Fix compilation issues for FreeBSD
-- #7164 Fix memory leaks in language sync and TLS functionality
+- #7172 Memory leaks in language sync and TLS functionality
+- #7175 | #7178 Memory leaks in copy/paste and drag and drop functionality
+- #7179 Disable drag and drop by default
 
 Github Actions:
+- #7177 Create workflow for flatpak build support
 - #7148 Fix unstable build for windows core
 - #7156 Change binary storage server
 - #7161 Use brew bundle to install dependencies
 - #7162 Add new distributions to CI
+- #7167 | #7168 | #7173 Use changelog when creating deb files
+- #7169 Remove temporary directory when building debs
+- #7174 Show all workflows for Raspberry PI
 ===========
 
 v1.14.3-snapshot

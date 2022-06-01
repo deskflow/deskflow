@@ -27,7 +27,7 @@
 #define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+-[a-z1-9]*)"
 #define VERSION_REGEX_SECTIONED "(\\d+)\\.(\\d+)\\.(\\d+)-([a-z1-9]*)"
 #define VERSION_SEGMENT_COUNT 4
-#define VERSION_URL "https://api-functions.prod.a.symless.com/version"
+#define VERSION_URL "https://api.symless.com/version"
 
 
 VersionChecker::VersionChecker()

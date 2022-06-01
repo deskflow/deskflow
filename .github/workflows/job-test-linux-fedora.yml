@@ -20,11 +20,18 @@ jobs:
           - distro: fedora33
           - distro: fedora34
           - distro: fedora35
+          - distro: fedora36
 
     name: ${{ matrix.distro }}
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Work around https://github.com/actions/checkout/issues/766
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
     - name: Build
       run: |

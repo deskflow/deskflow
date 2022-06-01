@@ -117,7 +117,7 @@ OSXScreen::OSXScreen(IEventQueue* events,
 	m_lastSingleClickXCursor(0),
 	m_lastSingleClickYCursor(0),
 	m_events(events),
-	m_getDropTargetThread(NULL),
+	m_getDropTargetThread(nullptr),
 	m_impl(NULL)
 {
     m_displayID = CGMainDisplayID();
@@ -602,8 +602,8 @@ OSXScreen::fakeMouseButton(ButtonID id, bool press)
     
 	if (!press && (id == kButtonLeft)) {
 		if (m_fakeDraggingStarted) {
-			m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
-				this, &OSXScreen::getDropTargetThread));
+			auto method = new TMethodJob<OSXScreen>(this, &OSXScreen::getDropTargetThread);
+			m_getDropTargetThread.reset(new Thread(method));
 		}
 		
 		m_draggingStarted = false;
@@ -614,30 +614,28 @@ void
 OSXScreen::getDropTargetThread(void*)
 {
 #if defined(MAC_OS_X_VERSION_10_7)
-	char* cstr = NULL;
-	
 	// wait for 5 secs for the drop destinaiton string to be filled.
 	UInt32 timeout = ARCH->time() + 5;
-	
+	m_dropTarget.clear();
+
 	while (ARCH->time() < timeout) {
 		CFStringRef cfstr = getCocoaDropTarget();
-		cstr = CFStringRefToUTF8String(cfstr);
+		char* cstr = CFStringRefToUTF8String(cfstr);
 		CFRelease(cfstr);
 		
 		if (cstr != NULL) {
+			LOG((CLOG_DEBUG "drop target: %s", cstr));
+			m_dropTarget = cstr;
+			free(cstr);
 			break;
 		}
 		ARCH->sleep(.1f);
 	}
 	
-	if (cstr != NULL) {
-		LOG((CLOG_DEBUG "drop target: %s", cstr));
-		m_dropTarget = cstr;
-	}
-	else {
+	if (m_dropTarget.empty()) {
 		LOG((CLOG_ERR "failed to get drop target"));
-		m_dropTarget.clear();
 	}
+
 #else
 	LOG((CLOG_WARN "drag drop not supported"));
 #endif
@@ -1208,8 +1206,8 @@ OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 		}
 		else {
 			if (m_fakeDraggingStarted) {
-				m_getDropTargetThread = new Thread(new TMethodJob<OSXScreen>(
-																			   this, &OSXScreen::getDropTargetThread));
+				auto method = new TMethodJob<OSXScreen>(this, &OSXScreen::getDropTargetThread);
+				m_getDropTargetThread.reset(new Thread(method));
 			}
 			
 			m_draggingStarted = false;
@@ -2069,14 +2067,15 @@ OSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 	}
 	
 	CFIndex length = CFStringGetLength(aString);
-	CFIndex maxSize = CFStringGetMaximumSizeForEncoding(
-		length,
-		kCFStringEncodingUTF8);
+	CFIndex maxSize = CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8);
 	char* buffer = (char*)malloc(maxSize);
-	if (CFStringGetCString(aString, buffer, maxSize, kCFStringEncodingUTF8)) {
-		return buffer;
+
+	if (!CFStringGetCString(aString, buffer, maxSize, kCFStringEncodingUTF8)) {
+		free(buffer);
+		buffer = NULL;
 	}
-	return NULL;
+
+	return buffer;
 }
 
 void
@@ -2100,21 +2099,20 @@ String&
 OSXScreen::getDraggingFilename()
 {
 	if (m_draggingStarted) {
+		m_draggingFilename.clear();
+
 		CFStringRef dragInfo = getDraggedFileURL();
-		char* info = NULL;
-		info = CFStringRefToUTF8String(dragInfo);
-		if (info == NULL) {
-			m_draggingFilename.clear();
-		}
-		else {
+		char* info = CFStringRefToUTF8String(dragInfo);
+		CFRelease(dragInfo);
+
+		if (info != NULL) {
 			LOG((CLOG_DEBUG "drag info: %s", info));
-			CFRelease(dragInfo);
-			String fileList(info);
-			m_draggingFilename = fileList;
+			m_draggingFilename = info;
+			free(info);
 		}
 
 		// fake a escape key down and up then left mouse button up
-        fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
+		fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
 		fakeKeyUp(1);
 		fakeMouseButton(kButtonLeft, false);
 	}

@@ -179,13 +179,13 @@ LicenseManager::getTrialNotice() const
     if (m_serialKey.isExpired(::time(0))){
         Notice = "<html><head/><body><p>"
                  "Trial expired - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Buy now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Buy now</a>"
                  "</p></body></html>";
     }
     else{
         Notice = "<html><head/><body><p>"
                  "Trial expires in %1 day%2 - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Buy now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Buy now</a>"
                  "</p></body></html>";
 
         time_t daysLeft = m_serialKey.daysLeft(::time(0));
@@ -203,13 +203,13 @@ LicenseManager::getTemporaryNotice() const
     if (m_serialKey.isExpired(::time(0))) {
         Notice = "<html><head/><body><p>"
                  "License expired - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Renew now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Renew now</a>"
                  "</p></body></html>";
     }
     else if (m_serialKey.isExpiring(::time(0))) {
         Notice = "<html><head/><body><p>"
                  "License expires in %1 day%2 - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Renew now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Renew now</a>"
                  "</p></body></html>";
 
         time_t daysLeft = m_serialKey.daysLeft(::time(0));

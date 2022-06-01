@@ -56,12 +56,20 @@ public:
     The \p data must be POD (plain old data) allocated by malloc(),
     which means it cannot have a constructor, destructor or be
     composed of any types that do. For non-POD (normal C++ objects
-    use \c setDataObject().
+    use \c setDataObject() or use appropriate constructor.
     \p target is the intended recipient of the event.
     \p flags is any combination of \c Flags.
     */
     Event(Type type, void* target = NULL, void* data = NULL,
                              Flags flags = kNone);
+
+    //! Create \c Event with non-POD data
+    /*!
+    \p type of the event
+    \p target is the intended recipient of the event.
+    \p dataObject with event data
+    */
+    Event(Type type, void* target, EventData* dataObject);
 
     //! @name manipulators
     //@{

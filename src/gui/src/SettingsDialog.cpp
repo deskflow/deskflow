@@ -155,13 +155,7 @@ void SettingsDialog::loadFromConfig() {
     m_pCheckBoxLanguageSync->setChecked(m_appConfig.getLanguageSync());
     m_pCheckBoxScrollDirection->setChecked(m_appConfig.getInvertScrollDirection());
 
-    //If the tls file exists test its key length
-    if (QFile(appConfig().getTLSCertPath()).exists()) {
-        updateKeyLengthOnFile(appConfig().getTLSCertPath());
-    } else {
-        m_pComboBoxKeyLength->setCurrentIndex(m_pComboBoxKeyLength->findText(appConfig().getTLSKeyLength()));
-    }
-
+    setupSeurity();
 
     if (m_appConfig.isSystemScoped()) {
         m_pRadioSystemScope->setChecked(true);
@@ -187,8 +181,6 @@ void SettingsDialog::loadFromConfig() {
     allowAutoConfig();
 #endif
 
-    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
 #else
@@ -196,6 +188,27 @@ void SettingsDialog::loadFromConfig() {
     m_pLabelInstallBonjour->hide();
 #endif
 
+}
+
+void SettingsDialog::setupSeurity()
+{
+    //If the tls file exists test its key length
+    if (QFile(appConfig().getTLSCertPath()).exists()) {
+        updateKeyLengthOnFile(appConfig().getTLSCertPath());
+    } else {
+        m_pComboBoxKeyLength->setCurrentIndex(m_pComboBoxKeyLength->findText(appConfig().getTLSKeyLength()));
+    }
+
+    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+
+    if (appConfig().getClientGroupChecked()) {
+        m_pLabelKeyLength->hide();
+        m_pComboBoxKeyLength->hide();
+        m_pLabelCertificate->hide();
+        m_pLineEditCertificatePath->hide();
+        m_pPushButtonBrowseCert->hide();
+        m_pPushButtonRegenCert->hide();
+    }
 }
 
 void SettingsDialog::allowAutoConfig()

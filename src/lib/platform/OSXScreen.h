@@ -32,6 +32,7 @@
 #include <mach/mach_interface.h>
 #include <mach/mach_init.h>
 #include <IOKit/IOMessage.h>
+#include <memory>
 
 extern "C" {
     typedef int CGSConnectionID;
@@ -336,7 +337,7 @@ private:
 
     IEventQueue*            m_events;
     
-    Thread*                m_getDropTargetThread;
+    std::unique_ptr<Thread>   m_getDropTargetThread;
     String                    m_dropTarget;
 
 #if defined(MAC_OS_X_VERSION_10_7)

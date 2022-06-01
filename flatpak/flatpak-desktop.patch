@@ -1,0 +1,14 @@
+diff --git a/res/synergy.desktop b/res/synergy.desktop
+index fa987bdf..9513dbf3 100644
+--- a/res/synergy.desktop
++++ b/res/synergy.desktop
+@@ -3,8 +3,7 @@ Type=Application
+ Version=1.0
+ Name=Synergy
+ Comment=Keyboard and mouse sharing solution
+-Path=/usr/bin
+-Exec=/usr/bin/synergy
++Exec=
+ Icon=synergy
+ Terminal=false
+ Categories=Utility;
