@@ -7,14 +7,14 @@ edition = "2021"
 
 [dependencies]
 v3_license_parser = { git = "https://github.com/symless/v3-license-parser.git" }
-ed25519-dalek = { version = "1.0.1", features = ["serde"] }
+ed25519-dalek = { version = "1.0.1" }
 cxx = "1.0.68"
 chrono = "0.4.19"
 
 [build-dependencies]
 const-gen = "1.1.0"
 cxx-build = "1.0.68"
-pkcs8 = { version = "0.8.0", features = ["std"] }
+pkcs8 = { version = "0.9.0", features = ["std"] }
 ed25519 = { version = "1.4.1", features = ["pkcs8", "alloc", "pem"] }
 
 [lib]
