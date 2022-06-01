@@ -1,0 +1,21 @@
+[package]
+name = "license-parser"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+v3_license_parser = { git = "https://github.com/symless/v3-license-parser.git" }
+ed25519-dalek = { version = "1.0.1", features = ["serde"] }
+cxx = "1.0.68"
+chrono = "0.4.19"
+
+[build-dependencies]
+const-gen = "1.1.0"
+cxx-build = "1.0.68"
+pkcs8 = { version = "0.8.0", features = ["std"] }
+ed25519 = { version = "1.4.1", features = ["pkcs8", "alloc", "pem"] }
+
+[lib]
+crate-type = ["staticlib"]

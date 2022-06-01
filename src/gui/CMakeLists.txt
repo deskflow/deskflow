@@ -1,4 +1,9 @@
-cmake_minimum_required (VERSION 3.4)
+if (BUILD_V3_LICENSE)
+    cmake_minimum_required (VERSION 3.20)
+else()
+    cmake_minimum_required (VERSION 3.4)
+endif()
+
 
 find_package (Qt5 COMPONENTS Core Widgets Network LinguistTools)
 set (CMAKE_AUTOMOC ON)

@@ -84,7 +84,20 @@ else()
     set (SYNERGY_ADD_HEADERS TRUE)
 endif()
 
+if (DEFINED ENV{SYNERGY_V3_LICENSE})
+    cmake_minimum_required (VERSION 3.20)
+    option (BUILD_V3_LICENSE "Build Online" ON)
+else()
+    option (BUILD_V3_LICENSE "Build Online" OFF)
+endif()
 
+if (BUILD_V3_LICENSE)
+    #
+    # Rust integration
+    #
+    find_package(Corrosion REQUIRED)
+    include(${PROJECT_SOURCE_DIR}/cmake/corrosion_cxx.cmake)
+endif()
 
 set (libs)
 include_directories (BEFORE SYSTEM ${PROJECT_SOURCE_DIR}/ext/googletest/googletest/include)
