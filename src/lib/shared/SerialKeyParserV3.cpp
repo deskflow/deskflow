@@ -1,4 +1,6 @@
 #include "SerialKeyParserV3.h"
+
+#if defined(BUILD_V3_LICENSE)
 #include "license-parser/src/lib.rs.h"
 
 bool SerialKeyParserV3::parse(const std::string &plainSerial)
@@ -11,3 +13,13 @@ bool SerialKeyParserV3::parse(const std::string &plainSerial)
     setExpirationTime(std::string(data.expiration));
     return data.valid;
 }
+
+#else
+
+bool SerialKeyParserV3::parse(const std::string &plainSerial)
+{
+    setKey(plainSerial);
+    return false;
+}
+
+#endif

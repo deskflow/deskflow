@@ -25,6 +25,7 @@ add_library(shared STATIC ${sources})
 target_link_libraries(shared arch base)
 
 if (BUILD_V3_LICENSE)
+    add_definitions(-DBUILD_V3_LICENSE)
     cmake_minimum_required (VERSION 3.20)
     add_library_rust(PATH license-parser NAMESPACE rust)
     target_link_libraries(shared rust::license-parser)
