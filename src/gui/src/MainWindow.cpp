@@ -1530,12 +1530,14 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool)
 {
     enableServer(true);
     enableClient(false);
+    m_AppConfig->saveSettings();
 }
 
 void MainWindow::on_m_pRadioGroupClient_clicked(bool)
 {
     enableClient(true);
     enableServer(false);
+    m_AppConfig->saveSettings();
 }
 
 void MainWindow::on_m_pButtonConnect_clicked()
