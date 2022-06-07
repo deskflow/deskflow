@@ -5,6 +5,7 @@ Enhancements:
 
 Bug fixes:
 - #7182 Remove unused TLS options from the GUI on Synergy Client
+- #7186 There are no additional TLS options for all users setting
 ===========
 
 v1.14.4-rc
