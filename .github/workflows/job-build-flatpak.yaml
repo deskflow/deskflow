@@ -3,7 +3,6 @@ name: Ubuntu-flatpak
 on:
   release:
     types: [created]
-  pull_request:
 
 jobs:
   build-flatpak-bundle:
@@ -83,7 +82,7 @@ jobs:
         if: "github.event_name == 'pull_request'"
         uses: actions/upload-artifact@v2
         with:
-          name: Bundle
+          name: ${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}
           path: flatpak/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
           retention-days: 1
 
