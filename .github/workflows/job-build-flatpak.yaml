@@ -54,7 +54,7 @@ jobs:
           rm -rf version-info
           SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
           SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
-          SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          SYNERGY_FLATPAK_NAME="${{ matrix.name }}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
           echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
           echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
           echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
@@ -62,10 +62,8 @@ jobs:
           echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
           echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
           echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
-          echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+          echo "::set-output name=SYNERGY_FLATPAK_NAME::${SYNERGY_FLATPAK_NAME}"
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
-          echo "::set-output name=SYNERGY_PACKAGE_NAME::${{ matrix.name }}"
-
       - name: Install flatpak
         run: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -77,21 +75,21 @@ jobs:
           cd flatpak
           flatpak-builder build ${{ matrix.name }}.yml --disable-cache --force-clean
           flatpak build-export export build
-          flatpak build-bundle export ${{ matrix.name }}.flatpak com.symless.Synergy master --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+          flatpak build-bundle export ${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak com.symless.Synergy master --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
         if: "github.event_name == 'pull_request'"
+        uses: actions/upload-artifact@v2
         with:
-          name: Bundle
-          path: flatpak/${{ matrix.name }}.flatpak
+          name: ${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}
+          path: flatpak/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
           retention-days: 1
 
       - name: Send package to Binary Storage
         if: "github.event_name == 'release'"
         uses: garygrossgarten/github-action-scp@v0.7.3
         with:
-          local: flatpak/${{ matrix.name }}.flatpak
+          local: flatpak/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
           remote: ${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/${{ matrix.name }}.flatpak
           host: ${{ secrets.BINARIES_SSH_HOST }}
           username: ${{ secrets.BINARIES_SSH_USER }}

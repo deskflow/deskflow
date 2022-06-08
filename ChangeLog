@@ -34,6 +34,7 @@ Github Actions:
 - #7167 Use changelog when creating deb files
 - #7169 Remove temporary directory when building debs
 - #7174 Show all workflows for Raspberry Pi
+- #7187 Rename flatpak to match other builds
 
 1.14.3
 ======
