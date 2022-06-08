@@ -275,6 +275,8 @@ void AppConfig::saveSettings()
 {
     setCommonSetting(kWizardLastRun, m_WizardLastRun);
     setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
+    setCommonSetting(kGroupClientCheck, m_ClientGroupChecked);
+    setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
 
     if (isWritable()) {
         setSetting(kScreenName, m_ScreenName);
@@ -299,11 +301,9 @@ void AppConfig::saveSettings()
         setSetting(kLastExpireWarningTime, m_LastExpiringWarningTime);
         setSetting(kActivationHasRun, m_ActivationHasRun);
         setSetting(kMinimizeToTray, m_MinimizeToTray);
-        setSetting(kGroupServerCheck, m_ServerGroupChecked);
         setSetting(kUseExternalConfig, m_UseExternalConfig);
         setSetting(kConfigFile, m_ConfigFile);
         setSetting(kUseInternalConfig, m_UseInternalConfig);
-        setSetting(kGroupClientCheck, m_ClientGroupChecked);
         setSetting(kServerHostname, m_ServerHostname);
         setSetting(kPreventSleep, m_PreventSleep);
         setSetting(kLanguageSync, m_LanguageSync);
