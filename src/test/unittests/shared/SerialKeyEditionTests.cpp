@@ -78,8 +78,8 @@ TEST(SerialKeyEditionTests, SetEditionProChina)
 TEST(SerialKeyEditionTests, NameConstructor)
 {
     SerialKeyEdition edition(SerialKeyEdition::BUSINESS);
-    EXPECT_EQ(kUnregistered, edition.getType());
-    EXPECT_FALSE(edition.isValid());
+    EXPECT_EQ(kBusiness, edition.getType());
+    EXPECT_TRUE(edition.isValid());
 }
 
 TEST(SerialKeyEditionTests, isValid)
@@ -92,7 +92,7 @@ TEST(SerialKeyEditionTests, isValid)
     EXPECT_TRUE(edition.isValid());
 
     edition.setType(Edition::kBusiness);
-    EXPECT_FALSE(edition.isValid());
+    EXPECT_TRUE(edition.isValid());
 
     edition.setType(Edition::kPro);
     EXPECT_TRUE(edition.isValid());

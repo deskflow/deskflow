@@ -37,13 +37,11 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
         throw std::runtime_error("Serial key expired");
     }
 
+    #ifdef SYNERGY_BUSINESS
     if (!serialKey.isValid()) {
-        #ifdef SYNERGY_BUSINESS
         throw std::runtime_error("The serial key is not compatible with the business version of Synergy.");
-        #else
-        throw std::runtime_error("The serial key is not compatible with the consumer version of Synergy.");
-        #endif
     }
+    #endif
 
     if (serialKey != m_serialKey) {
         using std::swap;
