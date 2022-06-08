@@ -2,38 +2,38 @@
 ======
 
 Bug fixes:
-- #7182 Remove unused TLS options from the GUI on Synergy Client
+- #7182 Remove unused TLS options from the GUI on client
 - #7186 There are no additional TLS options for all users setting
 
 Enhancements:
-- #7183 Refactoring for v3 licenses
+- #7183 Refactoring for Synergy 3 licenses
 
 1.14.4
 ======
 
 Bug fixes:
-- #7144 Fix double lines when pasting text from Linux to Windows
+- #7144 Double lines when pasting text from Linux to Windows
 - #7149 Address issues with modifiers and dead keys
 - #7163 Fix compilation issues for FreeBSD
 - #7172 Memory leaks in language sync and TLS functionality
-- #7175 | #7178 Memory leaks in copy/paste and drag and drop functionality
+- #7175 Memory leaks in copy/paste and drag and drop functionality
 - #7179 Disable drag and drop by default
 
 Enhancements:
-- #7143 Add ability to stop synergy on the login screen
+- #7143 Ability to stop Synergy on the login screen
 - #7157 Synergy Business accepts only business licenses
 - #7166 Replace language notifications with warnings in logs
 - #7181 Fedora 36 support to CI system
 
 Github Actions:
 - #7177 Create workflow for flatpak build support
-- #7148 Fix unstable build for windows core
+- #7148 Fix unstable build for Windows core
 - #7156 Change binary storage server
 - #7161 Use brew bundle to install dependencies
 - #7162 Add new distributions to CI
 - #7167 Use changelog when creating deb files
 - #7169 Remove temporary directory when building debs
-- #7174 Show all workflows for Raspberry PI
+- #7174 Show all workflows for Raspberry Pi
 
 1.14.3
 ======
@@ -47,33 +47,33 @@ Bug fixes:
 ======
 
 Bug fixes:
-- #7070 Fix radio button shifted focus on macOS
-- #7038 | #7104 | #7111 | #7112 | #7113 Fix client and server different keyboard layout errors
-- #7078 Fix clipboard re-enables automatically
-- #7077 Fix Ubuntu, CentOS and Debian build after SYNERGY-1161
-- #7080 Add trace if the system can't open file with trusted fingerprints
-- #7081 Fix autoconfig after SYNERGY-1161
+- #7070 Radio button shifted focus on macOS
+- #7038 Client and server different keyboard layout errors
+- #7078 Clipboard re-enables automatically
+- #7077 Broken Ubuntu, CentOS and Debian build
+- #7080 Trace if the system can't open file with trusted fingerprints
+- #7081 Dialog shouldn't appear for autoconfig functionality
 - #7082 Windows client doesn't resume connection after sleep
-- #7089 | #7094 Modifier keys don't work on Microsoft Remote Desktop
-- #7091 Fix CMakeFileList for unittests
-- #7092 Synergy is running after quit on Linux
+- #7089 Modifier keys don't work on Microsoft Remote Desktop
+- #7091 Broken CMakeFileList for unittests
+- #7092 Runs after quit on Linux
 - #7095 Update account and upgrade links
 - #7096 The system duplicates hotkeys in setup
-- #7099 SYNERGY-854 Fix compilation with msvc 2014
-- #7100 | #7101 No configuration available on Windows
+- #7099 Compilation broken with msvc 2014
+- #7100 No configuration available on Windows
 - #7097 The title "Enterprise" disappeares after clicking on "Preferences"
 - #7108 Wrong characters on client for unicode
-- #7114 Fixed problem with reading languages on Linux system
+- #7114 Problem with reading languages on Linux system
 - #7115 Prevent notifications if language reading fails
 
 Enhancements:
-- #7068 Add Synergy restart when settings changed
-- #7072 Ability to run synergy as a pre-login agent
-- #7074 Add Synergy restart when server settings changed
+- #7068 Restart when settings changed
+- #7072 Run synergy as a pre-login agent
+- #7074 Restart when server settings changed
 
 Github Actions:
-- #1043 Adding upload to s3 feature on all OSes
-- #7098 Add Apple M1 runner
+- #1043 Upload to S3 feature on all OS
+- #7098 Apple M1 runner
 - #7103 Fix core builds
 - #7109 Fix build version for M1 builds
 
