@@ -23,7 +23,8 @@ const std::map<std::string, Edition>& getSerialTypes()
         {SerialKeyEdition::BASIC, kBasic},
         {SerialKeyEdition::PRO, kPro},
         {SerialKeyEdition::BASIC_CHINA, kBasic_China},
-        {SerialKeyEdition::PRO_CHINA, kPro_China}
+        {SerialKeyEdition::PRO_CHINA, kPro_China},
+        {SerialKeyEdition::BUSINESS, kBusiness}
     };
 #endif
     return serialTypes;
