@@ -52,9 +52,3 @@ SerialKeyType::isTemporary() const
 	return m_isTemporary;
 }
 
-bool
-SerialKeyType::isPermanent() const
-{
-	return (!m_isTemporary);
-}
-

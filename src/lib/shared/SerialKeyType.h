@@ -31,7 +31,6 @@ public:
 	void setKeyType(const std::string& Type);
 	bool isTrial() const;
 	bool isTemporary() const;
-	bool isPermanent() const;
 
 private:
 	bool m_isTrial = false;
