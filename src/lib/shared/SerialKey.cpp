@@ -84,6 +84,12 @@ SerialKey::isTemporary() const
 }
 
 bool
+SerialKey::isMaintenance() const
+{
+    return m_data.keyType.isMaintenance();
+}
+
+bool
 SerialKey::isValid() const
 {
     bool Valid = true;
