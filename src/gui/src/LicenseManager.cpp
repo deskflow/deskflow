@@ -22,6 +22,47 @@
 #include <utility>
 #include <QThread>
 #include <QTimer>
+#include <QDateTime>
+#include <QLocale>
+
+namespace {
+
+std::string
+getMaintenanceMessage(const SerialKey& serialKey)
+{
+    auto expiration = QDateTime::fromTime_t(serialKey.getExpiration()).date();
+    QString message = "The license key you used will only work with versions of Synergy released before %1."
+                      "<p>To use this version, you’ll need to renew your Synergy maintenance license. "
+                      "<a href=\"https://symless.com/synergy/purchase?source=gui\""
+                         "style=\"text-decoration: none; color: #4285F4;\">Renew today</a>.</p>";
+    auto formatedDate = QLocale("en_US").toString(expiration, "MMM dd yyyy");
+    return message.arg(formatedDate).toStdString();
+}
+
+void
+checkSerialKey(const SerialKey& serialKey, bool acceptExpired)
+{
+    if (serialKey.isMaintenance()) {
+        auto buildDate = QDateTime::fromString(__TIMESTAMP__).toTime_t();
+
+        if (buildDate > serialKey.getExpiration()) {
+            throw std::runtime_error(getMaintenanceMessage(serialKey));
+        }
+    }
+
+    if (!acceptExpired && serialKey.isExpired(::time(nullptr))) {
+        throw std::runtime_error("Serial key expired");
+    }
+
+    #ifdef SYNERGY_BUSINESS
+    if (!serialKey.isValid()) {
+        throw std::runtime_error("The serial key is not compatible with the business version of Synergy.");
+    }
+    #endif
+}
+
+}
+
 
 LicenseManager::LicenseManager(AppConfig* appConfig) :
     m_AppConfig(appConfig),
@@ -31,17 +72,7 @@ LicenseManager::LicenseManager(AppConfig* appConfig) :
 void
 LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 {
-    time_t currentTime = ::time(0);
-
-    if (!acceptExpired && serialKey.isExpired(currentTime)) {
-        throw std::runtime_error("Serial key expired");
-    }
-
-    #ifdef SYNERGY_BUSINESS
-    if (!serialKey.isValid()) {
-        throw std::runtime_error("The serial key is not compatible with the business version of Synergy.");
-    }
-    #endif
+    checkSerialKey(serialKey, acceptExpired);
 
     if (serialKey != m_serialKey) {
         using std::swap;
@@ -108,6 +139,7 @@ LicenseManager::refresh()
             SerialKey serialKey (m_AppConfig->serialKey().toStdString());
             setSerialKey(serialKey, true);
         } catch (...) {
+            m_serialKey = SerialKey();
             m_AppConfig->clearSerialKey();
         }
     }

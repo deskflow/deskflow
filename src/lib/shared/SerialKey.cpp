@@ -131,6 +131,12 @@ SerialKey::daysLeft(time_t currentTime) const
     return timeLeft / day + daysLeft;
 }
 
+time_t
+SerialKey::getExpiration() const
+{
+    return m_data.expireTime;
+}
+
 int
 SerialKey::getSpanLeft(time_t time) const
 {

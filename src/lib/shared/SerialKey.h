@@ -35,6 +35,7 @@ public:
     bool                isMaintenance() const;
     bool                isValid() const;
     time_t              daysLeft(time_t currentTime) const;
+    time_t              getExpiration() const;
     int                 getSpanLeft(time_t time = ::time(0)) const;
     Edition             edition() const;
     const std::string&  toString() const;
