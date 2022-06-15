@@ -25,17 +25,19 @@ private:
 public:
 	static const std::string TRIAL;
 	static const std::string SUBSCRIPTION;
+	static const std::string MAINTENANCE;
 
 	SerialKeyType();
 
 	void setKeyType(const std::string& Type);
 	bool isTrial() const;
 	bool isTemporary() const;
-	bool isPermanent() const;
+	bool isMaintenance() const;
 
 private:
 	bool m_isTrial = false;
 	bool m_isTemporary = false;
+	bool m_isMaintenance = false;
 };
 
 inline bool

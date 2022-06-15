@@ -84,6 +84,12 @@ SerialKey::isTemporary() const
 }
 
 bool
+SerialKey::isMaintenance() const
+{
+    return m_data.keyType.isMaintenance();
+}
+
+bool
 SerialKey::isValid() const
 {
     bool Valid = true;
@@ -123,6 +129,12 @@ SerialKey::daysLeft(time_t currentTime) const
     daysLeft = timeLeft % day != 0 ? 1 : 0;
 
     return timeLeft / day + daysLeft;
+}
+
+time_t
+SerialKey::getExpiration() const
+{
+    return m_data.expireTime;
 }
 
 int

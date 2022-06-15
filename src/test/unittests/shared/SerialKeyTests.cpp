@@ -116,6 +116,16 @@ TEST(SerialKeyTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue)
     EXPECT_EQ(false, serial.isTrial());
     EXPECT_EQ(true, serial.isTemporary());
     EXPECT_EQ(true, serial.isExpiring(1));
+    EXPECT_FALSE(serial.isMaintenance());
+}
+
+TEST(SerialKeyTests, isExpiring_expiringV2MentenanceSerial_returnTrue)
+{
+    // {v2;maintenance;basic;Bob;1;email;company name;0;86400}
+    SerialKey serial("7B76323B6D61696E74656E616E63653B70726F3B736572686969206861647A68696C6F763B313B7365726869694073796D6C6573732E636F6D3B203B303B313635353132343139307D");
+    EXPECT_FALSE(serial.isTrial());
+    EXPECT_FALSE(serial.isTemporary());
+    EXPECT_TRUE(serial.isMaintenance());
 }
 
 TEST(SerialKeyTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue)

@@ -19,6 +19,7 @@
 
 const std::string SerialKeyType::TRIAL = "trial";
 const std::string SerialKeyType::SUBSCRIPTION = "subscription";
+const std::string SerialKeyType::MAINTENANCE = "maintenance";
 
 SerialKeyType::SerialKeyType()
 {
@@ -28,16 +29,9 @@ SerialKeyType::SerialKeyType()
 void
 SerialKeyType::setKeyType(const std::string& Type)
 {
-	m_isTrial = false;
-	m_isTemporary = false;
-
-	if (Type == SerialKeyType::TRIAL){
-		m_isTrial = true;
-		m_isTemporary = true;
-	}
-	else if (Type == SerialKeyType::SUBSCRIPTION){
-		m_isTemporary = true;
-	}
+	m_isTrial = (Type == SerialKeyType::TRIAL);
+	m_isTemporary = (m_isTrial || (Type == SerialKeyType::SUBSCRIPTION));
+	m_isMaintenance = (Type == SerialKeyType::MAINTENANCE);
 }
 
 bool
@@ -53,8 +47,8 @@ SerialKeyType::isTemporary() const
 }
 
 bool
-SerialKeyType::isPermanent() const
+SerialKeyType::isMaintenance() const
 {
-	return (!m_isTemporary);
+	return m_isMaintenance;
 }
 
