@@ -33,7 +33,7 @@ getMaintenanceMessage(const SerialKey& serialKey)
     auto expiration = QDateTime::fromTime_t(serialKey.getExpiration()).date();
     QString message = "The license key you used will only work with versions of Synergy released before %1."
                       "<p>To use this version, you’ll need to renew your Synergy maintenance license. "
-                      "<a href=\"https://symless.com/synergy/purchase?source=gui\""
+                      "<a href=\"https://symless.com/synergy/account?source=gui\""
                          "style=\"text-decoration: none; color: #4285F4;\">Renew today</a>.</p>";
     auto formatedDate = QLocale("en_US").toString(expiration, "MMM dd yyyy");
     return message.arg(formatedDate).toStdString();
