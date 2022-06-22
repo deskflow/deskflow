@@ -37,7 +37,7 @@ SynergyXkbKeyboard::SynergyXkbKeyboard()
         }
     }
     else {
-        LOG((CLOG_WARN "Can't open Xkb diaplay during reading languages"));
+        LOG((CLOG_WARN "Can't open Xkb display during reading languages"));
     }
 }
 
