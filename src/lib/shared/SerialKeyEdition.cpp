@@ -136,8 +136,16 @@ SerialKeyEdition::setType(const std::string& type)
     }
 }
 
-bool SerialKeyEdition::isValid() const
+bool
+SerialKeyEdition::isValid() const
 {
     auto types = getSerialTypes();
     return (types.find(getName()) != types.end());
 }
+
+bool
+SerialKeyEdition::isChina() const {
+    return (m_Type == kBasic_China || m_Type == kPro_China);
+}
+
+
