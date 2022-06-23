@@ -147,5 +147,3 @@ bool
 SerialKeyEdition::isChina() const {
     return (m_Type == kBasic_China || m_Type == kPro_China);
 }
-
-
