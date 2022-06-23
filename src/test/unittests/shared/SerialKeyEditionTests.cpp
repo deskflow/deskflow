@@ -64,6 +64,7 @@ TEST(SerialKeyEditionTests, SetEditionBasicChina)
     EXPECT_EQ(kBasic_China, edition.getType());
     EXPECT_EQ(SerialKeyEdition::BASIC_CHINA, edition.getName());
     EXPECT_EQ("Synergy 中文版", edition.getDisplayName());
+    EXPECT_TRUE(edition.isChina());
 }
 
 TEST(SerialKeyEditionTests, SetEditionProChina)
@@ -73,6 +74,7 @@ TEST(SerialKeyEditionTests, SetEditionProChina)
     EXPECT_EQ(kPro_China, edition.getType());
     EXPECT_EQ(SerialKeyEdition::PRO_CHINA, edition.getName());
     EXPECT_EQ("Synergy Pro 中文版", edition.getDisplayName());
+    EXPECT_TRUE(edition.isChina());
 }
 
 TEST(SerialKeyEditionTests, NameConstructor)

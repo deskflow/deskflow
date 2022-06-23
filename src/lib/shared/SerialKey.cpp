@@ -80,13 +80,13 @@ SerialKey::isTrial() const
 bool
 SerialKey::isTemporary() const
 {
-    return m_data.keyType.isTemporary();
+    return (m_data.keyType.isTemporary() && !m_data.edition.isChina());
 }
 
 bool
 SerialKey::isMaintenance() const
 {
-    return m_data.keyType.isMaintenance();
+    return (m_data.keyType.isMaintenance() || m_data.edition.isChina());
 }
 
 bool
