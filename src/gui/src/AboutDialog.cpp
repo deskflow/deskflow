@@ -31,12 +31,8 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 
 	QString aboutText(R"(<p>
 Keyboard and mouse sharing application. Cross platform and open source.<br /><br />
-Copyright © 2012-%%YEAR%% Symless Ltd.<br />
-Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.<br /><br />
+Copyright © %%YEAR%% Symless Ltd.<br /><br />
 Synergy is released under the GNU General Public License (GPLv2).<br /><br />
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.<br />
-The Synergy GUI is based on QSynergy by Volker Lanz.<br /><br />
-Visit our website for help and info (symless.com).
 </p>)");
 
 	m_versionChecker.setApp(synergyApp);
