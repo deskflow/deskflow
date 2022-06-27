@@ -33,8 +33,8 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 Keyboard and mouse sharing application. Cross platform and open source.<br /><br />
 Copyright © %%YEAR%% Symless Ltd.<br /><br />
 Synergy is released under the GNU General Public License (GPLv2).</p>
-<p><b>Key contributors</b><br>
-<span style="font-size: 11px">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
+<p style="font-size: 10pt">Key contributors<br>
+<span style="font-size: 7pt">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
 Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyle Bloom,
 Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
 </p>)");
