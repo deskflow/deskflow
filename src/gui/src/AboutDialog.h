@@ -36,6 +36,7 @@ class AboutDialog : public QDialog, public Ui::AboutDialogBase
         AboutDialog(QWidget* parent, const QString& synergyApp = QString());
 
     private:
+        void setupEliteBackersSection();
         VersionChecker m_versionChecker;
 };
 
