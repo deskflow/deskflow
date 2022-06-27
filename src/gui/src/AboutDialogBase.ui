@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>300</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,7 +31,7 @@
   <property name="maximumSize">
    <size>
     <width>450</width>
-    <height>300</height>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -138,6 +138,9 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
      <property name="margin">
       <number>1</number>
