@@ -69,7 +69,7 @@ Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Maga
     }
 
 #elif defined(Q_OS_LINUX)
-	QSize size(600, 330);
+	QSize size(600, 420);
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);
