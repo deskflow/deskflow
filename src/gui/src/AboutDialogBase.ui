@@ -115,13 +115,13 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>421</width>
-        <height>83</height>
+        <width>426</width>
+        <height>68</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <property name="leftMargin">
-        <number>3</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>3</number>
@@ -139,7 +139,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>7</pointsize>
+           <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
@@ -285,9 +285,13 @@
     <widget class="QLabel" name="labelEliteBackers">
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
+       <pointsize>-1</pointsize>
+       <weight>50</weight>
        <bold>false</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 14px</string>
      </property>
      <property name="text">
       <string>Elite Backers</string>
