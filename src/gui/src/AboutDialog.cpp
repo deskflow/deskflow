@@ -53,7 +53,6 @@ Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Maga
 
 	//Sets the current build year into the copyright text
 	label_3->setText(aboutText.replace(QString("%%YEAR%%"), QString::number(buildDate.year())));
-	setupEliteBackersSection();
 
 	// change default size based on os
 #if defined(Q_OS_MAC)
@@ -75,15 +74,4 @@ Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Maga
 	setMinimumSize(size);
 	resize(size);
 #endif
-}
-
-void AboutDialog::setupEliteBackersSection()
-{
-	QString eliteBackersLink(R"(
-	<a href="https://staging.symless.com/synergy/account-status" style="color: #4285F4;">
-	Become an Elite Backer
-	</a>)");
-
-	labelEliteBackersData->setText("Loading...<br> " + eliteBackersLink);
-	labelEliteBackersData->setOpenExternalLinks(true);
 }
