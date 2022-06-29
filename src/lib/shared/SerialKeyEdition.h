@@ -35,6 +35,7 @@ public:
 	void setType(const std::string& type);
 
 	bool isValid() const;
+	bool isChina() const;
 
 	static const std::string PRO;
 	static const std::string PRO_CHINA;
