@@ -26,7 +26,7 @@ class CreditsLoader : public QObject
 {
     Q_OBJECT
 public:
-    CreditsLoader(MainWindow& mainWindow);
+    explicit CreditsLoader(MainWindow& mainWindow);
     void loadEliteBackers();
 
 signals:

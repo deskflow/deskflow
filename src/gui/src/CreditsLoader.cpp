@@ -27,7 +27,7 @@ namespace {
 
 class CreditsResponse {
 public:
-    CreditsResponse(QByteArray& response) {
+    explicit CreditsResponse(const QByteArray& response) {
         auto data = parseJson(response);
         m_status = data["status"].toString();
 
@@ -55,7 +55,7 @@ public:
     }
 
 private:
-    QMap<QString, QVariant> parseJson(QByteArray& json) {
+    QMap<QString, QVariant> parseJson(const QByteArray& json) const {
         QJsonParseError jsonError;
         auto data =  QJsonDocument::fromJson(json, &jsonError);
         if (jsonError.error == QJsonParseError::NoError) {
