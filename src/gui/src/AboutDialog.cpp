@@ -17,17 +17,20 @@
  */
 
 #include "AboutDialog.h"
+#include "CreditsLoader.h"
 
 #include <QtCore>
 #include <QtGui>
 
 #include "OSXHelpers.h"
 
-AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
+AboutDialog::AboutDialog(MainWindow* parent, const QString& synergyApp) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	Ui::AboutDialogBase()
+	Ui::AboutDialogBase(),
+	credits(*parent)
 {
 	setupUi(this);
+	setupCreditsLoader();
 
 	QString aboutText(R"(<p>
 Keyboard and mouse sharing application. Cross platform and open source.<br /><br />
@@ -74,4 +77,15 @@ Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Maga
 	setMinimumSize(size);
 	resize(size);
 #endif
+}
+
+void AboutDialog::setupCreditsLoader()
+{
+	connect(&credits, SIGNAL(loaded(const QString&)), this, SLOT(updateEliteBackers(const QString&)));
+	credits.loadEliteBackers();
+}
+
+void AboutDialog::updateEliteBackers(const QString& eliteBackers) const
+{
+	this->labelEliteBackersData->setText(eliteBackers);
 }

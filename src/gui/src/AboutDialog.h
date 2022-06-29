@@ -22,6 +22,8 @@
 
 #include <QDialog>
 #include "VersionChecker.h"
+#include "CreditsLoader.h"
+#include "MainWindow.h"
 
 #include "ui_AboutDialogBase.h"
 
@@ -33,10 +35,15 @@ class AboutDialog : public QDialog, public Ui::AboutDialogBase
     Q_OBJECT
 
     public:
-        AboutDialog(QWidget* parent, const QString& synergyApp = QString());
+        AboutDialog(MainWindow* parent, const QString& synergyApp = QString());
+    public slots:
+        void updateEliteBackers(const QString& eliteBackers) const;
 
     private:
+        CreditsLoader credits;
         VersionChecker m_versionChecker;
+
+        void setupCreditsLoader();
 };
 
 #endif
