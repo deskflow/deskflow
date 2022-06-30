@@ -44,7 +44,7 @@
    <item row="10" column="1">
     <widget class="QLabel" name="labelCreditsLink">
      <property name="text">
-      <string notr="true">&lt;a href=&quot;https://symless.com/synergy/credits&quot; style=&quot;color: #4285F4;&quot;&gt;View the complete credits&lt;/a&gt;</string>
+      <string notr="true">&lt;a href=&quot;https://symless.com/synergy/credits?source=gui&quot; style=&quot;color: #4285F4;&quot;&gt;View the complete credits&lt;/a&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -54,7 +54,7 @@
    <item row="9" column="1">
     <widget class="QLabel" name="labelEliteBackerLink">
      <property name="text">
-      <string>&lt;a href=&quot;https://symless.com/synergy/account-status&quot; style=&quot;color: #4285F4;&quot;&gt;Become an Elite Backer&lt;/a&gt;</string>
+      <string>&lt;a href=&quot;https://symless.com/synergy/account-status?source=gui&quot; style=&quot;color: #4285F4;&quot;&gt;Become an Elite Backer&lt;/a&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
