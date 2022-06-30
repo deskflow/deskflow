@@ -17,26 +17,29 @@
  */
 
 #include "AboutDialog.h"
+#include "CreditsLoader.h"
 
 #include <QtCore>
 #include <QtGui>
 
 #include "OSXHelpers.h"
 
-AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
+AboutDialog::AboutDialog(MainWindow* parent, const QString& synergyApp) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	Ui::AboutDialogBase()
+	Ui::AboutDialogBase(),
+	credits(*parent)
 {
 	setupUi(this);
+	setupCreditsLoader();
 
 	QString aboutText(R"(<p>
 Keyboard and mouse sharing application. Cross platform and open source.<br /><br />
-Copyright © 2012-%%YEAR%% Symless Ltd.<br />
-Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.<br /><br />
-Synergy is released under the GNU General Public License (GPLv2).<br /><br />
-Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.<br />
-The Synergy GUI is based on QSynergy by Volker Lanz.<br /><br />
-Visit our website for help and info (symless.com).
+Copyright © %%YEAR%% Symless Ltd.<br /><br />
+Synergy is released under the GNU General Public License (GPLv2).</p>
+<p style="font-size: 14px">Key contributors<br>
+<span style="font-size: 11px">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
+Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyle Bloom,
+Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
 </p>)");
 
 	m_versionChecker.setApp(synergyApp);
@@ -56,7 +59,7 @@ Visit our website for help and info (symless.com).
 
 	// change default size based on os
 #if defined(Q_OS_MAC)
-	QSize size(600, 380);
+	QSize size(600, 490);
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);
@@ -69,9 +72,20 @@ Visit our website for help and info (symless.com).
     }
 
 #elif defined(Q_OS_LINUX)
-	QSize size(600, 330);
+	QSize size(600, 420);
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);
 #endif
+}
+
+void AboutDialog::setupCreditsLoader()
+{
+	connect(&credits, SIGNAL(loaded(const QString&)), this, SLOT(updateEliteBackers(const QString&)));
+	credits.loadEliteBackers();
+}
+
+void AboutDialog::updateEliteBackers(const QString& eliteBackers) const
+{
+	this->labelEliteBackersData->setText(eliteBackers);
 }
