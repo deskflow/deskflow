@@ -78,7 +78,7 @@ CreditsLoader::CreditsLoader(MainWindow& mainWindow) :
 
 void CreditsLoader::loadEliteBackers()
 {
-    const auto ELITE_BACKERS_URL = "https://api.symless.com/credits/elite-backers";
+    const auto ELITE_BACKERS_URL = "https://api2.prod.symless.com/credits/elite-backers";
     m_mainWindow.appendLogDebug(QString("Send request: %1").arg(ELITE_BACKERS_URL));
     const auto url = QUrl(ELITE_BACKERS_URL);
     const auto request = QNetworkRequest(url);
