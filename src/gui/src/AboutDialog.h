@@ -35,7 +35,7 @@ class AboutDialog : public QDialog, public Ui::AboutDialogBase
     Q_OBJECT
 
     public:
-        AboutDialog(MainWindow* parent, const QString& synergyApp = QString());
+        AboutDialog(MainWindow* parent, const AppConfig& config);
     public slots:
         void updateEliteBackers(const QString& eliteBackers) const;
 

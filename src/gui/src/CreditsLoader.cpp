@@ -17,6 +17,7 @@
 
 #include "CreditsLoader.h"
 #include "MainWindow.h"
+#include "AppConfig.h"
 
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -70,15 +71,16 @@ private:
 
 }
 
-CreditsLoader::CreditsLoader(MainWindow& mainWindow) :
-    m_mainWindow(mainWindow)
+CreditsLoader::CreditsLoader(MainWindow& mainWindow, const AppConfig& config) :
+    m_mainWindow(mainWindow),
+    m_config(config)
 {
     connect(&m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 }
 
 void CreditsLoader::loadEliteBackers()
 {
-    const auto ELITE_BACKERS_URL = "https://api2.prod.symless.com/credits/elite-backers";
+    const auto ELITE_BACKERS_URL = m_config.getEliteBackersUrl();
     m_mainWindow.appendLogDebug(QString("Send request: %1").arg(ELITE_BACKERS_URL));
     const auto url = QUrl(ELITE_BACKERS_URL);
     const auto request = QNetworkRequest(url);
