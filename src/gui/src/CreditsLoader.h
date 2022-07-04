@@ -21,12 +21,13 @@
 
 class QNetworkReply;
 class MainWindow;
+class AppConfig;
 
 class CreditsLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit CreditsLoader(MainWindow& mainWindow);
+    explicit CreditsLoader(MainWindow& mainWindow, const AppConfig& config);
     void loadEliteBackers();
 
 signals:
@@ -37,6 +38,7 @@ public slots:
 
 private:
     MainWindow& m_mainWindow;
+    const AppConfig& m_config;
     QNetworkAccessManager m_manager;
 
     void error(const QString& error) const;

@@ -114,6 +114,8 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         bool getAutoHide();
         void setInvertScrollDirection(bool b);
         bool getInvertScrollDirection() const;
+        void setEliteBackersUrl(const QString&);
+        const QString& getEliteBackersUrl() const;
         void setLanguageSync(bool b);
         bool getLanguageSync() const;
         void setPreventSleep(bool b);
@@ -208,7 +210,8 @@ protected:
         kTLSKeyLength,
         kPreventSleep,
         kLanguageSync,
-        kInvertScrollDirection
+        kInvertScrollDirection,
+        kEliteBackersUrl
     };
 
         void setScreenName(const QString& s);
@@ -248,6 +251,7 @@ protected:
         bool m_AutoHide;
         QString m_Serialkey;
         QString m_lastVersion;
+        QString m_eliteBackersUrl;
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;

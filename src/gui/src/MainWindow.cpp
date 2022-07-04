@@ -1265,7 +1265,7 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-    AboutDialog dlg(this, appPath(appConfig().synergycName()));
+    AboutDialog dlg(this, appConfig());
     dlg.exec();
 }
 

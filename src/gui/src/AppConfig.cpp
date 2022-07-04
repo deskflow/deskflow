@@ -79,7 +79,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "tlsKeyLength",
         "preventSleep",
         "languageSync",
-        "invertScrollDirection"
+        "invertScrollDirection",
+        "eliteBackersUrl"
 };
 
 static const char* logLevelNames[] =
@@ -245,6 +246,7 @@ void AppConfig::loadSettings()
     m_PreventSleep              = loadSetting(kPreventSleep, false).toBool();
     m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
     m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
+    m_eliteBackersUrl           = loadCommonSetting(kEliteBackersUrl, "https://api2.prod.symless.com/credits/elite-backers").toString();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -277,6 +279,7 @@ void AppConfig::saveSettings()
     setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
     setCommonSetting(kGroupClientCheck, m_ClientGroupChecked);
     setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
+    setCommonSetting(kEliteBackersUrl, m_eliteBackersUrl);
 
     if (isWritable()) {
         setSetting(kScreenName, m_ScreenName);
@@ -459,6 +462,14 @@ void AppConfig::setMinimizeToTray(bool newValue) {
 
 bool AppConfig::getInvertScrollDirection() const {
     return m_InvertScrollDirection;
+}
+
+void AppConfig::setEliteBackersUrl(const QString& newValue) {
+    setSettingModified(m_eliteBackersUrl, newValue);
+}
+
+const QString& AppConfig::getEliteBackersUrl() const {
+    return m_eliteBackersUrl;
 }
 
 bool AppConfig::getLanguageSync() const { return m_LanguageSync; }

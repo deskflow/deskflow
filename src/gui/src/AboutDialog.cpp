@@ -24,10 +24,10 @@
 
 #include "OSXHelpers.h"
 
-AboutDialog::AboutDialog(MainWindow* parent, const QString& synergyApp) :
+AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AboutDialogBase(),
-	credits(*parent)
+	credits(*parent, config)
 {
 	setupUi(this);
 	setupCreditsLoader();
@@ -42,7 +42,7 @@ Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyl
 Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
 </p>)");
 
-	m_versionChecker.setApp(synergyApp);
+	m_versionChecker.setApp(config.synergycName());
 	QString version = m_versionChecker.getVersion();
 #ifdef SYNERGY_REVISION
     version +=  '-';
