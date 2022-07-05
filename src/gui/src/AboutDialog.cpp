@@ -33,7 +33,7 @@ AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
 	setupCreditsLoader();
 
 	QString aboutText(R"(<p>
-Keyboard and mouse sharing application. Cross platform and open source.<br /><br />
+Keyboard and mouse sharing application. Cross platform and open source since 2001.<br /><br />
 Copyright © %%YEAR%% Symless Ltd.<br /><br />
 Synergy is released under the GNU General Public License (GPLv2).</p>
 <p style="font-size: 14px">Key contributors<br>
@@ -42,7 +42,7 @@ Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyl
 Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
 </p>)");
 
-	m_versionChecker.setApp(config.synergycName());
+	m_versionChecker.setApp(parent->appPath(config.synergycName()));
 	QString version = m_versionChecker.getVersion();
 #ifdef SYNERGY_REVISION
     version +=  '-';
@@ -81,11 +81,15 @@ Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Maga
 
 void AboutDialog::setupCreditsLoader()
 {
+	this->textEliteBackers->setText("Loading...");
+	this->textEliteBackers->viewport()->setAutoFillBackground(false);
+	this->textEliteBackers->document()->setDocumentMargin(0);
+
 	connect(&credits, SIGNAL(loaded(const QString&)), this, SLOT(updateEliteBackers(const QString&)));
 	credits.loadEliteBackers();
 }
 
 void AboutDialog::updateEliteBackers(const QString& eliteBackers) const
 {
-	this->labelEliteBackersData->setText(eliteBackers);
+	this->textEliteBackers->setText(eliteBackers);
 }
