@@ -33,7 +33,7 @@ AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
 	setupCreditsLoader();
 
 	QString aboutText(R"(<p>
-Keyboard and mouse sharing application. Cross platform and open source.<br /><br />
+Keyboard and mouse sharing application. Cross platform and open source since 2001.<br /><br />
 Copyright © %%YEAR%% Symless Ltd.<br /><br />
 Synergy is released under the GNU General Public License (GPLv2).</p>
 <p style="font-size: 14px">Key contributors<br>
