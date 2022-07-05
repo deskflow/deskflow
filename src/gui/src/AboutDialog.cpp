@@ -81,11 +81,15 @@ Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Maga
 
 void AboutDialog::setupCreditsLoader()
 {
+	this->textEliteBackers->setText("Loading...");
+	this->textEliteBackers->viewport()->setAutoFillBackground(false);
+	this->textEliteBackers->document()->setDocumentMargin(0);
+
 	connect(&credits, SIGNAL(loaded(const QString&)), this, SLOT(updateEliteBackers(const QString&)));
 	credits.loadEliteBackers();
 }
 
 void AboutDialog::updateEliteBackers(const QString& eliteBackers) const
 {
-	this->labelEliteBackersData->setText(eliteBackers);
+	this->textEliteBackers->setText(eliteBackers);
 }
