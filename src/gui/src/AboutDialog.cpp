@@ -42,7 +42,7 @@ Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyl
 Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
 </p>)");
 
-	m_versionChecker.setApp(config.synergycName());
+	m_versionChecker.setApp(parent->appPath(config.synergycName()));
 	QString version = m_versionChecker.getVersion();
 #ifdef SYNERGY_REVISION
     version +=  '-';
