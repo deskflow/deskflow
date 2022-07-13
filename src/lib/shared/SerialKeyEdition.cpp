@@ -9,6 +9,8 @@ const std::string SerialKeyEdition::BASIC = "basic";
 const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
 const std::string SerialKeyEdition::BUSINESS = "business";
 const std::string SerialKeyEdition::UNREGISTERED = "unregistered";
+const std::string SerialKeyEdition::ULTIMATE = "ultimate";
+const std::string SerialKeyEdition::BASIC_LIGHT = "basic_light";
 
 namespace {
 
@@ -24,7 +26,9 @@ const std::map<std::string, Edition>& getSerialTypes()
         {SerialKeyEdition::PRO, kPro},
         {SerialKeyEdition::BASIC_CHINA, kBasic_China},
         {SerialKeyEdition::PRO_CHINA, kPro_China},
-        {SerialKeyEdition::BUSINESS, kBusiness}
+        {SerialKeyEdition::BUSINESS, kBusiness},
+        {SerialKeyEdition::BASIC_LIGHT, kBasic_Ligth},
+        {SerialKeyEdition::ULTIMATE, kUltimate}
     };
 #endif
     return serialTypes;
@@ -78,6 +82,12 @@ SerialKeyEdition::getName() const
 		case kPro_China:
 			Name = PRO_CHINA;
 			break;
+		case kBasic_Ligth:
+			Name = BASIC_LIGHT;
+			break;
+		case kUltimate:
+			Name = ULTIMATE;
+			break;
 		default:
 			break;
 	}
@@ -98,6 +108,9 @@ SerialKeyEdition::getDisplayName() const
             break;
         case kPro_China:
             DisplayName = "Synergy Pro 中文版";
+            break;
+        case kBasic_Ligth:
+            DisplayName = "Synergy 1";
             break;
         default:
             std::string EditionName = getName();
@@ -120,6 +133,7 @@ void
 SerialKeyEdition::setType(Edition type)
 {
 	m_Type = type;
+	setType(getName());
 }
 
 void
