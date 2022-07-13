@@ -27,7 +27,9 @@ enum Edition {
     kUnregistered,
     kBusiness,
     kBasic_China,
-    kPro_China
+    kPro_China,
+    kLite,
+    kUltimate
 };
 
 #endif // EDITIONTYPE_H
