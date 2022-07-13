@@ -171,7 +171,7 @@ LicenseManager::getEditionName(Edition const edition, bool trial) const
             break;
         case kBasic:
             if (m_serialKey.isMaintenance()) {
-                DisplayName = "Synergy";
+                DisplayName = "Synergy 1";
             }
             else {
                 DisplayName = "Synergy 1 Basic";
@@ -179,7 +179,7 @@ LicenseManager::getEditionName(Edition const edition, bool trial) const
             break;
         case kPro:
             if (m_serialKey.isMaintenance()) {
-                DisplayName = "Synergy Ultimate";
+                DisplayName = "Synergy 1 Ultimate";
             }
             else {
                 DisplayName = "Synergy 1 Pro";
