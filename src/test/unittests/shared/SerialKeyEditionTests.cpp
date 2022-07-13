@@ -25,7 +25,6 @@ TEST(SerialKeyEditionTests, DefaultEditionType_Unregistered)
 	SerialKeyEdition edition;
 	EXPECT_EQ(kUnregistered, edition.getType());
 	EXPECT_EQ(SerialKeyEdition::UNREGISTERED, edition.getName());
-	EXPECT_EQ("Synergy 1 (UNREGISTERED)", edition.getDisplayName());
 	EXPECT_FALSE(edition.isValid());
 }
 
@@ -35,7 +34,6 @@ TEST(SerialKeyEditionTests, SetEditionType_edition)
 	edition.setType(kPro);
 	EXPECT_EQ(kPro, edition.getType());
 	EXPECT_EQ(SerialKeyEdition::PRO, edition.getName());
-	EXPECT_EQ("Synergy 1 Pro", edition.getDisplayName());
 	EXPECT_TRUE(edition.isValid());
 }
 
@@ -45,7 +43,6 @@ TEST(SerialKeyEditionTests, SetEditionType_string)
 	edition.setType(SerialKeyEdition::BASIC);
 	EXPECT_EQ(kBasic, edition.getType());
 	EXPECT_EQ(SerialKeyEdition::BASIC, edition.getName());
-	EXPECT_EQ("Synergy 1 Basic", edition.getDisplayName());
 }
 
 TEST(SerialKeyEditionTests, SetEditionBusiness)
@@ -54,7 +51,6 @@ TEST(SerialKeyEditionTests, SetEditionBusiness)
 	edition.setType(kBusiness);
 	EXPECT_EQ(kBusiness, edition.getType());
 	EXPECT_EQ(SerialKeyEdition::BUSINESS, edition.getName());
-	EXPECT_EQ("Synergy 1 Business", edition.getDisplayName());
 }
 
 TEST(SerialKeyEditionTests, SetEditionBasicChina)
@@ -63,7 +59,6 @@ TEST(SerialKeyEditionTests, SetEditionBasicChina)
     edition.setType(kBasic_China);
     EXPECT_EQ(kBasic_China, edition.getType());
     EXPECT_EQ(SerialKeyEdition::BASIC_CHINA, edition.getName());
-    EXPECT_EQ("Synergy 中文版", edition.getDisplayName());
     EXPECT_TRUE(edition.isChina());
 }
 
@@ -73,7 +68,6 @@ TEST(SerialKeyEditionTests, SetEditionProChina)
     edition.setType(kPro_China);
     EXPECT_EQ(kPro_China, edition.getType());
     EXPECT_EQ(SerialKeyEdition::PRO_CHINA, edition.getName());
-    EXPECT_EQ("Synergy Pro 中文版", edition.getDisplayName());
     EXPECT_TRUE(edition.isChina());
 }
 

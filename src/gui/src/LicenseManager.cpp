@@ -155,16 +155,55 @@ LicenseManager::skipActivation() const
 }
 
 QString
-LicenseManager::getEditionName(Edition const edition, bool trial)
+LicenseManager::getEditionName(Edition const edition, bool trial) const
 {
     SerialKeyEdition KeyEdition(edition);
-    std::string name = KeyEdition.getDisplayName();
+    const std::string ApplicationName = "Synergy 1 ";
+    std::string DisplayName(ApplicationName);
 
-    if (trial) {
-        name += " (Trial)";
+    switch (KeyEdition.getType())
+    {
+        case kBasic_China:
+            DisplayName = "Synergy 中文版";
+            break;
+        case kPro_China:
+            DisplayName = "Synergy Pro 中文版";
+            break;
+        case kBasic:
+            if (m_serialKey.isMaintenance()) {
+                DisplayName = "Synergy";
+            }
+            else {
+                DisplayName = "Synergy 1 Basic";
+            }
+            break;
+        case kPro:
+            if (m_serialKey.isMaintenance()) {
+                DisplayName = "Synergy Ultimate";
+            }
+            else {
+                DisplayName = "Synergy 1 Pro";
+            }
+            break;
+        default:
+            std::string EditionName = KeyEdition.getName();
+            if (!EditionName.empty()){
+                if (EditionName == SerialKeyEdition::UNREGISTERED){
+                   std::transform(EditionName.begin(), EditionName.end(), EditionName.begin(), ::toupper);
+                   EditionName = "(" + EditionName +")";
+                }
+                else{
+                   EditionName[0] = static_cast<char>(::toupper(EditionName[0]));
+                }
+                DisplayName = ApplicationName + EditionName;
+             }
     }
 
-    return QString::fromUtf8 (name.c_str(), static_cast<int>(name.size()));
+    if (trial) {
+        DisplayName += " (Trial)";
+    }
+
+    return QString::fromUtf8 (DisplayName.c_str(), static_cast<int>(DisplayName.size()));
 }
 
 void

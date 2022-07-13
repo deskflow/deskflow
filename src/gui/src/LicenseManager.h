@@ -38,7 +38,7 @@ public:
     const SerialKey& serialKey() const;
     void skipActivation() const;
     void notifyUpdate(QString fromVersion, QString toVersion) const;
-    static QString getEditionName(Edition edition, bool trial = false);
+    QString getEditionName(Edition edition, bool trial = false) const;
     void notifyActivation(QString identity) const;
     QString getLicenseNotice() const;
 
