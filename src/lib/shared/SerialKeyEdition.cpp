@@ -10,7 +10,7 @@ const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
 const std::string SerialKeyEdition::BUSINESS = "business";
 const std::string SerialKeyEdition::UNREGISTERED = "unregistered";
 const std::string SerialKeyEdition::ULTIMATE = "ultimate";
-const std::string SerialKeyEdition::BASIC_LIGHT = "basic_light";
+const std::string SerialKeyEdition::LITE = "lite";
 
 namespace {
 
@@ -27,7 +27,7 @@ const std::map<std::string, Edition>& getSerialTypes()
         {SerialKeyEdition::BASIC_CHINA, kBasic_China},
         {SerialKeyEdition::PRO_CHINA, kPro_China},
         {SerialKeyEdition::BUSINESS, kBusiness},
-        {SerialKeyEdition::BASIC_LIGHT, kBasic_Ligth},
+        {SerialKeyEdition::LITE, kLite},
         {SerialKeyEdition::ULTIMATE, kUltimate}
     };
 #endif
@@ -82,8 +82,8 @@ SerialKeyEdition::getName() const
 		case kPro_China:
 			Name = PRO_CHINA;
 			break;
-		case kBasic_Ligth:
-			Name = BASIC_LIGHT;
+		case kLite:
+			Name = LITE;
 			break;
 		case kUltimate:
 			Name = ULTIMATE;
@@ -109,7 +109,7 @@ SerialKeyEdition::getDisplayName() const
         case kPro_China:
             DisplayName = "Synergy Pro 中文版";
             break;
-        case kBasic_Ligth:
+        case kLite:
             DisplayName = "Synergy 1";
             break;
         default:

@@ -34,7 +34,7 @@ SerialKeyParser::setEdition(const std::string& edition)
 {
     m_data.edition.setType(edition);
     if (m_data.keyType.isMaintenance() && m_data.edition.getType() == Edition::kBasic) {
-        m_data.edition.setType(kBasic_Ligth);
+        m_data.edition.setType(kLite);
     }
     else if (m_data.keyType.isMaintenance() && m_data.edition.getType() == Edition::kPro) {
         m_data.edition.setType(kUltimate);

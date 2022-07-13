@@ -28,7 +28,7 @@ enum Edition {
     kBusiness,
     kBasic_China,
     kPro_China,
-    kBasic_Ligth,
+    kLite,
     kUltimate
 };
 
