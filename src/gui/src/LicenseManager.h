@@ -23,6 +23,8 @@
 #include <ActivationNotifier.h>
 #include <utility>
 
+#include "LicenseRegister.h"
+
 class AppConfig;
 
 class LicenseManager: public QObject
@@ -45,9 +47,11 @@ public:
 private:
     AppConfig* m_AppConfig;
     SerialKey m_serialKey;
+    LicenseRegister m_register;
 
 public slots:
     void validateSerialKey() const;
+    void registerLicense();
 
 signals:
     void editionChanged (Edition) const;
