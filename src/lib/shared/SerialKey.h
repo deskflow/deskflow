@@ -37,6 +37,7 @@ public:
     time_t              daysLeft(time_t currentTime) const;
     time_t              getExpiration() const;
     int                 getSpanLeft(time_t time = ::time(0)) const;
+    const std::string&  getEmail() const;
     Edition             edition() const;
     const std::string&  toString() const;
 

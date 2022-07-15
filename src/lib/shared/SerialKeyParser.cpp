@@ -24,6 +24,12 @@ SerialKeyParser::setKey(const std::string& key)
 }
 
 void
+SerialKeyParser::setEmail(const std::string& email)
+{
+    m_data.email = email;
+}
+
+void
 SerialKeyParser::setType(const std::string& type)
 {
     m_data.keyType.setKeyType(type);
@@ -114,6 +120,7 @@ SerialKeyParser::parseV1(const std::vector<std::string>& parts)
 {
     // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}
     setEdition(parts.at(1));
+    setEmail(parts.at(4));
     setWarningTime(parts.at(6));
     setExpirationTime(parts.at(7));
 }
@@ -124,6 +131,7 @@ SerialKeyParser::parseV2(const std::vector<std::string>& parts)
     // e.g.: {v2;trial;basic;Bob;1;email;company name;1398297600;1398384000}
     setType(parts.at(1));
     setEdition(parts.at(2));
+    setEmail(parts.at(5));
     setWarningTime(parts.at(7));
     setExpirationTime(parts.at(8));
 }

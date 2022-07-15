@@ -20,6 +20,7 @@
 #include <QTimer>
 
 #include "LicenseRegistry.h"
+#include <shared/SerialKey.h>
 #include "AppConfig.h"
 #include <QSysInfo>
 
@@ -62,18 +63,21 @@ void LicenseRegistry::registerLicense()
 QByteArray LicenseRegistry::getRequestData() const
 {
     QJsonObject data;
-    QString guid(QSysInfo::machineUniqueId());
 
+    const QString guid(QSysInfo::machineUniqueId());
     if (!guid.isEmpty()) {
         data["guid"] = guid;
-        data["guid_generated"] = false;
+        data["guid_type"] = "system";
     }
     else {
         data["guid"] = m_config.getGuid();
-        data["guid_generated"] = true;
+        data["guid_type"] = "synergy";
     }
 
-    data["key"] = m_config.serialKey();
+    const SerialKey key(m_config.serialKey().toStdString());
+    data["email"] = key.getEmail().c_str();
+    data["key"] = key.toString().c_str();
+
     data["is_server"] = m_config.getServerGroupChecked();
 
     return  QJsonDocument(data).toJson();

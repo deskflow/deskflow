@@ -26,6 +26,7 @@
  */
 struct SerialKeyData {
     std::string           key;            // Encoded serial key as a string
+    std::string           email;          // Email from the serial key
     SerialKeyEdition      edition;        // Serial key edition
     SerialKeyType         keyType;        // Serial key type
     unsigned long long    warnTime   = 0; // Warning time
@@ -53,6 +54,7 @@ struct SerialKeyData {
 inline bool
 operator== (SerialKeyData const& lhs, SerialKeyData const& rhs) {
     return  (lhs.key == rhs.key) &&
+            (lhs.email == rhs.email) &&
             (lhs.warnTime == rhs.warnTime) &&
             (lhs.expireTime == rhs.expireTime) &&
             (lhs.edition == rhs.edition) &&
