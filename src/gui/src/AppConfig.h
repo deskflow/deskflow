@@ -118,7 +118,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setEliteBackersUrl(const QString&);
         void setLicenseNextCheck(unsigned long long);
         const QString& getEliteBackersUrl() const;
-        const QString& getRegisterLicenseUrl() const;
+        const QString& getLicenseRegistryUrl() const;
         unsigned long long getLicenseNextCheck() const;
         const QString& getGuid() const;
         void setLanguageSync(bool b);
@@ -218,7 +218,7 @@ protected:
         kInvertScrollDirection,
         kEliteBackersUrl,
         kGuid,
-        kRegisterLicenseUrl,
+        kLicenseRegistryUrl,
         kLicenseNextCheck
     };
 
@@ -261,7 +261,7 @@ protected:
         QString m_lastVersion;
         QString m_eliteBackersUrl;
         QString m_guid;
-        QString m_registerLicenseUrl;
+        QString m_licenseRegistryUrl;
         unsigned long long m_licenseNextCheck;
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;

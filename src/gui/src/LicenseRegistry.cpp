@@ -19,21 +19,21 @@
 #include <QJsonDocument>
 #include <QTimer>
 
-#include "LicenseRegister.h"
+#include "LicenseRegistry.h"
 #include "AppConfig.h"
 #include <QSysInfo>
 
-LicenseRegister::LicenseRegister(AppConfig& config) :
+LicenseRegistry::LicenseRegistry(AppConfig& config) :
     m_config(config)
 {
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(registerLicense()));
 }
 
-void LicenseRegister::registerLicense()
+void LicenseRegistry::registerLicense()
 {
     m_timer.stop();
     if (m_config.edition() == Edition::kBusiness) {
-        const auto REGISTER_LICENSE_URL = m_config.getRegisterLicenseUrl();
+        const auto REGISTER_LICENSE_URL = m_config.getLicenseRegistryUrl();
         const auto url = QUrl(REGISTER_LICENSE_URL);
 
         auto request = QNetworkRequest(url);
@@ -59,7 +59,7 @@ void LicenseRegister::registerLicense()
     }
 }
 
-QByteArray LicenseRegister::getRequestData() const
+QByteArray LicenseRegistry::getRequestData() const
 {
     QJsonObject data;
     QString guid(QSysInfo::machineUniqueId());
@@ -79,7 +79,7 @@ QByteArray LicenseRegister::getRequestData() const
     return  QJsonDocument(data).toJson();
 }
 
-void LicenseRegister::scheduleRegistration()
+void LicenseRegistry::scheduleRegistration()
 {
     const auto nextCheck = m_config.getLicenseNextCheck();
     const auto currentTimestamp = static_cast<unsigned long long>(time(nullptr));

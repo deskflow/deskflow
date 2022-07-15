@@ -23,7 +23,7 @@
 #include <ActivationNotifier.h>
 #include <utility>
 
-#include "LicenseRegister.h"
+#include "LicenseRegistry.h"
 
 class AppConfig;
 
@@ -47,7 +47,7 @@ public:
 private:
     AppConfig* m_AppConfig;
     SerialKey m_serialKey;
-    LicenseRegister m_register;
+    LicenseRegistry m_registry;
 
 public slots:
     void validateSerialKey() const;

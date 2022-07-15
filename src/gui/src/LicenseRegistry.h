@@ -23,12 +23,12 @@
 class QNetworkReply;
 class AppConfig;
 
-class LicenseRegister : public QObject
+class LicenseRegistry : public QObject
 {
     Q_OBJECT
 
 public:
-    LicenseRegister(AppConfig& config);
+    LicenseRegistry(AppConfig& config);
     void scheduleRegistration();
 
 public slots:

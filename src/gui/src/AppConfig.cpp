@@ -248,7 +248,7 @@ void AppConfig::loadSettings()
     m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
     m_eliteBackersUrl           = loadCommonSetting(kEliteBackersUrl, "https://api2.prod.symless.com/credits/elite-backers").toString();
     m_guid                      = loadCommonSetting(kGuid, QSysInfo::machineUniqueId()).toString();
-    m_registerLicenseUrl        = loadCommonSetting(kRegisterLicenseUrl, "https://api2.prod.symless.com/license/register").toString();
+    m_licenseRegistryUrl        = loadCommonSetting(kLicenseRegistryUrl, "https://api2.prod.symless.com/license/register").toString();
     m_licenseNextCheck          = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
 
     //only change the serial key if the settings being loaded contains a key
@@ -284,7 +284,7 @@ void AppConfig::saveSettings()
     setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
     setCommonSetting(kEliteBackersUrl, m_eliteBackersUrl);
     setCommonSetting(kGuid, m_guid);
-    setCommonSetting(kRegisterLicenseUrl, m_registerLicenseUrl);
+    setCommonSetting(kLicenseRegistryUrl, m_licenseRegistryUrl);
     setCommonSetting(kLicenseNextCheck, m_licenseNextCheck);
 
     if (isWritable()) {
@@ -486,8 +486,8 @@ const QString& AppConfig::getEliteBackersUrl() const {
     return m_eliteBackersUrl;
 }
 
-const QString& AppConfig::getRegisterLicenseUrl() const {
-    return m_registerLicenseUrl;
+const QString& AppConfig::getLicenseRegistryUrl() const {
+    return m_licenseRegistryUrl;
 }
 
 unsigned long long AppConfig::getLicenseNextCheck() const {
