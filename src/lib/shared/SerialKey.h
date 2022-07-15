@@ -40,7 +40,6 @@ public:
     const std::string&  getEmail() const;
     Edition             edition() const;
     const std::string&  toString() const;
-    const std::string&  getDecodedKey() const;
 
 private:
     SerialKeyData         m_data;

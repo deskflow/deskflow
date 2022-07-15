@@ -24,12 +24,6 @@ SerialKeyParser::setKey(const std::string& key)
 }
 
 void
-SerialKeyParser::setDecodedKey(const std::string& key)
-{
-    m_data.key_decoded = key;
-}
-
-void
 SerialKeyParser::setEmail(const std::string& email)
 {
     m_data.email = email;
@@ -103,13 +97,11 @@ SerialKeyParser::parse(const std::string& plainSerial)
 
     if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
         setKey(plainSerial);
-        setDecodedKey(key);
         parseV1(parts);
         valid = true;
     }
     else if ((parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
         setKey(plainSerial);
-        setDecodedKey(key);
         parseV2(parts);
         valid = true;
     }

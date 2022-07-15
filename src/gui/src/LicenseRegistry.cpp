@@ -77,7 +77,6 @@ QByteArray LicenseRegistry::getRequestData() const
     const SerialKey key(m_config.serialKey().toStdString());
     data["email"] = key.getEmail().c_str();
     data["key"] = key.toString().c_str();
-    data["key_decoded"] = key.getDecodedKey().c_str();
 
     data["is_server"] = m_config.getServerGroupChecked();
 
