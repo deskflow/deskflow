@@ -47,6 +47,12 @@ public:
     void setKey(const std::string& key);
 
     /**
+     * @brief setKey setter to set decoded key
+     * @param key decoded serial key
+     */
+    void setDecodedKey(const std::string& key);
+
+    /**
      * @brief setEmail setter to set encoded email
      * @param email encoded email from the key
      */

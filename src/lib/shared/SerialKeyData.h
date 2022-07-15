@@ -26,6 +26,7 @@
  */
 struct SerialKeyData {
     std::string           key;            // Encoded serial key as a string
+    std::string           key_decoded;    // Decoded serial key
     std::string           email;          // Email from the serial key
     SerialKeyEdition      edition;        // Serial key edition
     SerialKeyType         keyType;        // Serial key type

@@ -161,3 +161,9 @@ SerialKey::getEmail() const
 {
     return m_data.email;
 }
+
+const std::string&
+SerialKey::getDecodedKey() const
+{
+    return m_data.key_decoded;
+}
