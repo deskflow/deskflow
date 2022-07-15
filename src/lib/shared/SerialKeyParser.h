@@ -47,12 +47,6 @@ public:
     void setKey(const std::string& key);
 
     /**
-     * @brief setEmail setter to set encoded email
-     * @param email encoded email from the key
-     */
-    void setEmail(const std::string& email);
-
-    /**
      * @brief setType setter for serial type
      * @param type serial key type
      */

@@ -155,9 +155,3 @@ SerialKey::getSpanLeft(time_t time) const
 
     return result;
 }
-
-const std::string&
-SerialKey::getEmail() const
-{
-    return m_data.email;
-}
