@@ -61,9 +61,13 @@ void LicenseRegistry::registerLicense()
 
 QByteArray LicenseRegistry::getRequestData() const
 {
-    QJsonObject data;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
     QString guid(QSysInfo::machineUniqueId());
+#else
+    QString guid;
+#endif
 
+    QJsonObject data;
     if (!guid.isEmpty()) {
         data["guid"] = guid;
         data["guid_type"] = "system";
