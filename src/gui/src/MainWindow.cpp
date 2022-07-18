@@ -646,6 +646,7 @@ void MainWindow::startSynergy()
             return;
         }
     }
+    m_LicenseManager->registerLicense();
 #endif
     bool desktopMode = appConfig().processMode() == Desktop;
     bool serviceMode = appConfig().processMode() == Service;

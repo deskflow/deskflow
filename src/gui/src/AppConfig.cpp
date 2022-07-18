@@ -247,6 +247,9 @@ void AppConfig::loadSettings()
     m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
     m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
     m_eliteBackersUrl           = loadCommonSetting(kEliteBackersUrl, "https://api2.prod.symless.com/credits/elite-backers").toString();
+    m_guid                      = loadCommonSetting(kGuid, QSysInfo::machineUniqueId()).toString();
+    m_licenseRegistryUrl        = loadCommonSetting(kLicenseRegistryUrl, "https://api2.prod.symless.com/license/register").toString();
+    m_licenseNextCheck          = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -280,6 +283,9 @@ void AppConfig::saveSettings()
     setCommonSetting(kGroupClientCheck, m_ClientGroupChecked);
     setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
     setCommonSetting(kEliteBackersUrl, m_eliteBackersUrl);
+    setCommonSetting(kGuid, m_guid);
+    setCommonSetting(kLicenseRegistryUrl, m_licenseRegistryUrl);
+    setCommonSetting(kLicenseNextCheck, m_licenseNextCheck);
 
     if (isWritable()) {
         setSetting(kScreenName, m_ScreenName);
@@ -408,7 +414,7 @@ void AppConfig::clearSerialKey()
     m_Serialkey.clear();
 }
 
-QString AppConfig::serialKey() { return m_Serialkey; }
+QString AppConfig::serialKey() const { return m_Serialkey; }
 
 int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
 
@@ -472,8 +478,24 @@ void AppConfig::setEliteBackersUrl(const QString& newValue) {
     setSettingModified(m_eliteBackersUrl, newValue);
 }
 
+void AppConfig::setLicenseNextCheck(unsigned long long time) {
+    setSettingModified(m_licenseNextCheck, time);
+}
+
 const QString& AppConfig::getEliteBackersUrl() const {
     return m_eliteBackersUrl;
+}
+
+const QString& AppConfig::getLicenseRegistryUrl() const {
+    return m_licenseRegistryUrl;
+}
+
+unsigned long long AppConfig::getLicenseNextCheck() const {
+    return m_licenseNextCheck;
+}
+
+const QString& AppConfig::getGuid() const {
+    return m_guid;
 }
 
 bool AppConfig::getLanguageSync() const { return m_LanguageSync; }

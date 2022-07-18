@@ -66,7 +66,8 @@ checkSerialKey(const SerialKey& serialKey, bool acceptExpired)
 
 LicenseManager::LicenseManager(AppConfig* appConfig) :
     m_AppConfig(appConfig),
-    m_serialKey(appConfig->edition()) {
+    m_serialKey(appConfig->edition()),
+    m_registry(*appConfig) {
 }
 
 void
@@ -82,6 +83,7 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 
         emit showLicenseNotice(getLicenseNotice());
         validateSerialKey();
+        m_registry.scheduleRegistration();
 
         if (m_serialKey.edition() != serialKey.edition()) {
             m_AppConfig->setEdition(m_serialKey.edition());
@@ -199,6 +201,12 @@ LicenseManager::getLicenseNotice() const
     }
 
     return Notice;
+}
+
+void
+LicenseManager::registerLicense()
+{
+    m_registry.registerLicense();
 }
 
 QString
