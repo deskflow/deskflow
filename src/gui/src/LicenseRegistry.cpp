@@ -66,11 +66,11 @@ QByteArray LicenseRegistry::getRequestData() const
 
     if (!guid.isEmpty()) {
         data["guid"] = guid;
-        data["guid_generated"] = false;
+        data["guid_type"] = "system";
     }
     else {
         data["guid"] = m_config.getGuid();
-        data["guid_generated"] = true;
+        data["guid_type"] = "synergy";
     }
 
     data["key"] = m_config.serialKey();
