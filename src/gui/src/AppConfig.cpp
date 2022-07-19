@@ -80,7 +80,10 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "preventSleep",
         "languageSync",
         "invertScrollDirection",
-        "eliteBackersUrl"
+        "eliteBackersUrl",
+        "guid",
+        "licenseRegistryUrl",
+        "licenseNextCheck"
 };
 
 static const char* logLevelNames[] =
