@@ -247,7 +247,7 @@ void AppConfig::loadSettings()
     m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
     m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
     m_eliteBackersUrl           = loadCommonSetting(kEliteBackersUrl, "https://api2.prod.symless.com/credits/elite-backers").toString();
-    m_guid                      = loadCommonSetting(kGuid, QSysInfo::machineUniqueId()).toString();
+    m_guid                      = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
     m_licenseRegistryUrl        = loadCommonSetting(kLicenseRegistryUrl, "https://api2.prod.symless.com/license/register").toString();
     m_licenseNextCheck          = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
 
