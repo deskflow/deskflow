@@ -148,8 +148,8 @@ AppUtilUnix::getCurrentLanguageCode()
           groupStartI = strI + 1;
       }
 
-      XFree(kbdDescr);
       XkbFreeNames(kbdDescr, XkbSymbolsNameMask, true);
+      XFree(kbdDescr);
       XCloseDisplay(display);
 
       result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
