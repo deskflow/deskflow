@@ -55,18 +55,10 @@ int AboutDialog::exec()
 
 void AboutDialog::resizeWindow()
 {
-// change default size based on os
-#if defined(Q_OS_MAC)
     QSize size(600, 310);
     setMaximumSize(size);
     setMinimumSize(size);
     resize(size);
-#elif defined(Q_OS_LINUX)
-    QSize size(600, 420);
-    setMaximumSize(size);
-    setMinimumSize(size);
-    resize(size);
-#endif
 }
 
 void AboutDialog::updateLogo() const
