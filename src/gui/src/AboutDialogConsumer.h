@@ -1,12 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ * Copyright (C) 2022 Symless Ltd.
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,33 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#pragma once
 
-#if !defined(ABOUTDIALOG__H)
+#include "CreditsLoader.h"
+#include "AboutDialogBusiness.h"
 
-#define ABOUTDIALOG__H
-
-#include <QDialog>
-#include "VersionChecker.h"
-#include "MainWindow.h"
-
-#include "ui_AboutDialogBase.h"
-
-class QWidget;
-class QString;
-
-class AboutDialog : public QDialog, public Ui::AboutDialogBase {
+class AboutDialogConsumer : public AboutDialogBusiness {
     Q_OBJECT
 public:
-    AboutDialog(MainWindow* parent, const AppConfig& config);
-    int exec() override;
+    AboutDialogConsumer(MainWindow* parent, const AppConfig& config);
+
+public slots:
+    void updateEliteBackers(const QString& eliteBackers) const;
+
 private:
-    VersionChecker m_versionChecker;
-    void updateLogo() const;
+    CreditsLoader credits;
 
-    virtual void resizeWindow();
-    virtual QString getCopyrights() const;
-    virtual QString getKeyContributors() const;
+    void setupCreditsLoader();
+    void resizeWindow() override;
+    QString getCopyrights() const override;
 };
-
-#endif
-

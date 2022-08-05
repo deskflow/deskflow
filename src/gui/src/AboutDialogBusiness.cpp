@@ -17,9 +17,9 @@
  */
 
 #include "OSXHelpers.h"
-#include "AboutDialog.h"
+#include "AboutDialogBusiness.h"
 
-AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
+AboutDialogBusiness::AboutDialogBusiness(MainWindow* parent, const AppConfig& config) :
     QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
     Ui::AboutDialogBase()
 {
@@ -43,7 +43,7 @@ AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
     labelCreditsLink->hide();
 }
 
-int AboutDialog::exec()
+int AboutDialogBusiness::exec()
 {
     //Sets the current build year into the copyright text
     label_3->setText(getCopyrights() + getKeyContributors());
@@ -53,7 +53,7 @@ int AboutDialog::exec()
     return QDialog::exec();
 }
 
-void AboutDialog::resizeWindow()
+void AboutDialogBusiness::resizeWindow()
 {
     QSize size(600, 310);
     setMaximumSize(size);
@@ -61,7 +61,7 @@ void AboutDialog::resizeWindow()
     resize(size);
 }
 
-void AboutDialog::updateLogo() const
+void AboutDialogBusiness::updateLogo() const
 {
 #if defined(Q_OS_MAC)
     if (isOSXInterfaceStyleDark()) {
@@ -73,7 +73,7 @@ void AboutDialog::updateLogo() const
 #endif
 }
 
-QString AboutDialog::getKeyContributors() const
+QString AboutDialogBusiness::getKeyContributors() const
 {
     return QString(R"(<p style="font-size: 14px">Key contributors<br>
                     <span style="font-size: 11px">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
@@ -82,7 +82,7 @@ QString AboutDialog::getKeyContributors() const
                     </p>)");
 }
 
-QString AboutDialog::getCopyrights() const
+QString AboutDialogBusiness::getCopyrights() const
 {
     QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
     QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");

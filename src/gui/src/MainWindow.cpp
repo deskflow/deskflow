@@ -24,8 +24,8 @@
 #include "MainWindow.h"
 
 #include "Fingerprint.h"
-#include "AboutDialog.h"
-#include "AboutDialogEliteBackers.h"
+#include "AboutDialogBusiness.h"
+#include "AboutDialogConsumer.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "ActivationDialog.h"
@@ -1269,11 +1269,11 @@ void MainWindow::on_m_pActionAbout_triggered()
 {
 #ifndef SYNERGY_ENTERPRISE
     if (appConfig().edition() == Edition::kBusiness) {
-        AboutDialog dlg(this, appConfig());
+        AboutDialogBusiness dlg(this, appConfig());
         dlg.exec();
     }
     else {
-        AboutDialogEliteBackers dlg(this, appConfig());
+        AboutDialogConsumer dlg(this, appConfig());
         dlg.exec();
     }
 #else
