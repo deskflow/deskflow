@@ -1277,7 +1277,7 @@ void MainWindow::on_m_pActionAbout_triggered()
         dlg.exec();
     }
 #else
-    AboutDialogBusiness dlg(this, appConfig());
+    AboutDialog dlg(this, appConfig());
     dlg.exec();
 #endif
 }
