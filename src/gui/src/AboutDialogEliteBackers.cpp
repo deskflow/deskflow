@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "CreditsLoader.h"
-#include "AboutDialogConsumer.h"
+#include "AboutDialogEliteBackers.h"
 
-AboutDialogConsumer::AboutDialogConsumer(MainWindow* parent, const AppConfig& config) :
-    AboutDialogBusiness(parent, config),
+AboutDialogEliteBackers::AboutDialogEliteBackers(MainWindow* parent, const AppConfig& config) :
+    AboutDialog(parent, config),
     credits(*parent, config)
 {
     setupCreditsLoader();
@@ -29,7 +29,7 @@ AboutDialogConsumer::AboutDialogConsumer(MainWindow* parent, const AppConfig& co
     labelCreditsLink->show();
 }
 
-void AboutDialogConsumer::setupCreditsLoader()
+void AboutDialogEliteBackers::setupCreditsLoader()
 {
     this->textEliteBackers->setText("Loading...");
     this->textEliteBackers->viewport()->setAutoFillBackground(false);
@@ -39,12 +39,12 @@ void AboutDialogConsumer::setupCreditsLoader()
     credits.loadEliteBackers();
 }
 
-void AboutDialogConsumer::updateEliteBackers(const QString& eliteBackers) const
+void AboutDialogEliteBackers::updateEliteBackers(const QString& eliteBackers) const
 {
     this->textEliteBackers->setText(eliteBackers);
 }
 
-QString AboutDialogConsumer::getCopyrights() const
+QString AboutDialogEliteBackers::getCopyrights() const
 {
     QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
     QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
@@ -56,7 +56,7 @@ QString AboutDialogConsumer::getCopyrights() const
     return aboutText.replace(QString("%%YEAR%%"), QString::number(buildDate.year()));
 }
 
-void AboutDialogConsumer::resizeWindow()
+void AboutDialogEliteBackers::resizeWindow()
 {
 // change default size based on os
 #if defined(Q_OS_MAC)
