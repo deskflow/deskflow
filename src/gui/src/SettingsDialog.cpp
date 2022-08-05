@@ -268,11 +268,11 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
         QMessageBox message(this);
         message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
         message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
-        message.setText(QObject::tr("TLS encryption is Synergy Pro feature.\nPlease upgrade if this is important to you"));
+        message.setText(QObject::tr("TLS encryption is a Synergy Ultimate feature."));
 
         if (message.exec() == QMessageBox::Accepted)
         {
-            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/upgrade"));
+            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/purchase-ultimate-upgrade?source=gui"));
         }
     }
 }

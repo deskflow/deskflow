@@ -452,7 +452,6 @@ bool AppConfig::isCryptoAvailable() const {
     result = (edition() == kPro ||
               edition() == kPro_China ||
               edition() == kBusiness ||
-              edition() == kLite ||
               edition() == kUltimate);
 #endif
 

@@ -555,3 +555,7 @@ QSettings &ServerConfig::settings() {
 
     return ConfigWriter::make()->settings();
 }
+
+bool ServerConfig::isHotkeysAvailable() const {
+    return (m_pAppConfig->edition() != Edition::kLite);
+}
