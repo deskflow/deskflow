@@ -557,5 +557,9 @@ QSettings &ServerConfig::settings() {
 }
 
 bool ServerConfig::isHotkeysAvailable() const {
+#ifndef SYNERGY_ENTERPRISE
     return (m_pAppConfig->edition() != Edition::kLite);
+#else
+    return true;
+#endif
 }
