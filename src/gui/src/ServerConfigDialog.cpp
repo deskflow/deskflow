@@ -186,12 +186,24 @@ void ServerConfigDialog::reject()
 
 void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
 {
-    Hotkey hotkey;
-    HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted) {
-        serverConfig().hotkeys().append(hotkey);
-        m_pListHotkeys->addItem(hotkey.text());
-        onChange();
+    if (serverConfig().isHotkeysAvailable()) {
+        Hotkey hotkey;
+        HotkeyDialog dlg(this, hotkey);
+        if (dlg.exec() == QDialog::Accepted) {
+            serverConfig().hotkeys().append(hotkey);
+            m_pListHotkeys->addItem(hotkey.text());
+            onChange();
+        }
+    }
+    else {
+        QMessageBox message(this);
+        message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+        message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
+        message.setText(QObject::tr("Configuring custom hotkeys is a Synergy Ultimate feature."));
+
+        if (message.exec() == QMessageBox::Accepted) {
+            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/purchase-ultimate-upgrade?source=gui"));
+        }
     }
 }
 
