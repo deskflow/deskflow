@@ -13,6 +13,7 @@ Enhancements:
 
 Github Actions:
 - #7210 Update macos workflow to use macos-latest
+- #7213 Update azure pipelines to use macos-latest
 
 1.14.4
 ======
