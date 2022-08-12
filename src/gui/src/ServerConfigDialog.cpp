@@ -21,6 +21,7 @@
 #include "ServerConfig.h"
 #include "HotkeyDialog.h"
 #include "ActionDialog.h"
+#include "UpgradeDialog.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -196,15 +197,11 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
         }
     }
     else {
-        QMessageBox message(this);
-        message.setWindowTitle(QObject::tr("Upgrade to access this feature"));
-        message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-        message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
-        message.setText(QObject::tr("Configuring custom hotkeys is a Synergy Ultimate feature."));
-
-        if (message.exec() == QMessageBox::Accepted) {
-            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/purchase-ultimate-upgrade?source=gui"));
-        }
+        UpgradeDialog upgradeDialog(this);
+        upgradeDialog.show(
+            "Configuring custom hotkeys is a Synergy Ultimate feature.",
+            "synergy/purchase/purchase-ultimate-upgrade?source=gui"
+        );
     }
 }
 

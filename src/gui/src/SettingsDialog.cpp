@@ -27,6 +27,7 @@
 #include "MainWindow.h"
 #include "BonjourWindows.h"
 #include "Zeroconf.h"
+#include "UpgradeDialog.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -265,15 +266,20 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
     {
         m_pCheckBoxEnableCrypto->setChecked(false);
 
-        QMessageBox message(this);
-        message.setWindowTitle(QObject::tr("Upgrade to access this feature"));
-        message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-        message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
-        message.setText(QObject::tr("TLS encryption is a Synergy Ultimate feature."));
-
-        if (message.exec() == QMessageBox::Accepted)
+        UpgradeDialog upgradeDialog(this);
+        if (appConfig().edition() == Edition::kLite)
         {
-            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/purchase-ultimate-upgrade?source=gui"));
+            upgradeDialog.show(
+                "TLS encryption is a Synergy Ultimate feature.",
+                "synergy/purchase/purchase-ultimate-upgrade?source=gui"
+            );
+        }
+        else
+        {
+            upgradeDialog.show(
+                "TLS encryption is a Synergy Pro feature.",
+                "synergy/purchase/upgrade?source=gui"
+            );
         }
     }
 }
