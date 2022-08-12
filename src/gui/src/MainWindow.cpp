@@ -1267,7 +1267,10 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-#ifndef SYNERGY_ENTERPRISE
+#if defined(SYNERGY_ENTERPRISE) || defined(SYNERGY_BUSINESS)
+    AboutDialog dlg(this, appConfig());
+    dlg.exec();
+#else
     if (appConfig().edition() == Edition::kBusiness) {
         AboutDialog dlg(this, appConfig());
         dlg.exec();
@@ -1276,9 +1279,6 @@ void MainWindow::on_m_pActionAbout_triggered()
         AboutDialogEliteBackers dlg(this, appConfig());
         dlg.exec();
     }
-#else
-    AboutDialog dlg(this, appConfig());
-    dlg.exec();
 #endif
 }
 

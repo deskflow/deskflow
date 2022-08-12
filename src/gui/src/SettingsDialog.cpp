@@ -266,6 +266,7 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
         m_pCheckBoxEnableCrypto->setChecked(false);
 
         QMessageBox message(this);
+        message.setWindowTitle(QObject::tr("Upgrade to access this feature"));
         message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
         message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
         message.setText(QObject::tr("TLS encryption is a Synergy Ultimate feature."));
