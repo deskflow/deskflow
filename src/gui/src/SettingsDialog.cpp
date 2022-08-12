@@ -265,7 +265,7 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
     else
     {
         m_pCheckBoxEnableCrypto->setChecked(false);
-
+#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
         UpgradeDialog upgradeDialog(this);
         if (appConfig().edition() == Edition::kLite)
         {
@@ -281,6 +281,7 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
                 "synergy/purchase/upgrade?source=gui"
             );
         }
+#endif
     }
 }
 
