@@ -448,7 +448,7 @@ void AppConfig::setCryptoEnabled(bool newValue) {
 bool AppConfig::isCryptoAvailable() const {
     bool result {true};
 
-#ifndef SYNERGY_ENTERPRISE
+#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
     result = (edition() == kPro ||
               edition() == kPro_China ||
               edition() == kBusiness ||
