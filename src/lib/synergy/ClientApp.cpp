@@ -26,6 +26,7 @@
 #include "synergy/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
+#include "net/TCPInvertedSocketFactory.h"
 #include "net/SocketMultiplexer.h"
 #include "net/XSocket.h"
 #include "mt/Thread.h"
@@ -362,11 +363,18 @@ Client*
 ClientApp::openClient(const String& name, const NetworkAddress& address,
                 synergy::Screen* screen)
 {
+    ISocketFactory* socketFactory = nullptr;
+    if (true) {
+        socketFactory = new TCPInvertedSocketFactory(m_events, getSocketMultiplexer());
+    } else {
+        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
+    }
+
     Client* client = new Client(
         m_events,
         name,
         address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
+        socketFactory,
         screen,
         args());
 

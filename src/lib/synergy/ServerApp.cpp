@@ -29,6 +29,7 @@
 #include "synergy/ServerArgs.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
+#include "net/TCPInvertedSocketFactory.h"
 #include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
@@ -632,9 +633,16 @@ ServerApp::handleResume(const Event&, void*)
 ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
+    ISocketFactory* socketFactory = nullptr;
+    if (true) {
+        socketFactory = new TCPInvertedSocketFactory(m_events, getSocketMultiplexer());
+    } else {
+        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
+    }
+
     ClientListener* listen = new ClientListener(
         address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
+        socketFactory,
         m_events,
         args().m_enableCrypto);
     
