@@ -17,9 +17,7 @@
  */
 
 #pragma once
-
 #include "net/ISocketFactory.h"
-#include "arch/IArchNetwork.h"
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -38,5 +36,5 @@ public:
 
 private:
     IEventQueue*        m_events;
-    SocketMultiplexer*    m_socketMultiplexer;
+    SocketMultiplexer*  m_socketMultiplexer;
 };

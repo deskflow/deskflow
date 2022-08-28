@@ -17,12 +17,10 @@
  */
 
 #include "net/TCPInvertedSocketFactory.h"
-#include "net/TCPSocket.h"
-#include "net/TCPListenSocket.h"
+#include "net/TCPClientSocket.h"
+#include "net/TCPServerSocket.h"
 #include "net/SecureSocket.h"
 #include "net/SecureListenSocket.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
 
 //
 // TCPInvertedSocketFactory
@@ -49,20 +47,17 @@ TCPInvertedSocketFactory::create(bool secure, IArchNetwork::EAddressFamily famil
         return secureSocket;
     }
     else {
-        return new TCPSocket(m_events, m_socketMultiplexer, family);
+        return new TCPClientSocket(m_events, m_socketMultiplexer, family);
     }
 }
 
 IListenSocket*
 TCPInvertedSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily family) const
 {
-    IListenSocket* socket = NULL;
     if (secure) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
+        return new SecureListenSocket(m_events, m_socketMultiplexer, family);
     }
     else {
-        socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
+        return new TCPServerSocket(m_events, m_socketMultiplexer, family);
     }
-
-    return socket;
 }
