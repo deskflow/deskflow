@@ -21,13 +21,9 @@
 #include "net/IDataSocket.h"
 #include "io/StreamBuffer.h"
 #include "mt/CondVar.h"
-#include "mt/Mutex.h"
 #include "arch/IArchNetwork.h"
 
-class Mutex;
-class Thread;
 class ISocketMultiplexerJob;
-class IEventQueue;
 class SocketMultiplexer;
 
 //! TCP data socket
@@ -37,9 +33,8 @@ A data socket using TCP.
 class TCPClientSocket : public IDataSocket {
 public:
     TCPClientSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
-    TCPClientSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket);
-    TCPClientSocket(TCPClientSocket const &) =delete;
-    TCPClientSocket(TCPClientSocket &&) =delete;
+    TCPClientSocket(TCPClientSocket const &) = delete;
+    TCPClientSocket(TCPClientSocket &&) = delete;
     virtual ~TCPClientSocket();
 
     TCPClientSocket& operator=(TCPClientSocket const &) =delete;
@@ -90,8 +85,6 @@ protected:
     void                discardWrittenData(int bytesWrote);
 
 private:
-    void                init();
-
     void                sendConnectionFailedEvent(const char*);
     void                onConnected();
     void                onInputShutdown();
@@ -106,16 +99,16 @@ private:
                             bool, bool, bool);
 
 protected:
-    bool                m_readable;
-    bool                m_writable;
-    bool                m_connected;
+    bool                m_readable = false;
+    bool                m_writable = false;
+    bool                m_connected = false;
     IEventQueue*        m_events;
     StreamBuffer        m_inputBuffer;
     StreamBuffer        m_outputBuffer;
 
 private:
     Mutex                m_mutex;
-    ArchSocket            m_socket;
+    ArchSocket            m_socket = nullptr;
     CondVar<bool>        m_flushed;
     SocketMultiplexer*    m_socketMultiplexer;
 };

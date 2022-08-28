@@ -46,32 +46,25 @@ TCPClientSocket::TCPClientSocket(IEventQueue* events, SocketMultiplexer* socketM
 {
     try {
         m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
+        LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
+        // turn off Nagle algorithm.  we send lots of very short messages
+        // that should be sent without (much) delay.  for example, the
+        // mouse motion messages are much less useful if they're delayed.
+        ARCH->setNoDelayOnSocket(m_socket, true);
     }
     catch (const XArchNetwork& e) {
+        try {
+            if (m_socket) {
+                ARCH->closeSocket(m_socket);
+                m_socket = nullptr;
+            }
+        }
+        catch (const XArchNetwork& e) {
+            // ignore, there's not much we can do
+            LOG((CLOG_WARN "error closing socket: %s", e.what()));
+        }
         throw XSocketCreate(e.what());
     }
-
-    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
-
-    init();
-}
-
-TCPClientSocket::TCPClientSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, ArchSocket socket) :
-    IDataSocket(events),
-    m_events(events),
-    m_mutex(),
-    m_socket(socket),
-    m_flushed(&m_mutex, true),
-    m_socketMultiplexer(socketMultiplexer)
-{
-    assert(m_socket != nullptr);
-
-    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
-
-    // socket starts in connected state
-    init();
-    onConnected();
-    setJob(newJob());
 }
 
 TCPClientSocket::~TCPClientSocket()
@@ -304,33 +297,6 @@ TCPClientSocket::connect(const NetworkAddress& addr)
         }
     }
     setJob(newJob());
-}
-
-void
-TCPClientSocket::init()
-{
-    // default state
-    m_connected = false;
-    m_readable  = false;
-    m_writable  = false;
-
-    try {
-        // turn off Nagle algorithm.  we send lots of very short messages
-        // that should be sent without (much) delay.  for example, the
-        // mouse motion messages are much less useful if they're delayed.
-        ARCH->setNoDelayOnSocket(m_socket, true);
-    }
-    catch (const XArchNetwork& e) {
-        try {
-            ARCH->closeSocket(m_socket);
-            m_socket = nullptr;
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
-        throw XSocketCreate(e.what());
-    }
 }
 
 TCPClientSocket::EJobResult
