@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,10 +28,11 @@
 #include "synergy/ArgsBase.h"
 #include "base/EventTypes.h"
 
+
 #include <map>
 
 enum EServerState {
-    kUninitialized,
+    kUninitialized = 0,
     kInitializing,
     kInitializingToStart,
     kInitialized,
@@ -42,6 +43,7 @@ enum EServerState {
 class Server;
 namespace synergy { class Screen; }
 class ClientListener;
+class ServerAPIListener;
 class EventQueueTimer;
 class ILogOutputter;
 class IEventQueue;
@@ -55,7 +57,7 @@ class ServerApp : public App {
 public:
     ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver);
     virtual ~ServerApp();
-    
+
     // Parse server specific command line arguments.
     void parseArgs(int argc, const char* const* argv);
 
@@ -108,14 +110,16 @@ public:
     static ServerApp& instance() { return (ServerApp&)App::instance(); }
 
     Server* getServerPtr() { return m_server; }
-    
+
     Server*                m_server;
     EServerState        m_serverState;
     synergy::Screen*    m_serverScreen;
     PrimaryClient*        m_primaryClient;
     ClientListener*        m_listener;
+    ServerAPIListener*      m_apiListener;
     EventQueueTimer*    m_timer;
     NetworkAddress*        m_synergyAddress;
+    String              m_activeScreenFilename;
 
 private:
     void handleScreenSwitched(const Event&, void*  data);

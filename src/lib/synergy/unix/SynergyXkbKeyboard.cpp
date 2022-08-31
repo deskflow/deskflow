@@ -24,7 +24,7 @@
 
 namespace synergy {
 
-namespace linux {
+namespace linuxos {
 
 SynergyXkbKeyboard::SynergyXkbKeyboard()
 {

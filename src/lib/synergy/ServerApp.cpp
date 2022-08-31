@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,8 +17,8 @@
  */
 
 #include "synergy/ServerApp.h"
-
 #include "server/Server.h"
+#include "server/ServerAPIListener.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
@@ -67,18 +67,20 @@
 
 ServerApp::ServerApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver) :
     App(events, createTaskBarReceiver, new lib::synergy::ServerArgs()),
-    m_server(NULL),
+    m_server(nullptr),
     m_serverState(kUninitialized),
-    m_serverScreen(NULL),
-    m_primaryClient(NULL),
-    m_listener(NULL),
-    m_timer(NULL),
-    m_synergyAddress(NULL)
+    m_serverScreen(nullptr),
+    m_primaryClient(nullptr),
+    m_listener(nullptr),
+    m_apiListener(nullptr),
+    m_timer(nullptr),
+    m_synergyAddress(nullptr)
 {
 }
 
 ServerApp::~ServerApp()
 {
+  m_apiListener->dispose();
 }
 
 void
@@ -91,9 +93,12 @@ ServerApp::parseArgs(int argc, const char* const* argv)
         m_bye(kExitArgs);
     }
     else {
-        if (!args().m_synergyAddress.empty()) {
+      if (!args().m_activeScreenFilename.empty()) {
+        m_activeScreenFilename = args().m_activeScreenFilename;
+      }
+      if (!args().m_synergyAddress.empty()) {
             try {
-                *m_synergyAddress = NetworkAddress(args().m_synergyAddress, 
+                *m_synergyAddress = NetworkAddress(args().m_synergyAddress,
                     kDefaultPort);
                 m_synergyAddress->resolve();
             }
@@ -250,7 +255,7 @@ ServerApp::loadConfig(const String& pathname)
     return false;
 }
 
-void 
+void
 ServerApp::forceReconnect(const Event&, void*)
 {
     if (m_server != NULL) {
@@ -258,7 +263,7 @@ ServerApp::forceReconnect(const Event&, void*)
     }
 }
 
-void 
+void
 ServerApp::handleClientConnected(const Event&, void* vlistener)
 {
     ClientListener* listener = static_cast<ClientListener*>(vlistener);
@@ -292,7 +297,7 @@ ServerApp::closeServer(Server* server)
         new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected));
     m_events->adoptHandler(m_events->forServer().disconnected(), server,
         new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected));
-    
+
     m_events->loop();
 
     m_events->removeHandler(Event::kTimer, timer);
@@ -303,7 +308,7 @@ ServerApp::closeServer(Server* server)
     delete server;
 }
 
-void 
+void
 ServerApp::stopRetryTimer()
 {
 	if (m_timer != NULL) {
@@ -327,7 +332,7 @@ void ServerApp::updateStatus(const String& msg)
     }
 }
 
-void 
+void
 ServerApp::closeClientListener(ClientListener* listen)
 {
     if (listen != NULL) {
@@ -336,12 +341,14 @@ ServerApp::closeClientListener(ClientListener* listen)
     }
 }
 
-void 
+void
 ServerApp::stopServer()
 {
     if (m_serverState == kStarted) {
         closeServer(m_server);
         closeClientListener(m_listener);
+        delete m_apiListener;
+        m_apiListener = nullptr;
         m_server      = NULL;
         m_listener    = NULL;
         m_serverState = kInitialized;
@@ -360,7 +367,7 @@ ServerApp::closePrimaryClient(PrimaryClient* primaryClient)
     delete primaryClient;
 }
 
-void 
+void
 ServerApp::closeServerScreen(synergy::Screen* screen)
 {
     if (screen != NULL) {
@@ -517,7 +524,7 @@ ServerApp::openServerScreen()
     return screen;
 }
 
-bool 
+bool
 ServerApp::startServer()
 {
     // skip if already started or starting
@@ -540,11 +547,14 @@ ServerApp::startServer()
     }
 
     double retryTime {};
-    ClientListener* listener = NULL;
+    ClientListener* listener = nullptr;
     try {
         listener   = openClientListener(args().m_config->getSynergyAddress());
         m_server   = openServer(*args().m_config, m_primaryClient);
         listener->setServer(m_server);
+        m_apiListener = new ServerAPIListener();
+        m_apiListener->setServer(m_server);
+
         m_server->setListener(listener);
         m_listener = listener;
         updateStatus();
@@ -580,7 +590,7 @@ ServerApp::startServer()
     }
 }
 
-synergy::Screen* 
+synergy::Screen*
 ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
@@ -594,7 +604,7 @@ ServerApp::createScreen()
 #endif
 }
 
-PrimaryClient* 
+PrimaryClient*
 ServerApp::openPrimaryClient(const String& name, synergy::Screen* screen)
 {
     LOG((CLOG_DEBUG1 "creating primary screen"));
@@ -609,7 +619,7 @@ ServerApp::handleScreenError(const Event&, void*)
     m_events->addEvent(Event(Event::kQuit));
 }
 
-void 
+void
 ServerApp::handleSuspend(const Event&, void*)
 {
     if (!m_suspended) {
@@ -619,7 +629,7 @@ ServerApp::handleSuspend(const Event&, void*)
     }
 }
 
-void 
+void
 ServerApp::handleResume(const Event&, void*)
 {
     if (m_suspended) {
@@ -632,24 +642,24 @@ ServerApp::handleResume(const Event&, void*)
 ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
-    ClientListener* listen = new ClientListener(
+    auto* listen = new ClientListener(
         address,
         new TCPSocketFactory(m_events, getSocketMultiplexer()),
         m_events,
         args().m_enableCrypto);
-    
+
     m_events->adoptHandler(
         m_events->forClientListener().connected(), listen,
         new TMethodEventJob<ServerApp>(
             this, &ServerApp::handleClientConnected, listen));
-    
+
     return listen;
 }
 
-Server* 
+Server*
 ServerApp::openServer(Config& config, PrimaryClient* primaryClient)
 {
-    Server* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
+    auto* server = new Server(config, primaryClient, m_serverScreen, m_events, args());
     try {
         m_events->adoptHandler(
             m_events->forServer().disconnected(), server,
@@ -711,7 +721,7 @@ ServerApp::mainLoop()
 
     // start server, etc
     appUtil().startNode();
-    
+
     // init ipc client after node start, since create a new screen wipes out
     // the event queue (the screen ctors call adoptBuffer).
     if (argsBase().m_enableIpc) {
@@ -740,24 +750,24 @@ ServerApp::mainLoop()
     // later.  the timer installed by startServer() will take care of
     // that.
     DAEMON_RUNNING(true);
-    
+
 #if defined(MAC_OS_X_VERSION_10_7)
-    
+
     Thread thread(
         new TMethodJob<ServerApp>(
             this, &ServerApp::runEventsLoop,
             NULL));
-    
+
     // wait until carbon loop is ready
     OSXScreen* screen = dynamic_cast<OSXScreen*>(
         m_serverScreen->getPlatformScreen());
     screen->waitForCarbonLoop();
-    
+
     runCocoaApp();
 #else
     m_events->loop();
 #endif
-    
+
     DAEMON_RUNNING(false);
 
     // close down
@@ -785,7 +795,7 @@ void ServerApp::resetServer(const Event&, void*)
     startServer();
 }
 
-int 
+int
 ServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
     // general initialization
@@ -815,7 +825,7 @@ int daemonMainLoopStatic(int argc, const char** argv) {
     return ServerApp::instance().daemonMainLoop(argc, argv);
 }
 
-int 
+int
 ServerApp::standardStartup(int argc, char** argv)
 {
     initApp(argc, argv);
@@ -829,7 +839,7 @@ ServerApp::standardStartup(int argc, char** argv)
     }
 }
 
-int 
+int
 ServerApp::foregroundStartup(int argc, char** argv)
 {
     initApp(argc, argv);
@@ -838,7 +848,7 @@ ServerApp::foregroundStartup(int argc, char** argv)
     return mainLoop();
 }
 
-const char* 
+const char*
 ServerApp::daemonName() const
 {
 #if SYSAPI_WIN32
@@ -848,7 +858,7 @@ ServerApp::daemonName() const
 #endif
 }
 
-const char* 
+const char*
 ServerApp::daemonInfo() const
 {
 #if SYSAPI_WIN32

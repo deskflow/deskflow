@@ -350,7 +350,51 @@ background-color: rgba(192,192,192, 0.1);
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="5" column="0" colspan="3">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <item>
+         <widget class="QLabel" name="m_pLabelActiveScreenFilename">
+          <property name="text">
+           <string>Active Screen File:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Maximum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="m_pLineEditActiveScreenFilename"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="m_pButtonActiveScreenFilenameBrowse">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../res/Synergy.qrc">
+            <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="0">
        <spacer name="verticalSpacer_6">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -865,9 +909,9 @@ background-color: rgba(192,192,192, 0.1);
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: #EC4C47; 
-font-size: 13px; 
-font-family: Arial; 
+         <string notr="true">color: #EC4C47;
+font-size: 13px;
+font-family: Arial;
 font-weight: bold;</string>
         </property>
         <property name="text">

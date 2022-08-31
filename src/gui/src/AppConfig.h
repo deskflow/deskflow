@@ -75,6 +75,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         const QString& screenName() const;
         int port() const;
         const QString& networkInterface() const;
+        const QString& activeScreenFilename() const;
         int logLevel() const;
         bool logToFile() const;
         const QString& logFilename() const;
@@ -153,6 +154,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setClientGroupChecked(bool) ;
         void setServerHostname(const QString&);
 
+
         /// @brief Set the path to the TLS/SSL certificate file that will be used
         /// @param [in] path The path to the Certificate
         void setTLSCertPath(const QString& path);
@@ -178,6 +180,7 @@ protected:
     /// @brief The enumeration to easily access the names of the setting inside m_SynergySettingsName
     enum Setting {
         kScreenName,
+        kActiveScreenFilename,
         kPort,
         kInterfaceSetting,
         kLogLevel,
@@ -217,6 +220,7 @@ protected:
         void setScreenName(const QString& s);
         void setPort(int i);
         void setNetworkInterface(const QString& s);
+        void setActiveScreenFilename(const QString& s);
         void setLogLevel(int i);
         void setLogToFile(bool b);
         void setLogFilename(const QString& s);
@@ -233,6 +237,7 @@ protected:
     private:
 
         QString m_ScreenName;
+        QString m_ActiveScreenFilename;
         int m_Port;
         QString m_Interface;
         int m_LogLevel;

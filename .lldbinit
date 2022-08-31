@@ -1,0 +1,1 @@
+settings set target.process.follow-fork-mode child

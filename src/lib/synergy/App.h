@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -62,7 +62,7 @@ public:
 
     // Parse command line arguments.
     virtual void parseArgs(int argc, const char* const* argv) = 0;
-    
+
     int run(int argc, char** argv);
 
     int daemonMainLoop(int, const char**);
@@ -97,7 +97,7 @@ public:
 
     virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
     virtual void bye(int error) { m_bye(error); }
-    
+
     virtual IEventQueue* getEvents() const { return m_events; }
 
     void                setSocketMultiplexer(SocketMultiplexer* sm) { m_socketMultiplexer = sm; }
@@ -138,7 +138,7 @@ public:
     virtual void        startNode();
     virtual int            mainLoop();
     virtual int            foregroundStartup(int argc, char** argv);
-    virtual synergy::Screen*    
+    virtual synergy::Screen*
                         createScreen();
     virtual void        loadConfig();
     virtual bool        loadConfig(const String& pathname);
@@ -178,6 +178,7 @@ private:
 
 #define HELP_COMMON_ARGS \
     " [--name <screen-name>]" \
+    " [--active-screen-filename <active-screen-filename>]" \
     " [--restart|--no-restart]" \
     " [--debug <level>]"
 

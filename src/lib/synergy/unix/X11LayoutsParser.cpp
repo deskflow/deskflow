@@ -170,7 +170,7 @@ X11LayoutsParser::getX11LanguageList(const String& pathToEvdevFile)
     std::vector<String> layoutNames;
     std::vector<String> layoutVariantNames;
 
-    synergy::linux::SynergyXkbKeyboard keyboard;
+    synergy::linuxos::SynergyXkbKeyboard keyboard;
     splitLine(layoutNames, keyboard.getLayout(), ',');
     splitLine(layoutVariantNames, keyboard.getVariant(), ',');
 

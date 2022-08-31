@@ -25,9 +25,7 @@
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
 
-namespace synergy {
-
-namespace linux {
+namespace synergy::linuxos {
 
 class SynergyXkbKeyboard
 {
@@ -45,8 +43,6 @@ public:
 };
 
 } //namespace Unix
-
-} //namespace synergy
 
 #endif // XKBKEYBOARD_H
 

@@ -44,8 +44,8 @@ else()
     option (SYNERGY_BUSINESS "Build Business" OFF)
 endif()
 
-set (CMAKE_CXX_STANDARD 14)
-set (CMAKE_CXX_EXTENSIONS OFF)
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_EXTENSIONS ON)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
@@ -106,6 +106,7 @@ if (UNIX)
     check_include_file_cxx (istream HAVE_ISTREAM)
     check_include_file_cxx (ostream HAVE_OSTREAM)
     check_include_file_cxx (sstream HAVE_SSTREAM)
+    check_include_file_cxx (filesystem HAVE_FILESYSTEM)
 
     check_include_files (inttypes.h HAVE_INTTYPES_H)
     check_include_files (locale.h HAVE_LOCALE_H)
@@ -166,6 +167,13 @@ if (UNIX)
     else()
         message (FATAL_ERROR "Missing library: pthread")
     endif()
+
+    if (HAVE_FILESYSTEM)
+      list (APPEND libs stdc++fs)
+    else()
+      message (FATAL_ERROR "Missing library: stdc++fs")
+    endif()
+
 
 
     if (APPLE)

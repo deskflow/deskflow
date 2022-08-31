@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,9 +26,21 @@
 #include "common/stdistream.h"
 #include "common/stdostream.h"
 
+#include <filesystem>
 #include <cstdlib>
 
 using namespace synergy::string;
+
+
+
+static String defaultActiveScreenFilename() {
+  const char * homeDir = std::getenv("HOME");
+  assert(homeDir != NULL);
+  std::filesystem::path homePath(homeDir);
+  assert(std::filesystem::exists(homePath));
+  auto path = std::filesystem::path(homePath / ".synergy-active-screen");
+  return path.generic_string();
+}
 
 //
 // Config
@@ -37,6 +49,7 @@ using namespace synergy::string;
 Config::Config(IEventQueue* events) :
 	m_inputFilter(events),
 	m_hasLockToScreenAction(false),
+  m_activeScreenFilename(defaultActiveScreenFilename()),
 	m_events(events)
 {
 	// do nothing
@@ -283,6 +296,12 @@ void
 Config::setSynergyAddress(const NetworkAddress& addr)
 {
 	m_synergyAddress = addr;
+}
+
+void
+Config::setActiveScreenFilename(const String& filename)
+{
+  m_activeScreenFilename = filename;
 }
 
 bool
@@ -534,6 +553,12 @@ Config::getSynergyAddress() const
 	return m_synergyAddress;
 }
 
+const String&
+Config::getActiveScreenFilename() const
+{
+  return m_activeScreenFilename;
+}
+
 const Config::ScreenOptions*
 Config::getOptions(const String& name) const
 {
@@ -562,7 +587,10 @@ Config::hasLockToScreenAction() const
 bool
 Config::operator==(const Config& x) const
 {
-	if (m_synergyAddress != x.m_synergyAddress) {
+	if (m_activeScreenFilename != x.m_activeScreenFilename) {
+    return false;
+  }
+  if (m_synergyAddress != x.m_synergyAddress) {
 		return false;
 	}
 	if (m_map.size() != x.m_map.size()) {
@@ -734,6 +762,9 @@ Config::readSectionOptions(ConfigReadContext& s)
 							String("invalid address argument ") + e.what());
 			}
 		}
+    else if (name == "activeScreenFilename") {
+      m_activeScreenFilename = value;
+    }
 		else if (name == "heartbeat") {
 			addOption("", kOptionHeartbeat, s.parseInt(value));
 		}
@@ -1836,7 +1867,7 @@ operator<<(std::ostream& s, const Config& config)
 
 		for (Config::link_const_iterator
 				link = config.beginNeighbor(*screen),
-				nend = config.endNeighbor(*screen); link != nend; ++link) {			
+				nend = config.endNeighbor(*screen); link != nend; ++link) {
 			s << "\t\t" << Config::dirName(link->first.getSide()) <<
 				Config::formatInterval(link->first.getInterval()) <<
 				" = " << link->second.getName().c_str() <<
@@ -1894,6 +1925,12 @@ operator<<(std::ostream& s, const Config& config)
 		s << "\taddress = " <<
 			config.m_synergyAddress.getHostname().c_str() << std::endl;
 	}
+
+  if (!config.m_activeScreenFilename.empty()) {
+    s << "\tactiveScreenFilename = " <<
+        config.m_activeScreenFilename.c_str() << std::endl;
+  }
+
 	s << config.m_inputFilter.format("\t");
 	s << "end" << std::endl;
 

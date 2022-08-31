@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -290,6 +290,8 @@ public:
     */
     void                setSynergyAddress(const NetworkAddress&);
 
+    void setActiveScreenFilename(const String& filename);
+
     //! Add a screen option
     /*!
     Adds an option and its value to the named screen.  Replaces the
@@ -396,6 +398,9 @@ public:
     const NetworkAddress&
                         getSynergyAddress() const;
 
+    const String&
+        getActiveScreenFilename() const;
+
     //! Get the screen options
     /*!
     Returns all the added options for the named screen.  Returns NULL
@@ -477,6 +482,7 @@ private:
     CellMap                m_map;
     NameMap                m_nameToCanonicalName;
     NetworkAddress        m_synergyAddress;
+    String              m_activeScreenFilename;
     ScreenOptions        m_globalOptions;
     InputFilter            m_inputFilter;
     bool                m_hasLockToScreenAction;

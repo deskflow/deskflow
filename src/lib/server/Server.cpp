@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <filesystem>
+
 #include "server/Server.h"
 
 #include "server/ClientProxy.h"
@@ -66,7 +68,7 @@ Server::Server(
 		lib::synergy::ServerArgs const& args) :
 	m_mock(false),
 	m_primaryClient(primaryClient),
-	m_active(primaryClient),
+  m_active(primaryClient),
 	m_seqNum(0),
 	m_xDelta(0),
 	m_yDelta(0),
@@ -476,7 +478,17 @@ Server::switchScreen(BaseClientProxy* dst,
 #endif
 	assert(m_active != NULL);
 
-	LOG((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", getName(m_active).c_str(), getName(dst).c_str(), x, y));
+	bool dstIsServer = m_primaryClient == dst;
+
+  LOG((CLOG_INFO "switch from \"%s\" to \"%s\" (dstIsServer=%i) at %d,%d", getName(m_active).c_str(), getName(dst).c_str(), dstIsServer, x, y));
+
+  // Update the active screen file
+  auto& activeScreenFileArg = m_args.m_activeScreenFilename;
+  auto& activeScreenFile = !activeScreenFileArg.empty() ?activeScreenFileArg : m_config->getActiveScreenFilename();
+  String activeScreenFileContent = dstIsServer ? "host" : getName(dst);
+  std::ofstream os(activeScreenFile,std::ios::binary | std::ios::trunc);
+  os << activeScreenFileContent;
+  os.close();
 
 	// stop waiting to switch
 	stopSwitch();
@@ -514,7 +526,7 @@ Server::switchScreen(BaseClientProxy* dst,
 
 
 #if defined(__APPLE__)
-        if (dst != m_primaryClient) {
+        if (dstIsServer) {
             String secureInputApplication = m_primaryClient->getSecureInputApp();
             if (secureInputApplication != "") {
                 // display notification on the server
@@ -2277,7 +2289,7 @@ Server::removeActiveClient(BaseClientProxy* client)
 void
 Server::removeOldClient(BaseClientProxy* client)
 {
-	OldClients::iterator i = m_oldClients.find(client);
+	auto i = m_oldClients.find(client);
 	if (i != m_oldClients.end()) {
 		m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
 		m_events->removeHandler(Event::kTimer, i->second);
@@ -2293,7 +2305,7 @@ void
 Server::forceLeaveClient(BaseClientProxy* client)
 {
 	BaseClientProxy* active =
-		(m_activeSaver != NULL) ? m_activeSaver : m_active;
+		(m_activeSaver != nullptr) ? m_activeSaver : m_active;
 	if (active == client) {
 		// record new position (center of primary screen)
 		m_primaryClient->getCursorCenter(m_x, m_y);
@@ -2312,7 +2324,7 @@ Server::forceLeaveClient(BaseClientProxy* client)
 
 		// enter new screen (unless we already have because of the
 		// screen saver)
-		if (m_activeSaver == NULL) {
+		if (m_activeSaver == nullptr) {
 			m_primaryClient->enter(m_x, m_y, m_seqNum,
 								m_primaryClient->getToggleMask(), false);
 		}
@@ -2455,4 +2467,8 @@ Server::dragInfoReceived(UInt32 fileNum, String content)
 	DragInformation::parseDragInfo(m_fakeDragFileList, fileNum, content);
 
 	m_screen->startDraggingFiles(m_fakeDragFileList);
+}
+
+String Server::getActiveClient() const {
+  return getName(m_active);
 }

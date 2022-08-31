@@ -47,6 +47,7 @@ const ElevateMode defaultElevateMode = ElevateAsNeeded;
 
 const char* AppConfig::m_SynergySettingsName[] = {
         "screenName",
+        "activeScreenFilename",
         "port",
         "interface",
         "logLevel2",
@@ -93,6 +94,7 @@ static const char* logLevelNames[] =
 
 AppConfig::AppConfig() :
     m_ScreenName(),
+    m_ActiveScreenFilename(QString(getenv("HOME")) + "/.synergy-active-screen"),
     m_Port(24800),
     m_Interface(),
     m_LogLevel(0),
@@ -137,6 +139,12 @@ const QString &AppConfig::screenName() const { return m_ScreenName; }
 int AppConfig::port() const { return m_Port; }
 
 const QString &AppConfig::networkInterface() const { return m_Interface; }
+
+const QString &AppConfig::activeScreenFilename() const {
+  return m_ActiveScreenFilename;
+}
+
+
 
 int AppConfig::logLevel() const { return m_LogLevel; }
 
@@ -207,7 +215,8 @@ void AppConfig::loadSettings()
     if (m_ScreenName.isEmpty()) {
        m_ScreenName = QHostInfo::localHostName();
     }
-
+    m_ActiveScreenFilename
+                        = loadSetting(kActiveScreenFilename, QString(getenv("HOME")) + "/.synergy-active-screen").toString();
     m_Port              = loadSetting(kPort, 24800).toInt();
     m_Interface         = loadSetting(kInterfaceSetting).toString();
     m_LogLevel          = loadSetting(kLogLevel, 0).toInt();
@@ -283,6 +292,7 @@ void AppConfig::saveSettings()
 
     if (isWritable()) {
         setSetting(kScreenName, m_ScreenName);
+        setSetting(kActiveScreenFilename, m_ActiveScreenFilename);
         setSetting(kPort, m_Port);
         setSetting(kInterfaceSetting, m_Interface);
         setSetting(kLogLevel, m_LogLevel);
@@ -341,6 +351,11 @@ void AppConfig::setLastVersion(const QString& version) {
 void AppConfig::setScreenName(const QString &s) {
     setSettingModified(m_ScreenName, s);
     emit screenNameChanged();
+}
+
+void AppConfig::setActiveScreenFilename(const QString &s) {
+  setSettingModified(m_ActiveScreenFilename, s);
+
 }
 
 void AppConfig::setPort(int i) {

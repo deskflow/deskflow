@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2020 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -53,6 +53,7 @@ namespace lib {
 
             bool                 m_shouldExit        = false;      /// @brief Will cause the application to exit when set to true
             String               m_synergyAddress;                 /// @brief Bind to this address //TODO This really should be a ServerArgs
+            String               m_activeScreenFilename;
             bool                 m_enableCrypto      = false;      /// @brief Should the connections be TLS encrypted
             String               m_profileDirectory;               /// @brief The profile DIR to use for the application
             String               m_pluginDirectory;                /// @brief //TODO Plugins? Get set in ARCH but doesn't seem to get used

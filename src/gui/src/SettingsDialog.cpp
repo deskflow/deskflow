@@ -58,6 +58,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
+    connect(m_pLineEditActiveScreenFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
     connect(m_pLineEditLogFilename,     SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
     connect(m_pComboLogLevel,           SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
     connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)),     this, SLOT(onChange()));
@@ -79,6 +80,7 @@ void SettingsDialog::accept()
 {
    appConfig().setLoadFromSystemScope(m_pRadioSystemScope->isChecked());
    appConfig().setScreenName(m_pLineEditScreenName->text());
+   appConfig().setActiveScreenFilename(m_pLineEditActiveScreenFilename->text());
    appConfig().setPort(m_pSpinBoxPort->value());
    appConfig().setNetworkInterface(m_pLineEditInterface->text());
    appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
@@ -139,8 +141,8 @@ void SettingsDialog::changeEvent(QEvent* event)
 }
 
 void SettingsDialog::loadFromConfig() {
-
     m_pLineEditScreenName->setText(appConfig().screenName());
+    m_pLineEditActiveScreenFilename->setText(appConfig().activeScreenFilename());
     m_pSpinBoxPort->setValue(appConfig().port());
     m_pLineEditInterface->setText(appConfig().networkInterface());
     m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
@@ -311,6 +313,19 @@ void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
     updateRegenButton();
 }
 
+void SettingsDialog::on_m_pButtonActiveScreenFilenameBrowse_clicked() {
+  QString fileName = QFileDialog::getSaveFileName(
+      this, tr("Select the file to use for active screen name..."),
+      m_pLineEditActiveScreenFilename->text(),
+      "All (*.*)",
+      nullptr,
+      QFileDialog::DontConfirmOverwrite);
+
+  if (!fileName.isEmpty()) {
+    m_pLineEditActiveScreenFilename->setText(fileName);
+  }
+}
+
 void SettingsDialog::on_m_pComboBoxKeyLength_currentIndexChanged(int index) {
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
     updateRegenButton();
@@ -343,6 +358,7 @@ bool SettingsDialog::isModified()
    return (!m_pLineEditScreenName->text().isEmpty() &&
       m_pLabelNameError->text().isEmpty() &&
       (appConfig().screenName()          != m_pLineEditScreenName->text()
+      || appConfig().activeScreenFilename()          != m_pLineEditActiveScreenFilename->text()
       || appConfig().port()              != m_pSpinBoxPort->value()
       || appConfig().networkInterface()  != m_pLineEditInterface->text()
       || appConfig().logLevel()          != m_pComboLogLevel->currentIndex()
@@ -364,6 +380,7 @@ bool SettingsDialog::isModified()
 }
 
 void SettingsDialog::enableControls(bool enable) {
+    m_pLineEditActiveScreenFilename->setEnabled(enable);
     m_pLineEditScreenName->setEnabled(enable);
     m_pSpinBoxPort->setEnabled(enable);
     m_pLineEditInterface->setEnabled(enable);
@@ -382,6 +399,7 @@ void SettingsDialog::enableControls(bool enable) {
     m_labelAdminRightsMessage->setVisible(!enable);
     m_pCheckBoxLanguageSync->setEnabled(enable);
     m_pCheckBoxScrollDirection->setEnabled(enable);
+    m_pButtonActiveScreenFilenameBrowse->setEnabled(enable);
 
     if (enable) {
         m_pLabelLogPath->setEnabled(m_pCheckBoxLogToFile->isChecked());

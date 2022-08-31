@@ -718,6 +718,11 @@ void MainWindow::startSynergy()
         args << "--prevent-sleep";
     }
 
+    if (!m_AppConfig->activeScreenFilename().isEmpty())
+    {
+      args << "--active-screen-filename" << m_AppConfig->activeScreenFilename();
+    }
+
     // put a space between last log output and new instance.
     if (!m_pLogOutput->toPlainText().isEmpty())
         appendLogRaw("");
