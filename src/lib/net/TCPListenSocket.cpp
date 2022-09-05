@@ -71,10 +71,7 @@ TCPListenSocket::bind(const NetworkAddress& addr)
         ARCH->setReuseAddrOnSocket(m_socket, true);
         ARCH->bindSocket(m_socket, addr.getAddress());
         ARCH->listenOnSocket(m_socket);
-        m_socketMultiplexer->addSocket(this,
-                            new TSocketMultiplexerMethodJob<TCPListenSocket>(
-                                this, &TCPListenSocket::serviceListening,
-                                m_socket, true, false));
+        setListeningJob();
     }
     catch (XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());

@@ -32,6 +32,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <memory>
+#include <iostream>
 
 //
 // TCPClientSocket
@@ -42,6 +43,7 @@ TCPClientSocket::TCPClientSocket(IEventQueue* events, SocketMultiplexer* socketM
     m_events(events),
     m_mutex(),
     m_socket(family),
+    m_listener(family),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
@@ -216,6 +218,7 @@ TCPClientSocket::getSize() const
 void
 TCPClientSocket::connect(const NetworkAddress& addr)
 {
+    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
     {
         Lock lock(&m_mutex);
 
@@ -225,6 +228,7 @@ TCPClientSocket::connect(const NetworkAddress& addr)
             return;
         }
 
+        startListener();
         if (m_socket.connectSocket(addr)) {
             onConnected();
         }
@@ -318,13 +322,13 @@ TCPClientSocket::newJob()
                                 m_socket.getRawSocket(), m_readable, m_writable);
     }
     else {
-        if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
+        auto isWritable = (m_writable && (m_outputBuffer.getSize() > 0));
+        if (!(m_readable || isWritable)) {
             return nullptr;
         }
         return new TSocketMultiplexerMethodJob<TCPClientSocket>(
                                 this, &TCPClientSocket::serviceConnected,
-                                m_socket.getRawSocket(), m_readable,
-                                m_writable && (m_outputBuffer.getSize() > 0));
+                                m_socket.getRawSocket(), m_readable, isWritable);
     }
 }
 
@@ -495,4 +499,26 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
     }
 
     return result == kNew ? newJob() : job;
+}
+
+void TCPClientSocket::startListener()
+{
+    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
+    Lock lock(&m_mutex);
+    m_listener.setReuseAddrOnSocket();
+    m_listener.bindSocket(14800);
+    m_listener.listenOnSocket();
+    m_socketMultiplexer->addSocket(this, new TSocketMultiplexerMethodJob<TCPClientSocket>(
+                                       this,
+                                       &TCPClientSocket::serviceListening,
+                                       m_listener.getRawSocket(),
+                                       true,
+                                       false));
+}
+
+ISocketMultiplexerJob* TCPClientSocket::serviceListening(ISocketMultiplexerJob* job,
+                                                         bool read, bool, bool error)
+{
+    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
+    return nullptr;
 }

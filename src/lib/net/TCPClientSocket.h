@@ -92,6 +92,10 @@ private:
     void                onOutputShutdown();
     void                onDisconnected();
 
+    void                startListener();
+    ISocketMultiplexerJob* serviceListening(ISocketMultiplexerJob* job,
+                                            bool read, bool, bool error);
+
     ISocketMultiplexerJob*
                         serviceConnecting(ISocketMultiplexerJob*,
                             bool, bool, bool);
@@ -110,6 +114,7 @@ protected:
 private:
     Mutex                m_mutex;
     ArchSocketFacade     m_socket;
+    ArchSocketFacade     m_listener;
     CondVar<bool>        m_flushed;
     SocketMultiplexer*    m_socketMultiplexer;
 };

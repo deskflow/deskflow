@@ -114,3 +114,13 @@ ArchSocket ArchSocketFacade::getRawSocket()
 {
     return m_socket;
 }
+
+void ArchSocketFacade::setReuseAddrOnSocket()
+{
+    ARCH->setReuseAddrOnSocket(m_socket, true);
+}
+
+void ArchSocketFacade::listenOnSocket()
+{
+    ARCH->listenOnSocket(m_socket);
+}
