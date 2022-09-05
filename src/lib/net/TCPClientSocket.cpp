@@ -41,30 +41,11 @@ TCPClientSocket::TCPClientSocket(IEventQueue* events, SocketMultiplexer* socketM
     IDataSocket(events),
     m_events(events),
     m_mutex(),
+    m_socket(family),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
-    try {
-        m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-        LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
-        // turn off Nagle algorithm.  we send lots of very short messages
-        // that should be sent without (much) delay.  for example, the
-        // mouse motion messages are much less useful if they're delayed.
-        ARCH->setNoDelayOnSocket(m_socket, true);
-    }
-    catch (const XArchNetwork& e) {
-        try {
-            if (m_socket) {
-                ARCH->closeSocket(m_socket);
-                m_socket = nullptr;
-            }
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
-        throw XSocketCreate(e.what());
-    }
+    m_socket.setNoDelayOnSocket();
 }
 
 TCPClientSocket::~TCPClientSocket()
@@ -81,22 +62,12 @@ TCPClientSocket::~TCPClientSocket()
 void
 TCPClientSocket::bind(const NetworkAddress& addr)
 {
-    try {
-        ARCH->bindSocket(m_socket, addr.getAddress());
-    }
-    catch (const XArchNetworkAddressInUse& e) {
-        throw XSocketAddressInUse(e.what());
-    }
-    catch (const XArchNetwork& e) {
-        throw XSocketBind(e.what());
-    }
+    m_socket.bindSocket(addr);
 }
 
 void
 TCPClientSocket::close()
 {
-    LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
-
     // remove ourself from the multiplexer
     setJob(nullptr);
 
@@ -107,19 +78,6 @@ TCPClientSocket::close()
         sendEvent(m_events->forISocket().disconnected());
     }
     onDisconnected();
-
-    // close the socket
-    if (m_socket != nullptr) {
-        ArchSocket socket = m_socket;
-        m_socket = nullptr;
-        try {
-            ARCH->closeSocket(socket);
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
-    }
 }
 
 void*
@@ -154,7 +112,7 @@ TCPClientSocket::read(void* buffer, UInt32 n)
 void
 TCPClientSocket::write(const void* buffer, UInt32 n)
 {
-    bool wasEmpty;
+    bool wasEmpty = false;
     {
         Lock lock(&m_mutex);
 
@@ -200,13 +158,7 @@ TCPClientSocket::shutdownInput()
         Lock lock(&m_mutex);
 
         // shutdown socket for reading
-        try {
-            ARCH->closeSocketForRead(m_socket);
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
+        m_socket.closeSocketForRead();
 
         // shutdown buffer for reading
         if (m_readable) {
@@ -228,13 +180,7 @@ TCPClientSocket::shutdownOutput()
         Lock lock(&m_mutex);
 
         // shutdown socket for writing
-        try {
-            ARCH->closeSocketForWrite(m_socket);
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
+        m_socket.closeSocketForWrite();
 
         // shutdown buffer for writing
         if (m_writable) {
@@ -277,23 +223,18 @@ TCPClientSocket::connect(const NetworkAddress& addr)
         Lock lock(&m_mutex);
 
         // fail on attempts to reconnect
-        if (m_socket == nullptr || m_connected) {
+        if (!m_socket.isValid() || m_connected) {
             sendConnectionFailedEvent("busy");
             return;
         }
 
-        try {
-            if (ARCH->connectSocket(m_socket, addr.getAddress())) {
-                sendEvent(m_events->forIDataSocket().connected());
-                onConnected();
-            }
-            else {
-                // connection is in progress
-                m_writable = true;
-            }
+        if (m_socket.connectSocket(addr)) {
+            sendEvent(m_events->forIDataSocket().connected());
+            onConnected();
         }
-        catch (const XArchNetwork& e) {
-            throw XSocketConnect(e.what());
+        else {
+            // connection is in progress
+            m_writable = true;
         }
     }
     setJob(newJob());
@@ -302,11 +243,8 @@ TCPClientSocket::connect(const NetworkAddress& addr)
 TCPClientSocket::EJobResult
 TCPClientSocket::doRead()
 {
-    UInt8 buffer[4096];
-    memset(buffer, 0, sizeof(buffer));
-    size_t bytesRead = 0;
-
-    bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+    UInt8 buffer[4096] = {0};
+    size_t bytesRead = m_socket.readSocket(buffer, sizeof(buffer));
 
     if (bytesRead > 0) {
         bool wasEmpty = (m_inputBuffer.getSize() == 0);
@@ -315,7 +253,7 @@ TCPClientSocket::doRead()
         do {
             m_inputBuffer.write(buffer, static_cast<UInt32>(bytesRead));
 
-            bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+            bytesRead = m_socket.readSocket(buffer, sizeof(buffer));
         } while (bytesRead > 0);
 
         // send input ready if input buffer was empty
@@ -342,13 +280,9 @@ TCPClientSocket::doRead()
 TCPClientSocket::EJobResult
 TCPClientSocket::doWrite()
 {
-    // write data
-    UInt32 bufferSize = 0;
-    int bytesWrote = 0;
-
-    bufferSize = m_outputBuffer.getSize();
-    const void* buffer = m_outputBuffer.peek(bufferSize);
-    bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, bufferSize);
+    UInt32 bufferSize = m_outputBuffer.getSize();
+    auto buffer = static_cast<const UInt8*>(m_outputBuffer.peek(bufferSize));
+    auto bytesWrote = static_cast<UInt8>(m_socket.writeSocket(buffer, bufferSize));
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
@@ -375,7 +309,7 @@ TCPClientSocket::newJob()
 {
     // note -- must have m_mutex locked on entry
 
-    if (m_socket == nullptr) {
+    if (!m_socket.isValid()) {
         return nullptr;
     }
     else if (!m_connected) {
@@ -385,7 +319,7 @@ TCPClientSocket::newJob()
         }
         return new TSocketMultiplexerMethodJob<TCPClientSocket>(
                                 this, &TCPClientSocket::serviceConnecting,
-                                m_socket, m_readable, m_writable);
+                                m_socket.getRawSocket(), m_readable, m_writable);
     }
     else {
         if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
@@ -393,7 +327,7 @@ TCPClientSocket::newJob()
         }
         return new TSocketMultiplexerMethodJob<TCPClientSocket>(
                                 this, &TCPClientSocket::serviceConnected,
-                                m_socket, m_readable,
+                                m_socket.getRawSocket(), m_readable,
                                 m_writable && (m_outputBuffer.getSize() > 0));
     }
 }
@@ -481,16 +415,14 @@ TCPClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
     // connection refused.  when that happens it at least doesn't
     // report the socket as being writable so synergy is able to time
     // out the attempt.)
-    if (error || true) {
-        try {
-            // connection may have failed or succeeded
-            ARCH->throwErrorOnSocket(m_socket);
-        }
-        catch (const XArchNetwork& e) {
-            sendConnectionFailedEvent(e.what());
-            onDisconnected();
-            return newJob();
-        }
+    try {
+        // connection may have failed or succeeded
+        m_socket.throwErrorOnSocket();
+    }
+    catch (const XArchNetwork& e) {
+        sendConnectionFailedEvent(e.what());
+        onDisconnected();
+        return newJob();
     }
 
     if (write) {

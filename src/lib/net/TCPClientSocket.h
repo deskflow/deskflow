@@ -22,6 +22,7 @@
 #include "io/StreamBuffer.h"
 #include "mt/CondVar.h"
 #include "arch/IArchNetwork.h"
+#include "net/ArchSocketFacade.h"
 
 class ISocketMultiplexerJob;
 class SocketMultiplexer;
@@ -69,7 +70,7 @@ protected:
         kNew            //!< Require a new job
     };
 
-    ArchSocket            getSocket() { return m_socket; }
+    ArchSocket            getSocket() { return m_socket.getRawSocket(); }
     IEventQueue*        getEvents() { return m_events; }
     virtual EJobResult    doRead();
     virtual EJobResult    doWrite();
@@ -108,7 +109,7 @@ protected:
 
 private:
     Mutex                m_mutex;
-    ArchSocket            m_socket = nullptr;
+    ArchSocketFacade     m_socket;
     CondVar<bool>        m_flushed;
     SocketMultiplexer*    m_socketMultiplexer;
 };
