@@ -74,9 +74,6 @@ TCPClientSocket::close()
     Lock lock(&m_mutex);
 
     // clear buffers and enter disconnected state
-    if (m_connected) {
-        sendEvent(m_events->forISocket().disconnected());
-    }
     onDisconnected();
 }
 
@@ -386,6 +383,10 @@ TCPClientSocket::onOutputShutdown()
 void
 TCPClientSocket::onDisconnected()
 {
+    if (m_connected) {
+        sendEvent(m_events->forISocket().disconnected());
+    }
+
     // disconnected
     onInputShutdown();
     onOutputShutdown();
@@ -440,7 +441,6 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
     Lock lock(&m_mutex);
 
     if (error) {
-        sendEvent(m_events->forISocket().disconnected());
         onDisconnected();
         return newJob();
     }
@@ -464,15 +464,13 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         catch (XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
-            sendEvent(m_events->forISocket().disconnected());
             result = kNew;
         }
         catch (XArchNetwork& e) {
             // other write error
             LOG((CLOG_WARN "error writing socket: %s", e.what()));
-            onDisconnected();
             sendEvent(m_events->forIStream().outputError());
-            sendEvent(m_events->forISocket().disconnected());
+            onDisconnected();
             result = kNew;
         }
     }
@@ -483,7 +481,6 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
         catch (XArchNetworkDisconnected&) {
             // stream hungup
-            sendEvent(m_events->forISocket().disconnected());
             onDisconnected();
             result = kNew;
         }
