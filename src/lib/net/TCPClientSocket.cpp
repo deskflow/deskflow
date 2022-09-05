@@ -229,7 +229,6 @@ TCPClientSocket::connect(const NetworkAddress& addr)
         }
 
         if (m_socket.connectSocket(addr)) {
-            sendEvent(m_events->forIDataSocket().connected());
             onConnected();
         }
         else {
@@ -360,6 +359,7 @@ TCPClientSocket::discardWrittenData(int bytesWrote)
 void
 TCPClientSocket::onConnected()
 {
+    sendEvent(m_events->forIDataSocket().connected());
     m_connected = true;
     m_readable  = true;
     m_writable  = true;
@@ -426,7 +426,6 @@ TCPClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
     }
 
     if (write) {
-        sendEvent(m_events->forIDataSocket().connected());
         onConnected();
         return newJob();
     }
