@@ -17,6 +17,7 @@ public:
     void closeSocketForWrite();
 
     void listenOnSocket();
+    ArchSocket acceptSocket();
     void bindSocket(const NetworkAddress& addr);
     bool connectSocket(const NetworkAddress& addr);
 

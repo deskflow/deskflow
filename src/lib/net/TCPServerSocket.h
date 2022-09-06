@@ -20,8 +20,9 @@
 
 #include "net/IListenSocket.h"
 #include "arch/IArchNetwork.h"
+#include "ArchSocketFacade.h"
+#include "mt/Mutex.h"
 
-class Mutex;
 class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
@@ -51,6 +52,7 @@ public:
 
 protected:
     void                setListeningJob();
+    void                connect();
 
 public:
     ISocketMultiplexerJob*
@@ -58,8 +60,9 @@ public:
                             bool, bool, bool);
 
 protected:
-    ArchSocket            m_socket;
-    Mutex*                m_mutex;
+    ArchSocketFacade    m_socket;
+    ArchSocketFacade    m_listener;
+    Mutex               m_mutex;
     IEventQueue*        m_events;
-    SocketMultiplexer*    m_socketMultiplexer;
+    SocketMultiplexer*  m_socketMultiplexer;
 };

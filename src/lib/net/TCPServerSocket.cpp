@@ -25,56 +25,47 @@
 #include "net/XSocket.h"
 #include "io/XIO.h"
 #include "mt/Lock.h"
-#include "mt/Mutex.h"
 #include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/IEventQueue.h"
+#include <iostream>
 
 //
 // TCPServerSocket
 //
 
 TCPServerSocket::TCPServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
+    m_listener(family),
+    m_socket(family),
     m_events(events),
     m_socketMultiplexer(socketMultiplexer)
 {
-    m_mutex = new Mutex;
-    try {
-        m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-    }
-    catch (XArchNetwork& e) {
-        throw XSocketCreate(e.what());
-    }
 }
 
 TCPServerSocket::~TCPServerSocket()
 {
     try {
-        if (m_socket != NULL) {
-            m_socketMultiplexer->removeSocket(this);
-            ARCH->closeSocket(m_socket);
-        }
+        m_socketMultiplexer->removeSocket(this);
     }
     catch (...) {
         // ignore
         LOG((CLOG_WARN "error while closing TCP socket"));
     }
-    delete m_mutex;
 }
 
 void
 TCPServerSocket::bind(const NetworkAddress& addr)
 {
     try {
-        Lock lock(m_mutex);
-        ARCH->setReuseAddrOnSocket(m_socket, true);
-        ARCH->bindSocket(m_socket, addr.getAddress());
-        ARCH->listenOnSocket(m_socket);
+        Lock lock(&m_mutex);
+        m_listener.setReuseAddrOnSocket();
+        m_listener.bindSocket(addr);
+        m_listener.listenOnSocket();
         m_socketMultiplexer->addSocket(this,
                             new TSocketMultiplexerMethodJob<TCPServerSocket>(
                                 this, &TCPServerSocket::serviceListening,
-                                m_socket, true, false));
+                                m_listener.getRawSocket(), true, false));
     }
     catch (XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
@@ -87,14 +78,13 @@ TCPServerSocket::bind(const NetworkAddress& addr)
 void
 TCPServerSocket::close()
 {
-    Lock lock(m_mutex);
-    if (m_socket == NULL) {
+    Lock lock(&m_mutex);
+    if (!m_listener.isValid()) {
         throw XIOClosed();
     }
     try {
         m_socketMultiplexer->removeSocket(this);
-        ARCH->closeSocket(m_socket);
-        m_socket = NULL;
+        m_listener.closeSocket();
     }
     catch (XArchNetwork& e) {
         throw XSocketIOClose(e.what());
@@ -110,9 +100,10 @@ TCPServerSocket::getEventTarget() const
 IDataSocket*
 TCPServerSocket::accept()
 {
+    connect();
     IDataSocket* socket = NULL;
     try {
-        socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+        socket = new TCPSocket(m_events, m_socketMultiplexer, m_listener.acceptSocket());
         if (socket != NULL) {
             setListeningJob();
         }
@@ -140,7 +131,7 @@ TCPServerSocket::setListeningJob()
     m_socketMultiplexer->addSocket(this,
                             new TSocketMultiplexerMethodJob<TCPServerSocket>(
                                 this, &TCPServerSocket::serviceListening,
-                                m_socket, true, false));
+                                m_listener.getRawSocket(), true, false));
 }
 
 ISocketMultiplexerJob*
@@ -157,4 +148,16 @@ TCPServerSocket::serviceListening(ISocketMultiplexerJob* job,
         return NULL;
     }
     return job;
+}
+
+void TCPServerSocket::connect()
+{
+    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
+    NetworkAddress addr("192.168.1.191", 14800);
+    addr.resolve();
+    if (m_socket.connectSocket(addr)) {
+        std::cout<<"SGADTRACE: Connected!"<<std::endl;
+    } else {
+        std::cout<<"SGADTRACE: Connection failed!"<<std::endl;
+    }
 }

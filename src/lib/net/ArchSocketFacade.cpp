@@ -124,3 +124,8 @@ void ArchSocketFacade::listenOnSocket()
 {
     ARCH->listenOnSocket(m_socket);
 }
+
+ArchSocket ArchSocketFacade::acceptSocket()
+{
+    return ARCH->acceptSocket(m_socket, nullptr);
+}
