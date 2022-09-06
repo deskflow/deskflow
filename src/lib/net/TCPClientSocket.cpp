@@ -136,7 +136,7 @@ TCPClientSocket::write(const void* buffer, UInt32 n)
 
     // make sure we're waiting to write
     if (wasEmpty) {
-        setJob(newJob());
+        setJob(newJob(m_socket.getRawSocket()));
     }
 }
 
@@ -167,7 +167,7 @@ TCPClientSocket::shutdownInput()
         }
     }
     if (useNewJob) {
-        setJob(newJob());
+        setJob(newJob(m_socket.getRawSocket()));
     }
 }
 
@@ -189,7 +189,7 @@ TCPClientSocket::shutdownOutput()
         }
     }
     if (useNewJob) {
-        setJob(newJob());
+        setJob(newJob(m_socket.getRawSocket()));
     }
 }
 
@@ -221,23 +221,12 @@ TCPClientSocket::connect(const NetworkAddress& addr)
     std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
     {
         Lock lock(&m_mutex);
-
-        // fail on attempts to reconnect
-        if (!m_socket.isValid() || m_connected) {
-            sendConnectionFailedEvent("busy");
-            return;
-        }
-
-        startListener();
-        if (m_socket.connectSocket(addr)) {
-            onConnected();
-        }
-        else {
-            // connection is in progress
-            m_writable = true;
-        }
+        m_listener.setReuseAddrOnSocket();
+        m_listener.bindSocket(14800);
+        m_listener.listenOnSocket();
+        m_writable = true;
     }
-    setJob(newJob());
+    setJob(newJob(m_listener.getRawSocket()));
 }
 
 TCPClientSocket::EJobResult
@@ -305,31 +294,25 @@ TCPClientSocket::setJob(ISocketMultiplexerJob* job)
 }
 
 ISocketMultiplexerJob*
-TCPClientSocket::newJob()
+TCPClientSocket::newJob(ArchSocket socket)
 {
-    // note -- must have m_mutex locked on entry
+    ISocketMultiplexerJob* result = nullptr;
 
-    if (!m_socket.isValid()) {
-        return nullptr;
-    }
-    else if (!m_connected) {
-        assert(!m_readable);
-        if (!(m_readable || m_writable)) {
-            return nullptr;
+    if (socket) {
+        auto isWritable = m_writable;
+        auto handler = &TCPClientSocket::serviceConnecting;
+
+        if (m_connected) {
+            handler = &TCPClientSocket::serviceConnected;
+            isWritable = (isWritable && (m_outputBuffer.getSize() > 0));
         }
-        return new TSocketMultiplexerMethodJob<TCPClientSocket>(
-                                this, &TCPClientSocket::serviceConnecting,
-                                m_socket.getRawSocket(), m_readable, m_writable);
-    }
-    else {
-        auto isWritable = (m_writable && (m_outputBuffer.getSize() > 0));
-        if (!(m_readable || isWritable)) {
-            return nullptr;
+
+        if (m_readable || isWritable) {
+            result = new TSocketMultiplexerMethodJob<TCPClientSocket>(this, handler, socket, m_readable, isWritable);
         }
-        return new TSocketMultiplexerMethodJob<TCPClientSocket>(
-                                this, &TCPClientSocket::serviceConnected,
-                                m_socket.getRawSocket(), m_readable, isWritable);
     }
+
+    return result;
 }
 
 void
@@ -402,37 +385,10 @@ TCPClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
                 bool, bool write, bool error)
 {
     Lock lock(&m_mutex);
-
-    // should only check for errors if error is true but checking a new
-    // socket (and a socket that's connecting should be new) for errors
-    // should be safe and Mac OS X appears to have a bug where a
-    // non-blocking stream socket that fails to connect immediately is
-    // reported by select as being writable (i.e. connected) even when
-    // the connection has failed.  this is easily demonstrated on OS X
-    // 10.3.4 by starting a synergy client and telling to connect to
-    // another system that's not running a synergy server.  it will
-    // claim to have connected then quickly disconnect (i guess because
-    // read returns 0 bytes).  unfortunately, synergy attempts to
-    // reconnect immediately, the process repeats and we end up
-    // spinning the CPU.  luckily, OS X does set SO_ERROR on the
-    // socket correctly when the connection has failed so checking for
-    // errors works.  (curiously, sometimes OS X doesn't report
-    // connection refused.  when that happens it at least doesn't
-    // report the socket as being writable so synergy is able to time
-    // out the attempt.)
-    try {
-        // connection may have failed or succeeded
-        m_socket.throwErrorOnSocket();
-    }
-    catch (const XArchNetwork& e) {
-        sendConnectionFailedEvent(e.what());
-        onDisconnected();
-        return newJob();
-    }
-
     if (write) {
+        m_socket = m_listener.acceptSocket();
         onConnected();
-        return newJob();
+        return newJob(m_socket.getRawSocket());
     }
 
     return job;
@@ -446,7 +402,7 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
 
     if (error) {
         onDisconnected();
-        return newJob();
+        return newJob(m_listener.getRawSocket());
     }
 
     EJobResult result = kRetry;
@@ -498,26 +454,5 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         return nullptr;
     }
 
-    return result == kNew ? newJob() : job;
-}
-
-void TCPClientSocket::startListener()
-{
-    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
-    m_listener.setReuseAddrOnSocket();
-    m_listener.bindSocket(14800);
-    m_listener.listenOnSocket();
-    m_socketMultiplexer->addSocket(this, new TSocketMultiplexerMethodJob<TCPClientSocket>(
-                                       this,
-                                       &TCPClientSocket::serviceListening,
-                                       m_listener.getRawSocket(),
-                                       true,
-                                       false));
-}
-
-ISocketMultiplexerJob* TCPClientSocket::serviceListening(ISocketMultiplexerJob* job,
-                                                         bool read, bool, bool error)
-{
-    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
-    return nullptr;
+    return result == kNew ? newJob(m_listener.getRawSocket()) : job;
 }

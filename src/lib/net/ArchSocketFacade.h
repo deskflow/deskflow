@@ -27,6 +27,7 @@ public:
     bool isValid() const;
     void throwErrorOnSocket();
     ArchSocket getRawSocket();
+    void operator =(ArchSocket socket);
 
 private:
     ArchSocket m_socket = nullptr;

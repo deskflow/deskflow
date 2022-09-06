@@ -52,7 +52,6 @@ public:
 
 protected:
     void                setListeningJob();
-    void                connect();
 
 public:
     ISocketMultiplexerJob*
@@ -61,7 +60,6 @@ public:
 
 protected:
     ArchSocketFacade    m_socket;
-    ArchSocketFacade    m_listener;
     Mutex               m_mutex;
     IEventQueue*        m_events;
     SocketMultiplexer*  m_socketMultiplexer;

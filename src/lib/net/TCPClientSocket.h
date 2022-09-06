@@ -61,7 +61,7 @@ public:
 
 
     virtual ISocketMultiplexerJob*
-                        newJob();
+                        newJob(ArchSocket socket);
 
 protected:
     enum EJobResult {
@@ -91,10 +91,6 @@ private:
     void                onInputShutdown();
     void                onOutputShutdown();
     void                onDisconnected();
-
-    void                startListener();
-    ISocketMultiplexerJob* serviceListening(ISocketMultiplexerJob* job,
-                                            bool read, bool, bool error);
 
     ISocketMultiplexerJob*
                         serviceConnecting(ISocketMultiplexerJob*,

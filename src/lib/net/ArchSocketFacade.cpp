@@ -129,3 +129,10 @@ ArchSocket ArchSocketFacade::acceptSocket()
 {
     return ARCH->acceptSocket(m_socket, nullptr);
 }
+void ArchSocketFacade::operator =(ArchSocket socket)
+{
+    if (isValid()) {
+        closeSocket();
+    }
+    m_socket = socket;
+}
