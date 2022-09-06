@@ -504,7 +504,6 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
 void TCPClientSocket::startListener()
 {
     std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
-    Lock lock(&m_mutex);
     m_listener.setReuseAddrOnSocket();
     m_listener.bindSocket(14800);
     m_listener.listenOnSocket();
