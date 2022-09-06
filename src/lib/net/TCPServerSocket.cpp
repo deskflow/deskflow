@@ -62,10 +62,7 @@ TCPServerSocket::bind(const NetworkAddress& addr)
         m_listener.setReuseAddrOnSocket();
         m_listener.bindSocket(addr);
         m_listener.listenOnSocket();
-        m_socketMultiplexer->addSocket(this,
-                            new TSocketMultiplexerMethodJob<TCPServerSocket>(
-                                this, &TCPServerSocket::serviceListening,
-                                m_listener.getRawSocket(), true, false));
+        setListeningJob();
     }
     catch (XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
