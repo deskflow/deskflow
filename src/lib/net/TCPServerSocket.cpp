@@ -61,7 +61,7 @@ TCPServerSocket::bind(const NetworkAddress& addr)
     tempAddr.resolve();
 
     m_socket.connectSocket(tempAddr);
-    setListeningJob();
+    setListeningJob(true);
 }
 
 void
@@ -114,26 +114,28 @@ TCPServerSocket::accept()
 }
 
 void
-TCPServerSocket::setListeningJob()
+TCPServerSocket::setListeningJob(bool read)
 {
     m_socketMultiplexer->addSocket(this,
                             new TSocketMultiplexerMethodJob<TCPServerSocket>(
                                 this, &TCPServerSocket::serviceListening,
-                                m_socket.getRawSocket(), true, false));
+                                m_socket.getRawSocket(), true, read));
 }
 
 ISocketMultiplexerJob*
 TCPServerSocket::serviceListening(ISocketMultiplexerJob* job,
-                            bool read, bool, bool error)
+                            bool read, bool write, bool error)
 {
+    LOG((CLOG_DEBUG1 "Read: %d Write: %d Error: %d", read, write, error));
     if (error) {
         close();
         return NULL;
     }
-    if (read) {
+    if (write) {
         m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this));
         // stop polling on this socket until the client accepts
         return NULL;
     }
+
     return job;
 }
