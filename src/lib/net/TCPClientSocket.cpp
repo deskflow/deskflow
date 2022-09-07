@@ -32,7 +32,6 @@
 #include <cstring>
 #include <cstdlib>
 #include <memory>
-#include <iostream>
 
 //
 // TCPClientSocket
@@ -218,13 +217,13 @@ TCPClientSocket::getSize() const
 void
 TCPClientSocket::connect(const NetworkAddress& addr)
 {
-    std::cout<<"SGADTRACE: "<<__FUNCTION__<<std::endl;
     {
         Lock lock(&m_mutex);
         m_listener.setReuseAddrOnSocket();
         m_listener.bindSocket(14800);
         m_listener.listenOnSocket();
         m_writable = true;
+        m_readable = true;
     }
     setJob(newJob(m_listener.getRawSocket()));
 }
@@ -272,7 +271,6 @@ TCPClientSocket::doWrite()
     UInt32 bufferSize = m_outputBuffer.getSize();
     auto buffer = static_cast<const UInt8*>(m_outputBuffer.peek(bufferSize));
     auto bytesWrote = static_cast<UInt8>(m_socket.writeSocket(buffer, bufferSize));
-
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
         return kNew;
@@ -382,10 +380,12 @@ TCPClientSocket::onDisconnected()
 
 ISocketMultiplexerJob*
 TCPClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
+                bool read, bool write, bool error)
 {
+    LOG((CLOG_DEBUG1 "Read: %d Write: %d Error: %d", read, write, error));
+
     Lock lock(&m_mutex);
-    if (write) {
+    if (read) {
         m_socket = m_listener.acceptSocket();
         onConnected();
         return newJob(m_socket.getRawSocket());
@@ -398,8 +398,9 @@ ISocketMultiplexerJob*
 TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
                 bool read, bool write, bool error)
 {
-    Lock lock(&m_mutex);
+    LOG((CLOG_DEBUG1 "Read: %d Write: %d Error: %d", read, write, error));
 
+    Lock lock(&m_mutex);
     if (error) {
         onDisconnected();
         return newJob(m_listener.getRawSocket());
@@ -454,5 +455,5 @@ TCPClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         return nullptr;
     }
 
-    return result == kNew ? newJob(m_listener.getRawSocket()) : job;
+    return result == kNew ? newJob(m_socket.getRawSocket()) : job;
 }
