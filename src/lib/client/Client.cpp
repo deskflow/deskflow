@@ -141,9 +141,9 @@ Client::connect(size_t addressIndex)
         // being shuttled between various networks).  patch by Brent
         // Priddy.
         m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
-        
+        bool isHostMode = m_serverAddress.getHostname().empty();
         // m_serverAddress will be null if the hostname address is not reolved
-        if (m_serverAddress.getAddress() != nullptr) {
+        if (m_serverAddress.getAddress() != nullptr && !isHostMode) {
           // to help users troubleshoot, show server host name (issue: 60)
           LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
           m_serverAddress.getHostname().c_str(),
@@ -160,9 +160,14 @@ Client::connect(size_t addressIndex)
         m_stream = new PacketStreamFilter(m_events, m_stream, true);
 
         // connect
-        LOG((CLOG_DEBUG1 "connecting to server"));
         setupConnecting();
-        setupTimer();
+        if (isHostMode) {
+            LOG((CLOG_DEBUG1 "waiting for server"));
+        }
+        else {
+            LOG((CLOG_DEBUG1 "connecting to server"));
+            setupTimer();
+        }
         socket->connect(m_serverAddress);
     }
     catch (XBase& e) {

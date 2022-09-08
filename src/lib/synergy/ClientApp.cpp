@@ -364,7 +364,7 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
                 synergy::Screen* screen)
 {
     ISocketFactory* socketFactory = nullptr;
-    if (true) {
+    if (address.getHostname().empty()) {
         socketFactory = new TCPInvertedSocketFactory(m_events, getSocketMultiplexer());
     } else {
         socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
