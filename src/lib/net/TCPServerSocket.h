@@ -33,7 +33,7 @@ A listen socket using TCP.
 */
 class TCPServerSocket : public IListenSocket {
 public:
-    TCPServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
+    TCPServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, NetworkAddress address);
     TCPServerSocket(TCPServerSocket const &) = delete;
     TCPServerSocket(TCPServerSocket &&) = delete;
     virtual ~TCPServerSocket();
@@ -63,4 +63,5 @@ protected:
     Mutex               m_mutex;
     IEventQueue*        m_events;
     SocketMultiplexer*  m_socketMultiplexer;
+    NetworkAddress      m_clientAddress;
 };

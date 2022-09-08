@@ -234,6 +234,13 @@ background-color: rgba(192,192,192, 0.1);
            </widget>
           </item>
           <item>
+           <widget class="QLineEdit" name="m_pLineEditClientIp">
+            <property name="placeholderText">
+             <string>Client IP</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -685,7 +692,6 @@ background-color: rgba(192,192,192, 0.1);
          <font>
           <family>Arial</family>
           <pointsize>-1</pointsize>
-          <weight>87</weight>
           <bold>true</bold>
          </font>
         </property>

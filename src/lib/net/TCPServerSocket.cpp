@@ -35,10 +35,11 @@
 // TCPServerSocket
 //
 
-TCPServerSocket::TCPServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
-    m_socket(family),
+TCPServerSocket::TCPServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, NetworkAddress address) :
+    m_socket(ARCH->getAddrFamily(address.getAddress())),
     m_events(events),
-    m_socketMultiplexer(socketMultiplexer)
+    m_socketMultiplexer(socketMultiplexer),
+    m_clientAddress(address)
 {
 }
 
@@ -57,10 +58,7 @@ void
 TCPServerSocket::bind(const NetworkAddress& addr)
 {
     Lock lock(&m_mutex);
-    NetworkAddress tempAddr("192.168.1.191", 14800);
-    tempAddr.resolve();
-
-    m_socket.connectSocket(tempAddr);
+    m_socket.connectSocket(m_clientAddress);
     setListeningJob(true);
 }
 

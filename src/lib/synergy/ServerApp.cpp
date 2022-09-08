@@ -88,6 +88,11 @@ ServerApp::parseArgs(int argc, const char* const* argv)
     ArgParser argParser(this);
     bool result = argParser.parseServerArgs(args(), argc, argv);
 
+    if (!args().m_clientAddress.empty()) {
+        m_clientAddress = NetworkAddress(args().m_clientAddress, kDefaultPort);
+        m_clientAddress.resolve();
+    }
+
     if (!result || args().m_shouldExit) {
         m_bye(kExitArgs);
     }
@@ -634,8 +639,8 @@ ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
     ISocketFactory* socketFactory = nullptr;
-    if (true) {
-        socketFactory = new TCPInvertedSocketFactory(m_events, getSocketMultiplexer());
+    if (!m_clientAddress.getHostname().empty()) {
+        socketFactory = new TCPInvertedSocketFactory(m_events, getSocketMultiplexer(), m_clientAddress);
     } else {
         socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
     }

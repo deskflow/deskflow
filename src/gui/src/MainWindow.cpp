@@ -979,6 +979,10 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     }
 #endif
 
+    if (!m_pLineEditClientIp->text().isEmpty()) {
+        args << "--host"<<m_pLineEditClientIp->text();
+    }
+
     return true;
 }
 
@@ -1492,12 +1496,14 @@ void MainWindow::enableServer(bool enable)
         m_pLabelServerState->show();
         updateLocalFingerprint();
         m_pButtonToggleStart->setEnabled(enable);
+        m_pLineEditClientIp->show();
     }
     else
     {
         m_pLabelFingerprint->hide();
         m_pButtonConfigureServer->hide();
         m_pLabelServerState->hide();
+        m_pLineEditClientIp->hide();
     }
 }
 

@@ -56,6 +56,10 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
             ++i;
             continue;
         }
+        else if (isArg(i, argc, argv, "", "--host", 1))
+        {
+            args.m_clientAddress = argv[++i];
+        }
         else if (isArg(i, argc, argv, "-a", "--address", 1)) {
             // save listen address
             args.m_synergyAddress = argv[++i];

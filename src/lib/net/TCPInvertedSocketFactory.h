@@ -18,6 +18,7 @@
 
 #pragma once
 #include "net/ISocketFactory.h"
+#include "NetworkAddress.h"
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -26,6 +27,7 @@ class SocketMultiplexer;
 class TCPInvertedSocketFactory : public ISocketFactory {
 public:
     TCPInvertedSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
+    TCPInvertedSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer, const NetworkAddress& address);
     virtual ~TCPInvertedSocketFactory();
 
     // ISocketFactory overrides
@@ -37,4 +39,5 @@ public:
 private:
     IEventQueue*        m_events;
     SocketMultiplexer*  m_socketMultiplexer;
+    NetworkAddress m_clientAddress;
 };

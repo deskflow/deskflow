@@ -116,6 +116,7 @@ public:
     ClientListener*        m_listener;
     EventQueueTimer*    m_timer;
     NetworkAddress*        m_synergyAddress;
+    NetworkAddress         m_clientAddress;
 
 private:
     void handleScreenSwitched(const Event&, void*  data);

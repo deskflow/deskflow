@@ -33,6 +33,14 @@ TCPInvertedSocketFactory::TCPInvertedSocketFactory(IEventQueue* events, SocketMu
     // do nothing
 }
 
+TCPInvertedSocketFactory::TCPInvertedSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer, const NetworkAddress& address) :
+    m_events(events),
+    m_socketMultiplexer(socketMultiplexer),
+    m_clientAddress(address)
+{
+    // do nothing
+}
+
 TCPInvertedSocketFactory::~TCPInvertedSocketFactory()
 {
     // do nothing
@@ -58,6 +66,6 @@ TCPInvertedSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily
         return new SecureListenSocket(m_events, m_socketMultiplexer, family);
     }
     else {
-        return new TCPServerSocket(m_events, m_socketMultiplexer, family);
+        return new TCPServerSocket(m_events, m_socketMultiplexer, m_clientAddress);
     }
 }

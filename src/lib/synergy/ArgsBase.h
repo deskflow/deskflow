@@ -52,6 +52,7 @@ namespace lib {
             bool                 m_enableDragDrop    = false;      /// @brief Should drag drop support be enabled
 
             bool                 m_shouldExit        = false;      /// @brief Will cause the application to exit when set to true
+            String               m_clientAddress;                 /// @brief Bind to this address //TODO This really should be a ServerArgs
             String               m_synergyAddress;                 /// @brief Bind to this address //TODO This really should be a ServerArgs
             bool                 m_enableCrypto      = false;      /// @brief Should the connections be TLS encrypted
             String               m_profileDirectory;               /// @brief The profile DIR to use for the application
