@@ -313,6 +313,7 @@ void AppConfig::saveSettings()
         setSetting(kPreventSleep, m_PreventSleep);
         setSetting(kLanguageSync, m_LanguageSync);
         setSetting(kInvertScrollDirection, m_InvertScrollDirection);
+        setSetting(kHostMode, m_HostMode);
     }
 
     m_unsavedChanges = false;
