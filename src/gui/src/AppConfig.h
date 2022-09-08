@@ -120,6 +120,8 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         bool getLanguageSync() const;
         void setPreventSleep(bool b);
         bool getPreventSleep() const;
+        bool getHostMode() const;
+        void setHostMode(bool newValue);
 #ifndef SYNERGY_ENTERPRISE
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
@@ -211,7 +213,8 @@ protected:
         kPreventSleep,
         kLanguageSync,
         kInvertScrollDirection,
-        kEliteBackersUrl
+        kEliteBackersUrl,
+        kHostMode
     };
 
         void setScreenName(const QString& s);
@@ -258,6 +261,7 @@ protected:
         bool m_InvertScrollDirection  = false;
         bool m_LanguageSync           = true;
         bool m_PreventSleep           = false;
+        bool m_HostMode               = false;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;

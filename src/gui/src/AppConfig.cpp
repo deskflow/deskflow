@@ -80,7 +80,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "preventSleep",
         "languageSync",
         "invertScrollDirection",
-        "eliteBackersUrl"
+        "eliteBackersUrl",
+        "hostMode"
 };
 
 static const char* logLevelNames[] =
@@ -245,6 +246,7 @@ void AppConfig::loadSettings()
     m_ServerHostname            = loadSetting(kServerHostname).toString();
     m_PreventSleep              = loadSetting(kPreventSleep, false).toBool();
     m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
+    m_HostMode                  = loadSetting(kHostMode, false).toBool();
     m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
     m_eliteBackersUrl           = loadCommonSetting(kEliteBackersUrl, "https://api2.prod.symless.com/credits/elite-backers").toString();
 
@@ -486,6 +488,14 @@ bool AppConfig::getPreventSleep() const { return m_PreventSleep; }
 
 void AppConfig::setPreventSleep(bool newValue) {
     setSettingModified(m_PreventSleep, newValue);
+}
+
+bool AppConfig::getHostMode() const {
+    return m_HostMode;
+}
+
+void AppConfig::setHostMode(bool newValue) {
+    setSettingModified(m_HostMode, newValue);
 }
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
