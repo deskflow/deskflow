@@ -54,6 +54,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 
     m_pCheckBoxLanguageSync->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
     m_pCheckBoxScrollDirection->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
+    m_pCheckBoxHostMode->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
