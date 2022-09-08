@@ -129,13 +129,6 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         ++i;
     }
 
-    // exactly one non-option argument (server-address)
-    if (i == argc) {
-        LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
-            args.m_pname, args.m_pname));
-        return false;
-    }
-
     if (checkUnexpectedArgs()) {
         return false;
     }
