@@ -61,7 +61,11 @@ ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, Ma
 
 ServerConfig::~ServerConfig()
 {
-    ServerConfig::saveSettings();
+    try {
+        ServerConfig::saveSettings();
+    }  catch (const std::exception& e) {
+        m_pMainWindow->appendLogError(e.what());
+    }
 }
 
 bool ServerConfig::save(const QString& fileName) const
