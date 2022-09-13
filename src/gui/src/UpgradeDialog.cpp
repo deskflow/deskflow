@@ -27,7 +27,7 @@ UpgradeDialog::UpgradeDialog(QWidget* parent) :
     addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
 }
 
-void UpgradeDialog::show(const QString& text, const QString& link)
+void UpgradeDialog::showDialog(const QString& text, const QString& link)
 {
     setText(QObject::tr(text.toStdString().c_str()));
 

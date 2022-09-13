@@ -39,23 +39,28 @@ void LicenseRegistry::registerLicense()
         auto request = QNetworkRequest(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-        auto reply = m_manager.post(request, getRequestData());
-        connect(reply, &QNetworkReply::finished, [=]() {
-            const auto HOUR = (60*60); //seconds per hour
-            const auto DAY = (24*HOUR);//seconds per day
-            const auto WEEK = (7*DAY); //seconds per week
-            const auto currentTimestamp = time(nullptr);
+        m_manager.post(request, getRequestData());
+        connect(&m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(handleResponse(QNetworkReply*)));
+    }
+}
 
-            if(reply->error() == QNetworkReply::NoError) {
-                m_config.setLicenseNextCheck(currentTimestamp + WEEK);
-            }
-            else{
-                m_config.setLicenseNextCheck(currentTimestamp + HOUR);
-            }
+void LicenseRegistry::handleResponse(QNetworkReply *reply)
+{
+    if (reply) {
+        const auto HOUR = (60*60); //seconds per hour
+        const auto DAY = (24*HOUR);//seconds per day
+        const auto WEEK = (7*DAY); //seconds per week
+        const auto currentTimestamp = time(nullptr);
 
-            scheduleRegistration();
-            reply->deleteLater();
-        });
+        if(reply->error() == QNetworkReply::NoError) {
+            m_config.setLicenseNextCheck(currentTimestamp + WEEK);
+        }
+        else{
+            m_config.setLicenseNextCheck(currentTimestamp + HOUR);
+        }
+
+        scheduleRegistration();
+        reply->deleteLater();
     }
 }
 
@@ -93,7 +98,7 @@ void LicenseRegistry::scheduleRegistration()
     }
     else {
         const auto interval = (nextCheck - currentTimestamp) * 1000; //interval in milliseconds
-        m_timer.setInterval(interval);
+        m_timer.setInterval(static_cast<int>(interval));
         m_timer.setSingleShot(true);
         m_timer.start();
     }

@@ -198,7 +198,7 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
     }
     else {
         UpgradeDialog upgradeDialog(this);
-        upgradeDialog.show(
+        upgradeDialog.showDialog(
             "Configuring custom hotkeys is a Synergy Ultimate feature.",
             "synergy/purchase/purchase-ultimate-upgrade?source=gui"
         );

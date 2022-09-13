@@ -20,6 +20,6 @@
 class UpgradeDialog : public QMessageBox
 {
 public:
-    UpgradeDialog(QWidget *parent = nullptr);
-    void show(const QString& text, const QString& link);
+    explicit UpgradeDialog(QWidget *parent = nullptr);
+    void showDialog(const QString& text, const QString& link);
 };

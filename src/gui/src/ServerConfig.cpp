@@ -56,12 +56,12 @@ ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, Ma
         m_pMainWindow(mainWindow)
 {
     GUI::Config::ConfigWriter::make()->registerClass(this);
-    loadSettings();
+    ServerConfig::loadSettings();
 }
 
 ServerConfig::~ServerConfig()
 {
-    saveSettings();
+    ServerConfig::saveSettings();
 }
 
 bool ServerConfig::save(const QString& fileName) const

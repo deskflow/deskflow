@@ -28,11 +28,12 @@ class LicenseRegistry : public QObject
     Q_OBJECT
 
 public:
-    LicenseRegistry(AppConfig& config);
+    explicit LicenseRegistry(AppConfig& config);
     void scheduleRegistration();
 
 public slots:
     void registerLicense();
+    void handleResponse(QNetworkReply *reply);
 
 private:
     AppConfig& m_config;

@@ -269,14 +269,14 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
         UpgradeDialog upgradeDialog(this);
         if (appConfig().edition() == Edition::kLite)
         {
-            upgradeDialog.show(
+            upgradeDialog.showDialog(
                 "TLS encryption is a Synergy Ultimate feature.",
                 "synergy/purchase/purchase-ultimate-upgrade?source=gui"
             );
         }
         else
         {
-            upgradeDialog.show(
+            upgradeDialog.showDialog(
                 "TLS encryption is a Synergy Pro feature.",
                 "synergy/purchase/upgrade?source=gui"
             );
