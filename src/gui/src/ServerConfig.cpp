@@ -56,12 +56,16 @@ ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, Ma
         m_pMainWindow(mainWindow)
 {
     GUI::Config::ConfigWriter::make()->registerClass(this);
-    loadSettings();
+    ServerConfig::loadSettings();
 }
 
 ServerConfig::~ServerConfig()
 {
-    saveSettings();
+    try {
+        ServerConfig::saveSettings();
+    }  catch (const std::exception& e) {
+        m_pMainWindow->appendLogError(e.what());
+    }
 }
 
 bool ServerConfig::save(const QString& fileName) const
@@ -554,4 +558,12 @@ QSettings &ServerConfig::settings() {
     using GUI::Config::ConfigWriter;
 
     return ConfigWriter::make()->settings();
+}
+
+bool ServerConfig::isHotkeysAvailable() const {
+#ifndef SYNERGY_ENTERPRISE
+    return (m_pAppConfig->edition() != Edition::kLite);
+#else
+    return true;
+#endif
 }

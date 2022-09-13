@@ -85,7 +85,7 @@ void ActivationDialog::accept()
                 arg ((daysLeft == 1) ? "" : "s").
                 arg ((daysLeft == 1) ? "s" : "");
 
-        if (edition == kPro || edition == kPro_China || edition == kBusiness) {
+        if (m_appConfig->isCryptoAvailable()) {
             m_appConfig->generateCertificate();
             thanksMessage = thanksMessage.arg("If you're using SSL, "
                             "remember to activate all of your devices.");

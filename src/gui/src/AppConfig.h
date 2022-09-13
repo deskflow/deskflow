@@ -50,6 +50,7 @@ const int kWizardVersion = 8;
 class QSettings;
 class SettingsDialog;
 class ServerConfig;
+class LicenseRegister;
 
 enum ProcessMode {
     Service,
@@ -93,7 +94,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         Edition edition() const;
         void setSerialKey(const QString& serial);
         void clearSerialKey();
-        QString serialKey();
+        QString serialKey() const;
         int lastExpiringWarningTime() const;
         void setLastExpiringWarningTime(int t);
 #endif
@@ -115,7 +116,11 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setInvertScrollDirection(bool b);
         bool getInvertScrollDirection() const;
         void setEliteBackersUrl(const QString&);
+        void setLicenseNextCheck(unsigned long long);
         const QString& getEliteBackersUrl() const;
+        const QString& getLicenseRegistryUrl() const;
+        unsigned long long getLicenseNextCheck() const;
+        const QString& getGuid() const;
         void setLanguageSync(bool b);
         bool getLanguageSync() const;
         void setPreventSleep(bool b);
@@ -211,7 +216,10 @@ protected:
         kPreventSleep,
         kLanguageSync,
         kInvertScrollDirection,
-        kEliteBackersUrl
+        kEliteBackersUrl,
+        kGuid,
+        kLicenseRegistryUrl,
+        kLicenseNextCheck
     };
 
         void setScreenName(const QString& s);
@@ -252,6 +260,9 @@ protected:
         QString m_Serialkey;
         QString m_lastVersion;
         QString m_eliteBackersUrl;
+        QString m_guid;
+        QString m_licenseRegistryUrl;
+        unsigned long long m_licenseNextCheck;
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;

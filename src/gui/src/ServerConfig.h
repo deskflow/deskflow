@@ -88,6 +88,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool isFull() const;
         bool isScreenExists(const QString& screenName) const;
         void addClient(const QString& clientName);
+        bool isHotkeysAvailable() const;
 
     protected:
         QSettings& settings();

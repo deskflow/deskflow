@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#pragma once
 
-#ifndef EDITIONTYPE_H
-#define EDITIONTYPE_H
+#include "CreditsLoader.h"
+#include "AboutDialog.h"
 
-/* Do not reorder these! */
+class AboutDialogEliteBackers : public AboutDialog {
+    Q_OBJECT
+public:
+    AboutDialogEliteBackers(MainWindow* parent, const AppConfig& config);
 
-enum Edition {
-    kBasic,
-    kPro,
-    Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered,
-    kBusiness,
-    kBasic_China,
-    kPro_China,
-    kLite,
-    kUltimate
+public slots:
+    void updateEliteBackers(const QString& eliteBackers) const;
+
+private:
+    CreditsLoader credits;
+
+    void setupCreditsLoader();
+    void resizeWindow() override;
+    QString getCopyrights() const override;
 };
-
-#endif // EDITIONTYPE_H
