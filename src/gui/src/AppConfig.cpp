@@ -84,7 +84,8 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "guid",
         "licenseRegistryUrl",
         "licenseNextCheck",
-        "initiateConnectionFromServer"
+        "initiateConnectionFromServer",
+        "clientHostMode"
 };
 
 static const char* logLevelNames[] =
@@ -254,6 +255,7 @@ void AppConfig::loadSettings()
     m_guid                      = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
     m_licenseRegistryUrl        = loadCommonSetting(kLicenseRegistryUrl, "https://api2.prod.symless.com/license/register").toString();
     m_licenseNextCheck          = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
+    m_ClientHostMode            = loadSetting(kClientHostMode, true).toBool();
     m_InitiateConnectionFromServer = loadSetting(kInitiateConnectionFromServer, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
@@ -322,6 +324,7 @@ void AppConfig::saveSettings()
         setSetting(kPreventSleep, m_PreventSleep);
         setSetting(kLanguageSync, m_LanguageSync);
         setSetting(kInvertScrollDirection, m_InvertScrollDirection);
+        setSetting(kClientHostMode, m_ClientHostMode);
     }
 
     m_unsavedChanges = false;
@@ -514,6 +517,10 @@ void AppConfig::setLanguageSync(bool newValue) {
 
 bool AppConfig::getPreventSleep() const { return m_PreventSleep; }
 
+bool AppConfig::getClientHostMode() const {
+    return (m_ClientHostMode && getInitiateConnectionFromServer());
+}
+
 bool AppConfig::getInitiateConnectionFromServer() const {
     return m_InitiateConnectionFromServer;
 }
@@ -645,6 +652,10 @@ void AppConfig::setClientGroupChecked(bool newValue) {
 
 void AppConfig::setServerHostname(const QString& newValue) {
     setSettingModified(m_ServerHostname, newValue);
+}
+
+void AppConfig::setClientHostMode(bool newValue) {
+    setSettingModified(m_ClientHostMode, newValue);
 }
 
 template<typename T>
