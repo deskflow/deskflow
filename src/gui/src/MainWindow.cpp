@@ -1330,6 +1330,7 @@ void MainWindow::on_m_pActionSettings_triggered()
     auto result = SettingsDialog(this, appConfig()).exec();
     if(result == QDialog::Accepted)
     {
+        enableClient(appConfig().getClientGroupChecked());
         auto state = synergyState();
         if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening)) {
             restartSynergy();
@@ -1517,9 +1518,18 @@ void MainWindow::enableClient(bool enable)
 
     if (enable)
     {
-        m_pLabelServerName->show();
-        m_pLineEditHostname->show();
-        m_pButtonConnect->show();
+        if (m_AppConfig->getClientHostMode())
+        {
+            m_pLabelServerName->hide();
+            m_pLineEditHostname->hide();
+            m_pButtonConnect->hide();
+        }
+        else
+        {
+            m_pLabelServerName->show();
+            m_pLineEditHostname->show();
+            m_pButtonConnect->show();
+        }
         m_pButtonToggleStart->setEnabled(enable);
     }
     else
