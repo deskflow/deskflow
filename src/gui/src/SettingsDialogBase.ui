@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>404</width>
-    <height>620</height>
+    <height>819</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -427,6 +427,13 @@ background-color: rgba(192,192,192, 0.1);
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="m_pCheckBoxClientHostMode">
+        <property name="text">
+         <string>Host mode</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -695,7 +702,6 @@ background-color: rgba(192,192,192, 0.1);
         </property>
         <property name="font">
          <font>
-          <weight>50</weight>
           <bold>false</bold>
          </font>
         </property>
