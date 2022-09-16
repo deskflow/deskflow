@@ -149,6 +149,7 @@ void ServerConfig::saveSettings()
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
     settings().setValue("clipboardSharing", clipboardSharing());
     settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
+    settings().setValue("clientAddress", getClientAddress());
 
     writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -204,6 +205,7 @@ void ServerConfig::loadSettings()
 	setClipboardSharingSize(settings().value("clipboardSharingSize",
 						(int) ServerConfig::defaultClipboardSharingSize()).toULongLong());
     setClipboardSharing(settings().value("clipboardSharing", true).toBool());
+    setClientAddress(settings().value("clientAddress", "").toString());
 
     readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
@@ -295,6 +297,10 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
     outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << endl;
     outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
     outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << endl;
+
+    if (!config.getClientAddress().isEmpty()) {
+        outStream << "\t" << "clientAddress = " << config.getClientAddress() << endl;
+    }
 
     if (config.hasSwitchDelay())
         outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
@@ -552,6 +558,16 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 	using std::swap;
 	swap (size, m_ClipboardSharingSize);
 	return size;
+}
+
+void ServerConfig::setClientAddress(const QString& address) {
+    if (m_pAppConfig->getInitiateConnectionFromServer()) {
+        m_clientAddress = address;
+    }
+}
+
+QString ServerConfig::getClientAddress() const {
+    return m_clientAddress.trimmed();
 }
 
 QSettings &ServerConfig::settings() {

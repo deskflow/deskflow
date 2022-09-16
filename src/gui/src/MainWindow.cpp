@@ -307,6 +307,7 @@ void MainWindow::loadSettings()
     enableClient(appConfig().getClientGroupChecked());
 
     m_pLineEditHostname->setText(appConfig().getServerHostname());
+    m_pLineEditClienIp->setText(serverConfig().getClientAddress());
 }
 
 void MainWindow::initConnections()
@@ -325,6 +326,7 @@ void MainWindow::saveSettings()
     appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
     appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
     appConfig().setServerHostname(m_pLineEditHostname->text());
+    serverConfig().setClientAddress(m_pLineEditClienIp->text());
 
     /* Save everything */
     GUI::Config::ConfigWriter::make()->globalSave();
@@ -1498,6 +1500,17 @@ void MainWindow::enableServer(bool enable)
 
     if (enable)
     {
+        if (m_AppConfig->getInitiateConnectionFromServer()) {
+            m_pLabelClientIp->show();
+            m_pLineEditClienIp->show();
+            m_pButtonConnectToClient->show();
+        }
+        else {
+            m_pLabelClientIp->hide();
+            m_pLineEditClienIp->hide();
+            m_pButtonConnectToClient->hide();
+        }
+
         m_pButtonConfigureServer->show();
         m_pLabelServerState->show();
         updateLocalFingerprint();
@@ -1508,6 +1521,9 @@ void MainWindow::enableServer(bool enable)
         m_pLabelFingerprint->hide();
         m_pButtonConfigureServer->hide();
         m_pLabelServerState->hide();
+        m_pLabelClientIp->hide();
+        m_pLineEditClienIp->hide();
+        m_pButtonConnectToClient->hide();
     }
 }
 
@@ -1564,6 +1580,11 @@ void MainWindow::on_m_pRadioGroupClient_clicked(bool)
 }
 
 void MainWindow::on_m_pButtonConnect_clicked()
+{
+    on_m_pButtonApply_clicked();
+}
+
+void MainWindow::on_m_pButtonConnectToClient_clicked()
 {
     on_m_pButtonApply_clicked();
 }
