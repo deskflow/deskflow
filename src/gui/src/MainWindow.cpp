@@ -838,7 +838,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     }
 #endif
 
-    if (m_pLineEditHostname->text().isEmpty())
+    if (m_pLineEditHostname->text().isEmpty() && !appConfig().getClientHostMode())
     {
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
         //check if autoconfig mode is enabled
@@ -860,18 +860,24 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 #endif
     }
 
-    QString hostName = m_pLineEditHostname->text();
-    // if interface is IPv6 - ensure that ip is in square brackets
-    if (hostName.count(':') > 1) {
-        if(hostName[0] != '[') {
-            hostName.insert(0, '[');
+    if (appConfig().getClientHostMode()) {
+        args <<"--host";
+        args <<":" + QString::number(appConfig().port());
+    }
+    else {
+        QString hostName = m_pLineEditHostname->text();
+        // if interface is IPv6 - ensure that ip is in square brackets
+        if (hostName.count(':') > 1) {
+            if(hostName[0] != '[') {
+                hostName.insert(0, '[');
+            }
+            if(hostName[hostName.size() - 1] != ']') {
+                hostName.push_back(']');
+            }
         }
-        if(hostName[hostName.size() - 1] != ']') {
-            hostName.push_back(']');
-        }
+        args << hostName + ":" + QString::number(appConfig().port());
     }
 
-    args << hostName + ":" + QString::number(appConfig().port());
     return true;
 }
 
