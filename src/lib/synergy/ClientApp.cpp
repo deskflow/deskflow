@@ -128,6 +128,7 @@ ClientApp::help()
         " [--yscroll <delta>]"
         " [--sync-language]"
         " [--invert-scroll]"
+        " [--host]"
         WINAPI_ARG
         HELP_SYS_ARGS
         HELP_COMMON_ARGS
@@ -142,6 +143,7 @@ ClientApp::help()
         "                             120 by default.\n"
         "      --sync-language      set this parameter to enable language synchronization.\n"
         "      --invert-scroll      invert scroll direction on this computer.\n"
+        "      --host               client starts a listener and waits for a server connection.\n"
         HELP_COMMON_INFO_2
         "\n"
         "* marks defaults.\n"
