@@ -126,6 +126,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setPreventSleep(bool b);
         bool getPreventSleep() const;
         bool getClientHostMode() const;
+        bool getServerClientMode() const;
         bool getInitiateConnectionFromServer() const;
 #ifndef SYNERGY_ENTERPRISE
         bool activationHasRun() const;
@@ -160,6 +161,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setClientGroupChecked(bool) ;
         void setServerHostname(const QString&);
         void setClientHostMode(bool newValue);
+        void setServerClientMode(bool newValue);
 
         /// @brief Set the path to the TLS/SSL certificate file that will be used
         /// @param [in] path The path to the Certificate
@@ -224,7 +226,8 @@ protected:
         kLicenseRegistryUrl,
         kLicenseNextCheck,
         kInitiateConnectionFromServer,
-        kClientHostMode
+        kClientHostMode,
+        kServerClientMode
     };
 
         void setScreenName(const QString& s);
@@ -276,6 +279,7 @@ protected:
         bool m_PreventSleep           = false;
         bool m_InitiateConnectionFromServer = false;
         bool m_ClientHostMode = true;
+        bool m_ServerClientMode = true;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;

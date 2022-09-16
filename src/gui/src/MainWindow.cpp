@@ -949,6 +949,14 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
         return false;
     }
 
+    if (appConfig().getServerClientMode() &&
+        m_pLineEditClienIp->text().isEmpty())
+    {
+        QMessageBox::warning(this, tr("Client IP address or name is empty"),
+                             tr("Please fill in a client ip address or name."));
+        return false;
+    }
+
 #if defined(Q_OS_WIN)
     // wrap in quotes so a malicious user can't start \Program.exe as admin.
     app = QString("\"%1\"").arg(app);
@@ -1332,6 +1340,7 @@ void MainWindow::on_m_pActionSettings_triggered()
     auto result = SettingsDialog(this, appConfig()).exec();
     if(result == QDialog::Accepted)
     {
+        enableServer(appConfig().getServerGroupChecked());
         enableClient(appConfig().getClientGroupChecked());
         auto state = synergyState();
         if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening)) {
@@ -1500,7 +1509,7 @@ void MainWindow::enableServer(bool enable)
 
     if (enable)
     {
-        if (m_AppConfig->getInitiateConnectionFromServer()) {
+        if (m_AppConfig->getServerClientMode()) {
             m_pLabelClientIp->show();
             m_pLineEditClienIp->show();
             m_pButtonConnectToClient->show();

@@ -149,7 +149,10 @@ void ServerConfig::saveSettings()
     settings().setValue("enableDragAndDrop", enableDragAndDrop());
     settings().setValue("clipboardSharing", clipboardSharing());
     settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
-    settings().setValue("clientAddress", getClientAddress());
+
+    if (!getClientAddress().isEmpty()) {
+        settings().setValue("clientAddress", getClientAddress());
+    }
 
     writeSettings(settings(), switchCorners(), "switchCorner");
 
@@ -561,13 +564,19 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 }
 
 void ServerConfig::setClientAddress(const QString& address) {
-    if (m_pAppConfig->getInitiateConnectionFromServer()) {
+    if (m_pAppConfig->getServerClientMode()) {
         m_clientAddress = address;
     }
 }
 
 QString ServerConfig::getClientAddress() const {
-    return m_clientAddress.trimmed();
+    QString clientAddress;
+
+    if (m_pAppConfig->getServerClientMode()) {
+        clientAddress = m_clientAddress.trimmed();
+    }
+
+    return clientAddress;
 }
 
 QSettings &ServerConfig::settings() {
