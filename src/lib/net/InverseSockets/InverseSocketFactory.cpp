@@ -16,7 +16,7 @@
  */
 #include "InverseSocketFactory.h"
 #include "net/InverseSockets/InverseClientSocket.h"
-#include "net/TCPListenSocket.h"
+#include "net/InverseSockets/InverseServerSocket.h"
 #include "net/SecureSocket.h"
 #include "net/SecureListenSocket.h"
 
@@ -52,7 +52,7 @@ InverseSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily fam
         socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
     }
     else {
-        socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
+        socket = new InverseServerSocket(m_events, m_socketMultiplexer, family);
     }
 
     return socket;
