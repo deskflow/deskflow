@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "InverseSocketFactory.h"
-#include "net/TCPSocket.h"
+#include "net/InverseSockets/InverseClientSocket.h"
 #include "net/TCPListenSocket.h"
 #include "net/SecureSocket.h"
 #include "net/SecureListenSocket.h"
@@ -39,7 +39,7 @@ InverseSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) c
         return secureSocket;
     }
     else {
-        return new TCPSocket(m_events, m_socketMultiplexer, family);
+        return new InverseClientSocket(m_events, m_socketMultiplexer, family);
     }
 }
 
