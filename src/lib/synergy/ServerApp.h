@@ -45,6 +45,7 @@ class ClientListener;
 class EventQueueTimer;
 class ILogOutputter;
 class IEventQueue;
+class ISocketFactory;
 namespace lib {
     namespace synergy{
         class ServerArgs;
@@ -119,6 +120,7 @@ public:
 
 private:
     void handleScreenSwitched(const Event&, void*  data);
+    ISocketFactory* getSocketFactory() const;
 };
 
 // configuration file name

@@ -29,6 +29,7 @@
 #include "synergy/ServerArgs.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
+#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
@@ -634,7 +635,7 @@ ServerApp::openClientListener(const NetworkAddress& address)
 {
     ClientListener* listen = new ClientListener(
         address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
+        getSocketFactory(),
         m_events,
         args().m_enableCrypto);
     
@@ -676,6 +677,21 @@ ServerApp::handleNoClients(const Event&, void*)
 void
 ServerApp::handleScreenSwitched(const Event& e, void*)
 {
+}
+
+ISocketFactory* ServerApp::getSocketFactory() const
+{
+    ISocketFactory* socketFactory = nullptr;
+    const auto clientAddress = args().m_config->getClientAddress();
+
+    if (clientAddress.empty()) {
+        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
+    }
+    else {
+        socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
+    }
+
+    return socketFactory;
 }
 
 int
