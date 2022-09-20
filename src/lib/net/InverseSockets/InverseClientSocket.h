@@ -23,9 +23,8 @@
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "arch/IArchNetwork.h"
+#include "AutoArchSocket.h"
 
-class Mutex;
-class Thread;
 class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
@@ -43,17 +42,17 @@ public:
     // ISocket overrides
     virtual void        bind(const NetworkAddress&);
     virtual void        close();
-    virtual void*        getEventTarget() const;
+    virtual void*       getEventTarget() const;
 
     // IStream overrides
-    virtual UInt32        read(void* buffer, UInt32 n);
+    virtual UInt32      read(void* buffer, UInt32 n);
     virtual void        write(const void* buffer, UInt32 n);
     virtual void        flush();
     virtual void        shutdownInput();
     virtual void        shutdownOutput();
     virtual bool        isReady() const;
     virtual bool        isFatal() const;
-    virtual UInt32        getSize() const;
+    virtual UInt32      getSize() const;
 
     // IDataSocket overrides
     virtual void        connect(const NetworkAddress&);
@@ -69,24 +68,22 @@ protected:
         kNew            //!< Require a new job
     };
 
-    ArchSocket            getSocket() { return m_socket; }
+    ArchSocket          getSocket() { return m_socket.getRawSocket(); }
     IEventQueue*        getEvents() { return m_events; }
-    virtual EJobResult    doRead();
-    virtual EJobResult    doWrite();
+    virtual EJobResult  doRead();
+    virtual EJobResult  doWrite();
 
     void                setJob(ISocketMultiplexerJob*);
 
     bool                isReadable() { return m_readable; }
     bool                isWritable() { return m_writable; }
 
-    Mutex&                getMutex() { return m_mutex; }
+    Mutex&              getMutex() { return m_mutex; }
 
     void                sendEvent(Event::Type);
     void                discardWrittenData(int bytesWrote);
 
 private:
-    void                init();
-
     void                sendConnectionFailedEvent(const char*);
     void                onConnected();
     void                onInputShutdown();
@@ -101,16 +98,16 @@ private:
                             bool, bool, bool);
 
 protected:
-    bool                m_readable;
-    bool                m_writable;
-    bool                m_connected;
+    bool                m_readable = false;
+    bool                m_writable = false;
+    bool                m_connected = false;
     IEventQueue*        m_events;
     StreamBuffer        m_inputBuffer;
     StreamBuffer        m_outputBuffer;
 
 private:
     Mutex                m_mutex;
-    ArchSocket           m_socket;
+    AutoArchSocket       m_socket;
     CondVar<bool>        m_flushed;
     SocketMultiplexer*   m_socketMultiplexer;
 };

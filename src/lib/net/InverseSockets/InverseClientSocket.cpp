@@ -41,26 +41,17 @@ InverseClientSocket::InverseClientSocket(IEventQueue* events, SocketMultiplexer*
     IDataSocket(events),
     m_events(events),
     m_mutex(),
+    m_socket(family),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
-    try {
-        m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-    }
-    catch (const XArchNetwork& e) {
-        throw XSocketCreate(e.what());
-    }
-
-    LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
-
-    init();
 }
 
 InverseClientSocket::~InverseClientSocket()
 {
     try {
         // warning virtual function in destructor is very danger practice
-        close();
+        InverseClientSocket::close();
     }
     catch (...) {
         LOG((CLOG_DEBUG "error while TCP socket destruction"));
@@ -70,22 +61,12 @@ InverseClientSocket::~InverseClientSocket()
 void
 InverseClientSocket::bind(const NetworkAddress& addr)
 {
-    try {
-        ARCH->bindSocket(m_socket, addr.getAddress());
-    }
-    catch (const XArchNetworkAddressInUse& e) {
-        throw XSocketAddressInUse(e.what());
-    }
-    catch (const XArchNetwork& e) {
-        throw XSocketBind(e.what());
-    }
+    m_socket.bindSocket(addr);
 }
 
 void
 InverseClientSocket::close()
 {
-    LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
-
     // remove ourself from the multiplexer
     setJob(nullptr);
 
@@ -98,17 +79,7 @@ InverseClientSocket::close()
     onDisconnected();
 
     // close the socket
-    if (m_socket != nullptr) {
-        ArchSocket socket = m_socket;
-        m_socket = nullptr;
-        try {
-            ARCH->closeSocket(socket);
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
-    }
+    m_socket.closeSocket();
 }
 
 void*
@@ -189,13 +160,7 @@ InverseClientSocket::shutdownInput()
         Lock lock(&m_mutex);
 
         // shutdown socket for reading
-        try {
-            ARCH->closeSocketForRead(m_socket);
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
+        m_socket.closeSocketForRead();
 
         // shutdown buffer for reading
         if (m_readable) {
@@ -217,13 +182,7 @@ InverseClientSocket::shutdownOutput()
         Lock lock(&m_mutex);
 
         // shutdown socket for writing
-        try {
-            ARCH->closeSocketForWrite(m_socket);
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
+        m_socket.closeSocketForWrite();
 
         // shutdown buffer for writing
         if (m_writable) {
@@ -266,13 +225,13 @@ InverseClientSocket::connect(const NetworkAddress& addr)
         Lock lock(&m_mutex);
 
         // fail on attempts to reconnect
-        if (m_socket == nullptr || m_connected) {
+        if (m_socket.getRawSocket() == nullptr || m_connected) {
             sendConnectionFailedEvent("busy");
             return;
         }
 
         try {
-            if (ARCH->connectSocket(m_socket, addr.getAddress())) {
+            if (m_socket.connectSocket(addr)) {
                 sendEvent(m_events->forIDataSocket().connected());
                 onConnected();
             }
@@ -288,41 +247,11 @@ InverseClientSocket::connect(const NetworkAddress& addr)
     setJob(newJob());
 }
 
-void
-InverseClientSocket::init()
-{
-    // default state
-    m_connected = false;
-    m_readable  = false;
-    m_writable  = false;
-
-    try {
-        // turn off Nagle algorithm.  we send lots of very short messages
-        // that should be sent without (much) delay.  for example, the
-        // mouse motion messages are much less useful if they're delayed.
-        ARCH->setNoDelayOnSocket(m_socket, true);
-    }
-    catch (const XArchNetwork& e) {
-        try {
-            ARCH->closeSocket(m_socket);
-            m_socket = nullptr;
-        }
-        catch (const XArchNetwork& e) {
-            // ignore, there's not much we can do
-            LOG((CLOG_WARN "error closing socket: %s", e.what()));
-        }
-        throw XSocketCreate(e.what());
-    }
-}
-
 InverseClientSocket::EJobResult
 InverseClientSocket::doRead()
 {
-    UInt8 buffer[4096];
-    memset(buffer, 0, sizeof(buffer));
-    size_t bytesRead = 0;
-
-    bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+    UInt8 buffer[4096] = {0};
+    size_t bytesRead = m_socket.readSocket(buffer, sizeof(buffer));
 
     if (bytesRead > 0) {
         bool wasEmpty = (m_inputBuffer.getSize() == 0);
@@ -331,7 +260,7 @@ InverseClientSocket::doRead()
         do {
             m_inputBuffer.write(buffer, static_cast<UInt32>(bytesRead));
 
-            bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
+            bytesRead = m_socket.readSocket(buffer, sizeof(buffer));
         } while (bytesRead > 0);
 
         // send input ready if input buffer was empty
@@ -358,13 +287,9 @@ InverseClientSocket::doRead()
 InverseClientSocket::EJobResult
 InverseClientSocket::doWrite()
 {
-    // write data
-    UInt32 bufferSize = 0;
-    int bytesWrote = 0;
-
-    bufferSize = m_outputBuffer.getSize();
-    const void* buffer = m_outputBuffer.peek(bufferSize);
-    bytesWrote = (UInt32)ARCH->writeSocket(m_socket, buffer, bufferSize);
+    UInt32 bufferSize = m_outputBuffer.getSize();
+    auto buffer = static_cast<const UInt8*>(m_outputBuffer.peek(bufferSize));
+    const UInt32 bytesWrote = static_cast<UInt32>(m_socket.writeSocket(buffer, bufferSize));
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
@@ -391,7 +316,7 @@ InverseClientSocket::newJob()
 {
     // note -- must have m_mutex locked on entry
 
-    if (m_socket == nullptr) {
+    if (m_socket.getRawSocket() == nullptr) {
         return nullptr;
     }
     else if (!m_connected) {
@@ -401,7 +326,7 @@ InverseClientSocket::newJob()
         }
         return new TSocketMultiplexerMethodJob<InverseClientSocket>(
                                 this, &InverseClientSocket::serviceConnecting,
-                                m_socket, m_readable, m_writable);
+                                m_socket.getRawSocket(), m_readable, m_writable);
     }
     else {
         if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
@@ -409,7 +334,7 @@ InverseClientSocket::newJob()
         }
         return new TSocketMultiplexerMethodJob<InverseClientSocket>(
                                 this, &InverseClientSocket::serviceConnected,
-                                m_socket, m_readable,
+                                m_socket.getRawSocket(), m_readable,
                                 m_writable && (m_outputBuffer.getSize() > 0));
     }
 }
@@ -500,7 +425,7 @@ InverseClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
     if (error || true) {
         try {
             // connection may have failed or succeeded
-            ARCH->throwErrorOnSocket(m_socket);
+            m_socket.throwErrorOnSocket();
         }
         catch (const XArchNetwork& e) {
             sendConnectionFailedEvent(e.what());

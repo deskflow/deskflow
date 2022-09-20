@@ -20,8 +20,9 @@
 
 #include "net/IListenSocket.h"
 #include "arch/IArchNetwork.h"
+#include "mt/Mutex.h"
+#include "AutoArchSocket.h"
 
-class Mutex;
 class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
@@ -54,8 +55,8 @@ public:
                             bool, bool, bool);
 
 protected:
-    ArchSocket          m_socket;
-    Mutex*              m_mutex;
+    AutoArchSocket      m_socket;
+    Mutex               m_mutex;
     IEventQueue*        m_events;
     SocketMultiplexer*  m_socketMultiplexer;
 };

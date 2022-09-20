@@ -36,69 +36,32 @@
 //
 
 InverseServerSocket::InverseServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
+    m_socket(family),
     m_events(events),
     m_socketMultiplexer(socketMultiplexer)
 {
-    m_mutex = new Mutex;
-    try {
-        m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-    }
-    catch (XArchNetwork& e) {
-        throw XSocketCreate(e.what());
-    }
 }
 
 InverseServerSocket::~InverseServerSocket()
 {
-    try {
-        if (m_socket != NULL) {
-            m_socketMultiplexer->removeSocket(this);
-            ARCH->closeSocket(m_socket);
-        }
-    }
-    catch (...) {
-        // ignore
-        LOG((CLOG_WARN "error while closing TCP socket"));
-    }
-    delete m_mutex;
+    m_socketMultiplexer->removeSocket(this);
+    m_socket.closeSocket();
 }
 
 void
 InverseServerSocket::bind(const NetworkAddress& addr)
 {
-    try {
-        Lock lock(m_mutex);
-        ARCH->setReuseAddrOnSocket(m_socket, true);
-        ARCH->bindSocket(m_socket, addr.getAddress());
-        ARCH->listenOnSocket(m_socket);
-        m_socketMultiplexer->addSocket(this,
-                            new TSocketMultiplexerMethodJob<InverseServerSocket>(
-                                this, &InverseServerSocket::serviceListening,
-                                m_socket, true, false));
-    }
-    catch (XArchNetworkAddressInUse& e) {
-        throw XSocketAddressInUse(e.what());
-    }
-    catch (XArchNetwork& e) {
-        throw XSocketBind(e.what());
-    }
+    Lock lock(&m_mutex);
+    m_socket.bindAndListen(addr);
+    setListeningJob();
 }
 
 void
 InverseServerSocket::close()
 {
-    Lock lock(m_mutex);
-    if (m_socket == NULL) {
-        throw XIOClosed();
-    }
-    try {
-        m_socketMultiplexer->removeSocket(this);
-        ARCH->closeSocket(m_socket);
-        m_socket = NULL;
-    }
-    catch (XArchNetwork& e) {
-        throw XSocketIOClose(e.what());
-    }
+    Lock lock(&m_mutex);
+    m_socketMultiplexer->removeSocket(this);
+    m_socket.closeSocket();
 }
 
 void*
@@ -110,23 +73,23 @@ InverseServerSocket::getEventTarget() const
 IDataSocket*
 InverseServerSocket::accept()
 {
-    IDataSocket* socket = NULL;
+    IDataSocket* socket = nullptr;
     try {
-        socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
-        if (socket != NULL) {
+        socket = new TCPSocket(m_events, m_socketMultiplexer, m_socket.acceptSocket());
+        if (socket != nullptr) {
             setListeningJob();
         }
         return socket;
     }
     catch (XArchNetwork&) {
-        if (socket != NULL) {
+        if (socket != nullptr) {
             delete socket;
             setListeningJob();
         }
-        return NULL;
+        return nullptr;
     }
     catch (std::exception &ex) {
-        if (socket != NULL) {
+        if (socket != nullptr) {
             delete socket;
             setListeningJob();
         }
@@ -140,7 +103,7 @@ InverseServerSocket::setListeningJob()
     m_socketMultiplexer->addSocket(this,
                             new TSocketMultiplexerMethodJob<InverseServerSocket>(
                                 this, &InverseServerSocket::serviceListening,
-                                m_socket, true, false));
+                                m_socket.getRawSocket(), true, false));
 }
 
 ISocketMultiplexerJob*
@@ -149,12 +112,12 @@ InverseServerSocket::serviceListening(ISocketMultiplexerJob* job,
 {
     if (error) {
         close();
-        return NULL;
+        return nullptr;
     }
     if (read) {
         m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this));
         // stop polling on this socket until the client accepts
-        return NULL;
+        return nullptr;
     }
     return job;
 }
