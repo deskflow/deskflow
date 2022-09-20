@@ -34,28 +34,28 @@ public:
     InverseClientSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
     InverseClientSocket(InverseClientSocket const &) =delete;
     InverseClientSocket(InverseClientSocket &&) =delete;
-    virtual ~InverseClientSocket();
+    ~InverseClientSocket() override;
 
     InverseClientSocket& operator=(InverseClientSocket const &) =delete;
     InverseClientSocket& operator=(InverseClientSocket &&) =delete;
 
     // ISocket overrides
-    virtual void        bind(const NetworkAddress&);
-    virtual void        close();
-    virtual void*       getEventTarget() const;
+    void        bind(const NetworkAddress&) override;
+    void        close() override;
+    void*       getEventTarget() const override;
 
     // IStream overrides
-    virtual UInt32      read(void* buffer, UInt32 n);
-    virtual void        write(const void* buffer, UInt32 n);
-    virtual void        flush();
-    virtual void        shutdownInput();
-    virtual void        shutdownOutput();
-    virtual bool        isReady() const;
-    virtual bool        isFatal() const;
-    virtual UInt32      getSize() const;
+    UInt32      read(void* buffer, UInt32 n) override;
+    void        write(const void* buffer, UInt32 n) override;
+    void        flush() override;
+    void        shutdownInput() override;
+    void        shutdownOutput() override;
+    bool        isReady() const override;
+    bool        isFatal() const override;
+    UInt32      getSize() const override;
 
     // IDataSocket overrides
-    virtual void        connect(const NetworkAddress&);
+    void        connect(const NetworkAddress&) override;
 
 
     virtual ISocketMultiplexerJob*
@@ -75,8 +75,8 @@ protected:
 
     void                setJob(ISocketMultiplexerJob*);
 
-    bool                isReadable() { return m_readable; }
-    bool                isWritable() { return m_writable; }
+    bool                isReadable() const { return m_readable; }
+    bool                isWritable() const { return m_writable; }
 
     Mutex&              getMutex() { return m_mutex; }
 
@@ -97,15 +97,13 @@ private:
                         serviceConnected(ISocketMultiplexerJob*,
                             bool, bool, bool);
 
-protected:
+private:
     bool                m_readable = false;
     bool                m_writable = false;
     bool                m_connected = false;
     IEventQueue*        m_events;
     StreamBuffer        m_inputBuffer;
     StreamBuffer        m_outputBuffer;
-
-private:
     Mutex                m_mutex;
     AutoArchSocket       m_socket;
     AutoArchSocket       m_listener;

@@ -92,10 +92,10 @@ void AutoArchSocket::bindAndListen(const NetworkAddress &addr)
         bindSocket(addr);
         listenOnSocket();
     }
-    catch (XArchNetworkAddressInUse& e) {
+    catch (const XArchNetworkAddressInUse& e) {
         throw XSocketAddressInUse(e.what());
     }
-    catch (XArchNetwork& e) {
+    catch (const XArchNetwork& e) {
         throw XSocketBind(e.what());
     }
 }

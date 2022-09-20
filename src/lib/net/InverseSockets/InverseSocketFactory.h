@@ -25,8 +25,8 @@ public:
     InverseSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
 
     // ISocketFactory overrides
-    IDataSocket* create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
-    IListenSocket* createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+    IDataSocket* create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
+    IListenSocket* createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
 
 private:
     IEventQueue*        m_events = nullptr;

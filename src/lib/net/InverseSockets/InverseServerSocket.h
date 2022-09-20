@@ -32,19 +32,18 @@ public:
     InverseServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
     InverseServerSocket(InverseServerSocket const &) =delete;
     InverseServerSocket(InverseServerSocket &&) =delete;
-    virtual ~InverseServerSocket();
+    ~InverseServerSocket() override;
 
     InverseServerSocket& operator=(InverseServerSocket const &) =delete;
     InverseServerSocket& operator=(InverseServerSocket &&) =delete;
 
     // ISocket overrides
-    virtual void        bind(const NetworkAddress&);
-    virtual void        close();
-    virtual void*        getEventTarget() const;
+    void        bind(const NetworkAddress&) override;
+    void        close() override;
+    void*        getEventTarget() const override;
 
     // IListenSocket overrides
-    virtual IDataSocket*
-                        accept();
+    IDataSocket* accept() override;
 
 protected:
     void                setListeningJob(bool read = false);
@@ -54,7 +53,7 @@ public:
                         serviceListening(ISocketMultiplexerJob*,
                             bool, bool, bool);
 
-protected:
+private:
     AutoArchSocket      m_socket;
     Mutex               m_mutex;
     IEventQueue*        m_events;

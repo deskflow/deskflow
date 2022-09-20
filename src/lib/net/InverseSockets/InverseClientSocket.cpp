@@ -40,7 +40,6 @@
 InverseClientSocket::InverseClientSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
     IDataSocket(events),
     m_events(events),
-    m_mutex(),
     m_socket(family),
     m_listener(family),
     m_flushed(&m_mutex, true),
@@ -264,7 +263,7 @@ InverseClientSocket::doWrite()
 {
     UInt32 bufferSize = m_outputBuffer.getSize();
     auto buffer = static_cast<const UInt8*>(m_outputBuffer.peek(bufferSize));
-    const UInt32 bytesWrote = static_cast<UInt32>(m_socket.writeSocket(buffer, bufferSize));
+    const auto bytesWrote = static_cast<UInt32>(m_socket.writeSocket(buffer, bufferSize));
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
@@ -313,7 +312,7 @@ InverseClientSocket::newJob(ArchSocket socket)
 void
 InverseClientSocket::sendConnectionFailedEvent(const char* msg)
 {
-    ConnectionFailedInfo* info = new ConnectionFailedInfo(msg);
+    auto info = new ConnectionFailedInfo(msg);
     m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
                             getEventTarget(), info, Event::kDontFreeData));
 }
@@ -376,7 +375,7 @@ InverseClientSocket::onDisconnected()
 
 ISocketMultiplexerJob*
 InverseClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
-                bool read, bool, bool error)
+                bool read, bool, bool)
 {
     Lock lock(&m_mutex);
 
@@ -405,7 +404,7 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         try {
             result = doWrite();
         }
-        catch (XArchNetworkShutdown&) {
+        catch (const XArchNetworkShutdown&) {
             // remote read end of stream hungup.  our output side
             // has therefore shutdown.
             onOutputShutdown();
@@ -416,12 +415,12 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
             }
             result = kNew;
         }
-        catch (XArchNetworkDisconnected&) {
+        catch (const XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
             result = kNew;
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             // other write error
             LOG((CLOG_WARN "error writing socket: %s", e.what()));
             onDisconnected();
@@ -434,12 +433,12 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         try {
             result = doRead();
         }
-        catch (XArchNetworkDisconnected&) {
+        catch (const XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
             result = kNew;
         }
-        catch (XArchNetwork& e) {
+        catch (const XArchNetwork& e) {
             // ignore other read error
             LOG((CLOG_WARN "error reading socket: %s", e.what()));
         }

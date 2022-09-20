@@ -34,7 +34,7 @@ IDataSocket*
 InverseSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
 {
     if (secure) {
-        SecureSocket* secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
+        auto secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
         secureSocket->initSsl (false);
         return secureSocket;
     }

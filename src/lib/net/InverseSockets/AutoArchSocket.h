@@ -24,26 +24,28 @@ public:
     explicit AutoArchSocket(IArchNetwork::EAddressFamily family);
     ~AutoArchSocket();
 
+    AutoArchSocket(const AutoArchSocket&) = delete;
+    AutoArchSocket& operator =(const AutoArchSocket&) = delete;
+
     void setNoDelayOnSocket(bool value = true);
     void setReuseAddrOnSocket(bool value = true);
 
-    void closeSocket();
-
-    void bindSocket(const NetworkAddress& addr);
-    void bindAndListen(const NetworkAddress& addr);
     void listenOnSocket();
-
     ArchSocket acceptSocket();
+    void bindSocket(const NetworkAddress& addr);
+    bool connectSocket(const NetworkAddress& addr);
+    void bindAndListen(const NetworkAddress& addr);
 
+    void closeSocket();
     void closeSocketForRead();
     void closeSocketForWrite();
-    bool connectSocket(const NetworkAddress& addr);
+
     size_t readSocket(UInt8* buffer, size_t size);
     size_t writeSocket(const UInt8* buffer, size_t size);
     void throwErrorOnSocket();
 
-    ArchSocket getRawSocket() const;
     bool isValid() const;
+    ArchSocket getRawSocket() const;
     void operator =(ArchSocket socket);
 
 private:

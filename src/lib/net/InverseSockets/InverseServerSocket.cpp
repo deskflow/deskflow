@@ -80,14 +80,14 @@ InverseServerSocket::accept()
         }
         return socket;
     }
-    catch (XArchNetwork&) {
+    catch (const XArchNetwork&) {
         if (socket != nullptr) {
             delete socket;
             setListeningJob();
         }
         return nullptr;
     }
-    catch (std::exception &ex) {
+    catch (const std::exception &ex) {
         if (socket != nullptr) {
             delete socket;
             setListeningJob();
