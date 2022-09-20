@@ -45,15 +45,14 @@ InverseServerSocket::InverseServerSocket(IEventQueue* events, SocketMultiplexer*
 InverseServerSocket::~InverseServerSocket()
 {
     m_socketMultiplexer->removeSocket(this);
-    m_socket.closeSocket();
 }
 
 void
 InverseServerSocket::bind(const NetworkAddress& addr)
 {
     Lock lock(&m_mutex);
-    m_socket.bindAndListen(addr);
-    setListeningJob();
+    m_socket.connectSocket(addr);
+    setListeningJob(true);
 }
 
 void
@@ -75,7 +74,7 @@ InverseServerSocket::accept()
 {
     IDataSocket* socket = nullptr;
     try {
-        socket = new TCPSocket(m_events, m_socketMultiplexer, m_socket.acceptSocket());
+        socket = new TCPSocket(m_events, m_socketMultiplexer, m_socket.getRawSocket());
         if (socket != nullptr) {
             setListeningJob();
         }
@@ -98,23 +97,23 @@ InverseServerSocket::accept()
 }
 
 void
-InverseServerSocket::setListeningJob()
+InverseServerSocket::setListeningJob(bool read)
 {
     m_socketMultiplexer->addSocket(this,
                             new TSocketMultiplexerMethodJob<InverseServerSocket>(
                                 this, &InverseServerSocket::serviceListening,
-                                m_socket.getRawSocket(), true, false));
+                                m_socket.getRawSocket(), true, read));
 }
 
 ISocketMultiplexerJob*
 InverseServerSocket::serviceListening(ISocketMultiplexerJob* job,
-                            bool read, bool, bool error)
+                            bool, bool write, bool error)
 {
     if (error) {
         close();
         return nullptr;
     }
-    if (read) {
+    if (write) {
         m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this));
         // stop polling on this socket until the client accepts
         return nullptr;

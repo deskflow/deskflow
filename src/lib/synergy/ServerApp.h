@@ -121,6 +121,7 @@ public:
 private:
     void handleScreenSwitched(const Event&, void*  data);
     ISocketFactory* getSocketFactory() const;
+    NetworkAddress  getAddress(const NetworkAddress& address) const;
 };
 
 // configuration file name

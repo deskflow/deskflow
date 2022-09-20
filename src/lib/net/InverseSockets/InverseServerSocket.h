@@ -47,7 +47,7 @@ public:
                         accept();
 
 protected:
-    void                setListeningJob();
+    void                setListeningJob(bool read = false);
 
 public:
     ISocketMultiplexerJob*

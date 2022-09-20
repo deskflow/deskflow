@@ -634,7 +634,7 @@ ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
     ClientListener* listen = new ClientListener(
-        address,
+        getAddress(address),
         getSocketFactory(),
         m_events,
         args().m_enableCrypto);
@@ -692,6 +692,19 @@ ISocketFactory* ServerApp::getSocketFactory() const
     }
 
     return socketFactory;
+}
+
+NetworkAddress ServerApp::getAddress(const NetworkAddress& address) const
+{
+    const auto clientAddress = args().m_config->getClientAddress();
+    if (clientAddress.empty()) {
+        return address;
+    }
+    else {
+        NetworkAddress addr(clientAddress.c_str(), kDefaultPort);
+        addr.resolve();
+        return addr;
+    }
 }
 
 int
