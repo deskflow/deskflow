@@ -92,7 +92,7 @@ InverseServerSocket::accept()
             delete socket;
             setListeningJob();
         }
-        throw ex;
+        throw;
     }
 }
 

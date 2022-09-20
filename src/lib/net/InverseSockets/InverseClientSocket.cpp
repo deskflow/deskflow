@@ -252,10 +252,10 @@ InverseClientSocket::doRead()
             m_connected = false;
         }
         m_readable = false;
-        return kNew;
+        return InverseClientSocket::EJobResult::kNew;
     }
 
-    return kRetry;
+    return InverseClientSocket::EJobResult::kRetry;
 }
 
 InverseClientSocket::EJobResult
@@ -267,10 +267,10 @@ InverseClientSocket::doWrite()
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
-        return kNew;
+        return InverseClientSocket::EJobResult::kNew;
     }
 
-    return kRetry;
+    return InverseClientSocket::EJobResult::kRetry;
 }
 
 void
@@ -399,7 +399,7 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         return newJob(m_listener.getRawSocket());
     }
 
-    EJobResult result = kRetry;
+    EJobResult result = InverseClientSocket::EJobResult::kRetry;
     if (write) {
         try {
             result = doWrite();
@@ -413,19 +413,19 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
                 sendEvent(m_events->forISocket().disconnected());
                 m_connected = false;
             }
-            result = kNew;
+            result = InverseClientSocket::EJobResult::kNew;
         }
         catch (const XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
-            result = kNew;
+            result = InverseClientSocket::EJobResult::kNew;
         }
         catch (const XArchNetwork& e) {
             // other write error
             LOG((CLOG_WARN "error writing socket: %s", e.what()));
             onDisconnected();
             sendEvent(m_events->forIStream().outputError());
-            result = kNew;
+            result = InverseClientSocket::EJobResult::kNew;
         }
     }
 
@@ -436,7 +436,7 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         catch (const XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
-            result = kNew;
+            result = InverseClientSocket::EJobResult::kNew;
         }
         catch (const XArchNetwork& e) {
             // ignore other read error
@@ -444,9 +444,9 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
     }
 
-    if (result == kBreak) {
+    if (result == InverseClientSocket::EJobResult::kBreak) {
         return nullptr;
     }
 
-    return result == kNew ? newJob(m_socket.getRawSocket()) : job;
+    return result == InverseClientSocket::EJobResult::kNew ? newJob(m_socket.getRawSocket()) : job;
 }

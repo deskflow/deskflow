@@ -62,7 +62,7 @@ public:
                         newJob(ArchSocket socket);
 
 protected:
-    enum EJobResult {
+    enum class EJobResult {
         kBreak = -1,    //!< Break the Job chain
         kRetry,            //!< Retry the same job
         kNew            //!< Require a new job
@@ -97,7 +97,6 @@ private:
                         serviceConnected(ISocketMultiplexerJob*,
                             bool, bool, bool);
 
-private:
     bool                m_readable = false;
     bool                m_writable = false;
     bool                m_connected = false;
