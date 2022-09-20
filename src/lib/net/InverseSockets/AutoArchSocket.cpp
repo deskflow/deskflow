@@ -40,21 +40,21 @@ AutoArchSocket::~AutoArchSocket()
 
 void AutoArchSocket::setNoDelayOnSocket(bool value)
 {
-    if (m_socket) {
+    if (isValid()) {
         ARCH->setNoDelayOnSocket(m_socket, value);
     }
 }
 
 void AutoArchSocket::setReuseAddrOnSocket(bool value)
 {
-    if (m_socket) {
+    if (isValid()) {
         ARCH->setReuseAddrOnSocket(m_socket, value);
     }
 }
 
 void AutoArchSocket::closeSocket()
 {
-    if (m_socket) {
+    if (isValid()) {
         try {
             LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
             ARCH->closeSocket(m_socket);
@@ -72,7 +72,7 @@ void AutoArchSocket::closeSocket()
 
 void AutoArchSocket::bindSocket(const NetworkAddress &addr)
 {
-    if (m_socket) {
+    if (isValid()) {
         try {
             ARCH->bindSocket(m_socket, addr.getAddress());
         }
@@ -102,7 +102,7 @@ void AutoArchSocket::bindAndListen(const NetworkAddress &addr)
 
 void AutoArchSocket::listenOnSocket()
 {
-    if (m_socket) {
+    if (isValid()) {
         ARCH->listenOnSocket(m_socket);
     }
 }
@@ -114,7 +114,7 @@ ArchSocket AutoArchSocket::acceptSocket()
 
 void AutoArchSocket::closeSocketForRead()
 {
-    if (m_socket) {
+    if (isValid()) {
         try {
             ARCH->closeSocketForRead(m_socket);
         }
@@ -127,7 +127,7 @@ void AutoArchSocket::closeSocketForRead()
 
 void AutoArchSocket::closeSocketForWrite()
 {
-    if (m_socket) {
+    if (isValid()) {
         try {
             ARCH->closeSocketForWrite(m_socket);
         }
@@ -142,7 +142,7 @@ bool AutoArchSocket::connectSocket(const NetworkAddress &addr)
 {
     bool result = false;
 
-    if (m_socket) {
+    if (isValid()) {
         // turn off Nagle algorithm. we send lots of very short messages
         // that should be sent without (much) delay. for example, the
         // mouse motion messages are much less useful if they're delayed.
@@ -157,7 +157,7 @@ size_t AutoArchSocket::readSocket(UInt8* buffer, size_t size)
 {
     size_t result = 0;
 
-    if (m_socket) {
+    if (isValid()) {
         result = ARCH->readSocket(m_socket, buffer, size);
     }
 
@@ -168,7 +168,7 @@ size_t AutoArchSocket::writeSocket(const UInt8* buffer, size_t size)
 {
     size_t result = 0;
 
-    if (m_socket) {
+    if (isValid()) {
         result = ARCH->writeSocket(m_socket, buffer, size);
     }
 
@@ -177,7 +177,7 @@ size_t AutoArchSocket::writeSocket(const UInt8* buffer, size_t size)
 
 void AutoArchSocket::throwErrorOnSocket()
 {
-    if (m_socket) {
+    if (isValid()) {
         ARCH->throwErrorOnSocket(m_socket);
     }
 }
@@ -185,4 +185,17 @@ void AutoArchSocket::throwErrorOnSocket()
 ArchSocket AutoArchSocket::getRawSocket() const
 {
     return m_socket;
+}
+
+bool AutoArchSocket::isValid() const
+{
+    return (m_socket != nullptr);
+}
+
+void AutoArchSocket::operator =(ArchSocket socket)
+{
+    if (isValid()) {
+        closeSocket();
+    }
+    m_socket = socket;
 }

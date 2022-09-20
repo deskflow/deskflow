@@ -43,7 +43,8 @@ public:
     void throwErrorOnSocket();
 
     ArchSocket getRawSocket() const;
-
+    bool isValid() const;
+    void operator =(ArchSocket socket);
 
 private:
     ArchSocket m_socket = nullptr;

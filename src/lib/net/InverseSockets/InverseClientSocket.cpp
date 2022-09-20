@@ -42,6 +42,7 @@ InverseClientSocket::InverseClientSocket(IEventQueue* events, SocketMultiplexer*
     m_events(events),
     m_mutex(),
     m_socket(family),
+    m_listener(family),
     m_flushed(&m_mutex, true),
     m_socketMultiplexer(socketMultiplexer)
 {
@@ -67,19 +68,10 @@ InverseClientSocket::bind(const NetworkAddress& addr)
 void
 InverseClientSocket::close()
 {
-    // remove ourself from the multiplexer
     setJob(nullptr);
 
     Lock lock(&m_mutex);
-
-    // clear buffers and enter disconnected state
-    if (m_connected) {
-        sendEvent(m_events->forISocket().disconnected());
-    }
     onDisconnected();
-
-    // close the socket
-    m_socket.closeSocket();
 }
 
 void*
@@ -139,7 +131,7 @@ InverseClientSocket::write(const void* buffer, UInt32 n)
 
     // make sure we're waiting to write
     if (wasEmpty) {
-        setJob(newJob());
+        setJob(newJob(m_socket.getRawSocket()));
     }
 }
 
@@ -170,7 +162,7 @@ InverseClientSocket::shutdownInput()
         }
     }
     if (useNewJob) {
-        setJob(newJob());
+        setJob(newJob(m_socket.getRawSocket()));
     }
 }
 
@@ -192,7 +184,7 @@ InverseClientSocket::shutdownOutput()
         }
     }
     if (useNewJob) {
-        setJob(newJob());
+        setJob(newJob(m_socket.getRawSocket()));
     }
 }
 
@@ -223,28 +215,11 @@ InverseClientSocket::connect(const NetworkAddress& addr)
 {
     {
         Lock lock(&m_mutex);
-
-        // fail on attempts to reconnect
-        if (m_socket.getRawSocket() == nullptr || m_connected) {
-            sendConnectionFailedEvent("busy");
-            return;
-        }
-
-        try {
-            if (m_socket.connectSocket(addr)) {
-                sendEvent(m_events->forIDataSocket().connected());
-                onConnected();
-            }
-            else {
-                // connection is in progress
-                m_writable = true;
-            }
-        }
-        catch (const XArchNetwork& e) {
-            throw XSocketConnect(e.what());
-        }
+        m_listener.bindAndListen(addr);
+        m_writable = true;
+        m_readable = true;
     }
-    setJob(newJob());
+    setJob(newJob(m_listener.getRawSocket()));
 }
 
 InverseClientSocket::EJobResult
@@ -312,31 +287,27 @@ InverseClientSocket::setJob(ISocketMultiplexerJob* job)
 }
 
 ISocketMultiplexerJob*
-InverseClientSocket::newJob()
+InverseClientSocket::newJob(ArchSocket socket)
 {
     // note -- must have m_mutex locked on entry
 
-    if (m_socket.getRawSocket() == nullptr) {
-        return nullptr;
-    }
-    else if (!m_connected) {
-        assert(!m_readable);
-        if (!(m_readable || m_writable)) {
-            return nullptr;
+    ISocketMultiplexerJob* result = nullptr;
+
+    if (socket) {
+        auto isWritable = m_writable;
+        auto handler = &InverseClientSocket::serviceConnecting;
+
+        if (m_connected) {
+            handler = &InverseClientSocket::serviceConnected;
+            isWritable = (isWritable && (m_outputBuffer.getSize() > 0));
         }
-        return new TSocketMultiplexerMethodJob<InverseClientSocket>(
-                                this, &InverseClientSocket::serviceConnecting,
-                                m_socket.getRawSocket(), m_readable, m_writable);
-    }
-    else {
-        if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
-            return nullptr;
+
+        if (m_readable || isWritable) {
+            result = new TSocketMultiplexerMethodJob<InverseClientSocket>(this, handler, socket, m_readable, isWritable);
         }
-        return new TSocketMultiplexerMethodJob<InverseClientSocket>(
-                                this, &InverseClientSocket::serviceConnected,
-                                m_socket.getRawSocket(), m_readable,
-                                m_writable && (m_outputBuffer.getSize() > 0));
     }
+
+    return result;
 }
 
 void
@@ -367,6 +338,7 @@ InverseClientSocket::discardWrittenData(int bytesWrote)
 void
 InverseClientSocket::onConnected()
 {
+    sendEvent(m_events->forIDataSocket().connected());
     m_connected = true;
     m_readable  = true;
     m_writable  = true;
@@ -393,6 +365,9 @@ InverseClientSocket::onOutputShutdown()
 void
 InverseClientSocket::onDisconnected()
 {
+    if (m_connected) {
+        sendEvent(m_events->forISocket().disconnected());
+    }
     // disconnected
     onInputShutdown();
     onOutputShutdown();
@@ -401,43 +376,14 @@ InverseClientSocket::onDisconnected()
 
 ISocketMultiplexerJob*
 InverseClientSocket::serviceConnecting(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
+                bool read, bool, bool error)
 {
     Lock lock(&m_mutex);
 
-    // should only check for errors if error is true but checking a new
-    // socket (and a socket that's connecting should be new) for errors
-    // should be safe and Mac OS X appears to have a bug where a
-    // non-blocking stream socket that fails to connect immediately is
-    // reported by select as being writable (i.e. connected) even when
-    // the connection has failed.  this is easily demonstrated on OS X
-    // 10.3.4 by starting a synergy client and telling to connect to
-    // another system that's not running a synergy server.  it will
-    // claim to have connected then quickly disconnect (i guess because
-    // read returns 0 bytes).  unfortunately, synergy attempts to
-    // reconnect immediately, the process repeats and we end up
-    // spinning the CPU.  luckily, OS X does set SO_ERROR on the
-    // socket correctly when the connection has failed so checking for
-    // errors works.  (curiously, sometimes OS X doesn't report
-    // connection refused.  when that happens it at least doesn't
-    // report the socket as being writable so synergy is able to time
-    // out the attempt.)
-    if (error || true) {
-        try {
-            // connection may have failed or succeeded
-            m_socket.throwErrorOnSocket();
-        }
-        catch (const XArchNetwork& e) {
-            sendConnectionFailedEvent(e.what());
-            onDisconnected();
-            return newJob();
-        }
-    }
-
-    if (write) {
-        sendEvent(m_events->forIDataSocket().connected());
+    if (read) {
+        m_socket = m_listener.acceptSocket();
         onConnected();
-        return newJob();
+        return newJob(m_socket.getRawSocket());
     }
 
     return job;
@@ -450,9 +396,8 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
     Lock lock(&m_mutex);
 
     if (error) {
-        sendEvent(m_events->forISocket().disconnected());
         onDisconnected();
-        return newJob();
+        return newJob(m_listener.getRawSocket());
     }
 
     EJobResult result = kRetry;
@@ -474,7 +419,6 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         catch (XArchNetworkDisconnected&) {
             // stream hungup
             onDisconnected();
-            sendEvent(m_events->forISocket().disconnected());
             result = kNew;
         }
         catch (XArchNetwork& e) {
@@ -482,7 +426,6 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
             LOG((CLOG_WARN "error writing socket: %s", e.what()));
             onDisconnected();
             sendEvent(m_events->forIStream().outputError());
-            sendEvent(m_events->forISocket().disconnected());
             result = kNew;
         }
     }
@@ -493,7 +436,6 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         }
         catch (XArchNetworkDisconnected&) {
             // stream hungup
-            sendEvent(m_events->forISocket().disconnected());
             onDisconnected();
             result = kNew;
         }
@@ -507,5 +449,5 @@ InverseClientSocket::serviceConnected(ISocketMultiplexerJob* job,
         return nullptr;
     }
 
-    return result == kNew ? newJob() : job;
+    return result == kNew ? newJob(m_socket.getRawSocket()) : job;
 }

@@ -59,7 +59,7 @@ public:
 
 
     virtual ISocketMultiplexerJob*
-                        newJob();
+                        newJob(ArchSocket socket);
 
 protected:
     enum EJobResult {
@@ -108,6 +108,7 @@ protected:
 private:
     Mutex                m_mutex;
     AutoArchSocket       m_socket;
+    AutoArchSocket       m_listener;
     CondVar<bool>        m_flushed;
     SocketMultiplexer*   m_socketMultiplexer;
 };
