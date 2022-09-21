@@ -959,7 +959,7 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
         m_pLineEditClienIp->text().isEmpty())
     {
         QMessageBox::warning(this, tr("Client IP address or name is empty"),
-                             tr("Please fill in a client ip address or name."));
+                             tr("Please fill in a client IP address or name."));
         return false;
     }
 

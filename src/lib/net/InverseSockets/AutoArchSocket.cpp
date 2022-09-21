@@ -26,7 +26,7 @@ AutoArchSocket::AutoArchSocket(IArchNetwork::EAddressFamily family)
 {
     try {
         m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
-        LOG((CLOG_DEBUG "Opening new socket: %08X", m_socket));
+        LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
     }
     catch (const XArchNetwork& e) {
         throw XSocketCreate(e.what());
@@ -56,7 +56,7 @@ void AutoArchSocket::closeSocket()
 {
     if (isValid()) {
         try {
-            LOG((CLOG_DEBUG "Closing socket: %08X", m_socket));
+            LOG((CLOG_DEBUG "closing socket: %08X", m_socket));
             ARCH->closeSocket(m_socket);
             m_socket = nullptr;
         }
