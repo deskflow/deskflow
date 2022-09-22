@@ -83,7 +83,10 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "eliteBackersUrl",
         "guid",
         "licenseRegistryUrl",
-        "licenseNextCheck"
+        "licenseNextCheck",
+        "initiateConnectionFromServer",
+        "clientHostMode",
+        "serverClientMode"
 };
 
 static const char* logLevelNames[] =
@@ -99,19 +102,19 @@ AppConfig::AppConfig() :
     m_Port(24800),
     m_Interface(),
     m_LogLevel(0),
+    m_LogToFile(),
     m_WizardLastRun(0),
     m_ProcessMode(DEFAULT_PROCESS_MODE),
+    m_StartedBefore(),
     m_AutoConfig(true),
+    m_AutoConfigServer(),
     m_ElevateMode(defaultElevateMode),
+    m_Edition(kUnregistered),
     m_CryptoEnabled(false),
     m_AutoHide(false),
     m_LastExpiringWarningTime(0),
-    m_AutoConfigServer(),
-    m_MinimizeToTray(false),
-    m_Edition(kUnregistered),
-    m_LogToFile(),
-    m_StartedBefore(),
     m_ActivationHasRun(),
+    m_MinimizeToTray(false),
     m_ServerGroupChecked(),
     m_UseExternalConfig(),
     m_UseInternalConfig(),
@@ -253,6 +256,9 @@ void AppConfig::loadSettings()
     m_guid                      = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
     m_licenseRegistryUrl        = loadCommonSetting(kLicenseRegistryUrl, "https://api2.prod.symless.com/license/register").toString();
     m_licenseNextCheck          = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
+    m_ClientHostMode            = loadSetting(kClientHostMode, true).toBool();
+    m_ServerClientMode          = loadSetting(kServerClientMode, true).toBool();
+    m_InitiateConnectionFromServer = loadSetting(kInitiateConnectionFromServer, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -320,6 +326,8 @@ void AppConfig::saveSettings()
         setSetting(kPreventSleep, m_PreventSleep);
         setSetting(kLanguageSync, m_LanguageSync);
         setSetting(kInvertScrollDirection, m_InvertScrollDirection);
+        setSetting(kClientHostMode, m_ClientHostMode);
+        setSetting(kServerClientMode, m_ServerClientMode);
     }
 
     m_unsavedChanges = false;
@@ -512,6 +520,18 @@ void AppConfig::setLanguageSync(bool newValue) {
 
 bool AppConfig::getPreventSleep() const { return m_PreventSleep; }
 
+bool AppConfig::getClientHostMode() const {
+    return (m_ClientHostMode && getInitiateConnectionFromServer());
+}
+
+bool AppConfig::getServerClientMode() const {
+    return (m_ServerClientMode && getInitiateConnectionFromServer());
+}
+
+bool AppConfig::getInitiateConnectionFromServer() const {
+    return m_InitiateConnectionFromServer;
+}
+
 void AppConfig::setPreventSleep(bool newValue) {
     setSettingModified(m_PreventSleep, newValue);
 }
@@ -639,6 +659,14 @@ void AppConfig::setClientGroupChecked(bool newValue) {
 
 void AppConfig::setServerHostname(const QString& newValue) {
     setSettingModified(m_ServerHostname, newValue);
+}
+
+void AppConfig::setClientHostMode(bool newValue) {
+    setSettingModified(m_ClientHostMode, newValue);
+}
+
+void AppConfig::setServerClientMode(bool newValue) {
+    setSettingModified(m_ServerClientMode, newValue);
 }
 
 template<typename T>

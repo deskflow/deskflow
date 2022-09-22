@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>658</height>
+    <height>552</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -244,10 +244,40 @@ background-color: rgba(192,192,192, 0.1);
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>20</height>
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="m_pLabelClientIp">
+            <property name="text">
+             <string>Client IP address or name:</string>
+            </property>
+            <property name="indent">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="leftMargin">
+             <number>20</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="m_pLineEditClienIp"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_pButtonConnectToClient">
+              <property name="text">
+               <string>Connect</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="synergy_widgets::ServerStateLabel" name="m_pLabelServerState">
@@ -685,7 +715,6 @@ background-color: rgba(192,192,192, 0.1);
          <font>
           <family>Arial</family>
           <pointsize>-1</pointsize>
-          <weight>87</weight>
           <bold>true</bold>
          </font>
         </property>

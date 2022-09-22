@@ -238,7 +238,6 @@ private:
     using AutoThread = std::unique_ptr<Thread>;
     AutoThread          m_sendFileThread;
     AutoThread          m_writeToDropDirThread;
-    TCPSocket*          m_socket;
     bool                m_useSecureNetwork;
     bool                m_enableClipboard;
     size_t              m_maximumClipboardSize;

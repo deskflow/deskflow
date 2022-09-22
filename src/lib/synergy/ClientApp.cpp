@@ -26,6 +26,7 @@
 #include "synergy/ClientArgs.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPSocketFactory.h"
+#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/SocketMultiplexer.h"
 #include "net/XSocket.h"
 #include "mt/Thread.h"
@@ -128,6 +129,7 @@ ClientApp::help()
         " [--yscroll <delta>]"
         " [--sync-language]"
         " [--invert-scroll]"
+        " [--host]"
         WINAPI_ARG
         HELP_SYS_ARGS
         HELP_COMMON_ARGS
@@ -142,6 +144,7 @@ ClientApp::help()
         "                             120 by default.\n"
         "      --sync-language      set this parameter to enable language synchronization.\n"
         "      --invert-scroll      invert scroll direction on this computer.\n"
+        "      --host               client starts a listener and waits for a server connection.\n"
         HELP_COMMON_INFO_2
         "\n"
         "* marks defaults.\n"
@@ -366,7 +369,7 @@ ClientApp::openClient(const String& name, const NetworkAddress& address,
         m_events,
         name,
         address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
+        getSocketFactory(),
         screen,
         args());
 
@@ -598,4 +601,18 @@ ClientApp::startNode()
     if (!startClient()) {
         m_bye(kExitFailed);
     }
+}
+
+ISocketFactory* ClientApp::getSocketFactory() const
+{
+    ISocketFactory* socketFactory = nullptr;
+
+    if (args().m_hostMode) {
+        socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
+    }
+    else {
+        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
+    }
+
+    return socketFactory;
 }

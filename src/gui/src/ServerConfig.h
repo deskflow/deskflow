@@ -89,6 +89,8 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool isScreenExists(const QString& screenName) const;
         void addClient(const QString& clientName);
         bool isHotkeysAvailable() const;
+        QString getClientAddress() const;
+        void setClientAddress(const QString& address);
 
     protected:
         QSettings& settings();
@@ -147,6 +149,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase
         bool m_DisableLockToScreen;
         bool m_ClipboardSharing;
         size_t m_ClipboardSharingSize;
+        QString m_clientAddress;
         MainWindow* m_pMainWindow;
 };
 

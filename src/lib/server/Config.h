@@ -450,6 +450,11 @@ public:
     */
     static String        formatInterval(const Interval&);
 
+    //! Get client address as a string
+    /*!
+     * Return client address a string.
+     */
+    String               getClientAddress() const;
     //@}
 
 private:
@@ -481,6 +486,7 @@ private:
     InputFilter            m_inputFilter;
     bool                m_hasLockToScreenAction;
     IEventQueue*        m_events;
+    String              m_clientAddress;
 };
 
 //! Configuration read context

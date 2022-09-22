@@ -53,8 +53,11 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
 
-    m_pCheckBoxLanguageSync->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
-    m_pCheckBoxScrollDirection->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
+    const auto isClientMode = m_pMainWindow->synergyType() == MainWindow::synergyClient;
+    m_pCheckBoxLanguageSync->setVisible(isClientMode);
+    m_pCheckBoxScrollDirection->setVisible(isClientMode);
+    m_pCheckBoxClientHostMode->setVisible(isClientMode && appConfig().getInitiateConnectionFromServer());
+    m_pCheckBoxServerClientMode->setVisible(!isClientMode && appConfig().getInitiateConnectionFromServer());
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
@@ -72,6 +75,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
     connect(m_pCheckBoxLanguageSync,    SIGNAL(clicked()),                this, SLOT(onChange()));
     connect(m_pCheckBoxScrollDirection, SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxClientHostMode,  SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxServerClientMode,SIGNAL(clicked()),                this, SLOT(onChange()));
 
     adjustSize();
 }
@@ -96,6 +101,8 @@ void SettingsDialog::accept()
    appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
    appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
    appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
+   appConfig().setClientHostMode(m_pCheckBoxClientHostMode->isChecked());
+   appConfig().setServerClientMode(m_pCheckBoxServerClientMode->isChecked());
 
    appConfig().saveSettings();
    QDialog::accept();
@@ -155,6 +162,8 @@ void SettingsDialog::loadFromConfig() {
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
     m_pCheckBoxLanguageSync->setChecked(m_appConfig.getLanguageSync());
     m_pCheckBoxScrollDirection->setChecked(m_appConfig.getInvertScrollDirection());
+    m_pCheckBoxClientHostMode->setChecked(m_appConfig.getClientHostMode());
+    m_pCheckBoxServerClientMode->setChecked(m_appConfig.getServerClientMode());
 
     setupSeurity();
 
@@ -367,6 +376,8 @@ bool SettingsDialog::isModified()
       || appConfig().getCryptoEnabled()  != m_pCheckBoxEnableCrypto->isChecked()
       || appConfig().isSystemScoped()    != m_isSystemAtStart
       || appConfig().getLanguageSync()   != m_pCheckBoxLanguageSync->isChecked()
+      || appConfig().getClientHostMode() != m_pCheckBoxClientHostMode->isChecked()
+      || appConfig().getServerClientMode() != m_pCheckBoxServerClientMode->isChecked()
       || appConfig().getInvertScrollDirection() != m_pCheckBoxScrollDirection->isChecked())
    );
 }
@@ -390,6 +401,8 @@ void SettingsDialog::enableControls(bool enable) {
     m_labelAdminRightsMessage->setVisible(!enable);
     m_pCheckBoxLanguageSync->setEnabled(enable);
     m_pCheckBoxScrollDirection->setEnabled(enable);
+    m_pCheckBoxClientHostMode->setEnabled(enable);
+    m_pCheckBoxServerClientMode->setEnabled(enable);
 
     if (enable) {
         m_pLabelLogPath->setEnabled(m_pCheckBoxLogToFile->isChecked());
