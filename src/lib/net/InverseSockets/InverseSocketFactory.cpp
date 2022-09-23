@@ -17,7 +17,7 @@
 #include "InverseSocketFactory.h"
 #include "net/InverseSockets/InverseClientSocket.h"
 #include "net/InverseSockets/InverseServerSocket.h"
-#include "net/SecureSocket.h"
+#include "net/InverseSockets/SecureClientSocket.h"
 #include "net/SecureListenSocket.h"
 
 //
@@ -34,7 +34,7 @@ IDataSocket*
 InverseSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
 {
     if (secure) {
-        auto secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
+        auto secureSocket = new SecureClientSocket(m_events, m_socketMultiplexer, family);
         secureSocket->initSsl (false);
         return secureSocket;
     }
