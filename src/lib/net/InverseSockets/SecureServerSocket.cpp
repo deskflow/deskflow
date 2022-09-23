@@ -17,16 +17,11 @@
 
 #include "SecureServerSocket.h"
 
-#include "net/SecureSocket.h"
-#include "net/NetworkAddress.h"
-#include "net/SocketMultiplexer.h"
-#include "net/TSocketMultiplexerMethodJob.h"
-#include "arch/XArch.h"
-#include "synergy/ArgParser.h"
-#include "synergy/ArgsBase.h"
-
-static const char s_certificateDir[] = { "SSL" };
-static const char s_certificateFilename[] = { "Synergy.pem" };
+#include <net/SecureSocket.h>
+#include <net/TSocketMultiplexerMethodJob.h>
+#include <arch/XArch.h>
+#include <synergy/ArgParser.h>
+#include <synergy/ArgsBase.h>
 
 //
 // SecureServerSocket
@@ -36,58 +31,61 @@ SecureServerSocket::SecureServerSocket(
         IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
         IArchNetwork::EAddressFamily family) :
-    TCPListenSocket(events, socketMultiplexer, family)
+        TCPListenSocket(events, socketMultiplexer, family)
 {
 }
 
 IDataSocket*
 SecureServerSocket::accept()
 {
-    SecureSocket* socket = NULL;
-    try {
-        socket = new SecureSocket(
-                        m_events,
-                        m_socketMultiplexer,
-                        ARCH->acceptSocket(m_socket, NULL));
-        socket->initSsl(true);
+    SecureSocket* socket = nullptr;
 
-        if (socket != NULL) {
+    try {
+        socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr));
+        socket->initSsl(true);
+        setListeningJob();
+
+        auto certificateFilename = getCertifcateFileName();
+        if (socket->loadCertificates(certificateFilename)) {
+            socket->secureAccept();
+        }
+        else {
+            delete socket;
+            socket = nullptr;
+        }
+    }
+    catch (const XArchNetwork&) {
+        if (socket) {
+            delete socket;
+            socket = nullptr;
             setListeningJob();
         }
+    }
+    catch (const std::exception&) {
+        if (socket) {
+            delete socket;
+            setListeningJob();
+        }
+        throw;
+    }
+
+    return dynamic_cast<IDataSocket*>(socket);
+}
+
+const std::string
+SecureServerSocket::getCertifcateFileName() const
+{
+    //if the tls cert option is set use that for the certificate file
+    auto certificateFilename = ArgParser::argsBase().m_tlsCertFile;
+
+    if (certificateFilename.empty()) {
+        auto dir = "SSL";
+        auto filename = "Synergy.pem";
+        auto profileDir = ARCH->getProfileDirectory().c_str();
 
         //default location of the TLS cert file in users dir
-        String certificateFilename = synergy::string::sprintf("%s/%s/%s",
-                                                              ARCH->getProfileDirectory().c_str(),
-                                                              s_certificateDir,
-                                                              s_certificateFilename);
-
-        //if the tls cert option is set use that for the certificate file
-        if (!ArgParser::argsBase().m_tlsCertFile.empty()) {
-            certificateFilename = ArgParser::argsBase().m_tlsCertFile;
-        }
-
-        bool loaded = socket->loadCertificates(certificateFilename);
-        if (!loaded) {
-            delete socket;
-            return NULL;
-        }
-
-        socket->secureAccept();
-
-        return dynamic_cast<IDataSocket*>(socket);
+        certificateFilename = synergy::string::sprintf("%s/%s/%s", profileDir, dir, filename);
     }
-    catch (XArchNetwork&) {
-        if (socket != NULL) {
-            delete socket;
-            setListeningJob();
-        }
-        return NULL;
-    }
-    catch (std::exception &ex) {
-        if (socket != NULL) {
-            delete socket;
-            setListeningJob();
-        }
-        throw ex;
-    }
+
+    return certificateFilename;
 }

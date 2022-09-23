@@ -14,23 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
-
-#include "net/TCPListenSocket.h"
-#include "common/stdset.h"
-
-class IEventQueue;
-class SocketMultiplexer;
-class IDataSocket;
+#include <net/TCPListenSocket.h>
 
 class SecureServerSocket : public TCPListenSocket {
 public:
     SecureServerSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
 
-
     // IListenSocket overrides
-    virtual IDataSocket*
-                        accept();
+    virtual IDataSocket* accept();
+
+private:
+    const std::string getCertifcateFileName() const;
 };
