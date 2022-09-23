@@ -18,7 +18,7 @@
 #include "net/InverseSockets/InverseClientSocket.h"
 #include "net/InverseSockets/InverseServerSocket.h"
 #include "net/InverseSockets/SecureClientSocket.h"
-#include "net/SecureListenSocket.h"
+#include "net/InverseSockets/SecureServerSocket.h"
 
 //
 // InverseSocketFactory
@@ -49,7 +49,7 @@ InverseSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily fam
     IListenSocket* socket = nullptr;
 
     if (secure) {
-        socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
+        socket = new SecureServerSocket(m_events, m_socketMultiplexer, family);
     }
     else {
         socket = new InverseServerSocket(m_events, m_socketMultiplexer, family);
