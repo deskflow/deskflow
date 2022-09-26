@@ -1,0 +1,134 @@
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2015-2022 Symless Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "SslLogger.h"
+#include <sstream>
+
+#include <base/Log.h>
+#include <openssl/err.h>
+#include <openssl/ssl.h>
+
+void SslLogger::logSecureLibInfo()
+{
+    if (CLOG->getFilter() >= kDEBUG) {
+        LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
+        LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
+        LOG((CLOG_DEBUG1 "openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON)));
+        LOG((CLOG_DEBUG1 "openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM)));
+        LOG((CLOG_DEBUG1 "openssl dir: %s", SSLeay_version(SSLEAY_DIR)));
+    }
+}
+
+static void
+showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
+    char msg[128] = {0};
+    for (int i = 0; i < sk_SSL_CIPHER_num(stack) ; i++) {
+        const SSL_CIPHER * cipher = sk_SSL_CIPHER_value(stack,i);
+
+        SSL_CIPHER_description(cipher, msg, sizeof(msg));
+
+        // Why does SSL put a newline in the description?
+        int pos = (int)strnlen(msg, sizeof(msg)) - 1;
+        if (msg[pos] == '\n') {
+            msg[pos] = '\0';
+        }
+
+        LOG((CLOG_DEBUG1 "%s",msg));
+    }
+}
+
+void SslLogger::logSecureCipherInfo(const SSL* ssl)
+{
+    if (ssl && CLOG->getFilter() >= kDEBUG1) {
+        STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(ssl);
+
+        if (sStack) {
+            LOG((CLOG_DEBUG1 "available local ciphers:"));
+            showCipherStackDesc(sStack);
+        }
+        else {
+             LOG((CLOG_DEBUG1 "local cipher list not available"));
+        }
+
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+	// m_ssl->m_ssl->session->ciphers is not forward compatable,
+	// In future release of OpenSSL, it's not visible,
+	// however, LibreSSL still uses this.
+	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
+#else
+	// Use SSL_get_client_ciphers() for newer versions of OpenSSL.
+	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(ssl);
+#endif
+        if (cStack) {
+            LOG((CLOG_DEBUG1 "available remote ciphers:"));
+            showCipherStackDesc(cStack);
+        }
+        else {
+            LOG((CLOG_DEBUG1 "remote cipher list not available"));
+        }
+    }
+}
+
+void SslLogger::logSecureConnectInfo(const SSL* ssl)
+{
+    if (ssl) {
+        const SSL_CIPHER* cipher = SSL_get_current_cipher(ssl);
+
+        if (cipher) {
+            char msg[128] = {0};
+            SSL_CIPHER_description(cipher, msg, sizeof(msg));
+            LOG((CLOG_DEBUG "openssl cipher: %s", msg));
+
+            //For some reason SSL_get_version is return mismatching information to SSL_CIPHER_description
+            // so grab the version out the description instead, This seems like a hacky way of doing it.
+            // But when the cipher says "TLSv1.2" but the get_version returns "TLSv1/SSLv3" we it doesn't look right
+            // For some reason macOS hates regex's so stringstream is used
+            std::istringstream iss(msg);
+
+            //Take the stream input and splits it into a vetor directly
+            const std::vector<std::string> parts{std::istream_iterator<std::string>{iss},
+                                           std::istream_iterator<std::string>{}};
+            if (parts.size() > 2)
+            {
+                //log the section containing the protocol version
+                LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
+            }
+            else
+            {
+                //log the error in spliting then display the whole description rather then nothing
+                LOG((CLOG_ERR "could not split cipher for protocol"));
+                LOG((CLOG_INFO "network encryption protocol: %s", msg));
+            }
+        }
+        else {
+            LOG((CLOG_ERR "could not get secure socket cipher"));
+        }
+    }
+}
+
+void SslLogger::logError(const std::string &reason)
+{
+    if (!reason.empty()) {
+        LOG((CLOG_ERR "secure socket error: %s", reason.c_str()));
+    }
+
+    auto id = ERR_get_error();
+    if (id) {
+        char error[65535] = {0};
+        ERR_error_string_n(id, error, sizeof(error));
+        LOG((CLOG_ERR "openssl error: %s", error));
+    }
+}

@@ -35,7 +35,6 @@ InverseSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) c
 {
     if (secure) {
         auto secureSocket = new SecureClientSocket(m_events, m_socketMultiplexer, family);
-        secureSocket->initSsl (false);
         return secureSocket;
     }
     else {

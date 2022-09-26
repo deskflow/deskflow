@@ -16,63 +16,42 @@
  */
 
 #include "SecureClientSocket.h"
+#include "SslLogger.h"
 
-#include "net/TSocketMultiplexerMethodJob.h"
-#include "base/TMethodEventJob.h"
-#include "net/TCPSocket.h"
-#include "mt/Lock.h"
-#include "arch/XArch.h"
-#include "base/Log.h"
-#include "base/Path.h"
+#include <sstream>
+#include <fstream>
+
+#include <base/Log.h>
+#include <base/Path.h>
+#include <base/TMethodEventJob.h>
+
+#include <mt/Lock.h>
+#include <arch/XArch.h>
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-#include <cstring>
-#include <sstream>
-#include <iterator>
-#include <cstdlib>
-#include <memory>
-#include <fstream>
+
+#include <net/NetworkAddress.h>
+#include <net/TSocketMultiplexerMethodJob.h>
 
 //
 // SecureClientSocket
 //
-
-#define MAX_ERROR_SIZE 65535
-
-static const float s_retryDelay = 0.01f;
-
-enum {
-    kMsgSize = 128
-};
-
-static const char kFingerprintDirName[] = "SSL/Fingerprints";
-//static const char kFingerprintLocalFilename[] = "Local.txt";
-static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
-//static const char kFingerprintTrustedClientsFilename[] = "TrustedClients.txt";
-
-struct Ssl {
-    SSL_CTX*    m_context;
-    SSL*        m_ssl;
-};
+constexpr float s_retryDelay = 0.01f;
 
 SecureClientSocket::SecureClientSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
-    TCPSocket(events, socketMultiplexer, family),
-    m_ssl(nullptr),
-    m_secureReady(false),
-    m_fatal(false)
+    TCPSocket(events, socketMultiplexer, family)
 {
+    m_ssl = new synergy::ssl::SslApi(false);
 }
 
 SecureClientSocket::SecureClientSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
         ArchSocket socket) :
-    TCPSocket(events, socketMultiplexer, socket),
-    m_ssl(nullptr),
-    m_secureReady(false),
-    m_fatal(false)
+    TCPSocket(events, socketMultiplexer, socket)
 {
+    m_ssl = new synergy::ssl::SslApi(false);
 }
 
 SecureClientSocket::~SecureClientSocket()
@@ -104,7 +83,7 @@ SecureClientSocket::newJob()
     // after TCP connection is established, SecureClientSocket will pick up
     // connected event and do secureConnect
     if (m_connected && !m_secureReady) {
-        return NULL;
+        return nullptr;
     }
 
     return TCPSocket::newJob();
@@ -129,13 +108,13 @@ SecureClientSocket::secureAccept()
 TCPSocket::EJobResult
 SecureClientSocket::doRead()
 {
-    static UInt8 buffer[4096];
-    memset(buffer, 0, sizeof(buffer));
+    UInt8 buffer[4096] = {0};
     int bytesRead = 0;
     int status = 0;
 
     if (isSecureReady()) {
         status = secureRead(buffer, sizeof(buffer), bytesRead);
+
         if (status < 0) {
             return kBreak;
         }
@@ -187,7 +166,7 @@ SecureClientSocket::doWrite()
     static bool s_retry = false;
     static int s_retrySize = 0;
     static int s_staticBufferSize = 0;
-    static void* s_staticBuffer = NULL;
+    static void* s_staticBuffer = nullptr;
 
     // write data
     int bufferSize = 0;
@@ -242,22 +221,20 @@ SecureClientSocket::doWrite()
 int
 SecureClientSocket::secureRead(void* buffer, int size, int& read)
 {
-    if (m_ssl->m_ssl != NULL) {
-        LOG((CLOG_DEBUG2 "reading secure socket"));
-        read = SSL_read(m_ssl->m_ssl, buffer, size);
+    LOG((CLOG_DEBUG2 "reading secure socket"));
+    read = m_ssl->read(static_cast<char*>(buffer), size);
 
-        static int retry;
+    static int retry = 0;
 
-        // Check result will cleanup the connection in the case of a fatal
-        checkResult(read, retry);
+    // Check result will cleanup the connection in the case of a fatal
+    checkResult(read, retry);
 
-        if (retry) {
-            return 0;
-        }
+    if (retry) {
+        return 0;
+    }
 
-        if (isFatal()) {
-            return -1;
-        }
+    if (isFatal()) {
+        return -1;
     }
     // According to SSL spec, the number of bytes read must not be negative and
     // not have an error code from SSL_get_error(). If this happens, it is
@@ -268,24 +245,22 @@ SecureClientSocket::secureRead(void* buffer, int size, int& read)
 int
 SecureClientSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
-    if (m_ssl->m_ssl != NULL) {
-        LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
+    LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
+    wrote = m_ssl->write(static_cast<const char*>(buffer), size);
 
-        wrote = SSL_write(m_ssl->m_ssl, buffer, size);
+    static int retry = 0;
 
-        static int retry;
+    // Check result will cleanup the connection in the case of a fatal
+    checkResult(wrote, retry);
 
-        // Check result will cleanup the connection in the case of a fatal
-        checkResult(wrote, retry);
-
-        if (retry) {
-            return 0;
-        }
-
-        if (isFatal()) {
-            return -1;
-        }
+    if (retry) {
+        return 0;
     }
+
+    if (isFatal()) {
+        return -1;
+    }
+
     // According to SSL spec, r must not be negative and not have an error code
     // from SSL_get_error(). If this happens, it is itself an error. Let the
     // parent handle the case
@@ -298,103 +273,10 @@ SecureClientSocket::isSecureReady()
     return m_secureReady;
 }
 
-void
-SecureClientSocket::initSsl(bool server)
-{
-    m_ssl = new Ssl();
-    m_ssl->m_context = NULL;
-    m_ssl->m_ssl = NULL;
-
-    initContext(server);
-}
-
 bool
 SecureClientSocket::loadCertificates(String& filename)
 {
-    if (filename.empty()) {
-        showError("tls certificate is not specified");
-        return false;
-    }
-    else {
-        std::ifstream file(synergy::filesystem::path(filename));
-        bool exist = file.good();
-        file.close();
-
-        if (!exist) {
-            String errorMsg("tls certificate doesn't exist: ");
-            errorMsg.append(filename);
-            showError(errorMsg.c_str());
-            return false;
-        }
-    }
-
-    int r = 0;
-    r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
-    if (r <= 0) {
-        showError("could not use tls certificate");
-        return false;
-    }
-
-    r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
-    if (r <= 0) {
-        showError("could not use tls private key");
-        return false;
-    }
-
-    r = SSL_CTX_check_private_key(m_ssl->m_context);
-    if (!r) {
-        showError("could not verify tls private key");
-        return false;
-    }
-
-    return true;
-}
-
-void
-SecureClientSocket::initContext(bool server)
-{
-    SSL_library_init();
-
-    const SSL_METHOD* method;
-
-    // load & register all cryptos, etc.
-    OpenSSL_add_all_algorithms();
-
-    // load all error messages
-    SSL_load_error_strings();
-
-    if (CLOG->getFilter() >= kINFO) {
-        showSecureLibInfo();
-    }
-
-    if (server) {
-        method = SSLv23_server_method();
-    }
-    else {
-        method = SSLv23_client_method();
-    }
-
-    // create new context from method
-    SSL_METHOD* m = const_cast<SSL_METHOD*>(method);
-    m_ssl->m_context = SSL_CTX_new(m);
-
-    //Prevent the usage of of all version prior to TLSv1.2 as they are known to be vulnerable
-    SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
-
-    if (m_ssl->m_context == NULL) {
-        showError();
-    }
-}
-
-void
-SecureClientSocket::createSSL()
-{
-    // I assume just one instance is needed
-    // get new SSL state with context
-    if (m_ssl->m_ssl == NULL) {
-        assert(m_ssl->m_context != NULL);
-        m_ssl->m_ssl = SSL_new(m_ssl->m_context);
-    }
+    return m_ssl->loadCertificate(filename);
 }
 
 void
@@ -404,34 +286,19 @@ SecureClientSocket::freeSSL()
     // take socket from multiplexer ASAP otherwise the race condition
     // could cause events to get called on a dead object. TCPSocket
     // will do this, too, but the double-call is harmless
-    setJob(NULL);
-    if (m_ssl->m_ssl != NULL) {
-        SSL_shutdown(m_ssl->m_ssl);
-
-        SSL_free(m_ssl->m_ssl);
-        m_ssl->m_ssl = NULL;
+    setJob(nullptr);
+    if (m_ssl) {
+        delete m_ssl;
+        m_ssl = nullptr;
     }
-    if (m_ssl->m_context != NULL) {
-        SSL_CTX_free(m_ssl->m_context);
-        m_ssl->m_context = NULL;
-    }
-    delete m_ssl;
 }
 
 int
 SecureClientSocket::secureAccept(int socket)
 {
-    createSSL();
-
-    // set connection socket to SSL state
-    SSL_set_fd(m_ssl->m_ssl, socket);
-
     LOG((CLOG_DEBUG2 "accepting secure socket"));
-    int r = SSL_accept(m_ssl->m_ssl);
-
-    static int retry;
-
-    checkResult(r, retry);
+    static int retry = 0;
+    checkResult(m_ssl->accept(socket), retry);
 
     if (isFatal()) {
         // tell user and sleep so the socket isn't hammered.
@@ -447,10 +314,7 @@ SecureClientSocket::secureAccept(int socket)
     if (retry == 0) {
         m_secureReady = true;
         LOG((CLOG_INFO "accepted secure socket"));
-        if (CLOG->getFilter() >= kDEBUG1) {
-            showSecureCipherInfo();
-        }
-        showSecureConnectInfo();
+        m_ssl->logSecureInfo();
         return 1;
     }
 
@@ -470,17 +334,9 @@ SecureClientSocket::secureAccept(int socket)
 int
 SecureClientSocket::secureConnect(int socket)
 {
-    createSSL();
-
-    // attach the socket descriptor
-    SSL_set_fd(m_ssl->m_ssl, socket);
-
     LOG((CLOG_DEBUG2 "connecting secure socket"));
-    int r = SSL_connect(m_ssl->m_ssl);
-
-    static int retry;
-
-    checkResult(r, retry);
+    static int retry = 0;
+    checkResult(m_ssl->connect(socket), retry);
 
     if (isFatal()) {
         LOG((CLOG_ERR "failed to connect secure socket"));
@@ -499,46 +355,20 @@ SecureClientSocket::secureConnect(int socket)
     retry = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
-    if (verifyCertFingerprint()) {
+
+    auto fingerprint = m_ssl->getFingerprint();
+    LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
+
+    if (m_ssl->isTrustedFingerprint(fingerprint)) {
         LOG((CLOG_INFO "connected to secure socket"));
-        if (!showCertificate()) {
-            disconnect();
-            return -1;// Cert fail, error
-        }
+        m_ssl->logSecureInfo();
+        return 1;
     }
     else {
         LOG((CLOG_ERR "failed to verify server certificate fingerprint"));
         disconnect();
         return -1; // Fingerprint failed, error
     }
-    LOG((CLOG_DEBUG2 "connected secure socket"));
-    if (CLOG->getFilter() >= kDEBUG1) {
-        showSecureCipherInfo();
-    }
-    showSecureConnectInfo();
-    return 1;
-}
-
-bool
-SecureClientSocket::showCertificate()
-{
-    X509* cert;
-    char* line;
-
-    // get the server's certificate
-    cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    if (cert != NULL) {
-        line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-        LOG((CLOG_INFO "server tls certificate info: %s", line));
-        OPENSSL_free(line);
-        X509_free(cert);
-    }
-    else {
-        showError("server has no tls certificate");
-        return false;
-    }
-
-    return true;
 }
 
 void
@@ -546,8 +376,7 @@ SecureClientSocket::checkResult(int status, int& retry)
 {
     // ssl errors are a little quirky. the "want" errors are normal and
     // should result in a retry.
-
-    int errorCode = SSL_get_error(m_ssl->m_ssl, status);
+    int errorCode = m_ssl->getErrorCode(status);
 
     switch (errorCode) {
     case SSL_ERROR_NONE:
@@ -618,36 +447,8 @@ SecureClientSocket::checkResult(int status, int& retry)
 
     if (isFatal()) {
         retry = 0;
-        showError();
+        SslLogger::logError();
         disconnect();
-    }
-}
-
-void
-SecureClientSocket::showError(const char* reason)
-{
-    if (reason != NULL) {
-        LOG((CLOG_ERR "secure socket error: %s", reason));
-    }
-
-    String error = getError();
-    if (!error.empty()) {
-        LOG((CLOG_ERR "openssl error: %s", error.c_str()));
-    }
-}
-
-String
-SecureClientSocket::getError()
-{
-    unsigned long e = ERR_get_error();
-
-    if (e != 0) {
-        char error[MAX_ERROR_SIZE];
-        ERR_error_string_n(e, error, MAX_ERROR_SIZE);
-        return error;
-    }
-    else {
-        return "";
     }
 }
 
@@ -659,77 +460,6 @@ SecureClientSocket::disconnect()
     sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void
-SecureClientSocket::formatFingerprint(String& fingerprint, bool hex, bool separator)
-{
-    if (hex) {
-        // to hexidecimal
-        synergy::string::toHex(fingerprint, 2);
-    }
-
-    // all uppercase
-    synergy::string::uppercase(fingerprint);
-
-    if (separator) {
-        // add colon to separate each 2 charactors
-        size_t separators = fingerprint.size() / 2;
-        for (size_t i = 1; i < separators; i++) {
-            fingerprint.insert(i * 3 - 1, ":");
-        }
-    }
-}
-
-bool
-SecureClientSocket::verifyCertFingerprint()
-{
-    // calculate received certificate fingerprint
-    using AutoX509 = std::unique_ptr<X509, decltype (&X509_free)>;
-    AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), &X509_free);
-
-    unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
-    unsigned int tempFingerprintLen;
-    int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
-
-    if (digestResult <= 0) {
-        LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
-        return false;
-    }
-
-    // format fingerprint into hexdecimal format with colon separator
-    String fingerprint(static_cast<char*>(static_cast<void*>(tempFingerprint)), tempFingerprintLen);
-    formatFingerprint(fingerprint);
-    LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
-
-    String trustedServersFilename;
-    trustedServersFilename = synergy::string::sprintf(
-        "%s/%s/%s",
-        ARCH->getProfileDirectory().c_str(),
-        kFingerprintDirName,
-        kFingerprintTrustedServersFilename);
-
-    // check if this fingerprint exist
-    String fileLine;
-    std::ifstream file;
-    file.open(synergy::filesystem::path(trustedServersFilename));
-
-    bool isValid = false;
-    if (file.is_open()) {
-        while (!file.eof()) {
-            getline(file,fileLine);
-            if (!fileLine.empty() && !fileLine.compare(fingerprint)) {
-                isValid = true;
-                break;
-            }
-        }
-    }
-    else {
-        LOG((CLOG_ERR "Fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
-    }
-
-    file.close();
-    return isValid;
-}
-
 ISocketMultiplexerJob*
 SecureClientSocket::serviceConnect(ISocketMultiplexerJob* job,
                 bool, bool write, bool error)
@@ -737,6 +467,7 @@ SecureClientSocket::serviceConnect(ISocketMultiplexerJob* job,
     Lock lock(&getMutex());
 
     int status = 0;
+
 #ifdef SYSAPI_WIN32
     status = secureConnect(static_cast<int>(getSocket()->m_socket));
 #elif SYSAPI_UNIX
@@ -745,7 +476,7 @@ SecureClientSocket::serviceConnect(ISocketMultiplexerJob* job,
 
     // If status < 0, error happened
     if (status < 0) {
-        return NULL;
+        return nullptr;
     }
 
     // If status > 0, success
@@ -772,9 +503,9 @@ SecureClientSocket::serviceAccept(ISocketMultiplexerJob* job,
 #elif SYSAPI_UNIX
     status = secureAccept(getSocket()->m_fd);
 #endif
-        // If status < 0, error happened
+     // If status < 0, error happened
     if (status < 0) {
-        return NULL;
+        return nullptr;
     }
 
     // If status > 0, success
@@ -789,112 +520,13 @@ SecureClientSocket::serviceAccept(ISocketMultiplexerJob* job,
             getSocket(), isReadable(), isWritable());
 }
 
-static void
-showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
-    char msg[kMsgSize];
-    int i = 0;
-    for ( ; i < sk_SSL_CIPHER_num(stack) ; i++) {
-        const SSL_CIPHER * cipher = sk_SSL_CIPHER_value(stack,i);
-
-        SSL_CIPHER_description(cipher, msg, kMsgSize);
-
-        // Why does SSL put a newline in the description?
-        int pos = (int)strnlen(msg, kMsgSize) - 1;
-        if (msg[pos] == '\n') {
-            msg[pos] = '\0';
-        }
-
-        LOG((CLOG_DEBUG1 "%s",msg));
-    }
-}
-
 void
-SecureClientSocket::showSecureCipherInfo()
+SecureClientSocket::handleTCPConnected(const Event&, void*)
 {
-    STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
-
-    if (sStack == NULL) {
-        LOG((CLOG_DEBUG1 "local cipher list not available"));
+    if (getSocket()) {
+        secureConnect();
     }
     else {
-        LOG((CLOG_DEBUG1 "available local ciphers:"));
-        showCipherStackDesc(sStack);
-    }
-
-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
-	// m_ssl->m_ssl->session->ciphers is not forward compatable,
-	// In future release of OpenSSL, it's not visible,
-	// however, LibreSSL still uses this.
-	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
-#else
-	// Use SSL_get_client_ciphers() for newer versions of OpenSSL.
-	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
-#endif
-    if (cStack == NULL) {
-        LOG((CLOG_DEBUG1 "remote cipher list not available"));
-    }
-    else {
-        LOG((CLOG_DEBUG1 "available remote ciphers:"));
-        showCipherStackDesc(cStack);
-    }
-    return;
-}
-
-void
-SecureClientSocket::showSecureLibInfo()
-{
-    LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
-    LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
-    LOG((CLOG_DEBUG1 "openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON)));
-    LOG((CLOG_DEBUG1 "openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM)));
-    LOG((CLOG_DEBUG1 "openssl dir: %s", SSLeay_version(SSLEAY_DIR)));
-    return;
-}
-
-void
-SecureClientSocket::showSecureConnectInfo()
-{
-    const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
-
-    if (cipher != NULL) {
-        char msg[kMsgSize];
-        SSL_CIPHER_description(cipher, msg, kMsgSize);
-        LOG((CLOG_DEBUG "openssl cipher: %s", msg));
-
-        //For some reason SSL_get_version is return mismatching information to SSL_CIPHER_description
-        // so grab the version out the description instead, This seems like a hacky way of doing it.
-        // But when the cipher says "TLSv1.2" but the get_version returns "TLSv1/SSLv3" we it doesn't look right
-        // For some reason macOS hates regex's so stringstream is used
-
-        std::istringstream iss(msg);
-
-        //Take the stream input and splits it into a vetor directly
-        const std::vector<std::string> parts{std::istream_iterator<std::string>{iss},
-                                       std::istream_iterator<std::string>{}};
-        if (parts.size() > 2)
-        {
-            //log the section containing the protocol version
-            LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
-        }
-        else
-        {
-            //log the error in spliting then display the whole description rather then nothing
-            LOG((CLOG_ERR "could not split cipher for protocol"));
-            LOG((CLOG_INFO "network encryption protocol: %s", msg));
-        }
-    }
-    else {
-        LOG((CLOG_ERR "could not get secure socket cipher"));
-    }
-    return;
-}
-
-void
-SecureClientSocket::handleTCPConnected(const Event& event, void*)
-{
-    if (getSocket() == nullptr) {
         LOG((CLOG_DEBUG "disregarding stale connect event"));
-        return;
     }
-    secureConnect();
 }
