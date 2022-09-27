@@ -71,7 +71,7 @@ SecureServerSocket::accept()
     return dynamic_cast<IDataSocket*>(socket);
 }
 
-const std::string
+std::string
 SecureServerSocket::getCertifcateFileName() const
 {
     //if the tls cert option is set use that for the certificate file

@@ -23,8 +23,8 @@ public:
         SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
 
     // IListenSocket overrides
-    virtual IDataSocket* accept();
+    IDataSocket* accept() override;
 
 private:
-    const std::string getCertifcateFileName() const;
+    std::string getCertifcateFileName() const;
 };

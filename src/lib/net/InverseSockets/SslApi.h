@@ -25,7 +25,10 @@ class SslApi
 {
 public:
     explicit SslApi(bool isServer = false);
+    SslApi(SslApi const &) =delete;
+    SslApi& operator=(SslApi const &) =delete;
     ~SslApi();
+
     int read(char* buffer, int size);
     int write(const char* buffer, int size);
     int accept(int socket);
@@ -40,10 +43,9 @@ public:
     int getErrorCode(int status) const;
 
 private:
-    void freeSSL();
     void createSSL();
     void formatFingerprint(std::string& fingerprint) const;
-    bool isCertificateExists(const std::string& filename);
+    bool isCertificateExists(const std::string& filename) const;
     void createContext(bool isServer = false);
 
     SSL*        m_ssl = nullptr;

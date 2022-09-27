@@ -26,7 +26,16 @@ SslApi::SslApi(bool isServer)
 
 SslApi::~SslApi()
 {
-    freeSSL();
+    if (m_ssl) {
+        SSL_shutdown(m_ssl);
+        SSL_free(m_ssl);
+        m_ssl = nullptr;
+    }
+
+    if (m_context) {
+        SSL_CTX_free(m_context);
+        m_context = nullptr;
+    }
 }
 
 int SslApi::read(char* buffer, int size)
@@ -84,20 +93,6 @@ void SslApi::createSSL()
     }
 }
 
-void SslApi::freeSSL()
-{
-    if (m_ssl) {
-        SSL_shutdown(m_ssl);
-        SSL_free(m_ssl);
-        m_ssl = nullptr;
-    }
-
-    if (m_context) {
-        SSL_CTX_free(m_context);
-        m_context = nullptr;
-    }
-}
-
 bool SslApi::loadCertificate(const std::string& filename)
 {
     bool result = false;
@@ -133,7 +128,7 @@ bool SslApi::showCertificate() const
         // get the server's certificate
         AutoX509 cert(SSL_get_peer_certificate(m_ssl), &X509_free);
         if (cert) {
-            auto line = X509_NAME_oneline(X509_get_subject_name(cert.get()), 0, 0);
+            auto line = X509_NAME_oneline(X509_get_subject_name(cert.get()), nullptr, 0);
             LOG((CLOG_INFO "server tls certificate info: %s", line));
             OPENSSL_free(line);
             result = true;
@@ -240,7 +235,7 @@ void SslApi::formatFingerprint(std::string &fingerprint) const
     }
 }
 
-bool SslApi::isCertificateExists(const std::string &filename)
+bool SslApi::isCertificateExists(const std::string &filename) const
 {
     bool result = (!filename.empty());
 

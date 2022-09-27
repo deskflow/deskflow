@@ -41,8 +41,7 @@ constexpr float s_retryDelay = 0.01f;
 
 SecureClientSocket::SecureClientSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
-    InverseClientSocket(events, socketMultiplexer, family),
-    m_ssl(false)
+    InverseClientSocket(events, socketMultiplexer, family)
 {
 }
 
@@ -175,7 +174,6 @@ SecureClientSocket::doWrite()
         status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
         if (status > 0) {
             s_retry = false;
-            bufferSize = 0;
         }
         else if (status < 0) {
             return InverseClientSocket::EJobResult::kBreak;
@@ -248,13 +246,13 @@ SecureClientSocket::secureWrite(const void* buffer, int size, int& wrote)
 }
 
 bool
-SecureClientSocket::isSecureReady()
+SecureClientSocket::isSecureReady() const
 {
     return m_secureReady;
 }
 
 bool
-SecureClientSocket::loadCertificates(String& filename)
+SecureClientSocket::loadCertificates(const std::string& filename)
 {
     return m_ssl.loadCertificate(filename);
 }
@@ -391,7 +389,7 @@ SecureClientSocket::checkResult(int status, int& retry)
                 try {
                     ARCH->throwErrorOnSocket(getSocket());
                 }
-                catch (XArchNetwork& e) {
+                catch (const XArchNetwork& e) {
                     LOG((CLOG_ERR "%s", e.what()));
                 }
             }
@@ -427,8 +425,7 @@ SecureClientSocket::disconnect()
 }
 
 ISocketMultiplexerJob*
-SecureClientSocket::serviceConnect(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
+SecureClientSocket::serviceConnect(ISocketMultiplexerJob*, bool, bool, bool)
 {
     Lock lock(&getMutex());
 
@@ -458,8 +455,7 @@ SecureClientSocket::serviceConnect(ISocketMultiplexerJob* job,
 }
 
 ISocketMultiplexerJob*
-SecureClientSocket::serviceAccept(ISocketMultiplexerJob* job,
-                bool, bool write, bool error)
+SecureClientSocket::serviceAccept(ISocketMultiplexerJob*, bool, bool, bool)
 {
     Lock lock(&getMutex());
 

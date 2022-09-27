@@ -34,18 +34,17 @@ public:
     // IDataSocket overrides
     void        connect(const NetworkAddress&) override;
 
-    ISocketMultiplexerJob*
-                        newJob();
+    ISocketMultiplexerJob* newJob();
     bool                isFatal() const { return m_fatal; }
     void                isFatal(bool b) { m_fatal = b; }
-    bool                isSecureReady();
+    bool                isSecureReady() const;
     void                secureConnect();
     void                secureAccept();
     int                 secureRead(void* buffer, int size, int& read);
     int                 secureWrite(const void* buffer, int size, int& wrote);
-    EJobResult          doRead();
-    EJobResult          doWrite();
-    bool                loadCertificates(String& CertFile);
+    EJobResult          doRead() override;
+    EJobResult          doWrite() override;
+    bool                loadCertificates(const std::string& CertFile);
 
 private:
     // SSL
@@ -65,8 +64,7 @@ private:
 
     void                handleTCPConnected(const Event&, void*);
 
-private:
-    synergy::ssl::SslApi  m_ssl;
+    synergy::ssl::SslApi  m_ssl{false};
     bool                  m_secureReady = false;
     bool                  m_fatal = false;
 };
