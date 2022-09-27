@@ -15,31 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <net/TCPSocket.h>
 #include "SslApi.h"
+#include "InverseClientSocket.h"
 
 //! Secure socket
 /*!
 A secure socket using SSL.
 */
-class SecureClientSocket : public TCPSocket {
+class SecureClientSocket : public InverseClientSocket {
 public:
     SecureClientSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
-    SecureClientSocket(IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        ArchSocket socket);
     SecureClientSocket(SecureClientSocket const &) =delete;
     SecureClientSocket(SecureClientSocket &&) =delete;
-    ~SecureClientSocket();
 
     SecureClientSocket& operator=(SecureClientSocket const &) =delete;
     SecureClientSocket& operator=(SecureClientSocket &&) =delete;
 
-    // ISocket overrides
-    void                close() override;
-
     // IDataSocket overrides
-    virtual void        connect(const NetworkAddress&);
+    void        connect(const NetworkAddress&) override;
 
     ISocketMultiplexerJob*
                         newJob();
@@ -57,7 +50,6 @@ public:
 private:
     // SSL
     void                initContext(bool server);
-    void                freeSSL();
     int                 secureAccept(int s);
     int                 secureConnect(int s);
     void                checkResult(int n, int& retry);
@@ -74,7 +66,7 @@ private:
     void                handleTCPConnected(const Event&, void*);
 
 private:
-    synergy::ssl::SslApi* m_ssl = nullptr;
+    synergy::ssl::SslApi  m_ssl;
     bool                  m_secureReady = false;
     bool                  m_fatal = false;
 };

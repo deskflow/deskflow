@@ -41,29 +41,9 @@ constexpr float s_retryDelay = 0.01f;
 
 SecureClientSocket::SecureClientSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family) :
-    TCPSocket(events, socketMultiplexer, family)
+    InverseClientSocket(events, socketMultiplexer, family),
+    m_ssl(false)
 {
-    m_ssl = new synergy::ssl::SslApi(false);
-}
-
-SecureClientSocket::SecureClientSocket(IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer,
-        ArchSocket socket) :
-    TCPSocket(events, socketMultiplexer, socket)
-{
-    m_ssl = new synergy::ssl::SslApi(false);
-}
-
-SecureClientSocket::~SecureClientSocket()
-{
-    freeSSL();
-}
-
-void
-SecureClientSocket::close()
-{
-    freeSSL();
-    TCPSocket::close();
 }
 
 void
@@ -74,7 +54,7 @@ SecureClientSocket::connect(const NetworkAddress& addr)
                 new TMethodEventJob<SecureClientSocket>(this,
                         &SecureClientSocket::handleTCPConnected));
 
-    TCPSocket::connect(addr);
+    InverseClientSocket::connect(addr);
 }
 
 ISocketMultiplexerJob*
@@ -86,7 +66,7 @@ SecureClientSocket::newJob()
         return nullptr;
     }
 
-    return TCPSocket::newJob();
+    return InverseClientSocket::newJob(getSocket());
 }
 
 void
@@ -105,7 +85,7 @@ SecureClientSocket::secureAccept()
                     getSocket(), isReadable(), isWritable()));
 }
 
-TCPSocket::EJobResult
+InverseClientSocket::EJobResult
 SecureClientSocket::doRead()
 {
     UInt8 buffer[4096] = {0};
@@ -116,14 +96,14 @@ SecureClientSocket::doRead()
         status = secureRead(buffer, sizeof(buffer), bytesRead);
 
         if (status < 0) {
-            return kBreak;
+            return InverseClientSocket::EJobResult::kBreak;
         }
         else if (status == 0) {
-            return kNew;
+            return InverseClientSocket::EJobResult::kNew;
         }
     }
     else {
-        return kRetry;
+        return InverseClientSocket::EJobResult::kRetry;
     }
 
     if (bytesRead > 0) {
@@ -135,7 +115,7 @@ SecureClientSocket::doRead()
 
             status = secureRead(buffer, sizeof(buffer), bytesRead);
             if (status < 0) {
-                return kBreak;
+                return InverseClientSocket::EJobResult::kBreak;
             }
         } while (bytesRead > 0 || status > 0);
 
@@ -154,13 +134,13 @@ SecureClientSocket::doRead()
             m_connected = false;
         }
         m_readable = false;
-        return kNew;
+        return InverseClientSocket::EJobResult::kNew;
     }
 
-    return kRetry;
+    return InverseClientSocket::EJobResult::kRetry;
 }
 
-TCPSocket::EJobResult
+InverseClientSocket::EJobResult
 SecureClientSocket::doWrite()
 {
     static bool s_retry = false;
@@ -188,7 +168,7 @@ SecureClientSocket::doWrite()
     }
 
     if (bufferSize == 0) {
-        return kRetry;
+        return InverseClientSocket::EJobResult::kRetry;
     }
 
     if (isSecureReady()) {
@@ -198,31 +178,31 @@ SecureClientSocket::doWrite()
             bufferSize = 0;
         }
         else if (status < 0) {
-            return kBreak;
+            return InverseClientSocket::EJobResult::kBreak;
         }
         else if (status == 0) {
             s_retry = true;
             s_retrySize = bufferSize;
-            return kNew;
+            return InverseClientSocket::EJobResult::kNew;
         }
     }
     else {
-        return kRetry;
+        return InverseClientSocket::EJobResult::kRetry;
     }
 
     if (bytesWrote > 0) {
         discardWrittenData(bytesWrote);
-        return kNew;
+        return InverseClientSocket::EJobResult::kNew;
     }
 
-    return kRetry;
+    return InverseClientSocket::EJobResult::kRetry;
 }
 
 int
 SecureClientSocket::secureRead(void* buffer, int size, int& read)
 {
     LOG((CLOG_DEBUG2 "reading secure socket"));
-    read = m_ssl->read(static_cast<char*>(buffer), size);
+    read = m_ssl.read(static_cast<char*>(buffer), size);
 
     static int retry = 0;
 
@@ -246,7 +226,7 @@ int
 SecureClientSocket::secureWrite(const void* buffer, int size, int& wrote)
 {
     LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
-    wrote = m_ssl->write(static_cast<const char*>(buffer), size);
+    wrote = m_ssl.write(static_cast<const char*>(buffer), size);
 
     static int retry = 0;
 
@@ -276,21 +256,7 @@ SecureClientSocket::isSecureReady()
 bool
 SecureClientSocket::loadCertificates(String& filename)
 {
-    return m_ssl->loadCertificate(filename);
-}
-
-void
-SecureClientSocket::freeSSL()
-{
-    isFatal(true);
-    // take socket from multiplexer ASAP otherwise the race condition
-    // could cause events to get called on a dead object. TCPSocket
-    // will do this, too, but the double-call is harmless
-    setJob(nullptr);
-    if (m_ssl) {
-        delete m_ssl;
-        m_ssl = nullptr;
-    }
+    return m_ssl.loadCertificate(filename);
 }
 
 int
@@ -298,7 +264,7 @@ SecureClientSocket::secureAccept(int socket)
 {
     LOG((CLOG_DEBUG2 "accepting secure socket"));
     static int retry = 0;
-    checkResult(m_ssl->accept(socket), retry);
+    checkResult(m_ssl.accept(socket), retry);
 
     if (isFatal()) {
         // tell user and sleep so the socket isn't hammered.
@@ -314,7 +280,7 @@ SecureClientSocket::secureAccept(int socket)
     if (retry == 0) {
         m_secureReady = true;
         LOG((CLOG_INFO "accepted secure socket"));
-        m_ssl->logSecureInfo();
+        m_ssl.logSecureInfo();
         return 1;
     }
 
@@ -336,7 +302,7 @@ SecureClientSocket::secureConnect(int socket)
 {
     LOG((CLOG_DEBUG2 "connecting secure socket"));
     static int retry = 0;
-    checkResult(m_ssl->connect(socket), retry);
+    checkResult(m_ssl.connect(socket), retry);
 
     if (isFatal()) {
         LOG((CLOG_ERR "failed to connect secure socket"));
@@ -356,12 +322,12 @@ SecureClientSocket::secureConnect(int socket)
     // No error, set ready, process and return ok
     m_secureReady = true;
 
-    auto fingerprint = m_ssl->getFingerprint();
+    auto fingerprint = m_ssl.getFingerprint();
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
-    if (m_ssl->isTrustedFingerprint(fingerprint)) {
+    if (m_ssl.isTrustedFingerprint(fingerprint)) {
         LOG((CLOG_INFO "connected to secure socket"));
-        m_ssl->logSecureInfo();
+        m_ssl.logSecureInfo();
         return 1;
     }
     else {
@@ -376,7 +342,7 @@ SecureClientSocket::checkResult(int status, int& retry)
 {
     // ssl errors are a little quirky. the "want" errors are normal and
     // should result in a retry.
-    int errorCode = m_ssl->getErrorCode(status);
+    int errorCode = m_ssl.getErrorCode(status);
 
     switch (errorCode) {
     case SSL_ERROR_NONE:
