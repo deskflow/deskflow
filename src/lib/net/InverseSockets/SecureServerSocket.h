@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <net/TCPListenSocket.h>
+#include "InverseServerSocket.h"
 
-class SecureServerSocket : public TCPListenSocket {
+class SecureServerSocket : public InverseServerSocket {
 public:
     SecureServerSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);

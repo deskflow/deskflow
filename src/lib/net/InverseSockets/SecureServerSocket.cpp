@@ -26,12 +26,11 @@
 //
 // SecureServerSocket
 //
-
 SecureServerSocket::SecureServerSocket(
         IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
         IArchNetwork::EAddressFamily family) :
-        TCPListenSocket(events, socketMultiplexer, family)
+        InverseServerSocket(events, socketMultiplexer, family)
 {
 }
 
@@ -41,7 +40,7 @@ SecureServerSocket::accept()
     SecureSocket* socket = nullptr;
 
     try {
-        socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr));
+        socket = new SecureSocket(m_events, m_socketMultiplexer, m_socket.getRawSocket());
         socket->initSsl(true);
         setListeningJob();
 
@@ -79,12 +78,8 @@ SecureServerSocket::getCertifcateFileName() const
     auto certificateFilename = ArgParser::argsBase().m_tlsCertFile;
 
     if (certificateFilename.empty()) {
-        auto dir = "SSL";
-        auto filename = "Synergy.pem";
-        auto profileDir = ARCH->getProfileDirectory().c_str();
-
         //default location of the TLS cert file in users dir
-        certificateFilename = synergy::string::sprintf("%s/%s/%s", profileDir, dir, filename);
+        certificateFilename = synergy::string::sprintf("%s/SSL/Synergy.pem", ARCH->getProfileDirectory().c_str());
     }
 
     return certificateFilename;
