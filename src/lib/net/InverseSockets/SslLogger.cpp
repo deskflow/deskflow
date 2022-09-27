@@ -16,6 +16,7 @@
  */
 #include "SslLogger.h"
 #include <sstream>
+#include <iterator>
 
 #include <base/Log.h>
 #include <openssl/err.h>
