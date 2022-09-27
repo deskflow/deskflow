@@ -21,6 +21,60 @@
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
+namespace {
+
+void showCipherStackDesc(STACK_OF(SSL_CIPHER)* stack)
+{
+    char msg[128] = {0};
+    for (int i = 0; i < sk_SSL_CIPHER_num(stack); ++i) {
+        auto cipher = sk_SSL_CIPHER_value(stack, i);
+        SSL_CIPHER_description(cipher, msg, sizeof(msg));
+
+        // SSL puts a newline in the description
+        auto pos = strnlen(msg, sizeof(msg)) - 1;
+        if (msg[pos] == '\n') {
+            msg[pos] = '\0';
+        }
+
+        LOG((CLOG_DEBUG1 "%s", msg));
+    }
+}
+
+void logLocalSecureCipherInfo(const SSL* ssl)
+{
+    auto sStack = SSL_get_ciphers(ssl);
+
+    if (sStack) {
+        LOG((CLOG_DEBUG1 "available local ciphers:"));
+        showCipherStackDesc(sStack);
+    }
+    else {
+         LOG((CLOG_DEBUG1 "local cipher list not available"));
+    }
+}
+
+void logRemoteSecureCipherInfo(const SSL* ssl)
+{
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+    // ssl->session->ciphers is not forward compatable,
+    // In future release of OpenSSL, it's not visible,
+    // however, LibreSSL still uses this.
+    auto cStack = ssl->session->ciphers;
+#else
+    // Use SSL_get_client_ciphers() for newer versions of OpenSSL.
+    auto cStack = SSL_get_client_ciphers(ssl);
+#endif
+    if (cStack) {
+        LOG((CLOG_DEBUG1 "available remote ciphers:"));
+        showCipherStackDesc(cStack);
+    }
+    else {
+        LOG((CLOG_DEBUG1 "remote cipher list not available"));
+    }
+}
+
+}// namespace
+
 void SslLogger::logSecureLibInfo()
 {
     if (CLOG->getFilter() >= kDEBUG) {
@@ -32,60 +86,18 @@ void SslLogger::logSecureLibInfo()
     }
 }
 
-static void
-showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
-    char msg[128] = {0};
-    for (int i = 0; i < sk_SSL_CIPHER_num(stack) ; i++) {
-        const SSL_CIPHER * cipher = sk_SSL_CIPHER_value(stack,i);
-
-        SSL_CIPHER_description(cipher, msg, sizeof(msg));
-
-        // Why does SSL put a newline in the description?
-        int pos = (int)strnlen(msg, sizeof(msg)) - 1;
-        if (msg[pos] == '\n') {
-            msg[pos] = '\0';
-        }
-
-        LOG((CLOG_DEBUG1 "%s",msg));
-    }
-}
-
 void SslLogger::logSecureCipherInfo(const SSL* ssl)
 {
     if (ssl && CLOG->getFilter() >= kDEBUG1) {
-        STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(ssl);
-
-        if (sStack) {
-            LOG((CLOG_DEBUG1 "available local ciphers:"));
-            showCipherStackDesc(sStack);
-        }
-        else {
-             LOG((CLOG_DEBUG1 "local cipher list not available"));
-        }
-
-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
-	// m_ssl->m_ssl->session->ciphers is not forward compatable,
-	// In future release of OpenSSL, it's not visible,
-	// however, LibreSSL still uses this.
-	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
-#else
-	// Use SSL_get_client_ciphers() for newer versions of OpenSSL.
-	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(ssl);
-#endif
-        if (cStack) {
-            LOG((CLOG_DEBUG1 "available remote ciphers:"));
-            showCipherStackDesc(cStack);
-        }
-        else {
-            LOG((CLOG_DEBUG1 "remote cipher list not available"));
-        }
+        logLocalSecureCipherInfo(ssl);
+        logRemoteSecureCipherInfo(ssl);
     }
 }
 
 void SslLogger::logSecureConnectInfo(const SSL* ssl)
 {
     if (ssl) {
-        const SSL_CIPHER* cipher = SSL_get_current_cipher(ssl);
+        auto cipher = SSL_get_current_cipher(ssl);
 
         if (cipher) {
             char msg[128] = {0};

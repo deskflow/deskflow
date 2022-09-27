@@ -16,7 +16,7 @@
  */
 #pragma once
 #include <string>
-#include <openssl/types.h>
+#include <openssl/ssl.h>
 
 class SslLogger
 {
