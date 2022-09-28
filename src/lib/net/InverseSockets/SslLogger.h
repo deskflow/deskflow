@@ -25,4 +25,5 @@ public:
     static void logSecureCipherInfo(const SSL* ssl);
     static void logSecureConnectInfo(const SSL* ssl);
     static void logError(const std::string& reason = "");
+    static void logErrorByCode(int code, int retry);
 };

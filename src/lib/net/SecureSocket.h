@@ -72,8 +72,6 @@ private:
     int                 secureConnect(int s);
     bool                showCertificate();
     void                checkResult(int n, int& retry);
-    void                showError(const char* reason = NULL);
-    String              getError();
     void                disconnect();
     void                formatFingerprint(String& fingerprint,
                                             bool hex = true,
@@ -87,10 +85,6 @@ private:
     ISocketMultiplexerJob*
                         serviceAccept(ISocketMultiplexerJob*,
                             bool, bool, bool);
-
-    void                showSecureConnectInfo();
-    void                showSecureLibInfo();
-    void                showSecureCipherInfo();
 
     void                handleTCPConnected(const Event& event, void*);
 

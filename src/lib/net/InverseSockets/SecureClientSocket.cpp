@@ -18,6 +18,7 @@
 #include "SecureClientSocket.h"
 #include "SslLogger.h"
 
+#include <set>
 #include <sstream>
 #include <fstream>
 
@@ -67,6 +68,7 @@ SecureClientSocket::newJob()
 
     return InverseClientSocket::newJob(getSocket());
 }
+
 
 void
 SecureClientSocket::secureConnect()
@@ -335,82 +337,75 @@ SecureClientSocket::secureConnect(int socket)
     }
 }
 
+void SecureClientSocket::setFatal(int code)
+{
+    const std::set<int> nonFatal {
+        SSL_ERROR_NONE,
+        SSL_ERROR_WANT_READ,
+        SSL_ERROR_WANT_WRITE,
+        SSL_ERROR_WANT_CONNECT,
+        SSL_ERROR_WANT_ACCEPT
+    };
+    m_fatal = nonFatal.find(code) == nonFatal.end();
+}
+
+int SecureClientSocket::getRetry(int errorCode, int retry)
+{
+    const std::set<int> retryCodes {
+        SSL_ERROR_WANT_READ,
+        SSL_ERROR_WANT_WRITE,
+        SSL_ERROR_WANT_CONNECT,
+        SSL_ERROR_WANT_ACCEPT
+    };
+
+    if (errorCode == SSL_ERROR_NONE || isFatal()) {
+        retry = 0;
+    }
+    else if (retryCodes.find(errorCode) != retryCodes.end()) {
+        ++retry;
+    }
+
+    return retry;
+}
+
 void
 SecureClientSocket::checkResult(int status, int& retry)
 {
     // ssl errors are a little quirky. the "want" errors are normal and
     // should result in a retry.
     int errorCode = m_ssl.getErrorCode(status);
+    setFatal(errorCode);
+    retry = getRetry(errorCode, retry);
 
     switch (errorCode) {
-    case SSL_ERROR_NONE:
-        retry = 0;
-        // operation completed
-        break;
+        case SSL_ERROR_WANT_WRITE:
+            // Need to make sure the socket is known to be writable so the impending
+            // select action actually triggers on a write. This isn't necessary for
+            // m_readable because the socket logic is always readable
+            m_writable = true;
+            break;
 
-    case SSL_ERROR_ZERO_RETURN:
-        // connection closed
-        isFatal(true);
-        LOG((CLOG_DEBUG "tls connection closed"));
-        break;
-
-    case SSL_ERROR_WANT_READ:
-        retry++;
-        LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", errorCode, retry));
-        break;
-
-    case SSL_ERROR_WANT_WRITE:
-        // Need to make sure the socket is known to be writable so the impending
-        // select action actually triggers on a write. This isn't necessary for
-        // m_readable because the socket logic is always readable
-        m_writable = true;
-        retry++;
-        LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
-        break;
-
-    case SSL_ERROR_WANT_CONNECT:
-        retry++;
-        LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
-        break;
-
-    case SSL_ERROR_WANT_ACCEPT:
-        retry++;
-        LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", errorCode, retry));
-        break;
-
-    case SSL_ERROR_SYSCALL:
-        LOG((CLOG_ERR "tls error occurred (system call failure)"));
-        if (ERR_peek_error() == 0) {
-            if (status == 0) {
-                LOG((CLOG_ERR "eof violates tls protocol"));
-            }
-            else if (status == -1) {
-                // underlying socket I/O reproted an error
-                try {
-                    ARCH->throwErrorOnSocket(getSocket());
+        case SSL_ERROR_SYSCALL:
+            if (ERR_peek_error() == 0) {
+                if (status == 0) {
+                    LOG((CLOG_ERR "eof violates tls protocol"));
                 }
-                catch (const XArchNetwork& e) {
-                    LOG((CLOG_ERR "%s", e.what()));
+                else if (status == -1) {
+                    // underlying socket I/O reproted an error
+                    try {
+                        ARCH->throwErrorOnSocket(getSocket());
+                    }
+                    catch (const XArchNetwork& e) {
+                        LOG((CLOG_ERR "%s", e.what()));
+                    }
                 }
             }
-        }
-
-        isFatal(true);
-        break;
-
-    case SSL_ERROR_SSL:
-        LOG((CLOG_ERR "tls error occurred (generic failure)"));
-        isFatal(true);
-        break;
-
-    default:
-        LOG((CLOG_ERR "tls error occurred (unknown failure)"));
-        isFatal(true);
-        break;
+            break;
     }
 
+    SslLogger::logErrorByCode(errorCode, retry);
+
     if (isFatal()) {
-        retry = 0;
         SslLogger::logError();
         disconnect();
     }

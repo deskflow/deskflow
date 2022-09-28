@@ -145,3 +145,43 @@ void SslLogger::logError(const std::string &reason)
         LOG((CLOG_ERR "openssl error: %s", error));
     }
 }
+
+void SslLogger::logErrorByCode(int code, int retry)
+{
+    switch (code) {
+        case SSL_ERROR_NONE:
+            break;
+
+        case SSL_ERROR_ZERO_RETURN:
+            LOG((CLOG_DEBUG "tls connection closed"));
+            break;
+
+        case SSL_ERROR_WANT_READ:
+            LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", code, retry));
+            break;
+
+        case SSL_ERROR_WANT_WRITE:
+            LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", code, retry));
+            break;
+
+        case SSL_ERROR_WANT_CONNECT:
+            LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", code, retry));
+            break;
+
+        case SSL_ERROR_WANT_ACCEPT:
+            LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", code, retry));
+            break;
+
+        case SSL_ERROR_SYSCALL:
+            LOG((CLOG_ERR "tls error occurred (system call failure)"));
+            break;
+
+        case SSL_ERROR_SSL:
+            LOG((CLOG_ERR "tls error occurred (generic failure)"));
+            break;
+
+        default:
+            LOG((CLOG_ERR "tls error occurred (unknown failure)"));
+            break;
+    }
+}
