@@ -70,7 +70,7 @@ private:
     void                freeSSL();
     int                 secureAccept(int s);
     int                 secureConnect(int s);
-    bool                showCertificate();
+    bool                showCertificate() const;
     void                checkResult(int n, int& retry);
     void                disconnect();
     void                formatFingerprint(String& fingerprint,

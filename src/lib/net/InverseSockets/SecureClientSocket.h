@@ -37,7 +37,7 @@ public:
     ISocketMultiplexerJob* newJob();
     bool                isFatal() const { return m_fatal; }
     void                setFatal(int code);
-    int                 getRetry(int errorCode, int retry);
+    int                 getRetry(int errorCode, int retry) const;
     bool                isSecureReady() const;
     void                secureConnect();
     void                secureAccept();

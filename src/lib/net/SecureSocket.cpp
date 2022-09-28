@@ -514,7 +514,7 @@ SecureSocket::secureConnect(int socket)
 }
 
 bool
-SecureSocket::showCertificate()
+SecureSocket::showCertificate() const
 {
     X509* cert;
     char* line;

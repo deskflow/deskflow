@@ -349,7 +349,7 @@ void SecureClientSocket::setFatal(int code)
     m_fatal = nonFatal.find(code) == nonFatal.end();
 }
 
-int SecureClientSocket::getRetry(int errorCode, int retry)
+int SecureClientSocket::getRetry(int errorCode, int retry) const
 {
     const std::set<int> retryCodes {
         SSL_ERROR_WANT_READ,
@@ -400,6 +400,8 @@ SecureClientSocket::checkResult(int status, int& retry)
                     }
                 }
             }
+            break;
+        default:
             break;
     }
 
