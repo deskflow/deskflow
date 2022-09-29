@@ -2,7 +2,7 @@
 ======
 
 Enhancements:
-- #7222 Ability to initiate connection from server
+- #7222 Ability to initiate non-TLS connection from server
 - #7225 Ability to initiate TLS connection from server
 
 1.14.5
