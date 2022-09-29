@@ -87,7 +87,7 @@ InverseServerSocket::accept()
         }
         return nullptr;
     }
-    catch (const std::exception &ex) {
+    catch (const std::exception&) {
         if (socket != nullptr) {
             delete socket;
             setListeningJob();

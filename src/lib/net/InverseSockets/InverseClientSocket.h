@@ -97,6 +97,7 @@ private:
                         serviceConnected(ISocketMultiplexerJob*,
                             bool, bool, bool);
 
+protected:
     bool                m_readable = false;
     bool                m_writable = false;
     bool                m_connected = false;

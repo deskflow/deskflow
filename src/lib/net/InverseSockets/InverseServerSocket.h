@@ -53,7 +53,7 @@ public:
                         serviceListening(ISocketMultiplexerJob*,
                             bool, bool, bool);
 
-private:
+protected:
     AutoArchSocket      m_socket;
     Mutex               m_mutex;
     IEventQueue*        m_events;
