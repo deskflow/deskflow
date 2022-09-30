@@ -658,6 +658,11 @@ String Config::getClientAddress() const
 	return m_clientAddress;
 }
 
+bool Config::isClientMode() const
+{
+	return (!m_clientAddress.empty());
+}
+
 void
 Config::readSection(ConfigReadContext& s)
 {
