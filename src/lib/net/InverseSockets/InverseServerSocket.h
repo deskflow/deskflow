@@ -58,5 +58,7 @@ protected:
     Mutex               m_mutex;
     IEventQueue*        m_events;
     SocketMultiplexer*  m_socketMultiplexer;
+
+private:
     NetworkAddress      m_address;
 };
