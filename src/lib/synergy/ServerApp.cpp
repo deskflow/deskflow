@@ -682,13 +682,12 @@ ServerApp::handleScreenSwitched(const Event& e, void*)
 ISocketFactory* ServerApp::getSocketFactory() const
 {
     ISocketFactory* socketFactory = nullptr;
-    const auto clientAddress = args().m_config->getClientAddress();
 
-    if (clientAddress.empty()) {
-        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
+    if (args().m_config->isClientMode()) {
+        socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
     }
     else {
-        socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
+        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
     }
 
     return socketFactory;
@@ -696,14 +695,14 @@ ISocketFactory* ServerApp::getSocketFactory() const
 
 NetworkAddress ServerApp::getAddress(const NetworkAddress& address) const
 {
-    const auto clientAddress = args().m_config->getClientAddress();
-    if (clientAddress.empty()) {
-        return address;
-    }
-    else {
+    if (args().m_config->isClientMode()) {
+        const auto clientAddress = args().m_config->getClientAddress();
         NetworkAddress addr(clientAddress.c_str(), kDefaultPort);
         addr.resolve();
         return addr;
+    }
+    else {
+        return address;
     }
 }
 

@@ -455,6 +455,13 @@ public:
      * Return client address a string.
      */
     String               getClientAddress() const;
+
+    //! Return true if server started in client mode
+    /*!
+     * In client mode the server initiates connection to client
+     */
+    bool                 isClientMode() const;
+
     //@}
 
 private:

@@ -51,7 +51,8 @@ void
 InverseServerSocket::bind(const NetworkAddress& addr)
 {
     Lock lock(&m_mutex);
-    m_socket.connectSocket(addr);
+    m_address = addr;
+    m_socket.connectSocket(m_address);
     setListeningJob(true);
 }
 
@@ -110,8 +111,8 @@ InverseServerSocket::serviceListening(ISocketMultiplexerJob* job,
                             bool, bool write, bool error)
 {
     if (error) {
-        close();
-        return nullptr;
+        m_socket.connectSocket(m_address);
+        return job;
     }
     if (write) {
         m_events->addEvent(Event(m_events->forIListenSocket().connecting(), this));
