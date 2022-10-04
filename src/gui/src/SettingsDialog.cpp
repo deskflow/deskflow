@@ -53,11 +53,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
 
-    const auto isClientMode = m_pMainWindow->synergyType() == MainWindow::synergyClient;
-    m_pCheckBoxLanguageSync->setVisible(isClientMode);
-    m_pCheckBoxScrollDirection->setVisible(isClientMode);
-    m_pCheckBoxClientHostMode->setVisible(isClientMode && appConfig().getInitiateConnectionFromServer());
-    m_pCheckBoxServerClientMode->setVisible(!isClientMode && appConfig().getInitiateConnectionFromServer());
+    m_pCheckBoxLanguageSync->setVisible(isClientMode());
+    m_pCheckBoxScrollDirection->setVisible(isClientMode());
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
@@ -198,6 +195,8 @@ void SettingsDialog::loadFromConfig() {
     m_pLabelInstallBonjour->hide();
 #endif
 
+    m_pCheckBoxClientHostMode->setVisible(isClientMode() && appConfig().getInitiateConnectionFromServer());
+    m_pCheckBoxServerClientMode->setVisible(!isClientMode() && appConfig().getInitiateConnectionFromServer());
 }
 
 void SettingsDialog::setupSeurity()
@@ -219,6 +218,11 @@ void SettingsDialog::setupSeurity()
         m_pPushButtonBrowseCert->hide();
         m_pPushButtonRegenCert->hide();
     }
+}
+
+bool SettingsDialog::isClientMode() const
+{
+    return (m_pMainWindow->synergyType() == MainWindow::synergyClient);
 }
 
 void SettingsDialog::allowAutoConfig()
