@@ -78,12 +78,14 @@ private:
     void                handleClientConnecting(const Event&, void*);
     void                handleClientAccepted(const Event&, void*);
     void                handleUnknownClient(const Event&, void*);
+    void                handleUnknownClientFailure(const Event&, void*);
     void                handleClientDisconnected(const Event&, void*);
 
     void                cleanupListenSocket();
     void                cleanupClientSockets();
     void                start();
     void                stop();
+    void                removeUnknownClient(ClientProxyUnknown* unknownClient);
 
 private:
     typedef std::set<ClientProxyUnknown*> NewClients;

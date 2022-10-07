@@ -321,6 +321,7 @@ SecureClientSocket::secureConnect(int socket)
     retry = 0;
     // No error, set ready, process and return ok
     m_secureReady = true;
+    sendEvent(m_events->forIDataSocket().secureConnected());
 
     auto fingerprint = m_ssl.getFingerprint();
     LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
