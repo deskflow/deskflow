@@ -263,6 +263,7 @@ private slots:
     void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 
     void on_m_pButtonConnect_clicked();
+    void on_m_pButtonConnectToClient_clicked();
 
 signals:
     void windowShown();

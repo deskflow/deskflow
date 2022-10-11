@@ -90,19 +90,19 @@ jobs:
     strategy:
       matrix:
         catalina-std:
-          image: macOS-10.15
+          image: macOS-latest
           platform: x86-64
           version: 10.14
           buildType: "standard"
           prefix: "synergy"
         catalina-ent:
-          image: macOS-10.15
+          image: macOS-latest
           platform: x86-64
           version: 10.14
           buildType: "enterprise"
           prefix: "synergy-enterprise"
         catalina-business:
-          image: macOS-10.15
+          image: macOS-latest
           platform: x86-64
           version: 10.14
           buildType: "business"

@@ -1432,6 +1432,7 @@ Server::handleClientDisconnected(const Event&, void* vclient)
 	removeOldClient(client);
 
 	delete client;
+	m_clientListener->restart();
 }
 
 void
@@ -2415,6 +2416,11 @@ bool
 Server::isReceivedFileSizeValid()
 {
 	return m_expectedFileSize == m_receivedFileData.size();
+}
+
+bool Server::isClientMode() const
+{
+	return m_args.m_config->isClientMode();
 }
 
 void

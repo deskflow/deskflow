@@ -22,7 +22,6 @@
 
 #include <QDialog>
 #include "VersionChecker.h"
-#include "CreditsLoader.h"
 #include "MainWindow.h"
 
 #include "ui_AboutDialogBase.h"
@@ -30,20 +29,18 @@
 class QWidget;
 class QString;
 
-class AboutDialog : public QDialog, public Ui::AboutDialogBase
-{
+class AboutDialog : public QDialog, public Ui::AboutDialogBase {
     Q_OBJECT
+public:
+    AboutDialog(MainWindow* parent, const AppConfig& config);
+    int exec() override;
+private:
+    VersionChecker m_versionChecker;
+    void updateLogo() const;
 
-    public:
-        AboutDialog(MainWindow* parent, const AppConfig& config);
-    public slots:
-        void updateEliteBackers(const QString& eliteBackers) const;
-
-    private:
-        CreditsLoader credits;
-        VersionChecker m_versionChecker;
-
-        void setupCreditsLoader();
+    virtual void resizeWindow();
+    virtual QString getCopyrights() const;
+    virtual QString getKeyContributors() const;
 };
 
 #endif

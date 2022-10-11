@@ -46,6 +46,12 @@ namespace lib {
              */
             ClientScrollDirection m_clientScrollDirection = ClientScrollDirection::SERVER;
 
+            /**
+             * @brief m_hostMode - activates host mode.
+             * Client starts a listener and waits for a server connection.
+             */
+            bool                  m_hostMode = false;
+
         };
     }
 }

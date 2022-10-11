@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2015-2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,22 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#pragma once
+#include "InverseServerSocket.h"
 
-#ifndef EDITIONTYPE_H
-#define EDITIONTYPE_H
+class SecureServerSocket : public InverseServerSocket {
+public:
+    SecureServerSocket(IEventQueue* events,
+        SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
 
-/* Do not reorder these! */
+    // IListenSocket overrides
+    IDataSocket* accept() override;
 
-enum Edition {
-    kBasic,
-    kPro,
-    Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered,
-    kBusiness,
-    kBasic_China,
-    kPro_China,
-    kLite,
-    kUltimate
+private:
+    std::string getCertifcateFileName() const;
 };
-
-#endif // EDITIONTYPE_H

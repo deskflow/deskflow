@@ -16,80 +16,77 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "AboutDialog.h"
-#include "CreditsLoader.h"
-
-#include <QtCore>
-#include <QtGui>
-
 #include "OSXHelpers.h"
+#include "AboutDialog.h"
 
 AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
-	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	Ui::AboutDialogBase(),
-	credits(*parent, config)
+    QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
+    Ui::AboutDialogBase()
 {
-	setupUi(this);
-	setupCreditsLoader();
+    setupUi(this);
 
-	QString aboutText(R"(<p>
-Keyboard and mouse sharing application. Cross platform and open source since 2001.<br /><br />
-Copyright © %%YEAR%% Symless Ltd.<br /><br />
-Synergy is released under the GNU General Public License (GPLv2).</p>
-<p style="font-size: 14px">Key contributors<br>
-<span style="font-size: 11px">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
-Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyle Bloom,
-Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
-</p>)");
-
-	m_versionChecker.setApp(parent->appPath(config.synergycName()));
-	QString version = m_versionChecker.getVersion();
+    m_versionChecker.setApp(parent->appPath(config.synergycName()));
+    QString version = m_versionChecker.getVersion();
 #ifdef SYNERGY_REVISION
     version +=  '-';
     version += SYNERGY_REVISION;
 #endif
-	m_pLabelSynergyVersion->setText(version);
+    m_pLabelSynergyVersion->setText(version);
 
-	QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
-	QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
-	m_pLabelBuildDate->setText(buildDate.toString(Qt::SystemLocaleLongDate));
+    QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
+    QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
+    m_pLabelBuildDate->setText(buildDate.toString(Qt::SystemLocaleLongDate));
 
-	//Sets the current build year into the copyright text
-	label_3->setText(aboutText.replace(QString("%%YEAR%%"), QString::number(buildDate.year())));
+    textEliteBackers->hide();
+    labelEliteBackers->hide();
+    labelEliteBackerLink->hide();
+    labelCreditsLink->hide();
+}
 
-	// change default size based on os
+int AboutDialog::exec()
+{
+    //Sets the current build year into the copyright text
+    label_3->setText(getCopyrights() + getKeyContributors());
+    resizeWindow();
+    updateLogo();
+
+    return QDialog::exec();
+}
+
+void AboutDialog::resizeWindow()
+{
+    QSize size(600, 310);
+    setMaximumSize(size);
+    setMinimumSize(size);
+    resize(size);
+}
+
+void AboutDialog::updateLogo() const
+{
 #if defined(Q_OS_MAC)
-	QSize size(600, 490);
-	setMaximumSize(size);
-	setMinimumSize(size);
-	resize(size);
-
     if (isOSXInterfaceStyleDark()) {
         QPixmap logo(":/res/image/about-dark.png");
         if (!logo.isNull()) {
             label_Logo->setPixmap(logo);
         }
     }
-
-#elif defined(Q_OS_LINUX)
-	QSize size(600, 420);
-	setMaximumSize(size);
-	setMinimumSize(size);
-	resize(size);
 #endif
 }
 
-void AboutDialog::setupCreditsLoader()
+QString AboutDialog::getKeyContributors() const
 {
-	this->textEliteBackers->setText("Loading...");
-	this->textEliteBackers->viewport()->setAutoFillBackground(false);
-	this->textEliteBackers->document()->setDocumentMargin(0);
-
-	connect(&credits, SIGNAL(loaded(const QString&)), this, SLOT(updateEliteBackers(const QString&)));
-	credits.loadEliteBackers();
+    return QString(R"(<p style="font-size: 14px">Key contributors<br>
+                    <span style="font-size: 11px">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
+                    Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyle Bloom,
+                    Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
+                    </p>)");
 }
 
-void AboutDialog::updateEliteBackers(const QString& eliteBackers) const
+QString AboutDialog::getCopyrights() const
 {
-	this->textEliteBackers->setText(eliteBackers);
+    QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
+    QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
+
+    QString copyrights(R"(<p>Keyboard and mouse sharing application.<br /><br />Copyright © %%YEAR%% Symless Ltd.</p>)");
+    return copyrights.replace(QString("%%YEAR%%"), QString::number(buildDate.year()));
 }

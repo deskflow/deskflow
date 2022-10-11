@@ -25,6 +25,7 @@ class Event;
 class Client;
 class NetworkAddress;
 class Thread;
+class ISocketFactory;
 namespace lib {
     namespace synergy {
         class ClientArgs;
@@ -82,6 +83,8 @@ public:
     Client* getClientPtr() { return m_client; }
 
 private:
+    ISocketFactory* getSocketFactory() const;
+
     Client*            m_client;
     synergy::Screen*   m_clientScreen;
     NetworkAddress*    m_serverAddress;

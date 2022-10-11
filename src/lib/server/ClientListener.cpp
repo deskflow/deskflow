@@ -17,6 +17,7 @@
  */
 
 #include "server/ClientListener.h"
+#include "server/Server.h"
 
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
@@ -40,22 +41,13 @@ ClientListener::ClientListener(const NetworkAddress& address,
     m_socketFactory(socketFactory),
     m_server(NULL),
     m_events(events),
-    m_useSecureNetwork(enableCrypto)
+    m_useSecureNetwork(enableCrypto),
+    m_address(address)
 {
     assert(m_socketFactory != NULL);
 
     try {
-        m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(address.getAddress()));
-
-        // setup event handler
-        m_events->adoptHandler(m_events->forIListenSocket().connecting(),
-                    m_listen,
-                    new TMethodEventJob<ClientListener>(this,
-                            &ClientListener::handleClientConnecting));
-        
-        // bind listen address
-        LOG((CLOG_DEBUG1 "binding listen socket"));
-        m_listen->bind(address);
+        start();
     }
     catch (XSocketAddressInUse&) {
         cleanupListenSocket();
@@ -72,31 +64,7 @@ ClientListener::ClientListener(const NetworkAddress& address,
 
 ClientListener::~ClientListener()
 {
-    LOG((CLOG_DEBUG1 "stop listening for clients"));
-
-    // discard already connected clients
-    for (NewClients::iterator index = m_newClients.begin();
-                                index != m_newClients.end(); ++index) {
-        ClientProxyUnknown* client = *index;
-        m_events->removeHandler(
-                            m_events->forClientProxyUnknown().success(), client);
-        m_events->removeHandler(
-                            m_events->forClientProxyUnknown().failure(), client);
-        m_events->removeHandler(
-                            m_events->forClientProxy().disconnected(), client);
-        delete client;
-    }
-
-    // discard waiting clients
-    ClientProxy* client = getNextClient();
-    while (client != NULL) {
-        delete client;
-        client = getNextClient();
-    }
-
-    m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
-    cleanupListenSocket();
-    cleanupClientSockets();
+    stop();
     delete m_socketFactory;
 }
 
@@ -117,6 +85,68 @@ ClientListener::getNextClient()
         m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
     }
     return client;
+}
+
+void ClientListener::start()
+{
+    m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(m_address.getAddress()));
+
+    // setup event handler
+    m_events->adoptHandler(m_events->forIListenSocket().connecting(),
+                m_listen,
+                new TMethodEventJob<ClientListener>(this,
+                        &ClientListener::handleClientConnecting));
+
+    // bind listen address
+    LOG((CLOG_DEBUG1 "binding listen socket"));
+    m_listen->bind(m_address);
+}
+
+void ClientListener::stop()
+{
+    LOG((CLOG_DEBUG1 "stop listening for clients"));
+
+    // discard already connected clients
+    for (NewClients::iterator index = m_newClients.begin();
+                                index != m_newClients.end(); ++index) {
+        ClientProxyUnknown* client = *index;
+        m_events->removeHandler(
+                            m_events->forClientProxyUnknown().success(), client);
+        m_events->removeHandler(
+                            m_events->forClientProxyUnknown().failure(), client);
+        m_events->removeHandler(
+                            m_events->forClientProxy().disconnected(), client);
+        delete client;
+    }
+
+    // discard waiting clients
+    ClientProxy* client = getNextClient();
+    while (client != nullptr) {
+        delete client;
+        client = getNextClient();
+    }
+
+    m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
+    cleanupListenSocket();
+    cleanupClientSockets();
+}
+
+void ClientListener::removeUnknownClient(ClientProxyUnknown* unknownClient)
+{
+    if (unknownClient) {
+        m_events->removeHandler(m_events->forClientProxyUnknown().success(), unknownClient);
+        m_events->removeHandler(m_events->forClientProxyUnknown().failure(), unknownClient);
+        m_newClients.erase(unknownClient);
+        delete unknownClient;
+    }
+}
+
+void ClientListener::restart()
+{
+    if (m_server && m_server->isClientMode()){
+        stop();
+        start();
+    }
 }
 
 void
@@ -168,22 +198,20 @@ ClientListener::handleClientAccepted(const Event&, void* vsocket)
     m_events->adoptHandler(m_events->forClientProxyUnknown().failure(),
                 client,
                 new TMethodEventJob<ClientListener>(this,
-                        &ClientListener::handleUnknownClient, client));
+                        &ClientListener::handleUnknownClientFailure, client));
 }
 
 void
 ClientListener::handleUnknownClient(const Event&, void* vclient)
 {
-    ClientProxyUnknown* unknownClient =
-        static_cast<ClientProxyUnknown*>(vclient);
+    auto unknownClient = static_cast<ClientProxyUnknown*>(vclient);
 
     // we should have the client in our new client list
     assert(m_newClients.count(unknownClient) == 1);
 
     // get the real client proxy and install it
-    ClientProxy* client = unknownClient->orphanClientProxy();
-    bool handshakeOk = true;
-    if (client != NULL) {
+    auto client = unknownClient->orphanClientProxy();
+    if (client) {
         // handshake was successful
         m_waitingClients.push_back(client);
         m_events->addEvent(Event(m_events->forClientListener().connected(),
@@ -195,21 +223,16 @@ ClientListener::handleUnknownClient(const Event&, void* vclient)
                                 &ClientListener::handleClientDisconnected,
                                 client));
     }
-    else {
-        handshakeOk = false;
-    }
 
     // now finished with unknown client
-    m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
-    m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
-    m_newClients.erase(unknownClient);
-    PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(unknownClient->getStream());
-    IDataSocket* socket = NULL;
-    if (streamFileter != NULL) {
-        socket = dynamic_cast<IDataSocket*>(streamFileter->getStream());
-    }
+    removeUnknownClient(unknownClient);
+}
 
-    delete unknownClient;
+void ClientListener::handleUnknownClientFailure(const Event &, void* vclient)
+{
+    auto unknownClient = static_cast<ClientProxyUnknown*>(vclient);
+    removeUnknownClient(unknownClient);
+    restart();
 }
 
 void

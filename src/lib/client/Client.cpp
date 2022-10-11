@@ -74,7 +74,6 @@ Client::Client(
     m_events(events),
     m_sendFileThread(nullptr),
     m_writeToDropDirThread(nullptr),
-    m_socket(NULL),
     m_useSecureNetwork(args.m_enableCrypto),
     m_args(args),
     m_enableClipboard(true),
@@ -135,29 +134,32 @@ Client::connect(size_t addressIndex)
     }
 
     try {
-        // resolve the server hostname.  do this every time we connect
-        // in case we couldn't resolve the address earlier or the address
-        // has changed (which can happen frequently if this is a laptop
-        // being shuttled between various networks).  patch by Brent
-        // Priddy.
-        m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
-        
-        // m_serverAddress will be null if the hostname address is not reolved
-        if (m_serverAddress.getAddress() != nullptr) {
-          // to help users troubleshoot, show server host name (issue: 60)
-          LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
-          m_serverAddress.getHostname().c_str(),
-          ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
-          m_serverAddress.getPort()));
+        if (m_args.m_hostMode)
+        {
+            LOG((CLOG_NOTE "waiting for server conection on %i port", m_serverAddress.getPort()));
+        }
+        else {
+            // resolve the server hostname.  do this every time we connect
+            // in case we couldn't resolve the address earlier or the address
+            // has changed (which can happen frequently if this is a laptop
+            // being shuttled between various networks).  patch by Brent
+            // Priddy.
+            m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
+
+            // m_serverAddress will be null if the hostname address is not reolved
+            if (m_serverAddress.getAddress() != nullptr) {
+              // to help users troubleshoot, show server host name (issue: 60)
+              LOG((CLOG_NOTE "connecting to '%s': %s:%i",
+              m_serverAddress.getHostname().c_str(),
+              ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
+              m_serverAddress.getPort()));
+            }
         }
 
         // create the socket
         IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork, ARCH->getAddrFamily(m_serverAddress.getAddress()));
-        m_socket = dynamic_cast<TCPSocket*>(socket);
-
         // filter socket messages, including a packetizing filter
-        m_stream = socket;
-        m_stream = new PacketStreamFilter(m_events, m_stream, true);
+        m_stream = new PacketStreamFilter(m_events, socket, true);
 
         // connect
         LOG((CLOG_DEBUG1 "connecting to server"));
@@ -546,10 +548,12 @@ Client::setupTimer()
 {
     assert(m_timer == NULL);
 
-    m_timer = m_events->newOneShotTimer(2.0, NULL);
-    m_events->adoptHandler(Event::kTimer, m_timer,
-                            new TMethodEventJob<Client>(this,
-                                &Client::handleConnectTimeout));
+    if (!m_args.m_hostMode) {
+        m_timer = m_events->newOneShotTimer(2.0, NULL);
+        m_events->adoptHandler(Event::kTimer, m_timer,
+                                new TMethodEventJob<Client>(this,
+                                    &Client::handleConnectTimeout));
+    }
 }
 
 void

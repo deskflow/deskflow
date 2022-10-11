@@ -653,6 +653,16 @@ Config::formatInterval(const Interval& x)
 										(int)(x.second * 100.0f + 0.5f));
 }
 
+String Config::getClientAddress() const
+{
+	return m_clientAddress;
+}
+
+bool Config::isClientMode() const
+{
+	return (!m_clientAddress.empty());
+}
+
 void
 Config::readSection(ConfigReadContext& s)
 {
@@ -772,6 +782,9 @@ Config::readSectionOptions(ConfigReadContext& s)
 		}
 		else if (name == "clipboardSharingSize") {
 			addOption("", kOptionClipboardSharingSize, s.parseInt(value));
+		}
+		else if (name == "clientAddress") {
+			m_clientAddress = value;
 		}
 		else {
 			handled = false;

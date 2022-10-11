@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2022 Synergy Seamless Inc.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,22 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#pragma once
 
-#ifndef EDITIONTYPE_H
-#define EDITIONTYPE_H
+#include <QObject>
+#include <QTimer>
+#include <QNetworkAccessManager>
 
-/* Do not reorder these! */
+class QNetworkReply;
+class AppConfig;
 
-enum Edition {
-    kBasic,
-    kPro,
-    Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered,
-    kBusiness,
-    kBasic_China,
-    kPro_China,
-    kLite,
-    kUltimate
+class LicenseRegistry : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit LicenseRegistry(AppConfig& config);
+    void scheduleRegistration();
+
+public slots:
+    void registerLicense();
+    void handleResponse(QNetworkReply *reply);
+
+private:
+    AppConfig& m_config;
+    QNetworkAccessManager m_manager;
+    QTimer m_timer;
+
+    QByteArray getRequestData() const;
 };
-
-#endif // EDITIONTYPE_H

@@ -1,3 +1,10 @@
+1.14.6
+======
+
+Enhancements:
+- #7222 Ability to initiate non-TLS connection from server
+- #7225 Ability to initiate TLS connection from server
+
 1.14.5
 ======
 
@@ -10,6 +17,11 @@ Enhancements:
 - #7190 Maintenance license serial key support
 - #7193 Support for maintenance licenses in China
 - #7197 Special contributor mentions on the about screen
+- #7203 License registration for Business edition
+
+Github Actions:
+- #7210 Update macos workflow to use macos-latest
+- #7213 Update azure pipelines to use macos-latest
 
 1.14.4
 ======

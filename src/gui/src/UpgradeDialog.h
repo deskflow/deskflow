@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,22 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#pragma once
+#include <QMessageBox>
 
-#ifndef EDITIONTYPE_H
-#define EDITIONTYPE_H
-
-/* Do not reorder these! */
-
-enum Edition {
-    kBasic,
-    kPro,
-    Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered,
-    kBusiness,
-    kBasic_China,
-    kPro_China,
-    kLite,
-    kUltimate
+class UpgradeDialog : public QMessageBox
+{
+public:
+    explicit UpgradeDialog(QWidget *parent = nullptr);
+    void showDialog(const QString& text, const QString& link);
 };
-
-#endif // EDITIONTYPE_H

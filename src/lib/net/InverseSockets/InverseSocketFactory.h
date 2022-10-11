@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2012-2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,22 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#pragma once
+#include "net/ISocketFactory.h"
 
-#ifndef EDITIONTYPE_H
-#define EDITIONTYPE_H
+class IEventQueue;
+class SocketMultiplexer;
 
-/* Do not reorder these! */
+class InverseSocketFactory : public ISocketFactory {
+public:
+    InverseSocketFactory(IEventQueue* events, SocketMultiplexer* socketMultiplexer);
 
-enum Edition {
-    kBasic,
-    kPro,
-    Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered,
-    kBusiness,
-    kBasic_China,
-    kPro_China,
-    kLite,
-    kUltimate
+    // ISocketFactory overrides
+    IDataSocket* create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
+    IListenSocket* createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
+
+private:
+    IEventQueue*        m_events = nullptr;
+    SocketMultiplexer*  m_socketMultiplexer = nullptr;
 };
-
-#endif // EDITIONTYPE_H
