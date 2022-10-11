@@ -577,16 +577,22 @@ QVariant AppConfig::loadCommonSetting(AppConfig::Setting name, const QVariant& d
     return result;
 }
 
-void AppConfig::loadScope(ConfigWriter::Scope scope) const {
+void AppConfig::loadScope(ConfigWriter::Scope scope) {
    auto writer = ConfigWriter::make();
 
    if (writer->getScope() != scope) {
+      setDefaultValues();
       writer->setScope(scope);
       if (writer->hasSetting(settingName(kScreenName), writer->getScope())) {
           //If the user already has settings, then load them up now.
           writer->globalLoad();
       }
    }
+}
+
+void AppConfig::setDefaultValues()
+{
+    m_InitiateConnectionFromServer = false;
 }
 
 void AppConfig::setLoadFromSystemScope(bool value) {
