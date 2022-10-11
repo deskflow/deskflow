@@ -1,6 +1,9 @@
 1.14.6
 ======
 
+Bug fixes:
+- #7208 Fix crash on FreeBSD when pressing special keys on a client.
+
 Enhancements:
 - #7222 Ability to initiate non-TLS connection from server
 - #7225 Ability to initiate TLS connection from server
