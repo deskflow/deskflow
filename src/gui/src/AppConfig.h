@@ -344,7 +344,11 @@ protected:
 
         /// @brief This method loads config from specified scope
         /// @param [in] scope which should be loaded.
-        void loadScope(GUI::Config::ConfigWriter::Scope scope) const;
+        void loadScope(GUI::Config::ConfigWriter::Scope scope);
+
+        /// @brief This function sets default values
+        /// for settings that shouldn't be copied from between scopes.
+        void setDefaultValues();
 
     signals:
         void sslToggled() const;
