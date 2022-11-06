@@ -222,7 +222,7 @@ private:
     bool                m_screensaverNotify;
 
     // logical to physical button mapping.  m_buttons[i] gives the
-    // physical button for logical button i+1.
+    // physical button for logical button i.
     std::vector<unsigned char>    m_buttons;
 
     // true if global auto-repeat was enabled before we turned it off
