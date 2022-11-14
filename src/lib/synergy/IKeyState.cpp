@@ -19,6 +19,7 @@
 #include "synergy/IKeyState.h"
 #include "base/EventQueue.h"
 
+#include <cstdint>
 #include <cstring>
 #include <cstdlib>
 
