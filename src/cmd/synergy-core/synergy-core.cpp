@@ -61,14 +61,14 @@ int main(int argc, char** argv)
     EventQueue events;
 
     if (isServer(argc, argv)) {
-        auto commandLine = getCommandLine(argc, argv);
         ServerApp app(&events, nullptr);
-        return app.run(commandLine.size(), &commandLine[0]);
+        auto commandLine = getCommandLine(argc, argv);
+        return app.run(static_cast<int>(commandLine.size()), &commandLine[0]);
     }
     else if (isClient(argc, argv)) {
-        auto commandLine = getCommandLine(argc, argv);
         ClientApp app(&events, nullptr);
-        return app.run(commandLine.size(), &commandLine[0]);
+        auto commandLine = getCommandLine(argc, argv);
+        return app.run(static_cast<int>(commandLine.size()), &commandLine[0]);
     }
     else {
         showHelp();
