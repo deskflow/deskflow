@@ -72,6 +72,19 @@ updateSetting(const IpcMessage& message)
     }
 }
 
+bool
+isServerCommandLine(const std::vector<String>& cmd)
+{
+    auto isServer = false;
+
+    if (cmd.size() > 1) {
+        isServer = (cmd[0].find("synergys") != String::npos) ||
+                   (cmd[0].find("synergy-core") != String::npos && cmd[1] == "server");
+    }
+
+    return isServer;
+}
+
 }//namespace
 
 DaemonApp* DaemonApp::s_instance = NULL;
@@ -324,15 +337,11 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
                 ArgParser::splitCommandString(command, argsArray);
                 ArgParser argParser(NULL);
                 const char** argv = argParser.getArgv(argsArray);
-
                 int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("synergys") != String::npos;
 
-
-                if (server) {
+                if (isServerCommandLine(argsArray)) {
                     auto serverArgs = new lib::synergy::ServerArgs();
                     argParser.parseServerArgs(*serverArgs, argc, argv);
-
                 }
                 else {
                     auto clientArgs = new lib::synergy::ClientArgs();

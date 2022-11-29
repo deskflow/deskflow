@@ -41,19 +41,12 @@ bool isClient(int argc, char** argv)
     return (argc > 1 && argv[1] == std::string("client"));
 }
 
-std::vector<char*> getCommandLine(int argc, char** argv)
-{
-    std::vector<char*> commandLine;
-
-    commandLine.reserve(argc - 1);
-    commandLine.push_back(argv[0]);
-    commandLine.insert(commandLine.end(), &argv[2], &argv[argc]);
-
-    return commandLine;
-}
-
 int main(int argc, char** argv)
 {
+#if SYSAPI_WIN32
+    ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
+
     Arch arch;
     arch.init();
 
@@ -62,13 +55,11 @@ int main(int argc, char** argv)
 
     if (isServer(argc, argv)) {
         ServerApp app(&events, nullptr);
-        auto commandLine = getCommandLine(argc, argv);
-        return app.run(static_cast<int>(commandLine.size()), &commandLine[0]);
+        return app.run(argc, argv);
     }
     else if (isClient(argc, argv)) {
         ClientApp app(&events, nullptr);
-        auto commandLine = getCommandLine(argc, argv);
-        return app.run(static_cast<int>(commandLine.size()), &commandLine[0]);
+        return app.run(argc, argv);
     }
     else {
         showHelp();
