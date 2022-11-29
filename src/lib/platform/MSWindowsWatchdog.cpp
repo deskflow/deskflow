@@ -611,7 +611,8 @@ MSWindowsWatchdog::shutdownExistingProcesses()
         if (entry.th32ProcessID != 0) {
 
             if (_stricmp(entry.szExeFile, "synergyc.exe") == 0 ||
-                _stricmp(entry.szExeFile, "synergys.exe") == 0) {
+                _stricmp(entry.szExeFile, "synergys.exe") == 0 ||
+                _stricmp(entry.szExeFile, "synergy-core.exe") == 0) {
                 
                 HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
                 shutdownProcess(handle, entry.th32ProcessID, 10);

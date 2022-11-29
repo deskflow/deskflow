@@ -7,6 +7,7 @@ Bug fixes:
 Enhancements:
 - #7222 Ability to initiate non-TLS connection from server
 - #7225 Ability to initiate TLS connection from server
+- #7239 Single app for server and client
 
 1.14.5
 ======
