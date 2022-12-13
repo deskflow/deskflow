@@ -18,6 +18,10 @@ set(sources
     synergy-core.cpp
 )
 
+if (WIN32)
+    list(APPEND sources synergy-core.exe.manifest)
+endif()
+
 add_executable(synergy-core ${sources})
 target_link_libraries(synergy-core
     arch base client common io mt net ipc platform server synlib ${libs})

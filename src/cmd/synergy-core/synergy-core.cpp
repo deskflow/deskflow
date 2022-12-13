@@ -21,14 +21,13 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/EventQueue.h"
-#include <vector>
 
 void showHelp()
 {
     std::cout<<"Usage: synergy-core <server | client> [...options]"<<std::endl;
-    std::cout<<"sever - start as a server (synergys)"<<std::endl;
+    std::cout<<"server - start as a server (synergys)"<<std::endl;
     std::cout<<"client - start as a client (synergyc)"<<std::endl;
-    std::cout<<"use synergy-core <sever|client> --help for more information."<<std::endl;
+    std::cout<<"use synergy-core <server|client> --help for more information."<<std::endl;
 }
 
 bool isServer(int argc, char** argv)
