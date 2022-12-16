@@ -934,17 +934,17 @@ OSXKeyState::setGroup(SInt32 group)
 {
     TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
     if(!keyboardLayout) {
-        LOG((CLOG_WARN "Nedeed keyboard layout is null"));
+        LOG((CLOG_WARN "Needed keyboard layout is null"));
         return;
     }
     auto canBeSetted = (CFBooleanRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
     if(!canBeSetted) {
-        LOG((CLOG_WARN "Nedeed keyboard layout is disabled for programmatically selection"));
+        LOG((CLOG_WARN "Needed keyboard layout is disabled for programmatically selection"));
         return;
     }
 
     if(TISSelectInputSource(keyboardLayout) != noErr) {
-        LOG((CLOG_WARN "Failed to set nedeed keyboard layout"));
+        LOG((CLOG_WARN "Failed to set needed keyboard layout"));
     }
 
     LOG((CLOG_DEBUG1 "Keyboard layout change to %d", group));
