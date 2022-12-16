@@ -78,7 +78,7 @@ jobs:
           echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
           echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
 
-      - name: Sign applicaiton
+      - name: Sign application
         run: |
           export PATH="$Qt5_DIR/bin:$PATH"
           macdeployqt ${{ github.workspace }}/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
@@ -111,7 +111,7 @@ jobs:
           SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
         run: |
           cd pkg
-          ../CI/MacOS/notorize.sh
+          ../CI/MacOS/notarize.sh
 
       - name: Send package to Binary Storage
         uses: garygrossgarten/github-action-scp@v0.7.3

@@ -1,28 +1,28 @@
 steps:
   - task: InstallAppleCertificate@2
     inputs:
-      certSecureFile: 'AppleSigningCert.cer'
-      certPwd: '$(AppleCertPass)'
-      keychain: 'temp'
+      certSecureFile: "AppleSigningCert.cer"
+      certPwd: "$(AppleCertPass)"
+      keychain: "temp"
 
   - task: CmdLine@2
     inputs:
-      script: | 
+      script: |
         python3 CI/build_version.py
-    displayName: 'Update Version.cmake'
+    displayName: "Update Version.cmake"
 
   - task: CmdLine@2
     inputs:
-      script: | 
+      script: |
         python3 -m pip install dmgbuild
         python3 -m pip install aqtinstall==0.11.1
-    displayName: 'Installing utilities'
+    displayName: "Installing utilities"
 
   - task: CmdLine@2
     inputs:
       script: |
         python3 -m aqt install $(QT_VERSION) mac desktop -O $(QT_PATH)
-    displayName: 'Installing QT'
+    displayName: "Installing QT"
 
   - task: CmdLine@2
     inputs:
@@ -35,7 +35,7 @@ steps:
           -DCMAKE_OSX_ARCHITECTURES=x86_64 \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CONFIGURATION_TYPES=Release ..
-    displayName: 'Cmake standard'
+    displayName: "Cmake standard"
     condition: eq(variables['buildType'], 'standard')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
@@ -54,7 +54,7 @@ steps:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CONFIGURATION_TYPES=Release \
           -DSYNERGY_ENTERPRISE=ON ..
-    displayName: 'Cmake enterprise'
+    displayName: "Cmake enterprise"
     condition: eq(variables['buildType'], 'enterprise')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
@@ -73,7 +73,7 @@ steps:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CONFIGURATION_TYPES=Release \
           -DSYNERGY_BUSINESS=ON ..
-    displayName: 'Cmake business'
+    displayName: "Cmake business"
     condition: eq(variables['buildType'], 'business')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
@@ -87,7 +87,7 @@ steps:
         . ./version
         make -j
         make install/strip
-    displayName: 'Compiling'
+    displayName: "Compiling"
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
@@ -98,7 +98,7 @@ steps:
         macdeployqt $(Build.Repository.LocalPath)/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
         codesign -f --options runtime --deep -s "$CODESIGN_ID" $(Build.Repository.LocalPath)/build/bundle/Synergy.app
         ln -s /Applications $(Build.Repository.LocalPath)/build/bundle/Applications
-    displayName: 'Signing'
+    displayName: "Signing"
     env:
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
 
@@ -131,22 +131,22 @@ steps:
         md5 -r $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
         shasum $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
         shasum -a 256 $(SYNERGY_DMG_FILENAME) >> $(SYNERGY_DMG_FILENAME).checksum.txt
-    displayName: 'Create Installer'
+    displayName: "Create Installer"
 
   - task: Bash@3
     inputs:
-      filePath: 'CI/MacOS/notorize.sh'
-      workingDirectory: 'pkg/'
+      filePath: "CI/MacOS/notarize.sh"
+      workingDirectory: "pkg/"
     env:
       ASC_USERNAME: $(ASC_USERNAME)
       NOTORY_APP_PASSWORD: $(NOTORY_APP_PASSWORD)
-    displayName: 'Submit for Notarization'
+    displayName: "Submit for Notarization"
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Binary Storage'
-      sourceFolder: '$(Build.Repository.LocalPath)/pkg'
-      contents: '*'
-      targetFolder: '$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
-      readyTimeout: '20000'
-    displayName: 'Send package to Binary Storage'
+      sshEndpoint: "Binary Storage"
+      sourceFolder: "$(Build.Repository.LocalPath)/pkg"
+      contents: "*"
+      targetFolder: "$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/"
+      readyTimeout: "20000"
+    displayName: "Send package to Binary Storage"
