@@ -89,22 +89,22 @@ void Screen::saveSettings(QSettings& settings) const
 
 QTextStream& Screen::writeScreensSection(QTextStream& outStream) const
 {
-    outStream << "\t" << name() << ":" << endl;
+    outStream << "\t" << name() << ":" << Qt::endl;
 
     for (int i = 0; i < modifiers().size(); i++)
         if (modifier(i) != i)
-            outStream << "\t\t" << modifierName(i) << " = " << modifierName(modifier(i)) << endl;
+            outStream << "\t\t" << modifierName(i) << " = " << modifierName(modifier(i)) << Qt::endl;
 
     for (int i = 0; i < fixes().size(); i++)
-        outStream << "\t\t" << fixName(i) << " = " << (fixes()[i] ? "true" : "false") << endl;
+        outStream << "\t\t" << fixName(i) << " = " << (fixes()[i] ? "true" : "false") << Qt::endl;
 
     outStream << "\t\t" << "switchCorners = none ";
     for (int i = 0; i < switchCorners().size(); i++)
         if (switchCorners()[i])
             outStream << "+" << switchCornerName(i) << " ";
-    outStream << endl;
+    outStream << Qt::endl;
 
-    outStream << "\t\t" << "switchCornerSize = " << switchCornerSize() << endl;
+    outStream << "\t\t" << "switchCornerSize = " << switchCornerSize() << Qt::endl;
 
     return outStream;
 }
@@ -113,10 +113,10 @@ QTextStream& Screen::writeAliasesSection(QTextStream& outStream) const
 {
     if (!aliases().isEmpty())
     {
-        outStream << "\t" << name() << ":" << endl;
+        outStream << "\t" << name() << ":" << Qt::endl;
 
         foreach (const QString& alias, aliases())
-            outStream << "\t\t" << alias << endl;
+            outStream << "\t\t" << alias << Qt::endl;
     }
 
     return outStream;

@@ -257,72 +257,72 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
 QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
 {
-    outStream << "section: screens" << endl;
+    outStream << "section: screens" << Qt::endl;
 
     foreach (const Screen& s, config.screens())
         if (!s.isNull())
             s.writeScreensSection(outStream);
 
-    outStream << "end" << endl << endl;
+    outStream << "end" << Qt::endl << Qt::endl;
 
-    outStream << "section: aliases" << endl;
+    outStream << "section: aliases" << Qt::endl;
 
     foreach (const Screen& s, config.screens())
         if (!s.isNull())
             s.writeAliasesSection(outStream);
 
-    outStream << "end" << endl << endl;
+    outStream << "end" << Qt::endl << Qt::endl;
 
-    outStream << "section: links" << endl;
+    outStream << "section: links" << Qt::endl;
 
     for (int i = 0; i < config.screens().size(); i++)
         if (!config.screens()[i].isNull())
         {
-            outStream << "\t" << config.screens()[i].name() << ":" << endl;
+            outStream << "\t" << config.screens()[i].name() << ":" << Qt::endl;
 
             for (unsigned int j = 0; j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++)
             {
                 int idx = config.adjacentScreenIndex(i, neighbourDirs[j].x, neighbourDirs[j].y);
                 if (idx != -1 && !config.screens()[idx].isNull())
-                    outStream << "\t\t" << neighbourDirs[j].name << " = " << config.screens()[idx].name() << endl;
+                    outStream << "\t\t" << neighbourDirs[j].name << " = " << config.screens()[idx].name() << Qt::endl;
             }
         }
 
-    outStream << "end" << endl << endl;
+    outStream << "end" << Qt::endl << Qt::endl;
 
-    outStream << "section: options" << endl;
+    outStream << "section: options" << Qt::endl;
 
     if (config.hasHeartbeat())
-        outStream << "\t" << "heartbeat = " << config.heartbeat() << endl;
+        outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
 
-    outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << endl;
-    outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << endl;
-    outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << endl;
-    outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
-    outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << endl;
+    outStream << "\t" << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
+    outStream << "\t" << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
+    outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << Qt::endl;
+    outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << Qt::endl;
+    outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
 
     if (!config.getClientAddress().isEmpty()) {
-        outStream << "\t" << "clientAddress = " << config.getClientAddress() << endl;
+        outStream << "\t" << "clientAddress = " << config.getClientAddress() << Qt::endl;
     }
 
     if (config.hasSwitchDelay())
-        outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
+        outStream << "\t" << "switchDelay = " << config.switchDelay() << Qt::endl;
 
     if (config.hasSwitchDoubleTap())
-        outStream << "\t" << "switchDoubleTap = " << config.switchDoubleTap() << endl;
+        outStream << "\t" << "switchDoubleTap = " << config.switchDoubleTap() << Qt::endl;
 
     outStream << "\t" << "switchCorners = none ";
     for (int i = 0; i < config.switchCorners().size(); i++)
         if (config.switchCorners()[i])
             outStream << "+" << config.switchCornerName(i) << " ";
-    outStream << endl;
+    outStream << Qt::endl;
 
-    outStream << "\t" << "switchCornerSize = " << config.switchCornerSize() << endl;
+    outStream << "\t" << "switchCornerSize = " << config.switchCornerSize() << Qt::endl;
 
     foreach(const Hotkey& hotkey, config.hotkeys())
         outStream << hotkey;
 
-    outStream << "end" << endl << endl;
+    outStream << "end" << Qt::endl << Qt::endl;
 
     return outStream;
 }
