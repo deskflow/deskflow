@@ -119,7 +119,7 @@ void SslCertificate::generateCertificate(const QString& path, const QString& key
         arguments.append("-x509");
         arguments.append("-nodes");
 
-        // valide duration
+        // valid duration
         arguments.append("-days");
         arguments.append(kCertificateLifetime);
 
