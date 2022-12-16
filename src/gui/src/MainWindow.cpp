@@ -67,7 +67,7 @@ static const char* synergyLightIconFiles[] =
     ":/res/icons/64x64/synergy-light-disconnected.png",
     ":/res/icons/64x64/synergy-light-disconnected.png",
     ":/res/icons/64x64/synergy-light-connected.png",
-    ":/res/icons/64x64/synergy-light-transfering.png",
+    ":/res/icons/64x64/synergy-light-transferring.png",
     ":/res/icons/64x64/synergy-light-disconnected.png"
 };
 
@@ -76,7 +76,7 @@ static const char* synergyDarkIconFiles[] =
     ":/res/icons/64x64/synergy-dark-disconnected.png",
     ":/res/icons/64x64/synergy-dark-disconnected.png",
     ":/res/icons/64x64/synergy-dark-connected.png",
-    ":/res/icons/64x64/synergy-dark-transfering.png",
+    ":/res/icons/64x64/synergy-dark-transferring.png",
     ":/res/icons/64x64/synergy-dark-disconnected.png"    //synergyPendingRetry
 };
 
@@ -85,7 +85,7 @@ static const char* synergyDefaultIconFiles[] =
     ":/res/icons/16x16/synergy-disconnected.png",   //synergyDisconnected
     ":/res/icons/16x16/synergy-disconnected.png",   //synergyConnecting
     ":/res/icons/16x16/synergy-connected.png",      //synergyConnected
-    ":/res/icons/16x16/synergy-transfering.png",    //synergyListening
+    ":/res/icons/16x16/synergy-transferring.png",    //synergyListening
     ":/res/icons/16x16/synergy-disconnected.png"    //synergyPendingRetry
 };
 
@@ -467,7 +467,7 @@ void MainWindow::updateFromLogLine(const QString &line)
     checkSecureSocket(line);
 
     // subprocess (synergys, synergyc) is not allowed to show notifications
-    // process the log from it and show notificatino from synergy instead
+    // process the log from it and show notification from synergy instead
 #ifdef Q_OS_MAC
     checkOSXNotification(line);
 #endif
@@ -589,14 +589,14 @@ void MainWindow::checkOSXNotification(const QString& line)
 {
     static const QString OSXNotificationSubstring = "OSX Notification: ";
     if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
-        int delimterPosition = line.indexOf('|');
+        int delimiterPosition = line.indexOf('|');
         int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
         QString title =
                 line.mid(notificationStartPosition + OSXNotificationSubstring.length(),
-                         delimterPosition - notificationStartPosition - OSXNotificationSubstring.length());
+                         delimiterPosition - notificationStartPosition - OSXNotificationSubstring.length());
         QString body =
-                line.mid(delimterPosition + 1,
-                         line.length() - delimterPosition);
+                line.mid(delimiterPosition + 1,
+                         line.length() - delimiterPosition);
         if (!showOSXNotification(title, body)) {
             appendLogInfo("OSX notification was not shown");
         }
@@ -1019,7 +1019,7 @@ void MainWindow::stopSynergy()
 
 void MainWindow::stopService()
 {
-    // send empty command to stop service from laucning anything.
+    // send empty command to stop service from launching anything.
     m_IpcClient.sendCommand("", appConfig().elevateMode());
 }
 
@@ -1201,6 +1201,8 @@ void MainWindow::changeEvent(QEvent* event)
             windowStateChanged();
             break;
         }
+        default:
+            break;
         }
     }
     // all that do not return are allowing the event to propagate
