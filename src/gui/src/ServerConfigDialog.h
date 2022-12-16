@@ -36,9 +36,9 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
         bool addClient(const QString& clientName);
 
     public slots:
-        void accept();
+        void accept() override;
         void reject() override;
-        void showEvent(QShowEvent* event);
+        void showEvent(QShowEvent* event) override;
         void message(const QString& message) { m_Message = message; }
 
     protected slots:

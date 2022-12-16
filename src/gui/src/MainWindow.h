@@ -108,7 +108,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
         ~MainWindow();
 
     public:
-        void setVisible(bool visible);
+        void setVisible(bool visible) override;
         int synergyType() const { return m_pRadioGroupClient->isChecked() ? synergyClient : synergyServer; }
         int synergyState() const { return m_SynergyState; }
         QString hostname() const { return m_pLineEditHostname->text(); }
@@ -191,7 +191,7 @@ public slots:
         QString getIPAddresses();
         void stopService();
         void stopDesktop();
-        void changeEvent(QEvent* event);
+        void changeEvent(QEvent* event) override;
         void retranslateMenuBar();
         void enableServer(bool enable);
         void enableClient(bool enable);
@@ -217,7 +217,7 @@ public slots:
         void restartSynergy();
         void proofreadInfo();
 
-        void showEvent (QShowEvent*);
+        void showEvent (QShowEvent*) override;
         void secureSocket(bool secureSocket);
 
         void windowStateChanged();

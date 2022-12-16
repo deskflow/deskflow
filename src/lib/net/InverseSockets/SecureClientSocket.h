@@ -35,7 +35,7 @@ public:
     void        connect(const NetworkAddress&) override;
 
     ISocketMultiplexerJob* newJob();
-    bool                isFatal() const { return m_fatal; }
+    bool                isFatal() const override { return m_fatal; }
     void                setFatal(int code);
     int                 getRetry(int errorCode, int retry) const;
     bool                isSecureReady() const;
