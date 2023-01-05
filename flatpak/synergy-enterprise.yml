@@ -11,7 +11,7 @@ modules:
   - name: openssl
     buildsystem: simple
     build-commands:
-      - "./config --prefix=/app"
+      - "./config --prefix=/var/run/host/usr/local/ssl"
       - "make"
       - "make install_sw"
     sources:
@@ -42,3 +42,4 @@ finish-args:
   - "--share=network"
   - "--device=dri"
   - "--talk-name=org.a11y.*"
+  - "--filesystem=host"
