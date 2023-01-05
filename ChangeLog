@@ -4,6 +4,7 @@
 Bug fixes:
 - #7208 Fix crash on FreeBSD when pressing special keys on a client.
 - #7241 Change the default signature hashing algorithm for sha256.
+- #7242 Fix tls certificate generation for flatpak.
 
 Enhancements:
 - #7222 Ability to initiate non-TLS connection from server
