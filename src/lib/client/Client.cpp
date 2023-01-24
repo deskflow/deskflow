@@ -134,9 +134,10 @@ Client::connect(size_t addressIndex)
     }
 
     try {
-        if (m_args.m_hostMode)
-        {
-            LOG((CLOG_NOTE "waiting for server conection on %i port", m_serverAddress.getPort()));
+        if (m_args.m_hostMode) {
+            LOG((CLOG_NOTE "waiting for server conection on %s:%i",
+                 ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
+                 m_serverAddress.getPort()));
         }
         else {
             // resolve the server hostname.  do this every time we connect
@@ -162,7 +163,6 @@ Client::connect(size_t addressIndex)
         m_stream = new PacketStreamFilter(m_events, socket, true);
 
         // connect
-        LOG((CLOG_DEBUG1 "connecting to server"));
         setupConnecting();
         setupTimer();
         socket->connect(m_serverAddress);

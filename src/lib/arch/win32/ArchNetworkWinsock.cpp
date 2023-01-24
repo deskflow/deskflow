@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "base/Log.h"
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/XArchWindows.h"
@@ -224,6 +224,7 @@ ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
         throw;
     }
 
+    LOG((CLOG_INFO __FUNCTION__ " create a new socket: %08X", fd));
     // allocate socket object
     ArchSocketImpl* socket = new ArchSocketImpl;
     socket->m_socket        = fd;
@@ -257,6 +258,7 @@ ArchNetworkWinsock::closeSocket(ArchSocket s)
 
     // close the socket if necessary
     if (doClose) {
+        LOG((CLOG_INFO __FUNCTION__ " close socket: %08X", s->m_socket));
         if (close_winsock(s->m_socket) == SOCKET_ERROR) {
             // close failed.  restore the last ref and throw.
             int err = getsockerror_winsock();
@@ -274,7 +276,7 @@ void
 ArchNetworkWinsock::closeSocketForRead(ArchSocket s)
 {
     assert(s != NULL);
-
+    LOG((CLOG_INFO __FUNCTION__ " close socket %08X for reading", s->m_socket));
     if (shutdown_winsock(s->m_socket, SD_RECEIVE) == SOCKET_ERROR) {
         if (getsockerror_winsock() != WSAENOTCONN) {
             throwError(getsockerror_winsock());
@@ -286,7 +288,7 @@ void
 ArchNetworkWinsock::closeSocketForWrite(ArchSocket s)
 {
     assert(s != NULL);
-
+    LOG((CLOG_INFO __FUNCTION__ " close socket %08X for writing", s->m_socket));
     if (shutdown_winsock(s->m_socket, SD_SEND) == SOCKET_ERROR) {
         if (getsockerror_winsock() != WSAENOTCONN) {
             throwError(getsockerror_winsock());
@@ -299,6 +301,10 @@ ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr)
 {
     assert(s    != NULL);
     assert(addr != NULL);
+    LOG((CLOG_INFO __FUNCTION__ " bind socket %08X to %s:%i",
+         s->m_socket,
+         addrToString(addr).c_str(),
+         getAddrPort(addr)));
 
     if (bind_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == SOCKET_ERROR) {
         throwError(getsockerror_winsock());
@@ -311,6 +317,7 @@ ArchNetworkWinsock::listenOnSocket(ArchSocket s)
     assert(s != NULL);
 
     // hardcoding backlog
+    LOG((CLOG_INFO __FUNCTION__ " start listen to socket %08X", s->m_socket));
     if (listen_winsock(s->m_socket, 3) == SOCKET_ERROR) {
         throwError(getsockerror_winsock());
     }
@@ -326,6 +333,7 @@ ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress* const addr)
     ArchNetAddress tmp = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in6));
 
     // accept on socket
+    LOG((CLOG_INFO __FUNCTION__ " accept on socket %08X", s->m_socket));
     SOCKET fd = accept_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, tmp), &tmp->m_len);
     if (fd == INVALID_SOCKET) {
         int err = getsockerror_winsock();
@@ -354,6 +362,7 @@ ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress* const addr)
     }
 
     // initialize socket
+    LOG((CLOG_INFO __FUNCTION__ " accepted socket %08X", fd));
     socket->m_socket    = fd;
     socket->m_refCount  = 1;
     socket->m_event     = WSACreateEvent_winsock();
@@ -374,6 +383,7 @@ ArchNetworkWinsock::connectSocket(ArchSocket s, ArchNetAddress addr)
     assert(s    != NULL);
     assert(addr != NULL);
 
+    LOG((CLOG_INFO __FUNCTION__ " connect socket %08X to %s:%i", s->m_socket, addrToString(addr).c_str(), getAddrPort(addr)));
     if (connect_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr),
                             addr->m_len) == SOCKET_ERROR) {
         if (getsockerror_winsock() == WSAEISCONN) {
@@ -406,6 +416,10 @@ ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
             continue;
         }
 
+        auto read = pe[i].m_events & kPOLLIN;
+        auto write = pe[i].m_events & kPOLLOUT;
+
+        LOG((CLOG_INFO __FUNCTION__ " poll socket %08X; read: %i; write: %i", pe[i].m_socket->m_socket, read, write));
         // select desired events
         long socketEvents = 0;
         if ((pe[i].m_events & kPOLLIN) != 0) {
@@ -498,18 +512,21 @@ ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
         }
         if ((info.lNetworkEvents & FD_READ) != 0) {
             pe[i].m_revents |= kPOLLIN;
+            LOG((CLOG_INFO __FUNCTION__ " read event on socket %08X", pe[i].m_socket->m_socket));
         }
         if ((info.lNetworkEvents & FD_ACCEPT) != 0) {
             pe[i].m_revents |= kPOLLIN;
+            LOG((CLOG_INFO __FUNCTION__ " accept event on socket %08X", pe[i].m_socket->m_socket));
         }
         if ((info.lNetworkEvents & FD_WRITE) != 0) {
             pe[i].m_revents |= kPOLLOUT;
-
+            LOG((CLOG_INFO __FUNCTION__ " write event on socket %08X", pe[i].m_socket->m_socket));
             // socket is now writable so don't bothing polling for
             // writable until it becomes unwritable.
             pe[i].m_socket->m_pollWrite = false;
         }
         if ((info.lNetworkEvents & FD_CONNECT) != 0) {
+            LOG((CLOG_INFO __FUNCTION__ " connect event on socket %08X", pe[i].m_socket->m_socket));
             if (info.iErrorCode[FD_CONNECT_BIT] != 0) {
                 pe[i].m_revents |= kPOLLERR;
             }
@@ -519,6 +536,7 @@ ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
             }
         }
         if ((info.lNetworkEvents & FD_CLOSE) != 0) {
+            LOG((CLOG_INFO __FUNCTION__ " close event on socket %08X", pe[i].m_socket->m_socket));
             if (info.iErrorCode[FD_CLOSE_BIT] != 0) {
                 pe[i].m_revents |= kPOLLERR;
             }
@@ -554,13 +572,14 @@ size_t
 ArchNetworkWinsock::readSocket(ArchSocket s, void* buf, size_t len)
 {
     assert(s != NULL);
-
+    LOG((CLOG_INFO __FUNCTION__ " read socket %08X", s->m_socket));
     int n = recv_winsock(s->m_socket, buf, (int)len, 0);
     if (n == SOCKET_ERROR) {
         int err = getsockerror_winsock();
         if (err == WSAEINTR || err == WSAEWOULDBLOCK) {
             return 0;
         }
+        LOG((CLOG_INFO __FUNCTION__ " error %i read socket %08X", err, s->m_socket));
         throwError(err);
     }
     return static_cast<size_t>(n);
@@ -570,7 +589,7 @@ size_t
 ArchNetworkWinsock::writeSocket(ArchSocket s, const void* buf, size_t len)
 {
     assert(s != NULL);
-
+    LOG((CLOG_INFO __FUNCTION__ " write socket %08X", s->m_socket));
     int n = send_winsock(s->m_socket, buf, (int)len, 0);
     if (n == SOCKET_ERROR) {
         int err = getsockerror_winsock();
@@ -581,6 +600,7 @@ ArchNetworkWinsock::writeSocket(ArchSocket s, const void* buf, size_t len)
             s->m_pollWrite = true;
             return 0;
         }
+        LOG((CLOG_INFO __FUNCTION__ " error %i write socket %08X", err, s->m_socket));
         throwError(err);
     }
     return static_cast<size_t>(n);
@@ -594,6 +614,7 @@ ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s)
     // get the error from the socket layer
     int err  = 0;
     int size = sizeof(err);
+    LOG((CLOG_INFO __FUNCTION__ " throw error on socket %08X", s->m_socket));
     if (getsockopt_winsock(s->m_socket, SOL_SOCKET,
                                     SO_ERROR, &err, &size) == SOCKET_ERROR) {
         err = getsockerror_winsock();
@@ -611,6 +632,7 @@ ArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
     assert(s != 0);
 
     int flag = blocking ? 0 : 1;
+    LOG((CLOG_INFO __FUNCTION__ " set blocking %i on socket %08X", flag, s));
     if (ioctl_winsock(s, FIONBIO, &flag) == SOCKET_ERROR) {
         throwError(getsockerror_winsock());
     }
@@ -624,6 +646,7 @@ ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
     // get old state
     BOOL oflag;
     int size = sizeof(oflag);
+
     if (getsockopt_winsock(s->m_socket, IPPROTO_TCP,
                                 TCP_NODELAY, &oflag, &size) == SOCKET_ERROR) {
         throwError(getsockerror_winsock());
@@ -632,6 +655,7 @@ ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
     // set new state
     BOOL flag = noDelay ? 1 : 0;
     size     = sizeof(flag);
+    LOG((CLOG_INFO __FUNCTION__ " set no delay %i on socket %08X", flag, s->m_socket));
     if (setsockopt_winsock(s->m_socket, IPPROTO_TCP,
                                 TCP_NODELAY, &flag, size) == SOCKET_ERROR) {
         throwError(getsockerror_winsock());
@@ -656,6 +680,7 @@ ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
     // set new state
     BOOL flag = reuse ? 1 : 0;
     size     = sizeof(flag);
+    LOG((CLOG_INFO __FUNCTION__ " set reuse %i on socket %08X", flag, s->m_socket));
     if (setsockopt_winsock(s->m_socket, SOL_SOCKET,
                                 SO_REUSEADDR, &flag, size) == SOCKET_ERROR) {
         throwError(getsockerror_winsock());
