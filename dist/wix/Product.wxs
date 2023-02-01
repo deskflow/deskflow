@@ -85,7 +85,9 @@
 				<File Source="$(var.BinPath)/synergys.exe">
 					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/synergyc.exe"/>
+				<File Source="$(var.BinPath)/synergyc.exe">
+					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
+				</File>
 				<File Source="$(var.BinPath)/syntool.exe"/>
 				<?if $(var.Platform) = x64 ?>
 					<File Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
