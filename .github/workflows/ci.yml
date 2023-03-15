@@ -1,0 +1,182 @@
+name: CI unit-tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
+      QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+      QT_VERSION: 5.12.6
+      QT_BASE_URL: http://qt.mirror.constant.com/
+      QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.12.6
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.QT_BASE_DIR }}
+          key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
+
+      - name: Install Qt
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          pip install aqtinstall
+          python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2017_64
+          cd $env:QT_LIB_DIR\msvc2017_64
+          dir
+
+      - name: Cache Bonjour
+        id: cache-bonjour
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.BONJOUR_BASE_DIR }}
+          key: ${{ runner.os }}-Bonjour
+
+      - name: Install Bonjour SDK
+        if: steps.cache-bonjour.outputs.cache-hit != 'true'
+        run: |
+          New-Item -Force -ItemType Directory -Path "$env:BONJOUR_BASE_DIR"
+          $client = new-object System.Net.WebClient
+          $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
+          [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
+
+      - name: Install OpenSSL
+        run: choco install openssl -y --no-progress
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Build
+        env:
+          CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\msvc2017_64\\"
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          msbuild synergy-core.sln /p:Configuration=Release
+
+      - name: Run unit test
+        run: .\build\bin\Release\unittests.exe
+
+  test-macos:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    strategy:
+      matrix:
+        include:
+          - os: "macos-latest"
+            target: "10.14"
+            shell: "bash"
+          - os: [self-hosted, macOS, arm64]
+            target: "11.0"
+            shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install brew dependencies
+        run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
+
+      - name: Build
+        env:
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target }}
+        run: |
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
+          . ./version
+          make -j
+
+      - name: Run unit test
+        run: ./build/bin/unittests
+
+  test-linux:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:${{ matrix.distro }}
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+    strategy:
+      matrix:
+        distro:
+          - centos7.6
+          - centos8
+          - debian9
+          - debian10
+          - debian11
+          - debiansid
+          - fedora33
+          - fedora34
+          - fedora35
+          - fedora36
+          - fedora37
+          - fedora38
+          - ubuntu18.04
+          - ubuntu20.04
+          - ubuntu22.04
+          - ubuntu22.10
+        flag: ["-j"]
+        include:
+          - distro: "ubuntu16.04"
+            flag: "-j1"
+
+    name: ${{ matrix.distro }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          make ${{ matrix.flag }}
+
+      - name: Run unit test
+        run: ./build/bin/unittests
+
+  test-raspberry-pi:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          rm -rf build
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          make -j1
+
+      - name: Run unit test
+        run: ./build/bin/unittests
