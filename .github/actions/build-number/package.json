@@ -1,0 +1,19 @@
+{
+  "name": "build-number",
+  "version": "1.0.0",
+  "description": "Generate next build number",
+  "main": "dist/build-number.js",
+  "scripts": {
+    "build": "ncc build build-number.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/ncc": "^0.36.1"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@octokit/core": "^4.2.0"
+  }
+}
