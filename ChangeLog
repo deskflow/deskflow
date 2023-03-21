@@ -11,6 +11,7 @@ Enhancements:
 - #7225 Ability to initiate TLS connection from server
 - #7239 Single app for server and client
 - #7248 Firewall exception for client
+- #7250 Add builds for Fedora 37 and 38
 
 1.14.5
 ======
