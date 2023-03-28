@@ -49,7 +49,7 @@ public:
     is thrown with an error of \c XSocketAddress::kBadPort.  The hostname
     is not resolved by the c'tor;  use \c resolve to do that.
     */
-    NetworkAddress(const String& hostname, int port);
+    NetworkAddress(const String& hostname, int port = 0);
 
     NetworkAddress(const NetworkAddress&);
 

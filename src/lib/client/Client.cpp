@@ -158,6 +158,8 @@ Client::connect(size_t addressIndex)
 
         // create the socket
         IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork, ARCH->getAddrFamily(m_serverAddress.getAddress()));
+        bindNetworkInterface(socket);
+
         // filter socket messages, including a packetizing filter
         m_stream = new PacketStreamFilter(m_events, socket, true);
 
@@ -833,6 +835,24 @@ Client::onFileRecieveCompleted()
     if (isReceivedFileSizeValid()) {
         auto method = new TMethodJob<Client>(this, &Client::writeToDropDirThread);
         m_writeToDropDirThread.reset(new Thread(method));
+    }
+}
+
+void Client::bindNetworkInterface(IDataSocket *socket)
+{
+    try {
+        if (!m_args.m_synergyAddress.empty()) {
+            LOG((CLOG_DEBUG1 "bind to network interface: %s", m_args.m_synergyAddress.c_str()));
+
+            NetworkAddress bindAddress(m_args.m_synergyAddress);
+            bindAddress.resolve();
+
+            socket->bind(bindAddress);
+        }
+    }
+    catch(XBase& e) {
+        LOG((CLOG_WARN "%s", e.what()));
+        LOG((CLOG_WARN "operating system will select network interface automatically"));
     }
 }
 
