@@ -59,7 +59,7 @@
 #endif
 
 #include <memory>
-#include <iostream>
+#include <sstream>
 #include <stdio.h>
 
 #define RETRY_TIME 1.0
@@ -117,45 +117,39 @@ ClientApp::help()
     "      --display <display>  connect to the X server at <display>\n" \
     "      --no-xinitthreads    do not call XInitThreads()\n"
 #else
-#  define WINAPI_ARG
-#  define WINAPI_INFO
+#  define WINAPI_ARG ""
+#  define WINAPI_INFO ""
 #endif
-    static const int buffer_size = 2000;
-    char buffer[buffer_size];
-    snprintf(
-        buffer,
-        buffer_size,
-        "Usage: %s"
-        " [--yscroll <delta>]"
-        " [--sync-language]"
-        " [--invert-scroll]"
-        " [--host]"
-        WINAPI_ARG
-        HELP_SYS_ARGS
-        HELP_COMMON_ARGS
-        " <server-address>"
-        "\n\n"
-        "Connect to a synergy mouse/keyboard sharing server.\n"
-        "\n"
-        HELP_COMMON_INFO_1
-        WINAPI_INFO
-        HELP_SYS_INFO
-        "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
-        "                             120 by default.\n"
-        "      --sync-language      set this parameter to enable language synchronization.\n"
-        "      --invert-scroll      invert scroll direction on this computer.\n"
-        "      --host               client starts a listener and waits for a server connection.\n"
-        HELP_COMMON_INFO_2
-        "\n"
-        "* marks defaults.\n"
-        "\n"
-        "The server address is of the form: [<hostname>][:<port>].  The hostname\n"
-        "must be the address or hostname of the server.  The port overrides the\n"
-        "default port, %d.\n",
-        args().m_pname, kDefaultPort
-    );
+    std::stringstream help;
+    help<< "Usage: " << args().m_pname
+        <<" [--yscroll <delta>]"
+        <<" [--sync-language]"
+        <<" [--invert-scroll]"
+        <<" [--host]"
+        <<WINAPI_ARG
+        <<HELP_SYS_ARGS
+        <<HELP_COMMON_ARGS
+        <<" <server-address>"
+        <<"\n\n"
+        <<"Connect to a synergy mouse/keyboard sharing server.\n"
+        <<"\n"
+        <<HELP_COMMON_INFO_1
+        <<WINAPI_INFO
+        <<HELP_SYS_INFO
+        <<"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
+        <<"                             120 by default.\n"
+        <<"      --sync-language      set this parameter to enable language synchronization.\n"
+        <<"      --invert-scroll      invert scroll direction on this computer.\n"
+        <<"      --host               client starts a listener and waits for a server connection.\n"
+        <<HELP_COMMON_INFO_2
+        <<"\n"
+        <<"* marks defaults.\n"
+        <<"\n"
+        <<"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
+        <<"must be the address or hostname of the server.  The port overrides the\n"
+        <<"default port, " << kDefaultPort <<".\n";
 
-    LOG((CLOG_PRINT "%s", buffer));
+    LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
 
 const char*
