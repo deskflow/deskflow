@@ -122,6 +122,7 @@ ClientApp::help()
 #endif
     std::stringstream help;
     help<< "Usage: " << args().m_pname
+        <<" [--address <address>]"
         <<" [--yscroll <delta>]"
         <<" [--sync-language]"
         <<" [--invert-scroll]"
@@ -133,6 +134,7 @@ ClientApp::help()
         <<"\n\n"
         <<"Connect to a synergy mouse/keyboard sharing server.\n"
         <<"\n"
+        <<"  -a, --address <address>  local network interface address.\n"
         <<HELP_COMMON_INFO_1
         <<WINAPI_INFO
         <<HELP_SYS_INFO
