@@ -52,6 +52,11 @@ namespace lib {
              */
             bool                  m_hostMode = false;
 
+            /**
+             * @brief m_serverAddress stores synergy server address
+             */
+            std::string m_serverAddress;
+
         };
     }
 }

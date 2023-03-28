@@ -87,9 +87,9 @@ ClientApp::parseArgs(int argc, const char* const* argv)
     }
     else {
         // save server address
-        if (!args().m_synergyAddress.empty()) {
+        if (!args().m_serverAddress.empty()) {
             try {
-                *m_serverAddress = NetworkAddress(args().m_synergyAddress, kDefaultPort);
+                *m_serverAddress = NetworkAddress(args().m_serverAddress, kDefaultPort);
                 m_serverAddress->resolve();
             }
             catch (XSocketAddress& e) {

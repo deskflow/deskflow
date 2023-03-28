@@ -111,7 +111,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setSynergyAddress)
 
     bool result = argParser.parseClientArgs(clientArgs, argc, kAddressCmd);
 
-    EXPECT_EQ("mock_address", clientArgs.m_synergyAddress);
+    EXPECT_EQ("mock_address", clientArgs.m_serverAddress);
     EXPECT_EQ(true, result);
 }
 

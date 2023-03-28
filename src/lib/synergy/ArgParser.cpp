@@ -126,7 +126,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         }
         else {
             if (i + 1 == argc) {
-                args.m_synergyAddress = argv[i];
+                args.m_serverAddress = argv[i];
                 return true;
             }
 
