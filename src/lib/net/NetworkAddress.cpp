@@ -238,7 +238,7 @@ void
 NetworkAddress::checkPort()
 {
     // check port number
-    if (m_port <= 0 || m_port > 65535) {
+    if (m_port < 0 || m_port > 65535) {
         throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
     }
 }

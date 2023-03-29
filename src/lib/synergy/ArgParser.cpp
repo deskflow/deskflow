@@ -56,10 +56,6 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
             ++i;
             continue;
         }
-        else if (isArg(i, argc, argv, "-a", "--address", 1)) {
-            // save listen address
-            args.m_synergyAddress = argv[++i];
-        }
         else if (isArg(i, argc, argv, "-c", "--config", 1)) {
             // save configuration file path
             args.m_configFile = argv[++i];
@@ -130,7 +126,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         }
         else {
             if (i + 1 == argc) {
-                args.m_synergyAddress = argv[i];
+                args.m_serverAddress = argv[i];
                 return true;
             }
 
@@ -223,7 +219,10 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 bool
 ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 {
-    if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+    if (isArg(i, argc, argv, "-a", "--address", 1)) {
+        argsBase().m_synergyAddress = argv[++i];
+    }
+    else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
         // change logging level
         argsBase().m_logFilter = argv[++i];
     }

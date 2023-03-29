@@ -210,6 +210,7 @@ private:
     void                handleStopRetry(const Event&, void*);
     void                onFileRecieveCompleted();
     void                sendClipboardThread(void*);
+    void                bindNetworkInterface(IDataSocket* socket) const;
 
 public:
     bool                m_mock;
