@@ -1,3 +1,9 @@
+1.14.7
+======
+
+Enhancements:
+- #7254 Ability to bind synergy client to a network interface.
+
 1.14.6
 ======
 
