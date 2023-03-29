@@ -838,7 +838,7 @@ Client::onFileRecieveCompleted()
     }
 }
 
-void Client::bindNetworkInterface(IDataSocket *socket)
+void Client::bindNetworkInterface(IDataSocket *socket) const
 {
     try {
         if (!m_args.m_synergyAddress.empty()) {
