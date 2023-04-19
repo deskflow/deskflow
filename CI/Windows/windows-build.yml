@@ -49,8 +49,7 @@ steps:
     inputs:
       targetType: 'inline'
       script: |
-        choco install openssl -y --forcex64 --no-progress
-        Copy-Item -Path "C:\\Program Files\\OpenSSL-Win64" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64" -Recurse
+        choco install openssl -y --forcex64 --no-progress --install-directory="$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64"
     displayName: 'Installing OpenSSL (x64)'
 
   - script: |
@@ -89,8 +88,7 @@ steps:
       targetType: 'inline'
       script: |
         choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
-        choco install openssl -y --forcex86 --no-progress
-        Copy-Item -Path "C:\\Program Files (x86)\\OpenSSL-Win32" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x86" -Recurse
+        choco install openssl -y --forcex86 --no-progress --install-directory="$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x86"
     displayName: 'Installing OpenSSL (x86)'
 
   - script: |
