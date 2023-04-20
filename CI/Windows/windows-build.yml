@@ -3,9 +3,11 @@ steps:
     inputs:
       targetType: "inline"
       script: |
+        choco install chocolately-core.extention
         Get-ChildItem -Path "C:\\Program Files\\"
         choco install openssl -y --forcex64 --no-progress
-        cat "C:\ProgramData\chocolatey\logs\chocolatey.log"
+        cat "C:\\ProgramData\\chocolatey\\logs\\chocolatey.log"
+        Get-ChildItem -Path "C:\\ProgramData\\chocolatey\\"
         Copy-Item -Path "C:\\Program Files\\OpenSSL-Win64" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64" -Recurse
     displayName: "Installing OpenSSL (x64)"
 
