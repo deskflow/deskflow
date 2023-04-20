@@ -9,14 +9,6 @@ jobs:
           image: windows-2019
           buildType: "standard"
           prefix: "synergy"
-        vs2019ent:
-          image: windows-2019
-          buildType: "enterprise"
-          prefix: "synergy-enterprise"
-        vs2019business:
-          image: windows-2019
-          buildType: "business"
-          prefix: "synergy-business"
 
     pool:
       vmImage: $[ variables['image'] ]
@@ -31,5 +23,4 @@ jobs:
       ENV_BAT: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\vsdevcmd'
 
     steps:
-      - template: CI/checkout.yml
       - template: CI/Windows/windows-build.yml
