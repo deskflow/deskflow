@@ -5,7 +5,7 @@ steps:
       script: |
         Get-ChildItem -Path "C:\\Program Files\\"
         choco install openssl -y --forcex64 --no-progress
-        Get-ChildItem -Path "C:\\Program Files\\"
+        Get-ChildItem -Path "C:\\Program Files\\Common Files\\"
         Copy-Item -Path "C:\\Program Files\\OpenSSL-Win64" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64" -Recurse
     displayName: "Installing OpenSSL (x64)"
 
