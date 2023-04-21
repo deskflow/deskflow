@@ -3,19 +3,11 @@ steps:
     inputs:
       targetType: "inline"
       script: |
-        New-Item -Force -ItemType Directory -Path "C:\\Program Files\\OpenSSL-Win64"
+        New-Item -Force -ItemType Directory -Path "C:\\Program Files\\OpenSSL-Win64\\bin"
         choco install openssl -y --forcex64 --no-progress
         Get-ChildItem -Path "C:\\Program Files\\OpenSSL-Win64\\"
         Get-ChildItem -Path "C:\\Program Files\\OpenSSL-Win64\\bin\\"
         Copy-Item -Path "C:\\Program Files\\OpenSSL-Win64" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64" -Recurse
         Get-ChildItem -Path "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64\\bin"
+        cat "C:\ProgramData\chocolatey\logs\chocolatey.log"
     displayName: "Installing OpenSSL (x64)"
-
-  - task: PowerShell@2
-    inputs:
-      targetType: "inline"
-      script: |
-        choco uninstall openssl -y --ignore-autouninstaller-failure --no-progress
-        choco install openssl -y --forcex86 --no-progress
-        Copy-Item -Path "C:\\Program Files (x86)\\OpenSSL-Win32" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x86" -Recurse
-    displayName: "Installing OpenSSL (x86)"
