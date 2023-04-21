@@ -6,6 +6,7 @@ steps:
         Get-ChildItem -Path "C:\\Program Files\\OpenSSL"
         Remove-Item "C:\\Program Files\\OpenSSL" -Recurse
         New-Item -Force -ItemType Directory -Path "C:\\Program Files\\OpenSSL-Win64"
+        Get-ChildItem -Path "C:\\Program Files"
         choco install openssl -y --forcex64 --no-progress
         Get-ChildItem -Path "C:\\Program Files"
         Get-ChildItem -Path "C:\\Program Files\\OpenSSL"
