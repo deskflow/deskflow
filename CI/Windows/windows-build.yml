@@ -3,11 +3,9 @@ steps:
     inputs:
       targetType: "inline"
       script: |
-        New-Item -Force -ItemType Directory -Path "C:\\Program Files\\OpenSSL-Win64\\bin"
+        New-Item -Force -ItemType Directory -Path "C:\\Program Files\\OpenSSL-Win64"
         choco install openssl -y --forcex64 --no-progress
-        Get-ChildItem -Path "C:\\Program Files\\OpenSSL-Win64\\"
-        Get-ChildItem -Path "C:\\Program Files\\OpenSSL-Win64\\bin\\"
+        Get-ChildItem -Path "C:\\ProgramData\\chocolatey\\lib"
         Copy-Item -Path "C:\\Program Files\\OpenSSL-Win64" -Destination "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64" -Recurse
         Get-ChildItem -Path "$(Build.Repository.LocalPath)\\ext\\openssl\\windows\\x64\\bin"
-        cat "C:\ProgramData\chocolatey\logs\chocolatey.log"
     displayName: "Installing OpenSSL (x64)"
