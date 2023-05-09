@@ -1,6 +1,9 @@
 1.14.7
 ======
 
+Bug fixes:
+- #7262 Fix backward compatibility for m1 and m2 builds.
+
 Enhancements:
 - #7254 Ability to bind synergy client to a network interface.
 

@@ -49,6 +49,7 @@ jobs:
           mkdir build
           cd build
           cmake \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11 \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
           . ./version
