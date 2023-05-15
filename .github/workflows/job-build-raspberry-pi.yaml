@@ -31,56 +31,56 @@ jobs:
       SYNERGY_BUSINESS: ${{ matrix.business }}
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Version Info
-      id: version
-      run: |
-        python3 CI/build_version.py
-        mkdir -p version-info && cd version-info && cmake .. && cd ..
-        . ./version-info/version
-        rm -rf version-info
-        SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
-        SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
-        SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
-        echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
-        echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
-        echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
-        echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
-        echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
-        echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
-        echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
-        echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
-        echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
-        echo "::set-output name=SYNERGY_PACKAGE_NAME::${{ matrix.name }}"
+      - name: Version Info
+        id: version
+        run: |
+          python3 CI/build_version.py
+          mkdir -p version-info && cd version-info && cmake .. && cd ..
+          . ./version-info/version
+          rm -rf version-info
+          SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
+          SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+          SYNERGY_DEB_VERSION="${SYNERGY_VERSION}.${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
+          echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
+          echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
+          echo "::set-output name=SYNERGY_VERSION_STAGE::${SYNERGY_VERSION_STAGE}"
+          echo "::set-output name=SYNERGY_VERSION_BUILD::${SYNERGY_VERSION_BUILD}"
+          echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
+          echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_DEB_VERSION::${SYNERGY_DEB_VERSION}"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_PACKAGE_NAME::${{ matrix.name }}"
 
-    - name: Build deb
-      env:
-        SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
-        SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
-        SYNERGY_DEB_VERSION: ${{ steps.version.outputs.SYNERGY_DEB_VERSION }}
-        PACKAGE_NAME: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}
-        SYNERGY_VERSION_STAGE: ${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}
-      run: |
-        sed -i "s/ synergy/ ${PACKAGE_NAME}/g" ./debian/control
-        python3 CI/deb_changelog.py "${PACKAGE_NAME}" "${SYNERGY_DEB_VERSION}"
-        debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
-        mkdir -p package
-        cd ..
-        filename=$(ls ${PACKAGE_NAME}_*${SYNERGY_REVISION}*.deb)
-        filename_new="${PACKAGE_NAME}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
-        mv $filename ${{ github.workspace }}/package/$filename_new
-        cd ${{ github.workspace }}/package
-        md5sum $filename_new >> ${filename_new}.checksum.txt
-        sha1sum $filename_new >> ${filename_new}.checksum.txt
-        sha256sum $filename_new >> ${filename_new}.checksum.txt
+      - name: Build deb
+        env:
+          SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+          SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+          SYNERGY_DEB_VERSION: ${{ steps.version.outputs.SYNERGY_DEB_VERSION }}
+          PACKAGE_NAME: ${{ steps.version.outputs.SYNERGY_PACKAGE_NAME }}
+          SYNERGY_VERSION_STAGE: ${{ steps.version.outputs.SYNERGY_VERSION_STAGE }}
+        run: |
+          sed -i "s/ synergy/ ${PACKAGE_NAME}/g" ./debian/control
+          python3 CI/deb_changelog.py "${PACKAGE_NAME}" "${SYNERGY_DEB_VERSION}"
+          debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
+          mkdir -p package
+          cd ..
+          filename=$(ls ${PACKAGE_NAME}_*${SYNERGY_REVISION}*.deb)
+          filename_new="${PACKAGE_NAME}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_raspios${filename##*${SYNERGY_REVISION}}"
+          mv $filename ${{ github.workspace }}/package/$filename_new
+          cd ${{ github.workspace }}/package
+          md5sum $filename_new >> ${filename_new}.checksum.txt
+          sha1sum $filename_new >> ${filename_new}.checksum.txt
+          sha256sum $filename_new >> ${filename_new}.checksum.txt
 
-    - name: Send package to Binary Storage
-      if: "github.event_name == 'release'"
-      uses: garygrossgarten/github-action-scp@v0.7.3
-      with:
-        local: "${{ github.workspace }}/package/"
-        remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
-        host: ${{ secrets.BINARIES_SSH_HOST }}
-        username: ${{ secrets.BINARIES_SSH_USER }}
-        privateKey: ${{ secrets.BINARIES_SSH_KEY }}
+      - name: Send package to Binary Storage
+        if: "github.event_name == 'release'"
+        uses: garygrossgarten/github-action-scp@v0.7.3
+        with:
+          local: "${{ github.workspace }}/package/"
+          remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
+          host: ${{ secrets.BINARIES_SSH_HOST }}
+          username: ${{ secrets.BINARIES_SSH_USER }}
+          privateKey: ${{ secrets.BINARIES_SSH_KEY }}

@@ -2,9 +2,9 @@ name: Debian
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build-arch64:
@@ -22,15 +22,15 @@ jobs:
     name: ${{ matrix.distro }}
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        . ./version
-        make -j
-        
-    - name: Run unit test
-      run: ./build/bin/unittests
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          make -j
+
+      - name: Run unit test
+        run: ./build/bin/unittests

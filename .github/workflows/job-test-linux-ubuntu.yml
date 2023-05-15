@@ -14,20 +14,19 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
     strategy:
       matrix:
-        distro: ['22.04', '20.04', '18.04']
-        flag: ['-j']
+        distro: ["22.04", "20.04", "18.04"]
+        flag: ["-j"]
         include:
-          - distro: '16.04'
-            flag: '-j1'
-
+          - distro: "16.04"
+            flag: "-j1"
 
     name: ubuntu${{ matrix.distro }}
 
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
-      
+          submodules: "recursive"
+
       - name: Work around https://github.com/actions/checkout/issues/766
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"

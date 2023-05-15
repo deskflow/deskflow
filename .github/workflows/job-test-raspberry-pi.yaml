@@ -2,9 +2,9 @@ name: Raspberry Pi
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test-on-pi:
@@ -16,13 +16,13 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Build
-      run: |
-        mkdir -p build; cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        make
+      - name: Build
+        run: |
+          mkdir -p build; cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make
 
-    - name: Run unit test
-      run: ./build/bin/unittests
+      - name: Run unit test
+        run: ./build/bin/unittests

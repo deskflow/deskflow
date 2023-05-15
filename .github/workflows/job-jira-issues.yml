@@ -1,6 +1,6 @@
 on:
   issues:
-    types: [ opened ]
+    types: [opened]
 
 name: Send Issue to Jira
 jobs:

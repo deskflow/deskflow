@@ -2,9 +2,9 @@ name: Fedora
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build-arch64:
@@ -25,21 +25,21 @@ jobs:
     name: ${{ matrix.distro }}
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
 
-    - name: Work around https://github.com/actions/checkout/issues/766
-      run: |
-        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Work around https://github.com/actions/checkout/issues/766
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
-        . ./version
-        make -j
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
+          . ./version
+          make -j
 
-    - name: Run unit test
-      run: ./build/bin/unittests
+      - name: Run unit test
+        run: ./build/bin/unittests
