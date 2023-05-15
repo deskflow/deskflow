@@ -1,0 +1,19 @@
+{
+  "name": "build-number",
+  "version": "1.0.0",
+  "description": "Calculate the current version",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build build-number.js",
+    "start": "node build-number.js"
+  },
+  "author": "Symless",
+  "license": "GPL-2.0-only",
+  "devDependencies": {
+    "@vercel/ncc": "^0.36.1"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@octokit/core": "^4.2.0"
+  }
+}

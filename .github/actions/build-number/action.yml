@@ -1,10 +1,10 @@
-name: 'Generate next build number'
-description: 'Generate next build number'
+name: "Generate next build number"
+description: "Generate next build number"
 
 outputs:
   build-number:
-    description: 'Generated build number'
+    description: "Generated build number"
 
 runs:
-  using: 'node12'
-  main: 'build-number.js'
+  using: "node16"
+  main: "dist/index.js"
