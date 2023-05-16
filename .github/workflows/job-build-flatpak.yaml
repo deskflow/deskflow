@@ -76,7 +76,7 @@ jobs:
 
       - name: Upload Artifact
         if: "github.event_name == 'pull_request'"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}
           path: flatpak/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
@@ -84,7 +84,7 @@ jobs:
 
       - name: Send package to Binary Storage
         if: "github.event_name == 'release'"
-        uses: garygrossgarten/github-action-scp@v0.7.3
+        uses: garygrossgarten/github-action-scp@v0.8.0
         with:
           local: flatpak/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
           remote: ${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/${{ matrix.name }}.flatpak
