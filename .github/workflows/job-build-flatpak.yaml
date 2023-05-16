@@ -42,10 +42,6 @@ jobs:
             libglib2.0-dev libgdk-pixbuf2.0-dev libnotify-dev \
             flatpak flatpak-builder
 
-      - name: Work around https://github.com/actions/checkout/issues/766
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
       - name: Version Info
         id: version
         run: |
