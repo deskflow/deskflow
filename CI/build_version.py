@@ -8,11 +8,11 @@ class VersionPart:
       self.number = 0
 
       if part:
-         self.__parsePreffix(part)
+         self.__parsePrefix(part)
          self.__parseNumber(part)
          self.__parseSuffix(part)
 
-   def __parsePreffix(self, part):
+   def __parsePrefix(self, part):
       if not part[0].isdigit():
          for i in part:
             if not i.isdigit():

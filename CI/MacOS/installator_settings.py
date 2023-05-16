@@ -58,7 +58,7 @@ icon_locations = {
 #    /foo/bar/baz.png - The path to an image file
 #
 # The hue component in hsl() and hwb() may include a unit; it defaults to
-# degrees ('deg'), but also supports radians ('rad') and gradians ('grad'
+# degrees ('deg'), but also supports radians ('rad') and gradiens ('grad'
 # or 'gon').
 #
 # Other color components may be expressed either in the range 0 to 1, or

@@ -40,5 +40,5 @@ jobs:
           . ./version
           make ${{ matrix.flag }}
 
-      - name: Run unit test
+      - name: Run unit tests
         run: ./build/bin/unittests

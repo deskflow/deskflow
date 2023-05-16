@@ -31,5 +31,5 @@ jobs:
         . ./version
         make -j
 
-    - name: Run unit test
+    - name: Run unit tests
       run: ./build/bin/unittests

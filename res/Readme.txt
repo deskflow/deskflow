@@ -1,4 +1,4 @@
-Thank you for chosing Synergy!
+Thank you for choosing Synergy!
 http://symless.com/
 
 Synergy allows you to share your keyboard and mouse between computers over a network.

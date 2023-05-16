@@ -47,7 +47,7 @@ section: links
 end
 
 # The aliases section is to map the full names of the computers to their logical names used in the screens section
-# One way to find the actual name of a comptuer is to run hostname from a command window
+# One way to find the actual name of a computer is to run hostname from a command window
 section: aliases
 	# Laptop is actually known as John-Smiths-MacBook-3.local
 	desktop2:

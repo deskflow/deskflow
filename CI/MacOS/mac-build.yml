@@ -135,7 +135,7 @@ steps:
 
   - task: Bash@3
     inputs:
-      filePath: 'CI/MacOS/notorize.sh'
+      filePath: 'CI/MacOS/notarize.sh'
       workingDirectory: 'pkg/'
     env:
       ASC_USERNAME: $(ASC_USERNAME)
