@@ -24,7 +24,7 @@ jobs:
 
       - name: Cache Qt
         id: cache-qt
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ${{ env.QT_BASE_DIR }}
           key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
@@ -39,7 +39,7 @@ jobs:
 
       - name: Cache Bonjour
         id: cache-bonjour
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ${{ env.BONJOUR_BASE_DIR }}
           key: ${{ runner.os }}-Bonjour
@@ -56,7 +56,7 @@ jobs:
         run: choco install openssl -y --no-progress
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Build
         env:

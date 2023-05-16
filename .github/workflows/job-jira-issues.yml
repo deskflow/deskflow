@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Login
-        uses: atlassian/gajira-login@master
+        uses: atlassian/gajira-login@v3
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
@@ -18,7 +18,7 @@ jobs:
 
       - name: Create
         id: create
-        uses: atlassian/gajira-create@master
+        uses: atlassian/gajira-create@v3
         with:
           project: SYNERGY
           issuetype: Task

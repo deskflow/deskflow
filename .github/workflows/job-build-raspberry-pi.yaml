@@ -78,7 +78,7 @@ jobs:
 
       - name: Send package to Binary Storage
         if: "github.event_name == 'release'"
-        uses: garygrossgarten/github-action-scp@v0.7.3
+        uses: garygrossgarten/github-action-scp@v0.8.0
         with:
           local: "${{ github.workspace }}/package/"
           remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
