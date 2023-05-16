@@ -23,7 +23,8 @@ jobs:
     name: ubuntu${{ matrix.distro }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           submodules: "recursive"
 

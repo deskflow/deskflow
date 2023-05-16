@@ -14,8 +14,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - id: file_changes
-        name: Get changed files
+      - name: Get changed files
+        id: file_changes
         uses: trilom/file-changes-action@v1.2.4
         with:
           output: ","

@@ -28,7 +28,8 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Install brew dependencies
         run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"

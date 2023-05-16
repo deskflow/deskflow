@@ -34,7 +34,8 @@ jobs:
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup Environment
         run: |
