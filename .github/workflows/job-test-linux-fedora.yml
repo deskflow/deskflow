@@ -30,10 +30,6 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Work around https://github.com/actions/checkout/issues/766
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
       - name: Build
         run: |
           mkdir build
