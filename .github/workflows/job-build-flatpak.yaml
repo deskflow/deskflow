@@ -90,7 +90,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@v0.7.3
         with:
           local: flatpak/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
-          remote: ${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/${{ matrix.name }}.flatpak
+          remote: ${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak
           host: ${{ secrets.BINARIES_SSH_HOST }}
           username: ${{ secrets.BINARIES_SSH_USER }}
           privateKey: ${{ secrets.BINARIES_SSH_KEY }}
