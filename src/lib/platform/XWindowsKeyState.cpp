@@ -204,7 +204,6 @@ XWindowsKeyState::pollActiveGroup() const
         XkbStateRec state;
         XSync(m_display, False);
         if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
-            LOG((CLOG_WARN "LANGUAGE_DEBUG Poll result %d", state.group));
             return state.group;
         }
 
@@ -297,9 +296,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG((CLOG_WARN "LANGUAGE_DEBUG  %03x (%08x) %s %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
-             keystroke.m_data.m_button.m_press ? "down" : "up",
-             keystroke.m_data.m_button.m_repeat ? "Repeat" : "New"));
         if (keystroke.m_data.m_button.m_repeat) {
             int c = keystroke.m_data.m_button.m_button;
             int i = (c >> 3);
@@ -321,7 +317,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         }
 
         if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %d", keystroke.m_data.m_group.m_group));
 
 #ifndef __APPLE__
             if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
@@ -342,7 +337,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             }
         }
         else {
-            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %+d", keystroke.m_data.m_group.m_group));
 
 #ifndef __APPLE__
             if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
