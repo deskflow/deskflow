@@ -3,6 +3,7 @@
 
 Bug fixes:
 - #7262 Fix backward compatibility for m1 and m2 builds.
+- #7265 Remove extra key press traces for Linux.
 
 Enhancements:
 - #7254 Ability to bind synergy client to a network interface.
