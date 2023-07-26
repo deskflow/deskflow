@@ -160,9 +160,10 @@ MSWindowsScreen::MSWindowsScreen(
         // SHGetFolderPath is deprecated in vista, but use it for xp support.
         char desktopPath[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
-        m_desktopPath = String(desktopPath);
+            m_desktopPath = String(desktopPath);
             LOG((CLOG_DEBUG "using desktop for file drag-drop target: %s", m_desktopPath.c_str()));
-        } else {
+        }
+        else {
             LOG((CLOG_DEBUG "unable to use desktop as file drag-drop target, code=%d", GetLastError()));
         }
 
