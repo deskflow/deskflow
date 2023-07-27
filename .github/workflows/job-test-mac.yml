@@ -21,7 +21,7 @@ jobs:
             target: "10.14"
             shell: "bash"
           - os: [self-hosted, macOS, arm64]
-            target: ""
+            target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
     env:

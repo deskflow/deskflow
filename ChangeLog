@@ -1,30 +1,35 @@
 1.14.7
 ======
 
+Bug fixes:
+- #7265 Remove extra key press traces for Linux
+
 Enhancements:
-- #7254 Ability to bind synergy client to a network interface.
+- #7262 Backward compatibility for M1 and M2 builds
+- #7254 Ability to bind client to a network interface
+- #7263 Change name of Flatpak uploaded to snapshots
 
 1.14.6
 ======
 
 Bug fixes:
-- #7208 Fix crash on FreeBSD when pressing special keys on a client.
-- #7241 Change the default signature hashing algorithm for sha256.
-- #7242 Fix tls certificate generation for flatpak.
+- #7208 Crash on FreeBSD when pressing special keys on a client
+- #7241 Change the default signature hashing algorithm for sha256
+- #7242 TLS certificate generation for Flatpak
 
 Enhancements:
-- #7222 Ability to initiate non-TLS connection from server
-- #7225 Ability to initiate TLS connection from server
+- #7222 Initiate non-TLS connection from server
+- #7225 Initiate TLS connection from server
 - #7239 Single app for server and client
 - #7248 Firewall exception for client
-- #7250 Add builds for Fedora 37 and 38
+- #7250 Builds for Fedora 37 and 38
 
 1.14.5
 ======
 
 Bug fixes:
 - #7182 Remove unused TLS options from the GUI on client
-- #7186 There are no additional TLS options for all users setting
+- #7186 No additional TLS options for all users setting
 
 Enhancements:
 - #7183 Refactoring for Synergy 3 licenses
