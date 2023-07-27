@@ -8,6 +8,7 @@ Enhancements:
 - #7262 Backward compatibility for M1 and M2 builds
 - #7254 Ability to bind client to a network interface
 - #7263 Change name of Flatpak uploaded to snapshots
+- #7269 Reword file drag drop error to debug message
 
 1.14.6
 ======
