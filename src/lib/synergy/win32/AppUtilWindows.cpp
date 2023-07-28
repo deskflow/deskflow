@@ -275,7 +275,7 @@ AppUtilWindows::showNotification(const String & title, const String & text) cons
 
     const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler.get(), &error);
     if (!launched) {
-        LOG((CLOG_DEBUG "failed to show toast notification. Error code: %d", error));
+        LOG((CLOG_DEBUG "failed to show toast notification, error code: %d", error));
         return;
     }
 }
