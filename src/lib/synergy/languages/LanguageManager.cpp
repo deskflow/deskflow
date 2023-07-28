@@ -42,7 +42,7 @@ namespace languages {
 LanguageManager::LanguageManager(const std::vector<String>& localLanguages) :
     m_localLanguages(localLanguages)
 {
-    LOG((CLOG_INFO "Local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
+    LOG((CLOG_INFO "local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
 }
 
 void LanguageManager::setRemoteLanguages(const String& remoteLanguages)
@@ -53,7 +53,7 @@ void LanguageManager::setRemoteLanguages(const String& remoteLanguages)
             m_remoteLanguages.push_back(remoteLanguages.substr(i, 2));
         }
     }
-    LOG((CLOG_INFO "Remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));
+    LOG((CLOG_INFO "remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));
 }
 
 const std::vector<String>& LanguageManager::getRemoteLanguages() const

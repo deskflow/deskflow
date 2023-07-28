@@ -94,7 +94,7 @@ OSXClipboardBMPConverter::getOSXFormat() const
 String
 OSXClipboardBMPConverter::fromIClipboard(const String& bmp) const
 {
-    LOG((CLOG_DEBUG1 "ENTER OSXClipboardBMPConverter::doFromIClipboard()"));
+    LOG((CLOG_DEBUG1 "getting data from clipboard"));
     // create BMP image
     UInt8 header[14];
     UInt8* dst = header;

@@ -285,10 +285,10 @@ DaemonApp::mainLoop(bool logToFile, bool foreground)
         DAEMON_RUNNING(false);
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s", e.what()));
+        LOG((CLOG_CRIT "an error occurred: %s", e.what()));
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG((CLOG_CRIT "an unknown error occurred.\n"));
     }
 }
 

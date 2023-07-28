@@ -352,7 +352,7 @@ MSWindowsWatchdog::startProcess()
 		getActiveDesktop(&sa);
 
         if (!isDesktopRunnable(m_activeDesktop)) {
-            LOG((CLOG_INFO, "Starting on the login screen is disabled!"));
+            LOG((CLOG_INFO, "starting on the login screen is disabled"));
             return;
         }
 

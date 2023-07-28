@@ -976,7 +976,7 @@ ServerProxy::setActiveServerLanguage(const String& language)
 
         if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
             if(!m_isUserNotifiedAboutLanguageSyncError) {
-                LOG((CLOG_WARN "Current server language is not installed on client."));
+                LOG((CLOG_WARN "current server language is not installed on client"));
                 m_isUserNotifiedAboutLanguageSyncError = true;
             }
         }
@@ -985,7 +985,7 @@ ServerProxy::setActiveServerLanguage(const String& language)
         }
     }
     else {
-        LOG((CLOG_DEBUG1 "Active server langauge is empty!"));
+        LOG((CLOG_DEBUG1 "active server langauge is empty"));
     }
 }
 
