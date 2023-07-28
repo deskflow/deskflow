@@ -100,7 +100,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
             nameListJoin.append(", ");
     }
 
-    LOG((CLOG_DEBUG "processes in session %d: %s",
+    LOG((CLOG_DEBUG2 "processes in session %d: %s",
         m_activeSessionId, nameListJoin.c_str()));
 
     CloseHandle(snapshot);
