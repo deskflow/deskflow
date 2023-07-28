@@ -109,13 +109,13 @@ AppUtilUnix::getCurrentLanguageCode()
 
     auto display = XOpenDisplay(nullptr);
       if (!display) {
-          LOG((CLOG_WARN "Failed to open x11 default display"));
+          LOG((CLOG_WARN "failed to open x11 default display"));
           return result;
       }
 
       auto kbdDescr= XkbAllocKeyboard();
       if (!kbdDescr) {
-          LOG((CLOG_WARN "Failed to get x11 keyboard description"));
+          LOG((CLOG_WARN "failed to get x11 keyboard description"));
           return result;
       }
       XkbGetNames(display, XkbSymbolsNameMask, kbdDescr);
@@ -174,24 +174,24 @@ void
 AppUtilUnix::showNotification(const String & title, const String & text) const
 {
 #if WINAPI_XWINDOWS
-    LOG((CLOG_INFO "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+    LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
     if (!notify_init("Synergy"))
     {
-        LOG((CLOG_INFO "Failed to initialize libnotify"));
+        LOG((CLOG_INFO "failed to initialize libnotify"));
         return;
     }
 
     auto notification = notify_notification_new (title.c_str(), text.c_str(), nullptr);
     if (notification == nullptr)
     {
-        LOG((CLOG_INFO "Failed to create notification"));
+        LOG((CLOG_INFO "failed to create notification"));
         return;
     }
     notify_notification_set_timeout(notification, 10000);
 
     if (!notify_notification_show(notification, nullptr))
     {
-        LOG((CLOG_INFO "Failed to show notification"));
+        LOG((CLOG_INFO "failed to show notification"));
     }
 
     g_object_unref(G_OBJECT(notification));
@@ -200,6 +200,6 @@ AppUtilUnix::showNotification(const String & title, const String & text) const
 #elif WINAPI_CARBON
     // synergys and synergyc are not allowed to send native notifications on MacOS
     // instead ask main synergy process to show them instead
-    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), text.c_str()));
+    LOG((CLOG_INFO "mac notification: %s|%s", title.c_str(), text.c_str()));
 #endif
 }

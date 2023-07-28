@@ -82,11 +82,11 @@ ToolApp::run(int argc, char** argv)
         }
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
+        LOG((CLOG_CRIT "an error occurred: %s\n", e.what()));
         return kExitFailed;
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG((CLOG_CRIT "an unknown error occurred\n"));
         return kExitFailed;
     }
 

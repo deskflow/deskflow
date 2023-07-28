@@ -218,7 +218,7 @@ OSXClipboard::get(EFormat format) const
 
     // if no converter then we don't recognize any formats
     if (converter == NULL) {
-        LOG((CLOG_DEBUG "Unable to find converter for data"));
+        LOG((CLOG_DEBUG "unable to find converter for data"));
         return result;
     }
 

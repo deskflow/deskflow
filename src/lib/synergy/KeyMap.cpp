@@ -346,10 +346,10 @@ SInt32 KeyMap::getLanguageGroupID(SInt32 group, const String& lang) const
     auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
     if (it != m_keyboardLayouts.end()) {
         id = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
-        LOG((CLOG_DEBUG1 "Language %s has group id %d", lang.c_str(), id));
+        LOG((CLOG_DEBUG1 "language %s has group id %d", lang.c_str(), id));
     }
     else {
-        LOG((CLOG_DEBUG1 "Could not found requested language"));
+        LOG((CLOG_DEBUG1 "could not found requested language"));
     }
 
     return id;

@@ -161,13 +161,13 @@ getEventDriver()
                 sEventDrvrRef = getService(iter);
             }
             else {
-                LOG((CLOG_WARN, "IOService not found"));
+                LOG((CLOG_WARN, "io service not found"));
             }
 
             IOObjectRelease(iter);
         }
         else {
-            LOG((CLOG_WARN, "Couldn't obtain IO master port"));
+            LOG((CLOG_WARN, "couldn't get io master port"));
         }
     }
 
@@ -595,7 +595,7 @@ OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
             m_capsPressed = keyDown;
             break;
         default:
-            LOG((CLOG_DEBUG1 "The key is not a modifier"));
+            LOG((CLOG_DEBUG1 "the key is not a modifier"));
             break;
     }
 }
@@ -653,7 +653,7 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
 
             setKeyboardModifiers(virtualKey, keyDown);
             if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
-                LOG((CLOG_WARN, "Fail to post HID event"));
+                LOG((CLOG_WARN, "fail to post hid event"));
                 postKeyboardKey(virtualKey, keyDown);
             }
 
@@ -673,7 +673,7 @@ OSXKeyState::fakeKey(const Keystroke& keystroke)
                 }
 
                 if(pollActiveGroup() != group) {
-                    LOG((CLOG_WARN "Failed to set new keyboard layout!"));
+                    LOG((CLOG_WARN "failed to set new keyboard layout"));
                 }
             }
             break;
@@ -934,20 +934,20 @@ OSXKeyState::setGroup(SInt32 group)
 {
     TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
     if(!keyboardLayout) {
-        LOG((CLOG_WARN "Nedeed keyboard layout is null"));
+        LOG((CLOG_WARN "nedeed keyboard layout is null"));
         return;
     }
     auto canBeSetted = (CFBooleanRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
     if(!canBeSetted) {
-        LOG((CLOG_WARN "Nedeed keyboard layout is disabled for programmatically selection"));
+        LOG((CLOG_WARN "nedeed keyboard layout is disabled for programmatically selection"));
         return;
     }
 
     if(TISSelectInputSource(keyboardLayout) != noErr) {
-        LOG((CLOG_WARN "Failed to set nedeed keyboard layout"));
+        LOG((CLOG_WARN "failed to set nedeed keyboard layout"));
     }
 
-    LOG((CLOG_DEBUG1 "Keyboard layout change to %d", group));
+    LOG((CLOG_DEBUG1 "keyboard layout change to %d", group));
 
     //A minimal delay is needed after a group change because the
     //keyboard key event often happens immediately after.

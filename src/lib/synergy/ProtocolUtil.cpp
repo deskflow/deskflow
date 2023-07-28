@@ -144,7 +144,7 @@ ProtocolUtil::vwritef(synergy::IStream* stream,
         LOG((CLOG_DEBUG2 "wrote %d bytes", size));
     }
     catch (const XBase& exception) {
-        LOG((CLOG_DEBUG2 "Exception <%s> during wrote %d bytes into stream", exception.what(), size));
+        LOG((CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream", exception.what(), size));
         throw;
     }
 }
@@ -519,8 +519,8 @@ void ProtocolUtil::readBytes(synergy::IStream * stream, UInt32 len, String* dest
         }
         catch (std::bad_alloc & exception) {
             // Added try catch due to GHSA-chfm-333q-gfpp
-            LOG((CLOG_ERR "ALLOC: Unable to allocate memory %d bytes", len));
-            LOG((CLOG_DEBUG "bad_alloc detected: Do you have enough free memory?"));
+            LOG((CLOG_ERR "bad alloc, unable to allocate memory %d bytes", len));
+            LOG((CLOG_DEBUG "bad_alloc detected: is there enough memory?"));
             throw exception;
         }
     }

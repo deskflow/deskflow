@@ -285,10 +285,10 @@ DaemonApp::mainLoop(bool logToFile, bool foreground)
         DAEMON_RUNNING(false);
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s", e.what()));
+        LOG((CLOG_CRIT "an error occurred: %s", e.what()));
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG((CLOG_CRIT "an unknown error occurred.\n"));
     }
 }
 
@@ -331,7 +331,8 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             }
 
             if (!command.empty()) {
-                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                LOG((CLOG_DEBUG "daemon got new core command"));
+                LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
                 std::vector<String> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
