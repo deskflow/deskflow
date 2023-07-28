@@ -430,7 +430,7 @@ Client::sendClipboard(ClipboardID id)
         // marshall the data
 		String data = clipboard.marshall();
 		if (data.size() >= m_maximumClipboardSize * 1024) {
-			LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
+			LOG((CLOG_NOTE "skipping clipboard transfer because the clipboard"
 				" contents exceeds the %i MB size limit set by the server",
 				m_maximumClipboardSize / 1024));
 			return;
@@ -764,7 +764,7 @@ Client::handleHello(const Event&, void*)
 
     if (isCompatible(major, minor)) {
         //because 1.6 is comptable with 1.7 and 1.8 - downgrading protocol for server
-        LOG((CLOG_NOTE "Downgrading protocol version for server"));
+        LOG((CLOG_NOTE "downgrading protocol version for server"));
         helloBackMinor = minor;
     }
     else if (major < kProtocolMajorVersion ||

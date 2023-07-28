@@ -331,7 +331,8 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             }
 
             if (!command.empty()) {
-                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                LOG((CLOG_DEBUG "daemon got new core command"));
+                LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
                 std::vector<String> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
