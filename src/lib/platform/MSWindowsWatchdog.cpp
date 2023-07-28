@@ -387,7 +387,8 @@ MSWindowsWatchdog::startProcess()
         m_processRunning = true;
         m_processFailures = 0;
 
-        LOG((CLOG_DEBUG "started process, session=%i, elevated: %s, command=%s",
+        LOG((CLOG_DEBUG "started core process from daemon");
+        LOG((CLOG_DEBUG2 "process info, session=%i, elevated: %s, command=%s",
             m_session.getActiveSessionId(),
             m_elevateProcess ? "yes" : "no",
             m_command.c_str()));
