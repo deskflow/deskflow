@@ -32,6 +32,12 @@ else()
     option (ENABLE_COVERAGE "Build with coverage")
 endif()
 
+if (DEFINED ENV{SYNERGY_UNIFIED_CORE})
+    option (UNIFIED_CORE "Build a single core binary" ON)
+else()
+    option (UNIFIED_CORE "Build a single core binary" OFF)
+endif()
+
 if ($ENV{SYNERGY_ENTERPRISE})
     option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
 else()
