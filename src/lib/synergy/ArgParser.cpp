@@ -68,7 +68,7 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
             continue;
         }
         else {
-            LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
+            LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
         ++i;
@@ -130,7 +130,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
                 return true;
             }
 
-            LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
+            LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
         ++i;
@@ -138,7 +138,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
 
     // exactly one non-option argument (server-address)
     if (i == argc) {
-        LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
+        LOG((CLOG_CRIT "%s: a server address or name is required" BYE,
             args.m_pname, args.m_pname));
         return false;
     }
