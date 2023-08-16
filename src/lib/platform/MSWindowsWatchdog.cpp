@@ -287,13 +287,13 @@ MSWindowsWatchdog::mainLoop(void*)
         
         }
         catch (std::exception& e) {
-            LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
+            LOG((CLOG_CRIT "failed to launch, error: %s", e.what()));
             m_processFailures++;
             m_processRunning = false;
             continue;
         }
         catch (...) {
-            LOG((CLOG_ERR "failed to launch, unknown error."));
+            LOG((CLOG_CRIT "failed to launch, unknown error."));
             m_processFailures++;
             m_processRunning = false;
             continue;
@@ -370,7 +370,7 @@ MSWindowsWatchdog::startProcess()
 	}
 
     if (!createRet) {
-        LOG((CLOG_ERR "could not launch command"));
+        LOG((CLOG_CRIT "could not launch command"));
         DWORD exitCode = 0;
         GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
         LOG((CLOG_ERR "exit code: %d", exitCode));

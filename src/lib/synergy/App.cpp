@@ -203,7 +203,7 @@ App::initApp(int argc, const char** argv)
 
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {
-        LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
+        LOG((CLOG_CRIT "%s: unrecognized log level `%s'" BYE,
             argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname));
         m_bye(kExitArgs);
     }

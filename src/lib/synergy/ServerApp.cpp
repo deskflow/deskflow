@@ -99,7 +99,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
                 m_synergyAddress->resolve();
             }
             catch (XSocketAddress& e) {
-                LOG((CLOG_PRINT "%s: %s" BYE,
+                LOG((CLOG_CRIT "%s: %s" BYE,
                     args().m_pname, e.what(), args().m_pname));
                 m_bye(kExitArgs);
             }
@@ -219,7 +219,7 @@ ServerApp::loadConfig()
     }
 
     if (!loaded) {
-        LOG((CLOG_PRINT "%s: no configuration available", args().m_pname));
+        LOG((CLOG_CRIT "%s: no configuration available", args().m_pname));
         m_bye(kExitConfig);
     }
 }

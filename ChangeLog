@@ -10,6 +10,7 @@ Enhancements:
 - #7263 Change name of Flatpak uploaded to snapshots
 - #7269 Reword file drag drop error to debug message
 - #7274 Only build necessary binaries
+- #7277 Change start errors to fatal
 
 1.14.6
 ======
