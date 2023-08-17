@@ -553,7 +553,12 @@ ServerApp::startServer()
         return true;
     }
     catch (XSocketAddressInUse& e) {
-        LOG((CLOG_CRIT "cannot listen for clients: %s", e.what()));
+        if (args().m_restartable) {
+            LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
+        }
+        else {
+            LOG((CLOG_CRIT "cannot listen for clients: %s", e.what()));
+        }
         closeClientListener(listener);
         updateStatus(String("cannot listen for clients: ") + e.what());
     }
