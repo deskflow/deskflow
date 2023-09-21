@@ -23,6 +23,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/IJob.h"
+#include <exception>
 
 //
 // Thread
@@ -169,12 +170,17 @@ Thread::threadFunc(void* vjob)
         LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x, result %p", id, result));
     }
     catch (XBase& e) {
-        LOG((CLOG_ERR "exception on thread 0x%08x: %s", id, e.what()));
+        LOG((CLOG_ERR "synergy exception on thread 0x%08x: %s", id, e.what()));
+        delete job;
+        throw;
+    }
+    catch (std::exception& e) {
+        LOG((CLOG_ERR "standard exception on thread 0x%08x: %s", id, e.what()));
         delete job;
         throw;
     }
     catch (...) {
-        LOG((CLOG_ERR "exception on thread 0x%08x: <unknown>", id));
+        LOG((CLOG_ERR "non-exception throw on thread 0x%08x: <unknown>", id));
         delete job;
         throw;
     }
