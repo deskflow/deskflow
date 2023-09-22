@@ -6,17 +6,21 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
+
 jobs:
   test-macos:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runtime.os }}
 
     defaults:
       run:
-        shell: ${{ matrix.shell }}
+        shell: ${{ matrix.runtime.shell }}
 
     strategy:
       matrix:
-        include:
+        runtime:
           - os: "macos-latest"
             target: "10.14"
             shell: "bash"
@@ -28,14 +32,27 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Setup PATH
+        env:
+          ARCH: ${{ matrix.runtime.arch }}
+        run: |
+          case "$ARCH" in
+            "arm64")
+              echo "/opt/homebrew/bin" >> $GITHUB_PATH
+              ;;
+          esac
 
       - name: Install brew dependencies
         run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
 
       - name: Build
         env:
-          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target }}
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
         run: |
           mkdir build
           cd build

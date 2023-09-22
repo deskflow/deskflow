@@ -2,34 +2,42 @@ name: CentOS
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
 
 jobs:
   build-arch64:
+    name: ${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
+
     env:
       GIT_COMMIT: ${{ github.sha }}
+
     strategy:
       matrix:
-        include:
-          - distro: centos7.6
-          - distro: centos8
-
-    name: ${{ matrix.distro }}
+        distro:
+          - centos7.6
+          - centos8
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
 
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
-        . ./version
-        make -j
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake3 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..
+          . ./version
+          make -j
 
-    - name: Run unit test
-      run: ./build/bin/unittests
+      - name: Run unit test
+        run: ./build/bin/unittests
