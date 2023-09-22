@@ -22,12 +22,12 @@ jobs:
     strategy:
       matrix:
         distro:
-          - fedora29
-          - fedora30
           - fedora33
           - fedora34
           - fedora35
           - fedora36
+          - fedora37
+          - fedora38
 
     steps:
       - name: Checkout git repo
