@@ -1,6 +1,6 @@
 on:
   issues:
-    types: [ opened ]
+    types: [opened]
 
 name: Send Issue to Jira
 jobs:
@@ -30,8 +30,8 @@ jobs:
             ${{ github.event.issue.body }}
 
       - name: Create comment
-        uses: jungwinter/comment@v1
         id: createComment
+        uses: jungwinter/comment@v1
         with:
           type: create
           body: |
