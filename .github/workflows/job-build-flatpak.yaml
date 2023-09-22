@@ -8,26 +8,29 @@ jobs:
   build-flatpak-bundle:
     name: ubuntu-flatpak
     runs-on: ubuntu-latest
+
     container:
       image: symless/synergy-core:ubuntu20.04
       options: --privileged
+
     strategy:
       matrix:
-        name: [synergy, synergy-enterprise, synergy-business]
-        include:
+        runtime:
           - name: synergy
             remote_folder: v1-core-standard
           - name: synergy-enterprise
             remote_folder: v1-core-enterprise
           - name: synergy-business
             remote_folder: v1-core-business
+
     env:
       GIT_COMMIT: ${{ github.sha }}
-      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
-      SYNERGY_BUSINESS: ${{ matrix.business }}
+      SYNERGY_ENTERPRISE: ${{ matrix.runtime.enterprise }}
+      SYNERGY_BUSINESS: ${{ matrix.runtime.business }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout git repo
+        uses: actions/checkout@v3
         with:
           submodules: "recursive"
           fetch-depth: "0"
@@ -54,7 +57,7 @@ jobs:
           rm -rf version-info
           SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
           SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
-          SYNERGY_FLATPAK_NAME="${{ matrix.name }}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+          SYNERGY_FLATPAK_NAME="${{ matrix.runtime.name }}_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
           echo "::set-output name=SYNERGY_VERSION_MAJOR::${SYNERGY_VERSION_MAJOR}"
           echo "::set-output name=SYNERGY_VERSION_MINOR::${SYNERGY_VERSION_MINOR}"
           echo "::set-output name=SYNERGY_VERSION_PATCH::${SYNERGY_VERSION_PATCH}"
@@ -63,7 +66,7 @@ jobs:
           echo "::set-output name=SYNERGY_VERSION::${SYNERGY_VERSION}"
           echo "::set-output name=SYNERGY_REVISION::${SYNERGY_REVISION}"
           echo "::set-output name=SYNERGY_FLATPAK_NAME::${SYNERGY_FLATPAK_NAME}"
-          echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          echo "::set-output name=SYNERGY_REMOTE_FOLDER::${{ matrix.runtime.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
       - name: Install flatpak
         run: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -73,7 +76,7 @@ jobs:
       - name: Build
         run: |
           cd flatpak
-          flatpak-builder build ${{ matrix.name }}.yml --disable-cache --force-clean
+          flatpak-builder build ${{ matrix.runtime.name }}.yml --disable-cache --force-clean
           flatpak build-export export build
           flatpak build-bundle export ${{ steps.version.outputs.SYNERGY_FLATPAK_NAME }}.flatpak com.symless.Synergy master --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
