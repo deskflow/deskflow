@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build-arch64:
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     env:
       GIT_COMMIT: ${{ github.sha }}
