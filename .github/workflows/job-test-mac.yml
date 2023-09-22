@@ -22,9 +22,11 @@ jobs:
       matrix:
         runtime:
           - os: "macos-latest"
+            arch: x64
             target: "10.14"
             shell: "bash"
           - os: [self-hosted, macOS, arm64]
+            arch: arm64
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
@@ -32,20 +34,20 @@ jobs:
       GIT_COMMIT: ${{ github.sha }}
 
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v3
-        with:
-          submodules: "recursive"
-
       - name: Setup PATH
-        env:
-          ARCH: ${{ matrix.runtime.arch }}
         run: |
           case "$ARCH" in
             "arm64")
               echo "/opt/homebrew/bin" >> $GITHUB_PATH
               ;;
           esac
+        env:
+          ARCH: ${{ matrix.runtime.arch }}
+
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
 
       - name: Install brew dependencies
         run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
