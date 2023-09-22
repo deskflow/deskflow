@@ -24,8 +24,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          apt-get update 
-          apt-get install -y \
+          sudo apt-get install -y \
             build-essential \
             cmake \
             debhelper \
@@ -41,8 +40,7 @@ jobs:
             libxtst-dev \
             qtbase5-dev \
             qttools5-dev \
-            qttools5-dev-tools 
-          rm -rf /var/lib/apt/lists'
+            qttools5-dev-tools
 
       - name: Checkout git repo
         uses: actions/checkout@v3
