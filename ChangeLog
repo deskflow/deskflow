@@ -12,6 +12,9 @@ Enhancements:
 - #7274 Only build necessary binaries
 - #7277 Change start errors to fatal
 
+GitHub Actions:
+- #7283 Update all workflows and fix broken macOS workflows
+
 1.14.6
 ======
 
