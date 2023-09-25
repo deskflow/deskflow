@@ -35,6 +35,16 @@ jobs:
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
 
     steps:
+      - name: Setup PATH
+        run: echo "/opt/homebrew/bin" >> $GITHUB_PATH
+        env:
+          ARCH: ${{ matrix.runtime.arch }}
+
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
       - name: Checkout git repo
         uses: actions/checkout@v3
         with:
