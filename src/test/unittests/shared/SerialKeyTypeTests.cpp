@@ -26,7 +26,7 @@ TEST(SerialKeyTypeTests, TrialTemporaryKeyType_false)
 	SerialKeyType KeyType;
 	EXPECT_EQ(false, KeyType.isTrial());
 	EXPECT_EQ(false, KeyType.isTemporary());
-	EXPECT_EQ(true, KeyType.isPermanent());
+	EXPECT_FALSE(KeyType.isMaintenance());
 }
 
 TEST(SerialKeyTypeTests, TrialTemporaryKeyType_true)
@@ -35,7 +35,7 @@ TEST(SerialKeyTypeTests, TrialTemporaryKeyType_true)
 	KeyType.setKeyType("trial");
 	EXPECT_EQ(true, KeyType.isTrial());
 	EXPECT_EQ(true, KeyType.isTemporary());
-	EXPECT_EQ(false, KeyType.isPermanent());
+	EXPECT_FALSE(KeyType.isMaintenance());
 }
 
 TEST(SerialKeyTypeTests, TemporaryKeyType_true)
@@ -44,14 +44,14 @@ TEST(SerialKeyTypeTests, TemporaryKeyType_true)
 	KeyType.setKeyType("subscription");
 	EXPECT_EQ(false, KeyType.isTrial());
 	EXPECT_EQ(true, KeyType.isTemporary());
-	EXPECT_EQ(false, KeyType.isPermanent());
+	EXPECT_FALSE(KeyType.isMaintenance());
 }
 
-TEST(SerialKeyTypeTests, PermanentKeyType_true)
+TEST(SerialKeyTypeTests, MaintanenceKeyType_true)
 {
 	SerialKeyType KeyType;
-	KeyType.setKeyType("");
+	KeyType.setKeyType("maintenance");
 	EXPECT_EQ(false, KeyType.isTrial());
 	EXPECT_EQ(false, KeyType.isTemporary());
-	EXPECT_EQ(true, KeyType.isPermanent());
+	EXPECT_TRUE(KeyType.isMaintenance());
 }

@@ -72,6 +72,19 @@ updateSetting(const IpcMessage& message)
     }
 }
 
+bool
+isServerCommandLine(const std::vector<String>& cmd)
+{
+    auto isServer = false;
+
+    if (cmd.size() > 1) {
+        isServer = (cmd[0].find("synergys") != String::npos) ||
+                   (cmd[0].find("synergy-core") != String::npos && cmd[1] == "server");
+    }
+
+    return isServer;
+}
+
 }//namespace
 
 DaemonApp* DaemonApp::s_instance = NULL;
@@ -272,10 +285,10 @@ DaemonApp::mainLoop(bool logToFile, bool foreground)
         DAEMON_RUNNING(false);
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s", e.what()));
+        LOG((CLOG_CRIT "an error occurred: %s", e.what()));
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG((CLOG_CRIT "an unknown error occurred.\n"));
     }
 }
 
@@ -318,21 +331,18 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             }
 
             if (!command.empty()) {
-                LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
+                LOG((CLOG_DEBUG "daemon got new core command"));
+                LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
                 std::vector<String> argsArray;
                 ArgParser::splitCommandString(command, argsArray);
                 ArgParser argParser(NULL);
                 const char** argv = argParser.getArgv(argsArray);
-
                 int argc = static_cast<int>(argsArray.size());
-                bool server = argsArray[0].find("synergys") != String::npos;
 
-
-                if (server) {
+                if (isServerCommandLine(argsArray)) {
                     auto serverArgs = new lib::synergy::ServerArgs();
                     argParser.parseServerArgs(*serverArgs, argc, argv);
-
                 }
                 else {
                     auto clientArgs = new lib::synergy::ClientArgs();

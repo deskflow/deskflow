@@ -21,6 +21,7 @@
 #include "ServerConfig.h"
 #include "HotkeyDialog.h"
 #include "ActionDialog.h"
+#include "UpgradeDialog.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -186,12 +187,21 @@ void ServerConfigDialog::reject()
 
 void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
 {
-    Hotkey hotkey;
-    HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted) {
-        serverConfig().hotkeys().append(hotkey);
-        m_pListHotkeys->addItem(hotkey.text());
-        onChange();
+    if (serverConfig().isHotkeysAvailable()) {
+        Hotkey hotkey;
+        HotkeyDialog dlg(this, hotkey);
+        if (dlg.exec() == QDialog::Accepted) {
+            serverConfig().hotkeys().append(hotkey);
+            m_pListHotkeys->addItem(hotkey.text());
+            onChange();
+        }
+    }
+    else {
+        UpgradeDialog upgradeDialog(this);
+        upgradeDialog.showDialog(
+            "Configuring custom hotkeys is a Synergy Ultimate feature.",
+            "synergy/purchase/purchase-ultimate-upgrade?source=gui"
+        );
     }
 }
 

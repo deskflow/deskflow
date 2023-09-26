@@ -59,24 +59,17 @@ void ActivationDialog::accept()
     QMessageBox message;
     m_appConfig->activationHasRun(true);
 
-    std::pair<bool, QString> result;
     try {
         SerialKey serialKey (ui->m_pTextEditSerialKey->toPlainText().
                              trimmed().toStdString());
-        result = m_LicenseManager->setSerialKey(serialKey);
+        m_LicenseManager->setSerialKey(serialKey);
     }
     catch (std::exception& e) {
-        message.critical(this, "Unknown Error",
-            tr("An error occurred while trying to activate Synergy. "
-                "Please contact the helpdesk, and provide the "
-                "following information:\n\n%1").arg(e.what()));
-        refreshSerialKey();
-        return;
-    }
-
-    if (!result.first) {
         message.critical(this, "Activation failed",
-                         tr("%1").arg(result.second));
+            tr("An error occurred while trying to activate Synergy. "
+                "<a href=\"https://symless.com/synergy/contact-support?source=gui\" style=\"text-decoration: none; color: #4285F4;\">"
+                "Please contact the helpdesk</a>, and provide the following information:"
+                "<br><br>%1").arg(e.what()));
         refreshSerialKey();
         return;
     }
@@ -92,7 +85,7 @@ void ActivationDialog::accept()
                 arg ((daysLeft == 1) ? "" : "s").
                 arg ((daysLeft == 1) ? "s" : "");
 
-        if (edition == kPro || edition == kPro_China || edition == kBusiness) {
+        if (m_appConfig->isCryptoAvailable()) {
             m_appConfig->generateCertificate();
             thanksMessage = thanksMessage.arg("If you're using SSL, "
                             "remember to activate all of your devices.");

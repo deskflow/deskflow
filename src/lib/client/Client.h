@@ -27,6 +27,7 @@
 #include "net/NetworkAddress.h"
 #include "base/EventTypes.h"
 #include "mt/CondVar.h"
+#include <memory>
 
 class EventQueueTimer;
 namespace synergy { class Screen; }
@@ -209,6 +210,7 @@ private:
     void                handleStopRetry(const Event&, void*);
     void                onFileRecieveCompleted();
     void                sendClipboardThread(void*);
+    void                bindNetworkInterface(IDataSocket* socket) const;
 
 public:
     bool                m_mock;
@@ -234,9 +236,9 @@ private:
     String              m_receivedFileData;
     DragFileList        m_dragFileList;
     String              m_dragFileExt;
-    Thread*             m_sendFileThread;
-    Thread*             m_writeToDropDirThread;
-    TCPSocket*          m_socket;
+    using AutoThread = std::unique_ptr<Thread>;
+    AutoThread          m_sendFileThread;
+    AutoThread          m_writeToDropDirThread;
     bool                m_useSecureNetwork;
     bool                m_enableClipboard;
     size_t              m_maximumClipboardSize;

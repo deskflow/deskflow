@@ -6,25 +6,40 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
+
 jobs:
   build-arch64:
+    name: ubuntu${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:ubuntu${{ matrix.distro }}
+
     env:
       GIT_COMMIT: ${{ github.sha }}
+
     strategy:
       matrix:
-        distro: ['20.04', '21.04', '18.04']
-        flag: ['-j']
+        distro:
+          - "22.04"
+          - "20.04"
+          - "18.04"
+        flag:
+          - "-j"
         include:
-          - distro: '16.04'
-            flag: '-j1'
-
-
-    name: ubuntu${{ matrix.distro }}
+          - distro: "16.04"
+            flag: "-j1"
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Work around https://github.com/actions/checkout/issues/766
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Build
         run: |

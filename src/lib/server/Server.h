@@ -33,6 +33,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
+#include <memory>
 
 class BaseClientProxy;
 class EventQueueTimer;
@@ -184,6 +185,9 @@ public:
 
     //! Return fake drag file list
     DragFileList        getFakeDragFileList() { return m_fakeDragFileList; }
+
+    //! Returns true if it's client mode and server initiates connection
+    bool isClientMode() const;
 
     //@}
 
@@ -471,19 +475,20 @@ private:
     IEventQueue*        m_events;
 
     // file transfer
+    using AutoThread = std::unique_ptr<Thread>;
     size_t                m_expectedFileSize;
     String                m_receivedFileData;
     DragFileList        m_dragFileList;
     DragFileList        m_fakeDragFileList;
-    Thread*                m_sendFileThread;
-    Thread*                m_writeToDropDirThread;
+    AutoThread          m_sendFileThread;
+    AutoThread          m_writeToDropDirThread;
     String                m_dragFileExt;
     bool                m_ignoreFileTransfer;
     bool                m_disableLockToScreen;
     bool                m_enableClipboard;
-    size_t				m_maximumClipboardSize;
+    size_t              m_maximumClipboardSize;
 
-    Thread*                m_sendDragInfoThread;
+    AutoThread          m_sendDragInfoThread;
     bool                m_waitDragInfoThread;
 
     ClientListener*        m_clientListener;

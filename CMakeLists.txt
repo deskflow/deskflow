@@ -32,10 +32,22 @@ else()
     option (ENABLE_COVERAGE "Build with coverage")
 endif()
 
+if (DEFINED ENV{SYNERGY_UNIFIED_CORE})
+    option (UNIFIED_CORE "Build a single core binary" ON)
+else()
+    option (UNIFIED_CORE "Build a single core binary" OFF)
+endif()
+
 if ($ENV{SYNERGY_ENTERPRISE})
     option (SYNERGY_ENTERPRISE "Build Enterprise" ON)
 else()
     option (SYNERGY_ENTERPRISE "Build Enterprise" OFF)
+endif()
+
+if ($ENV{SYNERGY_BUSINESS})
+    option (SYNERGY_BUSINESS "Build Business" ON)
+else()
+    option (SYNERGY_BUSINESS "Build Business" OFF)
 endif()
 
 set (CMAKE_CXX_STANDARD 14)

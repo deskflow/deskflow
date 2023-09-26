@@ -25,6 +25,7 @@
 
 #include "Fingerprint.h"
 #include "AboutDialog.h"
+#include "AboutDialogEliteBackers.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "ActivationDialog.h"
@@ -306,6 +307,7 @@ void MainWindow::loadSettings()
     enableClient(appConfig().getClientGroupChecked());
 
     m_pLineEditHostname->setText(appConfig().getServerHostname());
+    m_pLineEditClienIp->setText(serverConfig().getClientAddress());
 }
 
 void MainWindow::initConnections()
@@ -324,6 +326,7 @@ void MainWindow::saveSettings()
     appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
     appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
     appConfig().setServerHostname(m_pLineEditHostname->text());
+    serverConfig().setClientAddress(m_pLineEditClienIp->text());
 
     /* Save everything */
     GUI::Config::ConfigWriter::make()->globalSave();
@@ -646,6 +649,7 @@ void MainWindow::startSynergy()
             return;
         }
     }
+    m_LicenseManager->registerLicense();
 #endif
     bool desktopMode = appConfig().processMode() == Desktop;
     bool serviceMode = appConfig().processMode() == Service;
@@ -834,7 +838,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
     }
 #endif
 
-    if (m_pLineEditHostname->text().isEmpty())
+    if (m_pLineEditHostname->text().isEmpty() && !appConfig().getClientHostMode())
     {
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
         //check if autoconfig mode is enabled
@@ -856,18 +860,24 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 #endif
     }
 
-    QString hostName = m_pLineEditHostname->text();
-    // if interface is IPv6 - ensure that ip is in square brackets
-    if (hostName.count(':') > 1) {
-        if(hostName[0] != '[') {
-            hostName.insert(0, '[');
+    if (appConfig().getClientHostMode()) {
+        args <<"--host";
+        args <<":" + QString::number(appConfig().port());
+    }
+    else {
+        QString hostName = m_pLineEditHostname->text();
+        // if interface is IPv6 - ensure that ip is in square brackets
+        if (hostName.count(':') > 1) {
+            if(hostName[0] != '[') {
+                hostName.insert(0, '[');
+            }
+            if(hostName[hostName.size() - 1] != ']') {
+                hostName.push_back(']');
+            }
         }
-        if(hostName[hostName.size() - 1] != ']') {
-            hostName.push_back(']');
-        }
+        args << hostName + ":" + QString::number(appConfig().port());
     }
 
-    args << hostName + ":" + QString::number(appConfig().port());
     return true;
 }
 
@@ -942,6 +952,14 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
     {
         QMessageBox::warning(this, tr("Synergy server not found"),
                              tr("The executable for the synergy server does not exist."));
+        return false;
+    }
+
+    if (appConfig().getServerClientMode() &&
+        m_pLineEditClienIp->text().isEmpty())
+    {
+        QMessageBox::warning(this, tr("Client IP address or name is empty"),
+                             tr("Please fill in a client IP address or name."));
         return false;
     }
 
@@ -1265,8 +1283,19 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-    AboutDialog dlg(this, appPath(appConfig().synergycName()));
+#if defined(SYNERGY_ENTERPRISE) || defined(SYNERGY_BUSINESS)
+    AboutDialog dlg(this, appConfig());
     dlg.exec();
+#else
+    if (appConfig().edition() == Edition::kBusiness) {
+        AboutDialog dlg(this, appConfig());
+        dlg.exec();
+    }
+    else {
+        AboutDialogEliteBackers dlg(this, appConfig());
+        dlg.exec();
+    }
+#endif
 }
 
 void MainWindow::on_m_pActionHelp_triggered()
@@ -1317,6 +1346,8 @@ void MainWindow::on_m_pActionSettings_triggered()
     auto result = SettingsDialog(this, appConfig()).exec();
     if(result == QDialog::Accepted)
     {
+        enableServer(appConfig().getServerGroupChecked());
+        enableClient(appConfig().getClientGroupChecked());
         auto state = synergyState();
         if ((state == synergyConnected) || (state == synergyConnecting) || (state == synergyListening)) {
             restartSynergy();
@@ -1416,10 +1447,11 @@ int MainWindow::raiseActivationDialog()
 void MainWindow::on_windowShown()
 {
 #ifndef SYNERGY_ENTERPRISE
-	if (!m_AppConfig->activationHasRun() &&
-		!m_LicenseManager->serialKey().isValid()){
-			raiseActivationDialog();
-	}
+    auto serialKey = m_LicenseManager->serialKey();
+    if (!m_AppConfig->activationHasRun() && !serialKey.isValid()) {
+        setEdition(Edition::kUnregistered);
+        raiseActivationDialog();
+    }
 #endif
 }
 
@@ -1478,10 +1510,22 @@ void MainWindow::updateScreenName()
 
 void MainWindow::enableServer(bool enable)
 {
+    m_AppConfig->setServerGroupChecked(enable);
     m_pRadioGroupServer->setChecked(enable);
 
     if (enable)
     {
+        if (m_AppConfig->getServerClientMode()) {
+            m_pLabelClientIp->show();
+            m_pLineEditClienIp->show();
+            m_pButtonConnectToClient->show();
+        }
+        else {
+            m_pLabelClientIp->hide();
+            m_pLineEditClienIp->hide();
+            m_pButtonConnectToClient->hide();
+        }
+
         m_pButtonConfigureServer->show();
         m_pLabelServerState->show();
         updateLocalFingerprint();
@@ -1492,18 +1536,31 @@ void MainWindow::enableServer(bool enable)
         m_pLabelFingerprint->hide();
         m_pButtonConfigureServer->hide();
         m_pLabelServerState->hide();
+        m_pLabelClientIp->hide();
+        m_pLineEditClienIp->hide();
+        m_pButtonConnectToClient->hide();
     }
 }
 
 void MainWindow::enableClient(bool enable)
 {
+    m_AppConfig->setClientGroupChecked(enable);
     m_pRadioGroupClient->setChecked(enable);
 
     if (enable)
     {
-        m_pLabelServerName->show();
-        m_pLineEditHostname->show();
-        m_pButtonConnect->show();
+        if (m_AppConfig->getClientHostMode())
+        {
+            m_pLabelServerName->hide();
+            m_pLineEditHostname->hide();
+            m_pButtonConnect->hide();
+        }
+        else
+        {
+            m_pLabelServerName->show();
+            m_pLineEditHostname->show();
+            m_pButtonConnect->show();
+        }
         m_pButtonToggleStart->setEnabled(enable);
     }
     else
@@ -1527,15 +1584,22 @@ void MainWindow::on_m_pRadioGroupServer_clicked(bool)
 {
     enableServer(true);
     enableClient(false);
+    m_AppConfig->saveSettings();
 }
 
 void MainWindow::on_m_pRadioGroupClient_clicked(bool)
 {
     enableClient(true);
     enableServer(false);
+    m_AppConfig->saveSettings();
 }
 
 void MainWindow::on_m_pButtonConnect_clicked()
+{
+    on_m_pButtonApply_clicked();
+}
+
+void MainWindow::on_m_pButtonConnectToClient_clicked()
 {
     on_m_pButtonApply_clicked();
 }

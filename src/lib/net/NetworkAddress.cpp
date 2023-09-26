@@ -152,10 +152,13 @@ NetworkAddress::resolve(size_t index)
             // Logic for temporary filtring only ipv4 addresses
             std::vector<ArchNetAddress> ipv4OnlyAddresses;
             {
-                auto adresses = ARCH->nameToAddr(m_hostname);
-                for (auto address : adresses) {
+                auto addresses = ARCH->nameToAddr(m_hostname);
+                for (auto address : addresses) {
                     if (ARCH->getAddrFamily(address) == IArchNetwork::kINET) {
                         ipv4OnlyAddresses.emplace_back(address);
+                    }
+                    else {
+                        ARCH->closeAddr(address);
                     }
                 }
             }
@@ -235,7 +238,7 @@ void
 NetworkAddress::checkPort()
 {
     // check port number
-    if (m_port <= 0 || m_port > 65535) {
+    if (m_port < 0 || m_port > 65535) {
         throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
     }
 }

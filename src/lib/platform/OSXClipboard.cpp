@@ -100,13 +100,13 @@ OSXClipboard::add(EFormat format, const String & data)
 
     LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
     if (format == IClipboard::kText) {
-        LOG((CLOG_DEBUG " format of data to be added to clipboard was kText"));
+        LOG((CLOG_DEBUG "format of data to be added to clipboard was kText"));
     }
     else if (format == IClipboard::kBitmap) {
-        LOG((CLOG_DEBUG " format of data to be added to clipboard was kBitmap"));
+        LOG((CLOG_DEBUG "format of data to be added to clipboard was kBitmap"));
     }
     else if (format == IClipboard::kHTML) {
-        LOG((CLOG_DEBUG " format of data to be added to clipboard was kHTML"));
+        LOG((CLOG_DEBUG "format of data to be added to clipboard was kHTML"));
     }
 
     for (ConverterList::const_iterator index = m_converters.begin();
@@ -218,7 +218,7 @@ OSXClipboard::get(EFormat format) const
 
     // if no converter then we don't recognize any formats
     if (converter == NULL) {
-        LOG((CLOG_DEBUG "Unable to find converter for data"));
+        LOG((CLOG_DEBUG "unable to find converter for data"));
         return result;
     }
 

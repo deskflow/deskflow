@@ -23,6 +23,8 @@
 #include <ActivationNotifier.h>
 #include <utility>
 
+#include "LicenseRegistry.h"
+
 class AppConfig;
 
 class LicenseManager: public QObject
@@ -31,12 +33,11 @@ class LicenseManager: public QObject
 
 public:
     LicenseManager(AppConfig* appConfig);
-    std::pair<bool, QString> setSerialKey(SerialKey serialKey,
-                                          bool acceptExpired = false);
+    void setSerialKey(SerialKey serialKey, bool acceptExpired = false);
     void refresh();
     Edition activeEdition() const;
     QString activeEditionName() const;
-    SerialKey serialKey() const;
+    const SerialKey& serialKey() const;
     void skipActivation() const;
     void notifyUpdate(QString fromVersion, QString toVersion) const;
     static QString getEditionName(Edition edition, bool trial = false);
@@ -46,9 +47,11 @@ public:
 private:
     AppConfig* m_AppConfig;
     SerialKey m_serialKey;
+    LicenseRegistry m_registry;
 
 public slots:
     void validateSerialKey() const;
+    void registerLicense();
 
 signals:
     void editionChanged (Edition) const;

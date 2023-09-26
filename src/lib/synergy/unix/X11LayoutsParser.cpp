@@ -46,7 +46,7 @@ X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node* root, std::vector<
 {
     auto configItemElem = root->child("configItem");
     if(!configItemElem) {
-        LOG((CLOG_WARN "Failed to read \"configItem\" in xml file"));
+        LOG((CLOG_WARN "failed to read \"configItem\" in xml file"));
         return false;
     }
 
@@ -72,19 +72,19 @@ X11LayoutsParser::getAllLanguageData(const String& pathToEvdevFile)
     std::vector<Lang> allCodes;
     pugi::xml_document doc;
     if(!doc.load_file(pathToEvdevFile.c_str())) {
-        LOG((CLOG_WARN "Failed to open %s", pathToEvdevFile.c_str()));
+        LOG((CLOG_WARN "failed to open %s", pathToEvdevFile.c_str()));
         return allCodes;
     }
 
     auto xkbConfigElem = doc.child("xkbConfigRegistry");
     if(!xkbConfigElem) {
-        LOG((CLOG_WARN "Failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str()));
+        LOG((CLOG_WARN "failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str()));
         return allCodes;
     }
 
     auto layoutListElem = xkbConfigElem.child("layoutList");
     if(!layoutListElem) {
-        LOG((CLOG_WARN "Failed to read layoutList in %s", pathToEvdevFile.c_str()));
+        LOG((CLOG_WARN "failed to read layoutList in %s", pathToEvdevFile.c_str()));
         return allCodes;
     }
 
@@ -121,7 +121,7 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
                                           std::vector<String>& iso639_2Codes)
 {
     if(layoutNames.size() != layoutVariantNames.size()) {
-        LOG((CLOG_WARN "Error in language layout or language layout variants list"));
+        LOG((CLOG_WARN "error in language layout or language layout variants list"));
         return;
     }
 
@@ -133,7 +133,7 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
         const auto& layoutName = layoutNames[i];
         auto langIter = std::find_if(allLang.begin(), allLang.end(), [&layoutName](const Lang& l) {return l.name == layoutName;});
         if(langIter == allLang.end()) {
-            LOG((CLOG_WARN "Language \"%s\" is unknown", layoutNames[i].c_str()));
+            LOG((CLOG_WARN "language \"%s\" is unknown", layoutNames[i].c_str()));
             continue;
         }
 
@@ -146,7 +146,7 @@ X11LayoutsParser::convertLayoutToISO639_2(const String&        pathToEvdevFile,
             auto langVariantIter = std::find_if(langIter->variants.begin(), langIter->variants.end(),
                                                 [&variantName](const Lang& l) {return l.name == variantName;});
             if(langVariantIter == langIter->variants.end()) {
-                LOG((CLOG_WARN "Variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
+                LOG((CLOG_WARN "variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
                 continue;
             }
 
@@ -186,13 +186,13 @@ X11LayoutsParser::convertLayotToISO(const String& pathToEvdevFile, const String&
     std::vector<String> iso639_2Codes;
     convertLayoutToISO639_2(pathToEvdevFile, needToReloadFiles, {layoutLangCode}, {""}, iso639_2Codes);
     if(iso639_2Codes.empty()) {
-        LOG((CLOG_WARN "Failed to convert layout lang code! Code: \"%s\"", layoutLangCode.c_str()));
+        LOG((CLOG_WARN "failed to convert layout lang code: \"%s\"", layoutLangCode.c_str()));
         return "";
     }
 
     auto iso639_1Codes = convertISO639_2ToISO639_1(iso639_2Codes);
     if(iso639_1Codes.empty()) {
-        LOG((CLOG_WARN "Failed to convert ISO639/2 lang code to ISO639/1!"));
+        LOG((CLOG_WARN "failed to convert ISO639/2 lang code to ISO639/1"));
         return "";
     }
 
@@ -207,7 +207,7 @@ X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<String>& iso639_2C
         const auto& tableIter = std::find_if(ISO_Table.begin(), ISO_Table.end(),
                                             [&isoCode](const std::pair<String, String>& c) {return c.first == isoCode;});
         if(tableIter == ISO_Table.end()) {
-            LOG((CLOG_WARN "ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));
+            LOG((CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));
             continue;
         }
 

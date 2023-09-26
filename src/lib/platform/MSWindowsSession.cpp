@@ -70,7 +70,8 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
             if (!pidToSidRet) {
                 // if we can not acquire session associated with a specified process,
                 // simply ignore it
-                LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
+                LOG((CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
+                     entry.th32ProcessID, entry.szExeFile, GetLastError()));
                 gotEntry = nextProcessEntry(snapshot, &entry);
                 continue;
             }
@@ -100,7 +101,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
             nameListJoin.append(", ");
     }
 
-    LOG((CLOG_DEBUG "processes in session %d: %s",
+    LOG((CLOG_DEBUG2 "processes in session %d: %s",
         m_activeSessionId, nameListJoin.c_str()));
 
     CloseHandle(snapshot);

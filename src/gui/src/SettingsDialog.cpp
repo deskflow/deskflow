@@ -27,6 +27,7 @@
 #include "MainWindow.h"
 #include "BonjourWindows.h"
 #include "Zeroconf.h"
+#include "UpgradeDialog.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -52,8 +53,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
     enableControls(appConfig().isWritable());
 
-    m_pCheckBoxLanguageSync->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
-    m_pCheckBoxScrollDirection->setVisible(m_pMainWindow->synergyType() == MainWindow::synergyClient);
+    m_pCheckBoxLanguageSync->setVisible(isClientMode());
+    m_pCheckBoxScrollDirection->setVisible(isClientMode());
 
     const auto& serveConfig = m_pMainWindow->serverConfig();
     m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
@@ -71,6 +72,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
     connect(m_pComboElevate,            SIGNAL(currentIndexChanged(int)), this, SLOT(onChange()));
     connect(m_pCheckBoxLanguageSync,    SIGNAL(clicked()),                this, SLOT(onChange()));
     connect(m_pCheckBoxScrollDirection, SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxClientHostMode,  SIGNAL(clicked()),                this, SLOT(onChange()));
+    connect(m_pCheckBoxServerClientMode,SIGNAL(clicked()),                this, SLOT(onChange()));
 
     adjustSize();
 }
@@ -95,6 +98,8 @@ void SettingsDialog::accept()
    appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
    appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
    appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
+   appConfig().setClientHostMode(m_pCheckBoxClientHostMode->isChecked());
+   appConfig().setServerClientMode(m_pCheckBoxServerClientMode->isChecked());
 
    appConfig().saveSettings();
    QDialog::accept();
@@ -154,14 +159,10 @@ void SettingsDialog::loadFromConfig() {
     m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
     m_pCheckBoxLanguageSync->setChecked(m_appConfig.getLanguageSync());
     m_pCheckBoxScrollDirection->setChecked(m_appConfig.getInvertScrollDirection());
+    m_pCheckBoxClientHostMode->setChecked(m_appConfig.getClientHostMode());
+    m_pCheckBoxServerClientMode->setChecked(m_appConfig.getServerClientMode());
 
-    //If the tls file exists test its key length
-    if (QFile(appConfig().getTLSCertPath()).exists()) {
-        updateKeyLengthOnFile(appConfig().getTLSCertPath());
-    } else {
-        m_pComboBoxKeyLength->setCurrentIndex(m_pComboBoxKeyLength->findText(appConfig().getTLSKeyLength()));
-    }
-
+    setupSeurity();
 
     if (m_appConfig.isSystemScoped()) {
         m_pRadioSystemScope->setChecked(true);
@@ -187,8 +188,6 @@ void SettingsDialog::loadFromConfig() {
     allowAutoConfig();
 #endif
 
-    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
     m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
 #else
@@ -196,6 +195,34 @@ void SettingsDialog::loadFromConfig() {
     m_pLabelInstallBonjour->hide();
 #endif
 
+    m_pCheckBoxClientHostMode->setVisible(isClientMode() && appConfig().getInitiateConnectionFromServer());
+    m_pCheckBoxServerClientMode->setVisible(!isClientMode() && appConfig().getInitiateConnectionFromServer());
+}
+
+void SettingsDialog::setupSeurity()
+{
+    //If the tls file exists test its key length
+    if (QFile(appConfig().getTLSCertPath()).exists()) {
+        updateKeyLengthOnFile(appConfig().getTLSCertPath());
+    } else {
+        m_pComboBoxKeyLength->setCurrentIndex(m_pComboBoxKeyLength->findText(appConfig().getTLSKeyLength()));
+    }
+
+    m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+
+    if (appConfig().getClientGroupChecked()) {
+        m_pLabelKeyLength->hide();
+        m_pComboBoxKeyLength->hide();
+        m_pLabelCertificate->hide();
+        m_pLineEditCertificatePath->hide();
+        m_pPushButtonBrowseCert->hide();
+        m_pPushButtonRegenCert->hide();
+    }
+}
+
+bool SettingsDialog::isClientMode() const
+{
+    return (m_pMainWindow->synergyType() == MainWindow::synergyClient);
 }
 
 void SettingsDialog::allowAutoConfig()
@@ -251,16 +278,23 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked)
     else
     {
         m_pCheckBoxEnableCrypto->setChecked(false);
-
-        QMessageBox message(this);
-        message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-        message.addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
-        message.setText(QObject::tr("TLS encryption is Synergy Pro feature.\nPlease upgrade if this is important to you"));
-
-        if (message.exec() == QMessageBox::Accepted)
+#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
+        UpgradeDialog upgradeDialog(this);
+        if (appConfig().edition() == Edition::kLite)
         {
-            QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + "synergy/purchase/upgrade"));
+            upgradeDialog.showDialog(
+                "TLS encryption is a Synergy Ultimate feature.",
+                "synergy/purchase/purchase-ultimate-upgrade?source=gui"
+            );
         }
+        else
+        {
+            upgradeDialog.showDialog(
+                "TLS encryption is a Synergy Pro feature.",
+                "synergy/purchase/upgrade?source=gui"
+            );
+        }
+#endif
     }
 }
 
@@ -346,6 +380,8 @@ bool SettingsDialog::isModified()
       || appConfig().getCryptoEnabled()  != m_pCheckBoxEnableCrypto->isChecked()
       || appConfig().isSystemScoped()    != m_isSystemAtStart
       || appConfig().getLanguageSync()   != m_pCheckBoxLanguageSync->isChecked()
+      || appConfig().getClientHostMode() != m_pCheckBoxClientHostMode->isChecked()
+      || appConfig().getServerClientMode() != m_pCheckBoxServerClientMode->isChecked()
       || appConfig().getInvertScrollDirection() != m_pCheckBoxScrollDirection->isChecked())
    );
 }
@@ -369,6 +405,8 @@ void SettingsDialog::enableControls(bool enable) {
     m_labelAdminRightsMessage->setVisible(!enable);
     m_pCheckBoxLanguageSync->setEnabled(enable);
     m_pCheckBoxScrollDirection->setEnabled(enable);
+    m_pCheckBoxClientHostMode->setEnabled(enable);
+    m_pCheckBoxServerClientMode->setEnabled(enable);
 
     if (enable) {
         m_pLabelLogPath->setEnabled(m_pCheckBoxLogToFile->isChecked());

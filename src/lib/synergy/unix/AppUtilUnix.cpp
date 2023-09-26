@@ -25,6 +25,7 @@
 #include <X11/XKBlib.h>
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
+#include <platform/OSXAutoTypes.h>
 #else
 #error Platform not supported.
 #endif
@@ -71,11 +72,11 @@ AppUtilUnix::getKeyboardLayoutList()
 #elif WINAPI_CARBON
     CFStringRef keys[] = { kTISPropertyInputSourceCategory };
     CFStringRef values[] = { kTISCategoryKeyboardInputSource };
-    CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
-    CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+    AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL), CFRelease);
+    AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
-    for (CFIndex i = 0; i < CFArrayGetCount(kbds); ++i) {
-        TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
+    for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
+        TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds.get(), i);
         auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
         char temporaryCString[128] = {0};
         for(CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
@@ -108,13 +109,13 @@ AppUtilUnix::getCurrentLanguageCode()
 
     auto display = XOpenDisplay(nullptr);
       if (!display) {
-          LOG((CLOG_WARN "Failed to open x11 default display"));
+          LOG((CLOG_WARN "failed to open x11 default display"));
           return result;
       }
 
       auto kbdDescr= XkbAllocKeyboard();
       if (!kbdDescr) {
-          LOG((CLOG_WARN "Failed to get x11 keyboard description"));
+          LOG((CLOG_WARN "failed to get x11 keyboard description"));
           return result;
       }
       XkbGetNames(display, XkbSymbolsNameMask, kbdDescr);
@@ -147,8 +148,8 @@ AppUtilUnix::getCurrentLanguageCode()
           groupStartI = strI + 1;
       }
 
-      XFree(kbdDescr);
       XkbFreeNames(kbdDescr, XkbSymbolsNameMask, true);
+      XFree(kbdDescr);
       XCloseDisplay(display);
 
       result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
@@ -173,24 +174,24 @@ void
 AppUtilUnix::showNotification(const String & title, const String & text) const
 {
 #if WINAPI_XWINDOWS
-    LOG((CLOG_INFO "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+    LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
     if (!notify_init("Synergy"))
     {
-        LOG((CLOG_INFO "Failed to initialize libnotify"));
+        LOG((CLOG_INFO "failed to initialize libnotify"));
         return;
     }
 
     auto notification = notify_notification_new (title.c_str(), text.c_str(), nullptr);
     if (notification == nullptr)
     {
-        LOG((CLOG_INFO "Failed to create notification"));
+        LOG((CLOG_INFO "failed to create notification"));
         return;
     }
     notify_notification_set_timeout(notification, 10000);
 
     if (!notify_notification_show(notification, nullptr))
     {
-        LOG((CLOG_INFO "Failed to show notification"));
+        LOG((CLOG_INFO "failed to show notification"));
     }
 
     g_object_unref(G_OBJECT(notification));
@@ -199,6 +200,6 @@ AppUtilUnix::showNotification(const String & title, const String & text) const
 #elif WINAPI_CARBON
     // synergys and synergyc are not allowed to send native notifications on MacOS
     // instead ask main synergy process to show them instead
-    LOG((CLOG_INFO "OSX Notification: %s|%s", title.c_str(), text.c_str()));
+    LOG((CLOG_INFO "mac notification: %s|%s", title.c_str(), text.c_str()));
 #endif
 }

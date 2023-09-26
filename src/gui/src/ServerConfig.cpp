@@ -56,12 +56,16 @@ ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig* appConfig, Ma
         m_pMainWindow(mainWindow)
 {
     GUI::Config::ConfigWriter::make()->registerClass(this);
-    loadSettings();
+    ServerConfig::loadSettings();
 }
 
 ServerConfig::~ServerConfig()
 {
-    saveSettings();
+    try {
+        ServerConfig::saveSettings();
+    }  catch (const std::exception& e) {
+        m_pMainWindow->appendLogError(e.what());
+    }
 }
 
 bool ServerConfig::save(const QString& fileName) const
@@ -146,6 +150,10 @@ void ServerConfig::saveSettings()
     settings().setValue("clipboardSharing", clipboardSharing());
     settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
 
+    if (!getClientAddress().isEmpty()) {
+        settings().setValue("clientAddress", getClientAddress());
+    }
+
     writeSettings(settings(), switchCorners(), "switchCorner");
 
     settings().beginWriteArray("screens");
@@ -196,10 +204,11 @@ void ServerConfig::loadSettings()
     setSwitchCornerSize(settings().value("switchCornerSize").toInt());
     setIgnoreAutoConfigClient(settings().value("ignoreAutoConfigClient").toBool());
     setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
-    setEnableDragAndDrop(settings().value("enableDragAndDrop", true).toBool());
+    setEnableDragAndDrop(settings().value("enableDragAndDrop", false).toBool());
 	setClipboardSharingSize(settings().value("clipboardSharingSize",
 						(int) ServerConfig::defaultClipboardSharingSize()).toULongLong());
     setClipboardSharing(settings().value("clipboardSharing", true).toBool());
+    setClientAddress(settings().value("clientAddress", "").toString());
 
     readSettings(settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
@@ -291,6 +300,10 @@ QTextStream& operator<<(QTextStream& outStream, const ServerConfig& config)
     outStream << "\t" << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << endl;
     outStream << "\t" << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << endl;
     outStream << "\t" << "clipboardSharingSize = " << config.clipboardSharingSize() << endl;
+
+    if (!config.getClientAddress().isEmpty()) {
+        outStream << "\t" << "clientAddress = " << config.getClientAddress() << endl;
+    }
 
     if (config.hasSwitchDelay())
         outStream << "\t" << "switchDelay = " << config.switchDelay() << endl;
@@ -550,8 +563,32 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 	return size;
 }
 
+void ServerConfig::setClientAddress(const QString& address) {
+    if (m_pAppConfig->getServerClientMode()) {
+        m_clientAddress = address;
+    }
+}
+
+QString ServerConfig::getClientAddress() const {
+    QString clientAddress;
+
+    if (m_pAppConfig->getServerClientMode()) {
+        clientAddress = m_clientAddress.trimmed();
+    }
+
+    return clientAddress;
+}
+
 QSettings &ServerConfig::settings() {
     using GUI::Config::ConfigWriter;
 
     return ConfigWriter::make()->settings();
+}
+
+bool ServerConfig::isHotkeysAvailable() const {
+#ifndef SYNERGY_ENTERPRISE
+    return (m_pAppConfig->edition() != Edition::kLite);
+#else
+    return true;
+#endif
 }

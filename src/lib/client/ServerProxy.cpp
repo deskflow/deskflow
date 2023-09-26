@@ -922,7 +922,7 @@ ServerProxy::dragInfoReceived()
 void
 ServerProxy::handleClipboardSendingEvent(const Event& event, void*)
 {
-    ClipboardChunk::send(m_stream, event.getData());
+    ClipboardChunk::send(m_stream, event.getDataObject());
 }
 
 void
@@ -978,7 +978,7 @@ ServerProxy::setActiveServerLanguage(const String& language)
 
         if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
             if(!m_isUserNotifiedAboutLanguageSyncError) {
-                AppUtil::instance().showNotification("Language error", "Current server language is not installed on client.");
+                LOG((CLOG_WARN "current server language is not installed on client"));
                 m_isUserNotifiedAboutLanguageSyncError = true;
             }
         }
@@ -987,7 +987,7 @@ ServerProxy::setActiveServerLanguage(const String& language)
         }
     }
     else {
-        LOG((CLOG_DEBUG1 "Active server langauge is empty!"));
+        LOG((CLOG_DEBUG1 "active server langauge is empty"));
     }
 }
 
@@ -996,8 +996,8 @@ ServerProxy::checkMissedLanguages() const
 {
     auto missedLanguages = m_languageManager.getMissedLanguages();
     if (!missedLanguages.empty()) {
-        AppUtil::instance().showNotification("Language synchronization error",
-              "You need to install these languages on this computer and restart Synergy to enable support for multiple languages: "
-              + missedLanguages);
+        LOG((CLOG_WARN
+             "You need to install these languages on this computer and restart Synergy to enable support for multiple languages: %s",
+             missedLanguages.c_str()));
     }
 }

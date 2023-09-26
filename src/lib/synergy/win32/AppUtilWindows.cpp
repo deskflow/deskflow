@@ -230,7 +230,7 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const
         layout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
     }
     else {
-        LOG((CLOG_WARN "Failed to determine current keyboard layout"));
+        LOG((CLOG_WARN "failed to determine current keyboard layout"));
     }
 
     return layout;
@@ -249,9 +249,9 @@ public:
 void
 AppUtilWindows::showNotification(const String & title, const String & text) const
 {
-    LOG((CLOG_INFO "Showing notification. Title: \"%s\". Text: \"%s\"", title.c_str(), text.c_str()));
+    LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
     if (!WinToastLib::WinToast::isCompatible()) {
-        LOG((CLOG_INFO "This system does not support toast notifications"));
+        LOG((CLOG_INFO "this system does not support toast notifications"));
         return;
     }
     if (!WinToastLib::WinToast::instance()->isInitialized())
@@ -262,7 +262,7 @@ AppUtilWindows::showNotification(const String & title, const String & text) cons
 
         if (!WinToastLib::WinToast::instance()->initialize())
         {
-            LOG((CLOG_DEBUG "Failed to initialize toast notifications"));
+            LOG((CLOG_DEBUG "failed to initialize toast notifications"));
             return;
         }
     }
@@ -275,7 +275,7 @@ AppUtilWindows::showNotification(const String & title, const String & text) cons
 
     const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler.get(), &error);
     if (!launched) {
-        LOG((CLOG_DEBUG "Failed to show toast notification. Error code: %d", error));
+        LOG((CLOG_DEBUG "failed to show toast notification, error code: %d", error));
         return;
     }
 }

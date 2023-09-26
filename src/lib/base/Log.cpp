@@ -23,10 +23,11 @@
 #include "base/log_outputters.h"
 #include "common/Version.h"
 
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <ctime> 
+#include <ctime>
 
 // names of priorities
 static const char*        g_priority[] = {

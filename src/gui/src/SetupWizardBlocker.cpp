@@ -47,7 +47,7 @@ SetupWizardBlocker::SetupWizardBlocker(MainWindow& mainWindow, qBlockerType type
 
 void SetupWizardBlocker::onlineSupport()
 {
-    QDesktopServices::openUrl(QUrl("https://symless.com/help"));
+    QDesktopServices::openUrl(QUrl("https://symless.com/synergy/help?source=gui"));
     cancel();
 }
 

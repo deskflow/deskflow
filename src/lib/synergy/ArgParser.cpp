@@ -56,10 +56,6 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
             ++i;
             continue;
         }
-        else if (isArg(i, argc, argv, "-a", "--address", 1)) {
-            // save listen address
-            args.m_synergyAddress = argv[++i];
-        }
         else if (isArg(i, argc, argv, "-c", "--config", 1)) {
             // save configuration file path
             args.m_configFile = argv[++i];
@@ -67,8 +63,12 @@ ArgParser::parseServerArgs(lib::synergy::ServerArgs& args, int argc, const char*
         else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
             args.m_serial = SerialKey(argv[++i]);
         }
+        else if (isArg(i, argc, argv, nullptr, "server")) {
+            ++i;
+            continue;
+        }
         else {
-            LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
+            LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
         ++i;
@@ -117,13 +117,20 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         else if (isArg(i, argc, argv, nullptr, "--invert-scroll")) {
             args.m_clientScrollDirection = lib::synergy::ClientScrollDirection::INVERT_SERVER;
         }
+        else if (isArg(i, argc, argv, nullptr, "--host")) {
+            args.m_hostMode = true;
+        }
+        else if (isArg(i, argc, argv, nullptr, "client")) {
+            ++i;
+            continue;
+        }
         else {
             if (i + 1 == argc) {
-                args.m_synergyAddress = argv[i];
+                args.m_serverAddress = argv[i];
                 return true;
             }
 
-            LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
+            LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
             return false;
         }
         ++i;
@@ -131,7 +138,7 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
 
     // exactly one non-option argument (server-address)
     if (i == argc) {
-        LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
+        LOG((CLOG_CRIT "%s: a server address or name is required" BYE,
             args.m_pname, args.m_pname));
         return false;
     }
@@ -212,7 +219,10 @@ ArgParser::parseToolArgs(ToolArgs& args, int argc, const char* const* argv)
 bool
 ArgParser::parseGenericArgs(int argc, const char* const* argv, int& i)
 {
-    if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+    if (isArg(i, argc, argv, "-a", "--address", 1)) {
+        argsBase().m_synergyAddress = argv[++i];
+    }
+    else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
         // change logging level
         argsBase().m_logFilter = argv[++i];
     }

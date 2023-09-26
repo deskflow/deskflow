@@ -9,6 +9,32 @@ const std::string SerialKeyEdition::BASIC = "basic";
 const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
 const std::string SerialKeyEdition::BUSINESS = "business";
 const std::string SerialKeyEdition::UNREGISTERED = "unregistered";
+const std::string SerialKeyEdition::ULTIMATE = "ultimate";
+const std::string SerialKeyEdition::LITE = "lite";
+
+namespace {
+
+const std::map<std::string, Edition>& getSerialTypes()
+{
+#ifdef SYNERGY_BUSINESS
+    static const std::map<std::string, Edition> serialTypes = {
+        {SerialKeyEdition::BUSINESS, kBusiness}
+    };
+#else
+    static const std::map<std::string, Edition> serialTypes {
+        {SerialKeyEdition::BASIC, kBasic},
+        {SerialKeyEdition::PRO, kPro},
+        {SerialKeyEdition::BASIC_CHINA, kBasic_China},
+        {SerialKeyEdition::PRO_CHINA, kPro_China},
+        {SerialKeyEdition::BUSINESS, kBusiness},
+        {SerialKeyEdition::LITE, kLite},
+        {SerialKeyEdition::ULTIMATE, kUltimate}
+    };
+#endif
+    return serialTypes;
+}
+
+} //namespace
 
 SerialKeyEdition::SerialKeyEdition()
 {
@@ -56,6 +82,12 @@ SerialKeyEdition::getName() const
 		case kPro_China:
 			Name = PRO_CHINA;
 			break;
+		case kLite:
+			Name = LITE;
+			break;
+		case kUltimate:
+			Name = ULTIMATE;
+			break;
 		default:
 			break;
 	}
@@ -76,6 +108,9 @@ SerialKeyEdition::getDisplayName() const
             break;
         case kPro_China:
             DisplayName = "Synergy Pro 中文版";
+            break;
+        case kLite:
+            DisplayName = "Synergy 1";
             break;
         default:
             std::string EditionName = getName();
@@ -98,19 +133,13 @@ void
 SerialKeyEdition::setType(Edition type)
 {
 	m_Type = type;
+	setType(getName());
 }
 
 void
 SerialKeyEdition::setType(const std::string& type)
 {
-    static const std::map<std::string, Edition> types = {
-        {BASIC, kBasic},
-        {PRO, kPro},
-        {BUSINESS, kBusiness},
-        {BASIC_CHINA, kBasic_China},
-        {PRO_CHINA, kPro_China}
-    };
-
+    auto types = getSerialTypes();
     const auto& pType = types.find(type);
 
     if (pType != types.end()) {
@@ -119,4 +148,16 @@ SerialKeyEdition::setType(const std::string& type)
     else {
         m_Type = kUnregistered;
     }
+}
+
+bool
+SerialKeyEdition::isValid() const
+{
+    auto types = getSerialTypes();
+    return (types.find(getName()) != types.end());
+}
+
+bool
+SerialKeyEdition::isChina() const {
+    return ((m_Type == kBasic_China) || (m_Type == kPro_China));
 }

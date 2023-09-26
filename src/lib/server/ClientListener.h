@@ -66,7 +66,10 @@ public:
     ClientProxy*        getNextClient();
 
     //! Get server which owns this listener
-    Server*                getServer() { return m_server; }
+    Server*             getServer() { return m_server; }
+
+    //! This method restarts the listener
+    void                restart();
 
     //@}
 
@@ -75,10 +78,14 @@ private:
     void                handleClientConnecting(const Event&, void*);
     void                handleClientAccepted(const Event&, void*);
     void                handleUnknownClient(const Event&, void*);
+    void                handleUnknownClientFailure(const Event&, void*);
     void                handleClientDisconnected(const Event&, void*);
 
     void                cleanupListenSocket();
     void                cleanupClientSockets();
+    void                start();
+    void                stop();
+    void                removeUnknownClient(ClientProxyUnknown* unknownClient);
 
 private:
     typedef std::set<ClientProxyUnknown*> NewClients;
@@ -93,4 +100,5 @@ private:
     IEventQueue*        m_events;
     bool                m_useSecureNetwork;
     ClientSockets      m_clientSockets;
+    NetworkAddress     m_address;
 };

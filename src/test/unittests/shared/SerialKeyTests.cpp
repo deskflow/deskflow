@@ -22,62 +22,6 @@
 
 #include "test/global/gtest.h"
 
-TEST(SerialKeyTests, decode_empty_returnEmptyString)
-{
-    std::string plainText = SerialKey::decode("");
-    EXPECT_EQ(0, plainText.size());
-}
-
-TEST(SerialKeyTests, decode_invalidDigit_returnEmptyString)
-{
-    std::string plainText = SerialKey::decode("MOCKZ");
-    EXPECT_EQ(0, plainText.size());
-}
-
-TEST(SerialKeyTests, decode_validSerial_returnPlainText)
-{
-    std::string plainText = SerialKey::decode("53796E6572677920726F636B7321");
-    EXPECT_EQ("Synergy rocks!", plainText);
-}
-
-TEST(SerialKeyTests, parse_noParty_invalid)
-{
-    SerialKey serial;
-    bool r = serial.parse("MOCK");
-    EXPECT_FALSE(r);
-}
-
-TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid)
-{
-    SerialKey serial;
-    bool r = serial.parse("{Synergy;Rocks}");
-    EXPECT_FALSE(r);
-}
-
-TEST(SerialKeyTests, parse_validV1Serial_valid)
-{
-    SerialKey serial;
-    bool r = serial.parse("{v1;basic;Bob;1;email;company name;0;86400}");
-    EXPECT_EQ(true, r);
-    EXPECT_EQ(kBasic, serial.edition());
-    EXPECT_FALSE(serial.isExpired(0));
-    EXPECT_EQ(true, serial.daysLeft(0));
-    EXPECT_FALSE(serial.isExpiring(1));
-}
-
-TEST(SerialKeyTests, parse_validV2Serial_valid)
-{
-    SerialKey serial;
-    bool r = serial.parse("{v2;trial;pro;Bob;1;email;company name;0;86400}");
-    EXPECT_EQ(true, r);
-    EXPECT_EQ(kPro, serial.edition());
-    EXPECT_FALSE(serial.isExpired(0));
-    EXPECT_EQ(true, serial.daysLeft(0));
-    EXPECT_EQ(true, serial.isExpiring(1));
-    EXPECT_EQ(true, serial.isTrial());
-    EXPECT_EQ(true, serial.isTemporary());
-}
-
 TEST(SerialKeyTests, isExpiring_validV2TrialBasicSerial_returnFalse)
 {
     // {v2;trial;basic;Bob;1;email;company name;1;86400}
@@ -172,6 +116,16 @@ TEST(SerialKeyTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue)
     EXPECT_EQ(false, serial.isTrial());
     EXPECT_EQ(true, serial.isTemporary());
     EXPECT_EQ(true, serial.isExpiring(1));
+    EXPECT_FALSE(serial.isMaintenance());
+}
+
+TEST(SerialKeyTests, isExpiring_expiringV2MentenanceSerial_returnTrue)
+{
+    // {v2;maintenance;basic;Bob;1;email;company name;0;86400}
+    SerialKey serial("7B76323B6D61696E74656E616E63653B70726F3B736572686969206861647A68696C6F763B313B7365726869694073796D6C6573732E636F6D3B203B303B313635353132343139307D");
+    EXPECT_FALSE(serial.isTrial());
+    EXPECT_FALSE(serial.isTemporary());
+    EXPECT_TRUE(serial.isMaintenance());
 }
 
 TEST(SerialKeyTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue)

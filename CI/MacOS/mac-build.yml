@@ -64,6 +64,25 @@ steps:
     inputs:
       script: |
         export PATH="$(Qt5_DIR)/bin:$PATH"
+        export SYNERGY_BUSINESS=1
+        mkdir build
+        cd build
+        cmake \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=$(version) \
+          -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CONFIGURATION_TYPES=Release \
+          -DSYNERGY_BUSINESS=ON ..
+    displayName: 'Cmake business'
+    condition: eq(variables['buildType'], 'business')
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
+      CMAKE_PREFIX_PATH: "$(Qt5_DIR);/usr/local/opt/openssl"
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+        export PATH="$(Qt5_DIR)/bin:$PATH"
         cd build
         . ./version
         make -j
@@ -125,9 +144,9 @@ steps:
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Azure on Sandor'
+      sshEndpoint: 'Binary Storage'
       sourceFolder: '$(Build.Repository.LocalPath)/pkg'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      targetFolder: '$(BINARIES_DIR)/v1-core-$(buildType)/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
-    displayName: 'Send Package to sandor'
+    displayName: 'Send package to Binary Storage'

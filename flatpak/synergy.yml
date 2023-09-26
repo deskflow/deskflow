@@ -1,0 +1,42 @@
+app-id: com.symless.Synergy
+runtime: org.kde.Platform
+runtime-version: "5.15-21.08"
+sdk: org.kde.Sdk
+rename-icon: synergy
+rename-desktop-file: synergy.desktop
+modules:
+  - name: openssl
+    buildsystem: simple
+    build-commands:
+      - "./config --prefix=/var/run/host/usr/local/ssl"
+      - "make"
+      - "make install_sw"
+    sources:
+      - type: archive
+        url: https://github.com/openssl/openssl/archive/OpenSSL_1_1_1n.tar.gz
+        sha256: 6b2d2440ced8c802aaa61475919f0870ec556694c466ebea460e35ea2b14839e
+  - name: libnotify
+    buildsystem: meson
+    config-opts:
+      - "-Dman=false"
+      - "-Dgtk_doc=false"
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/GNOME/libnotify.git
+  - name: synergy
+    buildsystem: cmake-ninja
+    config-opts:
+      - "-DCMAKE_BUILD_TYPE=Release"
+    sources:
+      - type: dir
+        path: ../
+      - type: patch
+        path: flatpak-desktop.patch
+command: synergy
+finish-args:
+  - "--share=ipc"
+  - "--socket=x11"
+  - "--share=network"
+  - "--device=dri"
+  - "--talk-name=org.a11y.*"
+  - "--filesystem=host"

@@ -25,6 +25,7 @@ Work seamlessly across Windows, macOS and Linux.
 %{_bindir}/syntool
 %attr(644,-,-) %{_datarootdir}/applications/synergy.desktop
 %attr(644,-,-) %{_datarootdir}/icons/hicolor/scalable/apps/synergy.svg
+%exclude %{_bindir}/synergy-core
 
 %changelog
 * Wed Apr 26 2017 Symless <engineering@symless.com>

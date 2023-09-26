@@ -14,8 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB headers "*.h")
-file(GLOB sources "*.cpp")
+file(GLOB headers
+    "*.h"
+    "InverseSockets/*.h"
+)
+file(GLOB sources
+    "*.cpp"
+    "InverseSockets/*.cpp"
+)
 
 if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})

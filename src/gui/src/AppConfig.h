@@ -50,6 +50,7 @@ const int kWizardVersion = 8;
 class QSettings;
 class SettingsDialog;
 class ServerConfig;
+class LicenseRegister;
 
 enum ProcessMode {
     Service,
@@ -93,7 +94,7 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         Edition edition() const;
         void setSerialKey(const QString& serial);
         void clearSerialKey();
-        QString serialKey();
+        QString serialKey() const;
         int lastExpiringWarningTime() const;
         void setLastExpiringWarningTime(int t);
 #endif
@@ -114,10 +115,19 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         bool getAutoHide();
         void setInvertScrollDirection(bool b);
         bool getInvertScrollDirection() const;
+        void setEliteBackersUrl(const QString&);
+        void setLicenseNextCheck(unsigned long long);
+        const QString& getEliteBackersUrl() const;
+        const QString& getLicenseRegistryUrl() const;
+        unsigned long long getLicenseNextCheck() const;
+        const QString& getGuid() const;
         void setLanguageSync(bool b);
         bool getLanguageSync() const;
         void setPreventSleep(bool b);
         bool getPreventSleep() const;
+        bool getClientHostMode() const;
+        bool getServerClientMode() const;
+        bool getInitiateConnectionFromServer() const;
 #ifndef SYNERGY_ENTERPRISE
         bool activationHasRun() const;
         AppConfig& activationHasRun(bool value);
@@ -150,6 +160,8 @@ class AppConfig: public QObject, public GUI::Config::ConfigBase
         void setUseInternalConfig(bool) ;
         void setClientGroupChecked(bool) ;
         void setServerHostname(const QString&);
+        void setClientHostMode(bool newValue);
+        void setServerClientMode(bool newValue);
 
         /// @brief Set the path to the TLS/SSL certificate file that will be used
         /// @param [in] path The path to the Certificate
@@ -208,7 +220,14 @@ protected:
         kTLSKeyLength,
         kPreventSleep,
         kLanguageSync,
-        kInvertScrollDirection
+        kInvertScrollDirection,
+        kEliteBackersUrl,
+        kGuid,
+        kLicenseRegistryUrl,
+        kLicenseNextCheck,
+        kInitiateConnectionFromServer,
+        kClientHostMode,
+        kServerClientMode
     };
 
         void setScreenName(const QString& s);
@@ -248,12 +267,19 @@ protected:
         bool m_AutoHide;
         QString m_Serialkey;
         QString m_lastVersion;
+        QString m_eliteBackersUrl;
+        QString m_guid;
+        QString m_licenseRegistryUrl;
+        unsigned long long m_licenseNextCheck;
         int m_LastExpiringWarningTime;
         bool m_ActivationHasRun;
         bool m_MinimizeToTray;
         bool m_InvertScrollDirection  = false;
         bool m_LanguageSync           = true;
         bool m_PreventSleep           = false;
+        bool m_InitiateConnectionFromServer = false;
+        bool m_ClientHostMode = true;
+        bool m_ServerClientMode = true;
 
         bool m_ServerGroupChecked;
         bool m_UseExternalConfig;
@@ -318,7 +344,11 @@ protected:
 
         /// @brief This method loads config from specified scope
         /// @param [in] scope which should be loaded.
-        void loadScope(GUI::Config::ConfigWriter::Scope scope) const;
+        void loadScope(GUI::Config::ConfigWriter::Scope scope);
+
+        /// @brief This function sets default values
+        /// for settings that shouldn't be copied from between scopes.
+        void setDefaultValues();
 
     signals:
         void sslToggled() const;

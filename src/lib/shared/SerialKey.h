@@ -19,66 +19,36 @@
 
 #include <string>
 #include <ctime>
-#include "EditionType.h"
-#include "SerialKeyType.h"
+#include "SerialKeyData.h"
 #include "SerialKeyEdition.h"
-
-#ifdef TEST_ENV
-#include <gtest/gtest_prod.h>
-#endif
 
 class SerialKey {
     friend bool operator== (SerialKey const&, SerialKey const&);
 public:
     explicit SerialKey(Edition edition = kUnregistered);
-    explicit SerialKey(std::string serial);
+    explicit SerialKey(const std::string& serial);
 
     bool                isExpiring(time_t currentTime) const;
     bool                isExpired(time_t currentTime) const;
     bool                isTrial() const;
     bool                isTemporary() const;
+    bool                isMaintenance() const;
     bool                isValid() const;
     time_t              daysLeft(time_t currentTime) const;
+    time_t              getExpiration() const;
     int                 getSpanLeft(time_t time = ::time(0)) const;
-    std::string         email() const;
     Edition             edition() const;
-    std::string         toString() const;
-
-    static std::string  decode(const std::string& serial);
+    const std::string&  toString() const;
 
 private:
-    bool                parse(std::string plainSerial);
+    SerialKeyData         m_data;
 
-#ifdef TEST_ENV
-private:
-    FRIEND_TEST(SerialKeyTests, parse_noParty_invalid);
-    FRIEND_TEST(SerialKeyTests, parse_invalidPartsLenghth_invalid);
-    FRIEND_TEST(SerialKeyTests, parse_validV1Serial_valid);
-    FRIEND_TEST(SerialKeyTests, parse_validV2Serial_valid);
-#endif
-
-private:
-    std::string           m_name;
-    std::string           m_email;
-    std::string           m_company;
-    unsigned              m_userLimit;
-    unsigned long long    m_warnTime;
-    unsigned long long    m_expireTime;
-    SerialKeyEdition      m_edition;
-    SerialKeyType         m_KeyType;
 };
 
 
 inline bool
 operator== (SerialKey const& lhs, SerialKey const& rhs) {
-    return (lhs.m_name == rhs.m_name) &&
-            (lhs.m_email == rhs.m_email) &&
-            (lhs.m_company == rhs.m_company) &&
-            (lhs.m_userLimit == rhs.m_userLimit) &&
-            (lhs.m_warnTime == rhs.m_warnTime) &&
-            (lhs.m_expireTime == rhs.m_expireTime) &&
-            (lhs.m_edition == rhs.m_edition) &&
-            (lhs.m_KeyType == rhs.m_KeyType);
+    return (lhs.m_data == rhs.m_data);
 }
 
 inline bool

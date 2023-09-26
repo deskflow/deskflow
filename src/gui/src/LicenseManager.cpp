@@ -22,23 +22,58 @@
 #include <utility>
 #include <QThread>
 #include <QTimer>
+#include <QDateTime>
+#include <QLocale>
+
+namespace {
+
+std::string
+getMaintenanceMessage(const SerialKey& serialKey)
+{
+    auto expiration = QDateTime::fromTime_t(serialKey.getExpiration()).date();
+    QString message = "The license key you used will only work with versions of Synergy released before %1."
+                      "<p>To use this version, you’ll need to renew your Synergy maintenance license. "
+                      "<a href=\"https://symless.com/synergy/account?source=gui\""
+                         "style=\"text-decoration: none; color: #4285F4;\">Renew today</a>.</p>";
+    auto formatedDate = QLocale("en_US").toString(expiration, "MMM dd yyyy");
+    return message.arg(formatedDate).toStdString();
+}
+
+void
+checkSerialKey(const SerialKey& serialKey, bool acceptExpired)
+{
+    if (serialKey.isMaintenance()) {
+        auto buildDate = QDateTime::fromString(__TIMESTAMP__).toTime_t();
+
+        if (buildDate > serialKey.getExpiration()) {
+            throw std::runtime_error(getMaintenanceMessage(serialKey));
+        }
+    }
+
+    if (!acceptExpired && serialKey.isExpired(::time(nullptr))) {
+        throw std::runtime_error("Serial key expired");
+    }
+
+    #ifdef SYNERGY_BUSINESS
+    if (!serialKey.isValid()) {
+        throw std::runtime_error("The serial key is not compatible with the business version of Synergy.");
+    }
+    #endif
+}
+
+}
+
 
 LicenseManager::LicenseManager(AppConfig* appConfig) :
     m_AppConfig(appConfig),
-    m_serialKey(appConfig->edition()) {
+    m_serialKey(appConfig->edition()),
+    m_registry(*appConfig) {
 }
 
-std::pair<bool, QString>
+void
 LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 {
-    std::pair<bool, QString> ret (true, "");
-    time_t currentTime = ::time(0);
-
-    if (!acceptExpired && serialKey.isExpired(currentTime)) {
-        ret.first = false;
-        ret.second = "Serial key expired";
-        return ret;
-    }
+    checkSerialKey(serialKey, acceptExpired);
 
     if (serialKey != m_serialKey) {
         using std::swap;
@@ -48,14 +83,13 @@ LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired)
 
         emit showLicenseNotice(getLicenseNotice());
         validateSerialKey();
+        m_registry.scheduleRegistration();
 
         if (m_serialKey.edition() != serialKey.edition()) {
             m_AppConfig->setEdition(m_serialKey.edition());
             emit editionChanged(m_serialKey.edition());
         }
     }
-
-    return ret;
 }
 
 void
@@ -93,7 +127,7 @@ LicenseManager::activeEditionName() const
     return getEditionName(activeEdition(), m_serialKey.isTrial());
 }
 
-SerialKey
+const SerialKey&
 LicenseManager::serialKey() const
 {
     return m_serialKey;
@@ -107,6 +141,7 @@ LicenseManager::refresh()
             SerialKey serialKey (m_AppConfig->serialKey().toStdString());
             setSerialKey(serialKey, true);
         } catch (...) {
+            m_serialKey = SerialKey();
             m_AppConfig->clearSerialKey();
         }
     }
@@ -168,6 +203,12 @@ LicenseManager::getLicenseNotice() const
     return Notice;
 }
 
+void
+LicenseManager::registerLicense()
+{
+    m_registry.registerLicense();
+}
+
 QString
 LicenseManager::getTrialNotice() const
 {
@@ -176,13 +217,13 @@ LicenseManager::getTrialNotice() const
     if (m_serialKey.isExpired(::time(0))){
         Notice = "<html><head/><body><p>"
                  "Trial expired - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Buy now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Buy now</a>"
                  "</p></body></html>";
     }
     else{
         Notice = "<html><head/><body><p>"
                  "Trial expires in %1 day%2 - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Buy now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Buy now</a>"
                  "</p></body></html>";
 
         time_t daysLeft = m_serialKey.daysLeft(::time(0));
@@ -200,13 +241,13 @@ LicenseManager::getTemporaryNotice() const
     if (m_serialKey.isExpired(::time(0))) {
         Notice = "<html><head/><body><p>"
                  "License expired - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Renew now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Renew now</a>"
                  "</p></body></html>";
     }
     else if (m_serialKey.isExpiring(::time(0))) {
         Notice = "<html><head/><body><p>"
                  "License expires in %1 day%2 - "
-                 "<a href=\"https://members.symless.com/purchase\" style=\"color: #FFFFFF;\">Renew now</a>"
+                 "<a href=\"https://symless.com/synergy/purchase?source=gui\" style=\"color: #FFFFFF;\">Renew now</a>"
                  "</p></body></html>";
 
         time_t daysLeft = m_serialKey.daysLeft(::time(0));

@@ -20,6 +20,7 @@
 #include "net/TSocketMultiplexerMethodJob.h"
 #include "base/TMethodEventJob.h"
 #include "net/TCPSocket.h"
+#include <net/InverseSockets/SslLogger.h>
 #include "mt/Lock.h"
 #include "arch/XArch.h"
 #include "base/Log.h"
@@ -77,31 +78,13 @@ SecureSocket::SecureSocket(IEventQueue* events,
 
 SecureSocket::~SecureSocket()
 {
-    isFatal(true);
-    // take socket from multiplexer ASAP otherwise the race condition
-    // could cause events to get called on a dead object. TCPSocket
-    // will do this, too, but the double-call is harmless
-    setJob(NULL);
-    if (m_ssl->m_ssl != NULL) {
-        SSL_shutdown(m_ssl->m_ssl);
-
-        SSL_free(m_ssl->m_ssl);
-        m_ssl->m_ssl = NULL;
-    }
-    if (m_ssl->m_context != NULL) {
-        SSL_CTX_free(m_ssl->m_context);
-        m_ssl->m_context = NULL;
-    }
-    delete m_ssl;
+    freeSSL();
 }
 
 void
 SecureSocket::close()
 {
-    isFatal(true);
-
-    SSL_shutdown(m_ssl->m_ssl);
-
+    freeSSL();
     TCPSocket::close();
 }
 
@@ -330,7 +313,7 @@ bool
 SecureSocket::loadCertificates(String& filename)
 {
     if (filename.empty()) {
-        showError("tls certificate is not specified");
+        SslLogger::logError("tls certificate is not specified");
         return false;
     }
     else {
@@ -341,7 +324,7 @@ SecureSocket::loadCertificates(String& filename)
         if (!exist) {
             String errorMsg("tls certificate doesn't exist: ");
             errorMsg.append(filename);
-            showError(errorMsg.c_str());
+            SslLogger::logError(errorMsg.c_str());
             return false;
         }
     }
@@ -349,19 +332,19 @@ SecureSocket::loadCertificates(String& filename)
     int r = 0;
     r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use tls certificate");
+        SslLogger::logError("could not use tls certificate");
         return false;
     }
 
     r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
-        showError("could not use tls private key");
+        SslLogger::logError("could not use tls private key");
         return false;
     }
 
     r = SSL_CTX_check_private_key(m_ssl->m_context);
     if (!r) {
-        showError("could not verify tls private key");
+        SslLogger::logError("could not verify tls private key");
         return false;
     }
 
@@ -380,10 +363,7 @@ SecureSocket::initContext(bool server)
 
     // load all error messages
     SSL_load_error_strings();
-
-    if (CLOG->getFilter() >= kINFO) {
-        showSecureLibInfo();
-    }
+    SslLogger::logSecureLibInfo();
 
     if (server) {
         method = SSLv23_server_method();
@@ -400,7 +380,7 @@ SecureSocket::initContext(bool server)
     SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
     if (m_ssl->m_context == NULL) {
-        showError();
+        SslLogger::logError();
     }
 }
 
@@ -412,6 +392,30 @@ SecureSocket::createSSL()
     if (m_ssl->m_ssl == NULL) {
         assert(m_ssl->m_context != NULL);
         m_ssl->m_ssl = SSL_new(m_ssl->m_context);
+    }
+}
+
+void
+SecureSocket::freeSSL()
+{
+    isFatal(true);
+    // take socket from multiplexer ASAP otherwise the race condition
+    // could cause events to get called on a dead object. TCPSocket
+    // will do this, too, but the double-call is harmless
+    setJob(NULL);
+    if (m_ssl) {
+        if (m_ssl->m_ssl != NULL) {
+            SSL_shutdown(m_ssl->m_ssl);
+
+            SSL_free(m_ssl->m_ssl);
+            m_ssl->m_ssl = NULL;
+        }
+        if (m_ssl->m_context != NULL) {
+            SSL_CTX_free(m_ssl->m_context);
+            m_ssl->m_context = NULL;
+        }
+        delete m_ssl;
+        m_ssl = nullptr;
     }
 }
 
@@ -444,10 +448,8 @@ SecureSocket::secureAccept(int socket)
     if (retry == 0) {
         m_secureReady = true;
         LOG((CLOG_INFO "accepted secure socket"));
-        if (CLOG->getFilter() >= kDEBUG1) {
-            showSecureCipherInfo();
-        }
-        showSecureConnectInfo();
+        SslLogger::logSecureCipherInfo(m_ssl->m_ssl);
+        SslLogger::logSecureConnectInfo(m_ssl->m_ssl);
         return 1;
     }
 
@@ -509,15 +511,13 @@ SecureSocket::secureConnect(int socket)
         return -1; // Fingerprint failed, error
     }
     LOG((CLOG_DEBUG2 "connected secure socket"));
-    if (CLOG->getFilter() >= kDEBUG1) {
-        showSecureCipherInfo();
-    }
-    showSecureConnectInfo();
+    SslLogger::logSecureCipherInfo(m_ssl->m_ssl);
+    SslLogger::logSecureConnectInfo(m_ssl->m_ssl);
     return 1;
 }
 
 bool
-SecureSocket::showCertificate()
+SecureSocket::showCertificate() const
 {
     X509* cert;
     char* line;
@@ -531,7 +531,7 @@ SecureSocket::showCertificate()
         X509_free(cert);
     }
     else {
-        showError("server has no tls certificate");
+        SslLogger::logError("server has no tls certificate");
         return false;
     }
 
@@ -615,36 +615,8 @@ SecureSocket::checkResult(int status, int& retry)
 
     if (isFatal()) {
         retry = 0;
-        showError();
+        SslLogger::logError();
         disconnect();
-    }
-}
-
-void
-SecureSocket::showError(const char* reason)
-{
-    if (reason != NULL) {
-        LOG((CLOG_ERR "secure socket error: %s", reason));
-    }
-
-    String error = getError();
-    if (!error.empty()) {
-        LOG((CLOG_ERR "openssl error: %s", error.c_str()));
-    }
-}
-
-String
-SecureSocket::getError()
-{
-    unsigned long e = ERR_get_error();
-
-    if (e != 0) {
-        char error[MAX_ERROR_SIZE];
-        ERR_error_string_n(e, error, MAX_ERROR_SIZE);
-        return error;
-    }
-    else {
-        return "";
     }
 }
 
@@ -680,12 +652,12 @@ bool
 SecureSocket::verifyCertFingerprint()
 {
     // calculate received certificate fingerprint
-    X509 *cert = cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    EVP_MD* tempDigest;
+    using AutoX509 = std::unique_ptr<X509, decltype (&X509_free)>;
+    AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), &X509_free);
+
     unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
     unsigned int tempFingerprintLen;
-    tempDigest = (EVP_MD*)EVP_sha256();
-    int digestResult = X509_digest(cert, tempDigest, tempFingerprint, &tempFingerprintLen);
+    int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
     if (digestResult <= 0) {
         LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
@@ -720,7 +692,7 @@ SecureSocket::verifyCertFingerprint()
         }
     }
     else {
-        LOG((CLOG_ERR "Fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
+        LOG((CLOG_ERR "fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
     }
 
     file.close();
@@ -787,107 +759,7 @@ SecureSocket::serviceAccept(ISocketMultiplexerJob* job,
 }
 
 void
-showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
-    char msg[kMsgSize];
-    int i = 0;
-    for ( ; i < sk_SSL_CIPHER_num(stack) ; i++) {
-        const SSL_CIPHER * cipher = sk_SSL_CIPHER_value(stack,i);
-
-        SSL_CIPHER_description(cipher, msg, kMsgSize);
-
-        // Why does SSL put a newline in the description?
-        int pos = (int)strnlen(msg, kMsgSize) - 1;
-        if (msg[pos] == '\n') {
-            msg[pos] = '\0';
-        }
-
-        LOG((CLOG_DEBUG1 "%s",msg));
-    }
-}
-
-void
-SecureSocket::showSecureCipherInfo()
-{
-    STACK_OF(SSL_CIPHER) * sStack = SSL_get_ciphers(m_ssl->m_ssl);
-
-    if (sStack == NULL) {
-        LOG((CLOG_DEBUG1 "local cipher list not available"));
-    }
-    else {
-        LOG((CLOG_DEBUG1 "available local ciphers:"));
-        showCipherStackDesc(sStack);
-    }
-
-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
-	// m_ssl->m_ssl->session->ciphers is not forward compatable,
-	// In future release of OpenSSL, it's not visible,
-	// however, LibreSSL still uses this.
-    STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
-#else
-	// Use SSL_get_client_ciphers() for newer versions of OpenSSL.
-	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
-#endif
-	if (cStack == NULL) {
-        LOG((CLOG_DEBUG1 "remote cipher list not available"));
-    }
-    else {
-        LOG((CLOG_DEBUG1 "available remote ciphers:"));
-        showCipherStackDesc(cStack);
-    }
-    return;
-}
-
-void
-SecureSocket::showSecureLibInfo()
-{
-    LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
-    LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
-    LOG((CLOG_DEBUG1 "openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON)));
-    LOG((CLOG_DEBUG1 "openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM)));
-    LOG((CLOG_DEBUG1 "openssl dir: %s", SSLeay_version(SSLEAY_DIR)));
-    return;
-}
-
-void
-SecureSocket::showSecureConnectInfo()
-{
-    const SSL_CIPHER* cipher = SSL_get_current_cipher(m_ssl->m_ssl);
-
-    if (cipher != NULL) {
-        char msg[kMsgSize];
-        SSL_CIPHER_description(cipher, msg, kMsgSize);
-        LOG((CLOG_DEBUG "openssl cipher: %s", msg));
-        
-        //For some reason SSL_get_version is return mismatching information to SSL_CIPHER_description
-        // so grab the version out the description instead, This seems like a hacky way of doing it.
-        // But when the cipher says "TLSv1.2" but the get_version returns "TLSv1/SSLv3" we it doesn't look right
-        // For some reason macOS hates regex's so stringstream is used
-
-        std::istringstream iss(msg);
-
-        //Take the stream input and splits it into a vetor directly
-        const std::vector<std::string> parts{std::istream_iterator<std::string>{iss},
-                                       std::istream_iterator<std::string>{}};
-        if (parts.size() > 2)
-        {
-            //log the section containing the protocol version
-            LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
-        }
-        else
-        {
-            //log the error in spliting then display the whole description rather then nothing
-            LOG((CLOG_ERR "could not split cipher for protocol"));
-            LOG((CLOG_INFO "network encryption protocol: %s", msg));
-        }
-    }
-    else {
-        LOG((CLOG_ERR "could not get secure socket cipher"));
-    }
-    return;
-}
-
-void
-SecureSocket::handleTCPConnected(const Event& event, void*)
+SecureSocket::handleTCPConnected(const Event&, void*)
 {
     if (getSocket() == nullptr) {
         LOG((CLOG_DEBUG "disregarding stale connect event"));

@@ -893,7 +893,8 @@ MSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	BYTE keyState[256];
 	if (!GetKeyboardState(keyState)) {
-		LOG((CLOG_ERR "GetKeyboardState returned false on pollPressedKeys"));
+		LOG((CLOG_WARN "keyboard state is unexpected"));
+		LOG((CLOG_DEBUG "function 'GetKeyboardState' returned false on 'pollPressedKeys'"));
 		return;
 	}
 	for (KeyButton i = 1; i < 256; ++i) {
@@ -1318,7 +1319,7 @@ MSWindowsKeyState::setWindowGroup(SInt32 group)
 
     if(!PostMessage(targetWindow, WM_INPUTLANGCHANGEREQUEST,
                                 sysCharSet ? 1 : 0, (LPARAM)m_groups[group])) {
-        LOG((CLOG_WARN "Failed to post change language message!"));
+        LOG((CLOG_WARN "failed to post change language message"));
     }
 
 	// XXX -- use a short delay to let the target window process the message
@@ -1367,9 +1368,20 @@ MSWindowsKeyState::getIDForKey(synergy::KeyMap::KeyItem& item,
 	KeyID id = static_cast<KeyID>(unicode[0]);
 
 	switch (n) {
-	case -1:
-		return synergy::KeyMap::getDeadKey(id);
+	case -1: {
+		// dead key. add an space to the keyboard so we exit
+		// the dead key mode and future calls to this function
+		// with different modifiers are not affected.
 
+		BYTE emptyState[256] = { };
+		n = m_ToUnicodeEx(VK_SPACE, 0, emptyState, unicode,
+			sizeof(unicode) / sizeof(unicode[0]), 0, hkl);
+
+		// as an alternative, we could use the returned
+		// buffer in unicode to look at the dead key character
+		// and not rely on getDeadKey to provide the mapping
+		return synergy::KeyMap::getDeadKey(id);
+	}
 	default:
 	case 0:
 		// unmapped

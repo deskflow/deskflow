@@ -55,6 +55,32 @@ steps:
       GIT_COMMIT: $(Build.SourceVersion)
 
   - script: |
+      mkdir build-business
+      cd build-business
+      export SYNERGY_BUSINESS=1
+      if [ -z $(which cmake) ]; then cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON ..; else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON ..; fi
+      . ./version
+      make -j$(makeJobsLimit)
+    displayName: 'Build business'
+    condition: eq(variables['packager'],'deb')
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
+
+  - script: |
+      mkdir build-business
+      cd build-business
+      if [ -z $(which cmake) ]; then
+      cmake3 -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
+      else cmake -DCMAKE_BUILD_TYPE=Release -DSYNERGY_BUSINESS=ON -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/rpm/BUILDROOT/usr ..;
+      fi
+      . ./version
+      make -j$(makeJobsLimit)
+    condition: eq(variables['packager'],'rpm')
+    displayName: 'Build business rpm'
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
+
+  - script: |
       . ./build-release/version
       SYNERGY_VERSION="$SYNERGY_VERSION_MAJOR.$SYNERGY_VERSION_MINOR.$SYNERGY_VERSION_PATCH"
       SYNERGY_REVISION=`git rev-parse --short=8 HEAD`
@@ -69,7 +95,7 @@ steps:
     displayName: "Setup variables"
 
   - script: |
-      dch --create --package "synergy" --controlmaint --distribution unstable --newversion $SYNERGY_DEB_VERSION "Initial release"
+      python3 CI/deb_changelog.py synergy "${SYNERGY_DEB_VERSION}"
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir standard_package
@@ -89,7 +115,7 @@ steps:
 
   - script: |
       export SYNERGY_ENTERPRISE=1
-      dch --create --package "synergy-enterprise_" --controlmaint --distribution unstable --newversion $(SYNERGY_DEB_VERSION) "Initial release"
+      python3 CI/deb_changelog.py synergy "${SYNERGY_DEB_VERSION}"
       export GPG_TTY=$(tty)
       debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
       mkdir enterprise_package
@@ -103,6 +129,26 @@ steps:
       sha256sum $filename_new >> ${filename_new}.checksum.txt
       ls -la
     displayName: "Package Binary DEB(Enterprise)"
+    condition: eq(variables['packager'],'deb')
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
+
+  - script: |
+      export SYNERGY_BUSINESS=1
+      python3 CI/deb_changelog.py synergy "${SYNERGY_DEB_VERSION}"
+      export GPG_TTY=$(tty)
+      debuild --preserve-envvar SYNERGY_* --preserve-envvar GIT_COMMIT -us -uc
+      mkdir business_package
+      cd ..
+      filename=$(ls synergy_*.deb)
+      filename_new="synergy-business_${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}_$(name)${filename##*$(SYNERGY_REVISION)}"
+      mv $filename $(Build.Repository.LocalPath)/business_package/$filename_new
+      cd $(Build.Repository.LocalPath)/business_package
+      md5sum $filename_new >> ${filename_new}.checksum.txt
+      sha1sum $filename_new >> ${filename_new}.checksum.txt
+      sha256sum $filename_new >> ${filename_new}.checksum.txt
+      ls -la
+    displayName: "Package Binary DEB(Business)"
     condition: eq(variables['packager'],'deb')
     env:
       GIT_COMMIT: $(Build.SourceVersion)
@@ -144,20 +190,48 @@ steps:
     env:
       GIT_COMMIT: $(Build.SourceVersion)
 
-  - task: CopyFilesOverSSH@0
-    inputs:
-      sshEndpoint: 'Azure on Sandor'
-      sourceFolder: './standard_package'
-      contents: '*'
-      targetFolder: 'synergy-core/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
-      readyTimeout: '20000'
-    displayName: 'Send standard Package to sandor'
+  - script: |
+      cd build-business
+      make install/strip
+      cd rpm
+      rpmbuild -bb --define "_topdir $(pwd)" --buildroot $(pwd)/BUILDROOT synergy-business.spec
+      rpmlint --verbose RPMS/*.rpm
+      cd RPMS
+      filename=$(ls *.rpm)
+      md5sum $filename >> ${filename}.checksum.txt
+      sha1sum $filename >> ${filename}.checksum.txt
+      sha256sum $filename >> ${filename}.checksum.txt
+      cd ..
+      mv RPMS $(Build.Repository.LocalPath)/business_package
+      ls -la
+    displayName: "Package Binary RPM(business)"
+    condition: eq(variables['packager'],'rpm')
+    env:
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: CopyFilesOverSSH@0
     inputs:
-      sshEndpoint: 'Azure on Sandor'
+      sshEndpoint: 'Binary Storage'
+      sourceFolder: './standard_package'
+      contents: '*'
+      targetFolder: '$(BINARIES_DIR)/v1-core-standard/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send standard package to Binary Storage'
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Binary Storage'
       sourceFolder: './enterprise_package'
       contents: '*'
-      targetFolder: 'synergy-core/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      targetFolder: '$(BINARIES_DIR)/v1-core-enterprise/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
       readyTimeout: '20000'
-    displayName: 'Send enterprise Package to sandor'
+    displayName: 'Send enterprise package to Binary Storage'
+
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: 'Binary Storage'
+      sourceFolder: './business_package'
+      contents: '*'
+      targetFolder: '$(BINARIES_DIR)/v1-core-business/$(SYNERGY_VERSION)/$(SYNERGY_VERSION_STAGE)/b$(SYNERGY_VERSION_BUILD)-$(SYNERGY_REVISION)/'
+      readyTimeout: '20000'
+    displayName: 'Send business package to Binary Storage'

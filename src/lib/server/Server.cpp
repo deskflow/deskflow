@@ -91,13 +91,13 @@ Server::Server(
 	m_lockedToScreen(false),
 	m_screen(screen),
 	m_events(events),
-	m_sendFileThread(NULL),
-	m_writeToDropDirThread(NULL),
+	m_sendFileThread(nullptr),
+	m_writeToDropDirThread(nullptr),
 	m_ignoreFileTransfer(false),
 	m_disableLockToScreen(false),
 	m_enableClipboard(true),
-    m_maximumClipboardSize(INT_MAX),
-	m_sendDragInfoThread(NULL),
+	m_maximumClipboardSize(INT_MAX),
+	m_sendDragInfoThread(nullptr),
 	m_waitDragInfoThread(true),
 	m_args(args)
 {
@@ -212,7 +212,7 @@ Server::Server(
 
 	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
 	if (m_primaryClient->getToggleMask() & KeyModifierScrollLock) {
-		LOG((CLOG_NOTE "Scroll Lock is on, locking cursor to screen"));
+		LOG((CLOG_NOTE "scroll lock is on, locking cursor to screen"));
 		m_lockedToScreen = true;
 	}
 
@@ -431,7 +431,7 @@ Server::isLockedToScreen() const
 
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
-		LOG((CLOG_NOTE "Cursor is locked to screen, check Scroll Lock key"));
+		LOG((CLOG_NOTE "cursor is locked to screen, check scroll lock key"));
 		return true;
 	}
 
@@ -1493,6 +1493,7 @@ Server::handleClientDisconnected(const Event&, void* vclient)
 	removeOldClient(client);
 
 	delete client;
+	m_clientListener->restart();
 }
 
 void
@@ -1619,7 +1620,7 @@ Server::handleFakeInputEndEvent(const Event&, void*)
 void
 Server::handleFileChunkSendingEvent(const Event& event, void*)
 {
-	onFileChunkSending(event.getData());
+	onFileChunkSending(event.getDataObject());
 }
 
 void
@@ -1954,11 +1955,11 @@ Server::onMouseMovePrimary(SInt32 x, SInt32 y)
 				&& m_screen->isDraggingStarted()
 				&& m_active != newScreen
 				&& m_waitDragInfoThread) {
-				if (m_sendDragInfoThread == NULL) {
-					m_sendDragInfoThread = new Thread(
+				if (!m_sendDragInfoThread) {
+					m_sendDragInfoThread.reset(new Thread(
 						new TMethodJob<Server>(
 							this,
-							&Server::sendDragInfoThread, newScreen));
+							&Server::sendDragInfoThread, newScreen)));
 				}
 
 				return false;
@@ -2025,7 +2026,8 @@ Server::sendDragInfoThread(void* arg)
 		m_dragFileList.clear();
 	}
 	m_waitDragInfoThread = false;
-	m_sendDragInfoThread = NULL;
+	m_sendDragInfoThread.reset(nullptr);
+
 }
 
 void
@@ -2035,15 +2037,10 @@ Server::sendDragInfo(BaseClientProxy* newScreen)
 	UInt32 fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
 
 	if (fileCount > 0) {
-		char* info = NULL;
-		size_t size = infoString.size();
-		info = new char[size];
-		memcpy(info, infoString.c_str(), size);
-
 		LOG((CLOG_DEBUG2 "sending drag information to client"));
-		LOG((CLOG_DEBUG3 "dragging file list: %s", info));
-		LOG((CLOG_DEBUG3 "dragging file list string size: %i", size));
-		newScreen->sendDragInfo(fileCount, info, size);
+		LOG((CLOG_DEBUG3 "dragging file list: %s", infoString.c_str()));
+		LOG((CLOG_DEBUG3 "dragging file list string size: %i", infoString.size()));
+		newScreen->sendDragInfo(fileCount, infoString.c_str(), infoString.size());
 	}
 }
 
@@ -2210,9 +2207,9 @@ Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	} while (false);
 
 	if (jump) {
-		if (m_sendFileThread != NULL) {
+		if (m_sendFileThread) {
 			StreamChunker::interruptFile();
-			m_sendFileThread = NULL;
+			m_sendFileThread.reset(nullptr);
 		}
 
 		SInt32 newX = m_x;
@@ -2284,9 +2281,8 @@ void
 Server::onFileRecieveCompleted()
 {
 	if (isReceivedFileSizeValid()) {
-		m_writeToDropDirThread = new Thread(
-									   new TMethodJob<Server>(
-															   this, &Server::writeToDropDirThread));
+		auto method = new TMethodJob<Server>(this, &Server::writeToDropDirThread);
+		m_writeToDropDirThread.reset(new Thread(method));
 	}
 }
 
@@ -2580,6 +2576,11 @@ Server::isReceivedFileSizeValid()
 	return m_expectedFileSize == m_receivedFileData.size();
 }
 
+bool Server::isClientMode() const
+{
+	return m_args.m_config->isClientMode();
+}
+
 void
 Server::sendFileToClient(const char* filename)
 {
@@ -2587,10 +2588,9 @@ Server::sendFileToClient(const char* filename)
 		StreamChunker::interruptFile();
 	}
 
-	m_sendFileThread = new Thread(
-		new TMethodJob<Server>(
-			this, &Server::sendFileThread,
-			static_cast<void*>(const_cast<char*>(filename))));
+	auto data = static_cast<void*>(const_cast<char*>(filename));
+	auto method = new TMethodJob<Server>(this, &Server::sendFileThread, data);
+	m_sendFileThread.reset(new Thread(method));
 }
 
 void
@@ -2605,7 +2605,7 @@ Server::sendFileThread(void* data)
 		LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
 	}
 
-	m_sendFileThread = NULL;
+	m_sendFileThread.reset(nullptr);
 }
 
 void

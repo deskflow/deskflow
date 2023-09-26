@@ -67,12 +67,11 @@ private:
     // SSL
     void                initContext(bool server);
     void                createSSL();
+    void                freeSSL();
     int                 secureAccept(int s);
     int                 secureConnect(int s);
-    bool                showCertificate();
+    bool                showCertificate() const;
     void                checkResult(int n, int& retry);
-    void                showError(const char* reason = NULL);
-    String              getError();
     void                disconnect();
     void                formatFingerprint(String& fingerprint,
                                             bool hex = true,
@@ -87,10 +86,6 @@ private:
                         serviceAccept(ISocketMultiplexerJob*,
                             bool, bool, bool);
 
-    void                showSecureConnectInfo();
-    void                showSecureLibInfo();
-    void                showSecureCipherInfo();
-    
     void                handleTCPConnected(const Event& event, void*);
 
 private:

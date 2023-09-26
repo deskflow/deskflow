@@ -2,34 +2,43 @@ name: Debian
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
 
 jobs:
   build-arch64:
+    name: ${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
+
     env:
       GIT_COMMIT: ${{ github.sha }}
+
     strategy:
       matrix:
-        include:
-          - distro: debian9
-          - distro: debian10
-
-    name: ${{ matrix.distro }}
+        distro:
+          - debian9
+          - debian10
+          - debian11
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
 
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        . ./version
-        make -j
-        
-    - name: Run unit test
-      run: ./build/bin/unittests
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          make -j
+
+      - name: Run unit test
+        run: ./build/bin/unittests

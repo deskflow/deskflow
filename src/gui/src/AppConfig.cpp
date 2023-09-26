@@ -79,7 +79,14 @@ const char* AppConfig::m_SynergySettingsName[] = {
         "tlsKeyLength",
         "preventSleep",
         "languageSync",
-        "invertScrollDirection"
+        "invertScrollDirection",
+        "eliteBackersUrl",
+        "guid",
+        "licenseRegistryUrl",
+        "licenseNextCheck",
+        "initiateConnectionFromServer",
+        "clientHostMode",
+        "serverClientMode"
 };
 
 static const char* logLevelNames[] =
@@ -95,19 +102,19 @@ AppConfig::AppConfig() :
     m_Port(24800),
     m_Interface(),
     m_LogLevel(0),
+    m_LogToFile(),
     m_WizardLastRun(0),
     m_ProcessMode(DEFAULT_PROCESS_MODE),
+    m_StartedBefore(),
     m_AutoConfig(true),
+    m_AutoConfigServer(),
     m_ElevateMode(defaultElevateMode),
+    m_Edition(kUnregistered),
     m_CryptoEnabled(false),
     m_AutoHide(false),
     m_LastExpiringWarningTime(0),
-    m_AutoConfigServer(),
-    m_MinimizeToTray(false),
-    m_Edition(kUnregistered),
-    m_LogToFile(),
-    m_StartedBefore(),
     m_ActivationHasRun(),
+    m_MinimizeToTray(false),
     m_ServerGroupChecked(),
     m_UseExternalConfig(),
     m_UseInternalConfig(),
@@ -245,6 +252,13 @@ void AppConfig::loadSettings()
     m_PreventSleep              = loadSetting(kPreventSleep, false).toBool();
     m_LanguageSync              = loadSetting(kLanguageSync, false).toBool();
     m_InvertScrollDirection     = loadSetting(kInvertScrollDirection, false).toBool();
+    m_eliteBackersUrl           = loadCommonSetting(kEliteBackersUrl, "https://api2.prod.symless.com/credits/elite-backers").toString();
+    m_guid                      = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
+    m_licenseRegistryUrl        = loadCommonSetting(kLicenseRegistryUrl, "https://api2.prod.symless.com/license/register").toString();
+    m_licenseNextCheck          = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
+    m_ClientHostMode            = loadSetting(kClientHostMode, true).toBool();
+    m_ServerClientMode          = loadSetting(kServerClientMode, true).toBool();
+    m_InitiateConnectionFromServer = loadSetting(kInitiateConnectionFromServer, false).toBool();
 
     //only change the serial key if the settings being loaded contains a key
     bool updateSerial = ConfigWriter::make()
@@ -275,6 +289,12 @@ void AppConfig::saveSettings()
 {
     setCommonSetting(kWizardLastRun, m_WizardLastRun);
     setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
+    setCommonSetting(kGroupClientCheck, m_ClientGroupChecked);
+    setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
+    setCommonSetting(kEliteBackersUrl, m_eliteBackersUrl);
+    setCommonSetting(kGuid, m_guid);
+    setCommonSetting(kLicenseRegistryUrl, m_licenseRegistryUrl);
+    setCommonSetting(kLicenseNextCheck, m_licenseNextCheck);
 
     if (isWritable()) {
         setSetting(kScreenName, m_ScreenName);
@@ -299,15 +319,15 @@ void AppConfig::saveSettings()
         setSetting(kLastExpireWarningTime, m_LastExpiringWarningTime);
         setSetting(kActivationHasRun, m_ActivationHasRun);
         setSetting(kMinimizeToTray, m_MinimizeToTray);
-        setSetting(kGroupServerCheck, m_ServerGroupChecked);
         setSetting(kUseExternalConfig, m_UseExternalConfig);
         setSetting(kConfigFile, m_ConfigFile);
         setSetting(kUseInternalConfig, m_UseInternalConfig);
-        setSetting(kGroupClientCheck, m_ClientGroupChecked);
         setSetting(kServerHostname, m_ServerHostname);
         setSetting(kPreventSleep, m_PreventSleep);
         setSetting(kLanguageSync, m_LanguageSync);
         setSetting(kInvertScrollDirection, m_InvertScrollDirection);
+        setSetting(kClientHostMode, m_ClientHostMode);
+        setSetting(kServerClientMode, m_ServerClientMode);
     }
 
     m_unsavedChanges = false;
@@ -405,7 +425,7 @@ void AppConfig::clearSerialKey()
     m_Serialkey.clear();
 }
 
-QString AppConfig::serialKey() { return m_Serialkey; }
+QString AppConfig::serialKey() const { return m_Serialkey; }
 
 int AppConfig::lastExpiringWarningTime() const { return m_LastExpiringWarningTime; }
 
@@ -436,8 +456,11 @@ void AppConfig::setCryptoEnabled(bool newValue) {
 bool AppConfig::isCryptoAvailable() const {
     bool result {true};
 
-#ifndef SYNERGY_ENTERPRISE
-    result = (edition() == kPro || edition() == kPro_China || edition() == kBusiness);
+#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
+    result = (edition() == kPro ||
+              edition() == kPro_China ||
+              edition() == kBusiness ||
+              edition() == kUltimate);
 #endif
 
     return result;
@@ -461,6 +484,30 @@ bool AppConfig::getInvertScrollDirection() const {
     return m_InvertScrollDirection;
 }
 
+void AppConfig::setEliteBackersUrl(const QString& newValue) {
+    setSettingModified(m_eliteBackersUrl, newValue);
+}
+
+void AppConfig::setLicenseNextCheck(unsigned long long time) {
+    setSettingModified(m_licenseNextCheck, time);
+}
+
+const QString& AppConfig::getEliteBackersUrl() const {
+    return m_eliteBackersUrl;
+}
+
+const QString& AppConfig::getLicenseRegistryUrl() const {
+    return m_licenseRegistryUrl;
+}
+
+unsigned long long AppConfig::getLicenseNextCheck() const {
+    return m_licenseNextCheck;
+}
+
+const QString& AppConfig::getGuid() const {
+    return m_guid;
+}
+
 bool AppConfig::getLanguageSync() const { return m_LanguageSync; }
 
 void AppConfig::setInvertScrollDirection(bool newValue) {
@@ -472,6 +519,18 @@ void AppConfig::setLanguageSync(bool newValue) {
 }
 
 bool AppConfig::getPreventSleep() const { return m_PreventSleep; }
+
+bool AppConfig::getClientHostMode() const {
+    return (m_ClientHostMode && getInitiateConnectionFromServer());
+}
+
+bool AppConfig::getServerClientMode() const {
+    return (m_ServerClientMode && getInitiateConnectionFromServer());
+}
+
+bool AppConfig::getInitiateConnectionFromServer() const {
+    return m_InitiateConnectionFromServer;
+}
 
 void AppConfig::setPreventSleep(bool newValue) {
     setSettingModified(m_PreventSleep, newValue);
@@ -518,16 +577,22 @@ QVariant AppConfig::loadCommonSetting(AppConfig::Setting name, const QVariant& d
     return result;
 }
 
-void AppConfig::loadScope(ConfigWriter::Scope scope) const {
+void AppConfig::loadScope(ConfigWriter::Scope scope) {
    auto writer = ConfigWriter::make();
 
    if (writer->getScope() != scope) {
+      setDefaultValues();
       writer->setScope(scope);
       if (writer->hasSetting(settingName(kScreenName), writer->getScope())) {
           //If the user already has settings, then load them up now.
           writer->globalLoad();
       }
    }
+}
+
+void AppConfig::setDefaultValues()
+{
+    m_InitiateConnectionFromServer = false;
 }
 
 void AppConfig::setLoadFromSystemScope(bool value) {
@@ -600,6 +665,14 @@ void AppConfig::setClientGroupChecked(bool newValue) {
 
 void AppConfig::setServerHostname(const QString& newValue) {
     setSettingModified(m_ServerHostname, newValue);
+}
+
+void AppConfig::setClientHostMode(bool newValue) {
+    setSettingModified(m_ClientHostMode, newValue);
+}
+
+void AppConfig::setServerClientMode(bool newValue) {
+    setSettingModified(m_ServerClientMode, newValue);
 }
 
 template<typename T>

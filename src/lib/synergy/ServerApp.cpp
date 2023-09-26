@@ -29,6 +29,7 @@
 #include "synergy/ServerArgs.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
+#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/XSocket.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
@@ -98,7 +99,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
                 m_synergyAddress->resolve();
             }
             catch (XSocketAddress& e) {
-                LOG((CLOG_PRINT "%s: %s" BYE,
+                LOG((CLOG_CRIT "%s: %s" BYE,
                     args().m_pname, e.what(), args().m_pname));
                 m_bye(kExitArgs);
             }
@@ -218,7 +219,7 @@ ServerApp::loadConfig()
     }
 
     if (!loaded) {
-        LOG((CLOG_PRINT "%s: no configuration available", args().m_pname));
+        LOG((CLOG_CRIT "%s: no configuration available", args().m_pname));
         m_bye(kExitConfig);
     }
 }
@@ -539,7 +540,6 @@ ServerApp::startServer()
         assert(m_serverState == kInitialized);
     }
 
-    double retryTime {};
     ClientListener* listener = NULL;
     try {
         listener   = openClientListener(args().m_config->getSynergyAddress());
@@ -553,10 +553,14 @@ ServerApp::startServer()
         return true;
     }
     catch (XSocketAddressInUse& e) {
-        LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
+        if (args().m_restartable) {
+            LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
+        }
+        else {
+            LOG((CLOG_CRIT "cannot listen for clients: %s", e.what()));
+        }
         closeClientListener(listener);
         updateStatus(String("cannot listen for clients: ") + e.what());
-        retryTime = 10.0;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
@@ -567,6 +571,7 @@ ServerApp::startServer()
     if (args().m_restartable) {
         // install a timer and handler to retry later
         assert(m_timer == NULL);
+        const auto retryTime = 10.0;
         LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
         m_timer = m_events->newOneShotTimer(retryTime, NULL);
         m_events->adoptHandler(Event::kTimer, m_timer,
@@ -633,8 +638,8 @@ ClientListener*
 ServerApp::openClientListener(const NetworkAddress& address)
 {
     ClientListener* listen = new ClientListener(
-        address,
-        new TCPSocketFactory(m_events, getSocketMultiplexer()),
+        getAddress(address),
+        getSocketFactory(),
         m_events,
         args().m_enableCrypto);
     
@@ -676,6 +681,33 @@ ServerApp::handleNoClients(const Event&, void*)
 void
 ServerApp::handleScreenSwitched(const Event& e, void*)
 {
+}
+
+ISocketFactory* ServerApp::getSocketFactory() const
+{
+    ISocketFactory* socketFactory = nullptr;
+
+    if (args().m_config->isClientMode()) {
+        socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
+    }
+    else {
+        socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
+    }
+
+    return socketFactory;
+}
+
+NetworkAddress ServerApp::getAddress(const NetworkAddress& address) const
+{
+    if (args().m_config->isClientMode()) {
+        const auto clientAddress = args().m_config->getClientAddress();
+        NetworkAddress addr(clientAddress.c_str(), kDefaultPort);
+        addr.resolve();
+        return addr;
+    }
+    else {
+        return address;
+    }
 }
 
 int

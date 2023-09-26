@@ -30,7 +30,7 @@
    <item>
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/synergy/account-login&quot;&gt;&lt;span style=&quot; text-decoration: none; color: #4285F4;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This can be found on your &lt;a href=&quot;https://symless.com/synergy/account?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: none; color: #4285F4;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
