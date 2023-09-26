@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from datetime import datetime, timezone
 import re
 
-IGNORE_SEGMENTS = ['Github Actions:']
+IGNORE_SEGMENTS = ['CI changes:']
 
 if __name__ == '__main__':
   parser = ArgumentParser()
