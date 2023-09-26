@@ -10,6 +10,7 @@ Enhancements:
 - #7274 Support env var to build unified core binary
 - #7277 Change all errors that cause crash are FATAL
 - #7284 Change session ID info log message to DEBUG2
+- #7283 Update all workflows and fix broken macOS workflows
 
 # 1.14.6
 
