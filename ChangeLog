@@ -1,17 +1,15 @@
 # 1.14.7
 
-Bug fixes:
-
-- #7265 Remove extra key press traces for Linux
-
 Enhancements:
 
 - #7262 Backward compatibility for M1 and M2 builds
 - #7254 Bind client to a network interface with --address
 - #7263 Change name of Flatpak uploaded to snapshots
-- #7269 Reword file drag drop error to debug message
-- #7274 Only build necessary binaries
-- #7277 Change start errors to fatal
+- #7269 Change file drag drop ERROR to DEBUG message
+- #7274 Support env var to build unified core binary
+- #7277 Change all errors that cause crash are FATAL
+- #7265 Remove obtrusive Linux key press log messages
+- #7284 Change session ID info log message to DEBUG2
 
 CI changes:
 
