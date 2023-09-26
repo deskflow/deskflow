@@ -15,29 +15,31 @@ Enhancements:
 GitHub Actions:
 - #7283 Update all workflows and fix broken macOS workflows
 
-1.14.6
-======
+# 1.14.6
 
 Bug fixes:
+
 - #7208 Crash on FreeBSD when pressing special keys on a client
 - #7241 Change the default signature hashing algorithm for sha256
 - #7242 TLS certificate generation for Flatpak
 
 Enhancements:
+
 - #7222 Initiate non-TLS connection from server
 - #7225 Initiate TLS connection from server
 - #7239 Single app for server and client
 - #7248 Firewall exception for client
 - #7250 Builds for Fedora 37 and 38
 
-1.14.5
-======
+# 1.14.5
 
 Bug fixes:
+
 - #7182 Remove unused TLS options from the GUI on client
 - #7186 No additional TLS options for all users setting
 
 Enhancements:
+
 - #7183 Refactoring for Synergy 3 licenses
 - #7190 Maintenance license serial key support
 - #7193 Support for maintenance licenses in China
@@ -45,13 +47,14 @@ Enhancements:
 - #7203 License registration for Business edition
 
 Github Actions:
+
 - #7210 Update macos workflow to use macos-latest
 - #7213 Update azure pipelines to use macos-latest
 
-1.14.4
-======
+# 1.14.4
 
 Bug fixes:
+
 - #7144 Double lines when pasting text from Linux to Windows
 - #7149 Address issues with modifiers and dead keys
 - #7163 Fix compilation issues for FreeBSD
@@ -60,6 +63,7 @@ Bug fixes:
 - #7179 Disable drag and drop by default
 
 Enhancements:
+
 - #7143 Ability to stop Synergy on the login screen
 - #7157 Synergy Business accepts only business licenses
 - #7188 Synergy Basic\Pro accepts business licenses
@@ -67,6 +71,7 @@ Enhancements:
 - #7181 Fedora 36 support to CI system
 
 Github Actions:
+
 - #7177 Create workflow for flatpak build support
 - #7148 Fix unstable build for Windows core
 - #7156 Change binary storage server
@@ -77,18 +82,18 @@ Github Actions:
 - #7174 Show all workflows for Raspberry Pi
 - #7187 Rename flatpak to match other builds
 
-1.14.3
-======
+# 1.14.3
 
 Bug fixes:
+
 - #7135 Fix issue with function keys on macOS
 - #7140 Configure scroll direction on a per-computer basis
 - #7141 Code refactoring for the configure scroll direction task
 
-1.14.2
-======
+# 1.14.2
 
 Bug fixes:
+
 - #7070 Radio button shifted focus on macOS
 - #7038 Client and server different keyboard layout errors
 - #7078 Clipboard re-enables automatically
@@ -109,20 +114,22 @@ Bug fixes:
 - #7115 Prevent notifications if language reading fails
 
 Enhancements:
+
 - #7068 Restart when settings changed
 - #7072 Run synergy as a pre-login agent
 - #7074 Restart when server settings changed
 
 Github Actions:
+
 - #1043 Upload to S3 feature on all OS
 - #7098 Apple M1 runner
 - #7103 Fix core builds
 - #7109 Fix build version for M1 builds
 
-1.14.1
-======
+# 1.14.1
 
 Bug fixes:
+
 - #7016 Fix script that generates version number
 - #7006 Resolve code scanning issues
 - #7012 Fix natural horizontal scrolling on Mac client
@@ -140,6 +147,7 @@ Bug fixes:
 - #7064 There is no secure input notification if user moves pointer between clients
 
 Enhancements:
+
 - #6998 Remove functionality related to the screen saver synchronisation
 - #7026 Update the way we package OpenSSL for Windows build
 - #7035 Add Fedora 34 build
@@ -149,10 +157,10 @@ Enhancements:
 - #7040 Support "Kana" and "Eisu" keys on Japanese Apple Pro Keyboard (JIS)
 - #7047 Add prevent sleep option support to Linux
 
-1.14.0
-======
+# 1.14.0
 
 Bug fixes:
+
 - #6953 | #6961 The system does not update server name in Server configuration
 - #6966 macOS 10.13 missing build number
 - #6968 System loses synchronisation between settings and configuration
@@ -176,6 +184,7 @@ Bug fixes:
 - #7020 Remove cmake option for autoconfig
 
 Enhancements:
+
 - #6954 Move language selection to advanced section
 - #6959 Update synergy UI. Setup wizard
 - #6969 Update synergy UI. Validation for aliases.
@@ -193,10 +202,10 @@ Enhancements:
 - #7022 Add Fedora 33 to build and release pipeline
 - #7031 New licenses for Chinese market
 
-1.13.1
-======
+# 1.13.1
 
 Bug fixes:
+
 - #6900 Remaining SonarCloud reported bug items
 - #6903 Save global settings
 - #6889 Systray Icon on Ubuntu Auto Start (take 2)
@@ -217,6 +226,7 @@ Bug fixes:
 - #6951 Fix issue creating standard version for Raspberry Pi
 
 Enhancements:
+
 - #6912 Removes UI for Screen Saver Sync and Files Drag and Drop
 - #6909 Document CLI Arguments
 - #6916 Main Window receives screen name change
@@ -229,10 +239,10 @@ Enhancements:
 - #6949 Add a new option SYNERGY_AUTOCONFIG to exclude autoconfig from the standard version
 - #6952 Change OpenSSL logic to use find_package
 
-1.13.0
-======
+# 1.13.0
 
 Bug fixes:
+
 - #6858 Application is blurry and unfocused on macOS
 - #6872 Check for dns_sd.h only when building GUI
 - #6874 The logo on Windows taskbar is incorrect.
@@ -243,13 +253,14 @@ Bug fixes:
 - #6886 Update Welcome screen
 
 Enhancements:
+
 - #6867 Create only 1 artefact for macOS
 - #6885 Make build for every merge to master
 
-1.13.0
-======
+# 1.13.0
 
 Bug fixes:
+
 - #6831 Incorporating Sonar's major
 - #6837 Memory leaks on macOS system
 - #6838 Enterprise asks for serial key on Linux system
@@ -259,16 +270,17 @@ Bug fixes:
 - #6863 Adding MacOS CI Build Steps for Homebrew Cleanup
 
 Enhancements:
+
 - #6836 Enabling Github Code Scanning
 - #6841 Windows installer has been updated.
 - #6844 macOS installer has been updated.
 - #6860 About Synergy logo refreshed
 - #6865 Updated visual assets
 
-1.12.1
-======
+# 1.12.1
 
 Bug fixes:
+
 - #6753 Fixed a number of vulnerabilities detected by static analysis
 - #6567 Fixed Synergy spawning hundreds of zombie processes
 - #6755 Fixed Vulnerability in vreadf function detected by Static analysis
@@ -278,7 +290,7 @@ Bug fixes:
 - #6771 Added Ubuntu 16 to CI/CD
 - #6804 Synergy loses edition when creating a System scope config
 - #6660 + #6582 Add missing XAtom for utf-8 handling with Xorg
-- #6814 The system asks to save twice. 
+- #6814 The system asks to save twice.
 - #6817 Configure requires dns_sd.h for enterprise version
 - #6826 + #6829 SonarCloud Critical bugs
 - #6821 Blocker bugs found by sonar in synergy and in tests
@@ -287,6 +299,7 @@ Bug fixes:
 - #6835 Create TLS certificate during upgrade
 
 Enhancements:
+
 - #6750 Integrate SonarCloud for static analysis and test coverage
 - #6792 License key expiry
 - #6799 Synergy "Business" edition
@@ -295,10 +308,10 @@ Enhancements:
 - #6806 Move to Github Action for general PR builds and tests
 - #6816 Improve license key validation
 
-1.12.0
-======
+# 1.12.0
 
 Bug fixes:
+
 - #6748 Copyright year in about dialog isn't updated
 - #6730 Updating synergy looses settings
 - #6734 Fixed naming of installers for linux and windows
@@ -314,6 +327,7 @@ Bug fixes:
 - #6716 Denial of Service vulnerability on servers with 4GB of ram or less
 
 Enhancements:
+
 - #6739 Add submodules cloning to cmake
 - #6736 Command line option for custom TLS Certificate
 - #6666 Add doxygen documentation output from pipelines
@@ -327,12 +341,13 @@ Enhancements:
 - #6725 Disable the building of tests with CMake option
 
 Features:
+
 - #6538 System-wide config for all system users
 
-1.11.1
-======
+# 1.11.1
 
 Bug fixes:
+
 - #6622 Language files not updated during build
 - #6611 Mismatched TLS SHA fingerprint types
 - #6608 TLS certificate is not created on Windows
@@ -341,13 +356,14 @@ Bug fixes:
 - #4 Quote chars broken on US-International keyboard
 
 Enhancements:
+
 - #6632 Support for building with LibreSSL
 - #6396 Black and white icons for macOS toolbar
 
-1.11.0
-======
+# 1.11.0
 
 Bug fixes:
+
 - #6575 Service start error on Windows
 - #6570 Hotkey capture of ctrl and cmd swapped on macOS
 - #6569 Unable to run on macOS 10.15 Catalina
@@ -358,16 +374,18 @@ Bug fixes:
 - #5294 Cursor lockout at Windows server login screen
 
 Enhancements:
+
 - #6588 Version number header with update check
 - #4957 Server fails to start up due to synwinhk.dll is in use
 
 Features:
+
 - #6518 Key combination that will force a server restart
 
-1.10.3
-======
+# 1.10.3
 
 Bug fixes:
+
 - #6546 Filtered out self assigned ip addresses from being displayed
 - #6541 Fixed connected info text to include without TLS encryption
 - #6527 Config app renders incorrectly on high DPI screens
@@ -378,6 +396,7 @@ Bug fixes:
 - #3705 Hotkeys not working on Mac server
 
 Enhancements:
+
 - #6535 Version URL and added stage check to version check
 - #6529 Cleaner redistributable use in Windows installer
 - #6528 More verbose message for Linux display errors
@@ -388,11 +407,10 @@ Enhancements:
 - #6519 Support for Ubuntu 14.04 LTS for legacy users
 - #6390 Support for OpenSSL 1.1.1 for better security
 
-
-1.10.2
-======
+# 1.10.2
 
 Bug fixes:
+
 - #6495 Event queue memory leak in server cleanup
 - #6471 Unable to stop core retry loop in config app
 - #6460 TLS memory leak on Linux server when using client
@@ -402,21 +420,23 @@ Bug fixes:
 - #6373 Compile fails on BSD Unix with dl error
 
 Enhancements:
+
 - #6485 Readme for master branch with download help
 - #6475 Change master branch to current version
 - #6470 CI solution with on-demand containers
 - #6397 Remember last server used in Auto Config
 - #6375 Support for Qt 5.11 framework on Windows
 
-1.10.1
-======
+# 1.10.1
 
 Bug fixes:
+
 - #6339 Windows validating install step freezes
 - #6374 Windows background service crashes randomly
 - #6376 Undeclared identifier compile error in VS2017
 
 Enhancements:
+
 - #6372 Forced use of TLS 1.2 without fallback method
 - #6338 Auto config checkbox on settings screen
 - #6384 Removal of GPL screen on Windows installer
@@ -424,15 +444,16 @@ Enhancements:
 - #6382 Code comment for MSVC debugger logging
 - #6380 Compile without warnings using VS2017
 
-1.10.0
-======
+# 1.10.0
 
 Bug fixes:
+
 - #6347 Log to file defaults to unwritable location
 - #6345 Losing GUI config when restarting the OS
 - #4991 Oversized Bonjour protocol name could conflict
 
 Enhancements:
+
 - #6348 Use different hard coded Qt path for CI
 - #6346 CLI argument to control screen lock feature
 - #6344 Customizable size limit on clipboard sharing
@@ -444,25 +465,27 @@ Enhancements:
 - #6305 Support for Raspbian in package config
 - #6301 Combine enterprise and community codebases
 
-1.9.1
-=====
+# 1.9.1
 
 Bug fix:
+
 - #5964 Can't click after sleep on Mac client
 
 Enhancements:
+
 - #6310 More robust macOS screen shape detection
 - #6309 Update OpenSSL to 1.0.2o for better security
 
-1.9.0
-=====
+# 1.9.0
 
 Bug fixes:
+
 - #6251 Service hangs after GUI is opened
 - #5844 Icon causes Linux package manager to fail
 - #4132 Laggy mouse cursor on macOS clients
 
 Enhancements:
+
 - #6116 Quieter quartz event log entry on Mac
 - #6037 Solve defects reported by PVS Studio
 - #6014 Code sign binaries on Windows
@@ -475,8 +498,8 @@ Enhancements:
 - #4978 Visual Studio 2015 support on Windows 10
 - #4154 IPv6 support for Windows and Linux
 
-1.8.8
-=====
+# 1.8.8
+
 Bug #5196 - Some keys on Korean and Japanese keyboards have the same keycode
 Bug #5578 - Pressing Hangul key results in alt+'a'
 Bug #5785 - Can't switch screens when cursor is in a corner
@@ -490,12 +513,12 @@ Enhancement #4504 - Improved Korean language description
 Enhancement #5525 - Added support for precise screen positioning in config file
 Enhancement #4290 - Windows: Removed annoying alt+print screen functionality
 
-1.8.7
-=====
+# 1.8.7
+
 Bug #5784 - Edition changes when reopening GUI
 
-1.8.6
-=====
+# 1.8.6
+
 Bug #5592 - Some keys don't work for macOS Sierra clients
 Bug #5186 - Cursor stuck on client when using multi-DPI server
 Bug #5722 - Malformed serial key in registry will crash GUI on startup
@@ -503,15 +526,15 @@ Bug #5752 - Tab order is incorrect on Settings dialog
 Enhancement #5699 - Unified installers on macOS
 Feature #4836 - macOS Sierra build
 
-1.8.5
-=====
+# 1.8.5
+
 Bug #5680 - Server crashes when disconnecting SSL clients
 Bug #5626 - Build fails using Xcode 8 and macOS SDK 10.12
 Feature #5657 - Trial version support
 Feature #5707 - User upgrade statistics
 
-1.8.4
-=====
+# 1.8.4
+
 Bug #5183 - Slowly moving the cursor has no effect on high DPI clients
 Bug #4041 - UHD/4K DPI scaling broken on Windows servers
 Bug #4420 - When XRandR adds a screen, it is inaccessible
@@ -523,8 +546,8 @@ Enhancement #5627 - Move SSL certificate generation to main window
 Enhancement #5628 - Move SSL implementation into core binary
 Enhancement #5629 - Move activation from wizard into new dialog window
 
-1.8.3
-=====
+# 1.8.3
+
 Bug #2765 - A letter appears on macOS clients when the spacebar is pressed
 Bug #3241 - Windows UAC disconnects clients when elevated
 Bug #4740 - Linux client crashes with "Assertion '!m_open' failed"
@@ -535,8 +558,8 @@ Enhancement #123 - Option to disable clipboard sharing
 Enhancement #3305 - Media key support on macOS
 Enhancement #4323 - Make automatic elevation on Windows optional
 
-1.8.2
-=====
+# 1.8.2
+
 Bug #3044 - Unable to drag-select in MS Office
 Bug #4768 - Copy paste causes 'server is dead' error on switching
 Bug #4792 - Server logging crashes when switching with clipboard data
@@ -550,12 +573,12 @@ Enhancement #4922 - Add --enable-crypto argument to help text
 Enhancement #5299 - High resolution App icon on Mac
 Enhancement #4894 - Improve grammar in connection notification dialog
 
-1.8.1
-=====
+# 1.8.1
+
 Bug #5461 - GUI crash during activation on Mac
 
-1.8.0
-=====
+# 1.8.0
+
 Enhancement #4696 - Include 'ns' plugin in installers (instead of wizard download)
 Enhancement #4715 - Activation dialog which also accepts a serial key
 Enhancement #5020 - Recommend using serial key when online activation fails
@@ -565,8 +588,8 @@ Enhancement #4793 - Additional logging to output OpenSSL version
 Enhancement #4932 - Notify activation system when wizard finishes
 Enhancement #4716 - Allow software to be time limited with serial key
 
-1.7.6
-=====
+# 1.7.6
+
 Bug #451 - Fast cursor on any client with Mac server
 Bug #5041 - Copying from the Chrome web browser doesn't work
 Bug #4735 - Clipboard doesn't work from client to server
@@ -575,13 +598,13 @@ Bug #4353 - Large clipboard causes crash
 Bug #3774 - Missing MinGW dependencies after install on Windows
 Bug #4723 - Waiting for active desktop result freezes Windows service
 
-1.7.5
-=====
+# 1.7.5
+
 Bug #5030 - Display scaling breaks edge detection on Windows
 Bug #5064 - Compile fails on Mac OS X 10.11 (unused typedef)
 
-1.7.4
-=====
+# 1.7.4
+
 Bug #4721 - High CPU usage for Windows service
 Bug #4750 - SSL connect error 'passive ssl error limit'
 Bug #4584 - Drag and drop with SSL causes crash
@@ -595,8 +618,8 @@ Enhancement #4901 - Auto restart when running from GUI in desktop mode
 Enhancement #4845 - Add timestamp to log output
 Enhancement #4898 - Move version stage name to build config
 
-1.7.3
-=====
+# 1.7.3
+
 Bug #4565 - Incorrect plugin downloads on Debian and Mint
 Bug #4677 - Windows service log file grows to very large size
 Bug #4651 - High logging rate causes Windows service to crash
@@ -618,8 +641,8 @@ Enhancement #4708 - Download ns plugin for specific Mac versions
 Enhancement #4587 - Include OpenSSL binaries in source for easier building
 Enhancement #4695 - Automatically upload plugins as Buildbot step
 
-1.7.2
-=====
+# 1.7.2
+
 Bug #4564 - Modifier keys often stuck down on Mac client
 Bug #4581 - Starting GUI on Mac crashes instantly on syntool segfault
 Bug #4520 - Laggy or sluggish cursor (ping spikes) on Mac when using WiFi
@@ -631,8 +654,8 @@ Enhancement #4569 - Reintroduce GUI auto-hide setting (disabled by default)
 Enhancement #4570 - Make `--crypto-pass` show deprecated message
 Enhancement #4596 - Typo 'occurred' in WebClient.cpp
 
-1.7.1
-=====
+# 1.7.1
+
 Bug #3784 - Double click & drag doesn't select words on client
 Bug #3052 - Triple-click (select line) does not work
 Bug #4367 - Duplicate Alt-S Keyboard Shortcuts on Gui
@@ -658,8 +681,8 @@ Enhancement #4540 - Enable Network Security checkbox only when ns plugin exists
 Enhancement #4525 - Reorganize app data directory
 Enhancement #4390 - Disable GUI auto-hide by default
 
-1.7.0
-=====
+# 1.7.0
+
 Enhancement #4313 - SSL encrypted secure connection
 Enhancement #4168 - Plugin manager for GUI
 Enhancement #4307 - Always show client auto-detect dialog
@@ -667,16 +690,16 @@ Enhancement #4397 - Modernize Mac build script (deployment and signing)
 Enhancement #4398 - Remove obsolete Mac database cleaner
 Enhancement #4337 - Remove IStreamFilterFactory dead code
 
-1.6.3
-=====
+# 1.6.3
+
 Bug #4349 - Mouse click does not always bring window to front
 Bug #4463 - Unidentified developer error on Mac OS X
 Bug #4464 - Code signing verify failure not reported on Mac build
 Bug #4465 - Binary (syntool) is not code signed on Windows
 Enhancement #4455 - Replace version with branch name in package filename
 
-1.6.2
-=====
+# 1.6.2
+
 Bug #4227 - Helper tool crashes when service checks elevation state
 Bug #4091 - Zeroconf on server advertises bogus IP address
 Bug #4249 - Drag file causes client crash on Mac (10.10)
@@ -688,8 +711,8 @@ Enhancement #4240 - Minimize auto config message box usage
 Enhancement #4247 - Firewall exception for GUI (needed for Bonjour)
 Enhancement #4242 - Consistent naming for auto config feature
 
-1.6.1
-=====
+# 1.6.1
+
 Bug #4002 - Carbon loop not ready within 5 sec
 Bug #4191 - Accessibility helper tool crashes
 Bug #4149 - Mac 10.9.5 or 10.10 gatekeeper blocks Synergy
@@ -705,31 +728,31 @@ Enhancement #4126 - 64-bit support for OS X
 Enhancement #4141 - DMRM message support for μSynergy
 Enhancement #4124 - More robust argument parsing
 
-1.6.0
-=====
+# 1.6.0
+
 Feature #65 - Auto config feature using Zeroconf/Bonjour
 
-1.5.1
-=====
+# 1.5.1
+
 Bug #3307 - Configuration file paths containing spaces don't work
 Bug #3404 - Log path needs to be in quotes on windows
 Bug #3996 - Installer fails when Windows Firewall is disabled
 
-1.5.0
-=====
+# 1.5.0
+
 Bug #4060 - Key stuck down on Windows server
 Bug #4061 - Windows server repeats modifier keys
 
-1.4.18
-======
+# 1.4.18
+
 Bug #3980 - Shell extension DLL causes explorer.exe to crash
 Task #4049 - Correct code style in OSXKeyState compilation unit
 Task #4050 - Fix subversion issue tracker URL
 Task #4053 - Improve deb package quality
 Task #4054 - Improve rpm package quality
 
-1.4.17
-======
+# 1.4.17
+
 Bug #2836 - Unable to begin screen name or alias with numbers
 Bug #3796 - Some files being unintentionally dragged (including explorer.exe)
 Bug #3886 - Alias is allowed to match screen name
@@ -753,8 +776,8 @@ Task #3963 - Disable failing Linux unit/integ tests on Fedora 20 32-bit (valgrin
 Task #3964 - Make Premium login error more verbose
 Task #3969 - Merge String.cpp and StringUtil.cpp
 
-1.4.16
-======
+# 1.4.16
+
 Bug #3338 - Alt tab not working with Windows 8
 Bug #3642 - Failed to start server on Mac OS X 10.9 Mavericks, assistive devices problem
 Bug #3785 - Synwinxt.dll error opening file for writing during install of 1.4.15
@@ -766,13 +789,13 @@ Bug #3818 - Client freezes on Mac OS 10.6.8
 Bug #3874 - Premium GUI login is case sensitive for email
 Bug #3911 - Drag and drop error on OS X 10.9 Mavericks
 
-1.4.15
-======
+# 1.4.15
+
 Bug #3765 - Synergy Service - Error 87: The parameter is incorrect.
 Bug #3781 - Option not supported on Linux: --enable-drag-drop (server not starting)
 
-1.4.14
-======
+# 1.4.14
+
 Bug #3287 - Mac does not wake up
 Bug #3758 - Unstable service (synergyd)
 Bug #3759 - Exploit: C:\Program.exe (if it exists) is run by service (elevated)
@@ -781,26 +804,26 @@ Bug #3761 - Start button is visible when Synergy is running
 Bug #3762 - Apply button is disabled for Mac and Linux
 Feature #46 - Drag and drop between computers (Windows and Mac)
 
-1.4.13
-======
+# 1.4.13
+
 Version not released, unstable.
 
-1.4.12
-======
+# 1.4.12
+
 Bug #3565 - Encryption fails when typing fast (Invalid message from client)
 Bug #3606 - GUI is elevated after setup
 Bug #3572 - Mac caps lock causes disconnect
 
-1.4.11
-======
+# 1.4.11
+
 Feature #12 - Encryption
 Feature #421 - Portable version
 Bug #2855 - Mouse cursor remains hidden on Mac client (intermittently/randomly)
 Bug #3281 - server start on OS X defaults to 'interactive'
 Bug #3310 - P&ort in settings screen
 
-1.4.10
-======
+# 1.4.10
+
 Bug #2799 - Right shift broken (Windows server, Mac OS X client)
 Bug #3302 - GUI does not show/hide when tray icon is double clicked (Windows)
 Bug #3303 - Mac OS X IPC integ test fails intermittently
@@ -813,8 +836,8 @@ Feature #3300 - Make service mode default mode (now that we have elevate option)
 Feature #3301 - Add process mode option to settings (remove startup wizard page)
 Feature #3306 - Gatekeeper compatibility on Mac OS X 10.8
 
-1.4.9
-=====
+# 1.4.9
+
 Bug #3159 - In service mode, server doesn't start unless GUI is running
 Bug #3214 - Client sometimes can't connect if GUI is closed
 Bug #56 - Mac OS X server not sending keystrokes to client
@@ -831,8 +854,8 @@ Task #3193 - Add Micro Synergy to repository
 Task #3275 - Change hostname label to "IP address or hostname"
 Task #3276 - Installation recovery mechanism for synrgyhk.dll
 
-1.4.8
-=====
+# 1.4.8
+
 Bug #143: Cursor on Mac OS X goes to center when inactive
 Bug #146: Screen Resize causes problems with moving off right-hand side of screen
 Bug #3058: Modifier keys not working on Mac OS X server
@@ -846,16 +869,16 @@ Feature #3145: Check for updates
 Feature #3174: Startup mode wizard page
 Feature #3184: New service for process management
 
-1.4.7
-=====
+# 1.4.7
+
 Bug #3132: GUI hides before successful connection
 Bug #3133: Can't un-hide GUI on Mac
 Feature #3054: Hide synergy[cs] dock icon (Mac OS X)
 Feature #3135: Integrate log into main window
 Task #3134: Move hotkey warnings to DEBUG
 
-1.4.6
-=====
+# 1.4.6
+
 Bug #155: Build error on FreeBSD (missing sentinel in function call)
 Bug #571: Synergy SegFaults with "Unknown Quartz Event type: 0x1d"
 Bug #617: xrandr rotation on client confines cursor in wrong area
