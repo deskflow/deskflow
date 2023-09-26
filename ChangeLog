@@ -13,7 +13,7 @@ Enhancements:
 - #7274 Only build necessary binaries
 - #7277 Change start errors to fatal
 
-GitHub Actions:
+CI changes:
 
 - #7283 Update all workflows and fix broken macOS workflows
 
@@ -48,7 +48,7 @@ Enhancements:
 - #7197 Special contributor mentions on the about screen
 - #7203 License registration for Business edition
 
-Github Actions:
+CI changes:
 
 - #7210 Update macos workflow to use macos-latest
 - #7213 Update azure pipelines to use macos-latest
@@ -72,7 +72,7 @@ Enhancements:
 - #7166 Replace language notifications with warnings in logs
 - #7181 Fedora 36 support to CI system
 
-Github Actions:
+CI changes:
 
 - #7177 Create workflow for flatpak build support
 - #7148 Fix unstable build for Windows core
@@ -121,7 +121,7 @@ Enhancements:
 - #7072 Run synergy as a pre-login agent
 - #7074 Restart when server settings changed
 
-Github Actions:
+CI changes:
 
 - #1043 Upload to S3 feature on all OS
 - #7098 Apple M1 runner
