@@ -9,6 +9,7 @@ Enhancements:
 - #7269 Change file drag drop ERROR to DEBUG message
 - #7274 Support env var to build unified core binary
 - #7277 Change all errors that cause crash are FATAL
+- #7282 Improve error handling for thread jobs
 - #7284 Change session ID info log message to DEBUG2
 
 CI changes:
