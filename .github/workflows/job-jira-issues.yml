@@ -31,7 +31,7 @@ jobs:
 
       - name: Create comment
         id: createComment
-        uses: jungwinter/comment@v1
+        uses: winterjung/comment@v1
         with:
           type: create
           body: |
