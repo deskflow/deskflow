@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="synergys" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS=" --config ${HOME}/synergy.conf -f -d DEBUG1 -l /tmp/synergy.log" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="synergy-core" TARGET_NAME="synergys" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="synergy-core" RUN_TARGET_NAME="synergys">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
