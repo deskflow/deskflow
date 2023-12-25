@@ -111,6 +111,11 @@ ArgParser::parseClientArgs(lib::synergy::ClientArgs& args, int argc, const char*
         else if (isArg(i, argc, argv, nullptr, "--no-camp")) {
             // ignore -- included for backwards compatibility
         }
+        else if (isArg(i, argc, argv, "", "--active-screen-filename", 1)) {
+          // save listen address
+          // ignored - server only
+          i++;
+        }
         else if (isArg(i, argc, argv, nullptr, "--yscroll", 1)) {
             // define scroll
             args.m_yscroll = atoi(argv[++i]);

@@ -21,6 +21,7 @@
 #include "common/common.h"
 #include "common/stdstring.h"
 
+#include <cstdint>
 #include <stdarg.h>
 #include <vector>
 
