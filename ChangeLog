@@ -20,6 +20,7 @@ CI changes:
 - #7318 Remove Azure Pipelines config entirely
 - #7319 Remove workflows for slow self-hosted RPi runners
 - #7320 Move build_version.py script to scripts dir
+- #7321 Switch to GitHub hosted Mac M1 runner
 
 # 1.14.6
 

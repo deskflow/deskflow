@@ -1,4 +1,4 @@
-name: Mac
+name: "Build macOS 11"
 
 on:
   release:
@@ -9,8 +9,8 @@ defaults:
     shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
 jobs:
-  build-on-mac-m1:
-    runs-on: [self-hosted, macOS, arm64]
+  build-mac-11:
+    runs-on: "macos-latest-xlarge"
 
     strategy:
       matrix:
@@ -45,17 +45,12 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Checkout git repo
-        uses: actions/checkout@v3
-        with:
-          submodules: "recursive"
-
       - name: Setup Environment
         run: |
           python3 -m pip install dmgbuild
           brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
 
-      - name: Build SYNERGY
+      - name: Build
         env:
           CMAKE_BUILD_TYPE: Release
         run: |

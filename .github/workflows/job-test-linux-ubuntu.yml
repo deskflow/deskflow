@@ -1,4 +1,4 @@
-name: Ubuntu
+name: Test Ubuntu
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-arch64:
+  test-linux-ubuntu:
     name: ubuntu${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:ubuntu${{ matrix.distro }}

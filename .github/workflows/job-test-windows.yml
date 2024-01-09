@@ -1,4 +1,4 @@
-name: Windows
+name: "Test Windows"
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-arch64:
+  test-windows:
     runs-on: windows-latest
 
     env:
