@@ -2,8 +2,6 @@
 
 This is the open source core component of Synergy, a keyboard and mouse sharing tool.
 
-[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
-
 **News:** Visit the [Symless blog](https://symless.com/blog/) for updates
 
 ## Recommended
