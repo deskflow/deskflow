@@ -1,4 +1,4 @@
-name: CentOS
+name: Test CentOS
 
 on:
   push:

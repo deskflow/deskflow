@@ -1,4 +1,4 @@
-name: Mac
+name: "Build macOS 11"
 
 on:
   release:

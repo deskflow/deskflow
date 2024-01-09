@@ -1,4 +1,4 @@
-name: Debian
+name: Test Debian
 
 on:
   push:

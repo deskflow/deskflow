@@ -1,4 +1,4 @@
-name: SonarCloud Static Analysis
+name: "SonarCloud Analysis"
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  sonarcloud:
+  sonarcloud-analysis:
     runs-on: ubuntu-latest
     container: symless/synergy-core:debian10
 
@@ -56,7 +56,7 @@ jobs:
           cd build-release
           make coverage
 
-      - name: Run Sonar
+      - name: Run Sonar Scanner
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
           cd build-release

@@ -1,4 +1,4 @@
-name: Ubuntu-flatpak
+name: "Build Linux Flatpak"
 
 on:
   release:

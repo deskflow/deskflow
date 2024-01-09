@@ -1,4 +1,4 @@
-name: Fedora
+name: Test Fedora
 
 on:
   push:
