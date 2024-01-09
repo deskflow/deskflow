@@ -15,6 +15,7 @@ Enhancements:
 CI changes:
 
 - #7283 Update all workflows and fix broken macOS workflows
+- #7313 Fix CodeQL workflow: Failed to perl 404 Not Found
 
 # 1.14.6
 
