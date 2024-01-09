@@ -2,8 +2,6 @@
 
 This is the open source core component of Synergy, a keyboard and mouse sharing tool.
 
-**News:** Visit the [Symless blog](https://symless.com/blog/) for updates
-
 ## Recommended
 
 Things most people will need.
