@@ -24,12 +24,8 @@ jobs:
         distro:
           - "22.04"
           - "20.04"
-          - "18.04"
         flag:
           - "-j"
-        include:
-          - distro: "16.04"
-            flag: "-j1"
 
     steps:
       - name: Checkout git repo
