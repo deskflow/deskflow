@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "config (debug)",
+      "type": "shell",
+      "command": "cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Debug"
+    },
+    {
+      "label": "config (release)",
+      "type": "shell",
+      "command": "cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release"
+    },
+    {
+      "label": "build (debug)",
+      "type": "shell",
+      "command": "cmake --build ./build --parallel 4 --config Debug",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build (release)",
+      "type": "shell",
+      "command": "cmake --build ./build .. --parallel 4 --config Release",
+      "group": {
+        "kind": "build"
+      }
+    },
+    {
+      "label": "test (unit)",
+      "type": "shell",
+      "command": "./build/bin/unittests"
+    },
+    {
+      "label": "test (integ)",
+      "type": "shell",
+      "command": "./build/bin/integtests"
+    }
+  ]
+}
