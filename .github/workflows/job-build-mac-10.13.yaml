@@ -1,12 +1,12 @@
-name: Mac
+name: "Build macOS 10.13"
 
 on:
   release:
     types: [created]
 
 jobs:
-  build-on-mac-10_13:
-    runs-on: [self-hosted, macOS, X64, "10.13"]
+  build-mac-10:
+    runs-on: "macos-latest-xlarge"
 
     strategy:
       matrix:
@@ -42,7 +42,7 @@ jobs:
         run: |
           python3 -m pip install dmgbuild
 
-      - name: Build SYNERGY
+      - name: Build
         env:
           CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
         run: |

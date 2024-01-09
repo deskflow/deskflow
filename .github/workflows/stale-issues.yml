@@ -4,7 +4,7 @@ on:
     - cron: "30 1 * * *"
 
 jobs:
-  stale:
+  stale-issues:
     runs-on: ubuntu-latest
 
     steps:
