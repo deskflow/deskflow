@@ -18,6 +18,7 @@ CI changes:
 - #7313 Fix CodeQL workflow: Failed to perl 404 Not Found
 - #7317 Bump sonar-scanner-cli to 5.0.1.3006
 - #7318 Remove Azure Pipelines config entirely
+- #7319 Remove workflows for slow self-hosted RPi runners
 
 # 1.14.6
 
