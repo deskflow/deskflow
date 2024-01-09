@@ -10,7 +10,7 @@ defaults:
 
 jobs:
   build-on-mac-m1:
-    runs-on: [self-hosted, macOS, arm64]
+    runs-on: "macos-latest-xlarge"
 
     strategy:
       matrix:

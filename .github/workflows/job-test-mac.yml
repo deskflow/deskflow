@@ -25,7 +25,7 @@ jobs:
             arch: x64
             target: "10.14"
             shell: "bash"
-          - os: [self-hosted, macOS, arm64]
+          - os: "macos-latest-xlarge"
             arch: arm64
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"

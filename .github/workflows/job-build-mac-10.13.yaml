@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-on-mac-10_13:
-    runs-on: [self-hosted, macOS, X64, "10.13"]
+    runs-on: "macos-latest-xlarge"
 
     strategy:
       matrix:
