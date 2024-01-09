@@ -19,6 +19,7 @@ CI changes:
 - #7317 Bump sonar-scanner-cli to 5.0.1.3006
 - #7318 Remove Azure Pipelines config entirely
 - #7319 Remove workflows for slow self-hosted RPi runners
+- #7320 Move build_version.py script to scripts dir
 
 # 1.14.6
 
