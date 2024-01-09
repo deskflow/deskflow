@@ -42,7 +42,7 @@ jobs:
         run: |
           python3 -m pip install dmgbuild
 
-      - name: Build SYNERGY
+      - name: Build
         env:
           CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
         run: |

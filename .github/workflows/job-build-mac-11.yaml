@@ -50,7 +50,7 @@ jobs:
           python3 -m pip install dmgbuild
           brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
 
-      - name: Build SYNERGY
+      - name: Build
         env:
           CMAKE_BUILD_TYPE: Release
         run: |
