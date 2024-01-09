@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  sonarcloud:
     runs-on: ubuntu-latest
     container: symless/synergy-core:debian10
 
