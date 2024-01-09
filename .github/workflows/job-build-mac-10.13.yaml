@@ -47,7 +47,7 @@ jobs:
           CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
         run: |
           export PATH="$Qt5_DIR/bin:$PATH"
-          python3 CI/build_version.py
+          python3 scripts/build_version.py
           mkdir build
           cd build
           cmake \

@@ -54,7 +54,7 @@ jobs:
         env:
           CMAKE_BUILD_TYPE: Release
         run: |
-          python3 CI/build_version.py
+          python3 scripts/build_version.py
           mkdir build
           cd build
           cmake \
