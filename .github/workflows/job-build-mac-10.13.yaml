@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  build-on-mac-10_13:
+  build-mac-10:
     runs-on: "macos-latest-xlarge"
 
     strategy:

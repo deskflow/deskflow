@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  build-flatpak-bundle:
+  build-linux-flatpak:
     name: ubuntu-flatpak
     runs-on: ubuntu-latest
 

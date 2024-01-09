@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-arch64:
+  test-linux-centos:
     name: ${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:${{ matrix.distro }}
