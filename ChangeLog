@@ -12,7 +12,7 @@ Enhancements:
 - #7282 Improve error handling for thread jobs
 - #7284 Change session ID info log message to DEBUG2
 
-CI changes:
+Build/CI:
 
 - #7283 Update all workflows and fix broken macOS workflows
 - #7313 Fix CodeQL workflow: Failed to perl 404 Not Found
@@ -21,6 +21,7 @@ CI changes:
 - #7319 Remove workflows for slow self-hosted RPi runners
 - #7320 Move build_version.py script to scripts dir
 - #7321 Switch to GitHub hosted Mac M1 runner
+- #7322 Use C++20 and add VSCode tasks config
 
 # 1.14.6
 
