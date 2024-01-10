@@ -17,6 +17,15 @@
 cmake_minimum_required (VERSION 3.5)
 project (synergy-core C CXX)
 
+# use response files so that ninja can compile on windows,
+# otherwise you get an error when linking qt:
+#   "The input line is too long."
+set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+set(CMAKE_C_RESPONSE_FILE_LINK_FLAG "@")
+set(CMAKE_CXX_RESPONSE_FILE_LINK_FLAG "@")
+set(CMAKE_NINJA_FORCE_RESPONSE_FILE 1 CACHE INTERNAL "")
+
 if (DEFINED ENV{SYNERGY_NO_LEGACY})
     option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" OFF)
     option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" OFF)
@@ -89,8 +98,6 @@ if (${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
 else()
     set (SYNERGY_ADD_HEADERS TRUE)
 endif()
-
-
 
 set (libs)
 include_directories (BEFORE SYSTEM ${PROJECT_SOURCE_DIR}/ext/googletest/googletest/include)
@@ -325,6 +332,7 @@ if (UNIX)
     endif()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
     set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
 
@@ -337,6 +345,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         /DSYNERGY_VERSION=\"${SYNERGY_VERSION}\"
         /D_XKEYCHECK_H
     )
+
 endif()
 
 #
