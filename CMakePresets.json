@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "windows",
+      "displayName": "Windows",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows",
+      "displayName": "Windows",
+      "configurePreset": "windows"
+    }
+  ]
+}
