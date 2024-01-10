@@ -400,7 +400,8 @@ MSWindowsWatchdog::setStartupInfo(STARTUPINFO& si)
 {
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+    // TODO: fix
+	//si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
 	si.hStdError = m_stdOutWrite;
 	si.hStdOutput = m_stdOutWrite;
 	si.dwFlags |= STARTF_USESTDHANDLES;

@@ -142,9 +142,10 @@ ArchMiscWindows::openKey(HKEY key, const TCHAR* keyName, bool create)
                                 KEY_WRITE | KEY_QUERY_VALUE, &newKey);
     if (result != ERROR_SUCCESS && create) {
         DWORD disp;
-        result = RegCreateKeyEx(key, keyName, 0, TEXT(""),
-                                0, KEY_WRITE | KEY_QUERY_VALUE,
-                                NULL, &newKey, &disp);
+        // TODO: fix
+        // result = RegCreateKeyEx(key, keyName, 0, TEXT(""),
+        //                         0, KEY_WRITE | KEY_QUERY_VALUE,
+        //                         NULL, &newKey, &disp);
     }
     if (result != ERROR_SUCCESS) {
         RegCloseKey(key);
