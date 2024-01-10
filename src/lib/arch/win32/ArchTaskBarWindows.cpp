@@ -336,9 +336,18 @@ ArchTaskBarWindows::processDialogs(MSG* msg)
 
     ARCH->lockMutex(m_mutex);
 
-    // remove removed dialogs
-    // TODO: fix
-    //m_dialogs.erase(false);
+    // there was previously some code here, with the comment "remove removed dialogs":
+    //   m_dialogs.erase(false);
+    //
+    // it's not entirely clear what this code was doing, but it was probably trying to
+    // erase dialogs that had been removed (i.e. the map value was `false`).
+    for (auto it = m_dialogs.begin(); it != m_dialogs.end(); ) {
+    if (it->second == false) {
+        it = m_dialogs.erase(it);
+    } else {
+        ++it;
+    }
+}
 
     // merge added dialogs into the dialog list
     for (Dialogs::const_iterator index = m_addedDialogs.begin();
