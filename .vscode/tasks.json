@@ -4,12 +4,12 @@
     {
       "label": "config (debug)",
       "type": "shell",
-      "command": "cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Debug"
+      "command": "cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Debug -Wno-dev"
     },
     {
       "label": "config (release)",
       "type": "shell",
-      "command": "cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release"
+      "command": "cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -Wno-dev"
     },
     {
       "label": "build (debug)",
@@ -18,7 +18,8 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": "$msCompile"
     },
     {
       "label": "build (release)",
@@ -26,7 +27,8 @@
       "command": "cmake --build ./build .. --parallel 4 --config Release",
       "group": {
         "kind": "build"
-      }
+      },
+      "problemMatcher": "$msCompile"
     },
     {
       "label": "test (unit)",
