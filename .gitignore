@@ -32,3 +32,5 @@ flatpak/build
 flatpak/export
 flatpak/synergy.desktop
 flatpak/*.flatpak
+*.code-workspace
+*.idx

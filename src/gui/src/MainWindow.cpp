@@ -213,7 +213,13 @@ MainWindow::~MainWindow()
 {
     if (appConfig().processMode() == Desktop) {
         m_ExpectedRunningState = kStopped;
-        stopDesktop();
+        try {
+            stopDesktop();
+        }
+        catch (...) {
+            // do not throw, since throwing from a dtor can result in unreliable behaviour.
+            qCritical() << "error stopping desktop in main window destructor";
+        }
     }
 
 #if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)

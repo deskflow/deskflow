@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  codeql-analysis:
+  analyze:
     name: Analyze
     runs-on: ubuntu-latest
 
