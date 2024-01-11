@@ -23,6 +23,7 @@ Build/CI:
 - #7321 Switch to GitHub hosted Mac M1 runner
 - #7322 Use C++20 and add Windows CMake preset
 - #7323 Add Linux and macOS CMake presets
+- #7325 Add timeout to all GitHub workflows
 
 # 1.14.6
 

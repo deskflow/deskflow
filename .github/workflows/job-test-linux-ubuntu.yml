@@ -15,6 +15,7 @@ jobs:
     name: ubuntu${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:ubuntu${{ matrix.distro }}
+    timeout-minutes: 10
 
     env:
       GIT_COMMIT: ${{ github.sha }}

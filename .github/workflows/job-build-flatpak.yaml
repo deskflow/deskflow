@@ -8,6 +8,7 @@ jobs:
   build-linux-flatpak:
     name: ubuntu-flatpak
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     container:
       image: symless/synergy-core:ubuntu20.04

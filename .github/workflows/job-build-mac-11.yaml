@@ -11,6 +11,7 @@ defaults:
 jobs:
   build-mac-11:
     runs-on: "macos-latest-xlarge"
+    timeout-minutes: 10
 
     strategy:
       matrix:
