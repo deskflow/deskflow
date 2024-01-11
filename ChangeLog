@@ -21,7 +21,8 @@ Build/CI:
 - #7319 Remove workflows for slow self-hosted RPi runners
 - #7320 Move build_version.py script to scripts dir
 - #7321 Switch to GitHub hosted Mac M1 runner
-- #7322 Use C++20 and add VSCode tasks config
+- #7322 Use C++20 and add Windows CMake preset
+- #7323 Add Linux and macOS CMake presets
 
 # 1.14.6
 
