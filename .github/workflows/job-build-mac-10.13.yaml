@@ -7,6 +7,7 @@ on:
 jobs:
   build-mac-10:
     runs-on: "macos-latest-xlarge"
+    timeout-minutes: 10
 
     strategy:
       matrix:

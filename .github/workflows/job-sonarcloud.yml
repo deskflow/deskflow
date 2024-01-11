@@ -14,6 +14,7 @@ jobs:
   sonarcloud-analysis:
     runs-on: ubuntu-latest
     container: symless/synergy-core:debian10
+    timeout-minutes: 10
 
     env:
       SONAR_SCANNER_VERSION: 5.0.1.3006
