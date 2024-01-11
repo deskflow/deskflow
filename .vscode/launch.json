@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "gui",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergy",
+      "preLaunchTask": "build"
+    }
+  ]
+}

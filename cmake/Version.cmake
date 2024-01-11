@@ -3,8 +3,8 @@
 #
 
 set (SYNERGY_VERSION_MAJOR 1)
-set (SYNERGY_VERSION_MINOR 14)
-set (SYNERGY_VERSION_PATCH 7)
+set (SYNERGY_VERSION_MINOR 15)
+set (SYNERGY_VERSION_PATCH 0)
 set (SYNERGY_VERSION_STAGE "snapshot")
 
 # CI changes this to the current tag, but doesn't commit
