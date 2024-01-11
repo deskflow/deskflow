@@ -32,6 +32,11 @@
       "name": "linux",
       "displayName": "Linux",
       "inherits": "base"
+    },
+    {
+      "name": "macos",
+      "displayName": "macOS",
+      "inherits": "base"
     }
   ],
   "buildPresets": [
@@ -44,6 +49,11 @@
       "name": "linux",
       "displayName": "Linux",
       "configurePreset": "linux"
+    },
+    {
+      "name": "macos",
+      "displayName": "macOS",
+      "configurePreset": "macos"
     }
   ]
 }
