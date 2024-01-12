@@ -1,4 +1,4 @@
-name: "CodeQL"
+name: "CodeQL Analysis"
 
 on:
   push:
@@ -15,6 +15,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     strategy:
       fail-fast: false
@@ -24,6 +25,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
+          sudo apt-get update; \
           sudo apt-get install -y \
             build-essential \
             cmake \

@@ -1,4 +1,4 @@
-name: SonarCloud Static Analysis
+name: "SonarCloud Analysis"
 
 on:
   push:
@@ -11,12 +11,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  sonarcloud-analysis:
     runs-on: ubuntu-latest
     container: symless/synergy-core:debian10
+    timeout-minutes: 20
 
     env:
-      SONAR_SCANNER_VERSION: 4.4.0.2170
+      SONAR_SCANNER_VERSION: 5.0.1.3006
       SONAR_SCANNER_OPTS: -server
 
     steps:
@@ -33,7 +34,7 @@ jobs:
 
       - name: Installing Sonar Scanner
         run: |
-          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-4.4.0.2170-linux
+          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
 
@@ -56,7 +57,7 @@ jobs:
           cd build-release
           make coverage
 
-      - name: Run Sonar
+      - name: Run Sonar Scanner
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
           cd build-release

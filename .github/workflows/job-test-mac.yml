@@ -1,4 +1,4 @@
-name: Mac
+name: "Test macOS"
 
 on:
   push:
@@ -13,6 +13,7 @@ concurrency:
 jobs:
   test-macos:
     runs-on: ${{ matrix.runtime.os }}
+    timeout-minutes: 10
 
     defaults:
       run:
@@ -21,14 +22,18 @@ jobs:
     strategy:
       matrix:
         runtime:
-          - os: "macos-latest"
+          - name: "macos-10-intel"
+            os: "macos-latest"
             arch: x64
             target: "10.14"
             shell: "bash"
-          - os: [self-hosted, macOS, arm64]
+          - name: "macos-11-m1"
+            os: "macos-latest-xlarge"
             arch: arm64
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+
+    name: ${{ matrix.runtime.name }}
 
     env:
       GIT_COMMIT: ${{ github.sha }}

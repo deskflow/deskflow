@@ -5,14 +5,17 @@
 # file with configuration.  For more information, see:
 # https://github.com/actions/labeler/blob/master/README.md
 
-name: ChangeLog Updated
+name: "Check ChangeLog"
 on:
   pull_request:
     branches: [master]
 
 jobs:
-  check:
+  check-changelog:
+    if: ${{ !github.event.pull_request.draft }}
+
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Get changed files

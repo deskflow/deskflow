@@ -1,4 +1,4 @@
-name: Ubuntu
+name: Test Ubuntu
 
 on:
   push:
@@ -11,10 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-arch64:
+  test-linux-ubuntu:
     name: ubuntu${{ matrix.distro }}
     runs-on: ubuntu-latest
     container: symless/synergy-core:ubuntu${{ matrix.distro }}
+    timeout-minutes: 10
 
     env:
       GIT_COMMIT: ${{ github.sha }}
@@ -24,12 +25,8 @@ jobs:
         distro:
           - "22.04"
           - "20.04"
-          - "18.04"
         flag:
           - "-j"
-        include:
-          - distro: "16.04"
-            flag: "-j1"
 
     steps:
       - name: Checkout git repo

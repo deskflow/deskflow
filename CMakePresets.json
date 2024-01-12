@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "windows",
+      "displayName": "Windows",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "linux",
+      "displayName": "Linux",
+      "inherits": "base"
+    },
+    {
+      "name": "macos",
+      "displayName": "macOS",
+      "inherits": "base"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows",
+      "displayName": "Windows",
+      "configurePreset": "windows"
+    },
+    {
+      "name": "linux",
+      "displayName": "Linux",
+      "configurePreset": "linux"
+    },
+    {
+      "name": "macos",
+      "displayName": "macOS",
+      "configurePreset": "macos"
+    }
+  ]
+}

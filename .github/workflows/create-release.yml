@@ -1,4 +1,4 @@
-name: Create Build
+name: Create Release
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout git repo
@@ -29,10 +30,3 @@ jobs:
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_EVENT_PROPAGATION_TOKEN }}
-
-      - name: Run build on Azure
-        uses: Azure/pipelines@v1
-        with:
-          azure-devops-project-url: "https://dev.azure.com/symless/synergy-core"
-          azure-pipeline-name: "symless.synergy-core"
-          azure-devops-token: "${{ secrets.AZURE_DEVOPS_TOKEN }}"

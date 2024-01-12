@@ -1,4 +1,4 @@
-# 1.14.7
+# 1.15.0
 
 Enhancements:
 
@@ -12,9 +12,18 @@ Enhancements:
 - #7282 Improve error handling for thread jobs
 - #7284 Change session ID info log message to DEBUG2
 
-CI changes:
+Build/CI:
 
 - #7283 Update all workflows and fix broken macOS workflows
+- #7313 Fix CodeQL workflow: Failed to perl 404 Not Found
+- #7317 Bump sonar-scanner-cli to 5.0.1.3006
+- #7318 Remove Azure Pipelines config entirely
+- #7319 Remove workflows for slow self-hosted RPi runners
+- #7320 Move build_version.py script to scripts dir
+- #7321 Switch to GitHub hosted Mac M1 runner
+- #7322 Use C++20 and add Windows CMake preset
+- #7323 Add Linux and macOS CMake presets
+- #7325 Add timeout to all GitHub workflows
 
 # 1.14.6
 
