@@ -32,7 +32,7 @@
       "name": "linux",
       "displayName": "Linux",
       "inherits": "base",
-      "generator": "Ninja"
+      "generator": "Unix Makefiles"
     },
     {
       "name": "macos",
