@@ -398,12 +398,12 @@ MSWindowsWatchdog::startProcess()
 void
 MSWindowsWatchdog::setStartupInfo(STARTUPINFO& si)
 {
-	// TODO: maybe this should be \winlogon if we have logonui.exe?
-	char desktop[] = "winsta0\\Default";
-
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	si.lpDesktop = desktop;
+    
+	// TODO: maybe this should be \winlogon if we have logonui.exe?
+	si.lpDesktop = (LPSTR)"winsta0\\Default";
+
 	si.hStdError = m_stdOutWrite;
 	si.hStdOutput = m_stdOutWrite;
 	si.dwFlags |= STARTF_USESTDHANDLES;
