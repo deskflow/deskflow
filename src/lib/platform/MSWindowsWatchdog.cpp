@@ -40,6 +40,9 @@
 #define CURRENT_PROCESS_ID 0
 #define MAXIMUM_WAIT_TIME 3
 
+// TODO: maybe this should be \winlogon if we have logonui.exe?
+static char g_desktopName[] = "winsta0\\Default";
+
 namespace {
 std::string
 trimDesktopName(const std::string& nameFromTraces)
@@ -400,10 +403,7 @@ MSWindowsWatchdog::setStartupInfo(STARTUPINFO& si)
 {
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-    
-	// TODO: maybe this should be \winlogon if we have logonui.exe?
-	si.lpDesktop = (LPSTR)"winsta0\\Default";
-
+	si.lpDesktop = g_desktopName;
 	si.hStdError = m_stdOutWrite;
 	si.hStdOutput = m_stdOutWrite;
 	si.dwFlags |= STARTF_USESTDHANDLES;
