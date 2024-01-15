@@ -25,6 +25,7 @@ Tasks:
 - #7323 Add Linux and macOS CMake presets
 - #7325 Add timeout to all GitHub workflows
 - #7326 Restore lpDesktop assignment in Windows daemon
+- #7327 Only use Ninja to build on Windows
 
 # 1.14.6
 

@@ -5,7 +5,6 @@
       "name": "base",
       "hidden": true,
       "binaryDir": "${sourceDir}/build",
-      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
@@ -15,6 +14,7 @@
       "name": "windows",
       "displayName": "Windows",
       "inherits": "base",
+      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe"
@@ -31,12 +31,14 @@
     {
       "name": "linux",
       "displayName": "Linux",
-      "inherits": "base"
+      "inherits": "base",
+      "generator": "Unix Makefiles"
     },
     {
       "name": "macos",
       "displayName": "macOS",
-      "inherits": "base"
+      "inherits": "base",
+      "generator": "Unix Makefiles"
     }
   ],
   "buildPresets": [
