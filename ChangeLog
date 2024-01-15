@@ -1,5 +1,9 @@
 # 1.15.0
 
+Bug fixes:
+
+- #7326 Restore lpDesktop assignment in Windows daemon
+
 Enhancements:
 
 - #7254 Bind client to a network interface with --address
