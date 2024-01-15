@@ -1,9 +1,5 @@
 # 1.15.0
 
-Bug fixes:
-
-- #7326 Restore lpDesktop assignment in Windows daemon
-
 Enhancements:
 
 - #7254 Bind client to a network interface with --address
@@ -16,7 +12,7 @@ Enhancements:
 - #7282 Improve error handling for thread jobs
 - #7284 Change session ID info log message to DEBUG2
 
-Build/CI:
+Tasks:
 
 - #7283 Update all workflows and fix broken macOS workflows
 - #7313 Fix CodeQL workflow: Failed to perl 404 Not Found
@@ -28,6 +24,7 @@ Build/CI:
 - #7322 Use C++20 and add Windows CMake preset
 - #7323 Add Linux and macOS CMake presets
 - #7325 Add timeout to all GitHub workflows
+- #7326 Restore lpDesktop assignment in Windows daemon
 
 # 1.14.6
 
