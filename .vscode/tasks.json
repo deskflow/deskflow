@@ -8,6 +8,11 @@
       "targets": ["all"],
       "preset": "${command:cmake.activeBuildPresetName}",
       "group": "build"
+    },
+    {
+      "label": "reinstall windows daemon",
+      "type": "shell",
+      "command": "python scripts/windows_daemon.py"
     }
   ]
 }
