@@ -5,14 +5,16 @@ import sys
 import argparse
 import glob
 
-bin_file_base = 'synergyd'
-source_bin_dir = os.path.join('build', 'bin')
-source_bin_file_glob = bin_file_base + '*'
-target_bin_dir = 'bin'
-target_bin_file = os.path.join(target_bin_dir, bin_file_base) + '.exe'
-service_not_running_error = 2
+BIN_FILE_BASE = 'synergyd'
+SOURCE_BIN_DIR = os.path.join('build', 'bin')
+SOURCE_BIN_GLOB = f'{BIN_FILE_BASE}*'
+TARGET_BIN_DIR = 'bin'
+TARGET_BIN_FILE = f'{os.path.join(TARGET_BIN_DIR, BIN_FILE_BASE)}.exe'
+SERVICE_NOT_RUNNING_ERROR = 2
 
-def main():  
+def main():
+  """Entry point for the script."""
+
   parser = argparse.ArgumentParser()
   parser.add_argument('-p', action='store_true')
   args = parser.parse_args()
@@ -20,43 +22,49 @@ def main():
   try:
     reinstall()
   except Exception as e:
-    print('Error: ' + str(e))
+    print(f'Error: {e}')
   
   if (args.p):
     input('Press any key to continue...')
 
 def reinstall():
+  """Stops the running daemon service, copies files, and reinstalls."""
+
   if not is_admin():
     print('Re-launching script as admin')
-    ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, __file__ + ' -p', None, 1)
+    ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, f'{__file__} -p', None, 1)
     sys.exit()
   
   print('Stopping daemon service')
   try:
     subprocess.run(['net', 'stop', 'synergy'], shell=True, check=True)
   except subprocess.CalledProcessError as e:
-    if (e.returncode == service_not_running_error):
+    if (e.returncode == SERVICE_NOT_RUNNING_ERROR):
       print('Daemon service not running')
     else:
       raise e
 
-  print('Persisting dir: ' + target_bin_dir)
-  os.makedirs(target_bin_dir, exist_ok=True)
+  print(f'Persisting dir: {TARGET_BIN_DIR}')
+  os.makedirs(TARGET_BIN_DIR, exist_ok=True)
 
-  source_files = glob.glob(os.path.join(source_bin_dir, source_bin_file_glob))
+  source_files = glob.glob(os.path.join(SOURCE_BIN_DIR, SOURCE_BIN_GLOB))
   for source_file in source_files:
-    target_file = os.path.join(target_bin_dir, os.path.basename(source_file))
-    print('Copying ' + source_file + ' to ' + target_file)
+    target_file = os.path.join(TARGET_BIN_DIR, os.path.basename(source_file))
+    print(f'Copying {source_file} to {target_file}')
     # use the copy command; shutil.copy gives us a permission denied error.
-    subprocess.run(['copy', source_file, target_file], shell=True, check=True)
+    try:
+      subprocess.run(['copy', source_file, target_file], shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+      print(f'Copy failed: {e}')
   
   print('Removing old daemon service')
-  subprocess.run([target_bin_file, '/uninstall'], shell=True, check=True)
+  subprocess.run([TARGET_BIN_FILE, '/uninstall'], shell=True, check=True)
 
   print('Installing daemon service')
-  subprocess.run([target_bin_file, '/install'], shell=True, check=True)
+  subprocess.run([TARGET_BIN_FILE, '/install'], shell=True, check=True)
 
 def is_admin():
+    """Returns True if the current process has admin privileges."""
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except ctypes.WinError:
