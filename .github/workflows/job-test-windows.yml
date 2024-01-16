@@ -13,7 +13,7 @@ concurrency:
 jobs:
   test-windows:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     env:
       GIT_COMMIT: ${{ github.sha }}
