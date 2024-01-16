@@ -34,7 +34,7 @@ def main():
     print(f'Error: {e}')
   
   if (args.pause_on_exit):
-    input('Press any key to continue...')
+    input('Press enter to continue...')
 
 def reinstall(source_bin_dir, target_bin_dir, source_bin_name, target_bin_name):
   """Stops the running daemon service, copies files, and reinstalls."""
