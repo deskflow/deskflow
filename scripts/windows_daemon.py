@@ -28,7 +28,7 @@ def main():
 def reinstall():
   if not is_admin():
     print('Re-launching script as admin')
-    ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, __file__, None, 1)
+    ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, __file__ + ' -p', None, 1)
     sys.exit()
   
   print('Stopping daemon service')
