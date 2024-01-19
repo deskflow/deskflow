@@ -12,9 +12,6 @@ def main():
   parser.add_argument('--skip', nargs='*', default=[])
   args = parser.parse_args()
 
-  if (args.skip):
-    print(f'Skipping: {args.skip}')
-
   try:
     deps = Deps(args.skip)
     deps.install()
@@ -43,15 +40,17 @@ class Deps:
     if not windows.is_admin():
       windows.relaunch_as_admin(__file__)
       sys.exit()
-    
+
     ci_env = os.environ.get('CI')
     if ci_env:
       print('CI environment detected')
       self.choco_ci()
-    else:
-      self.choco("cmake")
-      self.choco("ninja")
+
+      # already installed on github runners.
+      self.skip.extend(['cmake', 'ninja'])
     
+    self.choco("cmake")
+    self.choco("ninja")
     self.choco("openssl", "3.1.1")
 
   def choco(self, package, version=None):
