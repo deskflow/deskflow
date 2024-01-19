@@ -59,8 +59,8 @@ jobs:
           $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
           [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
-      - name: Install OpenSSL
-        run: choco install openssl -y --no-progress
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py --skip cmake ninja
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
