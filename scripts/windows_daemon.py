@@ -1,9 +1,9 @@
 import os
 import subprocess
-import ctypes
 import sys
 import argparse
 import glob
+from lib import windows
 
 BIN_NAME = 'synergyd'
 SOURCE_BIN_DIR = os.path.join('build', 'bin')
@@ -21,11 +21,8 @@ def main():
   parser.add_argument('--target-bin-name', default=BIN_NAME)
   args = parser.parse_args()
 
-  if not is_admin():
-    print('Re-launching script as admin')
-    args = ' '.join(sys.argv[1:])
-    command = f'{__file__} --pause-on-exit {args}'
-    ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, command, None, 1)
+  if not windows.is_admin():
+    windows.relaunch_as_admin(__file__)
     sys.exit()
 
   try:
@@ -82,12 +79,5 @@ def copy_bin_files(source_bin_dir, target_bin_dir, source_bin_name, target_bin_n
       subprocess.run(['copy', source_file, target_file], shell=True, check=True)
     except subprocess.CalledProcessError as e:
       print(f'Copy failed: {e}')
-
-def is_admin():
-    """Returns True if the current process has admin privileges."""
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except ctypes.WinError:
-        return False
 
 main()
