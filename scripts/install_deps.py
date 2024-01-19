@@ -51,6 +51,8 @@ class Deps:
     
     self.choco("cmake")
     self.choco("ninja")
+
+    # lock openssl to 3.1.1. as of 19th jan 2024, 3.2.0 breaks cmake configure.
     self.choco("openssl", "3.1.1")
 
   def choco(self, package, version=None):
