@@ -1,3 +1,4 @@
+import os
 from lib import windows
 import subprocess
 import sys
