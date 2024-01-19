@@ -27,6 +27,7 @@ Tasks:
 - #7326 Restore lpDesktop assignment in Windows daemon
 - #7327 Only use Ninja to build on Windows
 - #7328 Reset error state before calling Process32Next
+- #1177 Split CMake presets into debug and release
 
 # 1.14.6
 
