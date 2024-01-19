@@ -43,16 +43,15 @@ class Deps:
     if not windows.is_admin():
       windows.relaunch_as_admin(__file__)
       sys.exit()
-
-    runner_temp = os.environ.get('RUNNER_TEMP')
-    if runner_temp:
-      # sets the choco cache dir, which should match the dir in the ci cache action.
-      key_arg = '--name="cacheLocation"'
-      value_arg = f'--value="{runner_temp}/choco"'
-      subprocess.run(['choco', 'config', 'set', key_arg, value_arg], shell=True, check=True)
     
-    self.choco("cmake")
-    self.choco("ninja")
+    ci_env = os.environ.get('CI')
+    if ci_env:
+      print('CI environment detected')
+      self.choco_ci()
+    else:
+      self.choco("cmake")
+      self.choco("ninja")
+    
     self.choco("openssl", "3.1.1")
 
   def choco(self, package, version=None):
@@ -70,5 +69,18 @@ class Deps:
     args.extend(['-y', '--no-progress'])
 
     subprocess.run(args, shell=True, check=True)
+
+  def choco_ci(self):
+    """Configures Chocolatey cache for CI."""
+
+    runner_temp_key = 'RUNNER_TEMP'
+    runner_temp = os.environ.get(runner_temp_key)
+    if runner_temp:
+      # sets the choco cache dir, which should match the dir in the ci cache action.
+      key_arg = '--name="cacheLocation"'
+      value_arg = f'--value="{runner_temp}/choco"'
+      subprocess.run(['choco', 'config', 'set', key_arg, value_arg], shell=True, check=True)
+    else:
+      print(f'Warning: CI environment variable {runner_temp_key} not set')
 
 main()
