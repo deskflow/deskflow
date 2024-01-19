@@ -42,6 +42,13 @@ class Deps:
     if not windows.is_admin():
       windows.relaunch_as_admin(__file__)
       sys.exit()
+
+    runner_temp = os.environ.get('RUNNER_TEMP')
+    if runner_temp:
+      # sets the choco cache dir, which should match the dir in the ci cache action.
+      key_arg = '--name="cacheLocation"'
+      value_arg = f'--value="{runner_temp}/choco"'
+      subprocess.run(['choco', 'config', 'set', key_arg, value_arg], shell=True, check=True)
     
     self.choco("cmake")
     self.choco("ninja")
@@ -49,7 +56,7 @@ class Deps:
 
   def choco(self, package, version=None):
     """Installs a package using Chocolatey."""
-    
+
     if (package in self.skip):
       print(f'Skipping: {package}')
       return
