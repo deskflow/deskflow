@@ -6,14 +6,13 @@
       "hidden": true,
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     },
     {
       "name": "windows",
-      "displayName": "Windows",
       "inherits": "base",
+      "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl.exe",
@@ -30,32 +29,83 @@
     },
     {
       "name": "linux",
-      "displayName": "Linux",
+      "hidden": true,
       "inherits": "base",
       "generator": "Unix Makefiles"
     },
     {
       "name": "macos",
-      "displayName": "macOS",
+      "hidden": true,
       "inherits": "base",
       "generator": "Unix Makefiles"
+    },
+    {
+      "name": "windows-debug",
+      "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-release",
+      "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-debug",
+      "inherits": "linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-release",
+      "inherits": "linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "macos-debug",
+      "inherits": "macos",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "macos-release",
+      "inherits": "macos",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     }
   ],
   "buildPresets": [
     {
-      "name": "windows",
-      "displayName": "Windows",
-      "configurePreset": "windows"
+      "name": "windows-debug",
+      "configurePreset": "windows-debug"
     },
     {
-      "name": "linux",
-      "displayName": "Linux",
-      "configurePreset": "linux"
+      "name": "windows-release",
+      "configurePreset": "windows-release"
     },
     {
-      "name": "macos",
-      "displayName": "macOS",
-      "configurePreset": "macos"
+      "name": "linux-debug",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "linux-release",
+      "configurePreset": "linux-release"
+    },
+    {
+      "name": "macos-debug",
+      "configurePreset": "macos-debug"
+    },
+    {
+      "name": "macos-release",
+      "configurePreset": "macos-release"
     }
   ]
 }
