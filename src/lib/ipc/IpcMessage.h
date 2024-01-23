@@ -49,6 +49,12 @@ private:
     EIpcClientType            m_clientType;
 };
 
+class IpcHelloBackMessage : public IpcMessage {
+public:
+    IpcHelloBackMessage();
+    virtual ~IpcHelloBackMessage();
+};
+
 class IpcShutdownMessage : public IpcMessage {
 public:
     IpcShutdownMessage();

@@ -21,6 +21,7 @@
 
 #include "synergy/DaemonApp.h"
 
+#include "ipc/Ipc.h"
 #include "synergy/App.h"
 #include "synergy/ArgParser.h"
 #include "synergy/ServerArgs.h"
@@ -37,6 +38,7 @@
 #include "base/EventQueue.h"
 #include "base/log_outputters.h"
 #include "base/Log.h"
+#include "synergy/protocol_types.h"
 
 #if SYSAPI_WIN32
 
@@ -145,6 +147,7 @@ DaemonApp::run(int argc, char** argv)
     try
     {
 #if SYSAPI_WIN32
+        // TODO: maybe we should only add this if not using /f?
         // sends debug messages to visual studio console window.
         log.insert(new MSWindowsDebugOutputter());
 #endif
@@ -164,11 +167,13 @@ DaemonApp::run(int argc, char** argv)
             }
 #if SYSAPI_WIN32
             else if (arg == "/install") {
+                LOG((CLOG_PRINT "installing windows daemon"));
                 uninstall = true;
                 arch.installDaemon();
                 return kExitSuccess;
             }
             else if (arg == "/uninstall") {
+                LOG((CLOG_PRINT "uninstalling windows daemon"));
                 arch.uninstallDaemon();
                 return kExitSuccess;
             }
@@ -182,14 +187,18 @@ DaemonApp::run(int argc, char** argv)
         }
 
         if (foreground) {
+            LOG((CLOG_PRINT "starting daemon in foreground"));
+
             // run process in foreground instead of daemonizing.
             // useful for debugging.
             mainLoop(false, foreground);
         }
         else {
 #if SYSAPI_WIN32
+            LOG((CLOG_PRINT "daemonizing windows service"));
             arch.daemonize("Synergy", winMainLoopStatic);
 #elif SYSAPI_UNIX
+            LOG((CLOG_PRINT "daemonizing unix service"));
             arch.daemonize("Synergy", unixMainLoopStatic);
 #endif
         }
@@ -398,6 +407,13 @@ DaemonApp::handleIpcMessage(const Event& e, void*)
             }
 
             LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
+
+            // TODO: implement hello back handling in s1 gui and node (server/client).
+            if (hm->clientType() == kIpcClientGui) {
+                LOG((CLOG_DEBUG "sending ipc hello back"));
+                IpcHelloBackMessage hbm;
+                m_ipcServer->send(hbm, hm->clientType());
+            }
 
 #if SYSAPI_WIN32
             String watchdogStatus = m_watchdog->isProcessActive() ? "active" : "idle";

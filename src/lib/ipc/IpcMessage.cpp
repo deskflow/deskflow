@@ -38,6 +38,15 @@ IpcHelloMessage::~IpcHelloMessage()
 {
 }
 
+IpcHelloBackMessage::IpcHelloBackMessage() :
+    IpcMessage(kIpcHelloBack)
+{
+}
+
+IpcHelloBackMessage::~IpcHelloBackMessage()
+{
+}
+
 IpcShutdownMessage::IpcShutdownMessage() :
 IpcMessage(kIpcShutdown)
 {
