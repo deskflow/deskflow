@@ -10,6 +10,13 @@
       }
     },
     {
+      "name": "minimal",
+      "hidden": true,
+      "environment": {
+        "SYNERGY_NO_LEGACY": "ON"
+      }
+    },
+    {
       "name": "windows",
       "inherits": "base",
       "hidden": true,
@@ -83,32 +90,48 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
-    }
-  ],
-  "buildPresets": [
-    {
-      "name": "windows-debug",
-      "configurePreset": "windows-debug"
     },
     {
-      "name": "windows-release",
-      "configurePreset": "windows-release"
+      "name": "windows-debug-min",
+      "inherits": ["windows", "minimal"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
     },
     {
-      "name": "linux-debug",
-      "configurePreset": "linux-debug"
+      "name": "windows-release-min",
+      "inherits": ["windows", "minimal"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     },
     {
-      "name": "linux-release",
-      "configurePreset": "linux-release"
+      "name": "linux-debug-min",
+      "inherits": ["linux", "minimal"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
     },
     {
-      "name": "macos-debug",
-      "configurePreset": "macos-debug"
+      "name": "linux-release-min",
+      "inherits": ["linux", "minimal"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     },
     {
-      "name": "macos-release",
-      "configurePreset": "macos-release"
+      "name": "macos-debug-min",
+      "inherits": ["macos", "minimal"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "macos-release-min",
+      "inherits": ["macos", "minimal"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     }
   ]
 }
