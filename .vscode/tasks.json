@@ -13,7 +13,7 @@
       "label": "reinstall windows daemon",
       "type": "shell",
       "command": "python scripts/windows_daemon.py",
-      "presentation": { "close": true }
+      "dependsOn": ["build"]
     }
   ]
 }

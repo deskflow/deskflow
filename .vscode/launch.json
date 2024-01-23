@@ -2,10 +2,31 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "gui",
+      "name": "gui lldb",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergy",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "windows daemon attach",
+      "type": "cppvsdbg",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "windows daemon attach lldb",
+      "type": "lldb",
+      "request": "attach",
+      "program": "${workspaceFolder}/build/bin/synergyd"
+    },
+    {
+      "name": "windows daemon launch",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}/build/bin",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergyd",
+      "args": ["-f"],
       "preLaunchTask": "build"
     }
   ]
