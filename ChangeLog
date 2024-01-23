@@ -11,9 +11,6 @@ Enhancements:
 - #7277 Change all errors that cause crash are FATAL
 - #7282 Improve error handling for thread jobs
 - #7284 Change session ID info log message to DEBUG2
-
-Tasks:
-
 - #7283 Update all workflows and fix broken macOS workflows
 - #7313 Fix CodeQL workflow: Failed to perl 404 Not Found
 - #7317 Bump sonar-scanner-cli to 5.0.1.3006
@@ -31,6 +28,7 @@ Tasks:
 - #7331 Script to install deps (Windows only for now)
 - #7332 Static link OpenSSL libs in CMake preset for Windows
 - #7333 Update VS Code config for Windows daemon debugging
+- #7334 Implement hello back in IPC protocol
 
 # 1.14.6
 
@@ -62,9 +60,6 @@ Enhancements:
 - #7193 Support for maintenance licenses in China
 - #7197 Special contributor mentions on the about screen
 - #7203 License registration for Business edition
-
-CI changes:
-
 - #7210 Update macos workflow to use macos-latest
 - #7213 Update azure pipelines to use macos-latest
 
@@ -86,9 +81,6 @@ Enhancements:
 - #7188 Synergy Basic\Pro accepts business licenses
 - #7166 Replace language notifications with warnings in logs
 - #7181 Fedora 36 support to CI system
-
-CI changes:
-
 - #7177 Create workflow for flatpak build support
 - #7148 Fix unstable build for Windows core
 - #7156 Change binary storage server
@@ -135,9 +127,6 @@ Enhancements:
 - #7068 Restart when settings changed
 - #7072 Run synergy as a pre-login agent
 - #7074 Restart when server settings changed
-
-CI changes:
-
 - #1043 Upload to S3 feature on all OS
 - #7098 Apple M1 runner
 - #7103 Fix core builds
