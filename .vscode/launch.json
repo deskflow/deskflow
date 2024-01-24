@@ -27,6 +27,15 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyd",
       "args": ["-f"],
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "windows daemon launch (rebuild)",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}/build/bin",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergyd",
+      "args": ["-f"],
       "preLaunchTask": "build"
     }
   ]
