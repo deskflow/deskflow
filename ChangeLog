@@ -30,6 +30,7 @@ Enhancements:
 - #7333 Update VS Code config for Windows daemon debugging
 - #7334 Implement hello back in IPC protocol
 - #7335 Clickable debug source paths and new launch target
+- #7336 Add C++ and LLDB to VS Code recommendations
 
 # 1.14.6
 
