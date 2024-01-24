@@ -29,6 +29,7 @@ Enhancements:
 - #7332 Static link OpenSSL libs in CMake preset for Windows
 - #7333 Update VS Code config for Windows daemon debugging
 - #7334 Implement hello back in IPC protocol
+- #7335 Clickable debug source paths and new launch target
 
 # 1.14.6
 

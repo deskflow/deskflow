@@ -203,7 +203,7 @@ Log::print(const char* file, int line, const char* fmt, ...)
         char* message = new char[size];
 
 #ifndef NDEBUG
-        snprintf(message, size, "[%s] %s: %s\n\t%s,%d", timestamp, g_priority[priority], buffer, file, line);
+        snprintf(message, size, "[%s] %s: %s\n\t%s:%d", timestamp, g_priority[priority], buffer, file, line);
 #else
         snprintf(message, size, "[%s] %s: %s", timestamp, g_priority[priority], buffer);
 #endif
