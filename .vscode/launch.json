@@ -9,19 +9,19 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "windows daemon attach",
+      "name": "win daemon attach",
       "type": "cppvsdbg",
       "request": "attach",
       "processId": "${command:pickProcess}"
     },
     {
-      "name": "windows daemon attach lldb",
+      "name": "win daemon attach - lldb",
       "type": "lldb",
       "request": "attach",
       "program": "${workspaceFolder}/build/bin/synergyd"
     },
     {
-      "name": "windows daemon launch",
+      "name": "win daemon launch",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}/build/bin",
       "request": "launch",
@@ -30,7 +30,7 @@
       "internalConsoleOptions": "openOnSessionStart"
     },
     {
-      "name": "windows daemon launch (rebuild)",
+      "name": "win daemon launch - rebuild",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}/build/bin",
       "request": "launch",
