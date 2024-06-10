@@ -160,7 +160,7 @@ jobs:
           - distro: "ubuntu16.04"
             flag: "-j1"
 
-    name: ${{ matrix.distro }}
+    name: test-linux-${{ matrix.distro }}
 
     steps:
       - uses: actions/checkout@v3
