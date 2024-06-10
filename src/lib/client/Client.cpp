@@ -158,6 +158,8 @@ Client::connect(size_t addressIndex)
 
         // create the socket
         IDataSocket* socket = m_socketFactory->create(m_useSecureNetwork, ARCH->getAddrFamily(m_serverAddress.getAddress()));
+        bindNetworkInterface(socket);
+
         // filter socket messages, including a packetizing filter
         m_stream = new PacketStreamFilter(m_events, socket, true);
 
@@ -428,7 +430,7 @@ Client::sendClipboard(ClipboardID id)
         // marshall the data
 		String data = clipboard.marshall();
 		if (data.size() >= m_maximumClipboardSize * 1024) {
-			LOG((CLOG_NOTE "Skipping clipboard transfer because the clipboard"
+			LOG((CLOG_NOTE "skipping clipboard transfer because the clipboard"
 				" contents exceeds the %i MB size limit set by the server",
 				m_maximumClipboardSize / 1024));
 			return;
@@ -762,7 +764,7 @@ Client::handleHello(const Event&, void*)
 
     if (isCompatible(major, minor)) {
         //because 1.6 is comptable with 1.7 and 1.8 - downgrading protocol for server
-        LOG((CLOG_NOTE "Downgrading protocol version for server"));
+        LOG((CLOG_NOTE "downgrading protocol version for server"));
         helloBackMinor = minor;
     }
     else if (major < kProtocolMajorVersion ||
@@ -833,6 +835,24 @@ Client::onFileRecieveCompleted()
     if (isReceivedFileSizeValid()) {
         auto method = new TMethodJob<Client>(this, &Client::writeToDropDirThread);
         m_writeToDropDirThread.reset(new Thread(method));
+    }
+}
+
+void Client::bindNetworkInterface(IDataSocket *socket) const
+{
+    try {
+        if (!m_args.m_synergyAddress.empty()) {
+            LOG((CLOG_DEBUG1 "bind to network interface: %s", m_args.m_synergyAddress.c_str()));
+
+            NetworkAddress bindAddress(m_args.m_synergyAddress);
+            bindAddress.resolve();
+
+            socket->bind(bindAddress);
+        }
+    }
+    catch(XBase& e) {
+        LOG((CLOG_WARN "%s", e.what()));
+        LOG((CLOG_WARN "operating system will select network interface automatically"));
     }
 }
 

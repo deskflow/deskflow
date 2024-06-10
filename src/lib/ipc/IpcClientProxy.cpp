@@ -159,6 +159,10 @@ IpcClientProxy::send(const IpcMessage& message)
         ProtocolUtil::writef(&m_stream, kIpcMsgShutdown);
         break;
 
+    case kIpcHelloBack:
+        ProtocolUtil::writef(&m_stream, kIpcMsgHelloBack);
+        break;
+
     default:
         LOG((CLOG_ERR "ipc message not supported: %d", message.type()));
         break;

@@ -23,6 +23,7 @@
 
 enum EIpcMessage {
     kIpcHello,
+    kIpcHelloBack,
     kIpcLogLine,
     kIpcCommand,
     kIpcShutdown,
@@ -32,12 +33,16 @@ enum EIpcMessage {
 enum EIpcClientType {
     kIpcClientUnknown,
     kIpcClientGui,
-    kIpcClientNode,
+    kIpcClientNode
 };
 
 // handshake: node/gui -> daemon
 // $1 = type, the client identifies it's self as gui or node (synergyc/s).
 extern const char*        kIpcMsgHello;
+
+// handshake: daemon -> node/gui
+// the daemon responds to the handshake.
+extern const char*        kIpcMsgHelloBack;
 
 // log line: daemon -> gui
 // $1 = aggregate log lines collected from synergys/c or the daemon itself.

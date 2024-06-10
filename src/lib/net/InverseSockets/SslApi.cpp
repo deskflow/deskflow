@@ -183,7 +183,7 @@ bool SslApi::isTrustedFingerprint(const std::string& fingerprint) const
         }
     }
     else {
-        LOG((CLOG_ERR "Fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
+        LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
     }
 
     return (isValid && showCertificate());

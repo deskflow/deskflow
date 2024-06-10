@@ -36,7 +36,7 @@ void ClientProxy1_8::synchronizeLanguages() const
         ProtocolUtil::writef(getStream(), kMsgDLanguageSynchronisation, &localLanguages);
     }
     else {
-        LOG((CLOG_ERR "Fail to read server languages"));
+        LOG((CLOG_ERR "failed to read server languages"));
     }
 }
 

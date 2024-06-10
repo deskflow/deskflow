@@ -59,7 +59,7 @@
 #endif
 
 #include <memory>
-#include <iostream>
+#include <sstream>
 #include <stdio.h>
 
 #define RETRY_TIME 1.0
@@ -87,9 +87,9 @@ ClientApp::parseArgs(int argc, const char* const* argv)
     }
     else {
         // save server address
-        if (!args().m_synergyAddress.empty()) {
+        if (!args().m_serverAddress.empty()) {
             try {
-                *m_serverAddress = NetworkAddress(args().m_synergyAddress, kDefaultPort);
+                *m_serverAddress = NetworkAddress(args().m_serverAddress, kDefaultPort);
                 m_serverAddress->resolve();
             }
             catch (XSocketAddress& e) {
@@ -98,7 +98,7 @@ ClientApp::parseArgs(int argc, const char* const* argv)
                 // server.  a bad port will never get better.  patch by Brent
                 // Priddy.
                 if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
-                    LOG((CLOG_PRINT "%s: %s" BYE,
+                    LOG((CLOG_CRIT "%s: %s" BYE,
                         args().m_pname, e.what(), args().m_pname));
                     m_bye(kExitFailed);
                 }
@@ -117,45 +117,41 @@ ClientApp::help()
     "      --display <display>  connect to the X server at <display>\n" \
     "      --no-xinitthreads    do not call XInitThreads()\n"
 #else
-#  define WINAPI_ARG
-#  define WINAPI_INFO
+#  define WINAPI_ARG ""
+#  define WINAPI_INFO ""
 #endif
-    static const int buffer_size = 2000;
-    char buffer[buffer_size];
-    snprintf(
-        buffer,
-        buffer_size,
-        "Usage: %s"
-        " [--yscroll <delta>]"
-        " [--sync-language]"
-        " [--invert-scroll]"
-        " [--host]"
-        WINAPI_ARG
-        HELP_SYS_ARGS
-        HELP_COMMON_ARGS
-        " <server-address>"
-        "\n\n"
-        "Connect to a synergy mouse/keyboard sharing server.\n"
-        "\n"
-        HELP_COMMON_INFO_1
-        WINAPI_INFO
-        HELP_SYS_INFO
-        "      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
-        "                             120 by default.\n"
-        "      --sync-language      set this parameter to enable language synchronization.\n"
-        "      --invert-scroll      invert scroll direction on this computer.\n"
-        "      --host               client starts a listener and waits for a server connection.\n"
-        HELP_COMMON_INFO_2
-        "\n"
-        "* marks defaults.\n"
-        "\n"
-        "The server address is of the form: [<hostname>][:<port>].  The hostname\n"
-        "must be the address or hostname of the server.  The port overrides the\n"
-        "default port, %d.\n",
-        args().m_pname, kDefaultPort
-    );
+    std::stringstream help;
+    help<< "Usage: " << args().m_pname
+        <<" [--address <address>]"
+        <<" [--yscroll <delta>]"
+        <<" [--sync-language]"
+        <<" [--invert-scroll]"
+        <<" [--host]"
+        <<WINAPI_ARG
+        <<HELP_SYS_ARGS
+        <<HELP_COMMON_ARGS
+        <<" <server-address>"
+        <<"\n\n"
+        <<"Connect to a synergy mouse/keyboard sharing server.\n"
+        <<"\n"
+        <<"  -a, --address <address>  local network interface address.\n"
+        <<HELP_COMMON_INFO_1
+        <<WINAPI_INFO
+        <<HELP_SYS_INFO
+        <<"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
+        <<"                             120 by default.\n"
+        <<"      --sync-language      set this parameter to enable language synchronization.\n"
+        <<"      --invert-scroll      invert scroll direction on this computer.\n"
+        <<"      --host               client starts a listener and waits for a server connection.\n"
+        <<HELP_COMMON_INFO_2
+        <<"\n"
+        <<"* marks defaults.\n"
+        <<"\n"
+        <<"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
+        <<"must be the address or hostname of the server.  The port overrides the\n"
+        <<"default port, " << kDefaultPort <<".\n";
 
-    LOG((CLOG_PRINT "%s", buffer));
+    LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
 
 const char*
@@ -317,7 +313,7 @@ ClientApp::handleClientFailed(const Event& e, void*)
         std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo*>(e.getData()));
 
         updateStatus(String("Failed to connect to server: ") + info->m_what + " Trying next address...");
-        LOG((CLOG_NOTE "Failed to connect to server: %s. Trying next address...", info->m_what.c_str()));
+        LOG((CLOG_NOTE "failed to connect to server=%s, trying next address", info->m_what.c_str()));
         if (!m_suspended) {
             scheduleClientRestart(nextRestartTimeout());
         }

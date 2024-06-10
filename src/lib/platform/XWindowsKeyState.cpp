@@ -204,11 +204,10 @@ XWindowsKeyState::pollActiveGroup() const
         XkbStateRec state;
         XSync(m_display, False);
         if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
-            LOG((CLOG_WARN "LANGUAGE_DEBUG Poll result %d", state.group));
             return state.group;
         }
 
-        LOG((CLOG_WARN "Failed to poll active group"));
+        LOG((CLOG_WARN "failed to poll active group"));
     }
 #endif
     return 0;
@@ -264,7 +263,7 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
 
     QDBusInterface screenSaverInterface(service, path, service, bus);
     if (!screenSaverInterface.isValid()) {
-        LOG((CLOG_WARN "Keyboard layout fail. DBus interface is invalid"));
+        LOG((CLOG_WARN "keyboard layout fail. dbus interface is invalid"));
         return false;
     }
 
@@ -273,19 +272,19 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
 
     if(!reply.isValid()) {
         auto qerror = reply.error();
-        LOG((CLOG_WARN "Keyboard layout fail %s : %s",
+        LOG((CLOG_WARN "keyboard layout fail %s : %s",
                 qerror.name().toStdString().c_str(),
                 qerror.message().toStdString().c_str()));
         return true;
     }
 
     if(reply.isError()) {
-        LOG((CLOG_WARN "Keyboard layout fail. reply contains error"));
+        LOG((CLOG_WARN "keyboard layout fail. reply contains error"));
         return true;
     }
 
     if(!reply.argumentAt<0>() || reply.argumentAt<1>() != QString("")) {
-        LOG((CLOG_WARN "Keyboard layout fail. Reply is unexpected!"));
+        LOG((CLOG_WARN "keyboard layout fail. Reply is unexpected!"));
         return true;
     }
 
@@ -297,9 +296,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
 {
     switch (keystroke.m_type) {
     case Keystroke::kButton:
-        LOG((CLOG_WARN "LANGUAGE_DEBUG  %03x (%08x) %s %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
-             keystroke.m_data.m_button.m_press ? "down" : "up",
-             keystroke.m_data.m_button.m_repeat ? "Repeat" : "New"));
         if (keystroke.m_data.m_button.m_repeat) {
             int c = keystroke.m_data.m_button.m_button;
             int i = (c >> 3);
@@ -321,7 +317,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
         }
 
         if (keystroke.m_data.m_group.m_absolute) {
-            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %d", keystroke.m_data.m_group.m_group));
 
 #ifndef __APPLE__
             if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
@@ -332,7 +327,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             if (m_xkb != NULL) {
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
                             keystroke.m_data.m_group.m_group) == False) {
-                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                    LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
                 }
             }
             else
@@ -342,7 +337,6 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
             }
         }
         else {
-            LOG((CLOG_WARN "LANGUAGE_DEBUG  group %+d", keystroke.m_data.m_group.m_group));
 
 #ifndef __APPLE__
             if(setCurrentLanguageWithDBus(keystroke.m_data.m_group.m_group)) {
@@ -354,7 +348,7 @@ XWindowsKeyState::fakeKey(const Keystroke& keystroke)
                 if (XkbLockGroup(m_display, XkbUseCoreKbd,
                             getEffectiveGroup(pollActiveGroup(),
                                 keystroke.m_data.m_group.m_group)) == False) {
-                    LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+                    LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
                 }
             }
             else
@@ -628,7 +622,7 @@ XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap& keyMap)
         }
     };
 
-    LOG((CLOG_DEBUG1 "XKB mapping"));
+    LOG((CLOG_DEBUG1 "xkb mapping"));
 
     // find the number of groups
     int maxNumGroups = 0;

@@ -99,7 +99,7 @@ ServerApp::parseArgs(int argc, const char* const* argv)
                 m_synergyAddress->resolve();
             }
             catch (XSocketAddress& e) {
-                LOG((CLOG_PRINT "%s: %s" BYE,
+                LOG((CLOG_CRIT "%s: %s" BYE,
                     args().m_pname, e.what(), args().m_pname));
                 m_bye(kExitArgs);
             }
@@ -219,7 +219,7 @@ ServerApp::loadConfig()
     }
 
     if (!loaded) {
-        LOG((CLOG_PRINT "%s: no configuration available", args().m_pname));
+        LOG((CLOG_CRIT "%s: no configuration available", args().m_pname));
         m_bye(kExitConfig);
     }
 }
@@ -540,7 +540,6 @@ ServerApp::startServer()
         assert(m_serverState == kInitialized);
     }
 
-    double retryTime {};
     ClientListener* listener = NULL;
     try {
         listener   = openClientListener(args().m_config->getSynergyAddress());
@@ -554,10 +553,14 @@ ServerApp::startServer()
         return true;
     }
     catch (XSocketAddressInUse& e) {
-        LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
+        if (args().m_restartable) {
+            LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
+        }
+        else {
+            LOG((CLOG_CRIT "cannot listen for clients: %s", e.what()));
+        }
         closeClientListener(listener);
         updateStatus(String("cannot listen for clients: ") + e.what());
-        retryTime = 10.0;
     }
     catch (XBase& e) {
         LOG((CLOG_CRIT "failed to start server: %s", e.what()));
@@ -568,6 +571,7 @@ ServerApp::startServer()
     if (args().m_restartable) {
         // install a timer and handler to retry later
         assert(m_timer == NULL);
+        const auto retryTime = 10.0;
         LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
         m_timer = m_events->newOneShotTimer(retryTime, NULL);
         m_events->adoptHandler(Event::kTimer, m_timer,

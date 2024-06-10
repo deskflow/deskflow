@@ -27,7 +27,7 @@ bool sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceI
 
     if (!ArchSystemUnix::DBusInhibitScreenCall(serviceID, state, error))
     {
-        LOG((CLOG_DEBUG "DBus inhibit error %s", error.c_str()));
+        LOG((CLOG_DEBUG "dbus inhibit error %s", error.c_str()));
         return false;
     }
 
@@ -46,7 +46,7 @@ void XWindowsPowerManager::disableSleep() const
     if (!sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
         !sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kSessionManager))
     {
-        LOG((CLOG_INFO "Failed to prevent system from going to sleep"));
+        LOG((CLOG_INFO "failed to prevent system from going to sleep"));
     }
 }
 
@@ -55,6 +55,6 @@ void XWindowsPowerManager::enableSleep() const
     if (!sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
         !sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kSessionManager))
     {
-        LOG((CLOG_INFO "Failed to enable system idle sleep"));
+        LOG((CLOG_INFO "failed to enable system idle sleep"));
     }
 }

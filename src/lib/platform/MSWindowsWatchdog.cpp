@@ -40,6 +40,9 @@
 #define CURRENT_PROCESS_ID 0
 #define MAXIMUM_WAIT_TIME 3
 
+// TODO: maybe this should be \winlogon if we have logonui.exe?
+static char g_desktopName[] = "winsta0\\Default";
+
 namespace {
 std::string
 trimDesktopName(const std::string& nameFromTraces)
@@ -287,13 +290,13 @@ MSWindowsWatchdog::mainLoop(void*)
         
         }
         catch (std::exception& e) {
-            LOG((CLOG_ERR "failed to launch, error: %s", e.what()));
+            LOG((CLOG_CRIT "failed to launch, error: %s", e.what()));
             m_processFailures++;
             m_processRunning = false;
             continue;
         }
         catch (...) {
-            LOG((CLOG_ERR "failed to launch, unknown error."));
+            LOG((CLOG_CRIT "failed to launch, unknown error."));
             m_processFailures++;
             m_processRunning = false;
             continue;
@@ -352,7 +355,7 @@ MSWindowsWatchdog::startProcess()
 		getActiveDesktop(&sa);
 
         if (!isDesktopRunnable(m_activeDesktop)) {
-            LOG((CLOG_INFO, "Starting on the login screen is disabled!"));
+            LOG((CLOG_INFO, "starting on the login screen is disabled"));
             return;
         }
 
@@ -370,7 +373,7 @@ MSWindowsWatchdog::startProcess()
 	}
 
     if (!createRet) {
-        LOG((CLOG_ERR "could not launch command"));
+        LOG((CLOG_CRIT "could not launch command"));
         DWORD exitCode = 0;
         GetExitCodeProcess(m_processInfo.hProcess, &exitCode);
         LOG((CLOG_ERR "exit code: %d", exitCode));
@@ -387,7 +390,8 @@ MSWindowsWatchdog::startProcess()
         m_processRunning = true;
         m_processFailures = 0;
 
-        LOG((CLOG_DEBUG "started process, session=%i, elevated: %s, command=%s",
+        LOG((CLOG_DEBUG "started core process from daemon"));
+        LOG((CLOG_DEBUG2 "process info, session=%i, elevated: %s, command=%s",
             m_session.getActiveSessionId(),
             m_elevateProcess ? "yes" : "no",
             m_command.c_str()));
@@ -399,7 +403,7 @@ MSWindowsWatchdog::setStartupInfo(STARTUPINFO& si)
 {
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+	si.lpDesktop = g_desktopName;
 	si.hStdError = m_stdOutWrite;
 	si.hStdOutput = m_stdOutWrite;
 	si.dwFlags |= STARTF_USESTDHANDLES;

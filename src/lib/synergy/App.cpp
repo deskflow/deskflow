@@ -140,19 +140,19 @@ App::run(int argc, char** argv)
         result = e.getCode();
     }
     catch (DisplayInvalidException& die) {
-        LOG((CLOG_CRIT "A display invalid exception error occurred: %s\n", die.what()));
+        LOG((CLOG_CRIT "a display invalid exception error occurred: %s\n", die.what()));
         // display invalid exceptions can occur when going to sleep. When this process exits, the
         // UI will restart us instantly. We don't really want that behevior, so we quies for a bit
         ARCH->sleep(10);
     }
     catch (std::runtime_error& re) {
-        LOG((CLOG_CRIT "A runtime error occurred: %s\n", re.what()));
+        LOG((CLOG_CRIT "a runtime error occurred: %s\n", re.what()));
     }
     catch (std::exception& e) {
-        LOG((CLOG_CRIT "An error occurred: %s\n", e.what()));
+        LOG((CLOG_CRIT "an error occurred: %s\n", e.what()));
     }
     catch (...) {
-        LOG((CLOG_CRIT "An unknown error occurred.\n"));
+        LOG((CLOG_CRIT "an unknown error occurred\n"));
     }
 
     appUtil().beforeAppExit();
@@ -203,7 +203,7 @@ App::initApp(int argc, const char** argv)
 
     // set log filter
     if (!CLOG->setFilter(argsBase().m_logFilter)) {
-        LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
+        LOG((CLOG_CRIT "%s: unrecognized log level `%s'" BYE,
             argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname));
         m_bye(kExitArgs);
     }

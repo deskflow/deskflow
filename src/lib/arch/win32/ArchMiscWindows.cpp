@@ -138,13 +138,13 @@ ArchMiscWindows::openKey(HKEY key, const TCHAR* keyName, bool create)
 
     // open next key
     HKEY newKey;
-    LONG result = RegOpenKeyEx(key, keyName, 0,
+    LSTATUS result = RegOpenKeyEx(key, keyName, 0,
                                 KEY_WRITE | KEY_QUERY_VALUE, &newKey);
     if (result != ERROR_SUCCESS && create) {
         DWORD disp;
-        result = RegCreateKeyEx(key, keyName, 0, TEXT(""),
-                                0, KEY_WRITE | KEY_QUERY_VALUE,
-                                NULL, &newKey, &disp);
+        result = RegCreateKeyEx(key, keyName, 0, NULL,
+                                 0, KEY_WRITE | KEY_QUERY_VALUE,
+                                 NULL, &newKey, &disp);
     }
     if (result != ERROR_SUCCESS) {
         RegCloseKey(key);

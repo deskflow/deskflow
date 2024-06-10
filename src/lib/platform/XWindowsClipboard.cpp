@@ -501,7 +501,7 @@ XWindowsClipboard::doFillCache()
 void
 XWindowsClipboard::icccmFillCache()
 {
-    LOG((CLOG_DEBUG "ICCCM fill clipboard %d", m_id));
+    LOG((CLOG_DEBUG "icccm fill clipboard %d", m_id));
 
     // see if we can get the list of available formats from the selection.
     // if not then use a default list of formats.  note that some clipboard
@@ -579,7 +579,7 @@ XWindowsClipboard::icccmGetSelection(Atom target,
     if (!getter.readClipboard(m_display, m_selection,
                                 target, actualTarget, data)) {
         LOG((CLOG_DEBUG1 "can't get data for selection target %s", XWindowsUtil::atomToString(m_display, target).c_str()));
-        LOGC(getter.m_error, (CLOG_WARN "ICCCM violation by clipboard owner"));
+        LOGC(getter.m_error, (CLOG_WARN "icccm violation by clipboard owner"));
         return false;
     }
     else if (*actualTarget == None) {
@@ -688,7 +688,7 @@ XWindowsClipboard::motifOwnsClipboard() const
 void
 XWindowsClipboard::motifFillCache()
 {
-    LOG((CLOG_DEBUG "Motif fill clipboard %d", m_id));
+    LOG((CLOG_DEBUG "motif fill clipboard %d", m_id));
 
     // get the Motif clipboard header property from the root window
     Atom target;

@@ -15,7 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 add_subdirectory(synergyd)
-add_subdirectory(synergyc)
-add_subdirectory(synergys)
+if (UNIFIED_CORE)
+    add_subdirectory(synergy-core)
+else()
+    add_subdirectory(synergyc)
+    add_subdirectory(synergys)
+endif (UNIFIED_CORE)
 add_subdirectory(syntool)
-add_subdirectory(synergy-core)

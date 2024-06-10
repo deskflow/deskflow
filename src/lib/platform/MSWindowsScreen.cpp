@@ -161,10 +161,10 @@ MSWindowsScreen::MSWindowsScreen(
         char desktopPath[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
             m_desktopPath = String(desktopPath);
-            LOG((CLOG_DEBUG "using desktop for drop target: %s", m_desktopPath.c_str()));
+            LOG((CLOG_DEBUG "using desktop for file drag-drop target: %s", m_desktopPath.c_str()));
         }
         else {
-            LOG((CLOG_ERR "failed to get desktop path, no drop target available, error=%d", GetLastError()));
+            LOG((CLOG_DEBUG "unable to use desktop as file drag-drop target, code=%d", GetLastError()));
         }
 
         if (App::instance().argsBase().m_preventSleep) {
@@ -328,7 +328,7 @@ MSWindowsScreen::leave()
     POINT pos;
     if (!getThisCursorPos(&pos))
     {
-        LOG((CLOG_DEBUG "Unable to leave screen as Windows security has disabled critical functions required to let synergy work"));
+        LOG((CLOG_DEBUG "unable to leave screen as windows security has disabled critical functions"));
         //unable to get position this means synergy will break if the cursor leaves the screen
         return false;
     }
@@ -579,16 +579,15 @@ bool MSWindowsScreen::setThisCursorPos(int x, int y)
 
 void MSWindowsScreen::updateDesktopThread()
 {
-
-    LOG((CLOG_DEBUG3 "Failed to set cursor Attempting to switch desktop"));
+    LOG((CLOG_DEBUG3 "failed to set cursor while attempting to switch desktop"));
     SetLastError(0);
     HDESK cur_hdesk = OpenInputDesktop(0, true, GENERIC_ALL);
 
     auto error = GetLastError();
-    LOG((CLOG_DEBUG3 "\tGetting desktop Handle: %p Status code: %d", cur_hdesk, error));
+    LOG((CLOG_DEBUG3 "current desktop, handle=%p code=%d", cur_hdesk, error));
     
     error = GetLastError();
-    LOG((CLOG_DEBUG3 "\tSetting desktop return: %d Status code: %d", SetThreadDesktop(cur_hdesk), GetLastError()));
+    LOG((CLOG_DEBUG3 "setting desktop, return=%d code=%d", SetThreadDesktop(cur_hdesk), GetLastError()));
 
     CloseDesktop(cur_hdesk);
 
@@ -1594,7 +1593,7 @@ MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
     // since this feature is mainly for client, so only check on client.
     if (!isPrimary()) {
         if ((cursorPos.x != x) && (cursorPos.y != y)) {
-            LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
+            LOG((CLOG_DEBUG "function 'SetCursorPos' failed; trying 'fakeMouseMove'"));
             LOG((CLOG_DEBUG "cursor pos %d, %d expected pos %d, %d", cursorPos.x, cursorPos.y, x, y));
             // when at Vista/7 login screen, SetCursorPos does not work (which could be
             // an MS security feature). instead we can use fakeMouseMove, which calls

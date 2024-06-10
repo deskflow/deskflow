@@ -1,16 +1,17 @@
-name: Mac
+name: "Build macOS 10.13"
 
 on:
   release:
     types: [created]
 
 jobs:
-  build-on-mac-10_13:
-    runs-on: [self-hosted, macOS, X64, "10.13"]
+  build-mac-10:
+    runs-on: "macos-latest-xlarge"
+    timeout-minutes: 10
 
     strategy:
       matrix:
-        include:
+        runtime:
           - name: "synergy"
             remote_folder: "v1-core-standard"
             enterprise: ""
@@ -23,27 +24,31 @@ jobs:
             remote_folder: "v1-core-business"
             enterprise: ""
             business: "1"
+
     env:
       GIT_COMMIT: ${{ github.sha }}
-      SYNERGY_ENTERPRISE: ${{ matrix.enterprise }}
-      SYNERGY_BUSINESS: ${{ matrix.business }}
+      SYNERGY_ENTERPRISE: ${{ matrix.runtime.enterprise }}
+      SYNERGY_BUSINESS: ${{ matrix.runtime.business }}
       Qt5_DIR: /usr/local/opt/qt/5.15.2/clang_64
       OpenSSL_DIR: /usr/local/ssl
       CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
 
       - name: Setup Environment
         run: |
           python3 -m pip install dmgbuild
 
-      - name: Build SYNERGY
+      - name: Build
         env:
           CMAKE_PREFIX_PATH: "${{ env.Qt5_DIR }};${{ env.OpenSSL_DIR }}"
         run: |
           export PATH="$Qt5_DIR/bin:$PATH"
-          python3 CI/build_version.py
+          python3 scripts/build_version.py
           mkdir build
           cd build
           cmake \
@@ -70,8 +75,8 @@ jobs:
           echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
           echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
           echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
-          SYNERGY_PACKAGE_NAME=${{ matrix.name }}
-          SYNERGY_REMOTE_FOLDER="${{ matrix.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          SYNERGY_PACKAGE_NAME=${{ matrix.runtime.name }}
+          SYNERGY_REMOTE_FOLDER="${{ matrix.runtime.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
           SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-10.13_x86-64.dmg"
           echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"

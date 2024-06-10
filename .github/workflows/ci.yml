@@ -1,14 +1,15 @@
-name: CI unit-tests
+name: CI
 
 on:
-  push:
-    branches: [master]
+  workflow_dispatch:
   pull_request:
-    branches: [master]
+  push:
+    branches: [master/*, release/*]
 
 jobs:
   test-windows:
     runs-on: windows-latest
+    timeout-minutes: 20
 
     env:
       GIT_COMMIT: ${{ github.sha }}
@@ -51,8 +52,8 @@ jobs:
           $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
           [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
-      - name: Install OpenSSL
-        run: choco install openssl -y --no-progress
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py --skip cmake ninja
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
@@ -71,34 +72,52 @@ jobs:
         run: .\build\bin\Release\unittests.exe
 
   test-macos:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runtime.os }}
+    timeout-minutes: 10
 
     defaults:
       run:
-        shell: ${{ matrix.shell }}
+        shell: ${{ matrix.runtime.shell }}
 
     strategy:
       matrix:
-        include:
-          - os: "macos-latest"
+        runtime:
+          - name: "macos-10-intel"
+            os: "macos-latest"
+            arch: x64
             target: "10.14"
             shell: "bash"
-          - os: [self-hosted, macOS, arm64]
-            target: "11.0"
+          - name: "macos-11-m1"
+            os: "macos-latest-xlarge"
+            arch: arm64
+            target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
     env:
       GIT_COMMIT: ${{ github.sha }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Setup PATH
+        run: |
+          case "$ARCH" in
+            "arm64")
+              echo "/opt/homebrew/bin" >> $GITHUB_PATH
+              ;;
+          esac
+        env:
+          ARCH: ${{ matrix.runtime.arch }}
+
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
 
       - name: Install brew dependencies
         run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
 
       - name: Build
         env:
-          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target }}
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
         run: |
           mkdir build
           cd build
@@ -113,6 +132,7 @@ jobs:
 
   test-linux:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     container: symless/synergy-core:${{ matrix.distro }}
     env:
       GIT_COMMIT: ${{ github.sha }}
@@ -154,29 +174,6 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           . ./version
           make ${{ matrix.flag }}
-
-      - name: Run unit test
-        run: ./build/bin/unittests
-
-  test-raspberry-pi:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [[self-hosted, linux, ARM, pi-3], [self-hosted, linux, ARM64, pi-4]]
-    env:
-      GIT_COMMIT: ${{ github.sha }}
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build
-        run: |
-          rm -rf build
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          . ./version
-          make -j1
 
       - name: Run unit test
         run: ./build/bin/unittests

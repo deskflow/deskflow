@@ -464,11 +464,11 @@ XWindowsScreen::setOptions(const OptionsList& options)
 	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
 		if (options[i] == kOptionXTestXineramaUnaware) {
 			m_xtestIsXineramaUnaware = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
+			LOG((CLOG_DEBUG1 "library, XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
 		}
 		else if (options[i] == kOptionScreenPreserveFocus) {
 			m_preserveFocus = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "Preserve Focus = %s", m_preserveFocus ? "true" : "false"));
+			LOG((CLOG_DEBUG1 "preserve focus: %s", m_preserveFocus ? "true" : "false"));
 		}
 	}
 }
@@ -906,7 +906,7 @@ XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
 	}
 
 	if (yDelta < m_mouseScrollDelta) {
-		LOG((CLOG_WARN "Wheel scroll delta (%d) smaller than threshold (%d)", yDelta, m_mouseScrollDelta));
+		LOG((CLOG_WARN "wheel scroll delta (%d) smaller than threshold (%d)", yDelta, m_mouseScrollDelta));
 	}
 
 	// send as many clicks as necessary
@@ -929,7 +929,7 @@ XWindowsScreen::openDisplay(const char* displayName)
 	}
 
 	// open the display
-	LOG((CLOG_DEBUG "XOpenDisplay(\"%s\")", displayName));
+	LOG((CLOG_DEBUG3 "calling XOpenDisplay(\"%s\")", displayName));
 	Display* display = XOpenDisplay(displayName);
 	if (display == NULL) {
 		throw XScreenUnavailable(60.0);
@@ -940,7 +940,7 @@ XWindowsScreen::openDisplay(const char* displayName)
 		int majorOpcode, firstEvent, firstError;
 		if (!XQueryExtension(display, XTestExtensionName,
 							&majorOpcode, &firstEvent, &firstError)) {
-			LOG((CLOG_ERR "XTEST extension not available"));
+			LOG((CLOG_ERR "the XTest extension is not available"));
 			XCloseDisplay(display);
 			throw XScreenOpenFailure();
 		}
@@ -1479,7 +1479,7 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify
 			||  xevent->type == m_xrandrEventBase + RRNotify
 			&& reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
-				LOG((CLOG_INFO "XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
+				LOG((CLOG_INFO "either XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
 
 				// we're required to call back into XLib so XLib can update its internal state
 				XRRUpdateConfiguration(xevent);
@@ -1818,7 +1818,7 @@ XWindowsScreen::ioErrorHandler(Display*)
 	// down.  X forces us to exit at this point which is annoying.
 	// we'll pretend as if we won't exit so we try to make sure we
 	// don't access the display anymore.
-	LOG((CLOG_CRIT "X display has unexpectedly disconnected"));
+	LOG((CLOG_CRIT "x display has unexpectedly disconnected"));
 	s_screen->onError();
 	return 0;
 }

@@ -1,0 +1,32 @@
+name: Create Release
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: "Generate next build number"
+        id: build
+        uses: "./.github/actions/build-number"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.build.outputs.next-build }}
+          release_name: ${{ steps.build.outputs.next-build }}
+          commitish: master
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_EVENT_PROPAGATION_TOKEN }}

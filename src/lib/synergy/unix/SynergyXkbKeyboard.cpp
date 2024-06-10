@@ -33,11 +33,11 @@ SynergyXkbKeyboard::SynergyXkbKeyboard()
 
     if (display) {
         if (!XkbRF_GetNamesProp(display.get(), nullptr, &m_data)) {
-            LOG((CLOG_WARN "Error reading keyboard layouts"));
+            LOG((CLOG_WARN "error reading keyboard layouts"));
         }
     }
     else {
-        LOG((CLOG_WARN "Can't open Xkb display during reading languages"));
+        LOG((CLOG_WARN "can't open xkb display during reading languages"));
     }
 }
 

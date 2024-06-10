@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cmake",
+      "label": "build",
+      "command": "build",
+      "targets": ["all"],
+      "preset": "${command:cmake.activeBuildPresetName}",
+      "group": "build"
+    },
+    {
+      "label": "reinstall windows daemon",
+      "type": "shell",
+      "command": "python scripts/windows_daemon.py",
+      "dependsOn": ["build"]
+    }
+  ]
+}

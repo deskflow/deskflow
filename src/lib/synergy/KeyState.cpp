@@ -890,7 +890,7 @@ KeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
             ++k;
         }
         else {
-            LOG((CLOG_DEBUG1 "Skipping keystroke (because language sync is disabled)"));
+            LOG((CLOG_DEBUG1 "skipping keystroke, language sync is disabled"));
             ++k;
         }
     }

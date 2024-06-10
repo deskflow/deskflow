@@ -70,7 +70,8 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
             if (!pidToSidRet) {
                 // if we can not acquire session associated with a specified process,
                 // simply ignore it
-                LOG((CLOG_ERR "could not get session id for process id %i", entry.th32ProcessID));
+                LOG((CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
+                     entry.th32ProcessID, entry.szExeFile, GetLastError()));
                 gotEntry = nextProcessEntry(snapshot, &entry);
                 continue;
             }
@@ -100,7 +101,7 @@ MSWindowsSession::isProcessInSession(const char* name, PHANDLE process = NULL)
             nameListJoin.append(", ");
     }
 
-    LOG((CLOG_DEBUG "processes in session %d: %s",
+    LOG((CLOG_DEBUG2 "processes in session %d: %s",
         m_activeSessionId, nameListJoin.c_str()));
 
     CloseHandle(snapshot);
@@ -157,13 +158,20 @@ MSWindowsSession::updateActiveSession()
 BOOL
 MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
 {
+    // TODO: issue S3-2021
+    // resetting the error state here is acceptable, but having to do so indicates that a
+    // different win32 function call has failed beforehand. we should always check for errors 
+    // after each win32 function call.
+    SetLastError(0);
+
     BOOL gotEntry = Process32Next(snapshot, entry);
     if (!gotEntry) {
 
         DWORD err = GetLastError();
-        if (err != ERROR_NO_MORE_FILES) {
 
-            // only worry about error if it's not the end of the snapshot
+        // only throw if it's not the end of the snapshot, if not the 'no more files' error
+        // then it's probably something serious.
+        if (err != ERROR_NO_MORE_FILES) {
             LOG((CLOG_ERR "could not get next process entry"));
             throw XArch(new XArchEvalWindows());
         }
