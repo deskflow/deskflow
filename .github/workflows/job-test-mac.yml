@@ -57,9 +57,6 @@ jobs:
       - name: Install Qt5
         run: brew install qt@5
 
-      - name: Install OpenSSL
-        run: brew install openssl
-
         # TODO: trim fat
       - name: Configure
         env:
