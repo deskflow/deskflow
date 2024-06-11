@@ -17,7 +17,7 @@ linux-packages:
       - libgtk-3-dev
       - rpm
 
-  ubuntux:
+  ubuntu:
     <<: *debian
 
   fedora: &fedora
