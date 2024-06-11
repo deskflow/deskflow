@@ -9,11 +9,10 @@ def main():
 
   parser = argparse.ArgumentParser()
   parser.add_argument('--pause-on-exit', action='store_true')
-  parser.add_argument('--skip', nargs='*', default=[])
   args = parser.parse_args()
 
   try:
-    deps = Deps(args.skip)
+    deps = Deps()
     deps.install()
   except Exception as e:
     print(f'Error: {e}')
@@ -23,16 +22,19 @@ def main():
 
 class Deps:
 
-  def __init__(self, skip):
-    self.skip = skip
-
   def install(self):
     """Installs dependencies."""
 
     if (sys.platform == 'win32'):
       self.windows()
+    elif (sys.platform == 'darwin'):
+      self.mac()
     else:
       print(f'Unsupported platform: {sys.platform}')
+  
+  def mac(self):
+    """Installs dependencies on macOS."""
+    subprocess.run('brew bundle --file=Brewfile', shell=True, check=True)
 
   def windows(self):
     """Installs dependencies on Windows."""
@@ -45,29 +47,20 @@ class Deps:
     if ci_env:
       print('CI environment detected')
       self.choco_ci()
-
-      # already installed on github runners.
-      self.skip.extend(['cmake', 'ninja'])
     
-    self.choco("cmake")
-    self.choco("ninja")
+    self.choco('Chocolatey.config', ci_env)
 
-    # lock openssl to 3.1.1. as of 19th jan 2024, 3.2.0 breaks cmake configure.
-    self.choco("openssl", "3.1.1")
-
-  def choco(self, package, version=None):
-    """Installs a package using Chocolatey."""
-
-    if (package in self.skip):
-      print(f'Skipping: {package}')
-      return
+  def choco(self, config, ci_env):
+    """Installs packages using Chocolatey."""
     
-    args = ['choco', 'install', package]
+    args = ['choco', 'install', config]
 
-    if (version):
-      args.extend(['--version', version])
+    if ci_env:
+      # don't show noisy choco progress bars in CI
+      args.extend(['--no-progress'])
 
-    args.extend(['-y', '--no-progress'])
+    # auto-accept all prompts
+    args.extend(['-y'])
 
     subprocess.run(args, shell=True, check=True)
 

@@ -60,7 +60,7 @@ jobs:
           [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
       - name: Install dependencies
-        run: python ./scripts/install_deps.py --skip cmake ninja
+        run: python ./scripts/install_deps.py
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
