@@ -23,12 +23,12 @@ jobs:
       matrix:
         runtime:
           - name: "macos-10-intel"
-            os: "macos-latest-large"
+            os: "macos-14-large"
             arch: x64
             target: "10.14"
             shell: "bash"
           - name: "macos-11-m1"
-            os: "macos-latest"
+            os: "macos-14"
             arch: arm64
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
