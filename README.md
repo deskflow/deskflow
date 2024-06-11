@@ -14,7 +14,11 @@ Instructions for those who want to contribute to development of Synergy Core.
 
 **Dependencies:**
 ```
+# Every OS (including Windows)
 python scripts/install_deps.py
+
+# Windows only (in addition to above)
+python scripts/install_deps.py --only qt
 ```
 
 **Configure:**
