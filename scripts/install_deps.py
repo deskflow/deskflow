@@ -9,15 +9,18 @@ try:
 except ImportError:
   yaml = None
 
+qt_base_url = 'http://qt.mirror.constant.com/'
+
 def main():
   """Entry point for the script."""
 
   parser = argparse.ArgumentParser()
-  parser.add_argument('--pause-on-exit', action='store_true')
+  parser.add_argument('--pause-on-exit', action='store_true', help='Useful on Windows')
+  parser.add_argument('--only', type=str, help='Only install the specified dependency')
   args = parser.parse_args()
 
   try:
-    deps = Deps()
+    deps = Deps(args.only)
     deps.install()
   except Exception as e:
     print(f'Error: {e}')
@@ -26,6 +29,9 @@ def main():
     input('Press enter to continue...')
 
 class Deps:
+
+  def __init__(self, only):
+    self.only = only
 
   def install(self):
     """Installs dependencies."""
@@ -47,12 +53,16 @@ class Deps:
       windows.relaunch_as_admin(__file__)
       sys.exit()
 
+    if self.only == 'qt':
+      self.windows_qt()
+      return
+
     ci_env = os.environ.get('CI')
     if ci_env:
       print('CI environment detected')
-      self.choco_ci()
+      self.windows_choco_ci()
     
-    self.choco('Chocolatey.config', ci_env)
+    self.windows_choco('Chocolatey.config', ci_env)
 
   def mac(self):
     """Installs dependencies on macOS."""
@@ -60,7 +70,7 @@ class Deps:
 
   def linux(self):
     """Installs dependencies on Linux."""
-    
+
     if not yaml:
       print("The 'yaml' module is not installed. Please install it using 'pip install pyyaml'.")
       sys.exit(1)
@@ -102,7 +112,7 @@ class Deps:
                     return line.strip().split('=')[1].strip('"')
     return None
 
-  def choco(self, config, ci_env):
+  def windows_choco(self, config, ci_env):
     """Installs packages using Chocolatey."""
     
     args = ['choco', 'install', config]
@@ -116,7 +126,7 @@ class Deps:
 
     self.run(args)
 
-  def choco_ci(self):
+  def windows_choco_ci(self):
     """Configures Chocolatey cache for CI."""
 
     runner_temp_key = 'RUNNER_TEMP'
@@ -128,6 +138,36 @@ class Deps:
       self.run(['choco', 'config', 'set', key_arg, value_arg])
     else:
       print(f'Warning: CI environment variable {runner_temp_key} not set')
+
+  def windows_qt(self):
+    # pip install aqtinstall
+    #       python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2019_64
+    #       cd $env:QT_LIB_DIR\msvc2019_64
+    # dir
+
+    qt_base_dir = os.environ.get('QT_BASE_DIR')
+    qt_version = os.environ.get('QT_VERSION')
+    qt_lib_dir = os.environ.get('QT_LIB_DIR')
+
+    if not qt_base_dir:
+      print('QT_BASE_DIR not set')
+      sys.exit(1)
+
+    if not qt_version:
+      print('QT_VERSION not set')
+      sys.exit(1)
+
+    if not qt_lib_dir:
+      print('QT_LIB_DIR not set')
+      sys.exit(1)
+
+    self.run(['pip', 'install', 'aqtinstall'])
+
+    args = ['python', '-m', 'aqt', 'install']
+    args.extend(['--outputdir', qt_base_dir])
+    args.extend(['--base', qt_base_url])
+    args.extend([qt_version, 'windows', 'desktop', 'win64_msvc2019_64'])
+    self.run(args)
 
   def run(self, args):
     """Runs a command."""
