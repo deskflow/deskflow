@@ -1,0 +1,75 @@
+linux-packages:
+  debian: &debian
+    command: sudo apt-get update && sudo apt-get install -y
+    packages:
+      - cmake
+      - make
+      - xorg-dev
+      - libx11-dev
+      - libxtst-dev
+      - libssl-dev
+      - pkg-config
+      - libglib2.0-dev
+      - libgdk-pixbuf-2.0-dev
+      - libnotify-dev
+      - libxkbfile-dev
+      - qtbase5-dev
+      - libgtk-3-dev
+      - rpm
+
+  ubuntux:
+    <<: *debian
+
+  fedora: &fedora
+    command: sudo dnf install -y
+    packages:
+      - cmake
+      - make
+      - gcc-c++
+      - libXtst-devel
+      - glib2-devel
+      - gdk-pixbuf2-devel
+      - libnotify-devel
+      - qt5-qtbase-devel
+      - libxkbfile-devel
+      - gtk3-devel
+      - rpm-build
+
+  centos:
+    <<: *fedora
+    command: sudo yum install -y
+
+  # Warning: AI generated (untested)
+  arch:
+    command: sudo pacman -Syu --noconfirm
+    packages:
+      - cmake
+      - make
+      - gcc
+      - libx11
+      - libxtst
+      - openssl
+      - pkg-config
+      - glib2
+      - gdk-pixbuf2
+      - libnotify
+      - libxkbfile
+      - qt5-base
+      - gtk3
+      - rpm
+
+  # Warning: AI generated (untested)
+  opensuse:
+    command: sudo zypper install -y
+    packages:
+      - cmake
+      - make
+      - gcc-c++
+      - libXtst-devel
+      - glib2-devel
+      - gdk-pixbuf-devel
+      - libnotify-devel
+      - libxkbfile-devel
+      - libqt5-qtbase-devel
+      - gtk3-devel
+      - rpm-build
