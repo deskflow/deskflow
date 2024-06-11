@@ -61,17 +61,13 @@ jobs:
       - name: Configure
         env:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
-        run: |
-          . ./version
-          cmake -B build --preset=macos-release
+        run: cmake -B build --preset=macos-release
 
         # TODO: trim fat
       - name: Build
         env:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
-        run: |
-          . ./version
-          cmake --build build
+        run: cmake --build build
 
       - name: Run unit test
         run: ./build/bin/unittests
