@@ -23,12 +23,12 @@ jobs:
       matrix:
         runtime:
           - name: "macos-10-intel"
-            os: "macos-latest"
+            os: "macos-14-large"
             arch: x64
             target: "10.14"
             shell: "bash"
           - name: "macos-11-m1"
-            os: "macos-latest-xlarge"
+            os: "macos-14"
             arch: arm64
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
@@ -54,20 +54,16 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Install brew dependencies
-        run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
+      - name: Install Qt5
+        run: brew install qt@5
 
-      - name: Build
+      - name: Configure
         env:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
-        run: |
-          mkdir build
-          cd build
-          cmake \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt5);$(brew --prefix openssl)" ..
-          . ./version
-          make -j
+        run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
+
+      - name: Build
+        run: cmake --build build
 
       - name: Run unit test
         run: ./build/bin/unittests
