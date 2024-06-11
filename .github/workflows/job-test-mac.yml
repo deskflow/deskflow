@@ -54,8 +54,11 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Install brew dependencies
-        run: brew bundle --file=- <<< "brew 'qt5'; brew 'openssl'"
+      - name: Install Qt5 with Homebrew
+        run: brew install qt@5
+
+      - name: Install OpenSSL with Homebrew
+        run: brew install openssl
 
       - name: Build
         env:
