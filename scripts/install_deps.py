@@ -3,7 +3,11 @@ from lib import windows
 import subprocess
 import sys
 import argparse
-import yaml
+
+try:
+  import yaml
+except ImportError:
+  yaml = None
 
 def main():
   """Entry point for the script."""
@@ -56,6 +60,11 @@ class Deps:
 
   def linux(self):
     """Installs dependencies on Linux."""
+    
+    if not yaml:
+      print("The 'yaml' module is not installed. Please install it using 'pip install pyyaml'.")
+      sys.exit(1)
+
     distro = self.linux_distro()
     if not distro:
       print("Unable to detect Linux distro")
