@@ -47,10 +47,7 @@
       "name": "macos",
       "hidden": true,
       "inherits": "base",
-      "generator": "Unix Makefiles",
-      "environment": {
-        "CMAKE_PREFIX_PATH": "/opt/homebrew/opt/qt@5"
-      }
+      "generator": "Unix Makefiles"
     },
     {
       "name": "windows-debug",
