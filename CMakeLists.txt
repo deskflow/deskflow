@@ -73,7 +73,7 @@ if (ENABLE_COVERAGE)
             NAME coverage
             EXECUTABLE unittests
             BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
-            EXCLUDE "ext/*")
+            EXCLUDE "ext/*" "scripts/*")
 
 endif()
 
