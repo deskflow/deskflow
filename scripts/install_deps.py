@@ -160,7 +160,7 @@ class Dependencies:
     
     only_qt = self.only == 'qt'
 
-    # for ci, skip qt; we install Qt separately so we can cache it.
+    # for ci, skip qt; we install qt separately so we can cache it.
     if not ci_env or only_qt:
       qt = WindowsQt(self.config.get_qt_config())
       qt_install_dir = qt.get_install_dir()
