@@ -3,6 +3,7 @@ from lib import windows
 import subprocess
 import sys
 import argparse
+import traceback
 
 config_file = 'deps.yml'
 
@@ -21,6 +22,8 @@ class PathError(Exception):
 try:
   import yaml # type: ignore
 except ImportError:
+  # this is fairly common in earlier versions of python3,
+  # which is normally what you find on mac and windows.
   print('Python yaml module missing, please install: pip install pyyaml')
   sys.exit(1)
 
@@ -36,14 +39,18 @@ def main():
     deps = Dependencies(args.only)
     deps.install()
   except Exception as e:
-    print(f'Error: {e}', file=sys.stderr)
+    traceback.print_exc()
   
   if (args.pause_on_exit):
     input('Press enter to continue...')
 
 def run(command):
   """Runs a shell command and asserts that the return code is 0."""
-  print(f'Running: {" ".join(command)}')
+  if isinstance(command, list):
+    print(f'Running: {" ".join(command)}')
+  else:
+    print(f'Running: {command}')
+  
   try:
     subprocess.run(command, shell=True, check=True)
   except subprocess.CalledProcessError as e:

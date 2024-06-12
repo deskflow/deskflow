@@ -6,7 +6,7 @@ dependencies:
       mirror: https://qt.mirror.constant.com/
       install-dir: C:\Qt
 
-  macos:
+  mac:
     packages: Brewfile
 
   linux:
