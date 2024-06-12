@@ -10,8 +10,6 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 
 Instructions for those who want to contribute to development of Synergy Core.
 
-*Windows:* Install the Visual Studio 'Desktop development with C++' workload.
-
 **Dependencies:**
 ```
 python scripts/install_deps.py
