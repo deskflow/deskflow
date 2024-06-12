@@ -210,6 +210,35 @@ class Dependencies:
         run(command)
 
 
+class WindowsWinget:
+    """Winget for Windows."""
+
+    def install_visual_studio(self):
+        """Installs packages using Winget."""
+
+        tools = [
+            "Microsoft.VisualStudio.Workload.NodeBuildTools",
+            "Microsoft.VisualStudio.Workload.MSBuildTools",
+            "Microsoft.VisualStudio.Workload.VCTools",
+        ]
+
+        args = [
+            "winget",
+            "install",
+            "--silent",
+            "--id",
+            "Microsoft.VisualStudio.2022.BuildTools",
+            "--override",
+            "--quiet",
+            "--wait",
+            "--includeRecommended",
+            "--add",
+            *tools,
+        ]
+
+        run(args)
+
+
 class WindowsChoco:
     """Chocolatey for Windows."""
 
