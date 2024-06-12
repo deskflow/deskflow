@@ -219,7 +219,6 @@ class WindowsWinget:
         """Installs packages using Winget."""
 
         tools = [
-            "Microsoft.VisualStudio.Workload.NodeBuildTools",
             "Microsoft.VisualStudio.Workload.MSBuildTools",
             "Microsoft.VisualStudio.Workload.VCTools",
         ]
