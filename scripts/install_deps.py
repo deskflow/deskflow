@@ -38,7 +38,7 @@ def main():
   try:
     deps = Dependencies(args.only)
     deps.install()
-  except Exception as e:
+  except Exception:
     traceback.print_exc()
   
   if (args.pause_on_exit):
@@ -80,41 +80,49 @@ def get_linux_distro():
   return None
 
 class Config:
+  """Reads the dependencies configuration file."""
+
   def __init__(self):
     with open(config_file, 'r') as f:
       data = yaml.safe_load(f)
 
     os_name = get_os()
-    root = data['dependencies']
+    try:
+      root = data['dependencies']
+    except KeyError:
+      raise YamlError(f'Nothing found in {config_file} for: dependencies')
 
-    self.os = root[os_name]
-    if not self.os:
+    try:
+      self.os = root[os_name]
+    except KeyError:
       raise YamlError(f'Nothing found in {config_file} for: {os_name}')
       
   def get_qt_config(self):
-    qt = self.os['qt']
-    if not qt:
+    try:
+      return self.os['qt']
+    except KeyError:
       raise YamlError(f'Nothing found in {config_file} for: qt')
-    return qt
   
   def get_packages_file(self):
-    packages = self.os['packages']
-    if not packages:
+    try:
+      return self.os['packages']
+    except KeyError:
       raise YamlError(f'Nothing found in {config_file} for: packages')
-    return packages
 
   def get_linux_package_command(self, distro):
-    distro_data = self.os[distro]
-    if not distro_data:
+    try:
+      distro_data = self.os[distro]
+    except KeyError:
       raise YamlError(f'Nothing found in {config_file} for: {distro}')
 
-    command_base = distro_data['command']
-    package_data = distro_data['packages']
-
-    if not command_base:
+    try:
+      command_base = distro_data['command']
+    except KeyError:
       raise YamlError(f'No package command found in {config_file} for: {distro}')
 
-    if not package_data:
+    try:
+      package_data = distro_data['packages']
+    except KeyError:
       raise YamlError(f'No package list found in {config_file} for: {distro}')
     
     packages = ' '.join(package_data)
@@ -223,8 +231,9 @@ class WindowsQt:
 
     self.version = os.environ.get('QT_VERSION')
     if not self.version:
-      default_version = config['version']
-      if not default_version:
+      try:
+        default_version = config['version']
+      except KeyError:
         raise EnvError(f'Qt version not set in {config_file}')
       
       print(f'QT_VERSION not set, using: {default_version}')
@@ -232,8 +241,9 @@ class WindowsQt:
 
     self.base_dir = os.environ.get('QT_BASE_DIR')
     if not self.base_dir:
-      default_base_dir = config['install-dir']
-      if not default_base_dir:
+      try:
+        default_base_dir = config['install-dir']
+      except KeyError:
         raise EnvError(f'Qt install-dir not set in {config_file}')
 
       print(f'QT_BASE_DIR not set, using: {default_base_dir}')
@@ -250,8 +260,9 @@ class WindowsQt:
 
     run(['pip', 'install', 'aqtinstall'])
 
-    mirror_url = self.config['mirror']
-    if not mirror_url:
+    try:
+      mirror_url = self.config['mirror']
+    except KeyError:
       raise EnvError(f'Qt mirror not set in {config_file}')
 
     args = ['python', '-m', 'aqt', 'install-qt']
