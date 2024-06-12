@@ -46,30 +46,30 @@ jobs:
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          mkdir build-release
-          cd build-release
+          mkdir build
+          cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
           . ./version
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
       - name: Running coverage
         run: |
-          cd build-release
+          cd build
           make coverage
 
       - name: Run Sonar Scanner
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
-          cd build-release
+          cd build
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
             -Dsonar.sources=. \
             -Dsonar.projectBaseDir=../ \
-            -Dsonar.exclusions=./ext/**,./scripts/**/*,**/build-release/** \
+            -Dsonar.exclusions=scripts/**,ext/**,build/** \
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.coverageReportPaths=build-release/coverage.xml \
+            -Dsonar.coverageReportPaths=build/coverage.xml \
             -Dsonar.cfamily.threads=2
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
