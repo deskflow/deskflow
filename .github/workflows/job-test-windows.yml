@@ -20,7 +20,6 @@ jobs:
       BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
       QT_VERSION: 5.15.2
-      QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.15.2
 
     steps:
       - name: Checkout git repo
@@ -62,7 +61,7 @@ jobs:
 
       - name: Build
         env:
-          CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\msvc2019_64\\"
+          CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: |
           mkdir build
           cd build

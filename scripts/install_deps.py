@@ -9,7 +9,7 @@ try:
 except ImportError:
   yaml = None
 
-qt_base_url = 'http://qt.mirror.constant.com/'
+qt_base_url = 'https://qt.mirror.constant.com/'
 
 def main():
   """Entry point for the script."""
