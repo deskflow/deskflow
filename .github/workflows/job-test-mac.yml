@@ -13,7 +13,7 @@ concurrency:
 jobs:
   test-macos:
     runs-on: ${{ matrix.runtime.os }}
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     defaults:
       run:
