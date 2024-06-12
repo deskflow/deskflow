@@ -55,7 +55,9 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        run: python ./scripts/install_deps.py
+        run: |
+          pip install pyyaml
+          python ./scripts/install_deps.py
 
       - name: Configure
         env:

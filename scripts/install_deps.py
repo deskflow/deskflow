@@ -4,12 +4,25 @@ import subprocess
 import sys
 import argparse
 
-try:
-  import yaml
-except ImportError:
-  yaml = None
+config_file = 'deps.yml'
 
-qt_base_url = 'https://qt.mirror.constant.com/'
+class EnvError(Exception):
+  pass
+
+class YamlError(Exception):
+  pass
+
+class PlatformError(Exception):
+  pass
+
+class PathError(Exception):
+  pass
+
+try:
+  import yaml # type: ignore
+except ImportError:
+  print('Python yaml module missing, please install: pip install pyyaml')
+  sys.exit(1)
 
 def main():
   """Entry point for the script."""
@@ -20,31 +33,105 @@ def main():
   args = parser.parse_args()
 
   try:
-    deps = Deps(args.only)
+    deps = Dependencies(args.only)
     deps.install()
   except Exception as e:
-    print(f'Error: {e}')
+    print(f'Error: {e}', file=sys.stderr)
   
   if (args.pause_on_exit):
     input('Press enter to continue...')
 
-class Deps:
+def run(command):
+  """Runs a shell command and asserts that the return code is 0."""
+  print(f'Running: {" ".join(command)}')
+  try:
+    subprocess.run(command, shell=True, check=True)
+  except subprocess.CalledProcessError as e:
+    print(f'Command failed: {command}', file=sys.stderr)
+    raise e
+
+def get_os():
+  """Detects the operating system."""
+  if (sys.platform == 'win32'):
+    return 'windows'
+  elif (sys.platform == 'darwin'):
+    return 'mac'
+  elif (sys.platform.startswith('linux')):
+    return 'linux'
+  else:
+    raise PlatformError(f'Unsupported platform: {sys.platform}')
+
+    
+def get_linux_distro():
+  """Detects the Linux distro."""
+  os_file = '/etc/os-release'
+  if os.path.isfile(os_file):
+      with open(os_file) as f:
+          for line in f:
+              if line.startswith('ID='):
+                  return line.strip().split('=')[1].strip('"')
+  return None
+
+class Config:
+  def __init__(self):
+    with open(config_file, 'r') as f:
+      data = yaml.safe_load(f)
+
+    os_name = get_os()
+    root = data['dependencies']
+
+    self.os = root[os_name]
+    if not self.os:
+      raise YamlError(f'Nothing found in {config_file} for: {os_name}')
+      
+  def get_qt_config(self):
+    qt = self.os['qt']
+    if not qt:
+      raise YamlError(f'Nothing found in {config_file} for: qt')
+    return qt
+  
+  def get_packages_file(self):
+    packages = self.os['packages']
+    if not packages:
+      raise YamlError(f'Nothing found in {config_file} for: packages')
+    return packages
+
+  def get_linux_package_command(self, distro):
+    root = self.data.get('linux', {})
+    distro_data = root.get(distro, [])
+    if not distro_data:
+      raise YamlError(f'Nothing found in {config_file} for: {distro}')
+
+    command_base = distro_data['command']
+    package_data = distro_data['packages']
+
+    if not command_base:
+      raise YamlError(f'No package command found in {config_file} for: {distro}')
+
+    if not package_data:
+      raise YamlError(f'No package list found in {config_file} for: {distro}')
+    
+    packages = ' '.join(package_data)
+    return f'{command_base} {packages}'
+
+class Dependencies:
 
   def __init__(self, only):
+    self.config = Config()
     self.only = only
 
   def install(self):
-    """Installs dependencies."""
+    """Installs dependencies for the current platform."""
 
-    if (sys.platform == 'win32'):
+    os = get_os()
+    if (os == 'windows'):
       self.windows()
-    elif (sys.platform == 'darwin'):
+    elif (os == 'mac'):
       self.mac()
-    elif (sys.platform.startswith('linux')):
+    elif (os == 'linux'):
       self.linux()
     else:
-      print(f'Unsupported platform: {sys.platform}')
-      sys.exit(1)
+      raise PlatformError(f'Unsupported platform: {os}')
 
   def windows(self):
     """Installs dependencies on Windows."""
@@ -52,67 +139,50 @@ class Deps:
     if not windows.is_admin():
       windows.relaunch_as_admin(__file__)
       sys.exit()
-
-    if self.only == 'qt':
-      self.windows_qt()
-      return
-
+    
     ci_env = os.environ.get('CI')
     if ci_env:
       print('CI environment detected')
-      self.windows_choco_ci()
     
-    self.windows_choco('Chocolatey.config', ci_env)
+    only_qt = self.only == 'qt'
+
+    # for ci, skip qt; we install Qt separately so we can cache it.
+    if not ci_env or only_qt:
+      qt = WindowsQt(self.config.get_qt_config())
+      qt_install_dir = qt.get_install_dir()
+      if qt_install_dir:
+        print(f'Skipping Qt, already installed at: {qt_install_dir}')
+      else:
+        qt.install()
+
+      if only_qt:
+        return
+
+    choco = WindowsChoco()
+
+    if ci_env:
+      choco.config_ci()
+    
+    choco.install('Chocolatey.config', ci_env)
 
   def mac(self):
     """Installs dependencies on macOS."""
-    self.run('brew bundle --file=Brewfile')
+    run('brew bundle --file=Brewfile')
 
   def linux(self):
     """Installs dependencies on Linux."""
 
-    if not yaml:
-      print("The 'yaml' module is not installed. Please install it using 'pip install pyyaml'.")
-      sys.exit(1)
-
-    distro = self.linux_distro()
+    distro = get_linux_distro()
     if not distro:
-      print("Unable to detect Linux distro")
-      sys.exit(1)
-
-    file = 'linux-packages.yml'
-    with open(file, 'r') as f:
-      data = yaml.safe_load(f)
-
-    root = data.get('linux-packages', {})
-    distro_data = root.get(distro, [])
-    if not distro_data:
-      print(f'Nothing found in {file} for: {distro}')
-      sys.exit(1)
-
-    command = distro_data['command']
-    package_data = distro_data['packages']
-
-    if not command:
-      print(f'No package command found in {file} for: {distro}')
-      sys.exit(1)
-
-    if not package_data:
-      print(f'No package list found in {file} for: {distro}')
-      sys.exit(1)
+      raise PlatformError("Unable to detect Linux distro")
     
-    package_list = ' '.join(package_data)
-    self.run(f'{command} {package_list}')
-    
-  def linux_distro(self):
-    if os.path.isfile('/etc/os-release'):
-        with open('/etc/os-release') as f:
-            for line in f:
-                if line.startswith('ID='):
-                    return line.strip().split('=')[1].strip('"')
-    return None
+    command = self.config.get_linux_package_command(distro)
+    run(command)
 
-  def windows_choco(self, config, ci_env):
+class WindowsChoco:
+  """Chocolatey for Windows."""
+
+  def install(self, config, ci_env):
     """Installs packages using Chocolatey."""
     
     args = ['choco', 'install', config]
@@ -124,9 +194,9 @@ class Deps:
     # auto-accept all prompts
     args.extend(['-y'])
 
-    self.run(args)
+    run(args)
 
-  def windows_choco_ci(self):
+  def config_ci(self):
     """Configures Chocolatey cache for CI."""
 
     runner_temp_key = 'RUNNER_TEMP'
@@ -135,43 +205,57 @@ class Deps:
       # sets the choco cache dir, which should match the dir in the ci cache action.
       key_arg = '--name="cacheLocation"'
       value_arg = f'--value="{runner_temp}/choco"'
-      self.run(['choco', 'config', 'set', key_arg, value_arg])
+      run(['choco', 'config', 'set', key_arg, value_arg])
     else:
       print(f'Warning: CI environment variable {runner_temp_key} not set')
 
-  def windows_qt(self):
-    # pip install aqtinstall
-    #       python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2019_64
-    #       cd $env:QT_LIB_DIR\msvc2019_64
-    # dir
+class WindowsQt:
+  """Qt for Windows."""
+  
+  def __init__(self, config):
+    self.config = config
 
-    qt_base_dir = os.environ.get('QT_BASE_DIR')
-    qt_version = os.environ.get('QT_VERSION')
-    qt_lib_dir = os.environ.get('QT_LIB_DIR')
+    self.version = os.environ.get('QT_VERSION')
+    if not self.version:
+      default_version = config['version']
+      if not default_version:
+        raise EnvError(f'Qt version not set in {config_file}')
+      
+      print(f'QT_VERSION not set, using: {default_version}')
+      self.version = default_version
 
-    if not qt_base_dir:
-      print('QT_BASE_DIR not set')
-      sys.exit(1)
+    self.base_dir = os.environ.get('QT_BASE_DIR')
+    if not self.base_dir:
+      default_base_dir = config['install-dir']
+      if not default_base_dir:
+        raise EnvError(f'Qt install-dir not set in {config_file}')
 
-    if not qt_version:
-      print('QT_VERSION not set')
-      sys.exit(1)
+      print(f'QT_BASE_DIR not set, using: {default_base_dir}')
+      self.base_dir = default_base_dir
 
-    if not qt_lib_dir:
-      print('QT_LIB_DIR not set')
-      sys.exit(1)
+    self.install_dir =  f'{self.base_dir}/{self.version}'
 
-    self.run(['pip', 'install', 'aqtinstall'])
+  def get_install_dir(self):
+    if os.path.isdir(self.install_dir):
+      return self.install_dir
 
-    args = ['python', '-m', 'aqt', 'install']
-    args.extend(['--outputdir', qt_base_dir])
-    args.extend(['--base', qt_base_url])
-    args.extend([qt_version, 'windows', 'desktop', 'win64_msvc2019_64'])
-    self.run(args)
+  def install(self):
+    """Installs Qt on Windows."""
 
-  def run(self, args):
-    """Runs a command."""
-    print(f'Running: {args}')
-    subprocess.run(args, shell=True, check=True)
+    run(['pip', 'install', 'aqtinstall'])
+
+    mirror_url = self.config['mirror']
+    if not mirror_url:
+      raise EnvError(f'Qt mirror not set in {config_file}')
+
+    args = ['python', '-m', 'aqt', 'install-qt']
+    args.extend(['--outputdir', self.base_dir])
+    args.extend(['--base', mirror_url])
+    args.extend(['windows', 'desktop', self.version, 'win64_msvc2019_64'])
+    run(args)
+
+    install_dir = self.get_install_dir()
+    if not install_dir:
+      raise EnvError(f'Qt not installed, path not found: {install_dir}')
 
 main()
