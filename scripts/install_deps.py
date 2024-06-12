@@ -55,17 +55,19 @@ def main():
         input("Press enter to continue...")
 
 
-def run(command):
-    """Runs a shell command and asserts that the return code is 0."""
+def run(command, check=True):
+    """Runs a shell command and by default asserts that the return code is 0."""
+
+    command_str = command
     if isinstance(command, list):
-        print(f'Running: {" ".join(command)}')
-    else:
-        print(f"Running: {command}")
+        command_str = " ".join(command)
+
+    print(f"Running: {command_str}")
 
     try:
-        subprocess.run(command, shell=True, check=True)
+        subprocess.run(command, shell=True, check=check)
     except subprocess.CalledProcessError as e:
-        print(f"Command failed: {command}", file=sys.stderr)
+        print(f"Command failed: {command_str}", file=sys.stderr)
         raise e
 
 
@@ -222,6 +224,14 @@ class WindowsWinget:
             "Microsoft.VisualStudio.Workload.VCTools",
         ]
 
+        override = [
+            "--quiet",
+            "--wait",
+            "--includeRecommended",
+            "--add",
+            ";".join(tools),
+        ]
+
         args = [
             "winget",
             "install",
@@ -229,14 +239,13 @@ class WindowsWinget:
             "--id",
             "Microsoft.VisualStudio.2022.BuildTools",
             "--override",
-            "--quiet",
-            "--wait",
-            "--includeRecommended",
-            "--add",
-            *tools,
+            f'"{",".join(override)}"',
         ]
 
-        run(args)
+        run(
+            args,
+            check=False,
+        )
 
 
 class WindowsChoco:
