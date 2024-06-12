@@ -104,8 +104,7 @@ class Config:
     return packages
 
   def get_linux_package_command(self, distro):
-    root = self.data.get('linux', {})
-    distro_data = root.get(distro, [])
+    distro_data = self.os[distro]
     if not distro_data:
       raise YamlError(f'Nothing found in {config_file} for: {distro}')
 
