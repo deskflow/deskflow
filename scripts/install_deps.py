@@ -239,7 +239,7 @@ class WindowsQt:
       print(f'QT_BASE_DIR not set, using: {default_base_dir}')
       self.base_dir = default_base_dir
 
-    self.install_dir =  f'{self.base_dir}/{self.version}'
+    self.install_dir =  f'{self.base_dir}\\{self.version}'
 
   def get_install_dir(self):
     if os.path.isdir(self.install_dir):
