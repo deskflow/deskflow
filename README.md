@@ -10,6 +10,8 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 
 Instructions for those who want to contribute to development of Synergy Core.
 
+[[Developer troubleshooting]]
+
 **Dependencies:**
 ```
 python scripts/install_deps.py
