@@ -10,6 +10,7 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 
 Instructions for those who want to contribute to development of Synergy Core.
 
+Having problems with the quick start guide?
 [Developer troubleshooting](https://github.com/symless/synergy-core/wiki/Developer-troubleshooting)
 
 **Dependencies:**
