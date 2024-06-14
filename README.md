@@ -18,14 +18,19 @@ python scripts/install_deps.py
 ```
 
 **Configure:**
+
+*Windows:*
 ```
-# Windows
 cmake -B build --preset=windows-release
+```
 
-# macOS
+*macOS:*
+```
 cmake -B build --preset=macos-release
+```
 
-# Linux
+*Linux:*
+```
 cmake -B build --preset=linux-release
 ```
 
