@@ -218,17 +218,12 @@ class WindowsWinget:
     def install_visual_studio(self):
         """Installs packages using Winget."""
 
-        tools = [
-            "Microsoft.VisualStudio.Workload.MSBuildTools",
-            "Microsoft.VisualStudio.Workload.VCTools",
-        ]
-
         override = [
             "--quiet",
             "--wait",
             "--includeRecommended",
-            "--add",
-            ";".join(tools),
+            "--add Microsoft.VisualStudio.Workload.MSBuildTools",
+            "--add Microsoft.VisualStudio.Workload.VCTools",
         ]
 
         args = [
@@ -238,11 +233,11 @@ class WindowsWinget:
             "--id",
             "Microsoft.VisualStudio.2022.BuildTools",
             "--override",
-            f'"{",".join(override)}"',
+            f'"{" ".join(override)}"',
         ]
 
         run(
-            args,
+            " ".join(args),
             check=False,
         )
 
