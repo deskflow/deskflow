@@ -188,9 +188,9 @@ class Dependencies:
             if only_qt:
                 return
 
-        # if not ci_env:
-        #     winget = WindowsWinget()
-        #     winget.install_visual_studio()
+        if not ci_env:
+            winget = WindowsWinget()
+            winget.install_visual_studio()
 
         choco = WindowsChoco()
         if ci_env:
