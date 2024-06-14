@@ -34,3 +34,5 @@ flatpak/synergy.desktop
 flatpak/*.flatpak
 *.code-workspace
 *.idx
+aqtinstall.log
+Brewfile.lock.json

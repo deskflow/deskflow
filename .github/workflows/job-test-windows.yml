@@ -20,8 +20,6 @@ jobs:
       BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
       QT_VERSION: 5.15.2
-      QT_BASE_URL: http://qt.mirror.constant.com/
-      QT_LIB_DIR: ${{ github.workspace }}\deps\Qt\5.15.2
 
     steps:
       - name: Checkout git repo
@@ -38,11 +36,7 @@ jobs:
 
       - name: Install Qt
         if: steps.cache-qt.outputs.cache-hit != 'true'
-        run: |
-          pip install aqtinstall
-          python -m aqt install --outputdir $env:QT_BASE_DIR --base $env:QT_BASE_URL $env:QT_VERSION windows desktop win64_msvc2019_64
-          cd $env:QT_LIB_DIR\msvc2019_64
-          dir
+        run: python ./scripts/install_deps.py --only qt
 
       - name: Cache Bonjour
         id: cache-bonjour
@@ -60,14 +54,16 @@ jobs:
           [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
       - name: Install dependencies
-        run: python ./scripts/install_deps.py --skip cmake ninja
+        run: |
+          pip install pyyaml
+          python ./scripts/install_deps.py
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Build
         env:
-          CMAKE_PREFIX_PATH: "${{ env.QT_LIB_DIR }}\\msvc2019_64\\"
+          CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: |
           mkdir build
           cd build

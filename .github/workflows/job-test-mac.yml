@@ -13,7 +13,7 @@ concurrency:
 jobs:
   test-macos:
     runs-on: ${{ matrix.runtime.os }}
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     defaults:
       run:
@@ -54,8 +54,10 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Install Qt5
-        run: brew install qt@5
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+          python ./scripts/install_deps.py
 
       - name: Configure
         env:
