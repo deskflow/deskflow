@@ -8,10 +8,11 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 
 ## Developer quick start
 
-Instructions for those who want to contribute to development of Synergy Core.
+Simplified instructions for those who want to contribute to development of Synergy Core.
 
-Having problems with the quick start guide?
-[Developer troubleshooting](https://github.com/symless/synergy-core/wiki/Developer-troubleshooting)
+You'll also need to read the 
+[quick start companion](https://github.com/symless/synergy-core/wiki/Quick-start-companion)
+which contains essential instructions.
 
 **Dependencies:**
 ```
