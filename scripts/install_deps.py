@@ -199,7 +199,7 @@ class Dependencies:
             choco.config_ci_cache()
 
         try:
-            command = self.os["command"]
+            command = self.config.os["command"]
         except KeyError:
             raise YamlError(f"Nothing found in {config_file} on Windows for: command")
 
@@ -208,7 +208,7 @@ class Dependencies:
     def mac(self):
         """Installs dependencies on macOS."""
         try:
-            command = self.os["command"]
+            command = self.config.os["command"]
         except KeyError:
             raise YamlError(f"Nothing found in {config_file} on Mac for: command")
 
