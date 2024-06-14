@@ -188,18 +188,31 @@ class Dependencies:
             if only_qt:
                 return
 
+        # use winget instead of choco to install the vc++ deps, since in choco  there is no way
+        # to load a choco config file but skip a package (i.e. to skip vc++ for ci)
         if not ci_env:
-            winget = WindowsWinget()
+            winget = WindowsWinGet()
             winget.install_visual_studio()
 
         choco = WindowsChoco()
         if ci_env:
-            choco.config_ci()
-        choco.install("Chocolatey.config", ci_env)
+            choco.config_ci_cache()
+
+        try:
+            command = self.os["command"]
+        except KeyError:
+            raise YamlError(f"Nothing found in {config_file} on Windows for: command")
+
+        choco.install(command, ci_env)
 
     def mac(self):
         """Installs dependencies on macOS."""
-        run("brew bundle --file=Brewfile")
+        try:
+            command = self.os["command"]
+        except KeyError:
+            raise YamlError(f"Nothing found in {config_file} on Mac for: command")
+
+        run(command)
 
     def linux(self):
         """Installs dependencies on Linux."""
@@ -212,11 +225,11 @@ class Dependencies:
         run(command)
 
 
-class WindowsWinget:
-    """Winget for Windows."""
+class WindowsWinGet:
+    """WinGet for Windows."""
 
     def install_visual_studio(self):
-        """Installs packages using Winget."""
+        """Installs packages using WinGet."""
 
         override = [
             "--quiet",
@@ -245,21 +258,15 @@ class WindowsWinget:
 class WindowsChoco:
     """Chocolatey for Windows."""
 
-    def install(self, config, ci_env):
+    def install(self, command, ci_env):
         """Installs packages using Chocolatey."""
-
-        args = ["choco", "install", config]
-
         if ci_env:
-            # don't show noisy choco progress bars in CI
-            args.extend(["--no-progress"])
+            # don't show noisy choco progress bars in ci env
+            run(f"{command} --no-progress")
+        else:
+            run(command)
 
-        # auto-accept all prompts
-        args.extend(["-y"])
-
-        run(args)
-
-    def config_ci(self):
+    def config_ci_cache(self):
         """Configures Chocolatey cache for CI."""
 
         runner_temp_key = "RUNNER_TEMP"

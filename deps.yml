@@ -1,13 +1,13 @@
 dependencies:
   windows:
-    packages: Chocolatey.config
+    command: choco install Chocolatey.config -y
     qt:
       version: 5.15.2
       mirror: https://qt.mirror.constant.com/
       install-dir: C:\Qt
 
   mac:
-    packages: Brewfile
+    command: brew bundle --file=Brewfile
 
   linux:
     debian: &debian
