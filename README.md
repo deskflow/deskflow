@@ -27,7 +27,7 @@ cmake -B build --preset=windows-release
 
 *macOS:*
 ```
-cmake -B build --preset=macos-release
+cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 ```
 
 *Linux:*
