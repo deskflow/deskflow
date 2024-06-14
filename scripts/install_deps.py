@@ -188,8 +188,8 @@ class Dependencies:
             if only_qt:
                 return
 
-        # use winget instead of choco to install the vc++ deps, since in choco  there is no way
-        # to load a choco config file but skip a package (i.e. to skip vc++ for ci)
+        # use winget instead of choco to install the vc++ deps, since in choco there is no way
+        # to load a choco config file but skip a specific package (i.e. to skip vc++ for ci)
         if not ci_env:
             winget = WindowsWinGet()
             winget.install_visual_studio()
