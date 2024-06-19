@@ -209,4 +209,5 @@ class Dependencies:
         cmd_utils.run(command)
 
 
-main()
+if __name__ == "__main__":
+    main()
