@@ -1,5 +1,5 @@
 import os
-from lib import windows, run
+from lib import windows, cmd_utils
 import sys
 import argparse
 import traceback
@@ -194,7 +194,7 @@ class Dependencies:
         except KeyError:
             raise YamlError(f"Nothing found in {config_file} on Mac for: command")
 
-        run(command)
+        cmd_utils.run(command)
 
     def linux(self):
         """Installs dependencies on Linux."""
@@ -204,7 +204,7 @@ class Dependencies:
             raise PlatformError("Unable to detect Linux distro")
 
         command = self.config.get_linux_package_command(distro)
-        run(command)
+        cmd_utils.run(command)
 
 
 main()

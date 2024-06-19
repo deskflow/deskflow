@@ -2,7 +2,7 @@ import ctypes
 import sys
 import os
 import xml.etree.ElementTree as ET
-from lib import run
+from lib import cmd_utils
 
 
 class EnvError(Exception):
@@ -31,9 +31,9 @@ class WindowsChoco:
         """Installs packages using Chocolatey."""
         if ci_env:
             # don't show noisy choco progress bars in ci env
-            run(f"{command} --no-progress")
+            cmd_utils.run(f"{command} --no-progress")
         else:
-            run(command)
+            cmd_utils.run(command)
 
     def config_ci_cache(self):
         """Configures Chocolatey cache for CI."""
@@ -44,7 +44,7 @@ class WindowsChoco:
             # sets the choco cache dir, which should match the dir in the ci cache action.
             key_arg = '--name="cacheLocation"'
             value_arg = f'--value="{runner_temp}/choco"'
-            run(["choco", "config", "set", key_arg, value_arg])
+            cmd_utils.run(["choco", "config", "set", key_arg, value_arg])
         else:
             print(f"Warning: CI environment variable {runner_temp_key} not set")
 
@@ -98,7 +98,7 @@ class WindowsQt:
     def install(self):
         """Installs Qt on Windows."""
 
-        run(["pip", "install", "aqtinstall"])
+        cmd_utils.run(["pip", "install", "aqtinstall"])
 
         try:
             mirror_url = self.config["mirror"]
@@ -109,7 +109,7 @@ class WindowsQt:
         args.extend(["--outputdir", self.base_dir])
         args.extend(["--base", mirror_url])
         args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
-        run(args)
+        cmd_utils.run(args)
 
         install_dir = self.get_install_dir()
         if not install_dir:
