@@ -64,6 +64,7 @@ def run(command, check=True):
         command_str = " ".join(command)
 
     print(f"Running: {command_str}")
+    sys.stdout.flush()
 
     try:
         subprocess.run(command, shell=True, check=check)
