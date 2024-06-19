@@ -45,6 +45,7 @@ dependencies:
         - cmake
         - make
         - gcc-c++
+        - openssl-devel
         - libXtst-devel
         - glib2-devel
         - gdk-pixbuf2-devel
