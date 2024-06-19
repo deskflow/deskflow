@@ -139,7 +139,7 @@ jobs:
 
       - name: Distribute
         if: ${{ !github.event.pull_request.draft && matrix.runtime.name == 'macos-11-m1' }}
-        uses: ./.github/actions/dist
+        uses: ./.github/actions/dist-macos
 
   test-linux:
     runs-on: ${{ matrix.distro.runs-on }}
