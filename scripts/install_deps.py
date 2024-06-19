@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 from lib import windows, cmd_utils
 import sys
