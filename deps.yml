@@ -5,6 +5,13 @@ dependencies:
       version: 5.15.2
       mirror: https://qt.mirror.constant.com/
       install-dir: C:\Qt
+    ci:
+      skip:
+        edit-config: Chocolatey.config
+        packages:
+          - cmake
+          - ninja
+          - visualstudio2022buildtools
 
   mac:
     command: brew bundle --file=Brewfile

@@ -4,6 +4,7 @@ import subprocess
 import sys
 import argparse
 import traceback
+import xml.etree.ElementTree as ET
 
 config_file = "deps.yml"
 
@@ -188,15 +189,18 @@ class Dependencies:
             if only_qt:
                 return
 
-        # use winget instead of choco to install the vc++ deps, since in choco there is no way
-        # to load a choco config file but skip a specific package (i.e. to skip vc++ for ci)
-        if not ci_env:
-            winget = WindowsWinGet()
-            winget.install_visual_studio()
-
         choco = WindowsChoco()
         if ci_env:
             choco.config_ci_cache()
+
+            try:
+                ci_skip = self.config.os["ci"]["skip"]
+                config_file = ci_skip["edit-config"]
+                remove_packages = ci_skip["packages"]
+            except KeyError:
+                raise YamlError(f"Bad mapping in {config_file} on Windows for: ci")
+
+            choco.remove_from_config(config_file, remove_packages)
 
         try:
             command = self.config.os["command"]
@@ -225,36 +229,6 @@ class Dependencies:
         run(command)
 
 
-class WindowsWinGet:
-    """WinGet for Windows."""
-
-    def install_visual_studio(self):
-        """Installs packages using WinGet."""
-
-        override = [
-            "--quiet",
-            "--wait",
-            "--includeRecommended",
-            "--add Microsoft.VisualStudio.Workload.MSBuildTools",
-            "--add Microsoft.VisualStudio.Workload.VCTools",
-        ]
-
-        args = [
-            "winget",
-            "install",
-            "--silent",
-            "--id",
-            "Microsoft.VisualStudio.2022.BuildTools",
-            "--override",
-            f'"{" ".join(override)}"',
-        ]
-
-        run(
-            " ".join(args),
-            check=False,
-        )
-
-
 class WindowsChoco:
     """Chocolatey for Windows."""
 
@@ -278,6 +252,19 @@ class WindowsChoco:
             run(["choco", "config", "set", key_arg, value_arg])
         else:
             print(f"Warning: CI environment variable {runner_temp_key} not set")
+
+    def remove_from_config(self, config_file, remove_packages):
+        """Removes a package from the Chocolatey configuration."""
+
+        tree = ET.parse(config_file)
+        root = tree.getroot()
+        for remove in remove_packages:
+            for package in root.findall("package"):
+                if package.get("id") == remove:
+                    root.remove(package)
+                    print(f"Removed package from choco config: {remove}")
+
+        tree.write(config_file)
 
 
 class WindowsQt:
