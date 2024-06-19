@@ -77,7 +77,7 @@ jobs:
         run: cmake --build build
 
       - name: Test
-        run: dir ./build/bin/; ./build/bin/unittests
+        run: ./build/bin/unittests
 
   macos:
     runs-on: ${{ matrix.runtime.os }}
