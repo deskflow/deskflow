@@ -146,10 +146,12 @@ jobs:
           - name: centos-7.6
             image: symless/synergy-core:centos7.6
             runs-on: ubuntu-latest
+            legacy-cmake: true
 
           - name: centos-8
             image: symless/synergy-core:centos8
             runs-on: ubuntu-latest
+            legacy-cmake: true
 
           - name: debian-11
             image: symless/synergy-core:debian11
@@ -163,14 +165,17 @@ jobs:
           - name: fedora-37
             image: symless/synergy-core:fedora37
             runs-on: ubuntu-latest
+            legacy-cmake: true
 
           - name: fedora-38
             image: symless/synergy-core:fedora38
             runs-on: ubuntu-latest
+            legacy-cmake: true
 
           - name: ubuntu-20.04
             image: symless/synergy-core:ubuntu20.04
             runs-on: ubuntu-latest
+            legacy-cmake: true
 
           - name: ubuntu-22.04
             image: symless/synergy-core:ubuntu22.04
