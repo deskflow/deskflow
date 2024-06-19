@@ -21,6 +21,7 @@ dependencies:
       packages:
         - cmake
         - make
+        - g++
         - xorg-dev
         - libx11-dev
         - libxtst-dev
