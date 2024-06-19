@@ -183,6 +183,7 @@ jobs:
         if: ${{ !matrix.distro.legacy-cmake }}
         run: cmake -B build --preset=linux-release
 
+      # Some legacy Linux distros don't support modern CMake presets.
       - name: Configure (legacy)
         if: ${{ matrix.distro.legacy-cmake }}
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
