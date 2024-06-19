@@ -136,7 +136,8 @@ jobs:
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
     name: test-linux-${{ matrix.distro.name }}
-    container: ${{ matrix.distro.container }}
+    container: symless/synergy-core:${{ matrix.distro.container }}
+
     env:
       GIT_COMMIT: ${{ github.sha }}
 
@@ -144,41 +145,41 @@ jobs:
       matrix:
         distro:
           - name: centos-7.6
-            container: symless/synergy-core:centos7.6
+            container: centos7.6
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: centos-8
-            container: symless/synergy-core:centos8
+            container: centos8
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: debian-11
-            container: symless/synergy-core:debian11
+            container: debian11
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: debian-12
-            container: symless/synergy-core:debiansid
+            container: debiansid
             runs-on: ubuntu-latest
 
           - name: fedora-37
-            container: symless/synergy-core:fedora37
+            container: fedora37
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: fedora-38
-            container: symless/synergy-core:fedora38
+            container: fedora38
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: ubuntu-20.04
-            container: symless/synergy-core:ubuntu20.04
+            container: ubuntu20.04
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: ubuntu-22.04
-            container: symless/synergy-core:ubuntu22.04
+            container: ubuntu22.04
             runs-on: ubuntu-latest
 
           - name: ubuntu-24.04
