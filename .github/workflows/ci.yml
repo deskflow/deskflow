@@ -20,7 +20,6 @@ jobs:
     timeout-minutes: 20
 
     env:
-      BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
       QT_VERSION: 5.15.2
 
@@ -40,21 +39,6 @@ jobs:
       - name: Install Qt
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: python ./scripts/install_deps.py --only qt
-
-      - name: Cache Bonjour
-        id: cache-bonjour
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.BONJOUR_BASE_DIR }}
-          key: ${{ runner.os }}-Bonjour
-
-      - name: Install Bonjour SDK
-        if: steps.cache-bonjour.outputs.cache-hit != 'true'
-        run: |
-          New-Item -Force -ItemType Directory -Path "$env:BONJOUR_BASE_DIR"
-          $client = new-object System.Net.WebClient
-          $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
-          [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
 
       - name: Install dependencies
         run: |
