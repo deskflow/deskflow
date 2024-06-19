@@ -81,7 +81,7 @@ jobs:
 
   test-macos:
     runs-on: ${{ matrix.runtime.os }}
-    timeout-minutes: 20
+    timeout-minutes: ${{ matrix.runtime.timeout }}
     name: test-${{ matrix.runtime.name }}
 
     defaults:
@@ -92,11 +92,14 @@ jobs:
       matrix:
         runtime:
           - name: "macos-10-intel"
+            timeout: 20
             os: "macos-14-large"
             arch: x64
             target: "10.14"
             shell: "bash"
+
           - name: "macos-11-m1"
+            timeout: 10
             os: "macos-14"
             arch: arm64
             target: "11"
