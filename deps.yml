@@ -51,6 +51,7 @@ dependencies:
         - gdk-pixbuf2-devel
         - libnotify-devel
         - qt5-qtbase-devel
+        - qt5-qttools-devel
         - libxkbfile-devel
         - gtk3-devel
         - rpm-build
