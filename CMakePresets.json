@@ -13,7 +13,7 @@
       "name": "minimal",
       "hidden": true,
       "environment": {
-        "SYNERGY_NO_LEGACY": "ON"
+        "SYNERGY_BUILD_MINIMAL": "ON"
       }
     },
     {
