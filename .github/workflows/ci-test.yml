@@ -197,7 +197,7 @@ jobs:
         run: python ./scripts/install_deps.py
 
       - name: Configure
-        if: ${{ matrix.distro.legacy-cmake }}
+        if: ${{ !matrix.distro.legacy-cmake }}
         run: cmake -B build --preset=linux-release
 
       - name: Configure (legacy)
