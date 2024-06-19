@@ -14,8 +14,8 @@ env:
   GIT_COMMIT: ${{ github.sha }}
 
 jobs:
-  test-windows:
-    runs-on: windows-latest
+  test-windows-2022:
+    runs-on: windows-2022
     timeout-minutes: 20
 
     env:
