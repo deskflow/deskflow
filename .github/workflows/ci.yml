@@ -11,10 +11,6 @@ on:
   push:
     branches: [master*, release*]
 
-concurrency:
-  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
-  cancel-in-progress: true
-
 env:
   GIT_COMMIT: ${{ github.sha }}
 
