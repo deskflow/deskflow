@@ -144,20 +144,12 @@ jobs:
         distro:
           - centos7.6
           - centos8
-          - debian9
-          - debian10
           - debian11
           - debiansid
-          - fedora33
-          - fedora34
-          - fedora35
-          - fedora36
           - fedora37
           - fedora38
-          - ubuntu18.04
           - ubuntu20.04
           - ubuntu22.04
-          - ubuntu22.10
 
     steps:
       - name: Checkout
