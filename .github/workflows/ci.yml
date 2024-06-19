@@ -193,7 +193,7 @@ jobs:
             install-deps: true
 
     steps:
-      # USe @v3 since older versions of Linux don't support @v4
+      # Use @v3 since older versions of Linux don't support @v4
       - name: Checkout
         uses: actions/checkout@v3
         with:
