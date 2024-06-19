@@ -10,5 +10,5 @@ runs:
 
   steps:
     # Strip symbols from binaries
-    - run: make install/strip
+    - run: cd build; make install/strip
       shell: bash
