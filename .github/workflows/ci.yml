@@ -68,6 +68,13 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
+      # Ninja can't find cl.exe by default (only the VS generators can).
+      - name: Add cl.exe to PATH
+        run: |
+          $vsPath = & vswhere -latest -property installationPath
+          $clPath = Join-Path $vsPath "VC\Tools\MSVC\*\bin\Hostx64\x64"
+          echo "$clPath" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_PATH
+
       - name: Configure
         env:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
