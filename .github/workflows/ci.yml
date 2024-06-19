@@ -66,17 +66,12 @@ jobs:
           python ./scripts/install_deps.py
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v2
 
-      # For some reason the msbuild env vars aren't loaded when using CMake presets,
-      # so use the legacy method for now until we can figure out why.
-      - name: Configure (legacy)
+      - name: Configure
         env:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
+        run: cmake -B build --preset=windows-release
 
       - name: Build
         run: cmake --build build
