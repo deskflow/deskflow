@@ -5,13 +5,10 @@ inputs:
     description: "Where to upload the package (github or google-drive)"
     default: "github"
 
-defaults:
-  run:
-    shell: bash
-
 runs:
   using: "composite"
 
   steps:
     # Strip symbols from binaries
     - run: make install/strip
+      shell: bash
