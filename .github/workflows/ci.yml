@@ -1,4 +1,4 @@
-name: CI Test
+name: CI
 
 on:
   workflow_dispatch:
@@ -136,6 +136,10 @@ jobs:
 
       - name: Test
         run: ./build/bin/unittests
+
+      - name: Distribute
+        if: ${{ !github.event.pull_request.draft && matrix.runtime.name == 'macos-11-m1' }}
+        uses: ./.github/actions/dist
 
   test-linux:
     runs-on: ${{ matrix.distro.runs-on }}
