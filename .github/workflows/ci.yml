@@ -65,7 +65,7 @@ jobs:
           pip install pyyaml
           python ./scripts/install_deps.py
 
-      - name: Setup VC++
+      - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure
@@ -193,8 +193,9 @@ jobs:
             install-deps: true
 
     steps:
+      # USe @v3 since older versions of Linux don't support @v4
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           submodules: "recursive"
 
