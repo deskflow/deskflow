@@ -15,7 +15,8 @@ env:
   GIT_COMMIT: ${{ github.sha }}
 
 jobs:
-  windows-2022:
+  windows:
+    name: windows-2022
     runs-on: windows-2022
     timeout-minutes: 20
 
@@ -116,6 +117,11 @@ jobs:
 
       - name: Test
         run: ./build/bin/unittests
+
+      - name: Distribute
+        uses: ./.github/actions/dist-macos
+        with:
+          upload-target: "github"
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}

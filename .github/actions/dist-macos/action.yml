@@ -1,0 +1,95 @@
+name: "Distribute (macOS)"
+description: "Create package and upload"
+inputs:
+  upload-target:
+    description: "Where to upload the package (github or gdrive)"
+    default: "github"
+
+runs:
+  using: "composite"
+
+  steps:
+    # Strip symbols from binaries
+    - run: cd build; make install/strip
+      shell: bash
+
+    # Generate version info
+    - id: version
+      run: |
+        . ./build/version
+        SYNERGY_VERSION="${SYNERGY_VERSION_MAJOR}.${SYNERGY_VERSION_MINOR}.${SYNERGY_VERSION_PATCH}"
+        SYNERGY_REVISION=$(git rev-parse --short=8 HEAD)
+        SYNERGY_DMG_VERSION="${SYNERGY_VERSION}-${SYNERGY_VERSION_STAGE}.${SYNERGY_REVISION}"
+        echo "::set-output name=SYNERGY_VERSION_MAJOR::$SYNERGY_VERSION_MAJOR"
+        echo "::set-output name=SYNERGY_VERSION_MINOR::$SYNERGY_VERSION_MINOR"
+        echo "::set-output name=SYNERGY_VERSION_PATCH::$SYNERGY_VERSION_PATCH"
+        echo "::set-output name=SYNERGY_VERSION_STAGE::$SYNERGY_VERSION_STAGE"
+        echo "::set-output name=SYNERGY_VERSION_BUILD::$SYNERGY_VERSION_BUILD"
+        echo "::set-output name=SYNERGY_VERSION::$SYNERGY_VERSION"
+        echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
+        echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
+        SYNERGY_PACKAGE_NAME=${{ matrix.runtime.name }}
+        SYNERGY_REMOTE_FOLDER="${{ matrix.runtime.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+        SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-arm64.dmg"
+        echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
+        echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
+        echo "::set-output name=SYNERGY_PACKAGE_NAME::$SYNERGY_PACKAGE_NAME"
+        echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
+      shell: bash
+
+    # Sign application
+    - run: |
+        export PATH="$(brew --prefix qt5)/bin:$PATH"
+        macdeployqt ${{ github.workspace }}/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
+        codesign -f --options runtime --deep -s "$CODESIGN_ID" ${{ github.workspace }}/build/bundle/Synergy.app
+        ln -s /Applications ${{ github.workspace }}/build/bundle/Applications
+      shell: bash
+
+    # Create DMG
+    - env:
+        SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+      run: |
+        pip install dmgbuild
+        dmgbuild \
+          -s dist/macos/dmgbuild/settings.py \
+          -D app=${{ github.workspace }}/build/bundle/Synergy.app \
+          -D background=${{ github.workspace }}/build/bundle/Synergy.app/Contents/Resources/.installer_background.tiff \
+          "Synergy" \
+          $SYNERGY_DMG_FILENAME
+        mkdir pkg
+        mv $SYNERGY_DMG_FILENAME pkg/
+        cd pkg
+        md5 -r $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+        shasum $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+        shasum -a 256 $SYNERGY_DMG_FILENAME >> $SYNERGY_DMG_FILENAME.checksum.txt
+      shell: bash
+
+    # Submit for notarization
+    - env:
+        ASC_USERNAME: ${{ secrets.ASC_USERNAME }}
+        NOTORY_APP_PASSWORD: ${{ secrets.NOTORY_APP_PASSWORD }}
+        SYNERGY_VERSION: ${{ steps.version.outputs.SYNERGY_VERSION }}
+        SYNERGY_REVISION: ${{ steps.version.outputs.SYNERGY_REVISION }}
+        SYNERGY_DMG_FILENAME: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+      run: |
+        cd pkg
+        ../dist/macos/notorize.sh
+
+    # Upload to GitHub
+    - if: ${{ inputs.upload-target == 'github' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: synergy-3-linux-${{ matrix.runtime.distro }}
+        path: ./dist
+        retention-days: 3
+
+    # Upload to Google Drive
+    # HACK: Using fork of action while PR is waiting
+    # https://symless.atlassian.net/browse/S3-1659
+    - if: ${{ inputs.upload-target == 'gdrive' }}
+      uses: symless/gdrive-upload@target-glob
+      with:
+        credentials: ${{ secrets.GOOGLE_DRIVE_KEY }}
+        target: "./dist/*"
+        parent_folder_id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+        child_folder: Snapshots/synergy1/test
