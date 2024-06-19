@@ -5,6 +5,12 @@ dependencies:
       version: 5.15.2
       mirror: https://qt.mirror.constant.com/
       install-dir: C:\Qt
+    ci:
+      skip:
+        edit-config: Chocolatey.config
+        packages:
+          - cmake
+          - visualstudio2022buildtools
 
   mac:
     command: brew bundle --file=Brewfile
@@ -15,6 +21,7 @@ dependencies:
       packages:
         - cmake
         - make
+        - g++
         - xorg-dev
         - libx11-dev
         - libxtst-dev
@@ -38,11 +45,13 @@ dependencies:
         - cmake
         - make
         - gcc-c++
+        - openssl-devel
         - libXtst-devel
         - glib2-devel
         - gdk-pixbuf2-devel
         - libnotify-devel
         - qt5-qtbase-devel
+        - qt5-qttools-devel
         - libxkbfile-devel
         - gtk3-devel
         - rpm-build

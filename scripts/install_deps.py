@@ -1,15 +1,12 @@
+#!/usr/bin/env python3
+
 import os
-from lib import windows
-import subprocess
+from lib import windows, cmd_utils
 import sys
 import argparse
 import traceback
 
 config_file = "deps.yml"
-
-
-class EnvError(Exception):
-    pass
 
 
 class YamlError(Exception):
@@ -53,22 +50,6 @@ def main():
 
     if args.pause_on_exit:
         input("Press enter to continue...")
-
-
-def run(command, check=True):
-    """Runs a shell command and by default asserts that the return code is 0."""
-
-    command_str = command
-    if isinstance(command, list):
-        command_str = " ".join(command)
-
-    print(f"Running: {command_str}")
-
-    try:
-        subprocess.run(command, shell=True, check=check)
-    except subprocess.CalledProcessError as e:
-        print(f"Command failed: {command_str}", file=sys.stderr)
-        raise e
 
 
 def get_os():
@@ -178,7 +159,7 @@ class Dependencies:
 
         # for ci, skip qt; we install qt separately so we can cache it.
         if not ci_env or only_qt:
-            qt = WindowsQt(self.config.get_qt_config())
+            qt = windows.WindowsQt(self.config.get_qt_config(), config_file)
             qt_install_dir = qt.get_install_dir()
             if qt_install_dir:
                 print(f"Skipping Qt, already installed at: {qt_install_dir}")
@@ -188,15 +169,18 @@ class Dependencies:
             if only_qt:
                 return
 
-        # use winget instead of choco to install the vc++ deps, since in choco there is no way
-        # to load a choco config file but skip a specific package (i.e. to skip vc++ for ci)
-        if not ci_env:
-            winget = WindowsWinGet()
-            winget.install_visual_studio()
-
-        choco = WindowsChoco()
+        choco = windows.WindowsChoco()
         if ci_env:
             choco.config_ci_cache()
+
+            try:
+                ci_skip = self.config.os["ci"]["skip"]
+                choco_config_file = ci_skip["edit-config"]
+                remove_packages = ci_skip["packages"]
+            except KeyError:
+                raise YamlError(f"Bad mapping in {config_file} on Windows for: ci")
+
+            choco.remove_from_config(choco_config_file, remove_packages)
 
         try:
             command = self.config.os["command"]
@@ -212,7 +196,7 @@ class Dependencies:
         except KeyError:
             raise YamlError(f"Nothing found in {config_file} on Mac for: command")
 
-        run(command)
+        cmd_utils.run(command)
 
     def linux(self):
         """Installs dependencies on Linux."""
@@ -222,115 +206,8 @@ class Dependencies:
             raise PlatformError("Unable to detect Linux distro")
 
         command = self.config.get_linux_package_command(distro)
-        run(command)
+        cmd_utils.run(command)
 
 
-class WindowsWinGet:
-    """WinGet for Windows."""
-
-    def install_visual_studio(self):
-        """Installs packages using WinGet."""
-
-        override = [
-            "--quiet",
-            "--wait",
-            "--includeRecommended",
-            "--add Microsoft.VisualStudio.Workload.MSBuildTools",
-            "--add Microsoft.VisualStudio.Workload.VCTools",
-        ]
-
-        args = [
-            "winget",
-            "install",
-            "--silent",
-            "--id",
-            "Microsoft.VisualStudio.2022.BuildTools",
-            "--override",
-            f'"{" ".join(override)}"',
-        ]
-
-        run(
-            " ".join(args),
-            check=False,
-        )
-
-
-class WindowsChoco:
-    """Chocolatey for Windows."""
-
-    def install(self, command, ci_env):
-        """Installs packages using Chocolatey."""
-        if ci_env:
-            # don't show noisy choco progress bars in ci env
-            run(f"{command} --no-progress")
-        else:
-            run(command)
-
-    def config_ci_cache(self):
-        """Configures Chocolatey cache for CI."""
-
-        runner_temp_key = "RUNNER_TEMP"
-        runner_temp = os.environ.get(runner_temp_key)
-        if runner_temp:
-            # sets the choco cache dir, which should match the dir in the ci cache action.
-            key_arg = '--name="cacheLocation"'
-            value_arg = f'--value="{runner_temp}/choco"'
-            run(["choco", "config", "set", key_arg, value_arg])
-        else:
-            print(f"Warning: CI environment variable {runner_temp_key} not set")
-
-
-class WindowsQt:
-    """Qt for Windows."""
-
-    def __init__(self, config):
-        self.config = config
-
-        self.version = os.environ.get("QT_VERSION")
-        if not self.version:
-            try:
-                default_version = config["version"]
-            except KeyError:
-                raise EnvError(f"Qt version not set in {config_file}")
-
-            print(f"QT_VERSION not set, using: {default_version}")
-            self.version = default_version
-
-        self.base_dir = os.environ.get("QT_BASE_DIR")
-        if not self.base_dir:
-            try:
-                default_base_dir = config["install-dir"]
-            except KeyError:
-                raise EnvError(f"Qt install-dir not set in {config_file}")
-
-            print(f"QT_BASE_DIR not set, using: {default_base_dir}")
-            self.base_dir = default_base_dir
-
-        self.install_dir = f"{self.base_dir}\\{self.version}"
-
-    def get_install_dir(self):
-        if os.path.isdir(self.install_dir):
-            return self.install_dir
-
-    def install(self):
-        """Installs Qt on Windows."""
-
-        run(["pip", "install", "aqtinstall"])
-
-        try:
-            mirror_url = self.config["mirror"]
-        except KeyError:
-            raise EnvError(f"Qt mirror not set in {config_file}")
-
-        args = ["python", "-m", "aqt", "install-qt"]
-        args.extend(["--outputdir", self.base_dir])
-        args.extend(["--base", mirror_url])
-        args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
-        run(args)
-
-        install_dir = self.get_install_dir()
-        if not install_dir:
-            raise EnvError(f"Qt not installed, path not found: {install_dir}")
-
-
-main()
+if __name__ == "__main__":
+    main()

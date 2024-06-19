@@ -26,12 +26,12 @@ set(CMAKE_C_RESPONSE_FILE_LINK_FLAG "@")
 set(CMAKE_CXX_RESPONSE_FILE_LINK_FLAG "@")
 set(CMAKE_NINJA_FORCE_RESPONSE_FILE 1 CACHE INTERNAL "")
 
-if (DEFINED ENV{SYNERGY_NO_LEGACY})
-    option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" OFF)
-    option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" OFF)
+if (DEFINED ENV{SYNERGY_BUILD_MINIMAL})
+    option (SYNERGY_BUILD_GUI "Build the GUI" OFF)
+    option (SYNERGY_BUILD_INSTALLER "Build the installer" OFF)
 else()
-    option (SYNERGY_BUILD_LEGACY_GUI "Build the legacy GUI" ON)
-    option (SYNERGY_BUILD_LEGACY_INSTALLER "Build the legacy installer" ON)
+    option (SYNERGY_BUILD_GUI "Build the GUI" ON)
+    option (SYNERGY_BUILD_INSTALLER "Build the installer" ON)
 endif()
 
 if (DEFINED ENV{SYNERGY_NO_TESTS})
@@ -435,7 +435,7 @@ endmacro(generate_versionfile)
 
 generate_versionfile()
 
-if (${SYNERGY_BUILD_LEGACY_INSTALLER})
+if (${SYNERGY_BUILD_INSTALLER})
 #
 # macOS app Bundle
 #
