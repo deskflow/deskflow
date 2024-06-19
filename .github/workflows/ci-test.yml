@@ -61,6 +61,8 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
 
+      # For some reason the msbuild env vars aren't loaded when using CMake presets,
+      # so use the legacy method for now until we can figure out why.
       - name: Configure (legacy)
         env:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
@@ -137,7 +139,7 @@ jobs:
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
     name: test-linux-${{ matrix.distro.name }}
-    container: symless/synergy-core:${{ matrix.distro.container }}
+    container: ${{ matrix.distro.container }}
 
     env:
       GIT_COMMIT: ${{ github.sha }}
@@ -146,41 +148,41 @@ jobs:
       matrix:
         distro:
           - name: centos-7.6
-            container: centos7.6
+            container: symless/synergy-core:centos7.6
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: centos-8
-            container: centos8
+            container: symless/synergy-core:centos8
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: debian-11
-            container: debian11
+            container: symless/synergy-core:debian11
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: debian-12
-            container: debiansid
+            container: symless/synergy-core:debiansid
             runs-on: ubuntu-latest
 
           - name: fedora-37
-            container: fedora37
+            container: symless/synergy-core:fedora37
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: fedora-38
-            container: fedora38
+            container: symless/synergy-core:fedora38
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: ubuntu-20.04
-            container: ubuntu20.04
+            container: symless/synergy-core:ubuntu20.04
             runs-on: ubuntu-latest
             legacy-cmake: true
 
           - name: ubuntu-22.04
-            container: ubuntu22.04
+            container: symless/synergy-core:ubuntu22.04
             runs-on: ubuntu-latest
 
           - name: ubuntu-24.04
