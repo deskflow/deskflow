@@ -133,23 +133,52 @@ jobs:
         run: ./build/bin/unittests
 
   test-linux:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
-    name: test-linux-${{ matrix.distro }}
-    container: symless/synergy-core:${{ matrix.distro }}
+    name: test-linux-${{ matrix.distro.name }}
+    container: ${{ matrix.distro.image }}
     env:
       GIT_COMMIT: ${{ github.sha }}
+
     strategy:
       matrix:
         distro:
-          - centos7.6
-          - centos8
-          - debian11
-          - debiansid
-          - fedora37
-          - fedora38
-          - ubuntu20.04
-          - ubuntu22.04
+          - name: centos-7.6
+            image: symless/synergy-core:centos7.6
+            runs-on: ubuntu-latest
+
+          - name: centos-8
+            image: symless/synergy-core:centos8
+            runs-on: ubuntu-latest
+
+          - name: debian-11
+            image: symless/synergy-core:debian11
+            runs-on: ubuntu-latest
+            legacy-cmake: true
+
+          - name: debian-12
+            image: symless/synergy-core:debiansid
+            runs-on: ubuntu-latest
+
+          - name: fedora-37
+            image: symless/synergy-core:fedora37
+            runs-on: ubuntu-latest
+
+          - name: fedora-38
+            image: symless/synergy-core:fedora38
+            runs-on: ubuntu-latest
+
+          - name: ubuntu-20.04
+            image: symless/synergy-core:ubuntu20.04
+            runs-on: ubuntu-latest
+
+          - name: ubuntu-22.04
+            image: symless/synergy-core:ubuntu22.04
+            runs-on: ubuntu-latest
+
+          - name: ubuntu-24.04
+            runs-on: ubuntu-24.04
+            install-deps: true
 
     steps:
       - name: Checkout
@@ -157,8 +186,17 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Install dependencies
+        if: ${{ matrix.distro.install-deps }}
+        run: python ./scripts/install_deps.py
+
       - name: Configure
+        if: ${{ matrix.distro.legacy-cmake }}
         run: cmake -B build --preset=linux-release
+
+      - name: Configure (legacy)
+        if: ${{ matrix.distro.legacy-cmake }}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build
