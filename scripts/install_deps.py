@@ -1,16 +1,10 @@
 import os
-from lib import windows
-import subprocess
+from lib import windows, run
 import sys
 import argparse
 import traceback
-import xml.etree.ElementTree as ET
 
 config_file = "deps.yml"
-
-
-class EnvError(Exception):
-    pass
 
 
 class YamlError(Exception):
@@ -54,23 +48,6 @@ def main():
 
     if args.pause_on_exit:
         input("Press enter to continue...")
-
-
-def run(command, check=True):
-    """Runs a shell command and by default asserts that the return code is 0."""
-
-    command_str = command
-    if isinstance(command, list):
-        command_str = " ".join(command)
-
-    print(f"Running: {command_str}")
-    sys.stdout.flush()
-
-    try:
-        subprocess.run(command, shell=True, check=check)
-    except subprocess.CalledProcessError as e:
-        print(f"Command failed: {command_str}", file=sys.stderr)
-        raise e
 
 
 def get_os():
@@ -180,7 +157,7 @@ class Dependencies:
 
         # for ci, skip qt; we install qt separately so we can cache it.
         if not ci_env or only_qt:
-            qt = WindowsQt(self.config.get_qt_config())
+            qt = windows.WindowsQt(self.config.get_qt_config())
             qt_install_dir = qt.get_install_dir()
             if qt_install_dir:
                 print(f"Skipping Qt, already installed at: {qt_install_dir}")
@@ -190,7 +167,7 @@ class Dependencies:
             if only_qt:
                 return
 
-        choco = WindowsChoco()
+        choco = windows.WindowsChoco()
         if ci_env:
             choco.config_ci_cache()
 
@@ -228,97 +205,6 @@ class Dependencies:
 
         command = self.config.get_linux_package_command(distro)
         run(command)
-
-
-class WindowsChoco:
-    """Chocolatey for Windows."""
-
-    def install(self, command, ci_env):
-        """Installs packages using Chocolatey."""
-        if ci_env:
-            # don't show noisy choco progress bars in ci env
-            run(f"{command} --no-progress")
-        else:
-            run(command)
-
-    def config_ci_cache(self):
-        """Configures Chocolatey cache for CI."""
-
-        runner_temp_key = "RUNNER_TEMP"
-        runner_temp = os.environ.get(runner_temp_key)
-        if runner_temp:
-            # sets the choco cache dir, which should match the dir in the ci cache action.
-            key_arg = '--name="cacheLocation"'
-            value_arg = f'--value="{runner_temp}/choco"'
-            run(["choco", "config", "set", key_arg, value_arg])
-        else:
-            print(f"Warning: CI environment variable {runner_temp_key} not set")
-
-    def remove_from_config(self, config_file, remove_packages):
-        """Removes a package from the Chocolatey configuration."""
-
-        tree = ET.parse(config_file)
-        root = tree.getroot()
-        for remove in remove_packages:
-            for package in root.findall("package"):
-                if package.get("id") == remove:
-                    root.remove(package)
-                    print(f"Removed package from choco config: {remove}")
-
-        tree.write(config_file)
-
-
-class WindowsQt:
-    """Qt for Windows."""
-
-    def __init__(self, config):
-        self.config = config
-
-        self.version = os.environ.get("QT_VERSION")
-        if not self.version:
-            try:
-                default_version = config["version"]
-            except KeyError:
-                raise EnvError(f"Qt version not set in {config_file}")
-
-            print(f"QT_VERSION not set, using: {default_version}")
-            self.version = default_version
-
-        self.base_dir = os.environ.get("QT_BASE_DIR")
-        if not self.base_dir:
-            try:
-                default_base_dir = config["install-dir"]
-            except KeyError:
-                raise EnvError(f"Qt install-dir not set in {config_file}")
-
-            print(f"QT_BASE_DIR not set, using: {default_base_dir}")
-            self.base_dir = default_base_dir
-
-        self.install_dir = f"{self.base_dir}\\{self.version}"
-
-    def get_install_dir(self):
-        if os.path.isdir(self.install_dir):
-            return self.install_dir
-
-    def install(self):
-        """Installs Qt on Windows."""
-
-        run(["pip", "install", "aqtinstall"])
-
-        try:
-            mirror_url = self.config["mirror"]
-        except KeyError:
-            raise EnvError(f"Qt mirror not set in {config_file}")
-
-        args = ["python", "-m", "aqt", "install-qt"]
-        args.extend(["--outputdir", self.base_dir])
-        args.extend(["--base", mirror_url])
-        args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
-        run(args)
-
-        install_dir = self.get_install_dir()
-        if not install_dir:
-            raise EnvError(f"Qt not installed, path not found: {install_dir}")
 
 
 main()
