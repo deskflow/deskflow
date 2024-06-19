@@ -10,7 +10,6 @@ dependencies:
         edit-config: Chocolatey.config
         packages:
           - cmake
-          - ninja
           - visualstudio2022buildtools
 
   mac:
