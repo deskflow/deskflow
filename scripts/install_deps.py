@@ -157,7 +157,7 @@ class Dependencies:
 
         # for ci, skip qt; we install qt separately so we can cache it.
         if not ci_env or only_qt:
-            qt = windows.WindowsQt(self.config.get_qt_config())
+            qt = windows.WindowsQt(self.config.get_qt_config(), config_file)
             qt_install_dir = qt.get_install_dir()
             if qt_install_dir:
                 print(f"Skipping Qt, already installed at: {qt_install_dir}")
@@ -173,12 +173,12 @@ class Dependencies:
 
             try:
                 ci_skip = self.config.os["ci"]["skip"]
-                config_file = ci_skip["edit-config"]
+                choco_config_file = ci_skip["edit-config"]
                 remove_packages = ci_skip["packages"]
             except KeyError:
                 raise YamlError(f"Bad mapping in {config_file} on Windows for: ci")
 
-            choco.remove_from_config(config_file, remove_packages)
+            choco.remove_from_config(choco_config_file, remove_packages)
 
         try:
             command = self.config.os["command"]
