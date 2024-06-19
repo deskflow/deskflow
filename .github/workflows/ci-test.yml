@@ -61,14 +61,15 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Configure
+      - name: Configure and build
         env:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: |
-          cmake -B build --preset=windows-release
-
-      - name: Build
-        run: cmake --build build
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          . ./version
+          msbuild synergy-core.sln /p:Configuration=Release
 
       - name: Test
         run: .\build\bin\Release\unittests.exe
@@ -76,6 +77,7 @@ jobs:
   test-macos:
     runs-on: ${{ matrix.runtime.os }}
     timeout-minutes: 20
+    name: test-${{ matrix.runtime.name }}
 
     defaults:
       run:
@@ -94,8 +96,6 @@ jobs:
             arch: arm64
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
-
-    name: ${{ matrix.runtime.name }}
 
     env:
       GIT_COMMIT: ${{ github.sha }}
