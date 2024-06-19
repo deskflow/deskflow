@@ -1,0 +1,175 @@
+name: CI Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master*, release*]
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
+      QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+      QT_VERSION: 5.15.2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.QT_BASE_DIR }}
+          key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
+
+      - name: Install Qt
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: python ./scripts/install_deps.py --only qt
+
+      - name: Cache Bonjour
+        id: cache-bonjour
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.BONJOUR_BASE_DIR }}
+          key: ${{ runner.os }}-Bonjour
+
+      - name: Install Bonjour SDK
+        if: steps.cache-bonjour.outputs.cache-hit != 'true'
+        run: |
+          New-Item -Force -ItemType Directory -Path "$env:BONJOUR_BASE_DIR"
+          $client = new-object System.Net.WebClient
+          $client.DownloadFile("https://binaries.symless.com/bonjour/BonjourSDK.zip",".\bonjoursdk.zip")
+          [System.IO.Compression.ZipFile]::ExtractToDirectory(".\bonjoursdk.zip", "$env:BONJOUR_BASE_DIR")
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+          python ./scripts/install_deps.py
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Configure
+        env:
+          CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
+        run: |
+          cmake -B build --preset=windows-release
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: .\build\bin\Release\unittests.exe
+
+  test-macos:
+    runs-on: ${{ matrix.runtime.os }}
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        shell: ${{ matrix.runtime.shell }}
+
+    strategy:
+      matrix:
+        runtime:
+          - name: "macos-10-intel"
+            os: "macos-14-large"
+            arch: x64
+            target: "10.14"
+            shell: "bash"
+          - name: "macos-11-m1"
+            os: "macos-14"
+            arch: arm64
+            target: "11"
+            shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+
+    name: ${{ matrix.runtime.name }}
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+
+    steps:
+      - name: Setup PATH
+        run: |
+          case "$ARCH" in
+            "arm64")
+              echo "/opt/homebrew/bin" >> $GITHUB_PATH
+              ;;
+          esac
+        env:
+          ARCH: ${{ matrix.runtime.arch }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+          python ./scripts/install_deps.py
+
+      - name: Configure
+        env:
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
+        run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: ./build/bin/unittests
+
+  test-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    name: test-linux-${{ matrix.distro }}
+    container: symless/synergy-core:${{ matrix.distro }}
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+    strategy:
+      matrix:
+        distro:
+          - centos7.6
+          - centos8
+          - debian9
+          - debian10
+          - debian11
+          - debiansid
+          - fedora33
+          - fedora34
+          - fedora35
+          - fedora36
+          - fedora37
+          - fedora38
+          - ubuntu18.04
+          - ubuntu20.04
+          - ubuntu22.04
+          - ubuntu22.10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Configure
+        run: cmake -B build --preset=linux-release
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: ./build/bin/unittests

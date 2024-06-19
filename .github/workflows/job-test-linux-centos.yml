@@ -1,10 +1,11 @@
 name: Test CentOS
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+  workflow_dispatch:
+  # push:
+  #   branches: [master]
+  # pull_request:
+  #   branches: [master]
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
