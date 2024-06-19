@@ -19,7 +19,7 @@ env:
   GIT_COMMIT: ${{ github.sha }}
 
 jobs:
-  test-windows-2022:
+  windows-2022:
     runs-on: windows-2022
     timeout-minutes: 20
 
@@ -84,10 +84,10 @@ jobs:
       - name: Test
         run: dir ./build/bin/; ./build/bin/unittests
 
-  test-macos:
+  macos:
     runs-on: ${{ matrix.runtime.os }}
     timeout-minutes: ${{ matrix.runtime.timeout }}
-    name: test-${{ matrix.runtime.name }}
+    name: ${{ matrix.runtime.name }}
 
     defaults:
       run:
@@ -146,10 +146,10 @@ jobs:
         if: ${{ !github.event.pull_request.draft && matrix.runtime.name == 'macos-11-m1' }}
         uses: ./.github/actions/dist-macos
 
-  test-linux:
+  linux:
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
-    name: test-linux-${{ matrix.distro.name }}
+    name: linux-${{ matrix.distro.name }}
     container: ${{ matrix.distro.container }}
 
     strategy:
