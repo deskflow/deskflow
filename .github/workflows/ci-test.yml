@@ -10,13 +10,15 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
   cancel-in-progress: true
 
+env:
+  GIT_COMMIT: ${{ github.sha }}
+
 jobs:
   test-windows:
     runs-on: windows-latest
     timeout-minutes: 20
 
     env:
-      GIT_COMMIT: ${{ github.sha }}
       BONJOUR_BASE_DIR: ${{ github.workspace }}\deps\bonjour
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
       QT_VERSION: 5.15.2
@@ -100,9 +102,6 @@ jobs:
             target: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-    env:
-      GIT_COMMIT: ${{ github.sha }}
-
     steps:
       - name: Setup PATH
         run: |
@@ -140,9 +139,6 @@ jobs:
     timeout-minutes: 10
     name: test-linux-${{ matrix.distro.name }}
     container: ${{ matrix.distro.container }}
-
-    env:
-      GIT_COMMIT: ${{ github.sha }}
 
     strategy:
       matrix:
