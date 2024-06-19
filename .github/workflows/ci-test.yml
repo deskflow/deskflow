@@ -61,15 +61,16 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Configure and build
+      - name: Configure (legacy)
         env:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
-          . ./version
-          msbuild synergy-core.sln /p:Configuration=Release
+
+      - name: Build
+        run: cmake --build build
 
       - name: Test
         run: .\build\bin\Release\unittests.exe
