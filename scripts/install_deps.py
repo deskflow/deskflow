@@ -3,7 +3,7 @@
 import os, sys, argparse, traceback
 from lib import env, windows, mac, cmd_utils
 
-env.ensure_in_venv("build/python", __file__)
+env.ensure_in_venv(__file__)
 env.ensure_module("yaml", "pyyaml")
 import yaml
 

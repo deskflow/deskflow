@@ -36,3 +36,4 @@ flatpak/*.flatpak
 *.idx
 aqtinstall.log
 Brewfile.lock.json
+.env*

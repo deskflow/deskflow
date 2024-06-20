@@ -1,6 +1,8 @@
 import os, sys, subprocess
 from lib import cmd_utils
 
+venv_path = "build/python"
+
 
 def check_module(module):
     try:
@@ -54,11 +56,11 @@ def get_env_var(name):
     return value
 
 
-def get_python_executable(venv_path):
+def get_python_executable(binary="python"):
     if sys.platform == "win32":
-        return os.path.join(venv_path, "Scripts", "python")
+        return os.path.join(venv_path, "Scripts", binary)
     else:
-        return os.path.join(venv_path, "bin", "python")
+        return os.path.join(venv_path, "bin", binary)
 
 
 def in_venv():
@@ -66,7 +68,7 @@ def in_venv():
     return sys.prefix != sys.base_prefix
 
 
-def ensure_in_venv(venv_path, script):
+def ensure_in_venv(script):
     """
     Ensures the script is running in a Python virtual environment (venv).
     If the script is not running in a venv, it will create one and re-run the script in the venv.
@@ -82,11 +84,12 @@ def ensure_in_venv(venv_path, script):
 
         script_file = os.path.basename(script)
         print(f"Using virtual environment for {script_file}")
-        python_executable = get_python_executable(venv_path)
+        python_executable = get_python_executable()
         result = subprocess.run([python_executable, script] + sys.argv[1:])
         sys.exit(result.returncode)
 
 
+# TODO: Use pyproject.toml to specify dependencies
 def ensure_module(module, package):
     """
     Ensures that a Python module is available, and installs the package if it is not.

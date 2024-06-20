@@ -8,7 +8,7 @@ import os.path
 
 # .. Useful stuff ..............................................................
 
-application = defines.get("app", "Synergy.app")
+application = defines.get("app", "build/bundle/Synergy.app")
 appname = os.path.basename(application)
 
 # .. Basics ....................................................................

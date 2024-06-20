@@ -15,7 +15,7 @@ def has_command(command):
         return False
 
 
-def run(command, check=True, shell=True, get_stdout=False):
+def run(command, check=True, shell=True, get_output=False, print_cmd=True):
     """
     Run a command. By default, shell is used and the return code is checked.
 
@@ -23,7 +23,7 @@ def run(command, check=True, shell=True, get_stdout=False):
         command (str or list): Command to run.
         check (bool): If True, raise an exception if the command fails.
         shell (bool): If True, run the command in a shell.
-        get_stdout (bool): If True, return the output of the command.
+        get_output (bool): If True, return the output of the command.
     """
 
     # To spread strings over multiple lines in YAML files, like in bash, a backslash is used at
@@ -41,28 +41,33 @@ def run(command, check=True, shell=True, get_stdout=False):
         command = command.replace(cmd_continuation, "")
         command_str = command
 
-    print(f"Running: {command_str}")
-    sys.stdout.flush()
+    if print_cmd:
+        print(f"Running: {command_str}")
+        sys.stdout.flush()
 
     try:
-        if get_stdout:
+        if get_output:
             result = subprocess.run(
                 command,
                 shell=shell,
                 check=check,
                 stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
             )
         else:
             result = subprocess.run(command, check=check, shell=shell)
     except subprocess.CalledProcessError as e:
-        print(
-            f"Command failed with code {e.returncode}: {command_str}", file=sys.stderr
-        )
+        if print_cmd:
+            print(
+                f"Command failed with code {e.returncode}: {command_str}",
+                file=sys.stderr,
+            )
         raise e
 
-    if result.returncode != 0:
+    if print_cmd and result.returncode != 0:
         print(
             f"Command failed with code {result.returncode}: {command_str}",
             file=sys.stderr,
         )
+    return result

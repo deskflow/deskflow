@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 
-import os, sys
+import os
 from lib import env
 
-env.ensure_in_venv("build/python", __file__)
+env.ensure_in_venv(__file__)
 env.ensure_module("dotenv", "python-dotenv")
 from dotenv import load_dotenv
 
+env_file = ".env"
 version_env = "build/.env.version"
 
 
 def main():
-    print(f"Operating system: {env.get_os()}")
+    load_dotenv(dotenv_path=env_file)
 
     if not os.path.isfile(version_env):
         raise RuntimeError(f"Version file not found: {version_env}")
@@ -44,10 +45,7 @@ def windows_package():
 def mac_package():
     from lib import mac
 
-    mac.install_certificate(
-        env.get_env_var("APPLE_P12_CERTIFICATE"),
-        env.get_env_var("APPLE_P12_PASSWORD"),
-    )
+    mac.package()
 
 
 def linux_package():
