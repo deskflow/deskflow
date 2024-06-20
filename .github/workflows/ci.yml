@@ -42,9 +42,7 @@ jobs:
         run: python ./scripts/install_deps.py --only qt
 
       - name: Install dependencies
-        run: |
-          pip install pyyaml
-          python ./scripts/install_deps.py
+        run: python ./scripts/install_deps.py
 
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
@@ -67,7 +65,7 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          target-name: "synergy-core-windows-${{ github.sha }}.zip"
+          github-target-filename: "synergy-core-windows-${{ github.sha }}.zip"
 
   macos:
     runs-on: ${{ matrix.runtime.os }}
@@ -115,7 +113,7 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        run: python ./scripts/install_deps.py
+        run: ./scripts/install_deps.py
 
       - name: Configure
         env:
@@ -129,13 +127,13 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        run: python ./scripts/package.py
+        run: ./scripts/package.py
 
       - name: Distribute
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          target-name: "synergy-core-macos-${{ matrix.runtime.target }}-${{ github.sha }}.zip"
+          github-target-filename: "synergy-core-macos-${{ matrix.runtime.target }}-${{ github.sha }}.zip"
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
@@ -197,7 +195,7 @@ jobs:
 
       - name: Install dependencies
         if: ${{ matrix.distro.install-deps }}
-        run: python ./scripts/install_deps.py
+        run: ./scripts/install_deps.py
 
       - name: Configure
         if: ${{ !matrix.distro.legacy-cmake }}
@@ -215,10 +213,10 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        run: python ./scripts/package.py
+        run: ./scripts/package.py
 
       - name: Distribute
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          target-name: "synergy-core-linux-${{ matrix.distro.name }}-${{ github.sha }}.tar.gz"
+          github-target-filename: "synergy-core-linux-${{ matrix.distro.name }}-${{ github.sha }}.tar.gz"
