@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 
-from lib import env
-
-import os
-from lib import windows, mac, cmd_utils
-import sys
-import argparse
-import traceback
+import os, sys, argparse, traceback
+from lib import env, windows, mac, cmd_utils
 
 if env.get_os() == "mac":
     # on mac, run in venv to make installing dependencies easier.
@@ -35,8 +30,6 @@ class PathError(Exception):
 
 
 def main():
-    """Entry point for the script."""
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--pause-on-exit", action="store_true", help="Useful on Windows"
@@ -105,6 +98,7 @@ class Dependencies:
         """Installs dependencies for the current platform."""
 
         os = env.get_os()
+        print(f"Operating system: {os}")
         if os == "windows":
             self.windows()
         elif os == "mac":
