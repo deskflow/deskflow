@@ -34,7 +34,7 @@ def install_dependencies():
         cmd_utils.run(f"{sudo} apt install -y python3-pip python3-venv")
     elif distro == "fedora" or distro == "centos":
         cmd_utils.run(f"{sudo} dnf check-update", check=False)
-        cmd_utils.run(f"{sudo} dnf install -y python3-pip python3-venv")
+        cmd_utils.run(f"{sudo} dnf install -y python3-pip python3-virtualenv")
     else:
         raise RuntimeError(f"Failed to install Python dependencies on {distro}")
 
