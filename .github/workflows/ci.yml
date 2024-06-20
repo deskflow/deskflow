@@ -131,6 +131,7 @@ jobs:
         shell: bash
 
       # Generate version info
+      # TODO: use remote folder or delete
       - id: version
         run: |
           . ./build/version
@@ -146,7 +147,7 @@ jobs:
           echo "::set-output name=SYNERGY_REVISION::$SYNERGY_REVISION"
           echo "::set-output name=SYNERGY_DMG_VERSION::$SYNERGY_DMG_VERSION"
           SYNERGY_PACKAGE_NAME=${{ matrix.runtime.name }}
-          SYNERGY_REMOTE_FOLDER="${{ matrix.runtime.remote_folder }}/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
+          SYNERGY_REMOTE_FOLDER="test/${SYNERGY_VERSION}/${SYNERGY_VERSION_STAGE}/b${SYNERGY_VERSION_BUILD}-${SYNERGY_REVISION}"
           SYNERGY_DMG_FILENAME="${SYNERGY_PACKAGE_NAME}_${SYNERGY_DMG_VERSION}_macos-arm64.dmg"
           echo "SYNERGY_REMOTE_FOLDER: $SYNERGY_REMOTE_FOLDER"
           echo "::set-output name=SYNERGY_REMOTE_FOLDER::$SYNERGY_REMOTE_FOLDER"
@@ -155,7 +156,9 @@ jobs:
         shell: bash
 
       # Sign application
+      # TODO: Is the path export needed?
       - run: |
+          echo $CODESIGN_ID
           export PATH="$(brew --prefix qt5)/bin:$PATH"
           macdeployqt ${{ github.workspace }}/build/bundle/Synergy.app -codesign="$CODESIGN_ID"
           codesign -f --options runtime --deep -s "$CODESIGN_ID" ${{ github.workspace }}/build/bundle/Synergy.app
