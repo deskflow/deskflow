@@ -5,6 +5,29 @@ import venv
 from lib import cmd_utils
 
 
+def get_os():
+    """Detects the operating system."""
+    if sys.platform == "win32":
+        return "windows"
+    elif sys.platform == "darwin":
+        return "mac"
+    elif sys.platform.startswith("linux"):
+        return "linux"
+    else:
+        raise PlatformError(f"Unsupported platform: {sys.platform}")
+
+
+def get_linux_distro():
+    """Detects the Linux distro."""
+    os_file = "/etc/os-release"
+    if os.path.isfile(os_file):
+        with open(os_file) as f:
+            for line in f:
+                if line.startswith("ID="):
+                    return line.strip().split("=")[1].strip('"')
+    return None
+
+
 def get_python_executable(venv_path):
     if sys.platform == "win32":
         return os.path.join(venv_path, "Scripts", "python")
@@ -21,7 +44,6 @@ def ensure_in_venv(venv_path, script):
     """
     Ensures the script is running in a Python virtual environment (venv).
     If the script is not running in a venv, it will create one and re-run the script in the venv.
-    This is to make Python dependencies easier to manage, as they are isolated from the system.
     """
     if not in_venv():
         if not os.path.exists(venv_path):
@@ -40,11 +62,7 @@ def ensure_in_venv(venv_path, script):
 def ensure_module(module, package):
     """
     Ensures that a Python module is available, and installs the package if it is not.
-    Must be running in a virtual environment (venv).
     """
-
-    if not in_venv():
-        raise RuntimeError("Must be running in a virtual environment (venv)")
 
     try:
         __import__(module)

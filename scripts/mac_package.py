@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
+import os
 from lib import env
 
-env.ensure_in_venv("build/mac_package", __file__)
-env.ensure_module("dotenv", "python-dotenv")
+if env.get_os() == "mac":
+    # on mac, run in venv to make installing dependencies easier.
+    env.ensure_in_venv("build/mac_package", __file__)
 
+env.ensure_module("dotenv", "python-dotenv")
 from dotenv import load_dotenv
-import os
 
 version_env = "build/.env.version"
 

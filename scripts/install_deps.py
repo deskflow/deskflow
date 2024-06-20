@@ -2,14 +2,17 @@
 
 from lib import env
 
-env.ensure_in_venv("build/install_deps", __file__)
-env.ensure_module("yaml", "pyyaml")
-
 import os
 from lib import windows, mac, cmd_utils
 import sys
 import argparse
 import traceback
+
+if env.get_os() == "mac":
+    # on mac, run in venv to make installing dependencies easier.
+    env.ensure_in_venv("build/install_deps", __file__)
+
+env.ensure_module("yaml", "pyyaml")
 import yaml
 
 config_file = "deps.yml"
@@ -53,29 +56,6 @@ def main():
         input("Press enter to continue...")
 
 
-def get_os():
-    """Detects the operating system."""
-    if sys.platform == "win32":
-        return "windows"
-    elif sys.platform == "darwin":
-        return "mac"
-    elif sys.platform.startswith("linux"):
-        return "linux"
-    else:
-        raise PlatformError(f"Unsupported platform: {sys.platform}")
-
-
-def get_linux_distro():
-    """Detects the Linux distro."""
-    os_file = "/etc/os-release"
-    if os.path.isfile(os_file):
-        with open(os_file) as f:
-            for line in f:
-                if line.startswith("ID="):
-                    return line.strip().split("=")[1].strip('"')
-    return None
-
-
 class Config:
     """Reads the dependencies configuration file."""
 
@@ -83,7 +63,7 @@ class Config:
         with open(config_file, "r") as f:
             data = yaml.safe_load(f)
 
-        self.os_name = get_os()
+        self.os_name = env.get_os()
         try:
             root = data["dependencies"]
         except KeyError:
@@ -124,7 +104,7 @@ class Dependencies:
     def install(self):
         """Installs dependencies for the current platform."""
 
-        os = get_os()
+        os = env.get_os()
         if os == "windows":
             self.windows()
         elif os == "mac":
@@ -185,7 +165,7 @@ class Dependencies:
     def linux(self):
         """Installs dependencies on Linux."""
 
-        distro = get_linux_distro()
+        distro = env.get_linux_distro()
         if not distro:
             raise PlatformError("Unable to detect Linux distro")
 
