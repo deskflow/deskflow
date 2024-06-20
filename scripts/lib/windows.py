@@ -24,17 +24,17 @@ def is_admin():
         return False
 
 
-def set_env_var(var_name, var_value):
+def set_env_var(name, value):
     """
     Sets or updates an environment variable.
 
     Args:
-    var_name (str): The name of the environment variable.
-    var_value (str): The value of the environment variable.
+    name (str): The name of the environment variable.
+    value (str): The value of the environment variable.
     """
-    print(f"Setting environment variable: {var_name}={var_value}")
-    os.environ[var_name] = var_value
-    cmd_utils.run(["setx", var_name, var_value], check=True)
+    print(f"Setting environment variable: {name}={value}")
+    os.environ[name] = value
+    cmd_utils.run(["setx", name, value], check=True)
 
 
 class WindowsChoco:
