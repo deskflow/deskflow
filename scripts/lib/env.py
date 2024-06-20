@@ -1,7 +1,5 @@
 import os
-import subprocess
 import sys
-import venv
 from lib import cmd_utils
 
 
@@ -45,6 +43,13 @@ def ensure_in_venv(venv_path, script):
     Ensures the script is running in a Python virtual environment (venv).
     If the script is not running in a venv, it will create one and re-run the script in the venv.
     """
+
+    try:
+        import venv
+    except ImportError:
+        print("Python is missing venv module, install python3-venv package")
+        sys.exit(1)
+
     if not in_venv():
         if not os.path.exists(venv_path):
             print(f"Creating virtual environment at {venv_path}")
@@ -65,9 +70,15 @@ def ensure_module(module, package):
     """
 
     try:
+        __import__("pip")
+    except ImportError:
+        print("Missing pip module, install python3-pip package")
+        sys.exit(1)
+
+    try:
         __import__(module)
     except ImportError:
-        print(f"Missing {module} module, installing {package} package...")
+        print(f"Python is missing {module} module, installing {package} package...")
         cmd_utils.run([sys.executable, "-m", "pip", "install", package], shell=False)
     else:
         print(f"Python package {package} already installed")
