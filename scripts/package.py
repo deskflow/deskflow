@@ -45,8 +45,8 @@ def mac_package():
     from lib import mac
 
     mac.install_certificate(
-        os.getenv("APPLE_P12_CERTIFICATE"),
-        os.getenv("APPLE_P12_PASSWORD"),
+        env.get_env_var("APPLE_P12_CERTIFICATE"),
+        env.get_env_var("APPLE_P12_PASSWORD"),
     )
 
 

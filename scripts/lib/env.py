@@ -46,6 +46,14 @@ def get_linux_distro():
     return None
 
 
+def get_env_var(name):
+    """Returns an env var or raises an error if it is not set."""
+    value = os.getenv(name)
+    if not value:
+        raise ValueError(f"Environment variable not set: {name}")
+    return value
+
+
 def get_python_executable(venv_path):
     if sys.platform == "win32":
         return os.path.join(venv_path, "Scripts", "python")
