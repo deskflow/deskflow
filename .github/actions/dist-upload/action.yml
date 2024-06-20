@@ -5,11 +5,17 @@ inputs:
     description: "Where to upload the package (github or gdrive)"
     default: "github"
 
-  target-filename:
+  github-target-filename:
     description: "The filename to upload (only used by GitHub artifacts)"
 
-  target-dir:
+  gdrive-target-dir:
     description: "The directory to upload (only used by Google Drive)"
+
+  gdrive-secret-key:
+    description: "The Google Drive secret key"
+
+  gdrive-parent-folder-id:
+    description: "The Google Drive parent folder ID"
 
 runs:
   using: "composite"
@@ -19,7 +25,7 @@ runs:
     - if: ${{ inputs.service == 'github' }}
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ inputs.target-name }}
+        name: ${{ inputs.github-target-filename }}
         path: ./dist
         retention-days: 3
 
@@ -29,7 +35,7 @@ runs:
     - if: ${{ inputs.service == 'gdrive' }}
       uses: symless/gdrive-upload@target-glob
       with:
-        credentials: ${{ secrets.GOOGLE_DRIVE_KEY }}
+        credentials: ${{ inputs.gdrive-secret-key }}
         target: "./dist/*"
-        parent_folder_id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
-        child_folder: Snapshots/${{ inputs.target-dir }}
+        parent_folder_id: ${{ inputs.gdrive-parent-folder-id }}
+        child_folder: Snapshots/${{ inputs.gdrive-target-dir }}
