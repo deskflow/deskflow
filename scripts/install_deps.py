@@ -177,6 +177,9 @@ class Dependencies:
             else:
                 qt.install()
 
+            if not ci_env:
+                qt.set_env_vars()
+
             if only_qt:
                 return
 

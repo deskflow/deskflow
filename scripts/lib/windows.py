@@ -24,6 +24,19 @@ def is_admin():
         return False
 
 
+def set_env_var(var_name, var_value):
+    """
+    Sets or updates an environment variable.
+
+    Args:
+    var_name (str): The name of the environment variable.
+    var_value (str): The value of the environment variable.
+    """
+    print(f"Setting environment variable: {var_name}={var_value}")
+    os.environ[var_name] = var_value
+    cmd_utils.run(["setx", var_name, var_value], check=True)
+
+
 class WindowsChoco:
     """Chocolatey for Windows."""
 
@@ -115,3 +128,6 @@ class WindowsQt:
         install_dir = self.get_install_dir()
         if not install_dir:
             raise EnvError(f"Qt not installed, path not found: {install_dir}")
+
+    def set_env_vars(self):
+        set_env_var("CMAKE_PREFIX_PATH", f"{self.get_install_dir()}\\msvc2019_64")
