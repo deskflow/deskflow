@@ -155,8 +155,20 @@ jobs:
           echo "::set-output name=SYNERGY_DMG_FILENAME::$SYNERGY_DMG_FILENAME"
         shell: bash
 
+      #Install certificate
+      - run: |
+          echo "$SIGNING_CERTIFICATE" | base64 --decode > certificate.p12
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$SIGNING_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security list-keychains -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+        env:
+          SIGNING_CERTIFICATE: ${{ secrets.SIGNING_CERTIFICATE }}
+          SIGNING_CERTIFICATE_PASSWORD: ${{ secrets.SIGNING_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+
       # Sign application
-      # TODO: Is the path export needed?
       - run: |
           echo $CODESIGN_ID
           export PATH="$(brew --prefix qt5)/bin:$PATH"
