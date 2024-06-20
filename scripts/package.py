@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os
+import os, sys
 from lib import env
 
 if env.get_os() == "mac":
@@ -14,6 +14,8 @@ version_env = "build/.env.version"
 
 
 def main():
+    print(f"Operating system: {env.get_os()}")
+
     load_dotenv(dotenv_path=version_env)
 
     major = os.getenv("SYNERGY_VERSION_MAJOR")
