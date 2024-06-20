@@ -6,8 +6,10 @@ from lib import cmd_utils
 def check_module(module):
     try:
         __import__(module)
+        return True
     except ImportError:
         print(f"Python is missing {module} module")
+        return False
 
 
 def bootstrap():
