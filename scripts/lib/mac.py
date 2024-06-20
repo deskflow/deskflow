@@ -2,9 +2,6 @@ import os, subprocess, base64, time, json
 from tempfile import NamedTemporaryFile
 from lib import cmd_utils, env
 
-env.ensure_module("dmgbuild", "dmgbuild")
-import dmgbuild
-
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
 cert_path = "/tmp/certificate.p12"
@@ -33,6 +30,9 @@ def set_cmake_prefix_env_var(cmake_prefix_command):
 
 
 def package():
+    env.ensure_module("dmgbuild", "dmgbuild")
+    import dmgbuild
+
     install_certificate(
         env.get_env_var("APPLE_P12_CERTIFICATE"),
         env.get_env_var("APPLE_P12_PASSWORD"),
