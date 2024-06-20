@@ -19,7 +19,7 @@ def set_env_var(name, value):
 
 
 def set_cmake_prefix_env_var(cmake_prefix_command):
-    output = cmd_utils.run(cmake_prefix_command, get_stdout=True)
-    cmake_prefix = output.strip()
+    result = cmd_utils.run(cmake_prefix_command, get_stdout=True)
+    cmake_prefix = result.stdout.strip()
 
     set_env_var(cmake_env_var, cmake_prefix)

@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
 
+from lib import env
+
+env.ensure_in_venv("build/install_deps", __file__)
+env.ensure_module("yaml", "pyyaml")
+
 import os
 from lib import windows, mac, cmd_utils
 import sys
 import argparse
 import traceback
+import yaml
 
-yaml = None
 config_file = "deps.yml"
+required_packages = {
+    "yaml": "pyyaml",
+    "dotenv": "python-dotenv",
+}
 
 
 class YamlError(Exception):
@@ -42,25 +51,6 @@ def main():
 
     if args.pause_on_exit:
         input("Press enter to continue...")
-
-
-def load_yaml():
-    try:
-        import yaml as yaml_import  # type: ignore
-
-        return yaml_import
-    except ImportError:
-        # this is a fairly common missing dep on mac and windows.
-        print("Python yaml module missing, installing...")
-        if get_os() == "mac":
-            cmd_utils.run("brew install pyyaml")
-        else:
-            cmd_utils.run("pip install pyyaml")
-
-        # re-launch script after pyyaml is installed
-        cmd_utils.run(f"{sys.executable} {__file__}")
-
-        sys.exit(1)
 
 
 def get_os():
@@ -202,8 +192,6 @@ class Dependencies:
         command = self.config.get_linux_command(distro)
         cmd_utils.run(command)
 
-
-yaml = load_yaml()
 
 if __name__ == "__main__":
     main()

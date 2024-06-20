@@ -1,10 +1,8 @@
 import subprocess
 import sys
-from contextlib import redirect_stdout
-import io
 
 
-def run(command, check=True, get_stdout=False):
+def run(command, check=True, shell=True, get_stdout=False):
     """Runs a shell command.
 
     Args:
@@ -33,16 +31,15 @@ def run(command, check=True, get_stdout=False):
 
     try:
         if get_stdout:
-            result = subprocess.run(
+            return subprocess.run(
                 command,
-                shell=True,
+                shell=shell,
                 check=check,
                 stdout=subprocess.PIPE,
                 text=True,
             )
-            return result.stdout
         else:
-            subprocess.run(command, check=check, shell=True)
+            return subprocess.run(command, check=check, shell=shell)
     except subprocess.CalledProcessError as e:
         print(f"Command failed: {command_str}", file=sys.stderr)
         raise e
