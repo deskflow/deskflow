@@ -28,14 +28,10 @@ def install_dependencies():
     distro = get_linux_distro()
     if distro == "ubuntu" or distro == "debian":
         print("Ubuntu detected, installing python3-pip...")
-        cmd_utils.run(
-            ["sudo", "apt", "install", "-y", "python3-pip", "python3-venv"], shell=False
-        )
+        cmd_utils.run(["sudo", "apt", "install", "-y", "python3-pip", "python3-venv"])
     elif distro == "fedora" or distro == "centos":
         print("Fedora detected, installing python3-pip...")
-        cmd_utils.run(
-            ["sudo", "dnf", "install", "-y", "python3-pip", "python3-venv"], shell=False
-        )
+        cmd_utils.run(["sudo", "dnf", "install", "-y", "python3-pip", "python3-venv"])
     else:
         raise RuntimeError(f"Failed to install Python dependencies on {distro}")
 
