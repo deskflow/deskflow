@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from lib import windows, cmd_utils
+from lib import windows, mac, cmd_utils
 import sys
 import argparse
 import traceback
@@ -93,34 +93,25 @@ class Config:
         with open(config_file, "r") as f:
             data = yaml.safe_load(f)
 
-        os_name = get_os()
+        self.os_name = get_os()
         try:
             root = data["dependencies"]
         except KeyError:
             raise YamlError(f"Nothing found in {config_file} for: dependencies")
 
         try:
-            self.os = root[os_name]
+            self.os = root[self.os_name]
         except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: {os_name}")
+            raise YamlError(f"Nothing found in {config_file} for: {self.os_name}")
 
     def get_qt_config(self):
-        try:
-            return self.os["qt"]
-        except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: qt")
+        return self.get("qt")
 
     def get_packages_file(self):
-        try:
-            return self.os["packages"]
-        except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: packages")
+        return self.get("packages")
 
     def get_linux_package_command(self, distro):
-        try:
-            distro_data = self.os[distro]
-        except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: {distro}")
+        distro_data = self.get(distro)
 
         try:
             command_base = distro_data["command"]
@@ -134,6 +125,12 @@ class Config:
 
         packages = " ".join(package_data)
         return f"{command_base} {packages}"
+
+    def get(self, key):
+        try:
+            return self.os[key]
+        except KeyError:
+            raise YamlError(f"Nothing found in {config_file} for: {self.os_name}:{key}")
 
 
 class Dependencies:
@@ -188,7 +185,7 @@ class Dependencies:
             choco.config_ci_cache()
 
             try:
-                ci_skip = self.config.os["ci"]["skip"]
+                ci_skip = self.config.get("ci")["skip"]
                 choco_config_file = ci_skip["edit-config"]
                 remove_packages = ci_skip["packages"]
             except KeyError:
@@ -196,21 +193,15 @@ class Dependencies:
 
             choco.remove_from_config(choco_config_file, remove_packages)
 
-        try:
-            command = self.config.os["command"]
-        except KeyError:
-            raise YamlError(f"Nothing found in {config_file} on Windows for: command")
-
+        command = self.config.get("command")
         choco.install(command, ci_env)
 
     def mac(self):
         """Installs dependencies on macOS."""
-        try:
-            command = self.config.os["command"]
-        except KeyError:
-            raise YamlError(f"Nothing found in {config_file} on Mac for: command")
-
+        command = self.config.get("command")
         cmd_utils.run(command)
+
+        mac.add_cmake_prefix(self.config.get("cmake-prefix"))
 
     def linux(self):
         """Installs dependencies on Linux."""
