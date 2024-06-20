@@ -12,15 +12,13 @@ def check_module(module):
         return False
 
 
-def bootstrap():
+def install_dependencies():
     has_pip = check_module("pip")
     has_venv = check_module("venv")
 
-    if not has_pip or not has_venv:
-        install_dependencies()
+    if has_pip and has_venv:
+        return
 
-
-def install_dependencies():
     print("Installing Python dependencies...")
 
     os = get_os()
@@ -83,7 +81,7 @@ def ensure_in_venv(venv_path, script):
     If the script is not running in a venv, it will create one and re-run the script in the venv.
     """
 
-    bootstrap()
+    install_dependencies()
     import venv
 
     if not in_venv():
@@ -105,7 +103,7 @@ def ensure_module(module, package):
     Ensures that a Python module is available, and installs the package if it is not.
     """
 
-    bootstrap()
+    install_dependencies()
 
     try:
         __import__(module)
