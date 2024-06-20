@@ -144,11 +144,6 @@ jobs:
     strategy:
       matrix:
         distro:
-          - name: centos-7.6
-            container: symless/synergy-core:centos7.6
-            runs-on: ubuntu-latest
-            legacy-cmake: true
-
           - name: centos-8
             container: symless/synergy-core:centos8
             runs-on: ubuntu-latest
