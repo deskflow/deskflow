@@ -61,14 +61,6 @@ class Config:
                 f"No package command found in {config_file} for: {distro}"
             )
 
-    def get_linux_extras_command(self, distro):
-        distro_data = self.get(distro)
-        try:
-            return distro_data["extras-command"]
-        except KeyError:
-            # HACK: use key accessor for optional values
-            return None
-
     def get(self, key):
         try:
             return self.os[key]
@@ -80,7 +72,7 @@ class Config:
 
 class Dependencies:
 
-    def __init__(self, only, extras):
+    def __init__(self, only):
         self.config = Config()
         self.only = only
         self.ci_env = os.environ.get("CI")

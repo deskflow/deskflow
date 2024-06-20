@@ -3,6 +3,43 @@ import sys
 from lib import cmd_utils
 
 
+def check_module(module):
+    try:
+        __import__(module)
+    except ImportError:
+        print(f"Python is missing {module} module")
+
+
+def bootstrap():
+    has_pip = check_module("pip")
+    has_venv = check_module("venv")
+
+    if not has_pip or not has_venv:
+        install_dependencies()
+
+
+def install_dependencies():
+    print("Installing Python dependencies...")
+
+    os = get_os()
+    if os != "linux":
+        raise RuntimeError(f"Failed to install Python dependencies on {os}")
+
+    distro = get_linux_distro()
+    if distro == "ubuntu" or distro == "debian":
+        print("Ubuntu detected, installing python3-pip...")
+        cmd_utils.run(
+            ["sudo", "apt", "install", "-y", "python3-pip", "python3-venv"], shell=False
+        )
+    elif distro == "fedora" or distro == "centos":
+        print("Fedora detected, installing python3-pip...")
+        cmd_utils.run(
+            ["sudo", "dnf", "install", "-y", "python3-pip", "python3-venv"], shell=False
+        )
+    else:
+        raise RuntimeError(f"Failed to install Python dependencies on {distro}")
+
+
 def get_os():
     """Detects the operating system."""
     if sys.platform == "win32":
@@ -44,11 +81,8 @@ def ensure_in_venv(venv_path, script):
     If the script is not running in a venv, it will create one and re-run the script in the venv.
     """
 
-    try:
-        import venv
-    except ImportError:
-        print("Python is missing venv module, install python3-venv package")
-        sys.exit(1)
+    bootstrap()
+    import venv
 
     if not in_venv():
         if not os.path.exists(venv_path):
@@ -69,11 +103,7 @@ def ensure_module(module, package):
     Ensures that a Python module is available, and installs the package if it is not.
     """
 
-    try:
-        __import__("pip")
-    except ImportError:
-        print("Missing pip module, install python3-pip package")
-        sys.exit(1)
+    bootstrap()
 
     try:
         __import__(module)

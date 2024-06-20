@@ -158,12 +158,10 @@ jobs:
             container: symless/synergy-core:debian11
             runs-on: ubuntu-latest
             legacy-cmake: true
-            python-deps: sudo apt install python3-pip python3-venv
 
           - name: debian-12
             container: symless/synergy-core:debiansid
             runs-on: ubuntu-latest
-            python-deps: sudo apt install python3-pip python3-venv
 
           - name: fedora-37
             container: symless/synergy-core:fedora37
@@ -179,16 +177,13 @@ jobs:
             container: symless/synergy-core:ubuntu20.04
             runs-on: ubuntu-latest
             legacy-cmake: true
-            python-deps: sudo apt install python3-pip python3-venv
 
           - name: ubuntu-22.04
             container: symless/synergy-core:ubuntu22.04
             runs-on: ubuntu-latest
-            python-deps: sudo apt install python3-pip python3-venv
 
           - name: ubuntu-24.04
             runs-on: ubuntu-24.04
-            python-deps: sudo apt install python3-pip python3-venv
 
     steps:
       # Use @v3 since some older Linux distro versions don't support @v4
