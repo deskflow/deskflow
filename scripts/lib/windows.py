@@ -33,6 +33,7 @@ class WindowsChoco:
             # don't show noisy choco progress bars in ci env
             cmd_utils.run(f"{command} --no-progress")
         else:
+            cmd_utils.run("winget install chocolatey", check=False)
             cmd_utils.run(command)
 
     def config_ci_cache(self):

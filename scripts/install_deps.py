@@ -6,6 +6,7 @@ import sys
 import argparse
 import traceback
 
+yaml = None
 config_file = "deps.yml"
 
 
@@ -19,15 +20,6 @@ class PlatformError(Exception):
 
 class PathError(Exception):
     pass
-
-
-try:
-    import yaml  # type: ignore
-except ImportError:
-    # this is fairly common in earlier versions of python3,
-    # which is normally what you find on mac and windows.
-    print("Python yaml module missing, please install: pip install pyyaml")
-    sys.exit(1)
 
 
 def main():
@@ -50,6 +42,25 @@ def main():
 
     if args.pause_on_exit:
         input("Press enter to continue...")
+
+
+def load_yaml():
+    try:
+        import yaml as yaml_import  # type: ignore
+
+        return yaml_import
+    except ImportError:
+        # this is a fairly common missing dep on mac and windows.
+        print("Python yaml module missing, installing...")
+        if get_os() == "mac":
+            cmd_utils.run("brew install pyyaml")
+        else:
+            cmd_utils.run("pip install pyyaml")
+
+        # re-launch script after pyyaml is installed
+        cmd_utils.run(f"{sys.executable} {__file__}")
+
+        sys.exit(1)
 
 
 def get_os():
@@ -208,6 +219,8 @@ class Dependencies:
         command = self.config.get_linux_package_command(distro)
         cmd_utils.run(command)
 
+
+yaml = load_yaml()
 
 if __name__ == "__main__":
     main()
