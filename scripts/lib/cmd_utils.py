@@ -2,6 +2,19 @@ import subprocess
 import sys
 
 
+def has_command(command):
+    platform = sys.platform
+    if platform == "win32":
+        cmd = f"where {command}"
+    else:
+        cmd = f"which {command}"
+    try:
+        subprocess.check_output(cmd, shell=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
 def run(command, check=True, shell=True, get_stdout=False):
     """
     Run a command. By default, shell is used and the return code is checked.

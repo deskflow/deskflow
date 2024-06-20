@@ -150,6 +150,12 @@ class Dependencies:
             raise RuntimeError("Unable to detect Linux distro")
 
         command = self.config.get_linux_command(distro)
+
+        has_sudo = cmd_utils.has_command("sudo")
+        if command.startswith("sudo") and not has_sudo:
+            print("sudo not found, running command without sudo")
+            command = command.replace("sudo", "")
+
         cmd_utils.run(command)
 
 
