@@ -107,24 +107,12 @@ class Config:
     def get_qt_config(self):
         return self.get("qt")
 
-    def get_packages_file(self):
-        return self.get("packages")
-
-    def get_linux_package_command(self, distro):
+    def get_linux_command(self, distro):
         distro_data = self.get(distro)
-
         try:
-            command_base = distro_data["command"]
+            return distro_data["command"]
         except KeyError:
             raise YamlError(f"No package command found in {config_file} for: {distro}")
-
-        try:
-            package_data = distro_data["packages"]
-        except KeyError:
-            raise YamlError(f"No package list found in {config_file} for: {distro}")
-
-        packages = " ".join(package_data)
-        return f"{command_base} {packages}"
 
     def get(self, key):
         try:
@@ -211,7 +199,7 @@ class Dependencies:
         if not distro:
             raise PlatformError("Unable to detect Linux distro")
 
-        command = self.config.get_linux_package_command(distro)
+        command = self.config.get_linux_command(distro)
         cmd_utils.run(command)
 
 
