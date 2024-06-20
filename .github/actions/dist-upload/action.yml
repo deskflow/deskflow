@@ -23,7 +23,7 @@ runs:
   steps:
     # Upload to GitHub
     - if: ${{ inputs.service == 'github' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.github-target-filename }}
         path: ./dist
