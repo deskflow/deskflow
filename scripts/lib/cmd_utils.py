@@ -17,6 +17,8 @@ def run(command, check=True, get_stdout=False):
     # the end of each line as continuation character.
     # When a YAML file is parsed, this becomes "\ ", so this character sequence must be removed
     # before running the command.
+    # This doesn't seem to be an issue on Windows, since the \ path separator is rarely followed
+    # by a space.
     cmd_continuation = "\\ "
 
     if isinstance(command, list):
