@@ -11,10 +11,6 @@ env.ensure_module("yaml", "pyyaml")
 import yaml
 
 config_file = "deps.yml"
-required_packages = {
-    "yaml": "pyyaml",
-    "dotenv": "python-dotenv",
-}
 
 
 def main():
