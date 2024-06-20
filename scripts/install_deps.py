@@ -5,7 +5,7 @@ from lib import env, windows, mac, cmd_utils
 
 if env.get_os() == "mac":
     # on mac, run in venv to make installing dependencies easier.
-    env.ensure_in_venv("build/install_deps", __file__)
+    env.ensure_in_venv("build/python", __file__)
 
 env.ensure_module("yaml", "pyyaml")
 import yaml
@@ -21,10 +21,15 @@ def main():
     parser.add_argument(
         "--only", type=str, help="Only install the specified dependency"
     )
+    parser.add_argument(
+        "--extras",
+        action="store_true",
+        help="Install extra dependencies (e.g. packaging, etc)",
+    )
     args = parser.parse_args()
 
     try:
-        deps = Dependencies(args.only)
+        deps = Dependencies(args.only, args.extras)
         deps.install()
     except Exception:
         traceback.print_exc()
@@ -59,9 +64,18 @@ class Config:
         try:
             return distro_data["command"]
         except KeyError:
+
             raise RuntimeError(
                 f"No package command found in {config_file} for: {distro}"
             )
+
+    def get_linux_extras_command(self, distro):
+        distro_data = self.get(distro)
+        try:
+            return distro_data["extras-command"]
+        except KeyError:
+            # HACK: use key accessor for optional values
+            return None
 
     def get(self, key):
         try:
@@ -74,9 +88,10 @@ class Config:
 
 class Dependencies:
 
-    def __init__(self, only):
+    def __init__(self, only, extras):
         self.config = Config()
         self.only = only
+        self.extras = extras
         self.ci_env = os.environ.get("CI")
 
         if self.ci_env:
@@ -153,6 +168,11 @@ class Dependencies:
 
         command = self.config.get_linux_command(distro)
         cmd_utils.run(command)
+
+        if self.extras:
+            command_extras = self.config.get_linux_extras_command(distro)
+            if command_extras:
+                cmd_utils.run(command_extras)
 
 
 if __name__ == "__main__":

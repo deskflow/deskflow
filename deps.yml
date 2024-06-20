@@ -36,6 +36,10 @@ dependencies:
         libgtk-3-dev \
         rpm
 
+      extras-command: sudo apt-get install -y \
+        python3-pip
+        python3-venv
+
     ubuntu:
       <<: *debian
 

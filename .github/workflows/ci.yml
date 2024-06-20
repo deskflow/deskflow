@@ -195,7 +195,7 @@ jobs:
 
       - name: Install dependencies
         if: ${{ matrix.distro.install-deps }}
-        run: ./scripts/install_deps.py
+        run: ./scripts/install_deps.py --extras
 
       - name: Configure
         if: ${{ !matrix.distro.legacy-cmake }}

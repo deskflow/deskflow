@@ -3,9 +3,9 @@
 import os, sys
 from lib import env
 
-if env.get_os() == "mac":
+if env.get_os() != "windows":
     # on mac, run in venv to make installing dependencies easier.
-    env.ensure_in_venv("build/mac_package", __file__)
+    env.ensure_in_venv("build/python", __file__)
 
 env.ensure_module("dotenv", "python-dotenv")
 from dotenv import load_dotenv
