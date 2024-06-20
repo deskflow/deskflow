@@ -83,13 +83,11 @@ class Dependencies:
     def install(self):
         """Installs dependencies for the current platform."""
 
-        os = env.get_os()
-        print(f"Operating system: {os}")
-        if os == "windows":
+        if env.is_windows():
             self.windows()
-        elif os == "mac":
+        elif env.is_mac():
             self.mac()
-        elif os == "linux":
+        elif env.is_linux():
             self.linux()
         else:
             raise RuntimeError(f"Unsupported platform: {os}")

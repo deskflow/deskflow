@@ -23,6 +23,18 @@ def get_os():
         raise RuntimeError(f"Unsupported platform: {sys.platform}")
 
 
+def is_windows():
+    return get_os() == "windows"
+
+
+def is_mac():
+    return get_os() == "mac"
+
+
+def is_linux():
+    return get_os() == "linux"
+
+
 def get_linux_distro():
     """Detects the Linux distro."""
     os_file = "/etc/os-release"

@@ -27,6 +27,32 @@ def main():
     version = f"{major}.{minor}.{patch}-{stage}+build-{build}"
     print(f"Synergy version: {version}")
 
+    if env.is_windows():
+        windows_package()
+    elif env.is_mac():
+        mac_package()
+    elif env.is_linux():
+        linux_package()
+    else:
+        raise RuntimeError(f"Unsupported platform: {env.get_os()}")
+
+
+def windows_package():
+    print("TODO: Windows packaging")
+
+
+def mac_package():
+    from lib import mac
+
+    mac.install_certificate(
+        os.getenv("APPLE_P12_CERTIFICATE"),
+        os.getenv("APPLE_P12_PASSWORD"),
+    )
+
+
+def linux_package():
+    print("TODO: Linux packaging")
+
 
 if __name__ == "__main__":
     main()

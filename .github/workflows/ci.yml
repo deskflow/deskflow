@@ -128,6 +128,9 @@ jobs:
 
       - name: Package
         run: ./scripts/package.py
+        env:
+          APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
+          APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
 
       - name: Distribute
         uses: ./.github/actions/dist-upload
