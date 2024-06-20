@@ -110,11 +110,11 @@ def ensure_dependencies():
 
     distro = get_linux_distro()
     if distro == "ubuntu" or distro == "debian":
-        cmd_utils.run(f"{sudo} apt update".trim(), check=False)
-        cmd_utils.run(f"{sudo} apt install -y python3-pip python3-venv".trim())
+        cmd_utils.run(f"{sudo} apt update".strip(), check=False)
+        cmd_utils.run(f"{sudo} apt install -y python3-pip python3-venv".strip())
     elif distro == "fedora" or distro == "centos":
-        cmd_utils.run(f"{sudo} dnf check-update".trim(), check=False)
-        cmd_utils.run(f"{sudo} dnf install -y python3-pip python3-virtualenv".trim())
+        cmd_utils.run(f"{sudo} dnf check-update".strip(), check=False)
+        cmd_utils.run(f"{sudo} dnf install -y python3-pip python3-virtualenv".strip())
     else:
         # arch, opensuse, etc, patches welcome! :)
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")

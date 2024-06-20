@@ -154,7 +154,7 @@ class Dependencies:
         has_sudo = cmd_utils.has_command("sudo")
         if command.startswith("sudo") and not has_sudo:
             print("sudo not found, running command without sudo")
-            command = command.replace("sudo", "").trim()
+            command = command.replace("sudo", "").strip()
 
         cmd_utils.run(command)
 
