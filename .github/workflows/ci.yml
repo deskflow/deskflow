@@ -190,8 +190,8 @@ jobs:
           ../dist/macos/notorize.sh
 
       # Upload to GitHub
-      - if: ${{ inputs.upload-target == 'github' }}
-        uses: actions/upload-artifact@v3
+      # - if: ${{ inputs.upload-target == 'github' }}
+      - uses: actions/upload-artifact@v3
         with:
           name: synergy-3-linux-${{ matrix.runtime.distro }}
           path: ./dist
@@ -200,13 +200,13 @@ jobs:
       # Upload to Google Drive
       # HACK: Using fork of action while PR is waiting
       # https://symless.atlassian.net/browse/S3-1659
-      - if: ${{ inputs.upload-target == 'gdrive' }}
-        uses: symless/gdrive-upload@target-glob
-        with:
-          credentials: ${{ secrets.GOOGLE_DRIVE_KEY }}
-          target: "./dist/*"
-          parent_folder_id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
-          child_folder: Snapshots/synergy1/test
+      # - if: ${{ inputs.upload-target == 'gdrive' }}
+      #   uses: symless/gdrive-upload@target-glob
+      #   with:
+      #     credentials: ${{ secrets.GOOGLE_DRIVE_KEY }}
+      #     target: "./dist/*"
+      #     parent_folder_id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+      #     child_folder: Snapshots/synergy1/test
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
