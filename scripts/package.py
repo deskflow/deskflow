@@ -13,6 +13,9 @@ version_env = "build/.env.version"
 def main():
     print(f"Operating system: {env.get_os()}")
 
+    if not os.path.isfile(version_env):
+        raise RuntimeError(f"Version file not found: {version_env}")
+
     load_dotenv(dotenv_path=version_env)
 
     major = os.getenv("SYNERGY_VERSION_MAJOR")

@@ -1,5 +1,4 @@
-import os
-import sys
+import os, sys, subprocess
 from lib import cmd_utils
 
 
@@ -62,12 +61,10 @@ def ensure_in_venv(venv_path, script):
             venv.create(venv_path, with_pip=True)
 
         script_file = os.path.basename(script)
-        print(f"Re-running {script_file} in virtual environment...")
+        print(f"Using virtual environment for {script_file}")
         python_executable = get_python_executable(venv_path)
-        result = cmd_utils.run([python_executable, script] + sys.argv[1:], shell=False)
+        result = subprocess.run([python_executable, script] + sys.argv[1:])
         sys.exit(result.returncode)
-    else:
-        print("Now running in virtual environment")
 
 
 def ensure_module(module, package):
@@ -82,8 +79,6 @@ def ensure_module(module, package):
     except ImportError:
         print(f"Python is missing {module} module, installing {package} package...")
         cmd_utils.run([sys.executable, "-m", "pip", "install", package], shell=False)
-    else:
-        print(f"Python package {package} already installed")
 
 
 def ensure_dependencies():
