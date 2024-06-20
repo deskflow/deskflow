@@ -14,7 +14,7 @@ def get_os():
     elif sys.platform.startswith("linux"):
         return "linux"
     else:
-        raise PlatformError(f"Unsupported platform: {sys.platform}")
+        raise RuntimeError(f"Unsupported platform: {sys.platform}")
 
 
 def get_linux_distro():

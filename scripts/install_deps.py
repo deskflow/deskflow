@@ -17,18 +17,6 @@ required_packages = {
 }
 
 
-class YamlError(Exception):
-    pass
-
-
-class PlatformError(Exception):
-    pass
-
-
-class PathError(Exception):
-    pass
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -60,12 +48,12 @@ class Config:
         try:
             root = data["dependencies"]
         except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: dependencies")
+            raise RuntimeError(f"Nothing found in {config_file} for: dependencies")
 
         try:
             self.os = root[self.os_name]
         except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: {self.os_name}")
+            raise RuntimeError(f"Nothing found in {config_file} for: {self.os_name}")
 
     def get_qt_config(self):
         return self.get("qt")
@@ -75,13 +63,17 @@ class Config:
         try:
             return distro_data["command"]
         except KeyError:
-            raise YamlError(f"No package command found in {config_file} for: {distro}")
+            raise RuntimeError(
+                f"No package command found in {config_file} for: {distro}"
+            )
 
     def get(self, key):
         try:
             return self.os[key]
         except KeyError:
-            raise YamlError(f"Nothing found in {config_file} for: {self.os_name}:{key}")
+            raise RuntimeError(
+                f"Nothing found in {config_file} for: {self.os_name}:{key}"
+            )
 
 
 class Dependencies:
@@ -106,7 +98,7 @@ class Dependencies:
         elif os == "linux":
             self.linux()
         else:
-            raise PlatformError(f"Unsupported platform: {os}")
+            raise RuntimeError(f"Unsupported platform: {os}")
 
     def windows(self):
         """Installs dependencies on Windows."""
@@ -141,7 +133,7 @@ class Dependencies:
                 choco_config_file = ci_skip["edit-config"]
                 remove_packages = ci_skip["packages"]
             except KeyError:
-                raise YamlError(f"Bad mapping in {config_file} on Windows for: ci")
+                raise RuntimeError(f"Bad mapping in {config_file} on Windows for: ci")
 
             choco.remove_from_config(choco_config_file, remove_packages)
 
@@ -161,7 +153,7 @@ class Dependencies:
 
         distro = env.get_linux_distro()
         if not distro:
-            raise PlatformError("Unable to detect Linux distro")
+            raise RuntimeError("Unable to detect Linux distro")
 
         command = self.config.get_linux_command(distro)
         cmd_utils.run(command)
