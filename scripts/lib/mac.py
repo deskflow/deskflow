@@ -19,4 +19,6 @@ def append_to_zshrc(text):
 def add_cmake_prefix(cmake_prefix_command):
     output = cmd_utils.run(cmake_prefix_command, get_stdout=True)
     cmake_prefix = output.strip()
+
+    print(f"Setting environment variable: {cmake_env_var}={cmake_prefix}")
     append_to_zshrc(f'export {cmake_env_var}="${cmake_env_var}:{cmake_prefix}"')

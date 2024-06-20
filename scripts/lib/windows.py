@@ -26,15 +26,20 @@ def is_admin():
 
 def set_env_var(name, value):
     """
-    Sets or updates an environment variable.
+    Sets or updates an environment variable. Appends the value if it doesn't already exist.
 
     Args:
     name (str): The name of the environment variable.
     value (str): The value of the environment variable.
     """
-    print(f"Setting environment variable: {name}={value}")
-    os.environ[name] = value
-    cmd_utils.run(["setx", name, value], check=True)
+
+    current_value = os.getenv(name, "")
+
+    if value not in current_value:
+        new_value = f"{current_value}{os.pathsep}{value}" if current_value else value
+        os.environ[name] = new_value
+        print(f"Setting environment variable: {name}={value}")
+        cmd_utils.run(["setx", name, new_value], check=True)
 
 
 class WindowsChoco:
