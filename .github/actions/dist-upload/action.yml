@@ -1,0 +1,35 @@
+name: "Distribute upload"
+description: "Uploads the package from the dist dir to GitHub artifacts or Google Drive"
+inputs:
+  service:
+    description: "Where to upload the package (github or gdrive)"
+    default: "github"
+
+  target-filename:
+    description: "The filename to upload (only used by GitHub artifacts)"
+
+  target-dir:
+    description: "The directory to upload (only used by Google Drive)"
+
+runs:
+  using: "composite"
+
+  steps:
+    # Upload to GitHub
+    - if: ${{ inputs.service == 'github' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.target-name }}
+        path: ./dist
+        retention-days: 3
+
+    # Upload to Google Drive
+    # HACK: Using fork of action while PR is waiting
+    # https://symless.atlassian.net/browse/S3-1659
+    - if: ${{ inputs.service == 'gdrive' }}
+      uses: symless/gdrive-upload@target-glob
+      with:
+        credentials: ${{ secrets.GOOGLE_DRIVE_KEY }}
+        target: "./dist/*"
+        parent_folder_id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+        child_folder: Snapshots/${{ inputs.target-dir }}
