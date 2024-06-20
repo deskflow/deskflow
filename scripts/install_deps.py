@@ -138,6 +138,10 @@ class Dependencies:
     def __init__(self, only):
         self.config = Config()
         self.only = only
+        self.ci_env = os.environ.get("CI")
+
+        if self.ci_env:
+            print("CI environment detected")
 
     def install(self):
         """Installs dependencies for the current platform."""
@@ -159,14 +163,10 @@ class Dependencies:
             windows.relaunch_as_admin(__file__)
             sys.exit()
 
-        ci_env = os.environ.get("CI")
-        if ci_env:
-            print("CI environment detected")
-
         only_qt = self.only == "qt"
 
         # for ci, skip qt; we install qt separately so we can cache it.
-        if not ci_env or only_qt:
+        if not self.ci_env or only_qt:
             qt = windows.WindowsQt(self.config.get_qt_config(), config_file)
             qt_install_dir = qt.get_install_dir()
             if qt_install_dir:
@@ -174,14 +174,14 @@ class Dependencies:
             else:
                 qt.install()
 
-            if not ci_env:
+            if not self.ci_env:
                 qt.set_env_vars()
 
             if only_qt:
                 return
 
         choco = windows.WindowsChoco()
-        if ci_env:
+        if self.ci_env:
             choco.config_ci_cache()
 
             try:
@@ -194,14 +194,15 @@ class Dependencies:
             choco.remove_from_config(choco_config_file, remove_packages)
 
         command = self.config.get("command")
-        choco.install(command, ci_env)
+        choco.install(command, self.ci_env)
 
     def mac(self):
         """Installs dependencies on macOS."""
         command = self.config.get("command")
         cmd_utils.run(command)
 
-        mac.add_cmake_prefix(self.config.get("cmake-prefix"))
+        if not self.ci_env:
+            mac.add_cmake_prefix(self.config.get("cmake-prefix"))
 
     def linux(self):
         """Installs dependencies on Linux."""
