@@ -4,6 +4,8 @@ import os
 import xml.etree.ElementTree as ET
 from lib import cmd_utils
 
+cmake_env_var = "CMAKE_PREFIX_PATH"
+
 
 class EnvError(Exception):
     pass
@@ -135,4 +137,4 @@ class WindowsQt:
             raise EnvError(f"Qt not installed, path not found: {install_dir}")
 
     def set_env_vars(self):
-        set_env_var("CMAKE_PREFIX_PATH", f"{self.get_install_dir()}\\msvc2019_64")
+        set_env_var(cmake_env_var, f"{self.get_install_dir()}\\msvc2019_64")

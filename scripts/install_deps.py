@@ -202,7 +202,7 @@ class Dependencies:
         cmd_utils.run(command)
 
         if not self.ci_env:
-            mac.add_cmake_prefix(self.config.get("cmake-prefix"))
+            mac.set_cmake_prefix_env_var(self.config.get("cmake-prefix"))
 
     def linux(self):
         """Installs dependencies on Linux."""
