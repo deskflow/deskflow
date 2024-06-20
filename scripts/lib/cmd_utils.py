@@ -13,9 +13,18 @@ def run(command, check=True, get_stdout=False):
     get_stdout (bool): If True, returns the stdout of the command instead of forwarding it.
     """
 
-    command_str = command
+    # To spread strings over multiple lines in YAML files, like in bash, a backslash is used at
+    # the end of each line as continuation character.
+    # When a YAML file is parsed, this becomes "\ ", so this character sequence must be removed
+    # before running the command.
+    cmd_continuation = "\\ "
+
     if isinstance(command, list):
+        command = [c.replace(cmd_continuation, "") for c in command]
         command_str = " ".join(command)
+    else:
+        command = command.replace(cmd_continuation, "")
+        command_str = command
 
     print(f"Running: {command_str}")
     sys.stdout.flush()
