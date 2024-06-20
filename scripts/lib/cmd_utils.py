@@ -46,7 +46,7 @@ def run(command, check=True, shell=True, get_stdout=False):
 
     try:
         if get_stdout:
-            return subprocess.run(
+            result = subprocess.run(
                 command,
                 shell=shell,
                 check=check,
@@ -54,7 +54,15 @@ def run(command, check=True, shell=True, get_stdout=False):
                 text=True,
             )
         else:
-            return subprocess.run(command, check=check, shell=shell)
+            result = subprocess.run(command, check=check, shell=shell)
     except subprocess.CalledProcessError as e:
-        print(f"Command failed: {command_str}", file=sys.stderr)
+        print(
+            f"Command failed with code {e.returncode}: {command_str}", file=sys.stderr
+        )
         raise e
+
+    if result.returncode != 0:
+        print(
+            f"Command failed with code {result.returncode}: {command_str}",
+            file=sys.stderr,
+        )

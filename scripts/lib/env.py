@@ -7,7 +7,7 @@ def check_module(module):
         __import__(module)
         return True
     except ImportError:
-        print(f"Python is missing {module} module")
+        print(f"Python is missing {module} module", file=sys.stderr)
         return False
 
 
@@ -77,7 +77,7 @@ def ensure_module(module, package):
     try:
         __import__(module)
     except ImportError:
-        print(f"Python is missing {module} module, installing {package} package...")
+        print(f"Python missing {module}, installing {package}...", file=sys.stderr)
         cmd_utils.run([sys.executable, "-m", "pip", "install", package], shell=False)
 
 
