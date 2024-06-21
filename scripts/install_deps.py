@@ -17,6 +17,7 @@ def main():
     )
     args = parser.parse_args()
 
+    error = False
     try:
         deps = Dependencies(args.only)
         deps.install()
@@ -67,7 +68,7 @@ class Dependencies:
 
         # for ci, skip qt; we install qt separately so we can cache it.
         if not self.ci_env or only_qt:
-            qt = windows.WindowsQt(self.config.get_qt_config())
+            qt = windows.WindowsQt(*self.config.get_qt_config())
             qt_install_dir = qt.get_install_dir()
             if qt_install_dir:
                 print(f"Skipping Qt, already installed at: {qt_install_dir}")
