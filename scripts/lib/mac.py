@@ -3,7 +3,7 @@ from lib import cmd_utils, env
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
-cert_path = "/tmp/certificate.p12"
+cert_path = "tmp/codesign.p12"
 dmg_path = "dist/synergy-macos.dmg"
 product_name = "Synergy"
 settings_file = "res/dist/macos/dmgbuild/settings.py"
