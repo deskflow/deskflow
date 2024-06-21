@@ -394,7 +394,7 @@ endif()
 
 
 #
-# Configure_file... but for directories, recursively.
+# Samme as the `configure_file` command but for directories recursively.
 #
 macro (configure_files srcDir destDir)
     message (STATUS "Configuring directory ${destDir}")
@@ -426,7 +426,7 @@ endmacro (configure_files)
 if (${SYNERGY_BUILD_INSTALLER})
 
 #
-# macOS app Bundle
+# macOS app bundle
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
@@ -443,14 +443,14 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
         set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
 #
 # Linux installation
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
+    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/res/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2")
         install(FILES res/synergy2.desktop DESTINATION share/applications)
