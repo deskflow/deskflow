@@ -1,5 +1,4 @@
 import os, subprocess, base64, time, json
-from tempfile import NamedTemporaryFile
 from lib import cmd_utils, env
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
@@ -39,7 +38,7 @@ def set_cmake_prefix_env_var(cmake_prefix_command):
 
 def package():
     env.ensure_module("dmgbuild", "dmgbuild")
-    import dmgbuild
+    import dmgbuild  # type: ignore
 
     install_certificate(
         env.get_env_var("APPLE_P12_CERTIFICATE"),
@@ -179,6 +178,25 @@ class NotaryTool:
             # important: suppress the original args with `from None` to avoid leaking the password
             raise RuntimeError(f"Command failed: {notarytool_path}") from None
 
+    def submit_and_wait(self, dmg_filename):
+        print("Submitting notarization request...")
+        submit_result = self.run_submit_command(dmg_filename)
+        request_id = submit_result["id"]
+
+        print(f"Notary submitted, waiting for request: {request_id}")
+        start = time.time()
+        wait_result = self.run_wait_command(request_id)
+        status = wait_result["status"]
+
+        time_taken = time.time() - start
+        print(f"Notary complete in {time_taken:.2f}s, status: {status}")
+        if status == "Accepted":
+            print("Notarization successful.")
+        elif status == "Invalid" or status == "Rejected":
+            raise ValueError(f"Notarization failed, status: {status}")
+        else:
+            raise ValueError(f"Unknown status: {status}")
+
     def run_submit_command(self, dmg_filename):
         if not os.path.exists(dmg_filename):
             raise FileNotFoundError(f"File not found: {dmg_filename}")
@@ -221,22 +239,3 @@ class NotaryTool:
             return json.loads(result.stderr)
         else:
             return json.loads(result.stdout)
-
-    def submit_and_wait(self, dmg_filename):
-        print("Submitting notarization request...")
-        submit_result = self.run_submit_command(dmg_filename)
-        request_id = submit_result["id"]
-
-        print(f"Notary submitted, waiting for request: {request_id}")
-        start = time.time()
-        wait_result = self.run_wait_command(request_id)
-        status = wait_result["status"]
-
-        time_taken = time.time() - start
-        print(f"Notary complete in {time_taken:.2f}s, status: {status}")
-        if status == "Accepted":
-            print("Notarization successful.")
-        elif status == "Invalid" or status == "Rejected":
-            raise ValueError(f"Notarization failed, status: {status}")
-        else:
-            raise ValueError(f"Unknown status: {status}")

@@ -5,7 +5,7 @@ from lib import env
 
 env.ensure_in_venv(__file__)
 env.ensure_module("dotenv", "python-dotenv")
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # type: ignore
 
 env_file = ".env"
 version_env = "build/.env.version"
