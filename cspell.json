@@ -1,0 +1,23 @@
+{
+  "version": "0.2",
+  "ignorePaths": [],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "words": [
+    "aqtinstall",
+    "codesign",
+    "distros",
+    "dmgbuild",
+    "dotenv",
+    "keychain",
+    "Keychains",
+    "macdeployqt",
+    "msvc",
+    "notarytool",
+    "outputdir",
+    "runas",
+    "winget"
+  ],
+  "ignoreWords": [],
+  "import": []
+}
