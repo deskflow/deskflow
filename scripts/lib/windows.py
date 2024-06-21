@@ -7,10 +7,6 @@ from lib import cmd_utils
 cmake_env_var = "CMAKE_PREFIX_PATH"
 
 
-class EnvError(Exception):
-    pass
-
-
 def relaunch_as_admin(script):
     args = " ".join(sys.argv[1:])
     command = f"{script} --pause-on-exit {args}"
@@ -69,10 +65,10 @@ class WindowsChoco:
         else:
             print(f"Warning: CI environment variable {runner_temp_key} not set")
 
-    def remove_from_config(self, config_file, remove_packages):
+    def remove_from_config(self, choco_config_file, remove_packages):
         """Removes a package from the Chocolatey configuration."""
 
-        tree = ET.parse(config_file)
+        tree = ET.parse(choco_config_file)
         root = tree.getroot()
         for remove in remove_packages:
             for package in root.findall("package"):
@@ -80,33 +76,22 @@ class WindowsChoco:
                     root.remove(package)
                     print(f"Removed package from choco config: {remove}")
 
-        tree.write(config_file)
+        tree.write(choco_config_file)
 
 
 class WindowsQt:
     """Qt for Windows."""
 
-    def __init__(self, config, config_file):
-        self.config = config
-        self.config_file = config_file
+    def __init__(self, mirror_url, default_version, default_base_dir):
+        self.mirror_url = mirror_url
 
         self.version = os.environ.get("QT_VERSION")
         if not self.version:
-            try:
-                default_version = config["version"]
-            except KeyError:
-                raise EnvError(f"Qt version not set in {config_file}")
-
             print(f"QT_VERSION not set, using: {default_version}")
             self.version = default_version
 
         self.base_dir = os.environ.get("QT_BASE_DIR")
         if not self.base_dir:
-            try:
-                default_base_dir = config["install-dir"]
-            except KeyError:
-                raise EnvError(f"Qt install-dir not set in {config_file}")
-
             print(f"QT_BASE_DIR not set, using: {default_base_dir}")
             self.base_dir = default_base_dir
 
@@ -121,20 +106,15 @@ class WindowsQt:
 
         cmd_utils.run(["pip", "install", "aqtinstall"])
 
-        try:
-            mirror_url = self.config["mirror"]
-        except KeyError:
-            raise EnvError(f"Qt mirror not set in {self.config_file}")
-
         args = ["python", "-m", "aqt", "install-qt"]
         args.extend(["--outputdir", self.base_dir])
-        args.extend(["--base", mirror_url])
+        args.extend(["--base", self.mirror_url])
         args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
         cmd_utils.run(args)
 
         install_dir = self.get_install_dir()
         if not install_dir:
-            raise EnvError(f"Qt not installed, path not found: {install_dir}")
+            raise RuntimeError(f"Qt not installed, path not found: {install_dir}")
 
     def set_env_vars(self):
         set_env_var(cmake_env_var, f"{self.get_install_dir()}\\msvc2019_64")

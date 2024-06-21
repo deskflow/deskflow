@@ -34,6 +34,7 @@ def strip_continuation_sequences(command):
         return command.replace(cmd_continuation, "")
 
 
+# TODO: fix bug: often when using this function, only the first arg element is sent to subprocess.run
 def run(
     command,
     check=True,
@@ -42,7 +43,13 @@ def run(
     print_cmd=True,
 ):
     """
-    Run a command.
+    Convenience wrapper around `subprocess.run` to:
+    - print the command before running it
+    - pipe/capture the output instead of printing it
+
+    This differs to `subprocess.run` in that by default it:
+    - checks the return code by default
+    - uses a shell by default (sometimes a bad idea for security)
 
     Warning: This code is used by CI and prints the command before running it;
     never use this function with sensitive information such as passwords,
@@ -65,25 +72,17 @@ def run(
         print(f"Running: {command_str}")
         sys.stdout.flush()
 
-    try:
-        if get_output:
-            result = subprocess.run(
-                command,
-                shell=shell,
-                check=check,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-        else:
-            result = subprocess.run(command, check=check, shell=shell)
-    except subprocess.CalledProcessError as e:
-        if print_cmd:
-            print(
-                f"Command failed with code {e.returncode}: {command_str}",
-                file=sys.stderr,
-            )
-        raise e
+    if get_output:
+        result = subprocess.run(
+            command,
+            shell=shell,
+            check=check,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    else:
+        result = subprocess.run(command, check=check, shell=shell)
 
     if print_cmd and result.returncode != 0:
         print(

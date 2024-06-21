@@ -2,6 +2,7 @@
 
 import os
 from lib import env
+from lib.config import Config
 
 env.ensure_in_venv(__file__)
 env.ensure_module("dotenv", "python-dotenv")
@@ -28,10 +29,12 @@ def main():
     version = f"{major}.{minor}.{patch}-{stage}+build-{build}"
     print(f"Synergy version: {version}")
 
+    config = Config()
+
     if env.is_windows():
         windows_package()
     elif env.is_mac():
-        mac_package()
+        mac_package(config)
     elif env.is_linux():
         linux_package()
     else:
@@ -42,10 +45,10 @@ def windows_package():
     print("TODO: Windows packaging")
 
 
-def mac_package():
+def mac_package(config):
     from lib import mac
 
-    mac.package()
+    mac.package(config)
 
 
 def linux_package():

@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 
 import os, sys, argparse, traceback
-from lib import env, windows, mac, cmd_utils
+from lib import env, windows, mac, cmd_utils, config
 
 env.ensure_in_venv(__file__)
-env.ensure_module("yaml", "pyyaml")
-import yaml
-
-config_file = "deps.yml"
 
 
 def main():
@@ -30,57 +26,12 @@ def main():
         input("Press enter to continue...")
 
 
-class Config:
-    """Reads the dependencies configuration file."""
-
-    def __init__(self):
-        with open(config_file, "r") as f:
-            data = yaml.safe_load(f)
-
-        self.os_name = env.get_os()
-        try:
-            root = data["dependencies"]
-        except KeyError:
-            raise RuntimeError(f"Nothing found in {config_file} for: dependencies")
-
-        try:
-            self.os = root[self.os_name]
-        except KeyError:
-            raise RuntimeError(f"Nothing found in {config_file} for: {self.os_name}")
-
-    def get_os_value(self, key):
-        try:
-            return self.os[key]
-        except KeyError:
-            raise RuntimeError(
-                f"Nothing found in {config_file} for: {self.os_name}:{key}"
-            )
-
-    def get_qt_config(self):
-        return self.get_os_value("qt")
-
-    def get_root_command(self):
-        command = self.get_os_value("command")
-        return cmd_utils.strip_continuation_sequences(command)
-
-    def get_linux_command(self, distro):
-        distro_data = self.get_os_value(distro)
-        try:
-            command = distro_data["command"]
-            return cmd_utils.strip_continuation_sequences(command)
-        except KeyError:
-
-            raise RuntimeError(
-                f"No package command found in {config_file} for: {distro}"
-            )
-
-
 class Dependencies:
 
     def __init__(self, only):
-        self.config = Config()
+        self.config = config.Config()
         self.only = only
-        self.ci_env = os.environ.get("CI")
+        self.ci_env = env.is_running_in_ci()
 
         if self.ci_env:
             print("CI environment detected")
@@ -108,7 +59,7 @@ class Dependencies:
 
         # for ci, skip qt; we install qt separately so we can cache it.
         if not self.ci_env or only_qt:
-            qt = windows.WindowsQt(self.config.get_qt_config(), config_file)
+            qt = windows.WindowsQt(self.config.get_qt_config())
             qt_install_dir = qt.get_install_dir()
             if qt_install_dir:
                 print(f"Skipping Qt, already installed at: {qt_install_dir}")
@@ -124,18 +75,10 @@ class Dependencies:
         choco = windows.WindowsChoco()
         if self.ci_env:
             choco.config_ci_cache()
-
-            ci = self.config.get_os_value("ci")
-            try:
-                ci_skip = ci["skip"]
-                choco_config_file = ci_skip["edit-config"]
-                remove_packages = ci_skip["packages"]
-            except KeyError:
-                raise RuntimeError(f"Bad structure in {config_file} under: ci")
-
+            choco_config_file, remove_packages = choco.get_config_file()
             choco.remove_from_config(choco_config_file, remove_packages)
 
-        command = self.config.get_root_command()
+        command = self.config.get_deps_command()
         choco.install(command, self.ci_env)
 
     def mac(self):
@@ -144,7 +87,7 @@ class Dependencies:
         cmd_utils.run(command)
 
         if not self.ci_env:
-            mac.set_cmake_prefix_env_var(self.config.get_os_value("cmake-prefix"))
+            mac.set_cmake_prefix_env_var(self.config.get_os_value("qt-prefix-command"))
 
     def linux(self):
         """Installs dependencies on Linux."""
@@ -153,12 +96,16 @@ class Dependencies:
         if not distro:
             raise RuntimeError("Unable to detect Linux distro")
 
-        command = self.config.get_linux_command(distro)
+        command = self.config.get_linux_deps_command(distro)
 
         has_sudo = cmd_utils.has_command("sudo")
-        if command.startswith("sudo") and not has_sudo:
-            print("sudo not found, running command without sudo")
-            command = command.replace("sudo", "").strip()
+        if "sudo" in command and not has_sudo:
+            # assume we're running as root if sudo is not found (common on older distros).
+            # a space char is intentionally added after "sudo" for intentionality.
+            # possible limitation with stripping "sudo" is that if any packages with "sudo" in the
+            # name are added to the list (probably very unlikely), this will have undefined behavior.
+            print("The 'sudo' command was not found, stripping sudo from command")
+            command = command.replace("sudo ", "").strip()
 
         cmd_utils.run(command)
 
