@@ -8,13 +8,12 @@ env.ensure_in_venv(__file__)
 
 env_file = ".env"
 version_env = "build/.env.version"
+package_filename_product = "synergy"
 
 
 def main():
     env.ensure_module("dotenv", "python-dotenv")
     from dotenv import load_dotenv  # type: ignore
-
-    from lib.config import Config
 
     load_dotenv(dotenv_path=env_file)
 
@@ -30,32 +29,39 @@ def main():
     stage = os.getenv("SYNERGY_VERSION_STAGE")
 
     version = f"{major}.{minor}.{patch}-{stage}+build-{build}"
-    print(f"Synergy version: {version}")
-
-    config = Config()
+    filename_base = get_filename_base(version)
+    print(f"Package filename base: {filename_base}")
 
     if env.is_windows():
-        windows_package()
+        windows_package(filename_base)
     elif env.is_mac():
-        mac_package(config)
+        mac_package(filename_base)
     elif env.is_linux():
-        linux_package()
+        linux_package(filename_base)
     else:
         raise RuntimeError(f"Unsupported platform: {env.get_os()}")
 
 
-def windows_package():
-    print("TODO: Windows packaging")
+def get_filename_base(version):
+    os = env.get_os()
+    arch = env.get_arch()
+    return f"{package_filename_product}-{version}-{os}-{arch}"
 
 
-def mac_package(config):
+def windows_package(filename_base):
+    """TODO: Windows packaging"""
+    pass
+
+
+def mac_package(filename_base):
     from lib import mac
 
-    mac.package(config)
+    mac.package(filename_base)
 
 
-def linux_package():
-    print("TODO: Linux packaging")
+def linux_package(filename_base):
+    """TODO: Linux packaging"""
+    pass
 
 
 if __name__ == "__main__":

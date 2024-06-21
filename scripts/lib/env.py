@@ -1,4 +1,4 @@
-import os, sys, subprocess
+import os, sys, subprocess, platform
 from lib import cmd_utils
 
 venv_path = "build/python"
@@ -23,6 +23,17 @@ def get_os():
         return "linux"
     else:
         raise RuntimeError(f"Unsupported platform: {sys.platform}")
+
+
+def get_arch():
+    info = platform.architecture()
+    arch = info[0]
+    if arch == "64bit":
+        return "x64"
+    elif arch == "32bit":
+        return "x86"
+    else:
+        raise RuntimeError(f"Unsupported architecture: {arch}")
 
 
 def is_windows():
