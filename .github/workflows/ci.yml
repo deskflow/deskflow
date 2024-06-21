@@ -129,6 +129,7 @@ jobs:
       - name: Package
         run: ./scripts/package.py
         env:
+          APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
           APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
           APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
           APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
