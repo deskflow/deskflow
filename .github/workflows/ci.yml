@@ -129,7 +129,7 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: !github.event.pull_request.draft
+        if: ${{ !github.event.pull_request.draft }}
         run: ./scripts/package.py
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
@@ -140,7 +140,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload to GitHub
-        if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+        if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
