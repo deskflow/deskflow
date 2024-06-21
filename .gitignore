@@ -37,3 +37,4 @@ flatpak/*.flatpak
 aqtinstall.log
 Brewfile.lock.json
 .env*
+dist/*.dmg
