@@ -11,16 +11,15 @@ version_key = "SYNERGY_VERSION"
 
 
 def main():
-    major, minor, patch, stage, _build = env.get_version_info()
-    version_value = f"{major}.{minor}.{patch}-{stage}"
-    print(f"Version number: {version_value}")
-
     env_file = os.getenv(github_key)
     if not env_file:
         raise RuntimeError(f"Env var {github_key} not set")
 
     if not os.path.exists(env_file):
         raise RuntimeError(f"File not found: {env_file}")
+
+    major, minor, patch, stage, _build = env.get_version_info()
+    version_value = f"{major}.{minor}.{patch}-{stage}"
 
     print(f"Setting env var: {version_key}={version_value}")
     with open(env_file, "a") as env_file:
