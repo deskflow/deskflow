@@ -1,0 +1,65 @@
+config:
+  windows:
+    dependencies:
+      command: choco install Chocolatey.config -y
+      qt:
+        version: 5.15.2
+        mirror: https://qt.mirror.constant.com/
+        install-dir: C:\Qt
+      ci:
+        skip:
+          edit-config: Chocolatey.config
+          packages:
+            - cmake
+            - visualstudio2022buildtools
+
+  mac:
+    qt-prefix-command: brew --prefix qt@5
+    dependencies:
+      command: brew bundle --file=Brewfile
+
+  # arch, opensuse, etc, patches welcome! :)
+  linux:
+    debian: &debian
+      dependencies:
+        command: sudo apt-get update && sudo apt-get install -y \
+          cmake \
+          make \
+          g++ \
+          xorg-dev \
+          libx11-dev \
+          libxtst-dev \
+          libssl-dev \
+          pkg-config \
+          libglib2.0-dev \
+          libgdk-pixbuf-2.0-dev \
+          libnotify-dev \
+          libxkbfile-dev \
+          qtbase5-dev \
+          qttools5-dev \
+          libgtk-3-dev \
+          rpm
+
+    ubuntu:
+      <<: *debian
+
+    fedora: &fedora
+      dependencies:
+        command: sudo dnf check-update && sudo dnf install -y \
+          cmake \
+          make \
+          gcc-c++ \
+          openssl-devel \
+          libXtst-devel \
+          glib2-devel \
+          gdk-pixbuf2-devel \
+          libnotify-devel \
+          qt5-qtbase-devel \
+          qt5-qttools-devel \
+          libxkbfile-devel \
+          gtk3-devel \
+          rpm-build
+
+    centos:
+      <<: *fedora
+      command: sudo yum install -y
