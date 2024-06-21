@@ -65,7 +65,7 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          github-target-filename: "synergy-core-windows-${{ github.sha }}"
+          github-target-filename: "synergy-windows"
 
   macos:
     runs-on: ${{ matrix.runtime.os }}
@@ -136,11 +136,21 @@ jobs:
           APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      - name: Distribute
+      - name: Upload to GitHub
+        if: github.event_name == 'pull_request'
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          github-target-filename: "synergy-core-macos-${{ matrix.runtime.target }}-${{ github.sha }}"
+          github-target-filename: "synergy-macos-${{ matrix.runtime.target }}"
+
+      - name: Upload to Google Drive
+        if: github.event_name != 'pull_request'
+        uses: ./.github/actions/dist-upload
+        with:
+          service: "gdrive"
+          gdrive-target-dir: "snapshots"
+          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
+          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
@@ -221,4 +231,4 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          github-target-filename: "synergy-core-linux-${{ matrix.distro.name }}-${{ github.sha }}"
+          github-target-filename: "synergy-${{ matrix.distro.name }}-${{ github.sha }}"
