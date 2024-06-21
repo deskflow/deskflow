@@ -1,4 +1,4 @@
-import os, subprocess, base64, time, json
+import os, subprocess, base64, time, json, shutil
 from lib import cmd_utils, env
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
@@ -32,18 +32,58 @@ def set_env_var(name, value):
 def set_cmake_prefix_env_var(cmake_prefix_command):
     result = cmd_utils.run(cmake_prefix_command, get_output=True)
     cmake_prefix = result.stdout.strip()
-
     set_env_var(cmake_env_var, cmake_prefix)
 
 
-def package():
-    env.ensure_module("dmgbuild", "dmgbuild")
-    import dmgbuild  # type: ignore
+def package(config):
+    if os.path.exists(app_path):
+        print("Deleting existing bundle")
+        shutil.rmtree(app_path)
+
+    # qt_prefix_command = config.get_os_value("qt-prefix-command")
+    # qt_prefix_path = cmd_utils.run(qt_prefix_command, get_output=True).stdout.strip()
+
+    # # is this necessary? can cmake find qt tools on it's own?
+    # #   export PATH="$(brew --prefix qt5)/bin:$PATH"
+    # ci_env = env.is_running_in_ci()
+    # if not ci_env:
+    #     set_env_var("PATH", f"{qt_prefix_path}/bin")
+
+    # cmake runs macdeployqt
+    print("Building bundle...")
+    cmd_utils.run("cmake --build build --target install")
 
     install_certificate(
         env.get_env_var("APPLE_P12_CERTIFICATE"),
         env.get_env_var("APPLE_P12_PASSWORD"),
     )
+
+    codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
+
+    print(f"Signing bundle {app_path}...")
+    subprocess.run(
+        [
+            codesign_path,
+            "-f",
+            "--options",
+            "runtime",
+            "--deep",
+            "-s",
+            codesign_id,
+            app_path,
+        ],
+        check=True,
+    )
+
+    build_dmg()
+
+    print(f"Notarizing package {dmg_path}...")
+    notarize_package()
+
+
+def build_dmg():
+    env.ensure_module("dmgbuild", "dmgbuild")
+    import dmgbuild  # type: ignore
 
     settings_file_abs = os.path.abspath(settings_file)
     app_path_abs = os.path.abspath(app_path)
@@ -71,9 +111,6 @@ def package():
     finally:
         print(f"Changing directory back to: {cwd}")
         os.chdir(cwd)
-
-    print(f"Notarizing package {dmg_path}...")
-    notarize_package()
 
 
 def install_certificate(cert_base64, cert_password):
@@ -120,8 +157,6 @@ def install_certificate(cert_base64, cert_password):
         # that private keys are left on the filesystem
         print(f"Removing temporary certificate file: {cert_path}")
         os.remove(cert_path)
-
-    print("Certificate installed successfully.")
 
 
 def notarize_package():
