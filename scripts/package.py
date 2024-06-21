@@ -25,8 +25,8 @@ def main():
     major = os.getenv("SYNERGY_VERSION_MAJOR")
     minor = os.getenv("SYNERGY_VERSION_MINOR")
     patch = os.getenv("SYNERGY_VERSION_PATCH")
-    build = os.getenv("SYNERGY_VERSION_BUILD")
     stage = os.getenv("SYNERGY_VERSION_STAGE")
+    build = os.getenv("SYNERGY_VERSION_BUILD")
 
     version = f"{major}.{minor}.{patch}-{stage}+build-{build}"
     filename_base = get_filename_base(version)
