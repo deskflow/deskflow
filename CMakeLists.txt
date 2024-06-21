@@ -424,12 +424,13 @@ macro (configure_files srcDir destDir)
 endmacro (configure_files)
 
 if (${SYNERGY_BUILD_INSTALLER})
+
 #
 # macOS app Bundle
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res/dist/macos/bundle)
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
@@ -459,6 +460,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
 endif()
 
 else()
-    message (STATUS "NOT configuring the v1 installer")
+    message (STATUS "NOT configuring the installer")
 endif()
+
 add_subdirectory (src)
