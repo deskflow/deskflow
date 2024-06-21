@@ -8,8 +8,8 @@ import os.path
 
 # .. Useful stuff ..............................................................
 
-application = defines.get("app")
-appname = os.path.basename(application)
+app = defines.get("app")
+app_basename = os.path.basename(app)
 
 # .. Basics ....................................................................
 
@@ -20,7 +20,7 @@ format = defines.get("format", "UDBZ")
 size = defines.get("size", None)
 
 # Files to include
-files = [application]
+files = [app]
 
 # Symlinks to create
 symlinks = {"Applications": "/Applications"}
@@ -31,11 +31,11 @@ symlinks = {"Applications": "/Applications"}
 # image, *or* you can define badge_icon, in which case the icon file you specify
 # will be used to badge the system's Removable Disk icon
 #
-icon = os.path.join(application, "Contents/Resources/VolumeIcon.icns")
+icon = os.path.join(app, "Contents/Resources/VolumeIcon.icns")
 
 # Where to put the icons
 icon_locations = {
-    appname: (144, 190),
+    app_basename: (144, 190),
     "Applications": (455, 190),
     ".background.tiff": (150, 450),
     ".VolumeIcon.icns": (455, 450),
@@ -63,7 +63,7 @@ icon_locations = {
 #
 # Other color components may be expressed either in the range 0 to 1, or
 # as percentages (e.g. 60% is equivalent to 0.6).
-background = os.path.join(application, "Contents/Resources/.background.tiff")
+background = os.path.join(app, "Contents/Resources/.background.tiff")
 
 show_status_bar = False
 show_tab_view = False

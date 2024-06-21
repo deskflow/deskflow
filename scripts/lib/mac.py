@@ -5,11 +5,16 @@ from lib import cmd_utils, env
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
 cert_path = "/tmp/certificate.p12"
-dmg_filename = "Synergy.dmg"
+dmg_path = "dist/synergy-macos.dmg"
 product_name = "Synergy"
-dist_dir = "dist"
-settings_file = "macos/dmgbuild/settings.py"  # relative to dist_dir
-app_path = "../build/bundle/Synergy.app"  # relative to dist_dir
+settings_file = "res/dist/macos/dmgbuild/settings.py"
+app_path = "build/bundle/Synergy.app"
+security_path = "/usr/bin/security"
+sudo_path = "/usr/bin/sudo"
+notarytool_path = "/usr/bin/notarytool"
+codesign_path = "/usr/bin/codesign"
+xcode_select_path = "/usr/bin/xcode-select"
+keychain_path = "/Library/Keychains/System.keychain"
 
 
 def set_env_var(name, value):
@@ -41,28 +46,34 @@ def package():
         env.get_env_var("APPLE_P12_PASSWORD"),
     )
 
+    settings_file_abs = os.path.abspath(settings_file)
+    app_path_abs = os.path.abspath(app_path)
+
     # cwd for dmgbuild, since setting the dmg filename to a path (include the dist dir) seems to
     # make the dmg disappear and never writes to the specified path. the dmgbuild module also
     # creates a temporary file in cwd, so it makes sense to change to the dist dir.
-    print(f"Changing directory to: {dist_dir}")
+    dist_dir = os.path.dirname(dmg_path)
+    print(f"Changing directory to: {os.path.abspath(dist_dir)}")
     cwd = os.getcwd()
+    os.makedirs(dist_dir, exist_ok=True)
     os.chdir(dist_dir)
 
     try:
-        print(f"Building package {dmg_filename}...")
+        print(f"Building package {dmg_path}...")
+        dmg_filename = os.path.basename(dmg_path)
         dmgbuild.build_dmg(
-            product_name,
             dmg_filename,
-            settings_file=settings_file,
+            product_name,
+            settings_file=settings_file_abs,
             defines={
-                "app": app_path,
+                "app": app_path_abs,
             },
         )
     finally:
         print(f"Changing directory back to: {cwd}")
         os.chdir(cwd)
 
-    print(f"Notarizing package {dmg_filename}...")
+    print(f"Notarizing package {dmg_path}...")
     notarize_package()
 
 
@@ -80,24 +91,37 @@ def install_certificate(cert_base64, cert_password):
 
     print(f"Installing certificate: {cert_path}")
 
-    # Warning: Contains private key password, never print this command
-    subprocess.run(
-        [
-            "/usr/bin/sudo",
-            "/usr/bin/security",
-            "import",
-            cert_path,
-            "-k",
-            "/Library/Keychains/System.keychain",
-            "-P",
-            cert_password,
-            "-T",
-            "/usr/bin/codesign",
-            "-T",
-            "/usr/bin/security",
-        ],
-        check=True,
-    )
+    try:
+        # warning: contains private key password, never print this command
+        subprocess.run(
+            [
+                sudo_path,
+                security_path,
+                "import",
+                cert_path,
+                "-k",
+                keychain_path,
+                "-P",
+                cert_password,
+                "-T",
+                codesign_path,
+                "-T",
+                security_path,
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        # important: suppress the original args with `from None` to avoid leaking the password
+        raise subprocess.CalledProcessError(e.returncode, security_path) from None
+    except Exception as e:
+        # important: suppress the original args with `from None` to avoid leaking the password
+        raise RuntimeError(f"Command failed: {security_path}") from None
+    finally:
+        # not strictly necessary for ci, but when run on a dev machine, it reduces the risk
+        # that private keys are left on the filesystem
+        print(f"Removing temporary certificate file: {cert_path}")
+        os.remove(cert_path)
+
     print("Certificate installed successfully.")
 
 
@@ -109,13 +133,11 @@ def notarize_package():
         env.get_env_var("APPLE_TEAM_ID"),
     )
 
-    notary_tool.submit_and_wait(dmg_filename)
+    notary_tool.submit_and_wait(dmg_path)
 
 
 def get_xcode_path():
-    result = cmd_utils.run(
-        ["/usr/bin/xcode-select", "-p"], get_output=True, shell=False
-    )
+    result = cmd_utils.run([xcode_select_path, "-p"], get_output=True, shell=False)
     return result.stdout.strip()
 
 
@@ -128,28 +150,39 @@ class NotaryTool:
         self.xcode_path = get_xcode_path()
 
     def get_path(self):
-        return f"{self.xcode_path}/usr/bin/notarytool"
+        return f"{self.xcode_path}{notarytool_path}"
 
     def store_credentials(self, user, password, team_id):
         print("Storing credentials for notary tool...")
 
-        # Warning: Contains password, never print this command
-        subprocess.run(
-            [
-                self.get_path(),
-                "store-credentials",
-                "notarytool-password",
-                "--apple-id",
-                user,
-                "--team-id",
-                team_id,
-                "--password",
-                password,
-            ],
-            check=True,
-        )
+        notarytool_path = self.get_path()
+        try:
+            # warning: contains password, never print this command
+            subprocess.run(
+                [
+                    notarytool_path,
+                    "store-credentials",
+                    "notarytool-password",
+                    "--apple-id",
+                    user,
+                    "--team-id",
+                    team_id,
+                    "--password",
+                    password,
+                ],
+                check=True,
+            )
+        except subprocess.CalledProcessError as e:
+            # important: suppress the original args with `from None` to avoid leaking the password
+            raise subprocess.CalledProcessError(e.returncode, notarytool_path) from None
+        except Exception as e:
+            # important: suppress the original args with `from None` to avoid leaking the password
+            raise RuntimeError(f"Command failed: {notarytool_path}") from None
 
     def run_submit_command(self, dmg_filename):
+        if not os.path.exists(dmg_filename):
+            raise FileNotFoundError(f"File not found: {dmg_filename}")
+
         result = cmd_utils.run(
             [
                 self.get_path(),
