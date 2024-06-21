@@ -2,17 +2,20 @@
 
 import os
 from lib import env
-from lib.config import Config
 
+# important: load venv before loading modules that install deps.
 env.ensure_in_venv(__file__)
-env.ensure_module("dotenv", "python-dotenv")
-from dotenv import load_dotenv  # type: ignore
 
 env_file = ".env"
 version_env = "build/.env.version"
 
 
 def main():
+    env.ensure_module("dotenv", "python-dotenv")
+    from dotenv import load_dotenv  # type: ignore
+
+    from lib.config import Config
+
     load_dotenv(dotenv_path=env_file)
 
     if not os.path.isfile(version_env):

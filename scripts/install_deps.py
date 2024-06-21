@@ -3,6 +3,7 @@
 import os, sys, argparse, traceback
 from lib import env, cmd_utils
 
+# important: load venv before loading modules that install deps.
 env.ensure_in_venv(__file__)
 
 
