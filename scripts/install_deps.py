@@ -48,25 +48,30 @@ class Config:
         except KeyError:
             raise RuntimeError(f"Nothing found in {config_file} for: {self.os_name}")
 
-    def get_qt_config(self):
-        return self.get("qt")
-
-    def get_linux_command(self, distro):
-        distro_data = self.get(distro)
-        try:
-            return distro_data["command"]
-        except KeyError:
-
-            raise RuntimeError(
-                f"No package command found in {config_file} for: {distro}"
-            )
-
-    def get(self, key):
+    def get_os_value(self, key):
         try:
             return self.os[key]
         except KeyError:
             raise RuntimeError(
                 f"Nothing found in {config_file} for: {self.os_name}:{key}"
+            )
+
+    def get_qt_config(self):
+        return self.get_os_value("qt")
+
+    def get_root_command(self):
+        command = self.get_os_value("command")
+        return cmd_utils.strip_continuation_sequences(command)
+
+    def get_linux_command(self, distro):
+        distro_data = self.get_os_value(distro)
+        try:
+            command = distro_data["command"]
+            return cmd_utils.strip_continuation_sequences(command)
+        except KeyError:
+
+            raise RuntimeError(
+                f"No package command found in {config_file} for: {distro}"
             )
 
 
@@ -120,25 +125,26 @@ class Dependencies:
         if self.ci_env:
             choco.config_ci_cache()
 
+            ci = self.config.get_os_value("ci")
             try:
-                ci_skip = self.config.get("ci")["skip"]
+                ci_skip = ci["skip"]
                 choco_config_file = ci_skip["edit-config"]
                 remove_packages = ci_skip["packages"]
             except KeyError:
-                raise RuntimeError(f"Bad mapping in {config_file} on Windows for: ci")
+                raise RuntimeError(f"Bad structure in {config_file} under: ci")
 
             choco.remove_from_config(choco_config_file, remove_packages)
 
-        command = self.config.get("command")
+        command = self.config.get_root_command()
         choco.install(command, self.ci_env)
 
     def mac(self):
         """Installs dependencies on macOS."""
-        command = self.config.get("command")
+        command = self.config.get_os_value("command")
         cmd_utils.run(command)
 
         if not self.ci_env:
-            mac.set_cmake_prefix_env_var(self.config.get("cmake-prefix"))
+            mac.set_cmake_prefix_env_var(self.config.get_os_value("cmake-prefix"))
 
     def linux(self):
         """Installs dependencies on Linux."""

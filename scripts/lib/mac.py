@@ -62,6 +62,8 @@ def install_certificate(cert_base64, cert_password):
         cert_file.write(cert_bytes)
 
     print(f"Installing certificate: {cert_path}")
+
+    # Warning: Contains private key password, never print this command
     subprocess.run(
         [
             "/usr/bin/sudo",
@@ -83,76 +85,14 @@ def install_certificate(cert_base64, cert_password):
 
 
 def notarize_package():
-    store_notary_tool_password(
+    notary_tool = NotaryTool()
+    notary_tool.store_credentials(
         env.get_env_var("APPLE_NOTARY_USER"),
         env.get_env_var("APPLE_NOTARY_PASSWORD"),
         env.get_env_var("APPLE_TEAM_ID"),
     )
 
-    submit_notary_tool_request()
-
-
-def submit_notary_tool_request():
-    print("Submitting notarization request...")
-    xcode_path = get_xcode_path()
-    result = cmd_utils.run(
-        [
-            f"{xcode_path}/usr/bin/notarytool",
-            "submit",
-            dmg_filename,
-            "--keychain-profile",
-            "notarytool-password",
-            "--output-format",
-            "json",
-        ],
-        get_output=True,
-        shell=False,
-    )
-
-    submit_output = json.loads(result.stdout)
-    request_id = submit_output["id"]
-    print(f"Request ID: {request_id}")
-
-    print("Waiting for notarization...")
-    while True:
-        time.sleep(10)
-        result = cmd_utils.run(
-            [
-                f"{xcode_path}/usr/bin/notarytool",
-                "log",
-                request_id,
-                "--keychain-profile",
-                "notarytool-password",
-                "--output-format",
-                "json",
-                "notarytool.json",
-            ],
-            shell=False,
-            check=False,
-            get_output=True,
-            print_cmd=False,
-        )
-
-        if result.returncode == 69:
-            print("Notarization not started...")
-            log_output = json.loads(result.stderr)
-            message = log_output["message"] if "message" in log_output else "Unknown"
-            print(f"Message: {message}")
-            continue
-
-        log = json.load(open("notarytool.json"))
-        status = log["status"] if "status" in log else "Unknown"
-        print(f"Notarization status: {status}")
-
-        if status == "Success":
-            print("Notarization successful.")
-            break
-        elif status == "Invalid":
-            raise ValueError("Notarization failed.")
-        elif status == "Accepted":
-            continue
-        else:
-            raise ValueError(f"Unknown status: {status}")
+    notary_tool.submit_and_wait(dmg_filename)
 
 
 def get_xcode_path():
@@ -162,20 +102,91 @@ def get_xcode_path():
     return result.stdout.strip()
 
 
-def store_notary_tool_password(user, password, team_id):
-    print("Storing notary tool password...")
-    xcode_path = get_xcode_path()
-    subprocess.run(
-        [
-            f"{xcode_path}/usr/bin/notarytool",
-            "store-credentials",
-            "notarytool-password",
-            "--apple-id",
-            user,
-            "--team-id",
-            team_id,
-            "--password",
-            password,
-        ],
-        check=True,
-    )
+class NotaryTool:
+    """
+    Provides a wrapper around the notarytool command line tool.
+    """
+
+    def __init__(self):
+        self.xcode_path = get_xcode_path()
+
+    def get_path(self):
+        return f"{self.xcode_path}/usr/bin/notarytool"
+
+    def store_credentials(self, user, password, team_id):
+        print("Storing credentials for notary tool...")
+
+        # Warning: Contains password, never print this command
+        subprocess.run(
+            [
+                self.get_path(),
+                "store-credentials",
+                "notarytool-password",
+                "--apple-id",
+                user,
+                "--team-id",
+                team_id,
+                "--password",
+                password,
+            ],
+            check=True,
+        )
+
+    def run_submit_command(self, dmg_filename):
+        result = cmd_utils.run(
+            [
+                self.get_path(),
+                "submit",
+                dmg_filename,
+                "--keychain-profile",
+                "notarytool-password",
+                "--output-format",
+                "json",
+            ],
+            get_output=True,
+            shell=False,
+        )
+
+        if result.stderr:
+            return json.loads(result.stderr)
+        else:
+            return json.loads(result.stdout)
+
+    def run_wait_command(self, request_id):
+        result = cmd_utils.run(
+            [
+                self.get_path(),
+                "wait",
+                request_id,
+                "--keychain-profile",
+                "notarytool-password",
+                "--output-format",
+                "json",
+            ],
+            get_output=True,
+            shell=False,
+        )
+
+        if result.stderr:
+            return json.loads(result.stderr)
+        else:
+            return json.loads(result.stdout)
+
+    def submit_and_wait(self, dmg_filename):
+        print("Submitting notarization request...")
+        submit_result = self.run_submit_command(dmg_filename)
+        request_id = submit_result["id"]
+
+        print(f"Notary submitted, waiting for request: {request_id}")
+        start = time.time()
+        wait_result = self.run_wait_command(request_id)
+        status = wait_result["status"]
+
+        time_taken = time.time() - start
+        print(f"Notary complete in {time_taken:.2f}s, status: {status}")
+        if status == "Accepted":
+            print("Notarization successful.")
+        elif status == "Invalid" or status == "Rejected":
+            raise ValueError(f"Notarization failed, status: {status}")
+        else:
+            raise ValueError(f"Unknown status: {status}")

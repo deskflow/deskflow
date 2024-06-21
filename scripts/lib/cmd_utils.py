@@ -15,31 +15,51 @@ def has_command(command):
         return False
 
 
-def run(command, check=True, shell=True, get_output=False, print_cmd=True):
+def strip_continuation_sequences(command):
     """
-    Run a command. By default, shell is used and the return code is checked.
+    Remove the continuation sequences (\) from a command.
 
-    Args:
-        command (str or list): Command to run.
-        check (bool): If True, raise an exception if the command fails.
-        shell (bool): If True, run the command in a shell.
-        get_output (bool): If True, return the output of the command.
+    To spread strings over multiple lines in YAML files, like in bash, a backslash is used at
+    the end of each line as continuation character.
+    When a YAML file is parsed, this becomes "\ " (without a new line char), so this character
+    sequence must be removed before running the command.
+    This doesn't seem to be an issue on Windows, since the \ path separator is rarely followed
+    by a space.
     """
-
-    # To spread strings over multiple lines in YAML files, like in bash, a backslash is used at
-    # the end of each line as continuation character.
-    # When a YAML file is parsed, this becomes "\ ", so this character sequence must be removed
-    # before running the command.
-    # This doesn't seem to be an issue on Windows, since the \ path separator is rarely followed
-    # by a space.
     cmd_continuation = "\\ "
 
     if isinstance(command, list):
-        command = [c.replace(cmd_continuation, "") for c in command]
-        command_str = " ".join(command)
+        return [c.replace(cmd_continuation, "") for c in command]
     else:
-        command = command.replace(cmd_continuation, "")
-        command_str = command
+        return command.replace(cmd_continuation, "")
+
+
+def run(
+    command,
+    check=True,
+    shell=True,
+    get_output=False,
+    print_cmd=True,
+):
+    """
+    Run a command.
+
+    Warning: This code is used by CI and prints the command before running it;
+    never use this function with sensitive information such as passwords,
+    unless you want the world to know.
+
+    Args:
+        command (str or list): The command to run.
+        check (bool): Raise an exception if the command fails.
+        shell (bool): Run the command in a shell.
+        get_output (bool): Return the output of the command.
+        print_cmd (bool): Print the command before running it.
+    """
+
+    # create string version of list command, only for debugging purposes
+    command_str = command
+    if isinstance(command, list):
+        command_str = " ".join(command)
 
     if print_cmd:
         print(f"Running: {command_str}")
