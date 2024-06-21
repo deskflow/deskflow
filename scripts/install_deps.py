@@ -84,7 +84,7 @@ class Dependencies:
         choco = windows.WindowsChoco()
         if self.ci_env:
             choco.config_ci_cache()
-            choco_config_file, remove_packages = choco.get_config_file()
+            choco_config_file, remove_packages = self.config.get_choco_config()
             choco.remove_from_config(choco_config_file, remove_packages)
 
         command = self.config.get_deps_command()
