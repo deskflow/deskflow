@@ -136,6 +136,9 @@ jobs:
           APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
+      - name: Get version
+        run: echo "SYNERGY_VERSION=$(python ./scripts/get_version.py)" >> $GITHUB_ENV
+
       - name: Upload to GitHub
         if: github.event_name == 'pull_request'
         uses: ./.github/actions/dist-upload
@@ -148,7 +151,7 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "gdrive"
-          gdrive-target-dir: "snapshots"
+          gdrive-target-dir: "synergy1/v1-core-standard/${{ env.SYNERGY_VERSION }}"
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
 
