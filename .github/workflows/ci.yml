@@ -76,9 +76,6 @@ jobs:
       run:
         shell: ${{ matrix.runtime.shell }}
 
-    env:
-      CODESIGN_ID: "Developer ID Application: Symless Ltd (4HX897Y6GJ)"
-
     strategy:
       matrix:
         runtime:
