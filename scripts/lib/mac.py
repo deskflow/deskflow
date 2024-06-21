@@ -4,7 +4,7 @@ from lib import cmd_utils, env
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
 cert_path = "tmp/codesign.p12"
-dmg_path = "dist/synergy-macos.dmg"
+dist_dir = "dist"
 product_name = "Synergy"
 settings_file = "res/dist/macos/dmgbuild/settings.py"
 app_path = "build/bundle/Synergy.app"
@@ -35,32 +35,26 @@ def set_cmake_prefix_env_var(cmake_prefix_command):
     set_env_var(cmake_env_var, cmake_prefix)
 
 
-def package(config):
-    if os.path.exists(app_path):
-        print("Deleting existing bundle")
-        shutil.rmtree(app_path)
+def package(filename_base):
+    codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
+    certificate = env.get_env_var("APPLE_P12_CERTIFICATE")
+    password = env.get_env_var("APPLE_P12_PASSWORD")
 
-    # qt_prefix_command = config.get_os_value("qt-prefix-command")
-    # qt_prefix_path = cmd_utils.run(qt_prefix_command, get_output=True).stdout.strip()
+    build_bundle()
+    install_certificate(certificate, password)
+    assert_certificate_installed(codesign_id)
+    sign_bundle(codesign_id)
+    dmg_path = build_dmg(filename_base)
+    notarize_package(dmg_path)
 
-    # # is this necessary? can cmake find qt tools on it's own?
-    # #   export PATH="$(brew --prefix qt5)/bin:$PATH"
-    # ci_env = env.is_running_in_ci()
-    # if not ci_env:
-    #     set_env_var("PATH", f"{qt_prefix_path}/bin")
 
-    # cmake runs macdeployqt
+def build_bundle():
     print("Building bundle...")
+    # cmake build install target should run macdeployqt
     cmd_utils.run("cmake --build build --target install")
 
-    install_certificate(
-        env.get_env_var("APPLE_P12_CERTIFICATE"),
-        env.get_env_var("APPLE_P12_PASSWORD"),
-    )
 
-    codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
-    is_certificate_installed(codesign_id)
-
+def sign_bundle(codesign_id):
     print(f"Signing bundle {app_path}...")
     sys.stdout.flush()
     subprocess.run(
@@ -77,13 +71,8 @@ def package(config):
         check=True,
     )
 
-    build_dmg()
 
-    print(f"Notarizing package {dmg_path}...")
-    notarize_package()
-
-
-def is_certificate_installed(codesign_id):
+def assert_certificate_installed(codesign_id):
     installed = cmd_utils.run(
         "security find-identity -v -p codesigning", get_output=True
     )
@@ -92,7 +81,7 @@ def is_certificate_installed(codesign_id):
         raise RuntimeError("Code signing certificate not installed or has expired")
 
 
-def build_dmg():
+def build_dmg(filename_base):
     env.ensure_module("dmgbuild", "dmgbuild")
     import dmgbuild  # type: ignore
 
@@ -102,15 +91,15 @@ def build_dmg():
     # cwd for dmgbuild, since setting the dmg filename to a path (include the dist dir) seems to
     # make the dmg disappear and never writes to the specified path. the dmgbuild module also
     # creates a temporary file in cwd, so it makes sense to change to the dist dir.
-    dist_dir = os.path.dirname(dmg_path)
     print(f"Changing directory to: {os.path.abspath(dist_dir)}")
     cwd = os.getcwd()
     os.makedirs(dist_dir, exist_ok=True)
     os.chdir(dist_dir)
 
     try:
+        dmg_filename = f"{filename_base}.dmg"
+        dmg_path = os.path.join(dist_dir, dmg_filename)
         print(f"Building package {dmg_path}...")
-        dmg_filename = os.path.basename(dmg_path)
         dmgbuild.build_dmg(
             dmg_filename,
             product_name,
@@ -122,6 +111,8 @@ def build_dmg():
     finally:
         print(f"Changing directory back to: {cwd}")
         os.chdir(cwd)
+
+    return dmg_path
 
 
 def install_certificate(cert_base64, cert_password):
@@ -172,7 +163,8 @@ def install_certificate(cert_base64, cert_password):
         os.remove(cert_path)
 
 
-def notarize_package():
+def notarize_package(dmg_path):
+    print(f"Notarizing package {dmg_path}...")
     notary_tool = NotaryTool()
     notary_tool.store_credentials(
         env.get_env_var("APPLE_NOTARY_USER"),
