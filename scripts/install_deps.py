@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os, sys, argparse, traceback
-from lib import env, windows, mac, cmd_utils, config
+from lib import env, cmd_utils
 
 env.ensure_in_venv(__file__)
 
@@ -29,6 +29,8 @@ def main():
 class Dependencies:
 
     def __init__(self, only):
+        from lib import config
+
         self.config = config.Config()
         self.only = only
         self.ci_env = env.is_running_in_ci()
@@ -50,6 +52,7 @@ class Dependencies:
 
     def windows(self):
         """Installs dependencies on Windows."""
+        from lib import windows
 
         if not windows.is_admin():
             windows.relaunch_as_admin(__file__)
@@ -83,6 +86,8 @@ class Dependencies:
 
     def mac(self):
         """Installs dependencies on macOS."""
+        from lib import mac
+
         command = self.config.get_os_value("command")
         cmd_utils.run(command)
 
