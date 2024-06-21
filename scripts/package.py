@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os
+import os, platform
 from lib import env
 
 # important: load venv before loading modules that install deps.
@@ -26,9 +26,8 @@ def main():
     minor = os.getenv("SYNERGY_VERSION_MINOR")
     patch = os.getenv("SYNERGY_VERSION_PATCH")
     stage = os.getenv("SYNERGY_VERSION_STAGE")
-    build = os.getenv("SYNERGY_VERSION_BUILD")
 
-    version = f"{major}.{minor}.{patch}-{stage}+build-{build}"
+    version = f"{major}.{minor}.{patch}-{stage}"
     filename_base = get_filename_base(version)
     print(f"Package filename base: {filename_base}")
 
@@ -44,8 +43,8 @@ def main():
 
 def get_filename_base(version):
     os = env.get_os()
-    arch = env.get_arch()
-    return f"{package_filename_product}-{version}-{os}-{arch}"
+    machine = platform.machine().lower()
+    return f"{package_filename_product}-{version}-{os}-{machine}"
 
 
 def windows_package(filename_base):

@@ -25,17 +25,6 @@ def get_os():
         raise RuntimeError(f"Unsupported platform: {sys.platform}")
 
 
-def get_arch():
-    info = platform.architecture()
-    arch = info[0]
-    if arch == "64bit":
-        return "x64"
-    elif arch == "32bit":
-        return "x86"
-    else:
-        raise RuntimeError(f"Unsupported architecture: {arch}")
-
-
 def is_windows():
     return get_os() == "windows"
 
