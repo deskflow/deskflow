@@ -86,7 +86,7 @@ def run(
 
     if print_cmd and result.returncode != 0:
         print(
-            f"Command failed with code {result.returncode}: {command_str}",
+            f"Command exited with code {result.returncode}: {command_str}",
             file=sys.stderr,
         )
     return result

@@ -22,7 +22,7 @@ config:
   linux:
     debian: &debian
       dependencies:
-        command: sudo apt-get update && sudo apt-get install -y \
+        command: sudo apt-get update; sudo apt-get install -y \
           cmake \
           make \
           g++ \
@@ -45,7 +45,7 @@ config:
 
     fedora: &fedora
       dependencies:
-        command: sudo dnf check-update && sudo dnf install -y \
+        command: sudo dnf check-update; sudo dnf install -y \
           cmake \
           make \
           gcc-c++ \
