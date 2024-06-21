@@ -122,6 +122,7 @@ def install_certificate(cert_base64, cert_password):
 
     print(f"Decoding certificate to: {cert_path}")
     cert_bytes = base64.b64decode(cert_base64)
+    os.makedirs(os.path.dirname(cert_path), exist_ok=True)
     with open(cert_path, "wb") as cert_file:
         cert_file.write(cert_bytes)
 

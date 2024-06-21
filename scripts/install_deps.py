@@ -30,9 +30,9 @@ def main():
 class Dependencies:
 
     def __init__(self, only):
-        from lib import config
+        from lib.config import Config
 
-        self.config = config.Config()
+        self.config = Config()
         self.only = only
         self.ci_env = env.is_running_in_ci()
 
