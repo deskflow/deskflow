@@ -7,6 +7,9 @@ shell_rc = "~/.zshrc"
 cert_path = "/tmp/certificate.p12"
 dmg_filename = "Synergy.dmg"
 product_name = "Synergy"
+dist_dir = "dist"
+settings_file = "macos/dmgbuild/settings.py"  # relative to dist_dir
+app_path = "../build/bundle/Synergy.app"  # relative to dist_dir
 
 
 def set_env_var(name, value):
@@ -38,12 +41,26 @@ def package():
         env.get_env_var("APPLE_P12_PASSWORD"),
     )
 
-    print(f"Building package {dmg_filename}...")
-    dmgbuild.build_dmg(
-        product_name,
-        dmg_filename,
-        settings_file="dist/macos/dmgbuild/settings.py",
-    )
+    # cwd for dmgbuild, since setting the dmg filename to a path (include the dist dir) seems to
+    # make the dmg disappear and never writes to the specified path. the dmgbuild module also
+    # creates a temporary file in cwd, so it makes sense to change to the dist dir.
+    print(f"Changing directory to: {dist_dir}")
+    cwd = os.getcwd()
+    os.chdir(dist_dir)
+
+    try:
+        print(f"Building package {dmg_filename}...")
+        dmgbuild.build_dmg(
+            product_name,
+            dmg_filename,
+            settings_file=settings_file,
+            defines={
+                "app": app_path,
+            },
+        )
+    finally:
+        print(f"Changing directory back to: {cwd}")
+        os.chdir(cwd)
 
     print(f"Notarizing package {dmg_filename}...")
     notarize_package()

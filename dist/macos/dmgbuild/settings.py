@@ -8,7 +8,7 @@ import os.path
 
 # .. Useful stuff ..............................................................
 
-application = defines.get("app", "build/bundle/Synergy.app")
+application = defines.get("app")
 appname = os.path.basename(application)
 
 # .. Basics ....................................................................
@@ -31,7 +31,7 @@ symlinks = {"Applications": "/Applications"}
 # image, *or* you can define badge_icon, in which case the icon file you specify
 # will be used to badge the system's Removable Disk icon
 #
-icon = os.path.join(application, "Contents", "Resources", "Drive.icns")
+icon = os.path.join(application, "Contents/Resources/VolumeIcon.icns")
 
 # Where to put the icons
 icon_locations = {
@@ -63,7 +63,7 @@ icon_locations = {
 #
 # Other color components may be expressed either in the range 0 to 1, or
 # as percentages (e.g. 60% is equivalent to 0.6).
-background = defines.get("background", "builtin-arrow")
+background = os.path.join(application, "Contents/Resources/.background.tiff")
 
 show_status_bar = False
 show_tab_view = False
