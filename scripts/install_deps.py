@@ -88,7 +88,7 @@ class Dependencies:
         """Installs dependencies on macOS."""
         from lib import mac
 
-        command = self.config.get_os_value("command")
+        command = self.config.get_os_deps_value("command")
         cmd_utils.run(command)
 
         if not self.ci_env:

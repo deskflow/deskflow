@@ -99,7 +99,7 @@ class Config:
             )
 
     def get_choco_config(self):
-        ci = self.get_os_value("ci")
+        ci = self.get_os_deps_value("ci")
         try:
             ci_skip = ci["skip"]
             choco_config_file = ci_skip["edit-config"]
