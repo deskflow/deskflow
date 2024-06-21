@@ -64,6 +64,7 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
+        if: ${{ !github.event.pull_request.draft }}
         run: python ./scripts/package.py
 
   macos:
@@ -231,4 +232,5 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
+        if: ${{ !github.event.pull_request.draft }}
         run: ./scripts/package.py
