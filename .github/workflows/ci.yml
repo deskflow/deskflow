@@ -137,7 +137,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Get version
-        run: echo "SYNERGY_VERSION=$(python ./scripts/get_version.py)" >> $GITHUB_ENV
+        run: echo "SYNERGY_VERSION=$(./scripts/get_version.py)" >> $GITHUB_ENV
 
       - name: Upload to GitHub
         if: github.event_name == 'pull_request'
