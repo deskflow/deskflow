@@ -2,6 +2,7 @@
 /build
 /dist
 /deps
+/tmp
 /scripts/**/*.pyc
 aqtinstall.log
 Brewfile.lock.json
