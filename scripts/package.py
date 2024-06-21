@@ -16,7 +16,7 @@ def main():
 
     load_dotenv(dotenv_path=env_file)
 
-    major, minor, patch, stage = env.get_version_info()
+    major, minor, patch, stage, _build = env.get_version_info()
     version = f"{major}.{minor}.{patch}-{stage}"
     filename_base = get_filename_base(version)
     print(f"Package filename base: {filename_base}")
