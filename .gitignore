@@ -6,6 +6,7 @@
 /scripts/**/*.pyc
 aqtinstall.log
 Brewfile.lock.json
+/.cache
 
 # typical developer-created files
 .vscode
