@@ -64,12 +64,6 @@ jobs:
       - name: Package
         run: python ./scripts/package.py
 
-      - name: Distribute
-        uses: ./.github/actions/dist-upload
-        with:
-          service: "github"
-          github-target-filename: "synergy-windows"
-
   macos:
     runs-on: ${{ matrix.runtime.os }}
     timeout-minutes: ${{ matrix.runtime.timeout }}
@@ -133,6 +127,7 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
+        if: !github.event.pull_request.draft
         run: ./scripts/package.py
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
@@ -143,7 +138,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload to GitHub
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && !github.event.pull_request.draft
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
@@ -235,9 +230,3 @@ jobs:
 
       - name: Package
         run: ./scripts/package.py
-
-      - name: Distribute
-        uses: ./.github/actions/dist-upload
-        with:
-          service: "github"
-          github-target-filename: "synergy-${{ matrix.distro.name }}-${{ github.sha }}"
