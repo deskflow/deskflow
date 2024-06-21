@@ -65,7 +65,7 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          github-target-filename: "synergy-core-windows-${{ github.sha }}.zip"
+          github-target-filename: "synergy-core-windows-${{ github.sha }}"
 
   macos:
     runs-on: ${{ matrix.runtime.os }}
@@ -139,7 +139,7 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          github-target-filename: "synergy-core-macos-${{ matrix.runtime.target }}-${{ github.sha }}.zip"
+          github-target-filename: "synergy-core-macos-${{ matrix.runtime.target }}-${{ github.sha }}"
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
@@ -220,4 +220,4 @@ jobs:
         uses: ./.github/actions/dist-upload
         with:
           service: "github"
-          github-target-filename: "synergy-core-linux-${{ matrix.distro.name }}-${{ github.sha }}.tar.gz"
+          github-target-filename: "synergy-core-linux-${{ matrix.distro.name }}-${{ github.sha }}"
