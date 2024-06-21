@@ -118,7 +118,9 @@ class Dependencies:
             print("The 'sudo' command was not found, stripping sudo from command")
             command = command.replace("sudo ", "").strip()
 
-        cmd_utils.run(command)
+        # don't check the return code, as some package managers return non-zero exit codes
+        # under normal circumstances (e.g. dnf returns 100 when there are updates available).
+        cmd_utils.run(command, check=False)
 
 
 if __name__ == "__main__":
