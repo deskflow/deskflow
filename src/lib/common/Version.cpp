@@ -25,5 +25,5 @@ const char* kCopyright   = "Copyright (C) 2012-%s Symless Ltd.\n"
                            "Copyright (C) 2002-2014 Chris Schoeneman";
 const char* kContact     = "Email: engineering@symless.com";
 const char* kWebsite     = "https://symless.com/";
-const char* kVersion     = SYNERGY_VERSION_STRING;
+const char* kVersion     = SYNERGY_VERSION_LONG;
 const char* kAppVersion  = "Synergy " SYNERGY_VERSION;
