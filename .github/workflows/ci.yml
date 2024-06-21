@@ -9,7 +9,9 @@ on:
       - synchronize
       - ready_for_review
   push:
-    branches: [master*, release*]
+    branches:
+      - master*
+      - release*
 
 env:
   GIT_COMMIT: ${{ github.sha }}
