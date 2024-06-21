@@ -22,9 +22,13 @@ def main():
         deps.install()
     except Exception:
         traceback.print_exc()
+        error = True
 
     if args.pause_on_exit:
         input("Press enter to continue...")
+
+    if error:
+        sys.exit(1)
 
 
 class Dependencies:
