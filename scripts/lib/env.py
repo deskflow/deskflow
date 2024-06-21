@@ -89,6 +89,7 @@ def ensure_in_venv(script):
 
         script_file = os.path.basename(script)
         print(f"Using virtual environment for {script_file}")
+        sys.stdout.flush()
         python_executable = get_python_executable()
         result = subprocess.run([python_executable, script] + sys.argv[1:])
         sys.exit(result.returncode)

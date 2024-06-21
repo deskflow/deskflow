@@ -1,4 +1,4 @@
-import os, subprocess, base64, time, json, shutil
+import os, subprocess, base64, time, json, shutil, sys
 from lib import cmd_utils, env
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
@@ -61,6 +61,7 @@ def package(config):
     codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
 
     print(f"Signing bundle {app_path}...")
+    sys.stdout.flush()
     subprocess.run(
         [
             codesign_path,
@@ -127,6 +128,7 @@ def install_certificate(cert_base64, cert_password):
         cert_file.write(cert_bytes)
 
     print(f"Installing certificate: {cert_path}")
+    sys.stdout.flush()
 
     try:
         # warning: contains private key password, never print this command
@@ -189,6 +191,7 @@ class NotaryTool:
 
     def store_credentials(self, user, password, team_id):
         print("Storing credentials for notary tool...")
+        sys.stdout.flush()
 
         notarytool_path = self.get_path()
         try:
