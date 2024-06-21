@@ -59,7 +59,6 @@ class Config:
         return mirror_url, default_version, default_base_dir
 
     def get_os_deps_value(self, key):
-
         deps_key = "dependencies"
         deps = self.get_os_value(deps_key)
         try:
