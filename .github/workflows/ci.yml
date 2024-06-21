@@ -215,17 +215,17 @@ jobs:
           ${{ matrix.distro.python-deps }}
           ./scripts/install_deps.py
 
-      - name: Configure
+      - name: Configure (modern)
         if: ${{ !matrix.distro.legacy-cmake }}
         run: cmake -B build --preset=linux-release
-
-      - name: Set env vars
-        run: ./scripts/github_env.py
 
       # Some older Linux distro versions don't support modern CMake presets.
       - name: Configure (legacy)
         if: ${{ matrix.distro.legacy-cmake }}
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Set env vars
+        run: ./scripts/github_env.py
 
       - name: Build
         run: cmake --build build
