@@ -59,12 +59,7 @@ def package(config):
     )
 
     codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
-    installed = cmd_utils.run(
-        "security find-identity -v -p codesigning", get_output=True
-    )
-    print(f"Installed certificates:\n{installed.stdout}")
-    if codesign_id not in installed.stdout:
-        raise ValueError(f"Certificate not installed: {codesign_id}")
+    is_certificate_installed(codesign_id)
 
     print(f"Signing bundle {app_path}...")
     sys.stdout.flush()
@@ -86,6 +81,15 @@ def package(config):
 
     print(f"Notarizing package {dmg_path}...")
     notarize_package()
+
+
+def is_certificate_installed(codesign_id):
+    installed = cmd_utils.run(
+        "security find-identity -v -p codesigning", get_output=True
+    )
+
+    if codesign_id not in installed.stdout:
+        raise RuntimeError("Code signing certificate not installed or has expired")
 
 
 def build_dmg():
