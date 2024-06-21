@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-import os, platform
+import platform
 from lib import env
 
 # important: load venv before loading modules that install deps.
 env.ensure_in_venv(__file__)
 
 env_file = ".env"
-version_env = "build/.env.version"
 package_filename_product = "synergy"
 
 
@@ -17,16 +16,7 @@ def main():
 
     load_dotenv(dotenv_path=env_file)
 
-    if not os.path.isfile(version_env):
-        raise RuntimeError(f"Version file not found: {version_env}")
-
-    load_dotenv(dotenv_path=version_env)
-
-    major = os.getenv("SYNERGY_VERSION_MAJOR")
-    minor = os.getenv("SYNERGY_VERSION_MINOR")
-    patch = os.getenv("SYNERGY_VERSION_PATCH")
-    stage = os.getenv("SYNERGY_VERSION_STAGE")
-
+    major, minor, patch, stage = env.get_version_info()
     version = f"{major}.{minor}.{patch}-{stage}"
     filename_base = get_filename_base(version)
     print(f"Package filename base: {filename_base}")
