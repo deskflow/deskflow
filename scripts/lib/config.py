@@ -59,7 +59,6 @@ class Config:
         return mirror_url, default_version, default_base_dir
 
     def get_os_deps_value(self, key):
-        deps_key = "dependencies"
         deps = self.get_os_value(deps_key)
         try:
             return deps[key]
@@ -69,7 +68,7 @@ class Config:
             )
 
     def get_deps_command(self):
-        dependencies = self.get_os_value("dependencies")
+        dependencies = self.get_os_value(deps_key)
         try:
             command = dependencies["command"]
         except KeyError:
