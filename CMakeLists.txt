@@ -394,7 +394,7 @@ endif()
 
 
 #
-# Samme as the `configure_file` command but for directories recursively.
+# Same as the `configure_file` command but for directories recursively.
 #
 macro (configure_files srcDir destDir)
     message (STATUS "Configuring directory ${destDir}")
