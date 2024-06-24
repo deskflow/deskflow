@@ -30,8 +30,6 @@ runs:
         retention-days: 3
 
     # Upload to Google Drive
-    # HACK: Using fork of action while PR is waiting
-    # https://symless.atlassian.net/browse/S3-1659
     - if: ${{ inputs.service == 'gdrive' }}
       uses: symless/gdrive-upload@target-glob
       with:
