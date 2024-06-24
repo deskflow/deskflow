@@ -35,7 +35,7 @@ jobs:
         run: python ./scripts/install_deps.py
 
       - name: Set Qt version env var
-        run: python ./scripts/github_env.py --qt-version
+        run: python ./scripts/github_env.py --set-qt-version
 
       - name: Cache Qt
         id: cache-qt
@@ -57,7 +57,7 @@ jobs:
         run: cmake -B build --preset=windows-release
 
       - name: Set app version env var
-        run: python ./scripts/github_env.py --app-version
+        run: python ./scripts/github_env.py --set-app-version
 
       - name: Build
         run: cmake --build build
@@ -120,7 +120,7 @@ jobs:
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
       - name: Set app version env var
-        run: ./scripts/github_env.py --app-version
+        run: ./scripts/github_env.py --set-app-version
 
       - name: Build
         run: cmake --build build
@@ -220,7 +220,7 @@ jobs:
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Set app version env var
-        run: ./scripts/github_env.py --app-version
+        run: ./scripts/github_env.py --set-app-version
 
       - name: Build
         run: cmake --build build
