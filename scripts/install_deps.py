@@ -3,9 +3,6 @@
 import os, sys, argparse, traceback
 from lib import env, cmd_utils
 
-# important: load venv before loading modules that install deps.
-env.ensure_in_venv(__file__)
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -19,6 +16,9 @@ def main():
 
     # ensures that pip and venv are available for `ensure_module` function.
     env.ensure_dependencies()
+
+    # important: load venv before loading modules that install deps.
+    env.ensure_in_venv(__file__)
 
     error = False
     try:

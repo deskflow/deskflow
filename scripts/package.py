@@ -3,14 +3,14 @@
 import platform
 from lib import env
 
-# important: load venv before loading modules that install deps.
-env.ensure_in_venv(__file__)
-
 env_file = ".env"
 package_filename_product = "synergy"
 
 
 def main():
+    # important: load venv before loading modules that install deps.
+    env.ensure_in_venv(__file__)
+
     env.ensure_module("dotenv", "python-dotenv")
     from dotenv import load_dotenv  # type: ignore
 

@@ -4,9 +4,6 @@ import os, argparse
 from lib import env
 from lib.config import Config
 
-# important: load venv before loading modules that install deps.
-env.ensure_in_venv(__file__)
-
 github_key = "GITHUB_ENV"
 app_version_key = "SYNERGY_VERSION"
 qt_version_key = "QT_VERSION"
@@ -25,6 +22,9 @@ def main():
         help=f"Set {qt_version_key} env var",
     )
     args = parser.parse_args()
+
+    # important: load venv before loading modules that install deps.
+    env.ensure_in_venv(__file__)
 
     if args.set_app_version:
         major, minor, patch, stage, _build = env.get_version_info()
