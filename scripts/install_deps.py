@@ -17,6 +17,9 @@ def main():
     )
     args = parser.parse_args()
 
+    # ensures that pip and venv are available for `ensure_module` function.
+    env.ensure_dependencies()
+
     error = False
     try:
         deps = Dependencies(args.only)

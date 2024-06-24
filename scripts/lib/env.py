@@ -80,7 +80,7 @@ def ensure_in_venv(script):
     If the script is not running in a venv, it will create one and re-run the script in the venv.
     """
 
-    ensure_dependencies()
+    assert_dependencies()
     import venv
 
     if not in_venv():
@@ -102,7 +102,7 @@ def ensure_module(module, package):
     Ensures that a Python module is available, and installs the package if it is not.
     """
 
-    ensure_dependencies()
+    assert_dependencies()
 
     try:
         __import__(module)
@@ -111,16 +111,30 @@ def ensure_module(module, package):
         cmd_utils.run([sys.executable, "-m", "pip", "install", package], shell=False)
 
 
-def ensure_dependencies():
+def assert_dependencies(raise_error=True):
     """
-    Ensures that pip and venv are available, and installs them if they are not.
-    This is normally only required on Linux.
+    Returns True if pip and venv are available.
     """
 
     has_pip = check_module("pip")
     has_venv = check_module("venv")
 
-    if has_pip and has_venv:
+    if raise_error:
+        if not has_pip:
+            raise RuntimeError("Python is missing pip")
+        if not has_venv:
+            raise RuntimeError("Python is missing venv")
+    else:
+        return has_pip and has_venv
+
+
+def ensure_dependencies():
+    """
+    Ensures that pip and venv are available, and installs them if they are not.
+    This is normally only installs on Linux, as Windows and Mac usually come with pip and venv.
+    """
+
+    if assert_dependencies(raise_error=False):
         return
 
     print("Installing Python dependencies...")
