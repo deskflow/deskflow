@@ -24,13 +24,15 @@ jobs:
 
     env:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
-      QT_VERSION: 5.15.2
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
+
+      - name: Set Qt version env var
+        run: python ./scripts/github_env.py --qt-version
 
       - name: Cache Qt
         id: cache-qt
@@ -54,8 +56,8 @@ jobs:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: cmake -B build --preset=windows-release
 
-      - name: Set env vars
-        run: python ./scripts/github_env.py
+      - name: Set app version env var
+        run: python ./scripts/github_env.py --app-version
 
       - name: Build
         run: cmake --build build
@@ -117,8 +119,8 @@ jobs:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
-      - name: Set env vars
-        run: ./scripts/github_env.py
+      - name: Set app version env var
+        run: ./scripts/github_env.py --app-version
 
       - name: Build
         run: cmake --build build
@@ -219,8 +221,8 @@ jobs:
         if: ${{ matrix.distro.legacy-cmake }}
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
-      - name: Set env vars
-        run: ./scripts/github_env.py
+      - name: Set app version env var
+        run: ./scripts/github_env.py --app-version
 
       - name: Build
         run: cmake --build build

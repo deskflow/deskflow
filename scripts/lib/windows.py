@@ -5,6 +5,8 @@ import xml.etree.ElementTree as ET
 from lib import cmd_utils
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
+runner_temp_env_var = "RUNNER_TEMP"
+qt_base_dir_env_var = "QT_BASE_DIR"
 
 
 def relaunch_as_admin(script):
@@ -55,15 +57,14 @@ class WindowsChoco:
     def config_ci_cache(self):
         """Configures Chocolatey cache for CI."""
 
-        runner_temp_key = "RUNNER_TEMP"
-        runner_temp = os.environ.get(runner_temp_key)
+        runner_temp = os.environ.get(runner_temp_env_var)
         if runner_temp:
             # sets the choco cache dir, which should match the dir in the ci cache action.
             key_arg = '--name="cacheLocation"'
             value_arg = f'--value="{runner_temp}/choco"'
             cmd_utils.run(["choco", "config", "set", key_arg, value_arg])
         else:
-            print(f"Warning: CI environment variable {runner_temp_key} not set")
+            print(f"Warning: CI environment variable {runner_temp_env_var} not set")
 
     def remove_from_config(self, choco_config_file, remove_packages):
         """Removes a package from the Chocolatey configuration."""
@@ -82,18 +83,15 @@ class WindowsChoco:
 class WindowsQt:
     """Qt for Windows."""
 
-    def __init__(self, mirror_url, default_version, default_base_dir):
+    def __init__(self, mirror_url, version, base_dir):
         self.mirror_url = mirror_url
+        self.version = version
 
-        self.version = os.environ.get("QT_VERSION")
-        if not self.version:
-            print(f"QT_VERSION not set, using: {default_version}")
-            self.version = default_version
-
-        self.base_dir = os.environ.get("QT_BASE_DIR")
+        # allows ci to override the qt base dir path
+        self.base_dir = os.environ.get(qt_base_dir_env_var)
         if not self.base_dir:
-            print(f"QT_BASE_DIR not set, using: {default_base_dir}")
-            self.base_dir = default_base_dir
+            print(f"QT_BASE_DIR not set, using: {base_dir}")
+            self.base_dir = base_dir
 
         self.install_dir = f"{self.base_dir}\\{self.version}"
 

@@ -47,16 +47,16 @@ class Config:
             raise ConfigError(f"Qt mirror not set in {self.config_file}")
 
         try:
-            default_version = qt["version"]
+            version = qt["version"]
         except KeyError:
             raise ConfigError(f"Qt version not set in {self.config_file}")
 
         try:
-            default_base_dir = qt["install-dir"]
+            base_dir = qt["install-dir"]
         except KeyError:
             raise ConfigError(f"Qt install-dir not set in {self.config_file}")
 
-        return mirror_url, default_version, default_base_dir
+        return mirror_url, version, base_dir
 
     def get_os_deps_value(self, key):
         deps = self.get_os_value(deps_key)
