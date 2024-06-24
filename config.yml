@@ -6,12 +6,11 @@ config:
         version: 5.15.2
         mirror: https://qt.mirror.constant.com/
         install-dir: C:\Qt
-      ci:
-        skip:
-          edit-config: Chocolatey.config
-          packages:
-            - cmake
-            - visualstudio2022buildtools
+      choco-ci:
+        edit-config: Chocolatey.config
+        skip-packages:
+          - cmake
+          - visualstudio2022buildtools
 
   mac:
     qt-prefix-command: brew --prefix qt@5
