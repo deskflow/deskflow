@@ -31,6 +31,9 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py
+
       - name: Set Qt version env var
         run: python ./scripts/github_env.py --qt-version
 
@@ -44,9 +47,6 @@ jobs:
       - name: Install Qt
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: python ./scripts/install_deps.py --only qt
-
-      - name: Install dependencies
-        run: python ./scripts/install_deps.py
 
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
@@ -208,9 +208,7 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        run: |
-          ${{ matrix.distro.python-deps }}
-          ./scripts/install_deps.py
+        run: ./scripts/install_deps.py
 
       - name: Configure (modern)
         if: ${{ !matrix.distro.legacy-cmake }}
