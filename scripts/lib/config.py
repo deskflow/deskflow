@@ -1,8 +1,5 @@
 from lib import env, cmd_utils
 
-env.ensure_module("yaml", "pyyaml")
-import yaml
-
 config_file = "config.yml"
 root_key = "config"
 deps_key = "dependencies"
@@ -31,6 +28,9 @@ class Config:
     """Reads the project configuration YAML file."""
 
     def __init__(self):
+        env.ensure_module("yaml", "pyyaml")
+        import yaml
+
         with open(config_file, "r") as f:
             data = yaml.safe_load(f)
 

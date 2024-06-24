@@ -2,6 +2,7 @@
 
 import os, argparse
 from lib import env
+from lib.config import Config
 
 github_key = "GITHUB_ENV"
 app_version_key = "SYNERGY_VERSION"
@@ -30,17 +31,11 @@ def main():
         version_value = f"{major}.{minor}.{patch}-{stage}"
         set_github_env(app_version_key, version_value)
     elif args.set_qt_version:
-        config = get_config()
+        config = Config()
         _qt_mirror, qt_version, _qt_install_dir = config.get_qt_config()
         set_github_env(qt_version_key, qt_version)
     else:
         raise RuntimeError("No option selected")
-
-
-def get_config():
-    from lib.config import Config
-
-    return Config()
 
 
 def set_github_env(key, value):
