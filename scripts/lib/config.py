@@ -19,9 +19,12 @@ class ConfigKeyError(RuntimeError):
 
 def _get(dict, key, key_parent=None):
     value = dict.get(key)
+
     if not value:
         key_path = f"{root_key}:{key_parent}:{key}" if key_parent else key
         raise ConfigKeyError(f"Missing key in {config_file}: {key_path}")
+
+    return value
 
 
 class Config:
