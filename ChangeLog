@@ -33,6 +33,7 @@ Enhancements:
 - #7336 Add C++ and LLDB to VS Code recommendations
 - #7351 Use deps script to make life easier for contribs
 - #7352 Combine GitHub workflows to reduce config duplication
+- #7353 Re-implement packaging for GitHub workflows (macOS)
 
 # 1.14.6
 

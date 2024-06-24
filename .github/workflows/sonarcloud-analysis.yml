@@ -49,7 +49,6 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
-          . ./version
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
       - name: Running coverage

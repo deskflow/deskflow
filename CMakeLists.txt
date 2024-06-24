@@ -16,6 +16,7 @@
 
 cmake_minimum_required (VERSION 3.5)
 project (synergy-core C CXX)
+include (cmake/Version.cmake)
 
 # use response files so that ninja can compile on windows,
 # otherwise you get an error when linking qt:
@@ -59,6 +60,18 @@ else()
     option (SYNERGY_BUSINESS "Build Business" OFF)
 endif()
 
+if (SYNERGY_DEVELOPER_MODE)
+    add_definitions (-DSYNERGY_DEVELOPER_MODE=1)
+endif()
+
+if (SYNERGY_ENTERPRISE)
+    add_definitions (-DSYNERGY_ENTERPRISE=1)
+endif()
+
+if (SYNERGY_BUSINESS)
+    add_definitions(-DSYNERGY_BUSINESS=1)
+endif()
+
 set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_EXTENSIONS OFF)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -80,11 +93,6 @@ endif()
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DNDEBUG)
 endif()
-
-#
-# Synergy version
-#
-include (cmake/Version.cmake)
 
 # TODO: Find out why we need these, and remove them
 if (COMMAND cmake_policy)
@@ -386,7 +394,7 @@ endif()
 
 
 #
-# Configure_file... but for directories, recursively.
+# Same as the `configure_file` command but for directories recursively.
 #
 macro (configure_files srcDir destDir)
     message (STATUS "Configuring directory ${destDir}")
@@ -415,33 +423,14 @@ macro (configure_files srcDir destDir)
     endforeach (templateFile)
 endmacro (configure_files)
 
-macro(generate_versionfile)
-    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" OR ${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-        FILE(WRITE ${CMAKE_BINARY_DIR}/version
-        "export SYNERGY_VERSION_MAJOR=\"${SYNERGY_VERSION_MAJOR}\"\n"
-        "export SYNERGY_VERSION_MINOR=\"${SYNERGY_VERSION_MINOR}\"\n"
-        "export SYNERGY_VERSION_PATCH=\"${SYNERGY_VERSION_PATCH}\"\n"
-        "export SYNERGY_VERSION_BUILD=\"${SYNERGY_VERSION_BUILD}\"\n"
-        "export SYNERGY_VERSION_STAGE=\"${SYNERGY_VERSION_STAGE}\"\n")
-    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        FILE(WRITE ${CMAKE_BINARY_DIR}/version.bat
-        "SET SYNERGY_VERSION_MAJOR=${SYNERGY_VERSION_MAJOR}\n"
-        "SET SYNERGY_VERSION_MINOR=${SYNERGY_VERSION_MINOR}\n"
-        "SET SYNERGY_VERSION_PATCH=${SYNERGY_VERSION_PATCH}\n"
-        "SET SYNERGY_VERSION_BUILD=${SYNERGY_VERSION_BUILD}\n"
-        "SET SYNERGY_VERSION_STAGE=${SYNERGY_VERSION_STAGE}\n")
-    endif()
-endmacro(generate_versionfile)
-
-generate_versionfile()
-
 if (${SYNERGY_BUILD_INSTALLER})
+
 #
-# macOS app Bundle
+# macOS app bundle
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/bundle)
+    set (SYNERGY_BUNDLE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res/dist/macos/bundle)
     set (SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
     set (SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
     set (SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
@@ -454,14 +443,14 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         message (STATUS "Configuring the v1 installer")
         set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
-        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/wix ${CMAKE_BINARY_DIR}/installer)
+        configure_files (${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endif()
 
 #
 # Linux installation
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
-    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
+    configure_files (${CMAKE_CURRENT_SOURCE_DIR}/res/dist/rpm ${CMAKE_BINARY_DIR}/rpm)
     install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
     if("${VERSION_MAJOR}" STREQUAL "2")
         install(FILES res/synergy2.desktop DESTINATION share/applications)
@@ -471,6 +460,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
 endif()
 
 else()
-    message (STATUS "NOT configuring the v1 installer")
+    message (STATUS "NOT configuring the installer")
 endif()
+
 add_subdirectory (src)

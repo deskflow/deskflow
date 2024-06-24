@@ -9,13 +9,16 @@ on:
       - synchronize
       - ready_for_review
   push:
-    branches: [master*, release*]
+    branches:
+      - master*
+      - release*
 
 env:
   GIT_COMMIT: ${{ github.sha }}
 
 jobs:
-  windows-2022:
+  windows:
+    name: windows-2022
     runs-on: windows-2022
     timeout-minutes: 20
 
@@ -41,9 +44,7 @@ jobs:
         run: python ./scripts/install_deps.py --only qt
 
       - name: Install dependencies
-        run: |
-          pip install pyyaml
-          python ./scripts/install_deps.py
+        run: python ./scripts/install_deps.py
 
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
@@ -53,11 +54,18 @@ jobs:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: cmake -B build --preset=windows-release
 
+      - name: Set env vars
+        run: python ./scripts/github_env.py
+
       - name: Build
         run: cmake --build build
 
       - name: Test
         run: ./build/bin/unittests
+
+      - name: Package
+        if: ${{ !github.event.pull_request.draft }}
+        run: python ./scripts/package.py
 
   macos:
     runs-on: ${{ matrix.runtime.os }}
@@ -102,20 +110,48 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        run: |
-          pip install pyyaml
-          python ./scripts/install_deps.py
+        run: ./scripts/install_deps.py
 
       - name: Configure
         env:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
+      - name: Set env vars
+        run: ./scripts/github_env.py
+
       - name: Build
         run: cmake --build build
 
       - name: Test
         run: ./build/bin/unittests
+
+      - name: Package
+        if: ${{ !github.event.pull_request.draft }}
+        run: ./scripts/package.py
+        env:
+          APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
+          APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
+          APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload to GitHub
+        if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+        uses: ./.github/actions/dist-upload
+        with:
+          service: "github"
+          github-target-filename: "synergy-macos-${{ matrix.runtime.target }}"
+
+      - name: Upload to Google Drive
+        if: github.event_name != 'pull_request'
+        uses: ./.github/actions/dist-upload
+        with:
+          service: "gdrive"
+          gdrive-target-dir: "synergy1/v1-core-standard/${{ env.SYNERGY_VERSION }}"
+          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
+          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
@@ -126,11 +162,6 @@ jobs:
     strategy:
       matrix:
         distro:
-          - name: centos-7.6
-            container: symless/synergy-core:centos7.6
-            runs-on: ubuntu-latest
-            legacy-cmake: true
-
           - name: centos-8
             container: symless/synergy-core:centos8
             runs-on: ubuntu-latest
@@ -166,7 +197,6 @@ jobs:
 
           - name: ubuntu-24.04
             runs-on: ubuntu-24.04
-            install-deps: true
 
     steps:
       # Use @v3 since some older Linux distro versions don't support @v4
@@ -176,10 +206,11 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        if: ${{ matrix.distro.install-deps }}
-        run: python ./scripts/install_deps.py
+        run: |
+          ${{ matrix.distro.python-deps }}
+          ./scripts/install_deps.py
 
-      - name: Configure
+      - name: Configure (modern)
         if: ${{ !matrix.distro.legacy-cmake }}
         run: cmake -B build --preset=linux-release
 
@@ -188,8 +219,15 @@ jobs:
         if: ${{ matrix.distro.legacy-cmake }}
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
+      - name: Set env vars
+        run: ./scripts/github_env.py
+
       - name: Build
         run: cmake --build build
 
       - name: Test
         run: ./build/bin/unittests
+
+      - name: Package
+        if: ${{ !github.event.pull_request.draft }}
+        run: ./scripts/package.py
