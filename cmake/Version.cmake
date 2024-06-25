@@ -7,6 +7,7 @@ string(STRIP "${VERSION}" VERSION)
 
 if (NOT VERSION)
     file(READ "${CMAKE_SOURCE_DIR}/VERSION" VERSION)
+    string(STRIP "${VERSION}" VERSION)
 endif()
 
 message (STATUS "Version number: " ${VERSION})
