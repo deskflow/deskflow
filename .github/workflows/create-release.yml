@@ -16,11 +16,15 @@ jobs:
       - name: Checkout git repo
         uses: actions/checkout@v4
 
+      - name: Read version file
+        id: read_version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
       - name: "Generate next build number"
         id: version
         uses: symless/next-version-action@master
         with:
-          current-version: $(cat VERSION)
+          current-version: ${{ env.VERSION }}
 
       - name: Create Release
         id: create_release
