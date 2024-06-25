@@ -10,7 +10,7 @@ Vendor: Symless
 Packager: Symless <engineering@symless.com>
 License: GPLv2
 Epoch: 1
-Release: @SYNERGY_SNAPSHOT_INFO@%{?dist}
+Release: @SYNERGY_VERSION_LONG@%{?dist}
 Requires: openssl
 
 %description
