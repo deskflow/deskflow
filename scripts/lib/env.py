@@ -2,7 +2,8 @@ import os, sys, subprocess, platform
 from lib import env, cmd_utils
 
 venv_path = "build/python"
-version_env = "build/.env.version"
+version_file = "VERSION"
+version_env_var = "SYNERGY_VERSION"
 
 
 def check_module(module):
@@ -159,19 +160,12 @@ def ensure_dependencies():
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")
 
 
-def get_version_info():
-    env.ensure_module("dotenv", "python-dotenv")
-    from dotenv import load_dotenv  # type: ignore
+def get_app_version():
+    """
+    Returns the version either from the env var, or from the version file.
+    """
+    if version_env_var in os.environ:
+        return os.environ[version_env_var]
 
-    if not os.path.isfile(version_env):
-        raise RuntimeError(f"Version file not found: {version_env}")
-
-    load_dotenv(dotenv_path=version_env)
-
-    major = os.getenv("SYNERGY_VERSION_MAJOR")
-    minor = os.getenv("SYNERGY_VERSION_MINOR")
-    patch = os.getenv("SYNERGY_VERSION_PATCH")
-    stage = os.getenv("SYNERGY_VERSION_STAGE")
-    build = os.getenv("SYNERGY_VERSION_BUILD")
-
-    return major, minor, patch, stage, build
+    with open(version_file, "r") as f:
+        return f.read().strip()

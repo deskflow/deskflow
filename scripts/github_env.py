@@ -26,9 +26,8 @@ def main():
     env.ensure_in_venv(__file__)
 
     if args.set_app_version:
-        major, minor, patch, stage, _build = env.get_version_info()
-        version_value = f"{major}.{minor}.{patch}-{stage}"
-        github.set_env(app_version_key, version_value)
+        version = env.get_app_version()
+        github.set_env(app_version_key, version)
     elif args.set_qt_version:
         config = Config()
         _qt_mirror, qt_version, _qt_install_dir = config.get_qt_config()
