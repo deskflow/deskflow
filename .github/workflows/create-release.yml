@@ -3,7 +3,9 @@ name: Create Release
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches:
+      - master*
+      - release*
 
 jobs:
   create-release:
