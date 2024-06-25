@@ -11,7 +11,8 @@ on:
   push:
     branches:
       - master*
-      - release*
+  release:
+    types: [published]
 
 env:
   GIT_COMMIT: ${{ github.sha }}

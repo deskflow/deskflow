@@ -1,6 +1,7 @@
 name: Create Release
 
 on:
+  workflow_dispatch:
   push:
     branches: [master]
 
@@ -11,22 +12,22 @@ jobs:
 
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: "Generate next build number"
-        id: build
-        uses: "./.github/actions/build-number"
+        id: version
+        uses: "symless/next-version-action"
+        with:
+          current-version: $(cat VERSION)
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.build.outputs.next-build }}
-          release_name: ${{ steps.build.outputs.next-build }}
+          tag_name: ${{ steps.version.outputs.next-version }}
+          release_name: ${{ steps.version.outputs.next-version }}
           commitish: master
           draft: false
           prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_EVENT_PROPAGATION_TOKEN }}
