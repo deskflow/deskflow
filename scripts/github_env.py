@@ -4,7 +4,6 @@ import argparse
 from lib import env, github
 from lib.config import Config
 
-app_version_key = "SYNERGY_VERSION"
 qt_version_key = "QT_VERSION"
 
 
