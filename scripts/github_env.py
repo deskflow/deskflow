@@ -11,11 +11,6 @@ qt_version_key = "QT_VERSION"
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--set-app-version",
-        action="store_true",
-        help=f"Set {app_version_key} env var",
-    )
-    parser.add_argument(
         "--set-qt-version",
         action="store_true",
         help=f"Set {qt_version_key} env var",
@@ -25,10 +20,7 @@ def main():
     # important: load venv before loading modules that install deps.
     env.ensure_in_venv(__file__)
 
-    if args.set_app_version:
-        version = env.get_app_version()
-        github.set_env(app_version_key, version)
-    elif args.set_qt_version:
+    if args.set_qt_version:
         config = Config()
         _qt_mirror, qt_version, _qt_install_dir = config.get_qt_config()
         github.set_env(qt_version_key, qt_version)
