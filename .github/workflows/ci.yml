@@ -15,7 +15,7 @@ on:
     types: [published]
 
 env:
-  GIT_COMMIT: ${{ github.sha }}
+  SYNERGY_VERSION: ${{ github.event.release.tag_name }}
 
 jobs:
   windows:
