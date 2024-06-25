@@ -209,7 +209,7 @@ jobs:
 
       - name: Read version file
         id: read_version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_EN
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: ./scripts/install_deps.py
