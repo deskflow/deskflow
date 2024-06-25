@@ -18,7 +18,7 @@ jobs:
 
       - name: "Generate next build number"
         id: version
-        uses: symless/next-version-action
+        uses: symless/next-version-action@master
         with:
           current-version: $(cat VERSION)
 
