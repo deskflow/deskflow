@@ -96,7 +96,7 @@ def ensure_in_venv(script):
         sys.exit(result.returncode)
 
 
-# TODO: Use pyproject.toml to specify dependencies
+# TODO: Use requirements.txt or pyproject.toml to specify dependencies
 def ensure_module(module, package):
     """
     Ensures that a Python module is available, and installs the package if it is not.
