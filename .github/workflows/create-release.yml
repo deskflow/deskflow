@@ -1,4 +1,4 @@
-name: Create Release
+name: Create release
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
 
       - name: "Generate next build number"
         id: version
-        uses: "symless/next-version-action"
+        uses: symless/next-version-action
         with:
           current-version: $(cat VERSION)
 
