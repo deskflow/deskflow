@@ -96,16 +96,6 @@ jobs:
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
     steps:
-      # - name: Setup PATH
-      #   run: |
-      #     case "$ARCH" in
-      #       "arm64")
-      #         echo "/opt/homebrew/bin" >> $GITHUB_PATH
-      #         ;;
-      #     esac
-      #   env:
-      #     ARCH: ${{ matrix.runtime.arch }}
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
