@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: python ./scripts/install_deps.py
 
-      - name: Set Qt version env var
+      - name: Set QT_VERSION env var
         run: python ./scripts/github_env.py --set-qt-version
 
       - name: Cache Qt
