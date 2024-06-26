@@ -20,14 +20,14 @@ jobs:
           fetch-depth: 0
 
       - name: Read version file
-        id: version
-        run: echo "::set-output name=version::$(cat VERSION)"
+        id: current-version
+        run: echo "::set-output name=current-version::$(cat VERSION)"
 
       - name: Get next version
         id: next-version
         uses: symless/next-version-action@master
         with:
-          current-version: ${{ steps.version.outputs.version }}
+          current-version: ${{ steps.current-version.outputs.current-version }}
 
       - name: Print next version
         run: echo ${{ steps.next-version.outputs.next-version }}
