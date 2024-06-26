@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Fetch all tags
+          fetch-depth: 0
 
       - name: Read version file
         id: read_version
