@@ -13,20 +13,23 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout git repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Read version file
         id: read_version
         run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
-      - name: "Generate next build number"
+      - name: Get next version
         id: version
         uses: symless/next-version-action@master
         with:
           current-version: ${{ env.VERSION }}
 
-      - name: Create Release
+      - name: Print next version
+        run: echo ${{ steps.version.outputs.next-version }}
+
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
