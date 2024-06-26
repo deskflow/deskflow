@@ -27,10 +27,9 @@ runs:
 
   steps:
     - if: ${{ inputs.use_gdrive }}
-      id: version
       run: |
         SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
-        echo "::set-output name=short::$SHORT_VERSION"
+        echo "short=$SHORT_VERSION" >> $GITHUB_ENV
       shell: bash
 
     # Upload to GitHub
@@ -48,4 +47,4 @@ runs:
         credentials: ${{ inputs.gdrive-secret-key }}
         target: "./dist/*"
         parent_folder_id: ${{ inputs.gdrive-parent-folder-id }}
-        child_folder: Packages/${{ inputs.gdrive-target-base-dir }}/${{ steps.version.outputs.short }}/${{ inputs.package-version }}
+        child_folder: Packages/${{ inputs.gdrive-target-base-dir }}${{ env.SHORT_VERSION }}/${{ inputs.package-version }}
