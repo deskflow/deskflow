@@ -40,6 +40,5 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.next-version }}
           release_name: ${{ steps.version.outputs.next-version }}
-          commitish: master
           draft: false
           prerelease: ${{ startsWith(github.ref, 'refs/heads/master') }}
