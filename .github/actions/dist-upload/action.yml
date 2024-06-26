@@ -45,4 +45,4 @@ runs:
         credentials: ${{ inputs.gdrive-secret-key }}
         target: "./dist/*"
         parent_folder_id: ${{ inputs.gdrive-parent-folder-id }}
-        child_folder: Snapshots/${{ gdrive-target-base-dir }}/${{ steps.version.outputs.short }}/${{ inputs.package-version }}
+        child_folder: Snapshots/${{ inputs.gdrive-target-base-dir }}/${{ steps.version.outputs.short }}/${{ inputs.package-version }}
