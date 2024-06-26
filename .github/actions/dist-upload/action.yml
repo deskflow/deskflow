@@ -8,19 +8,19 @@ inputs:
     description: "Whether to upload to Google Drive"
 
   github-target-filename:
-    description: "The filename to upload (GitHub artifacts)"
+    description: "Filename to upload (GitHub artifacts)"
 
   gdrive-target-base-dir:
-    description: "The base directory to upload (Google Drive)"
+    description: "Base directory to upload (Google Drive)"
 
   gdrive-secret-key:
-    description: "The Google Drive secret key"
+    description: "Google Drive secret key"
 
   gdrive-parent-folder-id:
-    description: "The Google Drive parent folder ID"
+    description: "Google Drive parent folder ID"
 
   package-version:
-    description: "The version of the package (for Google Drive)"
+    description: "Package version appended to the Google Drive dir"
 
 runs:
   using: "composite"
