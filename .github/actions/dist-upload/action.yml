@@ -8,10 +8,10 @@ inputs:
     description: "Whether to upload to Google Drive"
 
   github-target-filename:
-    description: "The filename to upload (only used by GitHub artifacts)"
+    description: "The filename to upload (GitHub artifacts)"
 
-  gdrive-target-dir:
-    description: "The directory to upload (only used by Google Drive)"
+  gdrive-target-base-dir:
+    description: "The base directory to upload (Google Drive)"
 
   gdrive-secret-key:
     description: "The Google Drive secret key"
@@ -19,10 +19,17 @@ inputs:
   gdrive-parent-folder-id:
     description: "The Google Drive parent folder ID"
 
+  package-version:
+    description: "The version of the package (for Google Drive)"
+
 runs:
   using: "composite"
 
   steps:
+    - name: Get short version
+      id: version
+      run: echo "::set-output name=short::${{ env.SYNERGY_VERSION.split('-')[0] }}"
+
     # Upload to GitHub
     - if: ${{ inputs.use_github }}
       uses: actions/upload-artifact@v4
@@ -38,4 +45,4 @@ runs:
         credentials: ${{ inputs.gdrive-secret-key }}
         target: "./dist/*"
         parent_folder_id: ${{ inputs.gdrive-parent-folder-id }}
-        child_folder: Snapshots/${{ inputs.gdrive-target-dir }}
+        child_folder: Snapshots/${{ gdrive-target-base-dir }}/${{ steps.version.outputs.short }}/${{ inputs.package-version }}

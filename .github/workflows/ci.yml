@@ -143,9 +143,10 @@ jobs:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
           github-target-filename: "synergy-macos-${{ matrix.runtime.target }}"
-          gdrive-target-dir: "synergy1/personal/${{ env.SYNERGY_VERSION }}"
+          gdrive-target-base-dir: "synergy1/personal"
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+          package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
