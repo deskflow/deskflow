@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master*
-      - release*
+      - master
+      - release/**
 
 jobs:
   create-release:
