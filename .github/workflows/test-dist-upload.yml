@@ -1,3 +1,6 @@
+# Used only for testing the `dist-upload` action.
+# Triggered using 'Run workflow' in the Actions tab.
+
 name: Test dist upload
 
 on:
