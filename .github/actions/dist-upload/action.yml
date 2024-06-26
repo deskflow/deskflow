@@ -28,7 +28,9 @@ runs:
   steps:
     - name: Get short version
       id: version
-      run: echo "::set-output name=short::${{ inputs.package-version.split('-')[0] }}"
+      run: |
+        SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
+        echo "::set-output name=short::$SHORT_VERSION"
       shell: bash
 
     # Upload to GitHub
