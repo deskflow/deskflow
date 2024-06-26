@@ -26,7 +26,7 @@ runs:
   using: "composite"
 
   steps:
-    - name: Get short version
+    - if: ${{ inputs.use_gdrive }}
       id: version
       run: |
         SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
