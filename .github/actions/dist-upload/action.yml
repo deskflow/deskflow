@@ -29,7 +29,7 @@ runs:
     - if: ${{ inputs.use_gdrive }}
       run: |
         SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
-        echo "short=$SHORT_VERSION" >> $GITHUB_ENV
+        echo "SHORT_VERSION=$SHORT_VERSION" >> $GITHUB_ENV
       shell: bash
 
     # Upload to GitHub
