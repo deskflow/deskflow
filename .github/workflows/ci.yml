@@ -31,7 +31,7 @@ jobs:
 
       - name: Read version file
         id: read_version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+        run: echo "SYNERGY_VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: python ./scripts/install_deps.py
@@ -112,7 +112,7 @@ jobs:
 
       - name: Read version file
         id: read_version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+        run: echo "SYNERGY_VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: ./scripts/install_deps.py
@@ -209,7 +209,7 @@ jobs:
 
       - name: Read version file
         id: read_version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+        run: echo "SYNERGY_VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: ./scripts/install_deps.py
