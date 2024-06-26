@@ -2,6 +2,9 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Synergy version number
   pull_request:
     types:
       - opened
@@ -12,7 +15,7 @@ on:
     types: [published]
 
 env:
-  SYNERGY_VERSION: ${{ github.event.release.tag_name }}
+  SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
 
 jobs:
   windows:
