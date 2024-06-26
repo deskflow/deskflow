@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Get short version
       id: version
-      run: echo "::set-output name=short::${{ env.SYNERGY_VERSION.split('-')[0] }}"
+      run: echo "::set-output name=short::${{ inputs.package-version.split('-')[0] }}"
 
     # Upload to GitHub
     - if: ${{ inputs.use_github }}
