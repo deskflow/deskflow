@@ -2,19 +2,22 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Synergy version number
   pull_request:
     types:
       - opened
       - reopened
       - synchronize
       - ready_for_review
-  push:
-    branches:
-      - master*
-      - release*
+  release:
+    types: [published]
 
 env:
-  GIT_COMMIT: ${{ github.sha }}
+  SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
+  UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+  UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
 jobs:
   windows:
@@ -24,13 +27,18 @@ jobs:
 
     env:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
-      QT_VERSION: 5.15.2
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
+
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py
+
+      - name: Set QT_VERSION env var
+        run: python ./scripts/github_env.py --set-qt-version
 
       - name: Cache Qt
         id: cache-qt
@@ -43,9 +51,6 @@ jobs:
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: python ./scripts/install_deps.py --only qt
 
-      - name: Install dependencies
-        run: python ./scripts/install_deps.py
-
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
 
@@ -53,9 +58,6 @@ jobs:
         env:
           CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: cmake -B build --preset=windows-release
-
-      - name: Set env vars
-        run: python ./scripts/github_env.py
 
       - name: Build
         run: cmake --build build
@@ -94,16 +96,6 @@ jobs:
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
     steps:
-      - name: Setup PATH
-        run: |
-          case "$ARCH" in
-            "arm64")
-              echo "/opt/homebrew/bin" >> $GITHUB_PATH
-              ;;
-          esac
-        env:
-          ARCH: ${{ matrix.runtime.arch }}
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -116,9 +108,6 @@ jobs:
         env:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
-
-      - name: Set env vars
-        run: ./scripts/github_env.py
 
       - name: Build
         run: cmake --build build
@@ -137,21 +126,17 @@ jobs:
           APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      - name: Upload to GitHub
-        if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+      - name: Upload
+        if:
         uses: ./.github/actions/dist-upload
         with:
-          service: "github"
+          use_github: ${{ env.UPLOAD_TO_GITHUB }}
+          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
           github-target-filename: "synergy-macos-${{ matrix.runtime.target }}"
-
-      - name: Upload to Google Drive
-        if: github.event_name != 'pull_request'
-        uses: ./.github/actions/dist-upload
-        with:
-          service: "gdrive"
-          gdrive-target-dir: "synergy1/v1-core-standard/${{ env.SYNERGY_VERSION }}"
+          gdrive-target-base-dir: "synergy1/personal"
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+          package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
     runs-on: ${{ matrix.distro.runs-on }}
@@ -206,9 +191,7 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        run: |
-          ${{ matrix.distro.python-deps }}
-          ./scripts/install_deps.py
+        run: ./scripts/install_deps.py
 
       - name: Configure (modern)
         if: ${{ !matrix.distro.legacy-cmake }}
@@ -218,9 +201,6 @@ jobs:
       - name: Configure (legacy)
         if: ${{ matrix.distro.legacy-cmake }}
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Set env vars
-        run: ./scripts/github_env.py
 
       - name: Build
         run: cmake --build build

@@ -1,28 +1,39 @@
 name: "Distribute upload"
 description: "Uploads the package from the dist dir to GitHub artifacts or Google Drive"
 inputs:
-  service:
-    description: "Where to upload the package (github or gdrive)"
-    default: "github"
+  use_github:
+    description: "Whether to upload to GitHub artifacts"
+
+  use_gdrive:
+    description: "Whether to upload to Google Drive"
 
   github-target-filename:
-    description: "The filename to upload (only used by GitHub artifacts)"
+    description: "Filename to upload (GitHub artifacts)"
 
-  gdrive-target-dir:
-    description: "The directory to upload (only used by Google Drive)"
+  gdrive-target-base-dir:
+    description: "Base directory to upload (Google Drive)"
 
   gdrive-secret-key:
-    description: "The Google Drive secret key"
+    description: "Google Drive secret key"
 
   gdrive-parent-folder-id:
-    description: "The Google Drive parent folder ID"
+    description: "Google Drive parent folder ID"
+
+  package-version:
+    description: "Package version appended to the Google Drive dir"
 
 runs:
   using: "composite"
 
   steps:
+    - if: ${{ inputs.use_gdrive == 'true' }}
+      run: |
+        SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
+        echo "SHORT_VERSION=$SHORT_VERSION" >> $GITHUB_ENV
+      shell: bash
+
     # Upload to GitHub
-    - if: ${{ inputs.service == 'github' }}
+    - if: ${{ inputs.use_github == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.github-target-filename }}
@@ -30,10 +41,10 @@ runs:
         retention-days: 3
 
     # Upload to Google Drive
-    - if: ${{ inputs.service == 'gdrive' }}
+    - if: ${{ inputs.use_gdrive }}
       uses: symless/gdrive-upload@target-glob
       with:
         credentials: ${{ inputs.gdrive-secret-key }}
         target: "./dist/*"
         parent_folder_id: ${{ inputs.gdrive-parent-folder-id }}
-        child_folder: Snapshots/${{ inputs.gdrive-target-dir }}
+        child_folder: Packages/${{ inputs.gdrive-target-base-dir }}/${{ env.SHORT_VERSION }}/${{ inputs.package-version }}

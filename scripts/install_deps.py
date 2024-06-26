@@ -3,9 +3,6 @@
 import os, sys, argparse, traceback
 from lib import env, cmd_utils
 
-# important: load venv before loading modules that install deps.
-env.ensure_in_venv(__file__)
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -16,6 +13,12 @@ def main():
         "--only", type=str, help="Only install the specified dependency"
     )
     args = parser.parse_args()
+
+    # ensures that pip and venv are available for `ensure_module` function.
+    env.ensure_dependencies()
+
+    # important: load venv before loading modules that install deps.
+    env.ensure_in_venv(__file__)
 
     error = False
     try:
@@ -84,8 +87,8 @@ class Dependencies:
         choco = windows.WindowsChoco()
         if self.ci_env:
             choco.config_ci_cache()
-            choco_config_file, remove_packages = self.config.get_choco_config()
-            choco.remove_from_config(choco_config_file, remove_packages)
+            edit_config, skip_packages = self.config.get_choco_ci_config()
+            choco.remove_from_config(edit_config, skip_packages)
 
         command = self.config.get_deps_command()
         choco.install(command, self.ci_env)

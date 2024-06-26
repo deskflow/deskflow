@@ -2,7 +2,8 @@ import os, sys, subprocess, platform
 from lib import env, cmd_utils
 
 venv_path = "build/python"
-version_env = "build/.env.version"
+version_file = "VERSION"
+version_env_var = "SYNERGY_VERSION"
 
 
 def check_module(module):
@@ -80,7 +81,7 @@ def ensure_in_venv(script):
     If the script is not running in a venv, it will create one and re-run the script in the venv.
     """
 
-    ensure_dependencies()
+    assert_dependencies()
     import venv
 
     if not in_venv():
@@ -96,13 +97,13 @@ def ensure_in_venv(script):
         sys.exit(result.returncode)
 
 
-# TODO: Use pyproject.toml to specify dependencies
+# TODO: Use requirements.txt or pyproject.toml to specify dependencies
 def ensure_module(module, package):
     """
     Ensures that a Python module is available, and installs the package if it is not.
     """
 
-    ensure_dependencies()
+    assert_dependencies()
 
     try:
         __import__(module)
@@ -111,16 +112,30 @@ def ensure_module(module, package):
         cmd_utils.run([sys.executable, "-m", "pip", "install", package], shell=False)
 
 
-def ensure_dependencies():
+def assert_dependencies(raise_error=True):
     """
-    Ensures that pip and venv are available, and installs them if they are not.
-    This is normally only required on Linux.
+    Returns True if pip and venv are available.
     """
 
     has_pip = check_module("pip")
     has_venv = check_module("venv")
 
-    if has_pip and has_venv:
+    if raise_error:
+        if not has_pip:
+            raise RuntimeError("Python is missing pip")
+        if not has_venv:
+            raise RuntimeError("Python is missing venv")
+    else:
+        return has_pip and has_venv
+
+
+def ensure_dependencies():
+    """
+    Ensures that pip and venv are available, and installs them if they are not.
+    This is normally only installs on Linux, as Windows and Mac usually come with pip and venv.
+    """
+
+    if assert_dependencies(raise_error=False):
         return
 
     print("Installing Python dependencies...")
@@ -145,19 +160,12 @@ def ensure_dependencies():
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")
 
 
-def get_version_info():
-    env.ensure_module("dotenv", "python-dotenv")
-    from dotenv import load_dotenv  # type: ignore
+def get_app_version():
+    """
+    Returns the version either from the env var, or from the version file.
+    """
+    if version_env_var in os.environ:
+        return os.environ[version_env_var]
 
-    if not os.path.isfile(version_env):
-        raise RuntimeError(f"Version file not found: {version_env}")
-
-    load_dotenv(dotenv_path=version_env)
-
-    major = os.getenv("SYNERGY_VERSION_MAJOR")
-    minor = os.getenv("SYNERGY_VERSION_MINOR")
-    patch = os.getenv("SYNERGY_VERSION_PATCH")
-    stage = os.getenv("SYNERGY_VERSION_STAGE")
-    build = os.getenv("SYNERGY_VERSION_BUILD")
-
-    return major, minor, patch, stage, build
+    with open(version_file, "r") as f:
+        return f.read().strip()

@@ -1,9 +1,11 @@
-name: Create Release
+name: Create release
 
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches:
+      - master*
+      - release*
 
 jobs:
   create-release:
@@ -11,23 +13,31 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
+          # Fetch all tags
           fetch-depth: 0
 
-      - name: "Generate next build number"
-        id: build
-        uses: "./.github/actions/build-number"
+      - name: Read version file
+        run: echo "CURRENT_VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
-      - name: Create Release
+      - name: Get next version
+        id: next-version
+        uses: symless/next-version-action@master
+        with:
+          current-version: ${{ env.CURRENT_VERSION }}
+
+      - name: Print next version
+        run: echo ${{ steps.next-version.outputs.next-version }}
+
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.build.outputs.next-build }}
-          release_name: ${{ steps.build.outputs.next-build }}
-          commitish: master
-          draft: false
-          prerelease: true
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_EVENT_PROPAGATION_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.next-version.outputs.next-version }}
+          release_name: ${{ steps.next-version.outputs.next-version }}
+          draft: false
+          prerelease: ${{ !startsWith(github.ref, 'refs/heads/release') }}
