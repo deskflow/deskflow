@@ -34,6 +34,7 @@ Enhancements:
 - #7351 Use deps script to make life easier for contribs
 - #7352 Combine GitHub workflows to reduce config duplication
 - #7353 Re-implement packaging for GitHub workflows (macOS)
+- #7354 Simplify version config and improve CI version number logic
 
 # 1.14.6
 
