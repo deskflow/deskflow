@@ -20,17 +20,17 @@ jobs:
           fetch-depth: 0
 
       - name: Read version file
-        id: read_version
-        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+        id: version
+        run: echo "::set-output name=version::$(cat VERSION)"
 
       - name: Get next version
-        id: version
+        id: next-version
         uses: symless/next-version-action@master
         with:
-          current-version: ${{ env.VERSION }}
+          current-version: ${{ steps.version.outputs.version }}
 
       - name: Print next version
-        run: echo ${{ steps.version.outputs.next-version }}
+        run: echo ${{ steps.next-version.outputs.next-version }}
 
       - name: Create release
         id: create_release
