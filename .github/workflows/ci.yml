@@ -16,6 +16,8 @@ on:
 
 env:
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
+  UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+  UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
 jobs:
   windows:
@@ -134,19 +136,14 @@ jobs:
           APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      - name: Upload to GitHub
-        if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+      - name: Upload
+        if:
         uses: ./.github/actions/dist-upload
         with:
-          service: "github"
+          use_github: ${{ env.UPLOAD_TO_GITHUB }}
+          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
           github-target-filename: "synergy-macos-${{ matrix.runtime.target }}"
-
-      - name: Upload to Google Drive
-        if: github.event_name != 'pull_request'
-        uses: ./.github/actions/dist-upload
-        with:
-          service: "gdrive"
-          gdrive-target-dir: "synergy1/v1-core-standard/${{ env.SYNERGY_VERSION }}"
+          gdrive-target-dir: "synergy1/personal/${{ env.SYNERGY_VERSION }}"
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
 

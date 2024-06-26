@@ -1,9 +1,11 @@
 name: "Distribute upload"
 description: "Uploads the package from the dist dir to GitHub artifacts or Google Drive"
 inputs:
-  service:
-    description: "Where to upload the package (github or gdrive)"
-    default: "github"
+  use_github:
+    description: "Whether to upload to GitHub artifacts"
+
+  use_gdrive:
+    description: "Whether to upload to Google Drive"
 
   github-target-filename:
     description: "The filename to upload (only used by GitHub artifacts)"
@@ -22,7 +24,7 @@ runs:
 
   steps:
     # Upload to GitHub
-    - if: ${{ inputs.service == 'github' }}
+    - if: ${{ inputs.use_github }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.github-target-filename }}
@@ -30,7 +32,7 @@ runs:
         retention-days: 3
 
     # Upload to Google Drive
-    - if: ${{ inputs.service == 'gdrive' }}
+    - if: ${{ inputs.use_gdrive }}
       uses: symless/gdrive-upload@target-glob
       with:
         credentials: ${{ inputs.gdrive-secret-key }}
