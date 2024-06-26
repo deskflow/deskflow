@@ -1,0 +1,21 @@
+name: Test dist upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Fetch all tags
+          fetch-depth: 0
+
+      - name: Make test dist
+        run: |
+          mkdir dist
+          echo "test" > dist/test
