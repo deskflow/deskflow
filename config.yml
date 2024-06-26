@@ -61,4 +61,3 @@ config:
 
     centos:
       <<: *fedora
-      command: sudo yum install -y
