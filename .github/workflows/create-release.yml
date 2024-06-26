@@ -20,14 +20,13 @@ jobs:
           fetch-depth: 0
 
       - name: Read version file
-        id: current-version
-        run: echo "::set-output name=current-version::$(cat VERSION)"
+        run: echo "CURRENT_VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Get next version
         id: next-version
         uses: symless/next-version-action@master
         with:
-          current-version: ${{ steps.current-version.outputs.current-version }}
+          current-version: ${{ env.CURRENT_VERSION }}
 
       - name: Print next version
         run: echo ${{ steps.next-version.outputs.next-version }}
