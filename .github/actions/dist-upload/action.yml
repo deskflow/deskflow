@@ -26,14 +26,14 @@ runs:
   using: "composite"
 
   steps:
-    - if: ${{ inputs.use_gdrive }}
+    - if: ${{ inputs.use_gdrive == 'true' }}
       run: |
         SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
         echo "SHORT_VERSION=$SHORT_VERSION" >> $GITHUB_ENV
       shell: bash
 
     # Upload to GitHub
-    - if: ${{ inputs.use_github }}
+    - if: ${{ inputs.use_github == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.github-target-filename }}
