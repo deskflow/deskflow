@@ -29,6 +29,7 @@ runs:
     - name: Get short version
       id: version
       run: echo "::set-output name=short::${{ inputs.package-version.split('-')[0] }}"
+      shell: bash
 
     # Upload to GitHub
     - if: ${{ inputs.use_github }}
