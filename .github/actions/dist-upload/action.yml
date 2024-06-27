@@ -26,6 +26,11 @@ runs:
   using: "composite"
 
   steps:
+    - if: ${{ inputs.use_gdrive == 'true' && !inputs.package-version }}
+      run: |
+        echo "Input 'package-version' is required when uploading to Google Drive"
+        exit 1
+
     - if: ${{ inputs.use_gdrive == 'true' }}
       run: |
         SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
