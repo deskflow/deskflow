@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import platform
+import platform, sys, argparse, traceback
 from lib import env
 
 env_file = ".env"
@@ -37,8 +37,9 @@ def get_filename_base(version):
 
 
 def windows_package(filename_base):
-    """TODO: Windows packaging"""
-    pass
+    from lib import windows
+
+    windows.package(filename_base)
 
 
 def mac_package(filename_base):

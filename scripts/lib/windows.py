@@ -1,12 +1,17 @@
-import ctypes
-import sys
-import os
+import ctypes, sys, os, shutil
 import xml.etree.ElementTree as ET
-from lib import cmd_utils
+from lib import cmd_utils, env, certificate
 
+msbuild_cmd = "msbuild"
+signtool_cmd = "signtool"
+certutil_cmd = "certutil"
 cmake_env_var = "CMAKE_PREFIX_PATH"
 runner_temp_env_var = "RUNNER_TEMP"
 qt_base_dir_env_var = "QT_BASE_DIR"
+dist_dir = "dist"
+build_dir = "build"
+wix_solution_file = f"{build_dir}/installer/Synergy.sln"
+installer_file = f"{build_dir}/installer/bin/Release/Synergy.msi"
 
 
 def relaunch_as_admin(script):
@@ -39,7 +44,89 @@ def set_env_var(name, value):
         new_value = f"{current_value}{os.pathsep}{value}" if current_value else value
         os.environ[name] = new_value
         print(f"Setting environment variable: {name}={value}")
-        cmd_utils.run(["setx", name, new_value], check=True)
+        cmd_utils.run(["setx", name, new_value], check=True, shell=True, print_cmd=True)
+
+
+def package(filename_base):
+    cert_base64 = env.get_env_var("WINDOWS_PFX")
+    cert_password = env.get_env_var("WINDOWS_PFX_PASS")
+
+    sign_binaries(cert_base64, cert_password)
+    build_msi(filename_base)
+    sign_msi(filename_base, cert_base64, cert_password)
+
+
+def assert_vs_cmd(cmd):
+    has_cmd = cmd_utils.has_command(cmd)
+    if not has_cmd:
+        raise RuntimeError(
+            f"The '{cmd}' command was not found, "
+            "re-run from 'Developer Command Prompt for VS'"
+        )
+
+
+def build_msi(filename_base):
+    print("Building MSI installer...")
+    configuration = "Release"
+    platform = "x64"
+
+    assert_vs_cmd(msbuild_cmd)
+    cmd_utils.run(
+        [
+            msbuild_cmd,
+            wix_solution_file,
+            f"/p:Configuration={configuration}",
+            f"/p:Platform={platform}",
+        ],
+        shell=True,
+        print_cmd=True,
+    )
+
+    path = get_package_path(filename_base)
+    print(f"Copying MSI installer to {dist_dir}")
+    os.makedirs(dist_dir, exist_ok=True)
+    shutil.copy(installer_file, path)
+
+
+def get_package_path(filename_base):
+    return f"{dist_dir}/{filename_base}.msi"
+
+
+def sign_binaries(cert_base64, cert_password):
+    exe_pattern = f"{build_dir}/bin/*.exe"
+    run_codesign(exe_pattern, cert_base64, cert_password)
+
+
+def sign_msi(filename_base, cert_base64, cert_password):
+    path = get_package_path(filename_base)
+    run_codesign(path, cert_base64, cert_password)
+
+
+def run_codesign(path, cert_base64, cert_password):
+    time_server = "http://timestamp.digicert.com"
+    hashing_algorithm = "SHA256"
+
+    with certificate.Certificate(cert_base64) as cert_path:
+        print("Signing MSI installer...")
+        assert_vs_cmd(signtool_cmd)
+
+        # WARNING: contains private key password, never print this command
+        cmd_utils.run(
+            [
+                signtool_cmd,
+                "sign",
+                "/f",
+                cert_path,
+                "/p",
+                cert_password,
+                "/t",
+                time_server,
+                "/fd",
+                hashing_algorithm,
+                path,
+            ],
+            shell=True,
+        )
 
 
 class WindowsChoco:
@@ -49,10 +136,23 @@ class WindowsChoco:
         """Installs packages using Chocolatey."""
         if ci_env:
             # don't show noisy choco progress bars in ci env
-            cmd_utils.run(f"{command} --no-progress")
+            cmd_utils.run(
+                f"{command} --no-progress",
+                shell=True,
+                print_cmd=True,
+            )
         else:
-            cmd_utils.run("winget install chocolatey", check=False)
-            cmd_utils.run(command)
+            cmd_utils.run(
+                "winget install chocolatey",
+                check=False,
+                shell=True,
+                print_cmd=True,
+            )
+            cmd_utils.run(
+                command,
+                shell=True,
+                print_cmd=True,
+            )
 
     def config_ci_cache(self):
         """Configures Chocolatey cache for CI."""
@@ -62,7 +162,11 @@ class WindowsChoco:
             # sets the choco cache dir, which should match the dir in the ci cache action.
             key_arg = '--name="cacheLocation"'
             value_arg = f'--value="{runner_temp}/choco"'
-            cmd_utils.run(["choco", "config", "set", key_arg, value_arg])
+            cmd_utils.run(
+                ["choco", "config", "set", key_arg, value_arg],
+                shell=True,
+                print_cmd=True,
+            )
         else:
             print(f"Warning: CI environment variable {runner_temp_env_var} not set")
 
@@ -102,13 +206,21 @@ class WindowsQt:
     def install(self):
         """Installs Qt on Windows."""
 
-        cmd_utils.run(["pip", "install", "aqtinstall"])
+        cmd_utils.run(
+            ["pip", "install", "aqtinstall"],
+            shell=True,
+            print_cmd=True,
+        )
 
         args = ["python", "-m", "aqt", "install-qt"]
         args.extend(["--outputdir", self.base_dir])
         args.extend(["--base", self.mirror_url])
         args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
-        cmd_utils.run(args)
+        cmd_utils.run(
+            args,
+            shell=True,
+            print_cmd=True,
+        )
 
         install_dir = self.get_install_dir()
         if not install_dir:
