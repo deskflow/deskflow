@@ -30,6 +30,7 @@ runs:
       run: |
         echo "Input 'package-version' is required when uploading to Google Drive"
         exit 1
+      shell: bash
 
     - if: ${{ inputs.use_gdrive == 'true' }}
       run: |
