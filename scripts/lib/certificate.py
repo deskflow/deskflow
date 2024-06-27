@@ -1,6 +1,6 @@
 import os, base64
 
-temp_path = "tmp/certificate.tmp"
+temp_path = "tmp/certificate"
 
 
 class Certificate:
@@ -13,26 +13,28 @@ class Certificate:
         print(f"Certificate path: {cert_path}")
     """
 
-    def __init__(self, base64):
+    def __init__(self, base64, file_ext):
         self.base64 = base64
+        self.temp_filename = f"{temp_path}.{file_ext}"
 
     def __enter__(self):
-        print(f"Decoding certificate to temporary path: {temp_path}")
+        print(f"Decoding certificate to temporary path: {self.temp_filename}")
         try:
             cert_bytes = base64.b64decode(self.base64)
         except Exception as e:
             raise ValueError("Failed to decode certificate base64") from e
 
-        os.makedirs(os.path.dirname(temp_path), exist_ok=True)
-        with open(temp_path, "wb") as cert_file:
+        os.makedirs(os.path.dirname(self.temp_filename), exist_ok=True)
+        with open(self.temp_filename, "wb") as cert_file:
             cert_file.write(cert_bytes)
-        return temp_path
+
+        return self.temp_filename
 
     def __exit__(self, _exc_type, _exc_value, _traceback):
         # not strictly necessary for ci, but when run on a dev machine, it reduces the risk
         # that private keys are left on the filesystem
-        print(f"Removing temporary certificate file: {temp_path}")
-        os.remove(temp_path)
+        print(f"Removing temporary certificate file: {self.temp_filename}")
+        os.remove(self.temp_filename)
 
         # propagate exceptions
         return False
