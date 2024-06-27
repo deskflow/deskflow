@@ -31,7 +31,6 @@ public:
     VersionChecker();
     virtual ~VersionChecker();
     void checkLatest();
-    QString getVersion();
     void setApp(const QString& app) { m_app = app; }
     int compareVersions(const QString& left, const QString& right);
 public slots:
@@ -47,5 +46,5 @@ private:
      * \param stage The string containing the stage version
      * \return An integer representation of the stage, the higher the number the more recent the version
      */
-    int getStageVersion(QString stage);
+    int getStageVersion(QString stage) const;
 };
