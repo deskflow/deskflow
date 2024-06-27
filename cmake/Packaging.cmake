@@ -45,18 +45,28 @@ macro(configure_macos_packaging)
     endif()
 endmacro()
 
+function(find_openssl_dir_win32 result)
+    execute_process(
+        COMMAND where openssl
+        OUTPUT_VARIABLE OPENSSL_PATH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    # gets the openssl bin dir
+    get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_PATH} DIRECTORY)
+    
+    # gets the openssl install root dir
+    get_filename_component(OPENSSL_DIR ${OPENSSL_BIN_DIR} DIRECTORY)
+
+    set(${result} ${OPENSSL_DIR} PARENT_SCOPE)
+endfunction()
+
 #
 # Windows installer
 #
 macro(configure_windows_packaging)
-    # Takes the `OPENSSL_CONF` env var which has the full path to `openssl.config` and find the
-    # root path, e.g.:
-    # OPENSSL_CONF: C:\Program Files\OpenSSL-Win64\bin\openssl.config
-    # OPENSSL_PATH: C:\Program Files\OpenSSL-Win64
-
-    string(REGEX MATCH "^(.*[/\\\\]OpenSSL-Win64)" OPENSSL_PATH "$ENV{OPENSSL_CONF}")
-    message(STATUS "OpenSSL path: ${OPENSSL_PATH}")
-
+    find_openssl_dir_win32(OPENSSL_PATH)
+    message(STATUS "Found OpenSSL dir: ${OPENSSL_PATH}")
     set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endmacro()
