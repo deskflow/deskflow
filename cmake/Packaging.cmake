@@ -52,10 +52,17 @@ function(find_openssl_dir_win32 result)
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 
-    # gets the openssl bin dir
-    get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_PATH} DIRECTORY)
+    # It's possible that there are multiple OpenSSL installations on the system,
+    # which is the case on GitHub runners.
+    # For now we'll pick the first one, but that's probably not very robust.
+    # Maybe our choco config could install to a set location?
+    string(REGEX REPLACE "\r?\n" ";" OPENSSL_PATH_LIST ${OPENSSL_PATH})
+    list(GET OPENSSL_PATH_LIST 0 OPENSSL_FIRST_PATH)
+
+    # Gets the OpenSSL bin dir
+    get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_FIRST_PATH} DIRECTORY)
     
-    # gets the openssl install root dir
+    # Gets the OpenSSL install root dir
     get_filename_component(OPENSSL_DIR ${OPENSSL_BIN_DIR} DIRECTORY)
 
     set(${result} ${OPENSSL_DIR} PARENT_SCOPE)
