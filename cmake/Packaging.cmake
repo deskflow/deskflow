@@ -51,19 +51,25 @@ function(find_openssl_dir_win32 result)
         OUTPUT_VARIABLE OPENSSL_PATH
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    message(STATUS "OpenSSL find result: ${OPENSSL_PATH}")
 
     # It's possible that there are multiple OpenSSL installations on the system,
     # which is the case on GitHub runners.
     # For now we'll pick the first one, but that's probably not very robust.
     # Maybe our choco config could install to a set location?
     string(REGEX REPLACE "\r?\n" ";" OPENSSL_PATH_LIST ${OPENSSL_PATH})
+    message(STATUS "OpenSSL path list: ${OPENSSL_PATH_LIST}")
+
     list(GET OPENSSL_PATH_LIST 0 OPENSSL_FIRST_PATH)
+    message(STATUS "OpenSSL first path: ${OPENSSL_FIRST_PATH}")
 
     # Gets the OpenSSL bin dir
     get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_FIRST_PATH} DIRECTORY)
+    message(STATUS "OpenSSL bin dir: ${OPENSSL_BIN_DIR}")
     
     # Gets the OpenSSL install root dir
     get_filename_component(OPENSSL_DIR ${OPENSSL_BIN_DIR} DIRECTORY)
+    message(STATUS "OpenSSL install root dir: ${OPENSSL_DIR}")
 
     set(${result} ${OPENSSL_DIR} PARENT_SCOPE)
 endfunction()
@@ -73,7 +79,6 @@ endfunction()
 #
 macro(configure_windows_packaging)
     find_openssl_dir_win32(OPENSSL_PATH)
-    message(STATUS "Found OpenSSL dir: ${OPENSSL_PATH}")
     set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
     configure_files (${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix ${CMAKE_BINARY_DIR}/installer)
 endmacro()
