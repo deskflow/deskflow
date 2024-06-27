@@ -68,6 +68,21 @@ jobs:
       - name: Package
         if: ${{ !github.event.pull_request.draft }}
         run: python ./scripts/package.py
+        env:
+          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
+          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
+
+      - name: Upload
+        if:
+        uses: ./.github/actions/dist-upload
+        with:
+          use_github: ${{ env.UPLOAD_TO_GITHUB }}
+          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
+          github-target-filename: "synergy-windows-x64"
+          gdrive-target-base-dir: "synergy1/personal"
+          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
+          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+          package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
     runs-on: ${{ matrix.runtime.os }}

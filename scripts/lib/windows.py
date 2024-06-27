@@ -48,8 +48,8 @@ def set_env_var(name, value):
 
 
 def package(filename_base):
-    cert_base64 = env.get_env_var("WINDOWS_PFX")
-    cert_password = env.get_env_var("WINDOWS_PFX_PASS")
+    cert_base64 = env.get_env_var("WINDOWS_PFX_CERTIFICATE")
+    cert_password = env.get_env_var("WINDOWS_PFX_PASSWORD")
 
     sign_binaries(cert_base64, cert_password)
     build_msi(filename_base)
