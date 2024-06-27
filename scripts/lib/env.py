@@ -178,8 +178,9 @@ def get_app_version():
     """
     Returns the version either from the env var, or from the version file.
     """
-    if version_env_var in os.environ:
-        return os.environ[version_env_var]
+    version_env_var = os.environ[version_env_var].strip()
+    if version_env_var:
+        return version_env_var
 
     with open(version_file, "r") as f:
         return f.read().strip()
