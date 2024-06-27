@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import os, sys, argparse, traceback
-from lib import env, cmd_utils
+import lib.env as env
+import lib.cmd_utils as cmd_utils
 
 
 def main():
@@ -61,7 +62,7 @@ class Dependencies:
 
     def windows(self):
         """Installs dependencies on Windows."""
-        from lib import windows
+        import lib.windows as windows
 
         if not windows.is_admin():
             windows.relaunch_as_admin(__file__)
@@ -95,7 +96,7 @@ class Dependencies:
 
     def mac(self):
         """Installs dependencies on macOS."""
-        from lib import mac
+        import lib.mac as mac
 
         command = self.config.get_os_deps_value("command")
         cmd_utils.run(command, shell=True, print_cmd=True)

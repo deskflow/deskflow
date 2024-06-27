@@ -1,6 +1,8 @@
 import ctypes, sys, os, shutil
 import xml.etree.ElementTree as ET
-from lib import cmd_utils, env, certificate
+import lib.cmd_utils as cmd_utils
+import lib.env as env
+from lib.certificate import Certificate
 
 msbuild_cmd = "msbuild"
 signtool_cmd = "signtool"
@@ -106,7 +108,7 @@ def run_codesign(path, cert_base64, cert_password):
     time_server = "http://timestamp.digicert.com"
     hashing_algorithm = "SHA256"
 
-    with certificate.Certificate(cert_base64) as cert_path:
+    with Certificate(cert_base64, "pfx") as cert_path:
         print("Signing MSI installer...")
         assert_vs_cmd(signtool_cmd)
 

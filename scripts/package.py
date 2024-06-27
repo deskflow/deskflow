@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import platform, sys, argparse, traceback
-from lib import env
+import platform
+import lib.env as env
 
 env_file = ".env"
 package_filename_product = "synergy"
@@ -37,13 +37,13 @@ def get_filename_base(version):
 
 
 def windows_package(filename_base):
-    from lib import windows
+    import lib.windows as windows
 
     windows.package(filename_base)
 
 
 def mac_package(filename_base):
-    from lib import mac
+    import lib.mac as mac
 
     mac.package(filename_base)
 

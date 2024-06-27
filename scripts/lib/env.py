@@ -1,5 +1,5 @@
-import os, sys, subprocess, base64
-from lib import env, cmd_utils
+import os, sys, subprocess
+import lib.cmd_utils as cmd_utils
 
 venv_path = "build/python"
 version_file = "VERSION"

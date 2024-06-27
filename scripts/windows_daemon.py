@@ -3,7 +3,7 @@ import subprocess
 import sys
 import argparse
 import glob
-from lib import windows
+import lib.windows as windows
 
 BIN_NAME = "synergyd"
 SOURCE_BIN_DIR = os.path.join("build", "bin")

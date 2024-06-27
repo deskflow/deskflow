@@ -1,5 +1,7 @@
 import os, time, json
-from lib import cmd_utils, env, certificate
+import lib.cmd_utils as cmd_utils
+import lib.env as env
+from lib.certificate import Certificate
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
@@ -124,7 +126,7 @@ def install_certificate(cert_base64, cert_password):
     if not cert_password:
         raise ValueError("Certificate password not provided")
 
-    with certificate.Certificate(cert_base64) as cert_path:
+    with Certificate(cert_base64, "p12") as cert_path:
         print(f"Installing certificate: {cert_path}")
 
         # WARNING: contains private key password, never print this command

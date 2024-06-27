@@ -1,4 +1,5 @@
-from lib import env, cmd_utils
+import lib.env as env
+import lib.cmd_utils as cmd_utils
 
 config_file = "config.yml"
 root_key = "config"
