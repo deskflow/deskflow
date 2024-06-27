@@ -1,9 +1,8 @@
-import os, subprocess, base64, time, json, shutil, sys
-from lib import cmd_utils, env
+import os, time, json
+from lib import cmd_utils, env, certificate
 
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
-cert_path = "tmp/codesign.p12"
 dist_dir = "dist"
 product_name = "Synergy"
 settings_file = "res/dist/macos/dmgbuild/settings.py"
@@ -30,18 +29,20 @@ def set_env_var(name, value):
 
 
 def set_cmake_prefix_env_var(cmake_prefix_command):
-    result = cmd_utils.run(cmake_prefix_command, get_output=True)
+    result = cmd_utils.run(
+        cmake_prefix_command, get_output=True, shell=True, print_cmd=True
+    )
     cmake_prefix = result.stdout.strip()
     set_env_var(cmake_env_var, cmake_prefix)
 
 
 def package(filename_base):
     codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
-    certificate = env.get_env_var("APPLE_P12_CERTIFICATE")
-    password = env.get_env_var("APPLE_P12_PASSWORD")
+    cert_base64 = env.get_env_var("APPLE_P12_CERTIFICATE")
+    cert_password = env.get_env_var("APPLE_P12_PASSWORD")
 
     build_bundle()
-    install_certificate(certificate, password)
+    install_certificate(cert_base64, cert_password)
     assert_certificate_installed(codesign_id)
     sign_bundle(codesign_id)
     dmg_path = build_dmg(filename_base)
@@ -51,13 +52,12 @@ def package(filename_base):
 def build_bundle():
     print("Building bundle...")
     # cmake build install target should run macdeployqt
-    cmd_utils.run("cmake --build build --target install")
+    cmd_utils.run("cmake --build build --target install", shell=True, print_cmd=True)
 
 
 def sign_bundle(codesign_id):
     print(f"Signing bundle {app_path}...")
-    sys.stdout.flush()
-    subprocess.run(
+    cmd_utils.run(
         [
             codesign_path,
             "-f",
@@ -67,14 +67,16 @@ def sign_bundle(codesign_id):
             "-s",
             codesign_id,
             app_path,
-        ],
-        check=True,
+        ]
     )
 
 
 def assert_certificate_installed(codesign_id):
     installed = cmd_utils.run(
-        "security find-identity -v -p codesigning", get_output=True
+        "security find-identity -v -p codesigning",
+        get_output=True,
+        shell=True,
+        print_cmd=True,
     )
 
     if codesign_id not in installed.stdout:
@@ -122,18 +124,11 @@ def install_certificate(cert_base64, cert_password):
     if not cert_password:
         raise ValueError("Certificate password not provided")
 
-    print(f"Decoding certificate to: {cert_path}")
-    cert_bytes = base64.b64decode(cert_base64)
-    os.makedirs(os.path.dirname(cert_path), exist_ok=True)
-    with open(cert_path, "wb") as cert_file:
-        cert_file.write(cert_bytes)
+    with certificate.Certificate(cert_base64) as cert_path:
+        print(f"Installing certificate: {cert_path}")
 
-    print(f"Installing certificate: {cert_path}")
-    sys.stdout.flush()
-
-    try:
-        # warning: contains private key password, never print this command
-        subprocess.run(
+        # WARNING: contains private key password, never print this command
+        cmd_utils.run(
             [
                 sudo_path,
                 security_path,
@@ -148,19 +143,7 @@ def install_certificate(cert_base64, cert_password):
                 "-T",
                 security_path,
             ],
-            check=True,
         )
-    except subprocess.CalledProcessError as e:
-        # important: suppress the original args with `from None` to avoid leaking the password
-        raise subprocess.CalledProcessError(e.returncode, security_path) from None
-    except Exception as e:
-        # important: suppress the original args with `from None` to avoid leaking the password
-        raise RuntimeError(f"Command failed: {security_path}") from None
-    finally:
-        # not strictly necessary for ci, but when run on a dev machine, it reduces the risk
-        # that private keys are left on the filesystem
-        print(f"Removing temporary certificate file: {cert_path}")
-        os.remove(cert_path)
 
 
 def notarize_package(dmg_path):
@@ -176,7 +159,9 @@ def notarize_package(dmg_path):
 
 
 def get_xcode_path():
-    result = cmd_utils.run([xcode_select_path, "-p"], get_output=True, shell=False)
+    result = cmd_utils.run(
+        [xcode_select_path, "-p"], get_output=True, shell=False, print_cmd=True
+    )
     return result.stdout.strip()
 
 
@@ -193,31 +178,22 @@ class NotaryTool:
 
     def store_credentials(self, user, password, team_id):
         print("Storing credentials for notary tool...")
-        sys.stdout.flush()
-
         notarytool_path = self.get_path()
-        try:
-            # warning: contains password, never print this command
-            subprocess.run(
-                [
-                    notarytool_path,
-                    "store-credentials",
-                    "notarytool-password",
-                    "--apple-id",
-                    user,
-                    "--team-id",
-                    team_id,
-                    "--password",
-                    password,
-                ],
-                check=True,
-            )
-        except subprocess.CalledProcessError as e:
-            # important: suppress the original args with `from None` to avoid leaking the password
-            raise subprocess.CalledProcessError(e.returncode, notarytool_path) from None
-        except Exception as e:
-            # important: suppress the original args with `from None` to avoid leaking the password
-            raise RuntimeError(f"Command failed: {notarytool_path}") from None
+
+        # WARNING: contains password, never print this command
+        cmd_utils.run(
+            [
+                notarytool_path,
+                "store-credentials",
+                "notarytool-password",
+                "--apple-id",
+                user,
+                "--team-id",
+                team_id,
+                "--password",
+                password,
+            ]
+        )
 
     def submit_and_wait(self, dmg_filename):
         print("Submitting notarization request...")
@@ -254,6 +230,7 @@ class NotaryTool:
             ],
             get_output=True,
             shell=False,
+            print_cmd=True,
         )
 
         if result.stderr:
@@ -274,6 +251,7 @@ class NotaryTool:
             ],
             get_output=True,
             shell=False,
+            print_cmd=True,
         )
 
         if result.stderr:
