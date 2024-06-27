@@ -33,7 +33,7 @@ def main():
 def get_filename_base(version):
     os = env.get_os()
     machine = platform.machine().lower()
-    return f"{package_filename_product}-{version}-{os}-{machine}"
+    return f"{package_filename_product}-{os}-{machine}-{version}"
 
 
 def windows_package(filename_base):
