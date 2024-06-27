@@ -1,4 +1,4 @@
-import os, sys, subprocess, platform
+import os, sys, subprocess, base64
 from lib import env, cmd_utils
 
 venv_path = "build/python"
@@ -75,7 +75,7 @@ def in_venv():
     return sys.prefix != sys.base_prefix
 
 
-def ensure_in_venv(script):
+def ensure_in_venv(script_file):
     """
     Ensures the script is running in a Python virtual environment (venv).
     If the script is not running in a venv, it will create one and re-run the script in the venv.
@@ -89,11 +89,9 @@ def ensure_in_venv(script):
             print(f"Creating virtual environment at {venv_path}")
             venv.create(venv_path, with_pip=True)
 
-        script_file = os.path.basename(script)
-        print(f"Using virtual environment for {script_file}")
-        sys.stdout.flush()
+        print(f"Using virtual environment for {script_file}", flush=True)
         python_executable = get_python_executable()
-        result = subprocess.run([python_executable, script] + sys.argv[1:])
+        result = subprocess.run([python_executable, script_file] + sys.argv[1:])
         sys.exit(result.returncode)
 
 
@@ -109,7 +107,11 @@ def ensure_module(module, package):
         __import__(module)
     except ImportError:
         print(f"Python missing {module}, installing {package}...", file=sys.stderr)
-        cmd_utils.run([sys.executable, "-m", "pip", "install", package], shell=False)
+        cmd_utils.run(
+            [sys.executable, "-m", "pip", "install", package],
+            shell=False,
+            print_cmd=True,
+        )
 
 
 def assert_dependencies(raise_error=True):
@@ -150,11 +152,23 @@ def ensure_dependencies():
 
     distro = get_linux_distro()
     if distro == "ubuntu" or distro == "debian":
-        cmd_utils.run(f"{sudo} apt update".strip(), check=False)
-        cmd_utils.run(f"{sudo} apt install -y python3-pip python3-venv".strip())
+        cmd_utils.run(
+            f"{sudo} apt update".strip(), check=False, shell=True, print_cmd=True
+        )
+        cmd_utils.run(
+            f"{sudo} apt install -y python3-pip python3-venv".strip(),
+            shell=True,
+            print_cmd=True,
+        )
     elif distro == "fedora" or distro == "centos":
-        cmd_utils.run(f"{sudo} dnf check-update".strip(), check=False)
-        cmd_utils.run(f"{sudo} dnf install -y python3-pip python3-virtualenv".strip())
+        cmd_utils.run(
+            f"{sudo} dnf check-update".strip(), check=False, shell=True, print_cmd=True
+        )
+        cmd_utils.run(
+            f"{sudo} dnf install -y python3-pip python3-virtualenv".strip(),
+            shell=True,
+            print_cmd=True,
+        )
     else:
         # arch, opensuse, etc, patches welcome! :)
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")

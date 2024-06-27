@@ -98,7 +98,7 @@ class Dependencies:
         from lib import mac
 
         command = self.config.get_os_deps_value("command")
-        cmd_utils.run(command)
+        cmd_utils.run(command, shell=True, print_cmd=True)
 
         if not self.ci_env:
             mac.set_cmake_prefix_env_var(self.config.get_os_value("qt-prefix-command"))
@@ -123,7 +123,7 @@ class Dependencies:
 
         # don't check the return code, as some package managers return non-zero exit codes
         # under normal circumstances (e.g. dnf returns 100 when there are updates available).
-        cmd_utils.run(command, check=False)
+        cmd_utils.run(command, check=False, shell=True, print_cmd=True)
 
 
 if __name__ == "__main__":
