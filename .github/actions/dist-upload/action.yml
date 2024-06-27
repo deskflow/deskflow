@@ -47,7 +47,7 @@ runs:
         retention-days: 3
 
     # Upload to Google Drive
-    - if: ${{ inputs.use_gdrive }}
+    - if: ${{ inputs.use_gdrive == 'true' }}
       uses: symless/gdrive-upload@target-glob
       with:
         credentials: ${{ inputs.gdrive-secret-key }}
