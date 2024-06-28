@@ -8,6 +8,7 @@ package_filename_product = "synergy"
 
 
 def main():
+    # important: load venv before loading modules that install deps.
     env.ensure_in_venv(__file__)
 
     from dotenv import load_dotenv  # type: ignore

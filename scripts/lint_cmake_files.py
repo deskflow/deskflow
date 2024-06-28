@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--format", action="store_true", help="Formats all CMake files")
     args = parser.parse_args()
 
+    # important: load venv before loading modules that install deps.
     env.ensure_in_venv(__file__)
 
     from cmakelang.format.__main__ import main as cmake_format_main
