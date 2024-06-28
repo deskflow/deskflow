@@ -227,3 +227,15 @@ jobs:
       - name: Package
         if: ${{ !github.event.pull_request.draft }}
         run: ./scripts/package.py
+
+      - name: Upload
+        if: ${{ env.UPLOAD_TO_GITHUB == 'true' || env.UPLOAD_TO_GDRIVE == 'true' }}
+        uses: ./.github/actions/dist-upload
+        with:
+          use_github: ${{ env.UPLOAD_TO_GITHUB }}
+          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
+          github-target-filename: "synergy-${{ matrix.distro.name }}"
+          gdrive-target-base-dir: "synergy1/personal"
+          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
+          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+          package-version: ${{ env.SYNERGY_VERSION }}
