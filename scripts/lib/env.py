@@ -183,7 +183,11 @@ def ensure_dependencies():
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")
 
     if update_cmd:
-        cmd_utils.run(f"{sudo} {update_cmd}".strip(), shell=True, print_cmd=True)
+        # don't check the return code, as some package managers return non-zero exit codes
+        # under normal circumstances (e.g. dnf returns 100 when there are updates available).
+        cmd_utils.run(
+            f"{sudo} {update_cmd}".strip(), check=False, shell=True, print_cmd=True
+        )
 
     if not install_cmd:
         raise RuntimeError("Install command not found")
