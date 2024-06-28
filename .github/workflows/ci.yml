@@ -210,22 +210,18 @@ jobs:
       - name: Bootstrap (apt)
         if: ${{ matrix.distro.install-deps-apt }}
         run: apt install -y git python3
-        shell: bash
 
       - name: Bootstrap (dnf)
         if: ${{ matrix.distro.install-deps-dnf }}
         run: dnf install -y git python3
-        shell: bash
 
       - name: Bootstrap (pacman)
         if: ${{ matrix.distro.install-deps-pacman }}
         run: pacman -Syu --noconfirm git python
-        shell: bash
 
       - name: Bootstrap (zypper)
         if: ${{ matrix.distro.install-deps-zypper }}
         run: zypper install -y git python3
-        shell: bash
 
       - name: Checkout
         uses: actions/checkout@v4
