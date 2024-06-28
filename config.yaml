@@ -24,7 +24,6 @@ config:
         command: sudo apt-get update; \
           sudo apt-get install -y \
           cmake \
-          cpack \
           make \
           g++ \
           xorg-dev \
@@ -48,7 +47,6 @@ config:
         command: sudo dnf check-update; \
           sudo dnf install -y \
           cmake \
-          cpack \
           make \
           gcc-c++ \
           openssl-devel \
