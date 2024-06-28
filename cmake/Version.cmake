@@ -17,7 +17,7 @@
 # On Windows, we also set a special 4-digit MSI version number.
 macro(set_version)
 
-    set(SYNERGY_VERSION $ENV{SYNERGY_VERSION})
+  set(SYNERGY_VERSION $ENV{SYNERGY_VERSION})
   string(STRIP "${SYNERGY_VERSION}" SYNERGY_VERSION)
 
   if(NOT SYNERGY_VERSION)
