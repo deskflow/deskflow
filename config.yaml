@@ -76,7 +76,7 @@ config:
           qt5-tools \
           gtk3
 
-    opensuse:
+    opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
         command: sudo zypper refresh; \
           sudo zypper install -y \
@@ -91,3 +91,6 @@ config:
           libqt5-qtbase-devel \
           libqt5-qttools-devel \
           gtk3-devel
+
+    opensuse-leap:
+      <<: *opensuse-tumbleweed
