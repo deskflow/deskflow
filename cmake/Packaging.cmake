@@ -89,7 +89,7 @@ macro(configure_linux_packaging)
   message(STATUS "Configuring Linux packaging")
 
   set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION_LINUX})
-  set(CPACK_GENERATOR "DEB;RPM")
+  set(CPACK_GENERATOR "DEB;RPM;TGZ;STGZ")
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Synergy <developers@symless.com>")
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")

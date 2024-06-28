@@ -20,7 +20,8 @@ def package(filename_base):
         extension = "rpm"
         generator = "RPM"
     else:
-        raise ValueError(f"Unsupported distro: {distro_like}")
+        extension = "sh"
+        generator = "STGZ"
 
     print(f"Building package for distro like {distro_like}")
 
