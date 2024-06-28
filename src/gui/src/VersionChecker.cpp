@@ -25,7 +25,6 @@
 #include <QLocale>
 
 #define VERSION_URL "https://api.symless.com/version"
-#define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+[\\d\\w+_-]+)"
 
 VersionChecker::VersionChecker()
 {
