@@ -160,6 +160,10 @@ jobs:
     name: linux-${{ matrix.distro.name }}
     container: ${{ matrix.distro.container }}
 
+    env:
+      # Prevent apt on Ubuntu 22 Docker container prompting for input.
+      DEBIAN_FRONTEND: noninteractive
+
     strategy:
       matrix:
         distro:
