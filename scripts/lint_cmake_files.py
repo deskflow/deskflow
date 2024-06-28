@@ -18,7 +18,6 @@ def find_files(base_dir, include_files, exclude_dirs):
     """Recursively find files, excluding specified directories"""
     matches = []
     for root, dirnames, filenames in os.walk(base_dir):
-        # Exclude specified directories
         dirnames[:] = [d for d in dirnames if d not in exclude_dirs]
 
         for pattern in include_files:
