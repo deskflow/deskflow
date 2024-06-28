@@ -1,44 +1,30 @@
-# synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2016 Symless Ltd.
-# Copyright (C) 2009 Nick Bolton
-# 
-# This package is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# found in the file LICENSE that should have accompanied this file.
-# 
-# This package is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# synergy -- mouse and keyboard sharing utility Copyright (C) 2012-2016 Symless
+# Ltd. Copyright (C) 2009 Nick Bolton
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# This package is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License found in the file LICENSE that
+# should have accompanied this file.
+#
+# This package is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB headers
-    "*.h"
-    "InverseSockets/*.h"
-)
-file(GLOB sources
-    "*.cpp"
-    "InverseSockets/*.cpp"
-)
+file(GLOB headers "*.h" "InverseSockets/*.h")
+file(GLOB sources "*.cpp" "InverseSockets/*.cpp")
 
-if (SYNERGY_ADD_HEADERS)
-    list(APPEND sources ${headers})
+if(SYNERGY_ADD_HEADERS)
+  list(APPEND sources ${headers})
 endif()
 
 add_library(net STATIC ${sources})
-target_link_libraries(net
-    PUBLIC
-        OpenSSL::SSL
-    PRIVATE
-        mt
-        io
-)
+target_link_libraries(
+  net
+  PUBLIC OpenSSL::SSL
+  PRIVATE mt io)
 if(WIN32)
-    target_link_libraries(net
-        PRIVATE
-            Crypt32
-            ws2_32
-    )
+  target_link_libraries(net PRIVATE Crypt32 ws2_32)
 endif()
