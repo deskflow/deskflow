@@ -166,41 +166,56 @@ jobs:
           - name: ubuntu-24.04
             container: ubuntu:24.04
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: ubuntu-22.04
             container: ubuntu:22.04
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: debian-12
             container: debian:12
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: debian-11
             container: debian:11
             runs-on: ubuntu-latest
+            install-git: true
             #legacy-cmake: true
 
           - name: fedora-41
             container: fedora:39
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: fedora-40
             container: fedora:40
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: arch-latest
             container: archlinux:latest
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: opensuse-tumbleweed
             container: opensuse/tumbleweed:latest
             runs-on: ubuntu-latest
+            install-git: true
 
           - name: opensuse-leap
             container: opensuse/leap:latest
             runs-on: ubuntu-latest
+            install-git: true
 
     steps:
+      - name: Install Git
+        if: ${{ matrix.distro.install-git }}
+        uses: ./.github/actions/deps-git-linux
+        with:
+          distro: ${{ matrix.distro.name }}
+
       - name: Checkout
         uses: actions/checkout@v4
         with:

@@ -1,0 +1,32 @@
+name: "Install Git Linux"
+description: "Installs Git on Linux, useful for public Docker containers"
+inputs:
+  distro:
+    description: "Linux distribution to install Git on"
+
+runs:
+  using: "composite"
+
+  steps:
+    - if: ${{ startsWith(inputs.distro, 'ubuntu') || startsWith(inputs.distro, 'debian') }}
+      run: |
+        apt-get update
+        apt-get install -y git
+      shell: bash
+
+    - if: ${{ startsWith(inputs.distro, 'fedora') }}
+      run: |
+        dnf update -y
+        dnf install -y git
+      shell: bash
+
+    - if: ${{ startsWith(inputs.distro, 'arch') }}
+      run: |
+        pacman -Syu --noconfirm git
+      shell: bash
+
+    - if: ${{ startsWith(inputs.distro, 'opensuse') }}
+      run: |
+        zypper refresh
+        zypper install -y git
+      shell: bash
