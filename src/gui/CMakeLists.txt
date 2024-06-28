@@ -4,28 +4,28 @@ set (CMAKE_AUTORCC ON)
 set (CMAKE_AUTOUIC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file (GLOB LEGACY_GUI_SOURCE_FILES
+file (GLOB GUI_SOURCE_FILES
    src/*.cpp
    src/*.h
    src/validators/*
    src/widgets/*
 )
-file (GLOB LEGACY_GUI_UI_FILES src/*.ui)
-file (GLOB LEGACY_ACTIVATION_FILES src/*Activation* src/*License*)
-file (GLOB LEGACY_ZEROCONF_FILES src/Zeroconf*)
-file (GLOB LEGACY_LANGUAGE_FILES res/lang/*.ts)
+file (GLOB GUI_UI_FILES src/*.ui)
+file (GLOB ACTIVATION_FILES src/*Activation* src/*License*)
+file (GLOB ZEROCONF_FILES src/Zeroconf*)
+file (GLOB LANGUAGE_FILES res/lang/*.ts)
 
 configure_file(res/Languages.qrc res/Languages.qrc)
 
-set_source_files_properties(${LEGACY_LANGUAGE_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/res/lang")
+set_source_files_properties(${LANGUAGE_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/res/lang")
 
-qt5_add_translation(QM_FILES ${LEGACY_LANGUAGE_FILES})
+qt5_add_translation(QM_FILES ${LANGUAGE_FILES})
 
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    file (GLOB LEGACY_GUI_MAC_SOURCE_FILES src/*.mm)
-    list (APPEND LEGACY_GUI_SOURCE_FILES ${LEGACY_GUI_MAC_SOURCE_FILES})
+    file (GLOB GUI_MAC_SOURCE_FILES src/*.mm)
+    list (APPEND GUI_SOURCE_FILES ${GUI_MAC_SOURCE_FILES})
 endif()
 
 # Retrieve the absolute path to qmake and then use that path to find
@@ -36,21 +36,24 @@ find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
 find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
 
 if (SYNERGY_ENTERPRISE)
-    list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ACTIVATION_FILES})
-    list (REMOVE_ITEM LEGACY_GUI_UI_FILES ${LEGACY_ACTIVATION_FILES})
+    list (REMOVE_ITEM GUI_SOURCE_FILES ${ACTIVATION_FILES})
+    list (REMOVE_ITEM GUI_UI_FILES ${ACTIVATION_FILES})
 endif ()
 
-list (REMOVE_ITEM LEGACY_GUI_SOURCE_FILES ${LEGACY_ZEROCONF_FILES})
+list (REMOVE_ITEM GUI_SOURCE_FILES ${ZEROCONF_FILES})
 
 
 if (WIN32)
-    set (LEGACY_GUI_RC_FILES res/win/Synergy.rc)
+    set (GUI_RC_FILES
+        res/win/Synergy.rc
+        ${CMAKE_BINARY_DIR}/src/version.rc
+    )
 endif()
 
 add_executable (synergy WIN32
-    ${LEGACY_GUI_SOURCE_FILES}
-    ${LEGACY_GUI_UI_FILES}
-    ${LEGACY_GUI_RC_FILES}
+    ${GUI_SOURCE_FILES}
+    ${GUI_UI_FILES}
+    ${GUI_RC_FILES}
     res/Synergy.qrc
     ${CMAKE_CURRENT_BINARY_DIR}/res/Languages.qrc
     ${QM_FILES}
@@ -59,7 +62,7 @@ add_executable (synergy WIN32
 include_directories (./src)
 target_link_libraries (synergy shared)
 
-qt5_use_modules (synergy Core Widgets Network)
+target_link_libraries(synergy Qt5::Core Qt5::Widgets Qt5::Network)
 target_compile_definitions (synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions (synergy PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
 

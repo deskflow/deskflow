@@ -14,14 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(target synergyd)
+
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if (WIN32)
-    add_executable (synergyd WIN32 ${sources})
+    add_executable (
+        ${target}
+        WIN32 
+        ${sources}
+        ${CMAKE_BINARY_DIR}/src/version.rc
+    )
 else()
-    add_executable (synergyd ${sources})
+    add_executable (${target} ${sources})
 endif()
 
-target_link_libraries (synergyd
+target_link_libraries (${target}
     arch base common io ipc mt net platform synlib shared ${libs})

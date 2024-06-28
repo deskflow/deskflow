@@ -24,11 +24,7 @@
 #include <QProcess>
 #include <QLocale>
 
-#define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+-[a-z1-9]*)"
-#define VERSION_REGEX_SECTIONED "(\\d+)\\.(\\d+)\\.(\\d+)-([a-z1-9]*)"
-#define VERSION_SEGMENT_COUNT 4
 #define VERSION_URL "https://api.symless.com/version"
-
 
 VersionChecker::VersionChecker()
 {
@@ -46,53 +42,52 @@ VersionChecker::~VersionChecker()
 void VersionChecker::checkLatest()
 {
     auto request = QNetworkRequest(QUrl(VERSION_URL));
-    request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy (") + getVersion() + ") " + QSysInfo::prettyProductName());
-    request.setRawHeader("X-Synergy-Version", getVersion().toStdString().c_str() );
+    request.setHeader(QNetworkRequest::UserAgentHeader, QString("Synergy (") + SYNERGY_VERSION + ") " + QSysInfo::prettyProductName());
+    request.setRawHeader("X-Synergy-Version", SYNERGY_VERSION );
     request.setRawHeader("X-Synergy-Language", QLocale::system().name().toStdString().c_str() );
     m_manager->get(request);
 }
 
 void VersionChecker::replyFinished(QNetworkReply* reply)
 {
-    QString newestVersion = QString(reply->readAll());
-    if (!newestVersion.isEmpty())
-    {
-        QString currentVersion = getVersion();
-        if (currentVersion != "Unknown") {
-            if (compareVersions(currentVersion, newestVersion) > 0)
-                emit updateFound(newestVersion);
-        }
+    auto newestVersion = QString(reply->readAll());
+    if (!newestVersion.isEmpty() && compareVersions(SYNERGY_VERSION, newestVersion) > 0) {
+        emit updateFound(newestVersion);
     }
 }
 
-int VersionChecker::getStageVersion(QString stage)
+int VersionChecker::getStageVersion(QString stage) const
 {
-    const int valueStable   = INT_MAX; //Stable will always be considered the highest value
-    const int valueRC       = 2;
-    const int valueSnapshot = 1;
-    const int valueOther    = 0;
+    const char* stableName = "stable";
+    const char* rcName = "rc";
+    const char* betaName = "beta";
 
-    //Stable should always be considered highest, followed by rc[0-9] then snapshots with everything else at the end
-    //HACK There is probably a much better way of doing this
-    if (stage == "stable")
+    // use max int for stable so it's always the highest value.
+    const int stableValue = INT_MAX;
+    const int rcValue = 2;
+    const int betaValue = 1;
+    const int otherValue = 0;
+
+    if (stage == stableName)
     {
-        return valueStable;
+        return stableValue;
     }
-    else if (stage.startsWith("rc") || stage.startsWith("RC"))
+    else if (stage.toLower().startsWith(rcName))
     {
         QRegExp rx("\\d*", Qt::CaseInsensitive);
         if (rx.indexIn(stage) != -1)
         {
-            //Return the RC value plus the RC version as in int 
-            return valueRC + rx.cap(1).toInt();
+            // return the rc value plus the rc number (e.g. 2 + 1)
+            // this should be ok since stable is max int.
+            return rcValue + rx.cap(1).toInt();
         }
     }
-    else if (stage == "snapshot")
+    else if (stage == betaName)
     {
-        return valueSnapshot;
+        return betaValue;
     }
-
-    return valueOther;
+    
+    return otherValue;
 }
 
 int VersionChecker::compareVersions(const QString& left, const QString& right)
@@ -100,48 +95,34 @@ int VersionChecker::compareVersions(const QString& left, const QString& right)
     if (left.compare(right) == 0)
         return 0; // versions are same.
 
-    QStringList leftSplit = left.split(QRegExp("[\\.-]"));
-    if (leftSplit.size() != VERSION_SEGMENT_COUNT)
-        return 1; // assume right wins.
+    QStringList leftParts = left.split("-");
+    QStringList rightParts = right.split("-");
 
-    QStringList rightSplit = right.split(QRegExp("[\\.-]"));
-    if (rightSplit.size() != VERSION_SEGMENT_COUNT)
-        return -1; // assume left wins.
+    if (leftParts.size() < 1 || rightParts.size() < 1)
+        return 0; // versions are same.
 
-    const int leftMajor = leftSplit.at(0).toInt();
-    const int leftMinor = leftSplit.at(1).toInt();
-    const int leftRev   = leftSplit.at(2).toInt();
-    const int leftStage = getStageVersion(leftSplit.at(3));
+    QString leftNumber = leftParts.at(0);
+    QString rightNumber = rightParts.at(0);
 
-    const int rightMajor = rightSplit.at(0).toInt();
-    const int rightMinor = rightSplit.at(1).toInt();
-    const int rightRev   = rightSplit.at(2).toInt();
-    const int rightStage = getStageVersion(rightSplit.at(3));
+    QStringList leftNumberParts = left.split(".");
+    QStringList rightNumberParts = right.split(".");
+
+    const int leftMajor = leftNumberParts.at(0).toInt();
+    const int leftMinor = leftNumberParts.at(1).toInt();
+    const int leftPatch = leftNumberParts.at(2).toInt();
+    const int leftStage = leftParts.size() > 1 ? getStageVersion(leftParts.at(1)) : 0;
+
+    const int rightMajor = rightNumberParts.at(0).toInt();
+    const int rightMinor = rightNumberParts.at(1).toInt();
+    const int rightPatch = rightNumberParts.at(2).toInt();
+    const int rightStage = rightParts.size() > 1 ? getStageVersion(rightParts.at(1)) : 0;
 
     const bool rightWins =
         ( rightMajor >  leftMajor) ||
         ((rightMajor >= leftMajor) && (rightMinor > leftMinor)) ||
-        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightRev > leftRev)) ||
-        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightRev >= leftRev) && (rightStage > leftStage));
+        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightPatch > leftPatch)) ||
+        ((rightMajor >= leftMajor) && (rightMinor >= leftMinor) && (rightPatch >= leftPatch) && (rightStage > leftStage));
 
     return rightWins ? 1 : -1;
 }
 
-QString VersionChecker::getVersion()
-{
-    QProcess process;
-    process.start(m_app, QStringList() << "--version");
-
-    process.setReadChannel(QProcess::StandardOutput);
-    if (process.waitForStarted() && process.waitForFinished())
-    {
-        QRegExp rx(VERSION_REGEX,Qt::CaseInsensitive);
-        QString text = process.readLine();
-        if (rx.indexIn(text) != -1)
-        {
-            return rx.cap(1);
-        }
-    }
-
-    return tr("Unknown");
-}

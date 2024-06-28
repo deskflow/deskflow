@@ -53,6 +53,10 @@ if (SYNERGY_ADD_HEADERS)
     list(APPEND sources ${headers})
 endif()
 
+if (WIN32)
+    list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
+endif()
+
 include_directories(
     ../../
     ../../lib/

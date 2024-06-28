@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import platform
-from lib import env
+import lib.env as env
 
 env_file = ".env"
 package_filename_product = "synergy"
@@ -33,16 +33,17 @@ def main():
 def get_filename_base(version):
     os = env.get_os()
     machine = platform.machine().lower()
-    return f"{package_filename_product}-{version}-{os}-{machine}"
+    return f"{package_filename_product}-{os}-{machine}-{version}"
 
 
 def windows_package(filename_base):
-    """TODO: Windows packaging"""
-    pass
+    import lib.windows as windows
+
+    windows.package(filename_base)
 
 
 def mac_package(filename_base):
-    from lib import mac
+    import lib.mac as mac
 
     mac.package(filename_base)
 

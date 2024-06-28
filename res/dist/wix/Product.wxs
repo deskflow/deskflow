@@ -38,9 +38,9 @@
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 			<?if $(var.Platform) = x64 ?>
-				<Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+				<Merge Id="VC_Redist" SourceFile="$(var.ResPath)\dist\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
 			<?else ?>
-				<Merge Id="VC_Redist" SourceFile="$(var.DisPath)\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+				<Merge Id="VC_Redist" SourceFile="$(var.ResPath)\dist\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
 			<?endif ?>
 		</DirectoryRef>
 		<Property Id="SynergyCommonBackground">common_background</Property>
@@ -90,11 +90,11 @@
 				</File>
 				<File Source="$(var.BinPath)/syntool.exe"/>
 				<?if $(var.Platform) = x64 ?>
-					<File Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
-					<File Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
+					<File Source="$(var.OpenSSLBinPath)/libssl-3-x64.dll"/>
+					<File Source="$(var.OpenSSLBinPath)/libcrypto-3-x64.dll"/>
 				<?else ?>
-					<File Source="$(var.OpenSSLBinPath)/libssl-1_1.dll"/>
-					<File Source="$(var.OpenSSLBinPath)/libcrypto-1_1.dll"/>
+					<File Source="$(var.OpenSSLBinPath)/libssl-3.dll"/>
+					<File Source="$(var.OpenSSLBinPath)/libcrypto-3.dll"/>
 				<?endif ?>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
@@ -112,7 +112,7 @@
 				<File Source="$(var.BinPath)\Qt5Widgetsd.dll"/>
 				<File Source="$(var.BinPath)\libGLESv2d.dll"/>
 				<File Source="$(var.BinPath)\libEGLd.dll"/>
-				<!-- Hacky -->
+				<!-- HACK: Normally the C++ redistributable solves this dependency, including it can cause problems -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
 				<File Source="$(var.BinPath)\Qt5Core.dll"/>
@@ -142,11 +142,11 @@
 		<ComponentGroup Directory="OpenSSLDir" Id="OpenSSLComponents">
 			<Component Guid="92648F77-65A6-4B16-AC59-A1F37BD341B1" Id="OpenSSL">
 				<?if $(var.Platform) = x64 ?>
-					<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-1_1-x64.dll"/>
-					<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-1_1-x64.dll"/>
+					<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-3-x64.dll"/>
+					<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-3-x64.dll"/>
 				<?else ?>
-					<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-1_1.dll"/>
-					<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-1_1.dll"/>
+					<File Id="OpenSSLDll1" Source="$(var.OpenSSLBinPath)/libcrypto-3.dll"/>
+					<File Id="OpenSSLDll2" Source="$(var.OpenSSLBinPath)/libssl-3.dll"/>
 				<?endif ?>
 				<File Source="$(var.OpenSSLBinPath)/openssl.exe"/>
 				<File Source="$(var.ResPath)/openssl/synergy.conf"/>

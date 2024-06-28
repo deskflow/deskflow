@@ -188,11 +188,10 @@ MainWindow::MainWindow (AppConfig& appConfig,
     updateWindowTitle();
 
     QString lastVersion = m_AppConfig->lastVersion();
-    QString currentVersion = m_VersionChecker.getVersion();
-    if (lastVersion != currentVersion) {
-        m_AppConfig->setLastVersion (currentVersion);
+    if (lastVersion != SYNERGY_VERSION) {
+        m_AppConfig->setLastVersion (SYNERGY_VERSION);
 #ifndef SYNERGY_ENTERPRISE
-        m_LicenseManager->notifyUpdate (lastVersion, currentVersion);
+        m_LicenseManager->notifyUpdate (lastVersion, SYNERGY_VERSION);
 #endif
     }
 

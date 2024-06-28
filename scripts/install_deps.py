@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import os, sys, argparse, traceback
-from lib import env, cmd_utils
+import lib.env as env
+import lib.cmd_utils as cmd_utils
 
 
 def main():
@@ -61,7 +62,7 @@ class Dependencies:
 
     def windows(self):
         """Installs dependencies on Windows."""
-        from lib import windows
+        import lib.windows as windows
 
         if not windows.is_admin():
             windows.relaunch_as_admin(__file__)
@@ -95,10 +96,10 @@ class Dependencies:
 
     def mac(self):
         """Installs dependencies on macOS."""
-        from lib import mac
+        import lib.mac as mac
 
         command = self.config.get_os_deps_value("command")
-        cmd_utils.run(command)
+        cmd_utils.run(command, shell=True, print_cmd=True)
 
         if not self.ci_env:
             mac.set_cmake_prefix_env_var(self.config.get_os_value("qt-prefix-command"))
@@ -123,7 +124,7 @@ class Dependencies:
 
         # don't check the return code, as some package managers return non-zero exit codes
         # under normal circumstances (e.g. dnf returns 100 when there are updates available).
-        cmd_utils.run(command, check=False)
+        cmd_utils.run(command, check=False, shell=True, print_cmd=True)
 
 
 if __name__ == "__main__":

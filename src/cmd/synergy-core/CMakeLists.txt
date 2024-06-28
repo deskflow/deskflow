@@ -14,21 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(target synergy-core)
+
 set(sources
-    synergy-core.cpp
+    ${target}.cpp
 )
 
 if (WIN32)
-    list(APPEND sources synergy-core.exe.manifest)
+    list(APPEND sources
+        ${target}.exe.manifest
+        ${CMAKE_BINARY_DIR}/src/version.rc
+    )
 endif()
 
-add_executable(synergy-core ${sources})
-target_link_libraries(synergy-core
+add_executable(${target} ${sources})
+target_link_libraries(${target}
     arch base client common io mt net ipc platform server synlib ${libs})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS synergy-core DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+    install (TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install (TARGETS synergy-core DESTINATION bin)
+    install (TARGETS ${target} DESTINATION bin)
 endif()
 

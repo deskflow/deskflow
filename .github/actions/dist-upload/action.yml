@@ -26,6 +26,12 @@ runs:
   using: "composite"
 
   steps:
+    - if: ${{ inputs.use_gdrive == 'true' && !inputs.package-version }}
+      run: |
+        echo "Input 'package-version' is required when uploading to Google Drive"
+        exit 1
+      shell: bash
+
     - if: ${{ inputs.use_gdrive == 'true' }}
       run: |
         SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
@@ -41,7 +47,7 @@ runs:
         retention-days: 3
 
     # Upload to Google Drive
-    - if: ${{ inputs.use_gdrive }}
+    - if: ${{ inputs.use_gdrive == 'true' }}
       uses: symless/gdrive-upload@target-glob
       with:
         credentials: ${{ inputs.gdrive-secret-key }}

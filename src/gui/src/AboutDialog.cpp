@@ -26,8 +26,7 @@ AboutDialog::AboutDialog(MainWindow* parent, const AppConfig& config) :
     setupUi(this);
 
     m_versionChecker.setApp(parent->appPath(config.synergycName()));
-    QString version = m_versionChecker.getVersion();
-    m_pLabelSynergyVersion->setText(version);
+    m_pLabelSynergyVersion->setText(SYNERGY_VERSION);
 
     QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
     QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");

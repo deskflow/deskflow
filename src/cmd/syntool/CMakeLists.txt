@@ -13,15 +13,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(target syntool)
+
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-add_executable(syntool ${sources})
-target_link_libraries(syntool
+if (WIN32)
+    list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
+endif()
+
+add_executable(${target} ${sources})
+target_link_libraries(${target}
     synlib arch base client common io ipc mt net platform server ${libs})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS syntool DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+    install (TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install (TARGETS syntool DESTINATION bin)
+    install (TARGETS ${target} DESTINATION bin)
 endif()
