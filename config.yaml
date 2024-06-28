@@ -92,6 +92,7 @@ config:
           libqt5-qtbase-devel \
           libqt5-qttools-devel \
           gtk3-devel \
+          openssl-devel \
           pkg-config
 
     opensuse-leap:
