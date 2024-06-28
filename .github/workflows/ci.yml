@@ -210,24 +210,28 @@ jobs:
             install-deps-zypper: true
 
     steps:
-      - if: ${{ matrix.distro.install-deps-apt }}
+      - name: Dependencies (apt)
+        if: ${{ matrix.distro.install-deps-apt }}
         run: |
           apt update
           apt install -y git python3
         shell: bash
 
-      - if: ${{ matrix.distro.install-deps-dnf }}
+      - name: Dependencies (dnf)
+        if: ${{ matrix.distro.install-deps-dnf }}
         run: |
           dnf update -y
           dnf install -y git python3
         shell: bash
 
-      - if: ${{ matrix.distro.install-deps-pacman }}
+      - name: Dependencies (pacman)
+        if: ${{ matrix.distro.install-deps-pacman }}
         run: |
           pacman -Syu --noconfirm git python
         shell: bash
 
-      - if: ${{ matrix.distro.install-deps-zypper }}
+      - name: Dependencies (zypper)
+        if: ${{ matrix.distro.install-deps-zypper }}
         run: |
           zypper refresh
           zypper install -y git python3
