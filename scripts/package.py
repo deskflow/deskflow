@@ -4,7 +4,7 @@ import platform
 import lib.env as env
 
 env_file = ".env"
-package_filename_product = "synergy"
+package_name = "synergy"
 
 
 def main():
@@ -32,7 +32,18 @@ def main():
 def get_filename_base(version):
     os = env.get_os()
     machine = platform.machine().lower()
-    return f"{package_filename_product}-{os}-{machine}-{version}"
+    if os == "linux":
+        distro_name, _distro_like, distro_version = env.get_linux_distro()
+        if not distro_name:
+            raise RuntimeError("Failed to detect Linux distro")
+        if not distro_version:
+            raise RuntimeError("Failed to detect Linux distro version")
+
+        version_for_filename = distro_version.replace(".", "_")
+        distro = f"{distro_name}-{version_for_filename}"
+        return f"{package_name}-{distro}-{machine}-{version}"
+    else:
+        return f"{package_name}-{os}-{machine}-{version}"
 
 
 def windows_package(filename_base):
@@ -48,8 +59,9 @@ def mac_package(filename_base):
 
 
 def linux_package(filename_base):
-    """TODO: Linux packaging"""
-    pass
+    import lib.linux as linux
+
+    linux.package(filename_base)
 
 
 if __name__ == "__main__":

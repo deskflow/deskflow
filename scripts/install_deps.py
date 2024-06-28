@@ -105,7 +105,7 @@ class Dependencies:
     def linux(self):
         """Installs dependencies on Linux."""
 
-        distro = env.get_linux_distro()
+        distro, _distro_like, _distro_version = env.get_linux_distro()
         if not distro:
             raise RuntimeError("Unable to detect Linux distro")
 

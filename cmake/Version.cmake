@@ -33,8 +33,10 @@ macro(set_version)
   # file)
   string(TIMESTAMP SYNERGY_BUILD_YEAR "%Y")
 
-  if(WIN32)
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set_windows_version()
+  elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set_linux_version()
   endif()
 
 endmacro()
@@ -63,4 +65,13 @@ macro(set_windows_version)
       "${VERSION_MAJOR},${VERSION_MINOR},${VERSION_PATCH},${VERSION_REVISION}")
   message(STATUS "Version number for Microsoft (CSV): "
                  ${SYNERGY_VERSION_MS_CSV})
+endmacro()
+
+macro(set_linux_version)
+  # Replace the first occurrence of '-' with '~' for Linux versioning; the '-'
+  # char is reserved for use at at the end of the version string to indicate a
+  # package revision. Debian has always used this convention, but support for
+  # this was also introduced in RPM 4.10.0.
+  string(REGEX REPLACE "-" "~" SYNERGY_VERSION_LINUX "${SYNERGY_VERSION}" 1)
+  message(STATUS "Version number for DEB/RPM: ${SYNERGY_VERSION_LINUX}")
 endmacro()

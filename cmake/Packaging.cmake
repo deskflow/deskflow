@@ -20,6 +20,11 @@
 macro(configure_packaging)
 
   if(${SYNERGY_BUILD_INSTALLER})
+    set(CPACK_PACKAGE_NAME "synergy")
+    set(CPACK_PACKAGE_CONTACT "Synergy <support@symless.com>")
+    set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
+    set(CPACK_PACKAGE_VENDOR "Symless")
+
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       configure_windows_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -27,45 +32,72 @@ macro(configure_packaging)
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
       configure_linux_packaging()
     endif()
+
+    include(CPack)
   else()
     message(STATUS "Not configuring installer")
   endif()
+
 endmacro()
 
 #
 # Windows installer
 #
 macro(configure_windows_packaging)
-  find_openssl_dir_win32(OPENSSL_PATH)
+
+  message(STATUS "Configuring Windows installer")
+
+  set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION_MS})
   set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
+
+  find_openssl_dir_win32(OPENSSL_PATH)
+
   configure_files(${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix
                   ${CMAKE_BINARY_DIR}/installer)
+
 endmacro()
 
 #
 # macOS app bundle
 #
 macro(configure_macos_packaging)
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(CMAKE_INSTALL_RPATH
-        "@loader_path/../Libraries;@loader_path/../Frameworks")
-    set(SYNERGY_BUNDLE_SOURCE_DIR
-        ${CMAKE_CURRENT_SOURCE_DIR}/res/dist/macos/bundle)
-    set(SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-    set(SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
-    set(SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
-    configure_files(${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
-  endif()
+
+  message(STATUS "Configuring macOS app bundle")
+
+  set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION})
+
+  set(CMAKE_INSTALL_RPATH
+      "@loader_path/../Libraries;@loader_path/../Frameworks")
+  set(SYNERGY_BUNDLE_SOURCE_DIR
+      ${CMAKE_CURRENT_SOURCE_DIR}/res/dist/macos/bundle)
+  set(SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+  set(SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
+  set(SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
+
+  configure_files(${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
+
 endmacro()
 
 #
 # Linux packages (including BSD and DragonFly)
 #
 macro(configure_linux_packaging)
-  configure_files(${CMAKE_CURRENT_SOURCE_DIR}/res/dist/rpm
-                  ${CMAKE_BINARY_DIR}/rpm)
-  install(FILES res/synergy.svg DESTINATION share/icons/hicolor/scalable/apps)
-  install(FILES res/synergy.desktop DESTINATION share/applications)
+  # configure_files(${CMAKE_CURRENT_SOURCE_DIR}/res/dist/rpm
+  # ${CMAKE_BINARY_DIR}/rpm) install(FILES res/synergy.svg DESTINATION
+  # share/icons/hicolor/scalable/apps) install(FILES res/synergy.desktop
+  # DESTINATION share/applications)
+  message(STATUS "Configuring Linux packaging")
+
+  set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION_LINUX})
+  set(CPACK_GENERATOR "DEB;RPM")
+
+  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Synergy <developers@symless.com>")
+  set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libstdc++6")
+
+  set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
+  set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
+  set(CPACK_RPM_PACKAGE_REQUIRES "libstdc++")
 endmacro()
 
 #

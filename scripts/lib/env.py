@@ -47,12 +47,21 @@ def is_running_in_ci():
 def get_linux_distro():
     """Detects the Linux distro."""
     os_file = "/etc/os-release"
+    name = None
+    name_like = None
+    version = None
+
     if os.path.isfile(os_file):
         with open(os_file) as f:
             for line in f:
                 if line.startswith("ID="):
-                    return line.strip().split("=")[1].strip('"')
-    return None
+                    name = line.strip().split("=")[1].strip('"')
+                elif line.startswith("ID_LIKE="):
+                    name_like = line.strip().split("=")[1].strip('"')
+                elif line.startswith("VERSION_ID="):
+                    version = line.strip().split("=")[1].strip('"')
+
+    return name, name_like, version
 
 
 def get_env_var(name):
@@ -151,8 +160,11 @@ def ensure_dependencies():
     has_sudo = cmd_utils.has_command("sudo")
     sudo = "sudo" if has_sudo else ""
 
-    distro = get_linux_distro()
-    if distro == "ubuntu" or distro == "debian":
+    distro, distro_like, _version = get_linux_distro()
+    if not distro_like:
+        distro_like = distro
+
+    if "debian" in distro_like:
         cmd_utils.run(
             f"{sudo} apt update".strip(), check=False, shell=True, print_cmd=True
         )
@@ -161,7 +173,7 @@ def ensure_dependencies():
             shell=True,
             print_cmd=True,
         )
-    elif distro == "fedora" or distro == "centos":
+    elif "fedora" in distro_like:
         cmd_utils.run(
             f"{sudo} dnf check-update".strip(), check=False, shell=True, print_cmd=True
         )
