@@ -13,10 +13,10 @@ def package(filename_base):
 
     extension = None
     generator = None
-    if distro_like == "debian":
+    if "debian" in distro_like:
         extension = "deb"
         generator = "DEB"
-    elif distro_like == "fedora":
+    elif "fedora" in distro_like:
         extension = "rpm"
         generator = "RPM"
     else:
