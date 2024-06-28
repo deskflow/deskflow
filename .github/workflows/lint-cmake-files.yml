@@ -1,0 +1,20 @@
+# Runs
+
+name: "Lint CMake files"
+on:
+  pull_request:
+
+jobs:
+  lint-cmake-files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py
+
+      - name: Lint CMake files
+        run: ./build/python/bin/cmake-format --check ./**/CMakeLists.txt cmake/*
