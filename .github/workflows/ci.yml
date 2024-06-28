@@ -198,11 +198,13 @@ jobs:
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
+            skip-package: true
 
           - name: opensuse-tumbleweed
             container: opensuse/tumbleweed:latest
             runs-on: ubuntu-latest
             install-deps-zypper: true
+            skip-package: true
 
     steps:
       - name: Dependencies (apt)
@@ -259,11 +261,13 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ !matrix.distro.skip-package && !github.event.pull_request.draft }}
         run: ./scripts/package.py
 
       - name: Upload
-        if: ${{ env.UPLOAD_TO_GITHUB == 'true' || env.UPLOAD_TO_GDRIVE == 'true' }}
+        if: >
+          ${{ !matrix.distro.skip-package &&
+          (env.UPLOAD_TO_GITHUB == 'true' || env.UPLOAD_TO_GDRIVE == 'true') }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
