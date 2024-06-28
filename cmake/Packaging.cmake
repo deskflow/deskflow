@@ -19,10 +19,10 @@
 #
 macro(configure_packaging)
     if (${SYNERGY_BUILD_INSTALLER})
-        if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-            configure_macos_packaging()
-        elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
             configure_windows_packaging()
+        elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+            configure_macos_packaging()
         elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
             configure_linux_packaging()
         endif()
