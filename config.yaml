@@ -74,7 +74,8 @@ config:
           libxkbfile \
           qt5-base \
           qt5-tools \
-          gtk3
+          gtk3 \
+          pkgconf
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
@@ -90,7 +91,8 @@ config:
           libxkbfile-devel \
           libqt5-qtbase-devel \
           libqt5-qttools-devel \
-          gtk3-devel
+          gtk3-devel \
+          pkg-config
 
     opensuse-leap:
       <<: *opensuse-tumbleweed
