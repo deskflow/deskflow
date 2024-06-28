@@ -36,6 +36,7 @@ Enhancements:
 - #7354 Re-implement CI auto version increment for packaging
 - #7353 Re-implement packaging for GitHub workflows (macOS)
 - #7360 Re-implement packaging for GitHub workflows (Windows)
+- #7361 Re-implement packaging for GitHub workflows (Linux)
 
 # 1.14.6
 
