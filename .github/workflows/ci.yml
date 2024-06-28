@@ -209,7 +209,7 @@ jobs:
     steps:
       - name: Bootstrap (apt)
         if: ${{ matrix.distro.install-deps-apt }}
-        run: apt install -y git python3
+        run: apt update; apt install -y git python3
 
       - name: Bootstrap (dnf)
         if: ${{ matrix.distro.install-deps-dnf }}
