@@ -20,4 +20,4 @@ jobs:
           pip install cmake_format
 
       - name: Lint CMake files
-        run: ./scripts/lint_cmake_files.sh
+        run: ./scripts/lint_cmake_files.py
