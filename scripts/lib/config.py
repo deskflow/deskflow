@@ -2,7 +2,7 @@ import yaml
 import lib.env as env
 import lib.cmd_utils as cmd_utils
 
-config_file = "config.yml"
+config_file = "config.yaml"
 root_key = "config"
 deps_key = "dependencies"
 
