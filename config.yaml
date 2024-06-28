@@ -94,6 +94,3 @@ config:
           gtk3-devel \
           openssl-devel \
           pkg-config
-
-    opensuse-leap:
-      <<: *opensuse-tumbleweed

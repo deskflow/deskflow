@@ -204,11 +204,6 @@ jobs:
             runs-on: ubuntu-latest
             install-deps-zypper: true
 
-          - name: opensuse-leap
-            container: opensuse/leap:latest
-            runs-on: ubuntu-latest
-            install-deps-zypper: true
-
     steps:
       - name: Dependencies (apt)
         if: ${{ matrix.distro.install-deps-apt }}
