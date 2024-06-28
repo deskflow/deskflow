@@ -171,13 +171,11 @@ jobs:
             container: ubuntu:24.04
             runs-on: ubuntu-latest
             install-deps-apt: true
-            config-git-safe-dir: true
 
           - name: ubuntu-22.04
             container: ubuntu:22.04
             runs-on: ubuntu-latest
             install-deps-apt: true
-            config-git-safe-dir: true
 
           - name: debian-12
             container: debian:12
@@ -204,7 +202,6 @@ jobs:
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
-            config-git-safe-dir: true
 
           - name: opensuse
             container: opensuse/tumbleweed:latest
@@ -234,7 +231,6 @@ jobs:
           submodules: "recursive"
 
       - name: Config Git safe dir
-        if: ${{ matrix.distro.config-git-safe-dir }}
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
