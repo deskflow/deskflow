@@ -194,13 +194,13 @@ jobs:
             runs-on: ubuntu-latest
             install-deps-dnf: true
 
-          - name: arch-latest
+          - name: arch
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
             skip-package: true
 
-          - name: opensuse-tumbleweed
+          - name: opensuse
             container: opensuse/tumbleweed:latest
             runs-on: ubuntu-latest
             install-deps-zypper: true
