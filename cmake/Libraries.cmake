@@ -114,7 +114,7 @@ macro(configure_unix_libs)
   if(APPLE)
     configure_mac_libs()
   else()
-    configure_unix_like_libs()
+    configure_xorg_libs()
   endif()
 
   # For config.h, set some static values; it may be a good idea to make these
@@ -191,11 +191,11 @@ macro(configure_mac_libs)
 endmacro()
 
 #
-# Unix-like (non-Apple) such as Linux, BSD, etc
+# X.org/X11 for Linux, BSD, etc
 #
-macro(configure_unix_like_libs)
+macro(configure_xorg_libs)
 
-  # add include dir for bsd (posix uses /usr/include/)
+  # Add include dir for BSD (posix uses /usr/include/)
   set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
 
   set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
