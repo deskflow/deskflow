@@ -75,46 +75,47 @@ def in_venv():
     return sys.prefix != sys.base_prefix
 
 
-def ensure_in_venv(script_file):
+def ensure_in_venv(script_file, auto_create=False):
     """
     Ensures the script is running in a Python virtual environment (venv).
     If the script is not running in a venv, it will create one and re-run the script in the venv.
     """
 
-    assert_dependencies()
+    check_dependencies(raise_error=True)
     import venv
 
     if not in_venv():
         if not os.path.exists(venv_path):
+            if not auto_create:
+                print("Hint: Run the `install_deps.py` script first.")
+                raise RuntimeError(f"Virtual environment not found at: {venv_path}")
+
             print(f"Creating virtual environment at {venv_path}")
             venv.create(venv_path, with_pip=True)
 
-        print(f"Using virtual environment for {script_file}", flush=True)
+        script_file_abs = os.path.abspath(script_file)
+        print(f"Using virtual environment for: {script_file_abs}", flush=True)
         python_executable = get_python_executable()
-        result = subprocess.run([python_executable, script_file] + sys.argv[1:])
+        result = subprocess.run([python_executable, script_file_abs] + sys.argv[1:])
         sys.exit(result.returncode)
 
 
-# TODO: Use requirements.txt or pyproject.toml to specify dependencies
-def ensure_module(module, package):
+def install_requirements():
     """
-    Ensures that a Python module is available, and installs the package if it is not.
+    Uses `pip` to install required Python modules from the `requirements.txt` file.
     """
 
-    assert_dependencies()
+    check_dependencies(raise_error=True)
 
-    try:
-        __import__(module)
-    except ImportError:
-        print(f"Python missing {module}, installing {package}...", file=sys.stderr)
-        cmd_utils.run(
-            [sys.executable, "-m", "pip", "install", package],
-            shell=False,
-            print_cmd=True,
-        )
+    print("Installing required modules...")
+    cmd_utils.run(
+        [sys.executable, "-m", "pip", "install", "-r", "scripts/requirements.txt"],
+        shell=False,
+        print_cmd=True,
+    )
 
 
-def assert_dependencies(raise_error=True):
+def check_dependencies(raise_error=False):
     """
     Returns True if pip and venv are available.
     """
@@ -137,7 +138,7 @@ def ensure_dependencies():
     This is normally only installs on Linux, as Windows and Mac usually come with pip and venv.
     """
 
-    if assert_dependencies(raise_error=False):
+    if check_dependencies():
         return
 
     print("Installing Python dependencies...")

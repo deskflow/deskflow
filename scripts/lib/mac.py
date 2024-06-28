@@ -1,3 +1,4 @@
+import dmgbuild  # type: ignore
 import os, time, json
 import lib.cmd_utils as cmd_utils
 import lib.env as env
@@ -86,9 +87,6 @@ def assert_certificate_installed(codesign_id):
 
 
 def build_dmg(filename_base):
-    env.ensure_module("dmgbuild", "dmgbuild")
-    import dmgbuild  # type: ignore
-
     settings_file_abs = os.path.abspath(settings_file)
     app_path_abs = os.path.abspath(app_path)
 

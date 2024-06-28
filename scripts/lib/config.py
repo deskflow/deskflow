@@ -1,3 +1,4 @@
+import yaml
 import lib.env as env
 import lib.cmd_utils as cmd_utils
 
@@ -29,8 +30,6 @@ class Config:
     """Reads the project configuration YAML file."""
 
     def __init__(self):
-        env.ensure_module("yaml", "pyyaml")
-        import yaml
 
         with open(config_file, "r") as f:
             data = yaml.safe_load(f)

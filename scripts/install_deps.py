@@ -15,11 +15,9 @@ def main():
     )
     args = parser.parse_args()
 
-    # ensures that pip and venv are available for `ensure_module` function.
     env.ensure_dependencies()
-
-    # important: load venv before loading modules that install deps.
-    env.ensure_in_venv(__file__)
+    env.ensure_in_venv(__file__, auto_create=True)
+    env.install_requirements()
 
     error = False
     try:
