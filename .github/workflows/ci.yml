@@ -207,27 +207,27 @@ jobs:
             skip-package: true
 
     steps:
-      - name: Dependencies (apt)
+      - name: Bootstrap (apt)
         if: ${{ matrix.distro.install-deps-apt }}
         run: |
           apt update
           apt install -y git python3
         shell: bash
 
-      - name: Dependencies (dnf)
+      - name: Bootstrap (dnf)
         if: ${{ matrix.distro.install-deps-dnf }}
         run: |
           dnf update -y
           dnf install -y git python3
         shell: bash
 
-      - name: Dependencies (pacman)
+      - name: Bootstrap (pacman)
         if: ${{ matrix.distro.install-deps-pacman }}
         run: |
           pacman -Syu --noconfirm git python
         shell: bash
 
-      - name: Dependencies (zypper)
+      - name: Bootstrap (zypper)
         if: ${{ matrix.distro.install-deps-zypper }}
         run: |
           zypper refresh
