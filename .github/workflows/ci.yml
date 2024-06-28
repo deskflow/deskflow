@@ -242,6 +242,9 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
       - name: Install dependencies
         run: ./scripts/install_deps.py
 
