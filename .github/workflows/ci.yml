@@ -166,71 +166,71 @@ jobs:
           - name: ubuntu-24.04
             container: ubuntu:24.04
             runs-on: ubuntu-latest
-            install-git-apt: true
+            install-deps-apt: true
 
           - name: ubuntu-22.04
             container: ubuntu:22.04
             runs-on: ubuntu-latest
-            install-git-apt: true
+            install-deps-apt: true
 
           - name: debian-12
             container: debian:12
             runs-on: ubuntu-latest
-            install-git-apt: true
+            install-deps-apt: true
 
           - name: debian-11
             container: debian:11
             runs-on: ubuntu-latest
-            install-git-apt: true
+            install-deps-apt: true
             #legacy-cmake: true
 
           - name: fedora-41
             container: fedora:39
             runs-on: ubuntu-latest
-            install-git-dnf: true
+            install-deps-dnf: true
 
           - name: fedora-40
             container: fedora:40
             runs-on: ubuntu-latest
-            install-git-dnf: true
+            install-deps-dnf: true
 
           - name: arch-latest
             container: archlinux:latest
             runs-on: ubuntu-latest
-            install-git-pacman: true
+            install-deps-pacman: true
 
           - name: opensuse-tumbleweed
             container: opensuse/tumbleweed:latest
             runs-on: ubuntu-latest
-            install-git-zypper: true
+            install-deps-zypper: true
 
           - name: opensuse-leap
             container: opensuse/leap:latest
             runs-on: ubuntu-latest
-            install-git-zypper: true
+            install-deps-zypper: true
 
     steps:
-      - if: ${{ matrix.distro.install-git-apt }}
+      - if: ${{ matrix.distro.install-deps-apt }}
         run: |
           apt update
-          apt install -y git
+          apt install -y git python3
         shell: bash
 
-      - if: ${{ matrix.distro.install-git-dnf }}
+      - if: ${{ matrix.distro.install-deps-dnf }}
         run: |
           dnf update -y
-          dnf install -y git
+          dnf install -y git python3
         shell: bash
 
-      - if: ${{ matrix.distro.install-git-pacman }}
+      - if: ${{ matrix.distro.install-deps-pacman }}
         run: |
-          pacman -Syu --noconfirm git
+          pacman -Syu --noconfirm git python
         shell: bash
 
-      - if: ${{ matrix.distro.install-git-zypper }}
+      - if: ${{ matrix.distro.install-deps-zypper }}
         run: |
           zypper refresh
-          zypper install -y git
+          zypper install -y git python3
         shell: bash
 
       - name: Checkout
