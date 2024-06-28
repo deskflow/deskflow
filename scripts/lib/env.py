@@ -164,34 +164,20 @@ def ensure_dependencies():
     if not distro_like:
         distro_like = distro
 
-    update_cmd = None
     install_cmd = None
     if "debian" in distro_like:
-        update_cmd = "apt update"
-        install_cmd = "apt install -y python3-pip python3-venv"
+        install_cmd = "apt update; apt install -y python3-pip python3-venv"
     elif "fedora" in distro_like:
-        update_cmd = "dnf check-update"
-        install_cmd = "dnf install -y python3-pip python3-virtualenv"
+        install_cmd = "dnf check-update; dnf install -y python3-pip python3-virtualenv"
     elif "arch" in distro_like:
-        update_cmd = "pacman -Sy"
-        install_cmd = "pacman -S --noconfirm python-pip python-virtualenv"
+        install_cmd = "pacman -Syu --noconfirm python-pip python-virtualenv"
     elif "opensuse" in distro_like:
-        update_cmd = "zypper refresh"
-        install_cmd = "zypper install -y python3-pip python3-virtualenv"
+        install_cmd = "zypper refresh; zypper install -y python3-pip python3-virtualenv"
     else:
-        # arch, opensuse, etc, patches welcome! :)
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")
 
-    if update_cmd:
-        # don't check the return code, as some package managers return non-zero exit codes
-        # under normal circumstances (e.g. dnf returns 100 when there are updates available).
-        cmd_utils.run(
-            f"{sudo} {update_cmd}".strip(), check=False, shell=True, print_cmd=True
-        )
-
-    if not install_cmd:
-        raise RuntimeError("Install command not found")
-
+    # don't check the return code, as some package managers return non-zero exit codes
+    # under normal circumstances (e.g. dnf returns 100 when there are updates available).
     cmd_utils.run(f"{sudo} {install_cmd}".strip(), shell=True, print_cmd=True)
 
 
