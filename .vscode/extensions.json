@@ -4,6 +4,7 @@
     "twxs.cmake",
     "llvm-vs-code-extensions.vscode-clangd",
     "ms-vscode.cpptools",
-    "vadimcn.vscode-lldb"
+    "vadimcn.vscode-lldb",
+    "cheshirekow.cmake-format"
   ]
 }
