@@ -63,10 +63,10 @@ int VersionChecker::getStageVersion(QString stage) const
     const char* betaName = "beta";
 
     // use max int for stable so it's always the highest value.
-    const int stableValue   = INT_MAX;
-    const int rcValue       = 2;
-    const int betaValue     = 1;
-    const int otherValue    = 0;
+    const int stableValue = INT_MAX;
+    const int rcValue = 2;
+    const int betaValue = 1;
+    const int otherValue = 0;
 
     if (stage == stableName)
     {
@@ -109,12 +109,12 @@ int VersionChecker::compareVersions(const QString& left, const QString& right)
 
     const int leftMajor = leftNumberParts.at(0).toInt();
     const int leftMinor = leftNumberParts.at(1).toInt();
-    const int leftPatch   = leftNumberParts.at(2).toInt();
+    const int leftPatch = leftNumberParts.at(2).toInt();
     const int leftStage = leftParts.size() > 1 ? getStageVersion(leftParts.at(1)) : 0;
 
     const int rightMajor = rightNumberParts.at(0).toInt();
     const int rightMinor = rightNumberParts.at(1).toInt();
-    const int rightPatch   = rightNumberParts.at(2).toInt();
+    const int rightPatch = rightNumberParts.at(2).toInt();
     const int rightStage = rightParts.size() > 1 ? getStageVersion(rightParts.at(1)) : 0;
 
     const bool rightWins =
