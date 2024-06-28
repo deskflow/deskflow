@@ -204,6 +204,7 @@ jobs:
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
+            config-git-safe-dir: true
 
           - name: opensuse
             container: opensuse/tumbleweed:latest
