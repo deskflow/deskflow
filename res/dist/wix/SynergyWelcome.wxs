@@ -7,7 +7,7 @@
    <Fragment>
       <UI Id="SynergyWelcome">
          <Property Id="SynergyWelcomeBackground">welcome_background</Property>
-         <Binary Id="welcome_background" SourceFile="$(var.ResPath)\welcome_background.png"/>
+         <Binary Id="welcome_background" SourceFile="$(var.ResPath)\dist\wix\images\welcome_background.png"/>
 
          <Dialog Id="SynergyWelcome" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
             <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
