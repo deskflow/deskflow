@@ -164,27 +164,31 @@ def ensure_dependencies():
     if not distro_like:
         distro_like = distro
 
+    update_cmd = None
+    install_cmd = None
     if "debian" in distro_like:
-        cmd_utils.run(
-            f"{sudo} apt update".strip(), check=False, shell=True, print_cmd=True
-        )
-        cmd_utils.run(
-            f"{sudo} apt install -y python3-pip python3-venv".strip(),
-            shell=True,
-            print_cmd=True,
-        )
+        update_cmd = "apt update"
+        install_cmd = "apt install -y python3-pip python3-venv"
     elif "fedora" in distro_like:
-        cmd_utils.run(
-            f"{sudo} dnf check-update".strip(), check=False, shell=True, print_cmd=True
-        )
-        cmd_utils.run(
-            f"{sudo} dnf install -y python3-pip python3-virtualenv".strip(),
-            shell=True,
-            print_cmd=True,
-        )
+        update_cmd = "dnf check-update"
+        install_cmd = "dnf install -y python3-pip python3-virtualenv"
+    elif "arch" in distro_like:
+        update_cmd = "pacman -Sy"
+        install_cmd = "pacman -S --noconfirm python-pip python-virtualenv"
+    elif "opensuse" in distro_like:
+        update_cmd = "zypper refresh"
+        install_cmd = "zypper install -y python3-pip python3-virtualenv"
     else:
         # arch, opensuse, etc, patches welcome! :)
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")
+
+    if update_cmd:
+        cmd_utils.run(f"{sudo} {update_cmd}".strip(), shell=True, print_cmd=True)
+
+    if not install_cmd:
+        raise RuntimeError("Install command not found")
+
+    cmd_utils.run(f"{sudo} {install_cmd}".strip(), shell=True, print_cmd=True)
 
 
 def get_app_version():
