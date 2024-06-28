@@ -1,2 +1,5 @@
 format:
   line_ending: "auto"
+
+markup:
+  first_comment_is_literal: true
