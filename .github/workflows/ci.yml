@@ -200,9 +200,15 @@ jobs:
             runs-on: ubuntu-24.04
 
     steps:
-      # Use @v3 since some older Linux distro versions don't support @v4
-      - name: Checkout
+      - name: Checkout (legacy)
+        if: ${{ matrix.distro.legacy-checkout }}
         uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Checkout (v4)
+        if: ${{ !matrix.distro.legacy-checkout }}
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
