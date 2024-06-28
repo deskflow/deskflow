@@ -112,131 +112,9 @@ macro(configure_unix_libs)
   endif()
 
   if(APPLE)
-    set(CMAKE_CXX_FLAGS
-        "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1"
-    )
-
-    if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-      set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
-    endif()
-
-    if(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 11.0)
-      set(SYNERGY_OSX_DEPLOYMENT_TARGET 1100)
-    elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.15)
-      set(SYNERGY_OSX_DEPLOYMENT_TARGET 1015)
-    elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.14)
-      set(SYNERGY_OSX_DEPLOYMENT_TARGET 1014)
-    else()
-      set(SYNERGY_OSX_DEPLOYMENT_TARGET 1013)
-    endif()
-
-    add_compile_definitions(
-      OSX_DEPLOYMENT_TARGET=${SYNERGY_OSX_DEPLOYMENT_TARGET})
-
-    find_library(lib_ScreenSaver ScreenSaver)
-    find_library(lib_IOKit IOKit)
-    find_library(lib_ApplicationServices ApplicationServices)
-    find_library(lib_Foundation Foundation)
-    find_library(lib_Carbon Carbon)
-
-    list(
-      APPEND
-      libs
-      ${lib_ScreenSaver}
-      ${lib_IOKit}
-      ${lib_ApplicationServices}
-      ${lib_Foundation}
-      ${lib_Carbon})
-
-    if(SYNERGY_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 1014)
-      find_library(lib_UserNotifications UserNotifications)
-      list(APPEND libs ${lib_UserNotifications})
-    endif()
-
-  else() # not-apple
-
-    # add include dir for bsd (posix uses /usr/include/)
-    set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
-
-    set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
-    set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
-    check_type_size("XRRNotifyEvent" X11_EXTENSIONS_XRANDR_H)
-    set(HAVE_X11_EXTENSIONS_XRANDR_H "${X11_EXTENSIONS_XRANDR_H}")
-    set(CMAKE_EXTRA_INCLUDE_FILES)
-
-    check_include_files("${XKBlib};X11/extensions/dpms.h"
-                        HAVE_X11_EXTENSIONS_DPMS_H)
-    check_include_files("X11/extensions/Xinerama.h"
-                        HAVE_X11_EXTENSIONS_XINERAMA_H)
-    check_include_files("${XKBlib};X11/extensions/XKBstr.h"
-                        HAVE_X11_EXTENSIONS_XKBSTR_H)
-    check_include_files("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
-    check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
-    check_include_files("${XKBlib}" HAVE_X11_XKBLIB_H)
-    check_include_files("X11/extensions/XInput2.h" HAVE_XI2)
-
-    if(HAVE_X11_EXTENSIONS_DPMS_H)
-      # Assume that function prototypes declared, when include exists.
-      set(HAVE_DPMS_PROTOTYPES 1)
-    endif()
-
-    if(NOT HAVE_X11_XKBLIB_H)
-      message(FATAL_ERROR "Missing header: " ${XKBlib})
-    endif()
-
-    check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
-    check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
-    check_library_exists("Xtst;Xext;X11" XTestQueryExtension "" HAVE_Xtst)
-    check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
-    check_library_exists("Xi" XISelectEvents "" HAVE_Xi)
-    check_library_exists("Xrandr" XRRQueryExtension "" HAVE_Xrandr)
-
-    if(HAVE_ICE)
-
-      # Assume we have SM if we have ICE.
-      set(HAVE_SM 1)
-      list(APPEND libs SM ICE)
-
-    endif()
-
-    if(!X11_xkbfile_FOUND)
-      message(FATAL_ERROR "Missing library: xkbfile")
-    endif()
-
-    if(HAVE_Xtst)
-
-      # Xtxt depends on X11.
-      set(HAVE_X11)
-      list(APPEND libs Xtst X11 xkbfile)
-
-    else()
-
-      message(FATAL_ERROR "Missing library: Xtst")
-
-    endif()
-
-    if(HAVE_Xext)
-      list(APPEND libs Xext)
-    endif()
-
-    if(HAVE_Xinerama)
-      list(APPEND libs Xinerama)
-    else(HAVE_Xinerama)
-      if(HAVE_X11_EXTENSIONS_XINERAMA_H)
-        set(HAVE_X11_EXTENSIONS_XINERAMA_H 0)
-        message(WARNING "Old Xinerama implementation detected, disabled")
-      endif()
-    endif()
-
-    if(HAVE_Xrandr)
-      list(APPEND libs Xrandr)
-    endif()
-
-    # this was outside of the linux scope, not sure why, moving it back inside.
-    if(HAVE_Xi)
-      list(APPEND libs Xi)
-    endif()
-
+    configure_mac_libs()
+  else()
+    configure_unix_like_libs()
   endif()
 
   # For config.h, set some static values; it may be a good idea to make these
@@ -260,11 +138,146 @@ macro(configure_unix_libs)
 
   add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
-  if(APPLE)
-    add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
-  else()
-    add_definitions(-DWINAPI_XWINDOWS=1)
+endmacro()
+
+#
+# Apple macOS
+#
+macro(configure_mac_libs)
+
+  set(CMAKE_CXX_FLAGS
+      "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1"
+  )
+
+  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
   endif()
+
+  if(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 11.0)
+    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1100)
+  elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.15)
+    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1015)
+  elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.14)
+    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1014)
+  else()
+    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1013)
+  endif()
+
+  add_compile_definitions(
+    OSX_DEPLOYMENT_TARGET=${SYNERGY_OSX_DEPLOYMENT_TARGET})
+
+  find_library(lib_ScreenSaver ScreenSaver)
+  find_library(lib_IOKit IOKit)
+  find_library(lib_ApplicationServices ApplicationServices)
+  find_library(lib_Foundation Foundation)
+  find_library(lib_Carbon Carbon)
+
+  list(
+    APPEND
+    libs
+    ${lib_ScreenSaver}
+    ${lib_IOKit}
+    ${lib_ApplicationServices}
+    ${lib_Foundation}
+    ${lib_Carbon})
+
+  if(SYNERGY_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 1014)
+    find_library(lib_UserNotifications UserNotifications)
+    list(APPEND libs ${lib_UserNotifications})
+  endif()
+
+  add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+
+endmacro()
+
+#
+# Unix-like (non-Apple) such as Linux, BSD, etc
+#
+macro(configure_unix_like_libs)
+
+  # add include dir for bsd (posix uses /usr/include/)
+  set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
+
+  set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
+  set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
+  check_type_size("XRRNotifyEvent" X11_EXTENSIONS_XRANDR_H)
+  set(HAVE_X11_EXTENSIONS_XRANDR_H "${X11_EXTENSIONS_XRANDR_H}")
+  set(CMAKE_EXTRA_INCLUDE_FILES)
+
+  check_include_files("${XKBlib};X11/extensions/dpms.h"
+                      HAVE_X11_EXTENSIONS_DPMS_H)
+  check_include_files("X11/extensions/Xinerama.h"
+                      HAVE_X11_EXTENSIONS_XINERAMA_H)
+  check_include_files("${XKBlib};X11/extensions/XKBstr.h"
+                      HAVE_X11_EXTENSIONS_XKBSTR_H)
+  check_include_files("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
+  check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
+  check_include_files("${XKBlib}" HAVE_X11_XKBLIB_H)
+  check_include_files("X11/extensions/XInput2.h" HAVE_XI2)
+
+  if(HAVE_X11_EXTENSIONS_DPMS_H)
+    # Assume that function prototypes declared, when include exists.
+    set(HAVE_DPMS_PROTOTYPES 1)
+  endif()
+
+  if(NOT HAVE_X11_XKBLIB_H)
+    message(FATAL_ERROR "Missing header: " ${XKBlib})
+  endif()
+
+  check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
+  check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
+  check_library_exists("Xtst;Xext;X11" XTestQueryExtension "" HAVE_Xtst)
+  check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
+  check_library_exists("Xi" XISelectEvents "" HAVE_Xi)
+  check_library_exists("Xrandr" XRRQueryExtension "" HAVE_Xrandr)
+
+  if(HAVE_ICE)
+
+    # Assume we have SM if we have ICE.
+    set(HAVE_SM 1)
+    list(APPEND libs SM ICE)
+
+  endif()
+
+  if(!X11_xkbfile_FOUND)
+    message(FATAL_ERROR "Missing library: xkbfile")
+  endif()
+
+  if(HAVE_Xtst)
+
+    # Xtxt depends on X11.
+    set(HAVE_X11)
+    list(APPEND libs Xtst X11 xkbfile)
+
+  else()
+
+    message(FATAL_ERROR "Missing library: Xtst")
+
+  endif()
+
+  if(HAVE_Xext)
+    list(APPEND libs Xext)
+  endif()
+
+  if(HAVE_Xinerama)
+    list(APPEND libs Xinerama)
+  else(HAVE_Xinerama)
+    if(HAVE_X11_EXTENSIONS_XINERAMA_H)
+      set(HAVE_X11_EXTENSIONS_XINERAMA_H 0)
+      message(WARNING "Old Xinerama implementation detected, disabled")
+    endif()
+  endif()
+
+  if(HAVE_Xrandr)
+    list(APPEND libs Xrandr)
+  endif()
+
+  # this was outside of the linux scope, not sure why, moving it back inside.
+  if(HAVE_Xi)
+    list(APPEND libs Xi)
+  endif()
+
+  add_definitions(-DWINAPI_XWINDOWS=1)
 
 endmacro()
 
