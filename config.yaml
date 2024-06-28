@@ -60,5 +60,34 @@ config:
           gtk3-devel \
           rpm-build
 
-    centos:
-      <<: *fedora
+    arch:
+      dependencies:
+        command: sudo pacman -Syu --noconfirm \
+          cmake \
+          make \
+          gcc \
+          openssl \
+          libxtst \
+          glib2 \
+          gdk-pixbuf2 \
+          libnotify \
+          libxkbfile \
+          qt5-base \
+          qt5-tools \
+          gtk3
+
+    opensuse:
+      dependencies:
+        command: sudo zypper refresh; \
+          sudo zypper install -y \
+          cmake \
+          make \
+          gcc-c++ \
+          libXtst-devel \
+          glib2-devel \
+          gdk-pixbuf-devel \
+          libnotify-devel \
+          libxkbfile-devel \
+          libqt5-qtbase-devel \
+          libqt5-qttools-devel \
+          gtk3-devel
