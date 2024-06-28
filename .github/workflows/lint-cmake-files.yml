@@ -17,4 +17,4 @@ jobs:
         run: python ./scripts/install_deps.py
 
       - name: Lint CMake files
-        run: ./build/python/bin/cmake-format --check ./**/CMakeLists.txt cmake/*
+        run: ./scripts/lint_cmake_files.sh
