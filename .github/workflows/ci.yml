@@ -182,7 +182,7 @@ jobs:
             container: debian:11
             runs-on: ubuntu-latest
             install-deps-apt: true
-            #legacy-cmake: true
+            legacy-cmake: true
 
           - name: fedora-41
             container: fedora:39
