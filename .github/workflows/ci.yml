@@ -163,41 +163,42 @@ jobs:
     strategy:
       matrix:
         distro:
-          - name: centos-8
-            container: symless/synergy-core:centos8
+          - name: ubuntu-24.04
+            container: ubuntu:24.04
             runs-on: ubuntu-latest
-            legacy-cmake: true
-
-          - name: debian-11
-            container: symless/synergy-core:debian11
-            runs-on: ubuntu-latest
-            legacy-cmake: true
-
-          - name: debian-12
-            container: symless/synergy-core:debiansid
-            runs-on: ubuntu-latest
-
-          - name: fedora-37
-            container: symless/synergy-core:fedora37
-            runs-on: ubuntu-latest
-            legacy-cmake: true
-
-          - name: fedora-38
-            container: symless/synergy-core:fedora38
-            runs-on: ubuntu-latest
-            legacy-cmake: true
-
-          - name: ubuntu-20.04
-            container: symless/synergy-core:ubuntu20.04
-            runs-on: ubuntu-latest
-            legacy-cmake: true
 
           - name: ubuntu-22.04
-            container: symless/synergy-core:ubuntu22.04
+            container: ubuntu:22.04
             runs-on: ubuntu-latest
 
-          - name: ubuntu-24.04
-            runs-on: ubuntu-24.04
+          - name: debian-12
+            container: debian:12
+            runs-on: ubuntu-latest
+
+          - name: debian-11
+            container: debian:11
+            runs-on: ubuntu-latest
+            #legacy-cmake: true
+
+          - name: fedora-41
+            container: fedora:39
+            runs-on: ubuntu-latest
+
+          - name: fedora-40
+            container: fedora:40
+            runs-on: ubuntu-latest
+
+          - name: arch-latest
+            container: archlinux:latest
+            runs-on: ubuntu-latest
+
+          - name: opensuse-tumbleweed
+            container: opensuse/tumbleweed:latest
+            runs-on: ubuntu-latest
+
+          - name: opensuse-leap
+            container: opensuse/leap:latest
+            runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
