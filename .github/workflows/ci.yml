@@ -202,6 +202,7 @@ jobs:
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
+            config-git-safe-dir: true
 
           - name: opensuse
             container: opensuse/tumbleweed:latest
@@ -230,7 +231,8 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Git safe dir
+      - name: Config Git safe dir
+        if: ${{ matrix.distro.config-git-safe-dir }}
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
