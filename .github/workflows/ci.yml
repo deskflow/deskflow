@@ -43,7 +43,7 @@ jobs:
 
       - name: Cache Qt
         id: cache-qt
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ${{ env.QT_BASE_DIR }}
           key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
