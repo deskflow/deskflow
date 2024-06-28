@@ -40,7 +40,7 @@ def main():
     files_recursive = find_files(".", include_files, exclude_dirs)
 
     if files_recursive:
-        sys.argv = ["cmake-format"] + new_args + files_recursive
+        sys.argv = [""] + new_args + files_recursive
         sys.exit(cmake_format_main())
     else:
         print("No CMake files found to process.")
