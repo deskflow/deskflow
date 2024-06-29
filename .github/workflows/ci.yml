@@ -161,7 +161,7 @@ jobs:
     container: ${{ matrix.distro.container }}
 
     env:
-      # Prevent apt on Ubuntu 22 Docker container prompting for input.
+      # Prevent apt prompting for input.
       DEBIAN_FRONTEND: noninteractive
 
     strategy:
@@ -212,21 +212,17 @@ jobs:
             skip-package: true
 
     steps:
-      - name: Bootstrap (apt)
-        if: ${{ matrix.distro.install-deps-apt }}
-        run: apt update; apt install -y git python3
-
-      - name: Bootstrap (dnf)
-        if: ${{ matrix.distro.install-deps-dnf }}
-        run: dnf install -y git python3
-
-      - name: Bootstrap (pacman)
-        if: ${{ matrix.distro.install-deps-pacman }}
-        run: pacman -Syu --noconfirm git python
-
-      - name: Bootstrap (zypper)
-        if: ${{ matrix.distro.install-deps-zypper }}
-        run: zypper install -y git python3
+      - name: Bootstrap
+        run: |
+          if [[ "${{ matrix.distro }}" == "apt" ]]; then
+            apt update && apt install -y git python3
+          elif [[ "${{ matrix.distro }}" == "dnf" ]]; then
+            dnf install -y git python3
+          elif [[ "${{ matrix.distro }}" == "pacman" ]]; then
+            pacman -Syu --noconfirm git python
+          elif [[ "${{ matrix.distro }}" == "zypper" ]]; then
+            zypper install -y git python3
+          fi
 
       - name: Checkout
         uses: actions/checkout@v4
