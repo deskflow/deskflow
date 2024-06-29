@@ -70,8 +70,6 @@ def linux_package(filename_base, version):
         linux.package(filename_base, build_tgz=True)
         linux.package(filename_base, build_stgz=True)
 
-    linux.package(filename_base)
-
 
 if __name__ == "__main__":
     main()
