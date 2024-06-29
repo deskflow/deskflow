@@ -200,6 +200,16 @@ jobs:
             runs-on: ubuntu-latest
             install-deps-dnf: true
 
+          - name: redhat-8
+            container: redhat/ubi8:latest
+            runs-on: ubuntu-latest
+            install-deps-dnf: true
+
+          - name: redhat-9
+            container: redhat/ubi9:latest
+            runs-on: ubuntu-latest
+            install-deps-dnf: true
+
           - name: arch
             container: archlinux:latest
             runs-on: ubuntu-latest
