@@ -171,6 +171,7 @@ jobs:
             container: ubuntu:24.04
             runs-on: ubuntu-latest
             install-deps-apt: true
+            extra-packages: true
 
           - name: ubuntu-22.04
             container: ubuntu:22.04
@@ -202,11 +203,13 @@ jobs:
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
+            skip-package: true
 
           - name: opensuse
             container: opensuse/tumbleweed:latest
             runs-on: ubuntu-latest
             install-deps-zypper: true
+            skip-package: true
 
     steps:
       - name: Bootstrap (apt)
@@ -252,11 +255,13 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ !matrix.distro.skip-package && !github.event.pull_request.draft }}
+        env:
+          LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
         run: ./scripts/package.py
 
       - name: Upload
-        if: ${{ env.UPLOAD_TO_GITHUB == 'true' || env.UPLOAD_TO_GDRIVE == 'true' }}
+        if: ${{ !matrix.distro.skip-package && !github.event.pull_request.draft }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
