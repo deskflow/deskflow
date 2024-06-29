@@ -5,21 +5,7 @@ import lib.env as env
 dist_dir = "dist"
 
 
-def package(filename_base):
-    build_extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
-
-    distro, distro_like, _distro_version = env.get_linux_distro()
-    if not distro_like:
-        distro_like = distro
-
-    build_package(filename_base, distro_like)
-
-    if build_extra_packages:
-        build_package(filename_base, build_tgz=True)
-        build_package(filename_base, build_stgz=True)
-
-
-def build_package(filename_base, distro_like=None, build_tgz=False, build_stgz=False):
+def package(filename_base, build_tgz=False, build_stgz=False):
 
     extension = None
     generator = None
@@ -34,6 +20,10 @@ def build_package(filename_base, distro_like=None, build_tgz=False, build_stgz=F
         extension = "sh"
         print("Building package for Linux (self-extracting tar.gz)")
     else:
+
+        distro, distro_like, _distro_version = env.get_linux_distro()
+        if not distro_like:
+            distro_like = distro
 
         print(f"Building package for distro like {distro_like}")
 

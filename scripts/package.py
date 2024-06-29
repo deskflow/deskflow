@@ -24,15 +24,15 @@ def main():
     elif env.is_mac():
         mac_package(filename_base)
     elif env.is_linux():
-        linux_package(filename_base)
+        linux_package(filename_base, version)
     else:
         raise RuntimeError(f"Unsupported platform: {env.get_os()}")
 
 
-def get_filename_base(version):
+def get_filename_base(version, use_linux_distro=True):
     os = env.get_os()
     machine = platform.machine().lower()
-    if os == "linux":
+    if os == "linux" and use_linux_distro:
         distro_name, _distro_like, distro_version = env.get_linux_distro()
         if not distro_name:
             raise RuntimeError("Failed to detect Linux distro")
@@ -58,8 +58,17 @@ def mac_package(filename_base):
     mac.package(filename_base)
 
 
-def linux_package(filename_base):
+def linux_package(filename_base, version):
     import lib.linux as linux
+
+    build_extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
+
+    linux.package(filename_base)
+
+    if build_extra_packages:
+        filename_base = get_filename_base(version, use_linux_distro=False)
+        linux.package(filename_base, build_tgz=True)
+        linux.package(filename_base, build_stgz=True)
 
     linux.package(filename_base)
 
