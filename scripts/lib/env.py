@@ -2,8 +2,6 @@ import os, sys, subprocess
 import lib.cmd_utils as cmd_utils
 
 venv_path = "build/python"
-version_file = "VERSION"
-version_env_var = "SYNERGY_VERSION"
 
 
 def check_module(module):
@@ -64,12 +62,28 @@ def get_linux_distro():
     return name, name_like, version
 
 
-def get_env_var(name):
-    """Returns an env var or raises an error if it is not set."""
+def get_env(name, required=True):
+    """Returns an env var (stripped) or optionally raises an error if not set."""
     value = os.getenv(name)
-    if not value:
-        raise ValueError(f"Environment variable not set: {name}")
+    if value:
+        value = value.strip()
+
+    if required and not value:
+        raise ValueError(f"Required env var not set: {name}")
+
     return value
+
+
+def get_env_bool(name, default=False):
+    """Returns a boolean value from an env var (stripped)."""
+    value = os.getenv(name)
+    if value:
+        value = value.strip()
+
+    if value is None:
+        return default
+
+    return value.lower() in ["true", "1", "yes"]
 
 
 def get_python_executable(binary="python"):
@@ -185,10 +199,9 @@ def get_app_version():
     """
     Returns the version either from the env var, or from the version file.
     """
-    if version_env_var in os.environ:
-        version = os.environ[version_env_var].strip()
-        if version:
-            return version
+    version = get_env("SYNERGY_VERSION", required=False)
+    if version:
+        return version
 
-    with open(version_file, "r") as f:
+    with open("VERSION", "r") as f:
         return f.read().strip()
