@@ -74,7 +74,7 @@ jobs:
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
 
       - name: Upload
-        if: ${{ env.UPLOAD_TO_GITHUB == 'true' || env.UPLOAD_TO_GDRIVE == 'true' }}
+        if: ${{ !github.event.pull_request.draft }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
@@ -143,7 +143,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
-        if: ${{ env.UPLOAD_TO_GITHUB == 'true' || env.UPLOAD_TO_GDRIVE == 'true' }}
+        if: ${{ !github.event.pull_request.draft }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
