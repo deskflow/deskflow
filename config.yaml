@@ -59,9 +59,6 @@ config:
           gtk3-devel \
           rpm-build
 
-    rhel:
-      <<: *fedora
-
     arch: &arch
       dependencies:
         command: sudo pacman -Syu --noconfirm \
