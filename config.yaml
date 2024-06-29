@@ -60,7 +60,7 @@ config:
           gtk3-devel \
           rpm-build
 
-    arch:
+    arch: &arch
       dependencies:
         command: sudo pacman -Syu --noconfirm \
           cmake \
@@ -76,6 +76,9 @@ config:
           qt5-tools \
           gtk3 \
           pkgconf
+
+    manjaro:
+      <<: *arch
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
