@@ -33,6 +33,9 @@ def package(filename_base, build_tgz=False, build_stgz=False):
         elif "fedora" in distro_like:
             generator = "RPM"
             extension = "rpm"
+        else:
+            # Arch and OpenSUSE, patches welcome! :)
+            raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
 
     original_dir = os.getcwd()
     try:
