@@ -214,13 +214,13 @@ jobs:
     steps:
       - name: Bootstrap
         run: |
-          if [[ "${{ matrix.distro }}" == "apt" ]]; then
+          if [[ "${{ matrix.distro.name }}" == "apt" ]]; then
             apt update && apt install -y git python3
-          elif [[ "${{ matrix.distro }}" == "dnf" ]]; then
+          elif [[ "${{ matrix.distro.name }}" == "dnf" ]]; then
             dnf install -y git python3
-          elif [[ "${{ matrix.distro }}" == "pacman" ]]; then
+          elif [[ "${{ matrix.distro.name }}" == "pacman" ]]; then
             pacman -Syu --noconfirm git python
-          elif [[ "${{ matrix.distro }}" == "zypper" ]]; then
+          elif [[ "${{ matrix.distro.name }}" == "zypper" ]]; then
             zypper install -y git python3
           fi
 
