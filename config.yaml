@@ -17,7 +17,6 @@ config:
     dependencies:
       command: brew bundle --file=Brewfile
 
-  # arch, opensuse, etc, patches welcome! :)
   linux:
     debian: &debian
       dependencies:

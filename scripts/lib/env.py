@@ -151,8 +151,8 @@ def check_dependencies(raise_error=False):
             raise RuntimeError("Python is missing pip")
         if not has_venv:
             raise RuntimeError("Python is missing venv")
-    else:
-        return has_pip and has_venv
+
+    return has_pip, has_venv
 
 
 def ensure_dependencies():
@@ -161,7 +161,8 @@ def ensure_dependencies():
     This is normally only installs on Linux, as Windows and Mac usually come with pip and venv.
     """
 
-    if check_dependencies():
+    has_pip, has_venv = check_dependencies()
+    if has_pip and has_venv:
         return
 
     print("Installing Python dependencies...")
@@ -178,21 +179,40 @@ def ensure_dependencies():
     if not distro_like:
         distro_like = distro
 
-    install_cmd = None
+    install_cmd_base = None
+    pip_package = None
+    venv_package = None
+
     if "debian" in distro_like:
-        install_cmd = "apt update; apt install -y python3-pip python3-venv"
+        install_cmd_base = f"{sudo} apt update; {sudo} apt install -y"
+        pip_package = "python3-pip"
+        venv_package = "python3-venv"
     elif "fedora" in distro_like:
-        install_cmd = "dnf check-update; dnf install -y python3-pip python3-virtualenv"
+        install_cmd_base = f"{sudo} dnf check-update; {sudo} dnf install -y"
+        pip_package = "python3-pip"
+        venv_package = "python3-virtualenv"
     elif "arch" in distro_like:
-        install_cmd = "pacman -Syu --noconfirm python-pip python-virtualenv"
+        install_cmd_base = f"{sudo} pacman -Syu --noconfirm python-pip"
+        pip_package = "python-pip"
+        venv_package = "python-virtualenv"
     elif "opensuse" in distro_like:
-        install_cmd = "zypper refresh; zypper install -y python3-pip python3-virtualenv"
+        install_cmd_base = f"{sudo} zypper refresh; {sudo} zypper install -y"
+        pip_package = "python3-pip"
+        venv_package = "python3-virtualenv"
     else:
         raise RuntimeError(f"Unable to install Python dependencies on {distro}")
 
+    install_cmd = f"{install_cmd_base} "
+
+    if not has_pip:
+        install_cmd += f"{pip_package} "
+
+    if not has_venv:
+        install_cmd += f"{venv_package} "
+
     # don't check the return code, as some package managers return non-zero exit codes
     # under normal circumstances (e.g. dnf returns 100 when there are updates available).
-    cmd_utils.run(f"{sudo} {install_cmd}".strip(), shell=True, print_cmd=True)
+    cmd_utils.run(install_cmd.strip(), shell=True, print_cmd=True)
 
 
 def get_app_version():
