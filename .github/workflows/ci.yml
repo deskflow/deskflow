@@ -204,13 +204,13 @@ jobs:
             container: redhat/ubi8:latest
             runs-on: ubuntu-latest
             install-deps-dnf: true
-            remove-rhel-sub-man: true
+            config-rhel-dnf: true
 
           - name: redhat-9
             container: redhat/ubi9:latest
             runs-on: ubuntu-latest
             install-deps-dnf: true
-            remove-rhel-sub-man: true
+            config-rhel-dnf: true
 
           - name: arch
             container: archlinux:latest
@@ -233,8 +233,9 @@ jobs:
     steps:
       - name: Bootstrap
         run: |
-          if [ "${{ matrix.distro.remove-rhel-sub-man }}" = "true" ]; then
+          if [ "${{ matrix.distro.config-rhel-dnf }}" = "true" ]; then
             dnf remove -y subscription-manager dnf-plugin-subscription-manager
+            dnf install -y epel-release
           fi
           if [ "${{ matrix.distro.install-deps-apt }}" = "true" ]; then
             apt update && apt install -y git python3
