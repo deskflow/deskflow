@@ -192,7 +192,7 @@ def ensure_dependencies():
         pip_package = "python3-pip"
         venv_package = "python3-virtualenv"
     elif "arch" in distro_like:
-        install_cmd_base = f"{sudo} pacman -Syu --noconfirm python-pip"
+        install_cmd_base = f"{sudo} pacman -Syu --noconfirm"
         pip_package = "python-pip"
         venv_package = "python-virtualenv"
     elif "opensuse" in distro_like:
