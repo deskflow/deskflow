@@ -17,6 +17,7 @@ on:
 
 env:
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
+  ENABLE_PACKAGING: ${{ !github.event.pull_request.draft }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
   UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
@@ -67,14 +68,14 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ env.ENABLE_PACKAGING == 'true' }}
         run: python ./scripts/package.py
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
 
       - name: Upload
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ env.ENABLE_PACKAGING == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
@@ -132,7 +133,7 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ env.ENABLE_PACKAGING == 'true' }}
         run: ./scripts/package.py
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
@@ -143,7 +144,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
-        if: ${{ !github.event.pull_request.draft }}
+        if: ${{ env.ENABLE_PACKAGING == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
@@ -251,13 +252,13 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ !matrix.distro.skip-package && !github.event.pull_request.draft }}
+        if: ${{ !matrix.distro.skip-package && env.ENABLE_PACKAGING == 'true' }}
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
         run: ./scripts/package.py
 
       - name: Upload
-        if: ${{ !matrix.distro.skip-package && !github.event.pull_request.draft }}
+        if: ${{ !matrix.distro.skip-package && env.ENABLE_PACKAGING == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
