@@ -59,6 +59,7 @@ def get_package_info(build_distro, build_tgz, build_stgz):
 def run_package_cmd(command):
     package_user = env.get_env("LINUX_PACKAGE_USER", required=False)
     if package_user:
+        cmd_utils.run(["sudo", "chown", "-R", package_user, "build"], check=True)
         command = ["sudo", "-u", package_user] + command
 
     cwd = os.getcwd()
