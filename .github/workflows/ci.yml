@@ -190,6 +190,16 @@ jobs:
             install-deps-apt: true
             legacy-cmake: true
 
+          - name: debian-12-arm32v7
+            container: arm32v7/debian:12
+            runs-on: ubuntu-latest
+            install-deps-apt: true
+
+          - name: debian-12-arm64v8
+            container: arm64v8/debian:12
+            runs-on: ubuntu-latest
+            install-deps-apt: true
+
           - name: fedora-41
             container: fedora:39
             runs-on: ubuntu-latest
