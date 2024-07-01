@@ -96,6 +96,11 @@ macro(configure_linux_packaging)
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
   set(CPACK_RPM_PACKAGE_REQUIRES "libstdc++")
 
+  # The default for CMake seems to be /usr/local, which is actually not that
+  # common. While it works on Debian and Fedora, it doesn't work on Arch Linux
+  # for example.
+  set(CMAKE_INSTALL_PREFIX /usr)
+
   install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
   install(FILES res/synergy.png DESTINATION share/pixmaps)
 
