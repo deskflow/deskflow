@@ -94,9 +94,11 @@ macro(configure_linux_packaging)
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
 
-  # The default for CMake seems to be /usr/local, which seems not to be commonly
-  # used commonly used. While it works on Debian and Fedora, it doesn't work on
-  # Arch Linux for example (the application isn't found in the menu).
+  # The default for CMake seems to be /usr/local, which seems uncommon. While
+  # the default /usr/local prefix causes the app to appear on Debian and Fedora,
+  # it doesn't seem to appear on Arch Linux. Setting the prefix to /usr seems to
+  # work on a wider variety of distros, and that also seems to be where most
+  # apps install to.
   set(CMAKE_INSTALL_PREFIX /usr)
 
   install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
