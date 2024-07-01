@@ -40,6 +40,8 @@ def get_filename_base(version, use_linux_distro=True):
         if distro_version:
             version_for_filename = distro_version.replace(".", "_")
             distro = f"{distro_name}-{version_for_filename}"
+        else:
+            distro = distro_name
 
         return f"{package_name}-{distro}-{machine}-{version}"
     else:
