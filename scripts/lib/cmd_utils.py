@@ -103,9 +103,8 @@ def run(
                 text=True,
             )
         else:
-            result = subprocess.run(
-                command, check=check, shell=shell, stdout=sys.stdout, stderr=sys.stderr
-            )
+            result = subprocess.run(command, check=check, shell=shell)
+
     except subprocess.CalledProcessError as e:
         # Take control of how failed commands are printed:
         # - if `print_cmd` is false, it will print `***` instead of the command
