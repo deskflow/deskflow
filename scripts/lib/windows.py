@@ -166,7 +166,6 @@ class WindowsChoco:
             value_arg = f'--value="{runner_temp}/choco"'
             cmd_utils.run(
                 ["choco", "config", "set", key_arg, value_arg],
-                shell=True,
                 print_cmd=True,
             )
         else:
