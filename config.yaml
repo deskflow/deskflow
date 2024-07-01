@@ -95,4 +95,4 @@ config:
           libqt5-qttools-devel \
           gtk3-devel \
           openssl-devel \
-          pkg-config
+          rpm-build
