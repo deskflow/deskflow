@@ -29,5 +29,5 @@ source=($source_file)
 sha256sums=($(cat $source_file.sha256))
 
 package() {
-  tar xf data.tar.gz -C "${pkgdir}"
+  tar xf $source_file -C "${pkgdir}"
 }
