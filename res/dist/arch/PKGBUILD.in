@@ -25,5 +25,9 @@ depends=(
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
 
 package() {
+  # By default, `makepkg` will run from the `src` directory, which would
+  # only install the binaries, and not the .desktop file, etc. To install
+  # everything, we need to run `make install` with the root Makefile.
+  cd $startdir
   make install DESTDIR=$pkgdir
 }
