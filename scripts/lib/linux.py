@@ -30,7 +30,7 @@ def package(filename_base, build_tgz=False, build_stgz=False):
         if "debian" in distro_like:
             generator = "DEB"
             extension = "deb"
-        elif "fedora" in distro_like:
+        elif "fedora" in distro_like or "opensuse" in distro_like:
             generator = "RPM"
             extension = "rpm"
         else:
