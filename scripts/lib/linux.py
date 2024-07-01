@@ -1,7 +1,7 @@
 import os, shutil, glob
 import lib.cmd_utils as cmd_utils
 import lib.env as env
-import scripts.lib.checksum as checksum
+import lib.checksum as checksum
 
 dist_dir = "dist"
 build_dir = "build"
