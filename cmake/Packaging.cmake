@@ -81,6 +81,8 @@ endmacro()
 #
 # Linux packages (including BSD and DragonFly)
 #
+# TODO: Are all the deps covered? What about openssl? Also is `libstdc++6` dep
+# really needed?
 macro(configure_linux_packaging)
 
   message(STATUS "Configuring Linux packaging")
