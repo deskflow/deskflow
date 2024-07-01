@@ -60,13 +60,22 @@ def run(
         print_cmd (bool): Print the command before running it (false by default for security)
     """
 
+    is_list_cmd = isinstance(command, list)
+
     # create string version of list command, only for debugging purposes
     command_str = command
-    if isinstance(command, list):
-        if shell:
-            raise ValueError("Cannot use shell for list commands")
-        else:
-            command_str = " ".join(command)
+    if is_list_cmd:
+        command_str = " ".join(command)
+
+    # the `subprocess.run` function has a little gotcha:
+    # - a string command must be used when `shell=True`
+    # - a list command must be used when shell isn't or `shell=False`
+    # however, it allows you to pass a string command when shell isn't used or `shell=False`
+    # then fails with a vague error message. same problem with list commands and `shell=True`
+    if is_list_cmd and shell:
+        raise ValueError("List commands cannot be used when shell is True")
+    elif not shell:
+        raise ValueError("String commands cannot be used when shell is False")
 
     if print_cmd:
         print(f"Running: {command_str}")

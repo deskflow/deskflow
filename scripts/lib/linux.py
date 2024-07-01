@@ -1,7 +1,7 @@
 import os, shutil, glob
 import lib.cmd_utils as cmd_utils
 import lib.env as env
-import lib.checksums as checksums
+import scripts.lib.checksum as checksum
 
 dist_dir = "dist"
 build_dir = "build"
@@ -16,7 +16,7 @@ def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False)
     run_cpack(generator)
     package_filename = get_package_filename(extension)
 
-    checksums.generate_sha256_file(package_filename)
+    checksum.generate_sha256_file(package_filename)
 
     if post_cmd:
         cwd = os.getcwd()
