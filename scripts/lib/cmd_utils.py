@@ -82,7 +82,7 @@ def run(
     # - a list command must be used when shell isn't or `shell=False`
     # however, it allows you to pass a string command when shell isn't used or `shell=False`
     # then fails with a vague error message. same problem with list commands and `shell=True`
-    if not env.is_window() and is_list_cmd and shell:
+    if not env.is_windows() and is_list_cmd and shell:
         raise ValueError("List commands cannot be used when shell=True on Unix systems")
     elif not is_list_cmd and not shell:
         raise ValueError("String commands cannot be used when shell=False or not set")
