@@ -22,7 +22,7 @@ def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False)
         cwd = os.getcwd()
         try:
             os.chdir(build_dir)
-            cmd_utils.run(post_cmd, check=True, print_cmd=True)
+            cmd_utils.run(post_cmd, check=True, print_cmd=True, shell=True)
         finally:
             os.chdir(cwd)
 
@@ -77,7 +77,9 @@ def run_cpack(generator):
     try:
         os.chdir("build")
 
-        cmd_utils.run(["cpack", "-G", generator], check=True, print_cmd=True)
+        cmd_utils.run(
+            ["cpack", "-G", generator], check=True, print_cmd=True, shell=True
+        )
 
     finally:
         os.chdir(original_dir)
