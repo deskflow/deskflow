@@ -64,7 +64,7 @@ def get_package_info(build_distro, build_tgz, build_stgz):
         elif "arch" in distro_like:
             generator = "TGZ"
             extension = "tar.gz"
-            post_cmd = "makepkg -si"
+            post_cmd = ["makepkg", "-si"]
         else:
             raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
 
