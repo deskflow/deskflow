@@ -23,7 +23,10 @@ depends=(
   'qt5-base'
 )
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
-source=('*.tar.gz')
+
+source_file=$(ls *.tar.gz | head -n 1)
+source=($source_file)
+sha256sums=($(cat $source_file.sha256))
 
 package() {
   tar xf data.tar.xz -C "${pkgdir}"

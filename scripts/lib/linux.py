@@ -1,6 +1,7 @@
 import os, shutil, glob
 import lib.cmd_utils as cmd_utils
 import lib.env as env
+import lib.checksums as checksums
 
 dist_dir = "dist"
 build_dir = "build"
@@ -13,6 +14,9 @@ def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False)
     )
 
     run_cpack(generator)
+    package_filename = get_package_filename(extension)
+
+    checksums.generate_sha256_file(package_filename)
 
     if post_cmd:
         cwd = os.getcwd()
@@ -22,7 +26,9 @@ def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False)
         finally:
             os.chdir(cwd)
 
-    copy_to_dist_dir(filename_base, extension)
+    target_file = f"{filename_base}.{extension}"
+    copy_to_dist_dir(package_filename, target_file)
+    copy_to_dist_dir(f"{package_filename}.sha256", f"{target_file}.sha256")
 
 
 def get_package_info(build_distro, build_tgz, build_stgz):
@@ -77,13 +83,18 @@ def run_cpack(generator):
         os.chdir(original_dir)
 
 
-def copy_to_dist_dir(filename_base, extension):
-    os.makedirs(dist_dir, exist_ok=True)
-
+def get_package_filename(extension):
     files = glob.glob(f"build/*.{extension}")
+
     if not files:
         raise ValueError(f"No .{extension} file found in build directory")
 
-    target = f"{dist_dir}/{filename_base}.{extension}"
-    print(f"Copying built .{extension} file to: {target}")
-    shutil.copy(files[0], target)
+    return files[0]
+
+
+def copy_to_dist_dir(source_file, target_file):
+    os.makedirs(dist_dir, exist_ok=True)
+
+    target_path = f"{dist_dir}/{target_file}"
+    print(f"Copying to: {target_path}")
+    shutil.copy(source_file, target_path)
