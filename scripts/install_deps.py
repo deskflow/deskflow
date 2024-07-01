@@ -120,9 +120,9 @@ class Dependencies:
             print("The 'sudo' command was not found, stripping sudo from command")
             command = command.replace("sudo ", "").strip()
 
-        # don't check the return code, as some package managers return non-zero exit codes
-        # under normal circumstances (e.g. dnf returns 100 when there are updates available).
-        cmd_utils.run(command, check=False, shell=True, print_cmd=True)
+        # On Fedora, dnf update returns code 100 when updates are available, but the last command
+        # run should be dnf install, so the return code should always be 0.
+        cmd_utils.run(command, shell=True, print_cmd=True)
 
 
 if __name__ == "__main__":
