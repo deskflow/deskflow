@@ -94,7 +94,7 @@ macro(configure_linux_packaging)
 
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
-  set(CPACK_RPM_PACKAGE_REQUIRES "libstdc++")
+  set(CPACK_RPM_PACKAGE_REQUIRES "libstdc++6")
 
   # The default for CMake seems to be /usr/local, which seems not to be commonly
   # used commonly used. While it works on Debian and Fedora, it doesn't work on
