@@ -36,11 +36,11 @@ def get_filename_base(version, use_linux_distro=True):
         distro_name, _distro_like, distro_version = env.get_linux_distro()
         if not distro_name:
             raise RuntimeError("Failed to detect Linux distro")
-        if not distro_version:
-            raise RuntimeError("Failed to detect Linux distro version")
 
-        version_for_filename = distro_version.replace(".", "_")
-        distro = f"{distro_name}-{version_for_filename}"
+        if distro_version:
+            version_for_filename = distro_version.replace(".", "_")
+            distro = f"{distro_name}-{version_for_filename}"
+
         return f"{package_name}-{distro}-{machine}-{version}"
     else:
         return f"{package_name}-{os}-{machine}-{version}"
