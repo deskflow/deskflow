@@ -1,7 +1,6 @@
 import os, shutil, glob
 import lib.cmd_utils as cmd_utils
 import lib.env as env
-import lib.checksum as checksum
 
 dist_dir = "dist"
 build_dir = "build"
@@ -9,43 +8,26 @@ build_dir = "build"
 
 def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False):
 
-    extension, generator, post_cmd = get_package_info(
-        build_distro, build_tgz, build_stgz
-    )
-
-    run_cpack(generator)
+    extension, cmd = get_package_info(build_distro, build_tgz, build_stgz)
+    run_package_cmd(cmd)
     package_filename = get_package_filename(extension)
-
-    checksum.generate_sha256_file(package_filename)
-
-    if post_cmd:
-        cwd = os.getcwd()
-        try:
-            os.chdir(build_dir)
-            cmd_utils.run(post_cmd, check=True, print_cmd=True)
-        finally:
-            os.chdir(cwd)
-
     target_file = f"{filename_base}.{extension}"
     copy_to_dist_dir(package_filename, target_file)
-    copy_to_dist_dir(f"{package_filename}.sha256", f"{target_file}.sha256")
 
 
 def get_package_info(build_distro, build_tgz, build_stgz):
 
-    extension = None
-    generator = None
-    post_cmd = None
+    command = None
+    cpack_generator = None
+    file_extension = None
 
     if build_tgz:
-        generator = "TGZ"
-        extension = "tar.gz"
-        print("Building package for Linux (tar.gz archive)")
+        cpack_generator = "TGZ"
+        file_extension = "tar.gz"
 
     elif build_stgz:
-        generator = "STGZ"
-        extension = "sh"
-        print("Building package for Linux (self-extracting tar.gz)")
+        cpack_generator = "STGZ"
+        file_extension = "sh"
 
     elif build_distro:
 
@@ -53,36 +35,35 @@ def get_package_info(build_distro, build_tgz, build_stgz):
         if not distro_like:
             distro_like = distro
 
-        distro = "arch"
-
-        print(f"Building package for distro like {distro_like}")
-
         if "debian" in distro_like:
-            generator = "DEB"
-            extension = "deb"
+            cpack_generator = "DEB"
+            file_extension = "deb"
         elif "fedora" in distro_like or "opensuse" in distro_like:
-            generator = "RPM"
-            extension = "rpm"
+            cpack_generator = "RPM"
+            file_extension = "rpm"
         elif "arch" in distro_like:
-            generator = "TGZ"
-            extension = "tar.gz"
-            post_cmd = ["makepkg", "-si"]
+            command = ["makepkg", "-si"]
+            file_extension = "pkg.tar.zst"
         else:
             raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
 
-    return extension, generator, post_cmd
+    if not cpack_generator and not command:
+        raise RuntimeError("No package generator or command found")
+
+    if cpack_generator:
+        command = ["cpack", "-G", cpack_generator]
+
+    return file_extension, command
 
 
-def run_cpack(generator):
+def run_package_cmd(command):
 
-    original_dir = os.getcwd()
+    cwd = os.getcwd()
     try:
         os.chdir("build")
-
-        cmd_utils.run(["cpack", "-G", generator], check=True, print_cmd=True)
-
+        cmd_utils.run(command, check=True, print_cmd=True)
     finally:
-        os.chdir(original_dir)
+        os.chdir(cwd)
 
 
 def get_package_filename(extension):
