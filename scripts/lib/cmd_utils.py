@@ -74,7 +74,7 @@ def run(
     # then fails with a vague error message. same problem with list commands and `shell=True`
     if is_list_cmd and shell:
         raise ValueError("List commands cannot be used when shell=True")
-    elif not shell:
+    elif not is_list_cmd and not shell:
         raise ValueError("String commands cannot be used when shell=False or not set")
 
     if print_cmd:

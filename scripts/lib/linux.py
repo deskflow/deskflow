@@ -53,6 +53,8 @@ def get_package_info(build_distro, build_tgz, build_stgz):
         if not distro_like:
             distro_like = distro
 
+        distro = "arch"
+
         print(f"Building package for distro like {distro_like}")
 
         if "debian" in distro_like:
