@@ -34,7 +34,6 @@ def strip_continuation_sequences(command):
         return command.replace(cmd_continuation, "")
 
 
-# TODO: fix bug: often when using this function, only the first arg element is sent to subprocess.run
 def run(
     command,
     check=True,  # true by default to fail fast
@@ -64,7 +63,10 @@ def run(
     # create string version of list command, only for debugging purposes
     command_str = command
     if isinstance(command, list):
-        command_str = " ".join(command)
+        if shell:
+            raise ValueError("Cannot use shell for list commands")
+        else:
+            command_str = " ".join(command)
 
     if print_cmd:
         print(f"Running: {command_str}")
@@ -88,7 +90,9 @@ def run(
                 text=True,
             )
         else:
-            result = subprocess.run(command, check=check, shell=shell)
+            result = subprocess.run(
+                command, check=check, shell=shell, stdout=sys.stdout, stderr=sys.stderr
+            )
     except subprocess.CalledProcessError as e:
         # Take control of how failed commands are printed:
         # - if `print_cmd` is false, it will print `***` instead of the command
