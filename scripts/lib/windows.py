@@ -126,8 +126,7 @@ def run_codesign(path, cert_base64, cert_password):
                 "/fd",
                 hashing_algorithm,
                 path,
-            ],
-            shell=True,
+            ]
         )
 
 
