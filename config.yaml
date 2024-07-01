@@ -62,6 +62,7 @@ config:
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
         command: sudo zypper refresh; \
+          sudo zypper remove busybox-which; \
           sudo zypper install -y \
           cmake \
           make \
