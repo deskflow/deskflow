@@ -190,13 +190,13 @@ jobs:
             install-deps-apt: true
             legacy-cmake: true
 
-          - name: fedora-41
-            container: fedora:41
+          - name: fedora-40
+            container: fedora:40
             runs-on: ubuntu-latest
             install-deps-dnf: true
 
-          - name: fedora-40
-            container: fedora:40
+          - name: fedora-39
+            container: fedora:39
             runs-on: ubuntu-latest
             install-deps-dnf: true
 
