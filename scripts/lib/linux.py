@@ -18,7 +18,7 @@ def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False)
         cwd = os.getcwd()
         try:
             os.chdir(build_dir)
-            cmd_utils.run(post_cmd)
+            cmd_utils.run(post_cmd, check=True, print_cmd=True)
         finally:
             os.chdir(cwd)
 
@@ -65,6 +65,18 @@ def get_package_info(build_distro, build_tgz, build_stgz):
     return extension, generator, post_cmd
 
 
+def run_cpack(generator):
+
+    original_dir = os.getcwd()
+    try:
+        os.chdir("build")
+
+        cmd_utils.run(["cpack", "-G", generator], check=True, print_cmd=True)
+
+    finally:
+        os.chdir(original_dir)
+
+
 def copy_to_dist_dir(filename_base, extension):
     os.makedirs(dist_dir, exist_ok=True)
 
@@ -75,15 +87,3 @@ def copy_to_dist_dir(filename_base, extension):
     target = f"{dist_dir}/{filename_base}.{extension}"
     print(f"Copying built .{extension} file to: {target}")
     shutil.copy(files[0], target)
-
-
-def run_cpack(generator):
-
-    original_dir = os.getcwd()
-    try:
-        os.chdir("build")
-
-        cmd_utils.run(["cpack", "-G", generator])
-
-    finally:
-        os.chdir(original_dir)
