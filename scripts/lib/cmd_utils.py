@@ -67,6 +67,12 @@ def run(
     if is_list_cmd:
         command_str = " ".join(command)
 
+    if print_cmd:
+        print(f"Running: {command_str}")
+    else:
+        print("Running command...")
+        command_str = "***"
+
     # the `subprocess.run` function has a little gotcha:
     # - a string command must be used when `shell=True`
     # - a list command must be used when shell isn't or `shell=False`
@@ -76,12 +82,6 @@ def run(
         raise ValueError("List commands cannot be used when shell=True")
     elif not is_list_cmd and not shell:
         raise ValueError("String commands cannot be used when shell=False or not set")
-
-    if print_cmd:
-        print(f"Running: {command_str}")
-    else:
-        print("Running command...")
-        command_str = "***"
 
     # Flush the output to ensure the command is printed before the output of the command,
     # which seems to happen in the GitHub runner logs.
