@@ -101,16 +101,8 @@ macro(configure_linux_packaging)
   # for example.
   set(CMAKE_INSTALL_PREFIX /usr)
 
-  set(SHARE_DIR ${CMAKE_BINARY_DIR}/share)
-  file(MAKE_DIRECTORY ${SHARE_DIR})
-  file(COPY res/dist/linux/synergy.desktop
-       DESTINATION ${SHARE_DIR}/applications)
-  file(COPY res/synergy.png DESTINATION ${SHARE_DIR}/pixmaps)
-
-  install(FILES ${CMAKE_BINARY_DIR}/share/applications/synergy.desktop
-          DESTINATION share/applications)
-  install(FILES ${CMAKE_BINARY_DIR}/share/pixmaps/synergy.png
-          DESTINATION share/pixmaps)
+  install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
+  install(FILES res/synergy.png DESTINATION share/pixmaps)
 
   configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
 
