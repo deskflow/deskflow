@@ -25,5 +25,5 @@ depends=(
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
 
 package() {
-  make install
+  make install DESTDIR=$pkgdir
 }
