@@ -42,7 +42,7 @@ def get_package_info(build_distro, build_tgz, build_stgz):
             cpack_generator = "RPM"
             file_extension = "rpm"
         elif "arch" in distro_like:
-            command = ["makepkg", "-si"]
+            command = ["makepkg", "-s"]
             file_extension = "pkg.tar.zst"
         else:
             raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
@@ -57,6 +57,9 @@ def get_package_info(build_distro, build_tgz, build_stgz):
 
 
 def run_package_cmd(command):
+    package_user = env.get_env("LINUX_PACKAGE_USER", required=False)
+    if package_user:
+        command = ["sudo", "-u", package_user] + command
 
     cwd = os.getcwd()
     try:

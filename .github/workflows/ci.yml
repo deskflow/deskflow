@@ -209,11 +209,13 @@ jobs:
             container: archlinux:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
+            package-user: build
 
           - name: manjaro
             container: manjarolinux/base:latest
             runs-on: ubuntu-latest
             install-deps-pacman: true
+            package-user: build
 
     steps:
       - name: Bootstrap
@@ -224,6 +226,7 @@ jobs:
             dnf install -y git python3
           elif [ "${{ matrix.distro.install-deps-pacman }}" = "true" ]; then
             pacman -Syu --noconfirm git python
+            sudo useradd -m build
           elif [ "${{ matrix.distro.install-deps-zypper }}" = "true" ]; then
             zypper install -y git python3
           fi
@@ -258,6 +261,7 @@ jobs:
         if: ${{ !matrix.distro.skip-package && env.ENABLE_PACKAGING == 'true' }}
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
+          LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
         run: ./scripts/package.py
 
       - name: Upload
