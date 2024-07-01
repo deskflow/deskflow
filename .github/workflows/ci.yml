@@ -62,7 +62,7 @@ jobs:
         run: cmake -B build --preset=windows-release
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build -j8
 
       - name: Test
         run: ./build/bin/unittests
@@ -127,7 +127,7 @@ jobs:
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build -j8
 
       - name: Test
         run: ./build/bin/unittests
@@ -249,7 +249,7 @@ jobs:
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build -j8
 
       - name: Test
         run: ./build/bin/unittests
