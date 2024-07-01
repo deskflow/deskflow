@@ -82,10 +82,7 @@ endmacro()
 # Linux packages (including BSD and DragonFly)
 #
 macro(configure_linux_packaging)
-  # configure_files(${CMAKE_CURRENT_SOURCE_DIR}/res/dist/rpm
-  # ${CMAKE_BINARY_DIR}/rpm) install(FILES res/synergy.svg DESTINATION
-  # share/icons/hicolor/scalable/apps) install(FILES res/synergy.desktop
-  # DESTINATION share/applications)
+
   message(STATUS "Configuring Linux packaging")
 
   set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION_LINUX})
@@ -98,12 +95,17 @@ macro(configure_linux_packaging)
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
   set(CPACK_RPM_PACKAGE_REQUIRES "libstdc++")
+
+  install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
+  install(FILES res/synergy.png DESTINATION share/pixmaps)
+
 endmacro()
 
 #
 # Same as the `configure_file` command but for directories recursively.
 #
 macro(configure_files srcDir destDir)
+
   message(STATUS "Configuring directory ${destDir}")
   make_directory(${destDir})
 
@@ -127,17 +129,26 @@ macro(configure_files srcDir destDir)
       message(STATUS "Copying file ${sourceFile}")
       configure_file(${sourceFilePath} ${destDir}/${sourceFile} COPYONLY)
     endif()
+
   endforeach(sourceFile)
 
   foreach(templateFile ${templateFiles})
+
     set(sourceTemplateFilePath ${srcDir}/${templateFile})
     string(REGEX REPLACE "\.in$" "" templateFile ${templateFile})
     message(STATUS "Configuring file ${templateFile}")
     configure_file(${sourceTemplateFilePath} ${destDir}/${templateFile} @ONLY)
+
   endforeach(templateFile)
+
 endmacro(configure_files)
 
+#
+# Find the OpenSSL directory on Windows based on the location of the first
+# `openssl` binary found.
+#
 function(find_openssl_dir_win32 result)
+
   execute_process(
     COMMAND where openssl
     OUTPUT_VARIABLE OPENSSL_PATH
@@ -162,4 +173,5 @@ function(find_openssl_dir_win32 result)
   set(${result}
       ${OPENSSL_DIR}
       PARENT_SCOPE)
+
 endfunction()
