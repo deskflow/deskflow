@@ -23,7 +23,7 @@ depends=(
   'qt5-base'
 )
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
-source=('@PROJECT_SOURCE_DIR@/dist/*.tar.gz')
+source=('*.tar.gz')
 
 package() {
   tar xf data.tar.xz -C "${pkgdir}"
