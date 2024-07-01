@@ -61,11 +61,11 @@ def mac_package(filename_base):
 def linux_package(filename_base, version):
     import lib.linux as linux
 
-    build_extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
+    extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
 
     linux.package(filename_base)
 
-    if build_extra_packages:
+    if extra_packages:
         filename_base = get_filename_base(version, use_linux_distro=False)
         linux.package(filename_base, build_tgz=True)
         linux.package(filename_base, build_stgz=True)

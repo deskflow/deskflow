@@ -3,12 +3,33 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 
 dist_dir = "dist"
+build_dir = "build"
 
 
-def package(filename_base, build_tgz=False, build_stgz=False):
+def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False):
+
+    extension, generator, post_cmd = get_package_info(
+        build_distro, build_tgz, build_stgz
+    )
+
+    run_cpack(generator)
+
+    if post_cmd:
+        cwd = os.getcwd()
+        try:
+            os.chdir(build_dir)
+            cmd_utils.run(post_cmd)
+        finally:
+            os.chdir(cwd)
+
+    copy_to_dist_dir(filename_base, extension)
+
+
+def get_package_info(build_distro, build_tgz, build_stgz):
 
     extension = None
     generator = None
+    post_cmd = None
 
     if build_tgz:
         generator = "TGZ"
@@ -19,7 +40,8 @@ def package(filename_base, build_tgz=False, build_stgz=False):
         generator = "STGZ"
         extension = "sh"
         print("Building package for Linux (self-extracting tar.gz)")
-    else:
+
+    elif build_distro:
 
         distro, distro_like, _distro_version = env.get_linux_distro()
         if not distro_like:
@@ -33,19 +55,17 @@ def package(filename_base, build_tgz=False, build_stgz=False):
         elif "fedora" in distro_like or "opensuse" in distro_like:
             generator = "RPM"
             extension = "rpm"
+        elif "arch" in distro_like:
+            generator = "TGZ"
+            extension = "tar.gz"
+            post_cmd = "makepkg -si"
         else:
-            # Arch and OpenSUSE, patches welcome! :)
             raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
 
-    original_dir = os.getcwd()
-    try:
-        os.chdir("build")
+    return extension, generator, post_cmd
 
-        cmd_utils.run(["cpack", "-G", generator])
 
-    finally:
-        os.chdir(original_dir)
-
+def copy_to_dist_dir(filename_base, extension):
     os.makedirs(dist_dir, exist_ok=True)
 
     files = glob.glob(f"build/*.{extension}")
@@ -55,3 +75,15 @@ def package(filename_base, build_tgz=False, build_stgz=False):
     target = f"{dist_dir}/{filename_base}.{extension}"
     print(f"Copying built .{extension} file to: {target}")
     shutil.copy(files[0], target)
+
+
+def run_cpack(generator):
+
+    original_dir = os.getcwd()
+    try:
+        os.chdir("build")
+
+        cmd_utils.run(["cpack", "-G", generator])
+
+    finally:
+        os.chdir(original_dir)

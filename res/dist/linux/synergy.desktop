@@ -2,7 +2,7 @@
 Type=Application
 Version=1.0
 Name=Synergy
-Comment=Keyboard and mouse sharing solution
+Comment=Mouse and keyboard sharing utility
 Path=/usr/bin
 Exec=/usr/bin/synergy
 Icon=synergy

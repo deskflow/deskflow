@@ -99,6 +99,8 @@ macro(configure_linux_packaging)
   install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
   install(FILES res/synergy.png DESTINATION share/pixmaps)
 
+  configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR} @ONLY)
+
 endmacro()
 
 #

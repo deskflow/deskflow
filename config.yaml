@@ -29,7 +29,6 @@ config:
           libx11-dev \
           libxtst-dev \
           libssl-dev \
-          pkg-config \
           libglib2.0-dev \
           libgdk-pixbuf-2.0-dev \
           libnotify-dev \
@@ -49,9 +48,9 @@ config:
           make \
           gcc-c++ \
           openssl-devel \
-          libXtst-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
+          libXtst-devel \
           libnotify-devel \
           libxkbfile-devel \
           qt5-qtbase-devel \
@@ -68,9 +67,9 @@ config:
           make \
           gcc-c++ \
           openssl-devel \
-          libXtst-devel \
           glib2-devel \
           gdk-pixbuf-devel \
+          libXtst-devel \
           libnotify-devel \
           libxkbfile-devel \
           libqt5-qtbase-devel \
@@ -81,19 +80,18 @@ config:
     arch: &arch
       dependencies:
         command: sudo pacman -Syu --noconfirm \
+          base-devel \
           cmake \
-          make \
           gcc \
           openssl \
-          libxtst \
           glib2 \
           gdk-pixbuf2 \
+          libxtst \
           libnotify \
           libxkbfile \
           qt5-base \
           qt5-tools \
-          gtk3 \
-          pkgconf
+          gtk3
 
     manjaro:
       <<: *arch
