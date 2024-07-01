@@ -53,9 +53,27 @@ config:
           glib2-devel \
           gdk-pixbuf2-devel \
           libnotify-devel \
+          libxkbfile-devel \
           qt5-qtbase-devel \
           qt5-qttools-devel \
+          gtk3-devel \
+          rpm-build
+
+    opensuse-tumbleweed: &opensuse-tumbleweed
+      dependencies:
+        command: sudo zypper refresh; \
+          sudo zypper install -y \
+          cmake \
+          make \
+          gcc-c++ \
+          openssl-devel \
+          libXtst-devel \
+          glib2-devel \
+          gdk-pixbuf-devel \
+          libnotify-devel \
           libxkbfile-devel \
+          libqt5-qtbase-devel \
+          libqt5-qttools-devel \
           gtk3-devel \
           rpm-build
 
@@ -78,21 +96,3 @@ config:
 
     manjaro:
       <<: *arch
-
-    opensuse-tumbleweed: &opensuse-tumbleweed
-      dependencies:
-        command: sudo zypper refresh; \
-          sudo zypper install -y \
-          cmake \
-          make \
-          gcc-c++ \
-          libXtst-devel \
-          glib2-devel \
-          gdk-pixbuf-devel \
-          libnotify-devel \
-          libxkbfile-devel \
-          libqt5-qtbase-devel \
-          libqt5-qttools-devel \
-          gtk3-devel \
-          openssl-devel \
-          rpm-build
