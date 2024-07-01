@@ -26,7 +26,7 @@ macro(set_version)
     string(STRIP "${SYNERGY_VERSION}" SYNERGY_VERSION)
   endif()
 
-  message(STATUS "Version number: " ${SYNERGY_VERSION})
+  message(STATUS "Version number (semver): " ${SYNERGY_VERSION})
   add_definitions(-DSYNERGY_VERSION="${SYNERGY_VERSION}")
 
   # Useful for copyright (e.g. in macOS bundle .plist.in and Windows version .rc
@@ -41,8 +41,8 @@ macro(set_version)
 
 endmacro()
 
-# MSI requires a 4-digit number and doesn't accept semver.
-macro(set_windows_version)
+macro(set_four_part_version)
+
   string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _ "${SYNERGY_VERSION}")
   set(VERSION_MAJOR "${CMAKE_MATCH_1}")
   set(VERSION_MINOR "${CMAKE_MATCH_2}")
@@ -55,23 +55,40 @@ macro(set_windows_version)
     set(VERSION_REVISION "0")
   endif()
 
-  # Dot-separated version number for MSI and Windows version .rc file.
-  set(SYNERGY_VERSION_MS
+  set(SYNERGY_VERSION_FOUR_PART
       "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_REVISION}")
-  message(STATUS "Version number for Microsoft (dots): " ${SYNERGY_VERSION_MS})
+
+endmacro()
+
+# MSI requires a 4-digit number and doesn't accept semver.
+macro(set_windows_version)
+
+  set_four_part_version()
+
+  # Dot-separated version number for MSI and Windows version .rc file.
+  set(SYNERGY_VERSION_MS ${SYNERGY_VERSION_FOUR_PART})
+  message(STATUS "Version number for (Microsoft 4-part): "
+                 ${SYNERGY_VERSION_MS})
 
   # CSV version number for Windows version .rc file.
   set(SYNERGY_VERSION_MS_CSV
       "${VERSION_MAJOR},${VERSION_MINOR},${VERSION_PATCH},${VERSION_REVISION}")
-  message(STATUS "Version number for Microsoft (CSV): "
+  message(STATUS "Version number for (Microsoft CSV): "
                  ${SYNERGY_VERSION_MS_CSV})
 endmacro()
 
 macro(set_linux_version)
+
   # Replace the first occurrence of '-' with '~' for Linux versioning; the '-'
   # char is reserved for use at at the end of the version string to indicate a
   # package revision. Debian has always used this convention, but support for
   # this was also introduced in RPM 4.10.0.
-  string(REGEX REPLACE "-" "~" SYNERGY_VERSION_LINUX "${SYNERGY_VERSION}" 1)
-  message(STATUS "Version number for DEB/RPM: ${SYNERGY_VERSION_LINUX}")
+  string(REGEX REPLACE "-" "~" SYNERGY_VERSION_LINUX "${SYNERGY_VERSION}")
+  message(STATUS "Version number (DEB/RPM): ${SYNERGY_VERSION_LINUX}")
+
+  # Arch does not support SemVer or DEB/RPM version format, so use the four-part
+  # version format which funnily enough is what Microsoft requires for MSI.
+  set_four_part_version()
+  message(STATUS "Version number (4-part): ${SYNERGY_VERSION_FOUR_PART}")
+
 endmacro()

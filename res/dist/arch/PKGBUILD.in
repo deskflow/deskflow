@@ -1,7 +1,7 @@
 # Maintainer: Synergy team <developers@symless.com>
 
 pkgname=synergy
-pkgver=@SYNERGY_VERSION@
+pkgver=@SYNERGY_VERSION_FOUR_PART@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
 url='https://symless.com/synergy/'
