@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import lib.env as env
 
 
 def has_command(command):
@@ -73,13 +74,16 @@ def run(
         print("Running command...")
         command_str = "***"
 
-    # the `subprocess.run` function has a little gotcha:
+    # TODO: You can definitely use a list command with shell=True on Windows,
+    # but can you use a string command with shell=False on Windows?
+    #
+    # The `subprocess.run` function has a little gotcha:
     # - a string command must be used when `shell=True`
     # - a list command must be used when shell isn't or `shell=False`
     # however, it allows you to pass a string command when shell isn't used or `shell=False`
     # then fails with a vague error message. same problem with list commands and `shell=True`
-    if is_list_cmd and shell:
-        raise ValueError("List commands cannot be used when shell=True")
+    if not env.is_window() and is_list_cmd and shell:
+        raise ValueError("List commands cannot be used when shell=True on Unix systems")
     elif not is_list_cmd and not shell:
         raise ValueError("String commands cannot be used when shell=False or not set")
 
