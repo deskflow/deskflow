@@ -191,7 +191,7 @@ jobs:
             legacy-cmake: true
 
           - name: fedora-41
-            container: fedora:39
+            container: fedora:41
             runs-on: ubuntu-latest
             install-deps-dnf: true
 
