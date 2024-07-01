@@ -225,7 +225,7 @@ jobs:
           elif [ "${{ matrix.distro.install-deps-dnf }}" = "true" ]; then
             dnf install -y git python3
           elif [ "${{ matrix.distro.install-deps-pacman }}" = "true" ]; then
-            pacman -Syu --noconfirm git python
+            pacman -Syu --noconfirm git python sudo
             useradd -m build
           elif [ "${{ matrix.distro.install-deps-zypper }}" = "true" ]; then
             zypper install -y git python3
