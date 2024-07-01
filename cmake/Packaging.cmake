@@ -81,8 +81,6 @@ endmacro()
 #
 # Linux packages (including BSD and DragonFly)
 #
-# TODO: Are all the deps covered? What about openssl? Also is `libstdc++6` dep
-# really needed?
 macro(configure_linux_packaging)
 
   message(STATUS "Configuring Linux packaging")
@@ -92,11 +90,9 @@ macro(configure_linux_packaging)
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Synergy <developers@symless.com>")
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libstdc++6")
 
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
-  set(CPACK_RPM_PACKAGE_REQUIRES "libstdc++6")
 
   # The default for CMake seems to be /usr/local, which seems not to be commonly
   # used commonly used. While it works on Debian and Fedora, it doesn't work on
