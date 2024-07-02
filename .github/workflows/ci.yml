@@ -14,10 +14,12 @@ on:
       - ready_for_review
   release:
     types: [published]
+  schedule:
+    - cron: "0 5 * * *"
 
 env:
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
-  ENABLE_PACKAGING: ${{ !github.event.pull_request.draft }}
+  ENABLE_PACKAGING: ${{ !github.event.pull_request.draft && github.event_name != 'schedule' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
   UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
