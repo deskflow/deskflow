@@ -19,12 +19,10 @@
 #include "platform/MSWindowsWatchdog.h"
 
 #include "arch/Arch.h"
-#include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "common/Version.h"
 #include "ipc/Ipc.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
@@ -36,6 +34,9 @@
 #include <Shellapi.h>
 #include <UserEnv.h>
 #include <sstream>
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 #define CURRENT_PROCESS_ID 0
 #define MAXIMUM_WAIT_TIME 3

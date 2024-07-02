@@ -20,8 +20,9 @@
 #include "base/String.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <Tlhelp32.h>
 #include <Windows.h>
+
+#include <Tlhelp32.h>
 
 class MSWindowsSession {
 public:

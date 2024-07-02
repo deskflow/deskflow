@@ -17,9 +17,11 @@
  */
 
 #include "common/stdpre.h"
+
 #if HAVE_OSTREAM
 #include <ostream>
 #else
 #include <iostream>
 #endif
+
 #include "common/stdpost.h"

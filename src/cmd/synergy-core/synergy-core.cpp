@@ -22,6 +22,10 @@
 #include "synergy/ServerApp.h"
 #include <iostream>
 
+#if SYSAPI_WIN32
+#include "arch/win32/ArchMiscWindows.h"
+#endif
+
 void showHelp() {
   std::cout << "Usage: synergy-core <server | client> [...options]"
             << std::endl;

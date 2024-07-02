@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "common/stdpost.h"
 #include "common/stdpre.h"
+
 #include <set>
+
+#include "common/stdpost.h"

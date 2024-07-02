@@ -18,6 +18,10 @@
 #include "arch/Arch.h"
 #include "synergy/ToolApp.h"
 
+#if SYSAPI_WIN32
+#include "arch/win32/ArchMiscWindows.h"
+#endif
+
 int main(int argc, char **argv) {
 #if SYSAPI_WIN32
   // record window instance for tray icon, etc

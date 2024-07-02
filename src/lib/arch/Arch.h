@@ -38,11 +38,11 @@
 #include "common/common.h"
 
 #if SYSAPI_WIN32
+
 #include "arch/win32/ArchConsoleWindows.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/ArchFileWindows.h"
 #include "arch/win32/ArchLogWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "arch/win32/ArchSleepWindows.h"
@@ -50,20 +50,24 @@
 #include "arch/win32/ArchSystemWindows.h"
 #include "arch/win32/ArchTaskBarWindows.h"
 #include "arch/win32/ArchTimeWindows.h"
+
 #elif SYSAPI_UNIX
+
 #include "arch/unix/ArchConsoleUnix.h"
 #include "arch/unix/ArchDaemonUnix.h"
 #include "arch/unix/ArchFileUnix.h"
 #include "arch/unix/ArchLogUnix.h"
-#if HAVE_PTHREAD
-#include "arch/unix/ArchMultithreadPosix.h"
-#endif
 #include "arch/unix/ArchNetworkBSD.h"
 #include "arch/unix/ArchSleepUnix.h"
 #include "arch/unix/ArchStringUnix.h"
 #include "arch/unix/ArchSystemUnix.h"
 #include "arch/unix/ArchTaskBarXWindows.h"
 #include "arch/unix/ArchTimeUnix.h"
+
+#if HAVE_PTHREAD
+#include "arch/unix/ArchMultithreadPosix.h"
+#endif
+
 #endif
 
 /*!

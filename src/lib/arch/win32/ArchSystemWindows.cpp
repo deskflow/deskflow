@@ -18,7 +18,8 @@
 
 #include "arch/win32/ArchSystemWindows.h"
 #include "arch/win32/ArchMiscWindows.h"
-#include "arch/win32/XArchWindows.h"
+
+#include "arch/XArch.h"
 
 #include "tchar.h"
 #include <string>

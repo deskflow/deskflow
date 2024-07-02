@@ -17,11 +17,13 @@
  */
 
 #include "common/stdpre.h"
+
 #if HAVE_ISTREAM
 #include <istream>
 #else
 #include <iostream>
 #endif
+
 #include "common/stdpost.h"
 
 #if defined(_MSC_VER) && _MSC_VER <= 1200

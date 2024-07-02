@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "common/stdistream.h"
-#include "common/stdpost.h"
 #include "common/stdpre.h"
+
+#include "common/stdistream.h"
 #include <fstream>
+
+#include "common/stdpost.h"

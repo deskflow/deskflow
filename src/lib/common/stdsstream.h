@@ -285,4 +285,5 @@ private:
 #endif /* not g++ 2.95 and no <sstream> */
 
 #include "common/stdistream.h"
+
 #include "common/stdpost.h"

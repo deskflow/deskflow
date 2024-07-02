@@ -21,6 +21,10 @@
 #include "base/Log.h"
 #include "synergy/ServerApp.h"
 
+#if SYSAPI_WIN32
+#include "arch/win32/ArchMiscWindows.h"
+#endif
+
 #if WINAPI_MSWINDOWS
 #include "MSWindowsServerTaskBarReceiver.h"
 #elif WINAPI_XWINDOWS

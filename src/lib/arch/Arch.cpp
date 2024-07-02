@@ -18,6 +18,10 @@
 
 #include "arch/Arch.h"
 
+#if SYSAPI_WIN32
+#include "arch/win32/ArchMiscWindows.h"
+#endif
+
 //
 // Arch
 //

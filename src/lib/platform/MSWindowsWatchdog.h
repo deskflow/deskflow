@@ -22,11 +22,11 @@
 #include "platform/MSWindowsSession.h"
 #include "synergy/XSynergy.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <list>
 #include <map>
 #include <string>
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 class Thread;
 class IpcLogOutputter;
