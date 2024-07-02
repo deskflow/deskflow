@@ -31,7 +31,7 @@ def main():
     env.ensure_in_venv(__file__)
     from cmakelang.format.__main__ import main as cmake_format_main
 
-    new_args = ["--in-place"] if args.format else ["--check"]
+    cmd_args = ["--in-place"] if args.format else ["--check"]
     files_recursive = fs.find_files(".", include_files, exclude_dirs)
 
     if args.format:
@@ -43,7 +43,7 @@ def main():
         print(file)
 
     if files_recursive:
-        sys.argv = [""] + new_args + files_recursive
+        sys.argv = [""] + cmd_args + files_recursive
 
         result = cmake_format_main()
         if result == 0:
