@@ -17,7 +17,7 @@ jobs:
         run: |
           python3 -m venv build/python
           source build/python/bin/activate
-          pip install cmake_format pyyaml
+          pip install pyyaml cmake_format clang_format
 
       - name: Linting with CMake formatter
         run: ./scripts/lint_cmake.py
