@@ -220,12 +220,12 @@ jobs:
           - name: debian-12-arm64v8
             runs-on: ubuntu-latest
             qemu-image: arm64v8/debian:stable
-            qemu-platform: aarch64
+            qemu-platform: linux/arm64/v8
 
           - name: debian-12-arm32v7
             runs-on: ubuntu-latest
             qemu-image: arm32v7/debian:stable
-            qemu-platform: arm
+            qemu-platform: linux/arm/v7
 
     steps:
       - name: Bootstrap
