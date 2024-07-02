@@ -127,9 +127,9 @@ TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors) {
   // can't assert anything
 }
 
-// looks like this test may fail intermittently:
-// * http://buildbot.symless.com:8000/builders/trunk-win32/builds/246/steps/shell_3/logs/stdio
-/*TEST_F(MSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
+// TODO: fix intermittently failing tests
+#if 0
+TEST_F(MSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
 {
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(1);
@@ -139,11 +139,9 @@ TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors) {
     // this behavior is different to that of Clipboard which only
     // returns the value passed into open(t) after empty() is called.
     EXPECT_EQ(1, actual);
-}*/
+}
 
-// this also fails intermittently:
-// http://buildbot.symless.com:8000/builders/trunk-win32/builds/266/steps/shell_3/logs/stdio
-/*TEST_F(MSWindowsClipboardTests, getTime_openAndEmpty_returnsOne)
+TEST_F(MSWindowsClipboardTests, getTime_openAndEmpty_returnsOne)
 {
     MSWindowsClipboard clipboard(NULL);
     clipboard.open(1);
@@ -152,7 +150,8 @@ TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors) {
     MSWindowsClipboard::Time actual = clipboard.getTime();
 
     EXPECT_EQ(1, actual);
-}*/
+}
+#endif
 
 TEST_F(MSWindowsClipboardTests, has_withFormatAdded_returnsTrue) {
   MSWindowsClipboard clipboard(NULL);

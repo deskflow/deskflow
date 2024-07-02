@@ -18,10 +18,11 @@
 
 #define TEST_ENV
 
-#include "base/Log.h"
-#include "platform/XWindowsKeyState.h"
 #include "test/mock/synergy/MockEventQueue.h"
 #include "test/mock/synergy/MockKeyMap.h"
+
+#include "base/Log.h"
+#include "platform/XWindowsKeyState.h"
 
 #define XK_LATIN1
 #define XK_MISCELLANY

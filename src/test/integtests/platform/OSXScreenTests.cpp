@@ -21,8 +21,10 @@
 
 #include "test/global/gtest.h"
 
-// disabling these tests - the return value of CGCursorIsVisible is unreliable.
-/*
+// TODO: fix intermittently failing test
+// return value of CGCursorIsVisible is unreliable
+#if 0
+
 TEST(OSXScreenTests, hideCursor_notPrimary)
 {
     EventQueue queue;
@@ -48,4 +50,5 @@ TEST(OSXScreenTests, showCursor_notPrimary)
     // workaround for screen class race condition.
     ARCH->sleep(.1f);
 }
-*/
+
+#endif
