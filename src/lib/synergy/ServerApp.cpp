@@ -117,8 +117,8 @@ void ServerApp::help() {
       "\n"
       "  -a, --address <address>  listen for clients on the given address.\n"
       "  -c, --config <pathname>  use the named configuration file "
-      "instead.\n" HELP_COMMON_INFO_1 WINAPI_INFO HELP_SYS_INFO
-          HELP_COMMON_INFO_2 "\n"
+      "instead.\n" HELP_COMMON_INFO_1 WINAPI_INFO
+          HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
       "* marks defaults.\n"
       "\n"
       "The argument for --address is of the form: [<hostname>][:<port>].  The\n"

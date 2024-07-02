@@ -223,20 +223,16 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
   ArgParser parser(nullptr);
   lib::synergy::ServerArgs args;
   args.m_daemon = false;
-  char const *argv[] = {
-    "synergy",
-    "--help"
+  char const *argv[] = {"synergy", "--help"
 #if WINAPI_MSWINDOWS
-    ,
-    "--exit-pause"
+                        ,
+                        "--exit-pause"
 #elif WINAPI_XWINDOWS
-    ,
-    "--no-xinitthreads"
+                        ,
+                        "--no-xinitthreads"
 #endif
-    ,
-    "--res-w",
-    "888"
-  };
+                        ,
+                        "--res-w", "888"};
   EXPECT_TRUE(
       parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExit, true);
@@ -246,21 +242,19 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help) {
   ArgParser parser(nullptr);
   lib::synergy::ClientArgs args;
   args.m_daemon = false;
-  char const *argv[] = {
-    "synergy",
-    "--help"
+  char const *argv[] = {"synergy",
+                        "--help"
 #if WINAPI_MSWINDOWS
-    ,
-    "--exit-pause"
+                        ,
+                        "--exit-pause"
 #elif WINAPI_XWINDOWS
-    ,
-    "--no-xinitthreads"
+                        ,
+                        "--no-xinitthreads"
 #endif
-    ,
-    "--res-w",
-    "888",
-    "127.0.0.1"
-  };
+                        ,
+                        "--res-w",
+                        "888",
+                        "127.0.0.1"};
   EXPECT_TRUE(
       parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExit, true);

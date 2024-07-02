@@ -1931,7 +1931,9 @@ void XWindowsScreen::refreshKeyboard(XEvent *event) {
     XkbRefreshKeyboardMapping((XkbMapNotifyEvent *)event);
   } else
 #else
-  { XRefreshKeyboardMapping(&event->xmapping); }
+  {
+    XRefreshKeyboardMapping(&event->xmapping);
+  }
 #endif
     m_keyState->updateKeyMap();
   m_keyState->updateKeyState();

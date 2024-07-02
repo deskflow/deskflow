@@ -152,14 +152,16 @@ TEST_F(ProtocolUtilTests, readf_bad_alloc_exception) {
 }
 
 TEST_F(ProtocolUtilTests, readf_asserts) {
-  ASSERT_DEBUG_DEATH({ ProtocolUtil::readf(&stream, "%x", &ActualString); },
-                     "invalid format specifier");
+  ASSERT_DEBUG_DEATH(
+      { ProtocolUtil::readf(&stream, "%x", &ActualString); },
+      "invalid format specifier");
 
-  ASSERT_DEBUG_DEATH({ ProtocolUtil::readf(&stream, "%5i", &ActualString); },
-                     "length to be read is wrong:");
+  ASSERT_DEBUG_DEATH(
+      { ProtocolUtil::readf(&stream, "%5i", &ActualString); },
+      "length to be read is wrong:");
 
-  ASSERT_DEBUG_DEATH({ ProtocolUtil::readf(&stream, "%5I", &ActualString); },
-                     "");
+  ASSERT_DEBUG_DEATH(
+      { ProtocolUtil::readf(&stream, "%5I", &ActualString); }, "");
 }
 
 TEST_F(ProtocolUtilTests, readf_params_validation) {

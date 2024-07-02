@@ -61,11 +61,10 @@ static int(PASCAL FAR *setsockopt_winsock)(SOCKET s, int level, int optname,
                                            const void FAR *optval, int optlen);
 static int(PASCAL FAR *shutdown_winsock)(SOCKET s, int how);
 static SOCKET(PASCAL FAR *socket_winsock)(int af, int type, int protocol);
-static struct hostent
-    FAR *(PASCAL FAR *gethostbyaddr_winsock)(const char FAR *addr, int len,
-                                             int type);
-static struct hostent
-    FAR *(PASCAL FAR *gethostbyname_winsock)(const char FAR *name);
+static struct hostent FAR *(PASCAL FAR *gethostbyaddr_winsock)(
+    const char FAR *addr, int len, int type);
+static struct hostent FAR *(PASCAL FAR *gethostbyname_winsock)(
+    const char FAR *name);
 static int(PASCAL FAR *WSACleanup_winsock)(void);
 static int(PASCAL FAR *WSAFDIsSet_winsock)(SOCKET, fd_set FAR *fdset);
 static WSAEVENT(PASCAL FAR *WSACreateEvent_winsock)(void);
