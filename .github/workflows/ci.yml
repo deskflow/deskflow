@@ -1,3 +1,7 @@
+# All-in-one continuous integration (CI) workflow.
+# Runs on all platforms (Windows, macOS, and Linux)
+# for all events (pull request, release, and schedule).
+
 name: CI
 
 on:
