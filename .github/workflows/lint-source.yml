@@ -1,13 +1,13 @@
 # Runs
 
-name: "Lint CMake files"
+name: "Lint source code"
 on:
   pull_request:
 
 jobs:
   lint-cmake-files:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
       - name: Checkout
@@ -19,5 +19,8 @@ jobs:
           source build/python/bin/activate
           pip install cmake_format pyyaml
 
-      - name: Lint CMake files
-        run: ./scripts/lint_cmake_files.py
+      - name: Lint CMake config
+        run: ./scripts/lint_cmake.py
+
+      - name: Lint with CLang
+        run: ./scripts/lint_clang.py
