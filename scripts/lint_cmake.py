@@ -32,11 +32,12 @@ def main():
 
     if files_recursive:
         sys.argv = [""] + new_args + files_recursive
+
         result = cmake_format_main()
-        if result:
+        if result == 0:
             print("CMake lint passed")
-        else:
-            sys.exit(1)
+
+        sys.exit(result)
     else:
         print("No CMake files found to process.", file=sys.stderr)
         sys.exit(0)
