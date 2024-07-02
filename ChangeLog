@@ -37,6 +37,7 @@ Enhancements:
 - #7353 Re-implement packaging for GitHub workflows (macOS)
 - #7360 Re-implement packaging for GitHub workflows (Windows)
 - #7361 Re-implement packaging for GitHub workflows (Linux)
+- #7363 Schedule CI daily at 5am to detect code rot early
 - #7364 Format all source with CLang and introduce lint workflow
 
 # 1.14.6
