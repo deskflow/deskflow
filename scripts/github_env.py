@@ -3,7 +3,6 @@
 import argparse
 import lib.env as env
 import lib.github as github
-from lib.config import Config
 
 qt_version_key = "QT_VERSION"
 
@@ -19,6 +18,8 @@ def main():
 
     # important: load venv before loading modules that install deps.
     env.ensure_in_venv(__file__)
+
+    from lib.config import Config
 
     if args.set_qt_version:
         config = Config()

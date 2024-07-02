@@ -26,6 +26,12 @@ runs:
   using: "composite"
 
   steps:
+    - if: ${{ inputs.use_gdrive == inputs.use_github }}
+      run: |
+        echo "Either 'use_github' or 'use_gdrive' must be true (and not both)"
+        exit 1
+      shell: bash
+
     - if: ${{ inputs.use_gdrive == 'true' && !inputs.package-version }}
       run: |
         echo "Input 'package-version' is required when uploading to Google Drive"

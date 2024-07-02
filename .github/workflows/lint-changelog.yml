@@ -5,37 +5,28 @@
 # file with configuration.  For more information, see:
 # https://github.com/actions/labeler/blob/master/README.md
 
-name: "Check ChangeLog"
+name: "Lint ChangeLog"
 on:
   pull_request:
-    branches: [master]
 
 jobs:
-  check-changelog:
+  lint-changelog:
     if: ${{ !github.event.pull_request.draft }}
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: Get changed files
+      - name: Get changes
         id: file_changes
         uses: trilom/file-changes-action@v1.2.4
         with:
           output: ","
 
-      - name: echo changes
-        run: |
-          echo Files
-          echo '${{ steps.file_changes.outputs.files}}'
-          echo Modified
-          echo '${{ steps.file_changes.outputs.files_modified}}'
-          echo Added
-          echo '${{ steps.file_changes.outputs.files_added}}'
-          echo Removed
-          echo '${{ steps.file_changes.outputs.files_removed}}'
+      - name: Show modified
+        run: echo '${{ steps.file_changes.outputs.files_modified}}'
 
-      - name: List files
+      - name: Check
         run: |
           if [[ "${{ steps.file_changes.outputs.files_modified}}" == *"ChangeLog"* ]]; then
             echo "ChangeLog has been updated"

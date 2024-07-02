@@ -17,11 +17,11 @@ config:
     dependencies:
       command: brew bundle --file=Brewfile
 
-  # arch, opensuse, etc, patches welcome! :)
   linux:
     debian: &debian
       dependencies:
-        command: sudo apt-get update; sudo apt-get install -y \
+        command: sudo apt-get update; \
+          sudo apt-get install -y \
           cmake \
           make \
           g++ \
@@ -29,35 +29,69 @@ config:
           libx11-dev \
           libxtst-dev \
           libssl-dev \
-          pkg-config \
           libglib2.0-dev \
           libgdk-pixbuf-2.0-dev \
           libnotify-dev \
           libxkbfile-dev \
           qtbase5-dev \
           qttools5-dev \
-          libgtk-3-dev \
-          rpm
+          libgtk-3-dev
 
     ubuntu:
       <<: *debian
 
     fedora: &fedora
       dependencies:
-        command: sudo dnf check-update; sudo dnf install -y \
+        command: sudo dnf check-update; \
+          sudo dnf install -y \
           cmake \
           make \
           gcc-c++ \
           openssl-devel \
-          libXtst-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
+          libXtst-devel \
           libnotify-devel \
+          libxkbfile-devel \
           qt5-qtbase-devel \
           qt5-qttools-devel \
-          libxkbfile-devel \
           gtk3-devel \
           rpm-build
 
-    centos:
-      <<: *fedora
+    opensuse-tumbleweed: &opensuse-tumbleweed
+      dependencies:
+        command: sudo zypper refresh; \
+          sudo zypper --non-interactive remove busybox-which; \
+          sudo zypper install -y \
+          cmake \
+          make \
+          gcc-c++ \
+          openssl-devel \
+          glib2-devel \
+          gdk-pixbuf-devel \
+          libXtst-devel \
+          libnotify-devel \
+          libxkbfile-devel \
+          libqt5-qtbase-devel \
+          libqt5-qttools-devel \
+          gtk3-devel \
+          rpm-build
+
+    arch: &arch
+      dependencies:
+        command: sudo pacman -Syu --noconfirm \
+          base-devel \
+          cmake \
+          gcc \
+          openssl \
+          glib2 \
+          gdk-pixbuf2 \
+          libxtst \
+          libnotify \
+          libxkbfile \
+          qt5-base \
+          qt5-tools \
+          gtk3
+
+    manjaro:
+      <<: *arch

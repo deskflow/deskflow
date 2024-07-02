@@ -15,11 +15,9 @@ def main():
     )
     args = parser.parse_args()
 
-    # ensures that pip and venv are available for `ensure_module` function.
     env.ensure_dependencies()
-
-    # important: load venv before loading modules that install deps.
-    env.ensure_in_venv(__file__)
+    env.ensure_in_venv(__file__, auto_create=True)
+    env.install_requirements()
 
     error = False
     try:
@@ -107,7 +105,7 @@ class Dependencies:
     def linux(self):
         """Installs dependencies on Linux."""
 
-        distro = env.get_linux_distro()
+        distro, _distro_like, _distro_version = env.get_linux_distro()
         if not distro:
             raise RuntimeError("Unable to detect Linux distro")
 
@@ -122,9 +120,9 @@ class Dependencies:
             print("The 'sudo' command was not found, stripping sudo from command")
             command = command.replace("sudo ", "").strip()
 
-        # don't check the return code, as some package managers return non-zero exit codes
-        # under normal circumstances (e.g. dnf returns 100 when there are updates available).
-        cmd_utils.run(command, check=False, shell=True, print_cmd=True)
+        # On Fedora, dnf update returns code 100 when updates are available, but the last command
+        # run should be dnf install, so the return code should always be 0.
+        cmd_utils.run(command, shell=True, print_cmd=True)
 
 
 if __name__ == "__main__":

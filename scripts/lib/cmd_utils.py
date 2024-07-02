@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import lib.env as env
 
 
 def has_command(command):
@@ -34,7 +35,6 @@ def strip_continuation_sequences(command):
         return command.replace(cmd_continuation, "")
 
 
-# TODO: fix bug: often when using this function, only the first arg element is sent to subprocess.run
 def run(
     command,
     check=True,  # true by default to fail fast
@@ -61,9 +61,11 @@ def run(
         print_cmd (bool): Print the command before running it (false by default for security)
     """
 
+    is_list_cmd = isinstance(command, list)
+
     # create string version of list command, only for debugging purposes
     command_str = command
-    if isinstance(command, list):
+    if is_list_cmd:
         command_str = " ".join(command)
 
     if print_cmd:
@@ -71,6 +73,19 @@ def run(
     else:
         print("Running command...")
         command_str = "***"
+
+    # TODO: You can definitely use a list command with shell=True on Windows,
+    # but can you use a string command with shell=False on Windows?
+    #
+    # The `subprocess.run` function has a little gotcha:
+    # - a string command must be used when `shell=True`
+    # - a list command must be used when shell isn't or `shell=False`
+    # however, it allows you to pass a string command when shell isn't used or `shell=False`
+    # then fails with a vague error message. same problem with list commands and `shell=True`
+    if not env.is_windows() and is_list_cmd and shell:
+        raise ValueError("List commands cannot be used when shell=True on Unix systems")
+    elif not is_list_cmd and not shell:
+        raise ValueError("String commands cannot be used when shell=False or not set")
 
     # Flush the output to ensure the command is printed before the output of the command,
     # which seems to happen in the GitHub runner logs.
@@ -89,6 +104,7 @@ def run(
             )
         else:
             result = subprocess.run(command, check=check, shell=shell)
+
     except subprocess.CalledProcessError as e:
         # Take control of how failed commands are printed:
         # - if `print_cmd` is false, it will print `***` instead of the command

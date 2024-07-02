@@ -50,8 +50,8 @@ def set_env_var(name, value):
 
 
 def package(filename_base):
-    cert_base64 = env.get_env_var("WINDOWS_PFX_CERTIFICATE")
-    cert_password = env.get_env_var("WINDOWS_PFX_PASSWORD")
+    cert_base64 = env.get_env("WINDOWS_PFX_CERTIFICATE")
+    cert_password = env.get_env("WINDOWS_PFX_PASSWORD")
 
     sign_binaries(cert_base64, cert_password)
     build_msi(filename_base)
@@ -126,8 +126,7 @@ def run_codesign(path, cert_base64, cert_password):
                 "/fd",
                 hashing_algorithm,
                 path,
-            ],
-            shell=True,
+            ]
         )
 
 
@@ -166,7 +165,6 @@ class WindowsChoco:
             value_arg = f'--value="{runner_temp}/choco"'
             cmd_utils.run(
                 ["choco", "config", "set", key_arg, value_arg],
-                shell=True,
                 print_cmd=True,
             )
         else:

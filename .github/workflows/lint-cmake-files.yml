@@ -1,0 +1,23 @@
+# Runs
+
+name: "Lint CMake files"
+on:
+  pull_request:
+
+jobs:
+  lint-cmake-files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv build/python
+          source build/python/bin/activate
+          pip install cmake_format pyyaml
+
+      - name: Lint CMake files
+        run: ./scripts/lint_cmake_files.py

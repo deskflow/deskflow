@@ -42,7 +42,7 @@ cmake -B build --preset=linux-release
 
 **Build:**
 ```
-cmake --build build
+cmake --build build -j8
 ```
 
 **Test:**

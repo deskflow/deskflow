@@ -1,7 +1,8 @@
+import yaml
 import lib.env as env
 import lib.cmd_utils as cmd_utils
 
-config_file = "config.yml"
+config_file = "config.yaml"
 root_key = "config"
 deps_key = "dependencies"
 
@@ -20,7 +21,7 @@ def _get(dict, key, key_parent=None):
 
     if not value:
         key_path = f"{root_key}:{key_parent}:{key}" if key_parent else key
-        raise ConfigKeyError(f"Missing key in {config_file}: {key_path}")
+        raise ConfigKeyError(config_file, key_path)
 
     return value
 
@@ -29,18 +30,18 @@ class Config:
     """Reads the project configuration YAML file."""
 
     def __init__(self):
-        env.ensure_module("yaml", "pyyaml")
-        import yaml
 
         with open(config_file, "r") as f:
             data = yaml.safe_load(f)
 
         self.os_name = env.get_os()
+
+        print("Config for OS:", self.os_name)
         root = _get(data, root_key)
         self.os = _get(root, self.os_name)
 
     def get_os_value(self, key):
-        return _get(self.os, key, f"{self.os_name}:{key}")
+        return _get(self.os, key, self.os_name)
 
     def get_qt_config(self):
         qt_key = "qt"

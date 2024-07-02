@@ -1,5 +1,0 @@
-#!/usr/bin/make -f
-
-%:
-	dh $@ --buildsystem=cmake --builddirectory=build --parallel
-

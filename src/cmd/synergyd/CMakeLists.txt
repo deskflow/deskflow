@@ -1,6 +1,6 @@
-# synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2016 Symless Ltd.
-# Copyright (C) 2012 Nick Bolton
+# Synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2012-2024 Symless Ltd.
+# Copyright (C) 2009-2012 Nick Bolton
 #
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,16 +19,22 @@ set(target synergyd)
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if (WIN32)
-    add_executable (
-        ${target}
-        WIN32 
-        ${sources}
-        ${CMAKE_BINARY_DIR}/src/version.rc
-    )
+if(WIN32)
+  add_executable(${target} WIN32 ${sources} ${CMAKE_BINARY_DIR}/src/version.rc)
 else()
-    add_executable (${target} ${sources})
+  add_executable(${target} ${sources})
 endif()
 
-target_link_libraries (${target}
-    arch base common io ipc mt net platform synlib shared ${libs})
+target_link_libraries(
+  ${target}
+  arch
+  base
+  common
+  io
+  ipc
+  mt
+  net
+  platform
+  synlib
+  shared
+  ${libs})

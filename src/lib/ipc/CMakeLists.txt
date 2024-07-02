@@ -1,11 +1,11 @@
-# synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2016 Symless Ltd.
-# Copyright (C) 2009 Nick Bolton
-# 
+# Synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2012-2024 Symless Ltd.
+# Copyright (C) 2009-2012 Nick Bolton
+#
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # found in the file LICENSE that should have accompanied this file.
-# 
+#
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,12 +17,20 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if (SYNERGY_ADD_HEADERS)
-    list(APPEND sources ${headers})
+if(SYNERGY_ADD_HEADERS)
+  list(APPEND sources ${headers})
 endif()
 
 add_library(ipc STATIC ${sources})
 
-if (UNIX)
-    target_link_libraries(ipc arch base common mt io net synlib)
+if(UNIX)
+  target_link_libraries(
+    ipc
+    arch
+    base
+    common
+    mt
+    io
+    net
+    synlib)
 endif()

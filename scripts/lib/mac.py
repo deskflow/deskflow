@@ -1,3 +1,4 @@
+import dmgbuild  # type: ignore
 import os, time, json
 import lib.cmd_utils as cmd_utils
 import lib.env as env
@@ -39,9 +40,9 @@ def set_cmake_prefix_env_var(cmake_prefix_command):
 
 
 def package(filename_base):
-    codesign_id = env.get_env_var("APPLE_CODESIGN_ID")
-    cert_base64 = env.get_env_var("APPLE_P12_CERTIFICATE")
-    cert_password = env.get_env_var("APPLE_P12_PASSWORD")
+    codesign_id = env.get_env("APPLE_CODESIGN_ID")
+    cert_base64 = env.get_env("APPLE_P12_CERTIFICATE")
+    cert_password = env.get_env("APPLE_P12_PASSWORD")
 
     build_bundle()
     install_certificate(cert_base64, cert_password)
@@ -86,9 +87,6 @@ def assert_certificate_installed(codesign_id):
 
 
 def build_dmg(filename_base):
-    env.ensure_module("dmgbuild", "dmgbuild")
-    import dmgbuild  # type: ignore
-
     settings_file_abs = os.path.abspath(settings_file)
     app_path_abs = os.path.abspath(app_path)
 
@@ -152,9 +150,9 @@ def notarize_package(dmg_path):
     print(f"Notarizing package {dmg_path}...")
     notary_tool = NotaryTool()
     notary_tool.store_credentials(
-        env.get_env_var("APPLE_NOTARY_USER"),
-        env.get_env_var("APPLE_NOTARY_PASSWORD"),
-        env.get_env_var("APPLE_TEAM_ID"),
+        env.get_env("APPLE_NOTARY_USER"),
+        env.get_env("APPLE_NOTARY_PASSWORD"),
+        env.get_env("APPLE_TEAM_ID"),
     )
 
     notary_tool.submit_and_wait(dmg_path)

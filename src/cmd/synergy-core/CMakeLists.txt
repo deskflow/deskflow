@@ -1,11 +1,11 @@
-# synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2022 Symless Ltd.
-# Copyright (C) 2009 Nick Bolton
-# 
+# Synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2012-2024 Symless Ltd.
+# Copyright (C) 2009-2012 Nick Bolton
+#
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # found in the file LICENSE that should have accompanied this file.
-# 
+#
 # This package is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,24 +16,30 @@
 
 set(target synergy-core)
 
-set(sources
-    ${target}.cpp
-)
+set(sources ${target}.cpp)
 
-if (WIN32)
-    list(APPEND sources
-        ${target}.exe.manifest
-        ${CMAKE_BINARY_DIR}/src/version.rc
-    )
+if(WIN32)
+  list(APPEND sources ${target}.exe.manifest ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
 
 add_executable(${target} ${sources})
-target_link_libraries(${target}
-    arch base client common io mt net ipc platform server synlib ${libs})
+target_link_libraries(
+  ${target}
+  arch
+  base
+  client
+  common
+  io
+  mt
+  net
+  ipc
+  platform
+  server
+  synlib
+  ${libs})
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    install (TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install (TARGETS ${target} DESTINATION bin)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  install(TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  install(TARGETS ${target} DESTINATION bin)
 endif()
-
