@@ -24,14 +24,13 @@ namespace synergy {
 namespace filesystem {
 
 #ifdef SYSAPI_WIN32
-    std::wstring path(const String& filePath);
+std::wstring path(const String &filePath);
 #else
-    std::string path(const String& filePath);
+std::string path(const String &filePath);
 #endif
 
+} // namespace filesystem
 
-} //namespace filesystem
-
-} //namespace synergy
+} // namespace synergy
 
 #endif // SYNERGY_PATH_H

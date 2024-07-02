@@ -16,46 +16,46 @@
  */
 #pragma once
 
-#include <string>
 #include "EditionType.h"
+#include <string>
 
-class SerialKeyEdition
-{
-	friend bool operator== (SerialKeyEdition const&, SerialKeyEdition const&);
+class SerialKeyEdition {
+  friend bool operator==(SerialKeyEdition const &, SerialKeyEdition const &);
+
 public:
-	SerialKeyEdition();
-	explicit SerialKeyEdition(Edition type);
-	explicit SerialKeyEdition(const std::string& type);
+  SerialKeyEdition();
+  explicit SerialKeyEdition(Edition type);
+  explicit SerialKeyEdition(const std::string &type);
 
-	Edition getType() const;
-	std::string getName() const;
-	std::string getDisplayName() const;
+  Edition getType() const;
+  std::string getName() const;
+  std::string getDisplayName() const;
 
-	void setType(Edition type);
-	void setType(const std::string& type);
+  void setType(Edition type);
+  void setType(const std::string &type);
 
-	bool isValid() const;
-	bool isChina() const;
+  bool isValid() const;
+  bool isChina() const;
 
-	static const std::string PRO;
-	static const std::string PRO_CHINA;
-	static const std::string BASIC;
-	static const std::string BASIC_CHINA;
-	static const std::string BUSINESS;
-	static const std::string UNREGISTERED;
-	static const std::string ULTIMATE;
-	static const std::string LITE;
+  static const std::string PRO;
+  static const std::string PRO_CHINA;
+  static const std::string BASIC;
+  static const std::string BASIC_CHINA;
+  static const std::string BUSINESS;
+  static const std::string UNREGISTERED;
+  static const std::string ULTIMATE;
+  static const std::string LITE;
 
 private:
-	Edition m_Type = kUnregistered;
+  Edition m_Type = kUnregistered;
 };
 
-inline bool
-operator== (SerialKeyEdition const& lhs, SerialKeyEdition const& rhs) {
-	return (lhs.m_Type == rhs.m_Type);
+inline bool operator==(SerialKeyEdition const &lhs,
+                       SerialKeyEdition const &rhs) {
+  return (lhs.m_Type == rhs.m_Type);
 }
 
-inline bool
-operator!= (SerialKeyEdition const& lhs, SerialKeyEdition const& rhs) {
-	return !(lhs == rhs);
+inline bool operator!=(SerialKeyEdition const &lhs,
+                       SerialKeyEdition const &rhs) {
+  return !(lhs == rhs);
 }

@@ -17,19 +17,14 @@
  */
 #include "RegExpValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-RegExpValidator::RegExpValidator(const QString& message, const QRegExp& validator) :
-   IStringValidator(message),
-   m_Validator(validator)
-{
+RegExpValidator::RegExpValidator(const QString &message,
+                                 const QRegExp &validator)
+    : IStringValidator(message), m_Validator(validator) {}
+
+bool RegExpValidator::validate(const QString &input) const {
+  return (m_Validator.exactMatch(input));
 }
 
-bool RegExpValidator::validate(const QString& input) const
-{
-   return (m_Validator.exactMatch(input));
-}
-
-}
-
+} // namespace validators

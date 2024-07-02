@@ -24,27 +24,28 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class VersionChecker : public QObject
-{
-    Q_OBJECT
+class VersionChecker : public QObject {
+  Q_OBJECT
 public:
-    VersionChecker();
-    virtual ~VersionChecker();
-    void checkLatest();
-    void setApp(const QString& app) { m_app = app; }
-    int compareVersions(const QString& left, const QString& right);
+  VersionChecker();
+  virtual ~VersionChecker();
+  void checkLatest();
+  void setApp(const QString &app) { m_app = app; }
+  int compareVersions(const QString &left, const QString &right);
 public slots:
-    void replyFinished(QNetworkReply* reply);
+  void replyFinished(QNetworkReply *reply);
 signals:
-    void updateFound(const QString& version);
-private:
-    QNetworkAccessManager* m_manager;
-    QString m_app;
+  void updateFound(const QString &version);
 
-    /**
-     * \brief Converts a string stage to a integer value
-     * \param stage The string containing the stage version
-     * \return An integer representation of the stage, the higher the number the more recent the version
-     */
-    int getStageVersion(QString stage) const;
+private:
+  QNetworkAccessManager *m_manager;
+  QString m_app;
+
+  /**
+   * \brief Converts a string stage to a integer value
+   * \param stage The string containing the stage version
+   * \return An integer representation of the stage, the higher the number the
+   * more recent the version
+   */
+  int getStageVersion(QString stage) const;
 };

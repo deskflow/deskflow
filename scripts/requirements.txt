@@ -1,4 +1,5 @@
 cmake_format
+clang-format
 python-dotenv
 pyyaml
 dmgbuild; sys_platform == 'darwin'

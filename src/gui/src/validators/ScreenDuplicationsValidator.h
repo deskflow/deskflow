@@ -18,22 +18,22 @@
 #ifndef SCREENDUPLICATIONSVALIDATOR_H
 #define SCREENDUPLICATIONSVALIDATOR_H
 
-#include "ScreenList.h"
 #include "IStringValidator.h"
+#include "ScreenList.h"
 
-namespace validators
-{
+namespace validators {
 
-class ScreenDuplicationsValidator : public IStringValidator
-{
-    const QString m_defaultName;
-    const ScreenList* m_pScreenList = nullptr;
+class ScreenDuplicationsValidator : public IStringValidator {
+  const QString m_defaultName;
+  const ScreenList *m_pScreenList = nullptr;
 
 public:
-   ScreenDuplicationsValidator(const QString& message, const QString& defaultName,const ScreenList* pScreens);
-   bool validate(const QString& input) const override;
+  ScreenDuplicationsValidator(const QString &message,
+                              const QString &defaultName,
+                              const ScreenList *pScreens);
+  bool validate(const QString &input) const override;
 };
 
-}
+} // namespace validators
 
 #endif // SCREENDUPLICATIONSVALIDATOR_H

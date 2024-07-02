@@ -17,42 +17,33 @@
 
 #include "Zeroconf.h"
 
-#include "ZeroconfService.h"
 #include "MainWindow.h"
+#include "ZeroconfService.h"
 
-Zeroconf::Zeroconf(MainWindow* mainWindow) :
-    m_pMainWindow(mainWindow),
-    m_pZeroconfService(nullptr)
-{
+Zeroconf::Zeroconf(MainWindow *mainWindow)
+    : m_pMainWindow(mainWindow), m_pZeroconfService(nullptr) {}
+
+Zeroconf::~Zeroconf() { stopService(); }
+
+void Zeroconf::startService() {
+  if (m_pZeroconfService != nullptr) {
+    m_pMainWindow->appendLogInfo("restarting zeroconf service");
+    delete m_pZeroconfService;
+    m_pZeroconfService = nullptr;
+  } else {
+    m_pMainWindow->appendLogInfo("starting zeroconf service");
+  }
+
+  m_pZeroconfService = new ZeroconfService(m_pMainWindow);
+
+  m_pMainWindow->appendLogInfo("started zeroconf service");
 }
 
-Zeroconf::~Zeroconf()
-{
-    stopService();
-}
-
-void Zeroconf::startService()
-{
-    if (m_pZeroconfService != nullptr) {
-        m_pMainWindow->appendLogInfo("restarting zeroconf service");
-        delete m_pZeroconfService;
-        m_pZeroconfService = nullptr;
-    }
-    else {
-        m_pMainWindow->appendLogInfo("starting zeroconf service");
-    }
-
-    m_pZeroconfService = new ZeroconfService(m_pMainWindow);
-
-    m_pMainWindow->appendLogInfo("started zeroconf service");
-}
-
-void Zeroconf::stopService()
-{
-    if (m_pZeroconfService != nullptr) {
-        m_pMainWindow->appendLogInfo("stopping zeroconf service");
-        delete m_pZeroconfService;
-        m_pZeroconfService = nullptr;
-        m_pMainWindow->appendLogInfo("stopped zeroconf service");
-    }
+void Zeroconf::stopService() {
+  if (m_pZeroconfService != nullptr) {
+    m_pMainWindow->appendLogInfo("stopping zeroconf service");
+    delete m_pZeroconfService;
+    m_pZeroconfService = nullptr;
+    m_pMainWindow->appendLogInfo("stopped zeroconf service");
+  }
 }

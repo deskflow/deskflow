@@ -21,28 +21,27 @@
 
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
-class OSXPowerManager
-{
+class OSXPowerManager {
 public:
-    OSXPowerManager();
-    ~OSXPowerManager();
+  OSXPowerManager();
+  ~OSXPowerManager();
 
-    /**
-     * @brief Prevents the system from sleep automatically
-     */
-    void disableSleep();
+  /**
+   * @brief Prevents the system from sleep automatically
+   */
+  void disableSleep();
 
-    /**
-     * @brief Enable automatically sleeping
-     */
-    void enableSleep();
+  /**
+   * @brief Enable automatically sleeping
+   */
+  void enableSleep();
 
-    OSXPowerManager(const OSXPowerManager&) = delete;
-    OSXPowerManager& operator=(const OSXPowerManager&) = delete;
+  OSXPowerManager(const OSXPowerManager &) = delete;
+  OSXPowerManager &operator=(const OSXPowerManager &) = delete;
 
 private:
-    // handler for assertion preventing the system from going to sleep
-    IOPMAssertionID m_sleepPreventionAssertionID = 0;
+  // handler for assertion preventing the system from going to sleep
+  IOPMAssertionID m_sleepPreventionAssertionID = 0;
 };
 
 #endif // OSXPOWERMANAGER_H

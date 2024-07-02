@@ -16,45 +16,36 @@
  */
 #pragma once
 
-#include <string>
-#include "SerialKeyType.h"
 #include "SerialKeyEdition.h"
+#include "SerialKeyType.h"
+#include <string>
 
 /**
  * @brief The SerialKeyData struct
  * This is DTO which stores key data
  */
 struct SerialKeyData {
-    std::string           key;            // Encoded serial key as a string
-    SerialKeyEdition      edition;        // Serial key edition
-    SerialKeyType         keyType;        // Serial key type
-    unsigned long long    warnTime   = 0; // Warning time
-    unsigned long long    expireTime = 0; // Expiration time
+  std::string key;                   // Encoded serial key as a string
+  SerialKeyEdition edition;          // Serial key edition
+  SerialKeyType keyType;             // Serial key type
+  unsigned long long warnTime = 0;   // Warning time
+  unsigned long long expireTime = 0; // Expiration time
 
-    /**
-     * @brief SerialKeyData constructor
-     * @param key encoded key
-     */
-    explicit SerialKeyData(const std::string& key) :
-        key(key)
-    {
-    }
+  /**
+   * @brief SerialKeyData constructor
+   * @param key encoded key
+   */
+  explicit SerialKeyData(const std::string &key) : key(key) {}
 
-    /**
-     * @brief SerialKeyData default constructor
-     * @param key edition. Unregistered by default
-     */
-    explicit SerialKeyData(Edition edition = kUnregistered) :
-        edition(edition)
-    {
-    }
+  /**
+   * @brief SerialKeyData default constructor
+   * @param key edition. Unregistered by default
+   */
+  explicit SerialKeyData(Edition edition = kUnregistered) : edition(edition) {}
 };
 
-inline bool
-operator== (SerialKeyData const& lhs, SerialKeyData const& rhs) {
-    return  (lhs.key == rhs.key) &&
-            (lhs.warnTime == rhs.warnTime) &&
-            (lhs.expireTime == rhs.expireTime) &&
-            (lhs.edition == rhs.edition) &&
-            (lhs.keyType == rhs.keyType);
+inline bool operator==(SerialKeyData const &lhs, SerialKeyData const &rhs) {
+  return (lhs.key == rhs.key) && (lhs.warnTime == rhs.warnTime) &&
+         (lhs.expireTime == rhs.expireTime) && (lhs.edition == rhs.edition) &&
+         (lhs.keyType == rhs.keyType);
 }

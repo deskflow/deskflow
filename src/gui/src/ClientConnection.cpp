@@ -20,78 +20,65 @@
 
 #include "MainWindow.h"
 
-#include <QMessageBox>
 #include <QHostAddress>
+#include <QMessageBox>
 
-ClientConnection::ClientConnection(MainWindow& parent) :
-    m_parent(parent)
-{
-}
+ClientConnection::ClientConnection(MainWindow &parent) : m_parent(parent) {}
 
-void ClientConnection::update(const QString& line)
-{
-    if (m_checkConnection && checkMainWindow())
-    {
-        if (line.contains("failed to connect to server"))
-        {
-            m_checkConnection = false;
-            if (!line.contains("server refused client with our name") &&
-                !line.contains("Trying next address"))
-            {
-                showMessage(getMessage(line));
-            }
-        }
-        else if (line.contains("connected to server"))
-        {
-            m_checkConnection = false;
-        }
+void ClientConnection::update(const QString &line) {
+  if (m_checkConnection && checkMainWindow()) {
+    if (line.contains("failed to connect to server")) {
+      m_checkConnection = false;
+      if (!line.contains("server refused client with our name") &&
+          !line.contains("Trying next address")) {
+        showMessage(getMessage(line));
+      }
+    } else if (line.contains("connected to server")) {
+      m_checkConnection = false;
     }
+  }
 }
 
-bool ClientConnection::checkMainWindow()
-{
-    bool result = m_parent.isActiveWindow();
+bool ClientConnection::checkMainWindow() {
+  bool result = m_parent.isActiveWindow();
 
-    if (m_parent.isMinimized() || m_parent.isHidden())
-    {
-        m_parent.showNormal();
-        m_parent.activateWindow();
-        result = true;
+  if (m_parent.isMinimized() || m_parent.isHidden()) {
+    m_parent.showNormal();
+    m_parent.activateWindow();
+    result = true;
+  }
+
+  return result;
+}
+
+QString ClientConnection::getMessage(const QString &line) const {
+  QString message(QObject::tr("Connection failed.\nCheck the IP address on the "
+                              "server, your TLS and firewall settings."));
+
+  if (line.contains("server already has a connected client with our name")) {
+    message =
+        QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
+  } else {
+    QHostAddress address(m_parent.appConfig().getServerHostname());
+    if (address.isNull()) {
+      message =
+          QObject::tr(
+              "We can’t connect to the server \"%1\" try to connect using the "
+              "server IP address and check your firewall settings.")
+              .arg(m_parent.appConfig().getServerHostname());
     }
+  }
 
-    return result;
+  return message;
 }
 
-QString ClientConnection::getMessage(const QString& line) const
-{
-    QString message(QObject::tr("Connection failed.\nCheck the IP address on the server, your TLS and firewall settings."));
-
-    if (line.contains("server already has a connected client with our name"))
-    {
-        message = QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
-    }
-    else
-    {
-        QHostAddress address(m_parent.appConfig().getServerHostname());
-        if (address.isNull())
-        {
-            message = QObject::tr("We can’t connect to the server \"%1\" try to connect using the server IP address and check your firewall settings.")
-                               .arg(m_parent.appConfig().getServerHostname());
-        }
-    }
-
-    return message;
+void ClientConnection::showMessage(const QString &message) const {
+  QMessageBox dialog(&m_parent);
+  dialog.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+  dialog.setText(message);
+  dialog.exec();
 }
 
-void ClientConnection::showMessage(const QString& message) const
-{
-    QMessageBox dialog(&m_parent);
-    dialog.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-    dialog.setText(message);
-    dialog.exec();
-}
-
-void ClientConnection::setCheckConnection(bool checkConnection)
-{
-    m_checkConnection = checkConnection;
+void ClientConnection::setCheckConnection(bool checkConnection) {
+  m_checkConnection = checkConnection;
 }

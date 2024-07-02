@@ -18,35 +18,33 @@
 
 #include <string>
 
-class SerialKeyType
-{
+class SerialKeyType {
 private:
-	friend bool operator== (SerialKeyType const&, SerialKeyType const&);
+  friend bool operator==(SerialKeyType const &, SerialKeyType const &);
+
 public:
-	static const std::string TRIAL;
-	static const std::string SUBSCRIPTION;
-	static const std::string MAINTENANCE;
+  static const std::string TRIAL;
+  static const std::string SUBSCRIPTION;
+  static const std::string MAINTENANCE;
 
-	SerialKeyType();
+  SerialKeyType();
 
-	void setKeyType(const std::string& Type);
-	bool isTrial() const;
-	bool isTemporary() const;
-	bool isMaintenance() const;
+  void setKeyType(const std::string &Type);
+  bool isTrial() const;
+  bool isTemporary() const;
+  bool isMaintenance() const;
 
 private:
-	bool m_isTrial = false;
-	bool m_isTemporary = false;
-	bool m_isMaintenance = false;
+  bool m_isTrial = false;
+  bool m_isTemporary = false;
+  bool m_isMaintenance = false;
 };
 
-inline bool
-operator== (SerialKeyType const& lhs, SerialKeyType const& rhs) {
-	return (lhs.m_isTrial == rhs.m_isTrial) && (lhs.m_isTemporary == rhs.m_isTemporary);
+inline bool operator==(SerialKeyType const &lhs, SerialKeyType const &rhs) {
+  return (lhs.m_isTrial == rhs.m_isTrial) &&
+         (lhs.m_isTemporary == rhs.m_isTemporary);
 }
 
-inline bool
-operator!= (SerialKeyType const& lhs, SerialKeyType const& rhs) {
-	return !(lhs == rhs);
+inline bool operator!=(SerialKeyType const &lhs, SerialKeyType const &rhs) {
+  return !(lhs == rhs);
 }
-

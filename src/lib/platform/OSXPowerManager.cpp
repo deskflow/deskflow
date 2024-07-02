@@ -19,32 +19,25 @@
 #include "OSXPowerManager.h"
 #include "base/Log.h"
 
-OSXPowerManager::OSXPowerManager()
-{
-}
+OSXPowerManager::OSXPowerManager() {}
 
-OSXPowerManager::~OSXPowerManager()
-{
-    enableSleep();
-}
+OSXPowerManager::~OSXPowerManager() { enableSleep(); }
 
-void OSXPowerManager::disableSleep()
-{
-    if (!m_sleepPreventionAssertionID) {
-        CFStringRef reasonForActivity = CFSTR("Synergy application");
-        IOReturn result = IOPMAssertionCreateWithName(kIOPMAssertPreventUserIdleDisplaySleep,
-                                                      kIOPMAssertionLevelOn, reasonForActivity,
-                                                      &m_sleepPreventionAssertionID);
-        if (result != kIOReturnSuccess) {
-            m_sleepPreventionAssertionID = 0;
-            LOG((CLOG_ERR "failed to disable system idle sleep"));
-        }
+void OSXPowerManager::disableSleep() {
+  if (!m_sleepPreventionAssertionID) {
+    CFStringRef reasonForActivity = CFSTR("Synergy application");
+    IOReturn result = IOPMAssertionCreateWithName(
+        kIOPMAssertPreventUserIdleDisplaySleep, kIOPMAssertionLevelOn,
+        reasonForActivity, &m_sleepPreventionAssertionID);
+    if (result != kIOReturnSuccess) {
+      m_sleepPreventionAssertionID = 0;
+      LOG((CLOG_ERR "failed to disable system idle sleep"));
     }
+  }
 }
 
-void OSXPowerManager::enableSleep()
-{
-    if (m_sleepPreventionAssertionID) {
-        IOPMAssertionRelease(m_sleepPreventionAssertionID);
-    }
+void OSXPowerManager::enableSleep() {
+  if (m_sleepPreventionAssertionID) {
+    IOPMAssertionRelease(m_sleepPreventionAssertionID);
+  }
 }

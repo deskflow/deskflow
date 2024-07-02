@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,12 +17,12 @@
  */
 
 #include "synergy/Screen.h"
+#include "base/IEventQueue.h"
+#include "base/Log.h"
+#include "base/TMethodEventJob.h"
+#include "server/ClientProxy.h"
 #include "synergy/IPlatformScreen.h"
 #include "synergy/protocol_types.h"
-#include "base/Log.h"
-#include "base/IEventQueue.h"
-#include "server/ClientProxy.h"
-#include "base/TMethodEventJob.h"
 
 namespace synergy {
 
@@ -30,502 +30,370 @@ namespace synergy {
 // Screen
 //
 
-Screen::Screen(IPlatformScreen* platformScreen, IEventQueue* events) :
-    m_screen(platformScreen),
-    m_isPrimary(platformScreen->isPrimary()),
-    m_enabled(false),
-    m_entered(m_isPrimary),
-    m_fakeInput(false),
-    m_events(events),
-    m_mock(false),
-    m_enableDragDrop(false)
-{
-    assert(m_screen != NULL);
+Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
+    : m_screen(platformScreen), m_isPrimary(platformScreen->isPrimary()),
+      m_enabled(false), m_entered(m_isPrimary), m_fakeInput(false),
+      m_events(events), m_mock(false), m_enableDragDrop(false) {
+  assert(m_screen != NULL);
 
-    // reset options
-    resetOptions();
+  // reset options
+  resetOptions();
 
-    LOG((CLOG_DEBUG "opened display"));
+  LOG((CLOG_DEBUG "opened display"));
 }
 
-Screen::~Screen()
-{
-    if (m_mock) {
-        return;
-    }
+Screen::~Screen() {
+  if (m_mock) {
+    return;
+  }
 
-    if (m_enabled) {
-        disable();
-    }
-    assert(!m_enabled);
-    assert(m_entered == m_isPrimary);
-    delete m_screen;
-    LOG((CLOG_DEBUG "closed display"));
+  if (m_enabled) {
+    disable();
+  }
+  assert(!m_enabled);
+  assert(m_entered == m_isPrimary);
+  delete m_screen;
+  LOG((CLOG_DEBUG "closed display"));
 }
 
-void
-Screen::enable()
-{
-    assert(!m_enabled);
+void Screen::enable() {
+  assert(!m_enabled);
 
-    m_screen->updateKeyMap();
-    m_screen->updateKeyState();
-    m_screen->enable();
-    if (m_isPrimary) {
-        enablePrimary();
-    }
-    else {
-        enableSecondary();
-    }
+  m_screen->updateKeyMap();
+  m_screen->updateKeyState();
+  m_screen->enable();
+  if (m_isPrimary) {
+    enablePrimary();
+  } else {
+    enableSecondary();
+  }
 
-    // note activation
-    m_enabled = true;
+  // note activation
+  m_enabled = true;
 }
 
-void
-Screen::disable()
-{
-    assert(m_enabled);
+void Screen::disable() {
+  assert(m_enabled);
 
-    if (!m_isPrimary && m_entered) {
-        leave();
-    }
-    else if (m_isPrimary && !m_entered) {
-        enter(0);
-    }
-    m_screen->disable();
-    if (m_isPrimary) {
-        disablePrimary();
-    }
-    else {
-        disableSecondary();
-    }
+  if (!m_isPrimary && m_entered) {
+    leave();
+  } else if (m_isPrimary && !m_entered) {
+    enter(0);
+  }
+  m_screen->disable();
+  if (m_isPrimary) {
+    disablePrimary();
+  } else {
+    disableSecondary();
+  }
 
-    // note deactivation
-    m_enabled = false;
+  // note deactivation
+  m_enabled = false;
 }
 
-void
-Screen::enter(KeyModifierMask toggleMask)
-{
-    assert(m_entered == false);
-    LOG((CLOG_INFO "entering screen"));
+void Screen::enter(KeyModifierMask toggleMask) {
+  assert(m_entered == false);
+  LOG((CLOG_INFO "entering screen"));
 
-    // now on screen
-    m_entered = true;
+  // now on screen
+  m_entered = true;
 
-    m_screen->enter();
-    if (m_isPrimary) {
-        enterPrimary();
-    }
-    else {
-        enterSecondary(toggleMask);
-    }
+  m_screen->enter();
+  if (m_isPrimary) {
+    enterPrimary();
+  } else {
+    enterSecondary(toggleMask);
+  }
 }
 
-bool
-Screen::leave()
-{
-    assert(m_entered == true);
-    LOG((CLOG_INFO "leaving screen"));
+bool Screen::leave() {
+  assert(m_entered == true);
+  LOG((CLOG_INFO "leaving screen"));
 
-    if (!m_screen->leave()) {
-        return false;
-    }
-    if (m_isPrimary) {
-        leavePrimary();
-    }
-    else {
-        leaveSecondary();
-    }
-
-    // make sure our idea of clipboard ownership is correct
-    m_screen->checkClipboards();
-
-    // now not on screen
-    m_entered = false;
-
-    return true;
-}
-
-void
-Screen::reconfigure(UInt32 activeSides)
-{
-    assert(m_isPrimary);
-    m_screen->reconfigure(activeSides);
-}
-
-void
-Screen::warpCursor(SInt32 x, SInt32 y)
-{
-    assert(m_isPrimary);
-    m_screen->warpCursor(x, y);
-}
-
-void
-Screen::setClipboard(ClipboardID id, const IClipboard* clipboard)
-{
-    m_screen->setClipboard(id, clipboard);
-}
-
-void
-Screen::grabClipboard(ClipboardID id)
-{
-    m_screen->setClipboard(id, NULL);
-}
-
-void
-Screen::screensaver(bool) const
-{
-    // do nothing
-}
-
-void
-Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
-{
-    // check for ctrl+alt+del emulation
-    if (id == kKeyDelete &&
-        (mask & (KeyModifierControl | KeyModifierAlt)) ==
-                (KeyModifierControl | KeyModifierAlt)) {
-        LOG((CLOG_DEBUG "emulating ctrl+alt+del press"));
-        if (m_screen->fakeCtrlAltDel()) {
-            return;
-        }
-    }
-    m_screen->fakeKeyDown(id, mask, button, lang);
-}
-
-void
-Screen::keyRepeat(KeyID id,
-                KeyModifierMask mask, SInt32 count, KeyButton button, const String& lang)
-{
-    assert(!m_isPrimary);
-    m_screen->fakeKeyRepeat(id, mask, count, button, lang);
-}
-
-void
-Screen::keyUp(KeyID, KeyModifierMask, KeyButton button)
-{
-    m_screen->fakeKeyUp(button);
-}
-
-void
-Screen::mouseDown(ButtonID button)
-{
-    m_screen->fakeMouseButton(button, true);
-}
-
-void
-Screen::mouseUp(ButtonID button)
-{
-    m_screen->fakeMouseButton(button, false);
-}
-
-void
-Screen::mouseMove(SInt32 x, SInt32 y)
-{
-    assert(!m_isPrimary);
-    m_screen->fakeMouseMove(x, y);
-}
-
-void
-Screen::mouseRelativeMove(SInt32 dx, SInt32 dy)
-{
-    assert(!m_isPrimary);
-    m_screen->fakeMouseRelativeMove(dx, dy);
-}
-
-void
-Screen::mouseWheel(SInt32 xDelta, SInt32 yDelta) const
-{
-    assert(!m_isPrimary);
-    m_screen->fakeMouseWheel(xDelta, yDelta);
-}
-
-void
-Screen::resetOptions()
-{
-    // reset options
-    m_halfDuplex = 0;
-
-    // let screen handle its own options
-    m_screen->resetOptions();
-}
-
-void
-Screen::setOptions(const OptionsList& options)
-{
-    // update options
-    for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
-        if (options[i] == kOptionHalfDuplexCapsLock) {
-            if (options[i + 1] != 0) {
-                m_halfDuplex |=  KeyModifierCapsLock;
-            }
-            else {
-                m_halfDuplex &= ~KeyModifierCapsLock;
-            }
-            LOG((CLOG_DEBUG1 "half-duplex caps-lock %s", ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
-        }
-        else if (options[i] == kOptionHalfDuplexNumLock) {
-            if (options[i + 1] != 0) {
-                m_halfDuplex |=  KeyModifierNumLock;
-            }
-            else {
-                m_halfDuplex &= ~KeyModifierNumLock;
-            }
-            LOG((CLOG_DEBUG1 "half-duplex num-lock %s", ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
-        }
-        else if (options[i] == kOptionHalfDuplexScrollLock) {
-            if (options[i + 1] != 0) {
-                m_halfDuplex |=  KeyModifierScrollLock;
-            }
-            else {
-                m_halfDuplex &= ~KeyModifierScrollLock;
-            }
-            LOG((CLOG_DEBUG1 "half-duplex scroll-lock %s", ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
-        }
-    }
-
-    // update half-duplex options
-    m_screen->setHalfDuplexMask(m_halfDuplex);
-
-    // let screen handle its own options
-    m_screen->setOptions(options);
-}
-
-void
-Screen::setSequenceNumber(UInt32 seqNum)
-{
-    m_screen->setSequenceNumber(seqNum);
-}
-
-UInt32
-Screen::registerHotKey(KeyID key, KeyModifierMask mask)
-{
-    return m_screen->registerHotKey(key, mask);
-}
-
-void
-Screen::unregisterHotKey(UInt32 id)
-{
-    m_screen->unregisterHotKey(id);
-}
-
-void
-Screen::fakeInputBegin()
-{
-    assert(!m_fakeInput);
-
-    m_fakeInput = true;
-    m_screen->fakeInputBegin();
-}
-
-void
-Screen::fakeInputEnd()
-{
-    assert(m_fakeInput);
-
-    m_fakeInput = false;
-    m_screen->fakeInputEnd();
-}
-
-bool
-Screen::isOnScreen() const
-{
-    return m_entered;
-}
-
-bool
-Screen::isLockedToScreen() const
-{
-    // check for pressed mouse buttons
-    // HACK: commented out as it breaks new drag drop feature
-    UInt32 buttonID = 0;
-
-    if (m_screen->isAnyMouseButtonDown(buttonID)) {
-        if (buttonID != kButtonLeft) {
-            LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
-        }
-        
-        if (m_enableDragDrop) {
-            return (buttonID == kButtonLeft) ? false : true;
-        }
-        else {
-            return true;
-        }
-    }
-
-    // not locked
+  if (!m_screen->leave()) {
     return false;
+  }
+  if (m_isPrimary) {
+    leavePrimary();
+  } else {
+    leaveSecondary();
+  }
+
+  // make sure our idea of clipboard ownership is correct
+  m_screen->checkClipboards();
+
+  // now not on screen
+  m_entered = false;
+
+  return true;
 }
 
-SInt32
-Screen::getJumpZoneSize() const
-{
-    if (!m_isPrimary) {
-        return 0;
+void Screen::reconfigure(UInt32 activeSides) {
+  assert(m_isPrimary);
+  m_screen->reconfigure(activeSides);
+}
+
+void Screen::warpCursor(SInt32 x, SInt32 y) {
+  assert(m_isPrimary);
+  m_screen->warpCursor(x, y);
+}
+
+void Screen::setClipboard(ClipboardID id, const IClipboard *clipboard) {
+  m_screen->setClipboard(id, clipboard);
+}
+
+void Screen::grabClipboard(ClipboardID id) { m_screen->setClipboard(id, NULL); }
+
+void Screen::screensaver(bool) const {
+  // do nothing
+}
+
+void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button,
+                     const String &lang) {
+  // check for ctrl+alt+del emulation
+  if (id == kKeyDelete && (mask & (KeyModifierControl | KeyModifierAlt)) ==
+                              (KeyModifierControl | KeyModifierAlt)) {
+    LOG((CLOG_DEBUG "emulating ctrl+alt+del press"));
+    if (m_screen->fakeCtrlAltDel()) {
+      return;
     }
-    else {
-        return m_screen->getJumpZoneSize();
+  }
+  m_screen->fakeKeyDown(id, mask, button, lang);
+}
+
+void Screen::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
+                       KeyButton button, const String &lang) {
+  assert(!m_isPrimary);
+  m_screen->fakeKeyRepeat(id, mask, count, button, lang);
+}
+
+void Screen::keyUp(KeyID, KeyModifierMask, KeyButton button) {
+  m_screen->fakeKeyUp(button);
+}
+
+void Screen::mouseDown(ButtonID button) {
+  m_screen->fakeMouseButton(button, true);
+}
+
+void Screen::mouseUp(ButtonID button) {
+  m_screen->fakeMouseButton(button, false);
+}
+
+void Screen::mouseMove(SInt32 x, SInt32 y) {
+  assert(!m_isPrimary);
+  m_screen->fakeMouseMove(x, y);
+}
+
+void Screen::mouseRelativeMove(SInt32 dx, SInt32 dy) {
+  assert(!m_isPrimary);
+  m_screen->fakeMouseRelativeMove(dx, dy);
+}
+
+void Screen::mouseWheel(SInt32 xDelta, SInt32 yDelta) const {
+  assert(!m_isPrimary);
+  m_screen->fakeMouseWheel(xDelta, yDelta);
+}
+
+void Screen::resetOptions() {
+  // reset options
+  m_halfDuplex = 0;
+
+  // let screen handle its own options
+  m_screen->resetOptions();
+}
+
+void Screen::setOptions(const OptionsList &options) {
+  // update options
+  for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+    if (options[i] == kOptionHalfDuplexCapsLock) {
+      if (options[i + 1] != 0) {
+        m_halfDuplex |= KeyModifierCapsLock;
+      } else {
+        m_halfDuplex &= ~KeyModifierCapsLock;
+      }
+      LOG((CLOG_DEBUG1 "half-duplex caps-lock %s",
+           ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
+    } else if (options[i] == kOptionHalfDuplexNumLock) {
+      if (options[i + 1] != 0) {
+        m_halfDuplex |= KeyModifierNumLock;
+      } else {
+        m_halfDuplex &= ~KeyModifierNumLock;
+      }
+      LOG((CLOG_DEBUG1 "half-duplex num-lock %s",
+           ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
+    } else if (options[i] == kOptionHalfDuplexScrollLock) {
+      if (options[i + 1] != 0) {
+        m_halfDuplex |= KeyModifierScrollLock;
+      } else {
+        m_halfDuplex &= ~KeyModifierScrollLock;
+      }
+      LOG((CLOG_DEBUG1 "half-duplex scroll-lock %s",
+           ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
     }
+  }
+
+  // update half-duplex options
+  m_screen->setHalfDuplexMask(m_halfDuplex);
+
+  // let screen handle its own options
+  m_screen->setOptions(options);
 }
 
-void
-Screen::getCursorCenter(SInt32& x, SInt32& y) const
-{
-    m_screen->getCursorCenter(x, y);
+void Screen::setSequenceNumber(UInt32 seqNum) {
+  m_screen->setSequenceNumber(seqNum);
 }
 
-KeyModifierMask
-Screen::getActiveModifiers() const
-{
-    return m_screen->getActiveModifiers();
+UInt32 Screen::registerHotKey(KeyID key, KeyModifierMask mask) {
+  return m_screen->registerHotKey(key, mask);
 }
 
-KeyModifierMask
-Screen::pollActiveModifiers() const
-{
-    return m_screen->pollActiveModifiers();
+void Screen::unregisterHotKey(UInt32 id) { m_screen->unregisterHotKey(id); }
+
+void Screen::fakeInputBegin() {
+  assert(!m_fakeInput);
+
+  m_fakeInput = true;
+  m_screen->fakeInputBegin();
 }
 
-bool
-Screen::isDraggingStarted() const
-{
-    return m_screen->isDraggingStarted();
+void Screen::fakeInputEnd() {
+  assert(m_fakeInput);
+
+  m_fakeInput = false;
+  m_screen->fakeInputEnd();
 }
 
-bool
-Screen::isFakeDraggingStarted() const
-{
-    return m_screen->isFakeDraggingStarted();
-}
+bool Screen::isOnScreen() const { return m_entered; }
 
-void
-Screen::setDraggingStarted(bool started)
-{
-    m_screen->setDraggingStarted(started);
-}
+bool Screen::isLockedToScreen() const {
+  // check for pressed mouse buttons
+  // HACK: commented out as it breaks new drag drop feature
+  UInt32 buttonID = 0;
 
-void
-Screen::startDraggingFiles(DragFileList& fileList)
-{
-    m_screen->fakeDraggingFiles(fileList);
-}
-
-void
-Screen::setEnableDragDrop(bool enabled)
-{
-    m_enableDragDrop = enabled;
-}
-
-String&
-Screen::getDraggingFilename() const
-{
-    return m_screen->getDraggingFilename();
-}
-
-void
-Screen::clearDraggingFilename()
-{
-    m_screen->clearDraggingFilename();
-}
-
-const String&
-Screen::getDropTarget() const
-{
-    return m_screen->getDropTarget();
-}
-
-void*
-Screen::getEventTarget() const
-{
-    return m_screen;
-}
-
-bool
-Screen::getClipboard(ClipboardID id, IClipboard* clipboard) const
-{
-    return m_screen->getClipboard(id, clipboard);
-}
-
-void
-Screen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
-{
-    m_screen->getShape(x, y, w, h);
-}
-
-void
-Screen::getCursorPos(SInt32& x, SInt32& y) const
-{
-    m_screen->getCursorPos(x, y);
-}
-
-void
-Screen::enablePrimary()
-{
-    // get notified of screen saver activation/deactivation
-    m_screen->openScreensaver(true);
-
-    // claim screen changed size
-    m_events->addEvent(Event(m_events->forIScreen().shapeChanged(), getEventTarget()));
-}
-
-void
-Screen::enableSecondary()
-{
-    // assume primary has all clipboards
-    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        grabClipboard(id);
+  if (m_screen->isAnyMouseButtonDown(buttonID)) {
+    if (buttonID != kButtonLeft) {
+      LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
     }
 
+    if (m_enableDragDrop) {
+      return (buttonID == kButtonLeft) ? false : true;
+    } else {
+      return true;
+    }
+  }
+
+  // not locked
+  return false;
 }
 
-void
-Screen::disablePrimary()
-{
-    // done with screen saver
-    m_screen->closeScreensaver();
+SInt32 Screen::getJumpZoneSize() const {
+  if (!m_isPrimary) {
+    return 0;
+  } else {
+    return m_screen->getJumpZoneSize();
+  }
 }
 
-void
-Screen::disableSecondary()
-{
-    // done with screen saver
-    m_screen->closeScreensaver();
+void Screen::getCursorCenter(SInt32 &x, SInt32 &y) const {
+  m_screen->getCursorCenter(x, y);
 }
 
-void
-Screen::enterPrimary()
-{
-    // do nothing
+KeyModifierMask Screen::getActiveModifiers() const {
+  return m_screen->getActiveModifiers();
 }
 
-void
-Screen::enterSecondary(KeyModifierMask)
-{
-    // do nothing
+KeyModifierMask Screen::pollActiveModifiers() const {
+  return m_screen->pollActiveModifiers();
 }
 
-void
-Screen::leavePrimary()
-{
-    // we don't track keys while on the primary screen so update our
-    // idea of them now.  this is particularly to update the state of
-    // the toggle modifiers.
-    m_screen->updateKeyState();
+bool Screen::isDraggingStarted() const { return m_screen->isDraggingStarted(); }
+
+bool Screen::isFakeDraggingStarted() const {
+  return m_screen->isFakeDraggingStarted();
 }
 
-void
-Screen::leaveSecondary()
-{
-    // release any keys we think are still down
-    m_screen->fakeAllKeysUp();
+void Screen::setDraggingStarted(bool started) {
+  m_screen->setDraggingStarted(started);
 }
 
-String
-Screen::getSecureInputApp() const
-{
-    return m_screen->getSecureInputApp();
+void Screen::startDraggingFiles(DragFileList &fileList) {
+  m_screen->fakeDraggingFiles(fileList);
 }
 
+void Screen::setEnableDragDrop(bool enabled) { m_enableDragDrop = enabled; }
+
+String &Screen::getDraggingFilename() const {
+  return m_screen->getDraggingFilename();
 }
+
+void Screen::clearDraggingFilename() { m_screen->clearDraggingFilename(); }
+
+const String &Screen::getDropTarget() const {
+  return m_screen->getDropTarget();
+}
+
+void *Screen::getEventTarget() const { return m_screen; }
+
+bool Screen::getClipboard(ClipboardID id, IClipboard *clipboard) const {
+  return m_screen->getClipboard(id, clipboard);
+}
+
+void Screen::getShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const {
+  m_screen->getShape(x, y, w, h);
+}
+
+void Screen::getCursorPos(SInt32 &x, SInt32 &y) const {
+  m_screen->getCursorPos(x, y);
+}
+
+void Screen::enablePrimary() {
+  // get notified of screen saver activation/deactivation
+  m_screen->openScreensaver(true);
+
+  // claim screen changed size
+  m_events->addEvent(
+      Event(m_events->forIScreen().shapeChanged(), getEventTarget()));
+}
+
+void Screen::enableSecondary() {
+  // assume primary has all clipboards
+  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+    grabClipboard(id);
+  }
+}
+
+void Screen::disablePrimary() {
+  // done with screen saver
+  m_screen->closeScreensaver();
+}
+
+void Screen::disableSecondary() {
+  // done with screen saver
+  m_screen->closeScreensaver();
+}
+
+void Screen::enterPrimary() {
+  // do nothing
+}
+
+void Screen::enterSecondary(KeyModifierMask) {
+  // do nothing
+}
+
+void Screen::leavePrimary() {
+  // we don't track keys while on the primary screen so update our
+  // idea of them now.  this is particularly to update the state of
+  // the toggle modifiers.
+  m_screen->updateKeyState();
+}
+
+void Screen::leaveSecondary() {
+  // release any keys we think are still down
+  m_screen->fakeAllKeysUp();
+}
+
+String Screen::getSecureInputApp() const {
+  return m_screen->getSecureInputApp();
+}
+
+} // namespace synergy

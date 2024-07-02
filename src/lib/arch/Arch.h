@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,39 +38,43 @@
 #include "common/common.h"
 
 #if SYSAPI_WIN32
-#    include "arch/win32/ArchConsoleWindows.h"
-#    include "arch/win32/ArchDaemonWindows.h"
-#    include "arch/win32/ArchFileWindows.h"
-#    include "arch/win32/ArchLogWindows.h"
-#    include "arch/win32/ArchMiscWindows.h"
-#    include "arch/win32/ArchMultithreadWindows.h"
-#    include "arch/win32/ArchNetworkWinsock.h"
-#    include "arch/win32/ArchSleepWindows.h"
-#    include "arch/win32/ArchStringWindows.h"
-#    include "arch/win32/ArchSystemWindows.h"
-#    include "arch/win32/ArchTaskBarWindows.h"
-#    include "arch/win32/ArchTimeWindows.h"
+
+#include "arch/win32/ArchConsoleWindows.h"
+#include "arch/win32/ArchDaemonWindows.h"
+#include "arch/win32/ArchFileWindows.h"
+#include "arch/win32/ArchLogWindows.h"
+#include "arch/win32/ArchMultithreadWindows.h"
+#include "arch/win32/ArchNetworkWinsock.h"
+#include "arch/win32/ArchSleepWindows.h"
+#include "arch/win32/ArchStringWindows.h"
+#include "arch/win32/ArchSystemWindows.h"
+#include "arch/win32/ArchTaskBarWindows.h"
+#include "arch/win32/ArchTimeWindows.h"
+
 #elif SYSAPI_UNIX
-#    include "arch/unix/ArchConsoleUnix.h"
-#    include "arch/unix/ArchDaemonUnix.h"
-#    include "arch/unix/ArchFileUnix.h"
-#    include "arch/unix/ArchLogUnix.h"
-#    if HAVE_PTHREAD
-#        include "arch/unix/ArchMultithreadPosix.h"
-#    endif
-#    include "arch/unix/ArchNetworkBSD.h"
-#    include "arch/unix/ArchSleepUnix.h"
-#    include "arch/unix/ArchStringUnix.h"
-#    include "arch/unix/ArchSystemUnix.h"
-#    include "arch/unix/ArchTaskBarXWindows.h"
-#    include "arch/unix/ArchTimeUnix.h"
+
+#include "arch/unix/ArchConsoleUnix.h"
+#include "arch/unix/ArchDaemonUnix.h"
+#include "arch/unix/ArchFileUnix.h"
+#include "arch/unix/ArchLogUnix.h"
+#include "arch/unix/ArchNetworkBSD.h"
+#include "arch/unix/ArchSleepUnix.h"
+#include "arch/unix/ArchStringUnix.h"
+#include "arch/unix/ArchSystemUnix.h"
+#include "arch/unix/ArchTaskBarXWindows.h"
+#include "arch/unix/ArchTimeUnix.h"
+
+#if HAVE_PTHREAD
+#include "arch/unix/ArchMultithreadPosix.h"
+#endif
+
 #endif
 
 /*!
 \def ARCH
 This macro evaluates to the singleton Arch object.
 */
-#define ARCH    (Arch::getInstance())
+#define ARCH (Arch::getInstance())
 
 //! Delegating implementation of architecture dependent interfaces
 /*!
@@ -83,62 +87,56 @@ exactly one of these objects before attempting to call any method,
 typically at the beginning of \c main().
 */
 class Arch : public ARCH_CONSOLE,
-                public ARCH_DAEMON,
-                public ARCH_FILE,
-                public ARCH_LOG,
-                public ARCH_MULTITHREAD,
-                public ARCH_NETWORK,
-                public ARCH_SLEEP,
-                public ARCH_STRING,
-                public ARCH_SYSTEM,
-                public ARCH_TASKBAR,
-                public ARCH_TIME {
+             public ARCH_DAEMON,
+             public ARCH_FILE,
+             public ARCH_LOG,
+             public ARCH_MULTITHREAD,
+             public ARCH_NETWORK,
+             public ARCH_SLEEP,
+             public ARCH_STRING,
+             public ARCH_SYSTEM,
+             public ARCH_TASKBAR,
+             public ARCH_TIME {
 public:
-    Arch();
-    Arch(Arch* arch);
-    virtual ~Arch();
+  Arch();
+  Arch(Arch *arch);
+  virtual ~Arch();
 
-    //! Call init on other arch classes.
-    /*!
-    Some arch classes depend on others to exist first. When init is called
-    these classes will have ARCH available for use.
-    */
-    virtual void init();
+  //! Call init on other arch classes.
+  /*!
+  Some arch classes depend on others to exist first. When init is called
+  these classes will have ARCH available for use.
+  */
+  virtual void init();
 
-    //
-    // accessors
-    //
+  //
+  // accessors
+  //
 
-    //! Return the singleton instance
-    /*!
-    The client must have instantiated exactly once Arch object before
-    calling this function.
-    */
-    static Arch*        getInstance();
+  //! Return the singleton instance
+  /*!
+  The client must have instantiated exactly once Arch object before
+  calling this function.
+  */
+  static Arch *getInstance();
 
-    static void            setInstance(Arch* s) { s_instance = s; }
+  static void setInstance(Arch *s) { s_instance = s; }
 
 private:
-    static Arch*        s_instance;
+  static Arch *s_instance;
 };
 
 //! Convenience object to lock/unlock an arch mutex
 class ArchMutexLock {
 public:
-    ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
-    {
-        ARCH->lockMutex(m_mutex);
-    }
-    ArchMutexLock(ArchMutexLock const &) =delete;
-    ArchMutexLock(ArchMutexLock  &&) =delete;
-    ~ArchMutexLock()
-    {
-        ARCH->unlockMutex(m_mutex);
-    }
+  ArchMutexLock(ArchMutex mutex) : m_mutex(mutex) { ARCH->lockMutex(m_mutex); }
+  ArchMutexLock(ArchMutexLock const &) = delete;
+  ArchMutexLock(ArchMutexLock &&) = delete;
+  ~ArchMutexLock() { ARCH->unlockMutex(m_mutex); }
 
-    ArchMutexLock& operator=(ArchMutexLock const &) =delete;
-    ArchMutexLock& operator=(ArchMutexLock  &&) =delete;
+  ArchMutexLock &operator=(ArchMutexLock const &) = delete;
+  ArchMutexLock &operator=(ArchMutexLock &&) = delete;
 
 private:
-    ArchMutex            m_mutex;
+  ArchMutex m_mutex;
 };

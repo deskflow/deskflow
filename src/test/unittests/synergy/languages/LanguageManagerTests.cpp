@@ -18,50 +18,46 @@
 #include "synergy/languages/LanguageManager.h"
 #include "test/global/gtest.h"
 
+TEST(LanguageManager, RemoteLanguagesTest) {
+  std::string remoteLanguages = "ruenuk";
+  synergy::languages::LanguageManager manager({"ru", "en", "uk"});
 
-TEST(LanguageManager, RemoteLanguagesTest)
-{
-    std::string remoteLanguages = "ruenuk";
-    synergy::languages::LanguageManager manager({"ru", "en", "uk"});
+  manager.setRemoteLanguages(remoteLanguages);
+  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}),
+            manager.getRemoteLanguages());
 
-    manager.setRemoteLanguages(remoteLanguages);
-    EXPECT_EQ((std::vector<std::string> {"ru", "en", "uk"}), manager.getRemoteLanguages());
-
-    manager.setRemoteLanguages(String());
-    EXPECT_TRUE(manager.getRemoteLanguages().empty());
+  manager.setRemoteLanguages(String());
+  EXPECT_TRUE(manager.getRemoteLanguages().empty());
 }
 
-TEST(LanguageManager, LocalLanguagesTest)
-{
-    std::vector<String> localLanguages = {"ru", "en", "uk"};
-    synergy::languages::LanguageManager manager(localLanguages);
+TEST(LanguageManager, LocalLanguagesTest) {
+  std::vector<String> localLanguages = {"ru", "en", "uk"};
+  synergy::languages::LanguageManager manager(localLanguages);
 
-    EXPECT_EQ((std::vector<std::string> {"ru", "en", "uk"}), manager.getLocalLanguages());
+  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}),
+            manager.getLocalLanguages());
 }
 
-TEST(LanguageManager, MissedLanguagesTest)
-{
-    String remoteLanguages = "ruenuk";
-    std::vector<String> localLanguages = {"en"};
-    synergy::languages::LanguageManager manager(localLanguages);
+TEST(LanguageManager, MissedLanguagesTest) {
+  String remoteLanguages = "ruenuk";
+  std::vector<String> localLanguages = {"en"};
+  synergy::languages::LanguageManager manager(localLanguages);
 
-    manager.setRemoteLanguages(remoteLanguages);
-    EXPECT_EQ("ru, uk", manager.getMissedLanguages());
+  manager.setRemoteLanguages(remoteLanguages);
+  EXPECT_EQ("ru, uk", manager.getMissedLanguages());
 }
 
-TEST(LanguageManager, SerializeLocalLanguagesTest)
-{
-    std::vector<String> localLanguages = {"ru", "en", "uk"};
-    synergy::languages::LanguageManager manager(localLanguages);
+TEST(LanguageManager, SerializeLocalLanguagesTest) {
+  std::vector<String> localLanguages = {"ru", "en", "uk"};
+  synergy::languages::LanguageManager manager(localLanguages);
 
-    EXPECT_EQ("ruenuk", manager.getSerializedLocalLanguages());
+  EXPECT_EQ("ruenuk", manager.getSerializedLocalLanguages());
 }
 
-TEST(LanguageManager, LanguageInstalledTest)
-{
-    std::vector<String> localLanguages = {"ru", "en", "uk"};
-    synergy::languages::LanguageManager manager(localLanguages);
+TEST(LanguageManager, LanguageInstalledTest) {
+  std::vector<String> localLanguages = {"ru", "en", "uk"};
+  synergy::languages::LanguageManager manager(localLanguages);
 
-    EXPECT_FALSE(manager.isLanguageInstalled("us"));
-    EXPECT_TRUE(manager.isLanguageInstalled("en"));
+  EXPECT_FALSE(manager.isLanguageInstalled("us"));
+  EXPECT_TRUE(manager.isLanguageInstalled("en"));
 }

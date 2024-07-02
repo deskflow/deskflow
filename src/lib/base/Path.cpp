@@ -26,27 +26,24 @@ namespace filesystem {
 
 #ifdef SYSAPI_WIN32
 
-std::wstring path(const String& filePath)
-{
-    std::wstring result;
+std::wstring path(const String &filePath) {
+  std::wstring result;
 
-    auto lenght = MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), filePath.length(), NULL, 0);
-    if (lenght > 0)
-    {
-        result.resize(lenght);
-        MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), filePath.length(), &result[0], lenght);
-    }
+  auto lenght = MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(),
+                                    filePath.length(), NULL, 0);
+  if (lenght > 0) {
+    result.resize(lenght);
+    MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), filePath.length(),
+                        &result[0], lenght);
+  }
 
-    return result;
+  return result;
 }
 
 #else
-std::string path(const String& filePath)
-{
-    return filePath;
-}
+std::string path(const String &filePath) { return filePath; }
 #endif
 
-} //namespace filesystem
+} // namespace filesystem
 
-} //namespace synergy
+} // namespace synergy

@@ -18,36 +18,35 @@
 #ifndef DATADOWNLOADER_H
 #define DATADOWNLOADER_H
 
-#include <QObject>
 #include <QByteArray>
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
 
-class DataDownloader : public QObject
-{
-    Q_OBJECT
+class DataDownloader : public QObject {
+  Q_OBJECT
 
 public:
-    explicit DataDownloader(QObject* parent = 0);
-    virtual ~DataDownloader();
+  explicit DataDownloader(QObject *parent = 0);
+  virtual ~DataDownloader();
 
-    QByteArray data() const;
-    void cancel();
-    void download(QUrl url);
-    bool isFinished() const { return m_IsFinished; }
+  QByteArray data() const;
+  void cancel();
+  void download(QUrl url);
+  bool isFinished() const { return m_IsFinished; }
 
 signals:
-    void isComplete();
+  void isComplete();
 
 private slots:
-    void complete(QNetworkReply* reply);
+  void complete(QNetworkReply *reply);
 
 private:
-    QNetworkAccessManager m_NetworkManager;
-    QByteArray m_Data;
-    QNetworkReply* m_pReply;
-    bool m_IsFinished;
+  QNetworkAccessManager m_NetworkManager;
+  QByteArray m_Data;
+  QNetworkReply *m_pReply;
+  bool m_IsFinished;
 };
 
 #endif // DATADOWNLOADER_H

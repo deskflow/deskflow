@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "net/IListenSocket.h"
+#include "AutoArchSocket.h"
 #include "arch/IArchNetwork.h"
 #include "mt/Mutex.h"
-#include "AutoArchSocket.h"
+#include "net/IListenSocket.h"
 
 class ISocketMultiplexerJob;
 class IEventQueue;
@@ -29,36 +29,36 @@ class SocketMultiplexer;
 
 class InverseServerSocket : public IListenSocket {
 public:
-    InverseServerSocket(IEventQueue* events, SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
-    InverseServerSocket(InverseServerSocket const &) =delete;
-    InverseServerSocket(InverseServerSocket &&) =delete;
-    ~InverseServerSocket() override;
+  InverseServerSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+                      IArchNetwork::EAddressFamily family);
+  InverseServerSocket(InverseServerSocket const &) = delete;
+  InverseServerSocket(InverseServerSocket &&) = delete;
+  ~InverseServerSocket() override;
 
-    InverseServerSocket& operator=(InverseServerSocket const &) =delete;
-    InverseServerSocket& operator=(InverseServerSocket &&) =delete;
+  InverseServerSocket &operator=(InverseServerSocket const &) = delete;
+  InverseServerSocket &operator=(InverseServerSocket &&) = delete;
 
-    // ISocket overrides
-    void        bind(const NetworkAddress&) override;
-    void        close() override;
-    void*        getEventTarget() const override;
+  // ISocket overrides
+  void bind(const NetworkAddress &) override;
+  void close() override;
+  void *getEventTarget() const override;
 
-    // IListenSocket overrides
-    IDataSocket* accept() override;
+  // IListenSocket overrides
+  IDataSocket *accept() override;
 
 protected:
-    void                setListeningJob(bool read = false);
+  void setListeningJob(bool read = false);
 
 public:
-    ISocketMultiplexerJob*
-                        serviceListening(ISocketMultiplexerJob*,
-                            bool, bool, bool);
+  ISocketMultiplexerJob *serviceListening(ISocketMultiplexerJob *, bool, bool,
+                                          bool);
 
 protected:
-    AutoArchSocket      m_socket;
-    Mutex               m_mutex;
-    IEventQueue*        m_events;
-    SocketMultiplexer*  m_socketMultiplexer;
+  AutoArchSocket m_socket;
+  Mutex m_mutex;
+  IEventQueue *m_events;
+  SocketMultiplexer *m_socketMultiplexer;
 
 private:
-    NetworkAddress      m_address;
+  NetworkAddress m_address;
 };

@@ -17,35 +17,28 @@
  */
 #include "ScreenDuplicationsValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-ScreenDuplicationsValidator::ScreenDuplicationsValidator(const QString& message, const QString& defaultName,const ScreenList* pScreens) :
-   IStringValidator(message),
-   m_defaultName(defaultName),
-   m_pScreenList(pScreens)
-{
+ScreenDuplicationsValidator::ScreenDuplicationsValidator(
+    const QString &message, const QString &defaultName,
+    const ScreenList *pScreens)
+    : IStringValidator(message), m_defaultName(defaultName),
+      m_pScreenList(pScreens) {}
 
-}
+bool ScreenDuplicationsValidator::validate(const QString &input) const {
+  bool result = true;
 
-bool ScreenDuplicationsValidator::validate(const QString& input) const
-{
-   bool result = true;
-
-   if (m_pScreenList)
-   {
-      for (const auto& screen : (*m_pScreenList))
-      {
-         if (!screen.isNull() && !screen.isServer() &&
-             input != m_defaultName && input == screen.name())
-         {
-            result = false;
-            break;
-         }
+  if (m_pScreenList) {
+    for (const auto &screen : (*m_pScreenList)) {
+      if (!screen.isNull() && !screen.isServer() && input != m_defaultName &&
+          input == screen.name()) {
+        result = false;
+        break;
       }
-   }
+    }
+  }
 
-   return result;
+  return result;
 }
 
-}
+} // namespace validators

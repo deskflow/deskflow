@@ -17,10 +17,10 @@
 
 #include "synergy/ToolApp.h"
 
-#include "synergy/ArgParser.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "synergy/ArgParser.h"
 
 #include <iostream>
 #include <sstream>
@@ -31,74 +31,58 @@
 
 #define JSON_URL "https://symless.com/account/json/"
 
-enum {
-    kErrorOk,
-    kErrorArgs,
-    kErrorException,
-    kErrorUnknown
-};
+enum { kErrorOk, kErrorArgs, kErrorException, kErrorUnknown };
 
-UInt32
-ToolApp::run(int argc, char** argv)
-{
-    if (argc <= 1) {
-        std::cerr << "no args" << std::endl;
-        return kErrorArgs;
+UInt32 ToolApp::run(int argc, char **argv) {
+  if (argc <= 1) {
+    std::cerr << "no args" << std::endl;
+    return kErrorArgs;
+  }
+
+  try {
+    ArgParser argParser(this);
+    bool result = argParser.parseToolArgs(m_args, argc, argv);
+
+    if (!result) {
+      m_bye(kExitArgs);
     }
 
-    try {
-        ArgParser argParser(this);
-        bool result = argParser.parseToolArgs(m_args, argc, argv);
-
-        if (!result) {
-            m_bye(kExitArgs);
-        }
-
-        if (m_args.m_printActiveDesktopName) {
+    if (m_args.m_printActiveDesktopName) {
 #if SYSAPI_WIN32
-            MSWindowsSession session;
-            String name = session.getActiveDesktopName();
-            if (name.empty()) {
-                LOG((CLOG_CRIT "failed to get active desktop name"));
-                return kExitFailed;
-            }
-            else {
-                String output = synergy::string::sprintf("activeDesktop:%s", name.c_str());
-                LOG((CLOG_INFO "%s", output.c_str()));
-            }
+      MSWindowsSession session;
+      String name = session.getActiveDesktopName();
+      if (name.empty()) {
+        LOG((CLOG_CRIT "failed to get active desktop name"));
+        return kExitFailed;
+      } else {
+        String output =
+            synergy::string::sprintf("activeDesktop:%s", name.c_str());
+        LOG((CLOG_INFO "%s", output.c_str()));
+      }
 #endif
-        }
-        else if (m_args.m_getInstalledDir) {
-            std::cout << ARCH->getInstalledDirectory() << std::endl;
-        }
-        else if (m_args.m_getProfileDir) {
-            std::cout << ARCH->getProfileDirectory() << std::endl;
-        }
-        else if (m_args.m_getArch) {
-            std::cout << ARCH->getPlatformName() << std::endl;
-        }
-        else {
-            throw XSynergy("Nothing to do");
-        }
+    } else if (m_args.m_getInstalledDir) {
+      std::cout << ARCH->getInstalledDirectory() << std::endl;
+    } else if (m_args.m_getProfileDir) {
+      std::cout << ARCH->getProfileDirectory() << std::endl;
+    } else if (m_args.m_getArch) {
+      std::cout << ARCH->getPlatformName() << std::endl;
+    } else {
+      throw XSynergy("Nothing to do");
     }
-    catch (std::exception& e) {
-        LOG((CLOG_CRIT "an error occurred: %s\n", e.what()));
-        return kExitFailed;
-    }
-    catch (...) {
-        LOG((CLOG_CRIT "an unknown error occurred\n"));
-        return kExitFailed;
-    }
+  } catch (std::exception &e) {
+    LOG((CLOG_CRIT "an error occurred: %s\n", e.what()));
+    return kExitFailed;
+  } catch (...) {
+    LOG((CLOG_CRIT "an unknown error occurred\n"));
+    return kExitFailed;
+  }
 
 #if WINAPI_XWINDOWS
-    // HACK: avoid sigsegv on linux
-    m_bye(kErrorOk);
+  // HACK: avoid sigsegv on linux
+  m_bye(kErrorOk);
 #endif
 
-    return kErrorOk;
+  return kErrorOk;
 }
 
-void
-ToolApp::help()
-{
-}
+void ToolApp::help() {}

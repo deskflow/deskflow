@@ -13,6 +13,11 @@ def main():
     parser.add_argument(
         "--only", type=str, help="Only install the specified dependency"
     )
+    parser.add_argument(
+        "--only-python",
+        action="store_true",
+        help="Only install Python dependencies",
+    )
     args = parser.parse_args()
 
     env.ensure_dependencies()
@@ -20,12 +25,13 @@ def main():
     env.install_requirements()
 
     error = False
-    try:
-        deps = Dependencies(args.only)
-        deps.install()
-    except Exception:
-        traceback.print_exc()
-        error = True
+    if not args.only_python:
+        try:
+            deps = Dependencies(args.only)
+            deps.install()
+        except Exception:
+            traceback.print_exc()
+            error = True
 
     if args.pause_on_exit:
         input("Press enter to continue...")

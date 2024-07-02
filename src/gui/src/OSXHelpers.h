@@ -21,15 +21,11 @@
 
 #include <QString>
 
-enum class IconsTheme {
-    ICONS_DARK,
-    ICONS_LIGHT,
-    ICONS_TEMPLATE
-};
+enum class IconsTheme { ICONS_DARK, ICONS_LIGHT, ICONS_TEMPLATE };
 
 void requestOSXNotificationPermission();
 bool isOSXDevelopmentBuild();
-bool showOSXNotification(const QString& title, const QString& body);
+bool showOSXNotification(const QString &title, const QString &body);
 bool isOSXInterfaceStyleDark();
 IconsTheme getOSXIconsTheme();
 

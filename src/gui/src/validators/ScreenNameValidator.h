@@ -18,18 +18,18 @@
 #ifndef SCREENNAMEVALIDATOR_H
 #define SCREENNAMEVALIDATOR_H
 
-#include "ScreenList.h"
 #include "LineEditValidator.h"
+#include "ScreenList.h"
 
-namespace validators
-{
+namespace validators {
 
-class ScreenNameValidator : public LineEditValidator
-{
+class ScreenNameValidator : public LineEditValidator {
 public:
-   explicit ScreenNameValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr, const ScreenList* pScreens = nullptr);
+  explicit ScreenNameValidator(QLineEdit *parent = nullptr,
+                               QLabel *errors = nullptr,
+                               const ScreenList *pScreens = nullptr);
 };
 
-}
+} // namespace validators
 
 #endif // SCREENNAMEVALIDATOR_H

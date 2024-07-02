@@ -16,16 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "QSynergyApplication.h"
+#include "AppConfig.h"
 #include "LicenseManager.h"
 #include "MainWindow.h"
-#include "AppConfig.h"
+#include "QSynergyApplication.h"
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
 
+#include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <QMessageBox>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -35,13 +35,9 @@
 #include <cstdlib>
 #endif
 
-class QThreadImpl : public QThread
-{
+class QThreadImpl : public QThread {
 public:
-    static void msleep(unsigned long msecs)
-    {
-        QThread::msleep(msecs);
-    }
+  static void msleep(unsigned long msecs) { QThread::msleep(msecs); }
 };
 
 QString getSystemSettingPath();
@@ -50,117 +46,111 @@ QString getSystemSettingPath();
 bool checkMacAssistiveDevices();
 #endif
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char *argv[]) {
 #ifdef Q_OS_DARWIN
-    /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is instantiated" */
-    ::setenv ("QT_BEARER_POLL_TIMEOUT", "-1", 1);
+  /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
+   * instantiated" */
+  ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
-    QCoreApplication::setOrganizationName("Synergy");
-    QCoreApplication::setOrganizationDomain("http://symless.com/");
-    QCoreApplication::setApplicationName("Synergy");
+  QCoreApplication::setOrganizationName("Synergy");
+  QCoreApplication::setOrganizationDomain("http://symless.com/");
+  QCoreApplication::setApplicationName("Synergy");
 
-    QSynergyApplication app(argc, argv);
+  QSynergyApplication app(argc, argv);
 
 #if defined(Q_OS_MAC)
 
-    if (app.applicationDirPath().startsWith("/Volumes/")) {
-        QMessageBox::information(
-            NULL, "Synergy",
-            "Please drag Synergy to the Applications folder, and open it from there.");
-        return 1;
-    }
+  if (app.applicationDirPath().startsWith("/Volumes/")) {
+    QMessageBox::information(NULL, "Synergy",
+                             "Please drag Synergy to the Applications folder, "
+                             "and open it from there.");
+    return 1;
+  }
 
-    if (!checkMacAssistiveDevices())
-    {
-        return 1;
-    }
+  if (!checkMacAssistiveDevices()) {
+    return 1;
+  }
 #endif
 
 #ifndef Q_OS_WIN
-    QApplication::setQuitOnLastWindowClosed(false);
+  QApplication::setQuitOnLastWindowClosed(false);
 #endif
 
-    AppConfig appConfig;
-    qRegisterMetaType<Edition>("Edition");
+  AppConfig appConfig;
+  qRegisterMetaType<Edition>("Edition");
 #ifndef SYNERGY_ENTERPRISE
-    LicenseManager licenseManager (&appConfig);
+  LicenseManager licenseManager(&appConfig);
 #endif
 
-    app.switchTranslator(appConfig.language());
+  app.switchTranslator(appConfig.language());
 
 #ifdef SYNERGY_ENTERPRISE
-    MainWindow mainWindow(appConfig);
+  MainWindow mainWindow(appConfig);
 #else
-    MainWindow mainWindow(appConfig, licenseManager);
+  MainWindow mainWindow(appConfig, licenseManager);
 #endif
 
-    QObject::connect(dynamic_cast<QObject*>(&app), SIGNAL(aboutToQuit()),
-                &mainWindow, SLOT(saveSettings()));
+  QObject::connect(dynamic_cast<QObject *>(&app), SIGNAL(aboutToQuit()),
+                   &mainWindow, SLOT(saveSettings()));
 
-    std::unique_ptr<SetupWizardBlocker> setupBlocker;
-    if (qgetenv("XDG_SESSION_TYPE") == "wayland")
-    {
-        setupBlocker.reset(new SetupWizardBlocker(mainWindow, SetupWizardBlocker::qBlockerType::waylandDetected));
-        setupBlocker->show();
-        return QApplication::exec();
-    }
+  std::unique_ptr<SetupWizardBlocker> setupBlocker;
+  if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
+    setupBlocker.reset(new SetupWizardBlocker(
+        mainWindow, SetupWizardBlocker::qBlockerType::waylandDetected));
+    setupBlocker->show();
+    return QApplication::exec();
+  }
 
-    std::unique_ptr<SetupWizard> setupWizard;
-    if (appConfig.wizardShouldRun())
-    {
-        setupWizard.reset(new SetupWizard(mainWindow));
-        setupWizard->show();
-    }
-    else
-    {
-        mainWindow.open();
-    }
+  std::unique_ptr<SetupWizard> setupWizard;
+  if (appConfig.wizardShouldRun()) {
+    setupWizard.reset(new SetupWizard(mainWindow));
+    setupWizard->show();
+  } else {
+    mainWindow.open();
+  }
 
-    return app.exec();
+  return app.exec();
 }
 
-
 #if defined(Q_OS_MAC)
-bool checkMacAssistiveDevices()
-{
+bool checkMacAssistiveDevices() {
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
 
-    // new in mavericks, applications are trusted individually
-    // with use of the accessibility api. this call will show a
-    // prompt which can show the security/privacy/accessibility
-    // tab, with a list of allowed applications. synergy should
-    // show up there automatically, but will be unchecked.
+  // new in mavericks, applications are trusted individually
+  // with use of the accessibility api. this call will show a
+  // prompt which can show the security/privacy/accessibility
+  // tab, with a list of allowed applications. synergy should
+  // show up there automatically, but will be unchecked.
 
-    if (AXIsProcessTrusted()) {
-        return true;
-    }
+  if (AXIsProcessTrusted()) {
+    return true;
+  }
 
-    const void* keys[] = { kAXTrustedCheckOptionPrompt };
-    const void* trueValue[] = { kCFBooleanTrue };
-    CFDictionaryRef options = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
+  const void *keys[] = {kAXTrustedCheckOptionPrompt};
+  const void *trueValue[] = {kCFBooleanTrue};
+  CFDictionaryRef options =
+      CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
 
-    bool result = AXIsProcessTrustedWithOptions(options);
-    CFRelease(options);
-    return result;
+  bool result = AXIsProcessTrustedWithOptions(options);
+  CFRelease(options);
+  return result;
 
 #else
 
-    // now deprecated in mavericks.
-    bool result = AXAPIEnabled();
-    if (!result) {
-        QMessageBox::information(
-            NULL, "Synergy",
-            "Please enable access to assistive devices "
-            "System Preferences -> Security & Privacy -> "
-            "Privacy -> Accessibility, then re-open Synergy.");
-    }
-    return result;
+  // now deprecated in mavericks.
+  bool result = AXAPIEnabled();
+  if (!result) {
+    QMessageBox::information(NULL, "Synergy",
+                             "Please enable access to assistive devices "
+                             "System Preferences -> Security & Privacy -> "
+                             "Privacy -> Accessibility, then re-open Synergy.");
+  }
+  return result;
 
 #endif
 }

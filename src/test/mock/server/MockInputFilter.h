@@ -23,8 +23,7 @@
 
 #include "test/global/gmock.h"
 
-class MockInputFilter : public InputFilter
-{
+class MockInputFilter : public InputFilter {
 public:
-     MOCK_METHOD(void, setPrimaryClient, (PrimaryClient*), (override));
+  MOCK_METHOD(void, setPrimaryClient, (PrimaryClient *), (override));
 };

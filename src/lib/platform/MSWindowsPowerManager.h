@@ -18,21 +18,19 @@
 #ifndef MSWINDOWSPOWERMANAGER_H
 #define MSWINDOWSPOWERMANAGER_H
 
-
-class MSWindowsPowerManager
-{
+class MSWindowsPowerManager {
 public:
-    ~MSWindowsPowerManager();
+  ~MSWindowsPowerManager();
 
-    /**
-     * @brief Prevents the system from sleep automatically
-     */
-    void disableSleep();
+  /**
+   * @brief Prevents the system from sleep automatically
+   */
+  void disableSleep();
 
-     /**
-      * @brief Enable automatically sleeping
-      */
-     void enableSleep();
+  /**
+   * @brief Enable automatically sleeping
+   */
+  void enableSleep();
 };
 
 #endif // MSWINDOWSPOWERMANAGER_H

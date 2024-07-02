@@ -17,9 +17,8 @@
 #pragma once
 #include <QMessageBox>
 
-class UpgradeDialog : public QMessageBox
-{
+class UpgradeDialog : public QMessageBox {
 public:
-    explicit UpgradeDialog(QWidget *parent = nullptr);
-    void showDialog(const QString& text, const QString& link);
+  explicit UpgradeDialog(QWidget *parent = nullptr);
+  void showDialog(const QString &text, const QString &link);
 };

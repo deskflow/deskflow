@@ -24,10 +24,9 @@
 
 #include "test/global/gmock.h"
 
-class MockServerApp : public ServerApp
-{
+class MockServerApp : public ServerApp {
 public:
-    MockServerApp() : ServerApp(nullptr, nullptr) { }
+  MockServerApp() : ServerApp(nullptr, nullptr) {}
 };
 
 #include "test/global/gtest.h"
@@ -36,14 +35,14 @@ public:
 // using ::testing::Invoke;
 using ::testing::NiceMock;
 
-TEST(ServerAppTests, runInner_will_handle_configuration_lifetime)
-{
-    NiceMock<MockServerApp> app;
+TEST(ServerAppTests, runInner_will_handle_configuration_lifetime) {
+  NiceMock<MockServerApp> app;
 
-    EXPECT_FALSE(app.args().m_config);
+  EXPECT_FALSE(app.args().m_config);
 
-    const char *argv[] {"synergyc"};
-    app.runInner(1, const_cast<char **>(argv), nullptr, [](int,char**){ return 0; });
+  const char *argv[]{"synergyc"};
+  app.runInner(1, const_cast<char **>(argv), nullptr,
+               [](int, char **) { return 0; });
 
-    EXPECT_TRUE(app.args().m_config);
+  EXPECT_TRUE(app.args().m_config);
 }

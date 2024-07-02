@@ -15,19 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "validators/SpacesValidator.h"
 #include "validators/RegExpValidator.h"
+#include "validators/SpacesValidator.h"
 
 #include "AliasValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-AliasValidator::AliasValidator(QLineEdit* parent, QLabel* errors) :
-   LineEditValidator(parent, errors)
-{
-   addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
-   addValidator(std::make_unique<RegExpValidator>("Remove unsupported characters", QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
+AliasValidator::AliasValidator(QLineEdit *parent, QLabel *errors)
+    : LineEditValidator(parent, errors) {
+  addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
+  addValidator(std::make_unique<RegExpValidator>(
+      "Remove unsupported characters",
+      QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
 }
 
-}
+} // namespace validators

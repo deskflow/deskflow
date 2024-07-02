@@ -1,0 +1,26 @@
+# Lints CMake config and C++ source code.
+
+name: "Lint source code"
+on:
+  pull_request:
+
+jobs:
+  lint-cmake-files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv build/python
+          source build/python/bin/activate
+          pip install pyyaml cmake_format clang_format
+
+      - name: Linting with CMake formatter
+        run: ./scripts/lint_cmake.py
+
+      - name: Linting with Clang format
+        run: ./scripts/lint_clang.py

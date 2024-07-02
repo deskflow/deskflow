@@ -23,20 +23,19 @@
 
 class MainWindow;
 
-class ClientConnection
-{
-    MainWindow& m_parent;
-    bool m_checkConnection = false;
+class ClientConnection {
+  MainWindow &m_parent;
+  bool m_checkConnection = false;
 
 public:
-    explicit ClientConnection(MainWindow& parent);
-    void update(const QString& line);
-    void setCheckConnection(bool checkConnection);
+  explicit ClientConnection(MainWindow &parent);
+  void update(const QString &line);
+  void setCheckConnection(bool checkConnection);
 
 private:
-    QString getMessage(const QString& line) const;
-    bool checkMainWindow();
-    void showMessage(const QString& message) const;
+  QString getMessage(const QString &line) const;
+  bool checkMainWindow();
+  void showMessage(const QString &message) const;
 };
 
 #endif // CLIENTCONNECTION_H

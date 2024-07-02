@@ -20,44 +20,38 @@
 #include <QProcess>
 #include <stdexcept>
 
-CommandProcess::CommandProcess(QString cmd, QStringList arguments, QString input) :
-    m_Command(cmd),
-    m_Arguments(arguments),
-    m_Input(input)
-{
-}
+CommandProcess::CommandProcess(QString cmd, QStringList arguments,
+                               QString input)
+    : m_Command(cmd), m_Arguments(arguments), m_Input(input) {}
 
-QString CommandProcess::run()
-{
-    QProcess process;
-    process.setReadChannel(QProcess::StandardOutput);
-    process.start(m_Command, m_Arguments);
-    bool success = process.waitForStarted();
+QString CommandProcess::run() {
+  QProcess process;
+  process.setReadChannel(QProcess::StandardOutput);
+  process.start(m_Command, m_Arguments);
+  bool success = process.waitForStarted();
 
-    QString output, error;
-    if (success)
-    {
-        if (!m_Input.isEmpty()) {
-            process.write(m_Input.toStdString().c_str());
-        }
-
-        if (process.waitForFinished()) {
-            output = QString::fromLocal8Bit(process.readAllStandardOutput().trimmed());
-            error = process.readAllStandardError().trimmed();
-        }
+  QString output, error;
+  if (success) {
+    if (!m_Input.isEmpty()) {
+      process.write(m_Input.toStdString().c_str());
     }
 
-    int code = process.exitCode();
-    if (!error.isEmpty() || !success || code != 0)
-    {
-        throw std::runtime_error(
-            QString("Code: %1\nError: %2")
-                .arg(process.exitCode())
-                .arg(error.isEmpty() ? "Unknown" : error)
-                .toStdString());
+    if (process.waitForFinished()) {
+      output =
+          QString::fromLocal8Bit(process.readAllStandardOutput().trimmed());
+      error = process.readAllStandardError().trimmed();
     }
+  }
 
-    emit finished();
+  int code = process.exitCode();
+  if (!error.isEmpty() || !success || code != 0) {
+    throw std::runtime_error(QString("Code: %1\nError: %2")
+                                 .arg(process.exitCode())
+                                 .arg(error.isEmpty() ? "Unknown" : error)
+                                 .toStdString());
+  }
 
-    return output;
+  emit finished();
+
+  return output;
 }

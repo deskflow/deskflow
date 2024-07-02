@@ -22,17 +22,16 @@
 class MainWindow;
 class ZeroconfService;
 
-class Zeroconf : public QObject
-{
-    Q_OBJECT
+class Zeroconf : public QObject {
+  Q_OBJECT
 
 public:
-    Zeroconf(MainWindow* mainWindow);
-    virtual ~Zeroconf();
-    void startService();
-    void stopService();
+  Zeroconf(MainWindow *mainWindow);
+  virtual ~Zeroconf();
+  void startService();
+  void stopService();
 
 private:
-    MainWindow* m_pMainWindow;
-    ZeroconfService* m_pZeroconfService;
+  MainWindow *m_pMainWindow;
+  ZeroconfService *m_pZeroconfService;
 };

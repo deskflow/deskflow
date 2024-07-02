@@ -1,0 +1,11 @@
+# Important: Use the same version of clang-format as our linter, which is:
+#
+# $ ./scripts/install_deps.py --only-python
+# $ ./build/python/bin/clang-format --version
+#
+# Warning: If you use a different version, the formatting will be different.
+#
+# To install a specific version of clang-format, use pip:
+# $ pip install clang-format==<version>
+
+BasedOnStyle: LLVM

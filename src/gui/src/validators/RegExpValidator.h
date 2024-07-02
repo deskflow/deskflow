@@ -18,20 +18,19 @@
 #ifndef REGEXPVALIDATOR_H
 #define REGEXPVALIDATOR_H
 
-#include <qregexp.h>
 #include "IStringValidator.h"
+#include <qregexp.h>
 
-namespace validators
-{
+namespace validators {
 
-class RegExpValidator : public IStringValidator
-{
-   QRegExp m_Validator;
+class RegExpValidator : public IStringValidator {
+  QRegExp m_Validator;
+
 public:
-   RegExpValidator(const QString& message, const QRegExp& validator);
-   bool validate(const QString& input) const override;
+  RegExpValidator(const QString &message, const QRegExp &validator);
+  bool validate(const QString &input) const override;
 };
 
-}
+} // namespace validators
 
 #endif // REGEXPVALIDATOR_H

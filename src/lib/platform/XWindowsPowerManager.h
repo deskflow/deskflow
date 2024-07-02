@@ -18,25 +18,23 @@
 #ifndef XWINDOWSPOWERMANAGER_H
 #define XWINDOWSPOWERMANAGER_H
 
-
-class XWindowsPowerManager
-{
+class XWindowsPowerManager {
 public:
-     XWindowsPowerManager() = default;
-    ~XWindowsPowerManager();
+  XWindowsPowerManager() = default;
+  ~XWindowsPowerManager();
 
-    /**
-     * @brief Prevent the system from sleep
-     */
-    void disableSleep() const;
+  /**
+   * @brief Prevent the system from sleep
+   */
+  void disableSleep() const;
 
-    /**
-     * @brief Enables automatical sleep
-     */
-    void enableSleep() const;
+  /**
+   * @brief Enables automatical sleep
+   */
+  void enableSleep() const;
 
-    XWindowsPowerManager(const XWindowsPowerManager&) = delete;
-    XWindowsPowerManager& operator=(const XWindowsPowerManager&) = delete;
+  XWindowsPowerManager(const XWindowsPowerManager &) = delete;
+  XWindowsPowerManager &operator=(const XWindowsPowerManager &) = delete;
 };
 
 #endif // XWINDOWSPOWERMANAGER_H

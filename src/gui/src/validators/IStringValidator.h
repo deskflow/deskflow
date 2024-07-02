@@ -20,23 +20,20 @@
 
 #include <QString>
 
-namespace validators
-{
+namespace validators {
 
-class IStringValidator
-{
-   QString m_Message;
+class IStringValidator {
+  QString m_Message;
 
 public:
-   IStringValidator() = default;
-   explicit IStringValidator(const QString& message);
-   const QString& getMessage() const;
+  IStringValidator() = default;
+  explicit IStringValidator(const QString &message);
+  const QString &getMessage() const;
 
-   virtual bool validate(const QString& input) const = 0;
-   virtual ~IStringValidator() = default;
+  virtual bool validate(const QString &input) const = 0;
+  virtual ~IStringValidator() = default;
 };
 
-}
-
+} // namespace validators
 
 #endif // IVALIDATOR_H

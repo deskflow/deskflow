@@ -16,30 +16,29 @@
  */
 #pragma once
 
-#include <QObject>
 #include <QNetworkAccessManager>
+#include <QObject>
 
 class QNetworkReply;
 class MainWindow;
 class AppConfig;
 
-class CreditsLoader : public QObject
-{
-    Q_OBJECT
+class CreditsLoader : public QObject {
+  Q_OBJECT
 public:
-    explicit CreditsLoader(MainWindow& mainWindow, const AppConfig& config);
-    void loadEliteBackers();
+  explicit CreditsLoader(MainWindow &mainWindow, const AppConfig &config);
+  void loadEliteBackers();
 
 signals:
-    void loaded(const QString& eliteBakers) const;
+  void loaded(const QString &eliteBakers) const;
 
 public slots:
-    void replyFinished(QNetworkReply* reply) const;
+  void replyFinished(QNetworkReply *reply) const;
 
 private:
-    MainWindow& m_mainWindow;
-    const AppConfig& m_config;
-    QNetworkAccessManager m_manager;
+  MainWindow &m_mainWindow;
+  const AppConfig &m_config;
+  QNetworkAccessManager m_manager;
 
-    void error(const QString& error) const;
+  void error(const QString &error) const;
 };

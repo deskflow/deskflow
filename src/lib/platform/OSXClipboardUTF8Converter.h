@@ -19,12 +19,11 @@
 
 #include "platform/OSXClipboardAnyTextConverter.h"
 
-class OSXClipboardUTF8Converter : public OSXClipboardAnyTextConverter
-{
+class OSXClipboardUTF8Converter : public OSXClipboardAnyTextConverter {
 public:
-    virtual CFStringRef getOSXFormat() const;
-private:
-    virtual String doFromIClipboard(const String&) const;
-    virtual String doToIClipboard(const String&) const;
-};
+  virtual CFStringRef getOSXFormat() const;
 
+private:
+  virtual String doFromIClipboard(const String &) const;
+  virtual String doToIClipboard(const String &) const;
+};

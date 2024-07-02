@@ -27,76 +27,75 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
-bool
-server_stubParseGenericArgs(int, const char* const*, int&)
-{
-    return false;
+bool server_stubParseGenericArgs(int, const char *const *, int &) {
+  return false;
 }
 
-bool
-server_stubCheckUnexpectedArgs()
-{
-    return false;
+bool server_stubCheckUnexpectedArgs() { return false; }
+
+TEST(ServerArgs, ServerArgs_will_construct_from_copy) {
+  lib::synergy::ServerArgs serverArgs;
+  serverArgs.m_display = "display0";
+  lib::synergy::ServerArgs serverArgs2{serverArgs};
+  EXPECT_EQ(serverArgs.m_display, serverArgs2.m_display);
 }
 
-TEST(ServerArgs, ServerArgs_will_construct_from_copy)
-{
-    lib::synergy::ServerArgs serverArgs;
-    serverArgs.m_display = "display0";
-    lib::synergy::ServerArgs serverArgs2 {serverArgs};
-    EXPECT_EQ(serverArgs.m_display, serverArgs2.m_display);
+TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress) {
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _))
+      .WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs())
+      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  lib::synergy::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kAddressCmd[argc] = {"stub", "--address", "mock_address"};
+
+  argParser.parseServerArgs(serverArgs, argc, kAddressCmd);
+
+  EXPECT_EQ("mock_address", serverArgs.m_synergyAddress);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress)
-{
-    NiceMock<MockArgParser> argParser;
-    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
-    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-    lib::synergy::ServerArgs serverArgs;
-    const int argc = 3;
-    const char* kAddressCmd[argc] = { "stub", "--address", "mock_address" };
+TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile) {
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _))
+      .WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs())
+      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  lib::synergy::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kConfigCmd[argc] = {"stub", "--config", "mock_configFile"};
 
-    argParser.parseServerArgs(serverArgs, argc, kAddressCmd);
+  argParser.parseServerArgs(serverArgs, argc, kConfigCmd);
 
-    EXPECT_EQ("mock_address", serverArgs.m_synergyAddress);
+  EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
-{
-    NiceMock<MockArgParser> argParser;
-    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
-    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-    lib::synergy::ServerArgs serverArgs;
-    const int argc = 3;
-    const char* kConfigCmd[argc] = { "stub", "--config", "mock_configFile" };
+TEST(ServerArgsParsingTests, parseServerArgs_checkSerialKeyParams) {
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _))
+      .WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs())
+      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  lib::synergy::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *serial =
+      "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B63"
+      "6F6D70616E79206E616D653B303B38363430307D";
+  std::array<const char *, argc> kSerialCmd = {"stub", "--serial-key", serial};
 
-    argParser.parseServerArgs(serverArgs, argc, kConfigCmd);
-
-    EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
+  argParser.parseServerArgs(serverArgs, argc, kSerialCmd.data());
+  EXPECT_EQ(serial, serverArgs.m_serial.toString());
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_checkSerialKeyParams)
-{
-    NiceMock<MockArgParser> argParser;
-    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
-    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-    lib::synergy::ServerArgs serverArgs;
-    const int argc = 3;
-    const char* serial = "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B636F6D70616E79206E616D653B303B38363430307D";
-    std::array<const char*, argc> kSerialCmd = { "stub", "--serial-key", serial };
+TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams) {
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _))
+      .WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs())
+      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  lib::synergy::ServerArgs serverArgs;
+  const int argc = 2;
+  std::array<const char *, argc> kUnknownCmd = {"stub", "--unknown"};
 
-    argParser.parseServerArgs(serverArgs, argc, kSerialCmd.data());
-    EXPECT_EQ(serial, serverArgs.m_serial.toString());
-}
-
-TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams)
-{
-    NiceMock<MockArgParser> argParser;
-    ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
-    ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-    lib::synergy::ServerArgs serverArgs;
-    const int argc = 2;
-    std::array<const char*, argc> kUnknownCmd = { "stub", "--unknown" };
-
-    EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kUnknownCmd.data()));
+  EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kUnknownCmd.data()));
 }

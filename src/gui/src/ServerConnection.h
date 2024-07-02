@@ -24,19 +24,18 @@
 
 class MainWindow;
 
-class ServerConnection
-{
-    MainWindow& m_parent;
-    QStringList m_ignoredClients;
+class ServerConnection {
+  MainWindow &m_parent;
+  QStringList m_ignoredClients;
 
 public:
-    explicit ServerConnection(MainWindow& parent);
-    void update(const QString& line);
+  explicit ServerConnection(MainWindow &parent);
+  void update(const QString &line);
 
 private:
-    void addClient(const QString& clientName);
-    void configureClient(const QString& clientName);
-    bool checkMainWindow();
+  void addClient(const QString &clientName);
+  void configureClient(const QString &clientName);
+  bool checkMainWindow();
 };
 
 #endif // SERVERCONNECTION_H

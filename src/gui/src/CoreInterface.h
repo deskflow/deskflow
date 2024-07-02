@@ -19,14 +19,13 @@
 
 #include <QString>
 
-class CoreInterface
-{
+class CoreInterface {
 public:
-    CoreInterface();
+  CoreInterface();
 
-    QString getProfileDir();
-    QString getInstalledDir();
-    QString getArch();
-    QString getSerialKeyFilePath();
-    QString run(const QStringList& args, const QString& input = "");
+  QString getProfileDir();
+  QString getInstalledDir();
+  QString getArch();
+  QString getSerialKeyFilePath();
+  QString run(const QStringList &args, const QString &input = "");
 };

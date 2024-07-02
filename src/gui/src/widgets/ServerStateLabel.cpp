@@ -20,44 +20,30 @@
 
 #include "ServerMessage.h"
 
-namespace synergy_widgets
-{
+namespace synergy_widgets {
 
-ServerStateLabel::ServerStateLabel(QWidget* parent) :
-   QLabel(parent)
-{
+ServerStateLabel::ServerStateLabel(QWidget *parent) : QLabel(parent) {}
+
+void ServerStateLabel::updateServerState(const QString &line) {
+  ServerMessage message(line);
+
+  if (message.isExitMessage()) {
+    m_clients.clear();
+  } else if (message.isConnectedMessage()) {
+    m_clients.append(message.getClientName());
+  } else if (message.isDisconnectedMessage()) {
+    m_clients.removeAll(message.getClientName());
+  }
+
+  updateState();
 }
 
-void ServerStateLabel::updateServerState(const QString& line)
-{
-   ServerMessage message(line);
-
-   if (message.isExitMessage())
-   {
-      m_clients.clear();
-   }
-   else if (message.isConnectedMessage())
-   {
-       m_clients.append(message.getClientName());
-   }
-   else if (message.isDisconnectedMessage())
-   {
-       m_clients.removeAll(message.getClientName());
-   }
-
-   updateState();
+void ServerStateLabel::updateState() {
+  if (m_clients.isEmpty()) {
+    show();
+  } else {
+    hide();
+  }
 }
 
-void ServerStateLabel::updateState()
-{
-   if (m_clients.isEmpty())
-   {
-      show();
-   }
-   else
-   {
-      hide();
-   }
-}
-
-} //namespace synergy_widgets
+} // namespace synergy_widgets

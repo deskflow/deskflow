@@ -17,62 +17,63 @@
 #ifndef SYNERGY_LANGUAGESLANGUAGEMANAGER_H
 #define SYNERGY_LANGUAGESLANGUAGEMANAGER_H
 
-#include "synergy/AppUtil.h"
 #include "base/String.h"
+#include "synergy/AppUtil.h"
 #include <vector>
 
 namespace synergy {
 
 namespace languages {
 
-class LanguageManager
-{
-    std::vector<String> m_remoteLanguages;
-    std::vector<String> m_localLanguages;
+class LanguageManager {
+  std::vector<String> m_remoteLanguages;
+  std::vector<String> m_localLanguages;
 
 public:
-    explicit LanguageManager(const std::vector<String>& localLanguages = AppUtil::instance().getKeyboardLayoutList());
+  explicit LanguageManager(const std::vector<String> &localLanguages =
+                               AppUtil::instance().getKeyboardLayoutList());
 
-    /**
-     * @brief setRemoteLanguages sets remote languages
-     * @param remoteLanguages is a string with sericalized languages
-     */
-    void setRemoteLanguages(const String& remoteLanguages);
+  /**
+   * @brief setRemoteLanguages sets remote languages
+   * @param remoteLanguages is a string with sericalized languages
+   */
+  void setRemoteLanguages(const String &remoteLanguages);
 
-    /**
-     * @brief getRemoteLanguages getter for remote languages
-     * @return vector of remote languages
-     */
-    const std::vector<String>& getRemoteLanguages() const;
+  /**
+   * @brief getRemoteLanguages getter for remote languages
+   * @return vector of remote languages
+   */
+  const std::vector<String> &getRemoteLanguages() const;
 
-    /**
-     * @brief getLocalLanguages getter for local languages
-     * @return vector of local languages
-     */
-    const std::vector<String>& getLocalLanguages() const;
+  /**
+   * @brief getLocalLanguages getter for local languages
+   * @return vector of local languages
+   */
+  const std::vector<String> &getLocalLanguages() const;
 
-    /**
-     * @brief getMissedLanguages getter for missed languages on local machine
-     * @return difference between remote and local languages as a coma separated string
-     */
-    String getMissedLanguages() const;
+  /**
+   * @brief getMissedLanguages getter for missed languages on local machine
+   * @return difference between remote and local languages as a coma separated
+   * string
+   */
+  String getMissedLanguages() const;
 
-    /**
-     * @brief getSerializedLocalLanguages getter for local serialized languages
-     * @return serialized local languages as a string
-     */
-    String getSerializedLocalLanguages() const;
+  /**
+   * @brief getSerializedLocalLanguages getter for local serialized languages
+   * @return serialized local languages as a string
+   */
+  String getSerializedLocalLanguages() const;
 
-    /**
-     * @brief isLanguageInstalled checks if language is installed
-     * @param language which should be checked
-     * @return true if the specified language is installed
-     */
-    bool isLanguageInstalled(const String& language) const;
+  /**
+   * @brief isLanguageInstalled checks if language is installed
+   * @param language which should be checked
+   * @return true if the specified language is installed
+   */
+  bool isLanguageInstalled(const String &language) const;
 };
 
-} //namespace languages
+} // namespace languages
 
-} //namespace synergy
+} // namespace synergy
 
 #endif // SYNERGY_LANGUAGESLANGUAGEMANAGER_H
