@@ -19,8 +19,8 @@ jobs:
           source build/python/bin/activate
           pip install cmake_format pyyaml
 
-      - name: Lint CMake config
+      - name: Linting with CMake formatter
         run: ./scripts/lint_cmake.py
 
-      - name: Lint with CLang
+      - name: Linting with Clang format
         run: ./scripts/lint_clang.py

@@ -21,18 +21,28 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--format", action="store_true", help="Formats all files with CLang"
+        "--format",
+        action="store_true",
+        help="In-place format all files",
     )
     args = parser.parse_args()
 
     args = ["-i"] if args.format else ["--dry-run", "--Werror"]
     files_recursive = fs.find_files(dirs, include_files)
 
-    if files_recursive:
-        cmd_utils.run(["clang-format"] + args + files_recursive, print_cmd=True)
-        print("CLang lint passed")
+    if args.format:
+        print("Formatting files with Clang formatter:")
     else:
-        print("No files for CLang to process", file=sys.stderr)
+        print("Checking files with Clang formatter:")
+
+    for file in files_recursive:
+        print(file)
+
+    if files_recursive:
+        cmd_utils.run(["clang-format"] + args + files_recursive)
+        print("Clang lint passed")
+    else:
+        print("No files for Clang to process", file=sys.stderr)
         sys.exit(0)
 
 

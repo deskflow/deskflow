@@ -21,7 +21,11 @@ def main():
     Lints by performing a dry run (--check) which fails when formatting is needed.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--format", action="store_true", help="Formats all CMake files")
+    parser.add_argument(
+        "--format",
+        action="store_true",
+        help="In-place format all files",
+    )
     args = parser.parse_args()
 
     env.ensure_in_venv(__file__)
@@ -29,6 +33,14 @@ def main():
 
     new_args = ["--in-place"] if args.format else ["--check"]
     files_recursive = fs.find_files(".", include_files, exclude_dirs)
+
+    if args.format:
+        print("Formatting files with CMake formatter:")
+    else:
+        print("Checking files with CMake formatter:")
+
+    for file in files_recursive:
+        print(file)
 
     if files_recursive:
         sys.argv = [""] + new_args + files_recursive
