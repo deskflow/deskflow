@@ -25,13 +25,14 @@ def main():
     )
     args = parser.parse_args()
 
-    args = [] if args.format else ["--dry-run", "--Werror"]
+    args = ["-i"] if args.format else ["--dry-run", "--Werror"]
     files_recursive = fs.find_files(dirs, include_files)
 
     if files_recursive:
         cmd_utils.run(["clang-format"] + args + files_recursive, print_cmd=True)
+        print("CLang lint passed")
     else:
-        print("No files for CLang to process.", file=sys.stderr)
+        print("No files for CLang to process", file=sys.stderr)
         sys.exit(0)
 
 
