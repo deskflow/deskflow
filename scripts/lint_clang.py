@@ -2,7 +2,7 @@
 
 import argparse, sys
 import lib.fs as fs
-import lib.cmd_utils as cmd_utils
+import lib.env as env
 
 include_files = [
     "*.h",
@@ -27,6 +27,9 @@ def main():
     )
     args = parser.parse_args()
 
+    env.ensure_in_venv(__file__)
+    from clang_format import clang_format  # type: ignore
+
     cmd_args = ["-i"] if args.format else ["--dry-run", "--Werror"]
     files_recursive = fs.find_files(dirs, include_files)
 
@@ -39,8 +42,12 @@ def main():
         print(file)
 
     if files_recursive:
-        cmd_utils.run(["clang-format"] + cmd_args + files_recursive)
-        print("Clang lint passed")
+        sys.argv = [""] + cmd_args + files_recursive
+        result = clang_format()
+        if result == 0:
+            print("Clang lint passed")
+
+        sys.exit(result)
     else:
         print("No files for Clang to process", file=sys.stderr)
         sys.exit(0)
