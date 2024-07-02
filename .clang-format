@@ -1,6 +1,5 @@
-BasedOnStyle: LLVM
-
 # Dumped from: Debian clang-format version 14.0.6
+# clang-format -style=llvm -dump-config > .clang-format
 ---
 Language: Cpp
 # BasedOnStyle:  LLVM
