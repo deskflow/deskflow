@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 
-# Dumped from: Ubuntu clang-format version 14.0.0-1ubuntu1.1
+# Dumped from: Debian clang-format version 14.0.6
 ---
 Language: Cpp
 # BasedOnStyle:  LLVM
