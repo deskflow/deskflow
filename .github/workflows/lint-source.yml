@@ -1,4 +1,4 @@
-# Runs
+# Lints CMake config and C++ source code.
 
 name: "Lint source code"
 on:
