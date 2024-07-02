@@ -17,41 +17,38 @@
 
 #pragma once
 
-#include <string>
-#include <ctime>
 #include "SerialKeyData.h"
 #include "SerialKeyEdition.h"
+#include <ctime>
+#include <string>
 
 class SerialKey {
-    friend bool operator== (SerialKey const&, SerialKey const&);
-public:
-    explicit SerialKey(Edition edition = kUnregistered);
-    explicit SerialKey(const std::string& serial);
+  friend bool operator==(SerialKey const &, SerialKey const &);
 
-    bool                isExpiring(time_t currentTime) const;
-    bool                isExpired(time_t currentTime) const;
-    bool                isTrial() const;
-    bool                isTemporary() const;
-    bool                isMaintenance() const;
-    bool                isValid() const;
-    time_t              daysLeft(time_t currentTime) const;
-    time_t              getExpiration() const;
-    int                 getSpanLeft(time_t time = ::time(0)) const;
-    Edition             edition() const;
-    const std::string&  toString() const;
+public:
+  explicit SerialKey(Edition edition = kUnregistered);
+  explicit SerialKey(const std::string &serial);
+
+  bool isExpiring(time_t currentTime) const;
+  bool isExpired(time_t currentTime) const;
+  bool isTrial() const;
+  bool isTemporary() const;
+  bool isMaintenance() const;
+  bool isValid() const;
+  time_t daysLeft(time_t currentTime) const;
+  time_t getExpiration() const;
+  int getSpanLeft(time_t time = ::time(0)) const;
+  Edition edition() const;
+  const std::string &toString() const;
 
 private:
-    SerialKeyData         m_data;
-
+  SerialKeyData m_data;
 };
 
-
-inline bool
-operator== (SerialKey const& lhs, SerialKey const& rhs) {
-    return (lhs.m_data == rhs.m_data);
+inline bool operator==(SerialKey const &lhs, SerialKey const &rhs) {
+  return (lhs.m_data == rhs.m_data);
 }
 
-inline bool
-operator!= (SerialKey const& lhs, SerialKey const& rhs) {
-    return !(lhs == rhs);
+inline bool operator!=(SerialKey const &lhs, SerialKey const &rhs) {
+  return !(lhs == rhs);
 }

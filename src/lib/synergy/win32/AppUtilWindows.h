@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -27,44 +27,40 @@
 
 class IEventQueue;
 
-enum AppExitMode {
-    kExitModeNormal,
-    kExitModeDaemon
-};
+enum AppExitMode { kExitModeNormal, kExitModeDaemon };
 
 class AppUtilWindows : public AppUtil {
 public:
-    AppUtilWindows(IEventQueue* events);
-    virtual ~AppUtilWindows();
+  AppUtilWindows(IEventQueue *events);
+  virtual ~AppUtilWindows();
 
-    int daemonNTStartup(int, char**);
-    
-    int daemonNTMainLoop(int argc, const char** argv);
+  int daemonNTStartup(int, char **);
 
-    void debugServiceWait();
+  int daemonNTMainLoop(int argc, const char **argv);
 
-    int run(int argc, char** argv);
+  void debugServiceWait();
 
-    void exitApp(int code);
+  int run(int argc, char **argv);
 
-    void beforeAppExit();
+  void exitApp(int code);
 
-    static AppUtilWindows& instance();
+  void beforeAppExit();
 
-    void startNode();
+  static AppUtilWindows &instance();
 
-    std::vector<String> getKeyboardLayoutList() override;
+  void startNode();
 
-    String getCurrentLanguageCode() override;
+  std::vector<String> getKeyboardLayoutList() override;
 
-    HKL getCurrentKeyboardLayout() const;
+  String getCurrentLanguageCode() override;
 
-    void showNotification(const String& title, const String& text) const override;
+  HKL getCurrentKeyboardLayout() const;
 
+  void showNotification(const String &title, const String &text) const override;
 
 private:
-    AppExitMode            m_exitMode;
-    IEventQueue*        m_events;
+  AppExitMode m_exitMode;
+  IEventQueue *m_events;
 
-    static BOOL WINAPI consoleHandler(DWORD Event);
+  static BOOL WINAPI consoleHandler(DWORD Event);
 };

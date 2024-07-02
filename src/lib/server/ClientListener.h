@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "server/Config.h"
-#include "base/EventTypes.h"
 #include "base/Event.h"
+#include "base/EventTypes.h"
 #include "common/stddeque.h"
 #include "common/stdset.h"
+#include "server/Config.h"
 
 class ClientProxy;
 class ClientProxyUnknown;
@@ -35,70 +35,68 @@ class IDataSocket;
 
 class ClientListener {
 public:
-    // The factories are adopted.
-    ClientListener(const NetworkAddress&,
-                            ISocketFactory*,
-                            IEventQueue* events,
-                            bool enableCrypto);
-    ClientListener(ClientListener const &) =delete;
-    ClientListener(ClientListener &&) =delete;
-    ~ClientListener();
+  // The factories are adopted.
+  ClientListener(const NetworkAddress &, ISocketFactory *, IEventQueue *events,
+                 bool enableCrypto);
+  ClientListener(ClientListener const &) = delete;
+  ClientListener(ClientListener &&) = delete;
+  ~ClientListener();
 
-    ClientListener& operator=(ClientListener const &) =delete;
-    ClientListener& operator=(ClientListener &&) =delete;
+  ClientListener &operator=(ClientListener const &) = delete;
+  ClientListener &operator=(ClientListener &&) = delete;
 
-    //! @name manipulators
-    //@{
+  //! @name manipulators
+  //@{
 
-    void                setServer(Server* server);
+  void setServer(Server *server);
 
-    //@}
+  //@}
 
-    //! @name accessors
-    //@{
+  //! @name accessors
+  //@{
 
-    //! Get next connected client
-    /*!
-    Returns the next connected client and removes it from the internal
-    list.  The client is responsible for deleting the returned client.
-    Returns NULL if no clients are available.
-    */
-    ClientProxy*        getNextClient();
+  //! Get next connected client
+  /*!
+  Returns the next connected client and removes it from the internal
+  list.  The client is responsible for deleting the returned client.
+  Returns NULL if no clients are available.
+  */
+  ClientProxy *getNextClient();
 
-    //! Get server which owns this listener
-    Server*             getServer() { return m_server; }
+  //! Get server which owns this listener
+  Server *getServer() { return m_server; }
 
-    //! This method restarts the listener
-    void                restart();
+  //! This method restarts the listener
+  void restart();
 
-    //@}
+  //@}
 
 private:
-    // client connection event handlers
-    void                handleClientConnecting(const Event&, void*);
-    void                handleClientAccepted(const Event&, void*);
-    void                handleUnknownClient(const Event&, void*);
-    void                handleUnknownClientFailure(const Event&, void*);
-    void                handleClientDisconnected(const Event&, void*);
+  // client connection event handlers
+  void handleClientConnecting(const Event &, void *);
+  void handleClientAccepted(const Event &, void *);
+  void handleUnknownClient(const Event &, void *);
+  void handleUnknownClientFailure(const Event &, void *);
+  void handleClientDisconnected(const Event &, void *);
 
-    void                cleanupListenSocket();
-    void                cleanupClientSockets();
-    void                start();
-    void                stop();
-    void                removeUnknownClient(ClientProxyUnknown* unknownClient);
+  void cleanupListenSocket();
+  void cleanupClientSockets();
+  void start();
+  void stop();
+  void removeUnknownClient(ClientProxyUnknown *unknownClient);
 
 private:
-    typedef std::set<ClientProxyUnknown*> NewClients;
-    typedef std::deque<ClientProxy*> WaitingClients;
-    typedef std::set<IDataSocket*> ClientSockets;
+  typedef std::set<ClientProxyUnknown *> NewClients;
+  typedef std::deque<ClientProxy *> WaitingClients;
+  typedef std::set<IDataSocket *> ClientSockets;
 
-    IListenSocket*        m_listen;
-    ISocketFactory*        m_socketFactory;
-    NewClients            m_newClients;
-    WaitingClients        m_waitingClients;
-    Server*                m_server;
-    IEventQueue*        m_events;
-    bool                m_useSecureNetwork;
-    ClientSockets      m_clientSockets;
-    NetworkAddress     m_address;
+  IListenSocket *m_listen;
+  ISocketFactory *m_socketFactory;
+  NewClients m_newClients;
+  WaitingClients m_waitingClients;
+  Server *m_server;
+  IEventQueue *m_events;
+  bool m_useSecureNetwork;
+  ClientSockets m_clientSockets;
+  NetworkAddress m_address;
 };

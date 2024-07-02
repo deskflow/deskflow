@@ -19,8 +19,8 @@
 // TODO: fix tests
 #if 0
 
-#include "test/mock/synergy/MockEventQueue.h"
 #include "platform/XWindowsScreenSaver.h"
+#include "test/mock/synergy/MockEventQueue.h"
 
 #include "test/global/gtest.h"
 #include <X11/Xlib.h>

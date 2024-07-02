@@ -17,48 +17,47 @@
 
 #pragma once
 
+#include <ActivationNotifier.h>
 #include <QObject>
 #include <shared/EditionType.h>
 #include <shared/SerialKey.h>
-#include <ActivationNotifier.h>
 #include <utility>
 
 #include "LicenseRegistry.h"
 
 class AppConfig;
 
-class LicenseManager: public QObject
-{
-    Q_OBJECT
+class LicenseManager : public QObject {
+  Q_OBJECT
 
 public:
-    LicenseManager(AppConfig* appConfig);
-    void setSerialKey(SerialKey serialKey, bool acceptExpired = false);
-    void refresh();
-    Edition activeEdition() const;
-    QString activeEditionName() const;
-    const SerialKey& serialKey() const;
-    void skipActivation() const;
-    void notifyUpdate(QString fromVersion, QString toVersion) const;
-    static QString getEditionName(Edition edition, bool trial = false);
-    void notifyActivation(QString identity) const;
-    QString getLicenseNotice() const;
+  LicenseManager(AppConfig *appConfig);
+  void setSerialKey(SerialKey serialKey, bool acceptExpired = false);
+  void refresh();
+  Edition activeEdition() const;
+  QString activeEditionName() const;
+  const SerialKey &serialKey() const;
+  void skipActivation() const;
+  void notifyUpdate(QString fromVersion, QString toVersion) const;
+  static QString getEditionName(Edition edition, bool trial = false);
+  void notifyActivation(QString identity) const;
+  QString getLicenseNotice() const;
 
 private:
-    AppConfig* m_AppConfig;
-    SerialKey m_serialKey;
-    LicenseRegistry m_registry;
+  AppConfig *m_AppConfig;
+  SerialKey m_serialKey;
+  LicenseRegistry m_registry;
 
 public slots:
-    void validateSerialKey() const;
-    void registerLicense();
+  void validateSerialKey() const;
+  void registerLicense();
 
 signals:
-    void editionChanged (Edition) const;
-    void InvalidLicense () const;
-    void showLicenseNotice(const QString& notice) const;
+  void editionChanged(Edition) const;
+  void InvalidLicense() const;
+  void showLicenseNotice(const QString &notice) const;
 
 protected:
-    QString getTrialNotice() const;
-    QString getTemporaryNotice() const;
+  QString getTrialNotice() const;
+  QString getTemporaryNotice() const;
 };

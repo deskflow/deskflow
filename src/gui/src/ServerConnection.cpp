@@ -24,66 +24,53 @@
 
 #include <QMessageBox>
 
+ServerConnection::ServerConnection(MainWindow &parent) : m_parent(parent) {}
 
-ServerConnection::ServerConnection(MainWindow& parent) :
-    m_parent(parent)
-{
+void ServerConnection::update(const QString &line) {
+  ServerMessage message(line);
 
+  if (!m_parent.appConfig().getUseExternalConfig() &&
+      message.isNewClientMessage() &&
+      !m_ignoredClients.contains(message.getClientName())) {
+    addClient(message.getClientName());
+  }
 }
 
-void ServerConnection::update(const QString& line)
-{
-    ServerMessage message(line);
+bool ServerConnection::checkMainWindow() {
+  bool result = m_parent.isActiveWindow();
 
-    if (!m_parent.appConfig().getUseExternalConfig() &&
-        message.isNewClientMessage() &&
-        !m_ignoredClients.contains(message.getClientName()))
-    {
-        addClient(message.getClientName());
-    }
+  if (m_parent.isMinimized() || m_parent.isHidden()) {
+    m_parent.showNormal();
+    m_parent.activateWindow();
+    result = true;
+  }
+
+  return result;
 }
 
-bool ServerConnection::checkMainWindow()
-{
-    bool result = m_parent.isActiveWindow();
+void ServerConnection::addClient(const QString &clientName) {
+  if (!m_parent.serverConfig().isFull() &&
+      !m_parent.serverConfig().isScreenExists(clientName) &&
+      checkMainWindow()) {
+    QMessageBox message(&m_parent);
+    message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
+    message.addButton(QObject::tr("Accept and configure"),
+                      QMessageBox::AcceptRole);
+    message.setText(
+        QObject::tr("%1 client has made a connection request").arg(clientName));
 
-    if (m_parent.isMinimized() || m_parent.isHidden())
-    {
-        m_parent.showNormal();
-        m_parent.activateWindow();
-        result = true;
+    if (message.exec() == QMessageBox::Accepted) {
+      configureClient(clientName);
+    } else {
+      m_ignoredClients.append(clientName);
     }
-
-    return result;
+  }
 }
 
-void ServerConnection::addClient(const QString& clientName)
-{
-    if (!m_parent.serverConfig().isFull() &&
-        !m_parent.serverConfig().isScreenExists(clientName) &&
-        checkMainWindow())
-    {
-        QMessageBox message(&m_parent);
-        message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-        message.addButton(QObject::tr("Accept and configure"), QMessageBox::AcceptRole);
-        message.setText(QObject::tr("%1 client has made a connection request").arg(clientName));
+void ServerConnection::configureClient(const QString &clientName) {
+  ServerConfigDialog dlg(&m_parent, m_parent.serverConfig());
 
-        if (message.exec() == QMessageBox::Accepted)
-        {
-            configureClient(clientName);
-        }
-        else
-        {
-            m_ignoredClients.append(clientName);
-        }
-    }
-}
-
-void ServerConnection::configureClient(const QString& clientName)
-{
-    ServerConfigDialog dlg(&m_parent, m_parent.serverConfig());
-
-    if(dlg.addClient(clientName) && dlg.exec() == QDialog::Accepted) {
-        m_parent.restartSynergy();
-    }
+  if (dlg.addClient(clientName) && dlg.exec() == QDialog::Accepted) {
+    m_parent.restartSynergy();
+  }
 }

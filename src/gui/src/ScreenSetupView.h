@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -20,8 +20,8 @@
 
 #define SCREENSETUPVIEW__H
 
-#include <QTableView>
 #include <QFlags>
+#include <QTableView>
 
 #include "Screen.h"
 
@@ -31,27 +31,25 @@ class QResizeEvent;
 class QDragEnterEvent;
 class ScreenSetupModel;
 
-class ScreenSetupView : public QTableView
-{
-    Q_OBJECT
+class ScreenSetupView : public QTableView {
+  Q_OBJECT
 
-    public:
-        ScreenSetupView(QWidget* parent);
+public:
+  ScreenSetupView(QWidget *parent);
 
-    public:
-        void setModel(QAbstractItemModel* model) override;
-        ScreenSetupModel* model() const;
+public:
+  void setModel(QAbstractItemModel *model) override;
+  ScreenSetupModel *model() const;
 
-    protected:
-        void mouseDoubleClickEvent(QMouseEvent*) override;
-        void setTableSize();
-        void resizeEvent(QResizeEvent*) override;
-        void dragEnterEvent(QDragEnterEvent* event) override;
-        void dragMoveEvent(QDragMoveEvent* event) override;
-        void startDrag(Qt::DropActions supportedActions) override;
-        QStyleOptionViewItem viewOptions() const override;
-        void scrollTo(const QModelIndex&, ScrollHint) override {}
+protected:
+  void mouseDoubleClickEvent(QMouseEvent *) override;
+  void setTableSize();
+  void resizeEvent(QResizeEvent *) override;
+  void dragEnterEvent(QDragEnterEvent *event) override;
+  void dragMoveEvent(QDragMoveEvent *event) override;
+  void startDrag(Qt::DropActions supportedActions) override;
+  QStyleOptionViewItem viewOptions() const override;
+  void scrollTo(const QModelIndex &, ScrollHint) override {}
 };
 
 #endif
-

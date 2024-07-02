@@ -21,11 +21,11 @@
 #include "test/global/gtest.h"
 
 TEST(IpcSettingMessage, testIpcSettingMessage) {
-    const std::string expected_name = "test";
-    const std::string expected_value = "test_value";
+  const std::string expected_name = "test";
+  const std::string expected_value = "test_value";
 
-    IpcSettingMessage message("test", "test_value");
+  IpcSettingMessage message("test", "test_value");
 
-    EXPECT_EQ(expected_name, message.getName());
-    EXPECT_EQ(expected_value, message.getValue());
+  EXPECT_EQ(expected_name, message.getName());
+  EXPECT_EQ(expected_value, message.getValue());
 }

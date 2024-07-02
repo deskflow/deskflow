@@ -16,21 +16,21 @@
  */
 #pragma once
 
-#include "CreditsLoader.h"
 #include "AboutDialog.h"
+#include "CreditsLoader.h"
 
 class AboutDialogEliteBackers : public AboutDialog {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    AboutDialogEliteBackers(MainWindow* parent, const AppConfig& config);
+  AboutDialogEliteBackers(MainWindow *parent, const AppConfig &config);
 
 public slots:
-    void updateEliteBackers(const QString& eliteBackers) const;
+  void updateEliteBackers(const QString &eliteBackers) const;
 
 private:
-    CreditsLoader credits;
+  CreditsLoader credits;
 
-    void setupCreditsLoader();
-    void resizeWindow() override;
-    QString getCopyrights() const override;
+  void setupCreditsLoader();
+  void resizeWindow() override;
+  QString getCopyrights() const override;
 };

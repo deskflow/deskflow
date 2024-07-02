@@ -21,15 +21,15 @@
 /* Do not reorder these! */
 
 enum Edition {
-    kBasic,
-    kPro,
-    Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-    kUnregistered,
-    kBusiness,
-    kBasic_China,
-    kPro_China,
-    kLite,
-    kUltimate
+  kBasic,
+  kPro,
+  Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
+  kUnregistered,
+  kBusiness,
+  kBasic_China,
+  kPro_China,
+  kLite,
+  kUltimate
 };
 
 #endif // EDITIONTYPE_H

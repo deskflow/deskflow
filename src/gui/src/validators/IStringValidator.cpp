@@ -17,18 +17,11 @@
  */
 #include "EmptyStringValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-IStringValidator::IStringValidator(const QString& message) :
-   m_Message(message)
-{
+IStringValidator::IStringValidator(const QString &message)
+    : m_Message(message) {}
 
-}
+const QString &IStringValidator::getMessage() const { return m_Message; }
 
-const QString& IStringValidator::getMessage() const
-{
-   return m_Message;
-}
-
-}
+} // namespace validators

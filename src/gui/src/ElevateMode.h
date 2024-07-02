@@ -32,10 +32,6 @@
 //  ElevateAlways      |    false   |   true
 //  ElevateNever       |    false   |   false
 //
-enum ElevateMode {
-    ElevateAsNeeded = 0,
-    ElevateAlways = 1,
-    ElevateNever = 2
-};
+enum ElevateMode { ElevateAsNeeded = 0, ElevateAlways = 1, ElevateNever = 2 };
 
 extern const ElevateMode defaultElevateMode;

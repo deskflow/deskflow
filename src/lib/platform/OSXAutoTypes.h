@@ -17,8 +17,8 @@
 #pragma once
 
 #if WINAPI_CARBON
-#include <memory>
 #include <Carbon/Carbon.h>
+#include <memory>
 
 using CFDeallocator = decltype(&CFRelease);
 using AutoCFArray = std::unique_ptr<const __CFArray, CFDeallocator>;

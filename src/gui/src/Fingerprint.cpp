@@ -27,123 +27,100 @@ static const char kLocalFilename[] = "Local.txt";
 static const char kTrustedServersFilename[] = "TrustedServers.txt";
 static const char kTrustedClientsFilename[] = "TrustedClients.txt";
 
-Fingerprint::Fingerprint(const QString& filename)
-{
-    m_Filename = filename;
+Fingerprint::Fingerprint(const QString &filename) { m_Filename = filename; }
+
+void Fingerprint::trust(const QString &fingerprintText, bool append) {
+  Fingerprint::persistDirectory();
+
+  QIODevice::OpenMode openMode;
+  if (append) {
+    openMode = QIODevice::Append;
+  } else {
+    openMode = QIODevice::WriteOnly;
+  }
+
+  QFile file(filePath());
+  if (file.open(openMode)) {
+    QTextStream out(&file);
+    out << fingerprintText << "\n";
+    file.close();
+  }
 }
 
-void Fingerprint::trust(const QString& fingerprintText, bool append)
-{
-    Fingerprint::persistDirectory();
-
-    QIODevice::OpenMode openMode;
-    if (append) {
-        openMode = QIODevice::Append;
-    }
-    else {
-        openMode = QIODevice::WriteOnly;
-    }
-
-    QFile file(filePath());
-    if (file.open(openMode))
-    {
-        QTextStream out(&file);
-        out << fingerprintText << "\n";
-        file.close();
-    }
-}
-
-bool Fingerprint::fileExists() const
-{
-    QString dirName = Fingerprint::directoryPath();
-    if (!QDir(dirName).exists()) {
-        return false;
-    }
-
-    QFile file(filePath());
-    return file.exists();
-}
-
-bool Fingerprint::isTrusted(const QString& fingerprintText)
-{
-    QStringList list = readList();
-    foreach (QString trusted, list)
-    {
-        if (trusted == fingerprintText) {
-            return true;
-        }
-    }
+bool Fingerprint::fileExists() const {
+  QString dirName = Fingerprint::directoryPath();
+  if (!QDir(dirName).exists()) {
     return false;
+  }
+
+  QFile file(filePath());
+  return file.exists();
 }
 
-QStringList Fingerprint::readList(const int readTo)
-{
-    QStringList list;
-
-    QString dirName = Fingerprint::directoryPath();
-    if (!QDir(dirName).exists()) {
-        return list;
+bool Fingerprint::isTrusted(const QString &fingerprintText) {
+  QStringList list = readList();
+  foreach (QString trusted, list) {
+    if (trusted == fingerprintText) {
+      return true;
     }
+  }
+  return false;
+}
 
-    QFile file(filePath());
+QStringList Fingerprint::readList(const int readTo) {
+  QStringList list;
 
-    if (file.open(QIODevice::ReadOnly))
-    {
-       QTextStream in(&file);
-       while (!in.atEnd())
-       {
-          list.append(in.readLine());
-          if (list.size() == readTo) {
-              break;
-          }
-       }
-       file.close();
-    }
-
+  QString dirName = Fingerprint::directoryPath();
+  if (!QDir(dirName).exists()) {
     return list;
-}
+  }
 
-QString Fingerprint::readFirst()
-{
-    QStringList list = readList(1);
-    return list.at(0);
-}
+  QFile file(filePath());
 
-QString Fingerprint::filePath() const
-{
-    QString dir = Fingerprint::directoryPath();
-    return QString("%1/%2").arg(dir).arg(m_Filename);
-}
-
-void Fingerprint::persistDirectory()
-{
-    QDir dir(Fingerprint::directoryPath());
-    if (!dir.exists()) {
-        dir.mkpath(".");
+  if (file.open(QIODevice::ReadOnly)) {
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+      list.append(in.readLine());
+      if (list.size() == readTo) {
+        break;
+      }
     }
+    file.close();
+  }
+
+  return list;
 }
 
-QString Fingerprint::directoryPath()
-{
-    CoreInterface coreInterface;
-    QString profileDir = coreInterface.getProfileDir();
-
-    return QString("%1/%2")
-      .arg(profileDir)
-      .arg(kDirName);
+QString Fingerprint::readFirst() {
+  QStringList list = readList(1);
+  return list.at(0);
 }
 
-Fingerprint Fingerprint::local()
-{
-    return Fingerprint(kLocalFilename);
+QString Fingerprint::filePath() const {
+  QString dir = Fingerprint::directoryPath();
+  return QString("%1/%2").arg(dir).arg(m_Filename);
 }
 
-Fingerprint Fingerprint::trustedServers()
-{
-    return Fingerprint(kTrustedServersFilename);
+void Fingerprint::persistDirectory() {
+  QDir dir(Fingerprint::directoryPath());
+  if (!dir.exists()) {
+    dir.mkpath(".");
+  }
 }
 
-Fingerprint Fingerprint::trustedClients()
-{
-    return Fingerprint(kTrustedClientsFilename);
+QString Fingerprint::directoryPath() {
+  CoreInterface coreInterface;
+  QString profileDir = coreInterface.getProfileDir();
+
+  return QString("%1/%2").arg(profileDir).arg(kDirName);
+}
+
+Fingerprint Fingerprint::local() { return Fingerprint(kLocalFilename); }
+
+Fingerprint Fingerprint::trustedServers() {
+  return Fingerprint(kTrustedServersFilename);
+}
+
+Fingerprint Fingerprint::trustedClients() {
+  return Fingerprint(kTrustedClientsFilename);
 }

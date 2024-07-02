@@ -20,21 +20,19 @@
 
 #include "test/global/gtest.h"
 
-
-TEST(PathTests, open_file_using_path)
-{
-   std::string utf8FileName = "тіás.txt";
+TEST(PathTests, open_file_using_path) {
+  std::string utf8FileName = "тіás.txt";
 #if SYSAPI_WIN32
-   //Windows uses UTF-16 for file path and names
-   std::wstring fileName = L"\x0442\x0456\x00E1\x0073\x002E\x0074\x0078\x0074";
+  // Windows uses UTF-16 for file path and names
+  std::wstring fileName = L"\x0442\x0456\x00E1\x0073\x002E\x0074\x0078\x0074";
 #else
-    std::string fileName = utf8FileName;
+  std::string fileName = utf8FileName;
 #endif
 
-   std::fstream file(fileName, std::fstream::out);
-   file << "test";
-   file.close();
+  std::fstream file(fileName, std::fstream::out);
+  file << "test";
+  file.close();
 
-   std::ifstream inFile(synergy::filesystem::path(utf8FileName));
-   EXPECT_TRUE(inFile.is_open());
+  std::ifstream inFile(synergy::filesystem::path(utf8FileName));
+  EXPECT_TRUE(inFile.is_open());
 }

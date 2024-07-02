@@ -19,16 +19,14 @@
 #include "platform/OSXClipboardUTF8Converter.h"
 #include "test/global/gtest.h"
 
-TEST(OSXClipboardUTF8ConverterTests, test_Format)
-{
-    OSXClipboardUTF8Converter converter;
-    EXPECT_EQ(IClipboard::kText, converter.getFormat());
-    EXPECT_EQ(CFSTR("public.utf8-plain-text"), converter.getOSXFormat());
+TEST(OSXClipboardUTF8ConverterTests, test_Format) {
+  OSXClipboardUTF8Converter converter;
+  EXPECT_EQ(IClipboard::kText, converter.getFormat());
+  EXPECT_EQ(CFSTR("public.utf8-plain-text"), converter.getOSXFormat());
 }
 
-TEST(OSXClipboardUTF8ConverterTests, test_readWriteClipboard)
-{
-    OSXClipboardUTF8Converter converter;
-    EXPECT_EQ("test data\r", converter.fromIClipboard("test data\n"));
-    EXPECT_EQ("test data\n", converter.toIClipboard("test data\r"));
+TEST(OSXClipboardUTF8ConverterTests, test_readWriteClipboard) {
+  OSXClipboardUTF8Converter converter;
+  EXPECT_EQ("test data\r", converter.fromIClipboard("test data\n"));
+  EXPECT_EQ("test data\n", converter.toIClipboard("test data\r"));
 }

@@ -19,31 +19,24 @@
 
 #include "CoreInterface.h"
 
-ActivationNotifier::ActivationNotifier(QObject *parent) :
-    QObject(parent)
-{
+ActivationNotifier::ActivationNotifier(QObject *parent) : QObject(parent) {}
+
+void ActivationNotifier::setIdentity(QString identity) {
+  m_Identity = identity;
 }
 
-void ActivationNotifier::setIdentity(QString identity)
-{
-    m_Identity = identity;
+void ActivationNotifier::setUpdateInfo(QString const &fromVersion,
+                                       QString const &toVersion,
+                                       QString const &serialKey) {
+  m_fromVersion = fromVersion;
+  m_toVersion = toVersion;
+  m_serialKey = serialKey;
 }
 
-void ActivationNotifier::setUpdateInfo(QString const& fromVersion,
-                                        QString const& toVersion,
-                                        QString const& serialKey)
-{
-    m_fromVersion = fromVersion;
-    m_toVersion = toVersion;
-    m_serialKey = serialKey;
+void ActivationNotifier::notify() {
+  // TODO: use something other than CURL
 }
 
-void ActivationNotifier::notify()
-{
-    // TODO: use something other than CURL
-}
-
-void ActivationNotifier::notifyUpdate()
-{
-    // TODO: use something other than CURL
+void ActivationNotifier::notifyUpdate() {
+  // TODO: use something other than CURL
 }

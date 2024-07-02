@@ -2,11 +2,11 @@
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "io/XIO.h"
-#include "base/XBase.h"
 #include "base/String.h"
+#include "base/XBase.h"
 #include "common/basic_types.h"
+#include "io/XIO.h"
 
 //! Generic socket exception
 XBASE_SUBCLASS(XSocket, XBase);
@@ -32,38 +32,38 @@ Thrown when attempting to create an invalid network address.
 */
 class XSocketAddress : public XSocket {
 public:
-    //! Failure codes
-    enum EError {
-        kUnknown,        //!< Unknown error
-        kNotFound,        //!< The hostname is unknown
-        kNoAddress,        //!< The hostname is valid but has no IP address
-        kUnsupported,    //!< The hostname is valid but has no supported address
-        kBadPort        //!< The port is invalid
-    };
+  //! Failure codes
+  enum EError {
+    kUnknown,     //!< Unknown error
+    kNotFound,    //!< The hostname is unknown
+    kNoAddress,   //!< The hostname is valid but has no IP address
+    kUnsupported, //!< The hostname is valid but has no supported address
+    kBadPort      //!< The port is invalid
+  };
 
-    XSocketAddress(EError, const String& hostname, int port) _NOEXCEPT;
-    virtual ~XSocketAddress() _NOEXCEPT { }
+  XSocketAddress(EError, const String &hostname, int port) _NOEXCEPT;
+  virtual ~XSocketAddress() _NOEXCEPT {}
 
-    //! @name accessors
-    //@{
+  //! @name accessors
+  //@{
 
-    //! Get the error code
-    EError                getError() const throw();
-    //! Get the hostname
-    String                getHostname() const throw();
-    //! Get the port
-    int                    getPort() const throw();
+  //! Get the error code
+  EError getError() const throw();
+  //! Get the hostname
+  String getHostname() const throw();
+  //! Get the port
+  int getPort() const throw();
 
-    //@}
+  //@}
 
 protected:
-    // XBase overrides
-    virtual String        getWhat() const throw();
+  // XBase overrides
+  virtual String getWhat() const throw();
 
 private:
-    EError                m_error;
-    String                m_hostname;
-    int                    m_port;
+  EError m_error;
+  String m_hostname;
+  int m_port;
 };
 
 //! I/O closing exception

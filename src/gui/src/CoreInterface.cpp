@@ -21,9 +21,9 @@
 #include "QUtility.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QProcess>
 #include <QtGlobal>
-#include <QDir>
 #include <stdexcept>
 
 static const char kCoreBinary[] = "syntool";
@@ -34,40 +34,31 @@ static const char kSerialKeyFilename[] = "Synergy.subkey";
 static const char kSerialKeyFilename[] = ".synergy.subkey";
 #endif
 
-CoreInterface::CoreInterface()
-{
+CoreInterface::CoreInterface() {}
+
+QString CoreInterface::getProfileDir() {
+  QStringList args("--get-profile-dir");
+  return run(args);
 }
 
-QString CoreInterface::getProfileDir()
-{
-    QStringList args("--get-profile-dir");
-    return run(args);
+QString CoreInterface::getInstalledDir() {
+  QStringList args("--get-installed-dir");
+  return run(args);
 }
 
-QString CoreInterface::getInstalledDir()
-{
-    QStringList args("--get-installed-dir");
-    return run(args);
+QString CoreInterface::getArch() {
+  QStringList args("--get-arch");
+  return run(args);
 }
 
-QString CoreInterface::getArch()
-{
-    QStringList args("--get-arch");
-    return run(args);
+QString CoreInterface::getSerialKeyFilePath() {
+  QString filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
+  return filename;
 }
 
-QString CoreInterface::getSerialKeyFilePath()
-{
-    QString filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
-    return filename;
-}
+QString CoreInterface::run(const QStringList &args, const QString &input) {
+  QString program(QCoreApplication::applicationDirPath() + "/" + kCoreBinary);
 
-QString CoreInterface::run(const QStringList& args, const QString& input)
-{
-    QString program(
-        QCoreApplication::applicationDirPath()
-        + "/" + kCoreBinary);
-
-    CommandProcess commandProcess(program, args, input);
-    return commandProcess.run();
+  CommandProcess commandProcess(program, args, input);
+  return commandProcess.run();
 }

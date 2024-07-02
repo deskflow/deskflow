@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file LICENSE that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,10 +19,10 @@
 
 #include "test/mock/ipc/MockIpcServer.h"
 
-#include "mt/Thread.h"
-#include "ipc/IpcLogOutputter.h"
 #include "base/String.h"
 #include "common/common.h"
+#include "ipc/IpcLogOutputter.h"
+#include "mt/Thread.h"
 
 #include "test/global/gmock.h"
 #include "test/global/gtest.h"
@@ -31,91 +31,96 @@
 #if WINAPI_MSWINDOWS
 
 using ::testing::_;
-using ::testing::Return;
+using ::testing::AtLeast;
 using ::testing::Matcher;
 using ::testing::MatcherCast;
 using ::testing::Property;
+using ::testing::Return;
 using ::testing::StrEq;
-using ::testing::AtLeast;
 
 using namespace synergy;
 
-//TODO Fix the IPC Tests for windows, see #6709
-// Tests disabled due to gtest/gmock update causing build problems
-// Decision to disable tests and create issue instead due to time constraints
-//inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s) {
-//    const Matcher<const IpcLogLineMessage&> m(
-//        Property(&IpcLogLineMessage::logLine, StrEq(s)));
-//    return MatcherCast<const IpcMessage&>(m);
-//}
+// TODO Fix the IPC Tests for windows, see #6709
+//  Tests disabled due to gtest/gmock update causing build problems
+//  Decision to disable tests and create issue instead due to time constraints
+// inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s)
+// {
+//     const Matcher<const IpcLogLineMessage&> m(
+//         Property(&IpcLogLineMessage::logLine, StrEq(s)));
+//     return MatcherCast<const IpcMessage&>(m);
+// }
 //
-//TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
+// TEST(IpcLogOutputterTests, write_threadingEnabled_bufferIsSent)
 //{
-//    MockIpcServer mockServer;
-//    mockServer.delegateToFake();
+//     MockIpcServer mockServer;
+//     mockServer.delegateToFake();
 //
-//    ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
+//     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 //
-//    EXPECT_CALL(mockServer, hasClients(_)).Times(AtLeast(3));
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"), _)).Times(1);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\n"), _)).Times(1);
+//     EXPECT_CALL(mockServer, hasClients(_)).Times(AtLeast(3));
+//     EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\n"),
+//     _)).Times(1); EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock
+//     2\n"), _)).Times(1);
 //
-//    IpcLogOutputter outputter(mockServer, kIpcClientUnknown, true);
-//    outputter.write(kNOTE, "mock 1");
-//    mockServer.waitForSend();
-//    outputter.write(kNOTE, "mock 2");
-//    mockServer.waitForSend();
-//}
+//     IpcLogOutputter outputter(mockServer, kIpcClientUnknown, true);
+//     outputter.write(kNOTE, "mock 1");
+//     mockServer.waitForSend();
+//     outputter.write(kNOTE, "mock 2");
+//     mockServer.waitForSend();
+// }
 //
-//TEST(IpcLogOutputterTests, write_overBufferMaxSize_firstLineTruncated)
+// TEST(IpcLogOutputterTests, write_overBufferMaxSize_firstLineTruncated)
 //{
-//    MockIpcServer mockServer;
+//     MockIpcServer mockServer;
 //
-//    ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
-//    EXPECT_CALL(mockServer, hasClients(_)).Times(1);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\nmock 3\n"), _)).Times(1);
+//     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
+//     EXPECT_CALL(mockServer, hasClients(_)).Times(1);
+//     EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 2\nmock 3\n"),
+//     _)).Times(1);
 //
-//    IpcLogOutputter outputter(mockServer, kIpcClientUnknown, false);
-//    outputter.bufferMaxSize(2);
+//     IpcLogOutputter outputter(mockServer, kIpcClientUnknown, false);
+//     outputter.bufferMaxSize(2);
 //
-//    // log more lines than the buffer can contain
-//    outputter.write(kNOTE, "mock 1");
-//    outputter.write(kNOTE, "mock 2");
-//    outputter.write(kNOTE, "mock 3");
-//    outputter.sendBuffer();
-//}
+//     // log more lines than the buffer can contain
+//     outputter.write(kNOTE, "mock 1");
+//     outputter.write(kNOTE, "mock 2");
+//     outputter.write(kNOTE, "mock 3");
+//     outputter.sendBuffer();
+// }
 //
-//TEST(IpcLogOutputterTests, write_underBufferMaxSize_allLinesAreSent)
+// TEST(IpcLogOutputterTests, write_underBufferMaxSize_allLinesAreSent)
 //{
-//    MockIpcServer mockServer;
+//     MockIpcServer mockServer;
 //
-//    ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
+//     ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 //
-//    EXPECT_CALL(mockServer, hasClients(_)).Times(1);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"), _)).Times(1);
+//     EXPECT_CALL(mockServer, hasClients(_)).Times(1);
+//     EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"),
+//     _)).Times(1);
 //
-//    IpcLogOutputter outputter(mockServer, kIpcClientUnknown, false);
-//    outputter.bufferMaxSize(2);
+//     IpcLogOutputter outputter(mockServer, kIpcClientUnknown, false);
+//     outputter.bufferMaxSize(2);
 //
-//    // log more lines than the buffer can contain
-//    outputter.write(kNOTE, "mock 1");
-//    outputter.write(kNOTE, "mock 2");
-//    outputter.sendBuffer();
-//}
+//     // log more lines than the buffer can contain
+//     outputter.write(kNOTE, "mock 1");
+//     outputter.write(kNOTE, "mock 2");
+//     outputter.sendBuffer();
+// }
 //
 //// HACK: temporarily disable this intermittently failing unit test.
 //// when the build machine is under heavy load, a race condition
 //// usually happens.
 //#if 0
-//TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
+// TEST(IpcLogOutputterTests, write_overBufferRateLimit_lastLineTruncated)
 //{
 //    MockIpcServer mockServer;
 //
 //    ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 //
 //    EXPECT_CALL(mockServer, hasClients(_)).Times(2);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"), _)).Times(1);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 4\nmock 5\n"), _)).Times(1);
+//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"),
+//    _)).Times(1); EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock
+//    4\nmock 5\n"), _)).Times(1);
 //
 //    IpcLogOutputter outputter(mockServer, false);
 //    outputter.bufferRateLimit(2, 1); // 1s
@@ -140,15 +145,16 @@ using namespace synergy;
 //}
 //#endif
 //
-//TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
+// TEST(IpcLogOutputterTests, write_underBufferRateLimit_allLinesAreSent)
 //{
 //    MockIpcServer mockServer;
 //
 //    ON_CALL(mockServer, hasClients(_)).WillByDefault(Return(true));
 //
 //    EXPECT_CALL(mockServer, hasClients(_)).Times(2);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"), _)).Times(1);
-//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 3\nmock 4\n"), _)).Times(1);
+//    EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock 1\nmock 2\n"),
+//    _)).Times(1); EXPECT_CALL(mockServer, send(IpcLogLineMessageEq("mock
+//    3\nmock 4\n"), _)).Times(1);
 //
 //    IpcLogOutputter outputter(mockServer, kIpcClientUnknown, false);
 //    outputter.bufferRateLimit(4, 1); // 1s (should be plenty of time)

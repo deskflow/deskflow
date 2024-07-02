@@ -17,22 +17,26 @@
  */
 #include <memory>
 
-#include "validators/SpacesValidator.h"
-#include "validators/RegExpValidator.h"
-#include "validators/EmptyStringValidator.h"
-#include "validators/ScreenDuplicationsValidator.h"
 #include "ScreenNameValidator.h"
+#include "validators/EmptyStringValidator.h"
+#include "validators/RegExpValidator.h"
+#include "validators/ScreenDuplicationsValidator.h"
+#include "validators/SpacesValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-ScreenNameValidator::ScreenNameValidator(QLineEdit* parent, QLabel* errors, const ScreenList* pScreens) :
-   LineEditValidator(parent, errors)
-{
-   addValidator(std::make_unique<EmptyStringValidator>("Computer name is required"));
-   addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
-   addValidator(std::make_unique<RegExpValidator>("Remove unsupported characters", QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
-   addValidator(std::make_unique<ScreenDuplicationsValidator>("A computer with this name already exists", parent ? parent->text() : "", pScreens));
+ScreenNameValidator::ScreenNameValidator(QLineEdit *parent, QLabel *errors,
+                                         const ScreenList *pScreens)
+    : LineEditValidator(parent, errors) {
+  addValidator(
+      std::make_unique<EmptyStringValidator>("Computer name is required"));
+  addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
+  addValidator(std::make_unique<RegExpValidator>(
+      "Remove unsupported characters",
+      QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
+  addValidator(std::make_unique<ScreenDuplicationsValidator>(
+      "A computer with this name already exists", parent ? parent->text() : "",
+      pScreens));
 }
 
-}
+} // namespace validators

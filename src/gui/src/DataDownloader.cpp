@@ -17,45 +17,34 @@
 
 #include "DataDownloader.h"
 
-DataDownloader::DataDownloader(QObject* parent) :
-    QObject(parent),
-    m_pReply(nullptr),
-    m_IsFinished(false)
-{
-    connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-        SLOT(complete(QNetworkReply*)));
+DataDownloader::DataDownloader(QObject *parent)
+    : QObject(parent), m_pReply(nullptr), m_IsFinished(false) {
+  connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply *)),
+          SLOT(complete(QNetworkReply *)));
 }
 
-DataDownloader::~DataDownloader()
-{
+DataDownloader::~DataDownloader() {}
+
+void DataDownloader::complete(QNetworkReply *reply) {
+  m_Data = reply->readAll();
+  reply->deleteLater();
+  m_pReply = nullptr;
+
+  if (!m_Data.isEmpty()) {
+    m_IsFinished = true;
+    emit isComplete();
+  }
 }
 
-void DataDownloader::complete(QNetworkReply* reply)
-{
-    m_Data = reply->readAll();
-    reply->deleteLater();
-	m_pReply = nullptr;
+QByteArray DataDownloader::data() const { return m_Data; }
 
-    if (!m_Data.isEmpty()) {
-        m_IsFinished = true;
-        emit isComplete();
-    }
+void DataDownloader::cancel() {
+  if (m_pReply != nullptr) {
+    m_pReply->abort();
+  }
 }
 
-QByteArray DataDownloader::data() const
-{
-    return m_Data;
-}
-
-void DataDownloader::cancel()
-{
-    if (m_pReply != nullptr) {
-        m_pReply->abort();
-    }
-}
-
-void DataDownloader::download(QUrl url)
-{
-    QNetworkRequest request(url);
-    m_pReply = m_NetworkManager.get(request);
+void DataDownloader::download(QUrl url) {
+  QNetworkRequest request(url);
+  m_pReply = m_NetworkManager.get(request);
 }

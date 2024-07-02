@@ -19,17 +19,16 @@
 
 #include "server/ClientProxy1_7.h"
 
-class ClientProxy1_8 : public ClientProxy1_7
-{
+class ClientProxy1_8 : public ClientProxy1_7 {
 public:
-    ClientProxy1_8(const String& name, synergy::IStream* adoptedStream, Server* server, IEventQueue* events);
-    ~ClientProxy1_8() override = default;
+  ClientProxy1_8(const String &name, synergy::IStream *adoptedStream,
+                 Server *server, IEventQueue *events);
+  ~ClientProxy1_8() override = default;
 
-    void        keyDown(KeyID, KeyModifierMask, KeyButton, const String&) override;
+  void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override;
 
 private:
-    void synchronizeLanguages() const;
-
+  void synchronizeLanguages() const;
 };
 
 #endif // SERVER_CLIENTPROXY1_8_H

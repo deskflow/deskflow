@@ -19,20 +19,17 @@
 #include <QtCore>
 #include <QtGui>
 
-UpgradeDialog::UpgradeDialog(QWidget* parent) :
-    QMessageBox(parent)
-{
-    setWindowTitle(QObject::tr("Upgrade to access this feature"));
-    addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-    addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
+UpgradeDialog::UpgradeDialog(QWidget *parent) : QMessageBox(parent) {
+  setWindowTitle(QObject::tr("Upgrade to access this feature"));
+  addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+  addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
 }
 
-void UpgradeDialog::showDialog(const QString& text, const QString& link)
-{
-    setText(QObject::tr(text.toStdString().c_str()));
+void UpgradeDialog::showDialog(const QString &text, const QString &link) {
+  setText(QObject::tr(text.toStdString().c_str()));
 
-    if (exec() == QMessageBox::Accepted)
-    {
-        QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() + link));
-    }
+  if (exec() == QMessageBox::Accepted) {
+    QDesktopServices::openUrl(
+        QUrl(QCoreApplication::organizationDomain() + link));
+  }
 }

@@ -19,12 +19,12 @@
 
 class SecureServerSocket : public InverseServerSocket {
 public:
-    SecureServerSocket(IEventQueue* events,
-        SocketMultiplexer* socketMultiplexer, IArchNetwork::EAddressFamily family);
+  SecureServerSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+                     IArchNetwork::EAddressFamily family);
 
-    // IListenSocket overrides
-    IDataSocket* accept() override;
+  // IListenSocket overrides
+  IDataSocket *accept() override;
 
 private:
-    std::string getCertifcateFileName() const;
+  std::string getCertifcateFileName() const;
 };

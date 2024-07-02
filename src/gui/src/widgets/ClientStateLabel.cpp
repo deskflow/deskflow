@@ -17,25 +17,17 @@
  */
 #include "ClientStateLabel.h"
 
-namespace synergy_widgets
-{
+namespace synergy_widgets {
 
-ClientStateLabel::ClientStateLabel(QWidget* parent) :
-    QLabel(parent)
-{
+ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
+
+void ClientStateLabel::updateClientState(const QString &line) {
+  if (line.contains("connected to server")) {
+    show();
+  } else if (line.contains("disconnected from server") ||
+             line.contains("process exited")) {
     hide();
+  }
 }
 
-void ClientStateLabel::updateClientState(const QString& line)
-{
-   if (line.contains("connected to server"))
-   {
-      show();
-   }
-   else if (line.contains("disconnected from server") || line.contains("process exited"))
-   {
-      hide();
-   }
-}
-
-}
+} // namespace synergy_widgets

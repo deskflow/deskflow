@@ -22,36 +22,38 @@
 #include <QObject>
 #include <base/String.h>
 
-class SslCertificate : public QObject
-{
-Q_OBJECT
+class SslCertificate : public QObject {
+  Q_OBJECT
 
 public:
-    explicit SslCertificate(QObject *parent = 0);
+  explicit SslCertificate(QObject *parent = 0);
 
 public slots:
-    /// @brief Generates a TLS cert and private key
-    /// @param [in] QString path The path of the file to be generated
-    /// @param [in] QString keyLength The size of the private key. default: 2048
-    /// @param [in] bool Should the file be created regardless of if the file already exists
-    void generateCertificate(const QString& path = QString(), const QString& keyLength = "2048", bool forceGen = false);
+  /// @brief Generates a TLS cert and private key
+  /// @param [in] QString path The path of the file to be generated
+  /// @param [in] QString keyLength The size of the private key. default: 2048
+  /// @param [in] bool Should the file be created regardless of if the file
+  /// already exists
+  void generateCertificate(const QString &path = QString(),
+                           const QString &keyLength = "2048",
+                           bool forceGen = false);
 
-    /// @brief Get the key length of a TLS private key
-    /// @param [in] QString path The path of the file to checked
-    /// @return QString The key legnth as a string
-    QString getCertKeyLength(const QString& path);
+  /// @brief Get the key length of a TLS private key
+  /// @param [in] QString path The path of the file to checked
+  /// @return QString The key legnth as a string
+  QString getCertKeyLength(const QString &path);
 
 signals:
-    void error(QString e);
-    void info(QString i);
-    void generateFinished();
+  void error(QString e);
+  void info(QString i);
+  void generateFinished();
 
 private:
-    bool runTool(const QStringList& args);
-    void generateFingerprint(const QString& certificateFilename);
+  bool runTool(const QStringList &args);
+  void generateFingerprint(const QString &certificateFilename);
 
 private:
-    QString m_ProfileDir;
-    QString m_ToolOutput;
-    CoreInterface m_CoreInterface;
+  QString m_ProfileDir;
+  QString m_ToolOutput;
+  CoreInterface m_CoreInterface;
 };

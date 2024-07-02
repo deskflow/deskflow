@@ -20,16 +20,14 @@
 
 #include "IStringValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-class SpacesValidator : public IStringValidator
-{
+class SpacesValidator : public IStringValidator {
 public:
-   explicit SpacesValidator(const QString& message);
-   bool validate(const QString& input) const override;
+  explicit SpacesValidator(const QString &message);
+  bool validate(const QString &input) const override;
 };
 
-}
+} // namespace validators
 
 #endif // SPACESVALIDATOR_H

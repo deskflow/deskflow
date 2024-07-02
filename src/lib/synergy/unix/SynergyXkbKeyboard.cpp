@@ -19,49 +19,45 @@
 #if WINAPI_XWINDOWS
 #include <memory>
 
-#include "base/Log.h"
 #include "SynergyXkbKeyboard.h"
+#include "base/Log.h"
 
 namespace synergy {
 
 namespace linux {
 
-SynergyXkbKeyboard::SynergyXkbKeyboard()
-{
-    using XkbDisplay = std::unique_ptr<Display, decltype(&XCloseDisplay)>;
-    XkbDisplay display(XkbOpenDisplay(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr), &XCloseDisplay);
+SynergyXkbKeyboard::SynergyXkbKeyboard() {
+  using XkbDisplay = std::unique_ptr<Display, decltype(&XCloseDisplay)>;
+  XkbDisplay display(
+      XkbOpenDisplay(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr),
+      &XCloseDisplay);
 
-    if (display) {
-        if (!XkbRF_GetNamesProp(display.get(), nullptr, &m_data)) {
-            LOG((CLOG_WARN "error reading keyboard layouts"));
-        }
+  if (display) {
+    if (!XkbRF_GetNamesProp(display.get(), nullptr, &m_data)) {
+      LOG((CLOG_WARN "error reading keyboard layouts"));
     }
-    else {
-        LOG((CLOG_WARN "can't open xkb display during reading languages"));
-    }
+  } else {
+    LOG((CLOG_WARN "can't open xkb display during reading languages"));
+  }
 }
 
-const char* SynergyXkbKeyboard::getLayout() const
-{
-    return m_data.layout ? m_data.layout : "us";
+const char *SynergyXkbKeyboard::getLayout() const {
+  return m_data.layout ? m_data.layout : "us";
 }
 
-const char* SynergyXkbKeyboard::getVariant() const
-{
-    return m_data.variant ? m_data.variant : "";
+const char *SynergyXkbKeyboard::getVariant() const {
+  return m_data.variant ? m_data.variant : "";
 }
 
-SynergyXkbKeyboard::~SynergyXkbKeyboard()
-{
-    std::free(m_data.model);
-    std::free(m_data.layout);
-    std::free(m_data.variant);
-    std::free(m_data.options);
+SynergyXkbKeyboard::~SynergyXkbKeyboard() {
+  std::free(m_data.model);
+  std::free(m_data.layout);
+  std::free(m_data.variant);
+  std::free(m_data.options);
 }
 
+} // namespace linux
 
-} //namespace Unix
+} // namespace synergy
 
-} //namespace synergy
-
-#endif //WINAPI_XWINDOWS
+#endif // WINAPI_XWINDOWS

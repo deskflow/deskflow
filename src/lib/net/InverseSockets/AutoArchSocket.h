@@ -18,36 +18,35 @@
 #pragma once
 #include "net/NetworkAddress.h"
 
-class AutoArchSocket
-{
+class AutoArchSocket {
 public:
-    explicit AutoArchSocket(IArchNetwork::EAddressFamily family);
-    ~AutoArchSocket();
+  explicit AutoArchSocket(IArchNetwork::EAddressFamily family);
+  ~AutoArchSocket();
 
-    AutoArchSocket(const AutoArchSocket&) = delete;
-    AutoArchSocket& operator =(const AutoArchSocket&) = delete;
+  AutoArchSocket(const AutoArchSocket &) = delete;
+  AutoArchSocket &operator=(const AutoArchSocket &) = delete;
 
-    void setNoDelayOnSocket(bool value = true);
-    void setReuseAddrOnSocket(bool value = true);
+  void setNoDelayOnSocket(bool value = true);
+  void setReuseAddrOnSocket(bool value = true);
 
-    void listenOnSocket();
-    ArchSocket acceptSocket();
-    void bindSocket(const NetworkAddress& addr);
-    bool connectSocket(const NetworkAddress& addr);
-    void bindAndListen(const NetworkAddress& addr);
+  void listenOnSocket();
+  ArchSocket acceptSocket();
+  void bindSocket(const NetworkAddress &addr);
+  bool connectSocket(const NetworkAddress &addr);
+  void bindAndListen(const NetworkAddress &addr);
 
-    void closeSocket();
-    void closeSocketForRead();
-    void closeSocketForWrite();
+  void closeSocket();
+  void closeSocketForRead();
+  void closeSocketForWrite();
 
-    size_t readSocket(UInt8* buffer, size_t size);
-    size_t writeSocket(const UInt8* buffer, size_t size);
-    void throwErrorOnSocket();
+  size_t readSocket(UInt8 *buffer, size_t size);
+  size_t writeSocket(const UInt8 *buffer, size_t size);
+  void throwErrorOnSocket();
 
-    bool isValid() const;
-    ArchSocket getRawSocket() const;
-    void operator =(ArchSocket socket);
+  bool isValid() const;
+  ArchSocket getRawSocket() const;
+  void operator=(ArchSocket socket);
 
 private:
-    ArchSocket m_socket = nullptr;
+  ArchSocket m_socket = nullptr;
 };

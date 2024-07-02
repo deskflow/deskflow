@@ -21,31 +21,29 @@
 #include <memory>
 #include <vector>
 
-#include <qvalidator.h>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <qvalidator.h>
 
 #include "IStringValidator.h"
 
-namespace validators
-{
+namespace validators {
 
-class LineEditValidator : public QValidator
-{
+class LineEditValidator : public QValidator {
 public:
-   explicit LineEditValidator(QLineEdit* parent = nullptr, QLabel* errors = nullptr);
-   QValidator::State validate(QString& input, int& pos) const override;
-   void addValidator(std::unique_ptr<IStringValidator> validator);
+  explicit LineEditValidator(QLineEdit *parent = nullptr,
+                             QLabel *errors = nullptr);
+  QValidator::State validate(QString &input, int &pos) const override;
+  void addValidator(std::unique_ptr<IStringValidator> validator);
 
 private:
-   QLabel* m_pErrors = nullptr;
-   QLineEdit* m_pControl = nullptr;
-   std::vector<std::unique_ptr<IStringValidator>> m_Validators;
+  QLabel *m_pErrors = nullptr;
+  QLineEdit *m_pControl = nullptr;
+  std::vector<std::unique_ptr<IStringValidator>> m_Validators;
 
-   void showError(const QString& message) const;
-
+  void showError(const QString &message) const;
 };
 
-}
+} // namespace validators
 
 #endif // LINEEDITVALIDATOR_H

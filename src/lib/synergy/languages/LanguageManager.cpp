@@ -19,87 +19,81 @@
 
 #include <algorithm>
 
-namespace  {
+namespace {
 
-String vectorToString(const std::vector<String>& vector, const String& delimiter = "")
-{
-    String string;
-    for (const auto& item : vector) {
-        if (&item != &vector[0]) {
-            string += delimiter;
-        }
-        string += item;
+String vectorToString(const std::vector<String> &vector,
+                      const String &delimiter = "") {
+  String string;
+  for (const auto &item : vector) {
+    if (&item != &vector[0]) {
+      string += delimiter;
     }
-    return string;
+    string += item;
+  }
+  return string;
 }
 
-} //anonymous namespace
+} // anonymous namespace
 
 namespace synergy {
 
 namespace languages {
 
-LanguageManager::LanguageManager(const std::vector<String>& localLanguages) :
-    m_localLanguages(localLanguages)
-{
-    LOG((CLOG_INFO "local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
+LanguageManager::LanguageManager(const std::vector<String> &localLanguages)
+    : m_localLanguages(localLanguages) {
+  LOG((CLOG_INFO "local languages: %s",
+       vectorToString(m_localLanguages, ", ").c_str()));
 }
 
-void LanguageManager::setRemoteLanguages(const String& remoteLanguages)
-{
-    m_remoteLanguages.clear();
-    if (!remoteLanguages.empty()) {
-        for (size_t i = 0; i <= remoteLanguages.size() - 2; i +=2) {
-            m_remoteLanguages.push_back(remoteLanguages.substr(i, 2));
-        }
+void LanguageManager::setRemoteLanguages(const String &remoteLanguages) {
+  m_remoteLanguages.clear();
+  if (!remoteLanguages.empty()) {
+    for (size_t i = 0; i <= remoteLanguages.size() - 2; i += 2) {
+      m_remoteLanguages.push_back(remoteLanguages.substr(i, 2));
     }
-    LOG((CLOG_INFO "remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));
+  }
+  LOG((CLOG_INFO "remote languages: %s",
+       vectorToString(m_remoteLanguages, ", ").c_str()));
 }
 
-const std::vector<String>& LanguageManager::getRemoteLanguages() const
-{
-    return m_remoteLanguages;
+const std::vector<String> &LanguageManager::getRemoteLanguages() const {
+  return m_remoteLanguages;
 }
 
-const std::vector<String>& LanguageManager::getLocalLanguages() const
-{
-    return m_localLanguages;
+const std::vector<String> &LanguageManager::getLocalLanguages() const {
+  return m_localLanguages;
 }
 
-String LanguageManager::getMissedLanguages() const
-{
-    String missedLanguages;
+String LanguageManager::getMissedLanguages() const {
+  String missedLanguages;
 
-    for (const auto& language : m_remoteLanguages) {
-        if (!isLanguageInstalled(language)) {
-            if (!missedLanguages.empty()) {
-                missedLanguages += ", ";
-            }
-            missedLanguages += language;
-        }
+  for (const auto &language : m_remoteLanguages) {
+    if (!isLanguageInstalled(language)) {
+      if (!missedLanguages.empty()) {
+        missedLanguages += ", ";
+      }
+      missedLanguages += language;
     }
+  }
 
-    return missedLanguages;
+  return missedLanguages;
 }
 
-String LanguageManager::getSerializedLocalLanguages() const
-{
-    return  vectorToString(m_localLanguages);
+String LanguageManager::getSerializedLocalLanguages() const {
+  return vectorToString(m_localLanguages);
 }
 
-bool LanguageManager::isLanguageInstalled(const String& language) const
-{
-    bool isInstalled = true;
+bool LanguageManager::isLanguageInstalled(const String &language) const {
+  bool isInstalled = true;
 
-    if (!m_localLanguages.empty()) {
-        isInstalled = (std::find(m_localLanguages.begin(), m_localLanguages.end(), language) != m_localLanguages.end());
-    }
+  if (!m_localLanguages.empty()) {
+    isInstalled = (std::find(m_localLanguages.begin(), m_localLanguages.end(),
+                             language) != m_localLanguages.end());
+  }
 
-    return isInstalled;
+  return isInstalled;
 }
 
-} //namespace languages
+} // namespace languages
 
-} //namespace synergy
-
-
+} // namespace synergy

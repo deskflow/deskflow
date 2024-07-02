@@ -18,33 +18,31 @@
 
 #pragma once
 
-#include <string>
 #include "IpcMessage.h"
+#include <string>
 
-class IpcSettingMessage : public IpcMessage
-{
+class IpcSettingMessage : public IpcMessage {
 public:
-    //!
-    //! \brief IpcSettingMessage constructor
-    //! \param name - setting name
-    //! \param value - setting value
-    //!
-    IpcSettingMessage(const std::string& name, const std::string& value);
+  //!
+  //! \brief IpcSettingMessage constructor
+  //! \param name - setting name
+  //! \param value - setting value
+  //!
+  IpcSettingMessage(const std::string &name, const std::string &value);
 
-    //!
-    //! \brief getName is a getter for the setting name
-    //! \return setting name
-    //!
-    const std::string& getName() const;
+  //!
+  //! \brief getName is a getter for the setting name
+  //! \return setting name
+  //!
+  const std::string &getName() const;
 
-    //!
-    //! \brief getValue is a getter for the setting value
-    //! \return setting value
-    //!
-    const std::string& getValue() const;
+  //!
+  //! \brief getValue is a getter for the setting value
+  //! \return setting value
+  //!
+  const std::string &getValue() const;
 
 private:
-    std::string m_name;
-    std::string m_value;
+  std::string m_name;
+  std::string m_value;
 };
-

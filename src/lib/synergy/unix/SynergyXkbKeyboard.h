@@ -20,36 +20,32 @@
 #ifndef XKBKEYBOARD_H
 #define XKBKEYBOARD_H
 
-
-#include <cstdio>
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
+#include <cstdio>
 
 namespace synergy {
 
 namespace linux {
 
-class SynergyXkbKeyboard
-{
-    XkbRF_VarDefsRec m_data = {};
+class SynergyXkbKeyboard {
+  XkbRF_VarDefsRec m_data = {};
 
 public:
-    SynergyXkbKeyboard();
-    SynergyXkbKeyboard(const SynergyXkbKeyboard&) = delete;
-    SynergyXkbKeyboard& operator=(const SynergyXkbKeyboard&) = delete;
+  SynergyXkbKeyboard();
+  SynergyXkbKeyboard(const SynergyXkbKeyboard &) = delete;
+  SynergyXkbKeyboard &operator=(const SynergyXkbKeyboard &) = delete;
 
-    const char* getLayout() const;
-    const char* getVariant() const;
+  const char *getLayout() const;
+  const char *getVariant() const;
 
-    ~SynergyXkbKeyboard();
+  ~SynergyXkbKeyboard();
 };
 
-} //namespace Unix
+} // namespace linux
 
-} //namespace synergy
+} // namespace synergy
 
 #endif // XKBKEYBOARD_H
 
-#endif //WINAPI_XWINDOWS
-
-
+#endif // WINAPI_XWINDOWS

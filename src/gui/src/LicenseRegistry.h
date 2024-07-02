@@ -16,29 +16,28 @@
  */
 #pragma once
 
+#include <QNetworkAccessManager>
 #include <QObject>
 #include <QTimer>
-#include <QNetworkAccessManager>
 
 class QNetworkReply;
 class AppConfig;
 
-class LicenseRegistry : public QObject
-{
-    Q_OBJECT
+class LicenseRegistry : public QObject {
+  Q_OBJECT
 
 public:
-    explicit LicenseRegistry(AppConfig& config);
-    void scheduleRegistration();
+  explicit LicenseRegistry(AppConfig &config);
+  void scheduleRegistration();
 
 public slots:
-    void registerLicense();
-    void handleResponse(QNetworkReply *reply);
+  void registerLicense();
+  void handleResponse(QNetworkReply *reply);
 
 private:
-    AppConfig& m_config;
-    QNetworkAccessManager m_manager;
-    QTimer m_timer;
+  AppConfig &m_config;
+  QNetworkAccessManager m_manager;
+  QTimer m_timer;
 
-    QByteArray getRequestData() const;
+  QByteArray getRequestData() const;
 };

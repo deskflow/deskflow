@@ -18,20 +18,15 @@
 #include "MSWindowsPowerManager.h"
 #include "arch/win32/ArchMiscWindows.h"
 
-MSWindowsPowerManager::~MSWindowsPowerManager()
-{
-    enableSleep();
+MSWindowsPowerManager::~MSWindowsPowerManager() { enableSleep(); }
+
+void MSWindowsPowerManager::disableSleep() {
+  ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
+  ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
 }
 
-void MSWindowsPowerManager::disableSleep()
-{
-    ArchMiscWindows::addBusyState(ArchMiscWindows::kSYSTEM);
-    ArchMiscWindows::addBusyState(ArchMiscWindows::kDISPLAY);
-}
-
-void MSWindowsPowerManager::enableSleep()
-{
-    // allow the system to enter power saving mode
-    ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM);
-    ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
+void MSWindowsPowerManager::enableSleep() {
+  // allow the system to enter power saving mode
+  ArchMiscWindows::removeBusyState(ArchMiscWindows::kSYSTEM);
+  ArchMiscWindows::removeBusyState(ArchMiscWindows::kDISPLAY);
 }

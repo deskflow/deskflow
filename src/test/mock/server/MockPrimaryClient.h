@@ -19,23 +19,22 @@
 
 #define TEST_ENV
 
-#include "server/PrimaryClient.h"
 #include "base/String.h"
+#include "server/PrimaryClient.h"
 
 #include "test/global/gmock.h"
 
-class MockPrimaryClient : public PrimaryClient
-{
+class MockPrimaryClient : public PrimaryClient {
 public:
-    MOCK_METHOD(void*, getEventTarget, (), (const, override));
-    MOCK_METHOD(void, getCursorPos, (SInt32&, SInt32&), (const, override));
-    MOCK_METHOD(void, setJumpCursorPos, (SInt32, SInt32), (const));
-    MOCK_METHOD(void, reconfigure, (UInt32), (override));
-    MOCK_METHOD(void, resetOptions, (), (override));
-    MOCK_METHOD(void, setOptions, (const OptionsList&), (override));
-    MOCK_METHOD(void, enable, (), (override));
-    MOCK_METHOD(void, disable, (), (override));
-    MOCK_METHOD(UInt32, registerHotKey, (KeyID, KeyModifierMask), (override));
-    MOCK_METHOD(KeyModifierMask, getToggleMask, (), (const, override));
-    MOCK_METHOD(void, unregisterHotKey, (UInt32), (override));
+  MOCK_METHOD(void *, getEventTarget, (), (const, override));
+  MOCK_METHOD(void, getCursorPos, (SInt32 &, SInt32 &), (const, override));
+  MOCK_METHOD(void, setJumpCursorPos, (SInt32, SInt32), (const));
+  MOCK_METHOD(void, reconfigure, (UInt32), (override));
+  MOCK_METHOD(void, resetOptions, (), (override));
+  MOCK_METHOD(void, setOptions, (const OptionsList &), (override));
+  MOCK_METHOD(void, enable, (), (override));
+  MOCK_METHOD(void, disable, (), (override));
+  MOCK_METHOD(UInt32, registerHotKey, (KeyID, KeyModifierMask), (override));
+  MOCK_METHOD(KeyModifierMask, getToggleMask, (), (const, override));
+  MOCK_METHOD(void, unregisterHotKey, (UInt32), (override));
 };
