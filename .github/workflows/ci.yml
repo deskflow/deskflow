@@ -219,13 +219,11 @@ jobs:
 
           - name: debian-12-arm64v8
             runs-on: ubuntu-latest
-            qemu-image: arm64v8/debian:stable
-            qemu-platform: linux/arm64/v8
+            arm-image: raspios_lite_arm64:latest
 
           - name: debian-12-arm32v7
             runs-on: ubuntu-latest
-            qemu-image: arm32v7/debian:stable
-            qemu-platform: linux/arm/v7
+            arm-image: raspios_lite:latest
 
     steps:
       - name: Bootstrap
@@ -246,11 +244,14 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - uses: pguyot/arm-runner-action@v2
+        if: ${{ matrix.distro.arm-image }}
+        id: build_image
         with:
-          image: ${{ matrix.distro.qemu-image }}
-          platforms: ${{ matrix.distro.qemu-platform }}
+          base_image: ${{ matrix.distro.arm-image }}
+          commands: |
+            echo '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' \
+            > hello.c && gcc -o hello hello.c && ./hello
 
       - name: Config Git safe dir
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
