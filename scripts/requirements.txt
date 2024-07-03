@@ -1,3 +1,4 @@
+gcovr
 cmake_format
 clang-format
 python-dotenv

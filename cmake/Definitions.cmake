@@ -73,12 +73,10 @@ macro(configure_options)
   set(DEFAULT_BUILD_GUI ON)
   set(DEFAULT_BUILD_INSTALLER ON)
   set(DEFAULT_BUILD_TESTS ON)
+  set(DEFAULT_ENABLE_COVERAGE ON)
 
   # unified binary is off by default for now, for backwards compatibility.
   set(DEFAULT_BUILD_UNIFIED OFF)
-
-  # coverage is off by default because it's only used in ci (for now).
-  set(DEFAULT_ENABLE_COVERAGE OFF)
 
   # licensing is off by default to make life easier for contributors.
   set(DEFAULT_ENABLE_LICENSING OFF)

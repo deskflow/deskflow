@@ -5,7 +5,7 @@
       "type": "cmake",
       "label": "build",
       "command": "build",
-      "targets": ["all"],
+      "targets": ["coverage"],
       "preset": "${command:cmake.activeBuildPresetName}",
       "group": {
         "kind": "build",
