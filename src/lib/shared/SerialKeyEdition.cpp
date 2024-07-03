@@ -1,28 +1,44 @@
-#include <algorithm>
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2016 Symless Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <map>
 
 #include "SerialKeyEdition.h"
 
-const std::string SerialKeyEdition::PRO = "pro";
-const std::string SerialKeyEdition::PRO_CHINA = "pro_china";
-const std::string SerialKeyEdition::BASIC = "basic";
-const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
-const std::string SerialKeyEdition::BUSINESS = "business";
-const std::string SerialKeyEdition::UNREGISTERED = "community";
-const std::string SerialKeyEdition::ULTIMATE = "ultimate";
-const std::string SerialKeyEdition::LITE = "lite";
+const std::string SerialKeyEdition::Pro = "pro";
+const std::string SerialKeyEdition::ProChina = "pro_china";
+const std::string SerialKeyEdition::Basic = "basic";
+const std::string SerialKeyEdition::BasicChina = "basic_china";
+const std::string SerialKeyEdition::Buisiness = "business";
+const std::string SerialKeyEdition::Unregistered = "community";
+const std::string SerialKeyEdition::Ultimate = "ultimate";
+const std::string SerialKeyEdition::Lite = "lite";
 
 namespace {
 
 const std::map<std::string, Edition> &getSerialTypes() {
   static const std::map<std::string, Edition> serialTypes{
-      {SerialKeyEdition::BASIC, kBasic},
-      {SerialKeyEdition::PRO, kPro},
-      {SerialKeyEdition::BASIC_CHINA, kBasicChina},
-      {SerialKeyEdition::PRO_CHINA, kProChina},
-      {SerialKeyEdition::BUSINESS, kBusiness},
-      {SerialKeyEdition::LITE, kLite},
-      {SerialKeyEdition::ULTIMATE, kUltimate}};
+      {SerialKeyEdition::Basic, kBasic},
+      {SerialKeyEdition::Pro, kPro},
+      {SerialKeyEdition::BasicChina, kBasicChina},
+      {SerialKeyEdition::ProChina, kProChina},
+      {SerialKeyEdition::Buisiness, kBusiness},
+      {SerialKeyEdition::Lite, kLite},
+      {SerialKeyEdition::Ultimate, kUltimate}};
   return serialTypes;
 }
 
@@ -30,45 +46,38 @@ const std::map<std::string, Edition> &getSerialTypes() {
 
 SerialKeyEdition::SerialKeyEdition() {}
 
-SerialKeyEdition::SerialKeyEdition(Edition type) : m_Type(type) {}
+SerialKeyEdition::SerialKeyEdition(Edition type) : m_type(type) {}
 
 SerialKeyEdition::SerialKeyEdition(const std::string &type) { setType(type); }
 
-Edition SerialKeyEdition::getType() const { return m_Type; }
+Edition SerialKeyEdition::getType() const { return m_type; }
 
 std::string SerialKeyEdition::getName() const {
-  std::string Name;
-
   switch (getType()) {
-  case kPro:
-    Name = PRO;
-    break;
-  case kBasic:
-    Name = BASIC;
-    break;
-  case kBusiness:
-    Name = BUSINESS;
-    break;
-  case kUnregistered:
-    Name = UNREGISTERED;
-    break;
-  case kBasicChina:
-    Name = BASIC_CHINA;
-    break;
-  case kProChina:
-    Name = PRO_CHINA;
-    break;
   case kLite:
-    Name = LITE;
-    break;
-  case kUltimate:
-    Name = ULTIMATE;
-    break;
-  default:
-    break;
-  }
+    return Lite;
 
-  return Name;
+  case kUltimate:
+    return Ultimate;
+
+  case kPro:
+    return Pro;
+
+  case kBasic:
+    return Basic;
+
+  case kBusiness:
+    return Buisiness;
+
+  case kBasicChina:
+    return BasicChina;
+
+  case kProChina:
+    return ProChina;
+
+  default:
+    return Unregistered;
+  }
 }
 
 std::string SerialKeyEdition::getProductName() const {
@@ -103,18 +112,18 @@ std::string SerialKeyEdition::getProductName() const {
 }
 
 void SerialKeyEdition::setType(Edition type) {
-  m_Type = type;
+  m_type = type;
   setType(getName());
 }
 
-void SerialKeyEdition::setType(const std::string &type) {
+void SerialKeyEdition::setType(const std::string &name) {
   auto types = getSerialTypes();
-  const auto &pType = types.find(type);
+  const auto &pType = types.find(name);
 
   if (pType != types.end()) {
-    m_Type = pType->second;
+    m_type = pType->second;
   } else {
-    m_Type = kUnregistered;
+    m_type = kUnregistered;
   }
 }
 
@@ -124,5 +133,5 @@ bool SerialKeyEdition::isValid() const {
 }
 
 bool SerialKeyEdition::isChina() const {
-  return ((m_Type == kBasicChina) || (m_Type == kProChina));
+  return ((m_type == kBasicChina) || (m_type == kProChina));
 }

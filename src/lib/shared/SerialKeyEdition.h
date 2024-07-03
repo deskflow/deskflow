@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
 
 #include "EditionType.h"
@@ -25,7 +26,7 @@ class SerialKeyEdition {
 public:
   SerialKeyEdition();
   explicit SerialKeyEdition(Edition type);
-  explicit SerialKeyEdition(const std::string &type);
+  explicit SerialKeyEdition(const std::string &name);
 
   Edition getType() const;
   std::string getName() const;
@@ -37,22 +38,22 @@ public:
   bool isValid() const;
   bool isChina() const;
 
-  static const std::string PRO;
-  static const std::string PRO_CHINA;
-  static const std::string BASIC;
-  static const std::string BASIC_CHINA;
-  static const std::string BUSINESS;
-  static const std::string UNREGISTERED;
-  static const std::string ULTIMATE;
-  static const std::string LITE;
+  static const std::string Pro;
+  static const std::string ProChina;
+  static const std::string Basic;
+  static const std::string BasicChina;
+  static const std::string Buisiness;
+  static const std::string Unregistered;
+  static const std::string Ultimate;
+  static const std::string Lite;
 
 private:
-  Edition m_Type = kUnregistered;
+  Edition m_type = kUnregistered;
 };
 
 inline bool operator==(SerialKeyEdition const &lhs,
                        SerialKeyEdition const &rhs) {
-  return (lhs.m_Type == rhs.m_Type);
+  return (lhs.m_type == rhs.m_type);
 }
 
 inline bool operator!=(SerialKeyEdition const &lhs,

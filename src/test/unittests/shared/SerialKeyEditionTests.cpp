@@ -15,85 +15,104 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "shared/EditionType.h"
 #define TEST_ENV
 
 #include "shared/SerialKeyEdition.h"
 #include "test/global/gtest.h"
 
-TEST(SerialKeyEditionTests, DefaultEditionType_Unregistered) {
+TEST(SerialKeyEditionTests, ctor_default_unregistered) {
   SerialKeyEdition edition;
+
   EXPECT_EQ(kUnregistered, edition.getType());
-  EXPECT_EQ(SerialKeyEdition::UNREGISTERED, edition.getName());
+  EXPECT_EQ(SerialKeyEdition::Unregistered, edition.getName());
   EXPECT_EQ("Synergy 1 (Unregistered)", edition.getProductName());
   EXPECT_FALSE(edition.isValid());
 }
 
-TEST(SerialKeyEditionTests, SetEditionType_edition) {
+TEST(SerialKeyEditionTests, ctor_businessName_isValid) {
+  SerialKeyEdition edition(SerialKeyEdition::Buisiness);
+
+  EXPECT_EQ(kBusiness, edition.getType());
+  EXPECT_TRUE(edition.isValid());
+}
+
+TEST(SerialKeyEditionTests, ctor_basicType_isValid) {
+  SerialKeyEdition edition(kBasic);
+
+  EXPECT_TRUE(edition.isValid());
+}
+
+TEST(SerialKeyEditionTests, setType_lite_isValid) {
   SerialKeyEdition edition;
+
+  edition.setType(kLite);
+
+  EXPECT_EQ(kLite, edition.getType());
+  EXPECT_EQ(SerialKeyEdition::Lite, edition.getName());
+  EXPECT_EQ("Synergy 1", edition.getProductName());
+  EXPECT_TRUE(edition.isValid());
+}
+
+TEST(SerialKeyEditionTests, setType_ultimate_isValid) {
+  SerialKeyEdition edition;
+
+  edition.setType(SerialKeyEdition::Ultimate);
+
+  EXPECT_EQ(kUltimate, edition.getType());
+  EXPECT_EQ(SerialKeyEdition::Ultimate, edition.getName());
+  EXPECT_EQ("Synergy 1 Ultimate", edition.getProductName());
+}
+
+TEST(SerialKeyEditionTests, setType_pro_isValid) {
+  SerialKeyEdition edition;
+
   edition.setType(kPro);
+
   EXPECT_EQ(kPro, edition.getType());
-  EXPECT_EQ(SerialKeyEdition::PRO, edition.getName());
+  EXPECT_EQ(SerialKeyEdition::Pro, edition.getName());
   EXPECT_EQ("Synergy 1 Pro", edition.getProductName());
   EXPECT_TRUE(edition.isValid());
 }
 
-TEST(SerialKeyEditionTests, SetEditionType_string) {
+TEST(SerialKeyEditionTests, setType_basic_isValid) {
   SerialKeyEdition edition;
-  edition.setType(SerialKeyEdition::BASIC);
+
+  edition.setType(kBasic);
+
   EXPECT_EQ(kBasic, edition.getType());
-  EXPECT_EQ(SerialKeyEdition::BASIC, edition.getName());
+  EXPECT_EQ(SerialKeyEdition::Basic, edition.getName());
   EXPECT_EQ("Synergy 1 Basic", edition.getProductName());
 }
 
-TEST(SerialKeyEditionTests, SetEditionBusiness) {
+TEST(SerialKeyEditionTests, setType_business_isValid) {
   SerialKeyEdition edition;
+
   edition.setType(kBusiness);
+
   EXPECT_EQ(kBusiness, edition.getType());
-  EXPECT_EQ(SerialKeyEdition::BUSINESS, edition.getName());
+  EXPECT_EQ(SerialKeyEdition::Buisiness, edition.getName());
   EXPECT_EQ("Synergy 1 Business", edition.getProductName());
 }
 
-TEST(SerialKeyEditionTests, SetEditionBasicChina) {
+TEST(SerialKeyEditionTests, setType_basicChina_isValid) {
   SerialKeyEdition edition;
+
   edition.setType(kBasicChina);
+
   EXPECT_EQ(kBasicChina, edition.getType());
-  EXPECT_EQ(SerialKeyEdition::BASIC_CHINA, edition.getName());
+  EXPECT_EQ(SerialKeyEdition::BasicChina, edition.getName());
   EXPECT_EQ("Synergy 1 中文版", edition.getProductName());
   EXPECT_TRUE(edition.isChina());
 }
 
-TEST(SerialKeyEditionTests, SetEditionProChina) {
+TEST(SerialKeyEditionTests, setType_proChina_isValid) {
   SerialKeyEdition edition;
+
   edition.setType(kProChina);
+
   EXPECT_EQ(kProChina, edition.getType());
-  EXPECT_EQ(SerialKeyEdition::PRO_CHINA, edition.getName());
+  EXPECT_EQ(SerialKeyEdition::ProChina, edition.getName());
   EXPECT_EQ("Synergy 1 Pro 中文版", edition.getProductName());
   EXPECT_TRUE(edition.isChina());
-}
-
-TEST(SerialKeyEditionTests, NameConstructor) {
-  SerialKeyEdition edition(SerialKeyEdition::BUSINESS);
-  EXPECT_EQ(kBusiness, edition.getType());
-  EXPECT_TRUE(edition.isValid());
-}
-
-TEST(SerialKeyEditionTests, isValid) {
-  SerialKeyEdition edition;
-  edition.setType(Edition::kBasic);
-  EXPECT_TRUE(edition.isValid());
-
-  edition.setType(Edition::kBasicChina);
-  EXPECT_TRUE(edition.isValid());
-
-  edition.setType(Edition::kBusiness);
-  EXPECT_TRUE(edition.isValid());
-
-  edition.setType(Edition::kPro);
-  EXPECT_TRUE(edition.isValid());
-
-  edition.setType(Edition::kProChina);
-  EXPECT_TRUE(edition.isValid());
-
-  edition.setType(Edition::kUnregistered);
-  EXPECT_FALSE(edition.isValid());
 }

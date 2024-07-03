@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
 
 #include <string>
@@ -23,13 +24,13 @@ private:
   friend bool operator==(SerialKeyType const &, SerialKeyType const &);
 
 public:
-  static const std::string TRIAL;
-  static const std::string SUBSCRIPTION;
-  static const std::string MAINTENANCE;
+  static const std::string Trial;
+  static const std::string Subscription;
+  static const std::string Maintenance;
 
   SerialKeyType();
 
-  void setKeyType(const std::string &Type);
+  void setKeyType(const std::string &type);
   bool isTrial() const;
   bool isTemporary() const;
   bool isMaintenance() const;
