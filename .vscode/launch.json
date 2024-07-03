@@ -9,6 +9,20 @@
       "preLaunchTask": "build"
     },
     {
+      "name": "unittests lldb",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/unittests",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "integtests lldb",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/integtests",
+      "preLaunchTask": "build"
+    },
+    {
       "name": "win daemon attach",
       "type": "cppvsdbg",
       "request": "attach",
