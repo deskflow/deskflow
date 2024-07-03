@@ -50,7 +50,7 @@ jobs:
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          mkdir build
+          mkdir -p build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
