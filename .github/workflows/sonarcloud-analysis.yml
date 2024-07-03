@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   sonarcloud-analysis:
+    if: ${{ vars.SONAR_SCANNER_ENABLED }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
