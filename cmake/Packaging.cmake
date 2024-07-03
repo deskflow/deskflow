@@ -19,7 +19,7 @@
 #
 macro(configure_packaging)
 
-  if(${SYNERGY_BUILD_INSTALLER})
+  if(${BUILD_INSTALLER})
     set(CPACK_PACKAGE_NAME "synergy")
     set(CPACK_PACKAGE_CONTACT "Synergy <support@symless.com>")
     set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
