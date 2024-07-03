@@ -115,6 +115,10 @@ jobs:
 
     strategy:
       matrix:
+        environment:
+          - name: regular
+          - name: enterprise
+
         runtime:
           - name: "macos-11-arm64"
             timeout: 10
@@ -185,6 +189,10 @@ jobs:
 
     strategy:
       matrix:
+        environment:
+          - name: regular
+          - name: enterprise
+
         distro:
           - name: ubuntu-24.04
             container: ubuntu:24.04
