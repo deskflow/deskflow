@@ -13,7 +13,6 @@ concurrency:
 jobs:
   sonarcloud-analysis:
     runs-on: ubuntu-latest
-    container: debian:12
     timeout-minutes: 20
 
     env:
@@ -21,26 +20,27 @@ jobs:
       SONAR_SCANNER_OPTS: -server
 
     steps:
-      - name: Checkout git repo
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Installing gcovr
+      - name: Install dependencies
+        run: ./scripts/install_deps.py
+
+      - name: Install gcovr
         run: |
-          apt update
-          apt install python3
           python3 -m venv build/python
           source build/python/bin/activate
           pip install gcovr
 
-      - name: Installing Sonar Scanner
+      - name: Install SonarScanner
         run: |
           export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
 
-      - name: Installing build-wrapper
+      - name: Install build-wrapper
         run: |
           curl --create-dirs -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
@@ -53,12 +53,12 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
-      - name: Running coverage
+      - name: Make coverage
         run: |
           cd build
           make coverage
 
-      - name: Run Sonar Scanner
+      - name: Run SonarScanner
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
           cd build
