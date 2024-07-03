@@ -37,6 +37,10 @@ macro(configure_definitions)
     add_definitions(-DNDEBUG)
   endif()
 
+  set(GUI_WINDOW_TITLE "Synergy 1 Community Edition")
+  if(DEFINED $ENV{SYNERGY_GUI_WINDOW_TITLE})
+    set(GUI_WINDOW_TITLE $ENV{SYNERGY_GUI_WINDOW_TITLE})
+  endif()
   add_definitions(-DSYNERGY_GUI_WINDOW_TITLE="${GUI_WINDOW_TITLE}")
 
   # TODO: find out why we need these, and remove them if we don't
@@ -102,7 +106,6 @@ macro(configure_options)
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
   option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
-  option(GUI_WINDOW_TITLE "GUI main window title" "Synergy 1 Community Edition")
 
   # auto config is off by default because it requires bonjour, which sucks.
   option(ENABLE_AUTO_CONFIG "Enable auto config (zeroconf)" OFF)
