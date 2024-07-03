@@ -1221,7 +1221,7 @@ void MainWindow::updateWindowTitle() {
 #ifdef SYNERGY_ENABLE_LICENSING
   setWindowTitle(m_LicenseManager->activeEditionName());
 #else
-  setWindowTitle(SYNERGY_GUI_WINDOW_TITLE);
+  setWindowTitle(SYNERGY_PRODUCT_NAME);
 #endif
 
 #ifdef SYNERGY_ENABLE_LICENSING

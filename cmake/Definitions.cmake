@@ -22,6 +22,12 @@ macro(configure_definitions)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+  set(PRODUCT_NAME "Synergy 1 Community Edition")
+  if(DEFINED $ENV{SYNERGY_PRODUCT_NAME})
+    set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
+  endif()
+  add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
+
   configure_ninja()
   configure_options()
 
@@ -36,12 +42,6 @@ macro(configure_definitions)
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DNDEBUG)
   endif()
-
-  set(GUI_WINDOW_TITLE "Synergy 1 Community Edition")
-  if(DEFINED $ENV{SYNERGY_GUI_WINDOW_TITLE})
-    set(GUI_WINDOW_TITLE $ENV{SYNERGY_GUI_WINDOW_TITLE})
-  endif()
-  add_definitions(-DSYNERGY_GUI_WINDOW_TITLE="${GUI_WINDOW_TITLE}")
 
   # TODO: find out why we need these, and remove them if we don't
   if(COMMAND cmake_policy)
