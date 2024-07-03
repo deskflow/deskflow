@@ -22,8 +22,10 @@ on:
     - cron: "0 5 * * *"
 
 env:
-  SYNERGY_ENABLE_LICENSING: true
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
+  SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
+  SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
+  SYNERGY_ENABLE_LICENSING: ${{ vars.SYNERGY_ENABLE_LICENSING }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.event_name != 'schedule' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
@@ -31,22 +33,12 @@ env:
 
 jobs:
   windows:
-    name: windows-2022 (${{ matrix.environment.name }})
+    name: windows-2022
     runs-on: windows-2022
     timeout-minutes: 20
-    environment: ${{ matrix.environment.name }}
 
     env:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
-      SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
-      SYNERGY_ENABLE_LICENSING: ${{ vars.SYNERGY_ENABLE_LICENSING }}
-      SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
-
-    strategy:
-      matrix:
-        environment:
-          - name: regular
-          - name: enterprise
 
     steps:
       - name: Checkout
@@ -105,7 +97,7 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
-    name: ${{ matrix.arch.name }} (${{ matrix.environment.name }})
+    name: ${{ matrix.arch.name }}
     runs-on: ${{ matrix.arch.os }}
     timeout-minutes: ${{ matrix.arch.timeout }}
 
@@ -115,10 +107,6 @@ jobs:
 
     strategy:
       matrix:
-        environment:
-          - name: regular
-          - name: enterprise
-
         arch:
           - name: "macos-11-arm64"
             timeout: 10
@@ -178,7 +166,7 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
-    name: linux-${{ matrix.distro.name }} (${{ matrix.environment.name }})
+    name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
     container: ${{ matrix.distro.container }}
@@ -189,10 +177,6 @@ jobs:
 
     strategy:
       matrix:
-        environment:
-          - name: regular
-          - name: enterprise
-
         distro:
           - name: ubuntu-24.04
             container: ubuntu:24.04
