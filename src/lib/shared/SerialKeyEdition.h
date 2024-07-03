@@ -25,7 +25,7 @@ class SerialKeyEdition {
                          SerialKeyEdition const &) = default;
 
 public:
-  SerialKeyEdition();
+  SerialKeyEdition() = default;
   explicit SerialKeyEdition(Edition type);
   explicit SerialKeyEdition(const std::string &name);
 

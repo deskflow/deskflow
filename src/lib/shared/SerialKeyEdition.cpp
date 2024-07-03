@@ -28,23 +28,14 @@ const std::string SerialKeyEdition::Unregistered = "community";
 const std::string SerialKeyEdition::Ultimate = "ultimate";
 const std::string SerialKeyEdition::Lite = "lite";
 
-namespace {
-
-const std::map<std::string, Edition> &getSerialTypes() {
-  static const std::map<std::string, Edition> serialTypes{
-      {SerialKeyEdition::Basic, kBasic},
-      {SerialKeyEdition::Pro, kPro},
-      {SerialKeyEdition::BasicChina, kBasicChina},
-      {SerialKeyEdition::ProChina, kProChina},
-      {SerialKeyEdition::Buisiness, kBusiness},
-      {SerialKeyEdition::Lite, kLite},
-      {SerialKeyEdition::Ultimate, kUltimate}};
-  return serialTypes;
-}
-
-} // namespace
-
-SerialKeyEdition::SerialKeyEdition() {}
+const std::map<std::string, Edition, std::less<>> serialTypes{
+    {SerialKeyEdition::Basic, kBasic},
+    {SerialKeyEdition::Pro, kPro},
+    {SerialKeyEdition::BasicChina, kBasicChina},
+    {SerialKeyEdition::ProChina, kProChina},
+    {SerialKeyEdition::Buisiness, kBusiness},
+    {SerialKeyEdition::Lite, kLite},
+    {SerialKeyEdition::Ultimate, kUltimate}};
 
 SerialKeyEdition::SerialKeyEdition(Edition type) : m_type(type) {}
 
@@ -117,10 +108,9 @@ void SerialKeyEdition::setType(Edition type) {
 }
 
 void SerialKeyEdition::setType(const std::string &name) {
-  auto types = getSerialTypes();
-  const auto &pType = types.find(name);
+  const auto &pType = serialTypes.find(name);
 
-  if (pType != types.end()) {
+  if (pType != serialTypes.end()) {
     m_type = pType->second;
   } else {
     m_type = kUnregistered;
@@ -128,8 +118,7 @@ void SerialKeyEdition::setType(const std::string &name) {
 }
 
 bool SerialKeyEdition::isValid() const {
-  auto types = getSerialTypes();
-  return (types.find(getName()) != types.end());
+  return serialTypes.contains(getName());
 }
 
 bool SerialKeyEdition::isChina() const {

@@ -50,6 +50,14 @@ TEST(SerialKeyEditionTests, ctor_basicType_isValid) {
   EXPECT_TRUE(edition.isValid());
 }
 
+TEST(SerialKeyEditionTests, setType_invalidType_unregistered) {
+  SerialKeyEdition edition;
+
+  edition.setType("stub");
+
+  EXPECT_EQ(kUnregistered, edition.getType());
+}
+
 TEST(SerialKeyEditionTests, setType_lite_isValid) {
   SerialKeyEdition edition;
 
