@@ -59,7 +59,7 @@ jobs:
 
       - name: Run SonarScanner
         run: |
-          export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
+          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
           cd build
           sonar-scanner \
             -Dsonar.organization=symless \
