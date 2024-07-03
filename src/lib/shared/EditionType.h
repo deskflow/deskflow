@@ -24,7 +24,7 @@ enum Edition {
   kBasic,
   kPro,
   kValueNotUsed,
-  kCommunity,
+  kUnregistered,
   kBusiness,
   kBasicChina,
   kProChina,

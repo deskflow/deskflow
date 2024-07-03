@@ -94,7 +94,7 @@ AppConfig::AppConfig()
     : m_ScreenName(), m_Port(24800), m_Interface(), m_LogLevel(0),
       m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(DEFAULT_PROCESS_MODE),
       m_StartedBefore(), m_AutoConfig(true), m_AutoConfigServer(),
-      m_ElevateMode(defaultElevateMode), m_Edition(kCommunity),
+      m_ElevateMode(defaultElevateMode), m_Edition(kUnregistered),
       m_CryptoEnabled(false), m_AutoHide(false), m_LastExpiringWarningTime(0),
       m_ActivationHasRun(), m_MinimizeToTray(false), m_ServerGroupChecked(),
       m_UseExternalConfig(), m_UseInternalConfig(), m_ClientGroupChecked(),
@@ -253,8 +253,8 @@ void AppConfig::loadSettings() {
 
   if (updateSerial) {
     m_Serialkey = loadSetting(kSerialKey, "").toString().trimmed();
-    m_Edition =
-        static_cast<Edition>(loadSetting(kEditionSetting, kCommunity).toInt());
+    m_Edition = static_cast<Edition>(
+        loadSetting(kEditionSetting, kUnregistered).toInt());
   }
 
   // Set the default path of the TLS certificate file in the users DIR

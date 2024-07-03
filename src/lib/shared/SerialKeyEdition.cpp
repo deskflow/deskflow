@@ -8,7 +8,7 @@ const std::string SerialKeyEdition::PRO_CHINA = "pro_china";
 const std::string SerialKeyEdition::BASIC = "basic";
 const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
 const std::string SerialKeyEdition::BUSINESS = "business";
-const std::string SerialKeyEdition::COMMUNITY = "community";
+const std::string SerialKeyEdition::UNREGISTERED = "community";
 const std::string SerialKeyEdition::ULTIMATE = "ultimate";
 const std::string SerialKeyEdition::LITE = "lite";
 
@@ -49,8 +49,8 @@ std::string SerialKeyEdition::getName() const {
   case kBusiness:
     Name = BUSINESS;
     break;
-  case kCommunity:
-    Name = COMMUNITY;
+  case kUnregistered:
+    Name = UNREGISTERED;
     break;
   case kBasicChina:
     Name = BASIC_CHINA;
@@ -73,41 +73,32 @@ std::string SerialKeyEdition::getName() const {
 
 std::string SerialKeyEdition::getDisplayName() const {
   const std::string productBase = "Synergy 1";
-  std::string DisplayName(productBase);
 
   switch (getType()) {
   case kBusiness:
-    DisplayName = productBase + " Business";
-    break;
+    return productBase + " Business";
+
   case kPro:
-    DisplayName = productBase + " Pro";
-    break;
+    return productBase + " Pro";
+
+  case kBasic:
+    return productBase + " Basic";
+
   case kBasicChina:
-    DisplayName = productBase + " 中文版";
-    break;
+    return productBase + " 中文版";
+
   case kProChina:
-    DisplayName = productBase + " Pro 中文版";
-    break;
+    return productBase + " Pro 中文版";
+
   case kLite:
-    DisplayName = productBase;
-    break;
+    return productBase;
+
   case kUltimate:
-    DisplayName = productBase + " Ultimate";
-    break;
+    return productBase + " Ultimate";
 
   default:
-    std::string editionName = getName();
-    if (!editionName.empty()) {
-      if (editionName == COMMUNITY) {
-        editionName = "Community Edition";
-      } else {
-        editionName[0] = static_cast<char>(::toupper(editionName[0]));
-      }
-      DisplayName = productBase + " " + editionName;
-    }
+    return productBase + " (Unregistered)";
   }
-
-  return DisplayName;
 }
 
 void SerialKeyEdition::setType(Edition type) {
@@ -122,7 +113,7 @@ void SerialKeyEdition::setType(const std::string &type) {
   if (pType != types.end()) {
     m_Type = pType->second;
   } else {
-    m_Type = kCommunity;
+    m_Type = kUnregistered;
   }
 }
 

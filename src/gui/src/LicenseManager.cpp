@@ -88,7 +88,7 @@ void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
 
 void LicenseManager::notifyUpdate(QString fromVersion,
                                   QString toVersion) const {
-  if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kCommunity))) {
+  if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kUnregistered))) {
     return;
   }
 

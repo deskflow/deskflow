@@ -36,7 +36,7 @@ void ActivationDialog::refreshSerialKey() {
 ActivationDialog::~ActivationDialog() { delete ui; }
 
 void ActivationDialog::reject() {
-  if (m_LicenseManager->activeEdition() == kCommunity) {
+  if (m_LicenseManager->activeEdition() == kUnregistered) {
     CancelActivationDialog cancelActivationDialog(this);
     if (QDialog::Accepted == cancelActivationDialog.exec()) {
       m_LicenseManager->skipActivation();
@@ -72,7 +72,7 @@ void ActivationDialog::accept() {
   m_LicenseManager->notifyActivation("serial:" + m_appConfig->serialKey());
   Edition edition = m_LicenseManager->activeEdition();
   time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
-  if (edition != kCommunity) {
+  if (edition != kUnregistered) {
     QString thanksMessage = tr("Thanks for trying %1! %5\n\n%2 day%3 of "
                                "your trial remain%4")
                                 .arg(m_LicenseManager->getEditionName(edition))

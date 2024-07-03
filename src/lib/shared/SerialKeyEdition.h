@@ -42,12 +42,12 @@ public:
   static const std::string BASIC;
   static const std::string BASIC_CHINA;
   static const std::string BUSINESS;
-  static const std::string COMMUNITY;
+  static const std::string UNREGISTERED;
   static const std::string ULTIMATE;
   static const std::string LITE;
 
 private:
-  Edition m_Type = kCommunity;
+  Edition m_Type = kUnregistered;
 };
 
 inline bool operator==(SerialKeyEdition const &lhs,
