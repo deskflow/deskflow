@@ -31,7 +31,7 @@ env:
 
 jobs:
   windows:
-    name: windows-2022-${{ matrix.environment.name }}
+    name: windows-2022 (${{ matrix.environment.name }})
     runs-on: windows-2022
     timeout-minutes: 20
     environment: ${{ matrix.environment.name }}
@@ -105,7 +105,7 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
-    name: ${{ matrix.arch.name }}-(${{ matrix.environment.name }})
+    name: ${{ matrix.arch.name }} (${{ matrix.environment.name }})
     runs-on: ${{ matrix.arch.os }}
     timeout-minutes: ${{ matrix.arch.timeout }}
 
@@ -178,7 +178,7 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
-    name: linux-${{ matrix.distro.name }}-(${{ matrix.environment.name }})
+    name: linux-${{ matrix.distro.name }} (${{ matrix.environment.name }})
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
     container: ${{ matrix.distro.container }}
