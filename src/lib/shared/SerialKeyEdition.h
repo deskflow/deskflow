@@ -21,7 +21,8 @@
 #include <string>
 
 class SerialKeyEdition {
-  friend bool operator==(SerialKeyEdition const &, SerialKeyEdition const &);
+  friend bool operator==(SerialKeyEdition const &,
+                         SerialKeyEdition const &) = default;
 
 public:
   SerialKeyEdition();
@@ -50,13 +51,3 @@ public:
 private:
   Edition m_type = kUnregistered;
 };
-
-inline bool operator==(SerialKeyEdition const &lhs,
-                       SerialKeyEdition const &rhs) {
-  return (lhs.m_type == rhs.m_type);
-}
-
-inline bool operator!=(SerialKeyEdition const &lhs,
-                       SerialKeyEdition const &rhs) {
-  return !(lhs == rhs);
-}

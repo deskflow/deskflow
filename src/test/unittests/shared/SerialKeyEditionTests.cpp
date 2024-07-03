@@ -21,6 +21,13 @@
 #include "shared/SerialKeyEdition.h"
 #include "test/global/gtest.h"
 
+TEST(SerialKeyEditionTests, equal_operator) {
+  SerialKeyEdition edition1(kPro);
+  SerialKeyEdition edition2(kPro);
+
+  EXPECT_EQ(edition1, edition2);
+}
+
 TEST(SerialKeyEditionTests, ctor_default_unregistered) {
   SerialKeyEdition edition;
 
