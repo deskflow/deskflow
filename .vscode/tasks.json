@@ -16,7 +16,19 @@
       "label": "reinstall windows daemon",
       "type": "shell",
       "command": "python scripts/windows_daemon.py",
-      "dependsOn": ["build-all"]
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "unittests",
+      "type": "shell",
+      "command": "./build/bin/unittests",
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "integtests",
+      "type": "shell",
+      "command": "./build/bin/integtests",
+      "dependsOn": ["build"]
     }
   ]
 }
