@@ -63,16 +63,20 @@ def get_linux_distro():
 
 
 def get_env(name, required=True, default=None):
-    """Returns an env var (stripped) or optionally raises an error if not set."""
+    """
+    Returns an env var (stripped) or optionally raises an error if not set.
+
+    If `default` is set, it will be returned even if `required` is True.
+    """
     value = os.getenv(name)
     if value:
         value = value.strip()
 
     if not value:
-        if required:
-            raise ValueError(f"Required env var not set: {name}")
-        else:
+        if default:
             return default
+        elif required:
+            raise ValueError(f"Required env var not set: {name}")
 
     return value
 
