@@ -32,7 +32,7 @@ def main():
 def get_filename_base(version, use_linux_distro=True):
     os = env.get_os()
     machine = platform.machine().lower()
-    package_base = env.get_env("SYNERGY_PACKAGE_PREFIX", default_package_prefix)
+    package_base = env.get_env("SYNERGY_PACKAGE_PREFIX", default=default_package_prefix)
 
     if os == "linux" and use_linux_distro:
         distro_name, _distro_like, distro_version = env.get_linux_distro()
