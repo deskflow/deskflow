@@ -28,6 +28,8 @@ jobs:
 
       - name: Installing gcovr
         run: |
+          apt update
+          apt install python3
           python3 -m venv build/python
           source build/python/bin/activate
           pip install gcovr
