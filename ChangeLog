@@ -127,7 +127,7 @@ Bug fixes:
 - #7096 The system duplicates hotkeys in setup
 - #7099 Compilation broken with msvc 2014
 - #7100 No configuration available on Windows
-- #7097 The title "Enterprise" disappeares after clicking on "Preferences"
+- #7097 Title disappeares after clicking on "Preferences"
 - #7108 Wrong characters on client for unicode
 - #7114 Problem with reading languages on Linux system
 - #7115 Prevent notifications if language reading fails
@@ -279,9 +279,9 @@ Bug fixes:
 
 - #6831 Incorporating Sonar's major
 - #6837 Memory leaks on macOS system
-- #6838 Enterprise asks for serial key on Linux system
+- #6838 Serial key requested by mistake
 - #6849 Auto-hide resets itself
-- #6846 TLS certificate is not created by default for Synergy Enterprise.
+- #6846 TLS certificate is not created by default
 - #6859 Systray Icon on Ubuntu Auto Start
 - #6863 Adding MacOS CI Build Steps for Homebrew Cleanup
 
@@ -307,7 +307,7 @@ Bug fixes:
 - #6804 Synergy loses edition when creating a System scope config
 - #6660 + #6582 Add missing XAtom for utf-8 handling with Xorg
 - #6814 The system asks to save twice.
-- #6817 Configure requires dns_sd.h for enterprise version
+- #6817 Configure requires dns_sd.h
 - #6826 + #6829 SonarCloud Critical bugs
 - #6821 Blocker bugs found by sonar in synergy and in tests
 - #6825 The system requires google test even when tests are disabled with BUILD_TESTS=OFF
@@ -430,7 +430,7 @@ Bug fixes:
 - #6495 Event queue memory leak in server cleanup
 - #6471 Unable to stop core retry loop in config app
 - #6460 TLS memory leak on Linux server when using client
-- #6407 Enterprise config app shows auto-config elements
+- #6407 Config app shows auto-config elements
 - #6403 Mouse cursor movement drifts over time
 - #6392 Hostname alert shows unnecessarily on every open
 - #6373 Compile fails on BSD Unix with dl error
@@ -479,7 +479,7 @@ Enhancements:
 - #6312 Removal of redundant CURL library
 - #6306 Show version number in config app title
 - #6305 Support for Raspbian in package config
-- #6301 Combine enterprise and community codebases
+- #6301 Combine codebases for all editions
 
 # 1.9.1
 
