@@ -24,7 +24,7 @@ TEST(SerialKeyEditionTests, DefaultEditionType_Unregistered) {
   SerialKeyEdition edition;
   EXPECT_EQ(kUnregistered, edition.getType());
   EXPECT_EQ(SerialKeyEdition::UNREGISTERED, edition.getName());
-  EXPECT_EQ("Synergy 1 (Unregistered)", edition.getDisplayName());
+  EXPECT_EQ("Synergy 1 (Unregistered)", edition.getProductName());
   EXPECT_FALSE(edition.isValid());
 }
 
@@ -33,7 +33,7 @@ TEST(SerialKeyEditionTests, SetEditionType_edition) {
   edition.setType(kPro);
   EXPECT_EQ(kPro, edition.getType());
   EXPECT_EQ(SerialKeyEdition::PRO, edition.getName());
-  EXPECT_EQ("Synergy 1 Pro", edition.getDisplayName());
+  EXPECT_EQ("Synergy 1 Pro", edition.getProductName());
   EXPECT_TRUE(edition.isValid());
 }
 
@@ -42,7 +42,7 @@ TEST(SerialKeyEditionTests, SetEditionType_string) {
   edition.setType(SerialKeyEdition::BASIC);
   EXPECT_EQ(kBasic, edition.getType());
   EXPECT_EQ(SerialKeyEdition::BASIC, edition.getName());
-  EXPECT_EQ("Synergy 1 Basic", edition.getDisplayName());
+  EXPECT_EQ("Synergy 1 Basic", edition.getProductName());
 }
 
 TEST(SerialKeyEditionTests, SetEditionBusiness) {
@@ -50,7 +50,7 @@ TEST(SerialKeyEditionTests, SetEditionBusiness) {
   edition.setType(kBusiness);
   EXPECT_EQ(kBusiness, edition.getType());
   EXPECT_EQ(SerialKeyEdition::BUSINESS, edition.getName());
-  EXPECT_EQ("Synergy 1 Business", edition.getDisplayName());
+  EXPECT_EQ("Synergy 1 Business", edition.getProductName());
 }
 
 TEST(SerialKeyEditionTests, SetEditionBasicChina) {
@@ -58,7 +58,7 @@ TEST(SerialKeyEditionTests, SetEditionBasicChina) {
   edition.setType(kBasicChina);
   EXPECT_EQ(kBasicChina, edition.getType());
   EXPECT_EQ(SerialKeyEdition::BASIC_CHINA, edition.getName());
-  EXPECT_EQ("Synergy 1 中文版", edition.getDisplayName());
+  EXPECT_EQ("Synergy 1 中文版", edition.getProductName());
   EXPECT_TRUE(edition.isChina());
 }
 
@@ -67,7 +67,7 @@ TEST(SerialKeyEditionTests, SetEditionProChina) {
   edition.setType(kProChina);
   EXPECT_EQ(kProChina, edition.getType());
   EXPECT_EQ(SerialKeyEdition::PRO_CHINA, edition.getName());
-  EXPECT_EQ("Synergy 1 Pro 中文版", edition.getDisplayName());
+  EXPECT_EQ("Synergy 1 Pro 中文版", edition.getProductName());
   EXPECT_TRUE(edition.isChina());
 }
 

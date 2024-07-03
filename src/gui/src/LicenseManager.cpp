@@ -136,7 +136,7 @@ void LicenseManager::skipActivation() const {
 
 QString LicenseManager::getEditionName(Edition const edition, bool trial) {
   SerialKeyEdition KeyEdition(edition);
-  std::string name = KeyEdition.getDisplayName();
+  std::string name = KeyEdition.getProductName();
 
   if (trial) {
     name += " (Trial)";

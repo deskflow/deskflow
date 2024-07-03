@@ -29,7 +29,7 @@ public:
 
   Edition getType() const;
   std::string getName() const;
-  std::string getDisplayName() const;
+  std::string getProductName() const;
 
   void setType(Edition type);
   void setType(const std::string &type);

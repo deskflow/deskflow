@@ -71,33 +71,34 @@ std::string SerialKeyEdition::getName() const {
   return Name;
 }
 
-std::string SerialKeyEdition::getDisplayName() const {
-  const std::string productBase = "Synergy 1";
+std::string SerialKeyEdition::getProductName() const {
+  const std::string nameBase = "Synergy 1";
 
   switch (getType()) {
-  case kBusiness:
-    return productBase + " Business";
-
-  case kPro:
-    return productBase + " Pro";
-
-  case kBasic:
-    return productBase + " Basic";
-
-  case kBasicChina:
-    return productBase + " 中文版";
-
-  case kProChina:
-    return productBase + " Pro 中文版";
 
   case kLite:
-    return productBase;
+    return nameBase;
 
   case kUltimate:
-    return productBase + " Ultimate";
+    return nameBase + " Ultimate";
+
+  case kPro:
+    return nameBase + " Pro";
+
+  case kBasic:
+    return nameBase + " Basic";
+
+  case kBusiness:
+    return nameBase + " Business";
+
+  case kBasicChina:
+    return nameBase + " 中文版";
+
+  case kProChina:
+    return nameBase + " Pro 中文版";
 
   default:
-    return productBase + " (Unregistered)";
+    return nameBase + " (Unregistered)";
   }
 }
 
