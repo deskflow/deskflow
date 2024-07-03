@@ -19,9 +19,10 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 add_subdirectory(lib)
 add_subdirectory(cmd)
-if(SYNERGY_BUILD_GUI)
+
+if(BUILD_GUI)
   add_subdirectory(gui)
-endif(SYNERGY_BUILD_GUI)
+endif(BUILD_GUI)
 
 if(BUILD_TESTS)
   add_subdirectory(test)

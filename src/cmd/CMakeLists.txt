@@ -15,10 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 add_subdirectory(synergyd)
-if(UNIFIED_CORE)
+
+if(BUILD_UNIFIED)
   add_subdirectory(synergy-core)
 else()
   add_subdirectory(synergyc)
   add_subdirectory(synergys)
-endif(UNIFIED_CORE)
+endif(BUILD_UNIFIED)
+
 add_subdirectory(syntool)
