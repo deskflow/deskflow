@@ -25,11 +25,11 @@ UpgradeDialog::UpgradeDialog(QWidget *parent) : QMessageBox(parent) {
   addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
 }
 
-void UpgradeDialog::showDialog(const QString &text, const QString &link) {
+void UpgradeDialog::showDialog(const QString &text) {
   setText(QObject::tr(text.toStdString().c_str()));
 
   if (exec() == QMessageBox::Accepted) {
-    QDesktopServices::openUrl(
-        QUrl(QCoreApplication::organizationDomain() + link));
+    QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() +
+                                   "/synergy/purchase/upgrade?source=gui"));
   }
 }

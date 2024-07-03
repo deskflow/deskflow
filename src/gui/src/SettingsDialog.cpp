@@ -193,7 +193,7 @@ void SettingsDialog::loadFromConfig() {
   allowAutoConfig();
 #endif
 
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
   m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
 #else
   m_pCheckBoxAutoConfig->hide();
@@ -274,17 +274,20 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
     buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
   } else {
     m_pCheckBoxEnableCrypto->setChecked(false);
-#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
-    UpgradeDialog upgradeDialog(this);
-    if (appConfig().edition() == Edition::kLite) {
-      upgradeDialog.showDialog(
-          "TLS encryption is a Synergy Ultimate feature.",
-          "synergy/purchase/purchase-ultimate-upgrade?source=gui");
-    } else {
-      upgradeDialog.showDialog("TLS encryption is a Synergy Pro feature.",
-                               "synergy/purchase/upgrade?source=gui");
+
+#ifdef SYNERGY_ENABLE_LICENSING
+    auto edition = appConfig().edition();
+    if (edition == Edition::kLite || edition == Edition::kBasic) {
+      UpgradeDialog upgradeDialog(this);
+      if (appConfig().edition() == Edition::kLite) {
+        upgradeDialog.showDialog(
+            "Upgrade to Synergy Ultimate to enable TLS encryption.");
+      } else if (appConfig().edition() == Edition::kBasic) {
+        upgradeDialog.showDialog(
+            "Upgrade to Synergy Pro to enable TLS encryption.");
+      }
     }
-#endif
+#endif // SYNERGY_ENABLE_LICENSING
   }
 }
 

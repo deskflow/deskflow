@@ -41,7 +41,7 @@ struct SerialKeyData {
    * @brief SerialKeyData default constructor
    * @param key edition. Unregistered by default
    */
-  explicit SerialKeyData(Edition edition = kUnregistered) : edition(edition) {}
+  explicit SerialKeyData(Edition edition = kCommunity) : edition(edition) {}
 };
 
 inline bool operator==(SerialKeyData const &lhs, SerialKeyData const &rhs) {

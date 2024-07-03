@@ -94,7 +94,7 @@ AppConfig::AppConfig()
     : m_ScreenName(), m_Port(24800), m_Interface(), m_LogLevel(0),
       m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(DEFAULT_PROCESS_MODE),
       m_StartedBefore(), m_AutoConfig(true), m_AutoConfigServer(),
-      m_ElevateMode(defaultElevateMode), m_Edition(kUnregistered),
+      m_ElevateMode(defaultElevateMode), m_Edition(kCommunity),
       m_CryptoEnabled(false), m_AutoHide(false), m_LastExpiringWarningTime(0),
       m_ActivationHasRun(), m_MinimizeToTray(false), m_ServerGroupChecked(),
       m_UseExternalConfig(), m_UseInternalConfig(), m_ClientGroupChecked(),
@@ -171,10 +171,9 @@ const QString &AppConfig::language() const { return m_Language; }
 bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 bool AppConfig::autoConfig() const {
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef ENABLE_AUTO_CONFIG
   return m_AutoConfig;
 #else
-  // always disable auto config for enterprise edition.
   return false;
 #endif
 }
@@ -254,8 +253,8 @@ void AppConfig::loadSettings() {
 
   if (updateSerial) {
     m_Serialkey = loadSetting(kSerialKey, "").toString().trimmed();
-    m_Edition = static_cast<Edition>(
-        loadSetting(kEditionSetting, kUnregistered).toInt());
+    m_Edition =
+        static_cast<Edition>(loadSetting(kEditionSetting, kCommunity).toInt());
   }
 
   // Set the default path of the TLS certificate file in the users DIR
@@ -319,7 +318,7 @@ void AppConfig::saveSettings() {
   m_unsavedChanges = false;
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef ENABLE_LICENSING
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
 AppConfig &AppConfig::activationHasRun(bool value) {
@@ -378,7 +377,7 @@ void AppConfig::setAutoConfigServer(const QString &autoConfigServer) {
   setSettingModified(m_AutoConfigServer, autoConfigServer);
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef ENABLE_LICENSING
 void AppConfig::setEdition(Edition e) {
   setSettingModified(m_Edition, e);
   setCommonSetting(kEditionSetting, m_Edition);
@@ -422,10 +421,10 @@ void AppConfig::setCryptoEnabled(bool newValue) {
 bool AppConfig::isCryptoAvailable() const {
   bool result{true};
 
-#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
-  result = (edition() == kPro || edition() == kPro_China ||
+#ifdef SYNERGY_ENABLE_LICENSING
+  result = (edition() == kPro || edition() == kProChina ||
             edition() == kBusiness || edition() == kUltimate);
-#endif
+#endif // SYNERGY_ENABLE_LICENSING
 
   return result;
 }

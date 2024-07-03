@@ -53,12 +53,12 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
     throw std::runtime_error("Serial key expired");
   }
 
-#ifdef SYNERGY_BUSINESS
+#ifdef SYNERGY_ENABLE_LICENSING
   if (!serialKey.isValid()) {
     throw std::runtime_error("The serial key is not compatible with the "
                              "business version of Synergy.");
   }
-#endif
+#endif // SYNERGY_ENABLE_LICENSING
 }
 
 } // namespace
@@ -88,7 +88,7 @@ void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
 
 void LicenseManager::notifyUpdate(QString fromVersion,
                                   QString toVersion) const {
-  if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kUnregistered))) {
+  if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kCommunity))) {
     return;
   }
 

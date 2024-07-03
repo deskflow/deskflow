@@ -266,10 +266,18 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked() {
       onChange();
     }
   } else {
-    UpgradeDialog upgradeDialog(this);
-    upgradeDialog.showDialog(
-        "Configuring custom hotkeys is a Synergy Ultimate feature.",
-        "synergy/purchase/purchase-ultimate-upgrade?source=gui");
+#ifdef SYNERGY_ENABLE_LICENSING
+    auto edition = appConfig().edition();
+    if (edition == Edition::kLite || edition == Edition::kBasic) {
+      UpgradeDialog upgradeDialog(this);
+      if (appConfig().edition() == Edition::kLite) {
+        upgradeDialog.showDialog(
+            "Upgrade to Synergy 1 Ultimate to enable hotkeys");
+      } else if (appConfig().edition() == Edition::kBasic) {
+        upgradeDialog.showDialog("Upgrade to Synergy 1 Pro to enable hotkeys");
+      }
+    }
+#endif // SYNERGY_ENABLE_LICENSING
   }
 }
 

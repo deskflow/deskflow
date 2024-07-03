@@ -23,11 +23,11 @@
 enum Edition {
   kBasic,
   kPro,
-  Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
-  kUnregistered,
+  kValueNotUsed,
+  kCommunity,
   kBusiness,
-  kBasic_China,
-  kPro_China,
+  kBasicChina,
+  kProChina,
   kLite,
   kUltimate
 };

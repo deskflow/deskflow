@@ -566,7 +566,7 @@ QSettings &ServerConfig::settings() {
 }
 
 bool ServerConfig::isHotkeysAvailable() const {
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   return (m_pAppConfig->edition() != Edition::kLite);
 #else
   return true;

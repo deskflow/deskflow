@@ -167,7 +167,7 @@ TEST(SerialKeyTests, toStringV1BasicSerialKey) {
 
 TEST(SerialKeyTests, IsValidKey_false) {
   //{v1;basic;Bob;1;email;company name;0;0}
-  SerialKey serial(kUnregistered);
+  SerialKey serial(kCommunity);
   EXPECT_EQ(false, serial.isValid());
 }
 

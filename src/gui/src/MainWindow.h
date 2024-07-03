@@ -87,10 +87,10 @@ public:
   enum qRuningState { kStarted, kStopped };
 
 public:
-#ifdef SYNERGY_ENTERPRISE
-  MainWindow(AppConfig &appConfig);
-#else
+#ifdef SYNERGY_ENABLE_LICENSING
   MainWindow(AppConfig &appConfig, LicenseManager &licenseManager);
+#else
+  MainWindow(AppConfig &appConfig);
 #endif
   ~MainWindow();
 
@@ -113,7 +113,7 @@ public:
   void autoAddScreen(const QString name);
   void addZeroconfServer(const QString name);
   Zeroconf &zeroconf() { return *m_pZeroconf; }
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   LicenseManager &licenseManager() const;
   int raiseActivationDialog();
 #endif
@@ -122,7 +122,7 @@ public:
 
 public slots:
   void setEdition(Edition edition);
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   void InvalidLicense();
   void showLicenseNotice(const QString &message);
 #endif
@@ -202,7 +202,7 @@ protected:
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
 #endif
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   void checkLicense(const QString &line);
 #endif
   QString getTimeStamp();
@@ -215,7 +215,7 @@ protected:
   void windowStateChanged();
 
 private:
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   LicenseManager *m_LicenseManager;
   bool m_ActivationDialogRunning;
   QStringList m_PendingClientNames;

@@ -25,21 +25,26 @@ macro(configure_definitions)
   configure_ninja()
   configure_options()
 
-  if(ENABLE_ACTIVATION)
-    add_definitions(-DENABLE_ACTIVATION=1)
+  if(ENABLE_LICENSING)
+    add_definitions(-DSYNERGY_ENABLE_LICENSING=1)
+  endif()
+
+  if(ENABLE_AUTO_CONFIG)
+    add_definitions(-DSYNERGY_ENABLE_AUTO_CONFIG=1)
   endif()
 
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DNDEBUG)
   endif()
 
-  # TODO: Find out why we need these, and remove them if we don't
+  add_definitions(-DSYNERGY_GUI_WINDOW_TITLE="${GUI_WINDOW_TITLE}")
+
+  # TODO: find out why we need these, and remove them if we don't
   if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 NEW)
   endif()
 
-  # Add headers to source list
   if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
     set(SYNERGY_ADD_HEADERS FALSE)
   else()
@@ -64,9 +69,15 @@ macro(configure_options)
   set(DEFAULT_BUILD_GUI ON)
   set(DEFAULT_BUILD_INSTALLER ON)
   set(DEFAULT_BUILD_TESTS ON)
+
+  # unified binary is off by default for now, for backwards compatibility.
   set(DEFAULT_BUILD_UNIFIED OFF)
-  set(DEFAULT_ENABLE_ACTIVATION OFF)
+
+  # coverage is off by default because it's only used in ci (for now).
   set(DEFAULT_ENABLE_COVERAGE OFF)
+
+  # licensing is off by default to make life easier for contributors.
+  set(DEFAULT_ENABLE_LICENSING OFF)
 
   if(DEFINED $ENV{SYNERGY_BUILD_MINIMAL})
     set(DEFAULT_BUILD_GUI OFF)
@@ -81,15 +92,19 @@ macro(configure_options)
     set(DEFAULT_BUILD_UNIFIED ON)
   endif()
 
-  if(DEFINED $ENV{SYNERGY_ENABLE_ACTIVATION})
-    set(DEFAULT_ENABLE_ACTIVATION ON)
+  if(DEFINED $ENV{SYNERGY_ENABLE_LICENSING})
+    set(DEFAULT_ENABLE_LICENSING ON)
   endif()
 
   option(BUILD_GUI "Build GUI" ${DEFAULT_BUILD_GUI})
   option(BUILD_INSTALLER "Build installer" ${DEFAULT_BUILD_INSTALLER})
   option(BUILD_TESTS "Build tests" ${DEFAULT_BUILD_TESTS})
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
-  option(ENABLE_ACTIVATION "Enable activation" ${DEFAULT_ENABLE_ACTIVATION})
+  option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
+  option(GUI_WINDOW_TITLE "GUI main window title" "Synergy 1 Community Edition")
+
+  # auto config is off by default because it requires bonjour, which sucks.
+  option(ENABLE_AUTO_CONFIG "Enable auto config (zeroconf)" OFF)
 
 endmacro()

@@ -8,26 +8,21 @@ const std::string SerialKeyEdition::PRO_CHINA = "pro_china";
 const std::string SerialKeyEdition::BASIC = "basic";
 const std::string SerialKeyEdition::BASIC_CHINA = "basic_china";
 const std::string SerialKeyEdition::BUSINESS = "business";
-const std::string SerialKeyEdition::UNREGISTERED = "unregistered";
+const std::string SerialKeyEdition::COMMUNITY = "community";
 const std::string SerialKeyEdition::ULTIMATE = "ultimate";
 const std::string SerialKeyEdition::LITE = "lite";
 
 namespace {
 
 const std::map<std::string, Edition> &getSerialTypes() {
-#ifdef SYNERGY_BUSINESS
-  static const std::map<std::string, Edition> serialTypes = {
-      {SerialKeyEdition::BUSINESS, kBusiness}};
-#else
   static const std::map<std::string, Edition> serialTypes{
       {SerialKeyEdition::BASIC, kBasic},
       {SerialKeyEdition::PRO, kPro},
-      {SerialKeyEdition::BASIC_CHINA, kBasic_China},
-      {SerialKeyEdition::PRO_CHINA, kPro_China},
+      {SerialKeyEdition::BASIC_CHINA, kBasicChina},
+      {SerialKeyEdition::PRO_CHINA, kProChina},
       {SerialKeyEdition::BUSINESS, kBusiness},
       {SerialKeyEdition::LITE, kLite},
       {SerialKeyEdition::ULTIMATE, kUltimate}};
-#endif
   return serialTypes;
 }
 
@@ -54,13 +49,13 @@ std::string SerialKeyEdition::getName() const {
   case kBusiness:
     Name = BUSINESS;
     break;
-  case kUnregistered:
-    Name = UNREGISTERED;
+  case kCommunity:
+    Name = COMMUNITY;
     break;
-  case kBasic_China:
+  case kBasicChina:
     Name = BASIC_CHINA;
     break;
-  case kPro_China:
+  case kProChina:
     Name = PRO_CHINA;
     break;
   case kLite:
@@ -77,30 +72,38 @@ std::string SerialKeyEdition::getName() const {
 }
 
 std::string SerialKeyEdition::getDisplayName() const {
-  const std::string ApplicationName = "Synergy 1 ";
-  std::string DisplayName(ApplicationName);
+  const std::string productBase = "Synergy 1";
+  std::string DisplayName(productBase);
 
   switch (getType()) {
-  case kBasic_China:
-    DisplayName = "Synergy 中文版";
+  case kBusiness:
+    DisplayName = productBase + " Business";
     break;
-  case kPro_China:
-    DisplayName = "Synergy Pro 中文版";
+  case kPro:
+    DisplayName = productBase + " Pro";
+    break;
+  case kBasicChina:
+    DisplayName = productBase + " 中文版";
+    break;
+  case kProChina:
+    DisplayName = productBase + " Pro 中文版";
     break;
   case kLite:
-    DisplayName = "Synergy 1";
+    DisplayName = productBase;
     break;
+  case kUltimate:
+    DisplayName = productBase + " Ultimate";
+    break;
+
   default:
-    std::string EditionName = getName();
-    if (!EditionName.empty()) {
-      if (EditionName == UNREGISTERED) {
-        std::transform(EditionName.begin(), EditionName.end(),
-                       EditionName.begin(), ::toupper);
-        EditionName = "(" + EditionName + ")";
+    std::string editionName = getName();
+    if (!editionName.empty()) {
+      if (editionName == COMMUNITY) {
+        editionName = "Community Edition";
       } else {
-        EditionName[0] = static_cast<char>(::toupper(EditionName[0]));
+        editionName[0] = static_cast<char>(::toupper(editionName[0]));
       }
-      DisplayName = ApplicationName + EditionName;
+      DisplayName = productBase + " " + editionName;
     }
   }
 
@@ -119,7 +122,7 @@ void SerialKeyEdition::setType(const std::string &type) {
   if (pType != types.end()) {
     m_Type = pType->second;
   } else {
-    m_Type = kUnregistered;
+    m_Type = kCommunity;
   }
 }
 
@@ -129,5 +132,5 @@ bool SerialKeyEdition::isValid() const {
 }
 
 bool SerialKeyEdition::isChina() const {
-  return ((m_Type == kBasic_China) || (m_Type == kPro_China));
+  return ((m_Type == kBasicChina) || (m_Type == kProChina));
 }
