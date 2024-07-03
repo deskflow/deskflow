@@ -33,12 +33,19 @@ env:
 
 jobs:
   windows:
-    name: windows-2022
-    runs-on: windows-2022
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.runs-on }}
     timeout-minutes: 20
 
     env:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+
+    strategy:
+      matrix:
+        target:
+          - name: windows-2022
+            runs-on: windows-2022
+            arch: x64
 
     steps:
       - name: Checkout
@@ -90,36 +97,36 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-windows-x64"
-          gdrive-target-base-dir: "synergy1/personal"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-windows-${{ matrix.target.name }}"
+          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
-    name: ${{ matrix.arch.name }}
-    runs-on: ${{ matrix.arch.os }}
-    timeout-minutes: ${{ matrix.arch.timeout }}
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.os }}
+    timeout-minutes: ${{ matrix.target.timeout }}
 
     defaults:
       run:
-        shell: ${{ matrix.arch.shell }}
+        shell: ${{ matrix.target.shell }}
 
     strategy:
       matrix:
-        arch:
+        target:
           - name: "macos-11-arm64"
             timeout: 10
             os: "macos-14"
             arch: arm64
-            target: "11"
+            version: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
           - name: "macos-10-intel"
             timeout: 20
             os: "macos-14-large"
             arch: x64
-            target: "10.14"
+            version: "10.14"
             shell: "bash"
 
     steps:
@@ -133,7 +140,7 @@ jobs:
 
       - name: Configure
         env:
-          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.arch.target }}
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target.version }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
       - name: Build
@@ -159,8 +166,8 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-${{ matrix.arch.name }}"
-          gdrive-target-base-dir: "synergy1/personal"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
+          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
@@ -280,8 +287,8 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-${{ matrix.distro.name }}"
-          gdrive-target-base-dir: "synergy1/personal"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
+          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
