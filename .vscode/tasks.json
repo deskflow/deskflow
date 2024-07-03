@@ -3,19 +3,9 @@
   "tasks": [
     {
       "type": "cmake",
-      "label": "build-all",
+      "label": "build",
       "command": "build",
       "targets": ["all"],
-      "preset": "${command:cmake.activeBuildPresetName}",
-      "group": {
-        "kind": "build"
-      }
-    },
-    {
-      "type": "cmake",
-      "label": "build-coverage",
-      "command": "build",
-      "targets": ["coverage"],
       "preset": "${command:cmake.activeBuildPresetName}",
       "group": {
         "kind": "build",
