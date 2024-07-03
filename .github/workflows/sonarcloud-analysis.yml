@@ -30,10 +30,7 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Install gcovr
-        run: |
-          python3 -m venv build/python
-          source build/python/bin/activate
-          pip install gcovr
+        run: pip install gcovr
 
       - name: Install SonarScanner
         run: |
