@@ -6,21 +6,21 @@
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergy",
-      "preLaunchTask": "build-all"
+      "preLaunchTask": "build"
     },
     {
       "name": "unittests lldb",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/unittests",
-      "preLaunchTask": "build-all"
+      "preLaunchTask": "build"
     },
     {
       "name": "integtests lldb",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/integtests",
-      "preLaunchTask": "build-all"
+      "preLaunchTask": "build"
     },
     {
       "name": "win daemon attach",
@@ -50,7 +50,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyd",
       "args": ["-f"],
-      "preLaunchTask": "build-all"
+      "preLaunchTask": "build"
     }
   ]
 }
