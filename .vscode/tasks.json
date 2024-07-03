@@ -3,7 +3,17 @@
   "tasks": [
     {
       "type": "cmake",
-      "label": "build",
+      "label": "build-all",
+      "command": "build",
+      "targets": ["all"],
+      "preset": "${command:cmake.activeBuildPresetName}",
+      "group": {
+        "kind": "build"
+      }
+    },
+    {
+      "type": "cmake",
+      "label": "build-coverage",
       "command": "build",
       "targets": ["coverage"],
       "preset": "${command:cmake.activeBuildPresetName}",
@@ -16,7 +26,7 @@
       "label": "reinstall windows daemon",
       "type": "shell",
       "command": "python scripts/windows_daemon.py",
-      "dependsOn": ["build"]
+      "dependsOn": ["build-all"]
     }
   ]
 }
