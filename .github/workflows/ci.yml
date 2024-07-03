@@ -22,6 +22,7 @@ on:
     - cron: "0 5 * * *"
 
 env:
+  SYNERGY_ENABLE_LICENSING: true
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.event_name != 'schedule' }}
