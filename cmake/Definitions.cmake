@@ -73,10 +73,12 @@ macro(configure_options)
   set(DEFAULT_BUILD_GUI ON)
   set(DEFAULT_BUILD_INSTALLER ON)
   set(DEFAULT_BUILD_TESTS ON)
-  set(DEFAULT_ENABLE_COVERAGE ON)
 
   # unified binary is off by default for now, for backwards compatibility.
   set(DEFAULT_BUILD_UNIFIED OFF)
+
+  # coverage is off by default because it's GCC only and a developer preference.
+  set(DEFAULT_ENABLE_COVERAGE OFF)
 
   # licensing is off by default to make life easier for contributors.
   set(DEFAULT_ENABLE_LICENSING OFF)
@@ -96,6 +98,10 @@ macro(configure_options)
 
   if(DEFINED $ENV{SYNERGY_ENABLE_LICENSING})
     set(DEFAULT_ENABLE_LICENSING ON)
+  endif()
+
+  if(DEFINED $ENV{SYNERGY_ENABLE_COVERAGE})
+    set(DEFAULT_ENABLE_COVERAGE ON)
   endif()
 
   option(BUILD_GUI "Build GUI" ${DEFAULT_BUILD_GUI})
