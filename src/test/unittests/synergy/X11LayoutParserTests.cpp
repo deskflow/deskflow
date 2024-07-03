@@ -15,13 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <gtest/gtest.h>
 #if WINAPI_XWINDOWS
 #include "synergy/unix/X11LayoutsParser.h"
 #include "test/global/gtest.h"
+#include <filesystem>
 #include <fstream>
 
+const std::string testDir = "tmp/test";
+
 void createTestFiles() {
-  std::ofstream correctEvdevFile("correctEvdev.xml");
+  std::filesystem::create_directories(testDir);
+
+  std::ofstream correctEvdevFile(testDir + "/correctEvdev.xml");
   if (!correctEvdevFile.is_open()) {
     FAIL();
   }
@@ -74,7 +80,7 @@ void createTestFiles() {
   correctEvdevFile << "</xkbConfigRegistry>" << std::endl;
   correctEvdevFile.close();
 
-  std::ofstream evdevFromFutureFile("evdevFromFuture.xml");
+  std::ofstream evdevFromFutureFile(testDir + "/evdevFromFuture.xml");
   if (!evdevFromFutureFile.is_open()) {
     FAIL();
   }
@@ -95,7 +101,7 @@ void createTestFiles() {
   evdevFromFutureFile << "</xkbConfigRegistry>" << std::endl;
   evdevFromFutureFile.close();
 
-  std::ofstream incorrectEvdevFile1("incorrectEvdev1.xml");
+  std::ofstream incorrectEvdevFile1(testDir + "/incorrectEvdev1.xml");
   if (!incorrectEvdevFile1.is_open()) {
     FAIL();
   }
@@ -103,7 +109,7 @@ void createTestFiles() {
   incorrectEvdevFile1 << "<incorrectRootTag></incorrectRootTag>" << std::endl;
   incorrectEvdevFile1.close();
 
-  std::ofstream incorrectEvdevFile2("incorrectEvdev2.xml");
+  std::ofstream incorrectEvdevFile2(testDir + "/incorrectEvdev2.xml");
   if (!incorrectEvdevFile2.is_open()) {
     FAIL();
   }
@@ -114,7 +120,7 @@ void createTestFiles() {
   incorrectEvdevFile2 << "</xkbConfigRegistry>" << std::endl;
   incorrectEvdevFile2.close();
 
-  std::ofstream incorrectEvdevFile3("incorrectEvdev3.xml");
+  std::ofstream incorrectEvdevFile3(testDir + "/incorrectEvdev3.xml");
   if (!incorrectEvdevFile3.is_open()) {
     FAIL();
   }
@@ -133,35 +139,41 @@ void createTestFiles() {
 TEST(X11LayoutsParsingTests, xmlCorrectParsingTest) {
   createTestFiles();
   std::vector<String> expectedResult = {"en", "ru"};
-  auto parsedResult = X11LayoutsParser::getX11LanguageList("correctEvdev.xml");
+  auto parsedResult =
+      X11LayoutsParser::getX11LanguageList(testDir + "/correctEvdev.xml");
 
   EXPECT_EQ(parsedResult, parsedResult);
 }
 
 TEST(X11LayoutsParsingTests, xmlParsingMissedEvdevFileTest) {
-  auto parsedResult = X11LayoutsParser::getX11LanguageList("missedFile");
+  auto parsedResult =
+      X11LayoutsParser::getX11LanguageList(testDir + "/missedFile");
   EXPECT_TRUE(parsedResult.empty());
 }
 
 TEST(X11LayoutsParsingTests, xmlParsingIncorrectEvdevFileTest) {
   std::vector<String> parsedResult;
-  parsedResult = X11LayoutsParser::getX11LanguageList("incorrectEvdev1.xml");
+  parsedResult =
+      X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev1.xml");
   EXPECT_TRUE(parsedResult.empty());
-  parsedResult = X11LayoutsParser::getX11LanguageList("incorrectEvdev2.xml");
+  parsedResult =
+      X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev2.xml");
   EXPECT_TRUE(parsedResult.empty());
-  parsedResult = X11LayoutsParser::getX11LanguageList("incorrectEvdev3.xml");
+  parsedResult =
+      X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev3.xml");
   EXPECT_TRUE(parsedResult.empty());
 }
 
 TEST(X11LayoutsParsingTests, layoutConvertTest) {
-  EXPECT_EQ(X11LayoutsParser::convertLayotToISO("correctEvdev.xml", "us", true),
+  EXPECT_EQ(X11LayoutsParser::convertLayotToISO(testDir + "/correctEvdev.xml",
+                                                "us", true),
             "en");
-  EXPECT_EQ(
-      X11LayoutsParser::convertLayotToISO("incorrectEvdev1.xml", "us", true),
-      "");
-  EXPECT_EQ(
-      X11LayoutsParser::convertLayotToISO("evdevFromFuture.xml", "us", true),
-      "");
+  EXPECT_EQ(X11LayoutsParser::convertLayotToISO(
+                testDir + "/incorrectEvdev1.xml", "us", true),
+            "");
+  EXPECT_EQ(X11LayoutsParser::convertLayotToISO(
+                testDir + "/evdevFromFuture.xml", "us", true),
+            "");
 }
 
 #endif
