@@ -13,11 +13,11 @@ concurrency:
 jobs:
   sonarcloud-analysis:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:debian10
+    container: debian:12
     timeout-minutes: 20
 
     env:
-      SONAR_SCANNER_VERSION: 5.0.1.3006
+      SONAR_SCANNER_VERSION: 6.1.0.4477
       SONAR_SCANNER_OPTS: -server
 
     steps:
