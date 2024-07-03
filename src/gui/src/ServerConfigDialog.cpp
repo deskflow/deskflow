@@ -22,13 +22,15 @@
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
 #include "UpgradeDialog.h"
+#include "shared/EditionType.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
 
-ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
+ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config,
+                                       AppConfig &appConfig)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ServerConfigDialogBase(), m_OrigServerConfig(config),
       m_OrigServerAppConfigUseExternalConfig(config.getUseExternalConfig()),
@@ -36,7 +38,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_ServerConfig(config),
       m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(),
                          serverConfig().numRows()),
-      m_Message("") {
+      m_Message(""), m_appConfig(appConfig) {
   setupUi(this);
 
   m_pEditConfigFile->setText(serverConfig().getConfigFile());

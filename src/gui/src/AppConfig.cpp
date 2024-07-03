@@ -318,7 +318,7 @@ void AppConfig::saveSettings() {
   m_unsavedChanges = false;
 }
 
-#ifdef ENABLE_LICENSING
+#ifdef SYNERGY_ENABLE_LICENSING
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
 AppConfig &AppConfig::activationHasRun(bool value) {
@@ -377,7 +377,7 @@ void AppConfig::setAutoConfigServer(const QString &autoConfigServer) {
   setSettingModified(m_AutoConfigServer, autoConfigServer);
 }
 
-#ifdef ENABLE_LICENSING
+#ifdef SYNERGY_ENABLE_LICENSING
 void AppConfig::setEdition(Edition e) {
   setSettingModified(m_Edition, e);
   setCommonSetting(kEditionSetting, m_Edition);

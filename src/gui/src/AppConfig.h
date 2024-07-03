@@ -85,6 +85,7 @@ public:
   void setAutoConfig(bool autoConfig);
   QString autoConfigServer() const;
   void setAutoConfigServer(const QString &autoConfigServer);
+
 #ifdef SYNERGY_ENABLE_LICENSING
   void setEdition(Edition);
   Edition edition() const;

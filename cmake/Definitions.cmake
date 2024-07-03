@@ -24,6 +24,7 @@ macro(configure_definitions)
 
   set(PRODUCT_NAME "Synergy 1 Community Edition")
   if(DEFINED $ENV{SYNERGY_PRODUCT_NAME})
+    message(STATUS "Product name: $ENV{SYNERGY_PRODUCT_NAME}")
     set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
   endif()
   add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
@@ -32,14 +33,17 @@ macro(configure_definitions)
   configure_options()
 
   if(ENABLE_LICENSING)
+    message(STATUS "Licensing enabled")
     add_definitions(-DSYNERGY_ENABLE_LICENSING=1)
   endif()
 
   if(ENABLE_AUTO_CONFIG)
+    message(STATUS "Auto config enabled")
     add_definitions(-DSYNERGY_ENABLE_AUTO_CONFIG=1)
   endif()
 
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
   endif()
 

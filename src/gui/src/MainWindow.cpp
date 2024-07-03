@@ -179,6 +179,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   QString lastVersion = m_AppConfig->lastVersion();
   if (lastVersion != SYNERGY_VERSION) {
     m_AppConfig->setLastVersion(SYNERGY_VERSION);
+
 #ifdef SYNERGY_ENABLE_LICENSING
     m_LicenseManager->notifyUpdate(lastVersion, SYNERGY_VERSION);
 #endif
@@ -1276,7 +1277,7 @@ void MainWindow::autoAddScreen(const QString name) {
 }
 
 void MainWindow::showConfigureServer(const QString &message) {
-  ServerConfigDialog dlg(this, serverConfig());
+  ServerConfigDialog dlg(this, serverConfig(), appConfig());
   dlg.message(message);
   auto result = dlg.exec();
 
@@ -1328,7 +1329,7 @@ void MainWindow::on_windowShown() {
 #ifdef SYNERGY_ENABLE_LICENSING
   auto serialKey = m_LicenseManager->serialKey();
   if (!m_AppConfig->activationHasRun() && !serialKey.isValid()) {
-    setEdition(Edition::kCommunity);
+    setEdition(Edition::kUnregistered);
     raiseActivationDialog();
   }
 #endif
