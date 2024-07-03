@@ -31,7 +31,7 @@ env:
 
 jobs:
   windows:
-    name: windows-2022
+    name: windows-2022-${{ matrix.environment.name }}
     runs-on: windows-2022
     timeout-minutes: 20
     environment: ${{ matrix.environment.name }}
@@ -105,13 +105,13 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
-    runs-on: ${{ matrix.runtime.os }}
-    timeout-minutes: ${{ matrix.runtime.timeout }}
-    name: ${{ matrix.runtime.name }}
+    name: ${{ matrix.arch.name }}-(${{ matrix.environment.name }})
+    runs-on: ${{ matrix.arch.os }}
+    timeout-minutes: ${{ matrix.arch.timeout }}
 
     defaults:
       run:
-        shell: ${{ matrix.runtime.shell }}
+        shell: ${{ matrix.arch.shell }}
 
     strategy:
       matrix:
@@ -119,7 +119,7 @@ jobs:
           - name: regular
           - name: enterprise
 
-        runtime:
+        arch:
           - name: "macos-11-arm64"
             timeout: 10
             os: "macos-14"
@@ -145,7 +145,7 @@ jobs:
 
       - name: Configure
         env:
-          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.arch.target }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
       - name: Build
@@ -171,16 +171,16 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-${{ matrix.runtime.name }}"
+          github-target-filename: "synergy-${{ matrix.arch.name }}"
           gdrive-target-base-dir: "synergy1/personal"
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
+    name: linux-${{ matrix.distro.name }}-(${{ matrix.environment.name }})
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
-    name: linux-${{ matrix.distro.name }}
     container: ${{ matrix.distro.container }}
 
     env:
