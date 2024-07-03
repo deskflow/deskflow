@@ -34,9 +34,18 @@ jobs:
     name: windows-2022
     runs-on: windows-2022
     timeout-minutes: 20
+    environment: ${{ matrix.environment.name }}
 
     env:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+      SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
+      SYNERGY_ENABLE_LICENSING: ${{ vars.SYNERGY_ENABLE_LICENSING }}
+
+    strategy:
+      matrix:
+        environment:
+          - name: regular
+          - name: enterprise
 
     steps:
       - name: Checkout
