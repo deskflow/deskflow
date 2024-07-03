@@ -4,7 +4,7 @@ import platform
 import lib.env as env
 
 env_file = ".env"
-package_name = "synergy"
+default_package_prefix = "synergy"
 
 
 def main():
@@ -32,6 +32,8 @@ def main():
 def get_filename_base(version, use_linux_distro=True):
     os = env.get_os()
     machine = platform.machine().lower()
+    package_base = env.get_env("SYNERGY_PACKAGE_PREFIX", default_package_prefix)
+
     if os == "linux" and use_linux_distro:
         distro_name, _distro_like, distro_version = env.get_linux_distro()
         if not distro_name:
@@ -43,9 +45,9 @@ def get_filename_base(version, use_linux_distro=True):
         else:
             distro = distro_name
 
-        return f"{package_name}-{distro}-{machine}-{version}"
+        return f"{package_base}-{distro}-{machine}-{version}"
     else:
-        return f"{package_name}-{os}-{machine}-{version}"
+        return f"{package_base}-{os}-{machine}-{version}"
 
 
 def windows_package(filename_base):

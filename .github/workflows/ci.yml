@@ -40,6 +40,7 @@ jobs:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
       SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
       SYNERGY_ENABLE_LICENSING: ${{ vars.SYNERGY_ENABLE_LICENSING }}
+      SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
 
     strategy:
       matrix:
