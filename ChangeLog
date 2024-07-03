@@ -69,7 +69,7 @@ Enhancements:
 - #7190 Maintenance license serial key support
 - #7193 Support for maintenance licenses in China
 - #7197 Special contributor mentions on the about screen
-- #7203 License registration for Business edition
+- #7203 License registration for more editions
 - #7210 Update macos workflow to use macos-latest
 - #7213 Update azure pipelines to use macos-latest
 
@@ -87,8 +87,8 @@ Bug fixes:
 Enhancements:
 
 - #7143 Ability to stop Synergy on the login screen
-- #7157 Synergy Business accepts only business licenses
-- #7188 Synergy Basic\Pro accepts business licenses
+- #7157 Only accept correct license for specific edition
+- #7188 Only accept correct license for personal edition
 - #7166 Replace language notifications with warnings in logs
 - #7181 Fedora 36 support to CI system
 - #7177 Create workflow for flatpak build support
@@ -318,7 +318,7 @@ Enhancements:
 
 - #6750 Integrate SonarCloud for static analysis and test coverage
 - #6792 License key expiry
-- #6799 Synergy "Business" edition
+- #6799 New edition
 - #6803 Update Synergy icons
 - #6800 Update behaviour when unregistered
 - #6806 Move to Github Action for general PR builds and tests

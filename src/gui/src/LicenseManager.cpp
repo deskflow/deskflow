@@ -55,8 +55,7 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
 
 #ifdef SYNERGY_ENABLE_LICENSING
   if (!serialKey.isValid()) {
-    throw std::runtime_error("The serial key is not compatible with the "
-                             "business version of Synergy.");
+    throw std::runtime_error("The serial key is not valid.");
   }
 #endif // SYNERGY_ENABLE_LICENSING
 }
