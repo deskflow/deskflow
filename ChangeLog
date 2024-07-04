@@ -39,6 +39,7 @@ Enhancements:
 - #7361 Re-implement packaging for GitHub workflows (Linux)
 - #7363 Schedule CI daily at 5am to detect code rot early
 - #7364 Format all source with Clang and introduce lint workflow
+- #7368 Make version check URL v1-specific and configurable
 
 # 1.14.6
 
