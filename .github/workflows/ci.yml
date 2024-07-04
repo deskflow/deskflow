@@ -221,7 +221,6 @@ jobs:
             container: opensuse/tumbleweed:latest
             runs-on: ubuntu-latest
             install-deps-zypper: true
-            package-cache: /var/cache/zypp/packages
 
           - name: arch
             container: archlinux:latest
@@ -236,13 +235,6 @@ jobs:
             package-user: build
 
     steps:
-      - name: Cache system packages
-        if: ${{ matrix.distro.package-cache }}
-        uses: actions/cache@v4
-        with:
-          path: ${{ matrix.distro.package-cache }}
-          key: ${{ runner.os }}-${{ matrix.distro.name }}-packages
-
       - name: Bootstrap
         run: |
           if [ "${{ matrix.distro.install-deps-apt }}" = "true" ]; then
