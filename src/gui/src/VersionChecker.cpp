@@ -24,8 +24,6 @@
 #include <QNetworkRequest>
 #include <QProcess>
 
-#define VERSION_URL "https://api.symless.com/version"
-
 VersionChecker::VersionChecker() {
   m_manager = new QNetworkAccessManager(this);
 
@@ -36,7 +34,7 @@ VersionChecker::VersionChecker() {
 VersionChecker::~VersionChecker() { delete m_manager; }
 
 void VersionChecker::checkLatest() {
-  auto request = QNetworkRequest(QUrl(VERSION_URL));
+  auto request = QNetworkRequest(QUrl(SYNERGY_VERSION_URL));
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QString("Synergy (") + SYNERGY_VERSION + ") " +
                         QSysInfo::prettyProductName());
