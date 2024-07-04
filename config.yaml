@@ -62,7 +62,7 @@ config:
       dependencies:
         command: sudo zypper refresh; \
           sudo zypper --non-interactive remove busybox-which; \
-          sudo zypper install libxslt-devel -y; \
+          sudo zypper install -y libxslt-devel; \
           sudo zypper install -y \
           cmake \
           make \
