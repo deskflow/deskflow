@@ -60,10 +60,9 @@ config:
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
-        command: sudo zypper refresh; \
+        command: sudo zypper --non-interactive refresh; \
           sudo zypper --non-interactive remove busybox-which; \
-          sudo zypper install -y libxslt-devel; \
-          sudo zypper install -y \
+          sudo zypper --non-interactive install -y \
           cmake \
           make \
           gcc-c++ \
