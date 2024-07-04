@@ -62,6 +62,7 @@ config:
       dependencies:
         command: sudo zypper refresh; \
           sudo zypper --non-interactive remove busybox-which; \
+          sudo zypper update; \
           sudo zypper install -y \
           cmake \
           make \
