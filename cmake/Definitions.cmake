@@ -30,7 +30,7 @@ macro(configure_definitions)
     add_definitions(-DSYNERGY_ENABLE_LICENSING=1)
   else()
     set(PRODUCT_NAME "Synergy 1 Community Edition")
-    if(DEFINED ENV{SYNERGY_PRODUCT_NAME})
+    if(NOT "$ENV{SYNERGY_PRODUCT_NAME}" STREQUAL "")
       set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
     endif()
     message(STATUS "Product name: ${PRODUCT_NAME}")
@@ -87,24 +87,24 @@ macro(configure_options)
   # licensing is off by default to make life easier for contributors.
   set(DEFAULT_ENABLE_LICENSING OFF)
 
-  if(DEFINED ENV{SYNERGY_BUILD_MINIMAL})
+  if("$ENV{SYNERGY_BUILD_MINIMAL}" STREQUAL "true")
     set(DEFAULT_BUILD_GUI OFF)
     set(DEFAULT_BUILD_INSTALLER OFF)
   endif()
 
-  if(DEFINED ENV{SYNERGY_NO_TESTS})
+  if("$ENV{SYNERGY_BUILD_TESTS}" STREQUAL "false")
     set(DEFAULT_BUILD_TESTS OFF)
   endif()
 
-  if(DEFINED ENV{SYNERGY_BUILD_UNIFIED})
+  if("$ENV{SYNERGY_BUILD_UNIFIED}" STREQUAL "true")
     set(DEFAULT_BUILD_UNIFIED ON)
   endif()
 
-  if(DEFINED ENV{SYNERGY_ENABLE_LICENSING})
+  if("$ENV{SYNERGY_ENABLE_LICENSING}" STREQUAL "true")
     set(DEFAULT_ENABLE_LICENSING ON)
   endif()
 
-  if(DEFINED ENV{SYNERGY_ENABLE_COVERAGE})
+  if("$ENV{SYNERGY_ENABLE_COVERAGE}" STREQUAL "true")
     set(DEFAULT_ENABLE_COVERAGE ON)
   endif()
 
