@@ -60,9 +60,9 @@ config:
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
-        command: sudo zypper --non-interactive refresh; \
+        command: sudo zypper refresh; \
           sudo zypper --non-interactive remove busybox-which; \
-          sudo zypper --non-interactive install -y \
+          sudo zypper install -y --force-resolution \
           cmake \
           make \
           gcc-c++ \
