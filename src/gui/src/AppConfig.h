@@ -85,7 +85,8 @@ public:
   void setAutoConfig(bool autoConfig);
   QString autoConfigServer() const;
   void setAutoConfigServer(const QString &autoConfigServer);
-#ifndef SYNERGY_ENTERPRISE
+
+#ifdef SYNERGY_ENABLE_LICENSING
   void setEdition(Edition);
   Edition edition() const;
   void setSerialKey(const QString &serial);
@@ -124,7 +125,7 @@ public:
   bool getClientHostMode() const;
   bool getServerClientMode() const;
   bool getInitiateConnectionFromServer() const;
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   bool activationHasRun() const;
   AppConfig &activationHasRun(bool value);
 #endif

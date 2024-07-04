@@ -7,7 +7,7 @@ from lib.certificate import Certificate
 cmake_env_var = "CMAKE_PREFIX_PATH"
 shell_rc = "~/.zshrc"
 dist_dir = "dist"
-product_name = "Synergy"
+product_name = "Synergy 1"
 settings_file = "res/dist/macos/dmgbuild/settings.py"
 app_path = "build/bundle/Synergy.app"
 security_path = "/usr/bin/security"

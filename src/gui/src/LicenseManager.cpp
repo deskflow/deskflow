@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Seamless Inc.
+ * Copyright (C) 2015 Synergy Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,12 +53,11 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
     throw std::runtime_error("Serial key expired");
   }
 
-#ifdef SYNERGY_BUSINESS
+#ifdef SYNERGY_ENABLE_LICENSING
   if (!serialKey.isValid()) {
-    throw std::runtime_error("The serial key is not compatible with the "
-                             "business version of Synergy.");
+    throw std::runtime_error("The serial key is not valid.");
   }
-#endif
+#endif // SYNERGY_ENABLE_LICENSING
 }
 
 } // namespace
@@ -136,7 +135,7 @@ void LicenseManager::skipActivation() const {
 
 QString LicenseManager::getEditionName(Edition const edition, bool trial) {
   SerialKeyEdition KeyEdition(edition);
-  std::string name = KeyEdition.getDisplayName();
+  std::string name = KeyEdition.getProductName();
 
   if (trial) {
     name += " (Trial)";

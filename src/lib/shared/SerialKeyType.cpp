@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Seamless Inc.
+ * Copyright (C) 2015 Synergy Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,16 +17,16 @@
 
 #include "SerialKeyType.h"
 
-const std::string SerialKeyType::TRIAL = "trial";
-const std::string SerialKeyType::SUBSCRIPTION = "subscription";
-const std::string SerialKeyType::MAINTENANCE = "maintenance";
+const std::string SerialKeyType::Trial = "trial";
+const std::string SerialKeyType::Subscription = "subscription";
+const std::string SerialKeyType::Maintenance = "maintenance";
 
 SerialKeyType::SerialKeyType() {}
 
 void SerialKeyType::setKeyType(const std::string &Type) {
-  m_isTrial = (Type == SerialKeyType::TRIAL);
-  m_isTemporary = (m_isTrial || (Type == SerialKeyType::SUBSCRIPTION));
-  m_isMaintenance = (Type == SerialKeyType::MAINTENANCE);
+  m_isTrial = (Type == SerialKeyType::Trial);
+  m_isTemporary = (m_isTrial || (Type == SerialKeyType::Subscription));
+  m_isMaintenance = (Type == SerialKeyType::Maintenance);
 }
 
 bool SerialKeyType::isTrial() const { return m_isTrial; }

@@ -13,9 +13,29 @@
       }
     },
     {
+      "type": "cmake",
+      "label": "coverage",
+      "command": "build",
+      "targets": ["coverage"],
+      "preset": "${command:cmake.activeBuildPresetName}",
+      "group": "build"
+    },
+    {
       "label": "reinstall windows daemon",
       "type": "shell",
       "command": "python scripts/windows_daemon.py",
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "unittests",
+      "type": "shell",
+      "command": "./build/bin/unittests",
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "integtests",
+      "type": "shell",
+      "command": "./build/bin/integtests",
       "dependsOn": ["build"]
     }
   ]

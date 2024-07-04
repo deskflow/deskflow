@@ -12,33 +12,35 @@ concurrency:
 
 jobs:
   sonarcloud-analysis:
+    if: ${{ vars.SONAR_SCANNER_ENABLED }}
     runs-on: ubuntu-latest
-    container: symless/synergy-core:debian10
     timeout-minutes: 20
 
     env:
-      SONAR_SCANNER_VERSION: 5.0.1.3006
+      SONAR_SCANNER_VERSION: 6.1.0.4477
       SONAR_SCANNER_OPTS: -server
+      SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
 
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Installing gcovr
-        run: |
-          apt-get update
-          apt-get install -y python python-pip
-          pip install gcovr
+      - name: Install dependencies
+        run: ./scripts/install_deps.py
 
-      - name: Installing Sonar Scanner
+      - name: Install gcovr
+        run: pip install gcovr
+
+      - name: Install SonarScanner
         run: |
-          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
-          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
+          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64
+          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip \
+            $SONAR_SCANNER_URL_BASE/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux-x64.zip
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
 
-      - name: Installing build-wrapper
+      - name: Install build-wrapper
         run: |
           curl --create-dirs -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
@@ -46,19 +48,19 @@ jobs:
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          mkdir build
+          mkdir -p build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
-      - name: Running coverage
+      - name: Make coverage
         run: |
           cd build
           make coverage
 
-      - name: Run Sonar Scanner
+      - name: Run SonarScanner
         run: |
-          export PATH=$HOME/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-linux/bin:$PATH
+          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
           cd build
           sonar-scanner \
             -Dsonar.organization=symless \

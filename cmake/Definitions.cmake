@@ -22,28 +22,37 @@ macro(configure_definitions)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+  set(PRODUCT_NAME "Synergy 1 Community Edition")
+  if(DEFINED $ENV{SYNERGY_PRODUCT_NAME})
+    message(STATUS "Product name: $ENV{SYNERGY_PRODUCT_NAME}")
+    set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
+  endif()
+  add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
+
   configure_ninja()
   configure_options()
 
-  if(SYNERGY_ENTERPRISE)
-    add_definitions(-DSYNERGY_ENTERPRISE=1)
+  if(ENABLE_LICENSING)
+    message(STATUS "Licensing enabled")
+    add_definitions(-DSYNERGY_ENABLE_LICENSING=1)
   endif()
 
-  if(SYNERGY_BUSINESS)
-    add_definitions(-DSYNERGY_BUSINESS=1)
+  if(ENABLE_AUTO_CONFIG)
+    message(STATUS "Auto config enabled")
+    add_definitions(-DSYNERGY_ENABLE_AUTO_CONFIG=1)
   endif()
 
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
   endif()
 
-  # TODO: Find out why we need these, and remove them if we don't
+  # TODO: find out why we need these, and remove them if we don't
   if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 NEW)
   endif()
 
-  # Add headers to source list
   if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
     set(SYNERGY_ADD_HEADERS FALSE)
   else()
@@ -64,36 +73,49 @@ macro(configure_ninja)
 endmacro()
 
 macro(configure_options)
-  if(DEFINED ENV{SYNERGY_BUILD_MINIMAL})
-    option(SYNERGY_BUILD_GUI "Build the GUI" OFF)
-    option(SYNERGY_BUILD_INSTALLER "Build the installer" OFF)
-  else()
-    option(SYNERGY_BUILD_GUI "Build the GUI" ON)
-    option(SYNERGY_BUILD_INSTALLER "Build the installer" ON)
+
+  set(DEFAULT_BUILD_GUI ON)
+  set(DEFAULT_BUILD_INSTALLER ON)
+  set(DEFAULT_BUILD_TESTS ON)
+
+  # unified binary is off by default for now, for backwards compatibility.
+  set(DEFAULT_BUILD_UNIFIED OFF)
+
+  # coverage is off by default because it's GCC only and a developer preference.
+  set(DEFAULT_ENABLE_COVERAGE OFF)
+
+  # licensing is off by default to make life easier for contributors.
+  set(DEFAULT_ENABLE_LICENSING OFF)
+
+  if(DEFINED $ENV{SYNERGY_BUILD_MINIMAL})
+    set(DEFAULT_BUILD_GUI OFF)
+    set(DEFAULT_BUILD_INSTALLER OFF)
   endif()
 
-  if(DEFINED ENV{SYNERGY_NO_TESTS})
-    option(BUILD_TESTS "Override building of tests" OFF)
-  else()
-    option(BUILD_TESTS "Override building of tests" ON)
-    option(ENABLE_COVERAGE "Build with coverage")
+  if(DEFINED $ENV{SYNERGY_NO_TESTS})
+    set(DEFAULT_BUILD_TESTS OFF)
   endif()
 
-  if(DEFINED ENV{SYNERGY_UNIFIED_CORE})
-    option(UNIFIED_CORE "Build a single core binary" ON)
-  else()
-    option(UNIFIED_CORE "Build a single core binary" OFF)
+  if(DEFINED $ENV{SYNERGY_BUILD_UNIFIED})
+    set(DEFAULT_BUILD_UNIFIED ON)
   endif()
 
-  if($ENV{SYNERGY_ENTERPRISE})
-    option(SYNERGY_ENTERPRISE "Build Enterprise" ON)
-  else()
-    option(SYNERGY_ENTERPRISE "Build Enterprise" OFF)
+  if(DEFINED $ENV{SYNERGY_ENABLE_LICENSING})
+    set(DEFAULT_ENABLE_LICENSING ON)
   endif()
 
-  if($ENV{SYNERGY_BUSINESS})
-    option(SYNERGY_BUSINESS "Build Business" ON)
-  else()
-    option(SYNERGY_BUSINESS "Build Business" OFF)
+  if(DEFINED $ENV{SYNERGY_ENABLE_COVERAGE})
+    set(DEFAULT_ENABLE_COVERAGE ON)
   endif()
+
+  option(BUILD_GUI "Build GUI" ${DEFAULT_BUILD_GUI})
+  option(BUILD_INSTALLER "Build installer" ${DEFAULT_BUILD_INSTALLER})
+  option(BUILD_TESTS "Build tests" ${DEFAULT_BUILD_TESTS})
+  option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
+  option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
+  option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
+
+  # auto config is off by default because it requires bonjour, which sucks.
+  option(ENABLE_AUTO_CONFIG "Enable auto config (zeroconf)" OFF)
+
 endmacro()

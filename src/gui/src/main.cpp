@@ -83,16 +83,16 @@ int main(int argc, char *argv[]) {
 
   AppConfig appConfig;
   qRegisterMetaType<Edition>("Edition");
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   LicenseManager licenseManager(&appConfig);
 #endif
 
   app.switchTranslator(appConfig.language());
 
-#ifdef SYNERGY_ENTERPRISE
-  MainWindow mainWindow(appConfig);
-#else
+#ifdef SYNERGY_ENABLE_LICENSING
   MainWindow mainWindow(appConfig, licenseManager);
+#else
+  MainWindow mainWindow(appConfig);
 #endif
 
   QObject::connect(dynamic_cast<QObject *>(&app), SIGNAL(aboutToQuit()),

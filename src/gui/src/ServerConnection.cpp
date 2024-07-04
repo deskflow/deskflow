@@ -18,6 +18,7 @@
 
 #include "ServerConnection.h"
 
+#include "AppConfig.h"
 #include "MainWindow.h"
 #include "ServerConfigDialog.h"
 #include "ServerMessage.h"
@@ -68,7 +69,8 @@ void ServerConnection::addClient(const QString &clientName) {
 }
 
 void ServerConnection::configureClient(const QString &clientName) {
-  ServerConfigDialog dlg(&m_parent, m_parent.serverConfig());
+  ServerConfigDialog dlg(&m_parent, m_parent.serverConfig(),
+                         m_parent.appConfig());
 
   if (dlg.addClient(clientName) && dlg.exec() == QDialog::Accepted) {
     m_parent.restartSynergy();

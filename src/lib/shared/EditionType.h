@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2015 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,11 +23,11 @@
 enum Edition {
   kBasic,
   kPro,
-  Trial_DO_NOT_USE_OR_THERE_WILL_BE_PAIN,
+  kValueNotUsed,
   kUnregistered,
   kBusiness,
-  kBasic_China,
-  kPro_China,
+  kBasicChina,
+  kProChina,
   kLite,
   kUltimate
 };

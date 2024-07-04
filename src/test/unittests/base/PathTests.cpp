@@ -16,15 +16,22 @@
  */
 
 #include "base/Path.h"
+#include <filesystem>
 #include <fstream>
 
 #include "test/global/gtest.h"
 
+const std::string testDir = "tmp/test";
+const std::wstring testDirW = L"tmp/test";
+
 TEST(PathTests, open_file_using_path) {
-  std::string utf8FileName = "тіás.txt";
+  std::filesystem::create_directories(testDir);
+
+  std::string utf8FileName = testDir + "/тіás.txt";
 #if SYSAPI_WIN32
   // Windows uses UTF-16 for file path and names
-  std::wstring fileName = L"\x0442\x0456\x00E1\x0073\x002E\x0074\x0078\x0074";
+  std::wstring fileName =
+      testDirW + L"/\x0442\x0456\x00E1\x0073\x002E\x0074\x0078\x0074";
 #else
   std::string fileName = utf8FileName;
 #endif

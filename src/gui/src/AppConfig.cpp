@@ -171,10 +171,9 @@ const QString &AppConfig::language() const { return m_Language; }
 bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 bool AppConfig::autoConfig() const {
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef ENABLE_AUTO_CONFIG
   return m_AutoConfig;
 #else
-  // always disable auto config for enterprise edition.
   return false;
 #endif
 }
@@ -319,7 +318,7 @@ void AppConfig::saveSettings() {
   m_unsavedChanges = false;
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
 AppConfig &AppConfig::activationHasRun(bool value) {
@@ -378,7 +377,7 @@ void AppConfig::setAutoConfigServer(const QString &autoConfigServer) {
   setSettingModified(m_AutoConfigServer, autoConfigServer);
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
 void AppConfig::setEdition(Edition e) {
   setSettingModified(m_Edition, e);
   setCommonSetting(kEditionSetting, m_Edition);
@@ -422,10 +421,10 @@ void AppConfig::setCryptoEnabled(bool newValue) {
 bool AppConfig::isCryptoAvailable() const {
   bool result{true};
 
-#if !defined(SYNERGY_ENTERPRISE) && !defined(SYNERGY_BUSINESS)
-  result = (edition() == kPro || edition() == kPro_China ||
+#ifdef SYNERGY_ENABLE_LICENSING
+  result = (edition() == kPro || edition() == kProChina ||
             edition() == kBusiness || edition() == kUltimate);
-#endif
+#endif // SYNERGY_ENABLE_LICENSING
 
   return result;
 }

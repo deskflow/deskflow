@@ -22,13 +22,15 @@
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
 #include "UpgradeDialog.h"
+#include "shared/EditionType.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
 
-ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
+ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config,
+                                       AppConfig &appConfig)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ServerConfigDialogBase(), m_OrigServerConfig(config),
       m_OrigServerAppConfigUseExternalConfig(config.getUseExternalConfig()),
@@ -36,7 +38,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_ServerConfig(config),
       m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(),
                          serverConfig().numRows()),
-      m_Message("") {
+      m_Message(""), m_appConfig(appConfig) {
   setupUi(this);
 
   m_pEditConfigFile->setText(serverConfig().getConfigFile());
@@ -266,10 +268,18 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked() {
       onChange();
     }
   } else {
-    UpgradeDialog upgradeDialog(this);
-    upgradeDialog.showDialog(
-        "Configuring custom hotkeys is a Synergy Ultimate feature.",
-        "synergy/purchase/purchase-ultimate-upgrade?source=gui");
+#ifdef SYNERGY_ENABLE_LICENSING
+    auto edition = appConfig().edition();
+    if (edition == Edition::kLite || edition == Edition::kBasic) {
+      UpgradeDialog upgradeDialog(this);
+      if (appConfig().edition() == Edition::kLite) {
+        upgradeDialog.showDialog(
+            "Upgrade to Synergy 1 Ultimate to enable hotkeys");
+      } else if (appConfig().edition() == Edition::kBasic) {
+        upgradeDialog.showDialog("Upgrade to Synergy 1 Pro to enable hotkeys");
+      }
+    }
+#endif // SYNERGY_ENABLE_LICENSING
   }
 }
 

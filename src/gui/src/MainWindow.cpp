@@ -85,13 +85,13 @@ static const char *synergyDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-disconnected.png"  // synergyPendingRetry
 };
 
-#ifdef SYNERGY_ENTERPRISE
-MainWindow::MainWindow(AppConfig &appConfig)
-#else
+#ifdef SYNERGY_ENABLE_LICENSING
 MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
+#else
+MainWindow::MainWindow(AppConfig &appConfig)
 #endif
     :
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
       m_LicenseManager(&licenseManager), m_ActivationDialogRunning(false),
 #endif
       m_pZeroconf(nullptr), m_AppConfig(&appConfig), m_pSynergy(NULL),
@@ -101,7 +101,7 @@ MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
       m_pMenuWindow(NULL), m_pMenuHelp(NULL), m_pCancelButton(NULL),
       m_ExpectedRunningState(kStopped), m_SecureSocket(false),
       m_serverConnection(*this), m_clientConnection(*this) {
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
   m_pZeroconf = new Zeroconf(this);
 #endif
 
@@ -157,7 +157,7 @@ MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
 
   connect(this, SIGNAL(windowShown()), this, SLOT(on_windowShown()),
           Qt::QueuedConnection);
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   connect(m_LicenseManager, SIGNAL(editionChanged(Edition)), this,
           SLOT(setEdition(Edition)), Qt::QueuedConnection);
 
@@ -179,16 +179,17 @@ MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
   QString lastVersion = m_AppConfig->lastVersion();
   if (lastVersion != SYNERGY_VERSION) {
     m_AppConfig->setLastVersion(SYNERGY_VERSION);
-#ifndef SYNERGY_ENTERPRISE
+
+#ifdef SYNERGY_ENABLE_LICENSING
     m_LicenseManager->notifyUpdate(lastVersion, SYNERGY_VERSION);
 #endif
   }
 
-#ifdef SYNERGY_ENTERPRISE
+#ifndef SYNERGY_ENABLE_LICENSING
   m_pActivate->setVisible(false);
 #endif
 
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
   updateZeroconfService();
 
   addZeroconfServer(m_AppConfig->autoConfigServer());
@@ -209,7 +210,7 @@ MainWindow::~MainWindow() {
     }
   }
 
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
   delete m_pZeroconf;
 #endif
 }
@@ -316,7 +317,7 @@ void MainWindow::saveSettings() {
 }
 
 void MainWindow::zeroConfToggled() {
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
   updateZeroconfService();
 
   addZeroconfServer(m_AppConfig->autoConfigServer());
@@ -438,7 +439,7 @@ void MainWindow::updateFromLogLine(const QString &line) {
   checkOSXNotification(line);
 #endif
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   checkLicense(line);
 #endif
 }
@@ -475,7 +476,7 @@ void MainWindow::checkConnected(const QString &line) {
   }
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::checkLicense(const QString &line) {
   if (line.contains("trial has expired")) {
     licenseManager().refresh();
@@ -589,7 +590,7 @@ void MainWindow::startSynergy() {
   requestOSXNotificationPermission();
 #endif
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   SerialKey serialKey = m_LicenseManager->serialKey();
   if (!serialKey.isValid()) {
     if (QDialog::Rejected == raiseActivationDialog()) {
@@ -764,7 +765,7 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     args << "--invert-scroll";
   }
 
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
   // check auto config first, if it is disabled or no server detected,
   // use line edit host name if it is not empty
   if (appConfig().autoConfig()) {
@@ -784,7 +785,7 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
 
   if (m_pLineEditHostname->text().isEmpty() &&
       !appConfig().getClientHostMode()) {
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
     // check if autoconfig mode is enabled
     if (!appConfig().autoConfig()) {
 #endif
@@ -794,7 +795,7 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
                               "client to connect to."));
       return false;
 
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
     } else {
       return false;
     }
@@ -917,7 +918,7 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
   args << "-c" << configFilename << "--address" << address();
   appendLogInfo("config file: " + configFilename);
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   if (!appConfig().serialKey().isEmpty()) {
     args << "--serial-key" << appConfig().serialKey();
   }
@@ -1134,12 +1135,12 @@ void MainWindow::addZeroconfServer(const QString name) {
 }
 
 void MainWindow::setEdition(Edition edition) {
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   setWindowTitle(m_LicenseManager->getEditionName(edition));
 #endif
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::InvalidLicense() {
   stopSynergy();
   m_AppConfig->activationHasRun(false);
@@ -1166,7 +1167,7 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
 LicenseManager &MainWindow::licenseManager() const { return *m_LicenseManager; }
 #endif
 
@@ -1184,18 +1185,8 @@ bool MainWindow::on_m_pActionSave_triggered() {
 }
 
 void MainWindow::on_m_pActionAbout_triggered() {
-#if defined(SYNERGY_ENTERPRISE) || defined(SYNERGY_BUSINESS)
   AboutDialog dlg(this, appConfig());
   dlg.exec();
-#else
-  if (appConfig().edition() == Edition::kBusiness) {
-    AboutDialog dlg(this, appConfig());
-    dlg.exec();
-  } else {
-    AboutDialogEliteBackers dlg(this, appConfig());
-    dlg.exec();
-  }
-#endif
 }
 
 void MainWindow::on_m_pActionHelp_triggered() {
@@ -1203,7 +1194,7 @@ void MainWindow::on_m_pActionHelp_triggered() {
 }
 
 void MainWindow::updateZeroconfService() {
-#if !defined(SYNERGY_ENTERPRISE) && defined(SYNERGY_AUTOCONFIG)
+#ifdef SYNERGY_ENABLE_AUTO_CONFIG
 
   // reset the server list in case one has gone away.
   // it'll be re-added after the zeroconf service restarts.
@@ -1228,10 +1219,13 @@ void MainWindow::updateAutoConfigWidgets() {
 }
 
 void MainWindow::updateWindowTitle() {
-#ifdef SYNERGY_ENTERPRISE
-  setWindowTitle("Synergy 1 Enterprise");
-#else
+#ifdef SYNERGY_ENABLE_LICENSING
   setWindowTitle(m_LicenseManager->activeEditionName());
+#else
+  setWindowTitle(SYNERGY_PRODUCT_NAME);
+#endif
+
+#ifdef SYNERGY_ENABLE_LICENSING
   m_LicenseManager->refresh();
 #endif
 }
@@ -1255,7 +1249,7 @@ void MainWindow::autoAddScreen(const QString name) {
     return;
   }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   if (m_ActivationDialogRunning) {
     // TODO: refactor this code
     // add this screen to the pending list and check this list until
@@ -1283,7 +1277,7 @@ void MainWindow::autoAddScreen(const QString name) {
 }
 
 void MainWindow::showConfigureServer(const QString &message) {
-  ServerConfigDialog dlg(this, serverConfig());
+  ServerConfigDialog dlg(this, serverConfig(), appConfig());
   dlg.message(message);
   auto result = dlg.exec();
 
@@ -1301,7 +1295,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
 }
 
 void MainWindow::on_m_pActivate_triggered() {
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   raiseActivationDialog();
 #endif
 }
@@ -1311,7 +1305,7 @@ void MainWindow::on_m_pButtonApply_clicked() {
   restartSynergy();
 }
 
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
 int MainWindow::raiseActivationDialog() {
   if (m_ActivationDialogRunning) {
     return QDialog::Rejected;
@@ -1332,7 +1326,7 @@ int MainWindow::raiseActivationDialog() {
 #endif
 
 void MainWindow::on_windowShown() {
-#ifndef SYNERGY_ENTERPRISE
+#ifdef SYNERGY_ENABLE_LICENSING
   auto serialKey = m_LicenseManager->serialKey();
   if (!m_AppConfig->activationHasRun() && !serialKey.isValid()) {
     setEdition(Edition::kUnregistered);

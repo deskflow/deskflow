@@ -326,6 +326,7 @@ macro(configure_test_libs)
   endif()
 
   if(ENABLE_COVERAGE)
+    message(STATUS "Enabling code coverage")
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
     setup_target_for_coverage_gcovr_xml(
@@ -337,6 +338,8 @@ macro(configure_test_libs)
       "${PROJECT_SOURCE_DIR}/src"
       EXCLUDE
       "ext/*")
+  else()
+    message(STATUS "Code coverage is disabled")
   endif()
 
   include_directories(BEFORE SYSTEM

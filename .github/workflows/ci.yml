@@ -23,6 +23,9 @@ on:
 
 env:
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
+  SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
+  SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
+  SYNERGY_ENABLE_LICENSING: ${{ vars.SYNERGY_ENABLE_LICENSING }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.event_name != 'schedule' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
@@ -30,12 +33,19 @@ env:
 
 jobs:
   windows:
-    name: windows-2022
-    runs-on: windows-2022
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.runs-on }}
     timeout-minutes: 20
 
     env:
       QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
+
+    strategy:
+      matrix:
+        target:
+          - name: windows-2022
+            runs-on: windows-2022
+            arch: x64
 
     steps:
       - name: Checkout
@@ -75,48 +85,48 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ env.PACKAGE_BUILD == 'true' }}
+        if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
         run: python ./scripts/package.py
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
 
       - name: Upload
-        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
+        if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-windows-x64"
-          gdrive-target-base-dir: "synergy1/personal"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-windows-${{ matrix.target.name }}"
+          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
-    runs-on: ${{ matrix.runtime.os }}
-    timeout-minutes: ${{ matrix.runtime.timeout }}
-    name: ${{ matrix.runtime.name }}
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.os }}
+    timeout-minutes: ${{ matrix.target.timeout }}
 
     defaults:
       run:
-        shell: ${{ matrix.runtime.shell }}
+        shell: ${{ matrix.target.shell }}
 
     strategy:
       matrix:
-        runtime:
+        target:
           - name: "macos-11-arm64"
             timeout: 10
             os: "macos-14"
             arch: arm64
-            target: "11"
+            version: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
           - name: "macos-10-intel"
             timeout: 20
             os: "macos-14-large"
             arch: x64
-            target: "10.14"
+            version: "10.14"
             shell: "bash"
 
     steps:
@@ -130,7 +140,7 @@ jobs:
 
       - name: Configure
         env:
-          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.runtime.target }}
+          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target.version }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 
       - name: Build
@@ -140,7 +150,7 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ env.PACKAGE_BUILD == 'true' }}
+        if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
         run: ./scripts/package.py
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
@@ -151,21 +161,21 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
-        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
+        if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-${{ matrix.runtime.name }}"
-          gdrive-target-base-dir: "synergy1/personal"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
+          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
+    name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     timeout-minutes: 10
-    name: linux-${{ matrix.distro.name }}
     container: ${{ matrix.distro.container }}
 
     env:
@@ -265,20 +275,20 @@ jobs:
         run: ./build/bin/unittests
 
       - name: Package
-        if: ${{ env.PACKAGE_BUILD == 'true' }}
+        if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
           LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
         run: ./scripts/package.py
 
       - name: Upload
-        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
+        if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "synergy-${{ matrix.distro.name }}"
-          gdrive-target-base-dir: "synergy1/personal"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
+          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
