@@ -196,7 +196,12 @@ jobs:
             runs-on: ubuntu-latest
             install-deps-apt: true
 
-          - name: debian-12
+          - name: debian-12-arm64
+            container: arm64v8/debian:12
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            install-deps-apt: true
+
+          - name: debian-12-amd64
             container: debian:12
             runs-on: ubuntu-latest
             install-deps-apt: true
