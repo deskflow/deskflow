@@ -35,6 +35,7 @@ jobs:
   windows:
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
+    container: ${{ matrix.target.container }}
     timeout-minutes: 20
 
     env:
@@ -43,9 +44,14 @@ jobs:
     strategy:
       matrix:
         target:
-          - name: windows-2022
+          - name: windows-2022-x64
             runs-on: windows-2022
             arch: x64
+
+          - name: windows-2022-arm64
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            container: dockurr/windows-arm:latest
+            arch: arm64
 
     steps:
       - name: Checkout
@@ -97,7 +103,7 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-windows-${{ matrix.target.name }}"
+          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
           gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
@@ -122,7 +128,7 @@ jobs:
             version: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-          - name: "macos-10-intel"
+          - name: "macos-10-amd64"
             timeout: 20
             os: "macos-14-large"
             arch: x64
@@ -175,8 +181,8 @@ jobs:
   linux:
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
-    timeout-minutes: 10
     container: ${{ matrix.distro.container }}
+    timeout-minutes: 10
 
     env:
       # Prevent apt prompting for input.
@@ -184,6 +190,9 @@ jobs:
 
     strategy:
       matrix:
+        # TODO
+        # arch:
+
         distro:
           - name: ubuntu-24.04
             container: ubuntu:24.04
