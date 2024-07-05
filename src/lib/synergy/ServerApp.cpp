@@ -79,8 +79,12 @@ void ServerApp::parseArgs(int argc, const char *const *argv) {
   ArgParser argParser(this);
   bool result = argParser.parseServerArgs(args(), argc, argv);
 
-  if (!result || args().m_shouldExit) {
-    m_bye(kExitArgs);
+  if (!result || args().m_shouldExitOk || args().m_shouldExitFail) {
+    if (args().m_shouldExitOk) {
+      m_bye(kExitSuccess);
+    } else {
+      m_bye(kExitArgs);
+    }
   } else {
     if (!args().m_synergyAddress.empty()) {
       try {

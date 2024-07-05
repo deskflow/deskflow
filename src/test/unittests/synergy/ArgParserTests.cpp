@@ -55,7 +55,7 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse) {
   bool result = ArgParser::isArg(i, argc, argv, "-t", NULL, 1);
 
   EXPECT_FALSE(result);
-  EXPECT_EQ(true, argsBase.m_shouldExit);
+  EXPECT_EQ(true, argsBase.m_shouldExitOk);
 }
 
 TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue) {
@@ -235,7 +235,7 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
                         "--res-w", "888"};
   EXPECT_TRUE(
       parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
-  EXPECT_EQ(args.m_shouldExit, true);
+  EXPECT_EQ(args.m_shouldExitOk, true);
 }
 
 TEST(ArgParserTests, parseClientArgs_parses_single_help) {
@@ -257,5 +257,5 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help) {
                         "127.0.0.1"};
   EXPECT_TRUE(
       parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
-  EXPECT_EQ(args.m_shouldExit, true);
+  EXPECT_EQ(args.m_shouldExitOk, true);
 }
