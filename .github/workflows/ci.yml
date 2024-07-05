@@ -44,14 +44,14 @@ jobs:
     strategy:
       matrix:
         target:
-          - name: windows-2022-amd64
-            runs-on: windows-2022
-            arch: x64
-
           - name: windows-2022-arm64
             runs-on: buildjet-4vcpu-ubuntu-2204-arm
             container: dockurr/windows-arm:latest
             arch: arm64
+
+          - name: windows-2022-amd64
+            runs-on: windows-2022
+            arch: x64
 
     steps:
       - name: Checkout
