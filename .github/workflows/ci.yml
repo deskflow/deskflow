@@ -55,15 +55,18 @@ jobs:
             arch: x64
 
     steps:
-      - name: Install WinGet
-        if: ${{ matrix.target.install-deps }}
-        uses: Cyberboss/install-winget@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Bootstrap
         if: ${{ matrix.target.install-deps }}
-        run: winget install -e --id Git.Git
+        run: |
+          $progressPreference = 'silentlyContinue'
+          Write-Output "Downloading WinGet and its dependencies..."
+          Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile winget.msixbundle
+          Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+          Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx -OutFile Microsoft.UI.Xaml.2.8.x64.appx
+          Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
+          Add-AppxPackage Microsoft.UI.Xaml.2.8.x64.appx
+          Add-AppxPackage winget.msixbundle
+          winget install -e --id Git.Git
 
       - name: Checkout
         uses: actions/checkout@v4
