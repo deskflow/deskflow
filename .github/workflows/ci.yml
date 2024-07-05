@@ -55,6 +55,11 @@ jobs:
             arch: x64
 
     steps:
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Bootstrap
         if: ${{ matrix.target.install-deps }}
         run: winget install -e --id Git.Git
