@@ -138,7 +138,7 @@ bool ArgParser::parsePlatformArg(lib::synergy::ArgsBase &argsBase,
 #if WINAPI_MSWINDOWS
   if (isArg(i, argc, argv, nullptr, "--service")) {
     LOG((CLOG_WARN "obsolete argument --service, use synergyd instead."));
-    argsBase.m_shouldExit = true;
+    argsBase.m_shouldExitFail = true;
   } else if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
     argsBase.m_pauseOnExit = true;
   } else if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
