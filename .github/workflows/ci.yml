@@ -57,6 +57,7 @@ jobs:
     steps:
       - name: Bootstrap
         if: ${{ matrix.target.install-deps }}
+        shell: pwsh
         run: |
           $progressPreference = 'silentlyContinue'
           Write-Output "Downloading WinGet and its dependencies..."
