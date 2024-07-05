@@ -71,8 +71,8 @@ def linux_package(filename_base, version):
 
     if extra_packages:
         filename_base = get_filename_base(version, use_linux_distro=False)
-        linux.package(filename_base, build_tgz=True)
-        linux.package(filename_base, build_stgz=True)
+        linux.package(filename_base, build_distro=False, build_tgz=True)
+        linux.package(filename_base, build_distro=False, build_stgz=True)
 
 
 if __name__ == "__main__":
