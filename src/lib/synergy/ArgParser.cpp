@@ -119,7 +119,7 @@ bool ArgParser::parseClientArgs(lib::synergy::ClientArgs &args, int argc,
   }
 
   // exactly one non-option argument (server-address)
-  if (i == argc) {
+  if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
     LOG((CLOG_CRIT "%s: a server address or name is required" BYE, args.m_pname,
          args.m_pname));
     return false;
@@ -220,12 +220,12 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) {
     if (m_app) {
       m_app->help();
     }
-    argsBase().m_shouldExit = true;
+    argsBase().m_shouldExitOk = true;
   } else if (isArg(i, argc, argv, nullptr, "--version")) {
     if (m_app) {
       m_app->version();
     }
-    argsBase().m_shouldExit = true;
+    argsBase().m_shouldExitOk = true;
   } else if (isArg(i, argc, argv, nullptr, "--no-tray")) {
     argsBase().m_disableTray = true;
   } else if (isArg(i, argc, argv, nullptr, "--ipc")) {
@@ -298,7 +298,7 @@ bool ArgParser::isArg(int argi, int argc, const char *const *argv,
     if (argi + minRequiredParameters >= argc) {
       LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE, argsBase().m_pname,
            argv[argi], argsBase().m_pname));
-      argsBase().m_shouldExit = true;
+      argsBase().m_shouldExitFail = true;
       return false;
     }
     return true;
