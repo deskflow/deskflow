@@ -25,6 +25,11 @@ macro(configure_definitions)
   configure_ninja()
   configure_options()
 
+  if(NOT DEFINED VERSION_URL)
+    set(VERSION_URL "https://api.symless.com/version?version=v1")
+  endif()
+  add_definitions(-DSYNERGY_VERSION_URL="${VERSION_URL}")
+
   if(ENABLE_LICENSING)
     message(STATUS "Licensing enabled")
     add_definitions(-DSYNERGY_ENABLE_LICENSING=1)
