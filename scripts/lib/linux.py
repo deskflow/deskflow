@@ -5,6 +5,7 @@ import lib.env as env
 dist_dir = "dist"
 build_dir = "build"
 package_name = "synergy"
+test_cmd = "synergys --version"
 
 
 def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False):
@@ -130,7 +131,7 @@ def test_install(package_file):
     )
 
     try:
-        cmd_utils.run("synergys --version", shell=True, check=True, print_cmd=True)
+        cmd_utils.run(test_cmd, shell=True, check=True, print_cmd=True)
     except Exception:
         raise RuntimeError("Unable to verify version")
     finally:
