@@ -57,7 +57,6 @@ jobs:
     steps:
       - name: Bootstrap
         if: ${{ matrix.target.install-deps }}
-        shell: cmd
         run: |
           powershell -Command $PSVersionTable
           curl -Lo winget.msixbundle https://aka.ms/getwinget
