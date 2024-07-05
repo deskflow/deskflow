@@ -51,7 +51,7 @@ def get_package_info(package_type: PackageType):
         if "debian" in distro_like:
             cpack_generator = "DEB"
             file_extension = "deb"
-        elif is_like_rpm(distro_like):
+        elif "fedora" in distro_like or "opensuse" in distro_like:
             cpack_generator = "RPM"
             file_extension = "rpm"
         elif "arch" in distro_like:
@@ -104,10 +104,6 @@ def copy_to_dist_dir(source_file, target_file):
     return target_path
 
 
-def is_like_rpm(distro_like):
-    return "fedora" in distro_like or "opensuse" in distro_like
-
-
 def test_install(package_file):
 
     distro, distro_like, _distro_version = env.get_linux_distro()
@@ -119,9 +115,12 @@ def test_install(package_file):
     if "debian" in distro_like:
         install_pre = ["apt", "install", "-f", "-y"]
         remove_pre = ["apt", "remove", "-y"]
-    elif is_like_rpm(distro_like):
+    elif "fedora" in distro_like:
         install_pre = ["yum", "install", "-y"]
         remove_pre = ["yum", "remove", "-y"]
+    elif "opensuse" in distro_like:
+        install_pre = ["zypper", "install", "-y"]
+        remove_pre = ["zypper", "remove", "-y"]
     elif "arch" in distro_like:
         install_pre = ["pacman", "-U", "--noconfirm"]
         remove_pre = ["pacman", "-R", "--noconfirm"]
