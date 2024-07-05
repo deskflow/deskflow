@@ -116,8 +116,8 @@ def test_install(package_file):
         install_pre = ["apt", "install", "-f", "-y"]
         remove_pre = ["apt", "remove", "-y"]
     elif "fedora" in distro_like:
-        install_pre = ["yum", "install", "-y"]
-        remove_pre = ["yum", "remove", "-y"]
+        install_pre = ["dnf", "install", "-y"]
+        remove_pre = ["dnf", "remove", "-y"]
     elif "opensuse" in distro_like:
         install_pre = ["zypper", "--no-gpg-checks", "install", "-y"]
         remove_pre = ["zypper", "remove", "-y"]
