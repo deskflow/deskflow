@@ -119,7 +119,7 @@ def test_install(package_file):
         install_pre = ["yum", "install", "-y"]
         remove_pre = ["yum", "remove", "-y"]
     elif "opensuse" in distro_like:
-        install_pre = ["zypper", "install", "-y"]
+        install_pre = ["zypper", "--no-gpg-check", "install", "-y"]
         remove_pre = ["zypper", "remove", "-y"]
     elif "arch" in distro_like:
         install_pre = ["pacman", "-U", "--noconfirm"]
