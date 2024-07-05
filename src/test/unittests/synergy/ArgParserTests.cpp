@@ -55,7 +55,7 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse) {
   bool result = ArgParser::isArg(i, argc, argv, "-t", NULL, 1);
 
   EXPECT_FALSE(result);
-  EXPECT_EQ(true, argsBase.m_shouldExitOk);
+  EXPECT_EQ(true, argsBase.m_shouldExitFail);
 }
 
 TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue) {
