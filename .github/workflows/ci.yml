@@ -44,25 +44,11 @@ jobs:
     strategy:
       matrix:
         target:
-          - name: windows-2022-arm64
-            runs-on: buildjet-4vcpu-ubuntu-2204-arm
-            container: dockurr/windows-arm:latest
-            arch: arm64
-            install-deps: true
-
           - name: windows-2022-amd64
             runs-on: windows-2022
             arch: x64
 
     steps:
-      - name: Bootstrap
-        if: ${{ matrix.target.install-deps }}
-        run: |
-          powershell -Command $PSVersionTable
-          curl -Lo winget.msixbundle https://aka.ms/getwinget
-          powershell Add-AppxPackage -Path winget.msixbundle
-          winget install -e --id Git.Git
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
