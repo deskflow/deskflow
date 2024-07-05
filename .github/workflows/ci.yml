@@ -55,7 +55,8 @@ jobs:
             arch: x64
 
     steps:
-      - name: Install winget
+      - name: Install WinGet
+        if: ${{ matrix.target.install-deps }}
         uses: Cyberboss/install-winget@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
