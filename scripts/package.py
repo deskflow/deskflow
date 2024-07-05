@@ -2,6 +2,7 @@
 
 import platform
 import lib.env as env
+from lib.linux import PackageType
 
 env_file = ".env"
 default_package_prefix = "synergy"
@@ -67,12 +68,12 @@ def linux_package(filename_base, version):
 
     extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
 
-    linux.package(filename_base)
+    linux.package(filename_base, PackageType.DISTRO)
 
     if extra_packages:
         filename_base = get_filename_base(version, use_linux_distro=False)
-        linux.package(filename_base, build_distro=False, build_tgz=True)
-        linux.package(filename_base, build_distro=False, build_stgz=True)
+        linux.package(filename_base, PackageType.TGZ)
+        linux.package(filename_base, PackageType.STGZ)
 
 
 if __name__ == "__main__":

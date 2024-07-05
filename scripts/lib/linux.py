@@ -1,6 +1,14 @@
 import os, shutil, glob
 import lib.cmd_utils as cmd_utils
 import lib.env as env
+from enum import Enum, auto
+
+
+class PackageType(Enum):
+    DISTRO = auto()
+    TGZ = auto()
+    STGZ = auto()
+
 
 dist_dir = "dist"
 build_dir = "build"
@@ -8,33 +16,33 @@ package_name = "synergy"
 test_cmd = "synergys --version"
 
 
-def package(filename_base, build_distro=True, build_tgz=False, build_stgz=False):
+def package(filename_base, package_type: PackageType):
 
-    extension, cmd = get_package_info(build_distro, build_tgz, build_stgz)
+    extension, cmd = get_package_info(package_type)
     run_package_cmd(cmd)
     package_filename = get_package_filename(extension)
     target_file = f"{filename_base}.{extension}"
     target_path = copy_to_dist_dir(package_filename, target_file)
 
-    if build_distro:
+    if package_type == PackageType.DISTRO:
         test_install(target_path)
 
 
-def get_package_info(build_distro, build_tgz, build_stgz):
+def get_package_info(package_type: PackageType):
 
     command = None
     cpack_generator = None
     file_extension = None
 
-    if build_tgz:
+    if package_type == PackageType.TGZ:
         cpack_generator = "TGZ"
         file_extension = "tar.gz"
 
-    elif build_stgz:
+    elif package_type == PackageType.STGZ:
         cpack_generator = "STGZ"
         file_extension = "sh"
 
-    elif build_distro:
+    elif package_type == PackageType.DISTRO:
 
         distro, distro_like, _distro_version = env.get_linux_distro()
         if not distro_like:
