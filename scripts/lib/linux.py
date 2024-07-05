@@ -58,7 +58,7 @@ def get_package_info(package_type: PackageType):
             command = ["makepkg", "-s"]
             file_extension = "pkg.tar.zst"
         else:
-            raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
+            raise RuntimeError(f"Linux distro not yet supported: {distro}")
 
     if not cpack_generator and not command:
         raise RuntimeError("No package generator or command found")
@@ -125,7 +125,7 @@ def test_install(package_file):
         install_pre = ["pacman", "-U", "--noconfirm"]
         remove_pre = ["pacman", "-R", "--noconfirm"]
     else:
-        raise RuntimeError(f"Linux distro not yet supported: {distro_like}")
+        raise RuntimeError(f"Linux distro not yet supported: {distro}")
 
     has_sudo = cmd_utils.has_command("sudo")
     sudo = ["sudo"] if has_sudo else []
