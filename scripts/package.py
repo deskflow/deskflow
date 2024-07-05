@@ -48,6 +48,11 @@ def get_filename_base(version, use_linux_distro=True):
 
         return f"{package_base}-{distro}-{machine}-{version}"
     else:
+        # some windows users get confused by 'amd64' and think it's 'arm64',
+        # so we'll use intel's 'x64' branding (even though it's wrong).
+        if machine == "amd64":
+            machine = "x64"
+
         return f"{package_base}-{os}-{machine}-{version}"
 
 

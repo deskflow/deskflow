@@ -44,9 +44,8 @@ jobs:
     strategy:
       matrix:
         target:
-          - name: windows-2022-amd64
+          - name: windows-2022-x64
             runs-on: windows-2022
-            arch: x64
 
     steps:
       - name: Checkout
@@ -123,7 +122,7 @@ jobs:
             version: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-          - name: "macos-10-amd64"
+          - name: "macos-10-intel"
             timeout: 20
             os: "macos-14-large"
             arch: x64
@@ -174,9 +173,9 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   linux:
-    name: linux-${{ matrix.distro.name }}
-    runs-on: ${{ matrix.distro.runs-on }}
-    container: ${{ matrix.distro.container }}
+    name: linux-${{ matrix.distro.name }}-${{ matrix.arch.name }}
+    runs-on: ${{ matrix.arch.runs-on }}
+    container: ${{ matrix.arch.container-prefix }}${{ matrix.distro.container }}
     timeout-minutes: 10
 
     env:
@@ -185,13 +184,17 @@ jobs:
 
     strategy:
       matrix:
-        # TODO
-        # arch:
+        arch:
+          - name: amd64
+            runs-on: ubuntu-latest
+
+          - name: arm64
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            container-prefix: arm64v8/
 
         distro:
           - name: ubuntu-24.04
             container: ubuntu:24.04
-            runs-on: ubuntu-latest
             install-deps-apt: true
             extra-packages: true
 
@@ -200,46 +203,34 @@ jobs:
             runs-on: ubuntu-latest
             install-deps-apt: true
 
-          - name: debian-12-arm64
-            container: arm64v8/debian:12
-            runs-on: buildjet-4vcpu-ubuntu-2204-arm
-            install-deps-apt: true
-
-          - name: debian-12-amd64
+          - name: debian-12
             container: debian:12
-            runs-on: ubuntu-latest
             install-deps-apt: true
 
           - name: debian-11
             container: debian:11
-            runs-on: ubuntu-latest
             install-deps-apt: true
             legacy-cmake: true
 
           - name: fedora-40
             container: fedora:40
-            runs-on: ubuntu-latest
             install-deps-dnf: true
 
           - name: fedora-39
             container: fedora:39
-            runs-on: ubuntu-latest
             install-deps-dnf: true
 
           - name: opensuse
             container: opensuse/tumbleweed:latest
-            runs-on: ubuntu-latest
             install-deps-zypper: true
 
           - name: arch
             container: archlinux:latest
-            runs-on: ubuntu-latest
             install-deps-pacman: true
             package-user: build
 
           - name: manjaro
             container: manjarolinux/base:latest
-            runs-on: ubuntu-latest
             install-deps-pacman: true
             package-user: build
 
