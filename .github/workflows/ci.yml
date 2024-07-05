@@ -57,16 +57,11 @@ jobs:
     steps:
       - name: Bootstrap
         if: ${{ matrix.target.install-deps }}
-        shell: powershell
+        shell: cmd
         run: |
-          $progressPreference = 'silentlyContinue'
-          Write-Output "Downloading WinGet and its dependencies..."
-          Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile winget.msixbundle
-          Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-          Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx -OutFile Microsoft.UI.Xaml.2.8.x64.appx
-          Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
-          Add-AppxPackage Microsoft.UI.Xaml.2.8.x64.appx
-          Add-AppxPackage winget.msixbundle
+          powershell -Command $PSVersionTable
+          curl -Lo winget.msixbundle https://aka.ms/getwinget
+          powershell Add-AppxPackage -Path winget.msixbundle
           winget install -e --id Git.Git
 
       - name: Checkout
