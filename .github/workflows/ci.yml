@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         target:
-          - name: windows-2022-x64
+          - name: windows-2022-amd64
             runs-on: windows-2022
             arch: x64
 
