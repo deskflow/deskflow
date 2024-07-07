@@ -30,10 +30,10 @@ macro(configure_definitions)
   endif()
   add_definitions(-DSYNERGY_VERSION_URL="${VERSION_URL}")
 
-  if(NOT "${SYNERGY_GIT_SHA}" STREQUAL "")
-    set(GIT_SHA "${SYNERGY_GIT_SHA}")
+  if(NOT "${GIT_SHA}" STREQUAL "")
+    set(GIT_SHA "${GIT_SHA}")
     message(STATUS "Git SHA: ${GIT_SHA}")
-    add_definitions(-DSYNERGY_GIT_SHA="${GIT_SHA}")
+    add_definitions(-DGIT_SHA="${GIT_SHA}")
   endif()
 
   if(ENABLE_LICENSING)

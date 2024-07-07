@@ -82,8 +82,8 @@ void App::version() {
 
   std::stringstream version;
   version << kVersion;
-#ifdef SYNERGY_GIT_SHA
-  version << " (" << SYNERGY_GIT_SHA << ")";
+#ifdef GIT_SHA
+  version << " (" << GIT_SHA << ")";
 #endif
 
   char buffer[buffer_size];
