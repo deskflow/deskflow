@@ -31,7 +31,8 @@ macro(configure_definitions)
   add_definitions(-DSYNERGY_VERSION_URL="${VERSION_URL}")
 
   if(NOT "$ENV{GIT_SHA}" STREQUAL "")
-    set(GIT_SHA "$ENV{GIT_SHA}")
+    # Shorten the Git SHA to 8 chars for readability
+    string(SUBSTRING "$ENV{GIT_SHA}" 0 8 GIT_SHA)
     message(STATUS "Git SHA: ${GIT_SHA}")
     add_definitions(-DGIT_SHA="${GIT_SHA}")
   endif()
