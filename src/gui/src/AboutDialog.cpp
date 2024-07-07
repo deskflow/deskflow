@@ -27,8 +27,8 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
   m_versionChecker.setApp(parent->appPath(config.synergycName()));
 
   QString version = SYNERGY_VERSION;
-#ifdef GIT_SHA
-  version += " (" GIT_SHA ")";
+#ifdef GIT_SHA_SHORT
+  version += " (" GIT_SHA_SHORT ")";
 #endif
 
   m_pLabelSynergyVersion->setText(version);

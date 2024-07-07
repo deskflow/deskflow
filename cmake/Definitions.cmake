@@ -32,9 +32,9 @@ macro(configure_definitions)
 
   if(NOT "$ENV{GIT_SHA}" STREQUAL "")
     # Shorten the Git SHA to 8 chars for readability
-    string(SUBSTRING "$ENV{GIT_SHA}" 0 8 GIT_SHA)
-    message(STATUS "Git SHA: ${GIT_SHA}")
-    add_definitions(-DGIT_SHA="${GIT_SHA}")
+    string(SUBSTRING "$ENV{GIT_SHA}" 0 8 GIT_SHA_SHORT)
+    message(STATUS "Short Git SHA: ${GIT_SHA_SHORT}")
+    add_definitions(-DGIT_SHA_SHORT="${GIT_SHA_SHORT}")
   endif()
 
   if(ENABLE_LICENSING)
