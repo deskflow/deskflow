@@ -24,7 +24,7 @@ jobs:
 
       - name: Get next version
         id: next-version
-        uses: symless/next-version-action@master
+        uses: symless/actions/next-version@master
         with:
           current-version: ${{ env.CURRENT_VERSION }}
 
