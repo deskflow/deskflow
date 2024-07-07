@@ -25,10 +25,16 @@ macro(configure_definitions)
   configure_ninja()
   configure_options()
 
-  if(NOT DEFINED VERSION_URL)
+  if("${VERSION_URL}" STREQUAL "")
     set(VERSION_URL "https://api.symless.com/version?version=v1")
   endif()
   add_definitions(-DSYNERGY_VERSION_URL="${VERSION_URL}")
+
+  if(NOT "${SYNERGY_GIT_SHA}" STREQUAL "")
+    set(GIT_SHA "${SYNERGY_GIT_SHA}")
+    message(STATUS "Git SHA: ${GIT_SHA}")
+    add_definitions(-DSYNERGY_GIT_SHA="${GIT_SHA}")
+  endif()
 
   if(ENABLE_LICENSING)
     message(STATUS "Licensing enabled")
