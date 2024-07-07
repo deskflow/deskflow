@@ -28,7 +28,7 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
 
   QString version = SYNERGY_VERSION;
 #ifdef SYNERGY_GIT_SHA
-    version += " (" SYNERGY_GIT_SHA ")";
+  version += " (" SYNERGY_GIT_SHA ")";
 #endif
 
   m_pLabelSynergyVersion->setText(version);
