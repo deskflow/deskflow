@@ -22,6 +22,7 @@ on:
     - cron: "0 5 * * *"
 
 env:
+  GIT_SHA: ${{ github.sha }}
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
   SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
   SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
