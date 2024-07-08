@@ -40,6 +40,7 @@ Enhancements:
 - #7363 Schedule CI daily at 5am to detect code rot early
 - #7364 Format all source with Clang and introduce lint workflow
 - #7368 Make version check URL v1-specific and configurable
+- #7369 Re-implement packaging for GitHub workflows (Linux ARM)
 - #7372 Add Git SHA to about screen and --version
 
 # 1.14.6
