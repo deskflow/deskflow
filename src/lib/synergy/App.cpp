@@ -41,6 +41,7 @@
 #endif
 
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 
 #if WINAPI_CARBON
@@ -79,9 +80,15 @@ void App::version() {
   char copyrightBuffer[cpight_size];
   snprintf(copyrightBuffer, cpight_size, kCopyright, kBuildYear);
 
+  std::stringstream version;
+  version << kVersion;
+#ifdef GIT_SHA_SHORT
+  version << " (" << GIT_SHA_SHORT << ")";
+#endif
+
   char buffer[buffer_size];
   snprintf(buffer, buffer_size, "%s %s, protocol version %d.%d\n%s",
-           argsBase().m_pname, kVersion, kProtocolMajorVersion,
+           argsBase().m_pname, version.str().c_str(), kProtocolMajorVersion,
            kProtocolMinorVersion, copyrightBuffer);
 
   std::cout << buffer << std::endl;
