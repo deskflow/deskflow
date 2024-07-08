@@ -58,6 +58,7 @@ config:
           libxkbfile-devel \
           qt6-qtbase-devel \
           qt6-qttools-devel \
+          qt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
@@ -77,6 +78,7 @@ config:
           libxkbfile-devel \
           libqt6-qtbase-devel \
           libqt6-qttools-devel \
+          libqt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
@@ -94,6 +96,7 @@ config:
           libxkbfile \
           qt6-base \
           qt6-tools \
+          qt6-5compat \
           gtk3
 
     manjaro:
