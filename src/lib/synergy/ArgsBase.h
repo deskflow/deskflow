@@ -36,35 +36,65 @@ public:
   /// @brief This sets the type of the derived class
   enum Type { kBase, kServer, kClient };
 
-  Type m_classType = kBase; /// @brief Stores what type of object this is
+  /// @brief Stores what type of object this is
+  Type m_classType = kBase;
 
-  bool m_daemon = true;          /// @brief Should run as a daemon
-  bool m_restartable = true;     /// @brief Should the app restart automatically
-  bool m_noHooks = false;        /// @brief Should the app use hooks
-  const char *m_pname = nullptr; /// @brief The filename of the running process
-  const char *m_logFilter =
-      nullptr; /// @brief The logging level of the application
-  const char *m_logFile = nullptr; /// @brief The full path to the logfile
-  const char *m_display =
-      nullptr;                /// @brief Contains the X-Server display to use
-  String m_name;              /// @brief The name of the current computer
-  bool m_disableTray = false; /// @brief Should the app add a tray icon
-  bool m_enableIpc =
-      false; /// @brief Tell the client to talk through IPC to the daemon
-  bool m_enableDragDrop = false; /// @brief Should drag drop support be enabled
+  /// @brief Should run as a daemon
+  bool m_daemon = true;
 
-  bool m_shouldExit =
-      false; /// @brief Will cause the application to exit when set to true
-  String m_synergyAddress; /// @brief Bind to this address
-  bool m_enableCrypto =
-      false; /// @brief Should the connections be TLS encrypted
-  String
-      m_profileDirectory; /// @brief The profile DIR to use for the application
-  String m_pluginDirectory; /// @brief //TODO Plugins? Get set in ARCH but
-                            /// doesn't seem to get used
-  String m_tlsCertFile; /// @brief Contains the location of the TLS certificate
-                        /// file
-  bool m_preventSleep = false; /// @brief Stop this computer from sleeping
+  /// @brief Should the app restart automatically
+  bool m_restartable = true;
+
+  /// @brief Should the app use hooks
+  bool m_noHooks = false;
+
+  /// @brief The filename of the running process
+  const char *m_pname = nullptr;
+
+  /// @brief The logging level of the application
+  const char *m_logFilter = nullptr;
+
+  /// @brief The full path to the logfile
+  const char *m_logFile = nullptr;
+
+  /// @brief Contains the X-Server display to use
+  const char *m_display = nullptr;
+
+  /// @brief The name of the current computer
+  String m_name;
+
+  /// @brief Should the app add a tray icon
+  bool m_disableTray = false;
+
+  /// @brief Tell the client to talk through IPC to the daemon
+  bool m_enableIpc = false;
+
+  /// @brief Should drag drop support be enabled
+  bool m_enableDragDrop = false;
+
+  /// @brief Will cause the application to exit with OK code when set to true
+  bool m_shouldExitOk = false;
+
+  /// @brief Will cause the application to exit with fail code when set to true
+  bool m_shouldExitFail = false;
+
+  /// @brief Bind to this address
+  String m_synergyAddress;
+
+  /// @brief Should the connections be TLS encrypted
+  bool m_enableCrypto = false;
+
+  /// @brief The dir to load settings from
+  String m_profileDirectory;
+
+  /// @brief The dir to load plugins from
+  String m_pluginDirectory;
+
+  /// @brief Contains the location of the TLS certificate file
+  String m_tlsCertFile;
+
+  /// @brief Stop this computer from sleeping
+  bool m_preventSleep = false;
 
 #if SYSAPI_WIN32
   bool m_debugServiceWait = false;
