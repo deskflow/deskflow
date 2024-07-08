@@ -60,7 +60,7 @@ void AboutDialog::updateLogo() const {
   if (isOSXInterfaceStyleDark()) {
     QPixmap logo(":/res/image/about-dark.png");
     if (!logo.isNull()) {
-      label_Logo->setPixmap(logo);
+      m_pLabel_Logo->setPixmap(logo);
     }
   }
 #endif
