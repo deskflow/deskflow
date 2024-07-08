@@ -87,8 +87,6 @@ int main(int argc, char *argv[]) {
   LicenseManager licenseManager(&appConfig);
 #endif
 
-  app.switchTranslator(appConfig.language());
-
 #ifdef SYNERGY_ENABLE_LICENSING
   MainWindow mainWindow(appConfig, licenseManager);
 #else

@@ -15,13 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <memory>
 
 #include "ScreenNameValidator.h"
+#include "validators/ComputerNameValidator.h"
 #include "validators/EmptyStringValidator.h"
-#include "validators/RegExpValidator.h"
 #include "validators/ScreenDuplicationsValidator.h"
 #include "validators/SpacesValidator.h"
+
+#include <QRegularExpression>
+#include <memory>
 
 namespace validators {
 
@@ -29,11 +31,11 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit *parent, QLabel *errors,
                                          const ScreenList *pScreens)
     : LineEditValidator(parent, errors) {
   addValidator(
-      std::make_unique<EmptyStringValidator>("Computer name is required"));
-  addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
-  addValidator(std::make_unique<RegExpValidator>(
-      "Remove unsupported characters",
-      QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
+      std::make_unique<EmptyStringValidator>("Computer name cannot be empty"));
+  addValidator(
+      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
+  addValidator(std::make_unique<ComputerNameValidator>(
+      "Contains invalid characters or is too long"));
   addValidator(std::make_unique<ScreenDuplicationsValidator>(
       "A computer with this name already exists", parent ? parent->text() : "",
       pScreens));

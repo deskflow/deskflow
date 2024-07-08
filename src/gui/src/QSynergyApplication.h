@@ -31,14 +31,10 @@ public:
 
 public:
   void commitData(QSessionManager &manager);
-  void switchTranslator(QString lang);
-  void setTranslator(QTranslator *translator);
 
   static QSynergyApplication *getInstance();
 
 private:
-  QTranslator *m_Translator;
-
   static QSynergyApplication *s_Instance;
 };
 

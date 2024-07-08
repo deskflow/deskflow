@@ -49,7 +49,7 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>2</number>
+        <number>10</number>
        </property>
        <item>
         <widget class="QLabel" name="m_pIconUpdate">
@@ -123,7 +123,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>14</height>
+        <height>10</height>
        </size>
       </property>
      </spacer>
@@ -146,7 +146,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>0</height>
+        <height>220</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -163,7 +163,7 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>28</number>
+        <number>15</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
@@ -176,7 +176,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>250</height>
+           <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -229,7 +229,7 @@ background-color: rgba(192,192,192, 0.1);
             </property>
             <property name="text">
              <string>Use this computer's keyboard and mouse 
-(Make this computer the server).</string>
+(make this computer the server)</string>
             </property>
            </widget>
           </item>
@@ -244,7 +244,7 @@ background-color: rgba(192,192,192, 0.1);
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>20</height>
+              <height>10</height>
              </size>
             </property>
            </spacer>
@@ -252,7 +252,7 @@ background-color: rgba(192,192,192, 0.1);
           <item>
            <widget class="QLabel" name="m_pLabelClientIp">
             <property name="text">
-             <string>Client IP address or name:</string>
+             <string>Client IP address or hostname:</string>
             </property>
             <property name="indent">
              <number>20</number>
@@ -304,7 +304,7 @@ background-color: rgba(192,192,192, 0.1);
              </size>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS/SSL active - &lt;a href=&quot;#&quot; style=&quot;text-decoration:none; color: #4285F4;&quot;&gt;view&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS enabled (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;fingerprint&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="textFormat">
              <enum>Qt::RichText</enum>
@@ -322,7 +322,7 @@ background-color: rgba(192,192,192, 0.1);
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>10</height>
              </size>
             </property>
            </spacer>
@@ -371,7 +371,7 @@ background-color: rgba(192,192,192, 0.1);
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>250</height>
+           <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -424,7 +424,7 @@ background-color: rgba(192,192,192, 0.1);
             </property>
             <property name="text">
              <string>Use another computer’s mouse and keyboard
-(Make this computer the client).</string>
+(make this computer the client)</string>
             </property>
            </widget>
           </item>
@@ -439,7 +439,7 @@ background-color: rgba(192,192,192, 0.1);
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>10</height>
              </size>
             </property>
            </spacer>
@@ -461,7 +461,7 @@ background-color: rgba(192,192,192, 0.1);
                </sizepolicy>
               </property>
               <property name="text">
-               <string>&amp;Server IP address or name:</string>
+               <string>&amp;Server IP address or hostname:</string>
               </property>
               <property name="buddy">
                <cstring>m_pLineEditHostname</cstring>
@@ -487,35 +487,12 @@ background-color: rgba(192,192,192, 0.1);
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QLabel" name="m_pLabelAutoDetected">
-              <property name="text">
-               <string>Server:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="m_pComboServerList">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>200</width>
-                <height>0</height>
-               </size>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
           <item>
            <widget class="synergy_widgets::ClientStateLabel" name="m_pLabelClientState">
             <property name="text">
-             <string>Connected to the server</string>
+             <string>Connected to server</string>
             </property>
             <property name="indent">
              <number>20</number>
@@ -533,7 +510,7 @@ background-color: rgba(192,192,192, 0.1);
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>10</height>
              </size>
             </property>
            </spacer>
@@ -715,6 +692,7 @@ background-color: rgba(192,192,192, 0.1);
          <font>
           <family>Arial</family>
           <pointsize>-1</pointsize>
+          <weight>88</weight>
           <bold>true</bold>
          </font>
         </property>

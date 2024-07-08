@@ -48,8 +48,8 @@ if(UNIX)
     ${libs})
 
   if(NOT APPLE)
-    find_package(Qt5 COMPONENTS DBus)
-    target_link_libraries(platform Qt5::DBus)
+    find_package(Qt6 COMPONENTS DBus)
+    target_link_libraries(platform Qt6::DBus)
   endif()
 endif()
 

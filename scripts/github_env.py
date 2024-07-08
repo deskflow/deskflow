@@ -23,7 +23,7 @@ def main():
 
     if args.set_qt_version:
         config = Config()
-        _qt_mirror, qt_version, _qt_install_dir = config.get_qt_config()
+        _, qt_version, _, _ = config.get_qt_config()
         github.set_env(qt_version_key, qt_version)
     else:
         raise RuntimeError("No option selected")

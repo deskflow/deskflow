@@ -50,12 +50,18 @@ def set_env_var(name, value):
 
 
 def package(filename_base):
-    cert_base64 = env.get_env("WINDOWS_PFX_CERTIFICATE")
-    cert_password = env.get_env("WINDOWS_PFX_PASSWORD")
+    cert_env_key = "WINDOWS_PFX_CERTIFICATE"
+    cert_base64 = env.get_env(cert_env_key, required=False)
+    if cert_base64:
+        cert_password = env.get_env("WINDOWS_PFX_PASSWORD")
+        sign_binaries(cert_base64, cert_password)
 
-    sign_binaries(cert_base64, cert_password)
     build_msi(filename_base)
-    sign_msi(filename_base, cert_base64, cert_password)
+
+    if cert_base64:
+        sign_msi(filename_base, cert_base64, cert_password)
+    else:
+        print(f"Skipped code signing, env var not set: {cert_env_key}")
 
 
 def assert_vs_cmd(cmd):
@@ -187,9 +193,10 @@ class WindowsChoco:
 class WindowsQt:
     """Qt for Windows."""
 
-    def __init__(self, mirror_url, version, base_dir):
+    def __init__(self, mirror_url, version, base_dir, modules):
         self.mirror_url = mirror_url
         self.version = version
+        self.modules = modules
 
         # allows ci to override the qt base dir path
         self.base_dir = os.environ.get(qt_base_dir_env_var)
@@ -215,7 +222,11 @@ class WindowsQt:
         args = ["python", "-m", "aqt", "install-qt"]
         args.extend(["--outputdir", self.base_dir])
         args.extend(["--base", self.mirror_url])
-        args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
+        args.extend(
+            ["windows", "desktop", self.version, "win64_msvc2019_64", "-m"]
+            + self.modules
+        )
+
         cmd_utils.run(
             args,
             shell=True,

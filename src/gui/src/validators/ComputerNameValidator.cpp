@@ -1,6 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2022 Symless Ltd.
+ * Copyright (C) 2012-2021 Symless Ltd.
+ * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,31 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
+#include "ComputerNameValidator.h"
 
-#include <QNetworkAccessManager>
-#include <QObject>
+#include <QRegularExpression>
 
-class QNetworkReply;
-class MainWindow;
-class AppConfig;
+namespace validators {
 
-class CreditsLoader : public QObject {
-  Q_OBJECT
-public:
-  explicit CreditsLoader(MainWindow &mainWindow, const AppConfig &config);
-  void loadEliteBackers();
+ComputerNameValidator::ComputerNameValidator(const QString &message)
+    : IStringValidator(message) {}
 
-signals:
-  void loaded(const QString &eliteBakers) const;
+bool ComputerNameValidator::validate(const QString &input) const {
+  const QRegularExpression re("^[\\w\\._-]{0,255}$",
+                              QRegularExpression::CaseInsensitiveOption);
+  auto match = re.match(input);
+  auto result = match.hasMatch();
+  return result;
+}
 
-public slots:
-  void replyFinished(QNetworkReply *reply) const;
-
-private:
-  MainWindow &m_mainWindow;
-  const AppConfig &m_config;
-  QNetworkAccessManager m_manager;
-
-  void error(const QString &error) const;
-};
+} // namespace validators

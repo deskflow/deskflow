@@ -28,7 +28,7 @@
 IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false) {
   m_Socket = new QTcpSocket(this);
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
-  connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+  connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
           SLOT(error(QAbstractSocket::SocketError)));
 
   m_Reader = new IpcReader(m_Socket);

@@ -24,7 +24,6 @@
 #include "MainWindow.h"
 
 #include "AboutDialog.h"
-#include "AboutDialogEliteBackers.h"
 #include "ActivationDialog.h"
 #include "CommandProcess.h"
 #include "DataDownloader.h"
@@ -35,7 +34,6 @@
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "SslCertificate.h"
-#include "Zeroconf.h"
 #include <QPushButton>
 #include <shared/EditionType.h>
 
@@ -44,12 +42,12 @@
 #endif
 
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
+#include <QRegularExpression>
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
@@ -94,16 +92,13 @@ MainWindow::MainWindow(AppConfig &appConfig)
 #ifdef SYNERGY_ENABLE_LICENSING
       m_LicenseManager(&licenseManager), m_ActivationDialogRunning(false),
 #endif
-      m_pZeroconf(nullptr), m_AppConfig(&appConfig), m_pSynergy(NULL),
+      m_AppConfig(&appConfig), m_pSynergy(NULL),
       m_SynergyState(synergyDisconnected),
       m_ServerConfig(5, 3, m_AppConfig, this), m_AlreadyHidden(false),
       m_pMenuBar(NULL), m_pMenuFile(NULL), m_pMenuEdit(NULL),
       m_pMenuWindow(NULL), m_pMenuHelp(NULL), m_pCancelButton(NULL),
       m_ExpectedRunningState(kStopped), m_SecureSocket(false),
       m_serverConnection(*this), m_clientConnection(*this) {
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-  m_pZeroconf = new Zeroconf(this);
-#endif
 
   setupUi(this);
 
@@ -111,8 +106,6 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
   m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 #endif
-
-  updateAutoConfigWidgets();
 
   createMenuBar();
   loadSettings();
@@ -171,9 +164,6 @@ MainWindow::MainWindow(AppConfig &appConfig)
   connect(m_AppConfig, SIGNAL(sslToggled()), this,
           SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
 
-  connect(m_AppConfig, SIGNAL(zeroConfToggled()), this, SLOT(zeroConfToggled()),
-          Qt::QueuedConnection);
-
   updateWindowTitle();
 
   QString lastVersion = m_AppConfig->lastVersion();
@@ -188,14 +178,6 @@ MainWindow::MainWindow(AppConfig &appConfig)
 #ifndef SYNERGY_ENABLE_LICENSING
   m_pActivate->setVisible(false);
 #endif
-
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-  updateZeroconfService();
-
-  addZeroconfServer(m_AppConfig->autoConfigServer());
-
-  updateAutoConfigWidgets();
-#endif
 }
 
 MainWindow::~MainWindow() {
@@ -209,10 +191,6 @@ MainWindow::~MainWindow() {
       qCritical() << "error stopping desktop in main window destructor";
     }
   }
-
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-  delete m_pZeroconf;
-#endif
 }
 
 void MainWindow::open() {
@@ -247,20 +225,12 @@ void MainWindow::setStatus(const QString &status) {
   m_pStatusLabel->setText(status);
 }
 
-void MainWindow::retranslateMenuBar() {
-  m_pMenuFile->setTitle(tr("&File"));
-  m_pMenuEdit->setTitle(tr("&Edit"));
-  m_pMenuWindow->setTitle(tr("&Window"));
-  m_pMenuHelp->setTitle(tr("&Help"));
-}
-
 void MainWindow::createMenuBar() {
   m_pMenuBar = new QMenuBar(this);
-  m_pMenuFile = new QMenu("", m_pMenuBar);
-  m_pMenuEdit = new QMenu("", m_pMenuBar);
-  m_pMenuWindow = new QMenu("", m_pMenuBar);
-  m_pMenuHelp = new QMenu("", m_pMenuBar);
-  retranslateMenuBar();
+  m_pMenuFile = new QMenu("File", m_pMenuBar);
+  m_pMenuEdit = new QMenu("Edit", m_pMenuBar);
+  m_pMenuWindow = new QMenu("Window", m_pMenuBar);
+  m_pMenuHelp = new QMenu("Help", m_pMenuBar);
 
   m_pMenuBar->addAction(m_pMenuFile->menuAction());
   m_pMenuBar->addAction(m_pMenuEdit->menuAction());
@@ -316,16 +286,6 @@ void MainWindow::saveSettings() {
   GUI::Config::ConfigWriter::make()->globalSave();
 }
 
-void MainWindow::zeroConfToggled() {
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-  updateZeroconfService();
-
-  addZeroconfServer(m_AppConfig->autoConfigServer());
-
-  updateAutoConfigWidgets();
-#endif
-}
-
 void MainWindow::setIcon(qSynergyState state) const {
   QIcon icon;
 
@@ -364,7 +324,7 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 void MainWindow::logOutput() {
   if (m_pSynergy) {
     QString text(m_pSynergy->readAllStandardOutput());
-    foreach (QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+    for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
       if (!line.isEmpty()) {
         appendLogRaw(line);
       }
@@ -402,7 +362,7 @@ void MainWindow::appendLogError(const QString &text) {
 }
 
 void MainWindow::appendLogRaw(const QString &text) {
-  foreach (QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+  foreach (QString line, text.split(QRegularExpression("\r|\n|\r\n"))) {
     if (!line.isEmpty()) {
 
       // HACK: macOS 10.13.4+ spamming error lines in logs making them
@@ -418,7 +378,7 @@ void MainWindow::appendLogRaw(const QString &text) {
 }
 
 void MainWindow::handleIdleService(const QString &text) {
-  foreach (QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+  foreach (QString line, text.split(QRegularExpression("\r|\n|\r\n"))) {
     // only start if there is no active service running
     if (!line.isEmpty() && line.contains("service status: idle") &&
         appConfig().startedBefore()) {
@@ -486,12 +446,13 @@ void MainWindow::checkLicense(const QString &line) {
 #endif
 
 void MainWindow::checkFingerprint(const QString &line) {
-  QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
-  if (!fingerprintRegex.exactMatch(line)) {
+  QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
+  auto match = re.match(line);
+  if (!match.hasMatch()) {
     return;
   }
 
-  QString fingerprint = fingerprintRegex.cap(1);
+  auto fingerprint = match.captured(1);
   if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
     return;
   }
@@ -568,12 +529,6 @@ QString MainWindow::getTimeStamp() {
 void MainWindow::restartSynergy() {
   stopSynergy();
   startSynergy();
-}
-
-void MainWindow::proofreadInfo() {
-  int oldState = m_SynergyState;
-  m_SynergyState = synergyDisconnected;
-  setSynergyState((qSynergyState)oldState);
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
@@ -765,41 +720,13 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     args << "--invert-scroll";
   }
 
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-  // check auto config first, if it is disabled or no server detected,
-  // use line edit host name if it is not empty
-  if (appConfig().autoConfig()) {
-    if (m_pComboServerList->count() != 0) {
-      QString serverIp = m_pComboServerList->currentText();
-      args << serverIp + ":" + QString::number(appConfig().port());
-      return true;
-    } else {
-      show();
-      QMessageBox::warning(
-          this, tr("No server selected"),
-          tr("No auto config server was selected, try manual mode instead."));
-      return false;
-    }
-  }
-#endif
-
   if (m_pLineEditHostname->text().isEmpty() &&
       !appConfig().getClientHostMode()) {
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-    // check if autoconfig mode is enabled
-    if (!appConfig().autoConfig()) {
-#endif
-      show();
-      QMessageBox::warning(this, tr("Hostname is empty"),
-                           tr("Please fill in a hostname for the synergy "
-                              "client to connect to."));
-      return false;
-
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-    } else {
-      return false;
-    }
-#endif
+    show();
+    QMessageBox::warning(this, tr("Hostname is empty"),
+                         tr("Please fill in a hostname for the synergy "
+                            "client to connect to."));
+    return false;
   }
 
   if (appConfig().getClientHostMode()) {
@@ -1102,38 +1029,6 @@ QString MainWindow::getIPAddresses() {
   return result.join(", ");
 }
 
-void MainWindow::changeEvent(QEvent *event) {
-  if (event != 0) {
-    switch (event->type()) {
-    case QEvent::LanguageChange: {
-      retranslateUi(this);
-      retranslateMenuBar();
-      updateWindowTitle();
-      proofreadInfo();
-
-      break;
-    }
-    case QEvent::WindowStateChange: {
-      windowStateChanged();
-      break;
-    }
-    }
-  }
-  // all that do not return are allowing the event to propagate
-  QMainWindow::changeEvent(event);
-}
-
-void MainWindow::addZeroconfServer(const QString name) {
-  // don't add yourself to the server list.
-  if (getIPAddresses().contains(name)) {
-    return;
-  }
-
-  if (m_pComboServerList->findText(name) == -1) {
-    m_pComboServerList->addItem(name);
-  }
-}
-
 void MainWindow::setEdition(Edition edition) {
 #ifdef SYNERGY_ENABLE_LICENSING
   setWindowTitle(m_LicenseManager->getEditionName(edition));
@@ -1193,31 +1088,6 @@ void MainWindow::on_m_pActionHelp_triggered() {
   QDesktopServices::openUrl(QUrl(HELP_URL));
 }
 
-void MainWindow::updateZeroconfService() {
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-
-  // reset the server list in case one has gone away.
-  // it'll be re-added after the zeroconf service restarts.
-  m_pComboServerList->clear();
-
-  if (m_pZeroconf != nullptr) {
-    if (appConfig().autoConfig()) {
-      m_pZeroconf->startService();
-    } else {
-      m_pZeroconf->stopService();
-    }
-  }
-#endif
-}
-
-void MainWindow::updateAutoConfigWidgets() {
-  m_pLabelServerName->show();
-  m_pLineEditHostname->show();
-
-  m_pLabelAutoDetected->hide();
-  m_pComboServerList->hide();
-}
-
 void MainWindow::updateWindowTitle() {
 #ifdef SYNERGY_ENABLE_LICENSING
   setWindowTitle(m_LicenseManager->activeEditionName());
@@ -1244,10 +1114,6 @@ void MainWindow::on_m_pActionSettings_triggered() {
 }
 
 void MainWindow::autoAddScreen(const QString name) {
-  if (m_ServerConfig.ignoreAutoConfigClient()) {
-    appendLogDebug(QString("ignoring zeroconf screen: %1").arg(name));
-    return;
-  }
 
 #ifdef SYNERGY_ENABLE_LICENSING
   if (m_ActivationDialogRunning) {
@@ -1367,11 +1233,6 @@ void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
                            Fingerprint::local().readFirst());
 }
 
-void MainWindow::on_m_pComboServerList_currentIndexChanged(
-    const QString &server) {
-  appConfig().setAutoConfigServer(server);
-}
-
 void MainWindow::windowStateChanged() {
   if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
     hide();
@@ -1380,7 +1241,7 @@ void MainWindow::windowStateChanged() {
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
       tr("This computer's name: %1 (<a href=\"#\" style=\"text-decoration: "
-         "none; color: #4285F4;\">Preferences</a>)")
+         "none; color: #4285F4;\">change</a>)")
           .arg(appConfig().screenName()));
   serverConfig().updateServerName();
 }

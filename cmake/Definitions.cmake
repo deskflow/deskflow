@@ -49,11 +49,6 @@ macro(configure_definitions)
     add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
   endif()
 
-  if(ENABLE_AUTO_CONFIG)
-    message(STATUS "Auto config enabled")
-    add_definitions(-DSYNERGY_ENABLE_AUTO_CONFIG=1)
-  endif()
-
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
@@ -126,8 +121,5 @@ macro(configure_options)
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
   option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
-
-  # auto config is off by default because it requires bonjour, which sucks.
-  option(ENABLE_AUTO_CONFIG "Enable auto config (zeroconf)" OFF)
 
 endmacro()

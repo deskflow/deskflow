@@ -53,10 +53,7 @@ const char *AppConfig::m_SynergySettingsName[] = {
     "logToFile",
     "logFilename",
     "wizardLastRun",
-    "language",
     "startedBefore",
-    "autoConfig",
-    "autoConfigServer",
     "elevateMode",
     "elevateModeEnum",
     "edition",
@@ -80,7 +77,6 @@ const char *AppConfig::m_SynergySettingsName[] = {
     "preventSleep",
     "languageSync",
     "invertScrollDirection",
-    "eliteBackersUrl",
     "guid",
     "licenseRegistryUrl",
     "licenseNextCheck",
@@ -93,12 +89,11 @@ static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 AppConfig::AppConfig()
     : m_ScreenName(), m_Port(24800), m_Interface(), m_LogLevel(0),
       m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(DEFAULT_PROCESS_MODE),
-      m_StartedBefore(), m_AutoConfig(true), m_AutoConfigServer(),
-      m_ElevateMode(defaultElevateMode), m_Edition(kUnregistered),
-      m_CryptoEnabled(false), m_AutoHide(false), m_LastExpiringWarningTime(0),
-      m_ActivationHasRun(), m_MinimizeToTray(false), m_ServerGroupChecked(),
-      m_UseExternalConfig(), m_UseInternalConfig(), m_ClientGroupChecked(),
-      m_LoadFromSystemScope() {
+      m_StartedBefore(), m_ElevateMode(defaultElevateMode),
+      m_Edition(kUnregistered), m_CryptoEnabled(false), m_AutoHide(false),
+      m_LastExpiringWarningTime(0), m_ActivationHasRun(),
+      m_MinimizeToTray(false), m_ServerGroupChecked(), m_UseExternalConfig(),
+      m_UseInternalConfig(), m_ClientGroupChecked(), m_LoadFromSystemScope() {
 
   auto writer = ConfigWriter::make();
 
@@ -166,19 +161,7 @@ bool AppConfig::wizardShouldRun() const {
   return m_WizardLastRun < kWizardVersion;
 }
 
-const QString &AppConfig::language() const { return m_Language; }
-
 bool AppConfig::startedBefore() const { return m_StartedBefore; }
-
-bool AppConfig::autoConfig() const {
-#ifdef ENABLE_AUTO_CONFIG
-  return m_AutoConfig;
-#else
-  return false;
-#endif
-}
-
-QString AppConfig::autoConfigServer() const { return m_AutoConfigServer; }
 
 void AppConfig::loadSettings() {
   m_ScreenName =
@@ -194,10 +177,7 @@ void AppConfig::loadSettings() {
   m_LogFilename =
       loadSetting(kLogFilename, synergyLogDir() + "synergy.log").toString();
   m_WizardLastRun = loadCommonSetting(kWizardLastRun, 0).toInt();
-  m_Language = loadSetting(kLanguage, QLocale::system().name()).toString();
   m_StartedBefore = loadSetting(kStartedBefore, false).toBool();
-  m_AutoConfig = loadSetting(kAutoConfig, false).toBool();
-  m_AutoConfigServer = loadSetting(kAutoConfigServer, "").toString();
 
   { // Scope related code together
     // TODO Investigate why kElevateModeEnum isn't loaded fully
@@ -229,10 +209,6 @@ void AppConfig::loadSettings() {
   m_PreventSleep = loadSetting(kPreventSleep, false).toBool();
   m_LanguageSync = loadSetting(kLanguageSync, false).toBool();
   m_InvertScrollDirection = loadSetting(kInvertScrollDirection, false).toBool();
-  m_eliteBackersUrl =
-      loadCommonSetting(kEliteBackersUrl,
-                        "https://api2.prod.symless.com/credits/elite-backers")
-          .toString();
   m_guid = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
   m_licenseRegistryUrl =
       loadCommonSetting(kLicenseRegistryUrl,
@@ -276,7 +252,6 @@ void AppConfig::saveSettings() {
   setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
   setCommonSetting(kGroupClientCheck, m_ClientGroupChecked);
   setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
-  setCommonSetting(kEliteBackersUrl, m_eliteBackersUrl);
   setCommonSetting(kGuid, m_guid);
   setCommonSetting(kLicenseRegistryUrl, m_licenseRegistryUrl);
   setCommonSetting(kLicenseNextCheck, m_licenseNextCheck);
@@ -288,10 +263,7 @@ void AppConfig::saveSettings() {
     setSetting(kLogLevel, m_LogLevel);
     setSetting(kLogToFile, m_LogToFile);
     setSetting(kLogFilename, m_LogFilename);
-    setSetting(kLanguage, m_Language);
     setSetting(kStartedBefore, m_StartedBefore);
-    setSetting(kAutoConfig, m_AutoConfig);
-    setSetting(kAutoConfigServer, m_AutoConfigServer);
     // Refer to enum ElevateMode declaration for insight in to why this
     // flag is mapped this way
     setSetting(kElevateModeSetting, m_ElevateMode == ElevateAlways);
@@ -356,25 +328,12 @@ void AppConfig::setWizardHasRun() {
   setSettingModified(m_WizardLastRun, kWizardVersion);
 }
 
-void AppConfig::setLanguage(const QString &language) {
-  setSettingModified(m_Language, language);
-}
-
 void AppConfig::setStartedBefore(bool b) {
   setSettingModified(m_StartedBefore, b);
 }
 
 void AppConfig::setElevateMode(ElevateMode em) {
   setSettingModified(m_ElevateMode, em);
-}
-
-void AppConfig::setAutoConfig(bool autoConfig) {
-  setSettingModified(m_AutoConfig, autoConfig);
-  emit zeroConfToggled();
-}
-
-void AppConfig::setAutoConfigServer(const QString &autoConfigServer) {
-  setSettingModified(m_AutoConfigServer, autoConfigServer);
 }
 
 #ifdef SYNERGY_ENABLE_LICENSING
@@ -445,16 +404,8 @@ bool AppConfig::getInvertScrollDirection() const {
   return m_InvertScrollDirection;
 }
 
-void AppConfig::setEliteBackersUrl(const QString &newValue) {
-  setSettingModified(m_eliteBackersUrl, newValue);
-}
-
 void AppConfig::setLicenseNextCheck(unsigned long long time) {
   setSettingModified(m_licenseNextCheck, time);
-}
-
-const QString &AppConfig::getEliteBackersUrl() const {
-  return m_eliteBackersUrl;
 }
 
 const QString &AppConfig::getLicenseRegistryUrl() const {

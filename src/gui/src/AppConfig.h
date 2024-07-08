@@ -79,12 +79,7 @@ public:
   QString logLevelText() const;
   ProcessMode processMode() const;
   bool wizardShouldRun() const;
-  const QString &language() const;
   bool startedBefore() const;
-  bool autoConfig() const;
-  void setAutoConfig(bool autoConfig);
-  QString autoConfigServer() const;
-  void setAutoConfigServer(const QString &autoConfigServer);
 
 #ifdef SYNERGY_ENABLE_LICENSING
   void setEdition(Edition);
@@ -112,9 +107,7 @@ public:
   bool getAutoHide();
   void setInvertScrollDirection(bool b);
   bool getInvertScrollDirection() const;
-  void setEliteBackersUrl(const QString &);
   void setLicenseNextCheck(unsigned long long);
-  const QString &getEliteBackersUrl() const;
   const QString &getLicenseRegistryUrl() const;
   unsigned long long getLicenseNextCheck() const;
   const QString &getGuid() const;
@@ -191,10 +184,7 @@ protected:
     kLogToFile,
     kLogFilename,
     kWizardLastRun,
-    kLanguage,
     kStartedBefore,
-    kAutoConfig,
-    kAutoConfigServer,
     kElevateModeSetting,
     kElevateModeEnum,
     kEditionSetting,
@@ -218,7 +208,6 @@ protected:
     kPreventSleep,
     kLanguageSync,
     kInvertScrollDirection,
-    kEliteBackersUrl,
     kGuid,
     kLicenseRegistryUrl,
     kLicenseNextCheck,
@@ -234,7 +223,6 @@ protected:
   void setLogToFile(bool b);
   void setLogFilename(const QString &s);
   void setWizardHasRun();
-  void setLanguage(const QString &language);
   void setStartedBefore(bool b);
   void setElevateMode(ElevateMode em);
 
@@ -253,10 +241,7 @@ private:
   QString m_LogFilename;
   int m_WizardLastRun;
   ProcessMode m_ProcessMode;
-  QString m_Language;
   bool m_StartedBefore;
-  bool m_AutoConfig;
-  QString m_AutoConfigServer;
   ElevateMode m_ElevateMode;
   Edition m_Edition;
   QString m_ActivateEmail;
@@ -264,7 +249,6 @@ private:
   bool m_AutoHide;
   QString m_Serialkey;
   QString m_lastVersion;
-  QString m_eliteBackersUrl;
   QString m_guid;
   QString m_licenseRegistryUrl;
   unsigned long long m_licenseNextCheck;
@@ -352,7 +336,6 @@ private:
 
 signals:
   void sslToggled() const;
-  void zeroConfToggled();
   void screenNameChanged() const;
 };
 

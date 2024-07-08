@@ -35,17 +35,13 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
 
   QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
-  m_pLabelBuildDate->setText(buildDate.toString(Qt::SystemLocaleLongDate));
-
-  textEliteBackers->hide();
-  labelEliteBackers->hide();
-  labelEliteBackerLink->hide();
-  labelCreditsLink->hide();
+  m_pLabelBuildDate->setText(
+      buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
 }
 
 int AboutDialog::exec() {
-  // Sets the current build year into the copyright text
-  label_3->setText(getCopyrights() + getKeyContributors());
+  m_pDevelopersLabel->setText(getImportantDevelopers());
+  m_pCopyrightLabel->setText(getCopyright());
   resizeWindow();
   updateLogo();
 
@@ -64,26 +60,37 @@ void AboutDialog::updateLogo() const {
   if (isOSXInterfaceStyleDark()) {
     QPixmap logo(":/res/image/about-dark.png");
     if (!logo.isNull()) {
-      label_Logo->setPixmap(logo);
+      m_pLabel_Logo->setPixmap(logo);
     }
   }
 #endif
 }
 
-QString AboutDialog::getKeyContributors() const {
-  return QString(R"(<p style="font-size: 14px">Key contributors<br>
-                    <span style="font-size: 11px">Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz,
-                    Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Kyle Bloom,
-                    Daun Chung, Serhii Hadzhylov, Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.</span>
-                    </p>)");
+QString AboutDialog::getImportantDevelopers() const {
+  return QString(
+      // The ultimate creator
+      "Chris Schoeneman, "
+
+      // Precursor developers
+      "Richard Lee, Adam Feder, "
+
+      // Contributors
+      "Nick Bolton, Volker Lanz, Ryan Breen, Guido Poschta, "
+      "Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Jason Axelson, "
+      "Jake Petroules, Sorin Sbârnea, "
+
+      // Symless employees
+      "Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
+      "Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.");
 }
 
-QString AboutDialog::getCopyrights() const {
+QString AboutDialog::getCopyright() const {
   QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
 
-  QString copyrights(
-      R"(<p>Keyboard and mouse sharing application.<br /><br />Copyright © %%YEAR%% Symless Ltd.</p>)");
-  return copyrights.replace(QString("%%YEAR%%"),
-                            QString::number(buildDate.year()));
+  QString copyright("Copyright © 2012-%%YEAR%% Symless Ltd.\n"
+                    "Copyright © 2009-2012 Nick Bolton\n"
+                    "Copyright © 2002-2009 Chris Schoeneman");
+  return copyright.replace(QString("%%YEAR%%"),
+                           QString::number(buildDate.year()));
 }

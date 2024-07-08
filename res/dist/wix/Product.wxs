@@ -105,29 +105,27 @@
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.BinPath)\Qt5Cored.dll"/>
-				<File Source="$(var.BinPath)\Qt5Guid.dll"/>
-				<File Source="$(var.BinPath)\Qt5Networkd.dll"/>
-				<File Source="$(var.BinPath)\Qt5Svgd.dll"/>
-				<File Source="$(var.BinPath)\Qt5Widgetsd.dll"/>
-				<File Source="$(var.BinPath)\libGLESv2d.dll"/>
-				<File Source="$(var.BinPath)\libEGLd.dll"/>
+				<File Source="$(var.BinPath)\Qt6Cored.dll"/>
+				<File Source="$(var.BinPath)\Qt6Guid.dll"/>
+				<File Source="$(var.BinPath)\Qt6Networkd.dll"/>
+				<File Source="$(var.BinPath)\Qt6Svgd.dll"/>
+				<File Source="$(var.BinPath)\Qt6Widgetsd.dll"/>
+				<File Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
 				<!-- HACK: Normally the C++ redistributable solves this dependency, including it can cause problems -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
-				<File Source="$(var.BinPath)\Qt5Core.dll"/>
-				<File Source="$(var.BinPath)\Qt5Gui.dll"/>
-				<File Source="$(var.BinPath)\Qt5Network.dll"/>
-				<File Source="$(var.BinPath)\Qt5Svg.dll"/>
-				<File Source="$(var.BinPath)\Qt5Widgets.dll"/>
-				<File Source="$(var.BinPath)\libGLESv2.dll"/>
-				<File Source="$(var.BinPath)\libEGL.dll"/>
+				<File Source="$(var.BinPath)\Qt6Core.dll"/>
+				<File Source="$(var.BinPath)\Qt6Gui.dll"/>
+				<File Source="$(var.BinPath)\Qt6Network.dll"/>
+				<File Source="$(var.BinPath)\Qt6Svg.dll"/>
+				<File Source="$(var.BinPath)\Qt6Widgets.dll"/>
+				<File Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
 			<Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
-				<File Id="qwindowsvistastyle" Source="$(var.BinPath)\styles\qwindowsvistastyle.dll"/>
+				<File Id="qmodernwindowsstyle" Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">

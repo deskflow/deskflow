@@ -15,19 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "validators/RegExpValidator.h"
+#include "validators/ComputerNameValidator.h"
 #include "validators/SpacesValidator.h"
 
 #include "AliasValidator.h"
+
+#include <QRegularExpression>
 
 namespace validators {
 
 AliasValidator::AliasValidator(QLineEdit *parent, QLabel *errors)
     : LineEditValidator(parent, errors) {
-  addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
-  addValidator(std::make_unique<RegExpValidator>(
-      "Remove unsupported characters",
-      QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
+  addValidator(
+      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
+  addValidator(std::make_unique<ComputerNameValidator>(
+      "Contains invalid characters or is too long"));
 }
 
 } // namespace validators

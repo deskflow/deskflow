@@ -28,7 +28,8 @@
 namespace {
 
 std::string getMaintenanceMessage(const SerialKey &serialKey) {
-  auto expiration = QDateTime::fromTime_t(serialKey.getExpiration()).date();
+  auto expiration =
+      QDateTime::fromSecsSinceEpoch(serialKey.getExpiration()).date();
   QString message =
       "The license key you used will only work with versions of Synergy "
       "released before %1."
@@ -42,7 +43,9 @@ std::string getMaintenanceMessage(const SerialKey &serialKey) {
 
 void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
   if (serialKey.isMaintenance()) {
-    auto buildDate = QDateTime::fromString(__TIMESTAMP__).toTime_t();
+    auto buildDate =
+        QDateTime::fromString(__TIMESTAMP__, "ddd MMM dd hh:mm:ss yyyy")
+            .toSecsSinceEpoch();
 
     if (buildDate > serialKey.getExpiration()) {
       throw std::runtime_error(getMaintenanceMessage(serialKey));

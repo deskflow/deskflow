@@ -40,8 +40,8 @@ private:
   void updateLogo() const;
 
   virtual void resizeWindow();
-  virtual QString getCopyrights() const;
-  virtual QString getKeyContributors() const;
+  virtual QString getCopyright() const;
+  virtual QString getImportantDevelopers() const;
 };
 
 #endif

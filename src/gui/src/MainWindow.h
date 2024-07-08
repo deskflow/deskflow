@@ -59,7 +59,6 @@ class DataDownloader;
 class CommandProcess;
 class SslCertificate;
 class LicenseManager;
-class Zeroconf;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   Q_OBJECT
@@ -111,14 +110,10 @@ public:
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
-  void addZeroconfServer(const QString name);
-  Zeroconf &zeroconf() { return *m_pZeroconf; }
 #ifdef SYNERGY_ENABLE_LICENSING
   LicenseManager &licenseManager() const;
   int raiseActivationDialog();
 #endif
-
-  void updateZeroconfService();
 
 public slots:
   void setEdition(Edition edition);
@@ -154,9 +149,6 @@ protected slots:
   void updateFound(const QString &version);
   void saveSettings();
 
-  /// @brief Receives the signal that the auto config option has changed
-  void zeroConfToggled();
-
 protected:
   // TODO This should be properly using the ConfigWriter system.
   QSettings &settings() {
@@ -183,8 +175,6 @@ protected:
   QString getIPAddresses();
   void stopService();
   void stopDesktop();
-  void changeEvent(QEvent *event);
-  void retranslateMenuBar();
   void enableServer(bool enable);
   void enableClient(bool enable);
   void closeEvent(QCloseEvent *event) override;
@@ -207,7 +197,6 @@ protected:
 #endif
   QString getTimeStamp();
   void restartSynergy();
-  void proofreadInfo();
 
   void showEvent(QShowEvent *);
   void secureSocket(bool secureSocket);
@@ -220,7 +209,6 @@ private:
   bool m_ActivationDialogRunning;
   QStringList m_PendingClientNames;
 #endif
-  Zeroconf *m_pZeroconf;
   AppConfig *m_AppConfig;
   QProcess *m_pSynergy;
   int m_SynergyState;
@@ -244,7 +232,6 @@ private:
   ServerConnection m_serverConnection;
   ClientConnection m_clientConnection;
 
-  void updateAutoConfigWidgets();
   void updateWindowTitle();
 
 private slots:
@@ -253,7 +240,6 @@ private slots:
 
   void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
-  void on_m_pComboServerList_currentIndexChanged(const QString &arg1);
 
   void on_m_pButtonConnect_clicked();
   void on_m_pButtonConnectToClient_clicked();
