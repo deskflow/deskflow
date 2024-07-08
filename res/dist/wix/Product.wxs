@@ -12,6 +12,7 @@
 		<Feature Id="ProductFeature" Title="$(var.Name)">
 			<ComponentGroupRef Id="ProductComponents"/>
 			<ComponentGroupRef Id="OpenSSLComponents"/>
+			<ComponentGroupRef Id="ProductQtStylesComponents"/>
 			<ComponentGroupRef Id="ProductQtPluginComponents"/>
 			<ComponentRef Id="RegistryEntries"/>
 			<MergeRef Id="VC_Redist"/>
@@ -109,6 +110,7 @@
 				<File Source="$(var.BinPath)\Qt6Networkd.dll"/>
 				<File Source="$(var.BinPath)\Qt6Svgd.dll"/>
 				<File Source="$(var.BinPath)\Qt6Widgetsd.dll"/>
+				<File Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
 				<!-- HACK: Normally the C++ redistributable solves this dependency, including it can cause problems -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
@@ -117,7 +119,13 @@
 				<File Source="$(var.BinPath)\Qt6Network.dll"/>
 				<File Source="$(var.BinPath)\Qt6Svg.dll"/>
 				<File Source="$(var.BinPath)\Qt6Widgets.dll"/>
+				<File Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
 				<?endif ?>
+			</Component>
+		</ComponentGroup>
+		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
+			<Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
+				<File Id="qmodernwindowsstyle" Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
