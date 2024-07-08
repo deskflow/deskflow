@@ -30,9 +30,10 @@ namespace validators {
 
 AliasValidator::AliasValidator(QLineEdit *parent, QLabel *errors)
     : LineEditValidator(parent, errors) {
-  addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
+  addValidator(
+      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
   addValidator(std::make_unique<RegExpValidator>(
-      "Remove unsupported characters", ValidScreenName));
+      "Computer name contains unsupported characters", ValidScreenName));
 }
 
 } // namespace validators

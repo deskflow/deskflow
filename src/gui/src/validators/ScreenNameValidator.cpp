@@ -35,10 +35,11 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit *parent, QLabel *errors,
                                          const ScreenList *pScreens)
     : LineEditValidator(parent, errors) {
   addValidator(
-      std::make_unique<EmptyStringValidator>("Computer name is required"));
-  addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
+      std::make_unique<EmptyStringValidator>("Computer name cannot be empty"));
+  addValidator(
+      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
   addValidator(std::make_unique<RegExpValidator>(
-      "Remove unsupported characters", ValidScreenName));
+      "Computer name contains unsupported characters", ValidScreenName));
   addValidator(std::make_unique<ScreenDuplicationsValidator>(
       "A computer with this name already exists", parent ? parent->text() : "",
       pScreens));
