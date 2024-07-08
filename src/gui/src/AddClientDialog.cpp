@@ -23,8 +23,7 @@
 
 AddClientDialog::AddClientDialog(const QString &clientName, QWidget *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::AddClientDialog(), m_AddResult(kAddClientIgnore),
-      m_IgnoreAutoConfigClient(false) {
+      Ui::AddClientDialog(), m_AddResult(kAddClientIgnore) {
   setupUi(this);
 
   m_pLabelHead->setText("A client wants to connect. "
@@ -79,17 +78,6 @@ AddClientDialog::~AddClientDialog() {
   delete m_pLabelCenter;
 }
 
-void AddClientDialog::changeEvent(QEvent *e) {
-  QDialog::changeEvent(e);
-  switch (e->type()) {
-  case QEvent::LanguageChange:
-    retranslateUi(this);
-    break;
-  default:
-    break;
-  }
-}
-
 void AddClientDialog::handleButtonLeft() {
   m_AddResult = kAddClientLeft;
   close();
@@ -113,8 +101,4 @@ void AddClientDialog::handleButtonDown() {
 void AddClientDialog::handleButtonAdvanced() {
   m_AddResult = kAddClientOther;
   close();
-}
-
-void AddClientDialog::on_m_pCheckBoxIgnoreClient_toggled(bool checked) {
-  m_IgnoreAutoConfigClient = checked;
 }

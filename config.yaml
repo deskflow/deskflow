@@ -6,6 +6,8 @@ config:
         version: 6.7.2
         mirror: https://qt.mirror.constant.com/
         install-dir: C:\Qt
+        modules:
+          - qt5compat
       choco-ci:
         edit-config: Chocolatey.config
         skip-packages:
@@ -36,7 +38,6 @@ config:
           qt6-base-dev \
           qt6-tools-dev \
           libqt6core5compat6-dev \
-          qt6-l10n-tools \
           libgtk-3-dev
 
     ubuntu:

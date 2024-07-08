@@ -25,7 +25,7 @@
 QSynergyApplication *QSynergyApplication::s_Instance = NULL;
 
 QSynergyApplication::QSynergyApplication(int &argc, char **argv)
-    : QApplication(argc, argv), m_Translator(NULL) {
+    : QApplication(argc, argv) {
   s_Instance = this;
 
   QFontDatabase::addApplicationFont(":/res/fonts/Arial.ttf");
@@ -35,7 +35,7 @@ QSynergyApplication::QSynergyApplication(int &argc, char **argv)
   setFont(Arial);
 }
 
-QSynergyApplication::~QSynergyApplication() { delete m_Translator; }
+QSynergyApplication::~QSynergyApplication() {}
 
 void QSynergyApplication::commitData(QSessionManager &) {
   foreach (QWidget *widget, topLevelWidgets()) {
@@ -46,20 +46,3 @@ void QSynergyApplication::commitData(QSessionManager &) {
 }
 
 QSynergyApplication *QSynergyApplication::getInstance() { return s_Instance; }
-
-void QSynergyApplication::switchTranslator(QString lang) {
-  if (m_Translator != NULL) {
-    removeTranslator(m_Translator);
-    delete m_Translator;
-  }
-
-  QResource locale(":/res/lang/gui_" + lang + ".qm");
-  m_Translator = new QTranslator();
-  m_Translator->load(locale.data(), locale.size());
-  installTranslator(m_Translator);
-}
-
-void QSynergyApplication::setTranslator(QTranslator *translator) {
-  m_Translator = translator;
-  installTranslator(m_Translator);
-}

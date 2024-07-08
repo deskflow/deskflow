@@ -19,15 +19,12 @@
 #include "validators/ScreenNameValidator.h"
 
 #include "AppConfig.h"
-#include "AppLocale.h"
-#include "BonjourWindows.h"
 #include "CoreInterface.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 #include "SslCertificate.h"
 #include "UpgradeDialog.h"
-#include "Zeroconf.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -37,14 +34,11 @@
 
 SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::SettingsDialogBase(), m_appConfig(config),
-      m_pBonjourWindows(nullptr) {
+      Ui::SettingsDialogBase(), m_appConfig(config) {
   setupUi(this);
 
   // TODO: maybe just accept MainWindow type in ctor?
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
-
-  m_Locale.fillLanguageComboBox(m_pComboLanguage);
 
   loadFromConfig();
   m_isSystemAtStart = appConfig().isSystemScoped();
@@ -64,7 +58,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
           SLOT(onChange()));
   connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
           SLOT(onChange()));
-  connect(m_pCheckBoxAutoConfig, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxMinimizeToTray, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxAutoHide, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxPreventSleep, SIGNAL(clicked()), this, SLOT(onChange()));
@@ -93,13 +86,10 @@ void SettingsDialog::accept() {
   appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
   appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
   appConfig().setLogFilename(m_pLineEditLogFilename->text());
-  appConfig().setLanguage(
-      m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString());
   appConfig().setElevateMode(
       static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
   appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
   appConfig().setPreventSleep(m_pCheckBoxPreventSleep->isChecked());
-  appConfig().setAutoConfig(m_pCheckBoxAutoConfig->isChecked());
   appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
   appConfig().setTLSCertPath(m_pLineEditCertificatePath->text());
   appConfig().setTLSKeyLength(m_pComboBoxKeyLength->currentText());
@@ -114,38 +104,12 @@ void SettingsDialog::accept() {
 }
 
 void SettingsDialog::reject() {
-  if (appConfig().language() !=
-      m_pComboLanguage->itemData(m_pComboLanguage->currentIndex()).toString()) {
-    QSynergyApplication::getInstance()->switchTranslator(
-        appConfig().language());
-  }
-
   // We should restore scope at start if the user rejects changes.
   if (appConfig().isSystemScoped() != m_isSystemAtStart) {
     appConfig().setLoadFromSystemScope(m_isSystemAtStart);
   }
 
   QDialog::reject();
-}
-
-void SettingsDialog::changeEvent(QEvent *event) {
-  if (event != nullptr) {
-    switch (event->type()) {
-    case QEvent::LanguageChange: {
-      int logLevelIndex = m_pComboLogLevel->currentIndex();
-
-      m_pComboLanguage->blockSignals(true);
-      retranslateUi(this);
-      m_pComboLanguage->blockSignals(false);
-
-      m_pComboLogLevel->setCurrentIndex(logLevelIndex);
-      break;
-    }
-
-    default:
-      QDialog::changeEvent(event);
-    }
-  }
 }
 
 void SettingsDialog::loadFromConfig() {
@@ -156,7 +120,6 @@ void SettingsDialog::loadFromConfig() {
   m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
   m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
   m_pLineEditLogFilename->setText(appConfig().logFilename());
-  setIndexFromItemData(m_pComboLanguage, appConfig().language());
   m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
   m_pCheckBoxPreventSleep->setChecked(appConfig().getPreventSleep());
   m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
@@ -177,27 +140,12 @@ void SettingsDialog::loadFromConfig() {
   }
 
 #if defined(Q_OS_WIN)
-  m_pBonjourWindows = new BonjourWindows(this, m_pMainWindow, m_appConfig);
-  if (m_pBonjourWindows->isRunning()) {
-    allowAutoConfig();
-  }
-
   m_pComboElevate->setCurrentIndex(static_cast<int>(appConfig().elevateMode()));
 
 #else
   // elevate checkbox is only useful on ms windows.
   m_pLabelElevate->hide();
   m_pComboElevate->hide();
-
-  // for linux and mac, allow auto config by default
-  allowAutoConfig();
-#endif
-
-#ifdef SYNERGY_ENABLE_AUTO_CONFIG
-  m_pCheckBoxAutoConfig->setChecked(appConfig().autoConfig());
-#else
-  m_pCheckBoxAutoConfig->hide();
-  m_pLabelInstallBonjour->hide();
 #endif
 
   m_pCheckBoxClientHostMode->setVisible(
@@ -231,12 +179,6 @@ bool SettingsDialog::isClientMode() const {
   return (m_pMainWindow->synergyType() == MainWindow::synergyClient);
 }
 
-void SettingsDialog::allowAutoConfig() {
-  m_pLabelInstallBonjour->hide();
-  m_pCheckBoxAutoConfig->setEnabled(true);
-  m_pCheckBoxAutoConfig->setChecked(m_appConfig.autoConfig());
-}
-
 void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
   bool checked = i == 2;
 
@@ -254,12 +196,6 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
   if (!fileName.isEmpty()) {
     m_pLineEditLogFilename->setText(fileName);
   }
-}
-
-void SettingsDialog::on_m_pComboLanguage_currentIndexChanged(int index) {
-  QString ietfCode = m_pComboLanguage->itemData(index).toString();
-  QSynergyApplication::getInstance()->switchTranslator(ietfCode);
-  buttonBox->button(QDialogButtonBox::Save)->setEnabled(isModified());
 }
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
@@ -289,12 +225,6 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
     }
 #endif // SYNERGY_ENABLE_LICENSING
   }
-}
-
-void SettingsDialog::on_m_pLabelInstallBonjour_linkActivated(const QString &) {
-#if defined(Q_OS_WIN)
-  m_pBonjourWindows->downloadAndInstall();
-#endif
 }
 
 void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
@@ -363,14 +293,10 @@ bool SettingsDialog::isModified() {
        appConfig().logLevel() != m_pComboLogLevel->currentIndex() ||
        appConfig().logToFile() != m_pCheckBoxLogToFile->isChecked() ||
        appConfig().logFilename() != m_pLineEditLogFilename->text() ||
-       appConfig().language() !=
-           m_pComboLanguage->itemData(m_pComboLanguage->currentIndex())
-               .toString() ||
        appConfig().elevateMode() !=
            static_cast<ElevateMode>(m_pComboElevate->currentIndex()) ||
        appConfig().getAutoHide() != m_pCheckBoxAutoHide->isChecked() ||
        appConfig().getPreventSleep() != m_pCheckBoxPreventSleep->isChecked() ||
-       appConfig().autoConfig() != m_pCheckBoxAutoConfig->isChecked() ||
        appConfig().getMinimizeToTray() !=
            m_pCheckBoxMinimizeToTray->isChecked() ||
        appConfig().getTLSCertPath() != m_pLineEditCertificatePath->text() ||
@@ -392,11 +318,9 @@ void SettingsDialog::enableControls(bool enable) {
   m_pLineEditInterface->setEnabled(enable);
   m_pComboLogLevel->setEnabled(enable);
   m_pCheckBoxLogToFile->setEnabled(enable);
-  m_pComboLanguage->setEnabled(enable);
   m_pComboElevate->setEnabled(enable);
   m_pCheckBoxAutoHide->setEnabled(enable);
   m_pCheckBoxPreventSleep->setEnabled(enable);
-  m_pCheckBoxAutoConfig->setEnabled(enable);
   m_pCheckBoxMinimizeToTray->setEnabled(enable);
   m_pLineEditCertificatePath->setEnabled(enable);
   m_pComboBoxKeyLength->setEnabled(enable);

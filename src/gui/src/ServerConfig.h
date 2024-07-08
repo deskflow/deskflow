@@ -69,7 +69,6 @@ public:
   int switchCornerSize() const { return m_SwitchCornerSize; }
   const QList<bool> &switchCorners() const { return m_SwitchCorners; }
   const HotkeyList &hotkeys() const { return m_Hotkeys; }
-  bool ignoreAutoConfigClient() const { return m_IgnoreAutoConfigClient; }
   bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
   bool disableLockToScreen() const { return m_DisableLockToScreen; }
   bool clipboardSharing() const { return m_ClipboardSharing; }
@@ -110,7 +109,6 @@ protected:
   void setSwitchDoubleTap(int val) { m_SwitchDoubleTap = val; }
   void setSwitchCorner(int c, bool on) { m_SwitchCorners[c] = on; }
   void setSwitchCornerSize(int val) { m_SwitchCornerSize = val; }
-  void setIgnoreAutoConfigClient(bool on) { m_IgnoreAutoConfigClient = on; }
   void setEnableDragAndDrop(bool on) { m_EnableDragAndDrop = on; }
   void setDisableLockToScreen(bool on) { m_DisableLockToScreen = on; }
   void setClipboardSharing(bool on) { m_ClipboardSharing = on; }
@@ -145,7 +143,6 @@ private:
   QList<bool> m_SwitchCorners;
   HotkeyList m_Hotkeys;
   AppConfig *m_pAppConfig;
-  bool m_IgnoreAutoConfigClient;
   bool m_EnableDragAndDrop;
   bool m_DisableLockToScreen;
   bool m_ClipboardSharing;

@@ -24,12 +24,10 @@
 #include <QDialog>
 #include <memory>
 
-#include "AppLocale.h"
 #include "CoreInterface.h"
 
 class MainWindow;
 class AppConfig;
-class BonjourWindows;
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
   Q_OBJECT
@@ -40,12 +38,10 @@ public:
                                    const QString &synergycName);
   static QString browseForSynergys(QWidget *parent, const QString &programDir,
                                    const QString &synergysName);
-  void allowAutoConfig();
 
 protected:
   void accept() override;
   void reject() override;
-  void changeEvent(QEvent *event) override;
   AppConfig &appConfig() { return m_appConfig; }
 
   /// @brief Causes the dialog to load all the settings from m_appConfig
@@ -75,9 +71,7 @@ protected:
 private:
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
-  AppLocale m_Locale;
   CoreInterface m_CoreInterface;
-  BonjourWindows *m_pBonjourWindows;
 
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
@@ -86,10 +80,8 @@ private:
 
 private slots:
   void on_m_pCheckBoxEnableCrypto_clicked(bool checked);
-  void on_m_pComboLanguage_currentIndexChanged(int index);
   void on_m_pCheckBoxLogToFile_stateChanged(int);
   void on_m_pButtonBrowseLog_clicked();
-  void on_m_pLabelInstallBonjour_linkActivated(const QString &link);
 
   /// @brief Handles the toggling of the system scoped radio button
   ///        As the user scope radio is connected this will fire for either

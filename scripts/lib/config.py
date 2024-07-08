@@ -51,8 +51,9 @@ class Config:
         mirror_url = _get(qt, "mirror", parent_key)
         version = _get(qt, "version", parent_key)
         base_dir = _get(qt, "install-dir", parent_key)
+        modules = _get(qt, "modules", parent_key)
 
-        return mirror_url, version, base_dir
+        return mirror_url, version, base_dir, modules
 
     def get_os_deps_value(self, key):
         deps = self.get_os_value(deps_key)

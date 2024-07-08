@@ -1,6 +1,6 @@
 find_package(
   Qt6
-  COMPONENTS Core Widgets Network LinguistTools Core5Compat
+COMPONENTS Core Widgets Network Core5Compat
   REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -11,18 +11,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB GUI_SOURCE_FILES src/*.cpp src/*.h src/validators/* src/widgets/*)
 file(GLOB GUI_UI_FILES src/*.ui)
 file(GLOB ACTIVATION_FILES src/*Activation* src/*License*)
-file(GLOB ZEROCONF_FILES src/Zeroconf*)
-file(GLOB LANGUAGE_FILES res/lang/*.ts)
-
-configure_file(res/Languages.qrc res/Languages.qrc)
-
-set_source_files_properties(
-  ${LANGUAGE_FILES} PROPERTIES OUTPUT_LOCATION
-                               "${CMAKE_CURRENT_BINARY_DIR}/res/lang")
-
-qt_add_translation(QM_FILES ${LANGUAGE_FILES})
-
-add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   file(GLOB GUI_MAC_SOURCE_FILES src/*.mm)
@@ -41,8 +29,6 @@ if(NOT ENABLE_LICENSING)
   list(REMOVE_ITEM GUI_UI_FILES ${ACTIVATION_FILES})
 endif()
 
-list(REMOVE_ITEM GUI_SOURCE_FILES ${ZEROCONF_FILES})
-
 if(WIN32)
   set(GUI_RC_FILES res/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
@@ -50,7 +36,7 @@ endif()
 add_executable(
   synergy WIN32
   ${GUI_SOURCE_FILES} ${GUI_UI_FILES} ${GUI_RC_FILES} res/Synergy.qrc
-  ${CMAKE_CURRENT_BINARY_DIR}/res/Languages.qrc ${QM_FILES})
+   ${QM_FILES})
 
 include_directories(./src)
 target_link_libraries(synergy shared)

@@ -32,8 +32,6 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
   m_pLabelBuildDate->setText(
       buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
 
-  textEliteBackers->hide();
-  labelEliteBackers->hide();
   labelEliteBackerLink->hide();
   labelCreditsLink->hide();
 }

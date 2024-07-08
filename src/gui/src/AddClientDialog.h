@@ -41,13 +41,8 @@ public:
   ~AddClientDialog();
 
   int addResult() { return m_AddResult; }
-  bool ignoreAutoConfigClient() { return m_IgnoreAutoConfigClient; }
-
-protected:
-  void changeEvent(QEvent *e);
 
 private slots:
-  void on_m_pCheckBoxIgnoreClient_toggled(bool checked);
   void handleButtonLeft();
   void handleButtonUp();
   void handleButtonRight();
@@ -61,7 +56,6 @@ private:
   QPushButton *m_pButtonDown;
   QLabel *m_pLabelCenter;
   int m_AddResult;
-  bool m_IgnoreAutoConfigClient;
 };
 
 #endif // ADDCLIENTDIALOG_H

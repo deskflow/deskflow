@@ -187,9 +187,10 @@ class WindowsChoco:
 class WindowsQt:
     """Qt for Windows."""
 
-    def __init__(self, mirror_url, version, base_dir):
+    def __init__(self, mirror_url, version, base_dir, modules):
         self.mirror_url = mirror_url
         self.version = version
+        self.modules = modules
 
         # allows ci to override the qt base dir path
         self.base_dir = os.environ.get(qt_base_dir_env_var)
@@ -215,7 +216,11 @@ class WindowsQt:
         args = ["python", "-m", "aqt", "install-qt"]
         args.extend(["--outputdir", self.base_dir])
         args.extend(["--base", self.mirror_url])
-        args.extend(["windows", "desktop", self.version, "win64_msvc2019_64"])
+        args.extend(
+            ["windows", "desktop", self.version, "win64_msvc2019_64", "-m"]
+            + self.modules
+        )
+
         cmd_utils.run(
             args,
             shell=True,

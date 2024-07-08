@@ -45,9 +45,8 @@ ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig *appConfig,
     :
 
       m_Screens(numColumns), m_NumColumns(numColumns), m_NumRows(numRows),
-      m_pAppConfig(appConfig), m_IgnoreAutoConfigClient(false),
-      m_EnableDragAndDrop(false), m_DisableLockToScreen(false),
-      m_ClipboardSharing(true),
+      m_pAppConfig(appConfig), m_EnableDragAndDrop(false),
+      m_DisableLockToScreen(false), m_ClipboardSharing(true),
       m_ClipboardSharingSize(defaultClipboardSharingSize()),
       m_pMainWindow(mainWindow) {
   GUI::Config::ConfigWriter::make()->registerClass(this);
@@ -86,7 +85,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const {
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&
          m_SwitchCorners == sc.m_SwitchCorners && m_Hotkeys == sc.m_Hotkeys &&
          m_pAppConfig == sc.m_pAppConfig &&
-         m_IgnoreAutoConfigClient == sc.m_IgnoreAutoConfigClient &&
          m_EnableDragAndDrop == sc.m_EnableDragAndDrop &&
          m_DisableLockToScreen == sc.m_DisableLockToScreen &&
          m_ClipboardSharing == sc.m_ClipboardSharing &&
@@ -130,7 +128,6 @@ void ServerConfig::saveSettings() {
   settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
   settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
-  settings().setValue("ignoreAutoConfigClient", ignoreAutoConfigClient());
   settings().setValue("disableLockToScreen", disableLockToScreen());
   settings().setValue("enableDragAndDrop", enableDragAndDrop());
   settings().setValue("clipboardSharing", clipboardSharing());
@@ -188,8 +185,6 @@ void ServerConfig::loadSettings() {
   haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
   setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
-  setIgnoreAutoConfigClient(
-      settings().value("ignoreAutoConfigClient").toBool());
   setDisableLockToScreen(
       settings().value("disableLockToScreen", false).toBool());
   setEnableDragAndDrop(settings().value("enableDragAndDrop", false).toBool());
@@ -511,7 +506,6 @@ int ServerConfig::showAddClientDialog(const QString &clientName) {
   AddClientDialog addClientDialog(clientName, m_pMainWindow);
   addClientDialog.exec();
   result = addClientDialog.addResult();
-  m_IgnoreAutoConfigClient = addClientDialog.ignoreAutoConfigClient();
 
   return result;
 }

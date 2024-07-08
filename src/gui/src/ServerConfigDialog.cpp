@@ -70,9 +70,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config,
   m_pCheckBoxDisableLockToScreen->setChecked(
       serverConfig().disableLockToScreen());
 
-  m_pCheckBoxIgnoreAutoConfigClient->setChecked(
-      serverConfig().ignoreAutoConfigClient());
-
   m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
   int clipboardSharingSizeM =
       static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
@@ -162,11 +159,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config,
   connect(m_pCheckBoxWin32KeepForeground, &QCheckBox::stateChanged, this,
           [this](const int &v) {
             serverConfig().setWin32KeepForeground(v);
-            onChange();
-          });
-  connect(m_pCheckBoxIgnoreAutoConfigClient, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setIgnoreAutoConfigClient(v);
             onChange();
           });
   connect(m_pCheckBoxDisableLockToScreen, &QCheckBox::stateChanged, this,
