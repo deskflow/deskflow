@@ -50,12 +50,18 @@ def set_env_var(name, value):
 
 
 def package(filename_base):
-    cert_base64 = env.get_env("WINDOWS_PFX_CERTIFICATE")
-    cert_password = env.get_env("WINDOWS_PFX_PASSWORD")
+    cert_env_key = "WINDOWS_PFX_CERTIFICATE"
+    cert_base64 = env.get_env(cert_env_key, required=False)
+    if cert_base64:
+        cert_password = env.get_env("WINDOWS_PFX_PASSWORD")
+        sign_binaries(cert_base64, cert_password)
 
-    sign_binaries(cert_base64, cert_password)
     build_msi(filename_base)
-    sign_msi(filename_base, cert_base64, cert_password)
+
+    if cert_base64:
+        sign_msi(filename_base, cert_base64, cert_password)
+    else:
+        print(f"Skipped code signing, env var not set: {cert_env_key}")
 
 
 def assert_vs_cmd(cmd):
