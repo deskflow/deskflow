@@ -70,15 +70,15 @@ config:
           cmake \
           make \
           gcc-c++ \
-          openssl-devel \
+          libopenssl-devel \
           glib2-devel \
           gdk-pixbuf-devel \
           libXtst-devel \
           libnotify-devel \
           libxkbfile-devel \
-          libqt6-qtbase-devel \
-          libqt6-qttools-devel \
-          qt6-qt5compat \
+          qt6-base-devel \
+          qt6-tools-devel \
+          qt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
