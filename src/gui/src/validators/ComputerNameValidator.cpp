@@ -15,23 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef REGEXPVALIDATOR_H
-#define REGEXPVALIDATOR_H
-
-#include "IStringValidator.h"
+#include "ComputerNameValidator.h"
 
 #include <QRegularExpression>
 
 namespace validators {
 
-class RegExpValidator : public IStringValidator {
-  QRegularExpression m_re;
+ComputerNameValidator::ComputerNameValidator(const QString &message)
+    : IStringValidator(message) {}
 
-public:
-  RegExpValidator(const QString &message, const QRegularExpression &re);
-  bool validate(const QString &input) const override;
-};
+bool ComputerNameValidator::validate(const QString &input) const {
+  const QRegularExpression re("^[a-z0-9\\._-]{0,255}$",
+                              QRegularExpression::CaseInsensitiveOption);
+  auto match = re.match(input);
+  auto result = match.hasMatch();
+  return result;
+}
 
 } // namespace validators
-
-#endif // REGEXPVALIDATOR_H

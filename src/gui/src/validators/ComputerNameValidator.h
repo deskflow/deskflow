@@ -15,19 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "RegExpValidator.h"
+
+#pragma once
+
+#include "IStringValidator.h"
 
 #include <QRegularExpression>
 
 namespace validators {
 
-RegExpValidator::RegExpValidator(const QString &message,
-                                 const QRegularExpression &validator)
-    : IStringValidator(message), m_re(validator) {}
-
-bool RegExpValidator::validate(const QString &input) const {
-  auto match = m_re.match(input);
-  return match.hasMatch();
-}
+class ComputerNameValidator : public IStringValidator {
+public:
+  ComputerNameValidator(const QString &message);
+  bool validate(const QString &input) const override;
+};
 
 } // namespace validators

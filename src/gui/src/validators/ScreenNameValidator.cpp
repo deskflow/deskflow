@@ -17,17 +17,13 @@
  */
 
 #include "ScreenNameValidator.h"
+#include "validators/ComputerNameValidator.h"
 #include "validators/EmptyStringValidator.h"
-#include "validators/RegExpValidator.h"
 #include "validators/ScreenDuplicationsValidator.h"
 #include "validators/SpacesValidator.h"
 
 #include <QRegularExpression>
 #include <memory>
-
-static const QRegularExpression
-    ValidScreenName("[a-z0-9\\._-]{,255}",
-                    QRegularExpression::CaseInsensitiveOption);
 
 namespace validators {
 
@@ -38,8 +34,8 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit *parent, QLabel *errors,
       std::make_unique<EmptyStringValidator>("Computer name cannot be empty"));
   addValidator(
       std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
-  addValidator(std::make_unique<RegExpValidator>(
-      "Computer name contains unsupported characters", ValidScreenName));
+  addValidator(std::make_unique<ComputerNameValidator>(
+      "Computer name contains unsupported characters"));
   addValidator(std::make_unique<ScreenDuplicationsValidator>(
       "A computer with this name already exists", parent ? parent->text() : "",
       pScreens));
