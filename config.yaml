@@ -78,7 +78,7 @@ config:
           libxkbfile-devel \
           libqt6-qtbase-devel \
           libqt6-qttools-devel \
-          libqt6-qt5compat-devel \
+          qt6-qt5compat \
           gtk3-devel \
           rpm-build
 
