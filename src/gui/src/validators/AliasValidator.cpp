@@ -29,7 +29,7 @@ AliasValidator::AliasValidator(QLineEdit *parent, QLabel *errors)
   addValidator(
       std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
   addValidator(std::make_unique<ComputerNameValidator>(
-      "Computer name contains unsupported characters"));
+      "Contains invalid characters or is too long"));
 }
 
 } // namespace validators
