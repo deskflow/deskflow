@@ -74,12 +74,12 @@ QString AboutDialog::getImportantDevelopers() const {
       // Precursor developers
       "Richard Lee, Adam Feder, "
 
-      // Major developers
+      // Contributors
       "Nick Bolton, Volker Lanz, Ryan Breen, Guido Poschta, "
       "Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Jason Axelson, "
       "Jake Petroules, Sorin Sbârnea, "
 
-      // Symless developers
+      // Symless employees
       "Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
       "Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.");
 }
