@@ -19,13 +19,13 @@
 #include "validators/ScreenNameValidator.h"
 
 #include "AppConfig.h"
+#include "AppLocale.h"
 #include "BonjourWindows.h"
 #include "CoreInterface.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "QUtility.h"
 #include "SslCertificate.h"
-#include "SynergyLocale.h"
 #include "UpgradeDialog.h"
 #include "Zeroconf.h"
 

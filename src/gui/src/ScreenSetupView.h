@@ -48,7 +48,7 @@ protected:
   void dragEnterEvent(QDragEnterEvent *event) override;
   void dragMoveEvent(QDragMoveEvent *event) override;
   void startDrag(Qt::DropActions supportedActions) override;
-  QStyleOptionViewItem viewOptions() const override;
+  void initViewItemOption(QStyleOptionViewItem *option) const override;
   void scrollTo(const QModelIndex &, ScrollHint) override {}
 };
 

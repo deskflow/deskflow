@@ -164,7 +164,7 @@ QString KeySequence::keyToString(int key) {
       return "1";
     case Qt::RightButton:
       return "2";
-    case Qt::MidButton:
+    case Qt::MiddleButton:
       return "3";
     }
 

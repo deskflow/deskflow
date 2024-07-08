@@ -20,14 +20,19 @@
 
 #include "AliasValidator.h"
 
+#include <QRegularExpression>
+
+static const QRegularExpression
+    ValidScreenName("[a-z0-9\\._-]{,255}",
+                    QRegularExpression::CaseInsensitiveOption);
+
 namespace validators {
 
 AliasValidator::AliasValidator(QLineEdit *parent, QLabel *errors)
     : LineEditValidator(parent, errors) {
   addValidator(std::make_unique<SpacesValidator>("Remove spaces"));
   addValidator(std::make_unique<RegExpValidator>(
-      "Remove unsupported characters",
-      QRegExp("[a-z0-9\\._-]{,255}", Qt::CaseInsensitive)));
+      "Remove unsupported characters", ValidScreenName));
 }
 
 } // namespace validators

@@ -21,7 +21,7 @@
 #include <QString>
 #include <QVector>
 
-class SynergyLocale {
+class AppLocale {
   class Language {
   public:
     Language() {}
@@ -34,7 +34,7 @@ class SynergyLocale {
   };
 
 public:
-  SynergyLocale();
+  AppLocale();
   void fillLanguageComboBox(QComboBox *comboBox);
 
 private:

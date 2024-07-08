@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "SynergyLocale.h"
+#include "AppLocale.h"
 
 #include <QDebug>
 #include <QResource>
 #include <QXmlStreamReader>
 
-SynergyLocale::SynergyLocale() { loadLanguages(); }
+AppLocale::AppLocale() { loadLanguages(); }
 
-void SynergyLocale::loadLanguages() {
+void AppLocale::loadLanguages() {
   QResource resource(":/res/lang/Languages.xml");
   QByteArray bytes(reinterpret_cast<const char *>(resource.data()),
                    resource.size());
@@ -36,7 +36,8 @@ void SynergyLocale::loadLanguages() {
       throw std::exception();
     }
 
-    if (xml.name() == "language" && token == QXmlStreamReader::StartElement) {
+    if (xml.name() == QLatin1String("language") &&
+        token == QXmlStreamReader::StartElement) {
       QXmlStreamAttributes attributes = xml.attributes();
       addLanguage(attributes.value("ietfCode").toString(),
                   attributes.value("name").toString());
@@ -44,13 +45,13 @@ void SynergyLocale::loadLanguages() {
   }
 }
 
-void SynergyLocale::addLanguage(const QString &ietfCode, const QString &name) {
-  m_Languages.push_back(SynergyLocale::Language(ietfCode, name));
+void AppLocale::addLanguage(const QString &ietfCode, const QString &name) {
+  m_Languages.push_back(AppLocale::Language(ietfCode, name));
 }
 
-void SynergyLocale::fillLanguageComboBox(QComboBox *comboBox) {
+void AppLocale::fillLanguageComboBox(QComboBox *comboBox) {
   comboBox->blockSignals(true);
-  QVector<SynergyLocale::Language>::iterator it;
+  QVector<AppLocale::Language>::iterator it;
   for (it = m_Languages.begin(); it != m_Languages.end(); ++it) {
     comboBox->addItem((*it).m_Name, (*it).m_IetfCode);
   }

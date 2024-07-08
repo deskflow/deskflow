@@ -23,6 +23,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
+#include <QRegularExpression>
 
 VersionChecker::VersionChecker() {
   m_manager = new QNetworkAccessManager(this);
@@ -63,14 +64,14 @@ int VersionChecker::getStageVersion(QString stage) const {
   const int betaValue = 1;
   const int otherValue = 0;
 
-  if (stage == stableName) {
+  if (stage.isEmpty() || stage == stableName) {
     return stableValue;
   } else if (stage.toLower().startsWith(rcName)) {
-    QRegExp rx("\\d*", Qt::CaseInsensitive);
-    if (rx.indexIn(stage) != -1) {
+    QRegularExpression re("\\d*", QRegularExpression::CaseInsensitiveOption);
+    if (re.match(stage).hasMatch()) {
       // return the rc value plus the rc number (e.g. 2 + 1)
       // this should be ok since stable is max int.
-      return rcValue + rx.cap(1).toInt();
+      return rcValue + re.match(stage).captured(1).toInt();
     }
   } else if (stage == betaName) {
     return betaValue;
@@ -86,26 +87,24 @@ int VersionChecker::compareVersions(const QString &left, const QString &right) {
   QStringList leftParts = left.split("-");
   QStringList rightParts = right.split("-");
 
-  if (leftParts.size() < 1 || rightParts.size() < 1)
-    return 0; // versions are same.
-
   QString leftNumber = leftParts.at(0);
   QString rightNumber = rightParts.at(0);
 
   QStringList leftNumberParts = left.split(".");
   QStringList rightNumberParts = right.split(".");
 
+  auto leftStagePart = leftParts.size() > 1 ? leftParts.at(1) : "";
+  auto rightStagePart = rightParts.size() > 1 ? rightParts.at(1) : "";
+
   const int leftMajor = leftNumberParts.at(0).toInt();
   const int leftMinor = leftNumberParts.at(1).toInt();
   const int leftPatch = leftNumberParts.at(2).toInt();
-  const int leftStage =
-      leftParts.size() > 1 ? getStageVersion(leftParts.at(1)) : 0;
+  const int leftStage = getStageVersion(leftStagePart);
 
   const int rightMajor = rightNumberParts.at(0).toInt();
   const int rightMinor = rightNumberParts.at(1).toInt();
   const int rightPatch = rightNumberParts.at(2).toInt();
-  const int rightStage =
-      rightParts.size() > 1 ? getStageVersion(rightParts.at(1)) : 0;
+  const int rightStage = getStageVersion(rightStagePart);
 
   const bool rightWins =
       (rightMajor > leftMajor) ||

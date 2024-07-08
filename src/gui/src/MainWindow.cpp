@@ -44,12 +44,12 @@
 #endif
 
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
+#include <QRegularExpression>
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
@@ -364,7 +364,7 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 void MainWindow::logOutput() {
   if (m_pSynergy) {
     QString text(m_pSynergy->readAllStandardOutput());
-    foreach (QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+    for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
       if (!line.isEmpty()) {
         appendLogRaw(line);
       }
@@ -402,7 +402,7 @@ void MainWindow::appendLogError(const QString &text) {
 }
 
 void MainWindow::appendLogRaw(const QString &text) {
-  foreach (QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+  foreach (QString line, text.split(QRegularExpression("\r|\n|\r\n"))) {
     if (!line.isEmpty()) {
 
       // HACK: macOS 10.13.4+ spamming error lines in logs making them
@@ -418,7 +418,7 @@ void MainWindow::appendLogRaw(const QString &text) {
 }
 
 void MainWindow::handleIdleService(const QString &text) {
-  foreach (QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+  foreach (QString line, text.split(QRegularExpression("\r|\n|\r\n"))) {
     // only start if there is no active service running
     if (!line.isEmpty() && line.contains("service status: idle") &&
         appConfig().startedBefore()) {
@@ -486,12 +486,13 @@ void MainWindow::checkLicense(const QString &line) {
 #endif
 
 void MainWindow::checkFingerprint(const QString &line) {
-  QRegExp fingerprintRegex(".*server fingerprint: ([A-F0-9:]+)");
-  if (!fingerprintRegex.exactMatch(line)) {
+  QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
+  auto match = re.match(line);
+  if (!match.hasMatch()) {
     return;
   }
 
-  QString fingerprint = fingerprintRegex.cap(1);
+  auto fingerprint = match.captured(1);
   if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
     return;
   }

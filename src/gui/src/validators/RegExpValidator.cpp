@@ -17,14 +17,17 @@
  */
 #include "RegExpValidator.h"
 
+#include <QRegularExpression>
+
 namespace validators {
 
 RegExpValidator::RegExpValidator(const QString &message,
-                                 const QRegExp &validator)
-    : IStringValidator(message), m_Validator(validator) {}
+                                 const QRegularExpression &validator)
+    : IStringValidator(message), m_re(validator) {}
 
 bool RegExpValidator::validate(const QString &input) const {
-  return (m_Validator.exactMatch(input));
+  auto match = m_re.match(input);
+  return match.hasMatch();
 }
 
 } // namespace validators

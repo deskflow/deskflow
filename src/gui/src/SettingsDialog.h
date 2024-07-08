@@ -24,8 +24,8 @@
 #include <QDialog>
 #include <memory>
 
+#include "AppLocale.h"
 #include "CoreInterface.h"
-#include "SynergyLocale.h"
 
 class MainWindow;
 class AppConfig;
@@ -75,7 +75,7 @@ protected:
 private:
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
-  SynergyLocale m_Locale;
+  AppLocale m_Locale;
   CoreInterface m_CoreInterface;
   BonjourWindows *m_pBonjourWindows;
 

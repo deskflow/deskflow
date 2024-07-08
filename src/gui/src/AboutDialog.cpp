@@ -29,7 +29,8 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
 
   QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
-  m_pLabelBuildDate->setText(buildDate.toString(Qt::SystemLocaleLongDate));
+  m_pLabelBuildDate->setText(
+      buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
 
   textEliteBackers->hide();
   labelEliteBackers->hide();
