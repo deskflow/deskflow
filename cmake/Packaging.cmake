@@ -90,6 +90,7 @@ macro(configure_linux_packaging)
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Synergy <developers@symless.com>")
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+  set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
