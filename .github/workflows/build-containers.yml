@@ -26,7 +26,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./.github/docker/debian-12/
           file: ./.github/docker/debian-12/Dockerfile
           push: true
           tags: symless/debian:12
+          platforms: linux/amd64,linux/arm64
