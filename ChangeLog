@@ -42,6 +42,7 @@ Enhancements:
 - #7368 Make version check URL v1-specific and configurable
 - #7369 Re-implement packaging for GitHub workflows (Linux ARM)
 - #7372 Add Git SHA to about screen and --version
+- #7373 Upgrade from Qt5 to Qt6 for more modern UI
 
 # 1.14.6
 
