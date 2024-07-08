@@ -68,9 +68,19 @@ void AboutDialog::updateLogo() const {
 
 QString AboutDialog::getImportantDevelopers() const {
   return QString(
-      "Chris Schoeneman, Nick Bolton, Richard Lee, Adam Feder, Volker Lanz, "
-      "Ryan Breen, Guido Poschta, Bertrand Landry Hetu, Tom Chadwick, "
-      "Brent Priddy, Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
+      // The ultimate creator
+      "Chris Schoeneman, "
+
+      // Precursor developers
+      "Richard Lee, Adam Feder, "
+
+      // Major developers
+      "Nick Bolton, Volker Lanz, Ryan Breen, Guido Poschta, "
+      "Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Jason Axelson, "
+      "Jake Petroules, Sorin Sbârnea, "
+
+      // Symless developers
+      "Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
       "Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.");
 }
 
