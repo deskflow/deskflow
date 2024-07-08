@@ -185,6 +185,11 @@ jobs:
     strategy:
       matrix:
         distro:
+          - name: debian-12
+            container: debian:12
+            runs-on: ubuntu-latest
+            install-deps-apt: true
+
           - name: ubuntu-24.04
             container: ubuntu:24.04
             runs-on: ubuntu-latest
@@ -193,11 +198,6 @@ jobs:
 
           - name: ubuntu-22.04
             container: ubuntu:22.04
-            runs-on: ubuntu-latest
-            install-deps-apt: true
-
-          - name: debian-12
-            container: debian:12
             runs-on: ubuntu-latest
             install-deps-apt: true
 
