@@ -201,12 +201,6 @@ jobs:
             runs-on: ubuntu-latest
             install-deps-apt: true
 
-          - name: debian-11
-            container: debian:11
-            runs-on: ubuntu-latest
-            install-deps-apt: true
-            legacy-cmake: true
-
           - name: fedora-40
             container: fedora:40
             runs-on: ubuntu-latest
@@ -259,14 +253,8 @@ jobs:
       - name: Install dependencies
         run: ./scripts/install_deps.py
 
-      - name: Configure (modern)
-        if: ${{ !matrix.distro.legacy-cmake }}
+      - name: Configure
         run: cmake -B build --preset=linux-release
-
-      # Some older Linux distro versions don't support modern CMake presets.
-      - name: Configure (legacy)
-        if: ${{ matrix.distro.legacy-cmake }}
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build -j8
