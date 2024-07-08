@@ -176,7 +176,7 @@ jobs:
   linux:
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
-    timeout-minutes: 10
+    timeout-minutes: 20
     container: ${{ matrix.distro.container }}
 
     env:
