@@ -20,7 +20,8 @@ depends=(
   'libxkbcommon-x11'
   'libnotify'
   'hicolor-icon-theme'
-  'qt5-base'
+  'qt6-base'
+  'qt6-tools'
 )
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
 

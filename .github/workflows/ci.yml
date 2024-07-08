@@ -141,7 +141,7 @@ jobs:
       - name: Configure
         env:
           CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target.version }}
-        run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
+        run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
 
       - name: Build
         run: cmake --build build -j8
