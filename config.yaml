@@ -60,7 +60,8 @@ config:
           qt6-qttools-devel \
           qt6-qt5compat-devel \
           gtk3-devel \
-          rpm-build
+          rpm-build \
+          file
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
