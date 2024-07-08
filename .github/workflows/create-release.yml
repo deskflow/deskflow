@@ -22,11 +22,16 @@ jobs:
       - name: Read version file
         run: echo "CURRENT_VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
+      - name: Override stage
+        if: ${{ !startsWith(github.ref, 'refs/heads/release') }}
+        run: echo "OVERRIDE_STAGE=snapshot" >> $GITHUB_ENV
+
       - name: Get next version
         id: next-version
-        uses: symless/next-version-action@master
+        uses: symless/actions/next-version@master
         with:
           current-version: ${{ env.CURRENT_VERSION }}
+          override-stage: ${{ env.OVERRIDE_STAGE }}
 
       - name: Print next version
         run: echo ${{ steps.next-version.outputs.next-version }}
