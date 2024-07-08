@@ -227,10 +227,10 @@ void MainWindow::setStatus(const QString &status) {
 
 void MainWindow::createMenuBar() {
   m_pMenuBar = new QMenuBar(this);
-  m_pMenuFile = new QMenu("", m_pMenuBar);
-  m_pMenuEdit = new QMenu("", m_pMenuBar);
-  m_pMenuWindow = new QMenu("", m_pMenuBar);
-  m_pMenuHelp = new QMenu("", m_pMenuBar);
+  m_pMenuFile = new QMenu("File", m_pMenuBar);
+  m_pMenuEdit = new QMenu("Edit", m_pMenuBar);
+  m_pMenuWindow = new QMenu("Window", m_pMenuBar);
+  m_pMenuHelp = new QMenu("Help", m_pMenuBar);
 
   m_pMenuBar->addAction(m_pMenuFile->menuAction());
   m_pMenuBar->addAction(m_pMenuEdit->menuAction());
@@ -1241,7 +1241,7 @@ void MainWindow::windowStateChanged() {
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
       tr("This computer's name: %1 (<a href=\"#\" style=\"text-decoration: "
-         "none; color: #4285F4;\">Preferences</a>)")
+         "none; color: #4285F4;\">change</a>)")
           .arg(appConfig().screenName()));
   serverConfig().updateServerName();
 }

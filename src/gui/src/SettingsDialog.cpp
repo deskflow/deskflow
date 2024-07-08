@@ -45,8 +45,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
   buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
   enableControls(appConfig().isWritable());
 
-  m_pCheckBoxLanguageSync->setVisible(isClientMode());
-  m_pCheckBoxScrollDirection->setVisible(isClientMode());
+  m_pCheckBoxLanguageSync->setEnabled(isClientMode());
+  m_pCheckBoxScrollDirection->setEnabled(isClientMode());
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
