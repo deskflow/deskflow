@@ -61,3 +61,4 @@ jobs:
           file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
           build-args: DOCKER_BASE_IMAGE=${{ matrix.os.base-image }}
+          platforms: linux/${{ matrix.os.platform }}
