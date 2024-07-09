@@ -15,19 +15,23 @@ jobs:
       matrix:
         os:
           - name: debian-12-amd64
-            config-dir: ./.github/docker/debian-12
+            config-dir: debian
+            base-image: debian:12
             platform: amd64
 
           - name: debian-12-arm64
-            config-dir: ./.github/docker/debian-12
+            config-dir: debian
+            base-image: arm64v8/debian:12
             platform: arm64
 
           - name: fedora-40-amd64
-            config-dir: ./.github/docker/fedora-40
+            config-dir: fedora
+            base-image: fedora:40
             platform: amd64
 
           - name: fedora-40-arm64
-            config-dir: ./.github/docker/fedora-40
+            config-dir: fedora
+            base-image: arm64v8/fedora:40
             platform: arm64
 
     steps:
@@ -53,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ${{ matrix.os.config-dir }}
-          file: ${{ matrix.os.config-dir }}/Dockerfile
+          context: ./.github/docker/${{ matrix.os.config-dir }}
+          file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
-          platforms: linux/${{ matrix.os.platform }}
+          build-args: DOCKER_BASE_IMAGE=${{ matrix.os.base-image }}
