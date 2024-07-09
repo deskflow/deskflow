@@ -1,7 +1,8 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2004 Chris Schoeneman
+ * Copyright (C) 2012-2024 Symless Ltd.
+ * Copyright (C) 2009-2012 Nick Bolton
+ * Copyright (C) 2002-2009 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +22,8 @@
 const char *kBuildYear = __DATE__ + 7;
 const char *kApplication = "Synergy";
 const char *kCopyright = "Copyright (C) 2012-%s Symless Ltd.\n"
-                         "Copyright (C) 2008-2014 Nick Bolton\n"
-                         "Copyright (C) 2002-2014 Chris Schoeneman";
+                         "Copyright (C) 2009-2012 Nick Bolton\n"
+                         "Copyright (C) 2002-2009 Chris Schoeneman";
 const char *kContact = "Email: engineering@symless.com";
 const char *kWebsite = "https://symless.com/";
 const char *kVersion = SYNERGY_VERSION;
