@@ -187,72 +187,50 @@ jobs:
       matrix:
         distro:
           - name: debian-12-arm64
-            container: arm64v8/debian:12
+            container: symless/synergy-core:debian-12-arm64
             runs-on: buildjet-4vcpu-ubuntu-2204-arm
-            install-deps-apt: true
-
-          - name: debian-12-amd64
-            container: debian:12
-            runs-on: ubuntu-latest
-            install-deps-apt: true
-
-          - name: ubuntu-24.04-amd64
-            container: ubuntu:24.04
-            runs-on: ubuntu-latest
-            install-deps-apt: true
             extra-packages: true
 
-          - name: ubuntu-22.04-amd64
-            container: ubuntu:22.04
+          - name: debian-12-amd64
+            container: symless/synergy-core:debian-12-amd64
             runs-on: ubuntu-latest
-            install-deps-apt: true
+            extra-packages: true
+
+          - name: ubuntu-24.04-amd64
+            container: symless/synergy-core:ubuntu-24.04-amd64
+            runs-on: ubuntu-latest
+
+          - name: ubuntu-22.04-amd64
+            container: symless/synergy-core:ubuntu-22.04-amd64
+            runs-on: ubuntu-latest
 
           - name: fedora-40-arm64
-            container: arm64v8/fedora:40
+            container: symless/synergy-core:fedora-40-arm64
             runs-on: buildjet-4vcpu-ubuntu-2204-arm
-            install-deps-dnf: true
 
           - name: fedora-40-amd64
-            container: fedora:40
+            container: symless/synergy-core:fedora-40-amd64
             runs-on: ubuntu-latest
-            install-deps-dnf: true
 
           - name: fedora-39-amd64
-            container: fedora:39
+            container: symless/synergy-core:fedora-39-amd64
             runs-on: ubuntu-latest
-            install-deps-dnf: true
 
           - name: opensuse-amd64
-            container: opensuse/tumbleweed:latest
+            container: symless/synergy-core:opensuse-amd64
             runs-on: ubuntu-latest
-            install-deps-zypper: true
 
-          - name: arch-amd64
-            container: archlinux:latest
+          - name: archlinux-amd64
+            container: symless/synergy-core:archlinux-amd64
             runs-on: ubuntu-latest
-            install-deps-pacman: true
             package-user: build
 
           - name: manjaro-amd64
-            container: manjarolinux/base:latest
+            container: symless/synergy-core:manjaro-amd64
             runs-on: ubuntu-latest
-            install-deps-pacman: true
             package-user: build
 
     steps:
-      - name: Bootstrap
-        run: |
-          if [ "${{ matrix.distro.install-deps-apt }}" = "true" ]; then
-            apt update && apt install -y git python3
-          elif [ "${{ matrix.distro.install-deps-dnf }}" = "true" ]; then
-            dnf install -y git python3
-          elif [ "${{ matrix.distro.install-deps-pacman }}" = "true" ]; then
-            pacman -Syu --noconfirm git python sudo
-            useradd -m build
-          elif [ "${{ matrix.distro.install-deps-zypper }}" = "true" ]; then
-            zypper install -y git python3
-          fi
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
