@@ -43,6 +43,7 @@ Enhancements:
 - #7369 Re-implement packaging for GitHub workflows (Linux ARM)
 - #7372 Add Git SHA to about screen and --version
 - #7373 Upgrade from Qt5 to Qt6 for more modern UI
+- #7374 Add missing DEB and RPM dependencies
 
 # 1.14.6
 
