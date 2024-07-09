@@ -8,28 +8,33 @@ on:
 jobs:
   build-containers:
     name: ${{ matrix.os.name }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os.runs-on }}
     if: ${{ vars.BUILD_CONTAINERS }}
+    timeout-minutes: 5
 
     strategy:
       matrix:
         os:
           - name: debian-12-amd64
+            runs-on: ubuntu-latest
             config-dir: debian
             base-image: debian:12-slim
             platform: amd64
 
           - name: debian-12-arm64
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
             config-dir: debian
             base-image: arm64v8/debian:12-slim
             platform: arm64
 
           - name: fedora-40-amd64
+            runs-on: ubuntu-latest
             config-dir: fedora
             base-image: fedora:40
             platform: amd64
 
           - name: fedora-40-arm64
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
             config-dir: fedora
             base-image: arm64v8/fedora:40
             platform: arm64
