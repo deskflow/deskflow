@@ -26,6 +26,8 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.os.platforms }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -43,4 +45,4 @@ jobs:
           context: ./.github/docker/${{ matrix.os.name }}
           file: ./.github/docker/${{ matrix.os.name }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
-          platforms: ${{ matrix.os.platform }}
+          platforms: ${{ matrix.os.platforms }}
