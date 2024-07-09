@@ -1,3 +1,3 @@
 FROM fedora:40
 
-RUN apt update && apt install -y git python3 && apt clean
+RUN dnf update && dnf install -y git python3
