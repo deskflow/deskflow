@@ -1,7 +1,7 @@
-# Weekly build of the Docker containers.
+# Weekly build of the Linux Docker containers.
 #
-# We use Docker Buildx instead of Docker Automated Builds so that we can have an image that is
-# always at most a week out of date instead of the last time a Dockerfile change was pushed.
+# We use Docker Buildx instead of Docker Automated Builds so that we can create an image that is
+# always at most a week out of date (instead of the last time a Dockerfile change was pushed).
 
 name: Build containers
 
@@ -32,6 +32,18 @@ jobs:
             base-image: arm64v8/debian:12-slim
             platform: arm64
 
+          - name: ubuntu-24.04-amd64
+            runs-on: ubuntu-latest
+            config-dir: ubuntu
+            base-image: ubuntu:24.04
+            platform: amd64
+
+          - name: ubuntu-22.04-amd64
+            runs-on: ubuntu-latest
+            config-dir: ubuntu
+            base-image: ubuntu:22.04
+            platform: amd64
+
           - name: fedora-40-amd64
             runs-on: ubuntu-latest
             config-dir: fedora
@@ -43,6 +55,30 @@ jobs:
             config-dir: fedora
             base-image: arm64v8/fedora:40
             platform: arm64
+
+          - name: fedora-39-amd64
+            runs-on: ubuntu-latest
+            config-dir: fedora
+            base-image: fedora:39
+            platform: amd64
+
+          - name: opensuse-amd64
+            runs-on: ubuntu-latest
+            config-dir: opensuse
+            base-image: opensuse/tumbleweed:latest
+            platform: amd64
+
+          - name: archlinux-amd64
+            runs-on: ubuntu-latest
+            config-dir: archlinux
+            base-image: archlinux:latest
+            platform: amd64
+
+          - name: manjaro-amd64
+            container: manjarolinux/base:latest
+            config-dir: manjaro
+            runs-on: ubuntu-latest
+            platform: amd64
 
     steps:
       - name: Checkout
@@ -64,5 +100,5 @@ jobs:
           context: ./.github/docker/${{ matrix.os.config-dir }}
           file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
-          build-args: DOCKER_BASE_IMAGE=${{ matrix.os.base-image }}
+          build-args: BASE_IMAGE=${{ matrix.os.base-image }}
           platforms: linux/${{ matrix.os.platform }}
