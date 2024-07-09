@@ -187,14 +187,12 @@ jobs:
       matrix:
         distro:
           - name: debian-12-arm64
-            container: arm64v8/debian:12
+            container: symless/synergy-core:debian-12-arm64
             runs-on: buildjet-4vcpu-ubuntu-2204-arm
-            install-deps-apt: true
 
           - name: debian-12-amd64
-            container: debian:12
+            container: symless/synergy-core:debian-12-amd64
             runs-on: ubuntu-latest
-            install-deps-apt: true
 
           - name: ubuntu-24.04-amd64
             container: ubuntu:24.04
@@ -208,14 +206,12 @@ jobs:
             install-deps-apt: true
 
           - name: fedora-40-arm64
-            container: arm64v8/fedora:40
+            container: symless/synergy-core:fedora-40-arm64
             runs-on: buildjet-4vcpu-ubuntu-2204-arm
-            install-deps-dnf: true
 
           - name: fedora-40-amd64
-            container: fedora:40
+            container: symless/synergy-core:fedora-40-amd64
             runs-on: ubuntu-latest
-            install-deps-dnf: true
 
           - name: fedora-39-amd64
             container: fedora:39
