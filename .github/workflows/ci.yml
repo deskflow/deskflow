@@ -197,11 +197,11 @@ jobs:
             extra-packages: true
 
           - name: ubuntu-24.04-amd64
-            container: ubuntu:24.04
+            container: symless/synergy-core:ubuntu-24.04-amd64
             runs-on: ubuntu-latest
 
           - name: ubuntu-22.04-amd64
-            container: ubuntu:22.04
+            container: symless/synergy-core:ubuntu-22.04-amd64
             runs-on: ubuntu-latest
 
           - name: fedora-40-arm64
@@ -213,20 +213,20 @@ jobs:
             runs-on: ubuntu-latest
 
           - name: fedora-39-amd64
-            container: fedora:39
+            container: symless/synergy-core:fedora-39-amd64
             runs-on: ubuntu-latest
 
           - name: opensuse-amd64
-            container: opensuse/tumbleweed:latest
+            container: symless/synergy-core:opensuse-amd64
             runs-on: ubuntu-latest
 
           - name: archlinux-amd64
-            container: archlinux:latest
+            container: symless/synergy-core:archlinux-amd64
             runs-on: ubuntu-latest
             package-user: build
 
           - name: manjaro-amd64
-            container: manjarolinux/base:latest
+            container: symless/synergy-core:manjaro-amd64
             runs-on: ubuntu-latest
             package-user: build
 
