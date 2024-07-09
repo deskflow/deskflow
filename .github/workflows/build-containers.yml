@@ -75,9 +75,9 @@ jobs:
             platform: amd64
 
           - name: manjaro-amd64
-            container: manjarolinux/base:latest
             config-dir: archlinux
             runs-on: ubuntu-latest
+            base-image: manjarolinux/base:latest
             platform: amd64
 
     steps:
