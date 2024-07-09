@@ -1,3 +1,11 @@
+# Weekly build of the Linux Docker containers.
+#
+# The objective is to reduce the problem where package updates often break the build process
+# due to transient network errors.
+#
+# We use Docker Buildx instead of Docker Automated Builds so that we can create an image that is
+# always at most a week out of date (instead of the last time a Dockerfile change was pushed).
+
 name: Build containers
 
 on:
@@ -7,8 +15,73 @@ on:
 
 jobs:
   build-containers:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os.name }}
+    runs-on: ${{ matrix.os.runs-on }}
     if: ${{ vars.BUILD_CONTAINERS }}
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        os:
+          - name: debian-12-amd64
+            runs-on: ubuntu-latest
+            config-dir: debian
+            base-image: debian:12-slim
+            platform: amd64
+
+          - name: debian-12-arm64
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            config-dir: debian
+            base-image: arm64v8/debian:12-slim
+            platform: arm64
+
+          - name: ubuntu-24.04-amd64
+            runs-on: ubuntu-latest
+            config-dir: debian
+            base-image: ubuntu:24.04
+            platform: amd64
+
+          - name: ubuntu-22.04-amd64
+            runs-on: ubuntu-latest
+            config-dir: debian
+            base-image: ubuntu:22.04
+            platform: amd64
+
+          - name: fedora-40-amd64
+            runs-on: ubuntu-latest
+            config-dir: fedora
+            base-image: fedora:40
+            platform: amd64
+
+          - name: fedora-40-arm64
+            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            config-dir: fedora
+            base-image: arm64v8/fedora:40
+            platform: arm64
+
+          - name: fedora-39-amd64
+            runs-on: ubuntu-latest
+            config-dir: fedora
+            base-image: fedora:39
+            platform: amd64
+
+          - name: opensuse-amd64
+            runs-on: ubuntu-latest
+            config-dir: opensuse
+            base-image: opensuse/tumbleweed:latest
+            platform: amd64
+
+          - name: archlinux-amd64
+            runs-on: ubuntu-latest
+            config-dir: archlinux
+            base-image: archlinux:latest
+            platform: amd64
+
+          - name: manjaro-amd64
+            config-dir: archlinux
+            runs-on: ubuntu-latest
+            base-image: manjarolinux/base:latest
+            platform: amd64
 
     steps:
       - name: Checkout
@@ -26,8 +99,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./.github/docker/debian-12/
-          file: ./.github/docker/debian-12/Dockerfile
           push: true
-          tags: symless/debian:12
-          platforms: linux/amd64,linux/arm64
+          context: ./.github/docker/${{ matrix.os.config-dir }}
+          file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
+          tags: symless/synergy-core:${{ matrix.os.name }}
+          build-args: BASE_IMAGE=${{ matrix.os.base-image }}
+          platforms: linux/${{ matrix.os.platform }}
