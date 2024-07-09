@@ -1,5 +1,8 @@
 # Weekly build of the Linux Docker containers.
 #
+# The objective is to reduce the problem where package updates often break the build process
+# due to transient network errors.
+#
 # We use Docker Buildx instead of Docker Automated Builds so that we can create an image that is
 # always at most a week out of date (instead of the last time a Dockerfile change was pushed).
 
