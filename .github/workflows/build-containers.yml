@@ -1,0 +1,33 @@
+name: Build containers
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * 0"
+
+jobs:
+  build-containers:
+    runs-on: ubuntu-latest
+    if: ${{ vars.BUILD_CONTAINERS }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./.github/docker/debian-12/
+          file: ./.github/docker/debian-12/Dockerfile
+          push: true
+          tags: symless/debian:12
+          platforms: linux/amd64,linux/arm64
