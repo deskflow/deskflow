@@ -29,4 +29,4 @@ jobs:
           context: ./.github/docker/debian-12/
           file: ./.github/docker/debian-12/Dockerfile
           push: true
-          tags: symless/synergy-core/debian:12
+          tags: symless/synergy-core:debian-12
