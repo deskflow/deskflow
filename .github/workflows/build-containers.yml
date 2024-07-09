@@ -34,13 +34,13 @@ jobs:
 
           - name: ubuntu-24.04-amd64
             runs-on: ubuntu-latest
-            config-dir: ubuntu
+            config-dir: debian
             base-image: ubuntu:24.04
             platform: amd64
 
           - name: ubuntu-22.04-amd64
             runs-on: ubuntu-latest
-            config-dir: ubuntu
+            config-dir: debian
             base-image: ubuntu:22.04
             platform: amd64
 
@@ -76,7 +76,7 @@ jobs:
 
           - name: manjaro-amd64
             container: manjarolinux/base:latest
-            config-dir: manjaro
+            config-dir: archlinux
             runs-on: ubuntu-latest
             platform: amd64
 
