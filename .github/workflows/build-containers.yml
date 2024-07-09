@@ -16,12 +16,12 @@ jobs:
         os:
           - name: debian-12-amd64
             config-dir: debian
-            base-image: debian:12
+            base-image: debian:12-slim
             platform: amd64
 
           - name: debian-12-arm64
             config-dir: debian
-            base-image: arm64v8/debian:12
+            base-image: arm64v8/debian:12-slim
             platform: arm64
 
           - name: fedora-40-amd64
