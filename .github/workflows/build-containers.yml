@@ -1,3 +1,8 @@
+# Weekly build of the Docker containers.
+#
+# We use Docker Buildx instead of Docker Automated Builds so that we can have an image that is
+# always at most a week out of date instead of the last time a Dockerfile change was pushed.
+
 name: Build containers
 
 on:
