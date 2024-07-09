@@ -53,7 +53,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ${{ matrix.os.name }}
-          file: ${{ matrix.os.name }}/Dockerfile
+          context: ${{ matrix.os.config-dir }}
+          file: ${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
           platforms: linux/${{ matrix.os.platform }}
