@@ -24,6 +24,7 @@ depends=(
   'qt6-tools'
 )
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
+options=('!debug')
 
 package() {
   # By default, `makepkg` will run from the `src` directory, which would
