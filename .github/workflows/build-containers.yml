@@ -48,12 +48,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        if: ${{ matrix.os.platform != 'amd64' }}
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/${{ matrix.os.platform }}
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
