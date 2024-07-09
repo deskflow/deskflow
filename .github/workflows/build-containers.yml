@@ -14,20 +14,27 @@ jobs:
     strategy:
       matrix:
         os:
-          - name: debian-12
-            platforms: linux/amd64,linux/arm64
+          - name: debian-12-amd64
+            platform: amd64
 
-          - name: fedora-40
-            platforms: linux/amd64,linux/arm64
+          - name: debian-12-arm64
+            platform: arm64
+
+          - name: fedora-40-amd64
+            platform: amd64
+
+          - name: fedora-40-arm64
+            platform: arm64
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up QEMU
+        if: ${{ matrix.os.platform != 'amd64' }}
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: ${{ matrix.os.platforms }}
+          platforms: linux/${{ matrix.os.platform }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -45,4 +52,4 @@ jobs:
           context: ./.github/docker/${{ matrix.os.name }}
           file: ./.github/docker/${{ matrix.os.name }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
-          platforms: ${{ matrix.os.platforms }}
+          platforms: linux/${{ matrix.os.platform }}
