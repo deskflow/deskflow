@@ -62,7 +62,7 @@ def package(filename_base):
     if cert_base64:
         install_certificate(cert_base64, cert_password)
     else:
-        print(f"Skipped certificate installation, {cert_p12_env} not set")
+        print(f"Skipped certificate installation, env var {cert_p12_env} not set")
 
     build_bundle()
     assert_certificate_installed(codesign_id)
@@ -72,7 +72,7 @@ def package(filename_base):
     if notary_user:
         notarize_package(dmg_path, notary_user, notary_password, notary_team_id)
     else:
-        print(f"Skipped notarization, {notary_user_env} not set")
+        print(f"Skipped notarization, env var {notary_user_env} not set")
 
 
 def package_env_vars():
