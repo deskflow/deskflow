@@ -4,6 +4,7 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
 
+path_env = "PATH"
 cmake_env = "CMAKE_PREFIX_PATH"
 cert_p12_env = "APPLE_P12_CERTIFICATE"
 notary_user_env = "APPLE_NOTARY_USER"
@@ -29,16 +30,14 @@ def set_env_var(name, value):
 
     print(f"Setting environment variable: {name}={name}")
     with open(file, "a") as f:
-        f.write(f"\n{text}")
+        f.write(f"\n{text}\n")
         print(f"Appended to {shell_rc}: {text}")
 
 
-def set_cmake_prefix_env_var(cmake_prefix_command):
-    result = cmd_utils.run(
-        cmake_prefix_command, get_output=True, shell=True, print_cmd=True
-    )
-    cmake_prefix = result.stdout.strip()
-    set_env_var(cmake_env, cmake_prefix)
+def set_env_vars(cmake_prefix_command):
+    cmd_sub = f"$({cmake_prefix_command})"
+    set_env_var(path_env, cmd_sub)
+    set_env_var(cmake_env, cmd_sub)
 
 
 def package(filename_base):
