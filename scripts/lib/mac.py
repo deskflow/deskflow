@@ -24,6 +24,10 @@ keychain_path = "/Library/Keychains/System.keychain"
 def set_env_var(name, value):
     text = f'export {name}="${name}:{value}"'
     file = os.path.expanduser(shell_rc)
+    if not os.path.exists(file):
+        print(f"File {file} not found, set env var manually:\n  {text}")
+        return
+
     with open(file, "r") as f:
         if text in f.read():
             return
