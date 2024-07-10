@@ -55,10 +55,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   install(CODE "MESSAGE (\"Running: ${MACDEPLOYQT_CMD}\")")
   install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
 
-  # HACK: bundle again to fix missing deps. since qt6, it seems that on the
-  # first pass misses out many dependencies from the Framework dir (it also
-  # finishes quickly with a bunch of warnings), and the 2nd pass (which takes
-  # much longer), all of the dependencies are copied over.
+  # HACK: Bundle again to fix missing deps. Since Qt 6, it seems that the first
+  # pass misses out many dependencies from the Framework dir (it also finishes
+  # quickly with a bunch of warnings), and after the 2nd pass (which takes much
+  # longer), all of the dependencies are copied to the bundle.
   install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
