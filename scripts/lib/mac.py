@@ -4,7 +4,9 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
 
-cmake_env_var = "CMAKE_PREFIX_PATH"
+cmake_env = "CMAKE_PREFIX_PATH"
+cert_p12_env = "APPLE_P12_CERTIFICATE"
+notary_user_env = "APPLE_NOTARY_USER"
 shell_rc = "~/.zshrc"
 dist_dir = "dist"
 product_name = "Synergy 1"
@@ -36,7 +38,7 @@ def set_cmake_prefix_env_var(cmake_prefix_command):
         cmake_prefix_command, get_output=True, shell=True, print_cmd=True
     )
     cmake_prefix = result.stdout.strip()
-    set_env_var(cmake_env_var, cmake_prefix)
+    set_env_var(cmake_env, cmake_prefix)
 
 
 def package(filename_base):
@@ -44,18 +46,60 @@ def package(filename_base):
     Package the application for macOS.
     The app bundle must be signed, or an error will occur:
     > EXC_BAD_ACCESS (SIGKILL (Code Signature Invalid))
+    A self-signed certificate should be sufficient:
+    https://support.apple.com/en-gb/guide/keychain-access/kyca8916/mac
     """
 
-    codesign_id = env.get_env("APPLE_CODESIGN_ID")
-    cert_base64 = env.get_env("APPLE_P12_CERTIFICATE")
-    cert_password = env.get_env("APPLE_P12_PASSWORD")
+    (
+        codesign_id,
+        cert_base64,
+        cert_password,
+        notary_user,
+        notary_password,
+        notary_team_id,
+    ) = package_env_vars()
+
+    if cert_base64:
+        install_certificate(cert_base64, cert_password)
+    else:
+        print(f"Skipped certificate installation, {cert_p12_env} not set")
 
     build_bundle()
-    install_certificate(cert_base64, cert_password)
     assert_certificate_installed(codesign_id)
     sign_bundle(codesign_id)
     dmg_path = build_dmg(filename_base)
-    notarize_package(dmg_path)
+
+    if notary_user:
+        notarize_package(dmg_path, notary_user, notary_password, notary_team_id)
+    else:
+        print(f"Skipped notarization, {notary_user_env} not set")
+
+
+def package_env_vars():
+    codesign_id = env.get_env("APPLE_CODESIGN_ID")
+    cert_base64 = env.get_env(cert_p12_env, required=False)
+    notary_user = env.get_env(notary_user_env, required=False)
+
+    if notary_user:
+        notary_password = env.get_env("APPLE_NOTARY_PASSWORD")
+        notary_team_id = env.get_env("APPLE_TEAM_ID")
+    else:
+        notary_password = None
+        notary_team_id = None
+
+    if cert_base64:
+        cert_password = env.get_env("APPLE_P12_PASSWORD")
+    else:
+        cert_password = None
+
+    return (
+        codesign_id,
+        cert_base64,
+        cert_password,
+        notary_user,
+        notary_password,
+        notary_team_id,
+    )
 
 
 def build_bundle():
@@ -152,15 +196,10 @@ def install_certificate(cert_base64, cert_password):
         )
 
 
-def notarize_package(dmg_path):
+def notarize_package(dmg_path, user, password, team_id):
     print(f"Notarizing package {dmg_path}...")
     notary_tool = NotaryTool()
-    notary_tool.store_credentials(
-        env.get_env("APPLE_NOTARY_USER"),
-        env.get_env("APPLE_NOTARY_PASSWORD"),
-        env.get_env("APPLE_TEAM_ID"),
-    )
-
+    notary_tool.store_credentials(user, password, team_id)
     notary_tool.submit_and_wait(dmg_path)
 
 
