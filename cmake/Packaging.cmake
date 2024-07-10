@@ -24,6 +24,7 @@ macro(configure_packaging)
     set(CPACK_PACKAGE_CONTACT "Synergy <support@symless.com>")
     set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
     set(CPACK_PACKAGE_VENDOR "Symless")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       configure_windows_packaging()
@@ -91,6 +92,11 @@ macro(configure_linux_packaging)
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Synergy <developers@symless.com>")
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+  # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
+  # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
+  # 12), so we must add it manually.
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
 
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
