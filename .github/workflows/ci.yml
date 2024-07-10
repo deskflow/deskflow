@@ -120,14 +120,12 @@ jobs:
             timeout: 10
             os: "macos-14"
             arch: arm64
-            version: "11"
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
           - name: "macos-10-intel"
             timeout: 20
             os: "macos-14-large"
             arch: x64
-            version: "10.14"
             shell: "bash"
 
     steps:
@@ -140,8 +138,6 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Configure
-        env:
-          CMAKE_OSX_DEPLOYMENT_TARGET: ${{ matrix.target.version }}
         run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
 
       - name: Build
