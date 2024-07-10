@@ -64,7 +64,6 @@ def package(filename_base):
         print(f"Skipped certificate installation, env var {cert_p12_env} not set")
 
     build_bundle()
-    assert_certificate_installed(codesign_id)
     sign_bundle(codesign_id)
     dmg_path = build_dmg(filename_base)
 
@@ -106,9 +105,19 @@ def build_bundle():
     # cmake build install target should run macdeployqt
     cmd_utils.run("cmake --build build --target install", shell=True, print_cmd=True)
 
+    bundle_bin_path = "Contents/MacOS/synergy"
+    cmd_utils.run(
+        'install_name_tool -add_rpath "@executable_path/../Frameworks" '
+        f"{app_path}/{bundle_bin_path}",
+        shell=True,
+        print_cmd=True,
+    )
+
 
 def sign_bundle(codesign_id):
     print(f"Signing bundle {app_path}...")
+
+    assert_certificate_installed(codesign_id)
     cmd_utils.run(
         [
             codesign_path,
