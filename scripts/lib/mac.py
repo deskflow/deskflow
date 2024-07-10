@@ -132,6 +132,8 @@ def sign_bundle(codesign_id):
 
 
 def assert_certificate_installed(codesign_id):
+    print(f"Checking certificate: {codesign_id}")
+
     installed = cmd_utils.run(
         "security find-identity -v -p codesigning",
         get_output=True,
@@ -141,8 +143,6 @@ def assert_certificate_installed(codesign_id):
 
     if codesign_id not in installed.stdout:
         raise RuntimeError("Code signing certificate not installed or has expired")
-    else:
-        print(f"Certificate found: {codesign_id}")
 
 
 def build_dmg(filename_base):
