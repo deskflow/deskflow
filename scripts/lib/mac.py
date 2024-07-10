@@ -4,7 +4,10 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
 
-cmake_env_var = "CMAKE_PREFIX_PATH"
+path_env = "PATH"
+cmake_env = "CMAKE_PREFIX_PATH"
+cert_p12_env = "APPLE_P12_CERTIFICATE"
+notary_user_env = "APPLE_NOTARY_USER"
 shell_rc = "~/.zshrc"
 dist_dir = "dist"
 product_name = "Synergy 1"
@@ -21,35 +24,80 @@ keychain_path = "/Library/Keychains/System.keychain"
 def set_env_var(name, value):
     text = f'export {name}="${name}:{value}"'
     file = os.path.expanduser(shell_rc)
-    with open(file, "r") as f:
-        if text in f.read():
-            return
+    if os.path.exists(file):
+        with open(file, "r") as f:
+            if text in f.read():
+                return
 
     print(f"Setting environment variable: {name}={name}")
     with open(file, "a") as f:
-        f.write(f"\n{text}")
+        f.write(f"\n{text}\n")
         print(f"Appended to {shell_rc}: {text}")
 
 
-def set_cmake_prefix_env_var(cmake_prefix_command):
-    result = cmd_utils.run(
-        cmake_prefix_command, get_output=True, shell=True, print_cmd=True
-    )
-    cmake_prefix = result.stdout.strip()
-    set_env_var(cmake_env_var, cmake_prefix)
+def set_env_vars(cmake_prefix_command):
+    cmd_sub = f"$({cmake_prefix_command})"
+    set_env_var(path_env, cmd_sub)
+    set_env_var(cmake_env, cmd_sub)
 
 
 def package(filename_base):
-    codesign_id = env.get_env("APPLE_CODESIGN_ID")
-    cert_base64 = env.get_env("APPLE_P12_CERTIFICATE")
-    cert_password = env.get_env("APPLE_P12_PASSWORD")
+    """
+    Package the application for macOS.
+    The app bundle must be signed, or an error will occur:
+    > EXC_BAD_ACCESS (SIGKILL (Code Signature Invalid))
+    An "Apple Development" certificate is sufficient for local development.
+    """
+
+    (
+        codesign_id,
+        cert_base64,
+        cert_password,
+        notary_user,
+        notary_password,
+        notary_team_id,
+    ) = package_env_vars()
+
+    if cert_base64:
+        install_certificate(cert_base64, cert_password)
+    else:
+        print(f"Skipped certificate installation, env var {cert_p12_env} not set")
 
     build_bundle()
-    install_certificate(cert_base64, cert_password)
-    assert_certificate_installed(codesign_id)
     sign_bundle(codesign_id)
     dmg_path = build_dmg(filename_base)
-    notarize_package(dmg_path)
+
+    if notary_user:
+        notarize_package(dmg_path, notary_user, notary_password, notary_team_id)
+    else:
+        print(f"Skipped notarization, env var {notary_user_env} not set")
+
+
+def package_env_vars():
+    codesign_id = env.get_env("APPLE_CODESIGN_ID")
+    cert_base64 = env.get_env(cert_p12_env, required=False)
+    notary_user = env.get_env(notary_user_env, required=False)
+
+    if notary_user:
+        notary_password = env.get_env("APPLE_NOTARY_PASSWORD")
+        notary_team_id = env.get_env("APPLE_TEAM_ID")
+    else:
+        notary_password = None
+        notary_team_id = None
+
+    if cert_base64:
+        cert_password = env.get_env("APPLE_P12_PASSWORD")
+    else:
+        cert_password = None
+
+    return (
+        codesign_id,
+        cert_base64,
+        cert_password,
+        notary_user,
+        notary_password,
+        notary_team_id,
+    )
 
 
 def build_bundle():
@@ -57,9 +105,19 @@ def build_bundle():
     # cmake build install target should run macdeployqt
     cmd_utils.run("cmake --build build --target install", shell=True, print_cmd=True)
 
+    bundle_bin_path = "Contents/MacOS/synergy"
+    cmd_utils.run(
+        'install_name_tool -add_rpath "@executable_path/../Frameworks" '
+        f"{app_path}/{bundle_bin_path}",
+        shell=True,
+        print_cmd=True,
+    )
+
 
 def sign_bundle(codesign_id):
     print(f"Signing bundle {app_path}...")
+
+    assert_certificate_installed(codesign_id)
     cmd_utils.run(
         [
             codesign_path,
@@ -75,6 +133,8 @@ def sign_bundle(codesign_id):
 
 
 def assert_certificate_installed(codesign_id):
+    print(f"Checking certificate: {codesign_id}")
+
     installed = cmd_utils.run(
         "security find-identity -v -p codesigning",
         get_output=True,
@@ -146,15 +206,10 @@ def install_certificate(cert_base64, cert_password):
         )
 
 
-def notarize_package(dmg_path):
+def notarize_package(dmg_path, user, password, team_id):
     print(f"Notarizing package {dmg_path}...")
     notary_tool = NotaryTool()
-    notary_tool.store_credentials(
-        env.get_env("APPLE_NOTARY_USER"),
-        env.get_env("APPLE_NOTARY_PASSWORD"),
-        env.get_env("APPLE_TEAM_ID"),
-    )
-
+    notary_tool.store_credentials(user, password, team_id)
     notary_tool.submit_and_wait(dmg_path)
 
 
@@ -186,10 +241,10 @@ class NotaryTool:
                 notarytool_path,
                 "store-credentials",
                 "notarytool-password",
-                "--apple-id",
-                user,
                 "--team-id",
                 team_id,
+                "--apple-id",
+                user,
                 "--password",
                 password,
             ]

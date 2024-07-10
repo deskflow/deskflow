@@ -106,7 +106,7 @@ class Dependencies:
         cmd_utils.run(command, shell=True, print_cmd=True)
 
         if not self.ci_env:
-            mac.set_cmake_prefix_env_var(self.config.get_os_value("qt-prefix-command"))
+            mac.set_env_vars(self.config.get_os_value("qt-prefix-command"))
 
     def linux(self):
         """Installs dependencies on Linux."""
