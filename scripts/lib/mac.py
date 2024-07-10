@@ -45,8 +45,7 @@ def package(filename_base):
     Package the application for macOS.
     The app bundle must be signed, or an error will occur:
     > EXC_BAD_ACCESS (SIGKILL (Code Signature Invalid))
-    A self-signed certificate should be sufficient:
-    https://support.apple.com/en-gb/guide/keychain-access/kyca8916/mac
+    An "Apple Development" certificate is sufficient for local development.
     """
 
     (
