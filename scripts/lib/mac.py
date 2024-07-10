@@ -233,10 +233,10 @@ class NotaryTool:
                 "notarytool-password",
                 "--apple-id",
                 user,
-                "--team-id",
-                team_id,
                 "--password",
                 password,
+                "--team-id",
+                team_id,
             ]
         )
 
