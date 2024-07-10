@@ -46,7 +46,7 @@ Enhancements:
 - #7374 Add missing DEB and RPM dependencies
 - #7376 Automated weekly build of Docker images for Linux runners
 - #7378 Improve workflow triggers to ensure correct run time
-
+- #7381 Set macOS min version to macOS 12.0
 
 # 1.14.6
 
