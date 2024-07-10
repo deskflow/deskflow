@@ -1,6 +1,6 @@
 find_package(
   Qt6
-  COMPONENTS Core Widgets Network Core5Compat
+  COMPONENTS Core5Compat Core Widgets Network
   REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -48,11 +48,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   find_program(MACDEPLOYQT_BIN macdeployqt6)
   message(STATUS "Found macdeployqt6: ${MACDEPLOYQT_BIN}")
 
+  set(MACDEPLOYQT_CMD
+      "${MACDEPLOYQT_BIN} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite")
+
   install(TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
-  install(CODE "MESSAGE (\"Running ${MACDEPLOYQT_BIN}\")")
-  install(
-    CODE "execute_process(COMMAND ${MACDEPLOYQT_BIN} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)"
-  )
+  install(CODE "MESSAGE (\"Running: ${MACDEPLOYQT_CMD}\")")
+  install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
