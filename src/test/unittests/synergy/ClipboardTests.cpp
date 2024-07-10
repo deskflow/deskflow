@@ -18,7 +18,7 @@
 
 #include "synergy/Clipboard.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(ClipboardTests, empty_openCalled_returnsTrue) {
   Clipboard clipboard;

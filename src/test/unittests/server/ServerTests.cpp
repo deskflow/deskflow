@@ -1,4 +1,5 @@
 #include "lib/server/Server.h"
+
 #include <gtest/gtest.h>
 
 TEST(ServerTests, allocLockCursorToScreenInfo_withState_setsState) {

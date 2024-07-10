@@ -18,8 +18,9 @@
 #ifndef _WIN32
 #include "lib/arch/XArch.h"
 #include "lib/arch/unix/ArchNetworkBSD.h"
-#include "test/global/gtest.h"
+
 #include <array>
+#include <gtest/gtest.h>
 #include <memory>
 #include <netinet/in.h>
 #include <sys/types.h>

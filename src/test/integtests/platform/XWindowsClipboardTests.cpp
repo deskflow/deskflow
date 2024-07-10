@@ -21,7 +21,7 @@
 
 #include "platform/XWindowsClipboard.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 #include <iostream>
 
 class CXWindowsClipboardTests : public ::testing::Test

@@ -16,9 +16,10 @@
  */
 
 #include "synergy/ProtocolUtil.h"
-#include "test/global/gtest.h"
 #include "test/mock/io/MockStream.h"
+
 #include <array>
+#include <gtest/gtest.h>
 
 using ::testing::_;
 using ::testing::DoAll;

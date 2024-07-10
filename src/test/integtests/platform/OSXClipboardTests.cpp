@@ -18,8 +18,7 @@
 
 #include "platform/OSXClipboard.h"
 
-#include "test/global/gtest.h"
-#include <iostream>
+#include <gtest/gtest.h>
 
 TEST(OSXClipboardTests, empty_openCalled_returnsTrue) {
   OSXClipboard clipboard;

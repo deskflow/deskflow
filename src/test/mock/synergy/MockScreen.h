@@ -21,7 +21,7 @@
 
 #include "synergy/Screen.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockScreen : public synergy::Screen {
 public:

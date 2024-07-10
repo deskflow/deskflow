@@ -17,7 +17,8 @@
 
 #include "lib/server/Config.h"
 #include "net/XSocket.h"
-#include "test/global/gtest.h"
+
+#include <gtest/gtest.h>
 
 class OnlySystemFilter : public InputFilter::Condition {
 public:

@@ -19,7 +19,7 @@
 
 #include "shared/SerialKeyType.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(SerialKeyTypeTests, TrialTemporaryKeyType_false) {
   SerialKeyType KeyType;

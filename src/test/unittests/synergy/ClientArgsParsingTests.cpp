@@ -19,7 +19,7 @@
 #include "synergy/ClientArgs.h"
 #include "test/mock/synergy/MockArgParser.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 #include <array>
 

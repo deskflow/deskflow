@@ -20,7 +20,7 @@
 
 #include "io/IStream.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class IEventQueue;
 

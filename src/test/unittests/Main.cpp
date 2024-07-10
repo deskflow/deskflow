@@ -23,7 +23,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 int main(int argc, char **argv) {
 #if SYSAPI_WIN32

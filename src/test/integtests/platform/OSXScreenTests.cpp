@@ -19,7 +19,7 @@
 #include "base/EventQueue.h"
 #include "platform/OSXScreen.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 // TODO: fix intermittently failing test
 // return value of CGCursorIsVisible is unreliable

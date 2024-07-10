@@ -21,7 +21,7 @@
 
 #include "server/Config.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockConfig : public Config {
 public:

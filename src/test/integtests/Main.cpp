@@ -23,8 +23,8 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include "test/global/gtest.h"
 #include <fstream>
+#include <gtest/gtest.h>
 #include <iostream>
 
 #define LOCK_TIMEOUT 30

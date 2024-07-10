@@ -17,8 +17,8 @@
 
 #include "arch/IArchString.h"
 #include "base/Unicode.h"
-#include "test/global/gtest.h"
-#include <array>
+
+#include <gtest/gtest.h>
 
 TEST(UnicodeTests, doUTF32ToUTF8_will_convert_simple_string) {
   bool errors;
