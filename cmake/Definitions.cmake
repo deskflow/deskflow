@@ -22,6 +22,10 @@ macro(configure_definitions)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+  if(APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
+  endif()
+
   configure_ninja()
   configure_options()
 

@@ -149,23 +149,6 @@ macro(configure_mac_libs)
       "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1"
   )
 
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
-  endif()
-
-  if(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 11.0)
-    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1100)
-  elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.15)
-    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1015)
-  elseif(CMAKE_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 10.14)
-    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1014)
-  else()
-    set(SYNERGY_OSX_DEPLOYMENT_TARGET 1013)
-  endif()
-
-  add_compile_definitions(
-    OSX_DEPLOYMENT_TARGET=${SYNERGY_OSX_DEPLOYMENT_TARGET})
-
   find_library(lib_ScreenSaver ScreenSaver)
   find_library(lib_IOKit IOKit)
   find_library(lib_ApplicationServices ApplicationServices)
@@ -181,10 +164,8 @@ macro(configure_mac_libs)
     ${lib_Foundation}
     ${lib_Carbon})
 
-  if(SYNERGY_OSX_DEPLOYMENT_TARGET GREATER_EQUAL 1014)
-    find_library(lib_UserNotifications UserNotifications)
-    list(APPEND libs ${lib_UserNotifications})
-  endif()
+  find_library(lib_UserNotifications UserNotifications)
+  list(APPEND libs ${lib_UserNotifications})
 
   add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
 
