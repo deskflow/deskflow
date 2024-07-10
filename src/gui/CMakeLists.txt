@@ -17,13 +17,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   list(APPEND GUI_SOURCE_FILES ${GUI_MAC_SOURCE_FILES})
 endif()
 
-# Retrieve the absolute path to qmake and then use that path to find the
-# binaries
-get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
-get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
-find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
-find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
-
 if(NOT ENABLE_LICENSING)
   list(REMOVE_ITEM GUI_SOURCE_FILES ${ACTIVATION_FILES})
   list(REMOVE_ITEM GUI_UI_FILES ${ACTIVATION_FILES})
@@ -51,17 +44,23 @@ if(WIN32)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+  find_program(MACDEPLOYQT_BIN macdeployqt6)
+  message(STATUS "Found macdeployqt6: ${MACDEPLOYQT_BIN}")
+  
   install(TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
   install(
-    CODE "MESSAGE (\"Running macdeployqt to install frameworks in bundle\")")
+    CODE "MESSAGE (\"Running ${MACDEPLOYQT_BIN}\")")
   install(
-    CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)"
+    CODE "execute_process(COMMAND ${MACDEPLOYQT_BIN} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)"
   )
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  install(TARGETS synergy DESTINATION bin)
-endif()
 
-if(WIN32)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+  install(TARGETS synergy DESTINATION bin)
+
+elseif(WIN32)
+
   if(Qt6_FOUND
      AND WIN32
      AND TARGET Qt6::qmake
@@ -83,6 +82,7 @@ if(WIN32)
                                                         ${imported_location})
     endif()
   endif()
+
   if(TARGET Qt6::windeployqt)
     # execute windeployqt in a tmp directory after build
     add_custom_command(
@@ -92,4 +92,5 @@ if(WIN32)
       COMMAND Qt6::windeployqt
               "$<TARGET_FILE_DIR:synergy>/$<TARGET_FILE_NAME:synergy>")
   endif()
+
 endif()
