@@ -141,6 +141,8 @@ def assert_certificate_installed(codesign_id):
 
     if codesign_id not in installed.stdout:
         raise RuntimeError("Code signing certificate not installed or has expired")
+    else:
+        print(f"Certificate found: {codesign_id}")
 
 
 def build_dmg(filename_base):
