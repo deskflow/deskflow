@@ -47,10 +47,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
   find_program(MACDEPLOYQT_BIN macdeployqt6)
   message(STATUS "Found macdeployqt6: ${MACDEPLOYQT_BIN}")
-  
+
   install(TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
-  install(
-    CODE "MESSAGE (\"Running ${MACDEPLOYQT_BIN}\")")
+  install(CODE "MESSAGE (\"Running ${MACDEPLOYQT_BIN}\")")
   install(
     CODE "execute_process(COMMAND ${MACDEPLOYQT_BIN} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite)"
   )
