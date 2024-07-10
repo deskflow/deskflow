@@ -231,12 +231,12 @@ class NotaryTool:
                 notarytool_path,
                 "store-credentials",
                 "notarytool-password",
+                "--team-id",
+                team_id,
                 "--apple-id",
                 user,
                 "--password",
                 password,
-                "--team-id",
-                team_id,
             ]
         )
 
