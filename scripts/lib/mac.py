@@ -40,6 +40,12 @@ def set_cmake_prefix_env_var(cmake_prefix_command):
 
 
 def package(filename_base):
+    """
+    Package the application for macOS.
+    The app bundle must be signed, or an error will occur:
+    > EXC_BAD_ACCESS (SIGKILL (Code Signature Invalid))
+    """
+
     codesign_id = env.get_env("APPLE_CODESIGN_ID")
     cert_base64 = env.get_env("APPLE_P12_CERTIFICATE")
     cert_password = env.get_env("APPLE_P12_PASSWORD")
