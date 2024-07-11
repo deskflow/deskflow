@@ -35,7 +35,7 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Install gcovr
-        run: pip install gcovr
+        run: apt install pipx && pipx install gcovr
 
       - name: Install SonarScanner
         run: |
