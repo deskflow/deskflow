@@ -1,5 +1,5 @@
 import dmgbuild  # type: ignore
-import os, time, json
+import os, time, json, shutil
 import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
@@ -101,17 +101,15 @@ def package_env_vars():
 
 
 def build_bundle():
+    # it's important to build a new bundle every time, so that we catch bugs with fresh builds.
+    if os.path.exists(app_path):
+        print(f"Bundle already exists, deleting: {app_path}")
+        shutil.rmtree(app_path)
+
     print("Building bundle...")
+
     # cmake build install target should run macdeployqt
     cmd_utils.run("cmake --build build --target install", shell=True, print_cmd=True)
-
-    bundle_bin_path = "Contents/MacOS/synergy"
-    cmd_utils.run(
-        'install_name_tool -add_rpath "@executable_path/../Frameworks" '
-        f"{app_path}/{bundle_bin_path}",
-        shell=True,
-        print_cmd=True,
-    )
 
 
 def sign_bundle(codesign_id):

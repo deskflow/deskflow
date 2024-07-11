@@ -18,7 +18,9 @@ concurrency:
 jobs:
   sonarcloud-analysis:
     if: ${{ vars.SONAR_SCANNER_ENABLED }}
-    runs-on: ubuntu-latest
+
+    runs-on: ubuntu-24.04-16-core-x64
+    container: symless/synergy-core:ubuntu-22.04-amd64
     timeout-minutes: 20
 
     env:
@@ -30,13 +32,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          submodules: "recursive"
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py
-
-      - name: Install gcovr
-        run: pip install gcovr
+        run: |
+          ./scripts/install_deps.py &&
+          apt install curl unzip -y &&
+          pip install gcovr
 
       - name: Install SonarScanner
         run: |

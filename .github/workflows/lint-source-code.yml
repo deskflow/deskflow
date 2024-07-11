@@ -12,7 +12,7 @@ on:
       - ready_for_review
 
 jobs:
-  lint-cmake-files:
+  lint-source-code:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
