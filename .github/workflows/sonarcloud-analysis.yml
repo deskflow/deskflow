@@ -33,10 +33,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py
-
-      - name: Install gcovr
-        run: apt install pipx curl -y && pipx install gcovr
+        run: |
+          ./scripts/install_deps.py &&
+          apt install pipx curl -y &&
+          pipx install gcovr
 
       - name: Install SonarScanner
         run: |
