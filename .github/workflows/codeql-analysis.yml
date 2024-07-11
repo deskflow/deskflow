@@ -29,29 +29,11 @@ jobs:
         language: ["cpp"]
 
     steps:
-      - name: Install dependencies
-        run: |
-          sudo apt-get update; \
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            debhelper \
-            devscripts \
-            git \
-            libavahi-compat-libdnssd-dev \
-            libgdk-pixbuf2.0-dev \
-            libgl1-mesa-dev \
-            libglib2.0-dev \
-            libnotify-dev \
-            libssl-dev \
-            libx11-dev \
-            libxtst-dev \
-            qtbase5-dev \
-            qttools5-dev \
-            qttools5-dev-tools
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Checkout git repo
-        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: ./scripts/install_deps.py
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
