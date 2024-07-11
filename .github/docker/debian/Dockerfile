@@ -16,7 +16,6 @@ FROM deps AS deps-full
 
 WORKDIR /app
 
-COPY . /app
-
-RUN ./scripts/install_deps.sh && \
+RUN --mount=type=bind,target=/app,rw \
+  ./scripts/install_deps.py && \
   apt clean
