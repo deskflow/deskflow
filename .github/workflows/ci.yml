@@ -46,7 +46,7 @@ jobs:
       matrix:
         target:
           - name: windows-2022-x64
-            runs-on: windows-2022-16-core-x64
+            runs-on: windows-2022-8-core-x64
 
     steps:
       - name: Checkout
