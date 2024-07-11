@@ -43,7 +43,7 @@ jobs:
           apt install pipx curl unzip -y &&
           pipx install gcovr
 
-      - name: Add .local/bin to env
+      - name: Add .local/bin to PATH
         run: echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
 
       - name: Install SonarScanner
