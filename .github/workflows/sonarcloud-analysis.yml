@@ -43,6 +43,9 @@ jobs:
           apt install pipx curl unzip -y &&
           pipx install gcovr
 
+      - name: Add .local/bin to env
+        run: echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
+
       - name: Install SonarScanner
         run: |
           export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64
