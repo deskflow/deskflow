@@ -20,7 +20,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
 
     name: Analyze
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-24.04-16-core-x64
     timeout-minutes: 20
 
     strategy:
