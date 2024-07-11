@@ -50,6 +50,7 @@ Enhancements:
 - #7380 Add `qt6-qpa-plugins` Qt dependency for Debian
 - #7381 Set macOS min version to macOS 12.0
 - #7382 Re-run `macdeployqt6` to copy missing Qt 6 dependencies
+- #7384 Run `install_deps.py` script when building containers weekly
 
 # 1.14.6
 

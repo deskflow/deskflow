@@ -18,7 +18,7 @@ jobs:
     name: ${{ matrix.os.name }}
     runs-on: ${{ matrix.os.runs-on }}
     if: ${{ vars.BUILD_CONTAINERS }}
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     strategy:
       matrix:
@@ -100,7 +100,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ./.github/docker/${{ matrix.os.config-dir }}
+          context: .
           file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
           build-args: BASE_IMAGE=${{ matrix.os.base-image }}
