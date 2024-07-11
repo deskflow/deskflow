@@ -31,6 +31,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
         run: |
