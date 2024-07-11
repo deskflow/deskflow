@@ -9,7 +9,7 @@ on:
 
 jobs:
   create-release:
-    runs-on: ubuntu-24.04-16-core-x64
+    runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:

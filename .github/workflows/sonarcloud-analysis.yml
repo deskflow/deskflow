@@ -19,7 +19,7 @@ jobs:
   sonarcloud-analysis:
     if: ${{ vars.SONAR_SCANNER_ENABLED }}
 
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-24.04-16-core-x64
     timeout-minutes: 20
 
     env:
