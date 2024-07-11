@@ -18,7 +18,7 @@ jobs:
     name: ${{ matrix.os.name }}
     runs-on: ${{ matrix.os.runs-on }}
     if: ${{ vars.BUILD_CONTAINERS }}
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     strategy:
       matrix:
