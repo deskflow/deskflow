@@ -20,7 +20,7 @@ jobs:
     if: ${{ vars.SONAR_SCANNER_ENABLED }}
 
     runs-on: ubuntu-24.04-16-core-x64
-    container: symless/synergy-core:ubuntu-24.04-amd64
+    container: symless/synergy-core:ubuntu-22.04-amd64
     timeout-minutes: 20
 
     env:
@@ -40,7 +40,8 @@ jobs:
       - name: Install dependencies
         run: |
           ./scripts/install_deps.py &&
-          apt install gcovr curl unzip -y
+          apt install curl unzip -y &&
+          pip install gcovr
 
       - name: Install SonarScanner
         run: |
