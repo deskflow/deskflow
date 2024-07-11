@@ -29,7 +29,8 @@
     {
       "label": "unittests",
       "type": "shell",
-      "command": "./build/bin/unittests",
+      "command": "./scripts/tests.py",
+      "args": ["--unittests", "--ignore-return-code", "--filter-file=${file}"],
       "dependsOn": ["build"]
     },
     {
