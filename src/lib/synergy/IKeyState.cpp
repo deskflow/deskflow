@@ -57,8 +57,7 @@ IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
   info->m_button = button;
   info->m_count = count;
   info->m_screens = info->m_screensBuffer;
-  strcpy(info->m_screensBuffer,
-         screens.c_str()); // Compliant: String type is safe
+  std::ranges::copy(screens, info->m_screensBuffer);
   return info;
 }
 
