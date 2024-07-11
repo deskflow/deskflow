@@ -1,5 +1,9 @@
+# syntax=docker/dockerfile:1
+
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS base
+
+FROM base AS deps
 
 RUN zypper refresh && \
   zypper update -y && \
