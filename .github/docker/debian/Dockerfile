@@ -16,6 +16,6 @@ FROM deps AS deps-full
 
 WORKDIR /app
 
-RUN --mount=type=bind,target=.,rw \
-  ./scripts/install_deps.sh && \
+RUN --mount=type=bind,target=/app,rw \
+  /app/scripts/install_deps.sh && \
   apt clean
