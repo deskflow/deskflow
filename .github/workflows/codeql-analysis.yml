@@ -21,6 +21,7 @@ jobs:
 
     name: Analyze
     runs-on: ubuntu-24.04-16-core-x64
+    container: symless/synergy-core:ubuntu-24.04-amd64
     timeout-minutes: 20
 
     strategy:
