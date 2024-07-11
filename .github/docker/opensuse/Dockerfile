@@ -10,8 +10,8 @@ RUN zypper refresh && \
   zypper install -y git python311 && \
   zypper clean --all
 
-# WORKDIR /app
+WORKDIR /app
 
-# RUN --mount=type=bind,target=/app,rw \
-#   ./scripts/install_deps.py && \
-#   zypper clean --all
+RUN --mount=type=bind,target=/app,rw \
+  ./scripts/install_deps.py && \
+  zypper clean --all
