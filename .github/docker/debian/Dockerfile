@@ -3,12 +3,16 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS base
 
+
 FROM base AS deps
 
 RUN apt update && \
   apt dist-upgrade -y && \
   apt install -y git python3 && \
   apt clean
+
+
+FROM deps AS deps-full
 
 WORKDIR /app
 
