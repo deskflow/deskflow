@@ -11,9 +11,6 @@ RUN apt update && \
   apt install -y git python3 && \
   apt clean
 
-
-FROM deps AS deps-full
-
 WORKDIR /app
 
 RUN --mount=type=bind,target=/app,rw \
