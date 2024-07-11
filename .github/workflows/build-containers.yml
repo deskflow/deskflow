@@ -100,7 +100,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ./.github/docker/${{ matrix.os.config-dir }}
+          context: .
           file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
           build-args: BASE_IMAGE=${{ matrix.os.base-image }}
