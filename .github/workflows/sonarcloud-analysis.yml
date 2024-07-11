@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: |
           ./scripts/install_deps.py &&
-          apt install pipx curl -y &&
+          apt install pipx curl unzip -y &&
           pipx install gcovr
 
       - name: Install SonarScanner
