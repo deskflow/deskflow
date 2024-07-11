@@ -7,7 +7,7 @@ FROM base AS deps
 
 RUN zypper refresh && \
   zypper update -y && \
-  zypper install -y git python311 && \
+  zypper install -y git python3 && \
   zypper clean --all
 
 WORKDIR /app
