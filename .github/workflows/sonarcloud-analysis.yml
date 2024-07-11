@@ -41,10 +41,8 @@ jobs:
         run: |
           ./scripts/install_deps.py &&
           apt install pipx curl unzip -y &&
-          pipx install gcovr
-
-      - name: Add .local/bin to PATH
-        run: echo "export PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
+          pipx install gcovr &&
+          pipx ensurepath
 
       - name: Install SonarScanner
         run: |
