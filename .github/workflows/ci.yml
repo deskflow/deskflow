@@ -54,6 +54,12 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Cache Chocolatey packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ runner.temp }}/choco
+          key: choco-${{ hashFiles('Chocolatey.config') }}
+
       - name: Install dependencies
         run: python ./scripts/install_deps.py
 
@@ -61,14 +67,12 @@ jobs:
         run: python ./scripts/github_env.py --set-qt-version
 
       - name: Cache Qt
-        id: cache-qt
         uses: actions/cache@v4
         with:
           path: ${{ env.QT_BASE_DIR }}
           key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
 
       - name: Install Qt
-        if: steps.cache-qt.outputs.cache-hit != 'true'
         run: python ./scripts/install_deps.py --only qt
 
       - name: Setup VC++ environment
