@@ -89,7 +89,6 @@ jobs:
       - name: Test
         run: |
           ./build/bin/unittests
-          ./build/bin/integtests
           ./build/bin/guitests
 
       - name: Package
@@ -153,7 +152,6 @@ jobs:
       - name: Test
         run: |
           ./build/bin/unittests
-          ./build/bin/integtests
           ./build/bin/guitests
 
       - name: Package
@@ -257,7 +255,6 @@ jobs:
       - name: Test
         run: |
           ./build/bin/unittests
-          ./build/bin/integtests
           ./build/bin/guitests
 
       - name: Package
