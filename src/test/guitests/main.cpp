@@ -16,8 +16,13 @@
  */
 
 #include <gtest/gtest.h>
+#include <qcoreapplication.h>
 
 int main(int argc, char **argv) {
+  // required to solve the issue where some qt objects need access to a qt app
+  // on some platforms (e.g. QNetworkAccessManager).
+  QCoreApplication app(argc, argv);
+
   testing::InitGoogleTest(&argc, argv);
 
   // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
