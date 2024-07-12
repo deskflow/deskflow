@@ -18,8 +18,6 @@
 
 #include "base/Log.h"
 #include "arch/Arch.h"
-#include "arch/XArch.h"
-#include "base/String.h"
 #include "base/log_outputters.h"
 #include "common/Version.h"
 
@@ -27,7 +25,6 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
-#include <iostream>
 
 // names of priorities
 static const char *g_priority[] = {"FATAL",  "ERROR",  "WARNING", "NOTE",
