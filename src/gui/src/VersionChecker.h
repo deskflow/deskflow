@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QString>
+#include <memory>
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -27,8 +28,8 @@ class QNetworkReply;
 class VersionChecker : public QObject {
   Q_OBJECT
 public:
-  VersionChecker();
-  virtual ~VersionChecker();
+  VersionChecker(std::shared_ptr<QNetworkAccessManager> manager = nullptr);
+  virtual ~VersionChecker() {}
   void checkLatest();
   void setApp(const QString &app) { m_app = app; }
   int compareVersions(const QString &left, const QString &right);
@@ -38,7 +39,7 @@ signals:
   void updateFound(const QString &version);
 
 private:
-  QNetworkAccessManager *m_manager;
+  std::shared_ptr<QNetworkAccessManager> m_manager;
   QString m_app;
 
   /**

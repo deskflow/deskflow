@@ -24,15 +24,13 @@
 #include <QNetworkRequest>
 #include <QProcess>
 #include <QRegularExpression>
+#include <memory>
 
-VersionChecker::VersionChecker() {
-  m_manager = new QNetworkAccessManager(this);
-
-  connect(m_manager, SIGNAL(finished(QNetworkReply *)), this,
+VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> nam)
+    : m_manager(nam ? nam : std::make_shared<QNetworkAccessManager>(this)) {
+  connect(m_manager.get(), SIGNAL(finished(QNetworkReply *)), this,
           SLOT(replyFinished(QNetworkReply *)));
 }
-
-VersionChecker::~VersionChecker() { delete m_manager; }
 
 void VersionChecker::checkLatest() {
   auto request = QNetworkRequest(QUrl(SYNERGY_VERSION_URL));
