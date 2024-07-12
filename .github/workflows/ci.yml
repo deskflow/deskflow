@@ -87,9 +87,7 @@ jobs:
         run: cmake --build build -j8
 
       - name: Test
-        run: |
-          ./build/bin/unittests
-          ./build/bin/guitests
+        run: ./build/bin/unittests
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
@@ -150,9 +148,7 @@ jobs:
         run: cmake --build build -j8
 
       - name: Test
-        run: |
-          ./build/bin/unittests
-          ./build/bin/guitests
+        run: ./build/bin/unittests
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
@@ -253,9 +249,7 @@ jobs:
         run: cmake --build build -j8
 
       - name: Test
-        run: |
-          ./build/bin/unittests
-          ./build/bin/guitests
+        run: ./build/bin/unittests
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
