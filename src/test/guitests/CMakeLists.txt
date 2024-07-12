@@ -19,6 +19,11 @@ set(GUI_DIR "../../../src/gui/src")
 file(GLOB_RECURSE test_sources "*.cpp")
 file(GLOB_RECURSE gui_sources "${GUI_DIR}/*.cpp")
 
+file(GLOB activation_sources "${GUI_DIR}/*Activation*" "${GUI_DIR}/*License*")
+if(NOT ENABLE_LICENSING)
+  list(REMOVE_ITEM gui_sources ${activation_sources})
+endif()
+
 # Remove main dir as the test already has its own main.
 file(GLOB gui_main "${GUI_DIR}/main.cpp")
 list(REMOVE_ITEM gui_sources ${gui_main})
