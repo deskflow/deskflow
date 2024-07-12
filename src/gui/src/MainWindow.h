@@ -188,7 +188,7 @@ protected:
   QString getProfileRootForArg();
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
-  void checkSecureSocket(const QString &line);
+  bool checkSecureSocket(const QString &line);
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
 #endif

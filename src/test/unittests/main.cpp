@@ -23,13 +23,13 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <gtest/gtest.h>
 
 int main(int argc, char **argv) {
   // required to solve the issue where some qt objects need access to a qt app
   // on some platforms (e.g. QNetworkAccessManager).
-  QCoreApplication app(argc, argv);
+  QApplication app(argc, argv);
 
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.

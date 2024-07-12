@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -486,7 +486,7 @@ void MainWindow::checkFingerprint(const QString &line) {
   }
 }
 
-void MainWindow::checkSecureSocket(const QString &line) {
+bool MainWindow::checkSecureSocket(const QString &line) {
   // obviously not very secure, since this can be tricked by injecting something
   // into the log. however, since we don't have IPC between core and GUI...
   // patches welcome.
@@ -499,7 +499,9 @@ void MainWindow::checkSecureSocket(const QString &line) {
         index + strlen(tlsCheckString)); // Compliant: we made sure that
                                          // tlsCheckString variable ended with
                                          // null(static const char* declaration)
+    return true;
   }
+  return false;
 }
 
 #ifdef Q_OS_MAC
