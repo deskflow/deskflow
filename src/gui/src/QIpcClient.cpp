@@ -110,7 +110,7 @@ void QIpcClient::sendCommand(const QString &command,
 
   std::string stdStringCommand = command.toStdString();
   const char *charCommand = stdStringCommand.c_str();
-  int length = static_cast<int>(strlen(charCommand));
+  int length = static_cast<int>(stdStringCommand.length());
 
   char lenBuf[4];
   intToBytes(length, lenBuf, 4);
