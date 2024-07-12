@@ -35,15 +35,21 @@
     {
       "label": "unittests (current)",
       "type": "shell",
-      "command": "./scripts/tests.py",
-      "args": ["--unit-tests", "--ignore-return-code", "--filter-file=${file}"],
+      "command": "python",
+      "args": [
+        "./scripts/tests.py",
+        "--unit-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}"
+      ],
       "dependsOn": ["build"]
     },
     {
       "label": "integtests (current)",
       "type": "shell",
-      "command": "./scripts/tests.py",
+      "command": "python",
       "args": [
+        "./scripts/tests.py",
         "--integ-tests",
         "--ignore-return-code",
         "--filter-file=${file}"
@@ -53,33 +59,34 @@
     {
       "label": "guitests (current)",
       "type": "shell",
-      "command": "./scripts/tests.py",
-      "args": ["--gui-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
-    },
-    {
-      "label": "unittests (all)",
-      "type": "shell",
-      "command": "./scripts/tests.py",
-      "args": ["--unit-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
-    },
-    {
-      "label": "integtests (all)",
-      "type": "shell",
-      "command": "./scripts/tests.py",
+      "command": "python",
       "args": [
-        "--integ-tests",
+        "./scripts/tests.py",
+        "--gui-tests",
         "--ignore-return-code",
         "--filter-file=${file}"
       ],
       "dependsOn": ["build"]
     },
     {
+      "label": "unittests (all)",
+      "type": "shell",
+      "command": "python",
+      "args": ["./scripts/tests.py", "--unit-tests", "--ignore-return-code"],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "integtests (all)",
+      "type": "shell",
+      "command": "python",
+      "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
+      "dependsOn": ["build"]
+    },
+    {
       "label": "guitests (all)",
       "type": "shell",
-      "command": "./scripts/tests.py",
-      "args": ["--gui-tests", "--ignore-return-code"],
+      "command": "python",
+      "args": ["./scripts/tests.py", "--gui-tests", "--ignore-return-code"],
       "dependsOn": ["build"]
     }
   ]
