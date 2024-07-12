@@ -27,16 +27,34 @@
       "dependsOn": ["build"]
     },
     {
+      "label": "gui",
+      "type": "process",
+      "command": "${workspaceFolder}/build/bin/synergy",
+      "dependsOn": ["build"]
+    },
+    {
       "label": "unittests",
       "type": "shell",
       "command": "./scripts/tests.py",
-      "args": ["--unittests", "--ignore-return-code", "--filter-file=${file}"],
+      "args": ["--unit-tests", "--ignore-return-code", "--filter-file=${file}"],
       "dependsOn": ["build"]
     },
     {
       "label": "integtests",
       "type": "shell",
-      "command": "./build/bin/integtests",
+      "command": "./scripts/tests.py",
+      "args": [
+        "--integ-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}"
+      ],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "guitests",
+      "type": "shell",
+      "command": "./scripts/tests.py",
+      "args": ["--gui-tests", "--ignore-return-code", "--filter-file=${file}"],
       "dependsOn": ["build"]
     }
   ]

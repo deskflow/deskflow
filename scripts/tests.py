@@ -6,8 +6,9 @@ import lib.cmd_utils as cmd_utils
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--unittests", action="store_true")
-    parser.add_argument("--integtests", action="store_true")
+    parser.add_argument("--unit-tests", action="store_true")
+    parser.add_argument("--integ-tests", action="store_true")
+    parser.add_argument("--gui-tests", action="store_true")
     parser.add_argument(
         "--filter-file",
         type=str,
@@ -35,10 +36,12 @@ def main():
 
 def get_binary_path(args):
     base_dir = "./build/bin"
-    if args.unittests:
+    if args.unit_tests:
         return f"{base_dir}/unittests"
-    elif args.integtests:
+    elif args.integ_tests:
         return f"{base_dir}/integtests"
+    elif args.gui_tests:
+        return f"{base_dir}/guitests"
     else:
         raise RuntimeError("No test type specified")
 
