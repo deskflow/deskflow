@@ -23,7 +23,7 @@
 #include <QHostAddress>
 #include <QTimer>
 
-QIpcClient::QIpcClient(const StreamProvider streamProvider)
+QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     : m_ReaderStarted(false), m_Enabled(false),
       m_StreamProvider(streamProvider) {
 
@@ -44,7 +44,10 @@ QIpcClient::QIpcClient(const StreamProvider streamProvider)
           SLOT(handleReadLogLine(const QString &)));
 }
 
-QIpcClient::~QIpcClient() {}
+QIpcClient::~QIpcClient() {
+  delete m_Reader;
+  delete m_Socket;
+}
 
 void QIpcClient::connected() {
   sendHello();
@@ -110,7 +113,7 @@ void QIpcClient::sendCommand(const QString &command,
 
   std::string stdStringCommand = command.toStdString();
   const char *charCommand = stdStringCommand.c_str();
-  int length = static_cast<int>(stdStringCommand.length());
+  auto length = static_cast<int>(stdStringCommand.length());
 
   char lenBuf[4];
   intToBytes(length, lenBuf, 4);

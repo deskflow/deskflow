@@ -33,8 +33,8 @@ class QIpcClient : public QObject {
 public:
   using StreamProvider = std::function<std::shared_ptr<QDataStreamProxy>()>;
 
-  QIpcClient(const StreamProvider streamProvider = nullptr);
-  virtual ~QIpcClient();
+  explicit QIpcClient(const StreamProvider &streamProvider = nullptr);
+  ~QIpcClient() override;
 
   void sendHello();
   void sendCommand(const QString &command, ElevateMode elevate);
