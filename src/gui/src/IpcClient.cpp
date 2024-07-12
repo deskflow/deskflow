@@ -23,9 +23,17 @@
 #include <QHostAddress>
 #include <QTimer>
 
-IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false) {
+IpcClient::IpcClient(const StreamProvider streamProvider)
+    : m_ReaderStarted(false), m_Enabled(false),
+      m_StreamProvider(streamProvider) {
 
   m_Socket = new QTcpSocket(this);
+
+  if (!m_StreamProvider) {
+    m_StreamProvider = [this]() {
+      return std::make_shared<QDataStreamProxy>(m_Socket);
+    };
+  }
 
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
   connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
@@ -87,7 +95,7 @@ void IpcClient::retryConnect() {
 }
 
 void IpcClient::sendHello() {
-  auto stream = m_StreamProvider->makeStream();
+  auto stream = m_StreamProvider();
   stream->writeRawData(kIpcMsgHello, 4);
 
   char typeBuf[1];
@@ -96,7 +104,7 @@ void IpcClient::sendHello() {
 }
 
 void IpcClient::sendCommand(const QString &command, ElevateMode const elevate) {
-  auto stream = m_StreamProvider->makeStream();
+  auto stream = m_StreamProvider();
   stream->writeRawData(kIpcMsgCommand, 4);
 
   std::string stdStringCommand = command.toStdString();

@@ -18,10 +18,12 @@
 #pragma once
 
 #include <QAbstractSocket>
+#include <QDataStream>
 #include <QObject>
 #include <QTcpSocket>
 
 #include "ElevateMode.h"
+#include "proxy/QDataStreamProxy.h"
 
 class IpcReader;
 
@@ -29,7 +31,9 @@ class IpcClient : public QObject {
   Q_OBJECT
 
 public:
-  IpcClient();
+  using StreamProvider = std::function<std::shared_ptr<QDataStreamProxy>()>;
+
+  IpcClient(const StreamProvider streamProvider = nullptr);
   virtual ~IpcClient();
 
   void sendHello();
@@ -58,4 +62,5 @@ private:
   IpcReader *m_Reader;
   bool m_ReaderStarted;
   bool m_Enabled;
+  StreamProvider m_StreamProvider;
 };
