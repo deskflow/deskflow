@@ -22,7 +22,7 @@ def main():
 
     args = parser.parse_args()
     binary = get_binary_path(args)
-    if args.filter_file:
+    if args.filter_file and not args.gui_tests:
         file_base = os.path.basename(args.filter_file)
         without_ext = os.path.splitext(file_base)[0]
         command = [binary, f"--gtest_filter={without_ext}*"]
