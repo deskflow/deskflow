@@ -14,21 +14,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(target guitests)
-set(GUI_DIR "../../../src/gui/src")
+set(gui_dir "../../../src/gui/src")
 
 file(GLOB_RECURSE test_sources "*.cpp")
-file(GLOB_RECURSE gui_sources "${GUI_DIR}/*.cpp")
+file(GLOB_RECURSE gui_sources "${gui_dir}/*.cpp")
 
-file(GLOB activation_sources "${GUI_DIR}/*Activation*" "${GUI_DIR}/*License*")
+file(GLOB activation_sources "${gui_dir}/*Activation*" "${gui_dir}/*License*")
 if(NOT ENABLE_LICENSING)
   list(REMOVE_ITEM gui_sources ${activation_sources})
 endif()
 
 # Remove main dir as the test already has its own main.
-file(GLOB gui_main "${GUI_DIR}/main.cpp")
+file(GLOB gui_main "${gui_dir}/main.cpp")
 list(REMOVE_ITEM gui_sources ${gui_main})
 
-include_directories(${GUI_DIR} ../../)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  file(GLOB mac_gui_sources "${gui_dir}/*.mm")
+  list(APPEND gui_sources ${mac_gui_sources})
+endif()
+
+include_directories(${gui_dir} ../../)
 
 if(WIN32)
   list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)

@@ -33,14 +33,14 @@
       "dependsOn": ["build"]
     },
     {
-      "label": "unittests",
+      "label": "unittests (current)",
       "type": "shell",
       "command": "./scripts/tests.py",
       "args": ["--unit-tests", "--ignore-return-code", "--filter-file=${file}"],
       "dependsOn": ["build"]
     },
     {
-      "label": "integtests",
+      "label": "integtests (current)",
       "type": "shell",
       "command": "./scripts/tests.py",
       "args": [
@@ -51,10 +51,35 @@
       "dependsOn": ["build"]
     },
     {
-      "label": "guitests",
+      "label": "guitests (current)",
       "type": "shell",
       "command": "./scripts/tests.py",
-      "args": ["--gui-tests", "--ignore-return-code", "--filter-file=${file}"],
+      "args": ["--gui-tests", "--ignore-return-code"],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "unittests (all)",
+      "type": "shell",
+      "command": "./scripts/tests.py",
+      "args": ["--unit-tests", "--ignore-return-code"],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "integtests (all)",
+      "type": "shell",
+      "command": "./scripts/tests.py",
+      "args": [
+        "--integ-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}"
+      ],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "guitests (all)",
+      "type": "shell",
+      "command": "./scripts/tests.py",
+      "args": ["--gui-tests", "--ignore-return-code"],
       "dependsOn": ["build"]
     }
   ]
