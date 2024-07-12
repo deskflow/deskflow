@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 TEST(MainWindowTests, checkSecureSocket_noMatch_expectFalse) {
-  AppConfig appConfig;
+  AppConfig appConfig(false);
   MainWindow mainWindow(appConfig);
 
   bool result = mainWindow.checkSecureSocket("test");
@@ -13,11 +13,11 @@ TEST(MainWindowTests, checkSecureSocket_noMatch_expectFalse) {
 }
 
 TEST(MainWindowTests, checkSecureSocket_match_expectTrue) {
-  AppConfig appConfig;
+  AppConfig appConfig(false);
   MainWindow mainWindow(appConfig);
 
-  bool result =
-      mainWindow.checkSecureSocket("network encryption protocol: test");
+  const char *test = "network encryption protocol: test";
+  bool result = mainWindow.checkSecureSocket(test);
 
   EXPECT_TRUE(result);
 }

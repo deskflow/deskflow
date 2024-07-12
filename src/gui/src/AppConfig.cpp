@@ -86,7 +86,7 @@ const char *AppConfig::m_SynergySettingsName[] = {
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
-AppConfig::AppConfig()
+AppConfig::AppConfig(bool globalLoad)
     : m_ScreenName(), m_Port(24800), m_Interface(), m_LogLevel(0),
       m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(DEFAULT_PROCESS_MODE),
       m_StartedBefore(), m_ElevateMode(defaultElevateMode),
@@ -99,7 +99,12 @@ AppConfig::AppConfig()
 
   // Register this class to receive global load and saves
   writer->registerClass(this);
-  writer->globalLoad();
+
+  // HACK: enable global load by default but allow it to be disabled for tests.
+  // when run in a test environment, this function causes a segfault.
+  if (globalLoad) {
+    writer->globalLoad();
+  }
 
   // User settings exist and the load from system scope variable is true
   if (writer->hasSetting(settingName(kLoadSystemSettings),

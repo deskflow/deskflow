@@ -491,7 +491,7 @@ bool MainWindow::checkSecureSocket(const QString &line) {
   // into the log. however, since we don't have IPC between core and GUI...
   // patches welcome.
   const int index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
-  if (index > 0) {
+  if (index >= 0) {
     secureSocket(true);
 
     // Get the protocol version from the line

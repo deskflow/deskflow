@@ -63,7 +63,7 @@ class AppConfig : public QObject, public GUI::Config::ConfigBase {
   friend class ServerConfig;
 
 public:
-  AppConfig();
+  AppConfig(bool globalLoad = true);
 
 public:
   bool isWritable() const;

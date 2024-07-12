@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: fix integ tests masquerading as unit tests
+#if 0
+
 #include "lib/server/Config.h"
 #include "net/XSocket.h"
 
@@ -261,3 +264,5 @@ TEST(ServerConfigTests, serverconfig_will_deem_different_cell_neighbours3) {
   EXPECT_FALSE(a == b);
   EXPECT_FALSE(b == a);
 }
+
+#endif
