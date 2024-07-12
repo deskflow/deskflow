@@ -73,7 +73,6 @@ set(ext_dir "../../../ext")
 
 include_directories(
   "../.."
-  "../../.."
   "../../lib"
   ${ext_dir}
   ${gui_dir}
