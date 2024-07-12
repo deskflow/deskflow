@@ -22,7 +22,6 @@
 #include <QTcpSocket>
 
 #include "ElevateMode.h"
-#include "providers/StreamProvider.h"
 
 class IpcReader;
 
@@ -30,7 +29,7 @@ class IpcClient : public QObject {
   Q_OBJECT
 
 public:
-  IpcClient(StreamProvider *streamProvider = nullptr);
+  IpcClient();
   virtual ~IpcClient();
 
   void sendHello();
@@ -59,5 +58,4 @@ private:
   IpcReader *m_Reader;
   bool m_ReaderStarted;
   bool m_Enabled;
-  StreamProvider *m_StreamProvider;
 };

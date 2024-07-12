@@ -1,5 +1,4 @@
 #include "IpcClient.h"
-#include "TempTest.h"
 #include "providers/StreamProvider.h"
 
 #include "gmock/gmock-spec-builders.h"
@@ -26,11 +25,6 @@ public:
 private:
   MockStream *m_MockStream;
 };
-
-void testStreamProvider(StreamProvider &sp) {
-  auto stream = sp.makeStream();
-  stream->writeRawData("test", 4);
-}
 
 TEST(IpcClientTests, sendCommand_anyCommand_commandSent) {
   MockStream mockStream;

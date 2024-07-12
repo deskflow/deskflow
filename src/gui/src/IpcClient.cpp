@@ -18,18 +18,14 @@
 #include "IpcClient.h"
 #include "Ipc.h"
 #include "IpcReader.h"
-#include "providers/StreamProvider.h"
 
 #include <QDataStream>
 #include <QHostAddress>
 #include <QTimer>
-#include <memory>
 
-IpcClient::IpcClient(StreamProvider *sp)
-    : m_ReaderStarted(false), m_Enabled(false) {
+IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false) {
 
   m_Socket = new QTcpSocket(this);
-  m_StreamProvider = sp ? sp : new StreamProvider(m_Socket);
 
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
   connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
