@@ -17,7 +17,6 @@
  */
 
 #include "synergy/IKeyState.h"
-#include "base/EventQueue.h"
 
 #include <cstdint>
 #include <cstdlib>
@@ -49,6 +48,7 @@ IKeyState::KeyInfo *
 IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
                           SInt32 count, const std::set<String> &destinations) {
   String screens = join(destinations);
+  const char *buffer = screens.c_str();
 
   // build structure
   KeyInfo *info = (KeyInfo *)malloc(sizeof(KeyInfo) + screens.size());
@@ -57,7 +57,7 @@ IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button,
   info->m_button = button;
   info->m_count = count;
   info->m_screens = info->m_screensBuffer;
-  std::ranges::copy(screens, info->m_screensBuffer);
+  std::copy(buffer, buffer + screens.size() + 1, info->m_screensBuffer);
   return info;
 }
 
@@ -106,8 +106,7 @@ String IKeyState::KeyInfo::join(const std::set<String> &destinations) {
   // which makes searching easy.  the string is empty if there are no
   // destinations and "*" means all destinations.
   String screens;
-  for (std::set<String>::const_iterator i = destinations.begin();
-       i != destinations.end(); ++i) {
+  for (auto i = destinations.begin(); i != destinations.end(); ++i) {
     if (*i == "*") {
       screens = "*";
       break;
