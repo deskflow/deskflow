@@ -25,15 +25,10 @@
 
 #include "AboutDialog.h"
 #include "ActivationDialog.h"
-#include "CommandProcess.h"
-#include "DataDownloader.h"
 #include "Fingerprint.h"
 #include "LicenseManager.h"
-#include "ProcessorArch.h"
-#include "QUtility.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "SslCertificate.h"
 #include <QPushButton>
 #include <shared/EditionType.h>
 
@@ -55,8 +50,6 @@
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
-
-static const char *tlsCheckString = "network encryption protocol: ";
 
 static const int debugLogLevel = 1;
 
@@ -487,21 +480,15 @@ void MainWindow::checkFingerprint(const QString &line) {
 }
 
 bool MainWindow::checkSecureSocket(const QString &line) {
-  // obviously not very secure, since this can be tricked by injecting something
-  // into the log. however, since we don't have IPC between core and GUI...
-  // patches welcome.
-  const int index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
-  if (index >= 0) {
-    secureSocket(true);
-
-    // Get the protocol version from the line
-    m_SecureSocketVersion = line.mid(
-        index + strlen(tlsCheckString)); // Compliant: we made sure that
-                                         // tlsCheckString variable ended with
-                                         // null(static const char* declaration)
-    return true;
+  static const QString tlsCheckString = "network encryption protocol: ";
+  const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
+  if (index == -1) {
+    return false;
   }
-  return false;
+
+  secureSocket(true);
+  m_SecureSocketVersion = line.mid(index + tlsCheckString.size());
+  return true;
 }
 
 #ifdef Q_OS_MAC
