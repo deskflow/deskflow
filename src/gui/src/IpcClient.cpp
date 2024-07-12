@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,14 +18,19 @@
 #include "IpcClient.h"
 #include "Ipc.h"
 #include "IpcReader.h"
+#include "providers/StreamProvider.h"
+
 #include <QDataStream>
 #include <QHostAddress>
-#include <QTcpSocket>
 #include <QTimer>
-#include <iostream>
+#include <memory>
 
-IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false) {
+IpcClient::IpcClient(StreamProvider *sp)
+    : m_ReaderStarted(false), m_Enabled(false) {
+
   m_Socket = new QTcpSocket(this);
+  m_StreamProvider = sp ? sp : new StreamProvider(m_Socket);
+
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
   connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
           SLOT(error(QAbstractSocket::SocketError)));
@@ -87,35 +91,32 @@ void IpcClient::retryConnect() {
 }
 
 void IpcClient::sendHello() {
-  QDataStream stream(m_Socket);
-  stream.writeRawData(kIpcMsgHello, 4);
+  auto stream = m_StreamProvider->makeStream();
+  stream->writeRawData(kIpcMsgHello, 4);
 
   char typeBuf[1];
   typeBuf[0] = kIpcClientGui;
-  stream.writeRawData(typeBuf, 1);
+  stream->writeRawData(typeBuf, 1);
 }
 
 void IpcClient::sendCommand(const QString &command, ElevateMode const elevate) {
-  QDataStream stream(m_Socket);
-
-  stream.writeRawData(kIpcMsgCommand, 4);
+  auto stream = m_StreamProvider->makeStream();
+  stream->writeRawData(kIpcMsgCommand, 4);
 
   std::string stdStringCommand = command.toStdString();
   const char *charCommand = stdStringCommand.c_str();
-  int length = static_cast<int>(
-      strlen(charCommand)); // Compliant: we made sure that charCommand variable
-                            // ended with null(String type is safe)
+  int length = static_cast<int>(strlen(charCommand));
 
   char lenBuf[4];
   intToBytes(length, lenBuf, 4);
-  stream.writeRawData(lenBuf, 4);
-  stream.writeRawData(charCommand, length);
+  stream->writeRawData(lenBuf, 4);
+  stream->writeRawData(charCommand, length);
 
   char elevateBuf[1];
   // Refer to enum ElevateMode documentation for why this flag is mapped this
   // way
   elevateBuf[0] = (elevate == ElevateAlways) ? 1 : 0;
-  stream.writeRawData(elevateBuf, 1);
+  stream->writeRawData(elevateBuf, 1);
 }
 
 void IpcClient::handleReadLogLine(const QString &text) { readLogLine(text); }

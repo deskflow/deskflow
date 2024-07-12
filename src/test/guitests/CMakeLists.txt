@@ -16,13 +16,12 @@
 set(target guitests)
 set(GUI_DIR "../../../src/gui/src")
 
-file(GLOB_RECURSE sources "*.cpp")
-file(GLOB_RECURSE gui_sources "${GUI_DIR}/VersionChecker.cpp")
-file(GLOB gui_ui_files "${GUI_DIR}/*.ui")
+file(GLOB_RECURSE test_sources "*.cpp")
+file(GLOB_RECURSE gui_sources "${GUI_DIR}/*.cpp")
 
 # Remove main dir as the test already has its own main.
-file(GLOB GUI_MAIN "${GUI_DIR}/main.cpp")
-list(REMOVE_ITEM gui_sources ${GUI_MAIN})
+file(GLOB gui_main "${GUI_DIR}/main.cpp")
+list(REMOVE_ITEM gui_sources ${gui_main})
 
 include_directories(${GUI_DIR} ../../)
 
@@ -35,8 +34,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_executable(${target} ${sources} ${gui_sources} ${gui_ui_files}
-                         ${global_sources} ${mock_sources})
+add_executable(${target} ${test_sources} ${gui_sources})
 
 find_package(
   Qt6
@@ -50,5 +48,7 @@ target_link_libraries(
   Qt6::Network
   Qt6::Core5Compat
   Qt6::Test
+  gtest
+  gmock
   shared
   ${libs})

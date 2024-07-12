@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,17 +19,18 @@
 
 #include <QAbstractSocket>
 #include <QObject>
+#include <QTcpSocket>
 
 #include "ElevateMode.h"
+#include "providers/StreamProvider.h"
 
-class QTcpSocket;
 class IpcReader;
 
 class IpcClient : public QObject {
   Q_OBJECT
 
 public:
-  IpcClient();
+  IpcClient(StreamProvider *streamProvider = nullptr);
   virtual ~IpcClient();
 
   void sendHello();
@@ -59,4 +59,5 @@ private:
   IpcReader *m_Reader;
   bool m_ReaderStarted;
   bool m_Enabled;
+  StreamProvider *m_StreamProvider;
 };
