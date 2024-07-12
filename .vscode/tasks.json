@@ -57,18 +57,6 @@
       "dependsOn": ["build"]
     },
     {
-      "label": "guitests (current)",
-      "type": "shell",
-      "command": "python",
-      "args": [
-        "./scripts/tests.py",
-        "--gui-tests",
-        "--ignore-return-code",
-        "--filter-file=${file}"
-      ],
-      "dependsOn": ["build"]
-    },
-    {
       "label": "unittests (all)",
       "type": "shell",
       "command": "python",
@@ -80,13 +68,6 @@
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
-    },
-    {
-      "label": "guitests (all)",
-      "type": "shell",
-      "command": "python",
-      "args": ["./scripts/tests.py", "--gui-tests", "--ignore-return-code"],
       "dependsOn": ["build"]
     }
   ]

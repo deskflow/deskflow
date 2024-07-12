@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "VersionChecker.h"
+#include "gui/src/VersionChecker.h"
 
 #include <QNetworkAccessManager>
 #include <gtest/gtest.h>

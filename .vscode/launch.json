@@ -23,13 +23,6 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "guitests lldb",
-      "type": "lldb",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/guitests",
-      "preLaunchTask": "build"
-    },
-    {
       "name": "win daemon attach",
       "type": "cppvsdbg",
       "request": "attach",

@@ -35,6 +35,25 @@ file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")
 list(APPEND headers ${mock_headers})
 list(APPEND sources ${mock_sources})
 
+set(gui_dir "../../gui/src")
+file(GLOB_RECURSE gui_sources "${gui_dir}/*.cpp")
+
+file(GLOB activation_sources "${gui_dir}/*Activation*" "${gui_dir}/*License*")
+if(NOT ENABLE_LICENSING)
+  list(REMOVE_ITEM gui_sources ${activation_sources})
+endif()
+
+# remove main gui as the test already has its own main.
+file(GLOB gui_main "${gui_dir}/main.cpp")
+list(REMOVE_ITEM gui_sources ${gui_main})
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  file(GLOB mac_gui_sources "${gui_dir}/*.mm")
+  list(APPEND gui_sources ${mac_gui_sources})
+endif()
+
+list(APPEND sources ${gui_sources})
+
 # platform
 if(WIN32)
   file(GLOB platform_sources "platform/MSWindows*.cpp")
@@ -50,8 +69,16 @@ endif()
 list(APPEND sources ${platform_sources})
 list(APPEND headers ${platform_headers})
 
-include_directories(../../ ../../lib/ ../../../ext/gtest/include
-                    ../../../ext/gmock/include ../../../ext)
+set(ext_dir "../../../ext")
+
+include_directories(
+  "../.."
+  "../../.."
+  "../../lib"
+  ${ext_dir}
+  ${gui_dir}
+  "${ext_dir}/gtest/include"
+  "${ext_dir}/gmock/include")
 
 if(SYNERGY_ADD_HEADERS)
   list(APPEND sources ${headers})
@@ -61,7 +88,18 @@ if(WIN32)
   list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(
+  Qt6
+  COMPONENTS Core5Compat Core Widgets Network Test
+  REQUIRED)
+
 add_executable(${target} ${sources})
+
 target_link_libraries(
   ${target}
   arch
@@ -79,4 +117,9 @@ target_link_libraries(
   gtest
   gmock
   shared
+  Qt6::Core
+  Qt6::Widgets
+  Qt6::Network
+  Qt6::Core5Compat
+  Qt6::Test
   ${libs})

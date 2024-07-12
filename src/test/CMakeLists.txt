@@ -29,4 +29,3 @@ endif()
 
 add_subdirectory(integtests)
 add_subdirectory(unittests)
-add_subdirectory(guitests)

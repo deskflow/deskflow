@@ -27,14 +27,14 @@
 
 class IpcReader;
 
-class IpcClient : public QObject {
+class QIpcClient : public QObject {
   Q_OBJECT
 
 public:
   using StreamProvider = std::function<std::shared_ptr<QDataStreamProxy>()>;
 
-  IpcClient(const StreamProvider streamProvider = nullptr);
-  virtual ~IpcClient();
+  QIpcClient(const StreamProvider streamProvider = nullptr);
+  virtual ~QIpcClient();
 
   void sendHello();
   void sendCommand(const QString &command, ElevateMode elevate);

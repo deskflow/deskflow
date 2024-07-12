@@ -32,7 +32,7 @@
 #include "ClientConnection.h"
 #include "ConfigWriter.h"
 #include "Ipc.h"
-#include "IpcClient.h"
+#include "QIpcClient.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "VersionChecker.h"
@@ -215,7 +215,7 @@ private:
   ServerConfig m_ServerConfig;
   bool m_AlreadyHidden;
   VersionChecker m_VersionChecker;
-  IpcClient m_IpcClient;
+  QIpcClient m_IpcClient;
   QMenuBar *m_pMenuBar;
   QMenu *m_pMenuFile;
   QMenu *m_pMenuEdit;
