@@ -21,6 +21,7 @@
 
 #include <cerrno>
 #include <cstdarg>
+#include <cstring>
 
 //
 // XBase
