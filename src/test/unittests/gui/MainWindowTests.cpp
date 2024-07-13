@@ -1,4 +1,3 @@
-#define protected public
 #include "MainWindow.h"
 
 #include <gtest/gtest.h>
@@ -6,27 +5,36 @@
 
 class TestMainWindow {
 public:
+  class MainWindowProxy : public MainWindow {
+  public:
+    explicit MainWindowProxy(AppConfig &appConfig) : MainWindow(appConfig) {}
+
+    bool _checkSecureSocket(const char *test) {
+      return MainWindow::checkSecureSocket(test);
+    }
+  };
+
   TestMainWindow() {
     m_appConfig = std::make_shared<AppConfig>(false);
 
 #ifdef SYNERGY_ENABLE_LICENSING
     m_licenseManager = std::make_shared<LicenseManager>(m_appConfig.get());
     m_mainWindow =
-        std::make_shared<MainWindow>(*m_appConfig, *m_licenseManager);
+        std::make_shared<MainWindowProxy>(*m_appConfig, *m_licenseManager);
 #else
-    m_mainWindow = std::make_shared<MainWindow>(*m_appConfig);
+    m_mainWindow = std::make_shared<MainWindowProxy>(*m_appConfig);
 #endif
   }
 
   std::shared_ptr<AppConfig> m_appConfig;
   std::shared_ptr<LicenseManager> m_licenseManager;
-  std::shared_ptr<MainWindow> m_mainWindow;
+  std::shared_ptr<MainWindowProxy> m_mainWindow;
 };
 
 TEST(MainWindowTests, checkSecureSocket_noMatch_expectFalse) {
   TestMainWindow testMainWindow;
 
-  bool result = testMainWindow.m_mainWindow->checkSecureSocket("test");
+  bool result = testMainWindow.m_mainWindow->_checkSecureSocket("test");
 
   EXPECT_FALSE(result);
 }
@@ -35,7 +43,7 @@ TEST(MainWindowTests, checkSecureSocket_match_expectTrue) {
   TestMainWindow testMainWindow;
 
   const char *test = "network encryption protocol: test";
-  bool result = testMainWindow.m_mainWindow->checkSecureSocket(test);
+  bool result = testMainWindow.m_mainWindow->_checkSecureSocket(test);
 
   EXPECT_TRUE(result);
 }
