@@ -26,6 +26,9 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <iostream>
+
+const int kPriorityPrefixLength = 3;
 
 // names of priorities
 static const char *g_priority[] = {"FATAL",  "ERROR",  "WARNING", "NOTE",
@@ -50,24 +53,21 @@ static const int g_defaultMaxPriority = kINFO;
 
 namespace {
 
-void output(ELevel priority, const char *message);
-
 ELevel getPriority(const char *&fmt) {
-  const int minLength = 3;
-  const char formatSpecifier = '%';
-  const char prioritySpecifier = 'z';
-
-  ELevel priority = kINFO;
-  if (strnlen(fmt, SIZE_MAX) > minLength && fmt[0] == formatSpecifier &&
-      fmt[1] == prioritySpecifier) {
-    priority = static_cast<ELevel>(fmt[2] - '0');
-    fmt += minLength;
+  if (strnlen(fmt, SIZE_MAX) < kPriorityPrefixLength) {
+    throw std::invalid_argument("invalid format string, too short");
   }
-  return priority;
+
+  if (fmt[0] != '%' || fmt[1] != 'z') {
+    throw std::invalid_argument("invalid format string, missing %z");
+  }
+
+  return static_cast<ELevel>(fmt[2] - '0');
 }
 
-std::vector<char> makeMessage(const char *file, int line, const char *message,
-                              ELevel priority) {
+std::vector<char> makeMessage(const char *filename, int line,
+                              const char *message, ELevel priority,
+                              bool debug) {
   const int timeBufferSize = 50;
   const int yearOffset = 1900;
   const int monthOffset = 1;
@@ -91,25 +91,25 @@ std::vector<char> makeMessage(const char *file, int line, const char *message,
   size_t timestampLength = strnlen(timestamp, sizeof(timestamp));
   size_t priorityLength = strnlen(g_priority[priority], SIZE_MAX);
   size_t messageLength = strnlen(message, SIZE_MAX);
-  size_t fileLength = strnlen(file, SIZE_MAX);
 
   size_t size = baseSize + timestampLength + priorityLength + messageLength;
 
-#ifndef NDEBUG
-  const int debugFileOffset = 6;
-  size += fileLength + debugFileOffset;
-#endif
-
-  std::vector<char> logMessage(size);
-#ifndef NDEBUG
-  snprintf(logMessage.data(), size, "[%s] %s: %s\n\t%s:%d", timestamp,
-           g_priority[priority], message, file, line);
-#else
-  snprintf(logMessage.data(), size, "[%s] %s: %s", timestamp,
-           g_priority[priority], message);
-#endif
-
-  return logMessage;
+  if (debug) {
+    std::cout << "*** trace start ***" << std::endl;
+    size_t filenameLength = strnlen(filename, SIZE_MAX);
+    std::cout << "*** trace end ***" << std::endl;
+    const int debugFileOffset = 6;
+    size += filenameLength + debugFileOffset;
+    std::vector<char> logMessage(size);
+    snprintf(logMessage.data(), size, "[%s] %s: %s\n\t%s:%d", timestamp,
+             g_priority[priority], message, filename, line);
+    return logMessage;
+  } else {
+    std::vector<char> logMessage(size);
+    snprintf(logMessage.data(), size, "[%s] %s: %s", timestamp,
+             g_priority[priority], message);
+    return logMessage;
+  }
 }
 } // namespace
 
@@ -119,8 +119,10 @@ std::vector<char> makeMessage(const char *file, int line, const char *message,
 
 Log *Log::s_log = NULL;
 
-Log::Log() {
-  assert(s_log == NULL);
+Log::Log(bool singleton, bool debug) : m_debug(debug) {
+  if (singleton) {
+    assert(s_log == NULL);
+  }
 
   // create mutex for multithread safe operation
   m_mutex = ARCH->newMutex();
@@ -129,7 +131,9 @@ Log::Log() {
   m_maxPriority = g_defaultMaxPriority;
   insert(new ConsoleLogOutputter);
 
-  s_log = this;
+  if (singleton) {
+    s_log = this;
+  }
 }
 
 Log::Log(Log *src) { s_log = src; }
@@ -166,6 +170,7 @@ void Log::print(const char *file, int line, const char *fmt, ...) {
   const int bufferResizeScale = 2;
 
   ELevel priority = getPriority(fmt);
+  fmt += kPriorityPrefixLength;
 
   if (priority > getFilter()) {
     return;
@@ -189,8 +194,7 @@ void Log::print(const char *file, int line, const char *fmt, ...) {
   }
 
   if (priority != kPRINT) {
-    std::vector<char> message =
-        makeMessage(file, line, buffer.data(), priority);
+    auto message = makeMessage(file, line, buffer.data(), priority, m_debug);
     output(priority, message.data());
   } else {
     output(priority, buffer.data());
