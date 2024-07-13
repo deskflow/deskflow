@@ -65,14 +65,10 @@ ELevel getPriority(const char *&fmt) {
   return static_cast<ELevel>(fmt[2] - '0');
 }
 
-std::vector<char> makeMessage(const char *filename, int lineNumber,
-                              const char *message, ELevel priority) {
-  const int timeBufferSize = 50;
+void makeTimeString(std::vector<char> &buffer) {
   const int yearOffset = 1900;
   const int monthOffset = 1;
-  const int baseSize = 10;
 
-  char timestamp[timeBufferSize];
   time_t t;
   time(&t);
   struct tm tm;
@@ -83,12 +79,25 @@ std::vector<char> makeMessage(const char *filename, int lineNumber,
   localtime_r(&t, &tm);
 #endif
 
-  snprintf(timestamp, sizeof(timestamp), "%04i-%02i-%02iT%02i:%02i:%02i",
+  snprintf(buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i",
            tm.tm_year + yearOffset, tm.tm_mon + monthOffset, tm.tm_mday,
            tm.tm_hour, tm.tm_min, tm.tm_sec);
+}
 
-  size_t timestampLength = strnlen(timestamp, sizeof(timestamp));
-  size_t priorityLength = strnlen(g_priority[priority], SIZE_MAX);
+std::vector<char> makeMessage(const char *filename, int lineNumber,
+                              const char *message, ELevel priority) {
+
+  // base size includes null terminator, colon, space, etc.
+  const int baseSize = 10;
+
+  const int timeBufferSize = 50;
+  const int priorityMaxSize = 10;
+
+  std::vector<char> timeBuffer(timeBufferSize);
+  makeTimeString(timeBuffer);
+
+  size_t timestampLength = strnlen(timeBuffer.data(), timeBufferSize);
+  size_t priorityLength = strnlen(g_priority[priority], priorityMaxSize);
   size_t messageLength = strnlen(message, SIZE_MAX);
   size_t bufferSize =
       baseSize + timestampLength + priorityLength + messageLength;
@@ -100,12 +109,13 @@ std::vector<char> makeMessage(const char *filename, int lineNumber,
     bufferSize += filenameLength + lineNumberLength;
 
     std::vector<char> buffer(bufferSize);
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timestamp,
-             g_priority[priority], message, filename, lineNumber);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d",
+             timeBuffer.data(), g_priority[priority], message, filename,
+             lineNumber);
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timestamp,
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(),
              g_priority[priority], message);
     return buffer;
   }
