@@ -48,3 +48,21 @@ TEST(LogTests, print_withErrorLevel_outputIsValid) {
 
   EXPECT_THAT(GetCapturedStderr(), HasSubstr("ERROR: test message\n"));
 }
+
+TEST(LogTests, print_longMessage_outputIsValid) {
+  CaptureStdout();
+
+  auto longString = std::string(10000, 'a');
+  CLOG->print("test file", 1, "%s", longString.c_str());
+
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("INFO: " + longString + "\n" DEBUG_TEXT));
+}
+
+TEST(LogTests, print_highestLevel_noOutput) {
+  CaptureStdout();
+
+  CLOG->print(CLOG_DEBUG5 "test message");
+
+  EXPECT_EQ(GetCapturedStdout(), "");
+}

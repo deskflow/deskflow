@@ -21,6 +21,7 @@
 #include "base/log_outputters.h"
 #include "common/Version.h"
 
+#include <cstdarg>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -47,6 +48,71 @@ static const int g_defaultMaxPriority = kDEBUG;
 static const int g_defaultMaxPriority = kINFO;
 #endif
 
+namespace {
+
+void output(ELevel priority, const char *message);
+
+ELevel getPriority(const char *&fmt) {
+  const int minLength = 3;
+  const char formatSpecifier = '%';
+  const char prioritySpecifier = 'z';
+
+  ELevel priority = kINFO;
+  if (strnlen(fmt, SIZE_MAX) > minLength && fmt[0] == formatSpecifier &&
+      fmt[1] == prioritySpecifier) {
+    priority = static_cast<ELevel>(fmt[2] - '0');
+    fmt += minLength;
+  }
+  return priority;
+}
+
+std::vector<char> makeMessage(const char *file, int line, const char *message,
+                              ELevel priority) {
+  const int timeBufferSize = 50;
+  const int yearOffset = 1900;
+  const int monthOffset = 1;
+  const int baseSize = 10;
+
+  char timestamp[timeBufferSize];
+  time_t t;
+  time(&t);
+  struct tm tm;
+
+#if WINAPI_MSWINDOWS
+  localtime_s(&tm, &t);
+#else
+  localtime_r(&t, &tm);
+#endif
+
+  snprintf(timestamp, sizeof(timestamp), "%04i-%02i-%02iT%02i:%02i:%02i",
+           tm.tm_year + yearOffset, tm.tm_mon + monthOffset, tm.tm_mday,
+           tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+  size_t timestampLength = strnlen(timestamp, sizeof(timestamp));
+  size_t priorityLength = strnlen(g_priority[priority], SIZE_MAX);
+  size_t messageLength = strnlen(message, SIZE_MAX);
+  size_t fileLength = strnlen(file, SIZE_MAX);
+
+  size_t size = baseSize + timestampLength + priorityLength + messageLength;
+
+#ifndef NDEBUG
+  const int debugFileOffset = 6;
+  size += fileLength + debugFileOffset;
+#endif
+
+  std::vector<char> logMessage(size);
+#ifndef NDEBUG
+  snprintf(logMessage.data(), size, "[%s] %s: %s\n\t%s:%d", timestamp,
+           g_priority[priority], message, file, line);
+#else
+  snprintf(logMessage.data(), size, "[%s] %s: %s", timestamp,
+           g_priority[priority], message);
+#endif
+
+  return logMessage;
+}
+} // namespace
+
 //
 // Log
 //
@@ -61,7 +127,6 @@ Log::Log() {
 
   // other initalization
   m_maxPriority = g_defaultMaxPriority;
-  m_maxNewlineLength = 0;
   insert(new ConsoleLogOutputter);
 
   s_log = this;
@@ -97,109 +162,38 @@ const char *Log::getFilterName(int level) const {
 }
 
 void Log::print(const char *file, int line, const char *fmt, ...) {
-  // check if fmt begins with a priority argument
-  ELevel priority = kINFO;
-  if ((strnlen(fmt, SIZE_MAX) > 2) && (fmt[0] == '%' && fmt[1] == 'z')) {
+  const int initBufferSize = 1024;
+  const int bufferResizeScale = 2;
 
-    // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
-    // number it a true number. we could use atoi instead, but this is how
-    // it was done originally.
-    priority = (ELevel)(fmt[2] - '\060');
+  ELevel priority = getPriority(fmt);
 
-    // move the pointer on past the debug priority char
-    fmt += 3;
-  }
-
-  // done if below priority threshold
   if (priority > getFilter()) {
     return;
   }
 
-  // compute prefix padding length
-  char stack[1024];
+  std::vector<char> buffer(initBufferSize);
+  auto length = static_cast<int>(buffer.size());
 
-  // compute suffix padding length
-  int sPad = m_maxNewlineLength;
-
-  // print to buffer, leaving space for a newline at the end and prefix
-  // at the beginning.
-  char *buffer = stack;
-  int len = (int)(sizeof(stack) / sizeof(stack[0]));
   while (true) {
-    // try printing into the buffer
     va_list args;
     va_start(args, fmt);
-    int n = ARCH->vsnprintf(buffer, len - sPad, fmt, args);
+    int n = vsnprintf(buffer.data(), length, fmt, args);
     va_end(args);
 
-    // if the buffer wasn't big enough then make it bigger and try again
-    if (n < 0 || n > (int)len) {
-      if (buffer != stack) {
-        delete[] buffer;
-      }
-      len *= 2;
-      buffer = new char[len];
-    }
-
-    // if the buffer was big enough then continue
-    else {
+    if (n < 0 || n > length) {
+      length *= bufferResizeScale;
+      buffer.resize(length);
+    } else {
       break;
     }
   }
 
-  // print the prefix to the buffer.    leave space for priority label.
-  // do not prefix time and file for kPRINT (CLOG_PRINT)
   if (priority != kPRINT) {
-
-    struct tm tm;
-    static const int timestamp_size = 50;
-    char timestamp[timestamp_size];
-    time_t t;
-    time(&t);
-#if WINAPI_MSWINDOWS
-    localtime_s(&tm, &t);
-#else
-    localtime_r(&t, &tm);
-#endif
-    snprintf(timestamp, timestamp_size, "%04i-%02i-%02iT%02i:%02i:%02i",
-             tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
-             tm.tm_min, tm.tm_sec);
-
-    // square brackets, spaces, comma and null terminator take about 10
-    int size = 10;
-    size += static_cast<int>(
-        strlen(timestamp)); // Compliant: we made sure that timestamp variable
-                            // ended with null(terminating null character is
-                            // automatically appended in snprintf)
-    size += static_cast<int>(strlen(
-        g_priority[priority])); // Compliant: we made sure that
-                                // g_priority[priority] variable ended with
-                                // null(static const char* declaration)
-    size += static_cast<int>(strnlen(buffer, len));
-#ifndef NDEBUG
-    size += static_cast<int>(strnlen(file, SIZE_MAX));
-    // assume there is no file contains over 100k lines of code
-    size += 6;
-#endif
-    char *message = new char[size];
-
-#ifndef NDEBUG
-    snprintf(message, size, "[%s] %s: %s\n\t%s:%d", timestamp,
-             g_priority[priority], buffer, file, line);
-#else
-    snprintf(message, size, "[%s] %s: %s", timestamp, g_priority[priority],
-             buffer);
-#endif
-
-    output(priority, message);
-    delete[] message;
+    std::vector<char> message =
+        makeMessage(file, line, buffer.data(), priority);
+    output(priority, message.data());
   } else {
-    output(priority, buffer);
-  }
-
-  // clean up
-  if (buffer != stack) {
-    delete[] buffer;
+    output(priority, buffer.data());
   }
 }
 
