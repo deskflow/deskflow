@@ -53,16 +53,15 @@ jobs:
             bootstrap: true
 
     steps:
-      - name: Bootstrap Chocolatey
+      - name: Bootstrap
         if: ${{ matrix.target.bootstrap }}
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force
           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
           iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-      - name: Bootstrap Git
-        if: ${{ matrix.target.bootstrap }}
-        run: choco install -y git
+          choco install -y --no-progress git
+          $gitPath = (Get-Command git).Source
+          echo "$gitPath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Checkout
         uses: actions/checkout@v4
