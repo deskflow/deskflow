@@ -174,7 +174,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
 }
 
 MainWindow::~MainWindow() {
-  if (appConfig().processMode() == Desktop) {
+  if (appConfig().processMode() == ProcessMode::kDesktop) {
     m_ExpectedRunningState = kStopped;
     try {
       stopDesktop();
@@ -209,7 +209,7 @@ void MainWindow::open() {
   // auto hiding before the user has configured synergy (which of course
   // confuses first time users, who think synergy has crashed).
   if (appConfig().startedBefore() &&
-      appConfig().processMode() == ProcessMode::Desktop) {
+      appConfig().processMode() == ProcessMode::kDesktop) {
     startSynergy();
   }
 }
@@ -543,8 +543,8 @@ void MainWindow::startSynergy() {
   }
   m_LicenseManager->registerLicense();
 #endif
-  bool desktopMode = appConfig().processMode() == Desktop;
-  bool serviceMode = appConfig().processMode() == Service;
+  bool desktopMode = appConfig().processMode() == ProcessMode::kDesktop;
+  bool serviceMode = appConfig().processMode() == ProcessMode::kService;
 
   appendLogDebug("starting process");
   m_ExpectedRunningState = kStarted;
@@ -848,9 +848,9 @@ void MainWindow::stopSynergy() {
 
   m_ExpectedRunningState = kStopped;
 
-  if (appConfig().processMode() == Service) {
+  if (appConfig().processMode() == ProcessMode::kService) {
     stopService();
-  } else if (appConfig().processMode() == Desktop) {
+  } else if (appConfig().processMode() == ProcessMode::kDesktop) {
     stopDesktop();
   }
 

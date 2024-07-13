@@ -52,7 +52,7 @@ class SettingsDialog;
 class ServerConfig;
 class LicenseRegister;
 
-enum ProcessMode { Service, Desktop };
+enum class ProcessMode { kService, kDesktop };
 
 class AppConfig : public QObject, public GUI::Config::ConfigBase {
   Q_OBJECT
@@ -63,9 +63,8 @@ class AppConfig : public QObject, public GUI::Config::ConfigBase {
   friend class ServerConfig;
 
 public:
-  AppConfig(bool globalLoad = true);
+  explicit AppConfig(bool globalLoad = true);
 
-public:
   bool isWritable() const;
   bool isSystemScoped() const;
 
@@ -176,7 +175,7 @@ public:
 protected:
   /// @brief The enumeration to easily access the names of the setting inside
   /// m_SynergySettingsName
-  enum Setting {
+  enum class Setting {
     kScreenName,
     kPort,
     kInterfaceSetting,
@@ -288,7 +287,7 @@ private:
   static const char *m_SynergySettingsName[];
 
   /// @brief Contains the name of the default configuration filename
-  static const char synergyConfigName[];
+  static const char m_SynergyConfigName[];
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
