@@ -7,21 +7,32 @@ using testing::HasSubstr;
 using testing::internal::CaptureStdout;
 using testing::internal::GetCapturedStdout;
 
-TEST(LogTests, print_simpleString_outputToConsole) {
+#ifndef NDEBUG
+#define DEBUG_TEXT "\ttest file:1\n"
+#endif
+
+TEST(LogTests, print_simpleString_outputIsValid) {
   CaptureStdout();
 
-  Log::getInstance()->print("test file", 1, "test message");
+  CLOG->print("test file", 1, "test message");
 
-  std::string output = GetCapturedStdout();
-  EXPECT_THAT(output, HasSubstr("INFO: test message\n\ttest file:1\n"));
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("INFO: test message\n" DEBUG_TEXT));
 }
 
-TEST(LogTests, print_withArgs_outputToConsole) {
+TEST(LogTests, print_withArgs_outputIsValid) {
   CaptureStdout();
 
-  Log::getInstance()->print("test file", 1, "test %d %.2f %s", 1, 1.234,
-                            "test arg");
+  CLOG->print("test file", 1, "test %d %.2f %s", 1, 1.234, "test arg");
 
-  std::string output = GetCapturedStdout();
-  EXPECT_THAT(output, HasSubstr("INFO: test 1 1.23 test arg\n\ttest file:1\n"));
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("INFO: test 1 1.23 test arg\n" DEBUG_TEXT));
+}
+
+TEST(LogTests, print_withPrintLevel_outputIsValid) {
+  CaptureStdout();
+
+  CLOG->print(CLOG_PRINT "test message");
+
+  EXPECT_THAT(GetCapturedStdout(), "test message\n");
 }
