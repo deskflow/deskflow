@@ -59,7 +59,7 @@ ELevel getPriority(const char *&fmt) {
   }
 
   if (fmt[0] != '%' || fmt[1] != 'z') {
-    throw std::invalid_argument("invalid format string, missing %z");
+    throw std::invalid_argument("invalid format string, missing priority");
   }
 
   return static_cast<ELevel>(fmt[2] - '0');
@@ -95,9 +95,7 @@ std::vector<char> makeMessage(const char *filename, int line,
   size_t size = baseSize + timestampLength + priorityLength + messageLength;
 
   if (debug) {
-    std::cout << "*** trace start ***" << std::endl;
     size_t filenameLength = strnlen(filename, SIZE_MAX);
-    std::cout << "*** trace end ***" << std::endl;
     const int debugFileOffset = 6;
     size += filenameLength + debugFileOffset;
     std::vector<char> logMessage(size);

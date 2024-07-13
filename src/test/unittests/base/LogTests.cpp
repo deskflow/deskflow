@@ -23,29 +23,27 @@ TEST(LogTests, print_releaseSimpleString_outputIsValid) {
   CaptureStdout();
   Log log(false, false);
 
-  log.print("test file", 1, "test message");
+  log.print(CLOG_PRINT "test message");
 
-  EXPECT_THAT(GetCapturedStdout(), EndsWith("INFO: test message\n"));
+  EXPECT_THAT(GetCapturedStdout(), EndsWith("test message\n"));
 }
 
 TEST(LogTests, print_debugSimpleString_outputIsValid) {
   CaptureStdout();
   Log log(false, true);
 
-  log.print("test file", 1, "test message");
+  log.print(CLOG_INFO "test message");
 
-  EXPECT_THAT(GetCapturedStdout(),
-              HasSubstr("INFO: test message\n\ttest file:1\n"));
+  EXPECT_THAT(GetCapturedStdout(), HasSubstr("INFO: test message\n"));
 }
 
 TEST(LogTests, print_debugWithArgs_outputIsValid) {
   CaptureStdout();
   Log log(false, true);
 
-  log.print("test file", 1, "test %d %.2f %s", 1, 1.234, "test arg");
+  log.print(CLOG_INFO "test %d %.2f %s", 1, 1.234, "test arg");
 
-  EXPECT_THAT(GetCapturedStdout(),
-              HasSubstr("INFO: test 1 1.23 test arg\n\ttest file:1\n"));
+  EXPECT_THAT(GetCapturedStdout(), HasSubstr("INFO: test 1 1.23 test arg\n"));
 }
 
 TEST(LogTests, print_debugWithPrintLevel_outputIsValid) {
@@ -71,10 +69,9 @@ TEST(LogTests, print_debugLongMessage_outputIsValid) {
   Log log(false, true);
 
   auto longString = std::string(10000, 'a');
-  log.print("test file", 1, "%s", longString.c_str());
+  log.print(CLOG_INFO "%s", longString.c_str());
 
-  EXPECT_THAT(GetCapturedStdout(),
-              HasSubstr("INFO: " + longString + "\n\ttest file:1\n"));
+  EXPECT_THAT(GetCapturedStdout(), HasSubstr("INFO: " + longString + "\n"));
 }
 
 TEST(LogTests, print_debugHighestLevel_noOutput) {
