@@ -1,6 +1,6 @@
 find_package(
   Qt6
-  COMPONENTS Core5Compat Core Widgets Network
+  COMPONENTS Core Widgets Network
   REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -32,8 +32,7 @@ add_executable(synergy WIN32 ${GUI_SOURCE_FILES} ${GUI_UI_FILES}
 include_directories(./src)
 target_link_libraries(synergy shared)
 
-target_link_libraries(synergy Qt6::Core Qt6::Widgets Qt6::Network
-                      Qt6::Core5Compat)
+target_link_libraries(synergy Qt6::Core Qt6::Widgets Qt6::Network)
 target_compile_definitions(
   synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions(synergy
