@@ -28,25 +28,9 @@
 #include <QApplication>
 #include <gtest/gtest.h>
 
-std::unique_ptr<QApplication> initQt(char **&argv) {
-  const std::string platformOption = "-platform offscreen";
-
-  std::vector<std::string> qtArgvStr = {std::string(argv[0]), platformOption};
-
-  std::vector<char *> qtArgv;
-  for (auto &str : qtArgvStr) {
-    qtArgv.push_back(&str[0]);
-  }
-
-  auto qtArgc = static_cast<int>(qtArgv.size());
-
-  // required to solve the issue where some qt objects need access to a qt app
-  // on some platforms (e.g. QNetworkAccessManager).
-  return std::make_unique<QApplication>(qtArgc, qtArgv.data());
-}
-
 int main(int argc, char **argv) {
-  auto qt = initQt(argv);
+  // required to solve the issue where qt objects need access to a qt app.
+  QApplication app(argc, argv);
 
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.
