@@ -249,6 +249,8 @@ jobs:
         run: cmake --build build -j8
 
       - name: Test
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: ./build/bin/unittests
 
       - name: Package
