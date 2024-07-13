@@ -9,3 +9,12 @@
 # $ pip install clang-format==<version>
 
 BasedOnStyle: LLVM
+
+# Turn off alignment of params with the opening bracket, which can be less readable in some cases.
+# This will result in:
+#   void fooBarBazQuxHelloWorld(
+#     int a, int b);
+# Instead of:
+#   void fooBarBazQuxHelloWorld(int a,
+#                               int b);
+AlignAfterOpenBracket: DontAlign
