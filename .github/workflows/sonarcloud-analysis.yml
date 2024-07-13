@@ -64,9 +64,11 @@ jobs:
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
       - name: Make coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           cd build
-          QT_QPA_PLATFORM=offscreen make coverage
+          make coverage
 
       - name: Run SonarScanner
         run: |
