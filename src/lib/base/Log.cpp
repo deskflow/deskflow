@@ -65,9 +65,8 @@ ELevel getPriority(const char *&fmt) {
   return static_cast<ELevel>(fmt[2] - '0');
 }
 
-std::vector<char> makeMessage(const char *filename, int line,
-                              const char *message, ELevel priority,
-                              bool debug) {
+std::vector<char> makeMessage(const char *filename, int lineNumber,
+                              const char *message, ELevel priority) {
   const int timeBufferSize = 50;
   const int yearOffset = 1900;
   const int monthOffset = 1;
@@ -91,22 +90,24 @@ std::vector<char> makeMessage(const char *filename, int line,
   size_t timestampLength = strnlen(timestamp, sizeof(timestamp));
   size_t priorityLength = strnlen(g_priority[priority], SIZE_MAX);
   size_t messageLength = strnlen(message, SIZE_MAX);
+  size_t bufferSize =
+      baseSize + timestampLength + priorityLength + messageLength;
 
-  size_t size = baseSize + timestampLength + priorityLength + messageLength;
-
-  if (debug) {
+  const auto filenameSet = filename != nullptr && filename[0] != '\0';
+  if (filenameSet) {
     size_t filenameLength = strnlen(filename, SIZE_MAX);
-    const int debugFileOffset = 6;
-    size += filenameLength + debugFileOffset;
-    std::vector<char> logMessage(size);
-    snprintf(logMessage.data(), size, "[%s] %s: %s\n\t%s:%d", timestamp,
-             g_priority[priority], message, filename, line);
-    return logMessage;
+    size_t lineNumberLength = snprintf(nullptr, 0, "%d", lineNumber);
+    bufferSize += filenameLength + lineNumberLength;
+
+    std::vector<char> buffer(bufferSize);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timestamp,
+             g_priority[priority], message, filename, lineNumber);
+    return buffer;
   } else {
-    std::vector<char> logMessage(size);
-    snprintf(logMessage.data(), size, "[%s] %s: %s", timestamp,
+    std::vector<char> buffer(bufferSize);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timestamp,
              g_priority[priority], message);
-    return logMessage;
+    return buffer;
   }
 }
 } // namespace
@@ -117,7 +118,7 @@ std::vector<char> makeMessage(const char *filename, int line,
 
 Log *Log::s_log = NULL;
 
-Log::Log(bool singleton, bool debug) : m_debug(debug) {
+Log::Log(bool singleton) {
   if (singleton) {
     assert(s_log == NULL);
   }
@@ -191,11 +192,11 @@ void Log::print(const char *file, int line, const char *fmt, ...) {
     }
   }
 
-  if (priority != kPRINT) {
-    auto message = makeMessage(file, line, buffer.data(), priority, m_debug);
-    output(priority, message.data());
-  } else {
+  if (priority == kPRINT) {
     output(priority, buffer.data());
+  } else {
+    auto message = makeMessage(file, line, buffer.data(), priority);
+    output(priority, message.data());
   }
 }
 

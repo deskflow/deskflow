@@ -28,12 +28,6 @@
 #define CLOG (Log::getInstance())
 #define BYE "\nTry `%s --help' for more information."
 
-#ifndef NDEBUG
-const bool kDebugDefault = true;
-#else
-const bool kDebugDefault = false;
-#endif
-
 class ILogOutputter;
 class Thread;
 
@@ -46,7 +40,7 @@ LOGC() provide convenient access.
 */
 class Log {
 public:
-  Log(bool singleton = true, bool debug = kDebugDefault);
+  Log(bool singleton = true);
   Log(Log *src);
   Log(Log const &) = delete;
   Log(Log &&) = delete;
@@ -146,7 +140,6 @@ private:
   OutputterList m_outputters;
   OutputterList m_alwaysOutputters;
   int m_maxPriority;
-  bool m_debug;
 };
 
 /*!
