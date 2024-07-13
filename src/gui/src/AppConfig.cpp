@@ -31,7 +31,7 @@ using GUI::Config::ConfigWriter;
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
 const char AppConfig::m_SynergyLogDir[] = "log/";
-const char AppConfig::synergyConfigName[] = "synergy.sgc";
+const char AppConfig::m_SynergyConfigName[] = "synergy.sgc";
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
