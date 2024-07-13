@@ -17,16 +17,14 @@
  */
 
 #include "AppConfig.h"
-#include "QSynergyApplication.h"
-#include "QUtility.h"
+
+#include "ConfigWriter.h"
+#include "SslCertificate.h"
 
 #include <QPushButton>
 #include <QtCore>
 #include <QtNetwork>
 #include <QtWidgets/QMessageBox>
-
-#include "ConfigWriter.h"
-#include "SslCertificate.h"
 
 using GUI::Config::ConfigWriter;
 #if defined(Q_OS_WIN)
@@ -34,16 +32,16 @@ const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
 const char AppConfig::m_SynergyLogDir[] = "log/";
 const char AppConfig::synergyConfigName[] = "synergy.sgc";
-#define DEFAULT_PROCESS_MODE Service
+const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
 const char AppConfig::m_SynergycName[] = "synergyc";
 const char AppConfig::m_SynergyLogDir[] = "/var/log/";
-const char AppConfig::synergyConfigName[] = "synergy.conf";
-#define DEFAULT_PROCESS_MODE Desktop
+const char AppConfig::m_SynergyConfigName[] = "synergy.conf";
+const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif
 
-const ElevateMode defaultElevateMode = ElevateAsNeeded;
+const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
 
 const char *AppConfig::m_SynergySettingsName[] = {
     "screenName",
@@ -88,8 +86,8 @@ static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 AppConfig::AppConfig(bool globalLoad)
     : m_ScreenName(), m_Port(24800), m_Interface(), m_LogLevel(0),
-      m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(DEFAULT_PROCESS_MODE),
-      m_StartedBefore(), m_ElevateMode(defaultElevateMode),
+      m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(kDefaultProcessMode),
+      m_StartedBefore(), m_ElevateMode(kDefaultElevateMode),
       m_Edition(kUnregistered), m_CryptoEnabled(false), m_AutoHide(false),
       m_LastExpiringWarningTime(0), m_ActivationHasRun(),
       m_MinimizeToTray(false), m_ServerGroupChecked(), m_UseExternalConfig(),
@@ -107,12 +105,12 @@ AppConfig::AppConfig(bool globalLoad)
   }
 
   // User settings exist and the load from system scope variable is true
-  if (writer->hasSetting(settingName(kLoadSystemSettings),
+  if (writer->hasSetting(settingName(Setting::kLoadSystemSettings),
                          ConfigWriter::kUser)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
-  else if (writer->hasSetting(settingName(kScreenName),
+  else if (writer->hasSetting(settingName(Setting::kScreenName),
                               ConfigWriter::kSystem)) {
     setLoadFromSystemScope(true);
   }
@@ -170,72 +168,82 @@ bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 void AppConfig::loadSettings() {
   m_ScreenName =
-      loadSetting(kScreenName, QHostInfo::localHostName()).toString();
+      loadSetting(Setting::kScreenName, QHostInfo::localHostName()).toString();
   if (m_ScreenName.isEmpty()) {
     m_ScreenName = QHostInfo::localHostName();
   }
 
-  m_Port = loadSetting(kPort, 24800).toInt();
-  m_Interface = loadSetting(kInterfaceSetting).toString();
-  m_LogLevel = loadSetting(kLogLevel, 0).toInt();
-  m_LogToFile = loadSetting(kLogToFile, false).toBool();
+  m_Port = loadSetting(Setting::kPort, 24800).toInt();
+  m_Interface = loadSetting(Setting::kInterfaceSetting).toString();
+  m_LogLevel = loadSetting(Setting::kLogLevel, 0).toInt();
+  m_LogToFile = loadSetting(Setting::kLogToFile, false).toBool();
   m_LogFilename =
-      loadSetting(kLogFilename, synergyLogDir() + "synergy.log").toString();
-  m_WizardLastRun = loadCommonSetting(kWizardLastRun, 0).toInt();
-  m_StartedBefore = loadSetting(kStartedBefore, false).toBool();
+      loadSetting(Setting::kLogFilename, synergyLogDir() + "synergy.log")
+          .toString();
+  m_WizardLastRun = loadCommonSetting(Setting::kWizardLastRun, 0).toInt();
+  m_StartedBefore = loadSetting(Setting::kStartedBefore, false).toBool();
 
   { // Scope related code together
     // TODO Investigate why kElevateModeEnum isn't loaded fully
-    QVariant elevateMode = loadSetting(kElevateModeEnum);
+    QVariant elevateMode = loadSetting(Setting::kElevateModeEnum);
     if (!elevateMode.isValid()) {
-      elevateMode = loadSetting(kElevateModeSetting,
-                                QVariant(static_cast<int>(defaultElevateMode)));
+      elevateMode =
+          loadSetting(Setting::kElevateModeSetting,
+                      QVariant(static_cast<int>(kDefaultElevateMode)));
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
   }
 
-  m_ActivateEmail = loadSetting(kActivateEmail, "").toString();
-  m_CryptoEnabled = loadSetting(kCryptoEnabled, true).toBool();
-  m_AutoHide = loadSetting(kAutoHide, false).toBool();
-  m_lastVersion = loadSetting(kLastVersion, "Unknown").toString();
-  m_LastExpiringWarningTime = loadSetting(kLastExpireWarningTime, 0).toInt();
-  m_ActivationHasRun = loadSetting(kActivationHasRun, false).toBool();
-  m_MinimizeToTray = loadSetting(kMinimizeToTray, false).toBool();
+  m_ActivateEmail = loadSetting(Setting::kActivateEmail, "").toString();
+  m_CryptoEnabled = loadSetting(Setting::kCryptoEnabled, true).toBool();
+  m_AutoHide = loadSetting(Setting::kAutoHide, false).toBool();
+  m_lastVersion = loadSetting(Setting::kLastVersion, "Unknown").toString();
+  m_LastExpiringWarningTime =
+      loadSetting(Setting::kLastExpireWarningTime, 0).toInt();
+  m_ActivationHasRun = loadSetting(Setting::kActivationHasRun, false).toBool();
+  m_MinimizeToTray = loadSetting(Setting::kMinimizeToTray, false).toBool();
   m_LoadFromSystemScope =
-      loadCommonSetting(kLoadSystemSettings, false).toBool();
-  m_ServerGroupChecked = loadSetting(kGroupServerCheck, false).toBool();
-  m_UseExternalConfig = loadSetting(kUseExternalConfig, false).toBool();
-  m_ConfigFile =
-      loadSetting(kConfigFile, QDir::homePath() + "/" + synergyConfigName)
-          .toString();
-  m_UseInternalConfig = loadSetting(kUseInternalConfig, false).toBool();
-  m_ClientGroupChecked = loadSetting(kGroupClientCheck, false).toBool();
-  m_ServerHostname = loadSetting(kServerHostname).toString();
-  m_PreventSleep = loadSetting(kPreventSleep, false).toBool();
-  m_LanguageSync = loadSetting(kLanguageSync, false).toBool();
-  m_InvertScrollDirection = loadSetting(kInvertScrollDirection, false).toBool();
-  m_guid = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
+      loadCommonSetting(Setting::kLoadSystemSettings, false).toBool();
+  m_ServerGroupChecked =
+      loadSetting(Setting::kGroupServerCheck, false).toBool();
+  m_UseExternalConfig =
+      loadSetting(Setting::kUseExternalConfig, false).toBool();
+  m_ConfigFile = loadSetting(Setting::kConfigFile,
+                             QDir::homePath() + "/" + m_SynergyConfigName)
+                     .toString();
+  m_UseInternalConfig =
+      loadSetting(Setting::kUseInternalConfig, false).toBool();
+  m_ClientGroupChecked =
+      loadSetting(Setting::kGroupClientCheck, false).toBool();
+  m_ServerHostname = loadSetting(Setting::kServerHostname).toString();
+  m_PreventSleep = loadSetting(Setting::kPreventSleep, false).toBool();
+  m_LanguageSync = loadSetting(Setting::kLanguageSync, false).toBool();
+  m_InvertScrollDirection =
+      loadSetting(Setting::kInvertScrollDirection, false).toBool();
+  m_guid = loadCommonSetting(Setting::kGuid, QUuid::createUuid()).toString();
   m_licenseRegistryUrl =
-      loadCommonSetting(kLicenseRegistryUrl,
+      loadCommonSetting(Setting::kLicenseRegistryUrl,
                         "https://api2.prod.symless.com/license/register")
           .toString();
-  m_licenseNextCheck = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
-  m_ClientHostMode = loadSetting(kClientHostMode, true).toBool();
-  m_ServerClientMode = loadSetting(kServerClientMode, true).toBool();
+  m_licenseNextCheck =
+      loadCommonSetting(Setting::kLicenseNextCheck, 0).toULongLong();
+  m_ClientHostMode = loadSetting(Setting::kClientHostMode, true).toBool();
+  m_ServerClientMode = loadSetting(Setting::kServerClientMode, true).toBool();
   m_InitiateConnectionFromServer =
-      loadSetting(kInitiateConnectionFromServer, false).toBool();
+      loadSetting(Setting::kInitiateConnectionFromServer, false).toBool();
 
   // only change the serial key if the settings being loaded contains a key
   bool updateSerial = ConfigWriter::make()->hasSetting(
-      settingName(kLoadSystemSettings), ConfigWriter::kCurrent);
+      settingName(Setting::kLoadSystemSettings), ConfigWriter::kCurrent);
   // if the setting exists and is not empty
-  updateSerial = updateSerial &&
-                 !loadSetting(kSerialKey, "").toString().trimmed().isEmpty();
+  updateSerial =
+      updateSerial &&
+      !loadSetting(Setting::kSerialKey, "").toString().trimmed().isEmpty();
 
   if (updateSerial) {
-    m_Serialkey = loadSetting(kSerialKey, "").toString().trimmed();
+    m_Serialkey = loadSetting(Setting::kSerialKey, "").toString().trimmed();
     m_Edition = static_cast<Edition>(
-        loadSetting(kEditionSetting, kUnregistered).toInt());
+        loadSetting(Setting::kEditionSetting, kUnregistered).toInt());
   }
 
   // Set the default path of the TLS certificate file in the users DIR
@@ -244,8 +252,8 @@ void AppConfig::loadSettings() {
           .arg(m_CoreInterface.getProfileDir(), "SSL", "Synergy.pem");
 
   m_TLSCertificatePath =
-      loadSetting(kTLSCertPath, certificateFilename).toString();
-  m_TLSKeyLength = loadSetting(kTLSKeyLength, "2048").toString();
+      loadSetting(Setting::kTLSCertPath, certificateFilename).toString();
+  m_TLSKeyLength = loadSetting(Setting::kTLSKeyLength, "2048").toString();
 
   if (getCryptoEnabled()) {
     generateCertificate();
@@ -253,43 +261,43 @@ void AppConfig::loadSettings() {
 }
 
 void AppConfig::saveSettings() {
-  setCommonSetting(kWizardLastRun, m_WizardLastRun);
-  setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
-  setCommonSetting(kGroupClientCheck, m_ClientGroupChecked);
-  setCommonSetting(kGroupServerCheck, m_ServerGroupChecked);
-  setCommonSetting(kGuid, m_guid);
-  setCommonSetting(kLicenseRegistryUrl, m_licenseRegistryUrl);
-  setCommonSetting(kLicenseNextCheck, m_licenseNextCheck);
+  setCommonSetting(Setting::kWizardLastRun, m_WizardLastRun);
+  setCommonSetting(Setting::kLoadSystemSettings, m_LoadFromSystemScope);
+  setCommonSetting(Setting::kGroupClientCheck, m_ClientGroupChecked);
+  setCommonSetting(Setting::kGroupServerCheck, m_ServerGroupChecked);
+  setCommonSetting(Setting::kGuid, m_guid);
+  setCommonSetting(Setting::kLicenseRegistryUrl, m_licenseRegistryUrl);
+  setCommonSetting(Setting::kLicenseNextCheck, m_licenseNextCheck);
 
   if (isWritable()) {
-    setSetting(kScreenName, m_ScreenName);
-    setSetting(kPort, m_Port);
-    setSetting(kInterfaceSetting, m_Interface);
-    setSetting(kLogLevel, m_LogLevel);
-    setSetting(kLogToFile, m_LogToFile);
-    setSetting(kLogFilename, m_LogFilename);
-    setSetting(kStartedBefore, m_StartedBefore);
+    setSetting(Setting::kScreenName, m_ScreenName);
+    setSetting(Setting::kPort, m_Port);
+    setSetting(Setting::kInterfaceSetting, m_Interface);
+    setSetting(Setting::kLogLevel, m_LogLevel);
+    setSetting(Setting::kLogToFile, m_LogToFile);
+    setSetting(Setting::kLogFilename, m_LogFilename);
+    setSetting(Setting::kStartedBefore, m_StartedBefore);
     // Refer to enum ElevateMode declaration for insight in to why this
     // flag is mapped this way
-    setSetting(kElevateModeSetting, m_ElevateMode == ElevateAlways);
-    setSetting(kElevateModeEnum, static_cast<int>(m_ElevateMode));
-    setSetting(kEditionSetting, m_Edition);
-    setSetting(kCryptoEnabled, m_CryptoEnabled);
-    setSetting(kAutoHide, m_AutoHide);
-    setSetting(kSerialKey, m_Serialkey);
-    setSetting(kLastVersion, m_lastVersion);
-    setSetting(kLastExpireWarningTime, m_LastExpiringWarningTime);
-    setSetting(kActivationHasRun, m_ActivationHasRun);
-    setSetting(kMinimizeToTray, m_MinimizeToTray);
-    setSetting(kUseExternalConfig, m_UseExternalConfig);
-    setSetting(kConfigFile, m_ConfigFile);
-    setSetting(kUseInternalConfig, m_UseInternalConfig);
-    setSetting(kServerHostname, m_ServerHostname);
-    setSetting(kPreventSleep, m_PreventSleep);
-    setSetting(kLanguageSync, m_LanguageSync);
-    setSetting(kInvertScrollDirection, m_InvertScrollDirection);
-    setSetting(kClientHostMode, m_ClientHostMode);
-    setSetting(kServerClientMode, m_ServerClientMode);
+    setSetting(Setting::kElevateModeSetting, m_ElevateMode == ElevateAlways);
+    setSetting(Setting::kElevateModeEnum, static_cast<int>(m_ElevateMode));
+    setSetting(Setting::kEditionSetting, m_Edition);
+    setSetting(Setting::kCryptoEnabled, m_CryptoEnabled);
+    setSetting(Setting::kAutoHide, m_AutoHide);
+    setSetting(Setting::kSerialKey, m_Serialkey);
+    setSetting(Setting::kLastVersion, m_lastVersion);
+    setSetting(Setting::kLastExpireWarningTime, m_LastExpiringWarningTime);
+    setSetting(Setting::kActivationHasRun, m_ActivationHasRun);
+    setSetting(Setting::kMinimizeToTray, m_MinimizeToTray);
+    setSetting(Setting::kUseExternalConfig, m_UseExternalConfig);
+    setSetting(Setting::kConfigFile, m_ConfigFile);
+    setSetting(Setting::kUseInternalConfig, m_UseInternalConfig);
+    setSetting(Setting::kServerHostname, m_ServerHostname);
+    setSetting(Setting::kPreventSleep, m_PreventSleep);
+    setSetting(Setting::kLanguageSync, m_LanguageSync);
+    setSetting(Setting::kInvertScrollDirection, m_InvertScrollDirection);
+    setSetting(Setting::kClientHostMode, m_ClientHostMode);
+    setSetting(Setting::kServerClientMode, m_ServerClientMode);
   }
 
   m_unsavedChanges = false;
@@ -453,29 +461,27 @@ void AppConfig::setPreventSleep(bool newValue) {
 
 bool AppConfig::getMinimizeToTray() { return m_MinimizeToTray; }
 
-QString AppConfig::settingName(AppConfig::Setting name) {
-  return m_SynergySettingsName[name];
+QString AppConfig::settingName(Setting name) {
+  auto index = static_cast<int>(name);
+  return m_SynergySettingsName[index];
 }
 
-template <typename T>
-void AppConfig::setSetting(AppConfig::Setting name, T value) {
+template <typename T> void AppConfig::setSetting(Setting name, T value) {
   ConfigWriter::make()->setSetting(settingName(name), value);
 }
 
-template <typename T>
-void AppConfig::setCommonSetting(AppConfig::Setting name, T value) {
+template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
   ConfigWriter::make()->setSetting(settingName(name), value,
                                    ConfigWriter::kUser);
   ConfigWriter::make()->setSetting(settingName(name), value,
                                    ConfigWriter::kSystem);
 }
 
-QVariant AppConfig::loadSetting(AppConfig::Setting name,
-                                const QVariant &defaultValue) {
+QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
   return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
 }
 
-QVariant AppConfig::loadCommonSetting(AppConfig::Setting name,
+QVariant AppConfig::loadCommonSetting(Setting name,
                                       const QVariant &defaultValue) const {
   QVariant result(defaultValue);
   QString setting(settingName(name));
@@ -500,7 +506,8 @@ void AppConfig::loadScope(ConfigWriter::Scope scope) {
   if (writer->getScope() != scope) {
     setDefaultValues();
     writer->setScope(scope);
-    if (writer->hasSetting(settingName(kScreenName), writer->getScope())) {
+    if (writer->hasSetting(settingName(Setting::kScreenName),
+                           writer->getScope())) {
       // If the user already has settings, then load them up now.
       writer->globalLoad();
     }
