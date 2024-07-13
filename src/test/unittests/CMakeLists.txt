@@ -71,8 +71,13 @@ list(APPEND headers ${platform_headers})
 
 set(ext_dir "../../../ext")
 
-include_directories("../.." "../../lib" ${ext_dir} ${gui_dir}
-                    "${ext_dir}/gtest/include" "${ext_dir}/gmock/include")
+include_directories(
+  "../.."
+  "../../lib"
+  ${ext_dir}
+  ${gui_dir}
+  "${ext_dir}/gtest/include"
+  "${ext_dir}/gmock/include")
 
 if(SYNERGY_ADD_HEADERS)
   list(APPEND sources ${headers})
@@ -89,7 +94,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(
   Qt6
-  COMPONENTS Core5Compat Core Widgets Network Test
+  COMPONENTS Core5Compat
+             Core
+             Widgets
+             Network
+             Test
   REQUIRED)
 
 add_executable(${target} ${sources})
