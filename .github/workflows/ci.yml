@@ -48,6 +48,9 @@ jobs:
           - name: windows-2022-x64
             runs-on: windows-2022-8-core-x64
 
+          - name: windows-11-arm64
+            runs-on: windows-11-8-core-arm64
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -188,7 +191,7 @@ jobs:
         distro:
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
-            runs-on: ubuntu-24.04-2-core-arm64
+            runs-on: ubuntu-24.04-8-core-arm64
             extra-packages: true
 
           - name: debian-12-amd64
@@ -206,7 +209,7 @@ jobs:
 
           - name: fedora-40-arm64
             container: symless/synergy-core:fedora-40-arm64
-            runs-on: ubuntu-24.04-2-core-arm64
+            runs-on: ubuntu-24.04-8-core-arm64
 
           - name: fedora-40-amd64
             container: symless/synergy-core:fedora-40-amd64
