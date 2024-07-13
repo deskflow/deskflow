@@ -14,7 +14,7 @@ public:
     m_mainWindow =
         std::make_shared<MainWindow>(*m_appConfig, *m_licenseManager);
 #else
-    mainWindow = std::make_shared<MainWindow>(*m_appConfig);
+    m_mainWindow = std::make_shared<MainWindow>(*m_appConfig);
 #endif
   }
 
