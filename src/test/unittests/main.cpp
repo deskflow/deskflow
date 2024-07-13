@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
   Log log;
   log.setFilter(kDEBUG4);
 
+  ::testing::GTEST_FLAG(throw_on_failure) = true;
   testing::InitGoogleTest(&argc, argv);
 
   // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
