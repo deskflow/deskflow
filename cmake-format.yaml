@@ -1,5 +1,8 @@
 format:
   line_ending: "auto"
 
+  # Always wrap arguments
+  max_pargs_hwrap: 2
+
 markup:
   first_comment_is_literal: true
