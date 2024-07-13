@@ -4,11 +4,15 @@
 #include <gtest/gtest.h>
 
 using testing::HasSubstr;
+using testing::internal::CaptureStderr;
 using testing::internal::CaptureStdout;
+using testing::internal::GetCapturedStderr;
 using testing::internal::GetCapturedStdout;
 
 #ifndef NDEBUG
 #define DEBUG_TEXT "\ttest file:1\n"
+#else
+#define DEBUG_TEXT ""
 #endif
 
 TEST(LogTests, print_simpleString_outputIsValid) {
@@ -35,4 +39,12 @@ TEST(LogTests, print_withPrintLevel_outputIsValid) {
   CLOG->print(CLOG_PRINT "test message");
 
   EXPECT_THAT(GetCapturedStdout(), "test message\n");
+}
+
+TEST(LogTests, print_withErrorLevel_outputIsValid) {
+  CaptureStderr();
+
+  CLOG->print(CLOG_ERR "test message");
+
+  EXPECT_THAT(GetCapturedStderr(), HasSubstr("ERROR: test message\n"));
 }
