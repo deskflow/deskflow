@@ -48,8 +48,6 @@ jobs:
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
-        env:
-          QT_QPA_PLATFORM: offscreen
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
