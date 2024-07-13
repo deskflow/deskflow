@@ -7,7 +7,13 @@ class TestMainWindow {
 public:
   class MainWindowProxy : public MainWindow {
   public:
+#ifdef SYNERGY_ENABLE_LICENSING
+    explicit MainWindowProxy(AppConfig &appConfig,
+                             LicenseManager &licenseManager)
+        : MainWindow(appConfig, licenseManager) {}
+#else
     explicit MainWindowProxy(AppConfig &appConfig) : MainWindow(appConfig) {}
+#endif
 
     bool _checkSecureSocket(const char *test) {
       return MainWindow::checkSecureSocket(test);
