@@ -352,14 +352,14 @@ void AppConfig::setElevateMode(ElevateMode em) {
 #ifdef SYNERGY_ENABLE_LICENSING
 void AppConfig::setEdition(Edition e) {
   setSettingModified(m_Edition, e);
-  setCommonSetting(kEditionSetting, m_Edition);
+  setCommonSetting(Setting::kEditionSetting, m_Edition);
 }
 
 Edition AppConfig::edition() const { return m_Edition; }
 
 void AppConfig::setSerialKey(const QString &serial) {
   setSettingModified(m_Serialkey, serial);
-  setCommonSetting(kSerialKey, m_Serialkey);
+  setCommonSetting(Setting::kSerialKey, m_Serialkey);
 }
 
 void AppConfig::clearSerialKey() { m_Serialkey.clear(); }
