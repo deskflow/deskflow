@@ -7,9 +7,7 @@ from lib.certificate import Certificate
 msbuild_cmd = "msbuild"
 signtool_cmd = "signtool"
 certutil_cmd = "certutil"
-cmake_env_var = "CMAKE_PREFIX_PATH"
 runner_temp_env_var = "RUNNER_TEMP"
-qt_base_dir_env_var = "QT_BASE_DIR"
 dist_dir = "dist"
 build_dir = "build"
 wix_solution_file = f"{build_dir}/installer/Synergy.sln"
@@ -188,54 +186,3 @@ class WindowsChoco:
                     print(f"Removed package from choco config: {remove}")
 
         tree.write(choco_config_file)
-
-
-class WindowsQt:
-    """Qt for Windows."""
-
-    def __init__(self, mirror_url, version, base_dir, modules):
-        self.mirror_url = mirror_url
-        self.version = version
-        self.modules = modules
-
-        # allows ci to override the qt base dir path
-        self.base_dir = os.environ.get(qt_base_dir_env_var)
-        if not self.base_dir:
-            print(f"QT_BASE_DIR not set, using: {base_dir}")
-            self.base_dir = base_dir
-
-        self.install_dir = f"{self.base_dir}\\{self.version}"
-
-    def get_install_dir(self):
-        if os.path.isdir(self.install_dir):
-            return self.install_dir
-
-    def install(self):
-        """Installs Qt on Windows."""
-
-        cmd_utils.run(
-            ["pip", "install", "aqtinstall"],
-            shell=True,
-            print_cmd=True,
-        )
-
-        args = ["python", "-m", "aqt", "install-qt"]
-        args.extend(["--outputdir", self.base_dir])
-        args.extend(["--base", self.mirror_url])
-        args.extend(
-            ["windows", "desktop", self.version, "win64_msvc2019_64", "-m"]
-            + self.modules
-        )
-
-        cmd_utils.run(
-            args,
-            shell=True,
-            print_cmd=True,
-        )
-
-        install_dir = self.get_install_dir()
-        if not install_dir:
-            raise RuntimeError(f"Qt not installed, path not found: {install_dir}")
-
-    def set_env_vars(self):
-        set_env_var(cmake_env_var, f"{self.get_install_dir()}\\msvc2019_64")

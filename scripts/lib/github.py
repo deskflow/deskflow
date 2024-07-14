@@ -3,7 +3,7 @@ import os
 github_key = "GITHUB_ENV"
 
 
-def set_env(key, value):
+def set_env_var(key, value):
     """
     Appends the key=value pair to the GitHub environment file.
     """

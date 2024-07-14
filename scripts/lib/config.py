@@ -16,10 +16,10 @@ class ConfigKeyError(RuntimeError):
         return f"Not found in {self.config_file}: {self.key}"
 
 
-def _get(dict, key, key_parent=None):
+def _get(dict, key, key_parent=None, required=True):
     value = dict.get(key)
 
-    if not value:
+    if required and not value:
         key_path = f"{root_key}:{key_parent}:{key}" if key_parent else key
         raise ConfigKeyError(config_file, key_path)
 
@@ -50,8 +50,8 @@ class Config:
         parent_key = f"{self.os_name}:{deps_key}"
         mirror_url = _get(qt, "mirror", parent_key)
         version = _get(qt, "version", parent_key)
-        base_dir = _get(qt, "install-dir", parent_key)
-        modules = _get(qt, "modules", parent_key)
+        base_dir = _get(qt, "base-dir", parent_key)
+        modules = _get(qt, "modules", parent_key, required=False)
 
         return mirror_url, version, base_dir, modules
 
@@ -70,8 +70,8 @@ class Config:
         command = _get(deps, "command", f"{self.os_name}:{distro}:{deps_key}")
         return cmd_utils.strip_continuation_sequences(command)
 
-    def get_choco_ci_config(self):
-        choco_ci_key = "choco-ci"
+    def get_windows_ci_config(self):
+        choco_ci_key = "ci"
         choco_ci = self.get_os_deps_value(choco_ci_key)
 
         choco_ci_path = f"{self.os_name}:{deps_key}:{choco_ci_key}"

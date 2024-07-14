@@ -4,8 +4,6 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
 
-path_env = "PATH"
-cmake_env = "CMAKE_PREFIX_PATH"
 cert_p12_env = "APPLE_P12_CERTIFICATE"
 notary_user_env = "APPLE_NOTARY_USER"
 shell_rc = "~/.zshrc"
@@ -22,23 +20,23 @@ keychain_path = "/Library/Keychains/System.keychain"
 
 
 def set_env_var(name, value):
-    text = f'export {name}="${name}:{value}"'
+    """
+    Adds to an environment variable in the shell rc file.
+
+    Returns True if the variable was added, False if it already exists.
+    """
+    text = f'export {name}="{value}:${name}"'
     file = os.path.expanduser(shell_rc)
     if os.path.exists(file):
         with open(file, "r") as f:
             if text in f.read():
-                return
+                return False
 
     print(f"Setting environment variable: {name}={name}")
     with open(file, "a") as f:
         f.write(f"\n{text}\n")
         print(f"Appended to {shell_rc}: {text}")
-
-
-def set_env_vars(cmake_prefix_command):
-    cmd_sub = f"$({cmake_prefix_command})"
-    set_env_var(path_env, cmd_sub)
-    set_env_var(cmake_env, cmd_sub)
+        return True
 
 
 def package(filename_base):

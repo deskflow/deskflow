@@ -3,6 +3,11 @@
 import os, sys, argparse, traceback
 import lib.env as env
 import lib.cmd_utils as cmd_utils
+import lib.qt_utils as qt_utils
+import lib.github as github
+
+path_env_var = "PATH"
+cmake_prefix_env_var = "CMAKE_PREFIX_PATH"
 
 
 def main():
@@ -11,12 +16,14 @@ def main():
         "--pause-on-exit", action="store_true", help="Useful on Windows"
     )
     parser.add_argument(
-        "--only", type=str, help="Only install the specified dependency"
-    )
-    parser.add_argument(
         "--only-python",
         action="store_true",
         help="Only install Python dependencies",
+    )
+    parser.add_argument(
+        "--ci-env",
+        action="store_true",
+        help="Set if running in CI environment",
     )
     args = parser.parse_args()
 
@@ -27,7 +34,7 @@ def main():
     error = False
     if not args.only_python:
         try:
-            deps = Dependencies(args.only)
+            deps = Dependencies(args.ci_env)
             deps.install()
         except Exception:
             traceback.print_exc()
@@ -42,12 +49,11 @@ def main():
 
 class Dependencies:
 
-    def __init__(self, only):
+    def __init__(self, ci_env):
         from lib.config import Config
 
         self.config = Config()
-        self.only = only
-        self.ci_env = env.is_running_in_ci()
+        self.ci_env = ci_env
 
         if self.ci_env:
             print("CI environment detected")
@@ -72,27 +78,18 @@ class Dependencies:
             windows.relaunch_as_admin(__file__)
             sys.exit()
 
-        only_qt = self.only == "qt"
+        qt = qt_utils.WindowsQt(*self.config.get_qt_config())
+        qt.install()
 
-        # for ci, skip qt; we install qt separately so we can cache it.
-        if not self.ci_env or only_qt:
-            qt = windows.WindowsQt(*self.config.get_qt_config())
-            qt_install_dir = qt.get_install_dir()
-            if qt_install_dir:
-                print(f"Skipping Qt, already installed at: {qt_install_dir}")
-            else:
-                qt.install()
-
-            if not self.ci_env:
-                qt.set_env_vars()
-
-            if only_qt:
-                return
+        if self.ci_env:
+            github.set_env_var(cmake_prefix_env_var, qt.get_install_dir())
+        else:
+            windows.set_env_var(cmake_prefix_env_var, qt.get_install_dir())
 
         choco = windows.WindowsChoco()
         if self.ci_env:
             choco.config_ci_cache()
-            edit_config, skip_packages = self.config.get_choco_ci_config()
+            edit_config, skip_packages = self.config.get_windows_ci_config()
             choco.remove_from_config(edit_config, skip_packages)
 
         command = self.config.get_deps_command()
@@ -102,11 +99,24 @@ class Dependencies:
         """Installs dependencies on macOS."""
         import lib.mac as mac
 
+        qt = qt_utils.MacQt(*self.config.get_qt_config())
+        qt.install()
+
+        qt_dir = qt.get_install_dir()
+        qt_bin_dir = os.path.join(qt_dir, "bin")
+        env_vars_set = 0
+        if self.ci_env:
+            github.set_env_var(cmake_prefix_env_var, qt_dir)
+            github.set_env_var(path_env_var, qt_bin_dir)
+        else:
+            env_vars_set += mac.set_env_var(cmake_prefix_env_var, qt_dir)
+            env_vars_set += mac.set_env_var(path_env_var, qt_bin_dir)
+
         command = self.config.get_os_deps_value("command")
         cmd_utils.run(command, shell=True, print_cmd=True)
 
-        if not self.ci_env:
-            mac.set_env_vars(self.config.get_os_value("qt-prefix-command"))
+        if env_vars_set:
+            print(f"To load env vars, run: source {mac.shell_rc}")
 
     def linux(self):
         """Installs dependencies on Linux."""
