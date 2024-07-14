@@ -48,23 +48,7 @@ jobs:
           - name: windows-2022-x64
             runs-on: windows-2022-8-core-x64
 
-          - name: windows-11-arm64
-            runs-on: windows-11-8-core-arm64
-            bootstrap: true
-
     steps:
-      - name: Bootstrap
-        if: ${{ matrix.target.bootstrap }}
-        run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-          choco install -y --no-progress git python
-          echo "C:\Program Files\Git\cmd" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          echo "C:\Python312" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          echo "C:\Python312\Scripts" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
