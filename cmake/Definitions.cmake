@@ -24,6 +24,11 @@ macro(configure_definitions)
 
   if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
+
+    # used by `add_compile_definitions` to set the macOS deployment target,
+    # which seems to be used by Qt to set the minimum macOS version.
+    # it's not clear why we're using this version format (without period).
+    set(COMPILE_OSX_DEPLOYMENT_TARGET 1200)
   endif()
 
   configure_ninja()
