@@ -16,4 +16,4 @@ def set_env_var(key, value):
 
     print(f"Setting GitHub env var: {key}={value}")
     with open(env_file, "a") as env_file:
-        env_file.write(f"{key}={value}\n")
+        env_file.write(f'{key}="{value}:${key}"\n')
