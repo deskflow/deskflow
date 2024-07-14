@@ -188,7 +188,7 @@ jobs:
         distro:
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
-            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            runs-on: ubuntu-24.04-8-core-arm64
             extra-packages: true
 
           - name: debian-12-amd64
@@ -206,7 +206,7 @@ jobs:
 
           - name: fedora-40-arm64
             container: symless/synergy-core:fedora-40-arm64
-            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            runs-on: ubuntu-24.04-8-core-arm64
 
           - name: fedora-40-amd64
             container: symless/synergy-core:fedora-40-amd64
