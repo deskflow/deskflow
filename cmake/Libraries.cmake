@@ -149,9 +149,6 @@ macro(configure_mac_libs)
       "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1"
   )
 
-  # Seems to be used by Qt and is in a strange format (without a period separator).
-  add_compile_definitions(OSX_DEPLOYMENT_TARGET=${COMPILE_OSX_DEPLOYMENT_TARGET})
-
   find_library(lib_ScreenSaver ScreenSaver)
   find_library(lib_IOKit IOKit)
   find_library(lib_ApplicationServices ApplicationServices)
