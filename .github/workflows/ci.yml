@@ -52,7 +52,7 @@ jobs:
           submodules: "recursive"
 
       - name: Cache Chocolatey packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/choco
           key: choco-${{ hashFiles('Chocolatey.config') }}
