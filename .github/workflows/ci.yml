@@ -61,7 +61,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./deps
-          key: ${{ runner.os }}-deps-${{ hashFiles('config.yml') }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
       - name: Install dependencies
         run: python ./scripts/install_deps.py --ci-env
@@ -131,7 +131,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./deps
-          key: ${{ runner.os }}-deps-${{ hashFiles('config.yml') }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
       - name: Install dependencies
         run: ./scripts/install_deps.py --ci-env
