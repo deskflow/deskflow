@@ -17,7 +17,7 @@ config:
   mac:
     qt-prefix-command: brew --prefix qt@6
     dependencies:
-      command: brew bundle --file=Brewfile --verbose --debug
+      command: brew bundle --file=Brewfile
 
   linux:
     debian: &debian
