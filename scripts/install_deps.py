@@ -107,7 +107,7 @@ class Dependencies:
         env_vars_set = 0
         if self.ci_env:
             github.set_env_var(cmake_prefix_env_var, qt_dir)
-            github.set_env_var(path_env_var, qt_bin_dir)
+            github.add_to_path(qt_bin_dir)
         else:
             env_vars_set += mac.set_env_var(cmake_prefix_env_var, qt_dir)
             env_vars_set += mac.set_env_var(path_env_var, qt_bin_dir)
