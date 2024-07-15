@@ -37,11 +37,6 @@ def is_linux():
     return get_os() == "linux"
 
 
-def is_running_in_ci():
-    """Returns True if running in a CI environment."""
-    return os.environ.get("CI")
-
-
 def get_linux_distro():
     """Detects the Linux distro."""
     os_file = "/etc/os-release"
