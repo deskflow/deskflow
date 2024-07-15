@@ -94,11 +94,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(
   Qt6
-  COMPONENTS Core5Compat
-             Core
-             Widgets
-             Network
-             Test
+  COMPONENTS Core Widgets Network Test
   REQUIRED)
 
 add_executable(${target} ${sources})
@@ -123,6 +119,5 @@ target_link_libraries(
   Qt6::Core
   Qt6::Widgets
   Qt6::Network
-  Qt6::Core5Compat
   Qt6::Test
   ${libs})
