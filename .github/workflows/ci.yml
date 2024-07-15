@@ -115,7 +115,7 @@ jobs:
             arch: arm64
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-          - name: "macos-14-intel"
+          - name: "macos-14-x86"
             timeout: 20
             os: "macos-14-large"
             arch: x64
