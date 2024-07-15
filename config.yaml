@@ -3,21 +3,22 @@ config:
     dependencies:
       command: choco install Chocolatey.config -y
       qt:
-        version: 6.7.2
+        version: 6.7
         mirror: https://qt.mirror.constant.com/
-        install-dir: C:\Qt
-        modules:
-          - qt5compat
-      choco-ci:
+        base-dir: ./deps/qt
+      ci:
         edit-config: Chocolatey.config
         skip-packages:
           - cmake
           - visualstudio2022buildtools
 
   mac:
-    qt-prefix-command: brew --prefix qt@6
     dependencies:
       command: brew bundle --file=Brewfile
+      qt:
+        version: 6.7
+        mirror: https://qt.mirror.constant.com/
+        base-dir: ./deps/qt
 
   linux:
     debian: &debian

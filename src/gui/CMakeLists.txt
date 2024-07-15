@@ -1,6 +1,6 @@
 find_package(
   Qt6
-  COMPONENTS Core5Compat Core Widgets Network
+  COMPONENTS Core Widgets Network
   REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
@@ -43,12 +43,7 @@ add_executable(
 include_directories(./src)
 target_link_libraries(synergy shared)
 
-target_link_libraries(
-  synergy
-  Qt6::Core
-  Qt6::Widgets
-  Qt6::Network
-  Qt6::Core5Compat)
+target_link_libraries(synergy Qt6::Core Qt6::Widgets Qt6::Network)
 target_compile_definitions(
   synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions(synergy
@@ -68,12 +63,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
   install(TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
   install(CODE "MESSAGE (\"Running: ${MACDEPLOYQT_CMD}\")")
-  install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
-
-  # HACK: Bundle again to fix missing deps. Since Qt 6, it seems that the first
-  # pass misses out many dependencies from the Framework dir (it also finishes
-  # quickly with a bunch of warnings), and after the 2nd pass (which takes much
-  # longer), all of the dependencies are copied to the bundle.
   install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
