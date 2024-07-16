@@ -1,7 +1,36 @@
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Symless Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "MainWindow.h"
+
+#include "test/mock/gui/QtTests.h"
 
 #include <gtest/gtest.h>
 #include <memory>
+
+class MainWindowTests : public QtTests {
+public:
+  static void SetUpTestSuite() {
+    QtTests::SetUpTestSuite();
+    qRegisterMetaType<Edition>("Edition");
+  }
+
+  static std::shared_ptr<QApplication> s_app;
+};
 
 class TestMainWindow {
 public:
@@ -21,6 +50,7 @@ public:
   };
 
   TestMainWindow() {
+
     m_appConfig = std::make_shared<AppConfig>(false);
 
 #ifdef SYNERGY_ENABLE_LICENSING
@@ -37,7 +67,7 @@ public:
   std::shared_ptr<MainWindowProxy> m_mainWindow;
 };
 
-TEST(MainWindowTests, checkSecureSocket_noMatch_expectFalse) {
+TEST_F(MainWindowTests, checkSecureSocket_noMatch_expectFalse) {
   TestMainWindow testMainWindow;
 
   bool result = testMainWindow.m_mainWindow->_checkSecureSocket("test");
@@ -45,7 +75,7 @@ TEST(MainWindowTests, checkSecureSocket_noMatch_expectFalse) {
   EXPECT_FALSE(result);
 }
 
-TEST(MainWindowTests, checkSecureSocket_match_expectTrue) {
+TEST_F(MainWindowTests, checkSecureSocket_match_expectTrue) {
   TestMainWindow testMainWindow;
 
   const char *test = "network encryption protocol: test";

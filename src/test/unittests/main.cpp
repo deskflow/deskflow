@@ -18,8 +18,7 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
-#include <memory>
-#include <qapplication.h>
+// #include <QApplication>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -29,8 +28,8 @@
 #include <gtest/gtest.h>
 
 int main(int argc, char **argv) {
-  // required to solve the issue where qt objects need access to a qt app.
-  QApplication app(argc, argv);
+  // // required to solve the issue where qt objects need access to a qt app.
+  // QApplication app(argc, argv);
 
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.
