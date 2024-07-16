@@ -10,14 +10,13 @@ This is the open source core component of Synergy, a keyboard and mouse sharing 
 * [Download Synergy](https://symless.com/synergy/download)
 * [Contact support](https://symless.com/synergy/contact)
 * [Help articles](https://symless.com/synergy/help)
+* [Project Wiki](https://github.com/symless/synergy-core/wiki)
 
 ## Developer quick start
 
-Simplified instructions for those who want to contribute to development of Synergy Core.
+Simplified instructions for those who want to contribute to the development of Synergy Core.
 
-You'll also need to read the 
-[quick start companion](https://github.com/symless/synergy-core/wiki/Quick-start-companion)
-which contains essential instructions.
+Having problems? Check the [Quick Start FAQ](https://github.com/symless/synergy-core/wiki/Quick-Start-FAQ) wiki page.
 
 **Dependencies:**
 ```
@@ -50,13 +49,3 @@ cmake --build build -j8
 ```
 ./build/bin/unittests
 ```
-
-## Developer resources
-
-For people who want to contribute to the development of Synergy.
-
-* [Getting started](https://github.com/symless/synergy-core/wiki/Getting-Started) - How to checkout the code from git and use the right branch.
-* [Compiling](https://github.com/symless/synergy-core/wiki/Compiling) - Instructions on how to compile Synergy Core from source.
-* [Text config](https://github.com/symless/synergy-core/wiki/Text-Config) - Write a text config file when running Synergy Core manually.
-* [Command line](https://github.com/symless/synergy-core/wiki/Command-Line) - Go full manual and run Synergy Core from the command line.
-* [Synergy Vintage](https://github.com/nbolton/synergy-vintage) - Use Synergy on operating systems available between 1995 and 2006.
