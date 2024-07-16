@@ -51,10 +51,10 @@ jobs:
           ./build/bin/unittests \
           2>&1 | tee valgrind.log
 
-      - name: Parse summaries
+      - name: Parse summary
         id: parse
         run: |
-          echo "summaries<<EOF" >> $GITHUB_OUTPUT
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT
           echo >> $GITHUB_OUTPUT
           echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> $GITHUB_OUTPUT
@@ -67,8 +67,8 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
-            **Valgrind summaries**
-            See (workflow output)[${{ env.URL }}] for full log.
+            ## Valgrind summary
+            See [workflow output](${{ env.URL }}) for full `valgrind` output.
             ```
-            ${{ steps.parse.outputs.summaries }}
+            ${{ steps.parse.outputs.summary }}
             ```
