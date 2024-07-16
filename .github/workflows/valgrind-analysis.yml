@@ -58,4 +58,21 @@ jobs:
           --show-leak-kinds=all \
           --track-origins=yes \
           --verbose \
+          --log-file=valgrind.log \
           ./build/bin/unittests
+
+      - name: Parse summaries
+        id: parse
+        run: |
+          echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> summary.txt
+          echo >> summary.txt
+          echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> summary.txt
+
+      - name: Post comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: Valgrind Summary
+          delete: true
+          message: |
+            $(cat summary.txt)
