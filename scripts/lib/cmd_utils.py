@@ -1,10 +1,17 @@
 import subprocess
 import sys
 import lib.env as env
-import colorama
-from colorama import Fore
 
-colorama.init()
+try:
+    import colorama  # type: ignore
+    from colorama import Fore  # type: ignore
+
+    colorama.init()
+except ImportError:
+
+    class Fore:
+        RESET = ""
+        YELLOW = ""
 
 
 def has_command(command):
