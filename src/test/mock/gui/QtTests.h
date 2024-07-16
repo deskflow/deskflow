@@ -24,12 +24,16 @@
 class QtTests : public ::testing::Test {
 public:
   static void SetUpTestSuite() {
+    GTEST_LOG_(INFO) << "Qt window setup";
     char *fakeArgv[] = {(char *)""};
     int fakeArgc = 0;
-    if (!s_app) {
-      s_app = std::make_shared<QApplication>(fakeArgc, fakeArgv);
-    }
+    s_app = std::make_unique<QApplication>(fakeArgc, fakeArgv);
   }
 
-  static std::shared_ptr<QApplication> s_app;
+  static void TearDownTestSuite() {
+    s_app.reset();
+    GTEST_LOG_(INFO) << "Qt window teardown";
+  }
+
+  static std::unique_ptr<QApplication> s_app;
 };

@@ -2,6 +2,6 @@
 
 #include "QtTests.h"
 
-std::shared_ptr<QApplication> QtTests::s_app;
+std::unique_ptr<QApplication> QtTests::s_app;
 
 #endif
