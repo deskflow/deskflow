@@ -22,6 +22,7 @@ body:
       label: What type of Synergy user are you?
       description: This will help us understand the context of your issue.
       options:
+        -
         - Customer
         - Code contributor
         - Community user
