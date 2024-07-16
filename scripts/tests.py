@@ -18,15 +18,24 @@ def main():
         action="store_true",
         help="Ignore the return code of the test command",
     )
+    parser.add_argument(
+        "--valgrind",
+        action="store_true",
+        help="Run the test command with valgrind",
+    )
 
     args = parser.parse_args()
     binary = get_binary_path(args)
+
     if args.filter_file:
         file_base = os.path.basename(args.filter_file)
         without_ext = os.path.splitext(file_base)[0]
         command = [binary, f"--gtest_filter={without_ext}*"]
     else:
         command = [binary]
+
+    if args.valgrind:
+        command = ["valgrind"] + command
 
     result = cmd_utils.run(command, print_cmd=True, check=False)
     if not args.ignore_return_code:

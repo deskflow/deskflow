@@ -1,6 +1,10 @@
 import subprocess
 import sys
 import lib.env as env
+import colorama
+from colorama import Fore
+
+colorama.init()
 
 
 def has_command(command):
@@ -120,7 +124,7 @@ def run(
 
     if result.returncode != 0:
         print(
-            f"Command exited with code {result.returncode}: {command_str}",
+            f"{Fore.YELLOW}Command exited with code {result.returncode}:{Fore.RESET} {command_str}",
             file=sys.stderr,
         )
 
