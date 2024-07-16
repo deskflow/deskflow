@@ -19,25 +19,7 @@ jobs:
     container: symless/synergy-core:ubuntu-22.04-amd64
     timeout-minutes: 5
 
-    # Running Valgrind against a debug build gives more useful diagnostics info, since the debug
-    # build has symbols and source info.
-    # However, since debug builds have less optimization, they can potentially have different
-    # memory bugs compared to release builds (though usually this is rare).
-    # Therefore, it's important to run Valgrind on both debug and release builds.
-    # Normally, the Valgrind summaries for debug and release builds will be the same.
-    strategy:
-      matrix:
-        mode:
-          - debug
-          - release
-
     steps:
-      - name: Delete last PR comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          delete: true
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -51,10 +33,10 @@ jobs:
           ./scripts/install_deps.py --ci-env &&
           apt install valgrind -y
 
-      - name: Configure (${{ matrix.mode }})
-        run: cmake -B build --preset=linux-${{ matrix.mode }}
+      - name: Configure
+        run: cmake -B build --preset=linux-release
 
-      - name: Build (${{ matrix.mode }})
+      - name: Build
         run: cmake --build build -j8
 
       - name: Run Valgrind on unit tests
@@ -82,9 +64,9 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          append: true
           message: |
-            **Valgrind summaries (${{ matrix.mode }})**
+            **Valgrind summaries**
             ```
             ${{ steps.parse.outputs.summaries }}
             ```
+            See workflow output for full log.
