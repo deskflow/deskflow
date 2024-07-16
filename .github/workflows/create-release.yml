@@ -9,6 +9,8 @@ on:
 
 jobs:
   create-release:
+    if: ${{ vars.CREATE_RELEASE }}
+
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
