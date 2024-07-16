@@ -30,6 +30,12 @@ jobs:
           - release
 
     steps:
+      - name: Delete previous
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          delete: true
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -49,7 +55,7 @@ jobs:
       - name: Build (${{ matrix.mode }})
         run: cmake --build build -j8
 
-      - name: Test (${{ matrix.mode }})
+      - name: Valgrind on tests
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
@@ -76,5 +82,9 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: Valgrind Summary (${{ matrix.mode }})
-          message: ${{ steps.parse.outputs.summary }}
+          append: true
+          message: |
+            # Valgrind ${{ matrix.mode }}
+            ```
+            ${{ steps.parse.outputs.summary }}
+            ```
