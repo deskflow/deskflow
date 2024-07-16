@@ -34,10 +34,9 @@ body:
     attributes:
       label: Support ticket number (for customers)
       description: |
-        Customers only (non-customers please ignore this field).
         If you have a support ticket number, please enter it here.
-        Customers are advised to (open a support ticket)[https://symless.com/synergy/contact]
-        before submitting a bug report.
+        Customers are advised to open a support ticket first: https://symless.com/synergy/contact
+        This is for customers only (non-customers please ignore this field).
         Leave this blank if you do not have a support ticket or if you're not a customer.
     validations:
       required: false
@@ -45,7 +44,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Version number
+      label: Synergy version number
       description: You can find the Synergy version number on the about screen.
       placeholder: 1.2.3
     validations:
@@ -54,7 +53,7 @@ body:
   - type: checkboxes
     id: os
     attributes:
-      label: Operating systems
+      label: Operating systems (OS)
       description: Which operating systems (OS) are you using?
       options:
         - label: Windows
@@ -69,7 +68,7 @@ body:
     attributes:
       label: OS versions or Linux distros
       description: |
-        Please provide the version number of your operating system.
+        Please provide the version number of your operating system (OS).
         If you're using Linux, please provide the name of the distribution.
       placeholder: Windows 11, macOS 15, Ubuntu 24.04
     validations:
@@ -78,7 +77,7 @@ body:
   - type: textarea
     id: config
     attributes:
-      label: Configuration
+      label: Synergy configuration
       description: |
         Please provide a very brief description of your configuration.
         Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
@@ -108,12 +107,12 @@ body:
   - type: dropdown
     id: product
     attributes:
-      label: Product
-      description: Which product are you using?
+      label: Product name
+      description: Which Synergy product are you using?
       options:
-        - label: Synergy 1
-        - label: Synergy 2
-        - label: Synergy 3
+        - Synergy 1
+        - Synergy 2
+        - Synergy 3
       default: 0
     validations:
       required: true
