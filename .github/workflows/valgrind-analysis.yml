@@ -72,7 +72,7 @@ jobs:
       - name: Parse summaries
         id: parse
         run: |
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "summaries<<EOF" >> $GITHUB_OUTPUT
           echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT
           echo >> $GITHUB_OUTPUT
           echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> $GITHUB_OUTPUT
@@ -86,5 +86,5 @@ jobs:
           message: |
             **Valgrind summaries (${{ matrix.mode }})**
             ```
-            ${{ steps.parse.outputs.summary }}
+            ${{ steps.parse.outputs.summaries }}
             ```
