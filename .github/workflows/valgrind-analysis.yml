@@ -1,0 +1,61 @@
+name: "Valgrind Analysis"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
+
+jobs:
+  valgrind-analysis:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:ubuntu-22.04-amd64
+    timeout-minutes: 5
+
+    # Running Valgrind against a debug build gives more useful diagnostics info, since it has
+    # symbols and source info, but since debug builds have less optimization, they can hide some
+    # bugs that may only appear in release builds.
+    # Therefore, it's important to run Valgrind on both debug and release builds.
+    strategy:
+      matrix:
+        mode:
+          - debug
+          - release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Install dependencies
+        run: |
+          ./scripts/install_deps.py --ci-env &&
+          apt install valgrind -y
+
+      - name: Configure (${{ matrix.mode }})
+        run: cmake -B build --preset=linux-${{ matrix.mode }}
+
+      - name: Build (${{ matrix.mode }})
+        run: cmake --build build -j8
+
+      - name: Test (${{ matrix.mode }})
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          valgrind \
+          --leak-check=full \
+          --show-leak-kinds=all \
+          --track-origins=yes \
+          --verbose \
+          ./build/bin/unittests
