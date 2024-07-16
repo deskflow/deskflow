@@ -1,0 +1,24 @@
+name: "Valgrind Analysis"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref || github.run_id }}"
+  cancel-in-progress: true
+
+jobs:
+  valgrind-analysis:
+    runs-on: ubuntu-latest
+    container: symless/synergy-core:ubuntu-22.04-amd64
+    timeout-minutes: 5
+
+    steps:
+      - name: Stub
+        run: echo stub
