@@ -66,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
             **Valgrind summaries**
+            See workflow output for full log.
             ```
             ${{ steps.parse.outputs.summaries }}
             ```
-            See workflow output for full log.
