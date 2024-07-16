@@ -68,11 +68,13 @@ jobs:
           echo >> summary.txt
           echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> summary.txt
 
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          cat summary.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Post comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: Valgrind Summary (${{ matrix.mode }})
-          delete: true
-          message: |
-            $(cat summary.txt)
+          message: ${{ steps.parse.outputs.summary }}
