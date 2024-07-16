@@ -20,8 +20,8 @@ jobs:
     timeout-minutes: 5
 
     # Running Valgrind against a debug build gives more useful diagnostics info, since it has
-    # symbols and source info, but since debug builds have less optimization, they can hide some
-    # bugs that may only appear in release builds.
+    # symbols and source info, but since debug builds have less optimization, they can potentially
+    # hide some bugs that may only appear in release builds (though usually rare).
     # Therefore, it's important to run Valgrind on both debug and release builds.
     strategy:
       matrix:
