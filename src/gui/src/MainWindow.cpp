@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -25,15 +25,10 @@
 
 #include "AboutDialog.h"
 #include "ActivationDialog.h"
-#include "CommandProcess.h"
-#include "DataDownloader.h"
 #include "Fingerprint.h"
 #include "LicenseManager.h"
-#include "ProcessorArch.h"
-#include "QUtility.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "SslCertificate.h"
 #include <QPushButton>
 #include <shared/EditionType.h>
 
@@ -55,8 +50,6 @@
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
-
-static const char *tlsCheckString = "network encryption protocol: ";
 
 static const int debugLogLevel = 1;
 
@@ -181,7 +174,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
 }
 
 MainWindow::~MainWindow() {
-  if (appConfig().processMode() == Desktop) {
+  if (appConfig().processMode() == ProcessMode::kDesktop) {
     m_ExpectedRunningState = kStopped;
     try {
       stopDesktop();
@@ -216,7 +209,7 @@ void MainWindow::open() {
   // auto hiding before the user has configured synergy (which of course
   // confuses first time users, who think synergy has crashed).
   if (appConfig().startedBefore() &&
-      appConfig().processMode() == ProcessMode::Desktop) {
+      appConfig().processMode() == ProcessMode::kDesktop) {
     startSynergy();
   }
 }
@@ -486,20 +479,16 @@ void MainWindow::checkFingerprint(const QString &line) {
   }
 }
 
-void MainWindow::checkSecureSocket(const QString &line) {
-  // obviously not very secure, since this can be tricked by injecting something
-  // into the log. however, since we don't have IPC between core and GUI...
-  // patches welcome.
-  const int index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
-  if (index > 0) {
-    secureSocket(true);
-
-    // Get the protocol version from the line
-    m_SecureSocketVersion = line.mid(
-        index + strlen(tlsCheckString)); // Compliant: we made sure that
-                                         // tlsCheckString variable ended with
-                                         // null(static const char* declaration)
+bool MainWindow::checkSecureSocket(const QString &line) {
+  static const QString tlsCheckString = "network encryption protocol: ";
+  const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
+  if (index == -1) {
+    return false;
   }
+
+  secureSocket(true);
+  m_SecureSocketVersion = line.mid(index + tlsCheckString.size());
+  return true;
 }
 
 #ifdef Q_OS_MAC
@@ -554,8 +543,8 @@ void MainWindow::startSynergy() {
   }
   m_LicenseManager->registerLicense();
 #endif
-  bool desktopMode = appConfig().processMode() == Desktop;
-  bool serviceMode = appConfig().processMode() == Service;
+  bool desktopMode = appConfig().processMode() == ProcessMode::kDesktop;
+  bool serviceMode = appConfig().processMode() == ProcessMode::kService;
 
   appendLogDebug("starting process");
   m_ExpectedRunningState = kStarted;
@@ -859,9 +848,9 @@ void MainWindow::stopSynergy() {
 
   m_ExpectedRunningState = kStopped;
 
-  if (appConfig().processMode() == Service) {
+  if (appConfig().processMode() == ProcessMode::kService) {
     stopService();
-  } else if (appConfig().processMode() == Desktop) {
+  } else if (appConfig().processMode() == ProcessMode::kDesktop) {
     stopDesktop();
   }
 

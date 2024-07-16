@@ -18,7 +18,7 @@
 #include "synergy/ClipboardChunk.h"
 #include "synergy/protocol_types.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(ClipboardChunkTests, start_formatStartChunk) {
   ClipboardID id = 0;

@@ -64,6 +64,8 @@ jobs:
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
       - name: Make coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           cd build
           make coverage

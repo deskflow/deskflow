@@ -21,7 +21,7 @@
 
 #include "server/Server.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class IEventQueue;
 

@@ -24,8 +24,8 @@
 #include "ipc/IpcLogOutputter.h"
 #include "mt/Thread.h"
 
-#include "test/global/gmock.h"
-#include "test/global/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 // HACK: ipc logging only used on windows anyway
 #if WINAPI_MSWINDOWS

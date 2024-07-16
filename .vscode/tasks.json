@@ -27,15 +27,47 @@
       "dependsOn": ["build"]
     },
     {
-      "label": "unittests",
-      "type": "shell",
-      "command": "./build/bin/unittests",
+      "label": "gui",
+      "type": "process",
+      "command": "${workspaceFolder}/build/bin/synergy",
       "dependsOn": ["build"]
     },
     {
-      "label": "integtests",
+      "label": "unittests (current)",
       "type": "shell",
-      "command": "./build/bin/integtests",
+      "command": "python",
+      "args": [
+        "./scripts/tests.py",
+        "--unit-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}"
+      ],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "integtests (current)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "./scripts/tests.py",
+        "--integ-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}"
+      ],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "unittests (all)",
+      "type": "shell",
+      "command": "python",
+      "args": ["./scripts/tests.py", "--unit-tests", "--ignore-return-code"],
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "integtests (all)",
+      "type": "shell",
+      "command": "python",
+      "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
       "dependsOn": ["build"]
     }
   ]

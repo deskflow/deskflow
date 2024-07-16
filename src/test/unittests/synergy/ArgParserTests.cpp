@@ -24,7 +24,7 @@
 #include "synergy/ServerArgs.h"
 #include "synergy/ToolArgs.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue) {
   int i = 1;

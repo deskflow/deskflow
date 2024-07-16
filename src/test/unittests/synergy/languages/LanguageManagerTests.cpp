@@ -16,7 +16,8 @@
  */
 
 #include "synergy/languages/LanguageManager.h"
-#include "test/global/gtest.h"
+
+#include <gtest/gtest.h>
 
 TEST(LanguageManager, RemoteLanguagesTest) {
   std::string remoteLanguages = "ruenuk";

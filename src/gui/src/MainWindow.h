@@ -32,7 +32,7 @@
 #include "ClientConnection.h"
 #include "ConfigWriter.h"
 #include "Ipc.h"
-#include "IpcClient.h"
+#include "QIpcClient.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "VersionChecker.h"
@@ -188,7 +188,7 @@ protected:
   QString getProfileRootForArg();
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
-  void checkSecureSocket(const QString &line);
+  bool checkSecureSocket(const QString &line);
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
 #endif
@@ -215,7 +215,7 @@ private:
   ServerConfig m_ServerConfig;
   bool m_AlreadyHidden;
   VersionChecker m_VersionChecker;
-  IpcClient m_IpcClient;
+  QIpcClient m_IpcClient;
   QMenuBar *m_pMenuBar;
   QMenu *m_pMenuFile;
   QMenu *m_pMenuEdit;

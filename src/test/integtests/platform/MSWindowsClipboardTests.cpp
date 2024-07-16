@@ -19,8 +19,8 @@
 #include "platform/IMSWindowsClipboardFacade.h"
 #include "platform/MSWindowsClipboard.h"
 
-#include "test/global/gmock.h"
-#include "test/global/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 class MSWindowsClipboardTests : public ::testing::Test {
 protected:

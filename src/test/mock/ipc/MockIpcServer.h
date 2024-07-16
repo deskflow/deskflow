@@ -21,7 +21,7 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 using ::testing::_;
 using ::testing::Invoke;

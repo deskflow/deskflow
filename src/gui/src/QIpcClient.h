@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,19 +18,23 @@
 #pragma once
 
 #include <QAbstractSocket>
+#include <QDataStream>
 #include <QObject>
+#include <QTcpSocket>
 
 #include "ElevateMode.h"
+#include "proxy/QDataStreamProxy.h"
 
-class QTcpSocket;
 class IpcReader;
 
-class IpcClient : public QObject {
+class QIpcClient : public QObject {
   Q_OBJECT
 
 public:
-  IpcClient();
-  virtual ~IpcClient();
+  using StreamProvider = std::function<std::shared_ptr<QDataStreamProxy>()>;
+
+  explicit QIpcClient(const StreamProvider &streamProvider = nullptr);
+  ~QIpcClient() override;
 
   void sendHello();
   void sendCommand(const QString &command, ElevateMode elevate);
@@ -59,4 +62,5 @@ private:
   IpcReader *m_Reader;
   bool m_ReaderStarted;
   bool m_Enabled;
+  StreamProvider m_StreamProvider;
 };

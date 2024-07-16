@@ -19,7 +19,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 const std::string testDir = "tmp/test";
 const std::wstring testDirW = L"tmp/test";

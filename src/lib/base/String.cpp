@@ -17,7 +17,6 @@
 
 #include "base/String.h"
 #include "arch/Arch.h"
-#include "common/common.h"
 #include "common/stdvector.h"
 
 #include <algorithm>
@@ -49,6 +48,7 @@ String vformat(const char *fmt, va_list args) {
   std::vector<size_t> width;
   std::vector<size_t> index;
   size_t maxIndex = 0;
+  size_t fmtLength = 0; // To store the length of fmt
   const char *scan = fmt;
   while (*scan) {
     if (*scan == '%') {
@@ -82,6 +82,7 @@ String vformat(const char *fmt, va_list args) {
       }
     }
     ++scan;
+    ++fmtLength; // Increment fmtLength for each character processed
   }
 
   // get args
@@ -97,9 +98,7 @@ String vformat(const char *fmt, va_list args) {
   }
 
   // compute final length
-  size_t resultLength =
-      strlen(fmt); // Compliant: we made sure that fmt variable ended with
-                   // null(in while loop higher)
+  size_t resultLength = fmtLength;
   const int n = static_cast<int>(pos.size());
   for (int i = 0; i < n; ++i) {
     resultLength -= width[i];

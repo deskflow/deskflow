@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
 #if WINAPI_XWINDOWS
 #include "synergy/unix/X11LayoutsParser.h"
-#include "test/global/gtest.h"
+
 #include <filesystem>
 #include <fstream>
+#include <gtest/gtest.h>
 
 const std::string testDir = "tmp/test";
 

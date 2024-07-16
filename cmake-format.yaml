@@ -1,5 +1,9 @@
 format:
+  # Solves line ending issues on Windows.
   line_ending: "auto"
+
+  # Any more than 4 args, and function calls become hard to read.
+  max_pargs_hwrap: 4
 
 markup:
   first_comment_is_literal: true

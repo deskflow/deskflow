@@ -228,7 +228,12 @@ macro(configure_xorg_libs)
 
     # Xtxt depends on X11.
     set(HAVE_X11)
-    list(APPEND libs Xtst X11 xkbfile)
+    list(
+      APPEND
+      libs
+      Xtst
+      X11
+      xkbfile)
 
   else()
 
@@ -280,8 +285,12 @@ macro(configure_windows_libs)
     comsuppw
     Shlwapi)
 
-  add_definitions(/DWIN32 /D_WINDOWS /D_CRT_SECURE_NO_WARNINGS
-                  /DSYNERGY_VERSION=\"${SYNERGY_VERSION}\" /D_XKEYCHECK_H)
+  add_definitions(
+    /DWIN32
+    /D_WINDOWS
+    /D_CRT_SECURE_NO_WARNINGS
+    /DSYNERGY_VERSION=\"${SYNERGY_VERSION}\"
+    /D_XKEYCHECK_H)
 
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/win/version.rc.in
                  ${CMAKE_BINARY_DIR}/src/version.rc @ONLY)

@@ -17,7 +17,8 @@
  */
 
 #include "platform/OSXClipboardUTF8Converter.h"
-#include "test/global/gtest.h"
+
+#include <gtest/gtest.h>
 
 TEST(OSXClipboardUTF8ConverterTests, test_Format) {
   OSXClipboardUTF8Converter converter;

@@ -21,7 +21,7 @@
 
 #include "synergy/App.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockApp : public App {
 public:

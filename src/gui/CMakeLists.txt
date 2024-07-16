@@ -8,7 +8,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file(GLOB GUI_SOURCE_FILES src/*.cpp src/*.h src/validators/* src/widgets/*)
+file(
+  GLOB
+  GUI_SOURCE_FILES
+  src/*.cpp
+  src/*.h
+  src/validators/*
+  src/widgets/*)
 file(GLOB GUI_UI_FILES src/*.ui)
 file(GLOB ACTIVATION_FILES src/*Activation* src/*License*)
 
@@ -26,8 +32,13 @@ if(WIN32)
   set(GUI_RC_FILES res/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
 
-add_executable(synergy WIN32 ${GUI_SOURCE_FILES} ${GUI_UI_FILES}
-                             ${GUI_RC_FILES} res/Synergy.qrc ${QM_FILES})
+add_executable(
+  synergy WIN32
+  ${GUI_SOURCE_FILES}
+  ${GUI_UI_FILES}
+  ${GUI_RC_FILES}
+  res/Synergy.qrc
+  ${QM_FILES})
 
 include_directories(./src)
 target_link_libraries(synergy shared)
