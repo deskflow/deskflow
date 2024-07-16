@@ -19,7 +19,8 @@
 #define TEST_ENV
 
 #include "shared/SerialKeyEdition.h"
-#include "test/global/gtest.h"
+
+#include <gtest/gtest.h>
 
 TEST(SerialKeyEditionTests, equal_operator) {
   SerialKeyEdition edition1(kPro);

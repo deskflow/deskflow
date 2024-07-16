@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,17 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "IpcClient.h"
+#include "QIpcClient.h"
 #include "Ipc.h"
 #include "IpcReader.h"
+
 #include <QDataStream>
 #include <QHostAddress>
-#include <QTcpSocket>
 #include <QTimer>
-#include <iostream>
 
-IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false) {
+QIpcClient::QIpcClient(const StreamProvider &streamProvider)
+    : m_ReaderStarted(false), m_Enabled(false),
+      m_StreamProvider(streamProvider) {
+
   m_Socket = new QTcpSocket(this);
+
+  if (!m_StreamProvider) {
+    m_StreamProvider = [this]() {
+      return std::make_shared<QDataStreamProxy>(m_Socket);
+    };
+  }
+
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
   connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
           SLOT(error(QAbstractSocket::SocketError)));
@@ -36,14 +44,17 @@ IpcClient::IpcClient() : m_ReaderStarted(false), m_Enabled(false) {
           SLOT(handleReadLogLine(const QString &)));
 }
 
-IpcClient::~IpcClient() {}
+QIpcClient::~QIpcClient() {
+  delete m_Reader;
+  delete m_Socket;
+}
 
-void IpcClient::connected() {
+void QIpcClient::connected() {
   sendHello();
   infoMessage("connection established");
 }
 
-void IpcClient::connectToHost() {
+void QIpcClient::connectToHost() {
   m_Enabled = true;
 
   infoMessage("connecting to service...");
@@ -55,13 +66,13 @@ void IpcClient::connectToHost() {
   }
 }
 
-void IpcClient::disconnectFromHost() {
+void QIpcClient::disconnectFromHost() {
   infoMessage("service disconnect");
   m_Reader->stop();
   m_Socket->close();
 }
 
-void IpcClient::error(QAbstractSocket::SocketError error) {
+void QIpcClient::error(QAbstractSocket::SocketError error) {
   QString text;
   switch (error) {
   case 0:
@@ -80,48 +91,46 @@ void IpcClient::error(QAbstractSocket::SocketError error) {
   QTimer::singleShot(1000, this, SLOT(retryConnect()));
 }
 
-void IpcClient::retryConnect() {
+void QIpcClient::retryConnect() {
   if (m_Enabled) {
     connectToHost();
   }
 }
 
-void IpcClient::sendHello() {
-  QDataStream stream(m_Socket);
-  stream.writeRawData(kIpcMsgHello, 4);
+void QIpcClient::sendHello() {
+  auto stream = m_StreamProvider();
+  stream->writeRawData(kIpcMsgHello, 4);
 
   char typeBuf[1];
   typeBuf[0] = kIpcClientGui;
-  stream.writeRawData(typeBuf, 1);
+  stream->writeRawData(typeBuf, 1);
 }
 
-void IpcClient::sendCommand(const QString &command, ElevateMode const elevate) {
-  QDataStream stream(m_Socket);
-
-  stream.writeRawData(kIpcMsgCommand, 4);
+void QIpcClient::sendCommand(const QString &command,
+                             ElevateMode const elevate) {
+  auto stream = m_StreamProvider();
+  stream->writeRawData(kIpcMsgCommand, 4);
 
   std::string stdStringCommand = command.toStdString();
   const char *charCommand = stdStringCommand.c_str();
-  int length = static_cast<int>(
-      strlen(charCommand)); // Compliant: we made sure that charCommand variable
-                            // ended with null(String type is safe)
+  auto length = static_cast<int>(stdStringCommand.length());
 
   char lenBuf[4];
   intToBytes(length, lenBuf, 4);
-  stream.writeRawData(lenBuf, 4);
-  stream.writeRawData(charCommand, length);
+  stream->writeRawData(lenBuf, 4);
+  stream->writeRawData(charCommand, length);
 
   char elevateBuf[1];
   // Refer to enum ElevateMode documentation for why this flag is mapped this
   // way
   elevateBuf[0] = (elevate == ElevateAlways) ? 1 : 0;
-  stream.writeRawData(elevateBuf, 1);
+  stream->writeRawData(elevateBuf, 1);
 }
 
-void IpcClient::handleReadLogLine(const QString &text) { readLogLine(text); }
+void QIpcClient::handleReadLogLine(const QString &text) { readLogLine(text); }
 
 // TODO: qt must have a built in way of converting int to bytes.
-void IpcClient::intToBytes(int value, char *buffer, int size) {
+void QIpcClient::intToBytes(int value, char *buffer, int size) {
   if (size == 1) {
     buffer[0] = value & 0xff;
   } else if (size == 2) {

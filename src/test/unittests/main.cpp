@@ -18,14 +18,20 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include <memory>
+#include <qapplication.h>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include "test/global/gtest.h"
+#include <QApplication>
+#include <gtest/gtest.h>
 
 int main(int argc, char **argv) {
+  // required to solve the issue where qt objects need access to a qt app.
+  QApplication app(argc, argv);
+
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
@@ -37,6 +43,7 @@ int main(int argc, char **argv) {
   Log log;
   log.setFilter(kDEBUG4);
 
+  ::testing::GTEST_FLAG(throw_on_failure) = true;
   testing::InitGoogleTest(&argc, argv);
 
   // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)

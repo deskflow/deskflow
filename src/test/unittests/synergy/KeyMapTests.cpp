@@ -19,8 +19,8 @@
 
 #include "synergy/KeyMap.h"
 
-#include "test/global/gmock.h"
-#include "test/global/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 using ::testing::_;
 using ::testing::Invoke;

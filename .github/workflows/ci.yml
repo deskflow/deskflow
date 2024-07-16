@@ -39,9 +39,6 @@ jobs:
     container: ${{ matrix.target.container }}
     timeout-minutes: 20
 
-    env:
-      QT_BASE_DIR: ${{ github.workspace }}\deps\Qt
-
     strategy:
       matrix:
         target:
@@ -55,32 +52,24 @@ jobs:
           submodules: "recursive"
 
       - name: Cache Chocolatey packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/choco
           key: choco-${{ hashFiles('Chocolatey.config') }}
 
-      - name: Install dependencies
-        run: python ./scripts/install_deps.py
-
-      - name: Set QT_VERSION env var
-        run: python ./scripts/github_env.py --set-qt-version
-
-      - name: Cache Qt
+      - name: Cache deps dir
         uses: actions/cache@v4
         with:
-          path: ${{ env.QT_BASE_DIR }}
-          key: ${{ runner.os }}-Qt_${{ env.QT_VERSION }}
+          path: ./deps
+          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
-      - name: Install Qt
-        run: python ./scripts/install_deps.py --only qt
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py --ci-env
 
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure
-        env:
-          CMAKE_PREFIX_PATH: "${{ env.QT_BASE_DIR }}\\${{ env.QT_VERSION }}\\msvc2019_64\\"
         run: cmake -B build --preset=windows-release
 
       - name: Build
@@ -120,13 +109,13 @@ jobs:
     strategy:
       matrix:
         target:
-          - name: "macos-11-arm64"
+          - name: "macos-14-arm64"
             timeout: 10
             os: "macos-14"
             arch: arm64
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-          - name: "macos-10-intel"
+          - name: "macos-14-x64"
             timeout: 20
             os: "macos-14-large"
             arch: x64
@@ -138,11 +127,17 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Cache deps dir
+        uses: actions/cache@v4
+        with:
+          path: ./deps
+          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
+
       - name: Install dependencies
-        run: ./scripts/install_deps.py
+        run: ./scripts/install_deps.py --ci-env
 
       - name: Configure
-        run: cmake -B build --preset=macos-release -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
+        run: cmake -B build --preset=macos-release
 
       - name: Build
         run: cmake --build build -j8
@@ -188,7 +183,7 @@ jobs:
         distro:
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
-            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            runs-on: ubuntu-24.04-8-core-arm64
             extra-packages: true
 
           - name: debian-12-amd64
@@ -206,7 +201,7 @@ jobs:
 
           - name: fedora-40-arm64
             container: symless/synergy-core:fedora-40-arm64
-            runs-on: buildjet-4vcpu-ubuntu-2204-arm
+            runs-on: ubuntu-24.04-8-core-arm64
 
           - name: fedora-40-amd64
             container: symless/synergy-core:fedora-40-amd64
@@ -240,7 +235,7 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py
+        run: ./scripts/install_deps.py --ci-env
 
       - name: Configure
         run: cmake -B build --preset=linux-release
@@ -249,6 +244,8 @@ jobs:
         run: cmake --build build -j8
 
       - name: Test
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: ./build/bin/unittests
 
       - name: Package

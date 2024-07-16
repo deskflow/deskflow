@@ -16,7 +16,8 @@
  */
 
 #include "lib/arch/IArchString.h"
-#include "test/global/gtest.h"
+
+#include <gtest/gtest.h>
 
 class SampleIArchString : public IArchString {
 public:

@@ -40,7 +40,7 @@ LOGC() provide convenient access.
 */
 class Log {
 public:
-  Log();
+  Log(bool singleton = true);
   Log(Log *src);
   Log(Log const &) = delete;
   Log(Log &&) = delete;
@@ -139,7 +139,6 @@ private:
   ArchMutex m_mutex;
   OutputterList m_outputters;
   OutputterList m_alwaysOutputters;
-  int m_maxNewlineLength;
   int m_maxPriority;
 };
 

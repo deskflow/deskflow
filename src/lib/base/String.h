@@ -25,7 +25,7 @@
 #include <vector>
 
 // use standard C++ string class for our string class
-typedef std::string String;
+using String = std::string;
 
 namespace synergy {
 

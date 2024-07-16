@@ -17,7 +17,7 @@
 
 #include "synergy/ArgParser.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 using namespace synergy;
 

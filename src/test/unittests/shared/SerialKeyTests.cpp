@@ -18,9 +18,9 @@
 #define TEST_ENV
 
 #include "shared/SerialKey.h"
-#include <climits>
 
-#include "test/global/gtest.h"
+#include <climits>
+#include <gtest/gtest.h>
 
 TEST(SerialKeyTests, isExpiring_validV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;1;86400}

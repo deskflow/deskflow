@@ -20,7 +20,7 @@
 #include "base/String.h"
 #include "synergy/KeyMap.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockKeyMap : public synergy::KeyMap {
 public:

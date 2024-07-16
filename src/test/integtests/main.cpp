@@ -23,8 +23,8 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include "test/global/gtest.h"
 #include <fstream>
+#include <gtest/gtest.h>
 #include <iostream>
 
 #define LOCK_TIMEOUT 30
@@ -57,6 +57,7 @@ int main(int argc, char **argv) {
     lock(lockFile);
   }
 
+  ::testing::GTEST_FLAG(throw_on_failure) = true;
   testing::InitGoogleTest(&argc, argv);
 
   int result = RUN_ALL_TESTS();

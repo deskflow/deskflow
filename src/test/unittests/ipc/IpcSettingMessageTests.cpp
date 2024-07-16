@@ -18,7 +18,8 @@
 #define TEST_ENV
 
 #include "ipc/IpcSettingMessage.h"
-#include "test/global/gtest.h"
+
+#include <gtest/gtest.h>
 
 TEST(IpcSettingMessage, testIpcSettingMessage) {
   const std::string expected_name = "test";

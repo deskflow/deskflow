@@ -2131,8 +2131,7 @@ Server::SwitchToScreenInfo *
 Server::SwitchToScreenInfo::alloc(const String &screen) {
   SwitchToScreenInfo *info =
       (SwitchToScreenInfo *)malloc(sizeof(SwitchToScreenInfo) + screen.size());
-  strcpy(info->m_screen,
-         screen.c_str()); // Compliant: we made sure the buffer is large enough
+  std::copy(screen.c_str(), screen.c_str() + screen.size() + 1, info->m_screen);
   return info;
 }
 
@@ -2166,8 +2165,8 @@ Server::KeyboardBroadcastInfo::alloc(State state, const String &screens) {
   KeyboardBroadcastInfo *info = (KeyboardBroadcastInfo *)malloc(
       sizeof(KeyboardBroadcastInfo) + screens.size());
   info->m_state = state;
-  strcpy(info->m_screens, screens.c_str()); // Compliant: we made sure that
-                                            // screens variable ended with null
+  std::copy(screens.c_str(), screens.c_str() + screens.size() + 1,
+            info->m_screens);
   return info;
 }
 

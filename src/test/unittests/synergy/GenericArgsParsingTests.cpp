@@ -19,7 +19,7 @@
 #include "synergy/ArgsBase.h"
 #include "test/mock/synergy/MockApp.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 using namespace synergy;
 using ::testing::_;

@@ -9,10 +9,7 @@ include_files = [
     "CMakeLists.txt",
 ]
 
-exclude_dirs = [
-    "ext",
-    "build",
-]
+exclude_dirs = ["ext", "build", "deps"]
 
 
 def main():

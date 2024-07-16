@@ -21,6 +21,7 @@
 
 #include <cerrno>
 #include <cstdarg>
+#include <cstring>
 
 //
 // XBase
@@ -39,14 +40,13 @@ XBase::~XBase() _NOEXCEPT {
 }
 
 const char *XBase::what() const _NOEXCEPT {
-  const char *what = std::runtime_error::what();
-  if (strlen(what) ==
-      0) { // Compliant: we made sure that what variable ended with null(std
-           // what func return pointer to a null-terminated string)
-    m_what = getWhat();
-    return m_what.c_str();
+  if (const char *what = std::runtime_error::what();
+      what != nullptr && what[0] != '\0') {
+    return what;
   }
-  return what;
+
+  m_what = getWhat();
+  return m_what.c_str();
 }
 
 String XBase::format(const char * /*id*/, const char *fmt, ...) const throw() {

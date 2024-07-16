@@ -32,9 +32,9 @@
 #include <X11/XKBlib.h>
 #endif
 
-#include "test/global/gmock.h"
-#include "test/global/gtest.h"
 #include <errno.h>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 class XWindowsKeyStateTests : public ::testing::Test {
 protected:

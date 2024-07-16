@@ -40,10 +40,9 @@
 #include "test/mock/server/MockPrimaryClient.h"
 #include "test/mock/synergy/MockScreen.h"
 
-#include "test/global/gtest.h"
 #include <fstream>
+#include <gtest/gtest.h>
 #include <iostream>
-#include <sstream>
 #include <stdio.h>
 
 using namespace std;

@@ -22,14 +22,14 @@
 
 #include "synergy/ServerApp.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockServerApp : public ServerApp {
 public:
   MockServerApp() : ServerApp(nullptr, nullptr) {}
 };
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 // using ::testing::_;
 // using ::testing::Invoke;

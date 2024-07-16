@@ -21,7 +21,7 @@
 
 #include "synergy/ArgParser.h"
 
-#include "test/global/gmock.h"
+#include <gmock/gmock.h>
 
 class MockArgParser : public ArgParser {
 public:

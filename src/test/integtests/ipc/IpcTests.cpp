@@ -37,7 +37,7 @@
 #include "net/SocketMultiplexer.h"
 #include "test/global/TestEventQueue.h"
 
-#include "test/global/gtest.h"
+#include <gtest/gtest.h>
 
 #define TEST_IPC_PORT 24802
 

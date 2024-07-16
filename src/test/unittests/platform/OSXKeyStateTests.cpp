@@ -20,8 +20,8 @@
 #include "test/mock/synergy/MockEventQueue.h"
 #include "test/mock/synergy/MockKeyMap.h"
 
-#include "test/global/gmock.h"
-#include "test/global/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask) {
   synergy::KeyMap keyMap;

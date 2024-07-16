@@ -34,4 +34,4 @@
 //
 enum ElevateMode { ElevateAsNeeded = 0, ElevateAlways = 1, ElevateNever = 2 };
 
-extern const ElevateMode defaultElevateMode;
+extern const ElevateMode kDefaultElevateMode;
