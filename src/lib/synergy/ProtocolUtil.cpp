@@ -132,8 +132,7 @@ void ProtocolUtil::vwritef(
   } catch (const XBase &exception) {
     LOG(
         (CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream",
-         exception.what(),
-         size));
+         exception.what(), size));
     throw;
   }
 }

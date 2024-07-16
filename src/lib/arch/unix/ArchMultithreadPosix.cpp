@@ -536,9 +536,7 @@ void ArchMultithreadPosix::startSignalHandler() {
   int status = pthread_attr_init(&attr);
   if (status == 0) {
     status = pthread_create(
-        &m_signalThread,
-        &attr,
-        &ArchMultithreadPosix::threadSignalHandler,
+        &m_signalThread, &attr, &ArchMultithreadPosix::threadSignalHandler,
         NULL);
     pthread_attr_destroy(&attr);
   }
@@ -560,8 +558,7 @@ ArchThreadImpl *ArchMultithreadPosix::find(pthread_t thread) {
 ArchThreadImpl *ArchMultithreadPosix::findNoRef(pthread_t thread) {
   // linear search
   for (ThreadList::const_iterator index = m_threadList.begin();
-       index != m_threadList.end();
-       ++index) {
+       index != m_threadList.end(); ++index) {
     if ((*index)->m_thread == thread) {
       return *index;
     }
@@ -587,8 +584,7 @@ void ArchMultithreadPosix::insert(ArchThreadImpl *thread) {
 
 void ArchMultithreadPosix::erase(ArchThreadImpl *thread) {
   for (ThreadList::iterator index = m_threadList.begin();
-       index != m_threadList.end();
-       ++index) {
+       index != m_threadList.end(); ++index) {
     if (*index == thread) {
       m_threadList.erase(index);
       break;

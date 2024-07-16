@@ -232,8 +232,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
 #endif
 
     m_events->adoptHandler(
-        m_events->forIpcServer().messageReceived(),
-        m_ipcServer,
+        m_events->forIpcServer().messageReceived(), m_ipcServer,
         new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
 
     m_ipcServer->listen();
@@ -309,8 +308,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
     if (!command.empty()) {
       LOG((CLOG_DEBUG "daemon got new core command"));
       LOG(
-          (CLOG_DEBUG2 "new command, elevate=%d command=%s",
-           cm->elevate(),
+          (CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(),
            command.c_str()));
 
       std::vector<String> argsArray;

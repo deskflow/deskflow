@@ -33,12 +33,10 @@ A secure socket using SSL.
 class SecureSocket : public TCPSocket {
 public:
   SecureSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family);
   SecureSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       ArchSocket socket);
   SecureSocket(SecureSocket const &) = delete;
   SecureSocket(SecureSocket &&) = delete;

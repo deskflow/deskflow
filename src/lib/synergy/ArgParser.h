@@ -41,30 +41,23 @@ public:
   bool parseClientArgs(
       lib::synergy::ClientArgs &args, int argc, const char *const *argv);
   bool parsePlatformArg(
-      lib::synergy::ArgsBase &argsBase,
-      const int &argc,
-      const char *const *argv,
-      int &i);
+      lib::synergy::ArgsBase &argsBase, const int &argc,
+      const char *const *argv, int &i);
   bool parseToolArgs(ToolArgs &args, int argc, const char *const *argv);
   bool parseGenericArgs(int argc, const char *const *argv, int &i);
   bool parseDeprecatedArgs(int argc, const char *const *argv, int &i);
   void setArgsBase(lib::synergy::ArgsBase &argsBase) { m_argsBase = &argsBase; }
 
   static bool isArg(
-      int argi,
-      int argc,
-      const char *const *argv,
-      const char *name1,
-      const char *name2,
-      int minRequiredParameters = 0);
+      int argi, int argc, const char *const *argv, const char *name1,
+      const char *name2, int minRequiredParameters = 0);
   static void splitCommandString(String &command, std::vector<String> &argv);
   static bool searchDoubleQuotes(
       String &command, size_t &left, size_t &right, size_t startPos = 0);
   static void removeDoubleQuotes(String &arg);
   static const char **getArgv(std::vector<String> &argsArray);
   static String assembleCommand(
-      std::vector<String> &argsArray,
-      String ignoreArg = "",
+      std::vector<String> &argsArray, String ignoreArg = "",
       int parametersRequired = 0);
 
   static lib::synergy::ArgsBase &argsBase() { return *m_argsBase; }

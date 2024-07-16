@@ -30,8 +30,7 @@ class SocketMultiplexer;
 class InverseServerSocket : public IListenSocket {
 public:
   InverseServerSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family);
   InverseServerSocket(InverseServerSocket const &) = delete;
   InverseServerSocket(InverseServerSocket &&) = delete;

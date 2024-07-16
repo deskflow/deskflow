@@ -68,8 +68,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(
 void ScreenSettingsDialog::accept() {
   if (m_pLineEditName->text().isEmpty()) {
     QMessageBox::warning(
-        this,
-        tr("Screen name is empty"),
+        this, tr("Screen name is empty"),
         tr("The screen name cannot be empty. "
            "Please either fill in a name or cancel the dialog."));
     return;
@@ -85,8 +84,7 @@ void ScreenSettingsDialog::accept() {
     QString alias(m_pListAliases->item(i)->text());
     if (alias == m_pLineEditName->text()) {
       QMessageBox::warning(
-          this,
-          tr("Screen name matches alias"),
+          this, tr("Screen name matches alias"),
           tr("The screen name cannot be the same as an alias. "
              "Please either remove the alias or change the screen name."));
       return;

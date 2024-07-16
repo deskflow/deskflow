@@ -24,8 +24,7 @@
 void DropHelper::writeToDir(
     const String &destination, DragFileList &fileList, String &data) {
   LOG(
-      (CLOG_DEBUG "dropping file, files=%i target=%s",
-       fileList.size(),
+      (CLOG_DEBUG "dropping file, files=%i target=%s", fileList.size(),
        destination.c_str()));
 
   if (!destination.empty() && fileList.size() > 0) {
@@ -46,8 +45,7 @@ void DropHelper::writeToDir(
     file.close();
 
     LOG(
-        (CLOG_DEBUG "%s is saved to %s",
-         fileList.at(0).getFilename().c_str(),
+        (CLOG_DEBUG "%s is saved to %s", fileList.at(0).getFilename().c_str(),
          destination.c_str()));
 
     fileList.clear();

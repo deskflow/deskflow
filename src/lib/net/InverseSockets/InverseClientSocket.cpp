@@ -38,8 +38,7 @@
 //
 
 InverseClientSocket::InverseClientSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     IArchNetwork::EAddressFamily family)
     : IDataSocket(events),
       m_events(events),
@@ -279,9 +278,7 @@ ISocketMultiplexerJob *InverseClientSocket::newJob(ArchSocket socket) {
 void InverseClientSocket::sendConnectionFailedEvent(const char *msg) {
   auto info = new ConnectionFailedInfo(msg);
   m_events->addEvent(Event(
-      m_events->forIDataSocket().connectionFailed(),
-      getEventTarget(),
-      info,
+      m_events->forIDataSocket().connectionFailed(), getEventTarget(), info,
       Event::kDontFreeData));
 }
 

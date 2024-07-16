@@ -76,8 +76,7 @@ void DragInformation::parseDragInfo(
 
   for (size_t i = 0; i < dragFileList.size(); ++i) {
     LOG(
-        (CLOG_DEBUG "dragging file %i name: %s",
-         i + 1,
+        (CLOG_DEBUG "dragging file %i name: %s", i + 1,
          dragFileList.at(i).getFilename().c_str()));
   }
 }

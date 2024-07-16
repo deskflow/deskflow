@@ -63,11 +63,8 @@ public:
   to create the socket.  \p screen is    the local screen.
   */
   Client(
-      IEventQueue *events,
-      const String &name,
-      const NetworkAddress &address,
-      ISocketFactory *socketFactory,
-      synergy::Screen *screen,
+      IEventQueue *events, const String &name, const NetworkAddress &address,
+      ISocketFactory *socketFactory, synergy::Screen *screen,
       lib::synergy::ClientArgs const &args);
   Client(Client const &) = delete;
   Client(Client &&) = delete;
@@ -166,10 +163,7 @@ public:
 
   // IClient overrides
   virtual void enter(
-      SInt32 xAbs,
-      SInt32 yAbs,
-      UInt32 seqNum,
-      KeyModifierMask mask,
+      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
       bool forScreensaver);
   virtual bool leave();
   virtual void setClipboard(ClipboardID, const IClipboard *);

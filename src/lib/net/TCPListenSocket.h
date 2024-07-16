@@ -33,8 +33,7 @@ A listen socket using TCP.
 class TCPListenSocket : public IListenSocket {
 public:
   TCPListenSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family);
   TCPListenSocket(TCPListenSocket const &) = delete;
   TCPListenSocket(TCPListenSocket &&) = delete;

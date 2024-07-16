@@ -50,8 +50,7 @@ static const size_t ModifiersFromXDefaultSize = 32;
 XWindowsKeyState::XWindowsKeyState(
     Display *display, bool useXKB, IEventQueue *events)
     : KeyState(
-          events,
-          AppUtil::instance().getKeyboardLayoutList(),
+          events, AppUtil::instance().getKeyboardLayoutList(),
           ClientApp::instance().args().m_enableLangSync),
       m_display(display),
       m_modifierFromX(ModifiersFromXDefaultSize) {
@@ -61,9 +60,7 @@ XWindowsKeyState::XWindowsKeyState(
 XWindowsKeyState::XWindowsKeyState(
     Display *display, bool useXKB, IEventQueue *events, synergy::KeyMap &keyMap)
     : KeyState(
-          events,
-          keyMap,
-          AppUtil::instance().getKeyboardLayoutList(),
+          events, keyMap, AppUtil::instance().getKeyboardLayoutList(),
           ClientApp::instance().args().m_enableLangSync),
       m_display(display),
       m_modifierFromX(ModifiersFromXDefaultSize) {
@@ -122,8 +119,7 @@ KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const {
         LOG(
             (CLOG_ERR "m_modifierFromX is too small (%d) for the "
                       "requested offset (%d)",
-             m_modifierFromX.size(),
-             offset + i));
+             m_modifierFromX.size(), offset + i));
       } else {
         mask |= m_modifierFromX[offset + i];
       }
@@ -172,14 +168,7 @@ KeyModifierMask XWindowsKeyState::pollActiveModifiers() const {
   int xRoot, yRoot, xWindow, yWindow;
   unsigned int state = 0;
   if (XQueryPointer(
-          m_display,
-          root,
-          &root,
-          &window,
-          &xRoot,
-          &yRoot,
-          &xWindow,
-          &yWindow,
+          m_display, root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow,
           &state) == False) {
     state = 0;
   }
@@ -299,10 +288,8 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
       }
     }
     XTestFakeKeyEvent(
-        m_display,
-        keystroke.m_data.m_button.m_button,
-        keystroke.m_data.m_button.m_press ? True : False,
-        CurrentTime);
+        m_display, keystroke.m_data.m_button.m_button,
+        keystroke.m_data.m_button.m_press ? True : False, CurrentTime);
     break;
 
   case Keystroke::kGroup:
@@ -339,8 +326,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
 #if HAVE_XKB_EXTENSION
       if (m_xkb != NULL) {
         if (XkbLockGroup(
-                m_display,
-                XkbUseCoreKbd,
+                m_display, XkbUseCoreKbd,
                 getEffectiveGroup(
                     pollActiveGroup(), keystroke.m_data.m_group.m_group)) ==
             False) {

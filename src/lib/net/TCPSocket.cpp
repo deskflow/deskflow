@@ -38,8 +38,7 @@
 //
 
 TCPSocket::TCPSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     IArchNetwork::EAddressFamily family)
     : IDataSocket(events),
       m_events(events),
@@ -58,8 +57,7 @@ TCPSocket::TCPSocket(
 }
 
 TCPSocket::TCPSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     ArchSocket socket)
     : IDataSocket(events),
       m_events(events),
@@ -379,10 +377,7 @@ ISocketMultiplexerJob *TCPSocket::newJob() {
       return nullptr;
     }
     return new TSocketMultiplexerMethodJob<TCPSocket>(
-        this,
-        &TCPSocket::serviceConnected,
-        m_socket,
-        m_readable,
+        this, &TCPSocket::serviceConnected, m_socket, m_readable,
         m_writable && (m_outputBuffer.getSize() > 0));
   }
 }
@@ -390,9 +385,7 @@ ISocketMultiplexerJob *TCPSocket::newJob() {
 void TCPSocket::sendConnectionFailedEvent(const char *msg) {
   ConnectionFailedInfo *info = new ConnectionFailedInfo(msg);
   m_events->addEvent(Event(
-      m_events->forIDataSocket().connectionFailed(),
-      getEventTarget(),
-      info,
+      m_events->forIDataSocket().connectionFailed(), getEventTarget(), info,
       Event::kDontFreeData));
 }
 

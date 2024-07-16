@@ -27,8 +27,7 @@
 // SecureServerSocket
 //
 SecureServerSocket::SecureServerSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     IArchNetwork::EAddressFamily family)
     : InverseServerSocket(events, socketMultiplexer, family) {}
 

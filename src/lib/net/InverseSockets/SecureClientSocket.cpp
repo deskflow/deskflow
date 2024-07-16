@@ -41,15 +41,13 @@
 constexpr float s_retryDelay = 0.01f;
 
 SecureClientSocket::SecureClientSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     IArchNetwork::EAddressFamily family)
     : InverseClientSocket(events, socketMultiplexer, family) {}
 
 void SecureClientSocket::connect(const NetworkAddress &addr) {
   m_events->adoptHandler(
-      m_events->forIDataSocket().connected(),
-      getEventTarget(),
+      m_events->forIDataSocket().connected(), getEventTarget(),
       new TMethodEventJob<SecureClientSocket>(
           this, &SecureClientSocket::handleTCPConnected));
 
@@ -68,19 +66,13 @@ ISocketMultiplexerJob *SecureClientSocket::newJob() {
 
 void SecureClientSocket::secureConnect() {
   setJob(new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this,
-      &SecureClientSocket::serviceConnect,
-      getSocket(),
-      isReadable(),
+      this, &SecureClientSocket::serviceConnect, getSocket(), isReadable(),
       isWritable()));
 }
 
 void SecureClientSocket::secureAccept() {
   setJob(new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this,
-      &SecureClientSocket::serviceAccept,
-      getSocket(),
-      isReadable(),
+      this, &SecureClientSocket::serviceAccept, getSocket(), isReadable(),
       isWritable()));
 }
 
@@ -312,19 +304,14 @@ int SecureClientSocket::secureConnect(int socket) {
 
 void SecureClientSocket::setFatal(int code) {
   const std::set<int> nonFatal{
-      SSL_ERROR_NONE,
-      SSL_ERROR_WANT_READ,
-      SSL_ERROR_WANT_WRITE,
-      SSL_ERROR_WANT_CONNECT,
-      SSL_ERROR_WANT_ACCEPT};
+      SSL_ERROR_NONE, SSL_ERROR_WANT_READ, SSL_ERROR_WANT_WRITE,
+      SSL_ERROR_WANT_CONNECT, SSL_ERROR_WANT_ACCEPT};
   m_fatal = nonFatal.find(code) == nonFatal.end();
 }
 
 int SecureClientSocket::getRetry(int errorCode, int retry) const {
   const std::set<int> retryCodes{
-      SSL_ERROR_WANT_READ,
-      SSL_ERROR_WANT_WRITE,
-      SSL_ERROR_WANT_CONNECT,
+      SSL_ERROR_WANT_READ, SSL_ERROR_WANT_WRITE, SSL_ERROR_WANT_CONNECT,
       SSL_ERROR_WANT_ACCEPT};
 
   if (errorCode == SSL_ERROR_NONE || isFatal()) {
@@ -408,10 +395,7 @@ SecureClientSocket::serviceConnect(ISocketMultiplexerJob *, bool, bool, bool) {
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this,
-      &SecureClientSocket::serviceConnect,
-      getSocket(),
-      isReadable(),
+      this, &SecureClientSocket::serviceConnect, getSocket(), isReadable(),
       isWritable());
 }
 
@@ -438,10 +422,7 @@ SecureClientSocket::serviceAccept(ISocketMultiplexerJob *, bool, bool, bool) {
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this,
-      &SecureClientSocket::serviceAccept,
-      getSocket(),
-      isReadable(),
+      this, &SecureClientSocket::serviceAccept, getSocket(), isReadable(),
       isWritable());
 }
 

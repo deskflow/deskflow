@@ -93,8 +93,7 @@ void MSWindowsClipboard::add(EFormat format, const String &data) {
   bool isSucceeded = false;
   // convert data to win32 form
   for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end();
-       ++index) {
+       index != m_converters.end(); ++index) {
     IMSWindowsClipboardConverter *converter = *index;
 
     // skip converters for other formats
@@ -102,8 +101,7 @@ void MSWindowsClipboard::add(EFormat format, const String &data) {
       HANDLE win32Data = converter->fromIClipboard(data);
       if (win32Data != NULL) {
         LOG(
-            (CLOG_DEBUG "add %d bytes to clipboard format: %d",
-             data.size(),
+            (CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(),
              format));
         m_facade->write(win32Data, converter->getWin32Format());
         isSucceeded = true;
@@ -145,8 +143,7 @@ IClipboard::Time MSWindowsClipboard::getTime() const { return m_time; }
 
 bool MSWindowsClipboard::has(EFormat format) const {
   for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end();
-       ++index) {
+       index != m_converters.end(); ++index) {
     IMSWindowsClipboardConverter *converter = *index;
     if (converter->getFormat() == format) {
       if (IsClipboardFormatAvailable(converter->getWin32Format())) {
@@ -161,8 +158,7 @@ String MSWindowsClipboard::get(EFormat format) const {
   // find the converter for the first clipboard format we can handle
   IMSWindowsClipboardConverter *converter = NULL;
   for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end();
-       ++index) {
+       index != m_converters.end(); ++index) {
 
     converter = *index;
     if (converter->getFormat() == format) {
@@ -192,8 +188,7 @@ String MSWindowsClipboard::get(EFormat format) const {
 
 void MSWindowsClipboard::clearConverters() {
   for (ConverterList::iterator index = m_converters.begin();
-       index != m_converters.end();
-       ++index) {
+       index != m_converters.end(); ++index) {
     delete *index;
   }
   m_converters.clear();

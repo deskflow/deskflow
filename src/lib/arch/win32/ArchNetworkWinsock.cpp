@@ -51,10 +51,7 @@ static u_short(PASCAL FAR *ntohs_winsock)(u_short v);
 static int(PASCAL FAR *recv_winsock)(
     SOCKET s, void FAR *buf, int len, int flags);
 static int(PASCAL FAR *select_winsock)(
-    int nfds,
-    fd_set FAR *readfds,
-    fd_set FAR *writefds,
-    fd_set FAR *exceptfds,
+    int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds,
     const struct timeval FAR *timeout);
 static int(PASCAL FAR *send_winsock)(
     SOCKET s, const void FAR *buf, int len, int flags);
@@ -168,106 +165,81 @@ void ArchNetworkWinsock::initModule(HMODULE module) {
 
   // get function addresses
   setfunc(
-      accept_winsock,
-      accept,
+      accept_winsock, accept,
       SOCKET(PASCAL FAR *)(
           SOCKET s, struct sockaddr FAR * addr, int FAR *addrlen));
   setfunc(
-      bind_winsock,
-      bind,
+      bind_winsock, bind,
       int(PASCAL FAR *)(
           SOCKET s, const struct sockaddr FAR *addr, int namelen));
   setfunc(close_winsock, closesocket, int(PASCAL FAR *)(SOCKET s));
   setfunc(
-      connect_winsock,
-      connect,
+      connect_winsock, connect,
       int(PASCAL FAR *)(
           SOCKET s, const struct sockaddr FAR *name, int namelen));
   setfunc(
-      gethostname_winsock,
-      gethostname,
+      gethostname_winsock, gethostname,
       int(PASCAL FAR *)(char FAR *name, int namelen));
   setfunc(getsockerror_winsock, WSAGetLastError, int(PASCAL FAR *)(void));
   setfunc(
-      getsockopt_winsock,
-      getsockopt,
+      getsockopt_winsock, getsockopt,
       int(PASCAL FAR *)(
           SOCKET s, int level, int optname, void FAR *optval, int FAR *optlen));
   setfunc(htons_winsock, htons, u_short(PASCAL FAR *)(u_short v));
   setfunc(
-      inet_ntoa_winsock,
-      inet_ntoa,
+      inet_ntoa_winsock, inet_ntoa,
       char FAR *(PASCAL FAR *)(struct in_addr in));
   setfunc(
-      inet_addr_winsock,
-      inet_addr,
+      inet_addr_winsock, inet_addr,
       unsigned long(PASCAL FAR *)(const char FAR *cp));
   setfunc(
-      ioctl_winsock,
-      ioctlsocket,
+      ioctl_winsock, ioctlsocket,
       int(PASCAL FAR *)(SOCKET s, int cmd, void FAR *));
   setfunc(listen_winsock, listen, int(PASCAL FAR *)(SOCKET s, int backlog));
   setfunc(ntohs_winsock, ntohs, u_short(PASCAL FAR *)(u_short v));
   setfunc(
-      recv_winsock,
-      recv,
+      recv_winsock, recv,
       int(PASCAL FAR *)(SOCKET s, void FAR *buf, int len, int flags));
   setfunc(
-      select_winsock,
-      select,
+      select_winsock, select,
       int(PASCAL FAR *)(
-          int nfds,
-          fd_set FAR *readfds,
-          fd_set FAR *writefds,
-          fd_set FAR *exceptfds,
-          const struct timeval FAR *timeout));
+          int nfds, fd_set FAR *readfds, fd_set FAR *writefds,
+          fd_set FAR *exceptfds, const struct timeval FAR *timeout));
   setfunc(
-      send_winsock,
-      send,
+      send_winsock, send,
       int(PASCAL FAR *)(SOCKET s, const void FAR *buf, int len, int flags));
   setfunc(
-      setsockopt_winsock,
-      setsockopt,
+      setsockopt_winsock, setsockopt,
       int(PASCAL FAR *)(
-          SOCKET s,
-          int level,
-          int optname,
-          const void FAR *optval,
+          SOCKET s, int level, int optname, const void FAR *optval,
           int optlen));
   setfunc(shutdown_winsock, shutdown, int(PASCAL FAR *)(SOCKET s, int how));
   setfunc(
-      socket_winsock,
-      socket,
+      socket_winsock, socket,
       SOCKET(PASCAL FAR *)(int af, int type, int protocol));
   setfunc(
-      gethostbyaddr_winsock,
-      gethostbyaddr,
+      gethostbyaddr_winsock, gethostbyaddr,
       struct hostent FAR *
           (PASCAL FAR *)(const char FAR *addr, int len, int type));
   setfunc(
-      gethostbyname_winsock,
-      gethostbyname,
+      gethostbyname_winsock, gethostbyname,
       struct hostent FAR * (PASCAL FAR *)(const char FAR *name));
   setfunc(WSACleanup_winsock, WSACleanup, int(PASCAL FAR *)(void));
   setfunc(
-      WSAFDIsSet_winsock,
-      __WSAFDIsSet,
+      WSAFDIsSet_winsock, __WSAFDIsSet,
       int(PASCAL FAR *)(SOCKET, fd_set FAR *));
   setfunc(WSACreateEvent_winsock, WSACreateEvent, WSAEVENT(PASCAL FAR *)(void));
   setfunc(WSACloseEvent_winsock, WSACloseEvent, BOOL(PASCAL FAR *)(WSAEVENT));
   setfunc(WSASetEvent_winsock, WSASetEvent, BOOL(PASCAL FAR *)(WSAEVENT));
   setfunc(WSAResetEvent_winsock, WSAResetEvent, BOOL(PASCAL FAR *)(WSAEVENT));
   setfunc(
-      WSAEventSelect_winsock,
-      WSAEventSelect,
+      WSAEventSelect_winsock, WSAEventSelect,
       int(PASCAL FAR *)(SOCKET, WSAEVENT, long));
   setfunc(
-      WSAWaitForMultipleEvents_winsock,
-      WSAWaitForMultipleEvents,
+      WSAWaitForMultipleEvents_winsock, WSAWaitForMultipleEvents,
       DWORD(PASCAL FAR *)(DWORD, const WSAEVENT FAR *, BOOL, DWORD, BOOL));
   setfunc(
-      WSAEnumNetworkEvents_winsock,
-      WSAEnumNetworkEvents,
+      WSAEnumNetworkEvents_winsock, WSAEnumNetworkEvents,
       int(PASCAL FAR *)(SOCKET, WSAEVENT, LPWSANETWORKEVENTS));
 
   s_networkModule = module;
@@ -798,13 +770,8 @@ std::string ArchNetworkWinsock::addrToName(ArchNetAddress addr) {
   char host[1024];
   char service[20];
   int ret = getnameinfo(
-      TYPED_ADDR(struct sockaddr, addr),
-      addr->m_len,
-      host,
-      sizeof(host),
-      service,
-      sizeof(service),
-      0);
+      TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host),
+      service, sizeof(service), 0);
 
   if (ret != NULL) {
     throwNameError(ret);

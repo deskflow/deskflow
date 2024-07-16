@@ -44,10 +44,7 @@ public:
   Subsequent clipboard events should report \p seqNum.
   */
   virtual void enter(
-      SInt32 xAbs,
-      SInt32 yAbs,
-      UInt32 seqNum,
-      KeyModifierMask mask,
+      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
       bool forScreensaver) = 0;
 
   //! Leave screen
@@ -99,10 +96,7 @@ public:
   \c count times.  If possible match the given modifier mask.
   */
   virtual void keyRepeat(
-      KeyID id,
-      KeyModifierMask,
-      SInt32 count,
-      KeyButton,
+      KeyID id, KeyModifierMask, SInt32 count, KeyButton,
       const String &lang) = 0;
 
   //! Notify of key release

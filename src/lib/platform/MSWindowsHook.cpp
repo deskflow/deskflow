@@ -328,8 +328,7 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   }
 
   PostThreadMessage(
-      g_threadID,
-      SYNERGY_MSG_DEBUG,
+      g_threadID, SYNERGY_MSG_DEBUG,
       (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) |
           0x60000000,
       lParam);
@@ -371,14 +370,10 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
     // and release for the dead key to our window.
     WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
     PostThreadMessage(
-        g_threadID,
-        SYNERGY_MSG_KEY,
-        deadCharAndVirtKey,
+        g_threadID, SYNERGY_MSG_KEY, deadCharAndVirtKey,
         g_deadLParam & 0x7fffffffu);
     PostThreadMessage(
-        g_threadID,
-        SYNERGY_MSG_KEY,
-        deadCharAndVirtKey,
+        g_threadID, SYNERGY_MSG_KEY, deadCharAndVirtKey,
         g_deadLParam | 0x80000000u);
 
     // use uncomposed character
@@ -391,12 +386,8 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   // put back the dead key, if any, for the application to use
   if (g_deadVirtKey != 0) {
     ToUnicode(
-        (UINT)g_deadVirtKey,
-        (g_deadLParam & 0x10ff0000u) >> 16,
-        g_deadKeyState,
-        wc,
-        2,
-        flags);
+        (UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState,
+        wc, 2, flags);
   }
 
   // clear out old dead key state

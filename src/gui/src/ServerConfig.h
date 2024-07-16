@@ -43,9 +43,7 @@ class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase {
 
 public:
   ServerConfig(
-      int numColumns,
-      int numRows,
-      AppConfig *appConfig,
+      int numColumns, int numRows, AppConfig *appConfig,
       MainWindow *mainWindow);
 
   ServerConfig(const ServerConfig &src) = default;

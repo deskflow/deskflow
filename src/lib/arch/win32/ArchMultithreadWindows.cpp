@@ -108,8 +108,7 @@ ArchMultithreadWindows::~ArchMultithreadWindows() {
 
   // clean up thread list
   for (ThreadList::iterator index = m_threadList.begin();
-       index != m_threadList.end();
-       ++index) {
+       index != m_threadList.end(); ++index) {
     delete *index;
   }
 
@@ -525,8 +524,7 @@ ArchThreadImpl *ArchMultithreadWindows::findNoRef(DWORD id) {
 ArchThreadImpl *ArchMultithreadWindows::findNoRefOrCreate(DWORD id) {
   // linear search
   for (ThreadList::const_iterator index = m_threadList.begin();
-       index != m_threadList.end();
-       ++index) {
+       index != m_threadList.end(); ++index) {
     if ((*index)->m_id == id) {
       return *index;
     }
@@ -546,8 +544,7 @@ void ArchMultithreadWindows::insert(ArchThreadImpl *thread) {
 
 void ArchMultithreadWindows::erase(ArchThreadImpl *thread) {
   for (ThreadList::iterator index = m_threadList.begin();
-       index != m_threadList.end();
-       ++index) {
+       index != m_threadList.end(); ++index) {
     if (*index == thread) {
       m_threadList.erase(index);
       break;

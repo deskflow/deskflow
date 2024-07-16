@@ -26,9 +26,7 @@ class Server;
 class ClientProxy1_4 : public ClientProxy1_3 {
 public:
   ClientProxy1_4(
-      const String &name,
-      synergy::IStream *adoptedStream,
-      Server *server,
+      const String &name, synergy::IStream *adoptedStream, Server *server,
       IEventQueue *events);
   ~ClientProxy1_4();
 
@@ -44,10 +42,7 @@ public:
   virtual void
   keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String &);
   virtual void keyRepeat(
-      KeyID key,
-      KeyModifierMask mask,
-      SInt32 count,
-      KeyButton button,
+      KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button,
       const String &lang);
   virtual void keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
   virtual void keepAlive();

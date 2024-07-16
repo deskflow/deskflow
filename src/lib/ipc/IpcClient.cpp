@@ -49,16 +49,14 @@ IpcClient::~IpcClient() {}
 
 void IpcClient::connect() {
   m_events->adoptHandler(
-      m_events->forIDataSocket().connected(),
-      m_socket.getEventTarget(),
+      m_events->forIDataSocket().connected(), m_socket.getEventTarget(),
       new TMethodEventJob<IpcClient>(this, &IpcClient::handleConnected));
 
   m_socket.connect(m_serverAddress);
   m_server = new IpcServerProxy(m_socket, m_events);
 
   m_events->adoptHandler(
-      m_events->forIpcServerProxy().messageReceived(),
-      m_server,
+      m_events->forIpcServerProxy().messageReceived(), m_server,
       new TMethodEventJob<IpcClient>(this, &IpcClient::handleMessageReceived));
 }
 
@@ -80,9 +78,7 @@ void IpcClient::send(const IpcMessage &message) {
 
 void IpcClient::handleConnected(const Event &, void *) {
   m_events->addEvent(Event(
-      m_events->forIpcClient().connected(),
-      this,
-      m_server,
+      m_events->forIpcClient().connected(), this, m_server,
       Event::kDontFreeData));
 
   IpcHelloMessage message(kIpcClientNode);

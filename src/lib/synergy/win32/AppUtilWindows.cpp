@@ -159,9 +159,7 @@ std::vector<String> AppUtilWindows::getKeyboardLayoutList() {
       String code("", 2);
       GetLocaleInfoA(
           MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT),
-          LOCALE_SISO639LANGNAME,
-          &code[0],
-          code.size());
+          LOCALE_SISO639LANGNAME, &code[0], code.size());
       layoutLangCodes.push_back(code);
     }
 
@@ -212,8 +210,7 @@ void AppUtilWindows::showNotification(
     const String &title, const String &text) const {
   LOG(
       (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
-       title.c_str(),
-       text.c_str()));
+       title.c_str(), text.c_str()));
   if (!WinToastLib::WinToast::isCompatible()) {
     LOG((CLOG_INFO "this system does not support toast notifications"));
     return;

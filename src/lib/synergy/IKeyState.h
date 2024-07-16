@@ -42,10 +42,7 @@ public:
   public:
     static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
     static KeyInfo *alloc(
-        KeyID,
-        KeyModifierMask,
-        KeyButton,
-        SInt32 count,
+        KeyID, KeyModifierMask, KeyButton, SInt32 count,
         const std::set<String> &destinations);
     static KeyInfo *alloc(const KeyInfo &);
 
@@ -103,10 +100,7 @@ public:
   Synthesizes a key repeat event and updates the key state.
   */
   virtual bool fakeKeyRepeat(
-      KeyID id,
-      KeyModifierMask mask,
-      SInt32 count,
-      KeyButton button,
+      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
       const String &lang) = 0;
 
   //! Fake a key release

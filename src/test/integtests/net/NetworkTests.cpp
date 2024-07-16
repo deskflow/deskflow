@@ -119,11 +119,9 @@ TEST_F(NetworkTests, sendToClient_mockData) {
   NiceMock<MockInputFilter> serverInputFilter;
 
   m_events.adoptHandler(
-      m_events.forClientListener().connected(),
-      &listener,
+      m_events.forClientListener().connected(), &listener,
       new TMethodEventJob<NetworkTests>(
-          this,
-          &NetworkTests::sendToClient_mockData_handleClientConnected,
+          this, &NetworkTests::sendToClient_mockData_handleClientConnected,
           &listener));
 
   ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
@@ -151,16 +149,11 @@ TEST_F(NetworkTests, sendToClient_mockData) {
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
-      &m_events,
-      "stub",
-      serverAddress,
-      clientSocketFactory,
-      &clientScreen,
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
       clientArgs);
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(),
-      &client,
+      m_events.forFile().fileRecieveCompleted(), &client,
       new TMethodEventJob<NetworkTests>(
           this, &NetworkTests::sendToClient_mockData_fileRecieveCompleted));
 
@@ -190,11 +183,9 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
   NiceMock<MockInputFilter> serverInputFilter;
 
   m_events.adoptHandler(
-      m_events.forClientListener().connected(),
-      &listener,
+      m_events.forClientListener().connected(), &listener,
       new TMethodEventJob<NetworkTests>(
-          this,
-          &NetworkTests::sendToClient_mockFile_handleClientConnected,
+          this, &NetworkTests::sendToClient_mockFile_handleClientConnected,
           &listener));
 
   ON_CALL(serverConfig, isScreen(_)).WillByDefault(Return(true));
@@ -222,16 +213,11 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
-      &m_events,
-      "stub",
-      serverAddress,
-      clientSocketFactory,
-      &clientScreen,
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
       clientArgs);
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(),
-      &client,
+      m_events.forFile().fileRecieveCompleted(), &client,
       new TMethodEventJob<NetworkTests>(
           this, &NetworkTests::sendToClient_mockFile_fileRecieveCompleted));
 
@@ -284,24 +270,17 @@ TEST_F(NetworkTests, sendToServer_mockData) {
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
-      &m_events,
-      "stub",
-      serverAddress,
-      clientSocketFactory,
-      &clientScreen,
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
       clientArgs);
 
   m_events.adoptHandler(
-      m_events.forClientListener().connected(),
-      &listener,
+      m_events.forClientListener().connected(), &listener,
       new TMethodEventJob<NetworkTests>(
-          this,
-          &NetworkTests::sendToServer_mockData_handleClientConnected,
+          this, &NetworkTests::sendToServer_mockData_handleClientConnected,
           &client));
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(),
-      &server,
+      m_events.forFile().fileRecieveCompleted(), &server,
       new TMethodEventJob<NetworkTests>(
           this, &NetworkTests::sendToServer_mockData_fileRecieveCompleted));
 
@@ -355,24 +334,17 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
-      &m_events,
-      "stub",
-      serverAddress,
-      clientSocketFactory,
-      &clientScreen,
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
       clientArgs);
 
   m_events.adoptHandler(
-      m_events.forClientListener().connected(),
-      &listener,
+      m_events.forClientListener().connected(), &listener,
       new TMethodEventJob<NetworkTests>(
-          this,
-          &NetworkTests::sendToServer_mockFile_handleClientConnected,
+          this, &NetworkTests::sendToServer_mockFile_handleClientConnected,
           &client));
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(),
-      &server,
+      m_events.forFile().fileRecieveCompleted(), &server,
       new TMethodEventJob<NetworkTests>(
           this, &NetworkTests::sendToServer_mockFile_fileRecieveCompleted));
 

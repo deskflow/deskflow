@@ -32,8 +32,7 @@ class SocketMultiplexer;
 class InverseClientSocket : public IDataSocket {
 public:
   InverseClientSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
   InverseClientSocket(InverseClientSocket const &) = delete;
   InverseClientSocket(InverseClientSocket &&) = delete;

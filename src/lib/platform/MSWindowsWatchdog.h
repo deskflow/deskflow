@@ -36,10 +36,8 @@ class FileLogOutputter;
 class MSWindowsWatchdog {
 public:
   MSWindowsWatchdog(
-      bool autoDetectCommand,
-      IpcServer &ipcServer,
-      IpcLogOutputter &ipcLogOutputter,
-      bool foreground);
+      bool autoDetectCommand, IpcServer &ipcServer,
+      IpcLogOutputter &ipcLogOutputter, bool foreground);
   virtual ~MSWindowsWatchdog();
 
   void startAsync();

@@ -1534,13 +1534,8 @@ static const KeySym s_map1008FF[] = {
 XWindowsUtil::KeySymMap XWindowsUtil::s_keySymToUCS4;
 
 bool XWindowsUtil::getWindowProperty(
-    Display *display,
-    Window window,
-    Atom property,
-    String *data,
-    Atom *type,
-    SInt32 *format,
-    bool deleteProperty) {
+    Display *display, Window window, Atom property, String *data, Atom *type,
+    SInt32 *format, bool deleteProperty) {
   assert(display != NULL);
 
   Atom actualType;
@@ -1559,17 +1554,8 @@ bool XWindowsUtil::getWindowProperty(
     unsigned long numItems;
     unsigned char *rawData;
     if (XGetWindowProperty(
-            display,
-            window,
-            property,
-            offset,
-            length,
-            False,
-            AnyPropertyType,
-            &actualType,
-            &actualDatumSize,
-            &numItems,
-            &bytesLeft,
+            display, window, property, offset, length, False, AnyPropertyType,
+            &actualType, &actualDatumSize, &numItems, &bytesLeft,
             &rawData) != Success ||
         actualType == None || actualDatumSize == 0) {
       // failed
@@ -1624,28 +1610,20 @@ bool XWindowsUtil::getWindowProperty(
 
   if (okay) {
     LOG(
-        (CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d",
-         property,
-         window,
-         (data == NULL) ? 0 : data->size()));
+        (CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property,
+         window, (data == NULL) ? 0 : data->size()));
     return true;
   } else {
     LOG(
-        (CLOG_DEBUG2 "can't read property %d on window 0x%08x",
-         property,
+        (CLOG_DEBUG2 "can't read property %d on window 0x%08x", property,
          window));
     return false;
   }
 }
 
 bool XWindowsUtil::setWindowProperty(
-    Display *display,
-    Window window,
-    Atom property,
-    const void *vdata,
-    UInt32 size,
-    Atom type,
-    SInt32 format) {
+    Display *display, Window window, Atom property, const void *vdata,
+    UInt32 size, Atom type, SInt32 format) {
   const UInt32 length = 4 * XMaxRequestSize(display);
   const unsigned char *data = static_cast<const unsigned char *>(vdata);
   UInt32 datumSize = static_cast<UInt32>(format / 8);
@@ -1666,13 +1644,7 @@ bool XWindowsUtil::setWindowProperty(
 
   // send first chunk
   XChangeProperty(
-      display,
-      window,
-      property,
-      type,
-      format,
-      PropModeReplace,
-      data,
+      display, window, property, type, format, PropModeReplace, data,
       chunkSize / datumSize);
 
   // append remaining chunks
@@ -1684,13 +1656,7 @@ bool XWindowsUtil::setWindowProperty(
       chunkSize = length;
     }
     XChangeProperty(
-        display,
-        window,
-        property,
-        type,
-        format,
-        PropModeAppend,
-        data,
+        display, window, property, type, format, PropModeAppend, data,
         chunkSize / datumSize);
     data += chunkSize;
     size -= chunkSize;
@@ -1722,9 +1688,7 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
   // wait for reply
   XEvent xevent;
   XIfEvent(
-      display,
-      &xevent,
-      &XWindowsUtil::propertyNotifyPredicate,
+      display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
       (XPointer)&filter);
   assert(xevent.type == PropertyNotify);
   assert(xevent.xproperty.window == window);
@@ -1936,9 +1900,7 @@ void XWindowsUtil::appendAtomData(String &data, Atom atom) {
 
 void XWindowsUtil::replaceAtomData(String &data, UInt32 index, Atom atom) {
   data.replace(
-      index * sizeof(Atom),
-      sizeof(Atom),
-      reinterpret_cast<const char *>(&atom),
+      index * sizeof(Atom), sizeof(Atom), reinterpret_cast<const char *>(&atom),
       sizeof(Atom));
 }
 

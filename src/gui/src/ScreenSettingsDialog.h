@@ -37,8 +37,7 @@ class ScreenSettingsDialog : public QDialog,
 
 public:
   ScreenSettingsDialog(
-      QWidget *parent,
-      Screen *pScreen = nullptr,
+      QWidget *parent, Screen *pScreen = nullptr,
       const ScreenList *pScreens = nullptr);
 
 public slots:

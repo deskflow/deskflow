@@ -51,8 +51,7 @@ void loadOldSystemSettings(QSettings &settings) {
     QSettings::setPath(
         QSettings::IniFormat, QSettings::SystemScope, "SystemConfig.ini");
     QSettings oldSystemSettings(
-        QSettings::IniFormat,
-        QSettings::SystemScope,
+        QSettings::IniFormat, QSettings::SystemScope,
         QCoreApplication::organizationName(),
         QCoreApplication::applicationName());
 
@@ -86,15 +85,13 @@ ConfigWriter *ConfigWriter::make() {
 
 ConfigWriter::ConfigWriter() {
   QSettings::setPath(
-      QSettings::Format::IniFormat,
-      QSettings::Scope::SystemScope,
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
 
   // Config will default to User settings if they exist,
   //  otherwise it will load System setting and save them to User settings
   m_pSettingsSystem = new QSettings(
-      QSettings::Format::IniFormat,
-      QSettings::Scope::SystemScope,
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       QCoreApplication::organizationName(),
       QCoreApplication::applicationName());
 

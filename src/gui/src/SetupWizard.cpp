@@ -28,9 +28,7 @@ SetupWizard::SetupWizard(MainWindow &mainWindow) : m_MainWindow(mainWindow) {
 
   connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
   connect(
-      m_pLineEditName,
-      SIGNAL(textEdited(QString)),
-      this,
+      m_pLineEditName, SIGNAL(textEdited(QString)), this,
       SLOT(onNameChanged()));
 }
 

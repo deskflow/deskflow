@@ -29,12 +29,8 @@ std::string XArchEvalWindows::eval() const throw() {
   if (FormatMessage(
           FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS |
               FORMAT_MESSAGE_FROM_SYSTEM,
-          0,
-          m_error,
-          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-          (LPTSTR)&cmsg,
-          0,
-          NULL) == 0) {
+          0, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&cmsg,
+          0, NULL) == 0) {
     cmsg = NULL;
     return synergy::string::sprintf("Unknown error, code %d", m_error);
   }
@@ -60,16 +56,14 @@ std::string XArchEvalWinsock::eval() const throw() {
           "The (blocking) call was canceled via WSACancelBlockingCall"},
       /* 10009 */ {WSAEBADF, "Bad file handle"},
       /* 10013 */
-      {WSAEACCES,
-       "The requested address is a broadcast address, but the "
-       "appropriate flag was not set"},
+      {WSAEACCES, "The requested address is a broadcast address, but the "
+                  "appropriate flag was not set"},
       /* 10014 */ {WSAEFAULT, "WSAEFAULT"},
       /* 10022 */ {WSAEINVAL, "WSAEINVAL"},
       /* 10024 */ {WSAEMFILE, "No more file descriptors available"},
       /* 10035 */
-      {WSAEWOULDBLOCK,
-       "Socket is marked as non-blocking and no connections "
-       "are present or the receive operation would block"},
+      {WSAEWOULDBLOCK, "Socket is marked as non-blocking and no connections "
+                       "are present or the receive operation would block"},
       /* 10036 */
       {WSAEINPROGRESS, "A blocking Windows Sockets operation is in progress"},
       /* 10037 */
@@ -78,9 +72,8 @@ std::string XArchEvalWinsock::eval() const throw() {
       /* 10038 */ {WSAENOTSOCK, "At least on descriptor is not a socket"},
       /* 10039 */ {WSAEDESTADDRREQ, "A destination address is required"},
       /* 10040 */
-      {WSAEMSGSIZE,
-       "The datagram was too large to fit into the specified "
-       "buffer and was truncated"},
+      {WSAEMSGSIZE, "The datagram was too large to fit into the specified "
+                    "buffer and was truncated"},
       /* 10041 */
       {WSAEPROTOTYPE,
        "The specified protocol is the wrong type for this socket"},
@@ -101,25 +94,22 @@ std::string XArchEvalWinsock::eval() const throw() {
       {WSAEADDRNOTAVAIL,
        "The specified address is not available from the local machine"},
       /* 10050 */
-      {WSAENETDOWN,
-       "The Windows Sockets implementation has detected that the "
-       "network subsystem has failed"},
+      {WSAENETDOWN, "The Windows Sockets implementation has detected that the "
+                    "network subsystem has failed"},
       /* 10051 */
       {WSAENETUNREACH,
        "The network can't be reached from this host at this time"},
       /* 10052 */
-      {WSAENETRESET,
-       "The connection must be reset because the Windows Sockets "
-       "implementation dropped it"},
+      {WSAENETRESET, "The connection must be reset because the Windows Sockets "
+                     "implementation dropped it"},
       /* 10053 */
       {WSAECONNABORTED,
        "The virtual circuit was aborted due to timeout or other failure"},
       /* 10054 */
       {WSAECONNRESET, "The virtual circuit was reset by the remote side"},
       /* 10055 */
-      {WSAENOBUFS,
-       "No buffer space is available or a buffer deadlock has "
-       "occured. The socket cannot be created"},
+      {WSAENOBUFS, "No buffer space is available or a buffer deadlock has "
+                   "occured. The socket cannot be created"},
       /* 10056 */ {WSAEISCONN, "The socket is already connected"},
       /* 10057 */ {WSAENOTCONN, "The socket is not connected"},
       /* 10058 */ {WSAESHUTDOWN, "The socket has been shutdown"},
@@ -143,9 +133,8 @@ std::string XArchEvalWinsock::eval() const throw() {
       {WSASYSNOTREADY,
        "Underlying network subsytem is not ready for network communication"},
       /* 10092 */
-      {WSAVERNOTSUPPORTED,
-       "The version of WinSock API support requested is "
-       "not provided in this implementation"},
+      {WSAVERNOTSUPPORTED, "The version of WinSock API support requested is "
+                           "not provided in this implementation"},
       /* 10093 */
       {WSANOTINITIALISED, "WinSock subsystem not properly initialized"},
       /* 10101 */

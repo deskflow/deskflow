@@ -38,9 +38,7 @@ void LicenseRegistry::registerLicense() {
 
     m_manager.post(request, getRequestData());
     connect(
-        &m_manager,
-        SIGNAL(finished(QNetworkReply *)),
-        this,
+        &m_manager, SIGNAL(finished(QNetworkReply *)), this,
         SLOT(handleResponse(QNetworkReply *)));
   }
 }

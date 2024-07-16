@@ -37,9 +37,7 @@ class ClientListener {
 public:
   // The factories are adopted.
   ClientListener(
-      const NetworkAddress &,
-      ISocketFactory *,
-      IEventQueue *events,
+      const NetworkAddress &, ISocketFactory *, IEventQueue *events,
       bool enableCrypto);
   ClientListener(ClientListener const &) = delete;
   ClientListener(ClientListener &&) = delete;

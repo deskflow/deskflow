@@ -225,8 +225,7 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
   lib::synergy::ServerArgs args;
   args.m_daemon = false;
   char const *argv[] = {
-      "synergy",
-      "--help"
+      "synergy", "--help"
 #if WINAPI_MSWINDOWS
       ,
       "--exit-pause"
@@ -235,8 +234,7 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
       "--no-xinitthreads"
 #endif
       ,
-      "--res-w",
-      "888"};
+      "--res-w", "888"};
   EXPECT_TRUE(
       parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExitOk, true);

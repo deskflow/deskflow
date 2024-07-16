@@ -119,8 +119,7 @@ XWindowsScreenSaver::XWindowsScreenSaver(
 
   // install disable timer event handler
   m_events->adoptHandler(
-      Event::kTimer,
-      this,
+      Event::kTimer, this,
       new TMethodEventJob<XWindowsScreenSaver>(
           this, &XWindowsScreenSaver::handleDisableTimer));
 }
@@ -362,8 +361,7 @@ void XWindowsScreenSaver::setXScreenSaverActive(bool activated) {
   if (m_xscreensaverActive != activated) {
     LOG(
         (CLOG_DEBUG "xscreensaver %s on window 0x%08x",
-         activated ? "activated" : "deactivated",
-         m_xscreensaver));
+         activated ? "activated" : "deactivated", m_xscreensaver));
     m_xscreensaverActive = activated;
 
     // if screen saver was activated forcefully (i.e. against
@@ -437,8 +435,7 @@ void XWindowsScreenSaver::clearWatchForXScreenSaver() {
   // stop watching all windows
   XWindowsUtil::ErrorLock lock(m_display);
   for (WatchList::iterator index = m_watchWindows.begin();
-       index != m_watchWindows.end();
-       ++index) {
+       index != m_watchWindows.end(); ++index) {
     XSelectInput(m_display, index->first, index->second);
   }
   m_watchWindows.clear();

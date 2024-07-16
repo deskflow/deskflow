@@ -32,9 +32,8 @@ subclasses to implement the rest.
 class PlatformScreen : public IPlatformScreen {
 public:
   PlatformScreen(
-      IEventQueue *events,
-      lib::synergy::ClientScrollDirection scrollDirection =
-          lib::synergy::ClientScrollDirection::SERVER);
+      IEventQueue *events, lib::synergy::ClientScrollDirection scrollDirection =
+                               lib::synergy::ClientScrollDirection::SERVER);
   virtual ~PlatformScreen();
 
   // IScreen overrides
@@ -68,10 +67,7 @@ public:
   virtual void
   fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &);
   virtual bool fakeKeyRepeat(
-      KeyID id,
-      KeyModifierMask mask,
-      SInt32 count,
-      KeyButton button,
+      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
       const String &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();

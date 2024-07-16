@@ -255,8 +255,7 @@ public:
   class MouseButtonAction : public Action {
   public:
     MouseButtonAction(
-        IEventQueue *events,
-        IPlatformScreen::ButtonInfo *adoptedInfo,
+        IEventQueue *events, IPlatformScreen::ButtonInfo *adoptedInfo,
         bool press);
     MouseButtonAction(MouseButtonAction const &) = delete;
     MouseButtonAction(MouseButtonAction &&) = delete;

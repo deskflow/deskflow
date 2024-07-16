@@ -63,11 +63,8 @@ void ArchDaemonWindows::daemonFailed(int result) {
 }
 
 void ArchDaemonWindows::installDaemon(
-    const char *name,
-    const char *description,
-    const char *pathname,
-    const char *commandLine,
-    const char *dependencies) {
+    const char *name, const char *description, const char *pathname,
+    const char *commandLine, const char *dependencies) {
   // open service manager
   SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
   if (mgr == NULL) {
@@ -77,19 +74,10 @@ void ArchDaemonWindows::installDaemon(
 
   // create the service
   SC_HANDLE service = CreateService(
-      mgr,
-      name,
-      name,
-      0,
+      mgr, name, name, 0,
       SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,
-      SERVICE_AUTO_START,
-      SERVICE_ERROR_NORMAL,
-      pathname,
-      NULL,
-      NULL,
-      dependencies,
-      NULL,
-      NULL);
+      SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, pathname, NULL, NULL,
+      dependencies, NULL, NULL);
 
   if (service == NULL) {
     // can't create service

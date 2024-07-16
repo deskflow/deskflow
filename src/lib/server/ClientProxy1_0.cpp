@@ -39,28 +39,23 @@ ClientProxy1_0::ClientProxy1_0(
       m_events(events) {
   // install event handlers
   m_events->adoptHandler(
-      m_events->forIStream().inputReady(),
-      stream->getEventTarget(),
+      m_events->forIStream().inputReady(), stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(
           this, &ClientProxy1_0::handleData, NULL));
   m_events->adoptHandler(
-      m_events->forIStream().outputError(),
-      stream->getEventTarget(),
+      m_events->forIStream().outputError(), stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(
           this, &ClientProxy1_0::handleWriteError, NULL));
   m_events->adoptHandler(
-      m_events->forIStream().inputShutdown(),
-      stream->getEventTarget(),
+      m_events->forIStream().inputShutdown(), stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(
           this, &ClientProxy1_0::handleDisconnect, NULL));
   m_events->adoptHandler(
-      m_events->forIStream().outputShutdown(),
-      stream->getEventTarget(),
+      m_events->forIStream().outputShutdown(), stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(
           this, &ClientProxy1_0::handleWriteError, NULL));
   m_events->adoptHandler(
-      Event::kTimer,
-      this,
+      Event::kTimer, this,
       new TMethodEventJob<ClientProxy1_0>(
           this, &ClientProxy1_0::handleFlatline, NULL));
 
@@ -131,28 +126,19 @@ void ClientProxy1_0::handleData(const Event &, void *) {
     if (n != 4) {
       LOG(
           (CLOG_ERR "incomplete message from \"%s\": %d bytes",
-           getName().c_str(),
-           n));
+           getName().c_str(), n));
       disconnect();
       return;
     }
 
     // parse message
     LOG(
-        (CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c",
-         getName().c_str(),
-         code[0],
-         code[1],
-         code[2],
-         code[3]));
+        (CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0],
+         code[1], code[2], code[3]));
     if (!(this->*m_parser)(code)) {
       LOG(
           (CLOG_ERR "invalid message from client \"%s\": %c%c%c%c",
-           getName().c_str(),
-           code[0],
-           code[1],
-           code[2],
-           code[3]));
+           getName().c_str(), code[0], code[1], code[2], code[3]));
       // not possible to determine message boundaries
       // read the whole stream to discard unkonwn data
       while (getStream()->read(nullptr, 4))
@@ -243,12 +229,8 @@ void ClientProxy1_0::getCursorPos(SInt32 &x, SInt32 &y) const {
 void ClientProxy1_0::enter(
     SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool) {
   LOG(
-      (CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x",
-       getName().c_str(),
-       xAbs,
-       yAbs,
-       seqNum,
-       mask));
+      (CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(),
+       xAbs, yAbs, seqNum, mask));
   ProtocolUtil::writef(getStream(), kMsgCEnter, xAbs, yAbs, seqNum, mask);
 }
 
@@ -280,9 +262,7 @@ void ClientProxy1_0::keyDown(
     KeyID key, KeyModifierMask mask, KeyButton, const String &) {
   LOG(
       (CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x",
-       getName().c_str(),
-       key,
-       mask));
+       getName().c_str(), key, mask));
   ProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
 }
 
@@ -290,26 +270,20 @@ void ClientProxy1_0::keyRepeat(
     KeyID key, KeyModifierMask mask, SInt32 count, KeyButton, const String &) {
   LOG(
       (CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d",
-       getName().c_str(),
-       key,
-       mask,
-       count));
+       getName().c_str(), key, mask, count));
   ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
 }
 
 void ClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton) {
   LOG(
       (CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x",
-       getName().c_str(),
-       key,
-       mask));
+       getName().c_str(), key, mask));
   ProtocolUtil::writef(getStream(), kMsgDKeyUp1_0, key, mask);
 }
 
 void ClientProxy1_0::mouseDown(ButtonID button) {
   LOG(
-      (CLOG_DEBUG1 "send mouse down to \"%s\" id=%d",
-       getName().c_str(),
+      (CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(),
        button));
   ProtocolUtil::writef(getStream(), kMsgDMouseDown, button);
 }
@@ -321,9 +295,7 @@ void ClientProxy1_0::mouseUp(ButtonID button) {
 
 void ClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs) {
   LOG(
-      (CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d",
-       getName().c_str(),
-       xAbs,
+      (CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs,
        yAbs));
   ProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
 }
@@ -363,8 +335,7 @@ void ClientProxy1_0::secureInputNotification(const String &app) const {
 
 void ClientProxy1_0::screensaver(bool on) {
   LOG(
-      (CLOG_DEBUG1 "send screen saver to \"%s\" on=%d",
-       getName().c_str(),
+      (CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(),
        on ? 1 : 0));
   ProtocolUtil::writef(getStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
@@ -381,8 +352,7 @@ void ClientProxy1_0::resetOptions() {
 
 void ClientProxy1_0::setOptions(const OptionsList &options) {
   LOG(
-      (CLOG_DEBUG1 "send set options to \"%s\" size=%d",
-       getName().c_str(),
+      (CLOG_DEBUG1 "send set options to \"%s\" size=%d", getName().c_str(),
        options.size()));
   ProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
 
@@ -409,13 +379,7 @@ bool ClientProxy1_0::recvInfo() {
   }
   LOG(
       (CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d",
-       getName().c_str(),
-       x,
-       y,
-       w,
-       h,
-       mx,
-       my));
+       getName().c_str(), x, y, w, h, mx, my));
 
   // validate
   if (w <= 0 || h <= 0) {
@@ -454,9 +418,7 @@ bool ClientProxy1_0::recvGrabClipboard() {
   }
   LOG(
       (CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d",
-       getName().c_str(),
-       id,
-       seqNum));
+       getName().c_str(), id, seqNum));
 
   // validate
   if (id >= kClipboardEnd) {

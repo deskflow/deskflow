@@ -37,8 +37,7 @@ CFStringRef OSXClipboardTextConverter::getOSXFormat() const {
 }
 
 String OSXClipboardTextConverter::convertString(
-    const String &data,
-    CFStringEncoding fromEncoding,
+    const String &data, CFStringEncoding fromEncoding,
     CFStringEncoding toEncoding) {
   CFStringRef stringRef = CFStringCreateWithCString(
       kCFAllocatorDefault, data.c_str(), fromEncoding);
@@ -61,13 +60,7 @@ String OSXClipboardTextConverter::convertString(
   }
 
   CFStringGetBytes(
-      stringRef,
-      entireString,
-      toEncoding,
-      0,
-      false,
-      (UInt8 *)buffer,
-      buffSize,
+      stringRef, entireString, toEncoding, 0, false, (UInt8 *)buffer, buffSize,
       NULL);
 
   String result(buffer, buffSize);

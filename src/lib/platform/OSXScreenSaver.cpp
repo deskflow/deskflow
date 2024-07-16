@@ -51,10 +51,7 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue *events, void *eventTarget)
   EventHandlerUPP launchTerminationEventHandler =
       NewEventHandlerUPP(launchTerminationCallback);
   InstallApplicationEventHandler(
-      launchTerminationEventHandler,
-      2,
-      launchEventTypes,
-      this,
+      launchTerminationEventHandler, 2, launchEventTypes, this,
       &m_launchTerminationEventHandlerRef);
   DisposeEventHandlerUPP(launchTerminationEventHandler);
 
@@ -128,13 +125,8 @@ pascal OSStatus OSXScreenSaver::launchTerminationCallback(
   ByteCount actualSize;
 
   result = GetEventParameter(
-      theEvent,
-      kEventParamProcessID,
-      typeProcessSerialNumber,
-      &actualType,
-      sizeof(psn),
-      &actualSize,
-      &psn);
+      theEvent, kEventParamProcessID, typeProcessSerialNumber, &actualType,
+      sizeof(psn), &actualSize, &psn);
 
   if ((result == noErr) && (actualSize > 0) &&
       (actualType == typeProcessSerialNumber)) {

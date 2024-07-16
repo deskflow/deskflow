@@ -28,8 +28,7 @@ class X11LayoutsParser {
 public:
   static std::vector<String> getX11LanguageList(const String &pathToEvdevFile);
   static String convertLayotToISO(
-      const String &pathToEvdevFile,
-      const String &layoutLangCode,
+      const String &pathToEvdevFile, const String &layoutLangCode,
       bool needToReloadFiles = false);
 
 private:
@@ -48,8 +47,7 @@ private:
   appendVectorUniq(const std::vector<String> &source, std::vector<String> &dst);
 
   static void convertLayoutToISO639_2(
-      const String &pathToEvdevFile,
-      bool needToReloadEvdev,
+      const String &pathToEvdevFile, bool needToReloadEvdev,
       const std::vector<String> &layoutNames,
       const std::vector<String> &layoutVariantNames,
       std::vector<String> &iso639_2Codes);

@@ -192,8 +192,7 @@ void ArchTaskBarWindows::updateIcon(UINT id) {
 void ArchTaskBarWindows::addAllIcons() {
   ARCH->lockMutex(m_mutex);
   for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
-       index != m_receivers.end();
-       ++index) {
+       index != m_receivers.end(); ++index) {
     modifyIconNoLock(index, NIM_ADD);
   }
   ARCH->unlockMutex(m_mutex);
@@ -202,8 +201,7 @@ void ArchTaskBarWindows::addAllIcons() {
 void ArchTaskBarWindows::removeAllIcons() {
   ARCH->lockMutex(m_mutex);
   for (ReceiverToInfoMap::const_iterator index = m_receivers.begin();
-       index != m_receivers.end();
-       ++index) {
+       index != m_receivers.end(); ++index) {
     removeIconNoLock(index->second.m_id);
   }
   ARCH->unlockMutex(m_mutex);
@@ -316,8 +314,7 @@ bool ArchTaskBarWindows::processDialogs(MSG *msg) {
 
   // merge added dialogs into the dialog list
   for (Dialogs::const_iterator index = m_addedDialogs.begin();
-       index != m_addedDialogs.end();
-       ++index) {
+       index != m_addedDialogs.end(); ++index) {
     m_dialogs.insert(std::make_pair(index->first, index->second));
   }
   m_addedDialogs.clear();
@@ -332,8 +329,7 @@ bool ArchTaskBarWindows::processDialogs(MSG *msg) {
   // values of some elements).
   ARCH->lockMutex(m_mutex);
   for (Dialogs::const_iterator index = m_dialogs.begin();
-       index != m_dialogs.end();
-       ++index) {
+       index != m_dialogs.end(); ++index) {
     if (index->second) {
       ARCH->unlockMutex(m_mutex);
       if (IsDialogMessage(index->first, msg)) {
@@ -434,18 +430,8 @@ void ArchTaskBarWindows::threadMainLoop() {
 
   // create window
   m_hwnd = CreateWindowEx(
-      WS_EX_TOOLWINDOW,
-      className,
-      TEXT("Synergy Task Bar"),
-      WS_POPUP,
-      0,
-      0,
-      1,
-      1,
-      NULL,
-      NULL,
-      instanceWin32(),
-      static_cast<void *>(this));
+      WS_EX_TOOLWINDOW, className, TEXT("Synergy Task Bar"), WS_POPUP, 0, 0, 1,
+      1, NULL, NULL, instanceWin32(), static_cast<void *>(this));
 
   // signal ready
   ARCH->lockMutex(m_mutex);

@@ -108,8 +108,7 @@ int FileChunk::assemble(
     if (expectedSize != dataReceived.size()) {
       LOG(
           (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
-           expectedSize,
-           dataReceived.size()));
+           expectedSize, dataReceived.size()));
       return kError;
     }
 

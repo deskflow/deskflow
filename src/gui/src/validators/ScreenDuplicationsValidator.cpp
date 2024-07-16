@@ -20,8 +20,7 @@
 namespace validators {
 
 ScreenDuplicationsValidator::ScreenDuplicationsValidator(
-    const QString &message,
-    const QString &defaultName,
+    const QString &message, const QString &defaultName,
     const ScreenList *pScreens)
     : IStringValidator(message),
       m_defaultName(defaultName),

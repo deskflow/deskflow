@@ -45,10 +45,7 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
 }
 
 IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
-    KeyID id,
-    KeyModifierMask mask,
-    KeyButton button,
-    SInt32 count,
+    KeyID id, KeyModifierMask mask, KeyButton button, SInt32 count,
     const std::set<String> &destinations) {
   String screens = join(destinations);
   const char *buffer = screens.c_str();

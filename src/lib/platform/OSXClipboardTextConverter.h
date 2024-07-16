@@ -36,7 +36,6 @@ protected:
 
   // generic encoding converter
   static String convertString(
-      const String &data,
-      CFStringEncoding fromEncoding,
+      const String &data, CFStringEncoding fromEncoding,
       CFStringEncoding toEncoding);
 };

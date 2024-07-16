@@ -113,8 +113,7 @@ public:
   NULL then *errors is set to true iff any character could not be decoded.
   */
   static String textToUTF8(
-      const String &,
-      bool *errors = nullptr,
+      const String &, bool *errors = nullptr,
       IArchString::EWideCharEncoding encoding =
           IArchString::kPlatformDetermined);
 
@@ -130,9 +129,7 @@ private:
   // convert nul terminated wchar_t string (in platform's native
   // encoding) to UTF8.
   static String wideCharToUTF8(
-      const wchar_t *,
-      UInt32 size,
-      bool *errors,
+      const wchar_t *, UInt32 size, bool *errors,
       IArchString::EWideCharEncoding encoding =
           IArchString::kPlatformDetermined);
 

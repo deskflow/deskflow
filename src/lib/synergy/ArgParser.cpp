@@ -59,9 +59,7 @@ bool ArgParser::parseServerArgs(
       continue;
     } else {
       LOG(
-          (CLOG_CRIT "%s: unrecognized option `%s'" BYE,
-           args.m_pname,
-           argv[i],
+          (CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i],
            args.m_pname));
       return false;
     }
@@ -115,9 +113,7 @@ bool ArgParser::parseClientArgs(
       }
 
       LOG(
-          (CLOG_CRIT "%s: unrecognized option `%s'" BYE,
-           args.m_pname,
-           argv[i],
+          (CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i],
            args.m_pname));
       return false;
     }
@@ -127,8 +123,7 @@ bool ArgParser::parseClientArgs(
   // exactly one non-option argument (server-address)
   if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
     LOG(
-        (CLOG_CRIT "%s: a server address or name is required" BYE,
-         args.m_pname,
+        (CLOG_CRIT "%s: a server address or name is required" BYE, args.m_pname,
          args.m_pname));
     return false;
   }
@@ -141,9 +136,7 @@ bool ArgParser::parseClientArgs(
 }
 
 bool ArgParser::parsePlatformArg(
-    lib::synergy::ArgsBase &argsBase,
-    const int &argc,
-    const char *const *argv,
+    lib::synergy::ArgsBase &argsBase, const int &argc, const char *const *argv,
     int &i) {
 #if WINAPI_MSWINDOWS
   if (isArg(i, argc, argv, nullptr, "--service")) {
@@ -300,21 +293,15 @@ bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) {
 }
 
 bool ArgParser::isArg(
-    int argi,
-    int argc,
-    const char *const *argv,
-    const char *name1,
-    const char *name2,
-    int minRequiredParameters) {
+    int argi, int argc, const char *const *argv, const char *name1,
+    const char *name2, int minRequiredParameters) {
   if ((name1 != nullptr && strcmp(argv[argi], name1) == 0) ||
       (name2 != nullptr && strcmp(argv[argi], name2) == 0)) {
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
       LOG(
-          (CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-           argsBase().m_pname,
-           argv[argi],
-           argsBase().m_pname));
+          (CLOG_PRINT "%s: missing arguments for `%s'" BYE, argsBase().m_pname,
+           argv[argi], argsBase().m_pname));
       argsBase().m_shouldExitFail = true;
       return false;
     }
@@ -419,8 +406,7 @@ String ArgParser::assembleCommand(
   String result;
 
   for (std::vector<String>::iterator it = argsArray.begin();
-       it != argsArray.end();
-       ++it) {
+       it != argsArray.end(); ++it) {
     if (it->compare(ignoreArg) == 0) {
       it = it + parametersRequired;
       continue;

@@ -32,16 +32,13 @@
 //
 
 ClientProxy1_5::ClientProxy1_5(
-    const String &name,
-    synergy::IStream *stream,
-    Server *server,
+    const String &name, synergy::IStream *stream, Server *server,
     IEventQueue *events)
     : ClientProxy1_4(name, stream, server, events),
       m_events(events) {
 
   m_events->adoptHandler(
-      m_events->forFile().keepAlive(),
-      this,
+      m_events->forFile().keepAlive(), this,
       new TMethodEventJob<ClientProxy1_3>(
           this, &ClientProxy1_3::handleKeepAlive, NULL));
 }
@@ -76,8 +73,7 @@ bool ClientProxy1_5::parseMessage(const UInt8 *code) {
 void ClientProxy1_5::fileChunkReceived() {
   Server *server = getServer();
   int result = FileChunk::assemble(
-      getStream(),
-      server->getReceivedFileData(),
+      getStream(), server->getReceivedFileData(),
       server->getExpectedFileSize());
 
   if (result == kFinish) {

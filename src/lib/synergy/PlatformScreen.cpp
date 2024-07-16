@@ -48,10 +48,7 @@ void PlatformScreen::fakeKeyDown(
 }
 
 bool PlatformScreen::fakeKeyRepeat(
-    KeyID id,
-    KeyModifierMask mask,
-    SInt32 count,
-    KeyButton button,
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
     const String &lang) {
   return getKeyState()->fakeKeyRepeat(id, mask, count, button, lang);
 }

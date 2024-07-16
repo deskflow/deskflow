@@ -32,9 +32,7 @@
 //
 
 ClientProxy1_4::ClientProxy1_4(
-    const String &name,
-    synergy::IStream *stream,
-    Server *server,
+    const String &name, synergy::IStream *stream, Server *server,
     IEventQueue *events)
     : ClientProxy1_3(name, stream, events),
       m_server(server) {
@@ -49,10 +47,7 @@ void ClientProxy1_4::keyDown(
 }
 
 void ClientProxy1_4::keyRepeat(
-    KeyID key,
-    KeyModifierMask mask,
-    SInt32 count,
-    KeyButton button,
+    KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button,
     const String &lang) {
   ClientProxy1_3::keyRepeat(key, mask, count, button, lang);
 }

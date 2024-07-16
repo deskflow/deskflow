@@ -41,8 +41,7 @@ int XIncompatibleClient::getMinor() const throw() { return m_minor; }
 
 String XIncompatibleClient::getWhat() const throw() {
   return format(
-      "XIncompatibleClient",
-      "incompatible client %{1}.%{2}",
+      "XIncompatibleClient", "incompatible client %{1}.%{2}",
       synergy::string::sprintf("%d", m_major).c_str(),
       synergy::string::sprintf("%d", m_minor).c_str());
 }
@@ -87,7 +86,6 @@ int XExitApp::getCode() const throw() { return m_code; }
 
 String XExitApp::getWhat() const throw() {
   return format(
-      "XExitApp",
-      "exiting with code %{1}",
+      "XExitApp", "exiting with code %{1}",
       synergy::string::sprintf("%d", m_code).c_str());
 }

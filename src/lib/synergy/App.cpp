@@ -59,8 +59,7 @@ App *App::s_instance = nullptr;
 //
 
 App::App(
-    IEventQueue *events,
-    CreateTaskBarReceiverFunc createTaskBarReceiver,
+    IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
     lib::synergy::ArgsBase *args)
     : m_bye(&exit),
       m_taskBarReceiver(NULL),
@@ -96,14 +95,9 @@ void App::version() {
 
   char buffer[buffer_size];
   snprintf(
-      buffer,
-      buffer_size,
-      "%s %s, protocol version %d.%d\n%s",
-      argsBase().m_pname,
-      version.str().c_str(),
-      kProtocolMajorVersion,
-      kProtocolMinorVersion,
-      copyrightBuffer);
+      buffer, buffer_size, "%s %s, protocol version %d.%d\n%s",
+      argsBase().m_pname, version.str().c_str(), kProtocolMajorVersion,
+      kProtocolMinorVersion, copyrightBuffer);
 
   std::cout << buffer << std::endl;
 }
@@ -193,10 +187,8 @@ void App::initApp(int argc, const char **argv) {
   // set log filter
   if (!CLOG->setFilter(argsBase().m_logFilter)) {
     LOG(
-        (CLOG_CRIT "%s: unrecognized log level `%s'" BYE,
-         argsBase().m_pname,
-         argsBase().m_logFilter,
-         argsBase().m_pname));
+        (CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname,
+         argsBase().m_logFilter, argsBase().m_pname));
     m_bye(kExitArgs);
   }
   loggingFilterWarning();
@@ -225,8 +217,7 @@ void App::initIpcClient() {
   m_ipcClient->connect();
 
   m_events->adoptHandler(
-      m_events->forIpcClient().messageReceived(),
-      m_ipcClient,
+      m_events->forIpcClient().messageReceived(), m_ipcClient,
       new TMethodEventJob<App>(this, &App::handleIpcMessage));
 }
 

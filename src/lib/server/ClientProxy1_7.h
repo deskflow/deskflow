@@ -23,9 +23,7 @@
 class ClientProxy1_7 : public ClientProxy1_6 {
 public:
   ClientProxy1_7(
-      const String &name,
-      synergy::IStream *adoptedStream,
-      Server *server,
+      const String &name, synergy::IStream *adoptedStream, Server *server,
       IEventQueue *events);
   ~ClientProxy1_7() override = default;
 

@@ -270,8 +270,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config) {
       outStream << "\t" << config.screens()[i].name() << ":" << Qt::endl;
 
       for (unsigned int j = 0;
-           j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]);
-           j++) {
+           j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++) {
         int idx = config.adjacentScreenIndex(
             i, neighbourDirs[j].x, neighbourDirs[j].y);
         if (idx != -1 && !config.screens()[idx].isNull())

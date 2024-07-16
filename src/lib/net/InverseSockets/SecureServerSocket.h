@@ -20,8 +20,7 @@
 class SecureServerSocket : public InverseServerSocket {
 public:
   SecureServerSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family);
 
   // IListenSocket overrides

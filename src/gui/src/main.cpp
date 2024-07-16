@@ -67,8 +67,7 @@ int main(int argc, char *argv[]) {
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QMessageBox::information(
-        NULL,
-        "Synergy",
+        NULL, "Synergy",
         "Please drag Synergy to the Applications folder, "
         "and open it from there.");
     return 1;
@@ -96,9 +95,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   QObject::connect(
-      dynamic_cast<QObject *>(&app),
-      SIGNAL(aboutToQuit()),
-      &mainWindow,
+      dynamic_cast<QObject *>(&app), SIGNAL(aboutToQuit()), &mainWindow,
       SLOT(saveSettings()));
 
   std::unique_ptr<SetupWizardBlocker> setupBlocker;
@@ -149,8 +146,7 @@ bool checkMacAssistiveDevices() {
   bool result = AXAPIEnabled();
   if (!result) {
     QMessageBox::information(
-        NULL,
-        "Synergy",
+        NULL, "Synergy",
         "Please enable access to assistive devices "
         "System Preferences -> Security & Privacy -> "
         "Privacy -> Accessibility, then re-open Synergy.");

@@ -327,8 +327,7 @@ EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target) {
 void EventQueue::deleteTimer(EventQueueTimer *timer) {
   ArchMutexLock lock(m_mutex);
   for (TimerQueue::iterator index = m_timerQueue.begin();
-       index != m_timerQueue.end();
-       ++index) {
+       index != m_timerQueue.end(); ++index) {
     if (index->getTimer() == timer) {
       m_timerQueue.erase(index);
       break;
@@ -375,8 +374,7 @@ void EventQueue::removeHandlers(void *target) {
       // copy to handlers array and clear table for target
       TypeHandlerTable &typeHandlers = index->second;
       for (TypeHandlerTable::iterator index2 = typeHandlers.begin();
-           index2 != typeHandlers.end();
-           ++index2) {
+           index2 != typeHandlers.end(); ++index2) {
         handlers.push_back(index2->second);
       }
       typeHandlers.clear();
@@ -385,8 +383,7 @@ void EventQueue::removeHandlers(void *target) {
 
   // delete handlers
   for (std::vector<IEventJob *>::iterator index = handlers.begin();
-       index != handlers.end();
-       ++index) {
+       index != handlers.end(); ++index) {
     delete *index;
   }
 }
@@ -456,8 +453,7 @@ bool EventQueue::hasTimerExpired(Event &event) {
 
   // countdown elapsed time
   for (TimerQueue::iterator index = m_timerQueue.begin();
-       index != m_timerQueue.end();
-       ++index) {
+       index != m_timerQueue.end(); ++index) {
     (*index) -= time;
   }
 
@@ -525,10 +521,7 @@ void EventQueue::waitForReady() const {
 //
 
 EventQueue::Timer::Timer(
-    EventQueueTimer *timer,
-    double timeout,
-    double initialTime,
-    void *target,
+    EventQueueTimer *timer, double timeout, double initialTime, void *target,
     bool oneShot)
     : m_timer(timer),
       m_timeout(timeout),

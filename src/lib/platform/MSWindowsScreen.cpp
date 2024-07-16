@@ -92,12 +92,8 @@ HINSTANCE MSWindowsScreen::s_windowInstance = NULL;
 MSWindowsScreen *MSWindowsScreen::s_screen = NULL;
 
 MSWindowsScreen::MSWindowsScreen(
-    bool isPrimary,
-    bool noHooks,
-    bool stopOnDeskSwitch,
-    IEventQueue *events,
-    bool enableLangSync,
-    lib::synergy::ClientScrollDirection scrollDirection)
+    bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue *events,
+    bool enableLangSync, lib::synergy::ClientScrollDirection scrollDirection)
     : PlatformScreen(events, scrollDirection),
       m_isPrimary(isPrimary),
       m_noHooks(noHooks),
@@ -141,29 +137,19 @@ MSWindowsScreen::MSWindowsScreen(
 
     m_screensaver = new MSWindowsScreenSaver();
     m_desks = new MSWindowsDesks(
-        m_isPrimary,
-        m_noHooks,
-        m_screensaver,
-        m_events,
+        m_isPrimary, m_noHooks, m_screensaver, m_events,
         new TMethodJob<MSWindowsScreen>(this, &MSWindowsScreen::updateKeysCB),
         stopOnDeskSwitch);
     m_keyState = new MSWindowsKeyState(
-        m_desks,
-        getEventTarget(),
-        m_events,
-        AppUtil::instance().getKeyboardLayoutList(),
-        enableLangSync);
+        m_desks, getEventTarget(), m_events,
+        AppUtil::instance().getKeyboardLayoutList(), enableLangSync);
 
     updateScreenShape();
     m_class = createWindowClass();
     m_window = createWindow(m_class, "Synergy");
     forceShowCursor();
     LOG(
-        (CLOG_DEBUG "screen shape: %d,%d %dx%d %s",
-         m_x,
-         m_y,
-         m_w,
-         m_h,
+        (CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h,
          m_multimon ? "(multi-monitor)" : ""));
     LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
@@ -200,8 +186,7 @@ MSWindowsScreen::MSWindowsScreen(
 
   // install event handlers
   m_events->adoptHandler(
-      Event::kSystem,
-      m_events->getSystemTarget(),
+      Event::kSystem, m_events->getSystemTarget(),
       new TMethodEventJob<MSWindowsScreen>(
           this, &MSWindowsScreen::handleSystemEvent));
 
@@ -245,8 +230,7 @@ void MSWindowsScreen::enable() {
   // we need to poll some things to fix them
   m_fixTimer = m_events->newTimer(1.0, NULL);
   m_events->adoptHandler(
-      Event::kTimer,
-      m_fixTimer,
+      Event::kTimer, m_fixTimer,
       new TMethodEventJob<MSWindowsScreen>(
           this, &MSWindowsScreen::handleFixes));
 
@@ -347,8 +331,7 @@ bool MSWindowsScreen::leave() {
 
     // warp to center
     LOG(
-        (CLOG_DEBUG1 "warping cursor to center: %+d, %+d",
-         m_xCenter,
+        (CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter,
          m_yCenter));
     warpCursor(m_xCenter, m_yCenter);
 
@@ -527,22 +510,14 @@ bool MSWindowsScreen::getThisCursorPos(LPPOINT pos) {
   auto result = GetCursorPos(pos);
   auto error = GetLastError();
   LOG(
-      (CLOG_DEBUG3 "%s Attempt: 1 , status %d, code: %d Pos {%d, %d}",
-       __func__,
-       result,
-       error,
-       pos->x,
-       pos->y));
+      (CLOG_DEBUG3 "%s Attempt: 1 , status %d, code: %d Pos {%d, %d}", __func__,
+       result, error, pos->x, pos->y));
   if (!result) {
     result = GetCursorPos(pos);
     error = GetLastError();
     LOG(
         (CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d Pos {%d, %d}",
-         __func__,
-         result,
-         error,
-         pos->x,
-         pos->y));
+         __func__, result, error, pos->x, pos->y));
     updateDesktopThread();
   }
   return result;
@@ -552,17 +527,13 @@ bool MSWindowsScreen::setThisCursorPos(int x, int y) {
   auto result = SetCursorPos(x, y);
   auto error = GetLastError();
   LOG(
-      (CLOG_DEBUG3 "%s Attempt: 1, status %d, code: %d",
-       __func__,
-       result,
+      (CLOG_DEBUG3 "%s Attempt: 1, status %d, code: %d", __func__, result,
        error));
   if (!result) {
     result = SetCursorPos(x, y);
     error = GetLastError();
     LOG(
-        (CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d",
-         __func__,
-         result,
+        (CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d", __func__, result,
          error));
     updateDesktopThread();
   }
@@ -581,8 +552,7 @@ void MSWindowsScreen::updateDesktopThread() {
   error = GetLastError();
   LOG(
       (CLOG_DEBUG3 "setting desktop, return=%d code=%d",
-       SetThreadDesktop(cur_hdesk),
-       GetLastError()));
+       SetThreadDesktop(cur_hdesk), GetLastError()));
 
   CloseDesktop(cur_hdesk);
 }
@@ -682,18 +652,13 @@ UInt32 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
     m_hotKeys.erase(id);
     LOG(
         (CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)",
-         synergy::KeyMap::formatKey(key, mask).c_str(),
-         key,
-         mask));
+         synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
     return 0;
   }
 
   LOG(
       (CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d",
-       synergy::KeyMap::formatKey(key, mask).c_str(),
-       key,
-       mask,
-       id));
+       synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
   return id;
 }
 
@@ -744,13 +709,9 @@ void MSWindowsScreen::fakeInputEnd() {
 SInt32 MSWindowsScreen::getJumpZoneSize() const { return 1; }
 
 bool MSWindowsScreen::isAnyMouseButtonDown(UInt32 &buttonID) const {
-  static const char *buttonToName[] = {
-      "<invalid>",
-      "Left Button",
-      "Middle Button",
-      "Right Button",
-      "X Button 1",
-      "X Button 2"};
+  static const char *buttonToName[] = {"<invalid>",     "Left Button",
+                                       "Middle Button", "Right Button",
+                                       "X Button 1",    "X Button 2"};
 
   for (UInt32 i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
     if (m_buttons[i]) {
@@ -808,10 +769,7 @@ void MSWindowsScreen::fakeKeyDown(
 }
 
 bool MSWindowsScreen::fakeKeyRepeat(
-    KeyID id,
-    KeyModifierMask mask,
-    SInt32 count,
-    KeyButton button,
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
     const String &lang) {
   bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button, lang);
   updateForceShowCursor();
@@ -878,17 +836,8 @@ void MSWindowsScreen::destroyClass(ATOM windowClass) const {
 HWND MSWindowsScreen::createWindow(ATOM windowClass, const char *name) const {
   HWND window = CreateWindowEx(
       WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
-      MAKEINTATOM(windowClass),
-      name,
-      WS_POPUP,
-      0,
-      0,
-      1,
-      1,
-      NULL,
-      NULL,
-      s_windowInstance,
-      NULL);
+      MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, NULL, NULL,
+      s_windowInstance, NULL);
   if (window == NULL) {
     LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
     throw XScreenOpenFailure();
@@ -900,17 +849,8 @@ HWND MSWindowsScreen::createDropWindow(
     ATOM windowClass, const char *name) const {
   HWND window = CreateWindowEx(
       WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_ACCEPTFILES,
-      MAKEINTATOM(m_class),
-      name,
-      WS_POPUP,
-      0,
-      0,
-      m_dropWindowSize,
-      m_dropWindowSize,
-      NULL,
-      NULL,
-      s_windowInstance,
-      NULL);
+      MAKEINTATOM(m_class), name, WS_POPUP, 0, 0, m_dropWindowSize,
+      m_dropWindowSize, NULL, NULL, s_windowInstance, NULL);
 
   if (window == NULL) {
     LOG((CLOG_ERR "failed to create drop window: %d", GetLastError()));
@@ -1072,9 +1012,7 @@ bool MSWindowsScreen::onEvent(
    We receive only WM_TIMECHANGE hence this message is used to resume.*/
   case WM_TIMECHANGE:
     m_events->addEvent(Event(
-        m_events->forIScreen().resume(),
-        getEventTarget(),
-        NULL,
+        m_events->forIScreen().resume(), getEventTarget(), NULL,
         Event::kDeliverImmediately));
     break;
 
@@ -1084,17 +1022,13 @@ bool MSWindowsScreen::onEvent(
     case PBT_APMRESUMECRITICAL:
     case PBT_APMRESUMESUSPEND:
       m_events->addEvent(Event(
-          m_events->forIScreen().resume(),
-          getEventTarget(),
-          NULL,
+          m_events->forIScreen().resume(), getEventTarget(), NULL,
           Event::kDeliverImmediately));
       break;
 
     case PBT_APMSUSPEND:
       m_events->addEvent(Event(
-          m_events->forIScreen().suspend(),
-          getEventTarget(),
-          NULL,
+          m_events->forIScreen().suspend(), getEventTarget(), NULL,
           Event::kDeliverImmediately));
       break;
     }
@@ -1125,10 +1059,8 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam) {
 
   LOG(
       (CLOG_DEBUG1 "event: Key char=%d, vk=0x%02x, nagr=%d, lParam=0x%08x",
-       (wParam & 0xffffu),
-       (wParam >> 16) & 0xffu,
-       (wParam & 0x1000000u) ? 1 : 0,
-       lParam));
+       (wParam & 0xffffu), (wParam >> 16) & 0xffu,
+       (wParam & 0x1000000u) ? 1 : 0, lParam));
 
   // get event info
   KeyButton button = (KeyButton)((lParam & 0x01ff0000) >> 16);
@@ -1239,12 +1171,8 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam) {
     if (key != kKeyNone) {
       // do it
       m_keyState->sendKeyEvent(
-          getEventTarget(),
-          ((lParam & 0x80000000u) == 0),
-          ((lParam & 0x40000000u) != 0),
-          key,
-          mask,
-          (SInt32)(lParam & 0xffff),
+          getEventTarget(), ((lParam & 0x80000000u) == 0),
+          ((lParam & 0x40000000u) != 0), key, mask, (SInt32)(lParam & 0xffff),
           button);
     } else {
       LOG((CLOG_DEBUG1 "cannot map key"));
@@ -1360,12 +1288,7 @@ bool MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my) {
 
   LOG(
       (CLOG_DEBUG3 "mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
-       x,
-       mx,
-       m_xCursor,
-       y,
-       my,
-       m_yCursor));
+       x, mx, m_xCursor, y, my, m_yCursor));
 
   // ignore if the mouse didn't move or if message posted prior
   // to last mark change.
@@ -1392,8 +1315,7 @@ bool MSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my) {
     // will always try to return to the original entry point on the
     // secondary screen.
     LOG(
-        (CLOG_DEBUG5 "warping server cursor to center: %+d,%+d",
-         m_xCenter,
+        (CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter,
          m_yCenter));
     warpCursorNoFlush(m_xCenter, m_yCenter);
 
@@ -1442,10 +1364,7 @@ bool MSWindowsScreen::onScreensaver(bool activated) {
   // the screen saver is disabled!
   MSG msg;
   if (PeekMessage(
-          &msg,
-          NULL,
-          SYNERGY_MSG_SCREEN_SAVER,
-          SYNERGY_MSG_SCREEN_SAVER,
+          &msg, NULL, SYNERGY_MSG_SCREEN_SAVER, SYNERGY_MSG_SCREEN_SAVER,
           PM_NOREMOVE)) {
     return true;
   }
@@ -1480,8 +1399,7 @@ bool MSWindowsScreen::onDisplayChange() {
       if (!m_isOnScreen) {
 
         LOG(
-            (CLOG_DEBUG1 "warping cursor to center: %+d, %+d",
-             m_xCenter,
+            (CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter,
              m_yCenter));
         warpCursor(m_xCenter, m_yCenter);
       }
@@ -1496,11 +1414,7 @@ bool MSWindowsScreen::onDisplayChange() {
     sendEvent(m_events->forIScreen().shapeChanged());
 
     LOG(
-        (CLOG_DEBUG "screen shape: %d,%d %dx%d %s",
-         m_x,
-         m_y,
-         m_w,
-         m_h,
+        (CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h,
          m_multimon ? "(multi-monitor)" : ""));
   }
 
@@ -1547,11 +1461,8 @@ void MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y) {
       LOG((CLOG_DEBUG
            "function 'SetCursorPos' failed; trying 'fakeMouseMove'"));
       LOG(
-          (CLOG_DEBUG "cursor pos %d, %d expected pos %d, %d",
-           cursorPos.x,
-           cursorPos.y,
-           x,
-           y));
+          (CLOG_DEBUG "cursor pos %d, %d expected pos %d, %d", cursorPos.x,
+           cursorPos.y, x, y));
       // when at Vista/7 login screen, SetCursorPos does not work (which could
       // be an MS security feature). instead we can use fakeMouseMove, which
       // calls mouse_event. IMPORTANT: as of implementing this function, it has
@@ -1781,9 +1692,7 @@ void MSWindowsScreen::forceShowCursor() {
     } else {
       if (m_gotOldMouseKeys) {
         SystemParametersInfo(
-            SPI_SETMOUSEKEYS,
-            m_oldMouseKeys.cbSize,
-            &m_oldMouseKeys,
+            SPI_SETMOUSEKEYS, m_oldMouseKeys.cbSize, &m_oldMouseKeys,
             SPIF_SENDCHANGE);
         m_showingMouse = false;
       }
@@ -1868,13 +1777,8 @@ String &MSWindowsScreen::getDraggingFilename() {
     xPos = (xPos - halfSize) < 0 ? 0 : xPos - halfSize;
     yPos = (yPos - halfSize) < 0 ? 0 : yPos - halfSize;
     SetWindowPos(
-        m_dropWindow,
-        HWND_TOPMOST,
-        xPos,
-        yPos,
-        m_dropWindowSize,
-        m_dropWindowSize,
-        SWP_SHOWWINDOW);
+        m_dropWindow, HWND_TOPMOST, xPos, yPos, m_dropWindowSize,
+        m_dropWindowSize, SWP_SHOWWINDOW);
 
     // TODO: fake these keys properly
     fakeKeyDown(

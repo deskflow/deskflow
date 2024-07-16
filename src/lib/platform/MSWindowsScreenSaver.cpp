@@ -138,8 +138,7 @@ void MSWindowsScreenSaver::deactivate() {
       "Screen-saver", 0, FALSE, DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
   if (desktop != NULL) {
     EnumDesktopWindows(
-        desktop,
-        &MSWindowsScreenSaver::killScreenSaverFunc,
+        desktop, &MSWindowsScreenSaver::killScreenSaverFunc,
         reinterpret_cast<LPARAM>(&killed));
     CloseDesktop(desktop);
   }

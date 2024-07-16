@@ -37,8 +37,7 @@ ScreenNameValidator::ScreenNameValidator(
   addValidator(std::make_unique<ComputerNameValidator>(
       "Contains invalid characters or is too long"));
   addValidator(std::make_unique<ScreenDuplicationsValidator>(
-      "A computer with this name already exists",
-      parent ? parent->text() : "",
+      "A computer with this name already exists", parent ? parent->text() : "",
       pScreens));
 }
 

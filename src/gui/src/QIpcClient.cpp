@@ -38,16 +38,12 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
 
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
   connect(
-      m_Socket,
-      SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
-      this,
+      m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
       SLOT(error(QAbstractSocket::SocketError)));
 
   m_Reader = new IpcReader(m_Socket);
   connect(
-      m_Reader,
-      SIGNAL(readLogLine(const QString &)),
-      this,
+      m_Reader, SIGNAL(readLogLine(const QString &)), this,
       SLOT(handleReadLogLine(const QString &)));
 }
 

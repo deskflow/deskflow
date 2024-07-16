@@ -79,10 +79,8 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 const char g_activeDesktop[] = {"activeDesktop:"};
 
 MSWindowsWatchdog::MSWindowsWatchdog(
-    bool autoDetectCommand,
-    IpcServer &ipcServer,
-    IpcLogOutputter &ipcLogOutputter,
-    bool foreground)
+    bool autoDetectCommand, IpcServer &ipcServer,
+    IpcLogOutputter &ipcLogOutputter, bool foreground)
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
       m_monitoring(true),
@@ -147,12 +145,8 @@ MSWindowsWatchdog::duplicateProcessToken(
 
   HANDLE newToken;
   BOOL duplicateRet = DuplicateTokenEx(
-      sourceToken,
-      TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
-      security,
-      SecurityImpersonation,
-      TokenPrimary,
-      &newToken);
+      sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
+      SecurityImpersonation, TokenPrimary, &newToken);
 
   if (!duplicateRet) {
     LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
@@ -225,8 +219,7 @@ void MSWindowsWatchdog::mainLoop(void *) {
         int timeout =
             (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
         LOG(
-            (CLOG_INFO "backing off, wait=%ds, failures=%d",
-             timeout,
+            (CLOG_INFO "backing off, wait=%ds, failures=%d", timeout,
              m_processFailures));
         ARCH->sleep(timeout);
       }
@@ -372,8 +365,7 @@ void MSWindowsWatchdog::startProcess() {
     LOG((CLOG_DEBUG "started core process from daemon"));
     LOG(
         (CLOG_DEBUG2 "process info, session=%i, elevated: %s, command=%s",
-         m_session.getActiveSessionId(),
-         m_elevateProcess ? "yes" : "no",
+         m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no",
          m_command.c_str()));
   }
 }
@@ -400,15 +392,7 @@ BOOL MSWindowsWatchdog::startProcessInForeground(String &command) {
   si.wShowWindow = SW_MINIMIZE;
 
   BOOL result = CreateProcess(
-      NULL,
-      LPSTR(command.c_str()),
-      NULL,
-      NULL,
-      TRUE,
-      0,
-      NULL,
-      NULL,
-      &si,
+      NULL, LPSTR(command.c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &si,
       &m_processInfo);
 
   m_children.insert(std::make_pair(m_processInfo.dwProcessId, m_processInfo));
@@ -437,17 +421,8 @@ BOOL MSWindowsWatchdog::startProcessAsUser(
   // re-launch in current active user session
   LOG((CLOG_INFO "starting new process"));
   BOOL createRet = CreateProcessAsUser(
-      userToken,
-      NULL,
-      LPSTR(command.c_str()),
-      sa,
-      NULL,
-      TRUE,
-      creationFlags,
-      environment,
-      NULL,
-      &si,
-      &m_processInfo);
+      userToken, NULL, LPSTR(command.c_str()), sa, NULL, TRUE, creationFlags,
+      environment, NULL, &si, &m_processInfo);
 
   m_children.insert(std::make_pair(m_processInfo.dwProcessId, m_processInfo));
 

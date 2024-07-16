@@ -102,8 +102,7 @@ bool ArchSystemUnix::DBusInhibitScreenCall(
     }
 
     reply = screenSaverInterface.call(
-        "Inhibit",
-        "Synergy",
+        "Inhibit", "Synergy",
         "Sleep is manually prevented by the Synergy preferences");
     if (reply.isValid())
       cookies[serviceNum] = reply.value();

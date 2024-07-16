@@ -74,9 +74,7 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence) {
 }
 
 int ClipboardChunk::assemble(
-    synergy::IStream *stream,
-    String &dataCached,
-    ClipboardID &id,
+    synergy::IStream *stream, String &dataCached, ClipboardID &id,
     UInt32 &sequence) {
   UInt8 mark;
   String data;
@@ -101,8 +99,7 @@ int ClipboardChunk::assemble(
     } else if (s_expectedSize != dataCached.size()) {
       LOG(
           (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
-           s_expectedSize,
-           dataCached.size()));
+           s_expectedSize, dataCached.size()));
       return kError;
     }
     return kFinish;

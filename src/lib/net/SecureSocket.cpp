@@ -57,8 +57,7 @@ struct Ssl {
 };
 
 SecureSocket::SecureSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     IArchNetwork::EAddressFamily family)
     : TCPSocket(events, socketMultiplexer, family),
       m_ssl(nullptr),
@@ -66,8 +65,7 @@ SecureSocket::SecureSocket(
       m_fatal(false) {}
 
 SecureSocket::SecureSocket(
-    IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
     ArchSocket socket)
     : TCPSocket(events, socketMultiplexer, socket),
       m_ssl(nullptr),
@@ -83,8 +81,7 @@ void SecureSocket::close() {
 
 void SecureSocket::connect(const NetworkAddress &addr) {
   m_events->adoptHandler(
-      m_events->forIDataSocket().connected(),
-      getEventTarget(),
+      m_events->forIDataSocket().connected(), getEventTarget(),
       new TMethodEventJob<SecureSocket>(
           this, &SecureSocket::handleTCPConnected));
 
@@ -103,19 +100,13 @@ ISocketMultiplexerJob *SecureSocket::newJob() {
 
 void SecureSocket::secureConnect() {
   setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-      this,
-      &SecureSocket::serviceConnect,
-      getSocket(),
-      isReadable(),
+      this, &SecureSocket::serviceConnect, getSocket(), isReadable(),
       isWritable()));
 }
 
 void SecureSocket::secureAccept() {
   setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-      this,
-      &SecureSocket::serviceAccept,
-      getSocket(),
-      isReadable(),
+      this, &SecureSocket::serviceAccept, getSocket(), isReadable(),
       isWritable()));
 }
 
@@ -626,9 +617,7 @@ bool SecureSocket::verifyCertFingerprint() {
 
   String trustedServersFilename;
   trustedServersFilename = synergy::string::sprintf(
-      "%s/%s/%s",
-      ARCH->getProfileDirectory().c_str(),
-      kFingerprintDirName,
+      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName,
       kFingerprintTrustedServersFilename);
 
   // check if this fingerprint exist
@@ -679,10 +668,7 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureSocket>(
-      this,
-      &SecureSocket::serviceConnect,
-      getSocket(),
-      isReadable(),
+      this, &SecureSocket::serviceConnect, getSocket(), isReadable(),
       isWritable());
 }
 
@@ -709,10 +695,7 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureSocket>(
-      this,
-      &SecureSocket::serviceAccept,
-      getSocket(),
-      isReadable(),
+      this, &SecureSocket::serviceAccept, getSocket(), isReadable(),
       isWritable());
 }
 

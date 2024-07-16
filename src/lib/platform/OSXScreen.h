@@ -37,9 +37,7 @@
 extern "C" {
 typedef int CGSConnectionID;
 CGError CGSSetConnectionProperty(
-    CGSConnectionID cid,
-    CGSConnectionID targetCID,
-    CFStringRef key,
+    CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key,
     CFTypeRef value);
 int _CGSDefaultConnection();
 }
@@ -57,9 +55,7 @@ class Mutex;
 class OSXScreen : public PlatformScreen {
 public:
   OSXScreen(
-      IEventQueue *events,
-      bool isPrimary,
-      bool enableLangSync = false,
+      IEventQueue *events, bool isPrimary, bool enableLangSync = false,
       lib::synergy::ClientScrollDirection scrollDirection =
           lib::synergy::ClientScrollDirection::SERVER);
 
@@ -184,9 +180,7 @@ private:
   void watchSystemPowerThread(void *);
   static void testCanceled(CFRunLoopTimerRef timer, void *info);
   static void powerChangeCallback(
-      void *refcon,
-      io_service_t service,
-      natural_t messageType,
+      void *refcon, io_service_t service, natural_t messageType,
       void *messageArgument);
   void handlePowerChangeRequest(natural_t messageType, void *messageArgument);
 

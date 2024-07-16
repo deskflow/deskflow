@@ -31,18 +31,9 @@
 const int kPriorityPrefixLength = 3;
 
 // names of priorities
-static const char *g_priority[] = {
-    "FATAL",
-    "ERROR",
-    "WARNING",
-    "NOTE",
-    "INFO",
-    "DEBUG",
-    "DEBUG1",
-    "DEBUG2",
-    "DEBUG3",
-    "DEBUG4",
-    "DEBUG5"};
+static const char *g_priority[] = {"FATAL",  "ERROR",  "WARNING", "NOTE",
+                                   "INFO",   "DEBUG",  "DEBUG1",  "DEBUG2",
+                                   "DEBUG3", "DEBUG4", "DEBUG5"};
 
 // number of priorities
 static const int g_numPriority =
@@ -89,21 +80,13 @@ void makeTimeString(std::vector<char> &buffer) {
 #endif
 
   snprintf(
-      buffer.data(),
-      buffer.size(),
-      "%04i-%02i-%02iT%02i:%02i:%02i",
-      tm.tm_year + yearOffset,
-      tm.tm_mon + monthOffset,
-      tm.tm_mday,
-      tm.tm_hour,
-      tm.tm_min,
-      tm.tm_sec);
+      buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i",
+      tm.tm_year + yearOffset, tm.tm_mon + monthOffset, tm.tm_mday, tm.tm_hour,
+      tm.tm_min, tm.tm_sec);
 }
 
 std::vector<char> makeMessage(
-    const char *filename,
-    int lineNumber,
-    const char *message,
+    const char *filename, int lineNumber, const char *message,
     ELevel priority) {
 
   // base size includes null terminator, colon, space, etc.
@@ -129,24 +112,14 @@ std::vector<char> makeMessage(
 
     std::vector<char> buffer(bufferSize);
     snprintf(
-        buffer.data(),
-        bufferSize,
-        "[%s] %s: %s\n\t%s:%d",
-        timeBuffer.data(),
-        g_priority[priority],
-        message,
-        filename,
-        lineNumber);
+        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(),
+        g_priority[priority], message, filename, lineNumber);
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
     snprintf(
-        buffer.data(),
-        bufferSize,
-        "[%s] %s: %s",
-        timeBuffer.data(),
-        g_priority[priority],
-        message);
+        buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(),
+        g_priority[priority], message);
     return buffer;
   }
 }
@@ -180,13 +153,11 @@ Log::Log(Log *src) { s_log = src; }
 Log::~Log() {
   // clean up
   for (OutputterList::iterator index = m_outputters.begin();
-       index != m_outputters.end();
-       ++index) {
+       index != m_outputters.end(); ++index) {
     delete *index;
   }
   for (OutputterList::iterator index = m_alwaysOutputters.begin();
-       index != m_alwaysOutputters.end();
-       ++index) {
+       index != m_alwaysOutputters.end(); ++index) {
     delete *index;
   }
   ARCH->closeMutex(m_mutex);

@@ -115,14 +115,7 @@ HKEY ArchMiscWindows::openKey(HKEY key, const TCHAR *keyName, bool create) {
   if (result != ERROR_SUCCESS && create) {
     DWORD disp;
     result = RegCreateKeyEx(
-        key,
-        keyName,
-        0,
-        NULL,
-        0,
-        KEY_WRITE | KEY_QUERY_VALUE,
-        NULL,
-        &newKey,
+        key, keyName, 0, NULL, 0, KEY_WRITE | KEY_QUERY_VALUE, NULL, &newKey,
         &disp);
   }
   if (result != ERROR_SUCCESS) {
@@ -203,11 +196,7 @@ void ArchMiscWindows::setValue(
     return;
   }
   RegSetValueEx(
-      key,
-      name,
-      0,
-      REG_SZ,
-      reinterpret_cast<const BYTE *>(value.c_str()),
+      key, name, 0, REG_SZ, reinterpret_cast<const BYTE *>(value.c_str()),
       (DWORD)value.size() + 1);
 }
 
@@ -218,11 +207,7 @@ void ArchMiscWindows::setValue(HKEY key, const TCHAR *name, DWORD value) {
     return;
   }
   RegSetValueEx(
-      key,
-      name,
-      0,
-      REG_DWORD,
-      reinterpret_cast<CONST BYTE *>(&value),
+      key, name, 0, REG_DWORD, reinterpret_cast<CONST BYTE *>(&value),
       sizeof(DWORD));
 }
 
@@ -235,11 +220,7 @@ void ArchMiscWindows::setValueBinary(
     return;
   }
   RegSetValueEx(
-      key,
-      name,
-      0,
-      REG_BINARY,
-      reinterpret_cast<const BYTE *>(value.data()),
+      key, name, 0, REG_BINARY, reinterpret_cast<const BYTE *>(value.data()),
       (DWORD)value.size());
 }
 
@@ -306,8 +287,7 @@ void ArchMiscWindows::removeDialog(HWND hwnd) { s_dialogs->erase(hwnd); }
 
 bool ArchMiscWindows::processDialog(MSG *msg) {
   for (Dialogs::const_iterator index = s_dialogs->begin();
-       index != s_dialogs->end();
-       ++index) {
+       index != s_dialogs->end(); ++index) {
     if (IsDialogMessage(*index, msg)) {
       return true;
     }

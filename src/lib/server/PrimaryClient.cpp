@@ -102,10 +102,7 @@ void PrimaryClient::enable() { m_screen->enable(); }
 void PrimaryClient::disable() { m_screen->disable(); }
 
 void PrimaryClient::enter(
-    SInt32 xAbs,
-    SInt32 yAbs,
-    UInt32 seqNum,
-    KeyModifierMask mask,
+    SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
     bool screensaver) {
   m_screen->setSequenceNumber(seqNum);
   if (!screensaver) {

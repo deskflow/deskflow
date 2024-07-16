@@ -39,9 +39,7 @@ public:
   static ClipboardChunk *end(ClipboardID id, UInt32 sequence);
 
   static int assemble(
-      synergy::IStream *stream,
-      String &dataCached,
-      ClipboardID &id,
+      synergy::IStream *stream, String &dataCached, ClipboardID &id,
       UInt32 &sequence);
 
   static void send(synergy::IStream *stream, void *data);

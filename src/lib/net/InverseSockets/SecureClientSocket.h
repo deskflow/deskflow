@@ -25,8 +25,7 @@ A secure socket using SSL.
 class SecureClientSocket : public InverseClientSocket {
 public:
   SecureClientSocket(
-      IEventQueue *events,
-      SocketMultiplexer *socketMultiplexer,
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family);
   SecureClientSocket(SecureClientSocket const &) = delete;
   SecureClientSocket(SecureClientSocket &&) = delete;

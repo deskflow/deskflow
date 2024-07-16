@@ -34,9 +34,7 @@ ScreenSetupModel::ScreenSetupModel(
     qFatal(
         "Not enough elements (%lld) in screens QList for %d columns and %d "
         "rows",
-        screens.size(),
-        m_NumColumns,
-        m_NumRows);
+        screens.size(), m_NumColumns, m_NumRows);
 }
 
 QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const {
@@ -102,10 +100,7 @@ QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const {
 }
 
 bool ScreenSetupModel::dropMimeData(
-    const QMimeData *data,
-    Qt::DropAction action,
-    int row,
-    int column,
+    const QMimeData *data, Qt::DropAction action, int row, int column,
     const QModelIndex &parent) {
   if (action == Qt::IgnoreAction)
     return true;
@@ -154,9 +149,8 @@ void ScreenSetupModel::addScreen(const Screen &newScreen) {
 
 bool ScreenSetupModel::isFull() const {
   auto emptyScreen = std::find_if(
-      m_Screens.cbegin(), m_Screens.cend(), [](const Screen &item) {
-        return item.isNull();
-      });
+      m_Screens.cbegin(), m_Screens.cend(),
+      [](const Screen &item) { return item.isNull(); });
 
   return (emptyScreen == m_Screens.cend());
 }

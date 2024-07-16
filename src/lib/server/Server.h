@@ -110,11 +110,8 @@ public:
   ownership of \p primaryClient.
   */
   Server(
-      Config &config,
-      PrimaryClient *primaryClient,
-      synergy::Screen *screen,
-      IEventQueue *events,
-      lib::synergy::ServerArgs const &args);
+      Config &config, PrimaryClient *primaryClient, synergy::Screen *screen,
+      IEventQueue *events, lib::synergy::ServerArgs const &args);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -255,11 +252,7 @@ private:
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
   bool isSwitchOkay(
-      BaseClientProxy *dst,
-      EDirection,
-      SInt32 x,
-      SInt32 y,
-      SInt32 xActive,
+      BaseClientProxy *dst, EDirection, SInt32 x, SInt32 y, SInt32 xActive,
       SInt32 yActive);
 
   // update switch state due to a mouse move at \p x, \p y that

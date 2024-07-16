@@ -72,8 +72,7 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
         keyboardLayout, kTISPropertyInputSourceLanguages);
     char temporaryCString[128] = {0};
     for (CFIndex index = 0;
-         index < CFArrayGetCount(layoutLanguages) && layoutLanguages;
-         index++) {
+         index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
       auto languageCode =
           (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
       if (!languageCode ||
@@ -156,8 +155,7 @@ String AppUtilUnix::getCurrentLanguageCode() {
       TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
   char temporaryCString[128] = {0};
   for (CFIndex index = 0;
-       index < CFArrayGetCount(layoutLanguages) && layoutLanguages;
-       index++) {
+       index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
     auto languageCode =
         (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
     if (!languageCode ||
@@ -178,8 +176,7 @@ void AppUtilUnix::showNotification(
 #if WINAPI_XWINDOWS
   LOG(
       (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
-       title.c_str(),
-       text.c_str()));
+       title.c_str(), text.c_str()));
   if (!notify_init("Synergy")) {
     LOG((CLOG_INFO "failed to initialize libnotify"));
     return;

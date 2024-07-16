@@ -70,10 +70,7 @@ public:
 
   // IClient overrides
   virtual void enter(
-      SInt32 xAbs,
-      SInt32 yAbs,
-      UInt32 seqNum,
-      KeyModifierMask mask,
+      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
       bool forScreensaver) = 0;
   virtual bool leave() = 0;
   virtual void setClipboard(ClipboardID, const IClipboard *) = 0;

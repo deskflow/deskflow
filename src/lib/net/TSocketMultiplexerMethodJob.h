@@ -33,10 +33,7 @@ public:
 
   //! run() invokes \c object->method(arg)
   TSocketMultiplexerMethodJob(
-      T *object,
-      Method method,
-      ArchSocket socket,
-      bool readable,
+      T *object, Method method, ArchSocket socket, bool readable,
       bool writeable);
   TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob const &) = delete;
   TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob &&) = delete;

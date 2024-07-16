@@ -146,10 +146,7 @@ private:
     // true iff the conversion was successful or the conversion
     // cannot be performed (in which case *actualTarget == None).
     bool readClipboard(
-        Display *display,
-        Atom selection,
-        Atom target,
-        Atom *actualTarget,
+        Display *display, Atom selection, Atom target, Atom *actualTarget,
         String *data);
 
   private:
@@ -227,13 +224,8 @@ private:
   public:
     Reply(Window, Atom target, ::Time);
     Reply(
-        Window,
-        Atom target,
-        ::Time,
-        Atom property,
-        const String &data,
-        Atom type,
-        int format);
+        Window, Atom target, ::Time, Atom property, const String &data,
+        Atom type, int format);
 
   public:
     // information about the request

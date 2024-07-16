@@ -54,11 +54,8 @@
 //
 
 Client::Client(
-    IEventQueue *events,
-    const String &name,
-    const NetworkAddress &address,
-    ISocketFactory *socketFactory,
-    synergy::Screen *screen,
+    IEventQueue *events, const String &name, const NetworkAddress &address,
+    ISocketFactory *socketFactory, synergy::Screen *screen,
     lib::synergy::ClientArgs const &args)
     : m_mock(false),
       m_name(name),
@@ -84,22 +81,18 @@ Client::Client(
 
   // register suspend/resume event handlers
   m_events->adoptHandler(
-      m_events->forIScreen().suspend(),
-      getEventTarget(),
+      m_events->forIScreen().suspend(), getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleSuspend));
   m_events->adoptHandler(
-      m_events->forIScreen().resume(),
-      getEventTarget(),
+      m_events->forIScreen().resume(), getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleResume));
 
   if (m_args.m_enableDragDrop) {
     m_events->adoptHandler(
-        m_events->forFile().fileChunkSending(),
-        this,
+        m_events->forFile().fileChunkSending(), this,
         new TMethodEventJob<Client>(this, &Client::handleFileChunkSending));
     m_events->adoptHandler(
-        m_events->forFile().fileRecieveCompleted(),
-        this,
+        m_events->forFile().fileRecieveCompleted(), this,
         new TMethodEventJob<Client>(this, &Client::handleFileRecieveCompleted));
   }
 }
@@ -192,9 +185,7 @@ void Client::refuseConnection(const char *msg) {
     auto info = new FailInfo(msg);
     info->m_retry = true;
     Event event(
-        m_events->forClient().connectionRefused(),
-        getEventTarget(),
-        info,
+        m_events->forClient().connectionRefused(), getEventTarget(), info,
         Event::kDontFreeData);
     m_events->addEvent(event);
   }
@@ -277,10 +268,7 @@ void Client::keyDown(
 }
 
 void Client::keyRepeat(
-    KeyID id,
-    KeyModifierMask mask,
-    SInt32 count,
-    KeyButton button,
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
     const String &lang) {
   m_screen->keyRepeat(id, mask, count, button, lang);
 }
@@ -309,8 +297,7 @@ void Client::resetOptions() { m_screen->resetOptions(); }
 
 void Client::setOptions(const OptionsList &options) {
   for (OptionsList::const_iterator index = options.begin();
-       index != options.end();
-       ++index) {
+       index != options.end(); ++index) {
     const OptionID id = *index;
     if (id == kOptionClipboardSharing) {
       index++;
@@ -385,9 +372,7 @@ void Client::sendConnectionFailedEvent(const char *msg) {
   FailInfo *info = new FailInfo(msg);
   info->m_retry = true;
   Event event(
-      m_events->forClient().connectionFailed(),
-      getEventTarget(),
-      info,
+      m_events->forClient().connectionFailed(), getEventTarget(), info,
       Event::kDontFreeData);
   m_events->addEvent(event);
 }
@@ -412,14 +397,12 @@ void Client::setupConnecting() {
         new TMethodEventJob<Client>(this, &Client::handleConnected));
   } else {
     m_events->adoptHandler(
-        m_events->forIDataSocket().connected(),
-        m_stream->getEventTarget(),
+        m_events->forIDataSocket().connected(), m_stream->getEventTarget(),
         new TMethodEventJob<Client>(this, &Client::handleConnected));
   }
 
   m_events->adoptHandler(
-      m_events->forIDataSocket().connectionFailed(),
-      m_stream->getEventTarget(),
+      m_events->forIDataSocket().connectionFailed(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleConnectionFailed));
 }
 
@@ -427,29 +410,23 @@ void Client::setupConnection() {
   assert(m_stream != NULL);
 
   m_events->adoptHandler(
-      m_events->forISocket().disconnected(),
-      m_stream->getEventTarget(),
+      m_events->forISocket().disconnected(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleDisconnected));
   m_events->adoptHandler(
-      m_events->forIStream().inputReady(),
-      m_stream->getEventTarget(),
+      m_events->forIStream().inputReady(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleHello));
   m_events->adoptHandler(
-      m_events->forIStream().outputError(),
-      m_stream->getEventTarget(),
+      m_events->forIStream().outputError(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleOutputError));
   m_events->adoptHandler(
-      m_events->forIStream().inputShutdown(),
-      m_stream->getEventTarget(),
+      m_events->forIStream().inputShutdown(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleDisconnected));
   m_events->adoptHandler(
-      m_events->forIStream().outputShutdown(),
-      m_stream->getEventTarget(),
+      m_events->forIStream().outputShutdown(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleDisconnected));
 
   m_events->adoptHandler(
-      m_events->forISocket().stopRetry(),
-      m_stream->getEventTarget(),
+      m_events->forISocket().stopRetry(), m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleStopRetry));
 }
 
@@ -459,12 +436,10 @@ void Client::setupScreen() {
   m_ready = false;
   m_server = new ServerProxy(this, m_stream, m_events);
   m_events->adoptHandler(
-      m_events->forIScreen().shapeChanged(),
-      getEventTarget(),
+      m_events->forIScreen().shapeChanged(), getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleShapeChanged));
   m_events->adoptHandler(
-      m_events->forClipboard().clipboardGrabbed(),
-      getEventTarget(),
+      m_events->forClipboard().clipboardGrabbed(), getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleClipboardGrabbed));
 }
 
@@ -474,8 +449,7 @@ void Client::setupTimer() {
   if (!m_args.m_hostMode) {
     m_timer = m_events->newOneShotTimer(2.0, NULL);
     m_events->adoptHandler(
-        Event::kTimer,
-        m_timer,
+        Event::kTimer, m_timer,
         new TMethodEventJob<Client>(this, &Client::handleConnectTimeout));
   }
 }

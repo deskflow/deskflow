@@ -70,8 +70,7 @@ TEST_F(IpcTests, connectToServer) {
   m_connectToServer_server = &server;
 
   m_events.adoptHandler(
-      m_events.forIpcServer().messageReceived(),
-      &server,
+      m_events.forIpcServer().messageReceived(), &server,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::connectToServer_handleMessageReceived));
 
@@ -94,8 +93,7 @@ TEST_F(IpcTests, sendMessageToServer) {
 
   // event handler sends "test" command to server.
   m_events.adoptHandler(
-      m_events.forIpcServer().messageReceived(),
-      &server,
+      m_events.forIpcServer().messageReceived(), &server,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToServer_serverHandleMessageReceived));
 
@@ -119,8 +117,7 @@ TEST_F(IpcTests, sendMessageToClient) {
 
   // event handler sends "test" log line to client.
   m_events.adoptHandler(
-      m_events.forIpcServer().messageReceived(),
-      &server,
+      m_events.forIpcServer().messageReceived(), &server,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToClient_serverHandleClientConnected));
 
@@ -128,8 +125,7 @@ TEST_F(IpcTests, sendMessageToClient) {
   client.connect();
 
   m_events.adoptHandler(
-      m_events.forIpcClient().messageReceived(),
-      &client,
+      m_events.forIpcClient().messageReceived(), &client,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToClient_clientHandleMessageReceived));
 

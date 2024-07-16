@@ -48,11 +48,8 @@ public:
   the listed daemons.  Throws an \c XArchDaemon exception on failure.
   */
   virtual void installDaemon(
-      const char *name,
-      const char *description,
-      const char *pathname,
-      const char *commandLine,
-      const char *dependencies) = 0;
+      const char *name, const char *description, const char *pathname,
+      const char *commandLine, const char *dependencies) = 0;
 
   //! Uninstall daemon
   /*!

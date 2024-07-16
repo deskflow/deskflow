@@ -70,10 +70,8 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   // check image type
   const BITMAPINFO *bitmap = static_cast<const BITMAPINFO *>(src);
   LOG(
-      (CLOG_INFO "bitmap: %dx%d %d",
-       bitmap->bmiHeader.biWidth,
-       bitmap->bmiHeader.biHeight,
-       (int)bitmap->bmiHeader.biBitCount));
+      (CLOG_INFO "bitmap: %dx%d %d", bitmap->bmiHeader.biWidth,
+       bitmap->bmiHeader.biHeight, (int)bitmap->bmiHeader.biBitCount));
   if (bitmap->bmiHeader.biPlanes == 1 &&
       (bitmap->bmiHeader.biBitCount == 24 ||
        bitmap->bmiHeader.biBitCount == 32) &&
@@ -87,8 +85,7 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   // create a destination DIB section
   LOG(
       (CLOG_INFO "convert image from: depth=%d comp=%d",
-       bitmap->bmiHeader.biBitCount,
-       bitmap->bmiHeader.biCompression));
+       bitmap->bmiHeader.biBitCount, bitmap->bmiHeader.biCompression));
   void *raw;
   BITMAPINFOHEADER info;
   LONG w = bitmap->bmiHeader.biWidth;

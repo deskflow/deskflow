@@ -191,9 +191,7 @@ OSXKeyState::OSXKeyState(
 }
 
 OSXKeyState::OSXKeyState(
-    IEventQueue *events,
-    synergy::KeyMap &keyMap,
-    std::vector<String> layouts,
+    IEventQueue *events, synergy::KeyMap &keyMap, std::vector<String> layouts,
     bool isLangSyncEnabled)
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled) {
   init();
@@ -346,16 +344,9 @@ KeyButton OSXKeyState::mapKeyFromEvent(
     UniChar chars[2];
     LOG((CLOG_DEBUG2 "modifiers: %08x", modifiers & 0xffu));
     OSStatus status = UCKeyTranslate(
-        layout,
-        vkCode & 0xffu,
-        action,
-        (modifiers >> 8) & 0xffu,
-        LMGetKbdType(),
-        0,
-        &m_deadKeyState,
-        sizeof(chars) / sizeof(chars[0]),
-        &count,
-        chars);
+        layout, vkCode & 0xffu, action, (modifiers >> 8) & 0xffu,
+        LMGetKbdType(), 0, &m_deadKeyState, sizeof(chars) / sizeof(chars[0]),
+        &count, chars);
 
     // get the characters
     if (status == 0) {
@@ -579,13 +570,8 @@ kern_return_t OSXKeyState::postHIDVirtualKey(UInt8 virtualKey, bool postDown) {
   if (driver) {
     if (isModifier(virtualKey)) {
       result = IOHIDPostEvent(
-          driver,
-          NX_FLAGSCHANGED,
-          {0, 0},
-          &event,
-          kNXEventDataVersion,
-          getKeyboardEventFlags(),
-          true);
+          driver, NX_FLAGSCHANGED, {0, 0}, &event, kNXEventDataVersion,
+          getKeyboardEventFlags(), true);
     } else {
       event.key.keyCode = virtualKey;
       const auto eventType = postDown ? NX_KEYDOWN : NX_KEYUP;
@@ -619,10 +605,7 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke) {
     LOG(
         (CLOG_DEBUG1
          "  button=0x%04x virtualKey=0x%04x keyDown=%s client=0x%04x",
-         button,
-         virtualKey,
-         keyDown ? "down" : "up",
-         client));
+         button, virtualKey, keyDown ? "down" : "up", client));
 
     setKeyboardModifiers(virtualKey, keyDown);
     if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
@@ -798,9 +781,7 @@ bool OSXKeyState::getKeyMap(
 }
 
 bool OSXKeyState::mapSynergyHotKeyToMac(
-    KeyID key,
-    KeyModifierMask mask,
-    UInt32 &macVirtualKey,
+    KeyID key, KeyModifierMask mask, UInt32 &macVirtualKey,
     UInt32 &macModifierMask) const {
   // look up button for key
   KeyButton button = getButton(key, pollActiveGroup());
@@ -841,18 +822,12 @@ void OSXKeyState::handleModifierKeys(
   // synthesize changed modifier keys
   if ((changed & KeyModifierShift) != 0) {
     handleModifierKey(
-        target,
-        s_shiftVK,
-        kKeyShift_L,
-        (newMask & KeyModifierShift) != 0,
+        target, s_shiftVK, kKeyShift_L, (newMask & KeyModifierShift) != 0,
         newMask);
   }
   if ((changed & KeyModifierControl) != 0) {
     handleModifierKey(
-        target,
-        s_controlVK,
-        kKeyControl_L,
-        (newMask & KeyModifierControl) != 0,
+        target, s_controlVK, kKeyControl_L, (newMask & KeyModifierControl) != 0,
         newMask);
   }
   if ((changed & KeyModifierAlt) != 0) {
@@ -861,35 +836,23 @@ void OSXKeyState::handleModifierKeys(
   }
   if ((changed & KeyModifierSuper) != 0) {
     handleModifierKey(
-        target,
-        s_superVK,
-        kKeySuper_L,
-        (newMask & KeyModifierSuper) != 0,
+        target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0,
         newMask);
   }
   if ((changed & KeyModifierCapsLock) != 0) {
     handleModifierKey(
-        target,
-        s_capsLockVK,
-        kKeyCapsLock,
-        (newMask & KeyModifierCapsLock) != 0,
-        newMask);
+        target, s_capsLockVK, kKeyCapsLock,
+        (newMask & KeyModifierCapsLock) != 0, newMask);
   }
   if ((changed & KeyModifierNumLock) != 0) {
     handleModifierKey(
-        target,
-        s_numLockVK,
-        kKeyNumLock,
-        (newMask & KeyModifierNumLock) != 0,
+        target, s_numLockVK, kKeyNumLock, (newMask & KeyModifierNumLock) != 0,
         newMask);
   }
 }
 
 void OSXKeyState::handleModifierKey(
-    void *target,
-    UInt32 virtualKey,
-    KeyID id,
-    bool down,
+    void *target, UInt32 virtualKey, KeyID id, bool down,
     KeyModifierMask newMask) {
   KeyButton button = mapVirtualKeyToKeyButton(virtualKey);
   onKey(button, down, newMask);

@@ -46,10 +46,7 @@ public:
 
   // IClient overrides
   void enter(
-      SInt32 xAbs,
-      SInt32 yAbs,
-      UInt32 seqNum,
-      KeyModifierMask mask,
+      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
       bool forScreensaver) override;
   bool leave() override;
   void setClipboard(ClipboardID, const IClipboard *) override;

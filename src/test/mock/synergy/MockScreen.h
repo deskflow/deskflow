@@ -28,9 +28,7 @@ public:
   MockScreen() : synergy::Screen() {}
   MOCK_METHOD(void, disable, (), (override));
   MOCK_METHOD(
-      void,
-      getShape,
-      (SInt32 &, SInt32 &, SInt32 &, SInt32 &),
+      void, getShape, (SInt32 &, SInt32 &, SInt32 &, SInt32 &),
       (const, override));
   MOCK_METHOD(void, getCursorPos, (SInt32 &, SInt32 &), (const, override));
   MOCK_METHOD(void, resetOptions, (), (override));

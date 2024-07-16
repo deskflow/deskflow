@@ -29,18 +29,16 @@
 VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> nam)
     : m_manager(nam ? nam : std::make_shared<QNetworkAccessManager>(this)) {
   connect(
-      m_manager.get(),
-      SIGNAL(finished(QNetworkReply *)),
-      this,
+      m_manager.get(), SIGNAL(finished(QNetworkReply *)), this,
       SLOT(replyFinished(QNetworkReply *)));
 }
 
 void VersionChecker::checkLatest() {
   auto request = QNetworkRequest(QUrl(SYNERGY_VERSION_URL));
   request.setHeader(
-      QNetworkRequest::UserAgentHeader,
-      QString("Synergy (") + SYNERGY_VERSION + ") " +
-          QSysInfo::prettyProductName());
+      QNetworkRequest::UserAgentHeader, QString("Synergy (") + SYNERGY_VERSION +
+                                            ") " +
+                                            QSysInfo::prettyProductName());
   request.setRawHeader("X-Synergy-Version", SYNERGY_VERSION);
   request.setRawHeader(
       "X-Synergy-Language", QLocale::system().name().toStdString().c_str());

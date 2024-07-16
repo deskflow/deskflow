@@ -54,38 +54,26 @@ SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
       m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
   connect(
-      m_pLineEditLogFilename,
-      SIGNAL(textChanged(QString)),
-      this,
+      m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
       SLOT(onChange()));
   connect(
-      m_pComboLogLevel,
-      SIGNAL(currentIndexChanged(int)),
-      this,
+      m_pComboLogLevel, SIGNAL(currentIndexChanged(int)), this,
       SLOT(onChange()));
   connect(
-      m_pLineEditCertificatePath,
-      SIGNAL(textChanged(QString)),
-      this,
+      m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
       SLOT(onChange()));
   connect(m_pCheckBoxMinimizeToTray, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxAutoHide, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxPreventSleep, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(
-      m_pLineEditInterface,
-      SIGNAL(textEdited(QString)),
-      this,
+      m_pLineEditInterface, SIGNAL(textEdited(QString)), this,
       SLOT(onChange()));
   connect(m_pSpinBoxPort, SIGNAL(valueChanged(int)), this, SLOT(onChange()));
   connect(
-      m_pLineEditScreenName,
-      SIGNAL(textEdited(QString)),
-      this,
+      m_pLineEditScreenName, SIGNAL(textEdited(QString)), this,
       SLOT(onChange()));
   connect(
-      m_pComboElevate,
-      SIGNAL(currentIndexChanged(int)),
-      this,
+      m_pComboElevate, SIGNAL(currentIndexChanged(int)), this,
       SLOT(onChange()));
   connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(
@@ -209,9 +197,7 @@ void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
 
 void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
   QString fileName = QFileDialog::getSaveFileName(
-      this,
-      tr("Save log file to..."),
-      m_pLineEditLogFilename->text(),
+      this, tr("Save log file to..."), m_pLineEditLogFilename->text(),
       "Logs (*.log *.txt)");
 
   if (!fileName.isEmpty()) {
@@ -259,11 +245,8 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
 
 void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
   QString fileName = QFileDialog::getSaveFileName(
-      this,
-      tr("Select a TLS certificate to use..."),
-      m_pLineEditCertificatePath->text(),
-      "Cert (*.pem)",
-      nullptr,
+      this, tr("Select a TLS certificate to use..."),
+      m_pLineEditCertificatePath->text(), "Cert (*.pem)", nullptr,
       QFileDialog::DontConfirmOverwrite);
 
   if (!fileName.isEmpty()) {

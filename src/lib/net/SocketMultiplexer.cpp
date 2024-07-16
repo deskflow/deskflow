@@ -67,8 +67,7 @@ SocketMultiplexer::~SocketMultiplexer() {
 
   // clean up jobs
   for (SocketJobMap::iterator i = m_socketJobMap.begin();
-       i != m_socketJobMap.end();
-       ++i) {
+       i != m_socketJobMap.end(); ++i) {
     delete *(i->second);
   }
 }

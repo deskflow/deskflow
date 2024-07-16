@@ -58,8 +58,7 @@ void IpcServer::init() {
   m_address.resolve();
 
   m_events->adoptHandler(
-      m_events->forIListenSocket().connecting(),
-      m_socket,
+      m_events->forIListenSocket().connecting(), m_socket,
       new TMethodEventJob<IpcServer>(this, &IpcServer::handleClientConnecting));
 }
 
@@ -100,20 +99,16 @@ void IpcServer::handleClientConnecting(const Event &, void *) {
   ARCH->unlockMutex(m_clientsMutex);
 
   m_events->adoptHandler(
-      m_events->forIpcClientProxy().disconnected(),
-      proxy,
+      m_events->forIpcClientProxy().disconnected(), proxy,
       new TMethodEventJob<IpcServer>(
           this, &IpcServer::handleClientDisconnected));
 
   m_events->adoptHandler(
-      m_events->forIpcClientProxy().messageReceived(),
-      proxy,
+      m_events->forIpcClientProxy().messageReceived(), proxy,
       new TMethodEventJob<IpcServer>(this, &IpcServer::handleMessageReceived));
 
   m_events->addEvent(Event(
-      m_events->forIpcServer().clientConnected(),
-      this,
-      proxy,
+      m_events->forIpcServer().clientConnected(), this, proxy,
       Event::kDontFreeData));
 }
 

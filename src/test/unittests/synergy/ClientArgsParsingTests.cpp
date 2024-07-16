@@ -86,15 +86,9 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
   clientArgs.m_enableLangSync = false;
   const int argc = 9;
   std::array<const char *, argc> kLangCmd = {
-      "stub",
-      "--enable-crypto",
-      "--profile-dir",
-      "profileDir",
-      "--plugin-dir",
-      "pluginDir",
-      "--tls-cert",
-      "tlsCertPath",
-      "--prevent-sleep"};
+      "stub",       "--enable-crypto", "--profile-dir",
+      "profileDir", "--plugin-dir",    "pluginDir",
+      "--tls-cert", "tlsCertPath",     "--prevent-sleep"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 
