@@ -30,10 +30,9 @@
 //
 
 ClientProxy1_6::ClientProxy1_6(const String &name, synergy::IStream *stream,
-                               Server *server, IEventQueue *events)
+    Server *server, IEventQueue *events)
     : ClientProxy1_5(name, stream, server, events), m_events(events) {
-  m_events->adoptHandler(
-      m_events->forClipboard().clipboardSending(), this,
+  m_events->adoptHandler(m_events->forClipboard().clipboardSending(), this,
       new TMethodEventJob<ClientProxy1_6>(
           this, &ClientProxy1_6::handleClipboardSendingEvent));
 }
@@ -73,7 +72,7 @@ bool ClientProxy1_6::recvClipboard() {
     LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
   } else if (r == kFinish) {
     LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d",
-         getName().c_str(), id, seq, dataCached.size()));
+        getName().c_str(), id, seq, dataCached.size()));
     // save clipboard
     m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
     m_clipboard[id].m_sequenceNumber = seq;
@@ -82,8 +81,8 @@ bool ClientProxy1_6::recvClipboard() {
     ClipboardInfo *info = new ClipboardInfo;
     info->m_id = id;
     info->m_sequenceNumber = seq;
-    m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(),
-                             getEventTarget(), info));
+    m_events->addEvent(Event(
+        m_events->forClipboard().clipboardChanged(), getEventTarget(), info));
   }
 
   return true;

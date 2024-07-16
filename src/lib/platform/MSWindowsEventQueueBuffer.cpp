@@ -76,8 +76,8 @@ void MSWindowsEventQueueBuffer::waitForEvent(double timeout) {
   MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLPOSTMESSAGE);
 }
 
-IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event,
-                                                            UInt32 &dataID) {
+IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(
+    Event &event, UInt32 &dataID) {
   // NOTE: QS_ALLINPUT was replaced with QS_ALLPOSTMESSAGE.
   //
   // peek at messages first.  waiting for QS_ALLINPUT will return
@@ -109,8 +109,8 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event,
 }
 
 bool MSWindowsEventQueueBuffer::addEvent(UInt32 dataID) {
-  return (PostThreadMessage(m_thread, m_userEvent, static_cast<WPARAM>(dataID),
-                            0) != 0);
+  return (PostThreadMessage(
+              m_thread, m_userEvent, static_cast<WPARAM>(dataID), 0) != 0);
 }
 
 bool MSWindowsEventQueueBuffer::isEmpty() const {

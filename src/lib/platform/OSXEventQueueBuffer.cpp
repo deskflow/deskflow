@@ -52,8 +52,8 @@ void OSXEventQueueBuffer::waitForEvent(double timeout) {
   ReceiveNextEvent(0, NULL, timeout, false, &event);
 }
 
-IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event,
-                                                      UInt32 &dataID) {
+IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(
+    Event &event, UInt32 &dataID) {
   // release the previous event
   if (m_event != NULL) {
     ReleaseEvent(m_event);
@@ -85,8 +85,8 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event,
 
 bool OSXEventQueueBuffer::addEvent(UInt32 dataID) {
   EventRef event;
-  OSStatus error = CreateEvent(kCFAllocatorDefault, 'Syne', dataID, 0,
-                               kEventAttributeNone, &event);
+  OSStatus error = CreateEvent(
+      kCFAllocatorDefault, 'Syne', dataID, 0, kEventAttributeNone, &event);
 
   if (error == noErr) {
 

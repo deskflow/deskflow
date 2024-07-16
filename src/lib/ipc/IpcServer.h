@@ -42,8 +42,8 @@ and allows the daemon and client/server to send log data to the GUI.
 class IpcServer {
 public:
   IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
-  IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-            int port);
+  IpcServer(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port);
   IpcServer(IpcServer const &) = delete;
   IpcServer(IpcServer &&) = delete;
   virtual ~IpcServer();

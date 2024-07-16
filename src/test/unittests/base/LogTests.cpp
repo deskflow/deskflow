@@ -76,8 +76,8 @@ TEST(LogTests, print_infoWithFileAndLine_outputIsValid) {
 
   log.print("test file", 123, LEVEL_INFO "test message");
 
-  EXPECT_THAT(GetCapturedStdout(),
-              EndsWith("INFO: test message\n\ttest file:123\n"));
+  EXPECT_THAT(
+      GetCapturedStdout(), EndsWith("INFO: test message\n\ttest file:123\n"));
 }
 
 TEST(LogTests, print_errorWithFileAndLine_outputIsValid) {
@@ -86,6 +86,6 @@ TEST(LogTests, print_errorWithFileAndLine_outputIsValid) {
 
   log.print("test file", 123, LEVEL_ERR "test message");
 
-  EXPECT_THAT(GetCapturedStderr(),
-              EndsWith("ERROR: test message\n\ttest file:123\n"));
+  EXPECT_THAT(
+      GetCapturedStderr(), EndsWith("ERROR: test message\n\ttest file:123\n"));
 }

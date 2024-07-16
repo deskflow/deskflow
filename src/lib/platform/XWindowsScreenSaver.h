@@ -34,8 +34,8 @@ class EventQueueTimer;
 //! X11 screen saver implementation
 class XWindowsScreenSaver : public IScreenSaver {
 public:
-  XWindowsScreenSaver(Display *, Window, void *eventTarget,
-                      IEventQueue *events);
+  XWindowsScreenSaver(
+      Display *, Window, void *eventTarget, IEventQueue *events);
   XWindowsScreenSaver(XWindowsScreenSaver const &) = delete;
   XWindowsScreenSaver(XWindowsScreenSaver &&) = delete;
   virtual ~XWindowsScreenSaver();

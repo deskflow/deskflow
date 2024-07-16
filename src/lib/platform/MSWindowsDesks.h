@@ -65,7 +65,7 @@ public:
   \p hookLibrary must be a handle to the hook library.
   */
   MSWindowsDesks(bool isPrimary, bool noHooks, const IScreenSaver *screensaver,
-                 IEventQueue *events, IJob *updateKeys, bool stopOnDeskSwitch);
+      IEventQueue *events, IJob *updateKeys, bool stopOnDeskSwitch);
   ~MSWindowsDesks();
 
   //! @name manipulators
@@ -123,7 +123,7 @@ public:
   This tells the desks that the display size has changed.
   */
   void setShape(SInt32 x, SInt32 y, SInt32 width, SInt32 height, SInt32 xCenter,
-                SInt32 yCenter, bool isMultimon);
+      SInt32 yCenter, bool isMultimon);
 
   //! Install/uninstall screensaver hooks
   /*!
@@ -159,8 +159,8 @@ public:
   /*!
   Synthesize a press or release of key \c button.
   */
-  void fakeKeyEvent(WORD virtualKey, WORD scanCode, DWORD flags,
-                    bool isAutoRepeat) const;
+  void fakeKeyEvent(
+      WORD virtualKey, WORD scanCode, DWORD flags, bool isAutoRepeat) const;
 
   //! Fake mouse press/release
   /*!

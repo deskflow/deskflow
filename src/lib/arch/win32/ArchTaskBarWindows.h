@@ -74,8 +74,8 @@ private:
   void updateIcon(UINT);
   void addAllIcons();
   void removeAllIcons();
-  void modifyIconNoLock(ReceiverToInfoMap::const_iterator,
-                        DWORD taskBarMessage);
+  void modifyIconNoLock(
+      ReceiverToInfoMap::const_iterator, DWORD taskBarMessage);
   void removeIconNoLock(UINT id);
   void handleIconMessage(IArchTaskBarReceiver *, LPARAM);
 

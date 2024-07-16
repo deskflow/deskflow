@@ -224,13 +224,13 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     CLOG->insert(m_ipcLogOutputter);
 
 #if SYSAPI_WIN32
-    m_watchdog = new MSWindowsWatchdog(false, *m_ipcServer, *m_ipcLogOutputter,
-                                       foreground);
+    m_watchdog = new MSWindowsWatchdog(
+        false, *m_ipcServer, *m_ipcLogOutputter, foreground);
     m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
 
-    m_events->adoptHandler(
-        m_events->forIpcServer().messageReceived(), m_ipcServer,
+    m_events->adoptHandler(m_events->forIpcServer().messageReceived(),
+        m_ipcServer,
         new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
 
     m_ipcServer->listen();
@@ -256,8 +256,8 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     delete m_watchdog;
 #endif
 
-    m_events->removeHandler(m_events->forIpcServer().messageReceived(),
-                            m_ipcServer);
+    m_events->removeHandler(
+        m_events->forIpcServer().messageReceived(), m_ipcServer);
 
     CLOG->remove(m_ipcLogOutputter);
     delete m_ipcLogOutputter;
@@ -306,7 +306,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
     if (!command.empty()) {
       LOG((CLOG_DEBUG "daemon got new core command"));
       LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(),
-           command.c_str()));
+          command.c_str()));
 
       std::vector<String> argsArray;
       ArgParser::splitCommandString(command, argsArray);

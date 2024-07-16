@@ -124,7 +124,7 @@ private:
     bool overlaps(const CellEdge &) const;
 
     bool getLink(EDirection side, float position, const CellEdge *&src,
-                 const CellEdge *&dst) const;
+        const CellEdge *&dst) const;
 
     bool operator==(const Cell &) const;
     bool operator!=(const Cell &) const;
@@ -259,8 +259,7 @@ public:
   be inside the range [0,1].
   */
   bool connect(const String &srcName, EDirection srcSide, float srcStart,
-               float srcEnd, const String &dstName, float dstStart,
-               float dstEnd);
+      float srcEnd, const String &dstName, float dstStart, float dstEnd);
 
   //! Disconnect screens
   /*!
@@ -361,8 +360,8 @@ public:
   saves the position on the neighbor in \c positionOut if it's not
   \c NULL.
   */
-  String getNeighbor(const String &, EDirection, float position,
-                     float *positionOut) const;
+  String getNeighbor(
+      const String &, EDirection, float position, float *positionOut) const;
 
   //! Check for neighbor
   /*!
@@ -459,14 +458,12 @@ private:
   void readSectionAliases(ConfigReadContext &);
 
   InputFilter::Condition *parseCondition(ConfigReadContext &,
-                                         const String &condition,
-                                         const std::vector<String> &args);
+      const String &condition, const std::vector<String> &args);
   void parseAction(ConfigReadContext &, const String &action,
-                   const std::vector<String> &args, InputFilter::Rule &,
-                   bool activate);
+      const std::vector<String> &args, InputFilter::Rule &, bool activate);
 
-  void parseScreens(ConfigReadContext &, const String &,
-                    std::set<String> &screens) const;
+  void parseScreens(
+      ConfigReadContext &, const String &, std::set<String> &screens) const;
   static const char *getOptionName(OptionID);
   static String getOptionValue(OptionID, OptionValue);
 
@@ -504,12 +501,11 @@ public:
   OptionValue parseCorners(const String &) const;
   Config::Interval parseInterval(const ArgList &args) const;
   void parseNameWithArgs(const String &type, const String &line,
-                         const String &delim, String::size_type &index,
-                         String &name, ArgList &args) const;
+      const String &delim, String::size_type &index, String &name,
+      ArgList &args) const;
   IPlatformScreen::KeyInfo *parseKeystroke(const String &keystroke) const;
-  IPlatformScreen::KeyInfo *
-  parseKeystroke(const String &keystroke,
-                 const std::set<String> &screens) const;
+  IPlatformScreen::KeyInfo *parseKeystroke(
+      const String &keystroke, const std::set<String> &screens) const;
   IPlatformScreen::ButtonInfo *parseMouse(const String &mouse) const;
   KeyModifierMask parseModifier(const String &modifiers) const;
   std::istream &getStream() const { return m_stream; };
@@ -533,7 +529,7 @@ class XConfigRead : public XBase {
 public:
   XConfigRead(const ConfigReadContext &context, const String &);
   XConfigRead(const ConfigReadContext &context, const char *errorFmt,
-              const String &arg);
+      const String &arg);
   virtual ~XConfigRead() _NOEXCEPT;
 
 protected:

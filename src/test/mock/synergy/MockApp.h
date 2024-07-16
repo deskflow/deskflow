@@ -35,8 +35,8 @@ public:
   MOCK_METHOD(void, parseArgs, (int, const char *const *), (override));
   MOCK_METHOD(void, version, (), (override));
   MOCK_METHOD(int, standardStartup, (int, char **), (override));
-  MOCK_METHOD(int, runInner, (int, char **, ILogOutputter *, StartupFunc),
-              (override));
+  MOCK_METHOD(
+      int, runInner, (int, char **, ILogOutputter *, StartupFunc), (override));
   MOCK_METHOD(void, startNode, (), (override));
   MOCK_METHOD(int, mainLoop, (), (override));
   MOCK_METHOD(int, foregroundStartup, (int, char **), (override));

@@ -348,32 +348,24 @@ static const KeyID s_decomposeTable[] = {
     // end of table
     0};
 
-static const KeyID s_numpadTable[] = {
-    kKeyKP_Space,    0x0020,     kKeyKP_Tab,       kKeyTab,
-    kKeyKP_Enter,    kKeyReturn, kKeyKP_F1,        kKeyF1,
-    kKeyKP_F2,       kKeyF2,     kKeyKP_F3,        kKeyF3,
-    kKeyKP_F4,       kKeyF4,     kKeyKP_Home,      kKeyHome,
-    kKeyKP_Left,     kKeyLeft,   kKeyKP_Up,        kKeyUp,
-    kKeyKP_Right,    kKeyRight,  kKeyKP_Down,      kKeyDown,
-    kKeyKP_PageUp,   kKeyPageUp, kKeyKP_PageDown,  kKeyPageDown,
-    kKeyKP_End,      kKeyEnd,    kKeyKP_Begin,     kKeyBegin,
-    kKeyKP_Insert,   kKeyInsert, kKeyKP_Delete,    kKeyDelete,
-    kKeyKP_Equal,    0x003d,     kKeyKP_Multiply,  0x002a,
-    kKeyKP_Add,      0x002b,     kKeyKP_Separator, 0x002c,
-    kKeyKP_Subtract, 0x002d,     kKeyKP_Decimal,   0x002e,
-    kKeyKP_Divide,   0x002f,     kKeyKP_0,         0x0030,
-    kKeyKP_1,        0x0031,     kKeyKP_2,         0x0032,
-    kKeyKP_3,        0x0033,     kKeyKP_4,         0x0034,
-    kKeyKP_5,        0x0035,     kKeyKP_6,         0x0036,
-    kKeyKP_7,        0x0037,     kKeyKP_8,         0x0038,
-    kKeyKP_9,        0x0039};
+static const KeyID s_numpadTable[] = {kKeyKP_Space, 0x0020, kKeyKP_Tab, kKeyTab,
+    kKeyKP_Enter, kKeyReturn, kKeyKP_F1, kKeyF1, kKeyKP_F2, kKeyF2, kKeyKP_F3,
+    kKeyF3, kKeyKP_F4, kKeyF4, kKeyKP_Home, kKeyHome, kKeyKP_Left, kKeyLeft,
+    kKeyKP_Up, kKeyUp, kKeyKP_Right, kKeyRight, kKeyKP_Down, kKeyDown,
+    kKeyKP_PageUp, kKeyPageUp, kKeyKP_PageDown, kKeyPageDown, kKeyKP_End,
+    kKeyEnd, kKeyKP_Begin, kKeyBegin, kKeyKP_Insert, kKeyInsert, kKeyKP_Delete,
+    kKeyDelete, kKeyKP_Equal, 0x003d, kKeyKP_Multiply, 0x002a, kKeyKP_Add,
+    0x002b, kKeyKP_Separator, 0x002c, kKeyKP_Subtract, 0x002d, kKeyKP_Decimal,
+    0x002e, kKeyKP_Divide, 0x002f, kKeyKP_0, 0x0030, kKeyKP_1, 0x0031, kKeyKP_2,
+    0x0032, kKeyKP_3, 0x0033, kKeyKP_4, 0x0034, kKeyKP_5, 0x0035, kKeyKP_6,
+    0x0036, kKeyKP_7, 0x0037, kKeyKP_8, 0x0038, kKeyKP_9, 0x0039};
 
 //
 // KeyState
 //
 
-KeyState::KeyState(IEventQueue *events, std::vector<String> layouts,
-                   bool isLangSyncEnabled)
+KeyState::KeyState(
+    IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled)
     : IKeyState(events), m_keyMapPtr(new synergy::KeyMap()),
       m_keyMap(*m_keyMapPtr), m_mask(0), m_events(events),
       m_isLangSyncEnabled(isLangSyncEnabled) {
@@ -382,7 +374,7 @@ KeyState::KeyState(IEventQueue *events, std::vector<String> layouts,
 }
 
 KeyState::KeyState(IEventQueue *events, synergy::KeyMap &keyMap,
-                   std::vector<String> layouts, bool isLangSyncEnabled)
+    std::vector<String> layouts, bool isLangSyncEnabled)
     : IKeyState(events), m_keyMapPtr(0), m_keyMap(keyMap), m_mask(0),
       m_events(events), m_isLangSyncEnabled(isLangSyncEnabled) {
   m_keyMap.setLanguageData(std::move(layouts));
@@ -423,27 +415,26 @@ void KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState) {
 }
 
 void KeyState::sendKeyEvent(void *target, bool press, bool isAutoRepeat,
-                            KeyID key, KeyModifierMask mask, SInt32 count,
-                            KeyButton button) {
+    KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button) {
   if (m_keyMap.isHalfDuplex(key, button)) {
     if (isAutoRepeat) {
       // ignore auto-repeat on half-duplex keys
     } else {
       m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target,
-                               KeyInfo::alloc(key, mask, button, 1)));
+          KeyInfo::alloc(key, mask, button, 1)));
       m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target,
-                               KeyInfo::alloc(key, mask, button, 1)));
+          KeyInfo::alloc(key, mask, button, 1)));
     }
   } else {
     if (isAutoRepeat) {
       m_events->addEvent(Event(m_events->forIKeyState().keyRepeat(), target,
-                               KeyInfo::alloc(key, mask, button, count)));
+          KeyInfo::alloc(key, mask, button, count)));
     } else if (press) {
       m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target,
-                               KeyInfo::alloc(key, mask, button, 1)));
+          KeyInfo::alloc(key, mask, button, 1)));
     } else {
       m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target,
-                               KeyInfo::alloc(key, mask, button, 1)));
+          KeyInfo::alloc(key, mask, button, 1)));
     }
   }
 }
@@ -485,16 +476,15 @@ void KeyState::updateKeyState() {
   m_mask = pollActiveModifiers();
 
   // set active modifiers
-  AddActiveModifierContext addModifierContext(pollActiveGroup(), m_mask,
-                                              m_activeModifiers);
+  AddActiveModifierContext addModifierContext(
+      pollActiveGroup(), m_mask, m_activeModifiers);
   m_keyMap.foreachKey(&KeyState::addActiveModifierCB, &addModifierContext);
 
   LOG((CLOG_DEBUG1 "modifiers on update: 0x%04x", m_mask));
 }
 
-void KeyState::addActiveModifierCB(KeyID, SInt32 group,
-                                   synergy::KeyMap::KeyItem &keyItem,
-                                   void *vcontext) {
+void KeyState::addActiveModifierCB(
+    KeyID, SInt32 group, synergy::KeyMap::KeyItem &keyItem, void *vcontext) {
   AddActiveModifierContext *context =
       static_cast<AddActiveModifierContext *>(vcontext);
   if (group == context->m_activeGroup &&
@@ -517,8 +507,8 @@ void KeyState::setHalfDuplexMask(KeyModifierMask mask) {
   }
 }
 
-void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID,
-                           const String &lang) {
+void KeyState::fakeKeyDown(
+    KeyID id, KeyModifierMask mask, KeyButton serverID, const String &lang) {
   // if this server key is already down then this is probably a
   // mis-reported autorepeat.
   serverID &= kButtonMask;
@@ -537,7 +527,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID,
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
   const synergy::KeyMap::KeyItem *keyItem =
       m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
-                      getActiveModifiersRValue(), mask, false, lang);
+          getActiveModifiersRValue(), mask, false, lang);
 
   if (keyItem == nullptr) {
     // a media key won't be mapped on mac, so we need to fake it in a
@@ -567,7 +557,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID,
 }
 
 bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                             KeyButton serverID, const String &lang) {
+    KeyButton serverID, const String &lang) {
   LOG((CLOG_DEBUG2 "fakeKeyRepeat"));
   serverID &= kButtonMask;
 
@@ -582,7 +572,7 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
   const synergy::KeyMap::KeyItem *keyItem =
       m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
-                      getActiveModifiersRValue(), mask, true, lang);
+          getActiveModifiersRValue(), mask, true, lang);
   if (keyItem == NULL) {
     return false;
   }
@@ -725,12 +715,12 @@ void KeyState::addAliasEntries() {
     // shift kKeyLeftTab then add a shifted kKeyTab entry that matches a
     // shifted kKeyLeftTab entry.
     m_keyMap.addKeyAliasEntry(kKeyTab, g, KeyModifierShift, KeyModifierShift,
-                              kKeyLeftTab, KeyModifierShift, KeyModifierShift);
+        kKeyLeftTab, KeyModifierShift, KeyModifierShift);
 
     // if we have no kKeyLeftTab but we do have a kKeyTab that can be
     // shifted then add kKeyLeftTab that matches a kKeyTab.
     m_keyMap.addKeyAliasEntry(kKeyLeftTab, g, KeyModifierShift,
-                              KeyModifierShift, kKeyTab, 0, KeyModifierShift);
+        KeyModifierShift, kKeyTab, 0, KeyModifierShift);
 
     // map non-breaking space to space
     m_keyMap.addKeyAliasEntry(0x20, g, 0, 0, 0xa0, 0, 0);
@@ -743,8 +733,8 @@ void KeyState::addKeypadEntries() {
   for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
     for (size_t i = 0; i < sizeof(s_numpadTable) / sizeof(s_numpadTable[0]);
          i += 2) {
-      m_keyMap.addKeyCombinationEntry(s_numpadTable[i], g,
-                                      s_numpadTable + i + 1, 1);
+      m_keyMap.addKeyCombinationEntry(
+          s_numpadTable[i], g, s_numpadTable + i + 1, 1);
     }
   }
 }
@@ -810,8 +800,7 @@ void KeyState::fakeKeys(const Keystrokes &keys, UInt32 count) {
 }
 
 void KeyState::updateModifierKeyState(KeyButton button,
-                                      const ModifierToKeys &oldModifiers,
-                                      const ModifierToKeys &newModifiers) {
+    const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers) {
   // get the pressed modifier buttons before and after
   synergy::KeyMap::ButtonToKeyMap oldKeys, newKeys;
   for (ModifierToKeys::const_iterator i = oldModifiers.begin();
@@ -826,11 +815,10 @@ void KeyState::updateModifierKeyState(KeyButton button,
   // get the modifier buttons that were pressed or released
   synergy::KeyMap::ButtonToKeyMap pressed, released;
   std::set_difference(oldKeys.begin(), oldKeys.end(), newKeys.begin(),
-                      newKeys.end(), std::inserter(released, released.end()),
-                      ButtonToKeyLess());
+      newKeys.end(), std::inserter(released, released.end()),
+      ButtonToKeyLess());
   std::set_difference(newKeys.begin(), newKeys.end(), oldKeys.begin(),
-                      oldKeys.end(), std::inserter(pressed, pressed.end()),
-                      ButtonToKeyLess());
+      oldKeys.end(), std::inserter(pressed, pressed.end()), ButtonToKeyLess());
 
   // update state
   for (synergy::KeyMap::ButtonToKeyMap::const_iterator i = released.begin();

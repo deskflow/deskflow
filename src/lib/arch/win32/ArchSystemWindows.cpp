@@ -43,9 +43,8 @@ ArchSystemWindows::~ArchSystemWindows() {
 
 std::string ArchSystemWindows::getOSName() const {
   std::string osName("Microsoft Windows <unknown>");
-  static const TCHAR *const windowsVersionKeyNames[] = {
-      _T("SOFTWARE"), _T("Microsoft"), _T("Windows NT"), _T("CurrentVersion"),
-      NULL};
+  static const TCHAR *const windowsVersionKeyNames[] = {_T("SOFTWARE"),
+      _T("Microsoft"), _T("Windows NT"), _T("CurrentVersion"), NULL};
 
   HKEY key =
       ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
@@ -85,8 +84,8 @@ std::string ArchSystemWindows::setting(const std::string &valueName) const {
   return ArchMiscWindows::readValueString(key, valueName.c_str());
 }
 
-void ArchSystemWindows::setting(const std::string &valueName,
-                                const std::string &valueString) const {
+void ArchSystemWindows::setting(
+    const std::string &valueName, const std::string &valueString) const {
   HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
   if (key == NULL)
     throw XArch(std::string("could not access registry key: ") + valueName);

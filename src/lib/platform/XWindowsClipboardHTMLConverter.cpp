@@ -24,8 +24,8 @@
 // XWindowsClipboardHTMLConverter
 //
 
-XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(Display *display,
-                                                               const char *name)
+XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(
+    Display *display, const char *name)
     : m_atom(XInternAtom(display, name, False)) {
   // do nothing
 }
@@ -42,8 +42,8 @@ Atom XWindowsClipboardHTMLConverter::getAtom() const { return m_atom; }
 
 int XWindowsClipboardHTMLConverter::getDataSize() const { return 8; }
 
-String
-XWindowsClipboardHTMLConverter::fromIClipboard(const String &data) const {
+String XWindowsClipboardHTMLConverter::fromIClipboard(
+    const String &data) const {
   return data;
 }
 

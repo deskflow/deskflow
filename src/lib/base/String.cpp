@@ -153,8 +153,8 @@ String sprintf(const char *fmt, ...) {
   return result;
 }
 
-void findReplaceAll(String &subject, const String &find,
-                    const String &replace) {
+void findReplaceAll(
+    String &subject, const String &find, const String &replace) {
   size_t pos = 0;
   while ((pos = subject.find(find, pos)) != String::npos) {
     subject.replace(pos, find.length(), replace);
@@ -228,21 +228,21 @@ std::vector<String> splitString(String string, const char c) {
 // CaselessCmp
 //
 
-bool CaselessCmp::cmpEqual(const String::value_type &a,
-                           const String::value_type &b) {
+bool CaselessCmp::cmpEqual(
+    const String::value_type &a, const String::value_type &b) {
   // should use std::tolower but not in all versions of libstdc++ have it
   return tolower(a) == tolower(b);
 }
 
-bool CaselessCmp::cmpLess(const String::value_type &a,
-                          const String::value_type &b) {
+bool CaselessCmp::cmpLess(
+    const String::value_type &a, const String::value_type &b) {
   // should use std::tolower but not in all versions of libstdc++ have it
   return tolower(a) < tolower(b);
 }
 
 bool CaselessCmp::less(const String &a, const String &b) {
   return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(),
-                                      &synergy::string::CaselessCmp::cmpLess);
+      &synergy::string::CaselessCmp::cmpLess);
 }
 
 bool CaselessCmp::equal(const String &a, const String &b) {

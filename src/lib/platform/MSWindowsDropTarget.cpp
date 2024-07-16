@@ -39,8 +39,8 @@ MSWindowsDropTarget &MSWindowsDropTarget::instance() {
 }
 
 HRESULT
-MSWindowsDropTarget::DragEnter(IDataObject *dataObject, DWORD keyState,
-                               POINTL point, DWORD *effect) {
+MSWindowsDropTarget::DragEnter(
+    IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect) {
   // check if data object contain drop
   m_allowDrop = queryDataObject(dataObject);
   if (m_allowDrop) {
@@ -63,8 +63,8 @@ HRESULT
 MSWindowsDropTarget::DragLeave(void) { return S_OK; }
 
 HRESULT
-MSWindowsDropTarget::Drop(IDataObject *dataObject, DWORD keyState, POINTL point,
-                          DWORD *effect) {
+MSWindowsDropTarget::Drop(
+    IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect) {
   *effect = DROPEFFECT_NONE;
 
   return S_OK;
@@ -120,8 +120,8 @@ void getDropData(IDataObject *dataObject) {
   }
 }
 
-HRESULT __stdcall MSWindowsDropTarget::QueryInterface(REFIID iid,
-                                                      void **object) {
+HRESULT __stdcall MSWindowsDropTarget::QueryInterface(
+    REFIID iid, void **object) {
   if (iid == IID_IDropTarget || iid == IID_IUnknown) {
     AddRef();
     *object = this;

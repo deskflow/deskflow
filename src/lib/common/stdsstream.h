@@ -135,8 +135,8 @@ protected:
     return this;
   }
 
-  virtual pos_type seekoff(off_type off, ios::seek_dir way,
-                           int which = ios::in | ios::out) {
+  virtual pos_type seekoff(
+      off_type off, ios::seek_dir way, int which = ios::in | ios::out) {
     pos_type ret = pos_type(off_type(-1));
     bool testin = which & ios::in && mode & ios::in;
     bool testout = which & ios::out && mode & ios::out;

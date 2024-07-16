@@ -22,14 +22,13 @@ class SocketMultiplexer;
 
 class InverseSocketFactory : public ISocketFactory {
 public:
-  InverseSocketFactory(IEventQueue *events,
-                       SocketMultiplexer *socketMultiplexer);
+  InverseSocketFactory(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer);
 
   // ISocketFactory overrides
-  IDataSocket *create(bool secure, IArchNetwork::EAddressFamily family =
-                                       IArchNetwork::kINET) const override;
-  IListenSocket *createListen(
-      bool secure,
+  IDataSocket *create(bool secure,
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
+  IListenSocket *createListen(bool secure,
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
 
 private:

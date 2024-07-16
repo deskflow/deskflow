@@ -328,8 +328,8 @@ void EventQueue::deleteTimer(EventQueueTimer *timer) {
   m_buffer->deleteTimer(timer);
 }
 
-void EventQueue::adoptHandler(Event::Type type, void *target,
-                              IEventJob *handler) {
+void EventQueue::adoptHandler(
+    Event::Type type, void *target, IEventJob *handler) {
   ArchMutexLock lock(m_mutex);
   IEventJob *&job = m_handlers[target][type];
   delete job;
@@ -509,7 +509,7 @@ void EventQueue::waitForReady() const {
 //
 
 EventQueue::Timer::Timer(EventQueueTimer *timer, double timeout,
-                         double initialTime, void *target, bool oneShot)
+    double initialTime, void *target, bool oneShot)
     : m_timer(timer), m_timeout(timeout), m_target(target), m_oneShot(oneShot),
       m_time(initialTime) {
   assert(m_timeout > 0.0);

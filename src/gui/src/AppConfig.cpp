@@ -43,44 +43,17 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
 
-const char *AppConfig::m_SynergySettingsName[] = {
-    "screenName",
-    "port",
-    "interface",
-    "logLevel2",
-    "logToFile",
-    "logFilename",
-    "wizardLastRun",
-    "startedBefore",
-    "elevateMode",
-    "elevateModeEnum",
-    "edition",
-    "cryptoEnabled",
-    "autoHide",
-    "serialKey",
-    "lastVersion",
-    "lastExpiringWarningTime",
-    "activationHasRun",
-    "minimizeToTray",
-    "ActivateEmail",
-    "loadFromSystemScope",
-    "groupServerChecked",
-    "useExternalConfig",
-    "configFile",
-    "useInternalConfig",
-    "groupClientChecked",
-    "serverHostname",
-    "tlsCertPath",
-    "tlsKeyLength",
-    "preventSleep",
-    "languageSync",
-    "invertScrollDirection",
-    "guid",
-    "licenseRegistryUrl",
-    "licenseNextCheck",
-    "initiateConnectionFromServer",
-    "clientHostMode",
-    "serverClientMode"};
+const char *AppConfig::m_SynergySettingsName[] = {"screenName", "port",
+    "interface", "logLevel2", "logToFile", "logFilename", "wizardLastRun",
+    "startedBefore", "elevateMode", "elevateModeEnum", "edition",
+    "cryptoEnabled", "autoHide", "serialKey", "lastVersion",
+    "lastExpiringWarningTime", "activationHasRun", "minimizeToTray",
+    "ActivateEmail", "loadFromSystemScope", "groupServerChecked",
+    "useExternalConfig", "configFile", "useInternalConfig",
+    "groupClientChecked", "serverHostname", "tlsCertPath", "tlsKeyLength",
+    "preventSleep", "languageSync", "invertScrollDirection", "guid",
+    "licenseRegistryUrl", "licenseNextCheck", "initiateConnectionFromServer",
+    "clientHostMode", "serverClientMode"};
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
@@ -105,13 +78,13 @@ AppConfig::AppConfig(bool globalLoad)
   }
 
   // User settings exist and the load from system scope variable is true
-  if (writer->hasSetting(settingName(Setting::kLoadSystemSettings),
-                         ConfigWriter::kUser)) {
+  if (writer->hasSetting(
+          settingName(Setting::kLoadSystemSettings), ConfigWriter::kUser)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
-  else if (writer->hasSetting(settingName(Setting::kScreenName),
-                              ConfigWriter::kSystem)) {
+  else if (writer->hasSetting(
+               settingName(Setting::kScreenName), ConfigWriter::kSystem)) {
     setLoadFromSystemScope(true);
   }
 }
@@ -187,9 +160,8 @@ void AppConfig::loadSettings() {
     // TODO Investigate why kElevateModeEnum isn't loaded fully
     QVariant elevateMode = loadSetting(Setting::kElevateModeEnum);
     if (!elevateMode.isValid()) {
-      elevateMode =
-          loadSetting(Setting::kElevateModeSetting,
-                      QVariant(static_cast<int>(kDefaultElevateMode)));
+      elevateMode = loadSetting(Setting::kElevateModeSetting,
+          QVariant(static_cast<int>(kDefaultElevateMode)));
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
   }
@@ -208,8 +180,8 @@ void AppConfig::loadSettings() {
       loadSetting(Setting::kGroupServerCheck, false).toBool();
   m_UseExternalConfig =
       loadSetting(Setting::kUseExternalConfig, false).toBool();
-  m_ConfigFile = loadSetting(Setting::kConfigFile,
-                             QDir::homePath() + "/" + m_SynergyConfigName)
+  m_ConfigFile = loadSetting(
+      Setting::kConfigFile, QDir::homePath() + "/" + m_SynergyConfigName)
                      .toString();
   m_UseInternalConfig =
       loadSetting(Setting::kUseInternalConfig, false).toBool();
@@ -221,10 +193,9 @@ void AppConfig::loadSettings() {
   m_InvertScrollDirection =
       loadSetting(Setting::kInvertScrollDirection, false).toBool();
   m_guid = loadCommonSetting(Setting::kGuid, QUuid::createUuid()).toString();
-  m_licenseRegistryUrl =
-      loadCommonSetting(Setting::kLicenseRegistryUrl,
-                        "https://api2.prod.symless.com/license/register")
-          .toString();
+  m_licenseRegistryUrl = loadCommonSetting(Setting::kLicenseRegistryUrl,
+      "https://api2.prod.symless.com/license/register")
+                             .toString();
   m_licenseNextCheck =
       loadCommonSetting(Setting::kLicenseNextCheck, 0).toULongLong();
   m_ClientHostMode = loadSetting(Setting::kClientHostMode, true).toBool();
@@ -471,18 +442,18 @@ template <typename T> void AppConfig::setSetting(Setting name, T value) {
 }
 
 template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
-  ConfigWriter::make()->setSetting(settingName(name), value,
-                                   ConfigWriter::kUser);
-  ConfigWriter::make()->setSetting(settingName(name), value,
-                                   ConfigWriter::kSystem);
+  ConfigWriter::make()->setSetting(
+      settingName(name), value, ConfigWriter::kUser);
+  ConfigWriter::make()->setSetting(
+      settingName(name), value, ConfigWriter::kSystem);
 }
 
 QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
   return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
 }
 
-QVariant AppConfig::loadCommonSetting(Setting name,
-                                      const QVariant &defaultValue) const {
+QVariant AppConfig::loadCommonSetting(
+    Setting name, const QVariant &defaultValue) const {
   QVariant result(defaultValue);
   QString setting(settingName(name));
   auto &writer = *ConfigWriter::make();
@@ -506,8 +477,8 @@ void AppConfig::loadScope(ConfigWriter::Scope scope) {
   if (writer->getScope() != scope) {
     setDefaultValues();
     writer->setScope(scope);
-    if (writer->hasSetting(settingName(Setting::kScreenName),
-                           writer->getScope())) {
+    if (writer->hasSetting(
+            settingName(Setting::kScreenName), writer->getScope())) {
       // If the user already has settings, then load them up now.
       writer->globalLoad();
     }
@@ -608,7 +579,7 @@ void AppConfig::setTLSKeyLength(const QString &length) {
 
 void AppConfig::generateCertificate(bool forceGeneration) const {
   SslCertificate sslCertificate;
-  sslCertificate.generateCertificate(getTLSCertPath(), getTLSKeyLength(),
-                                     forceGeneration);
+  sslCertificate.generateCertificate(
+      getTLSCertPath(), getTLSKeyLength(), forceGeneration);
   emit sslToggled();
 }

@@ -40,8 +40,8 @@ static const struct {
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(int numColumns, int numRows, AppConfig *appConfig,
-                           MainWindow *mainWindow)
+ServerConfig::ServerConfig(
+    int numColumns, int numRows, AppConfig *appConfig, MainWindow *mainWindow)
     :
 
       m_Screens(numColumns), m_NumColumns(numColumns), m_NumRows(numRows),
@@ -131,8 +131,8 @@ void ServerConfig::saveSettings() {
   settings().setValue("disableLockToScreen", disableLockToScreen());
   settings().setValue("enableDragAndDrop", enableDragAndDrop());
   settings().setValue("clipboardSharing", clipboardSharing());
-  settings().setValue("clipboardSharingSize",
-                      QVariant::fromValue(clipboardSharingSize()));
+  settings().setValue(
+      "clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
 
   if (!getClientAddress().isEmpty()) {
     settings().setValue("clientAddress", getClientAddress());
@@ -191,13 +191,13 @@ void ServerConfig::loadSettings() {
   setClipboardSharingSize(
       settings()
           .value("clipboardSharingSize",
-                 (int)ServerConfig::defaultClipboardSharingSize())
+              (int)ServerConfig::defaultClipboardSharingSize())
           .toULongLong());
   setClipboardSharing(settings().value("clipboardSharing", true).toBool());
   setClientAddress(settings().value("clientAddress", "").toString());
 
-  readSettings(settings(), switchCorners(), "switchCorner", false,
-               NumSwitchCorners);
+  readSettings(
+      settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
 
   int numScreens = settings().beginReadArray("screens");
   Q_ASSERT(numScreens <= screens().size());
@@ -222,8 +222,8 @@ void ServerConfig::loadSettings() {
   settings().endGroup();
 }
 
-int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn,
-                                      int deltaRow) const {
+int ServerConfig::adjacentScreenIndex(
+    int idx, int deltaColumn, int deltaRow) const {
   if (screens()[idx].isNull())
     return -1;
 
@@ -266,8 +266,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config) {
 
       for (unsigned int j = 0;
            j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++) {
-        int idx = config.adjacentScreenIndex(i, neighbourDirs[j].x,
-                                             neighbourDirs[j].y);
+        int idx = config.adjacentScreenIndex(
+            i, neighbourDirs[j].x, neighbourDirs[j].y);
         if (idx != -1 && !config.screens()[idx].isNull())
           outStream << "\t\t" << neighbourDirs[j].name << " = "
                     << config.screens()[idx].name() << Qt::endl;
@@ -380,8 +380,8 @@ int ServerConfig::autoAddScreen(const QString name) {
     dirIndex = 3;
   }
 
-  int idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
-                                neighbourDirs[dirIndex].y);
+  int idx = adjacentScreenIndex(
+      startIndex, neighbourDirs[dirIndex].x, neighbourDirs[dirIndex].y);
   while (idx != -1) {
     if (screens()[idx].isNull()) {
       m_Screens[idx].setName(name);
@@ -390,8 +390,8 @@ int ServerConfig::autoAddScreen(const QString name) {
     }
 
     startIndex += offset;
-    idx = adjacentScreenIndex(startIndex, neighbourDirs[dirIndex].x,
-                              neighbourDirs[dirIndex].y);
+    idx = adjacentScreenIndex(
+        startIndex, neighbourDirs[dirIndex].x, neighbourDirs[dirIndex].y);
   }
 
   if (!success) {

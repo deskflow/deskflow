@@ -33,7 +33,7 @@ class IEventQueue;
 class ClientProxyUnknown {
 public:
   ClientProxyUnknown(synergy::IStream *stream, double timeout, Server *server,
-                     IEventQueue *events);
+      IEventQueue *events);
   ClientProxyUnknown(ClientProxyUnknown const &) = delete;
   ClientProxyUnknown(ClientProxyUnknown &&) = delete;
   ~ClientProxyUnknown();

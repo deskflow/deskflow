@@ -91,6 +91,6 @@ QString AboutDialog::getCopyright() const {
   QString copyright("Copyright © 2012-%%YEAR%% Symless Ltd.\n"
                     "Copyright © 2009-2012 Nick Bolton\n"
                     "Copyright © 2002-2009 Chris Schoeneman");
-  return copyright.replace(QString("%%YEAR%%"),
-                           QString::number(buildDate.year()));
+  return copyright.replace(
+      QString("%%YEAR%%"), QString::number(buildDate.year()));
 }

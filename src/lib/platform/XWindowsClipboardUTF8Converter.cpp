@@ -24,9 +24,8 @@
 // XWindowsClipboardUTF8Converter
 //
 
-XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(Display *display,
-                                                               const char *name,
-                                                               bool normalize)
+XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(
+    Display *display, const char *name, bool normalize)
     : m_atom(XInternAtom(display, name, False)), m_normalize(normalize) {
   // do nothing
 }
@@ -45,8 +44,8 @@ int XWindowsClipboardUTF8Converter::getDataSize() const { return 8; }
 
 static bool isCR(char ch) { return (ch == '\r'); }
 
-String
-XWindowsClipboardUTF8Converter::fromIClipboard(const String &data) const {
+String XWindowsClipboardUTF8Converter::fromIClipboard(
+    const String &data) const {
   return data;
 }
 

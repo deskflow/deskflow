@@ -24,13 +24,12 @@
 // InverseSocketFactory
 //
 
-InverseSocketFactory::InverseSocketFactory(IEventQueue *events,
-                                           SocketMultiplexer *socketMultiplexer)
+InverseSocketFactory::InverseSocketFactory(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer)
     : m_events(events), m_socketMultiplexer(socketMultiplexer) {}
 
-IDataSocket *
-InverseSocketFactory::create(bool secure,
-                             IArchNetwork::EAddressFamily family) const {
+IDataSocket *InverseSocketFactory::create(
+    bool secure, IArchNetwork::EAddressFamily family) const {
   if (secure) {
     auto secureSocket =
         new SecureClientSocket(m_events, m_socketMultiplexer, family);
@@ -40,9 +39,8 @@ InverseSocketFactory::create(bool secure,
   }
 }
 
-IListenSocket *
-InverseSocketFactory::createListen(bool secure,
-                                   IArchNetwork::EAddressFamily family) const {
+IListenSocket *InverseSocketFactory::createListen(
+    bool secure, IArchNetwork::EAddressFamily family) const {
   IListenSocket *socket = nullptr;
 
   if (secure) {

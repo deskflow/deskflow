@@ -49,8 +49,7 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue *events, void *eventTarget)
   EventHandlerUPP launchTerminationEventHandler =
       NewEventHandlerUPP(launchTerminationCallback);
   InstallApplicationEventHandler(launchTerminationEventHandler, 2,
-                                 launchEventTypes, this,
-                                 &m_launchTerminationEventHandlerRef);
+      launchEventTypes, this, &m_launchTerminationEventHandlerRef);
   DisposeEventHandlerUPP(launchTerminationEventHandler);
 
   m_screenSaverPSN.highLongOfPSN = 0;
@@ -107,7 +106,7 @@ void OSXScreenSaver::processTerminated(ProcessSerialNumber psn) {
     if (m_enabled) {
       m_events->addEvent(
           Event(m_events->forIPrimaryScreen().screensaverDeactivated(),
-                m_eventTarget));
+              m_eventTarget));
     }
 
     m_screenSaverPSN.highLongOfPSN = 0;
@@ -122,9 +121,8 @@ pascal OSStatus OSXScreenSaver::launchTerminationCallback(
   EventParamType actualType;
   ByteCount actualSize;
 
-  result =
-      GetEventParameter(theEvent, kEventParamProcessID, typeProcessSerialNumber,
-                        &actualType, sizeof(psn), &actualSize, &psn);
+  result = GetEventParameter(theEvent, kEventParamProcessID,
+      typeProcessSerialNumber, &actualType, sizeof(psn), &actualSize, &psn);
 
   if ((result == noErr) && (actualSize > 0) &&
       (actualType == typeProcessSerialNumber)) {

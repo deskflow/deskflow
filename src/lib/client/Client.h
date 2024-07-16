@@ -63,8 +63,8 @@ public:
   to create the socket.  \p screen is    the local screen.
   */
   Client(IEventQueue *events, const String &name, const NetworkAddress &address,
-         ISocketFactory *socketFactory, synergy::Screen *screen,
-         lib::synergy::ClientArgs const &args);
+      ISocketFactory *socketFactory, synergy::Screen *screen,
+      lib::synergy::ClientArgs const &args);
   Client(Client const &) = delete;
   Client(Client &&) = delete;
   ~Client();
@@ -156,20 +156,20 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                        SInt32 &height) const;
+  virtual void getShape(
+      SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
   // IClient overrides
   virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum,
-                     KeyModifierMask mask, bool forScreensaver);
+      KeyModifierMask mask, bool forScreensaver);
   virtual bool leave();
   virtual void setClipboard(ClipboardID, const IClipboard *);
   virtual void grabClipboard(ClipboardID);
   virtual void setClipboardDirty(ClipboardID, bool);
   virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const String &);
-  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton,
-                         const String &lang);
+  virtual void keyRepeat(
+      KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton);
   virtual void mouseDown(ButtonID);
   virtual void mouseUp(ButtonID);

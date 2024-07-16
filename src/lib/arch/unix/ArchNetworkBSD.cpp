@@ -407,8 +407,8 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
 
   // do the select
   n = select((SELECT_TYPE_ARG1)n + 1, SELECT_TYPE_ARG234 readSetP,
-             SELECT_TYPE_ARG234 writeSetP, SELECT_TYPE_ARG234 errSetP,
-             SELECT_TYPE_ARG5 timeout2P);
+      SELECT_TYPE_ARG234 writeSetP, SELECT_TYPE_ARG234 errSetP,
+      SELECT_TYPE_ARG5 timeout2P);
 
   // reset the unblock pipe
   if (n > 0 && unblockPipe != NULL && FD_ISSET(unblockPipe[0], &readSet)) {
@@ -494,7 +494,7 @@ void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s) {
   int err = 0;
   auto size = static_cast<socklen_t>(sizeof(err));
   if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR,
-                 reinterpret_cast<optval_t *>(&err), &size) == -1) {
+          reinterpret_cast<optval_t *>(&err), &size) == -1) {
     err = errno;
   }
 
@@ -528,14 +528,14 @@ bool ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay) {
   int oflag;
   auto size = static_cast<socklen_t>(sizeof(oflag));
   if (getsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY,
-                 reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
+          reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
     throwError(errno);
   }
 
   int flag = noDelay ? 1 : 0;
   size = static_cast<socklen_t>(sizeof(flag));
   if (setsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY,
-                 reinterpret_cast<optval_t *>(&flag), size) == -1) {
+          reinterpret_cast<optval_t *>(&flag), size) == -1) {
     throwError(errno);
   }
 
@@ -549,14 +549,14 @@ bool ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse) {
   int oflag;
   auto size = static_cast<socklen_t>(sizeof(oflag));
   if (getsockopt(s->m_fd, SOL_SOCKET, SO_REUSEADDR,
-                 reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
+          reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
     throwError(errno);
   }
 
   int flag = reuse ? 1 : 0;
   size = static_cast<socklen_t>(sizeof(flag));
   if (setsockopt(s->m_fd, SOL_SOCKET, SO_REUSEADDR,
-                 reinterpret_cast<optval_t *>(&flag), size) == -1) {
+          reinterpret_cast<optval_t *>(&flag), size) == -1) {
     throwError(errno);
   }
 
@@ -611,8 +611,8 @@ ArchNetAddress ArchNetworkBSD::copyAddr(ArchNetAddress addr) {
   return new ArchNetAddressImpl(*addr);
 }
 
-std::vector<ArchNetAddress>
-ArchNetworkBSD::nameToAddr(const std::string &name) {
+std::vector<ArchNetAddress> ArchNetworkBSD::nameToAddr(
+    const std::string &name) {
   struct addrinfo hints;
   struct in6_addr serveraddr;
 
@@ -648,8 +648,8 @@ ArchNetworkBSD::nameToAddr(const std::string &name) {
       addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
     }
 
-    memcpy(&addresses.back()->m_addr, address->ai_addr,
-           addresses.back()->m_len);
+    memcpy(
+        &addresses.back()->m_addr, address->ai_addr, addresses.back()->m_len);
   }
 
   freeaddrinfo(pResult);
@@ -672,7 +672,7 @@ std::string ArchNetworkBSD::addrToName(ArchNetAddress addr) {
   char host[1024];
   char service[20];
   int ret = getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host,
-                        sizeof(host), service, sizeof(service), 0);
+      sizeof(host), service, sizeof(service), 0);
   if (ret != 0) {
     ARCH->unlockMutex(m_mutex);
     throwNameError(ret);
@@ -714,8 +714,8 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr) {
   }
 }
 
-IArchNetwork::EAddressFamily
-ArchNetworkBSD::getAddrFamily(ArchNetAddress addr) {
+IArchNetwork::EAddressFamily ArchNetworkBSD::getAddrFamily(
+    ArchNetAddress addr) {
   assert(addr != NULL);
 
   switch (addr->m_addr.ss_family) {
@@ -783,10 +783,10 @@ bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr) {
 
   case kINET6: {
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
-    return (addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&
-            memcmp(static_cast<const void *>(&ipAddr->sin6_addr),
-                   static_cast<const void *>(&in6addr_any),
-                   sizeof(in6_addr)) == 0);
+    return (
+        addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&
+        memcmp(static_cast<const void *>(&ipAddr->sin6_addr),
+            static_cast<const void *>(&in6addr_any), sizeof(in6_addr)) == 0);
   }
 
   default:
@@ -796,8 +796,8 @@ bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr) {
 }
 
 bool ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b) {
-  return (a->m_len == b->m_len &&
-          memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
+  return (
+      a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
 const int *ArchNetworkBSD::getUnblockPipe() {
@@ -900,8 +900,7 @@ void ArchNetworkBSD::throwError(int err) {
 }
 
 void ArchNetworkBSD::throwNameError(int err) {
-  static const char *s_msg[] = {
-      "The specified host is unknown",
+  static const char *s_msg[] = {"The specified host is unknown",
       "The requested name is valid but does not have an IP address",
       "A non-recoverable name server error occurred",
       "A temporary error occurred on an authoritative name server",

@@ -59,7 +59,7 @@ App *App::s_instance = nullptr;
 //
 
 App::App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
-         lib::synergy::ArgsBase *args)
+    lib::synergy::ArgsBase *args)
     : m_bye(&exit), m_taskBarReceiver(NULL), m_suspended(false),
       m_events(events), m_args(args), m_fileLog(nullptr),
       m_createTaskBarReceiver(createTaskBarReceiver), m_appUtil(events),
@@ -88,8 +88,8 @@ void App::version() {
 
   char buffer[buffer_size];
   snprintf(buffer, buffer_size, "%s %s, protocol version %d.%d\n%s",
-           argsBase().m_pname, version.str().c_str(), kProtocolMajorVersion,
-           kProtocolMinorVersion, copyrightBuffer);
+      argsBase().m_pname, version.str().c_str(), kProtocolMajorVersion,
+      kProtocolMinorVersion, copyrightBuffer);
 
   std::cout << buffer << std::endl;
 }
@@ -122,7 +122,7 @@ int App::run(int argc, char **argv) {
     result = e.getCode();
   } catch (DisplayInvalidException &die) {
     LOG((CLOG_CRIT "a display invalid exception error occurred: %s\n",
-         die.what()));
+        die.what()));
     // display invalid exceptions can occur when going to sleep. When this
     // process exits, the UI will restart us instantly. We don't really want
     // that behevior, so we quies for a bit
@@ -161,8 +161,8 @@ void App::loggingFilterWarning() {
   if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
     if (argsBase().m_logFile == NULL) {
       LOG((CLOG_WARN
-           "log messages above %s are NOT sent to console (use file logging)",
-           CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
+          "log messages above %s are NOT sent to console (use file logging)",
+          CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
     }
   }
 }
@@ -177,7 +177,7 @@ void App::initApp(int argc, const char **argv) {
   // set log filter
   if (!CLOG->setFilter(argsBase().m_logFilter)) {
     LOG((CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname,
-         argsBase().m_logFilter, argsBase().m_pname));
+        argsBase().m_logFilter, argsBase().m_pname));
     m_bye(kExitArgs);
   }
   loggingFilterWarning();
@@ -205,15 +205,14 @@ void App::initIpcClient() {
   m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
   m_ipcClient->connect();
 
-  m_events->adoptHandler(
-      m_events->forIpcClient().messageReceived(), m_ipcClient,
-      new TMethodEventJob<App>(this, &App::handleIpcMessage));
+  m_events->adoptHandler(m_events->forIpcClient().messageReceived(),
+      m_ipcClient, new TMethodEventJob<App>(this, &App::handleIpcMessage));
 }
 
 void App::cleanupIpcClient() {
   m_ipcClient->disconnect();
-  m_events->removeHandler(m_events->forIpcClient().messageReceived(),
-                          m_ipcClient);
+  m_events->removeHandler(
+      m_events->forIpcClient().messageReceived(), m_ipcClient);
   delete m_ipcClient;
 }
 
@@ -248,8 +247,8 @@ MinimalApp::~MinimalApp() {}
 
 int MinimalApp::standardStartup(int argc, char **argv) { return 0; }
 
-int MinimalApp::runInner(int argc, char **argv, ILogOutputter *outputter,
-                         StartupFunc startup) {
+int MinimalApp::runInner(
+    int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) {
   return 0;
 }
 

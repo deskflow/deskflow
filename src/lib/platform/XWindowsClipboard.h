@@ -59,8 +59,8 @@ public:
   owner window isn't this clipboard's window then this simply
   sends a failure event to the requestor.
   */
-  void addRequest(Window owner, Window requestor, Atom target, ::Time time,
-                  Atom property);
+  void addRequest(
+      Window owner, Window requestor, Atom target, ::Time time, Atom property);
 
   //! Process clipboard request
   /*!
@@ -106,8 +106,8 @@ private:
   // suitable converter.  iff onlyIfNotAdded is true then also
   // return NULL if a suitable converter was found but we already
   // have data of the converter's clipboard format.
-  IXWindowsClipboardConverter *getConverter(Atom target,
-                                            bool onlyIfNotAdded = false) const;
+  IXWindowsClipboardConverter *getConverter(
+      Atom target, bool onlyIfNotAdded = false) const;
 
   // convert target atom to clipboard format
   EFormat getFormat(Atom target) const;
@@ -116,8 +116,8 @@ private:
   // was owned at the given time.  returns true if the conversion
   // could be performed, false otherwise.  in either case, the
   // reply is inserted.
-  bool addSimpleRequest(Window requestor, Atom target, ::Time time,
-                        Atom property);
+  bool addSimpleRequest(
+      Window requestor, Atom target, ::Time time, Atom property);
 
   // if not already checked then see if the cache is stale and, if so,
   // clear it.  this has the side effect of updating m_timeOwned.
@@ -146,7 +146,7 @@ private:
     // true iff the conversion was successful or the conversion
     // cannot be performed (in which case *actualTarget == None).
     bool readClipboard(Display *display, Atom selection, Atom target,
-                       Atom *actualTarget, String *data);
+        Atom *actualTarget, String *data);
 
   private:
     bool processEvent(Display *display, XEvent *event);
@@ -223,7 +223,7 @@ private:
   public:
     Reply(Window, Atom target, ::Time);
     Reply(Window, Atom target, ::Time, Atom property, const String &data,
-          Atom type, int format);
+        Atom type, int format);
 
   public:
     // information about the request
@@ -260,8 +260,8 @@ private:
   void motifUnlockClipboard() const;
   bool motifOwnsClipboard() const;
   void motifFillCache();
-  bool motifGetSelection(const MotifClipFormat *, Atom *actualTarget,
-                         String *data) const;
+  bool motifGetSelection(
+      const MotifClipFormat *, Atom *actualTarget, String *data) const;
   Time motifGetTime() const;
 
   // reply methods
@@ -272,8 +272,8 @@ private:
   bool sendReply(Reply *);
   void clearReplies();
   void clearReplies(ReplyList &);
-  void sendNotify(Window requestor, Atom selection, Atom target, Atom property,
-                  Time time);
+  void sendNotify(
+      Window requestor, Atom selection, Atom target, Atom property, Time time);
   bool wasOwnedAtTime(::Time) const;
 
   // data conversion methods

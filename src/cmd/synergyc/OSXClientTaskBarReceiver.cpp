@@ -23,8 +23,8 @@
 // OSXClientTaskBarReceiver
 //
 
-OSXClientTaskBarReceiver::OSXClientTaskBarReceiver(const BufferedLogOutputter *,
-                                                   IEventQueue *events)
+OSXClientTaskBarReceiver::OSXClientTaskBarReceiver(
+    const BufferedLogOutputter *, IEventQueue *events)
     : ClientTaskBarReceiver(events) {
   // add ourself to the task bar
   ARCH->addReceiver(this);
@@ -50,8 +50,7 @@ const IArchTaskBarReceiver::Icon OSXClientTaskBarReceiver::getIcon() const {
   return NULL;
 }
 
-IArchTaskBarReceiver *
-createTaskBarReceiver(const BufferedLogOutputter *logBuffer,
-                      IEventQueue *events) {
+IArchTaskBarReceiver *createTaskBarReceiver(
+    const BufferedLogOutputter *logBuffer, IEventQueue *events) {
   return new OSXClientTaskBarReceiver(logBuffer, events);
 }

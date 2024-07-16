@@ -32,8 +32,8 @@ static const std::vector<const char *> blockerText = {
     "Please switch to Xorg if you wish to continue using Synergy today.",
 };
 
-SetupWizardBlocker::SetupWizardBlocker(MainWindow &mainWindow,
-                                       qBlockerType type)
+SetupWizardBlocker::SetupWizardBlocker(
+    MainWindow &mainWindow, qBlockerType type)
     : m_MainWindow(mainWindow) {
   setupUi(this);
 
@@ -42,9 +42,9 @@ SetupWizardBlocker::SetupWizardBlocker(MainWindow &mainWindow,
   label_HelpInfo->setText(blockerText[static_cast<int>(type)]);
 
   connect(m_pButtonSupport, &QPushButton::released, this,
-          &SetupWizardBlocker::onlineSupport);
+      &SetupWizardBlocker::onlineSupport);
   connect(m_pButtonCancel, &QPushButton::released, this,
-          &SetupWizardBlocker::cancel);
+      &SetupWizardBlocker::cancel);
 }
 
 void SetupWizardBlocker::onlineSupport() {

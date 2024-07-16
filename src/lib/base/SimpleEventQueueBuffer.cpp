@@ -52,8 +52,8 @@ void SimpleEventQueueBuffer::waitForEvent(double timeout) {
   }
 }
 
-IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event &,
-                                                         UInt32 &dataID) {
+IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(
+    Event &, UInt32 &dataID) {
   ArchMutexLock lock(m_queueMutex);
   if (!m_queueReady) {
     return kNone;

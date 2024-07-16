@@ -21,8 +21,8 @@
 
 namespace {
 
-String vectorToString(const std::vector<String> &vector,
-                      const String &delimiter = "") {
+String vectorToString(
+    const std::vector<String> &vector, const String &delimiter = "") {
   String string;
   for (const auto &item : vector) {
     if (&item != &vector[0]) {
@@ -42,7 +42,7 @@ namespace languages {
 LanguageManager::LanguageManager(const std::vector<String> &localLanguages)
     : m_localLanguages(localLanguages) {
   LOG((CLOG_INFO "local languages: %s",
-       vectorToString(m_localLanguages, ", ").c_str()));
+      vectorToString(m_localLanguages, ", ").c_str()));
 }
 
 void LanguageManager::setRemoteLanguages(const String &remoteLanguages) {
@@ -53,7 +53,7 @@ void LanguageManager::setRemoteLanguages(const String &remoteLanguages) {
     }
   }
   LOG((CLOG_INFO "remote languages: %s",
-       vectorToString(m_remoteLanguages, ", ").c_str()));
+      vectorToString(m_remoteLanguages, ", ").c_str()));
 }
 
 const std::vector<String> &LanguageManager::getRemoteLanguages() const {
@@ -88,7 +88,7 @@ bool LanguageManager::isLanguageInstalled(const String &language) const {
 
   if (!m_localLanguages.empty()) {
     isInstalled = (std::find(m_localLanguages.begin(), m_localLanguages.end(),
-                             language) != m_localLanguages.end());
+                       language) != m_localLanguages.end());
   }
 
   return isInstalled;

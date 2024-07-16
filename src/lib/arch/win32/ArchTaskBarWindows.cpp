@@ -256,8 +256,8 @@ void ArchTaskBarWindows::removeIconNoLock(UINT id) {
   }
 }
 
-void ArchTaskBarWindows::handleIconMessage(IArchTaskBarReceiver *receiver,
-                                           LPARAM lParam) {
+void ArchTaskBarWindows::handleIconMessage(
+    IArchTaskBarReceiver *receiver, LPARAM lParam) {
   // process message
   switch (lParam) {
   case WM_LBUTTONDOWN:
@@ -375,9 +375,8 @@ ArchTaskBarWindows::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-LRESULT CALLBACK ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
-                                                   WPARAM wParam,
-                                                   LPARAM lParam) {
+LRESULT CALLBACK ArchTaskBarWindows::staticWndProc(
+    HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
   // if msg is WM_NCCREATE, extract the ArchTaskBarWindows* and put
   // it in the extra window data then forward the call.
   ArchTaskBarWindows *self = NULL;
@@ -385,8 +384,8 @@ LRESULT CALLBACK ArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
     CREATESTRUCT *createInfo;
     createInfo = reinterpret_cast<CREATESTRUCT *>(lParam);
     self = static_cast<ArchTaskBarWindows *>(createInfo->lpCreateParams);
-    SetWindowLongPtr(hwnd, 0,
-                     reinterpret_cast<LONG_PTR>(createInfo->lpCreateParams));
+    SetWindowLongPtr(
+        hwnd, 0, reinterpret_cast<LONG_PTR>(createInfo->lpCreateParams));
   } else {
     // get the extra window data and forward the call
     LONG_PTR data = GetWindowLongPtr(hwnd, 0);
@@ -426,8 +425,8 @@ void ArchTaskBarWindows::threadMainLoop() {
 
   // create window
   m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW, className, TEXT("Synergy Task Bar"),
-                          WS_POPUP, 0, 0, 1, 1, NULL, NULL, instanceWin32(),
-                          static_cast<void *>(this));
+      WS_POPUP, 0, 0, 1, 1, NULL, NULL, instanceWin32(),
+      static_cast<void *>(this));
 
   // signal ready
   ARCH->lockMutex(m_mutex);

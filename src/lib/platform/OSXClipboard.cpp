@@ -41,9 +41,9 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL) {
   OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
   if (createErr != noErr) {
     LOG((CLOG_DEBUG "failed to create clipboard reference: error %i",
-         createErr));
+        createErr));
     LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled",
-         createErr));
+        createErr));
     m_pboard = NULL;
     return;
   }
@@ -105,17 +105,17 @@ void OSXClipboard::add(EFormat format, const String &data) {
     if (converter->getFormat() == format) {
       String osXData = converter->fromIClipboard(data);
       CFStringRef flavorType = converter->getOSXFormat();
-      CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault,
-                                       (UInt8 *)osXData.data(), osXData.size());
+      CFDataRef dataRef = CFDataCreate(
+          kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
       PasteboardItemID itemID = 0;
 
       if (dataRef) {
-        PasteboardPutItemFlavor(m_pboard, itemID, flavorType, dataRef,
-                                kPasteboardFlavorNoFlags);
+        PasteboardPutItemFlavor(
+            m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
 
         CFRelease(dataRef);
         LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(),
-             format));
+            format));
       }
     }
   }
@@ -206,8 +206,8 @@ String OSXClipboard::get(EFormat format) const {
 
     result = String((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
   } catch (OSStatus err) {
-    LOG((CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)",
-         err));
+    LOG((
+        CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)", err));
   } catch (...) {
     LOG((CLOG_DEBUG "unknown exception in OSXClipboard::get"));
     RETHROW_XTHREAD

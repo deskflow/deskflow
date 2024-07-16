@@ -61,11 +61,10 @@ QString ClientConnection::getMessage(const QString &line) const {
   } else {
     QHostAddress address(m_parent.appConfig().getServerHostname());
     if (address.isNull()) {
-      message =
-          QObject::tr(
-              "We can’t connect to the server \"%1\" try to connect using the "
-              "server IP address and check your firewall settings.")
-              .arg(m_parent.appConfig().getServerHostname());
+      message = QObject::tr(
+          "We can’t connect to the server \"%1\" try to connect using the "
+          "server IP address and check your firewall settings.")
+                    .arg(m_parent.appConfig().getServerHostname());
     }
   }
 

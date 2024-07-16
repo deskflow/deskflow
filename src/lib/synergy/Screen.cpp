@@ -148,8 +148,8 @@ void Screen::screensaver(bool) const {
   // do nothing
 }
 
-void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                     const String &lang) {
+void Screen::keyDown(
+    KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) {
   // check for ctrl+alt+del emulation
   if (id == kKeyDelete && (mask & (KeyModifierControl | KeyModifierAlt)) ==
                               (KeyModifierControl | KeyModifierAlt)) {
@@ -162,7 +162,7 @@ void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button,
 }
 
 void Screen::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                       KeyButton button, const String &lang) {
+    KeyButton button, const String &lang) {
   assert(!m_isPrimary);
   m_screen->fakeKeyRepeat(id, mask, count, button, lang);
 }
@@ -212,7 +212,7 @@ void Screen::setOptions(const OptionsList &options) {
         m_halfDuplex &= ~KeyModifierCapsLock;
       }
       LOG((CLOG_DEBUG1 "half-duplex caps-lock %s",
-           ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
+          ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
     } else if (options[i] == kOptionHalfDuplexNumLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierNumLock;
@@ -220,7 +220,7 @@ void Screen::setOptions(const OptionsList &options) {
         m_halfDuplex &= ~KeyModifierNumLock;
       }
       LOG((CLOG_DEBUG1 "half-duplex num-lock %s",
-           ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
+          ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
     } else if (options[i] == kOptionHalfDuplexScrollLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierScrollLock;
@@ -228,7 +228,7 @@ void Screen::setOptions(const OptionsList &options) {
         m_halfDuplex &= ~KeyModifierScrollLock;
       }
       LOG((CLOG_DEBUG1 "half-duplex scroll-lock %s",
-           ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
+          ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
     }
   }
 

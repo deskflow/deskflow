@@ -31,8 +31,8 @@ namespace validators {
 
 class LineEditValidator : public QValidator {
 public:
-  explicit LineEditValidator(QLineEdit *parent = nullptr,
-                             QLabel *errors = nullptr);
+  explicit LineEditValidator(
+      QLineEdit *parent = nullptr, QLabel *errors = nullptr);
   QValidator::State validate(QString &input, int &pos) const override;
   void addValidator(std::unique_ptr<IStringValidator> validator);
 

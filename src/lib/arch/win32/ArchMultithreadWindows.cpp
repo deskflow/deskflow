@@ -177,8 +177,8 @@ void ArchMultithreadWindows::broadcastCondVar(ArchCond cond) {
   }
 }
 
-bool ArchMultithreadWindows::waitCondVar(ArchCond cond, ArchMutex mutex,
-                                         double timeout) {
+bool ArchMultithreadWindows::waitCondVar(
+    ArchCond cond, ArchMutex mutex, double timeout) {
   // prepare to wait
   const DWORD winTimeout =
       (timeout < 0.0) ? INFINITE : static_cast<DWORD>(1000.0 * timeout);
@@ -451,8 +451,8 @@ bool ArchMultithreadWindows::wait(ArchThread target, double timeout) {
   }
 }
 
-bool ArchMultithreadWindows::isSameThread(ArchThread thread1,
-                                          ArchThread thread2) {
+bool ArchMultithreadWindows::isSameThread(
+    ArchThread thread1, ArchThread thread2) {
   return (thread1 == thread2);
 }
 
@@ -468,13 +468,13 @@ void *ArchMultithreadWindows::getResultOfThread(ArchThread thread) {
   return result;
 }
 
-IArchMultithread::ThreadID
-ArchMultithreadWindows::getIDOfThread(ArchThread thread) {
+IArchMultithread::ThreadID ArchMultithreadWindows::getIDOfThread(
+    ArchThread thread) {
   return static_cast<ThreadID>(thread->m_id);
 }
 
-void ArchMultithreadWindows::setSignalHandler(ESignal signal, SignalFunc func,
-                                              void *userData) {
+void ArchMultithreadWindows::setSignalHandler(
+    ESignal signal, SignalFunc func, void *userData) {
   lockMutex(m_threadMutex);
   m_signalFunc[signal] = func;
   m_signalUserData[signal] = userData;

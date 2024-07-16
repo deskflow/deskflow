@@ -53,27 +53,27 @@ SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
       m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
   connect(m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
-          SLOT(onChange()));
+      SLOT(onChange()));
   connect(m_pComboLogLevel, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(onChange()));
+      SLOT(onChange()));
   connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
-          SLOT(onChange()));
+      SLOT(onChange()));
   connect(m_pCheckBoxMinimizeToTray, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxAutoHide, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxPreventSleep, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pLineEditInterface, SIGNAL(textEdited(QString)), this,
-          SLOT(onChange()));
+      SLOT(onChange()));
   connect(m_pSpinBoxPort, SIGNAL(valueChanged(int)), this, SLOT(onChange()));
   connect(m_pLineEditScreenName, SIGNAL(textEdited(QString)), this,
-          SLOT(onChange()));
+      SLOT(onChange()));
   connect(m_pComboElevate, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(onChange()));
+      SLOT(onChange()));
   connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxScrollDirection, SIGNAL(clicked()), this,
-          SLOT(onChange()));
+  connect(
+      m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxClientHostMode, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxServerClientMode, SIGNAL(clicked()), this,
-          SLOT(onChange()));
+  connect(
+      m_pCheckBoxServerClientMode, SIGNAL(clicked()), this, SLOT(onChange()));
 
   adjustSize();
 }
@@ -189,9 +189,9 @@ void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
 }
 
 void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Save log file to..."), m_pLineEditLogFilename->text(),
-      "Logs (*.log *.txt)");
+  QString fileName =
+      QFileDialog::getSaveFileName(this, tr("Save log file to..."),
+          m_pLineEditLogFilename->text(), "Logs (*.log *.txt)");
 
   if (!fileName.isEmpty()) {
     m_pLineEditLogFilename->setText(fileName);
@@ -237,8 +237,8 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
 }
 
 void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Select a TLS certificate to use..."),
+  QString fileName = QFileDialog::getSaveFileName(this,
+      tr("Select a TLS certificate to use..."),
       m_pLineEditCertificatePath->text(), "Cert (*.pem)", nullptr,
       QFileDialog::DontConfirmOverwrite);
 
@@ -266,8 +266,8 @@ void SettingsDialog::updateRegenButton() {
   // NOR the above bools, if any have changed regen should be disabled as it
   // will be done on save
   auto nor = !(keyChanged || pathChanged);
-  m_pPushButtonRegenCert->setEnabled(nor &&
-                                     m_pCheckBoxEnableCrypto->isChecked());
+  m_pPushButtonRegenCert->setEnabled(
+      nor && m_pCheckBoxEnableCrypto->isChecked());
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
@@ -288,28 +288,32 @@ bool SettingsDialog::isModified() {
       !m_pLineEditScreenName->text().isEmpty() &&
       m_pLabelNameError->text().isEmpty() &&
       (appConfig().screenName() != m_pLineEditScreenName->text() ||
-       appConfig().port() != m_pSpinBoxPort->value() ||
-       appConfig().networkInterface() != m_pLineEditInterface->text() ||
-       appConfig().logLevel() != m_pComboLogLevel->currentIndex() ||
-       appConfig().logToFile() != m_pCheckBoxLogToFile->isChecked() ||
-       appConfig().logFilename() != m_pLineEditLogFilename->text() ||
-       appConfig().elevateMode() !=
-           static_cast<ElevateMode>(m_pComboElevate->currentIndex()) ||
-       appConfig().getAutoHide() != m_pCheckBoxAutoHide->isChecked() ||
-       appConfig().getPreventSleep() != m_pCheckBoxPreventSleep->isChecked() ||
-       appConfig().getMinimizeToTray() !=
-           m_pCheckBoxMinimizeToTray->isChecked() ||
-       appConfig().getTLSCertPath() != m_pLineEditCertificatePath->text() ||
-       appConfig().getTLSKeyLength() != m_pComboBoxKeyLength->currentText() ||
-       appConfig().getCryptoEnabled() != m_pCheckBoxEnableCrypto->isChecked() ||
-       appConfig().isSystemScoped() != m_isSystemAtStart ||
-       appConfig().getLanguageSync() != m_pCheckBoxLanguageSync->isChecked() ||
-       appConfig().getClientHostMode() !=
-           m_pCheckBoxClientHostMode->isChecked() ||
-       appConfig().getServerClientMode() !=
-           m_pCheckBoxServerClientMode->isChecked() ||
-       appConfig().getInvertScrollDirection() !=
-           m_pCheckBoxScrollDirection->isChecked()));
+          appConfig().port() != m_pSpinBoxPort->value() ||
+          appConfig().networkInterface() != m_pLineEditInterface->text() ||
+          appConfig().logLevel() != m_pComboLogLevel->currentIndex() ||
+          appConfig().logToFile() != m_pCheckBoxLogToFile->isChecked() ||
+          appConfig().logFilename() != m_pLineEditLogFilename->text() ||
+          appConfig().elevateMode() !=
+              static_cast<ElevateMode>(m_pComboElevate->currentIndex()) ||
+          appConfig().getAutoHide() != m_pCheckBoxAutoHide->isChecked() ||
+          appConfig().getPreventSleep() !=
+              m_pCheckBoxPreventSleep->isChecked() ||
+          appConfig().getMinimizeToTray() !=
+              m_pCheckBoxMinimizeToTray->isChecked() ||
+          appConfig().getTLSCertPath() != m_pLineEditCertificatePath->text() ||
+          appConfig().getTLSKeyLength() !=
+              m_pComboBoxKeyLength->currentText() ||
+          appConfig().getCryptoEnabled() !=
+              m_pCheckBoxEnableCrypto->isChecked() ||
+          appConfig().isSystemScoped() != m_isSystemAtStart ||
+          appConfig().getLanguageSync() !=
+              m_pCheckBoxLanguageSync->isChecked() ||
+          appConfig().getClientHostMode() !=
+              m_pCheckBoxClientHostMode->isChecked() ||
+          appConfig().getServerClientMode() !=
+              m_pCheckBoxServerClientMode->isChecked() ||
+          appConfig().getInvertScrollDirection() !=
+              m_pCheckBoxScrollDirection->isChecked()));
 }
 
 void SettingsDialog::enableControls(bool enable) {

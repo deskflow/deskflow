@@ -20,7 +20,7 @@
 DataDownloader::DataDownloader(QObject *parent)
     : QObject(parent), m_pReply(nullptr), m_IsFinished(false) {
   connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply *)),
-          SLOT(complete(QNetworkReply *)));
+      SLOT(complete(QNetworkReply *)));
 }
 
 DataDownloader::~DataDownloader() {}

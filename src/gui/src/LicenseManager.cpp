@@ -88,15 +88,15 @@ void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   }
 }
 
-void LicenseManager::notifyUpdate(QString fromVersion,
-                                  QString toVersion) const {
+void LicenseManager::notifyUpdate(
+    QString fromVersion, QString toVersion) const {
   if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kUnregistered))) {
     return;
   }
 
   ActivationNotifier *notifier = new ActivationNotifier();
-  notifier->setUpdateInfo(fromVersion, toVersion,
-                          QString::fromStdString(m_serialKey.toString()));
+  notifier->setUpdateInfo(
+      fromVersion, toVersion, QString::fromStdString(m_serialKey.toString()));
 
   QThread *thread = new QThread();
   connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
@@ -227,8 +227,8 @@ QString LicenseManager::getTemporaryNotice() const {
 void LicenseManager::validateSerialKey() const {
   if (m_serialKey.isValid()) {
     if (m_serialKey.isTemporary()) {
-      QTimer::singleShot(m_serialKey.getSpanLeft(), this,
-                         SLOT(validateSerialKey()));
+      QTimer::singleShot(
+          m_serialKey.getSpanLeft(), this, SLOT(validateSerialKey()));
     }
   } else {
     emit InvalidLicense();

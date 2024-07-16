@@ -29,8 +29,7 @@ class ScreenDuplicationsValidator : public IStringValidator {
 
 public:
   ScreenDuplicationsValidator(const QString &message,
-                              const QString &defaultName,
-                              const ScreenList *pScreens);
+      const QString &defaultName, const ScreenList *pScreens);
   bool validate(const QString &input) const override;
 };
 

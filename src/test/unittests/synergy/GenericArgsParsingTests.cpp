@@ -73,7 +73,7 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename) {
 }
 
 TEST_F(GenericArgsParsingTests,
-       parseGenericArgs_logFileCmdWithSpace_saveLogFilename) {
+    parseGenericArgs_logFileCmdWithSpace_saveLogFilename) {
   int i = 1;
   const int argc = 3;
   const char *kLogFileCmdWithSpace[argc] = {"stub", "--log", "mo ck_filename"};
@@ -218,7 +218,7 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue) {
 
 #ifndef WINAPI_XWINDOWS
 TEST_F(GenericArgsParsingTests,
-       parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue) {
+    parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue) {
   int i = 1;
   const int argc = 2;
   const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
@@ -232,7 +232,7 @@ TEST_F(GenericArgsParsingTests,
 
 #ifdef WINAPI_XWINDOWS
 TEST_F(GenericArgsParsingTests,
-       parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse) {
+    parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse) {
   int i = 1;
   const int argc = 2;
   const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};

@@ -70,10 +70,10 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   // check image type
   const BITMAPINFO *bitmap = static_cast<const BITMAPINFO *>(src);
   LOG((CLOG_INFO "bitmap: %dx%d %d", bitmap->bmiHeader.biWidth,
-       bitmap->bmiHeader.biHeight, (int)bitmap->bmiHeader.biBitCount));
+      bitmap->bmiHeader.biHeight, (int)bitmap->bmiHeader.biBitCount));
   if (bitmap->bmiHeader.biPlanes == 1 &&
       (bitmap->bmiHeader.biBitCount == 24 ||
-       bitmap->bmiHeader.biBitCount == 32) &&
+          bitmap->bmiHeader.biBitCount == 32) &&
       bitmap->bmiHeader.biCompression == BI_RGB) {
     // already in canonical form
     String image(static_cast<char const *>(src), srcSize);
@@ -83,7 +83,7 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
 
   // create a destination DIB section
   LOG((CLOG_INFO "convert image from: depth=%d comp=%d",
-       bitmap->bmiHeader.biBitCount, bitmap->bmiHeader.biCompression));
+      bitmap->bmiHeader.biBitCount, bitmap->bmiHeader.biCompression));
   void *raw;
   BITMAPINFOHEADER info;
   LONG w = bitmap->bmiHeader.biWidth;
@@ -108,7 +108,7 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   if (bitmap->bmiHeader.biBitCount >= 16) {
     if (bitmap->bmiHeader.biCompression == BI_BITFIELDS &&
         (bitmap->bmiHeader.biBitCount == 16 ||
-         bitmap->bmiHeader.biBitCount == 32)) {
+            bitmap->bmiHeader.biBitCount == 32)) {
       srcBits += 3 * sizeof(DWORD);
     }
   } else if (bitmap->bmiHeader.biClrUsed != 0) {
@@ -121,8 +121,8 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   // copy source image to destination image
   HDC dstDC = CreateCompatibleDC(dc);
   HGDIOBJ oldBitmap = SelectObject(dstDC, dst);
-  SetDIBitsToDevice(dstDC, 0, 0, w, h, 0, 0, 0, h, srcBits, bitmap,
-                    DIB_RGB_COLORS);
+  SetDIBitsToDevice(
+      dstDC, 0, 0, w, h, 0, 0, 0, h, srcBits, bitmap, DIB_RGB_COLORS);
   SelectObject(dstDC, oldBitmap);
   DeleteDC(dstDC);
   GdiFlush();

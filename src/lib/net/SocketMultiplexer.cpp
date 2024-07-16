@@ -205,7 +205,7 @@ void SocketMultiplexer::serviceThread(void *) {
           bool write = ((revents & IArchNetwork::kPOLLOUT) != 0);
           bool error =
               ((revents & (IArchNetwork::kPOLLERR | IArchNetwork::kPOLLNVAL)) !=
-               0);
+                  0);
 
           // run job
           ISocketMultiplexerJob *job = *jobCursor;

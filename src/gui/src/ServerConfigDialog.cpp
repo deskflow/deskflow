@@ -29,15 +29,15 @@
 #include <QtCore>
 #include <QtGui>
 
-ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config,
-                                       AppConfig &appConfig)
+ServerConfigDialog::ServerConfigDialog(
+    QWidget *parent, ServerConfig &config, AppConfig &appConfig)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ServerConfigDialogBase(), m_OrigServerConfig(config),
       m_OrigServerAppConfigUseExternalConfig(config.getUseExternalConfig()),
       m_OrigServerAppConfigExternalConfigFile(config.getConfigFile()),
       m_ServerConfig(config),
       m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(),
-                         serverConfig().numRows()),
+          serverConfig().numRows()),
       m_Message(""), m_appConfig(appConfig) {
   setupUi(this);
 
@@ -91,114 +91,114 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config,
     Screen serverScreen(serverConfig().getServerName());
     serverScreen.markAsServer();
     model().screen(serverConfig().numColumns() / 2,
-                   serverConfig().numRows() / 2) = serverScreen;
+        serverConfig().numRows() / 2) = serverScreen;
   } else {
     server->markAsServer();
   }
 
   m_pButtonAddComputer->setEnabled(!model().isFull());
   connect(m_pTrashScreenWidget, SIGNAL(screenRemoved()), this,
-          SLOT(onScreenRemoved()));
+      SLOT(onScreenRemoved()));
 
   onChange();
 
   // computers
   connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, this,
-          &ServerConfigDialog::onChange);
+      &ServerConfigDialog::onChange);
 
   // advanced
   connect(m_pCheckBoxSwitchDelay, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().haveSwitchDelay(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().haveSwitchDelay(v);
+        onChange();
+      });
   connect(m_pSpinBoxSwitchDelay,
-          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-          [this](const int &v) {
-            serverConfig().setSwitchDelay(v);
-            onChange();
-          });
+      static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
+      [this](const int &v) {
+        serverConfig().setSwitchDelay(v);
+        onChange();
+      });
   connect(m_pCheckBoxSwitchDoubleTap, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().haveSwitchDoubleTap(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().haveSwitchDoubleTap(v);
+        onChange();
+      });
   connect(m_pSpinBoxSwitchDoubleTap,
-          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-          [this](const int &v) {
-            serverConfig().setSwitchDoubleTap(v);
-            onChange();
-          });
+      static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
+      [this](const int &v) {
+        serverConfig().setSwitchDoubleTap(v);
+        onChange();
+      });
   connect(m_pCheckBoxEnableClipboard, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setClipboardSharing(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setClipboardSharing(v);
+        onChange();
+      });
   connect(m_pSpinBoxClipboardSizeLimit,
-          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-          [this](const int &v) {
-            serverConfig().setClipboardSharingSize(v * 1024);
-            onChange();
-          });
+      static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
+      [this](const int &v) {
+        serverConfig().setClipboardSharingSize(v * 1024);
+        onChange();
+      });
   connect(m_pCheckBoxHeartbeat, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().haveHeartbeat(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().haveHeartbeat(v);
+        onChange();
+      });
   connect(m_pSpinBoxHeartbeat,
-          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-          [this](const int &v) {
-            serverConfig().setHeartbeat(v);
-            onChange();
-          });
+      static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
+      [this](const int &v) {
+        serverConfig().setHeartbeat(v);
+        onChange();
+      });
   connect(m_pCheckBoxRelativeMouseMoves, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setRelativeMouseMoves(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setRelativeMouseMoves(v);
+        onChange();
+      });
   connect(m_pCheckBoxWin32KeepForeground, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setWin32KeepForeground(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setWin32KeepForeground(v);
+        onChange();
+      });
   connect(m_pCheckBoxDisableLockToScreen, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setDisableLockToScreen(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setDisableLockToScreen(v);
+        onChange();
+      });
   connect(m_pCheckBoxCornerTopLeft, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setSwitchCorner(BaseConfig::TopLeft, v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setSwitchCorner(BaseConfig::TopLeft, v);
+        onChange();
+      });
   connect(m_pCheckBoxCornerTopRight, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setSwitchCorner(BaseConfig::TopRight, v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setSwitchCorner(BaseConfig::TopRight, v);
+        onChange();
+      });
   connect(m_pCheckBoxCornerBottomLeft, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setSwitchCorner(BaseConfig::BottomLeft, v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setSwitchCorner(BaseConfig::BottomLeft, v);
+        onChange();
+      });
   connect(m_pCheckBoxCornerBottomRight, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setSwitchCorner(BaseConfig::BottomRight, v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setSwitchCorner(BaseConfig::BottomRight, v);
+        onChange();
+      });
   connect(m_pSpinBoxSwitchCornerSize,
-          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-          [this](const int &v) {
-            serverConfig().setSwitchCornerSize(v);
-            onChange();
-          });
+      static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
+      [this](const int &v) {
+        serverConfig().setSwitchCornerSize(v);
+        onChange();
+      });
 
   // config
   connect(m_pCheckBoxUseExternalConfig, &QCheckBox::stateChanged, this,
-          [this](const int &v) {
-            serverConfig().setUseExternalConfig(v);
-            onChange();
-          });
+      [this](const int &v) {
+        serverConfig().setUseExternalConfig(v);
+        onChange();
+      });
   connect(m_pEditConfigFile, &QLineEdit::textChanged, this, [this]() {
     serverConfig().setConfigFile(m_pEditConfigFile->text());
     onChange();
@@ -409,9 +409,8 @@ bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked() {
       QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
 #endif
 
-  QString fileName = QFileDialog::getOpenFileName(
-      this, tr("Browse for a synergys config file"), QString(),
-      synergyConfigFilter);
+  QString fileName = QFileDialog::getOpenFileName(this,
+      tr("Browse for a synergys config file"), QString(), synergyConfigFilter);
 
   if (!fileName.isEmpty()) {
     m_pEditConfigFile->setText(fileName);
@@ -441,6 +440,6 @@ void ServerConfigDialog::onChange() {
           serverConfig().getUseExternalConfig() &&
       m_OrigServerAppConfigExternalConfigFile == serverConfig().getConfigFile();
   m_pButtonBox->button(QDialogButtonBox::Ok)
-      ->setEnabled(!isAppConfigDataEqual ||
-                   !(m_OrigServerConfig == m_ServerConfig));
+      ->setEnabled(
+          !isAppConfigDataEqual || !(m_OrigServerConfig == m_ServerConfig));
 }

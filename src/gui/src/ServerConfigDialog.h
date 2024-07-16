@@ -32,8 +32,8 @@ class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase {
   Q_OBJECT
 
 public:
-  ServerConfigDialog(QWidget *parent, ServerConfig &config,
-                     AppConfig &appConfig);
+  ServerConfigDialog(
+      QWidget *parent, ServerConfig &config, AppConfig &appConfig);
   bool addClient(const QString &clientName);
 
 public slots:

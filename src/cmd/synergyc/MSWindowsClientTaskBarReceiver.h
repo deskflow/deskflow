@@ -29,8 +29,8 @@ class IEventQueue;
 //! Implementation of ClientTaskBarReceiver for Microsoft Windows
 class MSWindowsClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
-  MSWindowsClientTaskBarReceiver(HINSTANCE, const BufferedLogOutputter *,
-                                 IEventQueue *events);
+  MSWindowsClientTaskBarReceiver(
+      HINSTANCE, const BufferedLogOutputter *, IEventQueue *events);
   virtual ~MSWindowsClientTaskBarReceiver();
 
   // IArchTaskBarReceiver overrides
@@ -53,8 +53,8 @@ private:
   void destroyWindow();
 
   BOOL dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-  static BOOL CALLBACK staticDlgProc(HWND hwnd, UINT msg, WPARAM wParam,
-                                     LPARAM lParam);
+  static BOOL CALLBACK staticDlgProc(
+      HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
   HINSTANCE m_appInstance;

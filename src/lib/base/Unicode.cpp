@@ -253,8 +253,8 @@ String Unicode::UTF32ToUTF8(const String &src, bool *errors) {
   return doUTF32ToUTF8(reinterpret_cast<const UInt8 *>(src.data()), n, errors);
 }
 
-String Unicode::textToUTF8(const String &src, bool *errors,
-                           IArchString::EWideCharEncoding encoding) {
+String Unicode::textToUTF8(
+    const String &src, bool *errors, IArchString::EWideCharEncoding encoding) {
   // default to success
   resetError(errors);
 
@@ -273,8 +273,8 @@ String Unicode::textToUTF8(const String &src, bool *errors,
   return utf8;
 }
 
-wchar_t *Unicode::UTF8ToWideChar(const String &src, UInt32 &size,
-                                 bool *errors) {
+wchar_t *Unicode::UTF8ToWideChar(
+    const String &src, UInt32 &size, bool *errors) {
   // convert to platform's wide character encoding
   String tmp;
   switch (ARCH->getWideCharEncoding()) {
@@ -309,7 +309,7 @@ wchar_t *Unicode::UTF8ToWideChar(const String &src, UInt32 &size,
 }
 
 String Unicode::wideCharToUTF8(const wchar_t *src, UInt32 size, bool *errors,
-                               IArchString::EWideCharEncoding encoding) {
+    IArchString::EWideCharEncoding encoding) {
   if (encoding == IArchString::kPlatformDetermined) {
     encoding = ARCH->getWideCharEncoding();
   }
@@ -644,8 +644,8 @@ UInt32 Unicode::fromUTF8(const UInt8 *&data, UInt32 &n) {
   }
 
   // check for characters that didn't use the smallest possible encoding
-  static UInt32 s_minChar[] = {0,          0x00000000, 0x00000080, 0x00000800,
-                               0x00010000, 0x00200000, 0x04000000};
+  static UInt32 s_minChar[] = {0, 0x00000000, 0x00000080, 0x00000800,
+      0x00010000, 0x00200000, 0x04000000};
   if (c < s_minChar[size]) {
     return s_invalid;
   }

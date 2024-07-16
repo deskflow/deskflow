@@ -29,12 +29,10 @@ const std::string SerialKeyEdition::Ultimate = "ultimate";
 const std::string SerialKeyEdition::Lite = "lite";
 
 const std::map<std::string, Edition, std::less<>> serialTypes{
-    {SerialKeyEdition::Basic, kBasic},
-    {SerialKeyEdition::Pro, kPro},
+    {SerialKeyEdition::Basic, kBasic}, {SerialKeyEdition::Pro, kPro},
     {SerialKeyEdition::BasicChina, kBasicChina},
     {SerialKeyEdition::ProChina, kProChina},
-    {SerialKeyEdition::Buisiness, kBusiness},
-    {SerialKeyEdition::Lite, kLite},
+    {SerialKeyEdition::Buisiness, kBusiness}, {SerialKeyEdition::Lite, kLite},
     {SerialKeyEdition::Ultimate, kUltimate}};
 
 SerialKeyEdition::SerialKeyEdition(Edition type) : m_type(type) {}

@@ -52,9 +52,8 @@ InputFilter::KeystrokeCondition::KeystrokeCondition(
   free(info);
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events,
-                                                    KeyID key,
-                                                    KeyModifierMask mask)
+InputFilter::KeystrokeCondition::KeystrokeCondition(
+    IEventQueue *events, KeyID key, KeyModifierMask mask)
     : m_id(0), m_key(key), m_mask(mask), m_events(events) {
   // do nothing
 }
@@ -78,8 +77,8 @@ String InputFilter::KeystrokeCondition::format() const {
       "keystroke(%s)", synergy::KeyMap::formatKey(m_key, m_mask).c_str());
 }
 
-InputFilter::EFilterStatus
-InputFilter::KeystrokeCondition::match(const Event &event) {
+InputFilter::EFilterStatus InputFilter::KeystrokeCondition::match(
+    const Event &event) {
   EFilterStatus status;
 
   // check for hotkey events
@@ -117,9 +116,8 @@ InputFilter::MouseButtonCondition::MouseButtonCondition(
   free(info);
 }
 
-InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events,
-                                                        ButtonID button,
-                                                        KeyModifierMask mask)
+InputFilter::MouseButtonCondition::MouseButtonCondition(
+    IEventQueue *events, ButtonID button, KeyModifierMask mask)
     : m_button(button), m_mask(mask), m_events(events) {
   // do nothing
 }
@@ -148,8 +146,8 @@ String InputFilter::MouseButtonCondition::format() const {
   return synergy::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
-InputFilter::EFilterStatus
-InputFilter::MouseButtonCondition::match(const Event &event) {
+InputFilter::EFilterStatus InputFilter::MouseButtonCondition::match(
+    const Event &event) {
   static const KeyModifierMask s_ignoreMask =
       KeyModifierAltGr | KeyModifierCapsLock | KeyModifierNumLock |
       KeyModifierScrollLock;
@@ -196,8 +194,8 @@ String InputFilter::ScreenConnectedCondition::format() const {
   return synergy::string::sprintf("connect(%s)", m_screen.c_str());
 }
 
-InputFilter::EFilterStatus
-InputFilter::ScreenConnectedCondition::match(const Event &event) {
+InputFilter::EFilterStatus InputFilter::ScreenConnectedCondition::match(
+    const Event &event) {
   if (event.getType() == m_events->forServer().connected()) {
     Server::ScreenConnectedInfo *info =
         static_cast<Server::ScreenConnectedInfo *>(event.getData());
@@ -250,8 +248,7 @@ void InputFilter::LockCursorToScreenAction::perform(const Event &event) {
   Server::LockCursorToScreenInfo *info =
       Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
   m_events->addEvent(Event(m_events->forServer().lockCursorToScreen(),
-                           event.getTarget(), info,
-                           Event::kDeliverImmediately));
+      event.getTarget(), info, Event::kDeliverImmediately));
 }
 
 InputFilter::RestartServer::RestartServer(IEventQueue *events, Mode mode)
@@ -278,8 +275,8 @@ void InputFilter::RestartServer::perform(const Event &event) {
   exit(0);
 }
 
-InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue *events,
-                                                        const String &screen)
+InputFilter::SwitchToScreenAction::SwitchToScreenAction(
+    IEventQueue *events, const String &screen)
     : m_screen(screen), m_events(events) {
   // do nothing
 }
@@ -307,8 +304,7 @@ void InputFilter::SwitchToScreenAction::perform(const Event &event) {
   // send event
   Server::SwitchToScreenInfo *info = Server::SwitchToScreenInfo::alloc(screen);
   m_events->addEvent(Event(m_events->forServer().switchToScreen(),
-                           event.getTarget(), info,
-                           Event::kDeliverImmediately));
+      event.getTarget(), info, Event::kDeliverImmediately));
 }
 
 InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(
@@ -328,16 +324,15 @@ InputFilter::Action *InputFilter::SwitchInDirectionAction::clone() const {
 String InputFilter::SwitchInDirectionAction::format() const {
   static const char *s_names[] = {"", "left", "right", "up", "down"};
 
-  return synergy::string::sprintf("switchInDirection(%s)",
-                                  s_names[m_direction]);
+  return synergy::string::sprintf(
+      "switchInDirection(%s)", s_names[m_direction]);
 }
 
 void InputFilter::SwitchInDirectionAction::perform(const Event &event) {
   Server::SwitchInDirectionInfo *info =
       Server::SwitchInDirectionInfo::alloc(m_direction);
   m_events->addEvent(Event(m_events->forServer().switchInDirection(),
-                           event.getTarget(), info,
-                           Event::kDeliverImmediately));
+      event.getTarget(), info, Event::kDeliverImmediately));
 }
 
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
@@ -375,8 +370,7 @@ String InputFilter::KeyboardBroadcastAction::format() const {
   if (m_screens.empty() || m_screens[0] == '*') {
     return synergy::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
   } else {
-    return synergy::string::sprintf(
-        "%s(%s,%.*s)", s_name, s_mode[m_mode],
+    return synergy::string::sprintf("%s(%s,%.*s)", s_name, s_mode[m_mode],
         static_cast<int>(m_screens.size() >= 2 ? m_screens.size() - 2 : 0),
         m_screens.c_str() + 1);
   }
@@ -391,13 +385,11 @@ void InputFilter::KeyboardBroadcastAction::perform(const Event &event) {
   Server::KeyboardBroadcastInfo *info =
       Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
   m_events->addEvent(Event(m_events->forServer().keyboardBroadcast(),
-                           event.getTarget(), info,
-                           Event::kDeliverImmediately));
+      event.getTarget(), info, Event::kDeliverImmediately));
 }
 
-InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue *events,
-                                              IPlatformScreen::KeyInfo *info,
-                                              bool press)
+InputFilter::KeystrokeAction::KeystrokeAction(
+    IEventQueue *events, IPlatformScreen::KeyInfo *info, bool press)
     : m_keyInfo(info), m_press(press), m_events(events) {
   // do nothing
 }
@@ -424,18 +416,15 @@ String InputFilter::KeystrokeAction::format() const {
   const char *type = formatName();
 
   if (m_keyInfo->m_screens[0] == '\0') {
-    return synergy::string::sprintf(
-        "%s(%s)", type,
+    return synergy::string::sprintf("%s(%s)", type,
         synergy::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask)
             .c_str());
   } else if (m_keyInfo->m_screens[0] == '*') {
-    return synergy::string::sprintf(
-        "%s(%s,*)", type,
+    return synergy::string::sprintf("%s(%s,*)", type,
         synergy::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask)
             .c_str());
   } else {
-    return synergy::string::sprintf(
-        "%s(%s,%.*s)", type,
+    return synergy::string::sprintf("%s(%s,%.*s)", type,
         synergy::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
         strnlen(m_keyInfo->m_screens + 1, SIZE_MAX) - 1,
         m_keyInfo->m_screens + 1);
@@ -447,13 +436,11 @@ void InputFilter::KeystrokeAction::perform(const Event &event) {
                              : m_events->forIKeyState().keyUp();
 
   m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputBegin(),
-                           event.getTarget(), NULL,
-                           Event::kDeliverImmediately));
+      event.getTarget(), NULL, Event::kDeliverImmediately));
   m_events->addEvent(Event(type, event.getTarget(), m_keyInfo,
-                           Event::kDeliverImmediately | Event::kDontFreeData));
+      Event::kDeliverImmediately | Event::kDontFreeData));
   m_events->addEvent(Event(m_events->forIPrimaryScreen().fakeInputEnd(),
-                           event.getTarget(), NULL,
-                           Event::kDeliverImmediately));
+      event.getTarget(), NULL, Event::kDeliverImmediately));
 }
 
 const char *InputFilter::KeystrokeAction::formatName() const {
@@ -486,8 +473,7 @@ String InputFilter::MouseButtonAction::format() const {
 
   String key = synergy::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
   return synergy::string::sprintf("%s(%s%s%d)", type, key.c_str(),
-                                  key.empty() ? "" : "+",
-                                  m_buttonInfo->m_button);
+      key.empty() ? "" : "+", m_buttonInfo->m_button);
 }
 
 void InputFilter::MouseButtonAction::perform(const Event &event)
@@ -499,15 +485,14 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
     KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
     modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
     m_events->addEvent(Event(m_events->forIKeyState().keyDown(),
-                             event.getTarget(), modifierInfo,
-                             Event::kDeliverImmediately));
+        event.getTarget(), modifierInfo, Event::kDeliverImmediately));
   }
 
   // send button
   Event::Type type = m_press ? m_events->forIPrimaryScreen().buttonDown()
                              : m_events->forIPrimaryScreen().buttonUp();
   m_events->addEvent(Event(type, event.getTarget(), m_buttonInfo,
-                           Event::kDeliverImmediately | Event::kDontFreeData));
+      Event::kDeliverImmediately | Event::kDontFreeData));
 }
 
 const char *InputFilter::MouseButtonAction::formatName() const {
@@ -594,8 +579,8 @@ void InputFilter::Rule::removeAction(bool onActivation, UInt32 index) {
   }
 }
 
-void InputFilter::Rule::replaceAction(Action *adopted, bool onActivation,
-                                      UInt32 index) {
+void InputFilter::Rule::replaceAction(
+    Action *adopted, bool onActivation, UInt32 index) {
   if (adopted == NULL) {
     removeAction(onActivation, index);
   } else if (onActivation) {
@@ -698,8 +683,8 @@ UInt32 InputFilter::Rule::getNumActions(bool onActivation) const {
   }
 }
 
-const InputFilter::Action &InputFilter::Rule::getAction(bool onActivation,
-                                                        UInt32 index) const {
+const InputFilter::Action &InputFilter::Rule::getAction(
+    bool onActivation, UInt32 index) const {
   if (onActivation) {
     return *m_activateActions[index];
   } else {
@@ -763,54 +748,50 @@ void InputFilter::setPrimaryClient(PrimaryClient *client) {
       rule->disable(m_primaryClient);
     }
 
-    m_events->removeHandler(m_events->forIKeyState().keyDown(),
-                            m_primaryClient->getEventTarget());
-    m_events->removeHandler(m_events->forIKeyState().keyUp(),
-                            m_primaryClient->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIKeyState().keyDown(), m_primaryClient->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIKeyState().keyUp(), m_primaryClient->getEventTarget());
     m_events->removeHandler(m_events->forIKeyState().keyRepeat(),
-                            m_primaryClient->getEventTarget());
+        m_primaryClient->getEventTarget());
     m_events->removeHandler(m_events->forIPrimaryScreen().buttonDown(),
-                            m_primaryClient->getEventTarget());
+        m_primaryClient->getEventTarget());
     m_events->removeHandler(m_events->forIPrimaryScreen().buttonUp(),
-                            m_primaryClient->getEventTarget());
+        m_primaryClient->getEventTarget());
     m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyDown(),
-                            m_primaryClient->getEventTarget());
+        m_primaryClient->getEventTarget());
     m_events->removeHandler(m_events->forIPrimaryScreen().hotKeyUp(),
-                            m_primaryClient->getEventTarget());
-    m_events->removeHandler(m_events->forServer().connected(),
-                            m_primaryClient->getEventTarget());
+        m_primaryClient->getEventTarget());
+    m_events->removeHandler(
+        m_events->forServer().connected(), m_primaryClient->getEventTarget());
   }
 
   m_primaryClient = client;
 
   if (m_primaryClient != NULL) {
-    m_events->adoptHandler(
-        m_events->forIKeyState().keyDown(), m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forIKeyState().keyUp(), m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forIKeyState().keyRepeat(), m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forIPrimaryScreen().buttonDown(),
+    m_events->adoptHandler(m_events->forIKeyState().keyDown(),
         m_primaryClient->getEventTarget(),
         new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forIPrimaryScreen().buttonUp(),
+    m_events->adoptHandler(m_events->forIKeyState().keyUp(),
         m_primaryClient->getEventTarget(),
         new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forIPrimaryScreen().hotKeyDown(),
+    m_events->adoptHandler(m_events->forIKeyState().keyRepeat(),
         m_primaryClient->getEventTarget(),
         new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forIPrimaryScreen().hotKeyUp(),
+    m_events->adoptHandler(m_events->forIPrimaryScreen().buttonDown(),
         m_primaryClient->getEventTarget(),
         new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
-    m_events->adoptHandler(
-        m_events->forServer().connected(), m_primaryClient->getEventTarget(),
+    m_events->adoptHandler(m_events->forIPrimaryScreen().buttonUp(),
+        m_primaryClient->getEventTarget(),
+        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
+    m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyDown(),
+        m_primaryClient->getEventTarget(),
+        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
+    m_events->adoptHandler(m_events->forIPrimaryScreen().hotKeyUp(),
+        m_primaryClient->getEventTarget(),
+        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
+    m_events->adoptHandler(m_events->forServer().connected(),
+        m_primaryClient->getEventTarget(),
         new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent));
 
     for (RuleList::iterator rule = m_ruleList.begin(); rule != m_ruleList.end();
@@ -864,8 +845,7 @@ bool InputFilter::operator!=(const InputFilter &x) const {
 void InputFilter::handleEvent(const Event &event, void *) {
   // copy event and adjust target
   Event myEvent(event.getType(), this, event.getData(),
-                event.getFlags() | Event::kDontFreeData |
-                    Event::kDeliverImmediately);
+      event.getFlags() | Event::kDontFreeData | Event::kDeliverImmediately);
 
   // let each rule try to match the event until one does
   for (RuleList::iterator rule = m_ruleList.begin(); rule != m_ruleList.end();

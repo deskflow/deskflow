@@ -46,20 +46,20 @@
 //
 
 ClientProxyUnknown::ClientProxyUnknown(synergy::IStream *stream, double timeout,
-                                       Server *server, IEventQueue *events)
+    Server *server, IEventQueue *events)
     : m_stream(stream), m_proxy(NULL), m_ready(false), m_server(server),
       m_events(events) {
   assert(m_server != NULL);
 
   m_events->adoptHandler(Event::kTimer, this,
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleTimeout, NULL));
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleTimeout, NULL));
   m_timer = m_events->newOneShotTimer(timeout, this);
   addStreamHandlers();
 
   LOG((CLOG_DEBUG1 "saying hello"));
-  ProtocolUtil::writef(m_stream, kMsgHello, kProtocolMajorVersion,
-                       kProtocolMinorVersion);
+  ProtocolUtil::writef(
+      m_stream, kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown() {
@@ -99,44 +99,44 @@ void ClientProxyUnknown::addStreamHandlers() {
   assert(m_stream != NULL);
 
   m_events->adoptHandler(m_events->forIStream().inputReady(),
-                         m_stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleData));
+      m_stream->getEventTarget(),
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleData));
   m_events->adoptHandler(m_events->forIStream().outputError(),
-                         m_stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleWriteError));
+      m_stream->getEventTarget(),
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleWriteError));
   m_events->adoptHandler(m_events->forIStream().inputShutdown(),
-                         m_stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleDisconnect));
+      m_stream->getEventTarget(),
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleDisconnect));
   m_events->adoptHandler(m_events->forIStream().outputShutdown(),
-                         m_stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleWriteError));
+      m_stream->getEventTarget(),
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleWriteError));
 }
 
 void ClientProxyUnknown::addProxyHandlers() {
   assert(m_proxy != NULL);
 
   m_events->adoptHandler(m_events->forClientProxy().ready(), m_proxy,
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleReady));
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleReady));
   m_events->adoptHandler(m_events->forClientProxy().disconnected(), m_proxy,
-                         new TMethodEventJob<ClientProxyUnknown>(
-                             this, &ClientProxyUnknown::handleDisconnect));
+      new TMethodEventJob<ClientProxyUnknown>(
+          this, &ClientProxyUnknown::handleDisconnect));
 }
 
 void ClientProxyUnknown::removeHandlers() {
   if (m_stream != NULL) {
-    m_events->removeHandler(m_events->forIStream().inputReady(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputError(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().inputShutdown(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputShutdown(),
-                            m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().inputReady(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().outputError(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().inputShutdown(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().outputShutdown(), m_stream->getEventTarget());
   }
   if (m_proxy != NULL) {
     m_events->removeHandler(m_events->forClientProxy().ready(), m_proxy);
@@ -233,7 +233,7 @@ void ClientProxyUnknown::handleData(const Event &, void *) {
 
     // the proxy is created and now proxy now owns the stream
     LOG((CLOG_DEBUG1 "created proxy for client \"%s\" version %d.%d",
-         name.c_str(), major, minor));
+        name.c_str(), major, minor));
     m_stream = NULL;
 
     // wait until the proxy signals that it's ready or has disconnected
@@ -242,9 +242,9 @@ void ClientProxyUnknown::handleData(const Event &, void *) {
   } catch (XIncompatibleClient &e) {
     // client is incompatible
     LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)",
-         name.c_str(), e.getMajor(), e.getMinor()));
+        name.c_str(), e.getMajor(), e.getMinor()));
     ProtocolUtil::writef(m_stream, kMsgEIncompatible, kProtocolMajorVersion,
-                         kProtocolMinorVersion);
+        kProtocolMinorVersion);
   } catch (XBadClient &) {
     // client not behaving
     LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
@@ -252,7 +252,7 @@ void ClientProxyUnknown::handleData(const Event &, void *) {
   } catch (XBase &e) {
     // misc error
     LOG((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(),
-         e.what()));
+        e.what()));
   }
   sendFailure();
 }

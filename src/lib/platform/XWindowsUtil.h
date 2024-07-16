@@ -43,8 +43,7 @@ public:
   property is deleted after being read.
   */
   static bool getWindowProperty(Display *, Window window, Atom property,
-                                String *data, Atom *type, SInt32 *format,
-                                bool deleteProperty);
+      String *data, Atom *type, SInt32 *format, bool deleteProperty);
 
   //! Set property
   /*!
@@ -52,8 +51,7 @@ public:
   \c data.
   */
   static bool setWindowProperty(Display *, Window window, Atom property,
-                                const void *data, UInt32 size, Atom type,
-                                SInt32 format);
+      const void *data, UInt32 size, Atom type, SInt32 format);
 
   //! Get X server time
   /*!

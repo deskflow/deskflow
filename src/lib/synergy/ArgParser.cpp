@@ -34,8 +34,8 @@ lib::synergy::ArgsBase *ArgParser::m_argsBase = NULL;
 
 ArgParser::ArgParser(App *app) : m_app(app) {}
 
-bool ArgParser::parseServerArgs(lib::synergy::ServerArgs &args, int argc,
-                                const char *const *argv) {
+bool ArgParser::parseServerArgs(
+    lib::synergy::ServerArgs &args, int argc, const char *const *argv) {
   setArgsBase(args);
   updateCommonArgs(argv);
   int i = 1;
@@ -59,7 +59,7 @@ bool ArgParser::parseServerArgs(lib::synergy::ServerArgs &args, int argc,
       continue;
     } else {
       LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i],
-           args.m_pname));
+          args.m_pname));
       return false;
     }
     ++i;
@@ -72,8 +72,8 @@ bool ArgParser::parseServerArgs(lib::synergy::ServerArgs &args, int argc,
   return true;
 }
 
-bool ArgParser::parseClientArgs(lib::synergy::ClientArgs &args, int argc,
-                                const char *const *argv) {
+bool ArgParser::parseClientArgs(
+    lib::synergy::ClientArgs &args, int argc, const char *const *argv) {
   setArgsBase(args);
   updateCommonArgs(argv);
 
@@ -112,7 +112,7 @@ bool ArgParser::parseClientArgs(lib::synergy::ClientArgs &args, int argc,
       }
 
       LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i],
-           args.m_pname));
+          args.m_pname));
       return false;
     }
     ++i;
@@ -121,7 +121,7 @@ bool ArgParser::parseClientArgs(lib::synergy::ClientArgs &args, int argc,
   // exactly one non-option argument (server-address)
   if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
     LOG((CLOG_CRIT "%s: a server address or name is required" BYE, args.m_pname,
-         args.m_pname));
+        args.m_pname));
     return false;
   }
 
@@ -133,8 +133,7 @@ bool ArgParser::parseClientArgs(lib::synergy::ClientArgs &args, int argc,
 }
 
 bool ArgParser::parsePlatformArg(lib::synergy::ArgsBase &argsBase,
-                                 const int &argc, const char *const *argv,
-                                 int &i) {
+    const int &argc, const char *const *argv, int &i) {
 #if WINAPI_MSWINDOWS
   if (isArg(i, argc, argv, nullptr, "--service")) {
     LOG((CLOG_WARN "obsolete argument --service, use synergyd instead."));
@@ -171,8 +170,8 @@ bool ArgParser::parsePlatformArg(lib::synergy::ArgsBase &argsBase,
 #endif
 }
 
-bool ArgParser::parseToolArgs(ToolArgs &args, int argc,
-                              const char *const *argv) {
+bool ArgParser::parseToolArgs(
+    ToolArgs &args, int argc, const char *const *argv) {
   // We support exactly one argument at a fix position
   static const int only_index{1};
   if (isArg(only_index, argc, argv, nullptr, "--get-active-desktop", 0)) {
@@ -248,8 +247,8 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) {
 
     if (!IsWindowsVistaOrGreater()) {
       useDragDrop = false;
-      LOG((CLOG_INFO
-           "ignoring --enable-drag-drop, not supported below vista."));
+      LOG((
+          CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
     }
 #endif
 
@@ -290,14 +289,13 @@ bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) {
 }
 
 bool ArgParser::isArg(int argi, int argc, const char *const *argv,
-                      const char *name1, const char *name2,
-                      int minRequiredParameters) {
+    const char *name1, const char *name2, int minRequiredParameters) {
   if ((name1 != nullptr && strcmp(argv[argi], name1) == 0) ||
       (name2 != nullptr && strcmp(argv[argi], name2) == 0)) {
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
       LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE, argsBase().m_pname,
-           argv[argi], argsBase().m_pname));
+          argv[argi], argsBase().m_pname));
       argsBase().m_shouldExitFail = true;
       return false;
     }
@@ -327,8 +325,8 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv) {
     if (space > leftDoubleQuote && space < rightDoubleQuote) {
       ignoreThisSpace = true;
     } else if (space > rightDoubleQuote) {
-      searchDoubleQuotes(command, leftDoubleQuote, rightDoubleQuote,
-                         rightDoubleQuote + 1);
+      searchDoubleQuotes(
+          command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
     }
 
     if (!ignoreThisSpace) {
@@ -352,8 +350,8 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv) {
   argv.push_back(subString);
 }
 
-bool ArgParser::searchDoubleQuotes(String &command, size_t &left, size_t &right,
-                                   size_t startPos) {
+bool ArgParser::searchDoubleQuotes(
+    String &command, size_t &left, size_t &right, size_t startPos) {
   bool result = false;
   left = String::npos;
   right = String::npos;
@@ -397,8 +395,8 @@ const char **ArgParser::getArgv(std::vector<String> &argsArray) {
   return argv;
 }
 
-String ArgParser::assembleCommand(std::vector<String> &argsArray,
-                                  String ignoreArg, int parametersRequired) {
+String ArgParser::assembleCommand(
+    std::vector<String> &argsArray, String ignoreArg, int parametersRequired) {
   String result;
 
   for (std::vector<String>::iterator it = argsArray.begin();
@@ -440,7 +438,7 @@ bool ArgParser::checkUnexpectedArgs() {
   if (argsBase().m_daemon) {
     LOG((CLOG_ERR "the --daemon argument is not supported on windows. "
                   "instead, install %s as a service (--service install)",
-         argsBase().m_pname));
+        argsBase().m_pname));
     return true;
   }
 #endif

@@ -27,16 +27,15 @@
 // SecureServerSocket
 //
 SecureServerSocket::SecureServerSocket(IEventQueue *events,
-                                       SocketMultiplexer *socketMultiplexer,
-                                       IArchNetwork::EAddressFamily family)
+    SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family)
     : InverseServerSocket(events, socketMultiplexer, family) {}
 
 IDataSocket *SecureServerSocket::accept() {
   SecureSocket *socket = nullptr;
 
   try {
-    socket = new SecureSocket(m_events, m_socketMultiplexer,
-                              m_socket.getRawSocket());
+    socket = new SecureSocket(
+        m_events, m_socketMultiplexer, m_socket.getRawSocket());
     socket->initSsl(true);
     setListeningJob();
 

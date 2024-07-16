@@ -25,7 +25,7 @@ A secure socket using SSL.
 class SecureClientSocket : public InverseClientSocket {
 public:
   SecureClientSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-                     IArchNetwork::EAddressFamily family);
+      IArchNetwork::EAddressFamily family);
   SecureClientSocket(SecureClientSocket const &) = delete;
   SecureClientSocket(SecureClientSocket &&) = delete;
 
@@ -56,11 +56,11 @@ private:
   void checkResult(int n, int &retry);
   void disconnect();
 
-  ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool,
-                                        bool);
+  ISocketMultiplexerJob *serviceConnect(
+      ISocketMultiplexerJob *, bool, bool, bool);
 
-  ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *, bool, bool,
-                                       bool);
+  ISocketMultiplexerJob *serviceAccept(
+      ISocketMultiplexerJob *, bool, bool, bool);
 
   void handleTCPConnected(const Event &, void *);
 

@@ -68,8 +68,7 @@ public:
   /// @param [in] scope The scope to get the value from, default is current
   /// scope
   QVariant loadSetting(const QString &name,
-                       const QVariant &defaultValue = QVariant(),
-                       Scope scope = kCurrent);
+      const QVariant &defaultValue = QVariant(), Scope scope = kCurrent);
 
   /// @brief Changes the setting save and load location between System and User
   /// scope

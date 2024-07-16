@@ -30,7 +30,7 @@ class SocketMultiplexer;
 class InverseServerSocket : public IListenSocket {
 public:
   InverseServerSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-                      IArchNetwork::EAddressFamily family);
+      IArchNetwork::EAddressFamily family);
   InverseServerSocket(InverseServerSocket const &) = delete;
   InverseServerSocket(InverseServerSocket &&) = delete;
   ~InverseServerSocket() override;
@@ -50,8 +50,8 @@ protected:
   void setListeningJob(bool read = false);
 
 public:
-  ISocketMultiplexerJob *serviceListening(ISocketMultiplexerJob *, bool, bool,
-                                          bool);
+  ISocketMultiplexerJob *serviceListening(
+      ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   AutoArchSocket m_socket;

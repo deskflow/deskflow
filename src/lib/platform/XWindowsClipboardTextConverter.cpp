@@ -24,8 +24,8 @@
 // XWindowsClipboardTextConverter
 //
 
-XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(Display *display,
-                                                               const char *name)
+XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(
+    Display *display, const char *name)
     : m_atom(XInternAtom(display, name, False)) {
   // do nothing
 }
@@ -42,8 +42,8 @@ Atom XWindowsClipboardTextConverter::getAtom() const { return m_atom; }
 
 int XWindowsClipboardTextConverter::getDataSize() const { return 8; }
 
-String
-XWindowsClipboardTextConverter::fromIClipboard(const String &data) const {
+String XWindowsClipboardTextConverter::fromIClipboard(
+    const String &data) const {
   return Unicode::UTF8ToText(data);
 }
 

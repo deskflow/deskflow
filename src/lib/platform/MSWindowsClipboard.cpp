@@ -99,7 +99,7 @@ void MSWindowsClipboard::add(EFormat format, const String &data) {
       HANDLE win32Data = converter->fromIClipboard(data);
       if (win32Data != NULL) {
         LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(),
-             format));
+            format));
         m_facade->write(win32Data, converter->getWin32Format());
         isSucceeded = true;
         break;

@@ -31,16 +31,16 @@ subclasses to implement the rest.
 */
 class PlatformScreen : public IPlatformScreen {
 public:
-  PlatformScreen(IEventQueue *events,
-                 lib::synergy::ClientScrollDirection scrollDirection =
-                     lib::synergy::ClientScrollDirection::SERVER);
+  PlatformScreen(
+      IEventQueue *events, lib::synergy::ClientScrollDirection scrollDirection =
+                               lib::synergy::ClientScrollDirection::SERVER);
   virtual ~PlatformScreen();
 
   // IScreen overrides
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                        SInt32 &height) const = 0;
+  virtual void getShape(
+      SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
 
   // IPrimaryScreen overrides
@@ -64,10 +64,10 @@ public:
   virtual void updateKeyMap();
   virtual void updateKeyState();
   virtual void setHalfDuplexMask(KeyModifierMask);
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                           const String &);
+  virtual void fakeKeyDown(
+      KeyID id, KeyModifierMask mask, KeyButton button, const String &);
   virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                             KeyButton button, const String &lang);
+      KeyButton button, const String &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
   virtual bool fakeCtrlAltDel();

@@ -27,8 +27,8 @@
 
 namespace validators {
 
-ScreenNameValidator::ScreenNameValidator(QLineEdit *parent, QLabel *errors,
-                                         const ScreenList *pScreens)
+ScreenNameValidator::ScreenNameValidator(
+    QLineEdit *parent, QLabel *errors, const ScreenList *pScreens)
     : LineEditValidator(parent, errors) {
   addValidator(
       std::make_unique<EmptyStringValidator>("Computer name cannot be empty"));

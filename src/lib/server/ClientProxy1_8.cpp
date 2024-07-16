@@ -21,8 +21,7 @@
 #include "ClientProxy1_8.h"
 
 ClientProxy1_8::ClientProxy1_8(const String &name,
-                               synergy::IStream *adoptedStream, Server *server,
-                               IEventQueue *events)
+    synergy::IStream *adoptedStream, Server *server, IEventQueue *events)
     : ClientProxy1_7(name, adoptedStream, server, events) {
   synchronizeLanguages();
 }
@@ -32,19 +31,19 @@ void ClientProxy1_8::synchronizeLanguages() const {
   auto localLanguages = languageManager.getSerializedLocalLanguages();
   if (!localLanguages.empty()) {
     LOG((CLOG_DEBUG1 "send server languages to the client: %s",
-         localLanguages.c_str()));
-    ProtocolUtil::writef(getStream(), kMsgDLanguageSynchronisation,
-                         &localLanguages);
+        localLanguages.c_str()));
+    ProtocolUtil::writef(
+        getStream(), kMsgDLanguageSynchronisation, &localLanguages);
   } else {
     LOG((CLOG_ERR "failed to read server languages"));
   }
 }
 
-void ClientProxy1_8::keyDown(KeyID key, KeyModifierMask mask, KeyButton button,
-                             const String &language) {
+void ClientProxy1_8::keyDown(
+    KeyID key, KeyModifierMask mask, KeyButton button, const String &language) {
   LOG((CLOG_DEBUG1
-       "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, language=%s",
-       getName().c_str(), key, mask, button, language.c_str()));
-  ProtocolUtil::writef(getStream(), kMsgDKeyDownLang, key, mask, button,
-                       &language);
+      "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, language=%s",
+      getName().c_str(), key, mask, button, language.c_str()));
+  ProtocolUtil::writef(
+      getStream(), kMsgDKeyDownLang, key, mask, button, &language);
 }

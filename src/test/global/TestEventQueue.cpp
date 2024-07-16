@@ -28,8 +28,8 @@ void TestEventQueue::initQuitTimeout(double timeout) {
   assert(m_quitTimeoutTimer == nullptr);
   m_quitTimeoutTimer = newOneShotTimer(timeout, NULL);
   adoptHandler(Event::kTimer, m_quitTimeoutTimer,
-               new TMethodEventJob<TestEventQueue>(
-                   this, &TestEventQueue::handleQuitTimeout));
+      new TMethodEventJob<TestEventQueue>(
+          this, &TestEventQueue::handleQuitTimeout));
 }
 
 void TestEventQueue::cleanupQuitTimeout() {

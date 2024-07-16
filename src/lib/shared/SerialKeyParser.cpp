@@ -105,8 +105,8 @@ void SerialKeyParser::parseV2(const std::vector<std::string> &parts) {
   setExpirationTime(parts.at(8));
 }
 
-std::vector<std::string>
-SerialKeyParser::splitToParts(const std::string &plainSerial) const {
+std::vector<std::string> SerialKeyParser::splitToParts(
+    const std::string &plainSerial) const {
   // tokenize serialised subscription.
   std::vector<std::string> parts;
 

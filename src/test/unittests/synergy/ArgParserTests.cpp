@@ -176,7 +176,7 @@ TEST(ArgParserTests, assembleCommand_ignoreSecondArg_returnCommand) {
 }
 
 TEST(ArgParserTests,
-     assembleCommand_ignoreSecondArgWithOneParameter_returnCommand) {
+    assembleCommand_ignoreSecondArgWithOneParameter_returnCommand) {
   std::vector<String> argArray;
   argArray.push_back("stub1");
   argArray.push_back("stub2");
@@ -201,11 +201,11 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly) {
   ArgParser parser(nullptr);
   std::map<const char *, std::function<bool(ToolArgs const &)>> tests = {
       {"--get-active-desktop",
-       [](ToolArgs const &a) { return a.m_printActiveDesktopName; }},
+          [](ToolArgs const &a) { return a.m_printActiveDesktopName; }},
       {"--get-installed-dir",
-       [](ToolArgs const &a) { return a.m_getInstalledDir; }},
+          [](ToolArgs const &a) { return a.m_getInstalledDir; }},
       {"--get-profile-dir",
-       [](ToolArgs const &a) { return a.m_getProfileDir; }},
+          [](ToolArgs const &a) { return a.m_getProfileDir; }},
       {"--get-arch", [](ToolArgs const &a) { return a.m_getArch; }}};
   for (auto const &test : tests) {
     ToolArgs toolArgs;
@@ -225,14 +225,14 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
   args.m_daemon = false;
   char const *argv[] = {"synergy", "--help"
 #if WINAPI_MSWINDOWS
-                        ,
-                        "--exit-pause"
+      ,
+      "--exit-pause"
 #elif WINAPI_XWINDOWS
-                        ,
-                        "--no-xinitthreads"
+      ,
+      "--no-xinitthreads"
 #endif
-                        ,
-                        "--res-w", "888"};
+      ,
+      "--res-w", "888"};
   EXPECT_TRUE(
       parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExitOk, true);
@@ -242,19 +242,16 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help) {
   ArgParser parser(nullptr);
   lib::synergy::ClientArgs args;
   args.m_daemon = false;
-  char const *argv[] = {"synergy",
-                        "--help"
+  char const *argv[] = {"synergy", "--help"
 #if WINAPI_MSWINDOWS
-                        ,
-                        "--exit-pause"
+      ,
+      "--exit-pause"
 #elif WINAPI_XWINDOWS
-                        ,
-                        "--no-xinitthreads"
+      ,
+      "--no-xinitthreads"
 #endif
-                        ,
-                        "--res-w",
-                        "888",
-                        "127.0.0.1"};
+      ,
+      "--res-w", "888", "127.0.0.1"};
   EXPECT_TRUE(
       parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExitOk, true);

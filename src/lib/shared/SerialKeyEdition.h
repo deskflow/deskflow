@@ -21,8 +21,8 @@
 #include <string>
 
 class SerialKeyEdition {
-  friend bool operator==(SerialKeyEdition const &,
-                         SerialKeyEdition const &) = default;
+  friend bool operator==(
+      SerialKeyEdition const &, SerialKeyEdition const &) = default;
 
 public:
   SerialKeyEdition() = default;

@@ -79,9 +79,7 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 const char g_activeDesktop[] = {"activeDesktop:"};
 
 MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand,
-                                     IpcServer &ipcServer,
-                                     IpcLogOutputter &ipcLogOutputter,
-                                     bool foreground)
+    IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground)
     : m_thread(NULL), m_autoDetectCommand(autoDetectCommand),
       m_monitoring(true), m_commandChanged(false), m_stdOutWrite(NULL),
       m_stdOutRead(NULL), m_ipcServer(ipcServer),
@@ -121,8 +119,8 @@ void MSWindowsWatchdog::stop() {
 }
 
 HANDLE
-MSWindowsWatchdog::duplicateProcessToken(HANDLE process,
-                                         LPSECURITY_ATTRIBUTES security) {
+MSWindowsWatchdog::duplicateProcessToken(
+    HANDLE process, LPSECURITY_ATTRIBUTES security) {
   HANDLE sourceToken;
 
   BOOL tokenRet = OpenProcessToken(
@@ -136,9 +134,9 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process,
   LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
 
   HANDLE newToken;
-  BOOL duplicateRet = DuplicateTokenEx(
-      sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
-      SecurityImpersonation, TokenPrimary, &newToken);
+  BOOL duplicateRet =
+      DuplicateTokenEx(sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
+          security, SecurityImpersonation, TokenPrimary, &newToken);
 
   if (!duplicateRet) {
     LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
@@ -159,7 +157,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security) {
       m_session.isProcessInSession("logonui.exe", NULL)) {
 
     LOG((CLOG_DEBUG "getting elevated token, %s",
-         (m_elevateProcess ? "elevation required" : "at login screen")));
+        (m_elevateProcess ? "elevation required" : "at login screen")));
 
     HANDLE process;
     if (!m_session.isProcessInSession("winlogon.exe", &process)) {
@@ -210,7 +208,7 @@ void MSWindowsWatchdog::mainLoop(void *) {
         int timeout =
             (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
         LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout,
-             m_processFailures));
+            m_processFailures));
         ARCH->sleep(timeout);
       }
 
@@ -236,7 +234,7 @@ void MSWindowsWatchdog::mainLoop(void *) {
         m_processRunning = false;
 
         LOG((CLOG_WARN "detected application not running, pid=%d",
-             m_processInfo.dwProcessId));
+            m_processInfo.dwProcessId));
       }
 
       if (sendSasFunc != NULL) {
@@ -353,8 +351,8 @@ void MSWindowsWatchdog::startProcess() {
 
     LOG((CLOG_DEBUG "started core process from daemon"));
     LOG((CLOG_DEBUG2 "process info, session=%i, elevated: %s, command=%s",
-         m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no",
-         m_command.c_str()));
+        m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no",
+        m_command.c_str()));
   }
 }
 
@@ -380,15 +378,15 @@ BOOL MSWindowsWatchdog::startProcessInForeground(String &command) {
   si.wShowWindow = SW_MINIMIZE;
 
   BOOL result = CreateProcess(NULL, LPSTR(command.c_str()), NULL, NULL, TRUE, 0,
-                              NULL, NULL, &si, &m_processInfo);
+      NULL, NULL, &si, &m_processInfo);
 
   m_children.insert(std::make_pair(m_processInfo.dwProcessId, m_processInfo));
 
   return result;
 }
 
-BOOL MSWindowsWatchdog::startProcessAsUser(String &command, HANDLE userToken,
-                                           LPSECURITY_ATTRIBUTES sa) {
+BOOL MSWindowsWatchdog::startProcessAsUser(
+    String &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa) {
   // clear, as we're reusing process info struct
   ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
 
@@ -408,8 +406,7 @@ BOOL MSWindowsWatchdog::startProcessAsUser(String &command, HANDLE userToken,
   // re-launch in current active user session
   LOG((CLOG_INFO "starting new process"));
   BOOL createRet = CreateProcessAsUser(userToken, NULL, LPSTR(command.c_str()),
-                                       sa, NULL, TRUE, creationFlags,
-                                       environment, NULL, &si, &m_processInfo);
+      sa, NULL, TRUE, creationFlags, environment, NULL, &si, &m_processInfo);
 
   m_children.insert(std::make_pair(m_processInfo.dwProcessId, m_processInfo));
 
@@ -517,8 +514,8 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout) {
         // it causes the hook DLL to stay loaded in some apps,
         // making it impossible to start synergy again.
         LOG((CLOG_WARN
-             "shutdown timed out after %d secs, forcefully terminating",
-             (int)elapsed));
+            "shutdown timed out after %d secs, forcefully terminating",
+            (int)elapsed));
         TerminateProcess(handle, kExitSuccess);
         break;
       }
@@ -646,8 +643,8 @@ void MSWindowsWatchdog::testOutput(String buffer) {
   }
 }
 
-void MSWindowsWatchdog::closeProcessHandles(unsigned long pid,
-                                            bool removeFromMap) {
+void MSWindowsWatchdog::closeProcessHandles(
+    unsigned long pid, bool removeFromMap) {
   auto processInfo = m_children.find(pid);
   if (processInfo != m_children.end()) {
     CloseHandle(processInfo->second.hProcess);

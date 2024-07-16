@@ -36,8 +36,8 @@ public:
   virtual std::string getLogDirectory();
   virtual std::string getPluginDirectory();
   virtual std::string getProfileDirectory();
-  virtual std::string concatPath(const std::string &prefix,
-                                 const std::string &suffix);
+  virtual std::string concatPath(
+      const std::string &prefix, const std::string &suffix);
   virtual void setProfileDirectory(const String &s);
   virtual void setPluginDirectory(const String &s);
 

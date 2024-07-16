@@ -32,14 +32,14 @@ class ClipboardChunk : public Chunk {
 public:
   ClipboardChunk(size_t size);
 
-  static ClipboardChunk *start(ClipboardID id, UInt32 sequence,
-                               const String &size);
-  static ClipboardChunk *data(ClipboardID id, UInt32 sequence,
-                              const String &data);
+  static ClipboardChunk *start(
+      ClipboardID id, UInt32 sequence, const String &size);
+  static ClipboardChunk *data(
+      ClipboardID id, UInt32 sequence, const String &data);
   static ClipboardChunk *end(ClipboardID id, UInt32 sequence);
 
   static int assemble(synergy::IStream *stream, String &dataCached,
-                      ClipboardID &id, UInt32 &sequence);
+      ClipboardID &id, UInt32 &sequence);
 
   static void send(synergy::IStream *stream, void *data);
 

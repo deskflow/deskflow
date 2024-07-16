@@ -14,8 +14,8 @@ class ActivationDialog : public QDialog {
   Q_OBJECT
 
 public:
-  ActivationDialog(QWidget *parent, AppConfig &appConfig,
-                   LicenseManager &licenseManager);
+  ActivationDialog(
+      QWidget *parent, AppConfig &appConfig, LicenseManager &licenseManager);
   ~ActivationDialog();
 
 public slots:

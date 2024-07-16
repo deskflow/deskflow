@@ -35,8 +35,7 @@ public slots:
   /// @param [in] bool Should the file be created regardless of if the file
   /// already exists
   void generateCertificate(const QString &path = QString(),
-                           const QString &keyLength = "2048",
-                           bool forceGen = false);
+      const QString &keyLength = "2048", bool forceGen = false);
 
   /// @brief Get the key length of a TLS private key
   /// @param [in] QString path The path of the file to checked

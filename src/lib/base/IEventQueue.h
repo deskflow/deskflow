@@ -149,8 +149,8 @@ public:
   of type \p type.  If no such handler exists it will use the handler
   for \p target and type \p kUnknown if it exists.
   */
-  virtual void adoptHandler(Event::Type type, void *target,
-                            IEventJob *handler) = 0;
+  virtual void adoptHandler(
+      Event::Type type, void *target, IEventJob *handler) = 0;
 
   //! Unregister an event handler for an event type
   /*!

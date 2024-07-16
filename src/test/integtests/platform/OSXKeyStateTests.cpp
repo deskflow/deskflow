@@ -93,8 +93,8 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier) {
   keyState.fakeKeyUp(2);
 }
 
-bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState,
-                                    KeyButton button) {
+bool OSXKeyStateTests::isKeyPressed(
+    const OSXKeyState &keyState, KeyButton button) {
   // HACK: allow os to realize key state changes.
   ARCH->sleep(.2);
 

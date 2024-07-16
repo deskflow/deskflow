@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QMessageBox::information(NULL, "Synergy",
-                             "Please drag Synergy to the Applications folder, "
-                             "and open it from there.");
+        "Please drag Synergy to the Applications folder, "
+        "and open it from there.");
     return 1;
   }
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   QObject::connect(dynamic_cast<QObject *>(&app), SIGNAL(aboutToQuit()),
-                   &mainWindow, SLOT(saveSettings()));
+      &mainWindow, SLOT(saveSettings()));
 
   std::unique_ptr<SetupWizardBlocker> setupBlocker;
   if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
@@ -144,9 +144,9 @@ bool checkMacAssistiveDevices() {
   bool result = AXAPIEnabled();
   if (!result) {
     QMessageBox::information(NULL, "Synergy",
-                             "Please enable access to assistive devices "
-                             "System Preferences -> Security & Privacy -> "
-                             "Privacy -> Accessibility, then re-open Synergy.");
+        "Please enable access to assistive devices "
+        "System Preferences -> Security & Privacy -> "
+        "Privacy -> Accessibility, then re-open Synergy.");
   }
   return result;
 

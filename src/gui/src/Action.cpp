@@ -21,12 +21,9 @@
 #include <QSettings>
 #include <QTextStream>
 
-const char *Action::m_ActionTypeNames[] = {
-    "keyDown",           "keyUp",
-    "keystroke",         "switchToScreen",
-    "switchInDirection", "lockCursorToScreen",
-    "restartServer",     "mouseDown",
-    "mouseUp",           "mousebutton"};
+const char *Action::m_ActionTypeNames[] = {"keyDown", "keyUp", "keystroke",
+    "switchToScreen", "switchInDirection", "lockCursorToScreen",
+    "restartServer", "mouseDown", "mouseUp", "mousebutton"};
 
 const char *Action::m_SwitchDirectionNames[] = {"left", "right", "up", "down"};
 const char *Action::m_LockCursorModeNames[] = {"toggle", "on", "off"};

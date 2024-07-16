@@ -48,8 +48,8 @@ public:
   enum { kGroupPoll = -1, kGroupPollAndSet = -2 };
 
   XWindowsKeyState(Display *, bool useXKB, IEventQueue *events);
-  XWindowsKeyState(Display *, bool useXKB, IEventQueue *events,
-                   synergy::KeyMap &keyMap);
+  XWindowsKeyState(
+      Display *, bool useXKB, IEventQueue *events, synergy::KeyMap &keyMap);
   ~XWindowsKeyState();
 
   //! @name modifiers
@@ -124,8 +124,8 @@ private:
   */
   bool setCurrentLanguageWithDBus(SInt32 group) const;
 
-  static void remapKeyModifiers(KeyID, SInt32, synergy::KeyMap::KeyItem &,
-                                void *);
+  static void remapKeyModifiers(
+      KeyID, SInt32, synergy::KeyMap::KeyItem &, void *);
 
 private:
   struct XKBModifierInfo {

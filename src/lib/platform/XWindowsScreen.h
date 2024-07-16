@@ -40,10 +40,9 @@ class XWindowsScreenSaver;
 class XWindowsScreen : public PlatformScreen {
 public:
   XWindowsScreen(const char *displayName, bool isPrimary,
-                 bool disableXInitThreads, int mouseScrollDelta,
-                 IEventQueue *events,
-                 lib::synergy::ClientScrollDirection m_clientScrollDirection =
-                     lib::synergy::ClientScrollDirection::SERVER);
+      bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
+      lib::synergy::ClientScrollDirection m_clientScrollDirection =
+          lib::synergy::ClientScrollDirection::SERVER);
   virtual ~XWindowsScreen();
 
   //! @name manipulators
@@ -54,8 +53,8 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                        SInt32 &height) const;
+  virtual void getShape(
+      SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
   // IPrimaryScreen overrides

@@ -31,9 +31,9 @@ it sorts by std::greater, it has a forward iterator through the elements
 */
 template <class T, class Container = std::vector<T>,
 #if defined(_MSC_VER)
-          class Compare = std::greater<Container::value_type>>
+    class Compare = std::greater<Container::value_type>>
 #else
-          class Compare = std::greater<typename Container::value_type>>
+    class Compare = std::greater<typename Container::value_type>>
 #endif
 class PriorityQueue {
 public:

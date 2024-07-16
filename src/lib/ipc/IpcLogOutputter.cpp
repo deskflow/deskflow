@@ -37,8 +37,8 @@ enum EIpcLogOutputter {
   kBufferRateTimeLimit = 1      // seconds
 };
 
-IpcLogOutputter::IpcLogOutputter(IpcServer &ipcServer,
-                                 EIpcClientType clientType, bool useThread)
+IpcLogOutputter::IpcLogOutputter(
+    IpcServer &ipcServer, EIpcClientType clientType, bool useThread)
     : m_ipcServer(ipcServer), m_bufferMutex(ARCH->newMutex()), m_sending(false),
       m_bufferThread(nullptr), m_running(false),
       m_notifyCond(ARCH->newCondVar()), m_notifyMutex(ARCH->newMutex()),

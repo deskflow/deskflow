@@ -9,7 +9,7 @@ extern "C" {
 #import <UserNotifications/UNUserNotificationCenter.h>
 @interface AppDelegate
     : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate,
-                UNUserNotificationCenterDelegate>
+          UNUserNotificationCenterDelegate>
 #else
 @interface AppDelegate
     : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate>

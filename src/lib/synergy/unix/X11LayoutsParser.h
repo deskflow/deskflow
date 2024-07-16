@@ -28,8 +28,7 @@ class X11LayoutsParser {
 public:
   static std::vector<String> getX11LanguageList(const String &pathToEvdevFile);
   static String convertLayotToISO(const String &pathToEvdevFile,
-                                  const String &layoutLangCode,
-                                  bool needToReloadFiles = false);
+      const String &layoutLangCode, bool needToReloadFiles = false);
 
 private:
   struct Lang {
@@ -38,22 +37,21 @@ private:
     std::vector<Lang> variants;
   };
 
-  static bool readXMLConfigItemElem(const pugi::xml_node *root,
-                                    std::vector<Lang> &langList);
+  static bool readXMLConfigItemElem(
+      const pugi::xml_node *root, std::vector<Lang> &langList);
 
   static std::vector<Lang> getAllLanguageData(const String &pathToEvdevFile);
 
-  static void appendVectorUniq(const std::vector<String> &source,
-                               std::vector<String> &dst);
+  static void appendVectorUniq(
+      const std::vector<String> &source, std::vector<String> &dst);
 
-  static void
-  convertLayoutToISO639_2(const String &pathToEvdevFile, bool needToReloadEvdev,
-                          const std::vector<String> &layoutNames,
-                          const std::vector<String> &layoutVariantNames,
-                          std::vector<String> &iso639_2Codes);
+  static void convertLayoutToISO639_2(const String &pathToEvdevFile,
+      bool needToReloadEvdev, const std::vector<String> &layoutNames,
+      const std::vector<String> &layoutVariantNames,
+      std::vector<String> &iso639_2Codes);
 
-  static std::vector<String>
-  convertISO639_2ToISO639_1(const std::vector<String> &iso639_2Codes);
+  static std::vector<String> convertISO639_2ToISO639_1(
+      const std::vector<String> &iso639_2Codes);
 };
 
 #endif // WINAPI_XWINDOWS

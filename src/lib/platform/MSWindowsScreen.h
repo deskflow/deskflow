@@ -42,9 +42,9 @@ class MSWindowsDropTarget;
 class MSWindowsScreen : public PlatformScreen {
 public:
   MSWindowsScreen(bool isPrimary, bool noHooks, bool stopOnDeskSwitch,
-                  IEventQueue *events, bool enableLangSync = false,
-                  lib::synergy::ClientScrollDirection scrollDirection =
-                      lib::synergy::ClientScrollDirection::SERVER);
+      IEventQueue *events, bool enableLangSync = false,
+      lib::synergy::ClientScrollDirection scrollDirection =
+          lib::synergy::ClientScrollDirection::SERVER);
   virtual ~MSWindowsScreen();
 
   //! @name manipulators
@@ -72,8 +72,8 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                        SInt32 &height) const;
+  virtual void getShape(
+      SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
   /**
@@ -115,10 +115,10 @@ public:
 
   // IKeyState overrides
   virtual void updateKeys();
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                           const String &lang);
+  virtual void fakeKeyDown(
+      KeyID id, KeyModifierMask mask, KeyButton button, const String &lang);
   virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                             KeyButton button, const String &lang);
+      KeyButton button, const String &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
 
@@ -242,8 +242,8 @@ private: // HACK
   void saveMousePosition(SInt32 x, SInt32 y);
 
   // check if it is a modifier key repeating message
-  bool isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state,
-                        WPARAM wParam) const;
+  bool isModifierRepeat(
+      KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const;
 
   // send drag info and data back to server
   void sendDragThread(void *);

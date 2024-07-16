@@ -28,10 +28,10 @@ platform specific methods.
 */
 class KeyState : public IKeyState {
 public:
-  KeyState(IEventQueue *events, std::vector<String> layouts,
-           bool isLangSyncEnabled);
+  KeyState(
+      IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
   KeyState(IEventQueue *events, synergy::KeyMap &keyMap,
-           std::vector<String> layouts, bool isLangSyncEnabled);
+      std::vector<String> layouts, bool isLangSyncEnabled);
   virtual ~KeyState();
 
   //! @name manipulators
@@ -53,8 +53,7 @@ public:
   to the superclass.
   */
   virtual void sendKeyEvent(void *target, bool press, bool isAutoRepeat,
-                            KeyID key, KeyModifierMask mask, SInt32 count,
-                            KeyButton button);
+      KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button);
 
   //@}
   //! @name accessors
@@ -68,9 +67,9 @@ public:
   void updateKeyState() override;
   void setHalfDuplexMask(KeyModifierMask) override;
   void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                   const String &lang) override;
+      const String &lang) override;
   bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                     KeyButton button, const String &lang) override;
+      KeyButton button, const String &lang) override;
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
   bool fakeMediaKey(KeyID id) override;
@@ -143,8 +142,8 @@ private:
 public:
   struct AddActiveModifierContext {
   public:
-    AddActiveModifierContext(SInt32 group, KeyModifierMask mask,
-                             ModifierToKeys &activeModifiers);
+    AddActiveModifierContext(
+        SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers);
 
   public:
     SInt32 m_activeGroup;
@@ -161,7 +160,7 @@ private:
   class ButtonToKeyLess {
   public:
     bool operator()(const synergy::KeyMap::ButtonToKeyMap::value_type &a,
-                    const synergy::KeyMap::ButtonToKeyMap::value_type b) const {
+        const synergy::KeyMap::ButtonToKeyMap::value_type b) const {
       return (a.first < b.first);
     }
   };
@@ -189,13 +188,11 @@ private:
 
   // update key state to match changes to modifiers
   void updateModifierKeyState(KeyButton button,
-                              const ModifierToKeys &oldModifiers,
-                              const ModifierToKeys &newModifiers);
+      const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers);
 
   // active modifiers collection callback
   static void addActiveModifierCB(KeyID id, SInt32 group,
-                                  synergy::KeyMap::KeyItem &keyItem,
-                                  void *vcontext);
+      synergy::KeyMap::KeyItem &keyItem, void *vcontext);
 
 private:
   // must be declared before m_keyMap. used when this class owns the key map.

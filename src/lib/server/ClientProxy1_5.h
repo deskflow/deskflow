@@ -28,7 +28,7 @@ class IEventQueue;
 class ClientProxy1_5 : public ClientProxy1_4 {
 public:
   ClientProxy1_5(const String &name, synergy::IStream *adoptedStream,
-                 Server *server, IEventQueue *events);
+      Server *server, IEventQueue *events);
   ClientProxy1_5(ClientProxy1_5 const &) = delete;
   ClientProxy1_5(ClientProxy1_5 &&) = delete;
   ~ClientProxy1_5();

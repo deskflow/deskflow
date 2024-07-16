@@ -30,8 +30,8 @@
 // ClientProxy1_3
 //
 
-ClientProxy1_3::ClientProxy1_3(const String &name, synergy::IStream *stream,
-                               IEventQueue *events)
+ClientProxy1_3::ClientProxy1_3(
+    const String &name, synergy::IStream *stream, IEventQueue *events)
     : ClientProxy1_2(name, stream, events), m_keepAliveRate(kKeepAliveRate),
       m_keepAliveTimer(NULL), m_events(events) {
   setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);
@@ -44,7 +44,7 @@ ClientProxy1_3::~ClientProxy1_3() {
 
 void ClientProxy1_3::mouseWheel(SInt32 xDelta, SInt32 yDelta) {
   LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d,%+d", getName().c_str(),
-       xDelta, yDelta));
+      xDelta, yDelta));
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel, xDelta, yDelta);
 }
 
@@ -79,8 +79,8 @@ void ClientProxy1_3::addHeartbeatTimer() {
   if (m_keepAliveRate > 0.0) {
     m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, NULL);
     m_events->adoptHandler(Event::kTimer, m_keepAliveTimer,
-                           new TMethodEventJob<ClientProxy1_3>(
-                               this, &ClientProxy1_3::handleKeepAlive, NULL));
+        new TMethodEventJob<ClientProxy1_3>(
+            this, &ClientProxy1_3::handleKeepAlive, NULL));
   }
 
   // superclass does the alarm

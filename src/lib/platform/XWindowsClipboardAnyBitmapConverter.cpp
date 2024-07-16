@@ -93,8 +93,8 @@ IClipboard::EFormat XWindowsClipboardAnyBitmapConverter::getFormat() const {
 
 int XWindowsClipboardAnyBitmapConverter::getDataSize() const { return 8; }
 
-String
-XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) const {
+String XWindowsClipboardAnyBitmapConverter::fromIClipboard(
+    const String &bmp) const {
   // fill BMP info header with native-endian data
   CBMPInfoHeader infoHeader;
   const UInt8 *rawBMPInfoHeader = reinterpret_cast<const UInt8 *>(bmp.data());
@@ -121,16 +121,16 @@ XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) const {
   // convert to image format
   const UInt8 *rawBMPPixels = rawBMPInfoHeader + 40;
   if (infoHeader.biBitCount == 24) {
-    return doBGRFromIClipboard(rawBMPPixels, infoHeader.biWidth,
-                               infoHeader.biHeight);
+    return doBGRFromIClipboard(
+        rawBMPPixels, infoHeader.biWidth, infoHeader.biHeight);
   } else {
-    return doBGRAFromIClipboard(rawBMPPixels, infoHeader.biWidth,
-                                infoHeader.biHeight);
+    return doBGRAFromIClipboard(
+        rawBMPPixels, infoHeader.biWidth, infoHeader.biHeight);
   }
 }
 
-String
-XWindowsClipboardAnyBitmapConverter::toIClipboard(const String &image) const {
+String XWindowsClipboardAnyBitmapConverter::toIClipboard(
+    const String &image) const {
   // convert to raw BMP data
   UInt32 w, h, depth;
   String rawBMP = doToIClipboard(image, w, h, depth);
@@ -154,7 +154,7 @@ XWindowsClipboardAnyBitmapConverter::toIClipboard(const String &image) const {
   toLE(dst, static_cast<UInt32>(0));
 
   // construct image
-  return String(reinterpret_cast<const char *>(infoHeader),
-                sizeof(infoHeader)) +
+  return String(
+             reinterpret_cast<const char *>(infoHeader), sizeof(infoHeader)) +
          rawBMP;
 }

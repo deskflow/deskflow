@@ -27,7 +27,7 @@ class IDataSocket;
 class SecureListenSocket : public TCPListenSocket {
 public:
   SecureListenSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-                     IArchNetwork::EAddressFamily family);
+      IArchNetwork::EAddressFamily family);
 
   // IListenSocket overrides
   virtual IDataSocket *accept();

@@ -76,7 +76,7 @@ private:
   class Timer {
   public:
     Timer(EventQueueTimer *, double timeout, double initialTime, void *target,
-          bool oneShot);
+        bool oneShot);
     ~Timer();
 
     void reset();

@@ -40,12 +40,12 @@ bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
 Mutex *StreamChunker::s_interruptMutex = NULL;
 
-void StreamChunker::sendFile(char *filename, IEventQueue *events,
-                             void *eventTarget) {
+void StreamChunker::sendFile(
+    char *filename, IEventQueue *events, void *eventTarget) {
   s_isChunkingFile = true;
 
-  std::fstream file(static_cast<char *>(filename),
-                    std::ios::in | std::ios::binary);
+  std::fstream file(
+      static_cast<char *>(filename), std::ios::in | std::ios::binary);
 
   if (!file.is_open()) {
     throw runtime_error("failed to open file");
@@ -110,14 +110,13 @@ void StreamChunker::sendFile(char *filename, IEventQueue *events,
 }
 
 void StreamChunker::sendClipboard(String &data, size_t size, ClipboardID id,
-                                  UInt32 sequence, IEventQueue *events,
-                                  void *eventTarget) {
+    UInt32 sequence, IEventQueue *events, void *eventTarget) {
   // send first message (data size)
   String dataSize = synergy::string::sizeTypeToString(size);
   ClipboardChunk *sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 
-  events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget,
-                         sizeMessage));
+  events->addEvent(Event(
+      events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
 
   // send clipboard chunk with a fixed size
   size_t sentLength = 0;
@@ -134,8 +133,8 @@ void StreamChunker::sendClipboard(String &data, size_t size, ClipboardID id,
     String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
     ClipboardChunk *dataChunk = ClipboardChunk::data(id, sequence, chunk);
 
-    events->addEvent(Event(events->forClipboard().clipboardSending(),
-                           eventTarget, dataChunk));
+    events->addEvent(Event(
+        events->forClipboard().clipboardSending(), eventTarget, dataChunk));
 
     sentLength += chunkSize;
     if (sentLength == size) {

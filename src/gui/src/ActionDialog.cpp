@@ -27,8 +27,8 @@
 #include <QtCore>
 #include <QtGui>
 
-ActionDialog::ActionDialog(QWidget *parent, ServerConfig &config,
-                           Hotkey &hotkey, Action &action)
+ActionDialog::ActionDialog(
+    QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ActionDialogBase(), m_ServerConfig(config), m_Hotkey(hotkey),
       m_Action(action), m_pButtonGroupType(new QButtonGroup(this)) {
@@ -36,13 +36,10 @@ ActionDialog::ActionDialog(QWidget *parent, ServerConfig &config,
 
   // work around Qt Designer's lack of a QButtonGroup; we need it to get
   // at the button id of the checked radio button
-  QRadioButton *const typeButtons[] = {m_pRadioPress,
-                                       m_pRadioRelease,
-                                       m_pRadioPressAndRelease,
-                                       m_pRadioSwitchToScreen,
-                                       m_pRadioSwitchInDirection,
-                                       m_pRadioLockCursorToScreen,
-                                       m_pRadioRestartAllConnections};
+  QRadioButton *const typeButtons[] = {m_pRadioPress, m_pRadioRelease,
+      m_pRadioPressAndRelease, m_pRadioSwitchToScreen,
+      m_pRadioSwitchInDirection, m_pRadioLockCursorToScreen,
+      m_pRadioRestartAllConnections};
 
   for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]);
        i++)

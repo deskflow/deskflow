@@ -26,7 +26,7 @@ class IEventQueue;
 class ClientProxy1_6 : public ClientProxy1_5 {
 public:
   ClientProxy1_6(const String &name, synergy::IStream *adoptedStream,
-                 Server *server, IEventQueue *events);
+      Server *server, IEventQueue *events);
   ~ClientProxy1_6();
 
   virtual void setClipboard(ClipboardID id, const IClipboard *clipboard);

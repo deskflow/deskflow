@@ -145,8 +145,8 @@ public:
 
   // IApp overrides
   virtual int standardStartup(int argc, char **argv);
-  virtual int runInner(int argc, char **argv, ILogOutputter *outputter,
-                       StartupFunc startup);
+  virtual int runInner(
+      int argc, char **argv, ILogOutputter *outputter, StartupFunc startup);
   virtual void startNode();
   virtual int mainLoop();
   virtual int foregroundStartup(int argc, char **argv);

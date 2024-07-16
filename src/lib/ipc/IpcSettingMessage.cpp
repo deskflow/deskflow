@@ -18,8 +18,8 @@
 
 #include "IpcSettingMessage.h"
 
-IpcSettingMessage::IpcSettingMessage(const std::string &name,
-                                     const std::string &value)
+IpcSettingMessage::IpcSettingMessage(
+    const std::string &name, const std::string &value)
     : IpcMessage(kIpcSetting), m_name(name), m_value(value) {}
 
 const std::string &IpcSettingMessage::getName() const { return m_name; }

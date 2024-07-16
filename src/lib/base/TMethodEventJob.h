@@ -27,8 +27,8 @@ An event job class that invokes a member function.
 template <class T> class TMethodEventJob : public IEventJob {
 public:
   //! run(event) invokes \c object->method(event, arg)
-  TMethodEventJob(T *object, void (T::*method)(const Event &, void *),
-                  void *arg = NULL);
+  TMethodEventJob(
+      T *object, void (T::*method)(const Event &, void *), void *arg = NULL);
   virtual ~TMethodEventJob();
 
   // IJob overrides

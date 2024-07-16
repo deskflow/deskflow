@@ -69,13 +69,13 @@ std::string ArchSystemUnix::getLibsUsed(void) const {
 }
 
 #ifndef __APPLE__
-bool ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID,
-                                           bool state, std::string &error) {
+bool ArchSystemUnix::DBusInhibitScreenCall(
+    InhibitScreenServices serviceID, bool state, std::string &error) {
   error = "";
-  static const std::array<QString, 2> services = {"org.freedesktop.ScreenSaver",
-                                                  "org.gnome.SessionManager"};
-  static const std::array<QString, 2> paths = {"/org/freedesktop/ScreenSaver",
-                                               "/org/gnome/SessionManager"};
+  static const std::array<QString, 2> services = {
+      "org.freedesktop.ScreenSaver", "org.gnome.SessionManager"};
+  static const std::array<QString, 2> paths = {
+      "/org/freedesktop/ScreenSaver", "/org/gnome/SessionManager"};
   static std::array<uint, 2> cookies;
 
   auto serviceNum = static_cast<uint8_t>(serviceID);
@@ -86,8 +86,8 @@ bool ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID,
     return false;
   }
 
-  QDBusInterface screenSaverInterface(services[serviceNum], paths[serviceNum],
-                                      services[serviceNum], bus);
+  QDBusInterface screenSaverInterface(
+      services[serviceNum], paths[serviceNum], services[serviceNum], bus);
 
   if (!screenSaverInterface.isValid()) {
     error = "screen saver interface failed to initialize";
@@ -101,8 +101,7 @@ bool ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID,
       return false;
     }
 
-    reply = screenSaverInterface.call(
-        "Inhibit", "Synergy",
+    reply = screenSaverInterface.call("Inhibit", "Synergy",
         "Sleep is manually prevented by the Synergy preferences");
     if (reply.isValid())
       cookies[serviceNum] = reply.value();

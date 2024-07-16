@@ -126,8 +126,8 @@ public:
   static bool cmpLess(const String::value_type &a, const String::value_type &b);
 
   //! Returns true iff \c a is lexicographically equal to \c b
-  static bool cmpEqual(const String::value_type &a,
-                       const String::value_type &b);
+  static bool cmpEqual(
+      const String::value_type &a, const String::value_type &b);
 };
 
 } // namespace string
