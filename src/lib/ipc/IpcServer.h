@@ -90,7 +90,9 @@ private:
 #ifdef TEST_ENV
 public:
   IpcServer()
-      : m_mock(true), m_events(nullptr), m_socketMultiplexer(nullptr),
+      : m_mock(true),
+        m_events(nullptr),
+        m_socketMultiplexer(nullptr),
         m_socket(nullptr) {}
 #endif
 };

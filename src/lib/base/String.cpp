@@ -241,7 +241,11 @@ bool CaselessCmp::cmpLess(
 }
 
 bool CaselessCmp::less(const String &a, const String &b) {
-  return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(),
+  return std::lexicographical_compare(
+      a.begin(),
+      a.end(),
+      b.begin(),
+      b.end(),
       &synergy::string::CaselessCmp::cmpLess);
 }
 

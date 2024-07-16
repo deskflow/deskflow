@@ -67,7 +67,9 @@
 ClientApp::ClientApp(
     IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver)
     : App(events, createTaskBarReceiver, new lib::synergy::ClientArgs()),
-      m_client(NULL), m_clientScreen(NULL), m_serverAddress(NULL) {}
+      m_client(NULL),
+      m_clientScreen(NULL),
+      m_serverAddress(NULL) {}
 
 ClientApp::~ClientApp() {}
 
@@ -93,8 +95,11 @@ void ClientApp::parseArgs(int argc, const char *const *argv) {
         // server.  a bad port will never get better.  patch by Brent
         // Priddy.
         if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
-          LOG((CLOG_CRIT "%s: %s" BYE, args().m_pname, e.what(),
-              args().m_pname));
+          LOG(
+              (CLOG_CRIT "%s: %s" BYE,
+               args().m_pname,
+               e.what(),
+               args().m_pname));
           m_bye(kExitFailed);
         }
       }
@@ -165,17 +170,30 @@ const char *ClientApp::daemonInfo() const {
 synergy::Screen *ClientApp::createScreen() {
 #if WINAPI_MSWINDOWS
   return new synergy::Screen(
-      new MSWindowsScreen(false, args().m_noHooks, args().m_stopOnDeskSwitch,
-          m_events, args().m_enableLangSync, args().m_clientScrollDirection),
+      new MSWindowsScreen(
+          false,
+          args().m_noHooks,
+          args().m_stopOnDeskSwitch,
+          m_events,
+          args().m_enableLangSync,
+          args().m_clientScrollDirection),
       m_events);
 #elif WINAPI_XWINDOWS
   return new synergy::Screen(
-      new XWindowsScreen(args().m_display, false, args().m_disableXInitThreads,
-          args().m_yscroll, m_events, args().m_clientScrollDirection),
+      new XWindowsScreen(
+          args().m_display,
+          false,
+          args().m_disableXInitThreads,
+          args().m_yscroll,
+          m_events,
+          args().m_clientScrollDirection),
       m_events);
 #elif WINAPI_CARBON
   return new synergy::Screen(
-      new OSXScreen(m_events, false, args().m_enableLangSync,
+      new OSXScreen(
+          m_events,
+          false,
+          args().m_enableLangSync,
           args().m_clientScrollDirection),
       m_events);
 #endif
@@ -222,7 +240,8 @@ void ClientApp::handleScreenError(const Event &, void *) {
 synergy::Screen *ClientApp::openClientScreen() {
   synergy::Screen *screen = createScreen();
   screen->setEnableDragDrop(argsBase().m_enableDragDrop);
-  m_events->adoptHandler(m_events->forIScreen().error(),
+  m_events->adoptHandler(
+      m_events->forIScreen().error(),
       screen->getEventTarget(),
       new TMethodEventJob<ClientApp>(this, &ClientApp::handleScreenError));
   return screen;
@@ -250,7 +269,9 @@ void ClientApp::scheduleClientRestart(double retryTime) {
   // install a timer and handler to retry later
   LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
   EventQueueTimer *timer = m_events->newOneShotTimer(retryTime, NULL);
-  m_events->adoptHandler(Event::kTimer, timer,
+  m_events->adoptHandler(
+      Event::kTimer,
+      timer,
       new TMethodEventJob<ClientApp>(
           this, &ClientApp::handleClientRestart, timer));
 }
@@ -267,10 +288,12 @@ void ClientApp::handleClientFailed(const Event &e, void *) {
     std::unique_ptr<Client::FailInfo> info(
         static_cast<Client::FailInfo *>(e.getData()));
 
-    updateStatus(String("Failed to connect to server: ") + info->m_what +
-                 " Trying next address...");
-    LOG((CLOG_NOTE "failed to connect to server=%s, trying next address",
-        info->m_what.c_str()));
+    updateStatus(
+        String("Failed to connect to server: ") + info->m_what +
+        " Trying next address...");
+    LOG(
+        (CLOG_NOTE "failed to connect to server=%s, trying next address",
+         info->m_what.c_str()));
     if (!m_suspended) {
       scheduleClientRestart(nextRestartTimeout());
     }
@@ -306,26 +329,32 @@ void ClientApp::handleClientDisconnected(const Event &, void *) {
   updateStatus();
 }
 
-Client *ClientApp::openClient(const String &name, const NetworkAddress &address,
+Client *ClientApp::openClient(
+    const String &name,
+    const NetworkAddress &address,
     synergy::Screen *screen) {
   Client *client =
       new Client(m_events, name, address, getSocketFactory(), screen, args());
 
   try {
-    m_events->adoptHandler(m_events->forClient().connected(),
+    m_events->adoptHandler(
+        m_events->forClient().connected(),
         client->getEventTarget(),
         new TMethodEventJob<ClientApp>(
             this, &ClientApp::handleClientConnected));
 
-    m_events->adoptHandler(m_events->forClient().connectionFailed(),
+    m_events->adoptHandler(
+        m_events->forClient().connectionFailed(),
         client->getEventTarget(),
         new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientFailed));
 
-    m_events->adoptHandler(m_events->forClient().connectionRefused(),
+    m_events->adoptHandler(
+        m_events->forClient().connectionRefused(),
         client->getEventTarget(),
         new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRefused));
 
-    m_events->adoptHandler(m_events->forClient().disconnected(),
+    m_events->adoptHandler(
+        m_events->forClient().disconnected(),
         client->getEventTarget(),
         new TMethodEventJob<ClientApp>(
             this, &ClientApp::handleClientDisconnected));

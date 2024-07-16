@@ -60,10 +60,16 @@ extern Status DPMSInfo(Display *, CARD16 *, BOOL *);
 
 XWindowsScreenSaver::XWindowsScreenSaver(
     Display *display, Window window, void *eventTarget, IEventQueue *events)
-    : m_display(display), m_xscreensaverSink(window),
-      m_eventTarget(eventTarget), m_xscreensaver(None),
-      m_xscreensaverActive(false), m_dpms(false), m_disabled(false),
-      m_suppressDisable(false), m_disableTimer(NULL), m_disablePos(0),
+    : m_display(display),
+      m_xscreensaverSink(window),
+      m_eventTarget(eventTarget),
+      m_xscreensaver(None),
+      m_xscreensaverActive(false),
+      m_dpms(false),
+      m_disabled(false),
+      m_suppressDisable(false),
+      m_disableTimer(NULL),
+      m_disablePos(0),
       m_events(events) {
   // get atoms
   m_atomScreenSaver = XInternAtom(m_display, "SCREENSAVER", False);
@@ -112,7 +118,9 @@ XWindowsScreenSaver::XWindowsScreenSaver(
   }
 
   // install disable timer event handler
-  m_events->adoptHandler(Event::kTimer, this,
+  m_events->adoptHandler(
+      Event::kTimer,
+      this,
       new TMethodEventJob<XWindowsScreenSaver>(
           this, &XWindowsScreenSaver::handleDisableTimer));
 }
@@ -344,15 +352,18 @@ void XWindowsScreenSaver::setXScreenSaver(Window window) {
 bool XWindowsScreenSaver::isXScreenSaver(Window w) const {
   // check for m_atomScreenSaverVersion string property
   Atom type;
-  return (XWindowsUtil::getWindowProperty(m_display, w,
-              m_atomScreenSaverVersion, NULL, &type, NULL, False) &&
-          type == XA_STRING);
+  return (
+      XWindowsUtil::getWindowProperty(
+          m_display, w, m_atomScreenSaverVersion, NULL, &type, NULL, False) &&
+      type == XA_STRING);
 }
 
 void XWindowsScreenSaver::setXScreenSaverActive(bool activated) {
   if (m_xscreensaverActive != activated) {
-    LOG((CLOG_DEBUG "xscreensaver %s on window 0x%08x",
-        activated ? "activated" : "deactivated", m_xscreensaver));
+    LOG(
+        (CLOG_DEBUG "xscreensaver %s on window 0x%08x",
+         activated ? "activated" : "deactivated",
+         m_xscreensaver));
     m_xscreensaverActive = activated;
 
     // if screen saver was activated forcefully (i.e. against
@@ -366,9 +377,9 @@ void XWindowsScreenSaver::setXScreenSaverActive(bool activated) {
       m_events->addEvent(Event(
           m_events->forIPrimaryScreen().screensaverActivated(), m_eventTarget));
     } else {
-      m_events->addEvent(
-          Event(m_events->forIPrimaryScreen().screensaverDeactivated(),
-              m_eventTarget));
+      m_events->addEvent(Event(
+          m_events->forIPrimaryScreen().screensaverDeactivated(),
+          m_eventTarget));
     }
   }
 }
@@ -426,7 +437,8 @@ void XWindowsScreenSaver::clearWatchForXScreenSaver() {
   // stop watching all windows
   XWindowsUtil::ErrorLock lock(m_display);
   for (WatchList::iterator index = m_watchWindows.begin();
-       index != m_watchWindows.end(); ++index) {
+       index != m_watchWindows.end();
+       ++index) {
     XSelectInput(m_display, index->first, index->second);
   }
   m_watchWindows.clear();

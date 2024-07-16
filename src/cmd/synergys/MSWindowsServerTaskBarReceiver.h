@@ -53,8 +53,8 @@ private:
   void destroyWindow();
 
   BOOL dlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-  static BOOL CALLBACK staticDlgProc(
-      HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+  static BOOL CALLBACK
+  staticDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
   HINSTANCE m_appInstance;

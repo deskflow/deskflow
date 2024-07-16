@@ -325,7 +325,7 @@ struct codepair {
     {XK_Arabic_hamzaonalef, 0x0623}, /* ARABIC LETTER ALEF WITH HAMZA ABOVE */
     {XK_Arabic_hamzaonwaw, 0x0624},  /* ARABIC LETTER WAW WITH HAMZA ABOVE */
     {XK_Arabic_hamzaunderalef,
-        0x0625},                     /* ARABIC LETTER ALEF WITH HAMZA BELOW */
+     0x0625},                        /* ARABIC LETTER ALEF WITH HAMZA BELOW */
     {XK_Arabic_hamzaonyeh, 0x0626},  /* ARABIC LETTER YEH WITH HAMZA ABOVE */
     {XK_Arabic_alef, 0x0627},        /* ARABIC LETTER ALEF */
     {XK_Arabic_beh, 0x0628},         /* ARABIC LETTER BEH */
@@ -386,7 +386,7 @@ struct codepair {
     {XK_Ukrainian_ie, 0x0454},  /* CYRILLIC SMALL LETTER UKRAINIAN IE */
     {XK_Macedonia_dse, 0x0455}, /* CYRILLIC SMALL LETTER DZE */
     {XK_Ukrainian_i,
-        0x0456}, /* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I */
+     0x0456}, /* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I */
     {XK_Ukrainian_yi, 0x0457},  /* CYRILLIC SMALL LETTER YI */
     {XK_Cyrillic_je, 0x0458},   /* CYRILLIC SMALL LETTER JE */
     {XK_Cyrillic_lje, 0x0459},  /* CYRILLIC SMALL LETTER LJE */
@@ -395,7 +395,7 @@ struct codepair {
     {XK_Macedonia_kje, 0x045c}, /* CYRILLIC SMALL LETTER KJE */
 #if defined(XK_Ukrainian_ghe_with_upturn)
     {XK_Ukrainian_ghe_with_upturn,
-        0x0491}, /* CYRILLIC SMALL LETTER GHE WITH UPTURN */
+     0x0491}, /* CYRILLIC SMALL LETTER GHE WITH UPTURN */
 #endif
     {XK_Byelorussian_shortu, 0x045e}, /* CYRILLIC SMALL LETTER SHORT U */
     {XK_Cyrillic_dzhe, 0x045f},       /* CYRILLIC SMALL LETTER DZHE */
@@ -406,7 +406,7 @@ struct codepair {
     {XK_Ukrainian_IE, 0x0404},        /* CYRILLIC CAPITAL LETTER UKRAINIAN IE */
     {XK_Macedonia_DSE, 0x0405},       /* CYRILLIC CAPITAL LETTER DZE */
     {XK_Ukrainian_I,
-        0x0406}, /* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
+     0x0406}, /* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
     {XK_Ukrainian_YI, 0x0407},  /* CYRILLIC CAPITAL LETTER YI */
     {XK_Cyrillic_JE, 0x0408},   /* CYRILLIC CAPITAL LETTER JE */
     {XK_Cyrillic_LJE, 0x0409},  /* CYRILLIC CAPITAL LETTER LJE */
@@ -415,7 +415,7 @@ struct codepair {
     {XK_Macedonia_KJE, 0x040c}, /* CYRILLIC CAPITAL LETTER KJE */
 #if defined(XK_Ukrainian_GHE_WITH_UPTURN)
     {XK_Ukrainian_GHE_WITH_UPTURN,
-        0x0490}, /* CYRILLIC CAPITAL LETTER GHE WITH UPTURN */
+     0x0490}, /* CYRILLIC CAPITAL LETTER GHE WITH UPTURN */
 #endif
     {XK_Byelorussian_SHORTU, 0x040e}, /* CYRILLIC CAPITAL LETTER SHORT U */
     {XK_Cyrillic_DZHE, 0x040f},       /* CYRILLIC CAPITAL LETTER DZHE */
@@ -487,37 +487,37 @@ struct codepair {
 #if defined(XK_Greek_ALPHAaccent)
     {XK_Greek_ALPHAaccent, 0x0386}, /* GREEK CAPITAL LETTER ALPHA WITH TONOS */
     {XK_Greek_EPSILONaccent,
-        0x0388},                   /* GREEK CAPITAL LETTER EPSILON WITH TONOS */
+     0x0388},                      /* GREEK CAPITAL LETTER EPSILON WITH TONOS */
     {XK_Greek_ETAaccent, 0x0389},  /* GREEK CAPITAL LETTER ETA WITH TONOS */
     {XK_Greek_IOTAaccent, 0x038a}, /* GREEK CAPITAL LETTER IOTA WITH TONOS */
     {XK_Greek_IOTAdiaeresis,
-        0x03aa}, /* GREEK CAPITAL LETTER IOTA WITH DIALYTIKA */
+     0x03aa}, /* GREEK CAPITAL LETTER IOTA WITH DIALYTIKA */
     {XK_Greek_OMICRONaccent,
-        0x038c}, /* GREEK CAPITAL LETTER OMICRON WITH TONOS */
+     0x038c}, /* GREEK CAPITAL LETTER OMICRON WITH TONOS */
     {XK_Greek_UPSILONaccent,
-        0x038e}, /* GREEK CAPITAL LETTER UPSILON WITH TONOS */
+     0x038e}, /* GREEK CAPITAL LETTER UPSILON WITH TONOS */
     {XK_Greek_UPSILONdieresis,
-        0x03ab}, /* GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA */
+     0x03ab}, /* GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA */
     {XK_Greek_OMEGAaccent, 0x038f}, /* GREEK CAPITAL LETTER OMEGA WITH TONOS */
     {XK_Greek_accentdieresis, 0x0385}, /* GREEK DIALYTIKA TONOS */
     {XK_Greek_horizbar, 0x2015},       /* HORIZONTAL BAR */
     {XK_Greek_alphaaccent, 0x03ac},    /* GREEK SMALL LETTER ALPHA WITH TONOS */
     {XK_Greek_epsilonaccent,
-        0x03ad},                   /* GREEK SMALL LETTER EPSILON WITH TONOS */
+     0x03ad},                      /* GREEK SMALL LETTER EPSILON WITH TONOS */
     {XK_Greek_etaaccent, 0x03ae},  /* GREEK SMALL LETTER ETA WITH TONOS */
     {XK_Greek_iotaaccent, 0x03af}, /* GREEK SMALL LETTER IOTA WITH TONOS */
     {XK_Greek_iotadieresis,
-        0x03ca}, /* GREEK SMALL LETTER IOTA WITH DIALYTIKA */
+     0x03ca}, /* GREEK SMALL LETTER IOTA WITH DIALYTIKA */
     {XK_Greek_iotaaccentdieresis,
-        0x0390}, /* GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS */
+     0x0390}, /* GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS */
     {XK_Greek_omicronaccent,
-        0x03cc}, /* GREEK SMALL LETTER OMICRON WITH TONOS */
+     0x03cc}, /* GREEK SMALL LETTER OMICRON WITH TONOS */
     {XK_Greek_upsilonaccent,
-        0x03cd}, /* GREEK SMALL LETTER UPSILON WITH TONOS */
+     0x03cd}, /* GREEK SMALL LETTER UPSILON WITH TONOS */
     {XK_Greek_upsilondieresis,
-        0x03cb}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA */
+     0x03cb}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA */
     {XK_Greek_upsilonaccentdieresis,
-        0x03b0}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA AND TONOS */
+     0x03b0}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA AND TONOS */
     {XK_Greek_omegaaccent, 0x03ce}, /* GREEK SMALL LETTER OMEGA WITH TONOS */
     {XK_Greek_ALPHA, 0x0391},       /* GREEK CAPITAL LETTER ALPHA */
     {XK_Greek_BETA, 0x0392},        /* GREEK CAPITAL LETTER BETA */
@@ -626,14 +626,14 @@ struct codepair {
     {XK_lowleftcorner, 0x2514},  /* BOX DRAWINGS LIGHT UP AND RIGHT */
     {XK_crossinglines, 0x253c}, /* BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL */
     {XK_horizlinescan1,
-        0x23ba}, /* HORIZONTAL SCAN LINE-1 (Unicode 3.2 draft) */
+     0x23ba}, /* HORIZONTAL SCAN LINE-1 (Unicode 3.2 draft) */
     {XK_horizlinescan3,
-        0x23bb}, /* HORIZONTAL SCAN LINE-3 (Unicode 3.2 draft) */
+     0x23bb}, /* HORIZONTAL SCAN LINE-3 (Unicode 3.2 draft) */
     {XK_horizlinescan5, 0x2500}, /* BOX DRAWINGS LIGHT HORIZONTAL */
     {XK_horizlinescan7,
-        0x23bc}, /* HORIZONTAL SCAN LINE-7 (Unicode 3.2 draft) */
+     0x23bc}, /* HORIZONTAL SCAN LINE-7 (Unicode 3.2 draft) */
     {XK_horizlinescan9,
-        0x23bd},             /* HORIZONTAL SCAN LINE-9 (Unicode 3.2 draft) */
+     0x23bd},                /* HORIZONTAL SCAN LINE-9 (Unicode 3.2 draft) */
     {XK_leftt, 0x251c},      /* BOX DRAWINGS LIGHT VERTICAL AND RIGHT */
     {XK_rightt, 0x2524},     /* BOX DRAWINGS LIGHT VERTICAL AND LEFT */
     {XK_bott, 0x2534},       /* BOX DRAWINGS LIGHT UP AND HORIZONTAL */
@@ -1270,39 +1270,262 @@ XK_uhorn
 
 // map "Internet" keys to KeyIDs
 static const KeySym s_map1008FF[] = {
-    /* 0x00 */ 0, 0, kKeyBrightnessUp, kKeyBrightnessDown, 0, 0, 0, 0,
-    /* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
-    /* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
-    /* 0x18 */ kKeyWWWHome, kKeyAppMail, 0, kKeyWWWSearch, 0, 0, 0, 0,
-    /* 0x20 */ 0, 0, 0, 0, 0, 0, kKeyWWWBack, kKeyWWWForward,
-    /* 0x28 */ kKeyWWWStop, kKeyWWWRefresh, 0, 0, kKeyEject, 0, 0, 0,
-    /* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
-    /* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
-    /* 0x48 */ 0, 0, kKeyMissionControl, kKeyLaunchpad, 0, 0, 0, 0,
-    /* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-    /* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0};
+    /* 0x00 */ 0,
+    0,
+    kKeyBrightnessUp,
+    kKeyBrightnessDown,
+    0,
+    0,
+    0,
+    0,
+    /* 0x08 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x10 */ 0,
+    kKeyAudioDown,
+    kKeyAudioMute,
+    kKeyAudioUp,
+    /* 0x14 */ kKeyAudioPlay,
+    kKeyAudioStop,
+    kKeyAudioPrev,
+    kKeyAudioNext,
+    /* 0x18 */ kKeyWWWHome,
+    kKeyAppMail,
+    0,
+    kKeyWWWSearch,
+    0,
+    0,
+    0,
+    0,
+    /* 0x20 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    kKeyWWWBack,
+    kKeyWWWForward,
+    /* 0x28 */ kKeyWWWStop,
+    kKeyWWWRefresh,
+    0,
+    0,
+    kKeyEject,
+    0,
+    0,
+    0,
+    /* 0x30 */ kKeyWWWFavorites,
+    0,
+    kKeyAppMedia,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x38 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x40 */ kKeyAppUser1,
+    kKeyAppUser2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x48 */ 0,
+    0,
+    kKeyMissionControl,
+    kKeyLaunchpad,
+    0,
+    0,
+    0,
+    0,
+    /* 0x50 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x58 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x60 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x68 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x70 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x78 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x80 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x88 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x90 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0x98 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xa0 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xa8 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xb0 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xb8 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xc0 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xc8 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xd0 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xd8 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xe0 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xe8 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xf0 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    /* 0xf8 */ 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0};
 
 //
 // XWindowsUtil
@@ -1310,8 +1533,13 @@ static const KeySym s_map1008FF[] = {
 
 XWindowsUtil::KeySymMap XWindowsUtil::s_keySymToUCS4;
 
-bool XWindowsUtil::getWindowProperty(Display *display, Window window,
-    Atom property, String *data, Atom *type, SInt32 *format,
+bool XWindowsUtil::getWindowProperty(
+    Display *display,
+    Window window,
+    Atom property,
+    String *data,
+    Atom *type,
+    SInt32 *format,
     bool deleteProperty) {
   assert(display != NULL);
 
@@ -1330,9 +1558,19 @@ bool XWindowsUtil::getWindowProperty(Display *display, Window window,
     // get more data
     unsigned long numItems;
     unsigned char *rawData;
-    if (XGetWindowProperty(display, window, property, offset, length, False,
-            AnyPropertyType, &actualType, &actualDatumSize, &numItems,
-            &bytesLeft, &rawData) != Success ||
+    if (XGetWindowProperty(
+            display,
+            window,
+            property,
+            offset,
+            length,
+            False,
+            AnyPropertyType,
+            &actualType,
+            &actualDatumSize,
+            &numItems,
+            &bytesLeft,
+            &rawData) != Success ||
         actualType == None || actualDatumSize == 0) {
       // failed
       okay = false;
@@ -1385,18 +1623,29 @@ bool XWindowsUtil::getWindowProperty(Display *display, Window window,
   }
 
   if (okay) {
-    LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property,
-        window, (data == NULL) ? 0 : data->size()));
+    LOG(
+        (CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d",
+         property,
+         window,
+         (data == NULL) ? 0 : data->size()));
     return true;
   } else {
-    LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property,
-        window));
+    LOG(
+        (CLOG_DEBUG2 "can't read property %d on window 0x%08x",
+         property,
+         window));
     return false;
   }
 }
 
-bool XWindowsUtil::setWindowProperty(Display *display, Window window,
-    Atom property, const void *vdata, UInt32 size, Atom type, SInt32 format) {
+bool XWindowsUtil::setWindowProperty(
+    Display *display,
+    Window window,
+    Atom property,
+    const void *vdata,
+    UInt32 size,
+    Atom type,
+    SInt32 format) {
   const UInt32 length = 4 * XMaxRequestSize(display);
   const unsigned char *data = static_cast<const unsigned char *>(vdata);
   UInt32 datumSize = static_cast<UInt32>(format / 8);
@@ -1416,8 +1665,15 @@ bool XWindowsUtil::setWindowProperty(Display *display, Window window,
   }
 
   // send first chunk
-  XChangeProperty(display, window, property, type, format, PropModeReplace,
-      data, chunkSize / datumSize);
+  XChangeProperty(
+      display,
+      window,
+      property,
+      type,
+      format,
+      PropModeReplace,
+      data,
+      chunkSize / datumSize);
 
   // append remaining chunks
   data += chunkSize;
@@ -1427,8 +1683,15 @@ bool XWindowsUtil::setWindowProperty(Display *display, Window window,
     if (chunkSize > length) {
       chunkSize = length;
     }
-    XChangeProperty(display, window, property, type, format, PropModeAppend,
-        data, chunkSize / datumSize);
+    XChangeProperty(
+        display,
+        window,
+        property,
+        type,
+        format,
+        PropModeAppend,
+        data,
+        chunkSize / datumSize);
     data += chunkSize;
     size -= chunkSize;
   }
@@ -1458,7 +1721,10 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
 
   // wait for reply
   XEvent xevent;
-  XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
+  XIfEvent(
+      display,
+      &xevent,
+      &XWindowsUtil::propertyNotifyPredicate,
       (XPointer)&filter);
   assert(xevent.type == PropertyNotify);
   assert(xevent.xproperty.window == window);
@@ -1627,8 +1893,8 @@ String XWindowsUtil::atomToString(Display *display, Atom atom) {
   }
 }
 
-String XWindowsUtil::atomsToString(
-    Display *display, const Atom *atom, UInt32 num) {
+String
+XWindowsUtil::atomsToString(Display *display, const Atom *atom, UInt32 num) {
   char **names = new char *[num];
   bool error = false;
   XWindowsUtil::ErrorLock lock(display, &error);
@@ -1669,8 +1935,11 @@ void XWindowsUtil::appendAtomData(String &data, Atom atom) {
 }
 
 void XWindowsUtil::replaceAtomData(String &data, UInt32 index, Atom atom) {
-  data.replace(index * sizeof(Atom), sizeof(Atom),
-      reinterpret_cast<const char *>(&atom), sizeof(Atom));
+  data.replace(
+      index * sizeof(Atom),
+      sizeof(Atom),
+      reinterpret_cast<const char *>(&atom),
+      sizeof(Atom));
 }
 
 void XWindowsUtil::appendTimeData(String &data, Time time) {
@@ -1682,9 +1951,9 @@ Bool XWindowsUtil::propertyNotifyPredicate(
   PropertyNotifyPredicateInfo *filter =
       reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
   return (xevent->type == PropertyNotify &&
-             xevent->xproperty.window == filter->m_window &&
-             xevent->xproperty.atom == filter->m_property &&
-             xevent->xproperty.state == PropertyNewValue)
+          xevent->xproperty.window == filter->m_window &&
+          xevent->xproperty.atom == filter->m_property &&
+          xevent->xproperty.state == PropertyNewValue)
              ? True
              : False;
 }

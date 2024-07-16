@@ -34,14 +34,14 @@ MSWindowsClipboardTextConverter::~MSWindowsClipboardTextConverter() {
 
 UINT MSWindowsClipboardTextConverter::getWin32Format() const { return CF_TEXT; }
 
-String MSWindowsClipboardTextConverter::doFromIClipboard(
-    const String &data) const {
+String
+MSWindowsClipboardTextConverter::doFromIClipboard(const String &data) const {
   // convert and add nul terminator
   return Unicode::UTF8ToText(data) += '\0';
 }
 
-String MSWindowsClipboardTextConverter::doToIClipboard(
-    const String &data) const {
+String
+MSWindowsClipboardTextConverter::doToIClipboard(const String &data) const {
   // convert and truncate at first nul terminator
   String dst = Unicode::textToUTF8(data);
   String::size_type n = dst.find('\0');

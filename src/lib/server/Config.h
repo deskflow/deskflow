@@ -123,7 +123,10 @@ private:
     bool hasEdge(const CellEdge &) const;
     bool overlaps(const CellEdge &) const;
 
-    bool getLink(EDirection side, float position, const CellEdge *&src,
+    bool getLink(
+        EDirection side,
+        float position,
+        const CellEdge *&src,
         const CellEdge *&dst) const;
 
     bool operator==(const Cell &) const;
@@ -258,8 +261,14 @@ public:
   and all of \c srcStart, \c srcEnd, \c dstStart, or \c dstEnd must
   be inside the range [0,1].
   */
-  bool connect(const String &srcName, EDirection srcSide, float srcStart,
-      float srcEnd, const String &dstName, float dstStart, float dstEnd);
+  bool connect(
+      const String &srcName,
+      EDirection srcSide,
+      float srcStart,
+      float srcEnd,
+      const String &dstName,
+      float dstStart,
+      float dstEnd);
 
   //! Disconnect screens
   /*!
@@ -457,10 +466,16 @@ private:
   void readSectionLinks(ConfigReadContext &);
   void readSectionAliases(ConfigReadContext &);
 
-  InputFilter::Condition *parseCondition(ConfigReadContext &,
-      const String &condition, const std::vector<String> &args);
-  void parseAction(ConfigReadContext &, const String &action,
-      const std::vector<String> &args, InputFilter::Rule &, bool activate);
+  InputFilter::Condition *parseCondition(
+      ConfigReadContext &,
+      const String &condition,
+      const std::vector<String> &args);
+  void parseAction(
+      ConfigReadContext &,
+      const String &action,
+      const std::vector<String> &args,
+      InputFilter::Rule &,
+      bool activate);
 
   void parseScreens(
       ConfigReadContext &, const String &, std::set<String> &screens) const;
@@ -500,8 +515,12 @@ public:
   OptionValue parseCorner(const String &) const;
   OptionValue parseCorners(const String &) const;
   Config::Interval parseInterval(const ArgList &args) const;
-  void parseNameWithArgs(const String &type, const String &line,
-      const String &delim, String::size_type &index, String &name,
+  void parseNameWithArgs(
+      const String &type,
+      const String &line,
+      const String &delim,
+      String::size_type &index,
+      String &name,
       ArgList &args) const;
   IPlatformScreen::KeyInfo *parseKeystroke(const String &keystroke) const;
   IPlatformScreen::KeyInfo *parseKeystroke(
@@ -528,7 +547,9 @@ Thrown when a configuration stream cannot be parsed.
 class XConfigRead : public XBase {
 public:
   XConfigRead(const ConfigReadContext &context, const String &);
-  XConfigRead(const ConfigReadContext &context, const char *errorFmt,
+  XConfigRead(
+      const ConfigReadContext &context,
+      const char *errorFmt,
       const String &arg);
   virtual ~XConfigRead() _NOEXCEPT;
 

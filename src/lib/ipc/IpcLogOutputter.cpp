@@ -39,14 +39,21 @@ enum EIpcLogOutputter {
 
 IpcLogOutputter::IpcLogOutputter(
     IpcServer &ipcServer, EIpcClientType clientType, bool useThread)
-    : m_ipcServer(ipcServer), m_bufferMutex(ARCH->newMutex()), m_sending(false),
-      m_bufferThread(nullptr), m_running(false),
-      m_notifyCond(ARCH->newCondVar()), m_notifyMutex(ARCH->newMutex()),
-      m_bufferThreadId(0), m_bufferWaiting(false),
+    : m_ipcServer(ipcServer),
+      m_bufferMutex(ARCH->newMutex()),
+      m_sending(false),
+      m_bufferThread(nullptr),
+      m_running(false),
+      m_notifyCond(ARCH->newCondVar()),
+      m_notifyMutex(ARCH->newMutex()),
+      m_bufferThreadId(0),
+      m_bufferWaiting(false),
       m_bufferMaxSize(kBufferMaxSize),
       m_bufferRateWriteLimit(kBufferRateWriteLimit),
-      m_bufferRateTimeLimit(kBufferRateTimeLimit), m_bufferWriteCount(0),
-      m_bufferRateStart(ARCH->time()), m_clientType(clientType),
+      m_bufferRateTimeLimit(kBufferRateTimeLimit),
+      m_bufferWriteCount(0),
+      m_bufferRateStart(ARCH->time()),
+      m_clientType(clientType),
       m_runningMutex(ARCH->newMutex()) {
   if (useThread) {
     m_bufferThread = new Thread(

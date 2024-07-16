@@ -34,7 +34,8 @@ TEST(IArchStringTests, convStringWCToMB_will_work_do_simple_conversions) {
   EXPECT_EQ(errors, false);
 }
 
-TEST(IArchStringTests,
+TEST(
+    IArchStringTests,
     convStringWCToMB_will_work_do_simple_conversions_noresult) {
   SampleIArchString as;
   bool errors;

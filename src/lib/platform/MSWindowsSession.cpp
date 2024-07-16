@@ -64,8 +64,11 @@ bool MSWindowsSession::isProcessInSession(
       if (!pidToSidRet) {
         // if we can not acquire session associated with a specified process,
         // simply ignore it
-        LOG((CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
-            entry.th32ProcessID, entry.szExeFile, GetLastError()));
+        LOG(
+            (CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
+             entry.th32ProcessID,
+             entry.szExeFile,
+             GetLastError()));
         gotEntry = nextProcessEntry(snapshot, &entry);
         continue;
       } else {
@@ -88,13 +91,16 @@ bool MSWindowsSession::isProcessInSession(
 
   std::string nameListJoin;
   for (std::list<std::string>::iterator it = nameList.begin();
-       it != nameList.end(); it++) {
+       it != nameList.end();
+       it++) {
     nameListJoin.append(*it);
     nameListJoin.append(", ");
   }
 
-  LOG((CLOG_DEBUG2 "processes in session %d: %s", m_activeSessionId,
-      nameListJoin.c_str()));
+  LOG(
+      (CLOG_DEBUG2 "processes in session %d: %s",
+       m_activeSessionId,
+       nameListJoin.c_str()));
 
   CloseHandle(snapshot);
 
@@ -120,8 +126,13 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security) {
   }
 
   HANDLE newToken;
-  if (!DuplicateTokenEx(sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
-          security, SecurityImpersonation, TokenPrimary, &newToken)) {
+  if (!DuplicateTokenEx(
+          sourceToken,
+          TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
+          security,
+          SecurityImpersonation,
+          TokenPrimary,
+          &newToken)) {
 
     LOG((CLOG_ERR "could not duplicate token"));
     throw XArch(new XArchEvalWindows);

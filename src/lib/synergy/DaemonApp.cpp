@@ -100,11 +100,13 @@ int winMainLoopStatic(int, const char **) {
 #endif
 
 DaemonApp::DaemonApp()
-    : m_ipcServer(nullptr), m_ipcLogOutputter(nullptr),
+    : m_ipcServer(nullptr),
+      m_ipcLogOutputter(nullptr),
 #if SYSAPI_WIN32
       m_watchdog(nullptr),
 #endif
-      m_events(nullptr), m_fileLogOutputter(nullptr) {
+      m_events(nullptr),
+      m_fileLogOutputter(nullptr) {
   s_instance = this;
 }
 
@@ -229,7 +231,8 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
 
-    m_events->adoptHandler(m_events->forIpcServer().messageReceived(),
+    m_events->adoptHandler(
+        m_events->forIpcServer().messageReceived(),
         m_ipcServer,
         new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
 
@@ -305,8 +308,10 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
 
     if (!command.empty()) {
       LOG((CLOG_DEBUG "daemon got new core command"));
-      LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(),
-          command.c_str()));
+      LOG(
+          (CLOG_DEBUG2 "new command, elevate=%d command=%s",
+           cm->elevate(),
+           command.c_str()));
 
       std::vector<String> argsArray;
       ArgParser::splitCommandString(command, argsArray);

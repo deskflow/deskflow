@@ -44,8 +44,12 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
   return info;
 }
 
-IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask,
-    KeyButton button, SInt32 count, const std::set<String> &destinations) {
+IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
+    KeyID id,
+    KeyModifierMask mask,
+    KeyButton button,
+    SInt32 count,
+    const std::set<String> &destinations) {
   String screens = join(destinations);
   const char *buffer = screens.c_str();
 
@@ -95,9 +99,10 @@ bool IKeyState::KeyInfo::contains(const char *screens, const String &name) {
 }
 
 bool IKeyState::KeyInfo::equal(const KeyInfo *a, const KeyInfo *b) {
-  return (a->m_key == b->m_key && a->m_mask == b->m_mask &&
-          a->m_button == b->m_button && a->m_count == b->m_count &&
-          strcmp(a->m_screensBuffer, b->m_screensBuffer) == 0);
+  return (
+      a->m_key == b->m_key && a->m_mask == b->m_mask &&
+      a->m_button == b->m_button && a->m_count == b->m_count &&
+      strcmp(a->m_screensBuffer, b->m_screensBuffer) == 0);
 }
 
 String IKeyState::KeyInfo::join(const std::set<String> &destinations) {

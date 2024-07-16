@@ -109,8 +109,13 @@ void StreamChunker::sendFile(
   s_isChunkingFile = false;
 }
 
-void StreamChunker::sendClipboard(String &data, size_t size, ClipboardID id,
-    UInt32 sequence, IEventQueue *events, void *eventTarget) {
+void StreamChunker::sendClipboard(
+    String &data,
+    size_t size,
+    ClipboardID id,
+    UInt32 sequence,
+    IEventQueue *events,
+    void *eventTarget) {
   // send first message (data size)
   String dataSize = synergy::string::sizeTypeToString(size);
   ClipboardChunk *sizeMessage = ClipboardChunk::start(id, sequence, dataSize);

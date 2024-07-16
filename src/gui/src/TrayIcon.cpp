@@ -9,7 +9,8 @@ void TrayIcon::tryCreate() const {
                                                   // underlying DBus connection
                                                   // (on DBus)
     m_pTrayIcon->show();
-    m_connector(m_pTrayIcon.get(),
+    m_connector(
+        m_pTrayIcon.get(),
         SIGNAL(activated(QSystemTrayIcon::ActivationReason)));
   } else {
     QTimer::singleShot(2500, this, &TrayIcon::tryCreate);

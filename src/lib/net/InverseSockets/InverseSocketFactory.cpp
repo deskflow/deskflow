@@ -26,7 +26,8 @@
 
 InverseSocketFactory::InverseSocketFactory(
     IEventQueue *events, SocketMultiplexer *socketMultiplexer)
-    : m_events(events), m_socketMultiplexer(socketMultiplexer) {}
+    : m_events(events),
+      m_socketMultiplexer(socketMultiplexer) {}
 
 IDataSocket *InverseSocketFactory::create(
     bool secure, IArchNetwork::EAddressFamily family) const {

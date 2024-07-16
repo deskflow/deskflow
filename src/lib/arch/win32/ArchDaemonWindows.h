@@ -75,8 +75,12 @@ public:
   static UINT getDaemonQuitMessage();
 
   // IArchDaemon overrides
-  virtual void installDaemon(const char *name, const char *description,
-      const char *pathname, const char *commandLine, const char *dependencies);
+  virtual void installDaemon(
+      const char *name,
+      const char *description,
+      const char *pathname,
+      const char *commandLine,
+      const char *dependencies);
   virtual void uninstallDaemon(const char *name);
   virtual void installDaemon();
   virtual void uninstallDaemon();
@@ -142,5 +146,9 @@ private:
 #define LEGACY_SERVER_DAEMON_NAME _T("Synergy Server")
 #define LEGACY_CLIENT_DAEMON_NAME _T("Synergy Client")
 
-static const TCHAR *const g_daemonKeyPath[] = {_T("SOFTWARE"),
-    _T("The Synergy Project"), _T("Synergy"), _T("Service"), NULL};
+static const TCHAR *const g_daemonKeyPath[] = {
+    _T("SOFTWARE"),
+    _T("The Synergy Project"),
+    _T("Synergy"),
+    _T("Service"),
+    NULL};

@@ -27,8 +27,10 @@ void OSXPowerManager::disableSleep() {
   if (!m_sleepPreventionAssertionID) {
     CFStringRef reasonForActivity = CFSTR("Synergy application");
     IOReturn result = IOPMAssertionCreateWithName(
-        kIOPMAssertPreventUserIdleDisplaySleep, kIOPMAssertionLevelOn,
-        reasonForActivity, &m_sleepPreventionAssertionID);
+        kIOPMAssertPreventUserIdleDisplaySleep,
+        kIOPMAssertionLevelOn,
+        reasonForActivity,
+        &m_sleepPreventionAssertionID);
     if (result != kIOReturnSuccess) {
       m_sleepPreventionAssertionID = 0;
       LOG((CLOG_ERR "failed to disable system idle sleep"));

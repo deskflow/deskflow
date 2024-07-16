@@ -77,8 +77,14 @@ public:
 };
 
 ArchThreadImpl::ArchThreadImpl()
-    : m_refCount(1), m_id(0), m_func(NULL), m_userData(NULL), m_cancel(false),
-      m_cancelling(false), m_exited(false), m_result(NULL),
+    : m_refCount(1),
+      m_id(0),
+      m_func(NULL),
+      m_userData(NULL),
+      m_cancel(false),
+      m_cancelling(false),
+      m_exited(false),
+      m_result(NULL),
       m_networkData(NULL) {
   // do nothing
 }
@@ -90,7 +96,8 @@ ArchThreadImpl::ArchThreadImpl()
 ArchMultithreadPosix *ArchMultithreadPosix::s_instance = NULL;
 
 ArchMultithreadPosix::ArchMultithreadPosix()
-    : m_newThreadCalled(false), m_nextID(0) {
+    : m_newThreadCalled(false),
+      m_nextID(0) {
   assert(s_instance == NULL);
 
   s_instance = this;
@@ -490,8 +497,8 @@ void *ArchMultithreadPosix::getResultOfThread(ArchThread thread) {
   return result;
 }
 
-IArchMultithread::ThreadID ArchMultithreadPosix::getIDOfThread(
-    ArchThread thread) {
+IArchMultithread::ThreadID
+ArchMultithreadPosix::getIDOfThread(ArchThread thread) {
   return thread->m_id;
 }
 
@@ -528,8 +535,11 @@ void ArchMultithreadPosix::startSignalHandler() {
   pthread_attr_t attr;
   int status = pthread_attr_init(&attr);
   if (status == 0) {
-    status = pthread_create(&m_signalThread, &attr,
-        &ArchMultithreadPosix::threadSignalHandler, NULL);
+    status = pthread_create(
+        &m_signalThread,
+        &attr,
+        &ArchMultithreadPosix::threadSignalHandler,
+        NULL);
     pthread_attr_destroy(&attr);
   }
   if (status != 0) {
@@ -550,7 +560,8 @@ ArchThreadImpl *ArchMultithreadPosix::find(pthread_t thread) {
 ArchThreadImpl *ArchMultithreadPosix::findNoRef(pthread_t thread) {
   // linear search
   for (ThreadList::const_iterator index = m_threadList.begin();
-       index != m_threadList.end(); ++index) {
+       index != m_threadList.end();
+       ++index) {
     if ((*index)->m_thread == thread) {
       return *index;
     }
@@ -576,7 +587,8 @@ void ArchMultithreadPosix::insert(ArchThreadImpl *thread) {
 
 void ArchMultithreadPosix::erase(ArchThreadImpl *thread) {
   for (ThreadList::iterator index = m_threadList.begin();
-       index != m_threadList.end(); ++index) {
+       index != m_threadList.end();
+       ++index) {
     if (*index == thread) {
       m_threadList.erase(index);
       break;

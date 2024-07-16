@@ -43,28 +43,68 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
 
-const char *AppConfig::m_SynergySettingsName[] = {"screenName", "port",
-    "interface", "logLevel2", "logToFile", "logFilename", "wizardLastRun",
-    "startedBefore", "elevateMode", "elevateModeEnum", "edition",
-    "cryptoEnabled", "autoHide", "serialKey", "lastVersion",
-    "lastExpiringWarningTime", "activationHasRun", "minimizeToTray",
-    "ActivateEmail", "loadFromSystemScope", "groupServerChecked",
-    "useExternalConfig", "configFile", "useInternalConfig",
-    "groupClientChecked", "serverHostname", "tlsCertPath", "tlsKeyLength",
-    "preventSleep", "languageSync", "invertScrollDirection", "guid",
-    "licenseRegistryUrl", "licenseNextCheck", "initiateConnectionFromServer",
-    "clientHostMode", "serverClientMode"};
+const char *AppConfig::m_SynergySettingsName[] = {
+    "screenName",
+    "port",
+    "interface",
+    "logLevel2",
+    "logToFile",
+    "logFilename",
+    "wizardLastRun",
+    "startedBefore",
+    "elevateMode",
+    "elevateModeEnum",
+    "edition",
+    "cryptoEnabled",
+    "autoHide",
+    "serialKey",
+    "lastVersion",
+    "lastExpiringWarningTime",
+    "activationHasRun",
+    "minimizeToTray",
+    "ActivateEmail",
+    "loadFromSystemScope",
+    "groupServerChecked",
+    "useExternalConfig",
+    "configFile",
+    "useInternalConfig",
+    "groupClientChecked",
+    "serverHostname",
+    "tlsCertPath",
+    "tlsKeyLength",
+    "preventSleep",
+    "languageSync",
+    "invertScrollDirection",
+    "guid",
+    "licenseRegistryUrl",
+    "licenseNextCheck",
+    "initiateConnectionFromServer",
+    "clientHostMode",
+    "serverClientMode"};
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 AppConfig::AppConfig(bool globalLoad)
-    : m_ScreenName(), m_Port(24800), m_Interface(), m_LogLevel(0),
-      m_LogToFile(), m_WizardLastRun(0), m_ProcessMode(kDefaultProcessMode),
-      m_StartedBefore(), m_ElevateMode(kDefaultElevateMode),
-      m_Edition(kUnregistered), m_CryptoEnabled(false), m_AutoHide(false),
-      m_LastExpiringWarningTime(0), m_ActivationHasRun(),
-      m_MinimizeToTray(false), m_ServerGroupChecked(), m_UseExternalConfig(),
-      m_UseInternalConfig(), m_ClientGroupChecked(), m_LoadFromSystemScope() {
+    : m_ScreenName(),
+      m_Port(24800),
+      m_Interface(),
+      m_LogLevel(0),
+      m_LogToFile(),
+      m_WizardLastRun(0),
+      m_ProcessMode(kDefaultProcessMode),
+      m_StartedBefore(),
+      m_ElevateMode(kDefaultElevateMode),
+      m_Edition(kUnregistered),
+      m_CryptoEnabled(false),
+      m_AutoHide(false),
+      m_LastExpiringWarningTime(0),
+      m_ActivationHasRun(),
+      m_MinimizeToTray(false),
+      m_ServerGroupChecked(),
+      m_UseExternalConfig(),
+      m_UseInternalConfig(),
+      m_ClientGroupChecked(),
+      m_LoadFromSystemScope() {
 
   auto writer = ConfigWriter::make();
 
@@ -160,7 +200,8 @@ void AppConfig::loadSettings() {
     // TODO Investigate why kElevateModeEnum isn't loaded fully
     QVariant elevateMode = loadSetting(Setting::kElevateModeEnum);
     if (!elevateMode.isValid()) {
-      elevateMode = loadSetting(Setting::kElevateModeSetting,
+      elevateMode = loadSetting(
+          Setting::kElevateModeSetting,
           QVariant(static_cast<int>(kDefaultElevateMode)));
     }
     m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
@@ -180,9 +221,10 @@ void AppConfig::loadSettings() {
       loadSetting(Setting::kGroupServerCheck, false).toBool();
   m_UseExternalConfig =
       loadSetting(Setting::kUseExternalConfig, false).toBool();
-  m_ConfigFile = loadSetting(
-      Setting::kConfigFile, QDir::homePath() + "/" + m_SynergyConfigName)
-                     .toString();
+  m_ConfigFile =
+      loadSetting(
+          Setting::kConfigFile, QDir::homePath() + "/" + m_SynergyConfigName)
+          .toString();
   m_UseInternalConfig =
       loadSetting(Setting::kUseInternalConfig, false).toBool();
   m_ClientGroupChecked =
@@ -193,8 +235,9 @@ void AppConfig::loadSettings() {
   m_InvertScrollDirection =
       loadSetting(Setting::kInvertScrollDirection, false).toBool();
   m_guid = loadCommonSetting(Setting::kGuid, QUuid::createUuid()).toString();
-  m_licenseRegistryUrl = loadCommonSetting(Setting::kLicenseRegistryUrl,
-      "https://api2.prod.symless.com/license/register")
+  m_licenseRegistryUrl = loadCommonSetting(
+                             Setting::kLicenseRegistryUrl,
+                             "https://api2.prod.symless.com/license/register")
                              .toString();
   m_licenseNextCheck =
       loadCommonSetting(Setting::kLicenseNextCheck, 0).toULongLong();
@@ -365,8 +408,9 @@ bool AppConfig::isCryptoAvailable() const {
   bool result{true};
 
 #ifdef SYNERGY_ENABLE_LICENSING
-  result = (edition() == kPro || edition() == kProChina ||
-            edition() == kBusiness || edition() == kUltimate);
+  result =
+      (edition() == kPro || edition() == kProChina || edition() == kBusiness ||
+       edition() == kUltimate);
 #endif // SYNERGY_ENABLE_LICENSING
 
   return result;
@@ -452,8 +496,8 @@ QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
   return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
 }
 
-QVariant AppConfig::loadCommonSetting(
-    Setting name, const QVariant &defaultValue) const {
+QVariant
+AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
   QVariant result(defaultValue);
   QString setting(settingName(name));
   auto &writer = *ConfigWriter::make();

@@ -33,7 +33,10 @@ public:
       : KeyState((IEventQueue *)&eventQueue, {"en"}, true) {}
 
   MockKeyState(const MockEventQueue &eventQueue, const synergy::KeyMap &keyMap)
-      : KeyState((IEventQueue *)&eventQueue, (synergy::KeyMap &)keyMap, {"en"},
+      : KeyState(
+            (IEventQueue *)&eventQueue,
+            (synergy::KeyMap &)keyMap,
+            {"en"},
             true) {}
 
   MOCK_METHOD(SInt32, pollActiveGroup, (), (const, override));

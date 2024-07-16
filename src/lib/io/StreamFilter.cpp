@@ -26,10 +26,14 @@
 
 StreamFilter::StreamFilter(
     IEventQueue *events, synergy::IStream *stream, bool adoptStream)
-    : m_stream(stream), m_adopted(adoptStream), m_events(events) {
+    : m_stream(stream),
+      m_adopted(adoptStream),
+      m_events(events) {
   // replace handlers for m_stream
   m_events->removeHandlers(m_stream->getEventTarget());
-  m_events->adoptHandler(Event::kUnknown, m_stream->getEventTarget(),
+  m_events->adoptHandler(
+      Event::kUnknown,
+      m_stream->getEventTarget(),
       new TMethodEventJob<StreamFilter>(
           this, &StreamFilter::handleUpstreamEvent));
 }

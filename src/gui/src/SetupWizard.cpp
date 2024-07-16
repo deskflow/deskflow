@@ -27,7 +27,10 @@ SetupWizard::SetupWizard(MainWindow &mainWindow) : m_MainWindow(mainWindow) {
       new validators::ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
 
   connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
-  connect(m_pLineEditName, SIGNAL(textEdited(QString)), this,
+  connect(
+      m_pLineEditName,
+      SIGNAL(textEdited(QString)),
+      this,
       SLOT(onNameChanged()));
 }
 

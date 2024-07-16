@@ -69,7 +69,7 @@ std::string ArchFileWindows::getUserDirectory() {
     // FIXME -- allow UNC names
     if (dir[0] != '\0' &&
         (dir[1] == ':' || ((dir[0] == '\\' || dir[0] == '/') &&
-                              (dir[1] == '\\' || dir[1] == '/')))) {
+                           (dir[1] == '\\' || dir[1] == '/')))) {
       return dir;
     }
   }

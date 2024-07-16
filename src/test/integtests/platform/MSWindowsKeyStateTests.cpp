@@ -45,7 +45,11 @@ protected:
   virtual void TearDown() { delete m_screensaver; }
 
   MSWindowsDesks *newDesks(IEventQueue *eventQueue) {
-    return new MSWindowsDesks(true, false, m_screensaver, eventQueue,
+    return new MSWindowsDesks(
+        true,
+        false,
+        m_screensaver,
+        eventQueue,
         new TMethodJob<MSWindowsKeyStateTests>(
             this, &MSWindowsKeyStateTests::updateKeysCB),
         false);
@@ -74,7 +78,8 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed) {
   delete desks;
 }
 
-TEST_F(MSWindowsKeyStateTests,
+TEST_F(
+    MSWindowsKeyStateTests,
     testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue) {
   NiceMock<MockEventQueue> eventQueue;
   MSWindowsDesks *desks = newDesks(&eventQueue);

@@ -43,8 +43,12 @@ ArchSystemWindows::~ArchSystemWindows() {
 
 std::string ArchSystemWindows::getOSName() const {
   std::string osName("Microsoft Windows <unknown>");
-  static const TCHAR *const windowsVersionKeyNames[] = {_T("SOFTWARE"),
-      _T("Microsoft"), _T("Windows NT"), _T("CurrentVersion"), NULL};
+  static const TCHAR *const windowsVersionKeyNames[] = {
+      _T("SOFTWARE"),
+      _T("Microsoft"),
+      _T("Windows NT"),
+      _T("CurrentVersion"),
+      NULL};
 
   HKEY key =
       ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);

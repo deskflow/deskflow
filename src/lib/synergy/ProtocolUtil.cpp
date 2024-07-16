@@ -130,8 +130,10 @@ void ProtocolUtil::vwritef(
     stream->write(Buffer.data(), size);
     LOG((CLOG_DEBUG2 "wrote %d bytes", size));
   } catch (const XBase &exception) {
-    LOG((CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream",
-        exception.what(), size));
+    LOG(
+        (CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream",
+         exception.what(),
+         size));
     throw;
   }
 }
@@ -165,9 +167,10 @@ void ProtocolUtil::vreadf(
           break;
         default:
           // the length is wrong
-          LOG((CLOG_ERR
-              "read: length to be read is wrong: '%d' should be 1,2, or 4",
-              len));
+          LOG(
+              (CLOG_ERR
+               "read: length to be read is wrong: '%d' should be 1,2, or 4",
+               len));
           assert(false); // assert for debugging
           break;
         }
@@ -194,9 +197,10 @@ void ProtocolUtil::vreadf(
           break;
         default:
           // the length is wrong
-          LOG((CLOG_ERR
-              "read: length to be read is wrong: '%d' should be 1,2, or 4",
-              len));
+          LOG(
+              (CLOG_ERR
+               "read: length to be read is wrong: '%d' should be 1,2, or 4",
+               len));
           assert(false); // assert for debugging
           break;
         }
@@ -434,8 +438,9 @@ void ProtocolUtil::read(synergy::IStream *stream, void *vbuffer, UInt32 count) {
 
     // bail if stream has hungup
     if (n == 0) {
-      LOG((CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left",
-          count));
+      LOG(
+          (CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left",
+           count));
       throw XIOEndOfStream();
     }
 

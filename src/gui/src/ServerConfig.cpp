@@ -44,9 +44,13 @@ ServerConfig::ServerConfig(
     int numColumns, int numRows, AppConfig *appConfig, MainWindow *mainWindow)
     :
 
-      m_Screens(numColumns), m_NumColumns(numColumns), m_NumRows(numRows),
-      m_pAppConfig(appConfig), m_EnableDragAndDrop(false),
-      m_DisableLockToScreen(false), m_ClipboardSharing(true),
+      m_Screens(numColumns),
+      m_NumColumns(numColumns),
+      m_NumRows(numRows),
+      m_pAppConfig(appConfig),
+      m_EnableDragAndDrop(false),
+      m_DisableLockToScreen(false),
+      m_ClipboardSharing(true),
       m_ClipboardSharingSize(defaultClipboardSharingSize()),
       m_pMainWindow(mainWindow) {
   GUI::Config::ConfigWriter::make()->registerClass(this);
@@ -190,7 +194,8 @@ void ServerConfig::loadSettings() {
   setEnableDragAndDrop(settings().value("enableDragAndDrop", false).toBool());
   setClipboardSharingSize(
       settings()
-          .value("clipboardSharingSize",
+          .value(
+              "clipboardSharingSize",
               (int)ServerConfig::defaultClipboardSharingSize())
           .toULongLong());
   setClipboardSharing(settings().value("clipboardSharing", true).toBool());
@@ -265,7 +270,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config) {
       outStream << "\t" << config.screens()[i].name() << ":" << Qt::endl;
 
       for (unsigned int j = 0;
-           j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++) {
+           j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]);
+           j++) {
         int idx = config.adjacentScreenIndex(
             i, neighbourDirs[j].x, neighbourDirs[j].y);
         if (idx != -1 && !config.screens()[idx].isNull())

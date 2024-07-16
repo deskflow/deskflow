@@ -25,8 +25,10 @@ void ActivationNotifier::setIdentity(QString identity) {
   m_Identity = identity;
 }
 
-void ActivationNotifier::setUpdateInfo(QString const &fromVersion,
-    QString const &toVersion, QString const &serialKey) {
+void ActivationNotifier::setUpdateInfo(
+    QString const &fromVersion,
+    QString const &toVersion,
+    QString const &serialKey) {
   m_fromVersion = fromVersion;
   m_toVersion = toVersion;
   m_serialKey = serialKey;

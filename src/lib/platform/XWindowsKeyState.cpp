@@ -49,17 +49,24 @@ static const size_t ModifiersFromXDefaultSize = 32;
 
 XWindowsKeyState::XWindowsKeyState(
     Display *display, bool useXKB, IEventQueue *events)
-    : KeyState(events, AppUtil::instance().getKeyboardLayoutList(),
+    : KeyState(
+          events,
+          AppUtil::instance().getKeyboardLayoutList(),
           ClientApp::instance().args().m_enableLangSync),
-      m_display(display), m_modifierFromX(ModifiersFromXDefaultSize) {
+      m_display(display),
+      m_modifierFromX(ModifiersFromXDefaultSize) {
   init(display, useXKB);
 }
 
 XWindowsKeyState::XWindowsKeyState(
     Display *display, bool useXKB, IEventQueue *events, synergy::KeyMap &keyMap)
-    : KeyState(events, keyMap, AppUtil::instance().getKeyboardLayoutList(),
+    : KeyState(
+          events,
+          keyMap,
+          AppUtil::instance().getKeyboardLayoutList(),
           ClientApp::instance().args().m_enableLangSync),
-      m_display(display), m_modifierFromX(ModifiersFromXDefaultSize) {
+      m_display(display),
+      m_modifierFromX(ModifiersFromXDefaultSize) {
   init(display, useXKB);
 }
 
@@ -75,7 +82,8 @@ void XWindowsKeyState::init(Display *display, bool useXKB) {
   XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
   if (useXKB) {
-    m_xkb = XkbGetMap(m_display,
+    m_xkb = XkbGetMap(
+        m_display,
         XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask,
         XkbUseCoreKbd);
   } else {
@@ -111,9 +119,11 @@ KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const {
     if ((state & (1u << i)) != 0) {
       LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
       if (offset + i >= m_modifierFromX.size()) {
-        LOG((CLOG_ERR "m_modifierFromX is too small (%d) for the "
+        LOG(
+            (CLOG_ERR "m_modifierFromX is too small (%d) for the "
                       "requested offset (%d)",
-            m_modifierFromX.size(), offset + i));
+             m_modifierFromX.size(),
+             offset + i));
       } else {
         mask |= m_modifierFromX[offset + i];
       }
@@ -161,8 +171,16 @@ KeyModifierMask XWindowsKeyState::pollActiveModifiers() const {
   Window root = DefaultRootWindow(m_display), window;
   int xRoot, yRoot, xWindow, yWindow;
   unsigned int state = 0;
-  if (XQueryPointer(m_display, root, &root, &window, &xRoot, &yRoot, &xWindow,
-          &yWindow, &state) == False) {
+  if (XQueryPointer(
+          m_display,
+          root,
+          &root,
+          &window,
+          &xRoot,
+          &yRoot,
+          &xWindow,
+          &yWindow,
+          &state) == False) {
     state = 0;
   }
   return mapModifiersFromX(state);
@@ -209,7 +227,8 @@ void XWindowsKeyState::getKeyMap(synergy::KeyMap &keyMap) {
 
 #if HAVE_XKB_EXTENSION
   if (m_xkb != NULL) {
-    if (XkbGetUpdatedMap(m_display,
+    if (XkbGetUpdatedMap(
+            m_display,
             XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask,
             m_xkb) == Success) {
       updateKeysymMapXKB(keyMap);
@@ -245,9 +264,10 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const {
 
   if (!reply.isValid()) {
     auto qerror = reply.error();
-    LOG((CLOG_WARN "keyboard layout fail %s : %s",
-        qerror.name().toStdString().c_str(),
-        qerror.message().toStdString().c_str()));
+    LOG(
+        (CLOG_WARN "keyboard layout fail %s : %s",
+         qerror.name().toStdString().c_str(),
+         qerror.message().toStdString().c_str()));
     return true;
   }
 
@@ -273,13 +293,16 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
       int b = 1 << (c & 7);
       if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
           (c != 113 && c != 116 &&
-              (m_keyboardState.auto_repeats[i] & b) == 0)) {
+           (m_keyboardState.auto_repeats[i] & b) == 0)) {
         LOG((CLOG_DEBUG1 "  discard autorepeat"));
         break;
       }
     }
-    XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
-        keystroke.m_data.m_button.m_press ? True : False, CurrentTime);
+    XTestFakeKeyEvent(
+        m_display,
+        keystroke.m_data.m_button.m_button,
+        keystroke.m_data.m_button.m_press ? True : False,
+        CurrentTime);
     break;
 
   case Keystroke::kGroup:
@@ -296,8 +319,9 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
 #endif
 #if HAVE_XKB_EXTENSION
       if (m_xkb != NULL) {
-        if (XkbLockGroup(m_display, XkbUseCoreKbd,
-                keystroke.m_data.m_group.m_group) == False) {
+        if (XkbLockGroup(
+                m_display, XkbUseCoreKbd, keystroke.m_data.m_group.m_group) ==
+            False) {
           LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
         }
       } else
@@ -314,9 +338,12 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
 #endif
 #if HAVE_XKB_EXTENSION
       if (m_xkb != NULL) {
-        if (XkbLockGroup(m_display, XkbUseCoreKbd,
-                getEffectiveGroup(pollActiveGroup(),
-                    keystroke.m_data.m_group.m_group)) == False) {
+        if (XkbLockGroup(
+                m_display,
+                XkbUseCoreKbd,
+                getEffectiveGroup(
+                    pollActiveGroup(), keystroke.m_data.m_group.m_group)) ==
+            False) {
           LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
         }
       } else
@@ -470,10 +497,11 @@ void XWindowsKeyState::updateKeysymMap(synergy::KeyMap &keyMap) {
     // if it's sensitive to caps-lock.
     if ((item.m_sensitive & KeyModifierCapsLock) != 0) {
       item.m_sensitive |= KeyModifierShift;
-    } else if ((keysyms[0] != NoSymbol && keysyms[1] != NoSymbol &&
-                   keysyms[0] != keysyms[1]) ||
-               (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol &&
-                   keysyms[2] != keysyms[3])) {
+    } else if (
+        (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol &&
+         keysyms[0] != keysyms[1]) ||
+        (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol &&
+         keysyms[2] != keysyms[3])) {
       item.m_sensitive |= KeyModifierShift;
     }
 
@@ -566,8 +594,9 @@ void XWindowsKeyState::updateKeysymMap(synergy::KeyMap &keyMap) {
 
 #if HAVE_XKB_EXTENSION
 void XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap &keyMap) {
-  static const XkbKTMapEntryRec defMapEntry = {True, // active
-      0,                                             // level
+  static const XkbKTMapEntryRec defMapEntry = {
+      True, // active
+      0,    // level
       {
           0, // mods.mask
           0, // mods.real_mods
@@ -679,9 +708,10 @@ void XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap &keyMap) {
             if ((action->mods.flags & XkbSA_UseModMapMods) == 0) {
               modifierMask = action->mods.mask;
             }
-          } else if (action->type == XkbSA_SetGroup ||
-                     action->type == XkbSA_LatchGroup ||
-                     action->type == XkbSA_LockGroup) {
+          } else if (
+              action->type == XkbSA_SetGroup ||
+              action->type == XkbSA_LatchGroup ||
+              action->type == XkbSA_LockGroup) {
             // ignore group change key
             continue;
           }

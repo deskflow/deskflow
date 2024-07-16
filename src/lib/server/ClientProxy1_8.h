@@ -21,8 +21,11 @@
 
 class ClientProxy1_8 : public ClientProxy1_7 {
 public:
-  ClientProxy1_8(const String &name, synergy::IStream *adoptedStream,
-      Server *server, IEventQueue *events);
+  ClientProxy1_8(
+      const String &name,
+      synergy::IStream *adoptedStream,
+      Server *server,
+      IEventQueue *events);
   ~ClientProxy1_8() override = default;
 
   void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override;

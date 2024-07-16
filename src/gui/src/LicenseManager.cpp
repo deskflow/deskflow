@@ -66,7 +66,8 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
 } // namespace
 
 LicenseManager::LicenseManager(AppConfig *appConfig)
-    : m_AppConfig(appConfig), m_serialKey(appConfig->edition()),
+    : m_AppConfig(appConfig),
+      m_serialKey(appConfig->edition()),
       m_registry(*appConfig) {}
 
 void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {

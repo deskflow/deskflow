@@ -27,7 +27,9 @@ void TestEventQueue::raiseQuitEvent() { addEvent(Event(Event::kQuit)); }
 void TestEventQueue::initQuitTimeout(double timeout) {
   assert(m_quitTimeoutTimer == nullptr);
   m_quitTimeoutTimer = newOneShotTimer(timeout, NULL);
-  adoptHandler(Event::kTimer, m_quitTimeoutTimer,
+  adoptHandler(
+      Event::kTimer,
+      m_quitTimeoutTimer,
       new TMethodEventJob<TestEventQueue>(
           this, &TestEventQueue::handleQuitTimeout));
 }

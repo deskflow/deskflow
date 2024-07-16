@@ -114,8 +114,8 @@ public:
   /*!
   Sets the \p name value of \p key to \p value.data().
   */
-  static void setValueBinary(
-      HKEY key, const TCHAR *name, const std::string &value);
+  static void
+  setValueBinary(HKEY key, const TCHAR *name, const std::string &value);
 
   //! Read a string value from the registry
   static std::string readValueString(HKEY, const TCHAR *name);

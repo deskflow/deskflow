@@ -56,8 +56,12 @@ signals:
   void screensChanged();
 
 protected:
-  bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row,
-      int column, const QModelIndex &parent);
+  bool dropMimeData(
+      const QMimeData *data,
+      Qt::DropAction action,
+      int row,
+      int column,
+      const QModelIndex &parent);
   const Screen &screen(const QModelIndex &index) const {
     return screen(index.column(), index.row());
   }

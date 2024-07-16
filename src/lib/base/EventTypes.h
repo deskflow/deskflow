@@ -84,8 +84,10 @@ private:
 class IStreamEvents : public EventTypes {
 public:
   IStreamEvents()
-      : m_inputReady(Event::kUnknown), m_outputFlushed(Event::kUnknown),
-        m_outputError(Event::kUnknown), m_inputShutdown(Event::kUnknown),
+      : m_inputReady(Event::kUnknown),
+        m_outputFlushed(Event::kUnknown),
+        m_outputError(Event::kUnknown),
+        m_inputShutdown(Event::kUnknown),
         m_outputShutdown(Event::kUnknown) {}
 
   //! @name accessors
@@ -145,7 +147,8 @@ private:
 class IpcClientEvents : public EventTypes {
 public:
   IpcClientEvents()
-      : m_connected(Event::kUnknown), m_messageReceived(Event::kUnknown) {}
+      : m_connected(Event::kUnknown),
+        m_messageReceived(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -166,7 +169,8 @@ private:
 class IpcClientProxyEvents : public EventTypes {
 public:
   IpcClientProxyEvents()
-      : m_messageReceived(Event::kUnknown), m_disconnected(Event::kUnknown) {}
+      : m_messageReceived(Event::kUnknown),
+        m_disconnected(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -187,8 +191,8 @@ private:
 class IpcServerEvents : public EventTypes {
 public:
   IpcServerEvents()
-      : m_clientConnected(Event::kUnknown), m_messageReceived(Event::kUnknown) {
-  }
+      : m_clientConnected(Event::kUnknown),
+        m_messageReceived(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -225,7 +229,8 @@ private:
 class IDataSocketEvents : public EventTypes {
 public:
   IDataSocketEvents()
-      : m_connected(Event::kUnknown), m_secureConnected(Event::kUnknown),
+      : m_connected(Event::kUnknown),
+        m_secureConnected(Event::kUnknown),
         m_connectionFailed(Event::kUnknown) {}
 
   //! @name accessors
@@ -284,7 +289,8 @@ private:
 class ISocketEvents : public EventTypes {
 public:
   ISocketEvents()
-      : m_disconnected(Event::kUnknown), m_stopRetry(Event::kUnknown) {}
+      : m_disconnected(Event::kUnknown),
+        m_stopRetry(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -329,7 +335,8 @@ private:
 class ClientListenerEvents : public EventTypes {
 public:
   ClientListenerEvents()
-      : m_accepted(Event::kUnknown), m_connected(Event::kUnknown) {}
+      : m_accepted(Event::kUnknown),
+        m_connected(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -358,7 +365,8 @@ private:
 class ClientProxyEvents : public EventTypes {
 public:
   ClientProxyEvents()
-      : m_ready(Event::kUnknown), m_disconnected(Event::kUnknown) {}
+      : m_ready(Event::kUnknown),
+        m_disconnected(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -388,7 +396,8 @@ private:
 class ClientProxyUnknownEvents : public EventTypes {
 public:
   ClientProxyUnknownEvents()
-      : m_success(Event::kUnknown), m_failure(Event::kUnknown) {}
+      : m_success(Event::kUnknown),
+        m_failure(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -417,8 +426,10 @@ private:
 class ServerEvents : public EventTypes {
 public:
   ServerEvents()
-      : m_error(Event::kUnknown), m_connected(Event::kUnknown),
-        m_disconnected(Event::kUnknown), m_switchToScreen(Event::kUnknown),
+      : m_error(Event::kUnknown),
+        m_connected(Event::kUnknown),
+        m_disconnected(Event::kUnknown),
+        m_switchToScreen(Event::kUnknown),
         m_switchInDirection(Event::kUnknown),
         m_keyboardBroadcast(Event::kUnknown),
         m_lockCursorToScreen(Event::kUnknown),
@@ -504,7 +515,8 @@ private:
 class ServerAppEvents : public EventTypes {
 public:
   ServerAppEvents()
-      : m_reloadConfig(Event::kUnknown), m_forceReconnect(Event::kUnknown),
+      : m_reloadConfig(Event::kUnknown),
+        m_forceReconnect(Event::kUnknown),
         m_resetServer(Event::kUnknown) {}
 
   //! @name accessors
@@ -525,7 +537,8 @@ private:
 class IKeyStateEvents : public EventTypes {
 public:
   IKeyStateEvents()
-      : m_keyDown(Event::kUnknown), m_keyUp(Event::kUnknown),
+      : m_keyDown(Event::kUnknown),
+        m_keyUp(Event::kUnknown),
         m_keyRepeat(Event::kUnknown) {}
 
   //! @name accessors
@@ -551,13 +564,17 @@ private:
 class IPrimaryScreenEvents : public EventTypes {
 public:
   IPrimaryScreenEvents()
-      : m_buttonDown(Event::kUnknown), m_buttonUp(Event::kUnknown),
+      : m_buttonDown(Event::kUnknown),
+        m_buttonUp(Event::kUnknown),
         m_motionOnPrimary(Event::kUnknown),
-        m_motionOnSecondary(Event::kUnknown), m_wheel(Event::kUnknown),
+        m_motionOnSecondary(Event::kUnknown),
+        m_wheel(Event::kUnknown),
         m_screensaverActivated(Event::kUnknown),
         m_screensaverDeactivated(Event::kUnknown),
-        m_hotKeyDown(Event::kUnknown), m_hotKeyUp(Event::kUnknown),
-        m_fakeInputBegin(Event::kUnknown), m_fakeInputEnd(Event::kUnknown) {}
+        m_hotKeyDown(Event::kUnknown),
+        m_hotKeyUp(Event::kUnknown),
+        m_fakeInputBegin(Event::kUnknown),
+        m_fakeInputEnd(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -621,8 +638,10 @@ private:
 class IScreenEvents : public EventTypes {
 public:
   IScreenEvents()
-      : m_error(Event::kUnknown), m_shapeChanged(Event::kUnknown),
-        m_suspend(Event::kUnknown), m_resume(Event::kUnknown) {}
+      : m_error(Event::kUnknown),
+        m_shapeChanged(Event::kUnknown),
+        m_suspend(Event::kUnknown),
+        m_resume(Event::kUnknown) {}
 
   //! @name accessors
   //@{
@@ -709,7 +728,8 @@ class FileEvents : public EventTypes {
 public:
   FileEvents()
       : m_fileChunkSending(Event::kUnknown),
-        m_fileRecieveCompleted(Event::kUnknown), m_keepAlive(Event::kUnknown) {}
+        m_fileRecieveCompleted(Event::kUnknown),
+        m_keepAlive(Event::kUnknown) {}
 
   //! @name accessors
   //@{

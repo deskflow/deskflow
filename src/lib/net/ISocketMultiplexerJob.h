@@ -45,8 +45,8 @@ public:
   multiplexer.  It must instead return the new job.  It can,
   however, add or remove jobs for other sockets.
   */
-  virtual ISocketMultiplexerJob *run(
-      bool readable, bool writable, bool error) = 0;
+  virtual ISocketMultiplexerJob *
+  run(bool readable, bool writable, bool error) = 0;
 
   //@}
   //! @name accessors

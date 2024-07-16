@@ -42,7 +42,9 @@ private:
 template <class T>
 inline TMethodJob<T>::TMethodJob(
     T *object, void (T::*method)(void *), void *arg)
-    : m_object(object), m_method(method), m_arg(arg) {
+    : m_object(object),
+      m_method(method),
+      m_arg(arg) {
   // do nothing
 }
 

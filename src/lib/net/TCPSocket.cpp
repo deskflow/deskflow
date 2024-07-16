@@ -37,10 +37,15 @@
 // TCPSocket
 //
 
-TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+TCPSocket::TCPSocket(
+    IEventQueue *events,
+    SocketMultiplexer *socketMultiplexer,
     IArchNetwork::EAddressFamily family)
-    : IDataSocket(events), m_events(events), m_mutex(),
-      m_flushed(&m_mutex, true), m_socketMultiplexer(socketMultiplexer) {
+    : IDataSocket(events),
+      m_events(events),
+      m_mutex(),
+      m_flushed(&m_mutex, true),
+      m_socketMultiplexer(socketMultiplexer) {
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
   } catch (const XArchNetwork &e) {
@@ -52,10 +57,16 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
   init();
 }
 
-TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+TCPSocket::TCPSocket(
+    IEventQueue *events,
+    SocketMultiplexer *socketMultiplexer,
     ArchSocket socket)
-    : IDataSocket(events), m_events(events), m_mutex(), m_socket(socket),
-      m_flushed(&m_mutex, true), m_socketMultiplexer(socketMultiplexer) {
+    : IDataSocket(events),
+      m_events(events),
+      m_mutex(),
+      m_socket(socket),
+      m_flushed(&m_mutex, true),
+      m_socketMultiplexer(socketMultiplexer) {
   assert(m_socket != nullptr);
 
   LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
@@ -367,16 +378,22 @@ ISocketMultiplexerJob *TCPSocket::newJob() {
     if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
       return nullptr;
     }
-    return new TSocketMultiplexerMethodJob<TCPSocket>(this,
-        &TCPSocket::serviceConnected, m_socket, m_readable,
+    return new TSocketMultiplexerMethodJob<TCPSocket>(
+        this,
+        &TCPSocket::serviceConnected,
+        m_socket,
+        m_readable,
         m_writable && (m_outputBuffer.getSize() > 0));
   }
 }
 
 void TCPSocket::sendConnectionFailedEvent(const char *msg) {
   ConnectionFailedInfo *info = new ConnectionFailedInfo(msg);
-  m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
-      getEventTarget(), info, Event::kDontFreeData));
+  m_events->addEvent(Event(
+      m_events->forIDataSocket().connectionFailed(),
+      getEventTarget(),
+      info,
+      Event::kDontFreeData));
 }
 
 void TCPSocket::sendEvent(Event::Type type) {

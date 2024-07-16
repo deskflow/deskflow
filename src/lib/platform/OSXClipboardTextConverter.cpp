@@ -36,8 +36,10 @@ CFStringRef OSXClipboardTextConverter::getOSXFormat() const {
   return CFSTR("public.plain-text");
 }
 
-String OSXClipboardTextConverter::convertString(const String &data,
-    CFStringEncoding fromEncoding, CFStringEncoding toEncoding) {
+String OSXClipboardTextConverter::convertString(
+    const String &data,
+    CFStringEncoding fromEncoding,
+    CFStringEncoding toEncoding) {
   CFStringRef stringRef = CFStringCreateWithCString(
       kCFAllocatorDefault, data.c_str(), fromEncoding);
 
@@ -58,8 +60,15 @@ String OSXClipboardTextConverter::convertString(const String &data,
     return String();
   }
 
-  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false,
-      (UInt8 *)buffer, buffSize, NULL);
+  CFStringGetBytes(
+      stringRef,
+      entireString,
+      toEncoding,
+      0,
+      false,
+      (UInt8 *)buffer,
+      buffSize,
+      NULL);
 
   String result(buffer, buffSize);
 

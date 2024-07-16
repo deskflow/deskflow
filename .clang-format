@@ -10,11 +10,24 @@
 
 BasedOnStyle: LLVM
 
-# Turn off alignment of params with the opening bracket, which can be less readable in some cases.
-# This will result in:
+# Turn off LLVM default alignment of params with the opening bracket, 
+# which can be less readable in some cases in our code base.
+#
+# Using `AlwaysBreak` will result in:
 #   void fooBarBazQuxHelloWorld(
-#     int a, int b);
+#     int a,
+#     int b);
+#
 # Instead of:
 #   void fooBarBazQuxHelloWorld(int a,
 #                               int b);
-AlignAfterOpenBracket: DontAlign
+AlignAfterOpenBracket: AlwaysBreak
+
+# Turn off packing of parameters on the same line so that each parameter or argument is placed 
+# on a separate line. This makes it easier to see each parameter or argument when there are many.
+BinPackParameters: false
+BinPackArguments: false
+
+# Turn off packing of ctor initializers when they break. This makes it easier to see which
+# members were initialized and in what order.
+PackConstructorInitializers: CurrentLine

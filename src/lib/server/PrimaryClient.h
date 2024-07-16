@@ -120,12 +120,16 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void getShape(
-      SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
+  void
+  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
   void getCursorPos(SInt32 &x, SInt32 &y) const override;
 
   // IClient overrides
-  void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
+  void enter(
+      SInt32 xAbs,
+      SInt32 yAbs,
+      UInt32 seqNum,
+      KeyModifierMask mask,
       bool forScreensaver) override;
   bool leave() override;
   void setClipboard(ClipboardID, const IClipboard *) override;

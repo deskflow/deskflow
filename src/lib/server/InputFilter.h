@@ -254,8 +254,10 @@ public:
   // MouseButtonAction -- modifier combinations not implemented yet
   class MouseButtonAction : public Action {
   public:
-    MouseButtonAction(IEventQueue *events,
-        IPlatformScreen::ButtonInfo *adoptedInfo, bool press);
+    MouseButtonAction(
+        IEventQueue *events,
+        IPlatformScreen::ButtonInfo *adoptedInfo,
+        bool press);
     MouseButtonAction(MouseButtonAction const &) = delete;
     MouseButtonAction(MouseButtonAction &&) = delete;
     ~MouseButtonAction();

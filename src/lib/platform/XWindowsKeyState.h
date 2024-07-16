@@ -124,8 +124,8 @@ private:
   */
   bool setCurrentLanguageWithDBus(SInt32 group) const;
 
-  static void remapKeyModifiers(
-      KeyID, SInt32, synergy::KeyMap::KeyItem &, void *);
+  static void
+  remapKeyModifiers(KeyID, SInt32, synergy::KeyMap::KeyItem &, void *);
 
 private:
   struct XKBModifierInfo {

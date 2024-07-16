@@ -29,7 +29,8 @@ void UpgradeDialog::showDialog(const QString &text) {
   setText(QObject::tr(text.toStdString().c_str()));
 
   if (exec() == QMessageBox::Accepted) {
-    QDesktopServices::openUrl(QUrl(QCoreApplication::organizationDomain() +
-                                   "/synergy/purchase/upgrade?source=gui"));
+    QDesktopServices::openUrl(QUrl(
+        QCoreApplication::organizationDomain() +
+        "/synergy/purchase/upgrade?source=gui"));
   }
 }

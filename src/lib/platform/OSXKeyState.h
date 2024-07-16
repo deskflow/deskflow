@@ -38,8 +38,11 @@ public:
 
   OSXKeyState(
       IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
-  OSXKeyState(IEventQueue *events, synergy::KeyMap &keyMap,
-      std::vector<String> layouts, bool isLangSyncEnabled);
+  OSXKeyState(
+      IEventQueue *events,
+      synergy::KeyMap &keyMap,
+      std::vector<String> layouts,
+      bool isLangSyncEnabled);
   virtual ~OSXKeyState();
 
   //! @name modifiers
@@ -86,8 +89,11 @@ public:
   Calculates mac virtual key and mask for a key \p key and modifiers
   \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
   */
-  bool mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
-      UInt32 &macVirtualKey, UInt32 &macModifierMask) const;
+  bool mapSynergyHotKeyToMac(
+      KeyID key,
+      KeyModifierMask mask,
+      UInt32 &macVirtualKey,
+      UInt32 &macModifierMask) const;
 
   //@}
 
@@ -122,7 +128,11 @@ private:
   void setGroup(SInt32 group);
 
   // Send an event for the given modifier key
-  void handleModifierKey(void *target, UInt32 virtualKey, KeyID id, bool down,
+  void handleModifierKey(
+      void *target,
+      UInt32 virtualKey,
+      KeyID id,
+      bool down,
       KeyModifierMask newMask);
 
   // Checks if any in \p ids is a glyph key and if \p isCommand is false.

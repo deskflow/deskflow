@@ -76,7 +76,9 @@ public:
   void handleClientFailed(const Event &e, void *);
   void handleClientRefused(const Event &e, void *);
   void handleClientDisconnected(const Event &, void *);
-  Client *openClient(const String &name, const NetworkAddress &address,
+  Client *openClient(
+      const String &name,
+      const NetworkAddress &address,
       synergy::Screen *screen);
   void closeClient(Client *client);
   bool startClient();

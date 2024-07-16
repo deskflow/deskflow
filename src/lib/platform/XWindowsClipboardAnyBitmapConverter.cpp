@@ -63,10 +63,10 @@ static inline UInt16 fromLEU16(const UInt8 *data) {
 }
 
 static inline SInt32 fromLES32(const UInt8 *data) {
-  return static_cast<SInt32>(static_cast<UInt32>(data[0]) |
-                             (static_cast<UInt32>(data[1]) << 8) |
-                             (static_cast<UInt32>(data[2]) << 16) |
-                             (static_cast<UInt32>(data[3]) << 24));
+  return static_cast<SInt32>(
+      static_cast<UInt32>(data[0]) | (static_cast<UInt32>(data[1]) << 8) |
+      (static_cast<UInt32>(data[2]) << 16) |
+      (static_cast<UInt32>(data[3]) << 24));
 }
 
 static inline UInt32 fromLEU32(const UInt8 *data) {
@@ -93,8 +93,8 @@ IClipboard::EFormat XWindowsClipboardAnyBitmapConverter::getFormat() const {
 
 int XWindowsClipboardAnyBitmapConverter::getDataSize() const { return 8; }
 
-String XWindowsClipboardAnyBitmapConverter::fromIClipboard(
-    const String &bmp) const {
+String
+XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) const {
   // fill BMP info header with native-endian data
   CBMPInfoHeader infoHeader;
   const UInt8 *rawBMPInfoHeader = reinterpret_cast<const UInt8 *>(bmp.data());
@@ -129,8 +129,8 @@ String XWindowsClipboardAnyBitmapConverter::fromIClipboard(
   }
 }
 
-String XWindowsClipboardAnyBitmapConverter::toIClipboard(
-    const String &image) const {
+String
+XWindowsClipboardAnyBitmapConverter::toIClipboard(const String &image) const {
   // convert to raw BMP data
   UInt32 w, h, depth;
   String rawBMP = doToIClipboard(image, w, h, depth);

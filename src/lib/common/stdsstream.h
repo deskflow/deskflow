@@ -67,13 +67,17 @@ public:
   typedef streamoff off_type;
 
   explicit stringbuf(int which = ios::in | ios::out)
-      : streambuf(), mode(static_cast<ios::open_mode>(which)), stream(NULL),
+      : streambuf(),
+        mode(static_cast<ios::open_mode>(which)),
+        stream(NULL),
         stream_len(0) {
     stringbuf_init();
   }
 
   explicit stringbuf(const string &str, int which = ios::in | ios::out)
-      : streambuf(), mode(static_cast<ios::open_mode>(which)), stream(NULL),
+      : streambuf(),
+        mode(static_cast<ios::open_mode>(which)),
+        stream(NULL),
         stream_len(0) {
     if (mode & (ios::in | ios::out)) {
       stream_len = str.size();
@@ -135,8 +139,8 @@ protected:
     return this;
   }
 
-  virtual pos_type seekoff(
-      off_type off, ios::seek_dir way, int which = ios::in | ios::out) {
+  virtual pos_type
+  seekoff(off_type off, ios::seek_dir way, int which = ios::in | ios::out) {
     pos_type ret = pos_type(off_type(-1));
     bool testin = which & ios::in && mode & ios::in;
     bool testout = which & ios::out && mode & ios::out;
@@ -217,10 +221,12 @@ public:
   typedef streamoff off_type;
 
   explicit istringstream(int which = ios::in)
-      : istream(&sb), sb(which | ios::in) {}
+      : istream(&sb),
+        sb(which | ios::in) {}
 
   explicit istringstream(const string &str, int which = ios::in)
-      : istream(&sb), sb(str, which | ios::in) {}
+      : istream(&sb),
+        sb(str, which | ios::in) {}
 
   stringbuf *rdbuf() const { return const_cast<stringbuf *>(&sb); }
 
@@ -239,10 +245,12 @@ public:
   typedef streamoff off_type;
 
   explicit ostringstream(int which = ios::out)
-      : ostream(&sb), sb(which | ios::out) {}
+      : ostream(&sb),
+        sb(which | ios::out) {}
 
   explicit ostringstream(const string &str, int which = ios::out)
-      : ostream(&sb), sb(str, which | ios::out) {}
+      : ostream(&sb),
+        sb(str, which | ios::out) {}
 
   stringbuf *rdbuf() const { return const_cast<stringbuf *>(&sb); }
 
@@ -262,10 +270,12 @@ public:
   typedef streamoff off_type;
 
   explicit stringstream(int which = ios::out | ios::in)
-      : iostream(&sb), sb(which) {}
+      : iostream(&sb),
+        sb(which) {}
 
   explicit stringstream(const string &str, int which = ios::out | ios::in)
-      : iostream(&sb), sb(str, which) {}
+      : iostream(&sb),
+        sb(str, which) {}
 
   stringbuf *rdbuf() const { return const_cast<stringbuf *>(&sb); }
 

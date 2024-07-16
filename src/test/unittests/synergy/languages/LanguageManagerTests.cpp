@@ -24,7 +24,8 @@ TEST(LanguageManager, RemoteLanguagesTest) {
   synergy::languages::LanguageManager manager({"ru", "en", "uk"});
 
   manager.setRemoteLanguages(remoteLanguages);
-  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}),
+  EXPECT_EQ(
+      (std::vector<std::string>{"ru", "en", "uk"}),
       manager.getRemoteLanguages());
 
   manager.setRemoteLanguages(String());
@@ -35,7 +36,8 @@ TEST(LanguageManager, LocalLanguagesTest) {
   std::vector<String> localLanguages = {"ru", "en", "uk"};
   synergy::languages::LanguageManager manager(localLanguages);
 
-  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}),
+  EXPECT_EQ(
+      (std::vector<std::string>{"ru", "en", "uk"}),
       manager.getLocalLanguages());
 }
 

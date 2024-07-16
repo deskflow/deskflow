@@ -38,12 +38,14 @@ NetworkAddress::NetworkAddress(int port) : m_port(port) {
 }
 
 NetworkAddress::NetworkAddress(const NetworkAddress &addr)
-    : m_hostname(addr.m_hostname), m_port(addr.m_port) {
+    : m_hostname(addr.m_hostname),
+      m_port(addr.m_port) {
   *this = addr;
 }
 
 NetworkAddress::NetworkAddress(const String &hostname, int port)
-    : m_hostname(hostname), m_port(port) {
+    : m_hostname(hostname),
+      m_port(port) {
   // detect internet protocol version with colom count
   auto isColomPredicate = [](char c) { return c == ':'; };
   auto colomCount =

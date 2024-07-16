@@ -62,8 +62,12 @@ public:
   as its name and \p address as the server's address and \p factory
   to create the socket.  \p screen is    the local screen.
   */
-  Client(IEventQueue *events, const String &name, const NetworkAddress &address,
-      ISocketFactory *socketFactory, synergy::Screen *screen,
+  Client(
+      IEventQueue *events,
+      const String &name,
+      const NetworkAddress &address,
+      ISocketFactory *socketFactory,
+      synergy::Screen *screen,
       lib::synergy::ClientArgs const &args);
   Client(Client const &) = delete;
   Client(Client &&) = delete;
@@ -156,13 +160,17 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(
-      SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
+  virtual void
+  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
   // IClient overrides
-  virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum,
-      KeyModifierMask mask, bool forScreensaver);
+  virtual void enter(
+      SInt32 xAbs,
+      SInt32 yAbs,
+      UInt32 seqNum,
+      KeyModifierMask mask,
+      bool forScreensaver);
   virtual bool leave();
   virtual void setClipboard(ClipboardID, const IClipboard *);
   virtual void grabClipboard(ClipboardID);

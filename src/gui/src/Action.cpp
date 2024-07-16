@@ -21,23 +21,35 @@
 #include <QSettings>
 #include <QTextStream>
 
-const char *Action::m_ActionTypeNames[] = {"keyDown", "keyUp", "keystroke",
-    "switchToScreen", "switchInDirection", "lockCursorToScreen",
-    "restartServer", "mouseDown", "mouseUp", "mousebutton"};
+const char *Action::m_ActionTypeNames[] = {
+    "keyDown",
+    "keyUp",
+    "keystroke",
+    "switchToScreen",
+    "switchInDirection",
+    "lockCursorToScreen",
+    "restartServer",
+    "mouseDown",
+    "mouseUp",
+    "mousebutton"};
 
 const char *Action::m_SwitchDirectionNames[] = {"left", "right", "up", "down"};
 const char *Action::m_LockCursorModeNames[] = {"toggle", "on", "off"};
 
 Action::Action()
-    : m_KeySequence(), m_Type(keystroke), m_TypeScreenNames(),
-      m_SwitchScreenName(), m_SwitchDirection(switchLeft),
-      m_LockCursorMode(lockCursorToggle), m_ActiveOnRelease(false),
+    : m_KeySequence(),
+      m_Type(keystroke),
+      m_TypeScreenNames(),
+      m_SwitchScreenName(),
+      m_SwitchDirection(switchLeft),
+      m_LockCursorMode(lockCursorToggle),
+      m_ActiveOnRelease(false),
       m_HasScreens(false) {}
 
 QString Action::text() const {
   QString text =
-      QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6
-                                                              : type()]) +
+      QString(m_ActionTypeNames
+                  [keySequence().isMouseButton() ? type() + 6 : type()]) +
       "(";
 
   switch (type()) {

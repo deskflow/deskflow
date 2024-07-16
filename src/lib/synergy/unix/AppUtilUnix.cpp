@@ -59,8 +59,9 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
 #elif WINAPI_CARBON
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys,
-                            (const void **)values, 1, NULL, NULL),
+  AutoCFDictionary dict(
+      CFDictionaryCreate(
+          NULL, (const void **)keys, (const void **)values, 1, NULL, NULL),
       CFRelease);
   AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
@@ -71,11 +72,13 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
         keyboardLayout, kTISPropertyInputSourceLanguages);
     char temporaryCString[128] = {0};
     for (CFIndex index = 0;
-         index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+         index < CFArrayGetCount(layoutLanguages) && layoutLanguages;
+         index++) {
       auto languageCode =
           (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-      if (!languageCode || !CFStringGetCString(languageCode, temporaryCString,
-                               128, kCFStringEncodingUTF8)) {
+      if (!languageCode ||
+          !CFStringGetCString(
+              languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
         continue;
       }
 
@@ -153,11 +156,13 @@ String AppUtilUnix::getCurrentLanguageCode() {
       TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
   char temporaryCString[128] = {0};
   for (CFIndex index = 0;
-       index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+       index < CFArrayGetCount(layoutLanguages) && layoutLanguages;
+       index++) {
     auto languageCode =
         (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-    if (!languageCode || !CFStringGetCString(languageCode, temporaryCString,
-                             128, kCFStringEncodingUTF8)) {
+    if (!languageCode ||
+        !CFStringGetCString(
+            languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
       continue;
     }
 
@@ -171,8 +176,10 @@ String AppUtilUnix::getCurrentLanguageCode() {
 void AppUtilUnix::showNotification(
     const String &title, const String &text) const {
 #if WINAPI_XWINDOWS
-  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
-      title.c_str(), text.c_str()));
+  LOG(
+      (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
+       title.c_str(),
+       text.c_str()));
   if (!notify_init("Synergy")) {
     LOG((CLOG_INFO "failed to initialize libnotify"));
     return;

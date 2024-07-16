@@ -37,7 +37,10 @@ void LicenseRegistry::registerLicense() {
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     m_manager.post(request, getRequestData());
-    connect(&m_manager, SIGNAL(finished(QNetworkReply *)), this,
+    connect(
+        &m_manager,
+        SIGNAL(finished(QNetworkReply *)),
+        this,
         SLOT(handleResponse(QNetworkReply *)));
   }
 }

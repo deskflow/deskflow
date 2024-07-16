@@ -106,8 +106,10 @@ int FileChunk::assemble(
 
   case kDataEnd:
     if (expectedSize != dataReceived.size()) {
-      LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
-          expectedSize, dataReceived.size()));
+      LOG(
+          (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
+           expectedSize,
+           dataReceived.size()));
       return kError;
     }
 
@@ -115,12 +117,15 @@ int FileChunk::assemble(
       LOG((CLOG_DEBUG2 "file transfer finished"));
       elapsedTime += stopwatch.getTime();
       double averageSpeed = expectedSize / elapsedTime / 1000;
-      LOG((CLOG_DEBUG2 "file transfer finished: total time consumed=%f s",
-          elapsedTime));
-      LOG((CLOG_DEBUG2 "file transfer finished: total data received=%i kb",
-          expectedSize / 1000));
-      LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s",
-          averageSpeed));
+      LOG(
+          (CLOG_DEBUG2 "file transfer finished: total time consumed=%f s",
+           elapsedTime));
+      LOG(
+          (CLOG_DEBUG2 "file transfer finished: total data received=%i kb",
+           expectedSize / 1000));
+      LOG(
+          (CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s",
+           averageSpeed));
     }
     return kFinish;
   }

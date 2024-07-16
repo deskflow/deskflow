@@ -40,8 +40,8 @@ UINT MSWindowsClipboardHTMLConverter::getWin32Format() const {
   return m_format;
 }
 
-String MSWindowsClipboardHTMLConverter::doFromIClipboard(
-    const String &data) const {
+String
+MSWindowsClipboardHTMLConverter::doFromIClipboard(const String &data) const {
   // prepare to CF_HTML format prefix and suffix
   String prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
                 "EndHTML:ZZZZZZZZZZ\r\n"
@@ -55,11 +55,17 @@ String MSWindowsClipboardHTMLConverter::doFromIClipboard(
   // StartHTML is constant by the design of the prefix
   UInt32 EndHTML = EndFragment + (UInt32)suffix.size();
 
-  prefix.replace(prefix.find("XXXXXXXXXX"), 10,
+  prefix.replace(
+      prefix.find("XXXXXXXXXX"),
+      10,
       synergy::string::sprintf("%010u", StartFragment));
-  prefix.replace(prefix.find("YYYYYYYYYY"), 10,
+  prefix.replace(
+      prefix.find("YYYYYYYYYY"),
+      10,
       synergy::string::sprintf("%010u", EndFragment));
-  prefix.replace(prefix.find("ZZZZZZZZZZ"), 10,
+  prefix.replace(
+      prefix.find("ZZZZZZZZZZ"),
+      10,
       synergy::string::sprintf("%010u", EndHTML));
 
   // concatenate
@@ -68,8 +74,8 @@ String MSWindowsClipboardHTMLConverter::doFromIClipboard(
   return prefix;
 }
 
-String MSWindowsClipboardHTMLConverter::doToIClipboard(
-    const String &data) const {
+String
+MSWindowsClipboardHTMLConverter::doToIClipboard(const String &data) const {
   // get fragment start/end args
   String startArg = findArg(data, "StartFragment");
   String endArg = findArg(data, "EndFragment");

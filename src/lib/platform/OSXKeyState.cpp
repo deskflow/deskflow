@@ -52,27 +52,49 @@ static const KeyEntry s_controlKeys[] = {
     // cursor keys.  if we don't do this we'll may still get these from
     // the keyboard resource but they may not correspond to the arrow
     // keys.
-    {kKeyLeft, kVK_LeftArrow}, {kKeyRight, kVK_RightArrow},
-    {kKeyUp, kVK_UpArrow}, {kKeyDown, kVK_DownArrow}, {kKeyHome, kVK_Home},
-    {kKeyEnd, kVK_End}, {kKeyPageUp, kVK_PageUp}, {kKeyPageDown, kVK_PageDown},
+    {kKeyLeft, kVK_LeftArrow},
+    {kKeyRight, kVK_RightArrow},
+    {kKeyUp, kVK_UpArrow},
+    {kKeyDown, kVK_DownArrow},
+    {kKeyHome, kVK_Home},
+    {kKeyEnd, kVK_End},
+    {kKeyPageUp, kVK_PageUp},
+    {kKeyPageDown, kVK_PageDown},
     {kKeyInsert, kVK_Help}, // Mac Keyboards have 'Help' on 'Insert'
 
     // function keys
-    {kKeyF1, kVK_F1}, {kKeyF2, kVK_F2}, {kKeyF3, kVK_F3}, {kKeyF4, kVK_F4},
-    {kKeyF5, kVK_F5}, {kKeyF6, kVK_F6}, {kKeyF7, kVK_F7}, {kKeyF8, kVK_F8},
-    {kKeyF9, kVK_F9}, {kKeyF10, kVK_F10}, {kKeyF11, kVK_F11},
-    {kKeyF12, kVK_F12}, {kKeyF13, kVK_F13}, {kKeyF14, kVK_F14},
-    {kKeyF15, kVK_F15}, {kKeyF16, kVK_F16},
+    {kKeyF1, kVK_F1},
+    {kKeyF2, kVK_F2},
+    {kKeyF3, kVK_F3},
+    {kKeyF4, kVK_F4},
+    {kKeyF5, kVK_F5},
+    {kKeyF6, kVK_F6},
+    {kKeyF7, kVK_F7},
+    {kKeyF8, kVK_F8},
+    {kKeyF9, kVK_F9},
+    {kKeyF10, kVK_F10},
+    {kKeyF11, kVK_F11},
+    {kKeyF12, kVK_F12},
+    {kKeyF13, kVK_F13},
+    {kKeyF14, kVK_F14},
+    {kKeyF15, kVK_F15},
+    {kKeyF16, kVK_F16},
 
-    {kKeyKP_0, kVK_ANSI_Keypad0}, {kKeyKP_1, kVK_ANSI_Keypad1},
-    {kKeyKP_2, kVK_ANSI_Keypad2}, {kKeyKP_3, kVK_ANSI_Keypad3},
-    {kKeyKP_4, kVK_ANSI_Keypad4}, {kKeyKP_5, kVK_ANSI_Keypad5},
-    {kKeyKP_6, kVK_ANSI_Keypad6}, {kKeyKP_7, kVK_ANSI_Keypad7},
-    {kKeyKP_8, kVK_ANSI_Keypad8}, {kKeyKP_9, kVK_ANSI_Keypad9},
+    {kKeyKP_0, kVK_ANSI_Keypad0},
+    {kKeyKP_1, kVK_ANSI_Keypad1},
+    {kKeyKP_2, kVK_ANSI_Keypad2},
+    {kKeyKP_3, kVK_ANSI_Keypad3},
+    {kKeyKP_4, kVK_ANSI_Keypad4},
+    {kKeyKP_5, kVK_ANSI_Keypad5},
+    {kKeyKP_6, kVK_ANSI_Keypad6},
+    {kKeyKP_7, kVK_ANSI_Keypad7},
+    {kKeyKP_8, kVK_ANSI_Keypad8},
+    {kKeyKP_9, kVK_ANSI_Keypad9},
     {kKeyKP_Decimal, kVK_ANSI_KeypadDecimal},
     {kKeyKP_Equal, kVK_ANSI_KeypadEquals},
     {kKeyKP_Multiply, kVK_ANSI_KeypadMultiply},
-    {kKeyKP_Add, kVK_ANSI_KeypadPlus}, {kKeyKP_Divide, kVK_ANSI_KeypadDivide},
+    {kKeyKP_Add, kVK_ANSI_KeypadPlus},
+    {kKeyKP_Divide, kVK_ANSI_KeypadDivide},
     {kKeyKP_Subtract, kVK_ANSI_KeypadMinus},
     {kKeyKP_Enter, kVK_ANSI_KeypadEnter},
 
@@ -82,23 +104,32 @@ static const KeyEntry s_controlKeys[] = {
 
     // modifier keys.  OS X doesn't seem to support right handed versions
     // of modifier keys so we map them to the left handed versions.
-    {kKeyShift_L, s_shiftVK}, {kKeyShift_R, s_shiftVK},         // 60
-    {kKeyControl_L, s_controlVK}, {kKeyControl_R, s_controlVK}, // 62
-    {kKeyAlt_L, s_altVK}, {kKeyAlt_R, s_altVK}, {kKeySuper_L, s_superVK},
-    {kKeySuper_R, s_superVK},                         // 61
-    {kKeyMeta_L, s_superVK}, {kKeyMeta_R, s_superVK}, // 61
+    {kKeyShift_L, s_shiftVK},
+    {kKeyShift_R, s_shiftVK}, // 60
+    {kKeyControl_L, s_controlVK},
+    {kKeyControl_R, s_controlVK}, // 62
+    {kKeyAlt_L, s_altVK},
+    {kKeyAlt_R, s_altVK},
+    {kKeySuper_L, s_superVK},
+    {kKeySuper_R, s_superVK}, // 61
+    {kKeyMeta_L, s_superVK},
+    {kKeyMeta_R, s_superVK}, // 61
 
     // toggle modifiers
-    {kKeyNumLock, s_numLockVK}, {kKeyCapsLock, s_capsLockVK},
+    {kKeyNumLock, s_numLockVK},
+    {kKeyCapsLock, s_capsLockVK},
 
     // for Apple Pro JIS Keyboard, map Kana (IME activate) to Henkan (show next
     // IME conversion), and
     // Eisu (IME deactivate) to Zenkaku (IME activation toggle) on Windows
     // Japanese keyboard (OADG109A)
-    {kKeyHenkan, kVK_JIS_Kana}, {kKeyZenkaku, kVK_JIS_Eisu},
+    {kKeyHenkan, kVK_JIS_Kana},
+    {kKeyZenkaku, kVK_JIS_Eisu},
 
-    {kKeyMissionControl, s_missionControlVK}, {kKeyLaunchpad, s_launchpadVK},
-    {kKeyBrightnessUp, s_brightnessUp}, {kKeyBrightnessDown, s_brightnessDown}};
+    {kKeyMissionControl, s_missionControlVK},
+    {kKeyLaunchpad, s_launchpadVK},
+    {kKeyBrightnessUp, s_brightnessUp},
+    {kKeyBrightnessDown, s_brightnessDown}};
 
 namespace {
 
@@ -159,8 +190,11 @@ OSXKeyState::OSXKeyState(
   init();
 }
 
-OSXKeyState::OSXKeyState(IEventQueue *events, synergy::KeyMap &keyMap,
-    std::vector<String> layouts, bool isLangSyncEnabled)
+OSXKeyState::OSXKeyState(
+    IEventQueue *events,
+    synergy::KeyMap &keyMap,
+    std::vector<String> layouts,
+    bool isLangSyncEnabled)
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled) {
   init();
 }
@@ -292,8 +326,8 @@ KeyButton OSXKeyState::mapKeyFromEvent(
   UInt16 action;
   if (eventKind == kCGEventKeyDown) {
     action = kUCKeyActionDown;
-  } else if (CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat) ==
-             1) {
+  } else if (
+      CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat) == 1) {
     action = kUCKeyActionAutoKey;
   } else {
     return 0;
@@ -311,9 +345,17 @@ KeyButton OSXKeyState::mapKeyFromEvent(
     UniCharCount count;
     UniChar chars[2];
     LOG((CLOG_DEBUG2 "modifiers: %08x", modifiers & 0xffu));
-    OSStatus status = UCKeyTranslate(layout, vkCode & 0xffu, action,
-        (modifiers >> 8) & 0xffu, LMGetKbdType(), 0, &m_deadKeyState,
-        sizeof(chars) / sizeof(chars[0]), &count, chars);
+    OSStatus status = UCKeyTranslate(
+        layout,
+        vkCode & 0xffu,
+        action,
+        (modifiers >> 8) & 0xffu,
+        LMGetKbdType(),
+        0,
+        &m_deadKeyState,
+        sizeof(chars) / sizeof(chars[0]),
+        &count,
+        chars);
 
     // get the characters
     if (status == 0) {
@@ -536,8 +578,14 @@ kern_return_t OSXKeyState::postHIDVirtualKey(UInt8 virtualKey, bool postDown) {
 
   if (driver) {
     if (isModifier(virtualKey)) {
-      result = IOHIDPostEvent(driver, NX_FLAGSCHANGED, {0, 0}, &event,
-          kNXEventDataVersion, getKeyboardEventFlags(), true);
+      result = IOHIDPostEvent(
+          driver,
+          NX_FLAGSCHANGED,
+          {0, 0},
+          &event,
+          kNXEventDataVersion,
+          getKeyboardEventFlags(),
+          true);
     } else {
       event.key.keyCode = virtualKey;
       const auto eventType = postDown ? NX_KEYDOWN : NX_KEYUP;
@@ -568,9 +616,13 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke) {
     KeyButton button = keystroke.m_data.m_button.m_button;
     CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
 
-    LOG((CLOG_DEBUG1
-        "  button=0x%04x virtualKey=0x%04x keyDown=%s client=0x%04x",
-        button, virtualKey, keyDown ? "down" : "up", client));
+    LOG(
+        (CLOG_DEBUG1
+         "  button=0x%04x virtualKey=0x%04x keyDown=%s client=0x%04x",
+         button,
+         virtualKey,
+         keyDown ? "down" : "up",
+         client));
 
     setKeyboardModifiers(virtualKey, keyDown);
     if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
@@ -745,8 +797,11 @@ bool OSXKeyState::getKeyMap(
   return true;
 }
 
-bool OSXKeyState::mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
-    UInt32 &macVirtualKey, UInt32 &macModifierMask) const {
+bool OSXKeyState::mapSynergyHotKeyToMac(
+    KeyID key,
+    KeyModifierMask mask,
+    UInt32 &macVirtualKey,
+    UInt32 &macModifierMask) const {
   // look up button for key
   KeyButton button = getButton(key, pollActiveGroup());
   if (button == 0 && key != kKeyNone) {
@@ -785,33 +840,57 @@ void OSXKeyState::handleModifierKeys(
 
   // synthesize changed modifier keys
   if ((changed & KeyModifierShift) != 0) {
-    handleModifierKey(target, s_shiftVK, kKeyShift_L,
-        (newMask & KeyModifierShift) != 0, newMask);
+    handleModifierKey(
+        target,
+        s_shiftVK,
+        kKeyShift_L,
+        (newMask & KeyModifierShift) != 0,
+        newMask);
   }
   if ((changed & KeyModifierControl) != 0) {
-    handleModifierKey(target, s_controlVK, kKeyControl_L,
-        (newMask & KeyModifierControl) != 0, newMask);
+    handleModifierKey(
+        target,
+        s_controlVK,
+        kKeyControl_L,
+        (newMask & KeyModifierControl) != 0,
+        newMask);
   }
   if ((changed & KeyModifierAlt) != 0) {
     handleModifierKey(
         target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
   }
   if ((changed & KeyModifierSuper) != 0) {
-    handleModifierKey(target, s_superVK, kKeySuper_L,
-        (newMask & KeyModifierSuper) != 0, newMask);
+    handleModifierKey(
+        target,
+        s_superVK,
+        kKeySuper_L,
+        (newMask & KeyModifierSuper) != 0,
+        newMask);
   }
   if ((changed & KeyModifierCapsLock) != 0) {
-    handleModifierKey(target, s_capsLockVK, kKeyCapsLock,
-        (newMask & KeyModifierCapsLock) != 0, newMask);
+    handleModifierKey(
+        target,
+        s_capsLockVK,
+        kKeyCapsLock,
+        (newMask & KeyModifierCapsLock) != 0,
+        newMask);
   }
   if ((changed & KeyModifierNumLock) != 0) {
-    handleModifierKey(target, s_numLockVK, kKeyNumLock,
-        (newMask & KeyModifierNumLock) != 0, newMask);
+    handleModifierKey(
+        target,
+        s_numLockVK,
+        kKeyNumLock,
+        (newMask & KeyModifierNumLock) != 0,
+        newMask);
   }
 }
 
-void OSXKeyState::handleModifierKey(void *target, UInt32 virtualKey, KeyID id,
-    bool down, KeyModifierMask newMask) {
+void OSXKeyState::handleModifierKey(
+    void *target,
+    UInt32 virtualKey,
+    KeyID id,
+    bool down,
+    KeyModifierMask newMask) {
   KeyButton button = mapVirtualKeyToKeyButton(virtualKey);
   onKey(button, down, newMask);
   sendKeyEvent(target, down, false, id, newMask, 0, button);
@@ -821,8 +900,9 @@ bool OSXKeyState::getGroups(AutoCFArray &groups) const {
   // get number of layouts
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys,
-                            (const void **)values, 1, NULL, NULL),
+  AutoCFDictionary dict(
+      CFDictionaryCreate(
+          NULL, (const void **)keys, (const void **)values, 1, NULL, NULL),
       CFRelease);
   AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
@@ -848,7 +928,7 @@ void OSXKeyState::setGroup(SInt32 group) {
       kTISPropertyInputSourceIsEnableCapable);
   if (!canBeSetted) {
     LOG((CLOG_WARN
-        "nedeed keyboard layout is disabled for programmatically selection"));
+         "nedeed keyboard layout is disabled for programmatically selection"));
     return;
   }
 
@@ -873,7 +953,7 @@ void OSXKeyState::adjustAltGrModifier(
     for (KeyIDs::const_iterator i = ids.begin(); i != ids.end(); ++i) {
       KeyID id = *i;
       if (id != kKeyNone && ((id < 0xe000u || id > 0xefffu) ||
-                                (id >= kKeyKP_Equal && id <= kKeyKP_9))) {
+                             (id >= kKeyKP_Equal && id <= kKeyKP_9))) {
         *mask |= KeyModifierAltGr;
         return;
       }

@@ -34,13 +34,19 @@
 //
 
 const UINT MSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] = {
-    IDI_TASKBAR_NOT_RUNNING, IDI_TASKBAR_NOT_WORKING, IDI_TASKBAR_NOT_CONNECTED,
-    IDI_TASKBAR_NOT_CONNECTED, IDI_TASKBAR_CONNECTED};
+    IDI_TASKBAR_NOT_RUNNING,
+    IDI_TASKBAR_NOT_WORKING,
+    IDI_TASKBAR_NOT_CONNECTED,
+    IDI_TASKBAR_NOT_CONNECTED,
+    IDI_TASKBAR_CONNECTED};
 
 MSWindowsClientTaskBarReceiver::MSWindowsClientTaskBarReceiver(
-    HINSTANCE appInstance, const BufferedLogOutputter *logBuffer,
+    HINSTANCE appInstance,
+    const BufferedLogOutputter *logBuffer,
     IEventQueue *events)
-    : ClientTaskBarReceiver(events), m_appInstance(appInstance), m_window(NULL),
+    : ClientTaskBarReceiver(events),
+      m_appInstance(appInstance),
+      m_window(NULL),
       m_logBuffer(logBuffer) {
   for (UInt32 i = 0; i < kMaxState; ++i) {
     m_icon[i] = loadIcon(s_stateToIconID[i]);
@@ -137,9 +143,14 @@ void MSWindowsClientTaskBarReceiver::runMenu(int x, int y) {
   HMENU logLevelMenu = GetSubMenu(menu, 3);
   CheckMenuRadioItem(
       logLevelMenu, 0, 6, CLOG->getFilter() - kERROR, MF_BYPOSITION);
-  int n = TrackPopupMenu(menu,
-      TPM_NONOTIFY | TPM_RETURNCMD | TPM_LEFTBUTTON | TPM_RIGHTBUTTON, x, y, 0,
-      m_window, NULL);
+  int n = TrackPopupMenu(
+      menu,
+      TPM_NONOTIFY | TPM_RETURNCMD | TPM_LEFTBUTTON | TPM_RIGHTBUTTON,
+      x,
+      y,
+      0,
+      m_window,
+      NULL);
   SendMessage(m_window, WM_NULL, 0, 0);
 
   // perform the requested operation
@@ -202,7 +213,8 @@ void MSWindowsClientTaskBarReceiver::copyLog() const {
     // collect log buffer
     String data;
     for (BufferedLogOutputter::const_iterator index = m_logBuffer->begin();
-         index != m_logBuffer->end(); ++index) {
+         index != m_logBuffer->end();
+         ++index) {
       data += *index;
       data += "\n";
     }
@@ -244,10 +256,12 @@ void MSWindowsClientTaskBarReceiver::createWindow() {
   }
 
   // get the status dialog
-  m_window =
-      CreateDialogParam(m_appInstance, MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
-          NULL, (DLGPROC)&MSWindowsClientTaskBarReceiver::staticDlgProc,
-          reinterpret_cast<LPARAM>(static_cast<void *>(this)));
+  m_window = CreateDialogParam(
+      m_appInstance,
+      MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
+      NULL,
+      (DLGPROC)&MSWindowsClientTaskBarReceiver::staticDlgProc,
+      reinterpret_cast<LPARAM>(static_cast<void *>(this)));
 
   // window should appear on top of everything, including (especially)
   // the task bar.
@@ -312,10 +326,20 @@ BOOL CALLBACK MSWindowsClientTaskBarReceiver::staticDlgProc(
 IArchTaskBarReceiver *createTaskBarReceiver(
     const BufferedLogOutputter *logBuffer, IEventQueue *events) {
   ArchMiscWindows::setIcons(
-      (HICON)LoadImage(ArchMiscWindows::instanceWin32(),
-          MAKEINTRESOURCE(IDI_SYNERGY), IMAGE_ICON, 32, 32, LR_SHARED),
-      (HICON)LoadImage(ArchMiscWindows::instanceWin32(),
-          MAKEINTRESOURCE(IDI_SYNERGY), IMAGE_ICON, 16, 16, LR_SHARED));
+      (HICON)LoadImage(
+          ArchMiscWindows::instanceWin32(),
+          MAKEINTRESOURCE(IDI_SYNERGY),
+          IMAGE_ICON,
+          32,
+          32,
+          LR_SHARED),
+      (HICON)LoadImage(
+          ArchMiscWindows::instanceWin32(),
+          MAKEINTRESOURCE(IDI_SYNERGY),
+          IMAGE_ICON,
+          16,
+          16,
+          LR_SHARED));
 
   return new MSWindowsClientTaskBarReceiver(
       MSWindowsScreen::getWindowInstance(), logBuffer, events);

@@ -85,8 +85,8 @@ public:
   is longer than allowed by the system;  we'll rely on the
   system calls to tell us that.
   */
-  virtual std::string concatPath(
-      const std::string &prefix, const std::string &suffix) = 0;
+  virtual std::string
+  concatPath(const std::string &prefix, const std::string &suffix) = 0;
 
   //@}
   //! Set the user's profile directory

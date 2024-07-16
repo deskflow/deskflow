@@ -26,12 +26,17 @@ const QString ScreenSetupModel::m_MimeType = "application/x-qsynergy-screen";
 
 ScreenSetupModel::ScreenSetupModel(
     ScreenList &screens, int numColumns, int numRows)
-    : QAbstractTableModel(NULL), m_Screens(screens), m_NumColumns(numColumns),
+    : QAbstractTableModel(NULL),
+      m_Screens(screens),
+      m_NumColumns(numColumns),
       m_NumRows(numRows) {
   if (m_NumColumns * m_NumRows > screens.size())
-    qFatal("Not enough elements (%lld) in screens QList for %d columns and %d "
-           "rows",
-        screens.size(), m_NumColumns, m_NumRows);
+    qFatal(
+        "Not enough elements (%lld) in screens QList for %d columns and %d "
+        "rows",
+        screens.size(),
+        m_NumColumns,
+        m_NumRows);
 }
 
 QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const {
@@ -96,8 +101,12 @@ QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const {
   return pMimeData;
 }
 
-bool ScreenSetupModel::dropMimeData(const QMimeData *data,
-    Qt::DropAction action, int row, int column, const QModelIndex &parent) {
+bool ScreenSetupModel::dropMimeData(
+    const QMimeData *data,
+    Qt::DropAction action,
+    int row,
+    int column,
+    const QModelIndex &parent) {
   if (action == Qt::IgnoreAction)
     return true;
 
@@ -144,8 +153,10 @@ void ScreenSetupModel::addScreen(const Screen &newScreen) {
 }
 
 bool ScreenSetupModel::isFull() const {
-  auto emptyScreen = std::find_if(m_Screens.cbegin(), m_Screens.cend(),
-      [](const Screen &item) { return item.isNull(); });
+  auto emptyScreen = std::find_if(
+      m_Screens.cbegin(), m_Screens.cend(), [](const Screen &item) {
+        return item.isNull();
+      });
 
   return (emptyScreen == m_Screens.cend());
 }

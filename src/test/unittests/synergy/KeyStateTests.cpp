@@ -34,10 +34,15 @@ void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys);
 
 void assertMaskIsOne(ForeachKeyCallback cb, void *userData);
 
-const synergy::KeyMap::KeyItem *stubMapKey(synergy::KeyMap::Keystrokes &keys,
-    KeyID id, SInt32 group, synergy::KeyMap::ModifierToKeys &activeModifiers,
-    KeyModifierMask &currentState, KeyModifierMask desiredMask,
-    bool isAutoRepeat, const String &lang);
+const synergy::KeyMap::KeyItem *stubMapKey(
+    synergy::KeyMap::Keystrokes &keys,
+    KeyID id,
+    SInt32 group,
+    synergy::KeyMap::ModifierToKeys &activeModifiers,
+    KeyModifierMask &currentState,
+    KeyModifierMask desiredMask,
+    bool isAutoRepeat,
+    const String &lang);
 
 synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
 synergy::KeyMap::KeyItem s_stubKeyItem;
@@ -465,9 +470,15 @@ void assertMaskIsOne(ForeachKeyCallback cb, void *userData) {
   ASSERT_EQ(1, ((KeyState::AddActiveModifierContext *)userData)->m_mask);
 }
 
-const synergy::KeyMap::KeyItem *stubMapKey(synergy::KeyMap::Keystrokes &keys,
-    KeyID, SInt32, synergy::KeyMap::ModifierToKeys &, KeyModifierMask &,
-    KeyModifierMask, bool, const String &) {
+const synergy::KeyMap::KeyItem *stubMapKey(
+    synergy::KeyMap::Keystrokes &keys,
+    KeyID,
+    SInt32,
+    synergy::KeyMap::ModifierToKeys &,
+    KeyModifierMask &,
+    KeyModifierMask,
+    bool,
+    const String &) {
   keys.push_back(s_stubKeystroke);
   return &s_stubKeyItem;
 }

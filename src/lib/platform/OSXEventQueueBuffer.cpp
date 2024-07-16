@@ -32,7 +32,9 @@ class EventQueueTimer {};
 //
 
 OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue *events)
-    : m_event(NULL), m_eventQueue(events), m_carbonEventQueue(NULL) {
+    : m_event(NULL),
+      m_eventQueue(events),
+      m_carbonEventQueue(NULL) {
   // do nothing
 }
 
@@ -52,8 +54,8 @@ void OSXEventQueueBuffer::waitForEvent(double timeout) {
   ReceiveNextEvent(0, NULL, timeout, false, &event);
 }
 
-IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(
-    Event &event, UInt32 &dataID) {
+IEventQueueBuffer::Type
+OSXEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
   // release the previous event
   if (m_event != NULL) {
     ReleaseEvent(m_event);

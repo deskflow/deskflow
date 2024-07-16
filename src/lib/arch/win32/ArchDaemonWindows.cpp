@@ -62,8 +62,12 @@ void ArchDaemonWindows::daemonFailed(int result) {
   throw XArchDaemonRunFailed(result);
 }
 
-void ArchDaemonWindows::installDaemon(const char *name, const char *description,
-    const char *pathname, const char *commandLine, const char *dependencies) {
+void ArchDaemonWindows::installDaemon(
+    const char *name,
+    const char *description,
+    const char *pathname,
+    const char *commandLine,
+    const char *dependencies) {
   // open service manager
   SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
   if (mgr == NULL) {
@@ -72,10 +76,20 @@ void ArchDaemonWindows::installDaemon(const char *name, const char *description,
   }
 
   // create the service
-  SC_HANDLE service = CreateService(mgr, name, name, 0,
+  SC_HANDLE service = CreateService(
+      mgr,
+      name,
+      name,
+      0,
       SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,
-      SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, pathname, NULL, NULL,
-      dependencies, NULL, NULL);
+      SERVICE_AUTO_START,
+      SERVICE_ERROR_NORMAL,
+      pathname,
+      NULL,
+      NULL,
+      dependencies,
+      NULL,
+      NULL);
 
   if (service == NULL) {
     // can't create service
@@ -284,8 +298,8 @@ int ArchDaemonWindows::doRunDaemon(RunFunc run) {
   m_daemonThreadID = GetCurrentThreadId();
   while (m_serviceState != SERVICE_STOPPED) {
     // wait until we're told to start
-    while (
-        !isRunState(m_serviceState) && m_serviceState != SERVICE_STOP_PENDING) {
+    while (!isRunState(m_serviceState) &&
+           m_serviceState != SERVICE_STOP_PENDING) {
       ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
     }
 
@@ -421,7 +435,7 @@ void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn) {
           // whitespace must follow closing quote
           if (e == std::string::npos ||
               (e + 1 != commandLine.size() && commandLine[e + 1] != ' ' &&
-                  commandLine[e + 1] != '\t')) {
+               commandLine[e + 1] != '\t')) {
             args.clear();
             break;
           }

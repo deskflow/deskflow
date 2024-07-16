@@ -30,8 +30,9 @@ class LanguageManager {
   std::vector<String> m_localLanguages;
 
 public:
-  explicit LanguageManager(const std::vector<String> &localLanguages =
-                               AppUtil::instance().getKeyboardLayoutList());
+  explicit LanguageManager(
+      const std::vector<String> &localLanguages =
+          AppUtil::instance().getKeyboardLayoutList());
 
   /**
    * @brief setRemoteLanguages sets remote languages

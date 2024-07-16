@@ -46,7 +46,8 @@ typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(
 
 class App : public IApp {
 public:
-  App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
+  App(IEventQueue *events,
+      CreateTaskBarReceiverFunc createTaskBarReceiver,
       lib::synergy::ArgsBase *args);
   App(App const &) = delete;
   App(App &&) = delete;

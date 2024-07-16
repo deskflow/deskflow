@@ -69,7 +69,9 @@ TEST_F(IpcTests, connectToServer) {
   server.listen();
   m_connectToServer_server = &server;
 
-  m_events.adoptHandler(m_events.forIpcServer().messageReceived(), &server,
+  m_events.adoptHandler(
+      m_events.forIpcServer().messageReceived(),
+      &server,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::connectToServer_handleMessageReceived));
 
@@ -91,7 +93,9 @@ TEST_F(IpcTests, sendMessageToServer) {
   server.listen();
 
   // event handler sends "test" command to server.
-  m_events.adoptHandler(m_events.forIpcServer().messageReceived(), &server,
+  m_events.adoptHandler(
+      m_events.forIpcServer().messageReceived(),
+      &server,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToServer_serverHandleMessageReceived));
 
@@ -114,14 +118,18 @@ TEST_F(IpcTests, sendMessageToClient) {
   m_sendMessageToClient_server = &server;
 
   // event handler sends "test" log line to client.
-  m_events.adoptHandler(m_events.forIpcServer().messageReceived(), &server,
+  m_events.adoptHandler(
+      m_events.forIpcServer().messageReceived(),
+      &server,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToClient_serverHandleClientConnected));
 
   IpcClient client(&m_events, &socketMultiplexer, TEST_IPC_PORT);
   client.connect();
 
-  m_events.adoptHandler(m_events.forIpcClient().messageReceived(), &client,
+  m_events.adoptHandler(
+      m_events.forIpcClient().messageReceived(),
+      &client,
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToClient_clientHandleMessageReceived));
 
@@ -136,7 +144,8 @@ TEST_F(IpcTests, sendMessageToClient) {
 
 IpcTests::IpcTests()
     : m_connectToServer_helloMessageReceived(false),
-      m_connectToServer_hasClientNode(false), m_connectToServer_server(nullptr),
+      m_connectToServer_hasClientNode(false),
+      m_connectToServer_server(nullptr),
       m_sendMessageToClient_server(nullptr),
       m_sendMessageToServer_client(nullptr) {}
 

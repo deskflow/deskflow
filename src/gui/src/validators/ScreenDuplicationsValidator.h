@@ -28,8 +28,10 @@ class ScreenDuplicationsValidator : public IStringValidator {
   const ScreenList *m_pScreenList = nullptr;
 
 public:
-  ScreenDuplicationsValidator(const QString &message,
-      const QString &defaultName, const ScreenList *pScreens);
+  ScreenDuplicationsValidator(
+      const QString &message,
+      const QString &defaultName,
+      const ScreenList *pScreens);
   bool validate(const QString &input) const override;
 };
 

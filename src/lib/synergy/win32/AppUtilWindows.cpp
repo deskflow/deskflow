@@ -42,7 +42,8 @@
 #include <Windows.h>
 
 AppUtilWindows::AppUtilWindows(IEventQueue *events)
-    : m_events(events), m_exitMode(kExitModeNormal) {
+    : m_events(events),
+      m_exitMode(kExitModeNormal) {
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
     throw XArch(new XArchEvalWindows());
   }
@@ -156,8 +157,11 @@ std::vector<String> AppUtilWindows::getKeyboardLayoutList() {
 
     for (int i = 0; i < uLayouts; ++i) {
       String code("", 2);
-      GetLocaleInfoA(MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT),
-          LOCALE_SISO639LANGNAME, &code[0], code.size());
+      GetLocaleInfoA(
+          MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT),
+          LOCALE_SISO639LANGNAME,
+          &code[0],
+          code.size());
       layoutLangCodes.push_back(code);
     }
 
@@ -206,8 +210,10 @@ public:
 
 void AppUtilWindows::showNotification(
     const String &title, const String &text) const {
-  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
-      title.c_str(), text.c_str()));
+  LOG(
+      (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
+       title.c_str(),
+       text.c_str()));
   if (!WinToastLib::WinToast::isCompatible()) {
     LOG((CLOG_INFO "this system does not support toast notifications"));
     return;
@@ -228,9 +234,11 @@ void AppUtilWindows::showNotification(
   auto handler = std::make_unique<WinToastHandler>();
   WinToastLib::WinToastTemplate templ =
       WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
-  templ.setTextField(std::wstring(title.begin(), title.end()),
+  templ.setTextField(
+      std::wstring(title.begin(), title.end()),
       WinToastLib::WinToastTemplate::FirstLine);
-  templ.setTextField(std::wstring(text.begin(), text.end()),
+  templ.setTextField(
+      std::wstring(text.begin(), text.end()),
       WinToastLib::WinToastTemplate::SecondLine);
 
   const bool launched = WinToastLib::WinToast::instance()->showToast(

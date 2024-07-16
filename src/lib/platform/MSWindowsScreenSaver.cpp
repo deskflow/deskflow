@@ -42,8 +42,14 @@ static const TCHAR *const g_pathScreenSaverIsSecure[] = {
 //
 
 MSWindowsScreenSaver::MSWindowsScreenSaver()
-    : m_wasSecure(false), m_wasSecureAnInt(false), m_process(NULL),
-      m_watch(NULL), m_threadID(0), m_msg(0), m_wParam(0), m_lParam(0),
+    : m_wasSecure(false),
+      m_wasSecureAnInt(false),
+      m_process(NULL),
+      m_watch(NULL),
+      m_threadID(0),
+      m_msg(0),
+      m_wParam(0),
+      m_lParam(0),
       m_active(false) {
   // check if screen saver is enabled
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
@@ -131,7 +137,9 @@ void MSWindowsScreenSaver::deactivate() {
   HDESK desktop = OpenDesktop(
       "Screen-saver", 0, FALSE, DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
   if (desktop != NULL) {
-    EnumDesktopWindows(desktop, &MSWindowsScreenSaver::killScreenSaverFunc,
+    EnumDesktopWindows(
+        desktop,
+        &MSWindowsScreenSaver::killScreenSaverFunc,
         reinterpret_cast<LPARAM>(&killed));
     CloseDesktop(desktop);
   }

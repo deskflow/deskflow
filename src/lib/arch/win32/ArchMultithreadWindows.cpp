@@ -59,8 +59,14 @@ public:
 };
 
 ArchThreadImpl::ArchThreadImpl()
-    : m_refCount(1), m_thread(NULL), m_id(0), m_func(NULL), m_userData(NULL),
-      m_cancelling(false), m_result(NULL), m_networkData(NULL) {
+    : m_refCount(1),
+      m_thread(NULL),
+      m_id(0),
+      m_func(NULL),
+      m_userData(NULL),
+      m_cancelling(false),
+      m_result(NULL),
+      m_networkData(NULL) {
   m_exit = CreateEvent(NULL, TRUE, FALSE, NULL);
   m_cancel = CreateEvent(NULL, TRUE, FALSE, NULL);
 }
@@ -102,7 +108,8 @@ ArchMultithreadWindows::~ArchMultithreadWindows() {
 
   // clean up thread list
   for (ThreadList::iterator index = m_threadList.begin();
-       index != m_threadList.end(); ++index) {
+       index != m_threadList.end();
+       ++index) {
     delete *index;
   }
 
@@ -468,8 +475,8 @@ void *ArchMultithreadWindows::getResultOfThread(ArchThread thread) {
   return result;
 }
 
-IArchMultithread::ThreadID ArchMultithreadWindows::getIDOfThread(
-    ArchThread thread) {
+IArchMultithread::ThreadID
+ArchMultithreadWindows::getIDOfThread(ArchThread thread) {
   return static_cast<ThreadID>(thread->m_id);
 }
 
@@ -518,7 +525,8 @@ ArchThreadImpl *ArchMultithreadWindows::findNoRef(DWORD id) {
 ArchThreadImpl *ArchMultithreadWindows::findNoRefOrCreate(DWORD id) {
   // linear search
   for (ThreadList::const_iterator index = m_threadList.begin();
-       index != m_threadList.end(); ++index) {
+       index != m_threadList.end();
+       ++index) {
     if ((*index)->m_id == id) {
       return *index;
     }
@@ -538,7 +546,8 @@ void ArchMultithreadWindows::insert(ArchThreadImpl *thread) {
 
 void ArchMultithreadWindows::erase(ArchThreadImpl *thread) {
   for (ThreadList::iterator index = m_threadList.begin();
-       index != m_threadList.end(); ++index) {
+       index != m_threadList.end();
+       ++index) {
     if (*index == thread) {
       m_threadList.erase(index);
       break;

@@ -36,9 +36,13 @@ A data socket using TCP.
 */
 class TCPSocket : public IDataSocket {
 public:
-  TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+  TCPSocket(
+      IEventQueue *events,
+      SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
-  TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+  TCPSocket(
+      IEventQueue *events,
+      SocketMultiplexer *socketMultiplexer,
       ArchSocket socket);
   TCPSocket(TCPSocket const &) = delete;
   TCPSocket(TCPSocket &&) = delete;
@@ -98,10 +102,10 @@ private:
   void onOutputShutdown();
   void onDisconnected();
 
-  ISocketMultiplexerJob *serviceConnecting(
-      ISocketMultiplexerJob *, bool, bool, bool);
-  ISocketMultiplexerJob *serviceConnected(
-      ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *
+  serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *
+  serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   bool m_readable;

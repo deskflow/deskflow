@@ -26,9 +26,11 @@ public:
       IEventQueue *events, SocketMultiplexer *socketMultiplexer);
 
   // ISocketFactory overrides
-  IDataSocket *create(bool secure,
+  IDataSocket *create(
+      bool secure,
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
-  IListenSocket *createListen(bool secure,
+  IListenSocket *createListen(
+      bool secure,
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
 
 private:

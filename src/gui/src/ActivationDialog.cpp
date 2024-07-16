@@ -15,7 +15,9 @@
 
 ActivationDialog::ActivationDialog(
     QWidget *parent, AppConfig &appConfig, LicenseManager &licenseManager)
-    : QDialog(parent), ui(new Ui::ActivationDialog), m_appConfig(&appConfig),
+    : QDialog(parent),
+      ui(new Ui::ActivationDialog),
+      m_appConfig(&appConfig),
       m_LicenseManager(&licenseManager) {
   ui->setupUi(this);
   refreshSerialKey();
@@ -56,7 +58,9 @@ void ActivationDialog::accept() {
         ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString());
     m_LicenseManager->setSerialKey(serialKey);
   } catch (std::exception &e) {
-    message.critical(this, "Activation failed",
+    message.critical(
+        this,
+        "Activation failed",
         tr("An error occurred while trying to activate Synergy. "
            "<a href=\"https://symless.com/synergy/contact-support?source=gui\" "
            "style=\"text-decoration: none; color: #4285F4;\">"
@@ -91,7 +95,9 @@ void ActivationDialog::accept() {
     if (m_LicenseManager->serialKey().isTrial()) {
       message.information(this, "Thanks!", thanksMessage);
     } else {
-      message.information(this, "Activated!",
+      message.information(
+          this,
+          "Activated!",
           tr("Thanks for activating %1!")
               .arg(m_LicenseManager->getEditionName(edition)));
     }

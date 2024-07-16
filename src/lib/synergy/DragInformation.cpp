@@ -70,12 +70,15 @@ void DragInformation::parseDragInfo(
     ++index;
   }
 
-  LOG((CLOG_DEBUG "drag info received, total drag file number: %i",
-      dragFileList.size()));
+  LOG(
+      (CLOG_DEBUG "drag info received, total drag file number: %i",
+       dragFileList.size()));
 
   for (size_t i = 0; i < dragFileList.size(); ++i) {
-    LOG((CLOG_DEBUG "dragging file %i name: %s", i + 1,
-        dragFileList.at(i).getFilename().c_str()));
+    LOG(
+        (CLOG_DEBUG "dragging file %i name: %s",
+         i + 1,
+         dragFileList.at(i).getFilename().c_str()));
   }
 }
 

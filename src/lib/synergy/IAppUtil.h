@@ -31,6 +31,6 @@ public:
   virtual void startNode() = 0;
   virtual std::vector<String> getKeyboardLayoutList() = 0;
   virtual String getCurrentLanguageCode() = 0;
-  virtual void showNotification(
-      const String &title, const String &text) const = 0;
+  virtual void
+  showNotification(const String &title, const String &text) const = 0;
 };

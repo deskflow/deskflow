@@ -53,7 +53,10 @@ class EventQueueTimer {};
 
 XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
     Display *display, Window window, IEventQueue *events)
-    : m_events(events), m_display(display), m_window(window), m_waiting(false) {
+    : m_events(events),
+      m_display(display),
+      m_window(window),
+      m_waiting(false) {
   assert(m_display != NULL);
   assert(m_window != None);
 
@@ -168,8 +171,12 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
       }
     }
 #else
-    retval = select(nfds, SELECT_TYPE_ARG234 & rfds, SELECT_TYPE_ARG234 NULL,
-        SELECT_TYPE_ARG234 NULL, SELECT_TYPE_ARG5 TIMEOUT_DELAY);
+    retval = select(
+        nfds,
+        SELECT_TYPE_ARG234 & rfds,
+        SELECT_TYPE_ARG234 NULL,
+        SELECT_TYPE_ARG234 NULL,
+        SELECT_TYPE_ARG5 TIMEOUT_DELAY);
     if (FD_SET(m_pipefd[0], &rfds)) {
       read(m_pipefd[0], buf, 15);
     }
@@ -186,8 +193,8 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
   Thread::testCancel();
 }
 
-IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(
-    Event &event, UInt32 &dataID) {
+IEventQueueBuffer::Type
+XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
   Lock lock(&m_mutex);
 
   // push out pending events

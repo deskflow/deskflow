@@ -34,10 +34,16 @@
 // ClientListener
 //
 
-ClientListener::ClientListener(const NetworkAddress &address,
-    ISocketFactory *socketFactory, IEventQueue *events, bool enableCrypto)
-    : m_socketFactory(socketFactory), m_server(NULL), m_events(events),
-      m_useSecureNetwork(enableCrypto), m_address(address) {
+ClientListener::ClientListener(
+    const NetworkAddress &address,
+    ISocketFactory *socketFactory,
+    IEventQueue *events,
+    bool enableCrypto)
+    : m_socketFactory(socketFactory),
+      m_server(NULL),
+      m_events(events),
+      m_useSecureNetwork(enableCrypto),
+      m_address(address) {
   assert(m_socketFactory != NULL);
 
   try {
@@ -79,7 +85,9 @@ void ClientListener::start() {
       m_useSecureNetwork, ARCH->getAddrFamily(m_address.getAddress()));
 
   // setup event handler
-  m_events->adoptHandler(m_events->forIListenSocket().connecting(), m_listen,
+  m_events->adoptHandler(
+      m_events->forIListenSocket().connecting(),
+      m_listen,
       new TMethodEventJob<ClientListener>(
           this, &ClientListener::handleClientConnecting));
 
@@ -93,7 +101,8 @@ void ClientListener::stop() {
 
   // discard already connected clients
   for (NewClients::iterator index = m_newClients.begin();
-       index != m_newClients.end(); ++index) {
+       index != m_newClients.end();
+       ++index) {
     ClientProxyUnknown *client = *index;
     m_events->removeHandler(
         m_events->forClientProxyUnknown().success(), client);
@@ -143,7 +152,8 @@ void ClientListener::handleClientConnecting(const Event &, void *) {
 
   m_clientSockets.insert(socket);
 
-  m_events->adoptHandler(m_events->forClientListener().accepted(),
+  m_events->adoptHandler(
+      m_events->forClientListener().accepted(),
       socket->getEventTarget(),
       new TMethodEventJob<ClientListener>(
           this, &ClientListener::handleClientAccepted, socket));
@@ -172,10 +182,14 @@ void ClientListener::handleClientAccepted(const Event &, void *vsocket) {
   m_newClients.insert(client);
 
   // watch for events from unknown client
-  m_events->adoptHandler(m_events->forClientProxyUnknown().success(), client,
+  m_events->adoptHandler(
+      m_events->forClientProxyUnknown().success(),
+      client,
       new TMethodEventJob<ClientListener>(
           this, &ClientListener::handleUnknownClient, client));
-  m_events->adoptHandler(m_events->forClientProxyUnknown().failure(), client,
+  m_events->adoptHandler(
+      m_events->forClientProxyUnknown().failure(),
+      client,
       new TMethodEventJob<ClientListener>(
           this, &ClientListener::handleUnknownClientFailure, client));
 }
@@ -194,7 +208,9 @@ void ClientListener::handleUnknownClient(const Event &, void *vclient) {
     m_events->addEvent(Event(m_events->forClientListener().connected(), this));
 
     // watch for client to disconnect while it's in our queue
-    m_events->adoptHandler(m_events->forClientProxy().disconnected(), client,
+    m_events->adoptHandler(
+        m_events->forClientProxy().disconnected(),
+        client,
         new TMethodEventJob<ClientListener>(
             this, &ClientListener::handleClientDisconnected, client));
   }
@@ -215,7 +231,8 @@ void ClientListener::handleClientDisconnected(const Event &, void *vclient) {
   // find client in waiting clients queue
   for (WaitingClients::iterator i = m_waitingClients.begin(),
                                 n = m_waitingClients.end();
-       i != n; ++i) {
+       i != n;
+       ++i) {
     if (*i == client) {
       m_waitingClients.erase(i);
       m_events->removeHandler(

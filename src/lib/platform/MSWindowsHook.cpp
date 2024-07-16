@@ -64,8 +64,9 @@ void MSWindowsHook::loadLibrary() {
 
   // initialize library
   if (init(GetCurrentThreadId()) == 0) {
-    LOG((CLOG_ERR "failed to init %s.dll, another program may be using it",
-        g_name));
+    LOG(
+        (CLOG_ERR "failed to init %s.dll, another program may be using it",
+         g_name));
     LOG((CLOG_INFO "restarting your computer may solve this error"));
     throw XScreenOpenFailure();
   }
@@ -326,7 +327,9 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
     n = ToUnicode((UINT)wParam, scanCode, keys2, wc, 2, flags);
   }
 
-  PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+  PostThreadMessage(
+      g_threadID,
+      SYNERGY_MSG_DEBUG,
       (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) |
           0x60000000,
       lParam);
@@ -367,9 +370,15 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
     // previous dead key not composed.  send a fake key press
     // and release for the dead key to our window.
     WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
-    PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, deadCharAndVirtKey,
+    PostThreadMessage(
+        g_threadID,
+        SYNERGY_MSG_KEY,
+        deadCharAndVirtKey,
         g_deadLParam & 0x7fffffffu);
-    PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, deadCharAndVirtKey,
+    PostThreadMessage(
+        g_threadID,
+        SYNERGY_MSG_KEY,
+        deadCharAndVirtKey,
         g_deadLParam | 0x80000000u);
 
     // use uncomposed character
@@ -381,8 +390,13 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
 
   // put back the dead key, if any, for the application to use
   if (g_deadVirtKey != 0) {
-    ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-        g_deadKeyState, wc, 2, flags);
+    ToUnicode(
+        (UINT)g_deadVirtKey,
+        (g_deadLParam & 0x10ff0000u) >> 16,
+        g_deadKeyState,
+        wc,
+        2,
+        flags);
   }
 
   // clear out old dead key state

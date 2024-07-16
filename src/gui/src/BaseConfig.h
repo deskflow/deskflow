@@ -51,7 +51,10 @@ protected:
 
 protected:
   template <typename T1, typename T2>
-  void readSettings(QSettings &settings, T1 &array, const QString &arrayName,
+  void readSettings(
+      QSettings &settings,
+      T1 &array,
+      const QString &arrayName,
       const T2 &deflt) {
     int entries = settings.beginReadArray(arrayName + "Array");
     array.clear();
@@ -64,8 +67,12 @@ protected:
   }
 
   template <typename T1, typename T2>
-  void readSettings(QSettings &settings, T1 &array, const QString &arrayName,
-      const T2 &deflt, int entries) {
+  void readSettings(
+      QSettings &settings,
+      T1 &array,
+      const QString &arrayName,
+      const T2 &deflt,
+      int entries) {
     Q_ASSERT(array.size() >= entries);
     settings.beginReadArray(arrayName + "Array");
     for (int i = 0; i < entries; i++) {

@@ -106,8 +106,8 @@ private:
   // suitable converter.  iff onlyIfNotAdded is true then also
   // return NULL if a suitable converter was found but we already
   // have data of the converter's clipboard format.
-  IXWindowsClipboardConverter *getConverter(
-      Atom target, bool onlyIfNotAdded = false) const;
+  IXWindowsClipboardConverter *
+  getConverter(Atom target, bool onlyIfNotAdded = false) const;
 
   // convert target atom to clipboard format
   EFormat getFormat(Atom target) const;
@@ -116,8 +116,8 @@ private:
   // was owned at the given time.  returns true if the conversion
   // could be performed, false otherwise.  in either case, the
   // reply is inserted.
-  bool addSimpleRequest(
-      Window requestor, Atom target, ::Time time, Atom property);
+  bool
+  addSimpleRequest(Window requestor, Atom target, ::Time time, Atom property);
 
   // if not already checked then see if the cache is stale and, if so,
   // clear it.  this has the side effect of updating m_timeOwned.
@@ -145,8 +145,12 @@ private:
     // convert the given selection to the given type.  returns
     // true iff the conversion was successful or the conversion
     // cannot be performed (in which case *actualTarget == None).
-    bool readClipboard(Display *display, Atom selection, Atom target,
-        Atom *actualTarget, String *data);
+    bool readClipboard(
+        Display *display,
+        Atom selection,
+        Atom target,
+        Atom *actualTarget,
+        String *data);
 
   private:
     bool processEvent(Display *display, XEvent *event);
@@ -222,8 +226,14 @@ private:
   class Reply {
   public:
     Reply(Window, Atom target, ::Time);
-    Reply(Window, Atom target, ::Time, Atom property, const String &data,
-        Atom type, int format);
+    Reply(
+        Window,
+        Atom target,
+        ::Time,
+        Atom property,
+        const String &data,
+        Atom type,
+        int format);
 
   public:
     // information about the request

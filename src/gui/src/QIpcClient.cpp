@@ -24,7 +24,8 @@
 #include <QTimer>
 
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
-    : m_ReaderStarted(false), m_Enabled(false),
+    : m_ReaderStarted(false),
+      m_Enabled(false),
       m_StreamProvider(streamProvider) {
 
   m_Socket = new QTcpSocket(this);
@@ -36,11 +37,17 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
   }
 
   connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
-  connect(m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
+  connect(
+      m_Socket,
+      SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
+      this,
       SLOT(error(QAbstractSocket::SocketError)));
 
   m_Reader = new IpcReader(m_Socket);
-  connect(m_Reader, SIGNAL(readLogLine(const QString &)), this,
+  connect(
+      m_Reader,
+      SIGNAL(readLogLine(const QString &)),
+      this,
       SLOT(handleReadLogLine(const QString &)));
 }
 

@@ -29,8 +29,16 @@ public:
   MOCK_METHOD(void, foreachKey, (ForeachKeyCallback, void *), (override));
   MOCK_METHOD(void, addHalfDuplexModifier, (KeyID), (override));
   MOCK_METHOD(bool, isHalfDuplex, (KeyID, KeyButton), (const, override));
-  MOCK_METHOD(const KeyMap::KeyItem *, mapKey,
-      (Keystrokes &, KeyID, SInt32, ModifierToKeys &, KeyModifierMask &,
-          KeyModifierMask, bool, const String &),
+  MOCK_METHOD(
+      const KeyMap::KeyItem *,
+      mapKey,
+      (Keystrokes &,
+       KeyID,
+       SInt32,
+       ModifierToKeys &,
+       KeyModifierMask &,
+       KeyModifierMask,
+       bool,
+       const String &),
       (const, override));
 };

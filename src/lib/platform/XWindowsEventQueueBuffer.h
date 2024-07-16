@@ -38,8 +38,8 @@ public:
   XWindowsEventQueueBuffer(XWindowsEventQueueBuffer &&) = delete;
   virtual ~XWindowsEventQueueBuffer();
 
-  XWindowsEventQueueBuffer &operator=(
-      XWindowsEventQueueBuffer const &) = delete;
+  XWindowsEventQueueBuffer &
+  operator=(XWindowsEventQueueBuffer const &) = delete;
   XWindowsEventQueueBuffer &operator=(XWindowsEventQueueBuffer &&) = delete;
 
   // IEventQueueBuffer overrides

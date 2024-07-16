@@ -35,7 +35,9 @@ using namespace synergy::string;
 //
 
 Config::Config(IEventQueue *events)
-    : m_inputFilter(events), m_hasLockToScreenAction(false), m_events(events) {
+    : m_inputFilter(events),
+      m_hasLockToScreenAction(false),
+      m_events(events) {
   // do nothing
 }
 
@@ -91,7 +93,8 @@ bool Config::renameScreen(const String &oldName, const String &newName) {
   // update alias targets
   if (CaselessCmp::equal(oldName, oldCanonical)) {
     for (NameMap::iterator iter = m_nameToCanonicalName.begin();
-         iter != m_nameToCanonicalName.end(); ++iter) {
+         iter != m_nameToCanonicalName.end();
+         ++iter) {
       if (CaselessCmp::equal(iter->second, oldCanonical)) {
         iter->second = newName;
       }
@@ -198,8 +201,14 @@ void Config::removeAllAliases() {
   }
 }
 
-bool Config::connect(const String &srcName, EDirection srcSide, float srcStart,
-    float srcEnd, const String &dstName, float dstStart, float dstEnd) {
+bool Config::connect(
+    const String &srcName,
+    EDirection srcSide,
+    float srcStart,
+    float srcEnd,
+    const String &dstName,
+    float dstStart,
+    float dstEnd) {
   assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
   // find source cell
@@ -398,8 +407,11 @@ String Config::getCanonicalName(const String &name) const {
   }
 }
 
-String Config::getNeighbor(const String &srcName, EDirection srcSide,
-    float position, float *positionOut) const {
+String Config::getNeighbor(
+    const String &srcName,
+    EDirection srcSide,
+    float position,
+    float *positionOut) const {
   assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
   // find source cell
@@ -549,7 +561,9 @@ String Config::formatInterval(const Interval &x) {
   if (x.first == 0.0f && x.second == 1.0f) {
     return "";
   }
-  return synergy::string::sprintf("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
+  return synergy::string::sprintf(
+      "(%d,%d)",
+      (int)(x.first * 100.0f + 0.5f),
       (int)(x.second * 100.0f + 0.5f));
 }
 
@@ -844,8 +858,14 @@ void Config::readSectionLinks(ConfigReadContext &s) {
       if (!isScreen(dstScreen)) {
         throw XConfigRead(s, "unknown screen name \"%{1}\"", dstScreen);
       }
-      if (!connect(screen, dir, srcInterval.first, srcInterval.second,
-              dstScreen, dstInterval.first, dstInterval.second)) {
+      if (!connect(
+              screen,
+              dir,
+              srcInterval.first,
+              srcInterval.second,
+              dstScreen,
+              dstInterval.first,
+              dstInterval.second)) {
         throw XConfigRead(s, "overlapping range");
       }
     }
@@ -932,8 +952,12 @@ InputFilter::Condition *Config::parseCondition(
   throw XConfigRead(s, "unknown argument \"%{1}\"", name);
 }
 
-void Config::parseAction(ConfigReadContext &s, const String &name,
-    const std::vector<String> &args, InputFilter::Rule &rule, bool activate) {
+void Config::parseAction(
+    ConfigReadContext &s,
+    const String &name,
+    const std::vector<String> &args,
+    InputFilter::Rule &rule,
+    bool activate) {
   InputFilter::Action *action;
 
   if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
@@ -1084,7 +1108,8 @@ void Config::parseAction(ConfigReadContext &s, const String &name,
 
   else if (name == "keyboardBroadcast") {
     if (args.size() > 2) {
-      throw XConfigRead(s,
+      throw XConfigRead(
+          s,
           "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
     }
 
@@ -1098,8 +1123,10 @@ void Config::parseAction(ConfigReadContext &s, const String &name,
       } else if (args[0] == "toggle") {
         mode = InputFilter::KeyboardBroadcastAction::kToggle;
       } else {
-        throw XConfigRead(s, "syntax for action: "
-                             "keyboardBroadcast([{off|on|toggle}[,screens]])");
+        throw XConfigRead(
+            s,
+            "syntax for action: "
+            "keyboardBroadcast([{off|on|toggle}[,screens]])");
       }
     }
 
@@ -1295,7 +1322,8 @@ String Config::getOptionValue(OptionID id, OptionValue value) {
 //
 
 Config::Name::Name(Config *config, const String &name)
-    : m_config(config), m_name(config->getCanonicalName(name)) {
+    : m_config(config),
+      m_name(config->getCanonicalName(name)) {
   // do nothing
 }
 
@@ -1462,8 +1490,11 @@ bool Config::Cell::overlaps(const CellEdge &edge) const {
   return false;
 }
 
-bool Config::Cell::getLink(EDirection side, float position,
-    const CellEdge *&src, const CellEdge *&dst) const {
+bool Config::Cell::getLink(
+    EDirection side,
+    float position,
+    const CellEdge *&src,
+    const CellEdge *&dst) const {
   CellEdge edge(side, position);
   EdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
   if (i == m_neighbors.begin()) {
@@ -1539,7 +1570,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
     const Config::ScreenOptions *options = config.getOptions(*screen);
     if (options != NULL && options->size() > 0) {
       for (Config::ScreenOptions::const_iterator option = options->begin();
-           option != options->end(); ++option) {
+           option != options->end();
+           ++option) {
         const char *name = Config::getOptionName(option->first);
         String value = Config::getOptionValue(option->first, option->second);
         if (name != NULL && !value.empty()) {
@@ -1559,7 +1591,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
 
     for (Config::link_const_iterator link = config.beginNeighbor(*screen),
                                      nend = config.endNeighbor(*screen);
-         link != nend; ++link) {
+         link != nend;
+         ++link) {
       s << "\t\t" << Config::dirName(link->first.getSide())
         << Config::formatInterval(link->first.getInterval()) << " = "
         << link->second.getName().c_str()
@@ -1575,7 +1608,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
     CMNameMap aliases;
     for (Config::NameMap::const_iterator index =
              config.m_nameToCanonicalName.begin();
-         index != config.m_nameToCanonicalName.end(); ++index) {
+         index != config.m_nameToCanonicalName.end();
+         ++index) {
       if (index->first != index->second) {
         aliases.insert(std::make_pair(index->second, index->first));
       }
@@ -1585,7 +1619,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
     String screen;
     s << "section: aliases" << std::endl;
     for (CMNameMap::const_iterator index = aliases.begin();
-         index != aliases.end(); ++index) {
+         index != aliases.end();
+         ++index) {
       if (index->first != screen) {
         screen = index->first;
         s << "\t" << screen.c_str() << ":" << std::endl;
@@ -1600,7 +1635,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
   const Config::ScreenOptions *options = config.getOptions("");
   if (options != NULL && options->size() > 0) {
     for (Config::ScreenOptions::const_iterator option = options->begin();
-         option != options->end(); ++option) {
+         option != options->end();
+         ++option) {
       const char *name = Config::getOptionName(option->first);
       String value = Config::getOptionValue(option->first, option->second);
       if (name != NULL && !value.empty()) {
@@ -1623,7 +1659,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
 //
 
 ConfigReadContext::ConfigReadContext(std::istream &s, SInt32 firstLine)
-    : m_stream(s), m_line(firstLine - 1) {
+    : m_stream(s),
+      m_line(firstLine - 1) {
   // do nothing
 }
 
@@ -1655,7 +1692,9 @@ bool ConfigReadContext::readLine(String &line) {
       // make sure there are no invalid characters
       for (i = 0; i < line.length(); ++i) {
         if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
-          throw XConfigRead(*this, "invalid character %{1}",
+          throw XConfigRead(
+              *this,
+              "invalid character %{1}",
               synergy::string::sprintf("%#2x", line[i]));
         }
       }
@@ -1770,7 +1809,9 @@ OptionValue ConfigReadContext::parseCorners(const String &args) const {
     } else if (args[i] == '+') {
       add = true;
     } else {
-      throw XConfigRead(*this, "invalid corner operator \"%{1}\"",
+      throw XConfigRead(
+          *this,
+          "invalid corner operator \"%{1}\"",
           String(args.c_str() + i, 1));
     }
 
@@ -1821,9 +1862,13 @@ Config::Interval ConfigReadContext::parseInterval(const ArgList &args) const {
   return Config::Interval(startInterval, endInterval);
 }
 
-void ConfigReadContext::parseNameWithArgs(const String &type,
-    const String &line, const String &delim, String::size_type &index,
-    String &name, ArgList &args) const {
+void ConfigReadContext::parseNameWithArgs(
+    const String &type,
+    const String &line,
+    const String &delim,
+    String::size_type &index,
+    String &name,
+    ArgList &args) const {
   // skip leading whitespace
   String::size_type i = line.find_first_not_of(" \t", index);
   if (i == String::npos) {
@@ -1924,8 +1969,8 @@ void ConfigReadContext::parseNameWithArgs(const String &type,
   return;
 }
 
-IPlatformScreen::KeyInfo *ConfigReadContext::parseKeystroke(
-    const String &keystroke) const {
+IPlatformScreen::KeyInfo *
+ConfigReadContext::parseKeystroke(const String &keystroke) const {
   return parseKeystroke(keystroke, std::set<String>());
 }
 
@@ -1950,8 +1995,8 @@ IPlatformScreen::KeyInfo *ConfigReadContext::parseKeystroke(
   return IPlatformScreen::KeyInfo::alloc(key, mask, 0, 0, screens);
 }
 
-IPlatformScreen::ButtonInfo *ConfigReadContext::parseMouse(
-    const String &mouse) const {
+IPlatformScreen::ButtonInfo *
+ConfigReadContext::parseMouse(const String &mouse) const {
   String s = mouse;
 
   KeyModifierMask mask;
@@ -1971,8 +2016,8 @@ IPlatformScreen::ButtonInfo *ConfigReadContext::parseMouse(
   return IPlatformScreen::ButtonInfo::alloc(button, mask);
 }
 
-KeyModifierMask ConfigReadContext::parseModifier(
-    const String &modifiers) const {
+KeyModifierMask
+ConfigReadContext::parseModifier(const String &modifiers) const {
   String s = modifiers;
 
   KeyModifierMask mask;
@@ -2011,8 +2056,9 @@ XConfigRead::XConfigRead(const ConfigReadContext &context, const String &error)
 
 XConfigRead::XConfigRead(
     const ConfigReadContext &context, const char *errorFmt, const String &arg)
-    : m_error(synergy::string::sprintf("line %d: ", context.getLineNumber()) +
-              synergy::string::format(errorFmt, arg.c_str())) {
+    : m_error(
+          synergy::string::sprintf("line %d: ", context.getLineNumber()) +
+          synergy::string::format(errorFmt, arg.c_str())) {
   // do nothing
 }
 

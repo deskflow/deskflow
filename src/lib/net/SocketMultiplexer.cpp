@@ -34,11 +34,14 @@
 //
 
 SocketMultiplexer::SocketMultiplexer()
-    : m_mutex(new Mutex), m_thread(NULL), m_update(false),
+    : m_mutex(new Mutex),
+      m_thread(NULL),
+      m_update(false),
       m_jobsReady(new CondVar<bool>(m_mutex, false)),
       m_jobListLock(new CondVar<bool>(m_mutex, false)),
       m_jobListLockLocked(new CondVar<bool>(m_mutex, false)),
-      m_jobListLocker(NULL), m_jobListLockLocker(NULL) {
+      m_jobListLocker(NULL),
+      m_jobListLockLocker(NULL) {
   // this pointer just has to be unique and not NULL.  it will
   // never be dereferenced.  it's used to identify cursor nodes
   // in the jobs list.
@@ -64,7 +67,8 @@ SocketMultiplexer::~SocketMultiplexer() {
 
   // clean up jobs
   for (SocketJobMap::iterator i = m_socketJobMap.begin();
-       i != m_socketJobMap.end(); ++i) {
+       i != m_socketJobMap.end();
+       ++i) {
     delete *(i->second);
   }
 }
@@ -205,7 +209,7 @@ void SocketMultiplexer::serviceThread(void *) {
           bool write = ((revents & IArchNetwork::kPOLLOUT) != 0);
           bool error =
               ((revents & (IArchNetwork::kPOLLERR | IArchNetwork::kPOLLNVAL)) !=
-                  0);
+               0);
 
           // run job
           ISocketMultiplexerJob *job = *jobCursor;

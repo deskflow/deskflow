@@ -26,8 +26,10 @@
 //
 // SecureServerSocket
 //
-SecureServerSocket::SecureServerSocket(IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family)
+SecureServerSocket::SecureServerSocket(
+    IEventQueue *events,
+    SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
     : InverseServerSocket(events, socketMultiplexer, family) {}
 
 IDataSocket *SecureServerSocket::accept() {

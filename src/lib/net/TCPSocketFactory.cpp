@@ -30,7 +30,8 @@
 
 TCPSocketFactory::TCPSocketFactory(
     IEventQueue *events, SocketMultiplexer *socketMultiplexer)
-    : m_events(events), m_socketMultiplexer(socketMultiplexer) {
+    : m_events(events),
+      m_socketMultiplexer(socketMultiplexer) {
   // do nothing
 }
 

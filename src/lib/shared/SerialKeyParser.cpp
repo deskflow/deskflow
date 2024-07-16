@@ -28,8 +28,9 @@ void SerialKeyParser::setEdition(const std::string &edition) {
   if (m_data.keyType.isMaintenance() &&
       m_data.edition.getType() == Edition::kBasic) {
     m_data.edition.setType(kLite);
-  } else if (m_data.keyType.isMaintenance() &&
-             m_data.edition.getType() == Edition::kPro) {
+  } else if (
+      m_data.keyType.isMaintenance() &&
+      m_data.edition.getType() == Edition::kPro) {
     m_data.edition.setType(kUltimate);
   }
 }
@@ -78,8 +79,8 @@ bool SerialKeyParser::parse(const std::string &plainSerial) {
     setKey(plainSerial);
     parseV1(parts);
     valid = true;
-  } else if ((parts.size() == 9) &&
-             (parts.at(0).find("v2") != std::string::npos)) {
+  } else if (
+      (parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
     setKey(plainSerial);
     parseV2(parts);
     valid = true;
@@ -105,8 +106,8 @@ void SerialKeyParser::parseV2(const std::vector<std::string> &parts) {
   setExpirationTime(parts.at(8));
 }
 
-std::vector<std::string> SerialKeyParser::splitToParts(
-    const std::string &plainSerial) const {
+std::vector<std::string>
+SerialKeyParser::splitToParts(const std::string &plainSerial) const {
   // tokenize serialised subscription.
   std::vector<std::string> parts;
 

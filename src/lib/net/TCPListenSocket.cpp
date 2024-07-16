@@ -35,9 +35,12 @@
 // TCPListenSocket
 //
 
-TCPListenSocket::TCPListenSocket(IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family)
-    : m_events(events), m_socketMultiplexer(socketMultiplexer) {
+TCPListenSocket::TCPListenSocket(
+    IEventQueue *events,
+    SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
+    : m_events(events),
+      m_socketMultiplexer(socketMultiplexer) {
   m_mutex = new Mutex;
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
@@ -66,8 +69,9 @@ void TCPListenSocket::bind(const NetworkAddress &addr) {
     ARCH->bindSocket(m_socket, addr.getAddress());
     ARCH->listenOnSocket(m_socket);
     m_socketMultiplexer->addSocket(
-        this, new TSocketMultiplexerMethodJob<TCPListenSocket>(this,
-                  &TCPListenSocket::serviceListening, m_socket, true, false));
+        this,
+        new TSocketMultiplexerMethodJob<TCPListenSocket>(
+            this, &TCPListenSocket::serviceListening, m_socket, true, false));
   } catch (XArchNetworkAddressInUse &e) {
     throw XSocketAddressInUse(e.what());
   } catch (XArchNetwork &e) {
@@ -119,8 +123,9 @@ IDataSocket *TCPListenSocket::accept() {
 
 void TCPListenSocket::setListeningJob() {
   m_socketMultiplexer->addSocket(
-      this, new TSocketMultiplexerMethodJob<TCPListenSocket>(this,
-                &TCPListenSocket::serviceListening, m_socket, true, false));
+      this,
+      new TSocketMultiplexerMethodJob<TCPListenSocket>(
+          this, &TCPListenSocket::serviceListening, m_socket, true, false));
 }
 
 ISocketMultiplexerJob *TCPListenSocket::serviceListening(

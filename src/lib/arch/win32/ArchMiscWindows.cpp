@@ -114,8 +114,16 @@ HKEY ArchMiscWindows::openKey(HKEY key, const TCHAR *keyName, bool create) {
       RegOpenKeyEx(key, keyName, 0, KEY_WRITE | KEY_QUERY_VALUE, &newKey);
   if (result != ERROR_SUCCESS && create) {
     DWORD disp;
-    result = RegCreateKeyEx(key, keyName, 0, NULL, 0,
-        KEY_WRITE | KEY_QUERY_VALUE, NULL, &newKey, &disp);
+    result = RegCreateKeyEx(
+        key,
+        keyName,
+        0,
+        NULL,
+        0,
+        KEY_WRITE | KEY_QUERY_VALUE,
+        NULL,
+        &newKey,
+        &disp);
   }
   if (result != ERROR_SUCCESS) {
     RegCloseKey(key);
@@ -165,8 +173,8 @@ bool ArchMiscWindows::hasValue(HKEY key, const TCHAR *name) {
   return (result == ERROR_SUCCESS && (type == REG_DWORD || type == REG_SZ));
 }
 
-ArchMiscWindows::EValueType ArchMiscWindows::typeOfValue(
-    HKEY key, const TCHAR *name) {
+ArchMiscWindows::EValueType
+ArchMiscWindows::typeOfValue(HKEY key, const TCHAR *name) {
   DWORD type;
   LONG result = RegQueryValueEx(key, name, 0, &type, NULL, NULL);
   if (result != ERROR_SUCCESS) {
@@ -194,8 +202,13 @@ void ArchMiscWindows::setValue(
     // TODO: throw exception
     return;
   }
-  RegSetValueEx(key, name, 0, REG_SZ,
-      reinterpret_cast<const BYTE *>(value.c_str()), (DWORD)value.size() + 1);
+  RegSetValueEx(
+      key,
+      name,
+      0,
+      REG_SZ,
+      reinterpret_cast<const BYTE *>(value.c_str()),
+      (DWORD)value.size() + 1);
 }
 
 void ArchMiscWindows::setValue(HKEY key, const TCHAR *name, DWORD value) {
@@ -204,7 +217,12 @@ void ArchMiscWindows::setValue(HKEY key, const TCHAR *name, DWORD value) {
     // TODO: throw exception
     return;
   }
-  RegSetValueEx(key, name, 0, REG_DWORD, reinterpret_cast<CONST BYTE *>(&value),
+  RegSetValueEx(
+      key,
+      name,
+      0,
+      REG_DWORD,
+      reinterpret_cast<CONST BYTE *>(&value),
       sizeof(DWORD));
 }
 
@@ -216,12 +234,17 @@ void ArchMiscWindows::setValueBinary(
     // TODO: throw exception
     return;
   }
-  RegSetValueEx(key, name, 0, REG_BINARY,
-      reinterpret_cast<const BYTE *>(value.data()), (DWORD)value.size());
+  RegSetValueEx(
+      key,
+      name,
+      0,
+      REG_BINARY,
+      reinterpret_cast<const BYTE *>(value.data()),
+      (DWORD)value.size());
 }
 
-std::string ArchMiscWindows::readBinaryOrString(
-    HKEY key, const TCHAR *name, DWORD type) {
+std::string
+ArchMiscWindows::readBinaryOrString(HKEY key, const TCHAR *name, DWORD type) {
   // get the size of the string
   DWORD actualType;
   DWORD size = 0;
@@ -283,7 +306,8 @@ void ArchMiscWindows::removeDialog(HWND hwnd) { s_dialogs->erase(hwnd); }
 
 bool ArchMiscWindows::processDialog(MSG *msg) {
   for (Dialogs::const_iterator index = s_dialogs->begin();
-       index != s_dialogs->end(); ++index) {
+       index != s_dialogs->end();
+       ++index) {
     if (IsDialogMessage(*index, msg)) {
       return true;
     }
@@ -394,8 +418,8 @@ BOOL WINAPI ArchMiscWindows::getParentProcessEntry(PROCESSENTRY32 &entry) {
   return getProcessEntry(entry, selfEntry.th32ParentProcessID);
 }
 
-BOOL WINAPI ArchMiscWindows::getProcessEntry(
-    PROCESSENTRY32 &entry, DWORD processID) {
+BOOL WINAPI
+ArchMiscWindows::getProcessEntry(PROCESSENTRY32 &entry, DWORD processID) {
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (snapshot == INVALID_HANDLE_VALUE) {
@@ -410,8 +434,9 @@ BOOL WINAPI ArchMiscWindows::getProcessEntry(
   // unlikely we can go any further
   BOOL gotEntry = Process32First(snapshot, &entry);
   if (!gotEntry) {
-    LOG((CLOG_ERR "could not get first process entry (error: %i)",
-        GetLastError()));
+    LOG(
+        (CLOG_ERR "could not get first process entry (error: %i)",
+         GetLastError()));
     return FALSE;
   }
 

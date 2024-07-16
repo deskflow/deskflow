@@ -23,12 +23,14 @@
 
 AddClientDialog::AddClientDialog(const QString &clientName, QWidget *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::AddClientDialog(), m_AddResult(kAddClientIgnore) {
+      Ui::AddClientDialog(),
+      m_AddResult(kAddClientIgnore) {
   setupUi(this);
 
-  m_pLabelHead->setText("A client wants to connect. "
-                        "Please choose a location for " +
-                        clientName + ".");
+  m_pLabelHead->setText(
+      "A client wants to connect. "
+      "Please choose a location for " +
+      clientName + ".");
 
   QIcon icon(":res/icons/64x64/video-display.png");
   QSize IconSize(32, 32);

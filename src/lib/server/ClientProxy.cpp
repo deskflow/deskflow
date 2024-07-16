@@ -28,7 +28,8 @@
 //
 
 ClientProxy::ClientProxy(const String &name, synergy::IStream *stream)
-    : BaseClientProxy(name), m_stream(stream) {}
+    : BaseClientProxy(name),
+      m_stream(stream) {}
 
 ClientProxy::~ClientProxy() { delete m_stream; }
 

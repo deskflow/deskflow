@@ -29,7 +29,8 @@
 //
 
 ClientTaskBarReceiver::ClientTaskBarReceiver(IEventQueue *events)
-    : m_state(kNotRunning), m_events(events) {
+    : m_state(kNotRunning),
+      m_events(events) {
   // do nothing
 }
 

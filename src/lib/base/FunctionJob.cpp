@@ -23,7 +23,8 @@
 //
 
 FunctionJob::FunctionJob(void (*func)(void *), void *arg)
-    : m_func(func), m_arg(arg) {
+    : m_func(func),
+      m_arg(arg) {
   // do nothing
 }
 

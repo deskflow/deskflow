@@ -109,8 +109,12 @@ public:
   client (local screen) \p primaryClient.  The client retains
   ownership of \p primaryClient.
   */
-  Server(Config &config, PrimaryClient *primaryClient, synergy::Screen *screen,
-      IEventQueue *events, lib::synergy::ServerArgs const &args);
+  Server(
+      Config &config,
+      PrimaryClient *primaryClient,
+      synergy::Screen *screen,
+      IEventQueue *events,
+      lib::synergy::ServerArgs const &args);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -232,16 +236,16 @@ private:
 
   // lookup neighboring screen, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
-  BaseClientProxy *getNeighbor(
-      BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
+  BaseClientProxy *
+  getNeighbor(BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
 
   // lookup neighboring screen.  given a position relative to the
   // source screen, find the screen we should move onto and where.
   // if the position is sufficiently far from the source then we
   // cross multiple screens.  if there is no suitable screen then
   // return NULL and x,y are not modified.
-  BaseClientProxy *mapToNeighbor(
-      BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
+  BaseClientProxy *
+  mapToNeighbor(BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
 
   // adjusts x and y or neither to avoid ending up in a jump zone
   // after entering the client in the given direction.
@@ -250,8 +254,13 @@ private:
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
-  bool isSwitchOkay(BaseClientProxy *dst, EDirection, SInt32 x, SInt32 y,
-      SInt32 xActive, SInt32 yActive);
+  bool isSwitchOkay(
+      BaseClientProxy *dst,
+      EDirection,
+      SInt32 x,
+      SInt32 y,
+      SInt32 xActive,
+      SInt32 yActive);
 
   // update switch state due to a mouse move at \p x, \p y that
   // doesn't switch screens.
@@ -324,8 +333,8 @@ private:
   void handleFileRecieveCompletedEvent(const Event &, void *);
 
   // event processing
-  void onClipboardChanged(
-      BaseClientProxy *sender, ClipboardID id, UInt32 seqNum);
+  void
+  onClipboardChanged(BaseClientProxy *sender, ClipboardID id, UInt32 seqNum);
   void onScreensaver(bool activated);
   void onKeyDown(
       KeyID, KeyModifierMask, KeyButton, const String &, const char *screens);

@@ -24,7 +24,8 @@
 
 FunctionEventJob::FunctionEventJob(
     void (*func)(const Event &, void *), void *arg)
-    : m_func(func), m_arg(arg) {
+    : m_func(func),
+      m_arg(arg) {
   // do nothing
 }
 

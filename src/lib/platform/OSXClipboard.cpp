@@ -40,10 +40,12 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL) {
 
   OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
   if (createErr != noErr) {
-    LOG((CLOG_DEBUG "failed to create clipboard reference: error %i",
-        createErr));
-    LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled",
-        createErr));
+    LOG(
+        (CLOG_DEBUG "failed to create clipboard reference: error %i",
+         createErr));
+    LOG(
+        (CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled",
+         createErr));
     m_pboard = NULL;
     return;
   }
@@ -97,7 +99,8 @@ void OSXClipboard::add(EFormat format, const String &data) {
   }
 
   for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+       index != m_converters.end();
+       ++index) {
 
     IOSXClipboardConverter *converter = *index;
 
@@ -114,8 +117,10 @@ void OSXClipboard::add(EFormat format, const String &data) {
             m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
 
         CFRelease(dataRef);
-        LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(),
-            format));
+        LOG(
+            (CLOG_DEBUG "added %d bytes to clipboard format: %d",
+             data.size(),
+             format));
       }
     }
   }
@@ -145,7 +150,8 @@ bool OSXClipboard::has(EFormat format) const {
   PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
 
   for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+       index != m_converters.end();
+       ++index) {
     IOSXClipboardConverter *converter = *index;
     if (converter->getFormat() == format) {
       PasteboardFlavorFlags flags;
@@ -176,7 +182,8 @@ String OSXClipboard::get(EFormat format) const {
   // find the converter for the first clipboard format we can handle
   IOSXClipboardConverter *converter = NULL;
   for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+       index != m_converters.end();
+       ++index) {
     converter = *index;
 
     PasteboardFlavorFlags flags;
@@ -224,7 +231,8 @@ void OSXClipboard::clearConverters() {
     return;
 
   for (ConverterList::iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+       index != m_converters.end();
+       ++index) {
     delete *index;
   }
   m_converters.clear();

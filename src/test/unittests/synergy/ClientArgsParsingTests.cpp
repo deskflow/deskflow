@@ -71,7 +71,8 @@ TEST(ClientArgsParsingTests, parseClientArgs_setInvertScroll) {
   std::array<const char *, argc> kLangCmd = {"stub", "--invert-scroll"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
-  EXPECT_EQ(clientArgs.m_clientScrollDirection,
+  EXPECT_EQ(
+      clientArgs.m_clientScrollDirection,
       lib::synergy::ClientScrollDirection::INVERT_SERVER);
 }
 
@@ -84,9 +85,16 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
   lib::synergy::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 9;
-  std::array<const char *, argc> kLangCmd = {"stub", "--enable-crypto",
-      "--profile-dir", "profileDir", "--plugin-dir", "pluginDir", "--tls-cert",
-      "tlsCertPath", "--prevent-sleep"};
+  std::array<const char *, argc> kLangCmd = {
+      "stub",
+      "--enable-crypto",
+      "--profile-dir",
+      "profileDir",
+      "--plugin-dir",
+      "pluginDir",
+      "--tls-cert",
+      "tlsCertPath",
+      "--prevent-sleep"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 

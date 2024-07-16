@@ -18,7 +18,8 @@
 #include "ServerMessage.h"
 
 ServerMessage::ServerMessage(const QString &message)
-    : m_message(message), m_clienName(parseClientName(message)) {}
+    : m_message(message),
+      m_clienName(parseClientName(message)) {}
 
 bool ServerMessage::isNewClientMessage() const {
   return m_message.contains("unrecognised client name");

@@ -72,7 +72,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename) {
   EXPECT_EQ(2, i);
 }
 
-TEST_F(GenericArgsParsingTests,
+TEST_F(
+    GenericArgsParsingTests,
     parseGenericArgs_logFileCmdWithSpace_saveLogFilename) {
   int i = 1;
   const int argc = 3;
@@ -217,7 +218,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue) {
 }
 
 #ifndef WINAPI_XWINDOWS
-TEST_F(GenericArgsParsingTests,
+TEST_F(
+    GenericArgsParsingTests,
     parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue) {
   int i = 1;
   const int argc = 2;
@@ -231,7 +233,8 @@ TEST_F(GenericArgsParsingTests,
 #endif
 
 #ifdef WINAPI_XWINDOWS
-TEST_F(GenericArgsParsingTests,
+TEST_F(
+    GenericArgsParsingTests,
     parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse) {
   int i = 1;
   const int argc = 2;

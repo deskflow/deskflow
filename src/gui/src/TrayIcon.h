@@ -18,8 +18,8 @@ public:
   }
 
   template <typename TActionContainer>
-  void create(
-      TActionContainer const &actionContainer, TConnector const &connector) {
+  void
+  create(TActionContainer const &actionContainer, TConnector const &connector) {
     m_connector = connector;
     m_pTrayIconMenu = std::make_unique<QMenu>();
 

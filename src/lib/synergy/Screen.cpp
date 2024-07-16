@@ -31,9 +31,14 @@ namespace synergy {
 //
 
 Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
-    : m_screen(platformScreen), m_isPrimary(platformScreen->isPrimary()),
-      m_enabled(false), m_entered(m_isPrimary), m_fakeInput(false),
-      m_events(events), m_mock(false), m_enableDragDrop(false) {
+    : m_screen(platformScreen),
+      m_isPrimary(platformScreen->isPrimary()),
+      m_enabled(false),
+      m_entered(m_isPrimary),
+      m_fakeInput(false),
+      m_events(events),
+      m_mock(false),
+      m_enableDragDrop(false) {
   assert(m_screen != NULL);
 
   // reset options
@@ -161,8 +166,12 @@ void Screen::keyDown(
   m_screen->fakeKeyDown(id, mask, button, lang);
 }
 
-void Screen::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-    KeyButton button, const String &lang) {
+void Screen::keyRepeat(
+    KeyID id,
+    KeyModifierMask mask,
+    SInt32 count,
+    KeyButton button,
+    const String &lang) {
   assert(!m_isPrimary);
   m_screen->fakeKeyRepeat(id, mask, count, button, lang);
 }
@@ -211,24 +220,27 @@ void Screen::setOptions(const OptionsList &options) {
       } else {
         m_halfDuplex &= ~KeyModifierCapsLock;
       }
-      LOG((CLOG_DEBUG1 "half-duplex caps-lock %s",
-          ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
+      LOG(
+          (CLOG_DEBUG1 "half-duplex caps-lock %s",
+           ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
     } else if (options[i] == kOptionHalfDuplexNumLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierNumLock;
       } else {
         m_halfDuplex &= ~KeyModifierNumLock;
       }
-      LOG((CLOG_DEBUG1 "half-duplex num-lock %s",
-          ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
+      LOG(
+          (CLOG_DEBUG1 "half-duplex num-lock %s",
+           ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
     } else if (options[i] == kOptionHalfDuplexScrollLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierScrollLock;
       } else {
         m_halfDuplex &= ~KeyModifierScrollLock;
       }
-      LOG((CLOG_DEBUG1 "half-duplex scroll-lock %s",
-          ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
+      LOG(
+          (CLOG_DEBUG1 "half-duplex scroll-lock %s",
+           ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
     }
   }
 

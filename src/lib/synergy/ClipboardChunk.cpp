@@ -29,8 +29,8 @@ ClipboardChunk::ClipboardChunk(size_t size) : Chunk(size) {
   m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk *ClipboardChunk::start(
-    ClipboardID id, UInt32 sequence, const String &size) {
+ClipboardChunk *
+ClipboardChunk::start(ClipboardID id, UInt32 sequence, const String &size) {
   size_t sizeLength = size.size();
   ClipboardChunk *start =
       new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
@@ -45,8 +45,8 @@ ClipboardChunk *ClipboardChunk::start(
   return start;
 }
 
-ClipboardChunk *ClipboardChunk::data(
-    ClipboardID id, UInt32 sequence, const String &data) {
+ClipboardChunk *
+ClipboardChunk::data(ClipboardID id, UInt32 sequence, const String &data) {
   size_t dataSize = data.size();
   ClipboardChunk *chunk =
       new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
@@ -73,8 +73,11 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence) {
   return end;
 }
 
-int ClipboardChunk::assemble(synergy::IStream *stream, String &dataCached,
-    ClipboardID &id, UInt32 &sequence) {
+int ClipboardChunk::assemble(
+    synergy::IStream *stream,
+    String &dataCached,
+    ClipboardID &id,
+    UInt32 &sequence) {
   UInt8 mark;
   String data;
 
@@ -96,8 +99,10 @@ int ClipboardChunk::assemble(synergy::IStream *stream, String &dataCached,
     if (id >= kClipboardEnd) {
       return kError;
     } else if (s_expectedSize != dataCached.size()) {
-      LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
-          s_expectedSize, dataCached.size()));
+      LOG(
+          (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
+           s_expectedSize,
+           dataCached.size()));
       return kError;
     }
     return kFinish;
@@ -121,8 +126,9 @@ void ClipboardChunk::send(synergy::IStream *stream, void *data) {
 
   switch (mark) {
   case kDataStart:
-    LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s",
-        dataChunk.c_str()));
+    LOG(
+        (CLOG_DEBUG2 "sending clipboard chunk start: size=%s",
+         dataChunk.c_str()));
     break;
 
   case kDataChunk:

@@ -32,7 +32,9 @@ A listen socket using TCP.
 */
 class TCPListenSocket : public IListenSocket {
 public:
-  TCPListenSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+  TCPListenSocket(
+      IEventQueue *events,
+      SocketMultiplexer *socketMultiplexer,
       IArchNetwork::EAddressFamily family);
   TCPListenSocket(TCPListenSocket const &) = delete;
   TCPListenSocket(TCPListenSocket &&) = delete;
@@ -53,8 +55,8 @@ protected:
   void setListeningJob();
 
 public:
-  ISocketMultiplexerJob *serviceListening(
-      ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *
+  serviceListening(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   ArchSocket m_socket;

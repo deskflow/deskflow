@@ -25,7 +25,11 @@
 
 OSXUchrKeyResource::OSXUchrKeyResource(
     const void *resource, UInt32 keyboardType)
-    : m_m(NULL), m_cti(NULL), m_sdi(NULL), m_sri(NULL), m_st(NULL) {
+    : m_m(NULL),
+      m_cti(NULL),
+      m_sdi(NULL),
+      m_sri(NULL),
+      m_st(NULL) {
   m_resource = static_cast<const UCKeyboardLayout *>(resource);
   if (m_resource == NULL) {
     return;

@@ -56,15 +56,23 @@ struct Ssl {
   SSL *m_ssl;
 };
 
-SecureSocket::SecureSocket(IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family)
-    : TCPSocket(events, socketMultiplexer, family), m_ssl(nullptr),
-      m_secureReady(false), m_fatal(false) {}
+SecureSocket::SecureSocket(
+    IEventQueue *events,
+    SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
+    : TCPSocket(events, socketMultiplexer, family),
+      m_ssl(nullptr),
+      m_secureReady(false),
+      m_fatal(false) {}
 
-SecureSocket::SecureSocket(IEventQueue *events,
-    SocketMultiplexer *socketMultiplexer, ArchSocket socket)
-    : TCPSocket(events, socketMultiplexer, socket), m_ssl(nullptr),
-      m_secureReady(false), m_fatal(false) {}
+SecureSocket::SecureSocket(
+    IEventQueue *events,
+    SocketMultiplexer *socketMultiplexer,
+    ArchSocket socket)
+    : TCPSocket(events, socketMultiplexer, socket),
+      m_ssl(nullptr),
+      m_secureReady(false),
+      m_fatal(false) {}
 
 SecureSocket::~SecureSocket() { freeSSL(); }
 
@@ -74,7 +82,8 @@ void SecureSocket::close() {
 }
 
 void SecureSocket::connect(const NetworkAddress &addr) {
-  m_events->adoptHandler(m_events->forIDataSocket().connected(),
+  m_events->adoptHandler(
+      m_events->forIDataSocket().connected(),
       getEventTarget(),
       new TMethodEventJob<SecureSocket>(
           this, &SecureSocket::handleTCPConnected));
@@ -93,13 +102,21 @@ ISocketMultiplexerJob *SecureSocket::newJob() {
 }
 
 void SecureSocket::secureConnect() {
-  setJob(new TSocketMultiplexerMethodJob<SecureSocket>(this,
-      &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()));
+  setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
+      this,
+      &SecureSocket::serviceConnect,
+      getSocket(),
+      isReadable(),
+      isWritable()));
 }
 
 void SecureSocket::secureAccept() {
-  setJob(new TSocketMultiplexerMethodJob<SecureSocket>(this,
-      &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()));
+  setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
+      this,
+      &SecureSocket::serviceAccept,
+      getSocket(),
+      isReadable(),
+      isWritable()));
 }
 
 TCPSocket::EJobResult SecureSocket::doRead() {
@@ -328,7 +345,8 @@ void SecureSocket::initContext(bool server) {
 
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
   // be vulnerable
-  SSL_CTX_set_options(m_ssl->m_context,
+  SSL_CTX_set_options(
+      m_ssl->m_context,
       SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
   if (m_ssl->m_context == NULL) {
@@ -593,21 +611,25 @@ bool SecureSocket::verifyCertFingerprint() {
       cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
   if (digestResult <= 0) {
-    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d",
-        digestResult));
+    LOG(
+        (CLOG_ERR "failed to calculate fingerprint, digest result: %d",
+         digestResult));
     return false;
   }
 
   // format fingerprint into hexdecimal format with colon separator
-  String fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)),
+  String fingerprint(
+      static_cast<char *>(static_cast<void *>(tempFingerprint)),
       tempFingerprintLen);
   formatFingerprint(fingerprint);
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
   String trustedServersFilename;
-  trustedServersFilename =
-      synergy::string::sprintf("%s/%s/%s", ARCH->getProfileDirectory().c_str(),
-          kFingerprintDirName, kFingerprintTrustedServersFilename);
+  trustedServersFilename = synergy::string::sprintf(
+      "%s/%s/%s",
+      ARCH->getProfileDirectory().c_str(),
+      kFingerprintDirName,
+      kFingerprintTrustedServersFilename);
 
   // check if this fingerprint exist
   String fileLine;
@@ -624,8 +646,9 @@ bool SecureSocket::verifyCertFingerprint() {
       }
     }
   } else {
-    LOG((CLOG_ERR "fail to open trusted fingerprints file: %s",
-        trustedServersFilename.c_str()));
+    LOG(
+        (CLOG_ERR "fail to open trusted fingerprints file: %s",
+         trustedServersFilename.c_str()));
   }
 
   file.close();
@@ -655,8 +678,12 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(
   }
 
   // Retry case
-  return new TSocketMultiplexerMethodJob<SecureSocket>(this,
-      &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable());
+  return new TSocketMultiplexerMethodJob<SecureSocket>(
+      this,
+      &SecureSocket::serviceConnect,
+      getSocket(),
+      isReadable(),
+      isWritable());
 }
 
 ISocketMultiplexerJob *SecureSocket::serviceAccept(
@@ -681,8 +708,12 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(
   }
 
   // Retry case
-  return new TSocketMultiplexerMethodJob<SecureSocket>(this,
-      &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable());
+  return new TSocketMultiplexerMethodJob<SecureSocket>(
+      this,
+      &SecureSocket::serviceAccept,
+      getSocket(),
+      isReadable(),
+      isWritable());
 }
 
 void SecureSocket::handleTCPConnected(const Event &, void *) {

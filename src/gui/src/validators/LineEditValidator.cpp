@@ -20,7 +20,8 @@
 namespace validators {
 
 LineEditValidator::LineEditValidator(QLineEdit *parent, QLabel *errors)
-    : m_pErrors(errors), m_pControl(parent) {
+    : m_pErrors(errors),
+      m_pControl(parent) {
   if (m_pErrors) {
     m_pErrors->hide();
   }

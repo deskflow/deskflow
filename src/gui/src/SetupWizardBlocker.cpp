@@ -41,9 +41,15 @@ SetupWizardBlocker::SetupWizardBlocker(
 
   label_HelpInfo->setText(blockerText[static_cast<int>(type)]);
 
-  connect(m_pButtonSupport, &QPushButton::released, this,
+  connect(
+      m_pButtonSupport,
+      &QPushButton::released,
+      this,
       &SetupWizardBlocker::onlineSupport);
-  connect(m_pButtonCancel, &QPushButton::released, this,
+  connect(
+      m_pButtonCancel,
+      &QPushButton::released,
+      this,
       &SetupWizardBlocker::cancel);
 }
 

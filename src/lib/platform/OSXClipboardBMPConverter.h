@@ -36,6 +36,8 @@ public:
   virtual String toIClipboard(const String &) const;
 
   // generic encoding converter
-  static String convertString(const String &data, CFStringEncoding fromEncoding,
+  static String convertString(
+      const String &data,
+      CFStringEncoding fromEncoding,
       CFStringEncoding toEncoding);
 };

@@ -143,8 +143,9 @@ std::string SslApi::getFingerprint() const {
       cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
   if (digestResult <= 0) {
-    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d",
-        digestResult));
+    LOG(
+        (CLOG_ERR "failed to calculate fingerprint, digest result: %d",
+         digestResult));
     return "";
   }
 
@@ -158,9 +159,9 @@ std::string SslApi::getFingerprint() const {
 }
 
 bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
-  auto trustedServersFilename =
-      synergy::string::sprintf("%s/SSL/Fingerprints/TrustedServers.txt",
-          ARCH->getProfileDirectory().c_str());
+  auto trustedServersFilename = synergy::string::sprintf(
+      "%s/SSL/Fingerprints/TrustedServers.txt",
+      ARCH->getProfileDirectory().c_str());
 
   // check if this fingerprint exist
   std::ifstream file;
@@ -177,8 +178,9 @@ bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
       }
     }
   } else {
-    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s",
-        trustedServersFilename.c_str()));
+    LOG(
+        (CLOG_ERR "failed to open trusted fingerprints file: %s",
+         trustedServersFilename.c_str()));
   }
 
   return (isValid && showCertificate());
@@ -193,7 +195,8 @@ void SslApi::createContext(bool isServer) {
   }
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
   // be vulnerable
-  SSL_CTX_set_options(m_context,
+  SSL_CTX_set_options(
+      m_context,
       SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
   if (m_context) {
