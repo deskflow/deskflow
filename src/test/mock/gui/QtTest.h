@@ -17,21 +17,21 @@
 
 #pragma once
 
-#include <QApplication>
 #include <gtest/gtest.h>
+#include <qapplication.h>
 
 class QtTest : public ::testing::Test {
 public:
   static void SetUpTestSuite() {
-    GTEST_LOG_(INFO) << "Qt window setup";
-    char *fakeArgv[] = {(char *)""};
+    GTEST_LOG_(INFO) << "Qt app setup";
+    char **fakeArgv = nullptr;
     int fakeArgc = 0;
     s_app = std::make_unique<QApplication>(fakeArgc, fakeArgv);
   }
 
   static void TearDownTestSuite() {
     s_app.reset();
-    GTEST_LOG_(INFO) << "Qt window teardown";
+    GTEST_LOG_(INFO) << "Qt app teardown";
   }
 
   static std::unique_ptr<QApplication> s_app;
