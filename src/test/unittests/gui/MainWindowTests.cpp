@@ -50,7 +50,6 @@ public:
   };
 
   TestMainWindow() {
-
     m_appConfig = std::make_shared<AppConfig>(false);
 
 #ifdef SYNERGY_ENABLE_LICENSING
