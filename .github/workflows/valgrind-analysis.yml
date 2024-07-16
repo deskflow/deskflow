@@ -64,8 +64,8 @@ jobs:
           --show-leak-kinds=all \
           --track-origins=yes \
           --verbose \
-          --log-file=valgrind.log \
-          ./build/bin/unittests
+          ./build/bin/unittests \
+          2>&1 | tee valgrind.log
 
       - name: Parse summaries
         id: parse
