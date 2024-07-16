@@ -25,6 +25,8 @@ body:
         - Contributor
         - Community user
       default: 0
+    validations:
+      required: true
 
   - type: input
     id: ticket-number
@@ -54,10 +56,10 @@ body:
       label: Operating systems
       description: Which operating systems (OS) are you using?
       options:
-        - value: Windows
-        - value: macOS
-        - value: Linux or Unix
-        - value: Other
+        - label: Windows
+        - label: macOS
+        - label: Linux or Unix
+        - label: Other
 
   - type: textarea
     id: os-version
@@ -82,6 +84,8 @@ body:
         Windows 11 server, macOS 15 client
         Each computer has a single monitor
         Windows is on the left, macOS is on the right
+    validations:
+      required: true
 
   - type: textarea
     id: repro-steps
@@ -104,9 +108,9 @@ body:
       label: Product
       description: Which product are you using?
       options:
-        - Synergy 1
-        - Synergy 2
-        - Synergy 3
+        - label: Synergy 1
+        - label: Synergy 2
+        - label: Synergy 3
       default: 0
     validations:
       required: true
