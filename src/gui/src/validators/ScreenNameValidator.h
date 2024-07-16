@@ -25,9 +25,9 @@ namespace validators {
 
 class ScreenNameValidator : public LineEditValidator {
 public:
-  explicit ScreenNameValidator(QLineEdit *parent = nullptr,
-                               QLabel *errors = nullptr,
-                               const ScreenList *pScreens = nullptr);
+  explicit ScreenNameValidator(
+      QLineEdit *parent = nullptr, QLabel *errors = nullptr,
+      const ScreenList *pScreens = nullptr);
 };
 
 } // namespace validators

@@ -29,7 +29,8 @@
 //
 
 ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue *events)
-    : m_state(kNotRunning), m_events(events) {
+    : m_state(kNotRunning),
+      m_events(events) {
   // do nothing
 }
 
@@ -37,8 +38,8 @@ ServerTaskBarReceiver::~ServerTaskBarReceiver() {
   // do nothing
 }
 
-void ServerTaskBarReceiver::updateStatus(Server *server,
-                                         const String &errorMsg) {
+void ServerTaskBarReceiver::updateStatus(
+    Server *server, const String &errorMsg) {
   {
     // update our status
     m_errorMessage = errorMsg;
@@ -99,8 +100,8 @@ std::string ServerTaskBarReceiver::getToolTip() const {
     return synergy::string::sprintf("%s:  Not running", kAppVersion);
 
   case kNotWorking:
-    return synergy::string::sprintf("%s:  %s", kAppVersion,
-                                    m_errorMessage.c_str());
+    return synergy::string::sprintf(
+        "%s:  %s", kAppVersion, m_errorMessage.c_str());
 
   case kNotConnected:
     return synergy::string::sprintf("%s:  Waiting for clients", kAppVersion);

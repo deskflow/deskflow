@@ -35,7 +35,9 @@ bool isScreenSaverEngine(const ProcessSerialNumber &psn);
 //
 
 OSXScreenSaver::OSXScreenSaver(IEventQueue *events, void *eventTarget)
-    : m_eventTarget(eventTarget), m_enabled(true), m_events(events) {
+    : m_eventTarget(eventTarget),
+      m_enabled(true),
+      m_events(events) {
   m_autoReleasePool = screenSaverUtilCreatePool();
   m_screenSaverController = screenSaverUtilCreateController();
 
@@ -48,9 +50,9 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue *events, void *eventTarget)
 
   EventHandlerUPP launchTerminationEventHandler =
       NewEventHandlerUPP(launchTerminationCallback);
-  InstallApplicationEventHandler(launchTerminationEventHandler, 2,
-                                 launchEventTypes, this,
-                                 &m_launchTerminationEventHandlerRef);
+  InstallApplicationEventHandler(
+      launchTerminationEventHandler, 2, launchEventTypes, this,
+      &m_launchTerminationEventHandlerRef);
   DisposeEventHandlerUPP(launchTerminationEventHandler);
 
   m_screenSaverPSN.highLongOfPSN = 0;
@@ -105,9 +107,9 @@ void OSXScreenSaver::processTerminated(ProcessSerialNumber psn) {
       m_screenSaverPSN.lowLongOfPSN == psn.lowLongOfPSN) {
     LOG((CLOG_DEBUG1 "screen saver engine terminated, enabled=%d", m_enabled));
     if (m_enabled) {
-      m_events->addEvent(
-          Event(m_events->forIPrimaryScreen().screensaverDeactivated(),
-                m_eventTarget));
+      m_events->addEvent(Event(
+          m_events->forIPrimaryScreen().screensaverDeactivated(),
+          m_eventTarget));
     }
 
     m_screenSaverPSN.highLongOfPSN = 0;
@@ -122,9 +124,9 @@ pascal OSStatus OSXScreenSaver::launchTerminationCallback(
   EventParamType actualType;
   ByteCount actualSize;
 
-  result =
-      GetEventParameter(theEvent, kEventParamProcessID, typeProcessSerialNumber,
-                        &actualType, sizeof(psn), &actualSize, &psn);
+  result = GetEventParameter(
+      theEvent, kEventParamProcessID, typeProcessSerialNumber, &actualType,
+      sizeof(psn), &actualSize, &psn);
 
   if ((result == noErr) && (actualSize > 0) &&
       (actualType == typeProcessSerialNumber)) {

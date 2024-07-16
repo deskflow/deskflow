@@ -134,8 +134,8 @@ public:
   Synthesize key events to generate a press and release of key \c id
   \c count times.  If possible match the given modifier mask.
   */
-  void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton,
-                 const String &lang);
+  void keyRepeat(
+      KeyID id, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
 
   //! Notify of key release
   /*!
@@ -309,8 +309,8 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                        SInt32 &height) const;
+  virtual void
+  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
   IPlatformScreen *getPlatformScreen() { return m_screen; }

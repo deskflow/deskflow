@@ -1533,9 +1533,9 @@ static const KeySym s_map1008FF[] = {
 
 XWindowsUtil::KeySymMap XWindowsUtil::s_keySymToUCS4;
 
-bool XWindowsUtil::getWindowProperty(Display *display, Window window,
-                                     Atom property, String *data, Atom *type,
-                                     SInt32 *format, bool deleteProperty) {
+bool XWindowsUtil::getWindowProperty(
+    Display *display, Window window, Atom property, String *data, Atom *type,
+    SInt32 *format, bool deleteProperty) {
   assert(display != NULL);
 
   Atom actualType;
@@ -1553,9 +1553,10 @@ bool XWindowsUtil::getWindowProperty(Display *display, Window window,
     // get more data
     unsigned long numItems;
     unsigned char *rawData;
-    if (XGetWindowProperty(display, window, property, offset, length, False,
-                           AnyPropertyType, &actualType, &actualDatumSize,
-                           &numItems, &bytesLeft, &rawData) != Success ||
+    if (XGetWindowProperty(
+            display, window, property, offset, length, False, AnyPropertyType,
+            &actualType, &actualDatumSize, &numItems, &bytesLeft,
+            &rawData) != Success ||
         actualType == None || actualDatumSize == 0) {
       // failed
       okay = false;
@@ -1608,19 +1609,21 @@ bool XWindowsUtil::getWindowProperty(Display *display, Window window,
   }
 
   if (okay) {
-    LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property,
+    LOG(
+        (CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property,
          window, (data == NULL) ? 0 : data->size()));
     return true;
   } else {
-    LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property,
+    LOG(
+        (CLOG_DEBUG2 "can't read property %d on window 0x%08x", property,
          window));
     return false;
   }
 }
 
-bool XWindowsUtil::setWindowProperty(Display *display, Window window,
-                                     Atom property, const void *vdata,
-                                     UInt32 size, Atom type, SInt32 format) {
+bool XWindowsUtil::setWindowProperty(
+    Display *display, Window window, Atom property, const void *vdata,
+    UInt32 size, Atom type, SInt32 format) {
   const UInt32 length = 4 * XMaxRequestSize(display);
   const unsigned char *data = static_cast<const unsigned char *>(vdata);
   UInt32 datumSize = static_cast<UInt32>(format / 8);
@@ -1640,8 +1643,9 @@ bool XWindowsUtil::setWindowProperty(Display *display, Window window,
   }
 
   // send first chunk
-  XChangeProperty(display, window, property, type, format, PropModeReplace,
-                  data, chunkSize / datumSize);
+  XChangeProperty(
+      display, window, property, type, format, PropModeReplace, data,
+      chunkSize / datumSize);
 
   // append remaining chunks
   data += chunkSize;
@@ -1651,8 +1655,9 @@ bool XWindowsUtil::setWindowProperty(Display *display, Window window,
     if (chunkSize > length) {
       chunkSize = length;
     }
-    XChangeProperty(display, window, property, type, format, PropModeAppend,
-                    data, chunkSize / datumSize);
+    XChangeProperty(
+        display, window, property, type, format, PropModeAppend, data,
+        chunkSize / datumSize);
     data += chunkSize;
     size -= chunkSize;
   }
@@ -1672,8 +1677,8 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
 
   // do a zero-length append to get the current time
   unsigned char dummy;
-  XChangeProperty(display, window, atom, XA_INTEGER, 8, PropModeAppend, &dummy,
-                  0);
+  XChangeProperty(
+      display, window, atom, XA_INTEGER, 8, PropModeAppend, &dummy, 0);
 
   // look for property notify events with the following
   PropertyNotifyPredicateInfo filter;
@@ -1682,8 +1687,9 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
 
   // wait for reply
   XEvent xevent;
-  XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
-           (XPointer)&filter);
+  XIfEvent(
+      display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
+      (XPointer)&filter);
   assert(xevent.type == PropertyNotify);
   assert(xevent.xproperty.window == window);
   assert(xevent.xproperty.atom == atom);
@@ -1851,8 +1857,8 @@ String XWindowsUtil::atomToString(Display *display, Atom atom) {
   }
 }
 
-String XWindowsUtil::atomsToString(Display *display, const Atom *atom,
-                                   UInt32 num) {
+String
+XWindowsUtil::atomsToString(Display *display, const Atom *atom, UInt32 num) {
   char **names = new char *[num];
   bool error = false;
   XWindowsUtil::ErrorLock lock(display, &error);
@@ -1893,16 +1899,17 @@ void XWindowsUtil::appendAtomData(String &data, Atom atom) {
 }
 
 void XWindowsUtil::replaceAtomData(String &data, UInt32 index, Atom atom) {
-  data.replace(index * sizeof(Atom), sizeof(Atom),
-               reinterpret_cast<const char *>(&atom), sizeof(Atom));
+  data.replace(
+      index * sizeof(Atom), sizeof(Atom), reinterpret_cast<const char *>(&atom),
+      sizeof(Atom));
 }
 
 void XWindowsUtil::appendTimeData(String &data, Time time) {
   data.append(reinterpret_cast<char *>(&time), sizeof(Time));
 }
 
-Bool XWindowsUtil::propertyNotifyPredicate(Display *, XEvent *xevent,
-                                           XPointer arg) {
+Bool XWindowsUtil::propertyNotifyPredicate(
+    Display *, XEvent *xevent, XPointer arg) {
   PropertyNotifyPredicateInfo *filter =
       reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
   return (xevent->type == PropertyNotify &&
@@ -1936,8 +1943,8 @@ XWindowsUtil::ErrorLock::ErrorLock(Display *display, bool *flag)
   install(&XWindowsUtil::ErrorLock::saveHandler, flag);
 }
 
-XWindowsUtil::ErrorLock::ErrorLock(Display *display, ErrorHandler handler,
-                                   void *data)
+XWindowsUtil::ErrorLock::ErrorLock(
+    Display *display, ErrorHandler handler, void *data)
     : m_display(display) {
   install(handler, data);
 }
@@ -1967,8 +1974,8 @@ void XWindowsUtil::ErrorLock::install(ErrorHandler handler, void *data) {
   s_top = this;
 }
 
-int XWindowsUtil::ErrorLock::internalHandler(Display *display,
-                                             XErrorEvent *event) {
+int XWindowsUtil::ErrorLock::internalHandler(
+    Display *display, XErrorEvent *event) {
   if (s_top != NULL && s_top->m_handler != NULL) {
     s_top->m_handler(display, event, s_top->m_userData);
   }
@@ -1979,8 +1986,8 @@ void XWindowsUtil::ErrorLock::ignoreHandler(Display *, XErrorEvent *e, void *) {
   LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
-void XWindowsUtil::ErrorLock::saveHandler(Display *display, XErrorEvent *e,
-                                          void *flag) {
+void XWindowsUtil::ErrorLock::saveHandler(
+    Display *display, XErrorEvent *e, void *flag) {
   char errtxt[1024];
   XGetErrorText(display, e->error_code, errtxt, 1023);
   LOG((CLOG_DEBUG1 "flagging X error: %d - %.1023s", e->error_code, errtxt));

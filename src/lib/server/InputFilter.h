@@ -204,8 +204,8 @@ public:
     enum Mode { kOff, kOn, kToggle };
 
     KeyboardBroadcastAction(IEventQueue *events, Mode = kToggle);
-    KeyboardBroadcastAction(IEventQueue *events, Mode,
-                            const std::set<String> &screens);
+    KeyboardBroadcastAction(
+        IEventQueue *events, Mode, const std::set<String> &screens);
 
     Mode getMode() const;
     std::set<String> getScreens() const;
@@ -224,8 +224,8 @@ public:
   // KeystrokeAction
   class KeystrokeAction : public Action {
   public:
-    KeystrokeAction(IEventQueue *events, IPlatformScreen::KeyInfo *adoptedInfo,
-                    bool press);
+    KeystrokeAction(
+        IEventQueue *events, IPlatformScreen::KeyInfo *adoptedInfo, bool press);
     KeystrokeAction(KeystrokeAction const &) = delete;
     KeystrokeAction(KeystrokeAction &&) = delete;
     ~KeystrokeAction();
@@ -254,8 +254,9 @@ public:
   // MouseButtonAction -- modifier combinations not implemented yet
   class MouseButtonAction : public Action {
   public:
-    MouseButtonAction(IEventQueue *events,
-                      IPlatformScreen::ButtonInfo *adoptedInfo, bool press);
+    MouseButtonAction(
+        IEventQueue *events, IPlatformScreen::ButtonInfo *adoptedInfo,
+        bool press);
     MouseButtonAction(MouseButtonAction const &) = delete;
     MouseButtonAction(MouseButtonAction &&) = delete;
     ~MouseButtonAction();

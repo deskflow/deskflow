@@ -172,13 +172,15 @@ private:
 
 template <class T>
 inline CondVar<T>::CondVar(Mutex *mutex, const T &data)
-    : CondVarBase(mutex), m_data(data) {
+    : CondVarBase(mutex),
+      m_data(data) {
   // do nothing
 }
 
 template <class T>
 inline CondVar<T>::CondVar(const CondVar &cv)
-    : CondVarBase(cv.getMutex()), m_data(cv.m_data) {
+    : CondVarBase(cv.getMutex()),
+      m_data(cv.m_data) {
   // do nothing
 }
 

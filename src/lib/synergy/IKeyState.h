@@ -41,8 +41,9 @@ public:
   class KeyInfo {
   public:
     static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
-    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count,
-                          const std::set<String> &destinations);
+    static KeyInfo *alloc(
+        KeyID, KeyModifierMask, KeyButton, SInt32 count,
+        const std::set<String> &destinations);
     static KeyInfo *alloc(const KeyInfo &);
 
     static bool isDefault(const char *screens);
@@ -91,15 +92,16 @@ public:
   /*!
   Synthesizes a key press event and updates the key state.
   */
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                           const String &lang) = 0;
+  virtual void fakeKeyDown(
+      KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) = 0;
 
   //! Fake a key repeat
   /*!
   Synthesizes a key repeat event and updates the key state.
   */
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                             KeyButton button, const String &lang) = 0;
+  virtual bool fakeKeyRepeat(
+      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
+      const String &lang) = 0;
 
   //! Fake a key release
   /*!

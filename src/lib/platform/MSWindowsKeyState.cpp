@@ -568,28 +568,36 @@ static const Win32Modifiers s_modifiers[] = {
     {VK_RMENU, KeyModifierAlt},        {VK_LWIN, KeyModifierSuper},
     {VK_RWIN, KeyModifierSuper}};
 
-MSWindowsKeyState::MSWindowsKeyState(MSWindowsDesks *desks, void *eventTarget,
-                                     IEventQueue *events,
-                                     std::vector<String> layouts,
-                                     bool isLangSyncEnabled)
+MSWindowsKeyState::MSWindowsKeyState(
+    MSWindowsDesks *desks, void *eventTarget, IEventQueue *events,
+    std::vector<String> layouts, bool isLangSyncEnabled)
     : KeyState(events, std::move(layouts), isLangSyncEnabled),
-      m_eventTarget(eventTarget), m_desks(desks),
-      m_keyLayout(GetKeyboardLayout(0)), m_fixTimer(NULL), m_lastDown(0),
-      m_useSavedModifiers(false), m_savedModifiers(0),
-      m_originalSavedModifiers(0), m_events(events) {
+      m_eventTarget(eventTarget),
+      m_desks(desks),
+      m_keyLayout(GetKeyboardLayout(0)),
+      m_fixTimer(NULL),
+      m_lastDown(0),
+      m_useSavedModifiers(false),
+      m_savedModifiers(0),
+      m_originalSavedModifiers(0),
+      m_events(events) {
   init();
 }
 
-MSWindowsKeyState::MSWindowsKeyState(MSWindowsDesks *desks, void *eventTarget,
-                                     IEventQueue *events,
-                                     synergy::KeyMap &keyMap,
-                                     std::vector<String> layouts,
-                                     bool isLangSyncEnabled)
+MSWindowsKeyState::MSWindowsKeyState(
+    MSWindowsDesks *desks, void *eventTarget, IEventQueue *events,
+    synergy::KeyMap &keyMap, std::vector<String> layouts,
+    bool isLangSyncEnabled)
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled),
-      m_eventTarget(eventTarget), m_desks(desks),
-      m_keyLayout(GetKeyboardLayout(0)), m_fixTimer(NULL), m_lastDown(0),
-      m_useSavedModifiers(false), m_savedModifiers(0),
-      m_originalSavedModifiers(0), m_events(events) {
+      m_eventTarget(eventTarget),
+      m_desks(desks),
+      m_keyLayout(GetKeyboardLayout(0)),
+      m_fixTimer(NULL),
+      m_lastDown(0),
+      m_useSavedModifiers(false),
+      m_savedModifiers(0),
+      m_originalSavedModifiers(0),
+      m_events(events) {
   init();
 }
 
@@ -616,8 +624,8 @@ KeyButton MSWindowsKeyState::virtualKeyToButton(UINT virtualKey) const {
 
 void MSWindowsKeyState::setKeyLayout(HKL keyLayout) { m_keyLayout = keyLayout; }
 
-bool MSWindowsKeyState::testAutoRepeat(bool press, bool isRepeat,
-                                       KeyButton button) {
+bool MSWindowsKeyState::testAutoRepeat(
+    bool press, bool isRepeat, KeyButton button) {
   if (!isRepeat) {
     isRepeat = (press && m_lastDown != 0 && button == m_lastDown);
   }
@@ -646,8 +654,8 @@ void MSWindowsKeyState::useSavedModifiers(bool enable) {
   }
 }
 
-KeyID MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info,
-                                         KeyModifierMask *maskOut) const {
+KeyID MSWindowsKeyState::mapKeyFromEvent(
+    WPARAM charAndVirtKey, LPARAM info, KeyModifierMask *maskOut) const {
   static const KeyModifierMask s_controlAlt =
       KeyModifierControl | KeyModifierAlt;
 
@@ -702,15 +710,14 @@ UINT MSWindowsKeyState::mapKeyToVirtualKey(KeyID key) const {
   }
 }
 
-void MSWindowsKeyState::onKey(KeyButton button, bool down,
-                              KeyModifierMask newState) {
+void MSWindowsKeyState::onKey(
+    KeyButton button, bool down, KeyModifierMask newState) {
   KeyState::onKey(button, down, newState);
 }
 
-void MSWindowsKeyState::sendKeyEvent(void *target, bool press,
-                                     bool isAutoRepeat, KeyID key,
-                                     KeyModifierMask mask, SInt32 count,
-                                     KeyButton button) {
+void MSWindowsKeyState::sendKeyEvent(
+    void *target, bool press, bool isAutoRepeat, KeyID key,
+    KeyModifierMask mask, SInt32 count, KeyButton button) {
   if (press || isAutoRepeat) {
     // send key
     if (press && !isAutoRepeat) {
@@ -728,14 +735,14 @@ void MSWindowsKeyState::sendKeyEvent(void *target, bool press,
   }
 }
 
-void MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
-                                    KeyButton button, const String &lang) {
+void MSWindowsKeyState::fakeKeyDown(
+    KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) {
   KeyState::fakeKeyDown(id, mask, button, lang);
 }
 
-bool MSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-                                      SInt32 count, KeyButton button,
-                                      const String &lang) {
+bool MSWindowsKeyState::fakeKeyRepeat(
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
+    const String &lang) {
   return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
 }
 
@@ -764,8 +771,9 @@ void MSWindowsKeyState::ctrlAltDelThread(void *) {
   HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);
   if (desk != NULL) {
     if (SetThreadDesktop(desk)) {
-      PostMessage(HWND_BROADCAST, WM_HOTKEY, 0,
-                  MAKELPARAM(MOD_CONTROL | MOD_ALT, VK_DELETE));
+      PostMessage(
+          HWND_BROADCAST, WM_HOTKEY, 0,
+          MAKELPARAM(MOD_CONTROL | MOD_ALT, VK_DELETE));
     } else {
       LOG((CLOG_DEBUG "can't switch to Winlogon desk: %d", GetLastError()));
     }
@@ -1148,7 +1156,8 @@ void MSWindowsKeyState::getKeyMap(synergy::KeyMap &keyMap) {
 void MSWindowsKeyState::fakeKey(const Keystroke &keystroke) {
   switch (keystroke.m_type) {
   case Keystroke::kButton: {
-    LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
+    LOG(
+        (CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
          keystroke.m_data.m_button.m_client,
          keystroke.m_data.m_button.m_press ? "down" : "up"));
     KeyButton scanCode = keystroke.m_data.m_button.m_button;
@@ -1176,8 +1185,8 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke) {
 
     // vk,sc,flags,keystroke.m_data.m_button.m_repeat
 
-    m_desks->fakeKeyEvent(vk, scanCode, flags,
-                          keystroke.m_data.m_button.m_repeat);
+    m_desks->fakeKeyEvent(
+        vk, scanCode, flags, keystroke.m_data.m_button.m_repeat);
 
     // synthesize event
     // m_desks->fakeKeyEvent(button, vk,
@@ -1196,8 +1205,8 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke) {
         setWindowGroup(keystroke.m_data.m_group.m_group);
       } else {
         LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
-        setWindowGroup(getEffectiveGroup(pollActiveGroup(),
-                                         keystroke.m_data.m_group.m_group));
+        setWindowGroup(getEffectiveGroup(
+            pollActiveGroup(), keystroke.m_data.m_group.m_group));
       }
     }
     break;
@@ -1240,8 +1249,9 @@ void MSWindowsKeyState::setWindowGroup(SInt32 group) {
   // XXX -- determine if m_groups[group] can be used with the system
   // character set.
 
-  if (!PostMessage(targetWindow, WM_INPUTLANGCHANGEREQUEST, sysCharSet ? 1 : 0,
-                   (LPARAM)m_groups[group])) {
+  if (!PostMessage(
+          targetWindow, WM_INPUTLANGCHANGEREQUEST, sysCharSet ? 1 : 0,
+          (LPARAM)m_groups[group])) {
     LOG((CLOG_WARN "failed to post change language message"));
   }
 
@@ -1275,12 +1285,13 @@ UINT MSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const {
   return m_buttonToVK[button];
 }
 
-KeyID MSWindowsKeyState::getIDForKey(synergy::KeyMap::KeyItem &item,
-                                     KeyButton button, UINT virtualKey,
-                                     PBYTE keyState, HKL hkl) const {
+KeyID MSWindowsKeyState::getIDForKey(
+    synergy::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey,
+    PBYTE keyState, HKL hkl) const {
   WCHAR unicode[2];
-  int n = m_ToUnicodeEx(virtualKey, button, keyState, unicode,
-                        sizeof(unicode) / sizeof(unicode[0]), 0, hkl);
+  int n = m_ToUnicodeEx(
+      virtualKey, button, keyState, unicode,
+      sizeof(unicode) / sizeof(unicode[0]), 0, hkl);
   KeyID id = static_cast<KeyID>(unicode[0]);
 
   switch (n) {
@@ -1290,8 +1301,9 @@ KeyID MSWindowsKeyState::getIDForKey(synergy::KeyMap::KeyItem &item,
     // with different modifiers are not affected.
 
     BYTE emptyState[256] = {};
-    n = m_ToUnicodeEx(VK_SPACE, 0, emptyState, unicode,
-                      sizeof(unicode) / sizeof(unicode[0]), 0, hkl);
+    n = m_ToUnicodeEx(
+        VK_SPACE, 0, emptyState, unicode, sizeof(unicode) / sizeof(unicode[0]),
+        0, hkl);
 
     // as an alternative, we could use the returned
     // buffer in unicode to look at the dead key character
@@ -1314,8 +1326,8 @@ KeyID MSWindowsKeyState::getIDForKey(synergy::KeyMap::KeyItem &item,
   }
 }
 
-void MSWindowsKeyState::addKeyEntry(synergy::KeyMap &keyMap,
-                                    synergy::KeyMap::KeyItem &item) {
+void MSWindowsKeyState::addKeyEntry(
+    synergy::KeyMap &keyMap, synergy::KeyMap::KeyItem &item) {
   keyMap.addKeyEntry(item);
   if (item.m_group == 0) {
     m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);

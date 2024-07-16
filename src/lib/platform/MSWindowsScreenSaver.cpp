@@ -34,16 +34,22 @@
 
 static const TCHAR *g_isSecureNT = "ScreenSaverIsSecure";
 static const TCHAR *g_isSecure9x = "ScreenSaveUsePassword";
-static const TCHAR *const g_pathScreenSaverIsSecure[] = {"Control Panel",
-                                                         "Desktop", NULL};
+static const TCHAR *const g_pathScreenSaverIsSecure[] = {
+    "Control Panel", "Desktop", NULL};
 
 //
 // MSWindowsScreenSaver
 //
 
 MSWindowsScreenSaver::MSWindowsScreenSaver()
-    : m_wasSecure(false), m_wasSecureAnInt(false), m_process(NULL),
-      m_watch(NULL), m_threadID(0), m_msg(0), m_wParam(0), m_lParam(0),
+    : m_wasSecure(false),
+      m_wasSecureAnInt(false),
+      m_process(NULL),
+      m_watch(NULL),
+      m_threadID(0),
+      m_msg(0),
+      m_wParam(0),
+      m_lParam(0),
       m_active(false) {
   // check if screen saver is enabled
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
@@ -51,8 +57,8 @@ MSWindowsScreenSaver::MSWindowsScreenSaver()
 
 MSWindowsScreenSaver::~MSWindowsScreenSaver() { unwatchProcess(); }
 
-bool MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam,
-                                        LPARAM lParam) {
+bool MSWindowsScreenSaver::checkStarted(
+    UINT msg, WPARAM wParam, LPARAM lParam) {
   // if already started then say it didn't just start
   if (m_active) {
     return false;
@@ -128,11 +134,12 @@ void MSWindowsScreenSaver::deactivate() {
   bool killed = false;
 
   // NT runs screen saver in another desktop
-  HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE,
-                              DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
+  HDESK desktop = OpenDesktop(
+      "Screen-saver", 0, FALSE, DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
   if (desktop != NULL) {
-    EnumDesktopWindows(desktop, &MSWindowsScreenSaver::killScreenSaverFunc,
-                       reinterpret_cast<LPARAM>(&killed));
+    EnumDesktopWindows(
+        desktop, &MSWindowsScreenSaver::killScreenSaverFunc,
+        reinterpret_cast<LPARAM>(&killed));
     CloseDesktop(desktop);
   }
 
@@ -151,10 +158,10 @@ void MSWindowsScreenSaver::deactivate() {
 
   // force timer to restart
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
-  SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, !m_wasEnabled, 0,
-                       SPIF_SENDWININICHANGE);
-  SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0,
-                       SPIF_SENDWININICHANGE);
+  SystemParametersInfo(
+      SPI_SETSCREENSAVEACTIVE, !m_wasEnabled, 0, SPIF_SENDWININICHANGE);
+  SystemParametersInfo(
+      SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, SPIF_SENDWININICHANGE);
 }
 
 bool MSWindowsScreenSaver::isActive() const {

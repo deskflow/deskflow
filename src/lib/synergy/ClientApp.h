@@ -36,8 +36,8 @@ class ClientArgs;
 
 class ClientApp : public App {
 public:
-  ClientApp(IEventQueue *events,
-            CreateTaskBarReceiverFunc createTaskBarReceiver);
+  ClientApp(
+      IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ClientApp();
 
   // Parse client specific command line arguments.
@@ -60,8 +60,8 @@ public:
 
   int foregroundStartup(int argc, char **argv);
   int standardStartup(int argc, char **argv);
-  int runInner(int argc, char **argv, ILogOutputter *outputter,
-               StartupFunc startup);
+  int runInner(
+      int argc, char **argv, ILogOutputter *outputter, StartupFunc startup);
   synergy::Screen *createScreen();
   void updateStatus();
   void updateStatus(const String &msg);
@@ -76,8 +76,9 @@ public:
   void handleClientFailed(const Event &e, void *);
   void handleClientRefused(const Event &e, void *);
   void handleClientDisconnected(const Event &, void *);
-  Client *openClient(const String &name, const NetworkAddress &address,
-                     synergy::Screen *screen);
+  Client *openClient(
+      const String &name, const NetworkAddress &address,
+      synergy::Screen *screen);
   void closeClient(Client *client);
   bool startClient();
   void stopClient();

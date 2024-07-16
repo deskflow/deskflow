@@ -23,8 +23,8 @@
 // IClipboard
 //
 
-void IClipboard::unmarshall(IClipboard *clipboard, const String &data,
-                            Time time) {
+void IClipboard::unmarshall(
+    IClipboard *clipboard, const String &data, Time time) {
   assert(clipboard != NULL);
 
   const char *index = data.data();

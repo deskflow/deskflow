@@ -90,15 +90,15 @@ bool SslApi::loadCertificate(const std::string &filename) {
   bool result = false;
 
   if (isCertificateExists(filename)) {
-    auto r = SSL_CTX_use_certificate_file(m_context, filename.c_str(),
-                                          SSL_FILETYPE_PEM);
+    auto r = SSL_CTX_use_certificate_file(
+        m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
       SslLogger::logError("could not use tls certificate");
       return false;
     }
 
-    r = SSL_CTX_use_PrivateKey_file(m_context, filename.c_str(),
-                                    SSL_FILETYPE_PEM);
+    r = SSL_CTX_use_PrivateKey_file(
+        m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
       SslLogger::logError("could not use tls private key");
       return false;
@@ -139,11 +139,12 @@ std::string SslApi::getFingerprint() const {
   AutoX509 cert(SSL_get_peer_certificate(m_ssl), &X509_free);
   unsigned int tempFingerprintLen = 0;
   unsigned char tempFingerprint[EVP_MAX_MD_SIZE] = {0};
-  int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint,
-                                 &tempFingerprintLen);
+  int digestResult = X509_digest(
+      cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
   if (digestResult <= 0) {
-    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d",
+    LOG(
+        (CLOG_ERR "failed to calculate fingerprint, digest result: %d",
          digestResult));
     return "";
   }
@@ -158,9 +159,9 @@ std::string SslApi::getFingerprint() const {
 }
 
 bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
-  auto trustedServersFilename =
-      synergy::string::sprintf("%s/SSL/Fingerprints/TrustedServers.txt",
-                               ARCH->getProfileDirectory().c_str());
+  auto trustedServersFilename = synergy::string::sprintf(
+      "%s/SSL/Fingerprints/TrustedServers.txt",
+      ARCH->getProfileDirectory().c_str());
 
   // check if this fingerprint exist
   std::ifstream file;
@@ -177,7 +178,8 @@ bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
       }
     }
   } else {
-    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s",
+    LOG(
+        (CLOG_ERR "failed to open trusted fingerprints file: %s",
          trustedServersFilename.c_str()));
   }
 
@@ -193,8 +195,9 @@ void SslApi::createContext(bool isServer) {
   }
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
   // be vulnerable
-  SSL_CTX_set_options(m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 |
-                                     SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
+  SSL_CTX_set_options(
+      m_context,
+      SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
   if (m_context) {
     m_ssl = SSL_new(m_context);

@@ -37,10 +37,14 @@
 // TCPSocket
 //
 
-TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-                     IArchNetwork::EAddressFamily family)
-    : IDataSocket(events), m_events(events), m_mutex(),
-      m_flushed(&m_mutex, true), m_socketMultiplexer(socketMultiplexer) {
+TCPSocket::TCPSocket(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
+    : IDataSocket(events),
+      m_events(events),
+      m_mutex(),
+      m_flushed(&m_mutex, true),
+      m_socketMultiplexer(socketMultiplexer) {
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
   } catch (const XArchNetwork &e) {
@@ -52,10 +56,15 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
   init();
 }
 
-TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-                     ArchSocket socket)
-    : IDataSocket(events), m_events(events), m_mutex(), m_socket(socket),
-      m_flushed(&m_mutex, true), m_socketMultiplexer(socketMultiplexer) {
+TCPSocket::TCPSocket(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+    ArchSocket socket)
+    : IDataSocket(events),
+      m_events(events),
+      m_mutex(),
+      m_socket(socket),
+      m_flushed(&m_mutex, true),
+      m_socketMultiplexer(socketMultiplexer) {
   assert(m_socket != nullptr);
 
   LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
@@ -375,8 +384,9 @@ ISocketMultiplexerJob *TCPSocket::newJob() {
 
 void TCPSocket::sendConnectionFailedEvent(const char *msg) {
   ConnectionFailedInfo *info = new ConnectionFailedInfo(msg);
-  m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
-                           getEventTarget(), info, Event::kDontFreeData));
+  m_events->addEvent(Event(
+      m_events->forIDataSocket().connectionFailed(), getEventTarget(), info,
+      Event::kDontFreeData));
 }
 
 void TCPSocket::sendEvent(Event::Type type) {
@@ -419,9 +429,8 @@ void TCPSocket::onDisconnected() {
   m_connected = false;
 }
 
-ISocketMultiplexerJob *TCPSocket::serviceConnecting(ISocketMultiplexerJob *job,
-                                                    bool, bool write,
-                                                    bool error) {
+ISocketMultiplexerJob *TCPSocket::serviceConnecting(
+    ISocketMultiplexerJob *job, bool, bool write, bool error) {
   Lock lock(&m_mutex);
 
   // should only check for errors if error is true but checking a new
@@ -461,9 +470,8 @@ ISocketMultiplexerJob *TCPSocket::serviceConnecting(ISocketMultiplexerJob *job,
   return job;
 }
 
-ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job,
-                                                   bool read, bool write,
-                                                   bool error) {
+ISocketMultiplexerJob *TCPSocket::serviceConnected(
+    ISocketMultiplexerJob *job, bool read, bool write, bool error) {
   Lock lock(&m_mutex);
 
   if (error) {

@@ -83,15 +83,24 @@ MainWindow::MainWindow(AppConfig &appConfig)
 #endif
     :
 #ifdef SYNERGY_ENABLE_LICENSING
-      m_LicenseManager(&licenseManager), m_ActivationDialogRunning(false),
+      m_LicenseManager(&licenseManager),
+      m_ActivationDialogRunning(false),
 #endif
-      m_AppConfig(&appConfig), m_pSynergy(NULL),
+      m_AppConfig(&appConfig),
+      m_pSynergy(NULL),
       m_SynergyState(synergyDisconnected),
-      m_ServerConfig(5, 3, m_AppConfig, this), m_AlreadyHidden(false),
-      m_pMenuBar(NULL), m_pMenuFile(NULL), m_pMenuEdit(NULL),
-      m_pMenuWindow(NULL), m_pMenuHelp(NULL), m_pCancelButton(NULL),
-      m_ExpectedRunningState(kStopped), m_SecureSocket(false),
-      m_serverConnection(*this), m_clientConnection(*this) {
+      m_ServerConfig(5, 3, m_AppConfig, this),
+      m_AlreadyHidden(false),
+      m_pMenuBar(NULL),
+      m_pMenuFile(NULL),
+      m_pMenuEdit(NULL),
+      m_pMenuWindow(NULL),
+      m_pMenuHelp(NULL),
+      m_pCancelButton(NULL),
+      m_ExpectedRunningState(kStopped),
+      m_SecureSocket(false),
+      m_serverConnection(*this),
+      m_clientConnection(*this) {
 
   setupUi(this);
 
@@ -108,22 +117,26 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_VersionChecker.setApp(appPath(appConfig.synergycName()));
 
   updateScreenName();
-  connect(m_AppConfig, SIGNAL(screenNameChanged()), this,
-          SLOT(updateScreenName()));
+  connect(
+      m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
 #if defined(Q_OS_WIN)
   // ipc must always be enabled, so that we can disable command when switching
   // to desktop mode.
-  connect(&m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
-          SLOT(appendLogRaw(const QString &)));
-  connect(&m_IpcClient, SIGNAL(errorMessage(const QString &)), this,
-          SLOT(appendLogError(const QString &)));
-  connect(&m_IpcClient, SIGNAL(infoMessage(const QString &)), this,
-          SLOT(appendLogInfo(const QString &)));
-  connect(&m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
-          SLOT(handleIdleService(const QString &)));
+  connect(
+      &m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
+      SLOT(appendLogRaw(const QString &)));
+  connect(
+      &m_IpcClient, SIGNAL(errorMessage(const QString &)), this,
+      SLOT(appendLogError(const QString &)));
+  connect(
+      &m_IpcClient, SIGNAL(infoMessage(const QString &)), this,
+      SLOT(appendLogInfo(const QString &)));
+  connect(
+      &m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
+      SLOT(handleIdleService(const QString &)));
   m_IpcClient.connectToHost();
 #endif
 
@@ -141,21 +154,26 @@ MainWindow::MainWindow(AppConfig &appConfig)
   // hide padlock icon
   secureSocket(false);
 
-  connect(this, SIGNAL(windowShown()), this, SLOT(on_windowShown()),
-          Qt::QueuedConnection);
+  connect(
+      this, SIGNAL(windowShown()), this, SLOT(on_windowShown()),
+      Qt::QueuedConnection);
 #ifdef SYNERGY_ENABLE_LICENSING
-  connect(m_LicenseManager, SIGNAL(editionChanged(Edition)), this,
-          SLOT(setEdition(Edition)), Qt::QueuedConnection);
+  connect(
+      m_LicenseManager, SIGNAL(editionChanged(Edition)), this,
+      SLOT(setEdition(Edition)), Qt::QueuedConnection);
 
-  connect(m_LicenseManager, SIGNAL(showLicenseNotice(QString)), this,
-          SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
+  connect(
+      m_LicenseManager, SIGNAL(showLicenseNotice(QString)), this,
+      SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
 
-  connect(m_LicenseManager, SIGNAL(InvalidLicense()), this,
-          SLOT(InvalidLicense()), Qt::QueuedConnection);
+  connect(
+      m_LicenseManager, SIGNAL(InvalidLicense()), this, SLOT(InvalidLicense()),
+      Qt::QueuedConnection);
 #endif
 
-  connect(m_AppConfig, SIGNAL(sslToggled()), this,
-          SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
+  connect(
+      m_AppConfig, SIGNAL(sslToggled()), this, SLOT(updateLocalFingerprint()),
+      Qt::QueuedConnection);
 
   updateWindowTitle();
 
@@ -260,12 +278,13 @@ void MainWindow::loadSettings() {
 void MainWindow::initConnections() {
   connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
   connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-  connect(m_pActionStartSynergy, SIGNAL(triggered()), this,
-          SLOT(actionStart()));
+  connect(
+      m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(actionStart()));
   connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
   connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-  connect(&m_VersionChecker, SIGNAL(updateFound(const QString &)), this,
-          SLOT(updateFound(const QString &)));
+  connect(
+      &m_VersionChecker, SIGNAL(updateFound(const QString &)), this,
+      SLOT(updateFound(const QString &)));
 }
 
 void MainWindow::saveSettings() {
@@ -421,8 +440,9 @@ void MainWindow::checkConnected(const QString &line) {
     }
   } else if (line.contains("started server")) {
     setSynergyState(synergyListening);
-  } else if (line.contains("disconnected from server") ||
-             line.contains("process exited")) {
+  } else if (
+      line.contains("disconnected from server") ||
+      line.contains("process exited")) {
     setSynergyState(synergyDisconnected);
   } else if (line.contains("connecting to")) {
     setSynergyState(synergyConnecting);
@@ -497,10 +517,10 @@ void MainWindow::checkOSXNotification(const QString &line) {
   if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
     int delimterPosition = line.indexOf('|');
     int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
-    QString title =
-        line.mid(notificationStartPosition + OSXNotificationSubstring.length(),
-                 delimterPosition - notificationStartPosition -
-                     OSXNotificationSubstring.length());
+    QString title = line.mid(
+        notificationStartPosition + OSXNotificationSubstring.length(),
+        delimterPosition - notificationStartPosition -
+            OSXNotificationSubstring.length());
     QString body =
         line.mid(delimterPosition + 1, line.length() - delimterPosition);
     if (!showOSXNotification(title, body)) {
@@ -616,8 +636,9 @@ void MainWindow::startSynergy() {
   if (!m_pLogOutput->toPlainText().isEmpty())
     appendLogRaw("");
 
-  appendLogInfo("starting " +
-                QString(synergyType() == synergyServer ? "server" : "client"));
+  appendLogInfo(
+      "starting " +
+      QString(synergyType() == synergyServer ? "server" : "client"));
 
   if ((synergyType() == synergyClient && !clientArgs(args, app)) ||
       (synergyType() == synergyServer && !serverArgs(args, app))) {
@@ -626,12 +647,15 @@ void MainWindow::startSynergy() {
   }
 
   if (desktopMode) {
-    connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
-            SLOT(synergyFinished(int, QProcess::ExitStatus)));
-    connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this,
-            SLOT(logOutput()));
-    connect(synergyProcess(), SIGNAL(readyReadStandardError()), this,
-            SLOT(logError()));
+    connect(
+        synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
+        SLOT(synergyFinished(int, QProcess::ExitStatus)));
+    connect(
+        synergyProcess(), SIGNAL(readyReadStandardOutput()), this,
+        SLOT(logOutput()));
+    connect(
+        synergyProcess(), SIGNAL(readyReadStandardError()), this,
+        SLOT(logError()));
   }
 
   qDebug() << args;
@@ -712,9 +736,10 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
   if (m_pLineEditHostname->text().isEmpty() &&
       !appConfig().getClientHostMode()) {
     show();
-    QMessageBox::warning(this, tr("Hostname is empty"),
-                         tr("Please fill in a hostname for the synergy "
-                            "client to connect to."));
+    QMessageBox::warning(
+        this, tr("Hostname is empty"),
+        tr("Please fill in a hostname for the synergy "
+           "client to connect to."));
     return false;
   }
 
@@ -769,8 +794,8 @@ QString MainWindow::configFilename() {
     }
 
     if (configFullPath.isEmpty()) {
-      QMessageBox::critical(this, tr("Cannot write configuration file"),
-                            errors.join('\n'));
+      QMessageBox::critical(
+          this, tr("Cannot write configuration file"), errors.join('\n'));
     }
   }
 
@@ -807,8 +832,9 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
 
   if (appConfig().getServerClientMode() &&
       m_pLineEditClienIp->text().isEmpty()) {
-    QMessageBox::warning(this, tr("Client IP address or name is empty"),
-                         tr("Please fill in a client IP address or name."));
+    QMessageBox::warning(
+        this, tr("Client IP address or name is empty"),
+        tr("Please fill in a client IP address or name."));
     return false;
   }
 
@@ -911,17 +937,21 @@ void MainWindow::setSynergyState(qSynergyState state) {
 
   if ((state == synergyConnected) || (state == synergyConnecting) ||
       (state == synergyListening) || (state == synergyPendingRetry)) {
-    disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy,
-               SLOT(trigger()));
-    connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy,
-            SLOT(trigger()));
+    disconnect(
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy,
+        SLOT(trigger()));
+    connect(
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy,
+        SLOT(trigger()));
     m_pButtonToggleStart->setText(tr("&Stop"));
     m_pButtonApply->setEnabled(true);
   } else if (state == synergyDisconnected) {
-    disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy,
-               SLOT(trigger()));
-    connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy,
-            SLOT(trigger()));
+    disconnect(
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy,
+        SLOT(trigger()));
+    connect(
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy,
+        SLOT(trigger()));
     m_pButtonToggleStart->setText(tr("&Start"));
     m_pButtonApply->setEnabled(false);
   }
@@ -1060,8 +1090,8 @@ bool MainWindow::on_m_pActionSave_triggered() {
       QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
 
   if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
-    QMessageBox::warning(this, tr("Save failed"),
-                         tr("Could not save configuration to file."));
+    QMessageBox::warning(
+        this, tr("Save failed"), tr("Could not save configuration to file."));
     return true;
   }
 
@@ -1218,8 +1248,8 @@ void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
 }
 
 void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
-  QMessageBox::information(this, "SSL/TLS fingerprint",
-                           Fingerprint::local().readFirst());
+  QMessageBox::information(
+      this, "SSL/TLS fingerprint", Fingerprint::local().readFirst());
 }
 
 void MainWindow::windowStateChanged() {

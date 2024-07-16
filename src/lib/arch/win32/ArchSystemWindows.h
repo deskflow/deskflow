@@ -32,8 +32,8 @@ public:
   virtual std::string getOSName() const;
   virtual std::string getPlatformName() const;
   virtual std::string setting(const std::string &valueName) const;
-  virtual void setting(const std::string &valueName,
-                       const std::string &valueString) const;
+  virtual void
+  setting(const std::string &valueName, const std::string &valueString) const;
 
   bool isWOW64() const;
 };

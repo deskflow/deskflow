@@ -63,10 +63,10 @@ static inline UInt16 fromLEU16(const UInt8 *data) {
 }
 
 static inline SInt32 fromLES32(const UInt8 *data) {
-  return static_cast<SInt32>(static_cast<UInt32>(data[0]) |
-                             (static_cast<UInt32>(data[1]) << 8) |
-                             (static_cast<UInt32>(data[2]) << 16) |
-                             (static_cast<UInt32>(data[3]) << 24));
+  return static_cast<SInt32>(
+      static_cast<UInt32>(data[0]) | (static_cast<UInt32>(data[1]) << 8) |
+      (static_cast<UInt32>(data[2]) << 16) |
+      (static_cast<UInt32>(data[3]) << 24));
 }
 
 static inline UInt32 fromLEU32(const UInt8 *data) {
@@ -121,11 +121,11 @@ XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) const {
   // convert to image format
   const UInt8 *rawBMPPixels = rawBMPInfoHeader + 40;
   if (infoHeader.biBitCount == 24) {
-    return doBGRFromIClipboard(rawBMPPixels, infoHeader.biWidth,
-                               infoHeader.biHeight);
+    return doBGRFromIClipboard(
+        rawBMPPixels, infoHeader.biWidth, infoHeader.biHeight);
   } else {
-    return doBGRAFromIClipboard(rawBMPPixels, infoHeader.biWidth,
-                                infoHeader.biHeight);
+    return doBGRAFromIClipboard(
+        rawBMPPixels, infoHeader.biWidth, infoHeader.biHeight);
   }
 }
 
@@ -154,7 +154,7 @@ XWindowsClipboardAnyBitmapConverter::toIClipboard(const String &image) const {
   toLE(dst, static_cast<UInt32>(0));
 
   // construct image
-  return String(reinterpret_cast<const char *>(infoHeader),
-                sizeof(infoHeader)) +
+  return String(
+             reinterpret_cast<const char *>(infoHeader), sizeof(infoHeader)) +
          rawBMP;
 }

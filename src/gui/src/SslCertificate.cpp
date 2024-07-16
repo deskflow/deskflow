@@ -85,9 +85,8 @@ bool SslCertificate::runTool(const QStringList &args) {
   return true;
 }
 
-void SslCertificate::generateCertificate(const QString &path,
-                                         const QString &keyLength,
-                                         bool forceGen) {
+void SslCertificate::generateCertificate(
+    const QString &path, const QString &keyLength, bool forceGen) {
   QString sslDirPath =
       QString("%1%2%3").arg(m_ProfileDir).arg(QDir::separator()).arg(kSslDir);
 

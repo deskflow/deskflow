@@ -34,11 +34,14 @@
 // ClientListener
 //
 
-ClientListener::ClientListener(const NetworkAddress &address,
-                               ISocketFactory *socketFactory,
-                               IEventQueue *events, bool enableCrypto)
-    : m_socketFactory(socketFactory), m_server(NULL), m_events(events),
-      m_useSecureNetwork(enableCrypto), m_address(address) {
+ClientListener::ClientListener(
+    const NetworkAddress &address, ISocketFactory *socketFactory,
+    IEventQueue *events, bool enableCrypto)
+    : m_socketFactory(socketFactory),
+      m_server(NULL),
+      m_events(events),
+      m_useSecureNetwork(enableCrypto),
+      m_address(address) {
   assert(m_socketFactory != NULL);
 
   try {
@@ -80,9 +83,10 @@ void ClientListener::start() {
       m_useSecureNetwork, ARCH->getAddrFamily(m_address.getAddress()));
 
   // setup event handler
-  m_events->adoptHandler(m_events->forIListenSocket().connecting(), m_listen,
-                         new TMethodEventJob<ClientListener>(
-                             this, &ClientListener::handleClientConnecting));
+  m_events->adoptHandler(
+      m_events->forIListenSocket().connecting(), m_listen,
+      new TMethodEventJob<ClientListener>(
+          this, &ClientListener::handleClientConnecting));
 
   // bind listen address
   LOG((CLOG_DEBUG1 "binding listen socket"));
@@ -96,10 +100,10 @@ void ClientListener::stop() {
   for (NewClients::iterator index = m_newClients.begin();
        index != m_newClients.end(); ++index) {
     ClientProxyUnknown *client = *index;
-    m_events->removeHandler(m_events->forClientProxyUnknown().success(),
-                            client);
-    m_events->removeHandler(m_events->forClientProxyUnknown().failure(),
-                            client);
+    m_events->removeHandler(
+        m_events->forClientProxyUnknown().success(), client);
+    m_events->removeHandler(
+        m_events->forClientProxyUnknown().failure(), client);
     m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
     delete client;
   }
@@ -118,10 +122,10 @@ void ClientListener::stop() {
 
 void ClientListener::removeUnknownClient(ClientProxyUnknown *unknownClient) {
   if (unknownClient) {
-    m_events->removeHandler(m_events->forClientProxyUnknown().success(),
-                            unknownClient);
-    m_events->removeHandler(m_events->forClientProxyUnknown().failure(),
-                            unknownClient);
+    m_events->removeHandler(
+        m_events->forClientProxyUnknown().success(), unknownClient);
+    m_events->removeHandler(
+        m_events->forClientProxyUnknown().failure(), unknownClient);
     m_newClients.erase(unknownClient);
     delete unknownClient;
   }
@@ -152,8 +156,8 @@ void ClientListener::handleClientConnecting(const Event &, void *) {
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
   if (!m_useSecureNetwork) {
-    m_events->addEvent(Event(m_events->forClientListener().accepted(),
-                             socket->getEventTarget()));
+    m_events->addEvent(Event(
+        m_events->forClientListener().accepted(), socket->getEventTarget()));
   }
 }
 
@@ -222,8 +226,8 @@ void ClientListener::handleClientDisconnected(const Event &, void *vclient) {
        i != n; ++i) {
     if (*i == client) {
       m_waitingClients.erase(i);
-      m_events->removeHandler(m_events->forClientProxy().disconnected(),
-                              client);
+      m_events->removeHandler(
+          m_events->forClientProxy().disconnected(), client);
 
       // pull out the socket before deleting the client so
       // we know which socket we no longer need

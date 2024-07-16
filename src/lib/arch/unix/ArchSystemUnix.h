@@ -37,7 +37,7 @@ public:
 
 #ifndef __APPLE__
   enum class InhibitScreenServices { kScreenSaver, kSessionManager };
-  static bool DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state,
-                                    std::string &error);
+  static bool DBusInhibitScreenCall(
+      InhibitScreenServices serviceID, bool state, std::string &error);
 #endif
 };

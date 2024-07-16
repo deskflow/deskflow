@@ -121,8 +121,8 @@ public:
   typedef std::map<KeyButton, const KeyItem *> ButtonToKeyMap;
 
   //! Callback type for \c foreachKey
-  typedef void (*ForeachKeyCallback)(KeyID, SInt32 group, KeyItem &,
-                                     void *userData);
+  typedef void (*ForeachKeyCallback)(
+      KeyID, SInt32 group, KeyItem &, void *userData);
 
   //! @name manipulators
   //@{
@@ -147,11 +147,10 @@ public:
   effectively makes the \p sourceID an alias for \p targetID (i.e. we
   can generate \p targetID using \p sourceID).
   */
-  void addKeyAliasEntry(KeyID targetID, SInt32 group,
-                        KeyModifierMask targetRequired,
-                        KeyModifierMask targetSensitive, KeyID sourceID,
-                        KeyModifierMask sourceRequired,
-                        KeyModifierMask sourceSensitive);
+  void addKeyAliasEntry(
+      KeyID targetID, SInt32 group, KeyModifierMask targetRequired,
+      KeyModifierMask targetSensitive, KeyID sourceID,
+      KeyModifierMask sourceRequired, KeyModifierMask sourceSensitive);
 
   //! Add a key sequence entry
   /*!
@@ -163,8 +162,8 @@ public:
   least one key in \p keys is not in the map then nothing is added
   and this returns \c false, otherwise it returns \c true.
   */
-  bool addKeyCombinationEntry(KeyID id, SInt32 group, const KeyID *keys,
-                              UInt32 numKeys);
+  bool addKeyCombinationEntry(
+      KeyID id, SInt32 group, const KeyID *keys, UInt32 numKeys);
 
   //! Enable composition across groups
   /*!
@@ -219,11 +218,10 @@ public:
   event in \p keys.  It returns the \c KeyItem of the key being
   pressed/repeated, or NULL if the key cannot be mapped.
   */
-  virtual const KeyItem *mapKey(Keystrokes &keys, KeyID id, SInt32 group,
-                                ModifierToKeys &activeModifiers,
-                                KeyModifierMask &currentState,
-                                KeyModifierMask desiredMask, bool isAutoRepeat,
-                                const String &lang) const;
+  virtual const KeyItem *mapKey(
+      Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, KeyModifierMask desiredMask,
+      bool isAutoRepeat, const String &lang) const;
 
   void setLanguageData(std::vector<String> layouts);
 
@@ -248,9 +246,9 @@ public:
   it requires the modifiers to be in the state indicated by \p required
   for every modifier indicated by \p sensitive.
   */
-  const KeyItemList *findCompatibleKey(KeyID id, SInt32 group,
-                                       KeyModifierMask required,
-                                       KeyModifierMask sensitive) const;
+  const KeyItemList *findCompatibleKey(
+      KeyID id, SInt32 group, KeyModifierMask required,
+      KeyModifierMask sensitive) const;
 
   //! Test if modifier is half-duplex
   /*!
@@ -281,8 +279,8 @@ public:
   /*!
   Put all the keys in \p modifiers into \p keys.
   */
-  static void collectButtons(const ModifierToKeys &modifiers,
-                             ButtonToKeyMap &keys);
+  static void
+  collectButtons(const ModifierToKeys &modifiers, ButtonToKeyMap &keys);
 
   //! Set modifier key state
   /*!
@@ -332,15 +330,17 @@ public:
 #ifdef TEST_ENV
 private:
   FRIEND_TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem);
-  FRIEND_TEST(KeyMapTests,
-              findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem);
-  FRIEND_TEST(KeyMapTests,
-              findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem);
+  FRIEND_TEST(
+      KeyMapTests,
+      findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem);
+  FRIEND_TEST(
+      KeyMapTests,
+      findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem);
   FRIEND_TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem);
-  FRIEND_TEST(KeyMapTests,
-              findBestKey_noRequiredDown_matchOneRequiredChangeItem);
-  FRIEND_TEST(KeyMapTests,
-              findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
+  FRIEND_TEST(
+      KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem);
+  FRIEND_TEST(
+      KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
   FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch);
 #endif
 private:
@@ -369,80 +369,72 @@ private:
   // right button and synthesize the requested modifiers without regard
   // to what character they would synthesize.  we disallow multikey
   // entries since they don't make sense as hotkeys.
-  const KeyItem *mapCommandKey(Keystrokes &keys, KeyID id, SInt32 group,
-                               ModifierToKeys &activeModifiers,
-                               KeyModifierMask &currentState,
-                               KeyModifierMask desiredMask, bool isAutoRepeat,
-                               const String &lang) const;
+  const KeyItem *mapCommandKey(
+      Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, KeyModifierMask desiredMask,
+      bool isAutoRepeat, const String &lang) const;
 
   // maps a character key.  a character key is trying to synthesize a
   // particular KeyID and isn't entirely concerned with the modifiers
   // used to do it.
-  const KeyItem *mapCharacterKey(Keystrokes &keys, KeyID id, SInt32 group,
-                                 ModifierToKeys &activeModifiers,
-                                 KeyModifierMask &currentState,
-                                 KeyModifierMask desiredMask, bool isAutoRepeat,
-                                 const String &lang) const;
+  const KeyItem *mapCharacterKey(
+      Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, KeyModifierMask desiredMask,
+      bool isAutoRepeat, const String &lang) const;
 
   // maps a modifier key
-  const KeyItem *mapModifierKey(Keystrokes &keys, KeyID id, SInt32 group,
-                                ModifierToKeys &activeModifiers,
-                                KeyModifierMask &currentState,
-                                KeyModifierMask desiredMask, bool isAutoRepeat,
-                                const String &lang) const;
+  const KeyItem *mapModifierKey(
+      Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, KeyModifierMask desiredMask,
+      bool isAutoRepeat, const String &lang) const;
 
   // returns the index into \p entryList of the KeyItemList requiring
   // the fewest modifier changes between \p currentState and
   // \p desiredState.
-  SInt32 findBestKey(const KeyEntryList &entryList,
-                     KeyModifierMask desiredState) const;
+  SInt32 findBestKey(
+      const KeyEntryList &entryList, KeyModifierMask desiredState) const;
 
   // gets the \c KeyItem used to synthesize the modifier who's bit is
   // given by \p modifierBit in group \p group and does not synthesize
   // the key \p button.
-  const KeyItem *keyForModifier(KeyButton button, SInt32 group,
-                                SInt32 modifierBit) const;
+  const KeyItem *
+  keyForModifier(KeyButton button, SInt32 group, SInt32 modifierBit) const;
 
   // fills \p keystrokes with the keys to synthesize the key in
   // \p keyItem taking the modifiers into account.  returns \c true
   // iff successful and sets \p currentState to the
   // resulting modifier state.
-  bool keysForKeyItem(const KeyItem &keyItem, SInt32 &group,
-                      ModifierToKeys &activeModifiers,
-                      KeyModifierMask &currentState,
-                      KeyModifierMask desiredState,
-                      KeyModifierMask overrideModifiers, bool isAutoRepeat,
-                      Keystrokes &keystrokes, const String &lang) const;
+  bool keysForKeyItem(
+      const KeyItem &keyItem, SInt32 &group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, KeyModifierMask desiredState,
+      KeyModifierMask overrideModifiers, bool isAutoRepeat,
+      Keystrokes &keystrokes, const String &lang) const;
 
   // fills \p keystrokes with the keys to synthesize the modifiers
   // in \p desiredModifiers from the active modifiers listed in
   // \p activeModifiers not including the key in \p keyItem.
   // returns \c true iff successful.
-  bool keysToRestoreModifiers(const KeyItem &keyItem, SInt32 group,
-                              ModifierToKeys &activeModifiers,
-                              KeyModifierMask &currentState,
-                              const ModifierToKeys &desiredModifiers,
-                              Keystrokes &keystrokes) const;
+  bool keysToRestoreModifiers(
+      const KeyItem &keyItem, SInt32 group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, const ModifierToKeys &desiredModifiers,
+      Keystrokes &keystrokes) const;
 
   // fills \p keystrokes and \p undo with the keys to change the
   // current modifier state in \p currentState to match the state in
   // \p requiredState for each modifier indicated in \p sensitiveMask.
   // returns \c true iff successful and sets \p currentState to the
   // resulting modifier state.
-  bool keysForModifierState(KeyButton button, SInt32 group,
-                            ModifierToKeys &activeModifiers,
-                            KeyModifierMask &currentState,
-                            KeyModifierMask requiredState,
-                            KeyModifierMask sensitiveMask,
-                            KeyModifierMask notRequiredMask,
-                            Keystrokes &keystrokes) const;
+  bool keysForModifierState(
+      KeyButton button, SInt32 group, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, KeyModifierMask requiredState,
+      KeyModifierMask sensitiveMask, KeyModifierMask notRequiredMask,
+      Keystrokes &keystrokes) const;
 
   // Adds keystrokes to synthesize key \p keyItem in mode \p type to
   // \p keystrokes and to undo the synthesis to \p undo.
-  void addKeystrokes(EKeystroke type, const KeyItem &keyItem,
-                     ModifierToKeys &activeModifiers,
-                     KeyModifierMask &currentState,
-                     Keystrokes &keystrokes) const;
+  void addKeystrokes(
+      EKeystroke type, const KeyItem &keyItem, ModifierToKeys &activeModifiers,
+      KeyModifierMask &currentState, Keystrokes &keystrokes) const;
 
   // Returns the number of modifiers indicated in \p state.
   static SInt32 getNumModifiers(KeyModifierMask state);
@@ -453,13 +445,13 @@ private:
   // Ways to synthesize a KeyID over multiple keyboard groups
   typedef std::vector<KeyEntryList> KeyGroupTable;
 
-  void addGroupToKeystroke(Keystrokes &keys, SInt32 &group,
-                           const String &lang) const;
+  void addGroupToKeystroke(
+      Keystrokes &keys, SInt32 &group, const String &lang) const;
 
   SInt32 getLanguageGroupID(SInt32 group, const String &lang) const;
-  const KeyItemList *getKeyItemList(const KeyGroupTable &keyGroupTable,
-                                    SInt32 group,
-                                    KeyModifierMask desiredMask) const;
+  const KeyItemList *getKeyItemList(
+      const KeyGroupTable &keyGroupTable, SInt32 group,
+      KeyModifierMask desiredMask) const;
 
   // not implemented
   KeyMap(const KeyMap &);

@@ -24,7 +24,8 @@ IpcMessage::IpcMessage(UInt8 type) : m_type(type) {}
 IpcMessage::~IpcMessage() {}
 
 IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType)
-    : IpcMessage(kIpcHello), m_clientType(clientType) {}
+    : IpcMessage(kIpcHello),
+      m_clientType(clientType) {}
 
 IpcHelloMessage::~IpcHelloMessage() {}
 
@@ -37,11 +38,14 @@ IpcShutdownMessage::IpcShutdownMessage() : IpcMessage(kIpcShutdown) {}
 IpcShutdownMessage::~IpcShutdownMessage() {}
 
 IpcLogLineMessage::IpcLogLineMessage(const String &logLine)
-    : IpcMessage(kIpcLogLine), m_logLine(logLine) {}
+    : IpcMessage(kIpcLogLine),
+      m_logLine(logLine) {}
 
 IpcLogLineMessage::~IpcLogLineMessage() {}
 
 IpcCommandMessage::IpcCommandMessage(const String &command, bool elevate)
-    : IpcMessage(kIpcCommand), m_command(command), m_elevate(elevate) {}
+    : IpcMessage(kIpcCommand),
+      m_command(command),
+      m_elevate(elevate) {}
 
 IpcCommandMessage::~IpcCommandMessage() {}

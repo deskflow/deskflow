@@ -26,8 +26,8 @@ class IEventQueue;
 //! Implementation of ClientTaskBarReceiver for X Windows
 class CXWindowsClientTaskBarReceiver : public ClientTaskBarReceiver {
 public:
-  CXWindowsClientTaskBarReceiver(const BufferedLogOutputter *,
-                                 IEventQueue *events);
+  CXWindowsClientTaskBarReceiver(
+      const BufferedLogOutputter *, IEventQueue *events);
   CXWindowsClientTaskBarReceiver(const CXWindowsClientTaskBarReceiver &) =
       delete;
   CXWindowsClientTaskBarReceiver(CXWindowsClientTaskBarReceiver &&) = delete;

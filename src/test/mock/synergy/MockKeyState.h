@@ -33,8 +33,9 @@ public:
       : KeyState((IEventQueue *)&eventQueue, {"en"}, true) {}
 
   MockKeyState(const MockEventQueue &eventQueue, const synergy::KeyMap &keyMap)
-      : KeyState((IEventQueue *)&eventQueue, (synergy::KeyMap &)keyMap, {"en"},
-                 true) {}
+      : KeyState(
+            (IEventQueue *)&eventQueue, (synergy::KeyMap &)keyMap, {"en"},
+            true) {}
 
   MOCK_METHOD(SInt32, pollActiveGroup, (), (const, override));
   MOCK_METHOD(KeyModifierMask, pollActiveModifiers, (), (const, override));
@@ -49,5 +50,5 @@ typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 
 typedef UInt32 KeyID;
 
-typedef void (*ForeachKeyCallback)(KeyID, SInt32 group,
-                                   synergy::KeyMap::KeyItem &, void *userData);
+typedef void (*ForeachKeyCallback)(
+    KeyID, SInt32 group, synergy::KeyMap::KeyItem &, void *userData);

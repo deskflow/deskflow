@@ -75,9 +75,9 @@ public:
   static UINT getDaemonQuitMessage();
 
   // IArchDaemon overrides
-  virtual void installDaemon(const char *name, const char *description,
-                             const char *pathname, const char *commandLine,
-                             const char *dependencies);
+  virtual void installDaemon(
+      const char *name, const char *description, const char *pathname,
+      const char *commandLine, const char *dependencies);
   virtual void uninstallDaemon(const char *name);
   virtual void installDaemon();
   virtual void uninstallDaemon();

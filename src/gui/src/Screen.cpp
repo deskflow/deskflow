@@ -64,10 +64,11 @@ void Screen::loadSettings(QSettings &settings) {
   setSwitchCornerSize(settings.value("switchCornerSize").toInt());
 
   readSettings(settings, aliases(), "alias", QString(""));
-  readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod),
-               NumModifiers);
-  readSettings(settings, switchCorners(), "switchCorner", false,
-               NumSwitchCorners);
+  readSettings(
+      settings, modifiers(), "modifier", static_cast<int>(DefaultMod),
+      NumModifiers);
+  readSettings(
+      settings, switchCorners(), "switchCorner", false, NumSwitchCorners);
   readSettings(settings, fixes(), "fix", false, NumFixes);
 }
 

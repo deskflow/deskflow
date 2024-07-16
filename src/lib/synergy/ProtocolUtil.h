@@ -73,8 +73,8 @@ public:
   static bool readf(synergy::IStream *, const char *fmt, ...);
 
 private:
-  static void vwritef(synergy::IStream *, const char *fmt, UInt32 size,
-                      va_list);
+  static void
+  vwritef(synergy::IStream *, const char *fmt, UInt32 size, va_list);
   static void vreadf(synergy::IStream *, const char *fmt, va_list);
 
   static UInt32 getLength(const char *fmt, va_list);

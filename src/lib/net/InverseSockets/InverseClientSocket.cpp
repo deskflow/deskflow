@@ -37,11 +37,14 @@
 // InverseClientSocket
 //
 
-InverseClientSocket::InverseClientSocket(IEventQueue *events,
-                                         SocketMultiplexer *socketMultiplexer,
-                                         IArchNetwork::EAddressFamily family)
-    : IDataSocket(events), m_events(events), m_socket(family),
-      m_listener(family), m_flushed(&m_mutex, true),
+InverseClientSocket::InverseClientSocket(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
+    : IDataSocket(events),
+      m_events(events),
+      m_socket(family),
+      m_listener(family),
+      m_flushed(&m_mutex, true),
       m_socketMultiplexer(socketMultiplexer) {}
 
 InverseClientSocket::~InverseClientSocket() {
@@ -274,8 +277,9 @@ ISocketMultiplexerJob *InverseClientSocket::newJob(ArchSocket socket) {
 
 void InverseClientSocket::sendConnectionFailedEvent(const char *msg) {
   auto info = new ConnectionFailedInfo(msg);
-  m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(),
-                           getEventTarget(), info, Event::kDontFreeData));
+  m_events->addEvent(Event(
+      m_events->forIDataSocket().connectionFailed(), getEventTarget(), info,
+      Event::kDontFreeData));
 }
 
 void InverseClientSocket::sendEvent(Event::Type type) {
@@ -322,9 +326,8 @@ void InverseClientSocket::onDisconnected() {
   m_connected = false;
 }
 
-ISocketMultiplexerJob *
-InverseClientSocket::serviceConnecting(ISocketMultiplexerJob *job, bool read,
-                                       bool, bool) {
+ISocketMultiplexerJob *InverseClientSocket::serviceConnecting(
+    ISocketMultiplexerJob *job, bool read, bool, bool) {
   Lock lock(&m_mutex);
 
   if (read) {
@@ -336,9 +339,8 @@ InverseClientSocket::serviceConnecting(ISocketMultiplexerJob *job, bool read,
   return job;
 }
 
-ISocketMultiplexerJob *
-InverseClientSocket::serviceConnected(ISocketMultiplexerJob *job, bool read,
-                                      bool write, bool error) {
+ISocketMultiplexerJob *InverseClientSocket::serviceConnected(
+    ISocketMultiplexerJob *job, bool read, bool write, bool error) {
   Lock lock(&m_mutex);
 
   if (error) {

@@ -34,7 +34,8 @@
 
 SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::SettingsDialogBase(), m_appConfig(config) {
+      Ui::SettingsDialogBase(),
+      m_appConfig(config) {
   setupUi(this);
 
   // TODO: maybe just accept MainWindow type in ctor?
@@ -52,28 +53,34 @@ SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditScreenName, m_pLabelNameError, (&serveConfig.screens())));
 
-  connect(m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
-          SLOT(onChange()));
-  connect(m_pComboLogLevel, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(onChange()));
-  connect(m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
-          SLOT(onChange()));
+  connect(
+      m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
+      SLOT(onChange()));
+  connect(
+      m_pComboLogLevel, SIGNAL(currentIndexChanged(int)), this,
+      SLOT(onChange()));
+  connect(
+      m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
+      SLOT(onChange()));
   connect(m_pCheckBoxMinimizeToTray, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxAutoHide, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxPreventSleep, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pLineEditInterface, SIGNAL(textEdited(QString)), this,
-          SLOT(onChange()));
+  connect(
+      m_pLineEditInterface, SIGNAL(textEdited(QString)), this,
+      SLOT(onChange()));
   connect(m_pSpinBoxPort, SIGNAL(valueChanged(int)), this, SLOT(onChange()));
-  connect(m_pLineEditScreenName, SIGNAL(textEdited(QString)), this,
-          SLOT(onChange()));
-  connect(m_pComboElevate, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(onChange()));
+  connect(
+      m_pLineEditScreenName, SIGNAL(textEdited(QString)), this,
+      SLOT(onChange()));
+  connect(
+      m_pComboElevate, SIGNAL(currentIndexChanged(int)), this,
+      SLOT(onChange()));
   connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxScrollDirection, SIGNAL(clicked()), this,
-          SLOT(onChange()));
+  connect(
+      m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(m_pCheckBoxClientHostMode, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxServerClientMode, SIGNAL(clicked()), this,
-          SLOT(onChange()));
+  connect(
+      m_pCheckBoxServerClientMode, SIGNAL(clicked()), this, SLOT(onChange()));
 
   adjustSize();
 }
@@ -266,8 +273,8 @@ void SettingsDialog::updateRegenButton() {
   // NOR the above bools, if any have changed regen should be disabled as it
   // will be done on save
   auto nor = !(keyChanged || pathChanged);
-  m_pPushButtonRegenCert->setEnabled(nor &&
-                                     m_pCheckBoxEnableCrypto->isChecked());
+  m_pPushButtonRegenCert->setEnabled(
+      nor && m_pCheckBoxEnableCrypto->isChecked());
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {

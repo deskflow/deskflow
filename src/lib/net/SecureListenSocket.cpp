@@ -32,16 +32,16 @@ static const char s_certificateFilename[] = {"Synergy.pem"};
 // SecureListenSocket
 //
 
-SecureListenSocket::SecureListenSocket(IEventQueue *events,
-                                       SocketMultiplexer *socketMultiplexer,
-                                       IArchNetwork::EAddressFamily family)
+SecureListenSocket::SecureListenSocket(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
     : TCPListenSocket(events, socketMultiplexer, family) {}
 
 IDataSocket *SecureListenSocket::accept() {
   SecureSocket *socket = NULL;
   try {
-    socket = new SecureSocket(m_events, m_socketMultiplexer,
-                              ARCH->acceptSocket(m_socket, NULL));
+    socket = new SecureSocket(
+        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
     socket->initSsl(true);
 
     if (socket != NULL) {

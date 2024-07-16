@@ -34,8 +34,8 @@ class ActionDialog : public QDialog, public Ui::ActionDialogBase {
   Q_OBJECT
 
 public:
-  ActionDialog(QWidget *parent, ServerConfig &config, Hotkey &hotkey,
-               Action &action);
+  ActionDialog(
+      QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action);
 
 protected slots:
   void accept();

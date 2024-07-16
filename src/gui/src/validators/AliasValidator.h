@@ -24,8 +24,8 @@ namespace validators {
 
 class AliasValidator : public LineEditValidator {
 public:
-  explicit AliasValidator(QLineEdit *parent = nullptr,
-                          QLabel *errors = nullptr);
+  explicit AliasValidator(
+      QLineEdit *parent = nullptr, QLabel *errors = nullptr);
 };
 
 } // namespace validators

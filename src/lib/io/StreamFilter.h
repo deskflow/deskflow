@@ -33,8 +33,8 @@ public:
   this object takes ownership of the stream and will delete it in the
   d'tor.
   */
-  StreamFilter(IEventQueue *events, synergy::IStream *stream,
-               bool adoptStream = true);
+  StreamFilter(
+      IEventQueue *events, synergy::IStream *stream, bool adoptStream = true);
   StreamFilter(StreamFilter const &) = delete;
   StreamFilter(StreamFilter &&) = delete;
   virtual ~StreamFilter();

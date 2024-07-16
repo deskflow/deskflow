@@ -28,14 +28,18 @@
 
 IpcClient::IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer)
     : m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
-      m_socket(events, socketMultiplexer), m_server(nullptr), m_events(events) {
+      m_socket(events, socketMultiplexer),
+      m_server(nullptr),
+      m_events(events) {
   init();
 }
 
-IpcClient::IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-                     int port)
+IpcClient::IpcClient(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port)
     : m_serverAddress(NetworkAddress(IPC_HOST, port)),
-      m_socket(events, socketMultiplexer), m_server(nullptr), m_events(events) {
+      m_socket(events, socketMultiplexer),
+      m_server(nullptr),
+      m_events(events) {
   init();
 }
 
@@ -57,10 +61,10 @@ void IpcClient::connect() {
 }
 
 void IpcClient::disconnect() {
-  m_events->removeHandler(m_events->forIDataSocket().connected(),
-                          m_socket.getEventTarget());
-  m_events->removeHandler(m_events->forIpcServerProxy().messageReceived(),
-                          m_server);
+  m_events->removeHandler(
+      m_events->forIDataSocket().connected(), m_socket.getEventTarget());
+  m_events->removeHandler(
+      m_events->forIpcServerProxy().messageReceived(), m_server);
 
   m_server->disconnect();
   delete m_server;
@@ -73,8 +77,9 @@ void IpcClient::send(const IpcMessage &message) {
 }
 
 void IpcClient::handleConnected(const Event &, void *) {
-  m_events->addEvent(Event(m_events->forIpcClient().connected(), this, m_server,
-                           Event::kDontFreeData));
+  m_events->addEvent(Event(
+      m_events->forIpcClient().connected(), this, m_server,
+      Event::kDontFreeData));
 
   IpcHelloMessage message(kIpcClientNode);
   send(message);

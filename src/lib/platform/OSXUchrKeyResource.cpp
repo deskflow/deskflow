@@ -23,9 +23,13 @@
 // OSXUchrKeyResource
 //
 
-OSXUchrKeyResource::OSXUchrKeyResource(const void *resource,
-                                       UInt32 keyboardType)
-    : m_m(NULL), m_cti(NULL), m_sdi(NULL), m_sri(NULL), m_st(NULL) {
+OSXUchrKeyResource::OSXUchrKeyResource(
+    const void *resource, UInt32 keyboardType)
+    : m_m(NULL),
+      m_cti(NULL),
+      m_sdi(NULL),
+      m_sri(NULL),
+      m_st(NULL) {
   m_resource = static_cast<const UCKeyboardLayout *>(resource);
   if (m_resource == NULL) {
     return;
@@ -182,8 +186,8 @@ bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const {
   return true;
 }
 
-bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, UInt16 index,
-                                      UInt16 &state) const {
+bool OSXUchrKeyResource::getKeyRecord(
+    KeySequence &keys, UInt16 index, UInt16 &state) const {
   const UInt8 *const base = reinterpret_cast<const UInt8 *>(m_resource);
   const UCKeyStateRecord *sr = reinterpret_cast<const UCKeyStateRecord *>(
       base + m_sri->keyStateRecordOffsets[index]);

@@ -20,9 +20,11 @@
 #include <QProcess>
 #include <stdexcept>
 
-CommandProcess::CommandProcess(QString cmd, QStringList arguments,
-                               QString input)
-    : m_Command(cmd), m_Arguments(arguments), m_Input(input) {}
+CommandProcess::CommandProcess(
+    QString cmd, QStringList arguments, QString input)
+    : m_Command(cmd),
+      m_Arguments(arguments),
+      m_Input(input) {}
 
 QString CommandProcess::run() {
   QProcess process;

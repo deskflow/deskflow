@@ -24,8 +24,8 @@
 // XWindowsClipboardUCS2Converter
 //
 
-XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(Display *display,
-                                                               const char *name)
+XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(
+    Display *display, const char *name)
     : m_atom(XInternAtom(display, name, False)) {
   // do nothing
 }

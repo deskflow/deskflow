@@ -36,11 +36,11 @@ CFStringRef OSXClipboardHTMLConverter::getOSXFormat() const {
   return CFSTR("public.html");
 }
 
-String OSXClipboardHTMLConverter::convertString(const String &data,
-                                                CFStringEncoding fromEncoding,
-                                                CFStringEncoding toEncoding) {
-  CFStringRef stringRef = CFStringCreateWithCString(kCFAllocatorDefault,
-                                                    data.c_str(), fromEncoding);
+String OSXClipboardHTMLConverter::convertString(
+    const String &data, CFStringEncoding fromEncoding,
+    CFStringEncoding toEncoding) {
+  CFStringRef stringRef = CFStringCreateWithCString(
+      kCFAllocatorDefault, data.c_str(), fromEncoding);
 
   if (stringRef == NULL) {
     return String();
@@ -49,8 +49,8 @@ String OSXClipboardHTMLConverter::convertString(const String &data,
   CFIndex buffSize;
   CFRange entireString = CFRangeMake(0, CFStringGetLength(stringRef));
 
-  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, NULL, 0,
-                   &buffSize);
+  CFStringGetBytes(
+      stringRef, entireString, toEncoding, 0, false, NULL, 0, &buffSize);
 
   char *buffer = new char[buffSize];
 
@@ -59,8 +59,9 @@ String OSXClipboardHTMLConverter::convertString(const String &data,
     return String();
   }
 
-  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false,
-                   (UInt8 *)buffer, buffSize, NULL);
+  CFStringGetBytes(
+      stringRef, entireString, toEncoding, 0, false, (UInt8 *)buffer, buffSize,
+      NULL);
 
   String result(buffer, buffSize);
 
@@ -78,7 +79,7 @@ String OSXClipboardHTMLConverter::doToIClipboard(const String &data) const {
   if (Unicode::isUTF8(data)) {
     return data;
   } else {
-    return convertString(data, CFStringGetSystemEncoding(),
-                         kCFStringEncodingUTF8);
+    return convertString(
+        data, CFStringGetSystemEncoding(), kCFStringEncodingUTF8);
   }
 }

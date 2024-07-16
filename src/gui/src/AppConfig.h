@@ -303,14 +303,14 @@ private:
   /// @brief Loads a setting
   /// @param [in] name The setting to be loaded
   /// @param [in] defaultValue The default value of the setting
-  QVariant loadSetting(AppConfig::Setting name,
-                       const QVariant &defaultValue = QVariant());
+  QVariant loadSetting(
+      AppConfig::Setting name, const QVariant &defaultValue = QVariant());
 
   /// @brief Loads a common setting
   /// @param [in] name The setting to be loaded
   /// @param [in] defaultValue The default value of the setting
-  QVariant loadCommonSetting(AppConfig::Setting name,
-                             const QVariant &defaultValue = QVariant()) const;
+  QVariant loadCommonSetting(
+      AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
 
   /// @brief As the settings will be accessible by multiple objects this lock
   /// will ensure that

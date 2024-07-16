@@ -31,7 +31,8 @@ class IEventQueue;
 class MockIpcServer : public IpcServer {
 public:
   MockIpcServer()
-      : m_sendCond(ARCH->newCondVar()), m_sendMutex(ARCH->newMutex()) {}
+      : m_sendCond(ARCH->newCondVar()),
+        m_sendMutex(ARCH->newMutex()) {}
 
   ~MockIpcServer() {
     if (m_sendCond != NULL) {

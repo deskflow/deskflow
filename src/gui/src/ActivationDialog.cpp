@@ -13,9 +13,11 @@
 #include <QThread>
 #include <iostream>
 
-ActivationDialog::ActivationDialog(QWidget *parent, AppConfig &appConfig,
-                                   LicenseManager &licenseManager)
-    : QDialog(parent), ui(new Ui::ActivationDialog), m_appConfig(&appConfig),
+ActivationDialog::ActivationDialog(
+    QWidget *parent, AppConfig &appConfig, LicenseManager &licenseManager)
+    : QDialog(parent),
+      ui(new Ui::ActivationDialog),
+      m_appConfig(&appConfig),
       m_LicenseManager(&licenseManager) {
   ui->setupUi(this);
   refreshSerialKey();
@@ -92,9 +94,10 @@ void ActivationDialog::accept() {
     if (m_LicenseManager->serialKey().isTrial()) {
       message.information(this, "Thanks!", thanksMessage);
     } else {
-      message.information(this, "Activated!",
-                          tr("Thanks for activating %1!")
-                              .arg(m_LicenseManager->getEditionName(edition)));
+      message.information(
+          this, "Activated!",
+          tr("Thanks for activating %1!")
+              .arg(m_LicenseManager->getEditionName(edition)));
     }
   }
 

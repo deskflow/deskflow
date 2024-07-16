@@ -39,8 +39,8 @@ void splitLine(std::vector<String> &parts, const String &line, char delimiter) {
 
 } // namespace
 
-bool X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node *root,
-                                             std::vector<Lang> &langList) {
+bool X11LayoutsParser::readXMLConfigItemElem(
+    const pugi::xml_node *root, std::vector<Lang> &langList) {
   auto configItemElem = root->child("configItem");
   if (!configItemElem) {
     LOG((CLOG_WARN "failed to read \"configItem\" in xml file"));
@@ -75,7 +75,8 @@ X11LayoutsParser::getAllLanguageData(const String &pathToEvdevFile) {
 
   auto xkbConfigElem = doc.child("xkbConfigRegistry");
   if (!xkbConfigElem) {
-    LOG((CLOG_WARN "failed to read xkbConfigRegistry in %s",
+    LOG(
+        (CLOG_WARN "failed to read xkbConfigRegistry in %s",
          pathToEvdevFile.c_str()));
     return allCodes;
   }
@@ -102,8 +103,8 @@ X11LayoutsParser::getAllLanguageData(const String &pathToEvdevFile) {
   return allCodes;
 }
 
-void X11LayoutsParser::appendVectorUniq(const std::vector<String> &source,
-                                        std::vector<String> &dst) {
+void X11LayoutsParser::appendVectorUniq(
+    const std::vector<String> &source, std::vector<String> &dst) {
   for (const auto &elem : source) {
     if (std::find_if(dst.begin(), dst.end(), [elem](const String &s) {
           return s == elem;
@@ -147,7 +148,8 @@ void X11LayoutsParser::convertLayoutToISO639_2(
           langIter->variants.begin(), langIter->variants.end(),
           [&variantName](const Lang &l) { return l.name == variantName; });
       if (langVariantIter == langIter->variants.end()) {
-        LOG((CLOG_WARN "variant \"%s\" of language \"%s\" is unknown",
+        LOG(
+            (CLOG_WARN "variant \"%s\" of language \"%s\" is unknown",
              layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
         continue;
       }
@@ -176,19 +178,21 @@ X11LayoutsParser::getX11LanguageList(const String &pathToEvdevFile) {
 
   std::vector<String> iso639_2Codes;
   iso639_2Codes.reserve(layoutNames.size());
-  convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames,
-                          layoutVariantNames, iso639_2Codes);
+  convertLayoutToISO639_2(
+      pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
   return convertISO639_2ToISO639_1(iso639_2Codes);
 }
 
-String X11LayoutsParser::convertLayotToISO(const String &pathToEvdevFile,
-                                           const String &layoutLangCode,
-                                           bool needToReloadFiles) {
+String X11LayoutsParser::convertLayotToISO(
+    const String &pathToEvdevFile, const String &layoutLangCode,
+    bool needToReloadFiles) {
   std::vector<String> iso639_2Codes;
-  convertLayoutToISO639_2(pathToEvdevFile, needToReloadFiles, {layoutLangCode},
-                          {""}, iso639_2Codes);
+  convertLayoutToISO639_2(
+      pathToEvdevFile, needToReloadFiles, {layoutLangCode}, {""},
+      iso639_2Codes);
   if (iso639_2Codes.empty()) {
-    LOG((CLOG_WARN "failed to convert layout lang code: \"%s\"",
+    LOG(
+        (CLOG_WARN "failed to convert layout lang code: \"%s\"",
          layoutLangCode.c_str()));
     return "";
   }
@@ -206,13 +210,14 @@ std::vector<String> X11LayoutsParser::convertISO639_2ToISO639_1(
     const std::vector<String> &iso639_2Codes) {
   std::vector<String> result;
   for (const auto &isoCode : iso639_2Codes) {
-    const auto &tableIter =
-        std::find_if(ISO_Table.begin(), ISO_Table.end(),
-                     [&isoCode](const std::pair<String, String> &c) {
-                       return c.first == isoCode;
-                     });
+    const auto &tableIter = std::find_if(
+        ISO_Table.begin(), ISO_Table.end(),
+        [&isoCode](const std::pair<String, String> &c) {
+          return c.first == isoCode;
+        });
     if (tableIter == ISO_Table.end()) {
-      LOG((CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table",
+      LOG(
+          (CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table",
            isoCode.c_str()));
       continue;
     }

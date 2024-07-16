@@ -42,18 +42,18 @@ public:
   if \c format is not NULL.  If \c deleteProperty is true then the
   property is deleted after being read.
   */
-  static bool getWindowProperty(Display *, Window window, Atom property,
-                                String *data, Atom *type, SInt32 *format,
-                                bool deleteProperty);
+  static bool getWindowProperty(
+      Display *, Window window, Atom property, String *data, Atom *type,
+      SInt32 *format, bool deleteProperty);
 
   //! Set property
   /*!
   Sets property \c property on \c window to \c size bytes of data from
   \c data.
   */
-  static bool setWindowProperty(Display *, Window window, Atom property,
-                                const void *data, UInt32 size, Atom type,
-                                SInt32 format);
+  static bool setWindowProperty(
+      Display *, Window window, Atom property, const void *data, UInt32 size,
+      Atom type, SInt32 format);
 
   //! Get X server time
   /*!

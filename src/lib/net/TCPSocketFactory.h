@@ -31,12 +31,12 @@ public:
   virtual ~TCPSocketFactory();
 
   // ISocketFactory overrides
-  virtual IDataSocket *
-  create(bool secure,
-         IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
-  virtual IListenSocket *
-  createListen(bool secure,
-               IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+  virtual IDataSocket *create(
+      bool secure,
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+  virtual IListenSocket *createListen(
+      bool secure,
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
 
 private:
   IEventQueue *m_events;

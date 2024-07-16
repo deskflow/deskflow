@@ -32,10 +32,12 @@ A secure socket using SSL.
 */
 class SecureSocket : public TCPSocket {
 public:
-  SecureSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-               IArchNetwork::EAddressFamily family);
-  SecureSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-               ArchSocket socket);
+  SecureSocket(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+      IArchNetwork::EAddressFamily family);
+  SecureSocket(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+      ArchSocket socket);
   SecureSocket(SecureSocket const &) = delete;
   SecureSocket(SecureSocket &&) = delete;
   ~SecureSocket();
@@ -72,15 +74,15 @@ private:
   bool showCertificate() const;
   void checkResult(int n, int &retry);
   void disconnect();
-  void formatFingerprint(String &fingerprint, bool hex = true,
-                         bool separator = true);
+  void formatFingerprint(
+      String &fingerprint, bool hex = true, bool separator = true);
   bool verifyCertFingerprint();
 
-  ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool,
-                                        bool);
+  ISocketMultiplexerJob *
+  serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
 
-  ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *, bool, bool,
-                                       bool);
+  ISocketMultiplexerJob *
+  serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
 
   void handleTCPConnected(const Event &event, void *);
 

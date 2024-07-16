@@ -155,8 +155,8 @@ std::string ArchFileWindows::getProfileDirectory() {
   return dir;
 }
 
-std::string ArchFileWindows::concatPath(const std::string &prefix,
-                                        const std::string &suffix) {
+std::string ArchFileWindows::concatPath(
+    const std::string &prefix, const std::string &suffix) {
   std::string path;
   path.reserve(prefix.size() + 1 + suffix.size());
   path += prefix;

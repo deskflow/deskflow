@@ -34,8 +34,9 @@ TEST(IArchStringTests, convStringWCToMB_will_work_do_simple_conversions) {
   EXPECT_EQ(errors, false);
 }
 
-TEST(IArchStringTests,
-     convStringWCToMB_will_work_do_simple_conversions_noresult) {
+TEST(
+    IArchStringTests,
+    convStringWCToMB_will_work_do_simple_conversions_noresult) {
   SampleIArchString as;
   bool errors;
   auto converted = as.convStringWCToMB(nullptr, L"Hello", 6, &errors);

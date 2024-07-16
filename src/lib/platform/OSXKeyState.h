@@ -36,10 +36,11 @@ class OSXKeyState : public KeyState {
 public:
   typedef std::vector<KeyID> KeyIDs;
 
-  OSXKeyState(IEventQueue *events, std::vector<String> layouts,
-              bool isLangSyncEnabled);
-  OSXKeyState(IEventQueue *events, synergy::KeyMap &keyMap,
-              std::vector<String> layouts, bool isLangSyncEnabled);
+  OSXKeyState(
+      IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
+  OSXKeyState(
+      IEventQueue *events, synergy::KeyMap &keyMap, std::vector<String> layouts,
+      bool isLangSyncEnabled);
   virtual ~OSXKeyState();
 
   //! @name modifiers
@@ -50,8 +51,8 @@ public:
   Determines which modifier keys have changed and updates the modifier
   state and sends key events as appropriate.
   */
-  void handleModifierKeys(void *target, KeyModifierMask oldMask,
-                          KeyModifierMask newMask);
+  void handleModifierKeys(
+      void *target, KeyModifierMask oldMask, KeyModifierMask newMask);
 
   //@}
   //! @name accessors
@@ -78,17 +79,17 @@ public:
   that was pressed or released, or 0 if the button doesn't map to a known
   KeyID.
   */
-  KeyButton mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut,
-                            CGEventRef event) const;
+  KeyButton mapKeyFromEvent(
+      KeyIDs &ids, KeyModifierMask *maskOut, CGEventRef event) const;
 
   //! Map key and mask to native values
   /*!
   Calculates mac virtual key and mask for a key \p key and modifiers
   \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
   */
-  bool mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
-                             UInt32 &macVirtualKey,
-                             UInt32 &macModifierMask) const;
+  bool mapSynergyHotKeyToMac(
+      KeyID key, KeyModifierMask mask, UInt32 &macVirtualKey,
+      UInt32 &macModifierMask) const;
 
   //@}
 
@@ -113,8 +114,8 @@ private:
   void getKeyMapForSpecialKeys(synergy::KeyMap &keyMap, SInt32 group) const;
 
   // Convert keyboard resource to a key map
-  bool getKeyMap(synergy::KeyMap &keyMap, SInt32 group,
-                 const IOSXKeyResource &r) const;
+  bool getKeyMap(
+      synergy::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const;
 
   // Get the available keyboard groups
   bool getGroups(AutoCFArray &) const;
@@ -123,8 +124,9 @@ private:
   void setGroup(SInt32 group);
 
   // Send an event for the given modifier key
-  void handleModifierKey(void *target, UInt32 virtualKey, KeyID id, bool down,
-                         KeyModifierMask newMask);
+  void handleModifierKey(
+      void *target, UInt32 virtualKey, KeyID id, bool down,
+      KeyModifierMask newMask);
 
   // Checks if any in \p ids is a glyph key and if \p isCommand is false.
   // If so it adds the AltGr modifier to \p mask.  This allows OS X
@@ -132,8 +134,8 @@ private:
   // option is acting as AltGr (i.e. it generates a glyph and there are
   // no command modifiers active) then we don't send the super modifier
   // to clients because they'd try to match it as a command modifier.
-  void adjustAltGrModifier(const KeyIDs &ids, KeyModifierMask *mask,
-                           bool isCommand) const;
+  void adjustAltGrModifier(
+      const KeyIDs &ids, KeyModifierMask *mask, bool isCommand) const;
 
   // Maps an OS X virtual key id to a KeyButton.  This simply remaps
   // the ids so we don't use KeyButton 0.

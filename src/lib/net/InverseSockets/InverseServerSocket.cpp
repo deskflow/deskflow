@@ -35,10 +35,11 @@
 // InverseServerSocket
 //
 
-InverseServerSocket::InverseServerSocket(IEventQueue *events,
-                                         SocketMultiplexer *socketMultiplexer,
-                                         IArchNetwork::EAddressFamily family)
-    : m_socket(family), m_events(events),
+InverseServerSocket::InverseServerSocket(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
+    : m_socket(family),
+      m_events(events),
       m_socketMultiplexer(socketMultiplexer) {}
 
 InverseServerSocket::~InverseServerSocket() {
@@ -93,9 +94,8 @@ void InverseServerSocket::setListeningJob(bool read) {
                 m_socket.getRawSocket(), true, read));
 }
 
-ISocketMultiplexerJob *
-InverseServerSocket::serviceListening(ISocketMultiplexerJob *job, bool,
-                                      bool write, bool error) {
+ISocketMultiplexerJob *InverseServerSocket::serviceListening(
+    ISocketMultiplexerJob *job, bool, bool write, bool error) {
   if (error) {
     m_socket.connectSocket(m_address);
     return job;

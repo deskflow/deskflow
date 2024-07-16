@@ -90,10 +90,10 @@ private:
   void onOutputShutdown();
   void onDisconnected();
 
-  ISocketMultiplexerJob *serviceConnecting(ISocketMultiplexerJob *, bool, bool,
-                                           bool);
-  ISocketMultiplexerJob *serviceConnected(ISocketMultiplexerJob *, bool, bool,
-                                          bool);
+  ISocketMultiplexerJob *
+  serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *
+  serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   bool m_readable = false;

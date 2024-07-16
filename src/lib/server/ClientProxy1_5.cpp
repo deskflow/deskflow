@@ -31,21 +31,24 @@
 // ClientProxy1_5
 //
 
-ClientProxy1_5::ClientProxy1_5(const String &name, synergy::IStream *stream,
-                               Server *server, IEventQueue *events)
-    : ClientProxy1_4(name, stream, server, events), m_events(events) {
+ClientProxy1_5::ClientProxy1_5(
+    const String &name, synergy::IStream *stream, Server *server,
+    IEventQueue *events)
+    : ClientProxy1_4(name, stream, server, events),
+      m_events(events) {
 
-  m_events->adoptHandler(m_events->forFile().keepAlive(), this,
-                         new TMethodEventJob<ClientProxy1_3>(
-                             this, &ClientProxy1_3::handleKeepAlive, NULL));
+  m_events->adoptHandler(
+      m_events->forFile().keepAlive(), this,
+      new TMethodEventJob<ClientProxy1_3>(
+          this, &ClientProxy1_3::handleKeepAlive, NULL));
 }
 
 ClientProxy1_5::~ClientProxy1_5() {
   m_events->removeHandler(m_events->forFile().keepAlive(), this);
 }
 
-void ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char *info,
-                                  size_t size) {
+void ClientProxy1_5::sendDragInfo(
+    UInt32 fileCount, const char *info, size_t size) {
   String data(info, size);
 
   ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
@@ -69,8 +72,9 @@ bool ClientProxy1_5::parseMessage(const UInt8 *code) {
 
 void ClientProxy1_5::fileChunkReceived() {
   Server *server = getServer();
-  int result = FileChunk::assemble(getStream(), server->getReceivedFileData(),
-                                   server->getExpectedFileSize());
+  int result = FileChunk::assemble(
+      getStream(), server->getReceivedFileData(),
+      server->getExpectedFileSize());
 
   if (result == kFinish) {
     m_events->addEvent(

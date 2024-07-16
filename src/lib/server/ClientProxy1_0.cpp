@@ -31,30 +31,33 @@
 // ClientProxy1_0
 //
 
-ClientProxy1_0::ClientProxy1_0(const String &name, synergy::IStream *stream,
-                               IEventQueue *events)
-    : ClientProxy(name, stream), m_heartbeatTimer(NULL),
-      m_parser(&ClientProxy1_0::parseHandshakeMessage), m_events(events) {
+ClientProxy1_0::ClientProxy1_0(
+    const String &name, synergy::IStream *stream, IEventQueue *events)
+    : ClientProxy(name, stream),
+      m_heartbeatTimer(NULL),
+      m_parser(&ClientProxy1_0::parseHandshakeMessage),
+      m_events(events) {
   // install event handlers
-  m_events->adoptHandler(m_events->forIStream().inputReady(),
-                         stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxy1_0>(
-                             this, &ClientProxy1_0::handleData, NULL));
-  m_events->adoptHandler(m_events->forIStream().outputError(),
-                         stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxy1_0>(
-                             this, &ClientProxy1_0::handleWriteError, NULL));
-  m_events->adoptHandler(m_events->forIStream().inputShutdown(),
-                         stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxy1_0>(
-                             this, &ClientProxy1_0::handleDisconnect, NULL));
-  m_events->adoptHandler(m_events->forIStream().outputShutdown(),
-                         stream->getEventTarget(),
-                         new TMethodEventJob<ClientProxy1_0>(
-                             this, &ClientProxy1_0::handleWriteError, NULL));
-  m_events->adoptHandler(Event::kTimer, this,
-                         new TMethodEventJob<ClientProxy1_0>(
-                             this, &ClientProxy1_0::handleFlatline, NULL));
+  m_events->adoptHandler(
+      m_events->forIStream().inputReady(), stream->getEventTarget(),
+      new TMethodEventJob<ClientProxy1_0>(
+          this, &ClientProxy1_0::handleData, NULL));
+  m_events->adoptHandler(
+      m_events->forIStream().outputError(), stream->getEventTarget(),
+      new TMethodEventJob<ClientProxy1_0>(
+          this, &ClientProxy1_0::handleWriteError, NULL));
+  m_events->adoptHandler(
+      m_events->forIStream().inputShutdown(), stream->getEventTarget(),
+      new TMethodEventJob<ClientProxy1_0>(
+          this, &ClientProxy1_0::handleDisconnect, NULL));
+  m_events->adoptHandler(
+      m_events->forIStream().outputShutdown(), stream->getEventTarget(),
+      new TMethodEventJob<ClientProxy1_0>(
+          this, &ClientProxy1_0::handleWriteError, NULL));
+  m_events->adoptHandler(
+      Event::kTimer, this,
+      new TMethodEventJob<ClientProxy1_0>(
+          this, &ClientProxy1_0::handleFlatline, NULL));
 
   setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
@@ -73,14 +76,14 @@ void ClientProxy1_0::disconnect() {
 
 void ClientProxy1_0::removeHandlers() {
   // uninstall event handlers
-  m_events->removeHandler(m_events->forIStream().inputReady(),
-                          getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().outputError(),
-                          getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().inputShutdown(),
-                          getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().outputShutdown(),
-                          getStream()->getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().inputReady(), getStream()->getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().outputError(), getStream()->getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().inputShutdown(), getStream()->getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().outputShutdown(), getStream()->getEventTarget());
   m_events->removeHandler(Event::kTimer, this);
 
   // remove timer
@@ -121,17 +124,20 @@ void ClientProxy1_0::handleData(const Event &, void *) {
   while (n != 0) {
     // verify we got an entire code
     if (n != 4) {
-      LOG((CLOG_ERR "incomplete message from \"%s\": %d bytes",
+      LOG(
+          (CLOG_ERR "incomplete message from \"%s\": %d bytes",
            getName().c_str(), n));
       disconnect();
       return;
     }
 
     // parse message
-    LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0],
+    LOG(
+        (CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0],
          code[1], code[2], code[3]));
     if (!(this->*m_parser)(code)) {
-      LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c",
+      LOG(
+          (CLOG_ERR "invalid message from client \"%s\": %c%c%c%c",
            getName().c_str(), code[0], code[1], code[2], code[3]));
       // not possible to determine message boundaries
       // read the whole stream to discard unkonwn data
@@ -206,8 +212,8 @@ bool ClientProxy1_0::getClipboard(ClipboardID id, IClipboard *clipboard) const {
   return true;
 }
 
-void ClientProxy1_0::getShape(SInt32 &x, SInt32 &y, SInt32 &w,
-                              SInt32 &h) const {
+void ClientProxy1_0::getShape(
+    SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const {
   x = m_info.m_x;
   y = m_info.m_y;
   w = m_info.m_w;
@@ -220,9 +226,10 @@ void ClientProxy1_0::getCursorPos(SInt32 &x, SInt32 &y) const {
   y = m_info.m_my;
 }
 
-void ClientProxy1_0::enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum,
-                           KeyModifierMask mask, bool) {
-  LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(),
+void ClientProxy1_0::enter(
+    SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool) {
+  LOG(
+      (CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(),
        xAbs, yAbs, seqNum, mask));
   ProtocolUtil::writef(getStream(), kMsgCEnter, xAbs, yAbs, seqNum, mask);
 }
@@ -251,28 +258,32 @@ void ClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty) {
   m_clipboard[id].m_dirty = dirty;
 }
 
-void ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton,
-                             const String &) {
-  LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x",
+void ClientProxy1_0::keyDown(
+    KeyID key, KeyModifierMask mask, KeyButton, const String &) {
+  LOG(
+      (CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x",
        getName().c_str(), key, mask));
   ProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
 }
 
-void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count,
-                               KeyButton, const String &) {
-  LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d",
+void ClientProxy1_0::keyRepeat(
+    KeyID key, KeyModifierMask mask, SInt32 count, KeyButton, const String &) {
+  LOG(
+      (CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d",
        getName().c_str(), key, mask, count));
   ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
 }
 
 void ClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton) {
-  LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x",
+  LOG(
+      (CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x",
        getName().c_str(), key, mask));
   ProtocolUtil::writef(getStream(), kMsgDKeyUp1_0, key, mask);
 }
 
 void ClientProxy1_0::mouseDown(ButtonID button) {
-  LOG((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(),
+  LOG(
+      (CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(),
        button));
   ProtocolUtil::writef(getStream(), kMsgDMouseDown, button);
 }
@@ -283,7 +294,8 @@ void ClientProxy1_0::mouseUp(ButtonID button) {
 }
 
 void ClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs) {
-  LOG((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs,
+  LOG(
+      (CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs,
        yAbs));
   ProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
 }
@@ -294,13 +306,13 @@ void ClientProxy1_0::mouseRelativeMove(SInt32, SInt32) {
 
 void ClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta) {
   // clients prior to 1.3 only support the y axis
-  LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(),
-       yDelta));
+  LOG((
+      CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta));
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel1_0, yDelta);
 }
 
-void ClientProxy1_0::sendDragInfo(UInt32 fileCount, const char *info,
-                                  size_t size) {
+void ClientProxy1_0::sendDragInfo(
+    UInt32 fileCount, const char *info, size_t size) {
   // ignore -- not supported in protocol 1.0
   LOG((CLOG_DEBUG "draggingInfoSending not supported"));
 }
@@ -322,7 +334,8 @@ void ClientProxy1_0::secureInputNotification(const String &app) const {
 }
 
 void ClientProxy1_0::screensaver(bool on) {
-  LOG((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(),
+  LOG(
+      (CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(),
        on ? 1 : 0));
   ProtocolUtil::writef(getStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
@@ -338,7 +351,8 @@ void ClientProxy1_0::resetOptions() {
 }
 
 void ClientProxy1_0::setOptions(const OptionsList &options) {
-  LOG((CLOG_DEBUG1 "send set options to \"%s\" size=%d", getName().c_str(),
+  LOG(
+      (CLOG_DEBUG1 "send set options to \"%s\" size=%d", getName().c_str(),
        options.size()));
   ProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
 
@@ -359,11 +373,12 @@ void ClientProxy1_0::setOptions(const OptionsList &options) {
 bool ClientProxy1_0::recvInfo() {
   // parse the message
   SInt16 x, y, w, h, dummy1, mx, my;
-  if (!ProtocolUtil::readf(getStream(), kMsgDInfo + 4, &x, &y, &w, &h, &dummy1,
-                           &mx, &my)) {
+  if (!ProtocolUtil::readf(
+          getStream(), kMsgDInfo + 4, &x, &y, &w, &h, &dummy1, &mx, &my)) {
     return false;
   }
-  LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d",
+  LOG(
+      (CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d",
        getName().c_str(), x, y, w, h, mx, my));
 
   // validate
@@ -401,7 +416,8 @@ bool ClientProxy1_0::recvGrabClipboard() {
   if (!ProtocolUtil::readf(getStream(), kMsgCClipboard + 4, &id, &seqNum)) {
     return false;
   }
-  LOG((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d",
+  LOG(
+      (CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d",
        getName().c_str(), id, seqNum));
 
   // validate
@@ -413,8 +429,8 @@ bool ClientProxy1_0::recvGrabClipboard() {
   ClipboardInfo *info = new ClipboardInfo;
   info->m_id = id;
   info->m_sequenceNumber = seqNum;
-  m_events->addEvent(Event(m_events->forClipboard().clipboardGrabbed(),
-                           getEventTarget(), info));
+  m_events->addEvent(Event(
+      m_events->forClipboard().clipboardGrabbed(), getEventTarget(), info));
 
   return true;
 }
@@ -424,6 +440,8 @@ bool ClientProxy1_0::recvGrabClipboard() {
 //
 
 ClientProxy1_0::ClientClipboard::ClientClipboard()
-    : m_clipboard(), m_sequenceNumber(0), m_dirty(true) {
+    : m_clipboard(),
+      m_sequenceNumber(0),
+      m_dirty(true) {
   // do nothing
 }

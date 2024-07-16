@@ -25,10 +25,11 @@
 #include <QtCore>
 #include <QtGui>
 
-ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen,
-                                           const ScreenList *pScreens)
+ScreenSettingsDialog::ScreenSettingsDialog(
+    QWidget *parent, Screen *pScreen, const ScreenList *pScreens)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::ScreenSettingsDialogBase(), m_pScreen(pScreen) {
+      Ui::ScreenSettingsDialogBase(),
+      m_pScreen(pScreen) {
   setupUi(this);
 
   m_pLineEditName->setText(m_pScreen->name());
@@ -97,14 +98,14 @@ void ScreenSettingsDialog::accept() {
   m_pScreen->setModifier(Screen::Meta, m_pComboBoxMeta->currentIndex());
   m_pScreen->setModifier(Screen::Super, m_pComboBoxSuper->currentIndex());
 
-  m_pScreen->setSwitchCorner(Screen::TopLeft,
-                             m_pCheckBoxCornerTopLeft->isChecked());
-  m_pScreen->setSwitchCorner(Screen::TopRight,
-                             m_pCheckBoxCornerTopRight->isChecked());
-  m_pScreen->setSwitchCorner(Screen::BottomLeft,
-                             m_pCheckBoxCornerBottomLeft->isChecked());
-  m_pScreen->setSwitchCorner(Screen::BottomRight,
-                             m_pCheckBoxCornerBottomRight->isChecked());
+  m_pScreen->setSwitchCorner(
+      Screen::TopLeft, m_pCheckBoxCornerTopLeft->isChecked());
+  m_pScreen->setSwitchCorner(
+      Screen::TopRight, m_pCheckBoxCornerTopRight->isChecked());
+  m_pScreen->setSwitchCorner(
+      Screen::BottomLeft, m_pCheckBoxCornerBottomLeft->isChecked());
+  m_pScreen->setSwitchCorner(
+      Screen::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
   m_pScreen->setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
 
   m_pScreen->setFix(Screen::CapsLock, m_pCheckBoxCapsLock->isChecked());
@@ -126,8 +127,8 @@ void ScreenSettingsDialog::on_m_pButtonAddAlias_clicked() {
 
 void ScreenSettingsDialog::on_m_pLineEditAlias_textChanged(
     const QString &text) {
-  m_pButtonAddAlias->setEnabled(!text.isEmpty() &&
-                                m_pLabelAliasError->text().isEmpty());
+  m_pButtonAddAlias->setEnabled(
+      !text.isEmpty() && m_pLabelAliasError->text().isEmpty());
 }
 
 void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked() {

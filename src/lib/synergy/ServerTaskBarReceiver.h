@@ -97,6 +97,5 @@ private:
   IEventQueue *m_events;
 };
 
-IArchTaskBarReceiver *
-createTaskBarReceiver(const BufferedLogOutputter *logBuffer,
-                      IEventQueue *events);
+IArchTaskBarReceiver *createTaskBarReceiver(
+    const BufferedLogOutputter *logBuffer, IEventQueue *events);

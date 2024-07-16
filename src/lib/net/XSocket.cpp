@@ -23,10 +23,10 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(EError error, const String &hostname,
-                               int port) _NOEXCEPT : m_error(error),
-                                                     m_hostname(hostname),
-                                                     m_port(port) {
+XSocketAddress::XSocketAddress(EError error, const String &hostname, int port)
+    _NOEXCEPT : m_error(error),
+                m_hostname(hostname),
+                m_port(port) {
   // do nothing
 }
 
@@ -48,8 +48,9 @@ String XSocketAddress::getWhat() const throw() {
       "no address for: %{1}", "unsupported address for: %{1}",
       "invalid port" // m_port may not be set to the bad port
   };
-  return format(s_errorID[m_error], s_errorMsg[m_error], m_hostname.c_str(),
-                synergy::string::sprintf("%d", m_port).c_str());
+  return format(
+      s_errorID[m_error], s_errorMsg[m_error], m_hostname.c_str(),
+      synergy::string::sprintf("%d", m_port).c_str());
 }
 
 //

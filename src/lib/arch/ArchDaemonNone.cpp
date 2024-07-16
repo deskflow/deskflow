@@ -30,8 +30,8 @@ ArchDaemonNone::~ArchDaemonNone() {
   // do nothing
 }
 
-void ArchDaemonNone::installDaemon(const char *, const char *, const char *,
-                                   const char *, const char *) {
+void ArchDaemonNone::installDaemon(
+    const char *, const char *, const char *, const char *, const char *) {
   // do nothing
 }
 

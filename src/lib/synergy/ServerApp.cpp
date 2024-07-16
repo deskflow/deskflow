@@ -66,11 +66,15 @@
 // ServerApp
 //
 
-ServerApp::ServerApp(IEventQueue *events,
-                     CreateTaskBarReceiverFunc createTaskBarReceiver)
+ServerApp::ServerApp(
+    IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver)
     : App(events, createTaskBarReceiver, new lib::synergy::ServerArgs()),
-      m_server(NULL), m_serverState(kUninitialized), m_serverScreen(NULL),
-      m_primaryClient(NULL), m_listener(NULL), m_timer(NULL),
+      m_server(NULL),
+      m_serverState(kUninitialized),
+      m_serverScreen(NULL),
+      m_primaryClient(NULL),
+      m_listener(NULL),
+      m_timer(NULL),
       m_synergyAddress(NULL) {}
 
 ServerApp::~ServerApp() {}
@@ -216,7 +220,8 @@ bool ServerApp::loadConfig(const String &pathname) {
     return true;
   } catch (XConfigRead &e) {
     // report error in configuration file
-    LOG((CLOG_ERR "cannot read configuration \"%s\": %s", pathname.c_str(),
+    LOG(
+        (CLOG_ERR "cannot read configuration \"%s\": %s", pathname.c_str(),
          e.what()));
   }
   return false;
@@ -252,12 +257,14 @@ void ServerApp::closeServer(Server *server) {
   // wait for clients to disconnect for up to timeout seconds
   double timeout = 3.0;
   EventQueueTimer *timer = m_events->newOneShotTimer(timeout, NULL);
-  m_events->adoptHandler(Event::kTimer, timer,
-                         new TMethodEventJob<ServerApp>(
-                             this, &ServerApp::handleClientsDisconnected));
-  m_events->adoptHandler(m_events->forServer().disconnected(), server,
-                         new TMethodEventJob<ServerApp>(
-                             this, &ServerApp::handleClientsDisconnected));
+  m_events->adoptHandler(
+      Event::kTimer, timer,
+      new TMethodEventJob<ServerApp>(
+          this, &ServerApp::handleClientsDisconnected));
+  m_events->adoptHandler(
+      m_events->forServer().disconnected(), server,
+      new TMethodEventJob<ServerApp>(
+          this, &ServerApp::handleClientsDisconnected));
 
   m_events->loop();
 
@@ -313,12 +320,12 @@ void ServerApp::closePrimaryClient(PrimaryClient *primaryClient) {
 
 void ServerApp::closeServerScreen(synergy::Screen *screen) {
   if (screen != NULL) {
-    m_events->removeHandler(m_events->forIScreen().error(),
-                            screen->getEventTarget());
-    m_events->removeHandler(m_events->forIScreen().suspend(),
-                            screen->getEventTarget());
-    m_events->removeHandler(m_events->forIScreen().resume(),
-                            screen->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIScreen().error(), screen->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIScreen().suspend(), screen->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIScreen().resume(), screen->getEventTarget());
     delete screen;
   }
 }
@@ -331,8 +338,8 @@ void ServerApp::cleanupServer() {
     m_primaryClient = NULL;
     m_serverScreen = NULL;
     m_serverState = kUninitialized;
-  } else if (m_serverState == kInitializing ||
-             m_serverState == kInitializingToStart) {
+  } else if (
+      m_serverState == kInitializing || m_serverState == kInitializingToStart) {
     stopRetryTimer();
     m_serverState = kUninitialized;
   }
@@ -516,22 +523,22 @@ bool ServerApp::startServer() {
 
 synergy::Screen *ServerApp::createScreen() {
 #if WINAPI_MSWINDOWS
-  return new synergy::Screen(new MSWindowsScreen(true, args().m_noHooks,
-                                                 args().m_stopOnDeskSwitch,
-                                                 m_events),
-                             m_events);
+  return new synergy::Screen(
+      new MSWindowsScreen(
+          true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events),
+      m_events);
 #elif WINAPI_XWINDOWS
-  return new synergy::Screen(new XWindowsScreen(args().m_display, true,
-                                                args().m_disableXInitThreads, 0,
-                                                m_events),
-                             m_events);
+  return new synergy::Screen(
+      new XWindowsScreen(
+          args().m_display, true, args().m_disableXInitThreads, 0, m_events),
+      m_events);
 #elif WINAPI_CARBON
   return new synergy::Screen(new OSXScreen(m_events, true), m_events);
 #endif
 }
 
-PrimaryClient *ServerApp::openPrimaryClient(const String &name,
-                                            synergy::Screen *screen) {
+PrimaryClient *
+ServerApp::openPrimaryClient(const String &name, synergy::Screen *screen) {
   LOG((CLOG_DEBUG1 "creating primary screen"));
   return new PrimaryClient(name, screen);
 }
@@ -561,9 +568,10 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address) {
   ClientListener *listen = new ClientListener(
       getAddress(address), getSocketFactory(), m_events, args().m_enableCrypto);
 
-  m_events->adoptHandler(m_events->forClientListener().connected(), listen,
-                         new TMethodEventJob<ServerApp>(
-                             this, &ServerApp::handleClientConnected, listen));
+  m_events->adoptHandler(
+      m_events->forClientListener().connected(), listen,
+      new TMethodEventJob<ServerApp>(
+          this, &ServerApp::handleClientConnected, listen));
 
   return listen;
 }
@@ -694,10 +702,10 @@ int ServerApp::mainLoop() {
 
   // close down
   LOG((CLOG_DEBUG1 "stopping server"));
-  m_events->removeHandler(m_events->forServerApp().forceReconnect(),
-                          m_events->getSystemTarget());
-  m_events->removeHandler(m_events->forServerApp().reloadConfig(),
-                          m_events->getSystemTarget());
+  m_events->removeHandler(
+      m_events->forServerApp().forceReconnect(), m_events->getSystemTarget());
+  m_events->removeHandler(
+      m_events->forServerApp().reloadConfig(), m_events->getSystemTarget());
   cleanupServer();
   updateStatus();
   LOG((CLOG_NOTE "stopped server"));
@@ -716,8 +724,8 @@ void ServerApp::resetServer(const Event &, void *) {
   startServer();
 }
 
-int ServerApp::runInner(int argc, char **argv, ILogOutputter *outputter,
-                        StartupFunc startup) {
+int ServerApp::runInner(
+    int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) {
   // general initialization
   m_synergyAddress = new NetworkAddress;
   args().m_config = std::make_shared<Config>(m_events);

@@ -79,13 +79,15 @@ void makeTimeString(std::vector<char> &buffer) {
   localtime_r(&t, &tm);
 #endif
 
-  snprintf(buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i",
-           tm.tm_year + yearOffset, tm.tm_mon + monthOffset, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec);
+  snprintf(
+      buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i",
+      tm.tm_year + yearOffset, tm.tm_mon + monthOffset, tm.tm_mday, tm.tm_hour,
+      tm.tm_min, tm.tm_sec);
 }
 
-std::vector<char> makeMessage(const char *filename, int lineNumber,
-                              const char *message, ELevel priority) {
+std::vector<char> makeMessage(
+    const char *filename, int lineNumber, const char *message,
+    ELevel priority) {
 
   // base size includes null terminator, colon, space, etc.
   const int baseSize = 10;
@@ -109,14 +111,15 @@ std::vector<char> makeMessage(const char *filename, int lineNumber,
     bufferSize += filenameLength + lineNumberLength;
 
     std::vector<char> buffer(bufferSize);
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d",
-             timeBuffer.data(), g_priority[priority], message, filename,
-             lineNumber);
+    snprintf(
+        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(),
+        g_priority[priority], message, filename, lineNumber);
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(),
-             g_priority[priority], message);
+    snprintf(
+        buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(),
+        g_priority[priority], message);
     return buffer;
   }
 }

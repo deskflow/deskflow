@@ -54,7 +54,7 @@ public:
   /*!
   Writes a Synergy setting from the system.
   */
-  virtual void setting(const std::string &valueName,
-                       const std::string &valueString) const = 0;
+  virtual void setting(
+      const std::string &valueName, const std::string &valueString) const = 0;
   //@}
 };

@@ -40,8 +40,8 @@ public:
   If \p useThread is \c false, then the buffer needs to be sent manually
   using the \c sendBuffer() function.
   */
-  IpcLogOutputter(IpcServer &ipcServer, EIpcClientType clientType,
-                  bool useThread);
+  IpcLogOutputter(
+      IpcServer &ipcServer, EIpcClientType clientType, bool useThread);
   IpcLogOutputter(IpcLogOutputter const &) = delete;
   virtual ~IpcLogOutputter();
 

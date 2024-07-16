@@ -62,10 +62,9 @@ void ArchDaemonWindows::daemonFailed(int result) {
   throw XArchDaemonRunFailed(result);
 }
 
-void ArchDaemonWindows::installDaemon(const char *name, const char *description,
-                                      const char *pathname,
-                                      const char *commandLine,
-                                      const char *dependencies) {
+void ArchDaemonWindows::installDaemon(
+    const char *name, const char *description, const char *pathname,
+    const char *commandLine, const char *dependencies) {
   // open service manager
   SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
   if (mgr == NULL) {
@@ -74,11 +73,11 @@ void ArchDaemonWindows::installDaemon(const char *name, const char *description,
   }
 
   // create the service
-  SC_HANDLE service =
-      CreateService(mgr, name, name, 0,
-                    SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,
-                    SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, pathname, NULL,
-                    NULL, dependencies, NULL, NULL);
+  SC_HANDLE service = CreateService(
+      mgr, name, name, 0,
+      SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,
+      SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, pathname, NULL, NULL,
+      dependencies, NULL, NULL);
 
   if (service == NULL) {
     // can't create service
@@ -255,8 +254,8 @@ bool ArchDaemonWindows::isDaemonInstalled(const char *name) {
 }
 
 HKEY ArchDaemonWindows::openNTServicesKey() {
-  static const char *s_keyNames[] = {_T("SYSTEM"), _T("CurrentControlSet"),
-                                     _T("Services"), NULL};
+  static const char *s_keyNames[] = {
+      _T("SYSTEM"), _T("CurrentControlSet"), _T("Services"), NULL};
 
   return ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
@@ -606,8 +605,8 @@ void ArchDaemonWindows::installDaemon() {
     ss << path;
     ss << '"';
 
-    installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, ss.str().c_str(),
-                  "", "");
+    installDaemon(
+        DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, ss.str().c_str(), "", "");
   }
 
   start(DEFAULT_DAEMON_NAME);

@@ -28,9 +28,10 @@
 // TCPSocketFactory
 //
 
-TCPSocketFactory::TCPSocketFactory(IEventQueue *events,
-                                   SocketMultiplexer *socketMultiplexer)
-    : m_events(events), m_socketMultiplexer(socketMultiplexer) {
+TCPSocketFactory::TCPSocketFactory(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer)
+    : m_events(events),
+      m_socketMultiplexer(socketMultiplexer) {
   // do nothing
 }
 
@@ -38,9 +39,8 @@ TCPSocketFactory::~TCPSocketFactory() {
   // do nothing
 }
 
-IDataSocket *
-TCPSocketFactory::create(bool secure,
-                         IArchNetwork::EAddressFamily family) const {
+IDataSocket *TCPSocketFactory::create(
+    bool secure, IArchNetwork::EAddressFamily family) const {
   if (secure) {
     SecureSocket *secureSocket =
         new SecureSocket(m_events, m_socketMultiplexer, family);
@@ -51,9 +51,8 @@ TCPSocketFactory::create(bool secure,
   }
 }
 
-IListenSocket *
-TCPSocketFactory::createListen(bool secure,
-                               IArchNetwork::EAddressFamily family) const {
+IListenSocket *TCPSocketFactory::createListen(
+    bool secure, IArchNetwork::EAddressFamily family) const {
   IListenSocket *socket = NULL;
   if (secure) {
     socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);

@@ -48,11 +48,12 @@ QString getSystemSettingPath() {
 #if defined(Q_OS_WIN)
 void loadOldSystemSettings(QSettings &settings) {
   if (!QFile(settings.fileName()).exists()) {
-    QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope,
-                       "SystemConfig.ini");
-    QSettings oldSystemSettings(QSettings::IniFormat, QSettings::SystemScope,
-                                QCoreApplication::organizationName(),
-                                QCoreApplication::applicationName());
+    QSettings::setPath(
+        QSettings::IniFormat, QSettings::SystemScope, "SystemConfig.ini");
+    QSettings oldSystemSettings(
+        QSettings::IniFormat, QSettings::SystemScope,
+        QCoreApplication::organizationName(),
+        QCoreApplication::applicationName());
 
     if (QFile(oldSystemSettings.fileName()).exists()) {
       for (const auto &key : oldSystemSettings.allKeys()) {
@@ -61,8 +62,8 @@ void loadOldSystemSettings(QSettings &settings) {
     }
 
     // Restore system settings path
-    QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope,
-                       getSystemSettingPath());
+    QSettings::setPath(
+        QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
   }
 }
 #endif
@@ -83,15 +84,16 @@ ConfigWriter *ConfigWriter::make() {
 }
 
 ConfigWriter::ConfigWriter() {
-  QSettings::setPath(QSettings::Format::IniFormat,
-                     QSettings::Scope::SystemScope, getSystemSettingPath());
+  QSettings::setPath(
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
+      getSystemSettingPath());
 
   // Config will default to User settings if they exist,
   //  otherwise it will load System setting and save them to User settings
-  m_pSettingsSystem =
-      new QSettings(QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-                    QCoreApplication::organizationName(),
-                    QCoreApplication::applicationName());
+  m_pSettingsSystem = new QSettings(
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
+      QCoreApplication::organizationName(),
+      QCoreApplication::applicationName());
 
 #if defined(Q_OS_WIN)
   // This call is needed for backwardcapability with old settings.
@@ -134,8 +136,8 @@ bool ConfigWriter::isWritable() const {
   return m_pSettingsCurrent->isWritable();
 }
 
-QVariant ConfigWriter::loadSetting(const QString &name,
-                                   const QVariant &defaultValue, Scope scope) {
+QVariant ConfigWriter::loadSetting(
+    const QString &name, const QVariant &defaultValue, Scope scope) {
   switch (scope) {
   case kUser:
     return m_pSettingsUser->value(name, defaultValue);

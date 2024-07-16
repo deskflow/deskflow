@@ -24,10 +24,10 @@
 // XWindowsClipboardUTF8Converter
 //
 
-XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(Display *display,
-                                                               const char *name,
-                                                               bool normalize)
-    : m_atom(XInternAtom(display, name, False)), m_normalize(normalize) {
+XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(
+    Display *display, const char *name, bool normalize)
+    : m_atom(XInternAtom(display, name, False)),
+      m_normalize(normalize) {
   // do nothing
 }
 

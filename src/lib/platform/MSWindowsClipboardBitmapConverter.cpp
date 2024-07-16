@@ -69,7 +69,8 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
 
   // check image type
   const BITMAPINFO *bitmap = static_cast<const BITMAPINFO *>(src);
-  LOG((CLOG_INFO "bitmap: %dx%d %d", bitmap->bmiHeader.biWidth,
+  LOG(
+      (CLOG_INFO "bitmap: %dx%d %d", bitmap->bmiHeader.biWidth,
        bitmap->bmiHeader.biHeight, (int)bitmap->bmiHeader.biBitCount));
   if (bitmap->bmiHeader.biPlanes == 1 &&
       (bitmap->bmiHeader.biBitCount == 24 ||
@@ -82,7 +83,8 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   }
 
   // create a destination DIB section
-  LOG((CLOG_INFO "convert image from: depth=%d comp=%d",
+  LOG(
+      (CLOG_INFO "convert image from: depth=%d comp=%d",
        bitmap->bmiHeader.biBitCount, bitmap->bmiHeader.biCompression));
   void *raw;
   BITMAPINFOHEADER info;
@@ -121,8 +123,8 @@ String MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const {
   // copy source image to destination image
   HDC dstDC = CreateCompatibleDC(dc);
   HGDIOBJ oldBitmap = SelectObject(dstDC, dst);
-  SetDIBitsToDevice(dstDC, 0, 0, w, h, 0, 0, 0, h, srcBits, bitmap,
-                    DIB_RGB_COLORS);
+  SetDIBitsToDevice(
+      dstDC, 0, 0, w, h, 0, 0, 0, h, srcBits, bitmap, DIB_RGB_COLORS);
   SelectObject(dstDC, oldBitmap);
   DeleteDC(dstDC);
   GdiFlush();

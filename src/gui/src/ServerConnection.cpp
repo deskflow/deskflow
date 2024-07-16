@@ -55,8 +55,8 @@ void ServerConnection::addClient(const QString &clientName) {
       checkMainWindow()) {
     QMessageBox message(&m_parent);
     message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-    message.addButton(QObject::tr("Accept and configure"),
-                      QMessageBox::AcceptRole);
+    message.addButton(
+        QObject::tr("Accept and configure"), QMessageBox::AcceptRole);
     message.setText(
         QObject::tr("%1 client has made a connection request").arg(clientName));
 
@@ -69,8 +69,8 @@ void ServerConnection::addClient(const QString &clientName) {
 }
 
 void ServerConnection::configureClient(const QString &clientName) {
-  ServerConfigDialog dlg(&m_parent, m_parent.serverConfig(),
-                         m_parent.appConfig());
+  ServerConfigDialog dlg(
+      &m_parent, m_parent.serverConfig(), m_parent.appConfig());
 
   if (dlg.addClient(clientName) && dlg.exec() == QDialog::Accepted) {
     m_parent.restartSynergy();

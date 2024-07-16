@@ -45,10 +45,11 @@ protected:
   virtual void TearDown() { delete m_screensaver; }
 
   MSWindowsDesks *newDesks(IEventQueue *eventQueue) {
-    return new MSWindowsDesks(true, false, m_screensaver, eventQueue,
-                              new TMethodJob<MSWindowsKeyStateTests>(
-                                  this, &MSWindowsKeyStateTests::updateKeysCB),
-                              false);
+    return new MSWindowsDesks(
+        true, false, m_screensaver, eventQueue,
+        new TMethodJob<MSWindowsKeyStateTests>(
+            this, &MSWindowsKeyStateTests::updateKeysCB),
+        false);
   }
 
   void *getEventTarget() const {
@@ -65,8 +66,8 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed) {
   NiceMock<MockEventQueue> eventQueue;
   MSWindowsDesks *desks = newDesks(&eventQueue);
   MockKeyMap keyMap;
-  MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap,
-                             {"en"}, true);
+  MSWindowsKeyState keyState(
+      desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 
   EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
 
@@ -74,13 +75,14 @@ TEST_F(MSWindowsKeyStateTests, disable_eventQueueNotUsed) {
   delete desks;
 }
 
-TEST_F(MSWindowsKeyStateTests,
-       testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue) {
+TEST_F(
+    MSWindowsKeyStateTests,
+    testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue) {
   NiceMock<MockEventQueue> eventQueue;
   MSWindowsDesks *desks = newDesks(&eventQueue);
   MockKeyMap keyMap;
-  MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap,
-                             {"en"}, true);
+  MSWindowsKeyState keyState(
+      desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
   keyState.setLastDown(1);
 
   bool actual = keyState.testAutoRepeat(true, false, 1);
@@ -93,8 +95,8 @@ TEST_F(MSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero) {
   NiceMock<MockEventQueue> eventQueue;
   MSWindowsDesks *desks = newDesks(&eventQueue);
   MockKeyMap keyMap;
-  MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap,
-                             {"en"}, true);
+  MSWindowsKeyState keyState(
+      desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
   keyState.setLastDown(1);
 
   keyState.testAutoRepeat(false, false, 1);
@@ -107,8 +109,8 @@ TEST_F(MSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0) {
   NiceMock<MockEventQueue> eventQueue;
   MSWindowsDesks *desks = newDesks(&eventQueue);
   MockKeyMap keyMap;
-  MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap,
-                             {"en"}, true);
+  MSWindowsKeyState keyState(
+      desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 
   keyState.saveModifiers();
 
@@ -116,23 +118,23 @@ TEST_F(MSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0) {
   delete desks;
 }
 
-TEST_F(MSWindowsKeyStateTests,
-       testKoreanLocale_inputModeKey_resultCorrectKeyID) {
+TEST_F(
+    MSWindowsKeyStateTests, testKoreanLocale_inputModeKey_resultCorrectKeyID) {
   NiceMock<MockEventQueue> eventQueue;
   MSWindowsDesks *desks = newDesks(&eventQueue);
   MockKeyMap keyMap;
-  MSWindowsKeyState keyState(desks, getEventTarget(), &eventQueue, keyMap,
-                             {"en"}, true);
+  MSWindowsKeyState keyState(
+      desks, getEventTarget(), &eventQueue, keyMap, {"en"}, true);
 
   keyState.setKeyLayout((HKL)0x00000412u); // for ko-KR local ID
-  ASSERT_EQ(0xEF31,
-            keyState.getKeyID(0x15u, 0x1f2u)); // VK_HANGUL from Hangul key
-  ASSERT_EQ(0xEF34,
-            keyState.getKeyID(0x19u, 0x1f1u)); // VK_HANJA from Hanja key
-  ASSERT_EQ(0xEF31,
-            keyState.getKeyID(0x15u, 0x11du)); // VK_HANGUL from R-Alt key
-  ASSERT_EQ(0xEF34,
-            keyState.getKeyID(0x19u, 0x138u)); // VK_HANJA from R-Ctrl key
+  ASSERT_EQ(
+      0xEF31, keyState.getKeyID(0x15u, 0x1f2u)); // VK_HANGUL from Hangul key
+  ASSERT_EQ(
+      0xEF34, keyState.getKeyID(0x19u, 0x1f1u)); // VK_HANJA from Hanja key
+  ASSERT_EQ(
+      0xEF31, keyState.getKeyID(0x15u, 0x11du)); // VK_HANGUL from R-Alt key
+  ASSERT_EQ(
+      0xEF34, keyState.getKeyID(0x19u, 0x138u)); // VK_HANJA from R-Ctrl key
 
   keyState.setKeyLayout((HKL)0x00000411);             // for ja-jp locale ID
   ASSERT_EQ(0xEF26, keyState.getKeyID(0x15u, 0x1du)); // VK_KANA

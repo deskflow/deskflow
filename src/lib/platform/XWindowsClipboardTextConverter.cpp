@@ -24,8 +24,8 @@
 // XWindowsClipboardTextConverter
 //
 
-XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(Display *display,
-                                                               const char *name)
+XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(
+    Display *display, const char *name)
     : m_atom(XInternAtom(display, name, False)) {
   // do nothing
 }

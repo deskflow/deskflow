@@ -34,8 +34,8 @@ class SocketMultiplexer;
 class IpcClient {
 public:
   IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
-  IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-            int port);
+  IpcClient(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port);
   virtual ~IpcClient();
 
   //! @name manipulators

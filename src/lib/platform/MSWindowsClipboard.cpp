@@ -33,7 +33,9 @@
 UINT MSWindowsClipboard::s_ownershipFormat = 0;
 
 MSWindowsClipboard::MSWindowsClipboard(HWND window)
-    : m_window(window), m_time(0), m_facade(new MSWindowsClipboardFacade()),
+    : m_window(window),
+      m_time(0),
+      m_facade(new MSWindowsClipboardFacade()),
       m_deleteFacade(true) {
   // add converters, most desired first
   m_converters.push_back(new MSWindowsClipboardUTF16Converter);
@@ -98,7 +100,8 @@ void MSWindowsClipboard::add(EFormat format, const String &data) {
     if (converter->getFormat() == format) {
       HANDLE win32Data = converter->fromIClipboard(data);
       if (win32Data != NULL) {
-        LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(),
+        LOG(
+            (CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(),
              format));
         m_facade->write(win32Data, converter->getWin32Format());
         isSucceeded = true;

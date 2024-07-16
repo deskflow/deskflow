@@ -28,10 +28,11 @@ platform specific methods.
 */
 class KeyState : public IKeyState {
 public:
-  KeyState(IEventQueue *events, std::vector<String> layouts,
-           bool isLangSyncEnabled);
-  KeyState(IEventQueue *events, synergy::KeyMap &keyMap,
-           std::vector<String> layouts, bool isLangSyncEnabled);
+  KeyState(
+      IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
+  KeyState(
+      IEventQueue *events, synergy::KeyMap &keyMap, std::vector<String> layouts,
+      bool isLangSyncEnabled);
   virtual ~KeyState();
 
   //! @name manipulators
@@ -52,9 +53,9 @@ public:
   events in some circumstances.  If this is overridden it must forward
   to the superclass.
   */
-  virtual void sendKeyEvent(void *target, bool press, bool isAutoRepeat,
-                            KeyID key, KeyModifierMask mask, SInt32 count,
-                            KeyButton button);
+  virtual void sendKeyEvent(
+      void *target, bool press, bool isAutoRepeat, KeyID key,
+      KeyModifierMask mask, SInt32 count, KeyButton button);
 
   //@}
   //! @name accessors
@@ -67,10 +68,12 @@ public:
   void updateKeyMap() override { this->updateKeyMap(nullptr); }
   void updateKeyState() override;
   void setHalfDuplexMask(KeyModifierMask) override;
-  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                   const String &lang) override;
-  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                     KeyButton button, const String &lang) override;
+  void fakeKeyDown(
+      KeyID id, KeyModifierMask mask, KeyButton button,
+      const String &lang) override;
+  bool fakeKeyRepeat(
+      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
+      const String &lang) override;
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
   bool fakeMediaKey(KeyID id) override;
@@ -143,8 +146,8 @@ private:
 public:
   struct AddActiveModifierContext {
   public:
-    AddActiveModifierContext(SInt32 group, KeyModifierMask mask,
-                             ModifierToKeys &activeModifiers);
+    AddActiveModifierContext(
+        SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers);
 
   public:
     SInt32 m_activeGroup;
@@ -160,8 +163,9 @@ public:
 private:
   class ButtonToKeyLess {
   public:
-    bool operator()(const synergy::KeyMap::ButtonToKeyMap::value_type &a,
-                    const synergy::KeyMap::ButtonToKeyMap::value_type b) const {
+    bool operator()(
+        const synergy::KeyMap::ButtonToKeyMap::value_type &a,
+        const synergy::KeyMap::ButtonToKeyMap::value_type b) const {
       return (a.first < b.first);
     }
   };
@@ -188,14 +192,14 @@ private:
   void fakeKeys(const Keystrokes &, UInt32 count);
 
   // update key state to match changes to modifiers
-  void updateModifierKeyState(KeyButton button,
-                              const ModifierToKeys &oldModifiers,
-                              const ModifierToKeys &newModifiers);
+  void updateModifierKeyState(
+      KeyButton button, const ModifierToKeys &oldModifiers,
+      const ModifierToKeys &newModifiers);
 
   // active modifiers collection callback
-  static void addActiveModifierCB(KeyID id, SInt32 group,
-                                  synergy::KeyMap::KeyItem &keyItem,
-                                  void *vcontext);
+  static void addActiveModifierCB(
+      KeyID id, SInt32 group, synergy::KeyMap::KeyItem &keyItem,
+      void *vcontext);
 
 private:
   // must be declared before m_keyMap. used when this class owns the key map.

@@ -77,8 +77,14 @@ public:
 };
 
 ArchThreadImpl::ArchThreadImpl()
-    : m_refCount(1), m_id(0), m_func(NULL), m_userData(NULL), m_cancel(false),
-      m_cancelling(false), m_exited(false), m_result(NULL),
+    : m_refCount(1),
+      m_id(0),
+      m_func(NULL),
+      m_userData(NULL),
+      m_cancel(false),
+      m_cancelling(false),
+      m_exited(false),
+      m_result(NULL),
       m_networkData(NULL) {
   // do nothing
 }
@@ -90,7 +96,8 @@ ArchThreadImpl::ArchThreadImpl()
 ArchMultithreadPosix *ArchMultithreadPosix::s_instance = NULL;
 
 ArchMultithreadPosix::ArchMultithreadPosix()
-    : m_newThreadCalled(false), m_nextID(0) {
+    : m_newThreadCalled(false),
+      m_nextID(0) {
   assert(s_instance == NULL);
 
   s_instance = this;
@@ -186,8 +193,8 @@ void ArchMultithreadPosix::broadcastCondVar(ArchCond cond) {
   assert(status == 0);
 }
 
-bool ArchMultithreadPosix::waitCondVar(ArchCond cond, ArchMutex mutex,
-                                       double timeout) {
+bool ArchMultithreadPosix::waitCondVar(
+    ArchCond cond, ArchMutex mutex, double timeout) {
   // we can't wait on a condition variable and also wake it up for
   // cancellation since we don't use posix cancellation.  so we
   // must wake up periodically to check for cancellation.  we
@@ -326,8 +333,8 @@ ArchThread ArchMultithreadPosix::newThread(ThreadFunc func, void *data) {
   pthread_attr_t attr;
   int status = pthread_attr_init(&attr);
   if (status == 0) {
-    status = pthread_create(&thread->m_thread, &attr,
-                            &ArchMultithreadPosix::threadFunc, thread);
+    status = pthread_create(
+        &thread->m_thread, &attr, &ArchMultithreadPosix::threadFunc, thread);
     pthread_attr_destroy(&attr);
   }
 
@@ -471,8 +478,8 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout) {
   }
 }
 
-bool ArchMultithreadPosix::isSameThread(ArchThread thread1,
-                                        ArchThread thread2) {
+bool ArchMultithreadPosix::isSameThread(
+    ArchThread thread1, ArchThread thread2) {
   return (thread1 == thread2);
 }
 
@@ -495,8 +502,8 @@ ArchMultithreadPosix::getIDOfThread(ArchThread thread) {
   return thread->m_id;
 }
 
-void ArchMultithreadPosix::setSignalHandler(ESignal signal, SignalFunc func,
-                                            void *userData) {
+void ArchMultithreadPosix::setSignalHandler(
+    ESignal signal, SignalFunc func, void *userData) {
   lockMutex(m_threadMutex);
   m_signalFunc[signal] = func;
   m_signalUserData[signal] = userData;
@@ -528,8 +535,9 @@ void ArchMultithreadPosix::startSignalHandler() {
   pthread_attr_t attr;
   int status = pthread_attr_init(&attr);
   if (status == 0) {
-    status = pthread_create(&m_signalThread, &attr,
-                            &ArchMultithreadPosix::threadSignalHandler, NULL);
+    status = pthread_create(
+        &m_signalThread, &attr, &ArchMultithreadPosix::threadSignalHandler,
+        NULL);
     pthread_attr_destroy(&attr);
   }
   if (status != 0) {

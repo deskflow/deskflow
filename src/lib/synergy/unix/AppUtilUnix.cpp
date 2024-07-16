@@ -59,10 +59,10 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
 #elif WINAPI_CARBON
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys,
-                                           (const void **)values, 1, NULL,
-                                           NULL),
-                        CFRelease);
+  AutoCFDictionary dict(
+      CFDictionaryCreate(
+          NULL, (const void **)keys, (const void **)values, 1, NULL, NULL),
+      CFRelease);
   AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
   for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
@@ -75,8 +75,9 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
          index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
       auto languageCode =
           (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-      if (!languageCode || !CFStringGetCString(languageCode, temporaryCString,
-                                               128, kCFStringEncodingUTF8)) {
+      if (!languageCode ||
+          !CFStringGetCString(
+              languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
         continue;
       }
 
@@ -157,8 +158,9 @@ String AppUtilUnix::getCurrentLanguageCode() {
        index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
     auto languageCode =
         (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-    if (!languageCode || !CFStringGetCString(languageCode, temporaryCString,
-                                             128, kCFStringEncodingUTF8)) {
+    if (!languageCode ||
+        !CFStringGetCString(
+            languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
       continue;
     }
 
@@ -169,10 +171,11 @@ String AppUtilUnix::getCurrentLanguageCode() {
   return result;
 }
 
-void AppUtilUnix::showNotification(const String &title,
-                                   const String &text) const {
+void AppUtilUnix::showNotification(
+    const String &title, const String &text) const {
 #if WINAPI_XWINDOWS
-  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
+  LOG(
+      (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
        title.c_str(), text.c_str()));
   if (!notify_init("Synergy")) {
     LOG((CLOG_INFO "failed to initialize libnotify"));

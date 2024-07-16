@@ -25,8 +25,8 @@
 // ClientProxy1_1
 //
 
-ClientProxy1_2::ClientProxy1_2(const String &name, synergy::IStream *stream,
-                               IEventQueue *events)
+ClientProxy1_2::ClientProxy1_2(
+    const String &name, synergy::IStream *stream, IEventQueue *events)
     : ClientProxy1_1(name, stream, events) {
   // do nothing
 }
@@ -36,7 +36,8 @@ ClientProxy1_2::~ClientProxy1_2() {
 }
 
 void ClientProxy1_2::mouseRelativeMove(SInt32 xRel, SInt32 yRel) {
-  LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d",
+  LOG(
+      (CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d",
        getName().c_str(), xRel, yRel));
   ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
 }

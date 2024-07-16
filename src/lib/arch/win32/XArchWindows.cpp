@@ -26,11 +26,11 @@
 
 std::string XArchEvalWindows::eval() const throw() {
   char *cmsg;
-  if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                        FORMAT_MESSAGE_IGNORE_INSERTS |
-                        FORMAT_MESSAGE_FROM_SYSTEM,
-                    0, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                    (LPTSTR)&cmsg, 0, NULL) == 0) {
+  if (FormatMessage(
+          FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS |
+              FORMAT_MESSAGE_FROM_SYSTEM,
+          0, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&cmsg,
+          0, NULL) == 0) {
     cmsg = NULL;
     return synergy::string::sprintf("Unknown error, code %d", m_error);
   }

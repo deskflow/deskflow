@@ -47,9 +47,9 @@ public:
   followed by a NUL;  the daemon will be configured to startup after
   the listed daemons.  Throws an \c XArchDaemon exception on failure.
   */
-  virtual void installDaemon(const char *name, const char *description,
-                             const char *pathname, const char *commandLine,
-                             const char *dependencies) = 0;
+  virtual void installDaemon(
+      const char *name, const char *description, const char *pathname,
+      const char *commandLine, const char *dependencies) = 0;
 
   //! Uninstall daemon
   /*!

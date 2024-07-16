@@ -35,10 +35,11 @@
 // TCPListenSocket
 //
 
-TCPListenSocket::TCPListenSocket(IEventQueue *events,
-                                 SocketMultiplexer *socketMultiplexer,
-                                 IArchNetwork::EAddressFamily family)
-    : m_events(events), m_socketMultiplexer(socketMultiplexer) {
+TCPListenSocket::TCPListenSocket(
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
+    IArchNetwork::EAddressFamily family)
+    : m_events(events),
+      m_socketMultiplexer(socketMultiplexer) {
   m_mutex = new Mutex;
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
@@ -98,8 +99,8 @@ void *TCPListenSocket::getEventTarget() const {
 IDataSocket *TCPListenSocket::accept() {
   IDataSocket *socket = NULL;
   try {
-    socket = new TCPSocket(m_events, m_socketMultiplexer,
-                           ARCH->acceptSocket(m_socket, NULL));
+    socket = new TCPSocket(
+        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
     if (socket != NULL) {
       setListeningJob();
     }
@@ -126,9 +127,8 @@ void TCPListenSocket::setListeningJob() {
           this, &TCPListenSocket::serviceListening, m_socket, true, false));
 }
 
-ISocketMultiplexerJob *
-TCPListenSocket::serviceListening(ISocketMultiplexerJob *job, bool read, bool,
-                                  bool error) {
+ISocketMultiplexerJob *TCPListenSocket::serviceListening(
+    ISocketMultiplexerJob *job, bool read, bool, bool error) {
   if (error) {
     close();
     return NULL;

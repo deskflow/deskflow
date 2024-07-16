@@ -85,8 +85,8 @@ std::string ArchSystemWindows::setting(const std::string &valueName) const {
   return ArchMiscWindows::readValueString(key, valueName.c_str());
 }
 
-void ArchSystemWindows::setting(const std::string &valueName,
-                                const std::string &valueString) const {
+void ArchSystemWindows::setting(
+    const std::string &valueName, const std::string &valueString) const {
   HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
   if (key == NULL)
     throw XArch(std::string("could not access registry key: ") + valueName);

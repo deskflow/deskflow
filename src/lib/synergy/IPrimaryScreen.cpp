@@ -41,8 +41,8 @@ IPrimaryScreen::ButtonInfo::alloc(const ButtonInfo &x) {
   return info;
 }
 
-bool IPrimaryScreen::ButtonInfo::equal(const ButtonInfo *a,
-                                       const ButtonInfo *b) {
+bool IPrimaryScreen::ButtonInfo::equal(
+    const ButtonInfo *a, const ButtonInfo *b) {
   return (a->m_button == b->m_button && a->m_mask == b->m_mask);
 }
 
@@ -50,8 +50,8 @@ bool IPrimaryScreen::ButtonInfo::equal(const ButtonInfo *a,
 // IPrimaryScreen::MotionInfo
 //
 
-IPrimaryScreen::MotionInfo *IPrimaryScreen::MotionInfo::alloc(SInt32 x,
-                                                              SInt32 y) {
+IPrimaryScreen::MotionInfo *
+IPrimaryScreen::MotionInfo::alloc(SInt32 x, SInt32 y) {
   MotionInfo *info = (MotionInfo *)malloc(sizeof(MotionInfo));
   info->m_x = x;
   info->m_y = y;
@@ -62,8 +62,8 @@ IPrimaryScreen::MotionInfo *IPrimaryScreen::MotionInfo::alloc(SInt32 x,
 // IPrimaryScreen::WheelInfo
 //
 
-IPrimaryScreen::WheelInfo *IPrimaryScreen::WheelInfo::alloc(SInt32 xDelta,
-                                                            SInt32 yDelta) {
+IPrimaryScreen::WheelInfo *
+IPrimaryScreen::WheelInfo::alloc(SInt32 xDelta, SInt32 yDelta) {
   WheelInfo *info = (WheelInfo *)malloc(sizeof(WheelInfo));
   info->m_xDelta = xDelta;
   info->m_yDelta = yDelta;

@@ -74,11 +74,12 @@ void ArchLogWindows::writeLog(ELevel level, const char *msg) {
     // just dump our string into the raw data section of the event
     // so users can at least see the message.  note that we use our
     // level as the event category.
-    ReportEvent(m_eventLog, type, static_cast<WORD>(level),
-                0, // event ID
-                NULL, 0,
-                (DWORD)strlen(msg) + 1, // raw data size
-                NULL,
-                const_cast<char *>(msg)); // raw data
+    ReportEvent(
+        m_eventLog, type, static_cast<WORD>(level),
+        0, // event ID
+        NULL, 0,
+        (DWORD)strlen(msg) + 1, // raw data size
+        NULL,
+        const_cast<char *>(msg)); // raw data
   }
 }

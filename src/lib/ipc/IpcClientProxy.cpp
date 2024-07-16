@@ -32,38 +32,41 @@
 //
 
 IpcClientProxy::IpcClientProxy(synergy::IStream &stream, IEventQueue *events)
-    : m_stream(stream), m_clientType(kIpcClientUnknown), m_disconnecting(false),
-      m_readMutex(ARCH->newMutex()), m_writeMutex(ARCH->newMutex()),
+    : m_stream(stream),
+      m_clientType(kIpcClientUnknown),
+      m_disconnecting(false),
+      m_readMutex(ARCH->newMutex()),
+      m_writeMutex(ARCH->newMutex()),
       m_events(events) {
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), stream.getEventTarget(),
       new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleData));
 
-  m_events->adoptHandler(m_events->forIStream().outputError(),
-                         stream.getEventTarget(),
-                         new TMethodEventJob<IpcClientProxy>(
-                             this, &IpcClientProxy::handleWriteError));
+  m_events->adoptHandler(
+      m_events->forIStream().outputError(), stream.getEventTarget(),
+      new TMethodEventJob<IpcClientProxy>(
+          this, &IpcClientProxy::handleWriteError));
 
-  m_events->adoptHandler(m_events->forIStream().inputShutdown(),
-                         stream.getEventTarget(),
-                         new TMethodEventJob<IpcClientProxy>(
-                             this, &IpcClientProxy::handleDisconnect));
+  m_events->adoptHandler(
+      m_events->forIStream().inputShutdown(), stream.getEventTarget(),
+      new TMethodEventJob<IpcClientProxy>(
+          this, &IpcClientProxy::handleDisconnect));
 
-  m_events->adoptHandler(m_events->forIStream().outputShutdown(),
-                         stream.getEventTarget(),
-                         new TMethodEventJob<IpcClientProxy>(
-                             this, &IpcClientProxy::handleWriteError));
+  m_events->adoptHandler(
+      m_events->forIStream().outputShutdown(), stream.getEventTarget(),
+      new TMethodEventJob<IpcClientProxy>(
+          this, &IpcClientProxy::handleWriteError));
 }
 
 IpcClientProxy::~IpcClientProxy() {
-  m_events->removeHandler(m_events->forIStream().inputReady(),
-                          m_stream.getEventTarget());
-  m_events->removeHandler(m_events->forIStream().outputError(),
-                          m_stream.getEventTarget());
-  m_events->removeHandler(m_events->forIStream().inputShutdown(),
-                          m_stream.getEventTarget());
-  m_events->removeHandler(m_events->forIStream().outputShutdown(),
-                          m_stream.getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().inputReady(), m_stream.getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().outputError(), m_stream.getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().inputShutdown(), m_stream.getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().outputShutdown(), m_stream.getEventTarget());
 
   // don't delete the stream while it's being used.
   ARCH->lockMutex(m_readMutex);
@@ -111,8 +114,9 @@ void IpcClientProxy::handleData(const Event &, void *) {
     }
 
     // don't delete with this event; the data is passed to a new event.
-    Event e(m_events->forIpcClientProxy().messageReceived(), this, NULL,
-            Event::kDontFreeData);
+    Event e(
+        m_events->forIpcClientProxy().messageReceived(), this, NULL,
+        Event::kDontFreeData);
     e.setDataObject(m);
     m_events->addEvent(e);
 

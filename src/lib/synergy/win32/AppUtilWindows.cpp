@@ -42,7 +42,8 @@
 #include <Windows.h>
 
 AppUtilWindows::AppUtilWindows(IEventQueue *events)
-    : m_events(events), m_exitMode(kExitModeNormal) {
+    : m_events(events),
+      m_exitMode(kExitModeNormal) {
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
     throw XArch(new XArchEvalWindows());
   }
@@ -156,8 +157,9 @@ std::vector<String> AppUtilWindows::getKeyboardLayoutList() {
 
     for (int i = 0; i < uLayouts; ++i) {
       String code("", 2);
-      GetLocaleInfoA(MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT),
-                     LOCALE_SISO639LANGNAME, &code[0], code.size());
+      GetLocaleInfoA(
+          MAKELCID(((UINT)lpList[i] & 0xffffffff), SORT_DEFAULT),
+          LOCALE_SISO639LANGNAME, &code[0], code.size());
       layoutLangCodes.push_back(code);
     }
 
@@ -174,8 +176,8 @@ String AppUtilWindows::getCurrentLanguageCode() {
   auto hklLayout = getCurrentKeyboardLayout();
   if (hklLayout) {
     auto localLayoutID = MAKELCID(LOWORD(hklLayout), SORT_DEFAULT);
-    GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0],
-                   code.size());
+    GetLocaleInfoA(
+        localLayoutID, LOCALE_SISO639LANGNAME, &code[0], code.size());
   }
 
   return code;
@@ -204,9 +206,10 @@ public:
   void toastFailed() const override {}
 };
 
-void AppUtilWindows::showNotification(const String &title,
-                                      const String &text) const {
-  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
+void AppUtilWindows::showNotification(
+    const String &title, const String &text) const {
+  LOG(
+      (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
        title.c_str(), text.c_str()));
   if (!WinToastLib::WinToast::isCompatible()) {
     LOG((CLOG_INFO "this system does not support toast notifications"));
@@ -228,16 +231,18 @@ void AppUtilWindows::showNotification(const String &title,
   auto handler = std::make_unique<WinToastHandler>();
   WinToastLib::WinToastTemplate templ =
       WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
-  templ.setTextField(std::wstring(title.begin(), title.end()),
-                     WinToastLib::WinToastTemplate::FirstLine);
-  templ.setTextField(std::wstring(text.begin(), text.end()),
-                     WinToastLib::WinToastTemplate::SecondLine);
+  templ.setTextField(
+      std::wstring(title.begin(), title.end()),
+      WinToastLib::WinToastTemplate::FirstLine);
+  templ.setTextField(
+      std::wstring(text.begin(), text.end()),
+      WinToastLib::WinToastTemplate::SecondLine);
 
   const bool launched = WinToastLib::WinToast::instance()->showToast(
       templ, handler.get(), &error);
   if (!launched) {
-    LOG((CLOG_DEBUG "failed to show toast notification, error code: %d",
-         error));
+    LOG((
+        CLOG_DEBUG "failed to show toast notification, error code: %d", error));
     return;
   }
 }

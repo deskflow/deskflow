@@ -45,8 +45,9 @@ TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem) {
   EXPECT_EQ(0, keyMap.findBestKey(entryList, desiredState));
 }
 
-TEST(KeyMapTests,
-     findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem) {
+TEST(
+    KeyMapTests,
+    findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem) {
   KeyMap keyMap;
   KeyMap::KeyEntryList entryList;
   KeyMap::KeyItemList itemList;
@@ -60,8 +61,9 @@ TEST(KeyMapTests,
   EXPECT_EQ(0, keyMap.findBestKey(entryList, desiredState));
 }
 
-TEST(KeyMapTests,
-     findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem) {
+TEST(
+    KeyMapTests,
+    findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem) {
   KeyMap keyMap;
   KeyMap::KeyEntryList entryList;
   KeyMap::KeyItemList itemList1;
@@ -210,12 +212,14 @@ TEST(KeyMapTests, mapkey_handles_setmodifier_with_no_mapped) {
   KeyMap::ModifierToKeys activeModifiers{};
   KeyModifierMask currentState{};
   KeyModifierMask desiredMask{};
-  auto result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers,
-                              currentState, desiredMask, false, "en");
+  auto result = keyMap.mapKey(
+      strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask,
+      false, "en");
   EXPECT_FALSE(result == nullptr);
   desiredMask = KeyModifierControl;
-  result = keyMap.mapKey(strokes, kKeySetModifiers, 1, activeModifiers,
-                         currentState, desiredMask, false, "en");
+  result = keyMap.mapKey(
+      strokes, kKeySetModifiers, 1, activeModifiers, currentState, desiredMask,
+      false, "en");
   EXPECT_TRUE(result == nullptr);
 }
 

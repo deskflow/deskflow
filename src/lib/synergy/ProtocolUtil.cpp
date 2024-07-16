@@ -54,8 +54,8 @@ void writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8> &Buffer) {
 }
 
 template <typename T>
-void writeVectorInt(const std::vector<T> *VectorData,
-                    std::vector<UInt8> &Buffer) {
+void writeVectorInt(
+    const std::vector<T> *VectorData, std::vector<UInt8> &Buffer) {
   if (VectorData) {
     const std::vector<T> &Vector = *VectorData;
     writeInt((UInt32)Vector.size(), sizeof(UInt32), Buffer);
@@ -69,8 +69,8 @@ void writeString(const String *StringData, std::vector<UInt8> &Buffer) {
   const UInt32 len = (StringData != NULL) ? (UInt32)StringData->size() : 0;
   writeInt(len, sizeof(len), Buffer);
   if (len != 0) {
-    std::copy(StringData->begin(), StringData->end(),
-              std::back_inserter(Buffer));
+    std::copy(
+        StringData->begin(), StringData->end(), std::back_inserter(Buffer));
   }
 }
 
@@ -111,8 +111,8 @@ bool ProtocolUtil::readf(synergy::IStream *stream, const char *fmt, ...) {
   return result;
 }
 
-void ProtocolUtil::vwritef(synergy::IStream *stream, const char *fmt,
-                           UInt32 size, va_list args) {
+void ProtocolUtil::vwritef(
+    synergy::IStream *stream, const char *fmt, UInt32 size, va_list args) {
   assert(stream != NULL);
   assert(fmt != NULL);
 
@@ -130,14 +130,15 @@ void ProtocolUtil::vwritef(synergy::IStream *stream, const char *fmt,
     stream->write(Buffer.data(), size);
     LOG((CLOG_DEBUG2 "wrote %d bytes", size));
   } catch (const XBase &exception) {
-    LOG((CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream",
+    LOG(
+        (CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream",
          exception.what(), size));
     throw;
   }
 }
 
-void ProtocolUtil::vreadf(synergy::IStream *stream, const char *fmt,
-                          va_list args) {
+void ProtocolUtil::vreadf(
+    synergy::IStream *stream, const char *fmt, va_list args) {
   assert(stream != NULL);
   assert(fmt != NULL);
 
@@ -165,7 +166,8 @@ void ProtocolUtil::vreadf(synergy::IStream *stream, const char *fmt,
           break;
         default:
           // the length is wrong
-          LOG((CLOG_ERR
+          LOG(
+              (CLOG_ERR
                "read: length to be read is wrong: '%d' should be 1,2, or 4",
                len));
           assert(false); // assert for debugging
@@ -179,22 +181,23 @@ void ProtocolUtil::vreadf(synergy::IStream *stream, const char *fmt,
         switch (len) {
         case 1:
           // 1 byte integer
-          readVector1ByteInt(stream,
-                             *static_cast<std::vector<UInt8> *>(destination));
+          readVector1ByteInt(
+              stream, *static_cast<std::vector<UInt8> *>(destination));
           break;
         case 2:
           // 2 byte integer
-          readVector2BytesInt(stream,
-                              *static_cast<std::vector<UInt16> *>(destination));
+          readVector2BytesInt(
+              stream, *static_cast<std::vector<UInt16> *>(destination));
           break;
         case 4:
           // 4 byte integer
-          readVector4BytesInt(stream,
-                              *static_cast<std::vector<UInt32> *>(destination));
+          readVector4BytesInt(
+              stream, *static_cast<std::vector<UInt32> *>(destination));
           break;
         default:
           // the length is wrong
-          LOG((CLOG_ERR
+          LOG(
+              (CLOG_ERR
                "read: length to be read is wrong: '%d' should be 1,2, or 4",
                len));
           assert(false); // assert for debugging
@@ -297,8 +300,8 @@ UInt32 ProtocolUtil::getLength(const char *fmt, va_list args) {
   return n;
 }
 
-void ProtocolUtil::writef(std::vector<UInt8> &buffer, const char *fmt,
-                          va_list args) {
+void ProtocolUtil::writef(
+    std::vector<UInt8> &buffer, const char *fmt, va_list args) {
   while (*fmt) {
     if (*fmt == '%') {
       // format specifier.  determine argument size.
@@ -434,7 +437,8 @@ void ProtocolUtil::read(synergy::IStream *stream, void *vbuffer, UInt32 count) {
 
     // bail if stream has hungup
     if (n == 0) {
-      LOG((CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left",
+      LOG(
+          (CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left",
            count));
       throw XIOEndOfStream();
     }
@@ -461,8 +465,8 @@ UInt16 ProtocolUtil::read2BytesInt(synergy::IStream *stream) {
   std::array<UInt8, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
-  UInt16 Result = static_cast<UInt16>((static_cast<UInt16>(buffer[0]) << 8) |
-                                      static_cast<UInt16>(buffer[1]));
+  UInt16 Result = static_cast<UInt16>(
+      (static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]));
   LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
 
   return Result;
@@ -483,32 +487,32 @@ UInt32 ProtocolUtil::read4BytesInt(synergy::IStream *stream) {
   return Result;
 }
 
-void ProtocolUtil::readVector1ByteInt(synergy::IStream *stream,
-                                      std::vector<UInt8> &destination) {
+void ProtocolUtil::readVector1ByteInt(
+    synergy::IStream *stream, std::vector<UInt8> &destination) {
   UInt32 size = read4BytesInt(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read1ByteInt(stream));
   }
 }
 
-void ProtocolUtil::readVector2BytesInt(synergy::IStream *stream,
-                                       std::vector<UInt16> &destination) {
+void ProtocolUtil::readVector2BytesInt(
+    synergy::IStream *stream, std::vector<UInt16> &destination) {
   UInt32 size = read4BytesInt(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read2BytesInt(stream));
   }
 }
 
-void ProtocolUtil::readVector4BytesInt(synergy::IStream *stream,
-                                       std::vector<UInt32> &destination) {
+void ProtocolUtil::readVector4BytesInt(
+    synergy::IStream *stream, std::vector<UInt32> &destination) {
   UInt32 size = read4BytesInt(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read4BytesInt(stream));
   }
 }
 
-void ProtocolUtil::readBytes(synergy::IStream *stream, UInt32 len,
-                             String *destination) {
+void ProtocolUtil::readBytes(
+    synergy::IStream *stream, UInt32 len, String *destination) {
   assert(len == 0);
 
   // read the string length

@@ -26,8 +26,8 @@ using namespace std;
 
 DragInformation::DragInformation() : m_filename(), m_filesize(0) {}
 
-void DragInformation::parseDragInfo(DragFileList &dragFileList, UInt32 fileNum,
-                                    String data) {
+void DragInformation::parseDragInfo(
+    DragFileList &dragFileList, UInt32 fileNum, String data) {
   size_t startPos = 0;
   size_t findResult1 = 0;
   size_t findResult2 = 0;
@@ -70,11 +70,13 @@ void DragInformation::parseDragInfo(DragFileList &dragFileList, UInt32 fileNum,
     ++index;
   }
 
-  LOG((CLOG_DEBUG "drag info received, total drag file number: %i",
+  LOG(
+      (CLOG_DEBUG "drag info received, total drag file number: %i",
        dragFileList.size()));
 
   for (size_t i = 0; i < dragFileList.size(); ++i) {
-    LOG((CLOG_DEBUG "dragging file %i name: %s", i + 1,
+    LOG(
+        (CLOG_DEBUG "dragging file %i name: %s", i + 1,
          dragFileList.at(i).getFilename().c_str()));
   }
 }

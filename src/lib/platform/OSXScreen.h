@@ -36,8 +36,9 @@
 
 extern "C" {
 typedef int CGSConnectionID;
-CGError CGSSetConnectionProperty(CGSConnectionID cid, CGSConnectionID targetCID,
-                                 CFStringRef key, CFTypeRef value);
+CGError CGSSetConnectionProperty(
+    CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key,
+    CFTypeRef value);
 int _CGSDefaultConnection();
 }
 
@@ -53,9 +54,10 @@ class Mutex;
 //! Implementation of IPlatformScreen for OS X
 class OSXScreen : public PlatformScreen {
 public:
-  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false,
-            lib::synergy::ClientScrollDirection scrollDirection =
-                lib::synergy::ClientScrollDirection::SERVER);
+  OSXScreen(
+      IEventQueue *events, bool isPrimary, bool enableLangSync = false,
+      lib::synergy::ClientScrollDirection scrollDirection =
+          lib::synergy::ClientScrollDirection::SERVER);
 
   virtual ~OSXScreen();
 
@@ -64,8 +66,8 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                SInt32 &height) const override;
+  void
+  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
   void getCursorPos(SInt32 &x, SInt32 &y) const override;
 
   // IPrimaryScreen overrides
@@ -114,8 +116,8 @@ protected:
 
 private:
   bool updateScreenShape();
-  bool updateScreenShape(const CGDirectDisplayID,
-                         const CGDisplayChangeSummaryFlags);
+  bool
+  updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
 
   // convenience function to send events
@@ -167,20 +169,19 @@ private:
   void handleClipboardCheck(const Event &, void *);
 
   // Resolution switch callback
-  static void displayReconfigurationCallback(CGDirectDisplayID,
-                                             CGDisplayChangeSummaryFlags,
-                                             void *);
+  static void displayReconfigurationCallback(
+      CGDirectDisplayID, CGDisplayChangeSummaryFlags, void *);
 
   // fast user switch callback
-  static pascal OSStatus userSwitchCallback(EventHandlerCallRef nextHandler,
-                                            EventRef theEvent,
-                                            void *inUserData);
+  static pascal OSStatus userSwitchCallback(
+      EventHandlerCallRef nextHandler, EventRef theEvent, void *inUserData);
 
   // sleep / wakeup support
   void watchSystemPowerThread(void *);
   static void testCanceled(CFRunLoopTimerRef timer, void *info);
-  static void powerChangeCallback(void *refcon, io_service_t service,
-                                  natural_t messageType, void *messageArgument);
+  static void powerChangeCallback(
+      void *refcon, io_service_t service, natural_t messageType,
+      void *messageArgument);
   void handlePowerChangeRequest(natural_t messageType, void *messageArgument);
 
   void handleConfirmSleep(const Event &event, void *);
@@ -191,11 +192,10 @@ private:
   static bool getGlobalHotKeysEnabled();
 
   // Quartz event tap support
-  static CGEventRef handleCGInputEvent(CGEventTapProxy proxy, CGEventType type,
-                                       CGEventRef event, void *refcon);
-  static CGEventRef handleCGInputEventSecondary(CGEventTapProxy proxy,
-                                                CGEventType type,
-                                                CGEventRef event, void *refcon);
+  static CGEventRef handleCGInputEvent(
+      CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon);
+  static CGEventRef handleCGInputEventSecondary(
+      CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon);
 
   // convert CFString to char*
   static char *CFStringRefToUTF8String(CFStringRef aString);

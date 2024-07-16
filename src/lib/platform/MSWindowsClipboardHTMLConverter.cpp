@@ -55,12 +55,15 @@ MSWindowsClipboardHTMLConverter::doFromIClipboard(const String &data) const {
   // StartHTML is constant by the design of the prefix
   UInt32 EndHTML = EndFragment + (UInt32)suffix.size();
 
-  prefix.replace(prefix.find("XXXXXXXXXX"), 10,
-                 synergy::string::sprintf("%010u", StartFragment));
-  prefix.replace(prefix.find("YYYYYYYYYY"), 10,
-                 synergy::string::sprintf("%010u", EndFragment));
-  prefix.replace(prefix.find("ZZZZZZZZZZ"), 10,
-                 synergy::string::sprintf("%010u", EndHTML));
+  prefix.replace(
+      prefix.find("XXXXXXXXXX"), 10,
+      synergy::string::sprintf("%010u", StartFragment));
+  prefix.replace(
+      prefix.find("YYYYYYYYYY"), 10,
+      synergy::string::sprintf("%010u", EndFragment));
+  prefix.replace(
+      prefix.find("ZZZZZZZZZZ"), 10,
+      synergy::string::sprintf("%010u", EndHTML));
 
   // concatenate
   prefix += data;
@@ -88,8 +91,8 @@ MSWindowsClipboardHTMLConverter::doToIClipboard(const String &data) const {
   return data.substr(start, end - start);
 }
 
-String MSWindowsClipboardHTMLConverter::findArg(const String &data,
-                                                const String &name) const {
+String MSWindowsClipboardHTMLConverter::findArg(
+    const String &data, const String &name) const {
   String::size_type i = data.find(name);
   if (i == String::npos) {
     return String();

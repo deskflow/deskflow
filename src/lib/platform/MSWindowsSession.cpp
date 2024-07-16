@@ -27,8 +27,8 @@ MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1) {}
 
 MSWindowsSession::~MSWindowsSession() {}
 
-bool MSWindowsSession::isProcessInSession(const char *name,
-                                          PHANDLE process = NULL) {
+bool MSWindowsSession::isProcessInSession(
+    const char *name, PHANDLE process = NULL) {
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (snapshot == INVALID_HANDLE_VALUE) {
@@ -64,7 +64,8 @@ bool MSWindowsSession::isProcessInSession(const char *name,
       if (!pidToSidRet) {
         // if we can not acquire session associated with a specified process,
         // simply ignore it
-        LOG((CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
+        LOG(
+            (CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
              entry.th32ProcessID, entry.szExeFile, GetLastError()));
         gotEntry = nextProcessEntry(snapshot, &entry);
         continue;
@@ -93,7 +94,8 @@ bool MSWindowsSession::isProcessInSession(const char *name,
     nameListJoin.append(", ");
   }
 
-  LOG((CLOG_DEBUG2 "processes in session %d: %s", m_activeSessionId,
+  LOG(
+      (CLOG_DEBUG2 "processes in session %d: %s", m_activeSessionId,
        nameListJoin.c_str()));
 
   CloseHandle(snapshot);
@@ -120,9 +122,9 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security) {
   }
 
   HANDLE newToken;
-  if (!DuplicateTokenEx(sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
-                        security, SecurityImpersonation, TokenPrimary,
-                        &newToken)) {
+  if (!DuplicateTokenEx(
+          sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
+          SecurityImpersonation, TokenPrimary, &newToken)) {
 
     LOG((CLOG_ERR "could not duplicate token"));
     throw XArch(new XArchEvalWindows);
@@ -140,8 +142,8 @@ void MSWindowsSession::updateActiveSession() {
   m_activeSessionId = WTSGetActiveConsoleSessionId();
 }
 
-BOOL MSWindowsSession::nextProcessEntry(HANDLE snapshot,
-                                        LPPROCESSENTRY32 entry) {
+BOOL MSWindowsSession::nextProcessEntry(
+    HANDLE snapshot, LPPROCESSENTRY32 entry) {
   // TODO: issue S3-2021
   // resetting the error state here is acceptable, but having to do so indicates
   // that a different win32 function call has failed beforehand. we should

@@ -59,8 +59,8 @@ FileChunk *FileChunk::end() {
   return end;
 }
 
-int FileChunk::assemble(synergy::IStream *stream, String &dataReceived,
-                        size_t &expectedSize) {
+int FileChunk::assemble(
+    synergy::IStream *stream, String &dataReceived, size_t &expectedSize) {
   // parse
   UInt8 mark = 0;
   String content;
@@ -106,7 +106,8 @@ int FileChunk::assemble(synergy::IStream *stream, String &dataReceived,
 
   case kDataEnd:
     if (expectedSize != dataReceived.size()) {
-      LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
+      LOG(
+          (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
            expectedSize, dataReceived.size()));
       return kError;
     }
@@ -115,11 +116,14 @@ int FileChunk::assemble(synergy::IStream *stream, String &dataReceived,
       LOG((CLOG_DEBUG2 "file transfer finished"));
       elapsedTime += stopwatch.getTime();
       double averageSpeed = expectedSize / elapsedTime / 1000;
-      LOG((CLOG_DEBUG2 "file transfer finished: total time consumed=%f s",
+      LOG(
+          (CLOG_DEBUG2 "file transfer finished: total time consumed=%f s",
            elapsedTime));
-      LOG((CLOG_DEBUG2 "file transfer finished: total data received=%i kb",
+      LOG(
+          (CLOG_DEBUG2 "file transfer finished: total data received=%i kb",
            expectedSize / 1000));
-      LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s",
+      LOG(
+          (CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s",
            averageSpeed));
     }
     return kFinish;
@@ -128,8 +132,8 @@ int FileChunk::assemble(synergy::IStream *stream, String &dataReceived,
   return kError;
 }
 
-void FileChunk::send(synergy::IStream *stream, UInt8 mark, char *data,
-                     size_t dataSize) {
+void FileChunk::send(
+    synergy::IStream *stream, UInt8 mark, char *data, size_t dataSize) {
   String chunk(data, dataSize);
 
   switch (mark) {

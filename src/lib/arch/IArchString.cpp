@@ -37,8 +37,8 @@ IArchString::~IArchString() {
   }
 }
 
-int IArchString::convStringWCToMB(char *dst, const wchar_t *src, UInt32 n,
-                                  bool *errors) {
+int IArchString::convStringWCToMB(
+    char *dst, const wchar_t *src, UInt32 n, bool *errors) {
   ptrdiff_t len = 0;
 
   bool dummyErrors;
@@ -94,8 +94,8 @@ int IArchString::convStringWCToMB(char *dst, const wchar_t *src, UInt32 n,
   return static_cast<int>(len);
 }
 
-int IArchString::convStringMBToWC(wchar_t *dst, const char *src, UInt32 n,
-                                  bool *errors) {
+int IArchString::convStringMBToWC(
+    wchar_t *dst, const char *src, UInt32 n, bool *errors) {
   ptrdiff_t len = 0;
   wchar_t dummy;
 

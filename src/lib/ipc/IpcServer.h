@@ -42,8 +42,8 @@ and allows the daemon and client/server to send log data to the GUI.
 class IpcServer {
 public:
   IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
-  IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-            int port);
+  IpcServer(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port);
   IpcServer(IpcServer const &) = delete;
   IpcServer(IpcServer &&) = delete;
   virtual ~IpcServer();
@@ -90,7 +90,9 @@ private:
 #ifdef TEST_ENV
 public:
   IpcServer()
-      : m_mock(true), m_events(nullptr), m_socketMultiplexer(nullptr),
+      : m_mock(true),
+        m_events(nullptr),
+        m_socketMultiplexer(nullptr),
         m_socket(nullptr) {}
 #endif
 };

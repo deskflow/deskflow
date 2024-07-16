@@ -34,11 +34,14 @@
 //
 
 SocketMultiplexer::SocketMultiplexer()
-    : m_mutex(new Mutex), m_thread(NULL), m_update(false),
+    : m_mutex(new Mutex),
+      m_thread(NULL),
+      m_update(false),
       m_jobsReady(new CondVar<bool>(m_mutex, false)),
       m_jobListLock(new CondVar<bool>(m_mutex, false)),
       m_jobListLockLocked(new CondVar<bool>(m_mutex, false)),
-      m_jobListLocker(NULL), m_jobListLockLocker(NULL) {
+      m_jobListLocker(NULL),
+      m_jobListLockLocker(NULL) {
   // this pointer just has to be unique and not NULL.  it will
   // never be dereferenced.  it's used to identify cursor nodes
   // in the jobs list.

@@ -40,7 +40,9 @@ const UINT MSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] = {
 MSWindowsClientTaskBarReceiver::MSWindowsClientTaskBarReceiver(
     HINSTANCE appInstance, const BufferedLogOutputter *logBuffer,
     IEventQueue *events)
-    : ClientTaskBarReceiver(events), m_appInstance(appInstance), m_window(NULL),
+    : ClientTaskBarReceiver(events),
+      m_appInstance(appInstance),
+      m_window(NULL),
       m_logBuffer(logBuffer) {
   for (UInt32 i = 0; i < kMaxState; ++i) {
     m_icon[i] = loadIcon(s_stateToIconID[i]);
@@ -135,8 +137,8 @@ void MSWindowsClientTaskBarReceiver::runMenu(int x, int y) {
   HMENU menu = GetSubMenu(m_menu, 0);
   SetMenuDefaultItem(menu, IDC_TASKBAR_STATUS, FALSE);
   HMENU logLevelMenu = GetSubMenu(menu, 3);
-  CheckMenuRadioItem(logLevelMenu, 0, 6, CLOG->getFilter() - kERROR,
-                     MF_BYPOSITION);
+  CheckMenuRadioItem(
+      logLevelMenu, 0, 6, CLOG->getFilter() - kERROR, MF_BYPOSITION);
   int n = TrackPopupMenu(
       menu, TPM_NONOTIFY | TPM_RETURNCMD | TPM_LEFTBUTTON | TPM_RIGHTBUTTON, x,
       y, 0, m_window, NULL);
@@ -226,8 +228,8 @@ void MSWindowsClientTaskBarReceiver::onStatusChanged() {
 
 HICON
 MSWindowsClientTaskBarReceiver::loadIcon(UINT id) {
-  HANDLE icon = LoadImage(m_appInstance, MAKEINTRESOURCE(id), IMAGE_ICON, 0, 0,
-                          LR_DEFAULTCOLOR);
+  HANDLE icon = LoadImage(
+      m_appInstance, MAKEINTRESOURCE(id), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
   return static_cast<HICON>(icon);
 }
 
@@ -267,8 +269,8 @@ void MSWindowsClientTaskBarReceiver::destroyWindow() {
   }
 }
 
-BOOL MSWindowsClientTaskBarReceiver::dlgProc(HWND hwnd, UINT msg, WPARAM wParam,
-                                             LPARAM) {
+BOOL MSWindowsClientTaskBarReceiver::dlgProc(
+    HWND hwnd, UINT msg, WPARAM wParam, LPARAM) {
   switch (msg) {
   case WM_INITDIALOG:
     // use default focus
@@ -284,9 +286,8 @@ BOOL MSWindowsClientTaskBarReceiver::dlgProc(HWND hwnd, UINT msg, WPARAM wParam,
   return FALSE;
 }
 
-BOOL CALLBACK MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd, UINT msg,
-                                                            WPARAM wParam,
-                                                            LPARAM lParam) {
+BOOL CALLBACK MSWindowsClientTaskBarReceiver::staticDlgProc(
+    HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
   // if msg is WM_INITDIALOG, extract the MSWindowsClientTaskBarReceiver*
   // and put it in the extra window data then forward the call.
   MSWindowsClientTaskBarReceiver *self = NULL;
@@ -310,15 +311,15 @@ BOOL CALLBACK MSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd, UINT msg,
   }
 }
 
-IArchTaskBarReceiver *
-createTaskBarReceiver(const BufferedLogOutputter *logBuffer,
-                      IEventQueue *events) {
-  ArchMiscWindows::setIcons((HICON)LoadImage(ArchMiscWindows::instanceWin32(),
-                                             MAKEINTRESOURCE(IDI_SYNERGY),
-                                             IMAGE_ICON, 32, 32, LR_SHARED),
-                            (HICON)LoadImage(ArchMiscWindows::instanceWin32(),
-                                             MAKEINTRESOURCE(IDI_SYNERGY),
-                                             IMAGE_ICON, 16, 16, LR_SHARED));
+IArchTaskBarReceiver *createTaskBarReceiver(
+    const BufferedLogOutputter *logBuffer, IEventQueue *events) {
+  ArchMiscWindows::setIcons(
+      (HICON)LoadImage(
+          ArchMiscWindows::instanceWin32(), MAKEINTRESOURCE(IDI_SYNERGY),
+          IMAGE_ICON, 32, 32, LR_SHARED),
+      (HICON)LoadImage(
+          ArchMiscWindows::instanceWin32(), MAKEINTRESOURCE(IDI_SYNERGY),
+          IMAGE_ICON, 16, 16, LR_SHARED));
 
   return new MSWindowsClientTaskBarReceiver(
       MSWindowsScreen::getWindowInstance(), logBuffer, events);

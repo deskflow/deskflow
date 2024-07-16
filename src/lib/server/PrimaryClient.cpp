@@ -27,7 +27,9 @@
 //
 
 PrimaryClient::PrimaryClient(const String &name, synergy::Screen *screen)
-    : BaseClientProxy(name), m_screen(screen), m_fakeInputCount(0) {
+    : BaseClientProxy(name),
+      m_screen(screen),
+      m_fakeInputCount(0) {
   // all clipboards are clean
   for (UInt32 i = 0; i < kClipboardEnd; ++i) {
     m_clipboardDirty[i] = false;
@@ -86,8 +88,8 @@ bool PrimaryClient::getClipboard(ClipboardID id, IClipboard *clipboard) const {
   return m_screen->getClipboard(id, clipboard);
 }
 
-void PrimaryClient::getShape(SInt32 &x, SInt32 &y, SInt32 &width,
-                             SInt32 &height) const {
+void PrimaryClient::getShape(
+    SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const {
   m_screen->getShape(x, y, width, height);
 }
 
@@ -99,8 +101,9 @@ void PrimaryClient::enable() { m_screen->enable(); }
 
 void PrimaryClient::disable() { m_screen->disable(); }
 
-void PrimaryClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum,
-                          KeyModifierMask mask, bool screensaver) {
+void PrimaryClient::enter(
+    SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
+    bool screensaver) {
   m_screen->setSequenceNumber(seqNum);
   if (!screensaver) {
     m_screen->warpCursor(xAbs, yAbs);
@@ -133,8 +136,8 @@ void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty) {
   m_clipboardDirty[id] = dirty;
 }
 
-void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button,
-                            const String &) {
+void PrimaryClient::keyDown(
+    KeyID key, KeyModifierMask mask, KeyButton button, const String &) {
   if (m_fakeInputCount > 0) {
     // XXX -- don't forward keystrokes to primary screen for now
     (void)key;
@@ -144,8 +147,8 @@ void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button,
   }
 }
 
-void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton,
-                              const String &) {
+void PrimaryClient::keyRepeat(
+    KeyID, KeyModifierMask, SInt32, KeyButton, const String &) {
   // ignore
 }
 
@@ -183,8 +186,8 @@ void PrimaryClient::screensaver(bool) {
   // ignore
 }
 
-void PrimaryClient::sendDragInfo(UInt32 fileCount, const char *info,
-                                 size_t size) {
+void PrimaryClient::sendDragInfo(
+    UInt32 fileCount, const char *info, size_t size) {
   // ignore
 }
 

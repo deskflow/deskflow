@@ -37,6 +37,7 @@ protected:
   virtual String doToIClipboard(const String &) const;
 
   // generic encoding converter
-  static String convertString(const String &data, CFStringEncoding fromEncoding,
-                              CFStringEncoding toEncoding);
+  static String convertString(
+      const String &data, CFStringEncoding fromEncoding,
+      CFStringEncoding toEncoding);
 };

@@ -25,5 +25,5 @@ const char *BaseConfig::m_FixNames[] = {
     "halfDuplexCapsLock", "halfDuplexNumLock", "halfDuplexScrollLock",
     "xtestIsXineramaUnaware"};
 
-const char *BaseConfig::m_SwitchCornerNames[] = {"top-left", "top-right",
-                                                 "bottom-left", "bottom-right"};
+const char *BaseConfig::m_SwitchCornerNames[] = {
+    "top-left", "top-right", "bottom-left", "bottom-right"};

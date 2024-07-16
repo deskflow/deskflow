@@ -53,16 +53,29 @@
 // Client
 //
 
-Client::Client(IEventQueue *events, const String &name,
-               const NetworkAddress &address, ISocketFactory *socketFactory,
-               synergy::Screen *screen, lib::synergy::ClientArgs const &args)
-    : m_mock(false), m_name(name), m_serverAddress(address),
-      m_socketFactory(socketFactory), m_screen(screen), m_stream(NULL),
-      m_timer(NULL), m_server(NULL), m_ready(false), m_active(false),
-      m_suspended(false), m_connectOnResume(false), m_events(events),
-      m_sendFileThread(nullptr), m_writeToDropDirThread(nullptr),
-      m_useSecureNetwork(args.m_enableCrypto), m_args(args),
-      m_enableClipboard(true), m_maximumClipboardSize(INT_MAX) {
+Client::Client(
+    IEventQueue *events, const String &name, const NetworkAddress &address,
+    ISocketFactory *socketFactory, synergy::Screen *screen,
+    lib::synergy::ClientArgs const &args)
+    : m_mock(false),
+      m_name(name),
+      m_serverAddress(address),
+      m_socketFactory(socketFactory),
+      m_screen(screen),
+      m_stream(NULL),
+      m_timer(NULL),
+      m_server(NULL),
+      m_ready(false),
+      m_active(false),
+      m_suspended(false),
+      m_connectOnResume(false),
+      m_events(events),
+      m_sendFileThread(nullptr),
+      m_writeToDropDirThread(nullptr),
+      m_useSecureNetwork(args.m_enableCrypto),
+      m_args(args),
+      m_enableClipboard(true),
+      m_maximumClipboardSize(INT_MAX) {
   assert(m_socketFactory != NULL);
   assert(m_screen != NULL);
 
@@ -110,7 +123,8 @@ void Client::connect(size_t addressIndex) {
 
   try {
     if (m_args.m_hostMode) {
-      LOG((CLOG_NOTE "waiting for server conection on %i port",
+      LOG(
+          (CLOG_NOTE "waiting for server conection on %i port",
            m_serverAddress.getPort()));
     } else {
       // resolve the server hostname.  do this every time we connect
@@ -123,7 +137,8 @@ void Client::connect(size_t addressIndex) {
       // m_serverAddress will be null if the hostname address is not reolved
       if (m_serverAddress.getAddress() != nullptr) {
         // to help users troubleshoot, show server host name (issue: 60)
-        LOG((CLOG_NOTE "connecting to '%s': %s:%i",
+        LOG(
+            (CLOG_NOTE "connecting to '%s': %s:%i",
              m_serverAddress.getHostname().c_str(),
              ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
              m_serverAddress.getPort()));
@@ -169,8 +184,9 @@ void Client::refuseConnection(const char *msg) {
   if (msg) {
     auto info = new FailInfo(msg);
     info->m_retry = true;
-    Event event(m_events->forClient().connectionRefused(), getEventTarget(),
-                info, Event::kDontFreeData);
+    Event event(
+        m_events->forClient().connectionRefused(), getEventTarget(), info,
+        Event::kDontFreeData);
     m_events->addEvent(event);
   }
 }
@@ -201,8 +217,8 @@ void Client::getCursorPos(SInt32 &x, SInt32 &y) const {
   m_screen->getCursorPos(x, y);
 }
 
-void Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask,
-                   bool) {
+void Client::enter(
+    SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool) {
   m_active = true;
   m_screen->mouseMove(xAbs, yAbs);
   m_screen->enter(mask);
@@ -246,13 +262,14 @@ void Client::setClipboardDirty(ClipboardID, bool) {
   assert(0 && "shouldn't be called");
 }
 
-void Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button,
-                     const String &lang) {
+void Client::keyDown(
+    KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) {
   m_screen->keyDown(id, mask, button, lang);
 }
 
-void Client::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count,
-                       KeyButton button, const String &lang) {
+void Client::keyRepeat(
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
+    const String &lang) {
   m_screen->keyRepeat(id, mask, count, button, lang);
 }
 
@@ -329,7 +346,8 @@ void Client::sendClipboard(ClipboardID id) {
     // marshall the data
     String data = clipboard.marshall();
     if (data.size() >= m_maximumClipboardSize * 1024) {
-      LOG((CLOG_NOTE "skipping clipboard transfer because the clipboard"
+      LOG(
+          (CLOG_NOTE "skipping clipboard transfer because the clipboard"
                      " contents exceeds the %i MB size limit set by the server",
            m_maximumClipboardSize / 1024));
       return;
@@ -353,8 +371,9 @@ void Client::sendEvent(Event::Type type, void *data) {
 void Client::sendConnectionFailedEvent(const char *msg) {
   FailInfo *info = new FailInfo(msg);
   info->m_retry = true;
-  Event event(m_events->forClient().connectionFailed(), getEventTarget(), info,
-              Event::kDontFreeData);
+  Event event(
+      m_events->forClient().connectionFailed(), getEventTarget(), info,
+      Event::kDontFreeData);
   m_events->addEvent(event);
 }
 
@@ -364,8 +383,8 @@ void Client::sendFileChunk(const void *data) {
   assert(m_server != NULL);
 
   // relay
-  m_server->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1],
-                             chunk->m_dataSize);
+  m_server->fileChunkSending(
+      chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void Client::setupConnecting() {
@@ -445,27 +464,28 @@ void Client::cleanup() {
 
 void Client::cleanupConnecting() {
   if (m_stream != NULL) {
-    m_events->removeHandler(m_events->forIDataSocket().connected(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIDataSocket().connectionFailed(),
-                            m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIDataSocket().connected(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIDataSocket().connectionFailed(),
+        m_stream->getEventTarget());
   }
 }
 
 void Client::cleanupConnection() {
   if (m_stream != NULL) {
-    m_events->removeHandler(m_events->forIStream().inputReady(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputError(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().inputShutdown(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputShutdown(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forISocket().disconnected(),
-                            m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forISocket().stopRetry(),
-                            m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().inputReady(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().outputError(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().inputShutdown(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forIStream().outputShutdown(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forISocket().disconnected(), m_stream->getEventTarget());
+    m_events->removeHandler(
+        m_events->forISocket().stopRetry(), m_stream->getEventTarget());
     cleanupStream();
   }
 }
@@ -476,10 +496,10 @@ void Client::cleanupScreen() {
       m_screen->disable();
       m_ready = false;
     }
-    m_events->removeHandler(m_events->forIScreen().shapeChanged(),
-                            getEventTarget());
-    m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(),
-                            getEventTarget());
+    m_events->removeHandler(
+        m_events->forIScreen().shapeChanged(), getEventTarget());
+    m_events->removeHandler(
+        m_events->forClipboard().clipboardGrabbed(), getEventTarget());
     delete m_server;
     m_server = NULL;
   }
@@ -616,8 +636,9 @@ void Client::handleHello(const Event &, void *) {
     // server
     LOG((CLOG_NOTE "downgrading protocol version for server"));
     helloBackMinor = minor;
-  } else if (major < kProtocolMajorVersion || (major == kProtocolMajorVersion &&
-                                               minor < kProtocolMinorVersion)) {
+  } else if (
+      major < kProtocolMajorVersion ||
+      (major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
     sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
     cleanupTimer();
     cleanupConnection();
@@ -626,8 +647,8 @@ void Client::handleHello(const Event &, void *) {
 
   // say hello back
   LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
-  ProtocolUtil::writef(m_stream, kMsgHelloBack, helloBackMajor, helloBackMinor,
-                       &m_name);
+  ProtocolUtil::writef(
+      m_stream, kMsgHelloBack, helloBackMajor, helloBackMinor, &m_name);
 
   // now connected but waiting to complete handshake
   setupScreen();
@@ -681,7 +702,8 @@ void Client::onFileRecieveCompleted() {
 void Client::bindNetworkInterface(IDataSocket *socket) const {
   try {
     if (!m_args.m_synergyAddress.empty()) {
-      LOG((CLOG_DEBUG1 "bind to network interface: %s",
+      LOG(
+          (CLOG_DEBUG1 "bind to network interface: %s",
            m_args.m_synergyAddress.c_str()));
 
       NetworkAddress bindAddress(m_args.m_synergyAddress);
@@ -707,8 +729,8 @@ void Client::writeToDropDirThread(void *) {
     ARCH->sleep(.1f);
   }
 
-  DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList,
-                         m_receivedFileData);
+  DropHelper::writeToDir(
+      m_screen->getDropTarget(), m_dragFileList, m_receivedFileData);
 }
 
 void Client::dragInfoReceived(UInt32 fileNum, String data) {

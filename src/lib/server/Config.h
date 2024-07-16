@@ -123,8 +123,9 @@ private:
     bool hasEdge(const CellEdge &) const;
     bool overlaps(const CellEdge &) const;
 
-    bool getLink(EDirection side, float position, const CellEdge *&src,
-                 const CellEdge *&dst) const;
+    bool getLink(
+        EDirection side, float position, const CellEdge *&src,
+        const CellEdge *&dst) const;
 
     bool operator==(const Cell &) const;
     bool operator!=(const Cell &) const;
@@ -258,9 +259,9 @@ public:
   and all of \c srcStart, \c srcEnd, \c dstStart, or \c dstEnd must
   be inside the range [0,1].
   */
-  bool connect(const String &srcName, EDirection srcSide, float srcStart,
-               float srcEnd, const String &dstName, float dstStart,
-               float dstEnd);
+  bool connect(
+      const String &srcName, EDirection srcSide, float srcStart, float srcEnd,
+      const String &dstName, float dstStart, float dstEnd);
 
   //! Disconnect screens
   /*!
@@ -361,8 +362,8 @@ public:
   saves the position on the neighbor in \c positionOut if it's not
   \c NULL.
   */
-  String getNeighbor(const String &, EDirection, float position,
-                     float *positionOut) const;
+  String getNeighbor(
+      const String &, EDirection, float position, float *positionOut) const;
 
   //! Check for neighbor
   /*!
@@ -458,15 +459,15 @@ private:
   void readSectionLinks(ConfigReadContext &);
   void readSectionAliases(ConfigReadContext &);
 
-  InputFilter::Condition *parseCondition(ConfigReadContext &,
-                                         const String &condition,
-                                         const std::vector<String> &args);
-  void parseAction(ConfigReadContext &, const String &action,
-                   const std::vector<String> &args, InputFilter::Rule &,
-                   bool activate);
+  InputFilter::Condition *parseCondition(
+      ConfigReadContext &, const String &condition,
+      const std::vector<String> &args);
+  void parseAction(
+      ConfigReadContext &, const String &action,
+      const std::vector<String> &args, InputFilter::Rule &, bool activate);
 
-  void parseScreens(ConfigReadContext &, const String &,
-                    std::set<String> &screens) const;
+  void parseScreens(
+      ConfigReadContext &, const String &, std::set<String> &screens) const;
   static const char *getOptionName(OptionID);
   static String getOptionValue(OptionID, OptionValue);
 
@@ -503,13 +504,12 @@ public:
   OptionValue parseCorner(const String &) const;
   OptionValue parseCorners(const String &) const;
   Config::Interval parseInterval(const ArgList &args) const;
-  void parseNameWithArgs(const String &type, const String &line,
-                         const String &delim, String::size_type &index,
-                         String &name, ArgList &args) const;
+  void parseNameWithArgs(
+      const String &type, const String &line, const String &delim,
+      String::size_type &index, String &name, ArgList &args) const;
   IPlatformScreen::KeyInfo *parseKeystroke(const String &keystroke) const;
-  IPlatformScreen::KeyInfo *
-  parseKeystroke(const String &keystroke,
-                 const std::set<String> &screens) const;
+  IPlatformScreen::KeyInfo *parseKeystroke(
+      const String &keystroke, const std::set<String> &screens) const;
   IPlatformScreen::ButtonInfo *parseMouse(const String &mouse) const;
   KeyModifierMask parseModifier(const String &modifiers) const;
   std::istream &getStream() const { return m_stream; };
@@ -532,8 +532,9 @@ Thrown when a configuration stream cannot be parsed.
 class XConfigRead : public XBase {
 public:
   XConfigRead(const ConfigReadContext &context, const String &);
-  XConfigRead(const ConfigReadContext &context, const char *errorFmt,
-              const String &arg);
+  XConfigRead(
+      const ConfigReadContext &context, const char *errorFmt,
+      const String &arg);
   virtual ~XConfigRead() _NOEXCEPT;
 
 protected:

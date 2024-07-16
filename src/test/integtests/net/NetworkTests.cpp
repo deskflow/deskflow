@@ -78,20 +78,20 @@ public:
 
   void sendMockData(void *eventTarget);
 
-  void sendToClient_mockData_handleClientConnected(const Event &,
-                                                   void *vlistener);
+  void
+  sendToClient_mockData_handleClientConnected(const Event &, void *vlistener);
   void sendToClient_mockData_fileRecieveCompleted(const Event &, void *);
 
-  void sendToClient_mockFile_handleClientConnected(const Event &,
-                                                   void *vlistener);
+  void
+  sendToClient_mockFile_handleClientConnected(const Event &, void *vlistener);
   void sendToClient_mockFile_fileRecieveCompleted(const Event &event, void *);
 
-  void sendToServer_mockData_handleClientConnected(const Event &,
-                                                   void *vlistener);
+  void
+  sendToServer_mockData_handleClientConnected(const Event &, void *vlistener);
   void sendToServer_mockData_fileRecieveCompleted(const Event &event, void *);
 
-  void sendToServer_mockFile_handleClientConnected(const Event &,
-                                                   void *vlistener);
+  void
+  sendToServer_mockFile_handleClientConnected(const Event &, void *vlistener);
   void sendToServer_mockFile_fileRecieveCompleted(const Event &event, void *);
 
 public:
@@ -130,8 +130,8 @@ TEST_F(NetworkTests, sendToClient_mockData) {
 
   lib::synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
-  Server server(serverConfig, &primaryClient, &serverScreen, &m_events,
-                serverArgs);
+  Server server(
+      serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
   server.m_mock = true;
   listener.setServer(&server);
 
@@ -148,8 +148,9 @@ TEST_F(NetworkTests, sendToClient_mockData) {
   lib::synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
-  Client client(&m_events, "stub", serverAddress, clientSocketFactory,
-                &clientScreen, clientArgs);
+  Client client(
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
+      clientArgs);
 
   m_events.adoptHandler(
       m_events.forFile().fileRecieveCompleted(), &client,
@@ -193,8 +194,8 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
 
   lib::synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
-  Server server(serverConfig, &primaryClient, &serverScreen, &m_events,
-                serverArgs);
+  Server server(
+      serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
   server.m_mock = true;
   listener.setServer(&server);
 
@@ -211,8 +212,9 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
   lib::synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
-  Client client(&m_events, "stub", serverAddress, clientSocketFactory,
-                &clientScreen, clientArgs);
+  Client client(
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
+      clientArgs);
 
   m_events.adoptHandler(
       m_events.forFile().fileRecieveCompleted(), &client,
@@ -249,8 +251,8 @@ TEST_F(NetworkTests, sendToServer_mockData) {
 
   lib::synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
-  Server server(serverConfig, &primaryClient, &serverScreen, &m_events,
-                serverArgs);
+  Server server(
+      serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
   server.m_mock = true;
   listener.setServer(&server);
 
@@ -267,8 +269,9 @@ TEST_F(NetworkTests, sendToServer_mockData) {
   lib::synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
-  Client client(&m_events, "stub", serverAddress, clientSocketFactory,
-                &clientScreen, clientArgs);
+  Client client(
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
+      clientArgs);
 
   m_events.adoptHandler(
       m_events.forClientListener().connected(), &listener,
@@ -312,8 +315,8 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
 
   lib::synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
-  Server server(serverConfig, &primaryClient, &serverScreen, &m_events,
-                serverArgs);
+  Server server(
+      serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
   server.m_mock = true;
   listener.setServer(&server);
 
@@ -330,8 +333,9 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
   lib::synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
-  Client client(&m_events, "stub", serverAddress, clientSocketFactory,
-                &clientScreen, clientArgs);
+  Client client(
+      &m_events, "stub", serverAddress, clientSocketFactory, &clientScreen,
+      clientArgs);
 
   m_events.adoptHandler(
       m_events.forClientListener().connected(), &listener,
@@ -403,8 +407,8 @@ void NetworkTests::sendToClient_mockFile_fileRecieveCompleted(
   m_events.raiseQuitEvent();
 }
 
-void NetworkTests::sendToServer_mockData_handleClientConnected(const Event &,
-                                                               void *vclient) {
+void NetworkTests::sendToServer_mockData_handleClientConnected(
+    const Event &, void *vclient) {
   Client *client = static_cast<Client *>(vclient);
   sendMockData(client);
 }
@@ -417,8 +421,8 @@ void NetworkTests::sendToServer_mockData_fileRecieveCompleted(
   m_events.raiseQuitEvent();
 }
 
-void NetworkTests::sendToServer_mockFile_handleClientConnected(const Event &,
-                                                               void *vclient) {
+void NetworkTests::sendToServer_mockFile_handleClientConnected(
+    const Event &, void *vclient) {
   Client *client = static_cast<Client *>(vclient);
   client->sendFileToServer(kMockFilename);
 }
@@ -465,8 +469,8 @@ void NetworkTests::sendMockData(void *eventTarget) {
 
   // send last message
   FileChunk *transferFinished = FileChunk::end();
-  m_events.addEvent(Event(m_events.forFile().fileChunkSending(), eventTarget,
-                          transferFinished));
+  m_events.addEvent(Event(
+      m_events.forFile().fileChunkSending(), eventTarget, transferFinished));
 }
 
 UInt8 *newMockData(size_t size) {

@@ -253,8 +253,8 @@ String Unicode::UTF32ToUTF8(const String &src, bool *errors) {
   return doUTF32ToUTF8(reinterpret_cast<const UInt8 *>(src.data()), n, errors);
 }
 
-String Unicode::textToUTF8(const String &src, bool *errors,
-                           IArchString::EWideCharEncoding encoding) {
+String Unicode::textToUTF8(
+    const String &src, bool *errors, IArchString::EWideCharEncoding encoding) {
   // default to success
   resetError(errors);
 
@@ -273,8 +273,8 @@ String Unicode::textToUTF8(const String &src, bool *errors,
   return utf8;
 }
 
-wchar_t *Unicode::UTF8ToWideChar(const String &src, UInt32 &size,
-                                 bool *errors) {
+wchar_t *
+Unicode::UTF8ToWideChar(const String &src, UInt32 &size, bool *errors) {
   // convert to platform's wide character encoding
   String tmp;
   switch (ARCH->getWideCharEncoding()) {
@@ -308,8 +308,9 @@ wchar_t *Unicode::UTF8ToWideChar(const String &src, UInt32 &size,
   return dst;
 }
 
-String Unicode::wideCharToUTF8(const wchar_t *src, UInt32 size, bool *errors,
-                               IArchString::EWideCharEncoding encoding) {
+String Unicode::wideCharToUTF8(
+    const wchar_t *src, UInt32 size, bool *errors,
+    IArchString::EWideCharEncoding encoding) {
   if (encoding == IArchString::kPlatformDetermined) {
     encoding = ARCH->getWideCharEncoding();
   }

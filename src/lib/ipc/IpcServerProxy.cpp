@@ -30,15 +30,16 @@
 //
 
 IpcServerProxy::IpcServerProxy(synergy::IStream &stream, IEventQueue *events)
-    : m_stream(stream), m_events(events) {
+    : m_stream(stream),
+      m_events(events) {
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), stream.getEventTarget(),
       new TMethodEventJob<IpcServerProxy>(this, &IpcServerProxy::handleData));
 }
 
 IpcServerProxy::~IpcServerProxy() {
-  m_events->removeHandler(m_events->forIStream().inputReady(),
-                          m_stream.getEventTarget());
+  m_events->removeHandler(
+      m_events->forIStream().inputReady(), m_stream.getEventTarget());
 }
 
 void IpcServerProxy::handleData(const Event &, void *) {
@@ -61,8 +62,9 @@ void IpcServerProxy::handleData(const Event &, void *) {
     }
 
     // don't delete with this event; the data is passed to a new event.
-    Event e(m_events->forIpcServerProxy().messageReceived(), this, NULL,
-            Event::kDontFreeData);
+    Event e(
+        m_events->forIpcServerProxy().messageReceived(), this, NULL,
+        Event::kDontFreeData);
     e.setDataObject(m);
     m_events->addEvent(e);
 

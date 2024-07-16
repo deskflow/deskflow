@@ -38,12 +38,13 @@ class AppConfig;
 class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase {
   friend class ServerConfigDialog;
   friend class ServerConnection;
-  friend QTextStream &operator<<(QTextStream &outStream,
-                                 const ServerConfig &config);
+  friend QTextStream &
+  operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
-  ServerConfig(int numColumns, int numRows, AppConfig *appConfig,
-               MainWindow *mainWindow);
+  ServerConfig(
+      int numColumns, int numRows, AppConfig *appConfig,
+      MainWindow *mainWindow);
 
   ServerConfig(const ServerConfig &src) = default;
   ServerConfig(ServerConfig &&) = default;

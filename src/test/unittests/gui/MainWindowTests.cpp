@@ -8,8 +8,8 @@ public:
   class MainWindowProxy : public MainWindow {
   public:
 #ifdef SYNERGY_ENABLE_LICENSING
-    explicit MainWindowProxy(AppConfig &appConfig,
-                             LicenseManager &licenseManager)
+    explicit MainWindowProxy(
+        AppConfig &appConfig, LicenseManager &licenseManager)
         : MainWindow(appConfig, licenseManager) {}
 #else
     explicit MainWindowProxy(AppConfig &appConfig) : MainWindow(appConfig) {}

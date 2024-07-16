@@ -26,8 +26,9 @@ public:
   explicit ActivationNotifier(QObject *parent = 0);
 
   void setIdentity(QString identity);
-  void setUpdateInfo(QString const &fromVersion, QString const &toVersion,
-                     QString const &serialKey);
+  void setUpdateInfo(
+      QString const &fromVersion, QString const &toVersion,
+      QString const &serialKey);
 
 public slots:
   void notify();

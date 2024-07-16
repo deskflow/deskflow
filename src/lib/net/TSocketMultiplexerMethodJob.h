@@ -28,12 +28,13 @@ A socket multiplexer job class that invokes a member function.
 template <class T>
 class TSocketMultiplexerMethodJob : public ISocketMultiplexerJob {
 public:
-  typedef ISocketMultiplexerJob *(T::*Method)(ISocketMultiplexerJob *, bool,
-                                              bool, bool);
+  typedef ISocketMultiplexerJob *(T::*Method)(
+      ISocketMultiplexerJob *, bool, bool, bool);
 
   //! run() invokes \c object->method(arg)
-  TSocketMultiplexerMethodJob(T *object, Method method, ArchSocket socket,
-                              bool readable, bool writeable);
+  TSocketMultiplexerMethodJob(
+      T *object, Method method, ArchSocket socket, bool readable,
+      bool writeable);
   TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob const &) = delete;
   TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob &&) = delete;
   virtual ~TSocketMultiplexerMethodJob();
@@ -61,8 +62,11 @@ private:
 template <class T>
 inline TSocketMultiplexerMethodJob<T>::TSocketMultiplexerMethodJob(
     T *object, Method method, ArchSocket socket, bool readable, bool writable)
-    : m_object(object), m_method(method), m_socket(ARCH->copySocket(socket)),
-      m_readable(readable), m_writable(writable) {
+    : m_object(object),
+      m_method(method),
+      m_socket(ARCH->copySocket(socket)),
+      m_readable(readable),
+      m_writable(writable) {
   // do nothing
 }
 

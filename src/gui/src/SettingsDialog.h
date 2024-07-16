@@ -34,10 +34,10 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 
 public:
   SettingsDialog(QWidget *parent, AppConfig &config);
-  static QString browseForSynergyc(QWidget *parent, const QString &programDir,
-                                   const QString &synergycName);
-  static QString browseForSynergys(QWidget *parent, const QString &programDir,
-                                   const QString &synergysName);
+  static QString browseForSynergyc(
+      QWidget *parent, const QString &programDir, const QString &synergycName);
+  static QString browseForSynergys(
+      QWidget *parent, const QString &programDir, const QString &synergysName);
 
 protected:
   void accept() override;
