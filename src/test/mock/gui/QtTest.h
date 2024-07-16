@@ -19,9 +19,8 @@
 
 #include <QApplication>
 #include <gtest/gtest.h>
-#include <memory>
 
-class QtTests : public ::testing::Test {
+class QtTest : public ::testing::Test {
 public:
   static void SetUpTestSuite() {
     GTEST_LOG_(INFO) << "Qt window setup";

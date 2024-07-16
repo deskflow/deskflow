@@ -17,15 +17,15 @@
 
 #include "MainWindow.h"
 
-#include "test/mock/gui/QtTests.h"
+#include "test/mock/gui/QtTest.h"
 
 #include <gtest/gtest.h>
 #include <memory>
 
-class MainWindowTests : public QtTests {
+class MainWindowTests : public QtTest {
 public:
   static void SetUpTestSuite() {
-    QtTests::SetUpTestSuite();
+    QtTest::SetUpTestSuite();
     qRegisterMetaType<Edition>("Edition");
   }
 
