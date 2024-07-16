@@ -70,7 +70,10 @@ body:
       description: |
         Please provide the version number of your operating system (OS).
         If you're using Linux, please provide the name of the distribution.
-      placeholder: Windows 11, macOS 15, Ubuntu 24.04
+      placeholder: |
+        - Windows 11
+        - macOS 15
+        - Ubuntu 24.04
     validations:
       required: true
 
@@ -83,9 +86,9 @@ body:
         Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
         This will help us understand how you're using Synergy.
       placeholder: |
-        Windows 11 server, macOS 15 client
-        Each computer has a single monitor
-        Windows is on the left, macOS is on the right
+        - Windows 11 server, macOS 15 client
+        - Each computer has a single monitor
+        - Windows is on the left, macOS is on the right
     validations:
       required: true
 
