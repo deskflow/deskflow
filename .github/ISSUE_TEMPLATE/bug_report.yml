@@ -19,7 +19,7 @@ body:
   - type: dropdown
     id: user-type
     attributes:
-      label: What kind of user are you?
+      label: What type of Synergy user are you?
       description: This will help us understand the context of your issue.
       options:
         - Customer
@@ -32,7 +32,7 @@ body:
   - type: input
     id: ticket-number
     attributes:
-      label: Support ticket number
+      label: Support ticket number (for customers)
       description: |
         Customers only (non-customers please ignore this field).
         If you have a support ticket number, please enter it here.
@@ -61,6 +61,8 @@ body:
         - label: macOS
         - label: Linux or Unix
         - label: Other
+    validations:
+      required: true
 
   - type: textarea
     id: os-version
