@@ -35,7 +35,7 @@
 #include "ipc/IpcServerProxy.h"
 #include "mt/Thread.h"
 #include "net/SocketMultiplexer.h"
-#include "test/global/TestEventQueue.h"
+#include "test/shared/TestEventQueue.h"
 
 #include <gtest/gtest.h>
 

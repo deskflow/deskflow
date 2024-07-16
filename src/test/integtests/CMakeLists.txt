@@ -37,11 +37,11 @@ endif()
 list(APPEND sources ${platform_sources})
 list(APPEND headers ${platform_headers})
 
-file(GLOB_RECURSE global_headers "../../test/global/*.h")
-file(GLOB_RECURSE global_sources "../../test/global/*.cpp")
+file(GLOB_RECURSE shared_headers "../../test/shared/*.h")
+file(GLOB_RECURSE shared_sources "../../test/shared/*.cpp")
 
-list(APPEND headers ${global_headers})
-list(APPEND sources ${global_sources})
+list(APPEND headers ${shared_headers})
+list(APPEND sources ${shared_sources})
 
 file(GLOB_RECURSE mock_headers "../../test/mock/*.h")
 file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")

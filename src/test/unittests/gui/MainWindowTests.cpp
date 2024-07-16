@@ -17,7 +17,7 @@
 
 #include "MainWindow.h"
 
-#include "test/mock/gui/QtTest.h"
+#include "test/shared/gui/QtTest.h"
 
 #include <gtest/gtest.h>
 #include <memory>

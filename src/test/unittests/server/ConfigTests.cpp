@@ -186,7 +186,7 @@ TEST(
 }
 
 TEST(ServerConfigTests,
-     serverconfig_will_deem_different_configs_with_different_global_options) {
+     serverconfig_will_deem_different_configs_with_different_shared_options) {
   Config a(nullptr);
   Config b(nullptr);
   a.addScreen("screenA");

@@ -17,7 +17,7 @@
 
 #include "gui/src/VersionChecker.h"
 
-#include "test/mock/gui/QtCoreTest.h"
+#include "test/shared/gui/QtCoreTest.h"
 
 #include <QNetworkAccessManager>
 #include <gtest/gtest.h>
