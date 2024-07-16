@@ -1,6 +1,6 @@
-name: Bug report
-description: If you find a bug in Synergy, please let us know so we can fix it.
-labels: ["bug", "triage"]
+name: Feature request
+description: Had an idea how to improve Synergy? Share it with us.
+labels: ["enhancement", "triage"]
 body:
   - type: markdown
     attributes:
@@ -11,9 +11,9 @@ body:
     attributes:
       label: Discussion
       description: |
-        Have you considered starting a discussion instead of reporting a bug?
+        Have you considered starting a discussion instead of requesting a feature?
       options:
-        - label: Yes, and I still want to report a bug
+        - label: Yes, and I still want to request a feature
           required: true
 
   - type: dropdown
@@ -55,15 +55,6 @@ body:
         - Synergy 2
         - Synergy 3
       default: 0
-    validations:
-      required: true
-
-  - type: input
-    id: version
-    attributes:
-      label: Synergy version number
-      description: You can find the Synergy version number on the about screen.
-      placeholder: 1.2.3
     validations:
       required: true
 
@@ -110,39 +101,24 @@ body:
       required: true
 
   - type: textarea
-    id: repro-steps
+    id: problem
     attributes:
-      label: What steps will reproduce the problem?
+      label: What problem are you trying to solve?
       description: |
-        Please list the steps to reproduce the issue.
-        If you're not sure, please provide as much detail as possible.
-        This will help us understand the problem.
-      placeholder: |
-        1. Start Synergy
-        2. Click 'Configure Server'
-        3. Click 'Apply'
+        The most important part of problem solving is understanding the problem.
+        The more detail you provide, the better we can understand your idea.
+        “If I had only one hour to save the world, 
+        I would spend fifty-five minutes defining the problem,
+        and only five minutes finding the solution.”
+        — Albert Einstein
     validations:
       required: true
 
   - type: textarea
-    id: logs
+    id: solution
     attributes:
-      label: Log output
+      label: What solution do you propose?
       description: |
-        Please copy and paste any relevant log output. 
-        This will be automatically formatted into code, so no need for backticks.
-      render: shell
-
-  - type: textarea
-    id: additional-info
-    attributes:
-      label: Additional information
-      description: |
-        Please provide any additional information that may help us understand the issue.
-        This could include screenshots, error messages, or anything else you think is relevant.
-        - Any ideas about what maybe causing the problem?
-        - Any workarounds that you've discovered?
-        - What other apps are you running?
-        - Does the issue stop you using Synergy entirely?
-        - Did restarting Synergy or the computer help?
-        - Anything else you can think of?
+        Please describe the solution you have in mind.
+    validations:
+      required: true
