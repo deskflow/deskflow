@@ -1,0 +1,135 @@
+name: Bug Report
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to help us improve Synergy.
+
+  - type: checkboxes
+    id: discussion
+    attributes:
+      label: Discussion
+      description: |
+        Have you considered starting a discussion instead of reporting a bug?
+      options:
+        - label: Yes, and I still want to report a bug
+          required: true
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: What kind of user are you?
+      description: This will help us understand the context of your issue.
+      options:
+        - Customer
+        - Contributor
+        - Community user
+      default: 0
+
+  - type: input
+    id: ticket-number
+    attributes:
+      label: Support ticket number
+      description: |
+        Customers only (non-customers please ignore this field).
+        If you have a support ticket number, please enter it here.
+        Customers are advised to (open a support ticket)[https://symless.com/synergy/contact]
+        before submitting a bug report.
+        Leave this blank if you do not have a support ticket or if you're not a customer.
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Version number
+      description: You can find the Synergy version number on the about screen.
+      placeholder: 1.2.3
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: os
+    attributes:
+      label: Operating systems
+      description: Which operating systems (OS) are you using?
+      options:
+        - value: Windows
+        - value: macOS
+        - value: Linux or Unix
+        - value: Other
+
+  - type: textarea
+    id: os-version
+    attributes:
+      label: OS versions or Linux distros
+      description: |
+        Please provide the version number of your operating system.
+        If you're using Linux, please provide the name of the distribution.
+      placeholder: Windows 11, macOS 15, Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration
+      description: |
+        Please provide a very brief description of your configuration.
+        Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
+        This will help us understand how you're using Synergy.
+      placeholder: |
+        Windows 11 server, macOS 15 client
+        Each computer has a single monitor
+        Windows is on the left, macOS is on the right
+
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: What steps will reproduce the problem?
+      description: |
+        Please list the steps to reproduce the issue.
+        If you're not sure, please provide as much detail as possible.
+        This will help us understand the problem.
+      placeholder: |
+        1. Start Synergy
+        2. Click 'Configure Server'
+        3. Click 'Apply'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      description: Which product are you using?
+      options:
+        - Synergy 1
+        - Synergy 2
+        - Synergy 3
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output
+      description: |
+        Please copy and paste any relevant log output. 
+        This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional information
+      description: |
+        Please provide any additional information that may help us understand the issue.
+        This could include screenshots, error messages, or anything else you think is relevant.
+        - Any ideas about what maybe causing the problem?
+        - Any workarounds that you've discovered?
+        - What other apps are you running?
+        - Does the issue stop you using Synergy entirely?
+        - Did restarting Synergy or the computer help?
+        - Anything else you can think of?
