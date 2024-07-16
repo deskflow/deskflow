@@ -24,9 +24,9 @@ class QtCoreTest : public ::testing::Test {
 public:
   static void SetUpTestSuite() {
     GTEST_LOG_(INFO) << "Qt core app setup";
-    char **fakeArgv = nullptr;
-    int fakeArgc = 0;
-    s_app = std::make_unique<QCoreApplication>(fakeArgc, fakeArgv);
+    char **argv = nullptr;
+    int argc = 0;
+    s_app = std::make_unique<QCoreApplication>(argc, argv);
   }
 
   static void TearDownTestSuite() {
