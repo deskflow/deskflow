@@ -66,6 +66,7 @@ jobs:
           URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          recreate: true
           message: |
             ## Valgrind summary
             See [workflow output](${{ env.URL }}) for full `valgrind` output.
