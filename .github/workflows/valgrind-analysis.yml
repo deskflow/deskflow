@@ -32,7 +32,7 @@ jobs:
           - release
 
     steps:
-      - name: Delete previous
+      - name: Delete last PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,21 +72,19 @@ jobs:
       - name: Parse summaries
         id: parse
         run: |
-          echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> summary.txt
-          echo >> summary.txt
-          echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> summary.txt
-
           echo "summary<<EOF" >> $GITHUB_OUTPUT
-          cat summary.txt >> $GITHUB_OUTPUT
+          echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT
+          echo >> $GITHUB_OUTPUT
+          echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Post comment
+      - name: Append to PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           append: true
           message: |
-            # Valgrind ${{ matrix.mode }}
+            **Valgrind summaries (${{ matrix.mode }})**
             ```
             ${{ steps.parse.outputs.summary }}
             ```
