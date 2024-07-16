@@ -57,7 +57,7 @@ jobs:
       - name: Build (${{ matrix.mode }})
         run: cmake --build build -j8
 
-      - name: Valgrind on tests
+      - name: Run Valgrind on unit tests
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
