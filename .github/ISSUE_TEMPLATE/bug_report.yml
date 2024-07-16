@@ -25,7 +25,6 @@ body:
         - Customer
         - Code contributor
         - Community user
-      default: 0
     validations:
       required: true
 
@@ -50,7 +49,6 @@ body:
         - Synergy 1
         - Synergy 2
         - Synergy 3
-      default: 0
     validations:
       required: true
 
