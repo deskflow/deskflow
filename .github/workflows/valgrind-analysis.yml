@@ -24,7 +24,7 @@ jobs:
     # However, since debug builds have less optimization, they can potentially have different
     # memory bugs compared to release builds (though usually this is rare).
     # Therefore, it's important to run Valgrind on both debug and release builds.
-    # Normally, the Valgrind log for debug and release builds will be the same.
+    # Normally, the Valgrind summaries for debug and release builds will be the same.
     strategy:
       matrix:
         mode:
