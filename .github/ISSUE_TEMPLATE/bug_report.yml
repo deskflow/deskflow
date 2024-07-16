@@ -1,4 +1,5 @@
 name: Bug Report
+description: If you find a bug in Synergy, please let us know so we can fix it.
 labels: ["bug", "triage"]
 body:
   - type: markdown
