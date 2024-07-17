@@ -73,7 +73,7 @@ jobs:
         run: cmake -B build --preset=windows-release
 
       - name: Build
-        run: cmake --build build -j
+        run: cmake --build build -j8
 
       - name: Test
         run: ./build/bin/unittests
@@ -140,7 +140,7 @@ jobs:
         run: cmake -B build --preset=macos-release
 
       - name: Build
-        run: cmake --build build -j
+        run: cmake --build build -j8
 
       - name: Test
         run: ./build/bin/unittests
@@ -241,7 +241,7 @@ jobs:
         run: cmake -B build --preset=linux-release
 
       - name: Build
-        run: cmake --build build -j
+        run: cmake --build build -j8
 
       - name: Test
         env:
