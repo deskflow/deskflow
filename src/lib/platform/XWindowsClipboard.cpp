@@ -1196,13 +1196,7 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
     Window requestor, Time time, Atom property)
     : m_requestor(requestor),
       m_time(time),
-      m_property(property) {
-  // do nothing
-}
-
-XWindowsClipboard::CICCCMGetClipboard::~CICCCMGetClipboard() {
-  // do nothing
-}
+      m_property(property) {}
 
 bool XWindowsClipboard::CICCCMGetClipboard::readClipboard(
     Display *display, Atom selection, Atom target, Atom *actualTarget,

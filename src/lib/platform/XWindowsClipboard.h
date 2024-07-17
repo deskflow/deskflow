@@ -141,7 +141,7 @@ protected:
   class CICCCMGetClipboard {
   public:
     CICCCMGetClipboard(Window requestor, Time time, Atom property);
-    ~CICCCMGetClipboard();
+    ~CICCCMGetClipboard() = default;
 
     // convert the given selection to the given type.  returns
     // true iff the conversion was successful or the conversion
