@@ -28,6 +28,7 @@ macro(configure_definitions)
 
   configure_ninja()
   configure_options()
+  configure_python()
 
   if("${VERSION_URL}" STREQUAL "")
     set(VERSION_URL "https://api.symless.com/version?version=v1")
@@ -70,6 +71,8 @@ macro(configure_definitions)
   else()
     set(ADD_HEADERS_TO_SOURCES TRUE)
   endif()
+
+  set(BIN_TEMP_DIR ${CMAKE_BINARY_DIR}/temp/bin)
 endmacro()
 
 macro(configure_ninja)

@@ -19,6 +19,7 @@ project(synergy-core C CXX)
 
 include(cmake/Version.cmake)
 include(cmake/Definitions.cmake)
+include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
 include(cmake/Packaging.cmake)
 
@@ -28,3 +29,5 @@ configure_libs()
 configure_packaging()
 
 add_subdirectory(src)
+
+post_config_all()
