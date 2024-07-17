@@ -22,7 +22,6 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "common/stdvector.h"
-#include "mt/Thread.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardTextConverter.h"
@@ -534,13 +533,13 @@ bool XWindowsClipboard::icccmGetSelection(
   assert(data != nullptr);
 
   // request data conversion
-  CICCCMGetClipboard getter(m_window, m_time, m_atomData);
-  if (!getter.readClipboard(
+  if (CICCCMGetClipboard getter(m_window, m_time, m_atomData);
+      !getter.readClipboard(
           m_display, m_selection, target, actualTarget, data)) {
     LOG(
         (CLOG_DEBUG1 "can't get data for selection target %s",
          XWindowsUtil::atomToString(m_display, target).c_str()));
-    LOGC(getter.m_error, (CLOG_WARN "icccm violation by clipboard owner"));
+    LOGC(getter.error(), (CLOG_WARN "icccm violation by clipboard owner"));
     return false;
   } else if (*actualTarget == None) {
     LOG(
@@ -1197,12 +1196,7 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
     Window requestor, Time time, Atom property)
     : m_requestor(requestor),
       m_time(time),
-      m_property(property),
-      m_incr(false),
-      m_failed(false),
-      m_done(false),
-      m_reading(false),
-      m_error(false) {
+      m_property(property) {
   // do nothing
 }
 
