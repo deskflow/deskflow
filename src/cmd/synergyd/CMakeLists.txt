@@ -39,4 +39,4 @@ target_link_libraries(
   shared
   ${libs})
 
-post_config()
+# post_config()
