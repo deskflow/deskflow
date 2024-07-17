@@ -35,7 +35,6 @@
 #include "synergy/ArgParser.h"
 #include "synergy/ClientArgs.h"
 #include "synergy/ServerArgs.h"
-#include <memory>
 
 #if SYSAPI_WIN32
 
@@ -48,8 +47,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#elif SYSAPI_UNIX
+
+#include <iostream>
+
 #endif
 
+#include <memory>
 #include <sstream>
 #include <string>
 
