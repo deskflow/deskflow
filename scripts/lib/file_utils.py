@@ -52,7 +52,8 @@ def copy_dir(match, target, options, context):
         shutil.copytree(match, target, dirs_exist_ok=True)
 
     except PermissionError as e:
-        handle_permission_error(e, options, context)
+        context.permission_error = True
+        handle_copy_error(e, options, context)
     except Exception as e:
         handle_copy_error(e, options, context)
 
@@ -64,8 +65,8 @@ def copy_file(match, target, options, context):
     try:
         shutil.copy(match, target)
     except PermissionError as e:
-        handle_permission_error(e, options, context)
         context.permission_error = True
+        handle_copy_error(e, options, context)
     except Exception as e:
         handle_copy_error(e, options, context)
 
@@ -77,16 +78,3 @@ def handle_copy_error(e, options, context):
         raise e
     else:
         print(f"{Fore.YELLOW}WARNING:{Fore.RESET} Copy failed: {e}", file=sys.stderr)
-
-
-def handle_permission_error(e, options, context):
-    context.errors += 1
-    context.permission_error = True
-
-    if not options.ignore_errors:
-        raise e
-    else:
-        print(
-            f"{Fore.YELLOW}WARNING:{Fore.RESET} Copy failed: {e}",
-            file=sys.stderr,
-        )
