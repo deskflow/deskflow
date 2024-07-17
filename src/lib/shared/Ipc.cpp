@@ -18,9 +18,9 @@
 
 #include "Ipc.h"
 
-const char *kIpcMsgHello = "IHEL%1i";
-const char *kIpcMsgHelloBack = "IHEL";
-const char *kIpcMsgLogLine = "ILOG%s";
-const char *kIpcMsgCommand = "ICMD%s%1i";
-const char *kIpcMsgShutdown = "ISDN";
-const char *kIpcMsgSetting = "SSET%s%s";
+const char *const kIpcMsgHello = "IHEL%1i";
+const char *const kIpcMsgHelloBack = "IHEL";
+const char *const kIpcMsgLogLine = "ILOG%s";
+const char *const kIpcMsgCommand = "ICMD%s%1i";
+const char *const kIpcMsgShutdown = "ISDN";
+const char *const kIpcMsgSetting = "SSET%s%s";

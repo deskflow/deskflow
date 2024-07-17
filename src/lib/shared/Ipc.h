@@ -34,26 +34,26 @@ enum EIpcClientType { kIpcClientUnknown, kIpcClientGui, kIpcClientNode };
 
 // handshake: node/gui -> daemon
 // $1 = type, the client identifies it's self as gui or node (synergyc/s).
-extern const char *kIpcMsgHello;
+extern const char *const kIpcMsgHello;
 
 // handshake: daemon -> node/gui
 // the daemon responds to the handshake.
-extern const char *kIpcMsgHelloBack;
+extern const char *const kIpcMsgHelloBack;
 
 // log line: daemon -> gui
 // $1 = aggregate log lines collected from synergys/c or the daemon itself.
-extern const char *kIpcMsgLogLine;
+extern const char *const kIpcMsgLogLine;
 
 // command: gui -> daemon
 // $1 = command; the command for the daemon to launch, typically the full
 // path to synergys/c. $2 = true when process must be elevated on ms windows.
-extern const char *kIpcMsgCommand;
+extern const char *const kIpcMsgCommand;
 
 // shutdown: daemon -> node
 // the daemon tells synergys/c to shut down gracefully.
-extern const char *kIpcMsgShutdown;
+extern const char *const kIpcMsgShutdown;
 
 // set setting: gui -> daemon
 // $1 = setting name
 // $2 = setting value
-extern const char *kIpcMsgSetting;
+extern const char *const kIpcMsgSetting;
