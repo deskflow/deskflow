@@ -14,6 +14,7 @@ class CopyOptions:
 
 class CopyContext:
     def __init__(self):
+        self.errors = 0
         self.permission_error = False
 
 
@@ -32,6 +33,11 @@ def copy(source, target, options):
         else:
             raise RuntimeError(f"Path {match} is not a file or directory")
 
+    if context.errors and options.ignore_errors:
+        print(
+            f"{Fore.YELLOW}WARNING:{Fore.RESET} Ignored {context.errors} copy error(s)"
+        )
+
     if context.permission_error:
         print(
             f"{Fore.BLUE}HINT:{Fore.RESET} A permission error may mean that the file is in use"
@@ -46,10 +52,9 @@ def copy_dir(match, target, options, context):
         shutil.copytree(match, target, dirs_exist_ok=True)
 
     except PermissionError as e:
-        handle_permission_error(e, options)
-        context.permission_error = True
+        handle_permission_error(e, options, context)
     except Exception as e:
-        handle_copy_error(e, options)
+        handle_copy_error(e, options, context)
 
 
 def copy_file(match, target, options, context):
@@ -59,20 +64,25 @@ def copy_file(match, target, options, context):
     try:
         shutil.copy(match, target)
     except PermissionError as e:
-        handle_permission_error(e, options)
+        handle_permission_error(e, options, context)
         context.permission_error = True
     except Exception as e:
-        handle_copy_error(e, options)
+        handle_copy_error(e, options, context)
 
 
-def handle_copy_error(e, options):
+def handle_copy_error(e, options, context):
+    context.errors += 1
+
     if not options.ignore_errors:
         raise e
     else:
         print(f"{Fore.YELLOW}WARNING:{Fore.RESET} Copy failed: {e}", file=sys.stderr)
 
 
-def handle_permission_error(e, options):
+def handle_permission_error(e, options, context):
+    context.errors += 1
+    context.permission_error = True
+
     if not options.ignore_errors:
         raise e
     else:
