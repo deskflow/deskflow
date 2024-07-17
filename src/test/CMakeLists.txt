@@ -49,11 +49,11 @@ macro(set_sources)
   file(GLOB_RECURSE headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
   file(GLOB_RECURSE sources ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-  file(GLOB_RECURSE global_headers ${test_base_dir}/global/*.h)
-  file(GLOB_RECURSE global_sources ${test_base_dir}/global/*.cpp)
+  file(GLOB_RECURSE shared_headers ${test_base_dir}/shared/*.h)
+  file(GLOB_RECURSE shared_sources ${test_base_dir}/shared/*.cpp)
 
-  list(APPEND headers ${global_headers})
-  list(APPEND sources ${global_sources})
+  list(APPEND headers ${shared_headers})
+  list(APPEND sources ${shared_sources})
 
   file(GLOB_RECURSE mock_headers ${test_base_dir}/mock/*.h)
   file(GLOB_RECURSE mock_sources ${test_base_dir}/mock/*.cpp)

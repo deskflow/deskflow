@@ -15,24 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/XWindowsClipboard.h"
-
-#include "test/shared/undef_x11_macros.h"
+#pragma once
 
 #include <gtest/gtest.h>
+#include <qapplication.h>
 
-#define None 0L
-
-class TestXWindowsClipboard : public XWindowsClipboard {
+class QtTest : public ::testing::Test {
 public:
-  class TestCICCCMGetClipboard : public CICCCMGetClipboard {
-  public:
-    TestCICCCMGetClipboard() : CICCCMGetClipboard(None, None, None) {}
-  };
+  static void SetUpTestSuite() {
+    GTEST_LOG_(INFO) << "Qt app setup";
+    char **argv = nullptr;
+    int argc = 0;
+    s_app = std::make_unique<QApplication>(argc, argv);
+  }
+
+  static void TearDownTestSuite() {
+    s_app.reset();
+    GTEST_LOG_(INFO) << "Qt app teardown";
+  }
+
+  static std::unique_ptr<QApplication> s_app;
 };
-
-TEST(XWindowsClipboardTests_CICCCMGetClipboard, ctor_default_errorNone) {
-  TestXWindowsClipboard::TestCICCCMGetClipboard clipboard;
-
-  EXPECT_EQ(None, clipboard.m_error);
-}

@@ -74,6 +74,32 @@
       "command": "python",
       "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
       "dependsOn": ["build", "clean-gcda"]
+    },
+    {
+      "label": "unittests (current, valgrind)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "./scripts/tests.py",
+        "--unit-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}",
+        "--valgrind"
+      ],
+      "dependsOn": ["build", "clean-gcda"]
+    },
+    {
+      "label": "integtests (current, valgrind)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "./scripts/tests.py",
+        "--integ-tests",
+        "--ignore-return-code",
+        "--filter-file=${file}",
+        "--valgrind"
+      ],
+      "dependsOn": ["build", "clean-gcda"]
     }
   ]
 }

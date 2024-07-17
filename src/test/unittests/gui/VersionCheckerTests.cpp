@@ -17,12 +17,16 @@
 
 #include "gui/src/VersionChecker.h"
 
+#include "test/shared/gui/QtCoreTest.h"
+
 #include <QNetworkAccessManager>
 #include <gtest/gtest.h>
 
+class VersionCheckerTests : public QtCoreTest {};
+
 class QNetworkAccessManagerMock : public QNetworkAccessManager {};
 
-TEST(VersionCheckerTests, compareVersions_major_isValid) {
+TEST_F(VersionCheckerTests, compareVersions_major_isValid) {
   auto nam = std::make_shared<QNetworkAccessManager>();
   VersionChecker versionChecker(nam);
 
@@ -31,7 +35,7 @@ TEST(VersionCheckerTests, compareVersions_major_isValid) {
   EXPECT_EQ(versionChecker.compareVersions("1.0.0", "1.0.0"), 0);
 }
 
-TEST(VersionCheckerTests, compareVersions_minor_isValid) {
+TEST_F(VersionCheckerTests, compareVersions_minor_isValid) {
   auto nam = std::make_shared<QNetworkAccessManager>();
   VersionChecker versionChecker(nam);
 
@@ -40,7 +44,7 @@ TEST(VersionCheckerTests, compareVersions_minor_isValid) {
   EXPECT_EQ(versionChecker.compareVersions("1.1.0", "1.1.0"), 0);
 }
 
-TEST(VersionCheckerTests, compareVersions_patch_isValid) {
+TEST_F(VersionCheckerTests, compareVersions_patch_isValid) {
   auto nam = std::make_shared<QNetworkAccessManager>();
   VersionChecker versionChecker(nam);
 

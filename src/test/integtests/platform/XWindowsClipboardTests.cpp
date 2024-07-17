@@ -18,7 +18,7 @@
 
 #include "platform/XWindowsClipboard.h"
 
-#include "test/global/undef_x11_macros.h"
+#include "test/shared/undef_x11_macros.h"
 
 #include <gtest/gtest.h>
 

@@ -12,5 +12,5 @@ RUN dnf upgrade -y && \
 WORKDIR /app
 
 RUN --mount=type=bind,target=/app,rw \
-  ./scripts/install_deps.py && \
+  ./scripts/install_deps.py --ci-env && \
   dnf clean all

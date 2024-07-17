@@ -13,5 +13,5 @@ RUN useradd -m build
 WORKDIR /app
 
 RUN --mount=type=bind,target=/app,rw \
-  ./scripts/install_deps.py && \
+  ./scripts/install_deps.py --ci-env && \
   pacman -Scc --noconfirm

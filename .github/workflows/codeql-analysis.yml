@@ -39,7 +39,7 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py
+        run: ./scripts/install_deps.py --ci-env
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3

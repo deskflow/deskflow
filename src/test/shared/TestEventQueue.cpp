@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/global/TestEventQueue.h"
+#include "test/shared/TestEventQueue.h"
 
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
