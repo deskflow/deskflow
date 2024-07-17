@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,52 +18,51 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/EventTypes.h"
 #include "base/String.h"
 #include "shared/Ipc.h"
 
 class IpcMessage : public EventData {
 public:
-  virtual ~IpcMessage();
+  ~IpcMessage() override = default;
 
   //! Gets the message type ID.
-  UInt8 type() const { return m_type; }
+  IpcMessageType type() const { return m_type; }
 
 protected:
-  IpcMessage(UInt8 type);
+  explicit IpcMessage(IpcMessageType type);
 
 private:
-  UInt8 m_type;
+  IpcMessageType m_type;
 };
 
 class IpcHelloMessage : public IpcMessage {
 public:
-  IpcHelloMessage(EIpcClientType clientType);
-  virtual ~IpcHelloMessage();
+  explicit IpcHelloMessage(IpcClientType clientType);
+  ~IpcHelloMessage() override = default;
 
   //! Gets the message type ID.
-  EIpcClientType clientType() const { return m_clientType; }
+  IpcClientType clientType() const { return m_clientType; }
 
 private:
-  EIpcClientType m_clientType;
+  IpcClientType m_clientType;
 };
 
 class IpcHelloBackMessage : public IpcMessage {
 public:
-  IpcHelloBackMessage();
-  virtual ~IpcHelloBackMessage();
+  explicit IpcHelloBackMessage();
+  ~IpcHelloBackMessage() override = default;
 };
 
 class IpcShutdownMessage : public IpcMessage {
 public:
-  IpcShutdownMessage();
-  virtual ~IpcShutdownMessage();
+  explicit IpcShutdownMessage();
+  ~IpcShutdownMessage() override = default;
 };
 
 class IpcLogLineMessage : public IpcMessage {
 public:
-  IpcLogLineMessage(const String &logLine);
-  virtual ~IpcLogLineMessage();
+  explicit IpcLogLineMessage(const String &logLine);
+  ~IpcLogLineMessage() override = default;
 
   //! Gets the log line.
   String logLine() const { return m_logLine; }
@@ -75,8 +73,8 @@ private:
 
 class IpcCommandMessage : public IpcMessage {
 public:
-  IpcCommandMessage(const String &command, bool elevate);
-  virtual ~IpcCommandMessage();
+  explicit IpcCommandMessage(const String &command, bool elevate);
+  ~IpcCommandMessage() override = default;
 
   //! Gets the command.
   String command() const { return m_command; }

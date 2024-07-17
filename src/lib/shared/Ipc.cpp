@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +16,9 @@
  */
 
 #include "Ipc.h"
+
+const char *const kIpcHost = "127.0.0.1";
+const int kIpcPort = 24801;
 
 const char *const kIpcMsgHello = "IHEL%1i";
 const char *const kIpcMsgHelloBack = "IHEL";

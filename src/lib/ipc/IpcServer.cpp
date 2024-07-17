@@ -37,7 +37,7 @@ IpcServer::IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer)
       m_events(events),
       m_socketMultiplexer(socketMultiplexer),
       m_socket(nullptr),
-      m_address(NetworkAddress(IPC_HOST, IPC_PORT)) {
+      m_address(NetworkAddress(kIpcHost, kIpcPort)) {
   init();
 }
 
@@ -46,7 +46,7 @@ IpcServer::IpcServer(
     : m_mock(false),
       m_events(events),
       m_socketMultiplexer(socketMultiplexer),
-      m_address(NetworkAddress(IPC_HOST, port)) {
+      m_address(NetworkAddress(kIpcHost, port)) {
   init();
 }
 
@@ -135,7 +135,7 @@ void IpcServer::deleteClient(IpcClientProxy *proxy) {
   delete proxy;
 }
 
-bool IpcServer::hasClients(EIpcClientType clientType) const {
+bool IpcServer::hasClients(IpcClientType clientType) const {
   ArchMutexLock lock(m_clientsMutex);
 
   if (m_clients.empty()) {
@@ -155,7 +155,7 @@ bool IpcServer::hasClients(EIpcClientType clientType) const {
   return false;
 }
 
-void IpcServer::send(const IpcMessage &message, EIpcClientType filterType) {
+void IpcServer::send(const IpcMessage &message, IpcClientType filterType) {
   ArchMutexLock lock(m_clientsMutex);
 
   ClientList::iterator it;

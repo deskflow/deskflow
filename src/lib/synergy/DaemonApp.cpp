@@ -222,7 +222,8 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     m_ipcServer = new IpcServer(m_events, &multiplexer);
 
     // send logging to gui via ipc, log system adopts outputter.
-    m_ipcLogOutputter = new IpcLogOutputter(*m_ipcServer, kIpcClientGui, true);
+    m_ipcLogOutputter =
+        new IpcLogOutputter(*m_ipcServer, IpcClientType::GUI, true);
     CLOG->insert(m_ipcLogOutputter);
 
 #if SYSAPI_WIN32
@@ -296,7 +297,7 @@ std::string DaemonApp::logFilename() {
 void DaemonApp::handleIpcMessage(const Event &e, void *) {
   IpcMessage *m = static_cast<IpcMessage *>(e.getDataObject());
   switch (m->type()) {
-  case kIpcCommand: {
+  case IpcMessageType::Command: {
     IpcCommandMessage *cm = static_cast<IpcCommandMessage *>(m);
     String command = cm->command();
 
@@ -361,14 +362,14 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
     break;
   }
 
-  case kIpcHello: {
+  case IpcMessageType::Hello: {
     IpcHelloMessage *hm = static_cast<IpcHelloMessage *>(m);
     String type;
     switch (hm->clientType()) {
-    case kIpcClientGui:
+    case IpcClientType::GUI:
       type = "gui";
       break;
-    case kIpcClientNode:
+    case IpcClientType::Node:
       type = "node";
       break;
     default:
@@ -379,7 +380,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
     LOG((CLOG_DEBUG "ipc hello, type=%s", type.c_str()));
 
     // TODO: implement hello back handling in s1 gui and node (server/client).
-    if (hm->clientType() == kIpcClientGui) {
+    if (hm->clientType() == IpcClientType::GUI) {
       LOG((CLOG_DEBUG "sending ipc hello back"));
       IpcHelloBackMessage hbm;
       m_ipcServer->send(hbm, hm->clientType());
@@ -394,7 +395,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
     break;
   }
 
-  case kIpcSetting:
+  case IpcMessageType::Setting:
     updateSetting(*m);
     break;
   }

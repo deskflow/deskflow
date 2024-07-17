@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +32,7 @@
 
 IpcClientProxy::IpcClientProxy(synergy::IStream &stream, IEventQueue *events)
     : m_stream(stream),
-      m_clientType(kIpcClientUnknown),
+      m_clientType(IpcClientType::Unknown),
       m_disconnecting(false),
       m_readMutex(ARCH->newMutex()),
       m_writeMutex(ARCH->newMutex()),
@@ -135,7 +134,7 @@ void IpcClientProxy::send(const IpcMessage &message) {
   LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
   switch (message.type()) {
-  case kIpcLogLine: {
+  case IpcMessageType::LogLine: {
     const IpcLogLineMessage &llm =
         static_cast<const IpcLogLineMessage &>(message);
     const String logLine = llm.logLine();
@@ -143,11 +142,11 @@ void IpcClientProxy::send(const IpcMessage &message) {
     break;
   }
 
-  case kIpcShutdown:
+  case IpcMessageType::Shutdown:
     ProtocolUtil::writef(&m_stream, kIpcMsgShutdown);
     break;
 
-  case kIpcHelloBack:
+  case IpcMessageType::HelloBack:
     ProtocolUtil::writef(&m_stream, kIpcMsgHelloBack);
     break;
 
@@ -161,7 +160,7 @@ IpcHelloMessage *IpcClientProxy::parseHello() {
   UInt8 type;
   ProtocolUtil::readf(&m_stream, kIpcMsgHello + 4, &type);
 
-  m_clientType = static_cast<EIpcClientType>(type);
+  m_clientType = static_cast<IpcClientType>(type);
 
   // must be deleted by event handler.
   return new IpcHelloMessage(m_clientType);

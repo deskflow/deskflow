@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,19 +17,21 @@
 
 #pragma once
 
-#define IPC_HOST "127.0.0.1"
-#define IPC_PORT 24801
+#include "common/basic_types.h"
 
-enum EIpcMessage {
-  kIpcHello,
-  kIpcHelloBack,
-  kIpcLogLine,
-  kIpcCommand,
-  kIpcShutdown,
-  kIpcSetting
+enum class IpcMessageType : UInt8 {
+  Hello,
+  HelloBack,
+  LogLine,
+  Command,
+  Shutdown,
+  Setting
 };
 
-enum EIpcClientType { kIpcClientUnknown, kIpcClientGui, kIpcClientNode };
+enum class IpcClientType { Unknown, GUI, Node };
+
+extern const char *const kIpcHost;
+extern const int kIpcPort;
 
 // handshake: node/gui -> daemon
 // $1 = type, the client identifies it's self as gui or node (synergyc/s).

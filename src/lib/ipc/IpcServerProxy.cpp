@@ -78,13 +78,13 @@ void IpcServerProxy::send(const IpcMessage &message) {
   LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
   switch (message.type()) {
-  case kIpcHello: {
+  case IpcMessageType::Hello: {
     const IpcHelloMessage &hm = static_cast<const IpcHelloMessage &>(message);
     ProtocolUtil::writef(&m_stream, kIpcMsgHello, hm.clientType());
     break;
   }
 
-  case kIpcCommand: {
+  case IpcMessageType::Command: {
     const IpcCommandMessage &cm =
         static_cast<const IpcCommandMessage &>(message);
     const String command = cm.command();

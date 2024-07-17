@@ -19,33 +19,23 @@
 #include "ipc/IpcMessage.h"
 #include "shared/Ipc.h"
 
-IpcMessage::IpcMessage(UInt8 type) : m_type(type) {}
+IpcMessage::IpcMessage(IpcMessageType type) : m_type(type) {}
 
-IpcMessage::~IpcMessage() {}
-
-IpcHelloMessage::IpcHelloMessage(EIpcClientType clientType)
-    : IpcMessage(kIpcHello),
+IpcHelloMessage::IpcHelloMessage(IpcClientType clientType)
+    : IpcMessage(IpcMessageType::Hello),
       m_clientType(clientType) {}
 
-IpcHelloMessage::~IpcHelloMessage() {}
+IpcHelloBackMessage::IpcHelloBackMessage()
+    : IpcMessage(IpcMessageType::HelloBack) {}
 
-IpcHelloBackMessage::IpcHelloBackMessage() : IpcMessage(kIpcHelloBack) {}
-
-IpcHelloBackMessage::~IpcHelloBackMessage() {}
-
-IpcShutdownMessage::IpcShutdownMessage() : IpcMessage(kIpcShutdown) {}
-
-IpcShutdownMessage::~IpcShutdownMessage() {}
+IpcShutdownMessage::IpcShutdownMessage()
+    : IpcMessage(IpcMessageType::Shutdown) {}
 
 IpcLogLineMessage::IpcLogLineMessage(const String &logLine)
-    : IpcMessage(kIpcLogLine),
+    : IpcMessage(IpcMessageType::LogLine),
       m_logLine(logLine) {}
 
-IpcLogLineMessage::~IpcLogLineMessage() {}
-
 IpcCommandMessage::IpcCommandMessage(const String &command, bool elevate)
-    : IpcMessage(kIpcCommand),
+    : IpcMessage(IpcMessageType::Command),
       m_command(command),
       m_elevate(elevate) {}
-
-IpcCommandMessage::~IpcCommandMessage() {}

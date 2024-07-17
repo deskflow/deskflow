@@ -510,7 +510,7 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout) {
   }
 
   IpcShutdownMessage shutdown;
-  m_ipcServer.send(shutdown, kIpcClientNode);
+  m_ipcServer.send(shutdown, IpcClientType::Node);
 
   // wait for process to exit gracefully.
   double start = ARCH->time();

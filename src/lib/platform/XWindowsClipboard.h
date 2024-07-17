@@ -183,7 +183,7 @@ protected:
   };
 
   // Motif structure IDs
-  enum class MotifClip { Format = 1, Item = 2, Header = 3 };
+  enum class MotifClip : SInt32 { Format = 1, Item = 2, Header = 3 };
 
   // _MOTIF_CLIP_HEADER structure
   class MotifClipHeader {

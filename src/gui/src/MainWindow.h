@@ -168,7 +168,7 @@ protected:
   bool clientArgs(QStringList &args, QString &app);
   bool serverArgs(QStringList &args, QString &app);
   void setStatus(const QString &status);
-  void sendIpcMessage(EIpcMessage type, const char *buffer, bool showErrors);
+  void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses();
   void stopService();
