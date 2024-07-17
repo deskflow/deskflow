@@ -35,8 +35,9 @@
     {
       "label": "clean-gcda",
       "type": "shell",
-      "linux": {
-        "command": "find . -name '*.gcda' -delete"
+      "command": "find . -name '*.gcda' -delete",
+      "windows": {
+        "command": "$null" // no-op
       }
     },
     {
