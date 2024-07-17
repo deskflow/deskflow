@@ -21,6 +21,7 @@
 #include "test/shared/undef_x11_macros.h"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 class XWindowsClipboardTests : public ::testing::Test {
 protected:
@@ -37,7 +38,7 @@ protected:
     m_window = XCreateWindow(
         m_display, root, 0, 0, 1, 1, 0, 0, InputOnly, nullptr, 0, &attr);
 
-    m_clipboard = new XWindowsClipboard(m_display, m_window, 0);
+    m_clipboard = std::make_unique<XWindowsClipboard>(m_display, m_window, 0);
     m_clipboard->open(0);
     m_clipboard->empty();
   }
@@ -45,14 +46,14 @@ protected:
   void TearDown() override {
     XDestroyWindow(m_display, m_window);
     XCloseDisplay(m_display);
-    delete m_clipboard;
   }
 
   XWindowsClipboard &getClipboard() { return *m_clipboard; }
 
+private:
   Display *m_display;
   Window m_window;
-  XWindowsClipboard *m_clipboard;
+  std::unique_ptr<XWindowsClipboard> m_clipboard;
 };
 
 TEST_F(XWindowsClipboardTests, empty_openCalled_returnsTrue) {
