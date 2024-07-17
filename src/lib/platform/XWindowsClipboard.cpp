@@ -22,7 +22,6 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "common/stdvector.h"
-#include "mt/Thread.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardTextConverter.h"
@@ -1201,6 +1200,8 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
       m_incr(false),
       m_failed(false),
       m_done(false),
+      m_atomNone(),
+      m_atomIncr(),
       m_reading(false),
       m_error(false) {
   // do nothing
