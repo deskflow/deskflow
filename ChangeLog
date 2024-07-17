@@ -24,7 +24,7 @@ Enhancements:
 - #7326 Restore lpDesktop assignment in Windows daemon
 - #7327 Only use Ninja to build on Windows
 - #7328 Reset error state before calling Process32Next
-- #1177 Split CMake presets into debug and release
+- #7330 Split CMake presets into debug and release
 - #7331 Script to install deps (Windows only for now)
 - #7332 Static link OpenSSL libs in CMake preset for Windows
 - #7333 Update VS Code config for Windows daemon debugging
