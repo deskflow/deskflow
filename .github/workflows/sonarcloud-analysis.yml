@@ -27,6 +27,7 @@ jobs:
       SONAR_SCANNER_VERSION: 6.1.0.4477
       SONAR_SCANNER_OPTS: -server
       SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
+      SONAR_SCANNER_THREADS: 32
 
     steps:
       - name: Checkout
@@ -83,7 +84,7 @@ jobs:
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=build/coverage.xml \
-            -Dsonar.cfamily.threads=64
+            -Dsonar.cfamily.threads=${{ env.SONAR_SCANNER_THREADS }}
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
