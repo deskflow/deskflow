@@ -40,10 +40,8 @@
 #if SYSAPI_WIN32
 
 #include "arch/win32/ArchMiscWindows.h"
-#include "arch/win32/XArchWindows.h"
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
-#include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsWatchdog.h"
 #include "synergy/Screen.h"
 
@@ -52,7 +50,6 @@
 
 #endif
 
-#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -217,9 +214,9 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     CLOG->insert(m_ipcLogOutputter.get());
 
 #if SYSAPI_WIN32
-    m_watchdog = new MSWindowsWatchdog(
+    m_watchdog = std::make_unique<MSWindowsWatchdog>(
         false, *m_ipcServer, *m_ipcLogOutputter, foreground);
-    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
+    m_watchdog->setFileLogOutputter(m_fileLogOutputter.get());
 #endif
 
     m_events->adoptHandler(
@@ -231,7 +228,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
 #if SYSAPI_WIN32
 
     // install the platform event queue to handle service stop events.
-    m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
+    m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events.get()));
 
     String command = ARCH->setting("Command");
     bool elevate = ARCH->setting("Elevate") == "1";
@@ -246,7 +243,6 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
 
 #if SYSAPI_WIN32
     m_watchdog->stop();
-    delete m_watchdog;
 #endif
 
     m_events->removeHandler(
