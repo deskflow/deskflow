@@ -17,7 +17,6 @@
 
 #include "ipc/IpcClientProxy.h"
 
-#include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "io/IStream.h"
@@ -32,9 +31,7 @@
 
 IpcClientProxy::IpcClientProxy(synergy::IStream &stream, IEventQueue *events)
     : m_stream(stream),
-      m_events(events),
-      m_readMutex(ARCH->newMutex()),
-      m_writeMutex(ARCH->newMutex()) {
+      m_events(events) {
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), stream.getEventTarget(),
       new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleData));
