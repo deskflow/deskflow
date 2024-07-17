@@ -32,11 +32,9 @@
 
 IpcClientProxy::IpcClientProxy(synergy::IStream &stream, IEventQueue *events)
     : m_stream(stream),
-      m_clientType(IpcClientType::Unknown),
-      m_disconnecting(false),
+      m_events(events),
       m_readMutex(ARCH->newMutex()),
-      m_writeMutex(ARCH->newMutex()),
-      m_events(events) {
+      m_writeMutex(ARCH->newMutex()) {
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), stream.getEventTarget(),
       new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleData));

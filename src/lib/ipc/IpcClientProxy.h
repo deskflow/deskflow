@@ -55,9 +55,9 @@ private:
 
 private:
   synergy::IStream &m_stream;
-  IpcClientType m_clientType;
-  bool m_disconnecting;
+  IEventQueue *m_events;
+  IpcClientType m_clientType = IpcClientType::Unknown;
+  bool m_disconnecting = false;
   ArchMutex m_readMutex;
   ArchMutex m_writeMutex;
-  IEventQueue *m_events;
 };
