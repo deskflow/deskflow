@@ -35,7 +35,6 @@ macro(config_test)
   include_directories(
     ${test_base_dir}
     ${src_dir}
-    ${base_dir}
     ${src_dir}/lib
     ${gui_dir}
     ${ext_dir})
