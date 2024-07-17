@@ -34,5 +34,5 @@ public:
 TEST(XWindowsClipboardTests_CICCCMGetClipboard, ctor_default_errorNone) {
   TestXWindowsClipboard::TestCICCCMGetClipboard clipboard;
 
-  EXPECT_EQ(None, clipboard.m_error);
+  EXPECT_EQ(None, clipboard.error());
 }
