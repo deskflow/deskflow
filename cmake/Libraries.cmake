@@ -368,8 +368,4 @@ macro(configure_python)
   else()
     set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/bin/python")
   endif()
-
-  if(NOT EXISTS ${PYTHON_BIN})
-    message(FATAL_ERROR "Python not found at ${PYTHON_BIN}")
-  endif()
 endmacro()

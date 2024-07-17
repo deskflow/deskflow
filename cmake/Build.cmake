@@ -38,6 +38,11 @@ macro(post_config_all)
   # there was nothing to do. This is because the copy may have failed last time
   # due to the file being in use, and we'll usually want to try again.
   if(WIN32)
+
+    if(NOT EXISTS ${PYTHON_BIN})
+      message(FATAL_ERROR "Python not found at: ${PYTHON_BIN}")
+    endif()
+
     add_custom_target(
       run_post_build ALL
       COMMAND ${PYTHON_BIN} ${CMAKE_SOURCE_DIR}/scripts/fancy_copy.py
