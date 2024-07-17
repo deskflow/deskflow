@@ -50,9 +50,9 @@ Enhancements:
 - #7380 Add `qt6-qpa-plugins` Qt dependency for Debian
 - #7381 Set macOS min version to macOS 12.0
 - #7382 Re-run `macdeployqt6` to copy missing Qt 6 dependencies
+- #7383 Solve SonarCloud security hotspots and bugs
 - #7384 Run `install_deps.py` script when building containers weekly
 - #7389 Correct Qt macOS target and drop `Core5Compat` lib
-- #7383 Solve SonarCloud security hotspots and bugs
 - #7401 Run Valgrind on unit tests in CI to detect memory leaks
 - #7403 Solve low hanging reliability and maintainability issues
 
