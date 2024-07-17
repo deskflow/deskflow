@@ -122,4 +122,4 @@ elseif(WIN32)
 
 endif()
 
-# post_config()
+post_config()
