@@ -36,7 +36,7 @@ class DaemonApp {
 
 public:
   DaemonApp();
-  ~DaemonApp() = default;
+  ~DaemonApp();
   int run(int argc, char **argv);
   void mainLoop(bool logToFile, bool foreground = false);
 

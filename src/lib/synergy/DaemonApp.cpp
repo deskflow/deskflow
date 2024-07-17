@@ -99,15 +99,9 @@ int winMainLoopStatic(int, const char **) {
 }
 #endif
 
-DaemonApp::DaemonApp()
-    : m_ipcServer(nullptr),
-#if SYSAPI_WIN32
-      m_watchdog(nullptr),
-#endif
-      m_events(nullptr),
-      m_fileLogOutputter(nullptr) {
-  s_instance = this;
-}
+DaemonApp::DaemonApp() { s_instance = this; }
+
+DaemonApp::~DaemonApp() { s_instance = nullptr; }
 
 int DaemonApp::run(int argc, char **argv) {
 #if SYSAPI_WIN32
