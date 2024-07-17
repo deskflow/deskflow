@@ -34,11 +34,11 @@
 #include "server/Server.h"
 #include "synergy/FileChunk.h"
 #include "synergy/StreamChunker.h"
-#include "test/global/TestEventQueue.h"
 #include "test/mock/server/MockConfig.h"
 #include "test/mock/server/MockInputFilter.h"
 #include "test/mock/server/MockPrimaryClient.h"
 #include "test/mock/synergy/MockScreen.h"
+#include "test/shared/TestEventQueue.h"
 
 #include <fstream>
 #include <gtest/gtest.h>

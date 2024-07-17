@@ -20,5 +20,56 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Stub
-        run: echo stub
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Install dependencies
+        run: |
+          ./scripts/install_deps.py --ci-env &&
+          apt install valgrind -y
+
+      - name: Configure
+        run: cmake -B build --preset=linux-release
+
+      - name: Build
+        run: cmake --build build -j8
+
+      - name: Run Valgrind on unit tests
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          valgrind \
+          --leak-check=full \
+          --show-leak-kinds=all \
+          --track-origins=yes \
+          --verbose \
+          ./build/bin/unittests \
+          2>&1 | tee valgrind.log
+
+      - name: Parse summary
+        id: parse
+        run: |
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT
+          echo >> $GITHUB_OUTPUT
+          echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Append to PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        env:
+          URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          recreate: true
+          message: |
+            ## Valgrind summary
+            See [workflow output](${{ env.URL }}) for full `valgrind` output.
+            ```
+            ${{ steps.parse.outputs.summary }}
+            ```
