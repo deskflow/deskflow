@@ -83,7 +83,7 @@ jobs:
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=build/coverage.xml \
-            -Dsonar.cfamily.threads=2
+            -Dsonar.cfamily.threads=64
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
