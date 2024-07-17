@@ -37,7 +37,7 @@ jobs:
         run: cmake -B build --preset=linux-release
 
       - name: Build
-        run: cmake --build build -j8
+        run: cmake --build build -j
 
       - name: Run Valgrind on unit tests
         env:
