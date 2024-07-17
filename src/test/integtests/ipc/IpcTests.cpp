@@ -39,7 +39,7 @@
 
 #include <gtest/gtest.h>
 
-#define TEST_kIpcPort 24802
+const int kTestPort = 24802;
 
 class IpcTests : public ::testing::Test {
 public:
@@ -65,7 +65,7 @@ public:
 
 TEST_F(IpcTests, connectToServer) {
   SocketMultiplexer socketMultiplexer;
-  IpcServer server(&m_events, &socketMultiplexer, TEST_kIpcPort);
+  IpcServer server(&m_events, &socketMultiplexer, kTestPort);
   server.listen();
   m_connectToServer_server = &server;
 
@@ -74,7 +74,7 @@ TEST_F(IpcTests, connectToServer) {
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::connectToServer_handleMessageReceived));
 
-  IpcClient client(&m_events, &socketMultiplexer, TEST_kIpcPort);
+  IpcClient client(&m_events, &socketMultiplexer, kTestPort);
   client.connect();
 
   m_events.initQuitTimeout(5);
@@ -88,7 +88,7 @@ TEST_F(IpcTests, connectToServer) {
 
 TEST_F(IpcTests, sendMessageToServer) {
   SocketMultiplexer socketMultiplexer;
-  IpcServer server(&m_events, &socketMultiplexer, TEST_kIpcPort);
+  IpcServer server(&m_events, &socketMultiplexer, kTestPort);
   server.listen();
 
   // event handler sends "test" command to server.
@@ -97,7 +97,7 @@ TEST_F(IpcTests, sendMessageToServer) {
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToServer_serverHandleMessageReceived));
 
-  IpcClient client(&m_events, &socketMultiplexer, TEST_kIpcPort);
+  IpcClient client(&m_events, &socketMultiplexer, kTestPort);
   client.connect();
   m_sendMessageToServer_client = &client;
 
@@ -111,7 +111,7 @@ TEST_F(IpcTests, sendMessageToServer) {
 
 TEST_F(IpcTests, sendMessageToClient) {
   SocketMultiplexer socketMultiplexer;
-  IpcServer server(&m_events, &socketMultiplexer, TEST_kIpcPort);
+  IpcServer server(&m_events, &socketMultiplexer, kTestPort);
   server.listen();
   m_sendMessageToClient_server = &server;
 
@@ -121,7 +121,7 @@ TEST_F(IpcTests, sendMessageToClient) {
       new TMethodEventJob<IpcTests>(
           this, &IpcTests::sendMessageToClient_serverHandleClientConnected));
 
-  IpcClient client(&m_events, &socketMultiplexer, TEST_kIpcPort);
+  IpcClient client(&m_events, &socketMultiplexer, kTestPort);
   client.connect();
 
   m_events.adoptHandler(
