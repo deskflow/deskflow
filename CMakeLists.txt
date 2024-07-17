@@ -30,4 +30,4 @@ configure_packaging()
 
 add_subdirectory(src)
 
-post_config_all()
+# post_config_all()
