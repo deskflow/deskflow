@@ -156,16 +156,16 @@ private:
     Window m_requestor;
     Time m_time;
     Atom m_property;
-    bool m_incr;
-    bool m_failed;
-    bool m_done;
+    bool m_incr = false;
+    bool m_failed = false;
+    bool m_done = false;
 
     // atoms needed for the protocol
-    Atom m_atomNone; // NONE, not None
-    Atom m_atomIncr;
+    Atom m_atomNone = None;
+    Atom m_atomIncr = None;
 
     // true iff we've received the selection notify
-    bool m_reading;
+    bool m_reading = false;
 
     // the converted selection data
     String *m_data = nullptr;
@@ -174,9 +174,11 @@ private:
     // selection owner cannot convert to the requested type.
     Atom *m_actualTarget = nullptr;
 
-  public:
     // true iff the selection owner didn't follow ICCCM conventions
-    bool m_error;
+    bool m_error = false;
+
+  public:
+    bool error() const { return m_error; }
   };
 
   // Motif structure IDs
