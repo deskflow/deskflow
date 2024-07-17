@@ -1200,8 +1200,8 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
       m_incr(false),
       m_failed(false),
       m_done(false),
-      m_atomNone(),
-      m_atomIncr(),
+      m_atomNone(None),
+      m_atomIncr(None),
       m_reading(false),
       m_error(false) {
   // do nothing
