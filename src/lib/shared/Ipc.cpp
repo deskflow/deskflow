@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ipc/Ipc.h"
+#include "Ipc.h"
 
 const char *kIpcMsgHello = "IHEL%1i";
 const char *kIpcMsgHelloBack = "IHEL";

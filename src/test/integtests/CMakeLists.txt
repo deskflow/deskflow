@@ -14,67 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB_RECURSE headers "*.h")
-file(GLOB_RECURSE sources "*.cpp")
-
-# remove platform files (specific platform added later).
-file(GLOB_RECURSE remove_platform "platform/*")
-list(REMOVE_ITEM headers ${remove_platform})
-list(REMOVE_ITEM sources ${remove_platform})
-
-# platform
-if(WIN32)
-  file(GLOB platform_sources "platform/MSWindows*.cpp")
-  file(GLOB platform_headers "platform/MSWindows*.h")
-elseif(APPLE)
-  file(GLOB platform_sources "platform/OSX*.cpp")
-  file(GLOB platform_headers "platform/OSX*.h")
-elseif(UNIX)
-  file(GLOB platform_sources "platform/XWindows*.cpp")
-  file(GLOB platform_headers "platform/XWindows*.h")
-endif()
-
-list(APPEND sources ${platform_sources})
-list(APPEND headers ${platform_headers})
-
-file(GLOB_RECURSE global_headers "../../test/global/*.h")
-file(GLOB_RECURSE global_sources "../../test/global/*.cpp")
-
-list(APPEND headers ${global_headers})
-list(APPEND sources ${global_sources})
-
-file(GLOB_RECURSE mock_headers "../../test/mock/*.h")
-file(GLOB_RECURSE mock_sources "../../test/mock/*.cpp")
-
-list(APPEND headers ${mock_headers})
-list(APPEND sources ${mock_sources})
-
-if(SYNERGY_ADD_HEADERS)
-  list(APPEND sources ${headers})
-endif()
-
-if(WIN32)
-  list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
-endif()
-
-include_directories(
-  ../../ ../../lib/ ../../../ext/googletest/googletest/include
-  ../../../ext/googletest/googlemock/include)
-
-add_executable(integtests ${sources})
-target_link_libraries(
-  integtests
-  arch
-  base
-  client
-  common
-  io
-  ipc
-  mt
-  net
-  platform
-  server
-  synlib
-  gtest
-  gmock
-  ${libs})
+config_test()
+set(target integtests)
+add_executable(${target} ${sources})
+target_link_libraries(${target} ${test_libs})

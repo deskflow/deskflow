@@ -58,16 +58,17 @@ macro(configure_definitions)
     add_definitions(-DNDEBUG)
   endif()
 
-  # TODO: find out why we need these, and remove them if we don't
+  # TODO: find out why we need these, and remove them if we don't.
   if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 NEW)
   endif()
 
+  # TODO: explain why we're adding headers to sources.
   if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-    set(SYNERGY_ADD_HEADERS FALSE)
+    set(ADD_HEADERS_TO_SOURCES FALSE)
   else()
-    set(SYNERGY_ADD_HEADERS TRUE)
+    set(ADD_HEADERS_TO_SOURCES TRUE)
   endif()
 endmacro()
 

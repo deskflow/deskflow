@@ -23,10 +23,10 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "io/IStream.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "net/IDataSocket.h"
+#include "shared/Ipc.h"
 
 //
 // IpcServer

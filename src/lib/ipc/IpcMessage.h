@@ -21,7 +21,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/String.h"
-#include "ipc/Ipc.h"
+#include "shared/Ipc.h"
 
 class IpcMessage : public EventData {
 public:

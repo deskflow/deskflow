@@ -21,8 +21,8 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "io/IStream.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcMessage.h"
+#include "shared/Ipc.h"
 #include "synergy/ProtocolUtil.h"
 
 //

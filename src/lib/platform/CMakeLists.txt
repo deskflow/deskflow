@@ -31,7 +31,7 @@ elseif(UNIX)
   file(GLOB sources "XWindows*.cpp")
 endif()
 
-if(SYNERGY_ADD_HEADERS)
+if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 

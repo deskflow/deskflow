@@ -17,7 +17,7 @@
  */
 
 #include "ipc/IpcMessage.h"
-#include "ipc/Ipc.h"
+#include "shared/Ipc.h"
 
 IpcMessage::IpcMessage(UInt8 type) : m_type(type) {}
 

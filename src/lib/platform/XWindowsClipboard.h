@@ -132,6 +132,7 @@ private:
   void fillCache() const;
   void doFillCache();
 
+protected:
   //
   // helper classes
   //

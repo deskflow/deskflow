@@ -21,7 +21,7 @@
 #include "arch/IArchMultithread.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "ipc/Ipc.h"
+#include "shared/Ipc.h"
 
 namespace synergy {
 class IStream;

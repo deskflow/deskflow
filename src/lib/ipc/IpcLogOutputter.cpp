@@ -24,11 +24,11 @@
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
+#include "shared/Ipc.h"
 
 enum EIpcLogOutputter {
   kBufferMaxSize = 1000,
