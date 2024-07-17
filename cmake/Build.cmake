@@ -46,7 +46,7 @@ macro(post_config_all)
     add_custom_target(
       run_post_build ALL
       COMMAND ${PYTHON_BIN} ${CMAKE_SOURCE_DIR}/scripts/fancy_copy.py
-              ${BIN_TEMP_DIR}/${target}* ${CMAKE_BINARY_DIR}/bin --ignore-errors
+              ${BIN_TEMP_DIR} ${CMAKE_BINARY_DIR}/bin --ignore-errors
       VERBATIM
       COMMENT "Copying files to bin dir")
 
