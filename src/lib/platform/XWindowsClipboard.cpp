@@ -21,6 +21,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
+#include "common/basic_types.h"
 #include "common/stdvector.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
@@ -629,7 +630,7 @@ bool XWindowsClipboard::motifOwnsClipboard() const {
   if (data.size() >= sizeof(MotifClipHeader)) {
     MotifClipHeader header;
     std::memcpy(&header, data.data(), sizeof(header));
-    if ((header.m_id == kMotifClipHeader) &&
+    if ((header.m_id == MotifClip::Header) &&
         (static_cast<Window>(header.m_selectionOwner) == owner)) {
       return true;
     }
@@ -657,7 +658,7 @@ void XWindowsClipboard::motifFillCache() {
     return;
   }
   std::memcpy(&header, data.data(), sizeof(header));
-  if (header.m_id != kMotifClipHeader || header.m_numItems < 1) {
+  if (header.m_id != MotifClip::Header || header.m_numItems < 1) {
     return;
   }
 
@@ -677,7 +678,7 @@ void XWindowsClipboard::motifFillCache() {
     return;
   }
   std::memcpy(&item, data.data(), sizeof(item));
-  if (item.m_id != kMotifClipItem ||
+  if (item.m_id != MotifClip::Item ||
       item.m_numFormats - item.m_numDeletedFormats < 1) {
     return;
   }
@@ -706,7 +707,7 @@ void XWindowsClipboard::motifFillCache() {
       continue;
     }
     std::memcpy(&motifFormat, data.data(), sizeof(motifFormat));
-    if (motifFormat.m_id != kMotifClipFormat || motifFormat.m_length < 0 ||
+    if (motifFormat.m_id != MotifClip::Format || motifFormat.m_length < 0 ||
         motifFormat.m_type == None || motifFormat.m_deleted != 0) {
       continue;
     }

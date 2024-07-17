@@ -183,12 +183,12 @@ protected:
   };
 
   // Motif structure IDs
-  enum { kMotifClipFormat = 1, kMotifClipItem, kMotifClipHeader };
+  enum class MotifClip { Format = 1, Item = 2, Header = 3 };
 
   // _MOTIF_CLIP_HEADER structure
   class MotifClipHeader {
   public:
-    SInt32 m_id; // kMotifClipHeader
+    MotifClip m_id;
     SInt32 m_pad1[3];
     SInt32 m_item;
     SInt32 m_pad2[4];
@@ -201,7 +201,7 @@ protected:
   // Motif clip item structure
   class MotifClipItem {
   public:
-    SInt32 m_id; // kMotifClipItem
+    MotifClip m_id;
     SInt32 m_pad1[5];
     SInt32 m_size;
     SInt32 m_numFormats;
@@ -212,7 +212,7 @@ protected:
   // Motif clip format structure
   class MotifClipFormat {
   public:
-    SInt32 m_id; // kMotifClipFormat
+    MotifClip m_id;
     SInt32 m_pad1[6];
     SInt32 m_length;
     SInt32 m_data;
