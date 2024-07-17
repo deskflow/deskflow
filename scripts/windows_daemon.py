@@ -104,7 +104,7 @@ def is_any_process_running(dir):
             if dir.lower() in exe.lower():
                 print(f"Process found: {exe}")
                 return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
     return False
 
