@@ -38,6 +38,9 @@
       "command": "find . -name '*.gcda' -delete",
       "windows": {
         "command": "$null" // no-op
+      },
+      "presentation": {
+        "reveal": "silent"
       }
     },
     {
