@@ -35,7 +35,9 @@
     {
       "label": "clean-gcda",
       "type": "shell",
-      "command": "find . -name '*.gcda' -delete"
+      "linux": {
+        "command": "find . -name '*.gcda' -delete"
+      }
     },
     {
       "label": "unittests (current)",
