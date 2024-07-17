@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +17,9 @@
 
 #pragma once
 
-#include "arch/Arch.h"
 #include "ipc/IpcServer.h"
 
+#include <memory>
 #include <string>
 
 class Event;
@@ -31,11 +30,13 @@ class FileLogOutputter;
 class MSWindowsWatchdog;
 #endif
 
+extern const char *const kLogFilename;
+
 class DaemonApp {
 
 public:
   DaemonApp();
-  virtual ~DaemonApp();
+  ~DaemonApp() = default;
   int run(int argc, char **argv);
   void mainLoop(bool logToFile, bool foreground = false);
 
@@ -49,14 +50,12 @@ public:
   static DaemonApp *s_instance;
 
 #if SYSAPI_WIN32
-  MSWindowsWatchdog *m_watchdog;
+  std::unique_ptr<MSWindowsWatchdog> m_watchdog;
 #endif
 
 private:
-  IpcServer *m_ipcServer;
-  IpcLogOutputter *m_ipcLogOutputter;
-  IEventQueue *m_events;
-  FileLogOutputter *m_fileLogOutputter;
+  std::unique_ptr<IpcServer> m_ipcServer;
+  std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
+  std::unique_ptr<IEventQueue> m_events;
+  std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
 };
-
-#define LOG_FILENAME "synergyd.log"

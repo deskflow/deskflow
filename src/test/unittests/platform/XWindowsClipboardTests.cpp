@@ -21,7 +21,7 @@
 
 #include <gtest/gtest.h>
 
-#define None 0L
+const auto None = 0L;
 
 class TestXWindowsClipboard : public XWindowsClipboard {
 public:

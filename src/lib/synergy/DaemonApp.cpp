@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +24,6 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
 #include "base/log_outputters.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
@@ -37,7 +35,7 @@
 #include "synergy/ArgParser.h"
 #include "synergy/ClientArgs.h"
 #include "synergy/ServerArgs.h"
-#include "synergy/protocol_types.h"
+#include <memory>
 
 #if SYSAPI_WIN32
 
@@ -59,6 +57,8 @@
 #include <string>
 
 using namespace std;
+
+const char *const kLogFilename = "synergyd.log";
 
 namespace {
 void updateSetting(const IpcMessage &message) {
@@ -84,7 +84,7 @@ bool isServerCommandLine(const std::vector<String> &cmd) {
 
 } // namespace
 
-DaemonApp *DaemonApp::s_instance = NULL;
+DaemonApp *DaemonApp::s_instance = nullptr;
 
 int mainLoopStatic() {
   DaemonApp::s_instance->mainLoop(true);
@@ -101,7 +101,6 @@ int winMainLoopStatic(int, const char **) {
 
 DaemonApp::DaemonApp()
     : m_ipcServer(nullptr),
-      m_ipcLogOutputter(nullptr),
 #if SYSAPI_WIN32
       m_watchdog(nullptr),
 #endif
@@ -109,8 +108,6 @@ DaemonApp::DaemonApp()
       m_fileLogOutputter(nullptr) {
   s_instance = this;
 }
-
-DaemonApp::~DaemonApp() {}
 
 int DaemonApp::run(int argc, char **argv) {
 #if SYSAPI_WIN32
@@ -122,8 +119,7 @@ int DaemonApp::run(int argc, char **argv) {
   arch.init();
 
   Log log;
-  EventQueue events;
-  m_events = &events;
+  m_events = std::make_unique<EventQueue>();
 
   bool uninstall = false;
   try {
@@ -134,8 +130,7 @@ int DaemonApp::run(int argc, char **argv) {
 #endif
 
     // default log level to system setting.
-    string logLevel = arch.setting("LogLevel");
-    if (logLevel != "")
+    if (string logLevel = arch.setting("LogLevel"); logLevel != "")
       log.setFilter(logLevel.c_str());
 
     bool foreground = false;
@@ -210,8 +205,9 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     DAEMON_RUNNING(true);
 
     if (logToFile) {
-      m_fileLogOutputter = new FileLogOutputter(logFilename().c_str());
-      CLOG->insert(m_fileLogOutputter);
+      m_fileLogOutputter =
+          std::make_unique<FileLogOutputter>(logFilename().c_str());
+      CLOG->insert(m_fileLogOutputter.get());
     }
 
     // create socket multiplexer.  this must happen after daemonization
@@ -219,12 +215,12 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     SocketMultiplexer multiplexer;
 
     // uses event queue, must be created here.
-    m_ipcServer = new IpcServer(m_events, &multiplexer);
+    m_ipcServer = std::make_unique<IpcServer>(m_events.get(), &multiplexer);
 
     // send logging to gui via ipc, log system adopts outputter.
-    m_ipcLogOutputter =
-        new IpcLogOutputter(*m_ipcServer, IpcClientType::GUI, true);
-    CLOG->insert(m_ipcLogOutputter);
+    m_ipcLogOutputter = std::make_unique<IpcLogOutputter>(
+        *m_ipcServer, IpcClientType::GUI, true);
+    CLOG->insert(m_ipcLogOutputter.get());
 
 #if SYSAPI_WIN32
     m_watchdog = new MSWindowsWatchdog(
@@ -233,7 +229,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
 #endif
 
     m_events->adoptHandler(
-        m_events->forIpcServer().messageReceived(), m_ipcServer,
+        m_events->forIpcServer().messageReceived(), m_ipcServer.get(),
         new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
 
     m_ipcServer->listen();
@@ -260,11 +256,9 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
 #endif
 
     m_events->removeHandler(
-        m_events->forIpcServer().messageReceived(), m_ipcServer);
+        m_events->forIpcServer().messageReceived(), m_ipcServer.get());
 
-    CLOG->remove(m_ipcLogOutputter);
-    delete m_ipcLogOutputter;
-    delete m_ipcServer;
+    CLOG->remove(m_ipcLogOutputter.get());
 
     DAEMON_RUNNING(false);
   } catch (std::exception &e) {
@@ -288,7 +282,7 @@ std::string DaemonApp::logFilename() {
   if (logFilename.empty()) {
     logFilename = ARCH->getLogDirectory();
     logFilename.append("/");
-    logFilename.append(LOG_FILENAME);
+    logFilename.append(kLogFilename);
   }
 
   return logFilename;
