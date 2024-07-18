@@ -15,6 +15,7 @@ runs:
       run: |
         repo_url="${{ github.server_url }}/${{ github.repository }}"
         echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+      shell: bash
 
     - uses: marocchino/sticky-pull-request-comment@v2
       with:
