@@ -59,27 +59,20 @@ jobs:
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          mkdir -p build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
+          cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
           build-wrapper-linux-x86-64 --out-dir bw-output make -j
 
-      - name: Make unit tests coverage
-        id: unit-tests-coverage
+      - name: Unit tests coverage
+        id: unittests-coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        run: |
-          cd build
-          make unittests-coverage
+        run: cmake --build build --target unittests-coverage
         continue-on-error: true
 
-      - name: Make integration tests coverage
-        id: integ-tests-coverage
+      - name: Integration tests coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        run: |
-          cd build
-          make integtests-coverage
+        run: cmake --build build --target integtests-coverage
         continue-on-error: true
 
       - name: Run SonarScanner
@@ -102,7 +95,7 @@ jobs:
 
       # Delayed failure so that analysis can still run
       - name: Check for unit tests failure
-        if: ${{ steps.unit-tests-coverage.outcome == 'failure' }}
+        if: ${{ steps.unittests-coverage.outcome == 'failure' }}
         run: |
           echo "Unit tests failed"
           exit 1
