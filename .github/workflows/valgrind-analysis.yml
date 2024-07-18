@@ -51,17 +51,22 @@ jobs:
         with:
           executable: ./build/bin/integtests
 
+      - name: Get workflow URL
+        id: workflow-url
+        run: |
+          repo_url="${{ github.server_url }}/${{ github.repository }}"
+          echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Append to PR comment
         uses: marocchino/sticky-pull-request-comment@v2
-        env:
-          URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           recreate: true
           header: valgrind
           message: |
             ## Valgrind summary
-            See [workflow output](${{ env.URL }}) for full `valgrind` output.
+            See [workflow run](${{ steps.workflow-url.outputs.url }}) for full `valgrind` output.
 
             ### Unit tests
             ```

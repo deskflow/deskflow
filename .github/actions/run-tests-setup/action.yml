@@ -24,7 +24,7 @@ runs:
         recreate: true
         message: |
           ## Test results
-          See [workflow](${{ steps.workflow-url.outputs.url }}) for test output.
+          See [workflow run](${{ steps.workflow-url.outputs.url }}) for test output.
 
     # Append table header, since the first comment has an annoying comment.
     - uses: marocchino/sticky-pull-request-comment@v2
