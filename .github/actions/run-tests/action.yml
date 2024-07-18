@@ -24,12 +24,14 @@ runs:
       env:
         QT_QPA_PLATFORM: offscreen
       run: ./build/bin/unittests
+      shell: bash
       continue-on-error: true
 
     - id: integtests
       env:
         QT_QPA_PLATFORM: offscreen
       run: ./build/bin/integtests
+      shell: bash
       continue-on-error: true
 
     - uses: marocchino/sticky-pull-request-comment@v2
@@ -47,3 +49,4 @@ runs:
       run: |
         echo "Unit tests failed"
         exit 1
+      shell: bash
