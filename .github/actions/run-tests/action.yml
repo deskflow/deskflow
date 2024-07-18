@@ -24,7 +24,7 @@ runs:
     - id: integtests
       env:
         QT_QPA_PLATFORM: offscreen
-      run: ./build/bin/integtests --gtest_filter=MainWindowTests*
+      run: ./build/bin/integtests
       shell: bash
       continue-on-error: true
 
