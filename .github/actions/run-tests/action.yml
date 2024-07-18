@@ -54,7 +54,7 @@ runs:
         header: tests
         append: true
         message: |
-          | ${{ inputs.job }} | ${{ steps.results.unittests }} | ${{ steps.results.integtests }} |
+          | ${{ inputs.job }} | ${{ steps.results.outputs.unittests }} | ${{ steps.results.outputs.integtests }} |
 
     - if: steps.unittests.outcome == 'failure'
       run: |
