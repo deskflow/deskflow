@@ -56,7 +56,7 @@ using ::testing::Return;
 
 const size_t kMockDataSize = 1024 * 1024 * 10; // 10MB
 const UInt16 kMockDataChunkIncrement = 1024;   // 1KB
-const char *kMockFilename = "NetworkTests.mock";
+const char *kMockFilename = "tmp/NetworkTests.mock";
 const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 
 void getScreenShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h);
