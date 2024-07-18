@@ -28,6 +28,10 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
       m_Enabled(false),
       m_StreamProvider(streamProvider) {
 
+  // TODO: remove test
+  if (true) {
+  }
+
   m_Socket = new QTcpSocket(this);
 
   if (!m_StreamProvider) {
