@@ -14,9 +14,9 @@
     },
     {
       "type": "cmake",
-      "label": "coverage",
+      "label": "clean",
       "command": "build",
-      "targets": ["coverage"],
+      "targets": ["clean"],
       "preset": "${command:cmake.activeBuildPresetName}",
       "group": "build"
     },
@@ -33,6 +33,17 @@
       "dependsOn": ["build"]
     },
     {
+      "label": "clean-gcda",
+      "type": "shell",
+      "command": "find . -name '*.gcda' -delete",
+      "windows": {
+        "command": "$null" // no-op
+      },
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
       "label": "unittests (current)",
       "type": "shell",
       "command": "python",
@@ -42,7 +53,7 @@
         "--ignore-return-code",
         "--filter-file=${file}"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "integtests (current)",
@@ -54,21 +65,21 @@
         "--ignore-return-code",
         "--filter-file=${file}"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "unittests (all)",
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--unit-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "integtests (all)",
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "unittests (current, valgrind)",
@@ -81,7 +92,7 @@
         "--filter-file=${file}",
         "--valgrind"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "integtests (current, valgrind)",
@@ -94,7 +105,7 @@
         "--filter-file=${file}",
         "--valgrind"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     }
   ]
 }

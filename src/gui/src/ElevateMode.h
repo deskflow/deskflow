@@ -22,8 +22,8 @@
 // command line argument to synergy core, determines if the server restarts
 // when switching Windows desktops (e.g. when Windows UAC dialog pops up).
 // The second, passed as a boolean flag to Synergyd over the IPC inside
-// kIpcCommandMessage, determines whether Synergy should be started with
-// elevated privileges.
+// IpcMessageType::CommandMessage, determines whether Synergy should be started
+// with elevated privileges.
 //
 // The matrix for these two behaviours is as follows:
 //                          SodS        Elevate

@@ -20,7 +20,7 @@
 
 IpcSettingMessage::IpcSettingMessage(
     const std::string &name, const std::string &value)
-    : IpcMessage(kIpcSetting),
+    : IpcMessage(IpcMessageType::Setting),
       m_name(name),
       m_value(value) {}
 
