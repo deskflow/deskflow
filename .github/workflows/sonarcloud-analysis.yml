@@ -56,8 +56,10 @@ jobs:
 
       - name: Install build-wrapper
         run: |
-          curl --create-dirs -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-          unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
+          file="build-wrapper-linux-x86.zip"
+          url="https://sonarcloud.io/static/cpp/$file"
+          curl --create-dirs -sSLo $HOME/.sonar/$file $url
+          unzip -o $HOME/.sonar/$file -d $HOME/.sonar/
 
       - name: Configure
         run: cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
@@ -105,6 +107,8 @@ jobs:
             -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
             -Dsonar.tests=src/test \
             -Dsonar.exclusions=ext/**,build/** \
+            -Dsonar.coverage.exclusions=ext/**,scripts/**,src/test/**
+            -Dsonar.cpd.exclusions=**/*Test*.cpp
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
             -Dsonar.cfamily.compile-commands=build/compile_commands.json \
