@@ -18,7 +18,11 @@ runs:
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         header: tests
-        delete: true
+        recreate: true
+        message: |
+          ## Test results
+          | Job name | Unit tests | Integration tests |
+          | --- | --- | --- |
 
     - id: unittests
       env:
@@ -42,9 +46,7 @@ runs:
         header: tests
         append: true
         message: |
-          - **${{ inputs.job }}**
-            unittests: ${{ steps.unittests.outcome == 'success' && '✅' || '❌' }}
-            integtests: ${{ steps.integtests.outcome == 'success' && '✅' || '❌' }}
+          | ### ${{ inputs.job }} | ${{ steps.unittests.outcome }} | ${{ steps.integtests.outcome }} |
 
     - if: steps.unittests.outcome == 'failure'
       run: |
