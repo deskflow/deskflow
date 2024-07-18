@@ -22,7 +22,8 @@
     },
     {
       "label": "tests",
-      "dependsOn": ["unittests", "integtests"]
+      "dependsOn": ["unittests", "integtests"],
+      "problemMatcher": []
     },
     {
       "label": "gui",
@@ -41,7 +42,7 @@
       "type": "shell",
       "command": "find . -name '*.gcda' -delete",
       "windows": {
-        "command": "$null" // no-op
+        "command": "$null"
       },
       "presentation": {
         "reveal": "silent"
