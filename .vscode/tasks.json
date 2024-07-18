@@ -21,15 +21,19 @@
       "group": "build"
     },
     {
-      "label": "reinstall windows daemon",
-      "type": "shell",
-      "command": "python scripts/windows_daemon.py",
-      "dependsOn": ["build"]
+      "label": "tests",
+      "dependsOn": ["unittests (all)", "integtests (all)"]
     },
     {
       "label": "gui",
       "type": "process",
       "command": "${workspaceFolder}/build/bin/synergy",
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "windows daemon",
+      "type": "shell",
+      "command": "python scripts/windows_daemon.py",
       "dependsOn": ["build"]
     },
     {
