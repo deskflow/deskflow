@@ -79,16 +79,10 @@ static const char *synergyDefaultIconFiles[] = {
 };
 
 void testCodeCoverage() {
-  int a = 5, b = 3, sum = a + b, diff = a - b, prod = a * b;
-  double quot = (b != 0) ? static_cast<double>(a) / b : 0.0;
-  std::cout << "Sum: " << sum << ", Diff: " << diff << ", Prod: " << prod
-            << ", Quot: " << quot << std::endl;
-  int max_val = (a > b) ? a : b;
-  std::cout << "Max: " << max_val << std::endl;
-  int total = 0;
-  for (int i = 1; i <= 10; ++i)
-    total += i;
-  std::cout << "Total sum from 1 to 10 is: " << total << std::endl;
+  int a = 5, b = 3, sum = a + b;
+  std::cout << "Sum: " << sum << std::endl;
+  int product = a * b;
+  std::cout << "Product: " << product << std::endl;
 }
 
 #ifdef SYNERGY_ENABLE_LICENSING
