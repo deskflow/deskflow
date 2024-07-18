@@ -11,12 +11,15 @@ runs:
 
   steps:
     - uses: marocchino/sticky-pull-request-comment@v2
+      env:
+        URL: https://github.com/symless/synergy-core/actions/workflows/ci.yml
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         header: tests
         recreate: true
         message: |
           ## Test results
+          See [workflow output](${{ env.URL }}) for test output.
 
     # Append table header, since the first comment has an annoying comment.
     - uses: marocchino/sticky-pull-request-comment@v2
