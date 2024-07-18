@@ -27,7 +27,7 @@ jobs:
       SONAR_SCANNER_VERSION: 6.1.0.4477
       SONAR_SCANNER_OPTS: -server
       SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
-      MAX_THREADS: 32
+      CPU_CORE_COUNT: 32
 
     steps:
       - name: Checkout
@@ -60,7 +60,7 @@ jobs:
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
           cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j${MAX_THREADS}
+          build-wrapper-linux-x86-64 --out-dir bw-output make -j${CPU_CORE_COUNT}
 
       - name: Unit tests coverage
         id: unittests-coverage
@@ -88,7 +88,7 @@ jobs:
             -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=build/coverage.xml \
-            -Dsonar.cfamily.threads=${{ env.MAX_THREADS }}
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
