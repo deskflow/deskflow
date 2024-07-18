@@ -20,12 +20,6 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: tests
-          delete: true
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -63,7 +57,7 @@ jobs:
           URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          append: true
+          recreate: true
           header: valgrind
           message: |
             ## Valgrind summary

@@ -29,6 +29,16 @@ runs:
       continue-on-error: true
 
     - uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        header: tests
+        only-create: true
+        message: |
+          ## Test results
+          | Job name | Unit tests | Integration tests |
+          | --- | --- | --- |
+
+    - uses: marocchino/sticky-pull-request-comment@v2
       env:
         URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
       with:
