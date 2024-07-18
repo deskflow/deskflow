@@ -33,6 +33,21 @@ env:
   UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: tests
+          recreate: true
+          message: |
+            ## Test results
+            | Job name | Unit tests | Integration tests |
+            | --- | --- | --- |
+
   windows:
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}

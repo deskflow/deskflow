@@ -1,4 +1,4 @@
-name: "Run tests"
+name: "Run tests (append)"
 description: "Runs both unit tests and integration tests and appends to a PR comment"
 
 inputs:
@@ -14,16 +14,6 @@ runs:
   using: "composite"
 
   steps:
-    - uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        header: tests
-        recreate: true
-        message: |
-          ## Test results
-          | Job name | Unit tests | Integration tests |
-          | --- | --- | --- |
-
     - id: unittests
       env:
         QT_QPA_PLATFORM: offscreen
