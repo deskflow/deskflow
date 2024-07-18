@@ -15,7 +15,8 @@ runs:
   using: "composite"
 
   steps:
-    - id: run
+    - name: Valgrind
+      id: run
       env:
         QT_QPA_PLATFORM: offscreen
       run: |
@@ -29,7 +30,8 @@ runs:
       shell: bash
       continue-on-error: true
 
-    - id: parse
+    - name: Parse output
+      id: parse
       run: |
         echo "summary<<EOF" >> $GITHUB_OUTPUT
         echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT

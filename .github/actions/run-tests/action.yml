@@ -14,21 +14,24 @@ runs:
   using: "composite"
 
   steps:
-    - id: unittests
+    - name: Unit tests
+      id: unittests
       env:
         QT_QPA_PLATFORM: offscreen
       run: ./build/bin/unittests
       shell: bash
       continue-on-error: true
 
-    - id: integtests
+    - name: Integration tests
+      id: integtests
       env:
         QT_QPA_PLATFORM: offscreen
       run: ./build/bin/integtests
       shell: bash
       continue-on-error: true
 
-    - id: results
+    - name: Get test results
+      id: results
       run: |
         pass="✅ Pass"
         fail="❌ Fail"
@@ -40,7 +43,8 @@ runs:
         echo "integtests=$integtests" >> $GITHUB_OUTPUT
       shell: bash
 
-    - uses: marocchino/sticky-pull-request-comment@v2
+    - name: Append to PR comment
+      uses: marocchino/sticky-pull-request-comment@v2
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         header: tests
@@ -48,7 +52,8 @@ runs:
         message: |
           | ${{ inputs.job }} | ${{ steps.results.outputs.unittests }} | ${{ steps.results.outputs.integtests }} |
 
-    - if: steps.unittests.outcome == 'failure'
+    - name: Check test outcome
+      if: steps.unittests.outcome == 'failure'
       run: |
         echo "Unit tests failed"
         exit 1

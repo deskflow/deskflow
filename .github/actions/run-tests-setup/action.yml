@@ -17,7 +17,8 @@ runs:
         echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
       shell: bash
 
-    - uses: marocchino/sticky-pull-request-comment@v2
+    - name: Begin PR comment
+      uses: marocchino/sticky-pull-request-comment@v2
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         header: tests
@@ -26,8 +27,9 @@ runs:
           ## Test results
           See [workflow run](${{ steps.workflow-url.outputs.url }}) for test output.
 
-    # Append table header, since the first comment has an annoying comment.
-    - uses: marocchino/sticky-pull-request-comment@v2
+    # Neccesary since the first comment has an annoying comment.
+    - name: Append table header
+      uses: marocchino/sticky-pull-request-comment@v2
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         header: tests
