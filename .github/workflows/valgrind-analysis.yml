@@ -67,6 +67,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           recreate: true
+          header: valgrind
           message: |
             ## Valgrind summary
             See [workflow output](${{ env.URL }}) for full `valgrind` output.

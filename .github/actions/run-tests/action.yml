@@ -1,0 +1,45 @@
+name: "Run tests"
+description: "Runs both unit tests and integration tests and appends to a PR comment"
+
+inputs:
+  job:
+    description: "The job name to append to the PR comment"
+    default: "unknown"
+
+runs:
+  using: "composite"
+
+  steps:
+    - uses: marocchino/sticky-pull-request-comment@v2
+    with:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      header: tests
+      delete: true
+
+  - id: unittests
+    env:
+      QT_QPA_PLATFORM: offscreen
+    run: ./build/bin/unittests
+    continue-on-error: true
+
+  - id: integtests
+    env:
+      QT_QPA_PLATFORM: offscreen
+    run: ./build/bin/integtests
+    continue-on-error: true
+
+  - uses: marocchino/sticky-pull-request-comment@v2
+    env:
+      URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
+    with:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      append: true
+      message: |
+        - **${{ inputs.job }}**
+          unittests: ${{ steps.unittests.outcome == 'success' && '✅' || '❌' }}
+          integtests: ${{ steps.integtests.outcome == 'success' && '✅' || '❌' }}
+
+  - if: steps.unittests.outcome == 'failure'
+    run: |
+      echo "Unit tests failed"
+      exit 1

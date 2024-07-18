@@ -251,16 +251,10 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Unit tests
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: ./build/bin/unittests
-
-      - name: Integration tests
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: ./build/bin/integtests
-        continue-on-error: true
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        with:
+          job: ${{ matrix.distro.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
