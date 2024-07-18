@@ -99,7 +99,7 @@ jobs:
             -Dsonar.projectKey=symless_synergy-core \
             -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
             -Dsonar.tests=src/test \
-            -Dsonar.exclusions=ext/**,build/** \
+            -Dsonar.exclusions=ext/**/*,build/**/* \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.cfamily.compile-commands=build/compile_commands.json \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
