@@ -319,11 +319,12 @@ macro(configure_test_libs)
     message(STATUS "Enabling code coverage")
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
+
     setup_target_for_coverage_gcovr_xml(
       NAME
-      integtests-coverage
+      ${INTEG_TESTS_BIN}-coverage
       EXECUTABLE
-      integtests
+      ${INTEG_TESTS_BIN}
       BASE_DIRECTORY
       "${PROJECT_SOURCE_DIR}/src"
       EXCLUDE
@@ -331,13 +332,14 @@ macro(configure_test_libs)
 
     setup_target_for_coverage_gcovr_xml(
       NAME
-      unittests-coverage
+      ${UNIT_TESTS_BIN}-coverage
       EXECUTABLE
-      unittests
+      ${UNIT_TESTS_BIN}
       BASE_DIRECTORY
       "${PROJECT_SOURCE_DIR}/src"
       EXCLUDE
       "ext/*")
+
   else()
     message(STATUS "Code coverage is disabled")
   endif()
