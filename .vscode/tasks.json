@@ -2,8 +2,8 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "cmake",
       "label": "build",
+      "type": "cmake",
       "command": "build",
       "targets": ["all"],
       "preset": "${command:cmake.activeBuildPresetName}",
@@ -13,8 +13,8 @@
       }
     },
     {
-      "type": "cmake",
       "label": "clean",
+      "type": "cmake",
       "command": "build",
       "targets": ["clean"],
       "preset": "${command:cmake.activeBuildPresetName}",
@@ -26,10 +26,22 @@
       "problemMatcher": []
     },
     {
+      "label": "kill",
+      "type": "shell",
+      "command": "killall synergy; killall synergyc; killall synergys || true",
+      "windows": {
+        "command": "taskkill /F /IM synergy.exe /IM synergyc.exe /IM synergys.exe"
+      }
+    },
+    {
+      "label": "build-kill",
+      "dependsOn": ["build", "kill"]
+    },
+    {
       "label": "gui",
       "type": "process",
       "command": "${workspaceFolder}/build/bin/synergy",
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "kill"]
     },
     {
       "label": "windows daemon",
