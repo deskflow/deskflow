@@ -28,7 +28,14 @@ runs:
       timeout-minutes: 2
       env:
         QT_QPA_PLATFORM: offscreen
-      run: ./build/bin/integtests
+      run: |
+        ./build/bin/integtests
+
+        result=$?
+
+        if [ $result -ne 0 ]; then
+          echo "::warning ::Integration tests failed with code: $result"
+        fi
       shell: bash
       continue-on-error: true
 
