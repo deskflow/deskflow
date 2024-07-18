@@ -39,6 +39,7 @@ runs:
         URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        header: tests
         append: true
         message: |
           - **${{ inputs.job }}**
