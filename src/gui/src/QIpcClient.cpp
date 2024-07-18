@@ -29,6 +29,10 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
       m_Enabled(false),
       m_StreamProvider(streamProvider) {
 
+  // TODO: remove test -- covered
+  if (true) {
+  }
+
   m_Socket = new QTcpSocket(this);
 
   if (!m_StreamProvider) {
@@ -54,6 +58,11 @@ QIpcClient::~QIpcClient() {
 }
 
 void QIpcClient::connected() {
+
+  // TODO: remove test -- not covered
+  if (true) {
+  }
+
   sendHello();
   infoMessage("connection established");
 }

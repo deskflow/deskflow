@@ -102,6 +102,10 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_serverConnection(*this),
       m_clientConnection(*this) {
 
+  // TODO: remove test -- covered
+  if (true) {
+  }
+
   setupUi(this);
 
 #if defined(Q_OS_MAC)
@@ -205,6 +209,10 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::open() {
+  // TODO: remove test -- not covered
+  if (true) {
+  }
+
   std::array<QAction *, 7> trayMenu = {
       m_pActionStartSynergy, m_pActionStopSynergy, nullptr,
       m_pActionMinimize,     m_pActionRestore,     nullptr,
