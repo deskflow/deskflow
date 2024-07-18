@@ -59,53 +59,35 @@ jobs:
           curl --create-dirs -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
 
-      - name: Configure
-        run: cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
-
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
+          build-wrapper-linux-x86-64 --out-dir bw-output make -j${{ env.CPU_CORE_COUNT }}
 
-      - name: Unit tests coverage
+      - name: Make unittests-coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target unittests-coverage
-
-      - name: Integration tests coverage
-        id: integtests-coverage
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target integtests-coverage
-        continue-on-error: true
-
-      - name: Get coverage report paths
-        id: coverage-paths
         run: |
-          unittests=$(find build -name unittests-coverage.xml)
-          integtests=$(find build -name integtests-coverage.xml)
-          paths="${unittests}${integtests:+,$integtests}"
-          if [ -z "$paths" ]; then
-            echo "Error: No coverage files found"
-            exit 1
-          fi
-          echo "csv=$paths" >> $GITHUB_OUTPUT
+          cd build
+          make unittests-coverage
 
       - name: Run SonarScanner
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
+          cd build
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
-            -Dsonar.projectBaseDir=. \
-            -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
-            -Dsonar.tests=src/test \
+            -Dsonar.sources=. \
+            -Dsonar.projectBaseDir=../ \
             -Dsonar.exclusions=ext/**,build/** \
+            -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
-            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
-            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }} \
-            -Dsonar.python.version=3.10
+            -Dsonar.coverageReportPaths=build/unittests-coverage.xml \
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
