@@ -254,6 +254,7 @@ jobs:
       - name: Tests
         uses: ./.github/actions/run-tests
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: ${{ matrix.distro.name }}
 
       - name: Package
