@@ -68,11 +68,9 @@ jobs:
           build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
 
       - name: Unit tests coverage
-        id: unittests-coverage
         env:
           QT_QPA_PLATFORM: offscreen
         run: cmake --build build --target unittests-coverage
-        continue-on-error: true
 
       - name: Integration tests coverage
         id: integtests-coverage
@@ -111,10 +109,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Delayed failure so that analysis can still run
-      - name: Check for unit tests failure
-        if: ${{ steps.unittests-coverage.outcome == 'failure' }}
-        run: |
-          echo "Unit tests failed"
-          exit 1
