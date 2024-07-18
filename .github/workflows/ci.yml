@@ -89,6 +89,7 @@ jobs:
 
       - name: Tests
         uses: ./.github/actions/run-tests
+        timeout-minutes: 2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: ${{ matrix.target.name }}
@@ -159,6 +160,7 @@ jobs:
 
       - name: Tests
         uses: ./.github/actions/run-tests
+        timeout-minutes: 2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: ${{ matrix.target.name }}
@@ -263,6 +265,7 @@ jobs:
 
       - name: Tests
         uses: ./.github/actions/run-tests
+        timeout-minutes: 2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: linux-${{ matrix.distro.name }}
