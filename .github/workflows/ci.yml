@@ -42,7 +42,11 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: tests
-          delete: true
+          recreate: true
+          message: |
+            ## Test results
+            | Job name | Unit tests | Integration tests |
+            | --- | --- | --- |
 
   windows:
     name: ${{ matrix.target.name }}

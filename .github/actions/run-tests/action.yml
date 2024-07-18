@@ -28,16 +28,6 @@ runs:
       shell: bash
       continue-on-error: true
 
-    - uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        header: tests
-        only-create: true
-        message: |
-          ## Test results
-          | Job name | Unit tests | Integration tests |
-          | --- | --- | --- |
-
     - id: results
       run: |
         unittests=$([[ "${{ steps.unittests.outcome }}" == "success" ]] && echo "✅" || echo "❌")
@@ -47,8 +37,6 @@ runs:
       shell:
 
     - uses: marocchino/sticky-pull-request-comment@v2
-      env:
-        URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         header: tests
