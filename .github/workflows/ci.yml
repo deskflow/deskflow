@@ -33,6 +33,18 @@ env:
   UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/run-tests-setup
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   windows:
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
@@ -75,8 +87,12 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Test
-        run: ./build/bin/unittests
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        timeout-minutes: 2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          job: ${{ matrix.target.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
@@ -142,8 +158,12 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Test
-        run: ./build/bin/unittests
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        timeout-minutes: 2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          job: ${{ matrix.target.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
@@ -243,10 +263,12 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Test
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: ./build/bin/unittests
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        timeout-minutes: 2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          job: linux-${{ matrix.distro.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}

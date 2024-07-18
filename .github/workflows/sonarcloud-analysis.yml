@@ -27,13 +27,16 @@ jobs:
       SONAR_SCANNER_VERSION: 6.1.0.4477
       SONAR_SCANNER_OPTS: -server
       SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
-      SONAR_SCANNER_THREADS: 32
+      CPU_CORE_COUNT: 32
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
+
+          # Fetch all history for SonarScanner blame data
+          fetch-depth: 0
 
       - name: Config Git safe dir
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -53,38 +56,64 @@ jobs:
 
       - name: Install build-wrapper
         run: |
-          curl --create-dirs -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-          unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
+          file="build-wrapper-linux-x86.zip"
+          url="https://sonarcloud.io/static/cpp/$file"
+          curl --create-dirs -sSLo $HOME/.sonar/$file $url
+          unzip -o $HOME/.sonar/$file -d $HOME/.sonar/
+
+      - name: Configure
+        run: cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
 
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          mkdir -p build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON ..
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j
+          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
 
-      - name: Make coverage
+      - name: Unit tests coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: cmake --build build --target coverage-unittests
+
+      - name: Integration tests coverage
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
-          cd build
-          make coverage
+          cmake --build build --target coverage-integtests
+          result=$?
+
+          if [ $result -ne 0 ]; then
+            echo "::warning ::Integration tests failed with code: $result"
+          fi
+        continue-on-error: true
+
+      - name: Get coverage report paths
+        id: coverage-paths
+        run: |
+          unittests=$(find build -name coverage-unittests.xml)
+          integtests=$(find build -name coverage-integtests.xml)
+          paths="${unittests}${integtests:+,$integtests}"
+          if [ -z "$paths" ]; then
+            echo "Error: No coverage files found"
+            exit 1
+          fi
+          echo "csv=$paths" >> $GITHUB_OUTPUT
 
       - name: Run SonarScanner
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
-          cd build
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
-            -Dsonar.sources=. \
-            -Dsonar.projectBaseDir=../ \
+            -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
+            -Dsonar.tests=src/test \
             -Dsonar.exclusions=ext/**,build/** \
-            -Dsonar.cfamily.build-wrapper-output=bw-output \
+            -Dsonar.coverage.exclusions=ext/**,scripts/**,src/test/** \
+            -Dsonar.cpd.exclusions=**/*Test*.cpp \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.coverageReportPaths=build/coverage.xml \
-            -Dsonar.cfamily.threads=${{ env.SONAR_SCANNER_THREADS }}
+            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
+            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }} \
+            -Dsonar.python.version=3.10
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -30,6 +30,9 @@ macro(configure_definitions)
   configure_options()
   configure_python()
 
+  set(INTEG_TESTS_BIN integtests)
+  set(UNIT_TESTS_BIN unittests)
+
   if("${VERSION_URL}" STREQUAL "")
     set(VERSION_URL "https://api.symless.com/version?version=v1")
   endif()

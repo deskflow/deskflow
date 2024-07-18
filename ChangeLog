@@ -55,6 +55,7 @@ Enhancements:
 - #7389 Correct Qt macOS target and drop `Core5Compat` lib
 - #7401 Run Valgrind on unit tests in CI to detect memory leaks
 - #7403 Solve low hanging reliability and maintainability issues
+- #7404 Restore integtests and add to CI as warning comment on failure
 
 # 1.14.6
 

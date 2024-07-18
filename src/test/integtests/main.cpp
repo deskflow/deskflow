@@ -29,10 +29,8 @@
 
 #define LOCK_TIMEOUT 30
 
-using namespace std;
-
-void lock(string lockFile);
-void unlock(string lockFile);
+void lock(const std::string &lockFile);
+void unlock(const std::string &lockFile);
 
 int main(int argc, char **argv) {
 #if SYSAPI_WIN32
@@ -46,9 +44,10 @@ int main(int argc, char **argv) {
   Log log;
   log.setFilter(kDEBUG2);
 
-  string lockFile;
+  std::string lockFile;
   for (int i = 0; i < argc; i++) {
-    if (string(argv[i]).compare("--lock-file") == 0) {
+    const std::string option(argv[i]);
+    if (option.find("--lock-file") != std::string::npos) {
       lockFile = argv[i + 1];
     }
   }
@@ -66,21 +65,18 @@ int main(int argc, char **argv) {
     unlock(lockFile);
   }
 
-  // gtest seems to randomly finish with error codes (e.g. -1, -1073741819)
-  // even when no tests have failed. not sure what causes this, but it
-  // happens on all platforms and  keeps leading to false positives.
-  // according to the documentation, 1 is a failure, so we should be
-  // able to trust that code.
-  return (result == 1) ? 1 : 0;
+  // return code 1 means the test failed.
+  // any other non-zero code is probably a memory error.
+  return result;
 }
 
-void lock(string lockFile) {
+void lock(const std::string &lockFile) {
   double start = ARCH->time();
 
   // keep checking until timeout is reached.
   while ((ARCH->time() - start) < LOCK_TIMEOUT) {
 
-    ifstream is(lockFile.c_str());
+    std::ifstream is(lockFile.c_str());
     bool noLock = !is;
     is.close();
 
@@ -93,8 +89,8 @@ void lock(string lockFile) {
   }
 
   // write empty lock file.
-  ofstream os(lockFile.c_str());
+  std::ofstream os(lockFile.c_str());
   os.close();
 }
 
-void unlock(string lockFile) { remove(lockFile.c_str()); }
+void unlock(const std::string &lockFile) { remove(lockFile.c_str()); }

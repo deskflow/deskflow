@@ -54,6 +54,7 @@ QIpcClient::~QIpcClient() {
 }
 
 void QIpcClient::connected() {
+
   sendHello();
   infoMessage("connection established");
 }

@@ -60,24 +60,6 @@ macro(set_sources)
   list(APPEND headers ${mock_headers})
   list(APPEND sources ${mock_sources})
 
-  file(GLOB_RECURSE gui_sources ${gui_dir}/*.cpp)
-
-  file(GLOB activation_sources ${gui_dir}/*Activation* ${gui_dir}/*License*)
-  if(NOT ENABLE_LICENSING)
-    list(REMOVE_ITEM gui_sources ${activation_sources})
-  endif()
-
-  # remove main gui as the test already has its own main.
-  file(GLOB gui_main ${gui_dir}/main.cpp)
-  list(REMOVE_ITEM gui_sources ${gui_main})
-
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    file(GLOB mac_gui_sources ${gui_dir}/*.mm)
-    list(APPEND gui_sources ${mac_gui_sources})
-  endif()
-
-  list(APPEND sources ${gui_sources})
-
   if(ADD_HEADERS_TO_SOURCES)
     list(APPEND sources ${headers})
   endif()
@@ -86,11 +68,12 @@ macro(set_sources)
     list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
   endif()
 
-  add_platform_sources()
+  append_platform_sources()
+  append_gui_sources()
 
 endmacro()
 
-macro(add_platform_sources)
+macro(append_platform_sources)
 
   set(platform_dir ${CMAKE_CURRENT_SOURCE_DIR}/platform)
 
@@ -114,6 +97,31 @@ macro(add_platform_sources)
 
   list(APPEND sources ${platform_sources})
   list(APPEND headers ${platform_headers})
+
+endmacro()
+
+# TODO: compile gui sources into a single shared lib to reduce compile time.
+# currently the gui is compiled 3 times (gui exe, unit tests, and integ tests).
+# this might be tricky, since the qt moc generator seems to get easily confused.
+macro(append_gui_sources)
+
+  file(GLOB_RECURSE gui_sources ${gui_dir}/*.cpp)
+
+  file(GLOB activation_sources ${gui_dir}/*Activation* ${gui_dir}/*License*)
+  if(NOT ENABLE_LICENSING)
+    list(REMOVE_ITEM gui_sources ${activation_sources})
+  endif()
+
+  # remove main gui as the test already has its own main.
+  file(GLOB gui_main ${gui_dir}/main.cpp)
+  list(REMOVE_ITEM gui_sources ${gui_main})
+
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    file(GLOB mac_gui_sources ${gui_dir}/*.mm)
+    list(APPEND gui_sources ${mac_gui_sources})
+  endif()
+
+  list(APPEND sources ${gui_sources})
 
 endmacro()
 
