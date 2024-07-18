@@ -51,8 +51,6 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#include <iostream>
-
 static const int debugLogLevel = 1;
 
 static const char *synergyLightIconFiles[] = {
@@ -103,9 +101,6 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_SecureSocket(false),
       m_serverConnection(*this),
       m_clientConnection(*this) {
-
-  std::cout << "Code coverage test 1" << std::endl;
-  std::cout << "Code coverage test 2" << std::endl;
 
   setupUi(this);
 
