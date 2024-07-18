@@ -107,8 +107,8 @@ jobs:
             -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
             -Dsonar.tests=src/test \
             -Dsonar.exclusions=ext/**,build/** \
-            -Dsonar.coverage.exclusions=ext/**,scripts/**,src/test/**
-            -Dsonar.cpd.exclusions=**/*Test*.cpp
+            -Dsonar.coverage.exclusions=ext/**,scripts/**,src/test/** \
+            -Dsonar.cpd.exclusions=**/*Test*.cpp \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
             -Dsonar.cfamily.compile-commands=build/compile_commands.json \
