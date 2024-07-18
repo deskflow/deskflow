@@ -97,12 +97,13 @@ jobs:
           sonar-scanner \
             -Dsonar.organization=symless \
             -Dsonar.projectKey=symless_synergy-core \
+            -Dsonar.projectBaseDir=. \
             -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
             -Dsonar.tests=src/test \
             -Dsonar.exclusions=ext/**,build/** \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
+            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
             -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }} \
             -Dsonar.python.version=3.10
         env:
