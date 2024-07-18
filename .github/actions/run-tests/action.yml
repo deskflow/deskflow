@@ -30,12 +30,14 @@ runs:
 
     - id: results
       run: |
-        unittests_outcome=${{ steps.unittests.outcome }}
-        integtests_outcome=${{ steps.integtests.outcome }}
-        unittests_status=$([ "$unittests_outcome" = "success" ] && echo "✅" || echo "❌")
-        integtests_status=$([ "$integtests_outcome" = "success" ] && echo "✅" || echo "❌")
-        echo unittests=$unittests_status
-        echo integtests=$integtests_status
+        pass="✅ Pass"
+        fail="❌ Fail"
+        unittests_outcome="${{ steps.unittests.outcome }}"
+        integtests_outcome="${{ steps.integtests.outcome }}"
+        unittests=$( [ "$unittests_outcome" = "success" ] && echo $pass || echo $fail )
+        integtests=$( [ "$integtests_outcome" = "success" ] && echo $pass || echo $fail )
+        echo "unittests=$unittests" >> $GITHUB_OUTPUT
+        echo "integtests=$integtests" >> $GITHUB_OUTPUT
       shell: bash
 
     - uses: marocchino/sticky-pull-request-comment@v2
