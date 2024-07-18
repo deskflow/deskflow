@@ -22,7 +22,7 @@
     },
     {
       "label": "tests",
-      "dependsOn": ["unittests (all)", "integtests (all)"],
+      "dependsOn": ["unittests", "integtests"],
       "problemMatcher": []
     },
     {
@@ -85,14 +85,14 @@
       "dependsOn": ["build", "clean-gcda"]
     },
     {
-      "label": "unittests (all)",
+      "label": "unittests",
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--unit-tests", "--ignore-return-code"],
       "dependsOn": ["build", "clean-gcda"]
     },
     {
-      "label": "integtests (all)",
+      "label": "integtests",
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
