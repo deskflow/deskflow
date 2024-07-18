@@ -38,6 +38,14 @@ runs:
           | Job name | Unit tests | Integration tests |
           | --- | --- | --- |
 
+    - id: results
+      run: |
+        unittests=$([[ "${{ steps.unittests.outcome }}" == "success" ]] && echo "✅" || echo "❌")
+        integtests=$([[ "${{ steps.integtests.outcome }}" == "success" ]] && echo "✅" || echo "❌")
+        echo unittests=$unittests >> $GITHUB_OUTPUT
+        echo integtests=$integtests >> $GITHUB_OUTPUT
+      shell:
+
     - uses: marocchino/sticky-pull-request-comment@v2
       env:
         URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
@@ -46,7 +54,7 @@ runs:
         header: tests
         append: true
         message: |
-          | ${{ inputs.job }} | ${{ steps.unittests.outcome }} | ${{ steps.integtests.outcome }} |
+          | ${{ inputs.job }} | ${{ steps.results.unitests }} | ${{ steps.results.integtests }} |
 
     - if: steps.unittests.outcome == 'failure'
       run: |
