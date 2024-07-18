@@ -20,9 +20,9 @@
 
 #include "arch/Arch.h"
 #include "base/EventTypes.h"
-#include "ipc/Ipc.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPListenSocket.h"
+#include "shared/Ipc.h"
 
 #include <list>
 
@@ -58,14 +58,14 @@ public:
   virtual void listen();
 
   //! Send a message to all clients matching the filter type.
-  virtual void send(const IpcMessage &message, EIpcClientType filterType);
+  virtual void send(const IpcMessage &message, IpcClientType filterType);
 
   //@}
   //! @name accessors
   //@{
 
   //! Returns true when there are clients of the specified type connected.
-  virtual bool hasClients(EIpcClientType clientType) const;
+  virtual bool hasClients(IpcClientType clientType) const;
 
   //@}
 

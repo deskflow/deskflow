@@ -21,7 +21,7 @@
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "base/ILogOutputter.h"
-#include "ipc/Ipc.h"
+#include "shared/Ipc.h"
 
 #include <deque>
 
@@ -41,7 +41,7 @@ public:
   using the \c sendBuffer() function.
   */
   IpcLogOutputter(
-      IpcServer &ipcServer, EIpcClientType clientType, bool useThread);
+      IpcServer &ipcServer, IpcClientType clientType, bool useThread);
   IpcLogOutputter(IpcLogOutputter const &) = delete;
   virtual ~IpcLogOutputter();
 
@@ -115,6 +115,6 @@ private:
   double m_bufferRateTimeLimit;
   UInt16 m_bufferWriteCount;
   double m_bufferRateStart;
-  EIpcClientType m_clientType;
+  IpcClientType m_clientType;
   ArchMutex m_runningMutex;
 };

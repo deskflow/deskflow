@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,16 +17,16 @@
 
 #include "ipc/IpcClient.h"
 #include "base/TMethodEventJob.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
+#include "shared/Ipc.h"
 
 //
 // IpcClient
 //
 
 IpcClient::IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer)
-    : m_serverAddress(NetworkAddress(IPC_HOST, IPC_PORT)),
+    : m_serverAddress(NetworkAddress(kIpcHost, kIpcPort)),
       m_socket(events, socketMultiplexer),
       m_server(nullptr),
       m_events(events) {
@@ -36,7 +35,7 @@ IpcClient::IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer)
 
 IpcClient::IpcClient(
     IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port)
-    : m_serverAddress(NetworkAddress(IPC_HOST, port)),
+    : m_serverAddress(NetworkAddress(kIpcHost, port)),
       m_socket(events, socketMultiplexer),
       m_server(nullptr),
       m_events(events) {
@@ -81,7 +80,7 @@ void IpcClient::handleConnected(const Event &, void *) {
       m_events->forIpcClient().connected(), this, m_server,
       Event::kDontFreeData));
 
-  IpcHelloMessage message(kIpcClientNode);
+  IpcHelloMessage message(IpcClientType::Node);
   send(message);
 }
 

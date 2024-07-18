@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ipc/Ipc.h"
+/**
+ * This header fixes conflicts between X11 and Google Test.
+ *
+ * It should be included after headers of code under test (that use X11)
+ * and before including Google Test headers.
+ */
 
-const char *kIpcMsgHello = "IHEL%1i";
-const char *kIpcMsgHelloBack = "IHEL";
-const char *kIpcMsgLogLine = "ILOG%s";
-const char *kIpcMsgCommand = "ICMD%s%1i";
-const char *kIpcMsgShutdown = "ISDN";
-const char *kIpcMsgSetting = "SSET%s%s";
+#undef None // NOSONAR
+#undef Bool // NOSONAR

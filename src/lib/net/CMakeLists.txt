@@ -17,7 +17,7 @@
 file(GLOB headers "*.h" "InverseSockets/*.h")
 file(GLOB sources "*.cpp" "InverseSockets/*.cpp")
 
-if(SYNERGY_ADD_HEADERS)
+if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 

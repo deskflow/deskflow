@@ -24,11 +24,11 @@
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
+#include "shared/Ipc.h"
 
 enum EIpcLogOutputter {
   kBufferMaxSize = 1000,
@@ -38,7 +38,7 @@ enum EIpcLogOutputter {
 };
 
 IpcLogOutputter::IpcLogOutputter(
-    IpcServer &ipcServer, EIpcClientType clientType, bool useThread)
+    IpcServer &ipcServer, IpcClientType clientType, bool useThread)
     : m_ipcServer(ipcServer),
       m_bufferMutex(ARCH->newMutex()),
       m_sending(false),
@@ -179,7 +179,7 @@ void IpcLogOutputter::sendBuffer() {
 
   IpcLogLineMessage message(getChunk(kMaxSendLines));
   m_sending = true;
-  m_ipcServer.send(message, kIpcClientGui);
+  m_ipcServer.send(message, IpcClientType::GUI);
   m_sending = false;
 }
 

@@ -373,3 +373,11 @@ macro(update_submodules)
   endif()
 
 endmacro()
+
+macro(configure_python)
+  if(WIN32)
+    set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/Scripts/python.exe")
+  else()
+    set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/bin/python")
+  endif()
+endmacro()
