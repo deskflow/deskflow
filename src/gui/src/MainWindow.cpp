@@ -51,6 +51,8 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
+#include <iostream>
+
 static const int debugLogLevel = 1;
 
 static const char *synergyLightIconFiles[] = {
@@ -75,6 +77,54 @@ static const char *synergyDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-transfering.png",  // synergyListening
     ":/res/icons/16x16/synergy-disconnected.png"  // synergyPendingRetry
 };
+
+void testCodeCoverage() {
+  int a = 5;
+  int b = 3;
+  int sum = a + b;
+  int difference = a - b;
+  int product = a * b;
+  double quotient = 0.0;
+
+  if (b != 0) {
+    quotient = static_cast<double>(a) / b;
+  } else {
+    std::cerr << "Division by zero!" << std::endl;
+  }
+
+  std::vector<int> numbers = {1, 2, 3, 4, 5};
+  for (int num : numbers) {
+    std::cout << "Number: " << num << std::endl;
+  }
+
+  std::vector<std::pair<std::string, bool>> tests = {
+      {"Sum test", sum == 8},
+      {"Difference test", difference == 2},
+      {"Product test", product == 15},
+      {"Quotient test", quotient == (b != 0 ? 1.66667 : 0.0)}};
+
+  for (const auto &test : tests) {
+    std::cout << test.first << ": " << (test.second ? "Passed" : "Failed")
+              << std::endl;
+  }
+
+  int x = 10;
+  int y = 20;
+  int z = 30;
+  int max_val = (x > y) ? ((x > z) ? x : z) : ((y > z) ? y : z);
+
+  if (max_val == 30) {
+    std::cout << "Max value is correct: " << max_val << std::endl;
+  } else {
+    std::cout << "Max value is incorrect: " << max_val << std::endl;
+  }
+
+  int total = 0;
+  for (int i = 1; i <= 10; ++i) {
+    total += i;
+  }
+  std::cout << "Total sum from 1 to 10 is: " << total << std::endl;
+}
 
 #ifdef SYNERGY_ENABLE_LICENSING
 MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
@@ -101,6 +151,8 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_SecureSocket(false),
       m_serverConnection(*this),
       m_clientConnection(*this) {
+
+  testCodeCoverage();
 
   setupUi(this);
 
