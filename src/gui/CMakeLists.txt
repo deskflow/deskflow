@@ -1,3 +1,20 @@
+# Synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Symless Ltd.
+#
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file LICENSE that should have accompanied this file.
+#
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set(target synergy)
+
 find_package(
   Qt6
   COMPONENTS Core Widgets Network
@@ -33,7 +50,7 @@ if(WIN32)
 endif()
 
 add_executable(
-  synergy WIN32
+  ${target} WIN32
   ${GUI_SOURCE_FILES}
   ${GUI_UI_FILES}
   ${GUI_RC_FILES}
@@ -41,16 +58,16 @@ add_executable(
   ${QM_FILES})
 
 include_directories(./src)
-target_link_libraries(synergy shared)
+target_link_libraries(${target} shared)
 
-target_link_libraries(synergy Qt6::Core Qt6::Widgets Qt6::Network)
+target_link_libraries(${target} Qt6::Core Qt6::Widgets Qt6::Network)
 target_compile_definitions(
-  synergy PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
-target_compile_definitions(synergy
+  ${target} PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
+target_compile_definitions(${target}
                            PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
 
 if(WIN32)
-  set_target_properties(synergy PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+  set_target_properties(${target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -61,13 +78,13 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(MACDEPLOYQT_CMD
       "${MACDEPLOYQT_BIN} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite")
 
-  install(TARGETS synergy DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+  install(TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
   install(CODE "MESSAGE (\"Running: ${MACDEPLOYQT_CMD}\")")
   install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-  install(TARGETS synergy DESTINATION bin)
+  install(TARGETS ${target} DESTINATION bin)
 
 elseif(WIN32)
 
@@ -96,7 +113,7 @@ elseif(WIN32)
   if(TARGET Qt6::windeployqt)
     # execute windeployqt in a tmp directory after build
     add_custom_command(
-      TARGET synergy
+      TARGET ${target}
       POST_BUILD
       COMMAND set PATH=%PATH%$<SEMICOLON>${qt6_install_prefix}/bin
       COMMAND Qt6::windeployqt
@@ -104,3 +121,5 @@ elseif(WIN32)
   endif()
 
 endif()
+
+post_config()
