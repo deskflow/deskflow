@@ -62,7 +62,8 @@ jobs:
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
+          cd build
+          build-wrapper-linux-x86-64 --out-dir bw-output make build -j${CPU_CORE_COUNT}
 
       - name: Unit tests coverage
         id: unittests-coverage
