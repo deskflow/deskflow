@@ -34,7 +34,6 @@ runs:
         integtests=$([ "${{ steps.integtests.outcome }}" = "success" ] && echo "✅" || echo "❌")
         echo unittests=$unittests >> $GITHUB_OUTPUT
         echo integtests=$integtests >> $GITHUB_OUTPUT
-      shell:
 
     - uses: marocchino/sticky-pull-request-comment@v2
       with:
