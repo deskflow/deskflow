@@ -38,23 +38,9 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: ./.github/actions/run-tests-setup
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: tests
-          recreate: true
-          message: |
-            ## Test results
-
-      # Append table header, since the first comment has an annoying comment.
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          header: tests
-          append: true
-          message: |
-            | Job name | Unit tests | Integration tests |
-            | --- | --- | --- |
 
   windows:
     name: ${{ matrix.target.name }}

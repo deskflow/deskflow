@@ -1,4 +1,4 @@
-name: "Run tests (append)"
+name: "Run tests"
 description: "Runs both unit tests and integration tests and appends to a PR comment"
 
 inputs:
