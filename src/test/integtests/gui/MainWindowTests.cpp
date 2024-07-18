@@ -28,8 +28,6 @@ public:
     QtTest::SetUpTestSuite();
     qRegisterMetaType<Edition>("Edition");
   }
-
-  static std::shared_ptr<QApplication> s_app;
 };
 
 class TestMainWindow {
