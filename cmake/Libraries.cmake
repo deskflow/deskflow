@@ -321,7 +321,17 @@ macro(configure_test_libs)
     append_coverage_compiler_flags()
     setup_target_for_coverage_gcovr_xml(
       NAME
-      coverage
+      integtests-coverage
+      EXECUTABLE
+      integtests
+      BASE_DIRECTORY
+      "${PROJECT_SOURCE_DIR}/src"
+      EXCLUDE
+      "ext/*")
+
+    setup_target_for_coverage_gcovr_xml(
+      NAME
+      unittests-coverage
       EXECUTABLE
       unittests
       BASE_DIRECTORY
