@@ -30,8 +30,8 @@ runs:
 
     - id: results
       run: |
-        unittests=$([[ "${{ steps.unittests.outcome }}" == "success" ]] && echo "✅" || echo "❌")
-        integtests=$([[ "${{ steps.integtests.outcome }}" == "success" ]] && echo "✅" || echo "❌")
+        unittests=$([ "${{ steps.unittests.outcome }}" = "success" ] && echo "✅" || echo "❌")
+        integtests=$([ "${{ steps.integtests.outcome }}" = "success" ] && echo "✅" || echo "❌")
         echo unittests=$unittests >> $GITHUB_OUTPUT
         echo integtests=$integtests >> $GITHUB_OUTPUT
       shell:
