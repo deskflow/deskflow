@@ -30,7 +30,6 @@ runs:
         QT_QPA_PLATFORM: offscreen
       run: |
         ./build/bin/integtests
-
         result=$?
 
         if [ $result -ne 0 ]; then
