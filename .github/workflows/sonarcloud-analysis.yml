@@ -70,20 +70,19 @@ jobs:
       - name: Unit tests coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target unittests-coverage
+        run: cmake --build build --target coverage-unittests
 
       - name: Integration tests coverage
-        id: integtests-coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target integtests-coverage
+        run: cmake --build build --target coverage-integtests
         continue-on-error: true
 
       - name: Get coverage report paths
         id: coverage-paths
         run: |
-          unittests=$(find build -name unittests-coverage.xml)
-          integtests=$(find build -name integtests-coverage.xml)
+          unittests=$(find build -name coverage-unittests.xml)
+          integtests=$(find build -name coverage-integtests.xml)
           paths="${unittests}${integtests:+,$integtests}"
           if [ -z "$paths" ]; then
             echo "Error: No coverage files found"

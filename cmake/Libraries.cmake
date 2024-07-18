@@ -324,7 +324,7 @@ macro(configure_test_libs)
 
     setup_target_for_coverage_gcovr_xml(
       NAME
-      ${INTEG_TESTS_BIN}-coverage
+      coverage-${INTEG_TESTS_BIN}
       EXECUTABLE
       ${INTEG_TESTS_BIN}
       BASE_DIRECTORY
@@ -334,7 +334,7 @@ macro(configure_test_libs)
 
     setup_target_for_coverage_gcovr_xml(
       NAME
-      ${UNIT_TESTS_BIN}-coverage
+      coverage-${UNIT_TESTS_BIN}
       EXECUTABLE
       ${UNIT_TESTS_BIN}
       BASE_DIRECTORY
