@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -27,9 +27,9 @@
 #include "base/XBase.h"
 #include "base/log_outputters.h"
 #include "common/Version.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
+#include "shared/Ipc.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/XSynergy.h"
 #include "synergy/protocol_types.h"
@@ -230,7 +230,7 @@ void App::cleanupIpcClient() {
 
 void App::handleIpcMessage(const Event &e, void *) {
   IpcMessage *m = static_cast<IpcMessage *>(e.getDataObject());
-  if (m->type() == kIpcShutdown) {
+  if (m->type() == IpcMessageType::Shutdown) {
     LOG((CLOG_INFO "got ipc shutdown message"));
     m_events->addEvent(Event(Event::kQuit));
   }

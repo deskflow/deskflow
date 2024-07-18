@@ -31,13 +31,12 @@
 #include "AppConfig.h"
 #include "ClientConnection.h"
 #include "ConfigWriter.h"
-#include "Ipc.h"
 #include "QIpcClient.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
-#include "VersionChecker.h"
-
 #include "TrayIcon.h"
+#include "VersionChecker.h"
+#include "shared/Ipc.h"
 
 class QAction;
 class QMenu;
@@ -169,8 +168,7 @@ protected:
   bool clientArgs(QStringList &args, QString &app);
   bool serverArgs(QStringList &args, QString &app);
   void setStatus(const QString &status);
-  void
-  sendIpcMessage(qIpcMessageType type, const char *buffer, bool showErrors);
+  void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses();
   void stopService();

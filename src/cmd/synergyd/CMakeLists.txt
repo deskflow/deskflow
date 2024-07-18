@@ -38,3 +38,5 @@ target_link_libraries(
   synlib
   shared
   ${libs})
+
+post_config()
