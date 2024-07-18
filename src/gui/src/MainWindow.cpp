@@ -78,7 +78,10 @@ static const char *synergyDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-disconnected.png"  // synergyPendingRetry
 };
 
-void testCodeCoverage() { std::cout << "Code coverage test" << std::endl; }
+void testCodeCoverage() {
+  std::cout << "Code coverage test 1" << std::endl;
+  std::cout << "Code coverage test 2" << std::endl;
+}
 
 #ifdef SYNERGY_ENABLE_LICENSING
 MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
