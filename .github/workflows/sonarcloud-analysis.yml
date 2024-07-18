@@ -35,6 +35,9 @@ jobs:
         with:
           submodules: "recursive"
 
+          # Fetch all history for SonarScanner blame data
+          fetch-depth: 0
+
       - name: Config Git safe dir
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
@@ -62,8 +65,7 @@ jobs:
       - name: Build
         run: |
           export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
-          cd build
-          build-wrapper-linux-x86-64 --out-dir bw-output make -j${CPU_CORE_COUNT}
+          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
 
       - name: Unit tests coverage
         id: unittests-coverage
@@ -101,10 +103,11 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.projectBaseDir=../ \
             -Dsonar.exclusions=ext/**,build/** \
-            -Dsonar.cfamily.build-wrapper-output=bw-output \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
             -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
+            -Dsonar.python.version=3.10
+            -Dsonar.cfamily.compile-commands=build/compile_commands.json
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
