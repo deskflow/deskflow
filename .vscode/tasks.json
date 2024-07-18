@@ -30,7 +30,7 @@
       "type": "shell",
       "command": "killall synergy; killall synergyc; killall synergys || true",
       "windows": {
-        "command": "taskkill /F /IM synergy.exe /IM synergyc.exe /IM synergys.exe"
+        "command": "taskkill /F /IM synergy.exe /IM synergyc.exe /IM synergys.exe; $true"
       }
     },
     {
