@@ -16,6 +16,7 @@ runs:
   steps:
     - name: Unit tests
       id: unittests
+      timeout-minutes: 1
       env:
         QT_QPA_PLATFORM: offscreen
       run: ./build/bin/unittests
@@ -24,6 +25,7 @@ runs:
 
     - name: Integration tests
       id: integtests
+      timeout-minutes: 2
       env:
         QT_QPA_PLATFORM: offscreen
       run: ./build/bin/integtests
