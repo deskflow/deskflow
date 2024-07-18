@@ -87,12 +87,11 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Unit tests
-        run: ./build/bin/unittests
-
-      - name: Integration tests
-        run: ./build/bin/integtests
-        continue-on-error: true
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          job: ${{ matrix.target.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
@@ -158,12 +157,11 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Unit tests
-        run: ./build/bin/unittests
-
-      - name: Integration tests
-        run: ./build/bin/integtests
-        continue-on-error: true
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          job: ${{ matrix.target.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
@@ -267,7 +265,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          job: ${{ matrix.distro.name }}
+          job: linux-${{ matrix.distro.name }}
 
       - name: Package
         if: ${{ vars.SYNERGY_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
