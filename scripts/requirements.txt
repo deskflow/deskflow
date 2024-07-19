@@ -1,7 +1,0 @@
-cmake_format
-clang-format
-python-dotenv
-pyyaml
-dmgbuild; sys_platform == 'darwin'
-aqtinstall; sys_platform == 'win32' or sys_platform == 'darwin'
-colorama
