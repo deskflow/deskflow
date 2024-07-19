@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(APPCONFIG_H)
-
-#define APPCONFIG_H
+#pragma once
 
 #include "ConfigBase.h"
 #include "ConfigWriter.h"
@@ -30,12 +28,20 @@
 #include <mutex>
 #include <shared/EditionType.h>
 
+const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
+
 class QSettings;
 class SettingsDialog;
 class ServerConfig;
 class LicenseRegister;
 
 enum class ProcessMode { kService, kDesktop };
+
+#if defined(Q_OS_WIN) && !defined(SYNERGY_FORCE_DESKTOP_PROCESS)
+const ProcessMode kDefaultProcessMode = ProcessMode::kService;
+#else
+const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
+#endif
 
 class AppConfig : public QObject, public GUI::Config::ConfigBase {
   Q_OBJECT
@@ -71,6 +77,8 @@ public:
   QString serialKey() const;
   int lastExpiringWarningTime() const;
   void setLastExpiringWarningTime(int t);
+  bool activationHasRun() const;
+  AppConfig &activationHasRun(bool value);
 #endif
 
   QString synergysName() const;
@@ -100,10 +108,7 @@ public:
   bool getClientHostMode() const;
   bool getServerClientMode() const;
   bool getInitiateConnectionFromServer() const;
-#ifdef SYNERGY_ENABLE_LICENSING
-  bool activationHasRun() const;
-  AppConfig &activationHasRun(bool value);
-#endif
+
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
   ///             True - This will set the variable and load the global scope
@@ -215,63 +220,6 @@ protected:
   static QString settingName(AppConfig::Setting name);
 
 private:
-  QString m_ScreenName;
-  int m_Port;
-  QString m_Interface;
-  int m_LogLevel;
-  bool m_LogToFile;
-  QString m_LogFilename;
-  int m_WizardLastRun;
-  ProcessMode m_ProcessMode;
-  bool m_StartedBefore;
-  ElevateMode m_ElevateMode;
-  Edition m_Edition;
-  QString m_ActivateEmail;
-  bool m_CryptoEnabled;
-  bool m_AutoHide;
-  QString m_Serialkey;
-  QString m_lastVersion;
-  QString m_guid;
-  QString m_licenseRegistryUrl;
-  unsigned long long m_licenseNextCheck;
-  int m_LastExpiringWarningTime;
-  bool m_ActivationHasRun;
-  bool m_MinimizeToTray;
-  bool m_InvertScrollDirection = false;
-  bool m_LanguageSync = true;
-  bool m_PreventSleep = false;
-  bool m_InitiateConnectionFromServer = false;
-  bool m_ClientHostMode = true;
-  bool m_ServerClientMode = true;
-
-  bool m_ServerGroupChecked;
-  bool m_UseExternalConfig;
-  QString m_ConfigFile;
-  bool m_UseInternalConfig;
-  bool m_ClientGroupChecked;
-  QString m_ServerHostname;
-
-  QString m_TLSCertificatePath; /// @brief The path to the TLS certificate file
-  QString m_TLSKeyLength; /// @brief The key length of the TLS cert to make
-
-  bool m_LoadFromSystemScope; /// @brief should the setting be loaded from
-                              /// SystemScope
-                              ///         If the user has settings but this is
-                              ///         true then system settings will be
-                              ///         loaded instead of the users
-
-  CoreInterface m_CoreInterface;
-
-  static const char m_SynergysName[];
-  static const char m_SynergycName[];
-  static const char m_SynergyLogDir[];
-
-  /// @brief Contains the string values of the settings names that will be saved
-  static const char *m_SynergySettingsName[];
-
-  /// @brief Contains the name of the default configuration filename
-  static const char m_SynergyConfigName[];
-
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
   /// @param [in] value The Value to be saved
@@ -295,12 +243,6 @@ private:
   QVariant loadCommonSetting(
       AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
 
-  /// @brief As the settings will be accessible by multiple objects this lock
-  /// will ensure that
-  ///         it cant be modified by more that one object at a time if the
-  ///         setting is being switched from system to user.
-  std::mutex m_settings_lock;
-
   /// @brief Sets the setting in the config checking if it has changed and
   /// flagging that settings
   ///         needs to be saved if the setting was different
@@ -316,9 +258,72 @@ private:
   /// for settings that shouldn't be copied from between scopes.
   void setDefaultValues();
 
+  CoreInterface m_CoreInterface;
+  QString m_ScreenName = "";
+  int m_Port = 24800;
+  QString m_Interface = "";
+  int m_LogLevel = 0;
+  bool m_LogToFile = false;
+  QString m_LogFilename = "";
+  int m_WizardLastRun = 0;
+  ProcessMode m_ProcessMode = kDefaultProcessMode;
+  bool m_StartedBefore = false;
+  ElevateMode m_ElevateMode = kDefaultElevateMode;
+  Edition m_Edition = Edition::kUnregistered;
+  QString m_ActivateEmail = "";
+  bool m_CryptoEnabled = false;
+  bool m_AutoHide = false;
+  QString m_Serialkey = "";
+  QString m_lastVersion = "";
+  QString m_guid = "";
+  QString m_licenseRegistryUrl = "";
+  unsigned long long m_licenseNextCheck = 0;
+  int m_LastExpiringWarningTime = 0;
+  bool m_ActivationHasRun = false;
+  bool m_MinimizeToTray = false;
+  bool m_InvertScrollDirection = false;
+  bool m_LanguageSync = true;
+  bool m_PreventSleep = false;
+  bool m_InitiateConnectionFromServer = false;
+  bool m_ClientHostMode = true;
+  bool m_ServerClientMode = true;
+  bool m_ServerGroupChecked = false;
+  bool m_UseExternalConfig = false;
+  QString m_ConfigFile = "";
+  bool m_UseInternalConfig = false;
+  bool m_ClientGroupChecked = false;
+  QString m_ServerHostname = "";
+
+  /// @brief The path to the TLS certificate file
+  QString m_TLSCertificatePath = "";
+
+  /// @brief The key length of the TLS cert to make
+  QString m_TLSKeyLength = "";
+
+  /// @brief should the setting be loaded from
+  /// SystemScope
+  ///         If the user has settings but this is
+  ///         true then system settings will be
+  ///         loaded instead of the users
+  bool m_LoadFromSystemScope = false;
+
+  /// @brief As the settings will be accessible by multiple objects this lock
+  /// will ensure that
+  ///         it cant be modified by more that one object at a time if the
+  ///         setting is being switched from system to user.
+  std::mutex m_settings_lock;
+
+  static const char m_SynergysName[];
+  static const char m_SynergycName[];
+  static const char m_SynergyLogDir[];
+
+  /// @brief Contains the string values of the settings names that will be saved
+  static const char *const m_SynergySettingsName[];
+
+  /// @brief Contains the name of the default configuration filename
+  static const char m_SynergyConfigName[];
+
 signals:
   void sslToggled() const;
   void screenNameChanged() const;
 };
-
-#endif

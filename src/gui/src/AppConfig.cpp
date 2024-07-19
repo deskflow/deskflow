@@ -26,11 +26,12 @@
 #include <QtNetwork>
 #include <QtWidgets/QMessageBox>
 
+using GUI::Config::ConfigWriter;
+
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
 const int kWizardVersion = 8;
 
-using GUI::Config::ConfigWriter;
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
@@ -43,15 +44,7 @@ const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 const char AppConfig::m_SynergyConfigName[] = "synergy.conf";
 #endif
 
-#if defined(Q_OS_WIN) && !defined(SYNERGY_FORCE_DESKTOP_PROCESS)
-const ProcessMode kDefaultProcessMode = ProcessMode::kService;
-#else
-const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
-#endif
-
-const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
-
-const char *AppConfig::m_SynergySettingsName[] = {
+const char *const AppConfig::m_SynergySettingsName[] = {
     "screenName",
     "port",
     "interface",
@@ -92,27 +85,7 @@ const char *AppConfig::m_SynergySettingsName[] = {
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
-AppConfig::AppConfig(bool globalLoad)
-    : m_ScreenName(),
-      m_Port(24800),
-      m_Interface(),
-      m_LogLevel(0),
-      m_LogToFile(),
-      m_WizardLastRun(0),
-      m_ProcessMode(kDefaultProcessMode),
-      m_StartedBefore(),
-      m_ElevateMode(kDefaultElevateMode),
-      m_Edition(kUnregistered),
-      m_CryptoEnabled(false),
-      m_AutoHide(false),
-      m_LastExpiringWarningTime(0),
-      m_ActivationHasRun(),
-      m_MinimizeToTray(false),
-      m_ServerGroupChecked(),
-      m_UseExternalConfig(),
-      m_UseInternalConfig(),
-      m_ClientGroupChecked(),
-      m_LoadFromSystemScope() {
+AppConfig::AppConfig(bool globalLoad) {
 
   auto writer = ConfigWriter::make();
 
@@ -204,16 +177,13 @@ void AppConfig::loadSettings() {
   m_WizardLastRun = loadCommonSetting(Setting::kWizardLastRun, 0).toInt();
   m_StartedBefore = loadSetting(Setting::kStartedBefore, false).toBool();
 
-  { // Scope related code together
-    // TODO Investigate why kElevateModeEnum isn't loaded fully
-    QVariant elevateMode = loadSetting(Setting::kElevateModeEnum);
-    if (!elevateMode.isValid()) {
-      elevateMode = loadSetting(
-          Setting::kElevateModeSetting,
-          QVariant(static_cast<int>(kDefaultElevateMode)));
-    }
-    m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
+  QVariant elevateMode = loadSetting(Setting::kElevateModeEnum);
+  if (!elevateMode.isValid()) {
+    elevateMode = loadSetting(
+        Setting::kElevateModeSetting,
+        QVariant(static_cast<int>(kDefaultElevateMode)));
   }
+  m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 
   m_ActivateEmail = loadSetting(Setting::kActivateEmail, "").toString();
   m_CryptoEnabled = loadSetting(Setting::kCryptoEnabled, true).toBool();
