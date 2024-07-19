@@ -319,15 +319,29 @@ macro(configure_test_libs)
     message(STATUS "Enabling code coverage")
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
+    set(test_exclude ext/* build/* src/test/*)
+    set(test_src ${PROJECT_SOURCE_DIR}/src)
+
     setup_target_for_coverage_gcovr_xml(
       NAME
-      coverage
+      coverage-${INTEG_TESTS_BIN}
       EXECUTABLE
-      unittests
+      ${INTEG_TESTS_BIN}
       BASE_DIRECTORY
-      "${PROJECT_SOURCE_DIR}/src"
+      ${test_src}
       EXCLUDE
-      "ext/*")
+      ${test_exclude})
+
+    setup_target_for_coverage_gcovr_xml(
+      NAME
+      coverage-${UNIT_TESTS_BIN}
+      EXECUTABLE
+      ${UNIT_TESTS_BIN}
+      BASE_DIRECTORY
+      ${test_src}
+      EXCLUDE
+      ${test_exclude})
+
   else()
     message(STATUS "Code coverage is disabled")
   endif()
@@ -360,4 +374,12 @@ macro(update_submodules)
     endif()
   endif()
 
+endmacro()
+
+macro(configure_python)
+  if(WIN32)
+    set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/Scripts/python.exe")
+  else()
+    set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/bin/python")
+  endif()
 endmacro()

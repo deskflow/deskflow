@@ -1,0 +1,66 @@
+name: "Run tests"
+description: "Runs both unit tests and integration tests and appends to a PR comment"
+
+inputs:
+  GITHUB_TOKEN:
+    description: "The GitHub token to use for authentication"
+    required: true
+
+  job:
+    description: "The job name to append to the PR comment"
+    default: "unknown"
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Unit tests
+      id: unittests
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: ./build/bin/unittests
+      shell: bash
+      continue-on-error: true
+
+    - name: Integration tests
+      id: integtests
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: |
+        ./build/bin/integtests
+        result=$?
+
+        if [ $result -ne 0 ]; then
+          echo "::warning ::Integration tests failed with code: $result"
+        fi
+      shell: bash
+      continue-on-error: true
+
+    - name: Get test results
+      id: results
+      run: |
+        pass="✅ Pass"
+        fail="❌ Fail"
+        unittests_outcome="${{ steps.unittests.outcome }}"
+        integtests_outcome="${{ steps.integtests.outcome }}"
+        unittests=$( [ "$unittests_outcome" = "success" ] && echo $pass || echo $fail )
+        integtests=$( [ "$integtests_outcome" = "success" ] && echo $pass || echo $fail )
+        echo "unittests=$unittests" >> $GITHUB_OUTPUT
+        echo "integtests=$integtests" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Append to PR comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        header: tests
+        append: true
+        message: |
+          | ${{ inputs.job }} | ${{ steps.results.outputs.unittests }} | ${{ steps.results.outputs.integtests }} |
+
+    - name: Check test outcome
+      if: steps.unittests.outcome == 'failure'
+      run: |
+        echo "Unit tests failed"
+        exit 1
+      shell: bash

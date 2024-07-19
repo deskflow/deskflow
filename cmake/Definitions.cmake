@@ -28,6 +28,10 @@ macro(configure_definitions)
 
   configure_ninja()
   configure_options()
+  configure_python()
+
+  set(INTEG_TESTS_BIN integtests)
+  set(UNIT_TESTS_BIN unittests)
 
   if("${VERSION_URL}" STREQUAL "")
     set(VERSION_URL "https://api.symless.com/version?version=v1")
@@ -58,17 +62,20 @@ macro(configure_definitions)
     add_definitions(-DNDEBUG)
   endif()
 
-  # TODO: find out why we need these, and remove them if we don't
+  # TODO: find out why we need these, and remove them if we don't.
   if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
     cmake_policy(SET CMP0005 NEW)
   endif()
 
+  # TODO: explain why we're adding headers to sources.
   if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-    set(SYNERGY_ADD_HEADERS FALSE)
+    set(ADD_HEADERS_TO_SOURCES FALSE)
   else()
-    set(SYNERGY_ADD_HEADERS TRUE)
+    set(ADD_HEADERS_TO_SOURCES TRUE)
   endif()
+
+  set(BIN_TEMP_DIR ${CMAKE_BINARY_DIR}/temp/bin)
 endmacro()
 
 macro(configure_ninja)

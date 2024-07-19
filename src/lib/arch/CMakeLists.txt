@@ -17,7 +17,7 @@
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
-if(SYNERGY_ADD_HEADERS)
+if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 
@@ -33,7 +33,7 @@ endif()
 list(APPEND sources ${arch_sources})
 list(APPEND headers ${arch_headers})
 
-if(SYNERGY_ADD_HEADERS)
+if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 

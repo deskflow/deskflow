@@ -6,7 +6,7 @@
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergy",
-      "preLaunchTask": "build"
+      "preLaunchTask": "build-kill"
     },
     {
       "name": "unittests lldb",

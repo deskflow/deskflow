@@ -39,37 +39,41 @@ jobs:
       - name: Build
         run: cmake --build build -j8
 
-      - name: Run Valgrind on unit tests
-        env:
-          QT_QPA_PLATFORM: offscreen
-        run: |
-          valgrind \
-          --leak-check=full \
-          --show-leak-kinds=all \
-          --track-origins=yes \
-          --verbose \
-          ./build/bin/unittests \
-          2>&1 | tee valgrind.log
+      - name: Valgrind unit tests
+        id: unittests
+        uses: ./.github/actions/run-valgrind
+        with:
+          executable: ./build/bin/unittests
 
-      - name: Parse summary
-        id: parse
+      - name: Valgrind integration tests
+        id: integtests
+        uses: ./.github/actions/run-valgrind
+        with:
+          executable: ./build/bin/integtests
+
+      - name: Get workflow URL
+        id: workflow-url
         run: |
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT
-          echo >> $GITHUB_OUTPUT
-          echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          repo_url="${{ github.server_url }}/${{ github.repository }}"
+          echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Append to PR comment
         uses: marocchino/sticky-pull-request-comment@v2
-        env:
-          URL: https://github.com/symless/synergy-core/actions/workflows/valgrind-analysis.yml
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           recreate: true
+          header: valgrind
           message: |
             ## Valgrind summary
-            See [workflow output](${{ env.URL }}) for full `valgrind` output.
+            See [workflow run](${{ steps.workflow-url.outputs.url }}) for full `valgrind` output.
+
+            ### Unit tests
             ```
-            ${{ steps.parse.outputs.summary }}
+            ${{ steps.unittests.outputs.summary }}
+            ```
+
+            ### Integration tests
+            ```
+            ${{ steps.integtests.outputs.summary }}
             ```

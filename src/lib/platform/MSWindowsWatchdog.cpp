@@ -23,11 +23,11 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "ipc/Ipc.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
+#include "shared/Ipc.h"
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 
@@ -510,7 +510,7 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout) {
   }
 
   IpcShutdownMessage shutdown;
-  m_ipcServer.send(shutdown, kIpcClientNode);
+  m_ipcServer.send(shutdown, IpcClientType::Node);
 
   // wait for process to exit gracefully.
   double start = ARCH->time();

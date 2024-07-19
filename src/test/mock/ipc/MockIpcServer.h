@@ -45,8 +45,8 @@ public:
   }
 
   MOCK_METHOD(void, listen, (), (override));
-  MOCK_METHOD(void, send, (const IpcMessage &, EIpcClientType), (override));
-  MOCK_METHOD(bool, hasClients, (EIpcClientType), (const, override));
+  MOCK_METHOD(void, send, (const IpcMessage &, IpcClientType), (override));
+  MOCK_METHOD(bool, hasClients, (IpcClientType), (const, override));
 
   void delegateToFake() {
     ON_CALL(*this, send(_, _))
@@ -56,7 +56,7 @@ public:
   void waitForSend() { ARCH->waitCondVar(m_sendCond, m_sendMutex, 5); }
 
 private:
-  void mockSend(const IpcMessage &, EIpcClientType) {
+  void mockSend(const IpcMessage &, IpcClientType) {
     ArchMutexLock lock(m_sendMutex);
     ARCH->broadcastCondVar(m_sendCond);
   }

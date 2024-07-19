@@ -16,12 +16,13 @@
  */
 
 #include "QIpcClient.h"
-#include "Ipc.h"
 #include "IpcReader.h"
+#include "shared/Ipc.h"
 
 #include <QDataStream>
 #include <QHostAddress>
 #include <QTimer>
+#include <qglobal.h>
 
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     : m_ReaderStarted(false),
@@ -53,6 +54,7 @@ QIpcClient::~QIpcClient() {
 }
 
 void QIpcClient::connected() {
+
   sendHello();
   infoMessage("connection established");
 }
@@ -61,7 +63,8 @@ void QIpcClient::connectToHost() {
   m_Enabled = true;
 
   infoMessage("connecting to service...");
-  m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
+  const auto port = static_cast<quint16>(kIpcPort);
+  m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), port);
 
   if (!m_ReaderStarted) {
     m_Reader->start();
@@ -105,7 +108,7 @@ void QIpcClient::sendHello() {
   stream->writeRawData(kIpcMsgHello, 4);
 
   char typeBuf[1];
-  typeBuf[0] = kIpcClientGui;
+  typeBuf[0] = static_cast<char>(IpcClientType::GUI);
   stream->writeRawData(typeBuf, 1);
 }
 

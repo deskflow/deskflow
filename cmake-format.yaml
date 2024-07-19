@@ -6,4 +6,5 @@ format:
   max_pargs_hwrap: 4
 
 markup:
-  first_comment_is_literal: true
+  # Disable formatting of comments entirely, as this is annoying.
+  enable_markup: false

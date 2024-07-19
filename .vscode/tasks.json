@@ -2,8 +2,8 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "cmake",
       "label": "build",
+      "type": "cmake",
       "command": "build",
       "targets": ["all"],
       "preset": "${command:cmake.activeBuildPresetName}",
@@ -13,24 +13,52 @@
       }
     },
     {
+      "label": "clean",
       "type": "cmake",
-      "label": "coverage",
       "command": "build",
-      "targets": ["coverage"],
+      "targets": ["clean"],
       "preset": "${command:cmake.activeBuildPresetName}",
       "group": "build"
     },
     {
-      "label": "reinstall windows daemon",
+      "label": "tests",
+      "dependsOn": ["unittests", "integtests"],
+      "problemMatcher": []
+    },
+    {
+      "label": "kill",
       "type": "shell",
-      "command": "python scripts/windows_daemon.py",
-      "dependsOn": ["build"]
+      "command": "killall synergy; killall synergyc; killall synergys || true",
+      "windows": {
+        "command": "taskkill /F /IM synergy.exe /IM synergyc.exe /IM synergys.exe; $true"
+      }
+    },
+    {
+      "label": "build-kill",
+      "dependsOn": ["build", "kill"]
     },
     {
       "label": "gui",
       "type": "process",
       "command": "${workspaceFolder}/build/bin/synergy",
+      "dependsOn": ["build", "kill"]
+    },
+    {
+      "label": "windows daemon",
+      "type": "shell",
+      "command": "python scripts/windows_daemon.py",
       "dependsOn": ["build"]
+    },
+    {
+      "label": "clean-gcda",
+      "type": "shell",
+      "command": "find . -name '*.gcda' -delete",
+      "windows": {
+        "command": "$null"
+      },
+      "presentation": {
+        "reveal": "silent"
+      }
     },
     {
       "label": "unittests (current)",
@@ -42,7 +70,7 @@
         "--ignore-return-code",
         "--filter-file=${file}"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "integtests (current)",
@@ -54,21 +82,21 @@
         "--ignore-return-code",
         "--filter-file=${file}"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
-      "label": "unittests (all)",
+      "label": "unittests",
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--unit-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
-      "label": "integtests (all)",
+      "label": "integtests",
       "type": "shell",
       "command": "python",
       "args": ["./scripts/tests.py", "--integ-tests", "--ignore-return-code"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "unittests (current, valgrind)",
@@ -81,7 +109,7 @@
         "--filter-file=${file}",
         "--valgrind"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     },
     {
       "label": "integtests (current, valgrind)",
@@ -94,7 +122,7 @@
         "--filter-file=${file}",
         "--valgrind"
       ],
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "clean-gcda"]
     }
   ]
 }

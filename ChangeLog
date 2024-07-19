@@ -24,7 +24,7 @@ Enhancements:
 - #7326 Restore lpDesktop assignment in Windows daemon
 - #7327 Only use Ninja to build on Windows
 - #7328 Reset error state before calling Process32Next
-- #1177 Split CMake presets into debug and release
+- #7330 Split CMake presets into debug and release
 - #7331 Script to install deps (Windows only for now)
 - #7332 Static link OpenSSL libs in CMake preset for Windows
 - #7333 Update VS Code config for Windows daemon debugging
@@ -50,10 +50,12 @@ Enhancements:
 - #7380 Add `qt6-qpa-plugins` Qt dependency for Debian
 - #7381 Set macOS min version to macOS 12.0
 - #7382 Re-run `macdeployqt6` to copy missing Qt 6 dependencies
+- #7383 Solve SonarCloud security hotspots and bugs
 - #7384 Run `install_deps.py` script when building containers weekly
 - #7389 Correct Qt macOS target and drop `Core5Compat` lib
-- #7383 Solve SonarCloud security hotspots and bugs
 - #7401 Run Valgrind on unit tests in CI to detect memory leaks
+- #7403 Solve low hanging reliability and maintainability issues
+- #7404 Restore integtests and add to CI as warning comment on failure
 
 # 1.14.6
 

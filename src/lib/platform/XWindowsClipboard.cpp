@@ -21,8 +21,8 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
+#include "common/basic_types.h"
 #include "common/stdvector.h"
-#include "mt/Thread.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardTextConverter.h"
@@ -534,13 +534,13 @@ bool XWindowsClipboard::icccmGetSelection(
   assert(data != nullptr);
 
   // request data conversion
-  CICCCMGetClipboard getter(m_window, m_time, m_atomData);
-  if (!getter.readClipboard(
+  if (CICCCMGetClipboard getter(m_window, m_time, m_atomData);
+      !getter.readClipboard(
           m_display, m_selection, target, actualTarget, data)) {
     LOG(
         (CLOG_DEBUG1 "can't get data for selection target %s",
          XWindowsUtil::atomToString(m_display, target).c_str()));
-    LOGC(getter.m_error, (CLOG_WARN "icccm violation by clipboard owner"));
+    LOGC(getter.error(), (CLOG_WARN "icccm violation by clipboard owner"));
     return false;
   } else if (*actualTarget == None) {
     LOG(
@@ -630,7 +630,7 @@ bool XWindowsClipboard::motifOwnsClipboard() const {
   if (data.size() >= sizeof(MotifClipHeader)) {
     MotifClipHeader header;
     std::memcpy(&header, data.data(), sizeof(header));
-    if ((header.m_id == kMotifClipHeader) &&
+    if ((header.m_id == MotifClip::Header) &&
         (static_cast<Window>(header.m_selectionOwner) == owner)) {
       return true;
     }
@@ -658,7 +658,7 @@ void XWindowsClipboard::motifFillCache() {
     return;
   }
   std::memcpy(&header, data.data(), sizeof(header));
-  if (header.m_id != kMotifClipHeader || header.m_numItems < 1) {
+  if (header.m_id != MotifClip::Header || header.m_numItems < 1) {
     return;
   }
 
@@ -678,7 +678,7 @@ void XWindowsClipboard::motifFillCache() {
     return;
   }
   std::memcpy(&item, data.data(), sizeof(item));
-  if (item.m_id != kMotifClipItem ||
+  if (item.m_id != MotifClip::Item ||
       item.m_numFormats - item.m_numDeletedFormats < 1) {
     return;
   }
@@ -707,7 +707,7 @@ void XWindowsClipboard::motifFillCache() {
       continue;
     }
     std::memcpy(&motifFormat, data.data(), sizeof(motifFormat));
-    if (motifFormat.m_id != kMotifClipFormat || motifFormat.m_length < 0 ||
+    if (motifFormat.m_id != MotifClip::Format || motifFormat.m_length < 0 ||
         motifFormat.m_type == None || motifFormat.m_deleted != 0) {
       continue;
     }
@@ -1197,18 +1197,7 @@ XWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
     Window requestor, Time time, Atom property)
     : m_requestor(requestor),
       m_time(time),
-      m_property(property),
-      m_incr(false),
-      m_failed(false),
-      m_done(false),
-      m_reading(false),
-      m_error(false) {
-  // do nothing
-}
-
-XWindowsClipboard::CICCCMGetClipboard::~CICCCMGetClipboard() {
-  // do nothing
-}
+      m_property(property) {}
 
 bool XWindowsClipboard::CICCCMGetClipboard::readClipboard(
     Display *display, Atom selection, Atom target, Atom *actualTarget,

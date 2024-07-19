@@ -132,6 +132,7 @@ private:
   void fillCache() const;
   void doFillCache();
 
+protected:
   //
   // helper classes
   //
@@ -140,7 +141,7 @@ private:
   class CICCCMGetClipboard {
   public:
     CICCCMGetClipboard(Window requestor, Time time, Atom property);
-    ~CICCCMGetClipboard();
+    ~CICCCMGetClipboard() = default;
 
     // convert the given selection to the given type.  returns
     // true iff the conversion was successful or the conversion
@@ -156,16 +157,16 @@ private:
     Window m_requestor;
     Time m_time;
     Atom m_property;
-    bool m_incr;
-    bool m_failed;
-    bool m_done;
+    bool m_incr = false;
+    bool m_failed = false;
+    bool m_done = false;
 
     // atoms needed for the protocol
-    Atom m_atomNone; // NONE, not None
-    Atom m_atomIncr;
+    Atom m_atomNone = None;
+    Atom m_atomIncr = None;
 
     // true iff we've received the selection notify
-    bool m_reading;
+    bool m_reading = false;
 
     // the converted selection data
     String *m_data = nullptr;
@@ -174,18 +175,20 @@ private:
     // selection owner cannot convert to the requested type.
     Atom *m_actualTarget = nullptr;
 
-  public:
     // true iff the selection owner didn't follow ICCCM conventions
-    bool m_error;
+    bool m_error = false;
+
+  public:
+    bool error() const { return m_error; }
   };
 
   // Motif structure IDs
-  enum { kMotifClipFormat = 1, kMotifClipItem, kMotifClipHeader };
+  enum class MotifClip : SInt32 { Format = 1, Item = 2, Header = 3 };
 
   // _MOTIF_CLIP_HEADER structure
   class MotifClipHeader {
   public:
-    SInt32 m_id; // kMotifClipHeader
+    MotifClip m_id;
     SInt32 m_pad1[3];
     SInt32 m_item;
     SInt32 m_pad2[4];
@@ -198,7 +201,7 @@ private:
   // Motif clip item structure
   class MotifClipItem {
   public:
-    SInt32 m_id; // kMotifClipItem
+    MotifClip m_id;
     SInt32 m_pad1[5];
     SInt32 m_size;
     SInt32 m_numFormats;
@@ -209,7 +212,7 @@ private:
   // Motif clip format structure
   class MotifClipFormat {
   public:
-    SInt32 m_id; // kMotifClipFormat
+    MotifClip m_id;
     SInt32 m_pad1[6];
     SInt32 m_length;
     SInt32 m_data;
