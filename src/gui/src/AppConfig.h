@@ -30,23 +30,6 @@
 #include <mutex>
 #include <shared/EditionType.h>
 
-// this should be incremented each time a new page is added. this is
-// saved to settings when the user finishes running the wizard. if
-// the saved wizard version is lower than this number, the wizard
-// will be displayed. each version incrememnt should be described
-// here...
-//
-//   1: first version
-//   2: added language page
-//   3: added premium page and removed
-//   4: ssl plugin 'ns' v1.0
-//   5: ssl plugin 'ns' v1.1
-//   6: ssl plugin 'ns' v1.2
-//   7: serial key activation
-//   8: Visual Studio 2015 support
-//
-const int kWizardVersion = 8;
-
 class QSettings;
 class SettingsDialog;
 class ServerConfig;

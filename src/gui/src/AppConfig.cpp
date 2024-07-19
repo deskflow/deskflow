@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -26,19 +26,27 @@
 #include <QtNetwork>
 #include <QtWidgets/QMessageBox>
 
+// this should be incremented each time the wizard is changed,
+// which will force it to re-run for existing installations.
+const int kWizardVersion = 8;
+
 using GUI::Config::ConfigWriter;
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
 const char AppConfig::m_SynergyLogDir[] = "log/";
 const char AppConfig::m_SynergyConfigName[] = "synergy.sgc";
-const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
 const char AppConfig::m_SynergycName[] = "synergyc";
 const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 const char AppConfig::m_SynergyConfigName[] = "synergy.conf";
+#endif
+
+#if !defined(Q_OS_WIN) || defined(SYNERGY_FORCE_DESKTOP_PROCESS)
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
+#else
+const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #endif
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
