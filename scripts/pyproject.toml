@@ -2,7 +2,7 @@
 name = "scripts"
 version = "0.0.1"
 description = "Scripts to assist with development of Synergy"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
   "cmake_format",
   "clang-format",
