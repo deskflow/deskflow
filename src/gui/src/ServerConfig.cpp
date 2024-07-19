@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,9 @@
  */
 
 #include "ServerConfig.h"
+
 #include "AddClientDialog.h"
+#include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
 
@@ -25,6 +27,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QtCore>
+
+using synergy::gui::Config;
 
 static const struct {
   int x;
@@ -53,7 +57,7 @@ ServerConfig::ServerConfig(
       m_ClipboardSharing(true),
       m_ClipboardSharingSize(defaultClipboardSharingSize()),
       m_pMainWindow(mainWindow) {
-  GUI::Config::ConfigWriter::make()->registerClass(this);
+  synergy::gui::Config::get()->registerClass(this);
   ServerConfig::loadSettings();
 }
 
@@ -166,7 +170,7 @@ void ServerConfig::saveSettings() {
 
   m_pAppConfig->saveSettings();
   // Tell the config writer there are changes
-  GUI::Config::ConfigWriter::make()->markUnsaved();
+  synergy::gui::Config::get()->markUnsaved();
 }
 
 void ServerConfig::loadSettings() {
@@ -559,9 +563,7 @@ QString ServerConfig::getClientAddress() const {
 }
 
 QSettings &ServerConfig::settings() {
-  using GUI::Config::ConfigWriter;
-
-  return ConfigWriter::make()->settings();
+  return *Config::get()->currentSettings();
 }
 
 bool ServerConfig::isHotkeysAvailable() const {

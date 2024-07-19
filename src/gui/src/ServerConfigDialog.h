@@ -61,15 +61,17 @@ protected slots:
 protected:
   bool addComputer(const QString &clientName, bool doSilent);
   ServerConfig &serverConfig() { return m_ServerConfig; }
-  void setOrigServerConfig(const ServerConfig &s) { m_OrigServerConfig = s; }
+  void setOriginalServerConfig(const ServerConfig &s) {
+    m_OriginalServerConfig = s;
+  }
   ScreenSetupModel &model() { return m_ScreenSetupModel; }
   AppConfig &appConfig() { return m_appConfig; }
 
 private:
-  ServerConfig &m_OrigServerConfig;
-  bool m_OrigServerAppConfigUseExternalConfig;
-  QString m_OrigServerAppConfigExternalConfigFile;
+  ServerConfig &m_OriginalServerConfig;
   ServerConfig m_ServerConfig;
+  bool m_OriginalServerConfigIsExternal;
+  QString m_OriginalServerConfigUsesExternalFile;
   ScreenSetupModel m_ScreenSetupModel;
   QString m_Message;
   AppConfig &m_appConfig;

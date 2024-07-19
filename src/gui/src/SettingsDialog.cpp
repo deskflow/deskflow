@@ -183,7 +183,7 @@ void SettingsDialog::setupSeurity() {
 }
 
 bool SettingsDialog::isClientMode() const {
-  return (m_pMainWindow->synergyType() == MainWindow::synergyClient);
+  return (m_pMainWindow->coreMode() == MainWindow::CoreMode::Client);
 }
 
 void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {

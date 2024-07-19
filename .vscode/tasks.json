@@ -45,7 +45,11 @@
       "label": "gui",
       "type": "process",
       "command": "${workspaceFolder}/build/bin/synergy",
-      "dependsOn": ["build", "kill"]
+      "dependsOn": ["build", "kill"],
+      "problemMatcher": [],
+      "windows": {
+        "command": "${workspaceFolder}/build/bin/synergy.exe"
+      }
     },
     {
       "label": "restart daemon",

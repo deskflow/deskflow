@@ -18,7 +18,7 @@
 
 #include "AppConfig.h"
 
-#include "ConfigWriter.h"
+#include "Config.h"
 #include "SslCertificate.h"
 
 #include <QPushButton>
@@ -26,7 +26,7 @@
 #include <QtNetwork>
 #include <QtWidgets/QMessageBox>
 
-using GUI::Config::ConfigWriter;
+using synergy::gui::Config;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
@@ -87,7 +87,7 @@ static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 AppConfig::AppConfig(bool globalLoad) {
 
-  auto writer = ConfigWriter::make();
+  auto writer = Config::get();
 
   // Register this class to receive global load and saves
   writer->registerClass(this);
@@ -100,12 +100,12 @@ AppConfig::AppConfig(bool globalLoad) {
 
   // User settings exist and the load from system scope variable is true
   if (writer->hasSetting(
-          settingName(Setting::kLoadSystemSettings), ConfigWriter::kUser)) {
+          settingName(Setting::kLoadSystemSettings), Config::Scope::User)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
   else if (writer->hasSetting(
-               settingName(Setting::kScreenName), ConfigWriter::kSystem)) {
+               settingName(Setting::kScreenName), Config::Scope::System)) {
     setLoadFromSystemScope(true);
   }
 }
@@ -225,8 +225,8 @@ void AppConfig::loadSettings() {
       loadSetting(Setting::kInitiateConnectionFromServer, false).toBool();
 
   // only change the serial key if the settings being loaded contains a key
-  bool updateSerial = ConfigWriter::make()->hasSetting(
-      settingName(Setting::kLoadSystemSettings), ConfigWriter::kCurrent);
+  bool updateSerial = Config::get()->hasSetting(
+      settingName(Setting::kLoadSystemSettings), Config::Scope::Current);
   // if the setting exists and is not empty
   updateSerial =
       updateSerial &&
@@ -297,7 +297,7 @@ void AppConfig::saveSettings() {
     setSetting(Setting::kServerClientMode, m_ServerClientMode);
   }
 
-  m_unsavedChanges = false;
+  setModified(false);
 }
 
 #ifdef SYNERGY_ENABLE_LICENSING
@@ -465,41 +465,39 @@ QString AppConfig::settingName(Setting name) {
 }
 
 template <typename T> void AppConfig::setSetting(Setting name, T value) {
-  ConfigWriter::make()->setSetting(settingName(name), value);
+  Config::get()->setSetting(settingName(name), value);
 }
 
 template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
-  ConfigWriter::make()->setSetting(
-      settingName(name), value, ConfigWriter::kUser);
-  ConfigWriter::make()->setSetting(
-      settingName(name), value, ConfigWriter::kSystem);
+  Config::get()->setSetting(settingName(name), value, Config::Scope::User);
+  Config::get()->setSetting(settingName(name), value, Config::Scope::System);
 }
 
 QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
-  return ConfigWriter::make()->loadSetting(settingName(name), defaultValue);
+  return Config::get()->loadSetting(settingName(name), defaultValue);
 }
 
 QVariant
 AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
   QVariant result(defaultValue);
   QString setting(settingName(name));
-  auto &writer = *ConfigWriter::make();
+  auto &writer = *Config::get();
 
   if (writer.hasSetting(setting)) {
     result = writer.loadSetting(setting, defaultValue);
-  } else if (writer.getScope() == ConfigWriter::kSystem) {
-    if (writer.hasSetting(setting, ConfigWriter::kUser)) {
-      result = writer.loadSetting(setting, defaultValue, ConfigWriter::kUser);
+  } else if (writer.getScope() == Config::Scope::System) {
+    if (writer.hasSetting(setting, Config::Scope::User)) {
+      result = writer.loadSetting(setting, defaultValue, Config::Scope::User);
     }
-  } else if (writer.hasSetting(setting, ConfigWriter::kSystem)) {
-    result = writer.loadSetting(setting, defaultValue, ConfigWriter::kSystem);
+  } else if (writer.hasSetting(setting, Config::Scope::System)) {
+    result = writer.loadSetting(setting, defaultValue, Config::Scope::System);
   }
 
   return result;
 }
 
-void AppConfig::loadScope(ConfigWriter::Scope scope) {
-  auto writer = ConfigWriter::make();
+void AppConfig::loadScope(Config::Scope scope) {
+  auto writer = Config::get();
 
   if (writer->getScope() != scope) {
     setDefaultValues();
@@ -517,9 +515,9 @@ void AppConfig::setDefaultValues() { m_InitiateConnectionFromServer = false; }
 void AppConfig::setLoadFromSystemScope(bool value) {
 
   if (value) {
-    loadScope(ConfigWriter::kSystem);
+    loadScope(Config::Scope::System);
   } else {
-    loadScope(ConfigWriter::kUser);
+    loadScope(Config::Scope::User);
   }
 
   /*
@@ -529,12 +527,10 @@ void AppConfig::setLoadFromSystemScope(bool value) {
   m_LoadFromSystemScope = value;
 }
 
-bool AppConfig::isWritable() const {
-  return ConfigWriter::make()->isWritable();
-}
+bool AppConfig::isWritable() const { return Config::get()->isWritable(); }
 
 bool AppConfig::isSystemScoped() const {
-  return ConfigWriter::make()->getScope() == ConfigWriter::kSystem;
+  return Config::get()->getScope() == Config::Scope::System;
 }
 
 bool AppConfig::getServerGroupChecked() const { return m_ServerGroupChecked; }
@@ -585,7 +581,7 @@ template <typename T>
 void AppConfig::setSettingModified(T &variable, const T &newValue) {
   if (variable != newValue) {
     variable = newValue;
-    m_unsavedChanges = true;
+    setModified(true);
   }
 }
 

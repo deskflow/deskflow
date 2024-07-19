@@ -33,9 +33,9 @@ ServerConfigDialog::ServerConfigDialog(
     QWidget *parent, ServerConfig &config, AppConfig &appConfig)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ServerConfigDialogBase(),
-      m_OrigServerConfig(config),
-      m_OrigServerAppConfigUseExternalConfig(config.getUseExternalConfig()),
-      m_OrigServerAppConfigExternalConfigFile(config.getConfigFile()),
+      m_OriginalServerConfig(config),
+      m_OriginalServerConfigIsExternal(config.getUseExternalConfig()),
+      m_OriginalServerConfigUsesExternalFile(config.getConfigFile()),
       m_ServerConfig(config),
       m_ScreenSetupModel(
           serverConfig().screens(), serverConfig().numColumns(),
@@ -62,13 +62,13 @@ ServerConfigDialog::ServerConfigDialog(
   m_pSpinBoxSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
 
   m_pCheckBoxCornerTopLeft->setChecked(
-      serverConfig().switchCorner(BaseConfig::TopLeft));
+      serverConfig().switchCorner(ScreenConfig::TopLeft));
   m_pCheckBoxCornerTopRight->setChecked(
-      serverConfig().switchCorner(BaseConfig::TopRight));
+      serverConfig().switchCorner(ScreenConfig::TopRight));
   m_pCheckBoxCornerBottomLeft->setChecked(
-      serverConfig().switchCorner(BaseConfig::BottomLeft));
+      serverConfig().switchCorner(ScreenConfig::BottomLeft));
   m_pCheckBoxCornerBottomRight->setChecked(
-      serverConfig().switchCorner(BaseConfig::BottomRight));
+      serverConfig().switchCorner(ScreenConfig::BottomRight));
   m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
   m_pCheckBoxDisableLockToScreen->setChecked(
       serverConfig().disableLockToScreen());
@@ -186,25 +186,25 @@ ServerConfigDialog::ServerConfigDialog(
   connect(
       m_pCheckBoxCornerTopLeft, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(BaseConfig::TopLeft, v);
+        serverConfig().setSwitchCorner(ScreenConfig::TopLeft, v);
         onChange();
       });
   connect(
       m_pCheckBoxCornerTopRight, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(BaseConfig::TopRight, v);
+        serverConfig().setSwitchCorner(ScreenConfig::TopRight, v);
         onChange();
       });
   connect(
       m_pCheckBoxCornerBottomLeft, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(BaseConfig::BottomLeft, v);
+        serverConfig().setSwitchCorner(ScreenConfig::BottomLeft, v);
         onChange();
       });
   connect(
       m_pCheckBoxCornerBottomRight, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(BaseConfig::BottomRight, v);
+        serverConfig().setSwitchCorner(ScreenConfig::BottomRight, v);
         onChange();
       });
   connect(
@@ -261,14 +261,14 @@ void ServerConfigDialog::accept() {
 
   // now that the dialog has been accepted, copy the new server config to the
   // original one, which is a reference to the one in MainWindow.
-  setOrigServerConfig(serverConfig());
+  setOriginalServerConfig(serverConfig());
 
   QDialog::accept();
 }
 
 void ServerConfigDialog::reject() {
-  serverConfig().setUseExternalConfig(m_OrigServerAppConfigUseExternalConfig);
-  serverConfig().setConfigFile(m_OrigServerAppConfigExternalConfigFile);
+  serverConfig().setUseExternalConfig(m_OriginalServerConfigIsExternal);
+  serverConfig().setConfigFile(m_OriginalServerConfigUsesExternalFile);
 
   QDialog::reject();
 }
@@ -460,10 +460,10 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent) {
 
 void ServerConfigDialog::onChange() {
   bool isAppConfigDataEqual =
-      m_OrigServerAppConfigUseExternalConfig ==
+      m_OriginalServerConfigIsExternal ==
           serverConfig().getUseExternalConfig() &&
-      m_OrigServerAppConfigExternalConfigFile == serverConfig().getConfigFile();
+      m_OriginalServerConfigUsesExternalFile == serverConfig().getConfigFile();
   m_pButtonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(
-          !isAppConfigDataEqual || !(m_OrigServerConfig == m_ServerConfig));
+          !isAppConfigDataEqual || !(m_OriginalServerConfig == m_ServerConfig));
 }

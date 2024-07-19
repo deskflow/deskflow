@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -18,22 +18,23 @@
 
 #pragma once
 
-#include "ConfigBase.h"
-#include "ConfigWriter.h"
+#include "CommonConfig.h"
+#include "Config.h"
 #include "CoreInterface.h"
 #include "ElevateMode.h"
+#include "shared/EditionType.h"
+
 #include <QObject>
 #include <QString>
 #include <QVariant>
 #include <mutex>
-#include <shared/EditionType.h>
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
 
 class QSettings;
 class SettingsDialog;
-class ServerConfig;
 class LicenseRegister;
+class ServerConfig;
 
 enum class ProcessMode { kService, kDesktop };
 
@@ -43,7 +44,7 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif
 
-class AppConfig : public QObject, public GUI::Config::ConfigBase {
+class AppConfig : public QObject, public synergy::gui::CommonConfig {
   Q_OBJECT
 
   friend class SettingsDialog;
@@ -153,7 +154,7 @@ public:
   void setMinimizeToTray(bool b);
   bool getMinimizeToTray();
 
-  void saveSettings() override;
+  void saveSettings();
   void setLastVersion(const QString &version);
 
   /// @brief Generates TLS certificate
@@ -216,7 +217,7 @@ protected:
   /// @brief loads the setting from the current scope
   /// @param ignoreSystem should the load feature ignore the globalScope setting
   /// that was saved
-  void loadSettings() override;
+  void loadSettings();
   static QString settingName(AppConfig::Setting name);
 
 private:
@@ -252,7 +253,7 @@ private:
 
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
-  void loadScope(GUI::Config::ConfigWriter::Scope scope);
+  void loadScope(synergy::gui::Config::Scope scope);
 
   /// @brief This function sets default values
   /// for settings that shouldn't be copied from between scopes.

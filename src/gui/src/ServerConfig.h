@@ -16,15 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SERVERCONFIG__H)
-
-#define SERVERCONFIG__H
+#pragma once
 
 #include <QList>
 
-#include "BaseConfig.h"
-#include "ConfigBase.h"
+#include "CommonConfig.h"
 #include "Hotkey.h"
+#include "ScreenConfig.h"
 #include "ScreenList.h"
 
 class QTextStream;
@@ -35,7 +33,7 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase {
+class ServerConfig : public ScreenConfig, public synergy::gui::CommonConfig {
   friend class ServerConfigDialog;
   friend class ServerConnection;
   friend QTextStream &
@@ -160,5 +158,3 @@ enum {
   kAutoAddScreenManualClient,
   kAutoAddScreenIgnore
 };
-
-#endif

@@ -16,23 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREEN__H)
+#pragma once
 
-#define SCREEN__H
+#include "ScreenConfig.h"
 
 #include <QList>
 #include <QPixmap>
 #include <QString>
 #include <QStringList>
 
-#include "BaseConfig.h"
-
 class QSettings;
 class QTextStream;
-
 class ScreenSettingsDialog;
 
-class Screen : public BaseConfig {
+class Screen : public ScreenConfig {
   friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
   friend QDataStream &operator>>(QDataStream &inStream, Screen &screen);
   friend class ScreenSettingsDialog;
@@ -102,5 +99,3 @@ private:
 
 QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
 QDataStream &operator>>(QDataStream &inStream, Screen &screen);
-
-#endif

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2020-2020 Symless Ltd.
+ * Copyright (C) 2020 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,13 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cassert>
+#include "Config.h"
+
+#include "CommonConfig.h"
 
 #include <QCoreApplication>
 #include <QFile>
-
-#include "ConfigBase.h"
-#include "ConfigWriter.h"
+#include <cassert>
+#include <memory>
 
 namespace {
 
@@ -70,110 +71,82 @@ void loadOldSystemSettings(QSettings &settings) {
 
 } // namespace
 
-namespace GUI {
-namespace Config {
-// Assignment of static variable
-ConfigWriter *ConfigWriter::s_pConfiguration = nullptr;
+namespace synergy::gui {
 
-ConfigWriter *ConfigWriter::make() {
-  // Only one ConfigWriter can exist at any one time (Singleton)
-  if (!s_pConfiguration) {
-    s_pConfiguration = new ConfigWriter();
+std::unique_ptr<Config> Config::s_pSettings;
+
+Config *Config::get() {
+  if (!s_pSettings) {
+    s_pSettings = std::make_unique<Config>();
   }
-  return s_pConfiguration;
+  return s_pSettings.get();
 }
 
-ConfigWriter::ConfigWriter() {
+Config::Config() {
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
 
   // Config will default to User settings if they exist,
   //  otherwise it will load System setting and save them to User settings
-  m_pSettingsSystem = new QSettings(
+  m_pSystemSettings = std::make_unique<QSettings>(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       QCoreApplication::organizationName(),
       QCoreApplication::applicationName());
 
 #if defined(Q_OS_WIN)
   // This call is needed for backwardcapability with old settings.
-  loadOldSystemSettings(*m_pSettingsSystem);
+  loadOldSystemSettings(*m_pSystemSettings);
 #endif
 
-  // defaults to user scope, if we set the scope specifically then we also have
-  // to set
-  //  the application name and the organisation name which breaks backwards
-  //  compatibility See #6730
-  m_pSettingsUser = new QSettings();
-
-  // Set scope to user for initially
-  m_pSettingsCurrent = m_pSettingsUser;
+  // default to user scope.
+  // if we set the scope specifically then we also have to set the application
+  // name and the organisation name which breaks backwards compatibility.
+  m_pUserSettings = std::make_unique<QSettings>();
 }
 
-void ConfigWriter::destroy() { destroy(s_pConfiguration); }
-
-ConfigWriter::~ConfigWriter() {
+Config::~Config() {
   while (!m_pCallerList.empty()) {
     m_pCallerList.pop_back();
   }
-  m_pSettingsCurrent = nullptr; // this only references other pointers
-  destroy(m_pSettingsSystem);
-  destroy(m_pSettingsUser);
 }
 
-bool ConfigWriter::hasSetting(const QString &name, Scope scope) const {
+bool Config::hasSetting(const QString &name, Scope scope) const {
   switch (scope) {
-  case kUser:
-    return m_pSettingsUser->contains(name);
-  case kSystem:
-    return m_pSettingsSystem->contains(name);
+  case Scope::User:
+    return m_pUserSettings->contains(name);
+  case Scope::System:
+    return m_pSystemSettings->contains(name);
   default:
-    return m_pSettingsCurrent->contains(name);
+    return currentSettings()->contains(name);
   }
 }
 
-bool ConfigWriter::isWritable() const {
-  return m_pSettingsCurrent->isWritable();
-}
+bool Config::isWritable() const { return currentSettings()->isWritable(); }
 
-QVariant ConfigWriter::loadSetting(
+QVariant Config::loadSetting(
     const QString &name, const QVariant &defaultValue, Scope scope) {
   switch (scope) {
-  case kUser:
-    return m_pSettingsUser->value(name, defaultValue);
-  case kSystem:
-    return m_pSettingsSystem->value(name, defaultValue);
+  case Scope::User:
+    return m_pUserSettings->value(name, defaultValue);
+  case Scope::System:
+    return m_pSystemSettings->value(name, defaultValue);
   default:
-    return m_pSettingsCurrent->value(name, defaultValue);
+    return currentSettings()->value(name, defaultValue);
   }
 }
 
-void ConfigWriter::setScope(ConfigWriter::Scope scope) {
-  if (m_CurrentScope != scope) {
-    m_CurrentScope = scope;
-    switch (scope) {
-    case kUser:
-      m_pSettingsCurrent = m_pSettingsUser;
-      break;
-    case kSystem:
-      m_pSettingsCurrent = m_pSettingsSystem;
-      break;
-    default:
-      // setScope should never be kCurrent
-      assert(scope);
-    }
-  }
-}
+void Config::setScope(Config::Scope scope) { m_CurrentScope = scope; }
 
-ConfigWriter::Scope ConfigWriter::getScope() const { return m_CurrentScope; }
+Config::Scope Config::getScope() const { return m_CurrentScope; }
 
-void ConfigWriter::globalLoad() {
+void Config::globalLoad() {
   for (auto &i : m_pCallerList) {
     i->loadSettings();
   }
 }
 
-void ConfigWriter::globalSave() {
+void Config::globalSave() {
 
   // Save if there are any unsaved changes otherwise skip
   if (unsavedChanges()) {
@@ -181,20 +154,26 @@ void ConfigWriter::globalSave() {
       i->saveSettings();
     }
 
-    m_pSettingsUser->sync();
-    m_pSettingsSystem->sync();
+    m_pUserSettings->sync();
+    m_pSystemSettings->sync();
 
     m_unsavedChanges = false;
   }
 }
 
-QSettings &ConfigWriter::settings() { return *m_pSettingsCurrent; }
+QSettings *Config::currentSettings() const {
+  if (m_CurrentScope == Scope::User) {
+    return m_pUserSettings.get();
+  } else {
+    return m_pSystemSettings.get();
+  }
+}
 
-void ConfigWriter::registerClass(ConfigBase *receiver) {
+void Config::registerClass(CommonConfig *receiver) {
   m_pCallerList.push_back(receiver);
 }
 
-bool ConfigWriter::unsavedChanges() const {
+bool Config::unsavedChanges() const {
   if (m_unsavedChanges) {
     return true;
   }
@@ -209,6 +188,6 @@ bool ConfigWriter::unsavedChanges() const {
   return false;
 }
 
-void ConfigWriter::markUnsaved() { m_unsavedChanges = true; }
-} // namespace Config
-} // namespace GUI
+void Config::markUnsaved() { m_unsavedChanges = true; }
+
+} // namespace synergy::gui

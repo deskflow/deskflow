@@ -30,7 +30,7 @@
 #include "ActivationDialog.h"
 #include "AppConfig.h"
 #include "ClientConnection.h"
-#include "ConfigWriter.h"
+#include "Config.h"
 #include "QIpcClient.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
@@ -70,34 +70,35 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   friend class ClientConnection;
 
 public:
-  enum qSynergyState {
-    synergyDisconnected,
-    synergyConnecting,
-    synergyConnected,
-    synergyListening,
-    synergyPendingRetry
+  enum class CoreState {
+    Disconnected,
+    Connecting,
+    Connected,
+    Listening,
+    PendingRetry
   };
 
-  enum qSynergyType { synergyClient, synergyServer };
+  enum class CoreMode { Client, Server };
 
-  enum qLevel { Error, Info };
+  enum class LogLevel { Error, Info };
 
-  enum qRuningState { kStarted, kStopped };
+  enum class RuningState { Started, Stopped };
 
 public:
 #ifdef SYNERGY_ENABLE_LICENSING
   MainWindow(AppConfig &appConfig, LicenseManager &licenseManager);
 #else
-  MainWindow(AppConfig &appConfig);
+  explicit MainWindow(AppConfig &appConfig);
 #endif
-  ~MainWindow();
+  ~MainWindow() override;
 
 public:
   void setVisible(bool visible);
-  int synergyType() const {
-    return m_pRadioGroupClient->isChecked() ? synergyClient : synergyServer;
+  CoreMode coreMode() const {
+    auto isClient = m_pRadioGroupClient->isChecked();
+    return isClient ? CoreMode::Client : CoreMode::Server;
   }
-  int synergyState() const { return m_SynergyState; }
+  CoreState coreState() const { return m_CoreState; }
   QString hostname() const { return m_pLineEditHostname->text(); }
   QString configFilename();
   QString address() const;
@@ -124,8 +125,8 @@ public slots:
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
   void appendLogError(const QString &text);
-  void startSynergy();
-  void retryStart(); // If the connection failed this will retry a startSynergy
+  void startCore();
+  void retryStart();
   void actionStart();
   void handleIdleService(const QString &text);
 
@@ -142,28 +143,27 @@ protected slots:
   void on_m_pActivate_triggered();
   void synergyFinished(int exitCode, QProcess::ExitStatus);
   void trayActivated(QSystemTrayIcon::ActivationReason reason);
-  void stopSynergy();
+  void stopCore();
   void logOutput();
   void logError();
   void updateFound(const QString &version);
   void saveSettings();
 
 protected:
-  // TODO This should be properly using the ConfigWriter system.
   QSettings &settings() {
-    return GUI::Config::ConfigWriter::make()->settings();
+    return *synergy::gui::Config::get()->currentSettings();
   }
   AppConfig &appConfig() { return *m_AppConfig; }
   AppConfig const &appConfig() const { return *m_AppConfig; }
-  QProcess *synergyProcess() { return m_pSynergy; }
+  QProcess *coreProcess() { return m_pSynergy; }
   void setSynergyProcess(QProcess *p) { m_pSynergy = p; }
   void initConnections();
   void createMenuBar();
   void createStatusBar();
   void createTrayIcon();
   void loadSettings();
-  void setIcon(qSynergyState state) const;
-  void setSynergyState(qSynergyState state);
+  void setIcon(CoreState state) const;
+  void setCoreState(CoreState state);
   bool checkForApp(int which, QString &app);
   bool clientArgs(QStringList &args, QString &app);
   bool serverArgs(QStringList &args, QString &app);
@@ -194,43 +194,46 @@ protected:
   void checkLicense(const QString &line);
 #endif
   QString getTimeStamp();
-  void restartSynergy();
+  void restartCore();
 
-  void showEvent(QShowEvent *);
+  void showEvent(QShowEvent *) override;
   void secureSocket(bool secureSocket);
 
   void windowStateChanged();
 
 private:
+  void updateWindowTitle();
+
 #ifdef SYNERGY_ENABLE_LICENSING
   LicenseManager *m_LicenseManager;
   bool m_ActivationDialogRunning;
   QStringList m_PendingClientNames;
 #endif
-  AppConfig *m_AppConfig;
-  QProcess *m_pSynergy;
-  int m_SynergyState;
+
+  AppConfig *m_AppConfig = nullptr;
+  QProcess *m_pSynergy = nullptr;
+  QMenuBar *m_pMenuBar = nullptr;
+  QMenu *m_pMenuFile = nullptr;
+  QMenu *m_pMenuEdit = nullptr;
+  QMenu *m_pMenuWindow = nullptr;
+  QMenu *m_pMenuHelp = nullptr;
+  QAbstractButton *m_pCancelButton = nullptr;
+  CoreState m_CoreState = CoreState::Disconnected;
+  bool m_AlreadyHidden = false;
   ServerConfig m_ServerConfig;
-  bool m_AlreadyHidden;
   VersionChecker m_VersionChecker;
   QIpcClient m_IpcClient;
-  QMenuBar *m_pMenuBar;
-  QMenu *m_pMenuFile;
-  QMenu *m_pMenuEdit;
-  QMenu *m_pMenuWindow;
-  QMenu *m_pMenuHelp;
-  QAbstractButton *m_pCancelButton;
   TrayIcon m_trayIcon;
-  qRuningState m_ExpectedRunningState;
+  RuningState m_ExpectedRunningState = RuningState::Stopped;
   QMutex m_StopDesktopMutex;
-  bool m_SecureSocket; // brief Is the program running a secure socket protocol
-                       // (SSL/TLS)
-  QString m_SecureSocketVersion; // brief Contains the version of the Secure
-                                 // Socket currently active
   ServerConnection m_serverConnection;
   ClientConnection m_clientConnection;
 
-  void updateWindowTitle();
+  /// @brief Is the program running a secure socket protocol (SSL/TLS)
+  bool m_SecureSocket;
+
+  /// @brief Contains the version of the Secure Socket currently active
+  QString m_SecureSocketVersion;
 
 private slots:
   void on_m_pButtonApply_clicked();

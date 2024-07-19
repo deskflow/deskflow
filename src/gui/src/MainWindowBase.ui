@@ -357,7 +357,7 @@ background-color: rgba(192,192,192, 0.1);
                </size>
               </property>
               <property name="text">
-               <string>&amp;Configure server</string>
+               <string>&amp;Configure</string>
               </property>
              </widget>
             </item>
@@ -692,7 +692,6 @@ background-color: rgba(192,192,192, 0.1);
          <font>
           <family>Arial</family>
           <pointsize>-1</pointsize>
-          <weight>88</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -789,7 +788,7 @@ top: 3px;</string>
     <string notr="true">Ctrl+Q</string>
    </property>
   </action>
-  <action name="m_pActionStartSynergy">
+  <action name="m_pActionStartCore">
    <property name="text">
     <string>&amp;Start</string>
    </property>
@@ -797,10 +796,10 @@ top: 3px;</string>
     <string>Run</string>
    </property>
    <property name="shortcut">
-    <string notr="true">Ctrl+S</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="m_pActionStopSynergy">
+  <action name="m_pActionStopCore">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -811,7 +810,7 @@ top: 3px;</string>
     <string>Stop</string>
    </property>
    <property name="shortcut">
-    <string notr="true">Ctrl+T</string>
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionShowStatus">
@@ -894,7 +893,7 @@ top: 3px;</string>
   <connection>
    <sender>m_pButtonToggleStart</sender>
    <signal>clicked()</signal>
-   <receiver>m_pActionStartSynergy</receiver>
+   <receiver>m_pActionStartCore</receiver>
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
