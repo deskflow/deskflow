@@ -13,3 +13,4 @@ Brewfile.lock.json
 .DS_Store
 *.code-workspace
 .env*
+/scripts/*.egg-info
