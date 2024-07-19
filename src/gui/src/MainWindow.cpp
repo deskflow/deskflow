@@ -616,11 +616,17 @@ void MainWindow::startSynergy() {
     args << "--tls-cert"
          << QString("\"%1\"").arg(m_AppConfig->getTLSCertPath());
   }
-  // on windows, the profile directory changes depending on the user that
-  // launched the process (e.g. when launched with elevation). setting the
-  // profile dir on launch ensures it uses the same profile dir is used
-  // no matter how its relaunched.
-  args << "--profile-dir" << getProfileRootForArg();
+
+  try {
+    // on windows, the profile directory changes depending on the user that
+    // launched the process (e.g. when launched with elevation). setting the
+    // profile dir on launch ensures it uses the same profile dir is used
+    // no matter how its relaunched.
+    args << "--profile-dir" << getProfileRootForArg();
+  } catch (...) {
+    // TODO: show error message box
+    qWarning() << "Failed to get profile dir, skipping arg";
+  }
 
 #else
   if (m_AppConfig->getCryptoEnabled()) {
@@ -1074,7 +1080,15 @@ void MainWindow::showLicenseNotice(const QString &notice) {
 #endif
 
 void MainWindow::updateLocalFingerprint() {
-  if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists() &&
+  bool fingerprintExists = false;
+  try {
+    fingerprintExists = Fingerprint::local().fileExists();
+  } catch (...) {
+    // TODO: show error message box
+    qWarning() << "Failed to check if fingerprint exists";
+  }
+
+  if (m_AppConfig->getCryptoEnabled() && fingerprintExists &&
       m_pRadioGroupServer->isChecked()) {
     m_pLabelFingerprint->setVisible(true);
   } else {

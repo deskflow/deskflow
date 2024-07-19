@@ -268,14 +268,19 @@ void AppConfig::loadSettings() {
         loadSetting(Setting::kEditionSetting, kUnregistered).toInt());
   }
 
-  // Set the default path of the TLS certificate file in the users DIR
-  QString certificateFilename =
-      QString("%1/%2/%3")
-          .arg(m_CoreInterface.getProfileDir(), "SSL", "Synergy.pem");
+  try {
+    // Set the default path of the TLS certificate file in the users DIR
+    QString certificateFilename =
+        QString("%1/%2/%3")
+            .arg(m_CoreInterface.getProfileDir(), "SSL", "Synergy.pem");
 
-  m_TLSCertificatePath =
-      loadSetting(Setting::kTLSCertPath, certificateFilename).toString();
-  m_TLSKeyLength = loadSetting(Setting::kTLSKeyLength, "2048").toString();
+    m_TLSCertificatePath =
+        loadSetting(Setting::kTLSCertPath, certificateFilename).toString();
+    m_TLSKeyLength = loadSetting(Setting::kTLSKeyLength, "2048").toString();
+  } catch (...) {
+    // TODO: show error message box
+    qWarning() << "Failed to get profile dir, unable to configure TLS";
+  }
 
   if (getCryptoEnabled()) {
     generateCertificate();
@@ -630,8 +635,13 @@ void AppConfig::setTLSKeyLength(const QString &length) {
 }
 
 void AppConfig::generateCertificate(bool forceGeneration) const {
-  SslCertificate sslCertificate;
-  sslCertificate.generateCertificate(
-      getTLSCertPath(), getTLSKeyLength(), forceGeneration);
-  emit sslToggled();
+  try {
+    SslCertificate sslCertificate;
+    sslCertificate.generateCertificate(
+        getTLSCertPath(), getTLSKeyLength(), forceGeneration);
+    emit sslToggled();
+  } catch (...) {
+    // TODO: show error message box
+    qWarning() << "Failed to configure TLS";
+  }
 }
