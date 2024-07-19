@@ -43,10 +43,10 @@ const char AppConfig::m_SynergyLogDir[] = "/var/log/";
 const char AppConfig::m_SynergyConfigName[] = "synergy.conf";
 #endif
 
-#if !defined(Q_OS_WIN) || defined(SYNERGY_FORCE_DESKTOP_PROCESS)
-const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
-#else
+#if defined(Q_OS_WIN) && !defined(SYNERGY_FORCE_DESKTOP_PROCESS)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
+#else
+const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;

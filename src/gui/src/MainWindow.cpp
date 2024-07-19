@@ -16,11 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://symless.com/?source=gui"
-#define HELP_URL "http://symless.com/help?source=gui"
-
-#include <array>
-
 #include "MainWindow.h"
 
 #include "AboutDialog.h"
@@ -46,21 +41,27 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
+#include <array>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-static const int debugLogLevel = 1;
+static const char *const kDownloadUrl = "http://symless.com/?source=gui";
+static const char *const kHelpUrl = "http://symless.com/help?source=gui";
+static const int kRetryInterval = 1000;
+static const int kDebugLogLevel = 1;
 
-static const char *synergyLightIconFiles[] = {
+#if defined(Q_OS_MAC)
+
+static const char *const synergyLightIconFiles[] = {
     ":/res/icons/64x64/synergy-light-disconnected.png",
     ":/res/icons/64x64/synergy-light-disconnected.png",
     ":/res/icons/64x64/synergy-light-connected.png",
     ":/res/icons/64x64/synergy-light-transfering.png",
     ":/res/icons/64x64/synergy-light-disconnected.png"};
 
-static const char *synergyDarkIconFiles[] = {
+static const char *const synergyDarkIconFiles[] = {
     ":/res/icons/64x64/synergy-dark-disconnected.png",
     ":/res/icons/64x64/synergy-dark-disconnected.png",
     ":/res/icons/64x64/synergy-dark-connected.png",
@@ -68,7 +69,9 @@ static const char *synergyDarkIconFiles[] = {
     ":/res/icons/64x64/synergy-dark-disconnected.png" // synergyPendingRetry
 };
 
-static const char *synergyDefaultIconFiles[] = {
+#endif
+
+static const char *const synergyDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-disconnected.png", // synergyDisconnected
     ":/res/icons/16x16/synergy-disconnected.png", // synergyConnecting
     ":/res/icons/16x16/synergy-connected.png",    // synergyConnected
@@ -87,16 +90,16 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_ActivationDialogRunning(false),
 #endif
       m_AppConfig(&appConfig),
-      m_pSynergy(NULL),
+      m_pSynergy(nullptr),
       m_SynergyState(synergyDisconnected),
       m_ServerConfig(5, 3, m_AppConfig, this),
       m_AlreadyHidden(false),
-      m_pMenuBar(NULL),
-      m_pMenuFile(NULL),
-      m_pMenuEdit(NULL),
-      m_pMenuWindow(NULL),
-      m_pMenuHelp(NULL),
-      m_pCancelButton(NULL),
+      m_pMenuBar(nullptr),
+      m_pMenuFile(nullptr),
+      m_pMenuEdit(nullptr),
+      m_pMenuWindow(nullptr),
+      m_pMenuHelp(nullptr),
+      m_pCancelButton(nullptr),
       m_ExpectedRunningState(kStopped),
       m_SecureSocket(false),
       m_serverConnection(*this),
@@ -122,7 +125,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) && !defined(SYNERGY_FORCE_DESKTOP_PROCESS)
   // ipc must always be enabled, so that we can disable command when switching
   // to desktop mode.
   connect(
@@ -357,7 +360,7 @@ void MainWindow::updateFound(const QString &version) {
                              "Version <b>%1</b> is now available to "
                              "<a href=\"%2\">download</a>.</p>")
                               .arg(version)
-                              .arg(DOWNLOAD_URL));
+                              .arg(kDownloadUrl));
 }
 
 void MainWindow::appendLogInfo(const QString &text) {
@@ -365,7 +368,7 @@ void MainWindow::appendLogInfo(const QString &text) {
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
-  if (appConfig().logLevel() >= debugLogLevel) {
+  if (appConfig().logLevel() >= kDebugLogLevel) {
     appendLogRaw(getTimeStamp() + " DEBUG: " + text);
   }
 }
@@ -911,7 +914,7 @@ void MainWindow::stopDesktop() {
   }
 
   delete synergyProcess();
-  setSynergyProcess(NULL);
+  setSynergyProcess(nullptr);
 }
 
 void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus) {
@@ -1119,7 +1122,7 @@ void MainWindow::on_m_pActionAbout_triggered() {
 }
 
 void MainWindow::on_m_pActionHelp_triggered() {
-  QDesktopServices::openUrl(QUrl(HELP_URL));
+  QDesktopServices::openUrl(QUrl(kHelpUrl));
 }
 
 void MainWindow::updateWindowTitle() {
