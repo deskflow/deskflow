@@ -22,7 +22,7 @@
     },
     {
       "label": "tests",
-      "dependsOn": ["unittests", "integtests"],
+      "dependsOn": ["integtests", "unittests"],
       "problemMatcher": []
     },
     {
