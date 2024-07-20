@@ -16,7 +16,10 @@
  */
 
 #include "LicenseManager.h"
+
+#include "ActivationNotifier.h"
 #include "AppConfig.h"
+
 #include <QDateTime>
 #include <QLocale>
 #include <QThread>
@@ -66,7 +69,7 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
 } // namespace
 
 LicenseManager::LicenseManager(AppConfig *appConfig)
-    : m_AppConfig(appConfig),
+    : m_pAppConfig(appConfig),
       m_serialKey(appConfig->edition()),
       m_registry(*appConfig) {}
 
@@ -76,14 +79,14 @@ void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   if (serialKey != m_serialKey) {
     using std::swap;
     swap(serialKey, m_serialKey);
-    m_AppConfig.setSerialKey(QString::fromStdString(m_serialKey.toString()));
+    m_pAppConfig->setSerialKey(QString::fromStdString(m_serialKey.toString()));
 
     emit showLicenseNotice(getLicenseNotice());
     validateSerialKey();
     m_registry.scheduleRegistration();
 
     if (m_serialKey.edition() != serialKey.edition()) {
-      m_AppConfig.setEdition(m_serialKey.edition());
+      m_pAppConfig->setEdition(m_serialKey.edition());
       emit editionChanged(m_serialKey.edition());
     }
   }
@@ -119,22 +122,18 @@ QString LicenseManager::activeEditionName() const {
 const SerialKey &LicenseManager::serialKey() const { return m_serialKey; }
 
 void LicenseManager::refresh() {
-  if (!m_AppConfig.serialKey().isEmpty()) {
+  if (!m_pAppConfig->serialKey().isEmpty()) {
     try {
-      SerialKey serialKey(m_AppConfig.serialKey().toStdString());
+      SerialKey serialKey(m_pAppConfig->serialKey().toStdString());
       setSerialKey(serialKey, true);
     } catch (...) {
       m_serialKey = SerialKey();
-      m_AppConfig.clearSerialKey();
+      m_pAppConfig->clearSerialKey();
     }
   }
   if (!m_serialKey.isValid()) {
     emit InvalidLicense();
   }
-}
-
-void LicenseManager::skipActivation() const {
-  notifyActivation("skip:unknown");
 }
 
 QString LicenseManager::getEditionName(Edition const edition, bool trial) {

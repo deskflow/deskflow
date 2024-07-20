@@ -49,9 +49,9 @@ public:
 
   TestMainWindow() {
 #ifdef SYNERGY_ENABLE_LICENSING
-    m_licenseManager = std::make_shared<LicenseManager>(m_appConfig);
+    m_licenseManager = std::make_shared<LicenseManager>(&m_appConfig);
     m_mainWindow =
-        std::make_shared<MainWindowProxy>(*m_appConfig, *m_licenseManager);
+        std::make_shared<MainWindowProxy>(m_appConfig, *m_licenseManager);
 #else
     m_mainWindow = std::make_shared<MainWindowProxy>(m_appConfig);
 #endif

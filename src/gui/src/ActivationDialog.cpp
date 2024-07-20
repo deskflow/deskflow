@@ -1,17 +1,31 @@
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2016 Synergy Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "ActivationDialog.h"
-#include "ActivationNotifier.h"
 #include "AppConfig.h"
 #include "CancelActivationDialog.h"
-#include "FailedLoginDialog.h"
 #include "LicenseManager.h"
 #include "MainWindow.h"
-#include "QUtility.h"
+#include "shared/EditionType.h"
+
 #include "ui_ActivationDialog.h"
-#include <shared/EditionType.h>
 
 #include <QMessageBox>
 #include <QThread>
-#include <iostream>
 
 ActivationDialog::ActivationDialog(
     QWidget *parent, AppConfig &appConfig, LicenseManager &licenseManager)
@@ -40,13 +54,7 @@ ActivationDialog::~ActivationDialog() { delete ui; }
 void ActivationDialog::reject() {
   if (m_LicenseManager->activeEdition() == kUnregistered) {
     CancelActivationDialog cancelActivationDialog(this);
-    if (QDialog::Accepted == cancelActivationDialog.exec()) {
-      m_LicenseManager->skipActivation();
-    } else {
-      return;
-    }
   }
-  QDialog::reject();
 }
 
 void ActivationDialog::accept() {

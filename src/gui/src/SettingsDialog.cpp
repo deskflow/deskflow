@@ -21,6 +21,7 @@
 #include "AppConfig.h"
 #include "MainWindow.h"
 #include "SslCertificate.h"
+#include "UpgradeDialog.h"
 #include "validators/ScreenNameValidator.h"
 
 #include <QDir>
