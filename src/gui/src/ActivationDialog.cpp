@@ -21,9 +21,9 @@
 #include "LicenseManager.h"
 #include "MainWindow.h"
 #include "shared/EditionType.h"
-
 #include "ui_ActivationDialog.h"
 
+#include <QApplication>
 #include <QMessageBox>
 #include <QThread>
 
@@ -52,11 +52,17 @@ void ActivationDialog::refreshSerialKey() {
 ActivationDialog::~ActivationDialog() { delete ui; }
 
 void ActivationDialog::reject() {
-  if (m_LicenseManager->activeEdition() == kUnregistered) {
-    CancelActivationDialog cancelActivationDialog(this);
-    cancelActivationDialog.exec();
-  } else {
+  // don't show the cancel confirmation dialog if they've already registered,
+  // since it's not revent to customers who are changing their serial key.
+  if (m_LicenseManager->activeEdition() != kUnregistered) {
     QDialog::reject();
+    return;
+  }
+
+  // the user is told that the 'No' button will exit the app.
+  CancelActivationDialog cancelActivationDialog(this);
+  if (cancelActivationDialog.exec() == QDialog::Rejected) {
+    QApplication::exit();
   }
 }
 
