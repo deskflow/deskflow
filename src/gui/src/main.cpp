@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@
  */
 
 #include "AppConfig.h"
-#include "Config.h"
 #include "LicenseManager.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
@@ -54,10 +53,6 @@ int main(int argc, char *argv[]) {
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
    * instantiated" */
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
   QCoreApplication::setOrganizationName("Synergy");
@@ -115,7 +110,7 @@ int main(int argc, char *argv[]) {
     mainWindow.open();
   }
 
-  return app.exec();
+  return QSynergyApplication::exec();
 }
 
 #if defined(Q_OS_MAC)
