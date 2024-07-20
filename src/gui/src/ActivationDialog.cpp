@@ -55,6 +55,8 @@ void ActivationDialog::reject() {
   if (m_LicenseManager->activeEdition() == kUnregistered) {
     CancelActivationDialog cancelActivationDialog(this);
     cancelActivationDialog.exec();
+  } else {
+    QDialog::reject();
   }
 }
 
