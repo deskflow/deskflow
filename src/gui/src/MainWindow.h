@@ -150,13 +150,12 @@ protected slots:
   void saveSettings();
 
 protected:
-  QSettings &settings() {
-    return *synergy::gui::Config::get()->currentSettings();
-  }
-  AppConfig &appConfig() { return *m_AppConfig; }
-  AppConfig const &appConfig() const { return *m_AppConfig; }
-  QProcess *coreProcess() { return m_pSynergy; }
-  void setSynergyProcess(QProcess *p) { m_pSynergy = p; }
+  QSettings &settings() { return *appConfig().config().currentSettings(); }
+  AppConfig &appConfig() { return m_AppConfig; }
+  AppConfig const &appConfig() const { return m_AppConfig; }
+  AppConfig *appConfigPtr() { return &m_AppConfig; }
+  QProcess *coreProcess() { return m_pCoreProcess; }
+  void setSynergyProcess(QProcess *p) { m_pCoreProcess = p; }
   void initConnections();
   void createMenuBar();
   void createStatusBar();
@@ -204,14 +203,23 @@ protected:
 private:
   void updateWindowTitle();
 
+  AppConfig &m_AppConfig;
+  ServerConfig m_ServerConfig;
+  ServerConnection m_serverConnection;
+  ClientConnection m_clientConnection;
+  VersionChecker m_VersionChecker;
+  QIpcClient m_IpcClient;
+  TrayIcon m_trayIcon;
+  QMutex m_StopDesktopMutex;
+
 #ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager *m_LicenseManager;
-  bool m_ActivationDialogRunning;
+  LicenseManager *m_LicenseManager = nullptr;
+  bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
 #endif
 
-  AppConfig *m_AppConfig = nullptr;
-  QProcess *m_pSynergy = nullptr;
+  RuningState m_ExpectedRunningState = RuningState::Stopped;
+  QProcess *m_pCoreProcess = nullptr;
   QMenuBar *m_pMenuBar = nullptr;
   QMenu *m_pMenuFile = nullptr;
   QMenu *m_pMenuEdit = nullptr;
@@ -220,20 +228,12 @@ private:
   QAbstractButton *m_pCancelButton = nullptr;
   CoreState m_CoreState = CoreState::Disconnected;
   bool m_AlreadyHidden = false;
-  ServerConfig m_ServerConfig;
-  VersionChecker m_VersionChecker;
-  QIpcClient m_IpcClient;
-  TrayIcon m_trayIcon;
-  RuningState m_ExpectedRunningState = RuningState::Stopped;
-  QMutex m_StopDesktopMutex;
-  ServerConnection m_serverConnection;
-  ClientConnection m_clientConnection;
 
   /// @brief Is the program running a secure socket protocol (SSL/TLS)
-  bool m_SecureSocket;
+  bool m_SecureSocket = false;
 
   /// @brief Contains the version of the Secure Socket currently active
-  QString m_SecureSocketVersion;
+  QString m_SecureSocketVersion = "";
 
 private slots:
   void on_m_pButtonApply_clicked();

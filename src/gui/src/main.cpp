@@ -17,6 +17,7 @@
  */
 
 #include "AppConfig.h"
+#include "Config.h"
 #include "LicenseManager.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
@@ -34,6 +35,8 @@
 #ifdef Q_OS_DARWIN
 #include <cstdlib>
 #endif
+
+using namespace synergy::gui;
 
 class QThreadImpl : public QThread {
 public:
@@ -84,11 +87,9 @@ int main(int argc, char *argv[]) {
 
   AppConfig appConfig;
   qRegisterMetaType<Edition>("Edition");
-#ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager licenseManager(&appConfig);
-#endif
 
 #ifdef SYNERGY_ENABLE_LICENSING
+  LicenseManager licenseManager(&appConfig);
   MainWindow mainWindow(appConfig, licenseManager);
 #else
   MainWindow mainWindow(appConfig);

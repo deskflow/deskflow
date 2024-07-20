@@ -85,30 +85,27 @@ const char *const AppConfig::m_SynergySettingsName[] = {
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
-AppConfig::AppConfig(bool globalLoad) {
+AppConfig::AppConfig() {
+  m_Config.registerReceiever(this);
+  load();
+}
 
-  auto writer = Config::get();
-
-  // Register this class to receive global load and saves
-  writer->registerClass(this);
-
-  // HACK: enable global load by default but allow it to be disabled for tests.
-  // when run in a test environment, this function causes a segfault.
-  if (globalLoad) {
-    writer->globalLoad();
-  }
+void AppConfig::load() {
+  m_Config.loadAll();
 
   // User settings exist and the load from system scope variable is true
-  if (writer->hasSetting(
+  if (m_Config.hasSetting(
           settingName(Setting::kLoadSystemSettings), Config::Scope::User)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
-  else if (writer->hasSetting(
+  else if (m_Config.hasSetting(
                settingName(Setting::kScreenName), Config::Scope::System)) {
     setLoadFromSystemScope(true);
   }
 }
+
+Config &AppConfig::config() { return m_Config; }
 
 const QString &AppConfig::screenName() const { return m_ScreenName; }
 
@@ -225,7 +222,7 @@ void AppConfig::loadSettings() {
       loadSetting(Setting::kInitiateConnectionFromServer, false).toBool();
 
   // only change the serial key if the settings being loaded contains a key
-  bool updateSerial = Config::get()->hasSetting(
+  bool updateSerial = m_Config.hasSetting(
       settingName(Setting::kLoadSystemSettings), Config::Scope::Current);
   // if the setting exists and is not empty
   updateSerial =
@@ -465,47 +462,45 @@ QString AppConfig::settingName(Setting name) {
 }
 
 template <typename T> void AppConfig::setSetting(Setting name, T value) {
-  Config::get()->setSetting(settingName(name), value);
+  m_Config.setSetting(settingName(name), value);
 }
 
 template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
-  Config::get()->setSetting(settingName(name), value, Config::Scope::User);
-  Config::get()->setSetting(settingName(name), value, Config::Scope::System);
+  m_Config.setSetting(settingName(name), value, Config::Scope::User);
+  m_Config.setSetting(settingName(name), value, Config::Scope::System);
 }
 
 QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
-  return Config::get()->loadSetting(settingName(name), defaultValue);
+  return m_Config.loadSetting(settingName(name), defaultValue);
 }
 
 QVariant
 AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
   QVariant result(defaultValue);
   QString setting(settingName(name));
-  auto &writer = *Config::get();
 
-  if (writer.hasSetting(setting)) {
-    result = writer.loadSetting(setting, defaultValue);
-  } else if (writer.getScope() == Config::Scope::System) {
-    if (writer.hasSetting(setting, Config::Scope::User)) {
-      result = writer.loadSetting(setting, defaultValue, Config::Scope::User);
+  if (m_Config.hasSetting(setting)) {
+    result = m_Config.loadSetting(setting, defaultValue);
+  } else if (m_Config.getScope() == Config::Scope::System) {
+    if (m_Config.hasSetting(setting, Config::Scope::User)) {
+      result = m_Config.loadSetting(setting, defaultValue, Config::Scope::User);
     }
-  } else if (writer.hasSetting(setting, Config::Scope::System)) {
-    result = writer.loadSetting(setting, defaultValue, Config::Scope::System);
+  } else if (m_Config.hasSetting(setting, Config::Scope::System)) {
+    result = m_Config.loadSetting(setting, defaultValue, Config::Scope::System);
   }
 
   return result;
 }
 
 void AppConfig::loadScope(Config::Scope scope) {
-  auto writer = Config::get();
 
-  if (writer->getScope() != scope) {
+  if (m_Config.getScope() != scope) {
     setDefaultValues();
-    writer->setScope(scope);
-    if (writer->hasSetting(
-            settingName(Setting::kScreenName), writer->getScope())) {
+    m_Config.setScope(scope);
+    if (m_Config.hasSetting(
+            settingName(Setting::kScreenName), m_Config.getScope())) {
       // If the user already has settings, then load them up now.
-      writer->globalLoad();
+      m_Config.loadAll();
     }
   }
 }
@@ -527,10 +522,10 @@ void AppConfig::setLoadFromSystemScope(bool value) {
   m_LoadFromSystemScope = value;
 }
 
-bool AppConfig::isWritable() const { return Config::get()->isWritable(); }
+bool AppConfig::isWritable() const { return m_Config.isWritable(); }
 
 bool AppConfig::isSystemScoped() const {
-  return Config::get()->getScope() == Config::Scope::System;
+  return m_Config.getScope() == Config::Scope::System;
 }
 
 bool AppConfig::getServerGroupChecked() const { return m_ServerGroupChecked; }

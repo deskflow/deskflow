@@ -24,13 +24,12 @@
 #include <cassert>
 #include <memory>
 
-namespace {
+namespace synergy::gui {
 
 QString getSystemSettingPath() {
   const QString settingFilename("SystemConfig.ini");
   QString path;
 #if defined(Q_OS_WIN)
-  // Program file
   path = QCoreApplication::applicationDirPath() + "\\";
 #elif defined(Q_OS_DARWIN)
   // Global preferances dir
@@ -47,7 +46,7 @@ QString getSystemSettingPath() {
 }
 
 #if defined(Q_OS_WIN)
-void loadOldSystemSettings(QSettings &settings) {
+void loadWindowsLegacy(QSettings &settings) {
   if (!QFile(settings.fileName()).exists()) {
     QSettings::setPath(
         QSettings::IniFormat, QSettings::SystemScope, "SystemConfig.ini");
@@ -69,19 +68,6 @@ void loadOldSystemSettings(QSettings &settings) {
 }
 #endif
 
-} // namespace
-
-namespace synergy::gui {
-
-std::unique_ptr<Config> Config::s_pSettings;
-
-Config *Config::get() {
-  if (!s_pSettings) {
-    s_pSettings = std::make_unique<Config>();
-  }
-  return s_pSettings.get();
-}
-
 Config::Config() {
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
@@ -94,21 +80,25 @@ Config::Config() {
       QCoreApplication::organizationName(),
       QCoreApplication::applicationName());
 
-#if defined(Q_OS_WIN)
-  // This call is needed for backwardcapability with old settings.
-  loadOldSystemSettings(*m_pSystemSettings);
-#endif
-
   // default to user scope.
   // if we set the scope specifically then we also have to set the application
   // name and the organisation name which breaks backwards compatibility.
   m_pUserSettings = std::make_unique<QSettings>();
+
+  load();
 }
 
 Config::~Config() {
-  while (!m_pCallerList.empty()) {
-    m_pCallerList.pop_back();
+  while (!m_pReceievers.empty()) {
+    m_pReceievers.pop_back();
   }
+}
+
+void Config::load() {
+#if defined(Q_OS_WIN)
+  // This call is needed for backwardcapability with old settings.
+  loadWindowsLegacy(*m_pSystemSettings);
+#endif
 }
 
 bool Config::hasSetting(const QString &name, Scope scope) const {
@@ -125,7 +115,7 @@ bool Config::hasSetting(const QString &name, Scope scope) const {
 bool Config::isWritable() const { return currentSettings()->isWritable(); }
 
 QVariant Config::loadSetting(
-    const QString &name, const QVariant &defaultValue, Scope scope) {
+    const QString &name, const QVariant &defaultValue, Scope scope) const {
   switch (scope) {
   case Scope::User:
     return m_pUserSettings->value(name, defaultValue);
@@ -140,17 +130,17 @@ void Config::setScope(Config::Scope scope) { m_CurrentScope = scope; }
 
 Config::Scope Config::getScope() const { return m_CurrentScope; }
 
-void Config::globalLoad() {
-  for (auto &i : m_pCallerList) {
+void Config::loadAll() {
+  for (auto &i : m_pReceievers) {
     i->loadSettings();
   }
 }
 
-void Config::globalSave() {
+void Config::saveAll() {
 
   // Save if there are any unsaved changes otherwise skip
   if (unsavedChanges()) {
-    for (auto &i : m_pCallerList) {
+    for (auto &i : m_pReceievers) {
       i->saveSettings();
     }
 
@@ -169,8 +159,8 @@ QSettings *Config::currentSettings() const {
   }
 }
 
-void Config::registerClass(CommonConfig *receiver) {
-  m_pCallerList.push_back(receiver);
+void Config::registerReceiever(CommonConfig *receiver) {
+  m_pReceievers.push_back(receiver);
 }
 
 bool Config::unsavedChanges() const {
@@ -178,13 +168,11 @@ bool Config::unsavedChanges() const {
     return true;
   }
 
-  for (const auto &i : m_pCallerList) {
+  for (const auto &i : m_pReceievers) {
     if (i->modified()) {
-      // If any class returns true there is no point checking more
       return true;
     }
   }
-  // If this line is reached no class has unsaved changes
   return false;
 }
 

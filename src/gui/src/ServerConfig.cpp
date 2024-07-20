@@ -46,19 +46,13 @@ const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(
     int numColumns, int numRows, AppConfig *appConfig, MainWindow *mainWindow)
-    :
-
+    : m_pAppConfig(appConfig),
+      m_pMainWindow(mainWindow),
       m_Screens(numColumns),
       m_NumColumns(numColumns),
       m_NumRows(numRows),
-      m_pAppConfig(appConfig),
-      m_EnableDragAndDrop(false),
-      m_DisableLockToScreen(false),
-      m_ClipboardSharing(true),
-      m_ClipboardSharingSize(defaultClipboardSharingSize()),
-      m_pMainWindow(mainWindow) {
-  synergy::gui::Config::get()->registerClass(this);
-  ServerConfig::loadSettings();
+      m_ClipboardSharingSize(defaultClipboardSharingSize()) {
+  appConfig->config().registerReceiever(this);
 }
 
 ServerConfig::~ServerConfig() {
@@ -169,8 +163,7 @@ void ServerConfig::saveSettings() {
   settings().endGroup();
 
   m_pAppConfig->saveSettings();
-  // Tell the config writer there are changes
-  synergy::gui::Config::get()->markUnsaved();
+  m_pAppConfig->config().markUnsaved();
 }
 
 void ServerConfig::loadSettings() {
@@ -563,7 +556,7 @@ QString ServerConfig::getClientAddress() const {
 }
 
 QSettings &ServerConfig::settings() {
-  return *Config::get()->currentSettings();
+  return *m_pAppConfig->config().currentSettings();
 }
 
 bool ServerConfig::isHotkeysAvailable() const {

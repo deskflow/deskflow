@@ -15,16 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "SettingsDialog.h"
-#include "validators/ScreenNameValidator.h"
 
 #include "AppConfig.h"
-#include "CoreInterface.h"
 #include "MainWindow.h"
-#include "QSynergyApplication.h"
-#include "QUtility.h"
 #include "SslCertificate.h"
-#include "UpgradeDialog.h"
+#include "validators/ScreenNameValidator.h"
 
 #include <QDir>
 #include <QFileDialog>

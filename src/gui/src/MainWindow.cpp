@@ -24,8 +24,7 @@
 #include "LicenseManager.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include <QPushButton>
-#include <shared/EditionType.h>
+#include "shared/EditionType.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -37,6 +36,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QtCore>
 #include <QtGui>
@@ -87,11 +87,8 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_LicenseManager(&licenseManager),
       m_ActivationDialogRunning(false),
 #endif
-      m_AppConfig(&appConfig),
-      m_ServerConfig(5, 3, m_AppConfig, this),
-      m_AlreadyHidden(false),
-      m_ExpectedRunningState(RuningState::Stopped),
-      m_SecureSocket(false),
+      m_AppConfig(appConfig),
+      m_ServerConfig(5, 3, &m_AppConfig, this),
       m_serverConnection(*this),
       m_clientConnection(*this) {
 
@@ -102,6 +99,8 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 #endif
 
+  m_ServerConfig.loadSettings();
+
   createMenuBar();
   loadSettings();
   initConnections();
@@ -111,7 +110,8 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
   updateScreenName();
   connect(
-      m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
+      appConfigPtr(), SIGNAL(screenNameChanged()), this,
+      SLOT(updateScreenName()));
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
@@ -165,14 +165,14 @@ MainWindow::MainWindow(AppConfig &appConfig)
 #endif
 
   connect(
-      m_AppConfig, SIGNAL(sslToggled()), this, SLOT(updateLocalFingerprint()),
-      Qt::QueuedConnection);
+      appConfigPtr(), SIGNAL(sslToggled()), this,
+      SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
 
   updateWindowTitle();
 
-  QString lastVersion = m_AppConfig->lastVersion();
+  QString lastVersion = m_AppConfig.lastVersion();
   if (lastVersion != SYNERGY_VERSION) {
-    m_AppConfig->setLastVersion(SYNERGY_VERSION);
+    m_AppConfig.setLastVersion(SYNERGY_VERSION);
 
 #ifdef SYNERGY_ENABLE_LICENSING
     m_LicenseManager->notifyUpdate(lastVersion, SYNERGY_VERSION);
@@ -280,14 +280,12 @@ void MainWindow::initConnections() {
 }
 
 void MainWindow::saveSettings() {
-  // program settings
   appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
   appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
   appConfig().setServerHostname(m_pLineEditHostname->text());
   serverConfig().setClientAddress(m_pLineEditClienIp->text());
 
-  /* Save everything */
-  synergy::gui::Config::get()->globalSave();
+  appConfig().config().saveAll();
 }
 
 void MainWindow::setIcon(CoreState state) const {
@@ -327,8 +325,8 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 }
 
 void MainWindow::logOutput() {
-  if (m_pSynergy) {
-    QString text(m_pSynergy->readAllStandardOutput());
+  if (m_pCoreProcess) {
+    QString text(m_pCoreProcess->readAllStandardOutput());
     for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
       if (!line.isEmpty()) {
         appendLogRaw(line);
@@ -338,8 +336,8 @@ void MainWindow::logOutput() {
 }
 
 void MainWindow::logError() {
-  if (m_pSynergy) {
-    appendLogRaw(m_pSynergy->readAllStandardError());
+  if (m_pCoreProcess) {
+    appendLogRaw(m_pCoreProcess->readAllStandardError());
   }
 }
 
@@ -603,10 +601,9 @@ void MainWindow::startCore() {
 #endif
 
 #if defined(Q_OS_WIN)
-  if (m_AppConfig->getCryptoEnabled()) {
+  if (m_AppConfig.getCryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert"
-         << QString("\"%1\"").arg(m_AppConfig->getTLSCertPath());
+    args << "--tls-cert" << QString("\"%1\"").arg(m_AppConfig.getTLSCertPath());
   }
 
   try {
@@ -621,13 +618,13 @@ void MainWindow::startCore() {
   }
 
 #else
-  if (m_AppConfig->getCryptoEnabled()) {
+  if (m_AppConfig.getCryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << m_AppConfig->getTLSCertPath();
+    args << "--tls-cert" << m_AppConfig.getTLSCertPath();
   }
 #endif
 
-  if (m_AppConfig->getPreventSleep()) {
+  if (m_AppConfig.getPreventSleep()) {
     args << "--prevent-sleep";
   }
 
@@ -1064,7 +1061,7 @@ void MainWindow::setEdition(Edition edition) {
 #ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::InvalidLicense() {
   stopCore();
-  m_AppConfig->activationHasRun(false);
+  m_AppConfig.activationHasRun(false);
 }
 
 void MainWindow::showLicenseNotice(const QString &notice) {
@@ -1088,7 +1085,7 @@ void MainWindow::updateLocalFingerprint() {
     qWarning() << "Failed to check if fingerprint exists";
   }
 
-  if (m_AppConfig->getCryptoEnabled() && fingerprintExists &&
+  if (m_AppConfig.getCryptoEnabled() && fingerprintExists &&
       m_pRadioGroupServer->isChecked()) {
     m_pLabelFingerprint->setVisible(true);
   } else {
@@ -1228,7 +1225,7 @@ int MainWindow::raiseActivationDialog() {
 void MainWindow::on_windowShown() {
 #ifdef SYNERGY_ENABLE_LICENSING
   auto serialKey = m_LicenseManager->serialKey();
-  if (!m_AppConfig->activationHasRun() && !serialKey.isValid()) {
+  if (!m_AppConfig.activationHasRun() && !serialKey.isValid()) {
     setEdition(Edition::kUnregistered);
     raiseActivationDialog();
   }
@@ -1281,11 +1278,11 @@ void MainWindow::updateScreenName() {
 }
 
 void MainWindow::enableServer(bool enable) {
-  m_AppConfig->setServerGroupChecked(enable);
+  m_AppConfig.setServerGroupChecked(enable);
   m_pRadioGroupServer->setChecked(enable);
 
   if (enable) {
-    if (m_AppConfig->getServerClientMode()) {
+    if (m_AppConfig.getServerClientMode()) {
       m_pLabelClientIp->show();
       m_pLineEditClienIp->show();
       m_pButtonConnectToClient->show();
@@ -1310,11 +1307,11 @@ void MainWindow::enableServer(bool enable) {
 }
 
 void MainWindow::enableClient(bool enable) {
-  m_AppConfig->setClientGroupChecked(enable);
+  m_AppConfig.setClientGroupChecked(enable);
   m_pRadioGroupClient->setChecked(enable);
 
   if (enable) {
-    if (m_AppConfig->getClientHostMode()) {
+    if (m_AppConfig.getClientHostMode()) {
       m_pLabelServerName->hide();
       m_pLineEditHostname->hide();
       m_pButtonConnect->hide();
@@ -1342,13 +1339,13 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
   enableServer(true);
   enableClient(false);
-  m_AppConfig->saveSettings();
+  m_AppConfig.saveSettings();
 }
 
 void MainWindow::on_m_pRadioGroupClient_clicked(bool) {
   enableClient(true);
   enableServer(false);
-  m_AppConfig->saveSettings();
+  m_AppConfig.saveSettings();
 }
 
 void MainWindow::on_m_pButtonConnect_clicked() { on_m_pButtonApply_clicked(); }

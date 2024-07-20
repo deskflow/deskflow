@@ -24,6 +24,7 @@ namespace synergy::gui {
 
 class CommonConfig;
 
+/// @brief A general config reader and writer for user and gloabl settings
 class Config : private QObject {
 
 public:
@@ -31,9 +32,6 @@ public:
 
   explicit Config();
   ~Config() override;
-
-  /// @brief Singleton instance
-  static Config *get();
 
   /// @brief Checks if the setting exists
   /// @param [in] name The name of the setting to check
@@ -60,7 +58,7 @@ public:
   /// scope
   QVariant loadSetting(
       const QString &name, const QVariant &defaultValue = QVariant(),
-      Scope scope = Scope::Current);
+      Scope scope = Scope::Current) const;
 
   /// @brief Changes the setting save and load location between System and User
   /// scope
@@ -72,10 +70,10 @@ public:
   Scope getScope() const;
 
   /// @brief trigger a config load across all registered classes
-  void globalLoad();
+  void loadAll();
 
   /// @brief trigger a config save across all registered classes
-  void globalSave();
+  void saveAll();
 
   /// @brief Returns the current scopes settings object
   ///         If more specialize control into the settings is needed this can
@@ -87,28 +85,25 @@ public:
   /// directly affect the config file
   void markUnsaved();
 
-  /// @brief Register a class to receives globalLoad and globalSave events
-  /// @param [in] ScreenSettings The class that will receive the events
-  void registerClass(CommonConfig *receiver);
+  /// @brief Register a class to receives requests to save and load settings
+  void registerReceiever(CommonConfig *receiver);
 
   /// @brief Checks if any registered class has any unsaved changes
   /// @return bool True if any registered class has unsaved changes
   bool unsavedChanges() const;
 
 private:
+  void load();
+
   Scope m_CurrentScope = Scope::User;
   std::unique_ptr<QSettings> m_pUserSettings;
   std::unique_ptr<QSettings> m_pSystemSettings;
 
-  /// @brief Contains a list all all classes that hook into the writer.
-  ///         This allows all classes that save settings to be called an updated
-  ///         on a save and reload by any other class
-  std::list<CommonConfig *> m_pCallerList;
+  /// @brief Receivers of load/save callbacks
+  std::list<CommonConfig *> m_pReceievers;
 
-  /// @brief Set when settings are changed
+  /// @brief Is set to true when settings are changed
   bool m_unsavedChanges = false;
-
-  static std::unique_ptr<Config> s_pSettings;
 };
 
 template <typename T>

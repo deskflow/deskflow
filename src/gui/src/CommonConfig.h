@@ -19,7 +19,7 @@
 
 namespace synergy::gui {
 
-/// @brief Base for node config (e.g. server or client)
+/// @brief Common configuration interface
 class CommonConfig {
 public:
   CommonConfig() = default;

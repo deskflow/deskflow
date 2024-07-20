@@ -22,6 +22,7 @@
 #include <QString>
 #include <QVariant>
 
+/// @brief Screen configuration base class
 class ScreenConfig {
 public:
   enum Modifier {

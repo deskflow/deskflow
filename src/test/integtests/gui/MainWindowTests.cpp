@@ -15,9 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: fix randomly freezing on windows
-#ifndef WIN32
-
 #include "MainWindow.h"
 
 #include "test/shared/gui/QtTest.h"
@@ -51,18 +48,16 @@ public:
   };
 
   TestMainWindow() {
-    m_appConfig = std::make_shared<AppConfig>(false);
-
 #ifdef SYNERGY_ENABLE_LICENSING
-    m_licenseManager = std::make_shared<LicenseManager>(m_appConfig.get());
+    m_licenseManager = std::make_shared<LicenseManager>(m_appConfig);
     m_mainWindow =
         std::make_shared<MainWindowProxy>(*m_appConfig, *m_licenseManager);
 #else
-    m_mainWindow = std::make_shared<MainWindowProxy>(*m_appConfig);
+    m_mainWindow = std::make_shared<MainWindowProxy>(m_appConfig);
 #endif
   }
 
-  std::shared_ptr<AppConfig> m_appConfig;
+  AppConfig m_appConfig;
   std::shared_ptr<LicenseManager> m_licenseManager;
   std::shared_ptr<MainWindowProxy> m_mainWindow;
 };
@@ -83,5 +78,3 @@ TEST_F(MainWindowTests, checkSecureSocket_match_expectTrue) {
 
   EXPECT_TRUE(result);
 }
-
-#endif

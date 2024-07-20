@@ -76,14 +76,14 @@ void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   if (serialKey != m_serialKey) {
     using std::swap;
     swap(serialKey, m_serialKey);
-    m_AppConfig->setSerialKey(QString::fromStdString(m_serialKey.toString()));
+    m_AppConfig.setSerialKey(QString::fromStdString(m_serialKey.toString()));
 
     emit showLicenseNotice(getLicenseNotice());
     validateSerialKey();
     m_registry.scheduleRegistration();
 
     if (m_serialKey.edition() != serialKey.edition()) {
-      m_AppConfig->setEdition(m_serialKey.edition());
+      m_AppConfig.setEdition(m_serialKey.edition());
       emit editionChanged(m_serialKey.edition());
     }
   }
@@ -119,13 +119,13 @@ QString LicenseManager::activeEditionName() const {
 const SerialKey &LicenseManager::serialKey() const { return m_serialKey; }
 
 void LicenseManager::refresh() {
-  if (!m_AppConfig->serialKey().isEmpty()) {
+  if (!m_AppConfig.serialKey().isEmpty()) {
     try {
-      SerialKey serialKey(m_AppConfig->serialKey().toStdString());
+      SerialKey serialKey(m_AppConfig.serialKey().toStdString());
       setSerialKey(serialKey, true);
     } catch (...) {
       m_serialKey = SerialKey();
-      m_AppConfig->clearSerialKey();
+      m_AppConfig.clearSerialKey();
     }
   }
   if (!m_serialKey.isValid()) {

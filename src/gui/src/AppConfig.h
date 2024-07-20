@@ -44,6 +44,7 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif
 
+/// @brief Reads and writes application specific settings
 class AppConfig : public QObject, public synergy::gui::CommonConfig {
   Q_OBJECT
 
@@ -53,11 +54,13 @@ class AppConfig : public QObject, public synergy::gui::CommonConfig {
   friend class ServerConfig;
 
 public:
-  explicit AppConfig(bool globalLoad = true);
+  explicit AppConfig();
+
+  /// @brief Underlying configuration reader/writer
+  synergy::gui::Config &config();
 
   bool isWritable() const;
   bool isSystemScoped() const;
-
   const QString &screenName() const;
   int port() const;
   const QString &networkInterface() const;
@@ -221,6 +224,9 @@ protected:
   static QString settingName(AppConfig::Setting name);
 
 private:
+  /// @brief Loads config from the underlying reader/writer
+  void load();
+
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
   /// @param [in] value The Value to be saved
@@ -259,6 +265,7 @@ private:
   /// for settings that shouldn't be copied from between scopes.
   void setDefaultValues();
 
+  synergy::gui::Config m_Config;
   CoreInterface m_CoreInterface;
   QString m_ScreenName = "";
   int m_Port = 24800;
