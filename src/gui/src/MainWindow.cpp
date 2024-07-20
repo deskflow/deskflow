@@ -47,8 +47,8 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-static const char *const kDownloadUrl = "http://symless.com/?source=gui";
-static const char *const kHelpUrl = "http://symless.com/help?source=gui";
+static const char *const kDownloadUrl = "https://symless.com/?source=gui";
+static const char *const kHelpUrl = "https://symless.com/help?source=gui";
 static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
 
