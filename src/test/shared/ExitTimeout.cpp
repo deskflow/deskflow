@@ -20,6 +20,7 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <string_view>
 #include <thread>
 
 namespace synergy::test {

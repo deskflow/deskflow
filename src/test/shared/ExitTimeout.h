@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <string_view>
 #include <thread>
 
 namespace synergy::test {
