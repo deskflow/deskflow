@@ -22,7 +22,7 @@
 
 namespace synergy::test {
 
-/// @brief Exits the program after a specified timeout, unless cancelled.
+/// @brief Exits the program after a specified timeout, unless destroyed.
 class ExitTimeout {
 public:
   ExitTimeout(const int minutes, const std::string_view &name);
