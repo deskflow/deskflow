@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
  * This package is free software; you can redistribute it and/or
@@ -18,15 +18,19 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "shared/test_timeout.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include <QApplication>
 #include <gtest/gtest.h>
 
+using synergy::test::timeoutAndExit;
+
 int main(int argc, char **argv) {
+  timeoutAndExit(1, "Integration test timed out after 1 minute");
+
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
