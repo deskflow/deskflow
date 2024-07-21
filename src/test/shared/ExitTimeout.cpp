@@ -39,7 +39,12 @@ bool timeoutReached(const steady_clock::time_point &start, const int minutes) {
 ExitTimeout::ExitTimeout(const int minutes, const std::string_view &name)
     : m_minutes(minutes),
       m_name(name),
-      m_thread(std::make_unique<std::jthread>([this]() { run(); })) {}
+      m_thread(std::make_unique<std::thread>([this]() { run(); })) {}
+
+ExitTimeout::~ExitTimeout() {
+  m_running = false;
+  m_thread->join();
+}
 
 void ExitTimeout::run() const {
   auto start = steady_clock::now();
@@ -52,7 +57,5 @@ void ExitTimeout::run() const {
     }
   }
 }
-
-void ExitTimeout::cancel() { m_running = false; }
 
 } // namespace synergy::test

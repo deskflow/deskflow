@@ -47,8 +47,5 @@ int main(int argc, char **argv) {
 
   // return code 1 means the test failed.
   // any other non-zero code is probably a memory error.
-  auto result = RUN_ALL_TESTS();
-
-  exitTimeout.cancel();
-  return result;
+  return RUN_ALL_TESTS();
 }

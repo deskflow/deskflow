@@ -26,15 +26,14 @@ namespace synergy::test {
 class ExitTimeout {
 public:
   ExitTimeout(const int minutes, const std::string_view &name);
-  ~ExitTimeout() = default;
+  ~ExitTimeout();
   void run() const;
-  void cancel();
 
 private:
   bool m_running = true;
   int m_minutes = 0;
   std::string_view m_name;
-  std::unique_ptr<std::jthread> m_thread;
+  std::unique_ptr<std::thread> m_thread;
 };
 
 } // namespace synergy::test
