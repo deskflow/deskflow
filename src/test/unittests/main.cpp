@@ -18,7 +18,7 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
-#include "shared/test_timeout.h"
+#include "shared/ExitTimeout.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -26,10 +26,10 @@
 
 #include <gtest/gtest.h>
 
-using synergy::test::timeoutAndExit;
+using synergy::test::ExitTimeout;
 
 int main(int argc, char **argv) {
-  timeoutAndExit(1, "Integration test timed out after 1 minute");
+  ExitTimeout exitTimeout(1, "Integration tests");
 
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.
@@ -47,5 +47,8 @@ int main(int argc, char **argv) {
 
   // return code 1 means the test failed.
   // any other non-zero code is probably a memory error.
-  return RUN_ALL_TESTS();
+  auto result = RUN_ALL_TESTS();
+
+  exitTimeout.cancel();
+  return result;
 }

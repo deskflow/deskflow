@@ -15,18 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include <string>
+#pragma once
+
 #include <thread>
 
 namespace synergy::test {
 
-void timeoutAndExit(const int minutes, const std::string &message) {
-  std::jthread([minutes, message]() {
-    std::this_thread::sleep_for(std::chrono::minutes(minutes));
-    std::cerr << message << std::endl;
-    std::exit(EXIT_FAILURE);
-  });
-}
+/// @brief Exits the program after a specified timeout, unless cancelled.
+class ExitTimeout {
+public:
+  ExitTimeout(const int minutes, const std::string_view &name);
+  ~ExitTimeout() = default;
+  void run() const;
+  void cancel();
+
+private:
+  bool m_running = true;
+  int m_minutes = 0;
+  std::string_view m_name;
+  std::unique_ptr<std::jthread> m_thread;
+};
 
 } // namespace synergy::test
