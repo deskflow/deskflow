@@ -57,6 +57,7 @@ Enhancements:
 - #7403 Solve low hanging reliability and maintainability issues
 - #7404 Restore integtests and add to CI as warning comment on failure
 - #7406 Migrate scripts from `requirements.txt` to `pyproject.toml`
+- #7407 Implement safer memory use, improve dev env, fixed GUI bugs
 
 # 1.14.6
 
