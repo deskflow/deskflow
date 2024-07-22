@@ -22,8 +22,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
-#include <qdir.h>
-#include <qlogging.h>
+
 
 // RSA Bit length (e.g. 1024/2048/4096)
 static const char *const kCertificateKeyLength = "rsa:";

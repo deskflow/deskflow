@@ -23,7 +23,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QtGlobal>
-#include <qdir.h>
+
 
 static const char kCoreBinary[] = "syntool";
 
