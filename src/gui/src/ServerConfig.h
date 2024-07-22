@@ -43,12 +43,7 @@ public:
   ServerConfig(
       int numColumns, int numRows, AppConfig *appConfig,
       MainWindow *mainWindow);
-
-  ServerConfig(const ServerConfig &src) = default;
-  ServerConfig(ServerConfig &&) = default;
   ~ServerConfig() override;
-  ServerConfig &operator=(const ServerConfig &src) = default;
-  ServerConfig &operator=(ServerConfig &&) = default;
 
   bool operator==(const ServerConfig &sc) const;
 
