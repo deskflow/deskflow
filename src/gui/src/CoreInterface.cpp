@@ -24,7 +24,6 @@
 #include <QProcess>
 #include <QtGlobal>
 
-
 static const char kCoreBinary[] = "syntool";
 
 #ifdef Q_WS_WIN
