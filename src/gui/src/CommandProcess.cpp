@@ -45,8 +45,7 @@ QString CommandProcess::run() {
     }
   }
 
-  if (int code = process.exitCode();
-      !error.isEmpty() || !success || code != 0) {
+  if (int code = process.exitCode(); !success || code != 0) {
     qFatal(
         "Command failed: %s %s\nCode: %d\nError: %s", qUtf8Printable(m_Command),
         qUtf8Printable(m_Arguments.join(" ")), code,
