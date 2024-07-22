@@ -282,7 +282,6 @@ private:
   bool m_LogToFile = false;
   QString m_LogFilename = "";
   int m_WizardLastRun = 0;
-  ProcessMode m_ProcessMode = kDefaultProcessMode;
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = kDefaultElevateMode;
   Edition m_Edition = Edition::kUnregistered;

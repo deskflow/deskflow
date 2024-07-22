@@ -152,7 +152,9 @@ const QString AppConfig::logFilenameCmd() const {
 
 QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
 
-ProcessMode AppConfig::processMode() const { return m_ProcessMode; }
+ProcessMode AppConfig::processMode() const {
+  return m_ServiceEnabled ? ProcessMode::kService : ProcessMode::kDesktop;
+}
 
 bool AppConfig::wizardShouldRun() const {
   return m_WizardLastRun < kWizardVersion;
@@ -237,7 +239,8 @@ void AppConfig::loadSettings() {
 
     m_TlsCertPath = loadSetting(kTlsCertPath, certificateFilename).toString();
     m_TlsKeyLength = loadSetting(kTlsKeyLength, "2048").toString();
-  } catch (...) {
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
     qFatal("Failed to get profile dir, unable to configure TLS");
   }
 
@@ -592,7 +595,8 @@ void AppConfig::generateCertificate(bool forceGeneration) const {
     sslCertificate.generateCertificate(
         getTlsCertPath(), getTlsKeyLength(), forceGeneration);
     emit sslToggled();
-  } catch (...) {
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
     qFatal("Failed to configure TLS");
   }
 }

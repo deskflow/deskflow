@@ -126,7 +126,8 @@ void LicenseManager::refresh() {
     try {
       SerialKey serialKey(m_pAppConfig->serialKey().toStdString());
       setSerialKey(serialKey, true);
-    } catch (...) {
+    } catch (const std::exception &e) {
+      qDebug() << e.what();
       m_serialKey = SerialKey();
       m_pAppConfig->clearSerialKey();
     }

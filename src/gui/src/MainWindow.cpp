@@ -188,10 +188,9 @@ MainWindow::~MainWindow() {
     m_ExpectedRunningState = RuningState::Stopped;
     try {
       stopDesktop();
-    } catch (...) {
-      // do not throw, since throwing from a dtor can result in unreliable
-      // behaviour.
-      qCritical() << "error stopping desktop in main window destructor";
+    } catch (const std::exception &e) {
+      qDebug() << e.what();
+      qFatal("Failed to stop synergy desktop process");
     }
   }
 }
@@ -553,8 +552,6 @@ void MainWindow::startCore() {
   }
   m_LicenseManager->registerLicense();
 #endif
-  bool desktopMode = appConfig().processMode() == ProcessMode::kDesktop;
-  bool serviceMode = appConfig().processMode() == ProcessMode::kService;
 
   appendLogDebug("starting process");
   m_ExpectedRunningState = RuningState::Started;
@@ -569,7 +566,9 @@ void MainWindow::startCore() {
 
   args << "--name" << appConfig().screenName();
 
-  if (desktopMode) {
+  ProcessMode mode = appConfig().processMode();
+
+  if (mode == ProcessMode::kDesktop) {
     setSynergyProcess(new QProcess(this));
   } else {
     // tell client/server to talk to daemon through ipc.
@@ -602,7 +601,7 @@ void MainWindow::startCore() {
 #if defined(Q_OS_WIN)
   if (m_AppConfig.getCryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << QString("\"%1\"").arg(m_AppConfig.getTlsCertPath());
+    args << "--tls-cert" << m_AppConfig.getTlsCertPath();
   }
 
   try {
@@ -611,7 +610,8 @@ void MainWindow::startCore() {
     // profile dir on launch ensures it uses the same profile dir is used
     // no matter how its relaunched.
     args << "--profile-dir" << getProfileRootForArg();
-  } catch (...) {
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
     qFatal("Failed to get profile dir, skipping arg");
   }
 
@@ -640,7 +640,7 @@ void MainWindow::startCore() {
     return;
   }
 
-  if (desktopMode) {
+  if (mode == ProcessMode::kDesktop) {
     connect(
         coreProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
         SLOT(synergyFinished(int, QProcess::ExitStatus)));
@@ -662,7 +662,7 @@ void MainWindow::startCore() {
   if (appConfig().logToFile())
     appendLogInfo("log file: " + appConfig().logFilename());
 
-  if (desktopMode) {
+  if (mode == ProcessMode::kDesktop) {
     coreProcess()->start(app, args);
     if (!coreProcess()->waitForStarted()) {
       show();
@@ -675,9 +675,7 @@ void MainWindow::startCore() {
                   .arg(app)));
       return;
     }
-  }
-
-  if (serviceMode) {
+  } else if (mode == ProcessMode::kService) {
     QString command(app + " " + args.join(" "));
     m_IpcClient.sendCommand(command, appConfig().elevateMode());
   }
@@ -1074,7 +1072,8 @@ void MainWindow::updateLocalFingerprint() {
   bool fingerprintExists = false;
   try {
     fingerprintExists = Fingerprint::local().fileExists();
-  } catch (...) {
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
     qFatal("Failed to check if fingerprint exists");
   }
 

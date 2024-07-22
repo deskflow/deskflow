@@ -59,6 +59,7 @@ ServerConfig::~ServerConfig() {
   try {
     ServerConfig::saveSettings();
   } catch (const std::exception &e) {
+    qDebug() << e.what();
     m_pMainWindow->appendLogError(e.what());
   }
 }
