@@ -22,7 +22,15 @@
 
 namespace synergy::test {
 
-/// @brief Exits the program after a specified timeout, unless destroyed.
+/**
+ * @brief Exits the program after a specified timeout, unless destroyed.
+ *
+ * The `std::thread` class is used instead of `std::jthread` as Apple Clang has
+ * no `std::jthread` support: https://en.cppreference.com/w/cpp/compiler_support
+ *
+ * TODO: Switch to regular Clang instead of Apple Clang:
+ * https://symless.atlassian.net/browse/S1-1754
+ */
 class ExitTimeout {
 public:
   ExitTimeout(const int minutes, const std::string_view &name);
