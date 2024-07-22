@@ -17,13 +17,11 @@
 
 #pragma once
 
-#include <ActivationNotifier.h>
-#include <QObject>
-#include <shared/EditionType.h>
-#include <shared/SerialKey.h>
-#include <utility>
-
 #include "LicenseRegistry.h"
+#include "shared/EditionType.h"
+#include "shared/SerialKey.h"
+
+#include <QObject>
 
 class AppConfig;
 
@@ -37,14 +35,13 @@ public:
   Edition activeEdition() const;
   QString activeEditionName() const;
   const SerialKey &serialKey() const;
-  void skipActivation() const;
   void notifyUpdate(QString fromVersion, QString toVersion) const;
   static QString getEditionName(Edition edition, bool trial = false);
   void notifyActivation(QString identity) const;
   QString getLicenseNotice() const;
 
 private:
-  AppConfig *m_AppConfig;
+  AppConfig *m_pAppConfig;
   SerialKey m_serialKey;
   LicenseRegistry m_registry;
 

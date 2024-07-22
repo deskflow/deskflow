@@ -23,6 +23,9 @@
 #include "LicenseRegistry.h"
 #include <QSysInfo>
 
+const char *const kLicenseRegistryUrl =
+    "https://api2.prod.symless.com/license/register";
+
 LicenseRegistry::LicenseRegistry(AppConfig &config) : m_config(config) {
   connect(&m_timer, SIGNAL(timeout()), this, SLOT(registerLicense()));
 }
@@ -30,8 +33,7 @@ LicenseRegistry::LicenseRegistry(AppConfig &config) : m_config(config) {
 void LicenseRegistry::registerLicense() {
   m_timer.stop();
   if (m_config.edition() == Edition::kBusiness) {
-    const auto REGISTER_LICENSE_URL = m_config.getLicenseRegistryUrl();
-    const auto url = QUrl(REGISTER_LICENSE_URL);
+    const auto url = QUrl(kLicenseRegistryUrl);
 
     auto request = QNetworkRequest(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -73,18 +75,18 @@ QByteArray LicenseRegistry::getRequestData() const {
     data["guid"] = guid;
     data["guid_type"] = "system";
   } else {
-    data["guid"] = m_config.getGuid();
+    data["guid"] = m_config.guid();
     data["guid_type"] = "synergy";
   }
 
   data["key"] = m_config.serialKey();
-  data["is_server"] = m_config.getServerGroupChecked();
+  data["is_server"] = m_config.serverGroupChecked();
 
   return QJsonDocument(data).toJson();
 }
 
 void LicenseRegistry::scheduleRegistration() {
-  const auto nextCheck = m_config.getLicenseNextCheck();
+  const auto nextCheck = m_config.licenseNextCheck();
   const auto currentTimestamp = static_cast<unsigned long long>(time(nullptr));
 
   if (currentTimestamp >= nextCheck) {

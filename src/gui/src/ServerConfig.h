@@ -16,15 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SERVERCONFIG__H)
-
-#define SERVERCONFIG__H
+#pragma once
 
 #include <QList>
 
-#include "BaseConfig.h"
-#include "ConfigBase.h"
+#include "CommonConfig.h"
 #include "Hotkey.h"
+#include "ScreenConfig.h"
 #include "ScreenList.h"
 
 class QTextStream;
@@ -35,7 +33,7 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-class ServerConfig : public BaseConfig, public GUI::Config::ConfigBase {
+class ServerConfig : public ScreenConfig, public synergy::gui::CommonConfig {
   friend class ServerConfigDialog;
   friend class ServerConnection;
   friend QTextStream &
@@ -45,16 +43,10 @@ public:
   ServerConfig(
       int numColumns, int numRows, AppConfig *appConfig,
       MainWindow *mainWindow);
-
-  ServerConfig(const ServerConfig &src) = default;
-  ServerConfig(ServerConfig &&) = default;
-  ~ServerConfig();
-  ServerConfig &operator=(const ServerConfig &src) = default;
-  ServerConfig &operator=(ServerConfig &&) = delete;
+  ~ServerConfig() override;
 
   bool operator==(const ServerConfig &sc) const;
 
-public:
   const ScreenList &screens() const { return m_Screens; }
   int numColumns() const { return m_NumColumns; }
   int numRows() const { return m_NumRows; }
@@ -84,8 +76,8 @@ public:
   int autoAddScreen(const QString name);
   const QString &getServerName() const;
   void updateServerName();
-  const QString &getConfigFile() const;
-  bool getUseExternalConfig() const;
+  const QString &configFile() const;
+  bool useExternalConfig() const;
   bool isFull() const;
   bool isScreenExists(const QString &screenName) const;
   void addClient(const QString &clientName);
@@ -129,27 +121,28 @@ private:
   void addToFirstEmptyGrid(const QString &clientName);
 
 private:
+  bool m_HasHeartbeat = false;
+  int m_Heartbeat = 0;
+  bool m_RelativeMouseMoves = false;
+  bool m_Win32KeepForeground = false;
+  bool m_HasSwitchDelay = false;
+  int m_SwitchDelay = 0;
+  bool m_HasSwitchDoubleTap = false;
+  int m_SwitchDoubleTap = 0;
+  int m_SwitchCornerSize = 0;
+  bool m_EnableDragAndDrop = false;
+  bool m_DisableLockToScreen = false;
+  bool m_ClipboardSharing = true;
+  QString m_ClientAddress = "";
+  QList<bool> m_SwitchCorners;
+  HotkeyList m_Hotkeys;
+
+  AppConfig *m_pAppConfig;
+  MainWindow *m_pMainWindow;
   ScreenList m_Screens;
   int m_NumColumns;
   int m_NumRows;
-  bool m_HasHeartbeat;
-  int m_Heartbeat;
-  bool m_RelativeMouseMoves;
-  bool m_Win32KeepForeground;
-  bool m_HasSwitchDelay;
-  int m_SwitchDelay;
-  bool m_HasSwitchDoubleTap;
-  int m_SwitchDoubleTap;
-  int m_SwitchCornerSize;
-  QList<bool> m_SwitchCorners;
-  HotkeyList m_Hotkeys;
-  AppConfig *m_pAppConfig;
-  bool m_EnableDragAndDrop;
-  bool m_DisableLockToScreen;
-  bool m_ClipboardSharing;
   size_t m_ClipboardSharingSize;
-  QString m_clientAddress;
-  MainWindow *m_pMainWindow;
 };
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
@@ -160,5 +153,3 @@ enum {
   kAutoAddScreenManualClient,
   kAutoAddScreenIgnore
 };
-
-#endif

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>165</height>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Are you sure?
-
-If you don't activate Synergy you'll be missing out on some great features.</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You'll need to purchase a license to use this build of Synergy.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/synergy/purchase?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Purchase Synergy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;If you'd prefer to use the community edition instead, visit us on GitHub.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/symless/synergy-core&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GitHub project&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Would you like to go back and enter a serial key?&lt;/p&gt;&lt;p&gt;Choosing 'No' will quit Synergy.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -30,14 +28,17 @@ If you don't activate Synergy you'll be missing out on some great features.</str
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/pricing?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Buy now&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-     <property name="openExternalLinks">
-      <bool>true</bool>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

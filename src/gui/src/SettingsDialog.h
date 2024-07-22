@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SETTINGSDIALOG_H)
-
-#define SETTINGSDIALOG_H
+#pragma once
 
 #include "ui_SettingsDialogBase.h"
-#include <QDialog>
-#include <memory>
 
 #include "CoreInterface.h"
+#include "validators/ScreenNameValidator.h"
+
+#include <QDialog>
+#include <memory>
 
 class MainWindow;
 class AppConfig;
@@ -35,48 +35,45 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 public:
   SettingsDialog(QWidget *parent, AppConfig &config);
   static QString browseForSynergyc(
-      QWidget *parent, const QString &programDir, const QString &synergycName);
+      QWidget *parent, const QString &programDir,
+      const QString &coreClientName);
   static QString browseForSynergys(
-      QWidget *parent, const QString &programDir, const QString &synergysName);
+      QWidget *parent, const QString &programDir,
+      const QString &coreServerName);
 
 protected:
   void accept() override;
   void reject() override;
   AppConfig &appConfig() { return m_appConfig; }
 
-  /// @brief Causes the dialog to load all the settings from m_appConfig
+  /// @brief Load all settings.
   void loadFromConfig();
 
-  /// @brief Check if the regenerate button should be enabled or disabled and
-  /// sets it
-  void updateRegenButton();
+  /// @brief Enables or disables the TLS regenerate button.
+  void updateTlsRegenerateButton();
 
-  /// @brief Updates the key length value based on the loaded file
-  /// @param [in] QString path The path to the file to test
+  /// @brief Updates the key length value based on the loaded file.
   void updateKeyLengthOnFile(const QString &path);
 
-  /// @brief Check if there are modifications.
-  /// @return true if there are modifications.
-  bool isModified();
+  /// @brief Enables controls when they should be.
+  void updateControlsEnabled();
 
-  /// @brief Enables\disables all controls.
-  void enableControls(bool enabled);
-
-  /// @brief This method setups security section in setting
-  void setupSeurity();
-
-  /// @brief Returns true if current mode is a client mode
   bool isClientMode() const;
+  void updateTlsControls();
+  void updateTlsControlsEnabled();
 
 private:
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
   CoreInterface m_CoreInterface;
+  std::unique_ptr<validators::ScreenNameValidator> m_screenNameValidator;
 
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
   /// the scope and doesn't save changes
   bool m_isSystemAtStart = false;
+
+  QString m_nameError = "";
 
 private slots:
   void on_m_pCheckBoxEnableCrypto_clicked(bool checked);
@@ -100,8 +97,5 @@ private slots:
   ///         haven't changed
   void on_m_pPushButtonRegenCert_clicked();
 
-  /// @brief This slot handles common functionality for all fields.
-  void onChange();
+  void on_m_pScreenNameValidator_finished(const QString &error);
 };
-
-#endif

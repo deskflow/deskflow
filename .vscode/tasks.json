@@ -22,7 +22,7 @@
     },
     {
       "label": "tests",
-      "dependsOn": ["unittests", "integtests"],
+      "dependsOn": ["integtests", "unittests"],
       "problemMatcher": []
     },
     {
@@ -31,23 +31,42 @@
       "command": "killall synergy; killall synergyc; killall synergys || true",
       "windows": {
         "command": "taskkill /F /IM synergy.exe /IM synergyc.exe /IM synergys.exe; $true"
+      },
+      "presentation": {
+        "reveal": "silent"
       }
     },
     {
-      "label": "build-kill",
-      "dependsOn": ["build", "kill"]
+      "label": "kill-build",
+      "dependsOn": ["kill", "build"],
+      "problemMatcher": []
     },
     {
       "label": "gui",
       "type": "process",
       "command": "${workspaceFolder}/build/bin/synergy",
-      "dependsOn": ["build", "kill"]
+      "dependsOn": ["build", "kill"],
+      "problemMatcher": [],
+      "windows": {
+        "command": "${workspaceFolder}/build/bin/synergy.exe"
+      }
     },
     {
-      "label": "windows daemon",
+      "label": "restart daemon",
       "type": "shell",
-      "command": "python scripts/windows_daemon.py",
+      "command": "python scripts/daemon.py --restart",
       "dependsOn": ["build"]
+    },
+    {
+      "label": "reinstall daemon",
+      "type": "shell",
+      "command": "python scripts/daemon.py --reinstall",
+      "dependsOn": ["build"]
+    },
+    {
+      "label": "stop daemon",
+      "type": "shell",
+      "command": "python scripts/daemon.py --stop"
     },
     {
       "label": "clean-gcda",

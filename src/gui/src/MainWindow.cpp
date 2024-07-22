@@ -16,11 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DOWNLOAD_URL "http://symless.com/?source=gui"
-#define HELP_URL "http://symless.com/help?source=gui"
-
-#include <array>
-
 #include "MainWindow.h"
 
 #include "AboutDialog.h"
@@ -29,8 +24,8 @@
 #include "LicenseManager.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include <QPushButton>
-#include <shared/EditionType.h>
+#include "shared/EditionType.h"
+#include <memory>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -42,39 +37,46 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
+#include <array>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-static const int debugLogLevel = 1;
+static const char *const kDownloadUrl = "https://symless.com/?source=gui";
+static const char *const kHelpUrl = "https://symless.com/help?source=gui";
+static const int kRetryDelay = 1000;
+static const int kDebugLogLevel = 1;
 
-static const char *synergyLightIconFiles[] = {
+#if defined(Q_OS_MAC)
+
+static const char *const kLightIconFiles[] = {
     ":/res/icons/64x64/synergy-light-disconnected.png",
     ":/res/icons/64x64/synergy-light-disconnected.png",
     ":/res/icons/64x64/synergy-light-connected.png",
     ":/res/icons/64x64/synergy-light-transfering.png",
     ":/res/icons/64x64/synergy-light-disconnected.png"};
 
-static const char *synergyDarkIconFiles[] = {
+static const char *const kDarkIconFiles[] = {
     ":/res/icons/64x64/synergy-dark-disconnected.png",
     ":/res/icons/64x64/synergy-dark-disconnected.png",
     ":/res/icons/64x64/synergy-dark-connected.png",
     ":/res/icons/64x64/synergy-dark-transfering.png",
-    ":/res/icons/64x64/synergy-dark-disconnected.png" // synergyPendingRetry
-};
+    ":/res/icons/64x64/synergy-dark-disconnected.png"};
 
-static const char *synergyDefaultIconFiles[] = {
-    ":/res/icons/16x16/synergy-disconnected.png", // synergyDisconnected
-    ":/res/icons/16x16/synergy-disconnected.png", // synergyConnecting
-    ":/res/icons/16x16/synergy-connected.png",    // synergyConnected
-    ":/res/icons/16x16/synergy-transfering.png",  // synergyListening
-    ":/res/icons/16x16/synergy-disconnected.png"  // synergyPendingRetry
-};
+#endif
+
+static const char *const kDefaultIconFiles[] = {
+    ":/res/icons/16x16/synergy-disconnected.png",
+    ":/res/icons/16x16/synergy-disconnected.png",
+    ":/res/icons/16x16/synergy-connected.png",
+    ":/res/icons/16x16/synergy-transfering.png",
+    ":/res/icons/16x16/synergy-disconnected.png"};
 
 #ifdef SYNERGY_ENABLE_LICENSING
 MainWindow::MainWindow(AppConfig &appConfig, LicenseManager &licenseManager)
@@ -84,21 +86,9 @@ MainWindow::MainWindow(AppConfig &appConfig)
     :
 #ifdef SYNERGY_ENABLE_LICENSING
       m_LicenseManager(&licenseManager),
-      m_ActivationDialogRunning(false),
 #endif
-      m_AppConfig(&appConfig),
-      m_pSynergy(NULL),
-      m_SynergyState(synergyDisconnected),
-      m_ServerConfig(5, 3, m_AppConfig, this),
-      m_AlreadyHidden(false),
-      m_pMenuBar(NULL),
-      m_pMenuFile(NULL),
-      m_pMenuEdit(NULL),
-      m_pMenuWindow(NULL),
-      m_pMenuHelp(NULL),
-      m_pCancelButton(NULL),
-      m_ExpectedRunningState(kStopped),
-      m_SecureSocket(false),
+      m_AppConfig(appConfig),
+      m_ServerConfig(5, 3, &m_AppConfig, this),
       m_serverConnection(*this),
       m_clientConnection(*this) {
 
@@ -109,16 +99,19 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 #endif
 
+  m_ServerConfig.loadSettings();
+
   createMenuBar();
   loadSettings();
   initConnections();
 
   m_pWidgetUpdate->hide();
-  m_VersionChecker.setApp(appPath(appConfig.synergycName()));
+  m_VersionChecker.setApp(appPath(appConfig.coreClientName()));
 
   updateScreenName();
   connect(
-      m_AppConfig, SIGNAL(screenNameChanged()), this, SLOT(updateScreenName()));
+      appConfigPtr(), SIGNAL(screenNameChanged()), this,
+      SLOT(updateScreenName()));
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
@@ -172,14 +165,14 @@ MainWindow::MainWindow(AppConfig &appConfig)
 #endif
 
   connect(
-      m_AppConfig, SIGNAL(sslToggled()), this, SLOT(updateLocalFingerprint()),
-      Qt::QueuedConnection);
+      appConfigPtr(), SIGNAL(sslToggled()), this,
+      SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
 
   updateWindowTitle();
 
-  QString lastVersion = m_AppConfig->lastVersion();
+  QString lastVersion = m_AppConfig.lastVersion();
   if (lastVersion != SYNERGY_VERSION) {
-    m_AppConfig->setLastVersion(SYNERGY_VERSION);
+    m_AppConfig.setLastVersion(SYNERGY_VERSION);
 
 #ifdef SYNERGY_ENABLE_LICENSING
     m_LicenseManager->notifyUpdate(lastVersion, SYNERGY_VERSION);
@@ -193,13 +186,12 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
 MainWindow::~MainWindow() {
   if (appConfig().processMode() == ProcessMode::kDesktop) {
-    m_ExpectedRunningState = kStopped;
+    m_ExpectedRunningState = RuningState::Stopped;
     try {
       stopDesktop();
-    } catch (...) {
-      // do not throw, since throwing from a dtor can result in unreliable
-      // behaviour.
-      qCritical() << "error stopping desktop in main window destructor";
+    } catch (const std::exception &e) {
+      qDebug() << e.what();
+      qFatal("Failed to stop synergy desktop process");
     }
   }
 }
@@ -207,16 +199,15 @@ MainWindow::~MainWindow() {
 void MainWindow::open() {
 
   std::array<QAction *, 7> trayMenu = {
-      m_pActionStartSynergy, m_pActionStopSynergy, nullptr,
-      m_pActionMinimize,     m_pActionRestore,     nullptr,
-      m_pActionQuit};
+      m_pActionStartCore, m_pActionStopCore, nullptr,      m_pActionMinimize,
+      m_pActionRestore,   nullptr,           m_pActionQuit};
 
   m_trayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
     connect(o, s, this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
-    setIcon(synergyDisconnected);
+    setIcon(CoreState::Disconnected);
   });
 
-  if (appConfig().getAutoHide()) {
+  if (appConfig().autoHide()) {
     hide();
   } else {
     showNormal();
@@ -229,7 +220,7 @@ void MainWindow::open() {
   // confuses first time users, who think synergy has crashed).
   if (appConfig().startedBefore() &&
       appConfig().processMode() == ProcessMode::kDesktop) {
-    startSynergy();
+    startCore();
   }
 }
 
@@ -251,8 +242,8 @@ void MainWindow::createMenuBar() {
 #endif
   m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-  m_pMenuFile->addAction(m_pActionStartSynergy);
-  m_pMenuFile->addAction(m_pActionStopSynergy);
+  m_pMenuFile->addAction(m_pActionStartCore);
+  m_pMenuFile->addAction(m_pActionStopCore);
   m_pMenuFile->addSeparator();
   m_pMenuFile->addAction(m_pActivate);
   m_pMenuFile->addSeparator();
@@ -269,19 +260,18 @@ void MainWindow::createMenuBar() {
 }
 
 void MainWindow::loadSettings() {
-  enableServer(appConfig().getServerGroupChecked());
-  enableClient(appConfig().getClientGroupChecked());
+  enableServer(appConfig().serverGroupChecked());
+  enableClient(appConfig().clientGroupChecked());
 
-  m_pLineEditHostname->setText(appConfig().getServerHostname());
+  m_pLineEditHostname->setText(appConfig().serverHostname());
   m_pLineEditClienIp->setText(serverConfig().getClientAddress());
 }
 
 void MainWindow::initConnections() {
   connect(m_pActionMinimize, SIGNAL(triggered()), this, SLOT(hide()));
   connect(m_pActionRestore, SIGNAL(triggered()), this, SLOT(showNormal()));
-  connect(
-      m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(actionStart()));
-  connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
+  connect(m_pActionStartCore, SIGNAL(triggered()), this, SLOT(actionStart()));
+  connect(m_pActionStopCore, SIGNAL(triggered()), this, SLOT(stopCore()));
   connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
   connect(
       &m_VersionChecker, SIGNAL(updateFound(const QString &)), this,
@@ -289,35 +279,34 @@ void MainWindow::initConnections() {
 }
 
 void MainWindow::saveSettings() {
-  // program settings
   appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
   appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
   appConfig().setServerHostname(m_pLineEditHostname->text());
   serverConfig().setClientAddress(m_pLineEditClienIp->text());
 
-  /* Save everything */
-  GUI::Config::ConfigWriter::make()->globalSave();
+  appConfig().config().saveAll();
 }
 
-void MainWindow::setIcon(qSynergyState state) const {
+void MainWindow::setIcon(CoreState state) const {
   QIcon icon;
+  auto index = static_cast<int>(state);
 
 #ifdef Q_OS_MAC
   switch (getOSXIconsTheme()) {
   case IconsTheme::ICONS_DARK:
-    icon.addFile(synergyDarkIconFiles[state]);
+    icon.addFile(kDarkIconFiles[index]);
     break;
   case IconsTheme::ICONS_LIGHT:
-    icon.addFile(synergyLightIconFiles[state]);
+    icon.addFile(kLightIconFiles[index]);
     break;
   case IconsTheme::ICONS_TEMPLATE:
   default:
-    icon.addFile(synergyDarkIconFiles[state]);
+    icon.addFile(kDarkIconFiles[index]);
     icon.setIsMask(true);
     break;
   }
 #else
-  icon.addFile(synergyDefaultIconFiles[state]);
+  icon.addFile(kDefaultIconFiles[index]);
 #endif
 
   m_trayIcon.set(icon);
@@ -335,8 +324,8 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
 }
 
 void MainWindow::logOutput() {
-  if (m_pSynergy) {
-    QString text(m_pSynergy->readAllStandardOutput());
+  if (m_pCoreProcess) {
+    QString text(m_pCoreProcess->readAllStandardOutput());
     for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
       if (!line.isEmpty()) {
         appendLogRaw(line);
@@ -346,8 +335,8 @@ void MainWindow::logOutput() {
 }
 
 void MainWindow::logError() {
-  if (m_pSynergy) {
-    appendLogRaw(m_pSynergy->readAllStandardError());
+  if (m_pCoreProcess) {
+    appendLogRaw(m_pCoreProcess->readAllStandardError());
   }
 }
 
@@ -357,7 +346,7 @@ void MainWindow::updateFound(const QString &version) {
                              "Version <b>%1</b> is now available to "
                              "<a href=\"%2\">download</a>.</p>")
                               .arg(version)
-                              .arg(DOWNLOAD_URL));
+                              .arg(kDownloadUrl));
 }
 
 void MainWindow::appendLogInfo(const QString &text) {
@@ -365,7 +354,7 @@ void MainWindow::appendLogInfo(const QString &text) {
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
-  if (appConfig().logLevel() >= debugLogLevel) {
+  if (appConfig().logLevel() >= kDebugLogLevel) {
     appendLogRaw(getTimeStamp() + " DEBUG: " + text);
   }
 }
@@ -395,7 +384,7 @@ void MainWindow::handleIdleService(const QString &text) {
     // only start if there is no active service running
     if (!line.isEmpty() && line.contains("service status: idle") &&
         appConfig().startedBefore()) {
-      startSynergy();
+      startCore();
     }
   }
 }
@@ -428,7 +417,7 @@ void MainWindow::checkConnected(const QString &line) {
   }
 
   if (line.contains("connected to server") || line.contains("has connected")) {
-    setSynergyState(synergyConnected);
+    setCoreState(CoreState::Connected);
 
     if (!appConfig().startedBefore() && isVisible()) {
       QMessageBox::information(
@@ -440,13 +429,13 @@ void MainWindow::checkConnected(const QString &line) {
       appConfig().setStartedBefore(true);
     }
   } else if (line.contains("started server")) {
-    setSynergyState(synergyListening);
+    setCoreState(CoreState::Listening);
   } else if (
       line.contains("disconnected from server") ||
       line.contains("process exited")) {
-    setSynergyState(synergyDisconnected);
+    setCoreState(CoreState::Disconnected);
   } else if (line.contains("connecting to")) {
-    setSynergyState(synergyConnecting);
+    setCoreState(CoreState::Connecting);
   }
 }
 
@@ -474,7 +463,7 @@ void MainWindow::checkFingerprint(const QString &line) {
   static bool messageBoxAlreadyShown = false;
 
   if (!messageBoxAlreadyShown) {
-    stopSynergy();
+    stopCore();
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
@@ -493,7 +482,7 @@ void MainWindow::checkFingerprint(const QString &line) {
     if (fingerprintReply == QMessageBox::Yes) {
       // restart core process after trusting fingerprint.
       Fingerprint::trustedServers().trust(fingerprint);
-      startSynergy();
+      startCore();
     }
 
     messageBoxAlreadyShown = false;
@@ -536,9 +525,9 @@ QString MainWindow::getTimeStamp() {
   return '[' + current.toString(Qt::ISODate) + ']';
 }
 
-void MainWindow::restartSynergy() {
-  stopSynergy();
-  startSynergy();
+void MainWindow::restartCore() {
+  stopCore();
+  startCore();
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
@@ -548,7 +537,7 @@ void MainWindow::showEvent(QShowEvent *event) {
 
 void MainWindow::clearLog() { m_pLogOutput->clear(); }
 
-void MainWindow::startSynergy() {
+void MainWindow::startCore() {
   saveSettings();
 
 #ifdef Q_OS_MAC
@@ -564,12 +553,10 @@ void MainWindow::startSynergy() {
   }
   m_LicenseManager->registerLicense();
 #endif
-  bool desktopMode = appConfig().processMode() == ProcessMode::kDesktop;
-  bool serviceMode = appConfig().processMode() == ProcessMode::kService;
 
   appendLogDebug("starting process");
-  m_ExpectedRunningState = kStarted;
-  setSynergyState(synergyConnecting);
+  m_ExpectedRunningState = RuningState::Started;
+  setCoreState(CoreState::Connecting);
 
   QString app;
   QStringList args;
@@ -580,8 +567,10 @@ void MainWindow::startSynergy() {
 
   args << "--name" << appConfig().screenName();
 
-  if (desktopMode) {
-    setSynergyProcess(new QProcess(this));
+  ProcessMode mode = appConfig().processMode();
+
+  if (mode == ProcessMode::kDesktop) {
+    m_pCoreProcess = std::make_unique<QProcess>(this);
   } else {
     // tell client/server to talk to daemon through ipc.
     args << "--ipc";
@@ -611,25 +600,30 @@ void MainWindow::startSynergy() {
 #endif
 
 #if defined(Q_OS_WIN)
-  if (m_AppConfig->getCryptoEnabled()) {
+  if (m_AppConfig.cryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert"
-         << QString("\"%1\"").arg(m_AppConfig->getTLSCertPath());
+    args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
-  // on windows, the profile directory changes depending on the user that
-  // launched the process (e.g. when launched with elevation). setting the
-  // profile dir on launch ensures it uses the same profile dir is used
-  // no matter how its relaunched.
-  args << "--profile-dir" << getProfileRootForArg();
+
+  try {
+    // on windows, the profile directory changes depending on the user that
+    // launched the process (e.g. when launched with elevation). setting the
+    // profile dir on launch ensures it uses the same profile dir is used
+    // no matter how its relaunched.
+    args << "--profile-dir" << getProfileRootForArg();
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
+    qFatal("Failed to get profile dir, skipping arg");
+  }
 
 #else
-  if (m_AppConfig->getCryptoEnabled()) {
+  if (m_AppConfig.cryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << m_AppConfig->getTLSCertPath();
+    args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
 #endif
 
-  if (m_AppConfig->getPreventSleep()) {
+  if (m_AppConfig.preventSleep()) {
     args << "--prevent-sleep";
   }
 
@@ -639,27 +633,25 @@ void MainWindow::startSynergy() {
 
   appendLogInfo(
       "starting " +
-      QString(synergyType() == synergyServer ? "server" : "client"));
+      QString(coreMode() == CoreMode::Server ? "server" : "client"));
 
-  if ((synergyType() == synergyClient && !clientArgs(args, app)) ||
-      (synergyType() == synergyServer && !serverArgs(args, app))) {
-    stopSynergy();
+  if ((coreMode() == CoreMode::Client && !clientArgs(args, app)) ||
+      (coreMode() == CoreMode::Server && !serverArgs(args, app))) {
+    stopCore();
     return;
   }
 
-  if (desktopMode) {
+  if (mode == ProcessMode::kDesktop) {
     connect(
-        synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
-        SLOT(synergyFinished(int, QProcess::ExitStatus)));
+        m_pCoreProcess.get(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
+        SLOT(coreProcessExit(int, QProcess::ExitStatus)));
     connect(
-        synergyProcess(), SIGNAL(readyReadStandardOutput()), this,
+        m_pCoreProcess.get(), SIGNAL(readyReadStandardOutput()), this,
         SLOT(logOutput()));
     connect(
-        synergyProcess(), SIGNAL(readyReadStandardError()), this,
+        m_pCoreProcess.get(), SIGNAL(readyReadStandardError()), this,
         SLOT(logError()));
   }
-
-  qDebug() << args;
 
   // show command if debug log level...
   if (appConfig().logLevel() >= 4) {
@@ -671,9 +663,9 @@ void MainWindow::startSynergy() {
   if (appConfig().logToFile())
     appendLogInfo("log file: " + appConfig().logFilename());
 
-  if (desktopMode) {
-    synergyProcess()->start(app, args);
-    if (!synergyProcess()->waitForStarted()) {
+  if (mode == ProcessMode::kDesktop) {
+    m_pCoreProcess->start(app, args);
+    if (!m_pCoreProcess->waitForStarted()) {
       show();
       QMessageBox::warning(
           this, tr("Program can not be started"),
@@ -684,9 +676,7 @@ void MainWindow::startSynergy() {
                   .arg(app)));
       return;
     }
-  }
-
-  if (serviceMode) {
+  } else if (mode == ProcessMode::kService) {
     QString command(app + " " + args.join(" "));
     m_IpcClient.sendCommand(command, appConfig().elevateMode());
   }
@@ -694,19 +684,19 @@ void MainWindow::startSynergy() {
 
 void MainWindow::actionStart() {
   m_clientConnection.setCheckConnection(true);
-  startSynergy();
+  startCore();
 }
 
 void MainWindow::retryStart() {
   // This function is only called after a failed start
   // Only start synergy if the current state is pending retry
-  if (m_SynergyState == synergyPendingRetry) {
-    startSynergy();
+  if (m_CoreState == CoreState::PendingRetry) {
+    startCore();
   }
 }
 
 bool MainWindow::clientArgs(QStringList &args, QString &app) {
-  app = appPath(appConfig().synergycName());
+  app = appPath(appConfig().coreClientName());
 
   if (!QFile::exists(app)) {
     show();
@@ -716,38 +706,31 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     return false;
   }
 
-#if defined(Q_OS_WIN)
-  // wrap in quotes so a malicious user can't start \Program.exe as admin.
-  app = QString("\"%1\"").arg(app);
-#endif
-
   if (appConfig().logToFile()) {
     appConfig().persistLogDir();
-    args << "--log" << appConfig().logFilenameCmd();
+    args << "--log" << appConfig().logFilename();
   }
 
-  if (appConfig().getLanguageSync()) {
+  if (appConfig().languageSync()) {
     args << "--sync-language";
   }
 
-  if (appConfig().getInvertScrollDirection()) {
+  if (appConfig().invertScrollDirection()) {
     args << "--invert-scroll";
   }
 
-  if (m_pLineEditHostname->text().isEmpty() &&
-      !appConfig().getClientHostMode()) {
-    show();
-    QMessageBox::warning(
-        this, tr("Hostname is empty"),
-        tr("Please fill in a hostname for the synergy "
-           "client to connect to."));
-    return false;
-  }
-
-  if (appConfig().getClientHostMode()) {
+  if (appConfig().clientHostMode()) {
     args << "--host";
     args << ":" + QString::number(appConfig().port());
   } else {
+    if (m_pLineEditHostname->text().isEmpty()) {
+      show();
+      QMessageBox::warning(
+          this, tr("IP/hostname is empty"),
+          tr("Please enter a server hostname or IP address."));
+      return false;
+    }
+
     QString hostName = m_pLineEditHostname->text();
     // if interface is IPv6 - ensure that ip is in square brackets
     if (hostName.count(':') > 1) {
@@ -766,8 +749,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
 
 QString MainWindow::configFilename() {
   QString configFullPath;
-  if (appConfig().getUseExternalConfig()) {
-    configFullPath = appConfig().getConfigFile();
+  if (appConfig().useExternalConfig()) {
+    configFullPath = appConfig().configFile();
   } else {
     QStringList errors;
     for (auto path :
@@ -818,11 +801,12 @@ QString MainWindow::address() const {
 }
 
 QString MainWindow::appPath(const QString &name) {
-  return appConfig().synergyProgramDir() + name;
+  QDir dir(QCoreApplication::applicationDirPath());
+  return dir.filePath(name);
 }
 
 bool MainWindow::serverArgs(QStringList &args, QString &app) {
-  app = appPath(appConfig().synergysName());
+  app = appPath(appConfig().coreServerName());
 
   if (!QFile::exists(app)) {
     QMessageBox::warning(
@@ -831,33 +815,24 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  if (appConfig().getServerClientMode() &&
-      m_pLineEditClienIp->text().isEmpty()) {
+  if (appConfig().serverClientMode() && m_pLineEditClienIp->text().isEmpty()) {
     QMessageBox::warning(
         this, tr("Client IP address or name is empty"),
         tr("Please fill in a client IP address or name."));
     return false;
   }
 
-#if defined(Q_OS_WIN)
-  // wrap in quotes so a malicious user can't start \Program.exe as admin.
-  app = QString("\"%1\"").arg(app);
-#endif
-
   if (appConfig().logToFile()) {
     appConfig().persistLogDir();
 
-    args << "--log" << appConfig().logFilenameCmd();
+    args << "--log" << appConfig().logFilename();
   }
 
   QString configFilename = this->configFilename();
   if (configFilename.isEmpty()) {
     return false;
   }
-#if defined(Q_OS_WIN)
-  // wrap in quotes in case username contains spaces.
-  configFilename = QString("\"%1\"").arg(configFilename);
-#endif
+
   args << "-c" << configFilename << "--address" << address();
   appendLogInfo("config file: " + configFilename);
 
@@ -870,10 +845,10 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
   return true;
 }
 
-void MainWindow::stopSynergy() {
+void MainWindow::stopCore() {
   appendLogDebug("stopping process");
 
-  m_ExpectedRunningState = kStopped;
+  m_ExpectedRunningState = RuningState::Stopped;
 
   if (appConfig().processMode() == ProcessMode::kService) {
     stopService();
@@ -881,7 +856,7 @@ void MainWindow::stopSynergy() {
     stopDesktop();
   }
 
-  setSynergyState(synergyDisconnected);
+  setCoreState(CoreState::Disconnected);
 
   // reset so that new connects cause auto-hide.
   m_AlreadyHidden = false;
@@ -894,87 +869,92 @@ void MainWindow::stopService() {
 
 void MainWindow::stopDesktop() {
   QMutexLocker locker(&m_StopDesktopMutex);
-  if (!synergyProcess()) {
+  if (!m_pCoreProcess) {
     return;
   }
 
   appendLogInfo("stopping synergy desktop process");
 
-  if (synergyProcess()->isOpen()) {
-    synergyProcess()->close();
+  if (m_pCoreProcess->isOpen()) {
+    m_pCoreProcess->close();
   }
 
-  delete synergyProcess();
-  setSynergyProcess(NULL);
+  m_pCoreProcess->reset();
 }
 
-void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus) {
+void MainWindow::coreProcessExit(int exitCode, QProcess::ExitStatus) {
   if (exitCode == 0) {
-    appendLogInfo(QString("process exited normally"));
+    appendLogInfo("process exited normally");
   } else {
     appendLogError(QString("process exited with error code: %1").arg(exitCode));
   }
 
-  if (m_ExpectedRunningState == kStarted) {
+  if (m_ExpectedRunningState == RuningState::Started) {
 
-    setSynergyState(synergyPendingRetry);
-    QTimer::singleShot(1000, this, SLOT(retryStart()));
-    appendLogInfo(QString("detected process not running, auto restarting"));
+    if (coreState() != CoreState::PendingRetry) {
+      QTimer::singleShot(kRetryDelay, this, SLOT(retryStart()));
+      appendLogInfo("detected process not running, auto restarting");
+    } else {
+      appendLogInfo("detected process not running, already auto restarting");
+    }
+
+    setCoreState(CoreState::PendingRetry);
   } else {
-    setSynergyState(synergyDisconnected);
+    setCoreState(CoreState::Disconnected);
   }
 }
 
-void MainWindow::setSynergyState(qSynergyState state) {
+void MainWindow::setCoreState(CoreState state) {
   // always assume connection is not secure when connection changes
   // to anything except connected. the only way the padlock shows is
   // when the correct TLS version string is detected.
-  if (state != synergyConnected) {
+  if (state != CoreState::Connected) {
     secureSocket(false);
   }
 
-  if (synergyState() == state)
+  if (coreState() == state)
     return;
 
-  if ((state == synergyConnected) || (state == synergyConnecting) ||
-      (state == synergyListening) || (state == synergyPendingRetry)) {
+  if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
+      (state == CoreState::Listening) || (state == CoreState::PendingRetry)) {
     disconnect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy,
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCore,
         SLOT(trigger()));
     connect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy,
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCore,
         SLOT(trigger()));
+
     m_pButtonToggleStart->setText(tr("&Stop"));
     m_pButtonApply->setEnabled(true);
-  } else if (state == synergyDisconnected) {
+
+    m_pActionStartCore->setEnabled(false);
+    m_pActionStopCore->setEnabled(true);
+
+  } else if (state == CoreState::Disconnected) {
     disconnect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy,
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCore,
         SLOT(trigger()));
     connect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy,
+        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCore,
         SLOT(trigger()));
+
     m_pButtonToggleStart->setText(tr("&Start"));
     m_pButtonApply->setEnabled(false);
-  }
 
-  bool running = false;
-  if (state == synergyConnected || state == synergyListening) {
-    running = true;
+    m_pActionStartCore->setEnabled(true);
+    m_pActionStopCore->setEnabled(false);
   }
-
-  m_pActionStartSynergy->setEnabled(!running);
-  m_pActionStopSynergy->setEnabled(running);
 
   switch (state) {
-  case synergyListening: {
-    if (synergyType() == synergyServer) {
+  case CoreState::Listening: {
+    if (coreMode() == CoreMode::Server) {
       setStatus(
           tr("Synergy is waiting for clients").arg(m_SecureSocketVersion));
     }
 
     break;
   }
-  case synergyConnected: {
+  case CoreState::Connected: {
     if (m_SecureSocket) {
       setStatus(
           tr("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
@@ -984,20 +964,20 @@ void MainWindow::setSynergyState(qSynergyState state) {
     }
     break;
   }
-  case synergyConnecting:
+  case CoreState::Connecting:
     setStatus(tr("Synergy is starting..."));
     break;
-  case synergyPendingRetry:
+  case CoreState::PendingRetry:
     setStatus(tr("There was an error, retrying..."));
     break;
-  case synergyDisconnected:
+  case CoreState::Disconnected:
     setStatus(tr("Synergy is not running"));
     break;
   }
 
   setIcon(state);
 
-  m_SynergyState = state;
+  m_CoreState = state;
 }
 
 void MainWindow::setVisible(bool visible) {
@@ -1057,8 +1037,8 @@ void MainWindow::setEdition(Edition edition) {
 
 #ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::InvalidLicense() {
-  stopSynergy();
-  m_AppConfig->activationHasRun(false);
+  stopCore();
+  m_AppConfig.activationHasRun(false);
 }
 
 void MainWindow::showLicenseNotice(const QString &notice) {
@@ -1074,7 +1054,15 @@ void MainWindow::showLicenseNotice(const QString &notice) {
 #endif
 
 void MainWindow::updateLocalFingerprint() {
-  if (m_AppConfig->getCryptoEnabled() && Fingerprint::local().fileExists() &&
+  bool fingerprintExists = false;
+  try {
+    fingerprintExists = Fingerprint::local().fileExists();
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
+    qFatal("Failed to check if fingerprint exists");
+  }
+
+  if (m_AppConfig.cryptoEnabled() && fingerprintExists &&
       m_pRadioGroupServer->isChecked()) {
     m_pLabelFingerprint->setVisible(true);
   } else {
@@ -1105,7 +1093,7 @@ void MainWindow::on_m_pActionAbout_triggered() {
 }
 
 void MainWindow::on_m_pActionHelp_triggered() {
-  QDesktopServices::openUrl(QUrl(HELP_URL));
+  QDesktopServices::openUrl(QUrl(kHelpUrl));
 }
 
 void MainWindow::updateWindowTitle() {
@@ -1123,12 +1111,12 @@ void MainWindow::updateWindowTitle() {
 void MainWindow::on_m_pActionSettings_triggered() {
   auto result = SettingsDialog(this, appConfig()).exec();
   if (result == QDialog::Accepted) {
-    enableServer(appConfig().getServerGroupChecked());
-    enableClient(appConfig().getClientGroupChecked());
-    auto state = synergyState();
-    if ((state == synergyConnected) || (state == synergyConnecting) ||
-        (state == synergyListening)) {
-      restartSynergy();
+    enableServer(appConfig().serverGroupChecked());
+    enableClient(appConfig().clientGroupChecked());
+    auto state = coreState();
+    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
+        (state == CoreState::Listening)) {
+      restartCore();
     }
   }
 }
@@ -1168,10 +1156,10 @@ void MainWindow::showConfigureServer(const QString &message) {
   auto result = dlg.exec();
 
   if (result == QDialog::Accepted) {
-    auto state = synergyState();
-    if ((state == synergyConnected) || (state == synergyConnecting) ||
-        (state == synergyListening)) {
-      restartSynergy();
+    auto state = coreState();
+    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
+        (state == CoreState::Listening)) {
+      restartCore();
     }
   }
 }
@@ -1188,7 +1176,7 @@ void MainWindow::on_m_pActivate_triggered() {
 
 void MainWindow::on_m_pButtonApply_clicked() {
   m_clientConnection.setCheckConnection(true);
-  restartSynergy();
+  restartCore();
 }
 
 #ifdef SYNERGY_ENABLE_LICENSING
@@ -1214,7 +1202,7 @@ int MainWindow::raiseActivationDialog() {
 void MainWindow::on_windowShown() {
 #ifdef SYNERGY_ENABLE_LICENSING
   auto serialKey = m_LicenseManager->serialKey();
-  if (!m_AppConfig->activationHasRun() && !serialKey.isValid()) {
+  if (!m_AppConfig.activationHasRun() && !serialKey.isValid()) {
     setEdition(Edition::kUnregistered);
     raiseActivationDialog();
   }
@@ -1232,7 +1220,7 @@ QString MainWindow::getProfileRootForArg() {
   dir.replace("/.synergy", "");
 #endif
 
-  return QString("\"%1\"").arg(dir);
+  return dir;
 }
 
 void MainWindow::secureSocket(bool secureSocket) {
@@ -1254,7 +1242,7 @@ void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
 }
 
 void MainWindow::windowStateChanged() {
-  if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+  if (windowState() == Qt::WindowMinimized && appConfig().minimizeToTray())
     hide();
 }
 
@@ -1267,11 +1255,11 @@ void MainWindow::updateScreenName() {
 }
 
 void MainWindow::enableServer(bool enable) {
-  m_AppConfig->setServerGroupChecked(enable);
+  m_AppConfig.setServerGroupChecked(enable);
   m_pRadioGroupServer->setChecked(enable);
 
   if (enable) {
-    if (m_AppConfig->getServerClientMode()) {
+    if (m_AppConfig.serverClientMode()) {
       m_pLabelClientIp->show();
       m_pLineEditClienIp->show();
       m_pButtonConnectToClient->show();
@@ -1296,11 +1284,11 @@ void MainWindow::enableServer(bool enable) {
 }
 
 void MainWindow::enableClient(bool enable) {
-  m_AppConfig->setClientGroupChecked(enable);
+  m_AppConfig.setClientGroupChecked(enable);
   m_pRadioGroupClient->setChecked(enable);
 
   if (enable) {
-    if (m_AppConfig->getClientHostMode()) {
+    if (m_AppConfig.clientHostMode()) {
       m_pLabelServerName->hide();
       m_pLineEditHostname->hide();
       m_pButtonConnect->hide();
@@ -1318,23 +1306,16 @@ void MainWindow::enableClient(bool enable) {
   }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
-#if defined(Q_OS_LINUX)
-  QCoreApplication::quit();
-#endif
-  QWidget::closeEvent(event);
-}
-
 void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
   enableServer(true);
   enableClient(false);
-  m_AppConfig->saveSettings();
+  m_AppConfig.saveSettings();
 }
 
 void MainWindow::on_m_pRadioGroupClient_clicked(bool) {
   enableClient(true);
   enableServer(false);
-  m_AppConfig->saveSettings();
+  m_AppConfig.saveSettings();
 }
 
 void MainWindow::on_m_pButtonConnect_clicked() { on_m_pButtonApply_clicked(); }

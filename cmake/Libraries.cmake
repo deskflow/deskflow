@@ -1,19 +1,3 @@
-# Synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2024 Symless Ltd.
-# Copyright (C) 2009-2012 Nick Bolton
-#
-# This package is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# found in the file LICENSE that should have accompanied this file.
-#
-# This package is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 macro(configure_libs)
 
   set(libs)
@@ -295,6 +279,9 @@ macro(configure_windows_libs)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/win/version.rc.in
                  ${CMAKE_BINARY_DIR}/src/version.rc @ONLY)
 
+  find_openssl_dir_win32(OPENSSL_PATH)
+  add_definitions(-DOPENSSL_PATH="${OPENSSL_PATH}")
+
 endmacro()
 
 macro(configure_openssl)
@@ -383,3 +370,36 @@ macro(configure_python)
     set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/bin/python")
   endif()
 endmacro()
+
+#
+# Find the OpenSSL directory on Windows based on the location of the first
+# `openssl` binary found.
+#
+function(find_openssl_dir_win32 result)
+
+  execute_process(
+    COMMAND where openssl
+    OUTPUT_VARIABLE OPENSSL_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  # It's possible that there are multiple OpenSSL installations on the system,
+  # which is the case on GitHub runners. For now we'll pick the first one, but
+  # that's probably not very robust. Maybe our choco config could install to a
+  # specific location?
+  string(REGEX REPLACE "\r?\n" ";" OPENSSL_PATH_LIST ${OPENSSL_PATH})
+  message(STATUS "Found OpenSSL binaries at: ${OPENSSL_PATH_LIST}")
+
+  list(GET OPENSSL_PATH_LIST 0 OPENSSL_FIRST_PATH)
+  message(STATUS "First OpenSSL binary: ${OPENSSL_FIRST_PATH}")
+
+  get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_FIRST_PATH} DIRECTORY)
+  message(STATUS "OpenSSL bin dir: ${OPENSSL_BIN_DIR}")
+
+  get_filename_component(OPENSSL_DIR ${OPENSSL_BIN_DIR} DIRECTORY)
+  message(STATUS "OpenSSL install root dir: ${OPENSSL_DIR}")
+
+  set(${result}
+      ${OPENSSL_DIR}
+      PARENT_SCOPE)
+
+endfunction()

@@ -3,6 +3,7 @@
 import argparse
 import lib.env as env
 import lib.file_utils as file_utils
+import lib.colors as colors
 
 
 def main():
@@ -34,7 +35,7 @@ def main():
         if not args.ignore_errors:
             raise e
         else:
-            print(f"Error: {e}")
+            print(f"{colors.ERROR_TEXT} {e}")
 
 
 if __name__ == "__main__":

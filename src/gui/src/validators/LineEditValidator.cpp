@@ -33,19 +33,27 @@ void LineEditValidator::addValidator(
 }
 
 QValidator::State LineEditValidator::validate(QString &input, int &pos) const {
-  if (m_pControl) {
-    showError("");
-    m_pControl->setStyleSheet("");
+  if (!m_pControl) {
+    qFatal("Validator control not set");
+    return Invalid;
+  }
 
-    for (const auto &validator : m_Validators) {
-      if (!validator->validate(input)) {
-        m_pControl->setStyleSheet("border: 1px solid #EC4C47");
-        showError(validator->getMessage());
-        break;
-      }
+  QString error;
+  for (const auto &validator : m_Validators) {
+    if (!validator->validate(input)) {
+      error = validator->getMessage();
+      break;
     }
   }
 
+  if (error.isEmpty()) {
+    m_pControl->setStyleSheet("");
+  } else {
+    showError(error);
+    m_pControl->setStyleSheet("border: 1px solid #EC4C47");
+  }
+
+  finished(error);
   return Acceptable;
 }
 

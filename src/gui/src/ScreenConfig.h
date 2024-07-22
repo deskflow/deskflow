@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -16,15 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(BASECONFIG_H)
-
-#define BASECONFIG_H
+#pragma once
 
 #include <QSettings>
 #include <QString>
 #include <QVariant>
 
-class BaseConfig {
+/// @brief Screen configuration base class
+class ScreenConfig {
 public:
   enum Modifier {
     DefaultMod = -1,
@@ -46,8 +45,8 @@ public:
   enum Fix { CapsLock, NumLock, ScrollLock, XTest, NumFixes };
 
 protected:
-  BaseConfig() {}
-  virtual ~BaseConfig() {}
+  explicit ScreenConfig() = default;
+  ~ScreenConfig() = default;
 
 protected:
   template <typename T1, typename T2>
@@ -101,5 +100,3 @@ private:
   static const char *m_FixNames[];
   static const char *m_SwitchCornerNames[];
 };
-
-#endif

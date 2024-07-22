@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,32 +17,31 @@
  */
 
 #include "QSynergyApplication.h"
+
 #include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
 
-QSynergyApplication *QSynergyApplication::s_Instance = NULL;
-
 QSynergyApplication::QSynergyApplication(int &argc, char **argv)
     : QApplication(argc, argv) {
-  s_Instance = this;
 
   QFontDatabase::addApplicationFont(":/res/fonts/Arial.ttf");
   QFont Arial("Arial");
   Arial.setPixelSize(13);
   Arial.setStyleHint(QFont::SansSerif);
   setFont(Arial);
+
+  // Setting the style to 'Fusion' seems to fix issues such as text being
+  // rendered as black on black. This may not be the style we want long-term
+  // but it does fix the style issues for now.
+  setStyle("Fusion");
 }
 
-QSynergyApplication::~QSynergyApplication() {}
-
-void QSynergyApplication::commitData(QSessionManager &) {
+void QSynergyApplication::commitData(const QSessionManager &) const {
   foreach (QWidget *widget, topLevelWidgets()) {
     MainWindow *mainWindow = qobject_cast<MainWindow *>(widget);
     if (mainWindow)
       mainWindow->saveSettings();
   }
 }
-
-QSynergyApplication *QSynergyApplication::getInstance() { return s_Instance; }

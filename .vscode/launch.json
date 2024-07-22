@@ -2,55 +2,68 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "gui lldb",
+      "name": "gui unix",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergy",
-      "preLaunchTask": "build-kill"
+      "preLaunchTask": "kill-build"
     },
     {
-      "name": "unittests lldb",
+      "name": "gui windows",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}/build/bin",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergy",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "unittests unix",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/unittests",
       "preLaunchTask": "build"
     },
     {
-      "name": "integtests lldb",
+      "name": "unittests windows",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}/build/bin",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/unittests",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "integtests unix",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/integtests",
       "preLaunchTask": "build"
     },
     {
-      "name": "win daemon attach",
+      "name": "integtests windows",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}/build/bin",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/integtests",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "daemon windows",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}/build/bin",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergyd",
+      "args": ["-f"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "daemon windows attach",
       "type": "cppvsdbg",
       "request": "attach",
       "processId": "${command:pickProcess}"
-    },
-    {
-      "name": "win daemon attach - lldb",
-      "type": "lldb",
-      "request": "attach",
-      "program": "${workspaceFolder}/build/bin/synergyd"
-    },
-    {
-      "name": "win daemon launch",
-      "type": "cppvsdbg",
-      "cwd": "${workspaceRoot}/build/bin",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergyd",
-      "args": ["-f"],
-      "internalConsoleOptions": "openOnSessionStart"
-    },
-    {
-      "name": "win daemon launch - rebuild",
-      "type": "cppvsdbg",
-      "cwd": "${workspaceRoot}/build/bin",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergyd",
-      "args": ["-f"],
-      "preLaunchTask": "build"
     }
   ]
 }

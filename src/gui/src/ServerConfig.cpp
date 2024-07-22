@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,9 @@
  */
 
 #include "ServerConfig.h"
+
 #include "AddClientDialog.h"
+#include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
 
@@ -25,6 +27,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QtCore>
+
+using synergy::gui::Config;
 
 static const struct {
   int x;
@@ -42,25 +46,20 @@ const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(
     int numColumns, int numRows, AppConfig *appConfig, MainWindow *mainWindow)
-    :
-
+    : m_pAppConfig(appConfig),
+      m_pMainWindow(mainWindow),
       m_Screens(numColumns),
       m_NumColumns(numColumns),
       m_NumRows(numRows),
-      m_pAppConfig(appConfig),
-      m_EnableDragAndDrop(false),
-      m_DisableLockToScreen(false),
-      m_ClipboardSharing(true),
-      m_ClipboardSharingSize(defaultClipboardSharingSize()),
-      m_pMainWindow(mainWindow) {
-  GUI::Config::ConfigWriter::make()->registerClass(this);
-  ServerConfig::loadSettings();
+      m_ClipboardSharingSize(defaultClipboardSharingSize()) {
+  appConfig->config().registerReceiever(this);
 }
 
 ServerConfig::~ServerConfig() {
   try {
     ServerConfig::saveSettings();
   } catch (const std::exception &e) {
+    qDebug() << e.what();
     m_pMainWindow->appendLogError(e.what());
   }
 }
@@ -165,8 +164,7 @@ void ServerConfig::saveSettings() {
   settings().endGroup();
 
   m_pAppConfig->saveSettings();
-  // Tell the config writer there are changes
-  GUI::Config::ConfigWriter::make()->markUnsaved();
+  m_pAppConfig->config().markUnsaved();
 }
 
 void ServerConfig::loadSettings() {
@@ -422,12 +420,12 @@ void ServerConfig::updateServerName() {
   }
 }
 
-const QString &ServerConfig::getConfigFile() const {
-  return m_pAppConfig->getConfigFile();
+const QString &ServerConfig::configFile() const {
+  return m_pAppConfig->configFile();
 }
 
-bool ServerConfig::getUseExternalConfig() const {
-  return m_pAppConfig->getUseExternalConfig();
+bool ServerConfig::useExternalConfig() const {
+  return m_pAppConfig->useExternalConfig();
 }
 
 bool ServerConfig::isFull() const {
@@ -543,25 +541,23 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 }
 
 void ServerConfig::setClientAddress(const QString &address) {
-  if (m_pAppConfig->getServerClientMode()) {
-    m_clientAddress = address;
+  if (m_pAppConfig->serverClientMode()) {
+    m_ClientAddress = address;
   }
 }
 
 QString ServerConfig::getClientAddress() const {
   QString clientAddress;
 
-  if (m_pAppConfig->getServerClientMode()) {
-    clientAddress = m_clientAddress.trimmed();
+  if (m_pAppConfig->serverClientMode()) {
+    clientAddress = m_ClientAddress.trimmed();
   }
 
   return clientAddress;
 }
 
 QSettings &ServerConfig::settings() {
-  using GUI::Config::ConfigWriter;
-
-  return ConfigWriter::make()->settings();
+  return *m_pAppConfig->config().currentSettings();
 }
 
 bool ServerConfig::isHotkeysAvailable() const {
