@@ -23,6 +23,9 @@
 #include "LicenseRegistry.h"
 #include <QSysInfo>
 
+const char *const kLicenseRegistryUrl =
+    "https://api2.prod.symless.com/license/register";
+
 LicenseRegistry::LicenseRegistry(AppConfig &config) : m_config(config) {
   connect(&m_timer, SIGNAL(timeout()), this, SLOT(registerLicense()));
 }
@@ -30,8 +33,7 @@ LicenseRegistry::LicenseRegistry(AppConfig &config) : m_config(config) {
 void LicenseRegistry::registerLicense() {
   m_timer.stop();
   if (m_config.edition() == Edition::kBusiness) {
-    const auto REGISTER_LICENSE_URL = m_config.getLicenseRegistryUrl();
-    const auto url = QUrl(REGISTER_LICENSE_URL);
+    const auto url = QUrl(kLicenseRegistryUrl);
 
     auto request = QNetworkRequest(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");

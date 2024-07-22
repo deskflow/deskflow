@@ -643,7 +643,7 @@ void MainWindow::startCore() {
   if (mode == ProcessMode::kDesktop) {
     connect(
         coreProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
-        SLOT(synergyFinished(int, QProcess::ExitStatus)));
+        SLOT(coreProcessExit(int, QProcess::ExitStatus)));
     connect(
         coreProcess(), SIGNAL(readyReadStandardOutput()), this,
         SLOT(logOutput()));
@@ -705,14 +705,9 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     return false;
   }
 
-#if defined(Q_OS_WIN)
-  // wrap in quotes so a malicious user can't start \Program.exe as admin.
-  app = QString("\"%1\"").arg(app);
-#endif
-
   if (appConfig().logToFile()) {
     appConfig().persistLogDir();
-    args << "--log" << appConfig().logFilenameCmd();
+    args << "--log" << appConfig().logFilename();
   }
 
   if (appConfig().getLanguageSync()) {
@@ -826,26 +821,16 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  // #if defined(Q_OS_WIN)
-  //   // wrap in quotes so a malicious user can't start \Program.exe as admin.
-  //   app = QString("\"%1\"").arg(app);
-  // #endif
-
   if (appConfig().logToFile()) {
     appConfig().persistLogDir();
 
-    args << "--log" << appConfig().logFilenameCmd();
+    args << "--log" << appConfig().logFilename();
   }
 
   QString configFilename = this->configFilename();
   if (configFilename.isEmpty()) {
     return false;
   }
-
-  // #if defined(Q_OS_WIN)
-  //   // wrap in quotes in case username contains spaces.
-  //   configFilename = QString("\"%1\"").arg(configFilename);
-  // #endif
 
   args << "-c" << configFilename << "--address" << address();
   appendLogInfo("config file: " + configFilename);
@@ -897,7 +882,7 @@ void MainWindow::stopDesktop() {
   setSynergyProcess(nullptr);
 }
 
-void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus) {
+void MainWindow::coreProcessExit(int exitCode, QProcess::ExitStatus) {
   if (exitCode == 0) {
     appendLogInfo("process exited normally");
   } else {
@@ -1235,7 +1220,7 @@ QString MainWindow::getProfileRootForArg() {
   dir.replace("/.synergy", "");
 #endif
 
-  return QString("\"%1\"").arg(dir);
+  return dir;
 }
 
 void MainWindow::secureSocket(bool secureSocket) {

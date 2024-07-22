@@ -141,7 +141,7 @@ protected slots:
   void on_m_pActionHelp_triggered();
   void on_m_pActionSettings_triggered();
   void on_m_pActivate_triggered();
-  void synergyFinished(int exitCode, QProcess::ExitStatus);
+  void coreProcessExit(int exitCode, QProcess::ExitStatus);
   void trayActivated(QSystemTrayIcon::ActivationReason reason);
   void stopCore();
   void logOutput();

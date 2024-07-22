@@ -59,6 +59,7 @@ public:
   /// @brief Underlying configuration reader/writer
   synergy::gui::Config &config();
 
+  void applyAppSettings() const;
   bool isWritable() const;
   bool isSystemScoped() const;
   const QString &screenName() const;
@@ -67,7 +68,6 @@ public:
   int logLevel() const;
   bool logToFile() const;
   const QString &logFilename() const;
-  const QString logFilenameCmd() const;
   QString logLevelText() const;
   ProcessMode processMode() const;
   bool wizardShouldRun() const;
@@ -102,7 +102,6 @@ public:
   void setInvertScrollDirection(bool b);
   bool getInvertScrollDirection() const;
   void setLicenseNextCheck(unsigned long long);
-  const QString &getLicenseRegistryUrl() const;
   unsigned long long getLicenseNextCheck() const;
   const QString &getGuid() const;
   void setLanguageSync(bool b);
@@ -289,13 +288,12 @@ private:
   bool m_CryptoEnabled = false;
   bool m_AutoHide = false;
   QString m_Serialkey = "";
-  QString m_lastVersion = "";
-  QString m_guid = "";
-  QString m_licenseRegistryUrl = "";
+  QString m_LastVersion = "";
+  QString m_Guid = "";
   unsigned long long m_licenseNextCheck = 0;
   int m_LastExpiringWarningTime = 0;
   bool m_ActivationHasRun = false;
-  bool m_MinimizeToTray = false;
+  bool m_MinimizeToTray = true;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;

@@ -21,18 +21,18 @@
 #include "Config.h"
 #include "SslCertificate.h"
 
+#include <QApplication>
 #include <QPushButton>
 #include <QtCore>
 #include <QtNetwork>
 #include <QtWidgets/QMessageBox>
+#include <qapplication.h>
 
 using synergy::gui::Config;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
 const int kWizardVersion = 8;
-const char *const kLicenseRegistryUrlStr =
-    "https://api2.prod.symless.com/license/register";
 
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
@@ -108,6 +108,10 @@ void AppConfig::load() {
   }
 }
 
+void AppConfig::applyAppSettings() const {
+  QApplication::setQuitOnLastWindowClosed(!m_MinimizeOnClose);
+}
+
 Config &AppConfig::config() { return m_Config; }
 
 const QString &AppConfig::screenName() const { return m_ScreenName; }
@@ -139,15 +143,6 @@ void AppConfig::persistLogDir() {
   if (!dir.exists()) {
     dir.mkpath(dir.path());
   }
-}
-
-const QString AppConfig::logFilenameCmd() const {
-  QString filename = m_LogFilename;
-#if defined(Q_OS_WIN)
-  // wrap in quotes in case username contains spaces.
-  filename = QString("\"%1\"").arg(filename);
-#endif
-  return filename;
 }
 
 QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
@@ -190,7 +185,7 @@ void AppConfig::loadSettings() {
   m_ActivateEmail = loadSetting(kActivateEmail, "").toString();
   m_CryptoEnabled = loadSetting(kCryptoEnabled, true).toBool();
   m_AutoHide = loadSetting(kAutoHide, false).toBool();
-  m_lastVersion = loadSetting(kLastVersion, "Unknown").toString();
+  m_LastVersion = loadSetting(kLastVersion, "Unknown").toString();
   m_LastExpiringWarningTime = loadSetting(kLastExpireWarningTime, 0).toInt();
   m_ActivationHasRun = loadSetting(kActivationHasRun, false).toBool();
   m_MinimizeToTray = loadSetting(kMinimizeToTray, false).toBool();
@@ -207,9 +202,7 @@ void AppConfig::loadSettings() {
   m_PreventSleep = loadSetting(kPreventSleep, false).toBool();
   m_LanguageSync = loadSetting(kLanguageSync, false).toBool();
   m_InvertScrollDirection = loadSetting(kInvertScrollDirection, false).toBool();
-  m_guid = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
-  m_licenseRegistryUrl =
-      loadCommonSetting(kLicenseRegistryUrl, kLicenseRegistryUrlStr).toString();
+  m_Guid = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
   m_licenseNextCheck = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
   m_ClientHostMode = loadSetting(kClientHostMode, true).toBool();
   m_ServerClientMode = loadSetting(kServerClientMode, true).toBool();
@@ -247,6 +240,8 @@ void AppConfig::loadSettings() {
   if (getCryptoEnabled()) {
     generateCertificate();
   }
+
+  applyAppSettings();
 }
 
 void AppConfig::saveSettings() {
@@ -254,8 +249,7 @@ void AppConfig::saveSettings() {
   setCommonSetting(Setting::kLoadSystemSettings, m_LoadFromSystemScope);
   setCommonSetting(Setting::kGroupClientCheck, m_ClientGroupChecked);
   setCommonSetting(Setting::kGroupServerCheck, m_ServerGroupChecked);
-  setCommonSetting(Setting::kGuid, m_guid);
-  setCommonSetting(Setting::kLicenseRegistryUrl, m_licenseRegistryUrl);
+  setCommonSetting(Setting::kGuid, m_Guid);
   setCommonSetting(Setting::kLicenseNextCheck, m_licenseNextCheck);
 
   if (isWritable()) {
@@ -271,7 +265,7 @@ void AppConfig::saveSettings() {
     setSetting(Setting::kCryptoEnabled, m_CryptoEnabled);
     setSetting(Setting::kAutoHide, m_AutoHide);
     setSetting(Setting::kSerialKey, m_Serialkey);
-    setSetting(Setting::kLastVersion, m_lastVersion);
+    setSetting(Setting::kLastVersion, m_LastVersion);
     setSetting(Setting::kLastExpireWarningTime, m_LastExpiringWarningTime);
     setSetting(Setting::kActivationHasRun, m_ActivationHasRun);
     setSetting(Setting::kMinimizeToTray, m_MinimizeToTray);
@@ -291,6 +285,7 @@ void AppConfig::saveSettings() {
   }
 
   setModified(false);
+  applyAppSettings();
 }
 
 #ifdef SYNERGY_ENABLE_LICENSING
@@ -302,10 +297,10 @@ AppConfig &AppConfig::activationHasRun(bool value) {
 }
 #endif
 
-QString AppConfig::lastVersion() const { return m_lastVersion; }
+QString AppConfig::lastVersion() const { return m_LastVersion; }
 
 void AppConfig::setLastVersion(const QString &version) {
-  setSettingModified(m_lastVersion, version);
+  setSettingModified(m_LastVersion, version);
 }
 
 void AppConfig::setScreenName(const QString &s) {
@@ -412,15 +407,11 @@ void AppConfig::setLicenseNextCheck(unsigned long long time) {
   setSettingModified(m_licenseNextCheck, time);
 }
 
-const QString &AppConfig::getLicenseRegistryUrl() const {
-  return m_licenseRegistryUrl;
-}
-
 unsigned long long AppConfig::getLicenseNextCheck() const {
   return m_licenseNextCheck;
 }
 
-const QString &AppConfig::getGuid() const { return m_guid; }
+const QString &AppConfig::getGuid() const { return m_Guid; }
 
 bool AppConfig::getLanguageSync() const { return m_LanguageSync; }
 

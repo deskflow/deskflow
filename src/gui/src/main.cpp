@@ -76,11 +76,6 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-#ifndef Q_OS_WIN
-  // TODO: make this a setting
-  QApplication::setQuitOnLastWindowClosed(false);
-#endif
-
   AppConfig appConfig;
   qRegisterMetaType<Edition>("Edition");
 
