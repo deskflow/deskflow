@@ -28,7 +28,7 @@ CommandProcess::CommandProcess(
 QString CommandProcess::run() {
   QProcess process;
   process.setReadChannel(QProcess::StandardOutput);
-  process.start(m_Command + "x", m_Arguments);
+  process.start(m_Command, m_Arguments);
   bool success = process.waitForStarted();
 
   QString output;
