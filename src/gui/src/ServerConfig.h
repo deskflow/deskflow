@@ -46,9 +46,9 @@ public:
 
   ServerConfig(const ServerConfig &src) = default;
   ServerConfig(ServerConfig &&) = default;
-  ~ServerConfig();
+  ~ServerConfig() override;
   ServerConfig &operator=(const ServerConfig &src) = default;
-  ServerConfig &operator=(ServerConfig &&) = delete;
+  ServerConfig &operator=(ServerConfig &&) = default;
 
   bool operator==(const ServerConfig &sc) const;
 

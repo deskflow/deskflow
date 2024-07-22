@@ -24,6 +24,7 @@
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QThread>
+#include <memory>
 
 #include "ui_MainWindowBase.h"
 
@@ -154,8 +155,6 @@ protected:
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
   AppConfig *appConfigPtr() { return &m_AppConfig; }
-  QProcess *coreProcess() { return m_pCoreProcess; }
-  void setSynergyProcess(QProcess *p) { m_pCoreProcess = p; }
   void initConnections();
   void createMenuBar();
   void createStatusBar();
@@ -215,7 +214,7 @@ private:
 #endif
 
   RuningState m_ExpectedRunningState = RuningState::Stopped;
-  QProcess *m_pCoreProcess = nullptr;
+  std::unique_ptr<QProcess> m_pCoreProcess;
   QMenuBar *m_pMenuBar = nullptr;
   QMenu *m_pMenuFile = nullptr;
   QMenu *m_pMenuEdit = nullptr;

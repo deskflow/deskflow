@@ -25,6 +25,7 @@
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "shared/EditionType.h"
+#include <memory>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -569,7 +570,7 @@ void MainWindow::startCore() {
   ProcessMode mode = appConfig().processMode();
 
   if (mode == ProcessMode::kDesktop) {
-    setSynergyProcess(new QProcess(this));
+    m_pCoreProcess = std::make_unique<QProcess>(this);
   } else {
     // tell client/server to talk to daemon through ipc.
     args << "--ipc";
@@ -642,13 +643,13 @@ void MainWindow::startCore() {
 
   if (mode == ProcessMode::kDesktop) {
     connect(
-        coreProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
+        m_pCoreProcess.get(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
         SLOT(coreProcessExit(int, QProcess::ExitStatus)));
     connect(
-        coreProcess(), SIGNAL(readyReadStandardOutput()), this,
+        m_pCoreProcess.get(), SIGNAL(readyReadStandardOutput()), this,
         SLOT(logOutput()));
     connect(
-        coreProcess(), SIGNAL(readyReadStandardError()), this,
+        m_pCoreProcess.get(), SIGNAL(readyReadStandardError()), this,
         SLOT(logError()));
   }
 
@@ -663,8 +664,8 @@ void MainWindow::startCore() {
     appendLogInfo("log file: " + appConfig().logFilename());
 
   if (mode == ProcessMode::kDesktop) {
-    coreProcess()->start(app, args);
-    if (!coreProcess()->waitForStarted()) {
+    m_pCoreProcess->start(app, args);
+    if (!m_pCoreProcess->waitForStarted()) {
       show();
       QMessageBox::warning(
           this, tr("Program can not be started"),
@@ -868,18 +869,17 @@ void MainWindow::stopService() {
 
 void MainWindow::stopDesktop() {
   QMutexLocker locker(&m_StopDesktopMutex);
-  if (!coreProcess()) {
+  if (!m_pCoreProcess) {
     return;
   }
 
   appendLogInfo("stopping synergy desktop process");
 
-  if (coreProcess()->isOpen()) {
-    coreProcess()->close();
+  if (m_pCoreProcess->isOpen()) {
+    m_pCoreProcess->close();
   }
 
-  delete coreProcess();
-  setSynergyProcess(nullptr);
+  m_pCoreProcess->reset();
 }
 
 void MainWindow::coreProcessExit(int exitCode, QProcess::ExitStatus) {
