@@ -420,12 +420,12 @@ void ServerConfig::updateServerName() {
   }
 }
 
-const QString &ServerConfig::getConfigFile() const {
-  return m_pAppConfig->getConfigFile();
+const QString &ServerConfig::configFile() const {
+  return m_pAppConfig->configFile();
 }
 
-bool ServerConfig::getUseExternalConfig() const {
-  return m_pAppConfig->getUseExternalConfig();
+bool ServerConfig::useExternalConfig() const {
+  return m_pAppConfig->useExternalConfig();
 }
 
 bool ServerConfig::isFull() const {
@@ -541,7 +541,7 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 }
 
 void ServerConfig::setClientAddress(const QString &address) {
-  if (m_pAppConfig->getServerClientMode()) {
+  if (m_pAppConfig->serverClientMode()) {
     m_clientAddress = address;
   }
 }
@@ -549,7 +549,7 @@ void ServerConfig::setClientAddress(const QString &address) {
 QString ServerConfig::getClientAddress() const {
   QString clientAddress;
 
-  if (m_pAppConfig->getServerClientMode()) {
+  if (m_pAppConfig->serverClientMode()) {
     clientAddress = m_clientAddress.trimmed();
   }
 

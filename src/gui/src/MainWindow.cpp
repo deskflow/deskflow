@@ -105,7 +105,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   initConnections();
 
   m_pWidgetUpdate->hide();
-  m_VersionChecker.setApp(appPath(appConfig.synergycName()));
+  m_VersionChecker.setApp(appPath(appConfig.coreClientName()));
 
   updateScreenName();
   connect(
@@ -206,7 +206,7 @@ void MainWindow::open() {
     setIcon(CoreState::Disconnected);
   });
 
-  if (appConfig().getAutoHide()) {
+  if (appConfig().autoHide()) {
     hide();
   } else {
     showNormal();
@@ -259,10 +259,10 @@ void MainWindow::createMenuBar() {
 }
 
 void MainWindow::loadSettings() {
-  enableServer(appConfig().getServerGroupChecked());
-  enableClient(appConfig().getClientGroupChecked());
+  enableServer(appConfig().serverGroupChecked());
+  enableClient(appConfig().clientGroupChecked());
 
-  m_pLineEditHostname->setText(appConfig().getServerHostname());
+  m_pLineEditHostname->setText(appConfig().serverHostname());
   m_pLineEditClienIp->setText(serverConfig().getClientAddress());
 }
 
@@ -599,9 +599,9 @@ void MainWindow::startCore() {
 #endif
 
 #if defined(Q_OS_WIN)
-  if (m_AppConfig.getCryptoEnabled()) {
+  if (m_AppConfig.cryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << m_AppConfig.getTlsCertPath();
+    args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
 
   try {
@@ -616,13 +616,13 @@ void MainWindow::startCore() {
   }
 
 #else
-  if (m_AppConfig.getCryptoEnabled()) {
+  if (m_AppConfig.cryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << m_AppConfig.getTlsCertPath();
+    args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
 #endif
 
-  if (m_AppConfig.getPreventSleep()) {
+  if (m_AppConfig.preventSleep()) {
     args << "--prevent-sleep";
   }
 
@@ -695,7 +695,7 @@ void MainWindow::retryStart() {
 }
 
 bool MainWindow::clientArgs(QStringList &args, QString &app) {
-  app = appPath(appConfig().synergycName());
+  app = appPath(appConfig().coreClientName());
 
   if (!QFile::exists(app)) {
     show();
@@ -710,15 +710,15 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     args << "--log" << appConfig().logFilename();
   }
 
-  if (appConfig().getLanguageSync()) {
+  if (appConfig().languageSync()) {
     args << "--sync-language";
   }
 
-  if (appConfig().getInvertScrollDirection()) {
+  if (appConfig().invertScrollDirection()) {
     args << "--invert-scroll";
   }
 
-  if (appConfig().getClientHostMode()) {
+  if (appConfig().clientHostMode()) {
     args << "--host";
     args << ":" + QString::number(appConfig().port());
   } else {
@@ -748,8 +748,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
 
 QString MainWindow::configFilename() {
   QString configFullPath;
-  if (appConfig().getUseExternalConfig()) {
-    configFullPath = appConfig().getConfigFile();
+  if (appConfig().useExternalConfig()) {
+    configFullPath = appConfig().configFile();
   } else {
     QStringList errors;
     for (auto path :
@@ -800,11 +800,12 @@ QString MainWindow::address() const {
 }
 
 QString MainWindow::appPath(const QString &name) {
-  return appConfig().synergyProgramDir() + name;
+  QDir dir(QCoreApplication::applicationDirPath());
+  return dir.filePath(name);
 }
 
 bool MainWindow::serverArgs(QStringList &args, QString &app) {
-  app = appPath(appConfig().synergysName());
+  app = appPath(appConfig().coreServerName());
 
   if (!QFile::exists(app)) {
     QMessageBox::warning(
@@ -813,8 +814,7 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  if (appConfig().getServerClientMode() &&
-      m_pLineEditClienIp->text().isEmpty()) {
+  if (appConfig().serverClientMode() && m_pLineEditClienIp->text().isEmpty()) {
     QMessageBox::warning(
         this, tr("Client IP address or name is empty"),
         tr("Please fill in a client IP address or name."));
@@ -1062,7 +1062,7 @@ void MainWindow::updateLocalFingerprint() {
     qFatal("Failed to check if fingerprint exists");
   }
 
-  if (m_AppConfig.getCryptoEnabled() && fingerprintExists &&
+  if (m_AppConfig.cryptoEnabled() && fingerprintExists &&
       m_pRadioGroupServer->isChecked()) {
     m_pLabelFingerprint->setVisible(true);
   } else {
@@ -1111,8 +1111,8 @@ void MainWindow::updateWindowTitle() {
 void MainWindow::on_m_pActionSettings_triggered() {
   auto result = SettingsDialog(this, appConfig()).exec();
   if (result == QDialog::Accepted) {
-    enableServer(appConfig().getServerGroupChecked());
-    enableClient(appConfig().getClientGroupChecked());
+    enableServer(appConfig().serverGroupChecked());
+    enableClient(appConfig().clientGroupChecked());
     auto state = coreState();
     if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
         (state == CoreState::Listening)) {
@@ -1242,7 +1242,7 @@ void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
 }
 
 void MainWindow::windowStateChanged() {
-  if (windowState() == Qt::WindowMinimized && appConfig().getMinimizeToTray())
+  if (windowState() == Qt::WindowMinimized && appConfig().minimizeToTray())
     hide();
 }
 
@@ -1259,7 +1259,7 @@ void MainWindow::enableServer(bool enable) {
   m_pRadioGroupServer->setChecked(enable);
 
   if (enable) {
-    if (m_AppConfig.getServerClientMode()) {
+    if (m_AppConfig.serverClientMode()) {
       m_pLabelClientIp->show();
       m_pLineEditClienIp->show();
       m_pButtonConnectToClient->show();
@@ -1288,7 +1288,7 @@ void MainWindow::enableClient(bool enable) {
   m_pRadioGroupClient->setChecked(enable);
 
   if (enable) {
-    if (m_AppConfig.getClientHostMode()) {
+    if (m_AppConfig.clientHostMode()) {
       m_pLabelServerName->hide();
       m_pLineEditHostname->hide();
       m_pButtonConnect->hide();

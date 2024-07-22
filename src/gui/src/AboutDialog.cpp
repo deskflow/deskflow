@@ -24,7 +24,7 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
       Ui::AboutDialogBase() {
   setupUi(this);
 
-  m_versionChecker.setApp(parent->appPath(config.synergycName()));
+  m_versionChecker.setApp(parent->appPath(config.coreClientName()));
 
   QString version = SYNERGY_VERSION;
 #ifdef GIT_SHA_SHORT
