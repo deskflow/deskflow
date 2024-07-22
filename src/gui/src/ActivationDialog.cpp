@@ -99,7 +99,7 @@ void ActivationDialog::accept() {
                                 .arg((daysLeft == 1) ? "" : "s")
                                 .arg((daysLeft == 1) ? "s" : "");
 
-    if (m_appConfig->isCryptoAvailable()) {
+    if (m_appConfig->cryptoAvailable()) {
       m_appConfig->generateCertificate();
       thanksMessage =
           thanksMessage.arg("If you're using SSL, "

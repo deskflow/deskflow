@@ -132,16 +132,15 @@ void SettingsDialog::loadFromConfig() {
   m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
   m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
   m_pLineEditLogFilename->setText(appConfig().logFilename());
-  m_pCheckBoxAutoHide->setChecked(appConfig().getAutoHide());
-  m_pCheckBoxPreventSleep->setChecked(appConfig().getPreventSleep());
-  m_pCheckBoxMinimizeToTray->setChecked(appConfig().getMinimizeToTray());
-  m_pLineEditCertificatePath->setText(appConfig().getTlsCertPath());
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
-  m_pCheckBoxLanguageSync->setChecked(m_appConfig.getLanguageSync());
-  m_pCheckBoxScrollDirection->setChecked(
-      m_appConfig.getInvertScrollDirection());
-  m_pCheckBoxClientHostMode->setChecked(m_appConfig.getClientHostMode());
-  m_pCheckBoxServerClientMode->setChecked(m_appConfig.getServerClientMode());
+  m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
+  m_pCheckBoxPreventSleep->setChecked(appConfig().preventSleep());
+  m_pCheckBoxMinimizeToTray->setChecked(appConfig().minimizeToTray());
+  m_pLineEditCertificatePath->setText(appConfig().tlsCertPath());
+  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.cryptoEnabled());
+  m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
+  m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
+  m_pCheckBoxClientHostMode->setChecked(m_appConfig.clientHostMode());
+  m_pCheckBoxServerClientMode->setChecked(m_appConfig.serverClientMode());
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.serviceEnabled());
   m_pCheckBoxMinimizeOnClose->setChecked(m_appConfig.minimizeOnClose());
 
@@ -156,16 +155,16 @@ void SettingsDialog::loadFromConfig() {
 
 void SettingsDialog::setupSeurity() {
   // If the tls file exists test its key length
-  if (QFile(appConfig().getTlsCertPath()).exists()) {
-    updateKeyLengthOnFile(appConfig().getTlsCertPath());
+  if (QFile(appConfig().tlsCertPath()).exists()) {
+    updateKeyLengthOnFile(appConfig().tlsCertPath());
   } else {
     m_pComboBoxKeyLength->setCurrentIndex(
-        m_pComboBoxKeyLength->findText(appConfig().getTlsKeyLength()));
+        m_pComboBoxKeyLength->findText(appConfig().tlsKeyLength()));
   }
 
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.getCryptoEnabled());
+  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.cryptoEnabled());
 
-  if (appConfig().getClientGroupChecked()) {
+  if (appConfig().clientGroupChecked()) {
     m_pLabelKeyLength->setEnabled(false);
     m_pComboBoxKeyLength->setEnabled(false);
     m_pLabelCertificate->setEnabled(false);
@@ -198,7 +197,7 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
 }
 
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
-  if (appConfig().isCryptoAvailable()) {
+  if (appConfig().cryptoAvailable()) {
     m_pLabelKeyLength->setEnabled(checked);
     m_pComboBoxKeyLength->setEnabled(checked);
     m_pLabelCertificate->setEnabled(checked);
@@ -240,7 +239,7 @@ void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
   if (!fileName.isEmpty()) {
     m_pLineEditCertificatePath->setText(fileName);
     // If the tls file exists test its key length and update
-    if (QFile(appConfig().getTlsCertPath()).exists()) {
+    if (QFile(appConfig().tlsCertPath()).exists()) {
       updateKeyLengthOnFile(fileName);
     }
   }
@@ -254,9 +253,9 @@ void SettingsDialog::on_m_pComboBoxKeyLength_currentIndexChanged(int index) {
 void SettingsDialog::updateTlsRegenerateButton() {
   // Disable the Regenerate cert button if the key length is different to saved
   auto keyChanged =
-      appConfig().getTlsKeyLength() != m_pComboBoxKeyLength->currentText();
+      appConfig().tlsKeyLength() != m_pComboBoxKeyLength->currentText();
   auto pathChanged =
-      appConfig().getTlsCertPath() != m_pLineEditCertificatePath->text();
+      appConfig().tlsCertPath() != m_pLineEditCertificatePath->text();
   // NOR the above bools, if any have changed regen should be disabled as it
   // will be done on save
   auto nor = !(keyChanged || pathChanged);
@@ -300,11 +299,9 @@ void SettingsDialog::enableControls(bool enable) {
   m_pCheckBoxScrollDirection->setEnabled(enable && isClientMode());
 
   m_pCheckBoxClientHostMode->setEnabled(
-      enable && isClientMode() &&
-      appConfig().getInitiateConnectionFromServer());
+      enable && isClientMode() && appConfig().initiateConnectionFromServer());
   m_pCheckBoxServerClientMode->setEnabled(
-      enable && !isClientMode() &&
-      appConfig().getInitiateConnectionFromServer());
+      enable && !isClientMode() && appConfig().initiateConnectionFromServer());
 
   m_pLabelLogPath->setEnabled(enable && m_pCheckBoxLogToFile->isChecked());
   m_pLineEditLogFilename->setEnabled(

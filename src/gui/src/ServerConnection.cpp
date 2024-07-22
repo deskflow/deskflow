@@ -30,7 +30,7 @@ ServerConnection::ServerConnection(MainWindow &parent) : m_parent(parent) {}
 void ServerConnection::update(const QString &line) {
   ServerMessage message(line);
 
-  if (!m_parent.appConfig().getUseExternalConfig() &&
+  if (!m_parent.appConfig().useExternalConfig() &&
       message.isNewClientMessage() &&
       !m_ignoredClients.contains(message.getClientName())) {
     addClient(message.getClientName());

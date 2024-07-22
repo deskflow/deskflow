@@ -22,6 +22,7 @@
 #include "Config.h"
 #include "CoreInterface.h"
 #include "ElevateMode.h"
+#include "LicenseManager.h"
 #include "shared/EditionType.h"
 
 #include <QObject>
@@ -29,14 +30,17 @@
 #include <QVariant>
 #include <mutex>
 
-const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
-
 class QSettings;
 class SettingsDialog;
 class LicenseRegister;
 class ServerConfig;
+class LicenseManager;
+class ActivationDialog;
+class LicenseRegistry;
 
 enum class ProcessMode { kService, kDesktop };
+
+const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -52,6 +56,9 @@ class AppConfig : public QObject, public synergy::gui::CommonConfig {
   friend class MainWindow;
   friend class SetupWizard;
   friend class ServerConfig;
+  friend class LicenseManager;
+  friend class ActivationDialog;
+  friend class LicenseRegistry;
 
 public:
   explicit AppConfig();
@@ -59,7 +66,17 @@ public:
   /// @brief Underlying configuration reader/writer
   synergy::gui::Config &config();
 
+  void saveSettings() override;
   void applyAppSettings() const;
+
+  /// @brief Generates TLS certificate
+  /// @param [in] bool forceGeneration Generate certificate even if it's exists.
+  void generateCertificate(bool forceGeneration = false) const;
+
+  /**
+   * Getters
+   */
+
   bool isWritable() const;
   bool isSystemScoped() const;
   const QString &screenName() const;
@@ -72,106 +89,49 @@ public:
   ProcessMode processMode() const;
   bool wizardShouldRun() const;
   bool startedBefore() const;
-
-#ifdef SYNERGY_ENABLE_LICENSING
-  void setEdition(Edition);
-  Edition edition() const;
-  void setSerialKey(const QString &serial);
-  void clearSerialKey();
-  QString serialKey() const;
-  int lastExpiringWarningTime() const;
-  void setLastExpiringWarningTime(int t);
-  bool activationHasRun() const;
-  AppConfig &activationHasRun(bool value);
-#endif
-
-  QString synergysName() const;
-  QString synergycName() const;
-  QString synergyProgramDir() const;
-  QString synergyLogDir() const;
-
-  void persistLogDir();
+  QString coreServerName() const;
+  QString coreClientName() const;
+  QString logDir() const;
+  void persistLogDir() const;
   ElevateMode elevateMode();
-
-  bool isCryptoAvailable() const;
-  void setCryptoEnabled(bool e);
-  bool getCryptoEnabled() const;
-
-  void setAutoHide(bool b);
-  bool getAutoHide();
-  void setInvertScrollDirection(bool b);
-  bool getInvertScrollDirection() const;
-  void setLicenseNextCheck(unsigned long long);
-  unsigned long long getLicenseNextCheck() const;
-  const QString &getGuid() const;
-  void setLanguageSync(bool b);
-  bool getLanguageSync() const;
-  void setPreventSleep(bool b);
-  bool getPreventSleep() const;
-  bool getClientHostMode() const;
-  bool getServerClientMode() const;
-  bool getInitiateConnectionFromServer() const;
-
-  /// @brief Sets the user preference to load from SystemScope.
-  /// @param [in] value
-  ///             True - This will set the variable and load the global scope
-  ///             settings. False - This will set the variable and load the user
-  ///             scope settings.
-  void setLoadFromSystemScope(bool value);
-
-  bool getServerGroupChecked() const;
-  bool getUseExternalConfig() const;
-  const QString &getConfigFile() const;
-  bool getUseInternalConfig() const;
-  bool getClientGroupChecked() const;
-  QString getServerHostname() const;
+  bool cryptoAvailable() const;
+  bool cryptoEnabled() const;
+  bool autoHide();
+  bool invertScrollDirection() const;
+  unsigned long long licenseNextCheck() const;
+  const QString &guid() const;
+  bool languageSync() const;
+  bool preventSleep() const;
+  bool clientHostMode() const;
+  bool serverClientMode() const;
+  bool initiateConnectionFromServer() const;
+  bool serverGroupChecked() const;
+  bool useExternalConfig() const;
+  const QString &configFile() const;
+  bool useInternalConfig() const;
+  bool clientGroupChecked() const;
+  QString serverHostname() const;
+  QString lastVersion() const;
+  bool serviceEnabled() const;
+  bool minimizeToTray();
+  bool minimizeOnClose() const;
 
   /// @brief Gets the current TLS certificate path
   /// @return QString The path to the cert
-  QString getTlsCertPath() const;
+  QString tlsCertPath() const;
 
   /// @brief Get the key length to be used for the private key of a TLS cert
   /// @return QString The key length in bits
-  QString getTlsKeyLength() const;
+  QString tlsKeyLength() const;
 
-  void setServerGroupChecked(bool);
-  void setUseExternalConfig(bool);
-  void setConfigFile(const QString &);
-  void setUseInternalConfig(bool);
-  void setClientGroupChecked(bool);
-  void setServerHostname(const QString &);
-  void setClientHostMode(bool newValue);
-  void setServerClientMode(bool newValue);
-
-  /// @brief Set the path to the TLS/SSL certificate file that will be used
-  /// @param [in] path The path to the Certificate
-  void setTlsCertPath(const QString &path);
-
-  /// @brief Sets the key length of the private key to use in a TLS connection
-  /// @param [in] QString length The key length eg: 1024, 2048, 4096
-  void setTlsKeyLength(const QString &length);
-
-  QString lastVersion() const;
-
-  void setMinimizeToTray(bool b);
-  bool getMinimizeToTray();
-
-  void saveSettings();
-  void setLastVersion(const QString &version);
-
-  /// @brief Generates TLS certificate
-  /// @param [in] bool forceGeneration Generate certificate even if it's exists.
-  void generateCertificate(bool forceGeneration = false) const;
-
-  void setServiceEnabled(bool enabled);
-  bool serviceEnabled() const;
-
-  void setMinimizeOnClose(bool minimize);
-  bool minimizeOnClose() const;
+#ifdef SYNERGY_ENABLE_LICENSING
+  Edition edition() const;
+  QString serialKey() const;
+  int lastExpiringWarningTime() const;
+  bool activationHasRun() const;
+#endif
 
 protected:
-  /// @brief The enumeration to easily access the names of the setting inside
-  /// m_SynergySettingsName
   enum class Setting {
     kScreenName,
     kPort,
@@ -214,6 +174,15 @@ protected:
     kMinimizeOnClose
   };
 
+  static QString settingName(AppConfig::Setting name);
+
+  /// @brief Loads the setting from the current scope
+  void loadSettings() override;
+
+  /**
+   * Setters
+   */
+
   void setScreenName(const QString &s);
   void setPort(int i);
   void setNetworkInterface(const QString &s);
@@ -223,12 +192,44 @@ protected:
   void setWizardHasRun();
   void setStartedBefore(bool b);
   void setElevateMode(ElevateMode em);
+  void setCryptoEnabled(bool e);
+  void setEdition(Edition);
+  void setSerialKey(const QString &serial);
+  void clearSerialKey();
+  void setLastExpiringWarningTime(int t);
+  void setAutoHide(bool b);
+  void setInvertScrollDirection(bool b);
+  void setLicenseNextCheck(unsigned long long);
+  void setLanguageSync(bool b);
+  void setPreventSleep(bool b);
+  void setServerGroupChecked(bool);
+  void setUseExternalConfig(bool);
+  void setConfigFile(const QString &);
+  void setUseInternalConfig(bool);
+  void setClientGroupChecked(bool);
+  void setServerHostname(const QString &);
+  void setClientHostMode(bool newValue);
+  void setServerClientMode(bool newValue);
+  AppConfig &activationHasRun(bool value);
+  void setMinimizeToTray(bool b);
+  void setLastVersion(const QString &version);
+  void setServiceEnabled(bool enabled);
+  void setMinimizeOnClose(bool minimize);
 
-  /// @brief loads the setting from the current scope
-  /// @param ignoreSystem should the load feature ignore the globalScope setting
-  /// that was saved
-  void loadSettings();
-  static QString settingName(AppConfig::Setting name);
+  /// @brief Sets the user preference to load from SystemScope.
+  /// @param [in] value
+  ///             True - This will set the variable and load the global scope
+  ///             settings. False - This will set the variable and load the user
+  ///             scope settings.
+  void setLoadFromSystemScope(bool value);
+
+  /// @brief Set the path to the TLS/SSL certificate file that will be used
+  /// @param [in] path The path to the Certificate
+  void setTlsCertPath(const QString &path);
+
+  /// @brief Sets the key length of the private key to use in a TLS connection
+  /// @param [in] QString length The key length eg: 1024, 2048, 4096
+  void setTlsKeyLength(const QString &length);
 
 private:
   /// @brief Loads config from the underlying reader/writer
@@ -328,15 +329,15 @@ private:
   ///         setting is being switched from system to user.
   std::mutex m_settings_lock;
 
-  static const char m_SynergysName[];
-  static const char m_SynergycName[];
-  static const char m_SynergyLogDir[];
+  static const char m_CoreServerName[];
+  static const char m_CoreClientName[];
+  static const char m_LogDir[];
 
   /// @brief Contains the string values of the settings names that will be saved
-  static const char *const m_SynergySettingsName[];
+  static const char *const m_SettingsName[];
 
   /// @brief Contains the name of the default configuration filename
-  static const char m_SynergyConfigName[];
+  static const char m_ConfigFilename[];
 
 signals:
   void sslToggled() const;

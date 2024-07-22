@@ -35,9 +35,11 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 public:
   SettingsDialog(QWidget *parent, AppConfig &config);
   static QString browseForSynergyc(
-      QWidget *parent, const QString &programDir, const QString &synergycName);
+      QWidget *parent, const QString &programDir,
+      const QString &coreClientName);
   static QString browseForSynergys(
-      QWidget *parent, const QString &programDir, const QString &synergysName);
+      QWidget *parent, const QString &programDir,
+      const QString &coreServerName);
 
 protected:
   void accept() override;

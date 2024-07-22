@@ -81,8 +81,8 @@ public:
   int autoAddScreen(const QString name);
   const QString &getServerName() const;
   void updateServerName();
-  const QString &getConfigFile() const;
-  bool getUseExternalConfig() const;
+  const QString &configFile() const;
+  bool useExternalConfig() const;
   bool isFull() const;
   bool isScreenExists(const QString &screenName) const;
   void addClient(const QString &clientName);

@@ -34,8 +34,8 @@ ServerConfigDialog::ServerConfigDialog(
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ServerConfigDialogBase(),
       m_OriginalServerConfig(config),
-      m_OriginalServerConfigIsExternal(config.getUseExternalConfig()),
-      m_OriginalServerConfigUsesExternalFile(config.getConfigFile()),
+      m_OriginalServerConfigIsExternal(config.useExternalConfig()),
+      m_OriginalServerConfigUsesExternalFile(config.configFile()),
       m_ServerConfig(config),
       m_ScreenSetupModel(
           serverConfig().screens(), serverConfig().numColumns(),
@@ -44,9 +44,8 @@ ServerConfigDialog::ServerConfigDialog(
       m_appConfig(appConfig) {
   setupUi(this);
 
-  m_pEditConfigFile->setText(serverConfig().getConfigFile());
-  m_pCheckBoxUseExternalConfig->setChecked(
-      serverConfig().getUseExternalConfig());
+  m_pEditConfigFile->setText(serverConfig().configFile());
+  m_pCheckBoxUseExternalConfig->setChecked(serverConfig().useExternalConfig());
   m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
   m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
 
@@ -460,9 +459,8 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent) {
 
 void ServerConfigDialog::onChange() {
   bool isAppConfigDataEqual =
-      m_OriginalServerConfigIsExternal ==
-          serverConfig().getUseExternalConfig() &&
-      m_OriginalServerConfigUsesExternalFile == serverConfig().getConfigFile();
+      m_OriginalServerConfigIsExternal == serverConfig().useExternalConfig() &&
+      m_OriginalServerConfigUsesExternalFile == serverConfig().configFile();
   m_pButtonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(
           !isAppConfigDataEqual || !(m_OriginalServerConfig == m_ServerConfig));
