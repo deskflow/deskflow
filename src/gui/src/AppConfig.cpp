@@ -31,6 +31,8 @@ using synergy::gui::Config;
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
 const int kWizardVersion = 8;
+const char *const kLicenseRegistryUrlStr =
+    "https://api2.prod.symless.com/license/register";
 
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
@@ -81,7 +83,8 @@ const char *const AppConfig::m_SynergySettingsName[] = {
     "licenseNextCheck",
     "initiateConnectionFromServer",
     "clientHostMode",
-    "serverClientMode"};
+    "serverClientMode",
+    "serviceEnabled"};
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
@@ -158,82 +161,73 @@ bool AppConfig::wizardShouldRun() const {
 bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 void AppConfig::loadSettings() {
+  using enum AppConfig::Setting;
+
   m_ScreenName =
-      loadSetting(Setting::kScreenName, QHostInfo::localHostName()).toString();
+      loadSetting(kScreenName, QHostInfo::localHostName()).toString();
   if (m_ScreenName.isEmpty()) {
     m_ScreenName = QHostInfo::localHostName();
   }
 
-  m_Port = loadSetting(Setting::kPort, 24800).toInt();
-  m_Interface = loadSetting(Setting::kInterfaceSetting).toString();
-  m_LogLevel = loadSetting(Setting::kLogLevel, 0).toInt();
-  m_LogToFile = loadSetting(Setting::kLogToFile, false).toBool();
+  m_Port = loadSetting(kPort, 24800).toInt();
+  m_Interface = loadSetting(kInterfaceSetting).toString();
+  m_LogLevel = loadSetting(kLogLevel, 0).toInt();
+  m_LogToFile = loadSetting(kLogToFile, false).toBool();
   m_LogFilename =
-      loadSetting(Setting::kLogFilename, synergyLogDir() + "synergy.log")
-          .toString();
-  m_WizardLastRun = loadCommonSetting(Setting::kWizardLastRun, 0).toInt();
-  m_StartedBefore = loadSetting(Setting::kStartedBefore, false).toBool();
+      loadSetting(kLogFilename, synergyLogDir() + "synergy.log").toString();
+  m_WizardLastRun = loadCommonSetting(kWizardLastRun, 0).toInt();
+  m_StartedBefore = loadSetting(kStartedBefore, false).toBool();
 
-  QVariant elevateMode = loadSetting(Setting::kElevateModeEnum);
+  QVariant elevateMode = loadSetting(kElevateModeEnum);
   if (!elevateMode.isValid()) {
     elevateMode = loadSetting(
-        Setting::kElevateModeSetting,
-        QVariant(static_cast<int>(kDefaultElevateMode)));
+        kElevateModeSetting, QVariant(static_cast<int>(kDefaultElevateMode)));
   }
   m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 
-  m_ActivateEmail = loadSetting(Setting::kActivateEmail, "").toString();
-  m_CryptoEnabled = loadSetting(Setting::kCryptoEnabled, true).toBool();
-  m_AutoHide = loadSetting(Setting::kAutoHide, false).toBool();
-  m_lastVersion = loadSetting(Setting::kLastVersion, "Unknown").toString();
-  m_LastExpiringWarningTime =
-      loadSetting(Setting::kLastExpireWarningTime, 0).toInt();
-  m_ActivationHasRun = loadSetting(Setting::kActivationHasRun, false).toBool();
-  m_MinimizeToTray = loadSetting(Setting::kMinimizeToTray, false).toBool();
+  m_ActivateEmail = loadSetting(kActivateEmail, "").toString();
+  m_CryptoEnabled = loadSetting(kCryptoEnabled, true).toBool();
+  m_AutoHide = loadSetting(kAutoHide, false).toBool();
+  m_lastVersion = loadSetting(kLastVersion, "Unknown").toString();
+  m_LastExpiringWarningTime = loadSetting(kLastExpireWarningTime, 0).toInt();
+  m_ActivationHasRun = loadSetting(kActivationHasRun, false).toBool();
+  m_MinimizeToTray = loadSetting(kMinimizeToTray, false).toBool();
   m_LoadFromSystemScope =
-      loadCommonSetting(Setting::kLoadSystemSettings, false).toBool();
-  m_ServerGroupChecked =
-      loadSetting(Setting::kGroupServerCheck, false).toBool();
-  m_UseExternalConfig =
-      loadSetting(Setting::kUseExternalConfig, false).toBool();
+      loadCommonSetting(kLoadSystemSettings, false).toBool();
+  m_ServerGroupChecked = loadSetting(kGroupServerCheck, false).toBool();
+  m_UseExternalConfig = loadSetting(kUseExternalConfig, false).toBool();
   m_ConfigFile =
-      loadSetting(
-          Setting::kConfigFile, QDir::homePath() + "/" + m_SynergyConfigName)
+      loadSetting(kConfigFile, QDir::homePath() + "/" + m_SynergyConfigName)
           .toString();
-  m_UseInternalConfig =
-      loadSetting(Setting::kUseInternalConfig, false).toBool();
-  m_ClientGroupChecked =
-      loadSetting(Setting::kGroupClientCheck, false).toBool();
-  m_ServerHostname = loadSetting(Setting::kServerHostname).toString();
-  m_PreventSleep = loadSetting(Setting::kPreventSleep, false).toBool();
-  m_LanguageSync = loadSetting(Setting::kLanguageSync, false).toBool();
-  m_InvertScrollDirection =
-      loadSetting(Setting::kInvertScrollDirection, false).toBool();
-  m_guid = loadCommonSetting(Setting::kGuid, QUuid::createUuid()).toString();
-  m_licenseRegistryUrl = loadCommonSetting(
-                             Setting::kLicenseRegistryUrl,
-                             "https://api2.prod.symless.com/license/register")
-                             .toString();
-  m_licenseNextCheck =
-      loadCommonSetting(Setting::kLicenseNextCheck, 0).toULongLong();
-  m_ClientHostMode = loadSetting(Setting::kClientHostMode, true).toBool();
-  m_ServerClientMode = loadSetting(Setting::kServerClientMode, true).toBool();
+  m_UseInternalConfig = loadSetting(kUseInternalConfig, false).toBool();
+  m_ClientGroupChecked = loadSetting(kGroupClientCheck, false).toBool();
+  m_ServerHostname = loadSetting(kServerHostname).toString();
+  m_PreventSleep = loadSetting(kPreventSleep, false).toBool();
+  m_LanguageSync = loadSetting(kLanguageSync, false).toBool();
+  m_InvertScrollDirection = loadSetting(kInvertScrollDirection, false).toBool();
+  m_guid = loadCommonSetting(kGuid, QUuid::createUuid()).toString();
+  m_licenseRegistryUrl =
+      loadCommonSetting(kLicenseRegistryUrl, kLicenseRegistryUrlStr).toString();
+  m_licenseNextCheck = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
+  m_ClientHostMode = loadSetting(kClientHostMode, true).toBool();
+  m_ServerClientMode = loadSetting(kServerClientMode, true).toBool();
   m_InitiateConnectionFromServer =
-      loadSetting(Setting::kInitiateConnectionFromServer, false).toBool();
+      loadSetting(kInitiateConnectionFromServer, false).toBool();
 
   // only change the serial key if the settings being loaded contains a key
   bool updateSerial = m_Config.hasSetting(
-      settingName(Setting::kLoadSystemSettings), Config::Scope::Current);
+      settingName(kLoadSystemSettings), Config::Scope::Current);
   // if the setting exists and is not empty
-  updateSerial =
-      updateSerial &&
-      !loadSetting(Setting::kSerialKey, "").toString().trimmed().isEmpty();
+  updateSerial = updateSerial &&
+                 !loadSetting(kSerialKey, "").toString().trimmed().isEmpty();
 
   if (updateSerial) {
-    m_Serialkey = loadSetting(Setting::kSerialKey, "").toString().trimmed();
+    m_Serialkey = loadSetting(kSerialKey, "").toString().trimmed();
     m_Edition = static_cast<Edition>(
-        loadSetting(Setting::kEditionSetting, kUnregistered).toInt());
+        loadSetting(kEditionSetting, kUnregistered).toInt());
   }
+
+  m_ServiceEnabled = loadSetting(kServiceEnabled, m_ServiceEnabled).toBool();
 
   try {
     // Set the default path of the TLS certificate file in the users DIR
@@ -241,12 +235,10 @@ void AppConfig::loadSettings() {
         QString("%1/%2/%3")
             .arg(m_CoreInterface.getProfileDir(), "SSL", "Synergy.pem");
 
-    m_TLSCertificatePath =
-        loadSetting(Setting::kTLSCertPath, certificateFilename).toString();
-    m_TLSKeyLength = loadSetting(Setting::kTLSKeyLength, "2048").toString();
+    m_TlsCertPath = loadSetting(kTlsCertPath, certificateFilename).toString();
+    m_TlsKeyLength = loadSetting(kTlsKeyLength, "2048").toString();
   } catch (...) {
-    // TODO: show error message box
-    qWarning() << "Failed to get profile dir, unable to configure TLS";
+    qFatal("Failed to get profile dir, unable to configure TLS");
   }
 
   if (getCryptoEnabled()) {
@@ -271,9 +263,6 @@ void AppConfig::saveSettings() {
     setSetting(Setting::kLogToFile, m_LogToFile);
     setSetting(Setting::kLogFilename, m_LogFilename);
     setSetting(Setting::kStartedBefore, m_StartedBefore);
-    // Refer to enum ElevateMode declaration for insight in to why this
-    // flag is mapped this way
-    setSetting(Setting::kElevateModeSetting, m_ElevateMode == ElevateAlways);
     setSetting(Setting::kElevateModeEnum, static_cast<int>(m_ElevateMode));
     setSetting(Setting::kEditionSetting, m_Edition);
     setSetting(Setting::kCryptoEnabled, m_CryptoEnabled);
@@ -292,6 +281,10 @@ void AppConfig::saveSettings() {
     setSetting(Setting::kInvertScrollDirection, m_InvertScrollDirection);
     setSetting(Setting::kClientHostMode, m_ClientHostMode);
     setSetting(Setting::kServerClientMode, m_ServerClientMode);
+    setSetting(Setting::kServiceEnabled, m_ServiceEnabled);
+
+    // See enum ElevateMode declaration to understand why this setting is bool
+    setSetting(Setting::kElevateModeSetting, m_ElevateMode == ElevateAlways);
   }
 
   setModified(false);
@@ -580,17 +573,15 @@ void AppConfig::setSettingModified(T &variable, const T &newValue) {
   }
 }
 
-void AppConfig::setTLSCertPath(const QString &path) {
-  m_TLSCertificatePath = path;
-}
+void AppConfig::setTlsCertPath(const QString &path) { m_TlsCertPath = path; }
 
-QString AppConfig::getTLSCertPath() const { return m_TLSCertificatePath; }
+QString AppConfig::getTlsCertPath() const { return m_TlsCertPath; }
 
-QString AppConfig::getTLSKeyLength() const { return m_TLSKeyLength; }
+QString AppConfig::getTlsKeyLength() const { return m_TlsKeyLength; }
 
-void AppConfig::setTLSKeyLength(const QString &length) {
-  if (m_TLSKeyLength != length) {
-    m_TLSKeyLength = length;
+void AppConfig::setTlsKeyLength(const QString &length) {
+  if (m_TlsKeyLength != length) {
+    m_TlsKeyLength = length;
     generateCertificate(true);
   }
 }
@@ -599,10 +590,21 @@ void AppConfig::generateCertificate(bool forceGeneration) const {
   try {
     SslCertificate sslCertificate;
     sslCertificate.generateCertificate(
-        getTLSCertPath(), getTLSKeyLength(), forceGeneration);
+        getTlsCertPath(), getTlsKeyLength(), forceGeneration);
     emit sslToggled();
   } catch (...) {
-    // TODO: show error message box
-    qWarning() << "Failed to configure TLS";
+    qFatal("Failed to configure TLS");
   }
 }
+
+void AppConfig::setServiceEnabled(bool enabled) {
+  setSettingModified(m_ServiceEnabled, enabled);
+}
+
+bool AppConfig::serviceEnabled() const { return m_ServiceEnabled; }
+
+void AppConfig::setMinimizeOnClose(bool minimize) {
+  setSettingModified(m_MinimizeToTray, minimize);
+}
+
+bool AppConfig::minimizeOnClose() const { return m_MinimizeToTray; }

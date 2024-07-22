@@ -19,6 +19,7 @@
 #define LINEEDITVALIDATOR_H
 
 #include <memory>
+#include <qtmetamacros.h>
 #include <vector>
 
 #include <QtWidgets/QLabel>
@@ -30,11 +31,16 @@
 namespace validators {
 
 class LineEditValidator : public QValidator {
+  Q_OBJECT
+
 public:
   explicit LineEditValidator(
       QLineEdit *parent = nullptr, QLabel *errors = nullptr);
   QValidator::State validate(QString &input, int &pos) const override;
   void addValidator(std::unique_ptr<IStringValidator> validator);
+
+signals:
+  void finished(const QString &message) const;
 
 private:
   QLabel *m_pErrors = nullptr;

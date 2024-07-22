@@ -22,21 +22,74 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
+#include <qdir.h>
+#include <qlogging.h>
 
-static const char kCertificateKeyLength[] =
-    "rsa:"; // RSA Bit length (e.g. 1024/2048/4096)
-static const char kCertificateHashAlgorithm[] =
-    "-sha256"; // fingerprint hashing algorithm
-static const char kCertificateLifetime[] = "365";
-static const char kCertificateSubjectInfo[] = "/CN=Synergy";
-static const char kCertificateFilename[] = "Synergy.pem";
-static const char kSslDir[] = "SSL";
-static const char kUnixOpenSslCommand[] = "openssl";
+// RSA Bit length (e.g. 1024/2048/4096)
+static const char *const kCertificateKeyLength = "rsa:";
+
+// fingerprint hashing algorithm
+static const char *const kCertificateHashAlgorithm = "-sha256";
+
+static const char *const kCertificateLifetime = "365";
+static const char *const kCertificateSubjectInfo = "/CN=Synergy";
+static const char *const kCertificateFilename = "Synergy.pem";
+static const char *const kSslDir = "SSL";
 
 #if defined(Q_OS_WIN)
-static const char kWinOpenSslBinary[] = "OpenSSL\\openssl.exe";
-static const char kConfigFile[] = "OpenSSL\\synergy.conf";
+static const char *const kWinOpenSslDir = "OpenSSL";
+static const char *const kWinOpenSslBinary = "openssl.exe";
+static const char *const kConfigFile = "synergy.conf";
+#elif defined(Q_OS_UNIX)
+static const char *const kUnixOpenSslCommand = "openssl";
 #endif
+
+namespace synergy::gui {
+#if defined(Q_OS_WIN)
+
+QString openSslWindowsDir() {
+
+  auto appDir = QDir(QCoreApplication::applicationDirPath());
+  auto openSslDir = QDir(appDir.filePath(kWinOpenSslDir));
+
+  // in production, openssl is deployed with the app.
+  // in development, we can use the openssl path available at compile-time.
+  if (!openSslDir.exists()) {
+    openSslDir = QDir(OPENSSL_PATH);
+  }
+
+  // if the path still isn't found, something is seriously wrong.
+  if (!openSslDir.exists()) {
+    qFatal() << "OpenSSL dir not found: " << openSslDir;
+  }
+
+  return QDir::cleanPath(openSslDir.absolutePath());
+}
+
+QString openSslWindowsBinary() {
+  auto dir = QDir(openSslWindowsDir());
+  auto path = dir.filePath(kWinOpenSslBinary);
+
+  // when installed, there is no openssl bin dir; it's installed at the base.
+  // in development, we use the standard dir structure for openssl (bin dir).
+  if (!QFile::exists(path)) {
+    auto binDir = QDir(dir.filePath("bin"));
+    path = binDir.filePath(kWinOpenSslBinary);
+  }
+
+  // if the path still isn't found, something is seriously wrong.
+  if (!QFile::exists(path)) {
+    qFatal() << "OpenSSL binary not found: " << path;
+  }
+
+  return path;
+}
+
+#endif
+
+} // namespace synergy::gui
+
+using namespace synergy::gui;
 
 SslCertificate::SslCertificate(QObject *parent) : QObject(parent) {
   m_ProfileDir = m_CoreInterface.getProfileDir();
@@ -48,17 +101,16 @@ SslCertificate::SslCertificate(QObject *parent) : QObject(parent) {
 bool SslCertificate::runTool(const QStringList &args) {
   QString program;
 #if defined(Q_OS_WIN)
-  program = QCoreApplication::applicationDirPath();
-  program.append("\\").append(kWinOpenSslBinary);
+  program = openSslWindowsBinary();
 #else
   program = kUnixOpenSslCommand;
 #endif
 
   QStringList environment;
 #if defined(Q_OS_WIN)
-  environment << QString("OPENSSL_CONF=%1\\%2")
-                     .arg(QCoreApplication::applicationDirPath())
-                     .arg(kConfigFile);
+  auto openSslDir = QDir(openSslWindowsDir());
+  auto config = QDir::cleanPath(openSslDir.filePath(kConfigFile));
+  environment << QString("OPENSSL_CONF=%1").arg(config);
 #endif
 
   QProcess process;
@@ -73,8 +125,7 @@ bool SslCertificate::runTool(const QStringList &args) {
     standardError = process.readAllStandardError().trimmed();
   }
 
-  int code = process.exitCode();
-  if (!success || code != 0) {
+  if (int code = process.exitCode(); !success || code != 0) {
     emit error(QString("SSL tool failed: %1\n\nCode: %2\nError: %3")
                    .arg(program)
                    .arg(process.exitCode())
@@ -99,9 +150,7 @@ void SslCertificate::generateCertificate(
 
   const QString pathToUse = path.isEmpty() ? filename : path;
 
-  // If path is empty use filename
-  QFile file(pathToUse);
-  if (!file.exists() || forceGen) {
+  if (QFile file(pathToUse); !file.exists() || forceGen) {
     QStringList arguments;
 
     // self signed certificate
@@ -123,8 +172,7 @@ void SslCertificate::generateCertificate(
     arguments.append("-newkey");
     arguments.append(keySize);
 
-    QDir sslDir(sslDirPath);
-    if (!sslDir.exists()) {
+    if (QDir sslDir(sslDirPath); !sslDir.exists()) {
       sslDir.mkpath(".");
     }
 
@@ -161,7 +209,7 @@ void SslCertificate::generateFingerprint(const QString &certificateFilename) {
   }
 
   // find the fingerprint from the tool output
-  int i = m_ToolOutput.indexOf("=");
+  auto i = m_ToolOutput.indexOf("=");
   if (i != -1) {
     i++;
     QString fingerprint = m_ToolOutput.mid(i, m_ToolOutput.size() - i);

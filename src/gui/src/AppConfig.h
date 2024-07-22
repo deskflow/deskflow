@@ -38,7 +38,7 @@ class ServerConfig;
 
 enum class ProcessMode { kService, kDesktop };
 
-#if defined(Q_OS_WIN) && !defined(SYNERGY_FORCE_DESKTOP_PROCESS)
+#if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
@@ -129,11 +129,11 @@ public:
 
   /// @brief Gets the current TLS certificate path
   /// @return QString The path to the cert
-  QString getTLSCertPath() const;
+  QString getTlsCertPath() const;
 
   /// @brief Get the key length to be used for the private key of a TLS cert
   /// @return QString The key length in bits
-  QString getTLSKeyLength() const;
+  QString getTlsKeyLength() const;
 
   void setServerGroupChecked(bool);
   void setUseExternalConfig(bool);
@@ -146,11 +146,11 @@ public:
 
   /// @brief Set the path to the TLS/SSL certificate file that will be used
   /// @param [in] path The path to the Certificate
-  void setTLSCertPath(const QString &path);
+  void setTlsCertPath(const QString &path);
 
   /// @brief Sets the key length of the private key to use in a TLS connection
   /// @param [in] QString length The key length eg: 1024, 2048, 4096
-  void setTLSKeyLength(const QString &length);
+  void setTlsKeyLength(const QString &length);
 
   QString lastVersion() const;
 
@@ -163,6 +163,12 @@ public:
   /// @brief Generates TLS certificate
   /// @param [in] bool forceGeneration Generate certificate even if it's exists.
   void generateCertificate(bool forceGeneration = false) const;
+
+  void setServiceEnabled(bool enabled);
+  bool serviceEnabled() const;
+
+  void setMinimizeOnClose(bool minimize);
+  bool minimizeOnClose() const;
 
 protected:
   /// @brief The enumeration to easily access the names of the setting inside
@@ -194,8 +200,8 @@ protected:
     kUseInternalConfig,
     kGroupClientCheck,
     kServerHostname,
-    kTLSCertPath,
-    kTLSKeyLength,
+    kTlsCertPath,
+    kTlsKeyLength,
     kPreventSleep,
     kLanguageSync,
     kInvertScrollDirection,
@@ -204,7 +210,9 @@ protected:
     kLicenseNextCheck,
     kInitiateConnectionFromServer,
     kClientHostMode,
-    kServerClientMode
+    kServerClientMode,
+    kServiceEnabled,
+    kMinimizeOnClose
   };
 
   void setScreenName(const QString &s);
@@ -301,12 +309,14 @@ private:
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
+  bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
+  bool m_MinimizeOnClose = true;
 
   /// @brief The path to the TLS certificate file
-  QString m_TLSCertificatePath = "";
+  QString m_TlsCertPath = "";
 
   /// @brief The key length of the TLS cert to make
-  QString m_TLSKeyLength = "";
+  QString m_TlsKeyLength = "";
 
   /// @brief should the setting be loaded from
   /// SystemScope

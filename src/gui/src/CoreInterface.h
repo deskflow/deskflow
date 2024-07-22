@@ -21,11 +21,9 @@
 
 class CoreInterface {
 public:
-  CoreInterface();
-
   QString getProfileDir();
   QString getInstalledDir();
   QString getArch();
   QString getSerialKeyFilePath();
-  QString run(const QStringList &args, const QString &input = "");
+  QString run(const QStringList &args, const QString &input = "") const;
 };

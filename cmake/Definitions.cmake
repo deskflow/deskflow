@@ -57,11 +57,6 @@ macro(configure_definitions)
     add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
   endif()
 
-  if(FORCE_DESKTOP_PROCESS)
-    message(STATUS "Forcing desktop process")
-    add_definitions(-DSYNERGY_FORCE_DESKTOP_PROCESS=1)
-  endif()
-
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
@@ -137,6 +132,5 @@ macro(configure_options)
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
   option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
-  option(FORCE_DESKTOP_PROCESS "Forcefully prevent launch via daemon" OFF)
 
 endmacro()

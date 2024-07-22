@@ -174,13 +174,6 @@ protected:
   void stopDesktop();
   void enableServer(bool enable);
   void enableClient(bool enable);
-  void closeEvent(QCloseEvent *event) override;
-
-#if defined(Q_OS_WIN)
-  bool isServiceRunning(QString name);
-#else
-  bool isServiceRunning();
-#endif
 
   QString getProfileRootForArg();
   void checkConnected(const QString &line);
@@ -203,6 +196,10 @@ protected:
 private:
   void updateWindowTitle();
 
+#ifdef SYNERGY_ENABLE_LICENSING
+  LicenseManager *m_LicenseManager = nullptr;
+#endif
+
   AppConfig &m_AppConfig;
   ServerConfig m_ServerConfig;
   ServerConnection m_serverConnection;
@@ -213,7 +210,6 @@ private:
   QMutex m_StopDesktopMutex;
 
 #ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager *m_LicenseManager = nullptr;
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
 #endif

@@ -16,10 +16,9 @@
  */
 
 #include "CommandProcess.h"
-#include "qdebug.h"
 
+#include "qdebug.h"
 #include <QProcess>
-#include <stdexcept>
 
 CommandProcess::CommandProcess(
     QString cmd, QStringList arguments, QString input)
@@ -33,7 +32,8 @@ QString CommandProcess::run() {
   process.start(m_Command, m_Arguments);
   bool success = process.waitForStarted();
 
-  QString output, error;
+  QString output;
+  QString error;
   if (success) {
     if (!m_Input.isEmpty()) {
       process.write(m_Input.toStdString().c_str());
@@ -46,15 +46,12 @@ QString CommandProcess::run() {
     }
   }
 
-  int code = process.exitCode();
-  if (!error.isEmpty() || !success || code != 0) {
-    QString message = QString("Command failed: %1").arg(m_Command);
-    qDebug() << message << m_Arguments;
-    qDebug() << QString("Code: %1\nError: %2")
-                    .arg(process.exitCode())
-                    .arg(error.isEmpty() ? "Unknown" : error);
-
-    throw std::runtime_error(message.toStdString());
+  if (int code = process.exitCode();
+      !error.isEmpty() || !success || code != 0) {
+    qFatal() << QString("Command failed: %1 %2\nCode: %3\nError: %4")
+                    .arg(
+                        m_Command, m_Arguments.join(" "), QString::number(code),
+                        error);
   }
 
   emit finished();

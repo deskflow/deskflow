@@ -85,7 +85,6 @@ MainWindow::MainWindow(AppConfig &appConfig)
     :
 #ifdef SYNERGY_ENABLE_LICENSING
       m_LicenseManager(&licenseManager),
-      m_ActivationDialogRunning(false),
 #endif
       m_AppConfig(appConfig),
       m_ServerConfig(5, 3, &m_AppConfig, this),
@@ -115,7 +114,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-#if defined(Q_OS_WIN) && !defined(SYNERGY_FORCE_DESKTOP_PROCESS)
+#if defined(Q_OS_WIN)
   // ipc must always be enabled, so that we can disable command when switching
   // to desktop mode.
   connect(
@@ -603,7 +602,7 @@ void MainWindow::startCore() {
 #if defined(Q_OS_WIN)
   if (m_AppConfig.getCryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << QString("\"%1\"").arg(m_AppConfig.getTLSCertPath());
+    args << "--tls-cert" << QString("\"%1\"").arg(m_AppConfig.getTlsCertPath());
   }
 
   try {
@@ -613,14 +612,13 @@ void MainWindow::startCore() {
     // no matter how its relaunched.
     args << "--profile-dir" << getProfileRootForArg();
   } catch (...) {
-    // TODO: show error message box
-    qWarning() << "Failed to get profile dir, skipping arg";
+    qFatal("Failed to get profile dir, skipping arg");
   }
 
 #else
   if (m_AppConfig.getCryptoEnabled()) {
     args << "--enable-crypto";
-    args << "--tls-cert" << m_AppConfig.getTLSCertPath();
+    args << "--tls-cert" << m_AppConfig.getTlsCertPath();
   }
 #endif
 
@@ -653,8 +651,6 @@ void MainWindow::startCore() {
         coreProcess(), SIGNAL(readyReadStandardError()), this,
         SLOT(logError()));
   }
-
-  qDebug() << args;
 
   // show command if debug log level...
   if (appConfig().logLevel() >= 4) {
@@ -729,20 +725,18 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     args << "--invert-scroll";
   }
 
-  if (m_pLineEditHostname->text().isEmpty() &&
-      !appConfig().getClientHostMode()) {
-    show();
-    QMessageBox::warning(
-        this, tr("Hostname is empty"),
-        tr("Please fill in a hostname for the synergy "
-           "client to connect to."));
-    return false;
-  }
-
   if (appConfig().getClientHostMode()) {
     args << "--host";
     args << ":" + QString::number(appConfig().port());
   } else {
+    if (m_pLineEditHostname->text().isEmpty()) {
+      show();
+      QMessageBox::warning(
+          this, tr("IP/hostname is empty"),
+          tr("Please enter a server hostname or IP address."));
+      return false;
+    }
+
     QString hostName = m_pLineEditHostname->text();
     // if interface is IPv6 - ensure that ip is in square brackets
     if (hostName.count(':') > 1) {
@@ -1081,8 +1075,7 @@ void MainWindow::updateLocalFingerprint() {
   try {
     fingerprintExists = Fingerprint::local().fileExists();
   } catch (...) {
-    // TODO: show error message box
-    qWarning() << "Failed to check if fingerprint exists";
+    qFatal("Failed to check if fingerprint exists");
   }
 
   if (m_AppConfig.getCryptoEnabled() && fingerprintExists &&
@@ -1327,13 +1320,6 @@ void MainWindow::enableClient(bool enable) {
     m_pLineEditHostname->hide();
     m_pButtonConnect->hide();
   }
-}
-
-void MainWindow::closeEvent(QCloseEvent *event) {
-#if defined(Q_OS_LINUX)
-  QCoreApplication::quit();
-#endif
-  QWidget::closeEvent(event);
 }
 
 void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
