@@ -299,6 +299,10 @@ void SettingsDialog::enableControls(bool enable) {
   m_pCheckBoxLanguageSync->setEnabled(enable && isClientMode());
   m_pCheckBoxScrollDirection->setEnabled(enable && isClientMode());
 
+#if !defined(Q_OS_WIN)
+  m_pCheckBoxServiceEnabled->setEnabled(false);
+#endif
+
   m_pCheckBoxClientHostMode->setEnabled(
       enable && isClientMode() &&
       appConfig().getInitiateConnectionFromServer());
