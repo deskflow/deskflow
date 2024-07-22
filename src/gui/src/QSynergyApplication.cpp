@@ -33,8 +33,8 @@ QSynergyApplication::QSynergyApplication(int &argc, char **argv)
   setFont(Arial);
 
   // Setting the style to 'Fusion' seems to fix issues such as text being
-  // rendered as black on black. It's odd that this isn't the default, but
-  // that's Qt for you! ¯\_(ツ)_/¯
+  // rendered as black on black. This may not be the style we want long-term
+  // but it does fix the style issues for now.
   setStyle("Fusion");
 }
 

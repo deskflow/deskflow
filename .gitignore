@@ -15,3 +15,4 @@ Brewfile.lock.json
 .env*
 /scripts/*.egg-info
 /*.user
+*.ui.autosave
