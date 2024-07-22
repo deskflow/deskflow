@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -15,18 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LINEEDITVALIDATOR_H
-#define LINEEDITVALIDATOR_H
 
-#include <memory>
-#include <qtmetamacros.h>
-#include <vector>
-
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <qvalidator.h>
+#pragma once
 
 #include "IStringValidator.h"
+
+#include <QValidator>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <memory>
+#include <vector>
 
 namespace validators {
 
@@ -51,5 +49,3 @@ private:
 };
 
 } // namespace validators
-
-#endif // LINEEDITVALIDATOR_H
