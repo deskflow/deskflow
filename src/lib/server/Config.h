@@ -479,7 +479,7 @@ private:
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction;
   IEventQueue *m_events;
-  String m_clientAddress;
+  String m_ClientAddress;
 };
 
 //! Configuration read context

@@ -138,7 +138,7 @@ private:
   bool m_EnableDragAndDrop = false;
   bool m_DisableLockToScreen = false;
   bool m_ClipboardSharing = true;
-  QString m_clientAddress = "";
+  QString m_ClientAddress = "";
   QList<bool> m_SwitchCorners;
   HotkeyList m_Hotkeys;
 
