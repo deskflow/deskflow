@@ -17,7 +17,6 @@
 
 #include "CommandProcess.h"
 
-#include "qdebug.h"
 #include <QProcess>
 
 CommandProcess::CommandProcess(
@@ -29,7 +28,7 @@ CommandProcess::CommandProcess(
 QString CommandProcess::run() {
   QProcess process;
   process.setReadChannel(QProcess::StandardOutput);
-  process.start(m_Command, m_Arguments);
+  process.start(m_Command + "x", m_Arguments);
   bool success = process.waitForStarted();
 
   QString output;
@@ -48,10 +47,10 @@ QString CommandProcess::run() {
 
   if (int code = process.exitCode();
       !error.isEmpty() || !success || code != 0) {
-    qFatal() << QString("Command failed: %1 %2\nCode: %3\nError: %4")
-                    .arg(
-                        m_Command, m_Arguments.join(" "), QString::number(code),
-                        error);
+    qFatal(
+        "Command failed: %s %s\nCode: %d\nError: %s", qUtf8Printable(m_Command),
+        qUtf8Printable(m_Arguments.join(" ")), code,
+        error.isEmpty() ? "None" : qUtf8Printable(error));
   }
 
   emit finished();
