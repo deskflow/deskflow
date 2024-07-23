@@ -94,7 +94,7 @@ public:
   ~MainWindow() override;
 
 public:
-  void setVisible(bool visible);
+  void setVisible(bool visible) override;
   CoreMode coreMode() const {
     auto isClient = m_pRadioGroupClient->isChecked();
     return isClient ? CoreMode::Client : CoreMode::Server;
@@ -223,11 +223,7 @@ private:
   QAbstractButton *m_pCancelButton = nullptr;
   CoreState m_CoreState = CoreState::Disconnected;
   bool m_AlreadyHidden = false;
-
-  /// @brief Is the program running a secure socket protocol (SSL/TLS)
   bool m_SecureSocket = false;
-
-  /// @brief Contains the version of the Secure Socket currently active
   QString m_SecureSocketVersion = "";
 
 private slots:
