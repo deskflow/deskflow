@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse
 import lib.env as env
+
+env.ensure_in_venv(__file__)
+
+import argparse
 import lib.file_utils as file_utils
 import lib.colors as colors
 
@@ -12,9 +15,6 @@ def main():
     This script was mostly created beause the default `copy` command on Windows is too noisy.
     If this becomes complex it must be replaced with a library.
     """
-
-    # important: load venv before loading modules that install deps.
-    env.ensure_in_venv(__file__)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("source", help="Source pattern to copy from")
