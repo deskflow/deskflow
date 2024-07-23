@@ -22,6 +22,10 @@
 #include "MainWindow.h"
 #include "SslCertificate.h"
 
+#ifdef SYNERGY_ENABLE_LICENSING
+#include "UpgradeDialog.h"
+#endif // SYNERGY_ENABLE_LICENSING
+
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>

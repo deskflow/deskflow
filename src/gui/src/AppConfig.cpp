@@ -348,10 +348,7 @@ void AppConfig::applyAppSettings() const {
 
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
-AppConfig &AppConfig::activationHasRun(bool value) {
-  m_ActivationHasRun = value;
-  return *this;
-}
+void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
 
 void AppConfig::setEdition(Edition e) {
   setSettingModified(m_Edition, e);
