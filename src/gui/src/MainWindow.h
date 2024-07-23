@@ -39,7 +39,6 @@
 #include "gui/VersionChecker.h"
 #include "shared/Ipc.h"
 
-
 class QAction;
 class QMenu;
 class QLineEdit;
