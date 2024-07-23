@@ -6,9 +6,9 @@
 [![SonarCloud Analysis](https://github.com/symless/synergy-core/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/sonarcloud-analysis.yml)
 [![Build containers](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml)
 
-The Synergy Core project is the open-source core component of [Synergy](https://symless.com/synergy), a keyboard and mouse sharing tool. 
-
-This project is intended for developers, and when built produces the community edition of Synergy. To use it, install `synergy` with your favorite package manager.
+The Synergy Core project is the open-source core component of [Synergy](https://symless.com/synergy), a keyboard and mouse sharing tool.  
+This project is intended for advanced technical users, and when built produces the Synergy 1 Community Edition.  
+To use the community edition, install the `synergy` package with your favorite package manager.  
 
 * [Download Synergy](https://symless.com/synergy/download)
 * [Contact support](https://symless.com/synergy/contact)
