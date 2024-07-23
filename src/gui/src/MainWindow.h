@@ -58,7 +58,7 @@ class SetupWizard;
 class DataDownloader;
 class CommandProcess;
 class SslCertificate;
-class LicenseManager;
+class License;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   Q_OBJECT
@@ -87,7 +87,7 @@ public:
 
 public:
 #ifdef SYNERGY_ENABLE_LICENSING
-  MainWindow(AppConfig &appConfig, LicenseManager &licenseManager);
+  MainWindow(AppConfig &appConfig, License &license);
 #else
   explicit MainWindow(AppConfig &appConfig);
 #endif
@@ -112,14 +112,14 @@ public:
   void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
 #ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager &licenseManager() const;
+  License &license() const;
   int raiseActivationDialog();
 #endif
 
 public slots:
   void setEdition(Edition edition);
 #ifdef SYNERGY_ENABLE_LICENSING
-  void InvalidLicense();
+  void invalidSerialKey();
   void showLicenseNotice(const QString &message);
 #endif
   void appendLogRaw(const QString &text);
@@ -196,7 +196,7 @@ private:
   void updateWindowTitle();
 
 #ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager *m_LicenseManager = nullptr;
+  License *m_License = nullptr;
 #endif
 
   AppConfig &m_AppConfig;

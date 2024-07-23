@@ -25,11 +25,11 @@
 
 class AppConfig;
 
-class LicenseManager : public QObject {
+class License : public QObject {
   Q_OBJECT
 
 public:
-  LicenseManager(AppConfig *appConfig);
+  explicit License(AppConfig *appConfig);
   void setSerialKey(SerialKey serialKey, bool acceptExpired = false);
   void refresh();
   Edition activeEdition() const;
@@ -51,7 +51,7 @@ public slots:
 
 signals:
   void editionChanged(Edition) const;
-  void InvalidLicense() const;
+  void invalidSerialKey() const;
   void showLicenseNotice(const QString &notice) const;
 
 protected:

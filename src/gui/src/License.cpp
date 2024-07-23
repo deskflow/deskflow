@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "LicenseManager.h"
+#include "License.h"
 
 #include "ActivationNotifier.h"
 #include "AppConfig.h"
@@ -68,12 +68,12 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
 
 } // namespace
 
-LicenseManager::LicenseManager(AppConfig *appConfig)
+License::License(AppConfig *appConfig)
     : m_pAppConfig(appConfig),
       m_serialKey(appConfig->edition()),
       m_registry(*appConfig) {}
 
-void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
+void License::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   checkSerialKey(serialKey, acceptExpired);
 
   if (serialKey != m_serialKey) {
@@ -92,8 +92,7 @@ void LicenseManager::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   }
 }
 
-void LicenseManager::notifyUpdate(
-    QString fromVersion, QString toVersion) const {
+void License::notifyUpdate(QString fromVersion, QString toVersion) const {
   if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kUnregistered))) {
     return;
   }
@@ -113,15 +112,15 @@ void LicenseManager::notifyUpdate(
   QMetaObject::invokeMethod(notifier, "notifyUpdate", Qt::QueuedConnection);
 }
 
-Edition LicenseManager::activeEdition() const { return m_serialKey.edition(); }
+Edition License::activeEdition() const { return m_serialKey.edition(); }
 
-QString LicenseManager::activeEditionName() const {
+QString License::activeEditionName() const {
   return getEditionName(activeEdition(), m_serialKey.isTrial());
 }
 
-const SerialKey &LicenseManager::serialKey() const { return m_serialKey; }
+const SerialKey &License::serialKey() const { return m_serialKey; }
 
-void LicenseManager::refresh() {
+void License::refresh() {
   if (!m_pAppConfig->serialKey().isEmpty()) {
     try {
       SerialKey serialKey(m_pAppConfig->serialKey().toStdString());
@@ -133,11 +132,11 @@ void LicenseManager::refresh() {
     }
   }
   if (!m_serialKey.isValid()) {
-    emit InvalidLicense();
+    emit invalidSerialKey();
   }
 }
 
-QString LicenseManager::getEditionName(Edition const edition, bool trial) {
+QString License::getEditionName(Edition const edition, bool trial) {
   SerialKeyEdition KeyEdition(edition);
   std::string name = KeyEdition.getProductName();
 
@@ -148,7 +147,7 @@ QString LicenseManager::getEditionName(Edition const edition, bool trial) {
   return QString::fromUtf8(name.c_str(), static_cast<int>(name.size()));
 }
 
-void LicenseManager::notifyActivation(QString identity) const {
+void License::notifyActivation(QString identity) const {
   ActivationNotifier *notifier = new ActivationNotifier();
   notifier->setIdentity(identity);
 
@@ -163,7 +162,7 @@ void LicenseManager::notifyActivation(QString identity) const {
   QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
 
-QString LicenseManager::getLicenseNotice() const {
+QString License::getLicenseNotice() const {
   QString Notice;
 
   if (m_serialKey.isTemporary()) {
@@ -177,9 +176,9 @@ QString LicenseManager::getLicenseNotice() const {
   return Notice;
 }
 
-void LicenseManager::registerLicense() { m_registry.registerLicense(); }
+void License::registerLicense() { m_registry.registerLicense(); }
 
-QString LicenseManager::getTrialNotice() const {
+QString License::getTrialNotice() const {
   QString Notice;
 
   if (m_serialKey.isExpired(::time(0))) {
@@ -202,7 +201,7 @@ QString LicenseManager::getTrialNotice() const {
   return Notice;
 }
 
-QString LicenseManager::getTemporaryNotice() const {
+QString License::getTemporaryNotice() const {
   QString Notice;
 
   if (m_serialKey.isExpired(::time(0))) {
@@ -225,13 +224,13 @@ QString LicenseManager::getTemporaryNotice() const {
   return Notice;
 }
 
-void LicenseManager::validateSerialKey() const {
+void License::validateSerialKey() const {
   if (m_serialKey.isValid()) {
     if (m_serialKey.isTemporary()) {
       QTimer::singleShot(
           m_serialKey.getSpanLeft(), this, SLOT(validateSerialKey()));
     }
   } else {
-    emit InvalidLicense();
+    emit invalidSerialKey();
   }
 }

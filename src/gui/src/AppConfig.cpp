@@ -344,8 +344,6 @@ void AppConfig::applyAppSettings() const {
 // Begin getters and setters
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifdef SYNERGY_ENABLE_LICENSING
-
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
 void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
@@ -373,8 +371,6 @@ int AppConfig::lastExpiringWarningTime() const {
 void AppConfig::setLastExpiringWarningTime(int newValue) {
   setSettingModified(m_LastExpiringWarningTime, newValue);
 }
-
-#endif // SYNERGY_ENABLE_LICENSING
 
 void AppConfig::setServerGroupChecked(bool newValue) {
   setSettingModified(m_ServerGroupChecked, newValue);

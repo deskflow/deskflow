@@ -21,7 +21,7 @@
 #include "CommonConfig.h"
 #include "Config.h"
 #include "CoreInterface.h"
-#include "LicenseManager.h"
+#include "License.h"
 #include "gui/ElevateMode.h"
 #include "shared/EditionType.h"
 
@@ -34,7 +34,7 @@ class QSettings;
 class SettingsDialog;
 class LicenseRegister;
 class ServerConfig;
-class LicenseManager;
+class License;
 class ActivationDialog;
 class LicenseRegistry;
 
@@ -56,7 +56,7 @@ class AppConfig : public QObject, public synergy::gui::CommonConfig {
   friend class MainWindow;
   friend class SetupWizard;
   friend class ServerConfig;
-  friend class LicenseManager;
+  friend class License;
   friend class ActivationDialog;
   friend class LicenseRegistry;
 

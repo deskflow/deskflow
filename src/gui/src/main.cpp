@@ -17,7 +17,7 @@
  */
 
 #include "AppConfig.h"
-#include "LicenseManager.h"
+#include "License.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
@@ -29,9 +29,6 @@
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
-#endif
-
-#ifdef Q_OS_DARWIN
 #include <cstdlib>
 #endif
 
@@ -80,8 +77,8 @@ int main(int argc, char *argv[]) {
   qRegisterMetaType<Edition>("Edition");
 
 #ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager licenseManager(&appConfig);
-  MainWindow mainWindow(appConfig, licenseManager);
+  License license(&appConfig);
+  MainWindow mainWindow(appConfig, license);
 #else
   MainWindow mainWindow(appConfig);
 #endif

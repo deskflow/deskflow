@@ -18,7 +18,7 @@
 #include "ActivationDialog.h"
 #include "AppConfig.h"
 #include "CancelActivationDialog.h"
-#include "LicenseManager.h"
+#include "License.h"
 #include "MainWindow.h"
 #include "shared/EditionType.h"
 #include "ui_ActivationDialog.h"
@@ -28,15 +28,15 @@
 #include <QThread>
 
 ActivationDialog::ActivationDialog(
-    QWidget *parent, AppConfig &appConfig, LicenseManager &licenseManager)
+    QWidget *parent, AppConfig &appConfig, License &license)
     : QDialog(parent),
       ui(new Ui::ActivationDialog),
       m_appConfig(&appConfig),
-      m_LicenseManager(&licenseManager) {
+      m_License(&license) {
   ui->setupUi(this);
   refreshSerialKey();
   time_t currentTime = ::time(0);
-  if (!m_LicenseManager->serialKey().isExpired(currentTime)) {
+  if (!m_License->serialKey().isExpired(currentTime)) {
     ui->m_trialWidget->hide();
   }
 }
@@ -46,7 +46,7 @@ void ActivationDialog::refreshSerialKey() {
   ui->m_pTextEditSerialKey->setFocus();
   ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
   ui->m_trialLabel->setText(
-      tr(m_LicenseManager->getLicenseNotice().toStdString().c_str()));
+      tr(m_License->getLicenseNotice().toStdString().c_str()));
 }
 
 ActivationDialog::~ActivationDialog() { delete ui; }
@@ -54,7 +54,7 @@ ActivationDialog::~ActivationDialog() { delete ui; }
 void ActivationDialog::reject() {
   // don't show the cancel confirmation dialog if they've already registered,
   // since it's not revent to customers who are changing their serial key.
-  if (m_LicenseManager->activeEdition() != kUnregistered) {
+  if (m_License->activeEdition() != kUnregistered) {
     QDialog::reject();
     return;
   }
@@ -73,7 +73,7 @@ void ActivationDialog::accept() {
   try {
     SerialKey serialKey(
         ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString());
-    m_LicenseManager->setSerialKey(serialKey);
+    m_License->setSerialKey(serialKey);
   } catch (std::exception &e) {
     message.critical(
         this, "Activation failed",
@@ -88,13 +88,13 @@ void ActivationDialog::accept() {
     return;
   }
 
-  m_LicenseManager->notifyActivation("serial:" + m_appConfig->serialKey());
-  Edition edition = m_LicenseManager->activeEdition();
-  time_t daysLeft = m_LicenseManager->serialKey().daysLeft(::time(0));
+  m_License->notifyActivation("serial:" + m_appConfig->serialKey());
+  Edition edition = m_License->activeEdition();
+  time_t daysLeft = m_License->serialKey().daysLeft(::time(0));
   if (edition != kUnregistered) {
     QString thanksMessage = tr("Thanks for trying %1! %5\n\n%2 day%3 of "
                                "your trial remain%4")
-                                .arg(m_LicenseManager->getEditionName(edition))
+                                .arg(m_License->getEditionName(edition))
                                 .arg(daysLeft)
                                 .arg((daysLeft == 1) ? "" : "s")
                                 .arg((daysLeft == 1) ? "s" : "");
@@ -108,13 +108,13 @@ void ActivationDialog::accept() {
       thanksMessage = thanksMessage.arg("");
     }
 
-    if (m_LicenseManager->serialKey().isTrial()) {
+    if (m_License->serialKey().isTrial()) {
       message.information(this, "Thanks!", thanksMessage);
     } else {
       message.information(
           this, "Activated!",
           tr("Thanks for activating %1!")
-              .arg(m_LicenseManager->getEditionName(edition)));
+              .arg(m_License->getEditionName(edition)));
     }
   }
 

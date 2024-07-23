@@ -22,6 +22,12 @@
 #include "OSXHelpers.h"
 #endif
 
+#ifdef GIT_SHA_SHORT
+const char *const kVersionAppend = " (" GIT_SHA_SHORT ")";
+#else
+const char *const kVersionAppend = "";
+#endif
+
 AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::AboutDialogBase() {
@@ -29,10 +35,8 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
 
   m_versionChecker.setApp(parent->appPath(config.coreClientName()));
 
-  QString version = SYNERGY_VERSION;
-#ifdef GIT_SHA_SHORT
-  version += " (" GIT_SHA_SHORT ")";
-#endif
+  QString version(SYNERGY_VERSION);
+  version.append(kVersionAppend);
 
   m_pLabelSynergyVersion->setText(version);
 
