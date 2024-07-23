@@ -16,13 +16,13 @@
  */
 
 #include "QIpcClient.h"
+
 #include "IpcReader.h"
 #include "shared/Ipc.h"
 
 #include <QDataStream>
 #include <QHostAddress>
 #include <QTimer>
-#include <qglobal.h>
 
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     : m_ReaderStarted(false),

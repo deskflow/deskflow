@@ -69,7 +69,7 @@ macro(set_sources)
   endif()
 
   append_platform_sources()
-  append_gui_sources()
+  #append_gui_sources()
 
 endmacro()
 
@@ -168,10 +168,11 @@ macro(config_test_deps)
       gtest
       gmock
       shared
-      Qt6::Core
-      Qt6::Widgets
-      Qt6::Network
-      Qt6::Test
+      gui
+      # Qt6::Core
+      # Qt6::Widgets
+      # Qt6::Network
+      # Qt6::Test
       ${libs})
 
 endmacro()

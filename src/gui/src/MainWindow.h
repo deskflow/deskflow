@@ -36,7 +36,7 @@
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "TrayIcon.h"
-#include "VersionChecker.h"
+#include "gui/VersionChecker.h"
 #include "shared/Ipc.h"
 
 class QAction;

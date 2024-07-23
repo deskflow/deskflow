@@ -15,11 +15,6 @@
 
 set(target synergy)
 
-find_package(
-  Qt6
-  COMPONENTS Core Widgets Network
-  REQUIRED)
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -58,9 +53,15 @@ add_executable(
   ${QM_FILES})
 
 include_directories(./src)
-target_link_libraries(${target} shared)
 
-target_link_libraries(${target} Qt6::Core Qt6::Widgets Qt6::Network)
+target_link_libraries(
+  ${target}
+  shared
+  gui
+  Qt6::Core
+  Qt6::Widgets
+  Qt6::Network)
+
 target_compile_definitions(
   ${target} PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
 target_compile_definitions(${target}

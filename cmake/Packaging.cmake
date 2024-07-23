@@ -119,7 +119,7 @@ endmacro()
 #
 macro(configure_files srcDir destDir)
 
-  message(STATUS "Configuring directory ${destDir}")
+  message(VERBOSE "Configuring directory ${destDir}")
   make_directory(${destDir})
 
   file(
@@ -136,10 +136,10 @@ macro(configure_files srcDir destDir)
   foreach(sourceFile ${sourceFiles})
     set(sourceFilePath ${srcDir}/${sourceFile})
     if(IS_DIRECTORY ${sourceFilePath})
-      message(STATUS "Copying directory ${sourceFile}")
+      message(VERBOSE "Copying directory ${sourceFile}")
       make_directory(${destDir}/${sourceFile})
     else()
-      message(STATUS "Copying file ${sourceFile}")
+      message(VERBOSE "Copying file ${sourceFile}")
       configure_file(${sourceFilePath} ${destDir}/${sourceFile} COPYONLY)
     endif()
 
@@ -149,7 +149,7 @@ macro(configure_files srcDir destDir)
 
     set(sourceTemplateFilePath ${srcDir}/${templateFile})
     string(REGEX REPLACE "\.in$" "" templateFile ${templateFile})
-    message(STATUS "Configuring file ${templateFile}")
+    message(VERBOSE "Configuring file ${templateFile}")
     configure_file(${sourceTemplateFilePath} ${destDir}/${templateFile} @ONLY)
 
   endforeach(templateFile)
