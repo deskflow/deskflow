@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if 0 // TODO: reintroduce main window integ test once moved to the `gui` lib
+
 // TODO: fix test freezing only on windows
 #ifndef WIN32
 
@@ -82,4 +84,6 @@ TEST_F(MainWindowTests, checkSecureSocket_match_expectTrue) {
   EXPECT_TRUE(result);
 }
 
-#endif
+#endif // WIN32
+
+#endif // 0

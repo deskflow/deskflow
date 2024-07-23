@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
-import sys, argparse
 import lib.env as env
+
+env.ensure_in_venv(__file__)
+
+import sys, argparse
 import lib.fs as fs
+from cmakelang.format.__main__ import main as cmake_format_main  # type: ignore
 
 include_files = [
     "*.cmake",
@@ -24,9 +28,6 @@ def main():
         help="In-place format all files",
     )
     args = parser.parse_args()
-
-    env.ensure_in_venv(__file__)
-    from cmakelang.format.__main__ import main as cmake_format_main
 
     cmd_args = ["--in-place"] if args.format else ["--check"]
     files_recursive = fs.find_files(".", include_files, exclude_dirs)

@@ -7,6 +7,7 @@ macro(configure_libs)
     configure_windows_libs()
   endif()
 
+  config_qt()
   configure_openssl()
   update_submodules()
   configure_test_libs()
@@ -284,6 +285,15 @@ macro(configure_windows_libs)
 
 endmacro()
 
+macro(config_qt)
+
+  find_package(
+    Qt6
+    COMPONENTS Core Widgets Network
+    REQUIRED)
+
+endmacro()
+
 macro(configure_openssl)
   # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
   # libraries by apps is strongly discouraged."
@@ -390,13 +400,13 @@ function(find_openssl_dir_win32 result)
   message(STATUS "Found OpenSSL binaries at: ${OPENSSL_PATH_LIST}")
 
   list(GET OPENSSL_PATH_LIST 0 OPENSSL_FIRST_PATH)
-  message(STATUS "First OpenSSL binary: ${OPENSSL_FIRST_PATH}")
+  message(VERBOSE "First OpenSSL binary: ${OPENSSL_FIRST_PATH}")
 
   get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_FIRST_PATH} DIRECTORY)
-  message(STATUS "OpenSSL bin dir: ${OPENSSL_BIN_DIR}")
+  message(VERBOSE "OpenSSL bin dir: ${OPENSSL_BIN_DIR}")
 
   get_filename_component(OPENSSL_DIR ${OPENSSL_BIN_DIR} DIRECTORY)
-  message(STATUS "OpenSSL install root dir: ${OPENSSL_DIR}")
+  message(VERBOSE "OpenSSL install root dir: ${OPENSSL_DIR}")
 
   set(${result}
       ${OPENSSL_DIR}

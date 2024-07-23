@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
+import lib.env as env
+
+env.ensure_in_venv(__file__)
+
 import argparse, os, sys
 import lib.cmd_utils as cmd_utils
-import lib.env as env
 
 
 def main():
-    # important: load venv before loading modules that install deps.
-    env.ensure_in_venv(__file__)
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--unit-tests", action="store_true")
     parser.add_argument("--integ-tests", action="store_true")

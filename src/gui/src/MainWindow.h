@@ -32,11 +32,11 @@
 #include "AppConfig.h"
 #include "ClientConnection.h"
 #include "Config.h"
-#include "QIpcClient.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "TrayIcon.h"
-#include "VersionChecker.h"
+#include "gui/QIpcClient.h"
+#include "gui/VersionChecker.h"
 #include "shared/Ipc.h"
 
 class QAction;
@@ -94,7 +94,7 @@ public:
   ~MainWindow() override;
 
 public:
-  void setVisible(bool visible);
+  void setVisible(bool visible) override;
   CoreMode coreMode() const {
     auto isClient = m_pRadioGroupClient->isChecked();
     return isClient ? CoreMode::Client : CoreMode::Server;
@@ -223,11 +223,7 @@ private:
   QAbstractButton *m_pCancelButton = nullptr;
   CoreState m_CoreState = CoreState::Disconnected;
   bool m_AlreadyHidden = false;
-
-  /// @brief Is the program running a secure socket protocol (SSL/TLS)
   bool m_SecureSocket = false;
-
-  /// @brief Contains the version of the Secure Socket currently active
   QString m_SecureSocketVersion = "";
 
 private slots:

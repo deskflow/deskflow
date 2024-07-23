@@ -85,7 +85,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "clientHostMode",
     "serverClientMode",
     "serviceEnabled",
-    "minimizeOnClose"};
+    "closeToTray"};
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
@@ -108,50 +108,6 @@ void AppConfig::load() {
     setLoadFromSystemScope(true);
   }
 }
-
-void AppConfig::applyAppSettings() const {
-  QApplication::setQuitOnLastWindowClosed(!m_MinimizeOnClose);
-}
-
-Config &AppConfig::config() { return m_Config; }
-
-const QString &AppConfig::screenName() const { return m_ScreenName; }
-
-int AppConfig::port() const { return m_Port; }
-
-const QString &AppConfig::networkInterface() const { return m_Interface; }
-
-int AppConfig::logLevel() const { return m_LogLevel; }
-
-bool AppConfig::logToFile() const { return m_LogToFile; }
-
-const QString &AppConfig::logFilename() const { return m_LogFilename; }
-
-QString AppConfig::logDir() const {
-  // by default log to home dir
-  return QDir::home().absolutePath() + "/";
-}
-
-void AppConfig::persistLogDir() const {
-  QDir dir = logDir();
-
-  // persist the log directory
-  if (!dir.exists()) {
-    dir.mkpath(dir.path());
-  }
-}
-
-QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
-
-ProcessMode AppConfig::processMode() const {
-  return m_ServiceEnabled ? ProcessMode::kService : ProcessMode::kDesktop;
-}
-
-bool AppConfig::wizardShouldRun() const {
-  return m_WizardLastRun < kWizardVersion;
-}
-
-bool AppConfig::startedBefore() const { return m_StartedBefore; }
 
 void AppConfig::loadSettings() {
   using enum AppConfig::Setting;
@@ -219,6 +175,7 @@ void AppConfig::loadSettings() {
   }
 
   m_ServiceEnabled = loadSetting(kServiceEnabled, m_ServiceEnabled).toBool();
+  m_CloseToTray = loadSetting(kCloseToTray, m_CloseToTray).toBool();
 
   try {
     // Set the default path of the TLS certificate file in the users DIR
@@ -277,7 +234,7 @@ void AppConfig::saveSettings() {
     setSetting(kClientHostMode, m_ClientHostMode);
     setSetting(kServerClientMode, m_ServerClientMode);
     setSetting(kServiceEnabled, m_ServiceEnabled);
-    setSetting(kMinimizeOnClose, m_MinimizeOnClose);
+    setSetting(kCloseToTray, m_CloseToTray);
 
     // See enum ElevateMode declaration to understand why this setting is bool
     setSetting(kElevateModeSetting, m_ElevateMode == ElevateAlways);
@@ -286,161 +243,6 @@ void AppConfig::saveSettings() {
   setModified(false);
   applyAppSettings();
 }
-
-#ifdef SYNERGY_ENABLE_LICENSING
-bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
-
-AppConfig &AppConfig::activationHasRun(bool value) {
-  m_ActivationHasRun = value;
-  return *this;
-}
-#endif
-
-QString AppConfig::lastVersion() const { return m_LastVersion; }
-
-void AppConfig::setLastVersion(const QString &version) {
-  setSettingModified(m_LastVersion, version);
-}
-
-void AppConfig::setScreenName(const QString &s) {
-  setSettingModified(m_ScreenName, s);
-  emit screenNameChanged();
-}
-
-void AppConfig::setPort(int i) { setSettingModified(m_Port, i); }
-
-void AppConfig::setNetworkInterface(const QString &s) {
-  setSettingModified(m_Interface, s);
-}
-
-void AppConfig::setLogLevel(int i) { setSettingModified(m_LogLevel, i); }
-
-void AppConfig::setLogToFile(bool b) { setSettingModified(m_LogToFile, b); }
-
-void AppConfig::setLogFilename(const QString &s) {
-  setSettingModified(m_LogFilename, s);
-}
-
-void AppConfig::setWizardHasRun() {
-  setSettingModified(m_WizardLastRun, kWizardVersion);
-}
-
-void AppConfig::setStartedBefore(bool b) {
-  setSettingModified(m_StartedBefore, b);
-}
-
-void AppConfig::setElevateMode(ElevateMode em) {
-  setSettingModified(m_ElevateMode, em);
-}
-
-#ifdef SYNERGY_ENABLE_LICENSING
-void AppConfig::setEdition(Edition e) {
-  setSettingModified(m_Edition, e);
-  setCommonSetting(Setting::kEditionSetting, m_Edition);
-}
-
-Edition AppConfig::edition() const { return m_Edition; }
-
-void AppConfig::setSerialKey(const QString &serial) {
-  setSettingModified(m_Serialkey, serial);
-  setCommonSetting(Setting::kSerialKey, m_Serialkey);
-}
-
-void AppConfig::clearSerialKey() { m_Serialkey.clear(); }
-
-QString AppConfig::serialKey() const { return m_Serialkey; }
-
-int AppConfig::lastExpiringWarningTime() const {
-  return m_LastExpiringWarningTime;
-}
-
-void AppConfig::setLastExpiringWarningTime(int newValue) {
-  setSettingModified(m_LastExpiringWarningTime, newValue);
-}
-#endif
-
-QString AppConfig::coreServerName() const { return m_CoreServerName; }
-
-QString AppConfig::coreClientName() const { return m_CoreClientName; }
-
-ElevateMode AppConfig::elevateMode() { return m_ElevateMode; }
-
-void AppConfig::setCryptoEnabled(bool newValue) {
-  if (m_CryptoEnabled != newValue && newValue) {
-    generateCertificate();
-  } else {
-    emit sslToggled();
-  }
-  setSettingModified(m_CryptoEnabled, newValue);
-}
-
-bool AppConfig::cryptoAvailable() const {
-  bool result{true};
-
-#ifdef SYNERGY_ENABLE_LICENSING
-  result =
-      (edition() == kPro || edition() == kProChina || edition() == kBusiness ||
-       edition() == kUltimate);
-#endif // SYNERGY_ENABLE_LICENSING
-
-  return result;
-}
-
-bool AppConfig::cryptoEnabled() const {
-  return cryptoAvailable() && m_CryptoEnabled;
-}
-
-void AppConfig::setAutoHide(bool b) { setSettingModified(m_AutoHide, b); }
-
-bool AppConfig::autoHide() { return m_AutoHide; }
-
-void AppConfig::setMinimizeToTray(bool newValue) {
-  setSettingModified(m_MinimizeToTray, newValue);
-}
-
-bool AppConfig::invertScrollDirection() const {
-  return m_InvertScrollDirection;
-}
-
-void AppConfig::setLicenseNextCheck(unsigned long long time) {
-  setSettingModified(m_licenseNextCheck, time);
-}
-
-unsigned long long AppConfig::licenseNextCheck() const {
-  return m_licenseNextCheck;
-}
-
-const QString &AppConfig::guid() const { return m_Guid; }
-
-bool AppConfig::languageSync() const { return m_LanguageSync; }
-
-void AppConfig::setInvertScrollDirection(bool newValue) {
-  setSettingModified(m_InvertScrollDirection, newValue);
-}
-
-void AppConfig::setLanguageSync(bool newValue) {
-  setSettingModified(m_LanguageSync, newValue);
-}
-
-bool AppConfig::preventSleep() const { return m_PreventSleep; }
-
-bool AppConfig::clientHostMode() const {
-  return (m_ClientHostMode && initiateConnectionFromServer());
-}
-
-bool AppConfig::serverClientMode() const {
-  return (m_ServerClientMode && initiateConnectionFromServer());
-}
-
-bool AppConfig::initiateConnectionFromServer() const {
-  return m_InitiateConnectionFromServer;
-}
-
-void AppConfig::setPreventSleep(bool newValue) {
-  setSettingModified(m_PreventSleep, newValue);
-}
-
-bool AppConfig::minimizeToTray() { return m_MinimizeToTray; }
 
 QString AppConfig::settingName(Setting name) {
   auto index = static_cast<int>(name);
@@ -514,17 +316,65 @@ bool AppConfig::isSystemScoped() const {
   return m_Config.getScope() == Config::Scope::System;
 }
 
-bool AppConfig::serverGroupChecked() const { return m_ServerGroupChecked; }
+template <typename T>
+void AppConfig::setSettingModified(T &variable, const T &newValue) {
+  if (variable != newValue) {
+    variable = newValue;
+    setModified(true);
+  }
+}
 
-bool AppConfig::useExternalConfig() const { return m_UseExternalConfig; }
+void AppConfig::generateCertificate(bool forceGeneration) const {
+  try {
+    SslCertificate sslCertificate;
+    sslCertificate.generateCertificate(
+        tlsCertPath(), tlsKeyLength(), forceGeneration);
+    emit sslToggled();
+  } catch (const std::exception &e) {
+    qDebug() << e.what();
+    qFatal("Failed to configure TLS");
+  }
+}
 
-const QString &AppConfig::configFile() const { return m_ConfigFile; }
+void AppConfig::applyAppSettings() const {
+  QApplication::setQuitOnLastWindowClosed(!m_CloseToTray);
+}
 
-bool AppConfig::useInternalConfig() const { return m_UseInternalConfig; }
+///////////////////////////////////////////////////////////////////////////////
+// Begin getters and setters
+///////////////////////////////////////////////////////////////////////////////
 
-bool AppConfig::clientGroupChecked() const { return m_ClientGroupChecked; }
+#ifdef SYNERGY_ENABLE_LICENSING
 
-QString AppConfig::serverHostname() const { return m_ServerHostname; }
+bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
+
+void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
+
+void AppConfig::setEdition(Edition e) {
+  setSettingModified(m_Edition, e);
+  setCommonSetting(Setting::kEditionSetting, m_Edition);
+}
+
+Edition AppConfig::edition() const { return m_Edition; }
+
+void AppConfig::setSerialKey(const QString &serial) {
+  setSettingModified(m_Serialkey, serial);
+  setCommonSetting(Setting::kSerialKey, m_Serialkey);
+}
+
+void AppConfig::clearSerialKey() { m_Serialkey.clear(); }
+
+QString AppConfig::serialKey() const { return m_Serialkey; }
+
+int AppConfig::lastExpiringWarningTime() const {
+  return m_LastExpiringWarningTime;
+}
+
+void AppConfig::setLastExpiringWarningTime(int newValue) {
+  setSettingModified(m_LastExpiringWarningTime, newValue);
+}
+
+#endif // SYNERGY_ENABLE_LICENSING
 
 void AppConfig::setServerGroupChecked(bool newValue) {
   setSettingModified(m_ServerGroupChecked, newValue);
@@ -558,13 +408,165 @@ void AppConfig::setServerClientMode(bool newValue) {
   setSettingModified(m_ServerClientMode, newValue);
 }
 
-template <typename T>
-void AppConfig::setSettingModified(T &variable, const T &newValue) {
-  if (variable != newValue) {
-    variable = newValue;
-    setModified(true);
+Config &AppConfig::config() { return m_Config; }
+
+const QString &AppConfig::screenName() const { return m_ScreenName; }
+
+int AppConfig::port() const { return m_Port; }
+
+const QString &AppConfig::networkInterface() const { return m_Interface; }
+
+int AppConfig::logLevel() const { return m_LogLevel; }
+
+bool AppConfig::logToFile() const { return m_LogToFile; }
+
+const QString &AppConfig::logFilename() const { return m_LogFilename; }
+
+QString AppConfig::logDir() const {
+  // by default log to home dir
+  return QDir::home().absolutePath() + "/";
+}
+
+void AppConfig::persistLogDir() const {
+  QDir dir = logDir();
+
+  // persist the log directory
+  if (!dir.exists()) {
+    dir.mkpath(dir.path());
   }
 }
+
+QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
+
+ProcessMode AppConfig::processMode() const {
+  return m_ServiceEnabled ? ProcessMode::kService : ProcessMode::kDesktop;
+}
+
+bool AppConfig::wizardShouldRun() const {
+  return m_WizardLastRun < kWizardVersion;
+}
+
+bool AppConfig::startedBefore() const { return m_StartedBefore; }
+
+QString AppConfig::lastVersion() const { return m_LastVersion; }
+
+void AppConfig::setLastVersion(const QString &version) {
+  setSettingModified(m_LastVersion, version);
+}
+
+void AppConfig::setScreenName(const QString &s) {
+  setSettingModified(m_ScreenName, s);
+  emit screenNameChanged();
+}
+
+void AppConfig::setPort(int i) { setSettingModified(m_Port, i); }
+
+void AppConfig::setNetworkInterface(const QString &s) {
+  setSettingModified(m_Interface, s);
+}
+
+void AppConfig::setLogLevel(int i) { setSettingModified(m_LogLevel, i); }
+
+void AppConfig::setLogToFile(bool b) { setSettingModified(m_LogToFile, b); }
+
+void AppConfig::setLogFilename(const QString &s) {
+  setSettingModified(m_LogFilename, s);
+}
+
+void AppConfig::setWizardHasRun() {
+  setSettingModified(m_WizardLastRun, kWizardVersion);
+}
+
+void AppConfig::setStartedBefore(bool b) {
+  setSettingModified(m_StartedBefore, b);
+}
+
+void AppConfig::setElevateMode(ElevateMode em) {
+  setSettingModified(m_ElevateMode, em);
+}
+
+QString AppConfig::coreServerName() const { return m_CoreServerName; }
+
+QString AppConfig::coreClientName() const { return m_CoreClientName; }
+
+ElevateMode AppConfig::elevateMode() { return m_ElevateMode; }
+
+void AppConfig::setCryptoEnabled(bool newValue) {
+  if (m_CryptoEnabled != newValue && newValue) {
+    generateCertificate();
+  } else {
+    emit sslToggled();
+  }
+  setSettingModified(m_CryptoEnabled, newValue);
+}
+
+bool AppConfig::cryptoAvailable() const {
+  bool result{true};
+
+#ifdef SYNERGY_ENABLE_LICENSING
+  result =
+      (edition() == kPro || edition() == kProChina || edition() == kBusiness ||
+       edition() == kUltimate);
+#endif // SYNERGY_ENABLE_LICENSING
+
+  return result;
+}
+
+bool AppConfig::cryptoEnabled() const {
+  return cryptoAvailable() && m_CryptoEnabled;
+}
+
+void AppConfig::setAutoHide(bool b) { setSettingModified(m_AutoHide, b); }
+
+bool AppConfig::autoHide() const { return m_AutoHide; }
+
+void AppConfig::setMinimizeToTray(bool newValue) {
+  setSettingModified(m_MinimizeToTray, newValue);
+}
+
+bool AppConfig::invertScrollDirection() const {
+  return m_InvertScrollDirection;
+}
+
+void AppConfig::setLicenseNextCheck(unsigned long long time) {
+  setSettingModified(m_licenseNextCheck, time);
+}
+
+unsigned long long AppConfig::licenseNextCheck() const {
+  return m_licenseNextCheck;
+}
+
+const QString &AppConfig::guid() const { return m_Guid; }
+
+bool AppConfig::languageSync() const { return m_LanguageSync; }
+
+void AppConfig::setInvertScrollDirection(bool newValue) {
+  setSettingModified(m_InvertScrollDirection, newValue);
+}
+
+void AppConfig::setLanguageSync(bool newValue) {
+  setSettingModified(m_LanguageSync, newValue);
+}
+
+bool AppConfig::preventSleep() const { return m_PreventSleep; }
+
+bool AppConfig::clientHostMode() const {
+  return (m_ClientHostMode && initiateConnectionFromServer());
+}
+
+bool AppConfig::serverClientMode() const {
+  return (m_ServerClientMode && initiateConnectionFromServer());
+}
+
+bool AppConfig::initiateConnectionFromServer() const {
+  return m_InitiateConnectionFromServer;
+}
+
+void AppConfig::setPreventSleep(bool newValue) {
+  setSettingModified(m_PreventSleep, newValue);
+}
+
+bool AppConfig::minimizeToTray() const { return m_MinimizeToTray; }
 
 void AppConfig::setTlsCertPath(const QString &path) { m_TlsCertPath = path; }
 
@@ -579,26 +581,30 @@ void AppConfig::setTlsKeyLength(const QString &length) {
   }
 }
 
-void AppConfig::generateCertificate(bool forceGeneration) const {
-  try {
-    SslCertificate sslCertificate;
-    sslCertificate.generateCertificate(
-        tlsCertPath(), tlsKeyLength(), forceGeneration);
-    emit sslToggled();
-  } catch (const std::exception &e) {
-    qDebug() << e.what();
-    qFatal("Failed to configure TLS");
-  }
-}
-
 void AppConfig::setServiceEnabled(bool enabled) {
   setSettingModified(m_ServiceEnabled, enabled);
 }
 
 bool AppConfig::serviceEnabled() const { return m_ServiceEnabled; }
 
-void AppConfig::setMinimizeOnClose(bool minimize) {
-  setSettingModified(m_MinimizeOnClose, minimize);
+void AppConfig::setCloseToTray(bool minimize) {
+  setSettingModified(m_CloseToTray, minimize);
 }
 
-bool AppConfig::minimizeOnClose() const { return m_MinimizeOnClose; }
+bool AppConfig::closeToTray() const { return m_CloseToTray; }
+
+bool AppConfig::serverGroupChecked() const { return m_ServerGroupChecked; }
+
+bool AppConfig::useExternalConfig() const { return m_UseExternalConfig; }
+
+const QString &AppConfig::configFile() const { return m_ConfigFile; }
+
+bool AppConfig::useInternalConfig() const { return m_UseInternalConfig; }
+
+bool AppConfig::clientGroupChecked() const { return m_ClientGroupChecked; }
+
+QString AppConfig::serverHostname() const { return m_ServerHostname; }
+
+///////////////////////////////////////////////////////////////////////////////
+// End getters and setters
+///////////////////////////////////////////////////////////////////////////////

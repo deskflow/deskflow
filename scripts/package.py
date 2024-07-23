@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 
-import platform
 import lib.env as env
+
+env.ensure_in_venv(__file__)
+
+import platform
 from lib.linux import PackageType
+from dotenv import load_dotenv  # type: ignore
 
 env_file = ".env"
 default_package_prefix = "synergy"
 
 
 def main():
-    # important: load venv before loading modules that install deps.
-    env.ensure_in_venv(__file__)
-
-    from dotenv import load_dotenv  # type: ignore
 
     load_dotenv(dotenv_path=env_file)
 

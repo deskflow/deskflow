@@ -1038,7 +1038,7 @@ void MainWindow::setEdition(Edition edition) {
 #ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::InvalidLicense() {
   stopCore();
-  m_AppConfig.activationHasRun(false);
+  m_AppConfig.setActivationHasRun(false);
 }
 
 void MainWindow::showLicenseNotice(const QString &notice) {

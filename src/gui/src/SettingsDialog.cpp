@@ -21,7 +21,10 @@
 #include "AppConfig.h"
 #include "MainWindow.h"
 #include "SslCertificate.h"
+
+#ifdef SYNERGY_ENABLE_LICENSING
 #include "UpgradeDialog.h"
+#endif // SYNERGY_ENABLE_LICENSING
 
 #include <QDir>
 #include <QFileDialog>
@@ -109,7 +112,7 @@ void SettingsDialog::accept() {
   appConfig().setClientHostMode(m_pCheckBoxClientHostMode->isChecked());
   appConfig().setServerClientMode(m_pCheckBoxServerClientMode->isChecked());
   appConfig().setServiceEnabled(m_pCheckBoxServiceEnabled->isChecked());
-  appConfig().setMinimizeOnClose(m_pCheckBoxMinimizeOnClose->isChecked());
+  appConfig().setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
 
   appConfig().saveSettings();
   QDialog::accept();
@@ -142,7 +145,7 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxClientHostMode->setChecked(m_appConfig.clientHostMode());
   m_pCheckBoxServerClientMode->setChecked(m_appConfig.serverClientMode());
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.serviceEnabled());
-  m_pCheckBoxMinimizeOnClose->setChecked(m_appConfig.minimizeOnClose());
+  m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
   if (m_appConfig.isSystemScoped()) {
     m_pRadioSystemScope->setChecked(true);
@@ -299,7 +302,7 @@ void SettingsDialog::updateControlsEnabled() {
   m_pCheckBoxClientHostMode->setEnabled(writable);
   m_pCheckBoxServerClientMode->setEnabled(writable);
   m_pCheckBoxServiceEnabled->setEnabled(writable);
-  m_pCheckBoxMinimizeOnClose->setEnabled(writable);
+  m_pCheckBoxCloseToTray->setEnabled(writable);
 
   m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
   m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());

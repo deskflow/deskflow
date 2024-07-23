@@ -1,9 +1,14 @@
+#!/usr/bin/env python3
+
+import lib.env as env
+
+env.ensure_in_venv(__file__)
+
 import os, sys, time, subprocess, argparse
 import lib.windows as windows
-import lib.file_utils as file_utils
-import lib.env as env
+import psutil  # type: ignore
 import lib.colors as colors
-import psutil
+import lib.file_utils as file_utils
 
 DEFAULT_BIN_NAME = "synergyd"
 DEFAULT_SOURCE_DIR = os.path.join("build", "temp", "bin")

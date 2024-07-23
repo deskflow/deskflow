@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/src/QIpcClient.h"
+#include "gui/QIpcClient.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -25,7 +25,7 @@ using testing::StrEq;
 
 class MockStream : public QDataStreamProxy {
 public:
-  MOCK_METHOD(int, writeRawData, (const char *, int), (override));
+  MOCK_METHOD(qint64, writeRawData, (const char *, qint64), (override));
 };
 
 TEST(QIpcClientTests, sendCommand_anyCommand_commandSent) {

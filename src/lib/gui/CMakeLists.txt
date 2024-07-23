@@ -1,6 +1,5 @@
 # Synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2012-2024 Symless Ltd.
-# Copyright (C) 2009-2012 Nick Bolton
+# Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,16 +13,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(arch)
-add_subdirectory(base)
-add_subdirectory(client)
-add_subdirectory(common)
-add_subdirectory(io)
-add_subdirectory(ipc)
-add_subdirectory(mt)
-add_subdirectory(net)
-add_subdirectory(platform)
-add_subdirectory(server)
-add_subdirectory(synergy)
-add_subdirectory(shared)
-add_subdirectory(gui)
+set(target gui)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+file(GLOB_RECURSE sources *.cpp)
+file(GLOB_RECURSE headers *.h)
+
+if(ADD_HEADERS_TO_SOURCES)
+  list(APPEND sources ${headers})
+endif()
+
+add_library(${target} STATIC ${sources})
+target_link_libraries(
+  ${target}
+  shared
+  Qt6::Core
+  Qt6::Widgets
+  Qt6::Network)

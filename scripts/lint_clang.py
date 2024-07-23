@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+import lib.env as env
+
+env.ensure_in_venv(__file__)
+
 import argparse, sys
 import lib.fs as fs
-import lib.env as env
+from clang_format import clang_format  # type: ignore
 
 include_files = [
     "*.h",
@@ -26,9 +30,6 @@ def main():
         help="In-place format all files",
     )
     args = parser.parse_args()
-
-    env.ensure_in_venv(__file__)
-    from clang_format import clang_format  # type: ignore
 
     cmd_args = ["-i"] if args.format else ["--dry-run", "--Werror"]
     files_recursive = fs.find_files(dirs, include_files)
