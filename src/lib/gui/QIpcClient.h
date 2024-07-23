@@ -23,7 +23,7 @@
 #include <QTcpSocket>
 
 #include "ElevateMode.h"
-#include "proxy/QDataStreamProxy.h"
+#include "QDataStreamProxy.h"
 
 class IpcReader;
 

@@ -11,7 +11,7 @@ public:
   }
   virtual ~QDataStreamProxy() = default;
 
-  virtual int writeRawData(const char *data, int len) {
+  virtual qint64 writeRawData(const char *data, qint64 len) {
     assert(m_Stream);
     return m_Stream->writeRawData(data, len);
   }

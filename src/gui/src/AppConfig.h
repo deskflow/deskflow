@@ -21,8 +21,8 @@
 #include "CommonConfig.h"
 #include "Config.h"
 #include "CoreInterface.h"
-#include "ElevateMode.h"
 #include "LicenseManager.h"
+#include "gui/ElevateMode.h"
 #include "shared/EditionType.h"
 
 #include <QObject>

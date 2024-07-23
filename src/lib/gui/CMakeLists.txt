@@ -28,4 +28,9 @@ if(ADD_HEADERS_TO_SOURCES)
 endif()
 
 add_library(${target} STATIC ${sources})
-target_link_libraries(${target} Qt6::Core Qt6::Widgets Qt6::Network)
+target_link_libraries(
+  ${target}
+  shared
+  Qt6::Core
+  Qt6::Widgets
+  Qt6::Network)

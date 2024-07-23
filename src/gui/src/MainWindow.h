@@ -32,12 +32,13 @@
 #include "AppConfig.h"
 #include "ClientConnection.h"
 #include "Config.h"
-#include "QIpcClient.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "TrayIcon.h"
+#include "gui/QIpcClient.h"
 #include "gui/VersionChecker.h"
 #include "shared/Ipc.h"
+
 
 class QAction;
 class QMenu;

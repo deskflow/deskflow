@@ -80,6 +80,14 @@
       }
     },
     {
+      "label": "clean-qt",
+      "type": "shell",
+      "command": "rm -r build/src/gui",
+      "windows": {
+        "command": "remove-item -recurse build/src/gui"
+      }
+    },
+    {
       "label": "unittests (current)",
       "type": "shell",
       "command": "python",
