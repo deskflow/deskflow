@@ -175,6 +175,7 @@ void AppConfig::loadSettings() {
   }
 
   m_ServiceEnabled = loadSetting(kServiceEnabled, m_ServiceEnabled).toBool();
+  m_CloseToTray = loadSetting(kCloseToTray, m_CloseToTray).toBool();
 
   try {
     // Set the default path of the TLS certificate file in the users DIR
