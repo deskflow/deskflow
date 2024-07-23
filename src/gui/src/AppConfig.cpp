@@ -85,7 +85,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "clientHostMode",
     "serverClientMode",
     "serviceEnabled",
-    "minimizeOnClose"};
+    "closeToTray"};
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
@@ -110,7 +110,7 @@ void AppConfig::load() {
 }
 
 void AppConfig::applyAppSettings() const {
-  QApplication::setQuitOnLastWindowClosed(!m_MinimizeOnClose);
+  QApplication::setQuitOnLastWindowClosed(!m_CloseToTray);
 }
 
 Config &AppConfig::config() { return m_Config; }
@@ -277,7 +277,7 @@ void AppConfig::saveSettings() {
     setSetting(kClientHostMode, m_ClientHostMode);
     setSetting(kServerClientMode, m_ServerClientMode);
     setSetting(kServiceEnabled, m_ServiceEnabled);
-    setSetting(kMinimizeOnClose, m_MinimizeOnClose);
+    setSetting(kCloseToTray, m_CloseToTray);
 
     // See enum ElevateMode declaration to understand why this setting is bool
     setSetting(kElevateModeSetting, m_ElevateMode == ElevateAlways);
@@ -392,7 +392,7 @@ bool AppConfig::cryptoEnabled() const {
 
 void AppConfig::setAutoHide(bool b) { setSettingModified(m_AutoHide, b); }
 
-bool AppConfig::autoHide() { return m_AutoHide; }
+bool AppConfig::autoHide() const { return m_AutoHide; }
 
 void AppConfig::setMinimizeToTray(bool newValue) {
   setSettingModified(m_MinimizeToTray, newValue);
@@ -440,7 +440,7 @@ void AppConfig::setPreventSleep(bool newValue) {
   setSettingModified(m_PreventSleep, newValue);
 }
 
-bool AppConfig::minimizeToTray() { return m_MinimizeToTray; }
+bool AppConfig::minimizeToTray() const { return m_MinimizeToTray; }
 
 QString AppConfig::settingName(Setting name) {
   auto index = static_cast<int>(name);
@@ -597,8 +597,8 @@ void AppConfig::setServiceEnabled(bool enabled) {
 
 bool AppConfig::serviceEnabled() const { return m_ServiceEnabled; }
 
-void AppConfig::setMinimizeOnClose(bool minimize) {
-  setSettingModified(m_MinimizeOnClose, minimize);
+void AppConfig::setCloseToTray(bool minimize) {
+  setSettingModified(m_CloseToTray, minimize);
 }
 
-bool AppConfig::minimizeOnClose() const { return m_MinimizeOnClose; }
+bool AppConfig::closeToTray() const { return m_CloseToTray; }

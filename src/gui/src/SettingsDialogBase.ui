@@ -373,7 +373,7 @@ background-color: rgba(192,192,192, 0.1);
          <number>0</number>
         </property>
         <item>
-         <widget class="QCheckBox" name="m_pCheckBoxMinimizeOnClose">
+         <widget class="QCheckBox" name="m_pCheckBoxCloseToTray">
           <property name="text">
            <string>Minimize to tray on close</string>
           </property>
@@ -945,7 +945,7 @@ background-color: rgba(192,192,192, 0.1);
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pCheckBoxMinimizeOnClose</tabstop>
+  <tabstop>m_pCheckBoxCloseToTray</tabstop>
   <tabstop>m_pCheckBoxMinimizeToTray</tabstop>
   <tabstop>m_pCheckBoxAutoHide</tabstop>
   <tabstop>m_pCheckBoxEnableCrypto</tabstop>

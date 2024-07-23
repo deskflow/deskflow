@@ -68,7 +68,7 @@ void ActivationDialog::reject() {
 
 void ActivationDialog::accept() {
   QMessageBox message;
-  m_appConfig->activationHasRun(true);
+  m_appConfig->setActivationHasRun(true);
 
   try {
     SerialKey serialKey(

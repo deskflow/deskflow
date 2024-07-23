@@ -96,7 +96,7 @@ public:
   ElevateMode elevateMode();
   bool cryptoAvailable() const;
   bool cryptoEnabled() const;
-  bool autoHide();
+  bool autoHide() const;
   bool invertScrollDirection() const;
   unsigned long long licenseNextCheck() const;
   const QString &guid() const;
@@ -113,8 +113,8 @@ public:
   QString serverHostname() const;
   QString lastVersion() const;
   bool serviceEnabled() const;
-  bool minimizeToTray();
-  bool minimizeOnClose() const;
+  bool minimizeToTray() const;
+  bool closeToTray() const;
 
   /// @brief Gets the current TLS certificate path
   /// @return QString The path to the cert
@@ -171,7 +171,7 @@ protected:
     kClientHostMode,
     kServerClientMode,
     kServiceEnabled,
-    kMinimizeOnClose
+    kCloseToTray
   };
 
   static QString settingName(AppConfig::Setting name);
@@ -210,11 +210,11 @@ protected:
   void setServerHostname(const QString &);
   void setClientHostMode(bool newValue);
   void setServerClientMode(bool newValue);
-  AppConfig &activationHasRun(bool value);
   void setMinimizeToTray(bool b);
   void setLastVersion(const QString &version);
   void setServiceEnabled(bool enabled);
-  void setMinimizeOnClose(bool minimize);
+  void setCloseToTray(bool minimize);
+  void setActivationHasRun(bool value);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -308,7 +308,7 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
-  bool m_MinimizeOnClose = true;
+  bool m_CloseToTray = true;
 
   /// @brief The path to the TLS certificate file
   QString m_TlsCertPath = "";
