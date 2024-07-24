@@ -39,7 +39,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   const int argc = 3;
   const char *kYScrollCmd[argc] = {"stub", "--yscroll", "1"};
 
@@ -54,7 +54,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 2;
   std::array<const char *, argc> kLangCmd = {"stub", "--sync-language"};
@@ -66,14 +66,14 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync) {
 
 TEST(ClientArgsParsingTests, parseClientArgs_setInvertScroll) {
   NiceMock<MockArgParser> argParser;
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   const int argc = 2;
   std::array<const char *, argc> kLangCmd = {"stub", "--invert-scroll"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
   EXPECT_EQ(
       clientArgs.m_clientScrollDirection,
-      lib::synergy::ClientScrollDirection::INVERT_SERVER);
+      synergy::ClientScrollDirection::INVERT_SERVER);
 }
 
 TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
@@ -82,7 +82,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 9;
   std::array<const char *, argc> kLangCmd = {
@@ -105,7 +105,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setSynergyAddress) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   const int argc = 2;
   const char *kAddressCmd[argc] = {"stub", "mock_address"};
 
@@ -121,7 +121,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   const int argc = 1;
   const char *kNoAddressCmd[argc] = {"stub"};
 
@@ -136,7 +136,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   const int argc = 3;
   const char *kUnrecognizedCmd[argc] = {"stub", "mock_arg", "mock_address"};
 

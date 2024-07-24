@@ -32,11 +32,9 @@
 
 class QSettings;
 class SettingsDialog;
-class LicenseRegister;
 class ServerConfig;
-class License;
+class LicenseDisplay;
 class ActivationDialog;
-class LicenseRegistry;
 
 enum class ProcessMode { kService, kDesktop };
 
@@ -56,7 +54,6 @@ class AppConfig : public QObject, public synergy::gui::CommonConfig {
   friend class MainWindow;
   friend class SetupWizard;
   friend class ServerConfig;
-  friend class License;
   friend class ActivationDialog;
   friend class LicenseRegistry;
 

@@ -58,7 +58,6 @@ class SetupWizard;
 class DataDownloader;
 class CommandProcess;
 class SslCertificate;
-class License;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   Q_OBJECT

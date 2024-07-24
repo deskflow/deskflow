@@ -128,7 +128,7 @@ TEST_F(NetworkTests, sendToClient_mockData) {
   ON_CALL(serverConfig, getInputFilter())
       .WillByDefault(Return(&serverInputFilter));
 
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
   Server server(
       serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -145,7 +145,7 @@ TEST_F(NetworkTests, sendToClient_mockData) {
       .WillByDefault(Invoke(getScreenShape));
   ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
@@ -192,7 +192,7 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
   ON_CALL(serverConfig, getInputFilter())
       .WillByDefault(Return(&serverInputFilter));
 
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
   Server server(
       serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -209,7 +209,7 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
       .WillByDefault(Invoke(getScreenShape));
   ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
@@ -249,7 +249,7 @@ TEST_F(NetworkTests, sendToServer_mockData) {
   ON_CALL(serverConfig, getInputFilter())
       .WillByDefault(Return(&serverInputFilter));
 
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
   Server server(
       serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -266,7 +266,7 @@ TEST_F(NetworkTests, sendToServer_mockData) {
       .WillByDefault(Invoke(getScreenShape));
   ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(
@@ -313,7 +313,7 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
   ON_CALL(serverConfig, getInputFilter())
       .WillByDefault(Return(&serverInputFilter));
 
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   serverArgs.m_enableDragDrop = true;
   Server server(
       serverConfig, &primaryClient, &serverScreen, &m_events, serverArgs);
@@ -330,7 +330,7 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
       .WillByDefault(Invoke(getScreenShape));
   ON_CALL(clientScreen, getCursorPos(_, _)).WillByDefault(Invoke(getCursorPos));
 
-  lib::synergy::ClientArgs clientArgs;
+  synergy::ClientArgs clientArgs;
   clientArgs.m_enableDragDrop = true;
   clientArgs.m_enableCrypto = false;
   Client client(

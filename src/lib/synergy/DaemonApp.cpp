@@ -36,7 +36,6 @@
 #include "synergy/ClientArgs.h"
 #include "synergy/ServerArgs.h"
 
-
 #if SYSAPI_WIN32
 
 #include "arch/win32/ArchMiscWindows.h"
@@ -308,10 +307,10 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
       int argc = static_cast<int>(argsArray.size());
 
       if (isServerCommandLine(argsArray)) {
-        auto serverArgs = new lib::synergy::ServerArgs();
+        auto serverArgs = new synergy::ServerArgs();
         argParser.parseServerArgs(*serverArgs, argc, argv);
       } else {
-        auto clientArgs = new lib::synergy::ClientArgs();
+        auto clientArgs = new synergy::ClientArgs();
         argParser.parseClientArgs(*clientArgs, argc, argv);
       }
 

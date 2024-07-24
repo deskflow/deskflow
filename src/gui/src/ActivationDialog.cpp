@@ -21,11 +21,14 @@
 #include "MainWindow.h"
 #include "gui/LicenseDisplay.h"
 #include "license/ProductEdition.h"
+#include "license/parse_serial_key.h"
 #include "ui_ActivationDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
+
+using namespace synergy::license;
 
 const char *const kContactUrl =
     "https://symless.com/synergy/contact?source=gui";
@@ -78,7 +81,11 @@ void ActivationDialog::accept() {
   auto serialKeyString =
       ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString();
 
-  if (License license(serialKeyString); !m_LicenseDisplay.setLicense(license)) {
+  SerialKey serialKey = parseSerialKey(serialKeyString);
+
+  if (serialKey.isValid) {
+    m_LicenseDisplay.setLicense(License(serialKey));
+  } else {
     QMessageBox::critical(
         this, "Activation failed",
         tr("<p>There was a problem activating Synergy. "

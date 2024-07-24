@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "license/ProductEdition.h"
 #define TEST_ENV
+
+#include "license/ProductEdition.h"
 
 #include "license/License.h"
 
@@ -24,8 +25,9 @@
 #include <gtest/gtest.h>
 
 using enum Edition;
+using namespace synergy::license;
 
-TEST(LicenseTests, isExpiring_validV2TrialBasicSerial_returnFalse) {
+TEST(LicenseTests, ctor_isExpiring_validV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;1;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B313B38363430307D");
@@ -35,7 +37,7 @@ TEST(LicenseTests, isExpiring_validV2TrialBasicSerial_returnFalse) {
   EXPECT_EQ(kBasic, license.edition());
 }
 
-TEST(LicenseTests, isExpiring_expiringV2TrialBasicSerial_returnTrue) {
+TEST(LicenseTests, ctor_isExpiring_expiringV2TrialBasicSerial_returnTrue) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
@@ -44,7 +46,7 @@ TEST(LicenseTests, isExpiring_expiringV2TrialBasicSerial_returnTrue) {
   EXPECT_EQ(true, license.isExpiring(1));
 }
 
-TEST(LicenseTests, isExpiring_expiredV2TrialBasicSerial_returnFalse) {
+TEST(LicenseTests, ctor_isExpiring_expiredV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
@@ -53,7 +55,7 @@ TEST(LicenseTests, isExpiring_expiredV2TrialBasicSerial_returnFalse) {
   EXPECT_FALSE(license.isExpiring(86401));
 }
 
-TEST(LicenseTests, isExpired_validV2TrialBasicSerial_returnFalse) {
+TEST(LicenseTests, ctor_isExpired_validV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
@@ -62,7 +64,7 @@ TEST(LicenseTests, isExpired_validV2TrialBasicSerial_returnFalse) {
   EXPECT_FALSE(license.isExpired(0));
 }
 
-TEST(LicenseTests, isExpired_expiringV2TrialBasicSerial_returnFalse) {
+TEST(LicenseTests, ctor_isExpired_expiringV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
@@ -71,7 +73,7 @@ TEST(LicenseTests, isExpired_expiringV2TrialBasicSerial_returnFalse) {
   EXPECT_FALSE(license.isExpired(1));
 }
 
-TEST(LicenseTests, isExpired_expiredV2TrialBasicSerial_returnTrue) {
+TEST(LicenseTests, ctor_isExpired_expiredV2TrialBasicSerial_returnTrue) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
@@ -80,21 +82,24 @@ TEST(LicenseTests, isExpired_expiredV2TrialBasicSerial_returnTrue) {
   EXPECT_EQ(true, license.isExpired(86401));
 }
 
-TEST(LicenseTests, daysLeft_validExactlyOneDayV2TrialBasicSerial_returnOne) {
+TEST(
+    LicenseTests,
+    ctor_daysLeft_validExactlyOneDayV2TrialBasicSerial_returnOne) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
   EXPECT_EQ(1, license.daysLeft(0));
 }
 
-TEST(LicenseTests, daysLeft_validWithinOneDayV2TrialBasicSerial_returnOne) {
+TEST(
+    LicenseTests, ctor_daysLeft_validWithinOneDayV2TrialBasicSerial_returnOne) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
   EXPECT_EQ(1, license.daysLeft(1));
 }
 
-TEST(LicenseTests, daysLeft_expiredV2TrialBasicSerial_returnZero) {
+TEST(LicenseTests, ctor_daysLeft_expiredV2TrialBasicSerial_returnZero) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
@@ -102,7 +107,7 @@ TEST(LicenseTests, daysLeft_expiredV2TrialBasicSerial_returnZero) {
 }
 
 // Subscription license tests
-TEST(LicenseTests, isExpiring_validV2SubscriptionBasicSerial_returnFalse) {
+TEST(LicenseTests, ctor_isExpiring_validV2SubscriptionBasicSerial_returnFalse) {
   // {v2;subscription;basic;Bob;1;email;company name;1;86400}
   License license("7B76323B737562736372697074696F6E3B62617369633B426F623B313B6"
                   "56D61696C3B636F6D70616E79206E616D653B313B38363430307D");
@@ -112,7 +117,9 @@ TEST(LicenseTests, isExpiring_validV2SubscriptionBasicSerial_returnFalse) {
   EXPECT_EQ(kBasic, license.edition());
 }
 
-TEST(LicenseTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue) {
+TEST(
+    LicenseTests,
+    ctor_isExpiring_expiringV2SubscriptionBasicSerial_returnTrue) {
   // {v2;subscription;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B737562736372697074696F6E3B62617369633B426F623B313B6"
                   "56D61696C3B636F6D70616E79206E616D653B303B38363430307D");
@@ -121,7 +128,7 @@ TEST(LicenseTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue) {
   EXPECT_EQ(true, license.isExpiring(1));
 }
 
-TEST(LicenseTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue) {
+TEST(LicenseTests, ctor_isExpired_expiredV2SubscriptionBasicSerial_returnTrue) {
   // {v2;subscription;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B737562736372697074696F6E3B62617369633B426F623B313B6"
                   "56D61696C3B636F6D70616E79206E616D653B303B38363430307D");
@@ -131,7 +138,7 @@ TEST(LicenseTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue) {
 }
 
 // toString method tests
-TEST(LicenseTests, toStringV2SubscriptionBasicSerialKey) {
+TEST(LicenseTests, ctor_toStringV2SubscriptionBasicSerialKey) {
   //{v2;subscription;basic;Bob;1;email;company name;0;86400}
   const std::string Expected =
       "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B63"
@@ -140,7 +147,7 @@ TEST(LicenseTests, toStringV2SubscriptionBasicSerialKey) {
   EXPECT_EQ(Expected, license.toString());
 }
 
-TEST(LicenseTests, toStringV2TrialBasicSerialKey) {
+TEST(LicenseTests, ctor_toStringV2TrialBasicSerialKey) {
   //{v2;trial;basic;Bob;1;email;company name;0;86400}
   const std::string Expected =
       "7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E7920"
@@ -149,7 +156,7 @@ TEST(LicenseTests, toStringV2TrialBasicSerialKey) {
   EXPECT_EQ(Expected, license.toString());
 }
 
-TEST(LicenseTests, toStringV1BasicSerialKey) {
+TEST(LicenseTests, ctor_toStringV1BasicSerialKey) {
   //{v1;basic;Bob;1;email;company name;0;0}
   const std::string Expected = "7B76313B62617369633B426F623B313B656D61696C3B636"
                                "F6D70616E79206E616D653B303B307D";
@@ -157,30 +164,24 @@ TEST(LicenseTests, toStringV1BasicSerialKey) {
   EXPECT_EQ(Expected, license.toString());
 }
 
-TEST(LicenseTests, IsValidKey_false) {
-  //{v1;basic;Bob;1;email;company name;0;0}
-  License license(kUnregistered);
+TEST(LicenseTests, ctor_default_isNotValid) {
+  License license;
   EXPECT_EQ(false, license.isValid());
 }
 
-TEST(LicenseTests, IsValidKey_true) {
-  License license(kBasic);
-  EXPECT_EQ(true, license.isValid());
-}
-
-TEST(LicenseTests, IsValidExpiredKey_false) {
+TEST(LicenseTests, ctor_IsValidExpiredKey_false) {
   License license("7B76323B737562736372697074696F6E3B62617369633B426F623B313B6"
                   "56D61696C3B636F6D70616E79206E616D653B303B38363430307D");
   EXPECT_EQ(false, license.isValid());
 }
 
-TEST(LicenseTests, test_getTimeLeft) {
+TEST(LicenseTests, ctor_getTimeLeft) {
   License license;
   int expected{-1};
   EXPECT_EQ(expected, license.getTimeLeft());
 }
 
-TEST(LicenseTests, test_getTimeLeft_subscription) {
+TEST(LicenseTests, ctor_getTimeLeft_subscription) {
   // {v2;subscription;basic;Bob;1;email;company name;0;86400}
   License license(
       "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D"
@@ -189,7 +190,7 @@ TEST(LicenseTests, test_getTimeLeft_subscription) {
   EXPECT_EQ(-1, license.getTimeLeft(86401));
 }
 
-TEST(LicenseTests, test_getTimeLeft_max_int) {
+TEST(LicenseTests, ctor_getTimeLeft_max_int) {
   //"{v2;subscription;basic;Bob;1;email;company name;0;3147483647}"
   License license(
       "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D"

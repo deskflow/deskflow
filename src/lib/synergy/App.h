@@ -47,7 +47,7 @@ typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(
 class App : public IApp {
 public:
   App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
-      lib::synergy::ArgsBase *args);
+      synergy::ArgsBase *args);
   App(App const &) = delete;
   App(App &&) = delete;
   virtual ~App();
@@ -56,7 +56,7 @@ public:
   App &operator=(App &&) = delete;
 
   // Returns args that are common between server and client.
-  lib::synergy::ArgsBase &argsBase() const { return *m_args; }
+  synergy::ArgsBase &argsBase() const { return *m_args; }
 
   // Prints the current compiled version.
   virtual void version();
@@ -129,7 +129,7 @@ protected:
   IEventQueue *m_events;
 
 private:
-  lib::synergy::ArgsBase *m_args;
+  synergy::ArgsBase *m_args;
   static App *s_instance;
   FileLogOutputter *m_fileLog;
   CreateTaskBarReceiverFunc m_createTaskBarReceiver;

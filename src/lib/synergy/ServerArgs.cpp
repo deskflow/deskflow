@@ -17,11 +17,9 @@
 
 #include "ServerArgs.h"
 
-namespace lib {
 namespace synergy {
 
 ServerArgs::~ServerArgs() {}
 
 ServerArgs::ServerArgs() { m_classType = kServer; }
 } // namespace synergy
-} // namespace lib

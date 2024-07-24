@@ -18,21 +18,15 @@
 #include "License.h"
 
 #include "Product.h"
-#include "SerialKeyParser.h"
+#include "license/SerialKey.h"
+#include "license/parse_serial_key.h"
 
 #include <climits>
 
-License::License(Edition edition) : m_serialKey(edition) {}
+namespace synergy::license {
 
-License::License(const std::string &serialKey) : m_serialKey(serialKey) {
-  SerialKeyParser parser;
-
-  if (parser.parse(serialKey)) {
-    m_serialKey = parser.getData();
-  } else {
-    throw InvalidSerialKey();
-  }
-}
+License::License(const std::string &licenseString)
+    : m_serialKey(parseSerialKey(licenseString)) {}
 
 bool License::isExpiring(time_t currentTime) const {
   bool result = false;
@@ -61,25 +55,17 @@ bool License::isExpired(time_t currentTime) const {
   return result;
 }
 
-bool License::isTrial() const { return m_serialKey.keyType.isTrial(); }
+bool License::isTrial() const { return m_serialKey.type.isTrial(); }
 
-bool License::isTimeLimited() const {
-  return m_serialKey.keyType.isTimeLimited();
-}
+bool License::isTimeLimited() const { return m_serialKey.type.isTimeLimited(); }
 
 bool License::isValid() const {
-  bool Valid = true;
-
-  if (!m_serialKey.product.isValid() || isExpired(::time(nullptr))) {
-    Valid = false;
-  }
-
-  return Valid;
+  return m_serialKey.product.isValid() && !isExpired(::time(nullptr));
 }
 
-Edition License::edition() const { return m_serialKey.product.getEdition(); }
+Edition License::edition() const { return m_serialKey.product.edition(); }
 
-const std::string &License::toString() const { return m_serialKey.key; }
+const std::string &License::toString() const { return m_serialKey.hexString; }
 
 time_t License::daysLeft(time_t currentTime) const {
   unsigned long long timeLeft = 0;
@@ -113,3 +99,5 @@ int License::getTimeLeft(time_t time) const {
 
   return result;
 }
+
+} // namespace synergy::license

@@ -34,7 +34,6 @@
 #include "synergy/XSynergy.h"
 #include "synergy/protocol_types.h"
 
-
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/IEventQueue.h"
@@ -61,7 +60,7 @@ App *App::s_instance = nullptr;
 
 App::App(
     IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
-    lib::synergy::ArgsBase *args)
+    synergy::ArgsBase *args)
     : m_bye(&exit),
       m_taskBarReceiver(NULL),
       m_suspended(false),
@@ -251,7 +250,7 @@ void App::runEventsLoop(void *) {
 // MinimalApp
 //
 
-MinimalApp::MinimalApp() : App(NULL, NULL, new lib::synergy::ArgsBase()) {
+MinimalApp::MinimalApp() : App(NULL, NULL, new synergy::ArgsBase()) {
   m_arch.init();
   setEvents(m_events);
 }

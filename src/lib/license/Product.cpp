@@ -27,7 +27,7 @@ const std::string SKE::Buisiness = "business";
 
 using Edition = Product::Edition;
 
-const std::map<std::string, Edition, std::less<>> serialKeyEditions{
+const std::map<std::string, Edition, std::less<>> kSerialKeyEditions{
     {SKE::Basic, Edition::kBasic},
     {SKE::Pro, Edition::kPro},
     {SKE::Buisiness, Edition::kBusiness},
@@ -39,10 +39,10 @@ Product::Product(const std::string &serialKeyEditionID) {
   setEdition(serialKeyEditionID);
 }
 
-Edition Product::getEdition() const { return m_edition; }
+Edition Product::edition() const { return m_edition; }
 
-std::string Product::getSerialKeyId() const {
-  switch (getEdition()) {
+std::string Product::serialKeyId() const {
+  switch (edition()) {
     using enum Edition;
 
   case kPro:
@@ -59,10 +59,10 @@ std::string Product::getSerialKeyId() const {
   }
 }
 
-std::string Product::productName() const {
+std::string Product::name() const {
 
   const std::string nameBase = SYNERGY_PRODUCT_NAME;
-  switch (getEdition()) {
+  switch (edition()) {
     using enum Edition;
 
   case kPro:
@@ -82,9 +82,9 @@ std::string Product::productName() const {
 void Product::setEdition(Edition edition) { m_edition = edition; }
 
 void Product::setEdition(const std::string &name) {
-  const auto &pType = serialKeyEditions.find(name);
+  const auto &pType = kSerialKeyEditions.find(name);
 
-  if (pType != serialKeyEditions.end()) {
+  if (pType != kSerialKeyEditions.end()) {
     m_edition = pType->second;
   } else {
     throw InvalidType();
@@ -92,5 +92,8 @@ void Product::setEdition(const std::string &name) {
 }
 
 bool Product::isValid() const {
-  return serialKeyEditions.contains(getSerialKeyId());
+  if (m_edition == Edition::kUnregistered) {
+    return false;
+  }
+  return kSerialKeyEditions.contains(serialKeyId());
 }

@@ -111,7 +111,7 @@ public:
   */
   Server(
       Config &config, PrimaryClient *primaryClient, synergy::Screen *screen,
-      IEventQueue *events, lib::synergy::ServerArgs const &args);
+      IEventQueue *events, synergy::ServerArgs const &args);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -490,5 +490,5 @@ private:
   bool m_waitDragInfoThread;
 
   ClientListener *m_clientListener;
-  lib::synergy::ServerArgs m_args;
+  synergy::ServerArgs m_args;
 };

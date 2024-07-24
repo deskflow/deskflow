@@ -18,14 +18,15 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 
 class Product {
   friend bool operator==(Product const &, Product const &) = default;
 
 public:
-  class InvalidType : public std::exception {
+  class InvalidType : public std::runtime_error {
   public:
-    const char *what() const noexcept override { return "Invalid product"; }
+    explicit InvalidType() : std::runtime_error("Invalid product type") {}
   };
 
   enum class Edition {
@@ -50,9 +51,9 @@ public:
   explicit Product(const std::string &serialKeyEditionID);
 
   bool isValid() const;
-  Edition getEdition() const;
-  std::string getSerialKeyId() const;
-  std::string productName() const;
+  Edition edition() const;
+  std::string serialKeyId() const;
+  std::string name() const;
 
   void setEdition(Edition type);
   void setEdition(const std::string &serialKeyId);

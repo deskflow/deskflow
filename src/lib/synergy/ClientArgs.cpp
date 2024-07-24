@@ -17,11 +17,9 @@
 
 #include "ClientArgs.h"
 
-namespace lib {
 namespace synergy {
 
 ClientArgs::~ClientArgs() {}
 
 ClientArgs::ClientArgs() { m_classType = kClient; }
 } // namespace synergy
-} // namespace lib

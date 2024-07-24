@@ -20,7 +20,6 @@
 
 #include "ArgsBase.h"
 
-namespace lib {
 namespace synergy {
 enum ClientScrollDirection { SERVER = 1, INVERT_SERVER = -1 };
 
@@ -55,5 +54,5 @@ public:
   std::string m_serverAddress;
 };
 } // namespace synergy
-} // namespace lib
+
 #endif // SYNERGY_CORE_CLIENTARGS_H

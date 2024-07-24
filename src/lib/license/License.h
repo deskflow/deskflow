@@ -18,11 +18,13 @@
 #pragma once
 
 #include "SerialKey.h"
-#include "license/ProductEdition.h"
+#include "license/Product.h"
 
 #include <ctime>
 #include <stdexcept>
 #include <string>
+
+namespace synergy::license {
 
 class License {
   friend bool operator==(License const &, License const &);
@@ -33,7 +35,8 @@ public:
     explicit InvalidSerialKey() : std::runtime_error("Invalid serial key") {}
   };
 
-  explicit License(Edition edition = Edition::kUnregistered);
+  explicit License() : m_serialKey(Product::Edition::kUnregistered) {}
+  explicit License(const SerialKey &serialKey) : m_serialKey(serialKey) {}
   explicit License(const std::string &serialKey);
 
   bool isExpiring(time_t currentTime) const;
@@ -58,3 +61,5 @@ inline bool operator==(License const &lhs, License const &rhs) {
 inline bool operator!=(License const &lhs, License const &rhs) {
   return !(lhs == rhs);
 }
+
+} // namespace synergy::license

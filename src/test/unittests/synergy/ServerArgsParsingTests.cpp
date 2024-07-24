@@ -33,9 +33,9 @@ bool server_stubParseGenericArgs(int, const char *const *, int &) {
 bool server_stubCheckUnexpectedArgs() { return false; }
 
 TEST(ServerArgs, ServerArgs_will_construct_from_copy) {
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   serverArgs.m_display = "display0";
-  lib::synergy::ServerArgs serverArgs2{serverArgs};
+  synergy::ServerArgs serverArgs2{serverArgs};
   EXPECT_EQ(serverArgs.m_display, serverArgs2.m_display);
 }
 
@@ -45,7 +45,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setSynergyAddress) {
       .WillByDefault(Invoke(server_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   const int argc = 3;
   const char *kAddressCmd[argc] = {"stub", "--address", "mock_address"};
 
@@ -60,7 +60,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile) {
       .WillByDefault(Invoke(server_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   const int argc = 3;
   const char *kConfigCmd[argc] = {"stub", "--config", "mock_configFile"};
 
@@ -75,7 +75,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_serialKey_isSet) {
       .WillByDefault(Invoke(server_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   const int argc = 3;
   const char *serial =
       "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B63"
@@ -92,7 +92,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams) {
       .WillByDefault(Invoke(server_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-  lib::synergy::ServerArgs serverArgs;
+  synergy::ServerArgs serverArgs;
   const int argc = 2;
   std::array<const char *, argc> kUnknownCmd = {"stub", "--unknown"};
 

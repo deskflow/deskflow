@@ -23,20 +23,25 @@
 
 #include <string>
 
+namespace synergy::license {
+
 struct SerialKey {
-  std::string key;
+  bool isValid = false;
+  std::string hexString = "";
   Product product;
-  SerialKeyType keyType;
+  SerialKeyType type;
   unsigned long long warnTime = 0;
   unsigned long long expireTime = 0;
 
-  explicit SerialKey(const std::string &key) : key(key) {}
+  explicit SerialKey(const std::string &key) : hexString(key) {}
   explicit SerialKey(Edition edition = Edition::kUnregistered)
       : product(edition) {}
 };
 
 inline bool operator==(SerialKey const &lhs, SerialKey const &rhs) {
-  return (lhs.key == rhs.key) && (lhs.warnTime == rhs.warnTime) &&
+  return (lhs.hexString == rhs.hexString) && (lhs.warnTime == rhs.warnTime) &&
          (lhs.expireTime == rhs.expireTime) && (lhs.product == rhs.product) &&
-         (lhs.keyType == rhs.keyType);
+         (lhs.type == rhs.type);
 }
+
+} // namespace synergy::license

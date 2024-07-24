@@ -18,10 +18,8 @@
 
 #include "ArgsBase.h"
 
-namespace lib {
 namespace synergy {
 ArgsBase::~ArgsBase() {
   //
 }
 } // namespace synergy
-} // namespace lib

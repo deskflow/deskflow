@@ -15,18 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SYNERGY_CORE_SERVERARGS_H
-#define SYNERGY_CORE_SERVERARGS_H
+#pragma once
 
 #include "ArgsBase.h"
 #include "license/License.h"
 #include "server/Config.h"
+
 #include <memory>
 
-namespace lib {
 namespace synergy {
+
 class ServerArgs : public ArgsBase {
-  /// Public Functions
+  using License = synergy::license::License;
+
 public:
   ServerArgs();
   ServerArgs(ServerArgs const &src) = default;
@@ -41,6 +42,5 @@ public:
   License m_license;
   std::shared_ptr<Config> m_config;
 };
+
 } // namespace synergy
-} // namespace lib
-#endif // SYNERGY_CORE_SERVERARGS_H

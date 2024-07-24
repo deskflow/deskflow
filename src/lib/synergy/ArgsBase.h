@@ -21,7 +21,6 @@
 
 #include "base/String.h"
 
-namespace lib {
 namespace synergy {
 /**
  * @brief This is the base Argument class that will store the generic
@@ -113,6 +112,5 @@ protected:
   }
 };
 } // namespace synergy
-} // namespace lib
 
 #endif // SYNERGY_CORE_ARGSBASE_H

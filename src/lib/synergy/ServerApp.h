@@ -47,11 +47,10 @@ class EventQueueTimer;
 class ILogOutputter;
 class IEventQueue;
 class ISocketFactory;
-namespace lib {
+
 namespace synergy {
 class ServerArgs;
 }
-} // namespace lib
 
 class ServerApp : public App {
 public:
@@ -66,8 +65,8 @@ public:
   void help();
 
   // Returns arguments that are common and for server.
-  lib::synergy::ServerArgs &args() const {
-    return (lib::synergy::ServerArgs &)argsBase();
+  synergy::ServerArgs &args() const {
+    return (synergy::ServerArgs &)argsBase();
   }
 
   const char *daemonName() const;

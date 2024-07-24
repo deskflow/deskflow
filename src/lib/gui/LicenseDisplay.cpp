@@ -26,6 +26,7 @@
 #include <utility>
 
 using std::chrono::system_clock;
+using namespace synergy::license;
 
 // TODO: hard coding ui messages in a non-ui class is a terrible idea and should
 // probably be implemented in qml or some other visual language.
@@ -94,8 +95,8 @@ QString LicenseDisplay::productName() const {
     return QString("%1 (unregistered)").arg(SYNERGY_PRODUCT_NAME);
   }
 
-  Product licenseEdition(edition);
-  std::string name = licenseEdition.productName();
+  Product product(edition);
+  std::string name = product.name();
 
   if (m_license.isTrial()) {
     name += " (Trial)";

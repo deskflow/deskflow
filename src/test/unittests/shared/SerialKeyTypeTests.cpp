@@ -29,14 +29,14 @@ TEST(SerialKeyTypeTests, TrialTemporaryKeyType_false) {
 
 TEST(SerialKeyTypeTests, TrialTemporaryKeyType_true) {
   SerialKeyType KeyType;
-  KeyType.setKeyType("trial");
+  KeyType.setType("trial");
   EXPECT_EQ(true, KeyType.isTrial());
   EXPECT_EQ(true, KeyType.isTimeLimited());
 }
 
 TEST(SerialKeyTypeTests, TimeLimitedKeyType_true) {
   SerialKeyType KeyType;
-  KeyType.setKeyType("subscription");
+  KeyType.setType("subscription");
   EXPECT_EQ(false, KeyType.isTrial());
   EXPECT_EQ(true, KeyType.isTimeLimited());
 }

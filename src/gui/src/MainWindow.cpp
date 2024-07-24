@@ -51,6 +51,8 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
+using namespace synergy::license;
+
 static const char *const kDownloadUrl = "https://symless.com/?source=gui";
 static const char *const kHelpUrl = "https://symless.com/help?source=gui";
 static const int kRetryDelay = 1000;

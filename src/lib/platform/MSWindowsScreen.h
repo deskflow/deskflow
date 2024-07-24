@@ -44,8 +44,8 @@ public:
   MSWindowsScreen(
       bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue *events,
       bool enableLangSync = false,
-      lib::synergy::ClientScrollDirection scrollDirection =
-          lib::synergy::ClientScrollDirection::SERVER);
+      synergy::ClientScrollDirection scrollDirection =
+          synergy::ClientScrollDirection::SERVER);
   virtual ~MSWindowsScreen();
 
   //! @name manipulators

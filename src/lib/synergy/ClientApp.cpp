@@ -66,7 +66,7 @@
 
 ClientApp::ClientApp(
     IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver)
-    : App(events, createTaskBarReceiver, new lib::synergy::ClientArgs()),
+    : App(events, createTaskBarReceiver, new synergy::ClientArgs()),
       m_client(NULL),
       m_clientScreen(NULL),
       m_serverAddress(NULL) {}

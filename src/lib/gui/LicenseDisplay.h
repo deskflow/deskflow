@@ -24,6 +24,7 @@
 
 class LicenseDisplay : public QObject {
   Q_OBJECT
+  using License = synergy::license::License;
 
 public:
   class NoticeError : public std::runtime_error {

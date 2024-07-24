@@ -65,7 +65,7 @@ public:
   Client(
       IEventQueue *events, const String &name, const NetworkAddress &address,
       ISocketFactory *socketFactory, synergy::Screen *screen,
-      lib::synergy::ClientArgs const &args);
+      synergy::ClientArgs const &args);
   Client(Client const &) = delete;
   Client(Client &&) = delete;
   ~Client();
@@ -248,6 +248,6 @@ private:
   bool m_useSecureNetwork;
   bool m_enableClipboard;
   size_t m_maximumClipboardSize;
-  lib::synergy::ClientArgs m_args;
+  synergy::ClientArgs m_args;
   size_t m_resolvedAddressesCount = 0;
 };

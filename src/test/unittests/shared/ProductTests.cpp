@@ -24,60 +24,58 @@
 using enum Product::Edition;
 
 TEST(ProductTests, equal_operator) {
-  Product edition1(kPro);
-  Product edition2(kPro);
+  Product product1(kPro);
+  Product product2(kPro);
 
-  EXPECT_EQ(edition1, edition2);
+  EXPECT_EQ(product1, product2);
 }
 
 TEST(ProductTests, ctor_businessName_isValid) {
-  Product edition(Product::SerialKeyEditionID::Buisiness);
+  Product product(Product::SerialKeyEditionID::Buisiness);
 
-  EXPECT_EQ(kBusiness, edition.getEdition());
-  EXPECT_TRUE(edition.isValid());
+  EXPECT_EQ(kBusiness, product.edition());
+  EXPECT_TRUE(product.isValid());
 }
 
 TEST(ProductTests, ctor_basicType_isValid) {
-  Product edition(kBasic);
+  Product product(kBasic);
 
-  EXPECT_TRUE(edition.isValid());
+  EXPECT_TRUE(product.isValid());
 }
 
-TEST(ProductTests, setEdition_invalidType_unregistered) {
-  Product edition;
+TEST(ProductTests, setEdition_invalidType_throws) {
+  Product product;
 
-  edition.setEdition("stub");
-
-  EXPECT_EQ(kUnregistered, edition.getEdition());
+  EXPECT_THROW(product.setEdition("test"), Product::InvalidType);
 }
 
 TEST(ProductTests, setEdition_pro_isValid) {
-  Product edition;
+  Product product;
 
-  edition.setEdition(kPro);
+  product.setEdition(kPro);
 
-  EXPECT_EQ(kPro, edition.getEdition());
-  EXPECT_EQ(Product::SerialKeyEditionID::Pro, edition.getSerialKeyId());
-  EXPECT_EQ("Synergy 1 Pro", edition.productName());
-  EXPECT_TRUE(edition.isValid());
+  EXPECT_EQ(kPro, product.edition());
+  EXPECT_EQ(Product::SerialKeyEditionID::Pro, product.serialKeyId());
+  EXPECT_EQ("Synergy 1 Pro", product.name());
+  EXPECT_TRUE(product.isValid());
 }
 
 TEST(ProductTests, setEdition_basic_isValid) {
-  Product edition;
+  Product product;
 
-  edition.setEdition(kBasic);
+  product.setEdition(kBasic);
 
-  EXPECT_EQ(kBasic, edition.getEdition());
-  EXPECT_EQ(Product::SerialKeyEditionID::Basic, edition.getSerialKeyId());
-  EXPECT_EQ("Synergy 1 Basic", edition.productName());
+  EXPECT_EQ(kBasic, product.edition());
+  EXPECT_EQ(Product::SerialKeyEditionID::Basic, product.serialKeyId());
+  EXPECT_EQ("Synergy 1 Basic", product.name());
 }
 
 TEST(ProductTests, setEdition_business_isValid) {
-  Product edition;
+  Product product;
 
-  edition.setEdition(kBusiness);
+  product.setEdition(kBusiness);
 
-  EXPECT_EQ(kBusiness, edition.getEdition());
-  EXPECT_EQ(Product::SerialKeyEditionID::Buisiness, edition.getSerialKeyId());
-  EXPECT_EQ("Synergy 1 Business", edition.productName());
+  EXPECT_EQ(kBusiness, product.edition());
+  EXPECT_EQ(Product::SerialKeyEditionID::Buisiness, product.serialKeyId());
+  EXPECT_EQ("Synergy 1 Business", product.name());
 }

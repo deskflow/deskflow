@@ -28,11 +28,10 @@ class Client;
 class NetworkAddress;
 class Thread;
 class ISocketFactory;
-namespace lib {
+
 namespace synergy {
 class ClientArgs;
 }
-} // namespace lib
 
 class ClientApp : public App {
 public:
@@ -47,8 +46,8 @@ public:
   void help();
 
   // Returns arguments that are common and for client.
-  lib::synergy::ClientArgs &args() const {
-    return (lib::synergy::ClientArgs &)argsBase();
+  synergy::ClientArgs &args() const {
+    return (synergy::ClientArgs &)argsBase();
   }
 
   const char *daemonName() const;

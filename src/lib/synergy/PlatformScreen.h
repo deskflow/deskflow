@@ -32,8 +32,8 @@ subclasses to implement the rest.
 class PlatformScreen : public IPlatformScreen {
 public:
   PlatformScreen(
-      IEventQueue *events, lib::synergy::ClientScrollDirection scrollDirection =
-                               lib::synergy::ClientScrollDirection::SERVER);
+      IEventQueue *events, synergy::ClientScrollDirection scrollDirection =
+                               synergy::ClientScrollDirection::SERVER);
   virtual ~PlatformScreen();
 
   // IScreen overrides
@@ -142,6 +142,6 @@ private:
    * This member contains client scroll direction.
    * This member is used only on client side.
    */
-  lib::synergy::ClientScrollDirection m_clientScrollDirection =
-      lib::synergy::ClientScrollDirection::SERVER;
+  synergy::ClientScrollDirection m_clientScrollDirection =
+      synergy::ClientScrollDirection::SERVER;
 };

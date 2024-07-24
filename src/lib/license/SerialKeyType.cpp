@@ -20,11 +20,9 @@
 const std::string SerialKeyType::Trial = "trial";
 const std::string SerialKeyType::Subscription = "subscription";
 
-SerialKeyType::SerialKeyType() {}
-
-void SerialKeyType::setKeyType(const std::string &Type) {
-  m_isTrial = (Type == SerialKeyType::Trial);
-  m_isTimeLimited = (m_isTrial || (Type == SerialKeyType::Subscription));
+void SerialKeyType::setType(const std::string_view &type) {
+  m_isTrial = (type == SerialKeyType::Trial);
+  m_isTimeLimited = (m_isTrial || (type == SerialKeyType::Subscription));
 }
 
 bool SerialKeyType::isTrial() const { return m_isTrial; }

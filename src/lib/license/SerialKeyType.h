@@ -26,11 +26,11 @@ private:
 public:
   static const std::string Trial;
   static const std::string Subscription;
-  static const std::string Maintenance;
 
-  SerialKeyType();
+  explicit SerialKeyType() = default;
+  explicit SerialKeyType(const std::string_view &type) { setType(type); }
 
-  void setKeyType(const std::string &type);
+  void setType(const std::string_view &type);
   bool isTrial() const;
   bool isTimeLimited() const;
 
@@ -42,8 +42,4 @@ private:
 inline bool operator==(SerialKeyType const &lhs, SerialKeyType const &rhs) {
   return (lhs.m_isTrial == rhs.m_isTrial) &&
          (lhs.m_isTimeLimited == rhs.m_isTimeLimited);
-}
-
-inline bool operator!=(SerialKeyType const &lhs, SerialKeyType const &rhs) {
-  return !(lhs == rhs);
 }

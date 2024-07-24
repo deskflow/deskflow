@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2022 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,29 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
 
 #include "SerialKey.h"
 
+#include <stdexcept>
 #include <string>
-#include <vector>
 
-class SerialKeyParser {
+namespace synergy::license {
+
+using SerialKeyParseError = std::runtime_error;
+
+class InvalidSerialKeyDate : public SerialKeyParseError {
 public:
-  virtual bool parse(const std::string &plainSerial);
-
-  const SerialKey &getData() const;
-  void setKey(const std::string &key);
-  void setType(const std::string &type);
-  void setEdition(const std::string &edition);
-  void setWarningTime(const std::string &warnTime);
-  void setExpirationTime(const std::string &expTime);
-
-private:
-  std::string decode(const std::string &serial) const;
-  void parseV1(const std::vector<std::string> &parts);
-  void parseV2(const std::vector<std::string> &parts);
-  std::vector<std::string> splitToParts(const std::string &plainSerial) const;
-
-  SerialKey m_serialKey;
+  explicit InvalidSerialKeyDate()
+      : SerialKeyParseError("Invalid serial key date") {}
 };
+
+class InvalidSerialKeyVersion : public SerialKeyParseError {
+public:
+  explicit InvalidSerialKeyVersion()
+      : SerialKeyParseError("Invalid serial key version") {}
+};
+
+SerialKey parseSerialKey(const std::string &hexString);
+
+} // namespace synergy::license

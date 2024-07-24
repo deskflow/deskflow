@@ -68,7 +68,7 @@
 
 ServerApp::ServerApp(
     IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver)
-    : App(events, createTaskBarReceiver, new lib::synergy::ServerArgs()),
+    : App(events, createTaskBarReceiver, new synergy::ServerArgs()),
       m_server(NULL),
       m_serverState(kUninitialized),
       m_serverScreen(NULL),
