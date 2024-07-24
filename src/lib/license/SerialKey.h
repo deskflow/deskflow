@@ -31,6 +31,12 @@ namespace synergy::license {
 struct SerialKey {
   using time_point = std::chrono::system_clock::time_point;
 
+  friend bool operator==(const SerialKey &lhs, const SerialKey &rhs) {
+    return (lhs.hexString == rhs.hexString) && (lhs.warnTime == rhs.warnTime) &&
+           (lhs.expireTime == rhs.expireTime) && (lhs.product == rhs.product) &&
+           (lhs.type == rhs.type);
+  }
+
   bool isValid = false;
   std::string hexString = "";
   Product product;
@@ -42,11 +48,5 @@ struct SerialKey {
   explicit SerialKey(Edition edition = Edition::kUnregistered)
       : product(edition) {}
 };
-
-inline bool operator==(SerialKey const &lhs, SerialKey const &rhs) {
-  return (lhs.hexString == rhs.hexString) && (lhs.warnTime == rhs.warnTime) &&
-         (lhs.expireTime == rhs.expireTime) && (lhs.product == rhs.product) &&
-         (lhs.type == rhs.type);
-}
 
 } // namespace synergy::license

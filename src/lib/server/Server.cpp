@@ -429,7 +429,7 @@ void Server::switchScreen(
   assert(dst != NULL);
 
   // if trial is expired, exit the process
-  if (m_args.m_license.isExpired(std::time(0))) {
+  if (m_args.m_license.isExpired()) {
     LOG((CLOG_ERR "trial has expired, aborting server"));
     exit(kExitSuccess);
   }

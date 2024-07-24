@@ -20,23 +20,25 @@
 #include "SerialKey.h"
 #include "SerialKeyType.h"
 
-#include <charconv>
+#include <optional>
 #include <string>
 #include <vector>
 
 using Parts = std::vector<std::string>;
+using system_clock = std::chrono::system_clock;
+using time_point = system_clock::time_point;
 
 namespace synergy::license {
 
 std::string decode(const std::string &hexString);
-Parts splitToParts(const std::string &plainText);
+Parts tokenize(const std::string &plainText);
 SerialKey parseV1(const std::string &hexString, const Parts &parts);
 SerialKey parseV2(const std::string &hexString, const Parts &parts);
-long long parseDate(const std::string_view &s);
+std::optional<time_point> parseDate(const std::string &unixTimeString);
 
 SerialKey parseSerialKey(const std::string &hexString) {
   auto plainText = decode(hexString);
-  const auto parts = splitToParts(plainText);
+  const auto parts = tokenize(plainText);
 
   if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
     return parseV1(hexString, parts);
@@ -49,27 +51,17 @@ SerialKey parseSerialKey(const std::string &hexString) {
 }
 
 std::string decode(const std::string &hexString) {
-  static const char *const lut = "0123456789ABCDEF";
-  std::string plainText;
-  size_t len = hexString.length();
-  if (len & 1) {
-    return plainText;
+  if (hexString.length() % 2 != 0) {
+    throw InvalidHexString();
   }
 
-  plainText.reserve(len / 2);
-  for (size_t i = 0; i < len; i += 2) {
+  std::string plainText;
+  plainText.reserve(hexString.length() / 2);
 
-    char a = hexString[i];
-    char b = hexString[i + 1];
-
-    const auto p = std::lower_bound(lut, lut + 16, a);
-    const auto q = std::lower_bound(lut, lut + 16, b);
-
-    if (*q != b || *p != a) {
-      return plainText;
-    }
-
-    plainText.push_back(static_cast<char>(((p - lut) << 4) | (q - lut)));
+  for (size_t i = 0; i < hexString.length(); i += 2) {
+    std::string byteString = hexString.substr(i, 2);
+    auto byte = static_cast<char>(std::stoi(byteString, nullptr, 16));
+    plainText.push_back(byte);
   }
 
   return plainText;
@@ -98,44 +90,35 @@ SerialKey parseV2(const std::string &hexString, const Parts &parts) {
   return serialKey;
 }
 
-Parts splitToParts(const std::string &plainText) {
-  // tokenize serialised subscription.
+Parts tokenize(const std::string &plainText) {
+  if (plainText.front() != '{' || plainText.back() != '}') {
+    throw InvalidSerialKeyFormat();
+  }
+
+  const auto serialData = plainText.substr(1, plainText.length() - 2);
+
   Parts parts;
+  std::stringstream ss(serialData);
+  std::string item;
 
-  if (!plainText.empty()) {
-    std::string parityStart = plainText.substr(0, 1);
-    std::string parityEnd = plainText.substr(plainText.length() - 1, 1);
-
-    // check for parity chars { and }, record parity result, then remove them.
-    if (parityStart == "{" && parityEnd == "}") {
-      const auto serialData = plainText.substr(1, plainText.length() - 2);
-
-      std::string::size_type pos = 0;
-      bool look = true;
-      while (look) {
-        std::string::size_type start = pos;
-        pos = serialData.find(";", pos);
-        if (pos == std::string::npos) {
-          pos = serialData.length();
-          look = false;
-        }
-        parts.push_back(serialData.substr(start, pos - start));
-        pos += 1;
-      }
-    }
+  while (std::getline(ss, item, ';')) {
+    parts.push_back(item);
   }
 
   return parts;
 }
 
-long long parseDate(const std::string_view &s) {
-  long long i;
-  auto result = std::from_chars(s.data(), s.data() + s.size(), i);
-  if (result.ec == std::errc()) {
-    return i;
-  } else {
-    throw InvalidSerialKeyDate();
+std::optional<time_point> parseDate(const std::string &unixTimeString) {
+  if (unixTimeString.empty()) {
+    return std::nullopt;
   }
+
+  auto seconds = std::stoi(unixTimeString);
+  if (seconds <= 0) {
+    return std::nullopt;
+  }
+
+  return time_point{std::chrono::seconds{seconds}};
 }
 
 } // namespace synergy::license

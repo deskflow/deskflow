@@ -26,24 +26,17 @@
 #include <ctime>
 #include <utility>
 
-using std::chrono::system_clock;
+using namespace std::chrono;
 using namespace synergy::license;
 
-// TODO: hard coding ui messages in a non-ui class is a terrible idea and should
-// probably be implemented in qml or some other visual language.
 const char *const kLinkStyle = "color: #4285F4";
 const char *const kPurchaseUrl =
     "https://symless.com/synergy/purchase?source=gui";
-const char *const kBuyLink = R"(<a href="%1" )"
-                             R"(style="%2">Buy now</a>)"
-                             "</p>";
-const char *const kRenewLink = R"(<a href="%1" )"
-                               R"(style="%2">Renew now</a>)"
-                               "</p>";
+const char *const kBuyLink = R"(<a href="%1" style="%2">Buy now</a>)";
+const char *const kRenewLink = R"(<a href="%1" style="%2">Renew now</a>)";
 
-// TODO: why would we accept expired?
 bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
-  if (!acceptExpired && license.isExpired(::time(nullptr))) {
+  if (!acceptExpired && license.isExpired()) {
     qDebug("Expired license");
     return false;
   }
@@ -74,7 +67,9 @@ bool LicenseDisplay::setLicense(License license, bool acceptExpired) {
   }
 
   if (m_license.isTimeLimited()) {
-    QTimer::singleShot(m_license.getTimeLeft(), this, SLOT(validateLicense()));
+    auto daysLeft = m_license.daysLeft();
+    auto msLeft = duration_cast<milliseconds>(daysLeft);
+    QTimer::singleShot(msLeft, this, SLOT(validateLicense()));
   }
 
   return true;
@@ -118,13 +113,10 @@ QString LicenseDisplay::noticeMessage() const {
 
 QString LicenseDisplay::getTrialNotice() const {
   const QString buyLink = QString(kBuyLink).arg(kPurchaseUrl).arg(kLinkStyle);
-  const auto now = system_clock::now();
-  const std::time_t now_c = system_clock::to_time_t(now);
-
-  if (m_license.isExpired(now_c)) {
+  if (m_license.isExpired()) {
     return QString("<p>Your trial has expired. %1").arg(buyLink);
   } else {
-    days daysLeft = m_license.daysLeft(now_c);
+    auto daysLeft = m_license.daysLeft().count();
     return QString("<p>Your trial expires in %1 %2. %3</p>")
         .arg(daysLeft)
         .arg((daysLeft == 1) ? "day" : "days")
@@ -135,13 +127,10 @@ QString LicenseDisplay::getTrialNotice() const {
 QString LicenseDisplay::getTimeLimitedNotice() const {
   const QString renewLink =
       QString(kRenewLink).arg(kPurchaseUrl).arg(kLinkStyle);
-  const auto now = system_clock::now();
-  const std::time_t now_c = system_clock::to_time_t(now);
-
-  if (m_license.isExpired(now_c)) {
+  if (m_license.isExpired()) {
     return QString("<p>Your license has expired. %1</p>").arg(renewLink);
   } else {
-    days daysLeft = m_license.daysLeft(now_c);
+    auto daysLeft = m_license.daysLeft().count();
     return QString("<p>Your license expires in %1 %2. %3</p>")
         .arg(daysLeft)
         .arg((daysLeft == 1) ? "day" : "days")

@@ -23,8 +23,8 @@
 using namespace synergy::license;
 using namespace std::chrono;
 
-const auto kPast = system_clock::to_time_t(system_clock::now() - hours(1));
-const auto kFuture = system_clock::to_time_t(system_clock::now() + hours(1));
+const auto kPast = system_clock::now() - hours(1);
+const auto kFuture = system_clock::now() + hours(1);
 
 TEST(LicenseDisplayTests, setLicense_defaultLicense_returnsFalse) {
   LicenseDisplay licenseDisplay;

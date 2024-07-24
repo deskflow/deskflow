@@ -49,6 +49,8 @@ signals:
 private:
   QString getTrialNotice() const;
   QString getTimeLimitedNotice() const;
+
+  // TODO: why accept expired?
   bool isValid(const License &license, bool acceptExpired) const;
 
   License m_license;

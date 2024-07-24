@@ -24,6 +24,18 @@ namespace synergy::license {
 
 using SerialKeyParseError = std::runtime_error;
 
+class InvalidHexString : public SerialKeyParseError {
+public:
+  explicit InvalidHexString()
+      : SerialKeyParseError("Invalid hex string length") {}
+};
+
+class InvalidSerialKeyFormat : public SerialKeyParseError {
+public:
+  explicit InvalidSerialKeyFormat()
+      : SerialKeyParseError("Invalid serial key format") {}
+};
+
 class InvalidSerialKeyDate : public SerialKeyParseError {
 public:
   explicit InvalidSerialKeyDate()

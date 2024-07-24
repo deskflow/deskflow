@@ -42,8 +42,7 @@ ActivationDialog::ActivationDialog(
       m_LicenseDisplay(licenseDisplay) {
   ui->setupUi(this);
   refreshSerialKey();
-  time_t currentTime = ::time(0);
-  if (!m_LicenseDisplay.license().isExpired(currentTime)) {
+  if (!m_LicenseDisplay.license().isExpired()) {
     ui->m_trialWidget->hide();
   }
 }
@@ -101,7 +100,7 @@ void ActivationDialog::accept() {
   }
 
   Edition edition = m_LicenseDisplay.productEdition();
-  time_t daysLeft = m_LicenseDisplay.license().daysLeft(::time(0));
+  auto daysLeft = m_LicenseDisplay.license().daysLeft().count();
   if (edition != Edition::kUnregistered) {
     QString thanksMessage = tr("Thanks for trying %1! %5\n\n%2 day%3 of "
                                "your trial remain%4")
