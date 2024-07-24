@@ -18,14 +18,16 @@
 
 #include "AboutDialog.h"
 
+#include <QDateTime>
+
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
 #endif
 
 #ifdef GIT_SHA_SHORT
-const char *const kVersionAppend = " (" GIT_SHA_SHORT ")";
+const QString kVersionAppend = GIT_SHA_SHORT;
 #else
-const char *const kVersionAppend = "";
+const QString kVersionAppend;
 #endif
 
 AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
@@ -36,7 +38,9 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
   m_versionChecker.setApp(parent->appPath(config.coreClientName()));
 
   QString version(SYNERGY_VERSION);
-  version.append(kVersionAppend);
+  if (!kVersionAppend.isEmpty()) {
+    version.append(QString(" (%1)").arg(kVersionAppend));
+  }
 
   m_pLabelSynergyVersion->setText(version);
 

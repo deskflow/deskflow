@@ -551,7 +551,6 @@ void MainWindow::startCore() {
       return;
     }
   }
-  m_License->registerLicense();
 #endif
 
   appendLogDebug("starting process");

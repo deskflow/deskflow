@@ -93,7 +93,7 @@ public:
   QString coreClientName() const;
   QString logDir() const;
   void persistLogDir() const;
-  ElevateMode elevateMode();
+  ElevateMode elevateMode() const;
   bool cryptoAvailable() const;
   bool cryptoEnabled() const;
   bool autoHide() const;

@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include "LicenseRegistry.h"
 #include "shared/EditionType.h"
 #include "shared/SerialKey.h"
 
@@ -43,11 +42,9 @@ public:
 private:
   AppConfig *m_pAppConfig;
   SerialKey m_serialKey;
-  LicenseRegistry m_registry;
 
 public slots:
   void validateSerialKey() const;
-  void registerLicense();
 
 signals:
   void editionChanged(Edition) const;

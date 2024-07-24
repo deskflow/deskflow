@@ -70,8 +70,7 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
 
 License::License(AppConfig *appConfig)
     : m_pAppConfig(appConfig),
-      m_serialKey(appConfig->edition()),
-      m_registry(*appConfig) {}
+      m_serialKey(appConfig->edition()) {}
 
 void License::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   checkSerialKey(serialKey, acceptExpired);
@@ -83,7 +82,6 @@ void License::setSerialKey(SerialKey serialKey, bool acceptExpired) {
 
     emit showLicenseNotice(getLicenseNotice());
     validateSerialKey();
-    m_registry.scheduleRegistration();
 
     if (m_serialKey.edition() != serialKey.edition()) {
       m_pAppConfig->setEdition(m_serialKey.edition());
@@ -175,8 +173,6 @@ QString License::getLicenseNotice() const {
 
   return Notice;
 }
-
-void License::registerLicense() { m_registry.registerLicense(); }
 
 QString License::getTrialNotice() const {
   QString Notice;

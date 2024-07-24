@@ -485,7 +485,7 @@ QString AppConfig::coreServerName() const { return m_CoreServerName; }
 
 QString AppConfig::coreClientName() const { return m_CoreClientName; }
 
-ElevateMode AppConfig::elevateMode() { return m_ElevateMode; }
+ElevateMode AppConfig::elevateMode() const { return m_ElevateMode; }
 
 void AppConfig::setCryptoEnabled(bool newValue) {
   if (m_CryptoEnabled != newValue && newValue) {
