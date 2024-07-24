@@ -21,6 +21,7 @@
 #include "SerialKeyType.h"
 
 #include <optional>
+#include <sstream>
 #include <string>
 #include <vector>
 
