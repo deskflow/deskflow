@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "shared/EditionType.h"
+#include "shared/ProductEdition.h"
 #define TEST_ENV
 
 #include "shared/SerialKeyEdition.h"

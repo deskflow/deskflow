@@ -22,7 +22,8 @@
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
 #include "UpgradeDialog.h"
-#include "shared/EditionType.h"
+#include "gui/BuildConfig.h"
+#include "shared/ProductEdition.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -281,8 +282,7 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked() {
       m_pListHotkeys->addItem(hotkey.text());
       onChange();
     }
-  } else {
-#ifdef SYNERGY_ENABLE_LICENSING
+  } else if (kLicensingEnabled) {
     auto edition = appConfig().edition();
     if (edition == Edition::kLite || edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);
@@ -293,7 +293,6 @@ void ServerConfigDialog::on_m_pButtonNewHotkey_clicked() {
         upgradeDialog.showDialog("Upgrade to Synergy 1 Pro to enable hotkeys");
       }
     }
-#endif // SYNERGY_ENABLE_LICENSING
   }
 }
 

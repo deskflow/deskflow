@@ -92,7 +92,7 @@ QString AboutDialog::getImportantDevelopers() const {
 
       // Symless employees
       "Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
-      "Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.");
+      "Oleksandr Lysytsia, Olena Kutytska.");
 }
 
 QString AboutDialog::getCopyright() const {

@@ -39,13 +39,7 @@ class TestMainWindow {
 public:
   class MainWindowProxy : public MainWindow {
   public:
-#ifdef SYNERGY_ENABLE_LICENSING
-    explicit MainWindowProxy(
-        AppConfig &appConfig, LicenseManager &licenseManager)
-        : MainWindow(appConfig, licenseManager) {}
-#else
     explicit MainWindowProxy(AppConfig &appConfig) : MainWindow(appConfig) {}
-#endif
 
     bool _checkSecureSocket(const char *test) {
       return MainWindow::checkSecureSocket(test);
@@ -53,17 +47,10 @@ public:
   };
 
   TestMainWindow() {
-#ifdef SYNERGY_ENABLE_LICENSING
-    m_licenseManager = std::make_shared<LicenseManager>(&m_appConfig);
-    m_mainWindow =
-        std::make_shared<MainWindowProxy>(m_appConfig, *m_licenseManager);
-#else
     m_mainWindow = std::make_shared<MainWindowProxy>(m_appConfig);
-#endif
   }
 
   AppConfig m_appConfig;
-  std::shared_ptr<LicenseManager> m_licenseManager;
   std::shared_ptr<MainWindowProxy> m_mainWindow;
 };
 

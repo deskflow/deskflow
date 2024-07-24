@@ -17,9 +17,6 @@
 
 #include "License.h"
 
-#include "ActivationNotifier.h"
-#include "AppConfig.h"
-
 #include <QDateTime>
 #include <QLocale>
 #include <QThread>
@@ -59,18 +56,13 @@ void checkSerialKey(const SerialKey &serialKey, bool acceptExpired) {
     throw std::runtime_error("Serial key expired");
   }
 
-#ifdef SYNERGY_ENABLE_LICENSING
   if (!serialKey.isValid()) {
+    // TODO: throwing an exception seems a bit extreme... replace with signal.
     throw std::runtime_error("The serial key is not valid.");
   }
-#endif // SYNERGY_ENABLE_LICENSING
 }
 
 } // namespace
-
-License::License(AppConfig *appConfig)
-    : m_pAppConfig(appConfig),
-      m_serialKey(appConfig->edition()) {}
 
 void License::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   checkSerialKey(serialKey, acceptExpired);
@@ -78,63 +70,51 @@ void License::setSerialKey(SerialKey serialKey, bool acceptExpired) {
   if (serialKey != m_serialKey) {
     using std::swap;
     swap(serialKey, m_serialKey);
-    m_pAppConfig->setSerialKey(QString::fromStdString(m_serialKey.toString()));
+
+    // TODO: update via signal
+    // m_pAppConfig->setSerialKey(QString::fromStdString(m_serialKey.toString()));
 
     emit showLicenseNotice(getLicenseNotice());
     validateSerialKey();
 
     if (m_serialKey.edition() != serialKey.edition()) {
-      m_pAppConfig->setEdition(m_serialKey.edition());
+
+      // TODO: update via signal
+      // m_pAppConfig->setEdition(m_serialKey.edition());
+
       emit editionChanged(m_serialKey.edition());
     }
   }
 }
 
-void License::notifyUpdate(QString fromVersion, QString toVersion) const {
-  if ((fromVersion == "Unknown") && (m_serialKey == SerialKey(kUnregistered))) {
-    return;
-  }
-
-  ActivationNotifier *notifier = new ActivationNotifier();
-  notifier->setUpdateInfo(
-      fromVersion, toVersion, QString::fromStdString(m_serialKey.toString()));
-
-  QThread *thread = new QThread();
-  connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-  connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-  connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-  notifier->moveToThread(thread);
-  thread->start();
-
-  QMetaObject::invokeMethod(notifier, "notifyUpdate", Qt::QueuedConnection);
-}
-
 Edition License::activeEdition() const { return m_serialKey.edition(); }
 
-QString License::activeEditionName() const {
-  return getEditionName(activeEdition(), m_serialKey.isTrial());
+QString License::productName() const {
+  return getProductName(activeEdition(), m_serialKey.isTrial());
 }
 
 const SerialKey &License::serialKey() const { return m_serialKey; }
 
 void License::refresh() {
-  if (!m_pAppConfig->serialKey().isEmpty()) {
-    try {
-      SerialKey serialKey(m_pAppConfig->serialKey().toStdString());
-      setSerialKey(serialKey, true);
-    } catch (const std::exception &e) {
-      qDebug() << e.what();
-      m_serialKey = SerialKey();
-      m_pAppConfig->clearSerialKey();
-    }
-  }
+  // TODO: replace with signal
+
+  // if (!m_pAppConfig->serialKey().isEmpty()) {
+  //   try {
+  //     SerialKey serialKey(m_pAppConfig->serialKey().toStdString());
+  //     setSerialKey(serialKey, true);
+  //   } catch (const std::exception &e) {
+  //     qDebug() << e.what();
+  //     m_serialKey = SerialKey();
+  //     m_pAppConfig->clearSerialKey();
+  //   }
+  // }
+
   if (!m_serialKey.isValid()) {
     emit invalidSerialKey();
   }
 }
 
-QString License::getEditionName(Edition const edition, bool trial) {
+QString License::getProductName(Edition const edition, bool trial) {
   SerialKeyEdition KeyEdition(edition);
   std::string name = KeyEdition.getProductName();
 
@@ -143,21 +123,6 @@ QString License::getEditionName(Edition const edition, bool trial) {
   }
 
   return QString::fromUtf8(name.c_str(), static_cast<int>(name.size()));
-}
-
-void License::notifyActivation(QString identity) const {
-  ActivationNotifier *notifier = new ActivationNotifier();
-  notifier->setIdentity(identity);
-
-  QThread *thread = new QThread();
-  connect(notifier, SIGNAL(finished()), thread, SLOT(quit()));
-  connect(notifier, SIGNAL(finished()), notifier, SLOT(deleteLater()));
-  connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-  notifier->moveToThread(thread);
-  thread->start();
-
-  QMetaObject::invokeMethod(notifier, "notify", Qt::QueuedConnection);
 }
 
 QString License::getLicenseNotice() const {

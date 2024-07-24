@@ -21,9 +21,9 @@
 #include "CommonConfig.h"
 #include "Config.h"
 #include "CoreInterface.h"
-#include "License.h"
 #include "gui/ElevateMode.h"
-#include "shared/EditionType.h"
+#include "gui/License.h"
+#include "shared/ProductEdition.h"
 
 #include <QObject>
 #include <QString>
@@ -115,21 +115,12 @@ public:
   bool serviceEnabled() const;
   bool minimizeToTray() const;
   bool closeToTray() const;
-
-  /// @brief Gets the current TLS certificate path
-  /// @return QString The path to the cert
-  QString tlsCertPath() const;
-
-  /// @brief Get the key length to be used for the private key of a TLS cert
-  /// @return QString The key length in bits
-  QString tlsKeyLength() const;
-
-#ifdef SYNERGY_ENABLE_LICENSING
   Edition edition() const;
   QString serialKey() const;
   int lastExpiringWarningTime() const;
   bool activationHasRun() const;
-#endif
+  QString tlsCertPath() const;
+  QString tlsKeyLength() const;
 
 protected:
   enum class Setting {
@@ -215,6 +206,8 @@ protected:
   void setServiceEnabled(bool enabled);
   void setCloseToTray(bool minimize);
   void setActivationHasRun(bool value);
+  void setTlsCertPath(const QString &path);
+  void setTlsKeyLength(const QString &length);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -222,14 +215,6 @@ protected:
   ///             settings. False - This will set the variable and load the user
   ///             scope settings.
   void setLoadFromSystemScope(bool value);
-
-  /// @brief Set the path to the TLS/SSL certificate file that will be used
-  /// @param [in] path The path to the Certificate
-  void setTlsCertPath(const QString &path);
-
-  /// @brief Sets the key length of the private key to use in a TLS connection
-  /// @param [in] QString length The key length eg: 1024, 2048, 4096
-  void setTlsKeyLength(const QString &length);
 
 private:
   /// @brief Loads config from the underlying reader/writer
@@ -309,11 +294,7 @@ private:
   QString m_ServerHostname = "";
   bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = true;
-
-  /// @brief The path to the TLS certificate file
   QString m_TlsCertPath = "";
-
-  /// @brief The key length of the TLS cert to make
   QString m_TlsKeyLength = "";
 
   /// @brief should the setting be loaded from

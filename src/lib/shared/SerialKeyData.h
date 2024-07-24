@@ -26,11 +26,11 @@
  * This is DTO which stores key data
  */
 struct SerialKeyData {
-  std::string key;                   // Encoded serial key as a string
-  SerialKeyEdition edition;          // Serial key edition
-  SerialKeyType keyType;             // Serial key type
-  unsigned long long warnTime = 0;   // Warning time
-  unsigned long long expireTime = 0; // Expiration time
+  std::string key;
+  SerialKeyEdition edition;
+  SerialKeyType keyType;
+  unsigned long long warnTime = 0;
+  unsigned long long expireTime = 0;
 
   /**
    * @brief SerialKeyData constructor

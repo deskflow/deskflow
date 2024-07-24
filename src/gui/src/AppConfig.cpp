@@ -20,13 +20,14 @@
 
 #include "Config.h"
 #include "SslCertificate.h"
+#include "gui/BuildConfig.h"
 
 #include <QApplication>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QtCore>
 #include <QtNetwork>
-#include <QtWidgets/QMessageBox>
-#include <qapplication.h>
+
 
 using synergy::gui::Config;
 
@@ -497,15 +498,13 @@ void AppConfig::setCryptoEnabled(bool newValue) {
 }
 
 bool AppConfig::cryptoAvailable() const {
-  bool result{true};
+  if (!kLicensingEnabled) {
+    return true;
+  }
 
-#ifdef SYNERGY_ENABLE_LICENSING
-  result =
-      (edition() == kPro || edition() == kProChina || edition() == kBusiness ||
-       edition() == kUltimate);
-#endif // SYNERGY_ENABLE_LICENSING
-
-  return result;
+  return (
+      edition() == kPro || edition() == kProChina || edition() == kBusiness ||
+      edition() == kUltimate);
 }
 
 bool AppConfig::cryptoEnabled() const {

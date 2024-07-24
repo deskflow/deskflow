@@ -21,10 +21,8 @@
 #include "AppConfig.h"
 #include "MainWindow.h"
 #include "SslCertificate.h"
-
-#ifdef SYNERGY_ENABLE_LICENSING
 #include "UpgradeDialog.h"
-#endif // SYNERGY_ENABLE_LICENSING
+#include "gui/BuildConfig.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -212,9 +210,7 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
   updateTlsControlsEnabled();
 
-  if (!appConfig().cryptoAvailable()) {
-
-#ifdef SYNERGY_ENABLE_LICENSING
+  if (!appConfig().cryptoAvailable() && kLicensingEnabled) {
     auto edition = appConfig().edition();
     if (edition == Edition::kLite || edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);
@@ -226,7 +222,6 @@ void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
             "Upgrade to Synergy Pro to enable TLS encryption.");
       }
     }
-#endif // SYNERGY_ENABLE_LICENSING
   }
 }
 

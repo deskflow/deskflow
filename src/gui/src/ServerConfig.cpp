@@ -22,6 +22,7 @@
 #include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "gui/BuildConfig.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>
@@ -561,9 +562,5 @@ QSettings &ServerConfig::settings() {
 }
 
 bool ServerConfig::isHotkeysAvailable() const {
-#ifdef SYNERGY_ENABLE_LICENSING
-  return (m_pAppConfig->edition() != Edition::kLite);
-#else
-  return true;
-#endif
+  return !kLicensingEnabled || (m_pAppConfig->edition() != Edition::kLite);
 }

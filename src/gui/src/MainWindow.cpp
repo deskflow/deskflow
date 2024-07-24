@@ -21,11 +21,12 @@
 #include "AboutDialog.h"
 #include "ActivationDialog.h"
 #include "Fingerprint.h"
-#include "License.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "shared/EditionType.h"
-#include <memory>
+#include "gui/BuildConfig.h"
+#include "gui/License.h"
+#include "shared/ProductEdition.h"
+#include "ui_MainWindowBase.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -43,6 +44,7 @@
 #include <QtGui>
 #include <QtNetwork>
 #include <array>
+#include <memory>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -52,6 +54,12 @@ static const char *const kDownloadUrl = "https://symless.com/?source=gui";
 static const char *const kHelpUrl = "https://symless.com/help?source=gui";
 static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
+
+#ifdef SYNERGY_PRODUCT_NAME
+static QString kProductName = SYNERGY_PRODUCT_NAME;
+#else
+static QString kProductName;
+#endif
 
 #if defined(Q_OS_MAC)
 
@@ -78,16 +86,8 @@ static const char *const kDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-transfering.png",
     ":/res/icons/16x16/synergy-disconnected.png"};
 
-#ifdef SYNERGY_ENABLE_LICENSING
-MainWindow::MainWindow(AppConfig &appConfig, License &license)
-#else
 MainWindow::MainWindow(AppConfig &appConfig)
-#endif
-    :
-#ifdef SYNERGY_ENABLE_LICENSING
-      m_License(&license),
-#endif
-      m_AppConfig(appConfig),
+    : m_AppConfig(appConfig),
       m_ServerConfig(5, 3, &m_AppConfig, this),
       m_serverConnection(*this),
       m_clientConnection(*this) {
@@ -150,19 +150,17 @@ MainWindow::MainWindow(AppConfig &appConfig)
   connect(
       this, SIGNAL(windowShown()), this, SLOT(on_windowShown()),
       Qt::QueuedConnection);
-#ifdef SYNERGY_ENABLE_LICENSING
   connect(
-      m_License, SIGNAL(editionChanged(Edition)), this,
+      &m_License, SIGNAL(editionChanged(Edition)), this,
       SLOT(setEdition(Edition)), Qt::QueuedConnection);
 
   connect(
-      m_License, SIGNAL(showLicenseNotice(QString)), this,
+      &m_License, SIGNAL(showLicenseNotice(QString)), this,
       SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
 
   connect(
-      m_License, SIGNAL(invalidSerialKey()), this, SLOT(invalidSerialKey()),
+      &m_License, SIGNAL(invalidSerialKey()), this, SLOT(invalidSerialKey()),
       Qt::QueuedConnection);
-#endif
 
   connect(
       appConfigPtr(), SIGNAL(sslToggled()), this,
@@ -173,15 +171,11 @@ MainWindow::MainWindow(AppConfig &appConfig)
   QString lastVersion = m_AppConfig.lastVersion();
   if (lastVersion != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
-
-#ifdef SYNERGY_ENABLE_LICENSING
-    m_License->notifyUpdate(lastVersion, SYNERGY_VERSION);
-#endif
   }
 
-#ifndef SYNERGY_ENABLE_LICENSING
-  m_pActivate->setVisible(false);
-#endif
+  if (kLicensingEnabled) {
+    m_pActivate->setVisible(false);
+  }
 }
 
 MainWindow::~MainWindow() {
@@ -401,9 +395,9 @@ void MainWindow::updateFromLogLine(const QString &line) {
   checkOSXNotification(line);
 #endif
 
-#ifdef SYNERGY_ENABLE_LICENSING
-  checkLicense(line);
-#endif
+  if (kLicensingEnabled) {
+    checkLicense(line);
+  }
 }
 
 void MainWindow::checkConnected(const QString &line) {
@@ -439,14 +433,12 @@ void MainWindow::checkConnected(const QString &line) {
   }
 }
 
-#ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::checkLicense(const QString &line) {
   if (line.contains("trial has expired")) {
-    license().refresh();
+    m_License.refresh();
     raiseActivationDialog();
   }
 }
-#endif
 
 void MainWindow::checkFingerprint(const QString &line) {
   QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
@@ -544,14 +536,14 @@ void MainWindow::startCore() {
   requestOSXNotificationPermission();
 #endif
 
-#ifdef SYNERGY_ENABLE_LICENSING
-  SerialKey serialKey = m_License->serialKey();
-  if (!serialKey.isValid()) {
-    if (QDialog::Rejected == raiseActivationDialog()) {
-      return;
+  if (kLicensingEnabled) {
+    SerialKey serialKey = m_License.serialKey();
+    if (!serialKey.isValid()) {
+      if (QDialog::Rejected == raiseActivationDialog()) {
+        return;
+      }
     }
   }
-#endif
 
   appendLogDebug("starting process");
   m_ExpectedRunningState = RuningState::Started;
@@ -835,11 +827,11 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
   args << "-c" << configFilename << "--address" << address();
   appendLogInfo("config file: " + configFilename);
 
-#ifdef SYNERGY_ENABLE_LICENSING
-  if (!appConfig().serialKey().isEmpty()) {
-    args << "--serial-key" << appConfig().serialKey();
+  if (kLicensingEnabled) {
+    if (!appConfig().serialKey().isEmpty()) {
+      args << "--serial-key" << appConfig().serialKey();
+    }
   }
-#endif
 
   return true;
 }
@@ -998,6 +990,11 @@ void MainWindow::setVisible(bool visible) {
 #endif
 }
 
+MainWindow::CoreMode MainWindow::coreMode() const {
+  auto isClient = m_pRadioGroupClient->isChecked();
+  return isClient ? CoreMode::Client : CoreMode::Server;
+}
+
 QString MainWindow::getIPAddresses() {
   QStringList result;
   bool hinted = false;
@@ -1029,12 +1026,9 @@ QString MainWindow::getIPAddresses() {
 }
 
 void MainWindow::setEdition(Edition edition) {
-#ifdef SYNERGY_ENABLE_LICENSING
-  setWindowTitle(m_License->getEditionName(edition));
-#endif
+  setWindowTitle(m_License.getProductName(edition));
 }
 
-#ifdef SYNERGY_ENABLE_LICENSING
 void MainWindow::invalidSerialKey() {
   stopCore();
   m_AppConfig.setActivationHasRun(false);
@@ -1048,9 +1042,8 @@ void MainWindow::showLicenseNotice(const QString &notice) {
     this->m_trialLabel->show();
   }
 
-  setWindowTitle(m_License->activeEditionName());
+  setWindowTitle(m_License.productName());
 }
-#endif
 
 void MainWindow::updateLocalFingerprint() {
   bool fingerprintExists = false;
@@ -1069,9 +1062,7 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-#ifdef SYNERGY_ENABLE_LICENSING
-License &MainWindow::license() const { return *m_License; }
-#endif
+License &MainWindow::license() { return m_License; }
 
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
@@ -1096,15 +1087,12 @@ void MainWindow::on_m_pActionHelp_triggered() {
 }
 
 void MainWindow::updateWindowTitle() {
-#ifdef SYNERGY_ENABLE_LICENSING
-  setWindowTitle(m_License->activeEditionName());
-#else
-  setWindowTitle(SYNERGY_PRODUCT_NAME);
-#endif
-
-#ifdef SYNERGY_ENABLE_LICENSING
-  m_License->refresh();
-#endif
+  if (kLicensingEnabled) {
+    setWindowTitle(m_License.productName());
+    m_License.refresh();
+  } else {
+    setWindowTitle(kProductName);
+  }
 }
 
 void MainWindow::on_m_pActionSettings_triggered() {
@@ -1122,7 +1110,6 @@ void MainWindow::on_m_pActionSettings_triggered() {
 
 void MainWindow::autoAddScreen(const QString name) {
 
-#ifdef SYNERGY_ENABLE_LICENSING
   if (m_ActivationDialogRunning) {
     // TODO: refactor this code
     // add this screen to the pending list and check this list until
@@ -1130,7 +1117,6 @@ void MainWindow::autoAddScreen(const QString name) {
     m_PendingClientNames.append(name);
     return;
   }
-#endif
 
   int r = m_ServerConfig.autoAddScreen(name);
   if (r != kAutoAddScreenOk) {
@@ -1167,18 +1153,13 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
   showConfigureServer();
 }
 
-void MainWindow::on_m_pActivate_triggered() {
-#ifdef SYNERGY_ENABLE_LICENSING
-  raiseActivationDialog();
-#endif
-}
+void MainWindow::on_m_pActivate_triggered() { raiseActivationDialog(); }
 
 void MainWindow::on_m_pButtonApply_clicked() {
   m_clientConnection.setCheckConnection(true);
   restartCore();
 }
 
-#ifdef SYNERGY_ENABLE_LICENSING
 int MainWindow::raiseActivationDialog() {
   if (m_ActivationDialogRunning) {
     return QDialog::Rejected;
@@ -1196,16 +1177,15 @@ int MainWindow::raiseActivationDialog() {
   }
   return result;
 }
-#endif
 
 void MainWindow::on_windowShown() {
-#ifdef SYNERGY_ENABLE_LICENSING
-  auto serialKey = m_License->serialKey();
-  if (!m_AppConfig.activationHasRun() && !serialKey.isValid()) {
-    setEdition(Edition::kUnregistered);
-    raiseActivationDialog();
+  if (kLicensingEnabled) {
+    auto serialKey = m_License.serialKey();
+    if (!m_AppConfig.activationHasRun() && !serialKey.isValid()) {
+      setEdition(Edition::kUnregistered);
+      raiseActivationDialog();
+    }
   }
-#endif
 }
 
 QString MainWindow::getProfileRootForArg() {

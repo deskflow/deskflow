@@ -17,7 +17,6 @@
  */
 
 #include "AppConfig.h"
-#include "License.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
@@ -76,12 +75,7 @@ int main(int argc, char *argv[]) {
   AppConfig appConfig;
   qRegisterMetaType<Edition>("Edition");
 
-#ifdef SYNERGY_ENABLE_LICENSING
-  License license(&appConfig);
-  MainWindow mainWindow(appConfig, license);
-#else
   MainWindow mainWindow(appConfig);
-#endif
 
   QObject::connect(
       dynamic_cast<QObject *>(&app), SIGNAL(aboutToQuit()), &mainWindow,

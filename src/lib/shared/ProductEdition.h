@@ -15,21 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EDITIONTYPE_H
-#define EDITIONTYPE_H
+#pragma once
 
-/* Do not reorder these! */
-
-enum Edition {
-  kBasic,
-  kPro,
-  kValueNotUsed,
-  kUnregistered,
-  kBusiness,
-  kBasicChina,
-  kProChina,
-  kLite,
-  kUltimate
+enum ProductEdition {
+  kBasic = 0,
+  kPro = 1,
+  kValueNotUsed = 2,
+  kUnregistered = 3,
+  kBusiness = 4,
+  kBasicChina = 5,
+  kProChina = 6,
+  kLite = 7,
+  kUltimate = 8,
 };
 
-#endif // EDITIONTYPE_H
+/// @deprecated Use `ProductEdition` instead
+using Edition = ProductEdition;

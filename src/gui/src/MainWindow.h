@@ -86,19 +86,12 @@ public:
   enum class RuningState { Started, Stopped };
 
 public:
-#ifdef SYNERGY_ENABLE_LICENSING
-  MainWindow(AppConfig &appConfig, License &license);
-#else
   explicit MainWindow(AppConfig &appConfig);
-#endif
   ~MainWindow() override;
 
 public:
   void setVisible(bool visible) override;
-  CoreMode coreMode() const {
-    auto isClient = m_pRadioGroupClient->isChecked();
-    return isClient ? CoreMode::Client : CoreMode::Server;
-  }
+  CoreMode coreMode() const;
   CoreState coreState() const { return m_CoreState; }
   QString hostname() const { return m_pLineEditHostname->text(); }
   QString configFilename();
@@ -111,17 +104,13 @@ public:
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
-#ifdef SYNERGY_ENABLE_LICENSING
-  License &license() const;
+  License &license();
   int raiseActivationDialog();
-#endif
 
 public slots:
   void setEdition(Edition edition);
-#ifdef SYNERGY_ENABLE_LICENSING
   void invalidSerialKey();
   void showLicenseNotice(const QString &message);
-#endif
   void appendLogRaw(const QString &text);
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
@@ -181,9 +170,7 @@ protected:
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
 #endif
-#ifdef SYNERGY_ENABLE_LICENSING
   void checkLicense(const QString &line);
-#endif
   QString getTimeStamp();
   void restartCore();
 
@@ -195,11 +182,8 @@ protected:
 private:
   void updateWindowTitle();
 
-#ifdef SYNERGY_ENABLE_LICENSING
-  License *m_License = nullptr;
-#endif
-
   AppConfig &m_AppConfig;
+  License m_License;
   ServerConfig m_ServerConfig;
   ServerConnection m_serverConnection;
   ClientConnection m_clientConnection;
@@ -208,11 +192,8 @@ private:
   TrayIcon m_trayIcon;
   QMutex m_StopDesktopMutex;
 
-#ifdef SYNERGY_ENABLE_LICENSING
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
-#endif
-
   RuningState m_ExpectedRunningState = RuningState::Stopped;
   std::unique_ptr<QProcess> m_pCoreProcess;
   QMenuBar *m_pMenuBar = nullptr;
@@ -229,10 +210,8 @@ private:
 private slots:
   void on_m_pButtonApply_clicked();
   void on_windowShown();
-
   void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
-
   void on_m_pButtonConnect_clicked();
   void on_m_pButtonConnectToClient_clicked();
 

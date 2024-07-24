@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "EditionType.h"
+#include "ProductEdition.h"
 #include <string>
 
 class SerialKeyEdition {

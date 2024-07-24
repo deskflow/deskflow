@@ -17,30 +17,24 @@
 
 #pragma once
 
-#include "shared/EditionType.h"
+#include "shared/ProductEdition.h"
 #include "shared/SerialKey.h"
 
 #include <QObject>
-
-class AppConfig;
 
 class License : public QObject {
   Q_OBJECT
 
 public:
-  explicit License(AppConfig *appConfig);
   void setSerialKey(SerialKey serialKey, bool acceptExpired = false);
   void refresh();
   Edition activeEdition() const;
-  QString activeEditionName() const;
+  QString productName() const;
   const SerialKey &serialKey() const;
-  void notifyUpdate(QString fromVersion, QString toVersion) const;
-  static QString getEditionName(Edition edition, bool trial = false);
-  void notifyActivation(QString identity) const;
+  static QString getProductName(Edition edition, bool trial = false);
   QString getLicenseNotice() const;
 
 private:
-  AppConfig *m_pAppConfig;
   SerialKey m_serialKey;
 
 public slots:
@@ -50,6 +44,7 @@ signals:
   void editionChanged(Edition) const;
   void invalidSerialKey() const;
   void showLicenseNotice(const QString &notice) const;
+  void serialKeyChanged(const QString &serialKey) const;
 
 protected:
   QString getTrialNotice() const;

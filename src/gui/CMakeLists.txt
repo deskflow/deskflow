@@ -28,16 +28,10 @@ file(
   src/validators/*
   src/widgets/*)
 file(GLOB GUI_UI_FILES src/*.ui)
-file(GLOB ACTIVATION_FILES src/*Activation* src/*License*)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   file(GLOB GUI_MAC_SOURCE_FILES src/*.mm)
   list(APPEND GUI_SOURCE_FILES ${GUI_MAC_SOURCE_FILES})
-endif()
-
-if(NOT ENABLE_LICENSING)
-  list(REMOVE_ITEM GUI_SOURCE_FILES ${ACTIVATION_FILES})
-  list(REMOVE_ITEM GUI_UI_FILES ${ACTIVATION_FILES})
 endif()
 
 if(WIN32)
