@@ -114,7 +114,7 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   }
 
   auto seconds = std::stoi(unixTimeString);
-  if (seconds <= 0) {
+  if (seconds < 0) {
     return std::nullopt;
   }
 

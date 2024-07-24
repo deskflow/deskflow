@@ -49,7 +49,7 @@ bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
   return true;
 }
 
-bool LicenseDisplay::setLicense(License license, bool acceptExpired) {
+bool LicenseDisplay::setLicense(const License &license, bool acceptExpired) {
   if (!isValid(license, acceptExpired)) {
     m_license = License();
     emit serialKeyChanged("");
@@ -57,7 +57,7 @@ bool LicenseDisplay::setLicense(License license, bool acceptExpired) {
   }
 
   if (license != m_license) {
-    std::swap(license, m_license);
+    m_license = license;
 
     emit serialKeyChanged(QString::fromStdString(m_license.toString()));
 

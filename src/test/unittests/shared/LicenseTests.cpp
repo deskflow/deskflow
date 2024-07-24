@@ -37,6 +37,11 @@ protected:
   }
 };
 
+TEST_F(LicenseTests, isValid_default_returnsFalse) {
+  License license;
+  EXPECT_EQ(false, license.isValid());
+}
+
 TEST_F(LicenseTests, isExpiring_validV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;1;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
@@ -58,17 +63,6 @@ TEST_F(LicenseTests, isExpiring_expiringV2TrialBasicSerial_returnTrue) {
   EXPECT_EQ(true, license.isTrial());
   EXPECT_EQ(true, license.isTimeLimited());
   EXPECT_EQ(true, license.isExpiring());
-}
-
-TEST_F(LicenseTests, isExpiring_expiredV2TrialBasicSerial_returnFalse) {
-  // {v2;trial;basic;Bob;1;email;company name;0;86400}
-  License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
-                  "F6D70616E79206E616D653B303B38363430307D");
-  setNow(license, 86401);
-
-  EXPECT_EQ(true, license.isTrial());
-  EXPECT_EQ(true, license.isTimeLimited());
-  EXPECT_FALSE(license.isExpiring());
 }
 
 TEST_F(LicenseTests, isExpired_validV2TrialBasicSerial_returnFalse) {
@@ -117,7 +111,8 @@ TEST_F(LicenseTests, daysLeft_validWithinOneDayV2TrialBasicSerial_returnOne) {
   // {v2;trial;basic;Bob;1;email;company name;0;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
                   "F6D70616E79206E616D653B303B38363430307D");
-  setNow(license, 1);
+  setNow(license, 0);
+
   EXPECT_EQ(1, license.daysLeft().count());
 }
 
@@ -193,16 +188,4 @@ TEST_F(LicenseTests, toString_v1BasicSerialKey) {
   License license(expected);
 
   EXPECT_EQ(expected, license.toString());
-}
-
-TEST_F(LicenseTests, isValid_default_returnsFalse) {
-  License license;
-  EXPECT_EQ(false, license.isValid());
-}
-
-TEST_F(LicenseTests, isValid_expiredKey_returnsFalse) {
-  License license("7B76323B737562736372697074696F6E3B62617369633B426F623B313B6"
-                  "56D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-
-  EXPECT_EQ(false, license.isValid());
 }

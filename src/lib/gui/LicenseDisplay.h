@@ -39,7 +39,7 @@ public:
   QString productName() const;
 
   /// @return true if the serial key was set successfully
-  bool setLicense(License serialKey, bool acceptExpired = false);
+  bool setLicense(const License &serialKey, bool acceptExpired = false);
 
 signals:
   void serialKeyChanged(const QString &serialKey) const;
