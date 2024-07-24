@@ -316,8 +316,10 @@ macro(configure_test_libs)
     message(STATUS "Enabling code coverage")
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
-    set(test_exclude ext/* build/* src/test/*)
     set(test_src ${PROJECT_SOURCE_DIR}/src)
+    set(test_exclude test/*)
+
+    set(CODE_COVERAGE_VERBOSE true)
 
     setup_target_for_coverage_gcovr_xml(
       NAME
