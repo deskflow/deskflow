@@ -319,8 +319,6 @@ macro(configure_test_libs)
     set(test_src ${PROJECT_SOURCE_DIR}/src)
     set(test_exclude test/*)
 
-    set(CODE_COVERAGE_VERBOSE true)
-
     setup_target_for_coverage_gcovr_xml(
       NAME
       coverage-${INTEG_TESTS_BIN}
