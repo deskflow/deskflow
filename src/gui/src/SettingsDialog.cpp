@@ -31,6 +31,8 @@
 #include <QtGui>
 #include <memory>
 
+const char *const kProProductName = "Synergy 1 Pro";
+
 SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),
@@ -104,7 +106,7 @@ void SettingsDialog::accept() {
   appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
   appConfig().setTlsCertPath(m_pLineEditCertificatePath->text());
   appConfig().setTlsKeyLength(m_pComboBoxKeyLength->currentText());
-  appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
+  appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
   appConfig().setClientHostMode(m_pCheckBoxClientHostMode->isChecked());
@@ -137,7 +139,7 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxPreventSleep->setChecked(appConfig().preventSleep());
   m_pCheckBoxMinimizeToTray->setChecked(appConfig().minimizeToTray());
   m_pLineEditCertificatePath->setText(appConfig().tlsCertPath());
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.cryptoEnabled());
+  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
   m_pCheckBoxClientHostMode->setChecked(m_appConfig.clientHostMode());
@@ -162,20 +164,20 @@ void SettingsDialog::updateTlsControls() {
         m_pComboBoxKeyLength->findText(appConfig().tlsKeyLength()));
   }
 
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.cryptoEnabled());
+  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
 
   updateTlsControlsEnabled();
 }
 
 void SettingsDialog::updateTlsControlsEnabled() {
   auto clientMode = appConfig().clientGroupChecked();
-  auto cryptoAvailable = appConfig().cryptoAvailable();
+  auto tlsAvailable = appConfig().tlsAvailable();
   auto tlsChecked = m_pCheckBoxEnableCrypto->isChecked();
-  auto enabled = !clientMode && cryptoAvailable && tlsChecked;
+  auto enabled = !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
       "TLS controls enabled=%d, client=%d, crypto=%d, checked=%d", enabled,
-      clientMode, cryptoAvailable, tlsChecked);
+      clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);
   m_pComboBoxKeyLength->setEnabled(enabled);
@@ -210,17 +212,13 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
   updateTlsControlsEnabled();
 
-  if (!appConfig().cryptoAvailable() && kLicensingEnabled) {
+  if (!appConfig().tlsAvailable() && kLicensingEnabled) {
     auto edition = appConfig().edition();
-    if (edition == Edition::kLite || edition == Edition::kBasic) {
+    if (edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);
-      if (appConfig().edition() == Edition::kLite) {
-        upgradeDialog.showDialog(
-            "Upgrade to Synergy Ultimate to enable TLS encryption.");
-      } else if (appConfig().edition() == Edition::kBasic) {
-        upgradeDialog.showDialog(
-            "Upgrade to Synergy Pro to enable TLS encryption.");
-      }
+      upgradeDialog.showDialog(
+          QString("Upgrade to %1 to enable TLS encryption.")
+              .arg(kProProductName));
     }
   }
 }

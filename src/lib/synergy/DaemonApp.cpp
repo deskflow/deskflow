@@ -25,16 +25,17 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
+#include "global/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcSettingMessage.h"
 #include "net/SocketMultiplexer.h"
-#include "shared/Ipc.h"
 #include "synergy/App.h"
 #include "synergy/ArgParser.h"
 #include "synergy/ClientArgs.h"
 #include "synergy/ServerArgs.h"
+
 
 #if SYSAPI_WIN32
 

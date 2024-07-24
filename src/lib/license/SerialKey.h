@@ -17,36 +17,26 @@
 
 #pragma once
 
-#include "SerialKeyEdition.h"
+#include "ProductEdition.h"
 #include "SerialKeyType.h"
+#include "license/ProductEdition.h"
+
 #include <string>
 
-/**
- * @brief The SerialKeyData struct
- * This is DTO which stores key data
- */
-struct SerialKeyData {
+struct SerialKey {
   std::string key;
-  SerialKeyEdition edition;
+  Product product;
   SerialKeyType keyType;
   unsigned long long warnTime = 0;
   unsigned long long expireTime = 0;
 
-  /**
-   * @brief SerialKeyData constructor
-   * @param key encoded key
-   */
-  explicit SerialKeyData(const std::string &key) : key(key) {}
-
-  /**
-   * @brief SerialKeyData default constructor
-   * @param key edition. Unregistered by default
-   */
-  explicit SerialKeyData(Edition edition = kUnregistered) : edition(edition) {}
+  explicit SerialKey(const std::string &key) : key(key) {}
+  explicit SerialKey(Edition edition = Edition::kUnregistered)
+      : product(edition) {}
 };
 
-inline bool operator==(SerialKeyData const &lhs, SerialKeyData const &rhs) {
+inline bool operator==(SerialKey const &lhs, SerialKey const &rhs) {
   return (lhs.key == rhs.key) && (lhs.warnTime == rhs.warnTime) &&
-         (lhs.expireTime == rhs.expireTime) && (lhs.edition == rhs.edition) &&
+         (lhs.expireTime == rhs.expireTime) && (lhs.product == rhs.product) &&
          (lhs.keyType == rhs.keyType);
 }

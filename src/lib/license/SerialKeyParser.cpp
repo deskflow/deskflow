@@ -17,30 +17,22 @@
 
 #include "SerialKeyParser.h"
 
-void SerialKeyParser::setKey(const std::string &key) { m_data.key = key; }
+void SerialKeyParser::setKey(const std::string &key) { m_serialKey.key = key; }
 
 void SerialKeyParser::setType(const std::string &type) {
-  m_data.keyType.setKeyType(type);
+  m_serialKey.keyType.setKeyType(type);
 }
 
 void SerialKeyParser::setEdition(const std::string &edition) {
-  m_data.edition.setType(edition);
-  if (m_data.keyType.isMaintenance() &&
-      m_data.edition.getType() == Edition::kBasic) {
-    m_data.edition.setType(kLite);
-  } else if (
-      m_data.keyType.isMaintenance() &&
-      m_data.edition.getType() == Edition::kPro) {
-    m_data.edition.setType(kUltimate);
-  }
+  m_serialKey.product.setEdition(edition);
 }
 
 void SerialKeyParser::setWarningTime(const std::string &warnTime) {
-  sscanf(warnTime.c_str(), "%lld", &m_data.warnTime);
+  sscanf(warnTime.c_str(), "%lld", &m_serialKey.warnTime);
 }
 
 void SerialKeyParser::setExpirationTime(const std::string &expTime) {
-  sscanf(expTime.c_str(), "%lld", &m_data.expireTime);
+  sscanf(expTime.c_str(), "%lld", &m_serialKey.expireTime);
 }
 
 std::string SerialKeyParser::decode(const std::string &serial) const {
@@ -71,25 +63,24 @@ std::string SerialKeyParser::decode(const std::string &serial) const {
 }
 
 bool SerialKeyParser::parse(const std::string &plainSerial) {
-  bool valid = false;
   auto key = decode(plainSerial);
   const auto parts = splitToParts(key);
 
   if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
     setKey(plainSerial);
     parseV1(parts);
-    valid = true;
+    return true;
   } else if (
       (parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
     setKey(plainSerial);
     parseV2(parts);
-    valid = true;
+    return true;
   }
 
-  return valid;
+  return false;
 }
 
-const SerialKeyData &SerialKeyParser::getData() const { return m_data; }
+const SerialKey &SerialKeyParser::getData() const { return m_serialKey; }
 
 void SerialKeyParser::parseV1(const std::vector<std::string> &parts) {
   // e.g.: {v1;basic;Bob;1;email;company name;1398297600;1398384000}

@@ -22,8 +22,8 @@
 #include "Config.h"
 #include "CoreInterface.h"
 #include "gui/ElevateMode.h"
-#include "gui/License.h"
-#include "shared/ProductEdition.h"
+#include "gui/LicenseDisplay.h"
+#include "license/ProductEdition.h"
 
 #include <QObject>
 #include <QString>
@@ -94,8 +94,8 @@ public:
   QString logDir() const;
   void persistLogDir() const;
   ElevateMode elevateMode() const;
-  bool cryptoAvailable() const;
-  bool cryptoEnabled() const;
+  bool tlsAvailable() const;
+  bool tlsEnabled() const;
   bool autoHide() const;
   bool invertScrollDirection() const;
   unsigned long long licenseNextCheck() const;
@@ -135,7 +135,7 @@ protected:
     kElevateModeSetting,
     kElevateModeEnum,
     kEditionSetting,
-    kCryptoEnabled,
+    kTlsEnabled,
     kAutoHide,
     kSerialKey,
     kLastVersion,
@@ -183,9 +183,9 @@ protected:
   void setWizardHasRun();
   void setStartedBefore(bool b);
   void setElevateMode(ElevateMode em);
-  void setCryptoEnabled(bool e);
+  void setTlsEnabled(bool e);
   void setEdition(Edition);
-  void setSerialKey(const QString &serial);
+  void setSerialKey(const QString &serialKey);
   void clearSerialKey();
   void setLastExpiringWarningTime(int t);
   void setAutoHide(bool b);
@@ -271,9 +271,9 @@ private:
   ElevateMode m_ElevateMode = kDefaultElevateMode;
   Edition m_Edition = Edition::kUnregistered;
   QString m_ActivateEmail = "";
-  bool m_CryptoEnabled = false;
+  bool m_TlsEnabled = false;
   bool m_AutoHide = false;
-  QString m_Serialkey = "";
+  QString m_SerialKey = "";
   QString m_LastVersion = "";
   QString m_Guid = "";
   unsigned long long m_licenseNextCheck = 0;

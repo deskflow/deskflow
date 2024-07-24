@@ -21,13 +21,13 @@
 #include "Config.h"
 #include "SslCertificate.h"
 #include "gui/BuildConfig.h"
+#include "license/ProductEdition.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QtCore>
 #include <QtNetwork>
-
 
 using synergy::gui::Config;
 
@@ -59,7 +59,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "elevateMode",
     "elevateModeEnum",
     "edition",
-    "cryptoEnabled",
+    "cryptoEnabled", // kTlsEnabled (retain legacy string value)
     "autoHide",
     "serialKey",
     "lastVersion",
@@ -136,7 +136,7 @@ void AppConfig::loadSettings() {
   m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 
   m_ActivateEmail = loadSetting(kActivateEmail, "").toString();
-  m_CryptoEnabled = loadSetting(kCryptoEnabled, true).toBool();
+  m_TlsEnabled = loadSetting(kTlsEnabled, true).toBool();
   m_AutoHide = loadSetting(kAutoHide, false).toBool();
   m_LastVersion = loadSetting(kLastVersion, "Unknown").toString();
   m_LastExpiringWarningTime = loadSetting(kLastExpireWarningTime, 0).toInt();
@@ -165,33 +165,28 @@ void AppConfig::loadSettings() {
   // only change the serial key if the settings being loaded contains a key
   bool updateSerial = m_Config.hasSetting(
       settingName(kLoadSystemSettings), Config::Scope::Current);
-  // if the setting exists and is not empty
   updateSerial = updateSerial &&
                  !loadSetting(kSerialKey, "").toString().trimmed().isEmpty();
 
   if (updateSerial) {
-    m_Serialkey = loadSetting(kSerialKey, "").toString().trimmed();
+    m_SerialKey = loadSetting(kSerialKey, "").toString().trimmed();
     m_Edition = static_cast<Edition>(
-        loadSetting(kEditionSetting, kUnregistered).toInt());
+        loadSetting(kEditionSetting, static_cast<int>(Edition::kUnregistered))
+            .toInt());
   }
 
   m_ServiceEnabled = loadSetting(kServiceEnabled, m_ServiceEnabled).toBool();
   m_CloseToTray = loadSetting(kCloseToTray, m_CloseToTray).toBool();
 
-  try {
-    // Set the default path of the TLS certificate file in the users DIR
-    QString certificateFilename =
-        QString("%1/%2/%3")
-            .arg(m_CoreInterface.getProfileDir(), "SSL", "Synergy.pem");
+  // set the default path of the tls certificate file in the users dir
+  QString certificateFilename =
+      QString("%1/%2/%3")
+          .arg(m_CoreInterface.getProfileDir(), "SSL", "Synergy.pem");
 
-    m_TlsCertPath = loadSetting(kTlsCertPath, certificateFilename).toString();
-    m_TlsKeyLength = loadSetting(kTlsKeyLength, "2048").toString();
-  } catch (const std::exception &e) {
-    qDebug() << e.what();
-    qFatal("Failed to get profile dir, unable to configure TLS");
-  }
+  m_TlsCertPath = loadSetting(kTlsCertPath, certificateFilename).toString();
+  m_TlsKeyLength = loadSetting(kTlsKeyLength, "2048").toString();
 
-  if (cryptoEnabled()) {
+  if (tlsEnabled()) {
     generateCertificate();
   }
 
@@ -217,10 +212,10 @@ void AppConfig::saveSettings() {
     setSetting(kLogFilename, m_LogFilename);
     setSetting(kStartedBefore, m_StartedBefore);
     setSetting(kElevateModeEnum, static_cast<int>(m_ElevateMode));
-    setSetting(kEditionSetting, m_Edition);
-    setSetting(kCryptoEnabled, m_CryptoEnabled);
+    setSetting(kEditionSetting, static_cast<int>(m_Edition));
+    setSetting(kTlsEnabled, m_TlsEnabled);
     setSetting(kAutoHide, m_AutoHide);
-    setSetting(kSerialKey, m_Serialkey);
+    setSetting(kSerialKey, m_SerialKey);
     setSetting(kLastVersion, m_LastVersion);
     setSetting(kLastExpireWarningTime, m_LastExpiringWarningTime);
     setSetting(kActivationHasRun, m_ActivationHasRun);
@@ -351,19 +346,19 @@ void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
 
 void AppConfig::setEdition(Edition e) {
   setSettingModified(m_Edition, e);
-  setCommonSetting(Setting::kEditionSetting, m_Edition);
+  setCommonSetting(Setting::kEditionSetting, static_cast<int>(m_Edition));
 }
 
 Edition AppConfig::edition() const { return m_Edition; }
 
-void AppConfig::setSerialKey(const QString &serial) {
-  setSettingModified(m_Serialkey, serial);
-  setCommonSetting(Setting::kSerialKey, m_Serialkey);
+void AppConfig::setSerialKey(const QString &serialKey) {
+  setSettingModified(m_SerialKey, serialKey);
+  setCommonSetting(Setting::kSerialKey, m_SerialKey);
 }
 
-void AppConfig::clearSerialKey() { m_Serialkey.clear(); }
+void AppConfig::clearSerialKey() { m_SerialKey.clear(); }
 
-QString AppConfig::serialKey() const { return m_Serialkey; }
+QString AppConfig::serialKey() const { return m_SerialKey; }
 
 int AppConfig::lastExpiringWarningTime() const {
   return m_LastExpiringWarningTime;
@@ -488,28 +483,21 @@ QString AppConfig::coreClientName() const { return m_CoreClientName; }
 
 ElevateMode AppConfig::elevateMode() const { return m_ElevateMode; }
 
-void AppConfig::setCryptoEnabled(bool newValue) {
-  if (m_CryptoEnabled != newValue && newValue) {
+void AppConfig::setTlsEnabled(bool newValue) {
+  if (m_TlsEnabled != newValue && newValue) {
     generateCertificate();
   } else {
     emit sslToggled();
   }
-  setSettingModified(m_CryptoEnabled, newValue);
+  setSettingModified(m_TlsEnabled, newValue);
 }
 
-bool AppConfig::cryptoAvailable() const {
-  if (!kLicensingEnabled) {
-    return true;
-  }
-
-  return (
-      edition() == kPro || edition() == kProChina || edition() == kBusiness ||
-      edition() == kUltimate);
+bool AppConfig::tlsAvailable() const {
+  using enum Edition;
+  return !kLicensingEnabled || edition() == kPro || edition() == kBusiness;
 }
 
-bool AppConfig::cryptoEnabled() const {
-  return cryptoAvailable() && m_CryptoEnabled;
-}
+bool AppConfig::tlsEnabled() const { return tlsAvailable() && m_TlsEnabled; }
 
 void AppConfig::setAutoHide(bool b) { setSettingModified(m_AutoHide, b); }
 

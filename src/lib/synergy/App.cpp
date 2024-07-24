@@ -27,12 +27,13 @@
 #include "base/XBase.h"
 #include "base/log_outputters.h"
 #include "common/Version.h"
+#include "global/Ipc.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
-#include "shared/Ipc.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/XSynergy.h"
 #include "synergy/protocol_types.h"
+
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"

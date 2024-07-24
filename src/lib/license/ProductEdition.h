@@ -17,17 +17,7 @@
 
 #pragma once
 
-enum ProductEdition {
-  kBasic = 0,
-  kPro = 1,
-  kValueNotUsed = 2,
-  kUnregistered = 3,
-  kBusiness = 4,
-  kBasicChina = 5,
-  kProChina = 6,
-  kLite = 7,
-  kUltimate = 8,
-};
+#include "Product.h"
 
-/// @deprecated Use `ProductEdition` instead
-using Edition = ProductEdition;
+/// @deprecated Use `Product::Edition` instead
+using Edition = Product::Edition;

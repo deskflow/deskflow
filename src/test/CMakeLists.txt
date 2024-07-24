@@ -101,16 +101,6 @@ endmacro()
 
 macro(config_test_deps)
 
-  set(CMAKE_AUTOMOC ON)
-  set(CMAKE_AUTORCC ON)
-  set(CMAKE_AUTOUIC ON)
-  set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-  find_package(
-    Qt6
-    COMPONENTS Core Widgets Network Test
-    REQUIRED)
-
   set(gtest_dir ${gtest_base_dir}/googletest)
   set(gmock_dir ${gtest_base_dir}/googlemock)
 
@@ -127,6 +117,9 @@ macro(config_test_deps)
   endif()
 
   set(test_libs
+      gtest
+      gmock
+      global
       arch
       base
       client
@@ -139,9 +132,7 @@ macro(config_test_deps)
       synlib
       mt
       ipc
-      gtest
-      gmock
-      shared
+      license
       gui
       ${libs})
 

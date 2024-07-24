@@ -69,7 +69,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile) {
   EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_checkSerialKeyParams) {
+TEST(ServerArgsParsingTests, parseServerArgs_serialKey_isSet) {
   NiceMock<MockArgParser> argParser;
   ON_CALL(argParser, parseGenericArgs(_, _, _))
       .WillByDefault(Invoke(server_stubParseGenericArgs));
@@ -83,7 +83,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_checkSerialKeyParams) {
   std::array<const char *, argc> kSerialCmd = {"stub", "--serial-key", serial};
 
   argParser.parseServerArgs(serverArgs, argc, kSerialCmd.data());
-  EXPECT_EQ(serial, serverArgs.m_serial.toString());
+  EXPECT_EQ(serial, serverArgs.m_license.toString());
 }
 
 TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams) {

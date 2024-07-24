@@ -35,9 +35,9 @@
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "TrayIcon.h"
+#include "global/Ipc.h"
 #include "gui/QIpcClient.h"
 #include "gui/VersionChecker.h"
-#include "shared/Ipc.h"
 
 class QAction;
 class QMenu;
@@ -80,9 +80,7 @@ public:
   };
 
   enum class CoreMode { Client, Server };
-
   enum class LogLevel { Error, Info };
-
   enum class RuningState { Started, Stopped };
 
 public:
@@ -104,13 +102,14 @@ public:
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
-  License &license();
+  LicenseDisplay &licenseDisplay();
   int raiseActivationDialog();
+  void showLicenseNotice(const QString &message);
 
 public slots:
   void setEdition(Edition edition);
-  void invalidSerialKey();
-  void showLicenseNotice(const QString &message);
+  void setSerialKey(const QString &serialKey);
+  void invalidLicense();
   void appendLogRaw(const QString &text);
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
@@ -183,7 +182,7 @@ private:
   void updateWindowTitle();
 
   AppConfig &m_AppConfig;
-  License m_License;
+  LicenseDisplay m_LicenseDisplay;
   ServerConfig m_ServerConfig;
   ServerConnection m_serverConnection;
   ClientConnection m_clientConnection;

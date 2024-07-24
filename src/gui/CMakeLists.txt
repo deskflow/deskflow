@@ -50,8 +50,9 @@ include_directories(./src)
 
 target_link_libraries(
   ${target}
-  shared
   gui
+  global
+  license
   Qt6::Core
   Qt6::Widgets
   Qt6::Network)

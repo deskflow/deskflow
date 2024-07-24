@@ -32,18 +32,16 @@ public:
 
   void setKeyType(const std::string &type);
   bool isTrial() const;
-  bool isTemporary() const;
-  bool isMaintenance() const;
+  bool isTimeLimited() const;
 
 private:
   bool m_isTrial = false;
-  bool m_isTemporary = false;
-  bool m_isMaintenance = false;
+  bool m_isTimeLimited = false;
 };
 
 inline bool operator==(SerialKeyType const &lhs, SerialKeyType const &rhs) {
   return (lhs.m_isTrial == rhs.m_isTrial) &&
-         (lhs.m_isTemporary == rhs.m_isTemporary);
+         (lhs.m_isTimeLimited == rhs.m_isTimeLimited);
 }
 
 inline bool operator!=(SerialKeyType const &lhs, SerialKeyType const &rhs) {

@@ -703,12 +703,12 @@ background-color: rgba(192,192,192, 0.1);
 font-weight: 700;
 padding: 3px 5px;
 border-radius: 3px;
-background-color: #EC4C47;
+background-color: #3B67D3;
 color: #ffffff;
 top: 3px;</string>
         </property>
         <property name="text">
-         <string notr="true"/>
+         <string notr="true">Placeholder</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

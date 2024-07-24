@@ -17,7 +17,7 @@
  */
 
 #include "IpcReader.h"
-#include "shared/Ipc.h"
+#include "global/Ipc.h"
 #include <QByteArray>
 #include <QMutex>
 #include <QTcpSocket>

@@ -1,0 +1,148 @@
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2015 Synergy Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "LicenseDisplay.h"
+#include "license/ProductEdition.h"
+
+#include <QDateTime>
+#include <QLocale>
+#include <QThread>
+#include <QTimer>
+#include <ctime>
+#include <utility>
+
+using std::chrono::system_clock;
+
+// TODO: hard coding ui messages in a non-ui class is a terrible idea and should
+// probably be implemented in qml or some other visual language.
+const char *const kLinkStyle = "color: #4285F4";
+const char *const kPurchaseUrl =
+    "https://symless.com/synergy/purchase?source=gui";
+const char *const kBuyLink = R"(<a href="%1" )"
+                             R"(style="%2">Buy now</a>)"
+                             "</p>";
+const char *const kRenewLink = R"(<a href="%1" )"
+                               R"(style="%2">Renew now</a>)"
+                               "</p>";
+
+// TODO: why would we accept expired?
+bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
+  if (!acceptExpired && license.isExpired(::time(nullptr))) {
+    qDebug("Expired license");
+    return false;
+  }
+
+  if (!license.isValid()) {
+    qDebug("Invalid license");
+    return false;
+  }
+
+  return true;
+}
+
+bool LicenseDisplay::setLicense(License license, bool acceptExpired) {
+  if (!isValid(license, acceptExpired)) {
+    m_license = License();
+    emit serialKeyChanged("");
+    return false;
+  }
+
+  if (license != m_license) {
+    std::swap(license, m_license);
+
+    emit serialKeyChanged(QString::fromStdString(m_license.toString()));
+
+    if (m_license.edition() != license.edition()) {
+      emit editionChanged(m_license.edition());
+    }
+  }
+
+  if (m_license.isTimeLimited()) {
+    QTimer::singleShot(m_license.getTimeLeft(), this, SLOT(validateLicense()));
+  }
+
+  return true;
+}
+
+void LicenseDisplay::validateLicense() const {
+  if (!isValid(m_license, false)) {
+    emit invalidLicense();
+  }
+}
+
+Edition LicenseDisplay::productEdition() const { return m_license.edition(); }
+
+const License &LicenseDisplay::license() const { return m_license; }
+
+QString LicenseDisplay::productName() const {
+  auto edition = productEdition();
+  if (edition == Edition::kUnregistered) {
+    return QString("%1 (unregistered)").arg(SYNERGY_PRODUCT_NAME);
+  }
+
+  Product licenseEdition(edition);
+  std::string name = licenseEdition.productName();
+
+  if (m_license.isTrial()) {
+    name += " (Trial)";
+  }
+
+  return QString::fromUtf8(name.c_str(), static_cast<qsizetype>(name.size()));
+}
+
+QString LicenseDisplay::noticeMessage() const {
+  if (m_license.isTrial()) {
+    return getTrialNotice();
+  } else if (m_license.isTimeLimited()) {
+    return getTimeLimitedNotice();
+  } else {
+    throw NoticeError();
+  }
+}
+
+QString LicenseDisplay::getTrialNotice() const {
+  const QString buyLink = QString(kBuyLink).arg(kPurchaseUrl).arg(kLinkStyle);
+  const auto now = system_clock::now();
+  const std::time_t now_c = system_clock::to_time_t(now);
+
+  if (m_license.isExpired(now_c)) {
+    return QString("<p>Your trial has expired. %1").arg(buyLink);
+  } else {
+    time_t daysLeft = m_license.daysLeft(now_c);
+    return QString("<p>Your trial expires in %1 %2. %3</p>")
+        .arg(daysLeft)
+        .arg((daysLeft == 1) ? "day" : "days")
+        .arg(buyLink);
+  }
+}
+
+QString LicenseDisplay::getTimeLimitedNotice() const {
+  const QString renewLink =
+      QString(kRenewLink).arg(kPurchaseUrl).arg(kLinkStyle);
+  const auto now = system_clock::now();
+  const std::time_t now_c = system_clock::to_time_t(now);
+
+  if (m_license.isExpired(now_c)) {
+    return QString("<p>Your license has expired. %1</p>").arg(renewLink);
+  } else {
+    time_t daysLeft = m_license.daysLeft(now_c);
+    return QString("<p>Your license expires in %1 %2. %3</p>")
+        .arg(daysLeft)
+        .arg((daysLeft == 1) ? "day" : "days")
+        .arg(renewLink);
+  }
+}

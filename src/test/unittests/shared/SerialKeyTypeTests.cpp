@@ -17,37 +17,26 @@
 
 #define TEST_ENV
 
-#include "shared/SerialKeyType.h"
+#include "license/SerialKeyType.h"
 
 #include <gtest/gtest.h>
 
 TEST(SerialKeyTypeTests, TrialTemporaryKeyType_false) {
   SerialKeyType KeyType;
   EXPECT_EQ(false, KeyType.isTrial());
-  EXPECT_EQ(false, KeyType.isTemporary());
-  EXPECT_FALSE(KeyType.isMaintenance());
+  EXPECT_EQ(false, KeyType.isTimeLimited());
 }
 
 TEST(SerialKeyTypeTests, TrialTemporaryKeyType_true) {
   SerialKeyType KeyType;
   KeyType.setKeyType("trial");
   EXPECT_EQ(true, KeyType.isTrial());
-  EXPECT_EQ(true, KeyType.isTemporary());
-  EXPECT_FALSE(KeyType.isMaintenance());
+  EXPECT_EQ(true, KeyType.isTimeLimited());
 }
 
-TEST(SerialKeyTypeTests, TemporaryKeyType_true) {
+TEST(SerialKeyTypeTests, TimeLimitedKeyType_true) {
   SerialKeyType KeyType;
   KeyType.setKeyType("subscription");
   EXPECT_EQ(false, KeyType.isTrial());
-  EXPECT_EQ(true, KeyType.isTemporary());
-  EXPECT_FALSE(KeyType.isMaintenance());
-}
-
-TEST(SerialKeyTypeTests, MaintanenceKeyType_true) {
-  SerialKeyType KeyType;
-  KeyType.setKeyType("maintenance");
-  EXPECT_EQ(false, KeyType.isTrial());
-  EXPECT_EQ(false, KeyType.isTemporary());
-  EXPECT_TRUE(KeyType.isMaintenance());
+  EXPECT_EQ(true, KeyType.isTimeLimited());
 }

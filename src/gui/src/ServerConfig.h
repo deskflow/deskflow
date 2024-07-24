@@ -81,7 +81,6 @@ public:
   bool isFull() const;
   bool isScreenExists(const QString &screenName) const;
   void addClient(const QString &clientName);
-  bool isHotkeysAvailable() const;
   QString getClientAddress() const;
   void setClientAddress(const QString &address);
 

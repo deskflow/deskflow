@@ -19,6 +19,7 @@
 
 #include "base/Log.h"
 #include "base/String.h"
+#include "license/License.h"
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ClientArgs.h"
@@ -53,7 +54,7 @@ bool ArgParser::parseServerArgs(
       // save configuration file path
       args.m_configFile = argv[++i];
     } else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
-      args.m_serial = SerialKey(argv[++i]);
+      args.m_license = License(argv[++i]);
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;

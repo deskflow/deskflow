@@ -23,13 +23,14 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
+#include "global/Ipc.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
-#include "shared/Ipc.h"
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
+
 
 #include <Shellapi.h>
 #include <UserEnv.h>

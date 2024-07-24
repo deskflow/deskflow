@@ -17,38 +17,44 @@
 
 #pragma once
 
-#include "SerialKeyData.h"
-#include "SerialKeyEdition.h"
+#include "SerialKey.h"
+#include "license/ProductEdition.h"
+
 #include <ctime>
+#include <stdexcept>
 #include <string>
 
-class SerialKey {
-  friend bool operator==(SerialKey const &, SerialKey const &);
+class License {
+  friend bool operator==(License const &, License const &);
 
 public:
-  explicit SerialKey(Edition edition = kUnregistered);
-  explicit SerialKey(const std::string &serial);
+  class InvalidSerialKey : public std::runtime_error {
+  public:
+    explicit InvalidSerialKey() : std::runtime_error("Invalid serial key") {}
+  };
+
+  explicit License(Edition edition = Edition::kUnregistered);
+  explicit License(const std::string &serialKey);
 
   bool isExpiring(time_t currentTime) const;
   bool isExpired(time_t currentTime) const;
   bool isTrial() const;
-  bool isTemporary() const;
-  bool isMaintenance() const;
+  bool isTimeLimited() const;
   bool isValid() const;
   time_t daysLeft(time_t currentTime) const;
   time_t getExpiration() const;
-  int getSpanLeft(time_t time = ::time(0)) const;
+  int getTimeLeft(time_t time = ::time(0)) const;
   Edition edition() const;
   const std::string &toString() const;
 
 private:
-  SerialKeyData m_data;
+  SerialKey m_serialKey;
 };
 
-inline bool operator==(SerialKey const &lhs, SerialKey const &rhs) {
-  return (lhs.m_data == rhs.m_data);
+inline bool operator==(License const &lhs, License const &rhs) {
+  return (lhs.m_serialKey == rhs.m_serialKey);
 }
 
-inline bool operator!=(SerialKey const &lhs, SerialKey const &rhs) {
+inline bool operator!=(License const &lhs, License const &rhs) {
   return !(lhs == rhs);
 }

@@ -24,8 +24,9 @@
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "gui/BuildConfig.h"
-#include "gui/License.h"
-#include "shared/ProductEdition.h"
+#include "gui/LicenseDisplay.h"
+#include "license/License.h"
+#include "license/ProductEdition.h"
 #include "ui_MainWindowBase.h"
 
 #if defined(Q_OS_MAC)
@@ -56,9 +57,9 @@ static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
 
 #ifdef SYNERGY_PRODUCT_NAME
-static QString kProductName = SYNERGY_PRODUCT_NAME;
+const QString kProductName = SYNERGY_PRODUCT_NAME;
 #else
-static QString kProductName;
+const QString kProductName;
 #endif
 
 #if defined(Q_OS_MAC)
@@ -130,6 +131,10 @@ MainWindow::MainWindow(AppConfig &appConfig)
   connect(
       &m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
       SLOT(handleIdleService(const QString &)));
+
+  // TODO: only connect permenantly to ipc when switching to service mode.
+  // if switching from service to desktop, connect only to stop the service and
+  // don't retry.
   m_IpcClient.connectToHost();
 #endif
 
@@ -150,17 +155,6 @@ MainWindow::MainWindow(AppConfig &appConfig)
   connect(
       this, SIGNAL(windowShown()), this, SLOT(on_windowShown()),
       Qt::QueuedConnection);
-  connect(
-      &m_License, SIGNAL(editionChanged(Edition)), this,
-      SLOT(setEdition(Edition)), Qt::QueuedConnection);
-
-  connect(
-      &m_License, SIGNAL(showLicenseNotice(QString)), this,
-      SLOT(showLicenseNotice(QString)), Qt::QueuedConnection);
-
-  connect(
-      &m_License, SIGNAL(invalidSerialKey()), this, SLOT(invalidSerialKey()),
-      Qt::QueuedConnection);
 
   connect(
       appConfigPtr(), SIGNAL(sslToggled()), this,
@@ -168,25 +162,31 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
   updateWindowTitle();
 
-  QString lastVersion = m_AppConfig.lastVersion();
-  if (lastVersion != SYNERGY_VERSION) {
+  if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
   }
 
   if (kLicensingEnabled) {
-    m_pActivate->setVisible(false);
+    m_pActivate->setVisible(true);
+
+    connect(
+        &m_LicenseDisplay, SIGNAL(serialKeyChanged(const QString &)), this,
+        SLOT(setSerialKey(const QString &)), Qt::QueuedConnection);
+
+    connect(
+        &m_LicenseDisplay, SIGNAL(editionChanged(Edition)), this,
+        SLOT(setEdition(Edition)), Qt::QueuedConnection);
+
+    connect(
+        &m_LicenseDisplay, SIGNAL(invalidLicense()), this,
+        SLOT(invalidLicense()), Qt::QueuedConnection);
   }
 }
 
 MainWindow::~MainWindow() {
   if (appConfig().processMode() == ProcessMode::kDesktop) {
     m_ExpectedRunningState = RuningState::Stopped;
-    try {
-      stopDesktop();
-    } catch (const std::exception &e) {
-      qDebug() << e.what();
-      qFatal("Failed to stop synergy desktop process");
-    }
+    stopDesktop();
   }
 }
 
@@ -435,7 +435,8 @@ void MainWindow::checkConnected(const QString &line) {
 
 void MainWindow::checkLicense(const QString &line) {
   if (line.contains("trial has expired")) {
-    m_License.refresh();
+    License license(m_AppConfig.serialKey().toStdString());
+    m_LicenseDisplay.setLicense(license, true);
     raiseActivationDialog();
   }
 }
@@ -537,8 +538,8 @@ void MainWindow::startCore() {
 #endif
 
   if (kLicensingEnabled) {
-    SerialKey serialKey = m_License.serialKey();
-    if (!serialKey.isValid()) {
+    License license = m_LicenseDisplay.license();
+    if (!license.isValid()) {
       if (QDialog::Rejected == raiseActivationDialog()) {
         return;
       }
@@ -591,7 +592,7 @@ void MainWindow::startCore() {
 #endif
 
 #if defined(Q_OS_WIN)
-  if (m_AppConfig.cryptoEnabled()) {
+  if (m_AppConfig.tlsEnabled()) {
     args << "--enable-crypto";
     args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
@@ -608,7 +609,7 @@ void MainWindow::startCore() {
   }
 
 #else
-  if (m_AppConfig.cryptoEnabled()) {
+  if (m_AppConfig.tlsEnabled()) {
     args << "--enable-crypto";
     args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
@@ -1025,13 +1026,19 @@ QString MainWindow::getIPAddresses() {
   return result.join(", ");
 }
 
-void MainWindow::setEdition(Edition edition) {
-  setWindowTitle(m_License.getProductName(edition));
+void MainWindow::setSerialKey(const QString &serialKey) {
+  m_AppConfig.setSerialKey(serialKey);
 }
 
-void MainWindow::invalidSerialKey() {
+void MainWindow::setEdition(Edition edition) {
+  m_AppConfig.setEdition(edition);
+  setWindowTitle(m_LicenseDisplay.productName());
+}
+
+void MainWindow::invalidLicense() {
   stopCore();
   m_AppConfig.setActivationHasRun(false);
+  showLicenseNotice(m_LicenseDisplay.noticeMessage());
 }
 
 void MainWindow::showLicenseNotice(const QString &notice) {
@@ -1042,7 +1049,7 @@ void MainWindow::showLicenseNotice(const QString &notice) {
     this->m_trialLabel->show();
   }
 
-  setWindowTitle(m_License.productName());
+  setWindowTitle(m_LicenseDisplay.productName());
 }
 
 void MainWindow::updateLocalFingerprint() {
@@ -1054,7 +1061,7 @@ void MainWindow::updateLocalFingerprint() {
     qFatal("Failed to check if fingerprint exists");
   }
 
-  if (m_AppConfig.cryptoEnabled() && fingerprintExists &&
+  if (m_AppConfig.tlsEnabled() && fingerprintExists &&
       m_pRadioGroupServer->isChecked()) {
     m_pLabelFingerprint->setVisible(true);
   } else {
@@ -1062,7 +1069,7 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-License &MainWindow::license() { return m_License; }
+LicenseDisplay &MainWindow::licenseDisplay() { return m_LicenseDisplay; }
 
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
@@ -1088,8 +1095,9 @@ void MainWindow::on_m_pActionHelp_triggered() {
 
 void MainWindow::updateWindowTitle() {
   if (kLicensingEnabled) {
-    setWindowTitle(m_License.productName());
-    m_License.refresh();
+    License license(m_AppConfig.serialKey().toStdString());
+    m_LicenseDisplay.setLicense(license, true);
+    setWindowTitle(m_LicenseDisplay.productName());
   } else {
     setWindowTitle(kProductName);
   }
@@ -1164,7 +1172,7 @@ int MainWindow::raiseActivationDialog() {
   if (m_ActivationDialogRunning) {
     return QDialog::Rejected;
   }
-  ActivationDialog activationDialog(this, appConfig(), license());
+  ActivationDialog activationDialog(this, m_AppConfig, m_LicenseDisplay);
   m_ActivationDialogRunning = true;
   int result = activationDialog.exec();
   m_ActivationDialogRunning = false;
@@ -1180,7 +1188,7 @@ int MainWindow::raiseActivationDialog() {
 
 void MainWindow::on_windowShown() {
   if (kLicensingEnabled) {
-    auto serialKey = m_License.serialKey();
+    auto serialKey = m_LicenseDisplay.license();
     if (!m_AppConfig.activationHasRun() && !serialKey.isValid()) {
       setEdition(Edition::kUnregistered);
       raiseActivationDialog();

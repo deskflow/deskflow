@@ -21,6 +21,6 @@ if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 
-add_library(shared STATIC ${sources})
+add_library(license STATIC ${sources})
 
-target_link_libraries(shared arch base)
+target_link_libraries(license arch base)

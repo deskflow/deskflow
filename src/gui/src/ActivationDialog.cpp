@@ -19,24 +19,28 @@
 #include "AppConfig.h"
 #include "CancelActivationDialog.h"
 #include "MainWindow.h"
-#include "gui/License.h"
-#include "shared/ProductEdition.h"
+#include "gui/LicenseDisplay.h"
+#include "license/ProductEdition.h"
 #include "ui_ActivationDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
 
+const char *const kContactUrl =
+    "https://symless.com/synergy/contact?source=gui";
+const char *const kLinkStyle = "color: #4285F4";
+
 ActivationDialog::ActivationDialog(
-    QWidget *parent, AppConfig &appConfig, License &license)
+    QWidget *parent, AppConfig &appConfig, LicenseDisplay &licenseDisplay)
     : QDialog(parent),
       ui(new Ui::ActivationDialog),
       m_appConfig(&appConfig),
-      m_License(license) {
+      m_LicenseDisplay(licenseDisplay) {
   ui->setupUi(this);
   refreshSerialKey();
   time_t currentTime = ::time(0);
-  if (!m_License.serialKey().isExpired(currentTime)) {
+  if (!m_LicenseDisplay.license().isExpired(currentTime)) {
     ui->m_trialWidget->hide();
   }
 }
@@ -45,8 +49,10 @@ void ActivationDialog::refreshSerialKey() {
   ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
   ui->m_pTextEditSerialKey->setFocus();
   ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
-  ui->m_trialLabel->setText(
-      tr(m_License.getLicenseNotice().toStdString().c_str()));
+  if (m_LicenseDisplay.license().isTrial()) {
+    ui->m_trialLabel->setText(
+        tr(m_LicenseDisplay.noticeMessage().toStdString().c_str()));
+  }
 }
 
 ActivationDialog::~ActivationDialog() { delete ui; }
@@ -54,7 +60,7 @@ ActivationDialog::~ActivationDialog() { delete ui; }
 void ActivationDialog::reject() {
   // don't show the cancel confirmation dialog if they've already registered,
   // since it's not revent to customers who are changing their serial key.
-  if (m_License.activeEdition() != kUnregistered) {
+  if (m_LicenseDisplay.productEdition() != Edition::kUnregistered) {
     QDialog::reject();
     return;
   }
@@ -67,38 +73,37 @@ void ActivationDialog::reject() {
 }
 
 void ActivationDialog::accept() {
-  QMessageBox message;
   m_appConfig->setActivationHasRun(true);
 
-  try {
-    SerialKey serialKey(
-        ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString());
-    m_License.setSerialKey(serialKey);
-  } catch (std::exception &e) {
-    message.critical(
+  auto serialKeyString =
+      ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString();
+
+  if (License license(serialKeyString); !m_LicenseDisplay.setLicense(license)) {
+    QMessageBox::critical(
         this, "Activation failed",
-        tr("An error occurred while trying to activate Synergy. "
-           "<a href=\"https://symless.com/synergy/contact-support?source=gui\" "
-           "style=\"text-decoration: none; color: #4285F4;\">"
-           "Please contact the helpdesk</a>, and provide the following "
-           "information:"
-           "<br><br>%1")
-            .arg(e.what()));
+        tr("<p>There was a problem activating Synergy. "
+           "Please "
+           R"(<a href="%1" style="%2">contact us</a>)"
+           ", and provide the following information:"
+           "</p>"
+           "%3")
+            .arg(kContactUrl)
+            .arg(kLinkStyle)
+            .arg(m_LicenseDisplay.noticeMessage()));
     refreshSerialKey();
-    return;
   }
 
-  Edition edition = m_License.activeEdition();
-  time_t daysLeft = m_License.serialKey().daysLeft(::time(0));
-  if (edition != kUnregistered) {
+  Edition edition = m_LicenseDisplay.productEdition();
+  time_t daysLeft = m_LicenseDisplay.license().daysLeft(::time(0));
+  if (edition != Edition::kUnregistered) {
     QString thanksMessage = tr("Thanks for trying %1! %5\n\n%2 day%3 of "
                                "your trial remain%4")
-                                .arg(m_License.getProductName(edition))
+                                .arg(m_LicenseDisplay.productName())
                                 .arg(daysLeft)
                                 .arg((daysLeft == 1) ? "" : "s")
                                 .arg((daysLeft == 1) ? "s" : "");
 
-    if (m_appConfig->cryptoAvailable()) {
+    if (m_appConfig->tlsAvailable()) {
       m_appConfig->generateCertificate();
       thanksMessage =
           thanksMessage.arg("If you're using SSL, "
@@ -107,13 +112,12 @@ void ActivationDialog::accept() {
       thanksMessage = thanksMessage.arg("");
     }
 
-    if (m_License.serialKey().isTrial()) {
-      message.information(this, "Thanks!", thanksMessage);
+    if (m_LicenseDisplay.license().isTrial()) {
+      QMessageBox::information(this, "Thanks!", thanksMessage);
     } else {
-      message.information(
+      QMessageBox::information(
           this, "Activated!",
-          tr("Thanks for activating %1!")
-              .arg(m_License.getProductName(edition)));
+          tr("Thanks for activating %1!").arg(m_LicenseDisplay.productName()));
     }
   }
 

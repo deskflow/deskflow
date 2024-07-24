@@ -23,7 +23,7 @@
 #include "ServerConfig.h"
 #include "UpgradeDialog.h"
 #include "gui/BuildConfig.h"
-#include "shared/ProductEdition.h"
+#include "license/ProductEdition.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -274,25 +274,12 @@ void ServerConfigDialog::reject() {
 }
 
 void ServerConfigDialog::on_m_pButtonNewHotkey_clicked() {
-  if (serverConfig().isHotkeysAvailable()) {
-    Hotkey hotkey;
-    HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted) {
-      serverConfig().hotkeys().append(hotkey);
-      m_pListHotkeys->addItem(hotkey.text());
-      onChange();
-    }
-  } else if (kLicensingEnabled) {
-    auto edition = appConfig().edition();
-    if (edition == Edition::kLite || edition == Edition::kBasic) {
-      UpgradeDialog upgradeDialog(this);
-      if (appConfig().edition() == Edition::kLite) {
-        upgradeDialog.showDialog(
-            "Upgrade to Synergy 1 Ultimate to enable hotkeys");
-      } else if (appConfig().edition() == Edition::kBasic) {
-        upgradeDialog.showDialog("Upgrade to Synergy 1 Pro to enable hotkeys");
-      }
-    }
+  Hotkey hotkey;
+  HotkeyDialog dlg(this, hotkey);
+  if (dlg.exec() == QDialog::Accepted) {
+    serverConfig().hotkeys().append(hotkey);
+    m_pListHotkeys->addItem(hotkey.text());
+    onChange();
   }
 }
 

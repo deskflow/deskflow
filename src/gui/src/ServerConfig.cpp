@@ -560,7 +560,3 @@ QString ServerConfig::getClientAddress() const {
 QSettings &ServerConfig::settings() {
   return *m_pAppConfig->config().currentSettings();
 }
-
-bool ServerConfig::isHotkeysAvailable() const {
-  return !kLicensingEnabled || (m_pAppConfig->edition() != Edition::kLite);
-}

@@ -17,36 +17,38 @@
 
 #pragma once
 
-#include "shared/ProductEdition.h"
-#include "shared/SerialKey.h"
+#include "license/License.h"
+#include "license/ProductEdition.h"
 
 #include <QObject>
 
-class License : public QObject {
+class LicenseDisplay : public QObject {
   Q_OBJECT
 
 public:
-  void setSerialKey(SerialKey serialKey, bool acceptExpired = false);
-  void refresh();
-  Edition activeEdition() const;
+  class NoticeError : public std::runtime_error {
+  public:
+    NoticeError() : std::runtime_error("Could not create notice") {}
+  };
+
+  Edition productEdition() const;
+  const License &license() const;
+  void validateLicense() const;
+  QString noticeMessage() const;
   QString productName() const;
-  const SerialKey &serialKey() const;
-  static QString getProductName(Edition edition, bool trial = false);
-  QString getLicenseNotice() const;
 
-private:
-  SerialKey m_serialKey;
-
-public slots:
-  void validateSerialKey() const;
+  /// @return true if the serial key was set successfully
+  bool setLicense(License serialKey, bool acceptExpired = false);
 
 signals:
-  void editionChanged(Edition) const;
-  void invalidSerialKey() const;
-  void showLicenseNotice(const QString &notice) const;
   void serialKeyChanged(const QString &serialKey) const;
+  void editionChanged(Edition) const;
+  void invalidLicense() const;
 
-protected:
+private:
   QString getTrialNotice() const;
-  QString getTemporaryNotice() const;
+  QString getTimeLimitedNotice() const;
+  bool isValid(const License &license, bool acceptExpired) const;
+
+  License m_license;
 };

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "gui/License.h"
+#include "gui/LicenseDisplay.h"
 
 #include <QDialog>
 
@@ -31,7 +31,8 @@ class ActivationDialog : public QDialog {
   Q_OBJECT
 
 public:
-  ActivationDialog(QWidget *parent, AppConfig &appConfig, License &license);
+  ActivationDialog(
+      QWidget *parent, AppConfig &appConfig, LicenseDisplay &licenseDisplay);
   ~ActivationDialog() override;
 
 public slots:
@@ -44,5 +45,5 @@ protected:
 private:
   Ui::ActivationDialog *ui;
   AppConfig *m_appConfig;
-  License &m_License;
+  LicenseDisplay &m_LicenseDisplay;
 };

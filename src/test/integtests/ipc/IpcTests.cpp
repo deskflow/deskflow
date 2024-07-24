@@ -27,6 +27,7 @@
 #include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
+#include "global/Ipc.h"
 #include "ipc/IpcClient.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
@@ -34,8 +35,8 @@
 #include "ipc/IpcServerProxy.h"
 #include "mt/Thread.h"
 #include "net/SocketMultiplexer.h"
-#include "shared/Ipc.h"
 #include "test/shared/TestEventQueue.h"
+
 
 #include <gtest/gtest.h>
 

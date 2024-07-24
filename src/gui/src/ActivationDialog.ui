@@ -81,12 +81,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
 font-weight: 700;
 padding: 3px 5px;
 border-radius: 3px;
-background-color: #EC4C47;
+background-color: #3B67D3;
 color: #ffffff;
 top: 3px;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>Placeholder</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
