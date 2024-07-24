@@ -124,7 +124,7 @@ QString LicenseDisplay::getTrialNotice() const {
   if (m_license.isExpired(now_c)) {
     return QString("<p>Your trial has expired. %1").arg(buyLink);
   } else {
-    time_t daysLeft = m_license.daysLeft(now_c);
+    days daysLeft = m_license.daysLeft(now_c);
     return QString("<p>Your trial expires in %1 %2. %3</p>")
         .arg(daysLeft)
         .arg((daysLeft == 1) ? "day" : "days")
@@ -141,7 +141,7 @@ QString LicenseDisplay::getTimeLimitedNotice() const {
   if (m_license.isExpired(now_c)) {
     return QString("<p>Your license has expired. %1</p>").arg(renewLink);
   } else {
-    time_t daysLeft = m_license.daysLeft(now_c);
+    days daysLeft = m_license.daysLeft(now_c);
     return QString("<p>Your license expires in %1 %2. %3</p>")
         .arg(daysLeft)
         .arg((daysLeft == 1) ? "day" : "days")

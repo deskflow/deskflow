@@ -18,6 +18,7 @@
 
 #include "IpcReader.h"
 #include "global/Ipc.h"
+
 #include <QByteArray>
 #include <QMutex>
 #include <QTcpSocket>

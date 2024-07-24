@@ -21,7 +21,10 @@
 #include "license/SerialKey.h"
 #include "license/parse_serial_key.h"
 
+#include <chrono>
 #include <climits>
+
+using namespace std::chrono;
 
 namespace synergy::license {
 
@@ -68,18 +71,15 @@ Edition License::edition() const { return m_serialKey.product.edition(); }
 const std::string &License::toString() const { return m_serialKey.hexString; }
 
 time_t License::daysLeft(time_t currentTime) const {
-  unsigned long long timeLeft = 0;
-  unsigned long long const day = 60 * 60 * 24;
+  auto now = system_clock::now();
+  auto expireTime = m_serialKey.expireTime.value();
 
-  auto currentTimeAsLL = static_cast<unsigned long long>(currentTime);
-  if (static_cast<unsigned long long>(currentTime) < m_serialKey.expireTime) {
-    timeLeft = m_serialKey.expireTime - currentTimeAsLL;
+  if (currentTime >= expireTime) {
+    return days(0);
   }
 
-  unsigned long long daysLeft = 0;
-  daysLeft = timeLeft % day != 0 ? 1 : 0;
-
-  return timeLeft / day + daysLeft;
+  auto timeLeft = expireTime - currentTime;
+  return duration_cast<days>(timeLeft);
 }
 
 time_t License::getExpiration() const { return m_serialKey.expireTime; }

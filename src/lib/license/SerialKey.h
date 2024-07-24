@@ -21,17 +21,22 @@
 #include "SerialKeyType.h"
 #include "license/ProductEdition.h"
 
+#include <chrono>
+#include <ctime>
+#include <optional>
 #include <string>
 
 namespace synergy::license {
 
 struct SerialKey {
+  using time_point = std::chrono::system_clock::time_point;
+
   bool isValid = false;
   std::string hexString = "";
   Product product;
   SerialKeyType type;
-  unsigned long long warnTime = 0;
-  unsigned long long expireTime = 0;
+  std::optional<time_point> warnTime = std::nullopt;
+  std::optional<time_point> expireTime = std::nullopt;
 
   explicit SerialKey(const std::string &key) : hexString(key) {}
   explicit SerialKey(Edition edition = Edition::kUnregistered)
