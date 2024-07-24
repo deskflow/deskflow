@@ -30,7 +30,6 @@
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
 
-
 enum EIpcLogOutputter {
   kBufferMaxSize = 1000,
   kMaxSendLines = 100,

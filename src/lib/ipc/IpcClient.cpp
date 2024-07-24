@@ -21,7 +21,6 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
 
-
 //
 // IpcClient
 //

@@ -25,7 +25,6 @@
 #include "ipc/IpcSettingMessage.h"
 #include "synergy/ProtocolUtil.h"
 
-
 //
 // IpcClientProxy
 //

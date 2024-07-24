@@ -24,7 +24,6 @@
 #include "net/NetworkAddress.h"
 #include "net/TCPListenSocket.h"
 
-
 #include <list>
 
 class Event;

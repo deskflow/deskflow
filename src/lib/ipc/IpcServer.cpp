@@ -28,7 +28,6 @@
 #include "ipc/IpcMessage.h"
 #include "net/IDataSocket.h"
 
-
 //
 // IpcServer
 //

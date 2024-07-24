@@ -31,7 +31,6 @@
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 
-
 #include <Shellapi.h>
 #include <UserEnv.h>
 #include <sstream>

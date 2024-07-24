@@ -37,7 +37,6 @@
 #include "net/SocketMultiplexer.h"
 #include "test/shared/TestEventQueue.h"
 
-
 #include <gtest/gtest.h>
 
 const int kTestPort = 24802;
