@@ -21,6 +21,8 @@
 
 using SKE = Product::SerialKeyEditionID;
 
+const char *const kLicensedProductName = "Synergy 1";
+
 const std::string SKE::Pro = "pro";
 const std::string SKE::Basic = "basic";
 const std::string SKE::Buisiness = "business";
@@ -61,7 +63,7 @@ std::string Product::serialKeyId() const {
 
 std::string Product::name() const {
 
-  const std::string nameBase = SYNERGY_PRODUCT_NAME;
+  const std::string nameBase = kLicensedProductName;
   switch (edition()) {
     using enum Edition;
 

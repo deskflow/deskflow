@@ -16,6 +16,7 @@
  */
 
 #include "LicenseDisplay.h"
+#include "license/Product.h"
 #include "license/ProductEdition.h"
 
 #include <QDateTime>
@@ -92,7 +93,7 @@ const License &LicenseDisplay::license() const { return m_license; }
 QString LicenseDisplay::productName() const {
   auto edition = productEdition();
   if (edition == Edition::kUnregistered) {
-    return QString("%1 (unregistered)").arg(SYNERGY_PRODUCT_NAME);
+    return QString("%1 (unregistered)").arg(kLicensedProductName);
   }
 
   Product product(edition);

@@ -17,8 +17,10 @@
 
 #pragma once
 
-#include <string>
 #include <stdexcept>
+#include <string>
+
+extern const char *const kLicensedProductName;
 
 class Product {
   friend bool operator==(Product const &, Product const &) = default;
