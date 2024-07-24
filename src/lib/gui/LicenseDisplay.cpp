@@ -114,7 +114,7 @@ QString LicenseDisplay::noticeMessage() const {
 QString LicenseDisplay::getTrialNotice() const {
   const QString buyLink = QString(kBuyLink).arg(kPurchaseUrl).arg(kLinkStyle);
   if (m_license.isExpired()) {
-    return QString("<p>Your trial has expired. %1").arg(buyLink);
+    return QString("<p>Your trial has expired. %1</p>").arg(buyLink);
   } else {
     auto daysLeft = m_license.daysLeft().count();
     return QString("<p>Your trial expires in %1 %2. %3</p>")
