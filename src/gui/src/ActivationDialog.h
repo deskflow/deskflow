@@ -43,6 +43,9 @@ protected:
   void refreshSerialKey();
 
 private:
+  void showTrialMessage();
+  void showActivationError(const QString &message);
+
   Ui::ActivationDialog *ui;
   AppConfig *m_appConfig;
   LicenseDisplay &m_LicenseDisplay;

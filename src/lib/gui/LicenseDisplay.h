@@ -53,5 +53,5 @@ private:
   // TODO: why accept expired?
   bool isValid(const License &license, bool acceptExpired) const;
 
-  License m_license;
+  License m_license = License::invalid();
 };

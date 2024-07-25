@@ -39,7 +39,7 @@ public:
 
 public:
   String m_configFile = "";
-  License m_license;
+  License m_license = License::invalid();
   std::shared_ptr<Config> m_config;
 };
 

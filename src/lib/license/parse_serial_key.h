@@ -22,7 +22,11 @@
 
 namespace synergy::license {
 
-using SerialKeyParseError = std::runtime_error;
+class SerialKeyParseError : public std::runtime_error {
+public:
+  explicit SerialKeyParseError(const std::string &message)
+      : std::runtime_error(message) {}
+};
 
 class InvalidHexString : public SerialKeyParseError {
 public:
@@ -38,14 +42,14 @@ public:
 
 class InvalidSerialKeyDate : public SerialKeyParseError {
 public:
-  explicit InvalidSerialKeyDate()
-      : SerialKeyParseError("Invalid serial key date") {}
+  explicit InvalidSerialKeyDate(const std::string &date)
+      : SerialKeyParseError("Invalid serial key date: " + date) {}
 };
 
 class InvalidSerialKeyVersion : public SerialKeyParseError {
 public:
-  explicit InvalidSerialKeyVersion()
-      : SerialKeyParseError("Invalid serial key version") {}
+  explicit InvalidSerialKeyVersion(const std::string &version)
+      : SerialKeyParseError("Invalid serial key version: " + version) {}
 };
 
 SerialKey parseSerialKey(const std::string &hexString);

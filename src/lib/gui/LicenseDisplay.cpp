@@ -24,7 +24,6 @@
 #include <QThread>
 #include <QTimer>
 #include <ctime>
-#include <utility>
 
 using namespace std::chrono;
 using namespace synergy::license;
@@ -36,14 +35,14 @@ const char *const kBuyLink = R"(<a href="%1" style="%2">Buy now</a>)";
 const char *const kRenewLink = R"(<a href="%1" style="%2">Renew now</a>)";
 
 bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
-  if (!acceptExpired && license.isExpired()) {
-    qDebug("Expired license");
-    return false;
-  }
-
-  if (!license.isValid()) {
-    qDebug("Invalid license");
-    return false;
+  if (license.isExpired()) {
+    if (acceptExpired) {
+      qDebug("Ignoring expired license");
+      return true;
+    } else {
+      qDebug("License is expired");
+      return false;
+    }
   }
 
   return true;
@@ -51,7 +50,7 @@ bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
 
 bool LicenseDisplay::setLicense(const License &license, bool acceptExpired) {
   if (!isValid(license, acceptExpired)) {
-    m_license = License();
+    m_license = License::invalid();
     emit serialKeyChanged("");
     return false;
   }

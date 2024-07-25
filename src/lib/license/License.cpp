@@ -31,11 +31,15 @@ namespace synergy::license {
 License::License(const std::string &licenseString)
     : m_serialKey(parseSerialKey(licenseString)) {}
 
+License::License(const SerialKey &serialKey) : m_serialKey(serialKey) {
+  if (!m_serialKey.isValid) {
+    throw InvalidSerialKey();
+  }
+}
+
 bool License::isTrial() const { return m_serialKey.type.isTrial(); }
 
 bool License::isTimeLimited() const { return m_serialKey.type.isTimeLimited(); }
-
-bool License::isValid() const { return m_serialKey.isValid; }
 
 Edition License::edition() const { return m_serialKey.product.edition(); }
 

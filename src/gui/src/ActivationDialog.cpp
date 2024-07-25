@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
+#include <qglobal.h>
 
 using namespace synergy::license;
 
@@ -80,52 +81,68 @@ void ActivationDialog::accept() {
   auto serialKeyString =
       ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString();
 
-  SerialKey serialKey = parseSerialKey(serialKeyString);
+  auto safeParseSerialKey = [this, &serialKeyString]() {
+    try {
+      return parseSerialKey(serialKeyString);
+    } catch (const SerialKeyParseError &e) {
+      showActivationError(e.what());
+      return SerialKey::invalid();
+    }
+  };
 
-  if (serialKey.isValid) {
-    m_LicenseDisplay.setLicense(License(serialKey));
+  const auto &serialKey = safeParseSerialKey();
+  if (!serialKey.isValid) {
+    qDebug() << "Invalid serial key";
+    return;
+  }
+
+  if (License license(serialKey); !license.isExpired()) {
+    m_LicenseDisplay.setLicense(license);
   } else {
-    QMessageBox::critical(
-        this, "Activation failed",
-        tr("<p>There was a problem activating Synergy. "
-           "Please "
-           R"(<a href="%1" style="%2">contact us</a>)"
-           ", and provide the following information:"
-           "</p>"
-           "%3")
-            .arg(kContactUrl)
-            .arg(kLinkStyle)
-            .arg(m_LicenseDisplay.noticeMessage()));
+    showActivationError(m_LicenseDisplay.noticeMessage());
     refreshSerialKey();
   }
 
-  Edition edition = m_LicenseDisplay.productEdition();
-  auto daysLeft = m_LicenseDisplay.license().daysLeft().count();
-  if (edition != Edition::kUnregistered) {
-    QString thanksMessage = tr("Thanks for trying %1! %5\n\n%2 day%3 of "
-                               "your trial remain%4")
-                                .arg(m_LicenseDisplay.productName())
-                                .arg(daysLeft)
-                                .arg((daysLeft == 1) ? "" : "s")
-                                .arg((daysLeft == 1) ? "s" : "");
-
-    if (m_appConfig->tlsAvailable()) {
-      m_appConfig->generateCertificate();
-      thanksMessage =
-          thanksMessage.arg("If you're using SSL, "
-                            "remember to activate all of your devices.");
-    } else {
-      thanksMessage = thanksMessage.arg("");
-    }
-
-    if (m_LicenseDisplay.license().isTrial()) {
-      QMessageBox::information(this, "Thanks!", thanksMessage);
-    } else {
-      QMessageBox::information(
-          this, "Activated!",
-          tr("Thanks for activating %1!").arg(m_LicenseDisplay.productName()));
-    }
+  if (m_LicenseDisplay.license().isTrial()) {
+    showTrialMessage();
+  } else {
+    QMessageBox::information(
+        this, "Activated",
+        QString("Thanks for activating %1.")
+            .arg(m_LicenseDisplay.productName()));
   }
 
   QDialog::accept();
+}
+
+void ActivationDialog::showTrialMessage() {
+  auto daysLeft = m_LicenseDisplay.license().daysLeft().count();
+
+  QString tlsMessage;
+  if (m_appConfig->tlsAvailable()) {
+    m_appConfig->generateCertificate();
+    tlsMessage = "Remember to activate all of your devices to use TLS.";
+  }
+
+  QString message =
+      tr("<p>Thanks for trying %1. %2</p><p>%3 %4 of your trial %5.</p>")
+          .arg(m_LicenseDisplay.productName())
+          .arg(tlsMessage)
+          .arg(daysLeft)
+          .arg((daysLeft == 1) ? "day" : "days")
+          .arg((daysLeft == 1) ? "remains" : "remain");
+
+  QMessageBox::information(this, "Thanks", message);
+}
+
+void ActivationDialog::showActivationError(const QString &message) {
+  QString fullMessage =
+      QString("<p>There was a problem activating Synergy.</p>"
+              R"(<p>Please <a href="%1" style="%2">contact us</a> )"
+              "and provide the following information:</p>"
+              "%3")
+          .arg(kContactUrl)
+          .arg(kLinkStyle)
+          .arg(message);
+  QMessageBox::critical(this, "Activation failed", fullMessage);
 }

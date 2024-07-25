@@ -20,7 +20,9 @@
 #include "SerialKey.h"
 #include "SerialKeyType.h"
 
+#include <cctype>
 #include <optional>
+#include <ranges>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -38,16 +40,16 @@ SerialKey parseV2(const std::string &hexString, const Parts &parts);
 std::optional<time_point> parseDate(const std::string &unixTimeString);
 
 SerialKey parseSerialKey(const std::string &hexString) {
-  auto plainText = decode(hexString);
-  const auto parts = tokenize(plainText);
+  const auto &plainText = decode(hexString);
+  const auto &parts = tokenize(plainText);
+  const auto &version = parts.at(0);
 
-  if ((parts.size() == 8) && (parts.at(0).find("v1") != std::string::npos)) {
+  if (version == "v1") {
     return parseV1(hexString, parts);
-  } else if (
-      (parts.size() == 9) && (parts.at(0).find("v2") != std::string::npos)) {
+  } else if (version == "v2") {
     return parseV2(hexString, parts);
   } else {
-    throw InvalidSerialKeyVersion();
+    throw InvalidSerialKeyVersion(version);
   }
 }
 
@@ -69,9 +71,12 @@ std::string decode(const std::string &hexString) {
 }
 
 SerialKey parseV1(const std::string &hexString, const Parts &parts) {
+  if (parts.size() < 8) {
+    throw InvalidSerialKeyFormat();
+  }
+
   // e.g.: {v1;basic;name;1;email;company name;1398297600;1398384000}
-  SerialKey serialKey;
-  serialKey.hexString = hexString;
+  SerialKey serialKey(hexString);
   serialKey.product = Product(parts.at(1));
   serialKey.warnTime = parseDate(parts.at(6));
   serialKey.expireTime = parseDate(parts.at(7));
@@ -80,9 +85,11 @@ SerialKey parseV1(const std::string &hexString, const Parts &parts) {
 }
 
 SerialKey parseV2(const std::string &hexString, const Parts &parts) {
+  if (parts.size() < 9) {
+    throw InvalidSerialKeyFormat();
+  }
   // e.g.: {v2;trial;basic;name;1;email;company name;1398297600;1398384000}
-  SerialKey serialKey;
-  serialKey.hexString = hexString;
+  SerialKey serialKey(hexString);
   serialKey.type = SerialKeyType(parts.at(1));
   serialKey.product = Product(parts.at(2));
   serialKey.warnTime = parseDate(parts.at(7));
@@ -106,20 +113,39 @@ Parts tokenize(const std::string &plainText) {
     parts.push_back(item);
   }
 
+  // it's possible that the last character is a delimiter, so add an empty part
+  if (!serialData.empty() && serialData.back() == ';') {
+    parts.emplace_back("");
+  }
+
   return parts;
 }
 
+// Helper functions to trim whitespace
+auto is_not_space = [](unsigned char ch) { return !std::isspace(ch); };
+
+std::string trim(const std::string &str) {
+  auto front = std::ranges::find_if(str, is_not_space);
+  auto back =
+      std::ranges::find_if(str | std::views::reverse, is_not_space).base();
+  return (front < back ? std::string(front, back) : std::string{});
+}
+
 std::optional<time_point> parseDate(const std::string &unixTimeString) {
-  if (unixTimeString.empty()) {
+  auto clean = trim(unixTimeString);
+  if (clean.empty()) {
     return std::nullopt;
   }
 
-  auto seconds = std::stoi(unixTimeString);
-  if (seconds < 0) {
-    return std::nullopt;
+  try {
+    auto seconds = std::stoi(clean);
+    if (seconds < 0) {
+      throw InvalidSerialKeyDate(unixTimeString);
+    }
+    return time_point{std::chrono::seconds{seconds}};
+  } catch (const std::invalid_argument &) {
+    throw InvalidSerialKeyDate(unixTimeString);
   }
-
-  return time_point{std::chrono::seconds{seconds}};
 }
 
 } // namespace synergy::license

@@ -38,19 +38,20 @@ class License {
   using NowFunc = std::function<time_point()>;
 
 public:
-  explicit License() : m_serialKey(Product::Edition::kUnregistered) {}
-  explicit License(const SerialKey &serialKey) : m_serialKey(serialKey) {}
+  explicit License(const SerialKey &serialKey);
   explicit License(const std::string &serialKey);
+
+  static License invalid() { return License(); }
 
   friend bool operator==(License const &lhs, License const &rhs) {
     return lhs.m_serialKey == rhs.m_serialKey;
   }
 
+  bool isValid() const { return m_serialKey.isValid; }
   bool isExpiring() const;
   bool isExpired() const;
   bool isTrial() const;
   bool isTimeLimited() const;
-  bool isValid() const;
   days daysLeft() const;
   Edition edition() const;
   const std::string &toString() const;
@@ -72,7 +73,8 @@ protected:
   void setNowFunc(const NowFunc &nowFunc) { m_nowFunc = nowFunc; }
 
 private:
-  SerialKey m_serialKey;
+  License() = default;
+  SerialKey m_serialKey = SerialKey::invalid();
   NowFunc m_nowFunc = []() { return system_clock::now(); };
 };
 

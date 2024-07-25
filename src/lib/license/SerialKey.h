@@ -19,6 +19,7 @@
 
 #include "ProductEdition.h"
 #include "SerialKeyType.h"
+#include "license/Product.h"
 #include "license/ProductEdition.h"
 
 #include <chrono>
@@ -37,6 +38,12 @@ struct SerialKey {
            (lhs.type == rhs.type);
   }
 
+  explicit SerialKey(const std::string &key) : hexString(key) {}
+
+  static SerialKey invalid() {
+    return SerialKey(Product::Edition::kUnregistered);
+  }
+
   bool isValid = false;
   std::string hexString = "";
   Product product;
@@ -44,9 +51,8 @@ struct SerialKey {
   std::optional<time_point> warnTime = std::nullopt;
   std::optional<time_point> expireTime = std::nullopt;
 
-  explicit SerialKey(const std::string &key) : hexString(key) {}
-  explicit SerialKey(Edition edition = Edition::kUnregistered)
-      : product(edition) {}
+private:
+  explicit SerialKey(Edition edition) : product(edition) {}
 };
 
 } // namespace synergy::license

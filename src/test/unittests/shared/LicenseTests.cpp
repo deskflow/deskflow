@@ -37,11 +37,6 @@ protected:
   }
 };
 
-TEST_F(LicenseTests, isValid_default_returnsFalse) {
-  License license;
-  EXPECT_EQ(false, license.isValid());
-}
-
 TEST_F(LicenseTests, isExpiring_validV2TrialBasicSerial_returnFalse) {
   // {v2;trial;basic;Bob;1;email;company name;1;86400}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"

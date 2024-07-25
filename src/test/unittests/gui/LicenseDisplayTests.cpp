@@ -26,9 +26,9 @@ using namespace std::chrono;
 const auto kPast = system_clock::now() - hours(1);
 const auto kFuture = system_clock::now() + hours(1);
 
-TEST(LicenseDisplayTests, setLicense_defaultLicense_returnsFalse) {
+TEST(LicenseDisplayTests, setLicense_invalidLicense_returnsFalse) {
   LicenseDisplay licenseDisplay;
-  License license;
+  License license = License::invalid();
 
   auto result = licenseDisplay.setLicense(license, false);
 
@@ -37,7 +37,7 @@ TEST(LicenseDisplayTests, setLicense_defaultLicense_returnsFalse) {
 
 TEST(LicenseDisplayTests, setLicense_validExpiredLicense_returnsTrue) {
   LicenseDisplay licenseDisplay;
-  SerialKey serialKey;
+  SerialKey serialKey = SerialKey::invalid();
   serialKey.isValid = true;
   serialKey.expireTime = kPast;
   License license(serialKey);

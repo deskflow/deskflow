@@ -162,6 +162,12 @@ MainWindow::MainWindow(AppConfig &appConfig)
       appConfigPtr(), SIGNAL(sslToggled()), this,
       SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
 
+  const auto &serialKey = m_AppConfig.serialKey().toStdString();
+  if (!serialKey.empty()) {
+    License license(serialKey);
+    m_LicenseDisplay.setLicense(license, true);
+  }
+
   updateWindowTitle();
 
   if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
@@ -541,10 +547,8 @@ void MainWindow::startCore() {
 
   if (kLicensingEnabled) {
     License license = m_LicenseDisplay.license();
-    if (!license.isValid()) {
-      if (QDialog::Rejected == raiseActivationDialog()) {
-        return;
-      }
+    if (license.isExpired() && raiseActivationDialog() == QDialog::Rejected) {
+      return;
     }
   }
 
@@ -1097,8 +1101,6 @@ void MainWindow::on_m_pActionHelp_triggered() {
 
 void MainWindow::updateWindowTitle() {
   if (kLicensingEnabled) {
-    License license(m_AppConfig.serialKey().toStdString());
-    m_LicenseDisplay.setLicense(license, true);
     setWindowTitle(m_LicenseDisplay.productName());
   } else {
     setWindowTitle(kProductName);
@@ -1190,8 +1192,9 @@ int MainWindow::raiseActivationDialog() {
 
 void MainWindow::on_windowShown() {
   if (kLicensingEnabled) {
-    auto serialKey = m_LicenseDisplay.license();
-    if (!m_AppConfig.activationHasRun() && !serialKey.isValid()) {
+    auto license = m_LicenseDisplay.license();
+    if (!m_AppConfig.activationHasRun() || !license.isValid() ||
+        license.isExpired()) {
       setEdition(Edition::kUnregistered);
       raiseActivationDialog();
     }
