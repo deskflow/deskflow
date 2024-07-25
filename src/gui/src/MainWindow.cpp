@@ -26,12 +26,12 @@
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
 #include "license/License.h"
-#include <QApplication>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
 #endif
 
+#include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QMenu>
@@ -57,6 +57,7 @@ static const char *const kDownloadUrl = "https://symless.com/?source=gui";
 static const char *const kHelpUrl = "https://symless.com/help?source=gui";
 static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
+static const char *const kLinkStyle = "color: #4285F4";
 
 #ifdef SYNERGY_PRODUCT_NAME
 const QString kProductName = SYNERGY_PRODUCT_NAME;
@@ -99,10 +100,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   setupUi(this);
   connectSlots();
   createMenuBar();
-  applyConfig();
   secureSocket(false);
-
-  m_LicenseHandler.changeSerialKey(appConfig.serialKey(), true);
 
   m_pWidgetUpdate->hide();
   m_VersionChecker.setApp(appPath(appConfig.coreClientName()));
@@ -152,11 +150,20 @@ MainWindow::~MainWindow() {
   }
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Begin slots
+//////////////////////////////////////////////////////////////////////////////
+
+// remember: using queued connection allows the render loop to run before
+// executing the slot. the default is to instantly call the slot when the
+// signal is emitted from the thread that owns the receiver's object.
 void MainWindow::connectSlots() const {
 
   connect(this, &MainWindow::created, this, &MainWindow::onCreated);
 
-  connect(this, &MainWindow::shown, this, &MainWindow::onShown);
+  connect(
+      this, &MainWindow::shown, this, &MainWindow::onShown,
+      Qt::QueuedConnection);
 
   connect(
       &m_AppConfig, &AppConfig::loaded, this, &MainWindow::onAppConfigLoaded);
@@ -230,12 +237,120 @@ void MainWindow::onShown() {
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
   setWindowTitle(m_LicenseHandler.productName());
+
+  if (m_AppConfig.serialKey() != serialKey) {
+    m_AppConfig.setSerialKey(serialKey);
+    m_AppConfig.saveSettings();
+  }
 }
 
 void MainWindow::onLicenseHandlerInvalidLicense() {
   onActionStopCoreTriggered();
   m_AppConfig.setActivationHasRun(false);
   showLicenseNotice(m_LicenseHandler.noticeMessage());
+}
+
+void MainWindow::onAppConfigLoaded() {
+  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
+  m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
+  updateScreenName();
+  applyConfig();
+}
+
+void MainWindow::onAppConfigTlsChanged() {
+  updateLocalFingerprint();
+  if (m_TlsUtility.isAvailableAndEnabled()) {
+    m_TlsUtility.generateCertificate(true);
+  }
+}
+
+void MainWindow::onIpcClientReadLogLine(const QString &text) {
+  processCoreLogLine(text);
+}
+
+void MainWindow::onIpcClientErrorMessage(const QString &text) {
+  appendLogError(text);
+}
+
+void MainWindow::onIpcClientInfoMessage(const QString &text) {
+  appendLogInfo(text);
+}
+
+void MainWindow::onTrayIconCreate(QSystemTrayIcon::ActivationReason reason) {
+  if (reason == QSystemTrayIcon::DoubleClick) {
+    if (isVisible()) {
+      hide();
+    } else {
+      showNormal();
+      activateWindow();
+    }
+  }
+}
+
+void MainWindow::onCoreProcessReadyReadStandardOutput() {
+  if (m_pCoreProcess) {
+    QString text(m_pCoreProcess->readAllStandardOutput());
+    for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
+      if (!line.isEmpty()) {
+        processCoreLogLine(line);
+      }
+    }
+  }
+}
+
+void MainWindow::onCoreProcessReadyReadStandardError() {
+  if (m_pCoreProcess) {
+    processCoreLogLine(m_pCoreProcess->readAllStandardError());
+  }
+}
+
+void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
+  m_pWidgetUpdate->show();
+  m_pLabelUpdate->setText(tr("<p>Your version of Synergy is out of date. "
+                             "Version <b>%1</b> is now available to "
+                             "<a href=\"%2\">download</a>.</p>")
+                              .arg(version)
+                              .arg(kDownloadUrl));
+}
+
+void MainWindow::onActionStartCoreTriggered() {
+  m_ClientConnection.setCheckConnection(true);
+  startCore();
+}
+
+void MainWindow::onCoreProcessRetryStart() {
+  // This function is only called after a failed start
+  // Only start synergy if the current state is pending retry
+  if (m_CoreState == CoreState::PendingRetry) {
+    startCore();
+  }
+}
+
+void MainWindow::onActionStopCoreTriggered() { stopCore(); }
+
+void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
+
+void MainWindow::onCoreProcessFinished(int exitCode, QProcess::ExitStatus) {
+  if (exitCode == 0) {
+    appendLogInfo("process exited normally");
+  } else {
+    appendLogError(QString("process exited with error code: %1").arg(exitCode));
+  }
+
+  if (m_ExpectedRunningState == RuningState::Started) {
+
+    if (m_CoreState != CoreState::PendingRetry) {
+      QTimer::singleShot(
+          kRetryDelay, this, &MainWindow::onCoreProcessRetryStart);
+      appendLogInfo("detected process not running, auto restarting");
+    } else {
+      appendLogInfo("detected process not running, already auto restarting");
+    }
+
+    setCoreState(CoreState::PendingRetry);
+  } else {
+    setCoreState(CoreState::Disconnected);
+  }
 }
 
 bool MainWindow::on_m_pActionSave_triggered() {
@@ -285,19 +400,6 @@ void MainWindow::on_m_pButtonApply_clicked() {
   restartCore();
 }
 
-void MainWindow::onAppConfigLoaded() {
-  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
-  m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
-  updateScreenName();
-}
-
-void MainWindow::onAppConfigTlsChanged() {
-  updateLocalFingerprint();
-  if (m_TlsUtility.isAvailableAndEnabled()) {
-    m_TlsUtility.generateCertificate(true);
-  }
-}
-
 void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
   m_pActionSettings->trigger();
 }
@@ -325,17 +427,9 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
   on_m_pButtonApply_clicked();
 }
 
-void MainWindow::onIpcClientReadLogLine(const QString &text) {
-  processCoreLogLine(text);
-}
-
-void MainWindow::onIpcClientErrorMessage(const QString &text) {
-  appendLogError(text);
-}
-
-void MainWindow::onIpcClientInfoMessage(const QString &text) {
-  appendLogInfo(text);
-}
+//////////////////////////////////////////////////////////////////////////////
+// End slots
+//////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::open() {
 
@@ -444,48 +538,13 @@ void MainWindow::setIcon(CoreState state) const {
   m_TrayIcon.set(icon);
 }
 
-void MainWindow::onTrayIconCreate(QSystemTrayIcon::ActivationReason reason) {
-  if (reason == QSystemTrayIcon::DoubleClick) {
-    if (isVisible()) {
-      hide();
-    } else {
-      showNormal();
-      activateWindow();
-    }
-  }
-}
-
-void MainWindow::onCoreProcessReadyReadStandardOutput() {
-  if (m_pCoreProcess) {
-    QString text(m_pCoreProcess->readAllStandardOutput());
-    for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
-      if (!line.isEmpty()) {
-        onIpcClientReadLogLine(line);
-      }
-    }
-  }
-}
-
-void MainWindow::onCoreProcessReadyReadStandardError() {
-  if (m_pCoreProcess) {
-    onIpcClientReadLogLine(m_pCoreProcess->readAllStandardError());
-  }
-}
-
-void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
-  m_pWidgetUpdate->show();
-  m_pLabelUpdate->setText(tr("<p>Your version of Synergy is out of date. "
-                             "Version <b>%1</b> is now available to "
-                             "<a href=\"%2\">download</a>.</p>")
-                              .arg(version)
-                              .arg(kDownloadUrl));
-}
-
 void MainWindow::appendLogInfo(const QString &text) {
   processCoreLogLine(getTimeStamp() + " INFO: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
+  qDebug() << text;
+
   if (appConfig().logLevel() >= kDebugLogLevel) {
     processCoreLogLine(getTimeStamp() + " DEBUG: " + text);
   }
@@ -508,7 +567,7 @@ void MainWindow::processCoreLogLine(const QString &text) {
 
     // HACK: macOS 10.13.4+ spamming error lines in logs making them
     // impossible to read and debug; giving users a red herring.
-    if (!line.contains("calling TIS/TSM in non-main thread environment")) {
+    if (line.contains("calling TIS/TSM in non-main thread environment")) {
       continue;
     }
 
@@ -648,13 +707,13 @@ void MainWindow::checkOSXNotification(const QString &line) {
 }
 #endif
 
-QString MainWindow::getTimeStamp() {
+QString MainWindow::getTimeStamp() const {
   QDateTime current = QDateTime::currentDateTime();
   return '[' + current.toString(Qt::ISODate) + ']';
 }
 
 void MainWindow::restartCore() {
-  onActionStopCoreTriggered();
+  stopCore();
   startCore();
 }
 
@@ -664,6 +723,8 @@ void MainWindow::showEvent(QShowEvent *event) {
 }
 
 void MainWindow::startCore() {
+  appendLogDebug("starting core process");
+
   saveSettings();
 
 #ifdef Q_OS_MAC
@@ -673,11 +734,11 @@ void MainWindow::startCore() {
   if (kLicensingEnabled) {
     const auto &license = m_LicenseHandler.license();
     if (license.isExpired() && showActivationDialog() == QDialog::Rejected) {
+      appendLogDebug("starting core process");
       return;
     }
   }
 
-  appendLogDebug("starting process");
   m_ExpectedRunningState = RuningState::Started;
   setCoreState(CoreState::Connecting);
 
@@ -766,14 +827,14 @@ void MainWindow::startCore() {
 
   if (mode == ProcessMode::kDesktop) {
     connect(
-        m_pCoreProcess.get(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
-        SLOT(onCoreProcessFinished(int, QProcess::ExitStatus)));
+        m_pCoreProcess.get(), &QProcess::finished, this,
+        &MainWindow::onCoreProcessFinished);
     connect(
-        m_pCoreProcess.get(), SIGNAL(readyReadStandardOutput()), this,
-        SLOT(onCoreProcessReadyReadStandardOutput()));
+        m_pCoreProcess.get(), &QProcess::readyReadStandardOutput, this,
+        &MainWindow::onCoreProcessReadyReadStandardOutput);
     connect(
-        m_pCoreProcess.get(), SIGNAL(readyReadStandardError()), this,
-        SLOT(onCoreProcessReadyReadStandardError()));
+        m_pCoreProcess.get(), &QProcess::readyReadStandardError, this,
+        &MainWindow::onCoreProcessReadyReadStandardError);
   }
 
   // show command if debug log level...
@@ -802,19 +863,6 @@ void MainWindow::startCore() {
   } else if (mode == ProcessMode::kService) {
     QString command(app + " " + args.join(" "));
     m_IpcClient.sendCommand(command, appConfig().elevateMode());
-  }
-}
-
-void MainWindow::onActionStartCoreTriggered() {
-  m_ClientConnection.setCheckConnection(true);
-  startCore();
-}
-
-void MainWindow::retryStart() {
-  // This function is only called after a failed start
-  // Only start synergy if the current state is pending retry
-  if (m_CoreState == CoreState::PendingRetry) {
-    startCore();
   }
 }
 
@@ -923,7 +971,7 @@ QString MainWindow::address() const {
   return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
 }
 
-QString MainWindow::appPath(const QString &name) {
+QString MainWindow::appPath(const QString &name) const {
   QDir dir(QCoreApplication::applicationDirPath());
   return dir.filePath(name);
 }
@@ -959,16 +1007,12 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
   args << "-c" << configFilename << "--address" << address();
   appendLogInfo("config file: " + configFilename);
 
-  if (kLicensingEnabled) {
-    if (!appConfig().serialKey().isEmpty()) {
-      args << "--serial-key" << appConfig().serialKey();
-    }
+  if (kLicensingEnabled && !appConfig().serialKey().isEmpty()) {
+    args << "--serial-key" << appConfig().serialKey();
   }
 
   return true;
 }
-
-void MainWindow::onActionStopCoreTriggered() { stopCore(); }
 
 void MainWindow::stopCore() {
   appendLogDebug("stopping core process");
@@ -1007,28 +1051,6 @@ void MainWindow::stopDesktop() {
   m_pCoreProcess->reset();
 }
 
-void MainWindow::onCoreProcessFinished(int exitCode, QProcess::ExitStatus) {
-  if (exitCode == 0) {
-    appendLogInfo("process exited normally");
-  } else {
-    appendLogError(QString("process exited with error code: %1").arg(exitCode));
-  }
-
-  if (m_ExpectedRunningState == RuningState::Started) {
-
-    if (m_CoreState != CoreState::PendingRetry) {
-      QTimer::singleShot(kRetryDelay, this, SLOT(retryStart()));
-      appendLogInfo("detected process not running, auto restarting");
-    } else {
-      appendLogInfo("detected process not running, already auto restarting");
-    }
-
-    setCoreState(CoreState::PendingRetry);
-  } else {
-    setCoreState(CoreState::Disconnected);
-  }
-}
-
 void MainWindow::setCoreState(CoreState state) {
   // always assume connection is not secure when connection changes
   // to anything except connected. the only way the padlock shows is
@@ -1043,11 +1065,11 @@ void MainWindow::setCoreState(CoreState state) {
   if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
       (state == CoreState::Listening) || (state == CoreState::PendingRetry)) {
     disconnect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCore,
-        SLOT(trigger()));
+        m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
+        &QAction::trigger);
     connect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCore,
-        SLOT(trigger()));
+        m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore,
+        &QAction::trigger);
 
     m_pButtonToggleStart->setText(tr("&Stop"));
     m_pButtonApply->setEnabled(true);
@@ -1057,11 +1079,11 @@ void MainWindow::setCoreState(CoreState state) {
 
   } else if (state == CoreState::Disconnected) {
     disconnect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopCore,
-        SLOT(trigger()));
+        m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore,
+        &QAction::trigger);
     connect(
-        m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartCore,
-        SLOT(trigger()));
+        m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
+        &QAction::trigger);
 
     m_pButtonToggleStart->setText(tr("&Start"));
     m_pButtonApply->setEnabled(false);
@@ -1071,7 +1093,9 @@ void MainWindow::setCoreState(CoreState state) {
   }
 
   switch (state) {
-  case CoreState::Listening: {
+    using enum CoreState;
+
+  case Listening: {
     if (coreMode() == CoreMode::Server) {
       setStatus(
           tr("Synergy is waiting for clients").arg(m_SecureSocketVersion));
@@ -1079,7 +1103,7 @@ void MainWindow::setCoreState(CoreState state) {
 
     break;
   }
-  case CoreState::Connected: {
+  case Connected: {
     if (m_SecureSocket) {
       setStatus(
           tr("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
@@ -1089,13 +1113,13 @@ void MainWindow::setCoreState(CoreState state) {
     }
     break;
   }
-  case CoreState::Connecting:
+  case Connecting:
     setStatus(tr("Synergy is starting..."));
     break;
-  case CoreState::PendingRetry:
+  case PendingRetry:
     setStatus(tr("There was an error, retrying..."));
     break;
-  case CoreState::Disconnected:
+  case Disconnected:
     setStatus(tr("Synergy is not running"));
     break;
   }
@@ -1129,7 +1153,7 @@ MainWindow::CoreMode MainWindow::coreMode() const {
   return isClient ? CoreMode::Client : CoreMode::Server;
 }
 
-QString MainWindow::getIPAddresses() {
+QString MainWindow::getIPAddresses() const {
   QStringList result;
   bool hinted = false;
   const auto localnet = QHostAddress::parseSubnet("192.168.0.0/16");
@@ -1225,14 +1249,15 @@ void MainWindow::autoAddScreen(const QString name) {
 }
 
 void MainWindow::showConfigureServer(const QString &message) {
+  using enum CoreState;
+
   ServerConfigDialog dlg(this, serverConfig(), appConfig());
   dlg.message(message);
   auto result = dlg.exec();
 
   if (result == QDialog::Accepted) {
     auto state = m_CoreState;
-    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
-        (state == CoreState::Listening)) {
+    if ((state == Connected) || (state == Connecting) || (state == Listening)) {
       restartCore();
     }
   }
@@ -1257,7 +1282,7 @@ int MainWindow::showActivationDialog() {
   return result;
 }
 
-QString MainWindow::getProfileRootForArg() {
+QString MainWindow::getProfileRootForArg() const {
   CoreInterface coreInterface;
   QString dir = coreInterface.getProfileDir();
 
@@ -1285,13 +1310,12 @@ void MainWindow::windowStateChanged() {
     hide();
 }
 
-void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
-
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
-      tr("This computer's name: %1 (<a href=\"#\" style=\"text-decoration: "
-         "none; color: #4285F4;\">change</a>)")
-          .arg(appConfig().screenName()));
+      QString("This computer's name: %1 "
+              R"((<a href="#" style="%2;">change</a>))")
+          .arg(appConfig().screenName())
+          .arg(kLinkStyle));
   serverConfig().updateServerName();
 }
 

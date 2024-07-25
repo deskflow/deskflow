@@ -109,6 +109,8 @@ void AppConfig::loadAllScopes() {
 void AppConfig::loadSettings() {
   using enum AppConfig::Setting;
 
+  qDebug("loading settings");
+
   m_ScreenName =
       loadSetting(kScreenName, QHostInfo::localHostName()).toString();
   if (m_ScreenName.isEmpty()) {
@@ -176,6 +178,8 @@ void AppConfig::loadSettings() {
 
 void AppConfig::saveSettings() {
   using enum Setting;
+
+  qDebug("saving settings");
 
   setCommonSetting(kWizardLastRun, m_WizardLastRun);
   setCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope);
@@ -284,8 +288,10 @@ void AppConfig::setDefaultValues() { m_InitiateConnectionFromServer = false; }
 void AppConfig::setLoadFromSystemScope(bool value) {
 
   if (value) {
+    qDebug("loading system settings scope");
     loadScope(Config::Scope::System);
   } else {
+    qDebug("loading user settings scope");
     loadScope(Config::Scope::User);
   }
 

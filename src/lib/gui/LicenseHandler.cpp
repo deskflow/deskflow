@@ -52,11 +52,19 @@ bool LicenseHandler::isValid(const License &license, bool acceptExpired) const {
 bool LicenseHandler::changeSerialKey(
     const QString &hexString, bool acceptExpired) {
 
+  qDebug() << "changing serial key to:"
+           << (hexString.isEmpty() ? "empty" : hexString);
+
   if (hexString.isEmpty()) {
-    m_license.invalidate();
-    emit serialKeyChanged("");
-    qDebug("empty serial key");
-    return false;
+    if (!m_license.serialKey().hexString.empty()) {
+      m_license.invalidate();
+      emit serialKeyChanged("");
+      qDebug("cleared serial key");
+      return true;
+    } else {
+      qDebug("already empty serial key, ignoring");
+      return false;
+    }
   }
 
   auto serialKey = parseSerialKey(hexString.toStdString());

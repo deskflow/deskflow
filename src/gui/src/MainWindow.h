@@ -84,14 +84,13 @@ public:
   enum class RuningState { Started, Stopped };
 
 public:
-  void update();
   explicit MainWindow(AppConfig &appConfig);
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
   CoreMode coreMode() const;
   QString address() const;
-  QString appPath(const QString &name);
+  QString appPath(const QString &name) const;
   void open();
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
@@ -156,17 +155,17 @@ private:
   void setStatus(const QString &status);
   void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
-  QString getIPAddresses();
+  QString getIPAddresses() const;
   void stopService();
   void stopDesktop();
   void enableServer(bool enable);
   void enableClient(bool enable);
-  QString getProfileRootForArg();
+  QString getProfileRootForArg() const;
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   bool checkSecureSocket(const QString &line);
   void checkLicense(const QString &line);
-  QString getTimeStamp();
+  QString getTimeStamp() const;
   void restartCore();
   void showEvent(QShowEvent *) override;
   void secureSocket(bool secureSocket);
@@ -175,7 +174,7 @@ private:
   void updateWindowTitle();
   void processCoreLogLine(const QString &line);
   void startCore();
-  void retryStart();
+  void onCoreProcessRetryStart();
   void updateLocalFingerprint();
   void updateScreenName();
   void saveSettings();
