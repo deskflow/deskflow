@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2013-2016 Symless Ltd.
+ * Copyright (C) 2013 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
 
 #include "QUtility.h"
 
-#include "CommandProcess.h"
 #include "ProcessorArch.h"
 
 #if defined(Q_OS_LINUX)

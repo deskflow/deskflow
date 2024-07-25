@@ -154,33 +154,3 @@ TEST_F(LicenseTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue) {
   EXPECT_EQ(true, license.isTimeLimited());
   EXPECT_EQ(true, license.isExpired());
 }
-
-// toString method tests
-TEST_F(LicenseTests, toString_v2SubscriptionBasicSerialKey) {
-  //{v2;subscription;basic;Bob;1;email;company name;0;86400}
-  const std::string expected =
-      "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B63"
-      "6F6D70616E79206E616D653B303B38363430307D";
-  License license(expected);
-
-  EXPECT_EQ(expected, license.toString());
-}
-
-TEST_F(LicenseTests, toString_v2TrialBasicSerialKey) {
-  //{v2;trial;basic;Bob;1;email;company name;0;86400}
-  const std::string expected =
-      "7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636F6D70616E7920"
-      "6E616D653B303B38363430307D";
-  License license(expected);
-
-  EXPECT_EQ(expected, license.toString());
-}
-
-TEST_F(LicenseTests, toString_v1BasicSerialKey) {
-  //{v1;basic;Bob;1;email;company name;0;0}
-  const std::string expected = "7B76313B62617369633B426F623B313B656D61696C3B636"
-                               "F6D70616E79206E616D653B303B307D";
-  License license(expected);
-
-  EXPECT_EQ(expected, license.toString());
-}

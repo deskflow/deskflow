@@ -18,30 +18,32 @@
 #pragma once
 
 #include "SerialKey.h"
-#include "license/Product.h"
 
 #include <chrono>
 #include <ctime>
 #include <functional>
 #include <string>
 
+class Server;
+class LicenseHandler;
 class LicenseTests;
 
 namespace synergy::license {
 
 class License {
+  friend class ::Server;
+  friend class ::LicenseHandler;
   friend class ::LicenseTests;
 
   using days = std::chrono::days;
   using system_clock = std::chrono::system_clock;
   using time_point = system_clock::time_point;
   using NowFunc = std::function<time_point()>;
+  using LicenseError = std::runtime_error;
 
 public:
   explicit License(const SerialKey &serialKey);
-  explicit License(const std::string &serialKey);
-
-  static License invalid() { return License(); }
+  explicit License(const std::string &hexString);
 
   friend bool operator==(License const &lhs, License const &rhs) {
     return lhs.m_serialKey == rhs.m_serialKey;
@@ -52,11 +54,13 @@ public:
   bool isExpired() const;
   bool isTrial() const;
   bool isTimeLimited() const;
+  bool isTlsAvailable() const;
   days daysLeft() const;
   Edition edition() const;
-  const std::string &toString() const;
-
-  using LicenseError = std::runtime_error;
+  std::string productName() const;
+  const SerialKey &serialKey() const { return m_serialKey; }
+  void setSerialKey(const SerialKey &serialKey) { m_serialKey = serialKey; }
+  void invalidate() { m_serialKey = SerialKey::invalid(); }
 
   class InvalidSerialKey : public LicenseError {
   public:
@@ -73,7 +77,15 @@ protected:
   void setNowFunc(const NowFunc &nowFunc) { m_nowFunc = nowFunc; }
 
 private:
+  // for intentionality, force use of `invalid()` static function.
   License() = default;
+
+  // prevent copy, so that changes can be reflected in one instance.
+  License(const License &) = default;
+  License &operator=(const License &) = default;
+
+  static License invalid() { return License(); }
+
   SerialKey m_serialKey = SerialKey::invalid();
   NowFunc m_nowFunc = []() { return system_clock::now(); };
 };

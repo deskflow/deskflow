@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,11 +19,14 @@
 
 #include <QString>
 
-class CoreInterface {
+namespace synergy::gui {
+
+class IAppConfig {
 public:
-  QString getProfileDir();
-  QString getInstalledDir();
-  QString getArch();
-  QString getSerialKeyFilePath();
-  QString run(const QStringList &args, const QString &input = "") const;
+  virtual ~IAppConfig() = default;
+  virtual QString tlsCertPath() const = 0;
+  virtual QString tlsKeyLength() const = 0;
+  virtual bool tlsEnabled() const = 0;
 };
+
+} // namespace synergy::gui

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2016 Synergy Ltd.
+ * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,29 @@
 
 #pragma once
 
-#include "gui/LicenseHandler.h"
+#include <QString>
 
-#include <QDialog>
-
-namespace Ui {
-class ActivationDialog;
-}
-
-class AppConfig;
-
-class ActivationDialog : public QDialog {
-  Q_OBJECT
+class TlsFingerprint {
+private:
+  TlsFingerprint(const QString &filename);
 
 public:
-  ActivationDialog(
-      QWidget *parent, AppConfig &appConfig, LicenseHandler &licenseHandler);
-  ~ActivationDialog() override;
+  void trust(const QString &fingerprintText, bool append = true);
+  bool isTrusted(const QString &fingerprintText);
+  QStringList readList(const int readTo = -1);
+  QString readFirst();
+  QString filePath() const;
+  bool fileExists() const;
 
-public slots:
-  void reject();
-  void accept();
-
-protected:
-  void refreshSerialKey();
+public:
+  static TlsFingerprint local();
+  static TlsFingerprint trustedServers();
+  static TlsFingerprint trustedClients();
+  static QString directoryPath();
+  static QString localFingerprint();
+  static bool localFingerprintExists();
+  static void persistDirectory();
 
 private:
-  void showTrialMessage();
-  void showActivationError(const QString &message);
-
-  Ui::ActivationDialog *m_ui;
-  AppConfig *m_pAppConfig;
-  LicenseHandler &m_licenseHandler;
+  QString m_Filename;
 };

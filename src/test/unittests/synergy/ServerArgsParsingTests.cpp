@@ -83,7 +83,7 @@ TEST(ServerArgsParsingTests, parseServerArgs_serialKey_isSet) {
   std::array<const char *, argc> kSerialCmd = {"stub", "--serial-key", serial};
 
   argParser.parseServerArgs(serverArgs, argc, kSerialCmd.data());
-  EXPECT_EQ(serial, serverArgs.m_license.toString());
+  EXPECT_EQ(serial, serverArgs.m_serialKey.toString());
 }
 
 TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams) {

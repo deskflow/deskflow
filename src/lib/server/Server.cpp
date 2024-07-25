@@ -54,6 +54,8 @@
 #include <fstream>
 #include <sstream>
 
+using namespace synergy::license;
+
 //
 // Server
 //
@@ -429,7 +431,8 @@ void Server::switchScreen(
   assert(dst != NULL);
 
   // if trial is expired, exit the process
-  if (m_args.m_license.isExpired()) {
+  License license(m_args.m_serialKey);
+  if (license.isExpired()) {
     LOG((CLOG_ERR "trial has expired, aborting server"));
     exit(kExitSuccess);
   }

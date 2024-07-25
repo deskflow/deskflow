@@ -19,7 +19,7 @@
 
 #include "base/Log.h"
 #include "base/String.h"
-#include "license/License.h"
+#include "license/parse_serial_key.h"
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ClientArgs.h"
@@ -30,9 +30,9 @@
 #include <VersionHelpers.h>
 #endif
 
-using License = synergy::license::License;
+using namespace synergy::license;
 
-synergy::ArgsBase *ArgParser::m_argsBase = NULL;
+synergy::ArgsBase *ArgParser::m_argsBase = nullptr;
 
 ArgParser::ArgParser(App *app) : m_app(app) {}
 
@@ -55,7 +55,7 @@ bool ArgParser::parseServerArgs(
       // save configuration file path
       args.m_configFile = argv[++i];
     } else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
-      args.m_license = License(argv[++i]);
+      args.m_serialKey = parseSerialKey(argv[++i]);
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;

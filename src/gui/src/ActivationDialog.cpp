@@ -16,18 +16,19 @@
  */
 
 #include "ActivationDialog.h"
+
+#include "ui_ActivationDialog.h"
+
 #include "AppConfig.h"
 #include "CancelActivationDialog.h"
 #include "MainWindow.h"
-#include "gui/LicenseDisplay.h"
+#include "gui/LicenseHandler.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
-#include "ui_ActivationDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
-#include <qglobal.h>
 
 using namespace synergy::license;
 
@@ -36,34 +37,34 @@ const char *const kContactUrl =
 const char *const kLinkStyle = "color: #4285F4";
 
 ActivationDialog::ActivationDialog(
-    QWidget *parent, AppConfig &appConfig, LicenseDisplay &licenseDisplay)
+    QWidget *parent, AppConfig &appConfig, LicenseHandler &licenseHandler)
     : QDialog(parent),
-      ui(new Ui::ActivationDialog),
-      m_appConfig(&appConfig),
-      m_LicenseDisplay(licenseDisplay) {
-  ui->setupUi(this);
+      m_ui(new Ui::ActivationDialog),
+      m_pAppConfig(&appConfig),
+      m_licenseHandler(licenseHandler) {
+  m_ui->setupUi(this);
   refreshSerialKey();
-  if (!m_LicenseDisplay.license().isExpired()) {
-    ui->m_trialWidget->hide();
+  if (!m_licenseHandler.license().isExpired()) {
+    m_ui->m_trialWidget->hide();
   }
 }
 
 void ActivationDialog::refreshSerialKey() {
-  ui->m_pTextEditSerialKey->setText(m_appConfig->serialKey());
-  ui->m_pTextEditSerialKey->setFocus();
-  ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
-  if (m_LicenseDisplay.license().isTrial()) {
-    ui->m_trialLabel->setText(
-        tr(m_LicenseDisplay.noticeMessage().toStdString().c_str()));
+  m_ui->m_pTextEditSerialKey->setText(m_pAppConfig->serialKey());
+  m_ui->m_pTextEditSerialKey->setFocus();
+  m_ui->m_pTextEditSerialKey->moveCursor(QTextCursor::End);
+  if (m_licenseHandler.license().isTrial()) {
+    m_ui->m_trialLabel->setText(
+        tr(m_licenseHandler.noticeMessage().toStdString().c_str()));
   }
 }
 
-ActivationDialog::~ActivationDialog() { delete ui; }
+ActivationDialog::~ActivationDialog() { delete m_ui; }
 
 void ActivationDialog::reject() {
   // don't show the cancel confirmation dialog if they've already registered,
   // since it's not revent to customers who are changing their serial key.
-  if (m_LicenseDisplay.productEdition() != Edition::kUnregistered) {
+  if (m_licenseHandler.productEdition() != Edition::kUnregistered) {
     QDialog::reject();
     return;
   }
@@ -76,63 +77,50 @@ void ActivationDialog::reject() {
 }
 
 void ActivationDialog::accept() {
-  m_appConfig->setActivationHasRun(true);
+  m_pAppConfig->setActivationHasRun(true);
 
-  auto serialKeyString =
-      ui->m_pTextEditSerialKey->toPlainText().trimmed().toStdString();
-
-  auto safeParseSerialKey = [this, &serialKeyString]() {
-    try {
-      return parseSerialKey(serialKeyString);
-    } catch (const SerialKeyParseError &e) {
-      showActivationError(e.what());
-      return SerialKey::invalid();
+  try {
+    auto serialKey = m_ui->m_pTextEditSerialKey->toPlainText();
+    if (!m_licenseHandler.changeSerialKey(serialKey)) {
+      showActivationError(m_licenseHandler.noticeMessage());
+      return;
     }
-  };
-
-  const auto &serialKey = safeParseSerialKey();
-  if (!serialKey.isValid) {
-    qDebug() << "Invalid serial key";
+  } catch (const SerialKeyParseError &e) {
+    showActivationError(e.what());
     return;
   }
 
-  if (License license(serialKey); !license.isExpired()) {
-    m_LicenseDisplay.setLicense(license);
-  } else {
-    showActivationError(m_LicenseDisplay.noticeMessage());
-    refreshSerialKey();
-  }
-
-  if (m_LicenseDisplay.license().isTrial()) {
+  if (m_licenseHandler.license().isTrial()) {
     showTrialMessage();
   } else {
     QMessageBox::information(
         this, "Activated",
         QString("Thanks for activating %1.")
-            .arg(m_LicenseDisplay.productName()));
+            .arg(m_licenseHandler.productName()));
   }
 
   QDialog::accept();
 }
 
 void ActivationDialog::showTrialMessage() {
-  auto daysLeft = m_LicenseDisplay.license().daysLeft().count();
+  auto daysLeft = m_licenseHandler.license().daysLeft().count();
 
   QString tlsMessage;
-  if (m_appConfig->tlsAvailable()) {
-    m_appConfig->generateCertificate();
+  synergy::gui::TlsUtility tls(*m_pAppConfig, m_licenseHandler.license());
+  if (tls.isAvailableAndEnabled()) {
+    tls.generateCertificate();
     tlsMessage = "Remember to activate all of your devices to use TLS.";
   }
 
   QString message =
       tr("<p>Thanks for trying %1. %2</p><p>%3 %4 of your trial %5.</p>")
-          .arg(m_LicenseDisplay.productName())
+          .arg(m_licenseHandler.productName())
           .arg(tlsMessage)
           .arg(daysLeft)
           .arg((daysLeft == 1) ? "day" : "days")
           .arg((daysLeft == 1) ? "remains" : "remain");
 
-  QMessageBox::information(this, "Thanks", message);
+  QMessageBox::information(this, "Trial started", message);
 }
 
 void ActivationDialog::showActivationError(const QString &message) {

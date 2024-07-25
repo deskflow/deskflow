@@ -20,9 +20,9 @@
 
 #include "AppConfig.h"
 #include "MainWindow.h"
-#include "SslCertificate.h"
 #include "UpgradeDialog.h"
 #include "gui/BuildConfig.h"
+#include "gui/TlsCertificate.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -31,15 +31,20 @@
 #include <QtGui>
 #include <memory>
 
+using namespace synergy::license;
+
 const char *const kProProductName = "Synergy 1 Pro";
 
-SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
+SettingsDialog::SettingsDialog(
+    QWidget *parent, AppConfig &config, const License &license)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),
-      m_appConfig(config) {
+      m_appConfig(config),
+      m_license(license),
+      m_tlsUtility(config, license) {
+
   setupUi(this);
 
-  // TODO: maybe just accept MainWindow type in ctor?
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
   loadFromConfig();
@@ -171,12 +176,12 @@ void SettingsDialog::updateTlsControls() {
 
 void SettingsDialog::updateTlsControlsEnabled() {
   auto clientMode = appConfig().clientGroupChecked();
-  auto tlsAvailable = appConfig().tlsAvailable();
+  auto tlsAvailable = m_tlsUtility.isAvailableAndEnabled();
   auto tlsChecked = m_pCheckBoxEnableCrypto->isChecked();
   auto enabled = !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
-      "TLS controls enabled=%d, client=%d, crypto=%d, checked=%d", enabled,
+      "TLS controls enabled=%d, client=%d, available=%d, checked=%d", enabled,
       clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);
@@ -209,11 +214,11 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
+void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool) {
   updateTlsControlsEnabled();
 
-  if (!appConfig().tlsAvailable() && kLicensingEnabled) {
-    auto edition = appConfig().edition();
+  if (kLicensingEnabled && !m_tlsUtility.isAvailable()) {
+    auto edition = m_license.edition();
     if (edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);
       upgradeDialog.showDialog(
@@ -264,11 +269,11 @@ void SettingsDialog::updateTlsRegenerateButton() {
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
-  appConfig().generateCertificate(true);
+  m_tlsUtility.generateCertificate(true);
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
-  SslCertificate ssl;
+  TlsCertificate ssl;
   auto length = ssl.getCertKeyLength(path);
   auto index = m_pComboBoxKeyLength->findText(length);
   m_pComboBoxKeyLength->setCurrentIndex(index);

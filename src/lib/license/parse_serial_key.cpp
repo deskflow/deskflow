@@ -38,6 +38,7 @@ Parts tokenize(const std::string &plainText);
 SerialKey parseV1(const std::string &hexString, const Parts &parts);
 SerialKey parseV2(const std::string &hexString, const Parts &parts);
 std::optional<time_point> parseDate(const std::string &unixTimeString);
+std::string trim(const std::string &str);
 
 SerialKey parseSerialKey(const std::string &hexString) {
   const auto &plainText = decode(hexString);
@@ -54,15 +55,17 @@ SerialKey parseSerialKey(const std::string &hexString) {
 }
 
 std::string decode(const std::string &hexString) {
-  if (hexString.length() % 2 != 0) {
+  std::string trimmed = trim(hexString);
+
+  if (trimmed.length() % 2 != 0) {
     throw InvalidHexString();
   }
 
   std::string plainText;
-  plainText.reserve(hexString.length() / 2);
+  plainText.reserve(trimmed.length() / 2);
 
-  for (size_t i = 0; i < hexString.length(); i += 2) {
-    std::string byteString = hexString.substr(i, 2);
+  for (size_t i = 0; i < trimmed.length(); i += 2) {
+    std::string byteString = trimmed.substr(i, 2);
     auto byte = static_cast<char>(std::stoi(byteString, nullptr, 16));
     plainText.push_back(byte);
   }
@@ -121,10 +124,8 @@ Parts tokenize(const std::string &plainText) {
   return parts;
 }
 
-// Helper functions to trim whitespace
-auto is_not_space = [](unsigned char ch) { return !std::isspace(ch); };
-
 std::string trim(const std::string &str) {
+  auto is_not_space = [](unsigned char ch) { return !std::isspace(ch); };
   auto front = std::ranges::find_if(str, is_not_space);
   auto back =
       std::ranges::find_if(str | std::views::reverse, is_not_space).base();

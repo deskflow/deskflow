@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "LicenseDisplay.h"
-#include "license/Product.h"
+#include "LicenseHandler.h"
+
 #include "license/ProductEdition.h"
+#include "license/parse_serial_key.h"
 
 #include <QDateTime>
 #include <QLocale>
@@ -34,13 +35,13 @@ const char *const kPurchaseUrl =
 const char *const kBuyLink = R"(<a href="%1" style="%2">Buy now</a>)";
 const char *const kRenewLink = R"(<a href="%1" style="%2">Renew now</a>)";
 
-bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
+bool LicenseHandler::isValid(const License &license, bool acceptExpired) const {
   if (license.isExpired()) {
     if (acceptExpired) {
-      qDebug("Ignoring expired license");
+      qDebug("ignoring expired license");
       return true;
     } else {
-      qDebug("License is expired");
+      qDebug("license is expired");
       return false;
     }
   }
@@ -48,21 +49,36 @@ bool LicenseDisplay::isValid(const License &license, bool acceptExpired) const {
   return true;
 }
 
-bool LicenseDisplay::setLicense(const License &license, bool acceptExpired) {
-  if (!isValid(license, acceptExpired)) {
-    m_license = License::invalid();
+bool LicenseHandler::changeSerialKey(
+    const QString &hexString, bool acceptExpired) {
+
+  if (hexString.isEmpty()) {
+    m_license.invalidate();
     emit serialKeyChanged("");
+    qDebug("empty serial key");
     return false;
   }
 
-  if (license != m_license) {
-    m_license = license;
+  auto serialKey = parseSerialKey(hexString.toStdString());
 
-    emit serialKeyChanged(QString::fromStdString(m_license.toString()));
+  if (serialKey == m_license.serialKey()) {
+    qDebug("serial key did not change, ignoring");
+    return false;
+  }
 
-    if (m_license.edition() != license.edition()) {
-      emit editionChanged(m_license.edition());
-    }
+  if (!serialKey.isValid) {
+    qDebug() << "invalid serial key";
+    return false;
+  }
+
+  m_license.setSerialKey(serialKey);
+
+  if (isValid(m_license, acceptExpired)) {
+    emit serialKeyChanged(hexString);
+  } else {
+    m_license.invalidate();
+    emit serialKeyChanged("");
+    return false;
   }
 
   if (m_license.isTimeLimited()) {
@@ -74,43 +90,31 @@ bool LicenseDisplay::setLicense(const License &license, bool acceptExpired) {
   return true;
 }
 
-void LicenseDisplay::validateLicense() const {
+void LicenseHandler::validate() const {
   if (!isValid(m_license, false)) {
     emit invalidLicense();
   }
 }
 
-Edition LicenseDisplay::productEdition() const { return m_license.edition(); }
+Edition LicenseHandler::productEdition() const { return m_license.edition(); }
 
-const License &LicenseDisplay::license() const { return m_license; }
+const License &LicenseHandler::license() const { return m_license; }
 
-QString LicenseDisplay::productName() const {
-  auto edition = productEdition();
-  if (edition == Edition::kUnregistered) {
-    return QString("%1 (unregistered)").arg(kLicensedProductName);
-  }
-
-  Product product(edition);
-  std::string name = product.name();
-
-  if (m_license.isTrial()) {
-    name += " (Trial)";
-  }
-
-  return QString::fromUtf8(name.c_str(), static_cast<qsizetype>(name.size()));
+QString LicenseHandler::productName() const {
+  return QString::fromStdString(m_license.productName());
 }
 
-QString LicenseDisplay::noticeMessage() const {
+QString LicenseHandler::noticeMessage() const {
   if (m_license.isTrial()) {
-    return getTrialNotice();
+    return trialNotice();
   } else if (m_license.isTimeLimited()) {
-    return getTimeLimitedNotice();
+    return timeLimitedNotice();
   } else {
     throw NoticeError();
   }
 }
 
-QString LicenseDisplay::getTrialNotice() const {
+QString LicenseHandler::trialNotice() const {
   const QString buyLink = QString(kBuyLink).arg(kPurchaseUrl).arg(kLinkStyle);
   if (m_license.isExpired()) {
     return QString("<p>Your trial has expired. %1</p>").arg(buyLink);
@@ -123,7 +127,7 @@ QString LicenseDisplay::getTrialNotice() const {
   }
 }
 
-QString LicenseDisplay::getTimeLimitedNotice() const {
+QString LicenseHandler::timeLimitedNotice() const {
   const QString renewLink =
       QString(kRenewLink).arg(kPurchaseUrl).arg(kLinkStyle);
   if (m_license.isExpired()) {

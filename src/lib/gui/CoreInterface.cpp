@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CoreInterface.h"
+#include "gui/CoreInterface.h"
 
 #include "CommandProcess.h"
 
@@ -32,22 +32,22 @@ static const char kSerialKeyFilename[] = "Synergy.subkey";
 static const char kSerialKeyFilename[] = ".synergy.subkey";
 #endif
 
-QString CoreInterface::getProfileDir() {
+QString CoreInterface::getProfileDir() const {
   QStringList args("--get-profile-dir");
   return QDir::cleanPath(run(args));
 }
 
-QString CoreInterface::getInstalledDir() {
+QString CoreInterface::getInstalledDir() const {
   QStringList args("--get-installed-dir");
   return QDir::cleanPath(run(args));
 }
 
-QString CoreInterface::getArch() {
+QString CoreInterface::getArch() const {
   QStringList args("--get-arch");
   return run(args);
 }
 
-QString CoreInterface::getSerialKeyFilePath() {
+QString CoreInterface::getSerialKeyFilePath() const {
   auto filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
   return QDir::cleanPath(filename);
 }

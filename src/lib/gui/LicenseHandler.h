@@ -22,9 +22,13 @@
 
 #include <QObject>
 
-class LicenseDisplay : public QObject {
+/**
+ * @brief A convenience wrapper for `License` that provides Qt signals, etc.
+ */
+class LicenseHandler : public QObject {
   Q_OBJECT
   using License = synergy::license::License;
+  using SerialKey = synergy::license::SerialKey;
 
 public:
   class NoticeError : public std::runtime_error {
@@ -34,21 +38,20 @@ public:
 
   Edition productEdition() const;
   const License &license() const;
-  void validateLicense() const;
+  void validate() const;
   QString noticeMessage() const;
   QString productName() const;
 
   /// @return true if the serial key was set successfully
-  bool setLicense(const License &serialKey, bool acceptExpired = false);
+  bool changeSerialKey(const QString &hexString, bool acceptExpired = false);
 
 signals:
   void serialKeyChanged(const QString &serialKey) const;
-  void editionChanged(Edition) const;
   void invalidLicense() const;
 
 private:
-  QString getTrialNotice() const;
-  QString getTimeLimitedNotice() const;
+  QString trialNotice() const;
+  QString timeLimitedNotice() const;
 
   // TODO: why accept expired?
   bool isValid(const License &license, bool acceptExpired) const;

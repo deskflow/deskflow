@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/LicenseDisplay.h"
+#include "gui/LicenseHandler.h"
 
 #include <chrono>
 #include <gtest/gtest.h>
@@ -26,23 +26,21 @@ using namespace std::chrono;
 const auto kPast = system_clock::now() - hours(1);
 const auto kFuture = system_clock::now() + hours(1);
 
-TEST(LicenseDisplayTests, setLicense_invalidLicense_returnsFalse) {
-  LicenseDisplay licenseDisplay;
-  License license = License::invalid();
+TEST(LicenseHandlerTests, changeSerialKey_invalidLicense_returnsFalse) {
+  LicenseHandler licenseHandler;
 
-  auto result = licenseDisplay.setLicense(license, false);
+  auto result = licenseHandler.changeSerialKey("", false);
 
   ASSERT_FALSE(result);
 }
 
-TEST(LicenseDisplayTests, setLicense_validExpiredLicense_returnsTrue) {
-  LicenseDisplay licenseDisplay;
-  SerialKey serialKey = SerialKey::invalid();
-  serialKey.isValid = true;
-  serialKey.expireTime = kPast;
-  License license(serialKey);
+TEST(LicenseHandlerTests, changeSerialKey_validExpiredLicense_returnsTrue) {
+  LicenseHandler licenseHandler;
+  auto hexString = //
+      "7B76323B747269616C3B62617369633B426F623B313B656D6"
+      "1696C3B636F6D70616E79206E616D653B313B38363430307D";
 
-  auto result = licenseDisplay.setLicense(license, true);
+  auto result = licenseHandler.changeSerialKey(hexString, true);
 
   ASSERT_TRUE(result);
 }

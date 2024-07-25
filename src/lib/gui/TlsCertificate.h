@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015-2016 Symless Ltd.
+ * Copyright (C) 2015 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,16 +17,15 @@
 
 #pragma once
 
-#include "CoreInterface.h"
+#include "gui/CoreInterface.h"
 
 #include <QObject>
-#include <base/String.h>
 
-class SslCertificate : public QObject {
+class TlsCertificate : public QObject {
   Q_OBJECT
 
 public:
-  explicit SslCertificate(QObject *parent = 0);
+  explicit TlsCertificate(QObject *parent = nullptr);
 
 public slots:
   /// @brief Generates a TLS cert and private key

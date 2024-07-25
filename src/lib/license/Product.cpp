@@ -67,11 +67,14 @@ std::string Product::name() const {
   switch (edition()) {
     using enum Edition;
 
-  case kPro:
-    return nameBase + " Pro";
+  case kUnregistered:
+    return nameBase + " (unregistered)";
 
   case kBasic:
     return nameBase + " Basic";
+
+  case kPro:
+    return nameBase + " Pro";
 
   case kBusiness:
     return nameBase + " Business";
@@ -98,4 +101,21 @@ bool Product::isValid() const {
     return false;
   }
   return kSerialKeyEditions.contains(serialKeyId());
+}
+
+bool Product::isTlsAvailable() const {
+  switch (edition()) {
+    using enum Edition;
+
+  case kPro:
+  case kBusiness:
+    return true;
+
+  case kBasic:
+  case kUnregistered:
+    return false;
+
+  default:
+    throw InvalidType();
+  }
 }

@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SslCertificate.h"
+#include "TlsCertificate.h"
 
-#include "Fingerprint.h"
+#include "TlsFingerprint.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -89,14 +89,14 @@ QString openSslWindowsBinary() {
 
 using namespace synergy::gui;
 
-SslCertificate::SslCertificate(QObject *parent) : QObject(parent) {
+TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {
   m_ProfileDir = m_CoreInterface.getProfileDir();
   if (m_ProfileDir.isEmpty()) {
     emit error(tr("Failed to get profile directory."));
   }
 }
 
-bool SslCertificate::runTool(const QStringList &args) {
+bool TlsCertificate::runTool(const QStringList &args) {
   QString program;
 #if defined(Q_OS_WIN)
   program = openSslWindowsBinary();
@@ -134,7 +134,7 @@ bool SslCertificate::runTool(const QStringList &args) {
   return true;
 }
 
-void SslCertificate::generateCertificate(
+void TlsCertificate::generateCertificate(
     const QString &path, const QString &keyLength, bool forceGen) {
   QString sslDirPath =
       QString("%1%2%3").arg(m_ProfileDir).arg(QDir::separator()).arg(kSslDir);
@@ -193,7 +193,7 @@ void SslCertificate::generateCertificate(
   emit generateFinished();
 }
 
-void SslCertificate::generateFingerprint(const QString &certificateFilename) {
+void TlsCertificate::generateFingerprint(const QString &certificateFilename) {
   QStringList arguments;
   arguments.append("x509");
   arguments.append("-fingerprint");
@@ -212,14 +212,14 @@ void SslCertificate::generateFingerprint(const QString &certificateFilename) {
     i++;
     QString fingerprint = m_ToolOutput.mid(i, m_ToolOutput.size() - i);
 
-    Fingerprint::local().trust(fingerprint, false);
+    TlsFingerprint::local().trust(fingerprint, false);
     emit info(tr("SSL fingerprint generated."));
   } else {
     emit error(tr("Failed to find SSL fingerprint."));
   }
 }
 
-QString SslCertificate::getCertKeyLength(const QString &path) {
+QString TlsCertificate::getCertKeyLength(const QString &path) {
 
   QStringList arguments;
   arguments.append("rsa");

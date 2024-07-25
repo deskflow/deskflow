@@ -20,14 +20,12 @@
 
 #include "AboutDialog.h"
 #include "ActivationDialog.h"
-#include "Fingerprint.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
 #include "gui/BuildConfig.h"
-#include "gui/LicenseDisplay.h"
+#include "gui/LicenseHandler.h"
+#include "gui/TlsFingerprint.h"
 #include "license/License.h"
-#include "license/ProductEdition.h"
-#include "ui_MainWindowBase.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -51,6 +49,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
+using namespace synergy::gui;
 using namespace synergy::license;
 
 static const char *const kDownloadUrl = "https://symless.com/?source=gui";
@@ -92,83 +91,24 @@ static const char *const kDefaultIconFiles[] = {
 MainWindow::MainWindow(AppConfig &appConfig)
     : m_AppConfig(appConfig),
       m_ServerConfig(5, 3, &m_AppConfig, this),
-      m_serverConnection(*this),
-      m_clientConnection(*this) {
+      m_ServerConnection(*this),
+      m_ClientConnection(*this),
+      m_TlsUtility(appConfig, m_LicenseHandler.license()) {
 
   setupUi(this);
-
-#if defined(Q_OS_MAC)
-  m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
-  m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
-#endif
-
-  m_ServerConfig.loadSettings();
-
+  connectSlots();
   createMenuBar();
   loadSettings();
   initConnections();
+  secureSocket(false);
 
   m_pWidgetUpdate->hide();
   m_VersionChecker.setApp(appPath(appConfig.coreClientName()));
 
-  updateScreenName();
-  connect(
-      appConfigPtr(), SIGNAL(screenNameChanged()), this,
-      SLOT(updateScreenName()));
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-#if defined(Q_OS_WIN)
-  // ipc must always be enabled, so that we can disable command when switching
-  // to desktop mode.
-  connect(
-      &m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
-      SLOT(appendLogRaw(const QString &)));
-  connect(
-      &m_IpcClient, SIGNAL(errorMessage(const QString &)), this,
-      SLOT(appendLogError(const QString &)));
-  connect(
-      &m_IpcClient, SIGNAL(infoMessage(const QString &)), this,
-      SLOT(appendLogInfo(const QString &)));
-  connect(
-      &m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
-      SLOT(handleIdleService(const QString &)));
-
-  // TODO: only connect permenantly to ipc when switching to service mode.
-  // if switching from service to desktop, connect only to stop the service and
-  // don't retry.
-  m_IpcClient.connectToHost();
-#endif
-
-  // change default size based on os
-#if defined(Q_OS_MAC)
-  resize(720, 550);
-  setMinimumSize(size());
-#elif defined(Q_OS_LINUX)
-  resize(700, 530);
-  setMinimumSize(size());
-#endif
-
   m_trialLabel->hide();
-
-  // hide padlock icon
-  secureSocket(false);
-
-  connect(
-      this, SIGNAL(windowShown()), this, SLOT(on_windowShown()),
-      Qt::QueuedConnection);
-
-  connect(
-      appConfigPtr(), SIGNAL(sslToggled()), this,
-      SLOT(updateLocalFingerprint()), Qt::QueuedConnection);
-
-  const auto &serialKey = m_AppConfig.serialKey().toStdString();
-  if (!serialKey.empty()) {
-    License license(serialKey);
-    m_LicenseDisplay.setLicense(license, true);
-  }
-
-  updateWindowTitle();
 
   if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
@@ -176,19 +116,31 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
   if (kLicensingEnabled) {
     m_pActivate->setVisible(true);
-
-    connect(
-        &m_LicenseDisplay, SIGNAL(serialKeyChanged(const QString &)), this,
-        SLOT(setSerialKey(const QString &)), Qt::QueuedConnection);
-
-    connect(
-        &m_LicenseDisplay, SIGNAL(editionChanged(Edition)), this,
-        SLOT(setEdition(Edition)), Qt::QueuedConnection);
-
-    connect(
-        &m_LicenseDisplay, SIGNAL(invalidLicense()), this,
-        SLOT(invalidLicense()), Qt::QueuedConnection);
   }
+
+#if defined(Q_OS_MAC)
+
+  resize(720, 550);
+  setMinimumSize(size());
+
+  m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
+  m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
+#elif defined(Q_OS_LINUX)
+
+  resize(700, 530);
+  setMinimumSize(size());
+
+#elif defined(Q_OS_WIN)
+
+  // TODO: only connect permenantly to ipc when switching to service mode.
+  // if switching from service to desktop, connect only to stop the service and
+  // don't retry.
+  m_IpcClient.connectToHost();
+
+#endif
+
+  emit windowCreated();
 }
 
 MainWindow::~MainWindow() {
@@ -198,13 +150,175 @@ MainWindow::~MainWindow() {
   }
 }
 
+void MainWindow::connectSlots() const {
+
+  connect(this, SIGNAL(windowCreated()), this, SLOT(on_windowCreated()));
+
+  connect(this, SIGNAL(windowShown()), this, SLOT(on_windowShown()));
+
+  connect(&m_AppConfig, SIGNAL(loaded), this, SLOT(on_m_AppConfig_loaded()));
+
+  connect(
+      &m_AppConfig, SIGNAL(tlsChanged()), this,
+      SLOT(on_m_AppConfig_tlsChanged()));
+
+  connect(
+      &m_AppConfig, SIGNAL(screenNameChanged()), this,
+      SLOT(updateScreenName()));
+
+  if (kLicensingEnabled) {
+    connect(
+        &m_LicenseHandler, SIGNAL(serialKeyChanged(const QString &)), this,
+        SLOT(on_m_LicenseHandler_serialKeyChanged(const QString &)));
+
+    connect(
+        &m_LicenseHandler, SIGNAL(invalidLicense()), this,
+        SLOT(on_m_LicenseHandler_invalidLicense()));
+  }
+
+#if defined(Q_OS_WIN)
+  // ipc must always be enabled, so that we can disable command when switching
+  // to desktop mode.
+  connect(
+      &m_IpcClient, SIGNAL(readLogLine(const QString &)), this,
+      SLOT(on_readLogLine(const QString &)));
+  connect(
+      &m_IpcClient, SIGNAL(errorMessage(const QString &)), this,
+      SLOT(on_errorMessage(const QString &)));
+  connect(
+      &m_IpcClient, SIGNAL(infoMessage(const QString &)), this,
+      SLOT(on_infoMessage(const QString &)));
+#endif
+}
+
+void MainWindow::on_windowCreated() {
+  // load settings last after the ctor is finished and the window is created,
+  // to ensure that the ctor stays clean and doesn't have any weird call order
+  // dependencies.
+  m_ServerConfig.loadSettings();
+}
+
+void MainWindow::on_m_LicenseHandler_serialKeyChanged(
+    const QString &serialKey) {
+  setWindowTitle(m_LicenseHandler.productName());
+}
+
+void MainWindow::on_m_LicenseHandler_invalidLicense() {
+  stopCore();
+  m_AppConfig.setActivationHasRun(false);
+  showLicenseNotice(m_LicenseHandler.noticeMessage());
+}
+bool MainWindow::on_m_pActionSave_triggered() {
+  QString fileName =
+      QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
+
+  if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
+    QMessageBox::warning(
+        this, tr("Save failed"), tr("Could not save configuration to file."));
+    return true;
+  }
+
+  return false;
+}
+
+void MainWindow::on_m_pActionAbout_triggered() {
+  AboutDialog dlg(this, appConfig());
+  dlg.exec();
+}
+
+void MainWindow::on_m_pActionHelp_triggered() {
+  QDesktopServices::openUrl(QUrl(kHelpUrl));
+}
+
+void MainWindow::on_m_pActionSettings_triggered() {
+  auto result =
+      SettingsDialog(this, appConfig(), m_LicenseHandler.license()).exec();
+  if (result == QDialog::Accepted) {
+    enableServer(appConfig().serverGroupChecked());
+    enableClient(appConfig().clientGroupChecked());
+    auto state = coreState();
+    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
+        (state == CoreState::Listening)) {
+      restartCore();
+    }
+  }
+}
+
+void MainWindow::on_m_pButtonConfigureServer_clicked() {
+  showConfigureServer();
+}
+
+void MainWindow::on_m_pActivate_triggered() { raiseActivationDialog(); }
+
+void MainWindow::on_m_pButtonApply_clicked() {
+  m_ClientConnection.setCheckConnection(true);
+  restartCore();
+}
+
+void MainWindow::on_windowShown() {
+  if (kLicensingEnabled) {
+    const auto &license = m_LicenseHandler.license();
+    if (!m_AppConfig.activationHasRun() || !license.isValid() ||
+        license.isExpired()) {
+      raiseActivationDialog();
+    }
+  }
+}
+
+void MainWindow::on_m_AppConfig_loaded() {
+  m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
+  updateScreenName();
+}
+
+void MainWindow::on_m_AppConfig_tlsChanged() {
+  updateLocalFingerprint();
+  if (m_TlsUtility.isAvailableAndEnabled()) {
+    m_TlsUtility.generateCertificate(true);
+  }
+}
+
+void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
+  m_pActionSettings->trigger();
+}
+
+void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
+  QMessageBox::information(
+      this, "SSL/TLS fingerprint", TlsFingerprint::local().readFirst());
+}
+
+void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
+  enableServer(true);
+  enableClient(false);
+  m_AppConfig.saveSettings();
+}
+
+void MainWindow::on_m_pRadioGroupClient_clicked(bool) {
+  enableClient(true);
+  enableServer(false);
+  m_AppConfig.saveSettings();
+}
+
+void MainWindow::on_m_pButtonConnect_clicked() { on_m_pButtonApply_clicked(); }
+
+void MainWindow::on_m_pButtonConnectToClient_clicked() {
+  on_m_pButtonApply_clicked();
+}
+
+void MainWindow::on_readLogLine(const QString &text) {
+  processCoreLogLine(text);
+}
+
+void MainWindow::on_errorMessage(const QString &text) { appendLogError(text); }
+
+void MainWindow::on_infoMessage(const QString &text) { appendLogInfo(text); }
+
 void MainWindow::open() {
 
   std::array<QAction *, 7> trayMenu = {
       m_pActionStartCore, m_pActionStopCore, nullptr,      m_pActionMinimize,
       m_pActionRestore,   nullptr,           m_pActionQuit};
 
-  m_trayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
+  m_TrayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
     connect(o, s, this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
     setIcon(CoreState::Disconnected);
   });
@@ -311,7 +425,7 @@ void MainWindow::setIcon(CoreState state) const {
   icon.addFile(kDefaultIconFiles[index]);
 #endif
 
-  m_trayIcon.set(icon);
+  m_TrayIcon.set(icon);
 }
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
@@ -330,7 +444,7 @@ void MainWindow::logOutput() {
     QString text(m_pCoreProcess->readAllStandardOutput());
     for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
       if (!line.isEmpty()) {
-        appendLogRaw(line);
+        on_readLogLine(line);
       }
     }
   }
@@ -338,7 +452,7 @@ void MainWindow::logOutput() {
 
 void MainWindow::logError() {
   if (m_pCoreProcess) {
-    appendLogRaw(m_pCoreProcess->readAllStandardError());
+    on_readLogLine(m_pCoreProcess->readAllStandardError());
   }
 }
 
@@ -352,42 +466,38 @@ void MainWindow::updateFound(const QString &version) {
 }
 
 void MainWindow::appendLogInfo(const QString &text) {
-  appendLogRaw(getTimeStamp() + " INFO: " + text);
+  processCoreLogLine(getTimeStamp() + " INFO: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
   if (appConfig().logLevel() >= kDebugLogLevel) {
-    appendLogRaw(getTimeStamp() + " DEBUG: " + text);
+    processCoreLogLine(getTimeStamp() + " DEBUG: " + text);
   }
 }
 
 void MainWindow::appendLogError(const QString &text) {
-  appendLogRaw(getTimeStamp() + " ERROR: " + text);
+  on_readLogLine(getTimeStamp() + " ERROR: " + text);
 }
 
-void MainWindow::appendLogRaw(const QString &text) {
+void MainWindow::processCoreLogLine(const QString &text) {
   foreach (QString line, text.split(QRegularExpression("\r|\n|\r\n"))) {
-    if (!line.isEmpty()) {
-
-      // HACK: macOS 10.13.4+ spamming error lines in logs making them
-      // impossible to read and debug; giving users a red herring.
-      if (line.contains("calling TIS/TSM in non-main thread environment")) {
-        continue;
-      }
-
-      m_pLogOutput->appendPlainText(line);
-      updateFromLogLine(line);
+    if (line.isEmpty()) {
+      continue;
     }
-  }
-}
 
-void MainWindow::handleIdleService(const QString &text) {
-  foreach (QString line, text.split(QRegularExpression("\r|\n|\r\n"))) {
     // only start if there is no active service running
-    if (!line.isEmpty() && line.contains("service status: idle") &&
-        appConfig().startedBefore()) {
+    if (line.contains("service status: idle") && appConfig().startedBefore()) {
       startCore();
     }
+
+    // HACK: macOS 10.13.4+ spamming error lines in logs making them
+    // impossible to read and debug; giving users a red herring.
+    if (!line.contains("calling TIS/TSM in non-main thread environment")) {
+      continue;
+    }
+
+    m_pLogOutput->appendPlainText(line);
+    updateFromLogLine(line);
   }
 }
 
@@ -411,10 +521,10 @@ void MainWindow::updateFromLogLine(const QString &line) {
 void MainWindow::checkConnected(const QString &line) {
   // TODO: implement ipc connection state messages to replace this hack.
   if (m_pRadioGroupServer->isChecked()) {
-    m_serverConnection.update(line);
+    m_ServerConnection.update(line);
     m_pLabelServerState->updateServerState(line);
   } else {
-    m_clientConnection.update(line);
+    m_ClientConnection.update(line);
     m_pLabelClientState->updateClientState(line);
   }
 
@@ -443,8 +553,9 @@ void MainWindow::checkConnected(const QString &line) {
 
 void MainWindow::checkLicense(const QString &line) {
   if (line.contains("trial has expired")) {
-    License license(m_AppConfig.serialKey().toStdString());
-    m_LicenseDisplay.setLicense(license, true);
+    // TODO: figure out why we're re-reading the serial key here.
+    // perhaps it was 'just in case' it changed during the trial?
+    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
     raiseActivationDialog();
   }
 }
@@ -457,7 +568,7 @@ void MainWindow::checkFingerprint(const QString &line) {
   }
 
   auto fingerprint = match.captured(1);
-  if (Fingerprint::trustedServers().isTrusted(fingerprint)) {
+  if (TlsFingerprint::trustedServers().isTrusted(fingerprint)) {
     return;
   }
 
@@ -482,7 +593,7 @@ void MainWindow::checkFingerprint(const QString &line) {
 
     if (fingerprintReply == QMessageBox::Yes) {
       // restart core process after trusting fingerprint.
-      Fingerprint::trustedServers().trust(fingerprint);
+      TlsFingerprint::trustedServers().trust(fingerprint);
       startCore();
     }
 
@@ -546,7 +657,7 @@ void MainWindow::startCore() {
 #endif
 
   if (kLicensingEnabled) {
-    License license = m_LicenseDisplay.license();
+    const auto &license = m_LicenseHandler.license();
     if (license.isExpired() && raiseActivationDialog() == QDialog::Rejected) {
       return;
     }
@@ -627,7 +738,7 @@ void MainWindow::startCore() {
 
   // put a space between last log output and new instance.
   if (!m_pLogOutput->toPlainText().isEmpty())
-    appendLogRaw("");
+    on_readLogLine("");
 
   appendLogInfo(
       "starting " +
@@ -681,7 +792,7 @@ void MainWindow::startCore() {
 }
 
 void MainWindow::actionStart() {
-  m_clientConnection.setCheckConnection(true);
+  m_ClientConnection.setCheckConnection(true);
   startCore();
 }
 
@@ -1032,21 +1143,6 @@ QString MainWindow::getIPAddresses() {
   return result.join(", ");
 }
 
-void MainWindow::setSerialKey(const QString &serialKey) {
-  m_AppConfig.setSerialKey(serialKey);
-}
-
-void MainWindow::setEdition(Edition edition) {
-  m_AppConfig.setEdition(edition);
-  setWindowTitle(m_LicenseDisplay.productName());
-}
-
-void MainWindow::invalidLicense() {
-  stopCore();
-  m_AppConfig.setActivationHasRun(false);
-  showLicenseNotice(m_LicenseDisplay.noticeMessage());
-}
-
 void MainWindow::showLicenseNotice(const QString &notice) {
   this->m_trialLabel->hide();
 
@@ -1055,13 +1151,13 @@ void MainWindow::showLicenseNotice(const QString &notice) {
     this->m_trialLabel->show();
   }
 
-  setWindowTitle(m_LicenseDisplay.productName());
+  setWindowTitle(m_LicenseHandler.productName());
 }
 
 void MainWindow::updateLocalFingerprint() {
   bool fingerprintExists = false;
   try {
-    fingerprintExists = Fingerprint::local().fileExists();
+    fingerprintExists = TlsFingerprint::local().fileExists();
   } catch (const std::exception &e) {
     qDebug() << e.what();
     qFatal("Failed to check if fingerprint exists");
@@ -1075,48 +1171,13 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-LicenseDisplay &MainWindow::licenseDisplay() { return m_LicenseDisplay; }
-
-bool MainWindow::on_m_pActionSave_triggered() {
-  QString fileName =
-      QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
-
-  if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
-    QMessageBox::warning(
-        this, tr("Save failed"), tr("Could not save configuration to file."));
-    return true;
-  }
-
-  return false;
-}
-
-void MainWindow::on_m_pActionAbout_triggered() {
-  AboutDialog dlg(this, appConfig());
-  dlg.exec();
-}
-
-void MainWindow::on_m_pActionHelp_triggered() {
-  QDesktopServices::openUrl(QUrl(kHelpUrl));
-}
+LicenseHandler &MainWindow::licenseHandler() { return m_LicenseHandler; }
 
 void MainWindow::updateWindowTitle() {
   if (kLicensingEnabled) {
-    setWindowTitle(m_LicenseDisplay.productName());
+    setWindowTitle(m_LicenseHandler.productName());
   } else {
     setWindowTitle(kProductName);
-  }
-}
-
-void MainWindow::on_m_pActionSettings_triggered() {
-  auto result = SettingsDialog(this, appConfig()).exec();
-  if (result == QDialog::Accepted) {
-    enableServer(appConfig().serverGroupChecked());
-    enableClient(appConfig().clientGroupChecked());
-    auto state = coreState();
-    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
-        (state == CoreState::Listening)) {
-      restartCore();
-    }
   }
 }
 
@@ -1161,22 +1222,11 @@ void MainWindow::showConfigureServer(const QString &message) {
   }
 }
 
-void MainWindow::on_m_pButtonConfigureServer_clicked() {
-  showConfigureServer();
-}
-
-void MainWindow::on_m_pActivate_triggered() { raiseActivationDialog(); }
-
-void MainWindow::on_m_pButtonApply_clicked() {
-  m_clientConnection.setCheckConnection(true);
-  restartCore();
-}
-
 int MainWindow::raiseActivationDialog() {
   if (m_ActivationDialogRunning) {
     return QDialog::Rejected;
   }
-  ActivationDialog activationDialog(this, m_AppConfig, m_LicenseDisplay);
+  ActivationDialog activationDialog(this, m_AppConfig, m_LicenseHandler);
   m_ActivationDialogRunning = true;
   int result = activationDialog.exec();
   m_ActivationDialogRunning = false;
@@ -1188,17 +1238,6 @@ int MainWindow::raiseActivationDialog() {
     m_PendingClientNames.clear();
   }
   return result;
-}
-
-void MainWindow::on_windowShown() {
-  if (kLicensingEnabled) {
-    auto license = m_LicenseDisplay.license();
-    if (!m_AppConfig.activationHasRun() || !license.isValid() ||
-        license.isExpired()) {
-      setEdition(Edition::kUnregistered);
-      raiseActivationDialog();
-    }
-  }
 }
 
 QString MainWindow::getProfileRootForArg() {
@@ -1222,15 +1261,6 @@ void MainWindow::secureSocket(bool secureSocket) {
   } else {
     m_pLabelPadlock->hide();
   }
-}
-
-void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
-  m_pActionSettings->trigger();
-}
-
-void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
-  QMessageBox::information(
-      this, "SSL/TLS fingerprint", Fingerprint::local().readFirst());
 }
 
 void MainWindow::windowStateChanged() {
@@ -1296,22 +1326,4 @@ void MainWindow::enableClient(bool enable) {
     m_pLineEditHostname->hide();
     m_pButtonConnect->hide();
   }
-}
-
-void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
-  enableServer(true);
-  enableClient(false);
-  m_AppConfig.saveSettings();
-}
-
-void MainWindow::on_m_pRadioGroupClient_clicked(bool) {
-  enableClient(true);
-  enableServer(false);
-  m_AppConfig.saveSettings();
-}
-
-void MainWindow::on_m_pButtonConnect_clicked() { on_m_pButtonApply_clicked(); }
-
-void MainWindow::on_m_pButtonConnectToClient_clicked() {
-  on_m_pButtonApply_clicked();
 }

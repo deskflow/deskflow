@@ -39,7 +39,7 @@ public:
 
 public:
   String m_configFile = "";
-  License m_license = License::invalid();
+  license::SerialKey m_serialKey = license::SerialKey::invalid();
   std::shared_ptr<Config> m_config;
 };
 

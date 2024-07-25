@@ -28,8 +28,8 @@ using namespace std::chrono;
 
 namespace synergy::license {
 
-License::License(const std::string &licenseString)
-    : m_serialKey(parseSerialKey(licenseString)) {}
+License::License(const std::string &hexString)
+    : m_serialKey(parseSerialKey(hexString)) {}
 
 License::License(const SerialKey &serialKey) : m_serialKey(serialKey) {
   if (!m_serialKey.isValid) {
@@ -41,9 +41,11 @@ bool License::isTrial() const { return m_serialKey.type.isTrial(); }
 
 bool License::isTimeLimited() const { return m_serialKey.type.isTimeLimited(); }
 
-Edition License::edition() const { return m_serialKey.product.edition(); }
+bool License::isTlsAvailable() const {
+  return m_serialKey.product.isTlsAvailable();
+}
 
-const std::string &License::toString() const { return m_serialKey.hexString; }
+Edition License::edition() const { return m_serialKey.product.edition(); }
 
 bool License::isExpiring() const {
   if (!isTimeLimited()) {
@@ -78,6 +80,14 @@ days License::daysLeft() const {
 
   auto timeLeft = expireTime - m_nowFunc();
   return duration_cast<days>(timeLeft);
+}
+
+std::string License::productName() const {
+  auto name = m_serialKey.product.name();
+  if (m_serialKey.type.isTrial()) {
+    name += " (Trial)";
+  }
+  return name;
 }
 
 } // namespace synergy::license

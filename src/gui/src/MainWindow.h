@@ -37,6 +37,7 @@
 #include "TrayIcon.h"
 #include "global/Ipc.h"
 #include "gui/QIpcClient.h"
+#include "gui/TlsUtility.h"
 #include "gui/VersionChecker.h"
 
 class QAction;
@@ -57,7 +58,7 @@ class QSynergyApplication;
 class SetupWizard;
 class DataDownloader;
 class CommandProcess;
-class SslCertificate;
+class TlsCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   Q_OBJECT
@@ -83,10 +84,10 @@ public:
   enum class RuningState { Started, Stopped };
 
 public:
+  void update();
   explicit MainWindow(AppConfig &appConfig);
   ~MainWindow() override;
 
-public:
   void setVisible(bool visible) override;
   CoreMode coreMode() const;
   CoreState coreState() const { return m_CoreState; }
@@ -101,22 +102,23 @@ public:
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
-  LicenseDisplay &licenseDisplay();
+  LicenseHandler &licenseHandler();
   int raiseActivationDialog();
   void showLicenseNotice(const QString &message);
-
-public slots:
-  void setEdition(Edition edition);
-  void setSerialKey(const QString &serialKey);
-  void invalidLicense();
-  void appendLogRaw(const QString &text);
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
   void appendLogError(const QString &text);
-  void startCore();
-  void retryStart();
-  void actionStart();
-  void handleIdleService(const QString &text);
+
+signals:
+  void windowCreated();
+  void windowShown();
+
+public slots:
+  void on_m_LicenseHandler_serialKeyChanged(const QString &serialKey);
+  void on_m_LicenseHandler_invalidLicense();
+  void on_readLogLine(const QString &text);
+  void on_errorMessage(const QString &text);
+  void on_infoMessage(const QString &text);
 
 protected slots:
   void updateLocalFingerprint();
@@ -137,11 +139,21 @@ protected slots:
   void updateFound(const QString &version);
   void saveSettings();
 
+private slots:
+  void on_windowCreated();
+  void on_windowShown();
+  void on_m_AppConfig_loaded();
+  void on_m_AppConfig_tlsChanged();
+  void on_m_pButtonApply_clicked();
+  void on_m_pLabelComputerName_linkActivated(const QString &link);
+  void on_m_pLabelFingerprint_linkActivated(const QString &link);
+  void on_m_pButtonConnect_clicked();
+  void on_m_pButtonConnectToClient_clicked();
+
 protected:
   QSettings &settings() { return *appConfig().config().currentSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
-  AppConfig *appConfigPtr() { return &m_AppConfig; }
   void initConnections();
   void createMenuBar();
   void createStatusBar();
@@ -178,18 +190,17 @@ protected:
   void windowStateChanged();
 
 private:
+  void connectSlots() const;
   void updateWindowTitle();
+  void processCoreLogLine(const QString &line);
+  void startCore();
+  void retryStart();
+  void actionStart();
 
-  AppConfig &m_AppConfig;
-  LicenseDisplay m_LicenseDisplay;
-  ServerConfig m_ServerConfig;
-  ServerConnection m_serverConnection;
-  ClientConnection m_clientConnection;
   VersionChecker m_VersionChecker;
   QIpcClient m_IpcClient;
-  TrayIcon m_trayIcon;
+  TrayIcon m_TrayIcon;
   QMutex m_StopDesktopMutex;
-
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
   RuningState m_ExpectedRunningState = RuningState::Stopped;
@@ -205,14 +216,10 @@ private:
   bool m_SecureSocket = false;
   QString m_SecureSocketVersion = "";
 
-private slots:
-  void on_m_pButtonApply_clicked();
-  void on_windowShown();
-  void on_m_pLabelComputerName_linkActivated(const QString &link);
-  void on_m_pLabelFingerprint_linkActivated(const QString &link);
-  void on_m_pButtonConnect_clicked();
-  void on_m_pButtonConnectToClient_clicked();
-
-signals:
-  void windowShown();
+  AppConfig &m_AppConfig;
+  LicenseHandler m_LicenseHandler;
+  ServerConfig m_ServerConfig;
+  ServerConnection m_ServerConnection;
+  ClientConnection m_ClientConnection;
+  synergy::gui::TlsUtility m_TlsUtility;
 };

@@ -44,6 +44,8 @@ struct SerialKey {
     return SerialKey(Product::Edition::kUnregistered);
   }
 
+  const std::string &toString() const { return hexString; }
+
   bool isValid = false;
   std::string hexString = "";
   Product product;

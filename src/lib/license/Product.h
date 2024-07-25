@@ -56,6 +56,7 @@ public:
   Edition edition() const;
   std::string serialKeyId() const;
   std::string name() const;
+  bool isTlsAvailable() const;
 
   void setEdition(Edition type);
   void setEdition(const std::string &serialKeyId);
