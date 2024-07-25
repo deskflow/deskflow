@@ -89,10 +89,7 @@ const char *const AppConfig::m_SettingsName[] = {
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
-AppConfig::AppConfig() {
-  m_Config.registerReceiever(this);
-  loadAllScopes();
-}
+AppConfig::AppConfig() { m_Config.registerReceiever(this); }
 
 void AppConfig::loadAllScopes() {
   m_Config.loadAll();
@@ -311,10 +308,6 @@ void AppConfig::setSettingModified(T &variable, const T &newValue) {
     variable = newValue;
     setModified(true);
   }
-}
-
-void AppConfig::applyAppSettings() const {
-  QApplication::setQuitOnLastWindowClosed(!m_CloseToTray);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

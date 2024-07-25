@@ -90,39 +90,49 @@ public:
 
   void setVisible(bool visible) override;
   CoreMode coreMode() const;
-  CoreState coreState() const { return m_CoreState; }
-  QString hostname() const { return m_pLineEditHostname->text(); }
-  QString configFilename();
   QString address() const;
   QString appPath(const QString &name);
   void open();
-  void clearLog();
-  VersionChecker &versionChecker() { return m_VersionChecker; }
   ServerConfig &serverConfig() { return m_ServerConfig; }
-  void showConfigureServer(const QString &message);
-  void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
   LicenseHandler &licenseHandler();
   int raiseActivationDialog();
-  void showLicenseNotice(const QString &message);
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
   void appendLogError(const QString &text);
 
 signals:
-  void windowCreated();
-  void windowShown();
+  void created();
+  void shown();
 
+  // TODO: do any of the slots need to be public or   protected?
 public slots:
-  void on_m_LicenseHandler_serialKeyChanged(const QString &serialKey);
-  void on_m_LicenseHandler_invalidLicense();
-  void on_readLogLine(const QString &text);
-  void on_errorMessage(const QString &text);
-  void on_infoMessage(const QString &text);
+  void on_m_AppConfig_loaded();
+  void on_m_AppConfig_tlsChanged();
+  void on_m_AppConfig_screenNameChanged();
 
 protected slots:
-  void updateLocalFingerprint();
-  void updateScreenName();
+
+private slots:
+  void on_created();
+  void on_shown();
+  void on_m_LicenseHandler_serialKeyChanged(const QString &serialKey);
+  void on_m_LicenseHandler_invalidLicense();
+  void on_m_IpcClient_readLogLine(const QString &text);
+  void on_m_IpcClient_errorMessage(const QString &text);
+  void on_m_IpcClient_infoMessage(const QString &text);
+  void on_m_pCoreProcess_finished(int exitCode, QProcess::ExitStatus);
+  void on_m_VersionChecker_updateFound(const QString &version);
+  void on_m_TrayIcon_create(QSystemTrayIcon::ActivationReason reason);
+  void on_m_pActionStopCore_stopCore();
+  void on_m_pCoreProcess_readyReadStandardOutput();
+  void on_m_pCoreProcess_readyReadStandardError();
+  void on_m_pActionStartCore_triggered();
+  void on_m_pButtonApply_clicked();
+  void on_m_pLabelComputerName_linkActivated(const QString &link);
+  void on_m_pLabelFingerprint_linkActivated(const QString &link);
+  void on_m_pButtonConnect_clicked();
+  void on_m_pButtonConnectToClient_clicked();
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
   void on_m_pButtonConfigureServer_clicked();
@@ -131,34 +141,15 @@ protected slots:
   void on_m_pActionHelp_triggered();
   void on_m_pActionSettings_triggered();
   void on_m_pActivate_triggered();
-  void coreProcessExit(int exitCode, QProcess::ExitStatus);
-  void trayActivated(QSystemTrayIcon::ActivationReason reason);
-  void stopCore();
-  void logOutput();
-  void logError();
-  void updateFound(const QString &version);
-  void saveSettings();
 
-private slots:
-  void on_windowCreated();
-  void on_windowShown();
-  void on_m_AppConfig_loaded();
-  void on_m_AppConfig_tlsChanged();
-  void on_m_pButtonApply_clicked();
-  void on_m_pLabelComputerName_linkActivated(const QString &link);
-  void on_m_pLabelFingerprint_linkActivated(const QString &link);
-  void on_m_pButtonConnect_clicked();
-  void on_m_pButtonConnectToClient_clicked();
-
-protected:
+private:
   QSettings &settings() { return *appConfig().config().currentSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
-  void initConnections();
   void createMenuBar();
   void createStatusBar();
   void createTrayIcon();
-  void loadSettings();
+  void applyConfig();
   void setIcon(CoreState state) const;
   void setCoreState(CoreState state);
   bool checkForApp(int which, QString &app);
@@ -172,30 +163,32 @@ protected:
   void stopDesktop();
   void enableServer(bool enable);
   void enableClient(bool enable);
-
   QString getProfileRootForArg();
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   bool checkSecureSocket(const QString &line);
-#ifdef Q_OS_MAC
-  void checkOSXNotification(const QString &line);
-#endif
   void checkLicense(const QString &line);
   QString getTimeStamp();
   void restartCore();
-
   void showEvent(QShowEvent *) override;
   void secureSocket(bool secureSocket);
-
   void windowStateChanged();
-
-private:
   void connectSlots() const;
   void updateWindowTitle();
   void processCoreLogLine(const QString &line);
   void startCore();
   void retryStart();
-  void actionStart();
+  void updateLocalFingerprint();
+  void updateScreenName();
+  void saveSettings();
+  QString configFilename();
+  void showConfigureServer(const QString &message);
+  void showConfigureServer() { showConfigureServer(""); }
+  void showLicenseNotice(const QString &message);
+
+#ifdef Q_OS_MAC
+  void checkOSXNotification(const QString &line);
+#endif
 
   VersionChecker m_VersionChecker;
   QIpcClient m_IpcClient;

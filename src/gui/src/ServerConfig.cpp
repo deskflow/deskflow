@@ -29,8 +29,6 @@
 #include <QPushButton>
 #include <QtCore>
 
-using synergy::gui::Config;
-
 static const struct {
   int x;
   int y;

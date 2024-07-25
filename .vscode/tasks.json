@@ -21,6 +21,38 @@
       "group": "build"
     },
     {
+      "label": "clean-gcda",
+      "type": "shell",
+      "command": "find . -name '*.gcda' -delete",
+      "windows": {
+        "command": "$null"
+      },
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "clean-qt",
+      "type": "shell",
+      "command": "rm -r build/src/gui",
+      "windows": {
+        "command": "remove-item -recurse build/src/gui"
+      }
+    },
+    {
+      "label": "clean-config",
+      "type": "shell",
+      "linux": {
+        "command": "rm -r ~/.config/Synergy/Synergy.conf"
+      },
+      "windows": {
+        "command": "remove-item -recurse $env:APPDATA\\Synergy\\Synergy"
+      },
+      "osx": {
+        "command": "rm -r ~/Library/Application\\ Support/Synergy/Synergy"
+      }
+    },
+    {
       "label": "tests",
       "dependsOn": ["integtests", "unittests"],
       "problemMatcher": []
@@ -67,25 +99,6 @@
       "label": "stop daemon",
       "type": "shell",
       "command": "python scripts/daemon.py --stop"
-    },
-    {
-      "label": "clean-gcda",
-      "type": "shell",
-      "command": "find . -name '*.gcda' -delete",
-      "windows": {
-        "command": "$null"
-      },
-      "presentation": {
-        "reveal": "silent"
-      }
-    },
-    {
-      "label": "clean-qt",
-      "type": "shell",
-      "command": "rm -r build/src/gui",
-      "windows": {
-        "command": "remove-item -recurse build/src/gui"
-      }
     },
     {
       "label": "unittests (current)",

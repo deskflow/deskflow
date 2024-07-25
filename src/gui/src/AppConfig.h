@@ -48,9 +48,10 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 /**
  * @brief Simply reads and writes app settings.
  *
- * Important: Maintain a clear separation of concerns. It's tempting to
- * add logic (e.g. license checks) here since it's widely accessible,
- * but that has previously led to this class becoming a god object.
+ * Important: Maintain a clear separation of concerns and keep it simple.
+ * It is tempting to add logic (e.g. license checks) to this class since it
+ * instance is widely accessible, but that has previously led to this class
+ * becoming a god object.
  */
 class AppConfig : public QObject,
                   public synergy::gui::CommonConfig,
@@ -63,7 +64,7 @@ class AppConfig : public QObject,
   friend class ServerConfig;
   friend class ActivationDialog;
 
-protected:
+private:
   enum class Setting {
     kScreenName = 0,
     kPort = 1,
@@ -112,8 +113,8 @@ public:
   /// @brief Underlying configuration reader/writer
   synergy::gui::Config &config();
 
+  /// @brief Saves the setting to the current scope
   void saveSettings() override;
-  void applyAppSettings() const;
 
   /**
    * Getters
@@ -160,11 +161,11 @@ public:
   QString tlsCertPath() const override;
   QString tlsKeyLength() const override;
 
-protected:
-  static QString settingName(AppConfig::Setting name);
-
+private:
   /// @brief Loads the setting from the current scope
   void loadSettings() override;
+
+  static QString settingName(AppConfig::Setting name);
 
   /**
    * Setters
@@ -210,7 +211,6 @@ protected:
   ///             scope settings.
   void setLoadFromSystemScope(bool value);
 
-private:
   /// @brief Loads config from the underlying reader/writer
   void loadAllScopes();
 
@@ -323,8 +323,8 @@ private:
   static const char m_ConfigFilename[];
 
 signals:
-  void loaded() const;
-  void saved() const;
-  void tlsChanged() const;
-  void screenNameChanged() const;
+  void loaded();
+  void saved();
+  void tlsChanged();
+  void screenNameChanged();
 };
