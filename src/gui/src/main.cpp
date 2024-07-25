@@ -78,8 +78,8 @@ int main(int argc, char *argv[]) {
   MainWindow mainWindow(appConfig);
 
   QObject::connect(
-      dynamic_cast<QObject *>(&app), SIGNAL(aboutToQuit()), &mainWindow,
-      SLOT(saveSettings()));
+      &app, &QSynergyApplication::aboutToQuit, &mainWindow,
+      &MainWindow::onAppAboutToQuit);
 
   std::unique_ptr<SetupWizardBlocker> setupBlocker;
   if (qgetenv("XDG_SESSION_TYPE") == "wayland") {

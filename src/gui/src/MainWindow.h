@@ -107,15 +107,16 @@ signals:
 
   // TODO: do any of the slots need to be public or   protected?
 public slots:
-  void on_m_AppConfig_loaded();
-  void on_m_AppConfig_tlsChanged();
-  void on_m_AppConfig_screenNameChanged();
+  void onAppAboutToQuit() { m_AppConfig.saveSettings(); }
 
 protected slots:
 
 private slots:
   void on_created();
   void on_shown();
+  void on_m_AppConfig_loaded();
+  void on_m_AppConfig_tlsChanged();
+  void on_m_AppConfig_screenNameChanged();
   void on_m_LicenseHandler_serialKeyChanged(const QString &serialKey);
   void on_m_LicenseHandler_invalidLicense();
   void on_m_IpcClient_readLogLine(const QString &text);

@@ -34,9 +34,9 @@
     {
       "label": "clean-qt",
       "type": "shell",
-      "command": "rm -r build/src/gui",
+      "command": "rm -r build/src/gui build/src/lib/gui",
       "windows": {
-        "command": "remove-item -recurse build/src/gui"
+        "command": "remove-item -recurse build/src/gui build/src/lib/gui"
       }
     },
     {
