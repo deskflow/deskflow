@@ -26,7 +26,7 @@
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
 #include "license/License.h"
-#include <qapplication.h>
+#include <QApplication>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -154,41 +154,40 @@ MainWindow::~MainWindow() {
 
 void MainWindow::connectSlots() const {
 
-  connect(this, &MainWindow::created, this, &MainWindow::on_created);
+  connect(this, &MainWindow::created, this, &MainWindow::onCreated);
 
-  connect(this, &MainWindow::shown, this, &MainWindow::on_shown);
+  connect(this, &MainWindow::shown, this, &MainWindow::onShown);
 
   connect(
-      &m_AppConfig, &AppConfig::loaded, this,
-      &MainWindow::on_m_AppConfig_loaded);
+      &m_AppConfig, &AppConfig::loaded, this, &MainWindow::onAppConfigLoaded);
 
   connect(
       &m_AppConfig, &AppConfig::tlsChanged, this,
-      &MainWindow::on_m_AppConfig_tlsChanged);
+      &MainWindow::onAppConfigTlsChanged);
 
   connect(
       &m_AppConfig, &AppConfig::screenNameChanged, this,
-      &MainWindow::on_m_AppConfig_screenNameChanged);
+      &MainWindow::onAppConfigScreenNameChanged);
 
   connect(
       &m_LicenseHandler, &LicenseHandler::serialKeyChanged, this,
-      &MainWindow::on_m_LicenseHandler_serialKeyChanged);
+      &MainWindow::onLicenseHandlerSerialKeyChanged);
 
   connect(
       &m_LicenseHandler, &LicenseHandler::invalidLicense, this,
-      &MainWindow::on_m_LicenseHandler_invalidLicense);
+      &MainWindow::onLicenseHandlerInvalidLicense);
 
   connect(
       &m_IpcClient, &QIpcClient::readLogLine, this,
-      &MainWindow::on_m_IpcClient_readLogLine);
+      &MainWindow::onIpcClientReadLogLine);
 
   connect(
       &m_IpcClient, &QIpcClient::errorMessage, this,
-      &MainWindow::on_m_IpcClient_errorMessage);
+      &MainWindow::onIpcClientErrorMessage);
 
   connect(
       &m_IpcClient, &QIpcClient::infoMessage, this,
-      &MainWindow::on_m_IpcClient_infoMessage);
+      &MainWindow::onIpcClientInfoMessage);
 
   connect(m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
@@ -196,20 +195,22 @@ void MainWindow::connectSlots() const {
 
   connect(
       m_pActionStartCore, &QAction::triggered, this,
-      &MainWindow::on_m_pActionStartCore_triggered);
+      &MainWindow::onActionStartCoreTriggered);
 
   connect(
       m_pActionStopCore, &QAction::triggered, this,
-      &MainWindow::on_m_pActionStopCore_stopCore);
+      &MainWindow::onActionStopCoreTriggered);
 
   connect(m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 
   connect(
       &m_VersionChecker, &VersionChecker::updateFound, this,
-      &MainWindow::on_m_VersionChecker_updateFound);
+      &MainWindow::onVersionCheckerUpdateFound);
 }
 
-void MainWindow::on_created() {
+void MainWindow::onAppAboutToQuit() { m_AppConfig.saveSettings(); }
+
+void MainWindow::onCreated() {
   // it may seem a bit over-complicated to load the app config through a
   // signal/slot, but there is a good reason: intentionality; we want to
   // ensure that the ctor is fully executed before we start loading the
@@ -217,26 +218,26 @@ void MainWindow::on_created() {
   m_AppConfig.loadAllScopes();
 }
 
-void MainWindow::on_shown() {
+void MainWindow::onShown() {
   if (kLicensingEnabled) {
     const auto &license = m_LicenseHandler.license();
     if (!m_AppConfig.activationHasRun() || !license.isValid() ||
         license.isExpired()) {
-      raiseActivationDialog();
+      showActivationDialog();
     }
   }
 }
 
-void MainWindow::on_m_LicenseHandler_serialKeyChanged(
-    const QString &serialKey) {
+void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
   setWindowTitle(m_LicenseHandler.productName());
 }
 
-void MainWindow::on_m_LicenseHandler_invalidLicense() {
-  on_m_pActionStopCore_stopCore();
+void MainWindow::onLicenseHandlerInvalidLicense() {
+  onActionStopCoreTriggered();
   m_AppConfig.setActivationHasRun(false);
   showLicenseNotice(m_LicenseHandler.noticeMessage());
 }
+
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
       QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
@@ -277,20 +278,20 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
   showConfigureServer();
 }
 
-void MainWindow::on_m_pActivate_triggered() { raiseActivationDialog(); }
+void MainWindow::on_m_pActivate_triggered() { showActivationDialog(); }
 
 void MainWindow::on_m_pButtonApply_clicked() {
   m_ClientConnection.setCheckConnection(true);
   restartCore();
 }
 
-void MainWindow::on_m_AppConfig_loaded() {
+void MainWindow::onAppConfigLoaded() {
   QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
   m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
   updateScreenName();
 }
 
-void MainWindow::on_m_AppConfig_tlsChanged() {
+void MainWindow::onAppConfigTlsChanged() {
   updateLocalFingerprint();
   if (m_TlsUtility.isAvailableAndEnabled()) {
     m_TlsUtility.generateCertificate(true);
@@ -324,15 +325,15 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
   on_m_pButtonApply_clicked();
 }
 
-void MainWindow::on_m_IpcClient_readLogLine(const QString &text) {
+void MainWindow::onIpcClientReadLogLine(const QString &text) {
   processCoreLogLine(text);
 }
 
-void MainWindow::on_m_IpcClient_errorMessage(const QString &text) {
+void MainWindow::onIpcClientErrorMessage(const QString &text) {
   appendLogError(text);
 }
 
-void MainWindow::on_m_IpcClient_infoMessage(const QString &text) {
+void MainWindow::onIpcClientInfoMessage(const QString &text) {
   appendLogInfo(text);
 }
 
@@ -345,8 +346,7 @@ void MainWindow::open() {
   // TODO: this seems like a hack that needs investigating...
   m_TrayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
     connect(
-        o, s, this,
-        SLOT(on_m_TrayIcon_create(QSystemTrayIcon::ActivationReason)));
+        o, s, this, SLOT(onTrayIconCreate(QSystemTrayIcon::ActivationReason)));
     setIcon(CoreState::Disconnected);
   });
 
@@ -444,8 +444,7 @@ void MainWindow::setIcon(CoreState state) const {
   m_TrayIcon.set(icon);
 }
 
-void MainWindow::on_m_TrayIcon_create(
-    QSystemTrayIcon::ActivationReason reason) {
+void MainWindow::onTrayIconCreate(QSystemTrayIcon::ActivationReason reason) {
   if (reason == QSystemTrayIcon::DoubleClick) {
     if (isVisible()) {
       hide();
@@ -456,24 +455,24 @@ void MainWindow::on_m_TrayIcon_create(
   }
 }
 
-void MainWindow::on_m_pCoreProcess_readyReadStandardOutput() {
+void MainWindow::onCoreProcessReadyReadStandardOutput() {
   if (m_pCoreProcess) {
     QString text(m_pCoreProcess->readAllStandardOutput());
     for (QString line : text.split(QRegularExpression("\r|\n|\r\n"))) {
       if (!line.isEmpty()) {
-        on_m_IpcClient_readLogLine(line);
+        onIpcClientReadLogLine(line);
       }
     }
   }
 }
 
-void MainWindow::on_m_pCoreProcess_readyReadStandardError() {
+void MainWindow::onCoreProcessReadyReadStandardError() {
   if (m_pCoreProcess) {
-    on_m_IpcClient_readLogLine(m_pCoreProcess->readAllStandardError());
+    onIpcClientReadLogLine(m_pCoreProcess->readAllStandardError());
   }
 }
 
-void MainWindow::on_m_VersionChecker_updateFound(const QString &version) {
+void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
   m_pWidgetUpdate->show();
   m_pLabelUpdate->setText(tr("<p>Your version of Synergy is out of date. "
                              "Version <b>%1</b> is now available to "
@@ -493,7 +492,7 @@ void MainWindow::appendLogDebug(const QString &text) {
 }
 
 void MainWindow::appendLogError(const QString &text) {
-  on_m_IpcClient_readLogLine(getTimeStamp() + " ERROR: " + text);
+  onIpcClientReadLogLine(getTimeStamp() + " ERROR: " + text);
 }
 
 void MainWindow::processCoreLogLine(const QString &text) {
@@ -573,7 +572,7 @@ void MainWindow::checkLicense(const QString &line) {
     // TODO: figure out why we're re-reading the serial key here.
     // perhaps it was 'just in case' it changed during the trial?
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
-    raiseActivationDialog();
+    showActivationDialog();
   }
 }
 
@@ -592,7 +591,7 @@ void MainWindow::checkFingerprint(const QString &line) {
   static bool messageBoxAlreadyShown = false;
 
   if (!messageBoxAlreadyShown) {
-    on_m_pActionStopCore_stopCore();
+    onActionStopCoreTriggered();
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
@@ -655,7 +654,7 @@ QString MainWindow::getTimeStamp() {
 }
 
 void MainWindow::restartCore() {
-  on_m_pActionStopCore_stopCore();
+  onActionStopCoreTriggered();
   startCore();
 }
 
@@ -673,7 +672,7 @@ void MainWindow::startCore() {
 
   if (kLicensingEnabled) {
     const auto &license = m_LicenseHandler.license();
-    if (license.isExpired() && raiseActivationDialog() == QDialog::Rejected) {
+    if (license.isExpired() && showActivationDialog() == QDialog::Rejected) {
       return;
     }
   }
@@ -753,7 +752,7 @@ void MainWindow::startCore() {
 
   // put a space between last log output and new instance.
   if (!m_pLogOutput->toPlainText().isEmpty())
-    on_m_IpcClient_readLogLine("");
+    onIpcClientReadLogLine("");
 
   appendLogInfo(
       "starting " +
@@ -761,20 +760,20 @@ void MainWindow::startCore() {
 
   if ((coreMode() == CoreMode::Client && !clientArgs(args, app)) ||
       (coreMode() == CoreMode::Server && !serverArgs(args, app))) {
-    on_m_pActionStopCore_stopCore();
+    onActionStopCoreTriggered();
     return;
   }
 
   if (mode == ProcessMode::kDesktop) {
     connect(
         m_pCoreProcess.get(), SIGNAL(finished(int, QProcess::ExitStatus)), this,
-        SLOT(on_m_pCoreProcess_finished(int, QProcess::ExitStatus)));
+        SLOT(onCoreProcessFinished(int, QProcess::ExitStatus)));
     connect(
         m_pCoreProcess.get(), SIGNAL(readyReadStandardOutput()), this,
-        SLOT(on_m_pCoreProcess_readyReadStandardOutput()));
+        SLOT(onCoreProcessReadyReadStandardOutput()));
     connect(
         m_pCoreProcess.get(), SIGNAL(readyReadStandardError()), this,
-        SLOT(on_m_pCoreProcess_readyReadStandardError()));
+        SLOT(onCoreProcessReadyReadStandardError()));
   }
 
   // show command if debug log level...
@@ -806,7 +805,7 @@ void MainWindow::startCore() {
   }
 }
 
-void MainWindow::on_m_pActionStartCore_triggered() {
+void MainWindow::onActionStartCoreTriggered() {
   m_ClientConnection.setCheckConnection(true);
   startCore();
 }
@@ -969,8 +968,10 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
   return true;
 }
 
-void MainWindow::on_m_pActionStopCore_stopCore() {
-  appendLogDebug("stopping process");
+void MainWindow::onActionStopCoreTriggered() { stopCore(); }
+
+void MainWindow::stopCore() {
+  appendLogDebug("stopping core process");
 
   m_ExpectedRunningState = RuningState::Stopped;
 
@@ -1006,8 +1007,7 @@ void MainWindow::stopDesktop() {
   m_pCoreProcess->reset();
 }
 
-void MainWindow::on_m_pCoreProcess_finished(
-    int exitCode, QProcess::ExitStatus) {
+void MainWindow::onCoreProcessFinished(int exitCode, QProcess::ExitStatus) {
   if (exitCode == 0) {
     appendLogInfo("process exited normally");
   } else {
@@ -1238,7 +1238,7 @@ void MainWindow::showConfigureServer(const QString &message) {
   }
 }
 
-int MainWindow::raiseActivationDialog() {
+int MainWindow::showActivationDialog() {
   if (m_ActivationDialogRunning) {
     return QDialog::Rejected;
   }
@@ -1285,7 +1285,7 @@ void MainWindow::windowStateChanged() {
     hide();
 }
 
-void MainWindow::on_m_AppConfig_screenNameChanged() { updateScreenName(); }
+void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
 
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(

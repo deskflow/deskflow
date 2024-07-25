@@ -96,7 +96,7 @@ public:
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
   LicenseHandler &licenseHandler();
-  int raiseActivationDialog();
+  int showActivationDialog();
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
   void appendLogError(const QString &text);
@@ -105,30 +105,27 @@ signals:
   void created();
   void shown();
 
-  // TODO: do any of the slots need to be public or   protected?
 public slots:
-  void onAppAboutToQuit() { m_AppConfig.saveSettings(); }
-
-protected slots:
+  void onAppAboutToQuit();
 
 private slots:
-  void on_created();
-  void on_shown();
-  void on_m_AppConfig_loaded();
-  void on_m_AppConfig_tlsChanged();
-  void on_m_AppConfig_screenNameChanged();
-  void on_m_LicenseHandler_serialKeyChanged(const QString &serialKey);
-  void on_m_LicenseHandler_invalidLicense();
-  void on_m_IpcClient_readLogLine(const QString &text);
-  void on_m_IpcClient_errorMessage(const QString &text);
-  void on_m_IpcClient_infoMessage(const QString &text);
-  void on_m_pCoreProcess_finished(int exitCode, QProcess::ExitStatus);
-  void on_m_VersionChecker_updateFound(const QString &version);
-  void on_m_TrayIcon_create(QSystemTrayIcon::ActivationReason reason);
-  void on_m_pActionStopCore_stopCore();
-  void on_m_pCoreProcess_readyReadStandardOutput();
-  void on_m_pCoreProcess_readyReadStandardError();
-  void on_m_pActionStartCore_triggered();
+  void onCreated();
+  void onShown();
+  void onAppConfigLoaded();
+  void onAppConfigTlsChanged();
+  void onAppConfigScreenNameChanged();
+  void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
+  void onLicenseHandlerInvalidLicense();
+  void onIpcClientReadLogLine(const QString &text);
+  void onIpcClientErrorMessage(const QString &text);
+  void onIpcClientInfoMessage(const QString &text);
+  void onCoreProcessFinished(int exitCode, QProcess::ExitStatus);
+  void onVersionCheckerUpdateFound(const QString &version);
+  void onTrayIconCreate(QSystemTrayIcon::ActivationReason reason);
+  void onActionStartCoreTriggered();
+  void onActionStopCoreTriggered();
+  void onCoreProcessReadyReadStandardOutput();
+  void onCoreProcessReadyReadStandardError();
   void on_m_pButtonApply_clicked();
   void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
@@ -186,6 +183,7 @@ private:
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void showLicenseNotice(const QString &message);
+  void stopCore();
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
