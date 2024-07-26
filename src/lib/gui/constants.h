@@ -19,20 +19,24 @@
 
 #include <QString>
 
-const char *const kPrimaryLink = "color: #ff7c00";
-const char *const kSecondaryLink = "color: #4285F4";
-const char *const kWhiteLink = "color: #ffffff";
-const char *const kBuyLink = R"(<a href="%1" style="%2">Buy now</a>)";
-const char *const kRenewLink = R"(<a href="%1" style="%2">Renew now</a>)";
+const auto kColorPrimary = "#ff7c00";
+const auto kColorWhite = "#ffffff";
+const auto kColorBlue = "#4285f4";
 
-const QString kUrlSourceQuery = "source=gui";
-const QString kWebsiteUrl = "https://symless.com";
-const QString kProductUrl = QString("%1/synergy").arg(kWebsiteUrl);
-const QString kPurchaseUrl =
+const auto kPrimaryLink = QString("color: %1").arg(kColorPrimary);
+const auto kSecondaryLink = QString("color: %1").arg(kColorBlue);
+const auto kWhiteLink = QString("color: %1").arg(kColorWhite);
+const auto kBuyLink = R"(<a href="%1" style="%2">Buy now</a>)";
+const auto kRenewLink = R"(<a href="%1" style="%2">Renew now</a>)";
+
+const auto kUrlSourceQuery = "source=gui";
+const auto kWebsiteUrl = "https://symless.com";
+const auto kProductUrl = QString("%1/synergy").arg(kWebsiteUrl);
+const auto kPurchaseUrl =
     QString("%1/purchase?%2").arg(kProductUrl).arg(kUrlSourceQuery);
-const QString kContactUrl =
+const auto kContactUrl =
     QString("%1/contact?%2").arg(kProductUrl).arg(kUrlSourceQuery);
-const QString kHelpUrl =
+const auto kHelpUrl =
     QString("%1/help?%2").arg(kProductUrl).arg(kUrlSourceQuery);
-const QString kDownloadUrl =
+const auto kDownloadUrl =
     QString("%1/download?%2").arg(kProductUrl).arg(kUrlSourceQuery);

@@ -29,7 +29,7 @@
    <item>
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your serial key is on your &lt;a href=&quot;https://symless.com/synergy/account?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page. Don't have a license? &lt;a href=&quot;https://symless.com/synergy/purchase?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Purchase Synergy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;p&gt;Your serial key is on your &lt;a href=&quot;https://symless.com/synergy/account?source=gui&quot; style=&quot;color:#4285f4;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page. Don't have a license? &lt;a href=&quot;https://symless.com/synergy/purchase?source=gui&quot; style=&quot;color:#4285f4;&quot;&gt;Purchase Synergy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
