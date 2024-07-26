@@ -29,6 +29,7 @@
 #include "gui/constants.h"
 #include "gui/license_notices.h"
 #include "license/License.h"
+#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -306,12 +307,12 @@ void MainWindow::onCoreProcessReadyReadStandardError() {
 }
 
 void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
+  const auto link = QString(kLinkDownload).arg(kUrlDownload, kLinkStyleWhite);
+  const auto text =
+      QString("A new version is available (%1). %2").arg(version, link);
+
   m_pLabelUpdate->show();
-  m_pLabelUpdate->setText(tr("A new version is available (%1). "
-                             R"(<a href="%2" style="%3">Download now</a>)")
-                              .arg(version)
-                              .arg(kDownloadUrl)
-                              .arg(kSecondaryLink));
+  m_pLabelUpdate->setText(text);
 }
 
 void MainWindow::onActionStartCoreTriggered() {
@@ -373,7 +374,7 @@ void MainWindow::on_m_pActionAbout_triggered() {
 }
 
 void MainWindow::on_m_pActionHelp_triggered() {
-  QDesktopServices::openUrl(QUrl(kHelpUrl));
+  QDesktopServices::openUrl(QUrl(kUrlHelp));
 }
 
 void MainWindow::on_m_pActionSettings_triggered() {
@@ -1315,7 +1316,7 @@ void MainWindow::updateScreenName() {
       QString("This computer's name: %1 "
               R"((<a href="#" style="%2;">change</a>))")
           .arg(appConfig().screenName())
-          .arg(kSecondaryLink));
+          .arg(kLinkStyleSecondary));
   serverConfig().updateServerName();
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>650</height>
+    <width>781</width>
+    <height>642</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,83 +34,63 @@
      <number>20</number>
     </property>
     <item>
-     <widget class="QWidget" name="m_pWidgetUpdate" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="leftMargin">
-        <number>2</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>10</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="m_pIconUpdate">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../res/Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="m_pLabelUpdate">
-         <property name="text">
-          <string notr="true">m_pLabelUpdate</string>
-         </property>
-         <property name="openExternalLinks">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="m_pSpacerUpdate">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>469</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="m_pLabelComputerName">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>65535</width>
-        <height>65535</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <kerning>true</kerning>
-       </font>
-      </property>
-      <property name="text">
-       <string notr="true">This computer's name:</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="m_layout1">
+      <item>
+       <widget class="QLabel" name="m_pLabelComputerName">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>65535</width>
+          <height>65535</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <kerning>true</kerning>
+         </font>
+        </property>
+        <property name="text">
+         <string notr="true">This computer's name:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="m_pSpacerUpdate">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>469</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="m_pLabelUpdate">
+        <property name="styleSheet">
+         <string notr="true">padding: 3px 5px;
+border-radius: 3px;
+background-color: #3B67D3;
+color: #ffffff;
+top: 3px;</string>
+        </property>
+        <property name="text">
+         <string notr="true">m_pLabelUpdate</string>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <spacer name="verticalSpacer_5">
@@ -138,7 +118,7 @@
     <item>
      <widget class="QWidget" name="m_pMainWidgets" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -146,7 +126,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>220</height>
+        <height>200</height>
        </size>
       </property>
       <property name="maximumSize">

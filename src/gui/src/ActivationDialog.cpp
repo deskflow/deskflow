@@ -128,8 +128,8 @@ void ActivationDialog::showResultDialog(
         this, title,
         QString("Invalid serial key. "
                 R"(Please <a href="%1" style="%2">contact us</a> for help.)")
-            .arg(kContactUrl)
-            .arg(kSecondaryLink));
+            .arg(kUrlContact)
+            .arg(kLinkStyleSecondary));
     break;
 
   case kExpired:
@@ -137,8 +137,8 @@ void ActivationDialog::showResultDialog(
         this, title,
         QString("Sorry, that serial key has expired. "
                 R"(Please <a href="%1" style="%1">renew</a> your license.)")
-            .arg(kPurchaseUrl)
-            .arg(kSecondaryLink));
+            .arg(kUrlPurchase)
+            .arg(kLinkStyleSecondary));
     break;
 
   default:
@@ -184,8 +184,8 @@ void ActivationDialog::showErrorDialog(const QString &message) {
               R"(<p>Please <a href="%1" style="%2">contact us</a> )"
               "and provide the following information:</p>"
               "%3")
-          .arg(kContactUrl)
-          .arg(kSecondaryLink)
+          .arg(kUrlContact)
+          .arg(kLinkStyleSecondary)
           .arg(message);
   QMessageBox::critical(this, "Activation failed", fullMessage);
 }
