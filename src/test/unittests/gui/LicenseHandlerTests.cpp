@@ -29,8 +29,8 @@ const auto kFuture = system_clock::now() + hours(1);
 TEST(LicenseHandlerTests, changeSerialKey_validExpiredLicense_returnsTrue) {
   LicenseHandler licenseHandler;
   auto hexString = //
-      "7B76323B747269616C3B62617369633B426F623B313B656D6"
-      "1696C3B636F6D70616E79206E616D653B313B38363430307D";
+      "7B76313B70726F3B6E69636B20626F6C746F6E3B313B6"
+      "E69636B4073796D6C6573732E636F6D3B203B303B307D";
 
   auto result = licenseHandler.changeSerialKey(hexString);
 

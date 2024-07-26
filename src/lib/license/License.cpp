@@ -54,7 +54,7 @@ Edition License::productEdition() const {
 }
 
 bool License::isExpiring() const {
-  if (!isSubscription()) {
+  if (!isTimeLimited()) {
     return false;
   }
 
@@ -66,7 +66,7 @@ bool License::isExpiring() const {
 }
 
 bool License::isExpired() const {
-  if (!isSubscription()) {
+  if (!isTimeLimited()) {
     return false;
   }
 
