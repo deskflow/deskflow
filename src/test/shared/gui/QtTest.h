@@ -17,8 +17,8 @@
 
 #pragma once
 
+#include <QApplication>
 #include <gtest/gtest.h>
-#include <qapplication.h>
 
 class QtTest : public ::testing::Test {
 public:

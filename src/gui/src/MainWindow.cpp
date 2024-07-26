@@ -28,7 +28,6 @@
 #include "gui/constants.h"
 #include "gui/license_notices.h"
 #include "license/License.h"
-#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"

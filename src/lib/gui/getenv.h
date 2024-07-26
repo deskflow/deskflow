@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QString>
-#include <qglobal.h>
 
 namespace synergy::utils {
 

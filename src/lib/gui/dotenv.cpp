@@ -23,8 +23,6 @@
 #include <QProcessEnvironment>
 #include <QString>
 #include <QTextStream>
-#include <qglobal.h>
-#include <qprocess.h>
 
 namespace synergy::gui {
 

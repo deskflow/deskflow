@@ -25,7 +25,6 @@
 #include <QRegularExpression>
 #include <gui/getenv.h>
 #include <memory>
-#include <qglobal.h>
 
 using namespace synergy::utils;
 
