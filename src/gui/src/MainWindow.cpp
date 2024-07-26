@@ -1323,26 +1323,13 @@ void MainWindow::updateScreenName() {
 void MainWindow::enableServer(bool enable) {
   m_AppConfig.setServerGroupChecked(enable);
   m_pRadioGroupServer->setChecked(enable);
+  m_pWidgetServer->setEnabled(enable);
 
-  if (enable) {
-    if (m_AppConfig.serverClientMode()) {
-      m_pLabelClientIp->show();
-      m_pLineEditClienIp->show();
-      m_pButtonConnectToClient->show();
-    } else {
-      m_pLabelClientIp->hide();
-      m_pLineEditClienIp->hide();
-      m_pButtonConnectToClient->hide();
-    }
-
-    m_pButtonConfigureServer->show();
-    m_pLabelServerState->show();
-    updateLocalFingerprint();
-    m_pButtonToggleStart->setEnabled(enable);
+  if (m_AppConfig.serverClientMode()) {
+    m_pLabelClientIp->show();
+    m_pLineEditClienIp->show();
+    m_pButtonConnectToClient->show();
   } else {
-    m_pLabelFingerprint->hide();
-    m_pButtonConfigureServer->hide();
-    m_pLabelServerState->hide();
     m_pLabelClientIp->hide();
     m_pLineEditClienIp->hide();
     m_pButtonConnectToClient->hide();
