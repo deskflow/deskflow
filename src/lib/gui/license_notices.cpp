@@ -24,8 +24,8 @@ using License = synergy::license::License;
 
 namespace synergy::gui {
 
-QString trialLicenseNotice(const synergy::license::License &license);
-QString subscriptionLicenseNotice(const synergy::license::License &license);
+QString trialLicenseNotice(const License &license);
+QString subscriptionLicenseNotice(const License &license);
 
 QString licenseNotice(const License &license) {
   if (license.isTrial()) {
@@ -44,10 +44,14 @@ QString trialLicenseNotice(const License &license) {
     return QString("<p>Your trial has expired. %1</p>").arg(buyLink);
   } else {
     auto daysLeft = license.daysLeft().count();
-    return QString("<p>Your trial expires in %1 %2. %3</p>")
-        .arg(daysLeft)
-        .arg((daysLeft == 1) ? "day" : "days")
-        .arg(buyLink);
+    if (daysLeft <= 0) {
+      return QString("<p>Your trial expires today. %1</p>").arg(buyLink);
+    } else {
+      return QString("<p>Your trial expires in %1 %2. %3</p>")
+          .arg(daysLeft)
+          .arg((daysLeft == 1) ? "day" : "days")
+          .arg(buyLink);
+    }
   }
 }
 
@@ -58,10 +62,14 @@ QString subscriptionLicenseNotice(const License &license) {
     return QString("<p>Your license has expired. %1</p>").arg(renewLink);
   } else {
     auto daysLeft = license.daysLeft().count();
-    return QString("<p>Your license expires in %1 %2. %3</p>")
-        .arg(daysLeft)
-        .arg((daysLeft == 1) ? "day" : "days")
-        .arg(renewLink);
+    if (daysLeft <= 0) {
+      return QString("<p>Your license expires today. %1</p>").arg(renewLink);
+    } else {
+      return QString("<p>Your license expires in %1 %2. %3</p>")
+          .arg(daysLeft)
+          .arg((daysLeft == 1) ? "day" : "days")
+          .arg(renewLink);
+    }
   }
 }
 

@@ -64,13 +64,13 @@ public:
 
   class InvalidSerialKey : public LicenseError {
   public:
-    explicit InvalidSerialKey() : LicenseError("Invalid serial key") {}
+    explicit InvalidSerialKey() : LicenseError("invalid serial key") {}
   };
 
   class NoTimeLimitError : public LicenseError {
   public:
     explicit NoTimeLimitError()
-        : LicenseError("Serial key has no time limit") {}
+        : LicenseError("serial key has no time limit") {}
   };
 
 protected:
