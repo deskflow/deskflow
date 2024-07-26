@@ -36,9 +36,8 @@ LicenseHandler::ChangeSerialKeyResult
 LicenseHandler::changeSerialKey(const QString &hexString) {
   using enum LicenseHandler::ChangeSerialKeyResult;
 
-  // if (hexString.isEmpty()) {
-  if (true) {
-    qFatal("serial key is empty, ignoring");
+  if (hexString.isEmpty()) {
+    qFatal("serial key is empty");
     return kFatal;
   }
 
