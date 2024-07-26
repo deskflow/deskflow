@@ -23,10 +23,7 @@
 #include <QNetworkRequest>
 #include <QProcess>
 #include <QRegularExpression>
-#include <gui/getenv.h>
 #include <memory>
-
-using namespace synergy::utils;
 
 const char *const kVersion = SYNERGY_VERSION;
 
@@ -39,7 +36,8 @@ VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> network)
 }
 
 void VersionChecker::checkLatest() const {
-  const QString url = getenv("SYNERGY_VERSION_URL", SYNERGY_VERSION_URL);
+  const QString url =
+      qEnvironmentVariable("SYNERGY_VERSION_URL", SYNERGY_VERSION_URL);
   auto request = QNetworkRequest(url);
   auto userAgent = QString("Synergy %1 on %2")
                        .arg(kVersion)
