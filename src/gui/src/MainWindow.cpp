@@ -313,7 +313,7 @@ void MainWindow::onCoreProcessReadyReadStandardError() {
 void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
   const auto link = QString(kLinkDownload).arg(kUrlDownload, kLinkStyleWhite);
   const auto text =
-      QString("A new version is available (%1). %2").arg(version, link);
+      QString("A new version is available (v%1). %2").arg(version, link);
 
   m_pLabelUpdate->show();
   m_pLabelUpdate->setText(text);
@@ -505,11 +505,18 @@ void MainWindow::createMenuBar() {
 }
 
 void MainWindow::applyConfig() {
-  enableServer(appConfig().serverGroupChecked());
-  enableClient(appConfig().clientGroupChecked());
+  const auto serverEnabled = appConfig().serverGroupChecked();
+  const auto clientEnabled = appConfig().clientGroupChecked();
+
+  enableServer(serverEnabled);
+  enableClient(clientEnabled);
 
   m_pLineEditHostname->setText(appConfig().serverHostname());
   m_pLineEditClientIp->setText(serverConfig().getClientAddress());
+
+  if (serverEnabled || clientEnabled) {
+    startCore();
+  }
 }
 
 void MainWindow::saveSettings() {
