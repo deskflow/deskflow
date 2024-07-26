@@ -137,8 +137,8 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="topMargin">
-           <number>11</number>
+          <property name="spacing">
+           <number>15</number>
           </property>
           <item alignment="Qt::AlignTop">
            <widget class="QRadioButton" name="m_pRadioGroupServer">
@@ -157,7 +157,7 @@ background-color: rgba(192,192,192, 0.1);
            <widget class="QWidget" name="m_pWidgetServer" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutServer">
              <property name="spacing">
-              <number>10</number>
+              <number>15</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -175,7 +175,7 @@ background-color: rgba(192,192,192, 0.1);
               <widget class="QWidget" name="m_pWidgetServerInverse" native="true">
                <layout class="QVBoxLayout" name="m_pLayoutServerInverse">
                 <property name="spacing">
-                 <number>10</number>
+                 <number>15</number>
                 </property>
                 <property name="leftMargin">
                  <number>0</number>
@@ -301,6 +301,9 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
+          <property name="spacing">
+           <number>15</number>
+          </property>
           <property name="topMargin">
            <number>11</number>
           </property>
@@ -321,7 +324,7 @@ background-color: rgba(192,192,192, 0.1);
            <widget class="QWidget" name="m_pWidgetClient" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutClient">
              <property name="spacing">
-              <number>10</number>
+              <number>15</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
