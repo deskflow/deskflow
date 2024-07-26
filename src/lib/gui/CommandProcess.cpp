@@ -20,8 +20,8 @@
 #include <QProcess>
 
 CommandProcess::CommandProcess(
-    QString cmd, QStringList arguments, QString input)
-    : m_Command(cmd),
+    QString command, QStringList arguments, QString input)
+    : m_Command(command),
       m_Arguments(arguments),
       m_Input(input) {}
 
