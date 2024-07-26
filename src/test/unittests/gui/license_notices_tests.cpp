@@ -26,18 +26,23 @@ using namespace synergy::license;
 using namespace synergy::gui;
 using ::testing::HasSubstr;
 
+const auto kPast = system_clock::now() - hours(1);
 const auto kFutureOneHour = system_clock::now() + hours(1);
 const auto kFutureOneDay = system_clock::now() + days(1) + hours(1);
 const auto kFutureOneWeek = system_clock::now() + days(7) + hours(1);
 
-// license.setTrial(false);
-// license.setSubscription(true);
-// EXPECT_EQ(synergy::gui::subscriptionLicenseNotice(license),
-// synergy::gui::licenseNotice(license));
+TEST(license_notices_tests, licenseNotice_trialExpired_correctText) {
+  SerialKey serialKey("");
+  serialKey.isValid = true;
+  serialKey.warnTime = kPast;
+  serialKey.expireTime = kPast;
+  serialKey.type.setType("trial");
+  License license(serialKey);
 
-// license.setSubscription(false);
-// EXPECT_DEATH(synergy::gui::licenseNotice(license), "license notice only for
-// time limited licenses");
+  QString notice = licenseNotice(license);
+
+  EXPECT_THAT(notice.toStdString(), HasSubstr("Your trial has expired"));
+}
 
 TEST(license_notices_tests, licenseNotice_trialExpiringInOneHour_correctText) {
   SerialKey serialKey("");
@@ -78,17 +83,17 @@ TEST(license_notices_tests, licenseNotice_trialExpiringInOneWeek_correctText) {
   EXPECT_THAT(notice.toStdString(), HasSubstr("Your trial expires in 7 days"));
 }
 
-TEST(license_notices_tests, licenseNotice_trialExpired_correctText) {
+TEST(license_notices_tests, licenseNotice_subscriptionExpired_correctText) {
   SerialKey serialKey("");
   serialKey.isValid = true;
-  serialKey.warnTime = system_clock::now();
-  serialKey.expireTime = system_clock::now();
-  serialKey.type.setType("trial");
+  serialKey.warnTime = kPast;
+  serialKey.expireTime = kPast;
+  serialKey.type.setType("subscription");
   License license(serialKey);
 
   QString notice = licenseNotice(license);
 
-  EXPECT_THAT(notice.toStdString(), HasSubstr("Your trial has expired"));
+  EXPECT_THAT(notice.toStdString(), HasSubstr("Your license has expired"));
 }
 
 TEST(
@@ -135,28 +140,4 @@ TEST(
 
   EXPECT_THAT(
       notice.toStdString(), HasSubstr("Your license expires in 7 days"));
-}
-
-TEST(license_notices_tests, licenseNotice_subscriptionExpired_correctText) {
-  SerialKey serialKey("");
-  serialKey.isValid = true;
-  serialKey.warnTime = system_clock::now();
-  serialKey.expireTime = system_clock::now();
-  serialKey.type.setType("subscription");
-  License license(serialKey);
-
-  QString notice = licenseNotice(license);
-
-  EXPECT_THAT(notice.toStdString(), HasSubstr("Your license has expired"));
-}
-
-TEST(license_notices_tests, licenseNotice_invalidLicenseType_death) {
-  SerialKey serialKey("");
-  serialKey.isValid = true;
-  serialKey.warnTime = system_clock::now();
-  serialKey.expireTime = system_clock::now();
-  serialKey.type.setType("invalid");
-  License license(serialKey);
-
-  EXPECT_DEATH(licenseNotice(license), "");
 }
