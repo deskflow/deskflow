@@ -74,7 +74,7 @@
        <item>
         <spacer name="m_pSpacerUpdate">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -115,10 +115,10 @@
     <item>
      <spacer name="verticalSpacer_5">
       <property name="orientation">
-       <enum>Qt::Vertical</enum>
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
+       <enum>QSizePolicy::Policy::Fixed</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -193,10 +193,10 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="topMargin">
@@ -236,10 +236,10 @@ background-color: rgba(192,192,192, 0.1);
           <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
+             <enum>QSizePolicy::Policy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -307,7 +307,7 @@ background-color: rgba(192,192,192, 0.1);
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS enabled (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;fingerprint&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="textFormat">
-             <enum>Qt::RichText</enum>
+             <enum>Qt::TextFormat::RichText</enum>
             </property>
             <property name="indent">
              <number>20</number>
@@ -317,7 +317,7 @@ background-color: rgba(192,192,192, 0.1);
           <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -332,7 +332,7 @@ background-color: rgba(192,192,192, 0.1);
             <item>
              <spacer>
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -388,10 +388,10 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <property name="topMargin">
@@ -431,10 +431,10 @@ background-color: rgba(192,192,192, 0.1);
           <item>
            <spacer name="verticalSpacer_4">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
+             <enum>QSizePolicy::Policy::Minimum</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -502,10 +502,10 @@ background-color: rgba(192,192,192, 0.1);
           <item>
            <spacer name="verticalSpacer_3">
             <property name="orientation">
-             <enum>Qt::Vertical</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Expanding</enum>
+             <enum>QSizePolicy::Policy::Expanding</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -523,7 +523,7 @@ background-color: rgba(192,192,192, 0.1);
             <item>
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -561,10 +561,10 @@ background-color: rgba(192,192,192, 0.1);
     <item>
      <spacer name="verticalSpacer_7">
       <property name="orientation">
-       <enum>Qt::Vertical</enum>
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
+       <enum>QSizePolicy::Policy::Fixed</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -590,10 +590,10 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="leftMargin">
@@ -629,7 +629,7 @@ background-color: rgba(192,192,192, 0.1);
           <bool>false</bool>
          </property>
          <property name="lineWrapMode">
-          <enum>QPlainTextEdit::NoWrap</enum>
+          <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -648,7 +648,7 @@ background-color: rgba(192,192,192, 0.1);
        <number>6</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
+       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
       <property name="topMargin">
        <number>16</number>
@@ -676,7 +676,7 @@ background-color: rgba(192,192,192, 0.1);
       <item>
        <spacer name="spacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -687,31 +687,22 @@ background-color: rgba(192,192,192, 0.1);
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="m_trialLabel">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>-1</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
+       <widget class="QLabel" name="m_labelNotice">
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true">font-size: 13px;
-font-weight: 700;
-padding: 3px 5px;
+         <string notr="true">padding: 3px 5px;
 border-radius: 3px;
 background-color: #3B67D3;
 color: #ffffff;
 top: 3px;</string>
         </property>
         <property name="text">
-         <string notr="true">Placeholder</string>
+         <string notr="true">m_labelNotice</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="margin">
          <number>0</number>
@@ -724,10 +715,10 @@ top: 3px;</string>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Policy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>

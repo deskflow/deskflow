@@ -18,13 +18,16 @@
 #pragma once
 
 #include <QString>
+#include <qglobal.h>
 
-namespace synergy::gui {
+namespace synergy::utils {
 
 /**
- * @param filePath Path to the .env file.
- * @param envVars Somewhere to save strings for the lifetime of the app.
+ * @brief Alias for `qEnvironmentVariable` with the same signature.
  */
-void dotenv(const QString &filePath);
+inline QString
+getenv(const char *name, const QString &defaultValue = QString()) {
+  return qEnvironmentVariable(name, defaultValue);
+}
 
-} // namespace synergy::gui
+} // namespace synergy::utils

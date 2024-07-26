@@ -181,7 +181,7 @@ private:
   QString configFilename();
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
-  void showLicenseNotice(const QString &message);
+  void showLicenseNotice();
   void stopCore();
 
 #ifdef Q_OS_MAC

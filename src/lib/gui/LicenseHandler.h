@@ -31,14 +31,6 @@ class LicenseHandler : public QObject {
   using SerialKey = synergy::license::SerialKey;
 
 public:
-  class NoticeError : public std::runtime_error {
-  public:
-    NoticeError() : std::runtime_error("could not create notice") {}
-  };
-  class EmptySerialKeyError : public std::runtime_error {
-  public:
-    EmptySerialKeyError() : std::runtime_error("serial key is empty") {}
-  };
   enum class ChangeSerialKeyResult {
     kSuccess,
     kFatal,
@@ -50,7 +42,6 @@ public:
   Edition productEdition() const;
   const License &license() const;
   void validate() const;
-  QString validLicenseNotice() const;
   QString productName() const;
   ChangeSerialKeyResult changeSerialKey(const QString &hexString);
 
@@ -59,8 +50,5 @@ signals:
   void invalidLicense() const;
 
 private:
-  QString validTrialNotice() const;
-  QString validSubscriptionNotice() const;
-
   License m_license = License::invalid();
 };

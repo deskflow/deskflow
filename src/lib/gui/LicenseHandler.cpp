@@ -17,20 +17,25 @@
 
 #include "LicenseHandler.h"
 
-#include "constants.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
 
-#include <QDateTime>
-#include <QLocale>
+#include <QDebug>
 #include <QProcessEnvironment>
-#include <QThread>
 #include <QTimer>
-#include <climits>
-#include <ctime>
 
 using namespace std::chrono;
 using namespace synergy::license;
+
+const License &LicenseHandler::license() const { return m_license; }
+
+Edition LicenseHandler::productEdition() const {
+  return m_license.productEdition();
+}
+
+QString LicenseHandler::productName() const {
+  return QString::fromStdString(m_license.productName());
+}
 
 LicenseHandler::ChangeSerialKeyResult
 LicenseHandler::changeSerialKey(const QString &hexString) {
@@ -78,63 +83,12 @@ LicenseHandler::changeSerialKey(const QString &hexString) {
 
 void LicenseHandler::validate() const {
   if (!m_license.isValid()) {
-    qDebug("license validation failed, license is invalid");
+    qDebug("license validation failed, license invalid");
     emit invalidLicense();
   }
 
   if (m_license.isExpired()) {
-    qDebug("license validation failed, license is expired");
+    qDebug("license validation failed, license expired");
     emit invalidLicense();
-  }
-}
-
-Edition LicenseHandler::productEdition() const {
-  return m_license.productEdition();
-}
-
-const License &LicenseHandler::license() const { return m_license; }
-
-QString LicenseHandler::productName() const {
-  return QString::fromStdString(m_license.productName());
-}
-
-QString LicenseHandler::validLicenseNotice() const {
-  if (m_license.isExpired()) {
-    throw NoticeError();
-  }
-
-  if (m_license.isTrial()) {
-    return validTrialNotice();
-  } else if (m_license.isSubscription()) {
-    return validSubscriptionNotice();
-  } else {
-    throw NoticeError();
-  }
-}
-
-QString LicenseHandler::validTrialNotice() const {
-  const QString buyLink = QString(kBuyLink).arg(kPurchaseUrl).arg(kLinkStyle);
-  if (m_license.isExpired()) {
-    return QString("<p>Your trial has expired. %1</p>").arg(buyLink);
-  } else {
-    auto daysLeft = m_license.daysLeft().count();
-    return QString("<p>Your trial expires in %1 %2. %3</p>")
-        .arg(daysLeft)
-        .arg((daysLeft == 1) ? "day" : "days")
-        .arg(buyLink);
-  }
-}
-
-QString LicenseHandler::validSubscriptionNotice() const {
-  const QString renewLink =
-      QString(kRenewLink).arg(kPurchaseUrl).arg(kLinkStyle);
-  if (m_license.isExpired()) {
-    return QString("<p>Your license has expired. %1</p>").arg(renewLink);
-  } else {
-    auto daysLeft = m_license.daysLeft().count();
-    return QString("<p>Your license expires in %1 %2. %3</p>")
-        .arg(daysLeft)
-        .arg((daysLeft == 1) ? "day" : "days")
-        .arg(renewLink);
   }
 }

@@ -19,21 +19,19 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QProcess>
+#include <QProcessEnvironment>
 #include <QString>
 #include <QTextStream>
+#include <qglobal.h>
+#include <qprocess.h>
 
 namespace synergy::gui {
 
-QString stripQuotes(const QString &value) {
-  QString result = value;
-  if (result.startsWith('"') && result.endsWith('"')) {
-    result = result.mid(1, result.length() - 2);
-  }
-  return result;
-}
+QPair<QString, QString> getPair(const QString &line);
 
 /**
- * @brief A _very_ basic .env file parser.
+ * @brief A _very_ basic Qt .env file parser.
  *
  * This function re-invents the wheel to save adding a library dependency.
  * It does not support many things that a proper .env parser would, such as
@@ -59,17 +57,37 @@ void dotenv(const QString &filePath) {
     if (line.startsWith('#'))
       continue;
 
-    QStringList parts = line.split('=');
+    auto [key, value] = getPair(line);
+    if (key.isEmpty() || value.isEmpty())
+      continue;
 
-    if (parts.size() == 2) {
-      const auto &name = parts[0].trimmed();
-      auto value = stripQuotes(parts[1].trimmed());
-      auto name_c = name.toUtf8().constData();
-      auto value_c = value.toUtf8().constData();
-      qDebug("%s=%s", name_c, value_c);
-      qputenv(name_c, value_c);
-    }
+    auto saved = QByteArray(value.toUtf8());
+    const auto &key_c = key.toUtf8().constData();
+    const auto &saved_c = saved.constData();
+
+    qDebug("%s=%s", key_c, saved_c);
+    qputenv(key.toUtf8(), value.toUtf8());
   }
+}
+
+QString stripQuotes(const QString &value) {
+  QString result = value;
+  if (result.startsWith('"') && result.endsWith('"')) {
+    result = result.mid(1, result.length() - 2);
+  }
+  return result;
+}
+
+QPair<QString, QString> getPair(const QString &line) {
+  auto pos = line.indexOf('=');
+  if (pos == -1) {
+    return QPair<QString, QString>("", "");
+  }
+
+  QString key = line.left(pos);
+  QString value = line.mid(pos + 1);
+
+  return QPair<QString, QString>(key.trimmed(), stripQuotes(value.trimmed()));
 }
 
 } // namespace synergy::gui

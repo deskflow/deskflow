@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2024 Symless Ltd.
+ * Copyright (C) 2024 Synergy Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,14 +17,12 @@
 
 #pragma once
 
+#include "license/License.h"
+
 #include <QString>
 
 namespace synergy::gui {
 
-/**
- * @param filePath Path to the .env file.
- * @param envVars Somewhere to save strings for the lifetime of the app.
- */
-void dotenv(const QString &filePath);
+QString licenseNotice(const synergy::license::License &license);
 
 } // namespace synergy::gui

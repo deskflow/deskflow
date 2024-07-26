@@ -25,6 +25,9 @@
 #include "gui/BuildConfig.h"
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
+#include "gui/VersionChecker.h"
+#include "gui/constants.h"
+#include "gui/license_notices.h"
 #include "license/License.h"
 
 #if defined(Q_OS_MAC)
@@ -53,11 +56,8 @@
 using namespace synergy::gui;
 using namespace synergy::license;
 
-static const char *const kDownloadUrl = "https://symless.com/?source=gui";
-static const char *const kHelpUrl = "https://symless.com/help?source=gui";
 static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
-static const char *const kLinkStyle = "color: #4285F4";
 
 #ifdef SYNERGY_PRODUCT_NAME
 const QString kProductName = SYNERGY_PRODUCT_NAME;
@@ -102,13 +102,12 @@ MainWindow::MainWindow(AppConfig &appConfig)
   createMenuBar();
   secureSocket(false);
 
-  m_pWidgetUpdate->hide();
-  m_VersionChecker.setApp(appPath(appConfig.coreClientName()));
+  m_pLabelUpdate->hide();
 
   m_pLabelIpAddresses->setText(
       tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-  m_trialLabel->hide();
+  m_labelNotice->hide();
 
   if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
@@ -237,7 +236,7 @@ void MainWindow::onShown() {
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
   setWindowTitle(m_LicenseHandler.productName());
-  showLicenseNotice(m_LicenseHandler.validLicenseNotice());
+  showLicenseNotice();
 
   if (m_AppConfig.serialKey() != serialKey) {
     m_AppConfig.setSerialKey(serialKey);
@@ -307,12 +306,12 @@ void MainWindow::onCoreProcessReadyReadStandardError() {
 }
 
 void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
-  m_pWidgetUpdate->show();
-  m_pLabelUpdate->setText(tr("<p>Your version of Synergy is out of date. "
-                             "Version <b>%1</b> is now available to "
-                             "<a href=\"%2\">download</a>.</p>")
+  m_pLabelUpdate->show();
+  m_pLabelUpdate->setText(tr("A new version is available (%1). "
+                             R"(<a href="%2" style="%3">Download now</a>)")
                               .arg(version)
-                              .arg(kDownloadUrl));
+                              .arg(kDownloadUrl)
+                              .arg(kSecondaryLink));
 }
 
 void MainWindow::onActionStartCoreTriggered() {
@@ -1182,12 +1181,14 @@ QString MainWindow::getIPAddresses() const {
   return result.join(", ");
 }
 
-void MainWindow::showLicenseNotice(const QString &notice) {
-  this->m_trialLabel->hide();
+void MainWindow::showLicenseNotice() {
+  auto notice = licenseNotice(m_LicenseHandler.license());
+
+  this->m_labelNotice->hide();
 
   if (!notice.isEmpty()) {
-    this->m_trialLabel->setText(notice);
-    this->m_trialLabel->show();
+    this->m_labelNotice->setText(notice);
+    this->m_labelNotice->show();
   }
 }
 
@@ -1314,7 +1315,7 @@ void MainWindow::updateScreenName() {
       QString("This computer's name: %1 "
               R"((<a href="#" style="%2;">change</a>))")
           .arg(appConfig().screenName())
-          .arg(kLinkStyle));
+          .arg(kSecondaryLink));
   serverConfig().updateServerName();
 }
 

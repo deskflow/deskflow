@@ -35,8 +35,6 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
       Ui::AboutDialogBase() {
   setupUi(this);
 
-  m_versionChecker.setApp(parent->appPath(config.coreClientName()));
-
   QString version(SYNERGY_VERSION);
   if (!kVersionAppend.isEmpty()) {
     version.append(QString(" (%1)").arg(kVersionAppend));

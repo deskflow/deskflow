@@ -10,6 +10,13 @@
       "group": {
         "kind": "build",
         "isDefault": true
+      },
+      "problemMatcher": {
+        "base": "$gcc",
+        "fileLocation": ["absolute"]
+      },
+      "presentation": {
+        "revealProblems": "onProblem"
       }
     },
     {
