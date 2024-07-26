@@ -37,8 +37,6 @@ QPair<QString, QString> getPair(const QString &line);
  *
  * If this function is not sufficient, replace it with a library such as:
  * https://github.com/adeharo9/cpp-dotenv
- *
- * Or there's boost::trim ;-)
  */
 void dotenv(const QString &filePath) {
   QFile file(filePath);
