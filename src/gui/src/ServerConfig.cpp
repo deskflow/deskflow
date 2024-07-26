@@ -537,7 +537,7 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 }
 
 void ServerConfig::setClientAddress(const QString &address) {
-  if (m_pAppConfig->serverClientMode()) {
+  if (m_pAppConfig->invertConnection()) {
     m_ClientAddress = address;
   }
 }
@@ -545,7 +545,7 @@ void ServerConfig::setClientAddress(const QString &address) {
 QString ServerConfig::getClientAddress() const {
   QString clientAddress;
 
-  if (m_pAppConfig->serverClientMode()) {
+  if (m_pAppConfig->invertConnection()) {
     clientAddress = m_ClientAddress.trimmed();
   }
 

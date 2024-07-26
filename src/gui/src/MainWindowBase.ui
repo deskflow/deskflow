@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
-    <height>642</height>
+    <width>800</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -37,24 +37,6 @@
      <layout class="QHBoxLayout" name="m_layout1">
       <item>
        <widget class="QLabel" name="m_pLabelComputerName">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>65535</width>
-          <height>65535</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <kerning>true</kerning>
-         </font>
-        </property>
         <property name="text">
          <string notr="true">This computer's name:</string>
         </property>
@@ -67,7 +49,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>469</width>
+          <width>20</width>
           <height>20</height>
          </size>
         </property>
@@ -117,24 +99,6 @@ top: 3px;</string>
     </item>
     <item>
      <widget class="QWidget" name="m_pMainWidgets" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>200</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <property name="spacing">
         <number>16</number>
@@ -153,17 +117,11 @@ top: 3px;</string>
        </property>
        <item>
         <widget class="QFrame" name="m_pGroupServer">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>250</height>
-          </size>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="styleSheet">
           <string notr="true">.QFrame{
@@ -172,95 +130,88 @@ border-radius: 4px;
 background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
-         <property name="frameShape">
-          <enum>QFrame::Shape::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Shadow::Raised</enum>
-         </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="topMargin">
            <number>11</number>
           </property>
-          <item>
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QRadioButton" name="m_pRadioGroupServer">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>65535</width>
-              <height>30</height>
-             </size>
-            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton::indicator{
-   top: -7px;
+     top: -7px;
 }</string>
             </property>
             <property name="text">
              <string>Use this computer's keyboard and mouse 
-(make this computer the server)</string>
+(make this computer the &amp;server)</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>10</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QWidget" name="m_pWidgetServer" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutServer">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
-              <widget class="QLabel" name="m_pLabelClientIp">
-               <property name="text">
-                <string>Client IP address or hostname:</string>
-               </property>
-               <property name="indent">
-                <number>20</number>
-               </property>
+              <widget class="QWidget" name="m_pWidgetServerInverse" native="true">
+               <layout class="QVBoxLayout" name="m_pLayoutServerInverse">
+                <property name="spacing">
+                 <number>10</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="m_pLabelClientIp">
+                  <property name="text">
+                   <string>Client IP address or hostname:</string>
+                  </property>
+                  <property name="indent">
+                   <number>20</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                  <property name="leftMargin">
+                   <number>20</number>
+                  </property>
+                  <item>
+                   <widget class="QLineEdit" name="m_pLineEditClientIp"/>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="m_pButtonConnectToClient">
+                    <property name="text">
+                     <string>Connect</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
               </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
-               <property name="leftMargin">
-                <number>20</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLineEdit" name="m_pLineEditClienIp"/>
-               </item>
-               <item>
-                <widget class="QPushButton" name="m_pButtonConnectToClient">
-                 <property name="text">
-                  <string>Connect</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
              </item>
              <item>
               <widget class="synergy_widgets::ServerStateLabel" name="m_pLabelServerState">
@@ -274,18 +225,6 @@ background-color: rgba(192,192,192, 0.1);
              </item>
              <item>
               <widget class="QLabel" name="m_pLabelFingerprint">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS enabled (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;fingerprint&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -313,13 +252,13 @@ background-color: rgba(192,192,192, 0.1);
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
-                <spacer>
+                <spacer name="spacer_2">
                  <property name="orientation">
                   <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
-                   <width>40</width>
+                   <width>20</width>
                    <height>20</height>
                   </size>
                  </property>
@@ -327,18 +266,6 @@ background-color: rgba(192,192,192, 0.1);
                </item>
                <item>
                 <widget class="QPushButton" name="m_pButtonConfigureServer">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
                  <property name="text">
                   <string>&amp;Configure</string>
                  </property>
@@ -354,17 +281,11 @@ background-color: rgba(192,192,192, 0.1);
        </item>
        <item>
         <widget class="QFrame" name="m_pGroupClient">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>250</height>
-          </size>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="styleSheet">
           <string notr="true">.QFrame{
@@ -373,36 +294,12 @@ border-radius: 4px;
 background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
-         <property name="frameShape">
-          <enum>QFrame::Shape::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Shadow::Raised</enum>
-         </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <property name="topMargin">
            <number>11</number>
           </property>
-          <item>
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QRadioButton" name="m_pRadioGroupClient">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>300</width>
-              <height>30</height>
-             </size>
-            </property>
             <property name="styleSheet">
              <string notr="true">QRadioButton::indicator{
      top: -7px;
@@ -410,17 +307,82 @@ background-color: rgba(192,192,192, 0.1);
             </property>
             <property name="text">
              <string>Use another computer’s mouse and keyboard
-(make this computer the client)</string>
+(make this computer the &amp;client)</string>
             </property>
            </widget>
           </item>
+          <item alignment="Qt::AlignmentFlag::AlignTop">
+           <widget class="QWidget" name="m_pWidgetClient" native="true">
+            <layout class="QVBoxLayout" name="m_pLayoutClient">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="m_pLabelServerName">
+               <property name="text">
+                <string>Server IP address or hostname:</string>
+               </property>
+               <property name="indent">
+                <number>20</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="leftMargin">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QLineEdit" name="m_pLineEditHostname">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Hostname or IP address of the server computer.</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="m_pButtonConnect">
+                 <property name="text">
+                  <string>Connect</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="synergy_widgets::ClientStateLabel" name="m_pLabelClientState">
+               <property name="text">
+                <string>Connected to server</string>
+               </property>
+               <property name="indent">
+                <number>20</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item>
-           <spacer name="verticalSpacer_4">
+           <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Minimum</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -429,104 +391,6 @@ background-color: rgba(192,192,192, 0.1);
              </size>
             </property>
            </spacer>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="leftMargin">
-             <number>19</number>
-            </property>
-            <property name="topMargin">
-             <number>10</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="m_pLabelServerName">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>&amp;Server IP address or hostname:</string>
-              </property>
-              <property name="buddy">
-               <cstring>m_pLineEditHostname</cstring>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="m_pLineEditHostname">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>200</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Hostname or IP address of the server computer.</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="synergy_widgets::ClientStateLabel" name="m_pLabelClientState">
-            <property name="text">
-             <string>Connected to server</string>
-            </property>
-            <property name="indent">
-             <number>20</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Expanding</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>10</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="m_pButtonConnect">
-              <property name="text">
-               <string>Connect</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
          </layout>
         </widget>

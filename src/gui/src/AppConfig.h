@@ -100,9 +100,9 @@ private:
     // 31 = guid, obsolete
     // 32 = license registry url, obsolete
     kLicenseNextCheck = 33,
-    kInitiateConnectionFromServer = 34,
-    kClientHostMode = 35,
-    kServerClientMode = 36,
+    kInvertConnection = 34,
+    // 35 = client-host-mode, obsolete
+    // 36 = server-client-mode, obsolete
     kServiceEnabled = 37,
     kCloseToTray = 38,
   };
@@ -142,9 +142,7 @@ public:
   unsigned long long licenseNextCheck() const;
   bool languageSync() const;
   bool preventSleep() const;
-  bool clientHostMode() const;
-  bool serverClientMode() const;
-  bool initiateConnectionFromServer() const;
+  bool invertConnection() const;
   bool serverGroupChecked() const;
   bool useExternalConfig() const;
   const QString &configFile() const;
@@ -194,8 +192,6 @@ private:
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
-  void setClientHostMode(bool newValue);
-  void setServerClientMode(bool newValue);
   void setMinimizeToTray(bool b);
   void setLastVersion(const QString &version);
   void setServiceEnabled(bool enabled);
@@ -203,6 +199,7 @@ private:
   void setActivationHasRun(bool value);
   void setTlsCertPath(const QString &path);
   void setTlsKeyLength(const QString &length);
+  void setInvertConnection(bool value);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -279,9 +276,7 @@ private:
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
-  bool m_InitiateConnectionFromServer = false;
-  bool m_ClientHostMode = true;
-  bool m_ServerClientMode = true;
+  bool m_InvertConnection = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
   QString m_ConfigFile = "";
@@ -327,4 +322,5 @@ signals:
   void saved();
   void tlsChanged();
   void screenNameChanged();
+  void invertConnectionChanged();
 };

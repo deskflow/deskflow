@@ -84,9 +84,6 @@ SettingsDialog::SettingsDialog(
   connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(
       m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxClientHostMode, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(
-      m_pCheckBoxServerClientMode, SIGNAL(clicked()), this, SLOT(onChange()));
 
   adjustSize();
 }
@@ -114,10 +111,9 @@ void SettingsDialog::accept() {
   appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
-  appConfig().setClientHostMode(m_pCheckBoxClientHostMode->isChecked());
-  appConfig().setServerClientMode(m_pCheckBoxServerClientMode->isChecked());
   appConfig().setServiceEnabled(m_pCheckBoxServiceEnabled->isChecked());
   appConfig().setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
+  appConfig().setInvertConnection(m_pInvertConnection->isChecked());
 
   appConfig().saveSettings();
   QDialog::accept();
@@ -147,8 +143,6 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  m_pCheckBoxClientHostMode->setChecked(m_appConfig.clientHostMode());
-  m_pCheckBoxServerClientMode->setChecked(m_appConfig.serverClientMode());
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.serviceEnabled());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
@@ -157,6 +151,10 @@ void SettingsDialog::loadFromConfig() {
   } else {
     m_pRadioUserScope->setChecked(true);
   }
+
+  m_pInvertConnection->setChecked(m_appConfig.invertConnection());
+  m_pInvertConnection->setEnabled(
+      m_license.productEdition() == Edition::kBusiness);
 
   updateTlsControls();
 }
@@ -297,8 +295,6 @@ void SettingsDialog::updateControlsEnabled() {
   m_pComboBoxKeyLength->setEnabled(writable);
   m_pPushButtonBrowseCert->setEnabled(writable);
   m_pCheckBoxEnableCrypto->setEnabled(writable);
-  m_pCheckBoxClientHostMode->setEnabled(writable);
-  m_pCheckBoxServerClientMode->setEnabled(writable);
   m_pCheckBoxServiceEnabled->setEnabled(writable);
   m_pCheckBoxCloseToTray->setEnabled(writable);
 
@@ -308,12 +304,6 @@ void SettingsDialog::updateControlsEnabled() {
 #if !defined(Q_OS_WIN)
   m_pCheckBoxServiceEnabled->setEnabled(false);
 #endif
-
-  m_pCheckBoxClientHostMode->setEnabled(
-      writable && isClientMode() && appConfig().initiateConnectionFromServer());
-  m_pCheckBoxServerClientMode->setEnabled(
-      writable && !isClientMode() &&
-      appConfig().initiateConnectionFromServer());
 
   m_pLabelLogPath->setEnabled(writable && m_pCheckBoxLogToFile->isChecked());
   m_pLineEditLogFilename->setEnabled(

@@ -113,6 +113,7 @@ private slots:
   void onAppConfigLoaded();
   void onAppConfigTlsChanged();
   void onAppConfigScreenNameChanged();
+  void onAppConfigInvertConnection();
   void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
   void onLicenseHandlerInvalidLicense();
   void onIpcClientReadLogLine(const QString &text);

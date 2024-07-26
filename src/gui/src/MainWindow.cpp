@@ -177,6 +177,10 @@ void MainWindow::connectSlots() const {
       &MainWindow::onAppConfigScreenNameChanged);
 
   connect(
+      &m_AppConfig, &AppConfig::invertConnection, this,
+      &MainWindow::onAppConfigInvertConnection);
+
+  connect(
       &m_LicenseHandler, &LicenseHandler::serialKeyChanged, this,
       &MainWindow::onLicenseHandlerSerialKeyChanged);
 
@@ -331,6 +335,8 @@ void MainWindow::onCoreProcessRetryStart() {
 void MainWindow::onActionStopCoreTriggered() { stopCore(); }
 
 void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
+
+void MainWindow::onAppConfigInvertConnection() { applyConfig(); }
 
 void MainWindow::onCoreProcessFinished(int exitCode, QProcess::ExitStatus) {
   if (exitCode == 0) {
@@ -503,14 +509,14 @@ void MainWindow::applyConfig() {
   enableClient(appConfig().clientGroupChecked());
 
   m_pLineEditHostname->setText(appConfig().serverHostname());
-  m_pLineEditClienIp->setText(serverConfig().getClientAddress());
+  m_pLineEditClientIp->setText(serverConfig().getClientAddress());
 }
 
 void MainWindow::saveSettings() {
   appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
   appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
   appConfig().setServerHostname(m_pLineEditHostname->text());
-  serverConfig().setClientAddress(m_pLineEditClienIp->text());
+  serverConfig().setClientAddress(m_pLineEditClientIp->text());
 
   appConfig().config().saveAll();
 }
@@ -889,7 +895,7 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     args << "--invert-scroll";
   }
 
-  if (appConfig().clientHostMode()) {
+  if (appConfig().invertConnection()) {
     args << "--host";
     args << ":" + QString::number(appConfig().port());
   } else {
@@ -985,7 +991,7 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  if (appConfig().serverClientMode() && m_pLineEditClienIp->text().isEmpty()) {
+  if (appConfig().invertConnection() && m_pLineEditClientIp->text().isEmpty()) {
     QMessageBox::warning(
         this, tr("Client IP address or name is empty"),
         tr("Please fill in a client IP address or name."));
@@ -1324,37 +1330,14 @@ void MainWindow::enableServer(bool enable) {
   m_AppConfig.setServerGroupChecked(enable);
   m_pRadioGroupServer->setChecked(enable);
   m_pWidgetServer->setEnabled(enable);
-
-  if (m_AppConfig.serverClientMode()) {
-    m_pLabelClientIp->show();
-    m_pLineEditClienIp->show();
-    m_pButtonConnectToClient->show();
-  } else {
-    m_pLabelClientIp->hide();
-    m_pLineEditClienIp->hide();
-    m_pButtonConnectToClient->hide();
-  }
+  m_pWidgetServerInverse->setVisible(m_AppConfig.invertConnection());
+  m_pButtonToggleStart->setEnabled(true);
 }
 
 void MainWindow::enableClient(bool enable) {
   m_AppConfig.setClientGroupChecked(enable);
   m_pRadioGroupClient->setChecked(enable);
-
-  if (enable) {
-    if (m_AppConfig.clientHostMode()) {
-      m_pLabelServerName->hide();
-      m_pLineEditHostname->hide();
-      m_pButtonConnect->hide();
-    } else {
-      m_pLabelServerName->show();
-      m_pLineEditHostname->show();
-      m_pButtonConnect->show();
-    }
-    m_pButtonToggleStart->setEnabled(enable);
-  } else {
-    m_pLabelClientState->hide();
-    m_pLabelServerName->hide();
-    m_pLineEditHostname->hide();
-    m_pButtonConnect->hide();
-  }
+  m_pWidgetClient->setEnabled(enable);
+  m_pWidgetClient->setVisible(!m_AppConfig.invertConnection());
+  m_pButtonToggleStart->setEnabled(true);
 }

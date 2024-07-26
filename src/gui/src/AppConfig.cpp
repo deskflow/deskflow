@@ -57,15 +57,15 @@ const char *const AppConfig::m_SettingsName[] = {
     "startedBefore",
     "elevateMode",
     "elevateModeEnum",
-    "",              // edition, obsolete (using serial key instead)
+    "",              // 10 = edition, obsolete (using serial key instead)
     "cryptoEnabled", // kTlsEnabled (retain legacy string value)
     "autoHide",
     "serialKey",
     "lastVersion",
-    "", // lastExpiringWarningTime, obsolete
+    "", // 15 = lastExpiringWarningTime, obsolete
     "activationHasRun",
     "minimizeToTray",
-    "", // ActivateEmail, obsolete
+    "", // 18 = ActivateEmail, obsolete
     "loadFromSystemScope",
     "groupServerChecked", // kServerGroupChecked
     "useExternalConfig",
@@ -78,12 +78,12 @@ const char *const AppConfig::m_SettingsName[] = {
     "preventSleep",
     "languageSync",
     "invertScrollDirection",
-    "", // guid, obsolete
-    "", // licenseRegistryUrl, obsolete
+    "", // 31 = guid, obsolete
+    "", // 32 = licenseRegistryUrl, obsolete
     "licenseNextCheck",
-    "initiateConnectionFromServer",
-    "clientHostMode",
-    "serverClientMode",
+    "initiateConnectionFromServer", // kInvertConnection
+    "",                             // 35 = clientHostMode, obsolete
+    "",                             // 36 = serverClientMode, obsolete
     "serviceEnabled",
     "closeToTray"};
 
@@ -151,10 +151,7 @@ void AppConfig::loadSettings() {
   m_LanguageSync = loadSetting(kLanguageSync, false).toBool();
   m_InvertScrollDirection = loadSetting(kInvertScrollDirection, false).toBool();
   m_licenseNextCheck = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
-  m_ClientHostMode = loadSetting(kClientHostMode, true).toBool();
-  m_ServerClientMode = loadSetting(kServerClientMode, true).toBool();
-  m_InitiateConnectionFromServer =
-      loadSetting(kInitiateConnectionFromServer, false).toBool();
+  m_InvertConnection = loadSetting(kInvertConnection, false).toBool();
 
   // only change the serial key if the settings being loaded contains a key
   bool loadSerial = m_Config.hasSetting(
@@ -209,8 +206,7 @@ void AppConfig::saveSettings() {
     setSetting(kPreventSleep, m_PreventSleep);
     setSetting(kLanguageSync, m_LanguageSync);
     setSetting(kInvertScrollDirection, m_InvertScrollDirection);
-    setSetting(kClientHostMode, m_ClientHostMode);
-    setSetting(kServerClientMode, m_ServerClientMode);
+    setSetting(kInvertConnection, m_InvertConnection);
     setSetting(kServiceEnabled, m_ServiceEnabled);
     setSetting(kCloseToTray, m_CloseToTray);
 
@@ -283,7 +279,7 @@ void AppConfig::loadScope(Config::Scope scope) {
   }
 }
 
-void AppConfig::setDefaultValues() { m_InitiateConnectionFromServer = false; }
+void AppConfig::setDefaultValues() { m_InvertConnection = false; }
 
 void AppConfig::setLoadFromSystemScope(bool value) {
 
@@ -315,10 +311,113 @@ void AppConfig::setSettingModified(T &variable, const T &newValue) {
     setModified(true);
   }
 }
+QString AppConfig::logDir() const {
+  // by default log to home dir
+  return QDir::home().absolutePath() + "/";
+}
+
+void AppConfig::persistLogDir() const {
+  QDir dir = logDir();
+
+  // persist the log directory
+  if (!dir.exists()) {
+    dir.mkpath(dir.path());
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-// Begin getters and setters
+// Begin getters
 ///////////////////////////////////////////////////////////////////////////////
+
+bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
+
+QString AppConfig::serialKey() const { return m_SerialKey; }
+
+Config &AppConfig::config() { return m_Config; }
+
+const QString &AppConfig::screenName() const { return m_ScreenName; }
+
+int AppConfig::port() const { return m_Port; }
+
+const QString &AppConfig::networkInterface() const { return m_Interface; }
+
+int AppConfig::logLevel() const { return m_LogLevel; }
+
+bool AppConfig::logToFile() const { return m_LogToFile; }
+
+const QString &AppConfig::logFilename() const { return m_LogFilename; }
+
+QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
+
+ProcessMode AppConfig::processMode() const {
+  return m_ServiceEnabled ? ProcessMode::kService : ProcessMode::kDesktop;
+}
+
+bool AppConfig::wizardShouldRun() const {
+  return m_WizardLastRun < kWizardVersion;
+}
+
+bool AppConfig::startedBefore() const { return m_StartedBefore; }
+
+QString AppConfig::lastVersion() const { return m_LastVersion; }
+
+QString AppConfig::coreServerName() const { return m_CoreServerName; }
+
+QString AppConfig::coreClientName() const { return m_CoreClientName; }
+
+ElevateMode AppConfig::elevateMode() const { return m_ElevateMode; }
+
+bool AppConfig::tlsEnabled() const { return m_TlsEnabled; }
+
+bool AppConfig::autoHide() const { return m_AutoHide; }
+
+bool AppConfig::invertScrollDirection() const {
+  return m_InvertScrollDirection;
+}
+
+unsigned long long AppConfig::licenseNextCheck() const {
+  return m_licenseNextCheck;
+}
+
+bool AppConfig::languageSync() const { return m_LanguageSync; }
+
+bool AppConfig::preventSleep() const { return m_PreventSleep; }
+
+bool AppConfig::invertConnection() const { return m_InvertConnection; }
+
+bool AppConfig::minimizeToTray() const { return m_MinimizeToTray; }
+
+QString AppConfig::tlsCertPath() const { return m_TlsCertPath; }
+
+QString AppConfig::tlsKeyLength() const { return m_TlsKeyLength; }
+
+bool AppConfig::serviceEnabled() const { return m_ServiceEnabled; }
+
+bool AppConfig::closeToTray() const { return m_CloseToTray; }
+
+bool AppConfig::serverGroupChecked() const { return m_ServerGroupChecked; }
+
+bool AppConfig::useExternalConfig() const { return m_UseExternalConfig; }
+
+const QString &AppConfig::configFile() const { return m_ConfigFile; }
+
+bool AppConfig::useInternalConfig() const { return m_UseInternalConfig; }
+
+bool AppConfig::clientGroupChecked() const { return m_ClientGroupChecked; }
+
+QString AppConfig::serverHostname() const { return m_ServerHostname; }
+
+void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
+
+///////////////////////////////////////////////////////////////////////////////
+// End getters
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// Begin setters
+///////////////////////////////////////////////////////////////////////////////
+
+void AppConfig::clearSerialKey() { m_SerialKey.clear(); }
 
 void AppConfig::setTlsEnabled(bool value) {
   setSettingModified(m_TlsEnabled, value);
@@ -334,20 +433,10 @@ void AppConfig::setTlsKeyLength(const QString &value) {
   setSettingModified(m_TlsKeyLength, value);
   m_TlsChanged = true;
 }
-
-bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
-
-void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
-
 void AppConfig::setSerialKey(const QString &serialKey) {
   setSettingModified(m_SerialKey, serialKey);
   setCommonSetting(Setting::kSerialKey, m_SerialKey);
 }
-
-void AppConfig::clearSerialKey() { m_SerialKey.clear(); }
-
-QString AppConfig::serialKey() const { return m_SerialKey; }
-
 void AppConfig::setServerGroupChecked(bool newValue) {
   setSettingModified(m_ServerGroupChecked, newValue);
 }
@@ -371,57 +460,6 @@ void AppConfig::setClientGroupChecked(bool newValue) {
 void AppConfig::setServerHostname(const QString &newValue) {
   setSettingModified(m_ServerHostname, newValue);
 }
-
-void AppConfig::setClientHostMode(bool newValue) {
-  setSettingModified(m_ClientHostMode, newValue);
-}
-
-void AppConfig::setServerClientMode(bool newValue) {
-  setSettingModified(m_ServerClientMode, newValue);
-}
-
-Config &AppConfig::config() { return m_Config; }
-
-const QString &AppConfig::screenName() const { return m_ScreenName; }
-
-int AppConfig::port() const { return m_Port; }
-
-const QString &AppConfig::networkInterface() const { return m_Interface; }
-
-int AppConfig::logLevel() const { return m_LogLevel; }
-
-bool AppConfig::logToFile() const { return m_LogToFile; }
-
-const QString &AppConfig::logFilename() const { return m_LogFilename; }
-
-QString AppConfig::logDir() const {
-  // by default log to home dir
-  return QDir::home().absolutePath() + "/";
-}
-
-void AppConfig::persistLogDir() const {
-  QDir dir = logDir();
-
-  // persist the log directory
-  if (!dir.exists()) {
-    dir.mkpath(dir.path());
-  }
-}
-
-QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
-
-ProcessMode AppConfig::processMode() const {
-  return m_ServiceEnabled ? ProcessMode::kService : ProcessMode::kDesktop;
-}
-
-bool AppConfig::wizardShouldRun() const {
-  return m_WizardLastRun < kWizardVersion;
-}
-
-bool AppConfig::startedBefore() const { return m_StartedBefore; }
-
-QString AppConfig::lastVersion() const { return m_LastVersion; }
-
 void AppConfig::setLastVersion(const QString &version) {
   setSettingModified(m_LastVersion, version);
 }
@@ -457,35 +495,15 @@ void AppConfig::setElevateMode(ElevateMode em) {
   setSettingModified(m_ElevateMode, em);
 }
 
-QString AppConfig::coreServerName() const { return m_CoreServerName; }
-
-QString AppConfig::coreClientName() const { return m_CoreClientName; }
-
-ElevateMode AppConfig::elevateMode() const { return m_ElevateMode; }
-
-bool AppConfig::tlsEnabled() const { return m_TlsEnabled; }
-
 void AppConfig::setAutoHide(bool b) { setSettingModified(m_AutoHide, b); }
-
-bool AppConfig::autoHide() const { return m_AutoHide; }
 
 void AppConfig::setMinimizeToTray(bool newValue) {
   setSettingModified(m_MinimizeToTray, newValue);
 }
 
-bool AppConfig::invertScrollDirection() const {
-  return m_InvertScrollDirection;
-}
-
 void AppConfig::setLicenseNextCheck(unsigned long long time) {
   setSettingModified(m_licenseNextCheck, time);
 }
-
-unsigned long long AppConfig::licenseNextCheck() const {
-  return m_licenseNextCheck;
-}
-
-bool AppConfig::languageSync() const { return m_LanguageSync; }
 
 void AppConfig::setInvertScrollDirection(bool newValue) {
   setSettingModified(m_InvertScrollDirection, newValue);
@@ -495,54 +513,23 @@ void AppConfig::setLanguageSync(bool newValue) {
   setSettingModified(m_LanguageSync, newValue);
 }
 
-bool AppConfig::preventSleep() const { return m_PreventSleep; }
-
-bool AppConfig::clientHostMode() const {
-  return (m_ClientHostMode && initiateConnectionFromServer());
-}
-
-bool AppConfig::serverClientMode() const {
-  return (m_ServerClientMode && initiateConnectionFromServer());
-}
-
-bool AppConfig::initiateConnectionFromServer() const {
-  return m_InitiateConnectionFromServer;
-}
-
 void AppConfig::setPreventSleep(bool newValue) {
   setSettingModified(m_PreventSleep, newValue);
 }
-
-bool AppConfig::minimizeToTray() const { return m_MinimizeToTray; }
-
-QString AppConfig::tlsCertPath() const { return m_TlsCertPath; }
-
-QString AppConfig::tlsKeyLength() const { return m_TlsKeyLength; }
 
 void AppConfig::setServiceEnabled(bool enabled) {
   setSettingModified(m_ServiceEnabled, enabled);
 }
 
-bool AppConfig::serviceEnabled() const { return m_ServiceEnabled; }
-
 void AppConfig::setCloseToTray(bool minimize) {
   setSettingModified(m_CloseToTray, minimize);
 }
 
-bool AppConfig::closeToTray() const { return m_CloseToTray; }
-
-bool AppConfig::serverGroupChecked() const { return m_ServerGroupChecked; }
-
-bool AppConfig::useExternalConfig() const { return m_UseExternalConfig; }
-
-const QString &AppConfig::configFile() const { return m_ConfigFile; }
-
-bool AppConfig::useInternalConfig() const { return m_UseInternalConfig; }
-
-bool AppConfig::clientGroupChecked() const { return m_ClientGroupChecked; }
-
-QString AppConfig::serverHostname() const { return m_ServerHostname; }
+void AppConfig::setInvertConnection(bool value) {
+  setSettingModified(m_InvertConnection, value);
+  emit invertConnectionChanged();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-// End getters and setters
+// End setters
 ///////////////////////////////////////////////////////////////////////////////
