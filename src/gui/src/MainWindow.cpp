@@ -1189,13 +1189,13 @@ QString MainWindow::getIPAddresses() const {
 }
 
 void MainWindow::showLicenseNotice() {
-  auto notice = licenseNotice(m_LicenseHandler.license());
+  const auto &license = m_LicenseHandler.license();
+  const bool timeLimited = license.isTimeLimited();
 
-  this->m_labelNotice->hide();
-
-  if (!notice.isEmpty()) {
+  m_labelNotice->setVisible(timeLimited);
+  if (timeLimited) {
+    auto notice = licenseNotice(m_LicenseHandler.license());
     this->m_labelNotice->setText(notice);
-    this->m_labelNotice->show();
   }
 }
 
