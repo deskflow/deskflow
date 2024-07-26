@@ -17,8 +17,8 @@
 
 #include "TlsUtility.h"
 
-#include "BuildConfig.h"
 #include "TlsCertificate.h"
+#include "constants.h"
 
 namespace synergy::gui {
 

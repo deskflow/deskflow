@@ -22,7 +22,7 @@
 #include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
-#include "gui/BuildConfig.h"
+#include "gui/constants.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>

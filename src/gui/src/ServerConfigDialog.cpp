@@ -22,7 +22,7 @@
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
 #include "UpgradeDialog.h"
-#include "gui/BuildConfig.h"
+#include "gui/constants.h"
 #include "license/ProductEdition.h"
 
 #include <QFileDialog>

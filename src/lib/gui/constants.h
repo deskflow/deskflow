@@ -19,6 +19,12 @@
 
 #include <QString>
 
+#ifdef SYNERGY_ENABLE_LICENSING
+const bool kLicensingEnabled = true;
+#else
+const bool kLicensingEnabled = false;
+#endif // SYNERGY_ENABLE_LICENSING
+
 const auto kColorWhite = "#ffffff";
 const auto kColorPrimary = "#ff7c00";
 const auto kColorSecondary = "#4285f4";

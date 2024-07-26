@@ -21,8 +21,8 @@
 #include "AppConfig.h"
 #include "MainWindow.h"
 #include "UpgradeDialog.h"
-#include "gui/BuildConfig.h"
 #include "gui/TlsCertificate.h"
+#include "gui/constants.h"
 
 #include <QDir>
 #include <QFileDialog>

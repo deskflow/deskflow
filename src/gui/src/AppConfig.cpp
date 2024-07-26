@@ -19,7 +19,7 @@
 #include "AppConfig.h"
 
 #include "Config.h"
-#include "gui/BuildConfig.h"
+#include "gui/constants.h"
 
 #include <QApplication>
 #include <QMessageBox>

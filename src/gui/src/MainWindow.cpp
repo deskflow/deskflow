@@ -22,7 +22,6 @@
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "gui/BuildConfig.h"
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
 #include "gui/VersionChecker.h"
