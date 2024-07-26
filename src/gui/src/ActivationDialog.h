@@ -35,6 +35,12 @@ public:
       QWidget *parent, AppConfig &appConfig, LicenseHandler &licenseHandler);
   ~ActivationDialog() override;
 
+  class ActivationMessageError : public std::runtime_error {
+  public:
+    ActivationMessageError()
+        : std::runtime_error("could not show activation message") {}
+  };
+
 public slots:
   void reject();
   void accept();
@@ -43,8 +49,9 @@ protected:
   void refreshSerialKey();
 
 private:
-  void showTrialMessage();
-  void showActivationError(const QString &message);
+  void showResultDialog(LicenseHandler::ChangeSerialKeyResult result);
+  void showSuccessDialog();
+  void showErrorDialog(const QString &message);
 
   Ui::ActivationDialog *m_ui;
   AppConfig *m_pAppConfig;

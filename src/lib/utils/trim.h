@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SerialKeyType.h"
+#pragma once
 
-const std::string SerialKeyType::Trial = "trial";
-const std::string SerialKeyType::Subscription = "subscription";
+#include <ranges>
+#include <string>
 
-void SerialKeyType::setType(const std::string_view &type) {
-  m_isTrial = (type == SerialKeyType::Trial);
-  m_isSubscription = (type == SerialKeyType::Subscription);
+const auto isNotSpace = [](unsigned char ch) { return !std::isspace(ch); };
+
+namespace synergy::utils {
+
+/**
+ * @brief A _very_ basic whitespace trimer.
+ *
+ * Ideally C++20 would have a std::trim function, but until then, this will do.
+ */
+inline std::string trim(const std::string &str) {
+  auto front = std::ranges::find_if(str, isNotSpace);
+  auto back =
+      std::ranges::find_if(str | std::views::reverse, isNotSpace).base();
+  return (front < back ? std::string(front, back) : std::string{});
 }
 
-bool SerialKeyType::isTrial() const { return m_isTrial; }
-
-bool SerialKeyType::isSubscription() const { return m_isSubscription; }
-
-bool SerialKeyType::isTimeLimited() const {
-  return m_isTrial || m_isSubscription;
-}
+} // namespace synergy::utils

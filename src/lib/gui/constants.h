@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Ltd.
+ * Copyright (C) 2014 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SerialKeyType.h"
+#pragma once
 
-const std::string SerialKeyType::Trial = "trial";
-const std::string SerialKeyType::Subscription = "subscription";
+#include <QString>
 
-void SerialKeyType::setType(const std::string_view &type) {
-  m_isTrial = (type == SerialKeyType::Trial);
-  m_isSubscription = (type == SerialKeyType::Subscription);
-}
+const char *const kLinkStyle = "color: #4285F4";
+const char *const kBuyLink = R"(<a href="%1" style="%2">Buy now</a>)";
+const char *const kRenewLink = R"(<a href="%1" style="%2">Renew now</a>)";
 
-bool SerialKeyType::isTrial() const { return m_isTrial; }
-
-bool SerialKeyType::isSubscription() const { return m_isSubscription; }
-
-bool SerialKeyType::isTimeLimited() const {
-  return m_isTrial || m_isSubscription;
-}
+const QString kUrlAffix = "?source=gui";
+const QString kWebsiteUrl = "https://symless.com";
+const QString kProductUrl = QString("%1/synergy").arg(kWebsiteUrl);
+const QString kPurchaseUrl =
+    QString("%1/purchase?%2").arg(kWebsiteUrl).arg(kUrlAffix);
+const QString kContactUrl =
+    QString("%1/contact?%2").arg(kWebsiteUrl).arg(kUrlAffix);

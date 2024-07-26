@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SerialKeyType.h"
+#pragma once
 
-const std::string SerialKeyType::Trial = "trial";
-const std::string SerialKeyType::Subscription = "subscription";
+#include <QString>
 
-void SerialKeyType::setType(const std::string_view &type) {
-  m_isTrial = (type == SerialKeyType::Trial);
-  m_isSubscription = (type == SerialKeyType::Subscription);
-}
+namespace synergy::gui {
 
-bool SerialKeyType::isTrial() const { return m_isTrial; }
+void dotenv(const QString &filePath);
 
-bool SerialKeyType::isSubscription() const { return m_isSubscription; }
-
-bool SerialKeyType::isTimeLimited() const {
-  return m_isTrial || m_isSubscription;
-}
+} // namespace synergy::gui

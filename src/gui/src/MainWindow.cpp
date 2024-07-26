@@ -237,6 +237,7 @@ void MainWindow::onShown() {
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
   setWindowTitle(m_LicenseHandler.productName());
+  showLicenseNotice(m_LicenseHandler.validLicenseNotice());
 
   if (m_AppConfig.serialKey() != serialKey) {
     m_AppConfig.setSerialKey(serialKey);
@@ -245,14 +246,15 @@ void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
 }
 
 void MainWindow::onLicenseHandlerInvalidLicense() {
-  onActionStopCoreTriggered();
-  m_AppConfig.setActivationHasRun(false);
-  showLicenseNotice(m_LicenseHandler.noticeMessage());
+  stopCore();
+  showActivationDialog();
 }
 
 void MainWindow::onAppConfigLoaded() {
   QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
-  m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
+  if (!m_AppConfig.serialKey().isEmpty()) {
+    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
+  }
   updateScreenName();
   applyConfig();
 }
@@ -628,9 +630,6 @@ void MainWindow::checkConnected(const QString &line) {
 
 void MainWindow::checkLicense(const QString &line) {
   if (line.contains("trial has expired")) {
-    // TODO: figure out why we're re-reading the serial key here.
-    // perhaps it was 'just in case' it changed during the trial?
-    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey(), true);
     showActivationDialog();
   }
 }
@@ -1190,8 +1189,6 @@ void MainWindow::showLicenseNotice(const QString &notice) {
     this->m_trialLabel->setText(notice);
     this->m_trialLabel->show();
   }
-
-  setWindowTitle(m_LicenseHandler.productName());
 }
 
 void MainWindow::updateLocalFingerprint() {
@@ -1269,9 +1266,11 @@ int MainWindow::showActivationDialog() {
   }
 
   ActivationDialog activationDialog(this, m_AppConfig, m_LicenseHandler);
+
   m_ActivationDialogRunning = true;
   int result = activationDialog.exec();
   m_ActivationDialogRunning = false;
+
   if (!m_PendingClientNames.empty()) {
     foreach (const QString &name, m_PendingClientNames) {
       autoAddScreen(name);

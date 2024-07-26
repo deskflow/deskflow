@@ -33,7 +33,8 @@ bool TlsUtility::isAvailableAndEnabled() const {
 
 void TlsUtility::generateCertificate(bool replace) const {
   if (!isAvailableAndEnabled()) {
-    throw TlsUnavailableError();
+    qFatal("unable to generate tls certificate, "
+           "tls is either not available or not enabled");
   }
 
   auto path = m_appConfig.tlsCertPath();

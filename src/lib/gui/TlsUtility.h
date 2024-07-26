@@ -26,12 +26,6 @@ namespace synergy::gui {
 
 class TlsUtility {
 public:
-  class TlsUnavailableError : public std::runtime_error {
-  public:
-    explicit TlsUnavailableError()
-        : std::runtime_error("TLS is either not enabled or not available") {}
-  };
-
   explicit TlsUtility(
       const IAppConfig &appConfig, const license::License &license)
       : m_appConfig(appConfig),

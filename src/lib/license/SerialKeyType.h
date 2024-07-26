@@ -21,7 +21,8 @@
 
 class SerialKeyType {
 private:
-  friend bool operator==(SerialKeyType const &, SerialKeyType const &);
+  friend bool
+  operator==(SerialKeyType const &lhs, SerialKeyType const &rhs) = default;
 
 public:
   static const std::string Trial;
@@ -32,14 +33,10 @@ public:
 
   void setType(const std::string_view &type);
   bool isTrial() const;
+  bool isSubscription() const;
   bool isTimeLimited() const;
 
 private:
   bool m_isTrial = false;
-  bool m_isTimeLimited = false;
+  bool m_isSubscription = false;
 };
-
-inline bool operator==(SerialKeyType const &lhs, SerialKeyType const &rhs) {
-  return (lhs.m_isTrial == rhs.m_isTrial) &&
-         (lhs.m_isTimeLimited == rhs.m_isTimeLimited);
-}

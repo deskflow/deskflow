@@ -19,10 +19,10 @@
 
 #include "SerialKey.h"
 #include "SerialKeyType.h"
+#include "utils/trim.h"
 
 #include <cctype>
 #include <optional>
-#include <ranges>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -38,7 +38,6 @@ Parts tokenize(const std::string &plainText);
 SerialKey parseV1(const std::string &hexString, const Parts &parts);
 SerialKey parseV2(const std::string &hexString, const Parts &parts);
 std::optional<time_point> parseDate(const std::string &unixTimeString);
-std::string trim(const std::string &str);
 
 SerialKey parseSerialKey(const std::string &hexString) {
   const auto &plainText = decode(hexString);
@@ -55,7 +54,7 @@ SerialKey parseSerialKey(const std::string &hexString) {
 }
 
 std::string decode(const std::string &hexString) {
-  std::string trimmed = trim(hexString);
+  std::string trimmed = utils::trim(hexString);
 
   if (trimmed.length() % 2 != 0) {
     throw InvalidHexString();
@@ -124,16 +123,8 @@ Parts tokenize(const std::string &plainText) {
   return parts;
 }
 
-std::string trim(const std::string &str) {
-  auto is_not_space = [](unsigned char ch) { return !std::isspace(ch); };
-  auto front = std::ranges::find_if(str, is_not_space);
-  auto back =
-      std::ranges::find_if(str | std::views::reverse, is_not_space).base();
-  return (front < back ? std::string(front, back) : std::string{});
-}
-
 std::optional<time_point> parseDate(const std::string &unixTimeString) {
-  auto clean = trim(unixTimeString);
+  auto clean = utils::trim(unixTimeString);
   if (clean.empty()) {
     return std::nullopt;
   }

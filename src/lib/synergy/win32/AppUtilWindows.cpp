@@ -109,7 +109,8 @@ void AppUtilWindows::beforeAppExit() {
 
 int AppUtilWindows::run(int argc, char **argv) {
   if (!IsWindowsXPSP3OrGreater()) {
-    throw std::runtime_error("Synergy only supports Windows XP SP3 and above.");
+    throw std::runtime_error(
+        "unsupported os version, xp sp3 or greater required");
   }
 
   // record window instance for tray icon, etc

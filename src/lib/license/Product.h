@@ -28,7 +28,7 @@ class Product {
 public:
   class InvalidType : public std::runtime_error {
   public:
-    explicit InvalidType() : std::runtime_error("Invalid product type") {}
+    explicit InvalidType() : std::runtime_error("invalid product type") {}
   };
 
   enum class Edition {

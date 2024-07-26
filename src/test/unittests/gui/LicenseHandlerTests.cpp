@@ -26,21 +26,13 @@ using namespace std::chrono;
 const auto kPast = system_clock::now() - hours(1);
 const auto kFuture = system_clock::now() + hours(1);
 
-TEST(LicenseHandlerTests, changeSerialKey_invalidLicense_returnsFalse) {
-  LicenseHandler licenseHandler;
-
-  auto result = licenseHandler.changeSerialKey("", false);
-
-  ASSERT_FALSE(result);
-}
-
 TEST(LicenseHandlerTests, changeSerialKey_validExpiredLicense_returnsTrue) {
   LicenseHandler licenseHandler;
   auto hexString = //
       "7B76323B747269616C3B62617369633B426F623B313B656D6"
       "1696C3B636F6D70616E79206E616D653B313B38363430307D";
 
-  auto result = licenseHandler.changeSerialKey(hexString, true);
+  auto result = licenseHandler.changeSerialKey(hexString);
 
-  ASSERT_TRUE(result);
+  ASSERT_EQ(LicenseHandler::ChangeSerialKeyResult::kSuccess, result);
 }

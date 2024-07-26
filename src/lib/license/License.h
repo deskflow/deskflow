@@ -53,13 +53,13 @@ public:
   bool isExpiring() const;
   bool isExpired() const;
   bool isTrial() const;
+  bool isSubscription() const;
   bool isTimeLimited() const;
   bool isTlsAvailable() const;
   days daysLeft() const;
-  Edition edition() const;
+  Edition productEdition() const;
   std::string productName() const;
   const SerialKey &serialKey() const { return m_serialKey; }
-  void setSerialKey(const SerialKey &serialKey) { m_serialKey = serialKey; }
   void invalidate() { m_serialKey = SerialKey::invalid(); }
 
   class InvalidSerialKey : public LicenseError {

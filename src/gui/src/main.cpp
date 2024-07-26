@@ -21,6 +21,7 @@
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
+#include "gui/dotenv.h"
 
 #include <QMessageBox>
 #include <QtCore>
@@ -50,6 +51,8 @@ int main(int argc, char *argv[]) {
    * instantiated" */
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
+
+  dotenv(".env");
 
   QCoreApplication::setOrganizationName("Synergy");
   QCoreApplication::setOrganizationDomain("http://symless.com/");

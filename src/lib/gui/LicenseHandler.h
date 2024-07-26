@@ -33,28 +33,34 @@ class LicenseHandler : public QObject {
 public:
   class NoticeError : public std::runtime_error {
   public:
-    NoticeError() : std::runtime_error("Could not create notice") {}
+    NoticeError() : std::runtime_error("could not create notice") {}
+  };
+  class EmptySerialKeyError : public std::runtime_error {
+  public:
+    EmptySerialKeyError() : std::runtime_error("serial key is empty") {}
+  };
+  enum class ChangeSerialKeyResult {
+    kSuccess,
+    kFatal,
+    kUnchanged,
+    kInvalid,
+    kExpired,
   };
 
   Edition productEdition() const;
   const License &license() const;
   void validate() const;
-  QString noticeMessage() const;
+  QString validLicenseNotice() const;
   QString productName() const;
-
-  /// @return true if the serial key was set successfully
-  bool changeSerialKey(const QString &hexString, bool acceptExpired = false);
+  ChangeSerialKeyResult changeSerialKey(const QString &hexString);
 
 signals:
   void serialKeyChanged(const QString &serialKey) const;
   void invalidLicense() const;
 
 private:
-  QString trialNotice() const;
-  QString timeLimitedNotice() const;
-
-  // TODO: why accept expired?
-  bool isValid(const License &license, bool acceptExpired) const;
+  QString validTrialNotice() const;
+  QString validSubscriptionNotice() const;
 
   License m_license = License::invalid();
 };

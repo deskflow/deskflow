@@ -161,9 +161,6 @@ void ServerConfig::saveSettings() {
   settings().endArray();
 
   settings().endGroup();
-
-  m_pAppConfig->saveSettings();
-  m_pAppConfig->config().markUnsaved();
 }
 
 void ServerConfig::loadSettings() {
