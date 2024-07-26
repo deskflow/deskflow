@@ -155,7 +155,6 @@ void ActivationDialog::showSuccessDialog() {
 
   TlsUtility tls(*m_pAppConfig, license);
   if (tls.isAvailableAndEnabled()) {
-    tls.generateCertificate();
     message +=
         "<p>To ensure that TLS encryption works correctly, "
         "please activate all of your computers with the same serial key.</p>";
