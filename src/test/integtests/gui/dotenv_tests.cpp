@@ -1,0 +1,49 @@
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Symless Ltd.
+ *
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file LICENSE that should have accompanied this file.
+ *
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "gui/dotenv.h"
+
+#include <QFile>
+#include <QTextStream>
+
+#include <gtest/gtest.h>
+
+TEST(dotenv_tests, dotenv_envFileWithEntry_loadsEnvVar) {
+  // Arrange
+  const QString envFile = "tmp/test/.env";
+  QFile file(envFile);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    FAIL() << "Failed to create: " << envFile.toStdString();
+  }
+
+  const QString key = "TEST_ENV_VAR";
+  const QString value = R"("test value")";
+  const QString entry = key + " = " + value;
+
+  QTextStream out(&file);
+  out << " # Comment" << Qt::endl;
+  out << "FOOBAR" << Qt::endl;
+  out << entry << Qt::endl;
+  file.close();
+
+  synergy::gui::dotenv(envFile);
+
+  const QString actualValue = qgetenv(key.toUtf8().constData());
+  EXPECT_EQ("test value", actualValue.toStdString());
+
+  QFile::remove(envFile);
+}

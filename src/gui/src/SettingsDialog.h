@@ -18,9 +18,11 @@
 
 #pragma once
 
+#include "gui/TlsUtility.h"
 #include "ui_SettingsDialogBase.h"
 
-#include "CoreInterface.h"
+#include "gui/CoreInterface.h"
+#include "license/License.h"
 #include "validators/ScreenNameValidator.h"
 
 #include <QDialog>
@@ -33,7 +35,9 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
   Q_OBJECT
 
 public:
-  SettingsDialog(QWidget *parent, AppConfig &config);
+  SettingsDialog(
+      QWidget *parent, AppConfig &config,
+      const synergy::license::License &license);
   static QString browseForSynergyc(
       QWidget *parent, const QString &programDir,
       const QString &coreClientName);
@@ -63,17 +67,18 @@ protected:
   void updateTlsControlsEnabled();
 
 private:
+  QString m_nameError = "";
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
-  CoreInterface m_CoreInterface;
+  CoreInterface m_coreInterface;
+  const synergy::license::License &m_license;
+  synergy::gui::TlsUtility m_tlsUtility;
   std::unique_ptr<validators::ScreenNameValidator> m_screenNameValidator;
 
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
   /// the scope and doesn't save changes
   bool m_isSystemAtStart = false;
-
-  QString m_nameError = "";
 
 private slots:
   void on_m_pCheckBoxEnableCrypto_clicked(bool checked);

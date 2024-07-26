@@ -42,11 +42,11 @@ public:
 
   void TearDown() { delete m_argParser; }
 
-  static lib::synergy::ArgsBase argsBase;
+  static synergy::ArgsBase argsBase;
   ArgParser *m_argParser = nullptr;
 };
 
-lib::synergy::ArgsBase GenericArgsParsingTests::argsBase;
+synergy::ArgsBase GenericArgsParsingTests::argsBase;
 
 TEST_F(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel) {
   int i = 1;

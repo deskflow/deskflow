@@ -86,7 +86,7 @@ bool					OSXScreen::s_hasGHOM	    = false;
 OSXScreen::OSXScreen(IEventQueue* events,
 							bool isPrimary,
 							bool enableLangSync,
-							lib::synergy::ClientScrollDirection scrollDirection) :
+							synergy::ClientScrollDirection scrollDirection) :
 	PlatformScreen(events, scrollDirection),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),

@@ -93,7 +93,7 @@ MSWindowsScreen *MSWindowsScreen::s_screen = NULL;
 
 MSWindowsScreen::MSWindowsScreen(
     bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue *events,
-    bool enableLangSync, lib::synergy::ClientScrollDirection scrollDirection)
+    bool enableLangSync, synergy::ClientScrollDirection scrollDirection)
     : PlatformScreen(events, scrollDirection),
       m_isPrimary(isPrimary),
       m_noHooks(noHooks),

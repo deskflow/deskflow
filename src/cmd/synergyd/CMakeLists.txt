@@ -36,7 +36,8 @@ target_link_libraries(
   net
   platform
   synlib
-  shared
+  global
+  license
   ${libs})
 
 post_config()

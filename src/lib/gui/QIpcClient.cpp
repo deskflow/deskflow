@@ -18,7 +18,7 @@
 #include "QIpcClient.h"
 
 #include "IpcReader.h"
-#include "shared/Ipc.h"
+#include "global/Ipc.h"
 
 #include <QDataStream>
 #include <QHostAddress>

@@ -25,12 +25,12 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
+#include "global/Ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcSettingMessage.h"
 #include "net/SocketMultiplexer.h"
-#include "shared/Ipc.h"
 #include "synergy/App.h"
 #include "synergy/ArgParser.h"
 #include "synergy/ClientArgs.h"
@@ -307,10 +307,10 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
       int argc = static_cast<int>(argsArray.size());
 
       if (isServerCommandLine(argsArray)) {
-        auto serverArgs = new lib::synergy::ServerArgs();
+        auto serverArgs = new synergy::ServerArgs();
         argParser.parseServerArgs(*serverArgs, argc, argv);
       } else {
-        auto clientArgs = new lib::synergy::ClientArgs();
+        auto clientArgs = new synergy::ClientArgs();
         argParser.parseClientArgs(*clientArgs, argc, argv);
       }
 

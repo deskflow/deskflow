@@ -21,7 +21,7 @@
 #include "synergy/ArgsBase.h"
 
 PlatformScreen::PlatformScreen(
-    IEventQueue *events, lib::synergy::ClientScrollDirection scrollDirection)
+    IEventQueue *events, synergy::ClientScrollDirection scrollDirection)
     : IPlatformScreen(events),
       m_draggingStarted(false),
       m_fakeDraggingStarted(false),

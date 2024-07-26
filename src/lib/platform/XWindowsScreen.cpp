@@ -98,7 +98,7 @@ XWindowsScreen *XWindowsScreen::s_screen = NULL;
 XWindowsScreen::XWindowsScreen(
     const char *displayName, bool isPrimary, bool disableXInitThreads,
     int mouseScrollDelta, IEventQueue *events,
-    lib::synergy::ClientScrollDirection scrollDirection)
+    synergy::ClientScrollDirection scrollDirection)
     : PlatformScreen(events, scrollDirection),
       m_isPrimary(isPrimary),
       m_mouseScrollDelta(mouseScrollDelta),

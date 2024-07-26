@@ -42,8 +42,8 @@ public:
   XWindowsScreen(
       const char *displayName, bool isPrimary, bool disableXInitThreads,
       int mouseScrollDelta, IEventQueue *events,
-      lib::synergy::ClientScrollDirection m_clientScrollDirection =
-          lib::synergy::ClientScrollDirection::SERVER);
+      synergy::ClientScrollDirection m_clientScrollDirection =
+          synergy::ClientScrollDirection::SERVER);
   virtual ~XWindowsScreen();
 
   //! @name manipulators

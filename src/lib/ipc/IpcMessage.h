@@ -19,7 +19,7 @@
 
 #include "base/Event.h"
 #include "base/String.h"
-#include "shared/Ipc.h"
+#include "global/Ipc.h"
 
 class IpcMessage : public EventData {
 public:

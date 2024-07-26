@@ -48,7 +48,7 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse) {
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
-  static lib::synergy::ArgsBase argsBase;
+  static synergy::ArgsBase argsBase;
   ArgParser argParser(NULL);
   argParser.setArgsBase(argsBase);
 
@@ -222,7 +222,7 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly) {
 
 TEST(ArgParserTests, parseServerArgs_parses_each_category) {
   ArgParser parser(nullptr);
-  lib::synergy::ServerArgs args;
+  synergy::ServerArgs args;
   args.m_daemon = false;
   char const *argv[] = {
       "synergy", "--help"
@@ -242,7 +242,7 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
 
 TEST(ArgParserTests, parseClientArgs_parses_single_help) {
   ArgParser parser(nullptr);
-  lib::synergy::ClientArgs args;
+  synergy::ClientArgs args;
   args.m_daemon = false;
   char const *argv[] = {
       "synergy",

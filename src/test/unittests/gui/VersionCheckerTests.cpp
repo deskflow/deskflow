@@ -17,38 +17,29 @@
 
 #include "gui/VersionChecker.h"
 
-#include "shared/gui/QtCoreTest.h"
-
-#include <QNetworkAccessManager>
 #include <gtest/gtest.h>
 
-class VersionCheckerTests : public QtCoreTest {};
-
-class QNetworkAccessManagerMock : public QNetworkAccessManager {};
+class VersionCheckerTests : public ::testing::Test {
+protected:
+  int compareVersions(const QString &left, const QString &right) {
+    return VersionChecker::compareVersions(left, right);
+  }
+};
 
 TEST_F(VersionCheckerTests, compareVersions_major_isValid) {
-  auto nam = std::make_shared<QNetworkAccessManager>();
-  VersionChecker versionChecker(nam);
-
-  EXPECT_EQ(versionChecker.compareVersions("1.0.0", "2.0.0"), 1);
-  EXPECT_EQ(versionChecker.compareVersions("2.0.0", "1.0.0"), -1);
-  EXPECT_EQ(versionChecker.compareVersions("1.0.0", "1.0.0"), 0);
+  EXPECT_EQ(compareVersions("1.0.0", "2.0.0"), 1);
+  EXPECT_EQ(compareVersions("2.0.0", "1.0.0"), -1);
+  EXPECT_EQ(compareVersions("1.0.0", "1.0.0"), 0);
 }
 
 TEST_F(VersionCheckerTests, compareVersions_minor_isValid) {
-  auto nam = std::make_shared<QNetworkAccessManager>();
-  VersionChecker versionChecker(nam);
-
-  EXPECT_EQ(versionChecker.compareVersions("1.1.0", "1.2.0"), 1);
-  EXPECT_EQ(versionChecker.compareVersions("1.2.0", "1.1.0"), -1);
-  EXPECT_EQ(versionChecker.compareVersions("1.1.0", "1.1.0"), 0);
+  EXPECT_EQ(compareVersions("1.1.0", "1.2.0"), 1);
+  EXPECT_EQ(compareVersions("1.2.0", "1.1.0"), -1);
+  EXPECT_EQ(compareVersions("1.1.0", "1.1.0"), 0);
 }
 
 TEST_F(VersionCheckerTests, compareVersions_patch_isValid) {
-  auto nam = std::make_shared<QNetworkAccessManager>();
-  VersionChecker versionChecker(nam);
-
-  EXPECT_EQ(versionChecker.compareVersions("1.0.1", "1.0.2"), 1);
-  EXPECT_EQ(versionChecker.compareVersions("1.0.2", "1.0.1"), -1);
-  EXPECT_EQ(versionChecker.compareVersions("1.0.1", "1.0.1"), 0);
+  EXPECT_EQ(compareVersions("1.0.1", "1.0.2"), 1);
+  EXPECT_EQ(compareVersions("1.0.2", "1.0.1"), -1);
+  EXPECT_EQ(compareVersions("1.0.1", "1.0.1"), 0);
 }

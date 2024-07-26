@@ -18,8 +18,16 @@
 
 #include "AboutDialog.h"
 
+#include <QDateTime>
+
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
+#endif
+
+#ifdef GIT_SHA_SHORT
+const QString kVersionAppend = GIT_SHA_SHORT;
+#else
+const QString kVersionAppend;
 #endif
 
 AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
@@ -27,12 +35,10 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
       Ui::AboutDialogBase() {
   setupUi(this);
 
-  m_versionChecker.setApp(parent->appPath(config.coreClientName()));
-
-  QString version = SYNERGY_VERSION;
-#ifdef GIT_SHA_SHORT
-  version += " (" GIT_SHA_SHORT ")";
-#endif
+  QString version(SYNERGY_VERSION);
+  if (!kVersionAppend.isEmpty()) {
+    version.append(QString(" (%1)").arg(kVersionAppend));
+  }
 
   m_pLabelSynergyVersion->setText(version);
 
@@ -84,7 +90,7 @@ QString AboutDialog::getImportantDevelopers() const {
 
       // Symless employees
       "Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
-      "Oleksandr Lysytsia, Olena Kutytska, Francisco Magalhães.");
+      "Oleksandr Lysytsia, Olena Kutytska.");
 }
 
 QString AboutDialog::getCopyright() const {

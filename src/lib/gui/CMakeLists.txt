@@ -30,7 +30,8 @@ endif()
 add_library(${target} STATIC ${sources})
 target_link_libraries(
   ${target}
-  shared
+  global
+  license
   Qt6::Core
   Qt6::Widgets
   Qt6::Network)

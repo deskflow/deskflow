@@ -20,11 +20,9 @@
 
 #include "AppConfig.h"
 #include "MainWindow.h"
-#include "SslCertificate.h"
-
-#ifdef SYNERGY_ENABLE_LICENSING
 #include "UpgradeDialog.h"
-#endif // SYNERGY_ENABLE_LICENSING
+#include "gui/TlsCertificate.h"
+#include "gui/constants.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -33,13 +31,20 @@
 #include <QtGui>
 #include <memory>
 
-SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
+using namespace synergy::license;
+
+const char *const kProProductName = "Synergy 1 Pro";
+
+SettingsDialog::SettingsDialog(
+    QWidget *parent, AppConfig &config, const License &license)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),
-      m_appConfig(config) {
+      m_appConfig(config),
+      m_license(license),
+      m_tlsUtility(config, license) {
+
   setupUi(this);
 
-  // TODO: maybe just accept MainWindow type in ctor?
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
   loadFromConfig();
@@ -79,9 +84,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, AppConfig &config)
   connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(
       m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxClientHostMode, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(
-      m_pCheckBoxServerClientMode, SIGNAL(clicked()), this, SLOT(onChange()));
 
   adjustSize();
 }
@@ -106,13 +108,12 @@ void SettingsDialog::accept() {
   appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
   appConfig().setTlsCertPath(m_pLineEditCertificatePath->text());
   appConfig().setTlsKeyLength(m_pComboBoxKeyLength->currentText());
-  appConfig().setCryptoEnabled(m_pCheckBoxEnableCrypto->isChecked());
+  appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
-  appConfig().setClientHostMode(m_pCheckBoxClientHostMode->isChecked());
-  appConfig().setServerClientMode(m_pCheckBoxServerClientMode->isChecked());
   appConfig().setServiceEnabled(m_pCheckBoxServiceEnabled->isChecked());
   appConfig().setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
+  appConfig().setInvertConnection(m_pInvertConnection->isChecked());
 
   appConfig().saveSettings();
   QDialog::accept();
@@ -139,11 +140,9 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxPreventSleep->setChecked(appConfig().preventSleep());
   m_pCheckBoxMinimizeToTray->setChecked(appConfig().minimizeToTray());
   m_pLineEditCertificatePath->setText(appConfig().tlsCertPath());
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.cryptoEnabled());
+  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  m_pCheckBoxClientHostMode->setChecked(m_appConfig.clientHostMode());
-  m_pCheckBoxServerClientMode->setChecked(m_appConfig.serverClientMode());
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.serviceEnabled());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
@@ -152,6 +151,10 @@ void SettingsDialog::loadFromConfig() {
   } else {
     m_pRadioUserScope->setChecked(true);
   }
+
+  m_pInvertConnection->setChecked(m_appConfig.invertConnection());
+  m_pInvertConnection->setEnabled(
+      m_license.productEdition() == Edition::kBusiness);
 
   updateTlsControls();
 }
@@ -164,20 +167,20 @@ void SettingsDialog::updateTlsControls() {
         m_pComboBoxKeyLength->findText(appConfig().tlsKeyLength()));
   }
 
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.cryptoEnabled());
+  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
 
   updateTlsControlsEnabled();
 }
 
 void SettingsDialog::updateTlsControlsEnabled() {
   auto clientMode = appConfig().clientGroupChecked();
-  auto cryptoAvailable = appConfig().cryptoAvailable();
+  auto tlsAvailable = m_tlsUtility.isAvailableAndEnabled();
   auto tlsChecked = m_pCheckBoxEnableCrypto->isChecked();
-  auto enabled = !clientMode && cryptoAvailable && tlsChecked;
+  auto enabled = !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
-      "TLS controls enabled=%d, client=%d, crypto=%d, checked=%d", enabled,
-      clientMode, cryptoAvailable, tlsChecked);
+      "TLS controls enabled=%d, client=%d, available=%d, checked=%d", enabled,
+      clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);
   m_pComboBoxKeyLength->setEnabled(enabled);
@@ -209,24 +212,17 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool checked) {
+void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool) {
   updateTlsControlsEnabled();
 
-  if (!appConfig().cryptoAvailable()) {
-
-#ifdef SYNERGY_ENABLE_LICENSING
-    auto edition = appConfig().edition();
-    if (edition == Edition::kLite || edition == Edition::kBasic) {
+  if (kLicensingEnabled && !m_tlsUtility.isAvailable()) {
+    auto edition = m_license.productEdition();
+    if (edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);
-      if (appConfig().edition() == Edition::kLite) {
-        upgradeDialog.showDialog(
-            "Upgrade to Synergy Ultimate to enable TLS encryption.");
-      } else if (appConfig().edition() == Edition::kBasic) {
-        upgradeDialog.showDialog(
-            "Upgrade to Synergy Pro to enable TLS encryption.");
-      }
+      upgradeDialog.showDialog(
+          QString("Upgrade to %1 to enable TLS encryption.")
+              .arg(kProProductName));
     }
-#endif // SYNERGY_ENABLE_LICENSING
   }
 }
 
@@ -271,11 +267,11 @@ void SettingsDialog::updateTlsRegenerateButton() {
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
-  appConfig().generateCertificate(true);
+  m_tlsUtility.generateCertificate(true);
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
-  SslCertificate ssl;
+  TlsCertificate ssl;
   auto length = ssl.getCertKeyLength(path);
   auto index = m_pComboBoxKeyLength->findText(length);
   m_pComboBoxKeyLength->setCurrentIndex(index);
@@ -299,8 +295,6 @@ void SettingsDialog::updateControlsEnabled() {
   m_pComboBoxKeyLength->setEnabled(writable);
   m_pPushButtonBrowseCert->setEnabled(writable);
   m_pCheckBoxEnableCrypto->setEnabled(writable);
-  m_pCheckBoxClientHostMode->setEnabled(writable);
-  m_pCheckBoxServerClientMode->setEnabled(writable);
   m_pCheckBoxServiceEnabled->setEnabled(writable);
   m_pCheckBoxCloseToTray->setEnabled(writable);
 
@@ -310,12 +304,6 @@ void SettingsDialog::updateControlsEnabled() {
 #if !defined(Q_OS_WIN)
   m_pCheckBoxServiceEnabled->setEnabled(false);
 #endif
-
-  m_pCheckBoxClientHostMode->setEnabled(
-      writable && isClientMode() && appConfig().initiateConnectionFromServer());
-  m_pCheckBoxServerClientMode->setEnabled(
-      writable && !isClientMode() &&
-      appConfig().initiateConnectionFromServer());
 
   m_pLabelLogPath->setEnabled(writable && m_pCheckBoxLogToFile->isChecked());
   m_pLineEditLogFilename->setEnabled(

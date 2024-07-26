@@ -24,6 +24,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "common/stdexcept.h"
+#include "license/License.h"
 #include "mt/Thread.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
@@ -33,7 +34,6 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
-#include "shared/SerialKey.h"
 #include "synergy/AppUtil.h"
 #include "synergy/DropHelper.h"
 #include "synergy/FileChunk.h"
@@ -54,13 +54,15 @@
 #include <fstream>
 #include <sstream>
 
+using namespace synergy::license;
+
 //
 // Server
 //
 
 Server::Server(
     Config &config, PrimaryClient *primaryClient, synergy::Screen *screen,
-    IEventQueue *events, lib::synergy::ServerArgs const &args)
+    IEventQueue *events, synergy::ServerArgs const &args)
     : m_mock(false),
       m_primaryClient(primaryClient),
       m_active(primaryClient),
@@ -429,7 +431,8 @@ void Server::switchScreen(
   assert(dst != NULL);
 
   // if trial is expired, exit the process
-  if (m_args.m_serial.isExpired(std::time(0))) {
+  License license(m_args.m_serialKey);
+  if (license.isExpired()) {
     LOG((CLOG_ERR "trial has expired, aborting server"));
     exit(kExitSuccess);
   }

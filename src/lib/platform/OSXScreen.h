@@ -56,8 +56,8 @@ class OSXScreen : public PlatformScreen {
 public:
   OSXScreen(
       IEventQueue *events, bool isPrimary, bool enableLangSync = false,
-      lib::synergy::ClientScrollDirection scrollDirection =
-          lib::synergy::ClientScrollDirection::SERVER);
+      synergy::ClientScrollDirection scrollDirection =
+          synergy::ClientScrollDirection::SERVER);
 
   virtual ~OSXScreen();
 

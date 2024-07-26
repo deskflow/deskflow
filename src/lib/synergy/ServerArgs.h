@@ -15,18 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SYNERGY_CORE_SERVERARGS_H
-#define SYNERGY_CORE_SERVERARGS_H
+#pragma once
 
 #include "ArgsBase.h"
+#include "license/License.h"
 #include "server/Config.h"
-#include "shared/SerialKey.h"
+
 #include <memory>
 
-namespace lib {
 namespace synergy {
+
 class ServerArgs : public ArgsBase {
-  /// Public Functions
+  using License = synergy::license::License;
+
 public:
   ServerArgs();
   ServerArgs(ServerArgs const &src) = default;
@@ -36,16 +37,10 @@ public:
   ServerArgs &operator=(ServerArgs const &) = default;
   ServerArgs &operator=(ServerArgs &&) = default;
 
-  /// Public variables
 public:
-  String m_configFile = ""; /// @brief Contains the path to the config file
-  SerialKey m_serial; /// @brief Contains the serial number and license info
-  std::shared_ptr<Config>
-      m_config; /// @brief Contains the Parsed Configuration settings
-
-  /// Private Functions
-private:
+  String m_configFile = "";
+  license::SerialKey m_serialKey = license::SerialKey::invalid();
+  std::shared_ptr<Config> m_config;
 };
+
 } // namespace synergy
-} // namespace lib
-#endif // SYNERGY_CORE_SERVERARGS_H

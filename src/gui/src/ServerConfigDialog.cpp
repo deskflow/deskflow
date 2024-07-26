@@ -22,7 +22,8 @@
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
 #include "UpgradeDialog.h"
-#include "shared/EditionType.h"
+#include "gui/constants.h"
+#include "license/ProductEdition.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -273,27 +274,12 @@ void ServerConfigDialog::reject() {
 }
 
 void ServerConfigDialog::on_m_pButtonNewHotkey_clicked() {
-  if (serverConfig().isHotkeysAvailable()) {
-    Hotkey hotkey;
-    HotkeyDialog dlg(this, hotkey);
-    if (dlg.exec() == QDialog::Accepted) {
-      serverConfig().hotkeys().append(hotkey);
-      m_pListHotkeys->addItem(hotkey.text());
-      onChange();
-    }
-  } else {
-#ifdef SYNERGY_ENABLE_LICENSING
-    auto edition = appConfig().edition();
-    if (edition == Edition::kLite || edition == Edition::kBasic) {
-      UpgradeDialog upgradeDialog(this);
-      if (appConfig().edition() == Edition::kLite) {
-        upgradeDialog.showDialog(
-            "Upgrade to Synergy 1 Ultimate to enable hotkeys");
-      } else if (appConfig().edition() == Edition::kBasic) {
-        upgradeDialog.showDialog("Upgrade to Synergy 1 Pro to enable hotkeys");
-      }
-    }
-#endif // SYNERGY_ENABLE_LICENSING
+  Hotkey hotkey;
+  HotkeyDialog dlg(this, hotkey);
+  if (dlg.exec() == QDialog::Accepted) {
+    serverConfig().hotkeys().append(hotkey);
+    m_pListHotkeys->addItem(hotkey.text());
+    onChange();
   }
 }
 

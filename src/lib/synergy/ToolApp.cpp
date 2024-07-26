@@ -23,7 +23,6 @@
 #include "synergy/ArgParser.h"
 
 #include <iostream>
-#include <sstream>
 
 #if SYSAPI_WIN32
 #include "platform/MSWindowsSession.h"

@@ -35,9 +35,10 @@
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "TrayIcon.h"
+#include "global/Ipc.h"
 #include "gui/QIpcClient.h"
+#include "gui/TlsUtility.h"
 #include "gui/VersionChecker.h"
-#include "shared/Ipc.h"
 
 class QAction;
 class QMenu;
@@ -57,8 +58,7 @@ class QSynergyApplication;
 class SetupWizard;
 class DataDownloader;
 class CommandProcess;
-class SslCertificate;
-class LicenseManager;
+class TlsCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   Q_OBJECT
@@ -80,60 +80,57 @@ public:
   };
 
   enum class CoreMode { Client, Server };
-
   enum class LogLevel { Error, Info };
-
   enum class RuningState { Started, Stopped };
 
 public:
-#ifdef SYNERGY_ENABLE_LICENSING
-  MainWindow(AppConfig &appConfig, LicenseManager &licenseManager);
-#else
   explicit MainWindow(AppConfig &appConfig);
-#endif
   ~MainWindow() override;
 
-public:
   void setVisible(bool visible) override;
-  CoreMode coreMode() const {
-    auto isClient = m_pRadioGroupClient->isChecked();
-    return isClient ? CoreMode::Client : CoreMode::Server;
-  }
-  CoreState coreState() const { return m_CoreState; }
-  QString hostname() const { return m_pLineEditHostname->text(); }
-  QString configFilename();
+  CoreMode coreMode() const;
   QString address() const;
-  QString appPath(const QString &name);
+  QString appPath(const QString &name) const;
   void open();
-  void clearLog();
-  VersionChecker &versionChecker() { return m_VersionChecker; }
   ServerConfig &serverConfig() { return m_ServerConfig; }
-  void showConfigureServer(const QString &message);
-  void showConfigureServer() { showConfigureServer(""); }
   void autoAddScreen(const QString name);
-#ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager &licenseManager() const;
-  int raiseActivationDialog();
-#endif
-
-public slots:
-  void setEdition(Edition edition);
-#ifdef SYNERGY_ENABLE_LICENSING
-  void InvalidLicense();
-  void showLicenseNotice(const QString &message);
-#endif
-  void appendLogRaw(const QString &text);
+  LicenseHandler &licenseHandler();
+  int showActivationDialog();
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
   void appendLogError(const QString &text);
-  void startCore();
-  void retryStart();
-  void actionStart();
-  void handleIdleService(const QString &text);
 
-protected slots:
-  void updateLocalFingerprint();
-  void updateScreenName();
+signals:
+  void created();
+  void shown();
+
+public slots:
+  void onAppAboutToQuit();
+
+private slots:
+  void onCreated();
+  void onShown();
+  void onAppConfigLoaded();
+  void onAppConfigTlsChanged();
+  void onAppConfigScreenNameChanged();
+  void onAppConfigInvertConnection();
+  void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
+  void onLicenseHandlerInvalidLicense();
+  void onIpcClientReadLogLine(const QString &text);
+  void onIpcClientErrorMessage(const QString &text);
+  void onIpcClientInfoMessage(const QString &text);
+  void onCoreProcessFinished(int exitCode, QProcess::ExitStatus);
+  void onVersionCheckerUpdateFound(const QString &version);
+  void onTrayIconCreate(QSystemTrayIcon::ActivationReason reason);
+  void onActionStartCoreTriggered();
+  void onActionStopCoreTriggered();
+  void onCoreProcessReadyReadStandardOutput();
+  void onCoreProcessReadyReadStandardError();
+  void on_m_pButtonApply_clicked();
+  void on_m_pLabelComputerName_linkActivated(const QString &link);
+  void on_m_pLabelFingerprint_linkActivated(const QString &link);
+  void on_m_pButtonConnect_clicked();
+  void on_m_pButtonConnectToClient_clicked();
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
   void on_m_pButtonConfigureServer_clicked();
@@ -142,24 +139,15 @@ protected slots:
   void on_m_pActionHelp_triggered();
   void on_m_pActionSettings_triggered();
   void on_m_pActivate_triggered();
-  void coreProcessExit(int exitCode, QProcess::ExitStatus);
-  void trayActivated(QSystemTrayIcon::ActivationReason reason);
-  void stopCore();
-  void logOutput();
-  void logError();
-  void updateFound(const QString &version);
-  void saveSettings();
 
-protected:
+private:
   QSettings &settings() { return *appConfig().config().currentSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
-  AppConfig *appConfigPtr() { return &m_AppConfig; }
-  void initConnections();
   void createMenuBar();
   void createStatusBar();
   void createTrayIcon();
-  void loadSettings();
+  void applyConfig();
   void setIcon(CoreState state) const;
   void setCoreState(CoreState state);
   bool checkForApp(int which, QString &app);
@@ -168,51 +156,45 @@ protected:
   void setStatus(const QString &status);
   void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
-  QString getIPAddresses();
+  QString getIPAddresses() const;
   void stopService();
   void stopDesktop();
   void enableServer(bool enable);
   void enableClient(bool enable);
-
-  QString getProfileRootForArg();
+  QString getProfileRootForArg() const;
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   bool checkSecureSocket(const QString &line);
+  void checkLicense(const QString &line);
+  QString getTimeStamp() const;
+  void restartCore();
+  void showEvent(QShowEvent *) override;
+  void secureSocket(bool secureSocket);
+  void windowStateChanged();
+  void connectSlots() const;
+  void updateWindowTitle();
+  void processCoreLogLine(const QString &line);
+  void startCore();
+  void onCoreProcessRetryStart();
+  void updateLocalFingerprint();
+  void updateScreenName();
+  void saveSettings();
+  QString configFilename();
+  void showConfigureServer(const QString &message);
+  void showConfigureServer() { showConfigureServer(""); }
+  void showLicenseNotice();
+  void stopCore();
+
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
 #endif
-#ifdef SYNERGY_ENABLE_LICENSING
-  void checkLicense(const QString &line);
-#endif
-  QString getTimeStamp();
-  void restartCore();
 
-  void showEvent(QShowEvent *) override;
-  void secureSocket(bool secureSocket);
-
-  void windowStateChanged();
-
-private:
-  void updateWindowTitle();
-
-#ifdef SYNERGY_ENABLE_LICENSING
-  LicenseManager *m_LicenseManager = nullptr;
-#endif
-
-  AppConfig &m_AppConfig;
-  ServerConfig m_ServerConfig;
-  ServerConnection m_serverConnection;
-  ClientConnection m_clientConnection;
   VersionChecker m_VersionChecker;
   QIpcClient m_IpcClient;
-  TrayIcon m_trayIcon;
+  TrayIcon m_TrayIcon;
   QMutex m_StopDesktopMutex;
-
-#ifdef SYNERGY_ENABLE_LICENSING
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
-#endif
-
   RuningState m_ExpectedRunningState = RuningState::Stopped;
   std::unique_ptr<QProcess> m_pCoreProcess;
   QMenuBar *m_pMenuBar = nullptr;
@@ -226,16 +208,10 @@ private:
   bool m_SecureSocket = false;
   QString m_SecureSocketVersion = "";
 
-private slots:
-  void on_m_pButtonApply_clicked();
-  void on_windowShown();
-
-  void on_m_pLabelComputerName_linkActivated(const QString &link);
-  void on_m_pLabelFingerprint_linkActivated(const QString &link);
-
-  void on_m_pButtonConnect_clicked();
-  void on_m_pButtonConnectToClient_clicked();
-
-signals:
-  void windowShown();
+  AppConfig &m_AppConfig;
+  LicenseHandler m_LicenseHandler;
+  ServerConfig m_ServerConfig;
+  ServerConnection m_ServerConnection;
+  ClientConnection m_ClientConnection;
+  synergy::gui::TlsUtility m_TlsUtility;
 };

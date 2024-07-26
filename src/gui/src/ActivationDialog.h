@@ -17,7 +17,8 @@
 
 #pragma once
 
-#include <LicenseManager.h>
+#include "gui/LicenseHandler.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -31,8 +32,14 @@ class ActivationDialog : public QDialog {
 
 public:
   ActivationDialog(
-      QWidget *parent, AppConfig &appConfig, LicenseManager &licenseManager);
-  ~ActivationDialog();
+      QWidget *parent, AppConfig &appConfig, LicenseHandler &licenseHandler);
+  ~ActivationDialog() override;
+
+  class ActivationMessageError : public std::runtime_error {
+  public:
+    ActivationMessageError()
+        : std::runtime_error("could not show activation message") {}
+  };
 
 public slots:
   void reject();
@@ -42,7 +49,11 @@ protected:
   void refreshSerialKey();
 
 private:
-  Ui::ActivationDialog *ui;
-  AppConfig *m_appConfig;
-  LicenseManager *m_LicenseManager;
+  void showResultDialog(LicenseHandler::ChangeSerialKeyResult result);
+  void showSuccessDialog();
+  void showErrorDialog(const QString &message);
+
+  Ui::ActivationDialog *m_ui;
+  AppConfig *m_pAppConfig;
+  LicenseHandler &m_licenseHandler;
 };

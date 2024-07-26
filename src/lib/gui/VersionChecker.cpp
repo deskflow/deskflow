@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2012 Nick Bolton
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,23 +25,28 @@
 #include <QRegularExpression>
 #include <memory>
 
-VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> nam)
-    : m_manager(nam ? nam : std::make_shared<QNetworkAccessManager>(this)) {
+const char *const kVersion = SYNERGY_VERSION;
+
+VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> network)
+    : m_network(
+          network ? network : std::make_shared<QNetworkAccessManager>(this)) {
   connect(
-      m_manager.get(), SIGNAL(finished(QNetworkReply *)), this,
+      m_network.get(), SIGNAL(finished(QNetworkReply *)), this,
       SLOT(replyFinished(QNetworkReply *)));
 }
 
-void VersionChecker::checkLatest() {
-  auto request = QNetworkRequest(QUrl(SYNERGY_VERSION_URL));
-  request.setHeader(
-      QNetworkRequest::UserAgentHeader, QString("Synergy (") + SYNERGY_VERSION +
-                                            ") " +
-                                            QSysInfo::prettyProductName());
-  request.setRawHeader("X-Synergy-Version", SYNERGY_VERSION);
+void VersionChecker::checkLatest() const {
+  const QString url =
+      qEnvironmentVariable("SYNERGY_VERSION_URL", SYNERGY_VERSION_URL);
+  auto request = QNetworkRequest(url);
+  auto userAgent = QString("Synergy %1 on %2")
+                       .arg(kVersion)
+                       .arg(QSysInfo::prettyProductName());
+  request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
+  request.setRawHeader("X-Synergy-Version", kVersion);
   request.setRawHeader(
       "X-Synergy-Language", QLocale::system().name().toStdString().c_str());
-  m_manager->get(request);
+  m_network->get(request);
 }
 
 void VersionChecker::replyFinished(QNetworkReply *reply) {
@@ -53,7 +57,7 @@ void VersionChecker::replyFinished(QNetworkReply *reply) {
   }
 }
 
-int VersionChecker::getStageVersion(QString stage) const {
+int VersionChecker::getStageVersion(QString stage) {
   const char *stableName = "stable";
   const char *rcName = "rc";
   const char *betaName = "beta";

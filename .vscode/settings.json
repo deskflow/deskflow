@@ -1,0 +1,4 @@
+{
+  "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "gcovViewer.buildDirectories": ["${workspaceFolder}/build/src/lib"]
+}

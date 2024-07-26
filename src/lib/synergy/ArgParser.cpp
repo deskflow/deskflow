@@ -19,23 +19,25 @@
 
 #include "base/Log.h"
 #include "base/String.h"
+#include "license/parse_serial_key.h"
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/ClientArgs.h"
 #include "synergy/ServerArgs.h"
-#include "synergy/StreamChunker.h"
 #include "synergy/ToolArgs.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
 #endif
 
-lib::synergy::ArgsBase *ArgParser::m_argsBase = NULL;
+using namespace synergy::license;
+
+synergy::ArgsBase *ArgParser::m_argsBase = nullptr;
 
 ArgParser::ArgParser(App *app) : m_app(app) {}
 
 bool ArgParser::parseServerArgs(
-    lib::synergy::ServerArgs &args, int argc, const char *const *argv) {
+    synergy::ServerArgs &args, int argc, const char *const *argv) {
   setArgsBase(args);
   updateCommonArgs(argv);
   int i = 1;
@@ -53,7 +55,7 @@ bool ArgParser::parseServerArgs(
       // save configuration file path
       args.m_configFile = argv[++i];
     } else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
-      args.m_serial = SerialKey(argv[++i]);
+      args.m_serialKey = parseSerialKey(argv[++i]);
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
@@ -74,7 +76,7 @@ bool ArgParser::parseServerArgs(
 }
 
 bool ArgParser::parseClientArgs(
-    lib::synergy::ClientArgs &args, int argc, const char *const *argv) {
+    synergy::ClientArgs &args, int argc, const char *const *argv) {
   setArgsBase(args);
   updateCommonArgs(argv);
 
@@ -100,7 +102,7 @@ bool ArgParser::parseClientArgs(
       args.m_enableLangSync = true;
     } else if (isArg(i, argc, argv, nullptr, "--invert-scroll")) {
       args.m_clientScrollDirection =
-          lib::synergy::ClientScrollDirection::INVERT_SERVER;
+          synergy::ClientScrollDirection::INVERT_SERVER;
     } else if (isArg(i, argc, argv, nullptr, "--host")) {
       args.m_hostMode = true;
     } else if (isArg(i, argc, argv, nullptr, "client")) {
@@ -136,7 +138,7 @@ bool ArgParser::parseClientArgs(
 }
 
 bool ArgParser::parsePlatformArg(
-    lib::synergy::ArgsBase &argsBase, const int &argc, const char *const *argv,
+    synergy::ArgsBase &argsBase, const int &argc, const char *const *argv,
     int &i) {
 #if WINAPI_MSWINDOWS
   if (isArg(i, argc, argv, nullptr, "--service")) {

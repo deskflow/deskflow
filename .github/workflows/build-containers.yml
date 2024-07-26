@@ -21,6 +21,9 @@ jobs:
     timeout-minutes: 10
 
     strategy:
+      # Build all images even if some fail.
+      fail-fast: false
+
       matrix:
         os:
           - name: debian-12-amd64

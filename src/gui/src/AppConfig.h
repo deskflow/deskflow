@@ -20,10 +20,9 @@
 
 #include "CommonConfig.h"
 #include "Config.h"
-#include "CoreInterface.h"
-#include "LicenseManager.h"
+#include "gui/CoreInterface.h"
 #include "gui/ElevateMode.h"
-#include "shared/EditionType.h"
+#include "gui/IAppConfig.h"
 
 #include <QObject>
 #include <QString>
@@ -32,11 +31,9 @@
 
 class QSettings;
 class SettingsDialog;
-class LicenseRegister;
 class ServerConfig;
-class LicenseManager;
+class LicenseHandler;
 class ActivationDialog;
-class LicenseRegistry;
 
 enum class ProcessMode { kService, kDesktop };
 
@@ -48,17 +45,67 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif
 
-/// @brief Reads and writes application specific settings
-class AppConfig : public QObject, public synergy::gui::CommonConfig {
+/**
+ * @brief Simply reads and writes app settings.
+ *
+ * Important: Maintain a clear separation of concerns and keep it simple.
+ * It is tempting to add logic (e.g. license checks) to this class since it
+ * instance is widely accessible, but that has previously led to this class
+ * becoming a god object.
+ */
+class AppConfig : public QObject,
+                  public synergy::gui::CommonConfig,
+                  public synergy::gui::IAppConfig {
   Q_OBJECT
 
   friend class SettingsDialog;
   friend class MainWindow;
   friend class SetupWizard;
   friend class ServerConfig;
-  friend class LicenseManager;
   friend class ActivationDialog;
-  friend class LicenseRegistry;
+
+private:
+  enum class Setting {
+    kScreenName = 0,
+    kPort = 1,
+    kInterface = 2,
+    kLogLevel = 3,
+    kLogToFile = 4,
+    kLogFilename = 5,
+    kWizardLastRun = 6,
+    kStartedBefore = 7,
+    kElevateMode = 8,
+    kElevateModeEnum = 9,
+    // 10 = edition, obsolete (using serial key instead)
+    kTlsEnabled = 11,
+    kAutoHide = 12,
+    kSerialKey = 13,
+    kLastVersion = 14,
+    // 15 = last expire time, obsolete
+    kActivationHasRun = 16,
+    kMinimizeToTray = 17,
+    // 18 = activate email, obsolete
+    kLoadSystemSettings = 19,
+    kServerGroupChecked = 20,
+    kUseExternalConfig = 21,
+    kConfigFile = 22,
+    kUseInternalConfig = 23,
+    kClientGroupChecked = 24,
+    kServerHostname = 25,
+    kTlsCertPath = 26,
+    kTlsKeyLength = 27,
+    kPreventSleep = 28,
+    kLanguageSync = 29,
+    kInvertScrollDirection = 30,
+    // 31 = guid, obsolete
+    // 32 = license registry url, obsolete
+    kLicenseNextCheck = 33,
+    kInvertConnection = 34,
+    // 35 = client-host-mode, obsolete
+    // 36 = server-client-mode, obsolete
+    kServiceEnabled = 37,
+    kCloseToTray = 38,
+  };
 
 public:
   explicit AppConfig();
@@ -66,12 +113,8 @@ public:
   /// @brief Underlying configuration reader/writer
   synergy::gui::Config &config();
 
+  /// @brief Saves the setting to the current scope
   void saveSettings() override;
-  void applyAppSettings() const;
-
-  /// @brief Generates TLS certificate
-  /// @param [in] bool forceGeneration Generate certificate even if it's exists.
-  void generateCertificate(bool forceGeneration = false) const;
 
   /**
    * Getters
@@ -93,18 +136,13 @@ public:
   QString coreClientName() const;
   QString logDir() const;
   void persistLogDir() const;
-  ElevateMode elevateMode();
-  bool cryptoAvailable() const;
-  bool cryptoEnabled() const;
+  ElevateMode elevateMode() const;
   bool autoHide() const;
   bool invertScrollDirection() const;
   unsigned long long licenseNextCheck() const;
-  const QString &guid() const;
   bool languageSync() const;
   bool preventSleep() const;
-  bool clientHostMode() const;
-  bool serverClientMode() const;
-  bool initiateConnectionFromServer() const;
+  bool invertConnection() const;
   bool serverGroupChecked() const;
   bool useExternalConfig() const;
   const QString &configFile() const;
@@ -115,69 +153,17 @@ public:
   bool serviceEnabled() const;
   bool minimizeToTray() const;
   bool closeToTray() const;
-
-  /// @brief Gets the current TLS certificate path
-  /// @return QString The path to the cert
-  QString tlsCertPath() const;
-
-  /// @brief Get the key length to be used for the private key of a TLS cert
-  /// @return QString The key length in bits
-  QString tlsKeyLength() const;
-
-#ifdef SYNERGY_ENABLE_LICENSING
-  Edition edition() const;
   QString serialKey() const;
-  int lastExpiringWarningTime() const;
   bool activationHasRun() const;
-#endif
+  bool tlsEnabled() const override;
+  QString tlsCertPath() const override;
+  QString tlsKeyLength() const override;
 
-protected:
-  enum class Setting {
-    kScreenName,
-    kPort,
-    kInterfaceSetting,
-    kLogLevel,
-    kLogToFile,
-    kLogFilename,
-    kWizardLastRun,
-    kStartedBefore,
-    kElevateModeSetting,
-    kElevateModeEnum,
-    kEditionSetting,
-    kCryptoEnabled,
-    kAutoHide,
-    kSerialKey,
-    kLastVersion,
-    kLastExpireWarningTime,
-    kActivationHasRun,
-    kMinimizeToTray,
-    kActivateEmail,
-    kLoadSystemSettings,
-    kGroupServerCheck,
-    kUseExternalConfig,
-    kConfigFile,
-    kUseInternalConfig,
-    kGroupClientCheck,
-    kServerHostname,
-    kTlsCertPath,
-    kTlsKeyLength,
-    kPreventSleep,
-    kLanguageSync,
-    kInvertScrollDirection,
-    kGuid,
-    kLicenseRegistryUrl,
-    kLicenseNextCheck,
-    kInitiateConnectionFromServer,
-    kClientHostMode,
-    kServerClientMode,
-    kServiceEnabled,
-    kCloseToTray
-  };
-
-  static QString settingName(AppConfig::Setting name);
-
+private:
   /// @brief Loads the setting from the current scope
   void loadSettings() override;
+
+  static QString settingName(AppConfig::Setting name);
 
   /**
    * Setters
@@ -192,11 +178,9 @@ protected:
   void setWizardHasRun();
   void setStartedBefore(bool b);
   void setElevateMode(ElevateMode em);
-  void setCryptoEnabled(bool e);
-  void setEdition(Edition);
-  void setSerialKey(const QString &serial);
+  void setTlsEnabled(bool e);
+  void setSerialKey(const QString &serialKey);
   void clearSerialKey();
-  void setLastExpiringWarningTime(int t);
   void setAutoHide(bool b);
   void setInvertScrollDirection(bool b);
   void setLicenseNextCheck(unsigned long long);
@@ -208,13 +192,14 @@ protected:
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
-  void setClientHostMode(bool newValue);
-  void setServerClientMode(bool newValue);
   void setMinimizeToTray(bool b);
   void setLastVersion(const QString &version);
   void setServiceEnabled(bool enabled);
   void setCloseToTray(bool minimize);
   void setActivationHasRun(bool value);
+  void setTlsCertPath(const QString &path);
+  void setTlsKeyLength(const QString &length);
+  void setInvertConnection(bool value);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -223,17 +208,8 @@ protected:
   ///             scope settings.
   void setLoadFromSystemScope(bool value);
 
-  /// @brief Set the path to the TLS/SSL certificate file that will be used
-  /// @param [in] path The path to the Certificate
-  void setTlsCertPath(const QString &path);
-
-  /// @brief Sets the key length of the private key to use in a TLS connection
-  /// @param [in] QString length The key length eg: 1024, 2048, 4096
-  void setTlsKeyLength(const QString &length);
-
-private:
   /// @brief Loads config from the underlying reader/writer
-  void load();
+  void loadAllScopes();
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
@@ -273,6 +249,11 @@ private:
   /// for settings that shouldn't be copied from between scopes.
   void setDefaultValues();
 
+  /**
+   * @brief Gets a TLS certificate path based on the user's profile dir.
+   */
+  QString defaultTlsCertPath() const;
+
   synergy::gui::Config m_Config;
   CoreInterface m_CoreInterface;
   QString m_ScreenName = "";
@@ -284,23 +265,18 @@ private:
   int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = kDefaultElevateMode;
-  Edition m_Edition = Edition::kUnregistered;
   QString m_ActivateEmail = "";
-  bool m_CryptoEnabled = false;
+  bool m_TlsEnabled = true;
   bool m_AutoHide = false;
-  QString m_Serialkey = "";
+  QString m_SerialKey = "";
   QString m_LastVersion = "";
-  QString m_Guid = "";
   unsigned long long m_licenseNextCheck = 0;
-  int m_LastExpiringWarningTime = 0;
   bool m_ActivationHasRun = false;
   bool m_MinimizeToTray = true;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
-  bool m_InitiateConnectionFromServer = false;
-  bool m_ClientHostMode = true;
-  bool m_ServerClientMode = true;
+  bool m_InvertConnection = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
   QString m_ConfigFile = "";
@@ -308,13 +284,15 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
-  bool m_CloseToTray = true;
-
-  /// @brief The path to the TLS certificate file
+  bool m_CloseToTray = false;
   QString m_TlsCertPath = "";
+  QString m_TlsKeyLength = "2048";
 
-  /// @brief The key length of the TLS cert to make
-  QString m_TlsKeyLength = "";
+  /**
+   * @brief Flag is set when any TLS is setting is changed, and is reset
+   * when the TLS changed event is emitted.
+   */
+  bool m_TlsChanged = false;
 
   /// @brief should the setting be loaded from
   /// SystemScope
@@ -340,6 +318,9 @@ private:
   static const char m_ConfigFilename[];
 
 signals:
-  void sslToggled() const;
-  void screenNameChanged() const;
+  void loaded();
+  void saved();
+  void tlsChanged();
+  void screenNameChanged();
+  void invertConnectionChanged();
 };

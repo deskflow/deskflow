@@ -17,8 +17,8 @@
 
 #pragma once
 
+#include <QCoreApplication>
 #include <gtest/gtest.h>
-#include <qcoreapplication.h>
 
 class QtCoreTest : public ::testing::Test {
 public:

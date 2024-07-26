@@ -22,13 +22,12 @@
 #include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "gui/constants.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QtCore>
-
-using synergy::gui::Config;
 
 static const struct {
   int x;
@@ -162,9 +161,6 @@ void ServerConfig::saveSettings() {
   settings().endArray();
 
   settings().endGroup();
-
-  m_pAppConfig->saveSettings();
-  m_pAppConfig->config().markUnsaved();
 }
 
 void ServerConfig::loadSettings() {
@@ -541,7 +537,7 @@ size_t ServerConfig::setClipboardSharingSize(size_t size) {
 }
 
 void ServerConfig::setClientAddress(const QString &address) {
-  if (m_pAppConfig->serverClientMode()) {
+  if (m_pAppConfig->invertConnection()) {
     m_ClientAddress = address;
   }
 }
@@ -549,7 +545,7 @@ void ServerConfig::setClientAddress(const QString &address) {
 QString ServerConfig::getClientAddress() const {
   QString clientAddress;
 
-  if (m_pAppConfig->serverClientMode()) {
+  if (m_pAppConfig->invertConnection()) {
     clientAddress = m_ClientAddress.trimmed();
   }
 
@@ -558,12 +554,4 @@ QString ServerConfig::getClientAddress() const {
 
 QSettings &ServerConfig::settings() {
   return *m_pAppConfig->config().currentSettings();
-}
-
-bool ServerConfig::isHotkeysAvailable() const {
-#ifdef SYNERGY_ENABLE_LICENSING
-  return (m_pAppConfig->edition() != Edition::kLite);
-#else
-  return true;
-#endif
 }
