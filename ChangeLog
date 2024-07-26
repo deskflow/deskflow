@@ -59,6 +59,7 @@ Enhancements:
 - #7406 Migrate scripts from `requirements.txt` to `pyproject.toml`
 - #7407 Implement safer memory use, improve dev env, fixed GUI bugs
 - #7412 Reduce GUI compile time by building a GUI library
+- #7413 Improve UI design and reduce over-use of `#ifdef`
 
 # 1.14.6
 
