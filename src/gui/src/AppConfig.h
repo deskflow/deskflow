@@ -289,7 +289,7 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
-  bool m_CloseToTray = true;
+  bool m_CloseToTray = false;
   QString m_TlsCertPath = "";
   QString m_TlsKeyLength = "2048";
 
