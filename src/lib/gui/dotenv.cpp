@@ -61,12 +61,14 @@ void dotenv(const QString &filePath) {
     if (key.isEmpty() || value.isEmpty())
       continue;
 
-    auto saved = QByteArray(value.toUtf8());
-    const auto &key_c = key.toUtf8().constData();
-    const auto &saved_c = saved.constData();
+    const auto keyBytes = key.toUtf8();
+    const auto valueBytes = value.toUtf8();
 
-    qDebug("%s=%s", key_c, saved_c);
-    qputenv(key.toUtf8(), value.toUtf8());
+    const auto &key_c = keyBytes.constData();
+    const auto &value_c = valueBytes.constData();
+
+    qDebug("%s=%s", key_c, value_c);
+    qputenv(keyBytes, valueBytes);
   }
 }
 
