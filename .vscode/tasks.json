@@ -43,7 +43,7 @@
       "type": "shell",
       "command": "rm -r build/src/gui build/src/lib/gui",
       "windows": {
-        "command": "remove-item -recurse build/src/gui build/src/lib/gui"
+        "command": "remove-item -recurse build/src/gui,build/src/lib/gui"
       }
     },
     {

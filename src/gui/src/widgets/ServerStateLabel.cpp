@@ -35,14 +35,10 @@ void ServerStateLabel::updateServerState(const QString &line) {
     m_clients.removeAll(message.getClientName());
   }
 
-  updateState();
-}
-
-void ServerStateLabel::updateState() {
   if (m_clients.isEmpty()) {
-    show();
+    setText(tr("No clients connected"));
   } else {
-    hide();
+    setText(tr("Connected clients: %1").arg(m_clients.join(", ")));
   }
 }
 

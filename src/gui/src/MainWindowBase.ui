@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>651</height>
+    <width>836</width>
+    <height>727</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,7 +45,7 @@
       <item>
        <spacer name="m_pSpacerUpdate">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -77,10 +77,10 @@ top: 3px;</string>
     <item>
      <spacer name="verticalSpacer_5">
       <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
+       <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Policy::Fixed</enum>
+       <enum>QSizePolicy::Fixed</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -99,6 +99,12 @@ top: 3px;</string>
     </item>
     <item>
      <widget class="QWidget" name="m_pMainWidgets" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <property name="spacing">
         <number>16</number>
@@ -131,10 +137,10 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="topMargin">
-           <number>11</number>
+          <property name="spacing">
+           <number>15</number>
           </property>
-          <item alignment="Qt::AlignmentFlag::AlignTop">
+          <item alignment="Qt::AlignTop">
            <widget class="QRadioButton" name="m_pRadioGroupServer">
             <property name="styleSheet">
              <string notr="true">QRadioButton::indicator{
@@ -147,11 +153,11 @@ background-color: rgba(192,192,192, 0.1);
             </property>
            </widget>
           </item>
-          <item alignment="Qt::AlignmentFlag::AlignTop">
+          <item alignment="Qt::AlignTop">
            <widget class="QWidget" name="m_pWidgetServer" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutServer">
              <property name="spacing">
-              <number>10</number>
+              <number>15</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -169,7 +175,7 @@ background-color: rgba(192,192,192, 0.1);
               <widget class="QWidget" name="m_pWidgetServerInverse" native="true">
                <layout class="QVBoxLayout" name="m_pLayoutServerInverse">
                 <property name="spacing">
-                 <number>10</number>
+                 <number>15</number>
                 </property>
                 <property name="leftMargin">
                  <number>0</number>
@@ -229,7 +235,7 @@ background-color: rgba(192,192,192, 0.1);
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS enabled (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;fingerprint&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="textFormat">
-                <enum>Qt::TextFormat::RichText</enum>
+                <enum>Qt::RichText</enum>
                </property>
                <property name="indent">
                 <number>20</number>
@@ -239,7 +245,7 @@ background-color: rgba(192,192,192, 0.1);
              <item>
               <spacer name="verticalSpacer_2">
                <property name="orientation">
-                <enum>Qt::Orientation::Vertical</enum>
+                <enum>Qt::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -254,7 +260,7 @@ background-color: rgba(192,192,192, 0.1);
                <item>
                 <spacer name="spacer_2">
                  <property name="orientation">
-                  <enum>Qt::Orientation::Horizontal</enum>
+                  <enum>Qt::Horizontal</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
@@ -295,10 +301,13 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
+          <property name="spacing">
+           <number>15</number>
+          </property>
           <property name="topMargin">
            <number>11</number>
           </property>
-          <item alignment="Qt::AlignmentFlag::AlignTop">
+          <item alignment="Qt::AlignTop">
            <widget class="QRadioButton" name="m_pRadioGroupClient">
             <property name="styleSheet">
              <string notr="true">QRadioButton::indicator{
@@ -311,11 +320,11 @@ background-color: rgba(192,192,192, 0.1);
             </property>
            </widget>
           </item>
-          <item alignment="Qt::AlignmentFlag::AlignTop">
+          <item alignment="Qt::AlignTop">
            <widget class="QWidget" name="m_pWidgetClient" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutClient">
              <property name="spacing">
-              <number>10</number>
+              <number>15</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -382,7 +391,7 @@ background-color: rgba(192,192,192, 0.1);
           <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -411,10 +420,10 @@ background-color: rgba(192,192,192, 0.1);
     <item>
      <spacer name="verticalSpacer_7">
       <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
+       <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Policy::Fixed</enum>
+       <enum>QSizePolicy::Fixed</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -440,10 +449,10 @@ background-color: rgba(192,192,192, 0.1);
 }</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
+       <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
+       <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="leftMargin">
@@ -479,7 +488,7 @@ background-color: rgba(192,192,192, 0.1);
           <bool>false</bool>
          </property>
          <property name="lineWrapMode">
-          <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
+          <enum>QPlainTextEdit::NoWrap</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -498,7 +507,7 @@ background-color: rgba(192,192,192, 0.1);
        <number>6</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+       <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <property name="topMargin">
        <number>16</number>
@@ -526,7 +535,7 @@ background-color: rgba(192,192,192, 0.1);
       <item>
        <spacer name="spacer">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -552,7 +561,7 @@ top: 3px;</string>
          <string notr="true">m_labelNotice</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="margin">
          <number>0</number>
@@ -565,10 +574,10 @@ top: 3px;</string>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Policy::Fixed</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
