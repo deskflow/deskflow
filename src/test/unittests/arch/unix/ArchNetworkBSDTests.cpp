@@ -20,10 +20,15 @@
 #include "lib/arch/XArch.h"
 
 #include <array>
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
 #include <netinet/in.h>
 #include <sys/types.h>
+
+struct MockDeps : public ArchNetworkBSD::Deps {
+  MOCK_METHOD(void, sleepMock, (double));
+};
 
 const auto kPollStub = [](struct pollfd const *, nfds_t, int) { return 0; };
 
@@ -36,7 +41,7 @@ const auto kStubDeps = ArchNetworkBSD::Deps{
     kSleepStub,
 };
 
-TEST(ArchNetworkBSDTests, pollSocket_nullSocketEntry_throwsAccessError) {
+TEST(ArchNetworkBSDTests, pollSocket_stubEntry_throwsAccessError) {
   auto pollMock = [](struct pollfd const *, nfds_t, int) {
     errno = EACCES;
     return -1;
@@ -44,13 +49,24 @@ TEST(ArchNetworkBSDTests, pollSocket_nullSocketEntry_throwsAccessError) {
   auto deps = kStubDeps;
   deps.poll = pollMock;
   ArchNetworkBSD networkBSD(deps);
-  std::array<IArchNetwork::PollEntry, 2> pollEntries{{nullptr, 0, 0}};
+  std::array<IArchNetwork::PollEntry, 2> entries{{nullptr, 0, 0}};
 
   const auto f = [&] {
-    networkBSD.pollSocket(pollEntries.data(), pollEntries.size(), 1);
+    networkBSD.pollSocket(entries.data(), entries.size(), 1);
   };
 
   EXPECT_THROW({ f(); }, XArchNetworkAccess);
+}
+
+TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
+  MockDeps deps;
+  deps.sleep = [&deps](double) { deps.sleepMock(1); };
+  ArchNetworkBSD networkBSD(deps);
+
+  EXPECT_CALL(deps, sleepMock(1)).Times(1);
+  auto result = networkBSD.pollSocket(nullptr, 0, 1);
+
+  EXPECT_EQ(result, 0);
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {

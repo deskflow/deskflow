@@ -48,11 +48,7 @@ static const int s_family[] = {
 };
 static const int s_type[] = {SOCK_DGRAM, SOCK_STREAM};
 
-const PollFunc kPoll = [](struct pollfd *fds, nfds_t nfds, int timeout) {
-  return poll(fds, nfds, timeout);
-};
-
-const SleepFunc kSleep = [](double seconds) { ARCH->sleep(seconds); };
+const auto kSleep = [](double seconds) { ARCH->sleep(seconds); };
 
 #if !HAVE_INET_ATON
 // parse dotted quad addresses.  we don't bother with the weird BSD'ism
@@ -79,7 +75,7 @@ static in_addr_t inet_aton(const char *cp, struct in_addr *inp) {
 //
 
 ArchNetworkBSD::ArchNetworkBSD(const std::optional<Deps> &deps)
-    : m_deps(deps.value_or(Deps{kPoll, kSleep})) {}
+    : m_deps(deps.value_or(Deps{::poll, kSleep})) {}
 
 ArchNetworkBSD::~ArchNetworkBSD() {
   if (m_mutex)
