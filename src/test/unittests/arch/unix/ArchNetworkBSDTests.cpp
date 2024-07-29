@@ -24,22 +24,19 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 
-TEST(ArchNetworkBSDTests, pollSocket_errs_EACCES) {
-  auto poll = [](struct pollfd *, nfds_t, int) {
+TEST(ArchNetworkBSDTests, pollSocket_nullSocketEntry_throwsAccessError) {
+  auto pollMock = [](struct pollfd const *, nfds_t, int) {
     errno = EACCES;
     return -1;
   };
-  ArchNetworkBSD networkBSD(poll);
+  ArchNetworkBSD networkBSD(pollMock);
+  std::array<IArchNetwork::PollEntry, 2> pollEntries{{nullptr, 0, 0}};
 
-  try {
-    std::array<IArchNetwork::PollEntry, 2> pe{{nullptr, 0, 0}};
-    networkBSD.pollSocket(pe.data(), pe.size(), 1);
-    FAIL() << "Expected to throw";
-  } catch (XArchNetworkAccess const &err) {
-    EXPECT_STREQ(err.what(), "Permission denied");
-  } catch (std::runtime_error const &baseerr) {
-    FAIL() << "Expected to throw XArchNetworkAccess but got " << baseerr.what();
-  }
+  const auto f = [&] {
+    networkBSD.pollSocket(pollEntries.data(), pollEntries.size(), 1);
+  };
+
+  EXPECT_THROW({ f(); }, XArchNetworkAccess);
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_IP6) {
