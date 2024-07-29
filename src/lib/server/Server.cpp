@@ -2071,7 +2071,12 @@ void Server::closeClient(BaseClientProxy *client, const char *msg) {
 
   // move client to closing list
   removeClient(client);
-  m_oldClients.insert(std::make_pair(client, timer));
+
+  try {
+    m_oldClients.insert(std::make_pair(client, timer));
+  } catch (std::exception &e) { // NOSONAR
+    LOG((CLOG_ERR "failed to append old client: %s", e.what()));
+  }
 
   // if this client is the active screen then we have to
   // jump off of it
