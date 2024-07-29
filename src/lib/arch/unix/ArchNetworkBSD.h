@@ -75,6 +75,8 @@ public:
     virtual void sleep(double);
     virtual int poll(struct pollfd *, nfds_t, int);
     virtual std::shared_ptr<struct pollfd[]> makePollFD(nfds_t);
+    virtual ssize_t read(int, void *, size_t);
+    virtual void testCancelThread();
   };
 
   explicit ArchNetworkBSD() : m_deps(s_deps) {}

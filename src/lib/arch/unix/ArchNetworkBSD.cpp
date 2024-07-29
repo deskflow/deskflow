@@ -88,6 +88,12 @@ std::shared_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n) {
   return std::make_shared<struct pollfd[]>(n);
 }
 
+ssize_t ArchNetworkBSD::Deps::read(int fd, void *buf, size_t len) {
+  return ::read(fd, buf, len);
+}
+
+void ArchNetworkBSD::Deps::testCancelThread() { ARCH->testCancelThread(); }
+
 //
 // ArchNetworkBSD
 //
@@ -289,9 +295,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   // add the unblock pipe
   const int *unblockPipe = getUnblockPipe();
   if (unblockPipe != nullptr) {
-
-    // TODO: fix 'Access of the heap area at negative byte offset'
-    // https://sonarcloud.io/project/issues?open=AZDbWtn1LIjs0CMfDmHb&id=symless_synergy-core
+    assert(n < (1 + num));
     pfd[n].fd = unblockPipe[0];
 
     pfd[n].events = POLLIN;
@@ -311,7 +315,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
     int ignore;
 
     do {
-      ignore = read(unblockPipe[0], dummy, sizeof(dummy));
+      ignore = m_deps.read(unblockPipe[0], dummy, sizeof(dummy));
     } while (errno != EAGAIN);
 
     // don't count this unblock pipe in return value
@@ -322,11 +326,11 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   if (n == -1) {
     if (errno == EINTR) {
       // interrupted system call
-      ARCH->testCancelThread();
+      m_deps.testCancelThread();
       return 0;
     }
     throwError(errno);
-    return -1;
+    return -1; // unreachable
   }
 
   // translate back
