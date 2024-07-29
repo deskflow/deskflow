@@ -62,11 +62,10 @@ TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
 
 TEST(ArchNetworkBSDTests, pollSocket_stubEntry_throwsAccessError) {
   MockDeps deps;
-  ON_CALL(deps, pollMock(_, _, _))
-      .WillByDefault([](struct pollfd const *, nfds_t, int) {
-        errno = EACCES;
-        return -1;
-      });
+  ON_CALL(deps, pollMock(_, _, _)).WillByDefault([]() {
+    errno = EACCES;
+    return -1;
+  });
   ArchNetworkBSD networkBSD(deps);
   std::array<IArchNetwork::PollEntry, 2> entries{{nullptr, 0, 0}};
 
