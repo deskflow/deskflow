@@ -84,8 +84,8 @@ int ArchNetworkBSD::Deps::poll(struct pollfd *fds, nfds_t nfds, int timeout) {
   return ::poll(fds, nfds, timeout);
 }
 
-std::unique_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n) {
-  return std::make_unique<struct pollfd[]>(n);
+std::shared_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n) {
+  return std::make_shared<struct pollfd[]>(n);
 }
 
 //

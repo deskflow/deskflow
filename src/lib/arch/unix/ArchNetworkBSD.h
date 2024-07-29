@@ -74,7 +74,7 @@ public:
     virtual ~Deps() = default;
     virtual void sleep(double);
     virtual int poll(struct pollfd *, nfds_t, int);
-    virtual std::unique_ptr<struct pollfd[]> makePollFD(nfds_t);
+    virtual std::shared_ptr<struct pollfd[]> makePollFD(nfds_t);
   };
 
   explicit ArchNetworkBSD() : m_deps(s_deps) {}

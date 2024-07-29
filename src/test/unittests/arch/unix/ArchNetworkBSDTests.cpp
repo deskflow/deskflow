@@ -19,7 +19,6 @@
 
 #include "lib/arch/XArch.h"
 
-#include <array>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -27,6 +26,9 @@
 #include <sys/types.h>
 
 using ::testing::_;
+using ::testing::NiceMock;
+using PollEntries = std::vector<IArchNetwork::PollEntry>;
+using PollFD = struct pollfd[];
 
 struct MockDeps : public ArchNetworkBSD::Deps {
   MockDeps() {
@@ -37,8 +39,7 @@ struct MockDeps : public ArchNetworkBSD::Deps {
 
   MOCK_METHOD(void, sleep, (double), (override));
   MOCK_METHOD(int, poll, (struct pollfd *, nfds_t, int), (override));
-  MOCK_METHOD(
-      std::unique_ptr<struct pollfd[]>, makePollFD, (nfds_t), (override));
+  MOCK_METHOD(std::shared_ptr<PollFD>, makePollFD, (nfds_t), (override));
 };
 
 TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
@@ -51,20 +52,35 @@ TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
   EXPECT_EQ(result, 0);
 }
 
-TEST(ArchNetworkBSDTests, pollSocket_stubEntry_throwsAccessError) {
-  MockDeps deps;
+TEST(ArchNetworkBSDTests, pollSocket_mockAccessError_throws) {
+  NiceMock<MockDeps> deps;
   ON_CALL(deps, poll(_, _, _)).WillByDefault([]() {
     errno = EACCES;
     return -1;
   });
   ArchNetworkBSD networkBSD(deps);
-  std::array<IArchNetwork::PollEntry, 2> entries{{nullptr, 0, 0}};
+  PollEntries entries{{nullptr, 0, 0}};
 
   const auto f = [&] {
-    networkBSD.pollSocket(entries.data(), entries.size(), 1);
+    networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
   };
 
   EXPECT_THROW({ f(); }, XArchNetworkAccess);
+}
+
+TEST(ArchNetworkBSDTests, pollSocket_nullSocket_hasMinusOneFD) {
+  NiceMock<MockDeps> deps;
+  std::shared_ptr<PollFD> pollFD;
+  ON_CALL(deps, makePollFD(_)).WillByDefault([&pollFD](nfds_t n) {
+    pollFD = std::make_shared<PollFD>(n);
+    return pollFD;
+  });
+  ArchNetworkBSD networkBSD(deps);
+  PollEntries entries{{nullptr, 1, 0}};
+
+  networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
+
+  EXPECT_EQ(pollFD[0].fd, -1);
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
