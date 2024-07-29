@@ -241,8 +241,13 @@ Server::~Server() {
   m_events->removeHandler(Event::kTimer, this);
   stopSwitch();
 
-  // force immediate disconnection of secondary clients
-  disconnect();
+  try {
+    // force immediate disconnection of secondary clients
+    disconnect();
+  } catch (std::exception &e) { // NOSONAR
+    LOG((CLOG_ERR "failed to disconnect: %s", e.what()));
+  }
+
   for (OldClients::iterator index = m_oldClients.begin();
        index != m_oldClients.end(); ++index) {
     BaseClientProxy *client = index->first;
@@ -2072,11 +2077,7 @@ void Server::closeClient(BaseClientProxy *client, const char *msg) {
   // move client to closing list
   removeClient(client);
 
-  try {
-    m_oldClients.insert(std::make_pair(client, timer));
-  } catch (std::exception &e) { // NOSONAR
-    LOG((CLOG_ERR "failed to append old client: %s", e.what()));
-  }
+  m_oldClients.insert(std::make_pair(client, timer));
 
   // if this client is the active screen then we have to
   // jump off of it
