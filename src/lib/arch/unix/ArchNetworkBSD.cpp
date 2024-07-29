@@ -269,7 +269,7 @@ bool ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr) {
 }
 
 int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
-  assert(pe != NULL || num == 0);
+  assert((pe != nullptr && num > 0) || num == 0);
 
   // return if nothing to do
   if (num == 0) {
@@ -299,9 +299,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   // add the unblock pipe
   const int *unblockPipe = getUnblockPipe();
   if (unblockPipe != nullptr) {
-    assert(n > 0 && n < (1 + num));
-    pfd[n].fd = unblockPipe[0];
-
+    pfd[n].fd = unblockPipe[0]; // test
     pfd[n].events = POLLIN;
     ++n;
   }
