@@ -20,6 +20,7 @@
 
 #include "arch/IArchMultithread.h"
 #include "arch/IArchNetwork.h"
+#include <memory>
 
 #if HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -41,8 +42,6 @@ struct sockaddr_storage {
 typedef int socklen_t;
 #endif
 
-#include <functional>
-#include <optional>
 #include <poll.h>
 
 #define ARCH_NETWORK ArchNetworkBSD
@@ -52,9 +51,6 @@ typedef int socklen_t;
 // this should be void on modern systems but char is forwards
 // compatible so we always use it.
 typedef char optval_t;
-
-using PollFunc = std::function<int(struct pollfd *, nfds_t, int)>;
-using SleepFunc = std::function<void(double)>;
 
 class ArchSocketImpl {
 public:
@@ -75,11 +71,14 @@ public:
 class ArchNetworkBSD : public IArchNetwork {
 public:
   struct Deps {
-    PollFunc poll;
-    SleepFunc sleep;
+    virtual ~Deps() = default;
+    virtual void sleep(double);
+    virtual int poll(struct pollfd *, nfds_t, int);
+    virtual std::unique_ptr<struct pollfd[]> makePollFD(nfds_t);
   };
 
-  explicit ArchNetworkBSD(const std::optional<Deps> &deps = std::nullopt);
+  explicit ArchNetworkBSD() : m_deps(s_deps) {}
+  explicit ArchNetworkBSD(Deps &deps) : m_deps(deps) {}
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
   ~ArchNetworkBSD() override;
@@ -128,5 +127,6 @@ private:
 
 private:
   ArchMutex m_mutex{};
-  Deps m_deps;
+  Deps &m_deps;
+  static Deps s_deps;
 };

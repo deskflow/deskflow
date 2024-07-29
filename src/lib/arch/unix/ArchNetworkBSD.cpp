@@ -46,9 +46,10 @@ static const int s_family[] = {
     PF_INET,
     PF_INET6,
 };
+
 static const int s_type[] = {SOCK_DGRAM, SOCK_STREAM};
 
-const auto kSleep = [](double seconds) { ARCH->sleep(seconds); };
+ArchNetworkBSD::Deps ArchNetworkBSD::s_deps;
 
 #if !HAVE_INET_ATON
 // parse dotted quad addresses.  we don't bother with the weird BSD'ism
@@ -71,11 +72,25 @@ static in_addr_t inet_aton(const char *cp, struct in_addr *inp) {
 #endif
 
 //
-// ArchNetworkBSD
+// ArchNetworkBSD::Deps
 //
 
-ArchNetworkBSD::ArchNetworkBSD(const std::optional<Deps> &deps)
-    : m_deps(deps.value_or(Deps{::poll, kSleep})) {}
+void ArchNetworkBSD::Deps::sleep(double seconds) {
+  //
+  ARCH->sleep(seconds);
+}
+
+int ArchNetworkBSD::Deps::poll(struct pollfd *fds, nfds_t nfds, int timeout) {
+  return ::poll(fds, nfds, timeout);
+}
+
+std::unique_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n) {
+  return std::make_unique<struct pollfd[]>(n);
+}
+
+//
+// ArchNetworkBSD
+//
 
 ArchNetworkBSD::~ArchNetworkBSD() {
   if (m_mutex)
@@ -255,7 +270,8 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   }
 
   // allocate space for translated query
-  auto *pfd = new struct pollfd[1 + num];
+  auto pfdPtr = m_deps.makePollFD(1 + num);
+  auto *pfd = pfdPtr.get();
 
   // translate query
   for (int i = 0; i < num; ++i) {
@@ -307,10 +323,8 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
     if (errno == EINTR) {
       // interrupted system call
       ARCH->testCancelThread();
-      delete[] pfd;
       return 0;
     }
-    delete[] pfd;
     throwError(errno);
     return -1;
   }
@@ -332,7 +346,6 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
     }
   }
 
-  delete[] pfd;
   return n;
 }
 

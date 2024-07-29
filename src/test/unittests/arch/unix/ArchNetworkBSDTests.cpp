@@ -30,31 +30,22 @@ using ::testing::_;
 
 struct MockDeps : public ArchNetworkBSD::Deps {
   MockDeps() {
-    sleep = [this](double seconds) { sleepMock(seconds); };
-    poll = [this](struct pollfd const *fds, nfds_t nfds, int timeout) {
-      return pollMock(fds, nfds, timeout);
-    };
+    ON_CALL(*this, makePollFD(_)).WillByDefault([this](nfds_t n) {
+      return ArchNetworkBSD::Deps::makePollFD(n);
+    });
   }
-  MOCK_METHOD(void, sleepMock, (double));
-  MOCK_METHOD(int, pollMock, (struct pollfd const *, nfds_t, int));
-};
 
-const auto kPollStub = [](struct pollfd const *, nfds_t, int) { return 0; };
-
-const auto kSleepStub = [](double) {
-  // stub
-};
-
-const auto kStubDeps = ArchNetworkBSD::Deps{
-    kPollStub,
-    kSleepStub,
+  MOCK_METHOD(void, sleep, (double), (override));
+  MOCK_METHOD(int, poll, (struct pollfd *, nfds_t, int), (override));
+  MOCK_METHOD(
+      std::unique_ptr<struct pollfd[]>, makePollFD, (nfds_t), (override));
 };
 
 TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
   MockDeps deps;
   ArchNetworkBSD networkBSD(deps);
 
-  EXPECT_CALL(deps, sleepMock(1)).Times(1);
+  EXPECT_CALL(deps, sleep(1)).Times(1);
   auto result = networkBSD.pollSocket(nullptr, 0, 1);
 
   EXPECT_EQ(result, 0);
@@ -62,7 +53,7 @@ TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
 
 TEST(ArchNetworkBSDTests, pollSocket_stubEntry_throwsAccessError) {
   MockDeps deps;
-  ON_CALL(deps, pollMock(_, _, _)).WillByDefault([]() {
+  ON_CALL(deps, poll(_, _, _)).WillByDefault([]() {
     errno = EACCES;
     return -1;
   });
@@ -77,7 +68,8 @@ TEST(ArchNetworkBSDTests, pollSocket_stubEntry_throwsAccessError) {
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
-  ArchNetworkBSD networkBSD(kStubDeps);
+  MockDeps deps;
+  ArchNetworkBSD networkBSD(deps);
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
 
@@ -87,7 +79,8 @@ TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_badAddress_returnsFalse) {
-  ArchNetworkBSD networkBSD(kStubDeps);
+  MockDeps deps;
+  ArchNetworkBSD networkBSD(deps);
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
   auto scratch = (char *)&addr->m_addr;
