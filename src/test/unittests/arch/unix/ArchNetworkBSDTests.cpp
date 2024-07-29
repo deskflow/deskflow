@@ -140,8 +140,9 @@ TEST(ArchNetworkBSDTests, pollSocket_nullSocket_unblockPipeAppended) {
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  const auto unblockFD = 3;
-  EXPECT_EQ(deps.m_pollFD[1].fd, unblockFD);
+  // interesting: unblock pipe fd comes from `getNetworkDataForThread` which
+  // seems to differ depending on linux distro.
+  EXPECT_GT(deps.m_pollFD[1].fd, -1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_unblockPipeReventsError_readCalled) {
