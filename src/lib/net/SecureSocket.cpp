@@ -428,6 +428,10 @@ int SecureSocket::secureConnect(int socket) {
   SSL_set_fd(m_ssl->m_ssl, socket);
 
   LOG((CLOG_DEBUG2 "connecting secure socket"));
+
+  // TODO: S1-1766, enable hostname verification.
+  // the cert will need to be installed in the trusted store on the client.
+  // we'll probably need to find a way of securely transferring the cert.
   int r = SSL_connect(m_ssl->m_ssl);
 
   static int retry;
