@@ -60,6 +60,7 @@ Enhancements:
 - #7407 Implement safer memory use, improve dev env, fixed GUI bugs
 - #7412 Reduce GUI compile time by building a GUI library
 - #7413 Improve UI design and reduce over-use of `#ifdef`
+- #7414 Expand BSD sockets poll tests and remove legacy-poll code
 
 # 1.14.6
 

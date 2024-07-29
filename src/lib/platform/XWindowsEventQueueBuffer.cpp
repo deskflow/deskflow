@@ -27,19 +27,8 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#if HAVE_POLL
+
 #include <poll.h>
-#else
-#if HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#if HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#endif
 
 //
 // EventQueueTimer
@@ -112,7 +101,6 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
 
   // use poll() to wait for a message from the X server or for timeout.
   // this is a good deal more efficient than polling and sleeping.
-#if HAVE_POLL
   struct pollfd pfds[2];
   pfds[0].fd = ConnectionNumber(m_display);
   pfds[0].events = POLLIN;
@@ -121,29 +109,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
   int timeout = (dtimeout < 0.0) ? -1 : static_cast<int>(1000.0 * dtimeout);
   int remaining = timeout;
   int retval = 0;
-#else
-  struct timeval timeout;
-  struct timeval *timeoutPtr;
-  if (dtimeout < 0.0) {
-    timeoutPtr = NULL;
-  } else {
-    timeout.tv_sec = static_cast<int>(dtimeout);
-    timeout.tv_usec = static_cast<int>(1.0e+6 * (dtimeout - timeout.tv_sec));
-    timeoutPtr = &timeout;
-  }
 
-  // initialize file descriptor sets
-  fd_set rfds;
-  FD_ZERO(&rfds);
-  FD_SET(ConnectionNumber(m_display), &rfds);
-  FD_SET(m_pipefd[0], &rfds);
-  int nfds;
-  if (ConnectionNumber(m_display) > m_pipefd[0]) {
-    nfds = ConnectionNumber(m_display) + 1;
-  } else {
-    nfds = m_pipefd[0] + 1;
-  }
-#endif
   // It's possible that the X server has queued events locally
   // in xlib's event buffer and not pushed on to the fd. Hence we
   // can't simply monitor the fd as we may never be woken up.
@@ -159,7 +125,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
 
   while (((dtimeout < 0.0) || (remaining > 0)) &&
          getPendingCountLocked() == 0 && retval == 0) {
-#if HAVE_POLL
+
     retval = poll(pfds, 2, TIMEOUT_DELAY); // 16ms = 60hz, but we make it > to
                                            // play nicely with the cpu
     if (pfds[1].revents & POLLIN) {
@@ -170,14 +136,6 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
         // todo: handle read response
       }
     }
-#else
-    retval = select(
-        nfds, SELECT_TYPE_ARG234 & rfds, SELECT_TYPE_ARG234 NULL,
-        SELECT_TYPE_ARG234 NULL, SELECT_TYPE_ARG5 TIMEOUT_DELAY);
-    if (FD_SET(m_pipefd[0], &rfds)) {
-      read(m_pipefd[0], buf, 15);
-    }
-#endif
     remaining -= TIMEOUT_DELAY;
   }
 

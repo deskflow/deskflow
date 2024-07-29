@@ -6,6 +6,9 @@ env.ensure_in_venv(__file__)
 
 import argparse, os, sys
 import lib.cmd_utils as cmd_utils
+import lib.colors as colors
+
+valgrind_bin = "valgrind"
 
 
 def main():
@@ -39,7 +42,11 @@ def main():
         command = [binary]
 
     if args.valgrind:
-        command = ["valgrind"] + command
+        if not cmd_utils.has_command(valgrind_bin):
+            print(f"{colors.ERROR_TEXT} {valgrind_bin} not found")
+            sys.exit(1)
+
+        command = [valgrind_bin] + command
 
     result = cmd_utils.run(command, print_cmd=True, check=False)
     if not args.ignore_return_code:

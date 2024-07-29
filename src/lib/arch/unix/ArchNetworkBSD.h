@@ -20,10 +20,12 @@
 
 #include "arch/IArchMultithread.h"
 #include "arch/IArchNetwork.h"
+#include <memory>
 
 #if HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
+
 #if HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #else
@@ -40,24 +42,15 @@ struct sockaddr_storage {
 typedef int socklen_t;
 #endif
 
-#if HAVE_POLL
 #include <poll.h>
-#else
-#if HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#endif
+
+#define ARCH_NETWORK ArchNetworkBSD
+#define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_ *>(&addr_->m_addr))
 
 // old systems may use char* for [gs]etsockopt()'s optval argument.
 // this should be void on modern systems but char is forwards
 // compatible so we always use it.
 typedef char optval_t;
-
-#define ARCH_NETWORK ArchNetworkBSD
-#define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_ *>(&addr_->m_addr))
 
 class ArchSocketImpl {
 public:
@@ -77,57 +70,55 @@ public:
 //! Berkeley (BSD) sockets implementation of IArchNetwork
 class ArchNetworkBSD : public IArchNetwork {
 public:
-  ArchNetworkBSD();
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual void sleep(double);
+    virtual int poll(struct pollfd *, nfds_t, int);
+    virtual std::shared_ptr<struct pollfd[]> makePollFD(nfds_t);
+    virtual ssize_t read(int, void *, size_t);
+    virtual void testCancelThread();
+  };
+
+  explicit ArchNetworkBSD() : m_deps(s_deps) {}
+  explicit ArchNetworkBSD(Deps &deps) : m_deps(deps) {}
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
-  virtual ~ArchNetworkBSD();
+  ~ArchNetworkBSD() override;
 
   ArchNetworkBSD &operator=(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD &operator=(ArchNetworkBSD &&) = delete;
 
-  virtual void init();
+  void init() override;
 
   // IArchNetwork overrides
-  virtual ArchSocket newSocket(EAddressFamily, ESocketType);
-  virtual ArchSocket copySocket(ArchSocket s);
-  virtual void closeSocket(ArchSocket s);
-  virtual void closeSocketForRead(ArchSocket s);
-  virtual void closeSocketForWrite(ArchSocket s);
-  virtual void bindSocket(ArchSocket s, ArchNetAddress addr);
-  virtual void listenOnSocket(ArchSocket s);
-  virtual ArchSocket acceptSocket(ArchSocket s, ArchNetAddress *addr);
-  virtual bool connectSocket(ArchSocket s, ArchNetAddress name);
-  virtual int pollSocket(PollEntry[], int num, double timeout);
-  virtual void unblockPollSocket(ArchThread thread);
-  virtual size_t readSocket(ArchSocket s, void *buf, size_t len);
-  virtual size_t writeSocket(ArchSocket s, const void *buf, size_t len);
-  virtual void throwErrorOnSocket(ArchSocket);
-  virtual bool setNoDelayOnSocket(ArchSocket, bool noDelay);
-  virtual bool setReuseAddrOnSocket(ArchSocket, bool reuse);
-  virtual std::string getHostName();
-  virtual ArchNetAddress newAnyAddr(EAddressFamily);
-  virtual ArchNetAddress copyAddr(ArchNetAddress);
-  virtual std::vector<ArchNetAddress> nameToAddr(const std::string &);
-  virtual void closeAddr(ArchNetAddress);
-  virtual std::string addrToName(ArchNetAddress);
-  virtual std::string addrToString(ArchNetAddress);
-  virtual EAddressFamily getAddrFamily(ArchNetAddress);
-  virtual void setAddrPort(ArchNetAddress, int port);
-  virtual int getAddrPort(ArchNetAddress);
-  virtual bool isAnyAddr(ArchNetAddress);
-  virtual bool isEqualAddr(ArchNetAddress, ArchNetAddress);
-
-  struct Connectors {
-#if HAVE_POLL
-    int (*poll_impl)(struct pollfd *, nfds_t, int);
-#endif // HAVE_POLL
-    Connectors() {
-#if HAVE_POLL
-      poll_impl = poll;
-#endif // HAVE_POLL
-    }
-  };
-  static Connectors s_connectors;
+  ArchSocket newSocket(EAddressFamily, ESocketType) override;
+  ArchSocket copySocket(ArchSocket s) override;
+  void closeSocket(ArchSocket s) override;
+  void closeSocketForRead(ArchSocket s) override;
+  void closeSocketForWrite(ArchSocket s) override;
+  void bindSocket(ArchSocket s, ArchNetAddress addr) override;
+  void listenOnSocket(ArchSocket s) override;
+  ArchSocket acceptSocket(ArchSocket s, ArchNetAddress *addr) override;
+  bool connectSocket(ArchSocket s, ArchNetAddress name) override;
+  int pollSocket(PollEntry[], int num, double timeout) override;
+  void unblockPollSocket(ArchThread thread) override;
+  size_t readSocket(ArchSocket s, void *buf, size_t len) override;
+  size_t writeSocket(ArchSocket s, const void *buf, size_t len) override;
+  void throwErrorOnSocket(ArchSocket) override;
+  bool setNoDelayOnSocket(ArchSocket, bool noDelay) override;
+  bool setReuseAddrOnSocket(ArchSocket, bool reuse) override;
+  std::string getHostName() override;
+  ArchNetAddress newAnyAddr(EAddressFamily) override;
+  ArchNetAddress copyAddr(ArchNetAddress) override;
+  std::vector<ArchNetAddress> nameToAddr(const std::string &) override;
+  void closeAddr(ArchNetAddress) override;
+  std::string addrToName(ArchNetAddress) override;
+  std::string addrToString(ArchNetAddress) override;
+  EAddressFamily getAddrFamily(ArchNetAddress) override;
+  void setAddrPort(ArchNetAddress, int port) override;
+  int getAddrPort(ArchNetAddress) override;
+  bool isAnyAddr(ArchNetAddress) override;
+  bool isEqualAddr(ArchNetAddress, ArchNetAddress) override;
 
 private:
   const int *getUnblockPipe();
@@ -138,4 +129,6 @@ private:
 
 private:
   ArchMutex m_mutex{};
+  Deps &m_deps;
+  static Deps s_deps;
 };

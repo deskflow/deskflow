@@ -68,11 +68,12 @@ macro(set_sources)
     list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
   endif()
 
-  append_platform_sources()
+  replace_platform_sources()
+  replace_arch_sources()
 
 endmacro()
 
-macro(append_platform_sources)
+macro(replace_platform_sources)
 
   set(platform_dir ${CMAKE_CURRENT_SOURCE_DIR}/platform)
 
@@ -96,6 +97,30 @@ macro(append_platform_sources)
 
   list(APPEND sources ${platform_sources})
   list(APPEND headers ${platform_headers})
+
+endmacro()
+
+macro(replace_arch_sources)
+
+  set(arch_dir ${CMAKE_CURRENT_SOURCE_DIR}/arch)
+
+  # Remove arch files so that specific arch files can be added later.
+  # This is a bit weird, but it's simpler to include everything, remove all
+  # arch files, then only include the archs we need.
+  file(GLOB_RECURSE all_arch_files ${arch_dir}/*)
+  list(REMOVE_ITEM headers ${all_arch_files})
+  list(REMOVE_ITEM sources ${all_arch_files})
+
+  if(WIN32)
+    file(GLOB arch_sources ${arch_dir}/win32/*.cpp)
+    file(GLOB arch_headers ${arch_dir}/win32/*.h)
+  elseif(UNIX)
+    file(GLOB arch_sources ${arch_dir}/unix/*.cpp)
+    file(GLOB arch_headers ${arch_dir}/unix/*.h)
+  endif()
+
+  list(APPEND sources ${arch_sources})
+  list(APPEND headers ${arch_headers})
 
 endmacro()
 
