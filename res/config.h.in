@@ -49,9 +49,6 @@
 /* Define to 1 if you have the <ostream> header file. */
 #cmakedefine HAVE_OSTREAM ${HAVE_OSTREAM}
 
-/* Define if you have the `poll` function. */
-#cmakedefine HAVE_POLL ${HAVE_POLL}
-
 /* Define if you have a POSIX `sigwait` function. */
 #cmakedefine HAVE_POSIX_SIGWAIT ${HAVE_POSIX_SIGWAIT}
 

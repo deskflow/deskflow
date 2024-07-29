@@ -240,8 +240,6 @@ bool ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr) {
   return true;
 }
 
-#if HAVE_POLL
-
 int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   assert(pe != NULL || num == 0);
 
@@ -334,127 +332,6 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   delete[] pfd;
   return n;
 }
-
-#else
-
-int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
-  int i, n;
-
-  // prepare sets for select
-  n = 0;
-  fd_set readSet, writeSet, errSet;
-  fd_set *readSetP = NULL;
-  fd_set *writeSetP = NULL;
-  fd_set *errSetP = NULL;
-  FD_ZERO(&readSet);
-  FD_ZERO(&writeSet);
-  FD_ZERO(&errSet);
-  for (i = 0; i < num; ++i) {
-    // reset return flags
-    pe[i].m_revents = 0;
-
-    // set invalid flag if socket is bogus then go to next socket
-    if (pe[i].m_socket == NULL) {
-      pe[i].m_revents |= kPOLLNVAL;
-      continue;
-    }
-
-    int fdi = pe[i].m_socket->m_fd;
-    if (pe[i].m_events & kPOLLIN) {
-      FD_SET(pe[i].m_socket->m_fd, &readSet);
-      readSetP = &readSet;
-      if (fdi > n) {
-        n = fdi;
-      }
-    }
-    if (pe[i].m_events & kPOLLOUT) {
-      FD_SET(pe[i].m_socket->m_fd, &writeSet);
-      writeSetP = &writeSet;
-      if (fdi > n) {
-        n = fdi;
-      }
-    }
-    if (true) {
-      FD_SET(pe[i].m_socket->m_fd, &errSet);
-      errSetP = &errSet;
-      if (fdi > n) {
-        n = fdi;
-      }
-    }
-  }
-
-  // add the unblock pipe
-  const int *unblockPipe = getUnblockPipe();
-  if (unblockPipe != NULL) {
-    FD_SET(unblockPipe[0], &readSet);
-    readSetP = &readSet;
-    if (unblockPipe[0] > n) {
-      n = unblockPipe[0];
-    }
-  }
-
-  // if there are no sockets then don't block forever
-  if (n == 0 && timeout < 0.0) {
-    timeout = 0.0;
-  }
-
-  // prepare timeout for select
-  struct timeval timeout2;
-  struct timeval *timeout2P;
-  if (timeout < 0.0) {
-    timeout2P = NULL;
-  } else {
-    timeout2P = &timeout2;
-    timeout2.tv_sec = static_cast<int>(timeout);
-    timeout2.tv_usec = static_cast<int>(1.0e+6 * (timeout - timeout2.tv_sec));
-  }
-
-  // do the select
-  n = select(
-      (SELECT_TYPE_ARG1)n + 1, SELECT_TYPE_ARG234 readSetP,
-      SELECT_TYPE_ARG234 writeSetP, SELECT_TYPE_ARG234 errSetP,
-      SELECT_TYPE_ARG5 timeout2P);
-
-  // reset the unblock pipe
-  if (n > 0 && unblockPipe != NULL && FD_ISSET(unblockPipe[0], &readSet)) {
-    // the unblock event was signalled.  flush the pipe.
-    char dummy[100];
-    do {
-      read(unblockPipe[0], dummy, sizeof(dummy));
-    } while (errno != EAGAIN);
-  }
-
-  // handle results
-  if (n == -1) {
-    if (errno == EINTR) {
-      // interrupted system call
-      ARCH->testCancelThread();
-      return 0;
-    }
-    throwError(errno);
-  }
-  n = 0;
-  for (i = 0; i < num; ++i) {
-    if (pe[i].m_socket != NULL) {
-      if (FD_ISSET(pe[i].m_socket->m_fd, &readSet)) {
-        pe[i].m_revents |= kPOLLIN;
-      }
-      if (FD_ISSET(pe[i].m_socket->m_fd, &writeSet)) {
-        pe[i].m_revents |= kPOLLOUT;
-      }
-      if (FD_ISSET(pe[i].m_socket->m_fd, &errSet)) {
-        pe[i].m_revents |= kPOLLERR;
-      }
-    }
-    if (pe[i].m_revents != 0) {
-      ++n;
-    }
-  }
-
-  return n;
-}
-
-#endif
 
 void ArchNetworkBSD::unblockPollSocket(ArchThread thread) {
   const int *unblockPipe = getUnblockPipeForThread(thread);

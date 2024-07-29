@@ -40,16 +40,9 @@ struct sockaddr_storage {
 typedef int socklen_t;
 #endif
 
-#if HAVE_POLL
 #include <poll.h>
-#else
-#if HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#endif
+
+// #include <functional>
 
 // old systems may use char* for [gs]etsockopt()'s optval argument.
 // this should be void on modern systems but char is forwards
@@ -118,14 +111,8 @@ public:
   virtual bool isEqualAddr(ArchNetAddress, ArchNetAddress);
 
   struct Connectors {
-#if HAVE_POLL
     int (*poll_impl)(struct pollfd *, nfds_t, int);
-#endif // HAVE_POLL
-    Connectors() {
-#if HAVE_POLL
-      poll_impl = poll;
-#endif // HAVE_POLL
-    }
+    Connectors() { poll_impl = poll; }
   };
   static Connectors s_connectors;
 
@@ -138,4 +125,5 @@ private:
 
 private:
   ArchMutex m_mutex{};
+  // std::function<int(struct pollfd *, nfds_t, int)> m_poll;
 };
