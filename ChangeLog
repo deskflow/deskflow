@@ -62,6 +62,7 @@ Enhancements:
 - #7413 Improve UI design and reduce over-use of `#ifdef`
 - #7414 Expand BSD sockets poll tests and remove legacy-poll code
 - #7415 Assert arg value `num > 0` for BSD socket poll unblock pipe
+- #7416 Catch exception propagating to `Server` dtor
 
 # 1.14.6
 
