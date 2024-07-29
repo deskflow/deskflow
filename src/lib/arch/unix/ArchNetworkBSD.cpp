@@ -85,7 +85,11 @@ int ArchNetworkBSD::Deps::poll(struct pollfd *fds, nfds_t nfds, int timeout) {
 }
 
 std::shared_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n) {
-  return std::make_shared<struct pollfd[]>(n);
+  // C++20 supports std::make_shared<struct pollfd[]>(n) but this is not
+  // implemented on the compiler that comes with Ubuntu 22 and a few other
+  // distros, so use the manual new and delete until we drop those distros.
+  return std::shared_ptr<struct pollfd[]>(
+      new struct pollfd[n], std::default_delete<struct pollfd[]>());
 }
 
 ssize_t ArchNetworkBSD::Deps::read(int fd, void *buf, size_t len) {

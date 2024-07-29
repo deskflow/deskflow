@@ -34,7 +34,8 @@ using PollFD = struct pollfd[];
 struct MockDeps : public ArchNetworkBSD::Deps {
   MockDeps() {
     ON_CALL(*this, makePollFD(_)).WillByDefault([this](nfds_t n) {
-      return ArchNetworkBSD::Deps::makePollFD(n);
+      m_pollFD = ArchNetworkBSD::Deps::makePollFD(n);
+      return m_pollFD;
     });
   }
 
@@ -43,6 +44,8 @@ struct MockDeps : public ArchNetworkBSD::Deps {
   MOCK_METHOD(std::shared_ptr<PollFD>, makePollFD, (nfds_t), (override));
   MOCK_METHOD(ssize_t, read, (int, void *, size_t), (override));
   MOCK_METHOD(void, testCancelThread, (), (override));
+
+  std::shared_ptr<PollFD> m_pollFD;
 };
 
 TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
@@ -89,81 +92,56 @@ TEST(ArchNetworkBSDTests, pollSocket_pfdHasRevents_copiedToEntries) {
 
 TEST(ArchNetworkBSDTests, pollSocket_nullSocket_fdIsNegativeOne) {
   NiceMock<MockDeps> deps;
-  std::shared_ptr<PollFD> pollFD;
-  ON_CALL(deps, makePollFD(_)).WillByDefault([&pollFD](nfds_t n) {
-    pollFD = std::make_shared<PollFD>(n);
-    return pollFD;
-  });
   ArchNetworkBSD networkBSD(deps);
   PollEntries entries{{nullptr, 0, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(pollFD[0].fd, -1);
+  EXPECT_EQ(deps.m_pollFD[0].fd, -1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_socketSet_fdWasSet) {
   NiceMock<MockDeps> deps;
-  std::shared_ptr<PollFD> pollFD;
-  ON_CALL(deps, makePollFD(_)).WillByDefault([&pollFD](nfds_t n) {
-    pollFD = std::make_shared<PollFD>(n);
-    return pollFD;
-  });
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
   PollEntries entries{{&socket, 0, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(pollFD[0].fd, 1);
+  EXPECT_EQ(deps.m_pollFD[0].fd, 1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_eventHasPollInBit_bitWasSet) {
   NiceMock<MockDeps> deps;
-  std::shared_ptr<PollFD> pollFD;
-  ON_CALL(deps, makePollFD(_)).WillByDefault([&pollFD](nfds_t n) {
-    pollFD = std::make_shared<PollFD>(n);
-    return pollFD;
-  });
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
   PollEntries entries{{&socket, IArchNetwork::kPOLLIN, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(pollFD[0].events, POLLIN);
+  EXPECT_EQ(deps.m_pollFD[0].events, POLLIN);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_eventHasPollOutBit_bitWasSet) {
   NiceMock<MockDeps> deps;
-  std::shared_ptr<PollFD> pollFD;
-  ON_CALL(deps, makePollFD(_)).WillByDefault([&pollFD](nfds_t n) {
-    pollFD = std::make_shared<PollFD>(n);
-    return pollFD;
-  });
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
   PollEntries entries{{&socket, IArchNetwork::kPOLLOUT, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(pollFD[0].events, POLLOUT);
+  EXPECT_EQ(deps.m_pollFD[0].events, POLLOUT);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_nullSocket_unblockPipeAppended) {
   NiceMock<MockDeps> deps;
-  std::shared_ptr<PollFD> pollFD;
-  ON_CALL(deps, makePollFD(_)).WillByDefault([&pollFD](nfds_t n) {
-    pollFD = std::make_shared<PollFD>(n);
-    return pollFD;
-  });
   ArchNetworkBSD networkBSD(deps);
   PollEntries entries{{nullptr, 0, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
   const auto unblockFD = 3;
-  EXPECT_EQ(pollFD[1].fd, unblockFD);
+  EXPECT_EQ(deps.m_pollFD[1].fd, unblockFD);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_unblockPipeReventsError_readCalled) {
