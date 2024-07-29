@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "lib/arch/XArch.h"
 #include "lib/arch/unix/ArchNetworkBSD.h"
+
+#include "lib/arch/XArch.h"
 
 #include <array>
 #include <gtest/gtest.h>
@@ -39,19 +40,25 @@ TEST(ArchNetworkBSDTests, pollSocket_nullSocketEntry_throwsAccessError) {
   EXPECT_THROW({ f(); }, XArchNetworkAccess);
 }
 
-TEST(ArchNetworkBSDTests, isAnyAddr_IP6) {
+TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
   ArchNetworkBSD networkBSD;
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
-  EXPECT_TRUE(networkBSD.isAnyAddr(addr.get()));
 
+  auto result = networkBSD.isAnyAddr(addr.get());
+
+  EXPECT_TRUE(result);
+}
+
+TEST(ArchNetworkBSDTests, isAnyAddr_badAddress_returnsFalse) {
+  ArchNetworkBSD networkBSD;
+  std::unique_ptr<ArchNetAddressImpl> addr;
+  addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
   auto scratch = (char *)&addr->m_addr;
-  scratch[2] = 'b';
-  scratch[3] = 'a';
-  scratch[4] = 'd';
-  scratch[5] = 'a';
-  scratch[6] = 'd';
-  scratch[7] = 'd';
-  scratch[8] = 'r';
-  EXPECT_FALSE(networkBSD.isAnyAddr(addr.get()));
+  std::string badAddr = "badaddr";
+  std::ranges::copy(badAddr, scratch + 2);
+
+  auto result = networkBSD.isAnyAddr(addr.get());
+
+  EXPECT_FALSE(result);
 }
