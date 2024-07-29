@@ -48,6 +48,12 @@ static const int s_family[] = {
 };
 static const int s_type[] = {SOCK_DGRAM, SOCK_STREAM};
 
+const PollFunc kPoll = [](struct pollfd *fds, nfds_t nfds, int timeout) {
+  return poll(fds, nfds, timeout);
+};
+
+const SleepFunc kSleep = [](double seconds) { ARCH->sleep(seconds); };
+
 #if !HAVE_INET_ATON
 // parse dotted quad addresses.  we don't bother with the weird BSD'ism
 // of handling octal and hex and partial forms.
@@ -71,6 +77,9 @@ static in_addr_t inet_aton(const char *cp, struct in_addr *inp) {
 //
 // ArchNetworkBSD
 //
+
+ArchNetworkBSD::ArchNetworkBSD(const std::optional<Deps> &deps)
+    : m_deps(deps.value_or(Deps{kPoll, kSleep})) {}
 
 ArchNetworkBSD::~ArchNetworkBSD() {
   if (m_mutex)
@@ -244,7 +253,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   // return if nothing to do
   if (num == 0) {
     if (timeout > 0.0) {
-      ARCH->sleep(timeout);
+      m_deps.sleep(timeout);
     }
     return 0;
   }
@@ -281,7 +290,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
 
   // do the poll
-  n = m_poll(pfd, n, t);
+  n = m_deps.poll(pfd, n, t);
 
   // reset the unblock pipe
   if (n > 0 && unblockPipe != nullptr && (pfd[num].revents & POLLIN) != 0) {

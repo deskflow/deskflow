@@ -42,6 +42,7 @@ typedef int socklen_t;
 #endif
 
 #include <functional>
+#include <optional>
 #include <poll.h>
 
 #define ARCH_NETWORK ArchNetworkBSD
@@ -53,10 +54,7 @@ typedef int socklen_t;
 typedef char optval_t;
 
 using PollFunc = std::function<int(struct pollfd *, nfds_t, int)>;
-
-const PollFunc kPoll = [](struct pollfd *fds, nfds_t nfds, int timeout) {
-  return poll(fds, nfds, timeout);
-};
+using SleepFunc = std::function<void(double)>;
 
 class ArchSocketImpl {
 public:
@@ -76,7 +74,12 @@ public:
 //! Berkeley (BSD) sockets implementation of IArchNetwork
 class ArchNetworkBSD : public IArchNetwork {
 public:
-  explicit ArchNetworkBSD(const PollFunc &poll = kPoll) : m_poll(poll) {}
+  struct Deps {
+    PollFunc poll;
+    SleepFunc sleep;
+  };
+
+  explicit ArchNetworkBSD(const std::optional<Deps> &deps = std::nullopt);
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
   ~ArchNetworkBSD() override;
@@ -125,5 +128,5 @@ private:
 
 private:
   ArchMutex m_mutex{};
-  PollFunc m_poll;
+  Deps m_deps;
 };

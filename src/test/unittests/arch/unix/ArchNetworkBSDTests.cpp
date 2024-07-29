@@ -25,12 +25,25 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 
+const auto kPollStub = [](struct pollfd const *, nfds_t, int) { return 0; };
+
+const auto kSleepStub = [](double) {
+  // stub
+};
+
+const auto kStubDeps = ArchNetworkBSD::Deps{
+    kPollStub,
+    kSleepStub,
+};
+
 TEST(ArchNetworkBSDTests, pollSocket_nullSocketEntry_throwsAccessError) {
   auto pollMock = [](struct pollfd const *, nfds_t, int) {
     errno = EACCES;
     return -1;
   };
-  ArchNetworkBSD networkBSD(pollMock);
+  auto deps = kStubDeps;
+  deps.poll = pollMock;
+  ArchNetworkBSD networkBSD(deps);
   std::array<IArchNetwork::PollEntry, 2> pollEntries{{nullptr, 0, 0}};
 
   const auto f = [&] {
@@ -41,7 +54,7 @@ TEST(ArchNetworkBSDTests, pollSocket_nullSocketEntry_throwsAccessError) {
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
-  ArchNetworkBSD networkBSD;
+  ArchNetworkBSD networkBSD(kStubDeps);
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
 
@@ -51,7 +64,7 @@ TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_badAddress_returnsFalse) {
-  ArchNetworkBSD networkBSD;
+  ArchNetworkBSD networkBSD(kStubDeps);
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
   auto scratch = (char *)&addr->m_addr;
