@@ -287,6 +287,8 @@ void ArchMultithreadPosix::lockMutex(ArchMutex mutex) {
 }
 
 void ArchMultithreadPosix::unlockMutex(ArchMutex mutex) {
+  // TODO: S1-1767, we should use raii c++17 mutex instead of archaeic pthread
+  // to solve possible lock order reversal.
   int status = pthread_mutex_unlock(&mutex->m_mutex);
 
   switch (status) {
