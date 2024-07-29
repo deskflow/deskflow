@@ -22,18 +22,20 @@
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/XArchUnix.h"
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#include <netdb.h>
-#include <netinet/in.h>
-#if !defined(TCP_NODELAY)
-#include <netinet/tcp.h>
-#endif
 #include <arpa/inet.h>
 #include <cstring>
 #include <errno.h>
 #include <fcntl.h>
+#include <netdb.h>
+#include <netinet/in.h>
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#if !defined(TCP_NODELAY)
+#include <netinet/tcp.h>
+#endif
 
 #if !HAVE_INET_ATON
 #include <stdio.h>
@@ -69,10 +71,6 @@ static in_addr_t inet_aton(const char *cp, struct in_addr *inp) {
 //
 // ArchNetworkBSD
 //
-
-ArchNetworkBSD::Connectors ArchNetworkBSD::s_connectors;
-
-ArchNetworkBSD::ArchNetworkBSD() = default;
 
 ArchNetworkBSD::~ArchNetworkBSD() {
   if (m_mutex)
@@ -283,7 +281,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
 
   // do the poll
-  n = s_connectors.poll_impl(pfd, n, t);
+  n = m_poll(pfd, n, t);
 
   // reset the unblock pipe
   if (n > 0 && unblockPipe != nullptr && (pfd[num].revents & POLLIN) != 0) {

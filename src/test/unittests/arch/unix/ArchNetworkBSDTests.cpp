@@ -25,11 +25,12 @@
 #include <sys/types.h>
 
 TEST(ArchNetworkBSDTests, pollSocket_errs_EACCES) {
-  ArchNetworkBSD networkBSD;
-  ArchNetworkBSD::s_connectors.poll_impl = [](struct pollfd *, nfds_t, int) {
+  auto poll = [](struct pollfd *, nfds_t, int) {
     errno = EACCES;
     return -1;
   };
+  ArchNetworkBSD networkBSD(poll);
+
   try {
     std::array<IArchNetwork::PollEntry, 2> pe{{nullptr, 0, 0}};
     networkBSD.pollSocket(pe.data(), pe.size(), 1);
