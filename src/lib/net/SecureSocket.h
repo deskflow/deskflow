@@ -18,7 +18,6 @@
 #pragma once
 
 #include "net/TCPSocket.h"
-#include "net/XSocket.h"
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -90,4 +89,5 @@ private:
   Ssl *m_ssl;
   bool m_secureReady;
   bool m_fatal;
+  std::string m_hostname;
 };

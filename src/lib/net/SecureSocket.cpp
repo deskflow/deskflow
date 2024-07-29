@@ -22,6 +22,7 @@
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
 #include "mt/Lock.h"
+#include "net/NetworkAddress.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include <net/InverseSockets/SslLogger.h>
@@ -29,11 +30,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include <iterator>
 #include <memory>
 #include <openssl/err.h>
 #include <openssl/ssl.h>
-#include <sstream>
 
 //
 // SecureSocket
@@ -80,6 +79,8 @@ void SecureSocket::close() {
 }
 
 void SecureSocket::connect(const NetworkAddress &addr) {
+  m_hostname = addr.getHostname();
+
   m_events->adoptHandler(
       m_events->forIDataSocket().connected(), getEventTarget(),
       new TMethodEventJob<SecureSocket>(
@@ -424,8 +425,9 @@ int SecureSocket::secureAccept(int socket) {
 int SecureSocket::secureConnect(int socket) {
   createSSL();
 
-  // attach the socket descriptor
   SSL_set_fd(m_ssl->m_ssl, socket);
+  SSL_set_verify(m_ssl->m_ssl, SSL_VERIFY_PEER, nullptr);
+  SSL_set1_host(m_ssl->m_ssl, m_hostname.c_str());
 
   LOG((CLOG_DEBUG2 "connecting secure socket"));
   int r = SSL_connect(m_ssl->m_ssl);
