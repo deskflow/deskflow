@@ -299,7 +299,7 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   // add the unblock pipe
   const int *unblockPipe = getUnblockPipe();
   if (unblockPipe != nullptr) {
-    assert(n < (1 + num));
+    assert(n > 0 && n < (1 + num));
     pfd[n].fd = unblockPipe[0];
 
     pfd[n].events = POLLIN;
