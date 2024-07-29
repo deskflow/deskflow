@@ -48,6 +48,8 @@ struct MockDeps : public ArchNetworkBSD::Deps {
   std::shared_ptr<PollFD> m_pollFD;
 };
 
+#ifndef NDEBUG
+
 TEST(ArchNetworkBSDTests, pollSocket_negativeNum_death) {
   MockDeps deps;
   ArchNetworkBSD networkBSD(deps);
@@ -56,6 +58,8 @@ TEST(ArchNetworkBSDTests, pollSocket_negativeNum_death) {
 
   EXPECT_DEATH({ networkBSD.pollSocket(entries.data(), -1, 1); }, "num > 0");
 }
+
+#endif // DEBUG
 
 TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
   MockDeps deps;
