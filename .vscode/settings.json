@@ -1,4 +1,8 @@
 {
   "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/compile_commands.json",
-  "gcovViewer.buildDirectories": ["${workspaceFolder}/build/src/lib"]
+  "gcovViewer.buildDirectories": ["${workspaceFolder}/build/src/lib"],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "symless",
+    "projectKey": "symless_synergy-core"
+  }
 }
