@@ -15,10 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: mock out sockets on integ tests masquerading as unit tests
-#if 0
-
-#ifndef _WIN32
 #include "lib/arch/XArch.h"
 #include "lib/arch/unix/ArchNetworkBSD.h"
 
@@ -61,7 +57,3 @@ TEST(ArchNetworkBSDTests, isAnyAddr_IP6) {
   scratch[8] = 'r';
   EXPECT_FALSE(networkBSD.isAnyAddr(addr.get()));
 }
-
-#endif // #ifdnef _WIN32
-
-#endif

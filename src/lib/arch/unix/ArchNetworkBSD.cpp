@@ -272,7 +272,11 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   // add the unblock pipe
   const int *unblockPipe = getUnblockPipe();
   if (unblockPipe != nullptr) {
+
+    // TODO: fix 'Access of the heap area at negative byte offset'
+    // https://sonarcloud.io/project/issues?open=AZDbWtn1LIjs0CMfDmHb&id=symless_synergy-core
     pfd[n].fd = unblockPipe[0];
+
     pfd[n].events = POLLIN;
     ++n;
   }
