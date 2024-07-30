@@ -104,7 +104,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pLabelUpdate->hide();
 
   m_pLabelIpAddresses->setText(
-      tr("This computer's IP addresses: %1").arg(getIPAddresses()));
+      QString("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   m_labelNotice->hide();
 
@@ -361,11 +361,12 @@ void MainWindow::onCoreProcessFinished(int exitCode, QProcess::ExitStatus) {
 
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
-      QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
+      QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
 
   if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
     QMessageBox::warning(
-        this, tr("Save failed"), tr("Could not save configuration to file."));
+        this, QString("Save failed"),
+        QString("Could not save configuration to file."));
     return true;
   }
 
@@ -622,9 +623,9 @@ void MainWindow::checkConnected(const QString &line) {
     if (!appConfig().startedBefore() && isVisible()) {
       QMessageBox::information(
           this, "Synergy",
-          tr("Synergy is now connected. You can close the "
-             "config window and Synergy will remain connected in "
-             "the background."));
+          QString("Synergy is now connected. You can close the "
+                  "config window and Synergy will remain connected in "
+                  "the background."));
 
       appConfig().setStartedBefore(true);
     }
@@ -664,15 +665,16 @@ void MainWindow::checkFingerprint(const QString &line) {
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
-        this, tr("Security question"),
-        tr("You are connecting to a server. Here is it's fingerprint:\n\n"
-           "%1\n\n"
-           "Compare this fingerprint to the one on your server's screen."
-           "If the two don't match exactly, then it's probably not the server "
-           "you're expecting (it could be a malicious user).\n\n"
-           "To automatically trust this fingerprint for future "
-           "connections, click Yes. To reject this fingerprint and "
-           "disconnect from the server, click No.")
+        this, QString("Security question"),
+        QString(
+            "You are connecting to a server. Here is it's fingerprint:\n\n"
+            "%1\n\n"
+            "Compare this fingerprint to the one on your server's screen."
+            "If the two don't match exactly, then it's probably not the server "
+            "you're expecting (it could be a malicious user).\n\n"
+            "To automatically trust this fingerprint for future "
+            "connections, click Yes. To reject this fingerprint and "
+            "disconnect from the server, click No.")
             .arg(fingerprint),
         QMessageBox::Yes | QMessageBox::No);
 
@@ -862,11 +864,12 @@ void MainWindow::startCore() {
     if (!m_pCoreProcess->waitForStarted()) {
       show();
       QMessageBox::warning(
-          this, tr("Program can not be started"),
+          this, QString("Program can not be started"),
           QString(
-              tr("The executable<br><br>%1<br><br>could not be successfully "
-                 "started, although it does exist. Please check if you have "
-                 "sufficient permissions to run this program.")
+              QString(
+                  "The executable<br><br>%1<br><br>could not be successfully "
+                  "started, although it does exist. Please check if you have "
+                  "sufficient permissions to run this program.")
                   .arg(app)));
       return;
     }
@@ -882,8 +885,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
   if (!QFile::exists(app)) {
     show();
     QMessageBox::warning(
-        this, tr("Synergy client not found"),
-        tr("The executable for the synergy client does not exist."));
+        this, QString("Synergy client not found"),
+        QString("The executable for the synergy client does not exist."));
     return false;
   }
 
@@ -907,8 +910,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     if (m_pLineEditHostname->text().isEmpty()) {
       show();
       QMessageBox::warning(
-          this, tr("IP/hostname is empty"),
-          tr("Please enter a server hostname or IP address."));
+          this, QString("IP/hostname is empty"),
+          QString("Please enter a server hostname or IP address."));
       return false;
     }
 
@@ -938,15 +941,15 @@ QString MainWindow::configFilename() {
          {QStandardPaths::AppDataLocation, QStandardPaths::AppConfigLocation}) {
       auto configDirPath = QStandardPaths::writableLocation(path);
       if (!QDir().mkpath(configDirPath)) {
-        errors.push_back(
-            tr("Failed to create config folder \"%1\"").arg(configDirPath));
+        errors.push_back(QString("Failed to create config folder \"%1\"")
+                             .arg(configDirPath));
         continue;
       }
 
       QFile configFile(configDirPath + "/LastConfig.cfg");
       if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         errors.push_back(
-            tr("File:\"%1\" Error:%2")
+            QString("File:\"%1\" Error:%2")
                 .arg(configFile.fileName(), configFile.errorString()));
         continue;
       }
@@ -960,7 +963,7 @@ QString MainWindow::configFilename() {
 
     if (configFullPath.isEmpty()) {
       QMessageBox::critical(
-          this, tr("Cannot write configuration file"), errors.join('\n'));
+          this, QString("Cannot write configuration file"), errors.join('\n'));
     }
   }
 
@@ -991,15 +994,15 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
 
   if (!QFile::exists(app)) {
     QMessageBox::warning(
-        this, tr("Synergy server not found"),
-        tr("The executable for the synergy server does not exist."));
+        this, QString("Synergy server not found"),
+        QString("The executable for the synergy server does not exist."));
     return false;
   }
 
   if (appConfig().invertConnection() && m_pLineEditClientIp->text().isEmpty()) {
     QMessageBox::warning(
-        this, tr("Client IP address or name is empty"),
-        tr("Please fill in a client IP address or name."));
+        this, QString("Client IP address or name is empty"),
+        QString("Please fill in a client IP address or name."));
     return false;
   }
 
@@ -1081,7 +1084,7 @@ void MainWindow::setCoreState(CoreState state) {
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore,
         &QAction::trigger);
 
-    m_pButtonToggleStart->setText(tr("&Stop"));
+    m_pButtonToggleStart->setText(QString("&Stop"));
     m_pButtonApply->setEnabled(true);
 
     m_pActionStartCore->setEnabled(false);
@@ -1095,7 +1098,7 @@ void MainWindow::setCoreState(CoreState state) {
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
         &QAction::trigger);
 
-    m_pButtonToggleStart->setText(tr("&Start"));
+    m_pButtonToggleStart->setText(QString("&Start"));
     m_pButtonApply->setEnabled(false);
 
     m_pActionStartCore->setEnabled(true);
@@ -1107,8 +1110,7 @@ void MainWindow::setCoreState(CoreState state) {
 
   case Listening: {
     if (coreMode() == CoreMode::Server) {
-      setStatus(
-          tr("Synergy is waiting for clients").arg(m_SecureSocketVersion));
+      setStatus("Synergy is waiting for clients");
     }
 
     break;
@@ -1116,21 +1118,20 @@ void MainWindow::setCoreState(CoreState state) {
   case Connected: {
     if (m_SecureSocket) {
       setStatus(
-          tr("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
+          QString("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
     } else {
-      setStatus(tr("Synergy is running (without TLS encryption)")
-                    .arg(m_SecureSocketVersion));
+      setStatus("Synergy is running (without TLS encryption)");
     }
     break;
   }
   case Connecting:
-    setStatus(tr("Synergy is starting..."));
+    setStatus("Synergy is starting...");
     break;
   case PendingRetry:
-    setStatus(tr("There was an error, retrying..."));
+    setStatus("There was an error, retrying...");
     break;
   case Disconnected:
-    setStatus(tr("Synergy is not running"));
+    setStatus("Synergy is not running");
     break;
   }
 
@@ -1187,7 +1188,7 @@ QString MainWindow::getIPAddresses() const {
   }
 
   if (result.isEmpty()) {
-    result.append(tr("Unknown"));
+    result.append("Unknown");
   }
 
   return result.join(", ");
@@ -1245,13 +1246,13 @@ void MainWindow::autoAddScreen(const QString name) {
   if (r != kAutoAddScreenOk) {
     switch (r) {
     case kAutoAddScreenManualServer:
-      showConfigureServer(tr("Please add the server (%1) to the grid.")
+      showConfigureServer(QString("Please add the server (%1) to the grid.")
                               .arg(appConfig().screenName()));
       break;
 
     case kAutoAddScreenManualClient:
-      showConfigureServer(tr("Please drag the new client screen (%1) "
-                             "to the desired position on the grid.")
+      showConfigureServer(QString("Please drag the new client screen (%1) "
+                                  "to the desired position on the grid.")
                               .arg(name));
       break;
     }
