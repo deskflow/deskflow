@@ -38,7 +38,6 @@ config:
           libxkbfile-dev \
           qt6-base-dev \
           qt6-tools-dev \
-          qt6-qml-dev \
           qt6-declarative-dev \
           libgtk-3-dev \
           file
@@ -61,7 +60,6 @@ config:
           libxkbfile-devel \
           qt6-qtbase-devel \
           qt6-qttools-devel \
-          qt6-qml-devel \
           qt6-qtdeclarative-devel \
           gtk3-devel \
           rpm-build
@@ -81,7 +79,6 @@ config:
           libxkbfile-devel \
           qt6-base-devel \
           qt6-tools-devel \
-          qt6-qml-devel \
           qt6-qtdeclarative-devel \
           gtk3-devel \
           rpm-build
@@ -101,7 +98,6 @@ config:
           qt6-base \
           qt6-tools \
           qt6-declarative \
-          qt6-quickcontrols2 \
           gtk3
 
     manjaro:
