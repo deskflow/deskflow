@@ -64,7 +64,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "lastVersion",
     "", // 15 = lastExpiringWarningTime, obsolete
     "activationHasRun",
-    "minimizeToTray",
+    "", // 17 = minimizeToTray, obsolete
     "", // 18 = ActivateEmail, obsolete
     "loadFromSystemScope",
     "groupServerChecked", // kServerGroupChecked
@@ -136,7 +136,6 @@ void AppConfig::loadSettings() {
   m_AutoHide = loadSetting(kAutoHide, false).toBool();
   m_LastVersion = loadSetting(kLastVersion, "Unknown").toString();
   m_ActivationHasRun = loadSetting(kActivationHasRun, false).toBool();
-  m_MinimizeToTray = loadSetting(kMinimizeToTray, false).toBool();
   m_LoadFromSystemScope =
       loadCommonSetting(kLoadSystemSettings, false).toBool();
   m_ServerGroupChecked = loadSetting(kServerGroupChecked, false).toBool();
@@ -198,7 +197,6 @@ void AppConfig::saveSettings() {
     setSetting(kSerialKey, m_SerialKey);
     setSetting(kLastVersion, m_LastVersion);
     setSetting(kActivationHasRun, m_ActivationHasRun);
-    setSetting(kMinimizeToTray, m_MinimizeToTray);
     setSetting(kUseExternalConfig, m_UseExternalConfig);
     setSetting(kConfigFile, m_ConfigFile);
     setSetting(kUseInternalConfig, m_UseInternalConfig);
@@ -385,8 +383,6 @@ bool AppConfig::preventSleep() const { return m_PreventSleep; }
 
 bool AppConfig::invertConnection() const { return m_InvertConnection; }
 
-bool AppConfig::minimizeToTray() const { return m_MinimizeToTray; }
-
 QString AppConfig::tlsCertPath() const { return m_TlsCertPath; }
 
 QString AppConfig::tlsKeyLength() const { return m_TlsKeyLength; }
@@ -496,10 +492,6 @@ void AppConfig::setElevateMode(ElevateMode em) {
 }
 
 void AppConfig::setAutoHide(bool b) { setSettingModified(m_AutoHide, b); }
-
-void AppConfig::setMinimizeToTray(bool newValue) {
-  setSettingModified(m_MinimizeToTray, newValue);
-}
 
 void AppConfig::setLicenseNextCheck(unsigned long long time) {
   setSettingModified(m_licenseNextCheck, time);

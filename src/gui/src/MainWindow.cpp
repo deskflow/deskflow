@@ -1317,11 +1317,6 @@ void MainWindow::secureSocket(bool secureSocket) {
   }
 }
 
-void MainWindow::windowStateChanged() {
-  if (windowState() == Qt::WindowMinimized && appConfig().minimizeToTray())
-    hide();
-}
-
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
       QString("This computer's name: %1 "

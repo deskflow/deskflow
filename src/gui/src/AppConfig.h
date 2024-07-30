@@ -83,7 +83,7 @@ private:
     kLastVersion = 14,
     // 15 = last expire time, obsolete
     kActivationHasRun = 16,
-    kMinimizeToTray = 17,
+    // 17 = minimize to tray, obsolete
     // 18 = activate email, obsolete
     kLoadSystemSettings = 19,
     kServerGroupChecked = 20,
@@ -151,7 +151,6 @@ public:
   QString serverHostname() const;
   QString lastVersion() const;
   bool serviceEnabled() const;
-  bool minimizeToTray() const;
   bool closeToTray() const;
   QString serialKey() const;
   bool activationHasRun() const;
@@ -192,7 +191,6 @@ private:
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
-  void setMinimizeToTray(bool b);
   void setLastVersion(const QString &version);
   void setServiceEnabled(bool enabled);
   void setCloseToTray(bool minimize);
@@ -272,7 +270,6 @@ private:
   QString m_LastVersion = "";
   unsigned long long m_licenseNextCheck = 0;
   bool m_ActivationHasRun = false;
-  bool m_MinimizeToTray = true;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
