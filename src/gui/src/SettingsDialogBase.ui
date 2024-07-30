@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
-    <height>529</height>
+    <width>500</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -95,12 +95,35 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+           <widget class="QCheckBox" name="m_pCheckBoxPreventSleep">
             <property name="text">
-             <string>Hide the window when the app starts</string>
+             <string>Prevent this computer from going to sleep</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxLanguageSync">
+            <property name="text">
+             <string>Use server's keyboard language on this computer (client mode)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxScrollDirection">
+            <property name="text">
+             <string>Invert scroll direction on this computer (client mode)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>App</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QCheckBox" name="m_pCheckBoxCloseToTray">
             <property name="text">
@@ -109,9 +132,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxPreventSleep">
+           <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
             <property name="text">
-             <string>Prevent this computer from going to sleep</string>
+             <string>Hide the window when the app starts</string>
             </property>
            </widget>
           </item>
@@ -301,35 +324,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupScope">
-         <property name="title">
-          <string>Use settings profile from</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <property name="topMargin">
-           <number>5</number>
-          </property>
-          <item row="0" column="1">
-           <widget class="QRadioButton" name="m_pRadioSystemScope">
-            <property name="text">
-             <string>All users</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QRadioButton" name="m_pRadioUserScope">
-            <property name="text">
-             <string>Current user</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
@@ -419,6 +413,16 @@
              </widget>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="m_pInvertConnection">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Invert server/client TCP connection (business edition)</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -594,41 +598,10 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Miscellanious</string>
+          <string>Service</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="7" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxScrollDirection">
-            <property name="text">
-             <string>Invert scroll direction on this computer (client mode)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QCheckBox" name="m_pInvertConnection">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Invert server/client TCP connection (business edition)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxLanguageSync">
-            <property name="text">
-             <string>Use server's keyboard language on this computer (client mode)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxServiceEnabled">
-            <property name="text">
-             <string>Use background service (daemon)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+          <item row="1" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
              <widget class="QLabel" name="m_pLabelElevate">
@@ -682,6 +655,42 @@
             </item>
            </layout>
           </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="m_pCheckBoxServiceEnabled">
+            <property name="text">
+             <string>Use background service (daemon)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="m_pGroupScope">
+         <property name="title">
+          <string>Use settings profile from</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="m_pRadioSystemScope">
+            <property name="text">
+             <string>All users</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="m_pRadioUserScope">
+            <property name="text">
+             <string>Current user</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -731,7 +740,6 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pCheckBoxAutoHide</tabstop>
   <tabstop>m_pCheckBoxEnableCrypto</tabstop>
   <tabstop>m_pComboBoxKeyLength</tabstop>
   <tabstop>m_pLineEditCertificatePath</tabstop>
@@ -743,7 +751,6 @@
   <tabstop>m_pButtonBrowseLog</tabstop>
   <tabstop>m_pRadioUserScope</tabstop>
   <tabstop>m_pRadioSystemScope</tabstop>
-  <tabstop>m_pCheckBoxServiceEnabled</tabstop>
   <tabstop>m_pComboElevate</tabstop>
  </tabstops>
  <resources>
