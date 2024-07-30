@@ -225,6 +225,12 @@ void MainWindow::onCreated() {
   // ensure that the ctor is fully executed before we start loading the
   // app config. a signal is the clearest way to communicate this.
   m_AppConfig.loadAllScopes();
+
+  const auto serverEnabled = appConfig().serverGroupChecked();
+  const auto clientEnabled = appConfig().clientGroupChecked();
+  if (serverEnabled || clientEnabled) {
+    startCore();
+  }
 }
 
 void MainWindow::onShown() {
@@ -503,18 +509,11 @@ void MainWindow::createMenuBar() {
 }
 
 void MainWindow::applyConfig() {
-  const auto serverEnabled = appConfig().serverGroupChecked();
-  const auto clientEnabled = appConfig().clientGroupChecked();
-
-  enableServer(serverEnabled);
-  enableClient(clientEnabled);
+  enableServer(appConfig().serverGroupChecked());
+  enableClient(appConfig().clientGroupChecked());
 
   m_pLineEditHostname->setText(appConfig().serverHostname());
   m_pLineEditClientIp->setText(serverConfig().getClientAddress());
-
-  if (serverEnabled || clientEnabled) {
-    startCore();
-  }
 }
 
 void MainWindow::saveSettings() {
