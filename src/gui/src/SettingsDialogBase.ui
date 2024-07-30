@@ -26,7 +26,7 @@
       <enum>QTabWidget::TabPosition::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="m_pTabRegular">
       <attribute name="title">
@@ -612,7 +612,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Re-launch to get elevated privilages</string>
+               <string>Launch with elevated privilages</string>
               </property>
              </widget>
             </item>
@@ -638,17 +638,17 @@
               </property>
               <item>
                <property name="text">
-                <string>As Needed</string>
+                <string>Automatic (as needed)</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Always</string>
+                <string>Always elevate</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Never</string>
+                <string>Never elevate</string>
                </property>
               </item>
              </widget>
