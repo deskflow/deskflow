@@ -60,7 +60,7 @@ config:
           libxkbfile-devel \
           qt6-qtbase-devel \
           qt6-qttools-devel \
-          qt6-qtdeclarative-devel \
+          qt6-qtdeclarative \
           gtk3-devel \
           rpm-build
 
@@ -79,7 +79,7 @@ config:
           libxkbfile-devel \
           qt6-base-devel \
           qt6-tools-devel \
-          qt6-qtdeclarative-devel \
+          qt6-declarative \
           gtk3-devel \
           rpm-build
 
