@@ -100,7 +100,7 @@ private:
   std::unique_ptr<QSettings> m_pSystemSettings;
 
   /// @brief Receivers of load/save callbacks
-  std::list<CommonConfig *> m_pReceievers;
+  std::list<CommonConfig *> m_pReceivers;
 
   /// @brief Is set to true when settings are changed
   bool m_unsavedChanges = false;

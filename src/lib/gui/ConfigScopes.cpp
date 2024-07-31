@@ -89,8 +89,8 @@ ConfigScopes::ConfigScopes() {
 }
 
 ConfigScopes::~ConfigScopes() {
-  while (!m_pReceievers.empty()) {
-    m_pReceievers.pop_back();
+  while (!m_pReceivers.empty()) {
+    m_pReceivers.pop_back();
   }
 }
 
@@ -131,7 +131,7 @@ void ConfigScopes::setScope(ConfigScopes::Scope scope) { m_CurrentScope = scope;
 ConfigScopes::Scope ConfigScopes::getScope() const { return m_CurrentScope; }
 
 void ConfigScopes::loadAll() {
-  for (auto &i : m_pReceievers) {
+  for (auto &i : m_pReceivers) {
     i->loadSettings();
   }
 }
@@ -140,7 +140,7 @@ void ConfigScopes::saveAll() {
 
   // Save if there are any unsaved changes otherwise skip
   if (unsavedChanges()) {
-    for (auto &i : m_pReceievers) {
+    for (auto &i : m_pReceivers) {
       i->saveSettings();
     }
 
@@ -160,7 +160,7 @@ QSettings *ConfigScopes::currentSettings() const {
 }
 
 void ConfigScopes::registerReceiver(CommonConfig *receiver) {
-  m_pReceievers.push_back(receiver);
+  m_pReceivers.push_back(receiver);
 }
 
 bool ConfigScopes::unsavedChanges() const {
@@ -168,7 +168,7 @@ bool ConfigScopes::unsavedChanges() const {
     return true;
   }
 
-  for (const auto &i : m_pReceievers) {
+  for (const auto &i : m_pReceivers) {
     if (i->modified()) {
       return true;
     }
