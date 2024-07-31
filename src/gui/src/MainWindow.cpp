@@ -94,10 +94,67 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_ServerConfig(5, 3, &m_AppConfig, this),
       m_ServerConnection(*this),
       m_ClientConnection(*this),
-      m_TlsUtility(appConfig, m_LicenseHandler.license()) {
+      m_TlsUtility(appConfig, m_LicenseHandler.license()),
+      m_WindowSaveTimer(this) {
 
   setupUi(this);
+  setupControls();
   connectSlots();
+
+#if defined(Q_OS_WIN)
+
+  // TODO: only connect permenantly to ipc when switching to service mode.
+  // if switching from service to desktop, connect only to stop the service
+  // and don't retry.
+  m_IpcClient.connectToHost();
+
+#endif
+
+  emit created();
+}
+
+MainWindow::~MainWindow() {
+  if (appConfig().processMode() == ProcessMode::kDesktop) {
+    m_ExpectedRunningState = RuningState::Stopped;
+    stopDesktop();
+  }
+}
+
+void MainWindow::restoreWindow() {
+  qDebug("restoring window size and position");
+
+  const auto &config = appConfig();
+
+  const auto &size = config.mainWindowSize();
+  if (size.has_value()) {
+    resize(size.value());
+  }
+
+  const auto &position = config.mainWindowPosition();
+  if (position.has_value()) {
+    move(position.value());
+  }
+
+  // give the window chance to restore its size and position before the window
+  // size and position are saved. this prevents the window from being saved
+  // with the wrong size and position.
+  m_SaveWindow = true;
+}
+
+void MainWindow::saveWindow() {
+  if (!m_SaveWindow) {
+    qDebug("not yet ready to save window size and position, skipping");
+    return;
+  }
+
+  qDebug("saving window size and position");
+  auto &config = appConfig();
+  config.setMainWindowSize(size());
+  config.setMainWindowPosition(pos());
+  config.saveSettings();
+}
+
+void MainWindow::setupControls() {
   createMenuBar();
   secureSocket(false);
 
@@ -121,23 +178,7 @@ MainWindow::MainWindow(AppConfig &appConfig)
   m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
   m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-#elif defined(Q_OS_WIN)
-
-  // TODO: only connect permenantly to ipc when switching to service mode.
-  // if switching from service to desktop, connect only to stop the service and
-  // don't retry.
-  m_IpcClient.connectToHost();
-
 #endif
-
-  emit created();
-}
-
-MainWindow::~MainWindow() {
-  if (appConfig().processMode() == ProcessMode::kDesktop) {
-    m_ExpectedRunningState = RuningState::Stopped;
-    stopDesktop();
-  }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -207,6 +248,10 @@ void MainWindow::connectSlots() const {
   connect(
       &m_VersionChecker, &VersionChecker::updateFound, this,
       &MainWindow::onVersionCheckerUpdateFound);
+
+  connect(
+      &m_WindowSaveTimer, &QTimer::timeout, this,
+      &MainWindow::onWindowSaveTimerTimeout);
 }
 
 void MainWindow::onAppAboutToQuit() { m_AppConfig.saveSettings(); }
@@ -255,8 +300,10 @@ void MainWindow::onAppConfigLoaded() {
   if (!m_AppConfig.serialKey().isEmpty()) {
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
   }
+
   updateScreenName();
   applyConfig();
+  restoreWindow();
 }
 
 void MainWindow::onAppConfigTlsChanged() {
@@ -432,9 +479,27 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
   on_m_pButtonApply_clicked();
 }
 
+void MainWindow::onWindowSaveTimerTimeout() { saveWindow(); }
+
 //////////////////////////////////////////////////////////////////////////////
 // End slots
 //////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+  QMainWindow::resizeEvent(event);
+
+  // postpone save so that settings are not written every delta change.
+  m_WindowSaveTimer.setSingleShot(true);
+  m_WindowSaveTimer.start(1000);
+}
+
+void MainWindow::moveEvent(QMoveEvent *event) {
+  QMainWindow::moveEvent(event);
+
+  // postpone save so that settings are not written every delta change.
+  m_WindowSaveTimer.setSingleShot(true);
+  m_WindowSaveTimer.start(1000);
+}
 
 void MainWindow::open() {
 

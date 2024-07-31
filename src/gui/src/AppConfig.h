@@ -24,10 +24,15 @@
 #include "gui/ElevateMode.h"
 #include "gui/IAppConfig.h"
 
+#include <QDir>
+#include <QHostInfo>
 #include <QObject>
+#include <QPoint>
+#include <QSize>
 #include <QString>
 #include <QVariant>
 #include <mutex>
+#include <qvariant.h>
 
 class QSettings;
 class SettingsDialog;
@@ -38,6 +43,7 @@ class ActivationDialog;
 enum class ProcessMode { kService, kDesktop };
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
+const QString kDefaultLogFile = "synergy.log";
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -74,8 +80,8 @@ private:
     kLogFilename = 5,
     kWizardLastRun = 6,
     kStartedBefore = 7,
-    kElevateMode = 8,
-    kElevateModeEnum = 9,
+    kElevateModeLegacy = 8,
+    kElevateMode = 9,
     // 10 = edition, obsolete (using serial key instead)
     kTlsEnabled = 11,
     kAutoHide = 12,
@@ -105,6 +111,8 @@ private:
     // 36 = server-client-mode, obsolete
     kServiceEnabled = 37,
     kCloseToTray = 38,
+    kMainWindowSize = 39,
+    kMainWindowPosition = 40,
   };
 
 public:
@@ -157,10 +165,15 @@ public:
   bool tlsEnabled() const override;
   QString tlsCertPath() const override;
   QString tlsKeyLength() const override;
+  std::optional<QSize> mainWindowSize() const;
+  std::optional<QPoint> mainWindowPosition() const;
 
 private:
   /// @brief Loads the setting from the current scope
+  void extracted();
   void loadSettings() override;
+  void loadSerialKey();
+  void loadElevateMode();
 
   static QString settingName(AppConfig::Setting name);
 
@@ -198,6 +211,22 @@ private:
   void setTlsCertPath(const QString &path);
   void setTlsKeyLength(const QString &length);
   void setInvertConnection(bool value);
+  void setMainWindowSize(const QSize &size);
+  void setMainWindowPosition(const QPoint &position);
+  void loadCommonSettings();
+  void loadScopeSettings();
+
+  /**
+   * @brief Loads a setting if it exists, otherwise returns `std::nullopt`
+   *
+   * @param toType A function to convert the QVariant to the desired type.
+   */
+  template <typename T>
+  std::optional<T>
+  loadOptional(Setting name, std::function<T(QVariant)> toType) const;
+
+  template <typename T>
+  void setOptional(Setting name, const std::optional<T> &value);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -254,12 +283,12 @@ private:
 
   synergy::gui::Config m_Config;
   CoreInterface m_CoreInterface;
-  QString m_ScreenName = "";
+  QString m_ScreenName = QHostInfo::localHostName();
   int m_Port = 24800;
   QString m_Interface = "";
   int m_LogLevel = 0;
   bool m_LogToFile = false;
-  QString m_LogFilename = "";
+  QString m_LogFilename = logDir() + kDefaultLogFile;
   int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = kDefaultElevateMode;
@@ -276,14 +305,16 @@ private:
   bool m_InvertConnection = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
-  QString m_ConfigFile = "";
+  QString m_ConfigFile = QDir::homePath() + "/" + m_ConfigFilename;
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = false;
-  QString m_TlsCertPath = "";
+  QString m_TlsCertPath = defaultTlsCertPath();
   QString m_TlsKeyLength = "2048";
+  std::optional<QSize> m_MainWindowSize;
+  std::optional<QPoint> m_MainWindowPosition;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

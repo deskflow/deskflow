@@ -19,13 +19,14 @@
 #include "AppConfig.h"
 
 #include "Config.h"
-#include "gui/constants.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QtCore>
 #include <QtNetwork>
+#include <functional>
+#include <qvariant.h>
 
 using synergy::gui::Config;
 
@@ -85,7 +86,10 @@ const char *const AppConfig::m_SettingsName[] = {
     "",                             // 35 = clientHostMode, obsolete
     "",                             // 36 = serverClientMode, obsolete
     "serviceEnabled",
-    "closeToTray"};
+    "closeToTray",
+    "mainWindowSize",
+    "mainWindowPosition",
+};
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
@@ -111,65 +115,63 @@ void AppConfig::loadSettings() {
 
   qDebug("loading settings");
 
-  m_ScreenName =
-      loadSetting(kScreenName, QHostInfo::localHostName()).toString();
-  if (m_ScreenName.isEmpty()) {
-    m_ScreenName = QHostInfo::localHostName();
-  }
+  loadCommonSettings();
+  loadScopeSettings();
+  loadSerialKey();
+  loadElevateMode();
 
-  m_Port = loadSetting(kPort, 24800).toInt();
-  m_Interface = loadSetting(kInterface).toString();
-  m_LogLevel = loadSetting(kLogLevel, 0).toInt();
-  m_LogToFile = loadSetting(kLogToFile, false).toBool();
-  m_LogFilename =
-      loadSetting(kLogFilename, logDir() + "synergy.log").toString();
-  m_WizardLastRun = loadCommonSetting(kWizardLastRun, 0).toInt();
-  m_StartedBefore = loadSetting(kStartedBefore, false).toBool();
+  emit loaded();
+}
 
-  QVariant elevateMode = loadSetting(kElevateModeEnum);
-  if (!elevateMode.isValid()) {
-    elevateMode = loadSetting(
-        kElevateMode, QVariant(static_cast<int>(kDefaultElevateMode)));
-  }
-  m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
+void AppConfig::loadCommonSettings() {
+  using enum Setting;
 
-  m_AutoHide = loadSetting(kAutoHide, false).toBool();
-  m_LastVersion = loadSetting(kLastVersion, "Unknown").toString();
-  m_ActivationHasRun = loadSetting(kActivationHasRun, false).toBool();
+  m_WizardLastRun = loadCommonSetting(kWizardLastRun, m_WizardLastRun).toInt();
   m_LoadFromSystemScope =
-      loadCommonSetting(kLoadSystemSettings, false).toBool();
-  m_ServerGroupChecked = loadSetting(kServerGroupChecked, false).toBool();
-  m_UseExternalConfig = loadSetting(kUseExternalConfig, false).toBool();
-  m_ConfigFile =
-      loadSetting(kConfigFile, QDir::homePath() + "/" + m_ConfigFilename)
-          .toString();
-  m_UseInternalConfig = loadSetting(kUseInternalConfig, false).toBool();
-  m_ClientGroupChecked = loadSetting(kClientGroupChecked, false).toBool();
-  m_ServerHostname = loadSetting(kServerHostname).toString();
-  m_PreventSleep = loadSetting(kPreventSleep, false).toBool();
-  m_LanguageSync = loadSetting(kLanguageSync, false).toBool();
-  m_InvertScrollDirection = loadSetting(kInvertScrollDirection, false).toBool();
-  m_licenseNextCheck = loadCommonSetting(kLicenseNextCheck, 0).toULongLong();
-  m_InvertConnection = loadSetting(kInvertConnection, false).toBool();
+      loadCommonSetting(kLoadSystemSettings, m_LoadFromSystemScope).toBool();
+  m_licenseNextCheck =
+      loadCommonSetting(kLicenseNextCheck, m_licenseNextCheck).toULongLong();
+}
 
-  // only change the serial key if the settings being loaded contains a key
-  bool loadSerial = m_Config.hasSetting(
-      settingName(kLoadSystemSettings), Config::Scope::Current);
+void AppConfig::loadScopeSettings() {
+  using enum Setting;
 
-  if (loadSerial) {
-    const auto &serialKey = loadSetting(kSerialKey, "").toString().trimmed();
-    if (!serialKey.isEmpty()) {
-      m_SerialKey = serialKey;
-    }
-  }
-
+  m_ScreenName = loadSetting(kScreenName, m_ScreenName).toString();
+  m_Port = loadSetting(kPort, m_Port).toInt();
+  m_Interface = loadSetting(kInterface, m_Interface).toString();
+  m_LogLevel = loadSetting(kLogLevel, m_LogLevel).toInt();
+  m_LogToFile = loadSetting(kLogToFile, m_LogToFile).toBool();
+  m_LogFilename = loadSetting(kLogFilename, m_LogFilename).toString();
+  m_StartedBefore = loadSetting(kStartedBefore, m_StartedBefore).toBool();
+  m_AutoHide = loadSetting(kAutoHide, m_AutoHide).toBool();
+  m_LastVersion = loadSetting(kLastVersion, m_LastVersion).toString();
+  m_ActivationHasRun =
+      loadSetting(kActivationHasRun, m_ActivationHasRun).toBool();
+  m_ServerGroupChecked =
+      loadSetting(kServerGroupChecked, m_ServerGroupChecked).toBool();
+  m_UseExternalConfig =
+      loadSetting(kUseExternalConfig, m_UseExternalConfig).toBool();
+  m_ConfigFile = loadSetting(kConfigFile, m_ConfigFile).toString();
+  m_UseInternalConfig =
+      loadSetting(kUseInternalConfig, m_UseInternalConfig).toBool();
+  m_ClientGroupChecked =
+      loadSetting(kClientGroupChecked, m_ClientGroupChecked).toBool();
+  m_ServerHostname = loadSetting(kServerHostname, m_ServerHostname).toString();
+  m_PreventSleep = loadSetting(kPreventSleep, m_PreventSleep).toBool();
+  m_LanguageSync = loadSetting(kLanguageSync, m_LanguageSync).toBool();
+  m_InvertScrollDirection =
+      loadSetting(kInvertScrollDirection, m_InvertScrollDirection).toBool();
+  m_InvertConnection =
+      loadSetting(kInvertConnection, m_InvertConnection).toBool();
   m_ServiceEnabled = loadSetting(kServiceEnabled, m_ServiceEnabled).toBool();
   m_CloseToTray = loadSetting(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = loadSetting(kTlsEnabled, m_TlsEnabled).toBool();
-  m_TlsCertPath = loadSetting(kTlsCertPath, defaultTlsCertPath()).toString();
+  m_TlsCertPath = loadSetting(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = loadSetting(kTlsKeyLength, m_TlsKeyLength).toString();
-
-  emit loaded();
+  m_MainWindowPosition = loadOptional<QPoint>(
+      kMainWindowPosition, [](QVariant v) { return v.toPoint(); });
+  m_MainWindowSize = loadOptional<QSize>(
+      kMainWindowSize, [](QVariant v) { return v.toSize(); });
 }
 
 void AppConfig::saveSettings() {
@@ -191,7 +193,8 @@ void AppConfig::saveSettings() {
     setSetting(kLogToFile, m_LogToFile);
     setSetting(kLogFilename, m_LogFilename);
     setSetting(kStartedBefore, m_StartedBefore);
-    setSetting(kElevateModeEnum, static_cast<int>(m_ElevateMode));
+    setSetting(kElevateMode, static_cast<int>(m_ElevateMode));
+    setSetting(kElevateModeLegacy, m_ElevateMode == ElevateAlways);
     setSetting(kTlsEnabled, m_TlsEnabled);
     setSetting(kAutoHide, m_AutoHide);
     setSetting(kSerialKey, m_SerialKey);
@@ -207,18 +210,54 @@ void AppConfig::saveSettings() {
     setSetting(kInvertConnection, m_InvertConnection);
     setSetting(kServiceEnabled, m_ServiceEnabled);
     setSetting(kCloseToTray, m_CloseToTray);
-
-    // See enum ElevateMode declaration to understand why this setting is bool
-    setSetting(kElevateMode, m_ElevateMode == ElevateAlways);
+    setOptional(kMainWindowSize, m_MainWindowSize);
+    setOptional(kMainWindowPosition, m_MainWindowPosition);
   }
 
   setModified(false);
-  saved();
+
+  emit saved();
 
   if (m_TlsChanged) {
     m_TlsChanged = false;
     emit tlsChanged();
   }
+}
+
+void AppConfig::loadSerialKey() {
+  using enum Setting;
+
+  // only set the serial key if the current settings scope has they key.
+  bool shouldLoad = m_Config.hasSetting(
+      settingName(kLoadSystemSettings), Config::Scope::Current);
+
+  if (!shouldLoad) {
+    qDebug("no serial key in current scope, skipping load");
+    return;
+  }
+
+  const auto &serialKey =
+      loadSetting(kSerialKey, m_SerialKey).toString().trimmed();
+
+  if (serialKey.isEmpty()) {
+    qDebug("serial key is empty, skipping load");
+    return;
+  }
+
+  m_SerialKey = serialKey;
+}
+
+void AppConfig::loadElevateMode() {
+  using enum Setting;
+
+  QVariant elevateMode = loadSetting(kElevateMode);
+  if (!elevateMode.isValid()) {
+    qDebug("elevate mode not valid, loading legacy setting");
+    elevateMode = loadSetting(
+        kElevateModeLegacy, QVariant(static_cast<int>(kDefaultElevateMode)));
+  }
+
+  m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 }
 
 QString AppConfig::defaultTlsCertPath() const {
@@ -244,6 +283,23 @@ template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
 
 QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
   return m_Config.loadSetting(settingName(name), defaultValue);
+}
+
+template <typename T>
+std::optional<T>
+AppConfig::loadOptional(Setting name, std::function<T(QVariant)> toType) const {
+  if (m_Config.hasSetting(settingName(name))) {
+    return toType(m_Config.loadSetting(settingName(name)));
+  } else {
+    return std::nullopt;
+  }
+}
+
+template <typename T>
+void AppConfig::setOptional(Setting name, const std::optional<T> &value) {
+  if (value.has_value()) {
+    m_Config.setSetting(settingName(name), value.value());
+  }
 }
 
 QVariant
@@ -405,6 +461,14 @@ QString AppConfig::serverHostname() const { return m_ServerHostname; }
 
 void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
 
+std::optional<QSize> AppConfig::mainWindowSize() const {
+  return m_MainWindowSize;
+}
+
+std::optional<QPoint> AppConfig::mainWindowPosition() const {
+  return m_MainWindowPosition;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -520,6 +584,14 @@ void AppConfig::setCloseToTray(bool minimize) {
 void AppConfig::setInvertConnection(bool value) {
   setSettingModified(m_InvertConnection, value);
   emit invertConnectionChanged();
+}
+
+void AppConfig::setMainWindowSize(const QSize &size) {
+  m_MainWindowSize = size;
+}
+
+void AppConfig::setMainWindowPosition(const QPoint &position) {
+  m_MainWindowPosition = position;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
