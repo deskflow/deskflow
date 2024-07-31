@@ -17,17 +17,15 @@
 
 #include "ActivationDialog.h"
 
-#include "gui/license_notices.h"
-#include "ui_ActivationDialog.h"
-
-#include "AppConfig.h"
 #include "CancelActivationDialog.h"
 #include "MainWindow.h"
+#include "gui/AppConfig.h"
 #include "gui/LicenseHandler.h"
 #include "gui/constants.h"
 #include "gui/license_notices.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
+#include "ui_ActivationDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>

@@ -19,9 +19,9 @@
 #include "ServerConfig.h"
 
 #include "AddClientDialog.h"
-#include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "gui/Config.h"
 #include "gui/constants.h"
 
 #include <QAbstractButton>

@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include <QList>
-
-#include "CommonConfig.h"
 #include "Hotkey.h"
 #include "ScreenConfig.h"
 #include "ScreenList.h"
+#include "gui/CommonConfig.h"
+
+#include <QList>
 
 class QTextStream;
 class QSettings;

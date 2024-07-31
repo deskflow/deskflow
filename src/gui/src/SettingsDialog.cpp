@@ -18,9 +18,9 @@
 
 #include "SettingsDialog.h"
 
-#include "AppConfig.h"
 #include "MainWindow.h"
 #include "UpgradeDialog.h"
+#include "gui/AppConfig.h"
 #include "gui/TlsCertificate.h"
 #include "gui/constants.h"
 #include "validators/ScreenNameValidator.h"

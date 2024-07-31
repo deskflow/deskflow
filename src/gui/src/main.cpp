@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "AppConfig.h"
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
+#include "gui/AppConfig.h"
 #include "gui/dotenv.h"
 
 #include <QMessageBox>

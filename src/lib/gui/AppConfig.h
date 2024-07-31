@@ -20,9 +20,9 @@
 
 #include "CommonConfig.h"
 #include "Config.h"
-#include "gui/CoreInterface.h"
-#include "gui/ElevateMode.h"
-#include "gui/IAppConfig.h"
+#include "CoreInterface.h"
+#include "ElevateMode.h"
+#include "IAppConfig.h"
 
 #include <QDir>
 #include <QHostInfo>
