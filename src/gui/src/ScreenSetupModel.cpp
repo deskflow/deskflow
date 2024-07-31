@@ -35,14 +35,14 @@ ScreenSetupModel::ScreenSetupModel(
   // this is unlikely to happen, as the grid size is only 3x9.
   if (m_NumColumns > 100 || m_NumRows > 100) {
     qFatal(
-        "Grid size out of bounds: %d columns x %d rows", m_NumColumns,
+        "grid size out of bounds: %d columns x %d rows", m_NumColumns,
         m_NumRows);
     return;
   }
 
   if (m_NumColumns * m_NumRows > screens.size()) {
     qFatal(
-        "Scrren list (%lld) too small for %d columns x %d rows", screens.size(),
+        "scrren list (%lld) too small for %d columns x %d rows", screens.size(),
         m_NumColumns, m_NumRows);
   }
 }

@@ -115,9 +115,9 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
 MainWindow::~MainWindow() {
   try {
-  if (appConfig().processMode() == ProcessMode::kDesktop) {
-    m_ExpectedRunningState = RuningState::Stopped;
-    stopDesktop();
+    if (appConfig().processMode() == ProcessMode::kDesktop) {
+      m_ExpectedRunningState = RuningState::Stopped;
+      stopDesktop();
     }
   } catch (const std::exception &e) {
     qFatal("failed to stop core on main window close: %s", e.what());
@@ -876,7 +876,7 @@ void MainWindow::startCore() {
     args << "--profile-dir" << getProfileRootForArg();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("Failed to get profile dir, skipping arg");
+    qFatal("failed to get profile dir, skipping arg");
   }
 
 #else
@@ -1278,7 +1278,7 @@ void MainWindow::updateLocalFingerprint() {
     fingerprintExists = TlsFingerprint::local().fileExists();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("Failed to check if fingerprint exists");
+    qFatal("failed to check if fingerprint exists");
   }
 
   if (m_AppConfig.tlsEnabled() && fingerprintExists &&
