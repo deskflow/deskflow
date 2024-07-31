@@ -114,9 +114,19 @@ MainWindow::MainWindow(AppConfig &appConfig)
 }
 
 MainWindow::~MainWindow() {
+  try {
   if (appConfig().processMode() == ProcessMode::kDesktop) {
     m_ExpectedRunningState = RuningState::Stopped;
     stopDesktop();
+    }
+  } catch (const std::exception &e) {
+    qFatal("failed to stop core on main window close: %s", e.what());
+  }
+
+  try {
+    saveWindow();
+  } catch (const std::exception &e) {
+    qFatal("failed to save window on main window close: %s", e.what());
   }
 }
 
