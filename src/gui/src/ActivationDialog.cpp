@@ -78,9 +78,9 @@ void ActivationDialog::reject() {
     return;
   }
 
-  // the user is told that the 'No' button will exit the app.
+  // the accept button should be labeled "Exit" on the cancel dialoig.
   CancelActivationDialog cancelActivationDialog(this);
-  if (cancelActivationDialog.exec() == QDialog::Rejected) {
+  if (cancelActivationDialog.exec() == QDialog::Accepted) {
     QApplication::exit();
   }
 }
