@@ -100,12 +100,14 @@ void AppConfig::loadAllScopes() {
 
   // User settings exist and the load from system scope variable is true
   if (m_Config.hasSetting(
-          settingName(Setting::kLoadSystemSettings), ConfigScopes::Scope::User)) {
+          settingName(Setting::kLoadSystemSettings),
+          ConfigScopes::Scope::User)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
   else if (m_Config.hasSetting(
-               settingName(Setting::kScreenName), ConfigScopes::Scope::System)) {
+               settingName(Setting::kScreenName),
+               ConfigScopes::Scope::System)) {
     setLoadFromSystemScope(true);
   }
 }
@@ -316,10 +318,12 @@ AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
     result = m_Config.loadSetting(setting, defaultValue);
   } else if (m_Config.getScope() == ConfigScopes::Scope::System) {
     if (m_Config.hasSetting(setting, ConfigScopes::Scope::User)) {
-      result = m_Config.loadSetting(setting, defaultValue, ConfigScopes::Scope::User);
+      result = m_Config.loadSetting(
+          setting, defaultValue, ConfigScopes::Scope::User);
     }
   } else if (m_Config.hasSetting(setting, ConfigScopes::Scope::System)) {
-    result = m_Config.loadSetting(setting, defaultValue, ConfigScopes::Scope::System);
+    result = m_Config.loadSetting(
+        setting, defaultValue, ConfigScopes::Scope::System);
   }
 
   return result;

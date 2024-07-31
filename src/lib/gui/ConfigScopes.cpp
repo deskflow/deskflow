@@ -112,7 +112,9 @@ bool ConfigScopes::hasSetting(const QString &name, Scope scope) const {
   }
 }
 
-bool ConfigScopes::isWritable() const { return currentSettings()->isWritable(); }
+bool ConfigScopes::isWritable() const {
+  return currentSettings()->isWritable();
+}
 
 QVariant ConfigScopes::loadSetting(
     const QString &name, const QVariant &defaultValue, Scope scope) const {
@@ -126,7 +128,9 @@ QVariant ConfigScopes::loadSetting(
   }
 }
 
-void ConfigScopes::setScope(ConfigScopes::Scope scope) { m_CurrentScope = scope; }
+void ConfigScopes::setScope(ConfigScopes::Scope scope) {
+  m_CurrentScope = scope;
+}
 
 ConfigScopes::Scope ConfigScopes::getScope() const { return m_CurrentScope; }
 
