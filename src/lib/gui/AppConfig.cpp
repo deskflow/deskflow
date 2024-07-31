@@ -29,6 +29,7 @@
 #include <functional>
 
 using ConfigScopes = synergy::gui::ConfigScopes;
+using IConfigScopes = synergy::gui::IConfigScopes;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
@@ -93,19 +94,24 @@ const char *const AppConfig::m_SettingsName[] = {
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
-AppConfig::AppConfig() { m_Config.registerReceiver(this); }
+AppConfig::Deps AppConfig::s_Deps;
+
+AppConfig::AppConfig(Deps &deps) : m_Deps(deps), m_ScreenName(deps.hostname()) {
+
+  m_Deps.scopes().registerReceiver(this);
+}
 
 void AppConfig::loadAllScopes() {
-  m_Config.loadAll();
+  m_Deps.scopes().loadAll();
 
   // User settings exist and the load from system scope variable is true
-  if (m_Config.hasSetting(
+  if (m_Deps.scopes().hasSetting(
           settingName(Setting::kLoadSystemSettings),
           ConfigScopes::Scope::User)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
-  else if (m_Config.hasSetting(
+  else if (m_Deps.scopes().hasSetting(
                settingName(Setting::kScreenName),
                ConfigScopes::Scope::System)) {
     setLoadFromSystemScope(true);
@@ -230,7 +236,7 @@ void AppConfig::loadSerialKey() {
   using enum Setting;
 
   // only set the serial key if the current settings scope has they key.
-  bool shouldLoad = m_Config.hasSetting(
+  bool shouldLoad = m_Deps.scopes().hasSetting(
       settingName(kLoadSystemSettings), ConfigScopes::Scope::Current);
 
   if (!shouldLoad) {
@@ -252,7 +258,7 @@ void AppConfig::loadSerialKey() {
 void AppConfig::loadElevateMode() {
   using enum Setting;
 
-  if (!m_Config.hasSetting(settingName(kElevateMode))) {
+  if (!m_Deps.scopes().hasSetting(settingName(kElevateMode))) {
     qDebug("elevate mode not set yet, skipping");
     return;
   }
@@ -268,7 +274,7 @@ void AppConfig::loadElevateMode() {
 }
 
 QString AppConfig::defaultTlsCertPath() const {
-  QDir path(m_CoreInterface.getProfileDir());
+  QDir path(m_Deps.profileDir());
   path = path.filePath("SSL");
   path = path.filePath("Synergy.pem");
   return path.absolutePath();
@@ -280,23 +286,25 @@ QString AppConfig::settingName(Setting name) {
 }
 
 template <typename T> void AppConfig::setSetting(Setting name, T value) {
-  m_Config.setSetting(settingName(name), value);
+  m_Deps.scopes().setSetting(settingName(name), value);
 }
 
 template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
-  m_Config.setSetting(settingName(name), value, ConfigScopes::Scope::User);
-  m_Config.setSetting(settingName(name), value, ConfigScopes::Scope::System);
+  m_Deps.scopes().setSetting(
+      settingName(name), value, ConfigScopes::Scope::User);
+  m_Deps.scopes().setSetting(
+      settingName(name), value, ConfigScopes::Scope::System);
 }
 
 QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
-  return m_Config.loadSetting(settingName(name), defaultValue);
+  return m_Deps.scopes().loadSetting(settingName(name), defaultValue);
 }
 
 template <typename T>
 std::optional<T>
 AppConfig::loadOptional(Setting name, std::function<T(QVariant)> toType) const {
-  if (m_Config.hasSetting(settingName(name))) {
-    return toType(m_Config.loadSetting(settingName(name)));
+  if (m_Deps.scopes().hasSetting(settingName(name))) {
+    return toType(m_Deps.scopes().loadSetting(settingName(name)));
   } else {
     return std::nullopt;
   }
@@ -305,7 +313,7 @@ AppConfig::loadOptional(Setting name, std::function<T(QVariant)> toType) const {
 template <typename T>
 void AppConfig::setOptional(Setting name, const std::optional<T> &value) {
   if (value.has_value()) {
-    m_Config.setSetting(settingName(name), value.value());
+    m_Deps.scopes().setSetting(settingName(name), value.value());
   }
 }
 
@@ -314,15 +322,15 @@ AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
   QVariant result(defaultValue);
   QString setting(settingName(name));
 
-  if (m_Config.hasSetting(setting)) {
-    result = m_Config.loadSetting(setting, defaultValue);
-  } else if (m_Config.getScope() == ConfigScopes::Scope::System) {
-    if (m_Config.hasSetting(setting, ConfigScopes::Scope::User)) {
-      result = m_Config.loadSetting(
+  if (m_Deps.scopes().hasSetting(setting)) {
+    result = m_Deps.scopes().loadSetting(setting, defaultValue);
+  } else if (m_Deps.scopes().getScope() == ConfigScopes::Scope::System) {
+    if (m_Deps.scopes().hasSetting(setting, ConfigScopes::Scope::User)) {
+      result = m_Deps.scopes().loadSetting(
           setting, defaultValue, ConfigScopes::Scope::User);
     }
-  } else if (m_Config.hasSetting(setting, ConfigScopes::Scope::System)) {
-    result = m_Config.loadSetting(
+  } else if (m_Deps.scopes().hasSetting(setting, ConfigScopes::Scope::System)) {
+    result = m_Deps.scopes().loadSetting(
         setting, defaultValue, ConfigScopes::Scope::System);
   }
 
@@ -331,13 +339,13 @@ AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
 
 void AppConfig::loadScope(ConfigScopes::Scope scope) {
 
-  if (m_Config.getScope() != scope) {
+  if (m_Deps.scopes().getScope() != scope) {
     setDefaultValues();
-    m_Config.setScope(scope);
-    if (m_Config.hasSetting(
-            settingName(Setting::kScreenName), m_Config.getScope())) {
+    m_Deps.scopes().setScope(scope);
+    if (m_Deps.scopes().hasSetting(
+            settingName(Setting::kScreenName), m_Deps.scopes().getScope())) {
       // If the user already has settings, then load them up now.
-      m_Config.loadAll();
+      m_Deps.scopes().loadAll();
     }
   }
 }
@@ -361,10 +369,10 @@ void AppConfig::setLoadFromSystemScope(bool value) {
   m_LoadFromSystemScope = value;
 }
 
-bool AppConfig::isWritable() const { return m_Config.isWritable(); }
+bool AppConfig::isWritable() const { return m_Deps.scopes().isWritable(); }
 
 bool AppConfig::isSystemScoped() const {
-  return m_Config.getScope() == ConfigScopes::Scope::System;
+  return m_Deps.scopes().getScope() == ConfigScopes::Scope::System;
 }
 
 template <typename T>
@@ -392,11 +400,11 @@ void AppConfig::persistLogDir() const {
 // Begin getters
 ///////////////////////////////////////////////////////////////////////////////
 
+IConfigScopes &AppConfig::scopes() { return m_Deps.scopes(); }
+
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
 QString AppConfig::serialKey() const { return m_SerialKey; }
-
-ConfigScopes &AppConfig::config() { return m_Config; }
 
 const QString &AppConfig::screenName() const { return m_ScreenName; }
 

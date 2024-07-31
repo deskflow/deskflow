@@ -32,13 +32,6 @@
 #include <QString>
 #include <QVariant>
 #include <mutex>
-#include <qvariant.h>
-
-class QSettings;
-class SettingsDialog;
-class ServerConfig;
-class LicenseHandler;
-class ActivationDialog;
 
 enum class ProcessMode { kService, kDesktop };
 
@@ -63,12 +56,6 @@ class AppConfig : public QObject,
                   public synergy::gui::CommonConfig,
                   public synergy::gui::IAppConfig {
   Q_OBJECT
-
-  friend class SettingsDialog;
-  friend class MainWindow;
-  friend class SetupWizard;
-  friend class ServerConfig;
-  friend class ActivationDialog;
 
 private:
   enum class Setting {
@@ -116,18 +103,32 @@ private:
   };
 
 public:
-  explicit AppConfig();
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual QString profileDir() const {
+      return m_coreInterface.getProfileDir();
+    }
+    virtual synergy::gui::IConfigScopes &scopes() { return m_Scopes; }
+    virtual QString hostname() const { return QHostInfo::localHostName(); }
 
-  /// @brief Underlying configuration reader/writer
-  synergy::gui::ConfigScopes &config();
+  private:
+    [[no_unique_address]] CoreInterface m_coreInterface;
+    synergy::gui::ConfigScopes m_Scopes;
+  };
 
-  /// @brief Saves the setting to the current scope
+  explicit AppConfig() : AppConfig(s_Deps) {}
+  explicit AppConfig(Deps &deps);
+
+  synergy::gui::IConfigScopes &scopes();
   void saveSettings() override;
+  void loadAllScopes();
+  void loadSettings() override;
 
   /**
    * Getters
    */
 
+  void setActivationHasRun(bool value);
   bool isWritable() const;
   bool isSystemScoped() const;
   const QString &screenName() const;
@@ -168,15 +169,6 @@ public:
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
 
-private:
-  /// @brief Loads the setting from the current scope
-  void extracted();
-  void loadSettings() override;
-  void loadSerialKey();
-  void loadElevateMode();
-
-  static QString settingName(AppConfig::Setting name);
-
   /**
    * Setters
    */
@@ -207,12 +199,23 @@ private:
   void setLastVersion(const QString &version);
   void setServiceEnabled(bool enabled);
   void setCloseToTray(bool minimize);
-  void setActivationHasRun(bool value);
   void setTlsCertPath(const QString &path);
   void setTlsKeyLength(const QString &length);
   void setInvertConnection(bool value);
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
+
+  /// @brief Sets the user preference to load from SystemScope.
+  /// @param [in] value
+  ///             True - This will set the variable and load the global scope
+  ///             settings. False - This will set the variable and load the user
+  ///             scope settings.
+  void setLoadFromSystemScope(bool value);
+
+private:
+  static QString settingName(AppConfig::Setting name);
+  void loadSerialKey();
+  void loadElevateMode();
   void loadCommonSettings();
   void loadScopeSettings();
 
@@ -225,18 +228,11 @@ private:
   std::optional<T>
   loadOptional(Setting name, std::function<T(QVariant)> toType) const;
 
+  /**
+   * @brief Sets a setting if the value is not `std::nullopt`.
+   */
   template <typename T>
   void setOptional(Setting name, const std::optional<T> &value);
-
-  /// @brief Sets the user preference to load from SystemScope.
-  /// @param [in] value
-  ///             True - This will set the variable and load the global scope
-  ///             settings. False - This will set the variable and load the user
-  ///             scope settings.
-  void setLoadFromSystemScope(bool value);
-
-  /// @brief Loads config from the underlying reader/writer
-  void loadAllScopes();
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
@@ -281,9 +277,9 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  synergy::gui::ConfigScopes m_Config;
-  CoreInterface m_CoreInterface;
-  QString m_ScreenName = QHostInfo::localHostName();
+  static Deps s_Deps;
+  Deps &m_Deps;
+  QString m_ScreenName;
   int m_Port = 24800;
   QString m_Interface = "";
   int m_LogLevel = 0;

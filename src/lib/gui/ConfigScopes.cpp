@@ -23,6 +23,7 @@
 #include <QFile>
 #include <cassert>
 #include <memory>
+#include <qvariant.h>
 
 namespace synergy::gui {
 
@@ -181,5 +182,11 @@ bool ConfigScopes::unsavedChanges() const {
 }
 
 void ConfigScopes::markUnsaved() { m_unsavedChanges = true; }
+
+void ConfigScopes::setSetting(
+    const QString &name, const QVariant &value, Scope scope) {
+  currentSettings()->setValue(name, value);
+  m_unsavedChanges = true;
+}
 
 } // namespace synergy::gui

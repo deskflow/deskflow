@@ -144,7 +144,7 @@ private slots:
   void on_m_pActivate_triggered();
 
 private:
-  QSettings &settings() { return *appConfig().config().currentSettings(); }
+  QSettings &settings() { return *appConfig().scopes().currentSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
   void createMenuBar();

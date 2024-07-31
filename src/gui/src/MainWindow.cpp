@@ -593,7 +593,7 @@ void MainWindow::saveSettings() {
   appConfig().setServerHostname(m_pLineEditHostname->text());
   serverConfig().setClientAddress(m_pLineEditClientIp->text());
 
-  appConfig().config().saveAll();
+  appConfig().scopes().saveAll();
 }
 
 void MainWindow::setIcon(CoreState state) const {

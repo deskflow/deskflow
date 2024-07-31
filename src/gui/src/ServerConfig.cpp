@@ -51,7 +51,7 @@ ServerConfig::ServerConfig(
       m_NumColumns(numColumns),
       m_NumRows(numRows),
       m_ClipboardSharingSize(defaultClipboardSharingSize()) {
-  appConfig->config().registerReceiver(this);
+  appConfig->scopes().registerReceiver(this);
 }
 
 ServerConfig::~ServerConfig() {
@@ -553,5 +553,5 @@ QString ServerConfig::getClientAddress() const {
 }
 
 QSettings &ServerConfig::settings() {
-  return *m_pAppConfig->config().currentSettings();
+  return *m_pAppConfig->scopes().currentSettings();
 }
