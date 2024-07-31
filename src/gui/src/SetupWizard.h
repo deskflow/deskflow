@@ -16,9 +16,11 @@
  */
 
 #pragma once
+
 #include "ui_SetupWizardBase.h"
+
 #include <QDialog>
-#include <memory>
+#include <QObject>
 
 class MainWindow;
 
@@ -33,8 +35,8 @@ protected:
   void reject();
 
 private:
-  MainWindow &m_MainWindow;
+  MainWindow &m_mainWindow;
 
-private slots:
-  void onNameChanged();
+public slots:
+  void onLineEditNameChanged(const QString &error);
 };

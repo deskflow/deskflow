@@ -48,3 +48,5 @@ const auto kUrlHelp =
     QString("%1/help?%2").arg(kUrlProduct).arg(kUrlSourceQuery);
 const auto kUrlDownload =
     QString("%1/download?%2").arg(kUrlProduct).arg(kUrlSourceQuery);
+
+const auto kRedBorder = "border: 1px solid #EC4C47";

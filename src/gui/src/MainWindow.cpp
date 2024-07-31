@@ -121,17 +121,18 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::restoreWindow() {
-  qDebug("restoring window size and position");
 
   const auto &config = appConfig();
 
   const auto &size = config.mainWindowSize();
   if (size.has_value()) {
+    qDebug("restoring main window size");
     resize(size.value());
   }
 
   const auto &position = config.mainWindowPosition();
   if (position.has_value()) {
+    qDebug("restoring main window position");
     move(position.value());
   }
 

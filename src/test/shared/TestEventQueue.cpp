@@ -17,26 +17,24 @@
 
 #include "test/shared/TestEventQueue.h"
 
-#include "base/Log.h"
-#include "base/SimpleEventQueueBuffer.h"
 #include "base/TMethodEventJob.h"
 #include "common/stdexcept.h"
 
 void TestEventQueue::raiseQuitEvent() { addEvent(Event(Event::kQuit)); }
 
 void TestEventQueue::initQuitTimeout(double timeout) {
-  assert(m_quitTimeoutTimer == nullptr);
-  m_quitTimeoutTimer = newOneShotTimer(timeout, NULL);
+  assert(m_pQuitTimeoutTimer == nullptr);
+  m_pQuitTimeoutTimer = newOneShotTimer(timeout, NULL);
   adoptHandler(
-      Event::kTimer, m_quitTimeoutTimer,
+      Event::kTimer, m_pQuitTimeoutTimer,
       new TMethodEventJob<TestEventQueue>(
           this, &TestEventQueue::handleQuitTimeout));
 }
 
 void TestEventQueue::cleanupQuitTimeout() {
-  removeHandler(Event::kTimer, m_quitTimeoutTimer);
-  delete m_quitTimeoutTimer;
-  m_quitTimeoutTimer = nullptr;
+  removeHandler(Event::kTimer, m_pQuitTimeoutTimer);
+  delete m_pQuitTimeoutTimer;
+  m_pQuitTimeoutTimer = nullptr;
 }
 
 void TestEventQueue::handleQuitTimeout(const Event &, void *vclient) {

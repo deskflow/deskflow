@@ -18,15 +18,13 @@
 
 #pragma once
 
-#include "gui/TlsUtility.h"
 #include "ui_SettingsDialogBase.h"
 
 #include "gui/CoreInterface.h"
+#include "gui/TlsUtility.h"
 #include "license/License.h"
-#include "validators/ScreenNameValidator.h"
 
 #include <QDialog>
-#include <memory>
 
 class MainWindow;
 class AppConfig;
@@ -67,13 +65,16 @@ protected:
   void updateTlsControlsEnabled();
 
 private:
-  QString m_nameError = "";
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
   CoreInterface m_coreInterface;
   const synergy::license::License &m_license;
   synergy::gui::TlsUtility m_tlsUtility;
-  std::unique_ptr<validators::ScreenNameValidator> m_screenNameValidator;
+
+  // HACK: workaround for the validator accepting only a label.
+  // we should accept a reference to an error message proxy which passes the
+  // message to either a label or text.
+  QLabel m_labelError;
 
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
@@ -101,6 +102,4 @@ private slots:
   ///         This will regenerate the TLS certificate as long as the settings
   ///         haven't changed
   void on_m_pPushButtonRegenCert_clicked();
-
-  void on_m_pScreenNameValidator_finished(const QString &error);
 };

@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,23 +28,18 @@
 namespace validators {
 
 class LineEditValidator : public QValidator {
-  Q_OBJECT
-
 public:
   explicit LineEditValidator(
-      QLineEdit *parent = nullptr, QLabel *errors = nullptr);
+      QLineEdit *lineEdit = nullptr, QLabel *errorLabel = nullptr);
   QValidator::State validate(QString &input, int &pos) const override;
   void addValidator(std::unique_ptr<IStringValidator> validator);
 
-signals:
-  void finished(const QString &message) const;
-
 private:
-  QLabel *m_pErrors = nullptr;
-  QLineEdit *m_pControl = nullptr;
+  QLabel *m_pErrorLabel = nullptr;
+  QLineEdit *m_pLineEdit = nullptr;
   std::vector<std::unique_ptr<IStringValidator>> m_Validators;
 
-  void showError(const QString &message) const;
+  void setError(const QString &message) const;
 };
 
 } // namespace validators

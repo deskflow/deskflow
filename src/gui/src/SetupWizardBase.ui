@@ -35,7 +35,7 @@
    </size>
   </property>
   <property name="contextMenuPolicy">
-   <enum>Qt::NoContextMenu</enum>
+   <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>Setup Synergy</string>
@@ -43,7 +43,7 @@
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
-  <widget class="QLabel" name="label_Image">
+  <widget class="QLabel" name="m_pLabelImage">
    <property name="geometry">
     <rect>
      <x>270</x>
@@ -59,7 +59,7 @@
     <pixmap resource="../res/Synergy.qrc">:/res/image/welcome.png</pixmap>
    </property>
   </widget>
-  <widget class="QLabel" name="label_Title">
+  <widget class="QLabel" name="m_pLabelTitle">
    <property name="geometry">
     <rect>
      <x>270</x>
@@ -71,7 +71,6 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -79,10 +78,10 @@
     <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:18px&quot;&gt;Name your computer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
-    <enum>Qt::RichText</enum>
+    <enum>Qt::TextFormat::RichText</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="label_Name">
+  <widget class="QLabel" name="m_pLabelName">
    <property name="geometry">
     <rect>
      <x>184</x>
@@ -94,7 +93,6 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -102,7 +100,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:13px;&quot;&gt;Computer name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
-    <enum>Qt::RichText</enum>
+    <enum>Qt::TextFormat::RichText</enum>
    </property>
   </widget>
   <widget class="QLineEdit" name="m_pLineEditName">
@@ -124,7 +122,7 @@
     <number>255</number>
    </property>
   </widget>
-  <widget class="QLabel" name="label_HelpTitle">
+  <widget class="QLabel" name="m_pHelpIntro">
    <property name="geometry">
     <rect>
      <x>132</x>
@@ -136,7 +134,6 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -144,10 +141,10 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;&quot;&gt;Call your computer something short and meaningful, but it must have: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
-    <enum>Qt::RichText</enum>
+    <enum>Qt::TextFormat::RichText</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="label_HelpInfo">
+  <widget class="QLabel" name="m_pHelpList">
    <property name="geometry">
     <rect>
      <x>193</x>
@@ -160,7 +157,6 @@
     <font>
      <family>Arial</family>
      <pointsize>20</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -168,7 +164,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;list-style-type:none; font-size: 13px;&quot;&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- A different name from other computers &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only these special characters _ - .&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- No spaces &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only english characters and numbers&lt;/li&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
-    <enum>Qt::RichText</enum>
+    <enum>Qt::TextFormat::RichText</enum>
    </property>
   </widget>
   <widget class="QPushButton" name="m_pButtonApply">
@@ -183,7 +179,6 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
@@ -191,7 +186,7 @@
     <string>Apply</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_ErrorMessage">
+  <widget class="QLabel" name="m_pLabelError">
    <property name="geometry">
     <rect>
      <x>300</x>

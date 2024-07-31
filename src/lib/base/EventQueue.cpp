@@ -19,6 +19,7 @@
 #include "base/EventQueue.h"
 
 #include "arch/Arch.h"
+#include "base/EventQueue.h"
 #include "base/EventTypes.h"
 #include "base/IEventJob.h"
 #include "base/Log.h"

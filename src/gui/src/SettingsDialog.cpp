@@ -23,13 +23,13 @@
 #include "UpgradeDialog.h"
 #include "gui/TlsCertificate.h"
 #include "gui/constants.h"
+#include "validators/ScreenNameValidator.h"
 
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <memory>
 
 using namespace synergy::license;
 
@@ -56,12 +56,9 @@ SettingsDialog::SettingsDialog(
   updateControlsEnabled();
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
-  m_screenNameValidator = std::make_unique<validators::ScreenNameValidator>(
-      m_pLineEditScreenName, nullptr, (&serveConfig.screens()));
-  connect(
-      m_screenNameValidator.get(), SIGNAL(finished(QString)), this,
-      SLOT(on_m_pScreenNameValidator_finished(QString)));
-  m_pLineEditScreenName->setValidator(m_screenNameValidator.get());
+
+  m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
+      m_pLineEditScreenName, &m_labelError, (&serveConfig.screens())));
 
   connect(
       m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
@@ -90,8 +87,8 @@ SettingsDialog::SettingsDialog(
 }
 
 void SettingsDialog::accept() {
-  if (!m_nameError.isEmpty()) {
-    QMessageBox::warning(this, tr("Invalid screen name"), m_nameError);
+  if (!m_labelError.text().isEmpty()) {
+    QMessageBox::warning(this, tr("Invalid screen name"), m_labelError.text());
     return;
   }
 
@@ -323,8 +320,4 @@ void SettingsDialog::updateControlsEnabled() {
 #endif
 
   updateTlsControls();
-}
-
-void SettingsDialog::on_m_pScreenNameValidator_finished(const QString &error) {
-  m_nameError = error;
 }

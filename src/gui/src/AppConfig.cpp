@@ -232,7 +232,7 @@ void AppConfig::loadSerialKey() {
       settingName(kLoadSystemSettings), Config::Scope::Current);
 
   if (!shouldLoad) {
-    qDebug("no serial key in current scope, skipping load");
+    qDebug("no serial key in current scope, skipping");
     return;
   }
 
@@ -240,7 +240,7 @@ void AppConfig::loadSerialKey() {
       loadSetting(kSerialKey, m_SerialKey).toString().trimmed();
 
   if (serialKey.isEmpty()) {
-    qDebug("serial key is empty, skipping load");
+    qDebug("serial key is empty, skipping");
     return;
   }
 
@@ -249,6 +249,11 @@ void AppConfig::loadSerialKey() {
 
 void AppConfig::loadElevateMode() {
   using enum Setting;
+
+  if (!m_Config.hasSetting(settingName(kElevateMode))) {
+    qDebug("elevate mode not set yet, skipping");
+    return;
+  }
 
   QVariant elevateMode = loadSetting(kElevateMode);
   if (!elevateMode.isValid()) {
