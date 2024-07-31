@@ -159,7 +159,7 @@ QSettings *ConfigScopes::currentSettings() const {
   }
 }
 
-void ConfigScopes::registerReceiever(CommonConfig *receiver) {
+void ConfigScopes::registerReceiver(CommonConfig *receiver) {
   m_pReceievers.push_back(receiver);
 }
 

@@ -86,7 +86,7 @@ public:
   void markUnsaved();
 
   /// @brief Register a class to receives requests to save and load settings
-  void registerReceiever(CommonConfig *receiver);
+  void registerReceiver(CommonConfig *receiver);
 
   /// @brief Checks if any registered class has any unsaved changes
   /// @return bool True if any registered class has unsaved changes

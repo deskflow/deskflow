@@ -93,7 +93,7 @@ const char *const AppConfig::m_SettingsName[] = {
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
-AppConfig::AppConfig() { m_Config.registerReceiever(this); }
+AppConfig::AppConfig() { m_Config.registerReceiver(this); }
 
 void AppConfig::loadAllScopes() {
   m_Config.loadAll();

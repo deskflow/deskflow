@@ -51,7 +51,7 @@ ServerConfig::ServerConfig(
       m_NumColumns(numColumns),
       m_NumRows(numRows),
       m_ClipboardSharingSize(defaultClipboardSharingSize()) {
-  appConfig->config().registerReceiever(this);
+  appConfig->config().registerReceiver(this);
 }
 
 ServerConfig::~ServerConfig() {
