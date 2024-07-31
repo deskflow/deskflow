@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>552</height>
+    <width>772</width>
+    <height>634</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -16,18 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>720</width>
-    <height>552</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>720</width>
-    <height>552</height>
-   </size>
-  </property>
   <property name="baseSize">
    <size>
     <width>720</width>
@@ -35,7 +23,7 @@
    </size>
   </property>
   <property name="contextMenuPolicy">
-   <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
+   <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>Setup Synergy</string>
@@ -43,168 +31,151 @@
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
-  <widget class="QLabel" name="m_pLabelImage">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>70</y>
-     <width>181</width>
-     <height>161</height>
-    </rect>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>20</number>
    </property>
-   <property name="text">
-    <string/>
+   <property name="leftMargin">
+    <number>100</number>
    </property>
-   <property name="pixmap">
-    <pixmap resource="../res/Synergy.qrc">:/res/image/welcome.png</pixmap>
+   <property name="rightMargin">
+    <number>100</number>
    </property>
-  </widget>
-  <widget class="QLabel" name="m_pLabelTitle">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>253</y>
-     <width>261</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:18px&quot;&gt;Name your computer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::TextFormat::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="m_pLabelName">
-   <property name="geometry">
-    <rect>
-     <x>184</x>
-     <y>294</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size:13px;&quot;&gt;Computer name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::TextFormat::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="m_pLineEditName">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>293</y>
-     <width>230</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>230</width>
-     <height>20</height>
-    </size>
-   </property>
-   <property name="maxLength">
-    <number>255</number>
-   </property>
-  </widget>
-  <widget class="QLabel" name="m_pHelpIntro">
-   <property name="geometry">
-    <rect>
-     <x>132</x>
-     <y>354</y>
-     <width>481</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;&quot;&gt;Call your computer something short and meaningful, but it must have: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::TextFormat::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="m_pHelpList">
-   <property name="geometry">
-    <rect>
-     <x>193</x>
-     <y>380</y>
-     <width>311</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <pointsize>20</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;list-style-type:none; font-size: 13px;&quot;&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- A different name from other computers &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only these special characters _ - .&lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- No spaces &lt;/li&gt;&lt;li style=&quot;line-height:140%&quot;&gt;- Only english characters and numbers&lt;/li&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::TextFormat::RichText</enum>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="m_pButtonApply">
-   <property name="geometry">
-    <rect>
-     <x>650</x>
-     <y>510</y>
-     <width>56</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Apply</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="m_pLabelError">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>320</y>
-     <width>391</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: #EC4C47; 
-font-size: 13px; 
-font-family: Arial; 
-font-weight: bold;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="m_pLabelImage">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../res/Synergy.qrc">:/res/image/welcome.png</pixmap>
+     </property>
+     <property name="margin">
+      <number>30</number>
+     </property>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="m_pLabelTitle">
+     <property name="font">
+      <font>
+       <family>Cantarell</family>
+       <pointsize>18</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Name your computer</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="m_pLabelName">
+       <property name="text">
+        <string>Computer name</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="margin">
+        <number>2</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="m_pLineEditName">
+       <property name="minimumSize">
+        <size>
+         <width>230</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="m_pLabelError">
+       <property name="text">
+        <string>m_pLabelError</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="m_pHelpList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Call your computer something short and meaningful, but it must have:
+
+- No spaces
+- Only these special characters: _ - .
+- Only English characters and numbers
+- A different name from other computers
+</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::MarkdownText</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QPushButton" name="m_pButtonApply">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Continue</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="../res/Synergy.qrc"/>

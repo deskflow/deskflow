@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2021 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,21 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "validators/ComputerNameValidator.h"
-#include "validators/SpacesValidator.h"
+#pragma once
 
-#include "AliasValidator.h"
-
-#include <QRegularExpression>
+#include <QLabel>
+#include <QString>
+#include <qobject.h>
 
 namespace validators {
 
-AliasValidator::AliasValidator(QLineEdit *parent, ValidationError *error)
-    : LineEditValidator(parent, error) {
-  addValidator(
-      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
-  addValidator(std::make_unique<ComputerNameValidator>(
-      "Contains invalid characters or is too long"));
-}
+class ValidationError : QObject {
+  QString m_message;
+  QLabel *m_pLabel = nullptr;
+
+public:
+  explicit ValidationError(QObject *parent, QLabel *label = nullptr);
+  const QString &message() const;
+  void setMessage(const QString &message);
+};
 
 } // namespace validators

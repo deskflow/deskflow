@@ -169,12 +169,14 @@ void MainWindow::setupControls() {
   createMenuBar();
   secureSocket(false);
 
+  m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
   m_pLabelUpdate->hide();
+
+  m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
+  m_pLabelNotice->hide();
 
   m_pLabelIpAddresses->setText(
       QString("This computer's IP addresses: %1").arg(getIPAddresses()));
-
-  m_labelNotice->hide();
 
   if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
@@ -365,7 +367,7 @@ void MainWindow::onCoreProcessReadyReadStandardError() {
 }
 
 void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
-  const auto link = QString(kLinkDownload).arg(kUrlDownload, kLinkStyleWhite);
+  const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
   const auto text =
       QString("A new version is available (v%1). %2").arg(version, link);
 
@@ -1265,10 +1267,10 @@ void MainWindow::showLicenseNotice() {
   const auto &license = m_LicenseHandler.license();
   const bool timeLimited = license.isTimeLimited();
 
-  m_labelNotice->setVisible(timeLimited);
+  m_pLabelNotice->setVisible(timeLimited);
   if (timeLimited) {
     auto notice = licenseNotice(m_LicenseHandler.license());
-    this->m_labelNotice->setText(notice);
+    this->m_pLabelNotice->setText(notice);
   }
 }
 
@@ -1388,9 +1390,9 @@ void MainWindow::secureSocket(bool secureSocket) {
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
       QString("This computer's name: %1 "
-              R"((<a href="#" style="%2;">change</a>))")
+              R"((<a href="#" style="color: %2">change</a>))")
           .arg(appConfig().screenName())
-          .arg(kLinkStyleSecondary));
+          .arg(kColorSecondary));
   serverConfig().updateServerName();
 }
 

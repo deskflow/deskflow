@@ -22,16 +22,13 @@
 
 namespace validators {
 
-LineEditValidator::LineEditValidator(QLineEdit *lineEdit, QLabel *errorLabel)
-    : m_pErrorLabel(errorLabel),
+LineEditValidator::LineEditValidator(
+    QLineEdit *lineEdit, ValidationError *error)
+    : m_pError(error),
       m_pLineEdit(lineEdit) {
 
   if (!m_pLineEdit) {
     qFatal("validator line edit not set");
-  }
-
-  if (m_pErrorLabel) {
-    m_pErrorLabel->hide();
   }
 }
 
@@ -43,34 +40,25 @@ void LineEditValidator::addValidator(
 QValidator::State LineEditValidator::validate(QString &input, int &pos) const {
   assert(m_pLineEdit);
 
-  QString error;
+  QString errorMessage;
   for (const auto &validator : m_Validators) {
     if (!validator->validate(input)) {
-      error = validator->getMessage();
+      errorMessage = validator->getMessage();
       break;
     }
   }
 
-  if (error.isEmpty()) {
+  if (errorMessage.isEmpty()) {
     m_pLineEdit->setStyleSheet("");
   } else {
-    m_pLineEdit->setStyleSheet(kRedBorder);
+    m_pLineEdit->setStyleSheet(kStyleLineEditErrorBorder);
   }
 
-  setError(error);
-  return error.isEmpty() ? Acceptable : Intermediate;
-}
-
-void LineEditValidator::setError(const QString &message) const {
-  if (m_pErrorLabel) {
-    m_pErrorLabel->setText(message);
-
-    if (m_pErrorLabel->text().isEmpty()) {
-      m_pErrorLabel->hide();
-    } else {
-      m_pErrorLabel->show();
-    }
+  if (m_pError) {
+    m_pError->setMessage(errorMessage);
   }
+
+  return errorMessage.isEmpty() ? Acceptable : Intermediate;
 }
 
 } // namespace validators

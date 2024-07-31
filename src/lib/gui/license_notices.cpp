@@ -38,8 +38,7 @@ QString licenseNotice(const License &license) {
 }
 
 QString trialLicenseNotice(const License &license) {
-  const QString buyLink =
-      QString(kLinkBuy).arg(kUrlPurchase).arg(kLinkStyleWhite);
+  const QString buyLink = QString(kLinkBuy).arg(kUrlPurchase).arg(kColorWhite);
   if (license.isExpired()) {
     return QString("<p>Your trial has expired. %1</p>").arg(buyLink);
   } else {
@@ -57,7 +56,7 @@ QString trialLicenseNotice(const License &license) {
 
 QString subscriptionLicenseNotice(const License &license) {
   const QString renewLink =
-      QString(kLinkRenew).arg(kUrlPurchase).arg(kLinkStyleWhite);
+      QString(kLinkRenew).arg(kUrlPurchase).arg(kColorWhite);
   if (license.isExpired()) {
     return QString("<p>Your license has expired. %1</p>").arg(renewLink);
   } else {

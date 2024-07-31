@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
-    <height>555</height>
+    <width>550</width>
+    <height>582</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,10 +23,10 @@
    <property name="spacing">
     <number>15</number>
    </property>
-   <item alignment="Qt::AlignmentFlag::AlignTop">
+   <item alignment="Qt::AlignTop">
     <widget class="QTabWidget" name="m_pTabWidget">
      <property name="tabPosition">
-      <enum>QTabWidget::TabPosition::North</enum>
+      <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
       <number>1</number>
@@ -42,7 +42,7 @@
        <property name="topMargin">
         <number>15</number>
        </property>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupBasics">
          <property name="title">
           <string>Basics</string>
@@ -72,10 +72,10 @@
             <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Policy::Maximum</enum>
+               <enum>QSizePolicy::Maximum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -121,7 +121,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupApp">
          <property name="title">
           <string>App</string>
@@ -144,7 +144,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupSecurity">
          <property name="title">
           <string>Security</string>
@@ -177,7 +177,7 @@
             <item>
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -245,10 +245,10 @@
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Policy::Minimum</enum>
+               <enum>QSizePolicy::Minimum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -272,9 +272,6 @@
              <widget class="QPushButton" name="m_pPushButtonBrowseCert">
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">margin: 0px; padding: 0px;</string>
               </property>
               <property name="text">
                <string/>
@@ -304,7 +301,7 @@
             <item>
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -326,6 +323,19 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="m_pTabAdvanced">
@@ -339,7 +349,7 @@
        <property name="topMargin">
         <number>15</number>
        </property>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupNetworking">
          <property name="title">
           <string>Networking</string>
@@ -417,7 +427,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupLogs">
          <property name="title">
           <string>Logs</string>
@@ -435,7 +445,7 @@
           <item row="0" column="1">
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
+             <enum>Qt::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -519,10 +529,10 @@
             <item>
              <spacer name="horizontalSpacer_7">
               <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Policy::Minimum</enum>
+               <enum>QSizePolicy::Minimum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -553,9 +563,6 @@
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
               </property>
-              <property name="styleSheet">
-               <string notr="true">margin: 0px; padding: 0px;</string>
-              </property>
               <property name="text">
                <string/>
               </property>
@@ -579,7 +586,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupService">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -655,7 +662,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignmentFlag::AlignTop">
+       <item alignment="Qt::AlignTop">
         <widget class="QGroupBox" name="m_pGroupScope">
          <property name="title">
           <string>Use settings profile from</string>
@@ -687,17 +694,43 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
    </item>
    <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="m_pButtonBox">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Save</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>

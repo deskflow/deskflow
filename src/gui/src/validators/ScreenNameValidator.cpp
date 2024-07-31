@@ -22,6 +22,7 @@
 #include "validators/EmptyStringValidator.h"
 #include "validators/ScreenDuplicationsValidator.h"
 #include "validators/SpacesValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QRegularExpression>
 #include <memory>
@@ -29,8 +30,8 @@
 namespace validators {
 
 ScreenNameValidator::ScreenNameValidator(
-    QLineEdit *lineEdit, QLabel *errorLabel, const ScreenList *pScreens)
-    : LineEditValidator(lineEdit, errorLabel) {
+    QLineEdit *lineEdit, ValidationError *error, const ScreenList *pScreens)
+    : LineEditValidator(lineEdit, error) {
   addValidator(
       std::make_unique<EmptyStringValidator>("Computer name cannot be empty"));
   addValidator(

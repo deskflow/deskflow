@@ -18,8 +18,10 @@
 
 #include "ScreenSettingsDialog.h"
 #include "Screen.h"
+#include "gui/constants.h"
 #include "validators/AliasValidator.h"
 #include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QMessageBox>
 #include <QtCore>
@@ -30,15 +32,21 @@ ScreenSettingsDialog::ScreenSettingsDialog(
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ScreenSettingsDialogBase(),
       m_pScreen(pScreen) {
+
   setupUi(this);
+
+  m_pLabelAliasError->setStyleSheet(kStyleErrorActiveLabel);
+  m_pLabelNameError->setStyleSheet(kStyleErrorActiveLabel);
 
   m_pLineEditName->setText(m_pScreen->name());
   m_pLineEditName->setValidator(new validators::ScreenNameValidator(
-      m_pLineEditName, m_pLabelNameError, pScreens));
+      m_pLineEditName, new validators::ValidationError(this, m_pLabelNameError),
+      pScreens));
   m_pLineEditName->selectAll();
 
-  m_pLineEditAlias->setValidator(
-      new validators::AliasValidator(m_pLineEditAlias, m_pLabelAliasError));
+  m_pLineEditAlias->setValidator(new validators::AliasValidator(
+      m_pLineEditAlias,
+      new validators::ValidationError(this, m_pLabelAliasError)));
 
   for (int i = 0; i < m_pScreen->aliases().count(); i++)
     new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);

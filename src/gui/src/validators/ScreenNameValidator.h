@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,21 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SCREENNAMEVALIDATOR_H
-#define SCREENNAMEVALIDATOR_H
+
+#pragma once
 
 #include "LineEditValidator.h"
 #include "ScreenList.h"
+#include "validators/ValidationError.h"
 
 namespace validators {
 
 class ScreenNameValidator : public LineEditValidator {
 public:
   explicit ScreenNameValidator(
-      QLineEdit *lineEdit = nullptr, QLabel *errorLabel = nullptr,
+      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr,
       const ScreenList *pScreens = nullptr);
 };
 
 } // namespace validators
-
-#endif // SCREENNAMEVALIDATOR_H

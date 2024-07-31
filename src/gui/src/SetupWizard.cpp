@@ -18,15 +18,19 @@
 #include "SetupWizard.h"
 
 #include "MainWindow.h"
+#include "gui/constants.h"
 #include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
 
 SetupWizard::SetupWizard(MainWindow &mainWindow) : m_mainWindow(mainWindow) {
 
   setupUi(this);
 
+  m_pLabelError->setStyleSheet(kStyleErrorActiveLabel);
+
   m_pLineEditName->setText(m_mainWindow.appConfig().screenName());
-  m_pLineEditName->setValidator(
-      new validators::ScreenNameValidator(m_pLineEditName, m_pLabelError));
+  m_pLineEditName->setValidator(new validators::ScreenNameValidator(
+      m_pLineEditName, new validators::ValidationError(this, m_pLabelError)));
 
   connect(m_pButtonApply, &QPushButton::clicked, this, &SetupWizard::accept);
   connect(

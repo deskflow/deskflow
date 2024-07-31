@@ -23,6 +23,7 @@
 #include "gui/CoreInterface.h"
 #include "gui/TlsUtility.h"
 #include "license/License.h"
+#include "validators/ValidationError.h"
 
 #include <QDialog>
 
@@ -70,11 +71,7 @@ private:
   CoreInterface m_coreInterface;
   const synergy::license::License &m_license;
   synergy::gui::TlsUtility m_tlsUtility;
-
-  // HACK: workaround for the validator accepting only a label.
-  // we should accept a reference to an error message proxy which passes the
-  // message to either a label or text.
-  QLabel m_labelError;
+  validators::ValidationError *m_pScreenNameError;
 
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
@@ -85,21 +82,8 @@ private slots:
   void on_m_pCheckBoxEnableCrypto_clicked(bool checked);
   void on_m_pCheckBoxLogToFile_stateChanged(int);
   void on_m_pButtonBrowseLog_clicked();
-
-  /// @brief Handles the toggling of the system scoped radio button
-  ///        As the user scope radio is connected this will fire for either
-  ///        radio button
   void on_m_pRadioSystemScope_toggled(bool checked);
-
-  /// @brief Handles the click event of the Cert Path browse button
-  ///        displaying a file browser
   void on_m_pPushButtonBrowseCert_clicked();
-
-  /// @brief Handles the TLS cert key length changed event
   void on_m_pComboBoxKeyLength_currentIndexChanged(int index);
-
-  /// @brief handels the regenerate cert button event
-  ///         This will regenerate the TLS certificate as long as the settings
-  ///         haven't changed
   void on_m_pPushButtonRegenCert_clicked();
 };

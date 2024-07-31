@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>508</height>
+    <width>814</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -29,7 +29,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
@@ -62,10 +62,10 @@
             <string>Drag a screen from the grid to the trashcan to remove it.</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
+            <enum>QFrame::StyledPanel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
+            <enum>QFrame::Raised</enum>
            </property>
            <property name="text">
             <string/>
@@ -78,7 +78,7 @@
          <item>
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
+            <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -106,7 +106,7 @@
             <string>Configure the layout of your computer displays by dragging to where you want.</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+            <set>Qt::AlignCenter</set>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -119,7 +119,7 @@
          <item>
           <spacer name="horizontalSpacer_3">
            <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
+            <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -154,10 +154,10 @@
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
+          <enum>QSizePolicy::Fixed</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -194,10 +194,10 @@
           <bool>false</bool>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Shape::StyledPanel</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Shadow::Sunken</enum>
+          <enum>QFrame::Sunken</enum>
          </property>
         </widget>
        </item>
@@ -255,7 +255,7 @@
           <item row="3" column="1">
            <spacer>
             <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -315,7 +315,7 @@
           <item row="3" column="1">
            <spacer>
             <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -359,12 +359,6 @@
              <kerning>true</kerning>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -2px;
-}</string>
-           </property>
            <property name="title">
             <string>&amp;Switch computer</string>
            </property>
@@ -393,7 +387,7 @@
               <item>
                <spacer>
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -446,7 +440,7 @@
               <item>
                <spacer>
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -490,10 +484,10 @@
          <item>
           <spacer name="verticalSpacer_4">
            <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
+            <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Policy::Fixed</enum>
+            <enum>QSizePolicy::Fixed</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -509,12 +503,6 @@
             <font>
              <kerning>true</kerning>
             </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QGroupBox::title{
-   left: -2px;
-   top: -2px;
-}</string>
            </property>
            <property name="title">
             <string>Clipboard sharing</string>
@@ -547,7 +535,7 @@
               <item>
                <spacer name="horizontalSpacer">
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -582,7 +570,7 @@
             <item>
              <spacer name="verticalSpacer_3">
               <property name="orientation">
-               <enum>Qt::Orientation::Vertical</enum>
+               <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -600,7 +588,7 @@
        <item row="5" column="0">
         <spacer>
          <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -616,12 +604,6 @@
           <font>
            <kerning>true</kerning>
           </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -2px;
-}</string>
          </property>
          <property name="title">
           <string>&amp;Dead corners for this computer</string>
@@ -707,12 +689,6 @@
              <kerning>false</kerning>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -2px;
-}</string>
-           </property>
            <property name="title">
             <string>&amp;Options</string>
            </property>
@@ -723,7 +699,7 @@
             <item row="11" column="0">
              <spacer>
               <property name="orientation">
-               <enum>Qt::Orientation::Vertical</enum>
+               <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -737,9 +713,6 @@
              <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
               <property name="enabled">
                <bool>true</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
               </property>
               <property name="text">
                <string>Use &amp;relative mouse moves</string>
@@ -759,9 +732,6 @@
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
-                <property name="styleSheet">
-                 <string notr="true">left: -2px;</string>
-                </property>
                 <property name="text">
                  <string>&amp;Check clients every</string>
                 </property>
@@ -770,7 +740,7 @@
               <item>
                <spacer>
                 <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -816,9 +786,6 @@
             </item>
             <item row="4" column="0">
              <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
-              </property>
               <property name="text">
                <string>Ignore auto config clients</string>
               </property>
@@ -826,9 +793,6 @@
             </item>
             <item row="6" column="0">
              <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
-              </property>
               <property name="text">
                <string>Disable lock to screen</string>
               </property>
@@ -838,9 +802,6 @@
              <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
               <property name="enabled">
                <bool>true</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
               </property>
               <property name="text">
                <string>Don't take &amp;foreground window on Windows servers</string>
@@ -855,10 +816,10 @@
        <item row="3" column="0">
         <spacer name="verticalSpacer_5">
          <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
+          <enum>QSizePolicy::Fixed</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -886,7 +847,7 @@
          <item>
           <spacer name="verticalSpacer_2">
            <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
+            <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -902,17 +863,17 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;text-align: center; font-family: Arial; font-size: 18px; line-height: 25px;&quot;&gt;Config override&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="textFormat">
-            <enum>Qt::TextFormat::RichText</enum>
+            <enum>Qt::RichText</enum>
            </property>
           </widget>
          </item>
          <item>
           <spacer name="verticalSpacer_3">
            <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
+            <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Policy::Minimum</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -928,17 +889,17 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;text-align: center; font-size: 13px; font-family: Arial; line-hegiht: 18px;&quot;&gt;If you have a config file and want to override all setttings with this file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="textFormat">
-            <enum>Qt::TextFormat::RichText</enum>
+            <enum>Qt::RichText</enum>
            </property>
           </widget>
          </item>
          <item>
           <spacer name="verticalSpacer_4">
            <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
+            <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Policy::Maximum</enum>
+            <enum>QSizePolicy::Maximum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -959,10 +920,10 @@
            <item>
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Policy::Expanding</enum>
+              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -994,10 +955,10 @@
            <item>
             <spacer name="horizontalSpacer_3">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Policy::Expanding</enum>
+              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -1020,10 +981,10 @@
            <item>
             <spacer name="horizontalSpacer_4">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Policy::Expanding</enum>
+              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -1058,10 +1019,10 @@
            <item>
             <spacer name="horizontalSpacer_6">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Policy::Fixed</enum>
+              <enum>QSizePolicy::Fixed</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -1110,9 +1071,6 @@
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
-             <property name="styleSheet">
-              <string notr="true">margin: 0px; padding: 0px;</string>
-             </property>
              <property name="text">
               <string/>
              </property>
@@ -1134,10 +1092,10 @@
            <item>
             <spacer name="horizontalSpacer_5">
              <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Policy::Expanding</enum>
+              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -1152,7 +1110,7 @@
          <item>
           <spacer name="verticalSpacer">
            <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
+            <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1171,10 +1129,10 @@
    <item>
     <widget class="QDialogButtonBox" name="m_pButtonBox">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -1193,6 +1151,39 @@
    <header>TrashScreenWidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_pButtonBrowseConfigFile</tabstop>
+  <tabstop>m_pButtonAddComputer</tabstop>
+  <tabstop>m_pScreenSetupView</tabstop>
+  <tabstop>m_pListHotkeys</tabstop>
+  <tabstop>m_pButtonNewHotkey</tabstop>
+  <tabstop>m_pButtonEditHotkey</tabstop>
+  <tabstop>m_pButtonRemoveHotkey</tabstop>
+  <tabstop>m_pListActions</tabstop>
+  <tabstop>m_pButtonNewAction</tabstop>
+  <tabstop>m_pButtonEditAction</tabstop>
+  <tabstop>m_pButtonRemoveAction</tabstop>
+  <tabstop>m_pCheckBoxSwitchDelay</tabstop>
+  <tabstop>m_pSpinBoxSwitchDelay</tabstop>
+  <tabstop>m_pCheckBoxSwitchDoubleTap</tabstop>
+  <tabstop>m_pSpinBoxSwitchDoubleTap</tabstop>
+  <tabstop>m_pCheckBoxEnableClipboard</tabstop>
+  <tabstop>m_pSpinBoxClipboardSizeLimit</tabstop>
+  <tabstop>m_pCheckBoxHeartbeat</tabstop>
+  <tabstop>m_pSpinBoxHeartbeat</tabstop>
+  <tabstop>m_pCheckBoxRelativeMouseMoves</tabstop>
+  <tabstop>m_pCheckBoxWin32KeepForeground</tabstop>
+  <tabstop>m_pCheckBoxIgnoreAutoConfigClient</tabstop>
+  <tabstop>m_pCheckBoxDisableLockToScreen</tabstop>
+  <tabstop>m_pCheckBoxCornerTopLeft</tabstop>
+  <tabstop>m_pCheckBoxCornerBottomLeft</tabstop>
+  <tabstop>m_pCheckBoxCornerTopRight</tabstop>
+  <tabstop>m_pCheckBoxCornerBottomRight</tabstop>
+  <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
+  <tabstop>m_pCheckBoxUseExternalConfig</tabstop>
+  <tabstop>m_pEditConfigFile</tabstop>
+  <tabstop>m_pTabWidget</tabstop>
+ </tabstops>
  <resources>
   <include location="../res/Synergy.qrc"/>
  </resources>

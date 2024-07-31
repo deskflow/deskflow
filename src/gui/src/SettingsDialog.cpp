@@ -24,6 +24,7 @@
 #include "gui/TlsCertificate.h"
 #include "gui/constants.h"
 #include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -57,38 +58,15 @@ SettingsDialog::SettingsDialog(
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
 
+  m_pScreenNameError = new validators::ValidationError(this);
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
-      m_pLineEditScreenName, &m_labelError, (&serveConfig.screens())));
-
-  connect(
-      m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
-      SLOT(onChange()));
-  connect(
-      m_pComboLogLevel, SIGNAL(currentIndexChanged(int)), this,
-      SLOT(onChange()));
-  connect(
-      m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
-      SLOT(onChange()));
-  connect(m_pCheckBoxAutoHide, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxPreventSleep, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(
-      m_pLineEditInterface, SIGNAL(textEdited(QString)), this,
-      SLOT(onChange()));
-  connect(m_pSpinBoxPort, SIGNAL(valueChanged(int)), this, SLOT(onChange()));
-  connect(
-      m_pLineEditScreenName, SIGNAL(textEdited(QString)), this,
-      SLOT(onChange()));
-  connect(
-      m_pComboElevate, SIGNAL(currentIndexChanged(int)), this,
-      SLOT(onChange()));
-  connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(
-      m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
+      m_pLineEditScreenName, m_pScreenNameError, &serveConfig.screens()));
 }
 
 void SettingsDialog::accept() {
-  if (!m_labelError.text().isEmpty()) {
-    QMessageBox::warning(this, tr("Invalid screen name"), m_labelError.text());
+  if (!m_pLineEditScreenName->hasAcceptableInput()) {
+    QMessageBox::warning(
+        this, tr("Invalid screen name"), m_pScreenNameError->message());
     return;
   }
 
@@ -175,7 +153,7 @@ void SettingsDialog::updateTlsControlsEnabled() {
   auto enabled = !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
-      "TLS controls enabled=%d, client=%d, available=%d, checked=%d", enabled,
+      "tls enabled=%d, client=%d, available=%d, checked=%d", enabled,
       clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);

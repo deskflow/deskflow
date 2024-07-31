@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,18 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "SetupWizardBlocker.h"
+
+#include "MainWindow.h"
+
 #include <QDesktopServices>
 #include <QUrl>
 
-#include "MainWindow.h"
-#include "SetupWizardBlocker.h"
-
 static const std::vector<const char *> blockerTitels = {
-    "No Wayland support",
+    "Wayland is not yet supported",
 };
 
 static const std::vector<const char *> blockerText = {
-    "We have detected your system is using Wayland. It is not currently \n"
+    "We have detected your system is using Wayland which is not currently \n"
     "supported, but we are working on it. It's top of our priority list. \n"
     "\n"
     "Please switch to Xorg if you wish to continue using Synergy today.",
@@ -37,9 +38,8 @@ SetupWizardBlocker::SetupWizardBlocker(
     : m_MainWindow(mainWindow) {
   setupUi(this);
 
-  label_Title->setText(blockerTitels[static_cast<int>(type)]);
-
-  label_HelpInfo->setText(blockerText[static_cast<int>(type)]);
+  m_pLabelTitle->setText(blockerTitels[static_cast<int>(type)]);
+  m_pLabelInfo->setText(blockerText[static_cast<int>(type)]);
 
   connect(
       m_pButtonSupport, &QPushButton::released, this,
