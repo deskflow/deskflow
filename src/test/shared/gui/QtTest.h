@@ -23,16 +23,12 @@
 class QtTest : public ::testing::Test {
 public:
   static void SetUpTestSuite() {
-    GTEST_LOG_(INFO) << "Qt app setup";
     char **argv = nullptr;
     int argc = 0;
     s_app = std::make_unique<QApplication>(argc, argv);
   }
 
-  static void TearDownTestSuite() {
-    s_app.reset();
-    GTEST_LOG_(INFO) << "Qt app teardown";
-  }
+  static void TearDownTestSuite() { s_app.reset(); }
 
   static std::unique_ptr<QApplication> s_app;
 };
