@@ -208,7 +208,7 @@ void MainWindow::connectSlots() const {
       &MainWindow::onAppConfigScreenNameChanged);
 
   connect(
-      &m_AppConfig, &AppConfig::invertConnection, this,
+      &m_AppConfig, &AppConfig::invertConnectionChanged, this,
       &MainWindow::onAppConfigInvertConnection);
 
   connect(
@@ -613,7 +613,7 @@ void MainWindow::appendLogInfo(const QString &text) {
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
-  qDebug() << text;
+  qDebug("%s", text.toStdString().c_str());
 
   if (appConfig().logLevel() >= kDebugLogLevel) {
     processCoreLogLine(getTimeStamp() + " DEBUG: " + text);
