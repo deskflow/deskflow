@@ -7,15 +7,16 @@
 [![Build containers](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml)
 
 The Synergy Core project is the open-source core component of [Synergy](https://symless.com/synergy), a keyboard and mouse sharing tool.  
-This project is intended for advanced technical users, and when built produces Synergy 1 Community Edition.  
-To use the community edition, install the `synergy` package with your favorite package manager.  
+
+This project is intended for advanced technical users, and when built produces Synergy 1 Community Edition. 
+To use the community edition, either install the `synergy` package with your favorite package manager or build it yourself using the Developer Quick Start instructions below.
 
 * [Download Synergy](https://symless.com/synergy/download) (paid version)
 * [Contact support](https://symless.com/synergy/contact) (for customers)
 * [Help articles](https://symless.com/synergy/help)
 * [Project Wiki](https://github.com/symless/synergy-core/wiki)
 
-## Developer quick start
+## Developer Quick Start
 
 Simplified instructions for those who want to contribute to the development of Synergy Core.
 
