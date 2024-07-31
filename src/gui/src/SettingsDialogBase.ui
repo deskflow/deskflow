@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>550</height>
+    <width>559</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,8 +20,11 @@
    <string>Preferences</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_9">
-   <item>
-    <widget class="QTabWidget" name="m_pTabs">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <item alignment="Qt::AlignmentFlag::AlignTop">
+    <widget class="QTabWidget" name="m_pTabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::TabPosition::North</enum>
      </property>
@@ -39,8 +42,8 @@
        <property name="topMargin">
         <number>15</number>
        </property>
-       <item>
-        <widget class="QGroupBox" name="m_pGroupBoxCommon">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
+        <widget class="QGroupBox" name="m_pGroupBasics">
          <property name="title">
           <string>Basics</string>
          </property>
@@ -118,8 +121,8 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_2">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
+        <widget class="QGroupBox" name="m_pGroupApp">
          <property name="title">
           <string>App</string>
          </property>
@@ -141,7 +144,7 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupSecurity">
          <property name="title">
           <string>Security</string>
@@ -323,19 +326,6 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="m_pTabAdvanced">
@@ -349,8 +339,8 @@
        <property name="topMargin">
         <number>15</number>
        </property>
-       <item>
-        <widget class="QGroupBox" name="groupBox">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
+        <widget class="QGroupBox" name="m_pGroupNetworking">
          <property name="title">
           <string>Networking</string>
          </property>
@@ -427,8 +417,8 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="m_pGroupLog1">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
+        <widget class="QGroupBox" name="m_pGroupLogs">
          <property name="title">
           <string>Logs</string>
          </property>
@@ -589,8 +579,8 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="m_pGroupAdvanced">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
+        <widget class="QGroupBox" name="m_pGroupService">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -665,7 +655,7 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupScope">
          <property name="title">
           <string>Use settings profile from</string>
@@ -680,7 +670,7 @@
              <string>All users</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -689,40 +679,17 @@
             <property name="text">
              <string>Current user</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer_6">
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="m_pButtonBox">

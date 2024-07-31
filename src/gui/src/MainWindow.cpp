@@ -118,16 +118,8 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
 #if defined(Q_OS_MAC)
 
-  resize(720, 550);
-  setMinimumSize(size());
-
   m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
   m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
-
-#elif defined(Q_OS_LINUX)
-
-  resize(700, 530);
-  setMinimumSize(size());
 
 #elif defined(Q_OS_WIN)
 

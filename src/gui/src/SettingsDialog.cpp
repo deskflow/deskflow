@@ -45,7 +45,9 @@ SettingsDialog::SettingsDialog(
 
   setupUi(this);
 
-  m_pTabs->setCurrentIndex(0);
+  // force the first tab, since qt creator sets the active tab as the last one
+  // the developer was looking at, and it's easy to accidentally save that.
+  m_pTabWidget->setCurrentIndex(0);
 
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
@@ -85,8 +87,6 @@ SettingsDialog::SettingsDialog(
   connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
   connect(
       m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
-
-  adjustSize();
 }
 
 void SettingsDialog::accept() {
