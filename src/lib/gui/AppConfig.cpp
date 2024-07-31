@@ -18,7 +18,7 @@
 
 #include "AppConfig.h"
 
-#include "Config.h"
+#include "ConfigScopes.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -28,7 +28,7 @@
 #include <QtNetwork>
 #include <functional>
 
-using synergy::gui::Config;
+using synergy::gui::ConfigScopes;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.

@@ -19,7 +19,7 @@
 #pragma once
 
 #include "CommonConfig.h"
-#include "Config.h"
+#include "ConfigScopes.h"
 #include "CoreInterface.h"
 #include "ElevateMode.h"
 #include "IAppConfig.h"
@@ -119,7 +119,7 @@ public:
   explicit AppConfig();
 
   /// @brief Underlying configuration reader/writer
-  synergy::gui::Config &config();
+  synergy::gui::ConfigScopes &config();
 
   /// @brief Saves the setting to the current scope
   void saveSettings() override;
@@ -270,7 +270,7 @@ private:
 
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
-  void loadScope(synergy::gui::Config::Scope scope);
+  void loadScope(synergy::gui::ConfigScopes::Scope scope);
 
   /// @brief This function sets default values
   /// for settings that shouldn't be copied from between scopes.
@@ -281,7 +281,7 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  synergy::gui::Config m_Config;
+  synergy::gui::ConfigScopes m_Config;
   CoreInterface m_CoreInterface;
   QString m_ScreenName = QHostInfo::localHostName();
   int m_Port = 24800;

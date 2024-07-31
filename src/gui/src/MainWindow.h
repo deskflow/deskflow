@@ -35,7 +35,7 @@
 #include "TrayIcon.h"
 #include "global/Ipc.h"
 #include "gui/AppConfig.h"
-#include "gui/Config.h"
+#include "gui/ConfigScopes.h"
 #include "gui/QIpcClient.h"
 #include "gui/TlsUtility.h"
 #include "gui/VersionChecker.h"

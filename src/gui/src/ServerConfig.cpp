@@ -21,7 +21,7 @@
 #include "AddClientDialog.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
-#include "gui/Config.h"
+#include "gui/ConfigScopes.h"
 #include "gui/constants.h"
 
 #include <QAbstractButton>
