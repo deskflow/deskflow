@@ -28,6 +28,7 @@ const bool kLicensingEnabled = false;
 const auto kColorWhite = "#ffffff";
 const auto kColorPrimary = "#ff7c00";
 const auto kColorSecondary = "#4285f4";
+const auto kColorTertiary = "#33b2cc";
 
 const auto kLinkStyleWhite = QString("color: %1").arg(kColorWhite);
 const auto kLinkStylePrimary = QString("color: %1").arg(kColorPrimary);

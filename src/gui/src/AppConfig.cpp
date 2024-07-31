@@ -23,10 +23,10 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QVariant>
 #include <QtCore>
 #include <QtNetwork>
 #include <functional>
-#include <qvariant.h>
 
 using synergy::gui::Config;
 

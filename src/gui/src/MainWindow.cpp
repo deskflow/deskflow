@@ -1245,8 +1245,8 @@ QString MainWindow::getIPAddresses() const {
       // usually 192.168.x.x is a useful ip for the user, so indicate
       // this by making it bold.
       if (!hinted && address.isInSubnet(localnet)) {
-        QString format = "<span style=\"color:#4285F4;\">%1</span>";
-        result.append(format.arg(address.toString()));
+        QString format = R"(<span style="color:%1;">%2</span>)";
+        result.append(format.arg(kColorTertiary, address.toString()));
         hinted = true;
       } else {
         result.append(address.toString());

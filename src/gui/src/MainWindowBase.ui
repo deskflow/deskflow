@@ -92,6 +92,9 @@ top: 3px;</string>
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelIpAddresses">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The highlighted IP is the one we think you should use. The server listens on all IPs, so the other IPs may work as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
       <property name="text">
        <string notr="true">This computer's IP addresses:</string>
       </property>
