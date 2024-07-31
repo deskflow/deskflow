@@ -28,7 +28,7 @@
 #include <QtNetwork>
 #include <functional>
 
-using synergy::gui::ConfigScopes;
+using ConfigScopes = synergy::gui::ConfigScopes;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
@@ -100,12 +100,12 @@ void AppConfig::loadAllScopes() {
 
   // User settings exist and the load from system scope variable is true
   if (m_Config.hasSetting(
-          settingName(Setting::kLoadSystemSettings), Config::Scope::User)) {
+          settingName(Setting::kLoadSystemSettings), ConfigScopes::Scope::User)) {
     setLoadFromSystemScope(m_LoadFromSystemScope);
   }
   // If user setting don't exist but system ones do, load the system settings
   else if (m_Config.hasSetting(
-               settingName(Setting::kScreenName), Config::Scope::System)) {
+               settingName(Setting::kScreenName), ConfigScopes::Scope::System)) {
     setLoadFromSystemScope(true);
   }
 }
@@ -229,7 +229,7 @@ void AppConfig::loadSerialKey() {
 
   // only set the serial key if the current settings scope has they key.
   bool shouldLoad = m_Config.hasSetting(
-      settingName(kLoadSystemSettings), Config::Scope::Current);
+      settingName(kLoadSystemSettings), ConfigScopes::Scope::Current);
 
   if (!shouldLoad) {
     qDebug("no serial key in current scope, skipping");
@@ -282,8 +282,8 @@ template <typename T> void AppConfig::setSetting(Setting name, T value) {
 }
 
 template <typename T> void AppConfig::setCommonSetting(Setting name, T value) {
-  m_Config.setSetting(settingName(name), value, Config::Scope::User);
-  m_Config.setSetting(settingName(name), value, Config::Scope::System);
+  m_Config.setSetting(settingName(name), value, ConfigScopes::Scope::User);
+  m_Config.setSetting(settingName(name), value, ConfigScopes::Scope::System);
 }
 
 QVariant AppConfig::loadSetting(Setting name, const QVariant &defaultValue) {
@@ -314,18 +314,18 @@ AppConfig::loadCommonSetting(Setting name, const QVariant &defaultValue) const {
 
   if (m_Config.hasSetting(setting)) {
     result = m_Config.loadSetting(setting, defaultValue);
-  } else if (m_Config.getScope() == Config::Scope::System) {
-    if (m_Config.hasSetting(setting, Config::Scope::User)) {
-      result = m_Config.loadSetting(setting, defaultValue, Config::Scope::User);
+  } else if (m_Config.getScope() == ConfigScopes::Scope::System) {
+    if (m_Config.hasSetting(setting, ConfigScopes::Scope::User)) {
+      result = m_Config.loadSetting(setting, defaultValue, ConfigScopes::Scope::User);
     }
-  } else if (m_Config.hasSetting(setting, Config::Scope::System)) {
-    result = m_Config.loadSetting(setting, defaultValue, Config::Scope::System);
+  } else if (m_Config.hasSetting(setting, ConfigScopes::Scope::System)) {
+    result = m_Config.loadSetting(setting, defaultValue, ConfigScopes::Scope::System);
   }
 
   return result;
 }
 
-void AppConfig::loadScope(Config::Scope scope) {
+void AppConfig::loadScope(ConfigScopes::Scope scope) {
 
   if (m_Config.getScope() != scope) {
     setDefaultValues();
@@ -344,10 +344,10 @@ void AppConfig::setLoadFromSystemScope(bool value) {
 
   if (value) {
     qDebug("loading system settings scope");
-    loadScope(Config::Scope::System);
+    loadScope(ConfigScopes::Scope::System);
   } else {
     qDebug("loading user settings scope");
-    loadScope(Config::Scope::User);
+    loadScope(ConfigScopes::Scope::User);
   }
 
   /*
@@ -360,7 +360,7 @@ void AppConfig::setLoadFromSystemScope(bool value) {
 bool AppConfig::isWritable() const { return m_Config.isWritable(); }
 
 bool AppConfig::isSystemScoped() const {
-  return m_Config.getScope() == Config::Scope::System;
+  return m_Config.getScope() == ConfigScopes::Scope::System;
 }
 
 template <typename T>
@@ -392,7 +392,7 @@ bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 
 QString AppConfig::serialKey() const { return m_SerialKey; }
 
-Config &AppConfig::config() { return m_Config; }
+ConfigScopes &AppConfig::config() { return m_Config; }
 
 const QString &AppConfig::screenName() const { return m_ScreenName; }
 
