@@ -90,6 +90,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "closeToTray",
     "mainWindowSize",
     "mainWindowPosition",
+    "showDevThanks",
 };
 
 static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
@@ -180,6 +181,7 @@ void AppConfig::loadScopeSettings() {
       kMainWindowPosition, [](QVariant v) { return v.toPoint(); });
   m_MainWindowSize = loadOptional<QSize>(
       kMainWindowSize, [](QVariant v) { return v.toSize(); });
+  m_ShowDevThanks = loadSetting(kShowDevThanks, m_ShowDevThanks).toBool();
 }
 
 void AppConfig::saveSettings() {
@@ -218,6 +220,8 @@ void AppConfig::saveSettings() {
     setSetting(kInvertConnection, m_InvertConnection);
     setSetting(kServiceEnabled, m_ServiceEnabled);
     setSetting(kCloseToTray, m_CloseToTray);
+    setSetting(kShowDevThanks, m_ShowDevThanks);
+
     setOptional(kMainWindowSize, m_MainWindowSize);
     setOptional(kMainWindowPosition, m_MainWindowPosition);
   }

@@ -106,6 +106,7 @@ private:
     kCloseToTray = 38,
     kMainWindowSize = 39,
     kMainWindowPosition = 40,
+    kShowDevThanks = 41,
   };
 
 public:
