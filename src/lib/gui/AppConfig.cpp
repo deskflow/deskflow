@@ -24,7 +24,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVariant>
-#include <QtCore/qlogging.h>
 #include <QtCore>
 #include <QtNetwork>
 #include <functional>
