@@ -56,6 +56,10 @@ struct MockDeps : public AppConfig::Deps {
     ON_CALL(*this, hostname()).WillByDefault(Return("stub"));
   }
 
+  static std::shared_ptr<NiceMock<MockDeps>> makeNice() {
+    return std::make_shared<NiceMock<MockDeps>>();
+  }
+
   MOCK_METHOD(QString, profileDir, (), (const, override));
   MOCK_METHOD(synergy::gui::IConfigScopes &, scopes, (), (override));
   MOCK_METHOD(QString, hostname, (), (const, override));
@@ -66,8 +70,8 @@ struct MockDeps : public AppConfig::Deps {
 class AppConfigTests : public Test {};
 
 TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
-  NiceMock<MockDeps> deps;
-  ON_CALL(deps, hostname()).WillByDefault(Return("test"));
+  auto deps = MockDeps::makeNice();
+  ON_CALL(*deps, hostname()).WillByDefault(Return("test"));
 
   AppConfig appConfig(deps);
 
@@ -75,22 +79,22 @@ TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
 }
 
 TEST_F(AppConfigTests, loadAllScopes_byDefault_callsScopesLoadAll) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   AppConfig appConfig(deps);
 
-  EXPECT_CALL(deps.m_scopes, loadAll());
+  EXPECT_CALL(deps->m_scopes, loadAll());
 
   appConfig.loadAllScopes();
 }
 
 TEST_F(AppConfigTests, loadSettings_byDefault_callsScopesLoadSetting) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   AppConfig appConfig(deps);
 
-  ON_CALL(deps.m_scopes, hasSetting(_, _)).WillByDefault(Return(true));
-  ON_CALL(deps.m_scopes, loadSetting(_, _, _))
+  ON_CALL(deps->m_scopes, hasSetting(_, _)).WillByDefault(Return(true));
+  ON_CALL(deps->m_scopes, loadSetting(_, _, _))
       .WillByDefault(Return(QVariant("test")));
-  EXPECT_CALL(deps.m_scopes, loadSetting(_, _, _)).Times(AnyNumber());
+  EXPECT_CALL(deps->m_scopes, loadSetting(_, _, _)).Times(AnyNumber());
 
   appConfig.loadSettings();
 
@@ -98,11 +102,11 @@ TEST_F(AppConfigTests, loadSettings_byDefault_callsScopesLoadSetting) {
 }
 
 TEST_F(AppConfigTests, saveSettings_byDefault_callsScopesSetSetting) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   AppConfig appConfig(deps);
 
-  ON_CALL(deps.m_scopes, isWritable()).WillByDefault(Return(true));
-  EXPECT_CALL(deps.m_scopes, setSetting(_, _, _)).Times(AnyNumber());
+  ON_CALL(deps->m_scopes, isWritable()).WillByDefault(Return(true));
+  EXPECT_CALL(deps->m_scopes, setSetting(_, _, _)).Times(AnyNumber());
 
   appConfig.saveSettings();
 }

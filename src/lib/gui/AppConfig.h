@@ -122,8 +122,7 @@ public:
     synergy::gui::ConfigScopes m_scopes;
   };
 
-  explicit AppConfig() : AppConfig(s_Deps) {}
-  explicit AppConfig(Deps &deps);
+  explicit AppConfig(std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   synergy::gui::IConfigScopes &scopes();
   void saveSettings() override;
@@ -285,8 +284,7 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  static Deps s_Deps;
-  Deps &m_Deps;
+  std::shared_ptr<Deps> m_pDeps;
   QString m_ScreenName;
   int m_Port = 24800;
   QString m_Interface = "";

@@ -20,6 +20,7 @@
 
 #include "arch/IArchMultithread.h"
 #include "arch/IArchNetwork.h"
+
 #include <memory>
 
 #if HAVE_SYS_TYPES_H
@@ -69,8 +70,10 @@ public:
 
 //! Berkeley (BSD) sockets implementation of IArchNetwork
 class ArchNetworkBSD : public IArchNetwork {
+
 public:
   struct Deps {
+    const char *test = "test";
     virtual ~Deps() = default;
     virtual void sleep(double);
     virtual int poll(struct pollfd *, nfds_t, int);
@@ -79,8 +82,8 @@ public:
     virtual void testCancelThread();
   };
 
-  explicit ArchNetworkBSD() : m_deps(s_deps) {}
-  explicit ArchNetworkBSD(Deps &deps) : m_deps(deps) {}
+  explicit ArchNetworkBSD(std::shared_ptr<Deps> deps = std::make_shared<Deps>())
+      : m_pDeps(deps) {}
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
   ~ArchNetworkBSD() override;
@@ -128,7 +131,6 @@ private:
   void throwNameError(int);
 
 private:
-  static Deps s_deps;
-  Deps &m_deps;
+  std::shared_ptr<Deps> m_pDeps;
   ArchMutex m_mutex{};
 };

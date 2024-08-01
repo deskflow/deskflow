@@ -69,10 +69,6 @@ void loadWindowsLegacy(QSettings &settings) {
 #endif
 
 ConfigScopes::ConfigScopes() {
-  QSettings::setPath(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      getSystemSettingPath());
-
   auto orgName = QCoreApplication::organizationName();
   if (orgName.isEmpty()) {
     qFatal("unable to load config, organization name is empty");
@@ -88,6 +84,10 @@ ConfigScopes::ConfigScopes() {
   } else {
     qDebug() << "app name for config: " << appName;
   }
+
+  QSettings::setPath(
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
+      getSystemSettingPath());
 
   // Config will default to User settings if they exist,
   //  otherwise it will load System setting and save them to User settings
