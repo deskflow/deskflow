@@ -310,7 +310,7 @@ void MainWindow::onLicenseHandlerInvalidLicense() {
 
 void MainWindow::onAppConfigLoaded() {
   QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
-  if (!m_AppConfig.serialKey().isEmpty()) {
+  if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
   }
 
@@ -946,8 +946,7 @@ void MainWindow::startCore() {
         &MainWindow::onCoreProcessReadyReadStandardError);
   }
 
-  // show command if debug log level...
-  if (appConfig().logLevel() >= 4) {
+  if (appConfig().logLevel() >= kDebugLogLevel) {
     appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
   }
 
