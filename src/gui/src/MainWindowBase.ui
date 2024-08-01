@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>700</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -57,13 +57,6 @@
       </item>
       <item>
        <widget class="QLabel" name="m_pLabelUpdate">
-        <property name="styleSheet">
-         <string notr="true">padding: 3px 5px;
-border-radius: 3px;
-background-color: #3B67D3;
-color: #ffffff;
-top: 3px;</string>
-        </property>
         <property name="text">
          <string notr="true">m_pLabelUpdate</string>
         </property>
@@ -92,6 +85,9 @@ top: 3px;</string>
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelIpAddresses">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The highlighted IP is the one we think you should use. The server listens on all IPs, so the other IPs may work as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
       <property name="text">
        <string notr="true">This computer's IP addresses:</string>
       </property>
@@ -106,21 +102,6 @@ top: 3px;</string>
        </sizepolicy>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
-       <property name="spacing">
-        <number>16</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>15</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>8</number>
-       </property>
        <item>
         <widget class="QFrame" name="m_pGroupServer">
          <property name="sizePolicy">
@@ -129,29 +110,30 @@ top: 3px;</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="styleSheet">
-          <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);;
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-         </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
            <number>15</number>
           </property>
-          <item alignment="Qt::AlignTop">
-           <widget class="QRadioButton" name="m_pRadioGroupServer">
-            <property name="styleSheet">
-             <string notr="true">QRadioButton::indicator{
-     top: -7px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Use this computer's keyboard and mouse 
-(make this computer the &amp;server)</string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QRadioButton" name="m_pRadioGroupServer">
+              <property name="text">
+               <string>Use this computer's keyboard and mouse</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>(make this computer the server)</string>
+              </property>
+              <property name="indent">
+               <number>20</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item alignment="Qt::AlignTop">
            <widget class="QWidget" name="m_pWidgetServer" native="true">
@@ -293,32 +275,30 @@ background-color: rgba(192,192,192, 0.1);
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="styleSheet">
-          <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-         </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <property name="spacing">
            <number>15</number>
           </property>
-          <property name="topMargin">
-           <number>11</number>
-          </property>
-          <item alignment="Qt::AlignTop">
-           <widget class="QRadioButton" name="m_pRadioGroupClient">
-            <property name="styleSheet">
-             <string notr="true">QRadioButton::indicator{
-     top: -7px;
-}</string>
-            </property>
-            <property name="text">
-             <string>Use another computer’s mouse and keyboard
-(make this computer the &amp;client)</string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QRadioButton" name="m_pRadioGroupClient">
+              <property name="text">
+               <string>Use another computer’s mouse and keyboard</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>(make this computer the client)</string>
+              </property>
+              <property name="indent">
+               <number>20</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item alignment="Qt::AlignTop">
            <widget class="QWidget" name="m_pWidgetClient" native="true">
@@ -409,9 +389,6 @@ background-color: rgba(192,192,192, 0.1);
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelLogs">
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
       <property name="text">
        <string>Logs</string>
       </property>
@@ -440,13 +417,6 @@ background-color: rgba(192,192,192, 0.1);
         <width>0</width>
         <height>0</height>
        </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);;
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -480,9 +450,6 @@ background-color: rgba(192,192,192, 0.1);
            <family>Courier</family>
            <kerning>true</kerning>
           </font>
-         </property>
-         <property name="autoFillBackground">
-          <bool>false</bool>
          </property>
          <property name="undoRedoEnabled">
           <bool>false</bool>
@@ -546,19 +513,12 @@ background-color: rgba(192,192,192, 0.1);
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="m_labelNotice">
+       <widget class="QLabel" name="m_pLabelNotice">
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
-        <property name="styleSheet">
-         <string notr="true">padding: 3px 5px;
-border-radius: 3px;
-background-color: #3B67D3;
-color: #ffffff;
-top: 3px;</string>
-        </property>
         <property name="text">
-         <string notr="true">m_labelNotice</string>
+         <string notr="true">m_pLabelNotice</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -736,6 +696,18 @@ top: 3px;</string>
    <header>widgets/ClientStateLabel.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_pRadioGroupServer</tabstop>
+  <tabstop>m_pRadioGroupClient</tabstop>
+  <tabstop>m_pLineEditClientIp</tabstop>
+  <tabstop>m_pButtonConnectToClient</tabstop>
+  <tabstop>m_pButtonConfigureServer</tabstop>
+  <tabstop>m_pLineEditHostname</tabstop>
+  <tabstop>m_pButtonConnect</tabstop>
+  <tabstop>m_pLogOutput</tabstop>
+  <tabstop>m_pButtonApply</tabstop>
+  <tabstop>m_pButtonToggleStart</tabstop>
+ </tabstops>
  <resources>
   <include location="../res/Synergy.qrc"/>
  </resources>

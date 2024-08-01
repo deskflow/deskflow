@@ -91,8 +91,9 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event) {
       event->setDropAction(Qt::MoveAction);
       event->accept();
     } else {
-      int col = columnAt(event->pos().x());
-      int row = rowAt(event->pos().y());
+      const auto &point = event->position().toPoint();
+      int col = columnAt(point.x());
+      int row = rowAt(point.y());
 
       // a drop from outside is not allowed if there's a screen already there.
       if (!model()->screen(col, row).isNull())

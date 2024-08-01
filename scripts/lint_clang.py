@@ -25,6 +25,7 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "-f",
         "--format",
         action="store_true",
         help="In-place format all files",

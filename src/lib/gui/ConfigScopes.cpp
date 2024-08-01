@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Config.h"
+#include "ConfigScopes.h"
 
 #include "CommonConfig.h"
 
@@ -68,7 +68,7 @@ void loadWindowsLegacy(QSettings &settings) {
 }
 #endif
 
-Config::Config() {
+ConfigScopes::ConfigScopes() {
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
@@ -88,20 +88,20 @@ Config::Config() {
   load();
 }
 
-Config::~Config() {
-  while (!m_pReceievers.empty()) {
-    m_pReceievers.pop_back();
+ConfigScopes::~ConfigScopes() {
+  while (!m_pReceivers.empty()) {
+    m_pReceivers.pop_back();
   }
 }
 
-void Config::load() {
+void ConfigScopes::load() {
 #if defined(Q_OS_WIN)
   // This call is needed for backwardcapability with old settings.
   loadWindowsLegacy(*m_pSystemSettings);
 #endif
 }
 
-bool Config::hasSetting(const QString &name, Scope scope) const {
+bool ConfigScopes::hasSetting(const QString &name, Scope scope) const {
   switch (scope) {
   case Scope::User:
     return m_pUserSettings->contains(name);
@@ -112,9 +112,11 @@ bool Config::hasSetting(const QString &name, Scope scope) const {
   }
 }
 
-bool Config::isWritable() const { return currentSettings()->isWritable(); }
+bool ConfigScopes::isWritable() const {
+  return currentSettings()->isWritable();
+}
 
-QVariant Config::loadSetting(
+QVariant ConfigScopes::loadSetting(
     const QString &name, const QVariant &defaultValue, Scope scope) const {
   switch (scope) {
   case Scope::User:
@@ -126,21 +128,23 @@ QVariant Config::loadSetting(
   }
 }
 
-void Config::setScope(Config::Scope scope) { m_CurrentScope = scope; }
+void ConfigScopes::setScope(ConfigScopes::Scope scope) {
+  m_CurrentScope = scope;
+}
 
-Config::Scope Config::getScope() const { return m_CurrentScope; }
+ConfigScopes::Scope ConfigScopes::getScope() const { return m_CurrentScope; }
 
-void Config::loadAll() {
-  for (auto &i : m_pReceievers) {
+void ConfigScopes::loadAll() {
+  for (auto &i : m_pReceivers) {
     i->loadSettings();
   }
 }
 
-void Config::saveAll() {
+void ConfigScopes::saveAll() {
 
   // Save if there are any unsaved changes otherwise skip
   if (unsavedChanges()) {
-    for (auto &i : m_pReceievers) {
+    for (auto &i : m_pReceivers) {
       i->saveSettings();
     }
 
@@ -151,7 +155,7 @@ void Config::saveAll() {
   }
 }
 
-QSettings *Config::currentSettings() const {
+QSettings *ConfigScopes::currentSettings() const {
   if (m_CurrentScope == Scope::User) {
     return m_pUserSettings.get();
   } else {
@@ -159,16 +163,16 @@ QSettings *Config::currentSettings() const {
   }
 }
 
-void Config::registerReceiever(CommonConfig *receiver) {
-  m_pReceievers.push_back(receiver);
+void ConfigScopes::registerReceiver(CommonConfig *receiver) {
+  m_pReceivers.push_back(receiver);
 }
 
-bool Config::unsavedChanges() const {
+bool ConfigScopes::unsavedChanges() const {
   if (m_unsavedChanges) {
     return true;
   }
 
-  for (const auto &i : m_pReceievers) {
+  for (const auto &i : m_pReceivers) {
     if (i->modified()) {
       return true;
     }
@@ -176,6 +180,12 @@ bool Config::unsavedChanges() const {
   return false;
 }
 
-void Config::markUnsaved() { m_unsavedChanges = true; }
+void ConfigScopes::markUnsaved() { m_unsavedChanges = true; }
+
+void ConfigScopes::setSetting(
+    const QString &name, const QVariant &value, Scope scope) {
+  currentSettings()->setValue(name, value);
+  m_unsavedChanges = true;
+}
 
 } // namespace synergy::gui

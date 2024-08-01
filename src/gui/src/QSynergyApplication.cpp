@@ -26,12 +26,6 @@
 QSynergyApplication::QSynergyApplication(int &argc, char **argv)
     : QApplication(argc, argv) {
 
-  QFontDatabase::addApplicationFont(":/res/fonts/Arial.ttf");
-  QFont Arial("Arial");
-  Arial.setPixelSize(13);
-  Arial.setStyleHint(QFont::SansSerif);
-  setFont(Arial);
-
   // Setting the style to 'Fusion' seems to fix issues such as text being
   // rendered as black on black. This may not be the style we want long-term
   // but it does fix the style issues for now.

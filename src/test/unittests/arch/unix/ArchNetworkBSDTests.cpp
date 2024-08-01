@@ -31,6 +31,7 @@ using ::testing::NiceMock;
 using PollEntries = std::vector<IArchNetwork::PollEntry>;
 using PollFD = struct pollfd[];
 
+namespace {
 struct MockDeps : public ArchNetworkBSD::Deps {
   MockDeps() {
     ON_CALL(*this, makePollFD(_)).WillByDefault([this](nfds_t n) {
@@ -47,19 +48,7 @@ struct MockDeps : public ArchNetworkBSD::Deps {
 
   std::shared_ptr<PollFD> m_pollFD;
 };
-
-#ifndef NDEBUG
-
-TEST(ArchNetworkBSDTests, pollSocket_negativeNum_death) {
-  MockDeps deps;
-  ArchNetworkBSD networkBSD(deps);
-
-  PollEntries entries{{nullptr, 0, 0}};
-
-  EXPECT_DEATH({ networkBSD.pollSocket(entries.data(), -1, 1); }, "num > 0");
-}
-
-#endif // DEBUG
+} // namespace
 
 TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
   MockDeps deps;

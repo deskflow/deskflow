@@ -291,6 +291,8 @@ macro(config_qt)
     COMPONENTS Core Widgets Network
     REQUIRED)
 
+  message(STATUS "Qt version: ${Qt6_VERSION}")
+
 endmacro()
 
 macro(configure_openssl)

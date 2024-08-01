@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>508</height>
+    <width>814</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -29,7 +29,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
@@ -359,12 +359,6 @@
              <kerning>true</kerning>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -2px;
-}</string>
-           </property>
            <property name="title">
             <string>&amp;Switch computer</string>
            </property>
@@ -510,12 +504,6 @@
              <kerning>true</kerning>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">QGroupBox::title{
-   left: -2px;
-   top: -2px;
-}</string>
-           </property>
            <property name="title">
             <string>Clipboard sharing</string>
            </property>
@@ -617,12 +605,6 @@
            <kerning>true</kerning>
           </font>
          </property>
-         <property name="styleSheet">
-          <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -2px;
-}</string>
-         </property>
          <property name="title">
           <string>&amp;Dead corners for this computer</string>
          </property>
@@ -707,12 +689,6 @@
              <kerning>false</kerning>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">QGroupBox::title{
-   left: -5px;
-   top: -2px;
-}</string>
-           </property>
            <property name="title">
             <string>&amp;Options</string>
            </property>
@@ -738,9 +714,6 @@
               <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
-              </property>
               <property name="text">
                <string>Use &amp;relative mouse moves</string>
               </property>
@@ -758,9 +731,6 @@
                <widget class="QCheckBox" name="m_pCheckBoxHeartbeat">
                 <property name="enabled">
                  <bool>true</bool>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">left: -2px;</string>
                 </property>
                 <property name="text">
                  <string>&amp;Check clients every</string>
@@ -816,9 +786,6 @@
             </item>
             <item row="4" column="0">
              <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
-              </property>
               <property name="text">
                <string>Ignore auto config clients</string>
               </property>
@@ -826,9 +793,6 @@
             </item>
             <item row="6" column="0">
              <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
-              </property>
               <property name="text">
                <string>Disable lock to screen</string>
               </property>
@@ -838,9 +802,6 @@
              <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
               <property name="enabled">
                <bool>true</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">padding-left: 2px;</string>
               </property>
               <property name="text">
                <string>Don't take &amp;foreground window on Windows servers</string>
@@ -1110,9 +1071,6 @@
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
-             <property name="styleSheet">
-              <string notr="true">margin: 0px; padding: 0px;</string>
-             </property>
              <property name="text">
               <string/>
              </property>
@@ -1193,6 +1151,39 @@
    <header>TrashScreenWidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_pButtonBrowseConfigFile</tabstop>
+  <tabstop>m_pButtonAddComputer</tabstop>
+  <tabstop>m_pScreenSetupView</tabstop>
+  <tabstop>m_pListHotkeys</tabstop>
+  <tabstop>m_pButtonNewHotkey</tabstop>
+  <tabstop>m_pButtonEditHotkey</tabstop>
+  <tabstop>m_pButtonRemoveHotkey</tabstop>
+  <tabstop>m_pListActions</tabstop>
+  <tabstop>m_pButtonNewAction</tabstop>
+  <tabstop>m_pButtonEditAction</tabstop>
+  <tabstop>m_pButtonRemoveAction</tabstop>
+  <tabstop>m_pCheckBoxSwitchDelay</tabstop>
+  <tabstop>m_pSpinBoxSwitchDelay</tabstop>
+  <tabstop>m_pCheckBoxSwitchDoubleTap</tabstop>
+  <tabstop>m_pSpinBoxSwitchDoubleTap</tabstop>
+  <tabstop>m_pCheckBoxEnableClipboard</tabstop>
+  <tabstop>m_pSpinBoxClipboardSizeLimit</tabstop>
+  <tabstop>m_pCheckBoxHeartbeat</tabstop>
+  <tabstop>m_pSpinBoxHeartbeat</tabstop>
+  <tabstop>m_pCheckBoxRelativeMouseMoves</tabstop>
+  <tabstop>m_pCheckBoxWin32KeepForeground</tabstop>
+  <tabstop>m_pCheckBoxIgnoreAutoConfigClient</tabstop>
+  <tabstop>m_pCheckBoxDisableLockToScreen</tabstop>
+  <tabstop>m_pCheckBoxCornerTopLeft</tabstop>
+  <tabstop>m_pCheckBoxCornerBottomLeft</tabstop>
+  <tabstop>m_pCheckBoxCornerTopRight</tabstop>
+  <tabstop>m_pCheckBoxCornerBottomRight</tabstop>
+  <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
+  <tabstop>m_pCheckBoxUseExternalConfig</tabstop>
+  <tabstop>m_pEditConfigFile</tabstop>
+  <tabstop>m_pTabWidget</tabstop>
+ </tabstops>
  <resources>
   <include location="../res/Synergy.qrc"/>
  </resources>

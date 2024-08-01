@@ -20,7 +20,6 @@
 #include "IAppConfig.h"
 
 #include "license/License.h"
-#include <stdexcept>
 
 namespace synergy::gui {
 

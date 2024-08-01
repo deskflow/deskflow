@@ -128,7 +128,7 @@ private:
   void throwNameError(int);
 
 private:
-  ArchMutex m_mutex{};
-  Deps &m_deps;
   static Deps s_deps;
+  Deps &m_deps;
+  ArchMutex m_mutex{};
 };

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2021 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,33 +15,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include "IStringValidator.h"
-
-#include <QLabel>
-#include <QLineEdit>
-#include <QValidator>
-#include <memory>
-#include <vector>
-
 #include "ValidationError.h"
+
+#include "gui/constants.h"
 
 namespace validators {
 
-class LineEditValidator : public QValidator {
-public:
-  explicit LineEditValidator(
-      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr);
-  QValidator::State validate(QString &input, int &pos) const override;
-  void addValidator(std::unique_ptr<IStringValidator> validator);
+void clear(QLabel *label) {
+  if (label) {
+    label->setStyleSheet(kStyleErrorInactiveLabel);
+    label->setText("");
+  }
+}
 
-private:
-  ValidationError *m_pError = nullptr;
-  QLineEdit *m_pLineEdit = nullptr;
-  std::vector<std::unique_ptr<IStringValidator>> m_Validators;
+ValidationError::ValidationError(QObject *parent, QLabel *label)
+    : QObject(parent),
+      m_pLabel(label) {
 
-  void setError(const QString &message) const;
-};
+  if (m_pLabel) {
+    clear(m_pLabel);
+  }
+}
+
+const QString &ValidationError::message() const { return m_message; }
+
+void ValidationError::setMessage(const QString &message) {
+  m_message = message;
+
+  if (m_pLabel) {
+    if (message.isEmpty()) {
+      clear(m_pLabel);
+    } else {
+      m_pLabel->setStyleSheet(kStyleErrorActiveLabel);
+      m_pLabel->setText(message);
+    }
+  }
+}
 
 } // namespace validators

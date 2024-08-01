@@ -19,9 +19,9 @@
 #include "ServerConfig.h"
 
 #include "AddClientDialog.h"
-#include "Config.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "gui/ConfigScopes.h"
 #include "gui/constants.h"
 
 #include <QAbstractButton>
@@ -51,7 +51,7 @@ ServerConfig::ServerConfig(
       m_NumColumns(numColumns),
       m_NumRows(numRows),
       m_ClipboardSharingSize(defaultClipboardSharingSize()) {
-  appConfig->config().registerReceiever(this);
+  appConfig->scopes().registerReceiver(this);
 }
 
 ServerConfig::~ServerConfig() {
@@ -553,5 +553,5 @@ QString ServerConfig::getClientAddress() const {
 }
 
 QSettings &ServerConfig::settings() {
-  return *m_pAppConfig->config().currentSettings();
+  return *m_pAppConfig->scopes().currentSettings();
 }

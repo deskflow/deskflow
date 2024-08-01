@@ -18,10 +18,10 @@
 
 #include "ServerConnection.h"
 
-#include "AppConfig.h"
 #include "MainWindow.h"
 #include "ServerConfigDialog.h"
 #include "ServerMessage.h"
+#include "gui/AppConfig.h"
 
 #include <QMessageBox>
 

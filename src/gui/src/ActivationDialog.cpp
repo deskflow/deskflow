@@ -17,17 +17,15 @@
 
 #include "ActivationDialog.h"
 
-#include "gui/license_notices.h"
-#include "ui_ActivationDialog.h"
-
-#include "AppConfig.h"
 #include "CancelActivationDialog.h"
 #include "MainWindow.h"
+#include "gui/AppConfig.h"
 #include "gui/LicenseHandler.h"
 #include "gui/constants.h"
 #include "gui/license_notices.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
+#include "ui_ActivationDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -44,6 +42,9 @@ ActivationDialog::ActivationDialog(
       m_licenseHandler(licenseHandler) {
 
   m_ui->setupUi(this);
+
+  m_ui->m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
+
   refreshSerialKey();
 
   if (!m_licenseHandler.license().isExpired()) {
@@ -64,7 +65,7 @@ void ActivationDialog::refreshSerialKey() {
 
   const auto &license = m_licenseHandler.license();
   if (license.isTimeLimited()) {
-    m_ui->m_labelNotice->setText(licenseNotice(license));
+    m_ui->m_pLabelNotice->setText(licenseNotice(license));
   }
 }
 
@@ -78,9 +79,9 @@ void ActivationDialog::reject() {
     return;
   }
 
-  // the user is told that the 'No' button will exit the app.
+  // the accept button should be labeled "Exit" on the cancel dialoig.
   CancelActivationDialog cancelActivationDialog(this);
-  if (cancelActivationDialog.exec() == QDialog::Rejected) {
+  if (cancelActivationDialog.exec() == QDialog::Accepted) {
     QApplication::exit();
   }
 }
@@ -126,19 +127,21 @@ void ActivationDialog::showResultDialog(
   case kInvalid:
     QMessageBox::critical(
         this, title,
-        QString("Invalid serial key. "
-                R"(Please <a href="%1" style="%2">contact us</a> for help.)")
+        QString(
+            "Invalid serial key. "
+            R"(Please <a href="%1" style="color: %2">contact us</a> for help.)")
             .arg(kUrlContact)
-            .arg(kLinkStyleSecondary));
+            .arg(kColorSecondary));
     break;
 
   case kExpired:
     QMessageBox::warning(
         this, title,
-        QString("Sorry, that serial key has expired. "
-                R"(Please <a href="%1" style="%1">renew</a> your license.)")
+        QString(
+            "Sorry, that serial key has expired. "
+            R"(Please <a href="%1" style="color: %1">renew</a> your license.)")
             .arg(kUrlPurchase)
-            .arg(kLinkStyleSecondary));
+            .arg(kColorSecondary));
     break;
 
   default:
@@ -180,11 +183,11 @@ void ActivationDialog::showSuccessDialog() {
 void ActivationDialog::showErrorDialog(const QString &message) {
   QString fullMessage =
       QString("<p>There was a problem activating Synergy.</p>"
-              R"(<p>Please <a href="%1" style="%2">contact us</a> )"
+              R"(<p>Please <a href="%1" style="color: %2">contact us</a> )"
               "and provide the following information:</p>"
               "%3")
           .arg(kUrlContact)
-          .arg(kLinkStyleSecondary)
+          .arg(kColorSecondary)
           .arg(message);
   QMessageBox::critical(this, "Activation failed", fullMessage);
 }

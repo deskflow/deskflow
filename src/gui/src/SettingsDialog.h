@@ -18,15 +18,14 @@
 
 #pragma once
 
-#include "gui/TlsUtility.h"
 #include "ui_SettingsDialogBase.h"
 
 #include "gui/CoreInterface.h"
+#include "gui/TlsUtility.h"
 #include "license/License.h"
-#include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QDialog>
-#include <memory>
 
 class MainWindow;
 class AppConfig;
@@ -67,13 +66,12 @@ protected:
   void updateTlsControlsEnabled();
 
 private:
-  QString m_nameError = "";
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
   CoreInterface m_coreInterface;
   const synergy::license::License &m_license;
   synergy::gui::TlsUtility m_tlsUtility;
-  std::unique_ptr<validators::ScreenNameValidator> m_screenNameValidator;
+  validators::ValidationError *m_pScreenNameError;
 
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
@@ -84,23 +82,8 @@ private slots:
   void on_m_pCheckBoxEnableCrypto_clicked(bool checked);
   void on_m_pCheckBoxLogToFile_stateChanged(int);
   void on_m_pButtonBrowseLog_clicked();
-
-  /// @brief Handles the toggling of the system scoped radio button
-  ///        As the user scope radio is connected this will fire for either
-  ///        radio button
   void on_m_pRadioSystemScope_toggled(bool checked);
-
-  /// @brief Handles the click event of the Cert Path browse button
-  ///        displaying a file browser
   void on_m_pPushButtonBrowseCert_clicked();
-
-  /// @brief Handles the TLS cert key length changed event
   void on_m_pComboBoxKeyLength_currentIndexChanged(int index);
-
-  /// @brief handels the regenerate cert button event
-  ///         This will regenerate the TLS certificate as long as the settings
-  ///         haven't changed
   void on_m_pPushButtonRegenCert_clicked();
-
-  void on_m_pScreenNameValidator_finished(const QString &error);
 };

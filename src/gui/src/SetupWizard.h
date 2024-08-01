@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,9 +16,11 @@
  */
 
 #pragma once
+
 #include "ui_SetupWizardBase.h"
+
 #include <QDialog>
-#include <memory>
+#include <QObject>
 
 class MainWindow;
 
@@ -33,8 +35,8 @@ protected:
   void reject();
 
 private:
-  MainWindow &m_MainWindow;
+  MainWindow &m_mainWindow;
 
-private slots:
-  void onNameChanged();
+public slots:
+  void onLineEditNameChanged(const QString &error);
 };

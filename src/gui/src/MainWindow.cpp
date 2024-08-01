@@ -94,19 +94,89 @@ MainWindow::MainWindow(AppConfig &appConfig)
       m_ServerConfig(5, 3, &m_AppConfig, this),
       m_ServerConnection(*this),
       m_ClientConnection(*this),
-      m_TlsUtility(appConfig, m_LicenseHandler.license()) {
+      m_TlsUtility(appConfig, m_LicenseHandler.license()),
+      m_WindowSaveTimer(this) {
 
   setupUi(this);
+  setupControls();
   connectSlots();
+
+#if defined(Q_OS_WIN)
+
+  // TODO: only connect permenantly to ipc when switching to service mode.
+  // if switching from service to desktop, connect only to stop the service
+  // and don't retry.
+  m_IpcClient.connectToHost();
+
+#endif
+
+  emit created();
+}
+
+MainWindow::~MainWindow() {
+  try {
+    if (appConfig().processMode() == ProcessMode::kDesktop) {
+      m_ExpectedRunningState = RuningState::Stopped;
+      stopDesktop();
+    }
+  } catch (const std::exception &e) {
+    qFatal("failed to stop core on main window close: %s", e.what());
+  }
+
+  try {
+    saveWindow();
+  } catch (const std::exception &e) {
+    qFatal("failed to save window on main window close: %s", e.what());
+  }
+}
+
+void MainWindow::restoreWindow() {
+
+  const auto &config = appConfig();
+
+  const auto &size = config.mainWindowSize();
+  if (size.has_value()) {
+    qDebug("restoring main window size");
+    resize(size.value());
+  }
+
+  const auto &position = config.mainWindowPosition();
+  if (position.has_value()) {
+    qDebug("restoring main window position");
+    move(position.value());
+  }
+
+  // give the window chance to restore its size and position before the window
+  // size and position are saved. this prevents the window from being saved
+  // with the wrong size and position.
+  m_SaveWindow = true;
+}
+
+void MainWindow::saveWindow() {
+  if (!m_SaveWindow) {
+    qDebug("not yet ready to save window size and position, skipping");
+    return;
+  }
+
+  qDebug("saving window size and position");
+  auto &config = appConfig();
+  config.setMainWindowSize(size());
+  config.setMainWindowPosition(pos());
+  config.saveSettings();
+}
+
+void MainWindow::setupControls() {
   createMenuBar();
   secureSocket(false);
 
+  m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
   m_pLabelUpdate->hide();
 
-  m_pLabelIpAddresses->setText(
-      tr("This computer's IP addresses: %1").arg(getIPAddresses()));
+  m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
+  m_pLabelNotice->hide();
 
-  m_labelNotice->hide();
+  m_pLabelIpAddresses->setText(
+      QString("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
@@ -118,34 +188,10 @@ MainWindow::MainWindow(AppConfig &appConfig)
 
 #if defined(Q_OS_MAC)
 
-  resize(720, 550);
-  setMinimumSize(size());
-
   m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
   m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-#elif defined(Q_OS_LINUX)
-
-  resize(700, 530);
-  setMinimumSize(size());
-
-#elif defined(Q_OS_WIN)
-
-  // TODO: only connect permenantly to ipc when switching to service mode.
-  // if switching from service to desktop, connect only to stop the service and
-  // don't retry.
-  m_IpcClient.connectToHost();
-
 #endif
-
-  emit created();
-}
-
-MainWindow::~MainWindow() {
-  if (appConfig().processMode() == ProcessMode::kDesktop) {
-    m_ExpectedRunningState = RuningState::Stopped;
-    stopDesktop();
-  }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -175,7 +221,7 @@ void MainWindow::connectSlots() const {
       &MainWindow::onAppConfigScreenNameChanged);
 
   connect(
-      &m_AppConfig, &AppConfig::invertConnection, this,
+      &m_AppConfig, &AppConfig::invertConnectionChanged, this,
       &MainWindow::onAppConfigInvertConnection);
 
   connect(
@@ -215,6 +261,10 @@ void MainWindow::connectSlots() const {
   connect(
       &m_VersionChecker, &VersionChecker::updateFound, this,
       &MainWindow::onVersionCheckerUpdateFound);
+
+  connect(
+      &m_WindowSaveTimer, &QTimer::timeout, this,
+      &MainWindow::onWindowSaveTimerTimeout);
 }
 
 void MainWindow::onAppAboutToQuit() { m_AppConfig.saveSettings(); }
@@ -263,8 +313,10 @@ void MainWindow::onAppConfigLoaded() {
   if (!m_AppConfig.serialKey().isEmpty()) {
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
   }
+
   updateScreenName();
   applyConfig();
+  restoreWindow();
 }
 
 void MainWindow::onAppConfigTlsChanged() {
@@ -315,7 +367,7 @@ void MainWindow::onCoreProcessReadyReadStandardError() {
 }
 
 void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
-  const auto link = QString(kLinkDownload).arg(kUrlDownload, kLinkStyleWhite);
+  const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
   const auto text =
       QString("A new version is available (v%1). %2").arg(version, link);
 
@@ -367,11 +419,12 @@ void MainWindow::onCoreProcessFinished(int exitCode, QProcess::ExitStatus) {
 
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
-      QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
+      QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
 
   if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
     QMessageBox::warning(
-        this, tr("Save failed"), tr("Could not save configuration to file."));
+        this, QString("Save failed"),
+        QString("Could not save configuration to file."));
     return true;
   }
 
@@ -439,9 +492,27 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
   on_m_pButtonApply_clicked();
 }
 
+void MainWindow::onWindowSaveTimerTimeout() { saveWindow(); }
+
 //////////////////////////////////////////////////////////////////////////////
 // End slots
 //////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+  QMainWindow::resizeEvent(event);
+
+  // postpone save so that settings are not written every delta change.
+  m_WindowSaveTimer.setSingleShot(true);
+  m_WindowSaveTimer.start(1000);
+}
+
+void MainWindow::moveEvent(QMoveEvent *event) {
+  QMainWindow::moveEvent(event);
+
+  // postpone save so that settings are not written every delta change.
+  m_WindowSaveTimer.setSingleShot(true);
+  m_WindowSaveTimer.start(1000);
+}
 
 void MainWindow::open() {
 
@@ -522,7 +593,7 @@ void MainWindow::saveSettings() {
   appConfig().setServerHostname(m_pLineEditHostname->text());
   serverConfig().setClientAddress(m_pLineEditClientIp->text());
 
-  appConfig().config().saveAll();
+  appConfig().scopes().saveAll();
 }
 
 void MainWindow::setIcon(CoreState state) const {
@@ -555,7 +626,7 @@ void MainWindow::appendLogInfo(const QString &text) {
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
-  qDebug() << text;
+  qDebug("%s", text.toStdString().c_str());
 
   if (appConfig().logLevel() >= kDebugLogLevel) {
     processCoreLogLine(getTimeStamp() + " DEBUG: " + text);
@@ -621,9 +692,9 @@ void MainWindow::checkConnected(const QString &line) {
     if (!appConfig().startedBefore() && isVisible()) {
       QMessageBox::information(
           this, "Synergy",
-          tr("Synergy is now connected. You can close the "
-             "config window and Synergy will remain connected in "
-             "the background."));
+          QString("Synergy is now connected. You can close the "
+                  "config window and Synergy will remain connected in "
+                  "the background."));
 
       appConfig().setStartedBefore(true);
     }
@@ -663,15 +734,16 @@ void MainWindow::checkFingerprint(const QString &line) {
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
-        this, tr("Security question"),
-        tr("You are connecting to a server. Here is it's fingerprint:\n\n"
-           "%1\n\n"
-           "Compare this fingerprint to the one on your server's screen."
-           "If the two don't match exactly, then it's probably not the server "
-           "you're expecting (it could be a malicious user).\n\n"
-           "To automatically trust this fingerprint for future "
-           "connections, click Yes. To reject this fingerprint and "
-           "disconnect from the server, click No.")
+        this, QString("Security question"),
+        QString(
+            "You are connecting to a server. Here is it's fingerprint:\n\n"
+            "%1\n\n"
+            "Compare this fingerprint to the one on your server's screen."
+            "If the two don't match exactly, then it's probably not the server "
+            "you're expecting (it could be a malicious user).\n\n"
+            "To automatically trust this fingerprint for future "
+            "connections, click Yes. To reject this fingerprint and "
+            "disconnect from the server, click No.")
             .arg(fingerprint),
         QMessageBox::Yes | QMessageBox::No);
 
@@ -806,7 +878,7 @@ void MainWindow::startCore() {
     args << "--profile-dir" << getProfileRootForArg();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("Failed to get profile dir, skipping arg");
+    qFatal("failed to get profile dir, skipping arg");
   }
 
 #else
@@ -861,11 +933,12 @@ void MainWindow::startCore() {
     if (!m_pCoreProcess->waitForStarted()) {
       show();
       QMessageBox::warning(
-          this, tr("Program can not be started"),
+          this, QString("Program can not be started"),
           QString(
-              tr("The executable<br><br>%1<br><br>could not be successfully "
-                 "started, although it does exist. Please check if you have "
-                 "sufficient permissions to run this program.")
+              QString(
+                  "The executable<br><br>%1<br><br>could not be successfully "
+                  "started, although it does exist. Please check if you have "
+                  "sufficient permissions to run this program.")
                   .arg(app)));
       return;
     }
@@ -881,8 +954,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
   if (!QFile::exists(app)) {
     show();
     QMessageBox::warning(
-        this, tr("Synergy client not found"),
-        tr("The executable for the synergy client does not exist."));
+        this, QString("Synergy client not found"),
+        QString("The executable for the synergy client does not exist."));
     return false;
   }
 
@@ -906,8 +979,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     if (m_pLineEditHostname->text().isEmpty()) {
       show();
       QMessageBox::warning(
-          this, tr("IP/hostname is empty"),
-          tr("Please enter a server hostname or IP address."));
+          this, QString("IP/hostname is empty"),
+          QString("Please enter a server hostname or IP address."));
       return false;
     }
 
@@ -937,15 +1010,15 @@ QString MainWindow::configFilename() {
          {QStandardPaths::AppDataLocation, QStandardPaths::AppConfigLocation}) {
       auto configDirPath = QStandardPaths::writableLocation(path);
       if (!QDir().mkpath(configDirPath)) {
-        errors.push_back(
-            tr("Failed to create config folder \"%1\"").arg(configDirPath));
+        errors.push_back(QString("Failed to create config folder \"%1\"")
+                             .arg(configDirPath));
         continue;
       }
 
       QFile configFile(configDirPath + "/LastConfig.cfg");
       if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         errors.push_back(
-            tr("File:\"%1\" Error:%2")
+            QString("File:\"%1\" Error:%2")
                 .arg(configFile.fileName(), configFile.errorString()));
         continue;
       }
@@ -959,7 +1032,7 @@ QString MainWindow::configFilename() {
 
     if (configFullPath.isEmpty()) {
       QMessageBox::critical(
-          this, tr("Cannot write configuration file"), errors.join('\n'));
+          this, QString("Cannot write configuration file"), errors.join('\n'));
     }
   }
 
@@ -990,15 +1063,15 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
 
   if (!QFile::exists(app)) {
     QMessageBox::warning(
-        this, tr("Synergy server not found"),
-        tr("The executable for the synergy server does not exist."));
+        this, QString("Synergy server not found"),
+        QString("The executable for the synergy server does not exist."));
     return false;
   }
 
   if (appConfig().invertConnection() && m_pLineEditClientIp->text().isEmpty()) {
     QMessageBox::warning(
-        this, tr("Client IP address or name is empty"),
-        tr("Please fill in a client IP address or name."));
+        this, QString("Client IP address or name is empty"),
+        QString("Please fill in a client IP address or name."));
     return false;
   }
 
@@ -1080,7 +1153,7 @@ void MainWindow::setCoreState(CoreState state) {
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore,
         &QAction::trigger);
 
-    m_pButtonToggleStart->setText(tr("&Stop"));
+    m_pButtonToggleStart->setText(QString("&Stop"));
     m_pButtonApply->setEnabled(true);
 
     m_pActionStartCore->setEnabled(false);
@@ -1094,7 +1167,7 @@ void MainWindow::setCoreState(CoreState state) {
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
         &QAction::trigger);
 
-    m_pButtonToggleStart->setText(tr("&Start"));
+    m_pButtonToggleStart->setText(QString("&Start"));
     m_pButtonApply->setEnabled(false);
 
     m_pActionStartCore->setEnabled(true);
@@ -1106,8 +1179,7 @@ void MainWindow::setCoreState(CoreState state) {
 
   case Listening: {
     if (coreMode() == CoreMode::Server) {
-      setStatus(
-          tr("Synergy is waiting for clients").arg(m_SecureSocketVersion));
+      setStatus("Synergy is waiting for clients");
     }
 
     break;
@@ -1115,21 +1187,20 @@ void MainWindow::setCoreState(CoreState state) {
   case Connected: {
     if (m_SecureSocket) {
       setStatus(
-          tr("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
+          QString("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
     } else {
-      setStatus(tr("Synergy is running (without TLS encryption)")
-                    .arg(m_SecureSocketVersion));
+      setStatus("Synergy is running (without TLS encryption)");
     }
     break;
   }
   case Connecting:
-    setStatus(tr("Synergy is starting..."));
+    setStatus("Synergy is starting...");
     break;
   case PendingRetry:
-    setStatus(tr("There was an error, retrying..."));
+    setStatus("There was an error, retrying...");
     break;
   case Disconnected:
-    setStatus(tr("Synergy is not running"));
+    setStatus("Synergy is not running");
     break;
   }
 
@@ -1176,8 +1247,8 @@ QString MainWindow::getIPAddresses() const {
       // usually 192.168.x.x is a useful ip for the user, so indicate
       // this by making it bold.
       if (!hinted && address.isInSubnet(localnet)) {
-        QString format = "<span style=\"color:#4285F4;\">%1</span>";
-        result.append(format.arg(address.toString()));
+        QString format = R"(<span style="color:%1;">%2</span>)";
+        result.append(format.arg(kColorTertiary, address.toString()));
         hinted = true;
       } else {
         result.append(address.toString());
@@ -1186,7 +1257,7 @@ QString MainWindow::getIPAddresses() const {
   }
 
   if (result.isEmpty()) {
-    result.append(tr("Unknown"));
+    result.append("Unknown");
   }
 
   return result.join(", ");
@@ -1196,10 +1267,10 @@ void MainWindow::showLicenseNotice() {
   const auto &license = m_LicenseHandler.license();
   const bool timeLimited = license.isTimeLimited();
 
-  m_labelNotice->setVisible(timeLimited);
+  m_pLabelNotice->setVisible(timeLimited);
   if (timeLimited) {
     auto notice = licenseNotice(m_LicenseHandler.license());
-    this->m_labelNotice->setText(notice);
+    this->m_pLabelNotice->setText(notice);
   }
 }
 
@@ -1209,7 +1280,7 @@ void MainWindow::updateLocalFingerprint() {
     fingerprintExists = TlsFingerprint::local().fileExists();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("Failed to check if fingerprint exists");
+    qFatal("failed to check if fingerprint exists");
   }
 
   if (m_AppConfig.tlsEnabled() && fingerprintExists &&
@@ -1244,13 +1315,13 @@ void MainWindow::autoAddScreen(const QString name) {
   if (r != kAutoAddScreenOk) {
     switch (r) {
     case kAutoAddScreenManualServer:
-      showConfigureServer(tr("Please add the server (%1) to the grid.")
+      showConfigureServer(QString("Please add the server (%1) to the grid.")
                               .arg(appConfig().screenName()));
       break;
 
     case kAutoAddScreenManualClient:
-      showConfigureServer(tr("Please drag the new client screen (%1) "
-                             "to the desired position on the grid.")
+      showConfigureServer(QString("Please drag the new client screen (%1) "
+                                  "to the desired position on the grid.")
                               .arg(name));
       break;
     }
@@ -1316,17 +1387,12 @@ void MainWindow::secureSocket(bool secureSocket) {
   }
 }
 
-void MainWindow::windowStateChanged() {
-  if (windowState() == Qt::WindowMinimized && appConfig().minimizeToTray())
-    hide();
-}
-
 void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
       QString("This computer's name: %1 "
-              R"((<a href="#" style="%2;">change</a>))")
+              R"((<a href="#" style="color: %2">change</a>))")
           .arg(appConfig().screenName())
-          .arg(kLinkStyleSecondary));
+          .arg(kColorSecondary));
   serverConfig().updateServerName();
 }
 

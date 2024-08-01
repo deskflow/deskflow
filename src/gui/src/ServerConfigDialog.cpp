@@ -17,13 +17,11 @@
  */
 
 #include "ServerConfigDialog.h"
+
 #include "ActionDialog.h"
 #include "HotkeyDialog.h"
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
-#include "UpgradeDialog.h"
-#include "gui/constants.h"
-#include "license/ProductEdition.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -43,7 +41,12 @@ ServerConfigDialog::ServerConfigDialog(
           serverConfig().numRows()),
       m_Message(""),
       m_appConfig(appConfig) {
+
   setupUi(this);
+
+  // force the first tab, since qt creator sets the active tab as the last one
+  // the developer was looking at, and it's easy to accidentally save that.
+  m_pTabWidget->setCurrentIndex(0);
 
   m_pEditConfigFile->setText(serverConfig().configFile());
   m_pCheckBoxUseExternalConfig->setChecked(serverConfig().useExternalConfig());

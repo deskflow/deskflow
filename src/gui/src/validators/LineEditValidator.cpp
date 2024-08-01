@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,15 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "LineEditValidator.h"
+
+#include "gui/constants.h"
+#include <qvalidator.h>
 
 namespace validators {
 
-LineEditValidator::LineEditValidator(QLineEdit *parent, QLabel *errors)
-    : m_pErrors(errors),
-      m_pControl(parent) {
-  if (m_pErrors) {
-    m_pErrors->hide();
+LineEditValidator::LineEditValidator(
+    QLineEdit *lineEdit, ValidationError *error)
+    : m_pError(error),
+      m_pLineEdit(lineEdit) {
+
+  if (!m_pLineEdit) {
+    qFatal("validator line edit not set");
   }
 }
 
@@ -33,40 +38,27 @@ void LineEditValidator::addValidator(
 }
 
 QValidator::State LineEditValidator::validate(QString &input, int &pos) const {
-  if (!m_pControl) {
-    qFatal("Validator control not set");
-    return Invalid;
-  }
+  assert(m_pLineEdit);
 
-  QString error;
+  QString errorMessage;
   for (const auto &validator : m_Validators) {
     if (!validator->validate(input)) {
-      error = validator->getMessage();
+      errorMessage = validator->getMessage();
       break;
     }
   }
 
-  if (error.isEmpty()) {
-    m_pControl->setStyleSheet("");
+  if (errorMessage.isEmpty()) {
+    m_pLineEdit->setStyleSheet("");
   } else {
-    showError(error);
-    m_pControl->setStyleSheet("border: 1px solid #EC4C47");
+    m_pLineEdit->setStyleSheet(kStyleLineEditErrorBorder);
   }
 
-  finished(error);
-  return Acceptable;
-}
-
-void LineEditValidator::showError(const QString &message) const {
-  if (m_pErrors) {
-    m_pErrors->setText(message);
-
-    if (m_pErrors->text().isEmpty()) {
-      m_pErrors->hide();
-    } else {
-      m_pErrors->show();
-    }
+  if (m_pError) {
+    m_pError->setMessage(errorMessage);
   }
+
+  return errorMessage.isEmpty() ? Acceptable : Intermediate;
 }
 
 } // namespace validators

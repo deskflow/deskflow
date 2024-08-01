@@ -51,17 +51,9 @@ AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
 int AboutDialog::exec() {
   m_pDevelopersLabel->setText(getImportantDevelopers());
   m_pCopyrightLabel->setText(getCopyright());
-  resizeWindow();
   updateLogo();
 
   return QDialog::exec();
-}
-
-void AboutDialog::resizeWindow() {
-  QSize size(600, 310);
-  setMaximumSize(size);
-  setMinimumSize(size);
-  resize(size);
 }
 
 void AboutDialog::updateLogo() const {

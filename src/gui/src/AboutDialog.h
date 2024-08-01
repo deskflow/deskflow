@@ -37,7 +37,6 @@ private:
   VersionChecker m_versionChecker;
   void updateLogo() const;
 
-  virtual void resizeWindow();
   virtual QString getCopyright() const;
   virtual QString getImportantDevelopers() const;
 };

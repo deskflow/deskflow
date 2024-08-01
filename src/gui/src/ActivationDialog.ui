@@ -75,16 +75,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <number>8</number>
       </property>
       <item>
-       <widget class="QLabel" name="m_labelNotice">
-        <property name="styleSheet">
-         <string notr="true">padding: 3px 5px;
-border-radius: 3px;
-background-color: #3B67D3;
-color: #ffffff;
-top: 3px;</string>
-        </property>
+       <widget class="QLabel" name="m_pLabelNotice">
         <property name="text">
-         <string>m_labelNotice</string>
+         <string>m_pLabelNotice</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
@@ -94,7 +87,7 @@ top: 3px;</string>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+         <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -110,10 +103,10 @@ top: 3px;</string>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+      <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

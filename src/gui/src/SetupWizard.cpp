@@ -16,35 +16,41 @@
  */
 
 #include "SetupWizard.h"
-#include "MainWindow.h"
-#include "validators/ScreenNameValidator.h"
 
-SetupWizard::SetupWizard(MainWindow &mainWindow) : m_MainWindow(mainWindow) {
+#include "MainWindow.h"
+#include "gui/constants.h"
+#include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
+
+SetupWizard::SetupWizard(MainWindow &mainWindow) : m_mainWindow(mainWindow) {
+
   setupUi(this);
 
-  m_pLineEditName->setText(m_MainWindow.appConfig().screenName());
-  m_pLineEditName->setValidator(
-      new validators::ScreenNameValidator(m_pLineEditName, label_ErrorMessage));
+  m_pLabelError->setStyleSheet(kStyleErrorActiveLabel);
 
-  connect(m_pButtonApply, SIGNAL(clicked()), this, SLOT(accept()));
+  m_pLineEditName->setText(m_mainWindow.appConfig().screenName());
+  m_pLineEditName->setValidator(new validators::ScreenNameValidator(
+      m_pLineEditName, new validators::ValidationError(this, m_pLabelError)));
+
+  connect(m_pButtonApply, &QPushButton::clicked, this, &SetupWizard::accept);
   connect(
-      m_pLineEditName, SIGNAL(textEdited(QString)), this,
-      SLOT(onNameChanged()));
+      m_pLineEditName, &QLineEdit::textChanged, this,
+      &SetupWizard::onLineEditNameChanged);
 }
 
 void SetupWizard::accept() {
-  AppConfig &appConfig = m_MainWindow.appConfig();
+  AppConfig &appConfig = m_mainWindow.appConfig();
 
   appConfig.setWizardHasRun();
   appConfig.setScreenName(m_pLineEditName->text());
   appConfig.saveSettings();
 
-  m_MainWindow.open();
+  m_mainWindow.open();
   QDialog::accept();
 }
 
-void SetupWizard::onNameChanged() {
-  m_pButtonApply->setEnabled(label_ErrorMessage->text().isEmpty());
+void SetupWizard::onLineEditNameChanged(const QString &error) {
+  m_pButtonApply->setEnabled(m_pLineEditName->hasAcceptableInput());
 }
 
 void SetupWizard::reject() {

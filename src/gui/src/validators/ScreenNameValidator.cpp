@@ -17,10 +17,12 @@
  */
 
 #include "ScreenNameValidator.h"
+
 #include "validators/ComputerNameValidator.h"
 #include "validators/EmptyStringValidator.h"
 #include "validators/ScreenDuplicationsValidator.h"
 #include "validators/SpacesValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QRegularExpression>
 #include <memory>
@@ -28,8 +30,8 @@
 namespace validators {
 
 ScreenNameValidator::ScreenNameValidator(
-    QLineEdit *parent, QLabel *errors, const ScreenList *pScreens)
-    : LineEditValidator(parent, errors) {
+    QLineEdit *lineEdit, ValidationError *error, const ScreenList *pScreens)
+    : LineEditValidator(lineEdit, error) {
   addValidator(
       std::make_unique<EmptyStringValidator>("Computer name cannot be empty"));
   addValidator(
@@ -37,8 +39,8 @@ ScreenNameValidator::ScreenNameValidator(
   addValidator(std::make_unique<ComputerNameValidator>(
       "Contains invalid characters or is too long"));
   addValidator(std::make_unique<ScreenDuplicationsValidator>(
-      "A computer with this name already exists", parent ? parent->text() : "",
-      pScreens));
+      "A computer with this name already exists",
+      lineEdit ? lineEdit->text() : "", pScreens));
 }
 
 } // namespace validators

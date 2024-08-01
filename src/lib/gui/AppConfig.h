@@ -19,25 +19,24 @@
 #pragma once
 
 #include "CommonConfig.h"
-#include "Config.h"
-#include "gui/CoreInterface.h"
-#include "gui/ElevateMode.h"
-#include "gui/IAppConfig.h"
+#include "ConfigScopes.h"
+#include "CoreInterface.h"
+#include "ElevateMode.h"
+#include "IAppConfig.h"
 
+#include <QDir>
+#include <QHostInfo>
 #include <QObject>
+#include <QPoint>
+#include <QSize>
 #include <QString>
 #include <QVariant>
 #include <mutex>
 
-class QSettings;
-class SettingsDialog;
-class ServerConfig;
-class LicenseHandler;
-class ActivationDialog;
-
 enum class ProcessMode { kService, kDesktop };
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
+const QString kDefaultLogFile = "synergy.log";
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -58,12 +57,6 @@ class AppConfig : public QObject,
                   public synergy::gui::IAppConfig {
   Q_OBJECT
 
-  friend class SettingsDialog;
-  friend class MainWindow;
-  friend class SetupWizard;
-  friend class ServerConfig;
-  friend class ActivationDialog;
-
 private:
   enum class Setting {
     kScreenName = 0,
@@ -74,8 +67,8 @@ private:
     kLogFilename = 5,
     kWizardLastRun = 6,
     kStartedBefore = 7,
-    kElevateMode = 8,
-    kElevateModeEnum = 9,
+    kElevateModeLegacy = 8,
+    kElevateMode = 9,
     // 10 = edition, obsolete (using serial key instead)
     kTlsEnabled = 11,
     kAutoHide = 12,
@@ -83,7 +76,7 @@ private:
     kLastVersion = 14,
     // 15 = last expire time, obsolete
     kActivationHasRun = 16,
-    kMinimizeToTray = 17,
+    // 17 = minimize to tray, obsolete
     // 18 = activate email, obsolete
     kLoadSystemSettings = 19,
     kServerGroupChecked = 20,
@@ -105,21 +98,37 @@ private:
     // 36 = server-client-mode, obsolete
     kServiceEnabled = 37,
     kCloseToTray = 38,
+    kMainWindowSize = 39,
+    kMainWindowPosition = 40,
   };
 
 public:
-  explicit AppConfig();
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual QString profileDir() const {
+      return m_coreInterface.getProfileDir();
+    }
+    virtual synergy::gui::IConfigScopes &scopes() { return m_Scopes; }
+    virtual QString hostname() const { return QHostInfo::localHostName(); }
 
-  /// @brief Underlying configuration reader/writer
-  synergy::gui::Config &config();
+  private:
+    [[no_unique_address]] CoreInterface m_coreInterface;
+    synergy::gui::ConfigScopes m_Scopes;
+  };
 
-  /// @brief Saves the setting to the current scope
+  explicit AppConfig() : AppConfig(s_Deps) {}
+  explicit AppConfig(Deps &deps);
+
+  synergy::gui::IConfigScopes &scopes();
   void saveSettings() override;
+  void loadAllScopes();
+  void loadSettings() override;
 
   /**
    * Getters
    */
 
+  void setActivationHasRun(bool value);
   bool isWritable() const;
   bool isSystemScoped() const;
   const QString &screenName() const;
@@ -151,19 +160,14 @@ public:
   QString serverHostname() const;
   QString lastVersion() const;
   bool serviceEnabled() const;
-  bool minimizeToTray() const;
   bool closeToTray() const;
   QString serialKey() const;
   bool activationHasRun() const;
   bool tlsEnabled() const override;
   QString tlsCertPath() const override;
   QString tlsKeyLength() const override;
-
-private:
-  /// @brief Loads the setting from the current scope
-  void loadSettings() override;
-
-  static QString settingName(AppConfig::Setting name);
+  std::optional<QSize> mainWindowSize() const;
+  std::optional<QPoint> mainWindowPosition() const;
 
   /**
    * Setters
@@ -192,14 +196,14 @@ private:
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
-  void setMinimizeToTray(bool b);
   void setLastVersion(const QString &version);
   void setServiceEnabled(bool enabled);
   void setCloseToTray(bool minimize);
-  void setActivationHasRun(bool value);
   void setTlsCertPath(const QString &path);
   void setTlsKeyLength(const QString &length);
   void setInvertConnection(bool value);
+  void setMainWindowSize(const QSize &size);
+  void setMainWindowPosition(const QPoint &position);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -208,8 +212,27 @@ private:
   ///             scope settings.
   void setLoadFromSystemScope(bool value);
 
-  /// @brief Loads config from the underlying reader/writer
-  void loadAllScopes();
+private:
+  static QString settingName(AppConfig::Setting name);
+  void loadSerialKey();
+  void loadElevateMode();
+  void loadCommonSettings();
+  void loadScopeSettings();
+
+  /**
+   * @brief Loads a setting if it exists, otherwise returns `std::nullopt`
+   *
+   * @param toType A function to convert the QVariant to the desired type.
+   */
+  template <typename T>
+  std::optional<T>
+  loadOptional(Setting name, std::function<T(QVariant)> toType) const;
+
+  /**
+   * @brief Sets a setting if the value is not `std::nullopt`.
+   */
+  template <typename T>
+  void setOptional(Setting name, const std::optional<T> &value);
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
@@ -243,7 +266,7 @@ private:
 
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
-  void loadScope(synergy::gui::Config::Scope scope);
+  void loadScope(synergy::gui::ConfigScopes::Scope scope);
 
   /// @brief This function sets default values
   /// for settings that shouldn't be copied from between scopes.
@@ -254,14 +277,14 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  synergy::gui::Config m_Config;
-  CoreInterface m_CoreInterface;
-  QString m_ScreenName = "";
+  static Deps s_Deps;
+  Deps &m_Deps;
+  QString m_ScreenName;
   int m_Port = 24800;
   QString m_Interface = "";
   int m_LogLevel = 0;
   bool m_LogToFile = false;
-  QString m_LogFilename = "";
+  QString m_LogFilename = logDir() + kDefaultLogFile;
   int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = kDefaultElevateMode;
@@ -272,21 +295,22 @@ private:
   QString m_LastVersion = "";
   unsigned long long m_licenseNextCheck = 0;
   bool m_ActivationHasRun = false;
-  bool m_MinimizeToTray = true;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
   bool m_InvertConnection = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
-  QString m_ConfigFile = "";
+  QString m_ConfigFile = QDir::homePath() + "/" + m_ConfigFilename;
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = false;
-  QString m_TlsCertPath = "";
+  QString m_TlsCertPath = defaultTlsCertPath();
   QString m_TlsKeyLength = "2048";
+  std::optional<QSize> m_MainWindowSize;
+  std::optional<QPoint> m_MainWindowPosition;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

@@ -18,18 +18,19 @@
 
 #include "SettingsDialog.h"
 
-#include "AppConfig.h"
 #include "MainWindow.h"
 #include "UpgradeDialog.h"
+#include "gui/AppConfig.h"
 #include "gui/TlsCertificate.h"
 #include "gui/constants.h"
+#include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <memory>
 
 using namespace synergy::license;
 
@@ -45,6 +46,10 @@ SettingsDialog::SettingsDialog(
 
   setupUi(this);
 
+  // force the first tab, since qt creator sets the active tab as the last one
+  // the developer was looking at, and it's easy to accidentally save that.
+  m_pTabWidget->setCurrentIndex(0);
+
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
   loadFromConfig();
@@ -52,45 +57,16 @@ SettingsDialog::SettingsDialog(
   updateControlsEnabled();
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
-  m_screenNameValidator = std::make_unique<validators::ScreenNameValidator>(
-      m_pLineEditScreenName, nullptr, (&serveConfig.screens()));
-  connect(
-      m_screenNameValidator.get(), SIGNAL(finished(QString)), this,
-      SLOT(on_m_pScreenNameValidator_finished(QString)));
-  m_pLineEditScreenName->setValidator(m_screenNameValidator.get());
 
-  connect(
-      m_pLineEditLogFilename, SIGNAL(textChanged(QString)), this,
-      SLOT(onChange()));
-  connect(
-      m_pComboLogLevel, SIGNAL(currentIndexChanged(int)), this,
-      SLOT(onChange()));
-  connect(
-      m_pLineEditCertificatePath, SIGNAL(textChanged(QString)), this,
-      SLOT(onChange()));
-  connect(m_pCheckBoxMinimizeToTray, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxAutoHide, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(m_pCheckBoxPreventSleep, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(
-      m_pLineEditInterface, SIGNAL(textEdited(QString)), this,
-      SLOT(onChange()));
-  connect(m_pSpinBoxPort, SIGNAL(valueChanged(int)), this, SLOT(onChange()));
-  connect(
-      m_pLineEditScreenName, SIGNAL(textEdited(QString)), this,
-      SLOT(onChange()));
-  connect(
-      m_pComboElevate, SIGNAL(currentIndexChanged(int)), this,
-      SLOT(onChange()));
-  connect(m_pCheckBoxLanguageSync, SIGNAL(clicked()), this, SLOT(onChange()));
-  connect(
-      m_pCheckBoxScrollDirection, SIGNAL(clicked()), this, SLOT(onChange()));
-
-  adjustSize();
+  m_pScreenNameError = new validators::ValidationError(this);
+  m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
+      m_pLineEditScreenName, m_pScreenNameError, &serveConfig.screens()));
 }
 
 void SettingsDialog::accept() {
-  if (!m_nameError.isEmpty()) {
-    QMessageBox::warning(this, tr("Invalid screen name"), m_nameError);
+  if (!m_pLineEditScreenName->hasAcceptableInput()) {
+    QMessageBox::warning(
+        this, tr("Invalid screen name"), m_pScreenNameError->message());
     return;
   }
 
@@ -105,7 +81,6 @@ void SettingsDialog::accept() {
       static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
   appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
   appConfig().setPreventSleep(m_pCheckBoxPreventSleep->isChecked());
-  appConfig().setMinimizeToTray(m_pCheckBoxMinimizeToTray->isChecked());
   appConfig().setTlsCertPath(m_pLineEditCertificatePath->text());
   appConfig().setTlsKeyLength(m_pComboBoxKeyLength->currentText());
   appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
@@ -138,7 +113,6 @@ void SettingsDialog::loadFromConfig() {
   m_pLineEditLogFilename->setText(appConfig().logFilename());
   m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
   m_pCheckBoxPreventSleep->setChecked(appConfig().preventSleep());
-  m_pCheckBoxMinimizeToTray->setChecked(appConfig().minimizeToTray());
   m_pLineEditCertificatePath->setText(appConfig().tlsCertPath());
   m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
@@ -179,7 +153,7 @@ void SettingsDialog::updateTlsControlsEnabled() {
   auto enabled = !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
-      "TLS controls enabled=%d, client=%d, available=%d, checked=%d", enabled,
+      "tls enabled=%d, client=%d, available=%d, checked=%d", enabled,
       clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);
@@ -290,7 +264,6 @@ void SettingsDialog::updateControlsEnabled() {
   m_pComboElevate->setEnabled(writable);
   m_pCheckBoxAutoHide->setEnabled(writable);
   m_pCheckBoxPreventSleep->setEnabled(writable);
-  m_pCheckBoxMinimizeToTray->setEnabled(writable);
   m_pLineEditCertificatePath->setEnabled(writable);
   m_pComboBoxKeyLength->setEnabled(writable);
   m_pPushButtonBrowseCert->setEnabled(writable);
@@ -325,8 +298,4 @@ void SettingsDialog::updateControlsEnabled() {
 #endif
 
   updateTlsControls();
-}
-
-void SettingsDialog::on_m_pScreenNameValidator_finished(const QString &error) {
-  m_nameError = error;
 }

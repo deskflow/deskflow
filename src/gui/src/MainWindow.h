@@ -29,13 +29,13 @@
 #include "ui_MainWindowBase.h"
 
 #include "ActivationDialog.h"
-#include "AppConfig.h"
 #include "ClientConnection.h"
-#include "Config.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
 #include "TrayIcon.h"
 #include "global/Ipc.h"
+#include "gui/AppConfig.h"
+#include "gui/ConfigScopes.h"
 #include "gui/QIpcClient.h"
 #include "gui/TlsUtility.h"
 #include "gui/VersionChecker.h"
@@ -126,6 +126,9 @@ private slots:
   void onActionStopCoreTriggered();
   void onCoreProcessReadyReadStandardOutput();
   void onCoreProcessReadyReadStandardError();
+  void onWindowSaveTimerTimeout();
+
+  // autoconnect slots
   void on_m_pButtonApply_clicked();
   void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
@@ -141,7 +144,7 @@ private slots:
   void on_m_pActivate_triggered();
 
 private:
-  QSettings &settings() { return *appConfig().config().currentSettings(); }
+  QSettings &settings() { return *appConfig().scopes().currentSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
   void createMenuBar();
@@ -184,6 +187,11 @@ private:
   void showConfigureServer() { showConfigureServer(""); }
   void showLicenseNotice();
   void stopCore();
+  void restoreWindow();
+  void saveWindow();
+  void setupControls();
+  void resizeEvent(QResizeEvent *event) override;
+  void moveEvent(QMoveEvent *event) override;
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
@@ -207,6 +215,7 @@ private:
   bool m_AlreadyHidden = false;
   bool m_SecureSocket = false;
   QString m_SecureSocketVersion = "";
+  bool m_SaveWindow = false;
 
   AppConfig &m_AppConfig;
   LicenseHandler m_LicenseHandler;
@@ -214,4 +223,5 @@ private:
   ServerConnection m_ServerConnection;
   ClientConnection m_ClientConnection;
   synergy::gui::TlsUtility m_TlsUtility;
+  QTimer m_WindowSaveTimer;
 };

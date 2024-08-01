@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>403</width>
-    <height>675</height>
+    <width>440</width>
+    <height>739</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,13 +43,6 @@
    </property>
    <item>
     <widget class="QFrame" name="groupBox">
-     <property name="styleSheet">
-      <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -106,14 +99,8 @@ background-color: rgba(192,192,192, 0.1);
           <height>0</height>
          </size>
         </property>
-        <property name="styleSheet">
-         <string notr="true">color: #EC4C47; 
-font-size: 13px; 
-font-family: Arial; 
-font-weight: bold;</string>
-        </property>
         <property name="text">
-         <string/>
+         <string>m_pLabelNameError</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -154,13 +141,6 @@ font-weight: bold;</string>
    </item>
    <item>
     <widget class="QFrame" name="m_pGroupModifiers">
-     <property name="styleSheet">
-      <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -477,13 +457,6 @@ background-color: rgba(192,192,192, 0.1);
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="styleSheet">
-      <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -648,13 +621,6 @@ background-color: rgba(192,192,192, 0.1);
    </item>
    <item>
     <widget class="QFrame" name="m_pGroupFixes">
-     <property name="styleSheet">
-      <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -760,19 +726,6 @@ background-color: rgba(192,192,192, 0.1);
    </item>
    <item>
     <widget class="QFrame" name="m_pGroupAliases">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">.QFrame{
-border: 1px solid  rgba(192,192,192, 0.2);
-border-radius: 4px;
-background-color: rgba(192,192,192, 0.1);
-}</string>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -809,26 +762,6 @@ background-color: rgba(192,192,192, 0.1);
           <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>43</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton#m_pButtonAddAlias{
-left: 30px;
-}</string>
-          </property>
           <property name="text">
            <string>&amp;Add</string>
           </property>
@@ -847,9 +780,6 @@ left: 30px;
             <width>168</width>
             <height>20</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
           </property>
           <property name="maxLength">
            <number>255</number>
@@ -876,14 +806,8 @@ left: 30px;
             <height>16777215</height>
            </size>
           </property>
-          <property name="styleSheet">
-           <string notr="true">color: #EC4C47; 
-font-size: 13px; 
-font-family: Arial; 
-font-weight: bold;</string>
-          </property>
           <property name="text">
-           <string/>
+           <string>m_pLabelNameError</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -933,9 +857,6 @@ font-weight: bold;</string>
             <height>16777215</height>
            </size>
           </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::ExtendedSelection</enum>
           </property>
@@ -945,12 +866,6 @@ font-weight: bold;</string>
          <widget class="QPushButton" name="m_pButtonRemoveAlias">
           <property name="enabled">
            <bool>false</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
           </property>
           <property name="text">
            <string>&amp;Remove</string>
