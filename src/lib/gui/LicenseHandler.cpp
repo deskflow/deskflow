@@ -43,7 +43,7 @@ LicenseHandler::ChangeSerialKeyResult
 LicenseHandler::changeSerialKey(const QString &hexString) {
   using enum LicenseHandler::ChangeSerialKeyResult;
 
-  if (!kLicensingEnabled) {
+  if (!m_enabled) {
     qFatal("error: cannot set serial key, licensing is disabled");
   }
 
