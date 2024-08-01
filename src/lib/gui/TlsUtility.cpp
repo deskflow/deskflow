@@ -33,7 +33,7 @@ bool TlsUtility::isAvailableAndEnabled() const {
 
 void TlsUtility::generateCertificate(bool replace) const {
   if (!isAvailableAndEnabled()) {
-    qFatal("unable to generate tls certificate, "
+    qFatal("error: unable to generate tls certificate, "
            "tls is either not available or not enabled");
   }
 

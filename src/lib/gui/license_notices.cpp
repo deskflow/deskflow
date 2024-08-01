@@ -33,7 +33,7 @@ QString licenseNotice(const License &license) {
   } else if (license.isSubscription()) {
     return subscriptionLicenseNotice(license);
   } else {
-    qFatal("license notice only for time limited licenses");
+    qFatal("error: license notice only for time limited licenses");
   }
 }
 

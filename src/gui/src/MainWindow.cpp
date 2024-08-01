@@ -120,13 +120,13 @@ MainWindow::~MainWindow() {
       stopDesktop();
     }
   } catch (const std::exception &e) {
-    qFatal("failed to stop core on main window close: %s", e.what());
+    qFatal("error: failed to stop core on main window close: %s", e.what());
   }
 
   try {
     saveWindow();
   } catch (const std::exception &e) {
-    qFatal("failed to save window on main window close: %s", e.what());
+    qFatal("error: failed to save window on main window close: %s", e.what());
   }
 }
 
@@ -906,7 +906,7 @@ void MainWindow::startCore() {
     args << "--profile-dir" << getProfileRootForArg();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("failed to get profile dir, skipping arg");
+    qFatal("error: failed to get profile dir, skipping arg");
   }
 
 #else
@@ -1308,7 +1308,7 @@ void MainWindow::updateLocalFingerprint() {
     fingerprintExists = TlsFingerprint::local().fileExists();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("failed to check if fingerprint exists");
+    qFatal("error: failed to check if fingerprint exists");
   }
 
   if (m_AppConfig.tlsEnabled() && fingerprintExists &&

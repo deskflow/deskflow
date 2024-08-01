@@ -28,7 +28,7 @@ LineEditValidator::LineEditValidator(
       m_pLineEdit(lineEdit) {
 
   if (!m_pLineEdit) {
-    qFatal("validator line edit not set");
+    qFatal("error: validator line edit not set");
   }
 }
 

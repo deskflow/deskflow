@@ -17,12 +17,14 @@
 
 #include "LicenseHandler.h"
 
+#include "constants.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
 
 #include <QDebug>
 #include <QProcessEnvironment>
 #include <QTimer>
+#include <qglobal.h>
 
 using namespace std::chrono;
 using namespace synergy::license;
@@ -41,8 +43,12 @@ LicenseHandler::ChangeSerialKeyResult
 LicenseHandler::changeSerialKey(const QString &hexString) {
   using enum LicenseHandler::ChangeSerialKeyResult;
 
+  if (!kLicensingEnabled) {
+    qFatal("error: cannot set serial key, licensing is disabled");
+  }
+
   if (hexString.isEmpty()) {
-    qFatal("serial key is empty");
+    qFatal("error: serial key is empty");
     return kFatal;
   }
 

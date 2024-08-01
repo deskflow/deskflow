@@ -145,7 +145,9 @@ void ActivationDialog::showResultDialog(
     break;
 
   default:
-    qFatal("unexpected change serial key result: %d", static_cast<int>(result));
+    qFatal(
+        "error: unexpected change serial key result: %d",
+        static_cast<int>(result));
   }
 }
 
