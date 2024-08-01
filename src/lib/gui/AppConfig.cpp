@@ -486,6 +486,8 @@ std::optional<QPoint> AppConfig::mainWindowPosition() const {
   return m_MainWindowPosition;
 }
 
+bool AppConfig::showDevThanks() const { return m_ShowDevThanks; }
+
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -610,6 +612,8 @@ void AppConfig::setMainWindowSize(const QSize &size) {
 void AppConfig::setMainWindowPosition(const QPoint &position) {
   m_MainWindowPosition = position;
 }
+
+void AppConfig::setShowDevThanks(bool value) { m_ShowDevThanks = value; }
 
 ///////////////////////////////////////////////////////////////////////////////
 // End setters

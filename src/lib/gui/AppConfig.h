@@ -42,7 +42,13 @@ const QString kDefaultLogFile = "synergy.log";
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
-#endif
+#endif // Q_OS_WIN
+
+#ifdef SYNERGY_SHOW_DEV_THANKS
+const bool kDefaultShowDevThanks = true;
+#else
+const bool kDefaultShowDevThanks = false;
+#endif // SYNERGY_SHOW_DEV_THANKS
 
 /**
  * @brief Simply reads and writes app settings.
@@ -168,6 +174,7 @@ public:
   QString tlsKeyLength() const override;
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
+  bool showDevThanks() const;
 
   /**
    * Setters
@@ -204,6 +211,7 @@ public:
   void setInvertConnection(bool value);
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
+  void setShowDevThanks(bool show);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -311,6 +319,7 @@ private:
   QString m_TlsKeyLength = "2048";
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
+  bool m_ShowDevThanks = kDefaultShowDevThanks;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

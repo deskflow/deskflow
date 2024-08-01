@@ -803,9 +803,37 @@ void MainWindow::showEvent(QShowEvent *event) {
   emit shown();
 }
 
+void MainWindow::showDevThanks() {
+  if (kLicensingEnabled) {
+    qDebug("skipping dev thanks message, licensing enabled");
+    return;
+  }
+
+  if (!appConfig().showDevThanks()) {
+    qDebug("skipping dev thanks message, disabled in settings");
+    return;
+  }
+
+  QMessageBox::information(
+      this, "Thank you!",
+      QString(
+          "<p>Thanks for using Synergy.</p>"
+          "<p>If you enjoy using this app, you can support the developers by "
+          R"(<a href="%1" style="color: %2")>purchasing a license</a>)"
+          " or "
+          R"(<a href="%3" style="color: %4")>contributing code</a>.)"
+          "</p>"
+          "<p>This message will only appear once.</p>")
+          .arg(kUrlPurchase, kColorSecondary, kUrlContribute, kColorSecondary));
+
+  appConfig().setShowDevThanks(false);
+  appConfig().saveSettings();
+}
+
 void MainWindow::startCore() {
   appendLogDebug("starting core process");
 
+  showDevThanks();
   saveSettings();
 
 #ifdef Q_OS_MAC

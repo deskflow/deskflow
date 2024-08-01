@@ -38,6 +38,7 @@ const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
 const auto kUrlSourceQuery = "source=gui";
 const auto kUrlWebsite = "https://symless.com";
+const auto kUrlContribute = "https://github.com/symless/synergy-core";
 const auto kUrlProduct = QString("%1/synergy").arg(kUrlWebsite);
 const auto kUrlPurchase =
     QString("%1/purchase?%2").arg(kUrlProduct, kUrlSourceQuery);

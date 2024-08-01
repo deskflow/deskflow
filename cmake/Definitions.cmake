@@ -60,6 +60,11 @@ macro(configure_definitions)
     add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
   endif()
 
+  if(SHOW_DEV_THANKS)
+    message(STATUS "Enabling dev thanks message")
+    add_definitions(-DSYNERGY_SHOW_DEV_THANKS=1)
+  endif()
+
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
@@ -135,5 +140,6 @@ macro(configure_options)
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
   option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
+  option(SHOW_DEV_THANKS "Show message which thanks the devs" ON)
 
 endmacro()
