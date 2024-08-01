@@ -23,7 +23,6 @@
 #include <QFile>
 #include <cassert>
 #include <memory>
-#include <qvariant.h>
 
 namespace synergy::gui {
 

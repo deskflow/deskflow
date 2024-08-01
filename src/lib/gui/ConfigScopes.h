@@ -22,7 +22,6 @@
 #include <QSettings>
 #include <QVariant>
 #include <memory>
-#include <qvariant.h>
 
 namespace synergy::gui {
 
