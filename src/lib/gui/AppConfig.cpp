@@ -125,7 +125,6 @@ void AppConfig::loadSettings() {
 
   loadCommonSettings();
   loadScopeSettings();
-  loadScreenName();
   loadSerialKey();
   loadElevateMode();
 
@@ -144,6 +143,8 @@ void AppConfig::loadCommonSettings() {
 
 void AppConfig::loadScopeSettings() {
   using enum Setting;
+
+  loadScreenName();
 
   m_Port = loadSetting(kPort, m_Port).toInt();
   m_Interface = loadSetting(kInterface, m_Interface).toString();
