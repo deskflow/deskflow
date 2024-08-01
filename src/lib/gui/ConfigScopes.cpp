@@ -73,17 +73,35 @@ ConfigScopes::ConfigScopes() {
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
 
+  auto orgName = QCoreApplication::organizationName();
+  if (orgName.isEmpty()) {
+    qFatal("unable to load config, organization name is empty");
+    return;
+  } else {
+    qDebug() << "org name for config: " << orgName;
+  }
+
+  auto appName = QCoreApplication::applicationName();
+  if (appName.isEmpty()) {
+    qFatal("unable to load config, application name is empty");
+    return;
+  } else {
+    qDebug() << "app name for config: " << appName;
+  }
+
   // Config will default to User settings if they exist,
   //  otherwise it will load System setting and save them to User settings
   m_pSystemSettings = std::make_unique<QSettings>(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      QCoreApplication::organizationName(),
-      QCoreApplication::applicationName());
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
+      appName);
 
   // default to user scope.
   // if we set the scope specifically then we also have to set the application
   // name and the organisation name which breaks backwards compatibility.
   m_pUserSettings = std::make_unique<QSettings>();
+
+  qDebug() << "system settings path: " << m_pSystemSettings->fileName();
+  qDebug() << "user settings path: " << m_pUserSettings->fileName();
 
   load();
 }
