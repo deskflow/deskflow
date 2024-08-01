@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include "arch/Arch.h"
 #include <QString>
 
 #ifdef SYNERGY_ENABLE_LICENSING
