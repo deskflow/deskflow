@@ -114,12 +114,12 @@ public:
     virtual QString profileDir() const {
       return m_coreInterface.getProfileDir();
     }
-    virtual synergy::gui::IConfigScopes &scopes() { return m_Scopes; }
+    virtual synergy::gui::IConfigScopes &scopes() { return m_scopes; }
     virtual QString hostname() const { return QHostInfo::localHostName(); }
 
   private:
     [[no_unique_address]] CoreInterface m_coreInterface;
-    synergy::gui::ConfigScopes m_Scopes;
+    synergy::gui::ConfigScopes m_scopes;
   };
 
   explicit AppConfig() : AppConfig(s_Deps) {}
