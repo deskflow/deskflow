@@ -435,11 +435,13 @@ void Server::switchScreen(
     BaseClientProxy *dst, SInt32 x, SInt32 y, bool forScreensaver) {
   assert(dst != NULL);
 
-  // if trial is expired, exit the process
-  License license(m_args.m_serialKey);
-  if (license.isExpired()) {
-    LOG((CLOG_ERR "trial has expired, aborting server"));
-    exit(kExitSuccess);
+  if (m_args.m_serialKey.isValid) {
+    // if license is expired, exit the process
+    License license(m_args.m_serialKey);
+    if (license.isExpired()) {
+      LOG((CLOG_ERR "trial has expired, aborting server"));
+      exit(kExitSuccess);
+    }
   }
 
 #ifndef NDEBUG
