@@ -214,6 +214,7 @@ public:
 
 private:
   static QString settingName(AppConfig::Setting name);
+  void loadScreenName();
   void loadSerialKey();
   void loadElevateMode();
   void loadCommonSettings();

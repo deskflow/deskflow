@@ -65,6 +65,7 @@ Enhancements:
 - #7416 Catch exception propagating to `Server` dtor
 - #7421 Only load core after settings have fully loaded
 - #7419 Introduce 'Advanced' tab to Preferences window
+- #7422 Handle empty value for computer name setting
 
 # 1.14.6
 

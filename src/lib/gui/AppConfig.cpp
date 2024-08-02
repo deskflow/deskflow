@@ -144,7 +144,8 @@ void AppConfig::loadCommonSettings() {
 void AppConfig::loadScopeSettings() {
   using enum Setting;
 
-  m_ScreenName = loadSetting(kScreenName, m_ScreenName).toString();
+  loadScreenName();
+
   m_Port = loadSetting(kPort, m_Port).toInt();
   m_Interface = loadSetting(kInterface, m_Interface).toString();
   m_LogLevel = loadSetting(kLogLevel, m_LogLevel).toInt();
@@ -229,6 +230,23 @@ void AppConfig::saveSettings() {
   if (m_TlsChanged) {
     m_TlsChanged = false;
     emit tlsChanged();
+  }
+}
+
+void AppConfig::loadScreenName() {
+  using enum Setting;
+
+  const auto &screenName =
+      loadSetting(kScreenName, m_ScreenName).toString().trimmed();
+
+  // for some reason, the screen name can be saved as an empty string
+  // in the config file. this is probably a bug. if this happens, then default
+  // back to the hostname.
+  if (screenName.isEmpty()) {
+    qWarning("screen name was empty in config, setting to hostname");
+    m_ScreenName = m_Deps.hostname();
+  } else {
+    m_ScreenName = screenName;
   }
 }
 
