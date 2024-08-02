@@ -27,6 +27,7 @@ env:
   SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
   SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
   SYNERGY_ENABLE_LICENSING: ${{ vars.SYNERGY_ENABLE_LICENSING }}
+  SYNERGY_SHOW_DEV_THANKS: ${{ vars.SYNERGY_SHOW_DEV_THANKS }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.event_name != 'schedule' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
