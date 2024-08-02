@@ -206,15 +206,8 @@ void MainWindow::connectSlots() const {
       Qt::QueuedConnection);
 
   connect(
-      &m_ConfigScopes, &ConfigScopes::ready, this,
-      &MainWindow::onConfigScopesReady);
-
-  connect(
       &m_ConfigScopes, &ConfigScopes::saving, this,
       &MainWindow::onConfigScopesSaving, Qt::DirectConnection);
-
-  connect(
-      &m_AppConfig, &AppConfig::ready, this, &MainWindow::onAppConfigRecalled);
 
   connect(
       &m_AppConfig, &AppConfig::tlsChanged, this,
@@ -286,11 +279,15 @@ void MainWindow::onCreated() {
 
   m_ConfigScopes.signalReady();
 
-  // const auto serverEnabled = m_AppConfig.serverGroupChecked();
-  // const auto clientEnabled = m_AppConfig.clientGroupChecked();
-  // if (serverEnabled || clientEnabled) {
-  //   startCore();
-  // }
+  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
+
+  if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
+    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
+  }
+
+  updateScreenName();
+  applyConfig();
+  restoreWindow();
 }
 
 void MainWindow::onShown() {
@@ -318,25 +315,9 @@ void MainWindow::onLicenseHandlerInvalidLicense() {
   showActivationDialog();
 }
 
-void MainWindow::onConfigScopesReady() {
-  m_AppConfig.recall();
-  m_ServerConfig.recall();
-}
-
 void MainWindow::onConfigScopesSaving() {
   m_AppConfig.commit();
   m_ServerConfig.commit();
-}
-
-void MainWindow::onAppConfigRecalled() {
-  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
-  if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
-    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
-  }
-
-  updateScreenName();
-  applyConfig();
-  restoreWindow();
 }
 
 void MainWindow::onAppConfigTlsChanged() {

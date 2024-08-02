@@ -111,9 +111,7 @@ public slots:
 private slots:
   void onCreated();
   void onShown();
-  void onConfigScopesReady();
   void onConfigScopesSaving();
-  void onAppConfigRecalled();
   void onAppConfigTlsChanged();
   void onAppConfigScreenNameChanged();
   void onAppConfigInvertConnection();

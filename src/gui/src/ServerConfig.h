@@ -73,7 +73,6 @@ public:
   static size_t defaultClipboardSharingSize();
 
   void commit();
-  void recall();
   bool save(const QString &fileName) const;
   void save(QFile &file) const;
   int numScreens() const;
@@ -88,7 +87,9 @@ public:
   QString getClientAddress() const;
   void setClientAddress(const QString &address);
 
-protected:
+private:
+  void recall();
+  void setupScreens();
   QSettings &settings();
   ScreenList &screens() { return m_Screens; }
   void setScreens(const ScreenList &screens) { m_Screens = screens; }
@@ -113,11 +114,7 @@ protected:
   size_t setClipboardSharingSize(size_t size);
   QList<bool> &switchCorners() { return m_SwitchCorners; }
   HotkeyList &hotkeys() { return m_Hotkeys; }
-
-  void init();
   int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
-
-private:
   bool findScreenName(const QString &name, int &index);
   bool fixNoServer(const QString &name, int &index);
   int showAddClientDialog(const QString &clientName);

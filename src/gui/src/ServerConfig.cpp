@@ -22,7 +22,6 @@
 #include "Hotkey.h"
 #include "MainWindow.h"
 #include "gui/ConfigScopes.h"
-#include "gui/constants.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>
@@ -51,7 +50,9 @@ ServerConfig::ServerConfig(
       m_Screens(columns),
       m_Columns(columns),
       m_Rows(rows),
-      m_ClipboardSharingSize(defaultClipboardSharingSize()) {}
+      m_ClipboardSharingSize(defaultClipboardSharingSize()) {
+  recall();
+}
 
 ServerConfig::~ServerConfig() {
   try {
@@ -98,7 +99,7 @@ void ServerConfig::save(QFile &file) const {
   outStream << *this;
 }
 
-void ServerConfig::init() {
+void ServerConfig::setupScreens() {
   switchCorners().clear();
   screens().clear();
   hotkeys().clear();
@@ -174,7 +175,7 @@ void ServerConfig::recall() {
 
   // we need to know the number of columns and rows before we can set up
   // ourselves
-  init();
+  setupScreens();
 
   haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
   setHeartbeat(settings().value("heartbeat", 5000).toInt());

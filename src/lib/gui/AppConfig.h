@@ -125,7 +125,6 @@ public:
 
   synergy::gui::IConfigScopes &scopes();
   void commit();
-  void recall();
   void determineScope();
 
   /**
@@ -222,6 +221,8 @@ public:
 
 private:
   static QString settingName(AppConfig::Setting name);
+
+  void recall();
   void recallSerialKey();
   void recallElevateMode();
   void recallFromAllScopes();
@@ -240,13 +241,13 @@ private:
    * @brief Sets a setting if the value is not `std::nullopt`.
    */
   template <typename T>
-  void saveToCurrentScopeOptional(Setting name, const std::optional<T> &value);
+  void setInCurrentScopeOptional(Setting name, const std::optional<T> &value);
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
   /// @param [in] value The Value to be saved
   template <typename T>
-  void saveToCurrentScope(AppConfig::Setting name, T value);
+  void setInCurrentScope(AppConfig::Setting name, T value);
 
   /// @brief Sets the value of a common setting
   /// which should have the same value for all scopes
@@ -332,7 +333,6 @@ private:
   static const char m_ConfigFilename[];
 
 signals:
-  void ready();
   void tlsChanged();
   void screenNameChanged();
   void invertConnectionChanged();

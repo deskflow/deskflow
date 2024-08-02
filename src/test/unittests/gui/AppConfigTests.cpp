@@ -36,7 +36,7 @@ public:
       (const QString &name, const QVariant &defaultValue, Scope scope),
       (const, override));
   MOCK_METHOD(
-      void, setToScope,
+      void, setInScope,
       (const QString &name, const QVariant &value, Scope scope), (override));
   MOCK_METHOD(Scope, activeScope, (), (const, override));
   MOCK_METHOD(void, setActiveScope, (Scope scope), (override));
@@ -64,37 +64,36 @@ struct MockDeps : public AppConfig::Deps {
 class AppConfigTests : public Test {};
 
 TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
-  MockScopes scopes;
+  NiceMock<MockScopes> scopes;
   auto deps = MockDeps::makeNice();
-  ON_CALL(*deps, hostname()).WillByDefault(Return("test"));
+  ON_CALL(*deps, hostname()).WillByDefault(Return("test hostname"));
 
   AppConfig appConfig(scopes, deps);
 
-  ASSERT_EQ(appConfig.screenName().toStdString(), "test");
+  ASSERT_EQ(appConfig.screenName().toStdString(), "test hostname");
 }
 
-TEST_F(AppConfigTests, recall_byDefault_getsFromScope) {
-  MockScopes scopes;
+TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
+  NiceMock<MockScopes> scopes;
   auto deps = MockDeps::makeNice();
-  AppConfig appConfig(scopes, deps);
 
   ON_CALL(scopes, scopeContains(_, _)).WillByDefault(Return(true));
   ON_CALL(scopes, getFromScope(_, _, _))
-      .WillByDefault(Return(QVariant("test")));
-  EXPECT_CALL(scopes, getFromScope(_, _, _)).Times(AnyNumber());
+      .WillByDefault(Return(QVariant("test screen")));
+  EXPECT_CALL(scopes, getFromScope(_, _, _));
 
-  appConfig.recall();
+  AppConfig appConfig(scopes, deps);
 
-  ASSERT_EQ(appConfig.screenName().toStdString(), "test");
+  ASSERT_EQ(appConfig.screenName().toStdString(), "test screen");
 }
 
 TEST_F(AppConfigTests, commit_byDefault_setsToScope) {
-  MockScopes scopes;
+  NiceMock<MockScopes> scopes;
   auto deps = MockDeps::makeNice();
   AppConfig appConfig(scopes, deps);
 
   ON_CALL(scopes, isActiveScopeWritable()).WillByDefault(Return(true));
-  EXPECT_CALL(scopes, setToScope(_, _, _)).Times(AnyNumber());
+  EXPECT_CALL(scopes, setInScope(_, _, _)).Times(AnyNumber());
 
   appConfig.commit();
 }

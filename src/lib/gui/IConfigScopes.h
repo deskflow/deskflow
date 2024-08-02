@@ -62,7 +62,7 @@ public:
   /**
    * @brief Set a config value in a scope (default is current scope).
    */
-  virtual void setToScope(
+  virtual void setInScope(
       const QString &name, const QVariant &value,
       Scope scope = Scope::Current) = 0;
 };

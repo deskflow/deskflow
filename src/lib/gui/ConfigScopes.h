@@ -39,7 +39,7 @@ public:
   bool scopeContains(
       const QString &name, Scope scope = Scope::Current) const override;
   bool isActiveScopeWritable() const override;
-  void setToScope(
+  void setInScope(
       const QString &name, const QVariant &value,
       Scope scope = Scope::Current) override;
   QVariant getFromScope(

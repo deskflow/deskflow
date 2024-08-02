@@ -160,7 +160,7 @@ QVariant ConfigScopes::getFromScope(
   }
 }
 
-void ConfigScopes::setToScope(
+void ConfigScopes::setInScope(
     const QString &name, const QVariant &value, Scope scope) {
   switch (scope) {
   case Scope::User:

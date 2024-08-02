@@ -102,6 +102,7 @@ AppConfig::AppConfig(
       m_pDeps(deps),
       m_ScreenName(deps->hostname()) {
   determineScope();
+  recall();
 }
 
 void AppConfig::recall() {
@@ -113,8 +114,6 @@ void AppConfig::recall() {
   recallFromCurrentScope();
   recallSerialKey();
   recallElevateMode();
-
-  emit ready();
 }
 
 void AppConfig::recallFromAllScopes() {
@@ -183,35 +182,35 @@ void AppConfig::commit() {
   saveToAllScopes(kLicenseNextCheck, m_licenseNextCheck);
 
   if (isCurrentScopeWritable()) {
-    saveToCurrentScope(kScreenName, m_ScreenName);
-    saveToCurrentScope(kPort, m_Port);
-    saveToCurrentScope(kInterface, m_Interface);
-    saveToCurrentScope(kLogLevel, m_LogLevel);
-    saveToCurrentScope(kLogToFile, m_LogToFile);
-    saveToCurrentScope(kLogFilename, m_LogFilename);
-    saveToCurrentScope(kStartedBefore, m_StartedBefore);
-    saveToCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
-    saveToCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateAlways);
-    saveToCurrentScope(kTlsEnabled, m_TlsEnabled);
-    saveToCurrentScope(kAutoHide, m_AutoHide);
-    saveToCurrentScope(kSerialKey, m_SerialKey);
-    saveToCurrentScope(kLastVersion, m_LastVersion);
-    saveToCurrentScope(kActivationHasRun, m_ActivationHasRun);
-    saveToCurrentScope(kUseExternalConfig, m_UseExternalConfig);
-    saveToCurrentScope(kConfigFile, m_ConfigFile);
-    saveToCurrentScope(kUseInternalConfig, m_UseInternalConfig);
-    saveToCurrentScope(kServerHostname, m_ServerHostname);
-    saveToCurrentScope(kPreventSleep, m_PreventSleep);
-    saveToCurrentScope(kLanguageSync, m_LanguageSync);
-    saveToCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
-    saveToCurrentScope(kInvertConnection, m_InvertConnection);
-    saveToCurrentScope(kEnableService, m_EnableService);
-    saveToCurrentScope(kCloseToTray, m_CloseToTray);
-    saveToCurrentScope(kShowDevThanks, m_ShowDevThanks);
-    saveToCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
+    setInCurrentScope(kScreenName, m_ScreenName);
+    setInCurrentScope(kPort, m_Port);
+    setInCurrentScope(kInterface, m_Interface);
+    setInCurrentScope(kLogLevel, m_LogLevel);
+    setInCurrentScope(kLogToFile, m_LogToFile);
+    setInCurrentScope(kLogFilename, m_LogFilename);
+    setInCurrentScope(kStartedBefore, m_StartedBefore);
+    setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
+    setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateAlways);
+    setInCurrentScope(kTlsEnabled, m_TlsEnabled);
+    setInCurrentScope(kAutoHide, m_AutoHide);
+    setInCurrentScope(kSerialKey, m_SerialKey);
+    setInCurrentScope(kLastVersion, m_LastVersion);
+    setInCurrentScope(kActivationHasRun, m_ActivationHasRun);
+    setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
+    setInCurrentScope(kConfigFile, m_ConfigFile);
+    setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
+    setInCurrentScope(kServerHostname, m_ServerHostname);
+    setInCurrentScope(kPreventSleep, m_PreventSleep);
+    setInCurrentScope(kLanguageSync, m_LanguageSync);
+    setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
+    setInCurrentScope(kInvertConnection, m_InvertConnection);
+    setInCurrentScope(kEnableService, m_EnableService);
+    setInCurrentScope(kCloseToTray, m_CloseToTray);
+    setInCurrentScope(kShowDevThanks, m_ShowDevThanks);
+    setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
 
-    saveToCurrentScopeOptional(kMainWindowSize, m_MainWindowSize);
-    saveToCurrentScopeOptional(kMainWindowPosition, m_MainWindowPosition);
+    setInCurrentScopeOptional(kMainWindowSize, m_MainWindowSize);
+    setInCurrentScopeOptional(kMainWindowPosition, m_MainWindowPosition);
   }
 
   if (m_TlsChanged) {
@@ -293,14 +292,13 @@ QString AppConfig::settingName(Setting name) {
   return m_SettingsName[index];
 }
 
-template <typename T>
-void AppConfig::saveToCurrentScope(Setting name, T value) {
-  m_scopes.setToScope(settingName(name), value);
+template <typename T> void AppConfig::setInCurrentScope(Setting name, T value) {
+  m_scopes.setInScope(settingName(name), value);
 }
 
 template <typename T> void AppConfig::saveToAllScopes(Setting name, T value) {
-  m_scopes.setToScope(settingName(name), value, ConfigScopes::Scope::User);
-  m_scopes.setToScope(settingName(name), value, ConfigScopes::Scope::System);
+  m_scopes.setInScope(settingName(name), value, ConfigScopes::Scope::User);
+  m_scopes.setInScope(settingName(name), value, ConfigScopes::Scope::System);
 }
 
 QVariant AppConfig::getFromScope(Setting name, const QVariant &defaultValue) {
@@ -318,10 +316,10 @@ std::optional<T> AppConfig::getFromScopeOptional(
 }
 
 template <typename T>
-void AppConfig::saveToCurrentScopeOptional(
+void AppConfig::setInCurrentScopeOptional(
     Setting name, const std::optional<T> &value) {
   if (value.has_value()) {
-    m_scopes.setToScope(settingName(name), value.value());
+    m_scopes.setInScope(settingName(name), value.value());
   }
 }
 
@@ -512,13 +510,13 @@ void AppConfig::setTlsEnabled(bool value) {
 }
 
 void AppConfig::setTlsCertPath(const QString &value) {
+  m_TlsChanged = m_TlsCertPath != value;
   m_TlsCertPath = value;
-  m_TlsChanged = true;
 }
 
 void AppConfig::setTlsKeyLength(const QString &value) {
+  m_TlsChanged = m_TlsKeyLength != value;
   m_TlsKeyLength = value;
-  m_TlsChanged = true;
 }
 void AppConfig::setSerialKey(const QString &serialKey) {
   m_SerialKey = serialKey;
