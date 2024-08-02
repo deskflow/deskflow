@@ -1260,23 +1260,27 @@ void MainWindow::setVisible(bool visible) {
 }
 
 MainWindow::CoreMode MainWindow::coreMode() const {
+  using enum CoreMode;
+
   auto serverChecked = m_pRadioGroupServer->isChecked();
   auto clientChecked = m_pRadioGroupClient->isChecked();
 
   if (serverChecked) {
-    return CoreMode::Server;
+    return Server;
   } else if (clientChecked) {
-    return CoreMode::Client;
+    return Client;
   } else {
-    return CoreMode::None;
+    return None;
   }
 }
 
 QString MainWindow::coreModeString() const {
+  using enum CoreMode;
+
   switch (coreMode()) {
-  case CoreMode::Server:
+  case Server:
     return "server";
-  case CoreMode::Client:
+  case Client:
     return "client";
   default:
     qFatal("invalid core mode");
