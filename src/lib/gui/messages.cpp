@@ -109,19 +109,22 @@ void showCloseReminder(QWidget *parent) {
 }
 
 void showFirstRunMessage(
-    QWidget *parent, bool closeToTray, bool enableService) {
+    QWidget *parent, bool closeToTray, bool enableService, bool isServer) {
 
-  auto message = QString(
-      "<p>Synergy is now connected!</p>"
-      "<p>Try moving your mouse to your other computer. "
-      "Once there, go ahead and type something.</p>"
-      "<p>Don't forget, you can copy and paste between computers too.</p>");
+  auto message = QString("<p>Synergy is now connected!</p>");
+
+  if (isServer) {
+    message +=
+        "<p>Try moving your mouse to your other computer. Once there, go ahead "
+        "and type something.</p>"
+        "<p>Don't forget, you can copy and paste between computers too.</p>";
+  }
 
   if (!closeToTray && !enableService) {
-    message += "<p>As you do not have the setting enable to keep Synergy "
-               "running in the background, "
-               "you'll need to keep this window open or minimized to keep "
-               "Synergy running.</p>";
+    message +=
+        "<p>As you do not have the setting enabled to keep Synergy running in "
+        "the background, you'll need to keep this window open or minimized to "
+        "keep Synergy running.</p>";
   }
 
   QMessageBox::information(parent, "Connected", message);

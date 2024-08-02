@@ -26,7 +26,8 @@ namespace synergy::gui::messages {
 void messageHandler(
     QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
-void showFirstRunMessage(QWidget *parent, bool closeToTray, bool enableService);
+void showFirstRunMessage(
+    QWidget *parent, bool closeToTray, bool enableService, bool isServer);
 
 void showCloseReminder(QWidget *parent);
 
