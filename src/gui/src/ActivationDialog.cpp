@@ -108,7 +108,6 @@ void ActivationDialog::accept() {
   }
 
   showSuccessDialog();
-  m_pAppConfig->setActivationHasRun(true);
   QDialog::accept();
 }
 
@@ -123,6 +122,7 @@ void ActivationDialog::showResultDialog(
     QMessageBox::information(
         this, title,
         "Heads up, the serial key you entered was the same as last time.");
+    QDialog::accept();
     break;
 
   case kInvalid:

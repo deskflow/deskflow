@@ -111,7 +111,7 @@ void showCloseReminder(QWidget *parent) {
 void showFirstRunMessage(
     QWidget *parent, bool closeToTray, bool enableService) {
 
-  QString message = QString(
+  auto message = QString(
       "<p>Synergy is now connected!</p>"
       "<p>Try moving your mouse to your other computer. "
       "Once there, go ahead and type something.</p>"

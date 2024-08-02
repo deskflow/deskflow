@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "QSynergyApplication.h"
+#pragma once
 
-#include "MainWindow.h"
+#include <QString>
 
-#include <QtCore>
-#include <QtGui>
+namespace synergy::gui {
 
-QSynergyApplication::QSynergyApplication(int &argc, char **argv)
-    : QApplication(argc, argv) {}
+QString version();
+
+} // namespace synergy::gui

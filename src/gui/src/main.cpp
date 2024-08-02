@@ -25,13 +25,14 @@
 #include "gui/constants.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
+#include "gui/version.h"
 
 #include <QApplication>
 #include <QDebug>
 #include <QMessageBox>
+#include <QObject>
 #include <QtCore>
 #include <QtGui>
-#include <qobject.h>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -59,14 +60,16 @@ int main(int argc, char *argv[]) {
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
 
-  dotenv(".env");
-
   QCoreApplication::setOrganizationName(kAppName);
   QCoreApplication::setApplicationName(kAppName);
   QCoreApplication::setOrganizationDomain(kAppDomain);
 
   QSynergyApplication app(argc, argv);
   qInstallMessageHandler(synergy::gui::messages::messageHandler);
+
+  qInfo("Synergy v%s", synergy::gui::version().toUtf8().constData());
+
+  dotenv(".env");
 
 #if defined(Q_OS_MAC)
 

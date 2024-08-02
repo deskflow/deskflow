@@ -427,8 +427,8 @@ bool MainWindow::on_m_pActionSave_triggered() {
 }
 
 void MainWindow::on_m_pActionAbout_triggered() {
-  AboutDialog dlg(this, m_AppConfig);
-  dlg.exec();
+  AboutDialog about(this);
+  about.exec();
 }
 
 void MainWindow::on_m_pActionHelp_triggered() {
@@ -1358,9 +1358,7 @@ void MainWindow::updateWindowTitle() { setWindowTitle(productName()); }
 void MainWindow::autoAddScreen(const QString name) {
 
   if (m_ActivationDialogRunning) {
-    // TODO: refactor this code
-    // add this screen to the pending list and check this list until
-    // users finish activation dialog
+    // add this screen to the pending list if the activation dialog is running.
     m_PendingClientNames.append(name);
     return;
   }
@@ -1407,6 +1405,11 @@ int MainWindow::showActivationDialog() {
   m_ActivationDialogRunning = true;
   int result = activationDialog.exec();
   m_ActivationDialogRunning = false;
+
+  if (result == QDialog::Accepted) {
+    m_AppConfig.setActivationHasRun(true);
+    m_ConfigScopes.save();
+  }
 
   if (!m_PendingClientNames.empty()) {
     foreach (const QString &name, m_PendingClientNames) {

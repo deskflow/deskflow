@@ -74,7 +74,7 @@ ConfigScopes::ConfigScopes() {
     qFatal("unable to load config, organization name is empty");
     return;
   } else {
-    qDebug() << "org name for config: " << orgName;
+    qDebug() << "org name for config:" << orgName;
   }
 
   auto appName = QCoreApplication::applicationName();
@@ -82,8 +82,15 @@ ConfigScopes::ConfigScopes() {
     qFatal("unable to load config, application name is empty");
     return;
   } else {
-    qDebug() << "app name for config: " << appName;
+    qDebug() << "app name for config:" << appName;
   }
+
+  // default to user scope.
+  // if we set the scope specifically then we also have to set the application
+  // name and the organisation name which breaks backwards compatibility.
+  m_pUserSettings = std::make_unique<QSettings>();
+
+  qDebug() << "user settings path:" << m_pUserSettings->fileName();
 
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
@@ -95,13 +102,7 @@ ConfigScopes::ConfigScopes() {
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
       appName);
 
-  // default to user scope.
-  // if we set the scope specifically then we also have to set the application
-  // name and the organisation name which breaks backwards compatibility.
-  m_pUserSettings = std::make_unique<QSettings>();
-
-  qDebug() << "system settings path: " << m_pSystemSettings->fileName();
-  qDebug() << "user settings path: " << m_pUserSettings->fileName();
+  qDebug() << "system settings path:" << m_pSystemSettings->fileName();
 
 #if defined(Q_OS_WIN)
   loadWindowsLegacy(*m_pSystemSettings);

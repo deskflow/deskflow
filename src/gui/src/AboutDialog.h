@@ -30,7 +30,7 @@ class QString;
 class AboutDialog : public QDialog, public Ui::AboutDialogBase {
   Q_OBJECT
 public:
-  AboutDialog(MainWindow *parent, const AppConfig &config);
+  explicit AboutDialog(MainWindow *parent);
   int exec() override;
 
 private:
