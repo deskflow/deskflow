@@ -56,13 +56,13 @@ QIpcClient::~QIpcClient() {
 void QIpcClient::connected() {
 
   sendHello();
-  infoMessage("connection established");
+  emit infoMessage("connection established");
 }
 
 void QIpcClient::connectToHost() {
   m_Enabled = true;
 
-  infoMessage("connecting to service...");
+  emit infoMessage("connecting to service...");
   const auto port = static_cast<quint16>(kIpcPort);
   m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), port);
 
@@ -73,7 +73,7 @@ void QIpcClient::connectToHost() {
 }
 
 void QIpcClient::disconnectFromHost() {
-  infoMessage("service disconnect");
+  emit infoMessage("service disconnect");
   m_Reader->stop();
   m_Socket->close();
 }
@@ -92,7 +92,7 @@ void QIpcClient::error(QAbstractSocket::SocketError error) {
     break;
   }
 
-  errorMessage(QString("ipc connection error, %1").arg(text));
+  emit errorMessage(QString("ipc connection error, %1").arg(text));
 
   QTimer::singleShot(1000, this, SLOT(retryConnect()));
 }
@@ -133,7 +133,9 @@ void QIpcClient::sendCommand(
   stream->writeRawData(elevateBuf, 1);
 }
 
-void QIpcClient::handleReadLogLine(const QString &text) { readLogLine(text); }
+void QIpcClient::handleReadLogLine(const QString &text) {
+  emit readLogLine(text);
+}
 
 // TODO: qt must have a built in way of converting int to bytes.
 void QIpcClient::intToBytes(int value, char *buffer, int size) {
