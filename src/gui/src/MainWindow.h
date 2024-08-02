@@ -147,7 +147,6 @@ private slots:
   void on_m_pLineEditClientIp_returnPressed();
 
 private:
-  QSettings &settings() { return *appConfig().scopes().activeSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
   void createMenuBar();
