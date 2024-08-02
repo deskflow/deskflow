@@ -1471,6 +1471,7 @@ void MainWindow::enableServer(bool enable) {
 
   if (enable) {
     m_pButtonToggleStart->setEnabled(true);
+    m_pActionStartCore->setEnabled(true);
   }
 }
 
@@ -1483,5 +1484,6 @@ void MainWindow::enableClient(bool enable) {
 
   if (enable) {
     m_pButtonToggleStart->setEnabled(true);
+    m_pActionStartCore->setEnabled(true);
   }
 }
