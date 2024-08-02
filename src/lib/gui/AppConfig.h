@@ -124,7 +124,13 @@ public:
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   synergy::gui::IConfigScopes &scopes();
+
+  /**
+   * @brief Commits the current settings to the active scope.
+   * This should only be called when the settings are about to be saved.
+   */
   void commit();
+
   void determineScope();
 
   /**
@@ -132,8 +138,8 @@ public:
    */
 
   void setActivationHasRun(bool value);
-  bool isCurrentScopeWritable() const;
-  bool isCurrentScopeSystem() const;
+  bool isActiveScopeWritable() const;
+  bool isActiveScopeSystem() const;
   const QString &screenName() const;
   int port() const;
   const QString &networkInterface() const;
@@ -269,10 +275,6 @@ private:
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
   void loadScope(synergy::gui::ConfigScopes::Scope scope);
-
-  /// @brief This function sets default values
-  /// for settings that shouldn't be copied from between scopes.
-  void setDefaultValues();
 
   /**
    * @brief Gets a TLS certificate path based on the user's profile dir.

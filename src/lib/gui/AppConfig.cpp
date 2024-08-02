@@ -205,7 +205,7 @@ void AppConfig::commit() {
   saveToAllScopes(kServerGroupChecked, m_ServerGroupChecked);
   saveToAllScopes(kLicenseNextCheck, m_licenseNextCheck);
 
-  if (isCurrentScopeWritable()) {
+  if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
     setInCurrentScope(kPort, m_Port);
     setInCurrentScope(kInterface, m_Interface);
@@ -245,12 +245,21 @@ void AppConfig::commit() {
 
 void AppConfig::determineScope() {
 
+  qDebug("determining config scope");
+
   // first, try to determine if the system scope should be used according to the
   // user scope...
   if (m_scopes.scopeContains(
           settingName(Setting::kLoadSystemSettings),
           ConfigScopes::Scope::User)) {
-    setLoadFromSystemScope(m_LoadFromSystemScope);
+    auto loadFromSystemScope =
+        m_scopes
+            .getFromScope(
+                settingName(Setting::kLoadSystemSettings),
+                m_LoadFromSystemScope, ConfigScopes::Scope::User)
+            .toBool();
+
+    setLoadFromSystemScope(loadFromSystemScope);
   }
 
   // ...failing that, check the system scope instead to see if an arbitrary
@@ -364,19 +373,35 @@ AppConfig::findInAllScopes(Setting name, const QVariant &defaultValue) const {
 }
 
 void AppConfig::loadScope(ConfigScopes::Scope scope) {
+  switch (scope) {
+  case ConfigScopes::Scope::User:
+    qDebug("loading user settings scope");
+    break;
 
-  if (m_scopes.activeScope() != scope) {
-    setDefaultValues();
-    m_scopes.setActiveScope(scope);
-    if (m_scopes.scopeContains(
-            settingName(Setting::kScreenName), m_scopes.activeScope())) {
-      // If the user already has settings, then load them up now.
-      m_scopes.signalReady();
-    }
+  case ConfigScopes::Scope::System:
+    qDebug("loading system settings scope");
+    break;
+
+  default:
+    qFatal("invalid scope");
+  }
+
+  if (m_scopes.activeScope() == scope) {
+    qDebug("already in required scope, skipping");
+    return;
+  }
+
+  m_scopes.setActiveScope(scope);
+
+  // only signal ready if there is at least one setting in the required scope.
+  // this prevents the current settings from being set back to default.
+  if (m_scopes.scopeContains(
+          settingName(Setting::kScreenName), m_scopes.activeScope())) {
+    m_scopes.signalReady();
+  } else {
+    qDebug("no screen name in scope, skipping");
   }
 }
-
-void AppConfig::setDefaultValues() { m_InvertConnection = false; }
 
 void AppConfig::setLoadFromSystemScope(bool value) {
 
@@ -388,18 +413,15 @@ void AppConfig::setLoadFromSystemScope(bool value) {
     loadScope(ConfigScopes::Scope::User);
   }
 
-  /*
-   * It's very imprortant to set this variable after loadScope
-   * because during scope loading this variable can be rewritten with old value
-   */
+  // set after loading scope since it may have been overridden.
   m_LoadFromSystemScope = value;
 }
 
-bool AppConfig::isCurrentScopeWritable() const {
+bool AppConfig::isActiveScopeWritable() const {
   return m_scopes.isActiveScopeWritable();
 }
 
-bool AppConfig::isCurrentScopeSystem() const {
+bool AppConfig::isActiveScopeSystem() const {
   return m_scopes.activeScope() == ConfigScopes::Scope::System;
 }
 

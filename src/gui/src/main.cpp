@@ -21,6 +21,7 @@
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
 #include "gui/AppConfig.h"
+#include "gui/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
@@ -30,6 +31,7 @@
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
+#include <qobject.h>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -85,6 +87,10 @@ int main(int argc, char *argv[]) {
 
   ConfigScopes configScopes;
   AppConfig appConfig(configScopes);
+
+  QObject::connect(
+      &configScopes, &ConfigScopes::saving, &appConfig,
+      [&appConfig]() { appConfig.commit(); }, Qt::DirectConnection);
 
   std::unique_ptr<SetupWizardBlocker> setupBlocker;
   if (qgetenv("XDG_SESSION_TYPE") == "wayland") {

@@ -130,16 +130,16 @@ void MainWindow::restoreWindow() {
 
   const auto &config = m_AppConfig;
 
-  const auto &size = config.mainWindowSize();
-  if (size.has_value()) {
+  const auto &windowSize = config.mainWindowSize();
+  if (windowSize.has_value()) {
     qDebug("restoring main window size");
-    resize(size.value());
+    resize(windowSize.value());
   }
 
-  const auto &position = config.mainWindowPosition();
-  if (position.has_value()) {
+  const auto &windowPosition = config.mainWindowPosition();
+  if (windowPosition.has_value()) {
     qDebug("restoring main window position");
-    move(position.value());
+    move(windowPosition.value());
   }
 
   // give the window chance to restore its size and position before the window
@@ -156,6 +156,7 @@ void MainWindow::saveWindow() {
 
   qDebug("saving window size and position");
   auto &config = m_AppConfig;
+  auto saveConfig = false;
   config.setMainWindowSize(size());
   config.setMainWindowPosition(pos());
   m_ConfigScopes.save();
@@ -315,10 +316,7 @@ void MainWindow::onLicenseHandlerInvalidLicense() {
   showActivationDialog();
 }
 
-void MainWindow::onConfigScopesSaving() {
-  m_AppConfig.commit();
-  m_ServerConfig.commit();
-}
+void MainWindow::onConfigScopesSaving() { m_ServerConfig.commit(); }
 
 void MainWindow::onAppConfigTlsChanged() {
   updateLocalFingerprint();
@@ -842,7 +840,7 @@ void MainWindow::showDevThanksMessage() {
   messages::showDevThanks(this, kProductName);
 
   m_AppConfig.setShowDevThanks(false);
-  m_AppConfig.commit();
+  m_ConfigScopes.save();
 }
 
 void MainWindow::startCore() {
@@ -1274,7 +1272,7 @@ MainWindow::CoreMode MainWindow::coreMode() const {
   } else if (clientChecked) {
     return CoreMode::Client;
   } else {
-    qFatal("no core mode selected");
+    return CoreMode::None;
   }
 }
 

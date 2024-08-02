@@ -79,7 +79,7 @@ public:
     PendingRetry
   };
 
-  enum class CoreMode { Client, Server };
+  enum class CoreMode { None, Client, Server };
   enum class LogLevel { Error, Info };
   enum class RuningState { Started, Stopped };
 

@@ -70,16 +70,16 @@ void messageHandler(
 
   if (type == QtFatalMsg) {
     auto contextString =
-        QString("%1:%2, %3").arg(filename).arg(context.line).arg(function);
+        QString("%1:%2\n%3").arg(filename).arg(context.line).arg(function);
 
     QMessageBox::critical(
         nullptr, "Fatal error",
-        QString("<p>Sorry, a fatal error has occurred.</p>"
-                "<p>The application must now exit.</p>"
+        QString("<p>Sorry, a fatal error has occurred "
+                "and the application must now exit.</p>"
                 "<p>Please "
                 R"(<a href="%1" style="color: %2">contact us</a>)"
                 " and copy/paste the following error:</p>"
-                "<p>%3</p><p>%4</p>")
+                "<pre>%3\n\n%4</pre>")
             .arg(kUrlContact, kColorSecondary, message, contextString));
 
     // developers: if you hit this line in your debugger, traverse the stack to

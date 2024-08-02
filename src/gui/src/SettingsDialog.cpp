@@ -53,7 +53,7 @@ SettingsDialog::SettingsDialog(
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
   loadFromConfig();
-  m_wasOriginallySystemScope = appConfig().isCurrentScopeSystem();
+  m_wasOriginallySystemScope = appConfig().isActiveScopeSystem();
   updateControlsEnabled();
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
@@ -95,7 +95,7 @@ void SettingsDialog::accept() {
 
 void SettingsDialog::reject() {
   // restore original system scope value on reject.
-  if (appConfig().isCurrentScopeSystem() != m_wasOriginallySystemScope) {
+  if (appConfig().isActiveScopeSystem() != m_wasOriginallySystemScope) {
     appConfig().setLoadFromSystemScope(m_wasOriginallySystemScope);
   }
 
@@ -119,7 +119,7 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
-  if (m_appConfig.isCurrentScopeSystem()) {
+  if (m_appConfig.isActiveScopeSystem()) {
     m_pRadioSystemScope->setChecked(true);
   } else {
     m_pRadioUserScope->setChecked(true);
@@ -146,14 +146,15 @@ void SettingsDialog::updateTlsControls() {
 }
 
 void SettingsDialog::updateTlsControlsEnabled() {
+  bool writable = appConfig().isActiveScopeWritable();
   auto clientMode = appConfig().clientGroupChecked();
   auto tlsAvailable = m_tlsUtility.isAvailableAndEnabled();
   auto tlsChecked = m_pCheckBoxEnableCrypto->isChecked();
-  auto enabled = !clientMode && tlsAvailable && tlsChecked;
+  auto enabled = writable && !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
-      "tls enabled=%d, client=%d, available=%d, checked=%d", enabled,
-      clientMode, tlsAvailable, tlsChecked);
+      "tls enabled=%d, writable=%d, client=%d, available=%d, checked=%d",
+      enabled, writable, clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);
   m_pComboBoxKeyLength->setEnabled(enabled);
@@ -164,7 +165,7 @@ void SettingsDialog::updateTlsControlsEnabled() {
 }
 
 bool SettingsDialog::isClientMode() const {
-  return (m_pMainWindow->coreMode() == MainWindow::CoreMode::Client);
+  return m_pMainWindow->coreMode() == MainWindow::CoreMode::Client;
 }
 
 void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
@@ -253,7 +254,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
 }
 
 void SettingsDialog::updateControlsEnabled() {
-  bool writable = appConfig().isCurrentScopeWritable();
+  bool writable = appConfig().isActiveScopeWritable();
 
   m_pLineEditScreenName->setEnabled(writable);
   m_pSpinBoxPort->setEnabled(writable);

@@ -47,7 +47,7 @@ public:
       synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig,
       MainWindow &mainWindow, int columns = kDefaultColumns,
       int rows = kDefaultRows);
-  ~ServerConfig();
+  ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;
 

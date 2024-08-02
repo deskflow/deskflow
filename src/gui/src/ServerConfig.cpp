@@ -54,15 +54,6 @@ ServerConfig::ServerConfig(
   recall();
 }
 
-ServerConfig::~ServerConfig() {
-  try {
-    ServerConfig::commit();
-  } catch (const std::exception &e) {
-    qDebug() << e.what();
-    m_pMainWindow->appendLogError(e.what());
-  }
-}
-
 bool ServerConfig::save(const QString &fileName) const {
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -402,7 +393,6 @@ int ServerConfig::autoAddScreen(const QString name) {
     return kAutoAddScreenManualClient;
   }
 
-  commit();
   return kAutoAddScreenOk;
 }
 
@@ -414,7 +404,6 @@ void ServerConfig::updateServerName() {
   for (auto &screen : screens()) {
     if (screen.isServer()) {
       screen.setName(m_pAppConfig->screenName());
-      commit();
       break;
     }
   }

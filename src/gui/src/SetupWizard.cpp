@@ -39,7 +39,6 @@ SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig) {
 void SetupWizard::accept() {
   m_appConfig.setWizardHasRun();
   m_appConfig.setScreenName(m_pLineEditName->text());
-  m_appConfig.commit();
   QDialog::accept();
 }
 
