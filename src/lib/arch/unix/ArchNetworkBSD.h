@@ -73,7 +73,6 @@ class ArchNetworkBSD : public IArchNetwork {
 
 public:
   struct Deps {
-    const char *test = "test";
     virtual ~Deps() = default;
     virtual void sleep(double);
     virtual int poll(struct pollfd *, nfds_t, int);
