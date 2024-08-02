@@ -118,6 +118,8 @@ void showFirstRunMessage(
         "<p>Try moving your mouse to your other computer. Once there, go ahead "
         "and type something.</p>"
         "<p>Don't forget, you can copy and paste between computers too.</p>";
+  } else {
+    message += "<p>Try controlling this computer remotely.</p>";
   }
 
   if (!closeToTray && !enableService) {
