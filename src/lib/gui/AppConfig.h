@@ -263,7 +263,7 @@ private:
   template <typename T> void saveToAllScopes(AppConfig::Setting name, T value);
 
   QVariant getFromCurrentScope(
-      AppConfig::Setting name, const QVariant &defaultValue = QVariant());
+      AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
 
   /**
    * @brief Finds a value by searching each scope starting with the current

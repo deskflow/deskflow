@@ -330,8 +330,8 @@ template <typename T> void AppConfig::saveToAllScopes(Setting name, T value) {
   m_scopes.setInScope(settingName(name), value, ConfigScopes::Scope::System);
 }
 
-QVariant
-AppConfig::getFromCurrentScope(Setting name, const QVariant &defaultValue) {
+QVariant AppConfig::getFromCurrentScope(
+    Setting name, const QVariant &defaultValue) const {
   return m_scopes.getFromScope(settingName(name), defaultValue);
 }
 
