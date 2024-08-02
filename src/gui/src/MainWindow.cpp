@@ -621,6 +621,8 @@ void MainWindow::setIcon(CoreState state) const {
 }
 
 void MainWindow::appendLogInfo(const QString &text) {
+  qInfo("%s", text.toStdString().c_str());
+
   processCoreLogLine(getTimeStamp() + " INFO: " + text);
 }
 
@@ -633,7 +635,8 @@ void MainWindow::appendLogDebug(const QString &text) {
 }
 
 void MainWindow::appendLogError(const QString &text) {
-  onIpcClientReadLogLine(getTimeStamp() + " ERROR: " + text);
+  qCritical("%s", text.toStdString().c_str());
+  processCoreLogLine(getTimeStamp() + " ERROR: " + text);
 }
 
 void MainWindow::processCoreLogLine(const QString &text) {
