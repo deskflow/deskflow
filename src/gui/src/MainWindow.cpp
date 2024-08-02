@@ -451,6 +451,14 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
 
 void MainWindow::on_m_pActivate_triggered() { showActivationDialog(); }
 
+void MainWindow::on_m_pLineEditHostname_returnPressed() {
+  m_pButtonConnect->click();
+}
+
+void MainWindow::on_m_pLineEditClientIp_returnPressed() {
+  m_pButtonConnectToClient->click();
+}
+
 void MainWindow::on_m_pButtonApply_clicked() {
   m_ClientConnection.setCheckConnection(true);
   restartCore();
@@ -813,8 +821,9 @@ void MainWindow::showFirstRunMessage() {
   m_AppConfig.setStartedBefore(true);
   m_ConfigScopes.save();
 
+  const auto isServer = coreMode() == CoreMode::Server;
   messages::showFirstRunMessage(
-      this, m_AppConfig.closeToTray(), m_AppConfig.enableService());
+      this, m_AppConfig.closeToTray(), m_AppConfig.enableService(), isServer);
 }
 
 void MainWindow::showDevThanksMessage() {
@@ -824,7 +833,8 @@ void MainWindow::showDevThanksMessage() {
   }
 
   if (kLicensingEnabled) {
-    qFatal("dev thanks message should not be shown when licensing is enabled");
+    qDebug("licensing enabled, skipping dev thanks message");
+    return;
   }
 
   m_AppConfig.setShowDevThanks(false);
