@@ -236,13 +236,13 @@ private:
    */
   template <typename T>
   std::optional<T>
-  getFromScopeOptional(Setting name, std::function<T(QVariant)> toType) const;
+  getFromCurrentScope(Setting name, std::function<T(QVariant)> toType) const;
 
   /**
    * @brief Sets a setting if the value is not `std::nullopt`.
    */
   template <typename T>
-  void setInCurrentScopeOptional(Setting name, const std::optional<T> &value);
+  void setInCurrentScope(Setting name, const std::optional<T> &value);
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
@@ -256,7 +256,7 @@ private:
   /// @param [in] value The Value to be saved
   template <typename T> void saveToAllScopes(AppConfig::Setting name, T value);
 
-  QVariant getFromScope(
+  QVariant getFromCurrentScope(
       AppConfig::Setting name, const QVariant &defaultValue = QVariant());
 
   /**

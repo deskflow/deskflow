@@ -131,51 +131,57 @@ void AppConfig::recallFromCurrentScope() {
   recallSerialKey();
   recallElevateMode();
 
-  m_Port = getFromScope(kPort, m_Port).toInt();
-  m_Interface = getFromScope(kInterface, m_Interface).toString();
-  m_LogLevel = getFromScope(kLogLevel, m_LogLevel).toInt();
-  m_LogToFile = getFromScope(kLogToFile, m_LogToFile).toBool();
-  m_LogFilename = getFromScope(kLogFilename, m_LogFilename).toString();
-  m_StartedBefore = getFromScope(kStartedBefore, m_StartedBefore).toBool();
-  m_AutoHide = getFromScope(kAutoHide, m_AutoHide).toBool();
-  m_LastVersion = getFromScope(kLastVersion, m_LastVersion).toString();
+  m_Port = getFromCurrentScope(kPort, m_Port).toInt();
+  m_Interface = getFromCurrentScope(kInterface, m_Interface).toString();
+  m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
+  m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
+  m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
+  m_StartedBefore =
+      getFromCurrentScope(kStartedBefore, m_StartedBefore).toBool();
+  m_AutoHide = getFromCurrentScope(kAutoHide, m_AutoHide).toBool();
+  m_LastVersion = getFromCurrentScope(kLastVersion, m_LastVersion).toString();
   m_ActivationHasRun =
-      getFromScope(kActivationHasRun, m_ActivationHasRun).toBool();
+      getFromCurrentScope(kActivationHasRun, m_ActivationHasRun).toBool();
   m_ServerGroupChecked =
-      getFromScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
+      getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseExternalConfig =
-      getFromScope(kUseExternalConfig, m_UseExternalConfig).toBool();
-  m_ConfigFile = getFromScope(kConfigFile, m_ConfigFile).toString();
+      getFromCurrentScope(kUseExternalConfig, m_UseExternalConfig).toBool();
+  m_ConfigFile = getFromCurrentScope(kConfigFile, m_ConfigFile).toString();
   m_UseInternalConfig =
-      getFromScope(kUseInternalConfig, m_UseInternalConfig).toBool();
+      getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked =
-      getFromScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
-  m_ServerHostname = getFromScope(kServerHostname, m_ServerHostname).toString();
-  m_PreventSleep = getFromScope(kPreventSleep, m_PreventSleep).toBool();
-  m_LanguageSync = getFromScope(kLanguageSync, m_LanguageSync).toBool();
+      getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
+  m_ServerHostname =
+      getFromCurrentScope(kServerHostname, m_ServerHostname).toString();
+  m_PreventSleep = getFromCurrentScope(kPreventSleep, m_PreventSleep).toBool();
+  m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection =
-      getFromScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
+      getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection)
+          .toBool();
   m_InvertConnection =
-      getFromScope(kInvertConnection, m_InvertConnection).toBool();
-  m_EnableService = getFromScope(kEnableService, m_EnableService).toBool();
-  m_CloseToTray = getFromScope(kCloseToTray, m_CloseToTray).toBool();
-  m_TlsEnabled = getFromScope(kTlsEnabled, m_TlsEnabled).toBool();
-  m_TlsCertPath = getFromScope(kTlsCertPath, m_TlsCertPath).toString();
-  m_TlsKeyLength = getFromScope(kTlsKeyLength, m_TlsKeyLength).toString();
-  m_MainWindowPosition = getFromScopeOptional<QPoint>(
+      getFromCurrentScope(kInvertConnection, m_InvertConnection).toBool();
+  m_EnableService =
+      getFromCurrentScope(kEnableService, m_EnableService).toBool();
+  m_CloseToTray = getFromCurrentScope(kCloseToTray, m_CloseToTray).toBool();
+  m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
+  m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
+  m_TlsKeyLength =
+      getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toString();
+  m_MainWindowPosition = getFromCurrentScope<QPoint>(
       kMainWindowPosition, [](QVariant v) { return v.toPoint(); });
-  m_MainWindowSize = getFromScopeOptional<QSize>(
+  m_MainWindowSize = getFromCurrentScope<QSize>(
       kMainWindowSize, [](QVariant v) { return v.toSize(); });
-  m_ShowDevThanks = getFromScope(kShowDevThanks, m_ShowDevThanks).toBool();
+  m_ShowDevThanks =
+      getFromCurrentScope(kShowDevThanks, m_ShowDevThanks).toBool();
   m_ShowCloseReminder =
-      getFromScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
+      getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
 }
 
 void AppConfig::recallScreenName() {
   using enum Setting;
 
   const auto &screenName =
-      getFromScope(kScreenName, m_ScreenName).toString().trimmed();
+      getFromCurrentScope(kScreenName, m_ScreenName).toString().trimmed();
 
   // for some reason, the screen name can be saved as an empty string
   // in the config file. this is probably a bug. if this happens, then default
@@ -227,8 +233,8 @@ void AppConfig::commit() {
     setInCurrentScope(kShowDevThanks, m_ShowDevThanks);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
 
-    setInCurrentScopeOptional(kMainWindowSize, m_MainWindowSize);
-    setInCurrentScopeOptional(kMainWindowPosition, m_MainWindowPosition);
+    setInCurrentScope(kMainWindowSize, m_MainWindowSize);
+    setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
   }
 
   if (m_TlsChanged) {
@@ -266,7 +272,7 @@ void AppConfig::recallSerialKey() {
   }
 
   const auto &serialKey =
-      getFromScope(kSerialKey, m_SerialKey).toString().trimmed();
+      getFromCurrentScope(kSerialKey, m_SerialKey).toString().trimmed();
 
   if (serialKey.isEmpty()) {
     qDebug("serial key is empty, skipping");
@@ -284,10 +290,10 @@ void AppConfig::recallElevateMode() {
     return;
   }
 
-  QVariant elevateMode = getFromScope(kElevateMode);
+  QVariant elevateMode = getFromCurrentScope(kElevateMode);
   if (!elevateMode.isValid()) {
     qDebug("elevate mode not valid, loading legacy setting");
-    elevateMode = getFromScope(
+    elevateMode = getFromCurrentScope(
         kElevateModeLegacy, QVariant(static_cast<int>(kDefaultElevateMode)));
   }
 
@@ -315,12 +321,13 @@ template <typename T> void AppConfig::saveToAllScopes(Setting name, T value) {
   m_scopes.setInScope(settingName(name), value, ConfigScopes::Scope::System);
 }
 
-QVariant AppConfig::getFromScope(Setting name, const QVariant &defaultValue) {
+QVariant
+AppConfig::getFromCurrentScope(Setting name, const QVariant &defaultValue) {
   return m_scopes.getFromScope(settingName(name), defaultValue);
 }
 
 template <typename T>
-std::optional<T> AppConfig::getFromScopeOptional(
+std::optional<T> AppConfig::getFromCurrentScope(
     Setting name, std::function<T(QVariant)> toType) const {
   if (m_scopes.scopeContains(settingName(name))) {
     return toType(m_scopes.getFromScope(settingName(name)));
@@ -330,8 +337,7 @@ std::optional<T> AppConfig::getFromScopeOptional(
 }
 
 template <typename T>
-void AppConfig::setInCurrentScopeOptional(
-    Setting name, const std::optional<T> &value) {
+void AppConfig::setInCurrentScope(Setting name, const std::optional<T> &value) {
   if (value.has_value()) {
     m_scopes.setInScope(settingName(name), value.value());
   }
