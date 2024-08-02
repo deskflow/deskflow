@@ -153,6 +153,7 @@ private:
   void createStatusBar();
   void createTrayIcon();
   void applyConfig();
+  void applyCloseToTray() const;
   void setIcon(CoreState state) const;
   void setCoreState(CoreState state);
   bool checkForApp(int which, QString &app);
@@ -186,6 +187,7 @@ private:
   void updateScreenName();
   void saveSettings();
   QString configFilename();
+  bool isCoreActive() const;
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void showLicenseNotice();

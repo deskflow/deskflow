@@ -69,10 +69,10 @@ void ServerConnection::addClient(const QString &clientName) {
 }
 
 void ServerConnection::configureClient(const QString &clientName) {
-  ServerConfigDialog dlg(
+  ServerConfigDialog dialog(
       &m_parent, m_parent.serverConfig(), m_parent.appConfig());
 
-  if (dlg.addClient(clientName) && dlg.exec() == QDialog::Accepted) {
+  if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_parent.restartCore();
   }
 }

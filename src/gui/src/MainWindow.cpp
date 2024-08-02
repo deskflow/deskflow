@@ -270,7 +270,7 @@ void MainWindow::onCreated() {
 
   m_ConfigScopes.signalReady();
 
-  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
+  applyCloseToTray();
 
   if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
@@ -435,11 +435,10 @@ void MainWindow::on_m_pActionSettings_triggered() {
   if (result == QDialog::Accepted) {
     m_ConfigScopes.save();
 
-    enableServer(m_AppConfig.serverGroupChecked());
-    enableClient(m_AppConfig.clientGroupChecked());
-    auto state = m_CoreState;
-    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
-        (state == CoreState::Listening)) {
+    applyConfig();
+    applyCloseToTray();
+
+    if (isCoreActive()) {
       restartCore();
     }
   }
@@ -584,6 +583,10 @@ void MainWindow::applyConfig() {
 
   m_pLineEditHostname->setText(m_AppConfig.serverHostname());
   m_pLineEditClientIp->setText(m_ServerConfig.getClientAddress());
+}
+
+void MainWindow::applyCloseToTray() const {
+  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
 }
 
 void MainWindow::saveSettings() {
@@ -1389,18 +1392,18 @@ void MainWindow::autoAddScreen(const QString name) {
   }
 }
 
-void MainWindow::showConfigureServer(const QString &message) {
+bool MainWindow::isCoreActive() const {
   using enum CoreState;
 
-  ServerConfigDialog dlg(this, serverConfig(), m_AppConfig);
-  dlg.message(message);
-  auto result = dlg.exec();
+  auto state = m_CoreState;
+  return (state == Connected) || (state == Connecting) || (state == Listening);
+}
 
-  if (result == QDialog::Accepted) {
-    auto state = m_CoreState;
-    if ((state == Connected) || (state == Connecting) || (state == Listening)) {
-      restartCore();
-    }
+void MainWindow::showConfigureServer(const QString &message) {
+  ServerConfigDialog dialog(this, serverConfig(), m_AppConfig);
+  dialog.message(message);
+  if ((dialog.exec() == QDialog::Accepted) && isCoreActive()) {
+    restartCore();
   }
 }
 

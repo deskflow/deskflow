@@ -127,6 +127,10 @@ void showFirstRunMessage(
         "<p>As you do not have the setting enabled to keep Synergy running in "
         "the background, you'll need to keep this window open or minimized to "
         "keep Synergy running.</p>";
+  } else {
+    message +=
+        "<p>You can now close this window and Synergy will continue to run in "
+        "the background. This setting can be disabled.</p>";
   }
 
   QMessageBox::information(parent, "Connected", message);
