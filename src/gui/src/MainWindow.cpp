@@ -820,11 +820,11 @@ void MainWindow::showFirstRunMessage() {
     return;
   }
 
-  messages::showFirstRunMessage(
-      this, m_AppConfig.closeToTray(), m_AppConfig.enableService());
-
   m_AppConfig.setStartedBefore(true);
   m_ConfigScopes.save();
+
+  messages::showFirstRunMessage(
+      this, m_AppConfig.closeToTray(), m_AppConfig.enableService());
 }
 
 void MainWindow::showDevThanksMessage() {
@@ -837,10 +837,10 @@ void MainWindow::showDevThanksMessage() {
     qFatal("dev thanks message should not be shown when licensing is enabled");
   }
 
-  messages::showDevThanks(this, kProductName);
-
   m_AppConfig.setShowDevThanks(false);
   m_ConfigScopes.save();
+
+  messages::showDevThanks(this, kProductName);
 }
 
 void MainWindow::startCore() {
