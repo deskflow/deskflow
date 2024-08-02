@@ -103,7 +103,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QFrame" name="m_pGroupServer">
+        <widget class="QGroupBox" name="m_pGroupServer">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -268,7 +268,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QFrame" name="m_pGroupClient">
+        <widget class="QGroupBox" name="m_pGroupClient">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>

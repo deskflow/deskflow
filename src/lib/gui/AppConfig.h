@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "CommonConfig.h"
 #include "ConfigScopes.h"
 #include "CoreInterface.h"
 #include "ElevateMode.h"
@@ -31,7 +30,7 @@
 #include <QSize>
 #include <QString>
 #include <QVariant>
-#include <mutex>
+#include <optional>
 
 enum class ProcessMode { kService, kDesktop };
 
@@ -58,9 +57,7 @@ const bool kDefaultShowDevThanks = false;
  * instance is widely accessible, but that has previously led to this class
  * becoming a god object.
  */
-class AppConfig : public QObject,
-                  public synergy::gui::CommonConfig,
-                  public synergy::gui::IAppConfig {
+class AppConfig : public QObject, public synergy::gui::IAppConfig {
   Q_OBJECT
 
 private:
@@ -107,6 +104,7 @@ private:
     kMainWindowSize = 39,
     kMainWindowPosition = 40,
     kShowDevThanks = 41,
+    kShowCloseReminder = 42,
   };
 
 public:
@@ -115,28 +113,28 @@ public:
     virtual QString profileDir() const {
       return m_coreInterface.getProfileDir();
     }
-    virtual synergy::gui::IConfigScopes &scopes() { return m_scopes; }
     virtual QString hostname() const { return QHostInfo::localHostName(); }
 
   private:
     [[no_unique_address]] CoreInterface m_coreInterface;
-    synergy::gui::ConfigScopes m_scopes;
   };
 
-  explicit AppConfig(std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+  explicit AppConfig(
+      synergy::gui::IConfigScopes &scopes,
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   synergy::gui::IConfigScopes &scopes();
-  void saveSettings() override;
-  void loadAllScopes();
-  void loadSettings() override;
+  void commit();
+  void recall();
+  void determineScope();
 
   /**
    * Getters
    */
 
   void setActivationHasRun(bool value);
-  bool isWritable() const;
-  bool isSystemScoped() const;
+  bool isCurrentScopeWritable() const;
+  bool isCurrentScopeSystem() const;
   const QString &screenName() const;
   int port() const;
   const QString &networkInterface() const;
@@ -175,6 +173,7 @@ public:
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
   bool showDevThanks() const;
+  bool showCloseReminder() const;
 
   /**
    * Setters
@@ -212,6 +211,7 @@ public:
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
   void setShowDevThanks(bool show);
+  void setShowCloseReminder(bool show);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -222,10 +222,10 @@ public:
 
 private:
   static QString settingName(AppConfig::Setting name);
-  void loadSerialKey();
-  void loadElevateMode();
-  void loadCommonSettings();
-  void loadScopeSettings();
+  void recallSerialKey();
+  void recallElevateMode();
+  void recallFromAllScopes();
+  void recallFromCurrentScope();
 
   /**
    * @brief Loads a setting if it exists, otherwise returns `std::nullopt`
@@ -234,43 +234,35 @@ private:
    */
   template <typename T>
   std::optional<T>
-  loadOptional(Setting name, std::function<T(QVariant)> toType) const;
+  getFromScopeOptional(Setting name, std::function<T(QVariant)> toType) const;
 
   /**
    * @brief Sets a setting if the value is not `std::nullopt`.
    */
   template <typename T>
-  void setOptional(Setting name, const std::optional<T> &value);
+  void saveToCurrentScopeOptional(Setting name, const std::optional<T> &value);
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
   /// @param [in] value The Value to be saved
-  template <typename T> void setSetting(AppConfig::Setting name, T value);
+  template <typename T>
+  void saveToCurrentScope(AppConfig::Setting name, T value);
 
   /// @brief Sets the value of a common setting
   /// which should have the same value for all scopes
   /// @param [in] name The Setting to be saved
   /// @param [in] value The Value to be saved
-  template <typename T> void setCommonSetting(AppConfig::Setting name, T value);
+  template <typename T> void saveToAllScopes(AppConfig::Setting name, T value);
 
-  /// @brief Loads a setting
-  /// @param [in] name The setting to be loaded
-  /// @param [in] defaultValue The default value of the setting
-  QVariant loadSetting(
+  QVariant getFromScope(
       AppConfig::Setting name, const QVariant &defaultValue = QVariant());
 
-  /// @brief Loads a common setting
-  /// @param [in] name The setting to be loaded
-  /// @param [in] defaultValue The default value of the setting
-  QVariant loadCommonSetting(
+  /**
+   * @brief Finds a value by searching each scope starting with the current
+   * scope.
+   */
+  QVariant findInAllScopes(
       AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
-
-  /// @brief Sets the setting in the config checking if it has changed and
-  /// flagging that settings
-  ///         needs to be saved if the setting was different
-  /// @param [in] variable the setting that will be changed
-  /// @param [in] newValue The new value of the setting
-  template <typename T> void setSettingModified(T &variable, const T &newValue);
 
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
@@ -286,6 +278,7 @@ private:
   QString defaultTlsCertPath() const;
 
   std::shared_ptr<Deps> m_pDeps;
+  synergy::gui::IConfigScopes &m_scopes;
   QString m_ScreenName;
   int m_Port = 24800;
   QString m_Interface = "";
@@ -319,25 +312,14 @@ private:
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
   bool m_ShowDevThanks = kDefaultShowDevThanks;
+  bool m_LoadFromSystemScope = false;
+  bool m_ShowCloseReminder = true;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset
    * when the TLS changed event is emitted.
    */
   bool m_TlsChanged = false;
-
-  /// @brief should the setting be loaded from
-  /// SystemScope
-  ///         If the user has settings but this is
-  ///         true then system settings will be
-  ///         loaded instead of the users
-  bool m_LoadFromSystemScope = false;
-
-  /// @brief As the settings will be accessible by multiple objects this lock
-  /// will ensure that
-  ///         it cant be modified by more that one object at a time if the
-  ///         setting is being switched from system to user.
-  std::mutex m_settings_lock;
 
   static const char m_CoreServerName[];
   static const char m_CoreClientName[];
@@ -346,12 +328,11 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  /// @brief Contains the name of the default configuration filename
+  /// @brief Core config filename (not the Qt settings filename)
   static const char m_ConfigFilename[];
 
 signals:
-  void loaded();
-  void saved();
+  void ready();
   void tlsChanged();
   void screenNameChanged();
   void invertConnectionChanged();

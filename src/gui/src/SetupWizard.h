@@ -19,6 +19,8 @@
 
 #include "ui_SetupWizardBase.h"
 
+#include "gui/AppConfig.h"
+
 #include <QDialog>
 #include <QObject>
 
@@ -28,14 +30,14 @@ class SetupWizard : public QDialog, public Ui::SetupWizardBase {
   Q_OBJECT
 
 public:
-  explicit SetupWizard(MainWindow &mainWindow);
+  explicit SetupWizard(AppConfig &appConfig);
 
 protected:
   void accept();
   void reject();
 
 private:
-  MainWindow &m_mainWindow;
+  AppConfig &m_appConfig;
 
 public slots:
   void onLineEditNameChanged(const QString &error);

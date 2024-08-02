@@ -17,7 +17,7 @@
 
 #include "LineEditValidator.h"
 
-#include "gui/constants.h"
+#include "gui/styles.h"
 #include <qvalidator.h>
 
 namespace validators {
@@ -28,7 +28,7 @@ LineEditValidator::LineEditValidator(
       m_pLineEdit(lineEdit) {
 
   if (!m_pLineEdit) {
-    qFatal("error: validator line edit not set");
+    qFatal("validator line edit not set");
   }
 }
 

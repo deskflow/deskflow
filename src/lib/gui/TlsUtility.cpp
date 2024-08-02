@@ -19,6 +19,7 @@
 
 #include "TlsCertificate.h"
 #include "constants.h"
+#include <qglobal.h>
 
 namespace synergy::gui {
 
@@ -32,8 +33,11 @@ bool TlsUtility::isAvailableAndEnabled() const {
 }
 
 void TlsUtility::generateCertificate(bool replace) const {
+  qDebug("generating tls certificate, "
+         "all clients must trust the new fingerprint");
+
   if (!isAvailableAndEnabled()) {
-    qFatal("error: unable to generate tls certificate, "
+    qFatal("unable to generate tls certificate, "
            "tls is either not available or not enabled");
   }
 

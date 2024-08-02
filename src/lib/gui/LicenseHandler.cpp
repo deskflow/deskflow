@@ -44,11 +44,11 @@ LicenseHandler::changeSerialKey(const QString &hexString) {
   using enum LicenseHandler::ChangeSerialKeyResult;
 
   if (!m_enabled) {
-    qFatal("error: cannot set serial key, licensing is disabled");
+    qFatal("cannot set serial key, licensing is disabled");
   }
 
   if (hexString.isEmpty()) {
-    qFatal("error: serial key is empty");
+    qFatal("serial key is empty");
     return kFatal;
   }
 

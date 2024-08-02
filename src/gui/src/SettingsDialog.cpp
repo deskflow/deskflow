@@ -53,7 +53,7 @@ SettingsDialog::SettingsDialog(
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
   loadFromConfig();
-  m_isSystemAtStart = appConfig().isSystemScoped();
+  m_wasOriginallySystemScope = appConfig().isCurrentScopeSystem();
   updateControlsEnabled();
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
@@ -90,14 +90,13 @@ void SettingsDialog::accept() {
   appConfig().setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
   appConfig().setInvertConnection(m_pInvertConnection->isChecked());
 
-  appConfig().saveSettings();
   QDialog::accept();
 }
 
 void SettingsDialog::reject() {
-  // We should restore scope at start if the user rejects changes.
-  if (appConfig().isSystemScoped() != m_isSystemAtStart) {
-    appConfig().setLoadFromSystemScope(m_isSystemAtStart);
+  // restore original system scope value on reject.
+  if (appConfig().isCurrentScopeSystem() != m_wasOriginallySystemScope) {
+    appConfig().setLoadFromSystemScope(m_wasOriginallySystemScope);
   }
 
   QDialog::reject();
@@ -120,7 +119,7 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
-  if (m_appConfig.isSystemScoped()) {
+  if (m_appConfig.isCurrentScopeSystem()) {
     m_pRadioSystemScope->setChecked(true);
   } else {
     m_pRadioUserScope->setChecked(true);
@@ -254,7 +253,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
 }
 
 void SettingsDialog::updateControlsEnabled() {
-  bool writable = appConfig().isWritable();
+  bool writable = appConfig().isCurrentScopeWritable();
 
   m_pLineEditScreenName->setEnabled(writable);
   m_pSpinBoxPort->setEnabled(writable);

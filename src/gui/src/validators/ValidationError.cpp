@@ -17,7 +17,7 @@
 
 #include "ValidationError.h"
 
-#include "gui/constants.h"
+#include "gui/styles.h"
 
 namespace validators {
 

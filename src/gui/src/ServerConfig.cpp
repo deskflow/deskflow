@@ -44,19 +44,18 @@ static const struct {
 const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(
-    int numColumns, int numRows, AppConfig *appConfig, MainWindow *mainWindow)
-    : m_pAppConfig(appConfig),
-      m_pMainWindow(mainWindow),
-      m_Screens(numColumns),
-      m_NumColumns(numColumns),
-      m_NumRows(numRows),
-      m_ClipboardSharingSize(defaultClipboardSharingSize()) {
-  appConfig->scopes().registerReceiver(this);
-}
+    synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig,
+    MainWindow &mainWindow, int columns, int rows)
+    : m_pAppConfig(&appConfig),
+      m_pMainWindow(&mainWindow),
+      m_Screens(columns),
+      m_Columns(columns),
+      m_Rows(rows),
+      m_ClipboardSharingSize(defaultClipboardSharingSize()) {}
 
 ServerConfig::~ServerConfig() {
   try {
-    ServerConfig::saveSettings();
+    ServerConfig::commit();
   } catch (const std::exception &e) {
     qDebug() << e.what();
     m_pMainWindow->appendLogError(e.what());
@@ -75,8 +74,8 @@ bool ServerConfig::save(const QString &fileName) const {
 }
 
 bool ServerConfig::operator==(const ServerConfig &sc) const {
-  return m_Screens == sc.m_Screens && m_NumColumns == sc.m_NumColumns &&
-         m_NumRows == sc.m_NumRows && m_HasHeartbeat == sc.m_HasHeartbeat &&
+  return m_Screens == sc.m_Screens && m_Columns == sc.m_Columns &&
+         m_Rows == sc.m_Rows && m_HasHeartbeat == sc.m_HasHeartbeat &&
          m_Heartbeat == sc.m_Heartbeat &&
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&
@@ -114,7 +113,9 @@ void ServerConfig::init() {
     addScreen(Screen());
 }
 
-void ServerConfig::saveSettings() {
+void ServerConfig::commit() {
+  qDebug("committing server config");
+
   settings().beginGroup("internalConfig");
   settings().remove("");
 
@@ -163,7 +164,9 @@ void ServerConfig::saveSettings() {
   settings().endGroup();
 }
 
-void ServerConfig::loadSettings() {
+void ServerConfig::recall() {
+  qDebug("recalling server config");
+
   settings().beginGroup("internalConfig");
 
   setNumColumns(settings().value("numColumns", 5).toInt());
@@ -398,7 +401,7 @@ int ServerConfig::autoAddScreen(const QString name) {
     return kAutoAddScreenManualClient;
   }
 
-  saveSettings();
+  commit();
   return kAutoAddScreenOk;
 }
 
@@ -410,7 +413,7 @@ void ServerConfig::updateServerName() {
   for (auto &screen : screens()) {
     if (screen.isServer()) {
       screen.setName(m_pAppConfig->screenName());
-      saveSettings();
+      commit();
       break;
     }
   }
@@ -553,5 +556,5 @@ QString ServerConfig::getClientAddress() const {
 }
 
 QSettings &ServerConfig::settings() {
-  return *m_pAppConfig->scopes().currentSettings();
+  return *m_pAppConfig->scopes().activeSettings();
 }

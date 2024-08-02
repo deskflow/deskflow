@@ -19,6 +19,7 @@
 
 #include "constants.h"
 #include "license/License.h"
+#include "styles.h"
 
 using License = synergy::license::License;
 
@@ -33,7 +34,7 @@ QString licenseNotice(const License &license) {
   } else if (license.isSubscription()) {
     return subscriptionLicenseNotice(license);
   } else {
-    qFatal("error: license notice only for time limited licenses");
+    qFatal("license notice only for time limited licenses");
   }
 }
 

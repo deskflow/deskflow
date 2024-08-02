@@ -21,8 +21,12 @@
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
 #include "gui/AppConfig.h"
+#include "gui/constants.h"
 #include "gui/dotenv.h"
+#include "gui/messages.h"
 
+#include <QApplication>
+#include <QDebug>
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
@@ -46,6 +50,7 @@ bool checkMacAssistiveDevices();
 #endif
 
 int main(int argc, char *argv[]) {
+
 #ifdef Q_OS_DARWIN
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
    * instantiated" */
@@ -54,11 +59,12 @@ int main(int argc, char *argv[]) {
 
   dotenv(".env");
 
-  QCoreApplication::setOrganizationName("Synergy");
-  QCoreApplication::setOrganizationDomain("http://symless.com/");
-  QCoreApplication::setApplicationName("Synergy");
+  QCoreApplication::setOrganizationName(kAppName);
+  QCoreApplication::setApplicationName(kAppName);
+  QCoreApplication::setOrganizationDomain(kAppDomain);
 
   QSynergyApplication app(argc, argv);
+  qInstallMessageHandler(synergy::gui::messages::messageHandler);
 
 #if defined(Q_OS_MAC)
 
@@ -75,31 +81,37 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-  AppConfig appConfig;
   qRegisterMetaType<Edition>("Edition");
 
-  MainWindow mainWindow(appConfig);
+  ConfigScopes configScopes;
+  AppConfig appConfig(configScopes);
+
+  std::unique_ptr<SetupWizardBlocker> setupBlocker;
+  if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
+    SetupWizardBlocker blocked(SetupWizardBlocker::BlockerType::Wayland);
+    blocked.exec();
+    qInfo("wayland detected, exiting");
+    return 0;
+  }
+
+  if (appConfig.wizardShouldRun()) {
+    SetupWizard wizard(appConfig);
+    auto result = wizard.exec();
+    if (result != QDialog::Accepted) {
+      qInfo("wizard cancelled, exiting");
+      return 0;
+    }
+
+    configScopes.save();
+  }
+
+  MainWindow mainWindow(configScopes, appConfig);
 
   QObject::connect(
       &app, &QSynergyApplication::aboutToQuit, &mainWindow,
       &MainWindow::onAppAboutToQuit);
 
-  std::unique_ptr<SetupWizardBlocker> setupBlocker;
-  if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
-    setupBlocker.reset(new SetupWizardBlocker(
-        mainWindow, SetupWizardBlocker::qBlockerType::waylandDetected));
-    setupBlocker->show();
-    return QApplication::exec();
-  }
-
-  std::unique_ptr<SetupWizard> setupWizard;
-  if (appConfig.wizardShouldRun()) {
-    setupWizard.reset(new SetupWizard(mainWindow));
-    setupWizard->show();
-  } else {
-    mainWindow.open();
-  }
-
+  mainWindow.open();
   return QSynergyApplication::exec();
 }
 

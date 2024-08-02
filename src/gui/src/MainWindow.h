@@ -84,17 +84,18 @@ public:
   enum class RuningState { Started, Stopped };
 
 public:
-  explicit MainWindow(AppConfig &appConfig);
+  explicit MainWindow(
+      synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig);
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
   CoreMode coreMode() const;
+  QString coreModeString() const;
   QString address() const;
   QString appPath(const QString &name) const;
   void open();
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
-  LicenseHandler &licenseHandler();
   int showActivationDialog();
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
@@ -110,7 +111,9 @@ public slots:
 private slots:
   void onCreated();
   void onShown();
-  void onAppConfigLoaded();
+  void onConfigScopesReady();
+  void onConfigScopesSaving();
+  void onAppConfigRecalled();
   void onAppConfigTlsChanged();
   void onAppConfigScreenNameChanged();
   void onAppConfigInvertConnection();
@@ -144,7 +147,7 @@ private slots:
   void on_m_pActivate_triggered();
 
 private:
-  QSettings &settings() { return *appConfig().scopes().currentSettings(); }
+  QSettings &settings() { return *appConfig().scopes().activeSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
   void createMenuBar();
@@ -172,6 +175,7 @@ private:
   QString getTimeStamp() const;
   void restartCore();
   void showEvent(QShowEvent *) override;
+  void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
   void windowStateChanged();
   void connectSlots() const;
@@ -194,6 +198,7 @@ private:
   void moveEvent(QMoveEvent *event) override;
   void showFirstRunMessage();
   void showDevThanksMessage();
+  QString productName();
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
@@ -226,4 +231,5 @@ private:
   ClientConnection m_ClientConnection;
   synergy::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
+  synergy::gui::ConfigScopes &m_ConfigScopes;
 };

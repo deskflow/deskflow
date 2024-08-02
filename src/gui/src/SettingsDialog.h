@@ -76,7 +76,7 @@ private:
   /// @brief Stores settings scope at start of settings dialog
   /// This is neccessary to restore state if user changes
   /// the scope and doesn't save changes
-  bool m_isSystemAtStart = false;
+  bool m_wasOriginallySystemScope = false;
 
 private slots:
   void on_m_pCheckBoxEnableCrypto_clicked(bool checked);

@@ -18,7 +18,7 @@
 
 #include "ScreenSettingsDialog.h"
 #include "Screen.h"
-#include "gui/constants.h"
+#include "gui/styles.h"
 #include "validators/AliasValidator.h"
 #include "validators/ScreenNameValidator.h"
 #include "validators/ValidationError.h"

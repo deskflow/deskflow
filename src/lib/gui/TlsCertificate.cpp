@@ -58,7 +58,7 @@ QString openSslWindowsDir() {
 
   // if the path still isn't found, something is seriously wrong.
   if (!openSslDir.exists()) {
-    qFatal() << "error: openssl dir not found: " << openSslDir;
+    qFatal() << "openssl dir not found: " << openSslDir;
   }
 
   return QDir::cleanPath(openSslDir.absolutePath());
@@ -77,7 +77,7 @@ QString openSslWindowsBinary() {
 
   // if the path still isn't found, something is seriously wrong.
   if (!QFile::exists(path)) {
-    qFatal() << "error: openssl binary not found: " << path;
+    qFatal() << "openssl binary not found: " << path;
   }
 
   return path;
