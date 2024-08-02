@@ -25,6 +25,12 @@ const auto kAppName = "Synergy";
 // since qt uses this on some platforms when saving settings.
 const auto kAppDomain = "https://symless.com";
 
+#ifdef SYNERGY_PRODUCT_NAME
+const QString kProductName = SYNERGY_PRODUCT_NAME;
+#else
+const QString kProductName;
+#endif
+
 #ifdef SYNERGY_ENABLE_LICENSING
 const bool kLicensingEnabled = true;
 #else

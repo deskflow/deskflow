@@ -128,6 +128,10 @@ void showFirstRunMessage(
 }
 
 void showDevThanks(QWidget *parent, const QString &productName) {
+  if (productName.isEmpty()) {
+    qFatal("product name not set");
+  }
+
   QMessageBox::information(
       parent, "Thank you!",
       QString(

@@ -61,12 +61,6 @@ using namespace synergy::license;
 static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
 
-#ifdef SYNERGY_PRODUCT_NAME
-const QString kProductName = SYNERGY_PRODUCT_NAME;
-#else
-const QString kProductName;
-#endif
-
 #if defined(Q_OS_MAC)
 
 static const char *const kLightIconFiles[] = {
@@ -1348,8 +1342,10 @@ void MainWindow::updateLocalFingerprint() {
 QString MainWindow::productName() const {
   if (kLicensingEnabled) {
     return m_LicenseHandler.productName();
-  } else {
+  } else if (!kProductName.isEmpty()) {
     return kProductName;
+  } else {
+    qFatal("product name not set");
   }
 }
 
