@@ -168,9 +168,9 @@ void AppConfig::recallFromCurrentScope() {
   m_TlsKeyLength =
       getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toString();
   m_MainWindowPosition = getFromCurrentScope<QPoint>(
-      kMainWindowPosition, [](QVariant v) { return v.toPoint(); });
+      kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(
-      kMainWindowSize, [](QVariant v) { return v.toSize(); });
+      kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
   m_ShowDevThanks =
       getFromCurrentScope(kShowDevThanks, m_ShowDevThanks).toBool();
   m_ShowCloseReminder =
@@ -337,7 +337,7 @@ AppConfig::getFromCurrentScope(Setting name, const QVariant &defaultValue) {
 
 template <typename T>
 std::optional<T> AppConfig::getFromCurrentScope(
-    Setting name, std::function<T(QVariant)> toType) const {
+    Setting name, std::function<T(const QVariant &)> toType) const {
   if (m_scopes.scopeContains(settingName(name))) {
     return toType(m_scopes.getFromScope(settingName(name)));
   } else {
@@ -354,31 +354,33 @@ void AppConfig::setInCurrentScope(Setting name, const std::optional<T> &value) {
 
 QVariant
 AppConfig::findInAllScopes(Setting name, const QVariant &defaultValue) const {
+  using enum ConfigScopes::Scope;
+
   QVariant result(defaultValue);
   QString setting(settingName(name));
 
   if (m_scopes.scopeContains(setting)) {
     result = m_scopes.getFromScope(setting, defaultValue);
-  } else if (m_scopes.activeScope() == ConfigScopes::Scope::System) {
-    if (m_scopes.scopeContains(setting, ConfigScopes::Scope::User)) {
-      result = m_scopes.getFromScope(
-          setting, defaultValue, ConfigScopes::Scope::User);
+  } else if (m_scopes.activeScope() == System) {
+    if (m_scopes.scopeContains(setting, User)) {
+      result = m_scopes.getFromScope(setting, defaultValue, User);
     }
-  } else if (m_scopes.scopeContains(setting, ConfigScopes::Scope::System)) {
-    result = m_scopes.getFromScope(
-        setting, defaultValue, ConfigScopes::Scope::System);
+  } else if (m_scopes.scopeContains(setting, System)) {
+    result = m_scopes.getFromScope(setting, defaultValue, System);
   }
 
   return result;
 }
 
 void AppConfig::loadScope(ConfigScopes::Scope scope) {
+  using enum ConfigScopes::Scope;
+
   switch (scope) {
-  case ConfigScopes::Scope::User:
+  case User:
     qDebug("loading user settings scope");
     break;
 
-  case ConfigScopes::Scope::System:
+  case System:
     qDebug("loading system settings scope");
     break;
 
@@ -404,13 +406,14 @@ void AppConfig::loadScope(ConfigScopes::Scope scope) {
 }
 
 void AppConfig::setLoadFromSystemScope(bool value) {
+  using enum ConfigScopes::Scope;
 
   if (value) {
     qDebug("loading system settings scope");
-    loadScope(ConfigScopes::Scope::System);
+    loadScope(System);
   } else {
     qDebug("loading user settings scope");
-    loadScope(ConfigScopes::Scope::User);
+    loadScope(User);
   }
 
   // set after loading scope since it may have been overridden.

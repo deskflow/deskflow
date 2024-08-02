@@ -241,8 +241,8 @@ private:
    * @param toType A function to convert the QVariant to the desired type.
    */
   template <typename T>
-  std::optional<T>
-  getFromCurrentScope(Setting name, std::function<T(QVariant)> toType) const;
+  std::optional<T> getFromCurrentScope(
+      Setting name, std::function<T(const QVariant &)> toType) const;
 
   /**
    * @brief Sets a setting if the value is not `std::nullopt`.
@@ -281,8 +281,8 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  std::shared_ptr<Deps> m_pDeps;
   synergy::gui::IConfigScopes &m_scopes;
+  std::shared_ptr<Deps> m_pDeps;
   QString m_ScreenName;
   int m_Port = 24800;
   QString m_Interface = "";

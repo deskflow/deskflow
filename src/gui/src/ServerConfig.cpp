@@ -21,7 +21,6 @@
 #include "AddClientDialog.h"
 #include "Hotkey.h"
 #include "MainWindow.h"
-#include "gui/ConfigScopes.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>
@@ -43,8 +42,7 @@ static const struct {
 const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(
-    synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig,
-    MainWindow &mainWindow, int columns, int rows)
+    AppConfig &appConfig, MainWindow &mainWindow, int columns, int rows)
     : m_pAppConfig(&appConfig),
       m_pMainWindow(&mainWindow),
       m_Screens(columns),

@@ -95,7 +95,7 @@ static const char *const kDefaultIconFiles[] = {
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
-      m_ServerConfig(configScopes, appConfig, *this),
+      m_ServerConfig(appConfig, *this),
       m_ServerConnection(*this),
       m_ClientConnection(*this),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
@@ -128,15 +128,13 @@ MainWindow::~MainWindow() {
 
 void MainWindow::restoreWindow() {
 
-  const auto &config = m_AppConfig;
-
-  const auto &windowSize = config.mainWindowSize();
+  const auto &windowSize = m_AppConfig.mainWindowSize();
   if (windowSize.has_value()) {
     qDebug("restoring main window size");
     resize(windowSize.value());
   }
 
-  const auto &windowPosition = config.mainWindowPosition();
+  const auto &windowPosition = m_AppConfig.mainWindowPosition();
   if (windowPosition.has_value()) {
     qDebug("restoring main window position");
     move(windowPosition.value());
@@ -155,10 +153,8 @@ void MainWindow::saveWindow() {
   }
 
   qDebug("saving window size and position");
-  auto &config = m_AppConfig;
-  auto saveConfig = false;
-  config.setMainWindowSize(size());
-  config.setMainWindowPosition(pos());
+  m_AppConfig.setMainWindowSize(size());
+  m_AppConfig.setMainWindowPosition(pos());
   m_ConfigScopes.save();
 }
 
@@ -1345,7 +1341,7 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-QString MainWindow::productName() {
+QString MainWindow::productName() const {
   if (kLicensingEnabled) {
     return m_LicenseHandler.productName();
   } else {

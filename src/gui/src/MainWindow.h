@@ -196,7 +196,7 @@ private:
   void moveEvent(QMoveEvent *event) override;
   void showFirstRunMessage();
   void showDevThanksMessage();
-  QString productName();
+  QString productName() const;
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
@@ -221,13 +221,13 @@ private:
   bool m_SecureSocket = false;
   QString m_SecureSocketVersion = "";
   bool m_SaveWindow = false;
-
-  AppConfig &m_AppConfig;
   LicenseHandler m_LicenseHandler;
+
+  synergy::gui::ConfigScopes &m_ConfigScopes;
+  AppConfig &m_AppConfig;
   ServerConfig m_ServerConfig;
   ServerConnection m_ServerConnection;
   ClientConnection m_ClientConnection;
   synergy::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
-  synergy::gui::ConfigScopes &m_ConfigScopes;
 };

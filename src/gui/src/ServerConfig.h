@@ -21,7 +21,6 @@
 #include "Hotkey.h"
 #include "ScreenConfig.h"
 #include "ScreenList.h"
-#include "gui/ConfigScopes.h"
 
 #include <QList>
 
@@ -44,9 +43,8 @@ class ServerConfig : public ScreenConfig {
 
 public:
   ServerConfig(
-      synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig,
-      MainWindow &mainWindow, int columns = kDefaultColumns,
-      int rows = kDefaultRows);
+      AppConfig &appConfig, MainWindow &mainWindow,
+      int columns = kDefaultColumns, int rows = kDefaultRows);
   ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;
