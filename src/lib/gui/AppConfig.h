@@ -102,7 +102,7 @@ private:
     kInvertConnection = 34,
     // 35 = client-host-mode, obsolete
     // 36 = server-client-mode, obsolete
-    kServiceEnabled = 37,
+    kEnableService = 37,
     kCloseToTray = 38,
     kMainWindowSize = 39,
     kMainWindowPosition = 40,
@@ -165,7 +165,7 @@ public:
   bool clientGroupChecked() const;
   QString serverHostname() const;
   QString lastVersion() const;
-  bool serviceEnabled() const;
+  bool enableService() const;
   bool closeToTray() const;
   QString serialKey() const;
   bool activationHasRun() const;
@@ -204,7 +204,7 @@ public:
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
   void setLastVersion(const QString &version);
-  void setServiceEnabled(bool enabled);
+  void setEnableService(bool enabled);
   void setCloseToTray(bool minimize);
   void setTlsCertPath(const QString &path);
   void setTlsKeyLength(const QString &length);
@@ -312,8 +312,8 @@ private:
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
-  bool m_ServiceEnabled = kDefaultProcessMode == ProcessMode::kService;
-  bool m_CloseToTray = false;
+  bool m_EnableService = kDefaultProcessMode == ProcessMode::kService;
+  bool m_CloseToTray = true;
   QString m_TlsCertPath = defaultTlsCertPath();
   QString m_TlsKeyLength = "2048";
   std::optional<QSize> m_MainWindowSize;

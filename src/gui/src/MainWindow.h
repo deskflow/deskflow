@@ -192,7 +192,8 @@ private:
   void setupControls();
   void resizeEvent(QResizeEvent *event) override;
   void moveEvent(QMoveEvent *event) override;
-  void showDevThanks();
+  void showFirstRunMessage();
+  void showDevThanksMessage();
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);

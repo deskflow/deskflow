@@ -689,15 +689,11 @@ void MainWindow::checkConnected(const QString &line) {
   if (line.contains("connected to server") || line.contains("has connected")) {
     setCoreState(CoreState::Connected);
 
-    if (!appConfig().startedBefore() && isVisible()) {
-      QMessageBox::information(
-          this, "Synergy",
-          QString("Synergy is now connected. You can close the "
-                  "config window and Synergy will remain connected in "
-                  "the background."));
-
-      appConfig().setStartedBefore(true);
+    if (isVisible()) {
+      showFirstRunMessage();
+      showDevThanksMessage();
     }
+
   } else if (line.contains("started server")) {
     setCoreState(CoreState::Listening);
   } else if (
@@ -803,12 +799,30 @@ void MainWindow::showEvent(QShowEvent *event) {
   emit shown();
 }
 
-void MainWindow::showDevThanks() {
-  if (kLicensingEnabled) {
-    qDebug("skipping dev thanks message, licensing enabled");
+void MainWindow::showFirstRunMessage() {
+  if (appConfig().startedBefore()) {
     return;
   }
 
+  QString append;
+  if (m_AppConfig.closeToTray() || m_AppConfig.enableService()) {
+    append = "It will continue to run in the "
+             "background when you close this window.";
+  } else {
+    append = "As you do not have the setting enable to keep Synergy "
+             "running in the background, "
+             "you'll need to keep this window open or minimized to keep "
+             "Synergy running.";
+  }
+
+  QMessageBox::information(
+      this, "Synergy", QString("Synergy is now connected. %1").arg(append));
+
+  appConfig().setStartedBefore(true);
+  appConfig().saveSettings();
+}
+
+void MainWindow::showDevThanksMessage() {
   if (!appConfig().showDevThanks()) {
     qDebug("skipping dev thanks message, disabled in settings");
     return;
@@ -833,7 +847,6 @@ void MainWindow::showDevThanks() {
 void MainWindow::startCore() {
   appendLogDebug("starting core process");
 
-  showDevThanks();
   saveSettings();
 
 #ifdef Q_OS_MAC

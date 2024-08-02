@@ -86,7 +86,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "initiateConnectionFromServer", // kInvertConnection
     "",                             // 35 = clientHostMode, obsolete
     "",                             // 36 = serverClientMode, obsolete
-    "serviceEnabled",
+    "enableService",
     "closeToTray",
     "mainWindowSize",
     "mainWindowPosition",
@@ -172,7 +172,7 @@ void AppConfig::loadScopeSettings() {
       loadSetting(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_InvertConnection =
       loadSetting(kInvertConnection, m_InvertConnection).toBool();
-  m_ServiceEnabled = loadSetting(kServiceEnabled, m_ServiceEnabled).toBool();
+  m_EnableService = loadSetting(kEnableService, m_EnableService).toBool();
   m_CloseToTray = loadSetting(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = loadSetting(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = loadSetting(kTlsCertPath, m_TlsCertPath).toString();
@@ -218,7 +218,7 @@ void AppConfig::saveSettings() {
     setSetting(kLanguageSync, m_LanguageSync);
     setSetting(kInvertScrollDirection, m_InvertScrollDirection);
     setSetting(kInvertConnection, m_InvertConnection);
-    setSetting(kServiceEnabled, m_ServiceEnabled);
+    setSetting(kEnableService, m_EnableService);
     setSetting(kCloseToTray, m_CloseToTray);
     setSetting(kShowDevThanks, m_ShowDevThanks);
 
@@ -426,7 +426,7 @@ const QString &AppConfig::logFilename() const { return m_LogFilename; }
 QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
 
 ProcessMode AppConfig::processMode() const {
-  return m_ServiceEnabled ? ProcessMode::kService : ProcessMode::kDesktop;
+  return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
 }
 
 bool AppConfig::wizardShouldRun() const {
@@ -465,7 +465,7 @@ QString AppConfig::tlsCertPath() const { return m_TlsCertPath; }
 
 QString AppConfig::tlsKeyLength() const { return m_TlsKeyLength; }
 
-bool AppConfig::serviceEnabled() const { return m_ServiceEnabled; }
+bool AppConfig::enableService() const { return m_EnableService; }
 
 bool AppConfig::closeToTray() const { return m_CloseToTray; }
 
@@ -597,8 +597,8 @@ void AppConfig::setPreventSleep(bool newValue) {
   setSettingModified(m_PreventSleep, newValue);
 }
 
-void AppConfig::setServiceEnabled(bool enabled) {
-  setSettingModified(m_ServiceEnabled, enabled);
+void AppConfig::setEnableService(bool enabled) {
+  setSettingModified(m_EnableService, enabled);
 }
 
 void AppConfig::setCloseToTray(bool minimize) {

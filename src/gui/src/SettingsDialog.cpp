@@ -86,7 +86,7 @@ void SettingsDialog::accept() {
   appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
-  appConfig().setServiceEnabled(m_pCheckBoxServiceEnabled->isChecked());
+  appConfig().setEnableService(m_pCheckBoxServiceEnabled->isChecked());
   appConfig().setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
   appConfig().setInvertConnection(m_pInvertConnection->isChecked());
 
@@ -117,7 +117,7 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  m_pCheckBoxServiceEnabled->setChecked(m_appConfig.serviceEnabled());
+  m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
   if (m_appConfig.isSystemScoped()) {
