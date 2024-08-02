@@ -223,6 +223,7 @@ private:
   static QString settingName(AppConfig::Setting name);
 
   void recall();
+  void recallScreenName();
   void recallSerialKey();
   void recallElevateMode();
   void recallFromAllScopes();

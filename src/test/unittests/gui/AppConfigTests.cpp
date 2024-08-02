@@ -80,7 +80,7 @@ TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
   ON_CALL(scopes, scopeContains(_, _)).WillByDefault(Return(true));
   ON_CALL(scopes, getFromScope(_, _, _))
       .WillByDefault(Return(QVariant("test screen")));
-  EXPECT_CALL(scopes, getFromScope(_, _, _));
+  EXPECT_CALL(scopes, getFromScope(_, _, _)).Times(AnyNumber());
 
   AppConfig appConfig(scopes, deps);
 

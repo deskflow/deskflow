@@ -112,8 +112,6 @@ void AppConfig::recall() {
 
   recallFromAllScopes();
   recallFromCurrentScope();
-  recallSerialKey();
-  recallElevateMode();
 }
 
 void AppConfig::recallFromAllScopes() {
@@ -129,7 +127,10 @@ void AppConfig::recallFromAllScopes() {
 void AppConfig::recallFromCurrentScope() {
   using enum Setting;
 
-  m_ScreenName = getFromScope(kScreenName, m_ScreenName).toString();
+  recallScreenName();
+  recallSerialKey();
+  recallElevateMode();
+
   m_Port = getFromScope(kPort, m_Port).toInt();
   m_Interface = getFromScope(kInterface, m_Interface).toString();
   m_LogLevel = getFromScope(kLogLevel, m_LogLevel).toInt();
@@ -168,6 +169,23 @@ void AppConfig::recallFromCurrentScope() {
   m_ShowDevThanks = getFromScope(kShowDevThanks, m_ShowDevThanks).toBool();
   m_ShowCloseReminder =
       getFromScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
+}
+
+void AppConfig::recallScreenName() {
+  using enum Setting;
+
+  const auto &screenName =
+      getFromScope(kScreenName, m_ScreenName).toString().trimmed();
+
+  // for some reason, the screen name can be saved as an empty string
+  // in the config file. this is probably a bug. if this happens, then default
+  // back to the hostname.
+  if (screenName.isEmpty()) {
+    qWarning("screen name was empty in config, setting to hostname");
+    m_ScreenName = m_pDeps->hostname();
+  } else {
+    m_ScreenName = screenName;
+  }
 }
 
 void AppConfig::commit() {
@@ -242,11 +260,7 @@ void AppConfig::determineScope() {
 void AppConfig::recallSerialKey() {
   using enum Setting;
 
-  // only set the serial key if the current settings scope has they key.
-  bool shouldLoad = m_scopes.scopeContains(
-      settingName(kLoadSystemSettings), ConfigScopes::Scope::Current);
-
-  if (!shouldLoad) {
+  if (!m_scopes.scopeContains(settingName(kLoadSystemSettings))) {
     qDebug("no serial key in current scope, skipping");
     return;
   }
