@@ -68,6 +68,12 @@ jobs:
             base-image: fedora:39
             platform: amd64
 
+          - name: rhel-8-amd64
+            runs-on: ubuntu-latest
+            config-dir: rhel
+            base-image: redhat/ubi8:latest
+            platform: amd64
+
           - name: opensuse-amd64
             runs-on: ubuntu-latest
             config-dir: opensuse
