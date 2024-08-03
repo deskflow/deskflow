@@ -22,11 +22,14 @@
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
+#include "gui/ConfigScopes.h"
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
 #include "gui/VersionChecker.h"
 #include "gui/constants.h"
 #include "gui/license_notices.h"
+#include "gui/messages.h"
+#include "gui/styles.h"
 #include "license/License.h"
 
 #if defined(Q_OS_MAC)
@@ -58,12 +61,6 @@ using namespace synergy::license;
 static const int kRetryDelay = 1000;
 static const int kDebugLogLevel = 1;
 
-#ifdef SYNERGY_PRODUCT_NAME
-const QString kProductName = SYNERGY_PRODUCT_NAME;
-#else
-const QString kProductName;
-#endif
-
 #if defined(Q_OS_MAC)
 
 static const char *const kLightIconFiles[] = {
@@ -89,9 +86,10 @@ static const char *const kDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-transfering.png",
     ":/res/icons/16x16/synergy-disconnected.png"};
 
-MainWindow::MainWindow(AppConfig &appConfig)
-    : m_AppConfig(appConfig),
-      m_ServerConfig(5, 3, &m_AppConfig, this),
+MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
+    : m_ConfigScopes(configScopes),
+      m_AppConfig(appConfig),
+      m_ServerConfig(appConfig, *this),
       m_ServerConnection(*this),
       m_ClientConnection(*this),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
@@ -101,21 +99,13 @@ MainWindow::MainWindow(AppConfig &appConfig)
   setupControls();
   connectSlots();
 
-#if defined(Q_OS_WIN)
-
-  // TODO: only connect permenantly to ipc when switching to service mode.
-  // if switching from service to desktop, connect only to stop the service
-  // and don't retry.
-  m_IpcClient.connectToHost();
-
-#endif
-
+  // handled by `onCreated`
   emit created();
 }
 
 MainWindow::~MainWindow() {
   try {
-    if (appConfig().processMode() == ProcessMode::kDesktop) {
+    if (m_AppConfig.processMode() == ProcessMode::kDesktop) {
       m_ExpectedRunningState = RuningState::Stopped;
       stopDesktop();
     }
@@ -132,18 +122,16 @@ MainWindow::~MainWindow() {
 
 void MainWindow::restoreWindow() {
 
-  const auto &config = appConfig();
-
-  const auto &size = config.mainWindowSize();
-  if (size.has_value()) {
+  const auto &windowSize = m_AppConfig.mainWindowSize();
+  if (windowSize.has_value()) {
     qDebug("restoring main window size");
-    resize(size.value());
+    resize(windowSize.value());
   }
 
-  const auto &position = config.mainWindowPosition();
-  if (position.has_value()) {
+  const auto &windowPosition = m_AppConfig.mainWindowPosition();
+  if (windowPosition.has_value()) {
     qDebug("restoring main window position");
-    move(position.value());
+    move(windowPosition.value());
   }
 
   // give the window chance to restore its size and position before the window
@@ -159,10 +147,9 @@ void MainWindow::saveWindow() {
   }
 
   qDebug("saving window size and position");
-  auto &config = appConfig();
-  config.setMainWindowSize(size());
-  config.setMainWindowPosition(pos());
-  config.saveSettings();
+  m_AppConfig.setMainWindowSize(size());
+  m_AppConfig.setMainWindowPosition(pos());
+  m_ConfigScopes.save();
 }
 
 void MainWindow::setupControls() {
@@ -210,7 +197,8 @@ void MainWindow::connectSlots() const {
       Qt::QueuedConnection);
 
   connect(
-      &m_AppConfig, &AppConfig::loaded, this, &MainWindow::onAppConfigLoaded);
+      &m_ConfigScopes, &ConfigScopes::saving, this,
+      &MainWindow::onConfigScopesSaving, Qt::DirectConnection);
 
   connect(
       &m_AppConfig, &AppConfig::tlsChanged, this,
@@ -267,20 +255,30 @@ void MainWindow::connectSlots() const {
       &MainWindow::onWindowSaveTimerTimeout);
 }
 
-void MainWindow::onAppAboutToQuit() { m_AppConfig.saveSettings(); }
+void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
 
 void MainWindow::onCreated() {
-  // it may seem a bit over-complicated to load the app config through a
-  // signal/slot, but there is a good reason: intentionality; we want to
-  // ensure that the ctor is fully executed before we start loading the
-  // app config. a signal is the clearest way to communicate this.
-  m_AppConfig.loadAllScopes();
 
-  const auto serverEnabled = appConfig().serverGroupChecked();
-  const auto clientEnabled = appConfig().clientGroupChecked();
-  if (serverEnabled || clientEnabled) {
-    startCore();
+#if defined(Q_OS_WIN)
+
+  // TODO: only connect permenantly to ipc when switching to service mode.
+  // if switching from service to desktop, connect only to stop the service
+  // and don't retry.
+  m_IpcClient.connectToHost();
+
+#endif
+
+  m_ConfigScopes.signalReady();
+
+  applyCloseToTray();
+
+  if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
+    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
   }
+
+  updateScreenName();
+  applyConfig();
+  restoreWindow();
 }
 
 void MainWindow::onShown() {
@@ -299,7 +297,7 @@ void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
 
   if (m_AppConfig.serialKey() != serialKey) {
     m_AppConfig.setSerialKey(serialKey);
-    m_AppConfig.saveSettings();
+    m_ConfigScopes.save();
   }
 }
 
@@ -308,16 +306,7 @@ void MainWindow::onLicenseHandlerInvalidLicense() {
   showActivationDialog();
 }
 
-void MainWindow::onAppConfigLoaded() {
-  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
-  if (!m_AppConfig.serialKey().isEmpty()) {
-    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
-  }
-
-  updateScreenName();
-  applyConfig();
-  restoreWindow();
-}
+void MainWindow::onConfigScopesSaving() { m_ServerConfig.commit(); }
 
 void MainWindow::onAppConfigTlsChanged() {
   updateLocalFingerprint();
@@ -421,7 +410,7 @@ bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
       QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
 
-  if (!fileName.isEmpty() && !serverConfig().save(fileName)) {
+  if (!fileName.isEmpty() && !m_ServerConfig.save(fileName)) {
     QMessageBox::warning(
         this, QString("Save failed"),
         QString("Could not save configuration to file."));
@@ -432,8 +421,8 @@ bool MainWindow::on_m_pActionSave_triggered() {
 }
 
 void MainWindow::on_m_pActionAbout_triggered() {
-  AboutDialog dlg(this, appConfig());
-  dlg.exec();
+  AboutDialog about(this);
+  about.exec();
 }
 
 void MainWindow::on_m_pActionHelp_triggered() {
@@ -442,13 +431,14 @@ void MainWindow::on_m_pActionHelp_triggered() {
 
 void MainWindow::on_m_pActionSettings_triggered() {
   auto result =
-      SettingsDialog(this, appConfig(), m_LicenseHandler.license()).exec();
+      SettingsDialog(this, m_AppConfig, m_LicenseHandler.license()).exec();
   if (result == QDialog::Accepted) {
-    enableServer(appConfig().serverGroupChecked());
-    enableClient(appConfig().clientGroupChecked());
-    auto state = m_CoreState;
-    if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
-        (state == CoreState::Listening)) {
+    m_ConfigScopes.save();
+
+    applyConfig();
+    applyCloseToTray();
+
+    if (isCoreActive()) {
       restartCore();
     }
   }
@@ -459,6 +449,14 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
 }
 
 void MainWindow::on_m_pActivate_triggered() { showActivationDialog(); }
+
+void MainWindow::on_m_pLineEditHostname_returnPressed() {
+  m_pButtonConnect->click();
+}
+
+void MainWindow::on_m_pLineEditClientIp_returnPressed() {
+  m_pButtonConnectToClient->click();
+}
 
 void MainWindow::on_m_pButtonApply_clicked() {
   m_ClientConnection.setCheckConnection(true);
@@ -477,13 +475,13 @@ void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
 void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
   enableServer(true);
   enableClient(false);
-  m_AppConfig.saveSettings();
+  m_ConfigScopes.save();
 }
 
 void MainWindow::on_m_pRadioGroupClient_clicked(bool) {
   enableClient(true);
   enableServer(false);
-  m_AppConfig.saveSettings();
+  m_ConfigScopes.save();
 }
 
 void MainWindow::on_m_pButtonConnect_clicked() { on_m_pButtonApply_clicked(); }
@@ -527,7 +525,7 @@ void MainWindow::open() {
     setIcon(CoreState::Disconnected);
   });
 
-  if (appConfig().autoHide()) {
+  if (m_AppConfig.autoHide()) {
     hide();
   } else {
     showNormal();
@@ -538,8 +536,8 @@ void MainWindow::open() {
   // only start if user has previously started. this stops the gui from
   // auto hiding before the user has configured synergy (which of course
   // confuses first time users, who think synergy has crashed).
-  if (appConfig().startedBefore() &&
-      appConfig().processMode() == ProcessMode::kDesktop) {
+  if (m_AppConfig.startedBefore() &&
+      m_AppConfig.processMode() == ProcessMode::kDesktop) {
     startCore();
   }
 }
@@ -580,20 +578,24 @@ void MainWindow::createMenuBar() {
 }
 
 void MainWindow::applyConfig() {
-  enableServer(appConfig().serverGroupChecked());
-  enableClient(appConfig().clientGroupChecked());
+  enableServer(m_AppConfig.serverGroupChecked());
+  enableClient(m_AppConfig.clientGroupChecked());
 
-  m_pLineEditHostname->setText(appConfig().serverHostname());
-  m_pLineEditClientIp->setText(serverConfig().getClientAddress());
+  m_pLineEditHostname->setText(m_AppConfig.serverHostname());
+  m_pLineEditClientIp->setText(m_ServerConfig.getClientAddress());
+}
+
+void MainWindow::applyCloseToTray() const {
+  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
 }
 
 void MainWindow::saveSettings() {
-  appConfig().setServerGroupChecked(m_pRadioGroupServer->isChecked());
-  appConfig().setClientGroupChecked(m_pRadioGroupClient->isChecked());
-  appConfig().setServerHostname(m_pLineEditHostname->text());
-  serverConfig().setClientAddress(m_pLineEditClientIp->text());
+  m_AppConfig.setServerGroupChecked(m_pRadioGroupServer->isChecked());
+  m_AppConfig.setClientGroupChecked(m_pRadioGroupClient->isChecked());
+  m_AppConfig.setServerHostname(m_pLineEditHostname->text());
+  m_ServerConfig.setClientAddress(m_pLineEditClientIp->text());
 
-  appConfig().scopes().saveAll();
+  m_ConfigScopes.save();
 }
 
 void MainWindow::setIcon(CoreState state) const {
@@ -622,19 +624,22 @@ void MainWindow::setIcon(CoreState state) const {
 }
 
 void MainWindow::appendLogInfo(const QString &text) {
+  qInfo("%s", text.toStdString().c_str());
+
   processCoreLogLine(getTimeStamp() + " INFO: " + text);
 }
 
 void MainWindow::appendLogDebug(const QString &text) {
   qDebug("%s", text.toStdString().c_str());
 
-  if (appConfig().logLevel() >= kDebugLogLevel) {
+  if (m_AppConfig.logLevel() >= kDebugLogLevel) {
     processCoreLogLine(getTimeStamp() + " DEBUG: " + text);
   }
 }
 
 void MainWindow::appendLogError(const QString &text) {
-  onIpcClientReadLogLine(getTimeStamp() + " ERROR: " + text);
+  qCritical("%s", text.toStdString().c_str());
+  processCoreLogLine(getTimeStamp() + " ERROR: " + text);
 }
 
 void MainWindow::processCoreLogLine(const QString &text) {
@@ -644,7 +649,7 @@ void MainWindow::processCoreLogLine(const QString &text) {
     }
 
     // only start if there is no active service running
-    if (line.contains("service status: idle") && appConfig().startedBefore()) {
+    if (line.contains("service status: idle") && m_AppConfig.startedBefore()) {
       startCore();
     }
 
@@ -689,15 +694,11 @@ void MainWindow::checkConnected(const QString &line) {
   if (line.contains("connected to server") || line.contains("has connected")) {
     setCoreState(CoreState::Connected);
 
-    if (!appConfig().startedBefore() && isVisible()) {
-      QMessageBox::information(
-          this, "Synergy",
-          QString("Synergy is now connected. You can close the "
-                  "config window and Synergy will remain connected in "
-                  "the background."));
-
-      appConfig().setStartedBefore(true);
+    if (isVisible()) {
+      showFirstRunMessage();
+      showDevThanksMessage();
     }
+
   } else if (line.contains("started server")) {
     setCoreState(CoreState::Listening);
   } else if (
@@ -803,8 +804,53 @@ void MainWindow::showEvent(QShowEvent *event) {
   emit shown();
 }
 
+void MainWindow::closeEvent(QCloseEvent *event) {
+  if (!m_AppConfig.closeToTray()) {
+    return;
+  }
+
+  qDebug("window will hide to tray");
+  if (!m_AppConfig.showCloseReminder()) {
+    return;
+  }
+
+  messages::showCloseReminder(this);
+  m_AppConfig.setShowCloseReminder(false);
+  m_ConfigScopes.save();
+}
+
+void MainWindow::showFirstRunMessage() {
+  if (m_AppConfig.startedBefore()) {
+    return;
+  }
+
+  m_AppConfig.setStartedBefore(true);
+  m_ConfigScopes.save();
+
+  const auto isServer = coreMode() == CoreMode::Server;
+  messages::showFirstRunMessage(
+      this, m_AppConfig.closeToTray(), m_AppConfig.enableService(), isServer);
+}
+
+void MainWindow::showDevThanksMessage() {
+  if (!m_AppConfig.showDevThanks()) {
+    qDebug("skipping dev thanks message, disabled in settings");
+    return;
+  }
+
+  if (kLicensingEnabled) {
+    qDebug("licensing enabled, skipping dev thanks message");
+    return;
+  }
+
+  m_AppConfig.setShowDevThanks(false);
+  m_ConfigScopes.save();
+
+  messages::showDevThanks(this, kProductName);
+}
+
 void MainWindow::startCore() {
-  appendLogDebug("starting core process");
+  appendLogInfo(QString("starting core %1 process").arg(coreModeString()));
 
   saveSettings();
 
@@ -828,11 +874,11 @@ void MainWindow::startCore() {
 
   args << "-f"
        << "--no-tray"
-       << "--debug" << appConfig().logLevelText();
+       << "--debug" << m_AppConfig.logLevelText();
 
-  args << "--name" << appConfig().screenName();
+  args << "--name" << m_AppConfig.screenName();
 
-  ProcessMode mode = appConfig().processMode();
+  ProcessMode mode = m_AppConfig.processMode();
 
   if (mode == ProcessMode::kDesktop) {
     m_pCoreProcess = std::make_unique<QProcess>(this);
@@ -850,7 +896,7 @@ void MainWindow::startCore() {
     // unnecessary restarts when synergy was started elevated or
     // when it is not allowed to elevate. In these cases restarting
     // the server is fruitless.
-    if (appConfig().elevateMode() == ElevateAsNeeded) {
+    if (m_AppConfig.elevateMode() == ElevateAsNeeded) {
       args << "--stop-on-desk-switch";
     }
 #endif
@@ -896,10 +942,6 @@ void MainWindow::startCore() {
   if (!m_pLogOutput->toPlainText().isEmpty())
     onIpcClientReadLogLine("");
 
-  appendLogInfo(
-      "starting " +
-      QString(coreMode() == CoreMode::Server ? "server" : "client"));
-
   if ((coreMode() == CoreMode::Client && !clientArgs(args, app)) ||
       (coreMode() == CoreMode::Server && !serverArgs(args, app))) {
     onActionStopCoreTriggered();
@@ -918,15 +960,14 @@ void MainWindow::startCore() {
         &MainWindow::onCoreProcessReadyReadStandardError);
   }
 
-  // show command if debug log level...
-  if (appConfig().logLevel() >= 4) {
+  if (m_AppConfig.logLevel() >= kDebugLogLevel) {
     appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
   }
 
-  appendLogInfo("log level: " + appConfig().logLevelText());
+  appendLogInfo("log level: " + m_AppConfig.logLevelText());
 
-  if (appConfig().logToFile())
-    appendLogInfo("log file: " + appConfig().logFilename());
+  if (m_AppConfig.logToFile())
+    appendLogInfo("log file: " + m_AppConfig.logFilename());
 
   if (mode == ProcessMode::kDesktop) {
     m_pCoreProcess->start(app, args);
@@ -944,12 +985,12 @@ void MainWindow::startCore() {
     }
   } else if (mode == ProcessMode::kService) {
     QString command(app + " " + args.join(" "));
-    m_IpcClient.sendCommand(command, appConfig().elevateMode());
+    m_IpcClient.sendCommand(command, m_AppConfig.elevateMode());
   }
 }
 
 bool MainWindow::clientArgs(QStringList &args, QString &app) {
-  app = appPath(appConfig().coreClientName());
+  app = appPath(m_AppConfig.coreClientName());
 
   if (!QFile::exists(app)) {
     show();
@@ -959,22 +1000,22 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  if (appConfig().logToFile()) {
-    appConfig().persistLogDir();
-    args << "--log" << appConfig().logFilename();
+  if (m_AppConfig.logToFile()) {
+    m_AppConfig.persistLogDir();
+    args << "--log" << m_AppConfig.logFilename();
   }
 
-  if (appConfig().languageSync()) {
+  if (m_AppConfig.languageSync()) {
     args << "--sync-language";
   }
 
-  if (appConfig().invertScrollDirection()) {
+  if (m_AppConfig.invertScrollDirection()) {
     args << "--invert-scroll";
   }
 
-  if (appConfig().invertConnection()) {
+  if (m_AppConfig.invertConnection()) {
     args << "--host";
-    args << ":" + QString::number(appConfig().port());
+    args << ":" + QString::number(m_AppConfig.port());
   } else {
     if (m_pLineEditHostname->text().isEmpty()) {
       show();
@@ -994,7 +1035,7 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
         hostName.push_back(']');
       }
     }
-    args << hostName + ":" + QString::number(appConfig().port());
+    args << hostName + ":" + QString::number(m_AppConfig.port());
   }
 
   return true;
@@ -1002,8 +1043,8 @@ bool MainWindow::clientArgs(QStringList &args, QString &app) {
 
 QString MainWindow::configFilename() {
   QString configFullPath;
-  if (appConfig().useExternalConfig()) {
-    configFullPath = appConfig().configFile();
+  if (m_AppConfig.useExternalConfig()) {
+    configFullPath = m_AppConfig.configFile();
   } else {
     QStringList errors;
     for (auto path :
@@ -1023,7 +1064,7 @@ QString MainWindow::configFilename() {
         continue;
       }
 
-      serverConfig().save(configFile);
+      m_ServerConfig.save(configFile);
       configFile.close();
       configFullPath = configFile.fileName();
 
@@ -1040,7 +1081,7 @@ QString MainWindow::configFilename() {
 }
 
 QString MainWindow::address() const {
-  QString i = appConfig().networkInterface();
+  QString i = m_AppConfig.networkInterface();
   // if interface is IPv6 - ensure that ip is in square brackets
   if (i.count(':') > 1) {
     if (i[0] != '[') {
@@ -1050,7 +1091,7 @@ QString MainWindow::address() const {
       i.push_back(']');
     }
   }
-  return (!i.isEmpty() ? i : "") + ":" + QString::number(appConfig().port());
+  return (!i.isEmpty() ? i : "") + ":" + QString::number(m_AppConfig.port());
 }
 
 QString MainWindow::appPath(const QString &name) const {
@@ -1059,7 +1100,7 @@ QString MainWindow::appPath(const QString &name) const {
 }
 
 bool MainWindow::serverArgs(QStringList &args, QString &app) {
-  app = appPath(appConfig().coreServerName());
+  app = appPath(m_AppConfig.coreServerName());
 
   if (!QFile::exists(app)) {
     QMessageBox::warning(
@@ -1068,17 +1109,17 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  if (appConfig().invertConnection() && m_pLineEditClientIp->text().isEmpty()) {
+  if (m_AppConfig.invertConnection() && m_pLineEditClientIp->text().isEmpty()) {
     QMessageBox::warning(
         this, QString("Client IP address or name is empty"),
         QString("Please fill in a client IP address or name."));
     return false;
   }
 
-  if (appConfig().logToFile()) {
-    appConfig().persistLogDir();
+  if (m_AppConfig.logToFile()) {
+    m_AppConfig.persistLogDir();
 
-    args << "--log" << appConfig().logFilename();
+    args << "--log" << m_AppConfig.logFilename();
   }
 
   QString configFilename = this->configFilename();
@@ -1089,8 +1130,8 @@ bool MainWindow::serverArgs(QStringList &args, QString &app) {
   args << "-c" << configFilename << "--address" << address();
   appendLogInfo("config file: " + configFilename);
 
-  if (kLicensingEnabled && !appConfig().serialKey().isEmpty()) {
-    args << "--serial-key" << appConfig().serialKey();
+  if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
+    args << "--serial-key" << m_AppConfig.serialKey();
   }
 
   return true;
@@ -1101,9 +1142,9 @@ void MainWindow::stopCore() {
 
   m_ExpectedRunningState = RuningState::Stopped;
 
-  if (appConfig().processMode() == ProcessMode::kService) {
+  if (m_AppConfig.processMode() == ProcessMode::kService) {
     stopService();
-  } else if (appConfig().processMode() == ProcessMode::kDesktop) {
+  } else if (m_AppConfig.processMode() == ProcessMode::kDesktop) {
     stopDesktop();
   }
 
@@ -1115,7 +1156,7 @@ void MainWindow::stopCore() {
 
 void MainWindow::stopService() {
   // send empty command to stop service from laucning anything.
-  m_IpcClient.sendCommand("", appConfig().elevateMode());
+  m_IpcClient.sendCommand("", m_AppConfig.elevateMode());
 }
 
 void MainWindow::stopDesktop() {
@@ -1229,8 +1270,31 @@ void MainWindow::setVisible(bool visible) {
 }
 
 MainWindow::CoreMode MainWindow::coreMode() const {
-  auto isClient = m_pRadioGroupClient->isChecked();
-  return isClient ? CoreMode::Client : CoreMode::Server;
+  using enum CoreMode;
+
+  auto serverChecked = m_pRadioGroupServer->isChecked();
+  auto clientChecked = m_pRadioGroupClient->isChecked();
+
+  if (serverChecked) {
+    return Server;
+  } else if (clientChecked) {
+    return Client;
+  } else {
+    return None;
+  }
+}
+
+QString MainWindow::coreModeString() const {
+  using enum CoreMode;
+
+  switch (coreMode()) {
+  case Server:
+    return "server";
+  case Client:
+    return "client";
+  default:
+    qFatal("invalid core mode");
+  }
 }
 
 QString MainWindow::getIPAddresses() const {
@@ -1291,22 +1355,22 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-LicenseHandler &MainWindow::licenseHandler() { return m_LicenseHandler; }
-
-void MainWindow::updateWindowTitle() {
+QString MainWindow::productName() const {
   if (kLicensingEnabled) {
-    setWindowTitle(m_LicenseHandler.productName());
+    return m_LicenseHandler.productName();
+  } else if (!kProductName.isEmpty()) {
+    return kProductName;
   } else {
-    setWindowTitle(kProductName);
+    qFatal("product name not set");
   }
 }
+
+void MainWindow::updateWindowTitle() { setWindowTitle(productName()); }
 
 void MainWindow::autoAddScreen(const QString name) {
 
   if (m_ActivationDialogRunning) {
-    // TODO: refactor this code
-    // add this screen to the pending list and check this list until
-    // users finish activation dialog
+    // add this screen to the pending list if the activation dialog is running.
     m_PendingClientNames.append(name);
     return;
   }
@@ -1316,7 +1380,7 @@ void MainWindow::autoAddScreen(const QString name) {
     switch (r) {
     case kAutoAddScreenManualServer:
       showConfigureServer(QString("Please add the server (%1) to the grid.")
-                              .arg(appConfig().screenName()));
+                              .arg(m_AppConfig.screenName()));
       break;
 
     case kAutoAddScreenManualClient:
@@ -1328,18 +1392,18 @@ void MainWindow::autoAddScreen(const QString name) {
   }
 }
 
-void MainWindow::showConfigureServer(const QString &message) {
+bool MainWindow::isCoreActive() const {
   using enum CoreState;
 
-  ServerConfigDialog dlg(this, serverConfig(), appConfig());
-  dlg.message(message);
-  auto result = dlg.exec();
+  auto state = m_CoreState;
+  return (state == Connected) || (state == Connecting) || (state == Listening);
+}
 
-  if (result == QDialog::Accepted) {
-    auto state = m_CoreState;
-    if ((state == Connected) || (state == Connecting) || (state == Listening)) {
-      restartCore();
-    }
+void MainWindow::showConfigureServer(const QString &message) {
+  ServerConfigDialog dialog(this, serverConfig(), m_AppConfig);
+  dialog.message(message);
+  if ((dialog.exec() == QDialog::Accepted) && isCoreActive()) {
+    restartCore();
   }
 }
 
@@ -1353,6 +1417,11 @@ int MainWindow::showActivationDialog() {
   m_ActivationDialogRunning = true;
   int result = activationDialog.exec();
   m_ActivationDialogRunning = false;
+
+  if (result == QDialog::Accepted) {
+    m_AppConfig.setActivationHasRun(true);
+    m_ConfigScopes.save();
+  }
 
   if (!m_PendingClientNames.empty()) {
     foreach (const QString &name, m_PendingClientNames) {
@@ -1391,23 +1460,33 @@ void MainWindow::updateScreenName() {
   m_pLabelComputerName->setText(
       QString("This computer's name: %1 "
               R"((<a href="#" style="color: %2">change</a>))")
-          .arg(appConfig().screenName())
+          .arg(m_AppConfig.screenName())
           .arg(kColorSecondary));
-  serverConfig().updateServerName();
+  m_ServerConfig.updateServerName();
 }
 
 void MainWindow::enableServer(bool enable) {
+  qDebug(enable ? "server enabled" : "server disabled");
   m_AppConfig.setServerGroupChecked(enable);
   m_pRadioGroupServer->setChecked(enable);
   m_pWidgetServer->setEnabled(enable);
   m_pWidgetServerInverse->setVisible(m_AppConfig.invertConnection());
-  m_pButtonToggleStart->setEnabled(true);
+
+  if (enable) {
+    m_pButtonToggleStart->setEnabled(true);
+    m_pActionStartCore->setEnabled(true);
+  }
 }
 
 void MainWindow::enableClient(bool enable) {
+  qDebug(enable ? "client enabled" : "client disabled");
   m_AppConfig.setClientGroupChecked(enable);
   m_pRadioGroupClient->setChecked(enable);
   m_pWidgetClient->setEnabled(enable);
   m_pWidgetClient->setVisible(!m_AppConfig.invertConnection());
-  m_pButtonToggleStart->setEnabled(true);
+
+  if (enable) {
+    m_pButtonToggleStart->setEnabled(true);
+    m_pActionStartCore->setEnabled(true);
+  }
 }

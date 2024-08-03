@@ -27,37 +27,35 @@ namespace {
 
 class MockScopes : public synergy::gui::IConfigScopes {
 public:
+  MOCK_METHOD(void, signalReady, (), (override));
   MOCK_METHOD(
-      void, registerReceiver, (synergy::gui::CommonConfig * receiver),
-      (override));
-  MOCK_METHOD(void, loadAll, (), (override));
+      bool, scopeContains, (const QString &name, Scope scope),
+      (const, override));
   MOCK_METHOD(
-      bool, hasSetting, (const QString &name, Scope scope), (const, override));
-  MOCK_METHOD(
-      QVariant, loadSetting,
+      QVariant, getFromScope,
       (const QString &name, const QVariant &defaultValue, Scope scope),
       (const, override));
   MOCK_METHOD(
-      void, setSetting,
+      void, setInScope,
       (const QString &name, const QVariant &value, Scope scope), (override));
-  MOCK_METHOD(Scope, getScope, (), (const, override));
-  MOCK_METHOD(void, setScope, (Scope scope), (override));
-  MOCK_METHOD(bool, isWritable, (), (const, override));
-  MOCK_METHOD(QSettings *, currentSettings, (), (const, override));
-  MOCK_METHOD(void, saveAll, (), (override));
+  MOCK_METHOD(Scope, activeScope, (), (const, override));
+  MOCK_METHOD(void, setActiveScope, (Scope scope), (override));
+  MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
+  MOCK_METHOD(QSettings *, activeSettings, (), (const, override));
+  MOCK_METHOD(void, save, (), (override));
 };
 
 struct MockDeps : public AppConfig::Deps {
-  NiceMock<MockScopes> m_scopes;
-
   MockDeps() {
     ON_CALL(*this, profileDir()).WillByDefault(Return("stub"));
-    ON_CALL(*this, scopes()).WillByDefault(ReturnRef(m_scopes));
     ON_CALL(*this, hostname()).WillByDefault(Return("stub"));
   }
 
+  static std::shared_ptr<NiceMock<MockDeps>> makeNice() {
+    return std::make_shared<NiceMock<MockDeps>>();
+  }
+
   MOCK_METHOD(QString, profileDir, (), (const, override));
-  MOCK_METHOD(synergy::gui::IConfigScopes &, scopes, (), (override));
   MOCK_METHOD(QString, hostname, (), (const, override));
 };
 
@@ -66,43 +64,36 @@ struct MockDeps : public AppConfig::Deps {
 class AppConfigTests : public Test {};
 
 TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
-  NiceMock<MockDeps> deps;
-  ON_CALL(deps, hostname()).WillByDefault(Return("test"));
+  NiceMock<MockScopes> scopes;
+  auto deps = MockDeps::makeNice();
+  ON_CALL(*deps, hostname()).WillByDefault(Return("test hostname"));
 
-  AppConfig appConfig(deps);
+  AppConfig appConfig(scopes, deps);
 
-  ASSERT_EQ(appConfig.screenName().toStdString(), "test");
+  ASSERT_EQ(appConfig.screenName().toStdString(), "test hostname");
 }
 
-TEST_F(AppConfigTests, loadAllScopes_byDefault_callsScopesLoadAll) {
-  NiceMock<MockDeps> deps;
-  AppConfig appConfig(deps);
+TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
+  NiceMock<MockScopes> scopes;
+  auto deps = MockDeps::makeNice();
 
-  EXPECT_CALL(deps.m_scopes, loadAll());
+  ON_CALL(scopes, scopeContains(_, _)).WillByDefault(Return(true));
+  ON_CALL(scopes, getFromScope(_, _, _))
+      .WillByDefault(Return(QVariant("test screen")));
+  EXPECT_CALL(scopes, getFromScope(_, _, _)).Times(AnyNumber());
 
-  appConfig.loadAllScopes();
+  AppConfig appConfig(scopes, deps);
+
+  ASSERT_EQ(appConfig.screenName().toStdString(), "test screen");
 }
 
-TEST_F(AppConfigTests, loadSettings_byDefault_callsScopesLoadSetting) {
-  NiceMock<MockDeps> deps;
-  AppConfig appConfig(deps);
+TEST_F(AppConfigTests, commit_byDefault_setsToScope) {
+  NiceMock<MockScopes> scopes;
+  auto deps = MockDeps::makeNice();
+  AppConfig appConfig(scopes, deps);
 
-  ON_CALL(deps.m_scopes, hasSetting(_, _)).WillByDefault(Return(true));
-  ON_CALL(deps.m_scopes, loadSetting(_, _, _))
-      .WillByDefault(Return(QVariant("test")));
-  EXPECT_CALL(deps.m_scopes, loadSetting(_, _, _)).Times(AnyNumber());
+  ON_CALL(scopes, isActiveScopeWritable()).WillByDefault(Return(true));
+  EXPECT_CALL(scopes, setInScope(_, _, _)).Times(AnyNumber());
 
-  appConfig.loadSettings();
-
-  ASSERT_EQ(appConfig.screenName().toStdString(), "test");
-}
-
-TEST_F(AppConfigTests, saveSettings_byDefault_callsScopesSetSetting) {
-  NiceMock<MockDeps> deps;
-  AppConfig appConfig(deps);
-
-  ON_CALL(deps.m_scopes, isWritable()).WillByDefault(Return(true));
-  EXPECT_CALL(deps.m_scopes, setSetting(_, _, _)).Times(AnyNumber());
-
-  appConfig.saveSettings();
+  appConfig.commit();
 }

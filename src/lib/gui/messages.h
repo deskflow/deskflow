@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,28 +17,20 @@
 
 #pragma once
 
-#include "ui_SetupWizardBase.h"
+#include <QMessageLogContext>
+#include <QString>
+#include <QWidget>
 
-#include "gui/AppConfig.h"
+namespace synergy::gui::messages {
 
-#include <QDialog>
-#include <QObject>
+void messageHandler(
+    QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
-class MainWindow;
+void showFirstRunMessage(
+    QWidget *parent, bool closeToTray, bool enableService, bool isServer);
 
-class SetupWizard : public QDialog, public Ui::SetupWizardBase {
-  Q_OBJECT
+void showCloseReminder(QWidget *parent);
 
-public:
-  explicit SetupWizard(AppConfig &appConfig);
+void showDevThanks(QWidget *parent, const QString &productName);
 
-protected:
-  void accept();
-  void reject();
-
-private:
-  AppConfig &m_appConfig;
-
-public slots:
-  void onLineEditNameChanged(const QString &error);
-};
+} // namespace synergy::gui::messages

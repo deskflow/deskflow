@@ -33,6 +33,8 @@ using PollFD = struct pollfd[];
 
 namespace {
 struct MockDeps : public ArchNetworkBSD::Deps {
+  std::shared_ptr<PollFD> m_pollFD;
+
   MockDeps() {
     ON_CALL(*this, makePollFD(_)).WillByDefault([this](nfds_t n) {
       m_pollFD = ArchNetworkBSD::Deps::makePollFD(n);
@@ -40,29 +42,31 @@ struct MockDeps : public ArchNetworkBSD::Deps {
     });
   }
 
+  static std::shared_ptr<NiceMock<MockDeps>> makeNice() {
+    return std::make_shared<NiceMock<MockDeps>>();
+  }
+
   MOCK_METHOD(void, sleep, (double), (override));
   MOCK_METHOD(int, poll, (struct pollfd *, nfds_t, int), (override));
   MOCK_METHOD(std::shared_ptr<PollFD>, makePollFD, (nfds_t), (override));
   MOCK_METHOD(ssize_t, read, (int, void *, size_t), (override));
   MOCK_METHOD(void, testCancelThread, (), (override));
-
-  std::shared_ptr<PollFD> m_pollFD;
 };
 } // namespace
 
 TEST(ArchNetworkBSDTests, pollSocket_zeroEntries_callsSleep) {
-  MockDeps deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
 
-  EXPECT_CALL(deps, sleep(1)).Times(1);
+  EXPECT_CALL(*deps, sleep(1)).Times(1);
   auto result = networkBSD.pollSocket(nullptr, 0, 1);
 
   EXPECT_EQ(result, 0);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_mockAccessError_throws) {
-  NiceMock<MockDeps> deps;
-  ON_CALL(deps, poll(_, _, _)).WillByDefault([]() {
+  auto deps = MockDeps::makeNice();
+  ON_CALL(*deps, poll(_, _, _)).WillByDefault([]() {
     errno = EACCES;
     return -1;
   });
@@ -77,8 +81,8 @@ TEST(ArchNetworkBSDTests, pollSocket_mockAccessError_throws) {
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_pfdHasRevents_copiedToEntries) {
-  NiceMock<MockDeps> deps;
-  ON_CALL(deps, poll(_, _, _)).WillByDefault([](auto pfd, auto, auto) {
+  auto deps = MockDeps::makeNice();
+  ON_CALL(*deps, poll(_, _, _)).WillByDefault([](auto pfd, auto, auto) {
     pfd[0].revents = POLLIN | POLLOUT | POLLERR | POLLNVAL;
     return 0;
   });
@@ -93,50 +97,50 @@ TEST(ArchNetworkBSDTests, pollSocket_pfdHasRevents_copiedToEntries) {
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_nullSocket_fdIsNegativeOne) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   PollEntries entries{{nullptr, 0, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(deps.m_pollFD[0].fd, -1);
+  EXPECT_EQ(deps->m_pollFD[0].fd, -1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_socketSet_fdWasSet) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
   PollEntries entries{{&socket, 0, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(deps.m_pollFD[0].fd, 1);
+  EXPECT_EQ(deps->m_pollFD[0].fd, 1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_eventHasPollInBit_bitWasSet) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
   PollEntries entries{{&socket, IArchNetwork::kPOLLIN, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(deps.m_pollFD[0].events, POLLIN);
+  EXPECT_EQ(deps->m_pollFD[0].events, POLLIN);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_eventHasPollOutBit_bitWasSet) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
   PollEntries entries{{&socket, IArchNetwork::kPOLLOUT, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  EXPECT_EQ(deps.m_pollFD[0].events, POLLOUT);
+  EXPECT_EQ(deps->m_pollFD[0].events, POLLOUT);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_nullSocket_unblockPipeAppended) {
-  NiceMock<MockDeps> deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   PollEntries entries{{nullptr, 0, 0}};
 
@@ -144,42 +148,42 @@ TEST(ArchNetworkBSDTests, pollSocket_nullSocket_unblockPipeAppended) {
 
   // interesting: unblock pipe fd comes from `getNetworkDataForThread` which
   // seems to differ depending on linux distro.
-  EXPECT_GT(deps.m_pollFD[1].fd, -1);
+  EXPECT_GT(deps->m_pollFD[1].fd, -1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_unblockPipeReventsError_readCalled) {
   const auto unblockPipeIndex = 1;
-  NiceMock<MockDeps> deps;
-  ON_CALL(deps, poll(_, _, _)).WillByDefault([](auto pfd, auto, auto) {
+  auto deps = MockDeps::makeNice();
+  ON_CALL(*deps, poll(_, _, _)).WillByDefault([](auto pfd, auto, auto) {
     pfd[unblockPipeIndex].revents = POLLIN;
     return 1;
   });
-  ON_CALL(deps, read(_, _, _)).WillByDefault([]() {
+  ON_CALL(*deps, read(_, _, _)).WillByDefault([]() {
     errno = EAGAIN;
     return 0;
   });
   ArchNetworkBSD networkBSD(deps);
   PollEntries entries{{nullptr, 0, 0}};
 
-  EXPECT_CALL(deps, read(_, _, _)).Times(1);
+  EXPECT_CALL(*deps, read(_, _, _)).Times(1);
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_interruptSystemCall_testCancelThread) {
-  NiceMock<MockDeps> deps;
-  ON_CALL(deps, poll(_, _, _)).WillByDefault([]() {
+  auto deps = MockDeps::makeNice();
+  ON_CALL(*deps, poll(_, _, _)).WillByDefault([]() {
     errno = EINTR;
     return -1;
   });
   ArchNetworkBSD networkBSD(deps);
   PollEntries entries{{nullptr, 0, 0}};
 
-  EXPECT_CALL(deps, testCancelThread()).Times(1);
+  EXPECT_CALL(*deps, testCancelThread()).Times(1);
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
-  MockDeps deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
@@ -190,7 +194,7 @@ TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue) {
 }
 
 TEST(ArchNetworkBSDTests, isAnyAddr_badAddress_returnsFalse) {
-  MockDeps deps;
+  auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   std::unique_ptr<ArchNetAddressImpl> addr;
   addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));

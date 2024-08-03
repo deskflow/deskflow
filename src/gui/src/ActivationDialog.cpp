@@ -23,6 +23,7 @@
 #include "gui/LicenseHandler.h"
 #include "gui/constants.h"
 #include "gui/license_notices.h"
+#include "gui/styles.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
 #include "ui_ActivationDialog.h"
@@ -107,7 +108,6 @@ void ActivationDialog::accept() {
   }
 
   showSuccessDialog();
-  m_pAppConfig->setActivationHasRun(true);
   QDialog::accept();
 }
 
@@ -122,6 +122,7 @@ void ActivationDialog::showResultDialog(
     QMessageBox::information(
         this, title,
         "Heads up, the serial key you entered was the same as last time.");
+    QDialog::accept();
     break;
 
   case kInvalid:

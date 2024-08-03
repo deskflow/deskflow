@@ -66,6 +66,7 @@ Enhancements:
 - #7421 Only load core after settings have fully loaded
 - #7419 Introduce 'Advanced' tab to Preferences window
 - #7422 Handle empty value for computer name setting
+- #7423 Refactor local/global save/load and show dev thanks message
 
 # 1.14.6
 

@@ -17,58 +17,81 @@
 
 #include "ConfigScopes.h"
 
-#include "CommonConfig.h"
-
 #include <QCoreApplication>
 #include <QFile>
 #include <cassert>
 #include <memory>
 
+const auto kSystemConfigFilename = "SystemConfig.ini";
+const auto kUnixSystemConfigPath = "/usr/local/etc/symless/";
+
 namespace synergy::gui {
 
 QString getSystemSettingPath() {
-  const QString settingFilename("SystemConfig.ini");
-  QString path;
+  const QString settingFilename(kSystemConfigFilename);
 #if defined(Q_OS_WIN)
-  path = QCoreApplication::applicationDirPath() + "\\";
+  return QCoreApplication::applicationDirPath() + "\\";
 #elif defined(Q_OS_DARWIN)
-  // Global preferances dir
-  //  Would be nice to use /library, but QT has no elevate system in place
-  path = "/usr/local/etc/symless/";
+  // it would be nice to use /Library dir, but qt has no elevate system.
+  return kUnixSystemConfigPath + settingFilename;
 #elif defined(Q_OS_LINUX)
-  // QT adds application and filename to the end of the path already on linux
-  path = "/usr/local/etc/symless/";
-  return path;
+  // qt already adds application and filename to the end of the path on linux.
+  return kUnixSystemConfigPath;
 #else
-  assert("OS not supported");
+  qFatal("unsupported platform");
+  return "";
 #endif
-  return path + settingFilename;
 }
 
 #if defined(Q_OS_WIN)
 void loadWindowsLegacy(QSettings &settings) {
-  if (!QFile(settings.fileName()).exists()) {
-    QSettings::setPath(
-        QSettings::IniFormat, QSettings::SystemScope, "SystemConfig.ini");
-    QSettings oldSystemSettings(
-        QSettings::IniFormat, QSettings::SystemScope,
-        QCoreApplication::organizationName(),
-        QCoreApplication::applicationName());
-
-    if (QFile(oldSystemSettings.fileName()).exists()) {
-      for (const auto &key : oldSystemSettings.allKeys()) {
-        settings.setValue(key, oldSystemSettings.value(key));
-      }
-    }
-
-    // Restore system settings path
-    QSettings::setPath(
-        QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
+  if (QFile(settings.fileName()).exists()) {
+    qDebug("system settings already exist, skipping legacy load");
+    return;
   }
+
+  QSettings::setPath(
+      QSettings::IniFormat, QSettings::SystemScope, kSystemConfigFilename);
+  QSettings oldSystemSettings(
+      QSettings::IniFormat, QSettings::SystemScope,
+      QCoreApplication::organizationName(),
+      QCoreApplication::applicationName());
+
+  if (QFile(oldSystemSettings.fileName()).exists()) {
+    for (const auto &key : oldSystemSettings.allKeys()) {
+      settings.setValue(key, oldSystemSettings.value(key));
+    }
+  }
+
+  QSettings::setPath(
+      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
 }
 #endif
 
 ConfigScopes::ConfigScopes() {
+  auto orgName = QCoreApplication::organizationName();
+  if (orgName.isEmpty()) {
+    qFatal("unable to load config, organization name is empty");
+    return;
+  } else {
+    qDebug() << "org name for config:" << orgName;
+  }
+
+  auto appName = QCoreApplication::applicationName();
+  if (appName.isEmpty()) {
+    qFatal("unable to load config, application name is empty");
+    return;
+  } else {
+    qDebug() << "app name for config:" << appName;
+  }
+
+  // default to user scope.
+  // if we set the scope specifically then we also have to set the application
+  // name and the organisation name which breaks backwards compatibility.
+  m_pUserSettings = std::make_unique<QSettings>();
+
+  qDebug() << "user settings path:" << m_pUserSettings->fileName();
+
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
@@ -76,47 +99,57 @@ ConfigScopes::ConfigScopes() {
   // Config will default to User settings if they exist,
   //  otherwise it will load System setting and save them to User settings
   m_pSystemSettings = std::make_unique<QSettings>(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      QCoreApplication::organizationName(),
-      QCoreApplication::applicationName());
+      QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
+      appName);
 
-  // default to user scope.
-  // if we set the scope specifically then we also have to set the application
-  // name and the organisation name which breaks backwards compatibility.
-  m_pUserSettings = std::make_unique<QSettings>();
+  qDebug() << "system settings path:" << m_pSystemSettings->fileName();
 
-  load();
-}
-
-ConfigScopes::~ConfigScopes() {
-  while (!m_pReceivers.empty()) {
-    m_pReceivers.pop_back();
-  }
-}
-
-void ConfigScopes::load() {
 #if defined(Q_OS_WIN)
-  // This call is needed for backwardcapability with old settings.
   loadWindowsLegacy(*m_pSystemSettings);
 #endif
 }
 
-bool ConfigScopes::hasSetting(const QString &name, Scope scope) const {
+void ConfigScopes::signalReady() { emit ready(); }
+
+void ConfigScopes::save() {
+  qDebug("emitting config saving signal");
+  emit saving();
+
+  qDebug("writing config to filesystem");
+  m_pUserSettings->sync();
+  m_pSystemSettings->sync();
+}
+
+bool ConfigScopes::isActiveScopeWritable() const {
+  return activeSettings()->isWritable();
+}
+
+void ConfigScopes::setActiveScope(ConfigScopes::Scope scope) {
+  m_currentScope = scope;
+}
+
+ConfigScopes::Scope ConfigScopes::activeScope() const { return m_currentScope; }
+
+bool ConfigScopes::scopeContains(const QString &name, Scope scope) const {
   switch (scope) {
   case Scope::User:
     return m_pUserSettings->contains(name);
   case Scope::System:
     return m_pSystemSettings->contains(name);
   default:
-    return currentSettings()->contains(name);
+    return activeSettings()->contains(name);
   }
 }
 
-bool ConfigScopes::isWritable() const {
-  return currentSettings()->isWritable();
+QSettings *ConfigScopes::activeSettings() const {
+  if (m_currentScope == Scope::User) {
+    return m_pUserSettings.get();
+  } else {
+    return m_pSystemSettings.get();
+  }
 }
 
-QVariant ConfigScopes::loadSetting(
+QVariant ConfigScopes::getFromScope(
     const QString &name, const QVariant &defaultValue, Scope scope) const {
   switch (scope) {
   case Scope::User:
@@ -124,68 +157,23 @@ QVariant ConfigScopes::loadSetting(
   case Scope::System:
     return m_pSystemSettings->value(name, defaultValue);
   default:
-    return currentSettings()->value(name, defaultValue);
+    return activeSettings()->value(name, defaultValue);
   }
 }
 
-void ConfigScopes::setScope(ConfigScopes::Scope scope) {
-  m_CurrentScope = scope;
-}
-
-ConfigScopes::Scope ConfigScopes::getScope() const { return m_CurrentScope; }
-
-void ConfigScopes::loadAll() {
-  for (auto &i : m_pReceivers) {
-    i->loadSettings();
-  }
-}
-
-void ConfigScopes::saveAll() {
-
-  // Save if there are any unsaved changes otherwise skip
-  if (unsavedChanges()) {
-    for (auto &i : m_pReceivers) {
-      i->saveSettings();
-    }
-
-    m_pUserSettings->sync();
-    m_pSystemSettings->sync();
-
-    m_unsavedChanges = false;
-  }
-}
-
-QSettings *ConfigScopes::currentSettings() const {
-  if (m_CurrentScope == Scope::User) {
-    return m_pUserSettings.get();
-  } else {
-    return m_pSystemSettings.get();
-  }
-}
-
-void ConfigScopes::registerReceiver(CommonConfig *receiver) {
-  m_pReceivers.push_back(receiver);
-}
-
-bool ConfigScopes::unsavedChanges() const {
-  if (m_unsavedChanges) {
-    return true;
-  }
-
-  for (const auto &i : m_pReceivers) {
-    if (i->modified()) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void ConfigScopes::markUnsaved() { m_unsavedChanges = true; }
-
-void ConfigScopes::setSetting(
+void ConfigScopes::setInScope(
     const QString &name, const QVariant &value, Scope scope) {
-  currentSettings()->setValue(name, value);
-  m_unsavedChanges = true;
+  switch (scope) {
+  case Scope::User:
+    m_pUserSettings->setValue(name, value);
+    break;
+  case Scope::System:
+    m_pSystemSettings->setValue(name, value);
+    break;
+  default:
+    activeSettings()->setValue(name, value);
+    break;
+  }
 }
 
 } // namespace synergy::gui

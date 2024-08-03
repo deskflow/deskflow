@@ -19,6 +19,7 @@
 
 #include "constants.h"
 #include "license/License.h"
+#include "styles.h"
 
 using License = synergy::license::License;
 

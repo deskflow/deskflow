@@ -24,23 +24,14 @@
 #include "OSXHelpers.h"
 #endif
 
-#ifdef GIT_SHA_SHORT
-const QString kVersionAppend = GIT_SHA_SHORT;
-#else
-const QString kVersionAppend;
-#endif
+#include "gui/version.h"
 
-AboutDialog::AboutDialog(MainWindow *parent, const AppConfig &config)
+AboutDialog::AboutDialog(MainWindow *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::AboutDialogBase() {
   setupUi(this);
 
-  QString version(SYNERGY_VERSION);
-  if (!kVersionAppend.isEmpty()) {
-    version.append(QString(" (%1)").arg(kVersionAppend));
-  }
-
-  m_pLabelSynergyVersion->setText(version);
+  m_pLabelSynergyVersion->setText(synergy::gui::version());
 
   QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");

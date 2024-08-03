@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2020 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,20 +17,10 @@
 
 #pragma once
 
+#include <QString>
+
 namespace synergy::gui {
 
-/// @brief Common configuration interface
-class CommonConfig {
-public:
-  CommonConfig() = default;
-  virtual ~CommonConfig() = default;
-  virtual void loadSettings() = 0;
-  virtual void saveSettings() = 0;
-  bool modified() const { return m_modified; }
-  void setModified(bool modified) { m_modified = modified; }
-
-private:
-  bool m_modified = false;
-};
+QString version();
 
 } // namespace synergy::gui

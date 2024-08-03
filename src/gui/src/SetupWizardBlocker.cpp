@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2016 Symless Ltd.
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,9 +33,7 @@ static const std::vector<const char *> blockerText = {
     "Please switch to Xorg if you wish to continue using Synergy today.",
 };
 
-SetupWizardBlocker::SetupWizardBlocker(
-    MainWindow &mainWindow, qBlockerType type)
-    : m_MainWindow(mainWindow) {
+SetupWizardBlocker::SetupWizardBlocker(BlockerType type) {
   setupUi(this);
 
   m_pLabelTitle->setText(blockerTitels[static_cast<int>(type)]);

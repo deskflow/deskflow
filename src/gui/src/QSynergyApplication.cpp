@@ -24,18 +24,4 @@
 #include <QtGui>
 
 QSynergyApplication::QSynergyApplication(int &argc, char **argv)
-    : QApplication(argc, argv) {
-
-  // Setting the style to 'Fusion' seems to fix issues such as text being
-  // rendered as black on black. This may not be the style we want long-term
-  // but it does fix the style issues for now.
-  setStyle("Fusion");
-}
-
-void QSynergyApplication::commitData(const QSessionManager &) const {
-  foreach (QWidget *widget, topLevelWidgets()) {
-    MainWindow *mainWindow = qobject_cast<MainWindow *>(widget);
-    if (mainWindow)
-      mainWindow->saveSettings();
-  }
-}
+    : QApplication(argc, argv) {}

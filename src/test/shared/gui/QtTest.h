@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "gui/messages.h"
+
 #include <QApplication>
 #include <gtest/gtest.h>
 
@@ -26,6 +28,7 @@ public:
     char **argv = nullptr;
     int argc = 0;
     s_app = std::make_unique<QApplication>(argc, argv);
+    qInstallMessageHandler(synergy::gui::messages::messageHandler);
   }
 
   static void TearDownTestSuite() { s_app.reset(); }

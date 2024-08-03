@@ -17,6 +17,7 @@
 
 #include "LicenseHandler.h"
 
+#include "constants.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
 
@@ -40,6 +41,10 @@ QString LicenseHandler::productName() const {
 LicenseHandler::ChangeSerialKeyResult
 LicenseHandler::changeSerialKey(const QString &hexString) {
   using enum LicenseHandler::ChangeSerialKeyResult;
+
+  if (!m_enabled) {
+    qFatal("cannot set serial key, licensing is disabled");
+  }
 
   if (hexString.isEmpty()) {
     qFatal("serial key is empty");

@@ -28,6 +28,7 @@ const auto kFuture = system_clock::now() + hours(1);
 
 TEST(LicenseHandlerTests, changeSerialKey_validExpiredLicense_returnsTrue) {
   LicenseHandler licenseHandler;
+  licenseHandler.setEnabled(true);
   auto hexString = //
       "7B76313B70726F3B6E69636B20626F6C746F6E3B313B6"
       "E69636B4073796D6C6573732E636F6D3B203B303B307D";

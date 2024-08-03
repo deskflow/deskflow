@@ -53,7 +53,7 @@ SettingsDialog::SettingsDialog(
   m_pMainWindow = dynamic_cast<MainWindow *>(parent);
 
   loadFromConfig();
-  m_isSystemAtStart = appConfig().isSystemScoped();
+  m_wasOriginallySystemScope = appConfig().isActiveScopeSystem();
   updateControlsEnabled();
 
   const auto &serveConfig = m_pMainWindow->serverConfig();
@@ -86,18 +86,17 @@ void SettingsDialog::accept() {
   appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
-  appConfig().setServiceEnabled(m_pCheckBoxServiceEnabled->isChecked());
+  appConfig().setEnableService(m_pCheckBoxServiceEnabled->isChecked());
   appConfig().setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
   appConfig().setInvertConnection(m_pInvertConnection->isChecked());
 
-  appConfig().saveSettings();
   QDialog::accept();
 }
 
 void SettingsDialog::reject() {
-  // We should restore scope at start if the user rejects changes.
-  if (appConfig().isSystemScoped() != m_isSystemAtStart) {
-    appConfig().setLoadFromSystemScope(m_isSystemAtStart);
+  // restore original system scope value on reject.
+  if (appConfig().isActiveScopeSystem() != m_wasOriginallySystemScope) {
+    appConfig().setLoadFromSystemScope(m_wasOriginallySystemScope);
   }
 
   QDialog::reject();
@@ -117,10 +116,10 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  m_pCheckBoxServiceEnabled->setChecked(m_appConfig.serviceEnabled());
+  m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
 
-  if (m_appConfig.isSystemScoped()) {
+  if (m_appConfig.isActiveScopeSystem()) {
     m_pRadioSystemScope->setChecked(true);
   } else {
     m_pRadioUserScope->setChecked(true);
@@ -147,14 +146,15 @@ void SettingsDialog::updateTlsControls() {
 }
 
 void SettingsDialog::updateTlsControlsEnabled() {
+  bool writable = appConfig().isActiveScopeWritable();
   auto clientMode = appConfig().clientGroupChecked();
   auto tlsAvailable = m_tlsUtility.isAvailableAndEnabled();
   auto tlsChecked = m_pCheckBoxEnableCrypto->isChecked();
-  auto enabled = !clientMode && tlsAvailable && tlsChecked;
+  auto enabled = writable && !clientMode && tlsAvailable && tlsChecked;
 
   qDebug(
-      "tls enabled=%d, client=%d, available=%d, checked=%d", enabled,
-      clientMode, tlsAvailable, tlsChecked);
+      "tls enabled=%d, writable=%d, client=%d, available=%d, checked=%d",
+      enabled, writable, clientMode, tlsAvailable, tlsChecked);
 
   m_pLabelKeyLength->setEnabled(enabled);
   m_pComboBoxKeyLength->setEnabled(enabled);
@@ -165,7 +165,7 @@ void SettingsDialog::updateTlsControlsEnabled() {
 }
 
 bool SettingsDialog::isClientMode() const {
-  return (m_pMainWindow->coreMode() == MainWindow::CoreMode::Client);
+  return m_pMainWindow->coreMode() == MainWindow::CoreMode::Client;
 }
 
 void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
@@ -254,7 +254,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
 }
 
 void SettingsDialog::updateControlsEnabled() {
-  bool writable = appConfig().isWritable();
+  bool writable = appConfig().isActiveScopeWritable();
 
   m_pLineEditScreenName->setEnabled(writable);
   m_pSpinBoxPort->setEnabled(writable);

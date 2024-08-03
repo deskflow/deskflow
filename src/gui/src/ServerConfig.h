@@ -21,9 +21,11 @@
 #include "Hotkey.h"
 #include "ScreenConfig.h"
 #include "ScreenList.h"
-#include "gui/CommonConfig.h"
 
 #include <QList>
+
+const auto kDefaultColumns = 5;
+const auto kDefaultRows = 3;
 
 class QTextStream;
 class QSettings;
@@ -33,7 +35,7 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-class ServerConfig : public ScreenConfig, public synergy::gui::CommonConfig {
+class ServerConfig : public ScreenConfig {
   friend class ServerConfigDialog;
   friend class ServerConnection;
   friend QTextStream &
@@ -41,15 +43,15 @@ class ServerConfig : public ScreenConfig, public synergy::gui::CommonConfig {
 
 public:
   ServerConfig(
-      int numColumns, int numRows, AppConfig *appConfig,
-      MainWindow *mainWindow);
-  ~ServerConfig() override;
+      AppConfig &appConfig, MainWindow &mainWindow,
+      int columns = kDefaultColumns, int rows = kDefaultRows);
+  ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;
 
   const ScreenList &screens() const { return m_Screens; }
-  int numColumns() const { return m_NumColumns; }
-  int numRows() const { return m_NumRows; }
+  int numColumns() const { return m_Columns; }
+  int numRows() const { return m_Rows; }
   bool hasHeartbeat() const { return m_HasHeartbeat; }
   int heartbeat() const { return m_Heartbeat; }
   bool relativeMouseMoves() const { return m_RelativeMouseMoves; }
@@ -68,8 +70,7 @@ public:
   size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
   static size_t defaultClipboardSharingSize();
 
-  void saveSettings() override;
-  void loadSettings() override;
+  void commit();
   bool save(const QString &fileName) const;
   void save(QFile &file) const;
   int numScreens() const;
@@ -84,13 +85,15 @@ public:
   QString getClientAddress() const;
   void setClientAddress(const QString &address);
 
-protected:
+private:
+  void recall();
+  void setupScreens();
   QSettings &settings();
   ScreenList &screens() { return m_Screens; }
   void setScreens(const ScreenList &screens) { m_Screens = screens; }
   void addScreen(const Screen &screen) { m_Screens.append(screen); }
-  void setNumColumns(int n) { m_NumColumns = n; }
-  void setNumRows(int n) { m_NumRows = n; }
+  void setNumColumns(int n) { m_Columns = n; }
+  void setNumRows(int n) { m_Rows = n; }
   void haveHeartbeat(bool on) { m_HasHeartbeat = on; }
   void setHeartbeat(int val) { m_Heartbeat = val; }
   void setRelativeMouseMoves(bool on) { m_RelativeMouseMoves = on; }
@@ -109,11 +112,7 @@ protected:
   size_t setClipboardSharingSize(size_t size);
   QList<bool> &switchCorners() { return m_SwitchCorners; }
   HotkeyList &hotkeys() { return m_Hotkeys; }
-
-  void init();
   int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
-
-private:
   bool findScreenName(const QString &name, int &index);
   bool fixNoServer(const QString &name, int &index);
   int showAddClientDialog(const QString &clientName);
@@ -139,8 +138,8 @@ private:
   AppConfig *m_pAppConfig;
   MainWindow *m_pMainWindow;
   ScreenList m_Screens;
-  int m_NumColumns;
-  int m_NumRows;
+  int m_Columns;
+  int m_Rows;
   size_t m_ClipboardSharingSize;
 };
 

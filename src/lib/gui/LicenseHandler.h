@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "gui/constants.h"
 #include "license/License.h"
 #include "license/ProductEdition.h"
 
@@ -44,11 +45,13 @@ public:
   void validate() const;
   QString productName() const;
   ChangeSerialKeyResult changeSerialKey(const QString &hexString);
+  void setEnabled(bool enabled) { m_enabled = enabled; }
 
 signals:
   void serialKeyChanged(const QString &serialKey) const;
   void invalidLicense() const;
 
 private:
+  bool m_enabled = kLicensingEnabled;
   License m_license = License::invalid();
 };

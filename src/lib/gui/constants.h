@@ -19,18 +19,23 @@
 
 #include <QString>
 
+const auto kAppName = "Synergy";
+
+// TODO: change to `com.symless`. we'll need to gracefully import old settings,
+// since qt uses this on some platforms when saving settings.
+const auto kAppDomain = "https://symless.com";
+
+#ifdef SYNERGY_PRODUCT_NAME
+const QString kProductName = SYNERGY_PRODUCT_NAME;
+#else
+const QString kProductName;
+#endif
+
 #ifdef SYNERGY_ENABLE_LICENSING
 const bool kLicensingEnabled = true;
 #else
 const bool kLicensingEnabled = false;
 #endif // SYNERGY_ENABLE_LICENSING
-
-const auto kColorWhite = "#ffffff";
-const auto kColorPrimary = "#ff7c00";
-const auto kColorSecondary = "#4285f4";
-const auto kColorTertiary = "#33b2cc";
-const auto kColorError = "#ec4c47";
-const auto kColorNotice = "#3b67d3";
 
 const auto kLinkBuy = R"(<a href="%1" style="color: %2">Buy now</a>)";
 const auto kLinkRenew = R"(<a href="%1" style="color: %2">Renew now</a>)";
@@ -38,6 +43,9 @@ const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
 const auto kUrlSourceQuery = "source=gui";
 const auto kUrlWebsite = "https://symless.com";
+const auto kUrlContribute = "https://github.com/symless/synergy-core";
+const auto kUrlGnomeTrayFix =
+    "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
 const auto kUrlProduct = QString("%1/synergy").arg(kUrlWebsite);
 const auto kUrlPurchase =
     QString("%1/purchase?%2").arg(kUrlProduct, kUrlSourceQuery);
@@ -46,21 +54,3 @@ const auto kUrlContact =
 const auto kUrlHelp = QString("%1/help?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlDownload =
     QString("%1/download?%2").arg(kUrlProduct, kUrlSourceQuery);
-
-const auto kStyleLineEditErrorBorder =
-    QString("border: 1px solid %1; border-radius: 2px; padding: 2px;")
-        .arg(kColorError);
-
-const auto kStyleErrorActiveLabel = //
-    QString("padding: 3px 5px; border-radius: 3px; "
-            "background-color: %1; color: %2")
-        .arg(kColorError, kColorWhite);
-
-const auto kStyleErrorInactiveLabel = //
-    QString("padding: 3px 5px; border-radius: 3px;"
-            "background-color: none");
-
-const auto kStyleNoticeLabel = //
-    QString("padding: 3px 5px; border-radius: 3px;"
-            "background-color: %1; color: %2")
-        .arg(kColorNotice, kColorWhite);

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,18 +17,16 @@
 
 #include "SetupWizard.h"
 
-#include "MainWindow.h"
-#include "gui/constants.h"
+#include "gui/styles.h"
 #include "validators/ScreenNameValidator.h"
 #include "validators/ValidationError.h"
 
-SetupWizard::SetupWizard(MainWindow &mainWindow) : m_mainWindow(mainWindow) {
-
+SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig) {
   setupUi(this);
 
   m_pLabelError->setStyleSheet(kStyleErrorActiveLabel);
 
-  m_pLineEditName->setText(m_mainWindow.appConfig().screenName());
+  m_pLineEditName->setText(appConfig.screenName());
   m_pLineEditName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditName, new validators::ValidationError(this, m_pLabelError)));
 
@@ -39,13 +37,8 @@ SetupWizard::SetupWizard(MainWindow &mainWindow) : m_mainWindow(mainWindow) {
 }
 
 void SetupWizard::accept() {
-  AppConfig &appConfig = m_mainWindow.appConfig();
-
-  appConfig.setWizardHasRun();
-  appConfig.setScreenName(m_pLineEditName->text());
-  appConfig.saveSettings();
-
-  m_mainWindow.open();
+  m_appConfig.setWizardHasRun();
+  m_appConfig.setScreenName(m_pLineEditName->text());
   QDialog::accept();
 }
 

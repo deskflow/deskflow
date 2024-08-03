@@ -26,6 +26,4 @@ class QSynergyApplication : public QApplication {
 public:
   QSynergyApplication(int &argc, char **argv);
   ~QSynergyApplication() override = default;
-
-  void commitData(const QSessionManager &manager) const;
 };

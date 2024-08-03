@@ -79,22 +79,23 @@ public:
     PendingRetry
   };
 
-  enum class CoreMode { Client, Server };
+  enum class CoreMode { None, Client, Server };
   enum class LogLevel { Error, Info };
   enum class RuningState { Started, Stopped };
 
 public:
-  explicit MainWindow(AppConfig &appConfig);
+  explicit MainWindow(
+      synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig);
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
   CoreMode coreMode() const;
+  QString coreModeString() const;
   QString address() const;
   QString appPath(const QString &name) const;
   void open();
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
-  LicenseHandler &licenseHandler();
   int showActivationDialog();
   void appendLogInfo(const QString &text);
   void appendLogDebug(const QString &text);
@@ -110,7 +111,7 @@ public slots:
 private slots:
   void onCreated();
   void onShown();
-  void onAppConfigLoaded();
+  void onConfigScopesSaving();
   void onAppConfigTlsChanged();
   void onAppConfigScreenNameChanged();
   void onAppConfigInvertConnection();
@@ -142,15 +143,17 @@ private slots:
   void on_m_pActionHelp_triggered();
   void on_m_pActionSettings_triggered();
   void on_m_pActivate_triggered();
+  void on_m_pLineEditHostname_returnPressed();
+  void on_m_pLineEditClientIp_returnPressed();
 
 private:
-  QSettings &settings() { return *appConfig().scopes().currentSettings(); }
   AppConfig &appConfig() { return m_AppConfig; }
   AppConfig const &appConfig() const { return m_AppConfig; }
   void createMenuBar();
   void createStatusBar();
   void createTrayIcon();
   void applyConfig();
+  void applyCloseToTray() const;
   void setIcon(CoreState state) const;
   void setCoreState(CoreState state);
   bool checkForApp(int which, QString &app);
@@ -172,6 +175,7 @@ private:
   QString getTimeStamp() const;
   void restartCore();
   void showEvent(QShowEvent *) override;
+  void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
   void windowStateChanged();
   void connectSlots() const;
@@ -183,6 +187,7 @@ private:
   void updateScreenName();
   void saveSettings();
   QString configFilename();
+  bool isCoreActive() const;
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void showLicenseNotice();
@@ -192,6 +197,9 @@ private:
   void setupControls();
   void resizeEvent(QResizeEvent *event) override;
   void moveEvent(QMoveEvent *event) override;
+  void showFirstRunMessage();
+  void showDevThanksMessage();
+  QString productName() const;
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
@@ -216,9 +224,10 @@ private:
   bool m_SecureSocket = false;
   QString m_SecureSocketVersion = "";
   bool m_SaveWindow = false;
-
-  AppConfig &m_AppConfig;
   LicenseHandler m_LicenseHandler;
+
+  synergy::gui::ConfigScopes &m_ConfigScopes;
+  AppConfig &m_AppConfig;
   ServerConfig m_ServerConfig;
   ServerConnection m_ServerConnection;
   ClientConnection m_ClientConnection;

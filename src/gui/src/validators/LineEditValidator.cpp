@@ -17,7 +17,7 @@
 
 #include "LineEditValidator.h"
 
-#include "gui/constants.h"
+#include "gui/styles.h"
 #include <qvalidator.h>
 
 namespace validators {

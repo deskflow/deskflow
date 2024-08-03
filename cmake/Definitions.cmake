@@ -60,6 +60,11 @@ macro(configure_definitions)
     add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
   endif()
 
+  if(SHOW_DEV_THANKS)
+    message(STATUS "Enabling dev thanks message")
+    add_definitions(-DSYNERGY_SHOW_DEV_THANKS=1)
+  endif()
+
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
@@ -108,6 +113,9 @@ macro(configure_options)
   # licensing is off by default to make life easier for contributors.
   set(DEFAULT_ENABLE_LICENSING OFF)
 
+  # by default, show the dev thanks message.
+  set(DEFAULT_SHOW_DEV_THANKS ON)
+
   if("$ENV{SYNERGY_BUILD_MINIMAL}" STREQUAL "true")
     set(DEFAULT_BUILD_GUI OFF)
     set(DEFAULT_BUILD_INSTALLER OFF)
@@ -129,11 +137,16 @@ macro(configure_options)
     set(DEFAULT_ENABLE_COVERAGE ON)
   endif()
 
+  if("$ENV{SYNERGY_SHOW_DEV_THANKS}" STREQUAL "false")
+    set(DEFAULT_SHOW_DEV_THANKS OFF)
+  endif()
+
   option(BUILD_GUI "Build GUI" ${DEFAULT_BUILD_GUI})
   option(BUILD_INSTALLER "Build installer" ${DEFAULT_BUILD_INSTALLER})
   option(BUILD_TESTS "Build tests" ${DEFAULT_BUILD_TESTS})
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
   option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
+  option(SHOW_DEV_THANKS "Show dev thanks message" ${DEFAULT_SHOW_DEV_THANKS})
 
 endmacro()
