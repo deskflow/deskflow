@@ -24,7 +24,6 @@
 #include <QDebug>
 #include <QProcessEnvironment>
 #include <QTimer>
-#include <qglobal.h>
 
 using namespace std::chrono;
 using namespace synergy::license;

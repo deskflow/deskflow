@@ -19,7 +19,6 @@
 
 #include "TlsCertificate.h"
 #include "constants.h"
-#include <qglobal.h>
 
 namespace synergy::gui {
 
