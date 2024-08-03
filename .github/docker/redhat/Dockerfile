@@ -5,7 +5,7 @@ FROM $BASE_IMAGE AS base
 
 FROM base AS deps
 
-ENV RHEL_REPOS="codeready-builder-for-rhel-8-x86_64-rpms"
+ENV RHEL_REPOS="codeready-builder-for-rhel-9-x86_64-rpms"
 
 WORKDIR /app
 
