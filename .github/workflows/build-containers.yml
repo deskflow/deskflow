@@ -96,6 +96,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create RHEL login file
+        run: |
+          mkdir -p tmp
+          echo "export RHEL_USERNAME=${{ secrets.RHEL_USERNAME }}" >> ./tmp/rhel_login.sh
+          echo "export RHEL_PASSWORD=${{ secrets.RHEL_PASSWORD }}" >> ./tmp/rhel_login.sh
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -115,5 +121,3 @@ jobs:
           platforms: linux/${{ matrix.os.platform }}
           build-args: |
             BASE_IMAGE=${{ matrix.os.base-image }}
-            RHEL_USERNAME=${{ secrets.RHEL_USERNAME }}
-            RHEL_PASSWORD=${{ secrets.RHEL_PASSWORD }}
