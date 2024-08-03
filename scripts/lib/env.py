@@ -134,7 +134,7 @@ def install_requirements():
 
     print("Installing required modules...")
     cmd_utils.run(
-        [sys.executable, "-m", "pip", "install", "-e", "scripts"],
+        [sys.executable, "-m", "pip", "install", "-e", "--user", "scripts"],
         shell=False,
         print_cmd=True,
     )
