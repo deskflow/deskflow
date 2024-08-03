@@ -13,10 +13,6 @@ on:
   schedule:
     - cron: "0 5 * * 0"
 
-env:
-  RHEL_USERNAME: ${{ secrets.RHEL_USERNAME }}
-  RHEL_PASSWORD: ${{ secrets.RHEL_PASSWORD }}
-
 jobs:
   build-containers:
     name: ${{ matrix.os.name }}
@@ -116,5 +112,8 @@ jobs:
           context: .
           file: ./.github/docker/${{ matrix.os.config-dir }}/Dockerfile
           tags: symless/synergy-core:${{ matrix.os.name }}
-          build-args: BASE_IMAGE=${{ matrix.os.base-image }}
           platforms: linux/${{ matrix.os.platform }}
+          build-args: |
+            BASE_IMAGE=${{ matrix.os.base-image }}
+            RHEL_USERNAME=${{ secrets.RHEL_USERNAME }}
+            RHEL_PASSWORD=${{ secrets.RHEL_PASSWORD }}
