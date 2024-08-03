@@ -14,7 +14,7 @@ ENV RHEL_REPOS="codeready-builder-for-rhel-8-x86_64-rpms"
 
 WORKDIR /app
 
-RUN --mount=type=bind,target=/app,r \
+RUN --mount=type=bind,target=/app,rw \
   ./scripts/activate_rhel.sh
 
 RUN dnf upgrade -y && \
