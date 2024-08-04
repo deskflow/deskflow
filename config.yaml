@@ -63,6 +63,9 @@ config:
           gtk3-devel \
           rpm-build
 
+    rhel:
+      <<: *fedora
+
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
         command: sudo zypper refresh; \
