@@ -5,6 +5,9 @@ import lib.cmd_utils as cmd_utils
 config_file = "config.yaml"
 root_key = "config"
 deps_key = "dependencies"
+command_key = "command"
+command_pre_key = "command-pre"
+arrow = " ➤ "
 
 
 class ConfigKeyError(RuntimeError):
@@ -20,7 +23,7 @@ def _get(dict, key, key_parent=None, required=True):
     value = dict.get(key)
 
     if required and not value:
-        key_path = f"{root_key}:{key_parent}:{key}" if key_parent else key
+        key_path = f"{root_key}{arrow}{key_parent}{arrow}{key}" if key_parent else key
         raise ConfigKeyError(config_file, key_path)
 
     return value
@@ -40,14 +43,19 @@ class Config:
         root = _get(data, root_key)
         self.os = _get(root, self.os_name)
 
-    def get_os_value(self, key):
-        return _get(self.os, key, self.os_name)
+    def get_os_value(self, key, required=True, linux_distro=None):
+        if linux_distro:
+            # recurse with the linux distro as the key parameter to get the base distro key.
+            distro = self.get_os_value(key=linux_distro, required=required)
+            return _get(distro, key, f"{self.os_name}{arrow}{linux_distro}", required)
+        else:
+            return _get(self.os, key, self.os_name, required)
 
     def get_qt_config(self):
         qt_key = "qt"
         qt = self.get_os_deps_value(qt_key)
 
-        parent_key = f"{self.os_name}:{deps_key}"
+        parent_key = f"{self.os_name}{arrow}{deps_key}"
         mirror_url = _get(qt, "mirror", parent_key)
         version = _get(qt, "version", parent_key)
         base_dir = _get(qt, "base-dir", parent_key)
@@ -55,26 +63,26 @@ class Config:
 
         return mirror_url, version, base_dir, modules
 
-    def get_os_deps_value(self, key):
-        deps = self.get_os_value(deps_key)
-        return _get(deps, key, f"{self.os_name}:{deps_key}")
+    def get_os_deps_value(self, key, required=True, linux_distro=None):
+        deps = self.get_os_value(deps_key, required, linux_distro)
+        if linux_distro:
+            key_parent = f"{self.os_name}{arrow}{linux_distro}{arrow}{deps_key}"
+        else:
+            key_parent = f"{self.os_name}{arrow}{deps_key}"
+        return _get(deps, key, key_parent, required)
 
-    def get_deps_command(self):
-        deps = self.get_os_value(deps_key)
-        command = _get(deps, "command", f"{self.os_name}:{deps_key}")
+    def get_os_deps_command(self, key=command_key, required=True, linux_distro=None):
+        command = self.get_os_deps_value(key, required, linux_distro)
         return cmd_utils.strip_continuation_sequences(command)
 
-    def get_linux_deps_command(self, distro):
-        distro_data = self.get_os_value(distro)
-        deps = _get(distro_data, deps_key, f"{self.os_name}:{distro}")
-        command = _get(deps, "command", f"{self.os_name}:{distro}:{deps_key}")
-        return cmd_utils.strip_continuation_sequences(command)
+    def get_os_deps_command_pre(self, required=True, linux_distro=None):
+        return self.get_os_deps_command(command_pre_key, required, linux_distro)
 
     def get_windows_ci_config(self):
         choco_ci_key = "ci"
         choco_ci = self.get_os_deps_value(choco_ci_key)
 
-        choco_ci_path = f"{self.os_name}:{deps_key}:{choco_ci_key}"
+        choco_ci_path = f"{self.os_name}{arrow}{deps_key}{arrow}{choco_ci_key}"
         edit_config = _get(choco_ci, "edit-config", choco_ci_path)
         skip_packages = _get(choco_ci, "skip-packages", choco_ci_path)
 

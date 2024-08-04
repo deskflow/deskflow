@@ -92,7 +92,7 @@ class Dependencies:
             edit_config, skip_packages = self.config.get_windows_ci_config()
             choco.remove_from_config(edit_config, skip_packages)
 
-        command = self.config.get_deps_command()
+        command = self.config.get_os_deps_command()
         choco.install(command, self.ci_env)
 
     def mac(self):
@@ -112,7 +112,7 @@ class Dependencies:
             env_vars_set += mac.set_env_var(cmake_prefix_env_var, qt_dir)
             env_vars_set += mac.set_env_var(path_env_var, qt_bin_dir)
 
-        command = self.config.get_os_deps_value("command")
+        command = self.config.get_os_deps_command()
         cmd_utils.run(command, shell=True, print_cmd=True)
 
         if env_vars_set:
@@ -120,25 +120,30 @@ class Dependencies:
 
     def linux(self):
         """Installs dependencies on Linux."""
+        import lib.linux as linux
 
-        distro, _distro_like, _distro_version = env.get_linux_distro()
+        distro, distro_like, _distro_version = env.get_linux_distro()
         if not distro:
             raise RuntimeError("Unable to detect Linux distro")
 
-        command = self.config.get_linux_deps_command(distro)
+        command_pre = self.config.get_os_deps_command_pre(
+            linux_distro=distro, required=False
+        )
+        if command_pre:
+            print("Running dependencies prerequisites command")
 
-        has_sudo = cmd_utils.has_command("sudo")
-        if "sudo" in command and not has_sudo:
-            # assume we're running as root if sudo is not found (common on older distros).
-            # a space char is intentionally added after "sudo" for intentionality.
-            # possible limitation with stripping "sudo" is that if any packages with "sudo" in the
-            # name are added to the list (probably very unlikely), this will have undefined behavior.
-            print("The 'sudo' command was not found, stripping sudo from command")
-            command = command.replace("sudo ", "").strip()
+            check = True
+            if distro_like and "fedora" in distro_like:
+                print("Fedora-like detected, ignoring return code")
+                # On Fedora, dnf update returns code 100 when updates are available, but the last command
+                # run should be dnf install, so the return code should always be 0.
+                check = False
 
-        # On Fedora, dnf update returns code 100 when updates are available, but the last command
-        # run should be dnf install, so the return code should always be 0.
-        cmd_utils.run(command, shell=True, print_cmd=True)
+            linux.run_command(command_pre, check)
+
+        command = self.config.get_os_deps_command(linux_distro=distro)
+        print("Running dependencies command")
+        linux.run_command(command, check=True)
 
 
 if __name__ == "__main__":

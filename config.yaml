@@ -23,7 +23,8 @@ config:
   linux:
     debian: &debian
       dependencies:
-        command: sudo apt-get update; \
+        command-pre: sudo apt-get update
+        command: |
           sudo apt-get install -y \
           cmake \
           make \
@@ -46,7 +47,8 @@ config:
 
     fedora: &fedora
       dependencies:
-        command: sudo dnf check-update; \
+        command-pre: sudo dnf check-update
+        command: |
           sudo dnf install -y \
           cmake \
           make \
@@ -65,11 +67,15 @@ config:
 
     rhel:
       <<: *fedora
+      command-pre: |
+        sudo dnf check-update; \
+        sudo dnf install -y epel-release; \
+        sudo dnf config-manager --set-enabled codeready-builder-for-rhel-8-x86_64-rpms
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
-        command: sudo zypper refresh; \
-          sudo zypper install -y --force-resolution \
+        command-pre: sudo zypper refresh
+        command: sudo zypper install -y --force-resolution \
           cmake \
           make \
           gcc-c++ \
