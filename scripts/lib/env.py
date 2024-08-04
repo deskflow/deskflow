@@ -132,9 +132,16 @@ def install_requirements():
 
     check_dependencies(raise_error=True)
 
+    print("Updating pip...")
+    cmd_utils.run(
+        [sys.executable, "-m", "pip", "install", "--upgrade", "pip"],
+        shell=False,
+        print_cmd=True,
+    )
+
     print("Installing required modules...")
     cmd_utils.run(
-        [sys.executable, "-m", "pip", "install", "-e", "--user", "scripts"],
+        [sys.executable, "-m", "pip", "install", "-e", "scripts"],
         shell=False,
         print_cmd=True,
     )
