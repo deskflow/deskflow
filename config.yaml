@@ -46,7 +46,7 @@ config:
       <<: *debian
 
     fedora: &fedora
-      dependencies:
+      dependencies: &fedora_deps
         command-pre: sudo dnf check-update
         command: |
           sudo dnf install -y \
@@ -67,10 +67,12 @@ config:
 
     rhel:
       <<: *fedora
-      command-pre: |
-        sudo dnf check-update; \
-        sudo dnf install -y epel-release; \
-        sudo dnf config-manager --set-enabled codeready-builder-for-rhel-8-x86_64-rpms
+      dependencies:
+        <<: *fedora_deps
+        command-pre: |
+          sudo dnf check-update; \
+          sudo dnf install -y epel-release; \
+          sudo dnf config-manager --set-enabled codeready-builder-for-rhel-8-x86_64-rpms
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:

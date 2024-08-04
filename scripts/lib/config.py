@@ -73,7 +73,10 @@ class Config:
 
     def get_os_deps_command(self, key=command_key, required=True, linux_distro=None):
         command = self.get_os_deps_value(key, required, linux_distro)
-        return cmd_utils.strip_continuation_sequences(command)
+        if command:
+            return cmd_utils.strip_continuation_sequences(command)
+        else:
+            return None
 
     def get_os_deps_command_pre(self, required=True, linux_distro=None):
         return self.get_os_deps_command(command_pre_key, required, linux_distro)
