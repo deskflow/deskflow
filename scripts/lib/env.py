@@ -189,7 +189,7 @@ def ensure_dependencies():
 
     update_cmd = None
     install_cmd = None
-    if "rhel" in distro:
+    if distro == "rhel" or "rhel" in distro_like:
         update_cmd = "yum check-update"
         install_cmd = "yum install -y python3-pip"  # rhel has venv already
     elif "debian" in distro_like:
