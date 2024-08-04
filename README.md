@@ -66,4 +66,4 @@ Alternatively, use the [official packages](https://symless.com/synergy/download)
 
 Synergy 2 is no longer in development and should not be provided.
 
-[![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg)](https://repology.org/project/synergy)
+[![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg?exclude_unsupported=1)](https://repology.org/project/synergy/versions)
