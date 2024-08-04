@@ -70,8 +70,8 @@ config:
       dependencies:
         <<: *fedora_deps
         command-pre: |
-          sudo dnf check-update; \
-          sudo dnf config-manager --set-enabled powertools
+          sudo dnf check-update;
+          sudo dnf config-manager --set-enabled powertools;
           sudo dnf install -y epel-release
 
     rhel:
