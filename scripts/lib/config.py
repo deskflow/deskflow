@@ -46,7 +46,7 @@ class Config:
     def get_os_value(self, key, required=True, linux_distro=None):
         if linux_distro:
             # recurse with the linux distro as the key parameter to get the base distro key.
-            distro = self.get_os_value(key=linux_distro, required=required)
+            distro = self.get_os_value(key=linux_distro)
             return _get(distro, key, f"{self.os_name}{arrow}{linux_distro}", required)
         else:
             return _get(self.os, key, self.os_name, required)
