@@ -75,7 +75,7 @@ config:
           sudo dnf install -y epel-release;
           dnf config-manager --set-enabled crb
 
-    rockylinux:
+    rocky:
       <<: *rhel
       dependencies:
         <<: *rhel_deps
