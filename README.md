@@ -13,8 +13,8 @@ Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://syne
 This project is intended for advanced technical users, and when built produces Synergy 1 Community Edition. 
 To use the community edition, either install the `synergy` package with your favorite package manager or build it yourself using the Developer Quick Start instructions below.
 
-* [Download Synergy](https://symless.com/synergy/download) (paid version)
-* [Contact support](https://symless.com/synergy/contact) (for customers)
+* [Download Synergy](https://symless.com/synergy/download)
+* [Contact support](https://symless.com/synergy/contact)
 * [Help articles](https://symless.com/synergy/help)
 * [Project Wiki](https://github.com/symless/synergy-core/wiki)
 
