@@ -71,8 +71,8 @@ config:
         <<: *fedora_deps
         command-pre: |
           sudo dnf check-update;
-          sudo dnf config-manager --set-enabled powertools;
-          sudo dnf install -y epel-release
+          sudo dnf install -y epel-release;
+          sudo dnf config-manager --set-enabled powertools
 
     rhel:
       <<: *fedora
