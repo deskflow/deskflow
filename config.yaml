@@ -71,8 +71,7 @@ config:
         command-pre: |
           sudo dnf check-update;
           sudo dnf install -y epel-release;
-          sudo dnf config-manager --set-enabled powertools;
-          sudo dnf config-manager --set-enabled codeready-builder-for-rhel-9-x86_64-rpms
+          dnf config-manager --set-enabled crb
 
     almalinux:
       <<: *rhel
