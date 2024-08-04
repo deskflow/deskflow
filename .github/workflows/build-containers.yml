@@ -68,6 +68,18 @@ jobs:
             base-image: fedora:39
             platform: amd64
 
+          - name: rockylinux-9-amd64
+            runs-on: ubuntu-latest
+            config-dir: fedora
+            base-image: rockylinux:9
+            platform: amd64
+
+          - name: almalinux-9-amd64
+            runs-on: ubuntu-latest
+            config-dir: fedora
+            base-image: almalinux:9
+            platform: amd64
+
           - name: opensuse-amd64
             runs-on: ubuntu-latest
             config-dir: opensuse

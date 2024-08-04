@@ -67,6 +67,7 @@ Enhancements:
 - #7419 Introduce 'Advanced' tab to Preferences window
 - #7422 Handle empty value for computer name setting
 - #7423 Refactor local/global save/load and show dev thanks message
+- #7424 Add Alma Linux and Rocky Linux runners
 
 # 1.14.6
 

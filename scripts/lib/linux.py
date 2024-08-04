@@ -16,6 +16,20 @@ package_name = "synergy"
 test_cmd = "synergys --version"
 
 
+def run_command(command, check=True):
+
+    has_sudo = cmd_utils.has_command("sudo")
+    if "sudo" in command and not has_sudo:
+        # assume we're running as root if sudo is not found (common on older distros).
+        # a space char is intentionally added after "sudo" for intentionality.
+        # possible limitation with stripping "sudo" is that if any packages with "sudo" in the
+        # name are added to the list (probably very unlikely), this will have undefined behavior.
+        print("The 'sudo' command was not found, stripping sudo from command")
+        command = command.replace("sudo ", "").strip()
+
+    cmd_utils.run(command, check, shell=True, print_cmd=True)
+
+
 def package(filename_base, package_type: PackageType):
 
     extension, cmd = get_package_info(package_type)

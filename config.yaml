@@ -23,7 +23,8 @@ config:
   linux:
     debian: &debian
       dependencies:
-        command: sudo apt-get update; \
+        command-pre: sudo apt-get update
+        command: |
           sudo apt-get install -y \
           cmake \
           make \
@@ -45,8 +46,9 @@ config:
       <<: *debian
 
     fedora: &fedora
-      dependencies:
-        command: sudo dnf check-update; \
+      dependencies: &fedora_deps
+        command-pre: sudo dnf check-update
+        command: |
           sudo dnf install -y \
           cmake \
           make \
@@ -59,14 +61,34 @@ config:
           libxkbfile-devel \
           qt6-qtbase-devel \
           qt6-qttools-devel \
-          qt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
+    # RHEL is not actually supported yet, since it doesn't have Qt6 libs.
+    # We simply use it as a base for Alma Linux and Rocky Linux.
+    rhel: &rhel
+      <<: *fedora
+      dependencies: &rhel_deps
+        <<: *fedora_deps
+        command-pre: |
+          sudo dnf check-update;
+          sudo dnf install -y epel-release;
+          dnf config-manager --set-enabled crb
+
+    rocky:
+      <<: *rhel
+      dependencies:
+        <<: *rhel_deps
+
+    almalinux:
+      <<: *rhel
+      dependencies:
+        <<: *rhel_deps
+
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
-        command: sudo zypper refresh; \
-          sudo zypper install -y --force-resolution \
+        command-pre: sudo zypper refresh
+        command: sudo zypper install -y --force-resolution \
           cmake \
           make \
           gcc-c++ \
@@ -78,7 +100,6 @@ config:
           libxkbfile-devel \
           qt6-base-devel \
           qt6-tools-devel \
-          qt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
@@ -96,7 +117,6 @@ config:
           libxkbfile \
           qt6-base \
           qt6-tools \
-          qt6-5compat \
           gtk3
 
     manjaro:

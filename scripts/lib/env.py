@@ -132,6 +132,13 @@ def install_requirements():
 
     check_dependencies(raise_error=True)
 
+    print("Updating pip...")
+    cmd_utils.run(
+        [sys.executable, "-m", "pip", "install", "--upgrade", "pip"],
+        shell=False,
+        print_cmd=True,
+    )
+
     print("Installing required modules...")
     cmd_utils.run(
         [sys.executable, "-m", "pip", "install", "-e", "scripts"],
@@ -182,7 +189,10 @@ def ensure_dependencies():
 
     update_cmd = None
     install_cmd = None
-    if "debian" in distro_like:
+    if distro == "rhel" or "rhel" in distro_like:
+        update_cmd = "yum check-update"
+        install_cmd = "yum install -y python3-pip"  # rhel-like has venv already
+    elif "debian" in distro_like:
         update_cmd = "apt update"
         install_cmd = "apt install -y python3-pip python3-venv"
     elif "fedora" in distro_like:
