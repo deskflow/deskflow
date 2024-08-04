@@ -248,8 +248,8 @@ jobs:
             container: symless/synergy-core:opensuse-amd64
             runs-on: ubuntu-latest
 
-          - name: rhel-9-amd64
-            container: symless/synergy-core:rhel-9-amd64
+          - name: rockylinux-9-amd64
+            container: symless/synergy-core:rockylinux-9-amd64
             runs-on: ubuntu-latest
 
           - name: almalinux-9-amd64

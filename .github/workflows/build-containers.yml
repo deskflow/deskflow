@@ -68,10 +68,10 @@ jobs:
             base-image: fedora:39
             platform: amd64
 
-          - name: rhel-9-amd64
+          - name: rockylinux-9-amd64
             runs-on: ubuntu-latest
-            config-dir: redhat
-            base-image: redhat/ubi9:latest
+            config-dir: fedora
+            base-image: rockylinux:9
             platform: amd64
 
           - name: almalinux-9-amd64
@@ -101,12 +101,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Create RHEL login file
-        run: |
-          mkdir -p tmp
-          echo "export RHEL_USERNAME=${{ secrets.RHEL_USERNAME }}" >> ./tmp/rhel_login.sh
-          echo "export RHEL_PASSWORD=${{ secrets.RHEL_PASSWORD }}" >> ./tmp/rhel_login.sh
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

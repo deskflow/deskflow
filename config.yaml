@@ -64,6 +64,8 @@ config:
           gtk3-devel \
           rpm-build
 
+    # RHEL is not actually supported yet, since it doesn't have Qt6 libs.
+    # We simply use it as a base for Alma Linux and Rocky Linux.
     rhel: &rhel
       <<: *fedora
       dependencies: &rhel_deps
@@ -72,6 +74,11 @@ config:
           sudo dnf check-update;
           sudo dnf install -y epel-release;
           dnf config-manager --set-enabled crb
+
+    rockylinux:
+      <<: *rhel
+      dependencies:
+        <<: *rhel_deps
 
     almalinux:
       <<: *rhel
