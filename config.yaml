@@ -67,6 +67,11 @@ config:
 
     almalinux:
       <<: *fedora
+      dependencies:
+        <<: *fedora_deps
+        command-pre: |
+          sudo dnf check-update; \
+          sudo dnf install -y epel-release
 
     rhel:
       <<: *fedora
