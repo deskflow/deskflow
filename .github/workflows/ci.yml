@@ -252,6 +252,10 @@ jobs:
             container: symless/synergy-core:rhel-9-amd64
             runs-on: ubuntu-latest
 
+          - name: almalinux-9-amd64
+            container: symless/synergy-core:almalinux-9-amd64
+            runs-on: ubuntu-latest
+
           - name: archlinux-amd64
             container: symless/synergy-core:archlinux-amd64
             runs-on: ubuntu-latest

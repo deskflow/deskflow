@@ -65,6 +65,9 @@ config:
           gtk3-devel \
           rpm-build
 
+    almalinux:
+      <<: *fedora
+
     rhel:
       <<: *fedora
       dependencies:
