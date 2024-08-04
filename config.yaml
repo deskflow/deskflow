@@ -61,27 +61,23 @@ config:
           libxkbfile-devel \
           qt6-qtbase-devel \
           qt6-qttools-devel \
-          qt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
-    almalinux:
+    rhel: &rhel
       <<: *fedora
-      dependencies:
+      dependencies: &rhel_deps
         <<: *fedora_deps
         command-pre: |
           sudo dnf check-update;
           sudo dnf install -y epel-release;
-          sudo dnf config-manager --set-enabled powertools
-
-    rhel:
-      <<: *fedora
-      dependencies:
-        <<: *fedora_deps
-        command-pre: |
-          sudo dnf check-update; \
-          sudo dnf install -y epel-release; \
+          sudo dnf config-manager --set-enabled powertools;
           sudo dnf config-manager --set-enabled codeready-builder-for-rhel-9-x86_64-rpms
+
+    almalinux:
+      <<: *rhel
+      dependencies:
+        <<: *rhel_deps
 
     opensuse-tumbleweed: &opensuse-tumbleweed
       dependencies:
@@ -98,7 +94,6 @@ config:
           libxkbfile-devel \
           qt6-base-devel \
           qt6-tools-devel \
-          qt6-qt5compat-devel \
           gtk3-devel \
           rpm-build
 
@@ -116,7 +111,6 @@ config:
           libxkbfile \
           qt6-base \
           qt6-tools \
-          qt6-5compat \
           gtk3
 
     manjaro:
