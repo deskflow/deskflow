@@ -22,8 +22,6 @@
 #include <QString>
 #include <QWidget>
 
-class MainWindow;
-
 class ClientConnection {
 public:
   explicit ClientConnection(QWidget &parent, AppConfig &appConfig);

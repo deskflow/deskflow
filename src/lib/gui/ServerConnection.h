@@ -23,8 +23,6 @@
 #include "AppConfig.h"
 #include "IServerConfig.h"
 
-class MainWindow;
-
 class ServerConnection : public QObject {
   Q_OBJECT
   using IServerConfig = synergy::gui::IServerConfig;
