@@ -22,7 +22,7 @@
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "TrayIcon.h"
+#include "gui/TrayIcon.h"
 #include "gui/ConfigScopes.h"
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"

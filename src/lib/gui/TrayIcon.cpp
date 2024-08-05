@@ -17,7 +17,7 @@
 
 #include "TrayIcon.h"
 
-#include "gui/constants.h"
+#include "constants.h"
 
 const auto kShowRetryInterval = 1000;
 

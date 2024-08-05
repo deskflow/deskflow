@@ -32,12 +32,12 @@
 #include "ClientConnection.h"
 #include "ServerConfig.h"
 #include "ServerConnection.h"
-#include "TrayIcon.h"
 #include "global/Ipc.h"
 #include "gui/AppConfig.h"
 #include "gui/ConfigScopes.h"
 #include "gui/QIpcClient.h"
 #include "gui/TlsUtility.h"
+#include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 
 class QAction;
