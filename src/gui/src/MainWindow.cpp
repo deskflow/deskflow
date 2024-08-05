@@ -22,6 +22,7 @@
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
+#include "TrayIcon.h"
 #include "gui/ConfigScopes.h"
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
@@ -48,7 +49,6 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
-#include <array>
 #include <memory>
 
 #if defined(Q_OS_MAC)
@@ -253,6 +253,10 @@ void MainWindow::connectSlots() const {
   connect(
       &m_WindowSaveTimer, &QTimer::timeout, this,
       &MainWindow::onWindowSaveTimerTimeout);
+
+  connect(
+      &m_TrayIcon, &TrayIcon::activated, this,
+      &MainWindow::onTrayIconActivated);
 }
 
 void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
@@ -327,7 +331,12 @@ void MainWindow::onIpcClientInfoMessage(const QString &text) {
   appendLogInfo(text);
 }
 
-void MainWindow::onTrayIconCreate(QSystemTrayIcon::ActivationReason reason) {
+void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason) {
+
+  // HACK: setting the main window icon to disconnected when the tray is
+  // activated seems odd.
+  setIcon(CoreState::Disconnected);
+
   if (reason == QSystemTrayIcon::DoubleClick) {
     if (isVisible()) {
       hide();
@@ -514,16 +523,11 @@ void MainWindow::moveEvent(QMoveEvent *event) {
 
 void MainWindow::open() {
 
-  std::array<QAction *, 7> trayMenu = {
+  std::vector<QAction *> trayMenu = {
       m_pActionStartCore, m_pActionStopCore, nullptr,      m_pActionMinimize,
       m_pActionRestore,   nullptr,           m_pActionQuit};
 
-  // TODO: this seems like a hack that needs investigating...
-  m_TrayIcon.create(trayMenu, [this](QObject const *o, const char *s) {
-    connect(
-        o, s, this, SLOT(onTrayIconCreate(QSystemTrayIcon::ActivationReason)));
-    setIcon(CoreState::Disconnected);
-  });
+  m_TrayIcon.create(trayMenu);
 
   if (m_AppConfig.autoHide()) {
     hide();
@@ -620,7 +624,7 @@ void MainWindow::setIcon(CoreState state) const {
   icon.addFile(kDefaultIconFiles[index]);
 #endif
 
-  m_TrayIcon.set(icon);
+  m_TrayIcon.setIcon(icon);
 }
 
 void MainWindow::appendLogInfo(const QString &text) {

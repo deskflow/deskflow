@@ -16,20 +16,54 @@
  */
 
 #include "TrayIcon.h"
+#include "gui/constants.h"
 
-void TrayIcon::tryCreate() const {
-  QSystemTrayIcon trayIcon; // by creating a new tray icon, we actually make the
-                            // DBus implementation refresh the connection (DBus)
-  trayIcon.hide();          // we ony hide it in order for the compiler to not
-                            // optimise-out the object (make some use of it)
-  if (QSystemTrayIcon::isSystemTrayAvailable()) { // this ends up calling the
-                                                  // underlying DBus connection
-                                                  // (on DBus)
+TrayIcon::TrayIcon() {
+  m_setIcon = [this](const QIcon &icon) {
+    m_init = [this, icon]() { this->setIcon(icon); };
+  };
+}
+
+void TrayIcon::createLoop() const {
+  // HACK: apparently this is needed to create a dbus connection, and the hide
+  // is needed to make use of the object so the dbus connection doesn't get
+  // optimized away by the compiler.
+  // TODO: we should verify that this hack actually works.
+  QSystemTrayIcon trayIcon;
+  trayIcon.hide();
+
+  if (QSystemTrayIcon::isSystemTrayAvailable()) {
     m_pTrayIcon->show();
-    m_connector(
-        m_pTrayIcon.get(),
-        SIGNAL(activated(QSystemTrayIcon::ActivationReason)));
   } else {
-    QTimer::singleShot(2500, this, &TrayIcon::tryCreate);
+    QTimer::singleShot(2500, this, &TrayIcon::createLoop);
+  }
+}
+
+void TrayIcon::create(std::vector<QAction *> const &actions) {
+  m_pTrayIconMenu = std::make_unique<QMenu>();
+
+  for (auto action : actions) {
+    if (action) {
+      m_pTrayIconMenu->addAction(action);
+    } else {
+      m_pTrayIconMenu->addSeparator();
+    }
+  }
+
+  m_pTrayIcon = std::make_unique<QSystemTrayIcon>();
+
+  connect(
+      m_pTrayIcon.get(), &QSystemTrayIcon::activated, this,
+      &TrayIcon::activated);
+
+  m_pTrayIcon->setContextMenu(m_pTrayIconMenu.get());
+  m_pTrayIcon->setToolTip(kAppName);
+  m_setIcon = [this](const QIcon &icon) { m_pTrayIcon->setIcon(icon); };
+
+  createLoop();
+
+  if (m_init) {
+    m_init();
+    m_init = std::function<void()>();
   }
 }

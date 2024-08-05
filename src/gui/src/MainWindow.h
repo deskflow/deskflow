@@ -122,7 +122,7 @@ private slots:
   void onIpcClientInfoMessage(const QString &text);
   void onCoreProcessFinished(int exitCode, QProcess::ExitStatus);
   void onVersionCheckerUpdateFound(const QString &version);
-  void onTrayIconCreate(QSystemTrayIcon::ActivationReason reason);
+  void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void onActionStartCoreTriggered();
   void onActionStopCoreTriggered();
   void onCoreProcessReadyReadStandardOutput();
