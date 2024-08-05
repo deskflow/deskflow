@@ -133,9 +133,9 @@ class Dependencies:
             print("Running dependencies prerequisites command")
 
             check = True
-            if distro_like and "fedora" in distro_like:
+            if distro == "fedora" or "fedora" in distro_like:
                 print("Fedora-like detected, ignoring return code")
-                # On Fedora, dnf update returns code 100 when updates are available.
+                # On Fedora-like, dnf update returns code 100 when updates are available.
                 check = False
 
             linux.run_command(command_pre, check)
