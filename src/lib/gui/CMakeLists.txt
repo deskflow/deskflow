@@ -23,6 +23,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB_RECURSE sources *.cpp)
 file(GLOB_RECURSE headers *.h)
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  file(GLOB mac_sources *.mm)
+  list(APPEND sources ${mac_sources})
+endif()
+
 if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()

@@ -34,6 +34,10 @@
 #include "gui/styles.h"
 #include "license/License.h"
 
+#if defined(Q_OS_MAC)
+#include "gui/OSXHelpers.h"
+#endif
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>

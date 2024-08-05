@@ -29,11 +29,6 @@ file(
   src/widgets/*)
 file(GLOB GUI_UI_FILES src/*.ui)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  file(GLOB GUI_MAC_SOURCE_FILES src/*.mm)
-  list(APPEND GUI_SOURCE_FILES ${GUI_MAC_SOURCE_FILES})
-endif()
-
 if(WIN32)
   set(GUI_RC_FILES res/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()

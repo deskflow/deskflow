@@ -21,7 +21,7 @@
 #include <QDateTime>
 
 #if defined(Q_OS_MAC)
-#include "OSXHelpers.h"
+#include "gui/OSXHelpers.h"
 #endif
 
 #include "gui/version.h"

@@ -15,9 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(OSXHELPERS__H)
-
-#define OSXHELPERS__H
+#pragma once
 
 #include <QString>
 
@@ -28,5 +26,3 @@ bool isOSXDevelopmentBuild();
 bool showOSXNotification(const QString &title, const QString &body);
 bool isOSXInterfaceStyleDark();
 IconsTheme getOSXIconsTheme();
-
-#endif
