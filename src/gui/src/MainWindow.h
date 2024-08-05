@@ -154,7 +154,7 @@ private:
   void createTrayIcon();
   void applyConfig();
   void applyCloseToTray() const;
-  void setIcon(CoreState state) const;
+  void setIcon(CoreState state);
   void setCoreState(CoreState state);
   bool checkForApp(int which, QString &app);
   bool clientArgs(QStringList &args, QString &app);

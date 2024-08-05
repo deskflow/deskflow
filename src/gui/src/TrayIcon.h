@@ -27,19 +27,21 @@
 class TrayIcon : public QObject {
   Q_OBJECT
 public:
-  TrayIcon();
+  explicit TrayIcon() = default;
 
   void create(std::vector<QAction *> const &actions);
-  void setIcon(const QIcon &icon) const { m_setIcon(icon); }
+  void setIcon(const QIcon &icon);
 
 signals:
   void activated(QSystemTrayIcon::ActivationReason reason);
 
 private:
-  void createLoop() const;
+  void createLoop();
 
   std::unique_ptr<QSystemTrayIcon> m_pTrayIcon;
   std::unique_ptr<QMenu> m_pTrayIconMenu;
   std::function<void()> m_init;
   std::function<void(const QIcon &icon)> m_setIcon;
+  QIcon m_icon;
+  bool m_ready = false;
 };

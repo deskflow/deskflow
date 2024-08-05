@@ -602,7 +602,7 @@ void MainWindow::saveSettings() {
   m_ConfigScopes.save();
 }
 
-void MainWindow::setIcon(CoreState state) const {
+void MainWindow::setIcon(CoreState state) {
   QIcon icon;
   auto index = static_cast<int>(state);
 
