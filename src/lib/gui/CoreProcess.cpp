@@ -223,12 +223,12 @@ void CoreProcess::start() {
 
 #endif
 
-#if defined(Q_OS_WIN)
   if (m_appConfig.tlsEnabled()) {
     args << "--enable-crypto";
     args << "--tls-cert" << m_appConfig.tlsCertPath();
   }
 
+#if defined(Q_OS_WIN)
   try {
     // on windows, the profile directory changes depending on the user that
     // launched the process (e.g. when launched with elevation). setting the
@@ -238,12 +238,6 @@ void CoreProcess::start() {
   } catch (const std::exception &e) {
     qDebug() << e.what();
     qFatal("failed to get profile dir, skipping arg");
-  }
-
-#else
-  if (m_AppConfig.tlsEnabled()) {
-    args << "--enable-crypto";
-    args << "--tls-cert" << m_AppConfig.tlsCertPath();
   }
 #endif
 
