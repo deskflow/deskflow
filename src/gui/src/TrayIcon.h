@@ -36,7 +36,7 @@ signals:
   void activated(QSystemTrayIcon::ActivationReason reason);
 
 private:
-  void createLoop();
+  void showRetryLoop();
 
   std::unique_ptr<QSystemTrayIcon> m_pTrayIcon;
   std::unique_ptr<QMenu> m_pTrayIconMenu;
