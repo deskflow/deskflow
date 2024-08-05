@@ -48,9 +48,9 @@ private:
   void intToBytes(int value, char *buffer, int size);
 
 private slots:
-  void connected();
-  void error(QAbstractSocket::SocketError error);
-  void handleReadLogLine(const QString &text);
+  void onSocketConnected();
+  void onSocketError(QAbstractSocket::SocketError error);
+  void onIpcReaderReadLogLine(const QString &text);
 
 signals:
   void readLogLine(const QString &text);

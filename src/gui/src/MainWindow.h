@@ -24,9 +24,6 @@
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QThread>
-#include <memory>
-
-#include "ui_MainWindowBase.h"
 
 #include "ActivationDialog.h"
 #include "ServerConfig.h"
@@ -34,11 +31,12 @@
 #include "gui/AppConfig.h"
 #include "gui/ClientConnection.h"
 #include "gui/ConfigScopes.h"
-#include "gui/QIpcClient.h"
+#include "gui/CoreProcess.h"
 #include "gui/ServerConnection.h"
 #include "gui/TlsUtility.h"
 #include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
+#include "ui_MainWindowBase.h"
 
 class QAction;
 class QMenu;
@@ -61,6 +59,8 @@ class CommandProcess;
 class TlsCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
+  using CoreMode = synergy::gui::CoreProcess::CoreMode;
+
   Q_OBJECT
 
   friend class QSynergyApplication;
@@ -69,17 +69,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   friend class SettingsDialog;
 
 public:
-  enum class CoreState {
-    Disconnected,
-    Connecting,
-    Connected,
-    Listening,
-    PendingRetry
-  };
-
-  enum class CoreMode { None, Client, Server };
   enum class LogLevel { Error, Info };
-  enum class RuningState { Started, Stopped };
 
 public:
   explicit MainWindow(
@@ -87,10 +77,8 @@ public:
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
-  CoreMode coreMode() const;
-  QString coreModeString() const;
+  CoreMode coreMode() const { return m_CoreProcess.coreMode(); }
   QString address() const;
-  QString appPath(const QString &name) const;
   void open();
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
@@ -113,18 +101,17 @@ private slots:
   void onAppConfigTlsChanged();
   void onAppConfigScreenNameChanged();
   void onAppConfigInvertConnection();
+  void onCoreProcessError(CoreProcess::Error error);
+  void onCoreProcessLogLine(const QString &line);
+  void onCoreProcessLogInfo(const QString &message);
+  void onCoreProcessLogError(const QString &message);
+  void onCoreProcessStateChanged(CoreProcess::CoreState state);
   void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
   void onLicenseHandlerInvalidLicense();
-  void onIpcClientReadLogLine(const QString &text);
-  void onIpcClientErrorMessage(const QString &text);
-  void onIpcClientInfoMessage(const QString &text);
-  void onCoreProcessFinished(int exitCode, QProcess::ExitStatus);
   void onVersionCheckerUpdateFound(const QString &version);
   void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void onActionStartCoreTriggered();
   void onActionStopCoreTriggered();
-  void onCoreProcessReadyReadStandardOutput();
-  void onCoreProcessReadyReadStandardError();
   void onWindowSaveTimerTimeout();
   void onServerConnectionConfigureClient(const QString &clientName);
 
@@ -144,6 +131,8 @@ private slots:
   void on_m_pActivate_triggered();
   void on_m_pLineEditHostname_returnPressed();
   void on_m_pLineEditClientIp_returnPressed();
+  void on_m_pLineEditHostname_textChanged(const QString &text);
+  void on_m_pLineEditClientIp_textChanged(const QString &text);
 
 private:
   AppConfig &appConfig() { return m_AppConfig; }
@@ -153,11 +142,8 @@ private:
   void createTrayIcon();
   void applyConfig();
   void applyCloseToTray() const;
-  void setIcon(CoreState state);
-  void setCoreState(CoreState state);
+  void setIcon(CoreProcess::CoreState state);
   bool checkForApp(int which, QString &app);
-  bool clientArgs(QStringList &args, QString &app);
-  bool serverArgs(QStringList &args, QString &app);
   void setStatus(const QString &status);
   void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
@@ -166,7 +152,6 @@ private:
   void stopDesktop();
   void enableServer(bool enable);
   void enableClient(bool enable);
-  QString getProfileRootForArg() const;
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   bool checkSecureSocket(const QString &line);
@@ -179,18 +164,15 @@ private:
   void windowStateChanged();
   void connectSlots() const;
   void updateWindowTitle();
-  void processCoreLogLine(const QString &line);
+  void handleLogLine(const QString &line);
   void startCore();
-  void onCoreProcessRetryStart();
   void updateLocalFingerprint();
   void updateScreenName();
   void saveSettings();
   QString configFilename();
-  bool isCoreActive() const;
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
   void showLicenseNotice();
-  void stopCore();
   void restoreWindow();
   void saveWindow();
   void setupControls();
@@ -205,21 +187,15 @@ private:
 #endif
 
   VersionChecker m_VersionChecker;
-  QIpcClient m_IpcClient;
   TrayIcon m_TrayIcon;
-  QMutex m_StopDesktopMutex;
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
-  RuningState m_ExpectedRunningState = RuningState::Stopped;
-  std::unique_ptr<QProcess> m_pCoreProcess;
   QMenuBar *m_pMenuBar = nullptr;
   QMenu *m_pMenuFile = nullptr;
   QMenu *m_pMenuEdit = nullptr;
   QMenu *m_pMenuWindow = nullptr;
   QMenu *m_pMenuHelp = nullptr;
   QAbstractButton *m_pCancelButton = nullptr;
-  CoreState m_CoreState = CoreState::Disconnected;
-  bool m_AlreadyHidden = false;
   bool m_SecureSocket = false;
   QString m_SecureSocketVersion = "";
   bool m_SaveWindow = false;
@@ -228,6 +204,7 @@ private:
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;
   ServerConfig m_ServerConfig;
+  synergy::gui::CoreProcess m_CoreProcess;
   synergy::gui::ServerConnection m_ServerConnection;
   synergy::gui::ClientConnection m_ClientConnection;
   synergy::gui::TlsUtility m_TlsUtility;

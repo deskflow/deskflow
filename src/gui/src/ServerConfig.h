@@ -66,15 +66,15 @@ public:
   int switchCornerSize() const { return m_SwitchCornerSize; }
   const QList<bool> &switchCorners() const { return m_SwitchCorners; }
   const HotkeyList &hotkeys() const { return m_Hotkeys; }
-  bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
+  bool enableDragAndDrop() const override { return m_EnableDragAndDrop; }
   bool disableLockToScreen() const { return m_DisableLockToScreen; }
   bool clipboardSharing() const { return m_ClipboardSharing; }
   size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
   static size_t defaultClipboardSharingSize();
 
   void commit();
-  bool save(const QString &fileName) const;
-  void save(QFile &file) const;
+  bool save(const QString &fileName) const override;
+  void save(QFile &file) const override;
   int numScreens() const;
   int autoAddScreen(const QString name);
   const QString &getServerName() const;

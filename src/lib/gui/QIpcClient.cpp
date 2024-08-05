@@ -37,15 +37,15 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     };
   }
 
-  connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
   connect(
-      m_Socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this,
-      SLOT(error(QAbstractSocket::SocketError)));
+      m_Socket, &QTcpSocket::connected, this, &QIpcClient::onSocketConnected);
+  connect(
+      m_Socket, &QTcpSocket::errorOccurred, this, &QIpcClient::onSocketError);
 
   m_Reader = new IpcReader(m_Socket);
   connect(
-      m_Reader, SIGNAL(readLogLine(const QString &)), this,
-      SLOT(handleReadLogLine(const QString &)));
+      m_Reader, &IpcReader::readLogLine, this,
+      &QIpcClient::onIpcReaderReadLogLine);
 }
 
 QIpcClient::~QIpcClient() {
@@ -53,7 +53,7 @@ QIpcClient::~QIpcClient() {
   delete m_Socket;
 }
 
-void QIpcClient::connected() {
+void QIpcClient::onSocketConnected() {
 
   sendHello();
   emit infoMessage("connection established");
@@ -78,7 +78,7 @@ void QIpcClient::disconnectFromHost() {
   m_Socket->close();
 }
 
-void QIpcClient::error(QAbstractSocket::SocketError error) {
+void QIpcClient::onSocketError(QAbstractSocket::SocketError error) {
   QString text;
   switch (error) {
   case 0:
@@ -133,8 +133,14 @@ void QIpcClient::sendCommand(
   stream->writeRawData(elevateBuf, 1);
 }
 
-void QIpcClient::handleReadLogLine(const QString &text) {
-  emit readLogLine(text);
+void QIpcClient::onIpcReaderReadLogLine(const QString &text) {
+  const auto trimmed = text.trimmed();
+
+  if (trimmed.isEmpty()) {
+    return;
+  }
+
+  emit readLogLine(trimmed);
 }
 
 // TODO: qt must have a built in way of converting int to bytes.

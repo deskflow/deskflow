@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <QFile>
 #include <QString>
 
 namespace synergy::gui {
@@ -25,6 +26,9 @@ class IServerConfig {
 public:
   virtual bool isFull() const = 0;
   virtual bool screenExists(const QString &screenName) const = 0;
+  virtual bool save(const QString &fileName) const = 0;
+  virtual void save(QFile &file) const = 0;
+  virtual bool enableDragAndDrop() const = 0;
 };
 
 } // namespace synergy::gui
