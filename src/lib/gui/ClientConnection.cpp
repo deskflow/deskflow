@@ -17,12 +17,12 @@
 
 #include "ClientConnection.h"
 
-#include "MainWindow.h"
-
 #include <QHostAddress>
 #include <QMessageBox>
 
-ClientConnection::ClientConnection(MainWindow &parent) : m_parent(parent) {}
+ClientConnection::ClientConnection(QWidget &parent, AppConfig &appConfig)
+    : m_parent(parent),
+      m_appConfig(appConfig) {}
 
 void ClientConnection::update(const QString &line) {
   if (m_checkConnection && checkMainWindow()) {
@@ -58,13 +58,13 @@ QString ClientConnection::getMessage(const QString &line) const {
     message =
         QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
   } else {
-    QHostAddress address(m_parent.appConfig().serverHostname());
+    QHostAddress address(m_appConfig.serverHostname());
     if (address.isNull()) {
       message =
           QObject::tr(
               "We can’t connect to the server \"%1\" try to connect using the "
               "server IP address and check your firewall settings.")
-              .arg(m_parent.appConfig().serverHostname());
+              .arg(m_appConfig.serverHostname());
     }
   }
 

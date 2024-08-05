@@ -17,16 +17,16 @@
 
 #pragma once
 
+#include "AppConfig.h"
+
 #include <QString>
+#include <QWidget>
 
 class MainWindow;
 
 class ClientConnection {
-  MainWindow &m_parent;
-  bool m_checkConnection = false;
-
 public:
-  explicit ClientConnection(MainWindow &parent);
+  explicit ClientConnection(QWidget &parent, AppConfig &appConfig);
   void update(const QString &line);
   void setCheckConnection(bool checkConnection);
 
@@ -34,4 +34,8 @@ private:
   QString getMessage(const QString &line) const;
   bool checkMainWindow();
   void showMessage(const QString &message) const;
+
+  QWidget &m_parent;
+  AppConfig &m_appConfig;
+  bool m_checkConnection = false;
 };

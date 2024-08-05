@@ -22,16 +22,17 @@
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "gui/TrayIcon.h"
 #include "gui/ConfigScopes.h"
 #include "gui/LicenseHandler.h"
 #include "gui/TlsFingerprint.h"
+#include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 #include "gui/constants.h"
 #include "gui/license_notices.h"
 #include "gui/messages.h"
 #include "gui/styles.h"
 #include "license/License.h"
+
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -91,7 +92,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
       m_ServerConnection(*this, appConfig, m_ServerConfig),
-      m_ClientConnection(*this),
+      m_ClientConnection(*this, appConfig),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
       m_WindowSaveTimer(this) {
 
