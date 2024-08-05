@@ -59,7 +59,7 @@ class CommandProcess;
 class TlsCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
-  using CoreMode = synergy::gui::CoreProcess::CoreMode;
+  using CoreMode = synergy::gui::CoreProcess::Mode;
 
   Q_OBJECT
 
@@ -77,7 +77,7 @@ public:
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
-  CoreMode coreMode() const { return m_CoreProcess.coreMode(); }
+  CoreMode coreMode() const { return m_CoreProcess.mode(); }
   QString address() const;
   void open();
   ServerConfig &serverConfig() { return m_ServerConfig; }
@@ -105,7 +105,7 @@ private slots:
   void onCoreProcessLogLine(const QString &line);
   void onCoreProcessLogInfo(const QString &message);
   void onCoreProcessLogError(const QString &message);
-  void onCoreProcessStateChanged(CoreProcess::CoreState state);
+  void onCoreProcessStateChanged(CoreProcess::ConnectionState state);
   void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
   void onLicenseHandlerInvalidLicense();
   void onVersionCheckerUpdateFound(const QString &version);
@@ -142,14 +142,12 @@ private:
   void createTrayIcon();
   void applyConfig();
   void applyCloseToTray() const;
-  void setIcon(CoreProcess::CoreState state);
+  void setIcon(CoreProcess::ConnectionState state);
   bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
   void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses() const;
-  void stopService();
-  void stopDesktop();
   void enableServer(bool enable);
   void enableClient(bool enable);
   void checkConnected(const QString &line);

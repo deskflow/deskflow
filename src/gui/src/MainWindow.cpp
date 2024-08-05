@@ -58,8 +58,8 @@
 using namespace synergy::gui;
 using namespace synergy::license;
 
-using CoreMode = CoreProcess::CoreMode;
-using CoreState = CoreProcess::CoreState;
+using CoreMode = CoreProcess::Mode;
+using CoreState = CoreProcess::ConnectionState;
 
 #if defined(Q_OS_MAC)
 
@@ -303,7 +303,7 @@ void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
 }
 
 void MainWindow::onLicenseHandlerInvalidLicense() {
-  m_CoreProcess.stopCore();
+  m_CoreProcess.stop();
   showActivationDialog();
 }
 
@@ -342,7 +342,7 @@ void MainWindow::onActionStartCoreTriggered() {
   startCore();
 }
 
-void MainWindow::onActionStopCoreTriggered() { m_CoreProcess.stopCore(); }
+void MainWindow::onActionStopCoreTriggered() { m_CoreProcess.stop(); }
 
 void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
 
@@ -408,7 +408,7 @@ void MainWindow::on_m_pActionSettings_triggered() {
     applyConfig();
     applyCloseToTray();
 
-    if (m_CoreProcess.isCoreActive()) {
+    if (m_CoreProcess.isActive()) {
       restartCore();
     }
   }
@@ -533,7 +533,7 @@ void MainWindow::startCore() {
   }
 
   saveSettings();
-  m_CoreProcess.startCore();
+  m_CoreProcess.start();
 }
 
 void MainWindow::setStatus(const QString &status) {
@@ -753,7 +753,7 @@ QString MainWindow::getTimeStamp() const {
 }
 
 void MainWindow::restartCore() {
-  m_CoreProcess.stopCore();
+  m_CoreProcess.stop();
   startCore();
 }
 
@@ -785,7 +785,7 @@ void MainWindow::showFirstRunMessage() {
   m_AppConfig.setStartedBefore(true);
   m_ConfigScopes.save();
 
-  const auto isServer = m_CoreProcess.coreMode() == CoreMode::Server;
+  const auto isServer = m_CoreProcess.mode() == CoreMode::Server;
   messages::showFirstRunMessage(
       this, m_AppConfig.closeToTray(), m_AppConfig.enableService(), isServer);
 }
@@ -852,7 +852,7 @@ void MainWindow::onCoreProcessStateChanged(CoreState state) {
     using enum CoreState;
 
   case Listening: {
-    if (m_CoreProcess.coreMode() == CoreMode::Server) {
+    if (m_CoreProcess.mode() == CoreMode::Server) {
       setStatus("Synergy is waiting for clients");
     }
 
@@ -998,7 +998,7 @@ void MainWindow::autoAddScreen(const QString name) {
 void MainWindow::showConfigureServer(const QString &message) {
   ServerConfigDialog dialog(this, serverConfig(), m_AppConfig);
   dialog.message(message);
-  if ((dialog.exec() == QDialog::Accepted) && m_CoreProcess.isCoreActive()) {
+  if ((dialog.exec() == QDialog::Accepted) && m_CoreProcess.isActive()) {
     restartCore();
   }
 }
@@ -1057,7 +1057,7 @@ void MainWindow::enableServer(bool enable) {
   if (enable) {
     m_pButtonToggleStart->setEnabled(true);
     m_pActionStartCore->setEnabled(true);
-    m_CoreProcess.setMode(CoreProcess::CoreMode::Server);
+    m_CoreProcess.setMode(CoreProcess::Mode::Server);
   }
 }
 
@@ -1071,6 +1071,6 @@ void MainWindow::enableClient(bool enable) {
   if (enable) {
     m_pButtonToggleStart->setEnabled(true);
     m_pActionStartCore->setEnabled(true);
-    m_CoreProcess.setMode(CoreProcess::CoreMode::Client);
+    m_CoreProcess.setMode(CoreProcess::Mode::Client);
   }
 }

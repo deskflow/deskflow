@@ -34,10 +34,10 @@ class CoreProcess : public QObject {
   Q_OBJECT
 
 public:
-  enum class CoreMode { None, Client, Server };
+  enum class Mode { None, Client, Server };
   enum class Error { AddressMissing, StartFailed };
-  enum class RuningState { Started, Stopped };
-  enum class CoreState {
+  enum class ProcessState { Started, Stopped };
+  enum class ConnectionState {
     Disconnected,
     Connecting,
     Connected,
@@ -48,34 +48,34 @@ public:
   explicit CoreProcess(AppConfig &appConfig, IServerConfig &serverConfig);
   ~CoreProcess() override;
 
-  void startCore();
-  void stopCore();
+  void start();
+  void stop();
   void stopService();
   void stopDesktop();
 
   // getters
-  CoreMode coreMode() const { return m_CoreMode; }
-  bool isCoreActive() const;
+  Mode mode() const { return m_mode; }
+  bool isActive() const;
 
   // setters
-  void setAddress(const QString &address) { m_Address = address.trimmed(); }
-  void setMode(CoreMode mode) { m_CoreMode = mode; }
+  void setAddress(const QString &address) { m_address = address.trimmed(); }
+  void setMode(Mode mode) { m_mode = mode; }
 
 signals:
   void error(Error error);
   void logLine(const QString &line);
   void logInfo(const QString &message);
   void logError(const QString &message);
-  void stateChanged(CoreState state);
+  void stateChanged(ConnectionState state);
 
 private slots:
   void onIpcClientReadLogLine(const QString &text);
   void onIpcClientErrorMessage(const QString &text);
   void onIpcClientInfoMessage(const QString &text);
-  void onCoreProcessFinished(int exitCode, QProcess::ExitStatus);
-  void onCoreProcessRetryStart();
-  void onCoreProcessReadyReadStandardOutput();
-  void onCoreProcessReadyReadStandardError();
+  void onProcessFinished(int exitCode, QProcess::ExitStatus);
+  void onProcessRetryStart();
+  void onProcessReadyReadStandardOutput();
+  void onProcessReadyReadStandardError();
 
 private:
   QString appPath(const QString &name) const;
@@ -84,18 +84,18 @@ private:
   QString persistConfig() const;
   QString address() const;
   QString coreModeString() const;
-  void setCoreState(CoreState state);
+  void setCoreState(ConnectionState state);
   QString getProfileRootForArg() const;
 
-  AppConfig &m_AppConfig;
-  IServerConfig &m_ServerConfig;
-  QString m_Address;
-  std::unique_ptr<QProcess> m_pCoreProcess;
-  RuningState m_ExpectedRunningState = RuningState::Stopped;
-  CoreState m_CoreState = CoreState::Disconnected;
-  QIpcClient m_IpcClient;
-  CoreMode m_CoreMode = CoreMode::None;
-  QMutex m_StopDesktopMutex;
+  AppConfig &m_appConfig;
+  IServerConfig &m_serverConfig;
+  QString m_address;
+  std::unique_ptr<QProcess> m_pProcess;
+  ProcessState m_expectedProcessState = ProcessState::Stopped;
+  ConnectionState m_state = ConnectionState::Disconnected;
+  QIpcClient m_ipcClient;
+  Mode m_mode = Mode::None;
+  QMutex m_stopDesktopMutex;
 };
 
 } // namespace synergy::gui
