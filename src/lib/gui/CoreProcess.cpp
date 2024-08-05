@@ -19,6 +19,10 @@
 
 #include "constants.h"
 
+#if defined(Q_OS_MAC)
+#include "OSXHelpers.h"
+#endif
+
 #include <QCoreApplication>
 #include <QFile>
 #include <QMessageBox>
@@ -26,7 +30,6 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTimer>
-#include <qlogging.h>
 
 namespace synergy::gui {
 
