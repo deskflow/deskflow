@@ -19,6 +19,8 @@
 
 #include "constants.h"
 
+namespace synergy::gui {
+
 const auto kShowRetryInterval = 1000;
 
 void TrayIcon::setIcon(const QIcon &icon) {
@@ -69,3 +71,5 @@ void TrayIcon::create(std::vector<QAction *> const &actions) {
 
   showRetryLoop();
 }
+
+} // namespace synergy::gui

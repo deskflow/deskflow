@@ -19,6 +19,8 @@
 
 #include <QString>
 
+namespace synergy::gui {
+
 const auto kAppName = "Synergy";
 
 // TODO: change to `com.symless`. we'll need to gracefully import old settings,
@@ -54,3 +56,5 @@ const auto kUrlContact =
 const auto kUrlHelp = QString("%1/help?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlDownload =
     QString("%1/download?%2").arg(kUrlProduct, kUrlSourceQuery);
+
+} // namespace synergy::gui

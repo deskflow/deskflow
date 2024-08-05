@@ -20,6 +20,8 @@
 #include "gui/styles.h"
 #include <qvalidator.h>
 
+using namespace synergy::gui;
+
 namespace validators {
 
 LineEditValidator::LineEditValidator(

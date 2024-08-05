@@ -21,6 +21,8 @@
 #include "validators/ScreenNameValidator.h"
 #include "validators/ValidationError.h"
 
+using namespace synergy::gui;
+
 SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig) {
   setupUi(this);
 

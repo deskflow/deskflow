@@ -40,7 +40,6 @@ using namespace synergy::gui;
 
 class ServerConfig : public ScreenConfig, public IServerConfig {
   friend class ServerConfigDialog;
-  friend class ServerConnection;
   friend QTextStream &
   operator<<(QTextStream &outStream, const ServerConfig &config);
 

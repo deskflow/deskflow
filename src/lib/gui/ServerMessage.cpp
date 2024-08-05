@@ -17,6 +17,8 @@
 
 #include "ServerMessage.h"
 
+namespace synergy::gui {
+
 ServerMessage::ServerMessage(const QString &message)
     : m_message(message),
       m_clienName(parseClientName(message)) {}
@@ -50,3 +52,5 @@ QString ServerMessage::parseClientName(const QString &line) const {
 
   return clientName;
 }
+
+} // namespace synergy::gui

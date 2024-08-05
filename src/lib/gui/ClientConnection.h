@@ -22,6 +22,8 @@
 #include <QString>
 #include <QWidget>
 
+namespace synergy::gui {
+
 class ClientConnection {
 public:
   explicit ClientConnection(QWidget &parent, AppConfig &appConfig);
@@ -37,3 +39,5 @@ private:
   AppConfig &m_appConfig;
   bool m_checkConnection = false;
 };
+
+} // namespace synergy::gui

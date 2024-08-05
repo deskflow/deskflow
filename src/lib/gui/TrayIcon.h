@@ -24,6 +24,8 @@
 #include <functional>
 #include <memory>
 
+namespace synergy::gui {
+
 class TrayIcon : public QObject {
   Q_OBJECT
 public:
@@ -44,3 +46,5 @@ private:
   std::function<void(const QIcon &icon)> m_setIcon;
   QIcon m_icon;
 };
+
+} // namespace synergy::gui

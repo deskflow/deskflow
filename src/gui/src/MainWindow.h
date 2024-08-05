@@ -40,7 +40,6 @@
 #include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 
-
 class QAction;
 class QMenu;
 class QLineEdit;
@@ -68,8 +67,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   friend class SetupWizard;
   friend class ActivationDialog;
   friend class SettingsDialog;
-  friend class ServerConnection;
-  friend class ClientConnection;
 
 public:
   enum class CoreState {
@@ -231,8 +228,8 @@ private:
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;
   ServerConfig m_ServerConfig;
-  ServerConnection m_ServerConnection;
-  ClientConnection m_ClientConnection;
+  synergy::gui::ServerConnection m_ServerConnection;
+  synergy::gui::ClientConnection m_ClientConnection;
   synergy::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
 };

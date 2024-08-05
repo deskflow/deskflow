@@ -23,6 +23,8 @@
 #include "AppConfig.h"
 #include "IServerConfig.h"
 
+namespace synergy::gui {
+
 class ServerConnection : public QObject {
   Q_OBJECT
   using IServerConfig = synergy::gui::IServerConfig;
@@ -44,3 +46,5 @@ private:
   IServerConfig &m_serverConfig;
   QStringList m_ignoredClients;
 };
+
+} // namespace synergy::gui

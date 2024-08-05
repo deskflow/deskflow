@@ -27,6 +27,8 @@
 #include <QtCore>
 #include <QtGui>
 
+using namespace synergy::gui;
+
 ScreenSettingsDialog::ScreenSettingsDialog(
     QWidget *parent, Screen *pScreen, const ScreenList *pScreens)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),

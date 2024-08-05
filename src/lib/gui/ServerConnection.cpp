@@ -22,6 +22,8 @@
 
 #include <QMessageBox>
 
+namespace synergy::gui {
+
 ServerConnection::ServerConnection(
     QWidget &parent, AppConfig &appConfig, IServerConfig &serverConfig)
     : m_parent(parent),
@@ -84,3 +86,5 @@ void ServerConnection::addClient(const QString &clientName) {
     m_ignoredClients.append(clientName);
   }
 }
+
+} // namespace synergy::gui

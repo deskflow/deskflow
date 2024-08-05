@@ -20,6 +20,8 @@
 
 #include "gui/ServerMessage.h"
 
+using namespace synergy::gui;
+
 namespace synergy_widgets {
 
 ServerStateLabel::ServerStateLabel(QWidget *parent) : QLabel(parent) {}

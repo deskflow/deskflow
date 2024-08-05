@@ -20,6 +20,8 @@
 #include <QHostAddress>
 #include <QMessageBox>
 
+namespace synergy::gui {
+
 ClientConnection::ClientConnection(QWidget &parent, AppConfig &appConfig)
     : m_parent(parent),
       m_appConfig(appConfig) {}
@@ -81,3 +83,5 @@ void ClientConnection::showMessage(const QString &message) const {
 void ClientConnection::setCheckConnection(bool checkConnection) {
   m_checkConnection = checkConnection;
 }
+
+} // namespace synergy::gui

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2021 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,26 +17,4 @@
 
 #pragma once
 
-#include <QString>
-
-namespace synergy::gui {
-
-class ServerMessage {
-  QString m_message;
-  QString m_clienName;
-
-public:
-  explicit ServerMessage(const QString &message);
-
-  bool isNewClientMessage() const;
-  bool isExitMessage() const;
-  bool isConnectedMessage() const;
-  bool isDisconnectedMessage() const;
-
-  const QString &getClientName() const;
-
-private:
-  QString parseClientName(const QString &line) const;
-};
-
-} // namespace synergy::gui
+namespace synergy::gui {}
