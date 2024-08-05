@@ -22,7 +22,7 @@ To use the community edition, either install the `synergy` package with your fav
 
 Simplified instructions for those who want to contribute to the development of Synergy Core.
 
-Having problems? Check the [Quick Start FAQ](https://github.com/symless/synergy-core/wiki/Quick-Start-FAQ) wiki page.
+Having problems? Check the [Developer Guide](https://github.com/symless/synergy-core/wiki/Developer-Guide) wiki page.
 
 **Dependencies:**
 ```
