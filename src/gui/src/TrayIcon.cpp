@@ -16,13 +16,14 @@
  */
 
 #include "TrayIcon.h"
+
 #include "gui/constants.h"
 
 const auto kRetryInterval = 2500;
 
 void TrayIcon::setIcon(const QIcon &icon) {
   m_icon = icon;
-  if (m_ready) {
+  if (m_pTrayIcon) {
     m_pTrayIcon->setIcon(icon);
   }
 }
@@ -37,8 +38,6 @@ void TrayIcon::createLoop() {
 
   if (QSystemTrayIcon::isSystemTrayAvailable()) {
     m_pTrayIcon->show();
-    m_ready = true;
-    setIcon(m_icon);
   } else {
     // on some platforms, it's not always possible to create the tray when the
     // app starts, so keep trying until it is possible.
@@ -58,6 +57,7 @@ void TrayIcon::create(std::vector<QAction *> const &actions) {
   }
 
   m_pTrayIcon = std::make_unique<QSystemTrayIcon>();
+  setIcon(m_icon);
 
   connect(
       m_pTrayIcon.get(), &QSystemTrayIcon::activated, this,

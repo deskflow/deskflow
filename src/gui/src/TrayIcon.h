@@ -43,5 +43,4 @@ private:
   std::function<void()> m_init;
   std::function<void(const QIcon &icon)> m_setIcon;
   QIcon m_icon;
-  bool m_ready = false;
 };
