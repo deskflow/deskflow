@@ -134,7 +134,10 @@ class Dependencies:
 
             check = True
             if distro == "fedora" or "fedora" in distro_like:
-                print("Fedora-like detected, ignoring return code")
+                print(
+                    "Fedora-like detected, "
+                    "ignoring return code on dependencies prerequisites command"
+                )
                 # On Fedora-like, dnf update returns code 100 when updates are available.
                 check = False
 
