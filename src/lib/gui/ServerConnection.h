@@ -20,8 +20,8 @@
 #include <QString>
 #include <QStringList>
 
-#include "gui/AppConfig.h"
-#include "gui/IServerConfig.h"
+#include "AppConfig.h"
+#include "IServerConfig.h"
 
 class MainWindow;
 

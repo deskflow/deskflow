@@ -18,7 +18,7 @@
 
 #include "ServerStateLabel.h"
 
-#include "ServerMessage.h"
+#include "gui/ServerMessage.h"
 
 namespace synergy_widgets {
 
