@@ -19,7 +19,7 @@
 
 #include "gui/constants.h"
 
-const auto kRetryInterval = 2500;
+const auto kRetryInterval = 1000;
 
 void TrayIcon::setIcon(const QIcon &icon) {
   m_icon = icon;
@@ -41,6 +41,7 @@ void TrayIcon::createLoop() {
   } else {
     // on some platforms, it's not always possible to create the tray when the
     // app starts, so keep trying until it is possible.
+    qDebug("system tray not ready yet, retrying in %d ms", kRetryInterval);
     QTimer::singleShot(kRetryInterval, this, &TrayIcon::createLoop);
   }
 }
