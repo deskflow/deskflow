@@ -23,7 +23,7 @@ const auto kRetryInterval = 1000;
 
 void TrayIcon::setIcon(const QIcon &icon) {
   m_icon = icon;
-  if (m_pTrayIcon) {
+  if (m_pTrayIcon && !icon.isNull()) {
     m_pTrayIcon->setIcon(icon);
   }
 }

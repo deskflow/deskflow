@@ -263,6 +263,8 @@ void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
 
 void MainWindow::onCreated() {
 
+  setIcon(CoreState::Disconnected);
+
 #if defined(Q_OS_WIN)
 
   // TODO: only connect permenantly to ipc when switching to service mode.
@@ -332,10 +334,6 @@ void MainWindow::onIpcClientInfoMessage(const QString &text) {
 }
 
 void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason) {
-
-  // HACK: setting the main window icon to disconnected when the tray is
-  // activated seems odd.
-  setIcon(CoreState::Disconnected);
 
   if (reason == QSystemTrayIcon::DoubleClick) {
     if (isVisible()) {
