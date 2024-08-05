@@ -555,12 +555,20 @@ void AppConfig::setTlsEnabled(bool value) {
 }
 
 void AppConfig::setTlsCertPath(const QString &value) {
-  m_TlsChanged = m_TlsCertPath != value;
+  if (m_TlsCertPath != value) {
+    // deliberately only set the changed flag if there was a change.
+    // it's important not to set this flag to false here.
+    m_TlsChanged = true;
+  }
   m_TlsCertPath = value;
 }
 
 void AppConfig::setTlsKeyLength(const QString &value) {
-  m_TlsChanged = m_TlsKeyLength != value;
+  if (m_TlsKeyLength != value) {
+    // deliberately only set the changed flag if there was a change.
+    // it's important not to set this flag to false here.
+    m_TlsChanged = true;
+  }
   m_TlsKeyLength = value;
 }
 void AppConfig::setSerialKey(const QString &serialKey) {

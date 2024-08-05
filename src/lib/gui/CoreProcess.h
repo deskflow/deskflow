@@ -92,6 +92,7 @@ private:
   bool checkSecureSocket(const QString &line);
   bool checkOSXNotification(const QString &line);
   void handleLogLines(const QString &text);
+  void startWithService(const QString &app, const QStringList &args);
 
   AppConfig &m_appConfig;
   IServerConfig &m_serverConfig;

@@ -156,4 +156,13 @@ void showDevThanks(QWidget *parent, const QString &productName) {
               kColorSecondary));
 }
 
+void logVerbose(QString message) {
+  const auto enabled = QString(qgetenv("SYNERGY_VERBOSE_LOGGING"));
+  if (enabled != "true") {
+    return;
+  }
+
+  qDebug().noquote() << message;
+}
+
 } // namespace synergy::gui::messages

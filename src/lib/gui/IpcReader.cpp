@@ -16,13 +16,17 @@
  */
 
 #include "IpcReader.h"
+
 #include "global/Ipc.h"
+#include "messages.h"
 
 #include <QByteArray>
 #include <QMutex>
 #include <QTcpSocket>
 #include <iostream>
 #include <qtcpsocket.h>
+
+using namespace synergy::gui::messages;
 
 IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
 
@@ -40,18 +44,18 @@ void IpcReader::stop() {
 
 void IpcReader::onSocketReadyRead() {
   QMutexLocker locker(&m_Mutex);
-  std::cout << "ready read" << std::endl;
+  logVerbose("ready read");
 
   while (m_Socket->bytesAvailable()) {
-    std::cout << "bytes available" << std::endl;
+    logVerbose("bytes available");
 
     char codeBuf[5];
     readStream(codeBuf, 4);
     codeBuf[4] = 0;
-    std::cout << "ipc read: " << codeBuf << std::endl;
+    logVerbose(QString("ipc read: %1").arg(codeBuf));
 
     if (memcmp(codeBuf, kIpcMsgLogLine, 4) == 0) {
-      std::cout << "reading log line" << std::endl;
+      logVerbose("reading log line");
 
       char lenBuf[4];
       readStream(lenBuf, 4);
@@ -64,36 +68,35 @@ void IpcReader::onSocketReadyRead() {
 
       emit read(text);
     } else {
-      std::cerr << "aborting, message invalid" << std::endl;
+      std::cerr << "aborting, message invalid";
       return;
     }
   }
 
-  std::cout << "read done" << std::endl;
+  logVerbose("read done");
 }
 
 bool IpcReader::readStream(char *buffer, int length) {
-  std::cout << "reading stream" << std::endl;
+  logVerbose("reading stream");
 
   int read = 0;
   while (read < length) {
     int ask = length - read;
     if (m_Socket->bytesAvailable() < ask) {
-      std::cout << "buffer too short, waiting" << std::endl;
+      logVerbose("buffer too short, waiting");
       m_Socket->waitForReadyRead(-1);
     }
 
     int got = m_Socket->read(buffer, ask);
     read += got;
 
-    std::cout << "> ask=" << ask << " got=" << got << " read=" << read
-              << std::endl;
+    logVerbose(QString("ask=%1 got=%2 read=%3").arg(ask, got, read));
 
     if (got == -1) {
-      std::cout << "socket ended, aborting" << std::endl;
+      logVerbose("socket ended, aborting");
       return false;
     } else if (length - read > 0) {
-      std::cout << "more remains, seek to " << got << std::endl;
+      logVerbose(QString("more remains, seek to %1").arg(got));
       buffer += got;
     }
   }

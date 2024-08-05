@@ -180,7 +180,7 @@ void MainWindow::setupControls() {
 // remember: using queued connection allows the render loop to run before
 // executing the slot. the default is to instantly call the slot when the
 // signal is emitted from the thread that owns the receiver's object.
-void MainWindow::connectSlots() const {
+void MainWindow::connectSlots() {
 
   connect(this, &MainWindow::created, this, &MainWindow::onCreated);
 
@@ -265,6 +265,11 @@ void MainWindow::connectSlots() const {
   connect(
       &m_ServerConnection, &ServerConnection::configureClient, this,
       &MainWindow::onServerConnectionConfigureClient);
+
+  connect(
+      &m_TlsUtility, &TlsUtility::error, this, [this](const QString &message) {
+        QMessageBox::critical(this, "TLS error", message);
+      });
 }
 
 void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
@@ -829,8 +834,8 @@ void MainWindow::onCoreProcessStateChanged(CoreState state) {
   }
   case Connected: {
     if (m_SecureSocket) {
-      setStatus(
-          QString("Synergy is connected (with %1)").arg(m_CoreProcess.secureSocketVersion()));
+      setStatus(QString("Synergy is connected (with %1)")
+                    .arg(m_CoreProcess.secureSocketVersion()));
     } else {
       setStatus("Synergy is running (without TLS encryption)");
     }

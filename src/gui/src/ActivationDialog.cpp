@@ -31,6 +31,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
+#include <qmessagebox.h>
 
 using namespace synergy::gui;
 using namespace synergy::license;
@@ -158,6 +159,10 @@ void ActivationDialog::showSuccessDialog() {
                         .arg(m_licenseHandler.productName());
 
   TlsUtility tls(*m_pAppConfig, license);
+  connect(&tls, &TlsUtility::error, this, [this](const QString &message) {
+    QMessageBox::critical(this, "TLS error", message);
+  });
+
   if (tls.isAvailableAndEnabled()) {
     message +=
         "<p>To ensure that TLS encryption works correctly, "

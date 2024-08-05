@@ -33,4 +33,6 @@ void showCloseReminder(QWidget *parent);
 
 void showDevThanks(QWidget *parent, const QString &productName);
 
+void logVerbose(QString message);
+
 } // namespace synergy::gui::messages

@@ -19,16 +19,18 @@
 
 #include "IAppConfig.h"
 
+#include "TlsCertificate.h"
 #include "license/License.h"
+#include <qobject.h>
 
 namespace synergy::gui {
 
-class TlsUtility {
+class TlsUtility : public QObject {
+  Q_OBJECT
+
 public:
   explicit TlsUtility(
-      const IAppConfig &appConfig, const license::License &license)
-      : m_appConfig(appConfig),
-        m_license(license) {}
+      const IAppConfig &appConfig, const license::License &license);
 
   /**
    * @brief Combines the availability and the enabled status of TLS.
@@ -47,11 +49,15 @@ public:
   /**
    * @param replace Replace certificate on disk (default: false).
    */
-  void generateCertificate(bool replace = false) const;
+  void generateCertificate(bool replace = false);
+
+signals:
+  void error(const QString &message);
 
 private:
   const IAppConfig &m_appConfig;
   const license::License &m_license;
+  TlsCertificate m_certificate;
 };
 
 } // namespace synergy::gui

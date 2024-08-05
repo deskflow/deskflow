@@ -43,16 +43,14 @@ public slots:
   QString getCertKeyLength(const QString &path);
 
 signals:
-  void error(QString e);
-  void info(QString i);
-  void generateFinished();
+  void error(const QString &message);
 
 private:
   bool runTool(const QStringList &args);
   void generateFingerprint(const QString &certificateFilename);
 
 private:
-  QString m_ProfileDir;
-  QString m_ToolOutput;
-  CoreInterface m_CoreInterface;
+  QString m_profileDir;
+  QString m_toolStdout;
+  CoreInterface m_coreInterface;
 };

@@ -269,8 +269,7 @@ void CoreProcess::start() {
       emit error(Error::StartFailed);
     }
   } else if (processMode == ProcessMode::kService) {
-    QString command(app + " " + args.join(" "));
-    m_ipcClient.sendCommand(command, m_appConfig.elevateMode());
+    startWithService(app, args);
   }
 }
 
@@ -519,5 +518,25 @@ void CoreProcess::checkOSXNotification(const QString &line) {
   }
 }
 #endif
+
+void CoreProcess::startWithService(
+    const QString &app, const QStringList &args) {
+
+  QStringList command;
+
+  // wrap app in quotes to handle spaces in paths (e.g. "C:\Program Files").
+  command << QString(R"("%1")").arg(app);
+
+  for (const auto &arg : args) {
+    if (arg.startsWith("-")) {
+      command << arg;
+    } else {
+      // wrap opt args in quotes to handle spaces in paths.
+      command << QString(R"("%1")").arg(arg);
+    }
+  }
+
+  m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
+}
 
 } // namespace synergy::gui

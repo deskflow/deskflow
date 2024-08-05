@@ -20,7 +20,19 @@
 #include "TlsCertificate.h"
 #include "constants.h"
 
+#include <QString>
+
 namespace synergy::gui {
+
+TlsUtility::TlsUtility(
+    const IAppConfig &appConfig, const license::License &license)
+    : m_appConfig(appConfig),
+      m_license(license) {
+
+  connect(
+      &m_certificate, &TlsCertificate::error, this,
+      [this](const QString &message) { emit error(message); });
+}
 
 bool TlsUtility::isAvailable() const {
   return !kLicensingEnabled || m_license.isTlsAvailable();
@@ -31,7 +43,7 @@ bool TlsUtility::isAvailableAndEnabled() const {
   return isAvailable() && config.tlsEnabled();
 }
 
-void TlsUtility::generateCertificate(bool replace) const {
+void TlsUtility::generateCertificate(bool replace) {
   qDebug("generating tls certificate, "
          "all clients must trust the new fingerprint");
 
@@ -43,8 +55,7 @@ void TlsUtility::generateCertificate(bool replace) const {
   auto path = m_appConfig.tlsCertPath();
   auto length = m_appConfig.tlsKeyLength();
 
-  TlsCertificate cert;
-  cert.generateCertificate(path, length, replace);
+  m_certificate.generateCertificate(path, length, replace);
 }
 
 } // namespace synergy::gui

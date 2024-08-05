@@ -51,12 +51,8 @@ class QRadioButton;
 class QMessageBox;
 class QAbstractButton;
 
-class LogDialog;
 class QSynergyApplication;
 class SetupWizard;
-class DataDownloader;
-class CommandProcess;
-class TlsCertificate;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   using CoreMode = synergy::gui::CoreProcess::Mode;
@@ -160,7 +156,7 @@ private:
   void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
   void windowStateChanged();
-  void connectSlots() const;
+  void connectSlots();
   void updateWindowTitle();
   void handleLogLine(const QString &line);
   void startCore();

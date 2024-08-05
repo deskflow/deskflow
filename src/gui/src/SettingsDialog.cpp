@@ -46,6 +46,10 @@ SettingsDialog::SettingsDialog(
 
   setupUi(this);
 
+  connect(&m_tlsUtility, &TlsUtility::error, this, [this](const QString &e) {
+    QMessageBox::critical(this, "TLS error", e);
+  });
+
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
   m_pTabWidget->setCurrentIndex(0);
@@ -215,9 +219,11 @@ void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
 
   if (!fileName.isEmpty()) {
     m_pLineEditCertificatePath->setText(fileName);
-    // If the tls file exists test its key length and update
-    if (QFile(appConfig().tlsCertPath()).exists()) {
+
+    if (QFile(fileName).exists()) {
       updateKeyLengthOnFile(fileName);
+    } else {
+      qDebug("no tls certificate file at: %s", qUtf8Printable(fileName));
     }
   }
   updateTlsRegenerateButton();
@@ -246,6 +252,14 @@ void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
   TlsCertificate ssl;
+  connect(&ssl, &TlsCertificate::error, this, [this](const QString &e) {
+    QMessageBox::critical(this, "TLS error", e);
+  });
+
+  if (!QFile(path).exists()) {
+    qFatal("tls certificate file not found: %s", qUtf8Printable(path));
+  }
+
   auto length = ssl.getCertKeyLength(path);
   auto index = m_pComboBoxKeyLength->findText(length);
   m_pComboBoxKeyLength->setCurrentIndex(index);
