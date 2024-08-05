@@ -32,14 +32,14 @@ public:
   void stop();
 
 signals:
-  void readLogLine(const QString &text);
+  void read(const QString &text);
 
 private:
   bool readStream(char *buffer, int length);
   int bytesToInt(const char *buffer, int size);
 
 private slots:
-  void read();
+  void onSocketReadyRead();
 
 private:
   QTcpSocket *m_Socket;

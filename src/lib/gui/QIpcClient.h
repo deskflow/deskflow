@@ -50,10 +50,10 @@ private:
 private slots:
   void onSocketConnected();
   void onSocketError(QAbstractSocket::SocketError error);
-  void onIpcReaderReadLogLine(const QString &text);
+  void onIpcReaderRead(const QString &text);
 
 signals:
-  void readLogLine(const QString &text);
+  void read(const QString &text);
   void infoMessage(const QString &text);
   void errorMessage(const QString &text);
 

@@ -56,6 +56,7 @@ public:
   // getters
   Mode mode() const { return m_mode; }
   bool isActive() const;
+  QString secureSocketVersion() const { return m_secureSocketVersion; }
 
   // setters
   void setAddress(const QString &address) { m_address = address.trimmed(); }
@@ -67,9 +68,10 @@ signals:
   void logInfo(const QString &message);
   void logError(const QString &message);
   void stateChanged(ConnectionState state);
+  void secureSocket(bool enabled);
 
 private slots:
-  void onIpcClientReadLogLine(const QString &text);
+  void onIpcClientRead(const QString &text);
   void onIpcClientErrorMessage(const QString &text);
   void onIpcClientInfoMessage(const QString &text);
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
@@ -86,6 +88,10 @@ private:
   QString coreModeString() const;
   void setCoreState(ConnectionState state);
   QString getProfileRootForArg() const;
+  void checkLogLine(const QString &line);
+  bool checkSecureSocket(const QString &line);
+  bool checkOSXNotification(const QString &line);
+  void handleLogLines(const QString &text);
 
   AppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
@@ -96,6 +102,7 @@ private:
   QIpcClient m_ipcClient;
   Mode m_mode = Mode::None;
   QMutex m_stopDesktopMutex;
+  QString m_secureSocketVersion = "";
 };
 
 } // namespace synergy::gui

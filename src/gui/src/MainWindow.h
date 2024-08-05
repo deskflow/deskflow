@@ -106,6 +106,7 @@ private slots:
   void onCoreProcessLogInfo(const QString &message);
   void onCoreProcessLogError(const QString &message);
   void onCoreProcessStateChanged(CoreProcess::ConnectionState state);
+  void onCoreProcessSecureSocket(bool enabled);
   void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
   void onLicenseHandlerInvalidLicense();
   void onVersionCheckerUpdateFound(const QString &version);
@@ -152,7 +153,6 @@ private:
   void enableClient(bool enable);
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
-  bool checkSecureSocket(const QString &line);
   void checkLicense(const QString &line);
   QString getTimeStamp() const;
   void restartCore();
@@ -195,7 +195,6 @@ private:
   QMenu *m_pMenuHelp = nullptr;
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
-  QString m_SecureSocketVersion = "";
   bool m_SaveWindow = false;
   LicenseHandler m_LicenseHandler;
 

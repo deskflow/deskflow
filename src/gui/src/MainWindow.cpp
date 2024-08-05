@@ -225,6 +225,10 @@ void MainWindow::connectSlots() const {
       &MainWindow::onCoreProcessStateChanged);
 
   connect(
+      &m_CoreProcess, &CoreProcess::secureSocket, this,
+      &MainWindow::onCoreProcessSecureSocket);
+
+  connect(
       &m_LicenseHandler, &LicenseHandler::serialKeyChanged, this,
       &MainWindow::onLicenseHandlerSerialKeyChanged);
 
@@ -642,16 +646,8 @@ void MainWindow::handleLogLine(const QString &line) {
 }
 
 void MainWindow::updateFromLogLine(const QString &line) {
-  // TODO: This shouldn't be updating from log needs a better way of doing this
   checkConnected(line);
   checkFingerprint(line);
-  checkSecureSocket(line);
-
-  // subprocess (synergys, synergyc) is not allowed to show notifications
-  // process the log from it and show notificatino from synergy instead
-#ifdef Q_OS_MAC
-  checkOSXNotification(line);
-#endif
 
   if (kLicensingEnabled) {
     checkLicense(line);
@@ -689,7 +685,7 @@ void MainWindow::checkFingerprint(const QString &line) {
   static bool messageBoxAlreadyShown = false;
 
   if (!messageBoxAlreadyShown) {
-    onActionStopCoreTriggered();
+    m_CoreProcess.stop();
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
@@ -715,37 +711,6 @@ void MainWindow::checkFingerprint(const QString &line) {
     messageBoxAlreadyShown = false;
   }
 }
-
-bool MainWindow::checkSecureSocket(const QString &line) {
-  static const QString tlsCheckString = "network encryption protocol: ";
-  const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
-  if (index == -1) {
-    return false;
-  }
-
-  secureSocket(true);
-  m_SecureSocketVersion = line.mid(index + tlsCheckString.size());
-  return true;
-}
-
-#ifdef Q_OS_MAC
-void MainWindow::checkOSXNotification(const QString &line) {
-  static const QString OSXNotificationSubstring = "OSX Notification: ";
-  if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
-    int delimterPosition = line.indexOf('|');
-    int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
-    QString title = line.mid(
-        notificationStartPosition + OSXNotificationSubstring.length(),
-        delimterPosition - notificationStartPosition -
-            OSXNotificationSubstring.length());
-    QString body =
-        line.mid(delimterPosition + 1, line.length() - delimterPosition);
-    if (!showOSXNotification(title, body)) {
-      appendLogInfo("OSX notification was not shown");
-    }
-  }
-}
-#endif
 
 QString MainWindow::getTimeStamp() const {
   QDateTime current = QDateTime::currentDateTime();
@@ -807,6 +772,10 @@ void MainWindow::showDevThanksMessage() {
   messages::showDevThanks(this, kProductName);
 }
 
+void MainWindow::onCoreProcessSecureSocket(bool enabled) {
+  secureSocket(enabled);
+}
+
 void MainWindow::onCoreProcessStateChanged(CoreState state) {
   // always assume connection is not secure when connection changes
   // to anything except connected. the only way the padlock shows is
@@ -861,7 +830,7 @@ void MainWindow::onCoreProcessStateChanged(CoreState state) {
   case Connected: {
     if (m_SecureSocket) {
       setStatus(
-          QString("Synergy is connected (with %1)").arg(m_SecureSocketVersion));
+          QString("Synergy is connected (with %1)").arg(m_CoreProcess.secureSocketVersion()));
     } else {
       setStatus("Synergy is running (without TLS encryption)");
     }

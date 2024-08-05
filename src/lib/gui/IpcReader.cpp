@@ -22,20 +22,23 @@
 #include <QMutex>
 #include <QTcpSocket>
 #include <iostream>
+#include <qtcpsocket.h>
 
 IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
 
 IpcReader::~IpcReader() {}
 
 void IpcReader::start() {
-  connect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+  connect(
+      m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
 }
 
 void IpcReader::stop() {
-  disconnect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+  disconnect(
+      m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
 }
 
-void IpcReader::read() {
+void IpcReader::onSocketReadyRead() {
   QMutexLocker locker(&m_Mutex);
   std::cout << "ready read" << std::endl;
 
@@ -56,10 +59,10 @@ void IpcReader::read() {
 
       char *data = new char[len];
       readStream(data, len);
-      QString line = QString::fromUtf8(data, len);
+      QString text = QString::fromUtf8(data, len);
       delete[] data;
 
-      readLogLine(line);
+      emit read(text);
     } else {
       std::cerr << "aborting, message invalid" << std::endl;
       return;

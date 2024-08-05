@@ -43,9 +43,7 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
       m_Socket, &QTcpSocket::errorOccurred, this, &QIpcClient::onSocketError);
 
   m_Reader = new IpcReader(m_Socket);
-  connect(
-      m_Reader, &IpcReader::readLogLine, this,
-      &QIpcClient::onIpcReaderReadLogLine);
+  connect(m_Reader, &IpcReader::read, this, &QIpcClient::onIpcReaderRead);
 }
 
 QIpcClient::~QIpcClient() {
@@ -133,14 +131,14 @@ void QIpcClient::sendCommand(
   stream->writeRawData(elevateBuf, 1);
 }
 
-void QIpcClient::onIpcReaderReadLogLine(const QString &text) {
+void QIpcClient::onIpcReaderRead(const QString &text) {
   const auto trimmed = text.trimmed();
 
   if (trimmed.isEmpty()) {
     return;
   }
 
-  emit readLogLine(trimmed);
+  emit read(trimmed);
 }
 
 // TODO: qt must have a built in way of converting int to bytes.

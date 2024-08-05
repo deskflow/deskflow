@@ -41,9 +41,7 @@ CoreProcess::CoreProcess(AppConfig &appConfig, IServerConfig &serverConfig)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig) {
 
-  connect(
-      &m_ipcClient, &QIpcClient::readLogLine, this,
-      &CoreProcess::onIpcClientReadLogLine);
+  connect(&m_ipcClient, &QIpcClient::read, this, &CoreProcess::onIpcClientRead);
 
   connect(
       &m_ipcClient, &QIpcClient::errorMessage, this,
@@ -80,22 +78,22 @@ void CoreProcess::onProcessRetryStart() {
   }
 }
 
-void CoreProcess::onIpcClientReadLogLine(const QString &line) {
+void CoreProcess::onIpcClientRead(const QString &text) {
 
-  if (line.contains("connected to server") || line.contains("has connected")) {
+  if (text.contains("connected to server") || text.contains("has connected")) {
     setCoreState(ConnectionState::Connected);
 
-  } else if (line.contains("started server")) {
+  } else if (text.contains("started server")) {
     setCoreState(ConnectionState::Listening);
   } else if (
-      line.contains("disconnected from server") ||
-      line.contains("process exited")) {
+      text.contains("disconnected from server") ||
+      text.contains("process exited")) {
     setCoreState(ConnectionState::Disconnected);
-  } else if (line.contains("connecting to")) {
+  } else if (text.contains("connecting to")) {
     setCoreState(ConnectionState::Connecting);
   }
 
-  emit logLine(line);
+  handleLogLines(text);
 }
 
 void CoreProcess::onIpcClientErrorMessage(const QString &text) {
@@ -104,6 +102,18 @@ void CoreProcess::onIpcClientErrorMessage(const QString &text) {
 
 void CoreProcess::onIpcClientInfoMessage(const QString &text) {
   emit logInfo(text);
+}
+
+void CoreProcess::onProcessReadyReadStandardOutput() {
+  if (!m_pProcess) {
+    handleLogLines(m_pProcess->readAllStandardOutput());
+  }
+}
+
+void CoreProcess::onProcessReadyReadStandardError() {
+  if (m_pProcess) {
+    handleLogLines(m_pProcess->readAllStandardError());
+  }
 }
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
@@ -128,12 +138,7 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   }
 }
 
-void CoreProcess::onProcessReadyReadStandardOutput() {
-  if (!m_pProcess) {
-    return;
-  }
-
-  QString text = m_pProcess->readAllStandardOutput();
+void CoreProcess::handleLogLines(const QString &text) {
   for (auto line : text.split(kLineSplitRegex)) {
     const auto trimmed = line.trimmed();
 
@@ -141,7 +146,6 @@ void CoreProcess::onProcessReadyReadStandardOutput() {
       continue;
     }
 
-    // TODO: should this go in stderr handling?
     // HACK: macOS 10.13.4+ spamming error lines in logs making them
     // impossible to read and debug; giving users a red herring.
     if (trimmed.contains("calling TIS/TSM in non-main thread environment")) {
@@ -154,24 +158,8 @@ void CoreProcess::onProcessReadyReadStandardOutput() {
       start();
     }
 
+    checkLogLine(trimmed);
     emit logLine(trimmed);
-  }
-}
-
-void CoreProcess::onProcessReadyReadStandardError() {
-  if (!m_pProcess) {
-    return;
-  }
-
-  QString text = m_pProcess->readAllStandardError();
-  for (auto line : text.split(kLineSplitRegex)) {
-    const auto trimmed = line.trimmed();
-
-    if (trimmed.isEmpty()) {
-      continue;
-    }
-
-    emit logError(trimmed);
   }
 }
 
@@ -458,6 +446,7 @@ QString CoreProcess::coreModeString() const {
     return "client";
   default:
     qFatal("invalid core mode");
+    return "";
   }
 }
 
@@ -489,5 +478,46 @@ bool CoreProcess::isActive() const {
   auto state = m_state;
   return (state == Connected) || (state == Connecting) || (state == Listening);
 }
+
+void CoreProcess::checkLogLine(const QString &line) {
+  checkSecureSocket(line);
+
+  // subprocess (synergys, synergyc) is not allowed to show notifications
+  // process the log from it and show notificatino from synergy instead
+#ifdef Q_OS_MAC
+  checkOSXNotification(line);
+#endif
+}
+
+bool CoreProcess::checkSecureSocket(const QString &line) {
+  static const QString tlsCheckString = "network encryption protocol: ";
+  const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
+  if (index == -1) {
+    return false;
+  }
+
+  emit secureSocket(true);
+  m_secureSocketVersion = line.mid(index + tlsCheckString.size());
+  return true;
+}
+
+#ifdef Q_OS_MAC
+void CoreProcess::checkOSXNotification(const QString &line) {
+  static const QString OSXNotificationSubstring = "OSX Notification: ";
+  if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
+    int delimterPosition = line.indexOf('|');
+    int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
+    QString title = line.mid(
+        notificationStartPosition + OSXNotificationSubstring.length(),
+        delimterPosition - notificationStartPosition -
+            OSXNotificationSubstring.length());
+    QString body =
+        line.mid(delimterPosition + 1, line.length() - delimterPosition);
+    if (!showOSXNotification(title, body)) {
+      appendLogInfo("OSX notification was not shown");
+    }
+  }
+}
+#endif
 
 } // namespace synergy::gui
