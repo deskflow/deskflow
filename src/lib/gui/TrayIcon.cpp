@@ -17,18 +17,18 @@
 
 #include "TrayIcon.h"
 
-#include "gui/constants.h"
+#include "constants.h"
 
-const auto kRetryInterval = 1000;
+const auto kShowRetryInterval = 1000;
 
 void TrayIcon::setIcon(const QIcon &icon) {
   m_icon = icon;
-  if (m_pTrayIcon) {
+  if (m_pTrayIcon && !icon.isNull()) {
     m_pTrayIcon->setIcon(icon);
   }
 }
 
-void TrayIcon::createLoop() {
+void TrayIcon::showRetryLoop() {
   // HACK: apparently this is needed to create a dbus connection, and the hide
   // is needed to make use of the object so the dbus connection doesn't get
   // optimized away by the compiler.
@@ -41,8 +41,8 @@ void TrayIcon::createLoop() {
   } else {
     // on some platforms, it's not always possible to create the tray when the
     // app starts, so keep trying until it is possible.
-    qDebug("system tray not ready yet, retrying in %d ms", kRetryInterval);
-    QTimer::singleShot(kRetryInterval, this, &TrayIcon::createLoop);
+    qDebug("system tray not ready yet, retrying in %d ms", kShowRetryInterval);
+    QTimer::singleShot(kShowRetryInterval, this, &TrayIcon::showRetryLoop);
   }
 }
 
@@ -67,5 +67,5 @@ void TrayIcon::create(std::vector<QAction *> const &actions) {
   m_pTrayIcon->setContextMenu(m_pTrayIconMenu.get());
   m_pTrayIcon->setToolTip(kAppName);
 
-  createLoop();
+  showRetryLoop();
 }

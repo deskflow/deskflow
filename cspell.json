@@ -4,7 +4,6 @@
   "dictionaryDefinitions": [],
   "dictionaries": [],
   "words": [
-    "Schoeneman",
     "aqtinstall",
     "codesign",
     "codesigning",
@@ -15,12 +14,15 @@
     "gdrive",
     "keychain",
     "Keychains",
+    "Lanz",
     "LLDB",
     "macdeployqt",
     "msvc",
     "notarytool",
     "outputdir",
     "runas",
+    "Schoeneman",
+    "Volker",
     "winget"
   ],
   "ignoreWords": [],
