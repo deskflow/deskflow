@@ -21,6 +21,7 @@
 #include "Hotkey.h"
 #include "ScreenConfig.h"
 #include "ScreenList.h"
+#include "gui/IServerConfig.h"
 
 #include <QList>
 
@@ -35,7 +36,9 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-class ServerConfig : public ScreenConfig {
+using namespace synergy::gui;
+
+class ServerConfig : public ScreenConfig, public IServerConfig {
   friend class ServerConfigDialog;
   friend class ServerConnection;
   friend QTextStream &
@@ -79,8 +82,8 @@ public:
   void updateServerName();
   const QString &configFile() const;
   bool useExternalConfig() const;
-  bool isFull() const;
-  bool isScreenExists(const QString &screenName) const;
+  bool isFull() const override;
+  bool screenExists(const QString &screenName) const override;
   void addClient(const QString &clientName);
   QString getClientAddress() const;
   void setClientAddress(const QString &address);

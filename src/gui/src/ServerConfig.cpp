@@ -428,7 +428,7 @@ bool ServerConfig::isFull() const {
   return isFull;
 }
 
-bool ServerConfig::isScreenExists(const QString &screenName) const {
+bool ServerConfig::screenExists(const QString &screenName) const {
   bool isExists = false;
 
   for (const auto &screen : screens()) {

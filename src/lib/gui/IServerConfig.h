@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2021 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,19 +19,12 @@
 
 #include <QString>
 
-class MainWindow;
+namespace synergy::gui {
 
-class ClientConnection {
-  MainWindow &m_parent;
-  bool m_checkConnection = false;
-
+class IServerConfig {
 public:
-  explicit ClientConnection(MainWindow &parent);
-  void update(const QString &line);
-  void setCheckConnection(bool checkConnection);
-
-private:
-  QString getMessage(const QString &line) const;
-  bool checkMainWindow();
-  void showMessage(const QString &message) const;
+  virtual bool isFull() const = 0;
+  virtual bool screenExists(const QString &screenName) const = 0;
 };
+
+} // namespace synergy::gui

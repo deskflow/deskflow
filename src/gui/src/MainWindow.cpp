@@ -90,7 +90,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
-      m_ServerConnection(*this),
+      m_ServerConnection(*this, appConfig, m_ServerConfig),
       m_ClientConnection(*this),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
       m_WindowSaveTimer(this) {
@@ -257,6 +257,10 @@ void MainWindow::connectSlots() const {
   connect(
       &m_TrayIcon, &TrayIcon::activated, this,
       &MainWindow::onTrayIconActivated);
+
+  connect(
+      &m_ServerConnection, &ServerConnection::configureClient, this,
+      &MainWindow::onServerConnectionConfigureClient);
 }
 
 void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
@@ -500,6 +504,13 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
 }
 
 void MainWindow::onWindowSaveTimerTimeout() { saveWindow(); }
+
+void MainWindow::onServerConnectionConfigureClient(const QString &clientName) {
+  ServerConfigDialog dialog(this, m_ServerConfig, m_AppConfig);
+  if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
+    restartCore();
+  }
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // End slots

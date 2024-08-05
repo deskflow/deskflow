@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,24 +18,27 @@
 #include "ServerConnection.h"
 
 #include "MainWindow.h"
-#include "ServerConfigDialog.h"
 #include "ServerMessage.h"
 #include "gui/AppConfig.h"
 
 #include <QMessageBox>
 
-ServerConnection::ServerConnection(MainWindow &parent) : m_parent(parent) {}
+ServerConnection::ServerConnection(
+    QWidget &parent, AppConfig &appConfig, IServerConfig &serverConfig)
+    : m_parent(parent),
+      m_appConfig(appConfig),
+      m_serverConfig(serverConfig) {}
 
 void ServerConnection::update(const QString &line) {
   ServerMessage message(line);
 
-  if (!m_parent.appConfig().useExternalConfig() &&
-      message.isNewClientMessage() &&
+  if (!m_appConfig.useExternalConfig() && message.isNewClientMessage() &&
       !m_ignoredClients.contains(message.getClientName())) {
     addClient(message.getClientName());
   }
 }
 
+// TOOD: merge duplicated code between client and server connection
 bool ServerConnection::checkMainWindow() {
   bool result = m_parent.isActiveWindow();
 
@@ -50,29 +52,36 @@ bool ServerConnection::checkMainWindow() {
 }
 
 void ServerConnection::addClient(const QString &clientName) {
-  if (!m_parent.serverConfig().isFull() &&
-      !m_parent.serverConfig().isScreenExists(clientName) &&
-      checkMainWindow()) {
-    QMessageBox message(&m_parent);
-    message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-    message.addButton(
-        QObject::tr("Accept and configure"), QMessageBox::AcceptRole);
-    message.setText(
-        QObject::tr("%1 client has made a connection request").arg(clientName));
-
-    if (message.exec() == QMessageBox::Accepted) {
-      configureClient(clientName);
-    } else {
-      m_ignoredClients.append(clientName);
-    }
+  if (m_serverConfig.isFull()) {
+    qDebug(
+        "server config full, skipping add client prompt for: %s",
+        qPrintable(clientName));
+    return;
   }
-}
 
-void ServerConnection::configureClient(const QString &clientName) {
-  ServerConfigDialog dialog(
-      &m_parent, m_parent.serverConfig(), m_parent.appConfig());
+  if (m_serverConfig.screenExists(clientName)) {
+    qDebug(
+        "client already added, skipping add client prompt for: %s",
+        qPrintable(clientName));
+    return;
+  }
 
-  if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
-    m_parent.restartCore();
+  if (!checkMainWindow()) {
+    qDebug(
+        "main window not active, skipping add client prompt for: %s",
+        qPrintable(clientName));
+    return;
+  }
+
+  QMessageBox message(&m_parent);
+  message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
+  message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
+  message.setText(
+      QObject::tr("Client with name '%1' wants to connect").arg(clientName));
+
+  if (message.exec() == QMessageBox::Accepted) {
+    emit configureClient(clientName);
+  } else {
+    m_ignoredClients.append(clientName);
   }
 }

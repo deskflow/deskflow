@@ -128,6 +128,7 @@ private slots:
   void onCoreProcessReadyReadStandardOutput();
   void onCoreProcessReadyReadStandardError();
   void onWindowSaveTimerTimeout();
+  void onServerConnectionConfigureClient(const QString &clientName);
 
   // autoconnect slots
   void on_m_pButtonApply_clicked();

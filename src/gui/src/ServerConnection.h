@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,26 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERVERCONNECTION_H
-#define SERVERCONNECTION_H
+#pragma once
 
 #include <QString>
 #include <QStringList>
 
+#include "gui/AppConfig.h"
+#include "gui/IServerConfig.h"
+
 class MainWindow;
 
-class ServerConnection {
-  MainWindow &m_parent;
-  QStringList m_ignoredClients;
+class ServerConnection : public QObject {
+  Q_OBJECT
+  using IServerConfig = synergy::gui::IServerConfig;
 
 public:
-  explicit ServerConnection(MainWindow &parent);
+  explicit ServerConnection(
+      QWidget &parent, AppConfig &appConfig, IServerConfig &serverConfig);
   void update(const QString &line);
+
+signals:
+  void configureClient(const QString &clientName);
 
 private:
   void addClient(const QString &clientName);
-  void configureClient(const QString &clientName);
   bool checkMainWindow();
-};
 
-#endif // SERVERCONNECTION_H
+  QWidget &m_parent;
+  AppConfig &m_appConfig;
+  IServerConfig &m_serverConfig;
+  QStringList m_ignoredClients;
+};
