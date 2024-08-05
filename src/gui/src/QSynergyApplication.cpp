@@ -24,4 +24,8 @@
 #include <QtGui>
 
 QSynergyApplication::QSynergyApplication(int &argc, char **argv)
-    : QApplication(argc, argv) {}
+    : QApplication(argc, argv) {
+
+  // causes dark mode to be used on some OS (e.g. Windows)
+  setStyle("fusion");
+}
