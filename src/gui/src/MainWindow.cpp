@@ -48,6 +48,7 @@
 #include <QNetworkAccessManager>
 #include <QPushButton>
 #include <QRegularExpression>
+#include <QScrollBar>
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
@@ -87,6 +88,21 @@ static const char *const kDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-connected.png",
     ":/res/icons/16x16/synergy-transfering.png",
     ":/res/icons/16x16/synergy-disconnected.png"};
+
+namespace {
+
+void scrollToBottomIfAtBottom(QPlainTextEdit *plainTextEdit) {
+  QScrollBar *scrollBar = plainTextEdit->verticalScrollBar();
+  int currentValue = scrollBar->value();
+  int maxValue = scrollBar->maximum();
+
+  // Check if the current scroll position is at the bottom
+  if (currentValue == maxValue) {
+    plainTextEdit->moveCursor(QTextCursor::End);
+  }
+}
+
+} // namespace
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
@@ -626,6 +642,7 @@ void MainWindow::setIcon(CoreConnectionState state) {
 
 void MainWindow::handleLogLine(const QString &line) {
   m_pLogOutput->appendPlainText(line);
+  scrollToBottomIfAtBottom(m_pLogOutput);
   updateFromLogLine(line);
 }
 
