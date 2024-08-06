@@ -825,7 +825,7 @@ void MainWindow::updateStatus() {
 }
 
 void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
-  qDebug("core process state changed: %d", state);
+  qDebug("core process state changed: %d", static_cast<int>(state));
 
   updateStatus();
 
@@ -861,7 +861,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
 }
 
 void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state) {
-  qDebug("core connection state changed: %d", state);
+  qDebug("core connection state changed: %d", static_cast<int>(state));
 
   updateStatus();
 
