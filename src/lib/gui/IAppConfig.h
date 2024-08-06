@@ -17,9 +17,13 @@
 
 #pragma once
 
+#include "ElevateMode.h"
+
 #include <QString>
 
 namespace synergy::gui {
+
+enum class ProcessMode { kService, kDesktop };
 
 class IAppConfig {
 public:
@@ -27,6 +31,24 @@ public:
   virtual QString tlsCertPath() const = 0;
   virtual QString tlsKeyLength() const = 0;
   virtual bool tlsEnabled() const = 0;
+  virtual ProcessMode processMode() const = 0;
+  virtual ElevateMode elevateMode() const = 0;
+  virtual QString logLevelText() const = 0;
+  virtual const QString &screenName() const = 0;
+  virtual bool preventSleep() const = 0;
+  virtual bool logToFile() const = 0;
+  virtual const QString &logFilename() const = 0;
+  virtual QString coreServerName() const = 0;
+  virtual bool invertConnection() const = 0;
+  virtual void persistLogDir() const = 0;
+  virtual QString serialKey() const = 0;
+  virtual QString coreClientName() const = 0;
+  virtual bool languageSync() const = 0;
+  virtual bool invertScrollDirection() const = 0;
+  virtual int port() const = 0;
+  virtual bool useExternalConfig() const = 0;
+  virtual const QString &configFile() const = 0;
+  virtual const QString &networkInterface() const = 0;
 };
 
 } // namespace synergy::gui

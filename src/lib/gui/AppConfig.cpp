@@ -28,8 +28,7 @@
 #include <QtNetwork>
 #include <functional>
 
-using ConfigScopes = synergy::gui::ConfigScopes;
-using IConfigScopes = synergy::gui::IConfigScopes;
+using namespace synergy::gui;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.

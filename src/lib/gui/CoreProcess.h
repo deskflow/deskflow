@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "AppConfig.h"
+#include "IAppConfig.h"
 #include "IServerConfig.h"
 #include "QIpcClient.h"
 
@@ -39,7 +39,7 @@ public:
   enum class ProcessState { Starting, Started, Stopping, Stopped };
   enum class ConnectionState { Disconnected, Connecting, Connected, Listening };
 
-  explicit CoreProcess(AppConfig &appConfig, IServerConfig &serverConfig);
+  explicit CoreProcess(IAppConfig &appConfig, IServerConfig &serverConfig);
   ~CoreProcess() override;
 
   void extracted(QString &app, QStringList &args);
@@ -97,7 +97,7 @@ private:
   void checkOSXNotification(const QString &line);
 #endif
 
-  AppConfig &m_appConfig;
+  IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
   QString m_address;
   std::unique_ptr<QProcess> m_pProcess;

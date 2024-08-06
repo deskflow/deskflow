@@ -17,14 +17,16 @@
 
 #include "CoreProcess.h"
 
-#include "AppConfig.h"
+#include "IAppConfig.h"
 #include "constants.h"
+#include "gui/CoreInterface.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
 #endif
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QMutexLocker>
@@ -38,7 +40,7 @@ const int kRetryDelay = 1000;
 const auto kLastConfigFilename = "LastConfig.cfg";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
-CoreProcess::CoreProcess(AppConfig &appConfig, IServerConfig &serverConfig)
+CoreProcess::CoreProcess(IAppConfig &appConfig, IServerConfig &serverConfig)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig) {
 

@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "ConfigScopes.h"
 #include "CoreInterface.h"
 #include "ElevateMode.h"
 #include "IAppConfig.h"
+#include "IConfigScopes.h"
 
 #include <QDir>
 #include <QHostInfo>
@@ -32,7 +32,7 @@
 #include <QVariant>
 #include <optional>
 
-enum class ProcessMode { kService, kDesktop };
+namespace synergy::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
 const QString kDefaultLogFile = "synergy.log";
@@ -49,6 +49,8 @@ const bool kDefaultShowDevThanks = true;
 const bool kDefaultShowDevThanks = false;
 #endif // SYNERGY_SHOW_DEV_THANKS
 
+} // namespace synergy::gui
+
 /**
  * @brief Simply reads and writes app settings.
  *
@@ -58,6 +60,9 @@ const bool kDefaultShowDevThanks = false;
  * becoming a god object.
  */
 class AppConfig : public QObject, public synergy::gui::IAppConfig {
+  using ProcessMode = synergy::gui::ProcessMode;
+  using IConfigScopes = synergy::gui::IConfigScopes;
+
   Q_OBJECT
 
 private:
@@ -120,10 +125,11 @@ public:
   };
 
   explicit AppConfig(
-      synergy::gui::IConfigScopes &scopes,
+      IConfigScopes &scopes,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
-  synergy::gui::IConfigScopes &scopes();
+  IConfigScopes &scopes();
+  void determineScope();
 
   /**
    * @brief Commits the current settings to the active scope.
@@ -131,50 +137,47 @@ public:
    */
   void commit();
 
-  void determineScope();
-
   /**
    * Getters
    */
 
-  void setActivationHasRun(bool value);
+  ProcessMode processMode() const override;
+  ElevateMode elevateMode() const override;
+  bool tlsEnabled() const override;
+  QString tlsCertPath() const override;
+  QString tlsKeyLength() const override;
+  QString logLevelText() const override;
+  const QString &screenName() const override;
+  bool logToFile() const override;
+  bool preventSleep() const override;
+  const QString &logFilename() const override;
+  QString coreServerName() const override;
+  QString coreClientName() const override;
+  bool invertConnection() const override;
+  void persistLogDir() const override;
+  QString serialKey() const override;
+  bool languageSync() const override;
+  bool invertScrollDirection() const override;
+  int port() const override;
+  bool useExternalConfig() const override;
+  const QString &configFile() const override;
+  const QString &networkInterface() const override;
   bool isActiveScopeWritable() const;
   bool isActiveScopeSystem() const;
-  const QString &screenName() const;
-  int port() const;
-  const QString &networkInterface() const;
   int logLevel() const;
-  bool logToFile() const;
-  const QString &logFilename() const;
-  QString logLevelText() const;
-  ProcessMode processMode() const;
   bool wizardShouldRun() const;
   bool startedBefore() const;
-  QString coreServerName() const;
-  QString coreClientName() const;
   QString logDir() const;
-  void persistLogDir() const;
-  ElevateMode elevateMode() const;
   bool autoHide() const;
-  bool invertScrollDirection() const;
   unsigned long long licenseNextCheck() const;
-  bool languageSync() const;
-  bool preventSleep() const;
-  bool invertConnection() const;
   bool serverGroupChecked() const;
-  bool useExternalConfig() const;
-  const QString &configFile() const;
   bool useInternalConfig() const;
   bool clientGroupChecked() const;
   QString serverHostname() const;
   QString lastVersion() const;
   bool enableService() const;
   bool closeToTray() const;
-  QString serialKey() const;
   bool activationHasRun() const;
-  bool tlsEnabled() const override;
-  QString tlsCertPath() const override;
-  QString tlsKeyLength() const override;
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
   bool showDevThanks() const;
@@ -184,6 +187,7 @@ public:
    * Setters
    */
 
+  void setActivationHasRun(bool value);
   void setScreenName(const QString &s);
   void setPort(int i);
   void setNetworkInterface(const QString &s);
@@ -274,7 +278,7 @@ private:
 
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
-  void loadScope(synergy::gui::ConfigScopes::Scope scope);
+  void loadScope(IConfigScopes::Scope scope);
 
   /**
    * @brief Gets a TLS certificate path based on the user's profile dir.
@@ -288,10 +292,10 @@ private:
   QString m_Interface = "";
   int m_LogLevel = 0;
   bool m_LogToFile = false;
-  QString m_LogFilename = logDir() + kDefaultLogFile;
+  QString m_LogFilename = logDir() + synergy::gui::kDefaultLogFile;
   int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
-  ElevateMode m_ElevateMode = kDefaultElevateMode;
+  ElevateMode m_ElevateMode = synergy::gui::kDefaultElevateMode;
   QString m_ActivateEmail = "";
   bool m_TlsEnabled = true;
   bool m_AutoHide = false;
@@ -309,13 +313,14 @@ private:
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
-  bool m_EnableService = kDefaultProcessMode == ProcessMode::kService;
+  bool m_EnableService =
+      synergy::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = true;
   QString m_TlsCertPath = defaultTlsCertPath();
   QString m_TlsKeyLength = "2048";
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
-  bool m_ShowDevThanks = kDefaultShowDevThanks;
+  bool m_ShowDevThanks = synergy::gui::kDefaultShowDevThanks;
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
 
