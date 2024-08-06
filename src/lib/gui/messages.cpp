@@ -21,6 +21,7 @@
 #include "constants.h"
 #include "styles.h"
 
+#include <QAction>
 #include <QDateTime>
 #include <QDir>
 #include <QMessageBox>
