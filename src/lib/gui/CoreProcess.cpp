@@ -123,7 +123,9 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
     qFatal("core process must be in starting state");
   }
 
+  qInfo("running command: %s %s", qPrintable(app), qPrintable(args.join(" ")));
   m_pProcess->start(app, args);
+
   if (m_pProcess->waitForStarted()) {
     setProcessState(ProcessState::Started);
   } else {
@@ -158,6 +160,7 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
     }
   }
 
+  qInfo("running command: %s", qPrintable(command.join(" ")));
   m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
   setProcessState(ProcessState::Started);
 }
@@ -322,12 +325,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
         &CoreProcess::onProcessReadyReadStandardError);
   }
 
-  if (m_appConfig.logLevel() >= kDebugLogLevel) {
-    qInfo("command: %s %s", qPrintable(app), qPrintable(args.join(" ")));
-  }
-
-  // qInfo("log level: " + m_appConfig.logLevelText());
-  qInfo("log level: %s", qPrintable(m_appConfig.logLevelText()));
+  qDebug("log level: %s", qPrintable(m_appConfig.logLevelText()));
 
   if (m_appConfig.logToFile())
     qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
@@ -566,16 +564,12 @@ void CoreProcess::setProcessState(ProcessState state) {
 
 QString CoreProcess::getProfileRootForArg() const {
   CoreInterface coreInterface;
-  QString dir = coreInterface.getProfileDir();
+  QDir dir = coreInterface.getProfileDir();
 
-  // HACK: strip our app name since we're returning the root dir.
-#if defined(Q_OS_WIN)
-  dir.replace("\\Synergy", "");
-#else
-  dir.replace("/.synergy", "");
-#endif
+  // the core expects the profile root dir, not the app-specific profile dir.
+  dir.cdUp();
 
-  return dir;
+  return dir.absolutePath();
 }
 
 void CoreProcess::checkLogLine(const QString &line) {
