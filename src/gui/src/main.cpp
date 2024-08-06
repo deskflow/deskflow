@@ -22,6 +22,7 @@
 #include "SetupWizardBlocker.h"
 #include "gui/AppConfig.h"
 #include "gui/ConfigScopes.h"
+#include "gui/Logger.h"
 #include "gui/constants.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
@@ -54,7 +55,7 @@ bool checkMacAssistiveDevices();
 
 int main(int argc, char *argv[]) {
 
-#ifdef Q_OS_DARWIN
+#if defined(Q_OS_MAC)
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
    * instantiated" */
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
@@ -67,9 +68,10 @@ int main(int argc, char *argv[]) {
   QSynergyApplication app(argc, argv);
   qInstallMessageHandler(synergy::gui::messages::messageHandler);
 
-  qInfo("Synergy v%s", synergy::gui::version().toUtf8().constData());
-
   dotenv(".env");
+  s_logger.loadEnvVars();
+
+  qInfo("Synergy v%s", synergy::gui::version().toUtf8().constData());
 
 #if defined(Q_OS_MAC)
 

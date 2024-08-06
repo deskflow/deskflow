@@ -35,7 +35,7 @@ TlsUtility::TlsUtility(
 }
 
 bool TlsUtility::isAvailable() const {
-  return !kLicensingEnabled || m_license.isTlsAvailable();
+  return !kEnableActivation || m_license.isTlsAvailable();
 }
 
 bool TlsUtility::isAvailableAndEnabled() const {

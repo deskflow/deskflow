@@ -52,6 +52,6 @@ signals:
   void invalidLicense() const;
 
 private:
-  bool m_enabled = synergy::gui::kLicensingEnabled;
+  bool m_enabled = synergy::gui::kEnableActivation;
   License m_license = License::invalid();
 };

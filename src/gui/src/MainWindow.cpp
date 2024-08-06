@@ -25,6 +25,7 @@
 #include "gui/ConfigScopes.h"
 #include "gui/CoreProcess.h"
 #include "gui/LicenseHandler.h"
+#include "gui/Logger.h"
 #include "gui/TlsFingerprint.h"
 #include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
@@ -145,6 +146,10 @@ void MainWindow::saveWindow() {
 }
 
 void MainWindow::setupControls() {
+  if (!kEnableActivation) {
+    updateWindowTitle();
+  }
+
   createMenuBar();
   secureSocket(false);
 
@@ -161,7 +166,7 @@ void MainWindow::setupControls() {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
   }
 
-  if (kLicensingEnabled) {
+  if (kEnableActivation) {
     m_pActivate->setVisible(true);
   }
 
@@ -181,6 +186,10 @@ void MainWindow::setupControls() {
 // executing the slot. the default is to instantly call the slot when the
 // signal is emitted from the thread that owns the receiver's object.
 void MainWindow::connectSlots() {
+
+  connect(
+      &s_logger, &Logger::newLine, this, //
+      [this](const QString &line) { handleLogLine(line); });
 
   connect(this, &MainWindow::created, this, &MainWindow::onCreated);
 
@@ -205,20 +214,16 @@ void MainWindow::connectSlots() {
       &MainWindow::onAppConfigInvertConnection);
 
   connect(
+      &m_CoreProcess, &CoreProcess::starting, this,
+      &MainWindow::onCoreProcessStarting, Qt::DirectConnection);
+
+  connect(
       &m_CoreProcess, &CoreProcess::error, this,
       &MainWindow::onCoreProcessError);
 
   connect(
       &m_CoreProcess, &CoreProcess::logLine, this,
       &MainWindow::onCoreProcessLogLine);
-
-  connect(
-      &m_CoreProcess, &CoreProcess::logInfo, this,
-      &MainWindow::onCoreProcessLogInfo);
-
-  connect(
-      &m_CoreProcess, &CoreProcess::logError, this,
-      &MainWindow::onCoreProcessLogError);
 
   connect(
       &m_CoreProcess, &CoreProcess::stateChanged, this,
@@ -282,7 +287,7 @@ void MainWindow::onCreated() {
 
   applyCloseToTray();
 
-  if (kLicensingEnabled && !m_AppConfig.serialKey().isEmpty()) {
+  if (kEnableActivation && !m_AppConfig.serialKey().isEmpty()) {
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
   }
 
@@ -292,7 +297,7 @@ void MainWindow::onCreated() {
 }
 
 void MainWindow::onShown() {
-  if (kLicensingEnabled) {
+  if (kEnableActivation) {
     const auto &license = m_LicenseHandler.license();
     if (!m_AppConfig.activationHasRun() || !license.isValid() ||
         license.isExpired()) {
@@ -302,7 +307,7 @@ void MainWindow::onShown() {
 }
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
-  setWindowTitle(m_LicenseHandler.productName());
+  updateWindowTitle();
   showLicenseNotice();
 
   if (m_AppConfig.serialKey() != serialKey) {
@@ -348,7 +353,7 @@ void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
 
 void MainWindow::onActionStartCoreTriggered() {
   m_ClientConnection.setCheckConnection(true);
-  startCore();
+  m_CoreProcess.start();
 }
 
 void MainWindow::onActionStopCoreTriggered() { m_CoreProcess.stop(); }
@@ -375,14 +380,6 @@ void MainWindow::onCoreProcessError(CoreProcess::Error error) {
 
 void MainWindow::onCoreProcessLogLine(const QString &line) {
   handleLogLine(line);
-}
-
-void MainWindow::onCoreProcessLogInfo(const QString &message) {
-  appendLogInfo(message);
-}
-
-void MainWindow::onCoreProcessLogError(const QString &message) {
-  appendLogError(message);
 }
 
 bool MainWindow::on_m_pActionSave_triggered() {
@@ -417,8 +414,8 @@ void MainWindow::on_m_pActionSettings_triggered() {
     applyConfig();
     applyCloseToTray();
 
-    if (m_CoreProcess.isActive()) {
-      restartCore();
+    if (m_CoreProcess.isStarted()) {
+      m_CoreProcess.restart();
     }
   }
 }
@@ -447,7 +444,7 @@ void MainWindow::on_m_pLineEditClientIp_textChanged(const QString &text) {
 
 void MainWindow::on_m_pButtonApply_clicked() {
   m_ClientConnection.setCheckConnection(true);
-  restartCore();
+  m_CoreProcess.restart();
 }
 
 void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
@@ -482,7 +479,7 @@ void MainWindow::onWindowSaveTimerTimeout() { saveWindow(); }
 void MainWindow::onServerConnectionConfigureClient(const QString &clientName) {
   ServerConfigDialog dialog(this, m_ServerConfig, m_AppConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
-    restartCore();
+    m_CoreProcess.restart();
   }
 }
 
@@ -522,27 +519,23 @@ void MainWindow::open() {
 
   m_VersionChecker.checkLatest();
 
-  // only start if user has previously started. this stops the gui from
-  // auto hiding before the user has configured synergy (which of course
-  // confuses first time users, who think synergy has crashed).
-  if (m_AppConfig.startedBefore() &&
-      m_AppConfig.processMode() == ProcessMode::kDesktop) {
-    startCore();
+  if (m_AppConfig.startedBefore()) {
+    m_CoreProcess.start();
   }
 }
 
-void MainWindow::startCore() {
+void MainWindow::onCoreProcessStarting() {
 
-  if (kLicensingEnabled) {
+  if (kEnableActivation) {
     const auto &license = m_LicenseHandler.license();
     if (license.isExpired() && showActivationDialog() == QDialog::Rejected) {
-      qDebug("license expired, not starting core");
+      qDebug("license expired, cancelling core start");
+      m_CoreProcess.stop();
       return;
     }
   }
 
   saveSettings();
-  m_CoreProcess.start();
 }
 
 void MainWindow::setStatus(const QString &status) {
@@ -626,25 +619,6 @@ void MainWindow::setIcon(CoreState state) {
   m_TrayIcon.setIcon(icon);
 }
 
-void MainWindow::appendLogInfo(const QString &text) {
-  qInfo("%s", text.toStdString().c_str());
-
-  handleLogLine(getTimeStamp() + " INFO: " + text);
-}
-
-void MainWindow::appendLogDebug(const QString &text) {
-  qDebug("%s", text.toStdString().c_str());
-
-  if (m_AppConfig.logLevel() >= kDebugLogLevel) {
-    handleLogLine(getTimeStamp() + " DEBUG: " + text);
-  }
-}
-
-void MainWindow::appendLogError(const QString &text) {
-  qCritical("%s", text.toStdString().c_str());
-  handleLogLine(getTimeStamp() + " ERROR: " + text);
-}
-
 void MainWindow::handleLogLine(const QString &line) {
   m_pLogOutput->appendPlainText(line);
   updateFromLogLine(line);
@@ -654,7 +628,7 @@ void MainWindow::updateFromLogLine(const QString &line) {
   checkConnected(line);
   checkFingerprint(line);
 
-  if (kLicensingEnabled) {
+  if (kEnableActivation) {
     checkLicense(line);
   }
 }
@@ -708,9 +682,9 @@ void MainWindow::checkFingerprint(const QString &line) {
         QMessageBox::Yes | QMessageBox::No);
 
     if (fingerprintReply == QMessageBox::Yes) {
-      // restart core process after trusting fingerprint.
+      // start core process again after trusting fingerprint.
       TlsFingerprint::trustedServers().trust(fingerprint);
-      startCore();
+      m_CoreProcess.start();
     }
 
     messageBoxAlreadyShown = false;
@@ -720,11 +694,6 @@ void MainWindow::checkFingerprint(const QString &line) {
 QString MainWindow::getTimeStamp() const {
   QDateTime current = QDateTime::currentDateTime();
   return '[' + current.toString(Qt::ISODate) + ']';
-}
-
-void MainWindow::restartCore() {
-  m_CoreProcess.stop();
-  startCore();
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
@@ -766,8 +735,8 @@ void MainWindow::showDevThanksMessage() {
     return;
   }
 
-  if (kLicensingEnabled) {
-    qDebug("licensing enabled, skipping dev thanks message");
+  if (kEnableActivation) {
+    qDebug("activation enabled, skipping dev thanks message");
     return;
   }
 
@@ -933,12 +902,13 @@ void MainWindow::updateLocalFingerprint() {
 }
 
 QString MainWindow::productName() const {
-  if (kLicensingEnabled) {
+  if (kEnableActivation) {
     return m_LicenseHandler.productName();
   } else if (!kProductName.isEmpty()) {
     return kProductName;
   } else {
     qFatal("product name not set");
+    return "";
   }
 }
 
@@ -972,8 +942,8 @@ void MainWindow::autoAddScreen(const QString name) {
 void MainWindow::showConfigureServer(const QString &message) {
   ServerConfigDialog dialog(this, serverConfig(), m_AppConfig);
   dialog.message(message);
-  if ((dialog.exec() == QDialog::Accepted) && m_CoreProcess.isActive()) {
-    restartCore();
+  if ((dialog.exec() == QDialog::Accepted) && m_CoreProcess.isStarted()) {
+    m_CoreProcess.restart();
   }
 }
 

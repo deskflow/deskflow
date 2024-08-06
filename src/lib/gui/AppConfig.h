@@ -281,7 +281,7 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  synergy::gui::IConfigScopes &m_scopes;
+  synergy::gui::IConfigScopes &m_Scopes;
   std::shared_ptr<Deps> m_pDeps;
   QString m_ScreenName;
   int m_Port = 24800;
@@ -297,7 +297,7 @@ private:
   bool m_AutoHide = false;
   QString m_SerialKey = "";
   QString m_LastVersion = "";
-  unsigned long long m_licenseNextCheck = 0;
+  unsigned long long m_LicenseNextCheck = 0;
   bool m_ActivationHasRun = false;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;

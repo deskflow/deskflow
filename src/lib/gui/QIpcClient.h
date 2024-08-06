@@ -40,6 +40,7 @@ public:
   void sendCommand(const QString &command, ElevateMode elevate);
   void connectToHost();
   void disconnectFromHost();
+  bool isConnected() const { return m_isConnected; }
 
 public slots:
   void retryConnect();
@@ -49,18 +50,19 @@ private:
 
 private slots:
   void onSocketConnected();
+  void onIpcReaderHelloBack();
   void onSocketError(QAbstractSocket::SocketError error);
   void onIpcReaderRead(const QString &text);
 
 signals:
   void read(const QString &text);
-  void infoMessage(const QString &text);
-  void errorMessage(const QString &text);
+  void serviceReady();
 
 private:
-  QTcpSocket *m_Socket;
-  IpcReader *m_Reader;
-  bool m_ReaderStarted;
-  bool m_Enabled;
-  StreamProvider m_StreamProvider;
+  QTcpSocket *m_pSocket;
+  IpcReader *m_pReader;
+  bool m_readerStarted = false;
+  StreamProvider m_streamProvider;
+  bool m_isConnected = false;
+  bool m_isConnecting = false;
 };

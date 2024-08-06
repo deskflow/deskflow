@@ -23,62 +23,72 @@
 #include <QDataStream>
 #include <QHostAddress>
 #include <QTimer>
+#include <qlogging.h>
+
+const auto kRetryInterval = 1000;
+const auto kConnectTimeout = 5000;
 
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
-    : m_ReaderStarted(false),
-      m_Enabled(false),
-      m_StreamProvider(streamProvider) {
+    : m_streamProvider(streamProvider) {
 
-  m_Socket = new QTcpSocket(this);
+  m_pSocket = new QTcpSocket(this);
 
-  if (!m_StreamProvider) {
-    m_StreamProvider = [this]() {
-      return std::make_shared<QDataStreamProxy>(m_Socket);
+  if (!m_streamProvider) {
+    m_streamProvider = [this]() {
+      return std::make_shared<QDataStreamProxy>(m_pSocket);
     };
   }
 
   connect(
-      m_Socket, &QTcpSocket::connected, this, &QIpcClient::onSocketConnected);
+      m_pSocket, &QTcpSocket::connected, this, &QIpcClient::onSocketConnected);
   connect(
-      m_Socket, &QTcpSocket::errorOccurred, this, &QIpcClient::onSocketError);
+      m_pSocket, &QTcpSocket::errorOccurred, this, &QIpcClient::onSocketError);
 
-  m_Reader = new IpcReader(m_Socket);
-  connect(m_Reader, &IpcReader::read, this, &QIpcClient::onIpcReaderRead);
+  m_pReader = new IpcReader(m_pSocket);
+  connect(
+      m_pReader, &IpcReader::read, this, //
+      &QIpcClient::onIpcReaderRead);
+  connect(
+      m_pReader, &IpcReader::helloBack, this,
+      &QIpcClient::onIpcReaderHelloBack);
 }
 
 QIpcClient::~QIpcClient() {
-  delete m_Reader;
-  delete m_Socket;
+  delete m_pReader;
+  delete m_pSocket;
 }
 
-void QIpcClient::onSocketConnected() {
-
-  sendHello();
-  emit infoMessage("connection established");
-}
+void QIpcClient::onSocketConnected() { sendHello(); }
 
 void QIpcClient::connectToHost() {
-  m_Enabled = true;
-
-  emit infoMessage("connecting to service...");
+  m_isConnecting = true;
+  qInfo("connecting to background service...");
   const auto port = static_cast<quint16>(kIpcPort);
-  m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), port);
+  m_pSocket->connectToHost(QHostAddress(QHostAddress::LocalHost), port);
 
-  if (!m_ReaderStarted) {
-    m_Reader->start();
-    m_ReaderStarted = true;
+  if (!m_readerStarted) {
+    m_pReader->start();
+    m_readerStarted = true;
   }
+
+  QTimer::singleShot(kConnectTimeout, this, [this]() {
+    if (!m_isConnected) {
+      qCritical("ipc connection timeout");
+    }
+  });
 }
 
 void QIpcClient::disconnectFromHost() {
-  emit infoMessage("service disconnect");
-  m_Reader->stop();
-  m_Socket->close();
+  m_isConnecting = false;
+  qInfo("disconnected from background service");
+  m_pReader->stop();
+  m_pSocket->close();
+  m_isConnected = false;
 }
 
-void QIpcClient::onSocketError(QAbstractSocket::SocketError error) {
+void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) {
   QString text;
-  switch (error) {
+  switch (socketError) {
   case 0:
     text = "connection refused";
     break;
@@ -86,23 +96,31 @@ void QIpcClient::onSocketError(QAbstractSocket::SocketError error) {
     text = "remote host closed";
     break;
   default:
-    text = QString("code=%1").arg(error);
+    text = QString("code=%1").arg(socketError);
     break;
   }
 
-  emit errorMessage(QString("ipc connection error, %1").arg(text));
+  qWarning("ipc connection error, %s", qUtf8Printable(text));
 
-  QTimer::singleShot(1000, this, SLOT(retryConnect()));
+  QTimer::singleShot(kRetryInterval, this, &QIpcClient::retryConnect);
 }
 
 void QIpcClient::retryConnect() {
-  if (m_Enabled) {
-    connectToHost();
+  if (m_isConnected) {
+    qDebug("ipc already connected, skipping retry");
+    return;
+  } else if (!m_isConnecting) {
+    qDebug("ipc not connecting, skipping retry");
+    return;
   }
+
+  qInfo("retrying connection to background service...");
+  connectToHost();
 }
 
 void QIpcClient::sendHello() {
-  auto stream = m_StreamProvider();
+  qDebug("sending ipc hello message");
+  auto stream = m_streamProvider();
   stream->writeRawData(kIpcMsgHello, 4);
 
   char typeBuf[1];
@@ -112,7 +130,9 @@ void QIpcClient::sendHello() {
 
 void QIpcClient::sendCommand(
     const QString &command, ElevateMode const elevate) {
-  auto stream = m_StreamProvider();
+  qDebug("sending ipc command: %s", qUtf8Printable(command));
+
+  auto stream = m_streamProvider();
   stream->writeRawData(kIpcMsgCommand, 4);
 
   std::string stdStringCommand = command.toStdString();
@@ -125,23 +145,19 @@ void QIpcClient::sendCommand(
   stream->writeRawData(charCommand, length);
 
   char elevateBuf[1];
-  // Refer to enum ElevateMode documentation for why this flag is mapped this
-  // way
+  // see enum ElevateMode documentation for why this flag is mapped this way
   elevateBuf[0] = (elevate == ElevateAlways) ? 1 : 0;
   stream->writeRawData(elevateBuf, 1);
 }
 
-void QIpcClient::onIpcReaderRead(const QString &text) {
-  const auto trimmed = text.trimmed();
-
-  if (trimmed.isEmpty()) {
-    return;
-  }
-
-  emit read(trimmed);
+void QIpcClient::onIpcReaderHelloBack() {
+  qDebug("ipc hello back received");
+  m_isConnected = true;
+  serviceReady();
 }
 
-// TODO: qt must have a built in way of converting int to bytes.
+void QIpcClient::onIpcReaderRead(const QString &text) { emit read(text); }
+
 void QIpcClient::intToBytes(int value, char *buffer, int size) {
   if (size == 1) {
     buffer[0] = value & 0xff;
@@ -154,6 +170,6 @@ void QIpcClient::intToBytes(int value, char *buffer, int size) {
     buffer[2] = (value >> 8) & 0xff;
     buffer[3] = value & 0xff;
   } else {
-    // TODO: other sizes, if needed.
+    qFatal("intToBytes: size must be 1, 2, or 4");
   }
 }

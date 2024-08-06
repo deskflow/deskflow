@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2024 Symless Ltd.
+ * Copyright (C) 2024 Symless
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,20 +17,11 @@
 
 #pragma once
 
-#include <QMessageLogContext>
 #include <QString>
-#include <QWidget>
 
-namespace synergy::gui::messages {
-
-void messageHandler(
-    QtMsgType type, const QMessageLogContext &context, const QString &msg);
-
-void showFirstRunMessage(
-    QWidget *parent, bool closeToTray, bool enableService, bool isServer);
-
-void showCloseReminder(QWidget *parent);
-
-void showDevThanks(QWidget *parent, const QString &productName);
-
-} // namespace synergy::gui::messages
+/**
+ * @brief Useful for environment variables that have string boolean values.
+ */
+inline bool strToTrue(const QString &str) {
+  return str.toLower() == "true" || str == "1";
+}

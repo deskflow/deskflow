@@ -193,7 +193,7 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
 void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool) {
   updateTlsControlsEnabled();
 
-  if (kLicensingEnabled && !m_tlsUtility.isAvailable()) {
+  if (kEnableActivation && !m_tlsUtility.isAvailable()) {
     auto edition = m_license.productEdition();
     if (edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);

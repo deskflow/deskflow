@@ -45,14 +45,20 @@ macro(configure_definitions)
     add_definitions(-DGIT_SHA_SHORT="${GIT_SHA_SHORT}")
   endif()
 
-  if(ENABLE_LICENSING)
-    message(STATUS "Licensing enabled")
-    add_definitions(-DSYNERGY_ENABLE_LICENSING=1)
+  if(NOT "$ENV{SYNERGY_PRODUCT_NAME}" STREQUAL "")
+    set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
+  endif()
+
+  if(LICENSED_PRODUCT)
+    message(STATUS "Licensed product")
+    add_definitions(-DSYNERGY_LICENSED_PRODUCT=1)
+
+    if(ENABLE_ACTIVATION)
+      message(STATUS "Activation enabled")
+      add_definitions(-DSYNERGY_ENABLE_ACTIVATION=1)
+    endif()
   else()
     set(PRODUCT_NAME "Synergy 1 Community Edition")
-    if(NOT "$ENV{SYNERGY_PRODUCT_NAME}" STREQUAL "")
-      set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
-    endif()
   endif()
 
   if(PRODUCT_NAME)
@@ -110,10 +116,13 @@ macro(configure_options)
   # coverage is off by default because it's GCC only and a developer preference.
   set(DEFAULT_ENABLE_COVERAGE OFF)
 
-  # licensing is off by default to make life easier for contributors.
-  set(DEFAULT_ENABLE_LICENSING OFF)
+  # licensed product is off by default to show links to github, etc.
+  set(DEFAULT_LICENSED_PRODUCT OFF)
 
-  # by default, show the dev thanks message.
+  # activation is off by default to make life easier for contributors.
+  set(DEFAULT_ENABLE_ACTIVATION OFF)
+
+  # by default, show the dev thanks message, guides contributions, etc.
   set(DEFAULT_SHOW_DEV_THANKS ON)
 
   if("$ENV{SYNERGY_BUILD_MINIMAL}" STREQUAL "true")
@@ -129,8 +138,12 @@ macro(configure_options)
     set(DEFAULT_BUILD_UNIFIED ON)
   endif()
 
-  if("$ENV{SYNERGY_ENABLE_LICENSING}" STREQUAL "true")
-    set(DEFAULT_ENABLE_LICENSING ON)
+  if("$ENV{SYNERGY_ENABLE_ACTIVATION}" STREQUAL "true")
+    set(DEFAULT_ENABLE_ACTIVATION ON)
+  endif()
+
+  if("$ENV{SYNERGY_LICENSED_PRODUCT}" STREQUAL "true")
+    set(DEFAULT_LICENSED_PRODUCT ON)
   endif()
 
   if("$ENV{SYNERGY_ENABLE_COVERAGE}" STREQUAL "true")
@@ -145,7 +158,8 @@ macro(configure_options)
   option(BUILD_INSTALLER "Build installer" ${DEFAULT_BUILD_INSTALLER})
   option(BUILD_TESTS "Build tests" ${DEFAULT_BUILD_TESTS})
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
-  option(ENABLE_LICENSING "Enable licensing" ${DEFAULT_ENABLE_LICENSING})
+  option(ENABLE_ACTIVATION "Enable activation" ${DEFAULT_ENABLE_ACTIVATION})
+  option(LICENSED_PRODUCT "Show licensing info" ${DEFAULT_LICENSED_PRODUCT})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
   option(SHOW_DEV_THANKS "Show dev thanks message" ${DEFAULT_SHOW_DEV_THANKS})
 

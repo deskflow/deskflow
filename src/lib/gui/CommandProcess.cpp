@@ -39,8 +39,7 @@ QString CommandProcess::run() {
     }
 
     if (process.waitForFinished()) {
-      output =
-          QString::fromLocal8Bit(process.readAllStandardOutput().trimmed());
+      output = process.readAllStandardOutput().trimmed();
       error = process.readAllStandardError().trimmed();
     }
   }

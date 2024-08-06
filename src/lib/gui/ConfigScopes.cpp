@@ -18,20 +18,23 @@
 #include "ConfigScopes.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
-#include <cassert>
 #include <memory>
 
 const auto kSystemConfigFilename = "SystemConfig.ini";
+
+#if defined(Q_OS_UNIX)
 const auto kUnixSystemConfigPath = "/usr/local/etc/symless/";
+#endif
 
 namespace synergy::gui {
 
 QString getSystemSettingPath() {
   const QString settingFilename(kSystemConfigFilename);
 #if defined(Q_OS_WIN)
-  return QCoreApplication::applicationDirPath() + "\\";
-#elif defined(Q_OS_DARWIN)
+  return QCoreApplication::applicationDirPath() + QDir::separator();
+#elif defined(Q_OS_MAC)
   // it would be nice to use /Library dir, but qt has no elevate system.
   return kUnixSystemConfigPath + settingFilename;
 #elif defined(Q_OS_LINUX)

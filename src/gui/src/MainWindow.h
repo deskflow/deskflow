@@ -79,9 +79,6 @@ public:
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
   int showActivationDialog();
-  void appendLogInfo(const QString &text);
-  void appendLogDebug(const QString &text);
-  void appendLogError(const QString &text);
 
 signals:
   void created();
@@ -97,10 +94,9 @@ private slots:
   void onAppConfigTlsChanged();
   void onAppConfigScreenNameChanged();
   void onAppConfigInvertConnection();
+  void onCoreProcessStarting();
   void onCoreProcessError(CoreProcess::Error error);
   void onCoreProcessLogLine(const QString &line);
-  void onCoreProcessLogInfo(const QString &message);
-  void onCoreProcessLogError(const QString &message);
   void onCoreProcessStateChanged(CoreProcess::ConnectionState state);
   void onCoreProcessSecureSocket(bool enabled);
   void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
@@ -151,7 +147,6 @@ private:
   void checkFingerprint(const QString &line);
   void checkLicense(const QString &line);
   QString getTimeStamp() const;
-  void restartCore();
   void showEvent(QShowEvent *) override;
   void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
@@ -159,7 +154,6 @@ private:
   void connectSlots();
   void updateWindowTitle();
   void handleLogLine(const QString &line);
-  void startCore();
   void updateLocalFingerprint();
   void updateScreenName();
   void saveSettings();

@@ -17,16 +17,14 @@
 
 #include "IpcReader.h"
 
+#include "Logger.h"
 #include "global/Ipc.h"
-#include "messages.h"
 
 #include <QByteArray>
 #include <QMutex>
 #include <QTcpSocket>
-#include <iostream>
-#include <qtcpsocket.h>
 
-using namespace synergy::gui::messages;
+using namespace synergy::gui;
 
 IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
 
@@ -67,8 +65,11 @@ void IpcReader::onSocketReadyRead() {
       delete[] data;
 
       emit read(text);
+    } else if (memcmp(codeBuf, kIpcMsgHelloBack, 4) == 0) {
+      logVerbose("reading hello back");
+      emit helloBack();
     } else {
-      std::cerr << "aborting, message invalid";
+      qCritical("aborting ipc read, message invalid");
       return;
     }
   }
@@ -90,7 +91,7 @@ bool IpcReader::readStream(char *buffer, int length) {
     int got = m_Socket->read(buffer, ask);
     read += got;
 
-    logVerbose(QString("ask=%1 got=%2 read=%3").arg(ask, got, read));
+    logVerbose(QString("ask=%1 got=%2 read=%3").arg(ask).arg(got).arg(read));
 
     if (got == -1) {
       logVerbose("socket ended, aborting");

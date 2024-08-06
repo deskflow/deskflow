@@ -112,6 +112,9 @@
           </property>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <item>
              <widget class="QRadioButton" name="m_pRadioGroupServer">
               <property name="text">
@@ -277,6 +280,9 @@
           </property>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <item>
              <widget class="QRadioButton" name="m_pRadioGroupClient">
               <property name="text">

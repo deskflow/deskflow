@@ -17,20 +17,36 @@
 
 #pragma once
 
-#include <QMessageLogContext>
-#include <QString>
-#include <QWidget>
+#include <QObject>
 
-namespace synergy::gui::messages {
+#ifdef NDEBUG
+const bool kDebug = false;
+#else
+const bool kDebug = true;
+#endif
 
-void messageHandler(
-    QtMsgType type, const QMessageLogContext &context, const QString &msg);
+namespace synergy::gui {
 
-void showFirstRunMessage(
-    QWidget *parent, bool closeToTray, bool enableService, bool isServer);
+class Logger : public QObject {
+  Q_OBJECT
 
-void showCloseReminder(QWidget *parent);
+public:
+  void loadEnvVars();
+  void handleMessage(
+      QtMsgType type, const QMessageLogContext &context,
+      const QString &message);
+  void logVerbose(const QString &message);
 
-void showDevThanks(QWidget *parent, const QString &productName);
+signals:
+  void newLine(const QString &line);
 
-} // namespace synergy::gui::messages
+private:
+  bool m_debug = kDebug;
+  bool m_verbose = false;
+};
+
+extern Logger s_logger;
+
+inline void logVerbose(const QString &message) { s_logger.logVerbose(message); }
+
+} // namespace synergy::gui

@@ -17,7 +17,9 @@
 
 #include "CoreProcess.h"
 
+#include "AppConfig.h"
 #include "constants.h"
+#include <qlogging.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -41,31 +43,19 @@ CoreProcess::CoreProcess(AppConfig &appConfig, IServerConfig &serverConfig)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig) {
 
-  connect(&m_ipcClient, &QIpcClient::read, this, &CoreProcess::onIpcClientRead);
+  connect(
+      &m_ipcClient, &QIpcClient::read, this, //
+      &CoreProcess::onIpcClientRead);
 
   connect(
-      &m_ipcClient, &QIpcClient::errorMessage, this,
-      &CoreProcess::onIpcClientErrorMessage);
-
-  connect(
-      &m_ipcClient, &QIpcClient::infoMessage, this,
-      &CoreProcess::onIpcClientInfoMessage);
-
-#if defined(Q_OS_WIN)
-
-  // TODO: only connect permenantly to ipc when switching to service mode.
-  // if switching from service to desktop, connect only to stop the service
-  // and don't retry.
-  m_ipcClient.connectToHost();
-
-#endif
+      &m_ipcClient, &QIpcClient::serviceReady, this, //
+      &CoreProcess::onIpcClientServiceReady);
 }
 
 CoreProcess::~CoreProcess() {
   try {
     if (m_appConfig.processMode() == ProcessMode::kDesktop) {
-      m_expectedProcessState = ProcessState::Stopped;
-      stopDesktop();
+      stop();
     }
   } catch (const std::exception &e) {
     qFatal("failed to stop core on destruction: %s", e.what());
@@ -75,6 +65,28 @@ CoreProcess::~CoreProcess() {
 void CoreProcess::onProcessRetryStart() {
   if (m_state == ConnectionState::PendingRetry) {
     start();
+  }
+}
+
+void CoreProcess::onIpcClientServiceReady() {
+  if (m_processState == ProcessState::Starting) {
+    qDebug("service ready, continuing core process start");
+    start();
+  } else if (m_processState == ProcessState::Stopping) {
+    qDebug("service ready, continuing core process stop");
+    stop();
+  } else {
+    qCritical("service ready, but process state is not starting or stopping");
+  }
+}
+
+void CoreProcess::onIpcClientError(const QString &text) {
+  qCritical().noquote() << text;
+
+  if (m_appConfig.processMode() != ProcessMode::kService) {
+    // if not meant to be in service mode and there is an ipc connection error,
+    // then abandon the ipc client connection.
+    m_ipcClient.disconnectFromHost();
   }
 }
 
@@ -96,16 +108,8 @@ void CoreProcess::onIpcClientRead(const QString &text) {
   handleLogLines(text);
 }
 
-void CoreProcess::onIpcClientErrorMessage(const QString &text) {
-  emit logError(text);
-}
-
-void CoreProcess::onIpcClientInfoMessage(const QString &text) {
-  emit logInfo(text);
-}
-
 void CoreProcess::onProcessReadyReadStandardOutput() {
-  if (!m_pProcess) {
+  if (m_pProcess) {
     handleLogLines(m_pProcess->readAllStandardOutput());
   }
 }
@@ -118,18 +122,18 @@ void CoreProcess::onProcessReadyReadStandardError() {
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   if (exitCode == 0) {
-    emit logInfo("process exited normally");
+    qDebug("process exited normally");
   } else {
-    emit logError(QString("process exited with error code: %1").arg(exitCode));
+    qCritical("process exited with error code: %d", exitCode);
   }
 
-  if (m_expectedProcessState == ProcessState::Started) {
+  if (m_processState == ProcessState::Started) {
 
     if (m_state != ConnectionState::PendingRetry) {
       QTimer::singleShot(kRetryDelay, this, &CoreProcess::onProcessRetryStart);
-      emit logInfo("detected process not running, auto restarting");
+      qInfo("detected process not running, auto restarting");
     } else {
-      emit logInfo("detected process not running, already auto restarting");
+      qInfo("detected process not running, already auto restarting");
     }
 
     setCoreState(ConnectionState::PendingRetry);
@@ -138,39 +142,130 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   }
 }
 
+void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
+  if (m_processState != ProcessState::Starting) {
+    qFatal("core process must be in starting state");
+  }
+
+  m_pProcess->start(app, args);
+  if (m_pProcess->waitForStarted()) {
+    m_processState = ProcessState::Started;
+  } else {
+    emit error(Error::StartFailed);
+  }
+}
+
+void CoreProcess::startService(const QString &app, const QStringList &args) {
+  if (m_processState != ProcessState::Starting) {
+    qFatal("core process must be in starting state");
+  }
+
+  if (!m_ipcClient.isConnected()) {
+    // when service state changes, start will be called again.
+    qDebug("cannot start process, ipc not connected, connecting instead");
+    m_ipcClient.connectToHost();
+    return;
+  }
+
+  QStringList command;
+
+  // wrap app in quotes to handle spaces in paths (e.g. "C:\Program Files").
+  command << QString(R"("%1")").arg(app);
+
+  for (const auto &arg : args) {
+    if (arg.startsWith("-")) {
+      command << arg;
+    } else {
+      // wrap opt args in quotes to handle spaces in paths.
+      command << QString(R"("%1")").arg(arg);
+    }
+  }
+
+  m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
+  m_processState = ProcessState::Started;
+}
+
+void CoreProcess::stopDesktop() {
+  if (m_processState != ProcessState::Stopping) {
+    qFatal("core process must be in stopping state");
+  }
+
+  QMutexLocker locker(&m_stopDesktopMutex);
+  if (!m_pProcess) {
+    qFatal("process not set, cannot stop");
+  }
+
+  qInfo("stopping core desktop process");
+
+  if (m_pProcess->state() == QProcess::ProcessState::Running) {
+    qDebug("process is running, closing");
+    m_pProcess->terminate();
+  } else {
+    qDebug("process is not running, skipping terminate");
+  }
+
+  m_pProcess->reset();
+  m_processState = ProcessState::Stopped;
+}
+
+void CoreProcess::stopService() {
+  if (m_processState != ProcessState::Stopping) {
+    qFatal("core process must be in stopping state");
+  }
+
+  if (!m_ipcClient.isConnected()) {
+    qDebug("cannot stop process, ipc not connected");
+    return;
+  }
+
+  m_ipcClient.sendCommand("", m_appConfig.elevateMode());
+  m_processState = ProcessState::Stopped;
+}
+
 void CoreProcess::handleLogLines(const QString &text) {
   for (auto line : text.split(kLineSplitRegex)) {
-    const auto trimmed = line.trimmed();
-
-    if (trimmed.isEmpty()) {
+    if (line.isEmpty()) {
       continue;
     }
 
+#if defined(Q_OS_MAC)
     // HACK: macOS 10.13.4+ spamming error lines in logs making them
     // impossible to read and debug; giving users a red herring.
     if (trimmed.contains("calling TIS/TSM in non-main thread environment")) {
       continue;
     }
+#endif
 
-    // only start if there is no active service running
-    if (trimmed.contains("service status: idle") &&
-        m_appConfig.startedBefore()) {
-      start();
-    }
-
-    checkLogLine(trimmed);
-    emit logLine(trimmed);
+    checkLogLine(line);
+    emit logLine(line);
   }
 }
 
-void CoreProcess::start() {
-  emit logInfo(QString("starting core %1 process").arg(coreModeString()));
+void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
+  const auto processMode =
+      processModeOption.value_or(m_appConfig.processMode());
+
+  qInfo(
+      "starting core %s process (%s mode)", qPrintable(modeString()),
+      qPrintable(processModeString()));
+
+  if (m_processState == ProcessState::Started) {
+    qCritical("core process already started");
+    return;
+  }
+
+  // allow external listeners to abort the start process (e.g. licensing issue).
+  m_processState = ProcessState::Starting;
+  emit starting();
+  if (m_processState == ProcessState::Stopped) {
+    qDebug("core process start was cancelled by listener");
+    return;
+  }
 
 #ifdef Q_OS_MAC
   requestOSXNotificationPermission();
 #endif
 
-  m_expectedProcessState = ProcessState::Started;
   setCoreState(ConnectionState::Connecting);
 
   QString app;
@@ -181,8 +276,6 @@ void CoreProcess::start() {
        << "--debug" << m_appConfig.logLevelText();
 
   args << "--name" << m_appConfig.screenName();
-
-  ProcessMode processMode = m_appConfig.processMode();
 
   if (processMode == ProcessMode::kDesktop) {
     m_pProcess = std::make_unique<QProcess>(this);
@@ -255,56 +348,71 @@ void CoreProcess::start() {
   }
 
   if (m_appConfig.logLevel() >= kDebugLogLevel) {
-    emit logInfo(QString("command: %1 %2").arg(app, args.join(" ")));
+    qInfo("command: %s %s", qPrintable(app), qPrintable(args.join(" ")));
   }
 
-  emit logInfo("log level: " + m_appConfig.logLevelText());
+  // qInfo("log level: " + m_appConfig.logLevelText());
+  qInfo("log level: %s", qPrintable(m_appConfig.logLevelText()));
 
   if (m_appConfig.logToFile())
-    emit logInfo("log file: " + m_appConfig.logFilename());
+    qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
 
   if (processMode == ProcessMode::kDesktop) {
-    m_pProcess->start(app, args);
-    if (!m_pProcess->waitForStarted()) {
-      emit error(Error::StartFailed);
-    }
+    startDesktop(app, args);
   } else if (processMode == ProcessMode::kService) {
-    startWithService(app, args);
+    startService(app, args);
   }
+
+  m_lastProcessMode = processMode;
 }
 
-void CoreProcess::stop() {
-  emit logInfo("stopping core process");
+void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
+  const auto processMode =
+      processModeOption.value_or(m_appConfig.processMode());
 
-  m_expectedProcessState = ProcessState::Stopped;
+  qInfo("stopping core process (%s mode)", qPrintable(processModeString()));
 
-  if (m_appConfig.processMode() == ProcessMode::kService) {
-    stopService();
-  } else if (m_appConfig.processMode() == ProcessMode::kDesktop) {
-    stopDesktop();
+  if (m_processState == ProcessState::Starting) {
+    qDebug("core process is starting, cancelling");
+    m_processState = ProcessState::Stopped;
+  } else if (m_processState != ProcessState::Stopped) {
+    m_processState = ProcessState::Stopping;
+
+    if (processMode == ProcessMode::kService) {
+      stopService();
+    } else if (processMode == ProcessMode::kDesktop) {
+      stopDesktop();
+    }
+
+  } else {
+    qWarning("core process already stopped");
   }
 
   setCoreState(ConnectionState::Disconnected);
 }
 
-void CoreProcess::stopService() {
-  // send empty command to stop service from laucning anything.
-  m_ipcClient.sendCommand("", m_appConfig.elevateMode());
-}
+void CoreProcess::restart() {
+  qDebug("restarting core process");
 
-void CoreProcess::stopDesktop() {
-  QMutexLocker locker(&m_stopDesktopMutex);
-  if (!m_pProcess) {
-    return;
+  const auto processMode = m_appConfig.processMode();
+
+  if (m_lastProcessMode != processMode) {
+    if (processMode == ProcessMode::kDesktop) {
+      qDebug("process mode changed to desktop, stopping service process");
+      stop(ProcessMode::kService);
+    } else if (processMode == ProcessMode::kService) {
+      qDebug("process mode changed to service, stopping desktop process");
+      stop(ProcessMode::kDesktop);
+    }
   }
 
-  emit logInfo("stopping synergy desktop process");
-
-  if (m_pProcess->isOpen()) {
-    m_pProcess->close();
+  // no need to stop the core first when in service mode as the service will
+  // restart the core when it gets a new start command.
+  if (processMode != ProcessMode::kService) {
+    stop();
   }
 
-  m_pProcess->reset();
+  start();
 }
 
 QString CoreProcess::appPath(const QString &name) const {
@@ -337,9 +445,9 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
   }
 
   args << "-c" << configFilename << "--address" << address();
-  emit logInfo("config file: " + configFilename);
+  qInfo("config file: %s", qPrintable(configFilename));
 
-  if (kLicensingEnabled && !m_appConfig.serialKey().isEmpty()) {
+  if (kEnableActivation && !m_appConfig.serialKey().isEmpty()) {
     args << "--serial-key" << m_appConfig.serialKey();
   }
 
@@ -435,7 +543,7 @@ QString CoreProcess::address() const {
   return (!i.isEmpty() ? i : "") + ":" + QString::number(m_appConfig.port());
 }
 
-QString CoreProcess::coreModeString() const {
+QString CoreProcess::modeString() const {
   using enum Mode;
 
   switch (mode()) {
@@ -445,6 +553,20 @@ QString CoreProcess::coreModeString() const {
     return "client";
   default:
     qFatal("invalid core mode");
+    return "";
+  }
+}
+
+QString CoreProcess::processModeString() const {
+  using enum ProcessMode;
+
+  switch (m_appConfig.processMode()) {
+  case kDesktop:
+    return "desktop";
+  case kService:
+    return "service";
+  default:
+    qFatal("invalid process mode");
     return "";
   }
 }
@@ -470,12 +592,6 @@ QString CoreProcess::getProfileRootForArg() const {
 #endif
 
   return dir;
-}
-
-bool CoreProcess::isActive() const {
-  using enum ConnectionState;
-  auto state = m_state;
-  return (state == Connected) || (state == Connecting) || (state == Listening);
 }
 
 void CoreProcess::checkLogLine(const QString &line) {
@@ -513,30 +629,10 @@ void CoreProcess::checkOSXNotification(const QString &line) {
     QString body =
         line.mid(delimterPosition + 1, line.length() - delimterPosition);
     if (!showOSXNotification(title, body)) {
-      appendLogInfo("OSX notification was not shown");
+      qDebug("OSX notification was not shown");
     }
   }
 }
 #endif
-
-void CoreProcess::startWithService(
-    const QString &app, const QStringList &args) {
-
-  QStringList command;
-
-  // wrap app in quotes to handle spaces in paths (e.g. "C:\Program Files").
-  command << QString(R"("%1")").arg(app);
-
-  for (const auto &arg : args) {
-    if (arg.startsWith("-")) {
-      command << arg;
-    } else {
-      // wrap opt args in quotes to handle spaces in paths.
-      command << QString(R"("%1")").arg(arg);
-    }
-  }
-
-  m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
-}
 
 } // namespace synergy::gui

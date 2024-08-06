@@ -33,6 +33,7 @@ public:
 
 signals:
   void read(const QString &text);
+  void helloBack();
 
 private:
   bool readStream(char *buffer, int length);
