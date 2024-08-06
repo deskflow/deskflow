@@ -48,10 +48,6 @@ SettingsDialog::SettingsDialog(
 
   setupUi(this);
 
-  connect(&m_tlsUtility, &TlsUtility::error, this, [this](const QString &e) {
-    QMessageBox::critical(this, "TLS error", e);
-  });
-
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
   m_pTabWidget->setCurrentIndex(0);
@@ -254,10 +250,6 @@ void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
   TlsCertificate ssl;
-  connect(&ssl, &TlsCertificate::error, this, [this](const QString &e) {
-    QMessageBox::critical(this, "TLS error", e);
-  });
-
   if (!QFile(path).exists()) {
     qFatal("tls certificate file not found: %s", qUtf8Printable(path));
   }

@@ -52,9 +52,6 @@ public:
    */
   void generateCertificate(bool replace = false);
 
-signals:
-  void error(const QString &message);
-
 private:
   const IAppConfig &m_appConfig;
   const license::License &m_license;

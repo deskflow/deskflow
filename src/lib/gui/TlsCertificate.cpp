@@ -23,12 +23,8 @@
 #include <QDir>
 #include <QProcess>
 
-// RSA Bit length (e.g. 1024/2048/4096)
 static const char *const kCertificateKeyLength = "rsa:";
-
-// fingerprint hashing algorithm
 static const char *const kCertificateHashAlgorithm = "-sha256";
-
 static const char *const kCertificateLifetime = "365";
 static const char *const kCertificateSubjectInfo = "/CN=Synergy";
 static const char *const kCertificateFilename = "Synergy.pem";
@@ -42,8 +38,9 @@ static const char *const kConfigFile = "synergy.conf";
 static const char *const kUnixOpenSslCommand = "openssl";
 #endif
 
-namespace synergy::gui {
 #if defined(Q_OS_WIN)
+
+namespace synergy::gui {
 
 QString openSslWindowsDir() {
 
@@ -83,16 +80,16 @@ QString openSslWindowsBinary() {
   return path;
 }
 
-#endif
-
 } // namespace synergy::gui
 
 using namespace synergy::gui;
 
+#endif
+
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {
   m_profileDir = m_coreInterface.getProfileDir();
   if (m_profileDir.isEmpty()) {
-    emit error("Failed to get profile directory.");
+    qCritical("empty profile directory result");
   }
 }
 
@@ -149,8 +146,9 @@ bool TlsCertificate::runTool(const QStringList &args) {
     qDebug(
         "openssl failed with code %d: %s", code, qUtf8Printable(stderrOutput));
 
-    emit error(
-        QString("Unable to generate TLS certificate:\n\n%1").arg(stderrOutput));
+    qCritical(
+        "failed to generate TLS certificate:\n\n%s",
+        qUtf8Printable(stderrOutput));
     return false;
   }
 
@@ -176,7 +174,8 @@ void TlsCertificate::generateCertificate(
 
   QFile file(pathToUse);
   if (!file.exists() && !createFile) {
-    emit error("TLS certificate file does not exist: " + pathToUse);
+    qCritical(
+        "tls certificate file does not exist: %s", qUtf8Printable(pathToUse));
     return;
   }
 
@@ -245,7 +244,7 @@ void TlsCertificate::generateFingerprint(const QString &certificateFilename) {
     TlsFingerprint::local().trust(fingerprint, false);
     qDebug("tls fingerprint generated");
   } else {
-    emit error("Failed to find TLS fingerprint in TLS tool output.");
+    qCritical("failed to find tls fingerprint in tls tool output");
   }
 }
 

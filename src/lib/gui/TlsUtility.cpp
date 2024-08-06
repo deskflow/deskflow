@@ -27,12 +27,7 @@ namespace synergy::gui {
 TlsUtility::TlsUtility(
     const IAppConfig &appConfig, const license::License &license)
     : m_appConfig(appConfig),
-      m_license(license) {
-
-  connect(
-      &m_certificate, &TlsCertificate::error, this,
-      [this](const QString &message) { emit error(message); });
-}
+      m_license(license) {}
 
 bool TlsUtility::isAvailable() const {
   return !kEnableActivation || m_license.isTlsAvailable();

@@ -27,23 +27,10 @@ class TlsCertificate : public QObject {
 public:
   explicit TlsCertificate(QObject *parent = nullptr);
 
-public slots:
-  /// @brief Generates a TLS cert and private key
-  /// @param [in] QString path The path of the file to be generated
-  /// @param [in] QString keyLength The size of the private key. default: 2048
-  /// @param [in] bool Should the file be created regardless of if the file
-  /// already exists
   void generateCertificate(
       const QString &path = QString(), const QString &keyLength = "2048",
       bool forceGen = false);
-
-  /// @brief Get the key length of a TLS private key
-  /// @param [in] QString path The path of the file to checked
-  /// @return QString The key legnth as a string
   QString getCertKeyLength(const QString &path);
-
-signals:
-  void error(const QString &message);
 
 private:
   bool runTool(const QStringList &args);

@@ -276,11 +276,6 @@ void MainWindow::connectSlots() {
   connect(
       &m_ServerConnection, &ServerConnection::configureClient, this,
       &MainWindow::onServerConnectionConfigureClient);
-
-  connect(
-      &m_TlsUtility, &TlsUtility::error, this, [this](const QString &message) {
-        QMessageBox::critical(this, "TLS error", message);
-      });
 }
 
 void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
