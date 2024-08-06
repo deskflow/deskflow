@@ -97,7 +97,8 @@ private slots:
   void onCoreProcessStarting();
   void onCoreProcessError(CoreProcess::Error error);
   void onCoreProcessLogLine(const QString &line);
-  void onCoreProcessStateChanged(CoreProcess::ConnectionState state);
+  void onCoreConnectionStateChanged(CoreProcess::ConnectionState state);
+  void onCoreProcessStateChanged(CoreProcess::ProcessState state);
   void onCoreProcessSecureSocket(bool enabled);
   void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
   void onLicenseHandlerInvalidLicense();
@@ -169,6 +170,7 @@ private:
   void showFirstRunMessage();
   void showDevThanksMessage();
   QString productName() const;
+  void updateStatus();
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);

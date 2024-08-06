@@ -60,7 +60,8 @@ using namespace synergy::gui;
 using namespace synergy::license;
 
 using CoreMode = CoreProcess::Mode;
-using CoreState = CoreProcess::ConnectionState;
+using CoreConnectionState = CoreProcess::ConnectionState;
+using CoreProcessState = CoreProcess::ProcessState;
 
 #if defined(Q_OS_MAC)
 
@@ -226,8 +227,12 @@ void MainWindow::connectSlots() {
       &MainWindow::onCoreProcessLogLine);
 
   connect(
-      &m_CoreProcess, &CoreProcess::stateChanged, this,
+      &m_CoreProcess, &CoreProcess::processStateChanged, this,
       &MainWindow::onCoreProcessStateChanged);
+
+  connect(
+      &m_CoreProcess, &CoreProcess::connectionStateChanged, this,
+      &MainWindow::onCoreConnectionStateChanged);
 
   connect(
       &m_CoreProcess, &CoreProcess::secureSocket, this,
@@ -281,7 +286,7 @@ void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
 
 void MainWindow::onCreated() {
 
-  setIcon(CoreState::Disconnected);
+  setIcon(CoreConnectionState::Disconnected);
 
   m_ConfigScopes.signalReady();
 
@@ -594,7 +599,7 @@ void MainWindow::saveSettings() {
   m_ConfigScopes.save();
 }
 
-void MainWindow::setIcon(CoreState state) {
+void MainWindow::setIcon(CoreConnectionState state) {
   QIcon icon;
   auto index = static_cast<int>(state);
 
@@ -750,19 +755,71 @@ void MainWindow::onCoreProcessSecureSocket(bool enabled) {
   secureSocket(enabled);
 }
 
-void MainWindow::onCoreProcessStateChanged(CoreState state) {
-  // always assume connection is not secure when connection changes
-  // to anything except connected. the only way the padlock shows is
-  // when the correct TLS version string is detected.
-  if (state != CoreState::Connected) {
-    secureSocket(false);
-  } else if (isVisible()) {
-    showFirstRunMessage();
-    showDevThanksMessage();
-  }
+void MainWindow::updateStatus() {
+  const auto connection = m_CoreProcess.connectionState();
+  const auto process = m_CoreProcess.processState();
 
-  if ((state == CoreState::Connected) || (state == CoreState::Connecting) ||
-      (state == CoreState::Listening) || (state == CoreState::PendingRetry)) {
+  switch (process) {
+    using enum CoreProcessState;
+
+  case Starting:
+    setIcon(CoreConnectionState::Disconnected);
+    setStatus("Synergy is starting...");
+    break;
+
+  case Stopping:
+    setIcon(CoreConnectionState::Disconnected);
+    setStatus("Synergy is stopping...");
+    break;
+
+  case Stopped:
+    setIcon(CoreConnectionState::Disconnected);
+    setStatus("Synergy is not running");
+    break;
+
+  case Started: {
+    setIcon(connection);
+
+    switch (connection) {
+      using enum CoreConnectionState;
+
+    case Listening: {
+      if (m_CoreProcess.mode() == CoreMode::Server) {
+        setStatus("Synergy is waiting for clients");
+      }
+
+      break;
+    }
+
+    case Connecting:
+      setStatus("Synergy is connecting...");
+      break;
+
+    case Connected: {
+      if (m_SecureSocket) {
+        setStatus(QString("Synergy is connected (with %1)")
+                      .arg(m_CoreProcess.secureSocketVersion()));
+      } else {
+        setStatus("Synergy is connected (without TLS encryption)");
+      }
+      break;
+    }
+
+    case Disconnected:
+      setStatus("Synergy is disconnected");
+      break;
+    }
+  } break;
+  }
+}
+
+void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
+  qDebug("core process state changed: %d", state);
+
+  updateStatus();
+
+  if (state == CoreProcessState::Started ||
+      state == CoreProcessState::Starting) {
     disconnect(
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
         &QAction::trigger);
@@ -776,7 +833,7 @@ void MainWindow::onCoreProcessStateChanged(CoreState state) {
     m_pActionStartCore->setEnabled(false);
     m_pActionStopCore->setEnabled(true);
 
-  } else if (state == CoreState::Disconnected) {
+  } else {
     disconnect(
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore,
         &QAction::trigger);
@@ -790,38 +847,22 @@ void MainWindow::onCoreProcessStateChanged(CoreState state) {
     m_pActionStartCore->setEnabled(true);
     m_pActionStopCore->setEnabled(false);
   }
+}
 
-  switch (state) {
-    using enum CoreState;
+void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state) {
+  qDebug("core connection state changed: %d", state);
 
-  case Listening: {
-    if (m_CoreProcess.mode() == CoreMode::Server) {
-      setStatus("Synergy is waiting for clients");
-    }
+  updateStatus();
 
-    break;
+  // always assume connection is not secure when connection changes
+  // to anything except connected. the only way the padlock shows is
+  // when the correct TLS version string is detected.
+  if (state != CoreConnectionState::Connected) {
+    secureSocket(false);
+  } else if (isVisible()) {
+    showFirstRunMessage();
+    showDevThanksMessage();
   }
-  case Connected: {
-    if (m_SecureSocket) {
-      setStatus(QString("Synergy is connected (with %1)")
-                    .arg(m_CoreProcess.secureSocketVersion()));
-    } else {
-      setStatus("Synergy is running (without TLS encryption)");
-    }
-    break;
-  }
-  case Connecting:
-    setStatus("Synergy is starting...");
-    break;
-  case PendingRetry:
-    setStatus("There was an error, retrying...");
-    break;
-  case Disconnected:
-    setStatus("Synergy is not running");
-    break;
-  }
-
-  setIcon(state);
 }
 
 void MainWindow::setVisible(bool visible) {
@@ -917,7 +958,8 @@ void MainWindow::updateWindowTitle() { setWindowTitle(productName()); }
 void MainWindow::autoAddScreen(const QString name) {
 
   if (m_ActivationDialogRunning) {
-    // add this screen to the pending list if the activation dialog is running.
+    // add this screen to the pending list if the activation dialog is
+    // running.
     m_PendingClientNames.append(name);
     return;
   }

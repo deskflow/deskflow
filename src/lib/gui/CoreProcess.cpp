@@ -63,9 +63,13 @@ CoreProcess::~CoreProcess() {
 }
 
 void CoreProcess::onProcessRetryStart() {
-  if (m_state == ConnectionState::PendingRetry) {
-    start();
+  if (!m_retryingDesktopStart) {
+    qWarning("retry start not set, skipping retry");
+    return;
   }
+
+  start();
+  m_retryingDesktopStart = false;
 }
 
 void CoreProcess::onIpcClientServiceReady() {
@@ -90,23 +94,7 @@ void CoreProcess::onIpcClientError(const QString &text) {
   }
 }
 
-void CoreProcess::onIpcClientRead(const QString &text) {
-
-  if (text.contains("connected to server") || text.contains("has connected")) {
-    setCoreState(ConnectionState::Connected);
-
-  } else if (text.contains("started server")) {
-    setCoreState(ConnectionState::Listening);
-  } else if (
-      text.contains("disconnected from server") ||
-      text.contains("process exited")) {
-    setCoreState(ConnectionState::Disconnected);
-  } else if (text.contains("connecting to")) {
-    setCoreState(ConnectionState::Connecting);
-  }
-
-  handleLogLines(text);
-}
+void CoreProcess::onIpcClientRead(const QString &text) { handleLogLines(text); }
 
 void CoreProcess::onProcessReadyReadStandardOutput() {
   if (m_pProcess) {
@@ -121,24 +109,25 @@ void CoreProcess::onProcessReadyReadStandardError() {
 }
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
+  setProcessState(ProcessState::Stopped);
+  setConnectionState(ConnectionState::Disconnected);
+
+  m_pProcess->reset();
+
   if (exitCode == 0) {
-    qDebug("process exited normally");
+    qDebug("desktop process exited normally");
   } else {
-    qCritical("process exited with error code: %d", exitCode);
+    qCritical("desktop process exited with error code: %d", exitCode);
   }
 
   if (m_processState == ProcessState::Started) {
 
-    if (m_state != ConnectionState::PendingRetry) {
+    if (!m_retryingDesktopStart) {
       QTimer::singleShot(kRetryDelay, this, &CoreProcess::onProcessRetryStart);
       qInfo("detected process not running, auto restarting");
     } else {
       qInfo("detected process not running, already auto restarting");
     }
-
-    setCoreState(ConnectionState::PendingRetry);
-  } else {
-    setCoreState(ConnectionState::Disconnected);
   }
 }
 
@@ -149,8 +138,9 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
 
   m_pProcess->start(app, args);
   if (m_pProcess->waitForStarted()) {
-    m_processState = ProcessState::Started;
+    setProcessState(ProcessState::Started);
   } else {
+    setProcessState(ProcessState::Stopped);
     emit error(Error::StartFailed);
   }
 }
@@ -182,7 +172,7 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
   }
 
   m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
-  m_processState = ProcessState::Started;
+  setProcessState(ProcessState::Started);
 }
 
 void CoreProcess::stopDesktop() {
@@ -199,13 +189,10 @@ void CoreProcess::stopDesktop() {
 
   if (m_pProcess->state() == QProcess::ProcessState::Running) {
     qDebug("process is running, closing");
-    m_pProcess->terminate();
+    m_pProcess->close();
   } else {
     qDebug("process is not running, skipping terminate");
   }
-
-  m_pProcess->reset();
-  m_processState = ProcessState::Stopped;
 }
 
 void CoreProcess::stopService() {
@@ -219,7 +206,7 @@ void CoreProcess::stopService() {
   }
 
   m_ipcClient.sendCommand("", m_appConfig.elevateMode());
-  m_processState = ProcessState::Stopped;
+  setProcessState(ProcessState::Stopped);
 }
 
 void CoreProcess::handleLogLines(const QString &text) {
@@ -255,7 +242,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
   }
 
   // allow external listeners to abort the start process (e.g. licensing issue).
-  m_processState = ProcessState::Starting;
+  setProcessState(ProcessState::Starting);
   emit starting();
   if (m_processState == ProcessState::Stopped) {
     qDebug("core process start was cancelled by listener");
@@ -266,7 +253,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
   requestOSXNotificationPermission();
 #endif
 
-  setCoreState(ConnectionState::Connecting);
+  setConnectionState(ConnectionState::Connecting);
 
   QString app;
   QStringList args;
@@ -374,9 +361,9 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
 
   if (m_processState == ProcessState::Starting) {
     qDebug("core process is starting, cancelling");
-    m_processState = ProcessState::Stopped;
+    setProcessState(ProcessState::Stopped);
   } else if (m_processState != ProcessState::Stopped) {
-    m_processState = ProcessState::Stopping;
+    setProcessState(ProcessState::Stopping);
 
     if (processMode == ProcessMode::kService) {
       stopService();
@@ -388,7 +375,7 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
     qWarning("core process already stopped");
   }
 
-  setCoreState(ConnectionState::Disconnected);
+  setConnectionState(ConnectionState::Disconnected);
 }
 
 void CoreProcess::restart() {
@@ -571,13 +558,22 @@ QString CoreProcess::processModeString() const {
   }
 }
 
-void CoreProcess::setCoreState(ConnectionState state) {
-  if (m_state == state) {
+void CoreProcess::setConnectionState(ConnectionState state) {
+  if (m_connectionState == state) {
     return;
   }
 
-  m_state = state;
-  emit stateChanged(state);
+  m_connectionState = state;
+  emit connectionStateChanged(state);
+}
+
+void CoreProcess::setProcessState(ProcessState state) {
+  if (m_processState == state) {
+    return;
+  }
+
+  m_processState = state;
+  emit processStateChanged(state);
 }
 
 QString CoreProcess::getProfileRootForArg() const {
@@ -595,6 +591,20 @@ QString CoreProcess::getProfileRootForArg() const {
 }
 
 void CoreProcess::checkLogLine(const QString &line) {
+
+  if (line.contains("connected to server") || line.contains("has connected")) {
+    setConnectionState(ConnectionState::Connected);
+
+  } else if (line.contains("started server")) {
+    setConnectionState(ConnectionState::Listening);
+  } else if (
+      line.contains("disconnected from server") ||
+      line.contains("process exited")) {
+    setConnectionState(ConnectionState::Disconnected);
+  } else if (line.contains("connecting to")) {
+    setConnectionState(ConnectionState::Connecting);
+  }
+
   checkSecureSocket(line);
 
   // subprocess (synergys, synergyc) is not allowed to show notifications

@@ -37,13 +37,7 @@ public:
   enum class Mode { None, Client, Server };
   enum class Error { AddressMissing, StartFailed };
   enum class ProcessState { Starting, Started, Stopping, Stopped };
-  enum class ConnectionState {
-    Disconnected,
-    Connecting,
-    Connected,
-    Listening,
-    PendingRetry
-  };
+  enum class ConnectionState { Disconnected, Connecting, Connected, Listening };
 
   explicit CoreProcess(AppConfig &appConfig, IServerConfig &serverConfig);
   ~CoreProcess() override;
@@ -57,6 +51,8 @@ public:
   Mode mode() const { return m_mode; }
   QString secureSocketVersion() const { return m_secureSocketVersion; }
   bool isStarted() const { return m_processState == ProcessState::Started; }
+  ProcessState processState() const { return m_processState; }
+  ConnectionState connectionState() const { return m_connectionState; }
 
   // setters
   void setAddress(const QString &address) { m_address = address.trimmed(); }
@@ -66,7 +62,8 @@ signals:
   void starting();
   void error(Error error);
   void logLine(const QString &line);
-  void stateChanged(ConnectionState state);
+  void connectionStateChanged(ConnectionState state);
+  void processStateChanged(ProcessState state);
   void secureSocket(bool enabled);
 
 private slots:
@@ -90,7 +87,8 @@ private:
   QString address() const;
   QString modeString() const;
   QString processModeString() const;
-  void setCoreState(ConnectionState state);
+  void setConnectionState(ConnectionState state);
+  void setProcessState(ProcessState state);
   QString getProfileRootForArg() const;
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
@@ -102,12 +100,13 @@ private:
   QString m_address;
   std::unique_ptr<QProcess> m_pProcess;
   ProcessState m_processState = ProcessState::Stopped;
-  ConnectionState m_state = ConnectionState::Disconnected;
+  ConnectionState m_connectionState = ConnectionState::Disconnected;
   QIpcClient m_ipcClient;
   Mode m_mode = Mode::None;
   QMutex m_stopDesktopMutex;
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
+  bool m_retryingDesktopStart = false;
 };
 
 } // namespace synergy::gui
