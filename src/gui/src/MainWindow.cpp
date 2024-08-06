@@ -626,7 +626,7 @@ void MainWindow::handleLogLine(const QString &line) {
   QScrollBar *verticalScroll = m_pLogOutput->verticalScrollBar();
   int currentValue = verticalScroll->value();
   int maxValue = verticalScroll->maximum();
-  const auto atBottom = currentValue == maxValue;
+  const auto atBottom = qAbs(currentValue - maxValue) <= 1;
 
   m_pLogOutput->appendPlainText(line);
 
