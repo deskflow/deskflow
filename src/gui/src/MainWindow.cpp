@@ -190,7 +190,7 @@ void MainWindow::setupControls() {
 void MainWindow::connectSlots() {
 
   connect(
-      &s_logger, &Logger::newLine, this, //
+      &Logger::instance(), &Logger::newLine, this, //
       [this](const QString &line) { handleLogLine(line); });
 
   connect(this, &MainWindow::created, this, &MainWindow::onCreated);

@@ -26,6 +26,8 @@
 
 namespace synergy::gui {
 
+Logger Logger::s_instance;
+
 QString printLine(
     FILE *out, const QString &type, const QString &message,
     const QString &fileLine = "") {
@@ -42,8 +44,6 @@ QString printLine(
   fflush(out);
   return logLine;
 }
-
-Logger s_logger;
 
 void Logger::loadEnvVars() {
   const auto debugEnvVar = qEnvironmentVariable("SYNERGY_GUI_DEBUG");

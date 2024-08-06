@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
   qInstallMessageHandler(synergy::gui::messages::messageHandler);
 
   dotenv(".env");
-  s_logger.loadEnvVars();
+  Logger::instance().loadEnvVars();
 
   qInfo("Synergy v%s", synergy::gui::version().toUtf8().constData());
 

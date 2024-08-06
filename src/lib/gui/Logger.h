@@ -31,6 +31,8 @@ class Logger : public QObject {
   Q_OBJECT
 
 public:
+  static Logger &instance() { return s_instance; }
+
   void loadEnvVars();
   void handleMessage(
       QtMsgType type, const QMessageLogContext &context,
@@ -41,12 +43,13 @@ signals:
   void newLine(const QString &line);
 
 private:
+  static Logger s_instance;
   bool m_debug = kDebug;
   bool m_verbose = false;
 };
 
-extern Logger s_logger;
-
-inline void logVerbose(const QString &message) { s_logger.logVerbose(message); }
+inline void logVerbose(const QString &message) {
+  Logger::instance().logVerbose(message);
+}
 
 } // namespace synergy::gui

@@ -91,7 +91,7 @@ void showErrorDialog(
 void messageHandler(
     QtMsgType type, const QMessageLogContext &context, const QString &message) {
 
-  s_logger.handleMessage(type, context, message);
+  Logger::instance().handleMessage(type, context, message);
 
   if (type == QtFatalMsg || type == QtCriticalMsg) {
     showErrorDialog(message, context, type);
