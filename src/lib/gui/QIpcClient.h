@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "ElevateMode.h"
+#include "IpcReader.h"
 #include "QDataStreamProxy.h"
 
 class IpcReader;

@@ -30,8 +30,13 @@
 
 namespace synergy::gui::messages {
 
-static auto s_criticalMessage = std::unique_ptr<QMessageBox>();
-static auto s_ignoredErrors = QStringList();
+struct Errors {
+  static std::unique_ptr<QMessageBox> s_criticalMessage;
+  static QStringList s_ignoredErrors;
+};
+
+std::unique_ptr<QMessageBox> Errors::s_criticalMessage;
+QStringList Errors::s_ignoredErrors;
 
 void showErrorDialog(
     const QString &message, const QMessageLogContext &context, QtMsgType type) {
@@ -64,25 +69,25 @@ void showErrorDialog(
     // create a blocking message box for fatal errors, as we want to wait
     // until the dialog is dismissed before aborting the app.
     QMessageBox::critical(nullptr, title, text);
-  } else if (!s_ignoredErrors.contains(message)) {
+  } else if (!Errors::s_ignoredErrors.contains(message)) {
     // prevent message boxes piling up by deleting the last one if it exists.
     // if none exists yet, then nothing will happen.
-    s_criticalMessage.reset();
+    Errors::s_criticalMessage.reset();
 
     // as we don't abort for critical messages, create a new non-blocking
     // message box. this is so that we don't block the message handler; if we
     // did, we would prevent new messages from being logged properly.
     // the memory will stay allocated until the app exits, which is acceptable.
-    s_criticalMessage = std::make_unique<QMessageBox>(
+    Errors::s_criticalMessage = std::make_unique<QMessageBox>(
         QMessageBox::Critical, title, text,
         QMessageBox::Ok | QMessageBox::Ignore);
-    s_criticalMessage->open();
+    Errors::s_criticalMessage->open();
 
     QAction::connect(
-        s_criticalMessage.get(), &QMessageBox::finished, //
+        Errors::s_criticalMessage.get(), &QMessageBox::finished, //
         [message](int result) {
           if (result == QMessageBox::Ignore) {
-            s_ignoredErrors.append(message);
+            Errors::s_ignoredErrors.append(message);
           }
         });
   }

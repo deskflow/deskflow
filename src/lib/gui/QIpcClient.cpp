@@ -55,7 +55,7 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
 
   if (!m_streamProvider) {
     m_streamProvider = [this]() {
-      return std::make_shared<QDataStreamProxy>(m_pSocket);
+      return std::make_shared<QDataStreamProxy>(m_pSocket.get());
     };
   }
 

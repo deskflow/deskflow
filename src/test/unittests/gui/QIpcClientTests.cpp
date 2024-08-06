@@ -25,7 +25,7 @@ using testing::StrEq;
 
 class MockStream : public QDataStreamProxy {
 public:
-  MOCK_METHOD(qint64, writeRawData, (const char *, qint64), (override));
+  MOCK_METHOD(qint64, writeRawData, (const char *, int), (override));
 };
 
 TEST(QIpcClientTests, sendCommand_anyCommand_commandSent) {
