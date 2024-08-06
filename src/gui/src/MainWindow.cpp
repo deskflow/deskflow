@@ -622,15 +622,17 @@ void MainWindow::setIcon(CoreConnectionState state) {
 }
 
 void MainWindow::handleLogLine(const QString &line) {
+  const int kScrollBottomThreshold = 2;
 
   QScrollBar *verticalScroll = m_pLogOutput->verticalScrollBar();
-  int currentValue = verticalScroll->value();
-  int maxValue = verticalScroll->maximum();
-  const auto atBottom = qAbs(currentValue - maxValue) <= 1;
+  int currentScroll = verticalScroll->value();
+  int maxScroll = verticalScroll->maximum();
+  const auto scrollAtBottom =
+      qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
 
   m_pLogOutput->appendPlainText(line);
 
-  if (atBottom) {
+  if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());
     m_pLogOutput->horizontalScrollBar()->setValue(0);
   }
