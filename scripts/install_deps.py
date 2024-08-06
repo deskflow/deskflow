@@ -133,7 +133,7 @@ class Dependencies:
             print("Running dependencies prerequisites command")
 
             check = True
-            if distro == "fedora" or "fedora" in distro_like:
+            if distro == "fedora" or (distro_like and "fedora" in distro_like):
                 print(
                     "Fedora-like detected, "
                     "ignoring return code on dependencies prerequisites command"
