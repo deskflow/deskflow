@@ -158,8 +158,8 @@ void ActivationDialog::showSuccessDialog() {
                         .arg(m_licenseHandler.productName());
 
   TlsUtility tls(*m_pAppConfig, license);
-  connect(&tls, &TlsUtility::error, this, [this](const QString &message) {
-    QMessageBox::critical(this, "TLS error", message);
+  connect(&tls, &TlsUtility::error, this, [this](const QString &m) {
+    QMessageBox::critical(this, "TLS error", m);
   });
 
   if (tls.isAvailableAndEnabled()) {
