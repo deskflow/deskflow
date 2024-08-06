@@ -42,8 +42,8 @@ public:
   };
 
 public slots:
-  void reject();
-  void accept();
+  void reject() override;
+  void accept() override;
 
 protected:
   void refreshSerialKey();
