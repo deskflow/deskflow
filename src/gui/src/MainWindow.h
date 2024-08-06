@@ -96,7 +96,6 @@ private slots:
   void onAppConfigInvertConnection();
   void onCoreProcessStarting();
   void onCoreProcessError(CoreProcess::Error error);
-  void onCoreProcessLogLine(const QString &line);
   void onCoreConnectionStateChanged(CoreProcess::ConnectionState state);
   void onCoreProcessStateChanged(CoreProcess::ProcessState state);
   void onCoreProcessSecureSocket(bool enabled);

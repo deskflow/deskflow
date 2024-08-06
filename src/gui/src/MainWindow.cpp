@@ -239,8 +239,8 @@ void MainWindow::connectSlots() {
       &MainWindow::onCoreProcessError);
 
   connect(
-      &m_CoreProcess, &CoreProcess::logLine, this,
-      &MainWindow::onCoreProcessLogLine);
+      &m_CoreProcess, &CoreProcess::logLine, //
+      [this](const QString &line) { handleLogLine(line); });
 
   connect(
       &m_CoreProcess, &CoreProcess::processStateChanged, this,
@@ -397,10 +397,6 @@ void MainWindow::onCoreProcessError(CoreProcess::Error error) {
         "although it does exist. "
         "Please check if you have sufficient permissions to run this program.");
   }
-}
-
-void MainWindow::onCoreProcessLogLine(const QString &line) {
-  handleLogLine(line);
 }
 
 bool MainWindow::on_m_pActionSave_triggered() {
