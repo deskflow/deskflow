@@ -37,7 +37,7 @@ public:
   void handleMessage(
       QtMsgType type, const QMessageLogContext &context,
       const QString &message);
-  void logVerbose(const QString &message);
+  void logVerbose(const QString &message) const;
 
 signals:
   void newLine(const QString &line);

@@ -57,7 +57,7 @@ void Logger::loadEnvVars() {
   }
 }
 
-void Logger::logVerbose(const QString &message) {
+void Logger::logVerbose(const QString &message) const {
   if (m_verbose) {
     printLine(stdout, "VERBOSE", message);
   }
