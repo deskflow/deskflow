@@ -62,16 +62,6 @@ CoreProcess::~CoreProcess() {
   }
 }
 
-void CoreProcess::onProcessRetryStart() {
-  if (!m_retryingDesktopStart) {
-    qWarning("retry start not set, skipping retry");
-    return;
-  }
-
-  start();
-  m_retryingDesktopStart = false;
-}
-
 void CoreProcess::onIpcClientServiceReady() {
   if (m_processState == ProcessState::Starting) {
     qDebug("service ready, continuing core process start");
@@ -123,12 +113,8 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   }
 
   if (wasStarted) {
-    if (!m_retryingDesktopStart) {
-      QTimer::singleShot(kRetryDelay, this, &CoreProcess::onProcessRetryStart);
-      qInfo("detected process not running, auto restarting");
-    } else {
-      qInfo("detected process not running, already auto restarting");
-    }
+    qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
+    QTimer::singleShot(kRetryDelay, [this] { start(); });
   }
 }
 
@@ -181,7 +167,6 @@ void CoreProcess::stopDesktop() {
     qFatal("core process must be in stopping state");
   }
 
-  QMutexLocker locker(&m_stopDesktopMutex);
   if (!m_pProcess) {
     qFatal("process not set, cannot stop");
   }
@@ -230,6 +215,8 @@ void CoreProcess::handleLogLines(const QString &text) {
 }
 
 void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
+  QMutexLocker locker(&m_processMutex);
+
   const auto processMode =
       processModeOption.value_or(m_appConfig.processMode());
 
@@ -355,6 +342,8 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
 }
 
 void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
+  QMutexLocker locker(&m_processMutex);
+
   const auto processMode =
       processModeOption.value_or(m_appConfig.processMode());
 

@@ -71,7 +71,6 @@ private slots:
   void onIpcClientRead(const QString &text);
   void onIpcClientError(const QString &text);
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
-  void onProcessRetryStart();
   void onProcessReadyReadStandardOutput();
   void onProcessReadyReadStandardError();
 
@@ -106,10 +105,9 @@ private:
   ConnectionState m_connectionState = ConnectionState::Disconnected;
   QIpcClient m_ipcClient;
   Mode m_mode = Mode::None;
-  QMutex m_stopDesktopMutex;
+  QMutex m_processMutex;
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
-  bool m_retryingDesktopStart = false;
 };
 
 } // namespace synergy::gui
