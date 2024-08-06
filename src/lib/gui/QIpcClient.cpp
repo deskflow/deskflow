@@ -23,14 +23,35 @@
 #include <QDataStream>
 #include <QHostAddress>
 #include <QTimer>
+#include <memory>
 
 const auto kRetryInterval = 1000;
 const auto kConnectTimeout = 5000;
 
+namespace {
+
+void intToBytes(int value, char *buffer, int size) {
+  if (size == 1) {
+    buffer[0] = value & 0xff;
+  } else if (size == 2) {
+    buffer[0] = (value >> 8) & 0xff;
+    buffer[1] = value & 0xff;
+  } else if (size == 4) {
+    buffer[0] = (value >> 24) & 0xff;
+    buffer[1] = (value >> 16) & 0xff;
+    buffer[2] = (value >> 8) & 0xff;
+    buffer[3] = value & 0xff;
+  } else {
+    qFatal("intToBytes: size must be 1, 2, or 4");
+  }
+}
+
+} // namespace
+
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     : m_streamProvider(streamProvider) {
 
-  m_pSocket = new QTcpSocket(this);
+  m_pSocket = std::make_unique<QTcpSocket>();
 
   if (!m_streamProvider) {
     m_streamProvider = [this]() {
@@ -39,25 +60,22 @@ QIpcClient::QIpcClient(const StreamProvider &streamProvider)
   }
 
   connect(
-      m_pSocket, &QTcpSocket::connected, this, &QIpcClient::onSocketConnected);
+      m_pSocket.get(), &QTcpSocket::connected, this,
+      &QIpcClient::onSocketConnected);
   connect(
-      m_pSocket, &QTcpSocket::errorOccurred, this, &QIpcClient::onSocketError);
+      m_pSocket.get(), &QTcpSocket::errorOccurred, this,
+      &QIpcClient::onSocketError);
 
-  m_pReader = new IpcReader(m_pSocket);
+  m_pReader = std::make_unique<IpcReader>(m_pSocket.get());
   connect(
-      m_pReader, &IpcReader::read, this, //
+      m_pReader.get(), &IpcReader::read, this, //
       &QIpcClient::onIpcReaderRead);
   connect(
-      m_pReader, &IpcReader::helloBack, this,
+      m_pReader.get(), &IpcReader::helloBack, this,
       &QIpcClient::onIpcReaderHelloBack);
 }
 
-QIpcClient::~QIpcClient() {
-  delete m_pReader;
-  delete m_pSocket;
-}
-
-void QIpcClient::onSocketConnected() { sendHello(); }
+void QIpcClient::onSocketConnected() const { sendHello(); }
 
 void QIpcClient::connectToHost() {
   m_isConnecting = true;
@@ -85,7 +103,7 @@ void QIpcClient::disconnectFromHost() {
   m_isConnected = false;
 }
 
-void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) {
+void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) const {
   QString text;
   switch (socketError) {
   case 0:
@@ -101,10 +119,10 @@ void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) {
 
   qWarning("ipc connection error, %s", qUtf8Printable(text));
 
-  QTimer::singleShot(kRetryInterval, this, &QIpcClient::retryConnect);
+  QTimer::singleShot(kRetryInterval, this, &QIpcClient::onRetryConnect);
 }
 
-void QIpcClient::retryConnect() {
+void QIpcClient::onRetryConnect() {
   if (m_isConnected) {
     qDebug("ipc already connected, skipping retry");
     return;
@@ -117,7 +135,7 @@ void QIpcClient::retryConnect() {
   connectToHost();
 }
 
-void QIpcClient::sendHello() {
+void QIpcClient::sendHello() const {
   qDebug("sending ipc hello message");
   auto stream = m_streamProvider();
   stream->writeRawData(kIpcMsgHello, 4);
@@ -128,7 +146,7 @@ void QIpcClient::sendHello() {
 }
 
 void QIpcClient::sendCommand(
-    const QString &command, ElevateMode const elevate) {
+    const QString &command, ElevateMode const elevate) const {
   qDebug("sending ipc command: %s", qUtf8Printable(command));
 
   auto stream = m_streamProvider();
@@ -156,19 +174,3 @@ void QIpcClient::onIpcReaderHelloBack() {
 }
 
 void QIpcClient::onIpcReaderRead(const QString &text) { emit read(text); }
-
-void QIpcClient::intToBytes(int value, char *buffer, int size) {
-  if (size == 1) {
-    buffer[0] = value & 0xff;
-  } else if (size == 2) {
-    buffer[0] = (value >> 8) & 0xff;
-    buffer[1] = value & 0xff;
-  } else if (size == 4) {
-    buffer[0] = (value >> 24) & 0xff;
-    buffer[1] = (value >> 16) & 0xff;
-    buffer[2] = (value >> 8) & 0xff;
-    buffer[3] = value & 0xff;
-  } else {
-    qFatal("intToBytes: size must be 1, 2, or 4");
-  }
-}

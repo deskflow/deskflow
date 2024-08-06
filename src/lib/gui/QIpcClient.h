@@ -21,6 +21,7 @@
 #include <QDataStream>
 #include <QObject>
 #include <QTcpSocket>
+#include <memory>
 
 #include "ElevateMode.h"
 #include "QDataStreamProxy.h"
@@ -34,24 +35,18 @@ public:
   using StreamProvider = std::function<std::shared_ptr<QDataStreamProxy>()>;
 
   explicit QIpcClient(const StreamProvider &streamProvider = nullptr);
-  ~QIpcClient() override;
 
-  void sendHello();
-  void sendCommand(const QString &command, ElevateMode elevate);
+  void sendHello() const;
+  void sendCommand(const QString &command, ElevateMode elevate) const;
   void connectToHost();
   void disconnectFromHost();
   bool isConnected() const { return m_isConnected; }
 
-public slots:
-  void retryConnect();
-
-private:
-  void intToBytes(int value, char *buffer, int size);
-
 private slots:
-  void onSocketConnected();
+  void onRetryConnect();
+  void onSocketConnected() const;
   void onIpcReaderHelloBack();
-  void onSocketError(QAbstractSocket::SocketError error);
+  void onSocketError(QAbstractSocket::SocketError error) const;
   void onIpcReaderRead(const QString &text);
 
 signals:
@@ -59,8 +54,8 @@ signals:
   void serviceReady();
 
 private:
-  QTcpSocket *m_pSocket;
-  IpcReader *m_pReader;
+  std::unique_ptr<QTcpSocket> m_pSocket;
+  std::unique_ptr<IpcReader> m_pReader;
   bool m_readerStarted = false;
   StreamProvider m_streamProvider;
   bool m_isConnected = false;
