@@ -109,7 +109,7 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   if (exitCode == 0) {
     qDebug("desktop process exited normally");
   } else {
-    qCritical("desktop process exited with error code: %d", exitCode);
+    qWarning("desktop process exited with error code: %d", exitCode);
   }
 
   if (wasStarted) {
