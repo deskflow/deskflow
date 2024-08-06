@@ -160,9 +160,9 @@ void showDevThanks(QWidget *parent, const QString &productName) {
       QString("<p>Thanks for using %1.</p>"
               "<p>If you enjoy using this app, you can support the <br />"
               "developers by "
-              R"(<a href="%1" style="color: %2")>purchasing a license</a>)"
+              R"(<a href="%2" style="color: %3")>purchasing a license</a>)"
               " or "
-              R"(<a href="%3" style="color: %4")>contributing code</a>.)"
+              R"(<a href="%4" style="color: %5")>contributing code</a>.)"
               "</p>"
               "<p>This message will only appear once.</p>")
           .arg(
