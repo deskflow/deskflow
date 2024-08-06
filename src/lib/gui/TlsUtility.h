@@ -21,7 +21,8 @@
 
 #include "TlsCertificate.h"
 #include "license/License.h"
-#include <qobject.h>
+
+#include <QObject>
 
 namespace synergy::gui {
 

@@ -23,7 +23,6 @@
 #include <QDataStream>
 #include <QHostAddress>
 #include <QTimer>
-#include <qlogging.h>
 
 const auto kRetryInterval = 1000;
 const auto kConnectTimeout = 5000;

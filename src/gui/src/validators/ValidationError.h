@@ -18,8 +18,8 @@
 #pragma once
 
 #include <QLabel>
+#include <QObject>
 #include <QString>
-#include <qobject.h>
 
 namespace validators {
 

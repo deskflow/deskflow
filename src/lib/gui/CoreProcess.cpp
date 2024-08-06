@@ -19,7 +19,6 @@
 
 #include "AppConfig.h"
 #include "constants.h"
-#include <qlogging.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
