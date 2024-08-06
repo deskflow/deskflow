@@ -33,8 +33,8 @@ static auto s_criticalMessage = std::unique_ptr<QMessageBox>();
 static auto s_ignoredErrors = QStringList();
 
 void showErrorDialog(
-    const QString &message, const QString &filename,
-    const QMessageLogContext &context, QtMsgType type) {
+    const QString &message, const QMessageLogContext &context, QtMsgType type) {
+  auto filename = QFileInfo(context.file).fileName();
   auto contextString = QString("%1:%2").arg(filename).arg(context.line);
 
   auto title = type == QtFatalMsg ? "Fatal error" : "Critical error";
@@ -63,13 +63,6 @@ void showErrorDialog(
     // create a blocking message box for fatal errors, as we want to wait
     // until the dialog is dismissed before aborting the app.
     QMessageBox::critical(nullptr, title, text);
-
-    // developers: if you hit this line in your debugger, traverse the stack
-    // to find the cause of the fatal error. important: crash the app on fatal
-    // error to prevent the app being used in a broken state.
-    // hint: if you don't want to crash, but still want to show an error
-    // message, use `qCritical()` instead of `qFatal()`.
-    abort();
   } else if (!s_ignoredErrors.contains(message)) {
     // prevent message boxes piling up by deleting the last one if it exists.
     // if none exists yet, then nothing will happen.
@@ -100,7 +93,16 @@ void messageHandler(
   s_logger.handleMessage(type, context, message);
 
   if (type == QtFatalMsg || type == QtCriticalMsg) {
-    showErrorDialog(message, context.file, context, type);
+    showErrorDialog(message, context, type);
+  }
+
+  if (type == QtFatalMsg) {
+    // developers: if you hit this line in your debugger, traverse the stack
+    // to find the cause of the fatal error. important: crash the app on fatal
+    // error to prevent the app being used in a broken state.
+    // hint: if you don't want to crash, but still want to show an error
+    // message, use `qCritical()` instead of `qFatal()`.
+    abort();
   }
 }
 
