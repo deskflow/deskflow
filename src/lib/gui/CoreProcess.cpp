@@ -118,7 +118,9 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
 }
 
 void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
-  if (m_processState != ProcessState::Starting) {
+  using enum ProcessState;
+
+  if (m_processState != Starting) {
     qFatal("core process must be in starting state");
   }
 
@@ -126,15 +128,17 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
   m_pProcess->start(app, args);
 
   if (m_pProcess->waitForStarted()) {
-    setProcessState(ProcessState::Started);
+    setProcessState(Started);
   } else {
-    setProcessState(ProcessState::Stopped);
+    setProcessState(Stopped);
     emit error(Error::StartFailed);
   }
 }
 
 void CoreProcess::startService(const QString &app, const QStringList &args) {
-  if (m_processState != ProcessState::Starting) {
+  using enum ProcessState;
+
+  if (m_processState != Starting) {
     qFatal("core process must be in starting state");
   }
 
@@ -161,7 +165,7 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
 
   qInfo("running command: %s", qPrintable(command.join(" ")));
   m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
-  setProcessState(ProcessState::Started);
+  setProcessState(Started);
 }
 
 void CoreProcess::stopDesktop() {
@@ -198,7 +202,7 @@ void CoreProcess::stopService() {
 }
 
 void CoreProcess::handleLogLines(const QString &text) {
-  for (auto line : text.split(kLineSplitRegex)) {
+  for (const auto &line : text.split(kLineSplitRegex)) {
     if (line.isEmpty()) {
       continue;
     }
@@ -366,17 +370,19 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
 }
 
 void CoreProcess::restart() {
+  using enum ProcessMode;
+
   qDebug("restarting core process");
 
   const auto processMode = m_appConfig.processMode();
 
   if (m_lastProcessMode != processMode) {
-    if (processMode == ProcessMode::kDesktop) {
+    if (processMode == kDesktop) {
       qDebug("process mode changed to desktop, stopping service process");
-      stop(ProcessMode::kService);
-    } else if (processMode == ProcessMode::kService) {
+      stop(kService);
+    } else if (processMode == kService) {
       qDebug("process mode changed to service, stopping desktop process");
-      stop(ProcessMode::kDesktop);
+      stop(kDesktop);
     }
   }
 
@@ -572,18 +578,19 @@ QString CoreProcess::getProfileRootForArg() const {
 }
 
 void CoreProcess::checkLogLine(const QString &line) {
+  using enum ConnectionState;
 
   if (line.contains("connected to server") || line.contains("has connected")) {
-    setConnectionState(ConnectionState::Connected);
+    setConnectionState(Connected);
 
   } else if (line.contains("started server")) {
-    setConnectionState(ConnectionState::Listening);
+    setConnectionState(Listening);
   } else if (
       line.contains("disconnected from server") ||
       line.contains("process exited")) {
-    setConnectionState(ConnectionState::Disconnected);
+    setConnectionState(Disconnected);
   } else if (line.contains("connecting to")) {
-    setConnectionState(ConnectionState::Connecting);
+    setConnectionState(Connecting);
   }
 
   checkSecureSocket(line);
