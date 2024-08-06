@@ -218,7 +218,7 @@ void CoreProcess::handleLogLines(const QString &text) {
 #if defined(Q_OS_MAC)
     // HACK: macOS 10.13.4+ spamming error lines in logs making them
     // impossible to read and debug; giving users a red herring.
-    if (trimmed.contains("calling TIS/TSM in non-main thread environment")) {
+    if (line.contains("calling TIS/TSM in non-main thread environment")) {
       continue;
     }
 #endif

@@ -172,10 +172,6 @@ private:
   QString productName() const;
   void updateStatus();
 
-#ifdef Q_OS_MAC
-  void checkOSXNotification(const QString &line);
-#endif
-
   VersionChecker m_VersionChecker;
   TrayIcon m_TrayIcon;
   bool m_ActivationDialogRunning = false;

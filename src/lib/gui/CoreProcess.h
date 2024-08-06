@@ -92,8 +92,11 @@ private:
   QString getProfileRootForArg() const;
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
-  bool checkOSXNotification(const QString &line);
   void handleLogLines(const QString &text);
+
+#ifdef Q_OS_MAC
+  void checkOSXNotification(const QString &line);
+#endif
 
   AppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
