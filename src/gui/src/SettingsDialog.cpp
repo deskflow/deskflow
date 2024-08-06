@@ -22,6 +22,7 @@
 #include "UpgradeDialog.h"
 #include "gui/AppConfig.h"
 #include "gui/TlsCertificate.h"
+#include "gui/TlsUtility.h"
 #include "gui/constants.h"
 #include "validators/ScreenNameValidator.h"
 #include "validators/ValidationError.h"
@@ -33,6 +34,7 @@
 #include <QtGui>
 
 using namespace synergy::license;
+using namespace synergy::gui;
 
 const char *const kProProductName = "Synergy 1 Pro";
 
