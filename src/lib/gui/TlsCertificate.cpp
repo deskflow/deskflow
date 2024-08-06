@@ -155,7 +155,7 @@ bool TlsCertificate::runTool(const QStringList &args) {
   return true;
 }
 
-void TlsCertificate::generateCertificate(
+bool TlsCertificate::generateCertificate(
     const QString &path, const QString &keyLength, bool createFile) {
   QString sslDirPath =
       QString("%1%2%3").arg(m_profileDir).arg(QDir::separator()).arg(kSslDir);
@@ -176,7 +176,7 @@ void TlsCertificate::generateCertificate(
   if (!file.exists() && !createFile) {
     qCritical(
         "tls certificate file does not exist: %s", qUtf8Printable(pathToUse));
-    return;
+    return false;
   }
 
   QStringList arguments;
@@ -213,16 +213,18 @@ void TlsCertificate::generateCertificate(
   arguments.append(pathToUse);
 
   if (runTool(arguments)) {
-    generateFingerprint(pathToUse);
     qDebug("tls certificate generated");
+
+    return generateFingerprint(pathToUse);
   } else {
-    // error dialog already shown
-    qDebug("skipping fingerprint generation, as generate failed");
-    return;
+    qCritical("failed to generate tls certificate");
+    return false;
   }
 }
 
-void TlsCertificate::generateFingerprint(const QString &certificateFilename) {
+bool TlsCertificate::generateFingerprint(const QString &certificateFilename) {
+  qDebug("generating tls fingerprint");
+
   QStringList arguments;
   arguments.append("x509");
   arguments.append("-fingerprint");
@@ -232,7 +234,8 @@ void TlsCertificate::generateFingerprint(const QString &certificateFilename) {
   arguments.append(certificateFilename);
 
   if (!runTool(arguments)) {
-    return;
+    qCritical("failed to generate tls fingerprint");
+    return false;
   }
 
   // find the fingerprint from the tool output
@@ -243,8 +246,10 @@ void TlsCertificate::generateFingerprint(const QString &certificateFilename) {
 
     TlsFingerprint::local().trust(fingerprint, false);
     qDebug("tls fingerprint generated");
+    return true;
   } else {
     qCritical("failed to find tls fingerprint in tls tool output");
+    return false;
   }
 }
 

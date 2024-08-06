@@ -38,19 +38,20 @@ bool TlsUtility::isAvailableAndEnabled() const {
   return isAvailable() && config.tlsEnabled();
 }
 
-void TlsUtility::generateCertificate(bool replace) {
+bool TlsUtility::generateCertificate(bool replace) {
   qDebug("generating tls certificate, "
          "all clients must trust the new fingerprint");
 
   if (!isAvailableAndEnabled()) {
-    qFatal("unable to generate tls certificate, "
-           "tls is either not available or not enabled");
+    qCritical("unable to generate tls certificate, "
+              "tls is either not available or not enabled");
+    return false;
   }
 
   auto path = m_appConfig.tlsCertPath();
   auto length = m_appConfig.tlsKeyLength();
 
-  m_certificate.generateCertificate(path, length, replace);
+  return m_certificate.generateCertificate(path, length, replace);
 }
 
 } // namespace synergy::gui

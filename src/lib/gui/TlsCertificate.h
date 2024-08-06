@@ -27,14 +27,14 @@ class TlsCertificate : public QObject {
 public:
   explicit TlsCertificate(QObject *parent = nullptr);
 
-  void generateCertificate(
+  bool generateCertificate(
       const QString &path = QString(), const QString &keyLength = "2048",
       bool forceGen = false);
   QString getCertKeyLength(const QString &path);
 
 private:
   bool runTool(const QStringList &args);
-  void generateFingerprint(const QString &certificateFilename);
+  bool generateFingerprint(const QString &certificateFilename);
 
 private:
   QString m_profileDir;

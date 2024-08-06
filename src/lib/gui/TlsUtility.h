@@ -50,7 +50,7 @@ public:
   /**
    * @param replace Replace certificate on disk (default: false).
    */
-  void generateCertificate(bool replace = false);
+  bool generateCertificate(bool replace = false);
 
 private:
   const IAppConfig &m_appConfig;

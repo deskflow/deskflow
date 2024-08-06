@@ -245,7 +245,11 @@ void SettingsDialog::updateTlsRegenerateButton() {
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
-  m_tlsUtility.generateCertificate(true);
+  if (m_tlsUtility.generateCertificate(true)) {
+    QMessageBox::information(
+        this, tr("TLS Certificate Regenerated"),
+        tr("TLS certificate regenerated successfully."));
+  }
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
