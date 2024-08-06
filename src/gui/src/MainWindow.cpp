@@ -89,21 +89,6 @@ static const char *const kDefaultIconFiles[] = {
     ":/res/icons/16x16/synergy-transfering.png",
     ":/res/icons/16x16/synergy-disconnected.png"};
 
-namespace {
-
-void scrollToBottomIfAtBottom(QPlainTextEdit *plainTextEdit) {
-  QScrollBar *scrollBar = plainTextEdit->verticalScrollBar();
-  int currentValue = scrollBar->value();
-  int maxValue = scrollBar->maximum();
-
-  // Check if the current scroll position is at the bottom
-  if (currentValue == maxValue) {
-    plainTextEdit->moveCursor(QTextCursor::End);
-  }
-}
-
-} // namespace
-
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
@@ -637,8 +622,19 @@ void MainWindow::setIcon(CoreConnectionState state) {
 }
 
 void MainWindow::handleLogLine(const QString &line) {
+
+  QScrollBar *verticalScroll = m_pLogOutput->verticalScrollBar();
+  int currentValue = verticalScroll->value();
+  int maxValue = verticalScroll->maximum();
+  const auto atBottom = currentValue == maxValue;
+
   m_pLogOutput->appendPlainText(line);
-  scrollToBottomIfAtBottom(m_pLogOutput);
+
+  if (atBottom) {
+    verticalScroll->setValue(verticalScroll->maximum());
+    m_pLogOutput->horizontalScrollBar()->setValue(0);
+  }
+
   updateFromLogLine(line);
 }
 
