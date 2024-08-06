@@ -383,12 +383,10 @@ void CoreProcess::restart() {
     }
   }
 
-  // no need to stop the core first when in service mode as the service will
-  // restart the core when it gets a new start command.
-  if (processMode != ProcessMode::kService) {
-    stop();
-  }
-
+  // in service mode: though there is technically no need to stop the service
+  // before restarting it, it does make for cleaner process state tracking,
+  // especially if something goes wrong with starting the service.
+  stop();
   start();
 }
 
