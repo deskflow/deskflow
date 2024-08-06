@@ -36,9 +36,7 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-using namespace synergy::gui;
-
-class ServerConfig : public ScreenConfig, public IServerConfig {
+class ServerConfig : public ScreenConfig, public synergy::gui::IServerConfig {
   friend class ServerConfigDialog;
   friend QTextStream &
   operator<<(QTextStream &outStream, const ServerConfig &config);
@@ -47,7 +45,7 @@ public:
   ServerConfig(
       AppConfig &appConfig, MainWindow &mainWindow,
       int columns = kDefaultColumns, int rows = kDefaultRows);
-  ~ServerConfig() = default;
+  virtual ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;
 

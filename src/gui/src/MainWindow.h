@@ -56,6 +56,7 @@ class SetupWizard;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   using CoreMode = synergy::gui::CoreProcess::Mode;
+  using CoreProcess = synergy::gui::CoreProcess;
 
   Q_OBJECT
 
@@ -172,7 +173,7 @@ private:
   void updateStatus();
 
   VersionChecker m_VersionChecker;
-  TrayIcon m_TrayIcon;
+  synergy::gui::TrayIcon m_TrayIcon;
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
   QMenuBar *m_pMenuBar = nullptr;
