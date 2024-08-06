@@ -109,6 +109,8 @@ void CoreProcess::onProcessReadyReadStandardError() {
 }
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
+  const auto wasStarted = m_processState == ProcessState::Started;
+
   setProcessState(ProcessState::Stopped);
   setConnectionState(ConnectionState::Disconnected);
 
@@ -120,8 +122,7 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
     qCritical("desktop process exited with error code: %d", exitCode);
   }
 
-  if (m_processState == ProcessState::Started) {
-
+  if (wasStarted) {
     if (!m_retryingDesktopStart) {
       QTimer::singleShot(kRetryDelay, this, &CoreProcess::onProcessRetryStart);
       qInfo("detected process not running, auto restarting");
