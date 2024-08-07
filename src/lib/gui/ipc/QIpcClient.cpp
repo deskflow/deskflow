@@ -141,7 +141,7 @@ void QIpcClient::sendCommand(
 
   QByteArray lenBuf = intToBytes(length);
   if (lenBuf.size() != 4) {
-    qFatal("unexpected int buffer size: %d", lenBuf.size());
+    qFatal("unexpected int buffer size: %lld", lenBuf.size());
   }
   stream->writeRawData(lenBuf, 4);
   stream->writeRawData(charCommand, length);
