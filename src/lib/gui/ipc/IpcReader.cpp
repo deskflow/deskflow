@@ -57,10 +57,9 @@ void IpcReader::onSocketReadyRead() {
       readStream(lenBuf, 4);
       int len = bytesToInt(lenBuf, 4);
 
-      char *data = new char[len];
-      readStream(data, len);
-      QString text = QString::fromUtf8(data, len);
-      delete[] data;
+      std::vector<char> dataBuf(len);
+      readStream(dataBuf.data(), len);
+      QString text = QString::fromUtf8(dataBuf.data(), len);
 
       emit read(text);
     } else if (memcmp(codeBuf, kIpcMsgHelloBack, 4) == 0) {
