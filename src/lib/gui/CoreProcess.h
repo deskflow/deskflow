@@ -20,26 +20,39 @@
 #include "IAppConfig.h"
 #include "IServerConfig.h"
 #include "QIpcClient.h"
+#include "proxy/QProcessProxy.h"
 
 #include <QMutex>
 #include <QObject>
-#include <QProcess>
 #include <QString>
 #include <QStringList>
+#include <memory>
 
 namespace synergy::gui {
 
 class CoreProcess : public QObject {
   using IServerConfig = synergy::gui::IServerConfig;
+  using QProcessProxy = synergy::gui::proxy::QProcessProxy;
+
   Q_OBJECT
 
 public:
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual QProcessProxy &process() { return m_process; }
+
+  private:
+    QProcessProxy m_process;
+  };
+
   enum class Mode { None, Client, Server };
   enum class Error { AddressMissing, StartFailed };
   enum class ProcessState { Starting, Started, Stopping, Stopped };
   enum class ConnectionState { Disconnected, Connecting, Connected, Listening };
 
-  explicit CoreProcess(IAppConfig &appConfig, IServerConfig &serverConfig);
+  explicit CoreProcess(
+      IAppConfig &appConfig, IServerConfig &serverConfig,
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   ~CoreProcess() override;
 
   void extracted(QString &app, QStringList &args);
@@ -97,13 +110,13 @@ private:
   void checkOSXNotification(const QString &line);
 #endif
 
+  std::shared_ptr<Deps> m_pDeps;
   IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
   QString m_address;
-  std::unique_ptr<QProcess> m_pProcess;
+  QIpcClient m_ipcClient;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;
-  QIpcClient m_ipcClient;
   Mode m_mode = Mode::None;
   QMutex m_processMutex;
   QString m_secureSocketVersion = "";

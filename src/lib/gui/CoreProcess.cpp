@@ -54,9 +54,12 @@ QString processModeToString(ProcessMode mode) {
   }
 }
 
-CoreProcess::CoreProcess(IAppConfig &appConfig, IServerConfig &serverConfig)
+CoreProcess::CoreProcess(
+    IAppConfig &appConfig, IServerConfig &serverConfig,
+    std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
-      m_serverConfig(serverConfig) {
+      m_serverConfig(serverConfig),
+      m_pDeps(deps) {
 
   connect(
       &m_ipcClient, &QIpcClient::read, this, //
@@ -102,14 +105,14 @@ void CoreProcess::onIpcClientError(const QString &text) {
 void CoreProcess::onIpcClientRead(const QString &text) { handleLogLines(text); }
 
 void CoreProcess::onProcessReadyReadStandardOutput() {
-  if (m_pProcess) {
-    handleLogLines(m_pProcess->readAllStandardOutput());
+  if (m_pDeps->process()) {
+    handleLogLines(m_pDeps->process().readAllStandardOutput());
   }
 }
 
 void CoreProcess::onProcessReadyReadStandardError() {
-  if (m_pProcess) {
-    handleLogLines(m_pProcess->readAllStandardError());
+  if (m_pDeps->process()) {
+    handleLogLines(m_pDeps->process().readAllStandardError());
   }
 }
 
@@ -119,7 +122,7 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   setProcessState(ProcessState::Stopped);
   setConnectionState(ConnectionState::Disconnected);
 
-  m_pProcess->reset();
+  m_pDeps->process().reset();
 
   if (exitCode == 0) {
     qDebug("desktop process exited normally");
@@ -141,9 +144,9 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
   }
 
   qInfo("running command: %s %s", qPrintable(app), qPrintable(args.join(" ")));
-  m_pProcess->start(app, args);
+  m_pDeps->process().start(app, args);
 
-  if (m_pProcess->waitForStarted()) {
+  if (m_pDeps->process().waitForStarted()) {
     setProcessState(Started);
   } else {
     setProcessState(Stopped);
@@ -189,15 +192,15 @@ void CoreProcess::stopDesktop() {
     qFatal("core process must be in stopping state");
   }
 
-  if (!m_pProcess) {
+  if (!m_pDeps->process()) {
     qFatal("process not set, cannot stop");
   }
 
   qInfo("stopping core desktop process");
 
-  if (m_pProcess->state() == QProcess::ProcessState::Running) {
+  if (m_pDeps->process().state() == QProcess::ProcessState::Running) {
     qDebug("process is running, closing");
-    m_pProcess->close();
+    m_pDeps->process().close();
   } else {
     qDebug("process is not running, skipping terminate");
   }
@@ -275,7 +278,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
   args << "--name" << m_appConfig.screenName();
 
   if (processMode == ProcessMode::kDesktop) {
-    m_pProcess = std::make_unique<QProcess>(this);
+    m_pDeps->process().create();
   } else {
     // tell client/server to talk to daemon through ipc.
     args << "--ipc";
@@ -334,13 +337,13 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
 
   if (processMode == ProcessMode::kDesktop) {
     connect(
-        m_pProcess.get(), &QProcess::finished, this,
+        &m_pDeps->process(), &QProcessProxy::finished, this,
         &CoreProcess::onProcessFinished);
     connect(
-        m_pProcess.get(), &QProcess::readyReadStandardOutput, this,
+        &m_pDeps->process(), &QProcessProxy::readyReadStandardOutput, this,
         &CoreProcess::onProcessReadyReadStandardOutput);
     connect(
-        m_pProcess.get(), &QProcess::readyReadStandardError, this,
+        &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this,
         &CoreProcess::onProcessReadyReadStandardError);
   }
 
