@@ -40,6 +40,7 @@
 #include "base/TMethodJob.h"
 #endif
 
+#include <charconv>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
@@ -81,11 +82,15 @@ App::~App() {
 }
 
 void App::version() {
-  static const size_t buffer_size = 500;
-  static const size_t cpight_size = 200;
+  const size_t kBufferSize = 500;
+  const size_t kCopyrightSize = 200;
 
-  char copyrightBuffer[cpight_size];
-  snprintf(copyrightBuffer, cpight_size, kCopyright, kBuildYear);
+  constexpr const char *date = __DATE__;
+  int year;
+  std::from_chars(date + strlen(date) - 4, date + strlen(date), year);
+
+  char copyrightBuffer[kCopyrightSize];
+  snprintf(copyrightBuffer, kCopyrightSize, kCopyright, year);
 
   std::stringstream version;
   version << kVersion;
@@ -93,9 +98,9 @@ void App::version() {
   version << " (" << GIT_SHA_SHORT << ")";
 #endif
 
-  char buffer[buffer_size];
+  char buffer[kBufferSize];
   snprintf(
-      buffer, buffer_size, "%s %s, protocol version %d.%d\n%s",
+      buffer, kBufferSize, "%s %s, protocol version %d.%d\n%s",
       argsBase().m_pname, version.str().c_str(), kProtocolMajorVersion,
       kProtocolMinorVersion, copyrightBuffer);
 
