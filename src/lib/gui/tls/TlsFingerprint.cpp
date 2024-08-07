@@ -68,7 +68,7 @@ bool TlsFingerprint::isTrusted(const QString &fingerprintText) {
   return false;
 }
 
-QStringList TlsFingerprint::readList(const int readTo) {
+QStringList TlsFingerprint::readList(const int readTo) const {
   QStringList list;
 
   QString dirName = TlsFingerprint::directoryPath();
