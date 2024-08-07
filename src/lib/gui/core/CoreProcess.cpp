@@ -604,7 +604,7 @@ void CoreProcess::checkLogLine(const QString &line) {
   checkSecureSocket(line);
 
   // subprocess (synergys, synergyc) is not allowed to show notifications
-  // process the log from it and show notificatino from synergy instead
+  // process the log from it and show notification from synergy instead
 #ifdef Q_OS_MAC
   checkOSXNotification(line);
 #endif
@@ -624,18 +624,16 @@ bool CoreProcess::checkSecureSocket(const QString &line) {
 
 #ifdef Q_OS_MAC
 void CoreProcess::checkOSXNotification(const QString &line) {
-  static const QString OSXNotificationSubstring = "OSX Notification: ";
-  if (line.contains(OSXNotificationSubstring) && line.contains('|')) {
-    int delimterPosition = line.indexOf('|');
-    int notificationStartPosition = line.indexOf(OSXNotificationSubstring);
+  static const QString needle = "OSX Notification: ";
+  if (line.contains(needle) && line.contains('|')) {
+    int delimiterPosition = line.indexOf('|');
+    int start = line.indexOf(needle);
     QString title = line.mid(
-        notificationStartPosition + OSXNotificationSubstring.length(),
-        delimterPosition - notificationStartPosition -
-            OSXNotificationSubstring.length());
+        start + needle.length(), delimiterPosition - start - needle.length());
     QString body =
-        line.mid(delimterPosition + 1, line.length() - delimterPosition);
+        line.mid(delimiterPosition + 1, line.length() - delimiterPosition);
     if (!showOSXNotification(title, body)) {
-      qDebug("OSX notification was not shown");
+      qDebug("osx notification was not shown");
     }
   }
 }

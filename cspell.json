@@ -27,6 +27,7 @@
     "Lysytsia",
     "macdeployqt",
     "msvc",
+    "noquote",
     "notarytool",
     "Oleksandr",
     "Olena",
@@ -39,6 +40,8 @@
     "Schoeneman",
     "Serhii",
     "Sorin",
+    "synergyc",
+    "synergys",
     "Volker",
     "winget"
   ],
