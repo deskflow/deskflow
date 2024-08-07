@@ -33,9 +33,9 @@ public:
   static void persistDirectory();
 
   void trust(const QString &fingerprintText, bool append = true) const;
-  bool isTrusted(const QString &fingerprintText);
+  bool isTrusted(const QString &fingerprintText) const;
   QStringList readList(const int readTo = -1) const;
-  QString readFirst();
+  QString readFirst() const;
   QString filePath() const;
   bool fileExists() const;
 
