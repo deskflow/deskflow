@@ -48,6 +48,9 @@
 #include <AppKit/NSEvent.h>
 #include <libproc.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 // The following creates a section that tells Mac OS X
 // that it is OK to let us inject input in the login screen.
 // Just the name of the section is important, not its contents.

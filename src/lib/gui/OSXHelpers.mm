@@ -27,6 +27,9 @@
 
 #import <QtGlobal>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 void requestOSXNotificationPermission()
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
