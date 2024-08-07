@@ -27,9 +27,8 @@ static const char kLocalFilename[] = "Local.txt";
 static const char kTrustedServersFilename[] = "TrustedServers.txt";
 static const char kTrustedClientsFilename[] = "TrustedClients.txt";
 
-TlsFingerprint::TlsFingerprint(const QString &filename) {
-  m_Filename = filename;
-}
+TlsFingerprint::TlsFingerprint(const QString &filename)
+    : m_Filename(filename) {}
 
 void TlsFingerprint::trust(const QString &fingerprintText, bool append) {
   TlsFingerprint::persistDirectory();
