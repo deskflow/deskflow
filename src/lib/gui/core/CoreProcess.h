@@ -99,7 +99,7 @@ private:
   bool serverArgs(QStringList &args, QString &app);
   bool clientArgs(QStringList &args, QString &app);
   QString persistConfig() const;
-  QString address() const;
+  QString correctedInterface() const;
   QString modeString() const;
   QString processModeString() const;
   void setConnectionState(ConnectionState state);

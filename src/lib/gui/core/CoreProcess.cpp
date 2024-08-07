@@ -444,7 +444,7 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
     return false;
   }
 
-  args << "-c" << configFilename << "--address" << address();
+  args << "-c" << configFilename << "--address" << correctedInterface();
   qInfo("config file: %s", qPrintable(configFilename));
 
   if (kEnableActivation && !m_appConfig.serialKey().isEmpty()) {
@@ -527,20 +527,6 @@ QString CoreProcess::persistConfig() const {
 
   qFatal("failed to persist config file");
   return "";
-}
-
-QString CoreProcess::address() const {
-  QString i = m_appConfig.networkInterface();
-  // if interface is IPv6 - ensure that ip is in square brackets
-  if (i.count(':') > 1) {
-    if (i[0] != '[') {
-      i.insert(0, '[');
-    }
-    if (i[i.size() - 1] != ']') {
-      i.push_back(']');
-    }
-  }
-  return (!i.isEmpty() ? i : "") + ":" + QString::number(m_appConfig.port());
 }
 
 QString CoreProcess::modeString() const {
@@ -638,5 +624,19 @@ void CoreProcess::checkOSXNotification(const QString &line) {
   }
 }
 #endif
+
+QString CoreProcess::correctedInterface() const {
+  QString i = m_appConfig.networkInterface();
+  // if interface is IPv6 - ensure that ip is in square brackets
+  if (i.count(':') > 1) {
+    if (i[0] != '[') {
+      i.insert(0, '[');
+    }
+    if (i[i.size() - 1] != ']') {
+      i.push_back(']');
+    }
+  }
+  return (!i.isEmpty() ? i : "") + ":" + QString::number(m_appConfig.port());
+}
 
 } // namespace synergy::gui
