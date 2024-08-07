@@ -24,14 +24,6 @@ private:
   explicit TlsFingerprint(const QString &filename);
 
 public:
-  void trust(const QString &fingerprintText, bool append = true) const;
-  bool isTrusted(const QString &fingerprintText);
-  QStringList readList(const int readTo = -1) const;
-  QString readFirst();
-  QString filePath() const;
-  bool fileExists() const;
-
-public:
   static TlsFingerprint local();
   static TlsFingerprint trustedServers();
   static TlsFingerprint trustedClients();
@@ -39,6 +31,13 @@ public:
   static QString localFingerprint();
   static bool localFingerprintExists();
   static void persistDirectory();
+
+  void trust(const QString &fingerprintText, bool append = true) const;
+  bool isTrusted(const QString &fingerprintText);
+  QStringList readList(const int readTo = -1) const;
+  QString readFirst();
+  QString filePath() const;
+  bool fileExists() const;
 
 private:
   QString m_Filename;
