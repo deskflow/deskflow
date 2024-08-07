@@ -73,7 +73,7 @@ QString AboutDialog::getImportantDevelopers() const {
   // Nick continued the legacy in 2009 started by Chris.
   awesomePeople << "Nick Bolton";
 
-  // Wrote the first version of the GUI (QSynergy) in 2008.
+  // Volker wrote the first version of the GUI (QSynergy) in 2008.
   awesomePeople << "Volker Lanz";
 
   // Re-ignited the project in 2008 and rebuilt the community.
