@@ -668,7 +668,6 @@ bool CoreProcess::checkSecureSocket(const QString &line) {
   static const QString tlsCheckString = "network encryption protocol: ";
   const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
   if (index == -1) {
-    qDebug("no secure socket version found");
     return false;
   }
 
