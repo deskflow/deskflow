@@ -39,5 +39,5 @@ private:
 private:
   QString m_profileDir;
   QString m_toolStdout;
-  CoreInterface m_coreInterface;
+  [[no_unique_address]] CoreInterface m_coreInterface;
 };

@@ -68,7 +68,7 @@ protected:
 private:
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
-  CoreInterface m_coreInterface;
+  [[no_unique_address]] CoreInterface m_coreInterface;
   const synergy::license::License &m_license;
   synergy::gui::TlsUtility m_tlsUtility;
   validators::ValidationError *m_pScreenNameError;

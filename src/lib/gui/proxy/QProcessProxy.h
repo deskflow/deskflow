@@ -26,8 +26,8 @@ class QProcessProxy : public QObject {
   Q_OBJECT
 
 public:
-  virtual ~QProcessProxy() = default;
-  virtual operator bool() const;
+  ~QProcessProxy() override = default;
+  explicit virtual operator bool() const;
   virtual void create();
   virtual void start(const QString &program, const QStringList &arguments = {});
   virtual bool waitForStarted();
