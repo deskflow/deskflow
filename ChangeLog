@@ -69,6 +69,7 @@ Enhancements:
 - #7423 Refactor local/global save/load and show dev thanks message
 - #7424 Add Alma Linux and Rocky Linux runners
 - #7425 Refactored core process management and IPC client
+- #7426 Fixed warnings and enable errors as warnings
 
 # 1.14.6
 
