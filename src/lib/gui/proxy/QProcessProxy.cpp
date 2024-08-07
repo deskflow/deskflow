@@ -21,20 +21,20 @@ namespace synergy::gui::proxy {
 
 void QProcessProxy::create() {
   m_pProcess = std::make_unique<QProcess>();
+
   connect(
       m_pProcess.get(), &QProcess::finished, this,
       [this](int exitCode, QProcess::ExitStatus exitStatus) {
         emit finished(exitCode, exitStatus);
-      },
-      Qt::DirectConnection);
+      });
 
   connect(
-      m_pProcess.get(), &QProcess::readyReadStandardOutput, this,
-      [this]() { emit readyReadStandardOutput(); }, Qt::DirectConnection);
+      m_pProcess.get(), &QProcess::readyReadStandardOutput, //
+      this, [this]() { emit readyReadStandardOutput(); });
 
   connect(
-      m_pProcess.get(), &QProcess::readyReadStandardError, this,
-      [this]() { emit readyReadStandardError(); }, Qt::DirectConnection);
+      m_pProcess.get(), &QProcess::readyReadStandardError, //
+      this, [this]() { emit readyReadStandardError(); });
 }
 
 QProcessProxy::operator bool() const { return m_pProcess.get(); }
@@ -51,8 +51,6 @@ QProcess::ProcessState QProcessProxy::state() const {
 }
 
 void QProcessProxy::close() { m_pProcess->close(); }
-
-void QProcessProxy::reset() { m_pProcess.reset(); }
 
 QString QProcessProxy::readAllStandardOutput() {
   return m_pProcess->readAllStandardOutput();

@@ -33,7 +33,6 @@ public:
   virtual bool waitForStarted();
   virtual QProcess::ProcessState state() const;
   virtual void close();
-  virtual void reset();
   virtual QString readAllStandardOutput();
   virtual QString readAllStandardError();
 

@@ -29,7 +29,7 @@ class IAppConfig {
 public:
   virtual ~IAppConfig() = default;
   virtual QString tlsCertPath() const = 0;
-  virtual QString tlsKeyLength() const = 0;
+  virtual int tlsKeyLength() const = 0;
   virtual bool tlsEnabled() const = 0;
   virtual ProcessMode processMode() const = 0;
   virtual ElevateMode elevateMode() const = 0;

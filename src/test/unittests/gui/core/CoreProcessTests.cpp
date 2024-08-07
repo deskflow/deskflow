@@ -40,7 +40,7 @@ public:
   }
 
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
-  MOCK_METHOD(QString, tlsKeyLength, (), (const, override));
+  MOCK_METHOD(int, tlsKeyLength, (), (const, override));
   MOCK_METHOD(bool, tlsEnabled, (), (const, override));
   MOCK_METHOD(ProcessMode, processMode, (), (const, override));
   MOCK_METHOD(ElevateMode, elevateMode, (), (const, override));
@@ -96,7 +96,6 @@ public:
   MOCK_METHOD(bool, waitForStarted, (), (override));
   MOCK_METHOD(QProcess::ProcessState, state, (), (const, override));
   MOCK_METHOD(void, close, (), (override));
-  MOCK_METHOD(void, reset, (), (override));
   MOCK_METHOD(QString, readAllStandardOutput, (), (override));
   MOCK_METHOD(QString, readAllStandardError, (), (override));
 };

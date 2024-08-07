@@ -32,6 +32,7 @@
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
+#include <qglobal.h>
 
 using namespace synergy::license;
 using namespace synergy::gui;
@@ -84,7 +85,7 @@ void SettingsDialog::accept() {
   appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
   appConfig().setPreventSleep(m_pCheckBoxPreventSleep->isChecked());
   appConfig().setTlsCertPath(m_pLineEditCertificatePath->text());
-  appConfig().setTlsKeyLength(m_pComboBoxKeyLength->currentText());
+  appConfig().setTlsKeyLength(m_pComboBoxKeyLength->currentText().toInt());
   appConfig().setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
   appConfig().setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   appConfig().setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
@@ -138,8 +139,9 @@ void SettingsDialog::updateTlsControls() {
   if (QFile(appConfig().tlsCertPath()).exists()) {
     updateKeyLengthOnFile(appConfig().tlsCertPath());
   } else {
+    const auto keyLengthText = QString::number(appConfig().tlsKeyLength());
     m_pComboBoxKeyLength->setCurrentIndex(
-        m_pComboBoxKeyLength->findText(appConfig().tlsKeyLength()));
+        m_pComboBoxKeyLength->findText(keyLengthText));
   }
 
   m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
@@ -232,9 +234,8 @@ void SettingsDialog::on_m_pComboBoxKeyLength_currentIndexChanged(int index) {
 }
 
 void SettingsDialog::updateTlsRegenerateButton() {
-  // Disable the Regenerate cert button if the key length is different to saved
-  auto keyChanged =
-      appConfig().tlsKeyLength() != m_pComboBoxKeyLength->currentText();
+  const auto keyLength = m_pComboBoxKeyLength->currentText().toInt();
+  auto keyChanged = appConfig().tlsKeyLength() != keyLength;
   auto pathChanged =
       appConfig().tlsCertPath() != m_pLineEditCertificatePath->text();
   // NOR the above bools, if any have changed regen should be disabled as it
@@ -245,7 +246,7 @@ void SettingsDialog::updateTlsRegenerateButton() {
 }
 
 void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
-  if (m_tlsUtility.generateCertificate(true)) {
+  if (m_tlsUtility.generateCertificate()) {
     QMessageBox::information(
         this, tr("TLS Certificate Regenerated"),
         tr("TLS certificate regenerated successfully."));
@@ -259,9 +260,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
   }
 
   auto length = ssl.getCertKeyLength(path);
-  auto index = m_pComboBoxKeyLength->findText(length);
+  auto index = m_pComboBoxKeyLength->findText(QString::number(length));
   m_pComboBoxKeyLength->setCurrentIndex(index);
-  // Also update what is in the appconfig to match the file itself
   appConfig().setTlsKeyLength(length);
 }
 

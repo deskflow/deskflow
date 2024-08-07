@@ -36,6 +36,7 @@ namespace synergy::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
 const QString kDefaultLogFile = "synergy.log";
+const int kDefaultTlsKeyLength = 2048;
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -143,7 +144,7 @@ public:
   ElevateMode elevateMode() const override;
   bool tlsEnabled() const override;
   QString tlsCertPath() const override;
-  QString tlsKeyLength() const override;
+  int tlsKeyLength() const override;
   QString logLevelText() const override;
   const QString &screenName() const override;
   bool logToFile() const override;
@@ -213,7 +214,7 @@ public:
   void setEnableService(bool enabled);
   void setCloseToTray(bool minimize);
   void setTlsCertPath(const QString &path);
-  void setTlsKeyLength(const QString &length);
+  void setTlsKeyLength(int length);
   void setInvertConnection(bool value);
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
@@ -315,7 +316,7 @@ private:
       synergy::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = true;
   QString m_TlsCertPath = defaultTlsCertPath();
-  QString m_TlsKeyLength = "2048";
+  int m_TlsKeyLength = synergy::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
   bool m_ShowDevThanks = synergy::gui::kDefaultShowDevThanks;

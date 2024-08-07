@@ -21,6 +21,7 @@
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
 #include <qglobal.h>
+#include <qmutex.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -148,6 +149,18 @@ CoreProcess::CoreProcess(
   connect(
       &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
       &CoreProcess::onIpcClientServiceReady);
+
+  connect(
+      &m_pDeps->process(), &QProcessProxy::finished, this,
+      &CoreProcess::onProcessFinished);
+
+  connect(
+      &m_pDeps->process(), &QProcessProxy::readyReadStandardOutput, this,
+      &CoreProcess::onProcessReadyReadStandardOutput);
+
+  connect(
+      &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this,
+      &CoreProcess::onProcessReadyReadStandardError);
 }
 
 void CoreProcess::onIpcClientServiceReady() {
@@ -191,8 +204,6 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
 
   setProcessState(ProcessState::Stopped);
   setConnectionState(ConnectionState::Disconnected);
-
-  m_pDeps->process().reset();
 
   if (exitCode == 0) {
     qDebug("desktop process exited normally");
@@ -390,18 +401,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
       (mode() == Mode::Server && !serverArgs(args, app))) {
     qDebug("failed to get args for core process, aborting start");
     return;
-  }
-
-  if (processMode == ProcessMode::kDesktop) {
-    connect(
-        &m_pDeps->process(), &QProcessProxy::finished, this,
-        &CoreProcess::onProcessFinished);
-    connect(
-        &m_pDeps->process(), &QProcessProxy::readyReadStandardOutput, this,
-        &CoreProcess::onProcessReadyReadStandardOutput);
-    connect(
-        &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this,
-        &CoreProcess::onProcessReadyReadStandardError);
   }
 
   qDebug("log level: %s", qPrintable(m_appConfig.logLevelText()));

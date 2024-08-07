@@ -27,10 +27,8 @@ class TlsCertificate : public QObject {
 public:
   explicit TlsCertificate(QObject *parent = nullptr);
 
-  bool generateCertificate(
-      const QString &path = QString(), const QString &keyLength = "2048",
-      bool forceGen = false);
-  QString getCertKeyLength(const QString &path);
+  bool generateCertificate(const QString &path, int keyLength);
+  int getCertKeyLength(const QString &path);
 
 private:
   bool runTool(const QStringList &args);

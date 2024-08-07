@@ -22,6 +22,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
+#include <optional>
 
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
@@ -155,8 +156,7 @@ bool TlsCertificate::runTool(const QStringList &args) {
   return true;
 }
 
-bool TlsCertificate::generateCertificate(
-    const QString &path, const QString &keyLength, bool createFile) {
+bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
   QString sslDirPath =
       QString("%1%2%3").arg(m_profileDir).arg(QDir::separator()).arg(kSslDir);
 
@@ -165,19 +165,12 @@ bool TlsCertificate::generateCertificate(
                             .arg(QDir::separator())
                             .arg(kCertificateFilename);
 
-  QString keySize = kCertificateKeyLength + keyLength;
+  QString keySize = kCertificateKeyLength + QString::number(keyLength);
 
   const QString pathToUse =
       QDir::cleanPath(path.isEmpty() ? defaultPath : path);
 
   qDebug("generating tls certificate: %s", qUtf8Printable(pathToUse));
-
-  QFile file(pathToUse);
-  if (!file.exists() && !createFile) {
-    qCritical(
-        "tls certificate file does not exist: %s", qUtf8Printable(pathToUse));
-    return false;
-  }
 
   QStringList arguments;
 
@@ -253,7 +246,7 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename) {
   }
 }
 
-QString TlsCertificate::getCertKeyLength(const QString &path) {
+int TlsCertificate::getCertKeyLength(const QString &path) {
 
   QStringList arguments;
   arguments.append("rsa");
@@ -263,8 +256,10 @@ QString TlsCertificate::getCertKeyLength(const QString &path) {
   arguments.append("-noout");
 
   if (!runTool(arguments)) {
-    return QString();
+    qFatal("failed to get key length from certificate");
+    return 0;
   }
+
   const QString searchStart("Private-Key: (");
   const QString searchEnd(" bit");
 
@@ -275,5 +270,5 @@ QString TlsCertificate::getCertKeyLength(const QString &path) {
   const auto end = indexEnd - (indexStart + searchStart.length());
   auto keyLength = m_toolStdout.mid(start, end);
 
-  return keyLength;
+  return keyLength.toInt();
 }

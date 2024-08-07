@@ -329,7 +329,7 @@ void MainWindow::onConfigScopesSaving() { m_ServerConfig.commit(); }
 void MainWindow::onAppConfigTlsChanged() {
   updateLocalFingerprint();
   if (m_TlsUtility.isAvailableAndEnabled()) {
-    m_TlsUtility.generateCertificate(true);
+    m_TlsUtility.generateCertificate();
   }
 }
 
@@ -359,7 +359,10 @@ void MainWindow::onActionStartCoreTriggered() {
   m_CoreProcess.start();
 }
 
-void MainWindow::onActionStopCoreTriggered() { m_CoreProcess.stop(); }
+void MainWindow::onActionStopCoreTriggered() {
+  qDebug("stopping core process");
+  m_CoreProcess.stop();
+}
 
 void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
 

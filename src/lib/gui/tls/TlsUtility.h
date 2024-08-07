@@ -33,6 +33,8 @@ public:
   explicit TlsUtility(
       const IAppConfig &appConfig, const license::License &license);
 
+  bool generateCertificate();
+
   /**
    * @brief Combines the availability and the enabled status of TLS.
    *
@@ -46,11 +48,6 @@ public:
    * @return true if TLS is available, regardless of whether it is enabled.
    */
   bool isAvailable() const;
-
-  /**
-   * @param replace Replace certificate on disk (default: false).
-   */
-  bool generateCertificate(bool replace = false);
 
 private:
   const IAppConfig &m_appConfig;

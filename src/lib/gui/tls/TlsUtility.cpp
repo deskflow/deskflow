@@ -38,7 +38,7 @@ bool TlsUtility::isAvailableAndEnabled() const {
   return isAvailable() && config.tlsEnabled();
 }
 
-bool TlsUtility::generateCertificate(bool replace) {
+bool TlsUtility::generateCertificate() {
   qDebug("generating tls certificate, "
          "all clients must trust the new fingerprint");
 
@@ -51,7 +51,7 @@ bool TlsUtility::generateCertificate(bool replace) {
   auto path = m_appConfig.tlsCertPath();
   auto length = m_appConfig.tlsKeyLength();
 
-  return m_certificate.generateCertificate(path, length, replace);
+  return m_certificate.generateCertificate(path, length);
 }
 
 } // namespace synergy::gui

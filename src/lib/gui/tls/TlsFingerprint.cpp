@@ -30,7 +30,7 @@ static const char kTrustedClientsFilename[] = "TrustedClients.txt";
 TlsFingerprint::TlsFingerprint(const QString &filename)
     : m_Filename(filename) {}
 
-void TlsFingerprint::trust(const QString &fingerprintText, bool append) {
+void TlsFingerprint::trust(const QString &fingerprintText, bool append) const {
   TlsFingerprint::persistDirectory();
 
   QIODevice::OpenMode openMode;

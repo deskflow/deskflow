@@ -165,8 +165,7 @@ void AppConfig::recallFromCurrentScope() {
   m_CloseToTray = getFromCurrentScope(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
-  m_TlsKeyLength =
-      getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toString();
+  m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
   m_MainWindowPosition = getFromCurrentScope<QPoint>(
       kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(
@@ -197,7 +196,7 @@ void AppConfig::recallScreenName() {
 void AppConfig::commit() {
   using enum Setting;
 
-  qDebug("comitting app config");
+  qDebug("committing app config");
 
   saveToAllScopes(kWizardLastRun, m_WizardLastRun);
   saveToAllScopes(kLoadSystemSettings, m_LoadFromSystemScope);
@@ -505,7 +504,7 @@ bool AppConfig::invertConnection() const { return m_InvertConnection; }
 
 QString AppConfig::tlsCertPath() const { return m_TlsCertPath; }
 
-QString AppConfig::tlsKeyLength() const { return m_TlsKeyLength; }
+int AppConfig::tlsKeyLength() const { return m_TlsKeyLength; }
 
 bool AppConfig::enableService() const { return m_EnableService; }
 
@@ -564,7 +563,7 @@ void AppConfig::setTlsCertPath(const QString &value) {
   m_TlsCertPath = value;
 }
 
-void AppConfig::setTlsKeyLength(const QString &value) {
+void AppConfig::setTlsKeyLength(int value) {
   if (m_TlsKeyLength != value) {
     // deliberately only set the changed flag if there was a change.
     // it's important not to set this flag to false here.
@@ -572,10 +571,12 @@ void AppConfig::setTlsKeyLength(const QString &value) {
   }
   m_TlsKeyLength = value;
 }
+
 void AppConfig::setSerialKey(const QString &serialKey) {
   m_SerialKey = serialKey;
   saveToAllScopes(Setting::kSerialKey, m_SerialKey);
 }
+
 void AppConfig::setServerGroupChecked(bool newValue) {
   m_ServerGroupChecked = newValue;
 }

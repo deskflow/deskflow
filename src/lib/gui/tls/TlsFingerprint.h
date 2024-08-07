@@ -24,7 +24,7 @@ private:
   explicit TlsFingerprint(const QString &filename);
 
 public:
-  void trust(const QString &fingerprintText, bool append = true);
+  void trust(const QString &fingerprintText, bool append = true) const;
   bool isTrusted(const QString &fingerprintText);
   QStringList readList(const int readTo = -1);
   QString readFirst();
