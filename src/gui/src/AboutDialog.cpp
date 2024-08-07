@@ -70,7 +70,7 @@ QString AboutDialog::getImportantDevelopers() const {
   // Richard and Adam developed CosmoSynergy, the 90's predecessor project.
   awesomePeople << "Richard Lee" << "Adam Feder";
 
-  // Nick continued the legacy started by Chris in 2009.
+  // Nick continued the legacy in 2009 started by Chris.
   awesomePeople << "Nick Bolton";
 
   // Wrote the first version of the GUI (QSynergy) in 2008.
