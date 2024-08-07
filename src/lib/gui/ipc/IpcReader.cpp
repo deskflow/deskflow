@@ -86,7 +86,7 @@ bool IpcReader::readStream(char *buffer, int length) {
       m_Socket->waitForReadyRead(-1);
     }
 
-    int got = m_Socket->read(buffer, ask);
+    auto got = m_Socket->read(buffer, ask);
     read += got;
 
     logVerbose(QString("ask=%1 got=%2 read=%3").arg(ask).arg(got).arg(read));
