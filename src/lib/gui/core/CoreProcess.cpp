@@ -118,9 +118,16 @@ bool CoreProcess::Deps::fileExists(const QString &path) const {
   return QFile::exists(path);
 }
 
-QString CoreProcess::Deps::getProfileDir() const {
+QString CoreProcess::Deps::getProfileRoot() const {
   CoreTool coreTool;
-  return coreTool.getProfileDir();
+  QDir appDir = coreTool.getProfileDir();
+
+  // the core expects the profile root dir, not the app-specific profile dir.
+  if (!appDir.cdUp()) {
+    qFatal("failed to cd up to profile root dir");
+  }
+
+  return appDir.absolutePath();
 }
 
 //
@@ -368,16 +375,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
   }
 
 #if defined(Q_OS_WIN)
-  try {
-    // on windows, the profile directory changes depending on the user that
-    // launched the process (e.g. when launched with elevation). setting the
-    // profile dir on launch ensures it uses the same profile dir is used
-    // no matter how its relaunched.
-    args << "--profile-dir" << getProfileRootForArg();
-  } catch (const std::exception &e) {
-    qDebug() << e.what();
-    qFatal("failed to get profile dir, skipping arg");
-  }
+  // on windows, the profile directory changes depending on the user that
+  // launched the process (e.g. when launched with elevation). setting the
+  // profile dir on launch ensures it uses the same profile dir is used
+  // no matter how its relaunched.
+  args << "--profile-dir" << m_pDeps->getProfileRoot();
 #endif
 
   if (m_appConfig.preventSleep()) {
@@ -475,14 +477,10 @@ void CoreProcess::restart() {
 void CoreProcess::cleanup() {
   qInfo("cleaning up core process");
 
-  try {
-    const auto isDesktop = m_appConfig.processMode() == ProcessMode::kDesktop;
-    const auto isRunning = m_processState == ProcessState::Started;
-    if (isDesktop && isRunning) {
-      stop();
-    }
-  } catch (const std::exception &e) {
-    qFatal("failed to stop core on cleanup: %s", e.what());
+  const auto isDesktop = m_appConfig.processMode() == ProcessMode::kDesktop;
+  const auto isRunning = m_processState == ProcessState::Started;
+  if (isDesktop && isRunning) {
+    stop();
   }
 
   m_pDeps->ipcClient().disconnectFromHost();
@@ -633,15 +631,6 @@ void CoreProcess::setProcessState(ProcessState state) {
 
   m_processState = state;
   emit processStateChanged(state);
-}
-
-QString CoreProcess::getProfileRootForArg() const {
-  QDir dir = m_pDeps->getProfileDir();
-
-  // the core expects the profile root dir, not the app-specific profile dir.
-  dir.cdUp();
-
-  return dir.absolutePath();
 }
 
 void CoreProcess::checkLogLine(const QString &line) {

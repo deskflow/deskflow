@@ -44,7 +44,7 @@ public:
     virtual IQIpcClient &ipcClient() { return m_ipcClient; }
     virtual QString appPath(const QString &name) const;
     virtual bool fileExists(const QString &path) const;
-    virtual QString getProfileDir() const;
+    virtual QString getProfileRoot() const;
 
   private:
     QProcessProxy m_process;
@@ -105,7 +105,6 @@ private:
   QString processModeString() const;
   void setConnectionState(ConnectionState state);
   void setProcessState(ProcessState state);
-  QString getProfileRootForArg() const;
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
   void handleLogLines(const QString &text);
