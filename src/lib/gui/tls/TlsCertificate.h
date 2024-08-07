@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "gui/CoreInterface.h"
+#include "gui/core/CoreTool.h"
 
 #include <QObject>
 
@@ -39,5 +39,5 @@ private:
 private:
   QString m_profileDir;
   QString m_toolStdout;
-  [[no_unique_address]] CoreInterface m_coreInterface;
+  [[no_unique_address]] CoreTool m_coreTool;
 };

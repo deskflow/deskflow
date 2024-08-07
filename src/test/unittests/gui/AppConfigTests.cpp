@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/AppConfig.h"
+#include "gui/config/AppConfig.h"
 
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "AppConfig.h"
+#include "gui/config/AppConfig.h"
 
 #include <QString>
 #include <QWidget>

@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include "CoreInterface.h"
 #include "ElevateMode.h"
 #include "IAppConfig.h"
 #include "IConfigScopes.h"
+#include "gui/core/CoreTool.h"
 
 #include <QDir>
 #include <QHostInfo>
@@ -115,13 +115,11 @@ private:
 public:
   struct Deps {
     virtual ~Deps() = default;
-    virtual QString profileDir() const {
-      return m_coreInterface.getProfileDir();
-    }
+    virtual QString profileDir() const { return m_coreTool.getProfileDir(); }
     virtual QString hostname() const { return QHostInfo::localHostName(); }
 
   private:
-    [[no_unique_address]] CoreInterface m_coreInterface;
+    [[no_unique_address]] CoreTool m_coreTool;
   };
 
   explicit AppConfig(

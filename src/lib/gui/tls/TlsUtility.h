@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "IAppConfig.h"
+#include "gui/config/IAppConfig.h"
 
 #include "TlsCertificate.h"
 #include "license/License.h"

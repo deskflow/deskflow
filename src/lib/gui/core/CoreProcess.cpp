@@ -17,9 +17,9 @@
 
 #include "CoreProcess.h"
 
-#include "IAppConfig.h"
 #include "constants.h"
-#include "gui/CoreInterface.h"
+#include "gui/config/IAppConfig.h"
+#include "gui/core/CoreTool.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -576,8 +576,8 @@ void CoreProcess::setProcessState(ProcessState state) {
 }
 
 QString CoreProcess::getProfileRootForArg() const {
-  CoreInterface coreInterface;
-  QDir dir = coreInterface.getProfileDir();
+  CoreTool coreTool;
+  QDir dir = coreTool.getProfileDir();
 
   // the core expects the profile root dir, not the app-specific profile dir.
   dir.cdUp();

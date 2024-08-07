@@ -23,9 +23,9 @@
 #include <QTcpSocket>
 #include <memory>
 
-#include "ElevateMode.h"
 #include "IpcReader.h"
 #include "QDataStreamProxy.h"
+#include "gui/config/ElevateMode.h"
 
 class IpcReader;
 

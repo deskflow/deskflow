@@ -21,7 +21,7 @@
 #include "Hotkey.h"
 #include "ScreenConfig.h"
 #include "ScreenList.h"
-#include "gui/IServerConfig.h"
+#include "gui/config/IServerConfig.h"
 
 #include <QList>
 

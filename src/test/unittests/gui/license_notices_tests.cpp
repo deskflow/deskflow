@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/license_notices.h"
+#include "gui/license/license_notices.h"
 
 #include <chrono>
 #include <gmock/gmock.h>

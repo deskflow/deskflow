@@ -87,7 +87,7 @@ using namespace synergy::gui;
 #endif
 
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {
-  m_profileDir = m_coreInterface.getProfileDir();
+  m_profileDir = m_coreTool.getProfileDir();
   if (m_profileDir.isEmpty()) {
     qCritical("empty profile directory result");
   }

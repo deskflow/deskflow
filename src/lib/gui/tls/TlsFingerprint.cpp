@@ -17,7 +17,7 @@
 
 #include "TlsFingerprint.h"
 
-#include "gui/CoreInterface.h"
+#include "gui/core/CoreTool.h"
 
 #include <QDir>
 #include <QTextStream>
@@ -111,8 +111,8 @@ void TlsFingerprint::persistDirectory() {
 }
 
 QString TlsFingerprint::directoryPath() {
-  CoreInterface coreInterface;
-  QString profileDir = coreInterface.getProfileDir();
+  CoreTool coreTool;
+  QString profileDir = coreTool.getProfileDir();
 
   return QString("%1/%2").arg(profileDir).arg(kDirName);
 }

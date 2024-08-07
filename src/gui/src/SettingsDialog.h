@@ -20,8 +20,8 @@
 
 #include "ui_SettingsDialogBase.h"
 
-#include "gui/CoreInterface.h"
-#include "gui/TlsUtility.h"
+#include "gui/core/CoreTool.h"
+#include "gui/tls/TlsUtility.h"
 #include "license/License.h"
 #include "validators/ValidationError.h"
 
@@ -68,7 +68,7 @@ protected:
 private:
   MainWindow *m_pMainWindow;
   AppConfig &m_appConfig;
-  [[no_unique_address]] CoreInterface m_coreInterface;
+  [[no_unique_address]] CoreTool m_coreTool;
   const synergy::license::License &m_license;
   synergy::gui::TlsUtility m_tlsUtility;
   validators::ValidationError *m_pScreenNameError;

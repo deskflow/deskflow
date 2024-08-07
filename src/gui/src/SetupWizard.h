@@ -19,7 +19,7 @@
 
 #include "ui_SetupWizardBase.h"
 
-#include "gui/AppConfig.h"
+#include "gui/config/AppConfig.h"
 
 #include <QDialog>
 #include <QObject>

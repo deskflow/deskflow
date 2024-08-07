@@ -15,41 +15,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/CoreInterface.h"
+#include "gui/core/CoreTool.h"
 #include "shared/gui/QtCoreTest.h"
 
 #include <gtest/gtest.h>
 
-class CoreInterfaceTests : public QtCoreTest {};
+class CoreToolTests : public QtCoreTest {};
 
-TEST_F(CoreInterfaceTests, getProfileDir_noMock_returnsNonEmpty) {
-  CoreInterface coreInterface;
+TEST_F(CoreToolTests, getProfileDir_noMock_returnsNonEmpty) {
+  CoreTool coreTool;
 
-  QString profileDir = coreInterface.getProfileDir();
+  QString profileDir = coreTool.getProfileDir();
 
   EXPECT_FALSE(profileDir.isEmpty());
 }
 
-TEST_F(CoreInterfaceTests, getInstalledDir_noMock_returnsNonEmpty) {
-  CoreInterface coreInterface;
+TEST_F(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty) {
+  CoreTool coreTool;
 
-  QString installedDir = coreInterface.getInstalledDir();
+  QString installedDir = coreTool.getInstalledDir();
 
   EXPECT_FALSE(installedDir.isEmpty());
 }
 
-TEST_F(CoreInterfaceTests, getArch_noMock_returnsNonEmpty) {
-  CoreInterface coreInterface;
+TEST_F(CoreToolTests, getArch_noMock_returnsNonEmpty) {
+  CoreTool coreTool;
 
-  QString arch = coreInterface.getArch();
+  QString arch = coreTool.getArch();
 
   EXPECT_FALSE(arch.isEmpty());
 }
 
-TEST_F(CoreInterfaceTests, getSerialKeyFilePath_noMock_returnsNonEmpty) {
-  CoreInterface coreInterface;
+TEST_F(CoreToolTests, getSerialKeyFilePath_noMock_returnsNonEmpty) {
+  CoreTool coreTool;
 
-  QString serialKeyFilePath = coreInterface.getSerialKeyFilePath();
+  QString serialKeyFilePath = coreTool.getSerialKeyFilePath();
 
   EXPECT_FALSE(serialKeyFilePath.isEmpty());
 }

@@ -15,13 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/CoreProcess.h"
-#include "gui/IAppConfig.h"
+#include "gui/config/IAppConfig.h"
+#include "gui/core/CoreProcess.h"
 
-#include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <qglobal.h>
 
 using namespace synergy::gui;
 using ::testing::NiceMock;

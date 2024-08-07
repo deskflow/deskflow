@@ -17,8 +17,8 @@
 
 #include "ServerConnection.h"
 
-#include "AppConfig.h"
 #include "ServerMessage.h"
+#include "gui/config/AppConfig.h"
 
 #include <QMessageBox>
 

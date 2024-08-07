@@ -17,10 +17,10 @@
 
 #pragma once
 
-#include "IAppConfig.h"
-#include "IServerConfig.h"
-#include "QIpcClient.h"
-#include "proxy/QProcessProxy.h"
+#include "gui/config/IAppConfig.h"
+#include "gui/config/IServerConfig.h"
+#include "gui/ipc/QIpcClient.h"
+#include "gui/proxy/QProcessProxy.h"
 
 #include <QMutex>
 #include <QObject>

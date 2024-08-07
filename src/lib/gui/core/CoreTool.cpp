@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/CoreInterface.h"
+#include "gui/core/CoreTool.h"
 
 #include "CommandProcess.h"
 
@@ -32,28 +32,27 @@ static const char kSerialKeyFilename[] = "Synergy.subkey";
 static const char kSerialKeyFilename[] = ".synergy.subkey";
 #endif
 
-QString CoreInterface::getProfileDir() const {
+QString CoreTool::getProfileDir() const {
   QStringList args("--get-profile-dir");
   return QDir::cleanPath(run(args));
 }
 
-QString CoreInterface::getInstalledDir() const {
+QString CoreTool::getInstalledDir() const {
   QStringList args("--get-installed-dir");
   return QDir::cleanPath(run(args));
 }
 
-QString CoreInterface::getArch() const {
+QString CoreTool::getArch() const {
   QStringList args("--get-arch");
   return run(args);
 }
 
-QString CoreInterface::getSerialKeyFilePath() const {
+QString CoreTool::getSerialKeyFilePath() const {
   auto filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
   return QDir::cleanPath(filename);
 }
 
-QString
-CoreInterface::run(const QStringList &args, const QString &input) const {
+QString CoreTool::run(const QStringList &args, const QString &input) const {
   QString program(QCoreApplication::applicationDirPath() + "/" + kCoreBinary);
 
   CommandProcess commandProcess(program, args, input);

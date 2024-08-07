@@ -20,10 +20,10 @@
 
 #include "MainWindow.h"
 #include "UpgradeDialog.h"
-#include "gui/AppConfig.h"
-#include "gui/TlsCertificate.h"
-#include "gui/TlsUtility.h"
+#include "gui/config/AppConfig.h"
 #include "gui/constants.h"
+#include "gui/tls/TlsCertificate.h"
+#include "gui/tls/TlsUtility.h"
 #include "validators/ScreenNameValidator.h"
 #include "validators/ValidationError.h"
 

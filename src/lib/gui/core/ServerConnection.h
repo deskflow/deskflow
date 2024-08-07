@@ -20,8 +20,8 @@
 #include <QString>
 #include <QStringList>
 
-#include "AppConfig.h"
-#include "IServerConfig.h"
+#include "gui/config/AppConfig.h"
+#include "gui/config/IServerConfig.h"
 
 namespace synergy::gui {
 

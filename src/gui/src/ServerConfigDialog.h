@@ -22,7 +22,7 @@
 
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
-#include "gui/AppConfig.h"
+#include "gui/config/AppConfig.h"
 #include "ui_ServerConfigDialogBase.h"
 
 #include <QDialog>

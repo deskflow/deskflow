@@ -19,10 +19,10 @@
 
 #include "CancelActivationDialog.h"
 #include "MainWindow.h"
-#include "gui/AppConfig.h"
-#include "gui/LicenseHandler.h"
+#include "gui/config/AppConfig.h"
 #include "gui/constants.h"
-#include "gui/license_notices.h"
+#include "gui/license/LicenseHandler.h"
+#include "gui/license/license_notices.h"
 #include "gui/styles.h"
 #include "license/ProductEdition.h"
 #include "license/parse_serial_key.h"
