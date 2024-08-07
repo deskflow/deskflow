@@ -20,6 +20,7 @@
 #include "constants.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
+#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -115,6 +116,11 @@ QString CoreProcess::Deps::appPath(const QString &name) const {
 
 bool CoreProcess::Deps::fileExists(const QString &path) const {
   return QFile::exists(path);
+}
+
+QString CoreProcess::Deps::getProfileDir() const {
+  CoreTool coreTool;
+  return coreTool.getProfileDir();
 }
 
 //
@@ -630,8 +636,7 @@ void CoreProcess::setProcessState(ProcessState state) {
 }
 
 QString CoreProcess::getProfileRootForArg() const {
-  CoreTool coreTool;
-  QDir dir = coreTool.getProfileDir();
+  QDir dir = m_pDeps->getProfileDir();
 
   // the core expects the profile root dir, not the app-specific profile dir.
   dir.cdUp();

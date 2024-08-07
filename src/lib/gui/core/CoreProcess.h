@@ -44,6 +44,7 @@ public:
     virtual IQIpcClient &ipcClient() { return m_ipcClient; }
     virtual QString appPath(const QString &name) const;
     virtual bool fileExists(const QString &path) const;
+    virtual QString getProfileDir() const;
 
   private:
     QProcessProxy m_process;
