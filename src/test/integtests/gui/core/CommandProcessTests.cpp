@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gui/CommandProcess.h"
+#include "gui/core/CommandProcess.h"
 
 #include <gtest/gtest.h>
 
