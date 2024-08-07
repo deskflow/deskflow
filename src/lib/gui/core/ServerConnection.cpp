@@ -81,7 +81,7 @@ void ServerConnection::addClient(const QString &clientName) {
   const QPushButton *add =
       message.addButton("Add client", QMessageBox::AcceptRole);
   message.setText(
-      QObject::tr("A new client called '%1' wants to connect").arg(clientName));
+      QString("A new client called '%1' wants to connect").arg(clientName));
   message.exec();
 
   if (message.clickedButton() == add) {
