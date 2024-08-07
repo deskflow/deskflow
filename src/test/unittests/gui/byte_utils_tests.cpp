@@ -21,39 +21,20 @@
 
 using namespace synergy::gui;
 
-TEST(byte_utils_tests, bytesToInt_size1) {
-  char buffer[1] = {0x01};
-  EXPECT_EQ(bytesToInt(buffer, 1), 1);
-}
-
-TEST(byte_utils_tests, bytesToInt_size2) {
-  char buffer[2] = {0x01, 0x02};
-  EXPECT_EQ(bytesToInt(buffer, 2), 0x0102);
-}
-
 TEST(byte_utils_tests, bytesToInt_size4) {
   char buffer[4] = {0x01, 0x02, 0x03, 0x04};
-  EXPECT_EQ(bytesToInt(buffer, 4), 0x01020304);
-}
 
-TEST(byte_utils_tests, intToBytes_size1) {
-  char buffer[1] = {0};
-  intToBytes(1, buffer, 1);
-  EXPECT_EQ(buffer[0], 1);
-}
+  const auto i = bytesToInt(buffer, 4);
 
-TEST(byte_utils_tests, intToBytes_size2) {
-  char buffer[2] = {0};
-  intToBytes(0x0102, buffer, 2);
-  EXPECT_EQ(buffer[0], 0x01);
-  EXPECT_EQ(buffer[1], 0x02);
+  EXPECT_EQ(i, 0x01020304);
 }
 
 TEST(byte_utils_tests, intToBytes_size4) {
-  char buffer[4] = {0};
-  intToBytes(0x01020304, buffer, 4);
-  EXPECT_EQ(buffer[0], 0x01);
-  EXPECT_EQ(buffer[1], 0x02);
-  EXPECT_EQ(buffer[2], 0x03);
-  EXPECT_EQ(buffer[3], 0x04);
+  QByteArray bytes = intToBytes(0x01020304);
+
+  EXPECT_EQ(bytes.size(), 4);
+  EXPECT_EQ(bytes[0], 0x01);
+  EXPECT_EQ(bytes[1], 0x02);
+  EXPECT_EQ(bytes[2], 0x03);
+  EXPECT_EQ(bytes[3], 0x04);
 }

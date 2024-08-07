@@ -139,8 +139,10 @@ void QIpcClient::sendCommand(
   const char *charCommand = stdStringCommand.c_str();
   auto length = static_cast<int>(stdStringCommand.length());
 
-  char lenBuf[4];
-  intToBytes(length, lenBuf, 4);
+  QByteArray lenBuf = intToBytes(length);
+  if (lenBuf.size() != 4) {
+    qFatal("unexpected int buffer size: %d", lenBuf.size());
+  }
   stream->writeRawData(lenBuf, 4);
   stream->writeRawData(charCommand, length);
 

@@ -17,41 +17,26 @@
 
 #pragma once
 
+#include <QByteArray>
+#include <QDataStream>
+#include <QIODevice>
 #include <qlogging.h>
 
 namespace synergy::gui {
 
-// TODO: use QDataStream instead of raw bytes
-inline int bytesToInt(const char *buffer, int size) {
-  if (size == 1) {
-    return (unsigned char)buffer[0];
-  } else if (size == 2) {
-    return (((unsigned char)buffer[0]) << 8) + (unsigned char)buffer[1];
-  } else if (size == 4) {
-    return (((unsigned char)buffer[0]) << 24) +
-           (((unsigned char)buffer[1]) << 16) +
-           (((unsigned char)buffer[2]) << 8) + (unsigned char)buffer[3];
-  } else {
-    qFatal("bytesToInt: size must be 1, 2, or 4");
-    return 0;
-  }
+inline int bytesToInt(const char *buffer, size_t size) {
+  QByteArray byteArray(buffer, static_cast<int>(size));
+  QDataStream stream(byteArray);
+  int result;
+  stream >> result;
+  return result;
 }
 
-// TODO: use QDataStream instead of raw bytes
-inline void intToBytes(int value, char *buffer, int size) {
-  if (size == 1) {
-    buffer[0] = value & 0xff;
-  } else if (size == 2) {
-    buffer[0] = (value >> 8) & 0xff;
-    buffer[1] = value & 0xff;
-  } else if (size == 4) {
-    buffer[0] = (value >> 24) & 0xff;
-    buffer[1] = (value >> 16) & 0xff;
-    buffer[2] = (value >> 8) & 0xff;
-    buffer[3] = value & 0xff;
-  } else {
-    qFatal("intToBytes: size must be 1, 2, or 4");
-  }
+inline QByteArray intToBytes(int value) {
+  QByteArray bytes;
+  QDataStream stream(&bytes, QIODevice::WriteOnly);
+  stream << value;
+  return bytes;
 }
 
 } // namespace synergy::gui
