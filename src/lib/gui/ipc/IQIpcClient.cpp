@@ -15,4 +15,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "IQIpcClient.h" // NOLINT
+// empty .cpp for qt moc
