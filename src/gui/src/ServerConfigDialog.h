@@ -22,7 +22,7 @@
 
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
-#include "gui/AppConfig.h"
+#include "gui/config/AppConfig.h"
 #include "ui_ServerConfigDialogBase.h"
 
 #include <QDialog>
@@ -36,9 +36,9 @@ public:
   bool addClient(const QString &clientName);
 
 public slots:
-  void accept();
+  void accept() override;
   void reject() override;
-  void showEvent(QShowEvent *event);
+  void showEvent(QShowEvent *event) override;
   void message(const QString &message) { m_Message = message; }
 
 protected slots:

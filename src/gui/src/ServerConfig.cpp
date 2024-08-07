@@ -340,8 +340,7 @@ int ServerConfig::autoAddScreen(const QString name) {
   }
 
   if (findScreenName(name, targetIndex)) {
-    m_pMainWindow->appendLogDebug(
-        QString("ignoring screen already in config: %1").arg(name));
+    qDebug("ignoring screen already in config: %s", qPrintable(name));
     return kAutoAddScreenIgnore;
   }
 
@@ -428,7 +427,7 @@ bool ServerConfig::isFull() const {
   return isFull;
 }
 
-bool ServerConfig::isScreenExists(const QString &screenName) const {
+bool ServerConfig::screenExists(const QString &screenName) const {
   bool isExists = false;
 
   for (const auto &screen : screens()) {

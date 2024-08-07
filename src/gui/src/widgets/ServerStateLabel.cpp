@@ -18,7 +18,9 @@
 
 #include "ServerStateLabel.h"
 
-#include "ServerMessage.h"
+#include "gui/core/ServerMessage.h"
+
+using namespace synergy::gui;
 
 namespace synergy_widgets {
 
@@ -38,7 +40,14 @@ void ServerStateLabel::updateServerState(const QString &line) {
   if (m_clients.isEmpty()) {
     setText(tr("No clients connected"));
   } else {
-    setText(tr("Connected clients: %1").arg(m_clients.join(", ")));
+    // unfortunately, we can't rely on the clients list because we don't always
+    // catch the connect/disconnect messages. so clients tend to get stuck in
+    // the list even though they're offline.
+    // in order to properly show a list of clients, we would need the core to
+    // print a list of connected clients on every connect/disconnect event,
+    // which could be a bit noisy in the logs (perhaps an ipc message would be
+    // needed).
+    setText(tr("Client(s) are connected"));
   }
 }
 

@@ -17,75 +17,100 @@
 
 #include "messages.h"
 
+#include "Logger.h"
 #include "constants.h"
 #include "styles.h"
 
+#include <QAction>
 #include <QDateTime>
+#include <QDir>
 #include <QMessageBox>
 #include <QTime>
+#include <memory>
 
 namespace synergy::gui::messages {
+
+struct Errors {
+  static std::unique_ptr<QMessageBox> s_criticalMessage;
+  static QStringList s_ignoredErrors;
+};
+
+std::unique_ptr<QMessageBox> Errors::s_criticalMessage;
+QStringList Errors::s_ignoredErrors;
+
+void showErrorDialog(
+    const QString &message, const QMessageLogContext &context, QtMsgType type) {
+  auto filename = QFileInfo(context.file).fileName();
+  auto contextString = QString("%1:%2").arg(filename).arg(context.line);
+
+  auto title = type == QtFatalMsg ? "Fatal error" : "Critical error";
+  QString text;
+  if (type == QtFatalMsg) {
+    text = "<p>Sorry, a fatal error has occurred and the application must "
+           "now exit.</p>";
+  } else {
+    text = "<p>Sorry, a critical error has occurred.</p>";
+  }
+
+  if (kLicensedProduct) {
+    text += QString(R"(<p>Please <a href="%1" style="color: %2">contact us</a>)"
+                    " and copy/paste the following error:</p>")
+                .arg(kUrlContact, kColorSecondary);
+  } else {
+    text +=
+        QString(R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
+                " and copy/paste the following error:</p>")
+            .arg(kUrlBugReport, kColorSecondary);
+  }
+
+  text += QString("<pre>%3\n\n%4</pre>").arg(message, contextString);
+
+  if (type == QtFatalMsg) {
+    // create a blocking message box for fatal errors, as we want to wait
+    // until the dialog is dismissed before aborting the app.
+    QMessageBox::critical(nullptr, title, text);
+  } else if (!Errors::s_ignoredErrors.contains(message)) {
+    // prevent message boxes piling up by deleting the last one if it exists.
+    // if none exists yet, then nothing will happen.
+    Errors::s_criticalMessage.reset();
+
+    // as we don't abort for critical messages, create a new non-blocking
+    // message box. this is so that we don't block the message handler; if we
+    // did, we would prevent new messages from being logged properly.
+    // the memory will stay allocated until the app exits, which is acceptable.
+    Errors::s_criticalMessage = std::make_unique<QMessageBox>(
+        QMessageBox::Critical, title, text,
+        QMessageBox::Ok | QMessageBox::Ignore);
+    Errors::s_criticalMessage->open();
+
+    QAction::connect(
+        Errors::s_criticalMessage.get(), &QMessageBox::finished, //
+        [message](int result) {
+          if (result == QMessageBox::Ignore) {
+            Errors::s_ignoredErrors.append(message);
+          }
+        });
+  }
+}
 
 void messageHandler(
     QtMsgType type, const QMessageLogContext &context, const QString &message) {
 
-  auto datetime = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
-  const auto filename = QString(context.file).split("/").last();
-  auto function = context.function ? context.function : "";
+  Logger::instance().handleMessage(type, context, message);
 
-  QString typeString;
-  auto out = stdout;
-  switch (type) {
-  case QtDebugMsg:
-    typeString = "DEBUG";
-    break;
-  case QtInfoMsg:
-    typeString = "INFO";
-    break;
-  case QtWarningMsg:
-    typeString = "WARNING";
-    out = stderr;
-    break;
-  case QtCriticalMsg:
-    typeString = "CRITICAL";
-    out = stderr;
-    break;
-  case QtFatalMsg:
-    typeString = "FATAL";
-    out = stderr;
-    break;
+  if (type == QtFatalMsg || type == QtCriticalMsg) {
+    showErrorDialog(message, context, type);
   }
 
-  auto logLine = QString("[%1] %2: %3\n\t%4:%5, %6")
-                     .arg(datetime)
-                     .arg(typeString)
-                     .arg(message)
-                     .arg(filename)
-                     .arg(context.line)
-                     .arg(function);
-
-  auto logLineUtf = logLine.toUtf8();
-  auto logLine_c = logLineUtf.constData();
-  fprintf(out, "%s\n", logLine_c);
-
   if (type == QtFatalMsg) {
-    auto contextString =
-        QString("%1:%2\n%3").arg(filename).arg(context.line).arg(function);
-
-    QMessageBox::critical(
-        nullptr, "Fatal error",
-        QString("<p>Sorry, a fatal error has occurred "
-                "and the application must now exit.</p>"
-                "<p>Please "
-                R"(<a href="%1" style="color: %2">contact us</a>)"
-                " and copy/paste the following error:</p>"
-                "<pre>%3\n\n%4</pre>")
-            .arg(kUrlContact, kColorSecondary, message, contextString));
-
-    // developers: if you hit this line in your debugger, traverse the stack to
-    // find the cause of the fatal error.
-    // important: crash the app on fatal error to prevent the app being used in
-    // a broken state.
+    // developers: if you hit this line in your debugger, traverse the stack
+    // to find the cause of the fatal error. important: crash the app on fatal
+    // error to prevent the app being used in a broken state.
+    //
+    // hint: if you don't want to crash, but still want to show an error
+    // message, use `qCritical()` instead of `qFatal()`. you should use
+    // fatal errors when the app is in an unrecoverable state; i.e. it cannot
+    // function correctly in it's current state and must be restarted.
     abort();
   }
 }
@@ -143,16 +168,16 @@ void showDevThanks(QWidget *parent, const QString &productName) {
 
   QMessageBox::information(
       parent, "Thank you!",
-      QString(
-          "<p>Thanks for using %1.</p>"
-          "<p>If you enjoy using this app, you can support the developers by "
-          R"(<a href="%1" style="color: %2")>purchasing a license</a>)"
-          " or "
-          R"(<a href="%3" style="color: %4")>contributing code</a>.)"
-          "</p>"
-          "<p>This message will only appear once.</p>")
+      QString("<p>Thanks for using %1.</p>"
+              "<p>If you enjoy using this app, you can support the <br />"
+              "developers by "
+              R"(<a href="%2" style="color: %3")>purchasing a license</a>)"
+              " or "
+              R"(<a href="%4" style="color: %5")>contributing code</a>.)"
+              "</p>"
+              "<p>This message will only appear once.</p>")
           .arg(
-              productName, kUrlPurchase, kColorSecondary, kUrlContribute,
+              productName, kUrlPurchase, kColorSecondary, kUrlGitHub,
               kColorSecondary));
 }
 

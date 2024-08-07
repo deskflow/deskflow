@@ -18,7 +18,10 @@
 #include "LineEditValidator.h"
 
 #include "gui/styles.h"
-#include <qvalidator.h>
+
+#include <QValidator>
+
+using namespace synergy::gui;
 
 namespace validators {
 

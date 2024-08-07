@@ -21,7 +21,7 @@
 #include <QDateTime>
 
 #if defined(Q_OS_MAC)
-#include "OSXHelpers.h"
+#include "gui/OSXHelpers.h"
 #endif
 
 #include "gui/version.h"
@@ -29,7 +29,10 @@
 AboutDialog::AboutDialog(MainWindow *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::AboutDialogBase() {
+
   setupUi(this);
+
+  this->setFixedSize(this->size());
 
   m_pLabelSynergyVersion->setText(synergy::gui::version());
 
@@ -59,21 +62,47 @@ void AboutDialog::updateLogo() const {
 }
 
 QString AboutDialog::getImportantDevelopers() const {
-  return QString(
-      // The ultimate creator
-      "Chris Schoeneman, "
+  QStringList awesomePeople;
 
-      // Precursor developers
-      "Richard Lee, Adam Feder, "
+  // Chris is the ultimate creator, and the one who started it all in 2001.
+  awesomePeople << "Chris Schoeneman";
 
-      // Contributors
-      "Nick Bolton, Volker Lanz, Ryan Breen, Guido Poschta, "
-      "Bertrand Landry Hetu, Tom Chadwick, Brent Priddy, Jason Axelson, "
-      "Jake Petroules, Sorin Sbârnea, "
+  // Richard and Adam developed CosmoSynergy, the 90's predecessor project.
+  awesomePeople << "Richard Lee" << "Adam Feder";
 
-      // Symless employees
-      "Kyle Bloom, Daun Chung, Serhii Hadzhylov, "
-      "Oleksandr Lysytsia, Olena Kutytska.");
+  // Nick continued the legacy in 2009 started by Chris.
+  awesomePeople << "Nick Bolton";
+
+  // Volker wrote the first version of the GUI (QSynergy) in 2008.
+  awesomePeople << "Volker Lanz";
+
+  // Re-ignited the project in 2008 and rebuilt the community.
+  awesomePeople << "Sorin Sbârnea";
+
+  // Contributors of bug fixes in the early days.
+  awesomePeople << "Ryan Breen"
+                << "Guido Poschta"
+                << "Bertrand Landry Hetu"
+                << "Tom Chadwick"
+                << "Brent Priddy"
+                << "Jason Axelson"
+                << "Jake Petroules";
+
+  // Symless employees (in order of joining).
+  awesomePeople << "Kyle Bloom"
+                << "Daun Chung"
+                << "Serhii Hadzhylov"
+                << "Oleksandr Lysytsia"
+                << "Olena Kutytska"
+                << "Owen Phillips"
+                << "Daniel Evenson";
+
+  for (auto &person : awesomePeople) {
+    // prevent names from breaking on the space when wrapped
+    person = person.replace(" ", QString::fromUtf8("&nbsp;"));
+  }
+
+  return awesomePeople.join(", ") + ".";
 }
 
 QString AboutDialog::getCopyright() const {

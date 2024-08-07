@@ -21,6 +21,7 @@
 #include "Hotkey.h"
 #include "ScreenConfig.h"
 #include "ScreenList.h"
+#include "gui/config/IServerConfig.h"
 
 #include <QList>
 
@@ -35,9 +36,8 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-class ServerConfig : public ScreenConfig {
+class ServerConfig : public ScreenConfig, public synergy::gui::IServerConfig {
   friend class ServerConfigDialog;
-  friend class ServerConnection;
   friend QTextStream &
   operator<<(QTextStream &outStream, const ServerConfig &config);
 
@@ -45,7 +45,7 @@ public:
   ServerConfig(
       AppConfig &appConfig, MainWindow &mainWindow,
       int columns = kDefaultColumns, int rows = kDefaultRows);
-  ~ServerConfig() = default;
+  ~ServerConfig() override = default;
 
   bool operator==(const ServerConfig &sc) const;
 
@@ -64,23 +64,23 @@ public:
   int switchCornerSize() const { return m_SwitchCornerSize; }
   const QList<bool> &switchCorners() const { return m_SwitchCorners; }
   const HotkeyList &hotkeys() const { return m_Hotkeys; }
-  bool enableDragAndDrop() const { return m_EnableDragAndDrop; }
+  bool enableDragAndDrop() const override { return m_EnableDragAndDrop; }
   bool disableLockToScreen() const { return m_DisableLockToScreen; }
   bool clipboardSharing() const { return m_ClipboardSharing; }
   size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
   static size_t defaultClipboardSharingSize();
 
   void commit();
-  bool save(const QString &fileName) const;
-  void save(QFile &file) const;
+  bool save(const QString &fileName) const override;
+  void save(QFile &file) const override;
   int numScreens() const;
   int autoAddScreen(const QString name);
   const QString &getServerName() const;
   void updateServerName();
   const QString &configFile() const;
   bool useExternalConfig() const;
-  bool isFull() const;
-  bool isScreenExists(const QString &screenName) const;
+  bool isFull() const override;
+  bool screenExists(const QString &screenName) const override;
   void addClient(const QString &clientName);
   QString getClientAddress() const;
   void setClientAddress(const QString &address);

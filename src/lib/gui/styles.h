@@ -19,6 +19,8 @@
 
 #include <QString>
 
+namespace synergy::gui {
+
 const auto kColorWhite = "#ffffff";
 const auto kColorPrimary = "#ff7c00";
 const auto kColorSecondary = "#4285f4";
@@ -47,3 +49,5 @@ const auto kStyleNoticeLabel = //
     QString("padding: 3px 5px; border-radius: 3px;"
             "background-color: %1; color: %2")
         .arg(kColorNotice, kColorWhite);
+
+} // namespace synergy::gui

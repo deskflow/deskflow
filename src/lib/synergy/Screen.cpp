@@ -56,7 +56,11 @@ Screen::~Screen() {
     disable();
   }
   assert(!m_enabled);
+
+  // TODO: why assert this? it appears to be false when an elevated dialog
+  // appears on windows and the process is killed.
   assert(m_entered == m_isPrimary);
+
   delete m_screen;
   LOG((CLOG_DEBUG "closed display"));
 }

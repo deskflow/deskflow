@@ -11,7 +11,7 @@
     {
       "name": "gui windows",
       "type": "cppvsdbg",
-      "cwd": "${workspaceRoot}/build/bin",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergy",
       "internalConsoleOptions": "openOnSessionStart",
@@ -60,7 +60,7 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "daemon windows attach",
+      "name": "windows attach",
       "type": "cppvsdbg",
       "request": "attach",
       "processId": "${command:pickProcess}"

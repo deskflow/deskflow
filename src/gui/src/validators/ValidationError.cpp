@@ -19,6 +19,8 @@
 
 #include "gui/styles.h"
 
+using namespace synergy::gui;
+
 namespace validators {
 
 void clear(QLabel *label) {
