@@ -34,28 +34,18 @@ public:
   AppUtilWindows(IEventQueue *events);
   virtual ~AppUtilWindows();
 
-  int daemonNTStartup(int, char **);
-
-  int daemonNTMainLoop(int argc, const char **argv);
-
-  void debugServiceWait();
-
-  int run(int argc, char **argv);
-
-  void exitApp(int code);
-
-  void beforeAppExit();
-
   static AppUtilWindows &instance();
 
-  void startNode();
-
+  int daemonNTStartup(int, char **);
+  int daemonNTMainLoop(int argc, const char **argv);
+  void debugServiceWait();
+  int run(int argc, char **argv) override;
+  void exitApp(int code) override;
+  void beforeAppExit() override;
+  void startNode() override;
   std::vector<String> getKeyboardLayoutList() override;
-
   String getCurrentLanguageCode() override;
-
-  HKL getCurrentKeyboardLayout() const;
-
+  HKL getCurrentKeyboardLayout() const override;
   void showNotification(const String &title, const String &text) const override;
 
 private:

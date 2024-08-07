@@ -386,5 +386,9 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
   case IpcMessageType::Setting:
     updateSetting(*m);
     break;
+
+  default:
+    LOG((CLOG_DEBUG "ipc message ignored"));
+    break;
   }
 }

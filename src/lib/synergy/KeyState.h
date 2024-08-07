@@ -81,10 +81,10 @@ public:
   bool isKeyDown(KeyButton) const override;
   KeyModifierMask getActiveModifiers() const override;
   // Left abstract
-  virtual bool fakeCtrlAltDel() = 0;
-  virtual KeyModifierMask pollActiveModifiers() const = 0;
-  virtual SInt32 pollActiveGroup() const = 0;
-  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const = 0;
+  virtual bool fakeCtrlAltDel() override = 0;
+  virtual KeyModifierMask pollActiveModifiers() const override = 0;
+  virtual SInt32 pollActiveGroup() const override = 0;
+  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
 
   SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
 
