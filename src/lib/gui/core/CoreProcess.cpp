@@ -627,7 +627,8 @@ void CoreProcess::checkOSXNotification(const QString &line) {
 
 QString CoreProcess::correctedInterface() const {
   QString i = m_appConfig.networkInterface();
-  // if interface is IPv6 - ensure that ip is in square brackets
+
+  // if ipv6, ensure it's surround in square brackets
   if (i.count(':') > 1) {
     if (i[0] != '[') {
       i.insert(0, '[');
@@ -636,6 +637,7 @@ QString CoreProcess::correctedInterface() const {
       i.push_back(']');
     }
   }
+
   return (!i.isEmpty() ? i : "") + ":" + QString::number(m_appConfig.port());
 }
 
