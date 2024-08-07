@@ -21,7 +21,7 @@
 
 class TlsFingerprint {
 private:
-  TlsFingerprint(const QString &filename);
+  explicit TlsFingerprint(const QString &filename);
 
 public:
   void trust(const QString &fingerprintText, bool append = true);
