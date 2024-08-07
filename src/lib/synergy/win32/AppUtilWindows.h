@@ -45,7 +45,7 @@ public:
   void startNode() override;
   std::vector<String> getKeyboardLayoutList() override;
   String getCurrentLanguageCode() override;
-  HKL getCurrentKeyboardLayout() const override;
+  HKL getCurrentKeyboardLayout() const;
   void showNotification(const String &title, const String &text) const override;
 
 private:
