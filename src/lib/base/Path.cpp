@@ -35,8 +35,8 @@ std::wstring path(const String &filePath) {
   if (length > 0) {
     result.resize(length);
     MultiByteToWideChar(
-        CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), &result[0],
-        length);
+        CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()),
+        &result[0], length);
   }
 
   return result;
