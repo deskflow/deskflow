@@ -62,11 +62,11 @@ CoreProcess::CoreProcess(
       m_pDeps(deps) {
 
   connect(
-      &m_ipcClient, &QIpcClient::read, this, //
+      &m_pDeps->ipcClient(), &QIpcClient::read, this, //
       &CoreProcess::onIpcClientRead);
 
   connect(
-      &m_ipcClient, &QIpcClient::serviceReady, this, //
+      &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
       &CoreProcess::onIpcClientServiceReady);
 }
 
@@ -98,7 +98,7 @@ void CoreProcess::onIpcClientError(const QString &text) {
   if (m_appConfig.processMode() != ProcessMode::kService) {
     // if not meant to be in service mode and there is an ipc connection error,
     // then abandon the ipc client connection.
-    m_ipcClient.disconnectFromHost();
+    m_pDeps->ipcClient().disconnectFromHost();
   }
 }
 
@@ -161,10 +161,10 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
     qFatal("core process must be in starting state");
   }
 
-  if (!m_ipcClient.isConnected()) {
+  if (!m_pDeps->ipcClient().isConnected()) {
     // when service state changes, start will be called again.
     qDebug("cannot start process, ipc not connected, connecting instead");
-    m_ipcClient.connectToHost();
+    m_pDeps->ipcClient().connectToHost();
     return;
   }
 
@@ -183,7 +183,8 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
   }
 
   qInfo("running command: %s", qPrintable(command.join(" ")));
-  m_ipcClient.sendCommand(command.join(" "), m_appConfig.elevateMode());
+  m_pDeps->ipcClient().sendCommand(
+      command.join(" "), m_appConfig.elevateMode());
   setProcessState(Started);
 }
 
@@ -211,12 +212,12 @@ void CoreProcess::stopService() {
     qFatal("core process must be in stopping state");
   }
 
-  if (!m_ipcClient.isConnected()) {
+  if (!m_pDeps->ipcClient().isConnected()) {
     qDebug("cannot stop process, ipc not connected");
     return;
   }
 
-  m_ipcClient.sendCommand("", m_appConfig.elevateMode());
+  m_pDeps->ipcClient().sendCommand("", m_appConfig.elevateMode());
   setProcessState(ProcessState::Stopped);
 }
 

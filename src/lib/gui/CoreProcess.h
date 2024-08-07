@@ -40,9 +40,11 @@ public:
   struct Deps {
     virtual ~Deps() = default;
     virtual QProcessProxy &process() { return m_process; }
+    virtual QIpcClient &ipcClient() { return m_ipcClient; }
 
   private:
     QProcessProxy m_process;
+    QIpcClient m_ipcClient;
   };
 
   enum class Mode { None, Client, Server };
@@ -110,11 +112,10 @@ private:
   void checkOSXNotification(const QString &line);
 #endif
 
-  std::shared_ptr<Deps> m_pDeps;
   IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
+  std::shared_ptr<Deps> m_pDeps;
   QString m_address;
-  QIpcClient m_ipcClient;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;
   Mode m_mode = Mode::None;
