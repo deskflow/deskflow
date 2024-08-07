@@ -20,7 +20,8 @@
 #import <CoreData/CoreData.h>
 #import <Cocoa/Cocoa.h>
 
-#if defined(MAC_OS_X_VERSION_10_7)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 NSWindow* g_dragWindow = NULL;
 OSXDragView* g_dragView = NULL;
@@ -101,5 +102,3 @@ getCocoaDropTarget()
 	usleep(1000000);
 	return [g_dragView getDropTarget];
 }
-
-#endif

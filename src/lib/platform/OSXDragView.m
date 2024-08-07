@@ -17,7 +17,10 @@
 
 #import "platform/OSXDragView.h"
 
-#ifdef MAC_OS_X_VERSION_10_7
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wobjc-protocol-property-synthesis"
+#pragma clang diagnostic ignored "-Wprotocol"
 
 @implementation OSXDragView
 
@@ -162,5 +165,3 @@ draggingSourceOperationMask
 }
 
 @end
-
-#endif

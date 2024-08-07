@@ -29,12 +29,14 @@ namespace filesystem {
 std::wstring path(const String &filePath) {
   std::wstring result;
 
-  auto lenght = MultiByteToWideChar(
-      CP_UTF8, 0, filePath.c_str(), filePath.length(), NULL, 0);
-  if (lenght > 0) {
-    result.resize(lenght);
+  auto length = MultiByteToWideChar(
+      CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), NULL,
+      0);
+  if (length > 0) {
+    result.resize(length);
     MultiByteToWideChar(
-        CP_UTF8, 0, filePath.c_str(), filePath.length(), &result[0], lenght);
+        CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()),
+        &result[0], length);
   }
 
   return result;

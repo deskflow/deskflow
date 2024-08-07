@@ -19,7 +19,6 @@
 
 #include "common/Version.h"
 
-const char *kBuildYear = __DATE__ + 7;
 const char *kApplication = "Synergy";
 const char *kCopyright = "Copyright (C) 2012-%s Symless Ltd.\n"
                          "Copyright (C) 2009-2012 Nick Bolton\n"

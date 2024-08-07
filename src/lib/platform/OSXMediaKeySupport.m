@@ -13,8 +13,12 @@
  */
 
 #import "platform/OSXMediaKeySupport.h"
+
 #import <Cocoa/Cocoa.h>
 #import <IOKit/hidsystem/ev_keymap.h>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 int convertKeyIDToNXKeyType(KeyID id)
 {

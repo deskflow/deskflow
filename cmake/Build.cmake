@@ -13,6 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+if(WIN32)
+  message(STATUS "Enabling warnings as errors (MSVC)")
+  add_compile_options(/WX)
+elseif(UNIX)
+  message(STATUS "Enabling warnings as errors (GNU/Clang)")
+  add_compile_options(-Werror)
+endif()
+
 macro(post_config)
 
   # Build to a temp bin dir on Windows and then copy to the final bin dir
