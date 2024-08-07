@@ -76,7 +76,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2">
+          <spacer name="horizontalSpacer_21">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -117,7 +117,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_3">
+          <spacer name="horizontalSpacer_22">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -342,7 +342,7 @@
         <number>9</number>
        </property>
        <item row="1" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <layout class="QVBoxLayout" name="verticalLayout_21">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -482,7 +482,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_4">
+          <spacer name="verticalSpacer_41">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -644,7 +644,7 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="horizontalLayout_21">
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
@@ -1105,7 +1105,7 @@ Enabling this setting will disable the server config GUI.</string>
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer">
+        <spacer name="verticalSpacer_1">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
