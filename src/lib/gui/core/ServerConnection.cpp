@@ -21,6 +21,7 @@
 #include "gui/config/AppConfig.h"
 
 #include <QMessageBox>
+#include <QPushButton>
 
 namespace synergy::gui {
 
@@ -75,15 +76,20 @@ void ServerConnection::addClient(const QString &clientName) {
   }
 
   QMessageBox message(&m_parent);
-  message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-  message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
+  QPushButton *ignore = message.addButton("Ignore", QMessageBox::RejectRole);
+  QPushButton *add = message.addButton("Add client", QMessageBox::AcceptRole);
   message.setText(
-      QObject::tr("Client with name '%1' wants to connect").arg(clientName));
+      QObject::tr("A new client called '%1' wants to connect").arg(clientName));
+  message.exec();
 
-  if (message.exec() == QMessageBox::Accepted) {
+  if (message.clickedButton() == add) {
+    qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
     emit configureClient(clientName);
-  } else {
+  } else if (message.clickedButton() == ignore) {
+    qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
     m_ignoredClients.append(clientName);
+  } else {
+    qFatal("no expected dialog button was clicked");
   }
 }
 
