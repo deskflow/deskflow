@@ -32,7 +32,7 @@ class ConfigScopes : public QObject, public IConfigScopes {
 
 public:
   explicit ConfigScopes();
-  virtual ~ConfigScopes() = default;
+  ~ConfigScopes() override = default;
 
   void signalReady() override;
   void save() override;

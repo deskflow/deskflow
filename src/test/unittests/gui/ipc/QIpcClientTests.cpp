@@ -38,5 +38,5 @@ TEST(QIpcClientTests, sendCommand_anyCommand_commandSent) {
   EXPECT_CALL(*mockStream, writeRawData(StrEq("test"), 4)).Times(1);
 
   QIpcClient ipcClient(streamProvider);
-  ipcClient.sendCommand("test", ElevateMode::ElevateAsNeeded);
+  ipcClient.sendCommand("test", ElevateMode::kAutomatic);
 }

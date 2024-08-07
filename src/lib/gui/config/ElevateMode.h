@@ -17,19 +17,22 @@
 
 #pragma once
 
-// The elevate mode tristate determines two behaviours on Windows.
-// The first, switch-on-desk-switch (SodS), passed through synergyd as a
-// command line argument to synergy core, determines if the server restarts
-// when switching Windows desktops (e.g. when Windows UAC dialog pops up).
-// The second, passed as a boolean flag to Synergyd over the IPC inside
-// IpcMessageType::CommandMessage, determines whether Synergy should be started
-// with elevated privileges.
-//
-// The matrix for these two behaviours is as follows:
-//                          SodS        Elevate
-//                     ___________________________
-//  ElevateAsNeeded    |    true    |   false
-//  ElevateAlways      |    false   |   true
-//  ElevateNever       |    false   |   false
-//
-enum ElevateMode { ElevateAsNeeded = 0, ElevateAlways = 1, ElevateNever = 2 };
+/**
+ * @brief The elevate mode tristate determines two behaviors on Windows.
+ *
+ * The first, switch-on-desk-switch (SodS), passed through synergyd as a
+ * command line argument to synergy core, determines if the server restarts
+ * when switching Windows desktops (e.g. when Windows UAC dialog pops up).
+ * The second, passed as a boolean flag to Synergyd over the IPC inside
+ * IpcMessageType::CommandMessage, determines whether Synergy should be started
+ * with elevated privileges.
+ *
+ * The matrix for these two behaviors is as follows:
+ *
+ *               |    SodS   |   Elevate  |
+ *               |-----------|------------|
+ *  kAutomatic   |   true    |   false    |
+ *  kAlways      |   false   |   true     |
+ *  kNever       |   false   |   false    |
+ */
+enum class ElevateMode { kAutomatic = 0, kAlways = 1, kNever = 2 };

@@ -214,7 +214,8 @@ void AppConfig::commit() {
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kStartedBefore, m_StartedBefore);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
-    setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateAlways);
+    setInCurrentScope(
+        kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kTlsEnabled, m_TlsEnabled);
     setInCurrentScope(kAutoHide, m_AutoHide);
     setInCurrentScope(kSerialKey, m_SerialKey);

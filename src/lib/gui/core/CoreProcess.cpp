@@ -342,7 +342,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
     // unnecessary restarts when synergy was started elevated or
     // when it is not allowed to elevate. In these cases restarting
     // the server is fruitless.
-    if (m_appConfig.elevateMode() == ElevateAsNeeded) {
+    if (m_appConfig.elevateMode() == ElevateMode::kElevateAsNeeded) {
       args << "--stop-on-desk-switch";
     }
 #endif

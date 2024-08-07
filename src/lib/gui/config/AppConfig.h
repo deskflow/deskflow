@@ -34,7 +34,7 @@
 
 namespace synergy::gui {
 
-const ElevateMode kDefaultElevateMode = ElevateAsNeeded;
+const ElevateMode kDefaultElevateMode = ElevateMode::kElevateAsNeeded;
 const QString kDefaultLogFile = "synergy.log";
 
 #if defined(Q_OS_WIN)

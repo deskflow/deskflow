@@ -163,7 +163,7 @@ void QIpcClient::sendCommand(
 
   char elevateBuf[1];
   // see enum ElevateMode documentation for why this flag is mapped this way
-  elevateBuf[0] = (elevate == ElevateAlways) ? 1 : 0;
+  elevateBuf[0] = (elevate == ElevateMode::kAlways) ? 1 : 0;
   stream->writeRawData(elevateBuf, 1);
 }
 
