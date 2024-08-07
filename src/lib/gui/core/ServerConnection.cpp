@@ -76,8 +76,10 @@ void ServerConnection::addClient(const QString &clientName) {
   }
 
   QMessageBox message(&m_parent);
-  QPushButton *ignore = message.addButton("Ignore", QMessageBox::RejectRole);
-  QPushButton *add = message.addButton("Add client", QMessageBox::AcceptRole);
+  const QPushButton *ignore =
+      message.addButton("Ignore", QMessageBox::RejectRole);
+  const QPushButton *add =
+      message.addButton("Add client", QMessageBox::AcceptRole);
   message.setText(
       QObject::tr("A new client called '%1' wants to connect").arg(clientName));
   message.exec();
