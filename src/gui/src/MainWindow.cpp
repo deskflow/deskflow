@@ -113,6 +113,8 @@ MainWindow::~MainWindow() {
   } catch (const std::exception &e) {
     qFatal("failed to save window on main window close: %s", e.what());
   }
+
+  m_CoreProcess.cleanup();
 }
 
 void MainWindow::restoreWindow() {

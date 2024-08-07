@@ -42,6 +42,8 @@ public:
     virtual ~Deps() = default;
     virtual QProcessProxy &process() { return m_process; }
     virtual IQIpcClient &ipcClient() { return m_ipcClient; }
+    virtual QString appPath(const QString &name) const;
+    virtual bool fileExists(const QString &path) const;
 
   private:
     QProcessProxy m_process;
@@ -56,12 +58,12 @@ public:
   explicit CoreProcess(
       IAppConfig &appConfig, IServerConfig &serverConfig,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
-  ~CoreProcess() override;
 
   void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
   void restart();
+  void cleanup();
 
   // getters
   Mode mode() const { return m_mode; }
@@ -95,11 +97,9 @@ private:
   void startService(const QString &app, const QStringList &args);
   void stopDesktop();
   void stopService();
-  QString appPath(const QString &name) const;
   bool serverArgs(QStringList &args, QString &app);
   bool clientArgs(QStringList &args, QString &app);
   QString persistConfig() const;
-  QString correctedInterface() const;
   QString modeString() const;
   QString processModeString() const;
   void setConnectionState(ConnectionState state);
@@ -108,6 +108,8 @@ private:
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
   void handleLogLines(const QString &text);
+  QString correctedInterface() const;
+  QString correctedAddress() const;
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);

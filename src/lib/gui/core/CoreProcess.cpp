@@ -40,6 +40,10 @@ const int kRetryDelay = 1000;
 const auto kLastConfigFilename = "LastConfig.cfg";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
+//
+// free functions
+//
+
 QString processModeToString(ProcessMode mode) {
   using enum ProcessMode;
 
@@ -53,6 +57,69 @@ QString processModeToString(ProcessMode mode) {
     return "";
   }
 }
+
+/**
+ * @brief Wraps options that contain spaces in quotes
+ *
+ * Useful to handle things like paths with spaces (e.g. "C:\Program Files").
+ *
+ * Can also be used to create a representation of a command that can be pasted
+ * into a terminal.
+ */
+QString makeQuotedArgs(const QString &app, const QStringList &args) {
+  QStringList command;
+  command << app;
+  command << args;
+
+  QStringList quoted;
+  for (const auto &arg : command) {
+    if (arg.contains(' ')) {
+      quoted << QString("\"%1\"").arg(arg);
+    } else {
+      quoted << arg;
+    }
+  }
+
+  return quoted.join(" ");
+}
+
+/**
+ * @brief If IPv6, ensures the IP is surround in square brackets.
+ */
+QString wrapIpv6(const QString &address) {
+  if (!address.contains(':') || address.isEmpty()) {
+    return address;
+  }
+
+  QString wrapped = address;
+
+  if (address[0] != '[') {
+    wrapped.insert(0, '[');
+  }
+
+  if (address[address.size() - 1] != ']') {
+    wrapped.push_back(']');
+  }
+
+  return address;
+}
+
+//
+// CoreProcess::Deps
+//
+
+QString CoreProcess::Deps::appPath(const QString &name) const {
+  QDir dir(QCoreApplication::applicationDirPath());
+  return dir.filePath(name);
+}
+
+bool CoreProcess::Deps::fileExists(const QString &path) const {
+  return QFile::exists(path);
+}
+
+//
+// CoreProcess
+//
 
 CoreProcess::CoreProcess(
     IAppConfig &appConfig, IServerConfig &serverConfig,
@@ -68,16 +135,6 @@ CoreProcess::CoreProcess(
   connect(
       &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
       &CoreProcess::onIpcClientServiceReady);
-}
-
-CoreProcess::~CoreProcess() {
-  try {
-    if (m_appConfig.processMode() == ProcessMode::kDesktop) {
-      stop();
-    }
-  } catch (const std::exception &e) {
-    qFatal("failed to stop core on destruction: %s", e.what());
-  }
 }
 
 void CoreProcess::onIpcClientServiceReady() {
@@ -143,7 +200,11 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
     qFatal("core process must be in starting state");
   }
 
-  qInfo("running command: %s %s", qPrintable(app), qPrintable(args.join(" ")));
+  // only make quoted args for printing the command for convenience; so that the
+  // core command can be easily copy/pasted to the terminal for testing.
+  const auto quoted = makeQuotedArgs(app, args);
+  qInfo("running command: %s", qPrintable(quoted));
+
   m_pDeps->process().start(app, args);
 
   if (m_pDeps->process().waitForStarted()) {
@@ -168,23 +229,10 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
     return;
   }
 
-  QStringList command;
+  QString commandQuoted = makeQuotedArgs(app, args);
 
-  // wrap app in quotes to handle spaces in paths (e.g. "C:\Program Files").
-  command << QString(R"("%1")").arg(app);
-
-  for (const auto &arg : args) {
-    if (arg.startsWith("-")) {
-      command << arg;
-    } else {
-      // wrap opt args in quotes to handle spaces in paths.
-      command << QString(R"("%1")").arg(arg);
-    }
-  }
-
-  qInfo("running command: %s", qPrintable(command.join(" ")));
-  m_pDeps->ipcClient().sendCommand(
-      command.join(" "), m_appConfig.elevateMode());
+  qInfo("running command: %s", qPrintable(commandQuoted));
+  m_pDeps->ipcClient().sendCommand(commandQuoted, m_appConfig.elevateMode());
   setProcessState(Started);
 }
 
@@ -405,31 +453,40 @@ void CoreProcess::restart() {
     } else if (processMode == kService) {
       qDebug("process mode changed to service, stopping desktop process");
       stop(kDesktop);
+    } else {
+      qFatal("invalid process mode");
     }
+  } else {
+    // in service mode: though there is technically no need to stop the service
+    // before restarting it, it does make for cleaner process state tracking,
+    // especially if something goes wrong with starting the service.
+    stop();
   }
 
-  // in service mode: though there is technically no need to stop the service
-  // before restarting it, it does make for cleaner process state tracking,
-  // especially if something goes wrong with starting the service.
-  stop();
   start();
 }
 
-QString CoreProcess::appPath(const QString &name) const {
-  QDir dir(QCoreApplication::applicationDirPath());
-  return dir.filePath(name);
+void CoreProcess::cleanup() {
+  qInfo("cleaning up core process");
+
+  try {
+    const auto isDesktop = m_appConfig.processMode() == ProcessMode::kDesktop;
+    const auto isRunning = m_processState == ProcessState::Started;
+    if (isDesktop && isRunning) {
+      stop();
+    }
+  } catch (const std::exception &e) {
+    qFatal("failed to stop core on cleanup: %s", e.what());
+  }
+
+  m_pDeps->ipcClient().disconnectFromHost();
 }
 
 bool CoreProcess::serverArgs(QStringList &args, QString &app) {
-  app = appPath(m_appConfig.coreServerName());
+  app = m_pDeps->appPath(m_appConfig.coreServerName());
 
-  if (!QFile::exists(app)) {
-    qFatal("core server binary does not exist.");
-    return false;
-  }
-
-  if (m_appConfig.invertConnection() && m_address.isEmpty()) {
-    emit error(Error::AddressMissing);
+  if (!m_pDeps->fileExists(app)) {
+    qFatal("core server binary does not exist");
     return false;
   }
 
@@ -441,10 +498,27 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
 
   QString configFilename = persistConfig();
   if (configFilename.isEmpty()) {
+    qFatal("config file name empty for server args");
     return false;
   }
 
-  args << "-c" << configFilename << "--address" << correctedInterface();
+  if (m_appConfig.invertConnection()) {
+    qDebug("inverting server connection");
+
+    if (correctedAddress().isEmpty()) {
+      emit error(Error::AddressMissing);
+      qDebug("address is missing for server args");
+      return false;
+    }
+  }
+
+  // the address arg is dual purpose; when in listening mode, it's the address
+  // that the server listens on. when tcp sockets are inverted, it connects to
+  // that address. this is a bit confusing, and there should be probably be
+  // different args for different purposes.
+  args << "--address" << correctedInterface();
+
+  args << "-c" << configFilename;
   qInfo("config file: %s", qPrintable(configFilename));
 
   if (kEnableActivation && !m_appConfig.serialKey().isEmpty()) {
@@ -455,10 +529,10 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
 }
 
 bool CoreProcess::clientArgs(QStringList &args, QString &app) {
-  app = appPath(m_appConfig.coreClientName());
+  app = m_pDeps->appPath(m_appConfig.coreClientName());
 
-  if (!QFile::exists(app)) {
-    qFatal("core client binary does not exist.");
+  if (!m_pDeps->fileExists(app)) {
+    qFatal("core client binary does not exist");
     return false;
   }
 
@@ -476,24 +550,18 @@ bool CoreProcess::clientArgs(QStringList &args, QString &app) {
   }
 
   if (m_appConfig.invertConnection()) {
+    qDebug("inverting client connection");
     args << "--host";
     args << ":" + QString::number(m_appConfig.port());
   } else {
-    if (m_address.isEmpty()) {
+
+    if (correctedAddress().isEmpty()) {
       emit error(Error::AddressMissing);
+      qDebug("address is missing for client args");
       return false;
     }
 
-    // if interface is IPv6 - ensure that ip is in square brackets
-    if (m_address.count(':') > 1) {
-      if (m_address[0] != '[') {
-        m_address.insert(0, '[');
-      }
-      if (m_address[m_address.size() - 1] != ']') {
-        m_address.push_back(']');
-      }
-    }
-    args << m_address + ":" + QString::number(m_appConfig.port());
+    args << correctedAddress() + ":" + QString::number(m_appConfig.port());
   }
 
   return true;
@@ -600,6 +668,7 @@ bool CoreProcess::checkSecureSocket(const QString &line) {
   static const QString tlsCheckString = "network encryption protocol: ";
   const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
   if (index == -1) {
+    qDebug("no secure socket version found");
     return false;
   }
 
@@ -626,19 +695,10 @@ void CoreProcess::checkOSXNotification(const QString &line) {
 #endif
 
 QString CoreProcess::correctedInterface() const {
-  QString i = m_appConfig.networkInterface();
-
-  // if ipv6, ensure it's surround in square brackets
-  if (i.count(':') > 1) {
-    if (i[0] != '[') {
-      i.insert(0, '[');
-    }
-    if (i[i.size() - 1] != ']') {
-      i.push_back(']');
-    }
-  }
-
-  return (!i.isEmpty() ? i : "") + ":" + QString::number(m_appConfig.port());
+  QString interface = wrapIpv6(m_appConfig.networkInterface());
+  return interface + ":" + QString::number(m_appConfig.port());
 }
+
+QString CoreProcess::correctedAddress() const { return wrapIpv6(m_address); }
 
 } // namespace synergy::gui

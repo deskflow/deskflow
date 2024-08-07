@@ -106,8 +106,11 @@ void messageHandler(
     // developers: if you hit this line in your debugger, traverse the stack
     // to find the cause of the fatal error. important: crash the app on fatal
     // error to prevent the app being used in a broken state.
+    //
     // hint: if you don't want to crash, but still want to show an error
-    // message, use `qCritical()` instead of `qFatal()`.
+    // message, use `qCritical()` instead of `qFatal()`. you should use
+    // fatal errors when the app is in an unrecoverable state; i.e. it cannot
+    // function correctly in it's current state and must be restarted.
     abort();
   }
 }
