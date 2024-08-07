@@ -82,15 +82,13 @@ App::~App() {
 }
 
 void App::version() {
+  const std::string date = __DATE__;
+  std::string year = date.substr(date.size() - 4);
+
   const size_t kBufferSize = 500;
   const size_t kCopyrightSize = 200;
-
-  constexpr const char *date = __DATE__;
-  int year;
-  std::from_chars(date + strlen(date) - 4, date + strlen(date), year);
-
   char copyrightBuffer[kCopyrightSize];
-  snprintf(copyrightBuffer, kCopyrightSize, kCopyright, year);
+  snprintf(copyrightBuffer, kCopyrightSize, kCopyright, year.c_str());
 
   std::stringstream version;
   version << kVersion;
