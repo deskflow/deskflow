@@ -28,8 +28,6 @@ using namespace synergy::gui;
 
 IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
 
-IpcReader::~IpcReader() {}
-
 void IpcReader::start() {
   connect(
       m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);

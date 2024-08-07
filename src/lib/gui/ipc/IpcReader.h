@@ -27,7 +27,7 @@ class IpcReader : public QObject {
 
 public:
   IpcReader(QTcpSocket *socket);
-  virtual ~IpcReader();
+  ~IpcReader() override = default;
   void start();
   void stop();
 
