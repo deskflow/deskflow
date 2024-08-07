@@ -40,6 +40,20 @@ const int kRetryDelay = 1000;
 const auto kLastConfigFilename = "LastConfig.cfg";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
+QString processModeToString(ProcessMode mode) {
+  using enum ProcessMode;
+
+  switch (mode) {
+  case kDesktop:
+    return "desktop";
+  case kService:
+    return "service";
+  default:
+    qFatal("invalid process mode");
+    return "";
+  }
+}
+
 CoreProcess::CoreProcess(IAppConfig &appConfig, IServerConfig &serverConfig)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig) {
@@ -230,7 +244,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
 
   qInfo(
       "starting core %s process (%s mode)", qPrintable(modeString()),
-      qPrintable(processModeString()));
+      qPrintable(processModeToString(processMode)));
 
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
@@ -350,7 +364,9 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
   const auto processMode =
       processModeOption.value_or(m_appConfig.processMode());
 
-  qInfo("stopping core process (%s mode)", qPrintable(processModeString()));
+  qInfo(
+      "stopping core process (%s mode)",
+      qPrintable(processModeToString(processMode)));
 
   if (m_processState == ProcessState::Starting) {
     qDebug("core process is starting, cancelling");
@@ -526,27 +542,13 @@ QString CoreProcess::address() const {
 QString CoreProcess::modeString() const {
   using enum Mode;
 
-  switch (mode()) {
+  switch (m_mode) {
   case Server:
     return "server";
   case Client:
     return "client";
   default:
     qFatal("invalid core mode");
-    return "";
-  }
-}
-
-QString CoreProcess::processModeString() const {
-  using enum ProcessMode;
-
-  switch (m_appConfig.processMode()) {
-  case kDesktop:
-    return "desktop";
-  case kService:
-    return "service";
-  default:
-    qFatal("invalid process mode");
     return "";
   }
 }
