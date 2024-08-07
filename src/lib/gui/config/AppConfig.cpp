@@ -34,6 +34,9 @@ using namespace synergy::gui;
 // which will force it to re-run for existing installations.
 const int kWizardVersion = 8;
 
+static const char *const kLogLevelNames[] = {
+    "INFO", "DEBUG", "DEBUG1", "DEBUG2"};
+
 #if defined(Q_OS_WIN)
 const char AppConfig::m_CoreServerName[] = "synergys.exe";
 const char AppConfig::m_CoreClientName[] = "synergyc.exe";
@@ -92,8 +95,6 @@ const char *const AppConfig::m_SettingsName[] = {
     "showDevThanks",
     "showCloseReminder",
 };
-
-static const char *logLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 AppConfig::AppConfig(
     synergy::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
@@ -463,7 +464,7 @@ bool AppConfig::logToFile() const { return m_LogToFile; }
 
 const QString &AppConfig::logFilename() const { return m_LogFilename; }
 
-QString AppConfig::logLevelText() const { return logLevelNames[logLevel()]; }
+QString AppConfig::logLevelText() const { return kLogLevelNames[logLevel()]; }
 
 ProcessMode AppConfig::processMode() const {
   return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
