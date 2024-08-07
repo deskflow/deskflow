@@ -28,8 +28,8 @@ class IpcReader : public QObject {
 public:
   explicit IpcReader(QTcpSocket *socket);
   ~IpcReader() override = default;
-  void start();
-  void stop();
+  void start() const;
+  void stop() const;
 
 signals:
   void read(const QString &text);
@@ -37,7 +37,6 @@ signals:
 
 private:
   bool readStream(char *buffer, int length);
-  int bytesToInt(const char *buffer, int size);
 
 private slots:
   void onSocketReadyRead();

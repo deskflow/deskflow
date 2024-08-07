@@ -27,7 +27,7 @@ namespace synergy::gui::ipc {
 class IQIpcClient : public QObject {
   Q_OBJECT
 public:
-  virtual ~IQIpcClient() = default;
+  ~IQIpcClient() override = default;
   virtual void sendHello() const = 0;
   virtual void
   sendCommand(const QString &command, ElevateMode elevate) const = 0;

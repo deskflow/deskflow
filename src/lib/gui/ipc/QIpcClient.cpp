@@ -18,6 +18,7 @@
 #include "QIpcClient.h"
 
 #include "IpcReader.h"
+#include "byte_utils.h"
 #include "global/Ipc.h"
 
 #include <QDataStream>
@@ -28,25 +29,7 @@
 const auto kRetryInterval = 1000;
 const auto kConnectTimeout = 5000;
 
-namespace {
-
-void intToBytes(int value, char *buffer, int size) {
-  if (size == 1) {
-    buffer[0] = value & 0xff;
-  } else if (size == 2) {
-    buffer[0] = (value >> 8) & 0xff;
-    buffer[1] = value & 0xff;
-  } else if (size == 4) {
-    buffer[0] = (value >> 24) & 0xff;
-    buffer[1] = (value >> 16) & 0xff;
-    buffer[2] = (value >> 8) & 0xff;
-    buffer[3] = value & 0xff;
-  } else {
-    qFatal("intToBytes: size must be 1, 2, or 4");
-  }
-}
-
-} // namespace
+using namespace synergy::gui;
 
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     : m_streamProvider(streamProvider) {

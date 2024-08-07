@@ -162,7 +162,7 @@ void CoreProcess::onIpcClientServiceReady() {
   }
 }
 
-void CoreProcess::onIpcClientError(const QString &text) {
+void CoreProcess::onIpcClientError(const QString &text) const {
   qCritical().noquote() << text;
 
   if (m_appConfig.processMode() != ProcessMode::kService) {
@@ -249,7 +249,7 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
   setProcessState(Started);
 }
 
-void CoreProcess::stopDesktop() {
+void CoreProcess::stopDesktop() const {
   if (m_processState != ProcessState::Stopping) {
     qFatal("core process must be in stopping state");
   }

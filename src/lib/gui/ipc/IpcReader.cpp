@@ -18,6 +18,7 @@
 #include "IpcReader.h"
 
 #include "Logger.h"
+#include "byte_utils.h"
 #include "global/Ipc.h"
 
 #include <QByteArray>
@@ -28,12 +29,12 @@ using namespace synergy::gui;
 
 IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
 
-void IpcReader::start() {
+void IpcReader::start() const {
   connect(
       m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
 }
 
-void IpcReader::stop() {
+void IpcReader::stop() const {
   disconnect(
       m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
 }
@@ -99,18 +100,4 @@ bool IpcReader::readStream(char *buffer, int length) {
     }
   }
   return true;
-}
-
-int IpcReader::bytesToInt(const char *buffer, int size) {
-  if (size == 1) {
-    return (unsigned char)buffer[0];
-  } else if (size == 2) {
-    return (((unsigned char)buffer[0]) << 8) + (unsigned char)buffer[1];
-  } else if (size == 4) {
-    return (((unsigned char)buffer[0]) << 24) +
-           (((unsigned char)buffer[1]) << 16) +
-           (((unsigned char)buffer[2]) << 8) + (unsigned char)buffer[3];
-  } else {
-    return 0;
-  }
 }

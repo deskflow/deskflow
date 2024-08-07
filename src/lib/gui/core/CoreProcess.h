@@ -88,7 +88,7 @@ signals:
 private slots:
   void onIpcClientServiceReady();
   void onIpcClientRead(const QString &text);
-  void onIpcClientError(const QString &text);
+  void onIpcClientError(const QString &text) const;
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
   void onProcessReadyReadStandardOutput();
   void onProcessReadyReadStandardError();
@@ -96,7 +96,7 @@ private slots:
 private:
   void startDesktop(const QString &app, const QStringList &args);
   void startService(const QString &app, const QStringList &args);
-  void stopDesktop();
+  void stopDesktop() const;
   void stopService();
   bool serverArgs(QStringList &args, QString &app);
   bool clientArgs(QStringList &args, QString &app);
