@@ -45,7 +45,7 @@ public:
   ServerConfig(
       AppConfig &appConfig, MainWindow &mainWindow,
       int columns = kDefaultColumns, int rows = kDefaultRows);
-  virtual ~ServerConfig() = default;
+  ~ServerConfig() override = default;
 
   bool operator==(const ServerConfig &sc) const;
 
