@@ -33,6 +33,7 @@ namespace synergy::gui {
 class CoreProcess : public QObject {
   using IServerConfig = synergy::gui::IServerConfig;
   using QProcessProxy = synergy::gui::proxy::QProcessProxy;
+  using IQIpcClient = synergy::gui::ipc::IQIpcClient;
 
   Q_OBJECT
 
@@ -40,7 +41,7 @@ public:
   struct Deps {
     virtual ~Deps() = default;
     virtual QProcessProxy &process() { return m_process; }
-    virtual QIpcClient &ipcClient() { return m_ipcClient; }
+    virtual IQIpcClient &ipcClient() { return m_ipcClient; }
 
   private:
     QProcessProxy m_process;

@@ -26,10 +26,11 @@
 #include "IpcReader.h"
 #include "QDataStreamProxy.h"
 #include "gui/config/ElevateMode.h"
+#include "gui/ipc/IQIpcClient.h"
 
 class IpcReader;
 
-class QIpcClient : public QObject {
+class QIpcClient : public synergy::gui::ipc::IQIpcClient {
   Q_OBJECT
 
 public:
@@ -37,11 +38,11 @@ public:
 
   explicit QIpcClient(const StreamProvider &streamProvider = nullptr);
 
-  void sendHello() const;
-  void sendCommand(const QString &command, ElevateMode elevate) const;
-  void connectToHost();
-  void disconnectFromHost();
-  bool isConnected() const { return m_isConnected; }
+  void sendHello() const override;
+  void sendCommand(const QString &command, ElevateMode elevate) const override;
+  void connectToHost() override;
+  void disconnectFromHost() override;
+  bool isConnected() const override { return m_isConnected; }
 
 private slots:
   void onRetryConnect();
@@ -49,10 +50,6 @@ private slots:
   void onIpcReaderHelloBack();
   void onSocketError(QAbstractSocket::SocketError error) const;
   void onIpcReaderRead(const QString &text);
-
-signals:
-  void read(const QString &text);
-  void serviceReady();
 
 private:
   std::unique_ptr<QTcpSocket> m_pSocket;
