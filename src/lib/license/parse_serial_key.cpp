@@ -130,7 +130,7 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   }
 
   try {
-    auto seconds = std::stoi(clean);
+    auto seconds = std::stol(clean);
     if (seconds < 0) {
       throw InvalidSerialKeyDate(unixTimeString);
     }

@@ -89,6 +89,10 @@ public slots:
   void onAppAboutToQuit();
 
 private slots:
+  //
+  // Manual slots
+  //
+
   void onCreated();
   void onShown();
   void onConfigScopesSaving();
@@ -109,7 +113,9 @@ private slots:
   void onWindowSaveTimerTimeout();
   void onServerConnectionConfigureClient(const QString &clientName);
 
-  // autoconnect slots
+  //
+  // Auto-connect slots
+  //
   void on_m_pButtonApply_clicked();
   void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
