@@ -45,7 +45,7 @@ public:
   MOCK_METHOD(bool, contains, (QAnyStringView key), (const, override));
 };
 
-TEST(ScreenTests, loadSettings_readsArray) {
+TEST(ScreenTests, loadSettings_whenHasSetting_readsArray) {
   TestQtCoreApp app;
   NiceMock<QSettingsProxyMock> settings;
   Screen screen;
@@ -56,7 +56,7 @@ TEST(ScreenTests, loadSettings_readsArray) {
   screen.loadSettings(settings);
 }
 
-TEST(ScreenTests, saveSettings_writesArray) {
+TEST(ScreenTests, saveSettings_whenNameIsSet_writesArray) {
   TestQtCoreApp app;
   NiceMock<QSettingsProxyMock> settings;
   Screen screen;
