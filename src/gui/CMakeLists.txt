@@ -41,7 +41,12 @@ add_executable(
   res/Synergy.qrc
   ${QM_FILES})
 
+# regular exe headers
 include_directories(./src)
+
+# gui library autogen headers:
+# qt doesn't seem to auto include the autogen headers for libraries.
+include_directories(${CMAKE_BINARY_DIR}/src/lib/gui/gui_autogen/include)
 
 target_link_libraries(
   ${target}

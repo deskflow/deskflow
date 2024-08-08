@@ -22,6 +22,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 file(GLOB_RECURSE sources *.cpp)
 file(GLOB_RECURSE headers *.h)
+file(GLOB_RECURSE ui_files *.ui)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   file(GLOB mac_sources *.mm)
@@ -32,7 +33,7 @@ if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 
-add_library(${target} STATIC ${sources})
+add_library(${target} STATIC ${sources} ${ui_files})
 target_link_libraries(
   ${target}
   global
