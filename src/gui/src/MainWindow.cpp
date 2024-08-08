@@ -27,7 +27,7 @@
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
-#include "gui/dialog/SettingsDialog.h"
+#include "gui/dialogs/SettingsDialog.h"
 #include "gui/license/LicenseHandler.h"
 #include "gui/license/license_notices.h"
 #include "gui/messages.h"
