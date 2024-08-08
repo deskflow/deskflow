@@ -233,6 +233,7 @@ showNewClientPrompt(QWidget *parent, const QString &clientName) {
     return Ignore;
   } else {
     qFatal("no expected dialog button was clicked");
+    throw;
   }
 }
 
