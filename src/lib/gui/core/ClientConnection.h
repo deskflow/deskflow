@@ -17,27 +17,50 @@
 
 #pragma once
 
-#include "gui/config/AppConfig.h"
+#include "gui/config/IAppConfig.h"
 
+#include "gui/messages.h"
+
+#include <QObject>
 #include <QString>
 #include <QWidget>
+#include <memory>
+
+class QWidget;
 
 namespace synergy::gui {
 
-class ClientConnection {
+class ClientConnection : public QObject {
+  Q_OBJECT
+
 public:
-  explicit ClientConnection(QWidget &parent, AppConfig &appConfig);
-  void update(const QString &line);
-  void setCheckConnection(bool checkConnection);
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual void showError(
+        QWidget *parent, messages::ClientError error,
+        const QString &address) const;
+  };
+
+  explicit ClientConnection(
+      QWidget *parent, IAppConfig &appConfig,
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>())
+      : m_pParent(parent),
+        m_appConfig(appConfig),
+        m_deps(deps) {}
+
+  void handleLogLine(const QString &line);
+  void setShowMessage() { m_showMessage = true; }
+
+signals:
+  void messageShowing();
 
 private:
-  QString getMessage(const QString &line) const;
-  bool checkMainWindow();
-  void showMessage(const QString &message) const;
+  void showMessage(const QString &logLine);
 
-  QWidget &m_parent;
-  AppConfig &m_appConfig;
-  bool m_checkConnection = false;
+  QWidget *m_pParent;
+  IAppConfig &m_appConfig;
+  std::shared_ptr<Deps> m_deps;
+  bool m_showMessage = true;
 };
 
 } // namespace synergy::gui

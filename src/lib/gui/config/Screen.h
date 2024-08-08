@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 
 #include "ScreenConfig.h"
 
+#include "gui/proxy/QSettingsProxy.h"
+
 #include <QList>
 #include <QPixmap>
 #include <QString>
@@ -30,34 +32,49 @@ class QTextStream;
 class ScreenSettingsDialog;
 
 class Screen : public ScreenConfig {
-  friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
-  friend QDataStream &operator>>(QDataStream &inStream, Screen &screen);
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
   friend class ScreenSettingsDialog;
   friend class ScreenSetupModel;
   friend class ScreenSetupView;
 
-public:
-  Screen();
-  Screen(const QString &name);
+  friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen) {
+    return outStream << screen.name() << screen.switchCornerSize()
+                     << screen.aliases() << screen.modifiers()
+                     << screen.switchCorners() << screen.fixes()
+                     << screen.isServer();
+  }
+
+  friend QDataStream &operator>>(QDataStream &inStream, Screen &screen) {
+    return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >>
+           screen.m_Aliases >> screen.m_Modifiers >> screen.m_SwitchCorners >>
+           screen.m_Fixes >> screen.m_isServer;
+  }
 
 public:
+  explicit Screen();
+  explicit Screen(const QString &name);
+
   const QPixmap &pixmap() const { return m_Pixmap; }
   const QString &name() const { return m_Name; }
   const QStringList &aliases() const { return m_Aliases; }
 
   bool isNull() const { return m_Name.isEmpty(); }
   int modifier(int m) const {
-    return m_Modifiers[m] == DefaultMod ? m : m_Modifiers[m];
+    return m_Modifiers[m] ==
+                   static_cast<int>(ScreenConfig::Modifier::DefaultMod)
+               ? m
+               : m_Modifiers[m];
   }
   const QList<int> &modifiers() const { return m_Modifiers; }
   bool switchCorner(int c) const { return m_SwitchCorners[c]; }
   const QList<bool> &switchCorners() const { return m_SwitchCorners; }
   int switchCornerSize() const { return m_SwitchCornerSize; }
-  bool fix(Fix f) const { return m_Fixes[f]; }
+  bool fix(Fix f) const { return m_Fixes[static_cast<int>(f)]; }
   const QList<bool> &fixes() const { return m_Fixes; }
 
-  void loadSettings(QSettings &settings);
-  void saveSettings(QSettings &settings) const;
+  void loadSettings(QSettingsProxy &settings);
+  void saveSettings(QSettingsProxy &settings) const;
   QTextStream &writeScreensSection(QTextStream &outStream) const;
   QTextStream &writeAliasesSection(QTextStream &outStream) const;
 
@@ -84,18 +101,13 @@ protected:
   void setSwapped(bool on) { m_Swapped = on; }
 
 private:
-  QPixmap m_Pixmap;
+  QPixmap m_Pixmap = QPixmap(":res/icons/64x64/video-display.png");
   QString m_Name;
-
   QStringList m_Aliases;
   QList<int> m_Modifiers;
   QList<bool> m_SwitchCorners;
   int m_SwitchCornerSize;
   QList<bool> m_Fixes;
-
-  bool m_Swapped;
+  bool m_Swapped = false;
   bool m_isServer = false;
 };
-
-QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
-QDataStream &operator>>(QDataStream &inStream, Screen &screen);

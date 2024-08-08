@@ -18,7 +18,7 @@
 #pragma once
 
 #include "LineEditValidator.h"
-#include "ScreenList.h"
+#include "gui/config/ScreenList.h"
 #include "validators/ValidationError.h"
 
 namespace validators {

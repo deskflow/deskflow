@@ -30,6 +30,8 @@ const auto kUnixSystemConfigPath = "/usr/local/etc/symless/";
 
 namespace synergy::gui {
 
+using namespace proxy;
+
 QString getSystemSettingPath() {
   const QString settingFilename(kSystemConfigFilename);
 #if defined(Q_OS_WIN)
@@ -92,6 +94,7 @@ ConfigScopes::ConfigScopes() {
   // if we set the scope specifically then we also have to set the application
   // name and the organisation name which breaks backwards compatibility.
   m_pUserSettings = std::make_unique<QSettings>();
+  m_userSettingsProxy.set(*m_pUserSettings);
 
   qDebug() << "user settings path:" << m_pUserSettings->fileName();
 
@@ -104,6 +107,7 @@ ConfigScopes::ConfigScopes() {
   m_pSystemSettings = std::make_unique<QSettings>(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
       appName);
+  m_systemSettingsProxy.set(*m_pSystemSettings);
 
   qDebug() << "system settings path:" << m_pSystemSettings->fileName();
 
@@ -124,7 +128,7 @@ void ConfigScopes::save() {
 }
 
 bool ConfigScopes::isActiveScopeWritable() const {
-  return activeSettings()->isWritable();
+  return activeSettings().isWritable();
 }
 
 void ConfigScopes::setActiveScope(ConfigScopes::Scope scope) {
@@ -140,15 +144,23 @@ bool ConfigScopes::scopeContains(const QString &name, Scope scope) const {
   case Scope::System:
     return m_pSystemSettings->contains(name);
   default:
-    return activeSettings()->contains(name);
+    return activeSettings().contains(name);
   }
 }
 
-QSettings *ConfigScopes::activeSettings() const {
+QSettingsProxy &ConfigScopes::activeSettings() {
   if (m_currentScope == Scope::User) {
-    return m_pUserSettings.get();
+    return m_userSettingsProxy;
   } else {
-    return m_pSystemSettings.get();
+    return m_systemSettingsProxy;
+  }
+}
+
+const QSettingsProxy &ConfigScopes::activeSettings() const {
+  if (m_currentScope == Scope::User) {
+    return m_userSettingsProxy;
+  } else {
+    return m_systemSettingsProxy;
   }
 }
 
@@ -160,7 +172,7 @@ QVariant ConfigScopes::getFromScope(
   case Scope::System:
     return m_pSystemSettings->value(name, defaultValue);
   default:
-    return activeSettings()->value(name, defaultValue);
+    return activeSettings().value(name, defaultValue);
   }
 }
 
@@ -174,7 +186,7 @@ void ConfigScopes::setInScope(
     m_pSystemSettings->setValue(name, value);
     break;
   default:
-    activeSettings()->setValue(name, value);
+    activeSettings().setValue(name, value);
     break;
   }
 }

@@ -17,71 +17,67 @@
 
 #include "ClientConnection.h"
 
+#include "messages.h"
+
 #include <QHostAddress>
 #include <QMessageBox>
 
 namespace synergy::gui {
 
-ClientConnection::ClientConnection(QWidget &parent, AppConfig &appConfig)
-    : m_parent(parent),
-      m_appConfig(appConfig) {}
+//
+// ClientConnection::Deps
+//
 
-void ClientConnection::update(const QString &line) {
-  if (m_checkConnection && checkMainWindow()) {
-    if (line.contains("failed to connect to server")) {
-      m_checkConnection = false;
-      if (!line.contains("server refused client with our name") &&
-          !line.contains("Trying next address")) {
-        showMessage(getMessage(line));
-      }
-    } else if (line.contains("connected to server")) {
-      m_checkConnection = false;
+void ClientConnection::Deps::showError(
+    QWidget *parent, messages::ClientError error,
+    const QString &address) const {
+  messages::showClientConnectError(parent, error, address);
+}
+
+//
+// ClientConnection
+//
+
+void ClientConnection::handleLogLine(const QString &logLine) {
+  if (!m_showMessage) {
+    qDebug("message already shown, skipping");
+    return;
+  }
+
+  if (logLine.contains("failed to connect to server")) {
+    m_showMessage = false;
+
+    // ignore the message if it's about the server refusing by name as
+    // this will trigger the server to show an 'add client' dialog.
+    if (logLine.contains("server refused client with our name")) {
+      qDebug("ignoring client name refused message");
+      return;
     }
+
+    showMessage(logLine);
+  } else if (logLine.contains("connected to server")) {
+    m_showMessage = false;
   }
 }
 
-bool ClientConnection::checkMainWindow() {
-  bool result = m_parent.isActiveWindow();
+void ClientConnection::showMessage(const QString &logLine) {
+  using enum messages::ClientError;
 
-  if (m_parent.isMinimized() || m_parent.isHidden()) {
-    m_parent.showNormal();
-    m_parent.activateWindow();
-    result = true;
-  }
+  emit messageShowing();
 
-  return result;
-}
+  const auto address = m_appConfig.serverHostname();
+  auto message =
+      QString("<p>The connection to server '%1' didn't work.</p>").arg(address);
 
-QString ClientConnection::getMessage(const QString &line) const {
-  QString message(QObject::tr("Connection failed.\nCheck the IP address on the "
-                              "server, your TLS and firewall settings."));
-
-  if (line.contains("server already has a connected client with our name")) {
-    message =
-        QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
+  if (logLine.contains("server already has a connected client with our name")) {
+    m_deps->showError(m_pParent, AlreadyConnected, address);
+  } else if (QHostAddress a(address); a.isNull()) {
+    qDebug("ip not detected, showing hostname error");
+    m_deps->showError(m_pParent, HostnameError, address);
   } else {
-    QHostAddress address(m_appConfig.serverHostname());
-    if (address.isNull()) {
-      message =
-          QObject::tr(
-              "We can’t connect to the server \"%1\" try to connect using the "
-              "server IP address and check your firewall settings.")
-              .arg(m_appConfig.serverHostname());
-    }
+    qDebug("ip detected, showing generic error");
+    m_deps->showError(m_pParent, GenericError, address);
   }
-
-  return message;
-}
-
-void ClientConnection::showMessage(const QString &message) const {
-  QMessageBox dialog(&m_parent);
-  dialog.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-  dialog.setText(message);
-  dialog.exec();
-}
-
-void ClientConnection::setCheckConnection(bool checkConnection) {
-  m_checkConnection = checkConnection;
 }
 
 } // namespace synergy::gui

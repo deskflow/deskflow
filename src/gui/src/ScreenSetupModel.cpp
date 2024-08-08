@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,8 @@
  */
 
 #include "ScreenSetupModel.h"
-#include "Screen.h"
+
+#include "gui/config/Screen.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -137,7 +138,7 @@ bool ScreenSetupModel::dropMimeData(
   Screen droppedScreen;
   stream >> droppedScreen;
 
-  Screen oldScreen = screen(parent.column(), parent.row());
+  auto oldScreen = Screen(screen(parent.column(), parent.row()));
   if (!oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
     // see ScreenSetupView::startDrag()

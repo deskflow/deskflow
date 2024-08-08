@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,19 +17,19 @@
  */
 
 #include "Screen.h"
+#include "config/ScreenConfig.h"
 
 #include <QtCore>
 #include <QtGui>
 
-Screen::Screen()
-    : m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
-      m_Swapped(false) {
-  init();
-}
+using namespace synergy::gui::proxy;
+using enum ScreenConfig::Modifier;
+using enum ScreenConfig::SwitchCorner;
+using enum ScreenConfig::Fix;
 
-Screen::Screen(const QString &name)
-    : m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
-      m_Swapped(false) {
+Screen::Screen() { init(); }
+
+Screen::Screen(const QString &name) {
   init();
   setName(name);
 }
@@ -45,17 +45,17 @@ void Screen::init() {
   // m_Modifiers, m_SwitchCorners and m_Fixes are QLists we use like fixed-size
   // arrays, thus we need to make sure to fill them with the required number of
   // elements.
-  for (int i = 0; i < NumModifiers; i++)
+  for (int i = 0; i < static_cast<int>(NumModifiers); i++)
     modifiers() << i;
 
-  for (int i = 0; i < NumSwitchCorners; i++)
+  for (int i = 0; i < static_cast<int>(NumSwitchCorners); i++)
     switchCorners() << false;
 
-  for (int i = 0; i < NumFixes; i++)
+  for (int i = 0; i < static_cast<int>(NumFixes); i++)
     fixes() << false;
 }
 
-void Screen::loadSettings(QSettings &settings) {
+void Screen::loadSettings(QSettingsProxy &settings) {
   setName(settings.value("name").toString());
 
   if (name().isEmpty())
@@ -66,13 +66,14 @@ void Screen::loadSettings(QSettings &settings) {
   readSettings(settings, aliases(), "alias", QString(""));
   readSettings(
       settings, modifiers(), "modifier", static_cast<int>(DefaultMod),
-      NumModifiers);
+      static_cast<int>(NumModifiers));
   readSettings(
-      settings, switchCorners(), "switchCorner", false, NumSwitchCorners);
-  readSettings(settings, fixes(), "fix", false, NumFixes);
+      settings, switchCorners(), "switchCorner", 0,
+      static_cast<int>(NumSwitchCorners));
+  readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 }
 
-void Screen::saveSettings(QSettings &settings) const {
+void Screen::saveSettings(QSettingsProxy &settings) const {
   settings.setValue("name", name());
 
   if (name().isEmpty())
@@ -129,17 +130,4 @@ bool Screen::operator==(const Screen &screen) const {
          m_SwitchCornerSize == screen.m_SwitchCornerSize &&
          m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped &&
          m_isServer == screen.m_isServer;
-}
-
-QDataStream &operator<<(QDataStream &outStream, const Screen &screen) {
-  return outStream << screen.name() << screen.switchCornerSize()
-                   << screen.aliases() << screen.modifiers()
-                   << screen.switchCorners() << screen.fixes()
-                   << screen.isServer();
-}
-
-QDataStream &operator>>(QDataStream &inStream, Screen &screen) {
-  return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >>
-         screen.m_Aliases >> screen.m_Modifiers >> screen.m_SwitchCorners >>
-         screen.m_Fixes >> screen.m_isServer;
 }

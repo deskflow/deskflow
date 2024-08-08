@@ -25,6 +25,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QTime>
 #include <memory>
 
@@ -179,6 +180,61 @@ void showDevThanks(QWidget *parent, const QString &productName) {
           .arg(
               productName, kUrlPurchase, kColorSecondary, kUrlGitHub,
               kColorSecondary));
+}
+
+void showClientConnectError(
+    QWidget *parent, ClientError error, const QString &address) {
+  using enum ClientError;
+
+  auto message =
+      QString("<p>The connection to server '%1' didn't work.</p>").arg(address);
+
+  if (error == AlreadyConnected) {
+    message += //
+        "<p>Two of your client computers have the same name or there are "
+        "two instances of the client process running.</p>"
+        "<p>Please ensure that you're using a unique name and that only a "
+        "single client process is running.</p>";
+  } else if (error == HostnameError) {
+    message += //
+        "<p>Please try to connect to the server using the server IP address "
+        "instead of the hostname. </p>"
+        "<p>If that doesn't work, please check your TLS and "
+        "firewall settings.</p>";
+  } else if (error == GenericError) {
+    message += //
+        "<p>Please check your TLS and firewall settings.</p>";
+  } else {
+    qFatal("unknown client error");
+  }
+
+  QMessageBox dialog(parent);
+  dialog.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+  dialog.setText(message);
+  dialog.exec();
+}
+
+NewClientPromptResult
+showNewClientPrompt(QWidget *parent, const QString &clientName) {
+  using enum NewClientPromptResult;
+
+  QMessageBox message(parent);
+  const QPushButton *ignore =
+      message.addButton("Ignore", QMessageBox::RejectRole);
+  const QPushButton *add =
+      message.addButton("Add client", QMessageBox::AcceptRole);
+  message.setText(
+      QString("A new client called '%1' wants to connect").arg(clientName));
+  message.exec();
+
+  if (message.clickedButton() == add) {
+    return Add;
+  } else if (message.clickedButton() == ignore) {
+    return Ignore;
+  } else {
+    qFatal("no expected dialog button was clicked");
+    abort();
+  }
 }
 
 } // namespace synergy::gui::messages

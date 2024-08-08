@@ -71,6 +71,7 @@ Enhancements:
 - #7425 Refactored core process management and IPC client
 - #7426 Fixed warnings and enable errors as warnings
 - #7427 More reliable button click detection for add client dialog
+- #7428 Refactor settings dialog to simplify enable/disable logic
 
 # 1.14.6
 

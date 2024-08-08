@@ -19,9 +19,14 @@
 
 #include <QMessageLogContext>
 #include <QString>
-#include <QWidget>
+
+class QWidget;
 
 namespace synergy::gui::messages {
+
+enum class ClientError { AlreadyConnected, HostnameError, GenericError };
+
+enum class NewClientPromptResult { Add, Ignore };
 
 void messageHandler(
     QtMsgType type, const QMessageLogContext &context, const QString &msg);
@@ -32,5 +37,11 @@ void showFirstRunMessage(
 void showCloseReminder(QWidget *parent);
 
 void showDevThanks(QWidget *parent, const QString &productName);
+
+void showClientConnectError(
+    QWidget *parent, ClientError error, const QString &address);
+
+NewClientPromptResult
+showNewClientPrompt(QWidget *parent, const QString &clientName);
 
 } // namespace synergy::gui::messages

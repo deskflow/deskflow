@@ -15,10 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef QT_GUI_LIB
+#pragma once
 
-#include "QtCoreTest.h"
+#include <QApplication>
 
-std::unique_ptr<QCoreApplication> QtCoreTest::s_app;
+int argc = 0;          // NOLINT
+char **argv = nullptr; // NOLINT
 
-#endif
+/**
+ * Prefer using `TestQtCoreApp` instead.
+ */
+class TestQtFullApp : public QApplication {
+public:
+  explicit TestQtFullApp() : QApplication(argc, argv) {}
+};

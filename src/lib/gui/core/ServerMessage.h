@@ -23,7 +23,7 @@ namespace synergy::gui {
 
 class ServerMessage {
   QString m_message;
-  QString m_clienName;
+  QString m_clientName;
 
 public:
   explicit ServerMessage(const QString &message);

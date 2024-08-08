@@ -27,6 +27,11 @@
 #include <QPushButton>
 #include <QtCore>
 
+using namespace synergy::gui::proxy;
+using enum ScreenConfig::Modifier;
+using enum ScreenConfig::SwitchCorner;
+using enum ScreenConfig::Fix;
+
 static const struct {
   int x;
   int y;
@@ -94,7 +99,7 @@ void ServerConfig::setupScreens() {
   hotkeys().clear();
 
   // m_NumSwitchCorners is used as a fixed size array. See Screen::init()
-  for (int i = 0; i < NumSwitchCorners; i++)
+  for (int i = 0; i < static_cast<int>(NumSwitchCorners); i++)
     switchCorners() << false;
 
   // There must always be screen objects for each cell in the screens QList.
@@ -147,7 +152,7 @@ void ServerConfig::commit() {
   settings().beginWriteArray("hotkeys");
   for (int i = 0; i < hotkeys().size(); i++) {
     settings().setArrayIndex(i);
-    hotkeys()[i].saveSettings(settings());
+    hotkeys()[i].saveSettings(settings().get());
   }
   settings().endArray();
 
@@ -189,7 +194,8 @@ void ServerConfig::recall() {
   setClientAddress(settings().value("clientAddress", "").toString());
 
   readSettings(
-      settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
+      settings(), switchCorners(), "switchCorner", 0,
+      static_cast<int>(NumSwitchCorners));
 
   int numScreens = settings().beginReadArray("screens");
   Q_ASSERT(numScreens <= screens().size());
@@ -206,7 +212,7 @@ void ServerConfig::recall() {
   for (int i = 0; i < numHotkeys; i++) {
     settings().setArrayIndex(i);
     Hotkey h;
-    h.loadSettings(settings());
+    h.loadSettings(settings().get());
     hotkeys().append(h);
   }
   settings().endArray();
@@ -449,7 +455,7 @@ void ServerConfig::addClient(const QString &clientName) {
     fixNoServer(m_pAppConfig->screenName(), serverIndex);
   }
 
-  m_Screens.addScreenByPriority(clientName);
+  m_Screens.addScreenByPriority(Screen(clientName));
 }
 
 void ServerConfig::setConfigFile(const QString &configFile) {
@@ -542,6 +548,6 @@ QString ServerConfig::getClientAddress() const {
   return clientAddress;
 }
 
-QSettings &ServerConfig::settings() {
-  return *m_pAppConfig->scopes().activeSettings();
+QSettingsProxy &ServerConfig::settings() {
+  return m_pAppConfig->scopes().activeSettings();
 }

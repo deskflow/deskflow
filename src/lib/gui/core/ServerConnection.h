@@ -20,8 +20,9 @@
 #include <QString>
 #include <QStringList>
 
-#include "gui/config/AppConfig.h"
+#include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
+#include "gui/messages.h"
 
 namespace synergy::gui {
 
@@ -30,20 +31,28 @@ class ServerConnection : public QObject {
   using IServerConfig = synergy::gui::IServerConfig;
 
 public:
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual messages::NewClientPromptResult
+    showNewClientPrompt(QWidget *parent, const QString &clientName) const;
+  };
+
   explicit ServerConnection(
-      QWidget &parent, AppConfig &appConfig, IServerConfig &serverConfig);
-  void update(const QString &line);
+      QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+  void handleLogLine(const QString &logLine);
 
 signals:
+  void messageShowing();
   void configureClient(const QString &clientName);
 
 private:
-  void addClient(const QString &clientName);
-  bool checkMainWindow();
+  void handleNewClient(const QString &clientName);
 
-  QWidget &m_parent;
-  AppConfig &m_appConfig;
+  QWidget *m_pParent;
+  IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
+  std::shared_ptr<Deps> m_pDeps;
   QStringList m_ignoredClients;
 };
 

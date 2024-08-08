@@ -18,42 +18,46 @@
 #include "ServerConnection.h"
 
 #include "ServerMessage.h"
-#include "gui/config/AppConfig.h"
+#include "messages.h"
 
 #include <QMessageBox>
 #include <QPushButton>
 
 namespace synergy::gui {
 
-ServerConnection::ServerConnection(
-    QWidget &parent, AppConfig &appConfig, IServerConfig &serverConfig)
-    : m_parent(parent),
-      m_appConfig(appConfig),
-      m_serverConfig(serverConfig) {}
+//
+// ServerConnection::Deps
+//
 
-void ServerConnection::update(const QString &line) {
-  ServerMessage message(line);
+messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
+    QWidget *parent, const QString &clientName) const {
+  return messages::showNewClientPrompt(parent, clientName);
+}
+
+//
+// ServerConnection
+//
+
+ServerConnection::ServerConnection(
+    QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
+    std::shared_ptr<Deps> deps)
+    : m_pParent(parent),
+      m_appConfig(appConfig),
+      m_serverConfig(serverConfig),
+      m_pDeps(deps) {}
+
+void ServerConnection::handleLogLine(const QString &logLine) {
+  ServerMessage message(logLine);
 
   if (!m_appConfig.useExternalConfig() && message.isNewClientMessage() &&
       !m_ignoredClients.contains(message.getClientName())) {
-    addClient(message.getClientName());
+    handleNewClient(message.getClientName());
   }
 }
 
-// TOOD: merge duplicated code between client and server connection
-bool ServerConnection::checkMainWindow() {
-  bool result = m_parent.isActiveWindow();
+void ServerConnection::handleNewClient(const QString &clientName) {
+  using enum messages::NewClientPromptResult;
 
-  if (m_parent.isMinimized() || m_parent.isHidden()) {
-    m_parent.showNormal();
-    m_parent.activateWindow();
-    result = true;
-  }
-
-  return result;
-}
-
-void ServerConnection::addClient(const QString &clientName) {
   if (m_serverConfig.isFull()) {
     qDebug(
         "server config full, skipping add client prompt for: %s",
@@ -68,30 +72,17 @@ void ServerConnection::addClient(const QString &clientName) {
     return;
   }
 
-  if (!checkMainWindow()) {
-    qDebug(
-        "main window not active, skipping add client prompt for: %s",
-        qPrintable(clientName));
-    return;
-  }
+  emit messageShowing();
 
-  QMessageBox message(&m_parent);
-  const QPushButton *ignore =
-      message.addButton("Ignore", QMessageBox::RejectRole);
-  const QPushButton *add =
-      message.addButton("Add client", QMessageBox::AcceptRole);
-  message.setText(
-      QString("A new client called '%1' wants to connect").arg(clientName));
-  message.exec();
-
-  if (message.clickedButton() == add) {
+  const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName);
+  if (result == Add) {
     qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
     emit configureClient(clientName);
-  } else if (message.clickedButton() == ignore) {
+  } else if (result == Ignore) {
     qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
     m_ignoredClients.append(clientName);
   } else {
-    qFatal("no expected dialog button was clicked");
+    qFatal("unexpected add client result");
   }
 }
 

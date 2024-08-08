@@ -90,7 +90,8 @@ ScreenList::ScreenList(int width) : QList<Screen>(), m_width(width) {}
 
 void ScreenList::addScreenByPriority(const Screen &newScreen) {
   int serverIndex = getServerIndex(*this);
-  auto indexes = getNeighborsIndexes(serverIndex, m_width, size());
+  auto indexes =
+      getNeighborsIndexes(serverIndex, m_width, static_cast<int>(size()));
 
   bool isAdded = false;
   for (const auto &index : indexes) {

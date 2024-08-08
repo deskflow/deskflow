@@ -16,13 +16,12 @@
  */
 
 #include "gui/core/CoreTool.h"
-#include "shared/gui/QtCoreTest.h"
+#include "shared/gui/TestQtCoreApp.h"
 
 #include <gtest/gtest.h>
 
-class CoreToolTests : public QtCoreTest {};
-
-TEST_F(CoreToolTests, getProfileDir_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getProfileDir_noMock_returnsNonEmpty) {
+  TestQtCoreApp app;
   CoreTool coreTool;
 
   QString profileDir = coreTool.getProfileDir();
@@ -30,7 +29,8 @@ TEST_F(CoreToolTests, getProfileDir_noMock_returnsNonEmpty) {
   EXPECT_FALSE(profileDir.isEmpty());
 }
 
-TEST_F(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty) {
+  TestQtCoreApp app;
   CoreTool coreTool;
 
   QString installedDir = coreTool.getInstalledDir();
@@ -38,7 +38,8 @@ TEST_F(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty) {
   EXPECT_FALSE(installedDir.isEmpty());
 }
 
-TEST_F(CoreToolTests, getArch_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getArch_noMock_returnsNonEmpty) {
+  TestQtCoreApp app;
   CoreTool coreTool;
 
   QString arch = coreTool.getArch();
@@ -46,7 +47,8 @@ TEST_F(CoreToolTests, getArch_noMock_returnsNonEmpty) {
   EXPECT_FALSE(arch.isEmpty());
 }
 
-TEST_F(CoreToolTests, getSerialKeyFilePath_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getSerialKeyFilePath_noMock_returnsNonEmpty) {
+  TestQtCoreApp app;
   CoreTool coreTool;
 
   QString serialKeyFilePath = coreTool.getSerialKeyFilePath();

@@ -21,7 +21,7 @@ namespace synergy::gui {
 
 ServerMessage::ServerMessage(const QString &message)
     : m_message(message),
-      m_clienName(parseClientName(message)) {}
+      m_clientName(parseClientName(message)) {}
 
 bool ServerMessage::isNewClientMessage() const {
   return m_message.contains("unrecognised client name");
@@ -39,7 +39,7 @@ bool ServerMessage::isDisconnectedMessage() const {
   return m_message.contains("has disconnected");
 }
 
-const QString &ServerMessage::getClientName() const { return m_clienName; }
+const QString &ServerMessage::getClientName() const { return m_clientName; }
 
 QString ServerMessage::parseClientName(const QString &line) const {
   QString clientName("Unknown");

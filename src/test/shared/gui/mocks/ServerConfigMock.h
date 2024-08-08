@@ -17,21 +17,17 @@
 
 #pragma once
 
-#include "gui/messages.h"
+#include "gui/config/IServerConfig.h"
 
-#include <QApplication>
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-class QtTest : public ::testing::Test {
+class ServerConfigMock : public synergy::gui::IServerConfig {
 public:
-  static void SetUpTestSuite() {
-    char **argv = nullptr;
-    int argc = 0;
-    s_app = std::make_unique<QApplication>(argc, argv);
-    qInstallMessageHandler(synergy::gui::messages::messageHandler);
-  }
-
-  static void TearDownTestSuite() { s_app.reset(); }
-
-  static std::unique_ptr<QApplication> s_app;
+  MOCK_METHOD(bool, isFull, (), (const, override));
+  MOCK_METHOD(
+      bool, screenExists, (const QString &screenName), (const, override));
+  MOCK_METHOD(bool, save, (const QString &fileName), (const, override));
+  MOCK_METHOD(void, save, (QFile & file), (const, override));
+  MOCK_METHOD(bool, enableDragAndDrop, (), (const, override));
+  MOCK_METHOD(const ScreenList &, screens, (), (const, override));
 };

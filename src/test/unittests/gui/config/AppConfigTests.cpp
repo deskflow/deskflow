@@ -17,15 +17,20 @@
 
 #include "gui/config/AppConfig.h"
 
+#include "gui/proxy/QSettingsProxy.h"
+
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace testing;
+using namespace synergy::gui::proxy;
 
 namespace {
 
-class MockScopes : public synergy::gui::IConfigScopes {
+class ConfigScopesMock : public synergy::gui::IConfigScopes {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
 public:
   MOCK_METHOD(void, signalReady, (), (override));
   MOCK_METHOD(
@@ -41,18 +46,19 @@ public:
   MOCK_METHOD(Scope, activeScope, (), (const, override));
   MOCK_METHOD(void, setActiveScope, (Scope scope), (override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
-  MOCK_METHOD(QSettings *, activeSettings, (), (const, override));
+  MOCK_METHOD(const QSettingsProxy &, activeSettings, (), (const, override));
+  MOCK_METHOD(QSettingsProxy &, activeSettings, (), (override));
   MOCK_METHOD(void, save, (), (override));
 };
 
-struct MockDeps : public AppConfig::Deps {
-  MockDeps() {
+struct DepsMock : public AppConfig::Deps {
+  DepsMock() {
     ON_CALL(*this, profileDir()).WillByDefault(Return("stub"));
     ON_CALL(*this, hostname()).WillByDefault(Return("stub"));
   }
 
-  static std::shared_ptr<NiceMock<MockDeps>> makeNice() {
-    return std::make_shared<NiceMock<MockDeps>>();
+  static std::shared_ptr<NiceMock<DepsMock>> makeNice() {
+    return std::make_shared<NiceMock<DepsMock>>();
   }
 
   MOCK_METHOD(QString, profileDir, (), (const, override));
@@ -64,8 +70,8 @@ struct MockDeps : public AppConfig::Deps {
 class AppConfigTests : public Test {};
 
 TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
-  NiceMock<MockScopes> scopes;
-  auto deps = MockDeps::makeNice();
+  NiceMock<ConfigScopesMock> scopes;
+  auto deps = DepsMock::makeNice();
   ON_CALL(*deps, hostname()).WillByDefault(Return("test hostname"));
 
   AppConfig appConfig(scopes, deps);
@@ -74,8 +80,8 @@ TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
 }
 
 TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
-  NiceMock<MockScopes> scopes;
-  auto deps = MockDeps::makeNice();
+  NiceMock<ConfigScopesMock> scopes;
+  auto deps = DepsMock::makeNice();
 
   ON_CALL(scopes, scopeContains(_, _)).WillByDefault(Return(true));
   ON_CALL(scopes, getFromScope(_, _, _))
@@ -88,8 +94,8 @@ TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
 }
 
 TEST_F(AppConfigTests, commit_byDefault_setsToScope) {
-  NiceMock<MockScopes> scopes;
-  auto deps = MockDeps::makeNice();
+  NiceMock<ConfigScopesMock> scopes;
+  auto deps = DepsMock::makeNice();
   AppConfig appConfig(scopes, deps);
 
   ON_CALL(scopes, isActiveScopeWritable()).WillByDefault(Return(true));

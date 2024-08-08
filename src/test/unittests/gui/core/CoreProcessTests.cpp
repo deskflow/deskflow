@@ -19,6 +19,8 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/IQIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
+#include "shared/gui/mocks/AppConfigMock.h"
+#include "shared/gui/mocks/ServerConfigMock.h"
 
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>
@@ -30,58 +32,13 @@ using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
 
-class MockAppConfig : public IAppConfig {
-public:
-  MockAppConfig() {
-    ON_CALL(*this, screenName()).WillByDefault(ReturnRef(m_stubName));
-    ON_CALL(*this, networkInterface())
-        .WillByDefault(ReturnRef(m_stubInterface));
-    ON_CALL(*this, logLevelText()).WillByDefault(Return("stub log level"));
-  }
+namespace {
 
-  MOCK_METHOD(QString, tlsCertPath, (), (const, override));
-  MOCK_METHOD(int, tlsKeyLength, (), (const, override));
-  MOCK_METHOD(bool, tlsEnabled, (), (const, override));
-  MOCK_METHOD(ProcessMode, processMode, (), (const, override));
-  MOCK_METHOD(ElevateMode, elevateMode, (), (const, override));
-  MOCK_METHOD(QString, logLevelText, (), (const, override));
-  MOCK_METHOD(const QString &, screenName, (), (const, override));
-  MOCK_METHOD(bool, preventSleep, (), (const, override));
-  MOCK_METHOD(bool, logToFile, (), (const, override));
-  MOCK_METHOD(const QString &, logFilename, (), (const, override));
-  MOCK_METHOD(QString, coreServerName, (), (const, override));
-  MOCK_METHOD(QString, coreClientName, (), (const, override));
-  MOCK_METHOD(bool, invertConnection, (), (const, override));
-  MOCK_METHOD(void, persistLogDir, (), (const, override));
-  MOCK_METHOD(QString, serialKey, (), (const, override));
-  MOCK_METHOD(bool, languageSync, (), (const, override));
-  MOCK_METHOD(bool, invertScrollDirection, (), (const, override));
-  MOCK_METHOD(int, port, (), (const, override));
-  MOCK_METHOD(bool, useExternalConfig, (), (const, override));
-  MOCK_METHOD(const QString &, configFile, (), (const, override));
-  MOCK_METHOD(const QString &, networkInterface, (), (const, override));
-
-private:
-  const QString m_stubName = "stub name";
-  const QString m_stubInterface = "stub interface";
-  const QString m_stubAddress = "stub address";
-};
-
-class MockServerConfig : public IServerConfig {
-public:
-  MOCK_METHOD(bool, isFull, (), (const, override));
-  MOCK_METHOD(
-      bool, screenExists, (const QString &screenName), (const, override));
-  MOCK_METHOD(bool, save, (const QString &fileName), (const, override));
-  MOCK_METHOD(void, save, (QFile & file), (const, override));
-  MOCK_METHOD(bool, enableDragAndDrop, (), (const, override));
-};
-
-class MockQProcessProxy : public proxy::QProcessProxy {
+class QProcessProxyMock : public proxy::QProcessProxy {
 public:
   operator bool() const override { return toBool(); }
 
-  MockQProcessProxy() {
+  QProcessProxyMock() {
     ON_CALL(*this, toBool()).WillByDefault(Return(true));
     ON_CALL(*this, state())
         .WillByDefault(Return(QProcess::ProcessState::Running));
@@ -100,9 +57,9 @@ public:
   MOCK_METHOD(QString, readAllStandardError, (), (override));
 };
 
-class MockQIpcClient : public ipc::IQIpcClient {
+class QIpcClientMock : public ipc::IQIpcClient {
 public:
-  MockQIpcClient() {
+  QIpcClientMock() {
     ON_CALL(*this, isConnected()).WillByDefault(Return(true));
   }
 
@@ -115,9 +72,9 @@ public:
   MOCK_METHOD(bool, isConnected, (), (const, override));
 };
 
-class MockDeps : public CoreProcess::Deps {
+class DepsMock : public CoreProcess::Deps {
 public:
-  MockDeps() {
+  DepsMock() {
     ON_CALL(*this, process()).WillByDefault(ReturnRef(m_process));
     ON_CALL(*this, ipcClient()).WillByDefault(ReturnRef(m_ipcClient));
     ON_CALL(*this, appPath(_)).WillByDefault(Return("stub app path"));
@@ -131,20 +88,22 @@ public:
   MOCK_METHOD(bool, fileExists, (const QString &path), (const, override));
   MOCK_METHOD(QString, getProfileRoot, (), (const, override));
 
-  NiceMock<MockQProcessProxy> m_process;
-  NiceMock<MockQIpcClient> m_ipcClient;
+  NiceMock<QProcessProxyMock> m_process;
+  NiceMock<QIpcClientMock> m_ipcClient;
 };
 
 class CoreProcessTests : public ::testing::Test {
 public:
   CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps) {}
 
-  NiceMock<MockAppConfig> m_appConfig;
-  NiceMock<MockServerConfig> m_serverConfig;
-  std::shared_ptr<NiceMock<MockDeps>> m_pDeps =
-      std::make_shared<NiceMock<MockDeps>>();
+  NiceMock<AppConfigMock> m_appConfig;
+  NiceMock<ServerConfigMock> m_serverConfig;
+  std::shared_ptr<NiceMock<DepsMock>> m_pDeps =
+      std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;
 };
+
+} // namespace
 
 TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart) {
   m_coreProcess.setMode(CoreProcess::Mode::Server);

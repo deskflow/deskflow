@@ -520,7 +520,7 @@ bool AppConfig::useInternalConfig() const { return m_UseInternalConfig; }
 
 bool AppConfig::clientGroupChecked() const { return m_ClientGroupChecked; }
 
-QString AppConfig::serverHostname() const { return m_ServerHostname; }
+const QString &AppConfig::serverHostname() const { return m_ServerHostname; }
 
 void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
 

@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -16,14 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREENSETUPVIEW__H)
-
-#define SCREENSETUPVIEW__H
+#pragma once
 
 #include <QFlags>
 #include <QTableView>
 
-#include "Screen.h"
+#include "gui/config/Screen.h"
 
 class QWidget;
 class QMouseEvent;
@@ -51,5 +49,3 @@ protected:
   void initViewItemOption(QStyleOptionViewItem *option) const override;
   void scrollTo(const QModelIndex &, ScrollHint) override {}
 };
-
-#endif

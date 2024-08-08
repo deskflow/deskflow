@@ -94,8 +94,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
       m_CoreProcess(appConfig, m_ServerConfig),
-      m_ServerConnection(*this, appConfig, m_ServerConfig),
-      m_ClientConnection(*this, appConfig),
+      m_ServerConnection(this, appConfig, m_ServerConfig),
+      m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
       m_WindowSaveTimer(this) {
 
@@ -251,7 +251,9 @@ void MainWindow::connectSlots() {
 
   connect(m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
-  connect(m_pActionRestore, &QAction::triggered, this, &MainWindow::showNormal);
+  connect(
+      m_pActionRestore, &QAction::triggered, //
+      [this]() { showAndActivate(); });
 
   connect(
       m_pActionStartCore, &QAction::triggered, this,
@@ -278,6 +280,14 @@ void MainWindow::connectSlots() {
   connect(
       &m_ServerConnection, &ServerConnection::configureClient, this,
       &MainWindow::onServerConnectionConfigureClient);
+
+  connect(
+      &m_ServerConnection, &ServerConnection::messageShowing, this,
+      [this]() { showAndActivate(); });
+
+  connect(
+      &m_ClientConnection, &ClientConnection::messageShowing, this,
+      [this]() { showAndActivate(); });
 }
 
 void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
@@ -339,8 +349,7 @@ void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason) {
     if (isVisible()) {
       hide();
     } else {
-      showNormal();
-      activateWindow();
+      showAndActivate();
     }
   }
 }
@@ -355,7 +364,7 @@ void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
 }
 
 void MainWindow::onActionStartCoreTriggered() {
-  m_ClientConnection.setCheckConnection(true);
+  m_ClientConnection.setShowMessage();
   m_CoreProcess.start();
 }
 
@@ -408,9 +417,11 @@ void MainWindow::on_m_pActionHelp_triggered() {
 }
 
 void MainWindow::on_m_pActionSettings_triggered() {
-  auto result =
-      SettingsDialog(this, m_AppConfig, m_LicenseHandler.license()).exec();
-  if (result == QDialog::Accepted) {
+  auto dialog = SettingsDialog(
+      this, m_AppConfig, m_ServerConfig, m_LicenseHandler.license(),
+      m_CoreProcess);
+
+  if (dialog.exec() == QDialog::Accepted) {
     m_ConfigScopes.save();
 
     applyConfig();
@@ -445,7 +456,7 @@ void MainWindow::on_m_pLineEditClientIp_textChanged(const QString &text) {
 }
 
 void MainWindow::on_m_pButtonApply_clicked() {
-  m_ClientConnection.setCheckConnection(true);
+  m_ClientConnection.setShowMessage();
   m_CoreProcess.restart();
 }
 
@@ -516,7 +527,7 @@ void MainWindow::open() {
   if (m_AppConfig.autoHide()) {
     hide();
   } else {
-    showNormal();
+    showAndActivate();
   }
 
   m_VersionChecker.checkLatest();
@@ -651,10 +662,10 @@ void MainWindow::updateFromLogLine(const QString &line) {
 
 void MainWindow::checkConnected(const QString &line) {
   if (m_pRadioGroupServer->isChecked()) {
-    m_ServerConnection.update(line);
+    m_ServerConnection.handleLogLine(line);
     m_pLabelServerState->updateServerState(line);
   } else {
-    m_ClientConnection.update(line);
+    m_ClientConnection.handleLogLine(line);
     m_pLabelClientState->updateClientState(line);
   }
 }
@@ -1070,4 +1081,14 @@ void MainWindow::enableClient(bool enable) {
     m_pActionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Client);
   }
+}
+
+void MainWindow::showAndActivate() {
+  if (!isMinimized() && !isHidden()) {
+    qDebug("window already visible");
+    return;
+  }
+
+  showNormal();
+  activateWindow();
 }
