@@ -86,10 +86,12 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableCrypto_clicked(bool) {
+void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool) {
   updateTlsControlsEnabled();
 
   if (kEnableActivation && !m_tlsUtility.isAvailable()) {
+    m_pCheckBoxEnableTls->setChecked(false);
+
     auto edition = m_license.productEdition();
     if (edition == Edition::kBasic) {
       UpgradeDialog upgradeDialog(this);
@@ -107,14 +109,14 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
   updateControls();
 }
 
-void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
+void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
   QString fileName = QFileDialog::getSaveFileName(
       this, tr("Select a TLS certificate to use..."),
-      m_pLineEditCertificatePath->text(), "Cert (*.pem)", nullptr,
+      m_pLineEditTlsCertPath->text(), "Cert (*.pem)", nullptr,
       QFileDialog::DontConfirmOverwrite);
 
   if (!fileName.isEmpty()) {
-    m_pLineEditCertificatePath->setText(fileName);
+    m_pLineEditTlsCertPath->setText(fileName);
 
     if (QFile(fileName).exists()) {
       updateKeyLengthOnFile(fileName);
@@ -125,11 +127,11 @@ void SettingsDialog::on_m_pPushButtonBrowseCert_clicked() {
   updateTlsRegenerateButton();
 }
 
-void SettingsDialog::on_m_pComboBoxKeyLength_currentIndexChanged(int index) {
+void SettingsDialog::on_m_pComboBoxTlsKeyLength_currentIndexChanged(int index) {
   updateTlsRegenerateButton();
 }
 
-void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
+void SettingsDialog::on_m_pPushButtonTlsRegenCert_clicked() {
   if (m_tlsUtility.generateCertificate()) {
     QMessageBox::information(
         this, tr("TLS Certificate Regenerated"),
@@ -163,9 +165,9 @@ void SettingsDialog::accept() {
       static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
   m_appConfig.setAutoHide(m_pCheckBoxAutoHide->isChecked());
   m_appConfig.setPreventSleep(m_pCheckBoxPreventSleep->isChecked());
-  m_appConfig.setTlsCertPath(m_pLineEditCertificatePath->text());
-  m_appConfig.setTlsKeyLength(m_pComboBoxKeyLength->currentText().toInt());
-  m_appConfig.setTlsEnabled(m_pCheckBoxEnableCrypto->isChecked());
+  m_appConfig.setTlsCertPath(m_pLineEditTlsCertPath->text());
+  m_appConfig.setTlsKeyLength(m_pComboBoxTlsKeyLength->currentText().toInt());
+  m_appConfig.setTlsEnabled(m_pCheckBoxEnableTls->isChecked());
   m_appConfig.setLanguageSync(m_pCheckBoxLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
   m_appConfig.setEnableService(m_pCheckBoxServiceEnabled->isChecked());
@@ -194,8 +196,6 @@ void SettingsDialog::loadFromConfig() {
   m_pLineEditLogFilename->setText(m_appConfig.logFilename());
   m_pCheckBoxAutoHide->setChecked(m_appConfig.autoHide());
   m_pCheckBoxPreventSleep->setChecked(m_appConfig.preventSleep());
-  m_pLineEditCertificatePath->setText(m_appConfig.tlsCertPath());
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
   m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
@@ -216,15 +216,20 @@ void SettingsDialog::loadFromConfig() {
 }
 
 void SettingsDialog::updateTlsControls() {
+
   if (QFile(m_appConfig.tlsCertPath()).exists()) {
     updateKeyLengthOnFile(m_appConfig.tlsCertPath());
   } else {
     const auto keyLengthText = QString::number(m_appConfig.tlsKeyLength());
-    m_pComboBoxKeyLength->setCurrentIndex(
-        m_pComboBoxKeyLength->findText(keyLengthText));
+    m_pComboBoxTlsKeyLength->setCurrentIndex(
+        m_pComboBoxTlsKeyLength->findText(keyLengthText));
   }
 
-  m_pCheckBoxEnableCrypto->setChecked(m_appConfig.tlsEnabled());
+  const auto tlsEnabled = m_tlsUtility.isAvailableAndEnabled();
+  const auto writable = m_appConfig.isActiveScopeWritable();
+
+  m_pCheckBoxEnableTls->setChecked(writable && tlsEnabled);
+  m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
 
   updateTlsControlsEnabled();
 }
@@ -232,21 +237,15 @@ void SettingsDialog::updateTlsControls() {
 void SettingsDialog::updateTlsControlsEnabled() {
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto clientMode = m_appConfig.clientGroupChecked();
-  const auto tlsAvailable = m_tlsUtility.isAvailableAndEnabled();
-  const auto tlsChecked = m_pCheckBoxEnableCrypto->isChecked();
+  const auto tlsChecked = m_pCheckBoxEnableTls->isChecked();
 
-  auto enabled = writable && !clientMode && tlsAvailable && tlsChecked;
-
-  qDebug(
-      "tls enabled=%d, writable=%d, client=%d, available=%d, checked=%d",
-      enabled, writable, clientMode, tlsAvailable, tlsChecked);
-
-  m_pLabelKeyLength->setEnabled(enabled);
-  m_pComboBoxKeyLength->setEnabled(enabled);
-  m_pLabelCertificate->setEnabled(enabled);
-  m_pLineEditCertificatePath->setEnabled(enabled);
-  m_pPushButtonBrowseCert->setEnabled(enabled);
-  m_pPushButtonRegenCert->setEnabled(enabled);
+  auto enabled = writable && tlsChecked && !clientMode;
+  m_pLabelTlsKeyLength->setEnabled(enabled);
+  m_pComboBoxTlsKeyLength->setEnabled(enabled);
+  m_pLabelTlsCert->setEnabled(enabled);
+  m_pLineEditTlsCertPath->setEnabled(enabled);
+  m_pPushButtonTlsCertPath->setEnabled(enabled);
+  m_pPushButtonTlsRegenCert->setEnabled(enabled);
 }
 
 bool SettingsDialog::isClientMode() const {
@@ -255,13 +254,13 @@ bool SettingsDialog::isClientMode() const {
 
 void SettingsDialog::updateTlsRegenerateButton() {
   const auto writable = m_appConfig.isActiveScopeWritable();
-  const auto keyLength = m_pComboBoxKeyLength->currentText().toInt();
-  const auto path = m_pLineEditCertificatePath->text();
+  const auto keyLength = m_pComboBoxTlsKeyLength->currentText().toInt();
+  const auto path = m_pLineEditTlsCertPath->text();
   const auto keyChanged = m_appConfig.tlsKeyLength() != keyLength;
   const auto pathChanged = m_appConfig.tlsCertPath() != path;
-  const auto tlsEnabled = m_pCheckBoxEnableCrypto->isChecked();
+  const auto tlsEnabled = m_pCheckBoxEnableTls->isChecked();
 
-  m_pPushButtonRegenCert->setEnabled(
+  m_pPushButtonTlsRegenCert->setEnabled(
       writable && tlsEnabled && (keyChanged || pathChanged));
 }
 
@@ -272,8 +271,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
   }
 
   auto length = ssl.getCertKeyLength(path);
-  auto index = m_pComboBoxKeyLength->findText(QString::number(length));
-  m_pComboBoxKeyLength->setCurrentIndex(index);
+  auto index = m_pComboBoxTlsKeyLength->findText(QString::number(length));
+  m_pComboBoxTlsKeyLength->setCurrentIndex(index);
   m_appConfig.setTlsKeyLength(length);
 }
 
@@ -298,10 +297,8 @@ void SettingsDialog::updateControls() {
   m_pCheckBoxLogToFile->setEnabled(writable);
   m_pCheckBoxAutoHide->setEnabled(writable);
   m_pCheckBoxPreventSleep->setEnabled(writable);
-  m_pLineEditCertificatePath->setEnabled(writable);
-  m_pComboBoxKeyLength->setEnabled(writable);
-  m_pPushButtonBrowseCert->setEnabled(writable);
-  m_pCheckBoxEnableCrypto->setEnabled(writable);
+  m_pLineEditTlsCertPath->setEnabled(writable);
+  m_pComboBoxTlsKeyLength->setEnabled(writable);
   m_pCheckBoxCloseToTray->setEnabled(writable);
 
   m_pCheckBoxServiceEnabled->setEnabled(writable && serviceAvailable);

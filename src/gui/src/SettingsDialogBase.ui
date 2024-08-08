@@ -165,7 +165,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxEnableCrypto">
+             <widget class="QCheckBox" name="m_pCheckBoxEnableTls">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -188,7 +188,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="m_pLabelKeyLength">
+             <widget class="QLabel" name="m_pLabelTlsKeyLength">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -201,7 +201,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="m_pComboBoxKeyLength">
+             <widget class="QComboBox" name="m_pComboBoxTlsKeyLength">
               <property name="currentText">
                <string>1024</string>
               </property>
@@ -230,7 +230,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="m_pLabelCertificate">
+             <widget class="QLabel" name="m_pLabelTlsCert">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -259,7 +259,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLineEdit" name="m_pLineEditCertificatePath">
+             <widget class="QLineEdit" name="m_pLineEditTlsCertPath">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -269,7 +269,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="m_pPushButtonBrowseCert">
+             <widget class="QPushButton" name="m_pPushButtonTlsCertPath">
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
               </property>
@@ -312,7 +312,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="m_pPushButtonRegenCert">
+             <widget class="QPushButton" name="m_pPushButtonTlsRegenCert">
               <property name="text">
                <string>Regenerate certificate</string>
               </property>
@@ -740,11 +740,11 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pCheckBoxEnableCrypto</tabstop>
-  <tabstop>m_pComboBoxKeyLength</tabstop>
-  <tabstop>m_pLineEditCertificatePath</tabstop>
-  <tabstop>m_pPushButtonBrowseCert</tabstop>
-  <tabstop>m_pPushButtonRegenCert</tabstop>
+  <tabstop>m_pCheckBoxEnableTls</tabstop>
+  <tabstop>m_pComboBoxTlsKeyLength</tabstop>
+  <tabstop>m_pLineEditTlsCertPath</tabstop>
+  <tabstop>m_pPushButtonTlsCertPath</tabstop>
+  <tabstop>m_pPushButtonTlsRegenCert</tabstop>
   <tabstop>m_pCheckBoxLogToFile</tabstop>
   <tabstop>m_pComboLogLevel</tabstop>
   <tabstop>m_pLineEditLogFilename</tabstop>

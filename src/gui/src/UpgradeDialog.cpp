@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "UpgradeDialog.h"
+
+#include "gui/constants.h"
 
 #include <QtCore>
 #include <QtGui>
 
 UpgradeDialog::UpgradeDialog(QWidget *parent) : QMessageBox(parent) {
-  setWindowTitle(QObject::tr("Upgrade to access this feature"));
-  addButton(QObject::tr("Close"), QMessageBox::RejectRole);
-  addButton(QObject::tr("Upgrade"), QMessageBox::AcceptRole);
+  setWindowTitle("Upgrade to access this feature");
+  addButton("Cancel", QMessageBox::RejectRole);
+  addButton("Upgrade", QMessageBox::AcceptRole);
 }
 
 void UpgradeDialog::showDialog(const QString &text) {
-  setText(QObject::tr(text.toStdString().c_str()));
+  setText(text);
 
   if (exec() == QMessageBox::Accepted) {
-    QDesktopServices::openUrl(QUrl(
-        QCoreApplication::organizationDomain() +
-        "/synergy/purchase/upgrade?source=gui"));
+    QDesktopServices::openUrl(QUrl(synergy::gui::kUrlUpgrade));
   }
 }

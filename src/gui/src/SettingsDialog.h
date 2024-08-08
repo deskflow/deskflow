@@ -52,13 +52,13 @@ public:
       const QString &coreServerName);
 
 private slots:
-  void on_m_pCheckBoxEnableCrypto_clicked(bool checked);
+  void on_m_pCheckBoxEnableTls_clicked(bool checked);
   void on_m_pCheckBoxLogToFile_stateChanged(int);
   void on_m_pButtonBrowseLog_clicked();
   void on_m_pRadioSystemScope_toggled(bool checked);
-  void on_m_pPushButtonBrowseCert_clicked();
-  void on_m_pComboBoxKeyLength_currentIndexChanged(int index);
-  void on_m_pPushButtonRegenCert_clicked();
+  void on_m_pPushButtonTlsCertPath_clicked();
+  void on_m_pComboBoxTlsKeyLength_currentIndexChanged(int index);
+  void on_m_pPushButtonTlsRegenCert_clicked();
   void on_m_pCheckBoxServiceEnabled_toggled(bool checked);
 
 private:
