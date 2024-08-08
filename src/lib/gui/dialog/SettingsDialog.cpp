@@ -18,14 +18,14 @@
 
 #include "SettingsDialog.h"
 
-#include "MainWindow.h"
 #include "UpgradeDialog.h"
 #include "gui/config/AppConfig.h"
 #include "gui/constants.h"
+#include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
-#include "validators/ScreenNameValidator.h"
-#include "validators/ValidationError.h"
+#include "gui/validators/ScreenNameValidator.h"
+#include "gui/validators/ValidationError.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -39,7 +39,7 @@ using namespace synergy::gui;
 const char *const kProProductName = "Synergy 1 Pro";
 
 SettingsDialog::SettingsDialog(
-    MainWindow *parent, AppConfig &appConfig, const IServerConfig &serverConfig,
+    QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig,
     const License &license, const CoreProcess &coreProcess)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),
@@ -249,7 +249,7 @@ void SettingsDialog::updateTlsControlsEnabled() {
 }
 
 bool SettingsDialog::isClientMode() const {
-  return m_coreProcess.mode() == MainWindow::CoreMode::Client;
+  return m_coreProcess.mode() == synergy::gui::CoreProcess::Mode::Client;
 }
 
 void SettingsDialog::updateTlsRegenerateButton() {

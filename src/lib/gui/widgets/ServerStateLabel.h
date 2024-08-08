@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "ClientStateLabel.h"
 
-namespace synergy_widgets {
+#pragma once
 
-ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
+#include <QLabel>
+#include <QStringList>
 
-void ClientStateLabel::updateClientState(const QString &line) {
-  if (line.contains("connected to server")) {
-    show();
-  } else if (
-      line.contains("disconnected from server") ||
-      line.contains("process exited")) {
-    hide();
-  }
-}
+namespace synergy::gui::widgets {
 
-} // namespace synergy_widgets
+class ServerStateLabel : public QLabel {
+public:
+  explicit ServerStateLabel(QWidget *parent = nullptr);
+  void updateServerState(const QString &line);
+
+private:
+  QStringList m_clients;
+
+  void updateState();
+};
+
+} // namespace synergy::gui::widgets

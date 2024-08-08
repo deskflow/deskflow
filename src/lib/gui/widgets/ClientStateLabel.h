@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,16 +17,14 @@
 
 #pragma once
 
-#include "IStringValidator.h"
+#include <QLabel>
 
-#include <QRegularExpression>
+namespace synergy::gui::widgets {
 
-namespace validators {
-
-class ComputerNameValidator : public IStringValidator {
+class ClientStateLabel : public QLabel {
 public:
-  ComputerNameValidator(const QString &message);
-  bool validate(const QString &input) const override;
+  explicit ClientStateLabel(QWidget *parent = nullptr);
+  void updateClientState(const QString &line);
 };
 
-} // namespace validators
+} // namespace synergy::gui::widgets

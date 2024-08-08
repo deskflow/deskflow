@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,25 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERVERSTATELABEL_H
-#define SERVERSTATELABEL_H
+#include "EmptyStringValidator.h"
 
-#include <QLabel>
-#include <QStringList>
+namespace validators {
 
-namespace synergy_widgets {
+EmptyStringValidator::EmptyStringValidator(const QString &message)
+    : IStringValidator(message) {}
 
-class ServerStateLabel : public QLabel {
-public:
-  explicit ServerStateLabel(QWidget *parent = nullptr);
-  void updateServerState(const QString &line);
+bool EmptyStringValidator::validate(const QString &input) const {
+  return !input.isEmpty();
+}
 
-private:
-  QStringList m_clients;
-
-  void updateState();
-};
-
-} // namespace synergy_widgets
-
-#endif // SERVERSTATELABEL_H
+} // namespace validators

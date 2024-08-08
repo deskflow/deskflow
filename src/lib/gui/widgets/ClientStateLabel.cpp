@@ -15,17 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "ClientStateLabel.h"
 
-#include "LineEditValidator.h"
-#include "validators/ValidationError.h"
+namespace synergy::gui::widgets {
 
-namespace validators {
+ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
 
-class AliasValidator : public LineEditValidator {
-public:
-  explicit AliasValidator(
-      QLineEdit *parent = nullptr, ValidationError *error = nullptr);
-};
+void ClientStateLabel::updateClientState(const QString &line) {
+  if (line.contains("connected to server")) {
+    show();
+  } else if (
+      line.contains("disconnected from server") ||
+      line.contains("process exited")) {
+    hide();
+  }
+}
 
-} // namespace validators
+} // namespace synergy::gui::widgets

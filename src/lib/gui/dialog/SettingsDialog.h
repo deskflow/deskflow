@@ -25,12 +25,10 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/core/CoreTool.h"
 #include "gui/tls/TlsUtility.h"
+#include "gui/validators/ValidationError.h"
 #include "license/License.h"
-#include "validators/ValidationError.h"
 
 #include <QDialog>
-
-class MainWindow;
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
   using IServerConfig = synergy::gui::IServerConfig;
@@ -41,9 +39,8 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 
 public:
   SettingsDialog(
-      MainWindow *parent, AppConfig &appConfig,
-      const IServerConfig &serverConfig, const License &license,
-      const CoreProcess &coreProcess);
+      QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig,
+      const License &license, const CoreProcess &coreProcess);
   static QString browseForSynergyc(
       QWidget *parent, const QString &programDir,
       const QString &coreClientName);

@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,19 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CLIENTSTATELABEL_H
-#define CLIENTSTATELABEL_H
+#pragma once
 
-#include <QLabel>
+#include "LineEditValidator.h"
+#include "gui/validators/ValidationError.h"
 
-namespace synergy_widgets {
+namespace validators {
 
-class ClientStateLabel : public QLabel {
+class AliasValidator : public LineEditValidator {
 public:
-  explicit ClientStateLabel(QWidget *parent = nullptr);
-  void updateClientState(const QString &line);
+  explicit AliasValidator(
+      QLineEdit *parent = nullptr, ValidationError *error = nullptr);
 };
 
-} // namespace synergy_widgets
-
-#endif // CLIENTSTATELABEL_H
+} // namespace validators
