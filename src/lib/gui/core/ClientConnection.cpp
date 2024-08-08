@@ -59,18 +59,20 @@ QString ClientConnection::getMessage(const QString &line) const {
                      .arg(m_appConfig.serverHostname());
 
   if (line.contains("server already has a connected client with our name")) {
-    return message +
+    return message + //
            "<p>Two of your client computers have the same name or there are "
            "two instances of the client process running.</p>"
            "<p>Please ensure that you're using a unique name and that only a "
            "single client process is running.</p>";
   } else if (address.isNull()) {
-    return message + "<p>Please try to connect to the server using the "
-                     "server IP address instead of the hostname. </p>"
-                     "<p>If that doesn't work, please check your TLS and "
-                     "firewall settings.</p>";
+    return message + //
+           "<p>Please try to connect to the server using the server IP address "
+           "instead of the hostname. </p>"
+           "<p>If that doesn't work, please check your TLS and "
+           "firewall settings.</p>";
   } else {
-    return message + "<p>Please check your TLS and firewall settings.</p>";
+    return message + //
+           "<p>Please check your TLS and firewall settings.</p>";
   }
 }
 
