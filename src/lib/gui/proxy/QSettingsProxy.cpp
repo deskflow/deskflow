@@ -19,42 +19,42 @@
 
 namespace synergy::gui::proxy {
 
-int QSettingsProxy::beginReadArray(QAnyStringView prefix) {
+int QSettingsProxy::beginReadArray(const QString &prefix) {
   return m_pSettings->beginReadArray(prefix);
 }
 
 void QSettingsProxy::setArrayIndex(int i) { m_pSettings->setArrayIndex(i); }
 
-QVariant QSettingsProxy::value(QAnyStringView key) const {
+QVariant QSettingsProxy::value(const QString &key) const {
   return m_pSettings->value(key);
 }
 
 QVariant
-QSettingsProxy::value(QAnyStringView key, const QVariant &defaultValue) const {
+QSettingsProxy::value(const QString &key, const QVariant &defaultValue) const {
   return m_pSettings->value(key, defaultValue);
 }
 
 void QSettingsProxy::endArray() { m_pSettings->endArray(); }
 
-void QSettingsProxy::beginWriteArray(QAnyStringView prefix) {
+void QSettingsProxy::beginWriteArray(const QString &prefix) {
   m_pSettings->beginWriteArray(prefix);
 }
 
-void QSettingsProxy::setValue(QAnyStringView key, const QVariant &value) {
+void QSettingsProxy::setValue(const QString &key, const QVariant &value) {
   m_pSettings->setValue(key, value);
 }
 
-void QSettingsProxy::beginGroup(QAnyStringView prefix) {
+void QSettingsProxy::beginGroup(const QString &prefix) {
   m_pSettings->beginGroup(prefix);
 }
 
-void QSettingsProxy::remove(QAnyStringView key) { m_pSettings->remove(key); }
+void QSettingsProxy::remove(const QString &key) { m_pSettings->remove(key); }
 
 void QSettingsProxy::endGroup() { m_pSettings->endGroup(); }
 
 bool QSettingsProxy::isWritable() const { return m_pSettings->isWritable(); }
 
-bool QSettingsProxy::contains(QAnyStringView key) const {
+bool QSettingsProxy::contains(const QString &key) const {
   return m_pSettings->contains(key);
 }
 

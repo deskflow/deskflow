@@ -24,19 +24,19 @@ namespace synergy::gui::proxy {
 class QSettingsProxy {
 public:
   virtual ~QSettingsProxy() = default;
-  virtual int beginReadArray(QAnyStringView prefix);
-  virtual void beginWriteArray(QAnyStringView prefix);
+  virtual int beginReadArray(const QString &prefix);
+  virtual void beginWriteArray(const QString &prefix);
   virtual void setArrayIndex(int i);
-  virtual QVariant value(QAnyStringView key) const;
+  virtual QVariant value(const QString &key) const;
   virtual QVariant
-  value(QAnyStringView key, const QVariant &defaultValue) const;
+  value(const QString &key, const QVariant &defaultValue) const;
   virtual void endArray();
-  virtual void setValue(QAnyStringView key, const QVariant &value);
-  virtual void beginGroup(QAnyStringView prefix);
+  virtual void setValue(const QString &key, const QVariant &value);
+  virtual void beginGroup(const QString &prefix);
   virtual void endGroup();
-  virtual void remove(QAnyStringView key);
+  virtual void remove(const QString &key);
   virtual bool isWritable() const;
-  virtual bool contains(QAnyStringView key) const;
+  virtual bool contains(const QString &key) const;
 
   void set(QSettings &settings) { m_pSettings = &settings; }
   QSettings &get() const { return *m_pSettings; }

@@ -28,21 +28,21 @@ using namespace testing;
 
 class QSettingsProxyMock : public QSettingsProxy {
 public:
-  MOCK_METHOD(int, beginReadArray, (QAnyStringView prefix), (override));
-  MOCK_METHOD(void, beginWriteArray, (QAnyStringView prefix), (override));
+  MOCK_METHOD(int, beginReadArray, (const QString &prefix), (override));
+  MOCK_METHOD(void, beginWriteArray, (const QString &prefix), (override));
   MOCK_METHOD(void, setArrayIndex, (int i), (override));
-  MOCK_METHOD(QVariant, value, (QAnyStringView key), (const, override));
+  MOCK_METHOD(QVariant, value, (const QString &key), (const, override));
   MOCK_METHOD(
-      QVariant, value, (QAnyStringView key, const QVariant &defaultValue),
+      QVariant, value, (const QString &key, const QVariant &defaultValue),
       (const, override));
   MOCK_METHOD(void, endArray, (), (override));
   MOCK_METHOD(
-      void, setValue, (QAnyStringView key, const QVariant &value), (override));
-  MOCK_METHOD(void, beginGroup, (QAnyStringView prefix), (override));
+      void, setValue, (const QString &key, const QVariant &value), (override));
+  MOCK_METHOD(void, beginGroup, (const QString &prefix), (override));
   MOCK_METHOD(void, endGroup, (), (override));
-  MOCK_METHOD(void, remove, (QAnyStringView key), (override));
+  MOCK_METHOD(void, remove, (const QString &key), (override));
   MOCK_METHOD(bool, isWritable, (), (const, override));
-  MOCK_METHOD(bool, contains, (QAnyStringView key), (const, override));
+  MOCK_METHOD(bool, contains, (const QString &key), (const, override));
 };
 
 TEST(ScreenTests, loadSettings_whenHasSetting_readsArray) {
