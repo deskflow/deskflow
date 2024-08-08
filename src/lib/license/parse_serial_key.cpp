@@ -133,8 +133,6 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   try {
     auto seconds = std::stol(clean);
     if (seconds <= 0) {
-      // some serial keys have been generated with 0 as the expiration date.
-      qWarning("serial key expiration date is %ld", seconds);
       return std::nullopt;
     } else {
       return time_point{std::chrono::seconds{seconds}};
