@@ -28,6 +28,7 @@
     "macdeployqt",
     "msvc",
     "noquote",
+    "NOSONAR",
     "notarytool",
     "Oleksandr",
     "Olena",

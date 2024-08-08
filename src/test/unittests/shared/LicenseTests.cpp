@@ -70,7 +70,7 @@ TEST_F(LicenseTests, isExpiring_validV2TrialBasicSerial_isExpiring) {
                   "F6D70616E79206E616D653B313B38363430307D");
   setNow(license, 0);
 
-  EXPECT_FALSE(license.isExpiring());
+  EXPECT_FALSE(license.isExpiringSoon());
 }
 
 TEST_F(LicenseTests, isExpiring_validV2TrialBasicSerial_isBasicEdition) {
@@ -89,7 +89,7 @@ TEST_F(LicenseTests, isExpiring_expiringV2TrialBasicSerial_returnTrue) {
   setNow(license, 1);
 
   EXPECT_TRUE(license.isTrial());
-  EXPECT_TRUE(license.isExpiring());
+  EXPECT_TRUE(license.isExpiringSoon());
 }
 
 TEST_F(LicenseTests, isExpired_validV2TrialBasicSerial_returnFalse) {
@@ -157,7 +157,7 @@ TEST_F(LicenseTests, isExpiring_validV2SubscriptionBasicSerial_returnFalse) {
   setNow(license, 0);
 
   EXPECT_TRUE(license.isSubscription());
-  EXPECT_FALSE(license.isExpiring());
+  EXPECT_FALSE(license.isExpiringSoon());
   EXPECT_EQ(kBasic, license.productEdition());
 }
 
@@ -168,7 +168,7 @@ TEST_F(LicenseTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue) {
   setNow(license, 1);
 
   EXPECT_TRUE(license.isSubscription());
-  EXPECT_TRUE(license.isExpiring());
+  EXPECT_TRUE(license.isExpiringSoon());
 }
 
 TEST_F(LicenseTests, isExpired_expiredV2SubscriptionBasicSerial_returnTrue) {

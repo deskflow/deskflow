@@ -50,7 +50,7 @@ public:
   }
 
   bool isValid() const { return m_serialKey.isValid; }
-  bool isExpiring() const;
+  bool isExpiringSoon() const;
   bool isExpired() const;
   bool isTrial() const;
   bool isSubscription() const;

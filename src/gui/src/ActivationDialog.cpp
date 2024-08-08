@@ -31,6 +31,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
+#include <exception>
 
 using namespace synergy::gui;
 using namespace synergy::license;
@@ -102,8 +103,11 @@ void ActivationDialog::accept() {
       showResultDialog(result);
       return;
     }
-  } catch (const SerialKeyParseError &e) {
-    showErrorDialog(e.what());
+  } catch (const std::exception &e) { // NOSONAR
+    qCritical("failed to change serial key: %s", e.what());
+    return;
+  } catch (...) { // NOSONAR
+    qCritical("failed to change serial key");
     return;
   }
 
