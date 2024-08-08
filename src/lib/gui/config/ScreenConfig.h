@@ -18,12 +18,15 @@
 
 #pragma once
 
-#include <QSettings>
 #include <QString>
 #include <QVariant>
 
+#include "gui/proxy/QSettingsProxy.h"
+
 /// @brief Screen configuration base class
 class ScreenConfig {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
 public:
   enum Modifier {
     DefaultMod = -1,
@@ -51,13 +54,13 @@ protected:
 protected:
   template <typename T1, typename T2>
   void readSettings(
-      QSettings &settings, T1 &array, const QString &arrayName,
-      const T2 &deflt) {
+      QSettingsProxy &settings, T1 &array, const QString &arrayName,
+      const T2 &defaultValue) {
     int entries = settings.beginReadArray(arrayName + "Array");
     array.clear();
     for (int i = 0; i < entries; i++) {
       settings.setArrayIndex(i);
-      QVariant v = settings.value(arrayName, deflt);
+      QVariant v = settings.value(arrayName, defaultValue);
       array.append(v.value<T2>());
     }
     settings.endArray();
@@ -65,13 +68,13 @@ protected:
 
   template <typename T1, typename T2>
   void readSettings(
-      QSettings &settings, T1 &array, const QString &arrayName, const T2 &deflt,
-      int entries) {
+      QSettingsProxy &settings, T1 &array, const QString &arrayName,
+      const T2 &defaultValue, int entries) {
     Q_ASSERT(array.size() >= entries);
     settings.beginReadArray(arrayName + "Array");
     for (int i = 0; i < entries; i++) {
       settings.setArrayIndex(i);
-      QVariant v = settings.value(arrayName, deflt);
+      QVariant v = settings.value(arrayName, defaultValue);
       array[i] = v.value<T2>();
     }
     settings.endArray();
@@ -79,7 +82,8 @@ protected:
 
   template <typename T>
   void writeSettings(
-      QSettings &settings, const T &array, const QString &arrayName) const {
+      QSettingsProxy &settings, const T &array,
+      const QString &arrayName) const {
     settings.beginWriteArray(arrayName + "Array");
     for (int i = 0; i < array.size(); i++) {
       settings.setArrayIndex(i);

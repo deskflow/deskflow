@@ -28,6 +28,8 @@ namespace synergy::gui {
 
 /// @brief Encapsulates Qt config for both user and global scopes.
 class ConfigScopes : public QObject, public IConfigScopes {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
   Q_OBJECT
 
 public:
@@ -47,7 +49,8 @@ public:
       Scope scope = Scope::Current) const override;
   void setActiveScope(Scope scope = Scope::User) override;
   Scope activeScope() const override;
-  QSettings *activeSettings() const override;
+  QSettingsProxy &activeSettings() override;
+  const QSettingsProxy &activeSettings() const override;
 
 signals:
   void ready();
@@ -57,6 +60,8 @@ private:
   Scope m_currentScope = Scope::User;
   std::unique_ptr<QSettings> m_pUserSettings;
   std::unique_ptr<QSettings> m_pSystemSettings;
+  QSettingsProxy m_userSettingsProxy;
+  QSettingsProxy m_systemSettingsProxy;
 };
 
 } // namespace synergy::gui

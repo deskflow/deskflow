@@ -27,6 +27,8 @@
 #include <QPushButton>
 #include <QtCore>
 
+using namespace synergy::gui::proxy;
+
 static const struct {
   int x;
   int y;
@@ -147,7 +149,7 @@ void ServerConfig::commit() {
   settings().beginWriteArray("hotkeys");
   for (int i = 0; i < hotkeys().size(); i++) {
     settings().setArrayIndex(i);
-    hotkeys()[i].saveSettings(settings());
+    hotkeys()[i].saveSettings(settings().get());
   }
   settings().endArray();
 
@@ -206,7 +208,7 @@ void ServerConfig::recall() {
   for (int i = 0; i < numHotkeys; i++) {
     settings().setArrayIndex(i);
     Hotkey h;
-    h.loadSettings(settings());
+    h.loadSettings(settings().get());
     hotkeys().append(h);
   }
   settings().endArray();
@@ -542,6 +544,6 @@ QString ServerConfig::getClientAddress() const {
   return clientAddress;
 }
 
-QSettings &ServerConfig::settings() {
-  return *m_pAppConfig->scopes().activeSettings();
+QSettingsProxy &ServerConfig::settings() {
+  return m_pAppConfig->scopes().activeSettings();
 }

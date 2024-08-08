@@ -17,15 +17,20 @@
 
 #include "gui/config/AppConfig.h"
 
+#include "gui/proxy/QSettingsProxy.h"
+
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace testing;
+using namespace synergy::gui::proxy;
 
 namespace {
 
 class ConfigScopesMock : public synergy::gui::IConfigScopes {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
 public:
   MOCK_METHOD(void, signalReady, (), (override));
   MOCK_METHOD(
@@ -41,7 +46,8 @@ public:
   MOCK_METHOD(Scope, activeScope, (), (const, override));
   MOCK_METHOD(void, setActiveScope, (Scope scope), (override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
-  MOCK_METHOD(QSettings *, activeSettings, (), (const, override));
+  MOCK_METHOD(const QSettingsProxy &, activeSettings, (), (const, override));
+  MOCK_METHOD(QSettingsProxy &, activeSettings, (), (override));
   MOCK_METHOD(void, save, (), (override));
 };
 

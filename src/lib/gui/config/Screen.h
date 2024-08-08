@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 
 #include "ScreenConfig.h"
 
+#include "gui/proxy/QSettingsProxy.h"
+
 #include <QList>
 #include <QPixmap>
 #include <QString>
@@ -30,6 +32,8 @@ class QTextStream;
 class ScreenSettingsDialog;
 
 class Screen : public ScreenConfig {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
   friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
   friend QDataStream &operator>>(QDataStream &inStream, Screen &screen);
   friend class ScreenSettingsDialog;
@@ -56,8 +60,8 @@ public:
   bool fix(Fix f) const { return m_Fixes[f]; }
   const QList<bool> &fixes() const { return m_Fixes; }
 
-  void loadSettings(QSettings &settings);
-  void saveSettings(QSettings &settings) const;
+  void loadSettings(QSettingsProxy &settings);
+  void saveSettings(QSettingsProxy &settings) const;
   QTextStream &writeScreensSection(QTextStream &outStream) const;
   QTextStream &writeAliasesSection(QTextStream &outStream) const;
 

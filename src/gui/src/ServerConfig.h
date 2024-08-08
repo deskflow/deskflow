@@ -37,6 +37,8 @@ class MainWindow;
 class AppConfig;
 
 class ServerConfig : public ScreenConfig, public synergy::gui::IServerConfig {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
   friend class ServerConfigDialog;
   friend QTextStream &
   operator<<(QTextStream &outStream, const ServerConfig &config);
@@ -102,7 +104,7 @@ public:
 private:
   void recall();
   void setupScreens();
-  QSettings &settings();
+  QSettingsProxy &settings();
   ScreenList &screens() { return m_Screens; }
   void setScreens(const ScreenList &screens) { m_Screens = screens; }
   void addScreen(const Screen &screen) { m_Screens.append(screen); }

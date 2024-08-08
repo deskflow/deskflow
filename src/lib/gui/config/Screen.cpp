@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 
 #include <QtCore>
 #include <QtGui>
+
+using namespace synergy::gui::proxy;
 
 Screen::Screen()
     : m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
@@ -55,7 +57,7 @@ void Screen::init() {
     fixes() << false;
 }
 
-void Screen::loadSettings(QSettings &settings) {
+void Screen::loadSettings(QSettingsProxy &settings) {
   setName(settings.value("name").toString());
 
   if (name().isEmpty())
@@ -72,7 +74,7 @@ void Screen::loadSettings(QSettings &settings) {
   readSettings(settings, fixes(), "fix", false, NumFixes);
 }
 
-void Screen::saveSettings(QSettings &settings) const {
+void Screen::saveSettings(QSettingsProxy &settings) const {
   settings.setValue("name", name());
 
   if (name().isEmpty())

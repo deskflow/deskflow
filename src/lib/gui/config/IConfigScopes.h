@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "gui/proxy/QSettingsProxy.h"
+
 #include <QSettings>
 #include <QString>
 #include <QVariant>
@@ -24,6 +26,8 @@
 namespace synergy::gui {
 
 class IConfigScopes {
+  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+
 public:
   enum class Scope { Current, System, User };
 
@@ -32,7 +36,8 @@ public:
   virtual Scope activeScope() const = 0;
   virtual void setActiveScope(Scope scope = Scope::User) = 0;
   virtual bool isActiveScopeWritable() const = 0;
-  virtual QSettings *activeSettings() const = 0;
+  virtual QSettingsProxy &activeSettings() = 0;
+  virtual const QSettingsProxy &activeSettings() const = 0;
 
   /**
    * @brief Signals to listeners that the settings that they should read.
@@ -40,7 +45,7 @@ public:
   virtual void signalReady() = 0;
 
   /**
-   * @brief Signalls to listeners to save and calls `sync` on underlying Qt
+   * @brief Signals to listeners to save and calls `sync` on underlying Qt
    * config.
    *
    */
