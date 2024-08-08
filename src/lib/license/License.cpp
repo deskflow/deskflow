@@ -44,7 +44,7 @@ bool License::isSubscription() const {
 }
 
 bool License::isTimeLimited() const {
-  return m_serialKey.expireTime.has_value() || m_serialKey.warnTime.has_value();
+  return m_serialKey.type.isSubscription() || m_serialKey.type.isTrial();
 }
 
 bool License::isTlsAvailable() const {
