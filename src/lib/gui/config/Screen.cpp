@@ -131,16 +131,3 @@ bool Screen::operator==(const Screen &screen) const {
          m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped &&
          m_isServer == screen.m_isServer;
 }
-
-QDataStream &operator<<(QDataStream &outStream, const Screen &screen) {
-  return outStream << screen.name() << screen.switchCornerSize()
-                   << screen.aliases() << screen.modifiers()
-                   << screen.switchCorners() << screen.fixes()
-                   << screen.isServer();
-}
-
-QDataStream &operator>>(QDataStream &inStream, Screen &screen) {
-  return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >>
-         screen.m_Aliases >> screen.m_Modifiers >> screen.m_SwitchCorners >>
-         screen.m_Fixes >> screen.m_isServer;
-}

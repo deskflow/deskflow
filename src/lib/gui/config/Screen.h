@@ -38,8 +38,18 @@ class Screen : public ScreenConfig {
   friend class ScreenSetupModel;
   friend class ScreenSetupView;
 
-  friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
-  friend QDataStream &operator>>(QDataStream &inStream, Screen &screen);
+  friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen) {
+    return outStream << screen.name() << screen.switchCornerSize()
+                     << screen.aliases() << screen.modifiers()
+                     << screen.switchCorners() << screen.fixes()
+                     << screen.isServer();
+  }
+
+  friend QDataStream &operator>>(QDataStream &inStream, Screen &screen) {
+    return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >>
+           screen.m_Aliases >> screen.m_Modifiers >> screen.m_SwitchCorners >>
+           screen.m_Fixes >> screen.m_isServer;
+  }
 
 public:
   explicit Screen();
