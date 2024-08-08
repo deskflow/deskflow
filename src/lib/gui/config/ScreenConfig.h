@@ -51,7 +51,6 @@ protected:
   explicit ScreenConfig() = default;
   ~ScreenConfig() = default;
 
-protected:
   template <typename T1, typename T2>
   void readSettings(
       QSettingsProxy &settings, T1 &array, const QString &arrayName,
