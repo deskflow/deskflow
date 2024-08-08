@@ -83,10 +83,10 @@ TEST_F(LicenseTests, isExpiring_validV2TrialBasicSerial_isBasicEdition) {
 }
 
 TEST_F(LicenseTests, isExpiring_expiringV2TrialBasicSerial_returnTrue) {
-  // {v2;trial;basic;Bob;1;email;company name;0;86400}
+  // {v2;trial;basic;Bob;1;email;company name;86400;0}
   License license("7B76323B747269616C3B62617369633B426F623B313B656D61696C3B636"
-                  "F6D70616E79206E616D653B303B38363430307D");
-  setNow(license, 1);
+                  "F6D70616E79206E616D653B38363430303B307D");
+  setNow(license, 86401);
 
   EXPECT_TRUE(license.isTrial());
   EXPECT_TRUE(license.isExpiringSoon());
@@ -162,10 +162,10 @@ TEST_F(LicenseTests, isExpiring_validV2SubscriptionBasicSerial_returnFalse) {
 }
 
 TEST_F(LicenseTests, isExpiring_expiringV2SubscriptionBasicSerial_returnTrue) {
-  // {v2;subscription;basic;Bob;1;email;company name;0;86400}
+  // {v2;subscription;basic;Bob;1;email;company name;86400;0}
   License license("7B76323B737562736372697074696F6E3B62617369633B426F623B313B6"
-                  "56D61696C3B636F6D70616E79206E616D653B303B38363430307D");
-  setNow(license, 1);
+                  "56D61696C3B636F6D70616E79206E616D653B38363430303B307D");
+  setNow(license, 86401);
 
   EXPECT_TRUE(license.isSubscription());
   EXPECT_TRUE(license.isExpiringSoon());
