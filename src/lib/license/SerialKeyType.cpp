@@ -28,7 +28,3 @@ void SerialKeyType::setType(const std::string_view &type) {
 bool SerialKeyType::isTrial() const { return m_isTrial; }
 
 bool SerialKeyType::isSubscription() const { return m_isSubscription; }
-
-bool SerialKeyType::isTimeLimited() const {
-  return m_isTrial || m_isSubscription;
-}

@@ -34,7 +34,6 @@ public:
   void setType(const std::string_view &type);
   bool isTrial() const;
   bool isSubscription() const;
-  bool isTimeLimited() const;
 
 private:
   bool m_isTrial = false;

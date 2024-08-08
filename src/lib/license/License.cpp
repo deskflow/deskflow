@@ -43,7 +43,9 @@ bool License::isSubscription() const {
   return m_serialKey.type.isSubscription();
 }
 
-bool License::isTimeLimited() const { return m_serialKey.type.isTimeLimited(); }
+bool License::isTimeLimited() const {
+  return m_serialKey.type.isSubscription() || m_serialKey.type.isTrial();
+}
 
 bool License::isTlsAvailable() const {
   return m_serialKey.product.isTlsAvailable();
@@ -53,7 +55,7 @@ Edition License::productEdition() const {
   return m_serialKey.product.edition();
 }
 
-bool License::isExpiring() const {
+bool License::isExpiringSoon() const {
   if (!isTimeLimited()) {
     return false;
   }

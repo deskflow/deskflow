@@ -20,8 +20,6 @@
 #include "constants.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
-#include <qglobal.h>
-#include <qmutex.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"

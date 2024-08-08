@@ -22,6 +22,7 @@
 #include "utils/trim.h"
 
 #include <cctype>
+#include <exception>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -130,12 +131,13 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   }
 
   try {
-    auto seconds = std::stoi(clean);
-    if (seconds < 0) {
-      throw InvalidSerialKeyDate(unixTimeString);
+    auto seconds = std::stol(clean);
+    if (seconds <= 0) {
+      return std::nullopt;
+    } else {
+      return time_point{std::chrono::seconds{seconds}};
     }
-    return time_point{std::chrono::seconds{seconds}};
-  } catch (const std::invalid_argument &) {
+  } catch (const std::exception &) {
     throw InvalidSerialKeyDate(unixTimeString);
   }
 }
