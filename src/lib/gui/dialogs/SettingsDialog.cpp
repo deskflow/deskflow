@@ -48,7 +48,7 @@ SettingsDialog::SettingsDialog(
       m_coreProcess(coreProcess),
       m_tlsUtility(appConfig, license) {
 
-  qDebug("setting up settings dialog ui");
+  qDebug("settings dialog ui setup");
   setupUi(this);
 
   // force the first tab, since qt creator sets the active tab as the last one
