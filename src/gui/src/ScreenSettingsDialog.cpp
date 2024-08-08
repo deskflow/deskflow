@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -17,8 +17,7 @@
  */
 
 #include "ScreenSettingsDialog.h"
-
-#include "gui/config/Screen.h"
+#include "Screen.h"
 #include "gui/styles.h"
 #include "validators/AliasValidator.h"
 #include "validators/ScreenNameValidator.h"

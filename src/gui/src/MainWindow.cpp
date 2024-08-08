@@ -408,11 +408,9 @@ void MainWindow::on_m_pActionHelp_triggered() {
 }
 
 void MainWindow::on_m_pActionSettings_triggered() {
-  auto dialog = SettingsDialog(
-      this, m_AppConfig, m_ServerConfig, m_LicenseHandler.license(),
-      m_CoreProcess);
-
-  if (dialog.exec() == QDialog::Accepted) {
+  auto result =
+      SettingsDialog(this, m_AppConfig, m_LicenseHandler.license()).exec();
+  if (result == QDialog::Accepted) {
     m_ConfigScopes.save();
 
     applyConfig();

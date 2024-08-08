@@ -20,8 +20,6 @@
 #include <QFile>
 #include <QString>
 
-#include "ScreenList.h"
-
 namespace synergy::gui {
 
 class IServerConfig {
@@ -32,7 +30,6 @@ public:
   virtual bool save(const QString &fileName) const = 0;
   virtual void save(QFile &file) const = 0;
   virtual bool enableDragAndDrop() const = 0;
-  virtual const ScreenList &screens() const = 0;
 };
 
 } // namespace synergy::gui

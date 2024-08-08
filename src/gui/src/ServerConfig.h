@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
+ * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "Hotkey.h"
+#include "ScreenConfig.h"
+#include "ScreenList.h"
 #include "gui/config/IServerConfig.h"
-#include "gui/config/ScreenConfig.h"
-#include "gui/config/ScreenList.h"
 
 #include <QList>
 
@@ -49,15 +49,7 @@ public:
 
   bool operator==(const ServerConfig &sc) const;
 
-  //
-  // Overrides
-  //
-  const ScreenList &screens() const override { return m_Screens; }
-  bool enableDragAndDrop() const override { return m_EnableDragAndDrop; }
-
-  //
-  // New methods
-  //
+  const ScreenList &screens() const { return m_Screens; }
   int numColumns() const { return m_Columns; }
   int numRows() const { return m_Rows; }
   bool hasHeartbeat() const { return m_HasHeartbeat; }
@@ -72,29 +64,23 @@ public:
   int switchCornerSize() const { return m_SwitchCornerSize; }
   const QList<bool> &switchCorners() const { return m_SwitchCorners; }
   const HotkeyList &hotkeys() const { return m_Hotkeys; }
+  bool enableDragAndDrop() const override { return m_EnableDragAndDrop; }
   bool disableLockToScreen() const { return m_DisableLockToScreen; }
   bool clipboardSharing() const { return m_ClipboardSharing; }
   size_t clipboardSharingSize() const { return m_ClipboardSharingSize; }
   static size_t defaultClipboardSharingSize();
 
-  //
-  // Overrides
-  //
-  bool save(const QString &fileName) const override;
-  bool screenExists(const QString &screenName) const override;
-  void save(QFile &file) const override;
-  bool isFull() const override;
-
-  //
-  // New methods
-  //
   void commit();
+  bool save(const QString &fileName) const override;
+  void save(QFile &file) const override;
   int numScreens() const;
   int autoAddScreen(const QString name);
   const QString &getServerName() const;
   void updateServerName();
   const QString &configFile() const;
   bool useExternalConfig() const;
+  bool isFull() const override;
+  bool screenExists(const QString &screenName) const override;
   void addClient(const QString &clientName);
   QString getClientAddress() const;
   void setClientAddress(const QString &address);
