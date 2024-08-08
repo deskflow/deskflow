@@ -19,6 +19,7 @@
 
 #include <QHostAddress>
 #include <QMessageBox>
+#include <qglobal.h>
 
 namespace synergy::gui {
 
@@ -53,24 +54,26 @@ bool ClientConnection::checkMainWindow() {
 }
 
 QString ClientConnection::getMessage(const QString &line) const {
-  QString message(QObject::tr("Connection failed.\nCheck the IP address on the "
-                              "server, your TLS and firewall settings."));
+  QHostAddress address(m_appConfig.serverHostname());
+  auto message = QString("<p>The connection to server '%1' didn't work.</p>")
+                     .arg(m_appConfig.serverHostname());
 
   if (line.contains("server already has a connected client with our name")) {
-    message =
-        QObject::tr("Connection failed.\nYou can’t name 2 computers the same.");
-  } else {
-    QHostAddress address(m_appConfig.serverHostname());
-    if (address.isNull()) {
-      message =
-          QObject::tr(
-              "We can’t connect to the server \"%1\" try to connect using the "
-              "server IP address and check your firewall settings.")
-              .arg(m_appConfig.serverHostname());
-    }
+    return message +
+           "<p>Two of your client computers have the same name or there are "
+           "two instances of the client process running.</p>"
+           "<p>Please ensure that you're using a unique name and that only a "
+           "single client process is running.</p>";
   }
 
-  return message;
+  if (address.isNull()) {
+    return message + "<p>Please try to connect to the server using the "
+                     "server IP address instead of the hostname. </p>"
+                     "<p>If that doesn't work, please check your TLS and "
+                     "firewall settings.</p>";
+  } else {
+    return message + "<p>Please check your TLS and firewall settings.</p>";
+  }
 }
 
 void ClientConnection::showMessage(const QString &message) const {
