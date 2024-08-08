@@ -32,7 +32,6 @@
 #include <QMessageBox>
 #include <QtCore>
 #include <QtGui>
-#include <qglobal.h>
 
 using namespace synergy::license;
 using namespace synergy::gui;

@@ -24,7 +24,6 @@
 #include <cctype>
 #include <exception>
 #include <optional>
-#include <qglobal.h>
 #include <sstream>
 #include <string>
 #include <vector>
