@@ -73,6 +73,7 @@ Enhancements:
 - #7427 More reliable button click detection for add client dialog
 - #7428 Refactor settings dialog to simplify enable/disable logic
 - #7429 Parse date numbers as long instead of int
+- #7430 Improve setting enable logic and test coverage
 
 # 1.14.6
 
