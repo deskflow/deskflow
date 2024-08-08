@@ -22,7 +22,6 @@
 #include "UpgradeDialog.h"
 #include "gui/config/AppConfig.h"
 #include "gui/constants.h"
-#include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 #include "validators/ScreenNameValidator.h"
@@ -139,7 +138,7 @@ void SettingsDialog::on_m_pPushButtonRegenCert_clicked() {
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool checked) {
+void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool) {
   updateControls();
 }
 
@@ -306,9 +305,9 @@ void SettingsDialog::updateControls() {
   m_pCheckBoxEnableCrypto->setEnabled(writable);
   m_pCheckBoxCloseToTray->setEnabled(writable);
 
-  m_pCheckBoxServiceEnabled->setEnabled(writable & serviceAvailable);
-  m_pLabelElevate->setEnabled(writable & serviceAvailable && serviceChecked);
-  m_pComboElevate->setEnabled(writable & serviceAvailable && serviceChecked);
+  m_pCheckBoxServiceEnabled->setEnabled(writable && serviceAvailable);
+  m_pLabelElevate->setEnabled(writable && serviceAvailable && serviceChecked);
+  m_pComboElevate->setEnabled(writable && serviceAvailable && serviceChecked);
 
   m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
   m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());

@@ -28,6 +28,9 @@
 #include <QtCore>
 
 using namespace synergy::gui::proxy;
+using enum ScreenConfig::Modifier;
+using enum ScreenConfig::SwitchCorner;
+using enum ScreenConfig::Fix;
 
 static const struct {
   int x;
@@ -96,7 +99,7 @@ void ServerConfig::setupScreens() {
   hotkeys().clear();
 
   // m_NumSwitchCorners is used as a fixed size array. See Screen::init()
-  for (int i = 0; i < NumSwitchCorners; i++)
+  for (int i = 0; i < static_cast<int>(NumSwitchCorners); i++)
     switchCorners() << false;
 
   // There must always be screen objects for each cell in the screens QList.
@@ -191,7 +194,8 @@ void ServerConfig::recall() {
   setClientAddress(settings().value("clientAddress", "").toString());
 
   readSettings(
-      settings(), switchCorners(), "switchCorner", false, NumSwitchCorners);
+      settings(), switchCorners(), "switchCorner", 0,
+      static_cast<int>(NumSwitchCorners));
 
   int numScreens = settings().beginReadArray("screens");
   Q_ASSERT(numScreens <= screens().size());
@@ -451,7 +455,7 @@ void ServerConfig::addClient(const QString &clientName) {
     fixNoServer(m_pAppConfig->screenName(), serverIndex);
   }
 
-  m_Screens.addScreenByPriority(clientName);
+  m_Screens.addScreenByPriority(Screen(clientName));
 }
 
 void ServerConfig::setConfigFile(const QString &configFile) {

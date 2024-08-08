@@ -28,6 +28,8 @@
 #include <QtCore>
 #include <QtGui>
 
+using enum ScreenConfig::SwitchCorner;
+
 ServerConfigDialog::ServerConfigDialog(
     QWidget *parent, ServerConfig &config, AppConfig &appConfig)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -65,13 +67,13 @@ ServerConfigDialog::ServerConfigDialog(
   m_pSpinBoxSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
 
   m_pCheckBoxCornerTopLeft->setChecked(
-      serverConfig().switchCorner(ScreenConfig::TopLeft));
+      serverConfig().switchCorner(static_cast<int>(TopLeft)));
   m_pCheckBoxCornerTopRight->setChecked(
-      serverConfig().switchCorner(ScreenConfig::TopRight));
+      serverConfig().switchCorner(static_cast<int>(TopRight)));
   m_pCheckBoxCornerBottomLeft->setChecked(
-      serverConfig().switchCorner(ScreenConfig::BottomLeft));
+      serverConfig().switchCorner(static_cast<int>(BottomLeft)));
   m_pCheckBoxCornerBottomRight->setChecked(
-      serverConfig().switchCorner(ScreenConfig::BottomRight));
+      serverConfig().switchCorner(static_cast<int>(BottomRight)));
   m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
   m_pCheckBoxDisableLockToScreen->setChecked(
       serverConfig().disableLockToScreen());
@@ -189,25 +191,25 @@ ServerConfigDialog::ServerConfigDialog(
   connect(
       m_pCheckBoxCornerTopLeft, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(ScreenConfig::TopLeft, v);
+        serverConfig().setSwitchCorner(static_cast<int>(TopLeft), v);
         onChange();
       });
   connect(
       m_pCheckBoxCornerTopRight, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(ScreenConfig::TopRight, v);
+        serverConfig().setSwitchCorner(static_cast<int>(TopRight), v);
         onChange();
       });
   connect(
       m_pCheckBoxCornerBottomLeft, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(ScreenConfig::BottomLeft, v);
+        serverConfig().setSwitchCorner(static_cast<int>(BottomLeft), v);
         onChange();
       });
   connect(
       m_pCheckBoxCornerBottomRight, &QCheckBox::stateChanged, this,
       [this](const int &v) {
-        serverConfig().setSwitchCorner(ScreenConfig::BottomRight, v);
+        serverConfig().setSwitchCorner(static_cast<int>(BottomRight), v);
         onChange();
       });
   connect(

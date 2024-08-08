@@ -34,30 +34,33 @@ class ScreenSettingsDialog;
 class Screen : public ScreenConfig {
   using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
 
-  friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
-  friend QDataStream &operator>>(QDataStream &inStream, Screen &screen);
   friend class ScreenSettingsDialog;
   friend class ScreenSetupModel;
   friend class ScreenSetupView;
 
-public:
-  Screen();
-  Screen(const QString &name);
+  friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
+  friend QDataStream &operator>>(QDataStream &inStream, Screen &screen);
 
 public:
+  explicit Screen();
+  explicit Screen(const QString &name);
+
   const QPixmap &pixmap() const { return m_Pixmap; }
   const QString &name() const { return m_Name; }
   const QStringList &aliases() const { return m_Aliases; }
 
   bool isNull() const { return m_Name.isEmpty(); }
   int modifier(int m) const {
-    return m_Modifiers[m] == DefaultMod ? m : m_Modifiers[m];
+    return m_Modifiers[m] ==
+                   static_cast<int>(ScreenConfig::Modifier::DefaultMod)
+               ? m
+               : m_Modifiers[m];
   }
   const QList<int> &modifiers() const { return m_Modifiers; }
   bool switchCorner(int c) const { return m_SwitchCorners[c]; }
   const QList<bool> &switchCorners() const { return m_SwitchCorners; }
   int switchCornerSize() const { return m_SwitchCornerSize; }
-  bool fix(Fix f) const { return m_Fixes[f]; }
+  bool fix(Fix f) const { return m_Fixes[static_cast<int>(f)]; }
   const QList<bool> &fixes() const { return m_Fixes; }
 
   void loadSettings(QSettingsProxy &settings);
@@ -88,18 +91,13 @@ protected:
   void setSwapped(bool on) { m_Swapped = on; }
 
 private:
-  QPixmap m_Pixmap;
+  QPixmap m_Pixmap = QPixmap(":res/icons/64x64/video-display.png");
   QString m_Name;
-
   QStringList m_Aliases;
   QList<int> m_Modifiers;
   QList<bool> m_SwitchCorners;
   int m_SwitchCornerSize;
   QList<bool> m_Fixes;
-
-  bool m_Swapped;
+  bool m_Swapped = false;
   bool m_isServer = false;
 };
-
-QDataStream &operator<<(QDataStream &outStream, const Screen &screen);
-QDataStream &operator>>(QDataStream &inStream, Screen &screen);

@@ -29,6 +29,9 @@
 #include <QtGui>
 
 using namespace synergy::gui;
+using enum ScreenConfig::Modifier;
+using enum ScreenConfig::SwitchCorner;
+using enum ScreenConfig::Fix;
 
 ScreenSettingsDialog::ScreenSettingsDialog(
     QWidget *parent, Screen *pScreen, const ScreenList *pScreens)
@@ -54,26 +57,28 @@ ScreenSettingsDialog::ScreenSettingsDialog(
   for (int i = 0; i < m_pScreen->aliases().count(); i++)
     new QListWidgetItem(m_pScreen->aliases()[i], m_pListAliases);
 
-  m_pComboBoxShift->setCurrentIndex(m_pScreen->modifier(Screen::Shift));
-  m_pComboBoxCtrl->setCurrentIndex(m_pScreen->modifier(Screen::Ctrl));
-  m_pComboBoxAlt->setCurrentIndex(m_pScreen->modifier(Screen::Alt));
-  m_pComboBoxMeta->setCurrentIndex(m_pScreen->modifier(Screen::Meta));
-  m_pComboBoxSuper->setCurrentIndex(m_pScreen->modifier(Screen::Super));
+  m_pComboBoxShift->setCurrentIndex(
+      m_pScreen->modifier(static_cast<int>(Shift)));
+  m_pComboBoxCtrl->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Ctrl)));
+  m_pComboBoxAlt->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Alt)));
+  m_pComboBoxMeta->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Meta)));
+  m_pComboBoxSuper->setCurrentIndex(
+      m_pScreen->modifier(static_cast<int>(Super)));
 
   m_pCheckBoxCornerTopLeft->setChecked(
-      m_pScreen->switchCorner(Screen::TopLeft));
+      m_pScreen->switchCorner(static_cast<int>(TopLeft)));
   m_pCheckBoxCornerTopRight->setChecked(
-      m_pScreen->switchCorner(Screen::TopRight));
+      m_pScreen->switchCorner(static_cast<int>(TopRight)));
   m_pCheckBoxCornerBottomLeft->setChecked(
-      m_pScreen->switchCorner(Screen::BottomLeft));
+      m_pScreen->switchCorner(static_cast<int>(BottomLeft)));
   m_pCheckBoxCornerBottomRight->setChecked(
-      m_pScreen->switchCorner(Screen::BottomRight));
+      m_pScreen->switchCorner(static_cast<int>(BottomRight)));
   m_pSpinBoxSwitchCornerSize->setValue(m_pScreen->switchCornerSize());
 
-  m_pCheckBoxCapsLock->setChecked(m_pScreen->fix(Screen::CapsLock));
-  m_pCheckBoxNumLock->setChecked(m_pScreen->fix(Screen::NumLock));
-  m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(Screen::ScrollLock));
-  m_pCheckBoxXTest->setChecked(m_pScreen->fix(Screen::XTest));
+  m_pCheckBoxCapsLock->setChecked(m_pScreen->fix(CapsLock));
+  m_pCheckBoxNumLock->setChecked(m_pScreen->fix(NumLock));
+  m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(ScrollLock));
+  m_pCheckBoxXTest->setChecked(m_pScreen->fix(XTest));
 }
 
 void ScreenSettingsDialog::accept() {
@@ -103,26 +108,32 @@ void ScreenSettingsDialog::accept() {
     m_pScreen->addAlias(alias);
   }
 
-  m_pScreen->setModifier(Screen::Shift, m_pComboBoxShift->currentIndex());
-  m_pScreen->setModifier(Screen::Ctrl, m_pComboBoxCtrl->currentIndex());
-  m_pScreen->setModifier(Screen::Alt, m_pComboBoxAlt->currentIndex());
-  m_pScreen->setModifier(Screen::Meta, m_pComboBoxMeta->currentIndex());
-  m_pScreen->setModifier(Screen::Super, m_pComboBoxSuper->currentIndex());
+  m_pScreen->setModifier(
+      static_cast<int>(Shift), m_pComboBoxShift->currentIndex());
+  m_pScreen->setModifier(
+      static_cast<int>(Ctrl), m_pComboBoxCtrl->currentIndex());
+  m_pScreen->setModifier(static_cast<int>(Alt), m_pComboBoxAlt->currentIndex());
+  m_pScreen->setModifier(
+      static_cast<int>(Meta), m_pComboBoxMeta->currentIndex());
+  m_pScreen->setModifier(
+      static_cast<int>(Super), m_pComboBoxSuper->currentIndex());
 
   m_pScreen->setSwitchCorner(
-      Screen::TopLeft, m_pCheckBoxCornerTopLeft->isChecked());
+      static_cast<int>(TopLeft), m_pCheckBoxCornerTopLeft->isChecked());
   m_pScreen->setSwitchCorner(
-      Screen::TopRight, m_pCheckBoxCornerTopRight->isChecked());
+      static_cast<int>(TopRight), m_pCheckBoxCornerTopRight->isChecked());
   m_pScreen->setSwitchCorner(
-      Screen::BottomLeft, m_pCheckBoxCornerBottomLeft->isChecked());
+      static_cast<int>(BottomLeft), m_pCheckBoxCornerBottomLeft->isChecked());
   m_pScreen->setSwitchCorner(
-      Screen::BottomRight, m_pCheckBoxCornerBottomRight->isChecked());
+      static_cast<int>(BottomRight), m_pCheckBoxCornerBottomRight->isChecked());
   m_pScreen->setSwitchCornerSize(m_pSpinBoxSwitchCornerSize->value());
 
-  m_pScreen->setFix(Screen::CapsLock, m_pCheckBoxCapsLock->isChecked());
-  m_pScreen->setFix(Screen::NumLock, m_pCheckBoxNumLock->isChecked());
-  m_pScreen->setFix(Screen::ScrollLock, m_pCheckBoxScrollLock->isChecked());
-  m_pScreen->setFix(Screen::XTest, m_pCheckBoxXTest->isChecked());
+  m_pScreen->setFix(
+      static_cast<int>(CapsLock), m_pCheckBoxCapsLock->isChecked());
+  m_pScreen->setFix(static_cast<int>(NumLock), m_pCheckBoxNumLock->isChecked());
+  m_pScreen->setFix(
+      static_cast<int>(ScrollLock), m_pCheckBoxScrollLock->isChecked());
+  m_pScreen->setFix(static_cast<int>(XTest), m_pCheckBoxXTest->isChecked());
 
   QDialog::accept();
 }

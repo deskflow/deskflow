@@ -138,7 +138,7 @@ bool ScreenSetupModel::dropMimeData(
   Screen droppedScreen;
   stream >> droppedScreen;
 
-  Screen oldScreen = screen(parent.column(), parent.row());
+  Screen oldScreen = Screen(screen(parent.column(), parent.row()));
   if (!oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
     // see ScreenSetupView::startDrag()

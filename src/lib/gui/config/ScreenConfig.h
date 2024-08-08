@@ -28,7 +28,7 @@ class ScreenConfig {
   using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
 
 public:
-  enum Modifier {
+  enum class Modifier {
     DefaultMod = -1,
     Shift,
     Ctrl,
@@ -38,14 +38,14 @@ public:
     None,
     NumModifiers
   };
-  enum SwitchCorner {
+  enum class SwitchCorner {
     TopLeft,
     TopRight,
     BottomLeft,
     BottomRight,
     NumSwitchCorners
   };
-  enum Fix { CapsLock, NumLock, ScrollLock, XTest, NumFixes };
+  enum class Fix { CapsLock, NumLock, ScrollLock, XTest, NumFixes };
 
 protected:
   explicit ScreenConfig() = default;

@@ -17,21 +17,19 @@
  */
 
 #include "Screen.h"
+#include "config/ScreenConfig.h"
 
 #include <QtCore>
 #include <QtGui>
 
 using namespace synergy::gui::proxy;
+using enum ScreenConfig::Modifier;
+using enum ScreenConfig::SwitchCorner;
+using enum ScreenConfig::Fix;
 
-Screen::Screen()
-    : m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
-      m_Swapped(false) {
-  init();
-}
+Screen::Screen() { init(); }
 
-Screen::Screen(const QString &name)
-    : m_Pixmap(QPixmap(":res/icons/64x64/video-display.png")),
-      m_Swapped(false) {
+Screen::Screen(const QString &name) {
   init();
   setName(name);
 }
@@ -47,13 +45,13 @@ void Screen::init() {
   // m_Modifiers, m_SwitchCorners and m_Fixes are QLists we use like fixed-size
   // arrays, thus we need to make sure to fill them with the required number of
   // elements.
-  for (int i = 0; i < NumModifiers; i++)
+  for (int i = 0; i < static_cast<int>(NumModifiers); i++)
     modifiers() << i;
 
-  for (int i = 0; i < NumSwitchCorners; i++)
+  for (int i = 0; i < static_cast<int>(NumSwitchCorners); i++)
     switchCorners() << false;
 
-  for (int i = 0; i < NumFixes; i++)
+  for (int i = 0; i < static_cast<int>(NumFixes); i++)
     fixes() << false;
 }
 
@@ -68,10 +66,11 @@ void Screen::loadSettings(QSettingsProxy &settings) {
   readSettings(settings, aliases(), "alias", QString(""));
   readSettings(
       settings, modifiers(), "modifier", static_cast<int>(DefaultMod),
-      NumModifiers);
+      static_cast<int>(NumModifiers));
   readSettings(
-      settings, switchCorners(), "switchCorner", false, NumSwitchCorners);
-  readSettings(settings, fixes(), "fix", false, NumFixes);
+      settings, switchCorners(), "switchCorner", 0,
+      static_cast<int>(NumSwitchCorners));
+  readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const {
