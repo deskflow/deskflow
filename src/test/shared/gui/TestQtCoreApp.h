@@ -19,8 +19,8 @@
 
 #include <QCoreApplication>
 
-int argc = 0;          // NOLINT
-char **argv = nullptr; // NOLINT
+static int argc = 0;          // NOLINT NOSONAR
+static char **argv = nullptr; // NOLINT NOSONAR
 
 class TestQtCoreApp : public QCoreApplication {
 public:

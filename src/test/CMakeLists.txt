@@ -132,6 +132,10 @@ macro(config_test_deps)
   include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
                       ${gmock_dir}/include)
 
+  # gui library autogen headers:
+  # qt doesn't seem to auto include the autogen headers for libraries.
+  include_directories(${CMAKE_BINARY_DIR}/src/lib/gui/gui_autogen/include)
+
   add_library(gtest STATIC ${gtest_dir}/src/gtest-all.cc)
   add_library(gmock STATIC ${gmock_dir}/src/gmock-all.cc)
 

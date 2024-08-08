@@ -19,7 +19,6 @@
 #include "SettingsDialog.h"
 
 #include "UpgradeDialog.h"
-#include "gui/config/AppConfig.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsCertificate.h"
@@ -39,7 +38,7 @@ using namespace synergy::gui;
 const char *const kProProductName = "Synergy 1 Pro";
 
 SettingsDialog::SettingsDialog(
-    QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig,
+    QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
     const License &license, const CoreProcess &coreProcess)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),

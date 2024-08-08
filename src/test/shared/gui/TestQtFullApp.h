@@ -19,8 +19,8 @@
 
 #include <QApplication>
 
-int argc = 0;          // NOLINT
-char **argv = nullptr; // NOLINT
+static int argc = 0;          // NOLINT NOSONAR
+static char **argv = nullptr; // NOLINT NOSONAR
 
 /**
  * Prefer using `TestQtCoreApp` instead.

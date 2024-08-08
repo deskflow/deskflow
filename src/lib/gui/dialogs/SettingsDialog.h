@@ -20,7 +20,7 @@
 
 #include "ui_SettingsDialogBase.h"
 
-#include "gui/config/AppConfig.h"
+#include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/CoreTool.h"
@@ -31,6 +31,7 @@
 #include <QDialog>
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
+  using IAppConfig = synergy::gui::IAppConfig;
   using IServerConfig = synergy::gui::IServerConfig;
   using CoreProcess = synergy::gui::CoreProcess;
   using License = synergy::license::License;
@@ -39,14 +40,8 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 
 public:
   SettingsDialog(
-      QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig,
+      QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
       const License &license, const CoreProcess &coreProcess);
-  static QString browseForSynergyc(
-      QWidget *parent, const QString &programDir,
-      const QString &coreClientName);
-  static QString browseForSynergys(
-      QWidget *parent, const QString &programDir,
-      const QString &coreServerName);
 
 private slots:
   void on_m_pCheckBoxEnableTls_clicked(bool checked);
@@ -86,7 +81,7 @@ private:
   /// the scope and doesn't save changes
   bool m_wasOriginallySystemScope = false;
 
-  AppConfig &m_appConfig;
+  IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
   const License &m_license;
   const CoreProcess &m_coreProcess;
