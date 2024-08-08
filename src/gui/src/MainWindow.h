@@ -171,6 +171,7 @@ private:
   void showDevThanksMessage();
   QString productName() const;
   void updateStatus();
+  void showAndActivate();
 
   VersionChecker m_VersionChecker;
   synergy::gui::TrayIcon m_TrayIcon;

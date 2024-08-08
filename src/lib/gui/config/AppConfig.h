@@ -136,10 +136,9 @@ public:
    */
   void commit();
 
-  /**
-   * Getters
-   */
-
+  //
+  // Getters (overrides)
+  //
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
   bool tlsEnabled() const override;
@@ -161,6 +160,12 @@ public:
   bool useExternalConfig() const override;
   const QString &configFile() const override;
   const QString &networkInterface() const override;
+  const QString &serverHostname() const override;
+
+  //
+  // Getters (new methods)
+  //
+
   bool isActiveScopeWritable() const;
   bool isActiveScopeSystem() const;
   int logLevel() const;
@@ -172,7 +177,6 @@ public:
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
   bool clientGroupChecked() const;
-  QString serverHostname() const;
   QString lastVersion() const;
   bool enableService() const;
   bool closeToTray() const;
@@ -182,9 +186,9 @@ public:
   bool showDevThanks() const;
   bool showCloseReminder() const;
 
-  /**
-   * Setters
-   */
+  //
+  // Setters
+  //
 
   void setActivationHasRun(bool value);
   void setScreenName(const QString &s);
