@@ -594,9 +594,6 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="statusTip">
-          <string extracomment="Test"/>
-         </property>
          <property name="title">
           <string>Service</string>
          </property>
