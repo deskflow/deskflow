@@ -154,6 +154,13 @@ void MainWindow::setupControls() {
     updateWindowTitle();
   }
 
+  if (!kLicensedProduct) {
+    m_pActionHelp->setText("Report a bug");
+    m_pActionActivate->setText("Purchase");
+  } else if (!kEnableActivation) {
+    m_pActionActivate->setVisible(false);
+  }
+
   createMenuBar();
   secureSocket(false);
 
@@ -168,10 +175,6 @@ void MainWindow::setupControls() {
 
   if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
     m_AppConfig.setLastVersion(SYNERGY_VERSION);
-  }
-
-  if (kEnableActivation) {
-    m_pActivate->setVisible(true);
   }
 
 #if defined(Q_OS_MAC)
@@ -412,8 +415,12 @@ void MainWindow::on_m_pActionAbout_triggered() {
   about.exec();
 }
 
-void MainWindow::on_m_pActionHelp_triggered() {
-  QDesktopServices::openUrl(QUrl(kUrlHelp));
+void MainWindow::on_m_pActionHelp_triggered() const {
+  if (kLicensedProduct) {
+    QDesktopServices::openUrl(QUrl(kUrlHelp));
+  } else {
+    QDesktopServices::openUrl(QUrl(kUrlBugReport));
+  }
 }
 
 void MainWindow::on_m_pActionSettings_triggered() {
@@ -437,7 +444,13 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
   showConfigureServer();
 }
 
-void MainWindow::on_m_pActivate_triggered() { showActivationDialog(); }
+void MainWindow::on_m_pActionActivate_triggered() {
+  if (kLicensedProduct) {
+    showActivationDialog();
+  } else {
+    QDesktopServices::openUrl(QUrl(kUrlPurchase));
+  }
+}
 
 void MainWindow::on_m_pLineEditHostname_returnPressed() {
   m_pButtonConnect->click();
@@ -572,7 +585,7 @@ void MainWindow::createMenuBar() {
   m_pMenuFile->addAction(m_pActionStartCore);
   m_pMenuFile->addAction(m_pActionStopCore);
   m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(m_pActivate);
+  m_pMenuFile->addAction(m_pActionActivate);
   m_pMenuFile->addSeparator();
   m_pMenuFile->addAction(m_pActionSave);
   m_pMenuFile->addSeparator();
@@ -1012,6 +1025,10 @@ void MainWindow::showConfigureServer(const QString &message) {
 }
 
 int MainWindow::showActivationDialog() {
+  if (!kEnableActivation) {
+    qFatal("cannot show activation dialog when activation is disabled");
+  }
+
   if (m_ActivationDialogRunning) {
     return QDialog::Rejected;
   }

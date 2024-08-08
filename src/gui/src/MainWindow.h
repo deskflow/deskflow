@@ -120,9 +120,9 @@ private slots:
   void on_m_pButtonConfigureServer_clicked();
   bool on_m_pActionSave_triggered();
   void on_m_pActionAbout_triggered();
-  void on_m_pActionHelp_triggered();
+  void on_m_pActionHelp_triggered() const;
   void on_m_pActionSettings_triggered();
-  void on_m_pActivate_triggered();
+  void on_m_pActionActivate_triggered();
   void on_m_pLineEditHostname_returnPressed();
   void on_m_pLineEditClientIp_returnPressed();
   void on_m_pLineEditHostname_textChanged(const QString &text);

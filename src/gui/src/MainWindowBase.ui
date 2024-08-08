@@ -651,7 +651,7 @@
     <string notr="true"/>
    </property>
   </action>
-  <action name="m_pActivate">
+  <action name="m_pActionActivate">
    <property name="text">
     <string>Activate</string>
    </property>
