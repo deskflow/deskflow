@@ -64,9 +64,7 @@ QString ClientConnection::getMessage(const QString &line) const {
            "two instances of the client process running.</p>"
            "<p>Please ensure that you're using a unique name and that only a "
            "single client process is running.</p>";
-  }
-
-  if (address.isNull()) {
+  } else if (address.isNull()) {
     return message + "<p>Please try to connect to the server using the "
                      "server IP address instead of the hostname. </p>"
                      "<p>If that doesn't work, please check your TLS and "
