@@ -286,6 +286,7 @@ void SettingsDialog::updateControls() {
 #else
   // service not supported on unix yet, so always disable.
   const auto serviceAvailable = false;
+  m_pGroupService->setTitle("Service (Windows only)");
 #endif
 
   const bool writable = m_appConfig.isActiveScopeWritable();
