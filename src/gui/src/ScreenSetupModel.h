@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
  * This package is free software; you can redistribute it and/or
@@ -16,16 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SCREENSETUPMODEL__H)
-
-#define SCREENSETUPMODEL__H
+#pragma once
 
 #include <QAbstractTableModel>
 #include <QList>
 #include <QString>
 #include <QStringList>
 
-#include "ScreenList.h"
+#include "gui/config/ScreenList.h"
 
 class ScreenSetupView;
 class ServerConfigDialog;
@@ -80,5 +78,3 @@ private:
 
   static const QString m_MimeType;
 };
-
-#endif
