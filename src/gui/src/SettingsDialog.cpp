@@ -306,8 +306,8 @@ void SettingsDialog::updateControls() {
   m_pCheckBoxCloseToTray->setEnabled(writable);
 
   m_pCheckBoxServiceEnabled->setEnabled(writable && serviceAvailable);
-  m_pLabelElevate->setEnabled(writable && serviceAvailable && serviceChecked);
-  m_pComboElevate->setEnabled(writable && serviceAvailable && serviceChecked);
+  m_pLabelElevate->setEnabled(writable && serviceChecked && serviceAvailable);
+  m_pComboElevate->setEnabled(writable && serviceChecked && serviceAvailable);
 
   m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
   m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());
