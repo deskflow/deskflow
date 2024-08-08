@@ -126,7 +126,7 @@ void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
   updateTlsRegenerateButton();
 }
 
-void SettingsDialog::on_m_pComboBoxTlsKeyLength_currentIndexChanged(int index) {
+void SettingsDialog::on_m_pComboBoxTlsKeyLength_currentIndexChanged(int) {
   updateTlsRegenerateButton();
 }
 

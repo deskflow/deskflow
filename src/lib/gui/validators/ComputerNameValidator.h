@@ -25,7 +25,7 @@ namespace validators {
 
 class ComputerNameValidator : public IStringValidator {
 public:
-  ComputerNameValidator(const QString &message);
+  explicit ComputerNameValidator(const QString &message);
   bool validate(const QString &input) const override;
 };
 

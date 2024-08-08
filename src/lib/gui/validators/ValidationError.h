@@ -23,7 +23,7 @@
 
 namespace validators {
 
-class ValidationError : QObject {
+class ValidationError : public QObject {
   QString m_message;
   QLabel *m_pLabel = nullptr;
 
