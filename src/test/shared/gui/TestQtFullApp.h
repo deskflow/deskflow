@@ -27,5 +27,9 @@ static char **argv = nullptr; // NOLINT NOSONAR
  */
 class TestQtFullApp : public QApplication {
 public:
-  explicit TestQtFullApp() : QApplication(argc, argv) {}
+  explicit TestQtFullApp() : QApplication(argc, argv) {
+#if defined(Q_OS_WIN)
+#error "this object causes windows ci to freeze"
+#endif
+  }
 };
