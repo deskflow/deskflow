@@ -24,9 +24,20 @@
 #include <QMessageBox>
 #include <QTime>
 
+#if defined(Q_OS_WIN)
+#include <Windows.h>
+#endif
+
 namespace synergy::gui {
 
 Logger Logger::s_instance;
+
+QString fileLine(const QMessageLogContext &context) {
+  if (!context.file) {
+    return "";
+  }
+  return QString("%1:%2").arg(context.file).arg(context.line);
+}
 
 QString printLine(
     FILE *out, const QString &type, const QString &message,
@@ -40,8 +51,14 @@ QString printLine(
 
   auto logLineUtf = logLine.toUtf8();
   auto logLine_c = logLineUtf.constData();
+
+#if defined(Q_OS_WIN)
+  OutputDebugStringA(logLine_c);
+#else
   fprintf(out, "%s\n", logLine_c);
   fflush(out);
+#endif
+
   return logLine;
 }
 
@@ -92,8 +109,7 @@ void Logger::handleMessage(
     break;
   }
 
-  const auto fileLine = QString("%1:%2").arg(context.file).arg(context.line);
-  const auto logLine = printLine(out, typeString, message, fileLine);
+  const auto logLine = printLine(out, typeString, message, fileLine(context));
   emit newLine(logLine);
 }
 
