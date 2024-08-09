@@ -320,6 +320,8 @@ void MainWindow::onShown() {
       showActivationDialog();
     }
   }
+
+  qDebug() << "active settings path:" << m_ConfigScopes.activeFilePath();
 }
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {

@@ -21,10 +21,13 @@
 
 namespace synergy::gui {
 
+const QString kDefaultEnvFilename = ".env";
+
 /**
- * @param filePath Path to the .env file.
- * @param envVars Somewhere to save strings for the lifetime of the app.
+ * @brief Loads environment variables from a .env file.
+ *
+ * First checks current dir for .env, then looks in the app dir.
  */
-void dotenv(const QString &filePath);
+void dotenv(const QString &filename = kDefaultEnvFilename);
 
 } // namespace synergy::gui

@@ -66,12 +66,12 @@ int main(int argc, char *argv[]) {
   QCoreApplication::setOrganizationDomain(kAppDomain);
 
   QSynergyApplication app(argc, argv);
+
   qInstallMessageHandler(synergy::gui::messages::messageHandler);
+  qInfo("Synergy v%s", qPrintable(synergy::gui::version()));
 
-  dotenv(".env");
+  dotenv();
   Logger::instance().loadEnvVars();
-
-  qInfo("Synergy v%s", synergy::gui::version().toUtf8().constData());
 
 #if defined(Q_OS_MAC)
 
