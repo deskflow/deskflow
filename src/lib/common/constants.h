@@ -31,5 +31,5 @@ const auto kVersion = SYNERGY_VERSION;
 #ifdef GIT_SHA_SHORT
 const auto kVersionGitSha = GIT_SHA_SHORT;
 #else
-const auto kVersionGitSha;
+const auto kVersionGitSha = "";
 #endif
