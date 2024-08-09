@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// `TestQtFullApp` freezes on windows ci, so exclude this test for now.
+#ifndef WIN32
+
 #include "gui/core/CoreProcess.h"
 #include "gui/dialogs/SettingsDialog.h"
 #include "license/SerialKey.h"
@@ -43,3 +46,5 @@ TEST(SettingsDialogTests, ctor_getsScreenName) {
   SettingsDialog settingsDialog(
       nullptr, appConfig, serverConfig, license, coreProcess);
 }
+
+#endif
