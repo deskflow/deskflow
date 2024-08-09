@@ -1150,5 +1150,6 @@ void MainWindow::showAndActivate() {
   }
 
   showNormal();
+  raise();
   activateWindow();
 }
