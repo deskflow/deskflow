@@ -23,7 +23,6 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QTime>
-#include <qcontainerfwd.h>
 
 #if defined(Q_OS_WIN)
 #include <Windows.h>
