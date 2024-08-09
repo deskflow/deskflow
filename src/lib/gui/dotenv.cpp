@@ -58,13 +58,18 @@ void dotenv(const QString &filename) {
     // if nothing in current dir, then try the app data dir.
     // this makes it a bit easier for engineers in the field to have an easily
     // predictable location for the .env file.
-    QDir profileDir(
+    QDir configDir(
         QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
-    filePath = profileDir.filePath(filename);
+
+    // HACK: since we have the org name set to the app name, the config dir is
+    // confusing. make this simple by using the org dir instead.
+    configDir.cdUp();
+
+    filePath = configDir.filePath(filename);
     if (!open(file, filePath)) {
       qInfo(
           "no %s file in app config dir: %s", qPrintable(filename),
-          qPrintable(profileDir.absolutePath()));
+          qPrintable(configDir.absolutePath()));
       return;
     }
   }
