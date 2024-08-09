@@ -1059,6 +1059,13 @@ int MainWindow::showActivationDialog() {
 
     m_PendingClientNames.clear();
   }
+
+  // restart core process after activation in case switching on tls.
+  // this saves customer from having to figure out they need to click apply.
+  if (m_CoreProcess.isStarted()) {
+    m_CoreProcess.restart();
+  }
+
   return result;
 }
 
