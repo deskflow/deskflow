@@ -164,6 +164,7 @@ void MainWindow::setupControls() {
 
   createMenuBar();
   secureSocket(false);
+  updateLocalFingerprint();
 
   m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
   m_pLabelUpdate->hide();
