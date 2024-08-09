@@ -1044,6 +1044,11 @@ int MainWindow::showActivationDialog() {
 
   if (result == QDialog::Accepted) {
     m_AppConfig.setActivationHasRun(true);
+
+    // customers who are activating a pro license are usually doing so because
+    // they want tls. so, if it's available, turn it on after activating.
+    m_AppConfig.setTlsEnabled(m_LicenseHandler.license().isTlsAvailable());
+
     m_ConfigScopes.save();
   }
 
