@@ -18,7 +18,6 @@
 
 #pragma once
 
-// set version macro if not set yet
 #if !defined(SYNERGY_VERSION)
 #error version was not passed to the compiler
 #endif
