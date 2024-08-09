@@ -310,6 +310,9 @@ void MainWindow::onCreated() {
   updateScreenName();
   applyConfig();
   restoreWindow();
+
+  qDebug().noquote() << "active settings path:"
+                     << m_ConfigScopes.activeFilePath();
 }
 
 void MainWindow::onShown() {
@@ -320,9 +323,6 @@ void MainWindow::onShown() {
       showActivationDialog();
     }
   }
-
-  qDebug().noquote() << "active settings path:"
-                     << m_ConfigScopes.activeFilePath();
 }
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
