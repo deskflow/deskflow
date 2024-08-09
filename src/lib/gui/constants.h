@@ -21,12 +21,6 @@
 
 namespace synergy::gui {
 
-const auto kAppName = "Synergy";
-
-// TODO: change to `com.symless`. we'll need to gracefully import old settings,
-// since qt uses this on some platforms when saving settings.
-const auto kAppDomain = "https://symless.com";
-
 const int kDebugLogLevel = 1;
 
 #ifdef SYNERGY_PRODUCT_NAME
@@ -54,8 +48,8 @@ const auto kLinkBuy = R"(<a href="%1" style="color: %2">Buy now</a>)";
 const auto kLinkRenew = R"(<a href="%1" style="color: %2">Renew now</a>)";
 const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
-const auto kUrlSourceQuery = "source=gui";
 const auto kUrlWebsite = "https://symless.com";
+const auto kUrlSourceQuery = "source=gui";
 const auto kUrlGitHub = "https://github.com/symless/synergy-core";
 const auto kUrlGnomeTrayFix =
     "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";

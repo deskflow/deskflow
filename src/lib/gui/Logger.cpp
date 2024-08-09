@@ -24,24 +24,58 @@
 #include <QMessageBox>
 #include <QTime>
 
+#if defined(Q_OS_WIN)
+#include <Windows.h>
+#endif
+
 namespace synergy::gui {
 
+const auto kForceDebugMessages = QStringList{
+    "Synergy", // TEST
+    "No functional TLS backend was found",
+    "No TLS backend is available",
+    "QSslSocket::connectToHostEncrypted: TLS initialization failed",
+    "Retrying to obtain clipboard.",
+    "Unable to obtain clipboard."};
+
 Logger Logger::s_instance;
+
+QString fileLine(const QMessageLogContext &context) {
+  if (!context.file) {
+    return "";
+  }
+  return QString("%1:%2").arg(context.file).arg(context.line);
+}
 
 QString printLine(
     FILE *out, const QString &type, const QString &message,
     const QString &fileLine = "") {
+
   auto datetime = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
   auto logLine = QString("[%1] %2: %3").arg(datetime).arg(type).arg(message);
 
+  QTextStream stream(&logLine);
   if (!fileLine.isEmpty()) {
-    logLine += "\n\t" + fileLine;
+    stream << Qt::endl << "\t" + fileLine;
   }
 
-  auto logLineUtf = logLine.toUtf8();
-  auto logLine_c = logLineUtf.constData();
-  fprintf(out, "%s\n", logLine_c);
+  QString logLineReturn = logLine;
+  QTextStream streamReturn(&logLineReturn);
+  streamReturn << Qt::endl;
+
+  auto logLineReturn_c = qPrintable(logLineReturn);
+
+#if defined(Q_OS_WIN)
+  // Debug output is viewable using either VS Code, Visual Studio, DebugView, or
+  // DbgView++ (only one can be used at once). It's important to send output to
+  // the debug output API, because it's difficult to view stdout and stderr from
+  // a Windows GUI app.
+  OutputDebugStringA(logLineReturn_c);
+#else
+  fprintf(out, "%s", logLineReturn_c);
   fflush(out);
+#endif
+
   return logLine;
 }
 
@@ -64,11 +98,17 @@ void Logger::logVerbose(const QString &message) const {
 }
 
 void Logger::handleMessage(
-    QtMsgType type, const QMessageLogContext &context, const QString &message) {
+    const QtMsgType type, const QMessageLogContext &context,
+    const QString &message) {
+
+  auto mutatedType = type;
+  if (kForceDebugMessages.contains(message)) {
+    mutatedType = QtDebugMsg;
+  }
 
   QString typeString;
   auto out = stdout;
-  switch (type) {
+  switch (mutatedType) {
   case QtDebugMsg:
     typeString = "DEBUG";
     if (!m_debug) {
@@ -92,8 +132,7 @@ void Logger::handleMessage(
     break;
   }
 
-  const auto fileLine = QString("%1:%2").arg(context.file).arg(context.line);
-  const auto logLine = printLine(out, typeString, message, fileLine);
+  const auto logLine = printLine(out, typeString, message, fileLine(context));
   emit newLine(logLine);
 }
 

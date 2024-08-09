@@ -18,6 +18,7 @@
 #include "messages.h"
 
 #include "Logger.h"
+#include "common/version.h"
 #include "constants.h"
 #include "styles.h"
 
@@ -64,7 +65,9 @@ void showErrorDialog(
             .arg(kUrlBugReport, kColorSecondary);
   }
 
-  text += QString("<pre>%3\n\n%4</pre>").arg(message, contextString);
+  const QString version = QString::fromStdString(synergy::version());
+  text +=
+      QString("<pre>v%1\n%2\n%3</pre>").arg(version, message, contextString);
 
   if (type == QtFatalMsg) {
     // create a blocking message box for fatal errors, as we want to wait

@@ -22,7 +22,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "global/Ipc.h"
+#include "common/ipc.h"
 #include "io/IStream.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"

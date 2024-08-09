@@ -19,7 +19,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "base/Log.h"
-#include "common/Version.h"
+#include "common/constants.h"
 
 #include <Wtsapi32.h>
 #pragma warning(disable : 4099)

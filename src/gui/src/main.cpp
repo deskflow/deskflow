@@ -20,13 +20,13 @@
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
+#include "common/constants.h"
+#include "common/version.h"
 #include "gui/Logger.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
-#include "gui/constants.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
-#include "gui/version.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -61,17 +61,22 @@ int main(int argc, char *argv[]) {
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
 
-  QCoreApplication::setOrganizationName(kAppName);
   QCoreApplication::setApplicationName(kAppName);
-  QCoreApplication::setOrganizationDomain(kAppDomain);
+
+  // HACK: set org name to app name for backwards compatibility.
+  QCoreApplication::setOrganizationName(kAppName);
+
+  // HACK: set org domain to url for backwards compatibility.
+  QCoreApplication::setOrganizationDomain(kUrlWebsite);
 
   QSynergyApplication app(argc, argv);
+
   qInstallMessageHandler(synergy::gui::messages::messageHandler);
+  QString version = QString::fromStdString(synergy::version());
+  qInfo("Synergy v%s", qPrintable(version));
 
-  dotenv(".env");
+  dotenv();
   Logger::instance().loadEnvVars();
-
-  qInfo("Synergy v%s", synergy::gui::version().toUtf8().constData());
 
 #if defined(Q_OS_MAC)
 

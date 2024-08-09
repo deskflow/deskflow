@@ -17,7 +17,9 @@
 
 #include "dotenv.h"
 
+#include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QProcess>
 #include <QProcessEnvironment>
@@ -27,6 +29,11 @@
 namespace synergy::gui {
 
 QPair<QString, QString> getPair(const QString &line);
+
+bool open(QFile &file, const QString &filePath) {
+  file.setFileName(filePath);
+  return file.open(QIODevice::ReadOnly | QIODevice::Text);
+}
 
 /**
  * @brief A _very_ basic Qt .env file parser.
@@ -38,14 +45,29 @@ QPair<QString, QString> getPair(const QString &line);
  * If this function is not sufficient, replace it with a library such as:
  * https://github.com/adeharo9/cpp-dotenv
  */
-void dotenv(const QString &filePath) {
-  QFile file(filePath);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    qDebug("no .env file in current dir");
-    return;
+void dotenv(const QString &filename) {
+  QString filePath = filename;
+  QFile file;
+  if (!open(file, filePath)) {
+    QFileInfo fileInfo(filePath);
+    qInfo(
+        "no %s file in dir: %s", qPrintable(filename),
+        qPrintable(fileInfo.absolutePath()));
+
+    // if nothing in current dir, then try app dir.  this makes it a bit easier
+    // for engineers in the field to have an easily predictable location for the
+    // .env file.
+    QDir dir(QCoreApplication::applicationDirPath());
+    filePath = dir.filePath(filename);
+    if (!open(file, filePath)) {
+      qInfo(
+          "no %s file in app dir: %s", qPrintable(filename),
+          qPrintable(dir.absolutePath()));
+      return;
+    }
   }
 
-  qDebug("loading env vars from: %s", filePath.toUtf8().constData());
+  qInfo("loading env vars from: %s", qPrintable(filePath));
 
   QTextStream in(&file);
   while (!in.atEnd()) {

@@ -37,6 +37,7 @@ public:
   virtual void remove(const QString &key);
   virtual bool isWritable() const;
   virtual bool contains(const QString &key) const;
+  virtual QString fileName() const { return m_pSettings->fileName(); }
 
   void set(QSettings &settings) { m_pSettings = &settings; }
   QSettings &get() const { return *m_pSettings; }

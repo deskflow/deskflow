@@ -29,7 +29,7 @@
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
 #include "client/Client.h"
-#include "common/Version.h"
+#include "common/constants.h"
 #include "mt/Thread.h"
 #include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/NetworkAddress.h"

@@ -20,7 +20,7 @@
 
 #include "arch/Arch.h"
 #include "base/EventTypes.h"
-#include "global/Ipc.h"
+#include "common/ipc.h"
 #include "net/NetworkAddress.h"
 #include "net/TCPListenSocket.h"
 

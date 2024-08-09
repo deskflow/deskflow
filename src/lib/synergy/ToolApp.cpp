@@ -28,8 +28,6 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
-#define JSON_URL "https://symless.com/account/json/"
-
 enum { kErrorOk, kErrorArgs, kErrorException, kErrorUnknown };
 
 UInt32 ToolApp::run(int argc, char **argv) {

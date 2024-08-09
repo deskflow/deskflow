@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,22 +17,21 @@
 
 #pragma once
 
-#include "common/common.h"
+#include "constants.h"
 
-// set version macro if not set yet
-#if !defined(SYNERGY_VERSION)
-#error Version was not set (should be passed to compiler).
-#endif
+#include <string>
 
-// important strings
-extern const char *kApplication;
-extern const char *kCopyright;
-extern const char *kContact;
-extern const char *kWebsite;
+namespace synergy {
 
-// build version.  follows linux kernel style:  an even minor number implies
-// a release version, odd implies development version.
-extern const char *kVersion;
+inline std::string version() {
+  std::string result = kVersion;
+  std::string gitSha = kVersionGitSha;
+  if (!gitSha.empty()) {
+    result.append(" (");
+    result.append(gitSha);
+    result.append(")");
+  }
+  return result;
+}
 
-// application version
-extern const char *kAppVersion;
+} // namespace synergy

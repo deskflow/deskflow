@@ -1,6 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2024 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
+ * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,10 +18,15 @@
 
 #pragma once
 
-#include <QString>
+#if !defined(SYNERGY_VERSION)
+#error version was not passed to the compiler
+#endif
 
-namespace synergy::gui {
+const auto kAppName = "Synergy";
+const auto kVersion = SYNERGY_VERSION;
 
-QString version();
-
-} // namespace synergy::gui
+#ifdef GIT_SHA_SHORT
+const auto kVersionGitSha = GIT_SHA_SHORT;
+#else
+const auto kVersionGitSha = "";
+#endif

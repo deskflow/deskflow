@@ -36,7 +36,6 @@ endif()
 add_library(${target} STATIC ${sources} ${ui_files})
 target_link_libraries(
   ${target}
-  global
   license
   Qt6::Core
   Qt6::Widgets

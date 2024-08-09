@@ -54,7 +54,6 @@ target_link_libraries(
   arch
   base
   client
-  common
   io
   mt
   net

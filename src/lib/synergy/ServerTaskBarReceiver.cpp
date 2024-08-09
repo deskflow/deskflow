@@ -20,7 +20,7 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/String.h"
-#include "common/Version.h"
+#include "common/constants.h"
 #include "mt/Lock.h"
 #include "server/Server.h"
 
@@ -97,17 +97,17 @@ void ServerTaskBarReceiver::unlock() const {
 std::string ServerTaskBarReceiver::getToolTip() const {
   switch (m_state) {
   case kNotRunning:
-    return synergy::string::sprintf("%s:  Not running", kAppVersion);
+    return synergy::string::sprintf("%s:  Not running", kAppName);
 
   case kNotWorking:
     return synergy::string::sprintf(
-        "%s:  %s", kAppVersion, m_errorMessage.c_str());
+        "%s:  %s", kAppName, m_errorMessage.c_str());
 
   case kNotConnected:
-    return synergy::string::sprintf("%s:  Waiting for clients", kAppVersion);
+    return synergy::string::sprintf("%s:  Waiting for clients", kAppName);
 
   case kConnected:
-    return synergy::string::sprintf("%s:  Connected", kAppVersion);
+    return synergy::string::sprintf("%s:  Connected", kAppName);
 
   default:
     return "";

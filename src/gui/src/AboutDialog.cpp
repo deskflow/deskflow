@@ -17,6 +17,7 @@
  */
 
 #include "AboutDialog.h"
+#include "common/copyright.h"
 
 #include <QDateTime>
 
@@ -24,7 +25,7 @@
 #include "gui/OSXHelpers.h"
 #endif
 
-#include "gui/version.h"
+#include "common/version.h"
 
 AboutDialog::AboutDialog(MainWindow *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -34,7 +35,8 @@ AboutDialog::AboutDialog(MainWindow *parent)
 
   this->setFixedSize(this->size());
 
-  m_pLabelSynergyVersion->setText(synergy::gui::version());
+  QString version = QString::fromStdString(synergy::version());
+  m_pLabelSynergyVersion->setText(version);
 
   QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
@@ -43,8 +45,8 @@ AboutDialog::AboutDialog(MainWindow *parent)
 }
 
 int AboutDialog::exec() {
-  m_pDevelopersLabel->setText(getImportantDevelopers());
-  m_pCopyrightLabel->setText(getCopyright());
+  m_pDevelopersLabel->setText(importantDevelopers());
+  m_pCopyrightLabel->setText(QString::fromStdString(synergy::copyright()));
   updateLogo();
 
   return QDialog::exec();
@@ -61,7 +63,7 @@ void AboutDialog::updateLogo() const {
 #endif
 }
 
-QString AboutDialog::getImportantDevelopers() const {
+QString AboutDialog::importantDevelopers() const {
   QStringList awesomePeople;
 
   // Chris is the ultimate creator, and the one who started it all in 2001.
@@ -103,15 +105,4 @@ QString AboutDialog::getImportantDevelopers() const {
   }
 
   return awesomePeople.join(", ") + ".";
-}
-
-QString AboutDialog::getCopyright() const {
-  QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
-  QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
-
-  QString copyright("Copyright © 2012-%%YEAR%% Symless Ltd.\n"
-                    "Copyright © 2009-2012 Nick Bolton\n"
-                    "Copyright © 2002-2009 Chris Schoeneman");
-  return copyright.replace(
-      QString("%%YEAR%%"), QString::number(buildDate.year()));
 }

@@ -17,7 +17,7 @@
 
 #include "ipc/IpcClient.h"
 #include "base/TMethodEventJob.h"
-#include "global/Ipc.h"
+#include "common/ipc.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
 

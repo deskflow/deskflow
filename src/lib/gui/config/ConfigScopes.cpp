@@ -96,8 +96,6 @@ ConfigScopes::ConfigScopes() {
   m_pUserSettings = std::make_unique<QSettings>();
   m_userSettingsProxy.set(*m_pUserSettings);
 
-  qDebug() << "user settings path:" << m_pUserSettings->fileName();
-
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
@@ -108,8 +106,6 @@ ConfigScopes::ConfigScopes() {
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
       appName);
   m_systemSettingsProxy.set(*m_pSystemSettings);
-
-  qDebug() << "system settings path:" << m_pSystemSettings->fileName();
 
 #if defined(Q_OS_WIN)
   loadWindowsLegacy(*m_pSystemSettings);
@@ -162,6 +158,10 @@ const QSettingsProxy &ConfigScopes::activeSettings() const {
   } else {
     return m_systemSettingsProxy;
   }
+}
+
+QString ConfigScopes::activeFilePath() const {
+  return activeSettings().fileName();
 }
 
 QVariant ConfigScopes::getFromScope(

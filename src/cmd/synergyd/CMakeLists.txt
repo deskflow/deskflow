@@ -29,14 +29,12 @@ target_link_libraries(
   ${target}
   arch
   base
-  common
   io
   ipc
   mt
   net
   platform
   synlib
-  global
   license
   ${libs})
 

@@ -17,7 +17,7 @@
 
 #include "TrayIcon.h"
 
-#include "constants.h"
+#include "common/constants.h"
 
 namespace synergy::gui {
 

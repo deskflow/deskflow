@@ -75,13 +75,13 @@ ActivationDialog::~ActivationDialog() { delete m_ui; }
 
 void ActivationDialog::reject() {
   // don't show the cancel confirmation dialog if they've already registered,
-  // since it's not revent to customers who are changing their serial key.
+  // since it's not relevant to customers who are changing their serial key.
   if (m_licenseHandler.productEdition() != Edition::kUnregistered) {
     QDialog::reject();
     return;
   }
 
-  // the accept button should be labeled "Exit" on the cancel dialoig.
+  // the accept button should be labeled "Exit" on the cancel dialog.
   CancelActivationDialog cancelActivationDialog(this);
   if (cancelActivationDialog.exec() == QDialog::Accepted) {
     QApplication::exit();

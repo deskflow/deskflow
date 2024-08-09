@@ -19,7 +19,7 @@
 #include "base/Log.h"
 #include "arch/Arch.h"
 #include "base/log_outputters.h"
-#include "common/Version.h"
+#include "common/constants.h"
 
 #include <cstdarg>
 #include <cstdint>
@@ -223,7 +223,7 @@ void Log::insert(ILogOutputter *outputter, bool alwaysAtHead) {
     m_outputters.push_front(outputter);
   }
 
-  outputter->open(kAppVersion);
+  outputter->open(kAppName);
 
   // Issue 41
   // don't show log unless user requests it, as some users find this

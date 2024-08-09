@@ -51,6 +51,7 @@ public:
   Scope activeScope() const override;
   QSettingsProxy &activeSettings() override;
   const QSettingsProxy &activeSettings() const override;
+  QString activeFilePath() const;
 
 signals:
   void ready();

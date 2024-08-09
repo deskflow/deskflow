@@ -74,6 +74,7 @@ Enhancements:
 - #7428 Refactor settings dialog to simplify enable/disable logic
 - #7429 Parse date numbers as long instead of int
 - #7430 Improve setting enable logic and test coverage
+- #7431 Improve handling of Qt-related warnings and errors
 
 # 1.14.6
 
