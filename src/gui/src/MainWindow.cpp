@@ -737,7 +737,7 @@ void MainWindow::checkFingerprint(const QString &line) {
             "<p>You are connecting to a server.</p>"
             "<p>Here is it's TLS fingerprint:</p>"
             "<p>%1</p>"
-            "<p>Compare this fingerprint to the one on your server's screen."
+            "<p>Compare this fingerprint to the one on your server's screen. "
             "If the two don't match exactly, then it's probably not the server "
             "you're expecting (it could be a malicious user).</p>"
             "<p>Do you want to trust this fingerprint for future "
