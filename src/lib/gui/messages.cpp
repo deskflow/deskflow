@@ -40,6 +40,12 @@ struct Errors {
 std::unique_ptr<QMessageBox> Errors::s_criticalMessage;
 QStringList Errors::s_ignoredErrors;
 
+void raiseCriticalDialog() {
+  if (Errors::s_criticalMessage) {
+    Errors::s_criticalMessage->raise();
+  }
+}
+
 void showErrorDialog(
     const QString &message, const QMessageLogContext &context, QtMsgType type) {
   auto filename = QFileInfo(context.file).fileName();
@@ -72,7 +78,9 @@ void showErrorDialog(
   if (type == QtFatalMsg) {
     // create a blocking message box for fatal errors, as we want to wait
     // until the dialog is dismissed before aborting the app.
-    QMessageBox::critical(nullptr, title, text);
+    QMessageBox critical(
+        QMessageBox::Critical, title, text, QMessageBox::Abort);
+    critical.exec();
   } else if (!Errors::s_ignoredErrors.contains(message)) {
     // prevent message boxes piling up by deleting the last one if it exists.
     // if none exists yet, then nothing will happen.
@@ -85,6 +93,7 @@ void showErrorDialog(
     Errors::s_criticalMessage = std::make_unique<QMessageBox>(
         QMessageBox::Critical, title, text,
         QMessageBox::Ok | QMessageBox::Ignore);
+
     Errors::s_criticalMessage->open();
 
     QAction::connect(

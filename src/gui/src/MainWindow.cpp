@@ -320,6 +320,17 @@ void MainWindow::onShown() {
       showActivationDialog();
     }
   }
+
+  // if a critical error was shown just before the main window (i.e. on app
+  // load), it will be hidden behind the main window. therefore we need to raise
+  // it up in front of the main window.
+  // HACK: because the `onShown` event happens just as the window is shown, the
+  // message box has a chance of being raised under the main window. to solve
+  // this we delay the error dialog raise by a split second. this seems a bit
+  // hacky and fragile, so maybe there's a better approach.
+  const auto kCriticalDialogDelay = 100;
+  QTimer::singleShot(
+      kCriticalDialogDelay, [] { messages::raiseCriticalDialog(); });
 }
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {

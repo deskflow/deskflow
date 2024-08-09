@@ -31,6 +31,8 @@ enum class NewClientPromptResult { Add, Ignore };
 void messageHandler(
     QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
+void raiseCriticalDialog();
+
 void showFirstRunMessage(
     QWidget *parent, bool closeToTray, bool enableService, bool isServer);
 
