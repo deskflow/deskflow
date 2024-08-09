@@ -17,7 +17,9 @@
 
 #pragma once
 
+#include <QGuiApplication>
 #include <QPalette>
+#include <QStyleHints>
 
 namespace synergy::gui {
 
