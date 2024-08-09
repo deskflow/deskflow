@@ -201,7 +201,7 @@
               </widget>
              </item>
              <item>
-              <widget class="synergy_widgets::ServerStateLabel" name="m_pLabelServerState">
+              <widget class="synergy::gui::widgets::ServerStateLabel" name="m_pLabelServerState">
                <property name="text">
                 <string>No clients connected</string>
                </property>
@@ -358,7 +358,7 @@
               </layout>
              </item>
              <item>
-              <widget class="synergy_widgets::ClientStateLabel" name="m_pLabelClientState">
+              <widget class="synergy::gui::widgets::ClientStateLabel" name="m_pLabelClientState">
                <property name="text">
                 <string>Connected to server</string>
                </property>
@@ -662,14 +662,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>synergy_widgets::ServerStateLabel</class>
+   <class>synergy::gui::widgets::ServerStateLabel</class>
    <extends>QLabel</extends>
-   <header>widgets/ServerStateLabel.h</header>
+   <header>gui/widgets/ServerStateLabel.h</header>
   </customwidget>
   <customwidget>
-   <class>synergy_widgets::ClientStateLabel</class>
+   <class>synergy::gui::widgets::ClientStateLabel</class>
    <extends>QLabel</extends>
-   <header>widgets/ClientStateLabel.h</header>
+   <header>gui/widgets/ClientStateLabel.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

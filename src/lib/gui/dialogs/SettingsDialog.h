@@ -20,19 +20,18 @@
 
 #include "ui_SettingsDialogBase.h"
 
-#include "gui/config/AppConfig.h"
+#include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/CoreTool.h"
 #include "gui/tls/TlsUtility.h"
+#include "gui/validators/ValidationError.h"
 #include "license/License.h"
-#include "validators/ValidationError.h"
 
 #include <QDialog>
 
-class MainWindow;
-
 class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
+  using IAppConfig = synergy::gui::IAppConfig;
   using IServerConfig = synergy::gui::IServerConfig;
   using CoreProcess = synergy::gui::CoreProcess;
   using License = synergy::license::License;
@@ -41,24 +40,17 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 
 public:
   SettingsDialog(
-      MainWindow *parent, AppConfig &appConfig,
-      const IServerConfig &serverConfig, const License &license,
-      const CoreProcess &coreProcess);
-  static QString browseForSynergyc(
-      QWidget *parent, const QString &programDir,
-      const QString &coreClientName);
-  static QString browseForSynergys(
-      QWidget *parent, const QString &programDir,
-      const QString &coreServerName);
+      QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
+      const License &license, const CoreProcess &coreProcess);
 
 private slots:
-  void on_m_pCheckBoxEnableCrypto_clicked(bool checked);
+  void on_m_pCheckBoxEnableTls_clicked(bool checked);
   void on_m_pCheckBoxLogToFile_stateChanged(int);
   void on_m_pButtonBrowseLog_clicked();
   void on_m_pRadioSystemScope_toggled(bool checked);
-  void on_m_pPushButtonBrowseCert_clicked();
-  void on_m_pComboBoxKeyLength_currentIndexChanged(int index);
-  void on_m_pPushButtonRegenCert_clicked();
+  void on_m_pPushButtonTlsCertPath_clicked();
+  void on_m_pComboBoxTlsKeyLength_currentIndexChanged(int index);
+  void on_m_pPushButtonTlsRegenCert_clicked();
   void on_m_pCheckBoxServiceEnabled_toggled(bool checked);
 
 private:
@@ -89,7 +81,7 @@ private:
   /// the scope and doesn't save changes
   bool m_wasOriginallySystemScope = false;
 
-  AppConfig &m_appConfig;
+  IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
   const License &m_license;
   const CoreProcess &m_coreProcess;

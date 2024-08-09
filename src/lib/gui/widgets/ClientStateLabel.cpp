@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,25 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef IVALIDATOR_H
-#define IVALIDATOR_H
 
-#include <QString>
+#include "ClientStateLabel.h"
 
-namespace validators {
+namespace synergy::gui::widgets {
 
-class IStringValidator {
-  QString m_Message;
+ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
 
-public:
-  IStringValidator() = default;
-  explicit IStringValidator(const QString &message);
-  const QString &getMessage() const;
+void ClientStateLabel::updateClientState(const QString &line) {
+  if (line.contains("connected to server")) {
+    show();
+  } else if (
+      line.contains("disconnected from server") ||
+      line.contains("process exited")) {
+    hide();
+  }
+}
 
-  virtual bool validate(const QString &input) const = 0;
-  virtual ~IStringValidator() = default;
-};
-
-} // namespace validators
-
-#endif // IVALIDATOR_H
+} // namespace synergy::gui::widgets

@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,20 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "ClientStateLabel.h"
 
-namespace synergy_widgets {
+#include "gui/validators/ComputerNameValidator.h"
+#include "gui/validators/SpacesValidator.h"
 
-ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
+#include "AliasValidator.h"
 
-void ClientStateLabel::updateClientState(const QString &line) {
-  if (line.contains("connected to server")) {
-    show();
-  } else if (
-      line.contains("disconnected from server") ||
-      line.contains("process exited")) {
-    hide();
-  }
+#include <QRegularExpression>
+
+namespace validators {
+
+AliasValidator::AliasValidator(QLineEdit *parent, ValidationError *error)
+    : LineEditValidator(parent, error) {
+  addValidator(
+      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
+  addValidator(std::make_unique<ComputerNameValidator>(
+      "Contains invalid characters or is too long"));
 }
 
-} // namespace synergy_widgets
+} // namespace validators

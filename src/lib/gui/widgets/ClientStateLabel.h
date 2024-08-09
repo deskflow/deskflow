@@ -17,17 +17,14 @@
 
 #pragma once
 
-#include "LineEditValidator.h"
-#include "gui/config/ScreenList.h"
-#include "validators/ValidationError.h"
+#include <QLabel>
 
-namespace validators {
+namespace synergy::gui::widgets {
 
-class ScreenNameValidator : public LineEditValidator {
+class ClientStateLabel : public QLabel {
 public:
-  explicit ScreenNameValidator(
-      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr,
-      const ScreenList *pScreens = nullptr);
+  explicit ClientStateLabel(QWidget *parent = nullptr);
+  void updateClientState(const QString &line);
 };
 
-} // namespace validators
+} // namespace synergy::gui::widgets

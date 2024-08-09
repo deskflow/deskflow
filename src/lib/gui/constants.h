@@ -62,6 +62,8 @@ const auto kUrlGnomeTrayFix =
 const auto kUrlProduct = QString("%1/synergy").arg(kUrlWebsite);
 const auto kUrlPurchase =
     QString("%1/purchase?%2").arg(kUrlProduct, kUrlSourceQuery);
+const auto kUrlUpgrade =
+    QString("%1/purchase/upgrade?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlContact =
     QString("%1/contact?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlHelp = QString("%1/help?%2").arg(kUrlProduct, kUrlSourceQuery);

@@ -28,12 +28,19 @@ class AppConfigMock : public synergy::gui::IAppConfig {
 
 public:
   AppConfigMock() {
-    ON_CALL(*this, screenName()).WillByDefault(testing::ReturnRef(m_stubName));
+    ON_CALL(*this, screenName()).WillByDefault(testing::ReturnRef(m_stub));
+
     ON_CALL(*this, networkInterface())
-        .WillByDefault(testing::ReturnRef(m_stubInterface));
-    ON_CALL(*this, logLevelText())
-        .WillByDefault(testing::Return("stub log level"));
+        .WillByDefault(testing::ReturnRef(m_stub));
+
+    ON_CALL(*this, logLevelText()).WillByDefault(testing::Return(m_stub));
+
+    ON_CALL(*this, logFilename()).WillByDefault(testing::ReturnRef(m_stub));
   }
+
+  //
+  // Setters
+  //
 
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
   MOCK_METHOD(int, tlsKeyLength, (), (const, override));
@@ -57,9 +64,40 @@ public:
   MOCK_METHOD(const QString &, configFile, (), (const, override));
   MOCK_METHOD(const QString &, networkInterface, (), (const, override));
   MOCK_METHOD(const QString &, serverHostname, (), (const, override));
+  MOCK_METHOD(int, logLevel, (), (const, override));
+  MOCK_METHOD(bool, autoHide, (), (const, override));
+  MOCK_METHOD(bool, enableService, (), (const, override));
+  MOCK_METHOD(bool, closeToTray, (), (const, override));
+  MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
+  MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
+  MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
+
+  //
+  // Getters
+  //
+
+  MOCK_METHOD(
+      void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
+  MOCK_METHOD(void, setScreenName, (const QString &screenName), (override));
+  MOCK_METHOD(void, setPort, (int port), (override));
+  MOCK_METHOD(
+      void, setNetworkInterface, (const QString &networkInterface), (override));
+  MOCK_METHOD(void, setLogLevel, (int logLevel), (override));
+  MOCK_METHOD(void, setLogToFile, (bool logToFile), (override));
+  MOCK_METHOD(void, setLogFilename, (const QString &logFilename), (override));
+  MOCK_METHOD(void, setElevateMode, (ElevateMode elevateMode), (override));
+  MOCK_METHOD(void, setAutoHide, (bool autoHide), (override));
+  MOCK_METHOD(void, setPreventSleep, (bool preventSleep), (override));
+  MOCK_METHOD(void, setTlsCertPath, (const QString &tlsCertPath), (override));
+  MOCK_METHOD(void, setTlsKeyLength, (int tlsKeyLength), (override));
+  MOCK_METHOD(void, setTlsEnabled, (bool tlsEnabled), (override));
+  MOCK_METHOD(void, setLanguageSync, (bool languageSync), (override));
+  MOCK_METHOD(
+      void, setInvertScrollDirection, (bool invertScrollDirection), (override));
+  MOCK_METHOD(void, setEnableService, (bool enableService), (override));
+  MOCK_METHOD(void, setCloseToTray, (bool closeToTray), (override));
+  MOCK_METHOD(void, setInvertConnection, (bool invertConnection), (override));
 
 private:
-  const QString m_stubName = "stub name";
-  const QString m_stubInterface = "stub interface";
-  const QString m_stubAddress = "stub address";
+  const QString m_stub = "stub";
 };

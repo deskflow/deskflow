@@ -29,7 +29,7 @@
 using synergy::test::ExitTimeout;
 
 int main(int argc, char **argv) {
-  ExitTimeout exitTimeout(1, "Integration tests");
+  ExitTimeout exitTimeout(1, "Unit tests");
 
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.

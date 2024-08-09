@@ -19,13 +19,17 @@
 
 #include <QApplication>
 
-int argc = 0;          // NOLINT
-char **argv = nullptr; // NOLINT
+static int argc = 0;          // NOLINT NOSONAR
+static char **argv = nullptr; // NOLINT NOSONAR
 
 /**
  * Prefer using `TestQtCoreApp` instead.
  */
 class TestQtFullApp : public QApplication {
 public:
-  explicit TestQtFullApp() : QApplication(argc, argv) {}
+  explicit TestQtFullApp() : QApplication(argc, argv) {
+#if defined(Q_OS_WIN)
+#error "this object causes windows ci to freeze"
+#endif
+  }
 };

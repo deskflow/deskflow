@@ -15,21 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "validators/ComputerNameValidator.h"
-#include "validators/SpacesValidator.h"
+#pragma once
 
-#include "AliasValidator.h"
-
-#include <QRegularExpression>
+#include "LineEditValidator.h"
+#include "gui/config/ScreenList.h"
+#include "gui/validators/ValidationError.h"
 
 namespace validators {
 
-AliasValidator::AliasValidator(QLineEdit *parent, ValidationError *error)
-    : LineEditValidator(parent, error) {
-  addValidator(
-      std::make_unique<SpacesValidator>("Computer name cannot contain spaces"));
-  addValidator(std::make_unique<ComputerNameValidator>(
-      "Contains invalid characters or is too long"));
-}
+class ScreenNameValidator : public LineEditValidator {
+public:
+  explicit ScreenNameValidator(
+      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr,
+      const ScreenList *pScreens = nullptr);
+};
 
 } // namespace validators

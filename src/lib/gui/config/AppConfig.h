@@ -139,6 +139,7 @@ public:
   //
   // Getters (overrides)
   //
+
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
   bool tlsEnabled() const override;
@@ -161,25 +162,25 @@ public:
   const QString &configFile() const override;
   const QString &networkInterface() const override;
   const QString &serverHostname() const override;
+  bool isActiveScopeWritable() const override;
+  bool isActiveScopeSystem() const override;
+  int logLevel() const override;
+  bool autoHide() const override;
+  bool enableService() const override;
+  bool closeToTray() const override;
+  bool clientGroupChecked() const override;
 
   //
   // Getters (new methods)
   //
 
-  bool isActiveScopeWritable() const;
-  bool isActiveScopeSystem() const;
-  int logLevel() const;
   bool wizardShouldRun() const;
   bool startedBefore() const;
   QString logDir() const;
-  bool autoHide() const;
   unsigned long long licenseNextCheck() const;
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
-  bool clientGroupChecked() const;
   QString lastVersion() const;
-  bool enableService() const;
-  bool closeToTray() const;
   bool activationHasRun() const;
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
@@ -187,27 +188,36 @@ public:
   bool showCloseReminder() const;
 
   //
-  // Setters
+  // Setters (overrides)
+  //
+  void setScreenName(const QString &s) override;
+  void setPort(int i) override;
+  void setNetworkInterface(const QString &s) override;
+  void setLogLevel(int i) override;
+  void setLogToFile(bool b) override;
+  void setLogFilename(const QString &s) override;
+  void setElevateMode(ElevateMode em) override;
+  void setTlsEnabled(bool e) override;
+  void setAutoHide(bool b) override;
+  void setInvertScrollDirection(bool b) override;
+  void setLanguageSync(bool b) override;
+  void setPreventSleep(bool b) override;
+  void setEnableService(bool enabled) override;
+  void setCloseToTray(bool minimize) override;
+  void setTlsCertPath(const QString &path) override;
+  void setTlsKeyLength(int length) override;
+  void setInvertConnection(bool value) override;
+
+  //
+  // Setters (new methods)
   //
 
   void setActivationHasRun(bool value);
-  void setScreenName(const QString &s);
-  void setPort(int i);
-  void setNetworkInterface(const QString &s);
-  void setLogLevel(int i);
-  void setLogToFile(bool b);
-  void setLogFilename(const QString &s);
   void setWizardHasRun();
   void setStartedBefore(bool b);
-  void setElevateMode(ElevateMode em);
-  void setTlsEnabled(bool e);
   void setSerialKey(const QString &serialKey);
   void clearSerialKey();
-  void setAutoHide(bool b);
-  void setInvertScrollDirection(bool b);
   void setLicenseNextCheck(unsigned long long);
-  void setLanguageSync(bool b);
-  void setPreventSleep(bool b);
   void setServerGroupChecked(bool);
   void setUseExternalConfig(bool);
   void setConfigFile(const QString &);
@@ -215,11 +225,6 @@ public:
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
   void setLastVersion(const QString &version);
-  void setEnableService(bool enabled);
-  void setCloseToTray(bool minimize);
-  void setTlsCertPath(const QString &path);
-  void setTlsKeyLength(int length);
-  void setInvertConnection(bool value);
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
   void setShowDevThanks(bool show);
@@ -230,7 +235,7 @@ public:
   ///             True - This will set the variable and load the global scope
   ///             settings. False - This will set the variable and load the user
   ///             scope settings.
-  void setLoadFromSystemScope(bool value);
+  void setLoadFromSystemScope(bool value) override;
 
 private:
   static QString settingName(AppConfig::Setting name);

@@ -18,8 +18,8 @@
 #include "SetupWizard.h"
 
 #include "gui/styles.h"
-#include "validators/ScreenNameValidator.h"
-#include "validators/ValidationError.h"
+#include "gui/validators/ScreenNameValidator.h"
+#include "gui/validators/ValidationError.h"
 
 using namespace synergy::gui;
 

@@ -17,15 +17,14 @@
 
 #pragma once
 
-#include "LineEditValidator.h"
-#include "validators/ValidationError.h"
+#include "IStringValidator.h"
 
 namespace validators {
 
-class AliasValidator : public LineEditValidator {
+class SpacesValidator : public IStringValidator {
 public:
-  explicit AliasValidator(
-      QLineEdit *parent = nullptr, ValidationError *error = nullptr);
+  explicit SpacesValidator(const QString &message);
+  bool validate(const QString &input) const override;
 };
 
 } // namespace validators

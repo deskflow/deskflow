@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2021 Symless Ltd.
- * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,21 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "ComputerNameValidator.h"
 
-#include <QRegularExpression>
+#pragma once
 
-namespace validators {
+#include <QLabel>
+#include <QStringList>
 
-ComputerNameValidator::ComputerNameValidator(const QString &message)
-    : IStringValidator(message) {}
+namespace synergy::gui::widgets {
 
-bool ComputerNameValidator::validate(const QString &input) const {
-  const QRegularExpression re(
-      "^[\\w\\._-]{0,255}$", QRegularExpression::CaseInsensitiveOption);
-  auto match = re.match(input);
-  auto result = match.hasMatch();
-  return result;
-}
+class ServerStateLabel : public QLabel {
+public:
+  explicit ServerStateLabel(QWidget *parent = nullptr);
+  void updateServerState(const QString &line);
 
-} // namespace validators
+private:
+  QStringList m_clients;
+
+  void updateState();
+};
+
+} // namespace synergy::gui::widgets
