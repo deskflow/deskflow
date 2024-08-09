@@ -258,14 +258,6 @@ void MainWindow::connectSlots() {
       m_pActionRestore, &QAction::triggered, //
       [this]() { showAndActivate(); });
 
-  connect(
-      m_pActionStartCore, &QAction::triggered, this,
-      &MainWindow::onActionStartCoreTriggered);
-
-  connect(
-      m_pActionStopCore, &QAction::triggered, this,
-      &MainWindow::onActionStopCoreTriggered);
-
   connect(m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 
   connect(
@@ -369,16 +361,6 @@ void MainWindow::onVersionCheckerUpdateFound(const QString &version) {
   m_pLabelUpdate->setText(text);
 }
 
-void MainWindow::onActionStartCoreTriggered() {
-  m_ClientConnection.setShowMessage();
-  m_CoreProcess.start();
-}
-
-void MainWindow::onActionStopCoreTriggered() {
-  qDebug("stopping core process");
-  m_CoreProcess.stop();
-}
-
 void MainWindow::onAppConfigScreenNameChanged() { updateScreenName(); }
 
 void MainWindow::onAppConfigInvertConnection() { applyConfig(); }
@@ -397,6 +379,24 @@ void MainWindow::onCoreProcessError(CoreProcess::Error error) {
         "although it does exist. "
         "Please check if you have sufficient permissions to run this program.");
   }
+}
+
+void MainWindow::on_m_pActionStartCore_triggered() {
+  m_ClientConnection.setShowMessage();
+  m_CoreProcess.start();
+}
+
+void MainWindow::on_m_pActionStopCore_triggered() {
+  qDebug("stopping core process");
+  m_CoreProcess.stop();
+}
+
+void MainWindow::on_m_pActionTestFatalError_triggered() {
+  qFatal("test fatal error");
+}
+
+void MainWindow::on_m_pActionTestCriticalError_triggered() {
+  qCritical("test critical error");
 }
 
 bool MainWindow::on_m_pActionSave_triggered() {
@@ -598,6 +598,22 @@ void MainWindow::createMenuBar() {
   m_pMenuWindow->addAction(m_pActionRestore);
   m_pMenuHelp->addAction(m_pActionAbout);
   m_pMenuHelp->addAction(m_pActionHelp);
+
+#ifndef NDEBUG
+  // always enable test menu in debug mode.
+  const auto enableTestMenu = true;
+#else
+  // only enable test menu in release build if env var is true.
+  const auto enableTestMenu =
+      strToTrue(qEnvironmentVariable("SYNERGY_TEST_MENU"));
+#endif
+
+  if (enableTestMenu) {
+    auto testMenu = new QMenu("Test", m_pMenuBar);
+    m_pMenuBar->addMenu(testMenu);
+    testMenu->addAction(m_pActionTestFatalError);
+    testMenu->addAction(m_pActionTestCriticalError);
+  }
 
   setMenuBar(m_pMenuBar);
 }

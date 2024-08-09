@@ -34,7 +34,6 @@
 #include <QObject>
 #include <QtCore>
 #include <QtGui>
-#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>

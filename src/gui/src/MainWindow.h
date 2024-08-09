@@ -108,8 +108,6 @@ private slots:
   void onLicenseHandlerInvalidLicense();
   void onVersionCheckerUpdateFound(const QString &version);
   void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
-  void onActionStartCoreTriggered();
-  void onActionStopCoreTriggered();
   void onWindowSaveTimerTimeout();
   void onServerConnectionConfigureClient(const QString &clientName);
 
@@ -129,6 +127,10 @@ private slots:
   void on_m_pActionHelp_triggered() const;
   void on_m_pActionSettings_triggered();
   void on_m_pActionActivate_triggered();
+  void on_m_pActionStartCore_triggered();
+  void on_m_pActionStopCore_triggered();
+  void on_m_pActionTestFatalError_triggered();
+  void on_m_pActionTestCriticalError_triggered();
   void on_m_pLineEditHostname_returnPressed();
   void on_m_pLineEditClientIp_returnPressed();
   void on_m_pLineEditHostname_textChanged(const QString &text);

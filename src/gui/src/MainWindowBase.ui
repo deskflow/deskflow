@@ -599,14 +599,6 @@
     <string>Ctrl+T</string>
    </property>
   </action>
-  <action name="actionShowStatus">
-   <property name="text">
-    <string>S&amp;how Status</string>
-   </property>
-   <property name="shortcut">
-    <string notr="true">Ctrl+H</string>
-   </property>
-  </action>
   <action name="m_pActionMinimize">
    <property name="text">
     <string>&amp;Hide</string>
@@ -657,6 +649,22 @@
    </property>
    <property name="toolTip">
     <string>Activate</string>
+   </property>
+  </action>
+  <action name="m_pActionTestFatalError">
+   <property name="text">
+    <string>Test fatal error</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
+   </property>
+  </action>
+  <action name="m_pActionTestCriticalError">
+   <property name="text">
+    <string>Test critical error</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
  </widget>
