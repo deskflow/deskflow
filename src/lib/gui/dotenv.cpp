@@ -23,6 +23,7 @@
 #include <QFile>
 #include <QProcess>
 #include <QProcessEnvironment>
+#include <QStandardPaths>
 #include <QString>
 #include <QTextStream>
 
@@ -54,15 +55,16 @@ void dotenv(const QString &filename) {
         "no %s file in dir: %s", qPrintable(filename),
         qPrintable(fileInfo.absolutePath()));
 
-    // if nothing in current dir, then try app dir.  this makes it a bit easier
-    // for engineers in the field to have an easily predictable location for the
-    // .env file.
-    QDir dir(QCoreApplication::applicationDirPath());
-    filePath = dir.filePath(filename);
+    // if nothing in current dir, then try the app data dir.
+    // this makes it a bit easier for engineers in the field to have an easily
+    // predictable location for the .env file.
+    QDir profileDir(
+        QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
+    filePath = profileDir.filePath(filename);
     if (!open(file, filePath)) {
       qInfo(
-          "no %s file in app dir: %s", qPrintable(filename),
-          qPrintable(dir.absolutePath()));
+          "no %s file in app config dir: %s", qPrintable(filename),
+          qPrintable(profileDir.absolutePath()));
       return;
     }
   }
