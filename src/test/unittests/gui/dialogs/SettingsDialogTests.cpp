@@ -29,17 +29,23 @@ using namespace synergy::license;
 using namespace synergy::gui;
 
 TEST(SettingsDialogTests, ctor_getsScreenName) {
+  std::cout << "create app" << std::endl;
   TestQtFullApp app;
+  std::cout << "create mocks" << std::endl;
   NiceMock<AppConfigMock> appConfig;
   NiceMock<ServerConfigMock> serverConfig;
+  std::cout << "create license" << std::endl;
   SerialKey serialKey = SerialKey::invalid();
   serialKey.isValid = true;
   License license(serialKey);
+  std::cout << "create core process" << std::endl;
   auto cpDeps = std::make_shared<CoreProcess::Deps>();
   CoreProcess coreProcess(appConfig, serverConfig, cpDeps);
 
+  std::cout << "expect call" << std::endl;
   EXPECT_CALL(appConfig, screenName()).Times(1);
 
+  std::cout << "create dialog" << std::endl;
   SettingsDialog settingsDialog(
       nullptr, appConfig, serverConfig, license, coreProcess);
 }
