@@ -75,6 +75,7 @@ Enhancements:
 - #7429 Parse date numbers as long instead of int
 - #7430 Improve setting enable logic and test coverage
 - #7431 Improve handling of Qt-related warnings and errors
+- #7432 Only show close to tray reminder when not quitting the app
 
 # 1.14.6
 

@@ -259,7 +259,11 @@ void MainWindow::connectSlots() {
       m_pActionRestore, &QAction::triggered, //
       [this]() { showAndActivate(); });
 
-  connect(m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
+  connect(m_pActionQuit, &QAction::triggered, qApp, [this] {
+    qDebug("quitting application");
+    m_Quitting = true;
+    qApp->quit();
+  });
 
   connect(
       &m_VersionChecker, &VersionChecker::updateFound, this,
@@ -316,6 +320,17 @@ void MainWindow::onShown() {
       showActivationDialog();
     }
   }
+
+  // if a critical error was shown just before the main window (i.e. on app
+  // load), it will be hidden behind the main window. therefore we need to raise
+  // it up in front of the main window.
+  // HACK: because the `onShown` event happens just as the window is shown, the
+  // message box has a chance of being raised under the main window. to solve
+  // this we delay the error dialog raise by a split second. this seems a bit
+  // hacky and fragile, so maybe there's a better approach.
+  const auto kCriticalDialogDelay = 100;
+  QTimer::singleShot(
+      kCriticalDialogDelay, [] { messages::raiseCriticalDialog(); });
 }
 
 void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
@@ -674,7 +689,9 @@ void MainWindow::handleLogLine(const QString &line) {
   const auto scrollAtBottom =
       qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
 
-  m_pLogOutput->appendPlainText(line);
+  // only trim end instead of the whole line to prevent tab-indented debug
+  // filenames from losing their indentation.
+  m_pLogOutput->appendPlainText(trimEnd(line));
 
   if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());
@@ -730,14 +747,14 @@ void MainWindow::checkFingerprint(const QString &line) {
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
         this, QString("Security question"),
         QString(
-            "You are connecting to a server. Here is it's fingerprint:\n\n"
-            "%1\n\n"
-            "Compare this fingerprint to the one on your server's screen."
+            "<p>You are connecting to a server.</p>"
+            "<p>Here is it's TLS fingerprint:</p>"
+            "<p>%1</p>"
+            "<p>Compare this fingerprint to the one on your server's screen. "
             "If the two don't match exactly, then it's probably not the server "
-            "you're expecting (it could be a malicious user).\n\n"
-            "To automatically trust this fingerprint for future "
-            "connections, click Yes. To reject this fingerprint and "
-            "disconnect from the server, click No.")
+            "you're expecting (it could be a malicious user).</p>"
+            "<p>Do you want to trust this fingerprint for future "
+            "connections? If you don't, a connection cannot be made.</p>")
             .arg(fingerprint),
         QMessageBox::Yes | QMessageBox::No);
 
@@ -762,18 +779,23 @@ void MainWindow::showEvent(QShowEvent *event) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
+  if (m_Quitting) {
+    qDebug("skipping close event handle on quit");
+    return;
+  }
+
   if (!m_AppConfig.closeToTray()) {
+    qDebug("window will not hide to tray");
     return;
   }
 
-  qDebug("window will hide to tray");
-  if (!m_AppConfig.showCloseReminder()) {
-    return;
+  if (m_AppConfig.showCloseReminder()) {
+    messages::showCloseReminder(this);
+    m_AppConfig.setShowCloseReminder(false);
   }
 
-  messages::showCloseReminder(this);
-  m_AppConfig.setShowCloseReminder(false);
   m_ConfigScopes.save();
+  qDebug("window should hide to tray");
 }
 
 void MainWindow::showFirstRunMessage() {
@@ -791,7 +813,7 @@ void MainWindow::showFirstRunMessage() {
 
 void MainWindow::showDevThanksMessage() {
   if (!m_AppConfig.showDevThanks()) {
-    qDebug("skipping dev thanks message, disabled in settings");
+    qDebug("skipping dev thanks message");
     return;
   }
 
@@ -1139,5 +1161,6 @@ void MainWindow::showAndActivate() {
   }
 
   showNormal();
+  raise();
   activateWindow();
 }

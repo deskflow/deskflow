@@ -53,7 +53,8 @@ private:
   IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
   std::shared_ptr<Deps> m_pDeps;
-  QStringList m_ignoredClients;
+  QStringList m_receivedClients;
+  bool m_messageShowing = false;
 };
 
 } // namespace synergy::gui

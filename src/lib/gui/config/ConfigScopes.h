@@ -33,7 +33,13 @@ class ConfigScopes : public QObject, public IConfigScopes {
   Q_OBJECT
 
 public:
-  explicit ConfigScopes();
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual std::shared_ptr<QSettingsProxy> makeUserSettings();
+    virtual std::shared_ptr<QSettingsProxy> makeSystemSettings();
+  };
+
+  explicit ConfigScopes(std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   ~ConfigScopes() override = default;
 
   void signalReady() override;
@@ -59,10 +65,8 @@ signals:
 
 private:
   Scope m_currentScope = Scope::User;
-  std::unique_ptr<QSettings> m_pUserSettings;
-  std::unique_ptr<QSettings> m_pSystemSettings;
-  QSettingsProxy m_userSettingsProxy;
-  QSettingsProxy m_systemSettingsProxy;
+  std::shared_ptr<QSettingsProxy> m_pUserSettingsProxy;
+  std::shared_ptr<QSettingsProxy> m_pSystemSettingsProxy;
 };
 
 } // namespace synergy::gui

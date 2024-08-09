@@ -21,28 +21,10 @@
 
 namespace synergy::gui {
 
-const int kDebugLogLevel = 1;
-
-#ifdef SYNERGY_PRODUCT_NAME
-const QString kProductName = SYNERGY_PRODUCT_NAME;
-#else
-const QString kProductName;
-#endif
-
-#ifdef SYNERGY_LICENSED_PRODUCT
-const bool kLicensedProduct = true;
-#else
-const bool kLicensedProduct = false;
-#endif
-
-#ifdef SYNERGY_ENABLE_ACTIVATION
-#ifndef SYNERGY_LICENSED_PRODUCT
-#error "activation requires licensed product"
-#endif
-const bool kEnableActivation = true;
-#else
-const bool kEnableActivation = false;
-#endif // SYNERGY_ENABLE_ACTIVATION
+// important: this is used for settings paths on some platforms,
+// and must not be a url. qt automatically converts this to reverse domain
+// notation (rdn), e.g. com.symless
+const auto kOrgDomain = "symless.com";
 
 const auto kLinkBuy = R"(<a href="%1" style="color: %2">Buy now</a>)";
 const auto kLinkRenew = R"(<a href="%1" style="color: %2">Renew now</a>)";
@@ -64,5 +46,26 @@ const auto kUrlHelp = QString("%1/help?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlDownload =
     QString("%1/download?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlBugReport = QString("%1/issues").arg(kUrlGitHub);
+
+#ifdef SYNERGY_PRODUCT_NAME
+const QString kProductName = SYNERGY_PRODUCT_NAME;
+#else
+const QString kProductName;
+#endif
+
+#ifdef SYNERGY_LICENSED_PRODUCT
+const bool kLicensedProduct = true;
+#else
+const bool kLicensedProduct = false;
+#endif
+
+#ifdef SYNERGY_ENABLE_ACTIVATION
+#ifndef SYNERGY_LICENSED_PRODUCT
+#error "activation requires licensed product"
+#endif
+const bool kEnableActivation = true;
+#else
+const bool kEnableActivation = false;
+#endif // SYNERGY_ENABLE_ACTIVATION
 
 } // namespace synergy::gui
