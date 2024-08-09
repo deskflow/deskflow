@@ -19,7 +19,7 @@
 #include "base/Log.h"
 #include "arch/Arch.h"
 #include "base/log_outputters.h"
-#include "common/Version.h"
+#include "common/constants.h"
 
 #include <cstdarg>
 #include <cstdint>

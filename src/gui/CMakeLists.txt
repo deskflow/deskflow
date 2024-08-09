@@ -51,7 +51,7 @@ include_directories(${CMAKE_BINARY_DIR}/src/lib/gui/gui_autogen/include)
 target_link_libraries(
   ${target}
   gui
-  global
+  common
   license
   Qt6::Core
   Qt6::Widgets

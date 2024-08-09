@@ -25,7 +25,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/log_outputters.h"
-#include "common/Version.h"
+#include "common/constants.h"
 #include "platform/MSWindowsScreen.h"
 #include "synergy/App.h"
 #include "synergy/ArgsBase.h"

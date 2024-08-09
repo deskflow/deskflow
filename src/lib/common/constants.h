@@ -1,8 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2024 Symless Ltd.
- * Copyright (C) 2009-2012 Nick Bolton
- * Copyright (C) 2002-2009 Chris Schoeneman
+ * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "common/Version.h"
+#pragma once
 
-const char *kApplication = "Synergy";
-const char *kCopyright = "Copyright (C) 2012-%s Symless Ltd.\n"
-                         "Copyright (C) 2009-2012 Nick Bolton\n"
-                         "Copyright (C) 2002-2009 Chris Schoeneman";
-const char *kContact = "Email: engineering@symless.com";
-const char *kWebsite = "https://symless.com/";
-const char *kVersion = SYNERGY_VERSION;
-const char *kAppVersion = "Synergy " SYNERGY_VERSION;
+// set version macro if not set yet
+#if !defined(SYNERGY_VERSION)
+#error Version was not set (should be passed to compiler).
+#endif
+
+// important strings
+extern const char *kAppName;
+extern const char *kCopyright;
+extern const char *kContact;
+extern const char *kWebsite;
+
+// build version.  follows linux kernel style:  an even minor number implies
+// a release version, odd implies development version.
+extern const char *kVersion;
+
+// application version
+extern const char *kAppVersion;

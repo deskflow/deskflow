@@ -148,12 +148,11 @@ macro(config_test_deps)
   set(test_libs
       gtest
       gmock
-      global
+      common
       arch
       base
       client
       server
-      common
       io
       net
       platform

@@ -20,7 +20,7 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/String.h"
-#include "common/Version.h"
+#include "common/constants.h"
 #include "mt/Lock.h"
 #include "server/Server.h"
 

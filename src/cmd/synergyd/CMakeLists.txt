@@ -36,7 +36,6 @@ target_link_libraries(
   net
   platform
   synlib
-  global
   license
   ${libs})
 
