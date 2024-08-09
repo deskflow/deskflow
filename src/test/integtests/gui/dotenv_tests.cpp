@@ -22,8 +22,16 @@
 
 #include <gtest/gtest.h>
 
+TEST(dotenv_tests, dotenv_fileDoesNotExist_doesNotLoadEnvVar) {
+  const QString envFile = "tmp/test/.env";
+
+  synergy::gui::dotenv(envFile);
+
+  const QString actualValue = qEnvironmentVariable("TEST_ENV_VAR");
+  EXPECT_TRUE(actualValue.isEmpty());
+}
+
 TEST(dotenv_tests, dotenv_envFileWithEntry_loadsEnvVar) {
-  // Arrange
   const QString envFile = "tmp/test/.env";
   QFile file(envFile);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -42,7 +50,7 @@ TEST(dotenv_tests, dotenv_envFileWithEntry_loadsEnvVar) {
 
   synergy::gui::dotenv(envFile);
 
-  const QString actualValue = qgetenv(key.toUtf8().constData());
+  const QString actualValue = qEnvironmentVariable(qPrintable(key));
   EXPECT_EQ("test value", actualValue.toStdString());
 
   QFile::remove(envFile);
