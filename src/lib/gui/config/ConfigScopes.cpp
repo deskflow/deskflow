@@ -16,8 +16,7 @@
  */
 
 #include "ConfigScopes.h"
-#include "Logger.h"
-#include "common/constants.h"
+
 #include "proxy/QSettingsProxy.h"
 
 #include <QCoreApplication>
