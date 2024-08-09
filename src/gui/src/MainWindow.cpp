@@ -31,6 +31,7 @@
 #include "gui/license/LicenseHandler.h"
 #include "gui/license/license_notices.h"
 #include "gui/messages.h"
+#include "gui/string_utils.h"
 #include "gui/styles.h"
 #include "gui/tls/TlsFingerprint.h"
 #include "license/License.h"
