@@ -48,7 +48,6 @@ SettingsDialog::SettingsDialog(
       m_coreProcess(coreProcess),
       m_tlsUtility(appConfig, license) {
 
-  qDebug("setting up settings dialog ui");
   setupUi(this);
 
   // force the first tab, since qt creator sets the active tab as the last one
@@ -56,13 +55,12 @@ SettingsDialog::SettingsDialog(
   m_pTabWidget->setCurrentIndex(0);
 
   loadFromConfig();
+  m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
   updateControls();
 
   m_pScreenNameError = new validators::ValidationError(this);
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
-
-  m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
 }
 
 //
@@ -188,7 +186,6 @@ void SettingsDialog::reject() {
 }
 
 void SettingsDialog::loadFromConfig() {
-  qDebug("loading settings from config");
 
   m_pLineEditScreenName->setText(m_appConfig.screenName());
   m_pSpinBoxPort->setValue(m_appConfig.port());
@@ -279,7 +276,6 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
 }
 
 void SettingsDialog::updateControls() {
-  qDebug("updating settings dialog controls");
 
 #if defined(Q_OS_WIN)
   const auto serviceAvailable = true;
