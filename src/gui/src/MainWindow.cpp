@@ -741,7 +741,7 @@ void MainWindow::checkFingerprint(const QString &line) {
             "If the two don't match exactly, then it's probably not the server "
             "you're expecting (it could be a malicious user).</p>"
             "<p>Do you want to trust this fingerprint for future "
-            "connections? If you don't a connection cannot be made.</p>")
+            "connections? If you don't, a connection cannot be made.</p>")
             .arg(fingerprint),
         QMessageBox::Yes | QMessageBox::No);
 
