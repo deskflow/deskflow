@@ -23,7 +23,7 @@
 using namespace testing;
 using namespace synergy::gui;
 
-TEST(LoggerTests, handleMessage_withLogLine_emitsNewLine) {
+TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine) {
   Logger logger;
   std::string newLineEmitted;
   QObject::connect(
@@ -31,10 +31,14 @@ TEST(LoggerTests, handleMessage_withLogLine_emitsNewLine) {
       [&newLineEmitted](const QString &line) {
         newLineEmitted = line.toStdString();
       });
+  qputenv("SYNERGY_GUI_DEBUG", "true");
+  logger.loadEnvVars();
 
   logger.handleMessage(QtDebugMsg, QMessageLogContext(), "test");
 
   EXPECT_THAT(newLineEmitted, HasSubstr("test"));
+
+  qputenv("SYNERGY_GUI_DEBUG", "");
 }
 
 TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine) {
@@ -43,9 +47,9 @@ TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine) {
   QObject::connect(
       &logger, &Logger::newLine, //
       [&newLineEmitted](const QString &line) { newLineEmitted = true; });
-
   qputenv("SYNERGY_GUI_DEBUG", "false");
   logger.loadEnvVars();
+
   logger.handleMessage(QtDebugMsg, QMessageLogContext(), "test");
 
   EXPECT_FALSE(newLineEmitted);
