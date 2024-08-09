@@ -92,7 +92,6 @@ private slots:
   //
   // Manual slots
   //
-
   void onCreated();
   void onShown();
   void onConfigScopesSaving();
@@ -194,6 +193,7 @@ private:
   bool m_SecureSocket = false;
   bool m_SaveWindow = false;
   LicenseHandler m_LicenseHandler;
+  bool m_Quitting = false;
 
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;

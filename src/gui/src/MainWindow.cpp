@@ -259,7 +259,11 @@ void MainWindow::connectSlots() {
       m_pActionRestore, &QAction::triggered, //
       [this]() { showAndActivate(); });
 
-  connect(m_pActionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
+  connect(m_pActionQuit, &QAction::triggered, qApp, [this] {
+    qDebug("quitting application");
+    m_Quitting = true;
+    qApp->quit();
+  });
 
   connect(
       &m_VersionChecker, &VersionChecker::updateFound, this,
@@ -730,14 +734,14 @@ void MainWindow::checkFingerprint(const QString &line) {
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
         this, QString("Security question"),
         QString(
-            "You are connecting to a server. Here is it's fingerprint:\n\n"
-            "%1\n\n"
-            "Compare this fingerprint to the one on your server's screen."
+            "<p>You are connecting to a server.</p>"
+            "<p>Here is it's TLS fingerprint:</p>"
+            "<p>%1</p>"
+            "<p>Compare this fingerprint to the one on your server's screen."
             "If the two don't match exactly, then it's probably not the server "
-            "you're expecting (it could be a malicious user).\n\n"
-            "To automatically trust this fingerprint for future "
-            "connections, click Yes. To reject this fingerprint and "
-            "disconnect from the server, click No.")
+            "you're expecting (it could be a malicious user).</p>"
+            "<p>Do you want to trust this fingerprint for future "
+            "connections? If you don't a connection cannot be made.</p>")
             .arg(fingerprint),
         QMessageBox::Yes | QMessageBox::No);
 
