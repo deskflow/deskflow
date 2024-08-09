@@ -1,8 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
- * Copyright (C) 2009 Nick Bolton
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include "constants.h"
 
-const char *kAppName = "Synergy";
-const char *kCopyright = "Copyright (C) 2012-%s Symless Ltd.\n"
-                         "Copyright (C) 2009-2012 Nick Bolton\n"
-                         "Copyright (C) 2002-2009 Chris Schoeneman";
-const char *kContact = "Email: engineering@symless.com";
-const char *kWebsite = "https://symless.com/";
-const char *kVersion = SYNERGY_VERSION;
-const char *kAppVersion = "Synergy " SYNERGY_VERSION;
+#include <string>
+
+namespace synergy {
+
+inline std::string version() {
+  std::string result = kVersion;
+  std::string gitSha = kVersionGitSha;
+  if (!gitSha.empty()) {
+    result.append(" (");
+    result.append(gitSha);
+    result.append(")");
+  }
+  return result;
+}
+
+} // namespace synergy

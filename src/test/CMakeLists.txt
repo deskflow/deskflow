@@ -148,7 +148,6 @@ macro(config_test_deps)
   set(test_libs
       gtest
       gmock
-      common
       arch
       base
       client

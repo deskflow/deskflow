@@ -17,7 +17,7 @@
  */
 
 #include "ipc/IpcMessage.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 
 IpcMessage::IpcMessage(IpcMessageType type) : m_type(type) {}
 

@@ -17,10 +17,24 @@
 
 #pragma once
 
-#include <QString>
+#include <cstring>
+#include <string>
+#include <vector>
 
-namespace synergy::gui {
+namespace synergy {
 
-QString version();
+const auto kCopyrightFormat = //
+    "Copyright (C) 2012-%s Symless Ltd.\n"
+    "Copyright (C) 2009-2012 Nick Bolton\n"
+    "Copyright (C) 2002-2009 Chris Schoeneman";
 
-} // namespace synergy::gui
+inline std::string copyright() {
+  const std::string date = __DATE__;
+  const auto year = date.substr(date.size() - 4);
+  auto max = strnlen(kCopyrightFormat, 256) + 10;
+  std::vector<char> buffer(max);
+  std::sprintf(buffer.data(), kCopyrightFormat, year.c_str());
+  return std::string(buffer.data());
+}
+
+} // namespace synergy

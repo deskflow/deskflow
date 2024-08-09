@@ -24,5 +24,5 @@ endif()
 add_library(base STATIC ${sources})
 
 if(UNIX)
-  target_link_libraries(base common)
+  target_link_libraries(base)
 endif()

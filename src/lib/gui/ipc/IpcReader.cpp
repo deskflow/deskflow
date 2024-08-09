@@ -19,7 +19,7 @@
 
 #include "Logger.h"
 #include "byte_utils.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 
 #include <QByteArray>
 #include <QMutex>

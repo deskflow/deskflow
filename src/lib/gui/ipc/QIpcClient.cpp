@@ -19,7 +19,7 @@
 
 #include "IpcReader.h"
 #include "byte_utils.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 
 #include <QDataStream>
 #include <QHostAddress>

@@ -20,18 +20,16 @@
 
 // set version macro if not set yet
 #if !defined(SYNERGY_VERSION)
-#error Version was not set (should be passed to compiler).
+#error version was not passed to the compiler
 #endif
 
-// important strings
-extern const char *kAppName;
-extern const char *kCopyright;
-extern const char *kContact;
-extern const char *kWebsite;
+const auto kAppName = "Synergy";
+const auto kContact = "Email: engineering@symless.com";
+const auto kUrlWebsite = "https://symless.com";
+const auto kVersion = SYNERGY_VERSION;
 
-// build version.  follows linux kernel style:  an even minor number implies
-// a release version, odd implies development version.
-extern const char *kVersion;
-
-// application version
-extern const char *kAppVersion;
+#ifdef GIT_SHA_SHORT
+const auto kVersionGitSha = GIT_SHA_SHORT;
+#else
+const auto kVersionGitSha;
+#endif

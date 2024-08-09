@@ -24,7 +24,7 @@
 #include "base/EventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"

@@ -26,8 +26,10 @@
 #include "base/TMethodEventJob.h"
 #include "base/XBase.h"
 #include "base/log_outputters.h"
-#include "common/Ipc.h"
 #include "common/constants.h"
+#include "common/copyright.h"
+#include "common/ipc.h"
+#include "common/version.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
 #include "synergy/ArgsBase.h"
@@ -44,6 +46,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
+#include <vector>
 
 #if WINAPI_CARBON
 #include <ApplicationServices/ApplicationServices.h>
@@ -82,27 +85,17 @@ App::~App() {
 }
 
 void App::version() {
-  const std::string date = __DATE__;
-  std::string year = date.substr(date.size() - 4);
+  const auto version = synergy::version();
+  const auto copyright = synergy::copyright();
 
-  const size_t kBufferSize = 500;
-  const size_t kCopyrightSize = 200;
-  char copyrightBuffer[kCopyrightSize];
-  snprintf(copyrightBuffer, kCopyrightSize, kCopyright, year.c_str());
-
-  std::stringstream version;
-  version << kVersion;
-#ifdef GIT_SHA_SHORT
-  version << " (" << GIT_SHA_SHORT << ")";
-#endif
-
-  char buffer[kBufferSize];
+  const int kBufferSize = 1024;
+  std::vector<char> buffer(kBufferSize);
   snprintf(
-      buffer, kBufferSize, "%s %s, protocol version %d.%d\n%s",
-      argsBase().m_pname, version.str().c_str(), kProtocolMajorVersion,
-      kProtocolMinorVersion, copyrightBuffer);
+      buffer.data(), kBufferSize, "%s v%s, protocol v%d.%d\n%s", //
+      argsBase().m_pname, version.c_str(), kProtocolMajorVersion,
+      kProtocolMinorVersion, copyright.c_str());
 
-  std::cout << buffer << std::endl;
+  std::cout << std::string(buffer.data()) << std::endl;
 }
 
 int App::run(int argc, char **argv) {

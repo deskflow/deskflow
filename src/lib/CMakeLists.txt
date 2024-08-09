@@ -17,7 +17,6 @@
 add_subdirectory(arch)
 add_subdirectory(base)
 add_subdirectory(client)
-add_subdirectory(common)
 add_subdirectory(io)
 add_subdirectory(ipc)
 add_subdirectory(mt)

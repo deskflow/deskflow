@@ -27,7 +27,7 @@
 
 #include "ActivationDialog.h"
 #include "ServerConfig.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 #include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 #include "gui/config/AppConfig.h"

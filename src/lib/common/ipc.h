@@ -30,31 +30,31 @@ enum class IpcMessageType : UInt8 {
 
 enum class IpcClientType { Unknown, GUI, Node };
 
-extern const char *const kIpcHost;
-extern const int kIpcPort;
+const auto kIpcHost = "127.0.0.1";
+const auto kIpcPort = 24801;
 
 // handshake: node/gui -> daemon
 // $1 = type, the client identifies it's self as gui or node (synergyc/s).
-extern const char *const kIpcMsgHello;
+const auto kIpcMsgHello = "IHEL%1i";
 
 // handshake: daemon -> node/gui
 // the daemon responds to the handshake.
-extern const char *const kIpcMsgHelloBack;
+const auto kIpcMsgHelloBack = "IHEL";
 
 // log line: daemon -> gui
 // $1 = aggregate log lines collected from synergys/c or the daemon itself.
-extern const char *const kIpcMsgLogLine;
+const auto kIpcMsgLogLine = "ILOG%s";
 
 // command: gui -> daemon
 // $1 = command; the command for the daemon to launch, typically the full
 // path to synergys/c. $2 = true when process must be elevated on ms windows.
-extern const char *const kIpcMsgCommand;
+const auto kIpcMsgCommand = "ICMD%s%1i";
 
 // shutdown: daemon -> node
 // the daemon tells synergys/c to shut down gracefully.
-extern const char *const kIpcMsgShutdown;
+const auto kIpcMsgShutdown = "ISDN";
 
 // set setting: gui -> daemon
 // $1 = setting name
 // $2 = setting value
-extern const char *const kIpcMsgSetting;
+const auto kIpcMsgSetting = "SSET%s%s";

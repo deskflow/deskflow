@@ -29,7 +29,6 @@ target_link_libraries(
   ${target}
   arch
   base
-  common
   io
   ipc
   mt

@@ -25,7 +25,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"

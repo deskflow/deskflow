@@ -97,17 +97,17 @@ void ServerTaskBarReceiver::unlock() const {
 std::string ServerTaskBarReceiver::getToolTip() const {
   switch (m_state) {
   case kNotRunning:
-    return synergy::string::sprintf("%s:  Not running", kAppVersion);
+    return synergy::string::sprintf("%s:  Not running", kAppName);
 
   case kNotWorking:
     return synergy::string::sprintf(
-        "%s:  %s", kAppVersion, m_errorMessage.c_str());
+        "%s:  %s", kAppName, m_errorMessage.c_str());
 
   case kNotConnected:
-    return synergy::string::sprintf("%s:  Waiting for clients", kAppVersion);
+    return synergy::string::sprintf("%s:  Waiting for clients", kAppName);
 
   case kConnected:
-    return synergy::string::sprintf("%s:  Connected", kAppVersion);
+    return synergy::string::sprintf("%s:  Connected", kAppName);
 
   default:
     return "";

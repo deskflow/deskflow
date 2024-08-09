@@ -23,7 +23,7 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "common/Ipc.h"
+#include "common/ipc.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"

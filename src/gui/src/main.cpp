@@ -20,13 +20,13 @@
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
 #include "SetupWizardBlocker.h"
+#include "common/constants.h"
+#include "common/version.h"
 #include "gui/Logger.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
-#include "gui/constants.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
-#include "gui/version.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -34,6 +34,7 @@
 #include <QObject>
 #include <QtCore>
 #include <QtGui>
+#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -61,14 +62,19 @@ int main(int argc, char *argv[]) {
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
 
-  QCoreApplication::setOrganizationName(kAppName);
   QCoreApplication::setApplicationName(kAppName);
-  QCoreApplication::setOrganizationDomain(kAppDomain);
+
+  // HACK: set org name to app name for backwards compatibility.
+  QCoreApplication::setOrganizationName(kAppName);
+
+  // HACK: set org domain to url for backwards compatibility.
+  QCoreApplication::setOrganizationDomain(kUrlWebsite);
 
   QSynergyApplication app(argc, argv);
 
   qInstallMessageHandler(synergy::gui::messages::messageHandler);
-  qInfo("Synergy v%s", qPrintable(synergy::gui::version()));
+  QString version = QString::fromStdString(synergy::version());
+  qInfo("Synergy v%s", qPrintable(version));
 
   dotenv();
   Logger::instance().loadEnvVars();
