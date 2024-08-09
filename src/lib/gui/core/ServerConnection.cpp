@@ -49,38 +49,62 @@ ServerConnection::ServerConnection(
 void ServerConnection::handleLogLine(const QString &logLine) {
   ServerMessage message(logLine);
 
-  if (!m_appConfig.useExternalConfig() && message.isNewClientMessage() &&
-      !m_ignoredClients.contains(message.getClientName())) {
-    handleNewClient(message.getClientName());
+  if (!message.isNewClientMessage()) {
+    return;
   }
+
+  if (m_appConfig.useExternalConfig()) {
+    qDebug("external config enabled, skipping new client prompt");
+    return;
+  }
+
+  const auto client = message.getClientName();
+
+  if (m_receivedClients.contains(client)) {
+    qDebug(
+        "already got request, skipping new client prompt for: %s",
+        qPrintable(client));
+    return;
+  }
+
+  handleNewClient(message.getClientName());
 }
 
 void ServerConnection::handleNewClient(const QString &clientName) {
   using enum messages::NewClientPromptResult;
 
+  m_receivedClients.append(clientName);
+
+  if (m_messageShowing) {
+    qDebug("new client message already shown, skipping");
+    return;
+  }
+
   if (m_serverConfig.isFull()) {
     qDebug(
-        "server config full, skipping add client prompt for: %s",
+        "server config full, skipping new client prompt for: %s",
         qPrintable(clientName));
     return;
   }
 
   if (m_serverConfig.screenExists(clientName)) {
     qDebug(
-        "client already added, skipping add client prompt for: %s",
+        "client already added, skipping new client prompt for: %s",
         qPrintable(clientName));
     return;
   }
 
   emit messageShowing();
 
+  m_messageShowing = true;
   const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName);
+  m_messageShowing = false;
+
   if (result == Add) {
     qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
     emit configureClient(clientName);
   } else if (result == Ignore) {
     qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
-    m_ignoredClients.append(clientName);
   } else {
     qFatal("unexpected add client result");
   }
