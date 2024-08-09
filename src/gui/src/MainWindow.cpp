@@ -768,18 +768,23 @@ void MainWindow::showEvent(QShowEvent *event) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
+  if (m_Quitting) {
+    qDebug("skipping close event handle on quit");
+    return;
+  }
+
   if (!m_AppConfig.closeToTray()) {
+    qDebug("window will not hide to tray");
     return;
   }
 
-  qDebug("window will hide to tray");
-  if (!m_AppConfig.showCloseReminder()) {
-    return;
+  if (m_AppConfig.showCloseReminder()) {
+    messages::showCloseReminder(this);
+    m_AppConfig.setShowCloseReminder(false);
   }
 
-  messages::showCloseReminder(this);
-  m_AppConfig.setShowCloseReminder(false);
   m_ConfigScopes.save();
+  qDebug("window should hide to tray");
 }
 
 void MainWindow::showFirstRunMessage() {
@@ -797,7 +802,7 @@ void MainWindow::showFirstRunMessage() {
 
 void MainWindow::showDevThanksMessage() {
   if (!m_AppConfig.showDevThanks()) {
-    qDebug("skipping dev thanks message, disabled in settings");
+    qDebug("skipping dev thanks message");
     return;
   }
 
