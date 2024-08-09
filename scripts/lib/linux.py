@@ -7,7 +7,6 @@ from enum import Enum, auto
 class PackageType(Enum):
     DISTRO = auto()
     TGZ = auto()
-    STGZ = auto()
 
 
 dist_dir = "dist"
@@ -51,10 +50,6 @@ def get_package_info(package_type: PackageType):
     if package_type == PackageType.TGZ:
         cpack_generator = "TGZ"
         file_extension = "tar.gz"
-
-    elif package_type == PackageType.STGZ:
-        cpack_generator = "STGZ"
-        file_extension = "sh"
 
     elif package_type == PackageType.DISTRO:
 
