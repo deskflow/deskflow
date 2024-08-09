@@ -88,10 +88,9 @@ void App::version() {
   const auto version = synergy::version();
   const auto copyright = synergy::copyright();
 
-  const int kBufferSize = 1024;
-  std::vector<char> buffer(kBufferSize);
-  snprintf(
-      buffer.data(), kBufferSize, "%s v%s, protocol v%d.%d\n%s", //
+  std::vector<char> buffer(1024);
+  std::sprintf(
+      buffer.data(), "%s v%s, protocol v%d.%d\n%s", //
       argsBase().m_pname, version.c_str(), kProtocolMajorVersion,
       kProtocolMinorVersion, copyright.c_str());
 

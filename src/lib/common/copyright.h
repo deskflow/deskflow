@@ -31,8 +31,7 @@ const auto kCopyrightFormat = //
 inline std::string copyright() {
   const std::string date = __DATE__;
   const auto year = date.substr(date.size() - 4);
-  auto max = strnlen(kCopyrightFormat, 256) + 10;
-  std::vector<char> buffer(max);
+  std::vector<char> buffer(256);
   std::sprintf(buffer.data(), kCopyrightFormat, year.c_str());
   return std::string(buffer.data());
 }
