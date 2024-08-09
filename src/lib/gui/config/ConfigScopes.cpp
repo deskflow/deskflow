@@ -16,13 +16,18 @@
  */
 
 #include "ConfigScopes.h"
+#include "Logger.h"
+#include "common/constants.h"
 
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qlogging.h>
 #include <memory>
 
 const auto kSystemConfigFilename = "SystemConfig.ini";
+const auto kLegacyOrgDomain = "http-symless-com";
 
 #if defined(Q_OS_UNIX)
 const auto kUnixSystemConfigPath = "/usr/local/etc/symless/";
@@ -43,15 +48,13 @@ QString getSystemSettingPath() {
   // qt already adds application and filename to the end of the path on linux.
   return kUnixSystemConfigPath;
 #else
-  qFatal("unsupported platform");
-  return "";
+#error "unsupported platform"
 #endif
 }
 
-#if defined(Q_OS_WIN)
-void loadWindowsLegacy(QSettings &settings) {
+void migrateLegacySystemSettings(QSettings &settings) {
   if (QFile(settings.fileName()).exists()) {
-    qDebug("system settings already exist, skipping legacy load");
+    qDebug("system settings already exist, skipping migration");
     return;
   }
 
@@ -71,7 +74,45 @@ void loadWindowsLegacy(QSettings &settings) {
   QSettings::setPath(
       QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
 }
-#endif
+
+void migrateLegacyUserSettings(QSettings &newSettings) {
+  QString newPath = newSettings.fileName();
+  QFile newFile(newPath);
+  if (newFile.exists()) {
+    qInfo("user settings already exist, skipping migration");
+    return;
+  }
+
+  QSettings oldSettings(kLegacyOrgDomain, kAppName);
+  QString oldPath = oldSettings.fileName();
+
+  if (oldPath.isEmpty()) {
+    qInfo("no legacy settings to migrate, filename empty");
+    return;
+  }
+
+  if (!QFile(oldPath).exists()) {
+    qInfo("no legacy settings to migrate, file does not exist");
+    return;
+  }
+
+  QFileInfo oldFileInfo(oldPath);
+  QFileInfo newFileInfo(newPath);
+
+  qDebug(
+      "migrating legacy settings: '%s' -> '%s'", //
+      qPrintable(oldFileInfo.fileName()), qPrintable(newFileInfo.fileName()));
+
+  QStringList keys = oldSettings.allKeys();
+  for (const QString &key : keys) {
+    QVariant oldValue = oldSettings.value(key);
+    newSettings.setValue(key, oldValue);
+    logVerbose(
+        QString("migrating setting '%1' = '%2'").arg(key, oldValue.toString()));
+  }
+
+  newSettings.sync();
+}
 
 ConfigScopes::ConfigScopes() {
   auto orgName = QCoreApplication::organizationName();
@@ -96,6 +137,13 @@ ConfigScopes::ConfigScopes() {
   m_pUserSettings = std::make_unique<QSettings>();
   m_userSettingsProxy.set(*m_pUserSettings);
 
+#if defined(Q_OS_MAC)
+  // on mac, we used to save settings to "com.http-symless-com.Synergy.plist"
+  // because `setOrganizationName` was historically called using a url instead
+  // of an actual domain (e.g. symless.com).
+  migrateLegacyUserSettings(*m_pUserSettings);
+#endif // Q_OS_MAC
+
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
       getSystemSettingPath());
@@ -108,7 +156,7 @@ ConfigScopes::ConfigScopes() {
   m_systemSettingsProxy.set(*m_pSystemSettings);
 
 #if defined(Q_OS_WIN)
-  loadWindowsLegacy(*m_pSystemSettings);
+  migrateLegacySystemSettings(*m_pSystemSettings);
 #endif
 }
 

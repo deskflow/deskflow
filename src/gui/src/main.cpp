@@ -66,8 +66,8 @@ int main(int argc, char *argv[]) {
   // HACK: set org name to app name for backwards compatibility.
   QCoreApplication::setOrganizationName(kAppName);
 
-  // HACK: set org domain to url for backwards compatibility.
-  QCoreApplication::setOrganizationDomain(kUrlWebsite);
+  // used as a prefix for settings paths, and must not be a url.
+  QCoreApplication::setOrganizationDomain(kOrgDomain);
 
   QSynergyApplication app(argc, argv);
 
