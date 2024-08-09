@@ -678,7 +678,9 @@ void MainWindow::handleLogLine(const QString &line) {
   const auto scrollAtBottom =
       qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
 
-  m_pLogOutput->appendPlainText(line);
+  // only trim end instead of the whole line to prevent tab-indented debug
+  // filenames from losing their indentation.
+  m_pLogOutput->appendPlainText(trimEnd(line));
 
   if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());

@@ -55,24 +55,23 @@ QString printLine(
   auto logLine = QString("[%1] %2: %3").arg(datetime).arg(type).arg(message);
 
   QTextStream stream(&logLine);
+  stream << Qt::endl;
+
   if (!fileLine.isEmpty()) {
-    stream << Qt::endl << "\t" + fileLine;
+    stream << "\t" + fileLine << Qt::endl;
   }
 
-  QString logLineReturn = logLine;
-  QTextStream streamReturn(&logLineReturn);
-  streamReturn << Qt::endl;
-
-  auto logLineReturn_c = qPrintable(logLineReturn);
+  auto logLineBytes = logLine.toUtf8();
+  auto logLine_c = logLineBytes.constData();
 
 #if defined(Q_OS_WIN)
   // Debug output is viewable using either VS Code, Visual Studio, DebugView, or
   // DbgView++ (only one can be used at once). It's important to send output to
   // the debug output API, because it's difficult to view stdout and stderr from
   // a Windows GUI app.
-  OutputDebugStringA(logLineReturn_c);
+  OutputDebugStringA(logLine_c);
 #else
-  fprintf(out, "%s", logLineReturn_c);
+  fprintf(out, "%s", logLine_c);
   fflush(out);
 #endif
 
