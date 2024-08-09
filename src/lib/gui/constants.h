@@ -19,8 +19,6 @@
 
 #include <QString>
 
-#include "common/constants.h"
-
 namespace synergy::gui {
 
 const int kDebugLogLevel = 1;
@@ -50,6 +48,7 @@ const auto kLinkBuy = R"(<a href="%1" style="color: %2">Buy now</a>)";
 const auto kLinkRenew = R"(<a href="%1" style="color: %2">Renew now</a>)";
 const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
+const auto kUrlWebsite = "https://symless.com";
 const auto kUrlSourceQuery = "source=gui";
 const auto kUrlGitHub = "https://github.com/symless/synergy-core";
 const auto kUrlGnomeTrayFix =

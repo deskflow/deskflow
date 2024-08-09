@@ -23,7 +23,6 @@
 #endif
 
 const auto kAppName = "Synergy";
-const auto kUrlWebsite = "https://symless.com";
 const auto kVersion = SYNERGY_VERSION;
 
 #ifdef GIT_SHA_SHORT
