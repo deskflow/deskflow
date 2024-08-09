@@ -90,7 +90,7 @@ void App::version() {
 
   const auto kBufferLength = 1024;
   std::vector<char> buffer(kBufferLength);
-  std::snprintf(
+  std::snprintf(                                                   // NOSONAR
       buffer.data(), kBufferLength, "%s v%s, protocol v%d.%d\n%s", //
       argsBase().m_pname, version.c_str(), kProtocolMajorVersion,
       kProtocolMinorVersion, copyright.c_str());

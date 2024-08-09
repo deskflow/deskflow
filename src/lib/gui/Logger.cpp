@@ -30,7 +30,7 @@
 
 namespace synergy::gui {
 
-auto kForceDebugMessages = QStringList{
+const auto kForceDebugMessages = QStringList{
     "Synergy", // TEST
     "No functional TLS backend was found",
     "No TLS backend is available",

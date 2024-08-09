@@ -33,7 +33,8 @@ inline std::string copyright() {
   const auto year = date.substr(date.size() - 4);
   const auto kBufferLength = 256;
   std::vector<char> buffer(kBufferLength);
-  std::snprintf(buffer.data(), kBufferLength, kCopyrightFormat, year.c_str());
+  std::snprintf( // NOSONAR
+      buffer.data(), kBufferLength, kCopyrightFormat, year.c_str());
   return std::string(buffer.data());
 }
 

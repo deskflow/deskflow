@@ -392,11 +392,11 @@ void MainWindow::on_m_pActionStopCore_triggered() {
   m_CoreProcess.stop();
 }
 
-void MainWindow::on_m_pActionTestFatalError_triggered() {
+void MainWindow::on_m_pActionTestFatalError_triggered() const {
   qFatal("test fatal error");
 }
 
-void MainWindow::on_m_pActionTestCriticalError_triggered() {
+void MainWindow::on_m_pActionTestCriticalError_triggered() const {
   qCritical("test critical error");
 }
 
