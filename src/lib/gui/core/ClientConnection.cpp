@@ -39,12 +39,14 @@ void ClientConnection::Deps::showError(
 //
 
 void ClientConnection::handleLogLine(const QString &logLine) {
-  if (!m_showMessage) {
-    qDebug("message already shown, skipping");
-    return;
-  }
 
   if (logLine.contains("failed to connect to server")) {
+
+    if (!m_showMessage) {
+      qDebug("message already shown, skipping");
+      return;
+    }
+
     m_showMessage = false;
 
     // ignore the message if it's about the server refusing by name as
