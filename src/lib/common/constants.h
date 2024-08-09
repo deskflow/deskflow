@@ -24,7 +24,6 @@
 #endif
 
 const auto kAppName = "Synergy";
-const auto kContact = "Email: engineering@symless.com";
 const auto kUrlWebsite = "https://symless.com";
 const auto kVersion = SYNERGY_VERSION;
 
