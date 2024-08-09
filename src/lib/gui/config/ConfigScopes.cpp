@@ -18,6 +18,7 @@
 #include "ConfigScopes.h"
 #include "Logger.h"
 #include "common/constants.h"
+#include "proxy/QSettingsProxy.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -26,138 +27,32 @@
 #include <QtCore/qlogging.h>
 #include <memory>
 
-const auto kSystemConfigFilename = "SystemConfig.ini";
-const auto kLegacyOrgDomain = "http-symless-com";
-
-#if defined(Q_OS_UNIX)
-const auto kUnixSystemConfigPath = "/usr/local/etc/symless/";
-#endif
-
 namespace synergy::gui {
 
 using namespace proxy;
 
-QString getSystemSettingPath() {
-  const QString settingFilename(kSystemConfigFilename);
-#if defined(Q_OS_WIN)
-  return QCoreApplication::applicationDirPath() + QDir::separator();
-#elif defined(Q_OS_MAC)
-  // it would be nice to use /Library dir, but qt has no elevate system.
-  return kUnixSystemConfigPath + settingFilename;
-#elif defined(Q_OS_LINUX)
-  // qt already adds application and filename to the end of the path on linux.
-  return kUnixSystemConfigPath;
-#else
-#error "unsupported platform"
-#endif
+//
+// ConfigScopes::Deps
+//
+
+std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeUserSettings() {
+  return std::make_shared<QSettingsProxy>();
 }
 
-void migrateLegacySystemSettings(QSettings &settings) {
-  if (QFile(settings.fileName()).exists()) {
-    qDebug("system settings already exist, skipping migration");
-    return;
-  }
-
-  QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, kSystemConfigFilename);
-  QSettings oldSystemSettings(
-      QSettings::IniFormat, QSettings::SystemScope,
-      QCoreApplication::organizationName(),
-      QCoreApplication::applicationName());
-
-  if (QFile(oldSystemSettings.fileName()).exists()) {
-    for (const auto &key : oldSystemSettings.allKeys()) {
-      settings.setValue(key, oldSystemSettings.value(key));
-    }
-  }
-
-  QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
+std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeSystemSettings() {
+  return std::make_shared<QSettingsProxy>();
 }
 
-void migrateLegacyUserSettings(QSettings &newSettings) {
-  QString newPath = newSettings.fileName();
-  QFile newFile(newPath);
-  if (newFile.exists()) {
-    qInfo("user settings already exist, skipping migration");
-    return;
-  }
+//
+// ConfigScopes
+//
 
-  QSettings oldSettings(kLegacyOrgDomain, kAppName);
-  QString oldPath = oldSettings.fileName();
+ConfigScopes::ConfigScopes(std::shared_ptr<Deps> deps)
+    : m_pUserSettingsProxy(deps->makeUserSettings()),
+      m_pSystemSettingsProxy(deps->makeSystemSettings()) {
 
-  if (oldPath.isEmpty()) {
-    qInfo("no legacy settings to migrate, filename empty");
-    return;
-  }
-
-  if (!QFile(oldPath).exists()) {
-    qInfo("no legacy settings to migrate, file does not exist");
-    return;
-  }
-
-  QFileInfo oldFileInfo(oldPath);
-  QFileInfo newFileInfo(newPath);
-
-  qDebug(
-      "migrating legacy settings: '%s' -> '%s'", //
-      qPrintable(oldFileInfo.fileName()), qPrintable(newFileInfo.fileName()));
-
-  QStringList keys = oldSettings.allKeys();
-  for (const QString &key : keys) {
-    QVariant oldValue = oldSettings.value(key);
-    newSettings.setValue(key, oldValue);
-    logVerbose(
-        QString("migrating setting '%1' = '%2'").arg(key, oldValue.toString()));
-  }
-
-  newSettings.sync();
-}
-
-ConfigScopes::ConfigScopes() {
-  auto orgName = QCoreApplication::organizationName();
-  if (orgName.isEmpty()) {
-    qFatal("unable to load config, organization name is empty");
-    return;
-  } else {
-    qDebug() << "org name for config:" << orgName;
-  }
-
-  auto appName = QCoreApplication::applicationName();
-  if (appName.isEmpty()) {
-    qFatal("unable to load config, application name is empty");
-    return;
-  } else {
-    qDebug() << "app name for config:" << appName;
-  }
-
-  // default to user scope.
-  // if we set the scope specifically then we also have to set the application
-  // name and the organisation name which breaks backwards compatibility.
-  m_pUserSettings = std::make_unique<QSettings>();
-  m_userSettingsProxy.set(*m_pUserSettings);
-
-#if defined(Q_OS_MAC)
-  // on mac, we used to save settings to "com.http-symless-com.Synergy.plist"
-  // because `setOrganizationName` was historically called using a url instead
-  // of an actual domain (e.g. symless.com).
-  migrateLegacyUserSettings(*m_pUserSettings);
-#endif // Q_OS_MAC
-
-  QSettings::setPath(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      getSystemSettingPath());
-
-  // Config will default to User settings if they exist,
-  //  otherwise it will load System setting and save them to User settings
-  m_pSystemSettings = std::make_unique<QSettings>(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
-      appName);
-  m_systemSettingsProxy.set(*m_pSystemSettings);
-
-#if defined(Q_OS_WIN)
-  migrateLegacySystemSettings(*m_pSystemSettings);
-#endif
+  m_pUserSettingsProxy->loadUser();
+  m_pSystemSettingsProxy->loadSystem();
 }
 
 void ConfigScopes::signalReady() { emit ready(); }
@@ -167,8 +62,8 @@ void ConfigScopes::save() {
   emit saving();
 
   qDebug("writing config to filesystem");
-  m_pUserSettings->sync();
-  m_pSystemSettings->sync();
+  m_pUserSettingsProxy->sync();
+  m_pSystemSettingsProxy->sync();
 }
 
 bool ConfigScopes::isActiveScopeWritable() const {
@@ -184,9 +79,9 @@ ConfigScopes::Scope ConfigScopes::activeScope() const { return m_currentScope; }
 bool ConfigScopes::scopeContains(const QString &name, Scope scope) const {
   switch (scope) {
   case Scope::User:
-    return m_pUserSettings->contains(name);
+    return m_pUserSettingsProxy->contains(name);
   case Scope::System:
-    return m_pSystemSettings->contains(name);
+    return m_pSystemSettingsProxy->contains(name);
   default:
     return activeSettings().contains(name);
   }
@@ -194,17 +89,17 @@ bool ConfigScopes::scopeContains(const QString &name, Scope scope) const {
 
 QSettingsProxy &ConfigScopes::activeSettings() {
   if (m_currentScope == Scope::User) {
-    return m_userSettingsProxy;
+    return *m_pUserSettingsProxy;
   } else {
-    return m_systemSettingsProxy;
+    return *m_pSystemSettingsProxy;
   }
 }
 
 const QSettingsProxy &ConfigScopes::activeSettings() const {
   if (m_currentScope == Scope::User) {
-    return m_userSettingsProxy;
+    return *m_pUserSettingsProxy;
   } else {
-    return m_systemSettingsProxy;
+    return *m_pSystemSettingsProxy;
   }
 }
 
@@ -216,9 +111,9 @@ QVariant ConfigScopes::getFromScope(
     const QString &name, const QVariant &defaultValue, Scope scope) const {
   switch (scope) {
   case Scope::User:
-    return m_pUserSettings->value(name, defaultValue);
+    return m_pUserSettingsProxy->value(name, defaultValue);
   case Scope::System:
-    return m_pSystemSettings->value(name, defaultValue);
+    return m_pSystemSettingsProxy->value(name, defaultValue);
   default:
     return activeSettings().value(name, defaultValue);
   }
@@ -228,10 +123,10 @@ void ConfigScopes::setInScope(
     const QString &name, const QVariant &value, Scope scope) {
   switch (scope) {
   case Scope::User:
-    m_pUserSettings->setValue(name, value);
+    m_pUserSettingsProxy->setValue(name, value);
     break;
   case Scope::System:
-    m_pSystemSettings->setValue(name, value);
+    m_pSystemSettingsProxy->setValue(name, value);
     break;
   default:
     activeSettings().setValue(name, value);

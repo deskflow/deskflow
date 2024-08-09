@@ -21,9 +21,16 @@
 
 namespace synergy::gui::proxy {
 
+QString getSystemSettingPath();
+
 class QSettingsProxy {
 public:
   virtual ~QSettingsProxy() = default;
+
+  virtual void loadUser();
+  virtual void loadSystem();
+
+  virtual void sync() { m_pSettings->sync(); }
   virtual int beginReadArray(const QString &prefix);
   virtual void beginWriteArray(const QString &prefix);
   virtual void setArrayIndex(int i);
@@ -39,11 +46,10 @@ public:
   virtual bool contains(const QString &key) const;
   virtual QString fileName() const { return m_pSettings->fileName(); }
 
-  void set(QSettings &settings) { m_pSettings = &settings; }
   QSettings &get() const { return *m_pSettings; }
 
 private:
-  QSettings *m_pSettings;
+  std::unique_ptr<QSettings> m_pSettings;
 };
 
 } // namespace synergy::gui::proxy
