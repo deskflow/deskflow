@@ -65,30 +65,12 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-#if defined(Q_OS_MAC)
+const auto kIconFile16 = ":/res/icons/16x16/synergy.png";
 
-static const char *const kLightIconFiles[] = {
-    ":/res/icons/64x64/synergy-light-disconnected.png",
-    ":/res/icons/64x64/synergy-light-disconnected.png",
-    ":/res/icons/64x64/synergy-light-connected.png",
-    ":/res/icons/64x64/synergy-light-transfering.png",
-    ":/res/icons/64x64/synergy-light-disconnected.png"};
-
-static const char *const kDarkIconFiles[] = {
-    ":/res/icons/64x64/synergy-dark-disconnected.png",
-    ":/res/icons/64x64/synergy-dark-disconnected.png",
-    ":/res/icons/64x64/synergy-dark-connected.png",
-    ":/res/icons/64x64/synergy-dark-transfering.png",
-    ":/res/icons/64x64/synergy-dark-disconnected.png"};
-
-#endif
-
-static const char *const kDefaultIconFiles[] = {
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-disconnected.png",
-    ":/res/icons/16x16/synergy-connected.png",
-    ":/res/icons/16x16/synergy-transfering.png",
-    ":/res/icons/16x16/synergy-disconnected.png"};
+#ifdef Q_OS_MAC
+const auto kLightIconFile = ":/res/icons/64x64/synergy-light.png";
+const auto kDarkIconFile = ":/res/icons/64x64/synergy-dark.png";
+#endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
@@ -164,6 +146,7 @@ void MainWindow::setupControls() {
 
   createMenuBar();
   secureSocket(false);
+  updateLocalFingerprint();
 
   m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
   m_pLabelUpdate->hide();
@@ -262,7 +245,7 @@ void MainWindow::connectSlots() {
   connect(m_pActionQuit, &QAction::triggered, qApp, [this] {
     qDebug("quitting application");
     m_Quitting = true;
-    qApp->quit();
+    QApplication::quit();
   });
 
   connect(
@@ -294,7 +277,7 @@ void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
 
 void MainWindow::onCreated() {
 
-  setIcon(CoreConnectionState::Disconnected);
+  setIcon();
 
   m_ConfigScopes.signalReady();
 
@@ -655,26 +638,24 @@ void MainWindow::saveSettings() {
   m_ConfigScopes.save();
 }
 
-void MainWindow::setIcon(CoreConnectionState state) {
+void MainWindow::setIcon() {
   QIcon icon;
-  auto index = static_cast<int>(state);
-
 #ifdef Q_OS_MAC
   switch (getOSXIconsTheme()) {
   case IconsTheme::ICONS_DARK:
-    icon.addFile(kDarkIconFiles[index]);
+    icon.addFile(kDarkIconFile);
     break;
   case IconsTheme::ICONS_LIGHT:
-    icon.addFile(kLightIconFiles[index]);
+    icon.addFile(kLightIconFile);
     break;
   case IconsTheme::ICONS_TEMPLATE:
   default:
-    icon.addFile(kDarkIconFiles[index]);
+    icon.addFile(kDarkIconFile);
     icon.setIsMask(true);
     break;
   }
 #else
-  icon.addFile(kDefaultIconFiles[index]);
+  icon.addFile(kIconFile16);
 #endif
 
   m_TrayIcon.setIcon(icon);
@@ -840,23 +821,18 @@ void MainWindow::updateStatus() {
     using enum CoreProcessState;
 
   case Starting:
-    setIcon(CoreConnectionState::Disconnected);
     setStatus("Synergy is starting...");
     break;
 
   case Stopping:
-    setIcon(CoreConnectionState::Disconnected);
     setStatus("Synergy is stopping...");
     break;
 
   case Stopped:
-    setIcon(CoreConnectionState::Disconnected);
     setStatus("Synergy is not running");
     break;
 
   case Started: {
-    setIcon(connection);
-
     switch (connection) {
       using enum CoreConnectionState;
 

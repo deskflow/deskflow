@@ -17,15 +17,15 @@
  */
 
 #include "AboutDialog.h"
+
 #include "common/copyright.h"
+#include "common/version.h"
+#include "gui/style_utils.h"
 
 #include <QDateTime>
+#include <qguiapplication.h>
 
-#if defined(Q_OS_MAC)
-#include "gui/OSXHelpers.h"
-#endif
-
-#include "common/version.h"
+using namespace synergy::gui;
 
 AboutDialog::AboutDialog(MainWindow *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -53,14 +53,15 @@ int AboutDialog::exec() {
 }
 
 void AboutDialog::updateLogo() const {
-#if defined(Q_OS_MAC)
-  if (isOSXInterfaceStyleDark()) {
+  if (isDarkMode()) {
+    qDebug("dark mode detected, showing dark logo");
     QPixmap logo(":/res/image/about-dark.png");
     if (!logo.isNull()) {
       m_pLabel_Logo->setPixmap(logo);
     }
+  } else {
+    qDebug("light mode detected, keeping light logo");
   }
-#endif
 }
 
 QString AboutDialog::importantDevelopers() const {

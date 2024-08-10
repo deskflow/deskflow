@@ -520,7 +520,7 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
   args << "--address" << correctedInterface();
 
   args << "-c" << configFilename;
-  qInfo("config file: %s", qPrintable(configFilename));
+  qInfo("core config file: %s", qPrintable(configFilename));
 
   if (kEnableActivation && !m_appConfig.serialKey().isEmpty()) {
     args << "--serial-key" << m_appConfig.serialKey();
@@ -585,7 +585,8 @@ QString CoreProcess::persistConfig() const {
     QFile configFile(configDirPath + "/" + kLastConfigFilename);
     if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
       qWarning(
-          "failed to open config file: %s", qPrintable(configFile.fileName()));
+          "failed to open core config file: %s",
+          qPrintable(configFile.fileName()));
       continue;
     }
 

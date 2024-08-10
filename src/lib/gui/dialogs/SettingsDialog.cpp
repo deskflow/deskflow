@@ -90,6 +90,7 @@ void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool) {
 
   if (kEnableActivation && !m_tlsUtility.isAvailable()) {
     m_pCheckBoxEnableTls->setChecked(false);
+    updateTlsControlsEnabled();
 
     auto edition = m_license.productEdition();
     if (edition == Edition::kBasic) {

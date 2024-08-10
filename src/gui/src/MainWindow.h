@@ -143,7 +143,7 @@ private:
   void createTrayIcon();
   void applyConfig();
   void applyCloseToTray() const;
-  void setIcon(CoreProcess::ConnectionState state);
+  void setIcon();
   bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
   void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);

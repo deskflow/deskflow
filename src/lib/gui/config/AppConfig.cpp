@@ -258,7 +258,11 @@ void AppConfig::determineScope() {
                 settingName(Setting::kLoadSystemSettings),
                 m_LoadFromSystemScope, ConfigScopes::Scope::User)
             .toBool();
-
+    if (loadFromSystemScope) {
+      qDebug("user settings indicates system scope should be used");
+    } else {
+      qDebug("user settings indicates user scope should be used");
+    }
     setLoadFromSystemScope(loadFromSystemScope);
   }
 
@@ -268,6 +272,7 @@ void AppConfig::determineScope() {
   else if (m_Scopes.scopeContains(
                settingName(Setting::kScreenName),
                ConfigScopes::Scope::System)) {
+    qDebug("system settings scope contains screen name, using system scope");
     setLoadFromSystemScope(true);
   }
 }
@@ -409,10 +414,8 @@ void AppConfig::setLoadFromSystemScope(bool value) {
   using enum ConfigScopes::Scope;
 
   if (value) {
-    qDebug("loading system settings scope");
     loadScope(System);
   } else {
-    qDebug("loading user settings scope");
     loadScope(User);
   }
 
