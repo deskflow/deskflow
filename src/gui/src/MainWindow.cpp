@@ -407,6 +407,8 @@ void MainWindow::on_m_pActionClearSettings_triggered() {
     return;
   }
 
+  m_CoreProcess.stop();
+
   diagnostic::clearSettings(m_ConfigScopes, true);
 }
 
