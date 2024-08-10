@@ -39,7 +39,7 @@
 namespace synergy::gui {
 
 const int kRetryDelay = 1000;
-const auto kConfigFilename = "synergy.conf";
+const auto kServerConfigFilename = "synergy-server.conf";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 //
@@ -509,7 +509,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app) {
     args << "--log" << m_appConfig.logFilename();
   }
 
-  QString configFilename = persistConfig();
+  QString configFilename = persistServerConfig();
   if (configFilename.isEmpty()) {
     qFatal("config file name empty for server args");
     return false;
@@ -592,7 +592,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app) {
   return true;
 }
 
-QString CoreProcess::persistConfig() const {
+QString CoreProcess::persistServerConfig() const {
   QString configFullPath;
   if (m_appConfig.useExternalConfig()) {
     return m_appConfig.configFile();
@@ -601,7 +601,7 @@ QString CoreProcess::persistConfig() const {
   const auto configDir = paths::configDir(true);
   const auto configDirPath = configDir.absolutePath();
 
-  QFile configFile(configDirPath + "/" + kConfigFilename);
+  QFile configFile(configDirPath + "/" + kServerConfigFilename);
   if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
     qFatal(
         "failed to open core config file for write: %s",

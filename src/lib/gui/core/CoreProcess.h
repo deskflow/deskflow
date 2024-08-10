@@ -103,7 +103,7 @@ private:
   bool addGenericArgs(QStringList &args, const ProcessMode processMode) const;
   bool addServerArgs(QStringList &args, QString &app);
   bool addClientArgs(QStringList &args, QString &app);
-  QString persistConfig() const;
+  QString persistServerConfig() const;
   QString modeString() const;
   QString processModeString() const;
   void setConnectionState(ConnectionState state);
