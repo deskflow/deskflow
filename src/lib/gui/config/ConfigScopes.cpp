@@ -61,9 +61,11 @@ void ConfigScopes::clear() const {
 
 void ConfigScopes::signalReady() { emit ready(); }
 
-void ConfigScopes::save() {
-  qDebug("emitting config saving signal");
-  emit saving();
+void ConfigScopes::save(bool emitSaving) {
+  if (emitSaving) {
+    qDebug("emitting config saving signal");
+    emit saving();
+  }
 
   qDebug("writing config to filesystem");
   m_pUserSettingsProxy->sync();

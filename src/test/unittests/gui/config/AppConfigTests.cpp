@@ -48,7 +48,7 @@ public:
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
   MOCK_METHOD(const QSettingsProxy &, activeSettings, (), (const, override));
   MOCK_METHOD(QSettingsProxy &, activeSettings, (), (override));
-  MOCK_METHOD(void, save, (), (override));
+  MOCK_METHOD(void, save, (bool), (override));
 };
 
 struct DepsMock : public AppConfig::Deps {

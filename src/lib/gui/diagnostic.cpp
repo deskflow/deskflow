@@ -40,9 +40,13 @@ void restart() {
   QApplication::exit();
 }
 
-void clearSettings(const ConfigScopes &scopes, bool enableRestart) {
+void clearSettings(ConfigScopes &scopes, bool enableRestart) {
   qDebug("clearing settings");
   scopes.clear();
+
+  // save but do not emit saving signal which will prevent the current state of
+  // the app config and server configs from being applied.
+  scopes.save(false);
 
   auto configDir = paths::configDir();
   qDebug("removing config dir: %s", qPrintable(configDir.absolutePath()));

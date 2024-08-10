@@ -94,15 +94,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   emit created();
 }
 
-MainWindow::~MainWindow() {
-  try {
-    saveWindow();
-  } catch (const std::exception &e) {
-    qFatal("failed to save window on main window close: %s", e.what());
-  }
-
-  m_CoreProcess.cleanup();
-}
+MainWindow::~MainWindow() { m_CoreProcess.cleanup(); }
 
 void MainWindow::restoreWindow() {
 
@@ -276,7 +268,11 @@ void MainWindow::connectSlots() {
       [this]() { showAndActivate(); });
 }
 
-void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
+void MainWindow::onAppAboutToQuit() {
+  if (m_SaveOnExit) {
+    m_ConfigScopes.save();
+  }
+}
 
 void MainWindow::onCreated() {
 
@@ -409,6 +405,8 @@ void MainWindow::on_m_pActionClearSettings_triggered() {
 
   m_CoreProcess.stop();
 
+  m_Quitting = true;
+  m_SaveOnExit = false;
   diagnostic::clearSettings(m_ConfigScopes, true);
 }
 
