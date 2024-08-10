@@ -27,5 +27,5 @@ public:
   IDataSocket *accept() override;
 
 private:
-  std::string getCertifcateFileName() const;
+  std::string getCertificateFileName() const;
 };

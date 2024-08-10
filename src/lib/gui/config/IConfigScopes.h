@@ -48,8 +48,10 @@ public:
    * @brief Signals to listeners to save and calls `sync` on underlying Qt
    * config.
    *
+   * @param emitSaving Whether to emit the saving signal which typically
+   * triggers listeners to write their current state to the config.
    */
-  virtual void save() = 0;
+  virtual void save(bool emitSaving = true) = 0;
 
   /**
    * @brief Check a scope for a config value (default is current scope).

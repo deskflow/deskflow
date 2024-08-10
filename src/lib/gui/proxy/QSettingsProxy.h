@@ -29,7 +29,7 @@ public:
 
   virtual void loadUser();
   virtual void loadSystem();
-
+  virtual void clear() { m_pSettings->clear(); }
   virtual void sync() { m_pSettings->sync(); }
   virtual int beginReadArray(const QString &prefix);
   virtual void beginWriteArray(const QString &prefix);

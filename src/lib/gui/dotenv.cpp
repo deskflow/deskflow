@@ -17,6 +17,8 @@
 
 #include "dotenv.h"
 
+#include "paths.h"
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -55,17 +57,10 @@ void dotenv(const QString &filename) {
         "no %s file in dir: %s", qPrintable(filename),
         qPrintable(fileInfo.absolutePath()));
 
-    // if nothing in current dir, then try the app data dir.
+    // if nothing in current dir, then try the config dir.
     // this makes it a bit easier for engineers in the field to have an easily
     // predictable location for the .env file.
-    QDir configDir(
-        QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
-
-    // HACK: since we have the org name set to the app name, the config dir is
-    // confusing. make this simple by using the org dir instead.
-    // use `filePath("..")` instead of `cdUp` to avoid the existence check.
-    QDir orgDir = configDir.filePath("..");
-    orgDir = orgDir.absolutePath();
+    const auto orgDir = paths::configDir();
 
     filePath = orgDir.filePath(filename);
     if (!open(file, filePath)) {

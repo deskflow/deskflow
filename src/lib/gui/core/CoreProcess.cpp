@@ -20,6 +20,8 @@
 #include "constants.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
+#include "gui/paths.h"
+#include "tls/TlsUtility.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -37,7 +39,7 @@
 namespace synergy::gui {
 
 const int kRetryDelay = 1000;
-const auto kLastConfigFilename = "LastConfig.cfg";
+const auto kServerConfigFilename = "synergy-server.conf";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 //
@@ -135,9 +137,10 @@ QString CoreProcess::Deps::getProfileRoot() const {
 
 CoreProcess::CoreProcess(
     IAppConfig &appConfig, IServerConfig &serverConfig,
-    std::shared_ptr<Deps> deps)
+    const license::ILicense &license, std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig),
+      m_license(license),
       m_pDeps(deps) {
 
   connect(
@@ -339,65 +342,19 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
 
   setConnectionState(ConnectionState::Connecting);
 
-  QString app;
-  QStringList args;
-
-  args << "-f"
-       << "--no-tray"
-       << "--debug" << m_appConfig.logLevelText();
-
-  args << "--name" << m_appConfig.screenName();
-
   if (processMode == ProcessMode::kDesktop) {
     m_pDeps->process().create();
-  } else {
-    // tell client/server to talk to daemon through ipc.
-    args << "--ipc";
-
-#if defined(Q_OS_WIN)
-    // tell the client/server to shut down when a ms windows desk
-    // is switched; this is because we may need to elevate or not
-    // based on which desk the user is in (login always needs
-    // elevation, where as default desk does not).
-    // Note that this is only enabled when synergy is set to elevate
-    // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-    // unnecessary restarts when synergy was started elevated or
-    // when it is not allowed to elevate. In these cases restarting
-    // the server is fruitless.
-    if (m_appConfig.elevateMode() == ElevateMode::kAutomatic) {
-      args << "--stop-on-desk-switch";
-    }
-#endif
   }
 
-#ifndef Q_OS_LINUX
+  QString app;
+  QStringList args;
+  addGenericArgs(args, processMode);
 
-  if (m_serverConfig.enableDragAndDrop()) {
-    args << "--enable-drag-drop";
-  }
-
-#endif
-
-  if (m_appConfig.tlsEnabled()) {
-    args << "--enable-crypto";
-    args << "--tls-cert" << m_appConfig.tlsCertPath();
-  }
-
-#if defined(Q_OS_WIN)
-  // on windows, the profile directory changes depending on the user that
-  // launched the process (e.g. when launched with elevation). setting the
-  // profile dir on launch ensures it uses the same profile dir is used
-  // no matter how its relaunched.
-  args << "--profile-dir" << m_pDeps->getProfileRoot();
-#endif
-
-  if (m_appConfig.preventSleep()) {
-    args << "--prevent-sleep";
-  }
-
-  if ((mode() == Mode::Client && !clientArgs(args, app)) ||
-      (mode() == Mode::Server && !serverArgs(args, app))) {
-    qDebug("failed to get args for core process, aborting start");
+  if (mode() == Mode::Server && !addServerArgs(args, app)) {
+    qDebug("failed to add server args for core process, aborting start");
+    return;
+  } else if (mode() == Mode::Client && !addClientArgs(args, app)) {
+    qDebug("failed to add client args for core process, aborting start");
     return;
   }
 
@@ -483,7 +440,62 @@ void CoreProcess::cleanup() {
   m_pDeps->ipcClient().disconnectFromHost();
 }
 
-bool CoreProcess::serverArgs(QStringList &args, QString &app) {
+bool CoreProcess::addGenericArgs(
+    QStringList &args, const ProcessMode processMode) const {
+  args << "-f"
+       << "--no-tray"
+       << "--debug" << m_appConfig.logLevelText();
+
+  args << "--name" << m_appConfig.screenName();
+
+  if (processMode != ProcessMode::kDesktop) {
+    // tell client/server to talk to daemon through ipc.
+    args << "--ipc";
+
+#if defined(Q_OS_WIN)
+    // tell the client/server to shut down when a ms windows desk
+    // is switched; this is because we may need to elevate or not
+    // based on which desk the user is in (login always needs
+    // elevation, where as default desk does not).
+    // Note that this is only enabled when synergy is set to elevate
+    // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
+    // unnecessary restarts when synergy was started elevated or
+    // when it is not allowed to elevate. In these cases restarting
+    // the server is fruitless.
+    if (m_appConfig.elevateMode() == ElevateMode::kAutomatic) {
+      args << "--stop-on-desk-switch";
+    }
+#endif
+  }
+
+#ifndef Q_OS_LINUX
+
+  if (m_serverConfig.enableDragAndDrop()) {
+    args << "--enable-drag-drop";
+  }
+
+#endif
+
+  if (m_appConfig.tlsEnabled()) {
+    args << "--enable-crypto";
+  }
+
+#if defined(Q_OS_WIN)
+  // on windows, the profile directory changes depending on the user that
+  // launched the process (e.g. when launched with elevation). setting the
+  // profile dir on launch ensures it uses the same profile dir is used
+  // no matter how its relaunched.
+  args << "--profile-dir" << m_pDeps->getProfileRoot();
+#endif
+
+  if (m_appConfig.preventSleep()) {
+    args << "--prevent-sleep";
+  }
+
+  return true;
+}
+
+bool CoreProcess::addServerArgs(QStringList &args, QString &app) {
   app = m_pDeps->appPath(m_appConfig.coreServerName());
 
   if (!m_pDeps->fileExists(app)) {
@@ -497,7 +509,7 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
     args << "--log" << m_appConfig.logFilename();
   }
 
-  QString configFilename = persistConfig();
+  QString configFilename = persistServerConfig();
   if (configFilename.isEmpty()) {
     qFatal("config file name empty for server args");
     return false;
@@ -526,10 +538,22 @@ bool CoreProcess::serverArgs(QStringList &args, QString &app) {
     args << "--serial-key" << m_appConfig.serialKey();
   }
 
+  // bizarrely, the tls cert path arg was being given to the core client.
+  // since it's not clear why (it is only needed for the server), this has now
+  // been moved to server args.
+  if (m_appConfig.tlsEnabled()) {
+    TlsUtility tlsUtility(m_appConfig, m_license);
+    if (!tlsUtility.persistCertificate()) {
+      qCritical("failed to persist tls certificate");
+      return false;
+    }
+    args << "--tls-cert" << m_appConfig.tlsCertPath();
+  }
+
   return true;
 }
 
-bool CoreProcess::clientArgs(QStringList &args, QString &app) {
+bool CoreProcess::addClientArgs(QStringList &args, QString &app) {
   app = m_pDeps->appPath(m_appConfig.coreClientName());
 
   if (!m_pDeps->fileExists(app)) {
@@ -568,35 +592,25 @@ bool CoreProcess::clientArgs(QStringList &args, QString &app) {
   return true;
 }
 
-QString CoreProcess::persistConfig() const {
+QString CoreProcess::persistServerConfig() const {
   QString configFullPath;
   if (m_appConfig.useExternalConfig()) {
     return m_appConfig.configFile();
   }
 
-  for (auto path :
-       {QStandardPaths::AppDataLocation, QStandardPaths::AppConfigLocation}) {
-    auto configDirPath = QStandardPaths::writableLocation(path);
-    if (!QDir().mkpath(configDirPath)) {
-      qWarning("failed to create config folder: %s", qPrintable(configDirPath));
-      continue;
-    }
+  const auto configDir = paths::configDir(true);
+  const auto configDirPath = configDir.absolutePath();
 
-    QFile configFile(configDirPath + "/" + kLastConfigFilename);
-    if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-      qWarning(
-          "failed to open core config file: %s",
-          qPrintable(configFile.fileName()));
-      continue;
-    }
-
-    m_serverConfig.save(configFile);
-    configFile.close();
-    return configFile.fileName();
+  QFile configFile(configDirPath + "/" + kServerConfigFilename);
+  if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+    qFatal(
+        "failed to open core config file for write: %s",
+        qPrintable(configFile.fileName()));
   }
 
-  qFatal("failed to persist config file");
-  return "";
+  m_serverConfig.save(configFile);
+  configFile.close();
+  return configFile.fileName();
 }
 
 QString CoreProcess::modeString() const {

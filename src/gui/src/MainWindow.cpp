@@ -21,12 +21,14 @@
 #include "AboutDialog.h"
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
+#include "common/constants.h"
 #include "gui/Logger.h"
 #include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
+#include "gui/diagnostic.h"
 #include "gui/dialogs/SettingsDialog.h"
 #include "gui/license/LicenseHandler.h"
 #include "gui/license/license_notices.h"
@@ -76,13 +78,15 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
-      m_CoreProcess(appConfig, m_ServerConfig),
-      m_ServerConnection(this, appConfig, m_ServerConfig),
+      m_CoreProcess(appConfig, m_ServerConfig, m_LicenseHandler.license()),
+      m_ServerConnection(
+          this, appConfig, m_ServerConfig, m_ServerConfigDialogState),
       m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
       m_WindowSaveTimer(this) {
 
   setupUi(this);
+  createMenuBar();
   setupControls();
   connectSlots();
 
@@ -90,15 +94,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   emit created();
 }
 
-MainWindow::~MainWindow() {
-  try {
-    saveWindow();
-  } catch (const std::exception &e) {
-    qFatal("failed to save window on main window close: %s", e.what());
-  }
-
-  m_CoreProcess.cleanup();
-}
+MainWindow::~MainWindow() { m_CoreProcess.cleanup(); }
 
 void MainWindow::restoreWindow() {
 
@@ -112,6 +108,11 @@ void MainWindow::restoreWindow() {
   if (windowPosition.has_value()) {
     qDebug("restoring main window position");
     move(windowPosition.value());
+  } else {
+    // center main window in middle of screen
+    const auto screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->geometry();
+    move(screenGeometry.center() - rect().center());
   }
 
   // give the window chance to restore its size and position before the window
@@ -144,7 +145,6 @@ void MainWindow::setupControls() {
     m_pActionActivate->setVisible(false);
   }
 
-  createMenuBar();
   secureSocket(false);
   updateLocalFingerprint();
 
@@ -273,7 +273,11 @@ void MainWindow::connectSlots() {
       [this]() { showAndActivate(); });
 }
 
-void MainWindow::onAppAboutToQuit() { m_ConfigScopes.save(); }
+void MainWindow::onAppAboutToQuit() {
+  if (m_SaveOnExit) {
+    m_ConfigScopes.save();
+  }
+}
 
 void MainWindow::onCreated() {
 
@@ -398,6 +402,19 @@ void MainWindow::on_m_pActionTestCriticalError_triggered() const {
   qCritical("test critical error");
 }
 
+void MainWindow::on_m_pActionClearSettings_triggered() {
+  if (!messages::showClearSettings(this)) {
+    qDebug("clear settings cancelled");
+    return;
+  }
+
+  m_CoreProcess.stop();
+
+  m_Quitting = true;
+  m_SaveOnExit = false;
+  diagnostic::clearSettings(m_ConfigScopes, true);
+}
+
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
       QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
@@ -505,10 +522,12 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
 void MainWindow::onWindowSaveTimerTimeout() { saveWindow(); }
 
 void MainWindow::onServerConnectionConfigureClient(const QString &clientName) {
+  m_ServerConfigDialogState.setVisible(true);
   ServerConfigDialog dialog(this, m_ServerConfig, m_AppConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_CoreProcess.restart();
   }
+  m_ServerConfigDialogState.setVisible(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -592,22 +611,21 @@ void MainWindow::createMenuBar() {
   m_pMenuFile->addAction(m_pActionSave);
   m_pMenuFile->addSeparator();
   m_pMenuFile->addAction(m_pActionQuit);
+
   m_pMenuEdit->addAction(m_pActionSettings);
+
   m_pMenuWindow->addAction(m_pActionMinimize);
   m_pMenuWindow->addAction(m_pActionRestore);
+
   m_pMenuHelp->addAction(m_pActionAbout);
   m_pMenuHelp->addAction(m_pActionHelp);
+  m_pMenuFile->addSeparator();
+  m_pMenuHelp->addAction(m_pActionClearSettings);
 
-#ifndef NDEBUG
-  // always enable test menu in debug mode.
-  const auto enableTestMenu = true;
-#else
-  // only enable test menu in release build if env var is true.
   const auto enableTestMenu =
       strToTrue(qEnvironmentVariable("SYNERGY_TEST_MENU"));
-#endif
 
-  if (enableTestMenu) {
+  if (enableTestMenu || kDebugBuild) {
     auto testMenu = new QMenu("Test", m_pMenuBar);
     m_pMenuBar->addMenu(testMenu);
     testMenu->addAction(m_pActionTestFatalError);

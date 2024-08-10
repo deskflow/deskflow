@@ -21,6 +21,7 @@
 #include "gui/config/IServerConfig.h"
 #include "gui/ipc/QIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
+#include "license/License.h"
 
 #include <QMutex>
 #include <QObject>
@@ -58,6 +59,7 @@ public:
 
   explicit CoreProcess(
       IAppConfig &appConfig, IServerConfig &serverConfig,
+      const license::ILicense &license,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   void extracted(QString &app, QStringList &args);
@@ -98,9 +100,10 @@ private:
   void startService(const QString &app, const QStringList &args);
   void stopDesktop() const;
   void stopService();
-  bool serverArgs(QStringList &args, QString &app);
-  bool clientArgs(QStringList &args, QString &app);
-  QString persistConfig() const;
+  bool addGenericArgs(QStringList &args, const ProcessMode processMode) const;
+  bool addServerArgs(QStringList &args, QString &app);
+  bool addClientArgs(QStringList &args, QString &app);
+  QString persistServerConfig() const;
   QString modeString() const;
   QString processModeString() const;
   void setConnectionState(ConnectionState state);
@@ -117,6 +120,7 @@ private:
 
   IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
+  const license::ILicense &m_license;
   std::shared_ptr<Deps> m_pDeps;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;

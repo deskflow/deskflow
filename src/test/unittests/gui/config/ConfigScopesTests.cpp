@@ -63,8 +63,7 @@ struct DepsMock : public ConfigScopes::Deps {
 } // namespace
 
 TEST(ConfigScopesTests, ctor_callsMakeUserSettings) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   EXPECT_CALL(*deps, makeUserSettings()).Times(1);
 
@@ -72,8 +71,7 @@ TEST(ConfigScopesTests, ctor_callsMakeUserSettings) {
 }
 
 TEST(ConfigScopesTests, ctor_callsMakeSystemSettings) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   EXPECT_CALL(*deps, makeSystemSettings()).Times(1);
 
@@ -81,8 +79,7 @@ TEST(ConfigScopesTests, ctor_callsMakeSystemSettings) {
 }
 
 TEST(ConfigScopesTests, save_syncsBothScopes) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ConfigScopes configScopes(deps);
 
@@ -93,8 +90,7 @@ TEST(ConfigScopesTests, save_syncsBothScopes) {
 }
 
 TEST(ConfigScopesTests, activeSettings_returnsUserSettingsByDefault) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ConfigScopes configScopes(deps);
 
@@ -102,8 +98,7 @@ TEST(ConfigScopesTests, activeSettings_returnsUserSettingsByDefault) {
 }
 
 TEST(ConfigScopesTests, activeSettings_returnsSystemSettingsWhenSystemScope) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ConfigScopes configScopes(deps);
   configScopes.setActiveScope(ConfigScopes::Scope::System);
@@ -112,8 +107,7 @@ TEST(ConfigScopesTests, activeSettings_returnsSystemSettingsWhenSystemScope) {
 }
 
 TEST(ConfigScopesTests, setActiveScope_setsCurrentScope) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ConfigScopes configScopes(deps);
 
@@ -125,8 +119,7 @@ TEST(ConfigScopesTests, setActiveScope_setsCurrentScope) {
 TEST(
     ConfigScopesTests,
     isActiveScopeWritable_returnsTrueWhenUserSettingsWritable) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ConfigScopes configScopes(deps);
 
@@ -138,8 +131,7 @@ TEST(
 TEST(
     ConfigScopesTests,
     scopeContains_byDefault_returnsTrueWhenUserSettingsContainsKey) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ON_CALL(*deps->m_pUserSettings, contains(_)).WillByDefault(Return(true));
 
@@ -151,8 +143,7 @@ TEST(
 TEST(
     ConfigScopesTests,
     scopeContains_userScope_returnsTrueWhenUserSettingsContainsKey) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ON_CALL(*deps->m_pUserSettings, contains(_)).WillByDefault(Return(true));
 
@@ -164,8 +155,7 @@ TEST(
 TEST(
     ConfigScopesTests,
     scopeContains_systemScope_returnsTrueWhenSystemSettingsContainsKey) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ON_CALL(*deps->m_pSystemSettings, contains(_)).WillByDefault(Return(true));
 
@@ -175,8 +165,7 @@ TEST(
 }
 
 TEST(ConfigScopesTests, activeFilePath_returnsUserSettingsFileNameByDefault) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
   ON_CALL(*deps->m_pUserSettings, fileName()).WillByDefault(Return("test"));
 
   ConfigScopes configScopes(deps);
@@ -185,8 +174,7 @@ TEST(ConfigScopesTests, activeFilePath_returnsUserSettingsFileNameByDefault) {
 }
 
 TEST(ConfigScopesTests, getFromScope_byDefault_returnsValueFromActiveSettings) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
   ON_CALL(*deps->m_pUserSettings, value(_, _)).WillByDefault(Return("test"));
 
   ConfigScopes configScopes(deps);
@@ -195,8 +183,7 @@ TEST(ConfigScopesTests, getFromScope_byDefault_returnsValueFromActiveSettings) {
 }
 
 TEST(ConfigScopesTests, setInScope_byDefault_setsValueInActiveSettings) {
-  std::shared_ptr<NiceMock<DepsMock>> deps =
-      std::make_shared<NiceMock<DepsMock>>();
+  auto deps = std::make_shared<NiceMock<DepsMock>>();
 
   ConfigScopes configScopes(deps);
 

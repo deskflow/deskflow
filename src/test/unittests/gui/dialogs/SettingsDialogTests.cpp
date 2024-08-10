@@ -39,7 +39,7 @@ TEST(SettingsDialogTests, ctor_getsScreenName) {
   serialKey.isValid = true;
   License license(serialKey);
   auto cpDeps = std::make_shared<CoreProcess::Deps>();
-  CoreProcess coreProcess(appConfig, serverConfig, cpDeps);
+  CoreProcess coreProcess(appConfig, serverConfig, license, cpDeps);
 
   EXPECT_CALL(appConfig, screenName()).Times(1);
 

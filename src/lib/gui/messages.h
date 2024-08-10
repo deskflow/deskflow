@@ -46,4 +46,6 @@ void showClientConnectError(
 NewClientPromptResult
 showNewClientPrompt(QWidget *parent, const QString &clientName);
 
+bool showClearSettings(QWidget *parent);
+
 } // namespace synergy::gui::messages

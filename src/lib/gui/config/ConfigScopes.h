@@ -42,8 +42,10 @@ public:
   explicit ConfigScopes(std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   ~ConfigScopes() override = default;
 
+  void clear() const;
+
   void signalReady() override;
-  void save() override;
+  void save(bool emitSaving = true) override;
   bool scopeContains(
       const QString &name, Scope scope = Scope::Current) const override;
   bool isActiveScopeWritable() const override;

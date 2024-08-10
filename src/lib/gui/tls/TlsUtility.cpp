@@ -20,12 +20,13 @@
 #include "TlsCertificate.h"
 #include "constants.h"
 
+#include <QFile>
 #include <QString>
 
 namespace synergy::gui {
 
 TlsUtility::TlsUtility(
-    const IAppConfig &appConfig, const license::License &license)
+    const IAppConfig &appConfig, const license::ILicense &license)
     : m_appConfig(appConfig),
       m_license(license) {}
 
@@ -48,10 +49,20 @@ bool TlsUtility::generateCertificate() {
     return false;
   }
 
-  auto path = m_appConfig.tlsCertPath();
   auto length = m_appConfig.tlsKeyLength();
 
-  return m_certificate.generateCertificate(path, length);
+  return m_certificate.generateCertificate(m_appConfig.tlsCertPath(), length);
+}
+
+bool TlsUtility::persistCertificate() {
+  qDebug("persisting tls certificate");
+
+  if (QFile::exists(m_appConfig.tlsCertPath())) {
+    qDebug("tls certificate already exists");
+    return true;
+  }
+
+  return generateCertificate();
 }
 
 } // namespace synergy::gui

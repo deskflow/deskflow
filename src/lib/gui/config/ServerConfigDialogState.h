@@ -1,7 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,21 +17,22 @@
 
 #pragma once
 
-#if !defined(SYNERGY_VERSION)
-#error version was not passed to the compiler
-#endif
+namespace synergy::gui::config {
 
-const auto kAppName = "Synergy";
-const auto kVersion = SYNERGY_VERSION;
+/**
+ * @brief Represents the state of the server config dialog.
+ *
+ * Future design consideration: Once moving the server config dialog to the GUI
+ * lib, we can probably just pass a reference to that rather than needing an
+ * object to track it's state.
+ */
+class ServerConfigDialogState {
+public:
+  bool isVisible() const { return m_isVisible; }
+  void setVisible(bool isVisible) { m_isVisible = isVisible; }
 
-#ifdef GIT_SHA_SHORT
-const auto kVersionGitSha = GIT_SHA_SHORT;
-#else
-const auto kVersionGitSha = "";
-#endif
+private:
+  bool m_isVisible = false;
+};
 
-#ifndef NDEBUG
-const auto kDebugBuild = true;
-#else
-const auto kDebugBuild = false;
-#endif
+} // namespace synergy::gui::config

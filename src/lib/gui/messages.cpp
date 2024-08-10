@@ -249,4 +249,17 @@ showNewClientPrompt(QWidget *parent, const QString &clientName) {
   }
 }
 
+bool showClearSettings(QWidget *parent) {
+  QMessageBox message(parent);
+  message.addButton(QObject::tr("Cancel"), QMessageBox::RejectRole);
+  const auto clear =
+      message.addButton(QObject::tr("Clear settings"), QMessageBox::AcceptRole);
+  message.setText(
+      "<p>Are you sure you want to clear all settings and restart Synergy?</p>"
+      "<p>This action cannot be undone.</p>");
+  message.exec();
+
+  return message.clickedButton() == clear;
+}
+
 } // namespace synergy::gui::messages

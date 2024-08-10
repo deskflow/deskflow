@@ -25,8 +25,10 @@
 #include "gui/Logger.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
+#include "gui/diagnostic.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
+#include "gui/string_utils.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -34,6 +36,7 @@
 #include <QObject>
 #include <QtCore>
 #include <QtGui>
+#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -52,6 +55,11 @@ QString getSystemSettingPath();
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
 #endif
+
+bool hasArg(const QString &arg, const QStringList &args) {
+  return std::ranges::any_of(
+      args, [&arg](const QString &a) { return a == arg; });
+}
 
 int main(int argc, char *argv[]) {
 
@@ -96,6 +104,15 @@ int main(int argc, char *argv[]) {
   qRegisterMetaType<Edition>("Edition");
 
   ConfigScopes configScopes;
+
+  // --no-reset
+  QStringList arguments = QCoreApplication::arguments();
+  const auto noReset = hasArg("--no-reset", arguments);
+  const auto resetEnvVar = strToTrue(qEnvironmentVariable("SYNERGY_RESET_ALL"));
+  if (resetEnvVar && !noReset) {
+    diagnostic::clearSettings(configScopes, false);
+  }
+
   AppConfig appConfig(configScopes);
 
   QObject::connect(

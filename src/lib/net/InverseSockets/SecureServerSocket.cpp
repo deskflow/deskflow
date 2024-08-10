@@ -40,7 +40,7 @@ IDataSocket *SecureServerSocket::accept() {
     socket->initSsl(true);
     setListeningJob();
 
-    auto certificateFilename = getCertifcateFileName();
+    auto certificateFilename = getCertificateFileName();
     if (socket->loadCertificates(certificateFilename)) {
       socket->secureAccept();
     } else {
@@ -64,7 +64,7 @@ IDataSocket *SecureServerSocket::accept() {
   return dynamic_cast<IDataSocket *>(socket);
 }
 
-std::string SecureServerSocket::getCertifcateFileName() const {
+std::string SecureServerSocket::getCertificateFileName() const {
   // if the tls cert option is set use that for the certificate file
   auto certificateFilename = ArgParser::argsBase().m_tlsCertFile;
 

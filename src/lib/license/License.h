@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "ILicense.h"
 #include "SerialKey.h"
 
 #include <chrono>
@@ -30,7 +31,7 @@ class LicenseTests;
 
 namespace synergy::license {
 
-class License {
+class License : public ILicense {
   friend class ::Server;
   friend class ::LicenseHandler;
   friend class ::LicenseTests;
@@ -44,10 +45,13 @@ class License {
 public:
   explicit License(const SerialKey &serialKey);
   explicit License(const std::string &hexString);
+  ~License() override = default;
 
   friend bool operator==(License const &lhs, License const &rhs) {
     return lhs.m_serialKey == rhs.m_serialKey;
   }
+
+  bool isTlsAvailable() const override;
 
   bool isValid() const { return m_serialKey.isValid; }
   bool isExpiringSoon() const;
@@ -55,7 +59,6 @@ public:
   bool isTrial() const;
   bool isSubscription() const;
   bool isTimeLimited() const;
-  bool isTlsAvailable() const;
   days daysLeft() const;
   Edition productEdition() const;
   std::string productName() const;

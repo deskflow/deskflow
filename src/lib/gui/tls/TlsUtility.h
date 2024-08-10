@@ -31,9 +31,10 @@ class TlsUtility : public QObject {
 
 public:
   explicit TlsUtility(
-      const IAppConfig &appConfig, const license::License &license);
+      const IAppConfig &appConfig, const license::ILicense &license);
 
   bool generateCertificate();
+  bool persistCertificate();
 
   /**
    * @brief Combines the availability and the enabled status of TLS.
@@ -51,7 +52,7 @@ public:
 
 private:
   const IAppConfig &m_appConfig;
-  const license::License &m_license;
+  const license::ILicense &m_license;
   TlsCertificate m_certificate;
 };
 

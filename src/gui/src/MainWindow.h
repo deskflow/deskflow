@@ -32,6 +32,7 @@
 #include "gui/VersionChecker.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
+#include "gui/config/ServerConfigDialogState.h"
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
@@ -130,6 +131,7 @@ private slots:
   void on_m_pActionStopCore_triggered();
   void on_m_pActionTestFatalError_triggered() const;
   void on_m_pActionTestCriticalError_triggered() const;
+  void on_m_pActionClearSettings_triggered();
   void on_m_pLineEditHostname_returnPressed();
   void on_m_pLineEditClientIp_returnPressed();
   void on_m_pLineEditHostname_textChanged(const QString &text);
@@ -194,6 +196,8 @@ private:
   bool m_SaveWindow = false;
   LicenseHandler m_LicenseHandler;
   bool m_Quitting = false;
+  synergy::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
+  bool m_SaveOnExit = true;
 
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;

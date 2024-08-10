@@ -35,7 +35,6 @@ private:
   bool generateFingerprint(const QString &certificateFilename);
 
 private:
-  QString m_profileDir;
   QString m_toolStdout;
   [[no_unique_address]] CoreTool m_coreTool;
 };
