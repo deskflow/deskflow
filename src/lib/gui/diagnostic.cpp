@@ -40,7 +40,7 @@ void restart() {
   QApplication::exit();
 }
 
-void clearSettings(ConfigScopes &scopes, bool enableRestart) {
+void clearSettings(const ConfigScopes &scopes, bool enableRestart) {
   qDebug("clearing settings");
   scopes.clear();
 

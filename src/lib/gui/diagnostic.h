@@ -21,6 +21,6 @@
 
 namespace synergy::gui::diagnostic {
 
-void clearSettings(ConfigScopes &scopes, bool enableRestart);
+void clearSettings(const ConfigScopes &scopes, bool enableRestart);
 
 }
