@@ -667,6 +667,14 @@
     <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
+  <action name="m_pActionClearSettings">
+   <property name="text">
+    <string>Clear settings</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

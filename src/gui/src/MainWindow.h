@@ -130,6 +130,7 @@ private slots:
   void on_m_pActionStopCore_triggered();
   void on_m_pActionTestFatalError_triggered() const;
   void on_m_pActionTestCriticalError_triggered() const;
+  void on_m_pActionClearSettings_triggered();
   void on_m_pLineEditHostname_returnPressed();
   void on_m_pLineEditClientIp_returnPressed();
   void on_m_pLineEditHostname_textChanged(const QString &text);

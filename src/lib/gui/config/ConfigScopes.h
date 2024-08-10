@@ -42,6 +42,8 @@ public:
   explicit ConfigScopes(std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   ~ConfigScopes() override = default;
 
+  void clear();
+
   void signalReady() override;
   void save() override;
   bool scopeContains(

@@ -21,12 +21,14 @@
 #include "AboutDialog.h"
 #include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
+#include "common/constants.h"
 #include "gui/Logger.h"
 #include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
+#include "gui/diagnostic.h"
 #include "gui/dialogs/SettingsDialog.h"
 #include "gui/license/LicenseHandler.h"
 #include "gui/license/license_notices.h"
@@ -83,6 +85,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_WindowSaveTimer(this) {
 
   setupUi(this);
+  createMenuBar();
   setupControls();
   connectSlots();
 
@@ -144,7 +147,6 @@ void MainWindow::setupControls() {
     m_pActionActivate->setVisible(false);
   }
 
-  createMenuBar();
   secureSocket(false);
   updateLocalFingerprint();
 
@@ -398,6 +400,15 @@ void MainWindow::on_m_pActionTestCriticalError_triggered() const {
   qCritical("test critical error");
 }
 
+void MainWindow::on_m_pActionClearSettings_triggered() {
+  if (!messages::showClearSettings(this)) {
+    qDebug("clear settings cancelled");
+    return;
+  }
+
+  diagnostic::clearSettings(m_ConfigScopes, true);
+}
+
 bool MainWindow::on_m_pActionSave_triggered() {
   QString fileName =
       QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
@@ -592,22 +603,21 @@ void MainWindow::createMenuBar() {
   m_pMenuFile->addAction(m_pActionSave);
   m_pMenuFile->addSeparator();
   m_pMenuFile->addAction(m_pActionQuit);
+
   m_pMenuEdit->addAction(m_pActionSettings);
+
   m_pMenuWindow->addAction(m_pActionMinimize);
   m_pMenuWindow->addAction(m_pActionRestore);
+
   m_pMenuHelp->addAction(m_pActionAbout);
   m_pMenuHelp->addAction(m_pActionHelp);
+  m_pMenuFile->addSeparator();
+  m_pMenuHelp->addAction(m_pActionClearSettings);
 
-#ifndef NDEBUG
-  // always enable test menu in debug mode.
-  const auto enableTestMenu = true;
-#else
-  // only enable test menu in release build if env var is true.
   const auto enableTestMenu =
       strToTrue(qEnvironmentVariable("SYNERGY_TEST_MENU"));
-#endif
 
-  if (enableTestMenu) {
+  if (enableTestMenu || kDebugBuild) {
     auto testMenu = new QMenu("Test", m_pMenuBar);
     m_pMenuBar->addMenu(testMenu);
     testMenu->addAction(m_pActionTestFatalError);

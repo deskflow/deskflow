@@ -54,6 +54,11 @@ ConfigScopes::ConfigScopes(std::shared_ptr<Deps> deps)
   m_pSystemSettingsProxy->loadSystem();
 }
 
+void ConfigScopes::clear() {
+  m_pUserSettingsProxy->clear();
+  m_pSystemSettingsProxy->clear();
+}
+
 void ConfigScopes::signalReady() { emit ready(); }
 
 void ConfigScopes::save() {
