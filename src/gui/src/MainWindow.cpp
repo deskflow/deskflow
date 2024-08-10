@@ -108,6 +108,11 @@ void MainWindow::restoreWindow() {
   if (windowPosition.has_value()) {
     qDebug("restoring main window position");
     move(windowPosition.value());
+  } else {
+    // center main window in middle of screen
+    const auto screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->geometry();
+    move(screenGeometry.center() - rect().center());
   }
 
   // give the window chance to restore its size and position before the window
