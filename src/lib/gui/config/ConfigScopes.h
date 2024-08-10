@@ -42,7 +42,7 @@ public:
   explicit ConfigScopes(std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   ~ConfigScopes() override = default;
 
-  void clear();
+  void clear() const;
 
   void signalReady() override;
   void save() override;
