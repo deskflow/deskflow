@@ -63,8 +63,9 @@ void dotenv(const QString &filename) {
 
     // HACK: since we have the org name set to the app name, the config dir is
     // confusing. make this simple by using the org dir instead.
-    // use filePath("..") instead of cdUp to avoid the existence check.
+    // use `filePath("..")` instead of `cdUp` to avoid the existence check.
     QDir orgDir = configDir.filePath("..");
+    orgDir = orgDir.absolutePath();
 
     filePath = orgDir.filePath(filename);
     if (!open(file, filePath)) {
