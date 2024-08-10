@@ -23,7 +23,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
-#include <qdir.h>
 
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
