@@ -18,18 +18,17 @@
 #include "TlsCertificate.h"
 
 #include "TlsFingerprint.h"
+#include "gui/paths.h"
 
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
-#include <optional>
+#include <qdir.h>
 
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
 static const char *const kCertificateLifetime = "365";
 static const char *const kCertificateSubjectInfo = "/CN=Synergy";
-static const char *const kCertificateFilename = "Synergy.pem";
-static const char *const kSslDir = "SSL";
 
 #if defined(Q_OS_WIN)
 static const char *const kWinOpenSslDir = "OpenSSL";
@@ -38,6 +37,8 @@ static const char *const kConfigFile = "synergy.conf";
 #elif defined(Q_OS_UNIX)
 static const char *const kUnixOpenSslCommand = "openssl";
 #endif
+
+using namespace synergy::gui;
 
 #if defined(Q_OS_WIN)
 
@@ -87,12 +88,7 @@ using namespace synergy::gui;
 
 #endif
 
-TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {
-  m_profileDir = m_coreTool.getProfileDir();
-  if (m_profileDir.isEmpty()) {
-    qCritical("empty profile directory result");
-  }
-}
+TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {}
 
 bool TlsCertificate::runTool(const QStringList &args) {
   QString program;
@@ -157,20 +153,16 @@ bool TlsCertificate::runTool(const QStringList &args) {
 }
 
 bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
-  QString sslDirPath =
-      QString("%1%2%3").arg(m_profileDir).arg(QDir::separator()).arg(kSslDir);
+  qDebug("generating tls certificate: %s", qUtf8Printable(path));
 
-  QString defaultPath = QString("%1%2%3")
-                            .arg(sslDirPath)
-                            .arg(QDir::separator())
-                            .arg(kCertificateFilename);
+  QFileInfo info(path);
+  QDir dir(info.absolutePath());
+  if (!dir.exists() && !dir.mkpath(".")) {
+    qCritical("failed to create directory for tls certificate");
+    return false;
+  }
 
   QString keySize = kCertificateKeyLength + QString::number(keyLength);
-
-  const QString pathToUse =
-      QDir::cleanPath(path.isEmpty() ? defaultPath : path);
-
-  qDebug("generating tls certificate: %s", qUtf8Printable(pathToUse));
 
   QStringList arguments;
 
@@ -179,7 +171,7 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
   arguments.append("-x509");
   arguments.append("-nodes");
 
-  // valide duration
+  // valid duration
   arguments.append("-days");
   arguments.append(kCertificateLifetime);
 
@@ -193,22 +185,18 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
   arguments.append("-newkey");
   arguments.append(keySize);
 
-  if (QDir sslDir(sslDirPath); !sslDir.exists()) {
-    sslDir.mkpath(".");
-  }
-
   // key output filename
   arguments.append("-keyout");
-  arguments.append(pathToUse);
+  arguments.append(path);
 
   // certificate output filename
   arguments.append("-out");
-  arguments.append(pathToUse);
+  arguments.append(path);
 
   if (runTool(arguments)) {
     qDebug("tls certificate generated");
 
-    return generateFingerprint(pathToUse);
+    return generateFingerprint(path);
   } else {
     qCritical("failed to generate tls certificate");
     return false;

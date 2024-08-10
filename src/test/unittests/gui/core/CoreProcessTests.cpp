@@ -19,6 +19,7 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/IQIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
+#include "license/ILicense.h"
 #include "shared/gui/mocks/AppConfigMock.h"
 #include "shared/gui/mocks/ServerConfigMock.h"
 
@@ -27,10 +28,8 @@
 #include <gtest/gtest.h>
 
 using namespace synergy::gui;
-using ::testing::_;
-using ::testing::NiceMock;
-using ::testing::Return;
-using ::testing::ReturnRef;
+using namespace synergy::license;
+using namespace testing;
 
 namespace {
 
@@ -92,12 +91,23 @@ public:
   NiceMock<QIpcClientMock> m_ipcClient;
 };
 
-class CoreProcessTests : public ::testing::Test {
+class LicenseMock : public ILicense {
 public:
-  CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps) {}
+  LicenseMock() {
+    ON_CALL(*this, isTlsAvailable()).WillByDefault(Return(true));
+  }
+
+  MOCK_METHOD(bool, isTlsAvailable, (), (const, override));
+};
+
+class CoreProcessTests : public Test {
+public:
+  CoreProcessTests()
+      : m_coreProcess(m_appConfig, m_serverConfig, m_license, m_pDeps) {}
 
   NiceMock<AppConfigMock> m_appConfig;
   NiceMock<ServerConfigMock> m_serverConfig;
+  NiceMock<LicenseMock> m_license;
   std::shared_ptr<NiceMock<DepsMock>> m_pDeps =
       std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;

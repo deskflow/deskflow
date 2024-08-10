@@ -18,6 +18,7 @@
 #include "ServerConnection.h"
 
 #include "ServerMessage.h"
+#include "gui/config/ServerConfigDialogState.h"
 #include "messages.h"
 
 #include <QMessageBox>
@@ -40,16 +41,28 @@ messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
 
 ServerConnection::ServerConnection(
     QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
+    const config::ServerConfigDialogState &serverConfigDialogState,
     std::shared_ptr<Deps> deps)
     : m_pParent(parent),
       m_appConfig(appConfig),
       m_serverConfig(serverConfig),
+      m_serverConfigDialogState(serverConfigDialogState),
       m_pDeps(deps) {}
 
 void ServerConnection::handleLogLine(const QString &logLine) {
   ServerMessage message(logLine);
 
   if (!message.isNewClientMessage()) {
+    return;
+  }
+
+  if (m_messageShowing) {
+    qDebug("new client message already shown, skipping for now");
+    return;
+  }
+
+  if (m_serverConfigDialogState.isVisible()) {
+    qDebug("server config dialog visible, skipping new client prompt");
     return;
   }
 
@@ -74,11 +87,6 @@ void ServerConnection::handleNewClient(const QString &clientName) {
   using enum messages::NewClientPromptResult;
 
   m_receivedClients.append(clientName);
-
-  if (m_messageShowing) {
-    qDebug("new client message already shown, skipping");
-    return;
-  }
 
   if (m_serverConfig.isFull()) {
     qDebug(

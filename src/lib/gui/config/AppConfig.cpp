@@ -100,7 +100,8 @@ AppConfig::AppConfig(
     synergy::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
     : m_Scopes(scopes),
       m_pDeps(deps),
-      m_ScreenName(deps->hostname()) {
+      m_ScreenName(deps->hostname()),
+      m_TlsCertPath(deps->defaultTlsCertPath()) {
   determineScope();
   recall();
 }
@@ -312,13 +313,6 @@ void AppConfig::recallElevateMode() {
   }
 
   m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
-}
-
-QString AppConfig::defaultTlsCertPath() const {
-  QDir path(m_pDeps->profileDir());
-  path = path.filePath("SSL");
-  path = path.filePath("Synergy.pem");
-  return path.absolutePath();
 }
 
 QString AppConfig::settingName(Setting name) {

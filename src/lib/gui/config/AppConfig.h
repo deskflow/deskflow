@@ -21,7 +21,7 @@
 #include "ElevateMode.h"
 #include "IAppConfig.h"
 #include "IConfigScopes.h"
-#include "gui/core/CoreTool.h"
+#include "gui/paths.h"
 
 #include <QDir>
 #include <QHostInfo>
@@ -116,11 +116,10 @@ private:
 public:
   struct Deps {
     virtual ~Deps() = default;
-    virtual QString profileDir() const { return m_coreTool.getProfileDir(); }
+    virtual QString defaultTlsCertPath() const {
+      return synergy::gui::paths::defaultTlsCertPath();
+    }
     virtual QString hostname() const { return QHostInfo::localHostName(); }
-
-  private:
-    [[no_unique_address]] CoreTool m_coreTool;
   };
 
   explicit AppConfig(
@@ -293,9 +292,16 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  synergy::gui::IConfigScopes &m_Scopes;
-  std::shared_ptr<Deps> m_pDeps;
-  QString m_ScreenName;
+  static const char m_CoreServerName[];
+  static const char m_CoreClientName[];
+  static const char m_LogDir[];
+
+  /// @brief Contains the string values of the settings names that will be saved
+  static const char *const m_SettingsName[];
+
+  /// @brief Core config filename (not the Qt settings filename)
+  static const char m_ConfigFilename[];
+
   int m_Port = 24800;
   QString m_Interface = "";
   int m_LogLevel = 0;
@@ -324,7 +330,6 @@ private:
   bool m_EnableService =
       synergy::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = true;
-  QString m_TlsCertPath = defaultTlsCertPath();
   int m_TlsKeyLength = synergy::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
@@ -338,15 +343,10 @@ private:
    */
   bool m_TlsChanged = false;
 
-  static const char m_CoreServerName[];
-  static const char m_CoreClientName[];
-  static const char m_LogDir[];
-
-  /// @brief Contains the string values of the settings names that will be saved
-  static const char *const m_SettingsName[];
-
-  /// @brief Core config filename (not the Qt settings filename)
-  static const char m_ConfigFilename[];
+  synergy::gui::IConfigScopes &m_Scopes;
+  std::shared_ptr<Deps> m_pDeps;
+  QString m_ScreenName;
+  QString m_TlsCertPath;
 
 signals:
   void tlsChanged();

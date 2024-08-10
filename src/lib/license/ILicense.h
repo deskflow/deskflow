@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Symless Ltd.
+ * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,24 +17,16 @@
 
 #pragma once
 
-#include "gui/core/CoreTool.h"
+class Server;
+class LicenseHandler;
+class LicenseTests;
 
-#include <QObject>
+namespace synergy::license {
 
-class TlsCertificate : public QObject {
-  Q_OBJECT
-
+class ILicense {
 public:
-  explicit TlsCertificate(QObject *parent = nullptr);
-
-  bool generateCertificate(const QString &path, int keyLength);
-  int getCertKeyLength(const QString &path);
-
-private:
-  bool runTool(const QStringList &args);
-  bool generateFingerprint(const QString &certificateFilename);
-
-private:
-  QString m_toolStdout;
-  [[no_unique_address]] CoreTool m_coreTool;
+  virtual ~ILicense() = default;
+  virtual bool isTlsAvailable() const = 0;
 };
+
+} // namespace synergy::license

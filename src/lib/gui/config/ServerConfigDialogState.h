@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Symless Ltd.
+ * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,24 +17,22 @@
 
 #pragma once
 
-#include "gui/core/CoreTool.h"
+namespace synergy::gui::config {
 
-#include <QObject>
-
-class TlsCertificate : public QObject {
-  Q_OBJECT
-
+/**
+ * @brief Represents the state of the server config dialog.
+ *
+ * Future design consideration: Once moving the server config dialog to the GUI
+ * lib, we can probably just pass a reference to that rather than needing an
+ * object to track it's state.
+ */
+class ServerConfigDialogState {
 public:
-  explicit TlsCertificate(QObject *parent = nullptr);
-
-  bool generateCertificate(const QString &path, int keyLength);
-  int getCertKeyLength(const QString &path);
+  bool isVisible() const { return m_isVisible; }
+  void setVisible(bool isVisible) { m_isVisible = isVisible; }
 
 private:
-  bool runTool(const QStringList &args);
-  bool generateFingerprint(const QString &certificateFilename);
-
-private:
-  QString m_toolStdout;
-  [[no_unique_address]] CoreTool m_coreTool;
+  bool m_isVisible = false;
 };
+
+} // namespace synergy::gui::config

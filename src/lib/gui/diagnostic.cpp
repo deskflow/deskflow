@@ -18,10 +18,11 @@
 #include "diagnostic.h"
 
 #include "config/ConfigScopes.h"
+#include "paths.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QProcess>
-#include <qglobal.h>
 
 namespace synergy::gui::diagnostic {
 
@@ -43,7 +44,13 @@ void clearSettings(ConfigScopes &scopes, bool enableRestart) {
   qDebug("clearing settings");
   scopes.clear();
 
-  // TODO: delete core config file, tls files, and legacy files.
+  auto configDir = paths::configDir();
+  qDebug("removing config dir: %s", qPrintable(configDir.absolutePath()));
+  configDir.removeRecursively();
+
+  auto profileDir = paths::coreProfileDir();
+  qDebug("removing profile dir: %s", qPrintable(profileDir.absolutePath()));
+  profileDir.removeRecursively();
 
   if (enableRestart) {
     qDebug("restarting");

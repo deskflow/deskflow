@@ -78,8 +78,9 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
-      m_CoreProcess(appConfig, m_ServerConfig),
-      m_ServerConnection(this, appConfig, m_ServerConfig),
+      m_CoreProcess(appConfig, m_ServerConfig, m_LicenseHandler.license()),
+      m_ServerConnection(
+          this, appConfig, m_ServerConfig, m_ServerConfigDialogState),
       m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig, m_LicenseHandler.license()),
       m_WindowSaveTimer(this) {
@@ -516,10 +517,12 @@ void MainWindow::on_m_pButtonConnectToClient_clicked() {
 void MainWindow::onWindowSaveTimerTimeout() { saveWindow(); }
 
 void MainWindow::onServerConnectionConfigureClient(const QString &clientName) {
+  m_ServerConfigDialogState.setVisible(true);
   ServerConfigDialog dialog(this, m_ServerConfig, m_AppConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_CoreProcess.restart();
   }
+  m_ServerConfigDialogState.setVisible(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////

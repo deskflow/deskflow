@@ -32,6 +32,7 @@
 #include "gui/VersionChecker.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
+#include "gui/config/ServerConfigDialogState.h"
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
@@ -195,6 +196,7 @@ private:
   bool m_SaveWindow = false;
   LicenseHandler m_LicenseHandler;
   bool m_Quitting = false;
+  synergy::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
 
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;

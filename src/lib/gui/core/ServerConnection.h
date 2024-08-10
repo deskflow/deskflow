@@ -22,6 +22,7 @@
 
 #include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
+#include "gui/config/ServerConfigDialogState.h"
 #include "gui/messages.h"
 
 namespace synergy::gui {
@@ -39,6 +40,7 @@ public:
 
   explicit ServerConnection(
       QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
+      const config::ServerConfigDialogState &serverConfigDialogState,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   void handleLogLine(const QString &logLine);
 
@@ -52,6 +54,7 @@ private:
   QWidget *m_pParent;
   IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
+  const config::ServerConfigDialogState &m_serverConfigDialogState;
   std::shared_ptr<Deps> m_pDeps;
   QStringList m_receivedClients;
   bool m_messageShowing = false;
