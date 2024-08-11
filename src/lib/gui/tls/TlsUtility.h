@@ -20,18 +20,18 @@
 #include "gui/config/IAppConfig.h"
 
 #include "TlsCertificate.h"
-#include "license/License.h"
+#include "license/ILicense.h"
 
 #include <QObject>
 
 namespace synergy::gui {
 
 class TlsUtility : public QObject {
+  using ILicense = synergy::license::ILicense;
   Q_OBJECT
 
 public:
-  explicit TlsUtility(
-      const IAppConfig &appConfig, const license::ILicense &license);
+  explicit TlsUtility(const IAppConfig &appConfig, const ILicense &license);
 
   bool generateCertificate();
   bool persistCertificate();
@@ -52,7 +52,7 @@ public:
 
 private:
   const IAppConfig &m_appConfig;
-  const license::ILicense &m_license;
+  const ILicense &m_license;
   TlsCertificate m_certificate;
 };
 

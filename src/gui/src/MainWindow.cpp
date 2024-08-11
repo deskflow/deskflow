@@ -31,6 +31,7 @@
 #include "gui/diagnostic.h"
 #include "gui/dialogs/SettingsDialog.h"
 #include "gui/license/LicenseHandler.h"
+#include "gui/license/license_config.h"
 #include "gui/license/license_notices.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
@@ -62,6 +63,7 @@
 
 using namespace synergy::gui;
 using namespace synergy::license;
+using namespace synergy::gui::license;
 
 using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
@@ -134,14 +136,14 @@ void MainWindow::saveWindow() {
 }
 
 void MainWindow::setupControls() {
-  if (!kEnableActivation) {
+  if (!isActivationEnabled()) {
     updateWindowTitle();
   }
 
-  if (!kLicensedProduct) {
+  if (!isLicensedProduct()) {
     m_pActionHelp->setText("Report a bug");
     m_pActionActivate->setText("Purchase");
-  } else if (!kEnableActivation) {
+  } else if (!isActivationEnabled()) {
     m_pActionActivate->setVisible(false);
   }
 
@@ -287,7 +289,7 @@ void MainWindow::onCreated() {
 
   applyCloseToTray();
 
-  if (kEnableActivation && !m_AppConfig.serialKey().isEmpty()) {
+  if (isActivationEnabled() && !m_AppConfig.serialKey().isEmpty()) {
     m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
   }
 
@@ -300,7 +302,7 @@ void MainWindow::onCreated() {
 }
 
 void MainWindow::onShown() {
-  if (kEnableActivation) {
+  if (isActivationEnabled()) {
     const auto &license = m_LicenseHandler.license();
     if (!m_AppConfig.activationHasRun() || !license.isValid() ||
         license.isExpired()) {
@@ -435,7 +437,7 @@ void MainWindow::on_m_pActionAbout_triggered() {
 }
 
 void MainWindow::on_m_pActionHelp_triggered() const {
-  if (kLicensedProduct) {
+  if (isLicensedProduct()) {
     QDesktopServices::openUrl(QUrl(kUrlHelp));
   } else {
     QDesktopServices::openUrl(QUrl(kUrlBugReport));
@@ -464,7 +466,7 @@ void MainWindow::on_m_pButtonConfigureServer_clicked() {
 }
 
 void MainWindow::on_m_pActionActivate_triggered() {
-  if (kLicensedProduct) {
+  if (isLicensedProduct()) {
     showActivationDialog();
   } else {
     QDesktopServices::openUrl(QUrl(kUrlPurchase));
@@ -573,7 +575,7 @@ void MainWindow::open() {
 
 void MainWindow::onCoreProcessStarting() {
 
-  if (kEnableActivation) {
+  if (isActivationEnabled()) {
     const auto &license = m_LicenseHandler.license();
     if (license.isExpired() && showActivationDialog() == QDialog::Rejected) {
       qDebug("license expired, cancelling core start");
@@ -704,7 +706,7 @@ void MainWindow::updateFromLogLine(const QString &line) {
   checkConnected(line);
   checkFingerprint(line);
 
-  if (kEnableActivation) {
+  if (isActivationEnabled()) {
     checkLicense(line);
   }
 }
@@ -816,7 +818,7 @@ void MainWindow::showDevThanksMessage() {
     return;
   }
 
-  if (kEnableActivation) {
+  if (isActivationEnabled()) {
     qDebug("activation enabled, skipping dev thanks message");
     return;
   }
@@ -1014,7 +1016,7 @@ void MainWindow::updateLocalFingerprint() {
 }
 
 QString MainWindow::productName() const {
-  if (kEnableActivation) {
+  if (isActivationEnabled()) {
     return m_LicenseHandler.productName();
   } else if (!kProductName.isEmpty()) {
     return kProductName;
@@ -1061,7 +1063,7 @@ void MainWindow::showConfigureServer(const QString &message) {
 }
 
 int MainWindow::showActivationDialog() {
-  if (!kEnableActivation) {
+  if (!isActivationEnabled()) {
     qFatal("cannot show activation dialog when activation is disabled");
   }
 

@@ -21,7 +21,7 @@
 #include "gui/config/IServerConfig.h"
 #include "gui/ipc/QIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
-#include "license/License.h"
+#include "license/ILicense.h"
 
 #include <QMutex>
 #include <QObject>
@@ -35,6 +35,7 @@ class CoreProcess : public QObject {
   using IServerConfig = synergy::gui::IServerConfig;
   using QProcessProxy = synergy::gui::proxy::QProcessProxy;
   using IQIpcClient = synergy::gui::ipc::IQIpcClient;
+  using ILicense = synergy::license::ILicense;
 
   Q_OBJECT
 
@@ -59,7 +60,7 @@ public:
 
   explicit CoreProcess(
       IAppConfig &appConfig, IServerConfig &serverConfig,
-      const license::ILicense &license,
+      const ILicense &license,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   void extracted(QString &app, QStringList &args);
@@ -120,7 +121,7 @@ private:
 
   IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
-  const license::ILicense &m_license;
+  const ILicense &m_license;
   std::shared_ptr<Deps> m_pDeps;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;
