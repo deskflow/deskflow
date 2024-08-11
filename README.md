@@ -25,9 +25,7 @@ Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://syne
 
 ## Developer Quick Start
 
-How to build Synergy 1 Community Edition.
-
-Having problems? Check the [Developer Guide](https://github.com/symless/synergy-core/wiki/Developer-Guide) wiki page.
+How to build Synergy 1 Community Edition. Check the [Developer Guide](https://github.com/symless/synergy-core/wiki/Developer-Guide) wiki page if you have problems.
 
 **Dependencies:**
 ```
