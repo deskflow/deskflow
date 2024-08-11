@@ -12,7 +12,7 @@ Use the keyboard, mouse, or trackpad of one computer to control nearby computers
 
 This project contains the source code for Synergy 1 Community Edition.
 
-![Synergy 1 Community Edition](https://github.com/user-attachments/assets/5b641dcf-9a6f-4980-aaba-3aeeae577792)
+![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
 To use the community edition, install the `synergy` package with your favorite package manager or build it yourself using the Developer Quick Start instructions below.
 
