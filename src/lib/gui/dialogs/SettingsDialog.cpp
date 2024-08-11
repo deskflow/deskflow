@@ -19,8 +19,8 @@
 #include "SettingsDialog.h"
 
 #include "UpgradeDialog.h"
-#include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
+#include "gui/license/license_config.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ScreenNameValidator.h"
@@ -88,7 +88,7 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
 void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool) {
   updateTlsControlsEnabled();
 
-  if (kEnableActivation && !m_tlsUtility.isAvailable()) {
+  if (license::isActivationEnabled() && !m_tlsUtility.isAvailable()) {
     m_pCheckBoxEnableTls->setChecked(false);
     updateTlsControlsEnabled();
 

@@ -53,19 +53,4 @@ const QString kProductName = SYNERGY_PRODUCT_NAME;
 const QString kProductName;
 #endif
 
-#ifdef SYNERGY_LICENSED_PRODUCT
-const bool kLicensedProduct = true;
-#else
-const bool kLicensedProduct = false;
-#endif
-
-#ifdef SYNERGY_ENABLE_ACTIVATION
-#ifndef SYNERGY_LICENSED_PRODUCT
-#error "activation requires licensed product"
-#endif
-const bool kEnableActivation = true;
-#else
-const bool kEnableActivation = false;
-#endif // SYNERGY_ENABLE_ACTIVATION
-
 } // namespace synergy::gui

@@ -18,20 +18,22 @@
 #include "TlsUtility.h"
 
 #include "TlsCertificate.h"
-#include "constants.h"
+#include "gui/license/license_config.h"
 
 #include <QFile>
 #include <QString>
 
+using namespace synergy::license;
+using namespace synergy::gui::license;
+
 namespace synergy::gui {
 
-TlsUtility::TlsUtility(
-    const IAppConfig &appConfig, const license::ILicense &license)
+TlsUtility::TlsUtility(const IAppConfig &appConfig, const ILicense &license)
     : m_appConfig(appConfig),
       m_license(license) {}
 
 bool TlsUtility::isAvailable() const {
-  return !kEnableActivation || m_license.isTlsAvailable();
+  return !isActivationEnabled() || m_license.isTlsAvailable();
 }
 
 bool TlsUtility::isAvailableAndEnabled() const {

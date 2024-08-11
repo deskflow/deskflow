@@ -20,6 +20,7 @@
 #include "Logger.h"
 #include "common/version.h"
 #include "constants.h"
+#include "gui/license/license_config.h"
 #include "styles.h"
 
 #include <QAction>
@@ -29,6 +30,8 @@
 #include <QPushButton>
 #include <QTime>
 #include <memory>
+
+using namespace synergy::gui::license;
 
 namespace synergy::gui::messages {
 
@@ -60,7 +63,7 @@ void showErrorDialog(
     text = "<p>Sorry, a critical error has occurred.</p>";
   }
 
-  if (kLicensedProduct) {
+  if (isLicensedProduct()) {
     text += QString(R"(<p>Please <a href="%1" style="color: %2">contact us</a>)"
                     " and copy/paste the following error:</p>")
                 .arg(kUrlContact, kColorSecondary);

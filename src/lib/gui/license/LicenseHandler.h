@@ -18,6 +18,7 @@
 #pragma once
 
 #include "gui/constants.h"
+#include "gui/license/license_config.h"
 #include "license/License.h"
 #include "license/ProductEdition.h"
 
@@ -52,6 +53,6 @@ signals:
   void invalidLicense() const;
 
 private:
-  bool m_enabled = synergy::gui::kEnableActivation;
+  bool m_enabled = synergy::gui::license::isActivationEnabled();
   License m_license = License::invalid();
 };

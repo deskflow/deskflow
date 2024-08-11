@@ -17,9 +17,9 @@
 
 #include "CoreProcess.h"
 
-#include "constants.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
+#include "gui/license/license_config.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
 
@@ -35,6 +35,9 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTimer>
+
+using namespace synergy::license;
+using namespace synergy::gui::license;
 
 namespace synergy::gui {
 
@@ -136,8 +139,8 @@ QString CoreProcess::Deps::getProfileRoot() const {
 //
 
 CoreProcess::CoreProcess(
-    IAppConfig &appConfig, IServerConfig &serverConfig,
-    const license::ILicense &license, std::shared_ptr<Deps> deps)
+    IAppConfig &appConfig, IServerConfig &serverConfig, const ILicense &license,
+    std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_license(license),
@@ -534,7 +537,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app) {
   args << "-c" << configFilename;
   qInfo("core config file: %s", qPrintable(configFilename));
 
-  if (kEnableActivation && !m_appConfig.serialKey().isEmpty()) {
+  if (isActivationEnabled() && !m_appConfig.serialKey().isEmpty()) {
     args << "--serial-key" << m_appConfig.serialKey();
   }
 
