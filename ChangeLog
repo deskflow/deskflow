@@ -78,6 +78,7 @@ Enhancements:
 - #7432 Only show close to tray reminder when not quitting the app
 - #7434 Show dark logo in dark mode and improve .env loader
 - #7435 Add reset settings menu action and env var
+- #7436 Introduced new env vars for testing
 
 # 1.14.6
 
