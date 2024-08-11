@@ -6,12 +6,17 @@
 [![SonarCloud Analysis](https://github.com/symless/synergy-core/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/sonarcloud-analysis.yml)
 [![Build containers](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml)
 
-The Synergy Core project is the open-source core component of [Synergy](https://symless.com/synergy), a keyboard and mouse sharing tool.
+[Synergy](https://symless.com/synergy) is a keyboard and mouse sharing tool. 
+
+Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
+
+This project contains the source code for Synergy 1 Community Edition.
+
+![Synergy 1 Community Edition](https://github.com/user-attachments/assets/4b457d99-3985-4db7-99de-3bda5b7a74fd)
+
+To use the community edition, install the `synergy` package with your favorite package manager or build it yourself using the Developer Quick Start instructions below.
 
 Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) in the `#open-source` channel.
-
-This project is intended for advanced technical users, and when built produces Synergy 1 Community Edition. 
-To use the community edition, either install the `synergy` package with your favorite package manager or build it yourself using the Developer Quick Start instructions below.
 
 * [Download Synergy](https://symless.com/synergy/download)
 * [Contact support](https://symless.com/synergy/contact)
@@ -20,7 +25,7 @@ To use the community edition, either install the `synergy` package with your fav
 
 ## Developer Quick Start
 
-Simplified instructions for those who want to contribute to the development of Synergy Core.
+How to build Synergy 1 Community Edition.
 
 Having problems? Check the [Developer Guide](https://github.com/symless/synergy-core/wiki/Developer-Guide) wiki page.
 
