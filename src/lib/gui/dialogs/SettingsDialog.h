@@ -44,6 +44,9 @@ public:
       QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
       const License &license, const CoreProcess &coreProcess);
 
+signals:
+  void shown();
+
 private slots:
   void on_m_pCheckBoxEnableTls_clicked(bool checked);
   void on_m_pCheckBoxLogToFile_stateChanged(int);
@@ -57,6 +60,11 @@ private slots:
 private:
   void accept() override;
   void reject() override;
+  void showEvent(QShowEvent *event) override;
+  bool isClientMode() const;
+  void updateTlsControls();
+  void updateTlsControlsEnabled();
+  void showReadOnlyMessage();
 
   /// @brief Load all settings.
   void loadFromConfig();
@@ -69,11 +77,6 @@ private:
 
   /// @brief Enables controls when they should be.
   void updateControls();
-
-  bool isClientMode() const;
-  void updateTlsControls();
-  void updateTlsControlsEnabled();
-  void showReadOnlyMessage();
 
   [[no_unique_address]] CoreTool m_coreTool;
   validators::ValidationError *m_pScreenNameError;

@@ -63,9 +63,11 @@ SettingsDialog::SettingsDialog(
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
 
-  if (!m_appConfig.isActiveScopeWritable()) {
-    showReadOnlyMessage();
-  }
+  connect(this, &SettingsDialog::shown, [this] {
+    if (!m_appConfig.isActiveScopeWritable()) {
+      showReadOnlyMessage();
+    }
+  });
 }
 
 //
@@ -155,6 +157,11 @@ void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool) {
 //
 // End of auto-connect slots
 //
+
+void SettingsDialog::showEvent(QShowEvent *event) {
+  QDialog::showEvent(event);
+  emit shown();
+}
 
 void SettingsDialog::showReadOnlyMessage() {
   const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
