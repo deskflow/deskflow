@@ -22,6 +22,7 @@
 #include "gui/license/license_config.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
+#include <qlogging.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -59,7 +60,25 @@ QString processModeToString(ProcessMode mode) {
     return "service";
   default:
     qFatal("invalid process mode");
-    return "";
+    abort();
+  }
+}
+
+QString processStateToString(CoreProcess::ProcessState state) {
+  using enum CoreProcess::ProcessState;
+
+  switch (state) {
+  case Starting:
+    return "starting";
+  case Started:
+    return "started";
+  case Stopping:
+    return "stopping";
+  case Stopped:
+    return "stopped";
+  default:
+    qFatal("invalid process state");
+    abort();
   }
 }
 
@@ -139,8 +158,8 @@ QString CoreProcess::Deps::getProfileRoot() const {
 //
 
 CoreProcess::CoreProcess(
-    IAppConfig &appConfig, IServerConfig &serverConfig, const ILicense &license,
-    std::shared_ptr<Deps> deps)
+    const IAppConfig &appConfig, const IServerConfig &serverConfig,
+    const ILicense &license, std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_license(license),
@@ -175,7 +194,9 @@ void CoreProcess::onIpcClientServiceReady() {
     qDebug("service ready, continuing core process stop");
     stop();
   } else {
-    qCritical("service ready, but process state is not starting or stopping");
+    // This may happen when the IPC connection fails and then reconnects.
+    qWarning(
+        "ignoring service ready, process state is not starting or stopping");
   }
 }
 
@@ -644,6 +665,10 @@ void CoreProcess::setProcessState(ProcessState state) {
     return;
   }
 
+  qDebug(
+      "core process state changed: %s -> %s", //
+      qPrintable(processStateToString(m_processState)),
+      qPrintable(processStateToString(state)));
   m_processState = state;
   emit processStateChanged(state);
 }

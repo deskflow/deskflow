@@ -59,7 +59,7 @@ public:
   enum class ConnectionState { Disconnected, Connecting, Connected, Listening };
 
   explicit CoreProcess(
-      IAppConfig &appConfig, IServerConfig &serverConfig,
+      const IAppConfig &appConfig, const IServerConfig &serverConfig,
       const ILicense &license,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
@@ -119,8 +119,8 @@ private:
   void checkOSXNotification(const QString &line);
 #endif
 
-  IAppConfig &m_appConfig;
-  IServerConfig &m_serverConfig;
+  const IAppConfig &m_appConfig;
+  const IServerConfig &m_serverConfig;
   const ILicense &m_license;
   std::shared_ptr<Deps> m_pDeps;
   QString m_address;

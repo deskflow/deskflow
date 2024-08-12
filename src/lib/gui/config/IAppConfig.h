@@ -67,6 +67,7 @@ public:
   // Getters
   //
 
+  virtual void setStartedBefore(bool startedBefore) = 0;
   virtual void setLoadFromSystemScope(bool loadFromSystemScope) = 0;
   virtual void setScreenName(const QString &screenName) = 0;
   virtual void setPort(int port) = 0;

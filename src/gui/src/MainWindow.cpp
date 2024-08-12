@@ -887,9 +887,13 @@ void MainWindow::updateStatus() {
 }
 
 void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
-  qDebug("core process state changed: %d", static_cast<int>(state));
-
   updateStatus();
+
+  if (state == CoreProcessState::Started) {
+    qDebug("recording that core has started");
+    m_AppConfig.setStartedBefore(true);
+    m_ConfigScopes.save();
+  }
 
   if (state == CoreProcessState::Started ||
       state == CoreProcessState::Starting) {

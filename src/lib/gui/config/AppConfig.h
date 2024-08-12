@@ -189,6 +189,7 @@ public:
   //
   // Setters (overrides)
   //
+  void setStartedBefore(bool b) override;
   void setScreenName(const QString &s) override;
   void setPort(int i) override;
   void setNetworkInterface(const QString &s) override;
@@ -213,7 +214,6 @@ public:
 
   void setActivationHasRun(bool value);
   void setWizardHasRun();
-  void setStartedBefore(bool b);
   void setSerialKey(const QString &serialKey);
   void clearSerialKey();
   void setLicenseNextCheck(unsigned long long);

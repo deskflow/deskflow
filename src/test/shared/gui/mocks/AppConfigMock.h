@@ -39,7 +39,7 @@ public:
   }
 
   //
-  // Setters
+  // Getters
   //
 
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
@@ -73,9 +73,10 @@ public:
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
 
   //
-  // Getters
+  // Setters
   //
 
+  MOCK_METHOD(void, setStartedBefore, (bool startedBefore), (override));
   MOCK_METHOD(
       void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
   MOCK_METHOD(void, setScreenName, (const QString &screenName), (override));
