@@ -29,26 +29,29 @@
 namespace synergy::gui::proxy {
 
 const auto kLegacyOrgDomain = "http-symless-com";
-
-const auto kSystemConfigFilename = "SystemConfig.ini";
+const auto kLegacySystemConfigFilename = "SystemConfig.ini";
 
 #if defined(Q_OS_UNIX)
-const auto kUnixSystemConfigPath = "/usr/local/etc/symless/";
+const auto kUnixSystemConfigPath = "/usr/local/etc/";
 #endif
 
 //
 // Free functions
 //
 
-QString getSystemSettingPath() {
-  const QString settingFilename(kSystemConfigFilename);
+/**
+ * @brief The base dir for the system settings file.
+ *
+ * Important: Qt will append the org name as a dir, and the app name as the
+ * settings filename, i.e.: `{base-dir}/Synergy/Synergy.ini`
+ */
+QString getSystemSettingsBaseDir() {
 #if defined(Q_OS_WIN)
-  return QCoreApplication::applicationDirPath() + QDir::separator();
-#elif defined(Q_OS_MAC)
-  // it would be nice to use /Library dir, but qt has no elevate system.
-  return kUnixSystemConfigPath + settingFilename;
-#elif defined(Q_OS_LINUX)
-  // qt already adds application and filename to the end of the path on linux.
+  return QCoreApplication::applicationDirPath();
+#elif defined(Q_OS_UNIX)
+  // Qt already adds application and filename to the end of the path.
+  // On macOS, it would be nice to use /Library dir, but qt has no elevate
+  // system.
   return kUnixSystemConfigPath;
 #else
 #error "unsupported platform"
@@ -62,7 +65,8 @@ void migrateLegacySystemSettings(QSettings &settings) {
   }
 
   QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, kSystemConfigFilename);
+      QSettings::IniFormat, QSettings::SystemScope,
+      kLegacySystemConfigFilename);
   QSettings oldSystemSettings(
       QSettings::IniFormat, QSettings::SystemScope,
       QCoreApplication::organizationName(),
@@ -75,7 +79,7 @@ void migrateLegacySystemSettings(QSettings &settings) {
   }
 
   QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
+      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingsBaseDir());
 }
 
 void migrateLegacyUserSettings(QSettings &newSettings) {
@@ -151,7 +155,7 @@ void QSettingsProxy::loadSystem() {
 
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      getSystemSettingPath());
+      getSystemSettingsBaseDir());
 
   m_pSettings = std::make_unique<QSettings>(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,

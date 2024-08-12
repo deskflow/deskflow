@@ -149,7 +149,16 @@ void showCloseReminder(QWidget *parent) {
   QMessageBox::information(parent, "Notification area icon", message);
 }
 
-void showFirstRunMessage(
+void showFirstServerStartMessage(QWidget *parent) {
+  QMessageBox::information(
+      parent, "Server is running",
+      "<p>Great, the server is now running.</p>"
+      "<p>Now you can connect your other computers to this server. "
+      "You should see a prompt here on the server when a new client tries to "
+      "connect.</p>");
+}
+
+void showFirstConnectedMessage(
     QWidget *parent, bool closeToTray, bool enableService, bool isServer) {
 
   auto message = QString("<p>Synergy is now connected!</p>");
@@ -263,6 +272,15 @@ bool showClearSettings(QWidget *parent) {
   message.exec();
 
   return message.clickedButton() == clear;
+}
+
+void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath) {
+  QString nativePath = QDir::toNativeSeparators(systemSettingsPath);
+  QMessageBox::information(
+      parent, "Read-only settings",
+      QString("<p>Settings are read-only because you only have read access "
+              "to the file:</p><p>%1</p>")
+          .arg(nativePath));
 }
 
 } // namespace synergy::gui::messages

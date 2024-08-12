@@ -33,7 +33,9 @@ void messageHandler(
 
 void raiseCriticalDialog();
 
-void showFirstRunMessage(
+void showFirstServerStartMessage(QWidget *parent);
+
+void showFirstConnectedMessage(
     QWidget *parent, bool closeToTray, bool enableService, bool isServer);
 
 void showCloseReminder(QWidget *parent);
@@ -47,5 +49,7 @@ NewClientPromptResult
 showNewClientPrompt(QWidget *parent, const QString &clientName);
 
 bool showClearSettings(QWidget *parent);
+
+void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
 
 } // namespace synergy::gui::messages

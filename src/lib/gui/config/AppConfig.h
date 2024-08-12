@@ -126,7 +126,6 @@ public:
       IConfigScopes &scopes,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
-  IConfigScopes &scopes();
   void determineScope();
 
   /**
@@ -139,6 +138,7 @@ public:
   // Getters (overrides)
   //
 
+  IConfigScopes &scopes() const override;
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
   bool tlsEnabled() const override;
@@ -189,6 +189,7 @@ public:
   //
   // Setters (overrides)
   //
+
   void setScreenName(const QString &s) override;
   void setPort(int i) override;
   void setNetworkInterface(const QString &s) override;
@@ -211,9 +212,9 @@ public:
   // Setters (new methods)
   //
 
+  void setStartedBefore(bool b);
   void setActivationHasRun(bool value);
   void setWizardHasRun();
-  void setStartedBefore(bool b);
   void setSerialKey(const QString &serialKey);
   void clearSerialKey();
   void setLicenseNextCheck(unsigned long long);

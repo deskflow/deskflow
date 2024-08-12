@@ -799,7 +799,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   qDebug("window should hide to tray");
 }
 
-void MainWindow::showFirstRunMessage() {
+void MainWindow::showFirstConnectedMessage() {
   if (m_AppConfig.startedBefore()) {
     return;
   }
@@ -808,7 +808,7 @@ void MainWindow::showFirstRunMessage() {
   m_ConfigScopes.save();
 
   const auto isServer = m_CoreProcess.mode() == CoreMode::Server;
-  messages::showFirstRunMessage(
+  messages::showFirstConnectedMessage(
       this, m_AppConfig.closeToTray(), m_AppConfig.enableService(), isServer);
 }
 
@@ -887,9 +887,13 @@ void MainWindow::updateStatus() {
 }
 
 void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
-  qDebug("core process state changed: %d", static_cast<int>(state));
-
   updateStatus();
+
+  if (state == CoreProcessState::Started) {
+    qDebug("recording that core has started");
+    m_AppConfig.setStartedBefore(true);
+    m_ConfigScopes.save();
+  }
 
   if (state == CoreProcessState::Started ||
       state == CoreProcessState::Starting) {
@@ -933,7 +937,7 @@ void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state) {
   if (state != CoreConnectionState::Connected) {
     secureSocket(false);
   } else if (isVisible()) {
-    showFirstRunMessage();
+    showFirstConnectedMessage();
     showDevThanksMessage();
   }
 }
@@ -1127,12 +1131,21 @@ void MainWindow::enableServer(bool enable) {
   m_AppConfig.setServerGroupChecked(enable);
   m_pRadioGroupServer->setChecked(enable);
   m_pWidgetServer->setEnabled(enable);
-  m_pWidgetServerInverse->setVisible(m_AppConfig.invertConnection());
+  m_pWidgetServerInput->setVisible(m_AppConfig.invertConnection());
 
   if (enable) {
     m_pButtonToggleStart->setEnabled(true);
     m_pActionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Server);
+
+    // The server can run without any clients configured, and this is actually
+    // what you'll want to do the first time since you'll be prompted when an
+    // unrecognized client tries to connect.
+    if (!m_AppConfig.startedBefore()) {
+      qDebug("auto-starting core server for first time");
+      m_CoreProcess.start();
+      messages::showFirstServerStartMessage(this);
+    }
   }
 }
 
@@ -1140,8 +1153,8 @@ void MainWindow::enableClient(bool enable) {
   qDebug(enable ? "client enabled" : "client disabled");
   m_AppConfig.setClientGroupChecked(enable);
   m_pRadioGroupClient->setChecked(enable);
-  m_pWidgetClient->setEnabled(enable);
-  m_pWidgetClient->setVisible(!m_AppConfig.invertConnection());
+  m_pWidgetClientInput->setEnabled(enable);
+  m_pWidgetClientInput->setVisible(!m_AppConfig.invertConnection());
 
   if (enable) {
     m_pButtonToggleStart->setEnabled(true);

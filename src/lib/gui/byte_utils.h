@@ -20,7 +20,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QIODevice>
-#include <qlogging.h>
+#include <QtGlobal>
 
 namespace synergy::gui {
 

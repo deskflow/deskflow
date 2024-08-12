@@ -21,6 +21,7 @@
 #include "UpgradeDialog.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/license/license_config.h"
+#include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ScreenNameValidator.h"
@@ -61,6 +62,15 @@ SettingsDialog::SettingsDialog(
   m_pScreenNameError = new validators::ValidationError(this);
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
+
+  connect(
+      this, &SettingsDialog::shown, this,
+      [this] {
+        if (!m_appConfig.isActiveScopeWritable()) {
+          showReadOnlyMessage();
+        }
+      },
+      Qt::QueuedConnection);
 }
 
 //
@@ -107,6 +117,10 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
   m_appConfig.setLoadFromSystemScope(checked);
   loadFromConfig();
   updateControls();
+
+  if (isVisible() && !m_appConfig.isActiveScopeWritable()) {
+    showReadOnlyMessage();
+  }
 }
 
 void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
@@ -146,6 +160,16 @@ void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool) {
 //
 // End of auto-connect slots
 //
+
+void SettingsDialog::showEvent(QShowEvent *event) {
+  QDialog::showEvent(event);
+  emit shown();
+}
+
+void SettingsDialog::showReadOnlyMessage() {
+  const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
+  messages::showReadOnlySettings(this, activeScopeFilename);
+}
 
 void SettingsDialog::accept() {
   if (!m_pLineEditScreenName->hasAcceptableInput()) {
@@ -228,6 +252,7 @@ void SettingsDialog::updateTlsControls() {
   const auto tlsEnabled = m_tlsUtility.isAvailableAndEnabled();
   const auto writable = m_appConfig.isActiveScopeWritable();
 
+  m_pCheckBoxEnableTls->setEnabled(writable);
   m_pCheckBoxEnableTls->setChecked(writable && tlsEnabled);
   m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
 

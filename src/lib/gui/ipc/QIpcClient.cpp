@@ -79,14 +79,17 @@ void QIpcClient::connectToHost() {
 }
 
 void QIpcClient::disconnectFromHost() {
-  m_isConnecting = false;
-  qInfo("disconnected from background service");
   m_pReader->stop();
+  m_pSocket->flush();
   m_pSocket->close();
+
+  m_isConnecting = false;
   m_isConnected = false;
+
+  qInfo("disconnected from background service");
 }
 
-void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) const {
+void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) {
   QString text;
   switch (socketError) {
   case 0:
@@ -101,6 +104,7 @@ void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) const {
   }
 
   qWarning("ipc connection error, %s", qUtf8Printable(text));
+  m_isConnected = false;
 
   QTimer::singleShot(kRetryInterval, this, &QIpcClient::onRetryConnect);
 }
@@ -154,6 +158,12 @@ void QIpcClient::sendCommand(
 
 void QIpcClient::onIpcReaderHelloBack() {
   qDebug("ipc hello back received");
+
+  if (m_isConnected) {
+    qWarning("ipc already connected, ignoring hello back");
+    return;
+  }
+
   m_isConnected = true;
   serviceReady();
 }

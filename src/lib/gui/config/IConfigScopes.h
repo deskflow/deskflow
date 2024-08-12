@@ -38,6 +38,7 @@ public:
   virtual bool isActiveScopeWritable() const = 0;
   virtual QSettingsProxy &activeSettings() = 0;
   virtual const QSettingsProxy &activeSettings() const = 0;
+  virtual QString activeFilePath() const = 0;
 
   /**
    * @brief Signals to listeners that the settings that they should read.

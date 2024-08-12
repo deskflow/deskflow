@@ -39,9 +39,10 @@ public:
   }
 
   //
-  // Setters
+  // Getters
   //
 
+  MOCK_METHOD(synergy::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
   MOCK_METHOD(int, tlsKeyLength, (), (const, override));
   MOCK_METHOD(bool, tlsEnabled, (), (const, override));
@@ -73,7 +74,7 @@ public:
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
 
   //
-  // Getters
+  // Setters
   //
 
   MOCK_METHOD(

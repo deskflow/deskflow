@@ -176,7 +176,7 @@ private:
   void setupControls();
   void resizeEvent(QResizeEvent *event) override;
   void moveEvent(QMoveEvent *event) override;
-  void showFirstRunMessage();
+  void showFirstConnectedMessage();
   void showDevThanksMessage();
   QString productName() const;
   void updateStatus();

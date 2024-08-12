@@ -48,7 +48,7 @@ private slots:
   void onRetryConnect();
   void onSocketConnected() const;
   void onIpcReaderHelloBack();
-  void onSocketError(QAbstractSocket::SocketError error) const;
+  void onSocketError(QAbstractSocket::SocketError error);
   void onIpcReaderRead(const QString &text);
 
 private:

@@ -50,8 +50,6 @@ public:
   static void msleep(unsigned long msecs) { QThread::msleep(msecs); }
 };
 
-QString getSystemSettingPath();
-
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
 #endif
