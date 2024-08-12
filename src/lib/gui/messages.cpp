@@ -275,11 +275,12 @@ bool showClearSettings(QWidget *parent) {
 }
 
 void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath) {
+  QString nativePath = QDir::toNativeSeparators(systemSettingsPath);
   QMessageBox::information(
       parent, "Read-only settings",
       QString("<p>Settings are read-only because you only have read access "
               "to the file:</p><p>%1</p>")
-          .arg(systemSettingsPath));
+          .arg(nativePath));
 }
 
 } // namespace synergy::gui::messages
