@@ -118,7 +118,7 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
   loadFromConfig();
   updateControls();
 
-  if (!m_appConfig.isActiveScopeWritable()) {
+  if (isVisible() && !m_appConfig.isActiveScopeWritable()) {
     showReadOnlyMessage();
   }
 }
@@ -252,6 +252,7 @@ void SettingsDialog::updateTlsControls() {
   const auto tlsEnabled = m_tlsUtility.isAvailableAndEnabled();
   const auto writable = m_appConfig.isActiveScopeWritable();
 
+  m_pCheckBoxEnableTls->setEnabled(writable);
   m_pCheckBoxEnableTls->setChecked(writable && tlsEnabled);
   m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
 
