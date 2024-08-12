@@ -394,6 +394,8 @@ void AppConfig::loadScope(ConfigScopes::Scope scope) {
 
   m_Scopes.setActiveScope(scope);
 
+  qDebug("active scope file path: %s", qPrintable(m_Scopes.activeFilePath()));
+
   // only signal ready if there is at least one setting in the required scope.
   // this prevents the current settings from being set back to default.
   if (m_Scopes.scopeContains(

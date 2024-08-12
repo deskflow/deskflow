@@ -39,7 +39,13 @@ const auto kUnixSystemConfigPath = "/usr/local/etc/";
 // Free functions
 //
 
-QString getSystemSettingPath() {
+/**
+ * @brief The base dir for the system settings file.
+ *
+ * Important: Qt will append the org name as a dir, and the app name as the
+ * settings filename, i.e.: `{base-dir}/Synergy/Synergy.ini`
+ */
+QString getSystemSettingsBaseDir() {
 #if defined(Q_OS_WIN)
   return QCoreApplication::applicationDirPath();
 #elif defined(Q_OS_UNIX)
@@ -73,7 +79,7 @@ void migrateLegacySystemSettings(QSettings &settings) {
   }
 
   QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingPath());
+      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingsBaseDir());
 }
 
 void migrateLegacyUserSettings(QSettings &newSettings) {
@@ -149,7 +155,7 @@ void QSettingsProxy::loadSystem() {
 
   QSettings::setPath(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      getSystemSettingPath());
+      getSystemSettingsBaseDir());
 
   m_pSettings = std::make_unique<QSettings>(
       QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,

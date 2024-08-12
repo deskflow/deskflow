@@ -63,11 +63,14 @@ SettingsDialog::SettingsDialog(
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
 
-  connect(this, &SettingsDialog::shown, [this] {
-    if (!m_appConfig.isActiveScopeWritable()) {
-      showReadOnlyMessage();
-    }
-  });
+  connect(
+      this, &SettingsDialog::shown, this,
+      [this] {
+        if (!m_appConfig.isActiveScopeWritable()) {
+          showReadOnlyMessage();
+        }
+      },
+      Qt::QueuedConnection);
 }
 
 //

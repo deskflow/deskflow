@@ -21,7 +21,7 @@
 
 namespace synergy::gui::proxy {
 
-QString getSystemSettingPath();
+QString getSystemSettingBaseDir();
 
 class QSettingsProxy {
 public:
