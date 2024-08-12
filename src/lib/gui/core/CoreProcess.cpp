@@ -22,7 +22,6 @@
 #include "gui/license/license_config.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
-#include <qlogging.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -36,6 +35,7 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QtGlobal>
 
 using namespace synergy::license;
 using namespace synergy::gui::license;
