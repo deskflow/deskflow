@@ -61,10 +61,35 @@ cmake --build build -j8
 
 ## Packages
 
-To get Synergy 1, use your favorite package manager to install `synergy` (this repo).
+Synergy 1 Community Edition is packaged by the community (status shown below).
 
 Synergy 2 is no longer in development and should not be provided.
 
-For both Synergy 1 and Synergy 3 you can use the [official packages](https://symless.com/synergy/download).
+For the licensed builds of Synergy 1 and Synergy 3, please use the [official packages](https://symless.com/synergy/download).
+
+**Windows:**
+```
+choco install synergy
+```
+
+**macOS:**
+```
+brew install synergy
+```
+
+**Debian, Ubuntu, etc:**
+```
+sudo apt install synergy
+```
+
+**Fedora, Red Hat, etc:**
+```
+sudo dnf install synergy
+```
+
+**Arch, Manjaro, etc:**
+```
+sudo pacman -Syu synergy
+```
 
 [![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg?exclude_unsupported=1)](https://repology.org/project/synergy/versions)
