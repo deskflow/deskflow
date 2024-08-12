@@ -29,6 +29,7 @@
 namespace synergy::gui::proxy {
 
 const auto kLegacyOrgDomain = "http-symless-com";
+const auto kLegacySystemConfigFilename = "SystemConfig.ini";
 
 #if defined(Q_OS_UNIX)
 const auto kUnixSystemConfigPath = "/usr/local/etc/";
@@ -58,7 +59,8 @@ void migrateLegacySystemSettings(QSettings &settings) {
   }
 
   QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, kSystemConfigFilename);
+      QSettings::IniFormat, QSettings::SystemScope,
+      kLegacySystemConfigFilename);
   QSettings oldSystemSettings(
       QSettings::IniFormat, QSettings::SystemScope,
       QCoreApplication::organizationName(),
