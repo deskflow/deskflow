@@ -57,9 +57,27 @@ Screen::~Screen() {
   }
   assert(!m_enabled);
 
-  // TODO: why assert this? it appears to be false when an elevated dialog
-  // appears on windows and the process is killed.
-  assert(m_entered == m_isPrimary);
+  // Originally there was an assert here added before 2009 (history not in
+  // tact). This condition seems to occur on a Windows client when the process
+  // is shut down to make way for a new elevated process (e.g. at login screen).
+  // The reason why this assert was originally added is unclear, and was causing
+  // pain when using debug builds; you lose control of the client when it's at
+  // the login screen. Therefore it has been converted to a warning so that we
+  // can still see when it happens but it won't cause the process to pause. This
+  // also gives us the added benefit of seeing when it happens in production.
+  // Perhaps it indicates that the cursor is still being controlled on the
+  // client while it's shutting down? i.e. the screen is entered and is not the
+  // server, or the screen is not entered and is the server.
+  if (m_entered == m_isPrimary) {
+    LOG(
+        (CLOG_DEBUG "current screen: entered=%s, primary=%s", //
+         m_entered ? "yes" : "no", m_isPrimary ? "yes" : "no"));
+    if (m_isPrimary) {
+      LOG((CLOG_WARN "current primary screen is not entered on shutdown"));
+    } else {
+      LOG((CLOG_WARN "current secondary screen is entered on shutdown"));
+    }
+  }
 
   delete m_screen;
   LOG((CLOG_DEBUG "closed display"));
