@@ -64,8 +64,7 @@ SettingsDialog::SettingsDialog(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
 
   if (!m_appConfig.isActiveScopeWritable()) {
-    const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
-    messages::showReadOnlySettings(this, activeScopeFilename);
+    showReadOnlyMessage();
   }
 }
 
@@ -113,6 +112,10 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
   m_appConfig.setLoadFromSystemScope(checked);
   loadFromConfig();
   updateControls();
+
+  if (!m_appConfig.isActiveScopeWritable()) {
+    showReadOnlyMessage();
+  }
 }
 
 void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
@@ -152,6 +155,11 @@ void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool) {
 //
 // End of auto-connect slots
 //
+
+void SettingsDialog::showReadOnlyMessage() {
+  const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
+  messages::showReadOnlySettings(this, activeScopeFilename);
+}
 
 void SettingsDialog::accept() {
   if (!m_pLineEditScreenName->hasAcceptableInput()) {

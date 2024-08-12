@@ -39,6 +39,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
   Q_OBJECT
 
 public:
+  void extracted();
   SettingsDialog(
       QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
       const License &license, const CoreProcess &coreProcess);
@@ -72,6 +73,7 @@ private:
   bool isClientMode() const;
   void updateTlsControls();
   void updateTlsControlsEnabled();
+  void showReadOnlyMessage();
 
   [[no_unique_address]] CoreTool m_coreTool;
   validators::ValidationError *m_pScreenNameError;
