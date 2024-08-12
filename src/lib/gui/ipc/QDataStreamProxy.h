@@ -23,16 +23,25 @@
 class QDataStreamProxy {
 public:
   explicit QDataStreamProxy() = default;
-  explicit QDataStreamProxy(QTcpSocket *socket) {
-    m_Stream = std::make_unique<QDataStream>(socket);
-  }
+  explicit QDataStreamProxy(QTcpSocket *socket)
+      : m_Socket(socket),
+        m_Stream(std::make_unique<QDataStream>(socket)) {}
   virtual ~QDataStreamProxy() = default;
 
   virtual qint64 writeRawData(const char *data, int len) {
     assert(m_Stream);
-    return m_Stream->writeRawData(data, len);
+    assert(m_Socket);
+
+    const auto result = m_Stream->writeRawData(data, len);
+
+    // Causes a small performance hit, but ensures that all bytes are written
+    // when the function returns.
+    m_Socket->flush();
+
+    return result;
   }
 
 private:
+  QTcpSocket *m_Socket = nullptr;
   std::unique_ptr<QDataStream> m_Stream;
 };
