@@ -149,7 +149,16 @@ void showCloseReminder(QWidget *parent) {
   QMessageBox::information(parent, "Notification area icon", message);
 }
 
-void showFirstRunMessage(
+void showFirstServerStartMessage(QWidget *parent) {
+  QMessageBox::information(
+      parent, "Server is running",
+      "<p>Great, the server is now running.</p>"
+      "<p>Now you can connect your other computers to this server. "
+      "You should see a prompt here on the server when a new client tries to "
+      "connect.</p>");
+}
+
+void showFirstConnectedMessage(
     QWidget *parent, bool closeToTray, bool enableService, bool isServer) {
 
   auto message = QString("<p>Synergy is now connected!</p>");

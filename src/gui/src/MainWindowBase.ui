@@ -111,28 +111,42 @@
            <number>15</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QRadioButton" name="m_pRadioGroupServer">
-              <property name="text">
-               <string>Use this computer's keyboard and mouse</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>(make this computer the server)</string>
-              </property>
-              <property name="indent">
-               <number>20</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QWidget" name="m_pWidgetServerRadio" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="m_pRadioGroupServer">
+               <property name="text">
+                <string>Use this computer's keyboard and mouse</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>(make this computer the server)</string>
+               </property>
+               <property name="indent">
+                <number>20</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
           <item alignment="Qt::AlignTop">
            <widget class="QWidget" name="m_pWidgetServer" native="true">
@@ -153,7 +167,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QWidget" name="m_pWidgetServerInverse" native="true">
+              <widget class="QWidget" name="m_pWidgetServerInput" native="true">
                <layout class="QVBoxLayout" name="m_pLayoutServerInverse">
                 <property name="spacing">
                  <number>15</number>
@@ -279,31 +293,45 @@
            <number>15</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QRadioButton" name="m_pRadioGroupClient">
-              <property name="text">
-               <string>Use another computer’s mouse and keyboard</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>(make this computer the client)</string>
-              </property>
-              <property name="indent">
-               <number>20</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QWidget" name="m_pWidgetClientRadio" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="m_pRadioGroupClient">
+               <property name="text">
+                <string>Use another computer’s mouse and keyboard</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>(make this computer the client)</string>
+               </property>
+               <property name="indent">
+                <number>20</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
           <item alignment="Qt::AlignTop">
-           <widget class="QWidget" name="m_pWidgetClient" native="true">
+           <widget class="QWidget" name="m_pWidgetClientInput" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutClient">
              <property name="spacing">
               <number>15</number>
