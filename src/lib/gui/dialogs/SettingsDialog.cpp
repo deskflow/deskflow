@@ -21,6 +21,7 @@
 #include "UpgradeDialog.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/license/license_config.h"
+#include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ScreenNameValidator.h"
@@ -61,6 +62,11 @@ SettingsDialog::SettingsDialog(
   m_pScreenNameError = new validators::ValidationError(this);
   m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
+
+  if (!m_appConfig.isActiveScopeWritable()) {
+    const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
+    messages::showReadOnlySettings(this, activeScopeFilename);
+  }
 }
 
 //

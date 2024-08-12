@@ -443,7 +443,7 @@ void AppConfig::persistLogDir() const {
 // Begin getters
 ///////////////////////////////////////////////////////////////////////////////
 
-IConfigScopes &AppConfig::scopes() { return m_Scopes; }
+IConfigScopes &AppConfig::scopes() const { return m_Scopes; }
 
 bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
 

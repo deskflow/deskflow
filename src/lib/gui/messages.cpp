@@ -274,4 +274,12 @@ bool showClearSettings(QWidget *parent) {
   return message.clickedButton() == clear;
 }
 
+void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath) {
+  QMessageBox::information(
+      parent, "Read-only settings",
+      QString("<p>Settings are read-only because you only have read access "
+              "to the file:</p><p>%1</p>")
+          .arg(systemSettingsPath));
+}
+
 } // namespace synergy::gui::messages

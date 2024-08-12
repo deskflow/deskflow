@@ -50,4 +50,6 @@ showNewClientPrompt(QWidget *parent, const QString &clientName);
 
 bool showClearSettings(QWidget *parent);
 
+void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
+
 } // namespace synergy::gui::messages

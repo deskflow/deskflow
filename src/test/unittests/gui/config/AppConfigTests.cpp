@@ -49,6 +49,7 @@ public:
   MOCK_METHOD(const QSettingsProxy &, activeSettings, (), (const, override));
   MOCK_METHOD(QSettingsProxy &, activeSettings, (), (override));
   MOCK_METHOD(void, save, (bool), (override));
+  MOCK_METHOD(QString, activeFilePath, (), (const, override));
 };
 
 struct DepsMock : public AppConfig::Deps {

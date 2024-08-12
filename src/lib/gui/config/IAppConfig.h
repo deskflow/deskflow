@@ -19,6 +19,8 @@
 
 #include "ElevateMode.h"
 
+#include "gui/config/IConfigScopes.h"
+
 #include <QString>
 
 namespace synergy::gui {
@@ -26,13 +28,16 @@ namespace synergy::gui {
 enum class ProcessMode { kService, kDesktop };
 
 class IAppConfig {
+  using IConfigScopes = synergy::gui::IConfigScopes;
+
 public:
   virtual ~IAppConfig() = default;
 
   //
-  // Setters
+  // Getters
   //
 
+  virtual IConfigScopes &scopes() const = 0;
   virtual QString tlsCertPath() const = 0;
   virtual int tlsKeyLength() const = 0;
   virtual bool tlsEnabled() const = 0;
@@ -64,10 +69,9 @@ public:
   virtual bool clientGroupChecked() const = 0;
 
   //
-  // Getters
+  // Setters
   //
 
-  virtual void setStartedBefore(bool startedBefore) = 0;
   virtual void setLoadFromSystemScope(bool loadFromSystemScope) = 0;
   virtual void setScreenName(const QString &screenName) = 0;
   virtual void setPort(int port) = 0;

@@ -42,6 +42,7 @@ public:
   // Getters
   //
 
+  MOCK_METHOD(synergy::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
   MOCK_METHOD(int, tlsKeyLength, (), (const, override));
   MOCK_METHOD(bool, tlsEnabled, (), (const, override));
@@ -76,7 +77,6 @@ public:
   // Setters
   //
 
-  MOCK_METHOD(void, setStartedBefore, (bool startedBefore), (override));
   MOCK_METHOD(
       void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
   MOCK_METHOD(void, setScreenName, (const QString &screenName), (override));
