@@ -34,7 +34,7 @@ TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine) {
   qputenv("SYNERGY_GUI_DEBUG", "true");
   logger.loadEnvVars();
 
-  logger.handleMessage(QtDebugMsg, QMessageLogContext(), "test");
+  logger.handleMessage(QtDebugMsg, "stub", "test");
 
   EXPECT_THAT(newLineEmitted, HasSubstr("test"));
 
@@ -50,7 +50,7 @@ TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine) {
   qputenv("SYNERGY_GUI_DEBUG", "false");
   logger.loadEnvVars();
 
-  logger.handleMessage(QtDebugMsg, QMessageLogContext(), "test");
+  logger.handleMessage(QtDebugMsg, "stub", "test");
 
   EXPECT_FALSE(newLineEmitted);
 

@@ -35,8 +35,7 @@ public:
 
   void loadEnvVars();
   void handleMessage(
-      const QtMsgType type, const QMessageLogContext &context,
-      const QString &message);
+      const QtMsgType type, const QString &fileLine, const QString &message);
   void logVerbose(const QString &message) const;
 
 signals:
