@@ -81,6 +81,7 @@ Enhancements:
 - #7436 Introduced new env vars for testing
 - #7437 Show message box explaining why settings are read-only
 - #7438 Compare result of `clickedButton` instead of `exec`
+- #7440 Fixed light logo filename on about screen
 
 # 1.14.6
 
