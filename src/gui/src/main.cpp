@@ -38,7 +38,6 @@
 #include <QtGlobal>
 #include <QtGui>
 
-
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
 #include <cstdlib>
