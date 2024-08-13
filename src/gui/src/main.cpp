@@ -35,8 +35,9 @@
 #include <QMessageBox>
 #include <QObject>
 #include <QtCore>
+#include <QtGlobal>
 #include <QtGui>
-#include <qglobal.h>
+
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
