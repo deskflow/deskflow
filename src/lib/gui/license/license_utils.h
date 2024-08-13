@@ -17,9 +17,14 @@
 
 #pragma once
 
+#include <QString>
+
+#include "license/SerialKey.h"
+
 namespace synergy::gui::license {
 
 bool isLicensedProduct();
 bool isActivationEnabled();
+synergy::license::SerialKey parseSerialKey(const QString &hexString);
 
 } // namespace synergy::gui::license
