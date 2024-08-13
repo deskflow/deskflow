@@ -24,14 +24,22 @@
 
 UpgradeDialog::UpgradeDialog(QWidget *parent) : QMessageBox(parent) {
   setWindowTitle("Upgrade to access this feature");
-  addButton("Cancel", QMessageBox::RejectRole);
-  addButton("Upgrade", QMessageBox::AcceptRole);
+  m_cancel = addButton("Cancel", QMessageBox::RejectRole);
+  m_upgrade = addButton("Upgrade", QMessageBox::AcceptRole);
 }
 
 void UpgradeDialog::showDialog(const QString &text) {
   setText(text);
+  exec();
 
-  if (exec() == QMessageBox::Accepted) {
-    QDesktopServices::openUrl(QUrl(synergy::gui::kUrlUpgrade));
+  if (clickedButton() == m_upgrade) {
+    const auto url = QUrl(synergy::gui::kUrlUpgrade);
+    if (QDesktopServices::openUrl(url)) {
+      qDebug("opened url: %s", qUtf8Printable(url.toString()));
+    } else {
+      qCritical("failed to open url: %s", qUtf8Printable(url.toString()));
+    }
+  } else {
+    qDebug("upgrade was declined");
   }
 }
