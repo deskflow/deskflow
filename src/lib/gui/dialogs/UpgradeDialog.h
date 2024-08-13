@@ -26,6 +26,6 @@ public:
   void showDialog(const QString &text);
 
 private:
-  QPushButton *m_upgrade;
-  QPushButton *m_cancel;
+  QPushButton *m_upgrade = nullptr;
+  QPushButton *m_cancel = nullptr;
 };
