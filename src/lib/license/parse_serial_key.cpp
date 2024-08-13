@@ -21,7 +21,6 @@
 #include "SerialKeyType.h"
 #include "utils/string_utils.h"
 
-#include <cctype>
 #include <exception>
 #include <optional>
 #include <sstream>

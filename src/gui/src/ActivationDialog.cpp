@@ -31,7 +31,6 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QThread>
-#include <exception>
 
 using namespace synergy::gui;
 using namespace synergy::license;
