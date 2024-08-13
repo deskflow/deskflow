@@ -130,8 +130,7 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   }
 
   try {
-    // auto seconds = std::stol(clean);
-    auto seconds = std::stol("x");
+    auto seconds = std::stoll(clean);
     if (seconds <= 0) {
       return std::nullopt;
     } else {
