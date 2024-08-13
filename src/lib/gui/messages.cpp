@@ -20,7 +20,7 @@
 #include "Logger.h"
 #include "common/version.h"
 #include "constants.h"
-#include "gui/license/license_config.h"
+#include "gui/license/license_utils.h"
 #include "styles.h"
 
 #include <QAction>

@@ -18,7 +18,7 @@
 #pragma once
 
 #include "gui/constants.h"
-#include "gui/license/license_config.h"
+#include "gui/license/license_utils.h"
 #include "license/License.h"
 #include "license/ProductEdition.h"
 

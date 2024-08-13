@@ -30,8 +30,7 @@ public:
 
 class InvalidHexString : public SerialKeyParseError {
 public:
-  explicit InvalidHexString()
-      : SerialKeyParseError("invalid hex string length") {}
+  explicit InvalidHexString() : SerialKeyParseError("invalid hex string") {}
 };
 
 class InvalidSerialKeyFormat : public SerialKeyParseError {
@@ -42,8 +41,10 @@ public:
 
 class InvalidSerialKeyDate : public SerialKeyParseError {
 public:
-  explicit InvalidSerialKeyDate(const std::string &date)
-      : SerialKeyParseError("invalid serial key date: " + date) {}
+  explicit InvalidSerialKeyDate(
+      const std::string &date, const std::string &cause)
+      : SerialKeyParseError("invalid serial key date: " + date + "\n" + cause) {
+  }
 };
 
 class InvalidSerialKeyVersion : public SerialKeyParseError {

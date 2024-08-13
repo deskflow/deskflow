@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "license_config.h"
+#include "license_utils.h"
 
+#include "license/parse_serial_key.h"
 #include "string_utils.h"
 
 #include <QString>
@@ -52,6 +53,18 @@ bool isActivationEnabled() {
     return true;
   } else {
     return kEnableActivation;
+  }
+}
+
+synergy::license::SerialKey parseSerialKey(const QString &hexString) {
+  try {
+    return synergy::license::parseSerialKey(hexString.toStdString());
+  } catch (const std::exception &e) {
+    qFatal("failed to parse serial key: %s", e.what());
+    abort();
+  } catch (...) {
+    qFatal("failed to parse serial key, unknown error");
+    abort();
   }
 }
 

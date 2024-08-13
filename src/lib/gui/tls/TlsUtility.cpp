@@ -18,7 +18,7 @@
 #include "TlsUtility.h"
 
 #include "TlsCertificate.h"
-#include "gui/license/license_config.h"
+#include "gui/license/license_utils.h"
 
 #include <QFile>
 #include <QString>

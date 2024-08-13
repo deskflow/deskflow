@@ -19,7 +19,7 @@
 
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
-#include "gui/license/license_config.h"
+#include "gui/license/license_utils.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
 

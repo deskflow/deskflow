@@ -19,7 +19,7 @@
 
 #include "SerialKey.h"
 #include "SerialKeyType.h"
-#include "utils/trim.h"
+#include "utils/string_utils.h"
 
 #include <cctype>
 #include <exception>
@@ -131,14 +131,21 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   }
 
   try {
-    auto seconds = std::stol(clean);
+    // auto seconds = std::stol(clean);
+    auto seconds = std::stol("x");
     if (seconds <= 0) {
       return std::nullopt;
     } else {
       return time_point{std::chrono::seconds{seconds}};
     }
-  } catch (const std::exception &) {
-    throw InvalidSerialKeyDate(unixTimeString);
+  } catch (std::invalid_argument &) {
+    throw InvalidSerialKeyDate(unixTimeString, "invalid argument");
+  } catch (std::out_of_range &) {
+    throw InvalidSerialKeyDate(unixTimeString, "out of range");
+  } catch (std::exception &ex) {
+    throw InvalidSerialKeyDate(unixTimeString, ex.what());
+  } catch (...) { // NOSONAR
+    throw InvalidSerialKeyDate(unixTimeString, "unknown error");
   }
 }
 

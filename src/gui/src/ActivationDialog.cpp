@@ -97,17 +97,9 @@ void ActivationDialog::accept() {
     return;
   }
 
-  try {
-    const auto result = m_licenseHandler.changeSerialKey(serialKey);
-    if (result != Result::kSuccess) {
-      showResultDialog(result);
-      return;
-    }
-  } catch (const std::exception &e) { // NOSONAR
-    qCritical("failed to change serial key: %s", e.what());
-    return;
-  } catch (...) { // NOSONAR
-    qCritical("failed to change serial key");
+  const auto result = m_licenseHandler.changeSerialKey(serialKey);
+  if (result != Result::kSuccess) {
+    showResultDialog(result);
     return;
   }
 

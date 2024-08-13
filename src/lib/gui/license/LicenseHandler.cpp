@@ -18,17 +18,21 @@
 #include "LicenseHandler.h"
 
 #include "constants.h"
+#include "gui/license/license_utils.h"
 #include "license/ProductEdition.h"
-#include "license/parse_serial_key.h"
 
 #include <QDebug>
 #include <QProcessEnvironment>
 #include <QTimer>
+#include <qglobal.h>
 
 using namespace std::chrono;
-using namespace synergy::license;
+using namespace synergy::gui::license;
+using License = synergy::license::License;
 
-const License &LicenseHandler::license() const { return m_license; }
+const synergy::license::License &LicenseHandler::license() const {
+  return m_license;
+}
 
 Edition LicenseHandler::productEdition() const {
   return m_license.productEdition();
@@ -52,7 +56,7 @@ LicenseHandler::changeSerialKey(const QString &hexString) {
   }
 
   qDebug() << "changing serial key to:" << hexString;
-  auto serialKey = parseSerialKey(hexString.toStdString());
+  auto serialKey = parseSerialKey(hexString);
 
   if (serialKey == m_license.serialKey()) {
     qDebug("serial key did not change, ignoring");

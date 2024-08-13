@@ -20,7 +20,7 @@
 
 #include "UpgradeDialog.h"
 #include "gui/core/CoreProcess.h"
-#include "gui/license/license_config.h"
+#include "gui/license/license_utils.h"
 #include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
