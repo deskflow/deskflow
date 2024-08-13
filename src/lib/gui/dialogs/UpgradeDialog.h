@@ -18,9 +18,14 @@
 #pragma once
 
 #include <QMessageBox>
+#include <QPushButton>
 
 class UpgradeDialog : public QMessageBox {
 public:
   explicit UpgradeDialog(QWidget *parent = nullptr);
   void showDialog(const QString &text);
+
+private:
+  QPushButton *m_upgrade = nullptr;
+  QPushButton *m_cancel = nullptr;
 };
