@@ -50,9 +50,7 @@ void raiseCriticalDialog() {
 }
 
 void showErrorDialog(
-    const QString &message, const QMessageLogContext &context, QtMsgType type) {
-  auto filename = QFileInfo(context.file).fileName();
-  auto contextString = QString("%1:%2").arg(filename).arg(context.line);
+    const QString &message, const QString &fileLine, QtMsgType type) {
 
   auto title = type == QtFatalMsg ? "Fatal error" : "Critical error";
   QString text;
@@ -75,8 +73,7 @@ void showErrorDialog(
   }
 
   const QString version = QString::fromStdString(synergy::version());
-  text +=
-      QString("<pre>v%1\n%2\n%3</pre>").arg(version, message, contextString);
+  text += QString("<pre>v%1\n%2\n%3</pre>").arg(version, message, fileLine);
 
   if (type == QtFatalMsg) {
     // create a blocking message box for fatal errors, as we want to wait
@@ -109,13 +106,21 @@ void showErrorDialog(
   }
 }
 
+QString fileLine(const QMessageLogContext &context) {
+  if (!context.file) {
+    return "";
+  }
+  return QString("%1:%2").arg(context.file).arg(context.line);
+}
+
 void messageHandler(
     QtMsgType type, const QMessageLogContext &context, const QString &message) {
 
-  Logger::instance().handleMessage(type, context, message);
+  const auto fileLine = messages::fileLine(context);
+  Logger::instance().handleMessage(type, fileLine, message);
 
   if (type == QtFatalMsg || type == QtCriticalMsg) {
-    showErrorDialog(message, context, type);
+    showErrorDialog(message, fileLine, type);
   }
 
   if (type == QtFatalMsg) {

@@ -40,13 +40,6 @@ const auto kForceDebugMessages = QStringList{
 
 Logger Logger::s_instance;
 
-QString fileLine(const QMessageLogContext &context) {
-  if (!context.file) {
-    return "";
-  }
-  return QString("%1:%2").arg(context.file).arg(context.line);
-}
-
 QString printLine(
     FILE *out, const QString &type, const QString &message,
     const QString &fileLine = "") {
@@ -97,8 +90,7 @@ void Logger::logVerbose(const QString &message) const {
 }
 
 void Logger::handleMessage(
-    const QtMsgType type, const QMessageLogContext &context,
-    const QString &message) {
+    const QtMsgType type, const QString &fileLine, const QString &message) {
 
   auto mutatedType = type;
   if (kForceDebugMessages.contains(message)) {
@@ -131,7 +123,7 @@ void Logger::handleMessage(
     break;
   }
 
-  const auto logLine = printLine(out, typeString, message, fileLine(context));
+  const auto logLine = printLine(out, typeString, message, fileLine);
   emit newLine(logLine);
 }
 
