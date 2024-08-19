@@ -10,7 +10,7 @@
 
 Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
 
-This project contains the source code for Synergy 1 Community Edition which is actively maintained and free to use.
+This project contains the source code for Synergy 1 Community Edition which is actively maintained and free to use (no serial key is required for the community edition).
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
