@@ -42,6 +42,9 @@ config:
           libgtk-3-dev \
           file
 
+    linuxmint:
+      <<: *debian
+
     ubuntu:
       <<: *debian
 
