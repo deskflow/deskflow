@@ -43,8 +43,6 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: ./.github/actions/run-tests-setup
-        with:
-          COMMENT_PAT: ${{ secrets.COMMENT_PAT }}
 
   windows:
     name: ${{ matrix.target.name }}
@@ -96,7 +94,6 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          COMMENT_PAT: ${{ secrets.COMMENT_PAT }}
           job: ${{ matrix.target.name }}
 
       - name: Package
@@ -171,7 +168,6 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          COMMENT_PAT: ${{ secrets.COMMENT_PAT }}
           job: ${{ matrix.target.name }}
 
       - name: Package
@@ -288,7 +284,6 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          COMMENT_PAT: ${{ secrets.COMMENT_PAT }}
           job: linux-${{ matrix.distro.name }}
 
       - name: Package
