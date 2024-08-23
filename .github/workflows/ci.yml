@@ -38,6 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
+    permissions:
+      issues: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,6 +54,9 @@ jobs:
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
     timeout-minutes: 20
+
+    permissions:
+      issues: write
 
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one target may
@@ -122,6 +128,9 @@ jobs:
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
+
+    permissions:
+      issues: write
 
     defaults:
       run:
@@ -202,6 +211,9 @@ jobs:
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
     timeout-minutes: 20
+
+    permissions:
+      issues: write
 
     env:
       # Prevent apt prompting for input.
