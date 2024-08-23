@@ -111,5 +111,4 @@ jobs:
             -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }} \
             -Dsonar.python.version=3.10
         env:
-          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
