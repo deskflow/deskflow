@@ -57,7 +57,7 @@ jobs:
       - name: Append to PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.COMMENT_PAT }}
           recreate: true
           header: valgrind
           message: |

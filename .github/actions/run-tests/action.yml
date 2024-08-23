@@ -2,8 +2,8 @@ name: "Run tests"
 description: "Runs both unit tests and integration tests and appends to a PR comment"
 
 inputs:
-  GITHUB_TOKEN:
-    description: "The GitHub token to use for authentication"
+  COMMENT_PAT:
+    description: "The GitHub PAT to use for comments"
     required: true
 
   job:
@@ -52,7 +52,7 @@ runs:
     - name: Append to PR comment
       uses: marocchino/sticky-pull-request-comment@v2
       with:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.COMMENT_PAT }}
         header: tests
         append: true
         message: |

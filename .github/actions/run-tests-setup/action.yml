@@ -2,8 +2,8 @@ name: "Run tests (setup)"
 description: "Sets up the PR comment for tests"
 
 inputs:
-  GITHUB_TOKEN:
-    description: "The GitHub token to use for authentication"
+  COMMENT_PAT:
+    description: "The GitHub PAT to use for comments"
     required: true
 
 runs:
@@ -20,7 +20,7 @@ runs:
     - name: Begin PR comment
       uses: marocchino/sticky-pull-request-comment@v2
       with:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.COMMENT_PAT }}
         header: tests
         recreate: true
         message: |
@@ -31,7 +31,7 @@ runs:
     - name: Append table header
       uses: marocchino/sticky-pull-request-comment@v2
       with:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.COMMENT_PAT }}
         header: tests
         append: true
         message: |
