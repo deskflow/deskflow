@@ -4,9 +4,6 @@ description: "Sets up the PR comment for tests"
 runs:
   using: "composite"
 
-  permissions:
-    pull-requests: write
-
   steps:
     - name: Get workflow URL
       id: workflow-url
@@ -17,6 +14,8 @@ runs:
 
     - name: Begin PR comment
       uses: marocchino/sticky-pull-request-comment@v2
+      permissions:
+        pull-requests: write
       with:
         header: tests
         recreate: true
@@ -27,6 +26,8 @@ runs:
     # Neccesary since the first comment has an annoying comment.
     - name: Append table header
       uses: marocchino/sticky-pull-request-comment@v2
+      permissions:
+        pull-requests: write
       with:
         header: tests
         append: true
