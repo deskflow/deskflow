@@ -29,6 +29,8 @@ elseif(APPLE)
 elseif(UNIX)
   file(GLOB headers "XWindows*.h")
   file(GLOB sources "XWindows*.cpp")
+  file(GLOB headers "Ei*.h")
+  file(GLOB sources "Ei*.cpp")
 endif()
 
 if(ADD_HEADERS_TO_SOURCES)

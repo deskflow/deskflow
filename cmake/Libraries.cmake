@@ -1,5 +1,7 @@
 macro(configure_libs)
 
+  update_submodules()
+
   set(libs)
   if(UNIX)
     configure_unix_libs()
@@ -9,7 +11,6 @@ macro(configure_libs)
 
   config_qt()
   configure_openssl()
-  update_submodules()
   configure_test_libs()
 
 endmacro()
@@ -99,6 +100,7 @@ macro(configure_unix_libs)
     configure_mac_libs()
   else()
     configure_xorg_libs()
+    configure_wayland_libs()
   endif()
 
   # For config.h, set some static values; it may be a good idea to make these
@@ -152,6 +154,112 @@ macro(configure_mac_libs)
   list(APPEND libs ${lib_UserNotifications})
 
   add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+
+endmacro()
+
+macro(configure_wayland_libs)
+
+  include(FindPkgConfig)
+
+  option(SYSTEM_LIBEI "Use system libei" OFF)
+  if(SYSTEM_LIBEI)
+    pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= 0.99.1")
+  else()
+    build_libei()
+    find_library(LIBEI_LIBRARIES libei PATH ${libei_build_dir})
+    set(LIBEI_INCLUDE_DIRS ext/libei/src ${libei_build_dir}/libei)
+  endif()
+
+  option(SYSTEM_LIBPORTAL "Use system libportal" OFF)
+  if(SYSTEM_LIBPORTAL)
+    pkg_check_modules(LIBPORTAL REQUIRED "libportal-1 >= 0.7")
+  else()
+    build_libportal()
+    find_library(LIBPORTAL_LIBRARIES libportal PATH ${libportal_build_dir})
+    set(LIBPORTAL_INCLUDE_DIRS ext/libportal ${libportal_build_dir}/libportal)
+  endif()
+
+  pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+  pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+  find_library(LIBM m)
+
+  include_directories(
+    ${LIBXKBCOMMON_INCLUDE_DIRS}
+    ${GLIB2_INCLUDE_DIRS}
+    ${LIBM_INCLUDE_DIRS}
+    ${LIBEI_INCLUDE_DIRS}
+    ${LIBPORTAL_INCLUDE_DIRS})
+
+  list(
+    APPEND
+    libs
+    ${LIBXKBCOMMON_LINK_LIBRARIES}
+    ${GLIB2_LINK_LIBRARIES}
+    ${LIBM_LIBRARIES}
+    ${LIBEI_LINK_LIBRARIES}
+    ${LIBPORTAL_LINK_LIBRARIES})
+
+  add_definitions(-DWINAPI_LIBEI=1)
+  add_definitions(-DWINAPI_LIBPORTAL=1)
+
+endmacro()
+
+macro(build_libei)
+
+  set(libei_build_dir "${CMAKE_BINARY_DIR}/libei")
+
+  execute_process(COMMAND meson setup ${libei_build_dir}
+                          ${CMAKE_SOURCE_DIR}/ext/libei RESULT_VARIABLE result)
+
+  execute_process(COMMAND meson compile -C ${libei_build_dir}
+                  RESULT_VARIABLE libei_build_result)
+
+  if(NOT libei_build_result EQUAL 0)
+    message(FATAL_ERROR "Failed to build libei")
+  endif()
+
+endmacro()
+
+macro(build_libportal)
+
+  set(libportal_build_dir "${CMAKE_BINARY_DIR}/libportal")
+
+  execute_process(
+    COMMAND meson setup ${libportal_build_dir} ${CMAKE_SOURCE_DIR}/ext/libportal
+    RESULT_VARIABLE result)
+
+  execute_process(COMMAND meson compile -C ${libportal_build_dir}
+                  RESULT_VARIABLE libportal_build_result)
+
+  if(NOT libportal_build_result EQUAL 0)
+    message(FATAL_ERROR "Failed to build libportal")
+  endif()
+
+  # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
+  # the inputcapture code, so let's check for explicit functions that bits depending on what we have
+  include(CMakePushCheckState)
+  include(CheckCXXSourceCompiles)
+  cmake_push_check_state(RESET)
+  set(CMAKE_REQUIRED_INCLUDES
+      "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}"
+  )
+  set(CMAKE_REQUIRED_LIBRARIES
+      "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}"
+  )
+  check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h"
+                      HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+  check_symbol_exists(
+    xdp_portal_create_remote_desktop_session_full "libportal/portal.h"
+    HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+  check_symbol_exists(xdp_input_capture_session_connect_to_eis
+                      "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
+
+  # check_symbol_exists can’t check for enum values
+  check_cxx_source_compiles(
+    "#include <libportal/portal.h>
+        int main() { XdpOutputType out = XDP_OUTPUT_NONE; }
+    " HAVE_LIBPORTAL_OUTPUT_NONE)
+  cmake_pop_check_state()
 
 endmacro()
 
@@ -350,26 +458,30 @@ endmacro()
 
 macro(update_submodules)
 
-  find_package(Git QUIET)
+  option(GIT_SUBMODULE "Check submodules during build" ON)
+  if(GIT_SUBMODULE)
 
-  if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    find_package(Git QUIET)
 
-    option(GIT_SUBMODULE "Check submodules during build" ON)
-
-    if(GIT_SUBMODULE)
-
-      message(STATUS "Submodule update")
-      execute_process(
-        COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        RESULT_VARIABLE GIT_SUBMODULE_RESULT)
-
-      if(NOT GIT_SUBMODULE_RESULT EQUAL "0")
-        message(
-          FATAL_ERROR "Git submodule update failed: ${GIT_SUBMODULE_RESULT}")
-      endif()
-
+    if(NOT GIT_FOUND)
+      message(FATAL_ERROR "Git was not found")
     endif()
+
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/.git")
+      message(FATAL_ERROR "This is not a git repository")
+    endif()
+
+    message(STATUS "Submodule update")
+    execute_process(
+      COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      RESULT_VARIABLE GIT_SUBMODULE_RESULT)
+
+    if(NOT GIT_SUBMODULE_RESULT EQUAL "0")
+      message(
+        FATAL_ERROR "Git submodule update failed: ${GIT_SUBMODULE_RESULT}")
+    endif()
+
   endif()
 
 endmacro()
