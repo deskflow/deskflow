@@ -1,11 +1,11 @@
 name: "Run tests (setup)"
 description: "Sets up the PR comment for tests"
 
-permissions:
-  pull-requests: write
-
 runs:
   using: "composite"
+
+  permissions:
+    pull-requests: write
 
   steps:
     - name: Get workflow URL
