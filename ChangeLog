@@ -3,6 +3,7 @@
 Enhancements:
 
 - #7448 Only add PR comments for internal PR
+- #7445 Update `config.yaml` to support Linux Mint build target
 
 # 1.15.0
 
