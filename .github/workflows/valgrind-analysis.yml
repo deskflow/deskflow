@@ -56,8 +56,8 @@ jobs:
 
       - name: Append to PR comment
         uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           recreate: true
           header: valgrind
           message: |
