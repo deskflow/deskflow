@@ -27,7 +27,7 @@ Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://syne
 
 How to build Synergy 1 Community Edition. Check the [Developer Guide](https://github.com/symless/synergy-core/wiki/Developer-Guide) wiki page if you have problems.
 
-**Dependencies:**
+**1. Dependencies:**
 
 *Windows:*
 ```
@@ -39,7 +39,7 @@ python scripts/install_deps.py
 ./scripts/install_deps.py
 ```
 
-**Configure:**
+**2. Configure:**
 
 *Windows:*
 ```
@@ -56,19 +56,19 @@ cmake -B build --preset=macos-release
 cmake -B build --preset=linux-release
 ```
 
-**Build:**
+**3. Build:**
 ```
 cmake --build build -j8
 ```
 
-**Test:**
+**4. Test:**
 ```
 ./build/bin/unittests
 ```
 
 ## Packages
 
-Synergy 1 Community Edition is packaged by the community (status shown below).
+Synergy 1 Community Edition is packaged by the community (status shown below). Package maintainers can use `scripts/package.py` to build packages.
 
 Synergy 2 is no longer in development and should not be provided.
 
