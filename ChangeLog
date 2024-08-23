@@ -1,3 +1,9 @@
+# 1.16.0
+
+Enhancements:
+
+- #7448 Add issue write permission on CI workflow
+
 # 1.15.0
 
 Enhancements:
@@ -84,7 +90,6 @@ Enhancements:
 - #7440 Fixed light logo filename on about screen
 - #7441 Share file line logic between logger and message box
 - #7442 Improve error handling and use long long for dates
-- #7448 Add issue write permission on CI workflow
 
 # 1.14.6
 
