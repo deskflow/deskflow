@@ -43,8 +43,6 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: ./.github/actions/run-tests-setup
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   windows:
     name: ${{ matrix.target.name }}
