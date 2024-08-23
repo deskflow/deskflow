@@ -1,6 +1,9 @@
 name: "Run tests (setup)"
 description: "Sets up the PR comment for tests"
 
+permissions:
+  pull-requests: write
+
 runs:
   using: "composite"
 
@@ -14,8 +17,6 @@ runs:
 
     - name: Begin PR comment
       uses: marocchino/sticky-pull-request-comment@v2
-      permissions:
-        pull-requests: write
       with:
         header: tests
         recreate: true
@@ -26,8 +27,6 @@ runs:
     # Neccesary since the first comment has an annoying comment.
     - name: Append table header
       uses: marocchino/sticky-pull-request-comment@v2
-      permissions:
-        pull-requests: write
       with:
         header: tests
         append: true
