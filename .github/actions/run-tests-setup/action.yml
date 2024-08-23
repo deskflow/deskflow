@@ -6,6 +6,9 @@ inputs:
     description: "The GitHub token to use for authentication"
     required: true
 
+permissions:
+  pull-requests: write
+
 runs:
   using: "composite"
 
