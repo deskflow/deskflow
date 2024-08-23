@@ -28,8 +28,15 @@ Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://syne
 How to build Synergy 1 Community Edition. Check the [Developer Guide](https://github.com/symless/synergy-core/wiki/Developer-Guide) wiki page if you have problems.
 
 **Dependencies:**
+
+*Windows:*
 ```
 python scripts/install_deps.py
+```
+
+*macOS/Linux:*
+```
+./scripts/install_deps.py
 ```
 
 **Configure:**
