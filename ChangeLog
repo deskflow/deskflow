@@ -2,7 +2,7 @@
 
 Enhancements:
 
-- #7448 Add PR write permission on CI workflow
+- #7448 Only add PR comments for internal PR
 
 # 1.15.0
 
