@@ -21,6 +21,9 @@ on:
   schedule:
     - cron: "0 5 * * *"
 
+permissions:
+  pull-requests: write
+
 env:
   GIT_SHA: ${{ github.sha }}
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}

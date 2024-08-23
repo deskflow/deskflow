@@ -1,3 +1,9 @@
+# 1.16.0
+
+Enhancements:
+
+- #7448 Add issue write permission on CI workflow
+
 # 1.15.0
 
 Enhancements:
