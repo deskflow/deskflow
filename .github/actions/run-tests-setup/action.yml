@@ -1,10 +1,6 @@
 name: "Run tests (setup)"
 description: "Sets up the PR comment for tests"
 
-permissions:
-  contents: read
-  pull-requests: write
-
 runs:
   using: "composite"
 
@@ -18,6 +14,7 @@ runs:
 
     - name: Begin PR comment
       uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event.pull_request.head.repo.full_name == github.repository
       with:
         header: tests
         recreate: true
@@ -28,6 +25,7 @@ runs:
     # Neccesary since the first comment has an annoying comment.
     - name: Append table header
       uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event.pull_request.head.repo.full_name == github.repository
       with:
         header: tests
         append: true

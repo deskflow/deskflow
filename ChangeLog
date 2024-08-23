@@ -2,7 +2,7 @@
 
 Enhancements:
 
-- #7448 Add issue write permission on CI workflow
+- #7448 Add PR write permission on CI workflow
 
 # 1.15.0
 

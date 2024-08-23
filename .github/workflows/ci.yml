@@ -23,7 +23,7 @@ on:
   release:
     types: [published]
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 5 * * *" # 5am UTC
 
 env:
   GIT_SHA: ${{ github.sha }}
@@ -98,7 +98,6 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: ${{ matrix.target.name }}
 
       - name: Package
@@ -173,7 +172,6 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: ${{ matrix.target.name }}
 
       - name: Package
@@ -290,7 +288,6 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           job: linux-${{ matrix.distro.name }}
 
       - name: Package
