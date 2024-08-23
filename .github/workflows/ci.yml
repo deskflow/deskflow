@@ -21,9 +21,6 @@ on:
   schedule:
     - cron: "0 5 * * *"
 
-permissions:
-  pull-requests: write
-
 env:
   GIT_SHA: ${{ github.sha }}
   SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
@@ -46,8 +43,6 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: ./.github/actions/run-tests-setup
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   windows:
     name: ${{ matrix.target.name }}
