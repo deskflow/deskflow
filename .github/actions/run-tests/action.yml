@@ -47,6 +47,7 @@ runs:
 
     - name: Append to PR comment
       uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event.pull_request.head.repo.full_name == github.repository
       with:
         header: tests
         append: true
