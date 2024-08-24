@@ -34,15 +34,15 @@ public:
   ~EiKeyState();
 
   void init(int fd, std::size_t len);
-  void init_default_keymap();
+  void initDefaultKeymap();
 
   // IKeyState overrides
   bool fakeCtrlAltDel() override;
   KeyModifierMask pollActiveModifiers() const override;
   std::int32_t pollActiveGroup() const override;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
-  KeyID map_key_from_keyval(std::uint32_t keyval) const;
-  void update_xkb_state(std::uint32_t keyval, bool is_pressed);
+  KeyID mapKeyFromKeyval(std::uint32_t keyval) const;
+  void updateXkbState(std::uint32_t keyval, bool is_pressed);
 
 protected:
   // KeyState overrides
@@ -50,8 +50,8 @@ protected:
   void fakeKey(const Keystroke &keystroke) override;
 
 private:
-  std::uint32_t convert_mod_mask(std::uint32_t xkb_mask) const;
-  void assign_generated_modifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
+  std::uint32_t convertModMask(std::uint32_t xkb_mask) const;
+  void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
   EiScreen *screen_ = nullptr;
 

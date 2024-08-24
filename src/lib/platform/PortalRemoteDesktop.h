@@ -26,12 +26,6 @@
 #include <glib.h>
 #include <libportal/portal.h>
 
-#if !HAVE_LIBPORTAL_OUTPUT_NONE
-// Added in libportal ad82a74 Jun 2022, not yet released in libportal 0.6
-// should be used as a patch on ≤ 0.6, and non-git
-#define XDP_OUTPUT_NONE (XdpOutputType)0
-#endif
-
 namespace synergy {
 
 class PortalRemoteDesktop {
@@ -40,26 +34,26 @@ public:
   ~PortalRemoteDesktop();
 
 private:
-  void glib_thread();
-  gboolean timeout_handler();
+  void glibThread();
+  gboolean timeoutHandler();
   gboolean init_remote_desktop_session();
   void cb_init_remote_desktop_session(GObject *object, GAsyncResult *res);
   void cb_session_started(GObject *object, GAsyncResult *res);
-  void cb_session_closed(XdpSession *session);
+  void cbSessionClosed(XdpSession *session);
   void reconnect(unsigned int timeout = 1000);
 
   /// g_signal_connect callback wrapper
-  static void cb_session_closed_cb(XdpSession *session, gpointer data) {
-    reinterpret_cast<PortalRemoteDesktop *>(data)->cb_session_closed(session);
+  static void cbSessionClosedCb(XdpSession *session, gpointer data) {
+    reinterpret_cast<PortalRemoteDesktop *>(data)->cbSessionClosed(session);
   }
 
-  int fake_eis_fd();
+  int fakeEisFd();
 
 private:
   EiScreen *screen_;
   IEventQueue *events_;
 
-  Thread *glib_thread_;
+  Thread *glibThread_;
   GMainLoop *glib_main_loop_ = nullptr;
 
   XdpPortal *portal_ = nullptr;

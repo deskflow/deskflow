@@ -20,14 +20,13 @@
 
 #include "config.h"
 
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
+#include <memory>
 
 namespace synergy {
 
@@ -39,56 +38,56 @@ public:
   void disable();
   void release();
   void release(double x, double y);
-  bool is_active() const { return is_active_; }
+  bool isActive() const { return isActive_; }
 
 private:
-  void glib_thread();
-  gboolean timeout_handler();
-  gboolean init_input_capture_session();
-  void cb_init_input_capture_session(GObject *object, GAsyncResult *res);
-  void cb_set_pointer_barriers(GObject *object, GAsyncResult *res);
-  void cb_session_closed(XdpSession *session);
-  void cb_disabled(XdpInputCaptureSession *session);
-  void cb_activated(
+  void glibThread();
+  gboolean timeoutHandler();
+  gboolean initInputCaptureSession();
+  void cbInitInputCaptureSession(GObject *object, GAsyncResult *res);
+  void cbSetPointerBarriers(GObject *object, GAsyncResult *res);
+  void cbSessionClosed(XdpSession *session);
+  void cbDisabled(XdpInputCaptureSession *session);
+  void cbActivated(
       XdpInputCaptureSession *session, std::uint32_t activation_id,
       GVariant *options);
-  void cb_deactivated(
+  void cbDeactivated(
       XdpInputCaptureSession *session, std::uint32_t activation_id,
       GVariant *options);
   void cb_zones_changed(XdpInputCaptureSession *session, GVariant *options);
 
   /// g_signal_connect callback wrapper
-  static void cb_session_closed_cb(XdpSession *session, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_session_closed(session);
+  static void cbSessionClosedCb(XdpSession *session, gpointer data) {
+    reinterpret_cast<PortalInputCapture *>(data)->cbSessionClosed(session);
   }
-  static void cb_disabled_cb(XdpInputCaptureSession *session, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_disabled(session);
+  static void cbDisabledCb(XdpInputCaptureSession *session, gpointer data) {
+    reinterpret_cast<PortalInputCapture *>(data)->cbDisabled(session);
   }
-  static void cb_activated_cb(
+  static void cbActivatedCb(
       XdpInputCaptureSession *session, std::uint32_t activation_id,
       GVariant *options, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_activated(
+    reinterpret_cast<PortalInputCapture *>(data)->cbActivated(
         session, activation_id, options);
   }
-  static void cb_deactivated_cb(
+  static void cbDeactivatedCb(
       XdpInputCaptureSession *session, std::uint32_t activation_id,
       GVariant *options, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_deactivated(
+    reinterpret_cast<PortalInputCapture *>(data)->cbDeactivated(
         session, activation_id, options);
   }
-  static void cb_zones_changed_cb(
+  static void cbZonesChangedCb(
       XdpInputCaptureSession *session, GVariant *options, gpointer data) {
     reinterpret_cast<PortalInputCapture *>(data)->cb_zones_changed(
         session, options);
   }
 
-  int fake_eis_fd();
+  int fakeEisFd();
 
 private:
   EiScreen *screen_ = nullptr;
   IEventQueue *events_ = nullptr;
 
-  std::unique_ptr<Thread> glib_thread_;
+  std::unique_ptr<Thread> glibThread_;
   GMainLoop *glib_main_loop_ = nullptr;
 
   XdpPortal *portal_ = nullptr;
@@ -97,12 +96,10 @@ private:
   std::vector<guint> signals_;
 
   bool enabled_ = false;
-  bool is_active_ = false;
+  bool isActive_ = false;
   std::uint32_t activation_id_ = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> barriers_;
 };
 
 } // namespace synergy
-
-#endif // HAVE_LIBPORTAL_INPUTCAPTURE

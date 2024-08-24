@@ -19,10 +19,10 @@
 #include "platform/EiEventQueueBuffer.h"
 
 #include "base/Event.h"
-#include "base/EventQueueTimer.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "base/SimpleEventQueueBuffer.h"
 #include "mt/Thread.h"
 
 #include <cassert>
@@ -126,7 +126,7 @@ EiEventQueueBuffer::getEvent(Event &event, uint32_t &dataID) {
     return kUser;
   }
 
-  event = Event(EventType::SYSTEM, events_->getSystemTarget(), nullptr);
+  event = Event(kSystem, events_->getSystemTarget(), nullptr);
 
   return kSystem;
 }
