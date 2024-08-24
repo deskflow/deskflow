@@ -9,11 +9,3 @@
 [submodule "ext/pugixml"]
 	path = ext/pugixml
 	url = https://github.com/zeux/pugixml
-
-[submodule "ext/libei"]
-	path = ext/libei
-	url = https://gitlab.freedesktop.org/libinput/libei.git
-
-[submodule "ext/libportal"]
-	path = ext/libportal
-	url = https://github.com/flatpak/libportal.git
