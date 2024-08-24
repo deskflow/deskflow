@@ -186,7 +186,13 @@ macro(configure_wayland_libs)
     set(libportal_build_dir "${libportal_source_dir}/build")
     add_libportal()
     find_library(LIBPORTAL_LIBRARIES libportal PATH ${libportal_build_dir})
-    set(LIBPORTAL_INCLUDE_DIRS ${libportal_source_dir} ${libportal_build_dir})
+    set(LIBPORTAL_INCLUDE_DIRS ${libportal_source_dir})
+
+    # HACK: copy generated enums header (portal-enums.h) to the include dir
+    # so that we can include it without including the build dir (which causes
+    # type declaration conflicts).
+    file(COPY ${libportal_build_dir}/libportal/portal-enums.h
+         DESTINATION ${libportal_source_dir}/libportal)
   endif()
 
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
