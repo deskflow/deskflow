@@ -109,7 +109,7 @@ void EiScreen::handle_ei_log_event(
     LOG_INFO("ei: %s", message);
     break;
   case EI_LOG_PRIORITY_WARNING:
-    LOG((CLOG_WARN"ei: %s", message);
+    LOG((CLOG_WARN "ei: %s", message));
     break;
   case EI_LOG_PRIORITY_ERROR:
     LOG_ERR("ei: %s", message);
