@@ -1,4 +1,4 @@
-# Synergy Core
+# Synergy
 
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy-core)
 [![CI](https://github.com/symless/synergy-core/actions/workflows/ci.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/ci.yml)
@@ -6,11 +6,9 @@
 [![SonarCloud Analysis](https://github.com/symless/synergy-core/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/sonarcloud-analysis.yml)
 [![Build containers](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml/badge.svg)](https://github.com/symless/synergy-core/actions/workflows/build-containers.yml)
 
-[Synergy](https://symless.com/synergy) is a keyboard and mouse sharing tool. 
+[Synergy](https://symless.com/synergy) is a keyboard and mouse sharing app. Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
 
-Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
-
-This project contains the source code for Synergy 1 Community Edition which is actively maintained and free to use (no serial key is required for the community edition).
+This project contains the source code for _Synergy 1 Community Edition_ which is actively maintained, free to use, and does not require a license or serial key.
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
@@ -18,10 +16,9 @@ To use the community edition, install the `synergy` package with your favorite p
 
 Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) in the `#open-source` channel.
 
-* [Download Synergy](https://symless.com/synergy/download)
-* [Contact support](https://symless.com/synergy/contact)
-* [Help articles](https://symless.com/synergy/help)
-* [Project Wiki](https://github.com/symless/synergy-core/wiki)
+* [Read the wiki](https://github.com/symless/synergy/wiki)
+* [Raise an issue](https://github.com/symless/synergy/issues)
+* [Start a discussion](https://github.com/symless/synergy/discussions)
 
 ## Developer Quick Start
 
@@ -70,33 +67,37 @@ cmake --build build -j8
 
 Synergy 1 Community Edition is packaged by the community (status shown below). Package maintainers can use `scripts/package.py` to build packages.
 
-Synergy 2 is no longer in development and should not be provided.
+Synergy 2 is no longer in development and we recommend that package maintainers do not provide it.
 
-For the licensed builds of Synergy 1 and Synergy 3, please use the [official packages](https://symless.com/synergy/download).
+Synergy 3 and Synergy 1 (licensed) are available to download from the [official packages](https://symless.com/synergy/download).
 
-**Windows:**
+**Community edition:**
+
+*Windows:*
 ```
 choco install synergy
 ```
 
-**macOS:**
+*macOS:*
 ```
 brew install synergy
 ```
 
-**Debian, Ubuntu, etc:**
+*Debian, Ubuntu, etc:*
 ```
 sudo apt install synergy
 ```
 
-**Fedora, Red Hat, etc:**
+*Fedora, Red Hat, etc:*
 ```
 sudo dnf install synergy
 ```
 
-**Arch, Manjaro, etc:**
+*Arch, Manjaro, etc:*
 ```
 sudo pacman -Syu synergy
 ```
+
+*Repology:*
 
 [![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg?exclude_unsupported=1)](https://repology.org/project/synergy/versions)
