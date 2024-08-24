@@ -157,6 +157,7 @@ macro(configure_mac_libs)
 
 endmacro()
 
+# TODO: the output is a bit noisy, maybe make it quieter?
 macro(configure_wayland_libs)
 
   include(FindPkgConfig)
@@ -204,12 +205,28 @@ macro(configure_wayland_libs)
 
 endmacro()
 
+macro(check_meson)
+  find_program(MESON_EXECUTABLE meson)
+
+  if(NOT MESON_EXECUTABLE)
+    message(FATAL_ERROR "Meson is not installed")
+  endif()
+endmacro()
+
+# TOOD: perhaps split out the build step so that it's run as a dependency of the
+# platform lib.
 macro(build_libei)
+  check_meson()
 
   set(libei_build_dir "${CMAKE_BINARY_DIR}/libei")
 
-  execute_process(COMMAND meson setup ${libei_build_dir}
-                          ${CMAKE_SOURCE_DIR}/ext/libei RESULT_VARIABLE result)
+  execute_process(
+    COMMAND meson setup ${libei_build_dir} ${CMAKE_SOURCE_DIR}/ext/libei
+    RESULT_VARIABLE libei_setup_result)
+
+  if(NOT libei_setup_result EQUAL 0)
+    message(FATAL_ERROR "Failed to setup/config libei")
+  endif()
 
   execute_process(COMMAND meson compile -C ${libei_build_dir}
                   RESULT_VARIABLE libei_build_result)
@@ -220,13 +237,20 @@ macro(build_libei)
 
 endmacro()
 
+# TOOD: perhaps split out the build step so that it's run as a dependency of the
+# platform lib.
 macro(build_libportal)
+  check_meson()
 
   set(libportal_build_dir "${CMAKE_BINARY_DIR}/libportal")
 
   execute_process(
     COMMAND meson setup ${libportal_build_dir} ${CMAKE_SOURCE_DIR}/ext/libportal
-    RESULT_VARIABLE result)
+    RESULT_VARIABLE libportal_setup_result)
+
+  if(NOT libportal_setup_result EQUAL 0)
+    message(FATAL_ERROR "Failed to setup/config libportal")
+  endif()
 
   execute_process(COMMAND meson compile -C ${libportal_build_dir}
                   RESULT_VARIABLE libportal_build_result)
