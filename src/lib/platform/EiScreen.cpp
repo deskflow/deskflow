@@ -54,7 +54,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
   key_state_ = new EiKeyState(this, events);
   // install event handlers
   events_->add_handler(
-      EventType::SYSTEM, events_->getSystemTarget(),
+      Event::kSystem, events_->getSystemTarget(),
       [this](const auto &e) { handleSystemEvent(e); });
 
   if (use_portal) {
@@ -81,7 +81,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 
 EiScreen::~EiScreen() {
   events_->set_buffer(nullptr);
-  events_->remove_handler(EventType::SYSTEM, events_->getSystemTarget());
+  events_->removeHandler(Event::kSystem, events_->getSystemTarget());
 
   cleanupEi();
 
@@ -467,7 +467,7 @@ void EiScreen::removeDevice(struct ei_device *device) {
 }
 
 void EiScreen::sendEvent(EventType type, EventDataBase *data) {
-  events_->add_event(type, getEventTarget(), data);
+  events_->addEvent(type, getEventTarget(), data);
 }
 
 ButtonID EiScreen::mapButtonFromEvdev(ei_event *event) const {
@@ -505,7 +505,7 @@ bool EiScreen::onHotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask) {
   if (id != 0) {
     EventType type = is_pressed ? EventType::PRIMARY_SCREEN_HOTKEY_DOWN
                                 : EventType::PRIMARY_SCREEN_HOTKEY_UP;
-    events_->add_event(
+    events_->addEvent(
         type, getEventTarget(), create_event_data<HotKeyInfo>(id));
     return true;
   }

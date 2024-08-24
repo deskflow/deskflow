@@ -77,7 +77,7 @@ void PortalRemoteDesktop::cbSessionClosed(XdpSession *session) {
   LOG_ERR("Our RemoteDesktop session was closed, re-connecting.");
   g_signal_handler_disconnect(session, session_signal_id_);
   session_signal_id_ = 0;
-  events_->add_event(EventType::EI_SESSION_CLOSED, screen_->getEventTarget());
+  events_->addEvent(EventType::EI_SESSION_CLOSED, screen_->getEventTarget());
 
   // gcc warning "Suspicious usage of 'sizeof(A*)'" can be ignored
   g_clear_object(&session_);
@@ -93,7 +93,7 @@ void PortalRemoteDesktop::cb_session_started(
   if (!success) {
     LOG_ERR("Failed to start session");
     g_main_loop_quit(glib_main_loop_);
-    events_->add_event(EventType::QUIT);
+    events_->addEvent(Event::kQuit);
     return;
   }
 
@@ -105,12 +105,12 @@ void PortalRemoteDesktop::cb_session_started(
   auto fd = xdp_session_connect_to_eis(session, &error);
   if (fd < 0) {
     g_main_loop_quit(glib_main_loop_);
-    events_->add_event(EventType::QUIT);
+    events_->addEvent(Event::kQuit);
     return;
   }
 
   // Socket ownership is transferred to the EiScreen
-  events_->add_event(
+  events_->addEvent(
       EventType::EI_SCREEN_CONNECTED_TO_EIS, screen_->getEventTarget(),
       create_event_data<int>(fd));
 }
@@ -128,7 +128,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(
     // fails.
     if (session_iteration_ == 0) {
       g_main_loop_quit(glib_main_loop_);
-      events_->add_event(EventType::QUIT);
+      events_->addEvent(Event::kQuit);
     } else {
       this->reconnect(1000);
     }

@@ -18,6 +18,7 @@
 
 #include "platform/PortalInputCapture.h"
 
+#include "base/Event.h"
 #include "base/Log.h"
 #include "platform/PortalInputCapture.h"
 
@@ -118,7 +119,7 @@ int PortalInputCapture::fakeEisFd() {
 void PortalInputCapture::cbSessionClosed(XdpSession *session) {
   LOG_ERR("Our InputCapture session was closed, exiting.");
   g_main_loop_quit(glib_main_loop_);
-  events_->add_event(EventType::QUIT);
+  events_->addEvent(Event::kQuit);
 
   g_signal_handler_disconnect(session, signals_[SESSION_CLOSED]);
   signals_[SESSION_CLOSED] = 0;
@@ -136,7 +137,7 @@ void PortalInputCapture::cbInitInputCaptureSession(
         "Failed to initialize InputCapture session, quitting: %s",
         error->message);
     g_main_loop_quit(glib_main_loop_);
-    events_->add_event(EventType::QUIT);
+    events_->addEvent(Event::kQuit);
     return;
   }
 
@@ -152,12 +153,12 @@ void PortalInputCapture::cbInitInputCaptureSession(
 
     if (fd < 0) {
       g_main_loop_quit(glib_main_loop_);
-      events_->add_event(EventType::QUIT);
+      events_->addEvent(Event::kQuit);
       return;
     }
   }
   // Socket ownership is transferred to the EiScreen
-  events_->add_event(
+  events_->addEvent(
       EventType::EI_SCREEN_CONNECTED_TO_EIS, screen_->getEventTarget(),
       create_event_data<int>(fd));
 
