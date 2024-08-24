@@ -67,33 +67,37 @@ cmake --build build -j8
 
 Synergy 1 Community Edition is packaged by the community (status shown below). Package maintainers can use `scripts/package.py` to build packages.
 
-Synergy 2 is no longer in development and should not be provided by package managers.
+Synergy 2 is no longer in development and we recommend that package maintainers do not provide it.
 
-For the licensed builds of Synergy 1 and Synergy 3, please use the [official packages](https://symless.com/synergy/download).
+Synergy 3 and Synergy 1 (licensed) are available to download from the [official packages](https://symless.com/synergy/download).
 
-**Windows:**
+**Community edition:**
+
+*Windows:*
 ```
 choco install synergy
 ```
 
-**macOS:**
+*macOS:*
 ```
 brew install synergy
 ```
 
-**Debian, Ubuntu, etc:**
+*Debian, Ubuntu, etc:*
 ```
 sudo apt install synergy
 ```
 
-**Fedora, Red Hat, etc:**
+*Fedora, Red Hat, etc:*
 ```
 sudo dnf install synergy
 ```
 
-**Arch, Manjaro, etc:**
+*Arch, Manjaro, etc:*
 ```
 sudo pacman -Syu synergy
 ```
+
+*Repology:*
 
 [![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg?exclude_unsupported=1)](https://repology.org/project/synergy/versions)
