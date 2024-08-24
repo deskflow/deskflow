@@ -29,7 +29,7 @@
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
 
-namespace inputleap {
+namespace synergy {
 
 class PortalInputCapture {
 public:
@@ -103,6 +103,6 @@ private:
   std::vector<XdpInputCapturePointerBarrier *> barriers_;
 };
 
-} // namespace inputleap
+} // namespace synergy
 
 #endif // HAVE_LIBPORTAL_INPUTCAPTURE

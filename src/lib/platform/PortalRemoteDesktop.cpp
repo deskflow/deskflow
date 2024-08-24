@@ -22,7 +22,7 @@
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
 
-namespace inputleap {
+namespace synergy {
 
 PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
     : screen_(screen),
@@ -198,4 +198,4 @@ void PortalRemoteDesktop::glib_thread() {
   }
 }
 
-} // namespace inputleap
+} // namespace synergy

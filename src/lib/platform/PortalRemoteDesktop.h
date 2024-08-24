@@ -32,7 +32,7 @@
 #define XDP_OUTPUT_NONE (XdpOutputType)0
 #endif
 
-namespace inputleap {
+namespace synergy {
 
 class PortalRemoteDesktop {
 public:
@@ -71,4 +71,4 @@ private:
       0; /// The number of successful sessions we've had already
 };
 
-} // namespace inputleap
+} // namespace synergy
