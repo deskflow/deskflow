@@ -109,7 +109,7 @@ void EiScreen::handle_ei_log_event(
     LOG_INFO("ei: %s", message);
     break;
   case EI_LOG_PRIORITY_WARNING:
-    LOG((CLOG_WARN "ei: %s", message));
+    LOG_WARN("ei: %s", message);
     break;
   case EI_LOG_PRIORITY_ERROR:
     LOG_ERR("ei: %s", message);
@@ -129,7 +129,7 @@ void EiScreen::init_ei() {
   ei_set_user_data(ei_, this);
   ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
   ei_log_set_handler(ei_, cb_handle_ei_log_event);
-  ei_configure_name(ei_, "Synergy client");
+  ei_configure_name(ei_, "synergy client");
 
   // install the platform event queue
   events_->set_buffer(nullptr);
@@ -282,7 +282,7 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const {
   if (!ei_pointer_)
     return;
 
-  // libEI and Synergy seem to use opposite directions, so we have
+  // libei and synergy seem to use opposite directions, so we have
   // to send EI the opposite of the value received if we want to remain
   // compatible with other platforms (including X11).
   ei_device_scroll_discrete(ei_pointer_, -xDelta, -yDelta);
@@ -398,7 +398,7 @@ void EiScreen::update_shape() {
     }
   }
 
-  LOG((CLOG_NOTE"Logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
+  LOG_NOTE("logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
   cursor_x_ = x_ + w_ / 2;
   cursor_y_ = y_ + h_ / 2;
 
@@ -435,7 +435,7 @@ void EiScreen::add_device(struct ei_device *device) {
       // code) Where the EIS implementation does not tell us, we just default to
       // whatever libxkbcommon thinks is default. At least this way we can
       // influence with env vars what we get
-      LOG((CLOG_WARN
+      LOG_WARN(
           "keyboard device %s does not have a keymap, we are guessing",
           ei_device_get_name(device));
       key_state_->init_default_keymap();
@@ -533,7 +533,7 @@ void EiScreen::on_key_event(ei_event *event) {
   key_state_->update_xkb_state(keyval, pressed);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
-  LOG((CLOG_DEBUG1 
+  LOG_DEBUG1(
       "event: Key %s keycode=%d keyid=%d mask=0x%x",
       pressed ? "press" : "release", keycode, keyid, mask);
 
@@ -555,8 +555,8 @@ void EiScreen::on_button_event(ei_event *event) {
   bool pressed = ei_event_button_get_is_press(event);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
-  LOG((CLOG_DEBUG1 
-      "event: Button %s button=%d mask=0x%x", pressed ? "press" : "release",
+  LOG_DEBUG1(
+      "event: button %s button=%d mask=0x%x", pressed ? "press" : "release",
       button, mask);
 
   if (button == kButtonNone) {
@@ -586,7 +586,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   double dy = ei_event_scroll_get_dy(event);
   struct ei_device *device = ei_event_get_device(event);
 
-  LOG((CLOG_DEBUG1 "event: Scroll (%.2f, %.2f)", dx, dy);
+  LOG_DEBUG1("event: scroll (%.2f, %.2f)", dx, dy);
 
   struct ScrollRemainder *remainder =
       static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
@@ -598,7 +598,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   dx += remainder->x;
   dy += remainder->y;
 
-  LOG((CLOG_DEBUG1 "event: after remainder (%.2f, %.2f)", dx, dy);
+  LOG_DEBUG1("event: after remainder (%.2f, %.2f)", dx, dy);
 
   double x, y;
   double rx = modf(dx, &x);
@@ -607,9 +607,9 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   assert(!std::isnan(x) && !std::isinf(x));
   assert(!std::isnan(y) && !std::isinf(y));
 
-  LOG((CLOG_DEBUG1 "event: xy is (%.2f, %.2f)", x, y);
+  LOG_DEBUG1("event: xy is (%.2f, %.2f)", x, y);
 
-  // libEI and Synergy seem to use opposite directions, so we have
+  // libei and synergy seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
   if (x != 0 || y != 0)
@@ -621,7 +621,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
 
   remainder->x = rx;
   remainder->y = ry;
-  LOG((CLOG_DEBUG1 "event: remainder is (%.2f, %.2f)", x, y);
+  LOG_DEBUG1("event: remainder is (%.2f, %.2f)", x, y);
 }
 
 void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
@@ -634,9 +634,9 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
   std::int32_t dx = ei_event_scroll_get_discrete_dx(event);
   std::int32_t dy = ei_event_scroll_get_discrete_dy(event);
 
-  LOG((CLOG_DEBUG1 "event: Scroll discrete (%d, %d)", dx, dy);
+  LOG_DEBUG1("event: scroll discrete (%d, %d)", dx, dy);
 
-  // libEI and Synergy seem to use opposite directions, so we have
+  // libei and synergy seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
   send_event(
@@ -693,7 +693,7 @@ void EiScreen::handle_connected_to_eis_event(const Event &event) {
 
   auto rc = ei_setup_backend_fd(ei_, fd);
   if (rc != 0) {
-    LOG((CLOG_NOTE"Failed to set up ei: %s", strerror(-rc));
+    LOG_NOTE("failed to set up ei: %s", strerror(-rc));
   }
 }
 
@@ -754,7 +754,7 @@ void EiScreen::handle_system_event(const Event &sysevent) {
       //
       // We don't do anything here, we let the portal's Session.Closed signal
       // handle the rest.
-      LOG((CLOG_WARN"disconnected from EIS");
+      LOG_WARN("disconnected from eis");
       disconnected = true;
       break;
     case EI_EVENT_DEVICE_PAUSED:
