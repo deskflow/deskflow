@@ -227,6 +227,8 @@ macro(check_git)
   endif()
 endmacro()
 
+# TODO: re-implement in install_deps.py.
+# that way we're not tied to a particular version of libei.
 macro(build_libei)
   include(FetchContent)
 
@@ -265,6 +267,9 @@ macro(build_libei)
 
 endmacro()
 
+# TODO: move to a separate .cmake file and call it from install_deps.py,
+# that way we're not tied to a particular version of libportal, and
+# we can reintroduce the symbol checks to support multiple libportal versions.
 macro(build_libportal)
   include(FetchContent)
 
