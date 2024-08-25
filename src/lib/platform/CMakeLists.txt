@@ -44,7 +44,6 @@ endif()
 include_directories(${inc})
 add_library(platform STATIC ${sources})
 target_link_libraries(platform client ${libs})
-add_dependencies(platform libei libportal)
 
 if(UNIX)
   target_link_libraries(

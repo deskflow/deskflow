@@ -1,5 +1,5 @@
-set(LIBEI_VERSION 1.2.1)
-set(LIBPORTAL_VERSION 0.7)
+set(LIBEI_MIN_VERSION 1.2.1)
+set(LIBPORTAL_MIN_VERSION 0.6)
 
 macro(configure_libs)
 
@@ -165,39 +165,13 @@ macro(configure_wayland_libs)
 
   include(FindPkgConfig)
 
-  # Until libei is generally available in package repos, build it by default.
-  option(SYSTEM_LIBEI "Use system libei" OFF)
-  if(SYSTEM_LIBEI)
-    pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_VERSION}")
-  else()
-    set(libei_source_dir "${CMAKE_BINARY_DIR}/libei")
-    set(libei_build_dir "${libei_source_dir}/build")
-    add_libei()
-    find_library(LIBEI_LIBRARIES libei PATH ${libei_build_dir})
-    set(LIBEI_INCLUDE_DIRS ${libei_source_dir}/src ${libei_build_dir}/libei)
-  endif()
-
-  # Until libportal is generally available in package repos, build it by default.
-  option(SYSTEM_LIBPORTAL "Use system libportal" OFF)
-  if(SYSTEM_LIBPORTAL)
-    pkg_check_modules(LIBPORTAL REQUIRED "libportal-1 >= ${LIBPORTAL_VERSION}")
-  else()
-    set(libportal_source_dir "${CMAKE_BINARY_DIR}/libportal")
-    set(libportal_build_dir "${libportal_source_dir}/build")
-    add_libportal()
-    find_library(LIBPORTAL_LIBRARIES libportal PATH ${libportal_build_dir})
-    set(LIBPORTAL_INCLUDE_DIRS ${libportal_source_dir})
-
-    # HACK: copy generated enums header (portal-enums.h) to the include dir
-    # so that we can include it without including the build dir (which causes
-    # type declaration conflicts).
-    file(COPY ${libportal_build_dir}/libportal/portal-enums.h
-         DESTINATION ${libportal_source_dir}/libportal)
-  endif()
-
+  pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+  pkg_check_modules(LIBPORTAL REQUIRED "libportal >= ${LIBPORTAL_MIN_VERSION}")
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
   pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
   find_library(LIBM m)
+
+  check_libportal()
 
   include_directories(
     ${LIBXKBCOMMON_INCLUDE_DIRS}
@@ -236,42 +210,7 @@ macro(check_git)
   endif()
 endmacro()
 
-macro(add_libei)
-  include(ExternalProject)
-
-  check_meson()
-  check_git()
-
-  message(STATUS "Adding libei ${LIBEI_VERSION}")
-
-  ExternalProject_Add(
-    libei
-    GIT_REPOSITORY https://gitlab.freedesktop.org/libinput/libei.git
-    GIT_TAG ${LIBEI_VERSION}
-    SOURCE_DIR ${libei_source_dir}
-    CONFIGURE_COMMAND meson setup ${libei_build_dir} ${libei_source_dir}
-    BUILD_COMMAND meson compile -C ${libei_build_dir}
-    INSTALL_COMMAND "")
-
-endmacro()
-
-macro(add_libportal)
-  include(ExternalProject)
-
-  check_meson()
-  check_git()
-
-  message(STATUS "Adding libportal ${LIBPORTAL_VERSION}")
-
-  ExternalProject_Add(
-    libportal
-    GIT_REPOSITORY https://github.com/flatpak/libportal.git
-    GIT_TAG ${LIBPORTAL_VERSION}
-    SOURCE_DIR ${libportal_source_dir}
-    CONFIGURE_COMMAND meson setup ${libportal_build_dir} ${libportal_source_dir}
-    BUILD_COMMAND meson compile -C ${libportal_build_dir}
-    INSTALL_COMMAND "")
-
+macro(check_libportal)
   # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
   # the inputcapture code, so let's check for explicit functions that bits depending on what we have
   include(CMakePushCheckState)
