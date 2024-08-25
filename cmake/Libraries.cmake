@@ -1,6 +1,5 @@
-set(LIBEI_MIN_VERSION 0.99.1)
-set(LIBEI_TAG 1.2.1)
-set(LIBPORTAL_TAG a1530a9)
+set(LIBEI_VERSION 1.2.1)
+set(LIBPORTAL_VERSION 0.7)
 
 macro(configure_libs)
 
@@ -169,11 +168,11 @@ macro(configure_wayland_libs)
   # Until libei is generally available in package repos, build it by default.
   option(SYSTEM_LIBEI "Use system libei" OFF)
   if(SYSTEM_LIBEI)
-    pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+    pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_VERSION}")
   else()
     set(libei_source_dir "${CMAKE_BINARY_DIR}/libei")
     set(libei_build_dir "${libei_source_dir}/build")
-    build_libei()
+    add_libei()
     find_library(LIBEI_LIBRARIES libei PATH ${libei_build_dir})
     set(LIBEI_INCLUDE_DIRS ${libei_source_dir}/src ${libei_build_dir}/libei)
   endif()
@@ -181,9 +180,19 @@ macro(configure_wayland_libs)
   # Until libportal is generally available in package repos, build it by default.
   option(SYSTEM_LIBPORTAL "Use system libportal" OFF)
   if(SYSTEM_LIBPORTAL)
-    pkg_check_modules(LIBPORTAL REQUIRED libportal)
+    pkg_check_modules(LIBPORTAL REQUIRED "libportal-1 >= ${LIBPORTAL_VERSION}")
   else()
-    build_libportal()
+    set(libportal_source_dir "${CMAKE_BINARY_DIR}/libportal")
+    set(libportal_build_dir "${libportal_source_dir}/build")
+    add_libportal()
+    find_library(LIBPORTAL_LIBRARIES libportal PATH ${libportal_build_dir})
+    set(LIBPORTAL_INCLUDE_DIRS ${libportal_source_dir})
+
+    # HACK: copy generated enums header (portal-enums.h) to the include dir
+    # so that we can include it without including the build dir (which causes
+    # type declaration conflicts).
+    file(COPY ${libportal_build_dir}/libportal/portal-enums.h
+         DESTINATION ${libportal_source_dir}/libportal)
   endif()
 
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
@@ -227,97 +236,67 @@ macro(check_git)
   endif()
 endmacro()
 
-# TODO: re-implement in install_deps.py.
-# that way we're not tied to a particular version of libei.
-macro(build_libei)
-  include(FetchContent)
+macro(add_libei)
+  include(ExternalProject)
 
   check_meson()
   check_git()
 
-  message(STATUS "Building libei ${LIBEI_TAG}")
+  message(STATUS "Adding libei ${LIBEI_VERSION}")
 
-  FetchContent_Declare(
+  ExternalProject_Add(
     libei
     GIT_REPOSITORY https://gitlab.freedesktop.org/libinput/libei.git
-    GIT_TAG ${LIBEI_TAG}
-    SOURCE_DIR ${libei_source_dir})
-
-  FetchContent_MakeAvailable(libei)
-
-  execute_process(
-    COMMAND meson setup ${libei_build_dir} ${libei_source_dir}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    RESULT_VARIABLE libei_setup_result
-    OUTPUT_QUIET)
-
-  if(NOT libei_setup_result EQUAL "0")
-    message(FATAL_ERROR "Meson setup failed: ${libei_setup_result}")
-  endif()
-
-  execute_process(
-    COMMAND meson compile -C ${libei_build_dir}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    RESULT_VARIABLE libei_compile_result
-    OUTPUT_QUIET)
-
-  if(NOT libei_compile_result EQUAL "0")
-    message(FATAL_ERROR "Meson compile failed: ${libei_compile_result}")
-  endif()
+    GIT_TAG ${LIBEI_VERSION}
+    SOURCE_DIR ${libei_source_dir}
+    CONFIGURE_COMMAND meson setup ${libei_build_dir} ${libei_source_dir}
+    BUILD_COMMAND meson compile -C ${libei_build_dir}
+    INSTALL_COMMAND "")
 
 endmacro()
 
-# TODO: move to a separate .cmake file and call it from install_deps.py,
-# that way we're not tied to a particular version of libportal, and
-# we can reintroduce the symbol checks to support multiple libportal versions.
-macro(build_libportal)
-  include(FetchContent)
-
-  set(libportal_source_dir "${CMAKE_BINARY_DIR}/libportal")
-  set(libportal_build_dir "${libportal_source_dir}/build")
+macro(add_libportal)
+  include(ExternalProject)
 
   check_meson()
   check_git()
 
-  message(STATUS "Building libportal ${LIBPORTAL_TAG}")
+  message(STATUS "Adding libportal ${LIBPORTAL_VERSION}")
 
-  FetchContent_Declare(
+  ExternalProject_Add(
     libportal
     GIT_REPOSITORY https://github.com/flatpak/libportal.git
-    GIT_TAG ${LIBPORTAL_TAG}
-    SOURCE_DIR ${libportal_source_dir})
+    GIT_TAG ${LIBPORTAL_VERSION}
+    SOURCE_DIR ${libportal_source_dir}
+    CONFIGURE_COMMAND meson setup ${libportal_build_dir} ${libportal_source_dir}
+    BUILD_COMMAND meson compile -C ${libportal_build_dir}
+    INSTALL_COMMAND "")
 
-  FetchContent_MakeAvailable(libportal)
+  # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
+  # the inputcapture code, so let's check for explicit functions that bits depending on what we have
+  include(CMakePushCheckState)
+  include(CheckCXXSourceCompiles)
+  cmake_push_check_state(RESET)
+  set(CMAKE_REQUIRED_INCLUDES
+      "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}"
+  )
+  set(CMAKE_REQUIRED_LIBRARIES
+      "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}"
+  )
+  check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h"
+                      HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+  check_symbol_exists(
+    xdp_portal_create_remote_desktop_session_full "libportal/portal.h"
+    HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+  check_symbol_exists(xdp_input_capture_session_connect_to_eis
+                      "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
 
-  execute_process(
-    COMMAND meson setup ${libportal_build_dir} ${libportal_source_dir}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    RESULT_VARIABLE libportal_setup_result
-    OUTPUT_QUIET)
-
-  if(NOT libportal_setup_result EQUAL "0")
-    message(FATAL_ERROR "Meson setup failed: ${libportal_setup_result}")
-  endif()
-
-  execute_process(
-    COMMAND meson compile -C ${libportal_build_dir}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    RESULT_VARIABLE libportal_compile_result
-    OUTPUT_QUIET)
-
-  if(NOT libportal_compile_result EQUAL "0")
-    message(FATAL_ERROR "Meson compile failed: ${libportal_compile_result}")
-  endif()
-
-  # HACK: copy generated enums header (portal-enums.h) to the include dir
-  # so that we can include it without including the build dir (which causes
-  # type declaration conflicts).
-  file(COPY ${libportal_build_dir}/libportal/portal-enums.h
-       DESTINATION ${libportal_source_dir}/libportal)
-
-  find_library(LIBPORTAL_LIBRARIES libportal PATH ${libportal_build_dir})
-  set(LIBPORTAL_INCLUDE_DIRS ${libportal_source_dir})
-  include_directories(${LIBPORTAL_INCLUDE_DIRS})
+  # check_symbol_exists can’t check for enum values
+  check_cxx_source_compiles(
+    "#include <libportal/portal.h>
+        int main() { XdpOutputType out = XDP_OUTPUT_NONE; }
+    " HAVE_LIBPORTAL_OUTPUT_NONE)
+  cmake_pop_check_state()
 
 endmacro()
 

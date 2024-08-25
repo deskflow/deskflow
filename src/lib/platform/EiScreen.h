@@ -37,7 +37,12 @@ namespace synergy {
 class EiClipboard;
 class EiKeyState;
 class PortalRemoteDesktop;
+#if HAVE_LIBPORTAL_INPUTCAPTURE
 class PortalInputCapture;
+#endif
+
+// HACK: workaround until we implement event target.
+using EventTarget = void;
 
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen {
@@ -46,7 +51,7 @@ public:
   ~EiScreen();
 
   // IScreen overrides
-  void *getEventTarget() const override;
+  const EventTarget *get_event_target() const;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
   void getShape(
       std::int32_t &x, std::int32_t &y, std::int32_t &width,
@@ -88,41 +93,41 @@ public:
 
 protected:
   // IPlatformScreen overrides
-  void handleSystemEvent(const Event &event, void *) override;
-  void handleConnectedToEisEvent(const Event &event);
-  void handlePortalSessionClosed(const Event &event);
+  void handle_system_event(const Event &event) override;
+  void handle_connected_to_eis_event(const Event &event);
+  void handle_portal_session_closed(const Event &event);
   void updateButtons() override;
   IKeyState *getKeyState() const override;
 
-  void updateShape();
-  void addDevice(ei_device *device);
-  void removeDevice(ei_device *device);
+  void update_shape();
+  void add_device(ei_device *device);
+  void remove_device(ei_device *device);
 
 private:
-  void initEi();
-  void cleanupEi();
-  void sendEvent(Event::Type type, void *data);
-  ButtonID mapButtonFromEvdev(ei_event *event) const;
-  void onKeyEvent(ei_event *event);
-  void onButtonEvent(ei_event *event);
-  void sendWheelEvents(
+  void init_ei();
+  void cleanup_ei();
+  void send_event(EventType type, EventDataBase *data);
+  ButtonID map_button_from_evdev(ei_event *event) const;
+  void on_key_event(ei_event *event);
+  void on_button_event(ei_event *event);
+  void send_wheel_events(
       ei_device *device, const int threshold, double dx, double dy,
       bool is_discrete);
-  void onPointerScrollEvent(ei_event *event);
-  void onPointerScrollDiscreteEvent(ei_event *event);
-  void onMotionEvent(ei_event *event);
-  void onAbsMotionEvent(ei_event *event);
-  bool onHotkey(KeyID key, bool is_press, KeyModifierMask mask);
+  void on_pointer_scroll_event(ei_event *event);
+  void on_pointer_scroll_discrete_event(ei_event *event);
+  void on_motion_event(ei_event *event);
+  void on_abs_motion_event(ei_event *event);
+  bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
 
-  void handleEiLogEvent(
+  void handle_ei_log_event(
       ei *ei, ei_log_priority priority, const char *message,
       ei_log_context *context);
 
-  static void cbHandleEiLogEvent(
+  static void cb_handle_ei_log_event(
       ei *ei, ei_log_priority priority, const char *message,
       ei_log_context *context) {
     auto screen = reinterpret_cast<EiScreen *>(ei_get_user_data(ei));
-    screen->handleEiLogEvent(ei, priority, message, context);
+    screen->handle_ei_log_event(ei, priority, message, context);
   }
 
 private:
@@ -162,7 +167,9 @@ private:
   mutable std::mutex mutex_;
 
   PortalRemoteDesktop *portal_remote_desktop_ = nullptr;
+#if HAVE_LIBPORTAL_INPUTCAPTURE
   PortalInputCapture *portal_input_capture_ = nullptr;
+#endif
 
   struct HotKeyItem {
   public:

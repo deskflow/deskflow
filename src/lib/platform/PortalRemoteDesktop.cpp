@@ -29,7 +29,7 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
       events_(events),
       portal_(xdp_portal_new()) {
   glib_main_loop_ = g_main_loop_new(nullptr, true);
-  glibThread_ = new Thread([this]() { glibThread(); });
+  glib_thread_ = new Thread([this]() { glib_thread(); });
 
   reconnect(0);
 }
@@ -38,11 +38,11 @@ PortalRemoteDesktop::~PortalRemoteDesktop() {
   if (g_main_loop_is_running(glib_main_loop_))
     g_main_loop_quit(glib_main_loop_);
 
-  if (glibThread_ != nullptr) {
-    glibThread_->cancel();
-    glibThread_->wait();
-    delete glibThread_;
-    glibThread_ = nullptr;
+  if (glib_thread_ != nullptr) {
+    glib_thread_->cancel();
+    glib_thread_->wait();
+    delete glib_thread_;
+    glib_thread_ = nullptr;
 
     g_main_loop_unref(glib_main_loop_);
     glib_main_loop_ = nullptr;
@@ -57,7 +57,7 @@ PortalRemoteDesktop::~PortalRemoteDesktop() {
   free(session_restore_token_);
 }
 
-gboolean PortalRemoteDesktop::timeoutHandler() {
+gboolean PortalRemoteDesktop::timeout_handler() {
   return true; // keep re-triggering
 }
 
@@ -73,7 +73,7 @@ void PortalRemoteDesktop::reconnect(unsigned int timeout) {
     g_idle_add(init_cb, this);
 }
 
-void PortalRemoteDesktop::cbSessionClosed(XdpSession *session) {
+void PortalRemoteDesktop::cb_session_closed(XdpSession *session) {
   LOG_ERR("Our RemoteDesktop session was closed, re-connecting.");
   g_signal_handler_disconnect(session, session_signal_id_);
   session_signal_id_ = 0;
@@ -102,7 +102,10 @@ void PortalRemoteDesktop::cb_session_started(
   // ConnectToEIS requires version 2 of the xdg-desktop-portal (and the same
   // version in the impl.portal), i.e. you'll need an updated compositor on
   // top of everything...
-  auto fd = xdp_session_connect_to_eis(session, &error);
+  auto fd = -1;
+#if HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS
+  fd = xdp_session_connect_to_eis(session, &error);
+#endif
   if (fd < 0) {
     g_main_loop_quit(glib_main_loop_);
     events_->addEvent(Event::kQuit);
@@ -141,7 +144,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(
   // FIXME: the lambda trick doesn't work here for unknown reasons, we need
   // the static function
   session_signal_id_ = g_signal_connect(
-      G_OBJECT(session), "closed", G_CALLBACK(cbSessionClosedCb), this);
+      G_OBJECT(session), "closed", G_CALLBACK(cb_session_closed_cb), this);
 
   LOG_DEBUG("Session ready, starting");
   xdp_session_start(
@@ -154,6 +157,18 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(
       },
       this);
 }
+
+#if !defined(HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+static inline void xdp_portal_create_remote_desktop_session_full(
+    XdpPortal *portal, XdpDeviceType devices, XdpOutputType outputs,
+    XdpRemoteDesktopFlags flags, XdpCursorMode cursor_mode,
+    XdpPersistMode _unused1, const char *_unused2, GCancellable *cancellable,
+    GAsyncReadyCallback callback, gpointer data) {
+  xdp_portal_create_remote_desktop_session(
+      portal, devices, outputs, flags, cursor_mode, cancellable, callback,
+      data);
+}
+#endif
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session() {
   LOG_DEBUG(
@@ -174,7 +189,7 @@ gboolean PortalRemoteDesktop::init_remote_desktop_session() {
   return false; // don't reschedule
 }
 
-void PortalRemoteDesktop::glibThread() {
+void PortalRemoteDesktop::glib_thread() {
   auto context = g_main_loop_get_context(glib_main_loop_);
 
   while (g_main_loop_is_running(glib_main_loop_)) {

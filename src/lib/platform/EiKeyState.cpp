@@ -38,10 +38,10 @@ EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
   // one during initial startup - even before we know what our actual keymap is.
   // Once we get the actual keymap from EIS, we swap it out so hopefully that's
   // enough.
-  initDefaultKeymap();
+  init_default_keymap();
 }
 
-void EiKeyState::initDefaultKeymap() {
+void EiKeyState::init_default_keymap() {
   if (xkb_keymap_) {
     xkb_keymap_unref(xkb_keymap_);
   }
@@ -75,7 +75,7 @@ void EiKeyState::init(int fd, size_t len) {
   if (!keymap) {
     LOG_NOTE("failed to compile keymap, falling back to defaults");
     // Falling back to layout "us" is a lot more useful than segfaulting
-    initDefaultKeymap();
+    init_default_keymap();
     return;
   }
 
@@ -104,7 +104,7 @@ bool EiKeyState::fakeCtrlAltDel() {
 KeyModifierMask EiKeyState::pollActiveModifiers() const {
   std::uint32_t xkb_mask =
       xkb_state_serialize_mods(xkb_state_, XKB_STATE_MODS_EFFECTIVE);
-  return convertModMask(xkb_mask);
+  return convert_mod_mask(xkb_mask);
 }
 
 std::int32_t EiKeyState::pollActiveGroup() const {
@@ -116,7 +116,7 @@ void EiKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const {
   return;
 }
 
-std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const {
+std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const {
   std::uint32_t barrier_mask = 0;
 
   for (xkb_mod_index_t xkbmod = 0; xkbmod < xkb_keymap_num_mods(xkb_keymap_);
@@ -143,7 +143,7 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const {
 // Only way to figure out whether a key is a modifier key is to press it,
 // check if a modifier changed state and then release it again.
 // Luckily xkbcommon allows us to do this in a separate
-void EiKeyState::assignGeneratedModifiers(
+void EiKeyState::assign_generated_modifiers(
     std::uint32_t keycode, synergy::KeyMap::KeyItem &item) {
   std::uint32_t mods_generates = 0;
   auto state = xkb_state_new(xkb_keymap_);
@@ -163,7 +163,7 @@ void EiKeyState::assignGeneratedModifiers(
   xkb_state_update_key(state, keycode, XKB_KEY_UP);
   xkb_state_unref(state);
 
-  item.m_generates = convertModMask(mods_generates);
+  item.m_generates = convert_mod_mask(mods_generates);
 }
 
 void EiKeyState::getKeyMap(synergy::KeyMap &keyMap) {
@@ -213,15 +213,15 @@ void EiKeyState::getKeyMap(synergy::KeyMap &keyMap) {
         for (auto n = 0U; n < nmasks; n++) {
           mods_sensitive |= masks[n];
         }
-        item.m_sensitive = convertModMask(mods_sensitive);
+        item.m_sensitive = convert_mod_mask(mods_sensitive);
 
         uint32_t mods_required = 0;
         for (std::size_t m = 0; m < nmasks; m++) {
           mods_required |= masks[m];
         }
-        item.m_required = convertModMask(mods_required);
+        item.m_required = convert_mod_mask(mods_required);
 
-        assignGeneratedModifiers(keycode, item);
+        assign_generated_modifiers(keycode, item);
 
         // add capslock version of key is sensitive to capslock
         if (item.m_sensitive & KeyModifierShift &&
@@ -257,8 +257,8 @@ void EiKeyState::fakeKey(const Keystroke &keystroke) {
   }
 }
 
-KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const {
-  LOG_DEBUG1("mapKeyFromKeyval keyval=%d", keyval);
+KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const {
+  LOG_DEBUG1("map_key_from_keyval keyval=%d", keyval);
 
   // FIXME: That might be a bit crude...?
   xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(xkb_state_, keyval);
@@ -271,8 +271,8 @@ KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const {
   return keyid;
 }
 
-void EiKeyState::updateXkbState(uint32_t keyval, bool is_pressed) {
-  LOG_DEBUG1("updateXkbState keyval=%d pressed=%i", keyval, is_pressed);
+void EiKeyState::update_xkb_state(uint32_t keyval, bool is_pressed) {
+  LOG_DEBUG1("update_xkb_state keyval=%d pressed=%i", keyval, is_pressed);
   xkb_state_update_key(
       xkb_state_, keyval, is_pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }
