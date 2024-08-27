@@ -18,4 +18,4 @@ def compile():
 def install():
     has_sudo = cmd_utils.has_command("sudo")
     sudo = "sudo" if has_sudo else ""
-    cmd_utils.run([sudo, meson_bin, "install", "-C", build_dir], print_cmd=True)
+    cmd_utils.run([sudo, "ninja", "-C", build_dir, "install"], print_cmd=True)
