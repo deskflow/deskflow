@@ -28,7 +28,7 @@ config:
           sudo apt-get install -y \
           cmake \
           make \
-          ninja \
+          ninja-build \
           g++ \
           xorg-dev \
           libx11-dev \
