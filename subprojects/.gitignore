@@ -3,6 +3,10 @@
 /googletest-*
 /pugixml-*
 /WinToast-*
+/libei
+/libportal
+/gi-docgen
+/munit
 
 # Added by dependencies.
 /gi-docgen.wrap
