@@ -22,6 +22,8 @@ depends=(
   'hicolor-icon-theme'
   'qt6-base'
   'qt6-tools'
+  'libei'
+  'libportal'
 )
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
 options=('!debug')

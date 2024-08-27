@@ -166,6 +166,7 @@ config:
           gtest \
           pugixml \
           libportal \
+          libei \
           systemd \
           qt6-base \
           qt6-tools \
