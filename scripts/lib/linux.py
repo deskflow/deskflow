@@ -29,7 +29,7 @@ def run_command(command, check=True):
     cmd_utils.run(command, check, shell=True, print_cmd=True)
 
 
-def package(filename_base, package_type: PackageType):
+def package(filename_base, package_type: PackageType, leave_test_installed=False):
 
     extension, cmd = get_package_info(package_type)
     run_package_cmd(cmd)
@@ -38,7 +38,7 @@ def package(filename_base, package_type: PackageType):
     target_path = copy_to_dist_dir(package_filename, target_file)
 
     if package_type == PackageType.DISTRO:
-        test_install(target_path)
+        test_install(target_path, remove_test=not leave_test_installed)
 
 
 def get_package_info(package_type: PackageType):
@@ -113,7 +113,7 @@ def copy_to_dist_dir(source_file, target_file):
     return target_path
 
 
-def test_install(package_file):
+def test_install(package_file, remove_test=True):
 
     distro, distro_like, _distro_version = env.get_linux_distro()
     if not distro_like:
@@ -151,5 +151,11 @@ def test_install(package_file):
     except Exception:
         raise RuntimeError("Unable to verify version")
     finally:
-        cmd_utils.run(sudo + remove_pre + [package_name], check=True, print_cmd=True)
+        if remove_test:
+            cmd_utils.run(
+                sudo + remove_pre + [package_name], check=True, print_cmd=True
+            )
+        else:
+            print("Leaving test package installed")
+
         print("Installation test passed")

@@ -91,18 +91,21 @@ macro(configure_linux_packaging)
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-  set(deb_libei_dep "libei-1.0 (>= 1.0)")
+  set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
+  set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
+
+  set(deb_deps)
+  set(rpm_deps)
+
+  configure_libei_package_dep()
 
   # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
   # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
   # 12), so we must add it manually.
-  set(deb_qt_dep "qt6-qpa-plugins")
+  list(APPEND deb_deps "qt6-qpa-plugins")
 
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "${deb_qt_dep};${deb_libei_dep}")
-
-  set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
-  set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
-  set(CPACK_RPM_PACKAGE_REQUIRES "libei-1.0 >= 1.0")
+  string(JOIN ";" CPACK_DEBIAN_PACKAGE_DEPENDS ${deb_deps})
+  string(JOIN ";" CPACK_RPM_PACKAGE_REQUIRES ${rpm_deps})
 
   # The default for CMake seems to be /usr/local, which seems uncommon. While
   # the default /usr/local prefix causes the app to appear on Debian and Fedora,
@@ -114,17 +117,35 @@ macro(configure_linux_packaging)
   install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
   install(FILES res/synergy.png DESTINATION share/pixmaps)
 
-  option(SYSTEM_LIBEI "Use system libei" OFF)
-  if(NOT SYSTEM_LIBEI)
-    # Bundle libei with the app for now until the package becomes widely available.
-    install(
-      FILES ${LIBEI_LIBRARIES}
-      DESTINATION lib
-      COMPONENT libraries)
-  endif()
-
   # Prepare PKGBUILD for Arch Linux
   configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
+
+endmacro()
+
+macro(configure_libei_package_dep)
+
+  # By default, bundle libei if the project was fetched, otherwise system libei is used.
+  # The project is only fetched and built if Meson wasn't able to find it on the system.
+  file(GLOB libei_project_exists ${CMAKE_SOURCE_DIR}/subprojects/libei)
+  if(libei_project_exists)
+    set(DEFAULT_BUNDLE_LIBEI ON)
+  else()
+    set(DEFAULT_BUNDLE_LIBEI OFF)
+  endif()
+
+  option(BUNDLE_LIBEI "Bundle libei" ${DEFAULT_BUNDLE_LIBEI})
+  if(BUNDLE_LIBEI)
+    find_library(libei_lib_file NAMES ei)
+    get_filename_component(libei_lib_file_real ${libei_lib_file} REALPATH)
+    message(STATUS "Package will bundle libei: ${libei_lib_file_real}")
+    install(
+      FILES ${libei_lib_file_real}
+      DESTINATION lib
+      COMPONENT libraries)
+  else()
+    list(APPEND deb_deps "libei-1.0 (>= 1.0)")
+    list(APPEND rpm_deps "libei-1.0 >= 1.0")
+  endif()
 
 endmacro()
 
