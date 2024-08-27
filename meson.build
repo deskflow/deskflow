@@ -4,28 +4,30 @@
 project('synergy', 'cpp')
 
 gtest = dependency('gtest', required: false)
-gmock = dependency('gmock', required: false)
-pugixml = dependency('pugixml', required: false)
-wintoast = dependency('wintoast', required: false)
-libei = dependency('libei-1.0', required: false)
-libportal = dependency('libportal', required: false)
-
-if not gtest.found() or not gmock.found()
+if not gtest.found()
   subproject('gtest')
 endif
 
-if not pugixml.found()
-  subproject('pugixml')
+if host_machine.system() == 'windows'
+  wintoast = dependency('wintoast', required: false)
+  if not wintoast.found()
+    subproject('wintoast')
+  endif
 endif
 
-if not wintoast.found()
-  subproject('wintoast')
-endif
+if host_machine.system() == 'linux'
+  pugixml = dependency('pugixml', required: false)
+  if not pugixml.found()
+    subproject('pugixml')
+  endif
 
-if not libei.found()
-  subproject('libei')
-endif
+  libei = dependency('libei-1.0', required: false)
+  if not libei.found()
+    subproject('libei')
+  endif
 
-if not libportal.found()
-  subproject('libportal')
+  libportal = dependency('libportal', required: false)
+  if not libportal.found()
+    subproject('libportal')
+  endif
 endif
