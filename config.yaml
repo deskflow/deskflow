@@ -44,6 +44,7 @@ config:
           qt6-base-dev \
           qt6-tools-dev \
           libgtk-3-dev \
+          libgtest-dev \
           libpugixml-dev \
           libportal-dev \
           libsystemd-dev
@@ -75,6 +76,7 @@ config:
           qt6-qtbase-devel \
           qt6-qttools-devel \
           gtk3-devel \
+          gtest-devel \
           pugixml-devel \
           libportal-devel \
           systemd-devel
@@ -107,6 +109,7 @@ config:
           qt6-qtbase-devel \
           qt6-qttools-devel \
           gtk3-devel \
+          gtest-devel \
           pugixml-devel \
           systemd-devel
 
@@ -140,6 +143,7 @@ config:
           qt6-base-devel \
           qt6-tools-devel \
           gtk3-devel \
+          gtest-devel \
           pugixml-devel \
           libportal-devel \
           systemd-devel
@@ -159,6 +163,7 @@ config:
           libxtst \
           libnotify \
           libxkbfile \
+          gtest \
           pugixml \
           libportal \
           systemd \
