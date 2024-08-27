@@ -45,6 +45,7 @@ config:
           qt6-tools-dev \
           libgtk-3-dev \
           libgtest-dev \
+          libgmock-dev \
           libpugixml-dev \
           libportal-dev \
           libsystemd-dev
@@ -77,6 +78,7 @@ config:
           qt6-qttools-devel \
           gtk3-devel \
           gtest-devel \
+          gmock-devel \
           pugixml-devel \
           libportal-devel \
           systemd-devel
@@ -110,6 +112,7 @@ config:
           qt6-qttools-devel \
           gtk3-devel \
           gtest-devel \
+          gmock-devel \
           pugixml-devel \
           systemd-devel
 
