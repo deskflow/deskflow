@@ -28,8 +28,8 @@ config:
           sudo apt-get install -y \
           cmake \
           make \
-          g++ \
           ninja \
+          g++ \
           xorg-dev \
           libx11-dev \
           libxtst-dev \

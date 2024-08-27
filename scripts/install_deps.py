@@ -36,32 +36,37 @@ def main():
     env.install_requirements()
 
     error = False
-    if not args.skip_system:
-        try:
+    try:
+        if not args.skip_system:
             deps = Dependencies(args.ci_env)
             deps.install()
-        except Exception:
-            traceback.print_exc()
-            error = True
 
-    # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
-    # we fully switch from CMake to Meson. For the meantime, Meson will install the deps
-    # so that CMake can find them easily. Once we switch to Meson, it might be possible for
-    # Meson handle the deps resolution, so that we won't need to install them on the system.
-    if not args.skip_meson:
-        meson.setup()
+        if not args.skip_meson:
+            run_meson()
 
-        # Only compile and install on Linux for now, since we're only using Meson to fetch
-        # the deps on Windows and macOS.
-        if env.is_linux():
-            meson.compile()
-            meson.install()
+    except Exception:
+        traceback.print_exc()
+        error = True
 
     if args.pause_on_exit:
         input("Press enter to continue...")
 
     if error:
         sys.exit(1)
+
+
+# It's a bit weird to use Meson just for installing deps, but it's a stopgap until
+# we fully switch from CMake to Meson. For the meantime, Meson will install the deps
+# so that CMake can find them easily. Once we switch to Meson, it might be possible for
+# Meson handle the deps resolution, so that we won't need to install them on the system.
+def run_meson():
+    meson.setup()
+
+    # Only compile and install on Linux for now, since we're only using Meson to fetch
+    # the deps on Windows and macOS.
+    if env.is_linux():
+        meson.compile()
+        meson.install()
 
 
 class Dependencies:
