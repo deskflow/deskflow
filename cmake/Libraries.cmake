@@ -163,9 +163,6 @@ macro(configure_wayland_libs)
 
   include(FindPkgConfig)
 
-  set(ENV{PKG_CONFIG_PATH}
-      "/path/to/your/pkgconfig/directory:$ENV{PKG_CONFIG_PATH}")
-
   pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
   pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
