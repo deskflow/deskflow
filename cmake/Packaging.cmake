@@ -142,9 +142,12 @@ macro(configure_libei_package_dep)
       FILES ${libei_lib_file_real}
       DESTINATION lib
       COMPONENT libraries)
+
+    # Disable RPM dependency on libei, as it's bundled.
+    set(CPACK_RPM_SPEC_MORE_DEFINE "%define __requires_exclude libei")
   else()
-    list(APPEND deb_deps "libei-1.0 (>= 1.0)")
-    list(APPEND rpm_deps "libei-1.0 >= 1.0")
+    list(APPEND deb_deps "libei (>= 1.0)")
+    list(APPEND rpm_deps "libei >= 1.0")
   endif()
 
 endmacro()
