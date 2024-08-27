@@ -47,6 +47,14 @@ include_directories(${inc})
 add_library(platform STATIC ${sources})
 target_link_libraries(platform client ${libs})
 
+macro(link_wayland_libs)
+  target_link_libraries(platform ei)
+
+  if(LIBPORTAL_FOUND)
+    target_link_libraries(platform portal)
+  endif()
+endmacro()
+
 if(UNIX)
   target_link_libraries(
     platform
@@ -61,8 +69,7 @@ if(UNIX)
     find_package(Qt6 COMPONENTS DBus)
     target_link_libraries(platform Qt6::DBus)
 
-    # Libraries for Wayland support
-    target_link_libraries(platform ei portal)
+    link_wayland_libs()
   endif()
 endif()
 
