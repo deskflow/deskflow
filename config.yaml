@@ -63,7 +63,7 @@ config:
           gcc-c++ \
           rpm-build \
           python3-attrs \
-          python3-jinja \
+          python3-Jinja2 \
           openssl-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
