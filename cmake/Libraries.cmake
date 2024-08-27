@@ -420,38 +420,36 @@ endmacro()
 
 macro(configure_coverage)
 
-  if(NOT ENABLE_COVERAGE)
+  if(ENABLE_COVERAGE)
+    message(STATUS "Enabling code coverage")
+    include(cmake/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+    set(test_exclude subprojects/* build/* src/test/*)
+    set(test_src ${PROJECT_SOURCE_DIR}/src)
+
+    setup_target_for_coverage_gcovr_xml(
+      NAME
+      coverage-${INTEG_TESTS_BIN}
+      EXECUTABLE
+      ${INTEG_TESTS_BIN}
+      BASE_DIRECTORY
+      ${test_src}
+      EXCLUDE
+      ${test_exclude})
+
+    setup_target_for_coverage_gcovr_xml(
+      NAME
+      coverage-${UNIT_TESTS_BIN}
+      EXECUTABLE
+      ${UNIT_TESTS_BIN}
+      BASE_DIRECTORY
+      ${test_src}
+      EXCLUDE
+      ${test_exclude})
+
+  else()
     message(STATUS "Code coverage is disabled")
-    return()
   endif()
-
-  message(STATUS "Code coverage is disabled")
-  message(STATUS "Enabling code coverage")
-  include(cmake/CodeCoverage.cmake)
-  append_coverage_compiler_flags()
-  set(test_exclude subprojects/* build/* src/test/*)
-  set(test_src ${PROJECT_SOURCE_DIR}/src)
-
-  setup_target_for_coverage_gcovr_xml(
-    NAME
-    coverage-${INTEG_TESTS_BIN}
-    EXECUTABLE
-    ${INTEG_TESTS_BIN}
-    BASE_DIRECTORY
-    ${test_src}
-    EXCLUDE
-    ${test_exclude})
-
-  setup_target_for_coverage_gcovr_xml(
-    NAME
-    coverage-${UNIT_TESTS_BIN}
-    EXECUTABLE
-    ${UNIT_TESTS_BIN}
-    BASE_DIRECTORY
-    ${test_src}
-    EXCLUDE
-    ${test_exclude})
-
 endmacro()
 
 macro(configure_python)
