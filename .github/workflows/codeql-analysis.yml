@@ -36,6 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: ./scripts/install_deps.py --ci-env
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
