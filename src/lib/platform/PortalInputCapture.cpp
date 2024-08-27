@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2022 Peter Hutterer, Olivier Fourdan
+ * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -406,5 +406,9 @@ void PortalInputCapture::glib_thread() {
 }
 
 } // namespace synergy
+
+#else
+
+#error "libportal input capture support is not available"
 
 #endif
