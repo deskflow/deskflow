@@ -7,7 +7,7 @@ gtest = dependency('gtest', required: false)
 gmock = dependency('gmock', required: false)
 pugixml = dependency('pugixml', required: false)
 wintoast = dependency('wintoast', required: false)
-libei = dependency('libei', required: false)
+libei = dependency('libei-1.0', required: false)
 libportal = dependency('libportal', required: false)
 
 if not gtest.found() or not gmock.found()
@@ -15,17 +15,17 @@ if not gtest.found() or not gmock.found()
 endif
 
 if not pugixml.found()
-  subproject('pugixml') 
+  subproject('pugixml')
 endif
 
 if not wintoast.found()
-  subproject('wintoast') 
+  subproject('wintoast')
 endif
 
 if not libei.found()
-  subproject('libei') 
+  subproject('libei')
 endif
 
 if not libportal.found()
-  subproject('libportal') 
+  subproject('libportal')
 endif
