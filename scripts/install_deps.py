@@ -165,9 +165,13 @@ class Dependencies:
 
             linux.run_command(command_pre, check)
 
+        add_env = None
+        if distro == "debian" or (distro_like and "debian" in distro_like):
+            add_env = {"DEBIAN_FRONTEND": "noninteractive"}
+
         command = self.config.get_os_deps_command(linux_distro=distro)
         print("Running dependencies command")
-        linux.run_command(command, check=True)
+        linux.run_command(command, check=True, add_env=add_env)
 
 
 if __name__ == "__main__":
