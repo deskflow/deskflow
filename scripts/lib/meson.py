@@ -18,6 +18,17 @@ def compile():
 def install():
     has_sudo = cmd_utils.has_command("sudo")
     sudo = "sudo" if has_sudo else ""
-    cmd_utils.run(
-        [sudo, meson_bin, "install", "-C", build_dir, "--verbose"], print_cmd=True
+    result = cmd_utils.run(
+        [sudo, meson_bin, "install", "-C", build_dir],
+        print_cmd=True,
+        get_output=True,
+        check=False,
     )
+    if result.stdout:
+        print("Install output: " + result.stdout)
+
+    if result.stderr:
+        print("Install error: " + result.stderr)
+
+    if result.returncode != 0:
+        raise RuntimeError("Install failed")
