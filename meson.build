@@ -28,6 +28,6 @@ if host_machine.system() == 'linux'
 
   libportal = dependency('libportal', required: false)
   if not libportal.found()
-    subproject('libportal')
+    subproject('libportal', default_options: ['docs=false'])
   endif
 endif
