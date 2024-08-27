@@ -28,6 +28,14 @@ if host_machine.system() == 'linux'
 
   libportal = dependency('libportal', required: false)
   if not libportal.found()
-    subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled'])
+
+    # Building libportal is a bit tricky on RHEL-like, so skip until we figure it out.
+    rhel_grep = run_command(
+        'grep', '-Ei', 'redhat|rocky|almalinux', '/etc/os-release', check: true)
+    rhel_like = rhel_grep.returncode() == 0
+
+    if not rhel_like
+      subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled'])
+    endif
   endif
 endif

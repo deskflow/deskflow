@@ -167,19 +167,22 @@ macro(configure_wayland_libs)
       "/path/to/your/pkgconfig/directory:$ENV{PKG_CONFIG_PATH}")
 
   pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
-  pkg_check_modules(LIBPORTAL REQUIRED "libportal >= ${LIBPORTAL_MIN_VERSION}")
+  pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
   pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
   find_library(LIBM m)
 
-  check_libportal()
+  if(NOT LIBPORTAL_FOUND)
+    message(WARNING "libportal not found, some features will be disabled")
+  else()
+    check_libportal()
+    include_directories(${LIBPORTAL_INCLUDE_DIRS})
+    list(APPEND libs ${LIBPORTAL_LINK_LIBRARIES})
+    add_definitions(-DWINAPI_LIBPORTAL=1)
+  endif()
 
-  include_directories(
-    ${LIBXKBCOMMON_INCLUDE_DIRS}
-    ${GLIB2_INCLUDE_DIRS}
-    ${LIBM_INCLUDE_DIRS}
-    ${LIBEI_INCLUDE_DIRS}
-    ${LIBPORTAL_INCLUDE_DIRS})
+  include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
+                      ${LIBM_INCLUDE_DIRS} ${LIBEI_INCLUDE_DIRS})
 
   list(
     APPEND
@@ -187,11 +190,9 @@ macro(configure_wayland_libs)
     ${LIBXKBCOMMON_LINK_LIBRARIES}
     ${GLIB2_LINK_LIBRARIES}
     ${LIBM_LIBRARIES}
-    ${LIBEI_LINK_LIBRARIES}
-    ${LIBPORTAL_LINK_LIBRARIES})
+    ${LIBEI_LINK_LIBRARIES})
 
   add_definitions(-DWINAPI_LIBEI=1)
-  add_definitions(-DWINAPI_LIBPORTAL=1)
 
 endmacro()
 

@@ -95,7 +95,6 @@ config:
           make \
           ninja-build \
           gcc-c++ \
-          vala \
           rpm-build \
           python3-attrs \
           python3-jinja2 \
@@ -109,8 +108,7 @@ config:
           qt6-qttools-devel \
           gtk3-devel \
           pugixml-devel \
-          systemd-devel \
-          gobject-introspection-devel
+          systemd-devel
 
     rocky:
       <<: *rhel
