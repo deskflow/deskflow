@@ -50,7 +50,12 @@ def main():
     # Meson handle the deps resolution, so that we won't need to install them on the system.
     if not args.skip_meson:
         meson.setup()
-        meson.install()
+
+        # Only compile and install on Linux for now, since we're only using Meson to fetch
+        # the deps on Windows and macOS.
+        if env.is_linux():
+            meson.compile()
+            meson.install()
 
     if args.pause_on_exit:
         input("Press enter to continue...")

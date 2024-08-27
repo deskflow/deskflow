@@ -11,6 +11,10 @@ def setup():
     cmd_utils.run([meson_bin, "setup", build_dir, reconfigure], print_cmd=True)
 
 
+def compile():
+    cmd_utils.run([meson_bin, "compile", "-C", build_dir], print_cmd=True)
+
+
 def install():
     has_sudo = cmd_utils.has_command("sudo")
     sudo = "sudo" if has_sudo else ""
