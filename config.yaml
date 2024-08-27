@@ -80,6 +80,7 @@ config:
           gtest-devel \
           gmock-devel \
           pugixml-devel \
+          libei-devel \
           libportal-devel \
           systemd-devel
 
