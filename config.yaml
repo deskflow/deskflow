@@ -147,7 +147,7 @@ config:
 
     arch: &arch
       dependencies:
-        command: sudo pacman -Syu --noconfirm \
+        command: sudo pacman -Sy --noconfirm \
           base-devel \
           cmake \
           ninja \
