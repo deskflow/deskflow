@@ -91,13 +91,18 @@ macro(configure_linux_packaging)
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
+  set(deb_libei_dep "libei-1.0 (>= 1.0)")
+
   # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
   # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
   # 12), so we must add it manually.
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
+  set(deb_qt_dep "qt6-qpa-plugins")
+
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "${deb_qt_dep};${deb_libei_dep}")
 
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
+  set(CPACK_RPM_PACKAGE_REQUIRES "libei-1.0 >= 1.0")
 
   # The default for CMake seems to be /usr/local, which seems uncommon. While
   # the default /usr/local prefix causes the app to appear on Debian and Fedora,
@@ -108,6 +113,15 @@ macro(configure_linux_packaging)
 
   install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
   install(FILES res/synergy.png DESTINATION share/pixmaps)
+
+  option(SYSTEM_LIBEI "Use system libei" OFF)
+  if(NOT SYSTEM_LIBEI)
+    # Bundle libei with the app for now until the package becomes widely available.
+    install(
+      FILES ${LIBEI_LIBRARIES}
+      DESTINATION lib
+      COMPONENT libraries)
+  endif()
 
   # Prepare PKGBUILD for Arch Linux
   configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
