@@ -379,19 +379,26 @@ endmacro()
 
 macro(configure_gtest)
 
-  # Package maintainers: Please use -DSYSTEM_GTEST=ON cmake configure arg.
-  # Arch Linux maintainers: We do care about not bundling libs, etc. :)
-  # We made some mistakes and we're trying to put that right.
-  # The comment "They BUNDLE a fucking zip for cryptopp" in synergy.git/PKGBUILD
-  # is likely only relevant to a very version of old the code and should probably be removed.
-  option(SYSTEM_GTEST "Use system GoogleTest" OFF)
+  file(GLOB gtest_base_dir ${PROJECT_SOURCE_DIR}/subprojects/googletest-*)
+  if(gtest_base_dir)
+    set(DEFAULT_SYSTEM_GTEST OFF)
+  else()
+    set(DEFAULT_SYSTEM_GTEST ON)
+  endif()
+
+  # Arch Linux package maintainers:
+  # We do care about not bundling libs and didn't mean to cause upset. We made some mistakes
+  # and we're trying to put that right.
+  # The comment "They BUNDLE a fucking zip for cryptopp" in synergy.git/PKGBUILD is only
+  # relevant to a very version of old the code, so the comment should probably be removed.
+  # If there are any problems like this in future, please do feel free send us a patch! :)
+  option(SYSTEM_GTEST "Use system GoogleTest" ${DEFAULT_SYSTEM_GTEST})
   if(SYSTEM_GTEST)
     message(STATUS "Using system GoogleTest")
     find_package(GTest REQUIRED)
     set(GTEST_LIBS GTest::GTest GTest::Main)
   else()
     message(STATUS "Building GoogleTest")
-    file(GLOB gtest_base_dir ${PROJECT_SOURCE_DIR}/subprojects/googletest-*)
     set(gtest_dir ${gtest_base_dir}/googletest)
     set(gmock_dir ${gtest_base_dir}/googlemock)
     include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
@@ -495,11 +502,17 @@ macro(configure_wintoast)
 endmacro()
 
 macro(configure_pugixml)
-  option(SYSTEM_PUGIXML "Use system pugixml" OFF)
+  file(GLOB pugixml_dir ${CMAKE_SOURCE_DIR}/subprojects/pugixml-*)
+  if(NOT pugixml_dir)
+    set(DEFAULT_SYSTEM_PUGIXML ON)
+  else()
+    set(DEFAULT_SYSTEM_PUGIXML OFF)
+  endif()
+
+  option(SYSTEM_PUGIXML "Use system pugixml" ${DEFAULT_SYSTEM_PUGIXML})
   if(SYSTEM_PUGIXML)
     find_package(pugixml REQUIRED)
   else()
-    file(GLOB pugixml_dir ${CMAKE_SOURCE_DIR}/subprojects/pugixml-*)
     include_directories(${pugixml_dir}/src)
   endif()
 endmacro()
