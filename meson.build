@@ -23,7 +23,7 @@ if host_machine.system() == 'linux'
 
   libei = dependency('libei-1.0', required: false)
   if not libei.found()
-    subproject('libei', default_options: ['tests=disabled', '-Dliboeffis=disabled'])
+    subproject('libei', default_options: ['tests=disabled', 'liboeffis=disabled'])
   endif
 
   libportal = dependency('libportal', required: false)
