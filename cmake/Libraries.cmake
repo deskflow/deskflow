@@ -227,7 +227,7 @@ endmacro()
 #
 macro(configure_xorg_libs)
 
-  configure_pugixml()
+  find_package(pugixml REQUIRED)
 
   # Add include dir for BSD (posix uses /usr/include/)
   set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
@@ -497,20 +497,4 @@ macro(configure_wintoast)
   # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
   include_directories(${WINTOAST_DIR}/include)
-endmacro()
-
-macro(configure_pugixml)
-  file(GLOB pugixml_dir ${CMAKE_SOURCE_DIR}/subprojects/pugixml-*)
-  if(NOT pugixml_dir)
-    set(DEFAULT_SYSTEM_PUGIXML ON)
-  else()
-    set(DEFAULT_SYSTEM_PUGIXML OFF)
-  endif()
-
-  option(SYSTEM_PUGIXML "Use system pugixml" ${DEFAULT_SYSTEM_PUGIXML})
-  if(SYSTEM_PUGIXML)
-    find_package(pugixml REQUIRED)
-  else()
-    include_directories(${pugixml_dir}/src)
-  endif()
 endmacro()

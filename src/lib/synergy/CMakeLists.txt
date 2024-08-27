@@ -62,7 +62,3 @@ if(UNIX)
                           PkgConfig::lib_notify)
   endif()
 endif()
-
-if(SYSTEM_PUGIXML)
-  target_link_libraries(synlib pugixml)
-endif()

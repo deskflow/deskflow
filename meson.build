@@ -16,11 +16,6 @@ if host_machine.system() == 'windows'
 endif
 
 if host_machine.system() == 'linux'
-  pugixml = dependency('pugixml', required: false)
-  if not pugixml.found()
-    subproject('pugixml')
-  endif
-
   libei = dependency('libei-1.0', required: false)
   if not libei.found()
     subproject('libei', default_options: ['tests=disabled', 'liboeffis=disabled'])
