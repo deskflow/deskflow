@@ -45,6 +45,7 @@ config:
           libsystemd-dev \
           libgirepository1.0-dev \
           valac \
+          python3-attr \
           python3-jinja2 \
           python3-markdown \
           python3-markupsafe \
