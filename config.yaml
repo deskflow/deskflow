@@ -44,13 +44,7 @@ config:
           dbus \
           libsystemd-dev \
           libgirepository1.0-dev \
-          valac \
-          python3-jinja2 \
-          python3-markdown \
-          python3-markupsafe \
-          python3-packaging \
-          python3-pygments \
-          python3-typogrify
+          valac
 
     linuxmint:
       <<: *debian
