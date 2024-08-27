@@ -379,7 +379,7 @@ endmacro()
 
 macro(configure_gtest)
 
-  # Package maintainers: please use -DSYSTEM_GTEST=ON cmake configure arg.
+  # Package maintainers: Please use -DSYSTEM_GTEST=ON cmake configure arg.
   # Arch Linux maintainers: We do care about not bundling libs, etc. :)
   # We made some mistakes and we're trying to put that right.
   # The comment "They BUNDLE a fucking zip for cryptopp" in synergy.git/PKGBUILD
