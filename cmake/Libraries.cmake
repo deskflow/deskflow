@@ -498,7 +498,7 @@ endfunction()
 macro(configure_wintoast)
   # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
-  include_directories(${WINTOAST_DIR}/src)
+  include_directories(${WINTOAST_DIR}/include)
 endmacro()
 
 macro(configure_pugixml)
