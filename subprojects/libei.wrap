@@ -1,0 +1,3 @@
+[wrap-git]
+url = https://gitlab.freedesktop.org/libinput/libei.git
+revision = tags/v1.3.0

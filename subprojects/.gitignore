@@ -1,0 +1,9 @@
+# Fetched dependencies.
+/packagecache
+/googletest-*
+/pugixml-*
+/WinToast-*
+
+# Added by dependencies.
+/gi-docgen.wrap
+/munit.wrap
