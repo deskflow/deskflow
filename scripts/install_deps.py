@@ -5,6 +5,7 @@ import lib.env as env
 import lib.cmd_utils as cmd_utils
 import lib.qt_utils as qt_utils
 import lib.github as github
+import lib.meson as meson
 
 path_env_var = "PATH"
 cmake_prefix_env_var = "CMAKE_PREFIX_PATH"
@@ -16,14 +17,17 @@ def main():
         "--pause-on-exit", action="store_true", help="Useful on Windows"
     )
     parser.add_argument(
-        "--only-python",
-        action="store_true",
-        help="Only install Python dependencies",
-    )
-    parser.add_argument(
         "--ci-env",
         action="store_true",
         help="Set if running in CI environment",
+    )
+    parser.add_argument(
+        "--skip-system",
+        action="store_true",
+        help="Do not install system dependencies (apt, dnf, etc)",
+    )
+    parser.add_argument(
+        "--skip-meson", action="store_true", help="Do not setup and install with Meson"
     )
     args = parser.parse_args()
 
@@ -32,13 +36,21 @@ def main():
     env.install_requirements()
 
     error = False
-    if not args.only_python:
+    if not args.skip_system:
         try:
             deps = Dependencies(args.ci_env)
             deps.install()
         except Exception:
             traceback.print_exc()
             error = True
+
+    # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
+    # we fully switch from CMake to Meson. For the meantime, Meson will install the deps
+    # so that CMake can find them easily. Once we switch to Meson, it might be possible for
+    # Meson handle the deps resolution, so that we won't need to install them on the system.
+    if not args.skip_meson:
+        meson.setup()
+        meson.install()
 
     if args.pause_on_exit:
         input("Press enter to continue...")

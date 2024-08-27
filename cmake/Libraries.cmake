@@ -3,8 +3,6 @@ set(LIBPORTAL_MIN_VERSION 0.6)
 
 macro(configure_libs)
 
-  update_submodules()
-
   set(libs)
   if(UNIX)
     configure_unix_libs()
@@ -14,7 +12,10 @@ macro(configure_libs)
 
   config_qt()
   configure_openssl()
-  configure_test_libs()
+  configure_gtest()
+  configure_coverage()
+  configure_wintoast()
+  configure_pugixml()
 
 endmacro()
 
@@ -160,10 +161,12 @@ macro(configure_mac_libs)
 
 endmacro()
 
-# TODO: the output is a bit noisy, maybe make it quieter?
 macro(configure_wayland_libs)
 
   include(FindPkgConfig)
+
+  set(ENV{PKG_CONFIG_PATH}
+      "/path/to/your/pkgconfig/directory:$ENV{PKG_CONFIG_PATH}")
 
   pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
   pkg_check_modules(LIBPORTAL REQUIRED "libportal >= ${LIBPORTAL_MIN_VERSION}")
@@ -192,22 +195,6 @@ macro(configure_wayland_libs)
   add_definitions(-DWINAPI_LIBEI=1)
   add_definitions(-DWINAPI_LIBPORTAL=1)
 
-endmacro()
-
-macro(check_meson)
-  find_program(MESON_EXECUTABLE meson)
-
-  if(NOT MESON_EXECUTABLE)
-    message(FATAL_ERROR "Meson is not installed")
-  endif()
-endmacro()
-
-macro(check_git)
-  find_package(Git QUIET)
-
-  if(NOT GIT_FOUND)
-    message(FATAL_ERROR "Git was not found")
-  endif()
 endmacro()
 
 macro(check_libportal)
@@ -390,71 +377,73 @@ macro(configure_openssl)
   find_package(OpenSSL REQUIRED)
 endmacro()
 
-macro(configure_test_libs)
+macro(configure_gtest)
 
-  if(BUILD_TESTS AND NOT EXISTS
-                     "${PROJECT_SOURCE_DIR}/ext/googletest/CMakeLists.txt")
-    message(FATAL_ERROR "Git submodule for Google Test is missing")
-  endif()
-
-  if(ENABLE_COVERAGE)
-    message(STATUS "Enabling code coverage")
-    include(cmake/CodeCoverage.cmake)
-    append_coverage_compiler_flags()
-    set(test_exclude ext/* build/* src/test/*)
-    set(test_src ${PROJECT_SOURCE_DIR}/src)
-
-    setup_target_for_coverage_gcovr_xml(
-      NAME
-      coverage-${INTEG_TESTS_BIN}
-      EXECUTABLE
-      ${INTEG_TESTS_BIN}
-      BASE_DIRECTORY
-      ${test_src}
-      EXCLUDE
-      ${test_exclude})
-
-    setup_target_for_coverage_gcovr_xml(
-      NAME
-      coverage-${UNIT_TESTS_BIN}
-      EXECUTABLE
-      ${UNIT_TESTS_BIN}
-      BASE_DIRECTORY
-      ${test_src}
-      EXCLUDE
-      ${test_exclude})
-
+  # Package maintainers: please use -DSYSTEM_GTEST=ON cmake configure arg.
+  # Arch Linux maintainers: We do care about not bundling libs, etc. :)
+  # We made some mistakes and we're trying to put that right.
+  # The comment "They BUNDLE a fucking zip for cryptopp" in synergy.git/PKGBUILD
+  # is likely only relevant to a very version of old the code and should probably be removed.
+  option(SYSTEM_GTEST "Use system GoogleTest" OFF)
+  if(SYSTEM_GTEST)
+    message(STATUS "Using system GoogleTest")
+    find_package(GTest REQUIRED)
+    set(GTEST_LIBS GTest::GTest GTest::Main)
   else()
-    message(STATUS "Code coverage is disabled")
+    message(STATUS "Building GoogleTest")
+    file(GLOB gtest_base_dir ${PROJECT_SOURCE_DIR}/subprojects/googletest-*)
+    set(gtest_dir ${gtest_base_dir}/googletest)
+    set(gmock_dir ${gtest_base_dir}/googlemock)
+    include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
+                        ${gmock_dir}/include)
+
+    add_library(gtest STATIC ${gtest_dir}/src/gtest-all.cc)
+    add_library(gmock STATIC ${gmock_dir}/src/gmock-all.cc)
+
+    if(UNIX)
+      # Ignore noisy GoogleTest warnings
+      set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
+      set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
+    endif()
+
+    set(GTEST_LIBS gtest gmock)
   endif()
 
-  include_directories(BEFORE SYSTEM
-                      ${PROJECT_SOURCE_DIR}/ext/googletest/googletest/include)
 endmacro()
 
-macro(update_submodules)
+macro(configure_coverage)
 
-  option(GIT_SUBMODULE "Check submodules during build" ON)
-  if(GIT_SUBMODULE)
-
-    check_git()
-
-    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/.git")
-      message(FATAL_ERROR "This is not a git repository")
-    endif()
-
-    message(STATUS "Submodule update")
-    execute_process(
-      COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      RESULT_VARIABLE GIT_SUBMODULE_RESULT)
-
-    if(NOT GIT_SUBMODULE_RESULT EQUAL "0")
-      message(
-        FATAL_ERROR "Git submodule update failed: ${GIT_SUBMODULE_RESULT}")
-    endif()
-
+  if(NOT ENABLE_COVERAGE)
+    message(STATUS "Code coverage is disabled")
+    return()
   endif()
+
+  message(STATUS "Code coverage is disabled")
+  message(STATUS "Enabling code coverage")
+  include(cmake/CodeCoverage.cmake)
+  append_coverage_compiler_flags()
+  set(test_exclude subprojects/* build/* src/test/*)
+  set(test_src ${PROJECT_SOURCE_DIR}/src)
+
+  setup_target_for_coverage_gcovr_xml(
+    NAME
+    coverage-${INTEG_TESTS_BIN}
+    EXECUTABLE
+    ${INTEG_TESTS_BIN}
+    BASE_DIRECTORY
+    ${test_src}
+    EXCLUDE
+    ${test_exclude})
+
+  setup_target_for_coverage_gcovr_xml(
+    NAME
+    coverage-${UNIT_TESTS_BIN}
+    EXECUTABLE
+    ${UNIT_TESTS_BIN}
+    BASE_DIRECTORY
+    ${test_src}
+    EXCLUDE
+    ${test_exclude})
 
 endmacro()
 
@@ -498,3 +487,19 @@ function(find_openssl_dir_win32 result)
       PARENT_SCOPE)
 
 endfunction()
+
+macro(configure_wintoast)
+  # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
+  file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
+  include_directories(${WINTOAST_DIR}/src)
+endmacro()
+
+macro(configure_pugixml)
+  option(SYSTEM_PUGIXML "Use system pugixml" OFF)
+  if(SYSTEM_PUGIXML)
+    find_package(pugixml REQUIRED)
+  else()
+    file(GLOB pugixml_dir ${CMAKE_SOURCE_DIR}/subprojects/pugixml-*)
+    include_directories(${pugixml_dir}/src)
+  endif()
+endmacro()

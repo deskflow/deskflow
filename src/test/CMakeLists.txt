@@ -19,8 +19,6 @@ macro(config_all_tests)
   set(base_dir ${CMAKE_SOURCE_DIR})
   set(src_dir ${base_dir}/src)
   set(test_base_dir ${src_dir}/test)
-  set(ext_dir ${base_dir}/ext)
-  set(gtest_base_dir ${ext_dir}/googletest)
   set(gui_dir ${src_dir}/gui/src)
 
   config_test_deps()
@@ -126,24 +124,9 @@ endmacro()
 
 macro(config_test_deps)
 
-  set(gtest_dir ${gtest_base_dir}/googletest)
-  set(gmock_dir ${gtest_base_dir}/googlemock)
-
-  include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
-                      ${gmock_dir}/include)
-
   # gui library autogen headers:
   # qt doesn't seem to auto include the autogen headers for libraries.
   include_directories(${CMAKE_BINARY_DIR}/src/lib/gui/gui_autogen/include)
-
-  add_library(gtest STATIC ${gtest_dir}/src/gtest-all.cc)
-  add_library(gmock STATIC ${gmock_dir}/src/gmock-all.cc)
-
-  if(UNIX)
-    # ignore warnings in gtest and gmock
-    set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
-    set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
-  endif()
 
   set(test_libs
       gtest
@@ -161,6 +144,7 @@ macro(config_test_deps)
       ipc
       license
       gui
+      ${GTEST_LIBS}
       ${libs})
 
 endmacro()

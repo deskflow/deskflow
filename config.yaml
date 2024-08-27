@@ -41,7 +41,6 @@ config:
           qt6-tools-dev \
           libgtk-3-dev \
           file \
-          meson \
           dbus \
           libsystemd-dev \
           libgirepository1.0-dev \

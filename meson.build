@@ -11,7 +11,7 @@ libei = dependency('libei', required: false)
 libportal = dependency('libportal', required: false)
 
 if not gtest.found() or not gmock.found()
-  subproject('gtest') 
+  subproject('gtest')
 endif
 
 if not pugixml.found()

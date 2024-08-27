@@ -29,8 +29,10 @@ elseif(APPLE)
 elseif(UNIX)
   file(GLOB headers "XWindows*.h")
   file(GLOB sources "XWindows*.cpp")
-  file(GLOB headers "Ei*.h")
-  file(GLOB sources "Ei*.cpp")
+  # file(GLOB headers "Ei*.h")
+  # file(GLOB sources "Ei*.cpp")
+  # file(GLOB headers "Portal*.h")
+  # file(GLOB sources "Portal*.cpp")
 endif()
 
 if(ADD_HEADERS_TO_SOURCES)
@@ -58,6 +60,9 @@ if(UNIX)
   if(NOT APPLE)
     find_package(Qt6 COMPONENTS DBus)
     target_link_libraries(platform Qt6::DBus)
+
+    # Libraries for Wayland support
+    target_link_libraries(platform ei portal)
   endif()
 endif()
 
