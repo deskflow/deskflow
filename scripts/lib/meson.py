@@ -16,6 +16,10 @@ def compile():
 
 
 def install():
+    cmd = [meson_bin, "install", "-C", build_dir]
+
     has_sudo = cmd_utils.has_command("sudo")
-    sudo = "sudo" if has_sudo else ""
-    cmd_utils.run([sudo, meson_bin, "install", "-C", build_dir], print_cmd=True)
+    if has_sudo:
+        cmd.insert(0, "sudo")
+
+    cmd_utils.run(cmd, print_cmd=True)

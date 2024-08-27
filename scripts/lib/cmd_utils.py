@@ -127,7 +127,7 @@ def run(
         # Take control of how failed commands are printed:
         # - if `print_cmd` is false, it will print `***` instead of the command
         # - if the command was a list, the command is printed as a readable string
-        raise RuntimeError(f"Command failed: {command_str}")  # from None
+        raise RuntimeError(f"Command failed: {command_str}")
 
     if result.returncode != 0:
         print(
