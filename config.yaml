@@ -60,10 +60,11 @@ config:
           sudo dnf install -y \
           cmake \
           make \
+          ninja-build \
           gcc-c++ \
           rpm-build \
           python3-attrs \
-          python3-Jinja2 \
+          python3-jinja2 \
           openssl-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
@@ -86,6 +87,25 @@ config:
           sudo dnf check-update;
           sudo dnf install -y epel-release;
           dnf config-manager --set-enabled crb
+        command: |
+          sudo dnf install -y \
+          cmake \
+          make \
+          ninja-build \
+          gcc-c++ \
+          rpm-build \
+          python3-attrs \
+          python3-jinja2 \
+          openssl-devel \
+          glib2-devel \
+          gdk-pixbuf2-devel \
+          libXtst-devel \
+          libnotify-devel \
+          libxkbfile-devel \
+          qt6-qtbase-devel \
+          qt6-qttools-devel \
+          gtk3-devel \
+          systemd-devel
 
     rocky:
       <<: *rhel
@@ -103,6 +123,7 @@ config:
         command: sudo zypper install -y --force-resolution \
           cmake \
           make \
+          ninja \
           gcc-c++ \
           python3-attrs \
           python3-Jinja2 \
@@ -124,6 +145,7 @@ config:
         command: sudo pacman -Syu --noconfirm \
           base-devel \
           cmake \
+          ninja \
           gcc \
           python-attrs \
           python-jinja \
