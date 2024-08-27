@@ -137,7 +137,6 @@ config:
           rpm-build \
           python3-attrs \
           python3-Jinja2 \
-          googletest \
           libopenssl-devel \
           glib2-devel \
           gdk-pixbuf-devel \
