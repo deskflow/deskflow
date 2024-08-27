@@ -1,6 +1,5 @@
 import subprocess
 import sys
-import os
 import lib.env as env
 
 try:
@@ -53,7 +52,6 @@ def run(
     shell=False,  # false by default for security
     get_output=False,
     print_cmd=False,  # false by default for security
-    add_env=None,
 ):
     """
     Convenience wrapper around `subprocess.run` to:
@@ -99,10 +97,6 @@ def run(
         raise ValueError("List commands cannot be used when shell=True on Unix systems")
     elif not is_list_cmd and not shell:
         raise ValueError("String commands cannot be used when shell=False or not set")
-
-    env_vars = os.environ.copy()
-    if add_env:
-        env_vars.update(add_env)
 
     # Flush the output to ensure the command is printed before the output of the command,
     # which seems to happen in the GitHub runner logs.

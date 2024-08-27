@@ -15,7 +15,7 @@ package_name = "synergy"
 test_cmd = "synergys --version"
 
 
-def run_command(command, check=True, add_env=None):
+def run_command(command, check=True):
 
     has_sudo = cmd_utils.has_command("sudo")
     if "sudo" in command and not has_sudo:
@@ -26,7 +26,7 @@ def run_command(command, check=True, add_env=None):
         print("The 'sudo' command was not found, stripping sudo from command")
         command = command.replace("sudo ", "").strip()
 
-    cmd_utils.run(command, check, shell=True, print_cmd=True, add_env=add_env)
+    cmd_utils.run(command, check, shell=True, print_cmd=True)
 
 
 def package(filename_base, package_type: PackageType):

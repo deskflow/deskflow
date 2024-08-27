@@ -199,6 +199,10 @@ jobs:
     container: ${{ matrix.distro.container }}
     timeout-minutes: 20
 
+    env:
+      # Prevent apt prompting for input.
+      DEBIAN_FRONTEND: noninteractive
+
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one distro may
       # fail due to transient issues unrelated to the build.
