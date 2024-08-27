@@ -28,6 +28,9 @@ jobs:
         run: |
           ./scripts/install_deps.py --ci-env &&
           apt install valgrind -y
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
         run: cmake -B build --preset=linux-release

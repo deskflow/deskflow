@@ -42,6 +42,9 @@ jobs:
           ./scripts/install_deps.py --ci-env &&
           apt install curl unzip -y &&
           pip install gcovr
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Install SonarScanner
         run: |
