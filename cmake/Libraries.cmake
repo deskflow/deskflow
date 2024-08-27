@@ -14,8 +14,6 @@ macro(configure_libs)
   configure_openssl()
   configure_gtest()
   configure_coverage()
-  configure_wintoast()
-  configure_pugixml()
 
 endmacro()
 
@@ -231,6 +229,8 @@ endmacro()
 #
 macro(configure_xorg_libs)
 
+  configure_pugixml()
+
   # Add include dir for BSD (posix uses /usr/include/)
   set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
 
@@ -326,6 +326,8 @@ endmacro()
 # Windows
 #
 macro(configure_windows_libs)
+
+  configure_wintoast()
 
   set(CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
