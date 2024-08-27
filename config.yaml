@@ -29,6 +29,7 @@ config:
           cmake \
           make \
           g++ \
+          ninja \
           xorg-dev \
           libx11-dev \
           libxtst-dev \
