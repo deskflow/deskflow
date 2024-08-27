@@ -30,6 +30,9 @@ config:
           make \
           ninja-build \
           g++ \
+          file \
+          python3-attr \
+          python3-jinja2 \
           xorg-dev \
           libx11-dev \
           libxtst-dev \
@@ -41,18 +44,8 @@ config:
           qt6-base-dev \
           qt6-tools-dev \
           libgtk-3-dev \
-          file \
-          dbus \
-          libsystemd-dev \
-          libgirepository1.0-dev \
-          valac \
-          python3-attr \
-          python3-jinja2 \
-          python3-markdown \
-          python3-markupsafe \
-          python3-packaging \
-          python3-pygments \
-          python3-typogrify
+          libportal-dev \
+          libsystemd-dev
 
     linuxmint:
       <<: *debian
@@ -68,6 +61,9 @@ config:
           cmake \
           make \
           gcc-c++ \
+          rpm-build \
+          python3-attrs \
+          python3-jinja \
           openssl-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
@@ -77,7 +73,8 @@ config:
           qt6-qtbase-devel \
           qt6-qttools-devel \
           gtk3-devel \
-          rpm-build
+          libportal-devel \
+          systemd-devel
 
     # RHEL is not actually supported yet, since it doesn't have Qt6 libs.
     # We simply use it as a base for Alma Linux and Rocky Linux.
@@ -107,6 +104,8 @@ config:
           cmake \
           make \
           gcc-c++ \
+          python3-attrs \
+          python3-Jinja2 \
           libopenssl-devel \
           glib2-devel \
           gdk-pixbuf-devel \
@@ -116,7 +115,9 @@ config:
           qt6-base-devel \
           qt6-tools-devel \
           gtk3-devel \
-          rpm-build
+          rpm-build \
+          libportal-devel \
+          systemd-devel
 
     arch: &arch
       dependencies:
@@ -124,12 +125,16 @@ config:
           base-devel \
           cmake \
           gcc \
+          python-attrs \
+          python-jinja \
           openssl \
           glib2 \
           gdk-pixbuf2 \
           libxtst \
           libnotify \
           libxkbfile \
+          libportal \
+          systemd \
           qt6-base \
           qt6-tools \
           gtk3
