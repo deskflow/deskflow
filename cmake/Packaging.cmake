@@ -141,7 +141,6 @@ macro(configure_libei_package_dep)
     install(
       FILES ${libei_lib_file_real}
       DESTINATION lib
-      RENAME libei.so.1
       COMPONENT libraries)
 
     # Disable RPM dependency on libei, as it's bundled.

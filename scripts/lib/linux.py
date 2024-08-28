@@ -119,20 +119,25 @@ def test_install(package_file, remove_test=True):
     if not distro_like:
         distro_like = distro
 
-    install_pre = None
-    remove_pre = None
+    install_base = None
+    list_cmd = None
+    remove_base = None
     if "debian" in distro_like:
-        install_pre = ["apt", "install", "-f", "-y"]
-        remove_pre = ["apt", "remove", "-y"]
+        install_base = ["apt", "install", "-f", "-y"]
+        remove_base = ["apt", "remove", "-y"]
+        list_cmd = ["dpkg", "-L", "synergy"]
     elif "fedora" in distro_like:
-        install_pre = ["dnf", "install", "-y"]
-        remove_pre = ["dnf", "remove", "-y"]
+        install_base = ["dnf", "install", "-y"]
+        remove_base = ["dnf", "remove", "-y"]
+        list_cmd = ["rpm", "-ql", "synergy"]
     elif "opensuse" in distro_like:
-        install_pre = ["zypper", "--no-gpg-checks", "install", "-y"]
-        remove_pre = ["zypper", "remove", "-y"]
+        install_base = ["zypper", "--no-gpg-checks", "install", "-y"]
+        remove_base = ["zypper", "remove", "-y"]
+        list_cmd = ["rpm", "-ql", "synergy"]
     elif "arch" in distro_like:
-        install_pre = ["pacman", "-U", "--noconfirm"]
-        remove_pre = ["pacman", "-R", "--noconfirm"]
+        install_base = ["pacman", "-U", "--noconfirm"]
+        remove_base = ["pacman", "-R", "--noconfirm"]
+        list_cmd = ["pacman", "-Ql", "synergy"]
     else:
         raise RuntimeError(f"Linux distro not yet supported: {distro}")
 
@@ -141,10 +146,13 @@ def test_install(package_file, remove_test=True):
 
     print("Testing installation...")
     cmd_utils.run(
-        sudo + install_pre + [f"./{package_file}"],
+        sudo + install_base + [f"./{package_file}"],
         check=True,
         print_cmd=True,
     )
+
+    print("Listing installed files...")
+    cmd_utils.run(sudo + list_cmd, check=True, print_cmd=True)
 
     try:
         cmd_utils.run(test_cmd, shell=True, check=True, print_cmd=True)
@@ -153,7 +161,7 @@ def test_install(package_file, remove_test=True):
     finally:
         if remove_test:
             cmd_utils.run(
-                sudo + remove_pre + [package_name], check=True, print_cmd=True
+                sudo + remove_base + [package_name], check=True, print_cmd=True
             )
         else:
             print("Leaving test package installed")
