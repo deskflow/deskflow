@@ -16,12 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platform/PortalInputCapture.h"
+#include "config.h"
 
-#include "base/Event.h"
 #if HAVE_LIBPORTAL_INPUTCAPTURE
 
+#include "base/Event.h"
 #include "base/Log.h"
+#include "base/TMethodJob.h"
 #include "platform/PortalInputCapture.h"
 
 #include <sys/socket.h> // for EIS fd hack, remove
@@ -44,7 +45,8 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
       portal_(xdp_portal_new()),
       signals_(_N_SIGNALS) {
   glib_main_loop_ = g_main_loop_new(nullptr, true);
-  glib_thread_ = std::make_unique<Thread>([this]() { glib_thread(); });
+  glib_thread_ = new Thread(new TMethodJob<PortalInputCapture>(
+      this, &PortalInputCapture::glib_thread));
 
   auto init_capture_cb = [](gpointer data) -> gboolean {
     return reinterpret_cast<PortalInputCapture *>(data)
@@ -61,7 +63,7 @@ PortalInputCapture::~PortalInputCapture() {
   if (glib_thread_) {
     glib_thread_->cancel();
     glib_thread_->wait();
-    glib_thread_.reset();
+    glib_thread_ = nullptr;
 
     g_main_loop_unref(glib_main_loop_);
     glib_main_loop_ = nullptr;
@@ -160,9 +162,9 @@ void PortalInputCapture::cb_init_input_capture_session(
     }
   }
   // Socket ownership is transferred to the EiScreen
-  events_->addEvent(
-      EventType::EI_SCREEN_CONNECTED_TO_EIS, screen_->getEventTarget(),
-      create_event_data<int>(fd));
+  events_->addEvent(Event(
+      events_->forEi().connected(), screen_->getEventTarget(),
+      EiScreen::EiConnectInfo::alloc(fd)));
 
   // FIXME: the lambda trick doesn't work here for unknown reasons, we need
   // the static function
@@ -392,7 +394,7 @@ void PortalInputCapture::cb_zones_changed(
       this);
 }
 
-void PortalInputCapture::glib_thread() {
+void PortalInputCapture::glib_thread(void *) {
   auto context = g_main_loop_get_context(glib_main_loop_);
 
   LOG_DEBUG("GLib thread running");
@@ -406,9 +408,5 @@ void PortalInputCapture::glib_thread() {
 }
 
 } // namespace synergy
-
-#else
-
-#error "libportal input capture support is not available"
 
 #endif

@@ -67,5 +67,6 @@ public:
   MOCK_METHOD(IScreenEvents &, forIScreen, (), (override));
   MOCK_METHOD(ClipboardEvents &, forClipboard, (), (override));
   MOCK_METHOD(FileEvents &, forFile, (), (override));
+  MOCK_METHOD(EiEvents &, forEi, (), (override));
   MOCK_METHOD(void, waitForReady, (), (const, override));
 };

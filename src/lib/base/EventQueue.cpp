@@ -83,6 +83,7 @@ EventQueue::EventQueue()
       m_typesForIScreen(NULL),
       m_typesForClipboard(NULL),
       m_typesForFile(NULL),
+      m_typesForEi(NULL),
       m_readyMutex(new Mutex),
       m_readyCondVar(new CondVar<bool>(m_readyMutex, false)) {
   m_mutex = ARCH->newMutex();

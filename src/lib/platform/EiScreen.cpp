@@ -46,7 +46,8 @@ struct ScrollRemainder {
 namespace synergy {
 
 EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
-    : is_primary_(is_primary),
+    : PlatformScreen(events),
+      is_primary_(is_primary),
       events_(events),
       w_(1),
       h_(1),
@@ -518,10 +519,9 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask) {
   // key combinations may not work correctly, more effort is needed here.
   auto id = it->second.find_by_mask(mask);
   if (id != 0) {
-    EventType type = is_pressed ? EventType::PRIMARY_SCREEN_HOTKEY_DOWN
-                                : EventType::PRIMARY_SCREEN_HOTKEY_UP;
-    events_->addEvent(
-        type, getEventTarget(), create_event_data<HotKeyInfo>(id));
+    Event::Type type = is_pressed ? events_->forIPrimaryScreen().hotKeyDown()
+                                  : events_->forIPrimaryScreen().hotKeyUp();
+    sendEvent(type, HotKeyInfo::alloc(id));
     return true;
   }
 
@@ -569,10 +569,10 @@ void EiScreen::on_button_event(ei_event *event) {
     return;
   }
 
-  sendEvent(
-      pressed ? EventType::PRIMARY_SCREEN_BUTTON_DOWN
-              : EventType::PRIMARY_SCREEN_BUTTON_UP,
-      create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
+  auto eventType = pressed ? events_->forIPrimaryScreen().buttonDown()
+                           : events_->forIPrimaryScreen().buttonUp();
+
+  sendEvent(eventType, ButtonInfo::alloc(button, mask));
 }
 
 void EiScreen::on_pointer_scroll_event(ei_event *event) {
@@ -619,10 +619,10 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   // remain compatible with other platforms (including X11).
   if (x != 0 || y != 0)
     sendEvent(
-        EventType::PRIMARY_SCREEN_WHEEL,
-        create_event_data<WheelInfo>(WheelInfo{
+        events_->forIPrimaryScreen().wheel(),
+        WheelInfo::alloc(
             (int32_t)-x * PIXEL_TO_WHEEL_RATIO,
-            (int32_t)-y * PIXEL_TO_WHEEL_RATIO}));
+            (int32_t)-y * PIXEL_TO_WHEEL_RATIO));
 
   remainder->x = rx;
   remainder->y = ry;
@@ -644,9 +644,7 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
   // libei and synergy seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
-  sendEvent(
-      EventType::PRIMARY_SCREEN_WHEEL,
-      create_event_data<WheelInfo>(WheelInfo{-dx, -dy}));
+  sendEvent(events_->forIPrimaryScreen().wheel(), WheelInfo::alloc(-dx, -dy));
 }
 
 void EiScreen::on_motion_event(ei_event *event) {
@@ -661,8 +659,8 @@ void EiScreen::on_motion_event(ei_event *event) {
         "on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)",
         cursor_x_, cursor_y_);
     sendEvent(
-        EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
-        create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
+        events_->forIPrimaryScreen().motionOnPrimary(),
+        MotionInfo::alloc(cursor_x_, cursor_y_));
 
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     if (portal_input_capture_->is_active()) {
@@ -682,8 +680,8 @@ void EiScreen::on_motion_event(ei_event *event) {
           "on_motion_event on secondary at (dx,dy)=(%d,%d)", pixel_dx,
           pixel_dy);
       sendEvent(
-          EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
-          create_event_data<MotionInfo>(MotionInfo{pixel_dx, pixel_dy}));
+          events_->forIPrimaryScreen().motionOnSecondary(),
+          MotionInfo::alloc(pixel_dx, pixel_dy));
       buffer_dx -= pixel_dx;
       buffer_dy -= pixel_dy;
     }
@@ -693,7 +691,7 @@ void EiScreen::on_motion_event(ei_event *event) {
 void EiScreen::on_abs_motion_event(ei_event *event) { assert(is_primary_); }
 
 void EiScreen::handle_connected_to_eis_event(const Event &event, void *) {
-  int fd = event.get_data_as<int>();
+  int fd = static_cast<EiConnectInfo *>(event.getData())->m_fd;
   LOG_DEBUG("We have an EIS connection! fd is %d", fd);
 
   auto rc = ei_setup_backend_fd(ei_, fd);

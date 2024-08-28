@@ -79,3 +79,13 @@ IPrimaryScreen::HotKeyInfo *IPrimaryScreen::HotKeyInfo::alloc(UInt32 id) {
   info->m_id = id;
   return info;
 }
+
+//
+// IPrimaryScreen::EiConnectInfo
+//
+
+IPrimaryScreen::EiConnectInfo *IPrimaryScreen::EiConnectInfo::alloc(int fd) {
+  EiConnectInfo *info = (EiConnectInfo *)malloc(sizeof(EiConnectInfo));
+  info->m_fd = fd;
+  return info;
+}

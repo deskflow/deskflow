@@ -40,7 +40,7 @@ public:
   ~PortalRemoteDesktop();
 
 private:
-  void glib_thread();
+  void glib_thread(void *);
   gboolean timeout_handler();
   gboolean init_remote_desktop_session();
   void cb_init_remote_desktop_session(GObject *object, GAsyncResult *res);

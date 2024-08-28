@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
+#include <memory>
 
 namespace synergy {
 
@@ -42,7 +43,7 @@ public:
   bool is_active() const { return is_active_; }
 
 private:
-  void glib_thread();
+  void glib_thread(void *);
   gboolean timeout_handler();
   gboolean init_input_capture_session();
   void cb_init_input_capture_session(GObject *object, GAsyncResult *res);
@@ -88,7 +89,7 @@ private:
   EiScreen *screen_ = nullptr;
   IEventQueue *events_ = nullptr;
 
-  std::unique_ptr<Thread> glib_thread_;
+  Thread *glib_thread_;
   GMainLoop *glib_main_loop_ = nullptr;
 
   XdpPortal *portal_ = nullptr;

@@ -18,6 +18,7 @@
 
 #include "platform/PortalRemoteDesktop.h"
 #include "base/Log.h"
+#include "base/TMethodJob.h"
 
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
@@ -29,7 +30,8 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
       events_(events),
       portal_(xdp_portal_new()) {
   glib_main_loop_ = g_main_loop_new(nullptr, true);
-  glib_thread_ = new Thread([this]() { glib_thread(); });
+  glib_thread_ = new Thread(new TMethodJob<PortalRemoteDesktop>(
+      this, &PortalRemoteDesktop::glib_thread));
 
   reconnect(0);
 }
@@ -77,7 +79,8 @@ void PortalRemoteDesktop::cb_session_closed(XdpSession *session) {
   LOG_ERR("Our RemoteDesktop session was closed, re-connecting.");
   g_signal_handler_disconnect(session, session_signal_id_);
   session_signal_id_ = 0;
-  events_->addEvent(EventType::EI_SESSION_CLOSED, screen_->getEventTarget());
+  events_->addEvent(
+      Event(events_->forEi().sessionClosed(), screen_->getEventTarget()));
 
   // gcc warning "Suspicious usage of 'sizeof(A*)'" can be ignored
   g_clear_object(&session_);
@@ -113,9 +116,9 @@ void PortalRemoteDesktop::cb_session_started(
   }
 
   // Socket ownership is transferred to the EiScreen
-  events_->addEvent(
-      EventType::EI_SCREEN_CONNECTED_TO_EIS, screen_->getEventTarget(),
-      create_event_data<int>(fd));
+  events_->addEvent(Event(
+      events_->forEi().connected(), screen_->getEventTarget(),
+      EiScreen::EiConnectInfo::alloc(fd)));
 }
 
 void PortalRemoteDesktop::cb_init_remote_desktop_session(
@@ -189,7 +192,7 @@ gboolean PortalRemoteDesktop::init_remote_desktop_session() {
   return false; // don't reschedule
 }
 
-void PortalRemoteDesktop::glib_thread() {
+void PortalRemoteDesktop::glib_thread(void *) {
   auto context = g_main_loop_get_context(glib_main_loop_);
 
   while (g_main_loop_is_running(glib_main_loop_)) {
