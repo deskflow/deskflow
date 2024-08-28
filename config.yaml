@@ -178,10 +178,15 @@ config:
         ubuntu: *debian_libei
         linuxmint: *debian_libei
 
-        fedora: sudo dnf install -y \
+        fedora: &fedora_libei |
+          sudo dnf install -y \
           python3-attrs \
           python3-jinja2 \
           systemd-devel
+
+        rhel: *fedora_libei
+        rocky: *fedora_libei
+        almalinux: *fedora_libei
 
     libportal:
       dependencies:
