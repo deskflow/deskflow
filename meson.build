@@ -36,6 +36,10 @@ if host_machine.system() == 'linux'
     # Building libportal is a bit tricky on RHEL-like, so skip until we figure it out.
     # Even when `qt6-qtbase-devel` is installed:
     #   portal-qt6.cpp:32:10: fatal error: qpa/qplatformintegration.h: No such file or directory
+    #
+    # TODO: Maybe the better approach is to disable the `backend-qt6` option?
+    # If so can we do this for all distros or should we do it for only RHEL-like?
+    # It seems strange that e.g. Alma Linux has libei and libportal, but no -devel packages.
     rhel_grep = run_command(
         'grep', '-Ei', 'redhat|rocky|almalinux', '/etc/os-release', check: false)
     rhel_like = rhel_grep.returncode() == 0

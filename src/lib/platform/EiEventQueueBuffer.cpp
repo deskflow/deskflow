@@ -94,7 +94,8 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms) {
     // and potentially testCancel
     if (pfds[PIPEFD].revents & POLLIN) {
       char buf[64];
-      read(pipe_r_, buf, sizeof(buf)); // discard
+      auto result = read(pipe_r_, buf, sizeof(buf)); // discard
+      LOG_DEBUG("event queue read result: %d", result);
     }
   }
   Thread::testCancel();
@@ -135,7 +136,8 @@ bool EiEventQueueBuffer::addEvent(uint32_t dataID) {
   queue_.push({false, dataID});
 
   // tickle the pipe so our read thread wakes up
-  write(pipe_w_, "!", 1);
+  auto result = write(pipe_w_, "!", 1);
+  LOG_DEBUG("event queue write result: %d", result);
 
   return true;
 }
