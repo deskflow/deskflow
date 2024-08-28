@@ -159,7 +159,6 @@ config:
           pugixml \
           libei \
           libportal \
-          systemd \
           qt6-base \
           qt6-tools \
           gtk3
