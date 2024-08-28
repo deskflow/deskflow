@@ -23,6 +23,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
+#include "base/TMethodEventJob.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
@@ -53,14 +54,15 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
   init_ei();
   key_state_ = new EiKeyState(this, events);
   // install event handlers
-  events_->add_handler(
+  events_->adoptHandler(
       Event::kSystem, events_->getSystemTarget(),
-      [this](const auto &e) { handleSystemEvent(e); });
+      new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent));
 
   if (use_portal) {
-    events_->add_handler(
-        EventType::EI_SCREEN_CONNECTED_TO_EIS, get_event_target(),
-        [this](const auto &e) { handle_connected_to_eis_event(e); });
+    events_->adoptHandler(
+        events_->forEi().connected(), getEventTarget(),
+        new TMethodEventJob<EiScreen>(
+            this, &EiScreen::handle_connected_to_eis_event));
     if (is_primary) {
 #if HAVE_LIBPORTAL_INPUTCAPTURE
       portal_input_capture_ = new PortalInputCapture(this, events_);
@@ -69,9 +71,10 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
           "Missing libportal InputCapture portal support");
 #endif
     } else {
-      events_->add_handler(
-          EventType::EI_SESSION_CLOSED, get_event_target(),
-          [this](const auto &e) { handle_portal_session_closed(e); });
+      events_->adoptHandler(
+          events_->forEi().sessionClosed(), getEventTarget(),
+          new TMethodEventJob<EiScreen>(
+              this, &EiScreen::handle_portal_session_closed));
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
     }
   } else {
@@ -85,7 +88,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 }
 
 EiScreen::~EiScreen() {
-  events_->set_buffer(nullptr);
+  events_->adoptBuffer(nullptr);
   events_->removeHandler(Event::kSystem, events_->getSystemTarget());
 
   cleanup_ei();
@@ -132,8 +135,8 @@ void EiScreen::init_ei() {
   ei_configure_name(ei_, "synergy client");
 
   // install the platform event queue
-  events_->set_buffer(nullptr);
-  events_->set_buffer(std::make_unique<EiEventQueueBuffer>(this, ei_, events_));
+  events_->adoptBuffer(nullptr);
+  events_->adoptBuffer(new EiEventQueueBuffer(this, ei_, events_));
 }
 
 void EiScreen::cleanup_ei() {
@@ -162,7 +165,9 @@ void EiScreen::cleanup_ei() {
   ei_ = ei_unref(ei_);
 }
 
-const EventTarget *EiScreen::get_event_target() const { return this; }
+void *EiScreen::getEventTarget() const {
+  return const_cast<void *>(static_cast<const void *>(this));
+}
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const {
   return false;
@@ -402,7 +407,7 @@ void EiScreen::update_shape() {
   cursor_x_ = x_ + w_ / 2;
   cursor_y_ = y_ + h_ / 2;
 
-  send_event(EventType::SCREEN_SHAPE_CHANGED, nullptr);
+  sendEvent(events_->forIScreen().shapeChanged(), nullptr);
 }
 
 void EiScreen::add_device(struct ei_device *device) {
@@ -476,8 +481,8 @@ void EiScreen::remove_device(struct ei_device *device) {
   update_shape();
 }
 
-void EiScreen::sendEvent(EventType type, EventDataBase *data) {
-  events_->addEvent(type, getEventTarget(), data);
+void EiScreen::sendEvent(Event::Type type, void *data) {
+  events_->addEvent(Event(type, getEventTarget(), data));
 }
 
 ButtonID EiScreen::map_button_from_evdev(ei_event *event) const {
@@ -543,7 +548,7 @@ void EiScreen::on_key_event(ei_event *event) {
 
   if (keyid != kKeyNone) {
     key_state_->sendKeyEvent(
-        get_event_target(), pressed, false, keyid, mask, 1, keybutton);
+        getEventTarget(), pressed, false, keyid, mask, 1, keybutton);
   }
 }
 
@@ -564,7 +569,7 @@ void EiScreen::on_button_event(ei_event *event) {
     return;
   }
 
-  send_event(
+  sendEvent(
       pressed ? EventType::PRIMARY_SCREEN_BUTTON_DOWN
               : EventType::PRIMARY_SCREEN_BUTTON_UP,
       create_event_data<ButtonInfo>(ButtonInfo{button, mask}));
@@ -613,7 +618,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
   if (x != 0 || y != 0)
-    send_event(
+    sendEvent(
         EventType::PRIMARY_SCREEN_WHEEL,
         create_event_data<WheelInfo>(WheelInfo{
             (int32_t)-x * PIXEL_TO_WHEEL_RATIO,
@@ -639,7 +644,7 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
   // libei and synergy seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
-  send_event(
+  sendEvent(
       EventType::PRIMARY_SCREEN_WHEEL,
       create_event_data<WheelInfo>(WheelInfo{-dx, -dy}));
 }
@@ -655,7 +660,7 @@ void EiScreen::on_motion_event(ei_event *event) {
     LOG_DEBUG(
         "on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)",
         cursor_x_, cursor_y_);
-    send_event(
+    sendEvent(
         EventType::PRIMARY_SCREEN_MOTION_ON_PRIMARY,
         create_event_data<MotionInfo>(MotionInfo{cursor_x_, cursor_y_}));
 
@@ -676,7 +681,7 @@ void EiScreen::on_motion_event(ei_event *event) {
       LOG_DEBUG(
           "on_motion_event on secondary at (dx,dy)=(%d,%d)", pixel_dx,
           pixel_dy);
-      send_event(
+      sendEvent(
           EventType::PRIMARY_SCREEN_MOTION_ON_SECONDARY,
           create_event_data<MotionInfo>(MotionInfo{pixel_dx, pixel_dy}));
       buffer_dx -= pixel_dx;
@@ -687,7 +692,7 @@ void EiScreen::on_motion_event(ei_event *event) {
 
 void EiScreen::on_abs_motion_event(ei_event *event) { assert(is_primary_); }
 
-void EiScreen::handle_connected_to_eis_event(const Event &event) {
+void EiScreen::handle_connected_to_eis_event(const Event &event, void *) {
   int fd = event.get_data_as<int>();
   LOG_DEBUG("We have an EIS connection! fd is %d", fd);
 
@@ -697,14 +702,14 @@ void EiScreen::handle_connected_to_eis_event(const Event &event) {
   }
 }
 
-void EiScreen::handle_portal_session_closed(const Event &event) {
+void EiScreen::handle_portal_session_closed(const Event &event, void *) {
   // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed
   // signal Let's clean up either way.
   cleanup_ei();
   init_ei();
 }
 
-void EiScreen::handle_system_event(const Event &sysevent) {
+void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
   std::lock_guard<std::mutex> lock(mutex_);
   bool disconnected = false;
 

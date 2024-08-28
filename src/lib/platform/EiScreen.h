@@ -41,9 +41,6 @@ class PortalRemoteDesktop;
 class PortalInputCapture;
 #endif
 
-// HACK: workaround until we implement event target.
-using EventTarget = void;
-
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen {
 public:
@@ -51,7 +48,7 @@ public:
   ~EiScreen();
 
   // IScreen overrides
-  const EventTarget *get_event_target() const;
+  void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
   void getShape(
       std::int32_t &x, std::int32_t &y, std::int32_t &width,
@@ -93,9 +90,7 @@ public:
 
 protected:
   // IPlatformScreen overrides
-  void handle_system_event(const Event &event) override;
-  void handle_connected_to_eis_event(const Event &event);
-  void handle_portal_session_closed(const Event &event);
+  void handleSystemEvent(const Event &event, void *) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;
 
@@ -106,7 +101,7 @@ protected:
 private:
   void init_ei();
   void cleanup_ei();
-  void send_event(EventType type, EventDataBase *data);
+  void sendEvent(Event::Type type, void *data);
   ButtonID map_button_from_evdev(ei_event *event) const;
   void on_key_event(ei_event *event);
   void on_button_event(ei_event *event);
@@ -118,10 +113,11 @@ private:
   void on_motion_event(ei_event *event);
   void on_abs_motion_event(ei_event *event);
   bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
-
   void handle_ei_log_event(
       ei *ei, ei_log_priority priority, const char *message,
       ei_log_context *context);
+  void handle_connected_to_eis_event(const Event &event, void *);
+  void handle_portal_session_closed(const Event &event, void *);
 
   static void cb_handle_ei_log_event(
       ei *ei, ei_log_priority priority, const char *message,

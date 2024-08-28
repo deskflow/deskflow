@@ -19,7 +19,6 @@
 #include "platform/EiEventQueueBuffer.h"
 
 #include "base/Event.h"
-#include "base/EventQueueTimer.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
@@ -126,7 +125,7 @@ EiEventQueueBuffer::getEvent(Event &event, uint32_t &dataID) {
     return kUser;
   }
 
-  event = Event(EventType::SYSTEM, events_->getSystemTarget(), nullptr);
+  event = Event(Event::kSystem, events_->getSystemTarget());
 
   return kSystem;
 }
@@ -145,6 +144,15 @@ bool EiEventQueueBuffer::isEmpty() const {
   std::lock_guard<std::mutex> lock(mutex_);
 
   return queue_.empty();
+}
+
+EventQueueTimer *
+EiEventQueueBuffer::newTimer(double duration, bool oneShot) const {
+  throw std::runtime_error("Not implemented");
+}
+
+void EiEventQueueBuffer::deleteTimer(EventQueueTimer *) const {
+  throw std::runtime_error("Not implemented");
 }
 
 } // namespace synergy

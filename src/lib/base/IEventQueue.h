@@ -50,6 +50,7 @@ class IPrimaryScreenEvents;
 class IScreenEvents;
 class ClipboardEvents;
 class FileEvents;
+class EiEvents;
 
 //! Event queue interface
 /*!
@@ -243,4 +244,5 @@ public:
   virtual IScreenEvents &forIScreen() = 0;
   virtual ClipboardEvents &forClipboard() = 0;
   virtual FileEvents &forFile() = 0;
+  virtual EiEvents &forEi() = 0;
 };

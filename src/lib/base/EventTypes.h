@@ -750,3 +750,31 @@ private:
   Event::Type m_fileRecieveCompleted;
   Event::Type m_keepAlive;
 };
+
+class EiEvents : public EventTypes {
+public:
+  EiEvents() : m_connected(Event::kUnknown), m_sessionClosed(Event::kUnknown) {}
+
+  //! @name accessors
+  //@{
+
+  //! Get connected event type
+  /*!
+  This event is sent whenever connection to EIS is established and a file
+  descriptor for reading events is available.
+  */
+  Event::Type connected();
+
+  //! Get session closed event type
+  /*!
+  This event is sent whenever the portal session managing our EIS connection
+  is closed.
+  */
+  Event::Type sessionClosed();
+
+  //@}
+
+private:
+  Event::Type m_connected;
+  Event::Type m_sessionClosed;
+};
