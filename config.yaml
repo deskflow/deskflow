@@ -147,6 +147,7 @@ config:
           qt6-base-devel \
           qt6-tools-devel \
           gtk3-devel \
+          googletest-devel \
           pugixml-devel \
           libei-devel \
           libportal-devel \
