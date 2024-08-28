@@ -148,6 +148,7 @@ config:
           qt6-tools-devel \
           gtk3-devel \
           pugixml-devel \
+          libei-devel \
           libportal-devel \
           systemd-devel
 
@@ -168,8 +169,8 @@ config:
           libxkbfile \
           gtest \
           pugixml \
-          libportal \
           libei \
+          libportal \
           systemd \
           qt6-base \
           qt6-tools \
