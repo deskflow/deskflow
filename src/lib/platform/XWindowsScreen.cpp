@@ -1231,7 +1231,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
         Window root, child;
         XMotionEvent xmotion;
         xmotion.type = MotionNotify;
-        xmotion.sendEvent = False; // Raw motion
+        xmotion.send_event = False; // Raw motion
         xmotion.display = m_display;
         xmotion.window = m_window;
         /* xmotion's time, state and is_hint are not used */
@@ -1554,7 +1554,7 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion) {
   m_xCursor = xmotion.x_root;
   m_yCursor = xmotion.y_root;
 
-  if (xmotion.sendEvent) {
+  if (xmotion.send_event) {
     // we warped the mouse.  discard events until we
     // find the matching sent event.  see
     // warpCursorNoFlush() for where the events are
@@ -1568,7 +1568,7 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion) {
         LOG((CLOG_WARN "too many discarded events! %d", cntr));
         break;
       }
-    } while (!xevent.xany.sendEvent);
+    } while (!xevent.xany.send_event);
     cntr = 0;
   } else if (m_isOnScreen) {
     // motion on primary screen

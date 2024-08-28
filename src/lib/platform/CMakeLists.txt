@@ -27,15 +27,28 @@ elseif(APPLE)
     "OSX*.m"
     "OSX*.mm")
 elseif(UNIX)
-  file(GLOB headers "XWindows*.h")
-  file(GLOB sources "XWindows*.cpp")
-  file(GLOB headers "Ei*.h")
-  file(GLOB sources "Ei*.cpp")
+  file(GLOB x_headers "XWindows*.h")
+  file(GLOB x_sources "XWindows*.cpp")
+  file(GLOB ei_headers "Ei*.h")
+  file(GLOB ei_sources "Ei*.cpp")
 
   if(LIBPORTAL_FOUND)
-    file(GLOB headers "Portal*.h")
-    file(GLOB sources "Portal*.cpp")
+    file(GLOB portal_headers "Portal*.h")
+    file(GLOB portal_sources "Portal*.cpp")
   endif()
+
+  list(
+    APPEND
+    headers
+    ${x_headers}
+    ${ei_headers}
+    ${portal_headers})
+  list(
+    APPEND
+    sources
+    ${x_sources}
+    ${ei_sources}
+    ${portal_sources})
 endif()
 
 if(ADD_HEADERS_TO_SOURCES)

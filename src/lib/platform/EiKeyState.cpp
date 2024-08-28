@@ -20,6 +20,8 @@
 
 #include "base/Log.h"
 #include "platform/XWindowsUtil.h"
+#include "synergy/AppUtil.h"
+#include "synergy/ClientApp.h"
 
 #include <algorithm>
 #include <cstddef>
@@ -30,7 +32,9 @@
 namespace synergy {
 
 EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
-    : KeyState(events),
+    : KeyState(
+          events, AppUtil::instance().getKeyboardLayoutList(),
+          ClientApp::instance().args().m_enableLangSync),
       screen_{screen} {
   xkb_ = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
