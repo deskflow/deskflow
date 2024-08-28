@@ -32,6 +32,16 @@ if host_machine.system() == 'linux'
   endif
   
   if not system_libportal or not libportal.found()
-    subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled'])
+
+    # Building libportal is a bit tricky on RHEL-like, so skip until we figure it out.
+    # Even when `qt6-qtbase-devel` is installed:
+    #   portal-qt6.cpp:32:10: fatal error: qpa/qplatformintegration.h: No such file or directory
+    rhel_grep = run_command(
+        'grep', '-Ei', 'redhat|rocky|almalinux', '/etc/os-release', check: false)
+    rhel_like = rhel_grep.returncode() == 0
+
+    if not rhel_like
+      subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled'])
+    endif
   endif
 endif

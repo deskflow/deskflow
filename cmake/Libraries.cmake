@@ -164,7 +164,7 @@ macro(configure_wayland_libs)
   include(FindPkgConfig)
 
   pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
-  pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
+  #pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
   pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
   find_library(LIBM m)

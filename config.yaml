@@ -83,7 +83,7 @@ config:
     # We simply use it as a base for Alma Linux and Rocky Linux.
     rhel: &rhel
       <<: *fedora
-      subprojects: [libei, libportal]
+      subprojects: [libei]
       dependencies: &rhel_deps
         <<: *fedora_deps
         command-pre: |
@@ -205,19 +205,3 @@ config:
 
         ubuntu: *debian_libportal
         linuxmint: *debian_libportal
-
-        fedora: &fedora_libportal |
-          sudo dnf install -y \
-          python3-pytest \
-          vala \
-          protobuf-c \
-          protobuf \
-          glib2 \
-          gtk3-devel \
-          protobuf-c-devel \
-          systemd-devel \
-          gobject-introspection-devel
-
-        rhel: *fedora_libportal
-        rocky: *fedora_libportal
-        almalinux: *fedora_libportal

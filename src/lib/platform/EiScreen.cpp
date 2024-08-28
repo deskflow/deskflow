@@ -26,11 +26,14 @@
 #include "base/TMethodEventJob.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
-#include "platform/PortalInputCapture.h"
-#include "platform/PortalRemoteDesktop.h"
 #include "synergy/Clipboard.h"
 #include "synergy/KeyMap.h"
 #include "synergy/XScreen.h"
+
+#if WINAPI_LIBPORTAL
+#include "platform/PortalInputCapture.h"
+#include "platform/PortalRemoteDesktop.h"
+#endif
 
 #include <algorithm>
 #include <cmath>
@@ -70,13 +73,18 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 #else
       throw std::invalid_argument(
           "Missing libportal InputCapture portal support");
-#endif
+#endif // HAVE_LIBPORTAL_INPUTCAPTURE
     } else {
+#if WINAPI_LIBPORTAL
       events_->adoptHandler(
           events_->forEi().sessionClosed(), getEventTarget(),
           new TMethodEventJob<EiScreen>(
               this, &EiScreen::handle_portal_session_closed));
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
+#else
+      throw std::invalid_argument(
+          "Missing libportal RemoteDesktop portal support");
+#endif // WINAPI_LIBPORTAL
     }
   } else {
     // Note: socket backend does not support reconnections
@@ -96,7 +104,9 @@ EiScreen::~EiScreen() {
 
   delete key_state_;
 
+#if WINAPI_LIBPORTAL
   delete portal_remote_desktop_;
+#endif
 #if HAVE_LIBPORTAL_INPUTCAPTURE
   delete portal_input_capture_;
 #endif
