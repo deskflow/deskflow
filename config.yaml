@@ -64,8 +64,6 @@ config:
           ninja-build \
           gcc-c++ \
           rpm-build \
-          python3-attrs \
-          python3-jinja2 \
           openssl-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
@@ -79,8 +77,7 @@ config:
           gmock-devel \
           pugixml-devel \
           libei-devel \
-          libportal-devel \
-          systemd-devel
+          libportal-devel
 
     # RHEL is not actually supported yet, since it doesn't have Qt6 libs.
     # We simply use it as a base for Alma Linux and Rocky Linux.
@@ -152,8 +149,6 @@ config:
           cmake \
           ninja \
           gcc \
-          python-attrs \
-          python-jinja \
           openssl \
           glib2 \
           gdk-pixbuf2 \
