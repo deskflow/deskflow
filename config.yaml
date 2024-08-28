@@ -169,16 +169,14 @@ config:
   subprojects:
     libei:
       dependencies:
-        debian: sudo apt-get install -y \
+        debian: &debian_libei |
+          sudo apt-get install -y \
           python3-attr \
           python3-jinja2 \
           libsystemd-dev
 
-        ubuntu:
-          <<: *debian
-
-        linuxmint:
-          <<: *debian
+        ubuntu: *debian_libei
+        linuxmint: *debian_libei
 
         fedora: sudo dnf install -y \
           python3-attrs \

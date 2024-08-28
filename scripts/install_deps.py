@@ -209,7 +209,6 @@ class SubprojectDependencies:
         import lib.linux as linux
 
         command = self.config.get_subproject_deps_command(self.subproject)
-        print("Running dependencies command")
         linux.run_command(command, check=True)
 
 
