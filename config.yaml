@@ -208,7 +208,6 @@ config:
 
         fedora: &fedora_libportal |
           sudo dnf install -y \
-          dbus-python \
           python3-pytest \
           vala \
           protobuf-c \
