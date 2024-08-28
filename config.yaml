@@ -173,6 +173,13 @@ config:
           python3-attr \
           python3-jinja2 \
           libsystemd-dev
+
+        ubuntu:
+          <<: *debian
+
+        linuxmint:
+          <<: *debian
+
         fedora: sudo dnf install -y \
           python3-attrs \
           python3-jinja2 \
