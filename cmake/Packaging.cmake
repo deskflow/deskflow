@@ -94,18 +94,12 @@ macro(configure_linux_packaging)
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
 
-  set(deb_deps)
-  set(rpm_deps)
-
   configure_libei_package_dep()
 
   # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
   # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
   # 12), so we must add it manually.
-  list(APPEND deb_deps "qt6-qpa-plugins")
-
-  string(JOIN ";" CPACK_DEBIAN_PACKAGE_DEPENDS ${deb_deps})
-  string(JOIN ";" CPACK_RPM_PACKAGE_REQUIRES ${rpm_deps})
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
 
   # The default for CMake seems to be /usr/local, which seems uncommon. While
   # the default /usr/local prefix causes the app to appear on Debian and Fedora,
@@ -145,9 +139,6 @@ macro(configure_libei_package_dep)
 
     # Disable RPM dependency on libei, as it's bundled.
     set(CPACK_RPM_SPEC_MORE_DEFINE "%define __requires_exclude libei")
-  else()
-    list(APPEND deb_deps "libei (>= 1.0)")
-    list(APPEND rpm_deps "libei >= 1.0")
   endif()
 
 endmacro()
