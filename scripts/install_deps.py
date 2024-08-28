@@ -29,6 +29,9 @@ def main():
     parser.add_argument(
         "--skip-meson", action="store_true", help="Do not setup and install with Meson"
     )
+    parser.add_argument(
+        "--subproject", type=str, help="Sub-project to install dependencies for"
+    )
     args = parser.parse_args()
 
     env.ensure_dependencies()
@@ -37,13 +40,7 @@ def main():
 
     error = False
     try:
-        if not args.skip_system:
-            deps = Dependencies(args.ci_env)
-            deps.install()
-
-        if not args.skip_meson:
-            run_meson()
-
+        run(args)
     except Exception:
         traceback.print_exc()
         error = True
@@ -53,6 +50,20 @@ def main():
 
     if error:
         sys.exit(1)
+
+
+def run(args):
+    if args.subproject:
+        deps = SubprojectDependencies(args.subproject)
+        deps.install()
+        return
+
+    if not args.skip_system:
+        deps = Dependencies(args.ci_env)
+        deps.install()
+
+    if not args.skip_meson:
+        run_meson()
 
 
 # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
@@ -166,6 +177,38 @@ class Dependencies:
             linux.run_command(command_pre, check)
 
         command = self.config.get_os_deps_command(linux_distro=distro)
+        print("Running dependencies command")
+        linux.run_command(command, check=True)
+
+        subprojects = self.config.get_os_subprojects()
+        for subproject in subprojects:
+            deps = SubprojectDependencies(subproject)
+            deps.install()
+
+
+class SubprojectDependencies:
+
+    def __init__(self, subproject):
+        from lib.config import Config
+
+        self.subproject = subproject
+        self.config = Config()
+
+    def install(self):
+        """Installs dependencies for the current platform."""
+
+        print(f"Installing dependencies for sub-project: {self.subproject}")
+
+        if env.is_linux():
+            self.linux()
+        else:
+            raise RuntimeError(f"Unsupported platform: {os}")
+
+    def linux(self):
+        """Installs dependencies on Linux."""
+        import lib.linux as linux
+
+        command = self.config.get_subproject_deps_command(self.subproject)
         print("Running dependencies command")
         linux.run_command(command, check=True)
 

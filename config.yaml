@@ -22,6 +22,7 @@ config:
 
   linux:
     debian: &debian
+      subprojects: [libei]
       dependencies:
         command-pre: sudo apt-get update
         command: |
@@ -31,8 +32,6 @@ config:
           ninja-build \
           g++ \
           file \
-          python3-attr \
-          python3-jinja2 \
           xorg-dev \
           libx11-dev \
           libxtst-dev \
@@ -47,8 +46,7 @@ config:
           libgtest-dev \
           libgmock-dev \
           libpugixml-dev \
-          libportal-dev \
-          libsystemd-dev
+          libportal-dev
 
     linuxmint:
       <<: *debian
@@ -88,6 +86,7 @@ config:
     # We simply use it as a base for Alma Linux and Rocky Linux.
     rhel: &rhel
       <<: *fedora
+      subprojects: [libei]
       dependencies: &rhel_deps
         <<: *fedora_deps
         command-pre: |
@@ -101,8 +100,6 @@ config:
           ninja-build \
           gcc-c++ \
           rpm-build \
-          python3-attrs \
-          python3-jinja2 \
           openssl-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
@@ -114,8 +111,7 @@ config:
           gtk3-devel \
           gtest-devel \
           gmock-devel \
-          pugixml-devel \
-          systemd-devel
+          pugixml-devel
 
     rocky:
       <<: *rhel
@@ -136,8 +132,6 @@ config:
           ninja \
           gcc-c++ \
           rpm-build \
-          python3-attrs \
-          python3-Jinja2 \
           libopenssl-devel \
           glib2-devel \
           gdk-pixbuf-devel \
@@ -149,8 +143,7 @@ config:
           gtk3-devel \
           pugixml-devel \
           libei-devel \
-          libportal-devel \
-          systemd-devel
+          libportal-devel
 
     arch: &arch
       dependencies:
@@ -178,3 +171,29 @@ config:
 
     manjaro:
       <<: *arch
+
+  subprojects:
+    libei:
+      dependencies:
+        debian: sudo apt-get install -y \
+          python3-attr \
+          python3-jinja2 \
+          libsystemd-dev
+        fedora: sudo dnf install -y \
+          python3-attrs \
+          python3-jinja2 \
+          systemd-devel
+
+    libportal:
+      dependencies:
+        debian: sudo apt-get install -y \
+          python3-dbusmock \
+          python3-pytest \
+          valac \
+          protobuf-c-compiler \
+          protobuf-compiler \
+          libglib2.0 \
+          libgtk-3-dev \
+          libprotobuf-c-dev \
+          libsystemd-dev \
+          libgirepository1.0-dev

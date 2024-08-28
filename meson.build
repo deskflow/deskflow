@@ -16,17 +16,26 @@ if host_machine.system() == 'windows'
 endif
 
 if host_machine.system() == 'linux'
-  libei = dependency('libei-1.0', required: false)
-  if not libei.found()
+
+  system_libei = get_option('system_libei')
+  if system_libei
+    libei = dependency('libei-1.0', required: false)
+  endif
+
+  if not system_libei or not libei.found()
     subproject('libei', default_options: ['tests=disabled', 'liboeffis=disabled'])
   endif
 
-  libportal = dependency('libportal', required: false)
-  if not libportal.found()
+  system_libportal = get_option('system_libportal')
+  if system_libportal
+    libportal = dependency('libportal', required: false)
+  endif
+  
+  if not system_libportal or not libportal.found()
 
     # Building libportal is a bit tricky on RHEL-like, so skip until we figure it out.
     rhel_grep = run_command(
-        'grep', '-Ei', 'redhat|rocky|almalinux', '/etc/os-release', check: true)
+        'grep', '-Ei', 'redhat|rocky|almalinux', '/etc/os-release', check: false)
     rhel_like = rhel_grep.returncode() == 0
 
     if not rhel_like
