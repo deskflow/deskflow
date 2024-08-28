@@ -169,6 +169,9 @@ macro(configure_wayland_libs)
   pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
   find_library(LIBM m)
 
+  message(STATUS "libei version: ${LIBEI_VERSION}")
+  message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+
   if(NOT LIBPORTAL_FOUND)
     message(WARNING "libportal not found, some features will be disabled")
   else()
