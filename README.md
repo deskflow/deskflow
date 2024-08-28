@@ -95,7 +95,7 @@ sudo dnf install synergy
 
 *Arch, Manjaro, etc:*
 ```
-sudo pacman -Syu synergy
+sudo pacman -S synergy
 ```
 
 *Repology:*
