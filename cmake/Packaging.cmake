@@ -139,8 +139,8 @@ macro(configure_libei_package_dep)
     get_filename_component(libei_lib_file_real ${libei_lib_file} REALPATH)
     message(STATUS "Package will bundle libei: ${libei_lib_file_real}")
     install(
-      FILES ${libei_lib_file} ${libei_lib_file_real}
-      DESTINATION lib
+      FILES ${libei_lib_file_real}
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}
       COMPONENT libraries)
 
     # Disable RPM dependency on libei, as it's bundled.
