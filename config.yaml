@@ -83,12 +83,32 @@ config:
     # We simply use it as a base for Alma Linux and Rocky Linux.
     rhel: &rhel
       <<: *fedora
+      subprojects: [libei, libportal]
       dependencies: &rhel_deps
         <<: *fedora_deps
         command-pre: |
           sudo dnf check-update;
           sudo dnf install -y epel-release;
           dnf config-manager --set-enabled crb
+        command: |
+          sudo dnf install -y \
+          cmake \
+          make \
+          ninja-build \
+          gcc-c++ \
+          rpm-build \
+          openssl-devel \
+          glib2-devel \
+          gdk-pixbuf2-devel \
+          libXtst-devel \
+          libnotify-devel \
+          libxkbfile-devel \
+          qt6-qtbase-devel \
+          qt6-qttools-devel \
+          gtk3-devel \
+          gtest-devel \
+          gmock-devel \
+          pugixml-devel
 
     rocky:
       <<: *rhel
@@ -170,7 +190,8 @@ config:
 
     libportal:
       dependencies:
-        debian: sudo apt-get install -y \
+        debian: &debian_libportal |
+          sudo apt-get install -y \
           python3-dbusmock \
           python3-pytest \
           valac \
@@ -181,3 +202,23 @@ config:
           libprotobuf-c-dev \
           libsystemd-dev \
           libgirepository1.0-dev
+
+        ubuntu: *debian_libportal
+        linuxmint: *debian_libportal
+
+        fedora: &fedora_libportal |
+          sudo dnf install -y \
+          dbus-python \
+          python3-pytest \
+          vala \
+          protobuf-c \
+          protobuf \
+          glib2 \
+          gtk3-devel \
+          protobuf-c-devel \
+          systemd-devel \
+          gobject-introspection-devel
+
+        rhel: *fedora_libportal
+        rocky: *fedora_libportal
+        almalinux: *fedora_libportal
