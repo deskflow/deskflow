@@ -48,9 +48,14 @@
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
 #include "platform/XWindowsScreen.h"
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_LIBEI
+#include "platform/EiScreen.h"
+#endif
+#if WINAPI_CARBON
 #include "platform/OSXScreen.h"
 #endif
 
@@ -104,29 +109,40 @@ void ServerApp::parseArgs(int argc, const char *const *argv) {
 }
 
 void ServerApp::help() {
-  // window api args (windows/x-windows/carbon)
-#if WINAPI_XWINDOWS
-#define WINAPI_ARGS " [--display <display>] [--no-xinitthreads]"
-#define WINAPI_INFO                                                            \
-  "      --display <display>  connect to the X server at <display>\n"          \
-  "      --no-xinitthreads    do not call XInitThreads()\n"
-#else
-#define WINAPI_ARGS
-#define WINAPI_INFO
-#endif
   static const int buffer_size = 3000;
   char buffer[buffer_size];
   snprintf(
       buffer, buffer_size,
       "Usage: %s"
       " [--address <address>]"
-      " [--config <pathname>]" WINAPI_ARGS HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
+      " [--config <pathname>]"
+
+#if WINAPI_XWINDOWS
+      " [--display <display>] [--no-xinitthreads]"
+#endif
+
+#ifdef WINAPI_LIBEI
+      " [--no-wayland-ei]"
+#endif
+
+      HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
       "Start the synergy mouse/keyboard sharing server.\n"
       "\n"
       "  -a, --address <address>  listen for clients on the given address.\n"
       "  -c, --config <pathname>  use the named configuration file "
-      "instead.\n" HELP_COMMON_INFO_1 WINAPI_INFO
-          HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
+      "instead.\n" HELP_COMMON_INFO_1
+
+#if WINAPI_XWINDOWS
+      "      --display <display>  connect to the X server at <display>\n"
+      "      --no-xinitthreads    do not call XInitThreads()\n"
+#endif
+
+#if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
+      "      --no-wayland-ei      do not use EI for Wayland and instead\n"
+      "                             use the legacy X Window System.\n"
+#endif
+
+      HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
       "* marks defaults.\n"
       "\n"
       "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
@@ -527,7 +543,17 @@ synergy::Screen *ServerApp::createScreen() {
       new MSWindowsScreen(
           true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events),
       m_events);
-#elif WINAPI_XWINDOWS
+#endif
+
+#if WINAPI_LIBEI
+  if (args().m_disableWaylandEi) {
+    return new synergy::Screen(
+        new synergy::EiScreen(false, m_events, !args().m_disableWaylandPortal),
+        m_events);
+  }
+#endif
+
+#if WINAPI_XWINDOWS
   return new synergy::Screen(
       new XWindowsScreen(
           args().m_display, true, args().m_disableXInitThreads, 0, m_events),

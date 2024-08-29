@@ -22,17 +22,15 @@
 namespace synergy {
 
 #if WINAPI_LIBEI
-const auto kUseEiDefault = true;
-const auto kUseX11Default = false;
+const auto kDisableEiDefault = false;
 #else
-const auto kUseX11Default = true;
-const auto kUseEiDefault = false;
+const auto kDisableEiDefault = true;
 #endif
 
 #if WINAPI_LIBPORTAL
-const auto kUsePortalDefault = true;
+const auto kDisablePortalDefault = false;
 #else
-const auto kUsePortalDefault = false;
+const auto kDisablePortalDefault = true;
 #endif
 
 /**
@@ -108,14 +106,11 @@ public:
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;
 
-  /// @brief Use X11 (X Windows)
-  bool m_useX11 = kUseX11Default;
+  /// @brief Disable EI (Emulated Input) for Wayland support
+  bool m_disableWaylandEi = kDisableEiDefault;
 
-  /// @brief Use EI (Emulated Input) for Wayland support
-  bool m_useWaylandEi = kUseEiDefault;
-
-  /// @brief Use Portal for Wayland support
-  bool m_useWaylandPortal = kUsePortalDefault;
+  /// @brief Disable Portal for Wayland support (use EI sockets instead)
+  bool m_disableWaylandPortal = kDisablePortalDefault;
 
 #if SYSAPI_WIN32
   bool m_debugServiceWait = false;

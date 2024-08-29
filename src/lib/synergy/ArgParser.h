@@ -38,9 +38,9 @@ public:
   parseServerArgs(synergy::ServerArgs &args, int argc, const char *const *argv);
   bool
   parseClientArgs(synergy::ClientArgs &args, int argc, const char *const *argv);
-  bool parsePlatformArg(
+  bool parsePlatformArgs(
       synergy::ArgsBase &argsBase, const int &argc, const char *const *argv,
-      int &i);
+      int &i, bool isServer);
   bool parseToolArgs(ToolArgs &args, int argc, const char *const *argv);
   bool parseGenericArgs(int argc, const char *const *argv, int &i);
   bool parseDeprecatedArgs(int argc, const char *const *argv, int &i);

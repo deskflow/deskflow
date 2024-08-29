@@ -112,54 +112,50 @@ void ClientApp::parseArgs(int argc, const char *const *argv) {
 
 void ClientApp::help() {
   std::stringstream help;
-  help << "Usage: " << args().m_pname << " [--address <address>]"
-       << " [--yscroll <delta>]"
-       << " [--sync-language]"
-       << " [--invert-scroll]"
-       << " [--host]"
+  help
+      << "Usage: " << args().m_pname << " [--address <address>]"
+      << " [--yscroll <delta>]"
+      << " [--sync-language]"
+      << " [--invert-scroll]"
+      << " [--host]"
 #ifdef WINAPI_XWINDOWS
-       << " [--use-x11] [--display <display>]"
+      << " [--display <display>]"
+      << " [--no-xinitthreads]"
 #endif
 #ifdef WINAPI_LIBEI
-       << " [--use-wayland-ei]"
+      << " [--use-x-window]"
 #endif
-#ifdef WINAPI_LIBPORTAL
-       << " [--use-wayland-portal]"
-#endif
-       << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
-       << "\n\n"
-       << "Connect to a synergy mouse/keyboard sharing server.\n"
-       << "\n"
-       << "  -a, --address <address>  local network interface address.\n"
-       << HELP_COMMON_INFO_1 << HELP_SYS_INFO
-       << "      --yscroll <delta>    defines the vertical scrolling delta, "
-          "which is\n"
-       << "                             120 by default.\n"
-       << "      --sync-language      set this parameter to enable language "
-          "synchronization.\n"
-       << "      --invert-scroll      invert scroll direction on this "
-          "computer.\n"
-       << "      --host               client starts a listener and waits for a "
-          "server connection.\n"
+      << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
+      << "\n\n"
+      << "Connect to a synergy mouse/keyboard sharing server.\n"
+      << "\n"
+      << "  -a, --address <address>  local network interface address.\n"
+      << HELP_COMMON_INFO_1 << HELP_SYS_INFO
+      << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
+      << "                             which is 120 by default.\n"
+      << "      --sync-language      enable language synchronization.\n"
+      << "      --invert-scroll      invert scroll direction on this\n"
+      << "                             computer."
+      << "      --host               act as a host; invert server/client mode\n"
+      << "                             and listen instead of connecting.\n"
 #if WINAPI_XWINDOWS
-       << "      --use-x11            use the X11 backend\n"
-       << "      --display <display>  connect to the X server at <display>\n"
+      << "      --display <display>  connect to the X server at <display>\n"
+      << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
-#ifdef WINAPI_LIBEI
-       << "      --use-wayland-ei     use the EI backend for Wayland support\n"
+#if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
+      << "      --no-wayland-ei      do not use EI for Wayland and instead \n"
+      << "                             use the legacy X Window System.\n"
 #endif
-#ifdef WINAPI_LIBPORTAL
-       << "      --use-wayland-portal use the Portal backend for Wayland "
-          "support\n"
+#if defined(WINAPI_LIBPORTAL) && defined(WINAPI_LIBEI)
+      << "      --no-wayland-portal  do not use Portal for Wayland and \n"
+      << "                             connect to EI socket instead.\n"
 #endif
-       << HELP_COMMON_INFO_2 << "\n"
-       << "* marks defaults.\n"
-       << "\n"
-       << "The server address is of the form: [<hostname>][:<port>].  The "
-          "hostname\n"
-       << "must be the address or hostname of the server.  The port overrides "
-          "the\n"
-       << "default port, " << kDefaultPort << ".\n";
+      << HELP_COMMON_INFO_2 << "\n"
+      << "* marks defaults.\n"
+      << "\n"
+      << "The server address is of the form: [<hostname>][:<port>].\n"
+      << "The hostname must be the address or hostname of the server.\n"
+      << "The port overrides the default port, " << kDefaultPort << ".\n";
 
   LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
@@ -190,20 +186,19 @@ synergy::Screen *ClientApp::createScreen() {
       m_events);
 #endif
 #if WINAPI_LIBEI
-  if (args().m_useWaylandEi) {
+  if (!args().m_disableWaylandEi) {
     return new synergy::Screen(
-        new synergy::EiScreen(false, m_events, args().m_useWaylandPortal),
+        new synergy::EiScreen(false, m_events, !args().m_disableWaylandPortal),
         m_events);
   }
 #endif
 #if WINAPI_XWINDOWS
-  if (args().m_useX11) {
-    return new synergy::Screen(
-        new XWindowsScreen(
-            args().m_display, false, args().m_disableXInitThreads,
-            args().m_yscroll, m_events, args().m_clientScrollDirection),
-        m_events);
-  }
+  return new synergy::Screen(
+      new XWindowsScreen(
+          args().m_display, false, args().m_disableXInitThreads,
+          args().m_yscroll, m_events, args().m_clientScrollDirection),
+      m_events);
+
 #endif
 #if WINAPI_CARBON
   return new synergy::Screen(
@@ -212,8 +207,6 @@ synergy::Screen *ClientApp::createScreen() {
           args().m_clientScrollDirection),
       m_events);
 #endif
-
-  throw std::runtime_error("No platform defined");
 }
 
 void ClientApp::updateStatus() { updateStatus(""); }

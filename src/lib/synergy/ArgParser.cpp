@@ -42,7 +42,7 @@ bool ArgParser::parseServerArgs(
   updateCommonArgs(argv);
   int i = 1;
   while (i < argc) {
-    if (parsePlatformArg(args, argc, argv, i)) {
+    if (parsePlatformArgs(args, argc, argv, i, true)) {
       ++i;
       continue;
     } else if (parseGenericArgs(argc, argv, i)) {
@@ -82,7 +82,7 @@ bool ArgParser::parseClientArgs(
 
   int i{1};
   while (i < argc) {
-    if (parsePlatformArg(args, argc, argv, i)) {
+    if (parsePlatformArgs(args, argc, argv, i, false)) {
       ++i;
       continue;
     } else if (parseGenericArgs(argc, argv, i)) {
@@ -137,9 +137,9 @@ bool ArgParser::parseClientArgs(
   return true;
 }
 
-bool ArgParser::parsePlatformArg(
+bool ArgParser::parsePlatformArgs(
     synergy::ArgsBase &argsBase, const int &argc, const char *const *argv,
-    int &i) {
+    int &i, bool isServer) {
 #if WINAPI_MSWINDOWS
   if (isArg(i, argc, argv, nullptr, "--service")) {
     LOG((CLOG_WARN "obsolete argument --service, use synergyd instead."));
@@ -156,17 +156,15 @@ bool ArgParser::parsePlatformArg(
   return true;
 #elif WINAPI_XWINDOWS
 
-  if (isArg(i, argc, argv, nullptr, "--use-x11")) {
-    argsBase.m_useX11 = true;
+#if WINAPI_LIBEI
+  if (isArg(i, argc, argv, nullptr, "--no-wayland-ei")) {
+    argsBase.m_disableWaylandEi = true;
   }
 
-  else if (isArg(i, argc, argv, nullptr, "--use-wayland-ei")) {
-    argsBase.m_useWaylandEi = true;
+  else if (!isServer && isArg(i, argc, argv, nullptr, "--no-wayland-portal")) {
+    argsBase.m_disableWaylandPortal = true;
   }
-
-  else if (isArg(i, argc, argv, nullptr, "--use-wayland-portal")) {
-    argsBase.m_useWaylandPortal = true;
-  }
+#endif
 
   if (isArg(i, argc, argv, "-display", "--display", 1)) {
     // use alternative display
