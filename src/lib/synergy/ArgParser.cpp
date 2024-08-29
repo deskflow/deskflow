@@ -156,16 +156,6 @@ bool ArgParser::parsePlatformArgs(
   return true;
 #elif WINAPI_XWINDOWS
 
-#if WINAPI_LIBEI
-  if (isArg(i, argc, argv, nullptr, "--no-wayland-ei")) {
-    argsBase.m_disableWaylandEi = true;
-  }
-
-  else if (!isServer && isArg(i, argc, argv, nullptr, "--no-wayland-portal")) {
-    argsBase.m_disableWaylandPortal = true;
-  }
-#endif
-
   if (isArg(i, argc, argv, "-display", "--display", 1)) {
     // use alternative display
     argsBase.m_display = argv[++i];
@@ -174,6 +164,16 @@ bool ArgParser::parsePlatformArgs(
   else if (isArg(i, argc, argv, nullptr, "--no-xinitthreads")) {
     argsBase.m_disableXInitThreads = true;
   }
+
+#if WINAPI_LIBEI
+  else if (isArg(i, argc, argv, nullptr, "--no-wayland-ei")) {
+    argsBase.m_disableWaylandEi = true;
+  }
+
+  else if (!isServer && isArg(i, argc, argv, nullptr, "--no-wayland-portal")) {
+    argsBase.m_disableWaylandPortal = true;
+  }
+#endif
 
   else {
     // option not supported here
