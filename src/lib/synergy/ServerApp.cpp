@@ -552,9 +552,9 @@ synergy::Screen *ServerApp::createScreen() {
 #endif
 
 #if WINAPI_LIBEI
-  if (args().m_disableWaylandEi) {
+  if (!args().m_disableWaylandEi) {
     return new synergy::Screen(
-        new synergy::EiScreen(false, m_events, !args().m_disableWaylandPortal),
+        new synergy::EiScreen(true, m_events, !args().m_disableWaylandPortal),
         m_events);
   }
 #endif
