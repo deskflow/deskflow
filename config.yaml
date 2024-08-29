@@ -26,7 +26,7 @@ config:
       dependencies:
         command-pre: sudo apt-get update
         command: |
-          sudo apt-get install -y \
+          sudo apt-get install -y --ignore-missing \
           cmake \
           make \
           ninja-build \
@@ -46,6 +46,7 @@ config:
           libgtest-dev \
           libgmock-dev \
           libpugixml-dev \
+          libei-dev \
           libportal-dev
 
     linuxmint:
@@ -58,7 +59,7 @@ config:
       dependencies: &fedora_deps
         command-pre: sudo dnf check-update
         command: |
-          sudo dnf install -y \
+          sudo dnf install -y --ignore-missing \
           cmake \
           make \
           ninja-build \
@@ -90,25 +91,6 @@ config:
           sudo dnf check-update;
           sudo dnf install -y epel-release;
           dnf config-manager --set-enabled crb
-        command: |
-          sudo dnf install -y \
-          cmake \
-          make \
-          ninja-build \
-          gcc-c++ \
-          rpm-build \
-          openssl-devel \
-          glib2-devel \
-          gdk-pixbuf2-devel \
-          libXtst-devel \
-          libnotify-devel \
-          libxkbfile-devel \
-          qt6-qtbase-devel \
-          qt6-qttools-devel \
-          gtk3-devel \
-          gtest-devel \
-          gmock-devel \
-          pugixml-devel
 
     rocky:
       <<: *rhel

@@ -163,22 +163,32 @@ macro(configure_wayland_libs)
 
   include(FindPkgConfig)
 
-  pkg_check_modules(LIBEI REQUIRED "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+  pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
   pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
   pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
   find_library(LIBM m)
 
-  message(STATUS "libei version: ${LIBEI_VERSION}")
-  message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
-
-  if(NOT LIBPORTAL_FOUND)
-    message(WARNING "libportal not found, some features will be disabled")
+  if(LIBEI_FOUND)
+    message(STATUS "libei version: ${LIBEI_VERSION}")
   else()
+    message(
+      WARNING
+        "libei >= ${LIBEI_MIN_VERSION} not found, Wayland support will be disabled."
+    )
+  endif()
+
+  if(LIBPORTAL_FOUND)
+    add_definitions(-DWINAPI_LIBPORTAL=1)
+    message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
     check_libportal()
     include_directories(${LIBPORTAL_INCLUDE_DIRS})
     list(APPEND libs ${LIBPORTAL_LINK_LIBRARIES})
-    add_definitions(-DWINAPI_LIBPORTAL=1)
+  else()
+    message(
+      WARNING
+        "libportal >= ${LIBPORTAL_MIN_VERSION} not found, some Wayland features will be disabled."
+    )
   endif()
 
   include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
