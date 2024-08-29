@@ -206,8 +206,8 @@ jobs:
 
       matrix:
         distro:
-          - name: debian-13-arm64
-            container: symless/synergy-core:debian-13-arm64
+          - name: debian-13-amd64
+            container: symless/synergy-core:debian-13-amd64
             runs-on: ubuntu-latest
             extra-packages: true
 
