@@ -21,7 +21,7 @@ if host_machine.system() == 'linux'
   if system_libei
     dependency('libei-1.0', required: false)
   else
-    # Using the subproject is only useful for development; it's not intended for distribution.
+    # Using the subproject is only useful for development; it's not intended for normal use.
     # GNOME46 or above is required as this has the required bits for libei.
     # Building on anything older is pointless as you won't be able to actually connect to anything.
     subproject('libei', default_options: ['tests=disabled', 'liboeffis=disabled'])
@@ -31,7 +31,7 @@ if host_machine.system() == 'linux'
   if system_libportal
     dependency('libportal', required: false)
   else
-    # Using the subproject is only useful for development; it's not intended for distribution.
+    # Using the subproject is only useful for development; it's not intended for normal use.
     subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled'])
   endif
 endif
