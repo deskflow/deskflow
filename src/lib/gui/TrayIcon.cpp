@@ -17,6 +17,7 @@
 
 #include "TrayIcon.h"
 
+#include "Logger.h"
 #include "common/constants.h"
 
 namespace synergy::gui {
@@ -43,7 +44,7 @@ void TrayIcon::showRetryLoop() {
   } else {
     // on some platforms, it's not always possible to create the tray when the
     // app starts, so keep trying until it is possible.
-    qDebug("system tray not ready yet, retrying in %d ms", kShowRetryInterval);
+    logVerbose(QString("system tray not ready yet, retrying in %1 ms").arg(kShowRetryInterval));
     QTimer::singleShot(kShowRetryInterval, this, &TrayIcon::showRetryLoop);
   }
 }
