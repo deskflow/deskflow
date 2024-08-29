@@ -94,8 +94,6 @@ macro(configure_linux_packaging)
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
 
-  configure_libei_package_dep()
-
   # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
   # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
   # 12), so we must add it manually.
@@ -113,33 +111,6 @@ macro(configure_linux_packaging)
 
   # Prepare PKGBUILD for Arch Linux
   configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
-
-endmacro()
-
-macro(configure_libei_package_dep)
-
-  # By default, bundle libei if the project was fetched, otherwise system libei is used.
-  # The project is only fetched and built if Meson wasn't able to find it on the system.
-  file(GLOB libei_project_exists ${CMAKE_SOURCE_DIR}/subprojects/libei)
-  if(libei_project_exists)
-    set(DEFAULT_BUNDLE_LIBEI ON)
-  else()
-    set(DEFAULT_BUNDLE_LIBEI OFF)
-  endif()
-
-  option(BUNDLE_LIBEI "Bundle libei" ${DEFAULT_BUNDLE_LIBEI})
-  if(BUNDLE_LIBEI)
-    find_library(libei_lib_file NAMES ei)
-    get_filename_component(libei_lib_file_real ${libei_lib_file} REALPATH)
-    message(STATUS "Package will bundle libei: ${libei_lib_file_real}")
-    install(
-      FILES ${libei_lib_file_real}
-      DESTINATION lib
-      COMPONENT libraries)
-
-    # Disable RPM dependency on libei, as it's bundled.
-    set(CPACK_RPM_SPEC_MORE_DEFINE "%define __requires_exclude libei")
-  endif()
 
 endmacro()
 

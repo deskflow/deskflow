@@ -143,8 +143,7 @@ void ClientApp::help() {
       << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 #if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      << "      --no-wayland-ei      do not use EI for Wayland and instead \n"
-      << "                             use the legacy X Window System.\n"
+      << HELP_NO_LIBEI_ARG
 #endif
 #if defined(WINAPI_LIBPORTAL) && defined(WINAPI_LIBEI)
       << "      --no-wayland-portal  do not use Portal for Wayland and \n"
@@ -152,6 +151,11 @@ void ClientApp::help() {
 #endif
       << HELP_COMMON_INFO_2 << "\n"
       << "* marks defaults.\n"
+
+#if HELP_NO_WAYLAND_SUPPORT
+      << HELP_NO_WAYLAND_SUPPORT
+#endif
+
       << "\n"
       << "The server address is of the form: [<hostname>][:<port>].\n"
       << "The hostname must be the address or hostname of the server.\n"

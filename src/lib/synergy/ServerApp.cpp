@@ -138,12 +138,16 @@ void ServerApp::help() {
 #endif
 
 #if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      "      --no-wayland-ei      do not use EI for Wayland and instead\n"
-      "                             use the legacy X Window System.\n"
+      HELP_NO_LIBEI_ARG
 #endif
 
-      HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
+          HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
       "* marks defaults.\n"
+
+#if HELP_NO_WAYLAND_SUPPORT
+      HELP_NO_WAYLAND_SUPPORT
+#endif
+
       "\n"
       "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
       "hostname must be the address or hostname of an interface on the "

@@ -218,3 +218,16 @@ private:
   "      --exit-pause         wait for key press on exit, can be useful for\n" \
   "                             reading error messages that occur on exit.\n"
 #endif
+
+#if WINAPI_LIBEI
+#define HELP_NO_LIBEI_ARG                                                      \
+  "      --no-wayland-ei      do not use EI (emulated input) for\n"            \
+  "                             Wayland and instead use the legacy\n"          \
+  "                             X Window System.\n"
+#else
+#define HELP_NO_WAYLAND_SUPPORT                                                \
+  "\n"                                                                         \
+  "This build does not support Wayland as EI () is\n"                          \
+  "required for Wayland support.  Please rebuild with EI support\n"            \
+  "enabled.\n"
+#endif
