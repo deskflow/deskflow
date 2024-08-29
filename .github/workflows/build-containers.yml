@@ -26,6 +26,12 @@ jobs:
 
       matrix:
         os:
+          - name: debian-13-amd64
+            runs-on: ubuntu-latest
+            config-dir: debian
+            base-image: debian:trixie-slim
+            platform: amd64
+
           - name: debian-12-amd64
             runs-on: ubuntu-latest
             config-dir: debian
