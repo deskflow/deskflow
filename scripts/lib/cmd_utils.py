@@ -33,15 +33,11 @@ def strip_continuation_sequences(command):
 
     To spread strings over multiple lines in YAML files, like in bash, a backslash is used at
     the end of each line as continuation character.
-    When a YAML file is parsed, this becomes "\\ " (without a new line char), so this character
-    sequence must be removed before running the command.
-    This doesn't seem to be an issue on Windows, since the \\ path separator is rarely followed
-    by a space.
     """
-    cmd_continuation = "\\ "
+    cmd_continuation = "\\\n"
 
     if isinstance(command, list):
-        return [c.replace(cmd_continuation, "") for c in command]
+        raise ValueError("List commands are not supported")
     else:
         return command.replace(cmd_continuation, "")
 
