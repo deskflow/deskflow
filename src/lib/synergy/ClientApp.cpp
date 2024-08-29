@@ -143,7 +143,7 @@ void ClientApp::help() {
       << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 #if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      << HELP_NO_LIBEI_ARG
+      << kNoWaylandEiArg
 #endif
 #if defined(WINAPI_LIBPORTAL) && defined(WINAPI_LIBEI)
       << "      --no-wayland-portal  do not use Portal for Wayland and \n"

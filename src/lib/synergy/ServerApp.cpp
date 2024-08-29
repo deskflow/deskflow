@@ -66,6 +66,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 
 //
@@ -138,12 +139,12 @@ void ServerApp::help() {
       << "instead.\n" HELP_COMMON_INFO_1
 
 #if WINAPI_XWINDOWS
-      << "<< --display <display>  connect to the X server at <display>\n"
-      << "<< --no-xinitthreads    do not call XInitThreads()\n"
+      << "      --display <display>  connect to the X server at <display>\n"
+      << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 
 #if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      << HELP_NO_LIBEI_ARG
+      << kNoWaylandEiArg
 #endif
 
       << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"

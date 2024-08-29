@@ -220,17 +220,23 @@ private:
 #endif
 
 #if WINAPI_LIBEI
-#define HELP_NO_LIBEI_ARG                                                      \
-  "      --no-wayland-ei      do not use EI (emulated input) for\n"            \
-  "                             Wayland and instead use the legacy\n"          \
-  "                             X Window System.\n"
+
+const auto kNoWaylandEiArg =
+    "      --no-wayland-ei      do not use EI (emulated input) for\n"
+    "                             Wayland and instead use the legacy\n"
+    "                             X Window System.\n";
 const auto kHelpNoWayland = "";
+
 #elif WINAPI_XWINDOWS
+
+const auto kNoWaylandEiArg = "";
 const auto kHelpNoWayland =
     "\n"
     "Your Linux distribution does not support Wayland EI (emulated input)\n"
     "which is required for Wayland support.  Please use a Linux distribution\n"
     "that supports Wayland EI.\n";
+
 #else
+const auto kNoWaylandEiArg = "";
 const auto kHelpNoWayland = "";
 #endif
