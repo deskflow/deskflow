@@ -135,7 +135,7 @@ void ClientApp::help() {
       << "                             which is 120 by default.\n"
       << "      --sync-language      enable language synchronization.\n"
       << "      --invert-scroll      invert scroll direction on this\n"
-      << "                             computer."
+      << "                             computer.\n"
       << "      --host               act as a host; invert server/client mode\n"
       << "                             and listen instead of connecting.\n"
 #if WINAPI_XWINDOWS

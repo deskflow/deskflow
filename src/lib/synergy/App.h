@@ -183,8 +183,8 @@ private:
   "  -l  --log <file>         write log messages to file.\n"                   \
   "      --no-tray            disable the system tray icon.\n"                 \
   "      --enable-drag-drop   enable file drag & drop.\n"                      \
-  "      --enable-crypto      enable the crypto (ssl) plugin.\n"               \
-  "      --tls-cert           specify the path to the tls certificate file.\n"
+  "      --enable-crypto      enable TLS encryption.\n"                        \
+  "      --tls-cert           specify the path to the TLS certificate file.\n"
 
 #define HELP_COMMON_INFO_2                                                     \
   "  -h, --help               display this help and exit.\n"                   \
@@ -228,9 +228,9 @@ const auto kHelpNoWayland = "";
 #elif WINAPI_XWINDOWS
 const auto kHelpNoWayland =
     "\n"
-    "This build does not support Wayland because EI (emulated input) is\n"
-    "required for Wayland support.  Please ensure that your Linux\n"
-    "distribution supports EI.\n";
+    "Your Linux distribution does not support Wayland EI (emulated input)\n"
+    "which is required for Wayland support.  Please use a Linux distribution\n"
+    "that supports Wayland EI.\n";
 #else
 const auto kHelpNoWayland = "";
 #endif
