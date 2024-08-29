@@ -48,9 +48,14 @@
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
 #include "platform/XWindowsScreen.h"
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_LIBEI
+#include "platform/EiScreen.h"
+#endif
+#if WINAPI_CARBON
 #include "platform/OSXScreen.h"
 #endif
 
@@ -106,27 +111,27 @@ void ClientApp::parseArgs(int argc, const char *const *argv) {
 }
 
 void ClientApp::help() {
-#if WINAPI_XWINDOWS
-#define WINAPI_ARG " [--display <display>] [--no-xinitthreads]"
-#define WINAPI_INFO                                                            \
-  "      --display <display>  connect to the X server at <display>\n"          \
-  "      --no-xinitthreads    do not call XInitThreads()\n"
-#else
-#define WINAPI_ARG ""
-#define WINAPI_INFO ""
-#endif
   std::stringstream help;
   help << "Usage: " << args().m_pname << " [--address <address>]"
        << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
-       << " [--host]" << WINAPI_ARG << HELP_SYS_ARGS << HELP_COMMON_ARGS
-       << " <server-address>"
+       << " [--host]"
+#ifdef WINAPI_XWINDOWS
+       << " [--use-x11] [--display <display>]"
+#endif
+#ifdef WINAPI_LIBEI
+       << " [--use-wayland-ei]"
+#endif
+#ifdef WINAPI_LIBPORTAL
+       << " [--use-wayland-portal]"
+#endif
+       << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
        << "\n\n"
        << "Connect to a synergy mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  local network interface address.\n"
-       << HELP_COMMON_INFO_1 << WINAPI_INFO << HELP_SYS_INFO
+       << HELP_COMMON_INFO_1 << HELP_SYS_INFO
        << "      --yscroll <delta>    defines the vertical scrolling delta, "
           "which is\n"
        << "                             120 by default.\n"
@@ -136,6 +141,17 @@ void ClientApp::help() {
           "computer.\n"
        << "      --host               client starts a listener and waits for a "
           "server connection.\n"
+#if WINAPI_XWINDOWS
+       << "      --use-x11            use the X11 backend\n"
+       << "      --display <display>  connect to the X server at <display>\n"
+#endif
+#ifdef WINAPI_LIBEI
+       << "      --use-wayland-ei     use the EI backend for Wayland support\n"
+#endif
+#ifdef WINAPI_LIBPORTAL
+       << "      --use-wayland-portal use the Portal backend for Wayland "
+          "support\n"
+#endif
        << HELP_COMMON_INFO_2 << "\n"
        << "* marks defaults.\n"
        << "\n"
@@ -172,19 +188,32 @@ synergy::Screen *ClientApp::createScreen() {
           false, args().m_noHooks, args().m_stopOnDeskSwitch, m_events,
           args().m_enableLangSync, args().m_clientScrollDirection),
       m_events);
-#elif WINAPI_XWINDOWS
-  return new synergy::Screen(
-      new XWindowsScreen(
-          args().m_display, false, args().m_disableXInitThreads,
-          args().m_yscroll, m_events, args().m_clientScrollDirection),
-      m_events);
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_LIBEI
+  if (args().m_useWaylandEi) {
+    return new synergy::Screen(
+        new synergy::EiScreen(false, m_events, args().m_useWaylandPortal),
+        m_events);
+  }
+#endif
+#if WINAPI_XWINDOWS
+  if (args().m_useX11) {
+    return new synergy::Screen(
+        new XWindowsScreen(
+            args().m_display, false, args().m_disableXInitThreads,
+            args().m_yscroll, m_events, args().m_clientScrollDirection),
+        m_events);
+  }
+#endif
+#if WINAPI_CARBON
   return new synergy::Screen(
       new OSXScreen(
           m_events, false, args().m_enableLangSync,
           args().m_clientScrollDirection),
       m_events);
 #endif
+
+  throw std::runtime_error("No platform defined");
 }
 
 void ClientApp::updateStatus() { updateStatus(""); }

@@ -93,6 +93,7 @@ protected:
   void handleSystemEvent(const Event &event, void *) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;
+  String getSecureInputApp() const override;
 
   void update_shape();
   void add_device(ei_device *device);

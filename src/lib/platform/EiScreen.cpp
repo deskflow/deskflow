@@ -834,6 +834,10 @@ void EiScreen::updateButtons() {
 
 IKeyState *EiScreen::getKeyState() const { return key_state_; }
 
+String EiScreen::getSecureInputApp() const {
+  throw std::runtime_error("Not implemented");
+}
+
 EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id)
     : mask_(mask),
       id_(id) {}

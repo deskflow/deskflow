@@ -155,6 +155,19 @@ bool ArgParser::parsePlatformArg(
 
   return true;
 #elif WINAPI_XWINDOWS
+
+  if (isArg(i, argc, argv, nullptr, "--use-x11")) {
+    argsBase.m_useX11 = true;
+  }
+
+  else if (isArg(i, argc, argv, nullptr, "--use-wayland-ei")) {
+    argsBase.m_useWaylandEi = true;
+  }
+
+  else if (isArg(i, argc, argv, nullptr, "--use-wayland-portal")) {
+    argsBase.m_useWaylandPortal = true;
+  }
+
   if (isArg(i, argc, argv, "-display", "--display", 1)) {
     // use alternative display
     argsBase.m_display = argv[++i];
