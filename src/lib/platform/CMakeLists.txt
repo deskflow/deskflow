@@ -29,12 +29,16 @@ elseif(APPLE)
 elseif(UNIX)
   file(GLOB x_headers "XWindows*.h")
   file(GLOB x_sources "XWindows*.cpp")
-  file(GLOB ei_headers "Ei*.h")
-  file(GLOB ei_sources "Ei*.cpp")
 
-  if(LIBPORTAL_FOUND)
-    file(GLOB portal_headers "Portal*.h")
-    file(GLOB portal_sources "Portal*.cpp")
+  if(LIBEI_FOUND)
+    file(GLOB ei_headers "Ei*.h")
+    file(GLOB ei_sources "Ei*.cpp")
+
+    # The Portal sources also require EI.
+    if(LIBPORTAL_FOUND)
+      file(GLOB portal_headers "Portal*.h")
+      file(GLOB portal_sources "Portal*.cpp")
+    endif()
   endif()
 
   list(
@@ -64,10 +68,15 @@ add_library(platform STATIC ${sources})
 target_link_libraries(platform client ${libs})
 
 macro(link_wayland_libs)
-  target_link_libraries(platform ei)
+  target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
+                        ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES})
+
+  if(LIBEI_FOUND)
+    target_link_libraries(platform ${LIBEI_LINK_LIBRARIES})
+  endif()
 
   if(LIBPORTAL_FOUND)
-    target_link_libraries(platform portal)
+    target_link_libraries(platform ${LIBPORTAL_LINK_LIBRARIES})
   endif()
 endmacro()
 
