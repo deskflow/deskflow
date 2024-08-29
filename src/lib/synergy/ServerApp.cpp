@@ -36,6 +36,7 @@
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
+#include "synergy/App.h"
 #include "synergy/ArgParser.h"
 #include "synergy/Screen.h"
 #include "synergy/ServerArgs.h"
@@ -109,61 +110,61 @@ void ServerApp::parseArgs(int argc, const char *const *argv) {
 }
 
 void ServerApp::help() {
-  static const int buffer_size = 3000;
-  char buffer[buffer_size];
-  snprintf(
-      buffer, buffer_size,
-      "Usage: %s"
-      " [--address <address>]"
-      " [--config <pathname>]"
+  const auto userConfig =
+      ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME);
+  const auto sysConfig =
+      ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME);
+
+  std::stringstream help;
+  help
+      << "Usage: " << args().m_pname
+
+      << " [--address <address>]"
+      << " [--config <pathname>]"
 
 #if WINAPI_XWINDOWS
-      " [--display <display>] [--no-xinitthreads]"
+      << " [--display <display>] [--no-xinitthreads]"
 #endif
 
 #ifdef WINAPI_LIBEI
-      " [--no-wayland-ei]"
+      << " [--no-wayland-ei]"
 #endif
 
-      HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
-      "Start the synergy mouse/keyboard sharing server.\n"
-      "\n"
-      "  -a, --address <address>  listen for clients on the given address.\n"
-      "  -c, --config <pathname>  use the named configuration file "
-      "instead.\n" HELP_COMMON_INFO_1
+      << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
+      << "Start the synergy mouse/keyboard sharing server.\n"
+      << "\n"
+      << "  -a, --address <address>  listen for clients on the given address.\n"
+      << "  -c, --config <pathname>  use the named configuration file "
+      << "instead.\n" HELP_COMMON_INFO_1
 
 #if WINAPI_XWINDOWS
-      "      --display <display>  connect to the X server at <display>\n"
-      "      --no-xinitthreads    do not call XInitThreads()\n"
+      << "<< --display <display>  connect to the X server at <display>\n"
+      << "<< --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 
 #if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      HELP_NO_LIBEI_ARG
+      << HELP_NO_LIBEI_ARG
 #endif
 
-          HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
-      "* marks defaults.\n"
+      << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
+      << "* marks defaults.\n"
 
-#if HELP_NO_WAYLAND_SUPPORT
-      HELP_NO_WAYLAND_SUPPORT
-#endif
+      << kHelpNoWayland
 
-      "\n"
-      "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
-      "hostname must be the address or hostname of an interface on the "
-      "system.\n"
-      "The default is to listen on all interfaces.  The port overrides the\n"
-      "default port, %d.\n"
-      "\n"
-      "If no configuration file pathname is provided then the first of the\n"
-      "following to load successfully sets the configuration:\n"
-      "  %s\n"
-      "  %s\n",
-      args().m_pname, kDefaultPort,
-      ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME).c_str(),
-      ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME).c_str());
+      << "\n"
+      << "The argument for --address is of the form: [<hostname>][:<port>].  "
+         "The\n"
+      << "hostname must be the address or hostname of an interface on the "
+      << "system.\n"
+      << "The default is to listen on all interfaces.  The port overrides the\n"
+      << "default port, " << kDefaultPort << ".\n"
+      << "\n"
+      << "If no configuration file pathname is provided then the first of the\n"
+      << "following to load successfully sets the configuration:\n"
+      << "  " << userConfig << "\n"
+      << "  " << sysConfig << "\n";
 
-  LOG((CLOG_PRINT "%s", buffer));
+  LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
 
 void ServerApp::reloadSignalHandler(Arch::ESignal, void *) {

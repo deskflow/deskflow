@@ -152,9 +152,7 @@ void ClientApp::help() {
       << HELP_COMMON_INFO_2 << "\n"
       << "* marks defaults.\n"
 
-#if HELP_NO_WAYLAND_SUPPORT
-      << HELP_NO_WAYLAND_SUPPORT
-#endif
+      << kHelpNoWayland
 
       << "\n"
       << "The server address is of the form: [<hostname>][:<port>].\n"

@@ -224,10 +224,12 @@ private:
   "      --no-wayland-ei      do not use EI (emulated input) for\n"            \
   "                             Wayland and instead use the legacy\n"          \
   "                             X Window System.\n"
-#else
-#define HELP_NO_WAYLAND_SUPPORT                                                \
-  "\n"                                                                         \
-  "This build does not support Wayland as EI () is\n"                          \
-  "required for Wayland support.  Please rebuild with EI support\n"            \
-  "enabled.\n"
+const auto kHelpNoWayland = "";
+#elif WINAPI_XWINDOWS
+const auto kHelpNoWayland =
+    "\n"
+    "This build does not support Wayland as EI () is\n"
+    "required for Wayland support.  Please rebuild with EI support\n"
+    "enabled.\n";
+
 #endif
