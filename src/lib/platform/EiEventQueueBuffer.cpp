@@ -30,6 +30,8 @@
 #include <poll.h>
 #include <unistd.h>
 
+class EventQueueTimer {};
+
 namespace synergy {
 
 EiEventQueueBuffer::EiEventQueueBuffer(
@@ -150,11 +152,11 @@ bool EiEventQueueBuffer::isEmpty() const {
 
 EventQueueTimer *
 EiEventQueueBuffer::newTimer(double duration, bool oneShot) const {
-  throw std::runtime_error("Not implemented");
+  return new EventQueueTimer;
 }
 
-void EiEventQueueBuffer::deleteTimer(EventQueueTimer *) const {
-  throw std::runtime_error("Not implemented");
+void EiEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
+  delete timer;
 }
 
 } // namespace synergy
