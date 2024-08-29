@@ -228,8 +228,9 @@ const auto kHelpNoWayland = "";
 #elif WINAPI_XWINDOWS
 const auto kHelpNoWayland =
     "\n"
-    "This build does not support Wayland as EI () is\n"
-    "required for Wayland support.  Please rebuild with EI support\n"
-    "enabled.\n";
-
+    "This build does not support Wayland because EI (emulated input) is\n"
+    "required for Wayland support.  Please ensure that your Linux\n"
+    "distribution supports EI.\n";
+#else
+const auto kHelpNoWayland = "";
 #endif
