@@ -26,7 +26,7 @@ config:
       dependencies:
         command-pre: sudo apt-get update
         command: |
-          sudo apt-get install -y --ignore-missing \
+          sudo apt-get install -y \
           cmake \
           make \
           ninja-build \
@@ -48,6 +48,7 @@ config:
           libpugixml-dev \
           libei-dev \
           libportal-dev
+        optional: [libei-dev, libportal-dev]
 
     linuxmint:
       <<: *debian
@@ -59,7 +60,7 @@ config:
       dependencies: &fedora_deps
         command-pre: sudo dnf check-update
         command: |
-          sudo dnf install -y --ignore-missing \
+          sudo dnf install -y \
           cmake \
           make \
           ninja-build \
@@ -79,6 +80,7 @@ config:
           pugixml-devel \
           libei-devel \
           libportal-devel
+        optional: [libei-devel, libportal-devel]
 
     # RHEL is not actually supported yet, since it doesn't have Qt6 libs.
     # We simply use it as a base for Alma Linux and Rocky Linux.

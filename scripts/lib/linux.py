@@ -1,4 +1,4 @@
-import os, shutil, glob
+import os, shutil, glob, sys
 import lib.cmd_utils as cmd_utils
 import lib.env as env
 from enum import Enum, auto
@@ -167,3 +167,25 @@ def test_install(package_file, remove_test=True):
             print("Leaving test package installed")
 
         print("Installation test passed")
+
+
+def is_package_available(package):
+    distro, distro_like, _distro_version = env.get_linux_distro()
+    if not distro_like:
+        distro_like = distro
+
+    if "debian" in distro_like:
+        command = ["apt-cache", "show", package]
+    elif "fedora" in distro_like:
+        command = ["dnf", "info", package]
+    elif "opensuse" in distro_like:
+        command = ["zypper", "info", package]
+    elif "arch" in distro_like:
+        command = ["pacman", "-Si", package]
+    else:
+        raise RuntimeError(f"Linux distro not yet supported: {distro}")
+
+    result = cmd_utils.run(command, check=False, print_cmd=True, get_output=True)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+    return result.returncode == 0
