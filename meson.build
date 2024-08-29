@@ -31,6 +31,7 @@ if host_machine.system() == 'linux'
   if system_libportal
     dependency('libportal', required: false)
   else
+    # Using the subproject is only useful for development; it's not intended for distribution.
     subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled'])
   endif
 endif
