@@ -22,7 +22,6 @@ config:
 
   linux:
     debian: &debian
-      subprojects: [libei]
       dependencies:
         command-pre: sudo apt-get update
         command: |
@@ -86,7 +85,6 @@ config:
     # We simply use it as a base for Alma Linux and Rocky Linux.
     rhel: &rhel
       <<: *fedora
-      subprojects: [libei]
       dependencies: &rhel_deps
         <<: *fedora_deps
         command-pre: |
