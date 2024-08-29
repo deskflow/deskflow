@@ -177,7 +177,9 @@ class Dependencies:
             linux.run_command(command_pre, check)
 
         command = self.config.get_os_deps_command(linux_distro=distro)
-        optional = self.config.get_os_deps_value("optional", linux_distro=distro)
+        optional = self.config.get_os_deps_value(
+            "optional", linux_distro=distro, required=False
+        )
         if optional:
             for optional_package in optional:
                 if not linux.is_package_available(optional_package):
