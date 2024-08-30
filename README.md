@@ -1,6 +1,6 @@
 # Synergy
 
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy-core)
 [![CI](https://github.com/symless/synergy/actions/workflows/ci.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/ci.yml)
 [![CodeQL Analysis](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml)
 [![SonarCloud Analysis](https://github.com/symless/synergy/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/sonarcloud-analysis.yml)
