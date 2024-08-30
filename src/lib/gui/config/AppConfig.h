@@ -21,6 +21,7 @@
 #include "ElevateMode.h"
 #include "IAppConfig.h"
 #include "IConfigScopes.h"
+#include "gui/license/license_utils.h"
 #include "gui/paths.h"
 
 #include <QDir>
@@ -43,12 +44,6 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif // Q_OS_WIN
-
-#ifdef SYNERGY_SHOW_DEV_THANKS
-const bool kDefaultShowDevThanks = true;
-#else
-const bool kDefaultShowDevThanks = false;
-#endif // SYNERGY_SHOW_DEV_THANKS
 
 } // namespace synergy::gui
 
@@ -334,7 +329,7 @@ private:
   int m_TlsKeyLength = synergy::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
-  bool m_ShowDevThanks = synergy::gui::kDefaultShowDevThanks;
+  bool m_ShowDevThanks = !synergy::gui::license::isLicensedProduct();
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
 

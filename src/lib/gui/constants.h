@@ -32,7 +32,7 @@ const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
 const auto kUrlWebsite = "https://symless.com";
 const auto kUrlSourceQuery = "source=gui";
-const auto kUrlGitHub = "https://github.com/symless/synergy-core";
+const auto kUrlGitHub = "https://github.com/symless/synergy";
 const auto kUrlGnomeTrayFix =
     "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
 const auto kUrlProduct = QString("%1/synergy").arg(kUrlWebsite);
