@@ -44,7 +44,8 @@ void TrayIcon::showRetryLoop() {
   } else {
     // on some platforms, it's not always possible to create the tray when the
     // app starts, so keep trying until it is possible.
-    logVerbose(QString("system tray not ready yet, retrying in %1 ms").arg(kShowRetryInterval));
+    logVerbose(QString("system tray not ready yet, retrying in %1 ms")
+                   .arg(kShowRetryInterval));
     QTimer::singleShot(kShowRetryInterval, this, &TrayIcon::showRetryLoop);
   }
 }

@@ -13,7 +13,7 @@ include_files = [
     "CMakeLists.txt",
 ]
 
-exclude_dirs = ["ext", "build", "deps"]
+exclude_dirs = ["subprojects", "build", "deps"]
 
 
 def main():
