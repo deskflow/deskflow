@@ -254,14 +254,14 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press) {
 
   switch (button) {
   case kButtonLeft:
-    code = 0x110;
-    break; // BTN_LEFT
+    code = 0x110; // BTN_LEFT
+    break;
   case kButtonMiddle:
-    code = 0x112;
-    break; // BTN_MIDDLE
+    code = 0x112; // BTN_MIDDLE
+    break;
   case kButtonRight:
-    code = 0x111;
-    break; // BTN_RIGHT
+    code = 0x111; // BTN_RIGHT
+    break;
   default:
     code = 0x110 + (button - 1);
     break;
