@@ -551,12 +551,14 @@ synergy::Screen *ServerApp::createScreen() {
 
 #if WINAPI_LIBEI
   if (synergy::platform::isWayland()) {
+    LOG((CLOG_INFO "using ei screen for wayland"));
     return new synergy::Screen(
         new synergy::EiScreen(true, m_events, true), m_events);
   }
 #endif
 
 #if WINAPI_XWINDOWS
+  LOG((CLOG_INFO "using legacy x windows screen"));
   return new synergy::Screen(
       new XWindowsScreen(
           args().m_display, true, args().m_disableXInitThreads, 0, m_events),
