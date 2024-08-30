@@ -2,6 +2,12 @@
 
 Enhancements:
 
+- #7452 Change default value for dev thanks message
+
+# 1.15.0
+
+Enhancements:
+
 - #7254 Bind client to a network interface with `--address`
 - #7262 Backward compatibility for M1 and M2 builds
 - #7263 Change name of Flatpak uploaded to snapshots
