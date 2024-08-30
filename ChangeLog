@@ -8,6 +8,12 @@ Enhancements:
 - #7453 Change default value for dev thanks message
 - #7455 Use EI screen when XDG_SESSION_TYPE is "wayland"
 
+# 1.15.1
+
+Enhancements:
+
+- #7452 Change default value for dev thanks message
+
 # 1.15.0
 
 Enhancements:
