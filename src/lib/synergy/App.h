@@ -219,17 +219,7 @@ private:
   "                             reading error messages that occur on exit.\n"
 #endif
 
-#if WINAPI_LIBEI
-
-const auto kNoWaylandEiArg =
-    "      --no-wayland-ei      do not use EI (emulated input) for\n"
-    "                             Wayland and instead use the legacy\n"
-    "                             X Window System.\n";
-const auto kHelpNoWayland = "";
-
-#elif WINAPI_XWINDOWS
-
-const auto kNoWaylandEiArg = "";
+#if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
 const auto kHelpNoWayland =
     "\n"
     "Your Linux distribution does not support Wayland EI (emulated input)\n"
@@ -237,6 +227,5 @@ const auto kHelpNoWayland =
     "that supports Wayland EI.\n";
 
 #else
-const auto kNoWaylandEiArg = "";
 const auto kHelpNoWayland = "";
 #endif
