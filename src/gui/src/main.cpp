@@ -19,7 +19,6 @@
 #include "MainWindow.h"
 #include "QSynergyApplication.h"
 #include "SetupWizard.h"
-#include "SetupWizardBlocker.h"
 #include "common/constants.h"
 #include "common/version.h"
 #include "gui/Logger.h"
@@ -116,14 +115,6 @@ int main(int argc, char *argv[]) {
   QObject::connect(
       &configScopes, &ConfigScopes::saving, &appConfig,
       [&appConfig]() { appConfig.commit(); }, Qt::DirectConnection);
-
-  std::unique_ptr<SetupWizardBlocker> setupBlocker;
-  if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
-    SetupWizardBlocker blocked(SetupWizardBlocker::BlockerType::Wayland);
-    blocked.exec();
-    qInfo("wayland detected, exiting");
-    return 0;
-  }
 
   if (appConfig.wizardShouldRun()) {
     SetupWizard wizard(appConfig);
