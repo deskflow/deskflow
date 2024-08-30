@@ -146,7 +146,7 @@ std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const {
 
 // Only way to figure out whether a key is a modifier key is to press it,
 // check if a modifier changed state and then release it again.
-// Luckily xkbcommon allows us to do this in a separate
+// Luckily xkbcommon allows us to do this in a separate state.
 void EiKeyState::assign_generated_modifiers(
     std::uint32_t keycode, synergy::KeyMap::KeyItem &item) {
   std::uint32_t mods_generates = 0;
