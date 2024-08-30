@@ -7,6 +7,12 @@ Enhancements:
 - #7445 Update `config.yaml` to support Linux Mint build target
 - #7453 Change default value for dev thanks message
 
+# 1.15.1
+
+Enhancements:
+
+- #7452 Change default value for dev thanks message
+
 # 1.15.0
 
 Enhancements:
