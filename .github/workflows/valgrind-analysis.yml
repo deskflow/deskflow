@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ./scripts/install_deps.py --ci-env &&
+          ./scripts/install_deps.py &&
           apt install valgrind -y
         env:
           # Prevent apt prompting for input.

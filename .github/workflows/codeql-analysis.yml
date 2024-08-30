@@ -35,7 +35,7 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py --ci-env
+        run: ./scripts/install_deps.py
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive

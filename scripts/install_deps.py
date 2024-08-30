@@ -12,6 +12,10 @@ cmake_prefix_env_var = "CMAKE_PREFIX_PATH"
 
 
 def main():
+    is_ci = os.getenv("CI") is not None
+    if is_ci:
+        print("CI environment detected")
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--pause-on-exit", action="store_true", help="Useful on Windows"
@@ -19,7 +23,8 @@ def main():
     parser.add_argument(
         "--ci-env",
         action="store_true",
-        help="Set if running in CI environment",
+        help="Useful for faking CI env (defaults to true in CI env)"
+        default=is_ci,
     )
     parser.add_argument(
         "--skip-system",
@@ -180,11 +185,10 @@ class Dependencies:
         optional = self.config.get_os_deps_value(
             "optional", linux_distro=distro, required=False
         )
-        if optional:
-            for optional_package in optional:
-                if not linux.is_package_available(optional_package):
-                    print(f"Optional package not found, stripping: {optional_package}")
-                    command = command.replace(optional_package, "")
+        for optional_package in optional or []:
+            if not linux.is_package_available(optional_package):
+                print(f"Optional package not found, stripping: {optional_package}")
+                command = command.replace(optional_package, "")
 
         print("Running dependencies command")
         linux.run_command(command, check=True)

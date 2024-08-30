@@ -39,7 +39,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ./scripts/install_deps.py --ci-env &&
+          ./scripts/install_deps.py &&
           apt install curl unzip -y &&
           pip install gcovr
         env:
