@@ -76,7 +76,7 @@ void PortalRemoteDesktop::reconnect(unsigned int timeout) {
 }
 
 void PortalRemoteDesktop::cb_session_closed(XdpSession *session) {
-  LOG_ERR("Our RemoteDesktop session was closed, re-connecting.");
+  LOG_ERR("portal remote desktop session was closed, reconnecting");
   g_signal_handler_disconnect(session, session_signal_id_);
   session_signal_id_ = 0;
   events_->addEvent(
@@ -94,7 +94,7 @@ void PortalRemoteDesktop::cb_session_started(
   auto session = XDP_SESSION(object);
   auto success = xdp_session_start_finish(session, res, &error);
   if (!success) {
-    LOG_ERR("Failed to start session");
+    LOG_ERR("failed to start portal remote desktop session");
     g_main_loop_quit(glib_main_loop_);
     events_->addEvent(Event::kQuit);
     return;
@@ -123,13 +123,13 @@ void PortalRemoteDesktop::cb_session_started(
 
 void PortalRemoteDesktop::cb_init_remote_desktop_session(
     GObject *object, GAsyncResult *res) {
-  LOG_DEBUG("Session ready");
+  LOG_DEBUG("remote desktop session ready");
   g_autoptr(GError) error = nullptr;
 
   auto session = xdp_portal_create_remote_desktop_session_finish(
       XDP_PORTAL(object), res, &error);
   if (!session) {
-    LOG_ERR("Failed to initialize RemoteDesktop session: %s", error->message);
+    LOG_ERR("failed to initialize remote desktop session: %s", error->message);
     // This was the first attempt to connect to the RD portal - quit if that
     // fails.
     if (session_iteration_ == 0) {
@@ -175,7 +175,7 @@ static inline void xdp_portal_create_remote_desktop_session_full(
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session() {
   LOG_DEBUG(
-      "Setting up the RemoteDesktop session with restore token %s",
+      "setting up remote desktop session with restore token %s",
       session_restore_token_);
   xdp_portal_create_remote_desktop_session_full(
       portal_,

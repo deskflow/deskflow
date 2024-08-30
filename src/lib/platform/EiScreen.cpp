@@ -117,7 +117,7 @@ void EiScreen::handle_ei_log_event(
     ei_log_context *context) {
   switch (priority) {
   case EI_LOG_PRIORITY_DEBUG:
-    LOG_DEBUG3("ei: %s", message);
+    LOG_DEBUG("ei: %s", message);
     break;
   case EI_LOG_PRIORITY_INFO:
     LOG_INFO("ei: %s", message);
@@ -341,9 +341,7 @@ void EiScreen::enter() {
   }
 #if HAVE_LIBPORTAL_INPUTCAPTURE
   else {
-    LOG_DEBUG(
-        "Releasing input capture at (cursor_x_,cursor_y_) = (%i,%i)", cursor_x_,
-        cursor_y_);
+    LOG_DEBUG("releasing input capture at x=%i y=%i", cursor_x_, cursor_y_);
     portal_input_capture_->release(cursor_x_, cursor_y_);
   }
 #endif
@@ -549,7 +547,7 @@ void EiScreen::on_key_event(ei_event *event) {
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
   LOG_DEBUG1(
-      "event: Key %s keycode=%d keyid=%d mask=0x%x",
+      "event: key %s keycode=%d keyid=%d mask=0x%x",
       pressed ? "press" : "release", keycode, keyid, mask);
 
   if (is_primary_ && on_hotkey(keyid, pressed, mask)) {
@@ -563,7 +561,6 @@ void EiScreen::on_key_event(ei_event *event) {
 }
 
 void EiScreen::on_button_event(ei_event *event) {
-  LOG_DEBUG("on_button_event");
   assert(is_primary_);
 
   ButtonID button = map_button_from_evdev(event);
@@ -575,7 +572,7 @@ void EiScreen::on_button_event(ei_event *event) {
       button, mask);
 
   if (button == kButtonNone) {
-    LOG_DEBUG("onButtonEvent: button not recognized");
+    LOG_DEBUG("event: button not recognized");
     return;
   }
 
@@ -613,16 +610,12 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   dx += remainder->x;
   dy += remainder->y;
 
-  LOG_DEBUG1("event: after remainder (%.2f, %.2f)", dx, dy);
-
   double x, y;
   double rx = modf(dx, &x);
   double ry = modf(dy, &y);
 
   assert(!std::isnan(x) && !std::isinf(x));
   assert(!std::isnan(y) && !std::isinf(y));
-
-  LOG_DEBUG1("event: xy is (%.2f, %.2f)", x, y);
 
   // libei and synergy seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
@@ -636,7 +629,6 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
 
   remainder->x = rx;
   remainder->y = ry;
-  LOG_DEBUG1("event: remainder is (%.2f, %.2f)", x, y);
 }
 
 void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
@@ -658,16 +650,13 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
 }
 
 void EiScreen::on_motion_event(ei_event *event) {
-  LOG_DEBUG("on_motion_event");
   assert(is_primary_);
 
   double dx = ei_event_pointer_get_dx(event);
   double dy = ei_event_pointer_get_dy(event);
 
   if (is_on_screen_) {
-    LOG_DEBUG(
-        "on_motion_event on primary at (cursor_x_,cursor_y_)=(%i,%i)",
-        cursor_x_, cursor_y_);
+    LOG_DEBUG("event: motion on primary x=%i y=%i)", cursor_x_, cursor_y_);
     sendEvent(
         events_->forIPrimaryScreen().motionOnPrimary(),
         MotionInfo::alloc(cursor_x_, cursor_y_));
@@ -682,13 +671,8 @@ void EiScreen::on_motion_event(ei_event *event) {
     buffer_dy += dy;
     auto pixel_dx = static_cast<std::int32_t>(buffer_dx);
     auto pixel_dy = static_cast<std::int32_t>(buffer_dy);
-    LOG_DEBUG2(
-        "on_motion_event(buffer) on secondary at (dx,dy)=(%0.2f,%0.2f)",
-        buffer_dx, buffer_dy);
     if (pixel_dx || pixel_dy) {
-      LOG_DEBUG(
-          "on_motion_event on secondary at (dx,dy)=(%d,%d)", pixel_dx,
-          pixel_dy);
+      LOG_DEBUG("event: motion on secondary x=%d y=%d", pixel_dx, pixel_dy);
       sendEvent(
           events_->forIPrimaryScreen().motionOnSecondary(),
           MotionInfo::alloc(pixel_dx, pixel_dy));
@@ -702,7 +686,7 @@ void EiScreen::on_abs_motion_event(ei_event *event) { assert(is_primary_); }
 
 void EiScreen::handle_connected_to_eis_event(const Event &event, void *) {
   int fd = static_cast<EiConnectInfo *>(event.getData())->m_fd;
-  LOG_DEBUG("We have an EIS connection! fd is %d", fd);
+  LOG_DEBUG("eis connection established, fd=%d", fd);
 
   auto rc = ei_setup_backend_fd(ei_, fd);
   if (rc != 0) {
@@ -733,7 +717,7 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
 
     switch (type) {
     case EI_EVENT_CONNECT:
-      LOG_DEBUG("connected to EIS");
+      LOG_DEBUG("connected to eis");
       break;
     case EI_EVENT_SEAT_ADDED:
       if (!ei_seat_) {
@@ -742,7 +726,7 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
             ei_seat_, EI_DEVICE_CAP_POINTER, EI_DEVICE_CAP_POINTER_ABSOLUTE,
             EI_DEVICE_CAP_KEYBOARD, EI_DEVICE_CAP_BUTTON, EI_DEVICE_CAP_SCROLL,
             nullptr);
-        LOG_DEBUG("using seat %s", ei_seat_get_name(ei_seat_));
+        LOG_DEBUG("ei: using seat %s", ei_seat_get_name(ei_seat_));
         // we don't care about touch
       }
       break;

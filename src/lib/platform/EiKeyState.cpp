@@ -250,7 +250,7 @@ void EiKeyState::fakeKey(const Keystroke &keystroke) {
   switch (keystroke.m_type) {
   case Keystroke::kButton:
     LOG_DEBUG1(
-        "  %03x (%08x) %s", keystroke.m_data.m_button.m_button,
+        "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button,
         keystroke.m_data.m_button.m_client,
         keystroke.m_data.m_button.m_press ? "down" : "up");
     screen_->fakeKey(
@@ -262,21 +262,19 @@ void EiKeyState::fakeKey(const Keystroke &keystroke) {
 }
 
 KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const {
-  LOG_DEBUG1("map_key_from_keyval keyval=%d", keyval);
-
   // FIXME: That might be a bit crude...?
   xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(xkb_state_, keyval);
   KeySym keysym = static_cast<KeySym>(xkb_keysym);
-  LOG_DEBUG1("mapped code=%d to keysym=0x%04lx", keyval, keysym);
 
   KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
-  LOG_DEBUG1("mapped keysym=0x%04lx to keyID=%d", keysym, keyid);
+  LOG_DEBUG1(
+      "mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
 
   return keyid;
 }
 
 void EiKeyState::update_xkb_state(uint32_t keyval, bool is_pressed) {
-  LOG_DEBUG1("update_xkb_state keyval=%d pressed=%i", keyval, is_pressed);
+  LOG_DEBUG1("update key state: keyval=%d pressed=%i", keyval, is_pressed);
   xkb_state_update_key(
       xkb_state_, keyval, is_pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }

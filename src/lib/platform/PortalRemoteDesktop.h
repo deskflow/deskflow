@@ -67,8 +67,9 @@ private:
   char *session_restore_token_ = nullptr;
 
   guint session_signal_id_ = 0;
-  guint session_iteration_ =
-      0; /// The number of successful sessions we've had already
+
+  /// The number of successful sessions we've had already
+  guint session_iteration_ = 0;
 };
 
 } // namespace synergy
