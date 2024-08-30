@@ -7,6 +7,7 @@
 aqtinstall.log
 Brewfile.lock.json
 /.cache
+/subprojects
 
 # typical developer-created files
 .vscode
