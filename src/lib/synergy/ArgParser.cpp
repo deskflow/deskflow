@@ -165,16 +165,6 @@ bool ArgParser::parsePlatformArgs(
     argsBase.m_disableXInitThreads = true;
   }
 
-#if WINAPI_LIBEI
-  else if (isArg(i, argc, argv, nullptr, "--no-wayland-ei")) {
-    argsBase.m_disableWaylandEi = true;
-  }
-
-  else if (!isServer && isArg(i, argc, argv, nullptr, "--no-wayland-portal")) {
-    argsBase.m_disableWaylandPortal = true;
-  }
-#endif
-
   else {
     // option not supported here
     return false;

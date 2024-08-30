@@ -36,6 +36,7 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
+#include "platform/wayland.h"
 #include "synergy/ArgParser.h"
 #include "synergy/ClientArgs.h"
 #include "synergy/Screen.h"
@@ -139,15 +140,9 @@ void ClientApp::help() {
       << "      --host               act as a host; invert server/client mode\n"
       << "                             and listen instead of connecting.\n"
 #if WINAPI_XWINDOWS
-      << "      --display <display>  connect to the X server at <display>\n"
+      << "      --display <display>  when in X mode, connect to the X server\n"
+      << "                             at <display>\n."
       << "      --no-xinitthreads    do not call XInitThreads()\n"
-#endif
-#if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      << kNoWaylandEiArg
-#endif
-#if defined(WINAPI_LIBPORTAL) && defined(WINAPI_LIBEI)
-      << "      --no-wayland-portal  do not use Portal for Wayland and \n"
-      << "                             connect to EI socket instead.\n"
 #endif
       << HELP_COMMON_INFO_2 << "\n"
       << "* marks defaults.\n"
@@ -188,10 +183,9 @@ synergy::Screen *ClientApp::createScreen() {
       m_events);
 #endif
 #if WINAPI_LIBEI
-  if (!args().m_disableWaylandEi) {
+  if (synergy::platform::isWayland()) {
     return new synergy::Screen(
-        new synergy::EiScreen(false, m_events, !args().m_disableWaylandPortal),
-        m_events);
+        new synergy::EiScreen(false, m_events, true), m_events);
   }
 #endif
 #if WINAPI_XWINDOWS

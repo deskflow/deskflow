@@ -32,6 +32,7 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
+#include "platform/wayland.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
@@ -139,12 +140,9 @@ void ServerApp::help() {
       << "instead.\n" HELP_COMMON_INFO_1
 
 #if WINAPI_XWINDOWS
-      << "      --display <display>  connect to the X server at <display>\n"
+      << "      --display <display>  when in X mode, connect to the X server\n"
+      << "                             at <display>\n."
       << "      --no-xinitthreads    do not call XInitThreads()\n"
-#endif
-
-#if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
-      << kNoWaylandEiArg
 #endif
 
       << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
@@ -552,10 +550,9 @@ synergy::Screen *ServerApp::createScreen() {
 #endif
 
 #if WINAPI_LIBEI
-  if (!args().m_disableWaylandEi) {
+  if (synergy::platform::isWayland()) {
     return new synergy::Screen(
-        new synergy::EiScreen(true, m_events, !args().m_disableWaylandPortal),
-        m_events);
+        new synergy::EiScreen(true, m_events, true), m_events);
   }
 #endif
 

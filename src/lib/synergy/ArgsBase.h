@@ -21,18 +21,6 @@
 
 namespace synergy {
 
-#if WINAPI_LIBEI
-const auto kDisableEiDefault = false;
-#else
-const auto kDisableEiDefault = true;
-#endif
-
-#if WINAPI_LIBPORTAL
-const auto kDisablePortalDefault = false;
-#else
-const auto kDisablePortalDefault = true;
-#endif
-
 /**
  * @brief This is the base Argument class that will store the generic
  *        arguments passed into the applications this will be derived
@@ -105,12 +93,6 @@ public:
 
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;
-
-  /// @brief Disable EI (Emulated Input) for Wayland support
-  bool m_disableWaylandEi = kDisableEiDefault;
-
-  /// @brief Disable Portal for Wayland support (use EI sockets instead)
-  bool m_disableWaylandPortal = kDisablePortalDefault;
 
 #if SYSAPI_WIN32
   bool m_debugServiceWait = false;
