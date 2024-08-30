@@ -249,6 +249,11 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
     qFatal("core process must be in starting state");
   }
 
+  if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
+    qCritical("wayland client is is not supported in this version");
+    return;
+  }
+
   // only make quoted args for printing the command for convenience; so that the
   // core command can be easily copy/pasted to the terminal for testing.
   const auto quoted = makeQuotedArgs(app, args);
