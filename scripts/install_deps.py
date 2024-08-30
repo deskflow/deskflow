@@ -93,9 +93,6 @@ class Dependencies:
         self.config = Config()
         self.ci_env = ci_env
 
-        if self.ci_env:
-            print("CI environment detected")
-
     def install(self):
         """Installs dependencies for the current platform."""
 
