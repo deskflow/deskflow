@@ -23,7 +23,7 @@ def main():
     parser.add_argument(
         "--ci-env",
         action="store_true",
-        help="Useful for faking CI env (defaults to true in CI env)"
+        help="Useful for faking CI env (defaults to true in CI env)",
         default=is_ci,
     )
     parser.add_argument(
