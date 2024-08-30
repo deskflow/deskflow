@@ -2,6 +2,7 @@
 
 Enhancements:
 
+- #7449 Wayland support (port Red Hat libei and libportal impl)
 - #7448 Only add PR comments for internal PR
 - #7445 Update `config.yaml` to support Linux Mint build target
 

@@ -91,13 +91,13 @@ macro(configure_linux_packaging)
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
+  set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
+  set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
+
   # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
   # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
   # 12), so we must add it manually.
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
-
-  set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
-  set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
 
   # The default for CMake seems to be /usr/local, which seems uncommon. While
   # the default /usr/local prefix causes the app to appear on Debian and Fedora,

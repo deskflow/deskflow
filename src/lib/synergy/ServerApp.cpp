@@ -36,6 +36,7 @@
 #include "server/ClientProxy.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
+#include "synergy/App.h"
 #include "synergy/ArgParser.h"
 #include "synergy/Screen.h"
 #include "synergy/ServerArgs.h"
@@ -48,9 +49,14 @@
 
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
-#elif WINAPI_XWINDOWS
+#endif
+#if WINAPI_XWINDOWS
 #include "platform/XWindowsScreen.h"
-#elif WINAPI_CARBON
+#endif
+#if WINAPI_LIBEI
+#include "platform/EiScreen.h"
+#endif
+#if WINAPI_CARBON
 #include "platform/OSXScreen.h"
 #endif
 
@@ -60,6 +66,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 
 //
@@ -104,46 +111,61 @@ void ServerApp::parseArgs(int argc, const char *const *argv) {
 }
 
 void ServerApp::help() {
-  // window api args (windows/x-windows/carbon)
-#if WINAPI_XWINDOWS
-#define WINAPI_ARGS " [--display <display>] [--no-xinitthreads]"
-#define WINAPI_INFO                                                            \
-  "      --display <display>  connect to the X server at <display>\n"          \
-  "      --no-xinitthreads    do not call XInitThreads()\n"
-#else
-#define WINAPI_ARGS
-#define WINAPI_INFO
-#endif
-  static const int buffer_size = 3000;
-  char buffer[buffer_size];
-  snprintf(
-      buffer, buffer_size,
-      "Usage: %s"
-      " [--address <address>]"
-      " [--config <pathname>]" WINAPI_ARGS HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
-      "Start the synergy mouse/keyboard sharing server.\n"
-      "\n"
-      "  -a, --address <address>  listen for clients on the given address.\n"
-      "  -c, --config <pathname>  use the named configuration file "
-      "instead.\n" HELP_COMMON_INFO_1 WINAPI_INFO
-          HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
-      "* marks defaults.\n"
-      "\n"
-      "The argument for --address is of the form: [<hostname>][:<port>].  The\n"
-      "hostname must be the address or hostname of an interface on the "
-      "system.\n"
-      "The default is to listen on all interfaces.  The port overrides the\n"
-      "default port, %d.\n"
-      "\n"
-      "If no configuration file pathname is provided then the first of the\n"
-      "following to load successfully sets the configuration:\n"
-      "  %s\n"
-      "  %s\n",
-      args().m_pname, kDefaultPort,
-      ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME).c_str(),
-      ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME).c_str());
+  const auto userConfig =
+      ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME);
+  const auto sysConfig =
+      ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME);
 
-  LOG((CLOG_PRINT "%s", buffer));
+  std::stringstream help;
+  help
+      << "Usage: " << args().m_pname
+
+      << " [--address <address>]"
+      << " [--config <pathname>]"
+
+#if WINAPI_XWINDOWS
+      << " [--display <display>] [--no-xinitthreads]"
+#endif
+
+#ifdef WINAPI_LIBEI
+      << " [--no-wayland-ei]"
+#endif
+
+      << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
+      << "Start the synergy mouse/keyboard sharing server.\n"
+      << "\n"
+      << "  -a, --address <address>  listen for clients on the given address.\n"
+      << "  -c, --config <pathname>  use the named configuration file "
+      << "instead.\n" HELP_COMMON_INFO_1
+
+#if WINAPI_XWINDOWS
+      << "      --display <display>  connect to the X server at <display>\n"
+      << "      --no-xinitthreads    do not call XInitThreads()\n"
+#endif
+
+#if defined(WINAPI_XWINDOWS) && defined(WINAPI_LIBEI)
+      << kNoWaylandEiArg
+#endif
+
+      << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
+      << "* marks defaults.\n"
+
+      << kHelpNoWayland
+
+      << "\n"
+      << "The argument for --address is of the form: [<hostname>][:<port>].  "
+         "The\n"
+      << "hostname must be the address or hostname of an interface on the "
+      << "system.\n"
+      << "The default is to listen on all interfaces.  The port overrides the\n"
+      << "default port, " << kDefaultPort << ".\n"
+      << "\n"
+      << "If no configuration file pathname is provided then the first of the\n"
+      << "following to load successfully sets the configuration:\n"
+      << "  " << userConfig << "\n"
+      << "  " << sysConfig << "\n";
+
+  LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
 
 void ServerApp::reloadSignalHandler(Arch::ESignal, void *) {
@@ -527,7 +549,17 @@ synergy::Screen *ServerApp::createScreen() {
       new MSWindowsScreen(
           true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events),
       m_events);
-#elif WINAPI_XWINDOWS
+#endif
+
+#if WINAPI_LIBEI
+  if (!args().m_disableWaylandEi) {
+    return new synergy::Screen(
+        new synergy::EiScreen(true, m_events, !args().m_disableWaylandPortal),
+        m_events);
+  }
+#endif
+
+#if WINAPI_XWINDOWS
   return new synergy::Screen(
       new XWindowsScreen(
           args().m_display, true, args().m_disableXInitThreads, 0, m_events),

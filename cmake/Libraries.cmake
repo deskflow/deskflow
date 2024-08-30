@@ -1,3 +1,6 @@
+set(LIBEI_MIN_VERSION 1.2.1)
+set(LIBPORTAL_MIN_VERSION 0.6)
+
 macro(configure_libs)
 
   set(libs)
@@ -9,8 +12,8 @@ macro(configure_libs)
 
   config_qt()
   configure_openssl()
-  update_submodules()
-  configure_test_libs()
+  configure_gtest()
+  configure_coverage()
 
 endmacro()
 
@@ -99,6 +102,7 @@ macro(configure_unix_libs)
     configure_mac_libs()
   else()
     configure_xorg_libs()
+    configure_wayland_libs()
   endif()
 
   # For config.h, set some static values; it may be a good idea to make these
@@ -155,10 +159,78 @@ macro(configure_mac_libs)
 
 endmacro()
 
+macro(configure_wayland_libs)
+
+  include(FindPkgConfig)
+
+  pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+  if(LIBEI_FOUND)
+    message(STATUS "libei version: ${LIBEI_VERSION}")
+    add_definitions(-DWINAPI_LIBEI=1)
+    include_directories(${LIBEI_INCLUDE_DIRS})
+  else()
+    message(
+      WARNING
+        "libei >= ${LIBEI_MIN_VERSION} not found, Wayland support will be disabled."
+    )
+  endif()
+
+  pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
+  if(LIBPORTAL_FOUND)
+    message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+    add_definitions(-DWINAPI_LIBPORTAL=1)
+    include_directories(${LIBPORTAL_INCLUDE_DIRS})
+    check_libportal()
+  else()
+    message(
+      WARNING
+        "libportal >= ${LIBPORTAL_MIN_VERSION} not found, some Wayland features will be disabled."
+    )
+  endif()
+
+  pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+  pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+  find_library(LIBM m)
+  include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
+                      ${LIBM_INCLUDE_DIRS})
+
+endmacro()
+
+macro(check_libportal)
+  # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
+  # the inputcapture code, so let's check for explicit functions that bits depending on what we have
+  include(CMakePushCheckState)
+  include(CheckCXXSourceCompiles)
+  cmake_push_check_state(RESET)
+  set(CMAKE_REQUIRED_INCLUDES
+      "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}"
+  )
+  set(CMAKE_REQUIRED_LIBRARIES
+      "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}"
+  )
+  check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h"
+                      HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+  check_symbol_exists(
+    xdp_portal_create_remote_desktop_session_full "libportal/portal.h"
+    HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+  check_symbol_exists(xdp_input_capture_session_connect_to_eis
+                      "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
+
+  # check_symbol_exists can’t check for enum values
+  check_cxx_source_compiles(
+    "#include <libportal/portal.h>
+        int main() { XdpOutputType out = XDP_OUTPUT_NONE; }
+    " HAVE_LIBPORTAL_OUTPUT_NONE)
+  cmake_pop_check_state()
+
+endmacro()
+
 #
 # X.org/X11 for Linux, BSD, etc
 #
 macro(configure_xorg_libs)
+
+  find_package(pugixml REQUIRED)
 
   # Add include dir for BSD (posix uses /usr/include/)
   set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
@@ -256,6 +328,8 @@ endmacro()
 #
 macro(configure_windows_libs)
 
+  configure_wintoast()
+
   set(CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
@@ -306,18 +380,54 @@ macro(configure_openssl)
   find_package(OpenSSL REQUIRED)
 endmacro()
 
-macro(configure_test_libs)
+macro(configure_gtest)
 
-  if(BUILD_TESTS AND NOT EXISTS
-                     "${PROJECT_SOURCE_DIR}/ext/googletest/CMakeLists.txt")
-    message(FATAL_ERROR "Git submodule for Google Test is missing")
+  file(GLOB gtest_base_dir ${PROJECT_SOURCE_DIR}/subprojects/googletest-*)
+  if(gtest_base_dir)
+    set(DEFAULT_SYSTEM_GTEST OFF)
+  else()
+    set(DEFAULT_SYSTEM_GTEST ON)
   endif()
+
+  # Arch Linux package maintainers:
+  # We do care about not bundling libs and didn't mean to cause upset. We made some mistakes
+  # and we're trying to put that right.
+  # The comment "They BUNDLE a fucking zip for cryptopp" in synergy.git/PKGBUILD is only
+  # relevant to a very version of old the code, so the comment should probably be removed.
+  # If there are any problems like this in future, please do feel free send us a patch! :)
+  option(SYSTEM_GTEST "Use system GoogleTest" ${DEFAULT_SYSTEM_GTEST})
+  if(SYSTEM_GTEST)
+    message(STATUS "Using system GoogleTest")
+    find_package(GTest REQUIRED)
+    set(GTEST_LIBS GTest::GTest GTest::Main)
+  else()
+    message(STATUS "Building GoogleTest")
+    set(gtest_dir ${gtest_base_dir}/googletest)
+    set(gmock_dir ${gtest_base_dir}/googlemock)
+    include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
+                        ${gmock_dir}/include)
+
+    add_library(gtest STATIC ${gtest_dir}/src/gtest-all.cc)
+    add_library(gmock STATIC ${gmock_dir}/src/gmock-all.cc)
+
+    if(UNIX)
+      # Ignore noisy GoogleTest warnings
+      set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
+      set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
+    endif()
+
+    set(GTEST_LIBS gtest gmock)
+  endif()
+
+endmacro()
+
+macro(configure_coverage)
 
   if(ENABLE_COVERAGE)
     message(STATUS "Enabling code coverage")
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
-    set(test_exclude ext/* build/* src/test/*)
+    set(test_exclude subprojects/* build/* src/test/*)
     set(test_src ${PROJECT_SOURCE_DIR}/src)
 
     setup_target_for_coverage_gcovr_xml(
@@ -343,35 +453,6 @@ macro(configure_test_libs)
   else()
     message(STATUS "Code coverage is disabled")
   endif()
-
-  include_directories(BEFORE SYSTEM
-                      ${PROJECT_SOURCE_DIR}/ext/googletest/googletest/include)
-endmacro()
-
-macro(update_submodules)
-
-  find_package(Git QUIET)
-
-  if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-
-    option(GIT_SUBMODULE "Check submodules during build" ON)
-
-    if(GIT_SUBMODULE)
-
-      message(STATUS "Submodule update")
-      execute_process(
-        COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        RESULT_VARIABLE GIT_SUBMODULE_RESULT)
-
-      if(NOT GIT_SUBMODULE_RESULT EQUAL "0")
-        message(
-          FATAL_ERROR "Git submodule update failed: ${GIT_SUBMODULE_RESULT}")
-      endif()
-
-    endif()
-  endif()
-
 endmacro()
 
 macro(configure_python)
@@ -414,3 +495,9 @@ function(find_openssl_dir_win32 result)
       PARENT_SCOPE)
 
 endfunction()
+
+macro(configure_wintoast)
+  # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
+  file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
+  include_directories(${WINTOAST_DIR}/include)
+endmacro()

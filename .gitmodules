@@ -1,9 +1,0 @@
-[submodule "ext/googletest"]
-	path = ext/googletest
-	url = https://github.com/google/googletest.git
-[submodule "ext/WinToast"]
-	path = ext/WinToast
-	url = https://github.com/mohabouje/WinToast
-[submodule "ext/pugixml"]
-	path = ext/pugixml
-	url = https://github.com/zeux/pugixml

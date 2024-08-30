@@ -10,6 +10,8 @@
 
 This project contains the source code for _Synergy 1 Community Edition_ which is actively maintained, free to use, and does not require a license or serial key.
 
+**Wayland support:** Wayland is supported (GNOME 46 is required).
+
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
 To use the community edition, install the `synergy` package with your favorite package manager or build it yourself using the Developer Quick Start instructions below.
@@ -95,7 +97,7 @@ sudo dnf install synergy
 
 *Arch, Manjaro, etc:*
 ```
-sudo pacman -Syu synergy
+sudo pacman -S synergy
 ```
 
 *Repology:*

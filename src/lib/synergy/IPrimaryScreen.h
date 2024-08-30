@@ -70,6 +70,14 @@ public:
     UInt32 m_id;
   };
 
+  class EiConnectInfo {
+  public:
+    static EiConnectInfo *alloc(int fd);
+
+  public:
+    int m_fd;
+  };
+
   //! @name manipulators
   //@{
 

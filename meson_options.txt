@@ -1,0 +1,2 @@
+option('system_libportal', type: 'boolean', value: true, description: 'Use system libportal')
+option('system_libei', type: 'boolean', value: true, description: 'Use system libei')

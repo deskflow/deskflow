@@ -7,6 +7,7 @@ root_key = "config"
 deps_key = "dependencies"
 command_key = "command"
 command_pre_key = "command-pre"
+subprojects_key = "subprojects"
 arrow = " ➤ "
 
 
@@ -40,8 +41,8 @@ class Config:
         self.os_name = env.get_os()
 
         print("Config for OS:", self.os_name)
-        root = _get(data, root_key)
-        self.os = _get(root, self.os_name)
+        self.root = _get(data, root_key)
+        self.os = _get(self.root, self.os_name)
 
     def get_os_value(self, key, required=True, linux_distro=None):
         if linux_distro:
@@ -77,6 +78,27 @@ class Config:
             return cmd_utils.strip_continuation_sequences(command)
         else:
             return None
+
+    def get_os_subprojects(self):
+        distro, _distro_like, _distro_version = env.get_linux_distro()
+        return self.get_os_value(subprojects_key, linux_distro=distro, required=False)
+
+    def get_subproject_deps_command(self, subproject_name):
+        subprojects = _get(self.root, subprojects_key)
+        subproject = _get(subprojects, subproject_name, subprojects_key)
+        deps_parent = f"{subprojects_key}{arrow}{subproject_name}"
+        deps = _get(subproject, deps_key, deps_parent)
+
+        if env.is_linux():
+            distro, _distro_like, _distro_version = env.get_linux_distro()
+            if not distro:
+                raise RuntimeError("Unable to detect Linux distro")
+
+            command = _get(deps, distro, f"{deps_parent}{arrow}{deps_key}")
+        else:
+            command = _get(deps, self.os_name, f"{deps_parent}{arrow}{deps_key}")
+
+        return cmd_utils.strip_continuation_sequences(command)
 
     def get_os_deps_command_pre(self, required=True, linux_distro=None):
         return self.get_os_deps_command(command_pre_key, required, linux_distro)

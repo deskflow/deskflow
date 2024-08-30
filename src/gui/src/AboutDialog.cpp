@@ -66,39 +66,45 @@ void AboutDialog::updateLogo() const {
 
 QString AboutDialog::importantDevelopers() const {
   QStringList awesomePeople;
+  awesomePeople
 
-  // Chris is the ultimate creator, and the one who started it all in 2001.
-  awesomePeople << "Chris Schoeneman";
+      // Chris is the ultimate creator, and the one who started it all in 2001.
+      << "Chris Schoeneman"
 
-  // Richard and Adam developed CosmoSynergy, the 90's predecessor project.
-  awesomePeople << "Richard Lee" << "Adam Feder";
+      // Richard and Adam developed CosmoSynergy, the 90's predecessor project.
+      << "Richard Lee"
+      << "Adam Feder"
 
-  // Nick continued the legacy in 2009 started by Chris.
-  awesomePeople << "Nick Bolton";
+      // Nick continued the legacy in 2009 started by Chris.
+      << "Nick Bolton"
 
-  // Volker wrote the first version of the GUI (QSynergy) in 2008.
-  awesomePeople << "Volker Lanz";
+      // Volker wrote the first version of the GUI (QSynergy) in 2008.
+      << "Volker Lanz"
 
-  // Re-ignited the project in 2008 and rebuilt the community.
-  awesomePeople << "Sorin Sbârnea";
+      // Re-ignited the project in 2008 and rebuilt the community.
+      << "Sorin Sbârnea"
 
-  // Contributors of bug fixes in the early days.
-  awesomePeople << "Ryan Breen"
-                << "Guido Poschta"
-                << "Bertrand Landry Hetu"
-                << "Tom Chadwick"
-                << "Brent Priddy"
-                << "Jason Axelson"
-                << "Jake Petroules";
+      // Contributors of bug fixes in the early days.
+      << "Ryan Breen"
+      << "Guido Poschta"
+      << "Bertrand Landry Hetu"
+      << "Tom Chadwick"
+      << "Brent Priddy"
+      << "Jason Axelson"
+      << "Jake Petroules"
 
-  // Symless employees (in order of joining).
-  awesomePeople << "Kyle Bloom"
-                << "Daun Chung"
-                << "Serhii Hadzhylov"
-                << "Oleksandr Lysytsia"
-                << "Olena Kutytska"
-                << "Owen Phillips"
-                << "Daniel Evenson";
+      // Implemented Wayland support (libei and libportal).
+      << "Peter Hutterer"
+      << "Olivier Fourdan"
+
+      // Symless employees (in order of joining).
+      << "Kyle Bloom"
+      << "Daun Chung"
+      << "Serhii Hadzhylov"
+      << "Oleksandr Lysytsia"
+      << "Olena Kutytska"
+      << "Owen Phillips"
+      << "Daniel Evenson";
 
   for (auto &person : awesomePeople) {
     // prevent names from breaking on the space when wrapped

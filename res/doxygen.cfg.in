@@ -627,7 +627,7 @@ EXCLUDE_SYMLINKS       = NO
 
 EXCLUDE_PATTERNS       = */.svn/* \
                          */.git/* \
-                         */ext/* \
+                         */subprojects/* \
                          */src/gui/* \
                          */src/test/*
 

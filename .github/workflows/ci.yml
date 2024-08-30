@@ -79,7 +79,7 @@ jobs:
           key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
       - name: Install dependencies
-        run: python ./scripts/install_deps.py --ci-env
+        run: python ./scripts/install_deps.py
 
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
@@ -156,7 +156,7 @@ jobs:
           key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py --ci-env
+        run: ./scripts/install_deps.py
 
       - name: Configure
         run: cmake -B build --preset=macos-release
@@ -199,10 +199,6 @@ jobs:
     container: ${{ matrix.distro.container }}
     timeout-minutes: 20
 
-    env:
-      # Prevent apt prompting for input.
-      DEBIAN_FRONTEND: noninteractive
-
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one distro may
       # fail due to transient issues unrelated to the build.
@@ -210,6 +206,11 @@ jobs:
 
       matrix:
         distro:
+          - name: debian-13-amd64
+            container: symless/synergy-core:debian-13-amd64
+            runs-on: ubuntu-latest
+            extra-packages: true
+
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
             runs-on: ubuntu-24.04-8-core-arm64
@@ -272,7 +273,10 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py --ci-env
+        run: ./scripts/install_deps.py
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
         run: cmake -B build --preset=linux-release

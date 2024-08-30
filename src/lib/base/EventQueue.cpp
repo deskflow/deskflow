@@ -48,6 +48,7 @@ EVENT_TYPE_ACCESSOR(IPrimaryScreen)
 EVENT_TYPE_ACCESSOR(IScreen)
 EVENT_TYPE_ACCESSOR(Clipboard)
 EVENT_TYPE_ACCESSOR(File)
+EVENT_TYPE_ACCESSOR(Ei)
 
 // interrupt handler.  this just adds a quit event to the queue.
 static void interrupt(Arch::ESignal, void *data) {
@@ -82,6 +83,7 @@ EventQueue::EventQueue()
       m_typesForIScreen(NULL),
       m_typesForClipboard(NULL),
       m_typesForFile(NULL),
+      m_typesForEi(NULL),
       m_readyMutex(new Mutex),
       m_readyCondVar(new CondVar<bool>(m_readyMutex, false)) {
   m_mutex = ARCH->newMutex();

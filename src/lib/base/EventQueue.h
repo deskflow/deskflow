@@ -20,6 +20,7 @@
 
 #include "arch/IArchMultithread.h"
 #include "base/Event.h"
+#include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
@@ -158,6 +159,7 @@ public:
   IScreenEvents &forIScreen();
   ClipboardEvents &forClipboard();
   FileEvents &forFile();
+  EiEvents &forEi();
 
 private:
   ClientEvents *m_typesForClient;
@@ -180,6 +182,7 @@ private:
   IScreenEvents *m_typesForIScreen;
   ClipboardEvents *m_typesForClipboard;
   FileEvents *m_typesForFile;
+  EiEvents *m_typesForEi;
   Mutex *m_readyMutex;
   CondVar<bool> *m_readyCondVar;
   std::queue<Event> m_pending;

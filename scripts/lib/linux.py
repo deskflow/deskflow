@@ -1,4 +1,4 @@
-import os, shutil, glob
+import os, shutil, glob, sys
 import lib.cmd_utils as cmd_utils
 import lib.env as env
 from enum import Enum, auto
@@ -29,7 +29,7 @@ def run_command(command, check=True):
     cmd_utils.run(command, check, shell=True, print_cmd=True)
 
 
-def package(filename_base, package_type: PackageType):
+def package(filename_base, package_type: PackageType, leave_test_installed=False):
 
     extension, cmd = get_package_info(package_type)
     run_package_cmd(cmd)
@@ -38,7 +38,7 @@ def package(filename_base, package_type: PackageType):
     target_path = copy_to_dist_dir(package_filename, target_file)
 
     if package_type == PackageType.DISTRO:
-        test_install(target_path)
+        test_install(target_path, remove_test=not leave_test_installed)
 
 
 def get_package_info(package_type: PackageType):
@@ -113,26 +113,31 @@ def copy_to_dist_dir(source_file, target_file):
     return target_path
 
 
-def test_install(package_file):
+def test_install(package_file, remove_test=True):
 
     distro, distro_like, _distro_version = env.get_linux_distro()
     if not distro_like:
         distro_like = distro
 
-    install_pre = None
-    remove_pre = None
+    install_base = None
+    list_cmd = None
+    remove_base = None
     if "debian" in distro_like:
-        install_pre = ["apt", "install", "-f", "-y"]
-        remove_pre = ["apt", "remove", "-y"]
+        install_base = ["apt", "install", "-f", "-y"]
+        remove_base = ["apt", "remove", "-y"]
+        list_cmd = ["dpkg", "-L", "synergy"]
     elif "fedora" in distro_like:
-        install_pre = ["dnf", "install", "-y"]
-        remove_pre = ["dnf", "remove", "-y"]
+        install_base = ["dnf", "install", "-y"]
+        remove_base = ["dnf", "remove", "-y"]
+        list_cmd = ["rpm", "-ql", "synergy"]
     elif "opensuse" in distro_like:
-        install_pre = ["zypper", "--no-gpg-checks", "install", "-y"]
-        remove_pre = ["zypper", "remove", "-y"]
+        install_base = ["zypper", "--no-gpg-checks", "install", "-y"]
+        remove_base = ["zypper", "remove", "-y"]
+        list_cmd = ["rpm", "-ql", "synergy"]
     elif "arch" in distro_like:
-        install_pre = ["pacman", "-U", "--noconfirm"]
-        remove_pre = ["pacman", "-R", "--noconfirm"]
+        install_base = ["pacman", "-U", "--noconfirm"]
+        remove_base = ["pacman", "-R", "--noconfirm"]
+        list_cmd = ["pacman", "-Ql", "synergy"]
     else:
         raise RuntimeError(f"Linux distro not yet supported: {distro}")
 
@@ -141,15 +146,46 @@ def test_install(package_file):
 
     print("Testing installation...")
     cmd_utils.run(
-        sudo + install_pre + [f"./{package_file}"],
+        sudo + install_base + [f"./{package_file}"],
         check=True,
         print_cmd=True,
     )
+
+    print("Listing installed files...")
+    cmd_utils.run(sudo + list_cmd, check=True, print_cmd=True)
 
     try:
         cmd_utils.run(test_cmd, shell=True, check=True, print_cmd=True)
     except Exception:
         raise RuntimeError("Unable to verify version")
     finally:
-        cmd_utils.run(sudo + remove_pre + [package_name], check=True, print_cmd=True)
+        if remove_test:
+            cmd_utils.run(
+                sudo + remove_base + [package_name], check=True, print_cmd=True
+            )
+        else:
+            print("Leaving test package installed")
+
         print("Installation test passed")
+
+
+def is_package_available(package):
+    distro, distro_like, _distro_version = env.get_linux_distro()
+    if not distro_like:
+        distro_like = distro
+
+    if "debian" in distro_like:
+        command = ["apt-cache", "show", package]
+    elif "fedora" in distro_like:
+        command = ["dnf", "info", package]
+    elif "opensuse" in distro_like:
+        command = ["zypper", "info", package]
+    elif "arch" in distro_like:
+        command = ["pacman", "-Si", package]
+    else:
+        raise RuntimeError(f"Linux distro not yet supported: {distro}")
+
+    result = cmd_utils.run(command, check=False, print_cmd=True, get_output=True)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+    return result.returncode == 0

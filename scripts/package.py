@@ -4,6 +4,7 @@ import lib.env as env
 
 env.ensure_in_venv(__file__)
 
+import argparse
 import platform
 from lib.linux import PackageType
 from dotenv import load_dotenv  # type: ignore
@@ -13,6 +14,13 @@ default_package_prefix = "synergy"
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--leave-test-installed",
+        action="store_true",
+        help="Leave test package installed",
+    )
+    args = parser.parse_args()
 
     load_dotenv(dotenv_path=env_file)
 
@@ -25,7 +33,7 @@ def main():
     elif env.is_mac():
         mac_package(filename_base)
     elif env.is_linux():
-        linux_package(filename_base, version)
+        linux_package(filename_base, version, args.leave_test_installed)
     else:
         raise RuntimeError(f"Unsupported platform: {env.get_os()}")
 
@@ -68,12 +76,12 @@ def mac_package(filename_base):
     mac.package(filename_base)
 
 
-def linux_package(filename_base, version):
+def linux_package(filename_base, version, leave_test_installed):
     import lib.linux as linux
 
     extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
 
-    linux.package(filename_base, PackageType.DISTRO)
+    linux.package(filename_base, PackageType.DISTRO, leave_test_installed)
 
     if extra_packages:
         filename_base = get_filename_base(version, use_linux_distro=False)

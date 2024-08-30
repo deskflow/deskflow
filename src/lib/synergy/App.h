@@ -183,8 +183,8 @@ private:
   "  -l  --log <file>         write log messages to file.\n"                   \
   "      --no-tray            disable the system tray icon.\n"                 \
   "      --enable-drag-drop   enable file drag & drop.\n"                      \
-  "      --enable-crypto      enable the crypto (ssl) plugin.\n"               \
-  "      --tls-cert           specify the path to the tls certificate file.\n"
+  "      --enable-crypto      enable TLS encryption.\n"                        \
+  "      --tls-cert           specify the path to the TLS certificate file.\n"
 
 #define HELP_COMMON_INFO_2                                                     \
   "  -h, --help               display this help and exit.\n"                   \
@@ -217,4 +217,26 @@ private:
   "                             session (useful for vista and upward).\n"      \
   "      --exit-pause         wait for key press on exit, can be useful for\n" \
   "                             reading error messages that occur on exit.\n"
+#endif
+
+#if WINAPI_LIBEI
+
+const auto kNoWaylandEiArg =
+    "      --no-wayland-ei      do not use EI (emulated input) for\n"
+    "                             Wayland and instead use the legacy\n"
+    "                             X Window System.\n";
+const auto kHelpNoWayland = "";
+
+#elif WINAPI_XWINDOWS
+
+const auto kNoWaylandEiArg = "";
+const auto kHelpNoWayland =
+    "\n"
+    "Your Linux distribution does not support Wayland EI (emulated input)\n"
+    "which is required for Wayland support.  Please use a Linux distribution\n"
+    "that supports Wayland EI.\n";
+
+#else
+const auto kNoWaylandEiArg = "";
+const auto kHelpNoWayland = "";
 #endif

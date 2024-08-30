@@ -27,23 +27,26 @@ def has_command(command):
         return False
 
 
-def strip_continuation_sequences(command):
+def strip_continuation_sequences(command, strip_newlines=True):
     """
     Remove the continuation sequences (\\) from a command.
 
     To spread strings over multiple lines in YAML files, like in bash, a backslash is used at
     the end of each line as continuation character.
-    When a YAML file is parsed, this becomes "\\ " (without a new line char), so this character
-    sequence must be removed before running the command.
-    This doesn't seem to be an issue on Windows, since the \\ path separator is rarely followed
-    by a space.
     """
-    cmd_continuation = "\\ "
 
     if isinstance(command, list):
-        return [c.replace(cmd_continuation, "") for c in command]
-    else:
-        return command.replace(cmd_continuation, "")
+        raise ValueError("List commands are not supported")
+
+    cmd_continuation = " \\"
+    command = command.replace(cmd_continuation, "")
+
+    # Some versions of pyyaml will remove the newlines already, so always stripping
+    # makes the output more consistent.
+    if strip_newlines:
+        command = command.replace("\n", " ")
+
+    return command
 
 
 def run(
@@ -127,7 +130,7 @@ def run(
         # Take control of how failed commands are printed:
         # - if `print_cmd` is false, it will print `***` instead of the command
         # - if the command was a list, the command is printed as a readable string
-        raise RuntimeError(f"Command failed: {command_str}") from None
+        raise RuntimeError(f"Command failed: {command_str}")
 
     if result.returncode != 0:
         print(

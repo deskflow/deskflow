@@ -216,3 +216,16 @@ otherwise it expands to a call that doesn't.
 #define CLOG_DEBUG3 CLOG_TRACE "%z\070"
 #define CLOG_DEBUG4 CLOG_TRACE "%z\071" // char is '9'
 #define CLOG_DEBUG5 CLOG_TRACE "%z\072" // char is ':'
+
+#define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))
+#define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))
+#define LOG_ERR(...) LOG((CLOG_ERR __VA_ARGS__))
+#define LOG_WARN(...) LOG((CLOG_WARN __VA_ARGS__))
+#define LOG_NOTE(...) LOG((CLOG_NOTE __VA_ARGS__))
+#define LOG_INFO(...) LOG((CLOG_INFO __VA_ARGS__))
+#define LOG_DEBUG(...) LOG((CLOG_DEBUG __VA_ARGS__))
+#define LOG_DEBUG1(...) LOG((CLOG_DEBUG1 __VA_ARGS__))
+#define LOG_DEBUG2(...) LOG((CLOG_DEBUG2 __VA_ARGS__))
+#define LOG_DEBUG3(...) LOG((CLOG_DEBUG3 __VA_ARGS__))
+#define LOG_DEBUG4(...) LOG((CLOG_DEBUG4 __VA_ARGS__))
+#define LOG_DEBUG5(...) LOG((CLOG_DEBUG5 __VA_ARGS__))

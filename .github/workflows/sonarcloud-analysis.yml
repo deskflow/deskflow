@@ -39,9 +39,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ./scripts/install_deps.py --ci-env &&
+          ./scripts/install_deps.py &&
           apt install curl unzip -y &&
           pip install gcovr
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Install SonarScanner
         run: |
@@ -102,8 +105,8 @@ jobs:
             -Dsonar.projectKey=symless_synergy-core \
             -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
             -Dsonar.tests=src/test \
-            -Dsonar.exclusions=ext/**,build/** \
-            -Dsonar.coverage.exclusions=ext/**,scripts/**,src/test/** \
+            -Dsonar.exclusions=subprojects/**,build/** \
+            -Dsonar.coverage.exclusions=subprojects/**,scripts/**,src/test/** \
             -Dsonar.cpd.exclusions=**/*Test*.cpp \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \

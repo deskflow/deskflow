@@ -13,5 +13,5 @@ RUN zypper refresh && \
 WORKDIR /app
 
 RUN --mount=type=bind,target=/app,rw \
-  ./scripts/install_deps.py --ci-env && \
+  ./scripts/install_deps.py && \
   zypper clean --all

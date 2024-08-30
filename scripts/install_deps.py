@@ -5,25 +5,37 @@ import lib.env as env
 import lib.cmd_utils as cmd_utils
 import lib.qt_utils as qt_utils
 import lib.github as github
+import lib.meson as meson
 
 path_env_var = "PATH"
 cmake_prefix_env_var = "CMAKE_PREFIX_PATH"
 
 
 def main():
+    is_ci = os.getenv("CI") is not None
+    if is_ci:
+        print("CI environment detected")
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--pause-on-exit", action="store_true", help="Useful on Windows"
     )
     parser.add_argument(
-        "--only-python",
-        action="store_true",
-        help="Only install Python dependencies",
-    )
-    parser.add_argument(
         "--ci-env",
         action="store_true",
-        help="Set if running in CI environment",
+        help="Useful for faking CI env (defaults to true in CI env)",
+        default=is_ci,
+    )
+    parser.add_argument(
+        "--skip-system",
+        action="store_true",
+        help="Do not install system dependencies (apt, dnf, etc)",
+    )
+    parser.add_argument(
+        "--skip-meson", action="store_true", help="Do not setup and install with Meson"
+    )
+    parser.add_argument(
+        "--subproject", type=str, help="Sub-project to install dependencies for"
     )
     args = parser.parse_args()
 
@@ -32,19 +44,45 @@ def main():
     env.install_requirements()
 
     error = False
-    if not args.only_python:
-        try:
-            deps = Dependencies(args.ci_env)
-            deps.install()
-        except Exception:
-            traceback.print_exc()
-            error = True
+    try:
+        run(args)
+    except Exception:
+        traceback.print_exc()
+        error = True
 
     if args.pause_on_exit:
         input("Press enter to continue...")
 
     if error:
         sys.exit(1)
+
+
+def run(args):
+    if args.subproject:
+        deps = SubprojectDependencies(args.subproject)
+        deps.install()
+        return
+
+    if not args.skip_system:
+        deps = Dependencies(args.ci_env)
+        deps.install()
+
+    if not args.skip_meson:
+        run_meson()
+
+
+# It's a bit weird to use Meson just for installing deps, but it's a stopgap until
+# we fully switch from CMake to Meson. For the meantime, Meson will install the deps
+# so that CMake can find them easily. Once we switch to Meson, it might be possible for
+# Meson handle the deps resolution, so that we won't need to install them on the system.
+def run_meson():
+    meson.setup()
+
+    # Only compile and install on Linux for now, since we're only using Meson to fetch
+    # the deps on Windows and macOS.
+    if env.is_linux():
+        meson.compile()
+        meson.install()
 
 
 class Dependencies:
@@ -54,9 +92,6 @@ class Dependencies:
 
         self.config = Config()
         self.ci_env = ci_env
-
-        if self.ci_env:
-            print("CI environment detected")
 
     def install(self):
         """Installs dependencies for the current platform."""
@@ -144,7 +179,47 @@ class Dependencies:
             linux.run_command(command_pre, check)
 
         command = self.config.get_os_deps_command(linux_distro=distro)
+        optional = self.config.get_os_deps_value(
+            "optional", linux_distro=distro, required=False
+        )
+        for optional_package in optional or []:
+            if not linux.is_package_available(optional_package):
+                print(f"Optional package not found, stripping: {optional_package}")
+                command = command.replace(optional_package, "")
+
         print("Running dependencies command")
+        linux.run_command(command, check=True)
+
+        subprojects = self.config.get_os_subprojects()
+        if subprojects:
+            for subproject in subprojects:
+                deps = SubprojectDependencies(subproject)
+                deps.install()
+
+
+class SubprojectDependencies:
+
+    def __init__(self, subproject):
+        from lib.config import Config
+
+        self.subproject = subproject
+        self.config = Config()
+
+    def install(self):
+        """Installs dependencies for the current platform."""
+
+        print(f"Installing dependencies for sub-project: {self.subproject}")
+
+        if env.is_linux():
+            self.linux()
+        else:
+            raise RuntimeError(f"Unsupported platform: {os}")
+
+    def linux(self):
+        """Installs dependencies on Linux."""
+        import lib.linux as linux
+
+        command = self.config.get_subproject_deps_command(self.subproject)
         linux.run_command(command, check=True)
 
 
