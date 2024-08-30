@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.5)
-project(synergy-core C CXX)
+project(synergy C CXX)
 
 include(cmake/Version.cmake)
 include(cmake/Definitions.cmake)
