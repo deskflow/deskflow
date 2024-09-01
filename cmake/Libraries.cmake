@@ -13,8 +13,8 @@ macro(configure_libs)
   config_qt()
   configure_openssl()
   configure_coverage()
-  
-  if (BUILD_TESTS)
+
+  if(BUILD_TESTS)
     configure_gtest()
   endif()
 
@@ -403,11 +403,17 @@ macro(configure_gtest)
     message(STATUS "Using system GoogleTest")
     find_package(GTest)
     if(NOT GTEST_FOUND)
-      message(FATAL_ERROR "Google Test not found, re-configure with -DBUILD_TESTS=OFF or -DSYSTEM_GTEST=OFF")
+      message(
+        FATAL_ERROR
+          "Google Test not found, re-configure with -DBUILD_TESTS=OFF or -DSYSTEM_GTEST=OFF"
+      )
     endif()
   else()
-    if (NOT EXISTS ${gtest_base_dir})
-      message(FATAL_ERROR "Google Test subproject not found, reconfigure with -DBUILD_TESTS=OFF")
+    if(NOT EXISTS ${gtest_base_dir})
+      message(
+        FATAL_ERROR
+          "Google Test subproject not found, reconfigure with -DBUILD_TESTS=OFF"
+      )
     endif()
 
     message(STATUS "Building GoogleTest")
