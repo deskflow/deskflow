@@ -518,10 +518,11 @@ function(find_openssl_dir_win32 result)
 endfunction()
 
 macro(configure_wintoast)
-  # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
+  # WinToast is a pretty niche library, and there doesn't seem to be an installable package,
+  # so we rely on building from source.
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
   if(WINTOAST_DIR)
-    set(HAVE_WINTOAST 1)
+    set(HAVE_WINTOAST true)
     include_directories(${WINTOAST_DIR}/include)
   else()
     message(WARNING "WinToast subproject not found")

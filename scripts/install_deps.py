@@ -52,7 +52,7 @@ def main():
 
     colors = env.import_colors()
     print()
-    print(f"{colors.SUCCESS_TEXT} Dependencies installed successfully")
+    print(f"{colors.SUCCESS_TEXT} Dependencies installed")
 
     if args.pause_on_exit:
         input("Press enter to continue...")

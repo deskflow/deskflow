@@ -21,7 +21,11 @@ file(GLOB sources "*.cpp" "languages/*.cpp")
 if(WIN32)
   file(GLOB arch_headers "win32/*.h")
   file(GLOB arch_sources "win32/*.cpp")
-  list(APPEND arch_sources ${WINTOAST_DIR}/src/wintoastlib.cpp)
+
+  if(HAVE_WINTOAST)
+    list(APPEND arch_sources ${WINTOAST_DIR}/src/wintoastlib.cpp)
+  endif()
+
 elseif(UNIX)
   file(GLOB arch_headers "unix/*.h")
   file(GLOB arch_sources "unix/*.cpp")
