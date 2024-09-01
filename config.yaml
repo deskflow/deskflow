@@ -74,8 +74,8 @@ config:
           qt6-qtbase-devel \
           qt6-qttools-devel \
           gtk3-devel \
-          googletest-devel \
-          googlemock-devel \
+          gtest-devel \
+          gmock-devel \
           pugixml-devel \
           libei-devel \
           libportal-devel
@@ -120,8 +120,8 @@ config:
           qt6-base-devel \
           qt6-tools-devel \
           gtk3-devel \
-          gtest-devel \
-          gmock-devel \
+          googletest-devel \
+          googlemock-devel \
           pugixml-devel \
           libei-devel \
           libportal-devel
