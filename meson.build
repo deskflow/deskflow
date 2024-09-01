@@ -3,16 +3,17 @@
 
 project('synergy', 'cpp')
 
-gtest = dependency('gtest', required: false)
-if not gtest.found()
+system_gtest = get_option('system_gtest')
+if system_gtest
+  dependency('gtest', required: false)
+else
   subproject('gtest')
 endif
 
 if host_machine.system() == 'windows'
-  wintoast = dependency('wintoast', required: false)
-  if not wintoast.found()
-    subproject('wintoast')
-  endif
+  # WinToast is a niche lib which is not commonly installed, 
+  # so depend only on the subproject.
+  subproject('wintoast')
 endif
 
 if host_machine.system() == 'linux'

@@ -7,6 +7,10 @@ meson_bin = env.get_python_executable("meson")
 
 
 def setup():
+    args = []
+    if env.is_windows():
+        args.append("-Dsystem_gtest=false")
+
     reconfigure = "--reconfigure" if os.path.exists(build_dir) else ""
     cmd_utils.run([meson_bin, "setup", build_dir, reconfigure], print_cmd=True)
 
