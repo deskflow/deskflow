@@ -402,7 +402,12 @@ macro(configure_gtest)
   if(SYSTEM_GTEST)
     message(STATUS "Using system GoogleTest")
     find_package(GTest)
-    if(NOT GTEST_FOUND)
+    if(GTEST_FOUND)
+      # Ordinarily, we'd use GTEST_LIBRARIES, but it seems that these do not always export
+      # the required libraries (e.g. gmock) on some OS (e.g macOS with brew).
+      set(GTEST_LIB GTest::gtest)
+      set(GMOCK_LIB GTest::gmock)
+    else()
       message(
         FATAL_ERROR
           "Google Test not found, re-configure with -DBUILD_TESTS=OFF or -DSYSTEM_GTEST=OFF"
@@ -430,10 +435,10 @@ macro(configure_gtest)
       set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
       set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
     endif()
-  endif()
 
-  set(GTEST_LIB GTest::gtest)
-  set(GMOCK_LIB GTest::gmock)
+    set(GTEST_LIB gtest)
+    set(GMOCK_LIB gmock)
+  endif()
 
 endmacro()
 
