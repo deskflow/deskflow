@@ -520,7 +520,7 @@ endfunction()
 macro(configure_wintoast)
   # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
-  if (WINTOAST_DIR)
+  if(WINTOAST_DIR)
     set(HAVE_WINTOAST 1)
     include_directories(${WINTOAST_DIR}/include)
   else()
