@@ -227,3 +227,9 @@ def get_app_version():
 
     with open("VERSION", "r") as f:
         return f.read().strip()
+
+
+def import_colors():
+    import lib.colors as colors
+
+    return colors
