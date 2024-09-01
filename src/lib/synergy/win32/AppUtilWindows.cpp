@@ -34,11 +34,11 @@
 #include "synergy/XSynergy.h"
 
 #include <VersionHelpers.h>
+#include <Windows.h>
 #include <conio.h>
 #include <iostream>
 #include <memory>
 #include <sstream>
-#include <Windows.h>
 
 #if HAVE_WINTOAST
 #include "wintoastlib.h"
