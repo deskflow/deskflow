@@ -27,6 +27,9 @@ def main():
         default=is_ci,
     )
     parser.add_argument(
+        "--only-python", action="store_true", help="Only install Python dependencies"
+    )
+    parser.add_argument(
         "--skip-system",
         action="store_true",
         help="Do not install system dependencies (apt, dnf, etc)",
@@ -43,14 +46,19 @@ def main():
     env.ensure_in_venv(__file__, auto_create=True)
     env.install_requirements()
 
+    colors = env.import_colors()
+
+    if args.only_python:
+        print()
+        print(colors.SUCCESS_TEXT + " Only Python dependencies installed")
+        return
+
     error = False
     try:
         run(args)
     except Exception:
         traceback.print_exc()
         error = True
-
-    colors = env.import_colors()
     print()
 
     if error:
