@@ -19,9 +19,6 @@ macro(configure_libs)
     configure_gtest()
   endif()
 
-  # For config.h, save the results based on a template (config.h.in).
-  configure_file(res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
-
 endmacro()
 
 #
@@ -129,6 +126,11 @@ macro(configure_unix_libs)
   set(HAVE_SOCKLEN_T 1)
 
   add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
+
+  # Unix only: For config.h, save the results based on a template (config.h.in).
+  # Note that this won't work on Windows because filenames are not case sensitive,
+  # and we have header files named "Config.h" (upper case 'C').
+  configure_file(res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
 
 endmacro()
 
@@ -524,6 +526,7 @@ macro(configure_wintoast)
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
   if(WINTOAST_DIR)
     set(HAVE_WINTOAST true)
+    add_definitions(-DHAVE_WINTOAST=1)
     include_directories(${WINTOAST_DIR}/include)
   else()
     message(WARNING "Subproject 'WinToast' not found")
@@ -535,6 +538,7 @@ macro(configure_tomlplusplus)
   file(GLOB TOMLPLUSPLUS_DIR ${CMAKE_SOURCE_DIR}/subprojects/tomlplusplus-*)
   if(TOMLPLUSPLUS_DIR)
     set(HAVE_TOMLPLUSPLUS true)
+    add_definitions(-DHAVE_TOMLPLUSPLUS=1)
     include_directories(${TOMLPLUSPLUS_DIR}/include)
   else()
     message(WARNING "Subproject 'tomlplusplus' not found")
