@@ -6,6 +6,8 @@
 /libportal
 /gi-docgen
 /munit
+/dotenv-cpp
+/tomlplusplus-*
 
 # Added by dependencies.
 /gi-docgen.wrap

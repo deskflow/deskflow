@@ -88,6 +88,7 @@ ServerApp::ServerApp(
 ServerApp::~ServerApp() {}
 
 void ServerApp::parseArgs(int argc, const char *const *argv) {
+
   ArgParser argParser(this);
   bool result = argParser.parseServerArgs(args(), argc, argv);
 
@@ -184,16 +185,18 @@ void ServerApp::reloadConfig(const Event &, void *) {
 
 void ServerApp::loadConfig() {
   bool loaded = false;
+  std::string path;
 
   // load the config file, if specified
   if (!args().m_configFile.empty()) {
-    loaded = loadConfig(args().m_configFile);
+    path = args().m_configFile;
+    loaded = loadConfig(path);
   }
 
   // load the default configuration if no explicit file given
   else {
     // get the user's home directory
-    String path = ARCH->getUserDirectory();
+    path = ARCH->getUserDirectory();
     if (!path.empty()) {
       // complete path
       path = ARCH->concatPath(path, USR_CONFIG_NAME);
@@ -218,7 +221,9 @@ void ServerApp::loadConfig() {
   }
 
   if (!loaded) {
-    LOG((CLOG_CRIT "%s: no configuration available", args().m_pname));
+    LOG(
+        (CLOG_CRIT "%s: failed to load config: %s", args().m_pname,
+         path.c_str()));
     m_bye(kExitConfig);
   }
 }

@@ -83,10 +83,10 @@ public:
   void stopClient();
   int mainLoop();
   void startNode();
+  Client *getClientPtr() { return m_client; }
+  std::string configFilename() const { return "config-client.toml"; }
 
   static ClientApp &instance() { return (ClientApp &)App::instance(); }
-
-  Client *getClientPtr() { return m_client; }
 
 private:
   ISocketFactory *getSocketFactory() const;

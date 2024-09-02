@@ -41,4 +41,5 @@ public:
   MOCK_METHOD(int, mainLoop, (), (override));
   MOCK_METHOD(int, foregroundStartup, (int, char **), (override));
   MOCK_METHOD(synergy::Screen *, createScreen, (), (override));
+  MOCK_METHOD(std::string, configFilename, (), (const, override));
 };

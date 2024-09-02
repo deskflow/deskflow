@@ -42,6 +42,7 @@
 #include "synergy/Screen.h"
 #include "synergy/XScreen.h"
 #include "synergy/protocol_types.h"
+#include <cstdlib>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"

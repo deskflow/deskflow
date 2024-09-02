@@ -30,11 +30,13 @@
 #include "common/copyright.h"
 #include "common/ipc.h"
 #include "common/version.h"
+#include "config.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
 #include "synergy/ArgsBase.h"
 #include "synergy/XSynergy.h"
 #include "synergy/protocol_types.h"
+#include <stdexcept>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -43,6 +45,7 @@
 #endif
 
 #include <charconv>
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
@@ -54,6 +57,10 @@
 
 #if defined(__APPLE__)
 #include "platform/OSXDragSimulator.h"
+#endif
+
+#if HAVE_TOMLPLUSPLUS
+#include <toml++/toml.hpp>
 #endif
 
 App *App::s_instance = nullptr;
@@ -174,8 +181,58 @@ void App::loggingFilterWarning() {
 }
 
 void App::initApp(int argc, const char **argv) {
-  // parse command line
-  parseArgs(argc, argv);
+
+  // HACK: Temporary solution until we find a better way pass args loaded from
+  // the TOML config file.
+  int _argc = argc;
+  char **_argv = const_cast<char **>(argv);
+
+// TODO: move to own class
+#if HAVE_TOMLPLUSPLUS
+  std::vector<std::string> commandArgs;
+  const auto _configFilename = configFilename();
+  if (!_configFilename.empty() && std::filesystem::exists(_configFilename)) {
+    toml::table configTable;
+    try {
+      LOG((CLOG_INFO "loading config file: %s", _configFilename.c_str()));
+      configTable = toml::parse_file(_configFilename);
+      const auto args = configTable["args"];
+
+      if (args.is_table()) {
+        const auto &table = *(args.as_table());
+        for (const auto &pair : table) {
+          const auto key = pair.first;
+          commandArgs.push_back("--" + std::string(key.str()));
+
+          if (pair.second.is_string()) {
+            const auto value = pair.second.as_string()->get();
+            commandArgs.push_back(value);
+          }
+        }
+      } else {
+        LOG((CLOG_WARN "no args table found in config file"));
+      }
+
+    } catch (const toml::parse_error &err) {
+      std::cerr << "Config parse failed:\n" << err << "\n";
+      throw std::runtime_error("Failed to parse config file");
+    }
+  }
+
+  if (!commandArgs.empty()) {
+    _argv = new char *[argc + commandArgs.size() + 1];
+    _argv[0] = const_cast<char *>(argv[0]);
+
+    _argc = 1;
+    for (auto &arg : commandArgs) {
+      _argv[_argc] = new char[arg.size() + 1];
+      std::strcpy(_argv[_argc], arg.c_str());
+      _argc++;
+    }
+  }
+#endif // HAVE_TOMLPLUSPLUS
+
+  parseArgs(_argc, _argv);
 
   ARCH->setProfileDirectory(argsBase().m_profileDirectory);
   ARCH->setPluginDirectory(argsBase().m_pluginDirectory);

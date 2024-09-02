@@ -1,0 +1,11 @@
+[args]
+no-daemon = true
+no-tray = true
+debug = "INFO"
+name = "tuvok-tux"
+enable-crypto = true
+prevent-sleep = true
+address = ":24800"
+config = "/home/nick/.config/Synergy/synergy-server.conf"
+serial-key = "7B76313B70726F3B6E69636B20626F6C746F6E3B313B6E69636B4073796D6C6573732E636F6D3B203B303B307D"
+tls-cert = "/home/nick/.synergy/SSL/Synergy.pem"

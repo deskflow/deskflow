@@ -10,6 +10,12 @@ else
   subproject('gtest')
 endif
 
+# dotenv-cpp: Header-only library (only available from git)
+subproject('dotenv-cpp')
+
+# tomlplusplus: Header-only library
+subproject('tomlplusplus')
+
 if host_machine.system() == 'windows'
   # WinToast is a niche lib which is not commonly installed, 
   # so depend only on the subproject.

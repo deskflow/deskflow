@@ -109,10 +109,15 @@ public:
   int standardStartup(int argc, char **argv);
   int foregroundStartup(int argc, char **argv);
   void startNode();
+  Server *getServerPtr() { return m_server; }
+  std::string configFilename() const { return "config-server.toml"; }
 
   static ServerApp &instance() { return (ServerApp &)App::instance(); }
 
-  Server *getServerPtr() { return m_server; }
+private:
+  void handleScreenSwitched(const Event &, void *data);
+  ISocketFactory *getSocketFactory() const;
+  NetworkAddress getAddress(const NetworkAddress &address) const;
 
   Server *m_server;
   EServerState m_serverState;
@@ -121,11 +126,6 @@ public:
   ClientListener *m_listener;
   EventQueueTimer *m_timer;
   NetworkAddress *m_synergyAddress;
-
-private:
-  void handleScreenSwitched(const Event &, void *data);
-  ISocketFactory *getSocketFactory() const;
-  NetworkAddress getAddress(const NetworkAddress &address) const;
 };
 
 // configuration file name

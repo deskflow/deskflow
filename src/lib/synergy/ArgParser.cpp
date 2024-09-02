@@ -298,8 +298,9 @@ bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) {
 bool ArgParser::isArg(
     int argi, int argc, const char *const *argv, const char *name1,
     const char *name2, int minRequiredParameters) {
-  if ((name1 != nullptr && strcmp(argv[argi], name1) == 0) ||
-      (name2 != nullptr && strcmp(argv[argi], name2) == 0)) {
+  const auto match1 = (name1 != nullptr && strcmp(argv[argi], name1) == 0);
+  const auto match2 = (name2 != nullptr && strcmp(argv[argi], name2) == 0);
+  if (match1 || match2) {
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
       LOG(

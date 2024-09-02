@@ -55,27 +55,29 @@ public:
   App &operator=(App const &) = delete;
   App &operator=(App &&) = delete;
 
-  // Returns args that are common between server and client.
-  synergy::ArgsBase &argsBase() const { return *m_args; }
-
-  // Prints the current compiled version.
-  virtual void version();
-
   // Prints help specific to client or server.
   virtual void help() = 0;
 
   // Parse command line arguments.
   virtual void parseArgs(int argc, const char *const *argv) = 0;
 
-  int run(int argc, char **argv);
-
-  int daemonMainLoop(int, const char **);
-
   virtual void loadConfig() = 0;
   virtual bool loadConfig(const String &pathname) = 0;
 
   // A description of the daemon (used only on Windows).
   virtual const char *daemonInfo() const = 0;
+
+  virtual std::string configFilename() const = 0;
+
+  // Returns args that are common between server and client.
+  synergy::ArgsBase &argsBase() const { return *m_args; }
+
+  // Prints the current compiled version.
+  virtual void version();
+
+  int run(int argc, char **argv);
+
+  int daemonMainLoop(int, const char **);
 
   // Function pointer for function to exit immediately.
   // TODO: this is old C code - use inheritance to normalize
@@ -156,6 +158,7 @@ public:
   virtual const char *daemonInfo() const;
   virtual const char *daemonName() const;
   virtual void parseArgs(int argc, const char *const *argv);
+  std::string configFilename() const { return ""; }
 
 private:
   Arch m_arch;
