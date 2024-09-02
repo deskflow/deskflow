@@ -10,9 +10,6 @@ else
   subproject('gtest')
 endif
 
-# dotenv-cpp: Header-only library (only available from git)
-subproject('dotenv-cpp')
-
 # tomlplusplus: Header-only library
 subproject('tomlplusplus')
 
