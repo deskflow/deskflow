@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ public:
   int mainLoop();
   void startNode();
   Client *getClientPtr() { return m_client; }
-  std::string configFilename() const { return "config-client.toml"; }
+  std::string configFilename() const override { return "synergy-client.toml"; }
 
   static ClientApp &instance() { return (ClientApp &)App::instance(); }
 

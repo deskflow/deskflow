@@ -30,6 +30,8 @@
 
 using namespace synergy::string;
 
+namespace synergy::server {
+
 //
 // Config
 //
@@ -2038,3 +2040,5 @@ XConfigRead::~XConfigRead() _NOEXCEPT {
 String XConfigRead::getWhat() const throw() {
   return format("XConfigRead", "read error: %{1}", m_error.c_str());
 }
+
+} // namespace synergy::server

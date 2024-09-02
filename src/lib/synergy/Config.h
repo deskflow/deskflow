@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2014-2020 Symless Ltd.
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,31 +17,28 @@
 
 #pragma once
 
-#include "ArgsBase.h"
-#include "license/License.h"
-#include "server/Config.h"
-
-#include <memory>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 namespace synergy {
 
-class ServerArgs : public ArgsBase {
-  using License = synergy::license::License;
-  using Config = synergy::server::Config;
+class Config {
+  class ParseError : public std::runtime_error {
+  public:
+    explicit ParseError() : std::runtime_error("failed to parse config file") {}
+  };
 
 public:
-  ServerArgs();
-  ServerArgs(ServerArgs const &src) = default;
-  ServerArgs(ServerArgs &&) = default;
-  ~ServerArgs() override;
+  explicit Config(const std::string &filename);
+  bool load(const std::string &firstArg);
+  const char *const *argv() const;
+  int argc() const;
 
-  ServerArgs &operator=(ServerArgs const &) = default;
-  ServerArgs &operator=(ServerArgs &&) = default;
-
-public:
-  String m_configFile = "";
-  license::SerialKey m_serialKey = license::SerialKey::invalid();
-  std::shared_ptr<Config> m_config;
+private:
+  std::string m_filename;
+  std::vector<std::string> m_args;
+  std::vector<const char *> m_argv;
 };
 
 } // namespace synergy

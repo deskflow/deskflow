@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -26,10 +26,7 @@
 #include "common/stdexcept.h"
 #include "license/License.h"
 #include "mt/Thread.h"
-#include "net/IDataSocket.h"
-#include "net/IListenSocket.h"
 #include "net/TCPSocket.h"
-#include "net/XSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
@@ -38,12 +35,9 @@
 #include "synergy/DropHelper.h"
 #include "synergy/FileChunk.h"
 #include "synergy/IPlatformScreen.h"
-#include "synergy/KeyState.h"
 #include "synergy/PacketStreamFilter.h"
 #include "synergy/Screen.h"
 #include "synergy/StreamChunker.h"
-#include "synergy/XScreen.h"
-#include "synergy/XSynergy.h"
 #include "synergy/option_types.h"
 #include "synergy/protocol_types.h"
 
@@ -51,17 +45,16 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <fstream>
-#include <sstream>
 
 using namespace synergy::license;
+using namespace synergy::server;
 
 //
 // Server
 //
 
 Server::Server(
-    Config &config, PrimaryClient *primaryClient, synergy::Screen *screen,
+    ServerConfig &config, PrimaryClient *primaryClient, synergy::Screen *screen,
     IEventQueue *events, synergy::ServerArgs const &args)
     : m_mock(false),
       m_primaryClient(primaryClient),
@@ -265,7 +258,7 @@ Server::~Server() {
   removeClient(m_primaryClient);
 }
 
-bool Server::setConfig(const Config &config) {
+bool Server::setConfig(const ServerConfig &config) {
   // refuse configuration if it doesn't include the primary screen
   if (!config.isScreen(m_primaryClient->getName())) {
     return false;
@@ -2086,7 +2079,7 @@ void Server::closeClient(BaseClientProxy *client, const char *msg) {
   forceLeaveClient(client);
 }
 
-void Server::closeClients(const Config &config) {
+void Server::closeClients(const ServerConfig &config) {
   // collect the clients that are connected but are being dropped
   // from the configuration (or who's canonical name is changing).
   typedef std::set<BaseClientProxy *> RemovedClients;

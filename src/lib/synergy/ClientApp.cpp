@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -21,16 +21,11 @@
 #include "arch/Arch.h"
 #include "arch/IArchTaskBarReceiver.h"
 #include "base/Event.h"
-#include "base/EventQueue.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/String.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
-#include "base/log_outputters.h"
 #include "client/Client.h"
-#include "common/constants.h"
-#include "mt/Thread.h"
 #include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"

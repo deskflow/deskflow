@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -25,9 +25,6 @@
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
 #include "synergy/App.h"
-#include "synergy/ArgsBase.h"
-
-#include <map>
 
 enum EServerState {
   kUninitialized,
@@ -53,6 +50,8 @@ class ServerArgs;
 }
 
 class ServerApp : public App {
+  using ServerConfig = synergy::server::Config;
+
 public:
   ServerApp(
       IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
@@ -100,7 +99,7 @@ public:
   void handleSuspend(const Event &, void *);
   void handleResume(const Event &, void *);
   ClientListener *openClientListener(const NetworkAddress &address);
-  Server *openServer(Config &config, PrimaryClient *primaryClient);
+  Server *openServer(ServerConfig &config, PrimaryClient *primaryClient);
   void handleNoClients(const Event &, void *);
   bool startServer();
   int mainLoop();
@@ -110,7 +109,7 @@ public:
   int foregroundStartup(int argc, char **argv);
   void startNode();
   Server *getServerPtr() { return m_server; }
-  std::string configFilename() const { return "config-server.toml"; }
+  std::string configFilename() const override { return "synergy-server.toml"; }
 
   static ServerApp &instance() { return (ServerApp &)App::instance(); }
 

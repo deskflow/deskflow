@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -19,15 +19,10 @@
 #include "synergy/ServerApp.h"
 
 #include "arch/Arch.h"
-#include "base/EventQueue.h"
-#include "base/FunctionEventJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
-#include "base/log_outputters.h"
-#include "common/constants.h"
 #include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -35,6 +30,7 @@
 #include "platform/wayland.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
+#include "server/Config.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
 #include "synergy/App.h"
@@ -69,6 +65,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
+
+using namespace synergy::server;
 
 //
 // ServerApp
@@ -612,7 +610,8 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address) {
   return listen;
 }
 
-Server *ServerApp::openServer(Config &config, PrimaryClient *primaryClient) {
+Server *
+ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient) {
   Server *server =
       new Server(config, primaryClient, m_serverScreen, m_events, args());
   try {
