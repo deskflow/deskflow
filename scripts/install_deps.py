@@ -50,17 +50,29 @@ def main():
         traceback.print_exc()
         error = True
 
-    if args.pause_on_exit:
-        input("Press enter to continue...")
-
     colors = env.import_colors()
     print()
 
     if error:
         print(f"{colors.ERROR_TEXT} Failed to install dependencies")
-        sys.exit(1)
     else:
         print(f"{colors.SUCCESS_TEXT} Dependencies installed")
+
+        # On Windows and macOS, we set env vars for cmake, but for them to be picked up,
+        # either the shell needs to be restarted or the env vars need to be re-sourced.
+        # Restarting the shell is easier for most people.
+        if not env.is_linux():
+            print(f"{colors.WARNING_TEXT} Please restart your shells for new env vars")
+
+    # Useful on Windows, when elevated, Python is opened in a new window and closes
+    # immediately after the script finishes. This keeps the script window open so that
+    # the user can see the output.
+    if args.pause_on_exit:
+        print()
+        input("Press enter to continue...")
+
+    if error:
+        sys.exit(1)
 
 
 def run(args):
