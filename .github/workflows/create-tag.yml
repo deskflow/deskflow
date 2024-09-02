@@ -41,7 +41,7 @@ jobs:
           script: |
             const ref = `refs/tags/${{ steps.next-version.outputs.next-version }}`;
             const sha = context.sha;
-            await github.git.createRef({
+            await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: ref,
