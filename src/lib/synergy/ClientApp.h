@@ -39,6 +39,10 @@ public:
       IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ClientApp();
 
+  //
+  // IApp overrides
+  //
+
   void parseArgs(int argc, const char *const *argv) override;
   void help() override;
   const char *daemonName() const override;
@@ -53,7 +57,16 @@ public:
   synergy::Screen *createScreen() override;
   int mainLoop() override;
   void startNode() override;
+
+  //
+  // App overrides
+  //
+
   std::string configSection() const override { return "client"; }
+
+  //
+  // Regular functions
+  //
 
   void updateStatus();
   void updateStatus(const String &msg);
@@ -79,6 +92,10 @@ public:
   synergy::ClientArgs &args() const {
     return (synergy::ClientArgs &)argsBase();
   }
+
+  //
+  // Static functions
+  //
 
   static ClientApp &instance() { return (ClientApp &)App::instance(); }
 

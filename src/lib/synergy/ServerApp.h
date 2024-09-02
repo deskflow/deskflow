@@ -57,6 +57,10 @@ public:
       IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ServerApp();
 
+  //
+  // IApp overrides
+  //
+
   void parseArgs(int argc, const char *const *argv) override;
   void help() override;
   const char *daemonName() const override;
@@ -71,7 +75,16 @@ public:
   int standardStartup(int argc, char **argv) override;
   int foregroundStartup(int argc, char **argv) override;
   void startNode() override;
+
+  //
+  // App overrides
+  //
+
   std::string configSection() const override { return "server"; }
+
+  //
+  // Regular functions
+  //
 
   void reloadConfig(const Event &, void *);
   void forceReconnect(const Event &, void *);
@@ -103,6 +116,10 @@ public:
   synergy::ServerArgs &args() const {
     return (synergy::ServerArgs &)argsBase();
   }
+
+  //
+  // Static functions
+  //
 
   static void reloadSignalHandler(Arch::ESignal, void *);
   static ServerApp &instance() { return (ServerApp &)App::instance(); }
