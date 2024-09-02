@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -39,29 +39,35 @@ public:
       IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ClientApp();
 
-  // Parse client specific command line arguments.
-  void parseArgs(int argc, const char *const *argv);
+  //
+  // IApp overrides
+  //
 
-  // Prints help specific to client.
-  void help();
-
-  // Returns arguments that are common and for client.
-  synergy::ClientArgs &args() const {
-    return (synergy::ClientArgs &)argsBase();
-  }
-
-  const char *daemonName() const;
-  const char *daemonInfo() const;
-
-  // TODO: move to server only (not supported on client)
-  void loadConfig() {}
-  bool loadConfig(const String &pathname) { return false; }
-
-  int foregroundStartup(int argc, char **argv);
-  int standardStartup(int argc, char **argv);
+  void parseArgs(int argc, const char *const *argv) override;
+  void help() override;
+  const char *daemonName() const override;
+  const char *daemonInfo() const override;
+  void loadConfig() override {}
+  bool loadConfig(const String &pathname) override { return false; }
+  int foregroundStartup(int argc, char **argv) override;
+  int standardStartup(int argc, char **argv) override;
   int runInner(
-      int argc, char **argv, ILogOutputter *outputter, StartupFunc startup);
-  synergy::Screen *createScreen();
+      int argc, char **argv, ILogOutputter *outputter,
+      StartupFunc startup) override;
+  synergy::Screen *createScreen() override;
+  int mainLoop() override;
+  void startNode() override;
+
+  //
+  // App overrides
+  //
+
+  std::string configSection() const override { return "client"; }
+
+  //
+  // Regular functions
+  //
+
   void updateStatus();
   void updateStatus(const String &msg);
   void resetRestartTimeout();
@@ -81,12 +87,17 @@ public:
   void closeClient(Client *client);
   bool startClient();
   void stopClient();
-  int mainLoop();
-  void startNode();
+  Client *getClientPtr() { return m_client; }
+
+  synergy::ClientArgs &args() const {
+    return (synergy::ClientArgs &)argsBase();
+  }
+
+  //
+  // Static functions
+  //
 
   static ClientApp &instance() { return (ClientApp &)App::instance(); }
-
-  Client *getClientPtr() { return m_client; }
 
 private:
   ISocketFactory *getSocketFactory() const;

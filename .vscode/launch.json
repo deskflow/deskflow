@@ -4,6 +4,7 @@
     {
       "name": "gui unix",
       "type": "lldb",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergy",
       "preLaunchTask": "kill-build"
@@ -20,6 +21,7 @@
     {
       "name": "unittests unix",
       "type": "lldb",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/unittests",
       "preLaunchTask": "build"
@@ -27,7 +29,7 @@
     {
       "name": "unittests windows",
       "type": "cppvsdbg",
-      "cwd": "${workspaceRoot}/build/bin",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/unittests",
       "internalConsoleOptions": "openOnSessionStart",
@@ -36,6 +38,7 @@
     {
       "name": "integtests unix",
       "type": "lldb",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/integtests",
       "preLaunchTask": "build"
@@ -43,16 +46,50 @@
     {
       "name": "integtests windows",
       "type": "cppvsdbg",
-      "cwd": "${workspaceRoot}/build/bin",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/integtests",
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "build"
     },
     {
+      "name": "server unix",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergys",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "server windows",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergys",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "client unix",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergyc",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "client windows",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergyc",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
       "name": "daemon windows",
       "type": "cppvsdbg",
-      "cwd": "${workspaceRoot}/build/bin",
+      "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyd",
       "args": ["-f"],
@@ -64,6 +101,12 @@
       "type": "cppvsdbg",
       "request": "attach",
       "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "unix attach",
+      "type": "lldb",
+      "request": "attach",
+      "pid": "${command:pickProcess}"
     }
   ]
 }

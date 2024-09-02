@@ -55,66 +55,43 @@ public:
   App &operator=(App const &) = delete;
   App &operator=(App &&) = delete;
 
-  // Returns args that are common between server and client.
-  synergy::ArgsBase &argsBase() const { return *m_args; }
-
-  // Prints the current compiled version.
-  virtual void version();
-
-  // Prints help specific to client or server.
   virtual void help() = 0;
-
-  // Parse command line arguments.
   virtual void parseArgs(int argc, const char *const *argv) = 0;
-
-  int run(int argc, char **argv);
-
-  int daemonMainLoop(int, const char **);
-
   virtual void loadConfig() = 0;
   virtual bool loadConfig(const String &pathname) = 0;
-
-  // A description of the daemon (used only on Windows).
   virtual const char *daemonInfo() const = 0;
+  virtual std::string configSection() const = 0;
 
-  // Function pointer for function to exit immediately.
-  // TODO: this is old C code - use inheritance to normalize
-  void (*m_bye)(int);
+  virtual void version();
+  virtual void setByeFunc(void (*bye)(int)) { m_bye = bye; }
+  virtual void bye(int error) { m_bye(error); }
+  virtual IEventQueue *getEvents() const { return m_events; }
+
+  ARCH_APP_UTIL &appUtil() { return m_appUtil; }
+  synergy::ArgsBase &argsBase() const { return *m_args; }
+  int run(int argc, char **argv);
+  int daemonMainLoop(int, const char **);
+  void setupFileLogging();
+  void loggingFilterWarning();
+  void initApp(int argc, const char **argv);
+  void initApp(int argc, char **argv) { initApp(argc, (const char **)argv); }
+  void setEvents(EventQueue &events) { m_events = &events; }
+  void setSocketMultiplexer(SocketMultiplexer *sm) { m_socketMultiplexer = sm; }
+
+  virtual IArchTaskBarReceiver *taskBarReceiver() const {
+    return m_taskBarReceiver;
+  }
+
+  SocketMultiplexer *getSocketMultiplexer() const {
+    return m_socketMultiplexer;
+  }
 
   static App &instance() {
     assert(s_instance != nullptr);
     return *s_instance;
   }
 
-  // If --log was specified in args, then add a file logger.
-  void setupFileLogging();
-
-  // If messages will be hidden (to improve performance), warn user.
-  void loggingFilterWarning();
-
-  // Parses args, sets up file logging, and loads the config.
-  void initApp(int argc, const char **argv);
-
-  // HACK: accept non-const, but make it const anyway
-  void initApp(int argc, char **argv) { initApp(argc, (const char **)argv); }
-
-  ARCH_APP_UTIL &appUtil() { return m_appUtil; }
-
-  virtual IArchTaskBarReceiver *taskBarReceiver() const {
-    return m_taskBarReceiver;
-  }
-
-  virtual void setByeFunc(void (*bye)(int)) { m_bye = bye; }
-  virtual void bye(int error) { m_bye(error); }
-
-  virtual IEventQueue *getEvents() const { return m_events; }
-
-  void setSocketMultiplexer(SocketMultiplexer *sm) { m_socketMultiplexer = sm; }
-  SocketMultiplexer *getSocketMultiplexer() const {
-    return m_socketMultiplexer;
-  }
-
-  void setEvents(EventQueue &events) { m_events = &events; }
+  void (*m_bye)(int);
 
 private:
   void handleIpcMessage(const Event &, void *);
@@ -144,18 +121,24 @@ public:
   virtual ~MinimalApp();
 
   // IApp overrides
-  virtual int standardStartup(int argc, char **argv);
+  virtual int standardStartup(int argc, char **argv) override;
   virtual int runInner(
-      int argc, char **argv, ILogOutputter *outputter, StartupFunc startup);
-  virtual void startNode();
-  virtual int mainLoop();
-  virtual int foregroundStartup(int argc, char **argv);
-  virtual synergy::Screen *createScreen();
-  virtual void loadConfig();
-  virtual bool loadConfig(const String &pathname);
-  virtual const char *daemonInfo() const;
-  virtual const char *daemonName() const;
-  virtual void parseArgs(int argc, const char *const *argv);
+      int argc, char **argv, ILogOutputter *outputter,
+      StartupFunc startup) override;
+  virtual void startNode() override;
+  virtual int mainLoop() override;
+  virtual int foregroundStartup(int argc, char **argv) override;
+  virtual synergy::Screen *createScreen() override;
+  virtual void loadConfig() override;
+  virtual bool loadConfig(const String &pathname) override;
+  virtual const char *daemonInfo() const override;
+  virtual const char *daemonName() const override;
+  virtual void parseArgs(int argc, const char *const *argv) override;
+
+  //
+  // App overrides
+  //
+  std::string configSection() const override { return ""; }
 
 private:
   Arch m_arch;

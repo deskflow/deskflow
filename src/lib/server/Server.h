@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -31,7 +31,6 @@
 #include "synergy/ServerArgs.h"
 #include "synergy/clipboard_types.h"
 #include "synergy/key_types.h"
-#include "synergy/languages/LanguageManager.h"
 #include "synergy/mouse_types.h"
 #include <memory>
 
@@ -51,6 +50,8 @@ class ClientListener;
 This class implements the top-level server algorithms for synergy.
 */
 class Server : public INode {
+  using ServerConfig = synergy::server::Config;
+
 public:
   //! Lock cursor to screen data
   class LockCursorToScreenInfo {
@@ -110,8 +111,9 @@ public:
   ownership of \p primaryClient.
   */
   Server(
-      Config &config, PrimaryClient *primaryClient, synergy::Screen *screen,
-      IEventQueue *events, synergy::ServerArgs const &args);
+      ServerConfig &config, PrimaryClient *primaryClient,
+      synergy::Screen *screen, IEventQueue *events,
+      synergy::ServerArgs const &args);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -133,7 +135,7 @@ public:
   configuration was accepted (it must include the server's name).
   This will disconnect any clients no longer in the configuration.
   */
-  bool setConfig(const Config &);
+  bool setConfig(const ServerConfig &);
 
   //! Add a client
   /*!
@@ -351,7 +353,7 @@ private:
   void closeClient(BaseClientProxy *, const char *msg);
 
   // close clients not in \p config
-  void closeClients(const Config &config);
+  void closeClients(const ServerConfig &config);
 
   // close all clients whether they've completed the handshake or not,
   // except the primary client
@@ -422,7 +424,7 @@ private:
   SInt32 m_xDelta2, m_yDelta2;
 
   // current configuration
-  Config *m_config;
+  ServerConfig *m_config;
 
   // input filter (from m_config);
   InputFilter *m_inputFilter;

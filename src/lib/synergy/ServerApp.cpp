@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -19,22 +19,17 @@
 #include "synergy/ServerApp.h"
 
 #include "arch/Arch.h"
-#include "base/EventQueue.h"
-#include "base/FunctionEventJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
-#include "base/TMethodJob.h"
-#include "base/log_outputters.h"
-#include "common/constants.h"
 #include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
-#include "platform/wayland.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
+#include "server/Config.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
 #include "synergy/App.h"
@@ -51,24 +46,35 @@
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
 #endif
+
 #if WINAPI_XWINDOWS
 #include "platform/XWindowsScreen.h"
 #endif
+
 #if WINAPI_LIBEI
 #include "platform/EiScreen.h"
 #endif
+
 #if WINAPI_CARBON
+#include "platform/OSXDragSimulator.h"
 #include "platform/OSXScreen.h"
 #endif
 
-#if defined(__APPLE__)
-#include "platform/OSXDragSimulator.h"
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#include "platform/wayland.h"
+#endif
+
+#if defined(MAC_OS_X_VERSION_10_7)
+#include "base/TMethodJob.h"
+#include "mt/Thread.h"
 #endif
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
+
+using namespace synergy::server;
 
 //
 // ServerApp
@@ -88,6 +94,7 @@ ServerApp::ServerApp(
 ServerApp::~ServerApp() {}
 
 void ServerApp::parseArgs(int argc, const char *const *argv) {
+
   ArgParser argParser(this);
   bool result = argParser.parseServerArgs(args(), argc, argv);
 
@@ -184,16 +191,18 @@ void ServerApp::reloadConfig(const Event &, void *) {
 
 void ServerApp::loadConfig() {
   bool loaded = false;
+  std::string path;
 
   // load the config file, if specified
   if (!args().m_configFile.empty()) {
-    loaded = loadConfig(args().m_configFile);
+    path = args().m_configFile;
+    loaded = loadConfig(path);
   }
 
   // load the default configuration if no explicit file given
   else {
     // get the user's home directory
-    String path = ARCH->getUserDirectory();
+    path = ARCH->getUserDirectory();
     if (!path.empty()) {
       // complete path
       path = ARCH->concatPath(path, USR_CONFIG_NAME);
@@ -218,7 +227,9 @@ void ServerApp::loadConfig() {
   }
 
   if (!loaded) {
-    LOG((CLOG_CRIT "%s: no configuration available", args().m_pname));
+    LOG(
+        (CLOG_CRIT "%s: failed to load config: %s", args().m_pname,
+         path.c_str()));
     m_bye(kExitConfig);
   }
 }
@@ -607,7 +618,8 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address) {
   return listen;
 }
 
-Server *ServerApp::openServer(Config &config, PrimaryClient *primaryClient) {
+Server *
+ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient) {
   Server *server =
       new Server(config, primaryClient, m_serverScreen, m_events, args());
   try {

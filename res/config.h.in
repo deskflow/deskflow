@@ -175,11 +175,8 @@
 /* Define if libportal has xdp_portal_create_remote_desktop_session_full */
 #cmakedefine HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL ${HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL}
 
-/* Define if libportal has inputcapture support */
+/* Define if libportal has input capture support */
 #cmakedefine HAVE_LIBPORTAL_INPUTCAPTURE ${HAVE_LIBPORTAL_INPUTCAPTURE}
 
 /* Define if libei ei_device_start_emulating takes a sequence number */
 #cmakedefine HAVE_LIBEI_SEQUENCE_NUMBER ${HAVE_LIBEI_SEQUENCE_NUMBER}
-
-/* Define if wintoast is available */
-#cmakedefine HAVE_WINTOAST ${HAVE_WINTOAST}

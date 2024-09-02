@@ -33,6 +33,7 @@
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
 #include "synergy/ArgsBase.h"
+#include "synergy/Config.h"
 #include "synergy/XSynergy.h"
 #include "synergy/protocol_types.h"
 
@@ -43,8 +44,10 @@
 #endif
 
 #include <charconv>
+#include <filesystem>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <stdio.h>
 #include <vector>
 
@@ -55,6 +58,10 @@
 #if defined(__APPLE__)
 #include "platform/OSXDragSimulator.h"
 #endif
+
+const auto kConfigFilename = "synergy-config.toml";
+
+using namespace synergy;
 
 App *App::s_instance = nullptr;
 
@@ -174,8 +181,13 @@ void App::loggingFilterWarning() {
 }
 
 void App::initApp(int argc, const char **argv) {
-  // parse command line
-  parseArgs(argc, argv);
+
+  Config config(kConfigFilename, configSection());
+  if (config.load(argv[0])) {
+    parseArgs(config.argc(), config.argv());
+  } else {
+    parseArgs(argc, argv);
+  }
 
   ARCH->setProfileDirectory(argsBase().m_profileDirectory);
   ARCH->setPluginDirectory(argsBase().m_pluginDirectory);

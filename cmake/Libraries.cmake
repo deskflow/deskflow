@@ -10,9 +10,10 @@ macro(configure_libs)
     configure_windows_libs()
   endif()
 
-  config_qt()
+  configure_qt()
   configure_openssl()
   configure_coverage()
+  configure_tomlplusplus()
 
   if(BUILD_TESTS)
     configure_gtest()
@@ -124,7 +125,9 @@ macro(configure_unix_libs)
   set(TIME_WITH_SYS_TIME 1)
   set(HAVE_SOCKLEN_T 1)
 
-  # For config.h, save the results based on a template (config.h.in).
+  # Unix only: For config.h, save the results based on a template (config.h.in).
+  # Note that this won't work on Windows because filenames are not case sensitive,
+  # and we have header files named "Config.h" (upper case 'C').
   configure_file(res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
 
   add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
@@ -361,7 +364,7 @@ macro(configure_windows_libs)
 
 endmacro()
 
-macro(config_qt)
+macro(configure_qt)
 
   find_package(
     Qt6
@@ -523,9 +526,21 @@ macro(configure_wintoast)
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
   if(WINTOAST_DIR)
     set(HAVE_WINTOAST true)
+    add_definitions(-DHAVE_WINTOAST=1)
     include_directories(${WINTOAST_DIR}/include)
   else()
-    message(WARNING "WinToast subproject not found")
+    message(WARNING "Subproject 'WinToast' not found")
   endif()
 
+endmacro()
+
+macro(configure_tomlplusplus)
+  file(GLOB TOMLPLUSPLUS_DIR ${CMAKE_SOURCE_DIR}/subprojects/tomlplusplus-*)
+  if(TOMLPLUSPLUS_DIR)
+    set(HAVE_TOMLPLUSPLUS true)
+    add_definitions(-DHAVE_TOMLPLUSPLUS=1)
+    include_directories(${TOMLPLUSPLUS_DIR}/include)
+  else()
+    message(WARNING "Subproject 'tomlplusplus' not found")
+  endif()
 endmacro()

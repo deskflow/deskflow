@@ -9,6 +9,7 @@ Brewfile.lock.json
 /.cache
 
 # typical developer-created files
+synergy-config.toml
 .vscode
 .DS_Store
 *.code-workspace

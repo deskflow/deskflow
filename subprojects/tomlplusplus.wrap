@@ -1,0 +1,10 @@
+[wrap-file]
+directory = tomlplusplus-3.4.0
+source_url = https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz
+source_filename = tomlplusplus-3.4.0.tar.gz
+source_hash = 8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155
+source_fallback_url = https://github.com/mesonbuild/wrapdb/releases/download/tomlplusplus_3.4.0-1/tomlplusplus-3.4.0.tar.gz
+wrapdb_version = 3.4.0-1
+
+[provide]
+dependency_names = tomlplusplus

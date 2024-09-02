@@ -27,6 +27,7 @@ namespace synergy {
 
 class ServerArgs : public ArgsBase {
   using License = synergy::license::License;
+  using Config = synergy::server::Config;
 
 public:
   ServerArgs();

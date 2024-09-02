@@ -30,12 +30,15 @@
 
 #include <iosfwd>
 
+namespace synergy::server {
 class Config;
 class ConfigReadContext;
+} // namespace synergy::server
+
 class IEventQueue;
 
 namespace std {
-template <> struct iterator_traits<Config> {
+template <> struct iterator_traits<synergy::server::Config> {
   typedef String value_type;
   typedef ptrdiff_t difference_type;
   typedef bidirectional_iterator_tag iterator_category;
@@ -43,6 +46,8 @@ template <> struct iterator_traits<Config> {
   typedef String &reference;
 };
 }; // namespace std
+
+namespace synergy::server {
 
 //! Server configuration
 /*!
@@ -544,3 +549,5 @@ protected:
 private:
   String m_error;
 };
+
+} // namespace synergy::server
