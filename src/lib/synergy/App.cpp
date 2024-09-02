@@ -202,7 +202,9 @@ void App::initApp(int argc, const char **argv) {
         const auto &table = *(args.as_table());
         for (const auto &pair : table) {
           const auto key = pair.first;
-          commandArgs.push_back("--" + std::string(key.str()));
+          if (key.str() != "_") {
+            commandArgs.push_back("--" + std::string(key.str()));
+          }
 
           if (pair.second.is_string()) {
             const auto value = pair.second.as_string()->get();
