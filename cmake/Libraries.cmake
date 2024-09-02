@@ -12,8 +12,11 @@ macro(configure_libs)
 
   config_qt()
   configure_openssl()
-  configure_gtest()
   configure_coverage()
+
+  if(BUILD_TESTS)
+    configure_gtest()
+  endif()
 
 endmacro()
 
@@ -398,9 +401,26 @@ macro(configure_gtest)
   option(SYSTEM_GTEST "Use system GoogleTest" ${DEFAULT_SYSTEM_GTEST})
   if(SYSTEM_GTEST)
     message(STATUS "Using system GoogleTest")
-    find_package(GTest REQUIRED)
-    set(GTEST_LIBS GTest::GTest GTest::Main)
+    find_package(GTest)
+    if(GTEST_FOUND)
+      # Ordinarily, we'd use GTEST_LIBRARIES, but it seems that these do not always export
+      # the required libraries (e.g. gmock) on some OS (e.g macOS with brew).
+      set(GTEST_LIB GTest::gtest)
+      set(GMOCK_LIB GTest::gmock)
+    else()
+      message(
+        FATAL_ERROR
+          "Google Test not found, re-configure with -DBUILD_TESTS=OFF or -DSYSTEM_GTEST=OFF"
+      )
+    endif()
   else()
+    if(NOT EXISTS ${gtest_base_dir})
+      message(
+        FATAL_ERROR
+          "Google Test subproject not found, reconfigure with -DBUILD_TESTS=OFF"
+      )
+    endif()
+
     message(STATUS "Building GoogleTest")
     set(gtest_dir ${gtest_base_dir}/googletest)
     set(gmock_dir ${gtest_base_dir}/googlemock)
@@ -416,7 +436,8 @@ macro(configure_gtest)
       set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
     endif()
 
-    set(GTEST_LIBS gtest gmock)
+    set(GTEST_LIB gtest)
+    set(GMOCK_LIB gmock)
   endif()
 
 endmacro()
@@ -497,7 +518,14 @@ function(find_openssl_dir_win32 result)
 endfunction()
 
 macro(configure_wintoast)
-  # WinToast is a pretty niche library, and there doesn't seem to be a package for it.
+  # WinToast is a pretty niche library, and there doesn't seem to be an installable package,
+  # so we rely on building from source.
   file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
-  include_directories(${WINTOAST_DIR}/include)
+  if(WINTOAST_DIR)
+    set(HAVE_WINTOAST true)
+    include_directories(${WINTOAST_DIR}/include)
+  else()
+    message(WARNING "WinToast subproject not found")
+  endif()
+
 endmacro()

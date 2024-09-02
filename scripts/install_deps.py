@@ -50,6 +50,10 @@ def main():
         traceback.print_exc()
         error = True
 
+    colors = env.import_colors()
+    print()
+    print(f"{colors.SUCCESS_TEXT} Dependencies installed")
+
     if args.pause_on_exit:
         input("Press enter to continue...")
 

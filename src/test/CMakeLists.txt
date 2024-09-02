@@ -129,8 +129,6 @@ macro(config_test_deps)
   include_directories(${CMAKE_BINARY_DIR}/src/lib/gui/gui_autogen/include)
 
   set(test_libs
-      gtest
-      gmock
       arch
       base
       client
@@ -144,7 +142,8 @@ macro(config_test_deps)
       ipc
       license
       gui
-      ${GTEST_LIBS}
+      ${GMOCK_LIB}
+      ${GTEST_LIB}
       ${libs})
 
 endmacro()

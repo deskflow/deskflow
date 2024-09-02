@@ -1,2 +1,3 @@
+option('system_gtest', type: 'boolean', value: true, description: 'Use system gtest')
 option('system_libportal', type: 'boolean', value: true, description: 'Use system libportal')
 option('system_libei', type: 'boolean', value: true, description: 'Use system libei')

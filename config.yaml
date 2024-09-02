@@ -120,6 +120,8 @@ config:
           qt6-base-devel \
           qt6-tools-devel \
           gtk3-devel \
+          googletest-devel \
+          googlemock-devel \
           pugixml-devel \
           libei-devel \
           libportal-devel

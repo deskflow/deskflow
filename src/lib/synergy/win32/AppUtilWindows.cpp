@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2012-2016 Symless Ltd.
+ * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
  * This package is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
  */
 
 #include "synergy/win32/AppUtilWindows.h"
+
 #include "arch/IArchTaskBarReceiver.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
@@ -31,15 +32,17 @@
 #include "synergy/ArgsBase.h"
 #include "synergy/Screen.h"
 #include "synergy/XSynergy.h"
-#include "wintoastlib.h"
 
 #include <VersionHelpers.h>
+#include <Windows.h>
 #include <conio.h>
 #include <iostream>
 #include <memory>
 #include <sstream>
 
-#include <Windows.h>
+#if HAVE_WINTOAST
+#include "wintoastlib.h"
+#endif
 
 AppUtilWindows::AppUtilWindows(IEventQueue *events)
     : m_events(events),
@@ -198,6 +201,7 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const {
   return layout;
 }
 
+#if HAVE_WINTOAST
 class WinToastHandler : public WinToastLib::IWinToastHandler {
 public:
   WinToastHandler() {}
@@ -207,9 +211,11 @@ public:
   void toastDismissed(WinToastDismissalReason state) const override {}
   void toastFailed() const override {}
 };
+#endif
 
 void AppUtilWindows::showNotification(
     const String &title, const String &text) const {
+#if HAVE_WINTOAST
   LOG(
       (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
        title.c_str(), text.c_str()));
@@ -247,4 +253,7 @@ void AppUtilWindows::showNotification(
         CLOG_DEBUG "failed to show toast notification, error code: %d", error));
     return;
   }
+#else
+  LOG((CLOG_INFO "toast notifications are not supported"));
+#endif
 }
