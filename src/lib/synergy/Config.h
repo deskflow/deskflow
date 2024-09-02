@@ -23,6 +23,14 @@
 
 namespace synergy {
 
+//! App configuration
+/*!
+Parses a configuration file describing start args and potentially other
+configuration options in future. The configuration file is in TOML format.
+
+Initially this class was created to as a developer convenience; it is a
+convenient place to specify args without needing to fiddle with IDE configs.
+*/
 class Config {
   class ParseError : public std::runtime_error {
   public:

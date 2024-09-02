@@ -57,26 +57,23 @@ public:
       IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ServerApp();
 
-  // Parse server specific command line arguments.
-  void parseArgs(int argc, const char *const *argv);
-
-  // Prints help specific to server.
-  void help();
-
-  // Returns arguments that are common and for server.
-  synergy::ServerArgs &args() const {
-    return (synergy::ServerArgs &)argsBase();
-  }
-
-  const char *daemonName() const;
-  const char *daemonInfo() const;
-
-  // TODO: Document these functions.
-  static void reloadSignalHandler(Arch::ESignal, void *);
+  void parseArgs(int argc, const char *const *argv) override;
+  void help() override;
+  const char *daemonName() const override;
+  const char *daemonInfo() const override;
+  void loadConfig() override;
+  bool loadConfig(const String &pathname) override;
+  synergy::Screen *createScreen() override;
+  int mainLoop() override;
+  int runInner(
+      int argc, char **argv, ILogOutputter *outputter,
+      StartupFunc startup) override;
+  int standardStartup(int argc, char **argv) override;
+  int foregroundStartup(int argc, char **argv) override;
+  void startNode() override;
+  std::string configSection() const override { return "server"; }
 
   void reloadConfig(const Event &, void *);
-  void loadConfig();
-  bool loadConfig(const String &pathname);
   void forceReconnect(const Event &, void *);
   void resetServer(const Event &, void *);
   void handleClientConnected(const Event &, void *vlistener);
@@ -93,7 +90,6 @@ public:
   bool initServer();
   void retryHandler(const Event &, void *);
   synergy::Screen *openServerScreen();
-  synergy::Screen *createScreen();
   PrimaryClient *openPrimaryClient(const String &name, synergy::Screen *screen);
   void handleScreenError(const Event &, void *);
   void handleSuspend(const Event &, void *);
@@ -102,15 +98,13 @@ public:
   Server *openServer(ServerConfig &config, PrimaryClient *primaryClient);
   void handleNoClients(const Event &, void *);
   bool startServer();
-  int mainLoop();
-  int runInner(
-      int argc, char **argv, ILogOutputter *outputter, StartupFunc startup);
-  int standardStartup(int argc, char **argv);
-  int foregroundStartup(int argc, char **argv);
-  void startNode();
   Server *getServerPtr() { return m_server; }
-  std::string configSection() const override { return "server"; }
 
+  synergy::ServerArgs &args() const {
+    return (synergy::ServerArgs &)argsBase();
+  }
+
+  static void reloadSignalHandler(Arch::ESignal, void *);
   static ServerApp &instance() { return (ServerApp &)App::instance(); }
 
 private:
