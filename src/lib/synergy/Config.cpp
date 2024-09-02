@@ -43,7 +43,6 @@ bool Config::load(const std::string &firstArg) {
 #if HAVE_TOMLPLUSPLUS
   m_args.push_back(firstArg);
 
-  std::string specialLastArg = "";
   if (m_filename.empty() || !std::filesystem::exists(m_filename)) {
     LOG((CLOG_DEBUG "no config file at: %s", m_filename.c_str()));
     return false;
@@ -71,6 +70,7 @@ bool Config::load(const std::string &firstArg) {
     return false;
   }
 
+  std::string specialLastArg = "";
   const auto &table = *(args.as_table());
   for (const auto &pair : table) {
     const auto &key = pair.first;
