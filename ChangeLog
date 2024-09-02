@@ -7,6 +7,7 @@ Enhancements:
 - #7445 Update `config.yaml` to support Linux Mint build target
 - #7453 Change default value for dev thanks message
 - #7455 Use EI screen when XDG_SESSION_TYPE is "wayland"
+- #7461 More robust `choco` install and helpful `install_deps.py` messages
 
 # 1.15.1
 
