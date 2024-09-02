@@ -38,13 +38,15 @@ jobs:
       - name: Print next version
         run: echo ${{ steps.next-version.outputs.next-version }}
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.ORGANIZATION_TOKEN }}
+      - name: Create git tag
+        uses: actions/github-script@v7
         with:
-          tag_name: ${{ steps.next-version.outputs.next-version }}
-          release_name: ${{ steps.next-version.outputs.next-version }}
-          draft: false
-          prerelease: ${{ !startsWith(github.ref, 'refs/heads/release') }}
+          script: |
+            const ref = `refs/tags/${{ steps.next-version.outputs.next-version }}`;
+            const sha = context.sha;
+            await github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: ref,
+              sha: sha,
+            });
