@@ -125,12 +125,12 @@ macro(configure_unix_libs)
   set(TIME_WITH_SYS_TIME 1)
   set(HAVE_SOCKLEN_T 1)
 
-  add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
-
   # Unix only: For config.h, save the results based on a template (config.h.in).
   # Note that this won't work on Windows because filenames are not case sensitive,
   # and we have header files named "Config.h" (upper case 'C').
   configure_file(res/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/lib/config.h)
+
+  add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
 endmacro()
 
