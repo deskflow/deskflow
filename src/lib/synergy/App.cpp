@@ -190,6 +190,8 @@ void App::initApp(int argc, const char **argv) {
 // TODO: move to own class
 #if HAVE_TOMLPLUSPLUS
   std::vector<std::string> commandArgs;
+  std::string specialLastArg = "";
+
   const auto _configFilename = configFilename();
   if (!_configFilename.empty() && std::filesystem::exists(_configFilename)) {
     toml::table configTable;
@@ -202,9 +204,12 @@ void App::initApp(int argc, const char **argv) {
         const auto &table = *(args.as_table());
         for (const auto &pair : table) {
           const auto key = pair.first;
-          if (key.str() != "_") {
-            commandArgs.push_back("--" + std::string(key.str()));
+          if (key.str() == "_last") {
+            specialLastArg = pair.second.as_string()->get();
+            continue;
           }
+
+          commandArgs.push_back("--" + std::string(key.str()));
 
           if (pair.second.is_string()) {
             const auto value = pair.second.as_string()->get();
@@ -219,6 +224,10 @@ void App::initApp(int argc, const char **argv) {
       std::cerr << "Config parse failed:\n" << err << "\n";
       throw std::runtime_error("Failed to parse config file");
     }
+  }
+
+  if (!specialLastArg.empty()) {
+    commandArgs.push_back(specialLastArg);
   }
 
   if (!commandArgs.empty()) {
