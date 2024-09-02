@@ -52,9 +52,23 @@ def main():
 
     colors = env.import_colors()
     print()
-    print(f"{colors.SUCCESS_TEXT} Dependencies installed")
 
+    if error:
+        print(f"{colors.ERROR_TEXT} Failed to install dependencies")
+    else:
+        print(f"{colors.SUCCESS_TEXT} Dependencies installed")
+
+        # On Windows and macOS, we set env vars for cmake, but for them to be picked up,
+        # either the shell needs to be restarted or the env vars need to be re-sourced.
+        # Restarting the shell is easier for most people.
+        if not env.is_linux():
+            print(f"{colors.WARNING_TEXT} Please restart your shells for new env vars")
+
+    # Useful on Windows, when elevated, Python is opened in a new window and closes
+    # immediately after the script finishes. This keeps the script window open so that
+    # the user can see the output.
     if args.pause_on_exit:
+        print()
         input("Press enter to continue...")
 
     if error:
@@ -138,6 +152,10 @@ class Dependencies:
         """Installs dependencies on macOS."""
         import lib.mac as mac
 
+        # On macOS, brew does have a Qt package available, but it is always built against the
+        # current macOS version and the brew version also does some really weird stuff with the
+        # library symbols, which confuses the heck out of `macqtdeploy`. So, using the official
+        # Qt library binaries seems to be the most reliable option for distribution.
         qt = qt_utils.MacQt(*self.config.get_qt_config())
         qt.install()
 
