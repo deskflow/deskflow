@@ -47,7 +47,7 @@ runs:
 
     - if: ${{ inputs.use_gdrive == 'true' }}
       run: |
-        SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1)
+        SHORT_VERSION=$(echo "${{ inputs.package-version }}" | cut -d'-' -f1 | cut -d'+' -f1)
         echo "SHORT_VERSION=$SHORT_VERSION" >> $GITHUB_ENV
       shell: bash
 
