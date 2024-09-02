@@ -2,14 +2,15 @@
 
 Enhancements:
 
-- #7449 Wayland support (port Red Hat libei and libportal impl)
+- #7449 Wayland support (port Red Hat `libei` and `libportal` impl)
 - #7448 Only add PR comments for internal PR
 - #7445 Update `config.yaml` to support Linux Mint build target
 - #7453 Change default value for dev thanks message
-- #7455 Use EI screen when XDG_SESSION_TYPE is "wayland"
+- #7455 Use EI screen when `XDG_SESSION_TYPE` is "wayland"
 - #7461 More robust `choco` install and helpful `install_deps.py` messages
-- #7464 Restore --only-python arg to only install Python deps
-- 
+- #7464 Restore `--only-python` arg to only install Python deps
+- #7465 Also cut `+` char for `SHORT_VERSION` var used on upload
+
 # 1.15.1
 
 Enhancements:
