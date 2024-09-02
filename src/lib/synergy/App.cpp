@@ -30,7 +30,6 @@
 #include "common/copyright.h"
 #include "common/ipc.h"
 #include "common/version.h"
-#include "config.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
 #include "synergy/ArgsBase.h"

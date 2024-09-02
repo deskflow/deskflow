@@ -45,18 +45,27 @@
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
 #endif
+
 #if WINAPI_XWINDOWS
 #include "platform/XWindowsScreen.h"
 #endif
+
 #if WINAPI_LIBEI
 #include "platform/EiScreen.h"
 #endif
+
 #if WINAPI_CARBON
+#include "platform/OSXDragSimulator.h"
 #include "platform/OSXScreen.h"
 #endif
 
-#if defined(__APPLE__)
-#include "platform/OSXDragSimulator.h"
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#include "platform/wayland.h"
+#endif
+
+#if defined(MAC_OS_X_VERSION_10_7)
+#include "base/TMethodJob.h"
+#include "mt/Thread.h"
 #endif
 
 #include <memory>
