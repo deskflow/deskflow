@@ -70,7 +70,10 @@ def main():
         # either the shell needs to be restarted or the env vars need to be re-sourced.
         # Restarting the shell is easier for most people.
         if not env.is_linux():
-            print(f"{colors.WARNING_TEXT} Please restart your shells for new env vars")
+            print(
+                f"{colors.WARNING_TEXT} You may need to restart your terminal "
+                "or IDE to use new env vars"
+            )
 
     # Useful on Windows, when elevated, Python is opened in a new window and closes
     # immediately after the script finishes. This keeps the script window open so that
