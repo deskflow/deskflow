@@ -180,9 +180,3 @@
 
 /* Define if libei ei_device_start_emulating takes a sequence number */
 #cmakedefine HAVE_LIBEI_SEQUENCE_NUMBER ${HAVE_LIBEI_SEQUENCE_NUMBER}
-
-/* Define if WinToast is available */
-#cmakedefine HAVE_WINTOAST ${HAVE_WINTOAST}
-
-/* Define if toml++ is available */
-#cmakedefine HAVE_TOMLPLUSPLUS ${HAVE_TOMLPLUSPLUS}
