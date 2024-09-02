@@ -60,6 +60,8 @@
 #include "platform/OSXDragSimulator.h"
 #endif
 
+const auto kConfigFilename = "synergy-config.toml";
+
 using namespace synergy;
 
 App *App::s_instance = nullptr;
@@ -181,7 +183,7 @@ void App::loggingFilterWarning() {
 
 void App::initApp(int argc, const char **argv) {
 
-  Config config(configFilename());
+  Config config(kConfigFilename, configSection());
   if (config.load(argv[0])) {
     parseArgs(config.argc(), config.argv());
   } else {

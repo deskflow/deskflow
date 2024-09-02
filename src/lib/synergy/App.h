@@ -67,7 +67,7 @@ public:
   // A description of the daemon (used only on Windows).
   virtual const char *daemonInfo() const = 0;
 
-  virtual std::string configFilename() const = 0;
+  virtual std::string configSection() const = 0;
 
   // Returns args that are common between server and client.
   synergy::ArgsBase &argsBase() const { return *m_args; }
@@ -158,7 +158,7 @@ public:
   virtual const char *daemonInfo() const;
   virtual const char *daemonName() const;
   virtual void parseArgs(int argc, const char *const *argv);
-  std::string configFilename() const { return ""; }
+  std::string configSection() const { return ""; }
 
 private:
   Arch m_arch;

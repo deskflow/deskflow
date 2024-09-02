@@ -84,7 +84,7 @@ public:
   int mainLoop();
   void startNode();
   Client *getClientPtr() { return m_client; }
-  std::string configFilename() const override { return "synergy-client.toml"; }
+  std::string configSection() const override { return "client"; }
 
   static ClientApp &instance() { return (ClientApp &)App::instance(); }
 

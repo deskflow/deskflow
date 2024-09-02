@@ -109,7 +109,7 @@ public:
   int foregroundStartup(int argc, char **argv);
   void startNode();
   Server *getServerPtr() { return m_server; }
-  std::string configFilename() const override { return "synergy-server.toml"; }
+  std::string configSection() const override { return "server"; }
 
   static ServerApp &instance() { return (ServerApp &)App::instance(); }
 

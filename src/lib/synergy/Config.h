@@ -30,13 +30,14 @@ class Config {
   };
 
 public:
-  explicit Config(const std::string &filename);
+  explicit Config(const std::string &filename, const std::string &section);
   bool load(const std::string &firstArg);
   const char *const *argv() const;
   int argc() const;
 
 private:
   std::string m_filename;
+  std::string m_section;
   std::vector<std::string> m_args;
   std::vector<const char *> m_argv;
 };

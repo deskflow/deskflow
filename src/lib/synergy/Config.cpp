@@ -30,7 +30,9 @@
 
 namespace synergy {
 
-Config::Config(const std::string &filename) : m_filename(filename) {}
+Config::Config(const std::string &filename, const std::string &section)
+    : m_filename(filename),
+      m_section(section) {}
 
 const char *const *Config::argv() const { return m_argv.data(); }
 
@@ -57,7 +59,13 @@ bool Config::load(const std::string &firstArg) {
     throw ParseError();
   }
 
-  const auto args = configTable["args"];
+  if (!configTable.contains(m_section)) {
+    LOG((CLOG_WARN "no %s section found in config file", m_section.c_str()));
+    return false;
+  }
+
+  const auto &section = configTable[m_section];
+  const auto args = section["args"];
   if (!args.is_table()) {
     LOG((CLOG_WARN "no args table found in config file"));
     return false;
