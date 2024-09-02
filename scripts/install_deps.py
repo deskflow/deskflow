@@ -152,6 +152,10 @@ class Dependencies:
         """Installs dependencies on macOS."""
         import lib.mac as mac
 
+        # On macOS, brew does have a Qt package available, but it is always built against the
+        # current macOS version and the brew version also does some really weird stuff with the
+        # library symbols, which confuses the heck out of `macqtdeploy`. So, using the official
+        # Qt library binaries seems to be the most reliable option for distribution.
         qt = qt_utils.MacQt(*self.config.get_qt_config())
         qt.install()
 
