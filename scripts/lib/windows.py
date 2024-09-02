@@ -147,12 +147,8 @@ class WindowsChoco:
                 print_cmd=True,
             )
         else:
-            cmd_utils.run(
-                "winget install chocolatey",
-                check=False,
-                shell=True,
-                print_cmd=True,
-            )
+            self.ensure_choco_installed()
+
             cmd_utils.run(
                 command,
                 shell=True,
@@ -186,3 +182,26 @@ class WindowsChoco:
                     print(f"Removed package from choco config: {remove}")
 
         tree.write(choco_config_file)
+
+    def ensure_choco_installed(self):
+        if cmd_utils.has_command("choco"):
+            return
+
+        if not cmd_utils.has_command("winget"):
+            print("The winget command was not found", file=sys.stderr)
+            sys.exit(1)
+
+        print("The choco command was not found, installing Chocolatey...")
+        cmd_utils.run(
+            "winget install chocolatey",
+            check=False,
+            shell=True,
+            print_cmd=True,
+        )
+
+        if not cmd_utils.has_command("choco"):
+            print(
+                "The choco command was still not found, please re-run this script...",
+                file=sys.stderr,
+            )
+            sys.exit(1)
