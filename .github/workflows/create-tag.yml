@@ -8,8 +8,8 @@ on:
       - release/**
 
 jobs:
-  create-release:
-    if: ${{ vars.CREATE_RELEASE }}
+  create-tag:
+    if: ${{ vars.CREATE_TAGS }}
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -34,9 +34,6 @@ jobs:
         with:
           current-version: ${{ env.CURRENT_VERSION }}
           override-stage: ${{ env.OVERRIDE_STAGE }}
-
-      - name: Print next version
-        run: echo ${{ steps.next-version.outputs.next-version }}
 
       - name: Create git tag
         uses: actions/github-script@v7
