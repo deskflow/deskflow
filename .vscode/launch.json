@@ -2,6 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "github delete releases",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "./scripts/github.py",
+      "console": "integratedTerminal",
+      "args": ["--delete-releases", "snapshot", "--dry-run"]
+    },
+    {
       "name": "gui unix",
       "type": "lldb",
       "request": "launch",
