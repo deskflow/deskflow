@@ -51,14 +51,8 @@ XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
 
   m_userEvent = XInternAtom(m_display, "SYNERGY_USER_EVENT", False);
   // set up for pipe hack
-  int result = pipe(m_pipefd);
+  int result = pipe2(m_pipefd, O_NONBLOCK);
   assert(result == 0);
-
-  int pipeflags;
-  pipeflags = fcntl(m_pipefd[0], F_GETFL);
-  fcntl(m_pipefd[0], F_SETFL, pipeflags | O_NONBLOCK);
-  pipeflags = fcntl(m_pipefd[1], F_GETFL);
-  fcntl(m_pipefd[1], F_SETFL, pipeflags | O_NONBLOCK);
 }
 
 XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer() {
