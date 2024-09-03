@@ -177,6 +177,3 @@
 
 /* Define if libportal has input capture support */
 #cmakedefine HAVE_LIBPORTAL_INPUTCAPTURE ${HAVE_LIBPORTAL_INPUTCAPTURE}
-
-/* Define if libei ei_device_start_emulating takes a sequence number */
-#cmakedefine HAVE_LIBEI_SEQUENCE_NUMBER ${HAVE_LIBEI_SEQUENCE_NUMBER}
