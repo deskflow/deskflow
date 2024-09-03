@@ -185,8 +185,7 @@ config:
           libgtk-3-dev \
           libprotobuf-c-dev \
           libsystemd-dev \
-          libgirepository1.0-dev \
-          qt6-base-private-dev
+          libgirepository1.0-dev
 
         ubuntu: *debian_libportal
         linuxmint: *debian_libportal

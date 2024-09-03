@@ -12,7 +12,7 @@ def setup(no_system_list):
     if env.is_windows():
         cmd.append("-Dsystem_gtest=false")
 
-    for subproject in no_system_list:
+    for subproject in no_system_list or []:
         cmd.append(f"-Dsystem_{subproject}=false")
 
     # This might be a bit rude, but Meson seems to cache a lot (like CMake),
