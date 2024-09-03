@@ -38,6 +38,7 @@ macro(configure_unix_libs)
   include(CheckIncludeFileCXX)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
+  include(FindPkgConfig)
 
   check_include_file_cxx(istream HAVE_ISTREAM)
   check_include_file_cxx(ostream HAVE_OSTREAM)
@@ -167,32 +168,8 @@ endmacro()
 
 macro(configure_wayland_libs)
 
-  include(FindPkgConfig)
-
-  pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
-  if(LIBEI_FOUND)
-    message(STATUS "libei version: ${LIBEI_VERSION}")
-    add_definitions(-DWINAPI_LIBEI=1)
-    include_directories(${LIBEI_INCLUDE_DIRS})
-  else()
-    message(
-      WARNING
-        "libei >= ${LIBEI_MIN_VERSION} not found, Wayland support will be disabled."
-    )
-  endif()
-
-  pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
-  if(LIBPORTAL_FOUND)
-    message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
-    add_definitions(-DWINAPI_LIBPORTAL=1)
-    include_directories(${LIBPORTAL_INCLUDE_DIRS})
-    check_libportal()
-  else()
-    message(
-      WARNING
-        "libportal >= ${LIBPORTAL_MIN_VERSION} not found, some Wayland features will be disabled."
-    )
-  endif()
+  configure_libei()
+  configure_libportal()
 
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
   pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
@@ -202,23 +179,103 @@ macro(configure_wayland_libs)
 
 endmacro()
 
+macro(configure_libei)
+  option(SYSTEM_LIBEI "Use system libei" ON)
+  if(SYSTEM_LIBEI)
+    pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+    if(LIBEI_FOUND)
+      message(STATUS "libei version: ${LIBEI_VERSION}")
+      add_definitions(-DWINAPI_LIBEI=1)
+      include_directories(${LIBEI_INCLUDE_DIRS})
+    else()
+      message(WARNING "libei >= ${LIBEI_MIN_VERSION} not found")
+    endif()
+  else()
+    set(libei_bin_dir ${CMAKE_BINARY_DIR}/meson/subprojects/libei/src)
+    set(libei_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libei)
+    find_library(
+      LIBEI_LINK_LIBRARIES
+      NAMES ei
+      PATHS ${libei_bin_dir}
+      NO_DEFAULT_PATH)
+    if(LIBEI_LINK_LIBRARIES)
+      message(STATUS "Using local subproject libei")
+      set(LIBEI_FOUND true)
+      add_definitions(-DWINAPI_LIBEI=1)
+      set(LIBEI_INCLUDE_DIRS ${libei_src_dir}/src)
+      include_directories(${LIBEI_INCLUDE_DIRS})
+    else()
+      message(WARNING "Local libei not found")
+    endif()
+  endif()
+endmacro()
+
+macro(configure_libportal)
+  option(SYSTEM_LIBPORTAL "Use system libportal" ON)
+  if(SYSTEM_LIBPORTAL)
+    pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
+    if(LIBPORTAL_FOUND)
+      message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+      check_libportal()
+    else()
+      message(WARNING "libportal >= ${LIBPORTAL_MIN_VERSION} not found")
+    endif()
+  else()
+    set(libportal_bin_dir
+        ${CMAKE_BINARY_DIR}/meson/subprojects/libportal/libportal)
+    set(libportal_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libportal)
+    find_library(
+      LIBPORTAL_LINK_LIBRARIES
+      NAMES portal
+      PATHS ${libportal_bin_dir}
+      NO_DEFAULT_PATH)
+
+    if(LIBPORTAL_LINK_LIBRARIES)
+      message(STATUS "Using local subproject libportal")
+      set(LIBPORTAL_FOUND true)
+      set(LIBPORTAL_INCLUDE_DIRS ${libportal_src_dir})
+
+      # HACK: Somehow `check_symbol_exists` doesn't pick up on the symbols even though
+      # they are actually there. Since we use master branch of libportal, for now we'll
+      # assume that the symbols are there.
+      set(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS true)
+      set(HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL true)
+      set(HAVE_LIBPORTAL_INPUTCAPTURE true)
+      set(HAVE_LIBPORTAL_OUTPUT_NONE true)
+    else()
+      message(WARNING "Local libportal not found")
+    endif()
+  endif()
+
+  if(LIBPORTAL_FOUND)
+    add_definitions(-DWINAPI_LIBPORTAL=1)
+    include_directories(${LIBPORTAL_INCLUDE_DIRS})
+  endif()
+
+endmacro()
+
+# libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
+# the inputcapture code, so let's check for explicit functions that bits depending on what we have
 macro(check_libportal)
-  # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or
-  # the inputcapture code, so let's check for explicit functions that bits depending on what we have
   include(CMakePushCheckState)
   include(CheckCXXSourceCompiles)
+
   cmake_push_check_state(RESET)
+
   set(CMAKE_REQUIRED_INCLUDES
       "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}"
   )
   set(CMAKE_REQUIRED_LIBRARIES
       "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}"
   )
+
   check_symbol_exists(xdp_session_connect_to_eis "libportal/portal.h"
                       HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+
   check_symbol_exists(
     xdp_portal_create_remote_desktop_session_full "libportal/portal.h"
     HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+
   check_symbol_exists(xdp_input_capture_session_connect_to_eis
                       "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE)
 
@@ -227,7 +284,24 @@ macro(check_libportal)
     "#include <libportal/portal.h>
         int main() { XdpOutputType out = XDP_OUTPUT_NONE; }
     " HAVE_LIBPORTAL_OUTPUT_NONE)
+
   cmake_pop_check_state()
+
+  if(NOT HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS)
+    message(WARNING "xdp_session_connect_to_eis not found")
+  endif()
+
+  if(NOT HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
+    message(WARNING "xdp_portal_create_remote_desktop_session_full not found")
+  endif()
+
+  if(NOT HAVE_LIBPORTAL_INPUTCAPTURE)
+    message(WARNING "xdp_input_capture_session_connect_to_eis not found")
+  endif()
+
+  if(NOT HAVE_LIBPORTAL_OUTPUT_NONE)
+    message(WARNING "XDP_OUTPUT_NONE not found")
+  endif()
 
 endmacro()
 
