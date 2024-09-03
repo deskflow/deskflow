@@ -16,7 +16,7 @@ def main():
     if is_ci:
         print("CI environment detected")
 
-    args = parseArgs(is_ci)
+    args = parse_args(is_ci)
 
     env.ensure_dependencies()
     env.ensure_in_venv(__file__, auto_create=True)
@@ -62,7 +62,7 @@ def main():
         sys.exit(1)
 
 
-def parseArgs(is_ci):
+def parse_args(is_ci):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--pause-on-exit", action="store_true", help="Useful on Windows"
