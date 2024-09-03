@@ -11,6 +11,7 @@ Enhancements:
 - #7464 Restore `--only-python` arg to only install Python deps
 - #7465 Also cut `+` char for `SHORT_VERSION` var used on upload
 - #7467 Load server or client args from `synergy-config.toml`
+- #7469 Option to link against local libportal and other subprojects
 
 # 1.15.1
 
