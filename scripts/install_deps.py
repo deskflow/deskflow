@@ -173,11 +173,7 @@ class Dependencies:
             choco.remove_from_config(edit_config, skip_packages)
 
         command = self.config.get_os_deps_command()
-        cmd_utils.run(
-            command,
-            shell=True,
-            print_cmd=True,
-        )
+        choco.install(command, self.ci_env)
 
     def mac(self):
         """Installs dependencies on macOS."""

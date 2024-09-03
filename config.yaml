@@ -1,10 +1,7 @@
 config:
   windows:
     dependencies:
-      command: |
-        winget install Microsoft.Vcpkg chocolatey && \
-        vcpkg.exe install openssl && \
-        choco install Chocolatey.config -y --no-progress
+      command: choco install Chocolatey.config -y
       qt:
         version: 6.7
         mirror: https://qt.mirror.constant.com/

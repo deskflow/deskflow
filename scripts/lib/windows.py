@@ -137,6 +137,24 @@ def run_codesign(path, cert_base64, cert_password):
 class WindowsChoco:
     """Chocolatey for Windows."""
 
+    def install(self, command, ci_env):
+        """Installs packages using Chocolatey."""
+        if ci_env:
+            # don't show noisy choco progress bars in ci env
+            cmd_utils.run(
+                f"{command} --no-progress",
+                shell=True,
+                print_cmd=True,
+            )
+        else:
+            self.ensure_choco_installed()
+
+            cmd_utils.run(
+                command,
+                shell=True,
+                print_cmd=True,
+            )
+
     def config_ci_cache(self):
         """Configures Chocolatey cache for CI."""
 
@@ -166,7 +184,24 @@ class WindowsChoco:
         tree.write(choco_config_file)
 
     def ensure_choco_installed(self):
+        if cmd_utils.has_command("choco"):
+            return
+
+        if not cmd_utils.has_command("winget"):
+            print("The winget command was not found", file=sys.stderr)
+            sys.exit(1)
+
+        print("The choco command was not found, installing Chocolatey...")
+        cmd_utils.run(
+            "winget install chocolatey",
+            check=False,
+            shell=True,
+            print_cmd=True,
+        )
+
         if not cmd_utils.has_command("choco"):
-            raise RuntimeError(
-                "The choco command was not found, please install Chocolatey"
+            print(
+                "The choco command was still not found, please re-run this script...",
+                file=sys.stderr,
             )
+            sys.exit(1)
