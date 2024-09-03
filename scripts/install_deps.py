@@ -93,7 +93,7 @@ def parseArgs(is_ci):
         help="Install built Meson subprojects to system",
     )
     parser.add_argument(
-        "--meson-skip-system",
+        "--meson-no-system",
         nargs="+",
         help="Specify which Meson subprojects to use instead of system dependencies",
     )
@@ -111,22 +111,22 @@ def run(args):
         deps.install()
 
     if not args.skip_meson:
-        run_meson(args.meson_install, args.meson_skip_system)
+        run_meson(args.meson_install, args.meson_no_system)
 
 
 # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
 # we fully switch from CMake to Meson. For the meantime, Meson will install the deps
 # so that CMake can find them easily. Once we switch to Meson, it might be possible for
 # Meson handle the deps resolution, so that we won't need to install them on the system.
-def run_meson(meson_install, meson_skip_system):
-    meson.setup(meson_skip_system)
+def run_meson(install, no_system_list):
+    meson.setup(no_system_list)
 
     # Only compile and install on Linux for now, since we're only using Meson to fetch
     # the deps on Windows and macOS.
     if env.is_linux():
         meson.compile()
 
-    if meson_install:
+    if install:
         meson.install()
 
 
