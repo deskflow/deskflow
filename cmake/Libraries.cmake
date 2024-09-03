@@ -169,29 +169,61 @@ macro(configure_wayland_libs)
 
   include(FindPkgConfig)
 
-  pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
-  if(LIBEI_FOUND)
-    message(STATUS "libei version: ${LIBEI_VERSION}")
-    add_definitions(-DWINAPI_LIBEI=1)
-    include_directories(${LIBEI_INCLUDE_DIRS})
+  option(SYSTEM_LIBEI "Use system libei" ON)
+  if(SYSTEM_LIBEI)
+    pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+    if(LIBEI_FOUND)
+      message(STATUS "libei version: ${LIBEI_VERSION}")
+      add_definitions(-DWINAPI_LIBEI=1)
+      include_directories(${LIBEI_INCLUDE_DIRS})
+    else()
+      message(WARNING "libei >= ${LIBEI_MIN_VERSION} not found")
+    endif()
   else()
-    message(
-      WARNING
-        "libei >= ${LIBEI_MIN_VERSION} not found, Wayland support will be disabled."
-    )
+    set(libei_bin_dir ${CMAKE_BINARY_DIR}/meson/subprojects/libei)
+    set(libei_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libei)
+    find_library(
+      LIBEI_LINK_LIBRARIES
+      NAMES ei
+      PATHS ${libei_bin_dir}/src
+      NO_DEFAULT_PATH)
+    if(LIBEI_LINK_LIBRARIES)
+      message(STATUS "Using local subproject libei")
+      set(LIBEI_FOUND true)
+      add_definitions(-DWINAPI_LIBEI=1)
+      include_directories(${libei_src_dir}/src)
+    else()
+      message(WARNING "Local libei not found")
+    endif()
   endif()
 
-  pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
-  if(LIBPORTAL_FOUND)
-    message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
-    add_definitions(-DWINAPI_LIBPORTAL=1)
-    include_directories(${LIBPORTAL_INCLUDE_DIRS})
-    check_libportal()
+  option(SYSTEM_LIBPORTAL "Use system libportal" ON)
+  if(SYSTEM_LIBPORTAL)
+    pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
+    if(LIBPORTAL_FOUND)
+      message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+      add_definitions(-DWINAPI_LIBPORTAL=1)
+      include_directories(${LIBPORTAL_INCLUDE_DIRS})
+      check_libportal()
+    else()
+      message(WARNING "libportal >= ${LIBPORTAL_MIN_VERSION} not found")
+    endif()
   else()
-    message(
-      WARNING
-        "libportal >= ${LIBPORTAL_MIN_VERSION} not found, some Wayland features will be disabled."
-    )
+    set(libportal_bin_dir ${CMAKE_BINARY_DIR}/meson/subprojects/libportal)
+    set(libportal_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libportal)
+    find_library(
+      LIBPORTAL_LINK_LIBRARIES
+      NAMES portal
+      PATHS ${libportal_bin_dir}/libportal
+      NO_DEFAULT_PATH)
+    if(LIBPORTAL_LINK_LIBRARIES)
+      message(STATUS "Using local subproject libportal")
+      set(LIBPORTAL_FOUND true)
+      add_definitions(-DWINAPI_LIBPORTAL=1)
+      include_directories(${libportal_src_dir}/libportal)
+    else()
+      message(WARNING "Local libportal not found")
+    endif()
   endif()
 
   pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)

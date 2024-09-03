@@ -16,31 +16,7 @@ def main():
     if is_ci:
         print("CI environment detected")
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--pause-on-exit", action="store_true", help="Useful on Windows"
-    )
-    parser.add_argument(
-        "--ci-env",
-        action="store_true",
-        help="Useful for faking CI env (defaults to true in CI env)",
-        default=is_ci,
-    )
-    parser.add_argument(
-        "--only-python", action="store_true", help="Only install Python dependencies"
-    )
-    parser.add_argument(
-        "--skip-system",
-        action="store_true",
-        help="Do not install system dependencies (apt, dnf, etc)",
-    )
-    parser.add_argument(
-        "--skip-meson", action="store_true", help="Do not setup and install with Meson"
-    )
-    parser.add_argument(
-        "--subproject", type=str, help="Sub-project to install dependencies for"
-    )
-    args = parser.parse_args()
+    args = parseArgs(is_ci)
 
     env.ensure_dependencies()
     env.ensure_in_venv(__file__, auto_create=True)
@@ -86,6 +62,44 @@ def main():
         sys.exit(1)
 
 
+def parseArgs(is_ci):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--pause-on-exit", action="store_true", help="Useful on Windows"
+    )
+    parser.add_argument(
+        "--ci-env",
+        action="store_true",
+        help="Useful for faking CI env (defaults to true in CI env)",
+        default=is_ci,
+    )
+    parser.add_argument(
+        "--only-python", action="store_true", help="Only install Python dependencies"
+    )
+    parser.add_argument(
+        "--skip-system",
+        action="store_true",
+        help="Do not install system dependencies (apt, dnf, etc)",
+    )
+    parser.add_argument(
+        "--skip-meson", action="store_true", help="Do not setup and compile with Meson"
+    )
+    parser.add_argument(
+        "--subproject", type=str, help="Sub-project to install dependencies for"
+    )
+    parser.add_argument(
+        "--meson-install",
+        action="store_true",
+        help="Install built Meson subprojects to system",
+    )
+    parser.add_argument(
+        "--meson-skip-system",
+        nargs="+",
+        help="Specify which Meson subprojects to use instead of system dependencies",
+    )
+    return parser.parse_args()
+
+
 def run(args):
     if args.subproject:
         deps = SubprojectDependencies(args.subproject)
@@ -97,20 +111,22 @@ def run(args):
         deps.install()
 
     if not args.skip_meson:
-        run_meson()
+        run_meson(args.meson_install, args.meson_skip_system)
 
 
 # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
 # we fully switch from CMake to Meson. For the meantime, Meson will install the deps
 # so that CMake can find them easily. Once we switch to Meson, it might be possible for
 # Meson handle the deps resolution, so that we won't need to install them on the system.
-def run_meson():
-    meson.setup()
+def run_meson(meson_install, meson_skip_system):
+    meson.setup(meson_skip_system)
 
     # Only compile and install on Linux for now, since we're only using Meson to fetch
     # the deps on Windows and macOS.
     if env.is_linux():
         meson.compile()
+
+    if meson_install:
         meson.install()
 
 

@@ -6,11 +6,14 @@ build_dir = "build/meson"
 meson_bin = env.get_python_executable("meson")
 
 
-def setup():
+def setup(meson_skip_system):
     cmd = [meson_bin, "setup", build_dir]
 
     if env.is_windows():
         cmd.append("-Dsystem_gtest=false")
+
+    for subproject in meson_skip_system:
+        cmd.append(f"-Dsystem_{subproject}=false")
 
     if os.path.exists(build_dir):
         cmd.append("--reconfigure")
