@@ -58,7 +58,7 @@
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergys",
-      "preLaunchTask": "build"
+      "preLaunchTask": "kill-build"
     },
     {
       "name": "server windows",
@@ -67,7 +67,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergys",
       "internalConsoleOptions": "openOnSessionStart",
-      "preLaunchTask": "build"
+      "preLaunchTask": "kill-build"
     },
     {
       "name": "client unix",
@@ -75,7 +75,7 @@
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyc",
-      "preLaunchTask": "build"
+      "preLaunchTask": "kill-build"
     },
     {
       "name": "client windows",
@@ -84,7 +84,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyc",
       "internalConsoleOptions": "openOnSessionStart",
-      "preLaunchTask": "build"
+      "preLaunchTask": "kill-build"
     },
     {
       "name": "daemon windows",
