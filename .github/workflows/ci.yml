@@ -80,11 +80,10 @@ jobs:
           path: ./deps
           key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
-      - name: Install dependencies
-        run: python ./scripts/install_deps.py
-
-      - name: Cleanup vcpkg downloads
-        run: Remove-Item -Path vcpkg/downloads -Recurse -Force
+      # Install the VC++ environment with an action instead of using Chocolatey,
+      # as it's more reliable and faster.
+      - name: Setup VC++ environment
+        uses: ilammy/msvc-dev-cmd@v1
 
       # Install Ninja with an action instead of using Chocolatey, as it's more
       # reliable and faster. The Ninja install action is pretty good as it
@@ -92,10 +91,11 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      # Install the VC++ environment with an action instead of using Chocolatey,
-      # as it's more reliable and faster.
-      - name: Setup VC++ environment
-        uses: ilammy/msvc-dev-cmd@v1
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py
+
+      - name: Cleanup vcpkg downloads
+        run: Remove-Item -Path vcpkg/downloads -Recurse -Force
 
       - name: Configure
         run: cmake -B build --preset=windows-release
