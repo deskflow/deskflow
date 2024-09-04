@@ -237,7 +237,10 @@ def get_app_version():
     Returns the version either from the env var, or from the version file.
     """
     version = get_env("SYNERGY_VERSION", required=False)
-    if version:
+
+    # TODO: Perhaps regex match the version string and if it's not a valid version,
+    # log a warning and fall back to the VERSION file value.
+    if version and version != "master":
         return version
 
     with open("VERSION", "r") as f:
