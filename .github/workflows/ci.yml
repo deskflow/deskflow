@@ -73,6 +73,12 @@ jobs:
             vcpkg_installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
 
+      - name: Cache Python env
+        uses: actions/cache@v4
+        with:
+          path: build/python
+          key: python_env-${{ runner.os }}-${{ hashFiles('scripts/pyproject.toml') }}
+
       - name: Cache deps dir
         uses: actions/cache@v4
         with:
