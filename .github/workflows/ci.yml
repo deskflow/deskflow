@@ -74,12 +74,6 @@ jobs:
             vcpkg_installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
 
-      - name: Cache Chocolatey packages
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/choco
-          key: choco-${{ hashFiles('Chocolatey.config') }}
-
       - name: Cache deps dir
         uses: actions/cache@v4
         with:
