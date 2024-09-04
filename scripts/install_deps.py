@@ -32,49 +32,14 @@ def main():
         print("CI environment detected")
 
     args = parse_args(is_ci)
+    if args.lock_file:
+        env.persist_lock_file(args.lock_file)
 
-    env.ensure_dependencies()
-    env.ensure_in_venv(__file__, auto_create=True)
-    env.install_requirements()
-
-    colors = env.import_colors()
-
-    if args.only_python:
-        print()
-        print(colors.SUCCESS_TEXT + " Only Python dependencies installed")
-        return
-
-    error = False
     try:
         run(args)
-    except Exception:
-        traceback.print_exc()
-        error = True
-    print()
-
-    if error:
-        print(f"{colors.ERROR_TEXT} Failed to install dependencies")
-    else:
-        print(f"{colors.SUCCESS_TEXT} Dependencies installed")
-
-        # On Windows and macOS, we set env vars for cmake, but for them to be picked up,
-        # either the shell needs to be restarted or the env vars need to be re-sourced.
-        # Restarting the shell is easier for most people.
-        if not env.is_linux():
-            print(
-                f"{colors.WARNING_TEXT} You may need to restart your terminal "
-                "or IDE to use new env vars"
-            )
-
-    # Useful on Windows, when elevated, Python is opened in a new window and closes
-    # immediately after the script finishes. This keeps the script window open so that
-    # the user can see the output.
-    if args.pause_on_exit:
-        print()
-        input("Press enter to continue...")
-
-    if error:
-        sys.exit(1)
+    finally:
+        if args.lock_file:
+            env.remove_lock_file(args.lock_file)
 
 
 def parse_args(is_ci):
@@ -89,7 +54,22 @@ def parse_args(is_ci):
         default=is_ci,
     )
     parser.add_argument(
+        "--lock-file",
+        type=str,
+        help="Create a file to indicate script is running",
+    )
+    parser.add_argument(
         "--only-python", action="store_true", help="Only install Python dependencies"
+    )
+    parser.add_argument(
+        "--only-system",
+        action="store_true",
+        help="Only install system dependencies (apt, dnf, etc)",
+    )
+    parser.add_argument(
+        "--skip-python",
+        action="store_true",
+        help="Do not install Python dependencies",
     )
     parser.add_argument(
         "--skip-system",
@@ -98,6 +78,9 @@ def parse_args(is_ci):
     )
     parser.add_argument(
         "--skip-meson", action="store_true", help="Do not setup and compile with Meson"
+    )
+    parser.add_argument(
+        "--skip-vcpkg", action="store_true", help="Do not install vcpkg dependencies"
     )
     parser.add_argument(
         "--subproject", type=str, help="Sub-project to install dependencies for"
@@ -116,14 +99,65 @@ def parse_args(is_ci):
 
 
 def run(args):
+    env.ensure_dependencies()
+    env.ensure_in_venv(__file__, auto_create=True)
+
+    if not args.skip_python:
+        env.install_requirements()
+
+    colors = env.import_colors()
+
+    if args.only_python:
+        print()
+        print(colors.SUCCESS_TEXT + " Only Python dependencies installed")
+        return
+
+    error = False
+    try:
+        install(args)
+        print(f"\n{colors.SUCCESS_TEXT} Dependencies installed")
+
+        # On Windows and macOS, we set env vars for cmake, but for them to be picked up,
+        # either the shell needs to be restarted or the env vars need to be re-sourced.
+        # Restarting the shell is easier for most people.
+        if not env.is_linux():
+            print(
+                f"{colors.WARNING_TEXT} You may need to restart your terminal "
+                "or IDE to use new env vars"
+            )
+    except Exception:
+        traceback.print_exc()
+        error = True
+        print(f"\n{colors.ERROR_TEXT} Failed to install dependencies")
+
+    # Useful on Windows, when elevated, Python is opened in a new window and closes
+    # immediately after the script finishes. This keeps the script window open so that
+    # the user can see the output.
+    if args.pause_on_exit:
+        print()
+        input("Press enter to continue...")
+
+    if error:
+        sys.exit(1)
+
+
+def install(args):
+    if not args.skip_system:
+        deps = Dependencies(args.ci_env)
+        deps.install()
+
+    if args.only_system:
+        return
+
     if args.subproject:
         deps = SubprojectDependencies(args.subproject)
         deps.install()
         return
 
-    if not args.skip_system:
-        deps = Dependencies(args.ci_env)
-        deps.install()
+    if not args.skip_vcpkg:
+        import lib.vcpkg as vcpkg
+
+        vcpkg.install()
 
     if not args.skip_meson:
         run_meson(args.meson_install, args.meson_no_system)
@@ -169,9 +203,11 @@ class Dependencies:
         """Installs dependencies on Windows."""
         import lib.windows as windows
 
+        # Chocolatey requires admin privileges to install packages.
+        # If we move to winget, this will remove the need to elevate.
         if not windows.is_admin():
-            windows.relaunch_as_admin(__file__)
-            sys.exit()
+            windows.run_elevated(__file__, "--only-system --skip-python")
+            return
 
         qt = qt_utils.WindowsQt(*self.config.get_qt_config())
         qt.install()

@@ -248,3 +248,23 @@ def import_colors():
     import lib.colors as colors
 
     return colors
+
+
+def persist_lock_file(path):
+    """
+    Persists a lock file and ensures the directory part of the path exists.
+    """
+    dir_path = os.path.dirname(path)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path, exist_ok=True)
+
+    with open(path, "w") as f:
+        f.write(str(os.getpid()))
+
+
+def remove_lock_file(path):
+    """
+    Removes a lock file if it exists.
+    """
+    if os.path.exists(path):
+        os.remove(path)

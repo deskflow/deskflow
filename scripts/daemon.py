@@ -85,7 +85,7 @@ def print_verbose(context, message):
 
 def ensure_admin():
     if not windows.is_admin():
-        windows.relaunch_as_admin(__file__)
+        windows.run_elevated(__file__)
         sys.exit()
 
 

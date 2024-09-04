@@ -3,6 +3,7 @@
 /dist
 /deps
 /tmp
+/vcpkg*
 /scripts/**/*.pyc
 aqtinstall.log
 Brewfile.lock.json

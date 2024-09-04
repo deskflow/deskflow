@@ -107,6 +107,13 @@
       "type": "lldb",
       "request": "attach",
       "pid": "${command:pickProcess}"
+    },
+    {
+      "name": "install_deps.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "scripts/install_deps.py",
+      "console": "integratedTerminal"
     }
   ]
 }
