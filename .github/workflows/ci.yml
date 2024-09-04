@@ -9,7 +9,6 @@ on:
     inputs:
       version:
         description: Synergy version number
-        required: true
   pull_request:
     types:
       - opened
