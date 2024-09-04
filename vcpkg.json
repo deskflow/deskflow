@@ -1,5 +1,10 @@
 {
   "dependencies": [
-    "openssl"
+    {
+      "name": "openssl",
+      "features": [
+        "tools"
+      ]
+    }
   ]
 }
