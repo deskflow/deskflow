@@ -80,8 +80,8 @@ jobs:
           path: ./deps
           key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
-      # Install the VC++ environment with an action instead of using Chocolatey,
-      # as it's more reliable and faster.
+      # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
+      # VC++ as that's already pre-installed on the Windows runner.
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
 
@@ -94,6 +94,8 @@ jobs:
       - name: Install dependencies
         run: python ./scripts/install_deps.py
 
+      # The vcpkg downloads dir can be quite large (over 2GB) which bloats the cache.
+      # For the most part, we don't need it so it probably safe to discard it.
       - name: Cleanup vcpkg downloads
         run: Remove-Item -Path vcpkg/downloads -Recurse -Force
 
