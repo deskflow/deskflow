@@ -330,7 +330,7 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   bsd:
-    name: unix-${{ matrix.distro.name }}
+    name: bsd-${{ matrix.distro.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
