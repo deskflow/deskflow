@@ -18,6 +18,9 @@ on:
       - ready_for_review
   release:
     types: [published]
+  push:
+    branches:
+      - master
   schedule:
     - cron: "0 5 * * *" # 5am UTC
 
