@@ -27,6 +27,8 @@ def install():
     cmd_utils.run([vcpkg_bin, "install"], print_cmd=True)
 
 
+# Install a local vcpkg even if it's already installed system-wide,
+# so that we can cache the vcpkg dirs in the CI env.
 def ensure_vcpkg():
     if not os.path.exists("vcpkg"):
         get_vcpkg()
