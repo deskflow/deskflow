@@ -349,5 +349,5 @@ jobs:
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
-          prepare: ./scripts/install_deps.py
-          run: cmake -B build --preset=bsd-release
+          prepare: cd  synergy/synergy/; ./scripts/install_deps.py
+          run: synergy/synergy/; cmake -B build
