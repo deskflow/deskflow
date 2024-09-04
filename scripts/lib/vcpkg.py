@@ -27,10 +27,11 @@ def install():
     cmd_utils.run([vcpkg_bin, "install"], print_cmd=True)
 
 
-# Install a local vcpkg even if it's already installed system-wide, so that we can cache the
-# vcpkg dirs in the CI env. We also depend on the local `vcpkg/buildtrees` dir when bundling
-# the `openssl.exe` binary on Windows (that said, we could also use cmake to search for it).
 def ensure_vcpkg():
+    if cmd_utils.has_command("vcpkg"):
+        print("Using system vcpkg")
+        return "vcpkg"
+
     if not os.path.exists("vcpkg"):
         get_vcpkg()
     else:
