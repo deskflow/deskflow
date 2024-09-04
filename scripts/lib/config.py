@@ -22,6 +22,7 @@ root_key = "config"
 deps_key = "dependencies"
 command_key = "command"
 command_pre_key = "command-pre"
+command_choco_key = "command-choco"
 subprojects_key = "subprojects"
 arrow = " ➤ "
 

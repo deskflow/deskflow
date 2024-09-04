@@ -186,58 +186,15 @@ def run_codesign(path, cert_base64, cert_password):
 class WindowsChoco:
     """Chocolatey for Windows."""
 
-    def install(self, command, ci_env):
-        """Installs packages using Chocolatey."""
-        if ci_env:
-            # don't show noisy choco progress bars in ci env
-            cmd_utils.run(
-                f"{command} --no-progress",
-                shell=True,
-                print_cmd=True,
-            )
-        else:
-            self.ensure_choco_installed()
-
-            cmd_utils.run(
-                command,
-                shell=True,
-                print_cmd=True,
-            )
-
-    def config_ci_cache(self):
-        """Configures Chocolatey cache for CI."""
-
-        runner_temp = os.environ.get(RUNNER_TEMP_ENV)
-        if runner_temp:
-            # sets the choco cache dir, which should match the dir in the ci cache action.
-            key_arg = '--name="cacheLocation"'
-            value_arg = f'--value="{runner_temp}/choco"'
-            cmd_utils.run(
-                ["choco", "config", "set", key_arg, value_arg],
-                print_cmd=True,
-            )
-        else:
-            print(f"Warning: CI environment variable {RUNNER_TEMP_ENV} not set")
-
-    def remove_from_config(self, choco_config_file, remove_packages):
-        """Removes a package from the Chocolatey configuration."""
-
-        tree = ET.parse(choco_config_file)
-        root = tree.getroot()
-        for remove in remove_packages:
-            for package in root.findall("package"):
-                if package.get("id") == remove:
-                    root.remove(package)
-                    print(f"Removed package from choco config: {remove}")
-
-        tree.write(choco_config_file)
-
     def ensure_choco_installed(self):
         if cmd_utils.has_command("choco"):
             return
 
         if not cmd_utils.has_command("winget"):
-            print("The winget command was not found", file=sys.stderr)
+            print(
+                "The winget command was not found, please install Chocolatey manually",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         print("The choco command was not found, installing Chocolatey...")

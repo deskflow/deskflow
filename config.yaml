@@ -1,17 +1,18 @@
 config:
   windows:
     dependencies:
-      command: choco install Chocolatey.config -y
+      # We only run choco in dev env and not in CI, as it's pretty unreliable and slow.
+      # The Chocolatey mirror cannot be 100% reliable (according to docs) so it will
+      # often fail with an error `503 (Service Unavailable: Back-end server is at capacity)`
+      # which causes the nightly CI to fail intermittently.
+      command-elevated: |
+        if not defined CI (choco install Chocolatey.config -y)
+      command: |
+        winget install ninja-build.ninja cmake
       qt:
         version: 6.7
         mirror: https://qt.mirror.constant.com/
         base-dir: ./deps/qt
-      ci:
-        edit-config: Chocolatey.config
-        skip-packages:
-          - cmake
-          - wixtoolset
-          - visualstudio2022buildtools
 
   mac:
     dependencies:
