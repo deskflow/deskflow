@@ -8,7 +8,8 @@ config:
       command-elevated: |
         if not defined CI (choco install Chocolatey.config -y)
       command: |
-        winget install ninja-build.ninja cmake
+        if defined CI (scoop install ninja cmake)
+        else (winget install ninja-build.ninja cmake)
       qt:
         version: 6.7
         mirror: https://qt.mirror.constant.com/
