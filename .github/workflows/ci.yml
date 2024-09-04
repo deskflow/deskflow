@@ -21,18 +21,20 @@ on:
   push:
     branches:
       - master
+    tags:
+      - "*"
   schedule:
     - cron: "0 5 * * *" # 5am UTC
 
 env:
   GIT_SHA: ${{ github.sha }}
-  SYNERGY_VERSION: ${{ github.event.inputs.version || github.event.release.tag_name }}
+  SYNERGY_VERSION: ${{ github.event.inputs.version || github.ref_name }}
   SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
   SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
   SYNERGY_LICENSED_PRODUCT: ${{ vars.SYNERGY_LICENSED_PRODUCT }}
   SYNERGY_ENABLE_ACTIVATION: ${{ vars.SYNERGY_ENABLE_ACTIVATION }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
-  PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.event_name != 'schedule' }}
+  PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.ref_name != 'master' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
   UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
 
