@@ -9,17 +9,16 @@ on:
     inputs:
       version:
         description: Synergy version number
+  workflow_run:
+    workflows: ["Create tag"]
+    types:
+      - completed
   pull_request:
     types:
       - opened
       - reopened
       - synchronize
       - ready_for_review
-  release:
-    types: [published]
-  push:
-    tags:
-      - "*"
   schedule:
     - cron: "0 5 * * *" # 5am UTC
 
