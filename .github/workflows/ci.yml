@@ -65,7 +65,7 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      - name: Cache vcpkg dirs
+      - name: Cache vcpkg dir
         uses: actions/cache@v4
         with:
           path: vcpkg_installed
