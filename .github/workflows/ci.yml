@@ -9,10 +9,6 @@ on:
     inputs:
       version:
         description: Synergy version number
-  workflow_run:
-    workflows: ["Create tag"]
-    types:
-      - completed
   pull_request:
     types:
       - opened
