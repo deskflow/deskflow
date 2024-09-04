@@ -48,7 +48,7 @@ def ensure_vcpkg():
 
 def get_vcpkg():
     print("Downloading vcpkg...")
-    repo = git.Repo.clone_from(GIT_REPO, "vcpkg")
+    git.Repo.clone_from(GIT_REPO, "vcpkg")
 
     os.chdir("vcpkg")
     try:
