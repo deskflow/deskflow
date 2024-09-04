@@ -332,7 +332,6 @@ jobs:
   bsd:
     name: unix-${{ matrix.distro.name }}
     runs-on: ubuntu-latest
-    container: ${{ matrix.distro.container }}
     timeout-minutes: 20
 
     strategy:
