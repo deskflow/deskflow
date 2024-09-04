@@ -10,6 +10,7 @@ config:
         edit-config: Chocolatey.config
         skip-packages:
           - cmake
+          - wixtoolset
           - visualstudio2022buildtools
 
   mac:
