@@ -19,8 +19,6 @@ on:
   release:
     types: [published]
   push:
-    branches:
-      - master
     tags:
       - "*"
   schedule:
