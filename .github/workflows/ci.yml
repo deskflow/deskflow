@@ -66,6 +66,8 @@ jobs:
         with:
           submodules: "recursive"
 
+      # TOOD: cache vcpkg and vcpkg_installed
+
       - name: Cache Chocolatey packages
         uses: actions/cache@v4
         with:
