@@ -7,7 +7,6 @@
     "aqtinstall",
     "Axelson",
     "Breen",
-    "buildtools",
     "codesign",
     "codesigning",
     "Compat",
@@ -28,7 +27,6 @@
     "integtests",
     "keychain",
     "Keychains",
-    "Kitware",
     "Kutytska",
     "Lanz",
     "libei",
@@ -63,8 +61,7 @@
     "Valgrind",
     "vcpkg",
     "Volker",
-    "winget",
-    "wixtoolset"
+    "winget"
   ],
   "ignoreWords": [],
   "import": []
