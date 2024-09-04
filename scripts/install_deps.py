@@ -44,9 +44,14 @@ def main():
 
 def parse_args(is_ci):
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--pause-on-exit", action="store_true", help="Useful on Windows"
-    )
+
+    if env.is_windows():
+        parser.add_argument(
+            "--pause-on-exit",
+            action="store_true",
+            help="Windows only: Useful to prevent elevated window from closing",
+        )
+
     parser.add_argument(
         "--ci-env",
         action="store_true",
@@ -79,9 +84,14 @@ def parse_args(is_ci):
     parser.add_argument(
         "--skip-meson", action="store_true", help="Do not setup and compile with Meson"
     )
-    parser.add_argument(
-        "--skip-vcpkg", action="store_true", help="Do not install vcpkg dependencies"
-    )
+
+    if env.is_windows():
+        parser.add_argument(
+            "--skip-vcpkg",
+            action="store_true",
+            help="Windows only: Do not install vcpkg dependencies",
+        )
+
     parser.add_argument(
         "--subproject", type=str, help="Sub-project to install dependencies for"
     )
@@ -133,7 +143,7 @@ def run(args):
     # Useful on Windows, when elevated, Python is opened in a new window and closes
     # immediately after the script finishes. This keeps the script window open so that
     # the user can see the output.
-    if args.pause_on_exit:
+    if env.is_windows() and args.pause_on_exit:
         print()
         input("Press enter to continue...")
 
@@ -154,7 +164,8 @@ def install(args):
         deps.install()
         return
 
-    if not args.skip_vcpkg:
+    # Only install vcpkg dependencies on Windows, since on other OS it's not needed (yet).
+    if env.is_windows() and not args.skip_vcpkg:
         import lib.vcpkg as vcpkg
 
         vcpkg.install()
