@@ -13,6 +13,7 @@ Enhancements:
 - #7467 Load server or client args from `synergy-config.toml`
 - #7469 Option to link against local `libportal` and other subprojects
 - #7471 Use `vcpkg` to manage `openssl` dep instead of `choco`
+- #7473 Simplify `vcpkg` caching and use system `vcpkg`
 
 # 1.15.1
 

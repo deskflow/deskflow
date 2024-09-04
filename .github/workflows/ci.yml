@@ -65,13 +65,12 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      - name: Cache vcpkg dirs
+      - name: Cache vcpkg dir
         uses: actions/cache@v4
         with:
-          path: |
-            vcpkg
-            vcpkg_installed
+          path: vcpkg_installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+          restore-keys: vcpkg-${{ runner.os }}
 
       - name: Cache Python env
         uses: actions/cache@v4
@@ -98,11 +97,6 @@ jobs:
 
       - name: Install dependencies
         run: python ./scripts/install_deps.py
-
-      # The vcpkg downloads dir can be quite large (over 2GB) which bloats the cache.
-      # For the most part, we don't need it so it probably safe to discard it.
-      - name: Cleanup vcpkg downloads
-        run: Remove-Item -Path vcpkg/downloads -Recurse -Force
 
       - name: Configure
         run: cmake -B build --preset=windows-release

@@ -438,11 +438,8 @@ macro(configure_windows_libs)
 endmacro()
 
 macro(configure_windows_openssl)
-  # Strangely, vcpkg doesn't seem to put openssl.exe in the `vcpkg_installed` dir,
-  # so we have to fish it out of the `vcpkg/buildtrees` dir.
-  set(OPENSSL_EXE_DIR
-      ${CMAKE_SOURCE_DIR}/vcpkg/buildtrees/openssl/x64-windows-rel/apps)
   set(OPENSSL_ROOT_DIR ${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows)
+  set(OPENSSL_EXE_DIR ${OPENSSL_ROOT_DIR}/tools/openssl)
 
   if(EXISTS ${OPENSSL_EXE_DIR})
     message(STATUS "OpenSSL exe dir: ${OPENSSL_EXE_DIR}")
