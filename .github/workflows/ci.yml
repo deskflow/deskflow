@@ -328,3 +328,27 @@ jobs:
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
+
+  bsd:
+    name: unix-${{ matrix.distro.name }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.distro.container }}
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        distro:
+          - name: freebsd
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: FreeBSD VM
+        uses: vmactions/freebsd-vm@v1
+        with:
+          usesh: true
+          prepare: ./scripts/install_deps.py
+          run: cmake -B build --preset=bsd-release
