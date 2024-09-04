@@ -86,6 +86,12 @@ jobs:
       - name: Cleanup vcpkg downloads
         run: Remove-Item -Path vcpkg/downloads -Recurse -Force
 
+      # The Ninja install action is pretty good as it downloads directly from
+      # the `ninja-build` GitHub project releases. We use this instead of
+      # Chocolatey as it's more reliable and faster.
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
 
