@@ -28,6 +28,10 @@ def install():
 
 
 def ensure_vcpkg():
+    if cmd_utils.has_command("vcpkg"):
+        print("Using system vcpkg")
+        return "vcpkg"
+
     if not os.path.exists("vcpkg"):
         get_vcpkg()
     else:
