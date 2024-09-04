@@ -165,6 +165,8 @@ def install(args):
         return
 
     # Only install vcpkg dependencies on Windows, since on other OS it's not needed (yet).
+    # We probably won't ever need this on macOS and Linux since brew and apt/dnf/etc do a
+    # good job of providing dependencies. Where they don't, we can use Meson.
     if env.is_windows() and not args.skip_vcpkg:
         import lib.vcpkg as vcpkg
 
