@@ -1,7 +1,14 @@
 config:
   windows:
     dependencies:
-      command: choco install Chocolatey.config -y
+      command: |
+        winget install \
+          --silent --accept-package-agreements --accept-source-agreements \
+          Kitware.CMake \
+          Ninja-build.Ninja \
+          chocolatey \
+        && \
+        choco install Chocolatey.config -y
       qt:
         version: 6.7
         mirror: https://qt.mirror.constant.com/
@@ -9,7 +16,6 @@ config:
       ci:
         edit-config: Chocolatey.config
         skip-packages:
-          - cmake
           - wixtoolset
           - visualstudio2022buildtools
 
