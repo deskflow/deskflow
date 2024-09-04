@@ -22,10 +22,12 @@ if(ADD_HEADERS_TO_SOURCES)
 endif()
 
 add_library(net STATIC ${sources})
+
 target_link_libraries(
   net
-  PUBLIC OpenSSL::SSL
+  PUBLIC ${OPENSSL_LIBRARIES}
   PRIVATE mt io)
+
 if(WIN32)
   target_link_libraries(net PRIVATE Crypt32 ws2_32)
 endif()

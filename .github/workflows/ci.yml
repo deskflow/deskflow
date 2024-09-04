@@ -66,11 +66,13 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Cache Chocolatey packages
+      - name: Cache vcpkg dirs
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/choco
-          key: choco-${{ hashFiles('Chocolatey.config') }}
+          path: |
+            vcpkg
+            vcpkg_installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
 
       - name: Cache deps dir
         uses: actions/cache@v4
@@ -78,11 +80,24 @@ jobs:
           path: ./deps
           key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
+      # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
+      # VC++ as that's already pre-installed on the Windows runner.
+      - name: Setup VC++ environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # Install Ninja with an action instead of using Chocolatey, as it's more
+      # reliable and faster. The Ninja install action is pretty good as it
+      # downloads directly from the `ninja-build` GitHub project releases.
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Install dependencies
         run: python ./scripts/install_deps.py
 
-      - name: Setup VC++ environment
-        uses: ilammy/msvc-dev-cmd@v1
+      # The vcpkg downloads dir can be quite large (over 2GB) which bloats the cache.
+      # For the most part, we don't need it so it probably safe to discard it.
+      - name: Cleanup vcpkg downloads
+        run: Remove-Item -Path vcpkg/downloads -Recurse -Force
 
       - name: Configure
         run: cmake -B build --preset=windows-release

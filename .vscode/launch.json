@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "gui unix",
+      "name": "unix - gui",
       "type": "lldb",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -10,7 +10,45 @@
       "preLaunchTask": "kill-build"
     },
     {
-      "name": "gui windows",
+      "name": "unix - unittests",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/unittests",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "unix - integtests",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/integtests",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "unix - server",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergys",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "unix - client",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/synergyc",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "unix - attach",
+      "type": "lldb",
+      "request": "attach",
+      "pid": "${command:pickProcess}"
+    },
+    {
+      "name": "windows - gui",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -19,15 +57,7 @@
       "preLaunchTask": "kill-build"
     },
     {
-      "name": "unittests unix",
-      "type": "lldb",
-      "cwd": "${workspaceRoot}",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/unittests",
-      "preLaunchTask": "build"
-    },
-    {
-      "name": "unittests windows",
+      "name": "windows - unittests",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -36,15 +66,7 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "integtests unix",
-      "type": "lldb",
-      "cwd": "${workspaceRoot}",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/integtests",
-      "preLaunchTask": "build"
-    },
-    {
-      "name": "integtests windows",
+      "name": "windows - integtests",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -53,15 +75,7 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "server unix",
-      "type": "lldb",
-      "cwd": "${workspaceRoot}",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergys",
-      "preLaunchTask": "kill-build"
-    },
-    {
-      "name": "server windows",
+      "name": "windows - server",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -70,15 +84,7 @@
       "preLaunchTask": "kill-build"
     },
     {
-      "name": "client unix",
-      "type": "lldb",
-      "cwd": "${workspaceRoot}",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergyc",
-      "preLaunchTask": "kill-build"
-    },
-    {
-      "name": "client windows",
+      "name": "windows - client",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -87,7 +93,7 @@
       "preLaunchTask": "kill-build"
     },
     {
-      "name": "daemon windows",
+      "name": "windows - daemon",
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -97,16 +103,17 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "windows attach",
+      "name": "windows - attach",
       "type": "cppvsdbg",
       "request": "attach",
       "processId": "${command:pickProcess}"
     },
     {
-      "name": "unix attach",
-      "type": "lldb",
-      "request": "attach",
-      "pid": "${command:pickProcess}"
+      "name": "install_deps.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "scripts/install_deps.py",
+      "console": "integratedTerminal"
     }
   ]
 }

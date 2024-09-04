@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 
+# Synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Symless Ltd.
+#
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file LICENSE that should have accompanied this file.
+#
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os, sys, argparse, traceback
 import lib.env as env
 import lib.cmd_utils as cmd_utils
@@ -17,56 +32,30 @@ def main():
         print("CI environment detected")
 
     args = parse_args(is_ci)
+    if args.lock_file:
+        env.persist_lock_file(args.lock_file)
 
-    env.ensure_dependencies()
-    env.ensure_in_venv(__file__, auto_create=True)
-    env.install_requirements()
-
-    colors = env.import_colors()
-
-    if args.only_python:
-        print()
-        print(colors.SUCCESS_TEXT + " Only Python dependencies installed")
-        return
-
-    error = False
     try:
         run(args)
     except Exception:
         traceback.print_exc()
-        error = True
-    print()
-
-    if error:
-        print(f"{colors.ERROR_TEXT} Failed to install dependencies")
-    else:
-        print(f"{colors.SUCCESS_TEXT} Dependencies installed")
-
-        # On Windows and macOS, we set env vars for cmake, but for them to be picked up,
-        # either the shell needs to be restarted or the env vars need to be re-sourced.
-        # Restarting the shell is easier for most people.
-        if not env.is_linux():
-            print(
-                f"{colors.WARNING_TEXT} You may need to restart your terminal "
-                "or IDE to use new env vars"
-            )
-
-    # Useful on Windows, when elevated, Python is opened in a new window and closes
-    # immediately after the script finishes. This keeps the script window open so that
-    # the user can see the output.
-    if args.pause_on_exit:
-        print()
-        input("Press enter to continue...")
-
-    if error:
         sys.exit(1)
+    finally:
+        if env.is_windows() and args.pause_on_exit:
+            # Allow the rest of the install to continue while sitting at the pause.
+            if args.lock_file:
+                env.remove_lock_file(args.lock_file)
+
+            # Useful on Windows, when elevated, Python is opened in a new window and closes
+            # immediately after the script finishes. This keeps the script window open so that
+            # the user can see the output.
+            print()
+            input("Press enter to continue...")
 
 
 def parse_args(is_ci):
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--pause-on-exit", action="store_true", help="Useful on Windows"
-    )
+
     parser.add_argument(
         "--ci-env",
         action="store_true",
@@ -74,7 +63,17 @@ def parse_args(is_ci):
         default=is_ci,
     )
     parser.add_argument(
+        "--lock-file",
+        type=str,
+        help="Create a file to indicate script is running",
+    )
+    parser.add_argument(
         "--only-python", action="store_true", help="Only install Python dependencies"
+    )
+    parser.add_argument(
+        "--skip-python",
+        action="store_true",
+        help="Do not install Python dependencies",
     )
     parser.add_argument(
         "--skip-system",
@@ -97,18 +96,84 @@ def parse_args(is_ci):
         nargs="+",
         help="Specify which Meson subprojects to use instead of system dependencies",
     )
+
+    if env.is_windows():
+        parser.add_argument(
+            "--skip-vcpkg",
+            action="store_true",
+            help="Windows only: Do not install vcpkg dependencies",
+        )
+        parser.add_argument(
+            "--skip-elevated",
+            action="store_true",
+            help="Windows only: Do not run elevated command",
+        )
+        parser.add_argument(
+            "--only-elevated",
+            action="store_true",
+            help="Windows only: Only run elevated command",
+        )
+        parser.add_argument(
+            "--pause-on-exit",
+            action="store_true",
+            help="Windows only: Useful to prevent elevated window from closing",
+        )
+
     return parser.parse_args()
 
 
 def run(args):
+    env.ensure_dependencies()
+    env.ensure_in_venv(__file__, auto_create=True)
+
+    if not args.skip_python:
+        env.install_requirements()
+
+    colors = env.import_colors()
+
+    if args.only_python:
+        print()
+        print(colors.SUCCESS_TEXT + " Only Python dependencies installed")
+        return
+
+    try:
+        install(args)
+
+        print()
+        print(f"\n{colors.SUCCESS_TEXT} Dependencies installed")
+
+        # On Windows and macOS, we set env vars for cmake, but for them to be picked up,
+        # either the shell needs to be restarted or the env vars need to be re-sourced.
+        # Restarting the shell is easier for most people.
+        if not env.is_linux():
+            print(
+                f"{colors.WARNING_TEXT} You may need to restart your terminal "
+                "or IDE to use new env vars"
+            )
+    except Exception:
+        traceback.print_exc()
+        print()
+        print(f"\n{colors.ERROR_TEXT} Failed to install dependencies")
+        sys.exit(1)
+
+
+def install(args):
+    if not args.skip_system:
+        deps = Dependencies(args)
+        deps.install()
+
     if args.subproject:
         deps = SubprojectDependencies(args.subproject)
         deps.install()
         return
 
-    if not args.skip_system:
-        deps = Dependencies(args.ci_env)
-        deps.install()
+    # Only install vcpkg dependencies on Windows, since on other OS it's not needed (yet).
+    # We probably won't ever need this on macOS and Linux since brew and apt/dnf/etc do a
+    # good job of providing dependencies. Where they don't, we can use Meson.
+    if env.is_windows() and not args.skip_vcpkg:
+        import lib.vcpkg as vcpkg
+
+        vcpkg.install()
 
     if not args.skip_meson:
         run_meson(args.meson_install, args.meson_no_system)
@@ -132,11 +197,12 @@ def run_meson(install, no_system_list):
 
 class Dependencies:
 
-    def __init__(self, ci_env):
+    def __init__(self, args):
         from lib.config import Config
 
         self.config = Config()
-        self.ci_env = ci_env
+        self.args = args
+        self.ci_env = args.ci_env
 
     def install(self):
         """Installs dependencies for the current platform."""
@@ -154,9 +220,16 @@ class Dependencies:
         """Installs dependencies on Windows."""
         import lib.windows as windows
 
-        if not windows.is_admin():
-            windows.relaunch_as_admin(__file__)
-            sys.exit()
+        if not self.args.skip_elevated:
+            if not windows.is_admin():
+                windows.run_elevated(__file__, "--only-elevated --skip-python")
+            elif self.args.only_elevated:
+                # The choco command should run from the elevated command.
+                choco = windows.WindowsChoco()
+                choco.ensure_choco_installed()
+                command_elevated = self.config.get_os_deps_command("command-elevated")
+                cmd_utils.run(command_elevated, shell=True, print_cmd=True)
+                sys.exit(0)
 
         qt = qt_utils.WindowsQt(*self.config.get_qt_config())
         qt.install()
@@ -166,14 +239,9 @@ class Dependencies:
         else:
             windows.set_env_var(cmake_prefix_env_var, qt.get_install_dir())
 
-        choco = windows.WindowsChoco()
-        if self.ci_env:
-            choco.config_ci_cache()
-            edit_config, skip_packages = self.config.get_windows_ci_config()
-            choco.remove_from_config(edit_config, skip_packages)
-
         command = self.config.get_os_deps_command()
-        choco.install(command, self.ci_env)
+
+        cmd_utils.run(command, shell=True, print_cmd=True)
 
     def mac(self):
         """Installs dependencies on macOS."""

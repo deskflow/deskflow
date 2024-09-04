@@ -433,9 +433,29 @@ macro(configure_windows_libs)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/win/version.rc.in
                  ${CMAKE_BINARY_DIR}/src/version.rc @ONLY)
 
-  find_openssl_dir_win32(OPENSSL_PATH)
-  add_definitions(-DOPENSSL_PATH="${OPENSSL_PATH}")
+  configure_windows_openssl()
 
+endmacro()
+
+macro(configure_windows_openssl)
+  # Strangely, vcpkg doesn't seem to put openssl.exe in the `vcpkg_installed` dir,
+  # so we have to fish it out of the `vcpkg/buildtrees` dir.
+  set(OPENSSL_EXE_DIR
+      ${CMAKE_SOURCE_DIR}/vcpkg/buildtrees/openssl/x64-windows-rel/apps)
+  set(OPENSSL_ROOT_DIR ${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows)
+
+  if(EXISTS ${OPENSSL_EXE_DIR})
+    message(STATUS "OpenSSL exe dir: ${OPENSSL_EXE_DIR}")
+    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
+  else()
+    message(FATAL_ERROR "OpenSSL exe dir not found: ${OPENSSL_EXE_DIR}")
+  endif()
+
+  if(EXISTS ${OPENSSL_ROOT_DIR})
+    message(STATUS "OpenSSL root dir: ${OPENSSL_ROOT_DIR}")
+  else()
+    message(FATAL_ERROR "OpenSSL root dir not found: ${OPENSSL_ROOT_DIR}")
+  endif()
 endmacro()
 
 macro(configure_qt)
@@ -453,11 +473,13 @@ macro(configure_openssl)
   # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
   # libraries by apps is strongly discouraged."
   # https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
-  if(APPLE OR DEFINED ENV{SYNERGY_STATIC_OPENSSL})
+  # TODO: How about bundling the OpenSSL .dylib files with the app so they can be updated?
+  if(APPLE)
     set(OPENSSL_USE_STATIC_LIBS TRUE)
   endif()
 
   find_package(OpenSSL REQUIRED)
+  include_directories(${OPENSSL_INCLUDE_DIR})
 endmacro()
 
 macro(configure_gtest)
@@ -560,39 +582,6 @@ macro(configure_python)
     set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/bin/python")
   endif()
 endmacro()
-
-#
-# Find the OpenSSL directory on Windows based on the location of the first
-# `openssl` binary found.
-#
-function(find_openssl_dir_win32 result)
-
-  execute_process(
-    COMMAND where openssl
-    OUTPUT_VARIABLE OPENSSL_PATH
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-  # It's possible that there are multiple OpenSSL installations on the system,
-  # which is the case on GitHub runners. For now we'll pick the first one, but
-  # that's probably not very robust. Maybe our choco config could install to a
-  # specific location?
-  string(REGEX REPLACE "\r?\n" ";" OPENSSL_PATH_LIST ${OPENSSL_PATH})
-  message(STATUS "Found OpenSSL binaries at: ${OPENSSL_PATH_LIST}")
-
-  list(GET OPENSSL_PATH_LIST 0 OPENSSL_FIRST_PATH)
-  message(VERBOSE "First OpenSSL binary: ${OPENSSL_FIRST_PATH}")
-
-  get_filename_component(OPENSSL_BIN_DIR ${OPENSSL_FIRST_PATH} DIRECTORY)
-  message(VERBOSE "OpenSSL bin dir: ${OPENSSL_BIN_DIR}")
-
-  get_filename_component(OPENSSL_DIR ${OPENSSL_BIN_DIR} DIRECTORY)
-  message(VERBOSE "OpenSSL install root dir: ${OPENSSL_DIR}")
-
-  set(${result}
-      ${OPENSSL_DIR}
-      PARENT_SCOPE)
-
-endfunction()
 
 macro(configure_wintoast)
   # WinToast is a pretty niche library, and there doesn't seem to be an installable package,

@@ -51,7 +51,7 @@ QString openSslWindowsDir() {
   // in production, openssl is deployed with the app.
   // in development, we can use the openssl path available at compile-time.
   if (!openSslDir.exists()) {
-    openSslDir = QDir(OPENSSL_PATH);
+    openSslDir = QDir(OPENSSL_EXE_DIR);
   }
 
   // if the path still isn't found, something is seriously wrong.
