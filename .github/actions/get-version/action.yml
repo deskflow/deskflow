@@ -5,6 +5,6 @@ runs:
   using: "composite"
 
   steps:
-    - if: github.ref_name != "master"
+    - if: ${{ github.ref_name != "master" }}
       run: echo "SYNERGY_VERSION=${{ github.event.inputs.version || github.ref_name }}" >> $GITHUB_ENV
       shell: bash
