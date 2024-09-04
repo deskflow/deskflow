@@ -31,6 +31,10 @@ config:
           ninja-build \
           g++ \
           file \
+          curl \
+          zip \
+          unzip \
+          tar \
           xorg-dev \
           libx11-dev \
           libxtst-dev \
@@ -65,6 +69,10 @@ config:
           ninja-build \
           gcc-c++ \
           rpm-build \
+          curl \
+          zip \
+          unzip \
+          tar \
           openssl-devel \
           glib2-devel \
           gdk-pixbuf2-devel \
@@ -111,6 +119,10 @@ config:
           ninja \
           gcc-c++ \
           rpm-build \
+          curl \
+          zip \
+          unzip \
+          tar \
           libopenssl-devel \
           glib2-devel \
           gdk-pixbuf-devel \
@@ -133,6 +145,10 @@ config:
           cmake \
           ninja \
           gcc \
+          curl \
+          zip \
+          unzip \
+          tar \
           openssl \
           glib2 \
           gdk-pixbuf2 \
