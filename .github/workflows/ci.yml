@@ -84,7 +84,7 @@ jobs:
         run: python ./scripts/install_deps.py
 
       - name: Cleanup vcpkg downloads
-        run: rmdir /s /q vcpkg/downloads
+        run: Remove-Item -Path vcpkg/downloads -Recurse -Force
 
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
