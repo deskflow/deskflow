@@ -80,9 +80,6 @@ jobs:
           path: ./deps
           key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
 
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
-
       - name: Install dependencies
         run: python ./scripts/install_deps.py
 
