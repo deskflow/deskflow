@@ -25,9 +25,6 @@
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe"
       },
-      "environment": {
-        "SYNERGY_STATIC_OPENSSL": "ON"
-      },
       "architecture": {
         "value": "x64",
         "strategy": "external"
