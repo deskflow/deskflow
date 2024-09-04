@@ -456,8 +456,6 @@ macro(configure_windows_openssl)
   else()
     message(FATAL_ERROR "OpenSSL root dir not found: ${OPENSSL_ROOT_DIR}")
   endif()
-
-  include_directories(${OPENSSL_ROOT_DIR}/include)
 endmacro()
 
 macro(configure_qt)
@@ -481,6 +479,7 @@ macro(configure_openssl)
   endif()
 
   find_package(OpenSSL REQUIRED)
+  include_directories(${OPENSSL_INCLUDE_DIR})
 endmacro()
 
 macro(configure_gtest)
