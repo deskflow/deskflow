@@ -164,7 +164,7 @@ part of Synergy), we depend on Synergy 1 to remain stable and modern which is wh
 
 We welcome PRs (pull requests) from the community. If you'd like to make a change, please feel free to 
 [start a discussion](https://github.com/symless/synergy/discussions) or [open a PR](https://github.com/symless/synergy/wiki/Contributing).
-We think it's great that people start new forks of Synergy, power to them. However, it's not necessary to do this if you want to make changes.
+It's great that people spin up rebranded forks of Synergy, power to them. However, it's not necessary if you want to make changes.
 If you're thinking of starting your own rebranded fork of Synergy, it might be because we're doing something wrong so please 
 [let us know](https://github.com/symless/synergy/wiki/Contact-the-team) what we can do to let you feel welcome in our community.
 
