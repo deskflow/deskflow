@@ -28,7 +28,8 @@ config:
     debian: &debian
       dependencies:
         command-pre: sudo apt-get update
-        command: |          sudo apt-get install -y \
+        command: |
+          sudo apt-get install -y \
           cmake \
           make \
           ninja-build \
