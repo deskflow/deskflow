@@ -38,7 +38,6 @@ macro(configure_unix_libs)
   include(CheckIncludeFileCXX)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
-  include(FindPkgConfig)
 
   check_include_file_cxx(istream HAVE_ISTREAM)
   check_include_file_cxx(ostream HAVE_OSTREAM)
@@ -168,14 +167,20 @@ endmacro()
 
 macro(configure_wayland_libs)
 
-  configure_libei()
-  configure_libportal()
+  include(FindPkgConfig)
 
-  pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
-  pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
-  find_library(LIBM m)
-  include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
-                      ${LIBM_INCLUDE_DIRS})
+  if(PKG_CONFIG_FOUND)
+    configure_libei()
+    configure_libportal()
+
+    pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+    pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+    find_library(LIBM m)
+    include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
+                        ${LIBM_INCLUDE_DIRS})
+  else()
+    message(WARNING "pkg-config not found, skipping wayland libraries")
+  endif()
 
 endmacro()
 
