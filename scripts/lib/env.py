@@ -206,11 +206,16 @@ def ensure_dependencies():
 
     print("Installing Python dependencies...")
 
-    os = get_os()
-    if os != "linux":
+    if is_linux():
+        ensure_linux_dependencies()
+    elif is_unix_like():
+        ensure_unix_like_dependencies()
+    else:
         # should not be a problem, since windows and mac come with pip and venv
         raise RuntimeError(f"Unable to install Python dependencies on {os}")
 
+
+def ensure_linux_dependencies():
     has_sudo = cmd_utils.has_command("sudo")
     sudo = "sudo" if has_sudo else ""
 
@@ -235,7 +240,7 @@ def ensure_dependencies():
         update_cmd = "zypper refresh"
         install_cmd = "zypper install -y python3-pip python3-virtualenv"
     else:
-        raise RuntimeError(f"Unable to install Python dependencies on {distro}")
+        raise RuntimeError(f"Unable to install Python dependencies on: {distro}")
 
     if update_cmd:
         # don't check the return code, as some package managers return non-zero exit codes
@@ -246,6 +251,22 @@ def ensure_dependencies():
         )
 
     cmd_utils.run(f"{sudo} {install_cmd}".strip(), shell=True, print_cmd=True)
+
+
+def ensure_unix_like_dependencies():
+    name = get_unix_like_os()
+    if name == "freebsd":
+        cmd = "pkg install -y py3-pip"
+    elif name == "openbsd":
+        cmd = "pkg_add py3-pip"
+    elif name == "netbsd":
+        cmd = "pkgin install py3-pip"
+    elif name == "dragonfly":
+        cmd = "pkg install py3-pip"
+    else:
+        raise RuntimeError(f"Unable to install Python dependencies on: {name}")
+
+    cmd_utils.run(cmd, shell=True, print_cmd=True)
 
 
 def get_app_version():
