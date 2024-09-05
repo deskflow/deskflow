@@ -69,7 +69,7 @@ hint_other() {
 
 run_cmd() {
   cmd="${SUDO:+$SUDO }$@"
-  echo "Running command: $cmd"
+  echo "Running: $cmd"
   $cmd
 }
 
