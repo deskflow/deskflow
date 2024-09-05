@@ -11,6 +11,7 @@ gcc10
 openssl
 glib
 gdk-pixbuf2
+libX11
 libXtst
 libnotify
 libxkbfile
