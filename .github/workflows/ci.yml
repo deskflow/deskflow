@@ -337,7 +337,7 @@ jobs:
 
     env:
       SYNERGY_BUILD_CMD: |
-        ./scripts/install_deps.py;
+        ./scripts/install_deps.sh;
         cmake -B build;
         cmake --build build -j8;
         ./build/bin/unittests
