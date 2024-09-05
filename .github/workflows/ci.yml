@@ -38,7 +38,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: ./.github/actions/run-tests-setup
+      - name: Test setup
+        uses: ./.github/actions/run-tests-setup
 
   windows:
     name: ${{ matrix.target.name }}
