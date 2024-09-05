@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
-sudo=$(command -v sudo &> /dev/null && echo "sudo" || echo "")
+SUDO=$(which sudo > /dev/null 2>&1 && echo "sudo" || echo "")
 
 # Packages for Unix-like BSD-derived and Solaris.
-unix_like_packages=$(cat <<EOF
+BSD_PACKAGES=$(cat <<EOF
 cmake
 ninja
 gmake
@@ -37,11 +37,11 @@ hint_other() {
 }
 
 install_freebsd() {
-  run_cmd pkg install -y $unix_like_packages
+  run_cmd pkg install -y $BSD_PACKAGES
 }
 
 run_cmd() {
-  cmd="$sudo $@"
+  cmd="${SUDO:+$SUDO }$@"
   echo "Running command: $cmd"
   $cmd
 }
