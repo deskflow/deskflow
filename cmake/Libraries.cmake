@@ -342,15 +342,8 @@ macro(configure_xorg_libs)
     message(FATAL_ERROR "Missing header: " ${XKBlib})
   endif()
 
-  set(CMAKE_REQUIRED_LIBRARIES
-      SM
-      ICE
-      X11
-      Xext
-      Xtst
-      Xinerama
-      Xi
-      Xrandr)
+  #TODO: remove debug
+  set(CMAKE_REQUIRED_QUIET NO)
 
   check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
   check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
