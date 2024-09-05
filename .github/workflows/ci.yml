@@ -364,8 +364,6 @@ jobs:
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
-          prepare: |
-            pkg install -y python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on OpenBSD
@@ -373,8 +371,6 @@ jobs:
         uses: vmactions/openbsd-vm@v1
         with:
           usesh: true
-          prepare: |
-            pkg_add python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on NetBSD
@@ -382,8 +378,6 @@ jobs:
         uses: vmactions/netbsd-vm@v1
         with:
           usesh: true
-          prepare: |
-            /usr/sbin/pkg_add install python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on DragonFly BSD
@@ -391,8 +385,6 @@ jobs:
         uses: vmactions/dragonflybsd-vm@v1
         with:
           usesh: true
-          prepare: |
-            pkg install -y python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on Solaris
@@ -400,6 +392,4 @@ jobs:
         uses: vmactions/solaris-vm@v1
         with:
           usesh: true
-          prepare: |
-            pkgutil -y -i python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
