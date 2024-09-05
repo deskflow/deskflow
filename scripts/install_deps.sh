@@ -26,8 +26,14 @@ install_deps() {
   uname_out="$(uname -s)"
   case "${uname_out}" in
     FreeBSD*) install_freebsd ;;
-    *)        echo "Not supported: ${uname_out}" ;;
+    *)        hint_other $uname_out ;;
   esac
+}
+
+hint_other() {
+  # TODO: Port the .py script to shell script
+  # to make the deps installation lighter on Unix-like.
+  echo "For $1 please use: ./scripts/install_deps.py"
 }
 
 install_freebsd() {
@@ -35,7 +41,7 @@ install_freebsd() {
 }
 
 run_cmd() {
-  cmd = $sudo $@
+  cmd="$sudo $@"
   echo "Running command: $cmd"
   $cmd
 }
