@@ -147,7 +147,9 @@ If you're a package maintainer and would like to bring a package back to life, p
 
 ### Has Synergy moved beyond its goals from the 1.x era?
 
-Our goal for Synergy 1 has always and will always be to make a simple, reliable and feature-rich mouse and keyboard-sharing tool.
+Our goal for Synergy 1 (including the community edition) has always been and will always be to make a simple, reliable, and feature-rich 
+mouse and keyboard-sharing tool. We do maintain another product called Synergy 3, but as this uses Synergy 1 Core (the server and client 
+part of Synergy), we depend on Synergy 1 to remain stable and modern which is why we continue to develop and improve the product.
 
 ### If I want to solve issues in Synergy do I need to contribute to a fork?
 
@@ -155,7 +157,7 @@ We welcome PRs (pull requests) from the community. If you'd like to make a chang
 [start a discussion](https://github.com/symless/synergy/discussions) or [open a PR](https://github.com/symless/synergy/wiki/Contributing).
 We think it's great that people start new forks of Synergy, power to them. However, it's not necessary to do this if you want to make changes.
 If you're thinking of starting your own rebranded fork of Synergy, it might be because we're doing something wrong so please 
-[let us know](https://github.com/symless/synergy/wiki/Contact-the-team) what we can do to make you feel welcome in our community.
+[let us know](https://github.com/symless/synergy/wiki/Contact-the-team) what we can do to let you feel welcome in our community.
 
 ### Is clipboard sharing supported?
 
@@ -163,16 +165,19 @@ Absolutely. The clipboard-sharing feature is a cornerstone feature of the produc
 
 ### Is Wayland for Linux supported?
 
-Yes, thanks to the work of Peter Hutterer (the author of [libei](https://gitlab.freedesktop.org/libinput/libei) and primary
-contributor to [libportal](https://github.com/flatpak/libportal)) and others like Olivier Fourdan, et al. we are now, tools
-like Synergy is now supported on Wayland (the Linux display server protocol aimed to become the successor of the X Window System).
+Yes! Wayland (the Linux display server protocol aimed to become the successor of the X Window System) is an important platform for us.
+The [`libei`](https://gitlab.freedesktop.org/libinput/libei) and [`libportal`](https://github.com/flatpak/libportal) libraries enable 
+Wayland support for Synergy. We would like to give special thanks to Peter Hutterer (@whot), who is the author of `libei`, a major contributor
+to `libportal`, and the author of the Wayland implementation in Synergy. Others such as Olivier Fourdan helped with the Wayland implementation,
+and we rely on the work of our community of developers to continue the development of Wayland support.
 
 ### Where did it all start?
 
-You can learn about the [history of the project](https://github.com/symless/synergy/wiki/History) and its original creator, Chris Schoeneman, on our Wiki.
+Synergy was first created in 2001. You can learn about the [history of the project](https://github.com/symless/synergy/wiki/History) and its 
+original creator, Chris Schoeneman, on our Wiki.
 
 ## Repology
 
-Repology monitors a huge number of package repositories and other sources comparing packages versions across them and gathering other information.
+Repology monitors a huge number of package repositories and other sources comparing package versions across them and gathering other information.
 
 [![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg?exclude_unsupported=1)](https://repology.org/project/synergy/versions)
