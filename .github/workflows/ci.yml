@@ -381,7 +381,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkgin -y install python39
+            pkgin -y install python3
           run: |
             ./scripts/install_deps.py
             cmake -B build
@@ -394,7 +394,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg install -y python39
+            pkg install -y python3
           run: |
             ./scripts/install_deps.py
             cmake -B build
