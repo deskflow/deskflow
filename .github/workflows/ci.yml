@@ -350,7 +350,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            install -y python3
+            pkg install -y python3
           run: |
             ./scripts/install_deps.py
             cmake -B build
