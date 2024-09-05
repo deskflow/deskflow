@@ -105,8 +105,23 @@ macro(configure_unix_libs)
   if(APPLE)
     configure_mac_libs()
   else()
+
     configure_xorg_libs()
     configure_wayland_libs()
+
+    find_package(pugixml REQUIRED)
+
+    find_package(PkgConfig)
+    if(PKG_CONFIG_FOUND)
+      pkg_check_modules(lib_glib REQUIRED IMPORTED_TARGET glib-2.0)
+      pkg_search_module(PC_GDKPIXBUF gdk-pixbuf-2.0)
+      include_directories(${PC_GLIB_INCLUDE_DIRS} ${PC_GDKPIXBUF_INCLUDE_DIRS})
+
+      pkg_check_modules(lib_gdkpixbuf REQUIRED IMPORTED_TARGET gdk-pixbuf-2.0)
+      pkg_check_modules(lib_notify REQUIRED IMPORTED_TARGET libnotify)
+    else()
+      message(WARNING "pkg-config not found, skipping libnotify and gdk-pixbuf")
+    endif()
   endif()
 
   # For config.h, set some static values; it may be a good idea to make these
@@ -314,8 +329,6 @@ endmacro()
 # X.org/X11 for Linux, BSD, etc
 #
 macro(configure_xorg_libs)
-
-  find_package(pugixml REQUIRED)
 
   # Set include dir for BSD-derived systems
   set(CMAKE_REQUIRED_INCLUDES "/usr/local/include")
