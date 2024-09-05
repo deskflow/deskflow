@@ -46,7 +46,7 @@ install_openbsd() {
 }
 
 install_netbsd() {
-  run_cmd pkgin install $BSD_PACKAGES
+  run_cmd /usr/sbin/pkg_add $BSD_PACKAGES
 }
 
 hint_other() {
