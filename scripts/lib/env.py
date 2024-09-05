@@ -82,10 +82,10 @@ def get_unix_like_os():
     """Detects the Unix-like OS."""
 
     unix_like = ["freebsd", "openbsd", "netbsd", "dragonfly", "solaris"]
-    if any(sys.platform.startswith(os_name) for os_name in unix_like):
-        return unix_like
-    else:
-        return None
+    for os_name in unix_like:
+        if sys.platform.startswith(os_name):
+            return os_name
+    return None
 
 
 def get_env(name, required=True, default=None):
