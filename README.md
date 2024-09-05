@@ -24,12 +24,12 @@ for years to come and we're excited to work with the community to improve the co
 
 ## Operating Systems
 
-We support all major operating systems, including Windows, macOS, Linux, and BSD.
+We support all major operating systems, including Windows, macOS, Linux, and Unix-like (BSD-descended).
 
 All Linux distributions are supported, primarily focusing on: 
 Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE.
 
-Unix-like operating systems descended from BSD: FreeBSD, OpenBSD, NetBSD, DragonFly BSD.
+Supported Unix-like BSD-descended operating systems: FreeBSD, OpenBSD, NetBSD, DragonFly BSD.
 
 ## Ways to get involved
 
