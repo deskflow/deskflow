@@ -29,7 +29,6 @@ install_deps() {
     FreeBSD*)   install_freebsd ;;
     OpenBSD*)   install_openbsd ;;
     NetBSD*)    install_netbsd ;;
-    DragonFly*) install_dragonfly ;;
     *)          hint_other $uname_out ;;
   esac
   
@@ -48,10 +47,6 @@ install_openbsd() {
 
 install_netbsd() {
   run_cmd pkgin install $BSD_PACKAGES
-}
-
-install_dragonfly() {
-  run_cmd pkg install -y $BSD_PACKAGES
 }
 
 hint_other() {
