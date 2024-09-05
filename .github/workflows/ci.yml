@@ -332,7 +332,7 @@ jobs:
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
     name: unix-${{ matrix.distro.name }}
-    runs-on: ubuntu-22.04-16-core-x64
+    runs-on: ubuntu-latest
     timeout-minutes: 20
 
     env:
