@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 sudo=$(command -v sudo &> /dev/null && echo "sudo" || echo "")
 
