@@ -314,7 +314,7 @@ macro(configure_xorg_libs)
 
   # Add include dir for BSD (posix uses /usr/include/)
   #set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
-  set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES}:/usr/local/include")
+  set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} "/usr/local/include")
 
   set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
   set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
