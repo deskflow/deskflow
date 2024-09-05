@@ -350,7 +350,8 @@ jobs:
           - name: freebsd
           - name: openbsd
           - name: netbsd
-          - name: dragonfly-bsd
+          - name: dragonfly
+          - name: solaris
 
     steps:
       - name: Checkout
@@ -382,14 +383,23 @@ jobs:
         with:
           usesh: true
           prepare: |
-            /usr/sbin/pkg_add -y install python3
+            /usr/sbin/pkg_add install python3
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on DragonFly BSD
-        if: ${{ matrix.distro.name == 'dragonfly-bsd' }}
+        if: ${{ matrix.distro.name == 'dragonfly' }}
         uses: vmactions/dragonflybsd-vm@v1
         with:
           usesh: true
           prepare: |
             pkg install -y python3
+          run: ${{ env.SYNERGY_BUILD_CMD }}
+
+      - name: Build on Solaris
+        if: ${{ matrix.distro.name == 'solaris' }}
+        uses: vmactions/solaris-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkgutil -y -i python3
           run: ${{ env.SYNERGY_BUILD_CMD }}

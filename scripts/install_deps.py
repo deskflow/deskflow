@@ -304,7 +304,6 @@ class Dependencies:
                 print(f"Optional package not found, stripping: {optional_package}")
                 command = command.replace(optional_package, "")
 
-        print("Running dependencies command")
         linux.run_command(command, check=True)
 
         subprojects = self.config.get_os_subprojects()
@@ -312,6 +311,15 @@ class Dependencies:
             for subproject in subprojects:
                 deps = SubprojectDependencies(subproject)
                 deps.install()
+
+    def unix_like(self):
+        """Installs dependencies on Unix-like systems."""
+        os_name = env.get_unix_like_os()
+        if not os_name:
+            raise RuntimeError("Unix-like OS not supported: {sys.platform}")
+
+        command = self.config.get_os_deps_command(os_name)
+        cmd_utils.run(command, shell=True, print_cmd=True)
 
 
 class SubprojectDependencies:

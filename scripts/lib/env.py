@@ -36,6 +36,8 @@ def get_os():
         return "mac"
     elif sys.platform.startswith("linux"):
         return "linux"
+    elif get_unix_like_os():
+        return "unix-like"
     else:
         raise RuntimeError(f"Unsupported platform: {sys.platform}")
 
@@ -50,6 +52,10 @@ def is_mac():
 
 def is_linux():
     return get_os() == "linux"
+
+
+def is_unix_like():
+    return get_os() == "unix-like"
 
 
 def get_linux_distro():
@@ -70,6 +76,16 @@ def get_linux_distro():
                     version = line.strip().split("=")[1].strip('"')
 
     return name, name_like, version
+
+
+def get_unix_like_os():
+    """Detects the Unix-like OS."""
+
+    unix_like = ["freebsd", "openbsd", "netbsd", "dragonfly", "solaris"]
+    if any(sys.platform.startswith(os_name) for os_name in unix_like):
+        return unix_like
+    else:
+        return None
 
 
 def get_env(name, required=True, default=None):

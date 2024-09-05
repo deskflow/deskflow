@@ -154,6 +154,106 @@ config:
     manjaro:
       <<: *arch
 
+  freebsd:
+    dependencies:
+      command: |
+        pkg install -y \
+          cmake \
+          ninja \
+          gmake \
+          gcc10 \
+          openssl \
+          glib \
+          gdk-pixbuf2 \
+          libXtst \
+          libnotify \
+          libxkbfile \
+          qt6-base \
+          qt6-tools \
+          gtk3 \
+          googletest \
+          pugixml
+
+  openbsd:
+    dependencies:
+      command: |
+        pkg_add \
+          cmake \
+          ninja \
+          gmake \
+          gcc \
+          openssl \
+          glib2 \
+          gdk-pixbuf2 \
+          libXtst \
+          libnotify \
+          libxkbfile \
+          qt6-base \
+          qt6-tools \
+          gtk3 \
+          googletest \
+          pugixml
+
+  netbsd:
+    dependencies:
+      command: |
+        /usr/sbin/pkg_add install \
+          cmake \
+          ninja \
+          gmake \
+          gcc10 \
+          openssl \
+          glib2 \
+          gdk-pixbuf2 \
+          libXtst \
+          libnotify \
+          libxkbfile \
+          qt6-base \
+          qt6-tools \
+          gtk3 \
+          googletest \
+          pugixml
+
+  dragonfly:
+    dependencies:
+      command: |
+        pkg install -y \
+          cmake \
+          ninja \
+          gmake \
+          gcc10 \
+          openssl \
+          glib \
+          gdk-pixbuf2 \
+          libXtst \
+          libnotify \
+          libxkbfile \
+          qt6-base \
+          qt6-tools \
+          gtk3 \
+          googletest \
+          pugixml
+
+  solaris:
+    dependencies:
+      command: |
+        pkgutil -y -i \
+          cmake \
+          ninja \
+          gmake \
+          gcc10 \
+          openssl \
+          glib \
+          gdk-pixbuf2 \
+          libXtst \
+          libnotify \
+          libxkbfile \
+          qt6-base \
+          qt6-tools \
+          gtk3 \
+          googletest \
+          pugixml
+
   subprojects:
     libei:
       dependencies:
