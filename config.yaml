@@ -51,7 +51,6 @@ config:
           libpugixml-dev \
           libei-dev \
           libportal-dev
-
         optional: [libei-dev, libportal-dev]
 
     linuxmint:
