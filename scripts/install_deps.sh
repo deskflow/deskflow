@@ -2,27 +2,6 @@
 
 SUDO=$(which sudo > /dev/null 2>&1 && echo "sudo" || echo "")
 
-# Packages for Unix-like BSD-derived.
-BSD_PACKAGES=$(cat <<EOF
-cmake
-ninja
-gmake
-gcc10
-openssl
-glib
-gdk-pixbuf2
-libX11
-libXtst
-libnotify
-libxkbfile
-qt6-base
-qt6-tools
-gtk3
-googletest
-pugixml
-EOF
-)
-
 install_deps() {
   uname_out="$(uname -s)"
   case "${uname_out}" in
@@ -36,7 +15,25 @@ install_deps() {
 }
 
 install_freebsd() {
-  run_cmd pkg install -y $BSD_PACKAGES
+  run_cmd pkg install -y \
+    cmake \
+    ninja \
+    gmake \
+    gcc10 \
+    openssl \
+    glib \
+    gdk-pixbuf2 \
+    libX11 \
+    libXtst \
+    libnotify \
+    libxkbfile \
+    qt6-base \
+    qt6-tools \
+    gtk3 \
+    googletest \
+    pugixml
+  
+  find /usr -name libX11*
 }
 
 install_openbsd() {
