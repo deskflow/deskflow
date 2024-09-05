@@ -365,7 +365,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg install -y python3
+            pkg install -y python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on OpenBSD
@@ -374,7 +374,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg_add python3
+            pkg_add python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on NetBSD
@@ -383,7 +383,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            /usr/sbin/pkg_add install python3
+            /usr/sbin/pkg_add install python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on DragonFly BSD
@@ -392,7 +392,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg install -y python3
+            pkg install -y python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on Solaris
@@ -401,5 +401,5 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkgutil -y -i python3
+            pkgutil -y -i python3 cmake
           run: ${{ env.SYNERGY_BUILD_CMD }}
