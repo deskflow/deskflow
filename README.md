@@ -29,7 +29,7 @@ We support all major operating systems, including Windows, macOS, Linux, and Uni
 All Linux distributions are supported, primarily focusing on: 
 Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
 
-Supported Unix-like BSD-descended operating systems: FreeBSD, OpenBSD, NetBSD.
+We officially support FreeBSD, we would also like to support: OpenBSD, NetBSD, DragonFly BSD, Solaris.
 
 ## Ways to get involved
 
