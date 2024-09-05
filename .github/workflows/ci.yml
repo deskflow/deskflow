@@ -332,7 +332,7 @@ jobs:
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
     name: unix-${{ matrix.distro.name }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-16-core-x64
     timeout-minutes: 20
 
     env:
@@ -340,6 +340,7 @@ jobs:
         ./scripts/install_deps.sh;
         cmake -B build;
         cmake --build build -j8;
+        export QT_QPA_PLATFORM=offscreen;
         ./build/bin/unittests
         ./build/bin/inegtests
 

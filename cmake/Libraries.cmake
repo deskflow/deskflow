@@ -362,7 +362,8 @@ macro(configure_xorg_libs)
     message(FATAL_ERROR "Missing header: " ${XKBlib})
   endif()
 
-  # Set library path and -L flag for BSD-derived systems
+  # Set library path and -L flag for BSD-derived systems.
+  # On our FreeBSD CI, `link_directories` is also needed for some reason.
   set(CMAKE_LIBRARY_PATH "/usr/local/lib")
   set(CMAKE_REQUIRED_FLAGS "-L${CMAKE_LIBRARY_PATH}")
   link_directories(${CMAKE_LIBRARY_PATH})
