@@ -312,8 +312,7 @@ macro(configure_xorg_libs)
 
   find_package(pugixml REQUIRED)
 
-  # Add include dir for BSD (posix uses /usr/include/)
-  #set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
+  # Set include dir for BSD-derived systems
   set(CMAKE_REQUIRED_INCLUDES "/usr/local/include")
 
   set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
@@ -342,8 +341,8 @@ macro(configure_xorg_libs)
     message(FATAL_ERROR "Missing header: " ${XKBlib})
   endif()
 
-  #TODO: remove debug
-  set(CMAKE_REQUIRED_QUIET NO)
+  # Set library -L flag for BSD-derived systems
+  set(CMAKE_REQUIRED_FLAGS "-L/usr/local/lib")
 
   check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
   check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
