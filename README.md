@@ -140,8 +140,8 @@ There are many reasons why this may happen, but sometimes if a package maintaine
 without finding a replacement, the package might lose support, leading to its removal.
 This can also happen when there are difficulties updating the package to the latest version,
 and communication has broken down between the package maintainer and the upstream developers.
-If you're a package maintainer and would like to bring a package back to life, please 
-[get in touch](https://github.com/symless/synergy/wiki/Contact-the-team).
+If you're a package maintainer and would like to bring the `synergy` package back to life, please 
+[get in touch](https://github.com/symless/synergy/wiki/Contact-the-team) if you need our help.
 
 ## FAQ
 
