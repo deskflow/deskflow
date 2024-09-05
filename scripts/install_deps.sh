@@ -2,7 +2,7 @@
 
 SUDO=$(which sudo > /dev/null 2>&1 && echo "sudo" || echo "")
 
-# Packages for Unix-like BSD-derived and Solaris.
+# Packages for Unix-like BSD-derived.
 BSD_PACKAGES=$(cat <<EOF
 cmake
 ninja
@@ -30,7 +30,6 @@ install_deps() {
     OpenBSD*)   install_openbsd ;;
     NetBSD*)    install_netbsd ;;
     DragonFly*) install_dragonfly ;;
-    SunOS*)     install_solaris ;;
     *)          hint_other $uname_out ;;
   esac
   
@@ -53,10 +52,6 @@ install_netbsd() {
 
 install_dragonfly() {
   run_cmd pkg install -y $BSD_PACKAGES
-}
-
-install_solaris() {
-  run_cmd pkg install $BSD_PACKAGES
 }
 
 hint_other() {

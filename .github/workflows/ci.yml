@@ -351,7 +351,6 @@ jobs:
           - name: openbsd
           - name: netbsd
           - name: dragonfly
-          - name: solaris
 
     steps:
       - name: Checkout
@@ -383,13 +382,6 @@ jobs:
       - name: Build on DragonFly BSD
         if: ${{ matrix.distro.name == 'dragonfly' }}
         uses: vmactions/dragonflybsd-vm@v1
-        with:
-          usesh: true
-          run: ${{ env.SYNERGY_BUILD_CMD }}
-
-      - name: Build on Solaris
-        if: ${{ matrix.distro.name == 'solaris' }}
-        uses: vmactions/solaris-vm@v1
         with:
           usesh: true
           run: ${{ env.SYNERGY_BUILD_CMD }}
