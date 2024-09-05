@@ -31,9 +31,9 @@ Here are a few ways to join in with the project and get involved:
 
 ## Where to get help
 
-* Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) in the `#open-source` channel.
-* [Start a discussion](https://github.com/symless/synergy/discussions)
-* [Read the wiki](https://github.com/symless/synergy/wiki)
+* Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) (`#open-source` channel)
+* [Start a discussion](https://github.com/symless/synergy/discussions) on our GitHub project
+* [Read the wiki](https://github.com/symless/synergy/wiki) for guides and info
 
 ## Developer Quick Start
 
