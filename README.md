@@ -29,7 +29,7 @@ Here are a few ways to join in with the project and get involved:
 * [Submit a PR](https://github.com/symless/synergy/wiki/Contributing) (pull request) with a bug fix or improvement
 * [Let us know](https://github.com/symless/synergy/issues) if you have an idea for an improvement
 
-# Where to get help
+## Where to get help
 
 * Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) in the `#open-source` channel.
 * [Start a discussion](https://github.com/symless/synergy/discussions)
