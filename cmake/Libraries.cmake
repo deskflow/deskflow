@@ -316,6 +316,9 @@ macro(configure_xorg_libs)
   #set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
   set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} "/usr/local/include")
 
+  # This doesn't work, but I want to get the cmake policy warning from CI
+  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} "/usr/local/lib")
+
   set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
   set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
   check_type_size("XRRNotifyEvent" X11_EXTENSIONS_XRANDR_H)

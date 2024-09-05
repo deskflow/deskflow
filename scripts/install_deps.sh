@@ -37,6 +37,10 @@ install_deps() {
 
 install_freebsd() {
   run_cmd pkg install -y $BSD_PACKAGES
+  
+  # TODO: remove these debugging lines
+  find /usr/local/lib -name libX*
+  find /usr/local/include -name X*
 }
 
 install_openbsd() {
