@@ -341,6 +341,7 @@ jobs:
         cmake -B build;
         cmake --build build -j8;
         ./build/bin/unittests
+        ./build/bin/inegtests
 
     strategy:
       fail-fast: false
