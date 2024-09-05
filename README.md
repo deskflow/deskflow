@@ -24,7 +24,7 @@ for years to come and we're excited to work with the community to improve the co
 
 ## Operating Systems
 
-We support all major operating systems, including Windows, macOS, Linux, and Unix-like (BSD-descended).
+We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
 
 All Linux distributions are supported, primarily focusing on: 
 Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
@@ -125,7 +125,7 @@ sudo pacman -S synergy
 ## Package Maintainers
 
 Synergy is already available through most package managers as `synergy`, and we would love to see the latest version of 
-Synergy 1 Community Edition on every package manager for every OS we support (Windows, macOS, Linux, BSD, and so on).
+Synergy 1 Community Edition on every package manager for every OS we support (Windows, macOS, Linux, Unix-like BSD-derived, etc).
 
 Package maintainers can use `scripts/package.py` to see how we build packages,
 but most package maintainers will create a packaging script rather than use our scripts (which is fine by us).
