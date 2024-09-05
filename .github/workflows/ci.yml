@@ -349,8 +349,6 @@ jobs:
       matrix:
         distro:
           - name: freebsd
-          - name: openbsd
-          - name: netbsd
 
     steps:
       - name: Checkout
@@ -361,20 +359,6 @@ jobs:
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
         uses: vmactions/freebsd-vm@v1
-        with:
-          usesh: true
-          run: ${{ env.SYNERGY_BUILD_CMD }}
-
-      - name: Build on OpenBSD
-        if: ${{ matrix.distro.name == 'openbsd' }}
-        uses: vmactions/openbsd-vm@v1
-        with:
-          usesh: true
-          run: ${{ env.SYNERGY_BUILD_CMD }}
-
-      - name: Build on NetBSD
-        if: ${{ matrix.distro.name == 'netbsd' }}
-        uses: vmactions/netbsd-vm@v1
         with:
           usesh: true
           run: ${{ env.SYNERGY_BUILD_CMD }}

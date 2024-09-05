@@ -29,12 +29,9 @@ install_deps() {
     FreeBSD*)   install_freebsd ;;
     OpenBSD*)   install_openbsd ;;
     NetBSD*)    install_netbsd ;;
+    DragonFly*) install_dragonfly ;;
     *)          hint_other $uname_out ;;
   esac
-  
-  # TODO: remove these debugging lines
-  find /usr/local/lib -name libX*
-  find /usr/local/include -name X*
 }
 
 install_freebsd() {
@@ -42,11 +39,24 @@ install_freebsd() {
 }
 
 install_openbsd() {
-  run_cmd pkg_add $BSD_PACKAGES
+  # Patches welcome!
+  # pkg_add error:
+  #   Can't find libX11
+  #   Can't find libXtst
+  echo "Sorry, OpenBSD is not supported yet."
 }
 
 install_netbsd() {
-  run_cmd /usr/sbin/pkg_add $BSD_PACKAGES
+  # Patches welcome!
+  # pkg_add error:
+  #  pkg_add: no pkg found for 'libX11', sorry.
+  #  pkg_add: no pkg found for 'libXtst', sorry.
+  echo "Sorry, NetBSD is not supported yet."
+}
+
+install_dragonfly() {
+  # The C++ version on DragonFly BSD seems to be too old.
+  echo "Sorry, DragonFly BSD is not supported yet."
 }
 
 hint_other() {
