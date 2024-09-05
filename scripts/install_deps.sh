@@ -26,19 +26,39 @@ EOF
 install_deps() {
   uname_out="$(uname -s)"
   case "${uname_out}" in
-    FreeBSD*) install_freebsd ;;
-    *)        hint_other $uname_out ;;
+    FreeBSD*)   install_freebsd ;;
+    OpenBSD*)   install_openbsd ;;
+    NetBSD*)    install_netbsd ;;
+    DragonFly*) install_dragonfly ;;
+    SunOS*)     install_solaris ;;
+    *)          hint_other $uname_out ;;
   esac
+}
+
+install_freebsd() {
+  run_cmd pkg install -y $BSD_PACKAGES
+}
+
+install_openbsd() {
+  run_cmd pkg_add $BSD_PACKAGES
+}
+
+install_netbsd() {
+  run_cmd pkgin install $BSD_PACKAGES
+}
+
+install_dragonfly() {
+  run_cmd pkg install -y $BSD_PACKAGES
+}
+
+install_solaris() {
+  run_cmd pkg install $BSD_PACKAGES
 }
 
 hint_other() {
   # TODO: Port the .py script to shell script
   # to make the deps installation lighter on Unix-like.
   echo "For $1 please use: ./scripts/install_deps.py"
-}
-
-install_freebsd() {
-  run_cmd pkg install -y $BSD_PACKAGES
 }
 
 run_cmd() {
