@@ -335,7 +335,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    env:
+      SYNERGY_BUILD_CMD: |
+        ./scripts/install_deps.py;
+        cmake -B build;
+        cmake --build build -j8;
+        ./build/bin/unittests
+
     strategy:
+      fail-fast: false
+
       matrix:
         distro:
           - name: freebsd
@@ -356,11 +365,7 @@ jobs:
           usesh: true
           prepare: |
             pkg install -y python3
-          run: |
-            ./scripts/install_deps.py
-            cmake -B build
-            cmake --build build -j8
-            ./build/bin/unittests
+          run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on OpenBSD
         if: ${{ matrix.distro.name == 'openbsd' }}
@@ -368,12 +373,8 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg_add -z python3
-          run: |
-            ./scripts/install_deps.py
-            cmake -B build
-            cmake --build build -j8
-            ./build/bin/unittests
+            pkg_add python3
+          run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on NetBSD
         if: ${{ matrix.distro.name == 'netbsd' }}
@@ -381,12 +382,8 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkgin -y install python3
-          run: |
-            ./scripts/install_deps.py
-            cmake -B build
-            cmake --build build -j8
-            ./build/bin/unittests
+            /usr/sbin/pkg_add -y install python3
+          run: ${{ env.SYNERGY_BUILD_CMD }}
 
       - name: Build on DragonFly BSD
         if: ${{ matrix.distro.name == 'dragonfly-bsd' }}
@@ -395,8 +392,4 @@ jobs:
           usesh: true
           prepare: |
             pkg install -y python3
-          run: |
-            ./scripts/install_deps.py
-            cmake -B build
-            cmake --build build -j8
-            ./build/bin/unittests
+          run: ${{ env.SYNERGY_BUILD_CMD }}
