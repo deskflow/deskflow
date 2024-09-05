@@ -44,7 +44,7 @@ public:
       int mouseScrollDelta, IEventQueue *events,
       synergy::ClientScrollDirection m_clientScrollDirection =
           synergy::ClientScrollDirection::SERVER);
-  virtual ~XWindowsScreen();
+  virtual ~XWindowsScreen() override;
 
   //! @name manipulators
   //@{
@@ -52,50 +52,50 @@ public:
   //@}
 
   // IScreen overrides
-  virtual void *getEventTarget() const;
-  virtual bool getClipboard(ClipboardID id, IClipboard *) const;
+  virtual void *getEventTarget() const override;
+  virtual bool getClipboard(ClipboardID id, IClipboard *) const override;
   virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
-  virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
+  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
+  virtual void getCursorPos(SInt32 &x, SInt32 &y) const override;
 
   // IPrimaryScreen overrides
-  virtual void reconfigure(UInt32 activeSides);
-  virtual void warpCursor(SInt32 x, SInt32 y);
-  virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask);
-  virtual void unregisterHotKey(UInt32 id);
-  virtual void fakeInputBegin();
-  virtual void fakeInputEnd();
-  virtual SInt32 getJumpZoneSize() const;
-  virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const;
-  virtual void getCursorCenter(SInt32 &x, SInt32 &y) const;
+  virtual void reconfigure(UInt32 activeSides) override;
+  virtual void warpCursor(SInt32 x, SInt32 y) override;
+  virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask) override;
+  virtual void unregisterHotKey(UInt32 id) override;
+  virtual void fakeInputBegin() override;
+  virtual void fakeInputEnd() override;
+  virtual SInt32 getJumpZoneSize() const override;
+  virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const override;
+  virtual void getCursorCenter(SInt32 &x, SInt32 &y) const override;
 
   // ISecondaryScreen overrides
-  virtual void fakeMouseButton(ButtonID id, bool press);
-  virtual void fakeMouseMove(SInt32 x, SInt32 y);
-  virtual void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-  virtual void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+  virtual void fakeMouseButton(ButtonID id, bool press) override;
+  virtual void fakeMouseMove(SInt32 x, SInt32 y) override;
+  virtual void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const override;
+  virtual void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const override;
 
   // IPlatformScreen overrides
-  virtual void enable();
-  virtual void disable();
-  virtual void enter();
-  virtual bool leave();
-  virtual bool setClipboard(ClipboardID, const IClipboard *);
-  virtual void checkClipboards();
-  virtual void openScreensaver(bool notify);
-  virtual void closeScreensaver();
-  virtual void screensaver(bool activate);
-  virtual void resetOptions();
-  virtual void setOptions(const OptionsList &options);
-  virtual void setSequenceNumber(UInt32);
-  virtual bool isPrimary() const;
+  virtual void enable() override;
+  virtual void disable() override;
+  virtual void enter() override;
+  virtual bool leave() override;
+  virtual bool setClipboard(ClipboardID, const IClipboard *) override;
+  virtual void checkClipboards() override;
+  virtual void openScreensaver(bool notify) override;
+  virtual void closeScreensaver() override;
+  virtual void screensaver(bool activate) override;
+  virtual void resetOptions() override;
+  virtual void setOptions(const OptionsList &options) override;
+  virtual void setSequenceNumber(UInt32) override;
+  virtual bool isPrimary() const override;
   String getSecureInputApp() const override;
 
 protected:
   // IPlatformScreen overrides
-  virtual void handleSystemEvent(const Event &, void *);
-  virtual void updateButtons();
-  virtual IKeyState *getKeyState() const;
+  virtual void handleSystemEvent(const Event &, void *) override;
+  virtual void updateButtons() override;
+  virtual IKeyState *getKeyState() const override;
 
 private:
   // event sending
