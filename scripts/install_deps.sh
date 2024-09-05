@@ -32,8 +32,6 @@ install_freebsd() {
     gtk3 \
     googletest \
     pugixml
-  
-  find /usr -name libX11*
 }
 
 install_openbsd() {
