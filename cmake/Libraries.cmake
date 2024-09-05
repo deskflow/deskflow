@@ -362,8 +362,9 @@ macro(configure_xorg_libs)
     message(FATAL_ERROR "Missing header: " ${XKBlib})
   endif()
 
-  # Set library -L flag for BSD-derived systems
-  set(CMAKE_REQUIRED_FLAGS "-L/usr/local/lib")
+  # Set library path and -L flag for BSD-derived systems
+  set(CMAKE_LIBRARY_PATH "/usr/local/lib")
+  set(CMAKE_REQUIRED_FLAGS "-L${CMAKE_LIBRARY_PATH}")
 
   check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
   check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
