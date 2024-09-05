@@ -329,8 +329,9 @@ jobs:
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
 
-  bsd:
-    name: bsd-${{ matrix.distro.name }}
+  # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
+  unix:
+    name: unix-${{ matrix.distro.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -338,6 +339,9 @@ jobs:
       matrix:
         distro:
           - name: freebsd
+          - name: openbsd
+          - name: netbsd
+          - name: dragonfly-bsd
 
     steps:
       - name: Checkout
@@ -346,11 +350,51 @@ jobs:
           submodules: "recursive"
 
       - name: Build on FreeBSD
+        if: ${{ matrix.distro.name == 'freebsd' }}
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
           prepare: |
             pkg install -y python3
+          run: |
+            ./scripts/install_deps.py
+            cmake -B build
+            cmake --build build -j8
+            ./build/bin/unittests
+
+      - name: Build on OpenBSD
+        if: ${{ matrix.distro.name == 'openbsd' }}
+        uses: vmactions/openbsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkg_add -z python3
+          run: |
+            ./scripts/install_deps.py
+            cmake -B build
+            cmake --build build -j8
+            ./build/bin/unittests
+
+      - name: Build on NetBSD
+        if: ${{ matrix.distro.name == 'netbsd' }}
+        uses: vmactions/netbsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkgin -y install python39
+          run: |
+            ./scripts/install_deps.py
+            cmake -B build
+            cmake --build build -j8
+            ./build/bin/unittests
+
+      - name: Build on DragonFly BSD
+        if: ${{ matrix.distro.name == 'dragonfly-bsd' }}
+        uses: vmactions/dragonflybsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkg install -y python39
           run: |
             ./scripts/install_deps.py
             cmake -B build
