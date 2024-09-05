@@ -182,8 +182,8 @@ and we rely on the work of our community of developers to continue the developme
 
 ### Where did it all start?
 
-Synergy was first created in 2001. You can learn about the [history of the project](https://github.com/symless/synergy/wiki/History) and its 
-original creator, Chris Schoeneman, on our Wiki.
+Synergy was first created in 2001 by Chris Schoeneman.
+Read about the [history of the project](https://github.com/symless/synergy/wiki/History) on our Wiki.
 
 ## Repology
 
