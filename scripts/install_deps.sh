@@ -30,6 +30,7 @@ install_deps() {
     OpenBSD*)   install_openbsd ;;
     NetBSD*)    install_netbsd ;;
     DragonFly*) install_dragonfly ;;
+    SunOS*)     install_solaris ;;
     *)          hint_other $uname_out ;;
   esac
 }
@@ -55,8 +56,14 @@ install_netbsd() {
 }
 
 install_dragonfly() {
+  # Patches welcome!
   # The C++ version on DragonFly BSD seems to be too old.
   echo "Sorry, DragonFly BSD is not supported yet."
+}
+
+install_solaris() {
+  # Patches welcome!
+  echo "Sorry, Solaris is not supported yet."
 }
 
 hint_other() {
