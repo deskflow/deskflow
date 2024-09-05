@@ -342,7 +342,7 @@ jobs:
         cmake --build build -j8;
         export QT_QPA_PLATFORM=offscreen;
         ./build/bin/unittests
-        ./build/bin/inegtests
+        ./build/bin/integtests
 
     strategy:
       fail-fast: false
