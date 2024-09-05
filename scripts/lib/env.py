@@ -36,8 +36,6 @@ def get_os():
         return "mac"
     elif sys.platform.startswith("linux"):
         return "linux"
-    elif get_unix_like_os():
-        return "unix-like"
     else:
         raise RuntimeError(f"Unsupported platform: {sys.platform}")
 
@@ -52,10 +50,6 @@ def is_mac():
 
 def is_linux():
     return get_os() == "linux"
-
-
-def is_unix_like():
-    return get_os() == "unix-like"
 
 
 def get_linux_distro():
@@ -76,16 +70,6 @@ def get_linux_distro():
                     version = line.strip().split("=")[1].strip('"')
 
     return name, name_like, version
-
-
-def get_unix_like_os():
-    """Detects the Unix-like OS."""
-
-    unix_like = ["freebsd", "openbsd", "netbsd", "dragonfly", "solaris"]
-    for os_name in unix_like:
-        if sys.platform.startswith(os_name):
-            return os_name
-    return None
 
 
 def get_env(name, required=True, default=None):
@@ -206,16 +190,11 @@ def ensure_dependencies():
 
     print("Installing Python dependencies...")
 
-    if is_linux():
-        ensure_linux_dependencies()
-    elif is_unix_like():
-        ensure_unix_like_dependencies()
-    else:
+    os = get_os()
+    if os != "linux":
         # should not be a problem, since windows and mac come with pip and venv
         raise RuntimeError(f"Unable to install Python dependencies on {os}")
 
-
-def ensure_linux_dependencies():
     has_sudo = cmd_utils.has_command("sudo")
     sudo = "sudo" if has_sudo else ""
 
@@ -240,7 +219,7 @@ def ensure_linux_dependencies():
         update_cmd = "zypper refresh"
         install_cmd = "zypper install -y python3-pip python3-virtualenv"
     else:
-        raise RuntimeError(f"Unable to install Python dependencies on: {distro}")
+        raise RuntimeError(f"Unable to install Python dependencies on {distro}")
 
     if update_cmd:
         # don't check the return code, as some package managers return non-zero exit codes
@@ -251,22 +230,6 @@ def ensure_linux_dependencies():
         )
 
     cmd_utils.run(f"{sudo} {install_cmd}".strip(), shell=True, print_cmd=True)
-
-
-def ensure_unix_like_dependencies():
-    name = get_unix_like_os()
-    if name == "freebsd":
-        cmd = "pkg install -y py3-pip"
-    elif name == "openbsd":
-        cmd = "pkg_add py3-pip"
-    elif name == "netbsd":
-        cmd = "pkgin install py3-pip"
-    elif name == "dragonfly":
-        cmd = "pkg install py3-pip"
-    else:
-        raise RuntimeError(f"Unable to install Python dependencies on: {name}")
-
-    cmd_utils.run(cmd, shell=True, print_cmd=True)
 
 
 def get_app_version():
