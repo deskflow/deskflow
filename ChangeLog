@@ -14,6 +14,7 @@ Enhancements:
 - #7469 Option to link against local `libportal` and other subprojects
 - #7471 Use `vcpkg` to manage `openssl` dep instead of `choco`
 - #7473 Simplify `vcpkg` caching and use system `vcpkg`
+- #7474 FreeBSD GitHub runner with `vmactions/freebsd-vm@v1`
 
 # 1.15.1
 
