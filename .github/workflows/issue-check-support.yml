@@ -14,6 +14,9 @@ on:
 jobs:
   issue-check-support:
     runs-on: ubuntu-latest
+    env:
+      ISSUE_BODY: ${{ github.event.issue.body || github.event.inputs.issue_body }}
+      ISSUE_NUMBER: ${{ github.event.issue.number || github.event.inputs.issue_number  }}
 
     steps:
       - name: Checkout
@@ -27,8 +30,6 @@ jobs:
       - name: Check issue
         id: issue-check
         run: ./scripts/github.py --issue-check-tech-support
-        env:
-          ISSUE_BODY: ${{ github.event.issue.body || github.event.inputs.issue_body }}
 
       - name: Add comment for customer
         if: steps.issue-check.outputs.may-need-tech-support == 'true'
@@ -44,6 +45,6 @@ jobs:
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number || github.event.inputs.issue_number,
+              issue_number: context.issue.number || process.env.ISSUE_NUMBER,
               body: process.env.COMMENT_BODY
             });
