@@ -28,7 +28,7 @@ Version 1.15 brings a new philosophy of being more approachable to the open-sour
 instead of wholly focusing on commercial interests.
 We still have customers in order to finance the development of the code, but we are committed to
 maintaining and improving Synergy 1 Community Edition for years to come and we're excited to work
-with our  community of open source users to improve the code for the benefit of everyone.
+with our community of open source users to improve the code for the benefit of everyone.
 
 ## Operating Systems
 
