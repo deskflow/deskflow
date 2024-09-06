@@ -1,0 +1,42 @@
+name: Check if tech support issue
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add-comment:
+    runs-on: ubuntu-latest
+    env:
+      CUSTOMER_TEXT: "What type of Synergy user are you? Customer"
+      MISSING_TICKET_TEXT: "Support ticket number (for customers) No response"
+      COMMENT_BODY: |
+        Hello, as a customer, you're entitled to tech support which is included in your license. 
+        Please [raise a support ticket](https://symless.com/synergy/contact) if you'd like to take advantage of that. 
+        If that works for you, then please let us know your ticket number so we can continue the discussion there.
+
+    steps:
+      - name: Check if customer
+        id: customer_check
+        run: |
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          RESULT=$(echo "$ISSUE_BODY" | grep -z -q "$CUSTOMER_TEXT" && echo "true" || echo "false")
+          echo "is_customer=${RESULT}" >> $GITHUB_OUTPUT
+
+      - name: Check for ticket number
+        id: ticket_check
+        run: |
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          RESULT=$(echo "$ISSUE_BODY" | grep -z -q "$MISSING_TICKET_TEXT" && echo "true" || echo "false")
+          echo "missing_ticket=${RESULT}" >> $GITHUB_OUTPUT
+
+      - name: Add comment for customer
+        if: steps.customer_check.outputs.is_customer == 'true' && steps.ticket_check.outputs.missing_ticket == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: process.env.COMMENT_BODY
+            });
