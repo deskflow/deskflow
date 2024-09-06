@@ -65,7 +65,7 @@ install_other() {
   # TODO: Port the .py script to shell script to make the deps installation lighter on 
   # Linux and macOS. The .py script is probably only really needed to deal with Windows.
   echo "Running Python script for: $1"
-  run_cmd ./scripts/install_deps.py
+  ./scripts/install_deps.py
 }
 
 run_cmd() {
