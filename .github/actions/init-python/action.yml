@@ -36,7 +36,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: .venv
-        key: python_venv-${{ inputs.cache-key }}-${{ hashFiles('scripts/pyproject.toml') }}
+        key: python-venv-${{ inputs.cache-key }}-${{ hashFiles('scripts/pyproject.toml') }}
 
     # Use bash if to make output clearer in case of skipping.
     - name: Setup Python venv
