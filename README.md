@@ -54,8 +54,10 @@ Here are a few ways to join in with the project and get involved:
 
 ## Developer Quick Start
 
-Synergy 1 Community Edition is free and open source software, and anyone is welcome to build and 
-run it. These instructions will build Synergy 1 Community Edition, which doesn't require a license
+Synergy 1 Community Edition is free and open source software, and anyone is welcome to build it,
+run it, tinker with it, redistribute it as part of their own app, etc.
+
+These instructions will build Synergy 1 Community Edition, which doesn't require a license
 or serial key. Check the [Developer Guide](https://github.com/symless/synergy/wiki/Developer-Guide)
 wiki page if you have problems.
 
@@ -73,14 +75,9 @@ python scripts/install_deps.py
 
 **2. Configure:**
 
-*Linux:*
+*Linux, macOS, or BSD-derived:*
 ```
-cmake -B build --preset=linux-release
-```
-
-*macOS:*
-```
-cmake -B build --preset=macos-release
+cmake -B build
 ```
 
 *Windows:*

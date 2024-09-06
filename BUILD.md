@@ -11,7 +11,7 @@ wiki page if you have problems.
 
 **1. Dependencies:**
 
-*macOS, Linux, or BSD-derived:*
+*Linux, macOS, or BSD-derived:*
 ```
 ./scripts/install_deps.sh
 ```
@@ -23,14 +23,9 @@ python scripts/install_deps.py
 
 **2. Configure:**
 
-*Linux:*
+*Linux, macOS, or BSD-derived:*
 ```
-cmake -B build --preset=linux-release
-```
-
-*macOS:*
-```
-cmake -B build --preset=macos-release
+cmake -B build
 ```
 
 *Windows:*
