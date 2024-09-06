@@ -18,6 +18,7 @@ Enhancements:
 - #7479 Add `BUILD.md` to get people started
 - #7485 Use `.venv` dir for as Python venv and cache
 - #7488 Only wait for elevated process to end when arg is set
+- #7489 Add `--config-toml` arg for TOML config file
 
 # 1.15.1
 
