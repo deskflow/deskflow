@@ -23,7 +23,7 @@ jobs:
       - name: Setup Python venv
         uses: ./.github/actions/init-python
         with:
-          cache-key: "ubuntu-latest"
+          cache-key: "lint-source-code"
 
       - name: Install dependencies
         run: |
