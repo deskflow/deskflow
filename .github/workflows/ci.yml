@@ -293,7 +293,7 @@ jobs:
       - name: Setup Python venv
         uses: ./.github/actions/init-python
         with:
-          cache-key: ci-${{ matrix.target.name }}
+          cache-key: ci-${{ matrix.distro.name }}
           setup: false
 
       - name: Get version
