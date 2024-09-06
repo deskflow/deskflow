@@ -22,6 +22,14 @@ runs:
   using: "composite"
 
   steps:
+    - name: Check cache key
+      if: ${{ inputs.cache }}
+      run: |
+        if [ -z "${{ inputs.cache-key }}" ]; then
+          echo "Cache key is required"
+          exit 1
+        fi
+
     - name: Cache Python venv
       if: ${{ inputs.cache }}
       uses: actions/cache@v4
