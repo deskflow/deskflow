@@ -140,9 +140,9 @@ private:
 
 // configuration file name
 #if SYSAPI_WIN32
-#define USR_CONFIG_NAME "synergy.sgc"
-#define SYS_CONFIG_NAME "synergy.sgc"
+#define USER_CONFIG_NAME "synergy.sgc"
+#define SYSTEM_CONFIG_NAME "synergy.sgc"
 #elif SYSAPI_UNIX
-#define USR_CONFIG_NAME ".synergy.conf"
-#define SYS_CONFIG_NAME "synergy.conf"
+#define USER_CONFIG_NAME ".synergy.conf"
+#define SYSTEM_CONFIG_NAME "synergy.conf"
 #endif

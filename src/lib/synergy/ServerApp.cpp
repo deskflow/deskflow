@@ -120,9 +120,9 @@ void ServerApp::parseArgs(int argc, const char *const *argv) {
 
 void ServerApp::help() {
   const auto userConfig =
-      ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME);
+      ARCH->concatPath(ARCH->getUserDirectory(), USER_CONFIG_NAME);
   const auto sysConfig =
-      ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME);
+      ARCH->concatPath(ARCH->getSystemDirectory(), SYSTEM_CONFIG_NAME);
 
   std::stringstream help;
   help
@@ -205,7 +205,7 @@ void ServerApp::loadConfig() {
     path = ARCH->getUserDirectory();
     if (!path.empty()) {
       // complete path
-      path = ARCH->concatPath(path, USR_CONFIG_NAME);
+      path = ARCH->concatPath(path, USER_CONFIG_NAME);
 
       // now try loading the user's configuration
       if (loadConfig(path)) {
@@ -217,7 +217,7 @@ void ServerApp::loadConfig() {
       // try the system-wide config file
       path = ARCH->getSystemDirectory();
       if (!path.empty()) {
-        path = ARCH->concatPath(path, SYS_CONFIG_NAME);
+        path = ARCH->concatPath(path, SYSTEM_CONFIG_NAME);
         if (loadConfig(path)) {
           loaded = true;
           args().m_configFile = path;
