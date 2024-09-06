@@ -32,7 +32,7 @@
 #include "base/Log.h"
 #include "base/log_outputters.h"
 
-#if WINAPI_XWINDOWS
+#if HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
 #endif
 
@@ -173,7 +173,7 @@ String AppUtilUnix::getCurrentLanguageCode() {
 
 void AppUtilUnix::showNotification(
     const String &title, const String &text) const {
-#if WINAPI_XWINDOWS
+#if HAVE_LIBNOTIFY
   LOG(
       (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
        title.c_str(), text.c_str()));

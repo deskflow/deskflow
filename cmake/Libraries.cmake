@@ -38,7 +38,6 @@ macro(configure_unix_libs)
   include(CheckIncludeFileCXX)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
-  include(FindPkgConfig)
 
   check_include_file_cxx(istream HAVE_ISTREAM)
   check_include_file_cxx(ostream HAVE_OSTREAM)
@@ -106,8 +105,26 @@ macro(configure_unix_libs)
   if(APPLE)
     configure_mac_libs()
   else()
+
     configure_xorg_libs()
     configure_wayland_libs()
+
+    find_package(pugixml REQUIRED)
+
+    find_package(PkgConfig)
+    if(PKG_CONFIG_FOUND)
+      pkg_check_modules(lib_glib REQUIRED IMPORTED_TARGET glib-2.0)
+      pkg_search_module(PC_GDKPIXBUF gdk-pixbuf-2.0)
+
+      include_directories(${PC_GDKPIXBUF_INCLUDE_DIRS})
+
+      pkg_check_modules(lib_gdkpixbuf REQUIRED IMPORTED_TARGET gdk-pixbuf-2.0)
+      pkg_check_modules(lib_notify REQUIRED IMPORTED_TARGET libnotify)
+
+      add_definitions(-DHAVE_GDK_PIXBUF=1 -DHAVE_LIBNOTIFY=1)
+    else()
+      message(WARNING "pkg-config not found, skipping libnotify and gdk-pixbuf")
+    endif()
   endif()
 
   # For config.h, set some static values; it may be a good idea to make these
@@ -168,14 +185,20 @@ endmacro()
 
 macro(configure_wayland_libs)
 
-  configure_libei()
-  configure_libportal()
+  include(FindPkgConfig)
 
-  pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
-  pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
-  find_library(LIBM m)
-  include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
-                      ${LIBM_INCLUDE_DIRS})
+  if(PKG_CONFIG_FOUND)
+    configure_libei()
+    configure_libportal()
+
+    pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+    pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+    find_library(LIBM m)
+    include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
+                        ${LIBM_INCLUDE_DIRS})
+  else()
+    message(WARNING "pkg-config not found, skipping wayland libraries")
+  endif()
 
 endmacro()
 
@@ -310,10 +333,8 @@ endmacro()
 #
 macro(configure_xorg_libs)
 
-  find_package(pugixml REQUIRED)
-
-  # Add include dir for BSD (posix uses /usr/include/)
-  set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
+  # Set include dir for BSD-derived systems
+  set(CMAKE_REQUIRED_INCLUDES "/usr/local/include")
 
   set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
   set(CMAKE_EXTRA_INCLUDE_FILES "${XKBlib};X11/extensions/Xrandr.h")
@@ -340,6 +361,12 @@ macro(configure_xorg_libs)
   if(NOT HAVE_X11_XKBLIB_H)
     message(FATAL_ERROR "Missing header: " ${XKBlib})
   endif()
+
+  # Set library path and -L flag for BSD-derived systems.
+  # On our FreeBSD CI, `link_directories` is also needed for some reason.
+  set(CMAKE_LIBRARY_PATH "/usr/local/lib")
+  set(CMAKE_REQUIRED_FLAGS "-L${CMAKE_LIBRARY_PATH}")
+  link_directories(${CMAKE_LIBRARY_PATH})
 
   check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
   check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)

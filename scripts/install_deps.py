@@ -304,7 +304,6 @@ class Dependencies:
                 print(f"Optional package not found, stripping: {optional_package}")
                 command = command.replace(optional_package, "")
 
-        print("Running dependencies command")
         linux.run_command(command, check=True)
 
         subprojects = self.config.get_os_subprojects()

@@ -29,7 +29,7 @@ We support all major operating systems, including Windows, macOS, Linux, and Uni
 All Linux distributions are supported, primarily focusing on: 
 Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
 
-Supported Unix-like BSD-derived operating systems: FreeBSD, OpenBSD, NetBSD, DragonFly BSD.
+We officially support FreeBSD, we would also like to support: OpenBSD, NetBSD, DragonFly BSD, Solaris.
 
 ## Ways to get involved
 
@@ -50,14 +50,14 @@ How to build Synergy 1 Community Edition. Check the [Developer Guide](https://gi
 
 **1. Dependencies:**
 
+*Linux, macOS, or BSD-derived:*
+```
+./scripts/install_deps.sh
+```
+
 *Windows:*
 ```
 python scripts/install_deps.py
-```
-
-*macOS/Linux:*
-```
-./scripts/install_deps.py
 ```
 
 **2. Configure:**

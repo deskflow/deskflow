@@ -30,8 +30,10 @@ macro(configure_packaging)
       configure_windows_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       configure_macos_packaging()
-    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux|.*BSD|DragonFly")
+    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       configure_linux_packaging()
+    elseif(${CMAKE_SYSTEM_NAME} MATCHES "|.*BSD")
+      message(STATUS "BSD packaging not yet supported")
     endif()
 
     include(CPack)
@@ -78,7 +80,7 @@ macro(configure_macos_packaging)
 endmacro()
 
 #
-# Linux packages (including BSD and DragonFly)
+# Linux packages
 #
 macro(configure_linux_packaging)
 

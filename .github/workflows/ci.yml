@@ -38,7 +38,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: ./.github/actions/run-tests-setup
+      - name: Test setup
+        uses: ./.github/actions/run-tests-setup
 
   windows:
     name: ${{ matrix.target.name }}
@@ -328,3 +329,38 @@ jobs:
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
+
+  # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
+  unix:
+    name: unix-${{ matrix.distro.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      SYNERGY_BUILD_CMD: |
+        ./scripts/install_deps.sh;
+        cmake -B build;
+        cmake --build build -j8;
+        export QT_QPA_PLATFORM=offscreen;
+        ./build/bin/unittests
+        ./build/bin/integtests
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        distro:
+          - name: freebsd
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Build on FreeBSD
+        if: ${{ matrix.distro.name == 'freebsd' }}
+        uses: vmactions/freebsd-vm@v1
+        with:
+          usesh: true
+          run: ${{ env.SYNERGY_BUILD_CMD }}
