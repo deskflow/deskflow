@@ -32,9 +32,10 @@ runs:
     # Use bash if to make output clearer in case of skipping.
     - name: Setup Python venv
       run: |
-        if [ "${{ inputs.setup }}" = "false" ]; then
+        if [ "${{ inputs.setup }}" = "true" ]; then
+          echo "Setting up Python venv"
+          ${{ inputs.python-bin }} -m venv .venv
+        else
           echo "Skipping Python venv setup"
-          exit 0
         fi
-        ${{ inputs.python-bin }} -m venv .venv
       shell: bash
