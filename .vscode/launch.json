@@ -31,6 +31,7 @@
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergys",
+      "args": ["--config-toml", "synergy-config.toml"],
       "preLaunchTask": "kill-build"
     },
     {
@@ -39,6 +40,7 @@
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyc",
+      "args": ["--config-toml", "synergy-config.toml"],
       "preLaunchTask": "kill-build"
     },
     {
@@ -80,6 +82,7 @@
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergys",
+      "args": ["--config-toml", "synergy-config.toml"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
     },
@@ -89,6 +92,7 @@
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/synergyc",
+      "args": ["--config-toml", "synergy-config.toml"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
     },

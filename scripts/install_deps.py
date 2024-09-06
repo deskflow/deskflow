@@ -221,17 +221,20 @@ class Dependencies:
         import lib.windows as windows
 
         if not self.args.skip_elevated:
-            if not windows.is_admin():
-                windows.run_elevated(
-                    __file__, "--only-elevated --skip-python", wait_for_exit=True
-                )
-            elif self.args.only_elevated:
+            if windows.is_admin():
+
                 # The choco command should run from the elevated command.
                 choco = windows.WindowsChoco()
                 choco.ensure_choco_installed()
                 command_elevated = self.config.get_os_deps_command("command-elevated")
                 cmd_utils.run(command_elevated, shell=True, print_cmd=True)
-                sys.exit(0)
+
+                if self.args.only_elevated:
+                    sys.exit(0)
+            else:
+                windows.run_elevated(
+                    __file__, "--only-elevated --skip-python", wait_for_exit=True
+                )
 
         qt = qt_utils.WindowsQt(*self.config.get_qt_config())
         qt.install()

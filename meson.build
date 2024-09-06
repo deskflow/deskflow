@@ -1,22 +1,22 @@
 # For now, we're only using Meson to resolve dependencies. CMake is called separately.
 # In future, we may completely replace CMake with Meson.
+# Where available, we use system packages, otherwise we use subprojects.
+# Subprojects are also used to get the latest version during development.
 
 project('synergy', 'cpp')
+
+subproject('tomlplusplus')
+subproject('cli11')
+
+if host_machine.system() == 'windows'
+  subproject('wintoast')
+endif
 
 system_gtest = get_option('system_gtest')
 if system_gtest
   dependency('gtest', required: false)
 else
   subproject('gtest')
-endif
-
-# tomlplusplus: Header-only library
-subproject('tomlplusplus')
-
-if host_machine.system() == 'windows'
-  # WinToast is a niche lib which is not commonly installed, 
-  # so depend only on the subproject.
-  subproject('wintoast')
 endif
 
 if host_machine.system() == 'linux'

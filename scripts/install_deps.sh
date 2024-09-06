@@ -10,7 +10,7 @@ install_deps() {
     NetBSD*)    install_netbsd ;;
     DragonFly*) install_dragonfly ;;
     SunOS*)     install_solaris ;;
-    *)          install_other $uname_out ;;
+    *)          install_other $@ ;;
   esac
 }
 
@@ -64,8 +64,7 @@ install_solaris() {
 install_other() {
   # TODO: Port the .py script to shell script to make the deps installation lighter on 
   # Linux and macOS. The .py script is probably only really needed to deal with Windows.
-  echo "Running Python script for: $1"
-  ./scripts/install_deps.py
+  ./scripts/install_deps.py $@
 }
 
 run_cmd() {
@@ -74,4 +73,4 @@ run_cmd() {
   $cmd
 }
 
-install_deps
+install_deps $@
