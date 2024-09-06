@@ -32,7 +32,9 @@ runs:
     - name: Setup Python venv
       if: ${{ inputs.setup }}
       run: ${{ inputs.python-bin }} -m venv .venv
+      shell: bash
 
     - name: Source Python venv
       if: ${{ inputs.source }}
       run: source .venv/bin/activate
+      shell: bash
