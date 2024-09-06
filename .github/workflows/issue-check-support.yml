@@ -20,7 +20,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python venv
-        uses: ./.github/actions/init-python
+        uses: ./.github/actions/
+        with:
+          cache-key: "ubuntu-latest"
 
       - name: Check issue
         id: issue-check

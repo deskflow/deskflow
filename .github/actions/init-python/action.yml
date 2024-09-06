@@ -14,6 +14,10 @@ inputs:
     description: "Python binary to use"
     default: "python3"
 
+  cache-key:
+    description: "Cache key (note: hash is appended)
+    required: true
+
 runs:
   using: "composite"
 
@@ -23,7 +27,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: .venv
-        key: python_venv-${{ runner.os }}-${{ hashFiles('scripts/pyproject.toml') }}
+        key: python_venv-${{ inputs.cache-key }}-${{ hashFiles('scripts/pyproject.toml') }}
 
     - name: Setup Python venv
       if: ${{ inputs.setup }}

@@ -75,6 +75,7 @@ jobs:
       - name: Init Python venv
         uses: ./.github/actions/init-python
         with:
+          cache-key: ${{ matrix.target.name }}
           setup: false
 
       - name: Cache deps dir
@@ -167,6 +168,7 @@ jobs:
       - name: Setup Python venv
         uses: ./.github/actions/init-python
         with:
+          cache-key: ${{ matrix.target.name }}
           setup: false
 
       - name: Cache deps dir
@@ -291,6 +293,7 @@ jobs:
       - name: Setup Python venv
         uses: ./.github/actions/init-python
         with:
+          cache-key: ${{ matrix.target.name }}
           setup: false
 
       - name: Get version

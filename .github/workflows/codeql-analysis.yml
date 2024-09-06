@@ -36,6 +36,7 @@ jobs:
       - name: Init Python venv
         uses: ./.github/actions/init-python
         with:
+          cache-key: "ubuntu-24.04-x64"
           setup: false
 
       - name: Install dependencies
