@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        with:
           # Fetch all history for SonarScanner blame data
           fetch-depth: 0
 
