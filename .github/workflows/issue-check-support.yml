@@ -16,24 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ISSUE_BODY: ${{ github.event.issue.body || github.event.inputs.issue_body }}
-      ISSUE_NUMBER: ${{ github.event.issue.number || github.event.inputs.issue_number  }}
+      ISSUE_NUMBER: ${{ github.event.issue.number || github.event.inputs.issue_number }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python venv
-        uses: ./.github/actions/init-python
-        with:
-          cache-key: "issue-check-support"
-
-      - name: Check issue
-        id: issue-check
-        run: ./scripts/github.py --issue-check-tech-support
-
       - name: Add comment for customer
-        if: steps.issue-check.outputs.may-need-tech-support == 'true'
         env:
+          CUSTOMER_PATTERN: What type of Synergy user are you\?\s*Customer
+          NO_TICKET_PATTERN: Support ticket number \(for customers\)\s*_No response_
           COMMENT_BODY: |
             Hello! :wave: As a customer, you're entitled to tech support which is included in your
             license at no extra cost. 
@@ -44,15 +33,31 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            issue_number = process.env.ISSUE_NUMBER
-            body = process.env.COMMENT_BODY
+            const issueNumber = process.env.ISSUE_NUMBER;
+            const issueBody = process.env.ISSUE_BODY;
+            const customerPattern = new RegExp(process.env.CUSTOMER_PATTERN);
+            const noTicketPattern = new RegExp(process.env.NO_TICKET_PATTERN);
+
+            const isCustomer = customerPattern.test(issue_body);
+            const noTicket = noTicketPattern.test(issue_body);
+
+            if (!isCustomer) {
+              console.log('Not a customer');
+              return;
+            }
+
+            if (!noTicket) {
+              console.log('Already has a ticket');
+              return;
+            }
 
             // Strip newlines, since GitHub comments are not markdown.
-            body = body.replace(/\n/g, ' ');
+            const commentBody = process.env.COMMENT_BODY.replace(/\n/g, ' ');
 
+            console.log('Adding comment to issue:', issueNumber);
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number,
-              body
+              issue_number: issueNumber,
+              body: commentBody
             });
