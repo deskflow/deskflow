@@ -1,7 +1,7 @@
 # Important: Use the same version of clang-format as our linter, which is:
 #
 # $ ./scripts/install_deps.py --only-python
-# $ ./build/python/bin/clang-format --version
+# $ ./.venv/bin/clang-format --version
 #
 # Warning: If you use a different version, the formatting will be different.
 #
@@ -10,7 +10,7 @@
 
 BasedOnStyle: LLVM
 
-# Turn off LLVM default alignment of params with the opening bracket, 
+# Turn off LLVM default alignment of params with the opening bracket,
 # which can be less readable in some cases in our code base.
 #
 # Using `AlwaysBreak` will result in:

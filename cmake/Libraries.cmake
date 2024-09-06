@@ -600,10 +600,11 @@ macro(configure_coverage)
 endmacro()
 
 macro(configure_python)
+  set(python_venv_dir ${CMAKE_SOURCE_DIR}/.venv)
   if(WIN32)
-    set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/Scripts/python.exe")
+    set(PYTHON_BIN ${python_venv_dir}/Scripts/python.exe)
   else()
-    set(PYTHON_BIN "${CMAKE_BINARY_DIR}/python/bin/python")
+    set(PYTHON_BIN ${python_venv_dir}/bin/python)
   endif()
 endmacro()
 

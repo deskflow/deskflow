@@ -16,6 +16,7 @@ Enhancements:
 - #7473 Simplify `vcpkg` caching and use system `vcpkg`
 - #7474 FreeBSD GitHub runner with `vmactions/freebsd-vm@v1`
 - #7479 Add `BUILD.md` to get people started
+- #7485 Use `.venv` dir for as Python venv and cache
 
 # 1.15.1
 

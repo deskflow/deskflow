@@ -23,12 +23,17 @@ import sys, argparse
 import lib.fs as fs
 from cmakelang.format.__main__ import main as cmake_format_main  # type: ignore
 
-include_files = [
+INCLUDE_FILES = [
     "*.cmake",
     "CMakeLists.txt",
 ]
 
-exclude_dirs = ["subprojects", "build", "deps"]
+EXCLUDE_DIRS = [
+    "build",
+    ".venv",
+    "deps",
+    "subprojects",
+]
 
 
 def main():
@@ -46,7 +51,7 @@ def main():
     args = parser.parse_args()
 
     cmd_args = ["--in-place"] if args.format else ["--check"]
-    files_recursive = fs.find_files(".", include_files, exclude_dirs)
+    files_recursive = fs.find_files(".", INCLUDE_FILES, EXCLUDE_DIRS)
 
     if args.format:
         print("Formatting files with CMake formatter:")

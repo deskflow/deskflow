@@ -35,6 +35,13 @@ jobs:
       - name: Config Git safe dir
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
+      # Should only restore the .venv directory from cache.
+      - name: Init Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: "sonarcloud"
+          setup: false
+
       - name: Install dependencies
         run: |
           ./scripts/install_deps.py &&

@@ -20,10 +20,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: "lint-source-code"
+
       - name: Install dependencies
         run: |
-          python3 -m venv build/python
-          source build/python/bin/activate
+          source .venv/bin/activate
           pip install pyyaml cmake_format clang_format
 
       - name: Linting with CMake formatter
