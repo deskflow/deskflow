@@ -189,6 +189,10 @@ void App::initApp(int argc, const char **argv) {
   CLI::App cliApp{kAppDescription, kAppName};
   cliApp.add_option(
       "--config-toml", configFilename, "Use TOML configuration file");
+
+  // Allow legacy args.
+  cliApp.allow_extras();
+
   cliApp.parse(argc, argv);
 #endif // HAVE_CLI11
 
