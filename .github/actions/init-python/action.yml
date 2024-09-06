@@ -15,7 +15,7 @@ inputs:
     default: "python3"
 
   cache-key:
-    description: "Cache key (note: hash is appended)
+    description: "Cache key (note: hash is appended)"
     required: true
 
 runs:
