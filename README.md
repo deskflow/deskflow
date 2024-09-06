@@ -143,7 +143,7 @@ sudo pacman -S synergy
 choco install synergy
 ```
 
-*Note:* Some packages are temporarily broken. We have reached out to the package maintainers to 
+**Note:** Some packages are temporarily broken. We have reached out to the package maintainers to 
 resolve this. If you're a package maintainer and have a question for us, 
 [please let us know](ttps://github.com/symless/synergy/wiki/Contact-the-team).
 
