@@ -1,0 +1,38 @@
+name: "Setup Python venv"
+description: "Creates and caches a Python virtual environment"
+
+inputs:
+  setup:
+    description: "Setup Python venv"
+    default: true
+
+  cache:
+    description: "Cache Python venv"
+    default: true
+
+  source:
+    description: "Source Python venv"
+    default: true
+
+  python-bin:
+    description: "Python binary to use"
+    default: "python3"
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Cache Python venv
+      if: ${{ inputs.cache }}
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: python_venv-${{ runner.os }}-${{ hashFiles('scripts/pyproject.toml') }}
+
+    - name: Setup Python venv
+      if: ${{ inputs.setup }}
+      run: ${{ inputs.python-bin }} -m venv .venv
+
+    - name: Source Python venv
+      if: ${{ inputs.source }}
+      run: source .venv/bin/activate

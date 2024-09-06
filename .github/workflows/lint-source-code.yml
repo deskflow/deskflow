@@ -20,11 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+
       - name: Install dependencies
-        run: |
-          python3 -m venv build/python
-          source build/python/bin/activate
-          pip install pyyaml cmake_format clang_format
+        run: pip install pyyaml cmake_format clang_format
 
       - name: Linting with CMake formatter
         run: ./scripts/lint_cmake.py

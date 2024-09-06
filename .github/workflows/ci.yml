@@ -71,11 +71,11 @@ jobs:
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
           restore-keys: vcpkg-${{ runner.os }}
 
-      - name: Cache Python env
-        uses: actions/cache@v4
+      # Should only restore the .venv directory from cache.
+      - name: Init Python venv
+        uses: ./.github/actions/init-python
         with:
-          path: build/python
-          key: python_env-${{ runner.os }}-${{ hashFiles('scripts/pyproject.toml') }}
+          setup: false
 
       - name: Cache deps dir
         uses: actions/cache@v4
@@ -162,6 +162,12 @@ jobs:
 
       - name: Get version
         uses: ./.github/actions/get-version
+
+      # Should only restore the .venv directory from cache.
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          setup: false
 
       - name: Cache deps dir
         uses: actions/cache@v4
@@ -280,6 +286,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Should only restore the .venv directory from cache.
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          setup: false
 
       - name: Get version
         uses: ./.github/actions/get-version

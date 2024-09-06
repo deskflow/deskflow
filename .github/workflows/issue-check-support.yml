@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python venv
-        run: python -m venv .venv
+        uses: ./.github/actions/init-python
 
       - name: Check issue
         id: issue-check
