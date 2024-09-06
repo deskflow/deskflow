@@ -138,7 +138,7 @@ sudo pacman -S synergy
 ```
 
 *Windows:*
-*(temporarily broken)*
+*(very outdated)*
 ```
 choco install synergy
 ```
