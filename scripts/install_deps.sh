@@ -10,7 +10,7 @@ install_deps() {
     NetBSD*)    install_netbsd ;;
     DragonFly*) install_dragonfly ;;
     SunOS*)     install_solaris ;;
-    *)          hint_other $uname_out ;;
+    *)          install_other $uname_out ;;
   esac
 }
 
@@ -61,10 +61,11 @@ install_solaris() {
   echo "Sorry, Solaris is not supported yet."
 }
 
-hint_other() {
-  # TODO: Port the .py script to shell script
-  # to make the deps installation lighter on Unix-like.
-  echo "For $1 please use: ./scripts/install_deps.py"
+install_other() {
+  # TODO: Port the .py script to shell script to make the deps installation lighter on 
+  # Linux and macOS. The .py script is probably only really needed to deal with Windows.
+  echo "Running Python script for: $1"
+  run_cmd ./scripts/install_deps.py
 }
 
 run_cmd() {

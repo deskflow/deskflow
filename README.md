@@ -50,14 +50,14 @@ How to build Synergy 1 Community Edition. Check the [Developer Guide](https://gi
 
 **1. Dependencies:**
 
+*macOS, Linux, or BSD-derived:*
+```
+./scripts/install_deps.sh
+```
+
 *Windows:*
 ```
 python scripts/install_deps.py
-```
-
-*macOS/Linux:*
-```
-./scripts/install_deps.py
 ```
 
 **2. Configure:**
