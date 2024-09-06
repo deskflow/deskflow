@@ -46,7 +46,10 @@ jobs:
           script: |
             issue_number = process.env.ISSUE_NUMBER
             body = process.env.COMMENT_BODY
-            body = body.replace(/\\n/g, '\n')
+
+            // Strip newlines, since GitHub comments are not markdown.
+            body = body.replace(/\\n/g, ' ')
+
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
