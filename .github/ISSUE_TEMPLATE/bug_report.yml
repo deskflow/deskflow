@@ -40,7 +40,7 @@ body:
       description: |
         Have you considered starting a discussion instead of reporting a bug?
       options:
-        - label: I want to report a bug (I don't want to create a discussion)
+        - label: I want to report a bug (I don't want to start a discussion)
           required: true
 
   - type: dropdown
