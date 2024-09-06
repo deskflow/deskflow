@@ -43,6 +43,10 @@
 #include "base/TMethodJob.h"
 #endif
 
+#if WINAPI_CARBON
+#include "platform/OSXDragSimulator.h"
+#endif
+
 #include <charconv>
 #include <filesystem>
 #include <iostream>
@@ -55,11 +59,9 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#if defined(__APPLE__)
-#include "platform/OSXDragSimulator.h"
+#if HAVE_CLI11
+#include <CLI/CLI.hpp>
 #endif
-
-const auto kConfigFilename = "synergy-config.toml";
 
 using namespace synergy;
 
@@ -182,9 +184,19 @@ void App::loggingFilterWarning() {
 
 void App::initApp(int argc, const char **argv) {
 
-  Config config(kConfigFilename, configSection());
-  if (config.load(argv[0])) {
-    parseArgs(config.argc(), config.argv());
+  std::string configFilename;
+#if HAVE_CLI11
+  CLI::App cliApp{kAppDescription, kAppName};
+  cliApp.add_option(
+      "--config-toml", configFilename, "Use TOML configuration file");
+  cliApp.parse(argc, argv);
+#endif // HAVE_CLI11
+
+  if (!configFilename.empty()) {
+    Config config(configFilename, configSection());
+    if (config.load(argv[0])) {
+      parseArgs(config.argc(), config.argv());
+    }
   } else {
     parseArgs(argc, argv);
   }

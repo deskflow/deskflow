@@ -43,8 +43,12 @@ bool Config::load(const std::string &firstArg) {
 #if HAVE_TOMLPLUSPLUS
   m_args.push_back(firstArg);
 
-  if (m_filename.empty() || !std::filesystem::exists(m_filename)) {
-    LOG((CLOG_DEBUG "no config file at: %s", m_filename.c_str()));
+  if (m_filename.empty()) {
+    throw std::runtime_error("no config file specified");
+  }
+
+  if (!std::filesystem::exists(m_filename)) {
+    LOG((CLOG_ERR "config file not found: %s", m_filename.c_str()));
     return false;
   }
 
@@ -102,7 +106,7 @@ bool Config::load(const std::string &firstArg) {
 
   return true;
 #else
-  LOG((CLOG_WARN "toml++ not available, config file not loaded"));
+  LOG((CLOG_ERROR "toml++ not available, config file not loaded"));
   return false;
 #endif // HAVE_TOMLPLUSPLUS
 }

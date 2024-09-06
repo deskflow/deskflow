@@ -23,6 +23,7 @@
 #endif
 
 const auto kAppName = "Synergy";
+const auto kAppDescription = "Mouse and keyboard sharing utility";
 const auto kVersion = SYNERGY_VERSION;
 
 #ifdef GIT_SHA_SHORT
