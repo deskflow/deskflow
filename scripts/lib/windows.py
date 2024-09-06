@@ -35,9 +35,9 @@ def run_elevated(script, args=None, use_sys_argv=True, waitForExit=False):
         args = " ".join(sys.argv[1:])
 
     if waitForExit:
-        args += "--lock-file {LOCK_FILE}"
+        args += f" --lock-file {LOCK_FILE}"
+        env.persist_lock_file(LOCK_FILE)
 
-    env.persist_lock_file(LOCK_FILE)
     command = f"{script} {args} --pause-on-exit"
     print(f"Running script with elevated privileges: {command}")
 
