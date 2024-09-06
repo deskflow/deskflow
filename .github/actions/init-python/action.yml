@@ -29,7 +29,12 @@ runs:
         path: .venv
         key: python_venv-${{ inputs.cache-key }}-${{ hashFiles('scripts/pyproject.toml') }}
 
+    # Use bash if to make output clearer in case of skipping.
     - name: Setup Python venv
-      if: ${{ inputs.setup }}
-      run: ${{ inputs.python-bin }} -m venv .venv
+      run: |
+        if [ "${{ inputs.setup }}" = "false" ]; then
+          echo "Skipping Python venv setup"
+          exit 0
+        fi
+        ${{ inputs.python-bin }} -m venv .venv
       shell: bash
