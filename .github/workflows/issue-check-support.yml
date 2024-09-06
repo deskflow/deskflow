@@ -22,7 +22,7 @@ jobs:
       - name: Setup Python venv
         uses: ./.github/actions/init-python
         with:
-          cache-key: "check-support"
+          cache-key: "issue-check-support"
 
       - name: Check issue
         id: issue-check
