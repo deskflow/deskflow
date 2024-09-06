@@ -115,10 +115,9 @@ Synergy 3 and Synergy 1 (licensed) are available to download from the
 
 **Community edition:**
 
-*Windows:*
-*(temporarily broken)*
+*Fedora, Red Hat, etc:*
 ```
-choco install synergy
+sudo dnf install synergy
 ```
 
 *macOS:*
@@ -132,15 +131,16 @@ brew install synergy
 sudo apt install synergy
 ```
 
-*Fedora, Red Hat, etc:*
-```
-sudo dnf install synergy
-```
-
 *Arch, Manjaro, etc:*
 *(temporarily broken)*
 ```
 sudo pacman -S synergy
+```
+
+*Windows:*
+*(temporarily broken)*
+```
+choco install synergy
 ```
 
 *Note:* Some packages are temporarily broken. We have reached out to the package maintainers to 
