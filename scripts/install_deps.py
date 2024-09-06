@@ -222,7 +222,9 @@ class Dependencies:
 
         if not self.args.skip_elevated:
             if not windows.is_admin():
-                windows.run_elevated(__file__, "--only-elevated --skip-python")
+                windows.run_elevated(
+                    __file__, "--only-elevated --skip-python", wait_for_exit=True
+                )
             elif self.args.only_elevated:
                 # The choco command should run from the elevated command.
                 choco = windows.WindowsChoco()

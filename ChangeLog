@@ -17,6 +17,7 @@ Enhancements:
 - #7474 FreeBSD GitHub runner with `vmactions/freebsd-vm@v1`
 - #7479 Add `BUILD.md` to get people started
 - #7485 Use `.venv` dir for as Python venv and cache
+- #7488 Only wait for elevated process to end when arg is set
 
 # 1.15.1
 
