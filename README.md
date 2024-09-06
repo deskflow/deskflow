@@ -115,14 +115,14 @@ Synergy 3 and Synergy 1 (licensed) are available to download from the
 
 **Community edition:**
 
-*Fedora, Red Hat, etc:*
-```
-sudo dnf install synergy
-```
-
 *macOS:*
 ```
 brew install synergy
+```
+
+*Fedora, Red Hat, etc:*
+```
+sudo dnf install synergy
 ```
 
 *Debian, Ubuntu, etc:*
