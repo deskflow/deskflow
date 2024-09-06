@@ -83,12 +83,6 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: |
           cmake --build build --target coverage-integtests
-          result=$?
-
-          if [ $result -ne 0 ]; then
-            echo "::warning ::Integration tests failed with code: $result"
-          fi
-        continue-on-error: true
 
       - name: Get coverage report paths
         id: coverage-paths
