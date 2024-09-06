@@ -17,6 +17,7 @@ import os
 
 github_env_key = "GITHUB_ENV"
 github_path_key = "GITHUB_PATH"
+github_output_key = "GITHUB_OUTPUT"
 
 
 def set_env_var(key, value):
@@ -28,7 +29,7 @@ def set_env_var(key, value):
         raise RuntimeError(f"Env var {github_env_key} not set")
 
     if not os.path.exists(env_file):
-        raise RuntimeError(f"File not found: {env_file}")
+        raise RuntimeError(f"Env file not found: {env_file}")
 
     print(f"Setting GitHub env var: {key}={value}")
     with open(env_file, "a") as env_file:
@@ -44,8 +45,24 @@ def add_to_path(value):
         raise RuntimeError(f"Env var {github_path_key} not set")
 
     if not os.path.exists(path_file):
-        raise RuntimeError(f"File not found: {path_file}")
+        raise RuntimeError(f"Path file not found: {path_file}")
 
     print(f"Adding to GitHub path: {value}")
     with open(path_file, "a") as path_file:
         path_file.write(f"{value}\n")
+
+
+def set_output(name, value):
+    """
+    Sets the output parameter for the GitHub action.
+    """
+    output_file = os.getenv(github_output_key)
+    if not output_file:
+        raise RuntimeError(f"Env var {github_output_key} not set")
+
+    if not os.path.exists(output_file):
+        raise RuntimeError(f"Output file not found: {output_file}")
+
+    print(f"Setting GitHub output: {name}={value}")
+    with open(output_file, "a") as output_file:
+        output_file.write(f"{name}={value}\n")

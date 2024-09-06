@@ -60,8 +60,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
       - name: Get version
         uses: ./.github/actions/get-version
@@ -161,8 +159,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
       - name: Get version
         uses: ./.github/actions/get-version
@@ -284,8 +280,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
       - name: Get version
         uses: ./.github/actions/get-version
@@ -355,8 +349,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
