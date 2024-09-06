@@ -24,7 +24,9 @@ jobs:
         uses: ./.github/actions/init-python
 
       - name: Install dependencies
-        run: pip install pyyaml cmake_format clang_format
+        run: |
+          source .venv/bin/activate
+          pip install pyyaml cmake_format clang_format
 
       - name: Linting with CMake formatter
         run: ./scripts/lint_cmake.py

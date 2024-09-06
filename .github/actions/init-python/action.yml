@@ -2,16 +2,12 @@ name: "Setup Python venv"
 description: "Creates and caches a Python virtual environment"
 
 inputs:
-  setup:
-    description: "Setup Python venv"
-    default: true
-
   cache:
     description: "Cache Python venv"
     default: true
 
-  source:
-    description: "Source Python venv"
+  setup:
+    description: "Setup Python venv"
     default: true
 
   python-bin:
@@ -32,9 +28,4 @@ runs:
     - name: Setup Python venv
       if: ${{ inputs.setup }}
       run: ${{ inputs.python-bin }} -m venv .venv
-      shell: bash
-
-    - name: Source Python venv
-      if: ${{ inputs.source }}
-      run: source .venv/bin/activate
       shell: bash
