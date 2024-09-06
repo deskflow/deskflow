@@ -28,8 +28,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
           # Fetch all history for SonarScanner blame data
           fetch-depth: 0
