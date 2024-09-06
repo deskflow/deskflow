@@ -26,9 +26,9 @@ or build it yourself using the Developer Quick Start instructions below.
 
 Version 1.15 brings a new philosophy of being more approachable to the open-source community 
 instead of wholly focusing on commercial interests.
-We still have customers to support the development of the code, but we are committed to maintaining
-and improving Synergy 1 Community Edition for years to come and we're excited to work with our 
-community of open source users to improve the code for the benefit of everyone.
+We still have customers in order to finance the development of the code, but we are committed to
+maintaining and improving Synergy 1 Community Edition for years to come and we're excited to work
+with our  community of open source users to improve the code for the benefit of everyone.
 
 ## Operating Systems
 
