@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CUSTOMER_TEXT: "What type of Synergy user are you? Customer"
-      MISSING_TICKET_TEXT: "Support ticket number (for customers) No response"
+      MISSING_TICKET_TEXT: "Support ticket number (for customers) _No response_"
       COMMENT_BODY: |
         Hello, as a customer, you're entitled to tech support which is included in your license. 
         Please [raise a support ticket](https://symless.com/synergy/contact) if you'd like to take advantage of that. 
@@ -19,18 +19,22 @@ jobs:
         id: customer_check
         run: |
           ISSUE_BODY="${{ github.event.issue.body }}"
-          RESULT=$(echo "$ISSUE_BODY" | grep -z -q "$CUSTOMER_TEXT" && echo "true" || echo "false")
-          echo "is_customer=${RESULT}" >> $GITHUB_OUTPUT
+          IS_CUSTOMER=$(echo "$ISSUE_BODY" | grep -z -q "$CUSTOMER_TEXT" && echo "true" || echo "false")
+          RESULT="is_customer=${IS_CUSTOMER}"
+          echo $RESULT
+          echo $RESULT >> $GITHUB_OUTPUT
 
       - name: Check for ticket number
         id: ticket_check
         run: |
           ISSUE_BODY="${{ github.event.issue.body }}"
-          RESULT=$(echo "$ISSUE_BODY" | grep -z -q "$MISSING_TICKET_TEXT" && echo "true" || echo "false")
-          echo "missing_ticket=${RESULT}" >> $GITHUB_OUTPUT
+          NO_TICKET=$(echo "$ISSUE_BODY" | grep -z -q "$MISSING_TICKET_TEXT" && echo "true" || echo "false")
+          RESULT="no_ticket=${NO_TICKET}" >> $GITHUB_OUTPUT
+          echo $RESULT
+          echo $RESULT >> $GITHUB_OUTPUT
 
       - name: Add comment for customer
-        if: steps.customer_check.outputs.is_customer == 'true' && steps.ticket_check.outputs.missing_ticket == 'true'
+        if: steps.customer_check.outputs.is_customer == 'true' && steps.ticket_check.outputs.no_ticket == 'true'
         uses: actions/github-script@v6
         with:
           script: |
