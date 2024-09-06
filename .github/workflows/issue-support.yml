@@ -4,37 +4,27 @@ on:
     types: [opened]
 
 jobs:
-  add-comment:
+  check-issue-tech-support:
     runs-on: ubuntu-latest
-    env:
-      CUSTOMER_TEXT: "What type of Synergy user are you?[[:space:]]*\bCustomer\b"
-      MISSING_TICKET_TEXT: "Support ticket number (for customers)[[:space:]]*\b_No response_\b"
-      COMMENT_BODY: |
-        Hello, as a customer, you're entitled to tech support which is included in your license. 
-        Please [raise a support ticket](https://symless.com/synergy/contact) if you'd like to take advantage of that. 
-        If that works for you, then please let us know your ticket number so we can continue the discussion there.
 
     steps:
-      - name: Check if customer
-        id: customer_check
-        run: |
-          ISSUE_BODY="${{ github.event.issue.body }}"
-          IS_CUSTOMER=$(echo "$ISSUE_BODY" | grep -z -q "$CUSTOMER_TEXT" && echo "true" || echo "false")
-          RESULT="is_customer=${IS_CUSTOMER}"
-          echo $RESULT
-          echo $RESULT >> $GITHUB_OUTPUT
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Check for ticket number
-        id: ticket_check
-        run: |
-          ISSUE_BODY="${{ github.event.issue.body }}"
-          NO_TICKET=$(echo "$ISSUE_BODY" | grep -z -q "$MISSING_TICKET_TEXT" && echo "true" || echo "false")
-          RESULT="no_ticket=${NO_TICKET}"
-          echo $RESULT
-          echo $RESULT >> $GITHUB_OUTPUT
+      - name: Check if issue requires tech support
+        id: issue-check
+        run: ./scripts/github.py --issue-check-tech-support
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
 
       - name: Add comment for customer
-        if: steps.customer_check.outputs.is_customer == 'true' && steps.ticket_check.outputs.no_ticket == 'true'
+        if: steps.issue-check.outputs.may-need-tech-support == 'true'
+        env:
+          COMMENT_BODY: |
+            Hello, as a customer, you're entitled to tech support which is included in your
+            license. Please [raise a support ticket](https://symless.com/synergy/contact)
+            if you'd like to take advantage of that. If that works for you, then please let
+            us know your ticket number so we can continue the discussion there.
         uses: actions/github-script@v6
         with:
           script: |
