@@ -30,11 +30,11 @@ WIX_FILE = f"{BUILD_DIR}/installer/Synergy.sln"
 MSI_FILE = f"{BUILD_DIR}/installer/bin/Release/Synergy.msi"
 
 
-def run_elevated(script, args=None, use_sys_argv=True, waitForExit=False):
+def run_elevated(script, args=None, use_sys_argv=True, wait_for_exit=False):
     if not args and use_sys_argv:
         args = " ".join(sys.argv[1:])
 
-    if waitForExit:
+    if wait_for_exit:
         args += f" --lock-file {LOCK_FILE}"
         env.persist_lock_file(LOCK_FILE)
 
@@ -63,7 +63,7 @@ def run_elevated(script, args=None, use_sys_argv=True, waitForExit=False):
 
     print("Script is running with elevated privileges")
 
-    if waitForExit:
+    if wait_for_exit:
         with open(LOCK_FILE, "r") as f:
             pid = f.read()
 
