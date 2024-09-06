@@ -7,8 +7,8 @@ jobs:
   add-comment:
     runs-on: ubuntu-latest
     env:
-      CUSTOMER_TEXT: "What type of Synergy user are you? Customer"
-      MISSING_TICKET_TEXT: "Support ticket number (for customers) _No response_"
+      CUSTOMER_TEXT: "What type of Synergy user are you?[[:space:]]*\bCustomer\b"
+      MISSING_TICKET_TEXT: "Support ticket number (for customers)[[:space:]]*\bNo response\b"
       COMMENT_BODY: |
         Hello, as a customer, you're entitled to tech support which is included in your license. 
         Please [raise a support ticket](https://symless.com/synergy/contact) if you'd like to take advantage of that. 
