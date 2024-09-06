@@ -6,16 +6,6 @@ body:
     attributes:
       value: Thanks for taking the time to help us improve Synergy.
 
-  - type: checkboxes
-    id: discussion
-    attributes:
-      label: Discussion
-      description: |
-        Have you considered starting a discussion instead of requesting a feature?
-      options:
-        - label: Yes, and I still want to request a feature
-          required: true
-
   - type: dropdown
     id: user-type
     attributes:
@@ -42,6 +32,16 @@ body:
         Leave this blank if you do not have a support ticket or if you're not a customer.
     validations:
       required: false
+
+  - type: checkboxes
+    id: discussion
+    attributes:
+      label: Discussion
+      description: |
+        Have you considered starting a discussion instead of requesting a feature?
+      options:
+        - label: I want to request a feature (I don't want to start a discussion)
+          required: true
 
   - type: dropdown
     id: product
