@@ -65,6 +65,8 @@
     "unittests",
     "Valgrind",
     "vcpkg",
+    "venv",
+    "vmactions",
     "Volker",
     "whot",
     "winget"
