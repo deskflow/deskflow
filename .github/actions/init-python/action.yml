@@ -29,6 +29,7 @@ runs:
           echo "Cache key is required"
           exit 1
         fi
+      shell: bash
 
     - name: Cache Python venv
       if: ${{ inputs.cache }}
