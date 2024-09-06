@@ -38,8 +38,8 @@ jobs:
             const customerPattern = new RegExp(process.env.CUSTOMER_PATTERN);
             const noTicketPattern = new RegExp(process.env.NO_TICKET_PATTERN);
 
-            const isCustomer = customerPattern.test(issue_body);
-            const noTicket = noTicketPattern.test(issue_body);
+            const isCustomer = customerPattern.test(issueBody);
+            const noTicket = noTicketPattern.test(issueBody);
 
             if (!isCustomer) {
               console.log('Not a customer');
