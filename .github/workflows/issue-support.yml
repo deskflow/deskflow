@@ -2,6 +2,14 @@ name: Check if tech support issue
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number"
+        required: true
+      issue_body:
+        description: "Issue body"
+        required: true
 
 jobs:
   check-issue-tech-support:
@@ -15,7 +23,7 @@ jobs:
         id: issue-check
         run: ./scripts/github.py --issue-check-tech-support
         env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_BODY: ${{ github.event.issue.body || github.event.inputs.issue_body }}
 
       - name: Add comment for customer
         if: steps.issue-check.outputs.may-need-tech-support == 'true'
@@ -31,6 +39,6 @@ jobs:
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
+              issue_number: context.issue.number || github.event.inputs.issue_number,
               body: process.env.COMMENT_BODY
             });
