@@ -41,10 +41,12 @@ int Config::argc() const { return static_cast<int>(m_argv.size()); }
 bool Config::load(const std::string &firstArg) {
 
 #if HAVE_TOMLPLUSPLUS
-  m_args.push_back(firstArg);
+  if (!firstArg.empty()) {
+    m_args.push_back(firstArg);
+  }
 
   if (m_filename.empty()) {
-    throw std::runtime_error("no config file specified");
+    throw NoConfigFilenameError();
   }
 
   if (!std::filesystem::exists(m_filename)) {

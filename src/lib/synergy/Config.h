@@ -32,13 +32,20 @@ Initially this class was created to as a developer convenience; it is a
 convenient place to specify args without needing to fiddle with IDE configs.
 */
 class Config {
+public:
   class ParseError : public std::runtime_error {
   public:
     explicit ParseError() : std::runtime_error("failed to parse config file") {}
   };
 
-public:
+  class NoConfigFilenameError : public std::runtime_error {
+  public:
+    explicit NoConfigFilenameError()
+        : std::runtime_error("no config file specified") {}
+  };
+
   explicit Config(const std::string &filename, const std::string &section);
+
   bool load(const std::string &firstArg);
   const char *const *argv() const;
   int argc() const;
