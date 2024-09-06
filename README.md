@@ -116,6 +116,7 @@ Synergy 3 and Synergy 1 (licensed) are available to download from the
 **Community edition:**
 
 *Windows:*
+*(temporarily broken)*
 ```
 choco install synergy
 ```
@@ -126,6 +127,7 @@ brew install synergy
 ```
 
 *Debian, Ubuntu, etc:*
+*(temporarily broken)*
 ```
 sudo apt install synergy
 ```
@@ -136,9 +138,14 @@ sudo dnf install synergy
 ```
 
 *Arch, Manjaro, etc:*
+*(temporarily broken)*
 ```
 sudo pacman -S synergy
 ```
+
+*Note:* Some packages are temporarily broken. We have reached out to the package maintainers to 
+resolve this. If you're a package maintainer and have a question for us, 
+[please let us know](ttps://github.com/symless/synergy/wiki/Contact-the-team).
 
 ## Package Maintainers
 
