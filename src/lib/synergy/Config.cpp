@@ -106,7 +106,7 @@ bool Config::load(const std::string &firstArg) {
 
   return true;
 #else
-  LOG((CLOG_ERROR "toml++ not available, config file not loaded"));
+  LOG((CLOG_ERR "toml++ not available, config file not loaded"));
   return false;
 #endif // HAVE_TOMLPLUSPLUS
 }
