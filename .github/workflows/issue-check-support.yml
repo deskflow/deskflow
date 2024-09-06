@@ -35,16 +35,20 @@ jobs:
         if: steps.issue-check.outputs.may-need-tech-support == 'true'
         env:
           COMMENT_BODY: |
-            Hello, as a customer, you're entitled to tech support which is included in your
-            license. Please [raise a support ticket](https://symless.com/synergy/contact)
-            if you'd like to take advantage of that. If that works for you, then please let
-            us know your ticket number so we can continue the discussion there.
+            Hello! :wave: As a customer, you're entitled to tech support which is included in your
+            license at no extra cost. 
+            Please [raise a support ticket](https://symless.com/synergy/contact) if you'd like to
+            take advantage of that. 
+            If that works for you, then please let us know your ticket number so we can continue 
+            the discussion there. Thanks!
         uses: actions/github-script@v6
         with:
           script: |
+            body = process.env.COMMEN_BODY
+            body = body.replace(/\\n/g, '\n')
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number || process.env.ISSUE_NUMBER,
-              body: process.env.COMMENT_BODY
+              issue_number: context.issue.number || github.event.inputs.issue_number,
+              body
             });
