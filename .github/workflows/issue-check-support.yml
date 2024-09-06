@@ -48,7 +48,7 @@ jobs:
             body = process.env.COMMENT_BODY
 
             // Strip newlines, since GitHub comments are not markdown.
-            body = body.replace(/\\n/g, ' ')
+            body = body.replace(/\n/g, ' ');
 
             github.rest.issues.createComment({
               owner: context.repo.owner,
