@@ -15,6 +15,7 @@ Enhancements:
 - #7471 Use `vcpkg` to manage `openssl` dep instead of `choco`
 - #7473 Simplify `vcpkg` caching and use system `vcpkg`
 - #7474 FreeBSD GitHub runner with `vmactions/freebsd-vm@v1`
+- #7479 Add `BUILD.md` to get people started
 
 # 1.15.1
 
