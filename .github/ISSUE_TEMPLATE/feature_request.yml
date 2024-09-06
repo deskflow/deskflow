@@ -1,6 +1,6 @@
 name: Feature request
 description: Had an idea how to improve Synergy? Share it with us.
-labels: ["enhancement", "triage"]
+labels: ["enhancement", "triage", "unanswered"]
 body:
   - type: markdown
     attributes:
