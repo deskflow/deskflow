@@ -6,9 +6,10 @@
 /vcpkg
 /vcpkg_installed
 /scripts/**/*.pyc
+/.cache
+/.venv
 aqtinstall.log
 Brewfile.lock.json
-/.cache
 
 # typical developer-created files
 synergy-config.toml

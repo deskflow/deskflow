@@ -16,7 +16,8 @@
 import os, sys, subprocess
 import lib.cmd_utils as cmd_utils
 
-venv_path = "build/python"
+# The `.venv` dir seems to be most common for virtual environments.
+VENV_DIR = ".venv"
 
 
 def check_module(module):
@@ -105,9 +106,9 @@ def get_env_bool(name, default=False):
 
 def get_python_executable(binary="python"):
     if sys.platform == "win32":
-        return os.path.join(venv_path, "Scripts", binary)
+        return os.path.join(VENV_DIR, "Scripts", binary)
     else:
-        return os.path.join(venv_path, "bin", binary)
+        return os.path.join(VENV_DIR, "bin", binary)
 
 
 def in_venv():
@@ -125,13 +126,13 @@ def ensure_in_venv(script_file, auto_create=False):
     import venv
 
     if not in_venv():
-        if not os.path.exists(venv_path):
+        if not os.path.exists(VENV_DIR):
             if not auto_create:
                 print("Hint: Run the `install_deps.py` script first.")
-                raise RuntimeError(f"Virtual environment not found at: {venv_path}")
+                raise RuntimeError(f"Virtual environment not found at: {VENV_DIR}")
 
-            print(f"Creating virtual environment at {venv_path}")
-            venv.create(venv_path, with_pip=True)
+            print(f"Creating virtual environment at {VENV_DIR}")
+            venv.create(VENV_DIR, with_pip=True)
 
         script_file_abs = os.path.abspath(script_file)
         print(f"Using virtual environment for: {script_file_abs}", flush=True)
