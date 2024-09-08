@@ -20,26 +20,28 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+set(res_dir ${CMAKE_SOURCE_DIR}/res/gui)
+set(qrc_file ${res_dir}/Synergy.qrc)
+
 file(
   GLOB
-  GUI_SOURCE_FILES
+  sources
   src/*.cpp
   src/*.h
   src/validators/*
   src/widgets/*)
-file(GLOB GUI_UI_FILES src/*.ui)
+file(GLOB ui_files src/*.ui)
 
 if(WIN32)
-  set(GUI_RC_FILES res/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
+  set(rc_files ${res_dir}/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
 
 add_executable(
   ${target} WIN32
-  ${GUI_SOURCE_FILES}
-  ${GUI_UI_FILES}
-  ${GUI_RC_FILES}
-  res/Synergy.qrc
-  ${QM_FILES})
+  ${sources}
+  ${ui_files}
+  ${rc_files}
+  ${qrc_file})
 
 # regular exe headers
 include_directories(./src)

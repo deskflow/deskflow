@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/res">
+    <qresource prefix="res">
         <file>icons/16x16/synergy.png</file>
         <file>icons/64x64/video-display.png</file>
         <file>icons/64x64/user-trash.png</file>

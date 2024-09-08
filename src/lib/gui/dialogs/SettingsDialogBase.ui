@@ -277,7 +277,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../res/Synergy.qrc">
+               <iconset resource="../../../../res/gui/Synergy.qrc">
                 <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
               </property>
               <property name="iconSize">
@@ -567,7 +567,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../res/Synergy.qrc">
+               <iconset resource="../../../../res/gui/Synergy.qrc">
                 <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
               </property>
               <property name="iconSize">
@@ -754,7 +754,7 @@
   <tabstop>m_pComboElevate</tabstop>
  </tabstops>
  <resources>
-  <include location="../res/Synergy.qrc"/>
+  <include location="../../../../res/gui/Synergy.qrc"/>
  </resources>
  <connections>
   <connection>
