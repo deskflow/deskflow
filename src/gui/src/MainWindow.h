@@ -198,6 +198,7 @@ private:
   bool m_Quitting = false;
   synergy::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
   bool m_SaveOnExit = true;
+  bool m_WaylandWarningsShown = false;
 
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;

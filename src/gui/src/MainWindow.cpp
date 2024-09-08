@@ -588,15 +588,19 @@ void MainWindow::onCoreProcessStarting() {
     }
   }
 
-  if (synergy::platform::isWayland()) {
-#ifndef WINAPI_LIBEI
+  if (synergy::platform::isWayland() && !m_WaylandWarningsShown) {
+    m_WaylandWarningsShown = true;
+#if WINAPI_LIBEI
+    messages::showWaylandExperimental(this);
+#else
     qWarning("libei is missing, required for wayland support mode");
     messages::showNoLibeiSupport(this);
 #endif
 #ifndef HAVE_LIBPORTAL_INPUTCAPTURE
-    if (m_CoreProcess.mode() == CoreProcess::Mode::Server)
+    if (m_CoreProcess.mode() == CoreProcess::Mode::Server) {
       qWarning("libportal is missing input capture, required for server mode");
-    messages::showNoLibportalInputCapture(this);
+      messages::showNoLibportalInputCapture(this);
+    }
 #endif
   }
 
