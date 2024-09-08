@@ -588,20 +588,8 @@ void MainWindow::onCoreProcessStarting() {
     }
   }
 
-  if (synergy::platform::isWayland() && !m_WaylandWarningsShown) {
-    m_WaylandWarningsShown = true;
-#if WINAPI_LIBEI
-    messages::showWaylandExperimental(this);
-#else
-    qWarning("libei is missing, required for wayland support mode");
-    messages::showNoLibeiSupport(this);
-#endif
-#ifndef HAVE_LIBPORTAL_INPUTCAPTURE
-    if (m_CoreProcess.mode() == CoreProcess::Mode::Server) {
-      qWarning("libportal is missing input capture, required for server mode");
-      messages::showNoLibportalInputCapture(this);
-    }
-#endif
+  if (synergy::platform::isWayland()) {
+    m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
   }
 
   saveSettings();
@@ -864,6 +852,10 @@ void MainWindow::updateStatus() {
     setStatus("Synergy is starting...");
     break;
 
+  case RetryPending:
+    setStatus("Synergy will retry in a moment...");
+    break;
+
   case Stopping:
     setStatus("Synergy is stopping...");
     break;
@@ -916,7 +908,8 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
   }
 
   if (state == CoreProcessState::Started ||
-      state == CoreProcessState::Starting) {
+      state == CoreProcessState::Starting ||
+      state == CoreProcessState::RetryPending) {
     disconnect(
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
         &QAction::trigger);

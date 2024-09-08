@@ -54,8 +54,10 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
 
 void showWaylandExperimental(QWidget *parent);
 
-void showNoLibeiSupport(QWidget *parent);
+void showNoEiSupport(QWidget *parent);
 
-void showNoLibportalInputCapture(QWidget *parent);
+void showNoPortalSupport(QWidget *parent);
+
+void showNoPortalInputCapture(QWidget *parent);
 
 } // namespace synergy::gui::messages

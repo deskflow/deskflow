@@ -76,6 +76,8 @@ QString processStateToString(CoreProcess::ProcessState state) {
     return "stopping";
   case Stopped:
     return "stopped";
+  case RetryPending:
+    return "retry pending";
   default:
     qFatal("invalid process state");
     abort();
@@ -184,6 +186,14 @@ CoreProcess::CoreProcess(
   connect(
       &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this,
       &CoreProcess::onProcessReadyReadStandardError);
+
+  connect(&m_retryTimer, &QTimer::timeout, [this] {
+    if (m_processState == ProcessState::RetryPending) {
+      start();
+    } else {
+      qDebug("retry cancelled, process state is not retry pending");
+    }
+  });
 }
 
 void CoreProcess::onIpcClientServiceReady() {
@@ -227,7 +237,6 @@ void CoreProcess::onProcessReadyReadStandardError() {
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   const auto wasStarted = m_processState == ProcessState::Started;
 
-  setProcessState(ProcessState::Stopped);
   setConnectionState(ConnectionState::Disconnected);
 
   if (exitCode == 0) {
@@ -238,7 +247,16 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
 
   if (wasStarted) {
     qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
-    QTimer::singleShot(kRetryDelay, [this] { start(); });
+
+    if (m_retryTimer.isActive()) {
+      m_retryTimer.stop();
+    }
+
+    setProcessState(ProcessState::RetryPending);
+    m_retryTimer.setSingleShot(true);
+    m_retryTimer.start(kRetryDelay);
+  } else {
+    setProcessState(ProcessState::Stopped);
   }
 }
 

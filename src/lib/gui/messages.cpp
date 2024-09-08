@@ -299,24 +299,46 @@ void showWaylandExperimental(QWidget *parent) {
           .arg(kUrlBugReport, kColorSecondary));
 }
 
-void showNoLibeiSupport(QWidget *parent) {
+void showNoEiSupport(QWidget *parent) {
   QMessageBox::critical(
       parent, "Library missing: libei",
-      "<p>Sorry, it looks like your Linux distribution does not support "
-      "libei which is required for server mode on Wayland.</p>"
-      "<p>Please either switch to X from your login screen or use a more "
-      "recent Linux distribution that supports libei.</p>");
+      QString(
+          "<p>Sorry, while this version of Synergy does support Wayland, "
+          "this build was not linked with libei which is required for Wayland "
+          "support.</p>"
+          "<p>Please either switch to X from your login screen or use a build "
+          "that supports libei.</p>"
+          "<p>If you think this is incorrect, please "
+          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
+          .arg(kUrlBugReport, kColorSecondary));
 }
 
-void showNoLibportalInputCapture(QWidget *parent) {
+void showNoPortalSupport(QWidget *parent) {
+  QMessageBox::critical(
+      parent, "Library missing: libportal",
+      QString(
+          "<p>Sorry, while this version of Synergy does support Wayland, this "
+          "build was not linked with libportal which is required for Wayland "
+          "support.</p>"
+          "<p>Please either switch to X from your login screen or use a build "
+          "that supports libportal.</p>"
+          "<p>If you think this is incorrect, please "
+          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
+          .arg(kUrlBugReport, kColorSecondary));
+}
+
+void showNoPortalInputCapture(QWidget *parent) {
   QMessageBox::critical(
       parent, "Library problem: libportal",
-      "<p>Sorry, it looks like your Linux distribution does not support "
-      "libportal with input capture which is required for server mode on "
-      "Wayland.</p>"
-      "<p>Please either switch to X from your login screen or use a more "
-      "recent Linux distribution that supports libportal with input "
-      "capture.</p>");
+      QString(
+          "<p>Sorry, while this version of Synergy does support Wayland, "
+          "this build was not linked with the version of libportal that has "
+          "input capture which is required for server mode on Wayland.</p>"
+          "<p>Please either switch to X from your login screen or use a build "
+          "that supports libportal with input capture.</p>"
+          "<p>If you think this is incorrect, please "
+          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
+          .arg(kUrlBugReport, kColorSecondary));
 }
 
 } // namespace synergy::gui::messages
