@@ -28,9 +28,7 @@ public:
   struct Deps {
     virtual ~Deps() = default;
     virtual void showWaylandExperimental(QWidget *parent);
-    virtual void showNoEiSupport(QWidget *parent);
-    virtual void showNoPortalSupport(QWidget *parent);
-    virtual void showNoPortalInputCapture(QWidget *parent);
+    virtual void showWaylandLibraryError(QWidget *parent);
   };
 
   explicit WaylandWarnings(
@@ -43,8 +41,8 @@ public:
       bool hasPortalInputCapture = platform::kHasPortalInputCapture);
 
 private:
-  bool m_failureShown{false};
-  bool m_successShown{false};
+  bool m_errorShown{false};
+  bool m_warningShown{false};
   std::shared_ptr<Deps> m_pDeps;
 };
 

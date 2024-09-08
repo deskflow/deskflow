@@ -27,16 +27,8 @@ namespace synergy::gui::core {
 // WaylandWarnings::Deps
 //
 
-void WaylandWarnings::Deps::showNoEiSupport(QWidget *parent) {
-  messages::showNoEiSupport(parent);
-}
-
-void WaylandWarnings::Deps::showNoPortalSupport(QWidget *parent) {
-  messages::showNoPortalSupport(parent);
-}
-
-void WaylandWarnings::Deps::showNoPortalInputCapture(QWidget *parent) {
-  messages::showNoPortalInputCapture(parent);
+void WaylandWarnings::Deps::showWaylandLibraryError(QWidget *parent) {
+  messages::showWaylandLibraryError(parent);
 }
 
 void WaylandWarnings::Deps::showWaylandExperimental(QWidget *parent) {
@@ -50,36 +42,20 @@ void WaylandWarnings::Deps::showWaylandExperimental(QWidget *parent) {
 void WaylandWarnings::showOnce(
     QWidget *parent, CoreProcess::Mode mode, bool hasEi, bool hasPortal,
     bool hasPortalInputCapture) {
-  if (!hasEi) {
-    qWarning("libei is missing, required for wayland support mode");
-    if (!m_failureShown) {
-      m_failureShown = true;
-      m_pDeps->showNoEiSupport(parent);
+
+  const auto portalIcProblem =
+      !hasPortalInputCapture && mode == CoreProcess::Mode::Server;
+
+  if (!hasEi || !hasPortal || portalIcProblem) {
+    if (!m_errorShown) {
+      m_errorShown = true;
+      m_pDeps->showWaylandLibraryError(parent);
     }
     return;
   }
 
-  if (!hasPortal) {
-    qWarning("libportal is missing, required for wayland support mode");
-    if (!m_failureShown) {
-      m_failureShown = true;
-      m_pDeps->showNoPortalSupport(parent);
-    }
-    return;
-  }
-
-  if (!hasPortalInputCapture && mode == CoreProcess::Mode::Server) {
-    qWarning("libportal is missing input capture, required for server mode");
-
-    if (!m_failureShown) {
-      m_failureShown = true;
-      m_pDeps->showNoPortalInputCapture(parent);
-    }
-    return;
-  }
-
-  if (!m_successShown) {
-    m_successShown = true;
+  if (!m_warningShown) {
+    m_warningShown = true;
     m_pDeps->showWaylandExperimental(parent);
   }
 }

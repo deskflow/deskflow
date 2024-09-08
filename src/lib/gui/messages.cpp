@@ -294,48 +294,20 @@ void showWaylandExperimental(QWidget *parent) {
       QString(
           "<p>Thanks for trying the beta version!</p>"
           "<p>Wayland support is experimental and contains bugs.</p>"
-          R"(<p>Please  <a href="%1" style="color: %2">report bugs</a> to us if you find any.</p>)"
+          R"(<p>Please <a href="%1" style="color: %2">report bugs</a> to us if you find any.</p>)"
           "<p>Happy testing!</p>")
           .arg(kUrlBugReport, kColorSecondary));
 }
 
-void showNoEiSupport(QWidget *parent) {
+void showWaylandLibraryError(QWidget *parent) {
   QMessageBox::critical(
-      parent, "Library missing: libei",
+      parent, "Library problem",
       QString(
           "<p>Sorry, while this version of Synergy does support Wayland, "
-          "this build was not linked with libei which is required for Wayland "
-          "support.</p>"
+          "this build was not linked with one or more of the required "
+          "libraries.</p>"
           "<p>Please either switch to X from your login screen or use a build "
-          "that supports libei.</p>"
-          "<p>If you think this is incorrect, please "
-          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
-          .arg(kUrlBugReport, kColorSecondary));
-}
-
-void showNoPortalSupport(QWidget *parent) {
-  QMessageBox::critical(
-      parent, "Library missing: libportal",
-      QString(
-          "<p>Sorry, while this version of Synergy does support Wayland, this "
-          "build was not linked with libportal which is required for Wayland "
-          "support.</p>"
-          "<p>Please either switch to X from your login screen or use a build "
-          "that supports libportal.</p>"
-          "<p>If you think this is incorrect, please "
-          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
-          .arg(kUrlBugReport, kColorSecondary));
-}
-
-void showNoPortalInputCapture(QWidget *parent) {
-  QMessageBox::critical(
-      parent, "Library problem: libportal",
-      QString(
-          "<p>Sorry, while this version of Synergy does support Wayland, "
-          "this build was not linked with the version of libportal that has "
-          "input capture which is required for server mode on Wayland.</p>"
-          "<p>Please either switch to X from your login screen or use a build "
-          "that supports libportal with input capture.</p>"
+          "that uses the correct libraries.</p>"
           "<p>If you think this is incorrect, please "
           R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
           .arg(kUrlBugReport, kColorSecondary));
