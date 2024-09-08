@@ -24,13 +24,14 @@
 #include "common/common.h"
 #include "ipc/IpcClient.h"
 #include "synergy/IApp.h"
-#include <stdexcept>
 
 #if SYSAPI_WIN32
 #include "synergy/win32/AppUtilWindows.h"
 #elif SYSAPI_UNIX
 #include "synergy/unix/AppUtilUnix.h"
 #endif
+
+#include <stdexcept>
 
 class IArchTaskBarReceiver;
 class BufferedLogOutputter;
