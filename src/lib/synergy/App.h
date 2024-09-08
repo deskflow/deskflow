@@ -24,6 +24,7 @@
 #include "common/common.h"
 #include "ipc/IpcClient.h"
 #include "synergy/IApp.h"
+#include <stdexcept>
 
 #if SYSAPI_WIN32
 #include "synergy/win32/AppUtilWindows.h"
@@ -46,6 +47,11 @@ typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(
 
 class App : public IApp {
 public:
+  class XNoEiSupport : public std::runtime_error {
+  public:
+    XNoEiSupport() : std::runtime_error("libei is not supported") {}
+  };
+
   App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
       synergy::ArgsBase *args);
   App(App const &) = delete;

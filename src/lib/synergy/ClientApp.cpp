@@ -186,13 +186,17 @@ synergy::Screen *ClientApp::createScreen() {
           args().m_enableLangSync, args().m_clientScrollDirection),
       m_events);
 #endif
-#if WINAPI_LIBEI
+
   if (synergy::platform::isWayland()) {
+#if WINAPI_LIBEI
     LOG((CLOG_INFO "using ei screen for wayland"));
     return new synergy::Screen(
         new synergy::EiScreen(false, m_events, true), m_events);
-  }
+#else
+    throw XNoEiSupport();
 #endif
+  }
+
 #if WINAPI_XWINDOWS
   LOG((CLOG_INFO "using legacy x windows screen"));
   return new synergy::Screen(
