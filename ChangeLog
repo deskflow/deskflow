@@ -19,6 +19,7 @@ Enhancements:
 - #7485 Use `.venv` dir for as Python venv and cache
 - #7488 Only wait for elevated process to end when arg is set
 - #7489 Add `--config-toml` arg for TOML config file
+- #7492 Add warnings for `libei` and `libportal`
 
 # 1.15.1
 
