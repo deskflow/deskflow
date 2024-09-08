@@ -121,7 +121,7 @@
       <string notr="true"/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../res/Synergy.qrc">:/res/image/about-light.png</pixmap>
+      <pixmap>:/image/about-light.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -249,9 +249,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../res/Synergy.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>buttonOk</sender>

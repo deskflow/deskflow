@@ -71,7 +71,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="../res/Synergy.qrc">:/res/icons/64x64/user-trash.png</pixmap>
+            <pixmap>:/icons/64x64/user-trash.png</pixmap>
            </property>
           </widget>
          </item>
@@ -1072,8 +1072,8 @@ Enabling this setting will disable the server config GUI.</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../res/Synergy.qrc">
-             <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
+            <iconset>
+             <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1179,9 +1179,6 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>m_pEditConfigFile</tabstop>
   <tabstop>m_pTabWidget</tabstop>
  </tabstops>
- <resources>
-  <include location="../res/Synergy.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>

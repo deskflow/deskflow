@@ -73,11 +73,11 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile16 = ":/res/icons/16x16/synergy.png";
+const auto kIconFile16 = ":/icons/16x16/synergy.png";
 
 #ifdef Q_OS_MAC
-const auto kLightIconFile = ":/res/icons/64x64/synergy-light.png";
-const auto kDarkIconFile = ":/res/icons/64x64/synergy-dark.png";
+const auto kLightIconFile = ":/icons/64x64/synergy-light.png";
+const auto kDarkIconFile = ":/icons/64x64/synergy-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)

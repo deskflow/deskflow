@@ -60,7 +60,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../res/Synergy.qrc">:/res/image/welcome.png</pixmap>
+      <pixmap>:/image/welcome.png</pixmap>
      </property>
      <property name="margin">
       <number>1</number>
@@ -186,8 +186,5 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../res/Synergy.qrc"/>
- </resources>
  <connections/>
 </ui>

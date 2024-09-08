@@ -277,8 +277,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../../res/gui/Synergy.qrc">
-                <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
+               <iconset>
+                <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -567,8 +567,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../../res/gui/Synergy.qrc">
-                <normaloff>:/res/icons/64x64/folder.png</normaloff>:/res/icons/64x64/folder.png</iconset>
+               <iconset>
+                <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -753,9 +753,6 @@
   <tabstop>m_pRadioSystemScope</tabstop>
   <tabstop>m_pComboElevate</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../../res/gui/Synergy.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>
