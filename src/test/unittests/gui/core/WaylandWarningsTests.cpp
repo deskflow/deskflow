@@ -29,6 +29,7 @@ namespace {
 struct MockDeps : public WaylandWarnings::Deps {
   MOCK_METHOD(void, showWaylandExperimental, (QWidget *), (override));
   MOCK_METHOD(void, showNoEiSupport, (QWidget *), (override));
+  MOCK_METHOD(void, showNoPortalSupport, (QWidget *), (override));
   MOCK_METHOD(void, showNoPortalInputCapture, (QWidget *), (override));
 };
 
@@ -37,13 +38,27 @@ struct MockDeps : public WaylandWarnings::Deps {
 TEST(WaylandWarningsTests, showOnce_serverNoEiNoPortalIc_showNoEiWarning) {
   const auto deps = std::make_shared<MockDeps>();
   const bool hasEi = false;
+  const bool hasPortal = false;
   const bool hasPortalIC = false;
   WaylandWarnings waylandWarnings(deps);
 
   EXPECT_CALL(*deps, showNoEiSupport(nullptr)).Times(1);
 
   waylandWarnings.showOnce(
-      nullptr, CoreProcess::Mode::Server, hasEi, hasPortalIC);
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+}
+
+TEST(WaylandWarningsTests, showOnce_serverNoPortal_showNoPortalWarning) {
+  const auto deps = std::make_shared<MockDeps>();
+  const bool hasEi = true;
+  const bool hasPortal = false;
+  const bool hasPortalIC = false;
+  WaylandWarnings waylandWarnings(deps);
+
+  EXPECT_CALL(*deps, showNoPortalSupport(nullptr)).Times(1);
+
+  waylandWarnings.showOnce(
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
 }
 
 TEST(
@@ -51,13 +66,14 @@ TEST(
     showOnce_serverHasEiAndNoPortalIc_showPortalIcWarning) {
   const auto deps = std::make_shared<MockDeps>();
   const bool hasEi = true;
+  const bool hasPortal = true;
   const bool hasPortalIC = false;
   WaylandWarnings waylandWarnings(deps);
 
   EXPECT_CALL(*deps, showNoPortalInputCapture(nullptr)).Times(1);
 
   waylandWarnings.showOnce(
-      nullptr, CoreProcess::Mode::Server, hasEi, hasPortalIC);
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
 }
 
 TEST(
@@ -65,25 +81,27 @@ TEST(
     showOnce_serverHasEiAndPortalIc_showExperimentalOnly) {
   const auto deps = std::make_shared<MockDeps>();
   const bool hasEi = true;
+  const bool hasPortal = true;
   const bool hasPortalIC = true;
   WaylandWarnings waylandWarnings(deps);
 
   EXPECT_CALL(*deps, showWaylandExperimental(nullptr)).Times(1);
 
   waylandWarnings.showOnce(
-      nullptr, CoreProcess::Mode::Server, hasEi, hasPortalIC);
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
 }
 
 TEST(WaylandWarningsTests, showOnce_calledTwice_messageOnlyShownOnce) {
   const auto deps = std::make_shared<MockDeps>();
   const bool hasEi = true;
+  const bool hasPortal = true;
   const bool hasPortalIC = true;
   WaylandWarnings waylandWarnings(deps);
 
   EXPECT_CALL(*deps, showWaylandExperimental(nullptr)).Times(1);
 
   waylandWarnings.showOnce(
-      nullptr, CoreProcess::Mode::Server, hasEi, hasPortalIC);
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
   waylandWarnings.showOnce(
-      nullptr, CoreProcess::Mode::Server, hasEi, hasPortalIC);
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
 }

@@ -31,6 +31,10 @@ void WaylandWarnings::Deps::showNoEiSupport(QWidget *parent) {
   messages::showNoEiSupport(parent);
 }
 
+void WaylandWarnings::Deps::showNoPortalSupport(QWidget *parent) {
+  messages::showNoPortalSupport(parent);
+}
+
 void WaylandWarnings::Deps::showNoPortalInputCapture(QWidget *parent) {
   messages::showNoPortalInputCapture(parent);
 }
@@ -44,7 +48,7 @@ void WaylandWarnings::Deps::showWaylandExperimental(QWidget *parent) {
 //
 
 void WaylandWarnings::showOnce(
-    QWidget *parent, CoreProcess::Mode mode, bool hasEi,
+    QWidget *parent, CoreProcess::Mode mode, bool hasEi, bool hasPortal,
     bool hasPortalInputCapture) {
   if (m_shown) {
     qDebug("wayland warnings already shown");
@@ -56,6 +60,12 @@ void WaylandWarnings::showOnce(
   if (!hasEi) {
     qWarning("libei is missing, required for wayland support mode");
     m_pDeps->showNoEiSupport(parent);
+    return;
+  }
+
+  if (!hasPortal) {
+    qWarning("libportal is missing, required for wayland support mode");
+    m_pDeps->showNoPortalSupport(parent);
     return;
   }
 

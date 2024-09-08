@@ -29,6 +29,7 @@ public:
     virtual ~Deps() = default;
     virtual void showWaylandExperimental(QWidget *parent);
     virtual void showNoEiSupport(QWidget *parent);
+    virtual void showNoPortalSupport(QWidget *parent);
     virtual void showNoPortalInputCapture(QWidget *parent);
   };
 
@@ -38,6 +39,7 @@ public:
 
   void showOnce(
       QWidget *parent, CoreProcess::Mode mode, bool hasEi = platform::kHasEi,
+      bool hasPortal = platform::kHasPortal,
       bool hasPortalInputCapture = platform::kHasPortalInputCapture);
 
 private:
