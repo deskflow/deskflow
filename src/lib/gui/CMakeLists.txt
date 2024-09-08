@@ -33,7 +33,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 if(ADD_HEADERS_TO_SOURCES)
-  list(APPEND sources ${headers}) 
+  list(APPEND sources ${headers})
 endif()
 
 add_library(${target} STATIC ${sources} ${ui_files} ${qrc_file})

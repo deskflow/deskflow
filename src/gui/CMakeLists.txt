@@ -36,12 +36,7 @@ if(WIN32)
   set(rc_files ${res_dir}/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
 
-add_executable(
-  ${target} WIN32
-  ${sources}
-  ${ui_files}
-  ${rc_files}
-  ${qrc_file})
+add_executable(${target} WIN32 ${sources} ${ui_files} ${rc_files} ${qrc_file})
 
 # regular exe headers
 include_directories(./src)
