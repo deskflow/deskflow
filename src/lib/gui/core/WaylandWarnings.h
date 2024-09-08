@@ -43,7 +43,8 @@ public:
       bool hasPortalInputCapture = platform::kHasPortalInputCapture);
 
 private:
-  bool m_shown{false};
+  bool m_failureShown{false};
+  bool m_successShown{false};
   std::shared_ptr<Deps> m_pDeps;
 };
 

@@ -91,7 +91,22 @@ TEST(
       nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
 }
 
-TEST(WaylandWarningsTests, showOnce_calledTwice_messageOnlyShownOnce) {
+TEST(WaylandWarningsTests, showOnce_failureCalledTwice_messageOnlyShownOnce) {
+  const auto deps = std::make_shared<MockDeps>();
+  const bool hasEi = false;
+  const bool hasPortal = false;
+  const bool hasPortalIC = false;
+  WaylandWarnings waylandWarnings(deps);
+
+  EXPECT_CALL(*deps, showNoEiSupport(nullptr)).Times(1);
+
+  waylandWarnings.showOnce(
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+  waylandWarnings.showOnce(
+      nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+}
+
+TEST(WaylandWarningsTests, showOnce_successCalledTwice_messageOnlyShownOnce) {
   const auto deps = std::make_shared<MockDeps>();
   const bool hasEi = true;
   const bool hasPortal = true;

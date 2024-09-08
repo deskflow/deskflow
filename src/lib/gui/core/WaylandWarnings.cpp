@@ -50,32 +50,38 @@ void WaylandWarnings::Deps::showWaylandExperimental(QWidget *parent) {
 void WaylandWarnings::showOnce(
     QWidget *parent, CoreProcess::Mode mode, bool hasEi, bool hasPortal,
     bool hasPortalInputCapture) {
-  if (m_shown) {
-    qDebug("wayland warnings already shown");
-    return;
-  }
-
-  m_shown = true;
-
   if (!hasEi) {
     qWarning("libei is missing, required for wayland support mode");
-    m_pDeps->showNoEiSupport(parent);
+    if (!m_failureShown) {
+      m_failureShown = true;
+      m_pDeps->showNoEiSupport(parent);
+    }
     return;
   }
 
   if (!hasPortal) {
     qWarning("libportal is missing, required for wayland support mode");
-    m_pDeps->showNoPortalSupport(parent);
+    if (!m_failureShown) {
+      m_failureShown = true;
+      m_pDeps->showNoPortalSupport(parent);
+    }
     return;
   }
 
   if (!hasPortalInputCapture && mode == CoreProcess::Mode::Server) {
     qWarning("libportal is missing input capture, required for server mode");
-    m_pDeps->showNoPortalInputCapture(parent);
+
+    if (!m_failureShown) {
+      m_failureShown = true;
+      m_pDeps->showNoPortalInputCapture(parent);
+    }
     return;
   }
 
-  m_pDeps->showWaylandExperimental(parent);
+  if (!m_successShown) {
+    m_successShown = true;
+    m_pDeps->showWaylandExperimental(parent);
+  }
 }
 
 } // namespace synergy::gui::core
