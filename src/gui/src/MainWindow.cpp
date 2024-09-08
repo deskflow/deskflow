@@ -38,9 +38,13 @@
 #include "gui/styles.h"
 #include "gui/tls/TlsFingerprint.h"
 #include "license/License.h"
+#include "platform/wayland.h"
 
 #if defined(Q_OS_MAC)
 #include "gui/OSXHelpers.h"
+#endif
+#if defined(Q_OS_LINUX)
+#include "config.h"
 #endif
 
 #include <QApplication>
@@ -582,6 +586,18 @@ void MainWindow::onCoreProcessStarting() {
       m_CoreProcess.stop();
       return;
     }
+  }
+
+  if (synergy::platform::isWayland()) {
+#ifndef WINAPI_LIBEI
+    qWarning("libei is missing, required for wayland support mode");
+    messages::showNoLibeiSupport(this);
+#endif
+#ifndef HAVE_LIBPORTAL_INPUTCAPTURE
+    if (m_CoreProcess.mode() == CoreProcess::Mode::Server)
+      qWarning("libportal is missing input capture, required for server mode");
+    messages::showNoLibportalInputCapture(this);
+#endif
   }
 
   saveSettings();

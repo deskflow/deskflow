@@ -22,8 +22,8 @@
 namespace synergy::platform {
 
 inline bool isWayland() {
-  const std::string session = getenv("XDG_SESSION_TYPE");
-  return session == "wayland";
+  const auto session = getenv("XDG_SESSION_TYPE");
+  return session != nullptr && std::string(session) == "wayland";
 }
 
 } // namespace synergy::platform

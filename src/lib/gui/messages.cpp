@@ -288,4 +288,24 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath) {
           .arg(nativePath));
 }
 
+void showNoLibeiSupport(QWidget *parent) {
+  QMessageBox::critical(
+      parent, "Library missing: libei",
+      "<p>Sorry, it looks like your Linux distribution does not support "
+      "libei which is required for server mode on Wayland.</p>"
+      "<p>Please either switch to X from your login screen or use a more "
+      "recent Linux distribution that supports libei.</p>");
+}
+
+void showNoLibportalInputCapture(QWidget *parent) {
+  QMessageBox::critical(
+      parent, "Library problem: libportal",
+      "<p>Sorry, it looks like your Linux distribution does not support "
+      "libportal with input capture which is required for server mode on "
+      "Wayland.</p>"
+      "<p>Please either switch to X from your login screen or use a more "
+      "recent Linux distribution that supports libportal with input "
+      "capture.</p>");
+}
+
 } // namespace synergy::gui::messages

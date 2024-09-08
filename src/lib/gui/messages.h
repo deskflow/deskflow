@@ -52,4 +52,8 @@ bool showClearSettings(QWidget *parent);
 
 void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
 
+void showNoLibeiSupport(QWidget *parent);
+
+void showNoLibportalInputCapture(QWidget *parent);
+
 } // namespace synergy::gui::messages
