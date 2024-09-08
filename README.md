@@ -22,11 +22,21 @@ run it, tinker with it, redistribute it as part of their own app, etc.
 To use the community edition, install the `synergy` package with your favorite package manager
 or build it yourself using the Developer Quick Start instructions below.
 
+## Roadmap
+
+| Version | Main goal | Date |
+| --- | --- | --- |
+| v1.16 | Experimental Wayland support (`libei` and `libportal`) | 13th Sep 2024 |
+| v1.17 | Cross-platform daemon to replace legacy daemon | 18th Oct 2024 |
+
+Dates are likely to change. If you have any questions, 
+please [start a discussion](https://github.com/symless/synergy/discussions).
+
 ## Goals and Philosophy
 
-Version 1.15 brings a new philosophy of being more approachable to the open-source community 
+Version 1.15 brings a new philosophy of being more approachable to the open source community 
 instead of wholly focusing on commercial interests.
-We still have customers in order to finance the development of the code, but we are committed to
+We still have customers to finance the development of the code, but we are committed to
 maintaining and improving Synergy 1 Community Edition for years to come and we're excited to work
 with our community of open source users to improve the code for the benefit of everyone.
 
@@ -48,7 +58,7 @@ Here are a few ways to join in with the project and get involved:
 
 ## Where to get help
 
-* Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) (`#open-source` channel)
+* Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) (`#open source` channel)
 * [Start a discussion](https://github.com/symless/synergy/discussions) on our GitHub project
 * [Read the wiki](https://github.com/symless/synergy/wiki) for guides and info
 
