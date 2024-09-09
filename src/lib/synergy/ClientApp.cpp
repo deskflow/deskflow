@@ -187,6 +187,7 @@ synergy::Screen *ClientApp::createScreen() {
       m_events);
 #endif
 
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
   if (synergy::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG((CLOG_INFO "using ei screen for wayland"));
@@ -196,6 +197,7 @@ synergy::Screen *ClientApp::createScreen() {
     throw XNoEiSupport();
 #endif
   }
+#endif
 
 #if WINAPI_XWINDOWS
   LOG((CLOG_INFO "using legacy x windows screen"));
@@ -206,6 +208,7 @@ synergy::Screen *ClientApp::createScreen() {
       m_events);
 
 #endif
+
 #if WINAPI_CARBON
   return new synergy::Screen(
       new OSXScreen(

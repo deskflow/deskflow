@@ -588,9 +588,11 @@ void MainWindow::onCoreProcessStarting() {
     }
   }
 
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
   if (synergy::platform::isWayland()) {
     m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
   }
+#endif
 
   saveSettings();
 }
