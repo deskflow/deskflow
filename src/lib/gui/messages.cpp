@@ -309,7 +309,8 @@ void showWaylandLibraryError(QWidget *parent) {
           "<p>Please either switch to X from your login screen or use a build "
           "that uses the correct libraries.</p>"
           "<p>If you think this is incorrect, please "
-          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)")
+          R"(<a href="%1" style="color: %2">report a bug</a>.</p>)"
+          "<p>Please check the logs for more information.</p>")
           .arg(kUrlBugReport, kColorSecondary));
 }
 
