@@ -349,7 +349,7 @@ jobs:
       SYNERGY_BUILD_CMD: |
         ./scripts/install_deps.sh;
         cmake -B build;
-        cmake --build build -j8;
+        cmake --build build -j16;
         export QT_QPA_PLATFORM=offscreen;
         ./build/bin/unittests
         ./build/bin/integtests
