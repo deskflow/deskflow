@@ -12,7 +12,7 @@ if host_machine.system() == 'windows'
   subproject('wintoast')
 endif
 
-system_gtest = get_option('system_gtest')
+system_gtest = get_option('system-gtest')
 if system_gtest
   dependency('gtest', required: false)
 else
@@ -21,7 +21,7 @@ endif
 
 if host_machine.system() == 'linux'
 
-  system_libei = get_option('system_libei')
+  system_libei = get_option('system-libei')
   if system_libei
     dependency('libei-1.0', required: false)
   else
@@ -31,11 +31,15 @@ if host_machine.system() == 'linux'
     subproject('libei', default_options: ['tests=disabled', 'liboeffis=disabled'])
   endif
 
-  system_libportal = get_option('system_libportal')
+  system_libportal = get_option('system-libportal')
   if system_libportal
     dependency('libportal', required: false)
   else
     # Using the subproject is only useful for development; it's not intended for normal use.
-    subproject('libportal', default_options: ['docs=false', 'backend-gtk3=enabled', 'backend-qt6=disabled'])
+    subproject('libportal', default_options: [
+      'docs=false',
+      'backend-gtk3=enabled',
+      'backend-qt6=disabled'
+    ])
   endif
 endif

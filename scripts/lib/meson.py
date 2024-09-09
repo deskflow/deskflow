@@ -21,14 +21,14 @@ build_dir = "build/meson"
 meson_bin = env.get_python_executable("meson")
 
 
-def setup(no_system_list):
+def setup(no_system_list, static_list):
     cmd = [meson_bin, "setup", build_dir]
 
     if env.is_windows():
-        cmd.append("-Dsystem_gtest=false")
+        cmd.append("-Dsystem-gtest=false")
 
     for subproject in no_system_list or []:
-        cmd.append(f"-Dsystem_{subproject}=false")
+        cmd.append(f"-Dsystem-{subproject}=false")
 
     # This might be a bit rude, but Meson seems to cache a lot (like CMake),
     # so wiping every time is the easiest way to ensure that the build is clean.
@@ -38,6 +38,32 @@ def setup(no_system_list):
         cmd.append("--wipe")
 
     cmd_utils.run(cmd, print_cmd=True)
+
+    for subproject in static_list or []:
+        static_subproject(subproject)
+
+
+def static_subproject(subproject):
+    if subproject == "libportal":
+        # HACK: This is a bit horrible. Ideally, Meson would take care of this, but for some reason
+        # meson `patch_directory` isn't working for the libportal subproject.
+        # Important: Static linking is not intended for package maintainers, only for beta testers.
+        # Static linking is also pretty horrible, but many distros will be slow to pick up 0.8.x
+        # which has input capture support.
+        # The sooner we can remove this patching code the better.
+        cmd_utils.run(
+            [
+                "patch",
+                "-d",
+                "subprojects/libportal",
+                "-p1",
+                "-i",
+                "static-lib.diff",
+            ],
+            print_cmd=True,
+        )
+    else:
+        raise Exception(f"Unknown subproject: {subproject}")
 
 
 def compile():

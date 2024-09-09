@@ -1,3 +1,4 @@
 [wrap-git]
 url = https://github.com/flatpak/libportal.git
 revision = main
+patch_directory = libportal

@@ -248,6 +248,12 @@ macro(configure_libportal)
     set(libportal_bin_dir
         ${CMAKE_BINARY_DIR}/meson/subprojects/libportal/libportal)
     set(libportal_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libportal)
+
+    option(LIBPORTAL_STATIC "Use the static libportal binary" OFF)
+    if(LIBPORTAL_STATIC)
+      set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
+    endif()
+
     find_library(
       LIBPORTAL_LINK_LIBRARIES
       NAMES portal
@@ -258,6 +264,8 @@ macro(configure_libportal)
       message(STATUS "Using local subproject libportal")
       set(LIBPORTAL_FOUND true)
       set(LIBPORTAL_INCLUDE_DIRS ${libportal_src_dir})
+
+      message(STATUS "libportal library file: ${LIBPORTAL_LINK_LIBRARIES}")
 
       # HACK: Somehow `check_symbol_exists` doesn't pick up on the symbols even though
       # they are actually there. Since we use master branch of libportal, for now we'll
