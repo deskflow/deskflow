@@ -4,7 +4,8 @@
 # Except for the wrap files.
 !.gitignore
 !*.wrap
+!packagefiles/*
 
 # Ignore wraps added by subprojects.
-/gi-docgen.wrap
-/munit.wrap
+gi-docgen.wrap
+munit.wrap

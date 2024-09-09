@@ -235,6 +235,10 @@ jobs:
             runs-on: ubuntu-latest
             extra-packages: true
 
+            # Static libportal only needed until libportal is updated to 0.8.x.
+            extra-dep-args: --meson-no-system libportal --meson-static libportal --subprojects
+            extra-cmake-args: -DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON
+
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
             runs-on: ubuntu-24.04-8-core-arm64
@@ -248,6 +252,10 @@ jobs:
           - name: ubuntu-24.04-amd64
             container: symless/synergy-core:ubuntu-24.04-amd64
             runs-on: ubuntu-latest
+
+            # Static libportal only needed until libportal is updated to 0.8.x.
+            extra-dep-args: --meson-no-system libportal --meson-static libportal --subprojects
+            extra-cmake-args: -DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON
 
           - name: ubuntu-22.04-amd64
             container: symless/synergy-core:ubuntu-22.04-amd64
@@ -305,13 +313,13 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py
+        run: ./scripts/install_deps.py ${{ matrix.distro.extra-dep-args }}
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
-        run: cmake -B build --preset=linux-release
+        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }}
 
       - name: Build
         run: cmake --build build -j8

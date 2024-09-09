@@ -22,6 +22,7 @@ Enhancements:
 - #7492 Add warnings for `libei` and `libportal`
 - #7495 Use 16-CPU CI runner for FreeBSD
 - #7496 Cache vcpkg local app dir to restore built OpenSSL
+- #7498 Option to static link `libportal` ahead of 0.8.x distribution
 
 # 1.15.1
 

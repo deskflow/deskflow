@@ -84,7 +84,9 @@ def parse_args(is_ci):
         "--skip-meson", action="store_true", help="Do not setup and compile with Meson"
     )
     parser.add_argument(
-        "--subproject", type=str, help="Sub-project to install dependencies for"
+        "--subprojects",
+        action="store_true",
+        help="Install dependencies for Meson subprojects (use with --meson-no-system)",
     )
     parser.add_argument(
         "--meson-install",
@@ -95,6 +97,11 @@ def parse_args(is_ci):
         "--meson-no-system",
         nargs="+",
         help="Specify which Meson subprojects to use instead of system dependencies",
+    )
+    parser.add_argument(
+        "--meson-static",
+        nargs="+",
+        help="Specify which Meson subprojects to build as static libraries",
     )
 
     if env.is_windows():
@@ -162,11 +169,6 @@ def install(args):
         deps = Dependencies(args)
         deps.install()
 
-    if args.subproject:
-        deps = SubprojectDependencies(args.subproject)
-        deps.install()
-        return
-
     # Only install vcpkg dependencies on Windows, since on other OS it's not needed (yet).
     # We probably won't ever need this on macOS and Linux since brew and apt/dnf/etc do a
     # good job of providing dependencies. Where they don't, we can use Meson.
@@ -176,15 +178,20 @@ def install(args):
         vcpkg.install()
 
     if not args.skip_meson:
-        run_meson(args.meson_install, args.meson_no_system)
+        if args.subprojects:
+            for subproject in args.meson_no_system or []:
+                deps = SubprojectDependencies(subproject)
+                deps.install()
+
+        run_meson(args.meson_install, args.meson_no_system, args.meson_static)
 
 
 # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
 # we fully switch from CMake to Meson. For the meantime, Meson will install the deps
 # so that CMake can find them easily. Once we switch to Meson, it might be possible for
 # Meson handle the deps resolution, so that we won't need to install them on the system.
-def run_meson(install, no_system_list):
-    meson.setup(no_system_list)
+def run_meson(install, no_system_list, static_list):
+    meson.setup(no_system_list, static_list)
 
     # Only compile and install on Linux for now, since we're only using Meson to fetch
     # the deps on Windows and macOS.
