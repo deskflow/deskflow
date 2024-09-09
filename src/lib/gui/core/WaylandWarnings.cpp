@@ -50,6 +50,8 @@ void WaylandWarnings::showOnce(
     if (!m_errorShown) {
       m_errorShown = true;
       m_pDeps->showWaylandLibraryError(parent);
+    } else {
+      qWarning("missing required wayland lib(s) or feature");
     }
     return;
   }
