@@ -45,12 +45,12 @@ def setup(no_system_list, static_list):
 
 def static_subproject(subproject):
     if subproject == "libportal":
-        # HACK: This is a bit horrible. Ideally, Meson would take care of this, but for some reason
-        # meson `patch_directory` isn't working for the libportal subproject.
+        # HACK: This is a bit horrible. Ideally, Meson would take care of applying this patch,
+        # but it only seems to copy the .diff over and not apply the patch.
+        #
         # Important: Static linking is not intended for package maintainers, only for beta testers.
         # Static linking is also pretty horrible, but many distros will be slow to pick up 0.8.x
-        # which has input capture support.
-        # The sooner we can remove this patching code the better.
+        # which has input capture support. The sooner we can remove this patching code the better.
         cmd_utils.run(
             [
                 "patch",
