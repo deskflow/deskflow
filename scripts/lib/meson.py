@@ -64,7 +64,7 @@ def static_subproject(subproject):
             check=False,
         )
     else:
-        raise Exception(f"Unknown subproject: {subproject}")
+        raise RuntimeError(f"Unknown subproject: {subproject}")
 
 
 def compile():
