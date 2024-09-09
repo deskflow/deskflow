@@ -130,7 +130,7 @@ void PortalInputCapture::cb_session_closed(XdpSession *session) {
 
 void PortalInputCapture::cb_init_input_capture_session(
     GObject *object, GAsyncResult *res) {
-  LOG_DEBUG("portal session ready");
+  LOG_DEBUG("portal input capture session initialized");
   g_autoptr(GError) error = nullptr;
 
   auto session = xdp_portal_create_input_capture_session_finish(

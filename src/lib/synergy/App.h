@@ -31,6 +31,8 @@
 #include "synergy/unix/AppUtilUnix.h"
 #endif
 
+#include <stdexcept>
+
 class IArchTaskBarReceiver;
 class BufferedLogOutputter;
 class ILogOutputter;
@@ -46,6 +48,11 @@ typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(
 
 class App : public IApp {
 public:
+  class XNoEiSupport : public std::runtime_error {
+  public:
+    XNoEiSupport() : std::runtime_error("libei is not supported") {}
+  };
+
   App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
       synergy::ArgsBase *args);
   App(App const &) = delete;

@@ -94,7 +94,9 @@ void PortalRemoteDesktop::cb_session_started(
   auto session = XDP_SESSION(object);
   auto success = xdp_session_start_finish(session, res, &error);
   if (!success) {
-    LOG_ERR("failed to start portal remote desktop session");
+    LOG_ERR(
+        "failed to start portal remote desktop session, quitting: %s",
+        error->message);
     g_main_loop_quit(glib_main_loop_);
     events_->addEvent(Event::kQuit);
     return;
@@ -123,7 +125,7 @@ void PortalRemoteDesktop::cb_session_started(
 
 void PortalRemoteDesktop::cb_init_remote_desktop_session(
     GObject *object, GAsyncResult *res) {
-  LOG_DEBUG("remote desktop session ready");
+  LOG_DEBUG("portal remote desktop session initialized");
   g_autoptr(GError) error = nullptr;
 
   auto session = xdp_portal_create_remote_desktop_session_finish(
@@ -149,7 +151,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(
   session_signal_id_ = g_signal_connect(
       G_OBJECT(session), "closed", G_CALLBACK(cb_session_closed_cb), this);
 
-  LOG_DEBUG("Session ready, starting");
+  LOG_DEBUG("portal remote desktop session starting");
   xdp_session_start(
       session,
       nullptr, // parent

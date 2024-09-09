@@ -38,9 +38,13 @@
 #include "gui/styles.h"
 #include "gui/tls/TlsFingerprint.h"
 #include "license/License.h"
+#include "platform/wayland.h"
 
 #if defined(Q_OS_MAC)
 #include "gui/OSXHelpers.h"
+#endif
+#if defined(Q_OS_LINUX)
+#include "config.h"
 #endif
 
 #include <QApplication>
@@ -69,11 +73,11 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile16 = ":/res/icons/16x16/synergy.png";
+const auto kIconFile16 = ":/icons/16x16/synergy.png";
 
 #ifdef Q_OS_MAC
-const auto kLightIconFile = ":/res/icons/64x64/synergy-light.png";
-const auto kDarkIconFile = ":/res/icons/64x64/synergy-dark.png";
+const auto kLightIconFile = ":/icons/64x64/synergy-light.png";
+const auto kDarkIconFile = ":/icons/64x64/synergy-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
@@ -584,6 +588,12 @@ void MainWindow::onCoreProcessStarting() {
     }
   }
 
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+  if (synergy::platform::isWayland()) {
+    m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
+  }
+#endif
+
   saveSettings();
 }
 
@@ -844,6 +854,10 @@ void MainWindow::updateStatus() {
     setStatus("Synergy is starting...");
     break;
 
+  case RetryPending:
+    setStatus("Synergy will retry in a moment...");
+    break;
+
   case Stopping:
     setStatus("Synergy is stopping...");
     break;
@@ -896,7 +910,8 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state) {
   }
 
   if (state == CoreProcessState::Started ||
-      state == CoreProcessState::Starting) {
+      state == CoreProcessState::Starting ||
+      state == CoreProcessState::RetryPending) {
     disconnect(
         m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore,
         &QAction::trigger);

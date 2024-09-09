@@ -25,6 +25,7 @@
     "hotspots",
     "Hutterer",
     "ifdef",
+    "INPUTCAPTURE",
     "integtests",
     "keychain",
     "Keychains",
@@ -69,7 +70,8 @@
     "vmactions",
     "Volker",
     "whot",
-    "winget"
+    "winget",
+    "XWINDOWS"
   ],
   "ignoreWords": [],
   "import": []

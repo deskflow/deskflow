@@ -15,6 +15,9 @@
 
 set(target gui)
 
+set(res_dir ${CMAKE_SOURCE_DIR}/res/gui)
+set(qrc_file ${res_dir}/Synergy.qrc)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -33,7 +36,8 @@ if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 
-add_library(${target} STATIC ${sources} ${ui_files})
+add_library(${target} STATIC ${sources} ${ui_files} ${qrc_file})
+
 target_link_libraries(
   ${target}
   license

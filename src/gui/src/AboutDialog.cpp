@@ -55,7 +55,7 @@ int AboutDialog::exec() {
 void AboutDialog::updateLogo() const {
   if (isDarkMode()) {
     qDebug("dark mode detected, showing dark logo");
-    QPixmap logo(":/res/image/about-dark.png");
+    QPixmap logo(":/image/about-dark.png");
     if (!logo.isNull()) {
       m_pLabel_Logo->setPixmap(logo);
     }

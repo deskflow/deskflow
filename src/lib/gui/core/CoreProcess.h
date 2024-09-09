@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QTimer>
 #include <memory>
 
 namespace synergy::gui {
@@ -55,7 +56,13 @@ public:
 
   enum class Mode { None, Client, Server };
   enum class Error { AddressMissing, StartFailed };
-  enum class ProcessState { Starting, Started, Stopping, Stopped };
+  enum class ProcessState {
+    Starting,
+    Started,
+    Stopping,
+    Stopped,
+    RetryPending
+  };
   enum class ConnectionState { Disconnected, Connecting, Connected, Listening };
 
   explicit CoreProcess(
@@ -130,6 +137,7 @@ private:
   QMutex m_processMutex;
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
+  QTimer m_retryTimer;
 };
 
 } // namespace synergy::gui

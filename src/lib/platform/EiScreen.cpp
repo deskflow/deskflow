@@ -71,8 +71,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 #if HAVE_LIBPORTAL_INPUTCAPTURE
       portal_input_capture_ = new PortalInputCapture(this, events_);
 #else
-      throw std::invalid_argument(
-          "Missing libportal InputCapture portal support");
+      throw std::invalid_argument("missing libportal input capture support");
 #endif // HAVE_LIBPORTAL_INPUTCAPTURE
     } else {
 #if WINAPI_LIBPORTAL
@@ -82,8 +81,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
               this, &EiScreen::handle_portal_session_closed));
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
 #else
-      throw std::invalid_argument(
-          "Missing libportal RemoteDesktop portal support");
+      throw std::invalid_argument("missing libportal remote desktop support");
 #endif // WINAPI_LIBPORTAL
     }
   } else {
@@ -91,7 +89,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
     auto rc = ei_setup_backend_socket(ei_, nullptr);
     if (rc != 0) {
       LOG_DEBUG("ei init error: %s", strerror(-rc));
-      throw std::runtime_error("Failed to init ei context");
+      throw std::runtime_error("failed to init ei context");
     }
   }
 }
@@ -819,7 +817,7 @@ void EiScreen::updateButtons() {
 IKeyState *EiScreen::getKeyState() const { return key_state_; }
 
 String EiScreen::getSecureInputApp() const {
-  throw std::runtime_error("Not implemented");
+  throw std::runtime_error("get security input app not implemented");
 }
 
 EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id)

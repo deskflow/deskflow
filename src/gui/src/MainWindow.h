@@ -36,6 +36,7 @@
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
+#include "gui/core/WaylandWarnings.h"
 #include "gui/tls/TlsUtility.h"
 #include "ui_MainWindowBase.h"
 
@@ -198,6 +199,7 @@ private:
   bool m_Quitting = false;
   synergy::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
   bool m_SaveOnExit = true;
+  synergy::gui::core::WaylandWarnings m_WaylandWarnings;
 
   synergy::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;
