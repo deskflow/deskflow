@@ -2,8 +2,9 @@
 *
 
 # Except for the wrap files.
-!.gitignore
-!*.wrap
+!/.gitignore
+!/*.wrap
+!/packagefiles
 
 # Ignore wraps added by subprojects.
 /gi-docgen.wrap
