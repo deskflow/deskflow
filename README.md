@@ -15,7 +15,7 @@ maintained.
 Synergy 1 Community Edition is free and open source software, and anyone is welcome to build it,
 run it, tinker with it, redistribute it as part of their own app, etc.
 
-**Wayland support:** Wayland now has experimental support (GNOME 46 is required, KDE TBD).
+**Wayland support:** Wayland now has experimental support in [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) (GNOME 46 is required, KDE TBD).
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
@@ -24,10 +24,10 @@ or build it yourself using the Developer Quick Start instructions below.
 
 ## Roadmap
 
-| Version | Main goal | Date |
-| --- | --- | --- |
-| v1.16 | Experimental Wayland support (`libei` and `libportal`) | 13th Sep 2024 |
-| v1.17 | Cross-platform daemon to replace legacy daemon | 18th Oct 2024 |
+| Version | Main goal | Date | Status |
+| --- | --- | --- | --- |
+| [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) | Experimental Wayland support (`libei` and `libportal`) | 9th Sep 2024 | Beta released |
+| v1.17 | Cross-platform daemon to replace legacy daemon | 18th Oct 2024 | Planning |
 
 Dates are likely to change. If you have any questions, 
 please [start a discussion](https://github.com/symless/synergy/discussions).
