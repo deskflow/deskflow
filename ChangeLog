@@ -20,6 +20,7 @@ Enhancements:
 - #7488 Only wait for elevated process to end when arg is set
 - #7489 Add `--config-toml` arg for TOML config file
 - #7492 Add warnings for `libei` and `libportal`
+- #7495 Use 16-CPU CI runner for FreeBSD
 
 # 1.15.1
 
