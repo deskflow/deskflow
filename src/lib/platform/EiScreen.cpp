@@ -88,7 +88,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
     // Note: socket backend does not support reconnections
     auto rc = ei_setup_backend_socket(ei_, nullptr);
     if (rc != 0) {
-      LOG_DEBUG("ei init error: %s", strerror(-rc));
+      LOG_ERR("ei init error: %s", strerror(-rc));
       throw std::runtime_error("failed to init ei context");
     }
   }
@@ -115,7 +115,7 @@ void EiScreen::handle_ei_log_event(
     ei_log_context *context) {
   switch (priority) {
   case EI_LOG_PRIORITY_DEBUG:
-    LOG_DEBUG("ei: %s", message);
+    LOG_DEBUG1("ei: %s", message);
     break;
   case EI_LOG_PRIORITY_INFO:
     LOG_INFO("ei: %s", message);
@@ -670,7 +670,7 @@ void EiScreen::on_motion_event(ei_event *event) {
     auto pixel_dx = static_cast<std::int32_t>(buffer_dx);
     auto pixel_dy = static_cast<std::int32_t>(buffer_dy);
     if (pixel_dx || pixel_dy) {
-      LOG_DEBUG("event: motion on secondary x=%d y=%d", pixel_dx, pixel_dy);
+      LOG_DEBUG1("event: motion on secondary x=%d y=%d", pixel_dx, pixel_dy);
       sendEvent(
           events_->forIPrimaryScreen().motionOnSecondary(),
           MotionInfo::alloc(pixel_dx, pixel_dy));
@@ -769,10 +769,10 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
     case EI_EVENT_FRAME:
       break;
     case EI_EVENT_DEVICE_START_EMULATING:
-      LOG_DEBUG("device %s starts emulating", ei_device_get_name(device));
+      LOG_DEBUG("device %s started emulating", ei_device_get_name(device));
       break;
     case EI_EVENT_DEVICE_STOP_EMULATING:
-      LOG_DEBUG("device %s stops emulating", ei_device_get_name(device));
+      LOG_DEBUG("device %s stopped emulating", ei_device_get_name(device));
       break;
     case EI_EVENT_KEYBOARD_KEY:
       on_key_event(event);
