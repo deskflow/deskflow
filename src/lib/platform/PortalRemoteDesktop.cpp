@@ -94,7 +94,9 @@ void PortalRemoteDesktop::cb_session_started(
   auto session = XDP_SESSION(object);
   auto success = xdp_session_start_finish(session, res, &error);
   if (!success) {
-    LOG_ERR("failed to start portal remote desktop session");
+    LOG_ERR(
+        "failed to start portal remote desktop session, quitting: %s",
+        error->message);
     g_main_loop_quit(glib_main_loop_);
     events_->addEvent(Event::kQuit);
     return;
