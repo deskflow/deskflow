@@ -84,7 +84,9 @@ def parse_args(is_ci):
         "--skip-meson", action="store_true", help="Do not setup and compile with Meson"
     )
     parser.add_argument(
-        "--subproject", type=str, help="Sub-project to install dependencies for"
+        "--subprojects",
+        action="store_true",
+        help="Install dependencies for Meson subprojects (use with --meson-no-system)",
     )
     parser.add_argument(
         "--meson-install",
@@ -167,11 +169,6 @@ def install(args):
         deps = Dependencies(args)
         deps.install()
 
-    if args.subproject:
-        deps = SubprojectDependencies(args.subproject)
-        deps.install()
-        return
-
     # Only install vcpkg dependencies on Windows, since on other OS it's not needed (yet).
     # We probably won't ever need this on macOS and Linux since brew and apt/dnf/etc do a
     # good job of providing dependencies. Where they don't, we can use Meson.
@@ -181,6 +178,11 @@ def install(args):
         vcpkg.install()
 
     if not args.skip_meson:
+        if args.subprojects:
+            for subproject in args.meson_no_system or []:
+                deps = SubprojectDependencies(subproject)
+                deps.install()
+
         run_meson(args.meson_install, args.meson_no_system, args.meson_static)
 
 

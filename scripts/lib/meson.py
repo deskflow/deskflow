@@ -61,6 +61,7 @@ def static_subproject(subproject):
                 "static-lib.diff",
             ],
             print_cmd=True,
+            check=False,
         )
     else:
         raise Exception(f"Unknown subproject: {subproject}")
