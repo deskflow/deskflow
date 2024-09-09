@@ -1,0 +1,15 @@
+diff --git a/libportal/meson.build b/libportal/meson.build
+index 316bd9c..37a17f7 100644
+--- a/libportal/meson.build
++++ b/libportal/meson.build
+@@ -73,9 +73,8 @@ gio_unix_dep = dependency('gio-unix-2.0')
+ 
+ install_headers(headers, subdir: 'libportal')
+ 
+-libportal = library('portal',
++libportal = static_library('portal',
+   src,
+-  version: version,
+   include_directories: [top_inc, libportal_inc],
+   install: true,
+   dependencies: [gio_dep, gio_unix_dep],
