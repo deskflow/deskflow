@@ -19,13 +19,15 @@ maintained.
 Synergy 1 Community Edition is free and open source software, and anyone is welcome to build it,
 run it, tinker with it, redistribute it as part of their own app, etc.
 
-**Wayland support:** Experimental support in Synergy [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) (required >= GNOME 46 or KDE Plasma 6.1).
+**Wayland support:** Experimental support in 
+[Synergy v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2)
+(required >= GNOME 46 or KDE Plasma 6.1).
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
-To use the community edition, we encourage you to build it yourself using the _Build Quick Start_ instructions below
-or you can install the `synergy` package with your favorite package manager (please note that some package managers
-have older versions and need to be updated).
+To use the community edition, we encourage you to build it yourself using the [Build Quick Start](#build-quick-start)
+instructions below or you can install the `synergy` package with your [favorite package manager](#how-to-install-packages)
+(please note that some package managers have older versions and need to be updated).
 
 ## Roadmap
 
