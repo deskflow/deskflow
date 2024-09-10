@@ -249,4 +249,4 @@ versions across them and gathering other information.
 
 ## License
 
-This project is licensed under [GPL-2.0](LICENSE) with an OpenSSL [exception](LICENSE_EXCEPTION).
+This project is licensed under [GPL-2.0](LICENSE) with an [OpenSSL exception](LICENSE_EXCEPTION).
