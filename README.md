@@ -246,3 +246,8 @@ Repology monitors a huge number of package repositories and other sources compar
 versions across them and gathering other information.
 
 [![Repology](https://repology.org/badge/vertical-allrepos/synergy.svg?exclude_unsupported=1)](https://repology.org/project/synergy/versions)
+
+## License
+
+This project is licensed under [GPL-2.0](LICENSE), with a special exception for linking with
+OpenSSL as detailed in the [LICENSE-OpenSSL].
