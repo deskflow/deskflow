@@ -1,5 +1,9 @@
 # Synergy
 
+![GitHub Release](https://img.shields.io/github/v/release/symless/synergy?display_name=release&label=latest%20version)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/symless/synergy)
+![GitHub License](https://img.shields.io/github/license/symless/synergy)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy-core)
 [![CI](https://github.com/symless/synergy/actions/workflows/ci.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/ci.yml)
 [![CodeQL Analysis](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml)
@@ -15,12 +19,14 @@ maintained.
 Synergy 1 Community Edition is free and open source software, and anyone is welcome to build it,
 run it, tinker with it, redistribute it as part of their own app, etc.
 
-**Wayland support:** Wayland now has experimental support in [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) (GNOME 46 is required, KDE TBD).
+**Wayland support:** Wayland now has experimental support in Synergy [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) (required >= GNOME 46 or KDE Plasma 6.1).
+_Note:_ For now, Hyprland support appears to be missing for `org.freedesktop.portal.InputCapture`.
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
-To use the community edition, install the `synergy` package with your favorite package manager
-or build it yourself using the Developer Quick Start instructions below.
+To use the community edition, we encourage you to build it yourself using the _Build Quick Start_ instructions below
+or you can install the `synergy` package with your favorite package manager (please note that some package managers
+have older versions and need to be updated).
 
 ## Roadmap
 
@@ -62,13 +68,13 @@ Here are a few ways to join in with the project and get involved:
 * [Start a discussion](https://github.com/symless/synergy/discussions) on our GitHub project
 * [Read the wiki](https://github.com/symless/synergy/wiki) for guides and info
 
-## Developer Quick Start
+## Build Quick Start
 
 Synergy 1 Community Edition is free and open source software, and anyone is welcome to build it,
 run it, tinker with it, redistribute it as part of their own app, etc.
 
 These instructions will build Synergy 1 Community Edition, which doesn't require a license
-or serial key. Check the [Developer Guide](https://github.com/symless/synergy/wiki/Developer-Guide)
+or serial key. Check the [Build Guide](https://github.com/symless/synergy/wiki/Build-Guide)
 wiki page if you have problems.
 
 **1. Dependencies:**
