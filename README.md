@@ -249,5 +249,4 @@ versions across them and gathering other information.
 
 ## License
 
-This project is licensed under [GPL-2.0](LICENSE), with a special exception for linking with
-OpenSSL as detailed in the [LICENSE-OpenSSL](LICENSE-OpenSSL) file.
+This project is licensed under [GPL-2.0](LICENSE) with an OpenSSL [exception](LICENSE_EXCEPTION).
