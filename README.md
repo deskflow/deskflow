@@ -3,8 +3,8 @@
 [![GitHub Release](https://img.shields.io/github/v/release/symless/synergy?display_name=release&label=latest%20version)](https://github.com/symless/synergy/releases)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/symless/synergy)](https://github.com/symless/synergy/commits/master/)
 [![GitHub License](https://img.shields.io/github/license/symless/synergy)](LICENSE)
-
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy-core)
+
 [![CI](https://github.com/symless/synergy/actions/workflows/ci.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/ci.yml)
 [![CodeQL Analysis](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml)
 [![SonarCloud Analysis](https://github.com/symless/synergy/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/sonarcloud-analysis.yml)
