@@ -16,7 +16,6 @@ Synergy 1 Community Edition is free and open source software, and anyone is welc
 run it, tinker with it, redistribute it as part of their own app, etc.
 
 **Wayland support:** Wayland now has experimental support in [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) (required >= GNOME 46 or KDE Plasma 6.1).
-
 _Note:_ For now, Hyprland support appears to be missing for `org.freedesktop.portal.InputCapture`.
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
