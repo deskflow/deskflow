@@ -196,6 +196,11 @@ and communication has broken down between the package maintainer and the upstrea
 If you're a package maintainer and would like to bring the `synergy` package back to life, please 
 [get in touch](https://github.com/symless/synergy/wiki/Contact-the-team) if you need our help.
 
+## Similar Projects
+
+* [Lan Mouse](https://github.com/feschber/lan-mouse) - A Rust implementation with the goal of
+  having native front-ends and interoperability with Synergy.
+
 ## FAQ
 
 ### Has Synergy moved beyond its goals from the 1.x era?
