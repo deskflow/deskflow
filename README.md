@@ -21,7 +21,7 @@ _Note:_ For now, Hyprland support appears to be missing for `org.freedesktop.por
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
 
-To use the community edition, we encourage you to build it yourself using the Build Quick Start_ instructions below
+To use the community edition, we encourage you to build it yourself using the _Build Quick Start_ instructions below
 or you can install the `synergy` package with your favorite package manager (please note that some package managers
 have older versions and need to be updated).
 
