@@ -2,6 +2,7 @@
 
 Enhancements:
 
+- #7505 Remove static link in CI to libportal on Debian 13
 - #7503 Make package filenames consistent with previous versions
 
 # 1.16.0
