@@ -58,7 +58,8 @@ def get_linux_distro():
     os_file = "/etc/os-release"
     name = None
     name_like = None
-    version = None
+    version_id = None
+    version_codename = None
 
     if os.path.isfile(os_file):
         with open(os_file) as f:
@@ -68,9 +69,11 @@ def get_linux_distro():
                 elif line.startswith("ID_LIKE="):
                     name_like = line.strip().split("=")[1].strip('"')
                 elif line.startswith("VERSION_ID="):
-                    version = line.strip().split("=")[1].strip('"')
+                    version_id = line.strip().split("=")[1].strip('"')
+                elif line.startswith("VERSION_CODENAME="):
+                    version_codename = line.strip().split("=")[1].strip('"')
 
-    return name, name_like, version
+    return name, name_like, version_id or version_codename
 
 
 def get_env(name, required=True, default=None):

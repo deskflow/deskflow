@@ -57,6 +57,7 @@ def get_filename_base(version, use_linux_distro=True):
     os = env.get_os()
     machine = platform.machine().lower()
     package_base = env.get_env("SYNERGY_PACKAGE_PREFIX", default=default_package_prefix)
+    os_part = os
 
     if os == "linux" and use_linux_distro:
         distro_name, _distro_like, distro_version = env.get_linux_distro()
@@ -64,19 +65,25 @@ def get_filename_base(version, use_linux_distro=True):
             raise RuntimeError("Failed to detect Linux distro")
 
         if distro_version:
-            version_for_filename = distro_version.replace(".", "_")
-            distro = f"{distro_name}-{version_for_filename}"
+            version_for_filename = distro_version.replace(".", "-")
+            os_part = f"{distro_name}-{version_for_filename}"
         else:
-            distro = distro_name
+            os_part = distro_name
 
-        return f"{package_base}-{distro}-{machine}-{version}"
+        # For consistency with existing filenames, we'll use 'amd64' instead of 'x86_64'.
+        # Also, that's what Linux distros tend to call that architecture anyway.
+        if machine == "x86_64":
+            machine = "amd64"
     else:
-        # some windows users get confused by 'amd64' and think it's 'arm64',
-        # so we'll use intel's 'x64' branding (even though it's wrong).
-        if machine == "amd64":
+        # Some Windows users get confused by 'amd64' and think it's 'arm64',
+        # so we'll use Intel's 'x64' branding (even though it's wrong).
+        # Also replace 'x86_64' with 'x64' for consistency.
+        if machine == "amd64" or machine == "x86_64":
             machine = "x64"
 
-        return f"{package_base}-{os}-{machine}-{version}"
+    # Underscore is used to delimit different parts of the filename (e.g. version, OS, etc).
+    # Dashes are used to delimit spaces, e.g. "debian-trixie" for "Debian Trixie".
+    return f"{package_base}_{version}_{os_part}_{machine}"
 
 
 def windows_package(filename_base):
