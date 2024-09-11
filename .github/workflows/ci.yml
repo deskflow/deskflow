@@ -235,10 +235,6 @@ jobs:
             runs-on: ubuntu-latest
             extra-packages: true
 
-            # Static libportal only needed until libportal is updated to 0.8.x.
-            extra-dep-args: --meson-no-system libportal --meson-static libportal --subprojects
-            extra-cmake-args: -DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON
-
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
             runs-on: ubuntu-24.04-8-core-arm64
