@@ -65,7 +65,7 @@ def get_filename_base(version, use_linux_distro=True):
             raise RuntimeError("Failed to detect Linux distro")
 
         if distro_version:
-            version_for_filename = distro_version.replace(".", "_")
+            version_for_filename = distro_version.replace(".", "-")
             os_part = f"{distro_name}-{version_for_filename}"
         else:
             os_part = distro_name
