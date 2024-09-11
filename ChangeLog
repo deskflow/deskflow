@@ -2,8 +2,8 @@
 
 Enhancements:
 
-- #7505 Remove static link in CI to libportal on Debian 13
 - #7503 Make package filenames consistent with previous versions
+- #7505 Remove static link of libportal from Debian Trixie CI
 
 # 1.16.0
 
