@@ -69,12 +69,20 @@ def get_filename_base(version, use_linux_distro=True):
             os_part = f"{distro_name}-{version_for_filename}"
         else:
             os_part = distro_name
+
+        # For consistency with existing filenames, we'll use 'amd64' instead of 'x86_64'.
+        # Also, that's what Linux distros tend to call that architecture anyway.
+        if machine == "x86_64":
+            machine = "amd64"
     else:
         # Some Windows users get confused by 'amd64' and think it's 'arm64',
         # so we'll use Intel's 'x64' branding (even though it's wrong).
-        if machine == "amd64":
+        # Also replace 'x86_64' with 'x64' for consistency.
+        if machine == "amd64" or machine == "x86_64":
             machine = "x64"
 
+    # Underscore is used to delimit different parts of the filename (e.g. version, OS, etc).
+    # Dashes are used to delimit spaces, e.g. "debian-trixie" for "Debian Trixie".
     return f"{package_base}_{version}_{os_part}_{machine}"
 
 
