@@ -7,6 +7,7 @@ Enhancements:
 - #7506 Make `APPLE_CODESIGN_ID` env var optional for CE CI
 - #7507 Add `run-retry` action to workaround `integtest` `gcovr` issue
 - #7509 Use GitHub vars to determine custom runner names
+- #7510 Delete all `.gcda` files when integtests coverage fails
 
 # 1.16.0
 
