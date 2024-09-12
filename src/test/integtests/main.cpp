@@ -24,11 +24,17 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
+#include <filesystem>
 #include <gtest/gtest.h>
 
 using synergy::test::ExitTimeout;
 
+const auto testDir = "tmp/test";
+
 int main(int argc, char **argv) {
+  // HACK: Unit tests should not use the filesystem.
+  std::filesystem::create_directories(testDir);
+
   ExitTimeout exitTimeout(1, "Integration tests");
 
 #if SYSAPI_WIN32
