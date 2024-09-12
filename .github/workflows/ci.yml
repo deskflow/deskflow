@@ -153,7 +153,7 @@ jobs:
             arch: arm64
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-          - name: "macos-14-x64"
+          - name: ${{ vars.CI_MAC_INTEL_NAME || 'macos-13-x64' }}
             timeout: 20
             os: ${{ vars.CI_MAC_INTEL_RUNNER || 'macos-13' }}
             arch: x64
