@@ -82,9 +82,7 @@ jobs:
       - name: Integration tests coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        uses: ./.github/actions/run-retry
-        with:
-          run: cmake --build build --target coverage-integtests
+        run: cmake --build build --target coverage-integtests
 
       - name: Get coverage report paths
         id: coverage-paths

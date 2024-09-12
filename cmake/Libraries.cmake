@@ -583,6 +583,11 @@ macro(configure_coverage)
     set(test_exclude subprojects/* build/* src/test/*)
     set(test_src ${PROJECT_SOURCE_DIR}/src)
 
+    # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
+    # > Got negative hit value in gcov line 'branch  2 taken -1' caused by a bug in gcov tool
+    # Bug report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68080
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
+
     setup_target_for_coverage_gcovr_xml(
       NAME
       coverage-${INTEG_TESTS_BIN}

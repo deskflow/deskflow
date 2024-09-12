@@ -16,7 +16,6 @@
  */
 
 #include "base/Path.h"
-#include <filesystem>
 #include <fstream>
 
 #include <gtest/gtest.h>
@@ -25,8 +24,6 @@ const std::string testDir = "tmp/test";
 const std::wstring testDirW = L"tmp/test";
 
 TEST(PathTests, open_file_using_path) {
-  std::filesystem::create_directories(testDir);
-
   std::string utf8FileName = testDir + "/тіás.txt";
 #if SYSAPI_WIN32
   // Windows uses UTF-16 for file path and names

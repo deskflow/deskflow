@@ -18,15 +18,12 @@
 #if WINAPI_XWINDOWS
 #include "synergy/unix/X11LayoutsParser.h"
 
-#include <filesystem>
 #include <fstream>
 #include <gtest/gtest.h>
 
 const std::string testDir = "tmp/test";
 
 void createTestFiles() {
-  std::filesystem::create_directories(testDir);
-
   std::ofstream correctEvdevFile(testDir + "/correctEvdev.xml");
   if (!correctEvdevFile.is_open()) {
     FAIL();
