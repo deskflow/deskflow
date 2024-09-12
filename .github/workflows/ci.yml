@@ -145,14 +145,14 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Package
-        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
+        if: ${{ env.PACKAGE_BUILD == 'true' }}
         run: python ./scripts/package.py
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
 
       - name: Upload
-        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
+        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use-github: true
@@ -223,7 +223,7 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Package
-        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
+        if: ${{ env.PACKAGE_BUILD == 'true' }}
         run: ./scripts/package.py
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
@@ -234,7 +234,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
-        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
+        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use-github: true
@@ -308,14 +308,14 @@ jobs:
           job: linux-${{ matrix.distro.name }}
 
       - name: Package
-        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
+        if: ${{ env.PACKAGE_BUILD == 'true' }}
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
           LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
         run: ./scripts/package.py
 
       - name: Upload
-        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
+        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
           use-github: true
