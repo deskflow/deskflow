@@ -229,15 +229,16 @@ jobs:
 
       - id: set-matrix
         run: |
+          json_file=".github/workflows/ci-linux.json"
           if [ "${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true" ]; then
             echo "Excluding arm64 builds from the matrix."
             matrix=$(
               jq '.distro |= map(select(.["runs-on"] | contains("arm64") | not))'
-              .github/workflows/ci-linux.json
+              $json_file
             )
           else
             echo "Returning all builds for the matrix."
-            matrix=$(cat ci-linux.json)
+            matrix=$(cat $json_file)
           fi
           echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
