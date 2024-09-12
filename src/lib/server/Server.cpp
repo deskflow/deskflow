@@ -1790,6 +1790,9 @@ void Server::sendDragInfo(BaseClientProxy *newScreen) {
 
 void Server::onMouseMoveSecondary(SInt32 dx, SInt32 dy) {
   LOG((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
+  dx = dx - dx / 3;
+  dy = dy - dy / 3;
+  LOG((CLOG_DEBUG1 "Adjusted to %+d,%+d", dx, dy));
 
   // mouse move on secondary (client's) screen
   assert(m_active != NULL);
