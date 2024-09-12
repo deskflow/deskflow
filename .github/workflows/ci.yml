@@ -237,7 +237,7 @@ jobs:
 
           - name: debian-12-arm64
             container: symless/synergy-core:debian-12-arm64
-            runs-on: ubuntu-24.04-8-core-arm64
+            runs-on: ${{ vars.CI_LINUX_ARM_RUNNER }}
             extra-packages: true
 
           - name: debian-12-amd64
@@ -259,7 +259,7 @@ jobs:
 
           - name: fedora-40-arm64
             container: symless/synergy-core:fedora-40-arm64
-            runs-on: ubuntu-24.04-8-core-arm64
+            runs-on: ${{ vars.CI_LINUX_ARM_RUNNER }}
 
           - name: fedora-40-amd64
             container: symless/synergy-core:fedora-40-amd64
