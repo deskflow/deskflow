@@ -155,7 +155,7 @@ jobs:
 
           - name: "macos-14-x64"
             timeout: 20
-            os: "macos-14-large"
+            os: ${{ vars.CI_MAC_INTEL_RUNNER || 'macos-13' }}
             arch: x64
             shell: "bash"
 
