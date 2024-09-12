@@ -55,7 +55,7 @@ jobs:
       matrix:
         target:
           - name: windows-2022-x64
-            runs-on: ${{ vars.WINDOWS_RUNNER || 'windows-2022' }}
+            runs-on: ${{ vars.CI_WINDOWS_RUNNER || 'windows-2022' }}
 
     steps:
       - name: Checkout
@@ -348,7 +348,7 @@ jobs:
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
     name: unix-${{ matrix.distro.name }}
-    runs-on: ubuntu-24.04-16-core-x64
+    runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
     timeout-minutes: 20
 
     env:
