@@ -14,13 +14,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import dmgbuild  # type: ignore
-import os, time, json, shutil
+import os, time, json, shutil, sys
 import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
 
 cert_p12_env = "APPLE_P12_CERTIFICATE"
 notary_user_env = "APPLE_NOTARY_USER"
+codesign_env = "APPLE_CODESIGN_ID"
 shell_rc = "~/.zshrc"
 dist_dir = "dist"
 product_name = "Synergy 1"
@@ -74,20 +75,34 @@ def package(filename_base):
     if cert_base64:
         install_certificate(cert_base64, cert_password)
     else:
-        print(f"Skipped certificate installation, env var {cert_p12_env} not set")
+        print(
+            f"Warning: Skipped certificate installation, env var {cert_p12_env} not set",
+            file=sys.stderr,
+        )
 
     build_bundle()
-    sign_bundle(codesign_id)
+
+    if codesign_id:
+        sign_bundle(codesign_id)
+    else:
+        print(
+            f"Warning: Skipped code signing, env var {codesign_env} not set",
+            file=sys.stderr,
+        )
+
     dmg_path = build_dmg(filename_base)
 
     if notary_user:
         notarize_package(dmg_path, notary_user, notary_password, notary_team_id)
     else:
-        print(f"Skipped notarization, env var {notary_user_env} not set")
+        print(
+            f"Warning: Skipped notarization, env var {notary_user_env} not set",
+            file=sys.stderr,
+        )
 
 
 def package_env_vars():
-    codesign_id = env.get_env("APPLE_CODESIGN_ID")
+    codesign_id = env.get_env(codesign_env, required=False)
     cert_base64 = env.get_env(cert_p12_env, required=False)
     notary_user = env.get_env(notary_user_env, required=False)
 
