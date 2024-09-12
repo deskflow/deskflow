@@ -33,10 +33,5 @@ runs:
           echo "Not filtering JSON"
           json=$(cat $json_file)
         fi
-        echo "json=$(echo $json)" >> $GITHUB_OUTPUT
-
-    - name: Debug
-      shell: bash
-      run: |
-        json="${{ steps.filter.outputs.json }}"
         echo $json
+        echo "json=$(echo $json)" >> $GITHUB_OUTPUT
