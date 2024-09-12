@@ -240,7 +240,11 @@ jobs:
             echo "Returning all builds for the matrix."
             matrix=$(cat $json_file)
           fi
-          echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+          echo "matrix=$(echo $matrix)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Debug
+        run: echo "${{ steps.set-matrix.outputs.matrix }}"
 
   linux:
     name: linux-${{ matrix.distro.name }}
