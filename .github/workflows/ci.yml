@@ -221,30 +221,19 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      json-matrix: ${{ steps.filter.outputs.matrix }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - id: set-matrix
-        run: |
-          json_file=".github/workflows/ci-linux.json"
-          if [ "${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true" ]; then
-            echo "Excluding arm64 builds from the matrix."
-            matrix=$( \
-              jq '.distro |= map(select(.["runs-on"] | contains("arm64") | not))' \
-              $json_file \
-            )
-          else
-            echo "Returning all builds for the matrix."
-            matrix=$(cat $json_file)
-          fi
-          echo "matrix=$(echo $matrix)" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Debug
-        run: echo "${{ steps.set-matrix.outputs.matrix }}"
+      - name: Filter JSON
+        uses: ./.github/actions/filter-json
+        id: filter
+        with:
+          json-file: .github/workflows/ci-linux.json
+          condition: '"${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true"'
+          jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
 
   linux:
     name: linux-${{ matrix.distro.name }}
@@ -257,7 +246,7 @@ jobs:
       # Normally, we want to fail fast, but in this case we shouldn't since one distro may
       # fail due to transient issues unrelated to the build.
       fail-fast: false
-      matrix: ${{fromJson(needs.linux-matrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.linux-matrix.outputs.json-matrix)}}
 
     steps:
       - name: Checkout
