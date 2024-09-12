@@ -37,4 +37,6 @@ runs:
 
     - name: Debug
       shell: bash
-      run: echo "${{ steps.filter.outputs.json }}"
+      run: |
+        json="${{ steps.filter.outputs.json }}"
+        echo $json
