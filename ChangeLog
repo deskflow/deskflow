@@ -5,6 +5,7 @@ Enhancements:
 - #7503 Make package filenames consistent with previous versions
 - #7505 Remove static link of libportal from Debian Trixie CI
 - #7506 Make `APPLE_CODESIGN_ID` env var optional for CE CI
+- #7507 Add `run-retry` action to workaround `integtest` `gcovr` issue
 
 # 1.16.0
 
