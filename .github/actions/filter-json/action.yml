@@ -36,4 +36,5 @@ runs:
         echo "json=$(echo $json)" >> $GITHUB_OUTPUT
 
     - name: Debug
+      shell: bash
       run: echo "${{ steps.filter.outputs.json }}"
