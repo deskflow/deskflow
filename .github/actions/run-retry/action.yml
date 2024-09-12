@@ -1,13 +1,20 @@
 name: "Retry command"
 description: "Retries a specified command up to a specified number of times."
+
 inputs:
   run:
     description: "The command to run"
     required: true
+
+  run-on-fail:
+    description: "The command to run on failure (between retries)"
+    required: false
+
   retries:
     description: "Number of retries"
     required: false
     default: 3
+
 runs:
   using: "composite"
   steps:
@@ -24,6 +31,9 @@ runs:
             echo "Attempt $attempt failed! No more retries left."
             exit 1
           fi
+
+          ${{ inputs.run-on-fail }}
+
           echo "Attempt $attempt failed! Retrying in $delay seconds..."
           attempt=$((attempt + 1))
         done

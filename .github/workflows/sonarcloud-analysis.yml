@@ -85,6 +85,7 @@ jobs:
         uses: ./.github/actions/run-retry
         with:
           run: cmake --build build --target coverage-integtests
+          run-on-fail: find build -name '*.gcda' -delete
 
       - name: Get coverage report paths
         id: coverage-paths
