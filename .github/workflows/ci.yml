@@ -291,6 +291,12 @@ jobs:
             runs-on: ubuntu-latest
             package-user: build
 
+        exclude:
+          - distro.name: ${{ vars.CI_LINUX_ARM_RUNNER || 'debian-12-arm64' }}
+            reason: "To enable ARM runners, use a GitHub paid plan."
+          - distro.name: ${{ vars.CI_LINUX_ARM_RUNNER || 'fedora-40-arm64' }}
+            reason: "To enable ARM runners, use a GitHub paid plan."
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
