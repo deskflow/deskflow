@@ -78,6 +78,7 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: cmake --build build --target coverage-unittests
 
+      # Retry integtests coverae as gcovr intermittently fails to parse .gcda files.
       - name: Integration tests coverage
         env:
           QT_QPA_PLATFORM: offscreen
