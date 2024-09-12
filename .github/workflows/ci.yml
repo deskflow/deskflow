@@ -221,7 +221,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      json-matrix: ${{ steps.filter.outputs.matrix }}
+      json-matrix: ${{ steps.filter.outputs.json }}
 
     steps:
       - name: Checkout

@@ -31,7 +31,7 @@ runs:
           json=$(jq '${{ inputs.jq-filter }}' $json_file)
         else
           echo "Not filtering JSON"
-          json=$(jq '.' $json_file)
+          json=$(cat $json_file)
         fi
         echo "json=$(echo $json)" >> $GITHUB_OUTPUT
 
