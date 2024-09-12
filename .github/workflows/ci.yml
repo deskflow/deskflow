@@ -217,85 +217,39 @@ jobs:
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.SYNERGY_VERSION }}
 
+  linux-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - id: set-matrix
+        run: |
+          if [ "${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true" ]; then
+            echo "Excluding arm64 builds from the matrix."
+            jq '.distro |= map(select(.["runs-on"] | contains("arm64") | not))' ci-linux.json 
+          else
+            echo "Returning all builds for the matrix."
+            jq '.' ci-linux.json
+          fi
+          echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+
   linux:
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
+    needs: linux-matrix
     timeout-minutes: 20
 
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one distro may
       # fail due to transient issues unrelated to the build.
       fail-fast: false
-
-      matrix:
-        distro:
-          - name: debian-13-amd64
-            container: symless/synergy-core:debian-13-amd64
-            runs-on: ubuntu-latest
-            extra-packages: true
-
-          - name: debian-12-arm64
-            container: symless/synergy-core:debian-12-arm64
-            runs-on: "ubuntu-24.04-8-core-arm64"
-            extra-packages: true
-
-          - name: debian-12-amd64
-            container: symless/synergy-core:debian-12-amd64
-            runs-on: ubuntu-latest
-            extra-packages: true
-
-          - name: ubuntu-24.04-amd64
-            container: symless/synergy-core:ubuntu-24.04-amd64
-            runs-on: ubuntu-latest
-
-            # Static libportal only needed until libportal is updated to 0.8.x.
-            extra-dep-args: --meson-no-system libportal --meson-static libportal --subprojects
-            extra-cmake-args: -DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON
-
-          - name: ubuntu-22.04-amd64
-            container: symless/synergy-core:ubuntu-22.04-amd64
-            runs-on: ubuntu-latest
-
-          - name: fedora-40-arm64
-            container: symless/synergy-core:fedora-40-arm64
-            runs-on: "ubuntu-24.04-8-core-arm64"
-
-          - name: fedora-40-amd64
-            container: symless/synergy-core:fedora-40-amd64
-            runs-on: ubuntu-latest
-
-          - name: fedora-39-amd64
-            container: symless/synergy-core:fedora-39-amd64
-            runs-on: ubuntu-latest
-
-          - name: opensuse-amd64
-            container: symless/synergy-core:opensuse-amd64
-            runs-on: ubuntu-latest
-
-          - name: rockylinux-9-amd64
-            container: symless/synergy-core:rockylinux-9-amd64
-            runs-on: ubuntu-latest
-
-          - name: almalinux-9-amd64
-            container: symless/synergy-core:almalinux-9-amd64
-            runs-on: ubuntu-latest
-
-          - name: archlinux-amd64
-            container: symless/synergy-core:archlinux-amd64
-            runs-on: ubuntu-latest
-            package-user: build
-
-          - name: manjaro-amd64
-            container: symless/synergy-core:manjaro-amd64
-            runs-on: ubuntu-latest
-            package-user: build
-
-        exclude:
-          - distro.name: ${{ vars.CI_USE_LINUX_ARM_RUNNER != 'true' && 'debian-12-arm64' }}
-            reason: "To enable ARM runners, use a GitHub paid plan."
-          - distro.name: ${{ vars.CI_USE_LINUX_ARM_RUNNER != 'true' && 'fedora-40-arm64' }}
-            reason: "To enable ARM runners, use a GitHub paid plan."
+      matrix: ${{fromJson(needs.linux-matrix.outputs.matrix)}}
 
     steps:
       - name: Checkout
