@@ -55,9 +55,13 @@ jobs:
       matrix:
         target:
           - name: windows-2022-x64
-            runs-on: windows-2022-8-core-x64
+            runs-on: ${{ vars.WINDOWS_RUNNER || 'windows-2022' }}
 
     steps:
+      - if: ${{ vars.USE_LARGE_RUNNERS == 'true' && matrix.target.runner-large == null }}
+        name: Skip job
+        run: echo "Skipping job as large runner is not available."
+
       - name: Checkout
         uses: actions/checkout@v4
 
