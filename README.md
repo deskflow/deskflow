@@ -1,5 +1,11 @@
 # Synergy
 
+> [!IMPORTANT]
+> 🚀 Big changes are happening in the Synergy development community!
+> 
+> Been away for a while? Curious about what's changed?
+> [Join the discussion](https://github.com/symless/synergy/discussions/7476)
+
 [![GitHub Release](https://img.shields.io/github/v/release/symless/synergy?display_name=release&label=latest%20version)](https://github.com/symless/synergy/releases)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/symless/synergy)](https://github.com/symless/synergy/commits/master/)
 [![GitHub License](https://img.shields.io/github/license/symless/synergy)](LICENSE)
