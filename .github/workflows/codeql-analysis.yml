@@ -16,7 +16,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
 
     name: Analyze
-    runs-on: ubuntu-24.04
+    runs-on: ${{ vars.CODEQL_RUNNER || 'ubuntu-24.04' }}
     container: symless/synergy-core:ubuntu-24.04-amd64
     timeout-minutes: 20
 
