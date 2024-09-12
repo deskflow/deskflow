@@ -42,6 +42,7 @@ jobs:
         uses: ./.github/actions/run-tests-setup
 
   windows:
+    needs: setup
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
@@ -132,6 +133,7 @@ jobs:
           package-version: ${{ env.SYNERGY_VERSION }}
 
   macos:
+    needs: setup
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
@@ -236,10 +238,10 @@ jobs:
           jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
 
   linux:
+    needs: [setup, linux-matrix]
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
-    needs: linux-matrix
     timeout-minutes: 20
 
     strategy:
