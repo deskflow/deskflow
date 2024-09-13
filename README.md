@@ -206,8 +206,9 @@ That's a bit sad. If you're a package maintainer, please let us know if you have
 
 ### Is Synergy compatible with Lan Mouse or Input Leap?
 
-We would love to see compatibility between our fellow open source projects, Lan Mouse and Input Leap.
-If you're interested in collaborating, please feel free to reach out to us.
+We would love to see compatibility between our fellow open source projects, Lan Mouse and 
+Input Leap. This idea is discussed from time in the communities for all of our projects,
+so it may happen in the not-too-distant future.
 
 ### Has Synergy moved beyond its goals from the 1.x era?
 
