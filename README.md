@@ -200,7 +200,7 @@ That's a bit sad. If you're a package maintainer, please let us know if you have
 * [Lan Mouse](https://github.com/feschber/lan-mouse) - A Rust implementation with the goal of
   having native front-ends and interoperability with Synergy.
 * [Input Leap](https://github.com/input-leap/input-leap) - A Synergy-derivative with the goal
-  of continuing what Barrier started (now a dead Synergy fork).
+  of continuing what Barrier started (a now dead Synergy fork).
 
 ## FAQ
 
