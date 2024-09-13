@@ -1,5 +1,12 @@
 # Synergy
 
+> [!TIP]
+> We're on Libera Chat IRC network (`#synergy` or `#synergy-dev`).
+> 
+> Alternatively, there's [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) (`#open-source` channel).
+>
+> Or if you want to stay on GitHub, you can [start a new discussion](https://github.com/symless/synergy/discussions).
+
 > [!IMPORTANT]
 > 🚀 Big changes are happening in the Synergy development community!
 > 
@@ -47,33 +54,18 @@ please [start a discussion](https://github.com/symless/synergy/discussions).
 
 ## Goals and Philosophy
 
-Version 1.15 brings a new philosophy of being more approachable to the open source community 
-instead of wholly focusing on commercial interests.
+Version 1.15 brings a [new philosophy](https://github.com/symless/synergy/discussions/7476)
+of being more approachable to the open source community instead of wholly focusing on commercial interests.
 We still have customers to finance the development of the code, but we are committed to
 maintaining and improving Synergy 1 Community Edition for years to come and we're excited to work
 with our community of open source users to improve the code for the benefit of everyone.
 
-## Operating Systems
-
-We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
-
-All Linux distributions are supported, primarily focusing on: 
-Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
-
-We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
-
 ## Ways to get involved
 
 Here are a few ways to join in with the project and get involved:
-* Compile the latest `master` version (see below) and [report a bug](https://github.com/symless/synergy/issues)
+* Build the latest `master` version (see below) and [report a bug](https://github.com/symless/synergy/issues)
 * [Submit a PR](https://github.com/symless/synergy/wiki/Contributing) (pull request) with a bug fix or improvement
 * [Let us know](https://github.com/symless/synergy/issues) if you have an idea for an improvement
-
-## Where to get help
-
-* Join us on [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) (`#open source` channel)
-* [Start a discussion](https://github.com/symless/synergy/discussions) on our GitHub project
-* [Read the wiki](https://github.com/symless/synergy/wiki) for guides and info
 
 ## Build Quick Start
 
@@ -165,8 +157,16 @@ choco install synergy
 ```
 
 **Note:** Some packages are temporarily broken. We have reached out to the package maintainers to 
-resolve this. If you're a package maintainer and have a question for us, 
-[please let us know](ttps://github.com/symless/synergy/wiki/Contact-the-team).
+resolve this. If you're a package maintainer and have a question, please let us know.
+
+## Operating Systems
+
+We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
+
+All Linux distributions are supported, primarily focusing on: 
+Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
+
+We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
 
 ## Package Maintainers
 
@@ -174,40 +174,41 @@ Synergy is already available through most package managers as `synergy`, and we 
 the latest version of Synergy 1 Community Edition on every package manager for every OS we support
 (Windows, macOS, Linux, Unix-like BSD-derived, etc).
 
-Package maintainers can use `scripts/package.py` to see how we build packages,
-but most package maintainers will create a packaging script rather than use our scripts 
-(which is fine by us).
-If you're a package maintainer and have a question, please 
-[get in touch](https://github.com/symless/synergy/wiki/Contact-the-team).
+Package maintainers can use `scripts/package.py` to see how we build packages.
+Feel free to contact us if you have any questions about packaging Synergy.
 
-Good packages:
+Current packages:
 - [Fedora](https://packages.fedoraproject.org/pkgs/synergy/synergy/)
 - [Arch Linux](https://aur.archlinux.org/packages/synergy)
 - [FreeBSD](https://www.freshports.org/sysutils/synergy)
 - [Homebrew](https://formulae.brew.sh/formula/synergy-core#default)
 - [Gentoo](https://packages.gentoo.org/packages/x11-misc/synergy)
+
+Very outdated packages:
+- [Chocolatey](https://community.chocolatey.org/packages/synergy)
 - [openSUSE](https://build.opensuse.org/package/show/openSUSE:Factory/synergy)
 
 Broken packages:
 - [Ubuntu](https://launchpad.net/ubuntu/+source/synergy)
 - [Debian](https://tracker.debian.org/pkg/synergy)
-- [Chocolatey](https://community.chocolatey.org/packages/synergy)
 
-It appears that the `synergy` package has been removed or discontinued from some package 
-repositories. There are many reasons why this may happen, but sometimes if a package maintainer
-steps down or leaves the project without finding a replacement, the package might lose support,
-leading to its removal.
-This can also happen when there are difficulties updating the package to the latest version,
-and communication has broken down between the package maintainer and the upstream developers.
-If you're a package maintainer and would like to bring the `synergy` package back to life, please 
-[get in touch](https://github.com/symless/synergy/wiki/Contact-the-team) if you need our help.
+It appears that the `synergy` package has been removed or discontinued from some package repositories.
+That's a bit sad. If you're a package maintainer, please let us know if you have any questions.
 
 ## Similar Projects
 
 * [Lan Mouse](https://github.com/feschber/lan-mouse) - A Rust implementation with the goal of
   having native front-ends and interoperability with Synergy.
+* [Input Leap](https://github.com/input-leap/input-leap) - A Synergy-derivative with the goal
+  of continuing what Barrier started (a now dead Synergy fork).
 
 ## FAQ
+
+### Is Synergy compatible with Lan Mouse or Input Leap?
+
+We would love to see compatibility between our fellow open source projects, Lan Mouse and 
+Input Leap. This idea is discussed from time in the communities for all of our projects,
+so it may happen in the not-too-distant future.
 
 ### Has Synergy moved beyond its goals from the 1.x era?
 
