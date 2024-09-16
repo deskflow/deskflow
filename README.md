@@ -2,6 +2,7 @@
 
 > [!TIP]
 > We're on Libera Chat IRC network (`#deskflow` or `#deskflow-dev`).
+> 
 > Or if you want to stay on GitHub, you can [start a new discussion](https://github.com/symless/synergy/discussions).
 
 > [!IMPORTANT]
