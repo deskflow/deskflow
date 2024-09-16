@@ -3,7 +3,7 @@
 > [!TIP]
 > We're on Libera Chat IRC network (`#deskflow` or `#deskflow-dev`).
 > 
-> Or if you want to stay on GitHub, you can [start a new discussion](https://github.com/symless/synergy/discussions).
+> Or if you want to stay on GitHub, you can [start a new discussion](https://github.com/deskflow/deskflow/discussions).
 
 > [!IMPORTANT]
 > 🚀 Deskflow is now the upstream project for Synergy.
@@ -14,17 +14,17 @@
 > We are currently in the process of renaming the project to Deskflow and moving all licensing code downstream.
 > Hold on to your butts, this is going to be a hell of a ride.
 > 
-> [Join the discussion](https://github.com/symless/synergy/discussions/7476)
+> [Join the discussion](https://github.com/deskflow/deskflow/discussions/7476)
 
-[![GitHub Release](https://img.shields.io/github/v/release/symless/synergy?display_name=release&label=latest%20version)](https://github.com/symless/synergy/releases)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/symless/synergy)](https://github.com/symless/synergy/commits/master/)
-[![GitHub License](https://img.shields.io/github/license/symless/synergy)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/deskflow/deskflow?display_name=release&label=latest%20version)](https://github.com/deskflow/deskflow/releases)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow)](https://github.com/deskflow/deskflow/commits/master/)
+[![GitHub License](https://img.shields.io/github/license/deskflow/deskflow)](LICENSE)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy-core)
 
-[![CI](https://github.com/symless/synergy/actions/workflows/ci.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/ci.yml)
-[![CodeQL Analysis](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/codeql-analysis.yml)
-[![SonarCloud Analysis](https://github.com/symless/synergy/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/sonarcloud-analysis.yml)
-[![Build containers](https://github.com/symless/synergy/actions/workflows/build-containers.yml/badge.svg)](https://github.com/symless/synergy/actions/workflows/build-containers.yml)
+[![CI](https://github.com/deskflow/deskflow/actions/workflows/ci.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/ci.yml)
+[![CodeQL Analysis](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml)
+[![SonarCloud Analysis](https://github.com/deskflow/deskflow/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/sonarcloud-analysis.yml)
+[![Build containers](https://github.com/deskflow/deskflow/actions/workflows/build-containers.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/build-containers.yml)
 
 [Synergy](https://symless.com/synergy) is a keyboard and mouse sharing app. 
 Use the keyboard, mouse, or trackpad of one computer to control nearby computers, 
@@ -36,7 +36,7 @@ Synergy 1 Community Edition is free and open source software, and anyone is welc
 run it, tinker with it, redistribute it as part of their own app, etc.
 
 **Wayland support:** Experimental support in 
-[Synergy v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2)
+[Synergy v1.16](https://github.com/deskflow/deskflow/releases/tag/1.16.0-beta%2Br2)
 (required >= GNOME 46 or KDE Plasma 6.1).
 
 ![Synergy 1 Community Edition](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
@@ -47,7 +47,7 @@ instructions below or you can install the `synergy` package with your [favorite 
 
 ## Goals and Philosophy
 
-Version 1.15 brings a [new philosophy](https://github.com/symless/synergy/discussions/7476)
+Version 1.15 brings a [new philosophy](https://github.com/deskflow/deskflow/discussions/7476)
 of being more approachable to the open source community instead of wholly focusing on commercial interests.
 We still have customers to finance the development of the code, but we are committed to
 maintaining and improving Synergy 1 Community Edition for years to come and we're excited to work
@@ -56,9 +56,9 @@ with our community of open source users to improve the code for the benefit of e
 ## Ways to get involved
 
 Here are a few ways to join in with the project and get involved:
-* Build the latest `master` version (see below) and [report a bug](https://github.com/symless/synergy/issues)
-* [Submit a PR](https://github.com/symless/synergy/wiki/Contributing) (pull request) with a bug fix or improvement
-* [Let us know](https://github.com/symless/synergy/issues) if you have an idea for an improvement
+* Build the latest `master` version (see below) and [report a bug](https://github.com/deskflow/deskflow/issues)
+* [Submit a PR](https://github.com/deskflow/deskflow/wiki/Contributing) (pull request) with a bug fix or improvement
+* [Let us know](https://github.com/deskflow/deskflow/issues) if you have an idea for an improvement
 
 ## Build Quick Start
 
@@ -67,7 +67,7 @@ run it, tinker with it, redistribute it as part of their own app, etc.
 
 > [!TIP]
 > These instructions will build Synergy 1 Community Edition, which doesn't require a license
-> or serial key. Check the [Build Guide](https://github.com/symless/synergy/wiki/Build-Guide)
+> or serial key. Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
 > wiki page if you have problems.
 
 **1. Dependencies:**
@@ -214,13 +214,13 @@ the product.
 ### If I want to solve issues in Synergy do I need to contribute to a fork?
 
 We welcome PRs (pull requests) from the community. If you'd like to make a change, please feel
-free to [start a discussion](https://github.com/symless/synergy/discussions) or 
-[open a PR](https://github.com/symless/synergy/wiki/Contributing).
+free to [start a discussion](https://github.com/deskflow/deskflow/discussions) or 
+[open a PR](https://github.com/deskflow/deskflow/wiki/Contributing).
 It's great that people spin up re-branded forks of Synergy, power to them. However, it's not 
 necessary if you want to make changes.
 If you're thinking of starting your own re-branded fork of Synergy, it might be because we're
 doing something wrong so please 
-[let us know](https://github.com/symless/synergy/wiki/Contact-the-team) what we can do to let
+[let us know](https://github.com/deskflow/deskflow/wiki/Contact-the-team) what we can do to let
 you feel welcome in our community.
 
 ### Is clipboard sharing supported?
@@ -243,7 +243,7 @@ support.
 ### Where did it all start?
 
 Synergy was first created in 2001 by Chris Schoeneman.
-Read about the [history of the project](https://github.com/symless/synergy/wiki/History) on our
+Read about the [history of the project](https://github.com/deskflow/deskflow/wiki/History) on our
 wiki.
 
 ## Repology
