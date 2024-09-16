@@ -1,16 +1,18 @@
-# Synergy
+# Deskflow
 
 > [!TIP]
-> We're on Libera Chat IRC network (`#synergy` or `#synergy-dev`).
-> 
-> Alternatively, there's [Discord](https://discord.com/invite/xBFv6j7) or [Slack](https://synergy-app.slack.com/join/shared_invite/zt-d8if26fr-6x~TSTz4skGmTnFP5IPaww#/shared-invite/email) (`#open-source` channel).
->
+> We're on Libera Chat IRC network (`#deskflow` or `#deskflow-dev`).
 > Or if you want to stay on GitHub, you can [start a new discussion](https://github.com/symless/synergy/discussions).
 
 > [!IMPORTANT]
-> 🚀 Big changes are happening in the Synergy development community!
+> 🚀 Deskflow is now the upstream project for Synergy.
+>
+> The project has been renamed to draw a line between the community-run project (now Deskflow),
+> and the commercially licensed product, Synergy (a mix of open source and proprietary).
+>
+> We are currently in the process of renaming the project to Deskflow and moving all licensing code downstream.
+> Hold on to your butts, this is going to be a hell of a ride.
 > 
-> Been away for a while? Curious about what's changed?
 > [Join the discussion](https://github.com/symless/synergy/discussions/7476)
 
 [![GitHub Release](https://img.shields.io/github/v/release/symless/synergy?display_name=release&label=latest%20version)](https://github.com/symless/synergy/releases)
@@ -41,16 +43,6 @@ run it, tinker with it, redistribute it as part of their own app, etc.
 To use the community edition, we encourage you to build it yourself using the [Build Quick Start](#build-quick-start)
 instructions below or you can install the `synergy` package with your [favorite package manager](#how-to-install-packages)
 (please note that some package managers have older versions and need to be updated).
-
-## Roadmap
-
-| Version | Main goal | Date | Status |
-| --- | --- | --- | --- |
-| [v1.16](https://github.com/symless/synergy/releases/tag/1.16.0-beta%2Br2) | Experimental Wayland support (`libei` and `libportal`) | 9th Sep 2024 | Beta released |
-| v1.17 | Cross-platform daemon to replace legacy daemon | 18th Oct 2024 | Planning |
-
-Dates are likely to change. If you have any questions, 
-please [start a discussion](https://github.com/symless/synergy/discussions).
 
 ## Goals and Philosophy
 
