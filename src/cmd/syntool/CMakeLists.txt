@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -39,7 +39,7 @@ target_link_libraries(
   ${libs})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  install(TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+  install(TARGETS ${target} DESTINATION ${DESKFLOW_BUNDLE_BINARY_DIR})
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(TARGETS ${target} DESTINATION bin)
 endif()

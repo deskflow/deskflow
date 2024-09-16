@@ -195,11 +195,11 @@ TEST_F(MSWindowsClipboardTests, get_withFormatAdded_returnsExpected) {
   EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST_F(MSWindowsClipboardTests, isOwnedBySynergy_defaultState_noError) {
+TEST_F(MSWindowsClipboardTests, isOwnedByDeskflow_defaultState_noError) {
   MSWindowsClipboard clipboard(NULL);
   clipboard.open(0);
 
-  bool actual = clipboard.isOwnedBySynergy();
+  bool actual = clipboard.isOwnedByDeskflow();
 
   EXPECT_EQ(true, actual);
 }

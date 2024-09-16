@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -25,11 +25,11 @@
 #include "gui/config/ServerConfigDialogState.h"
 #include "gui/messages.h"
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class ServerConnection : public QObject {
   Q_OBJECT
-  using IServerConfig = synergy::gui::IServerConfig;
+  using IServerConfig = deskflow::gui::IServerConfig;
 
 public:
   struct Deps {
@@ -60,4 +60,4 @@ private:
   bool m_messageShowing = false;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 TEST(dotenv_tests, dotenv_fileDoesNotExist_doesNotLoadEnvVar) {
   const QString envFile = "tmp/test/.env";
 
-  synergy::gui::dotenv(envFile);
+  deskflow::gui::dotenv(envFile);
 
   const QString actualValue = qEnvironmentVariable("TEST_ENV_VAR");
   EXPECT_TRUE(actualValue.isEmpty());
@@ -48,7 +48,7 @@ TEST(dotenv_tests, dotenv_envFileWithEntry_loadsEnvVar) {
   out << entry << Qt::endl;
   file.close();
 
-  synergy::gui::dotenv(envFile);
+  deskflow::gui::dotenv(envFile);
 
   const QString actualValue = qEnvironmentVariable(qPrintable(key));
   EXPECT_EQ("test value", actualValue.toStdString());

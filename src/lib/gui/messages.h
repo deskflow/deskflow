@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 class QWidget;
 
-namespace synergy::gui::messages {
+namespace deskflow::gui::messages {
 
 enum class ClientError { AlreadyConnected, HostnameError, GenericError };
 
@@ -56,4 +56,4 @@ void showWaylandExperimental(QWidget *parent);
 
 void showWaylandLibraryError(QWidget *parent);
 
-} // namespace synergy::gui::messages
+} // namespace deskflow::gui::messages

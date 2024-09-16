@@ -31,7 +31,7 @@
 ArchDaemonWindows *ArchDaemonWindows::s_daemon = NULL;
 
 ArchDaemonWindows::ArchDaemonWindows() : m_daemonThreadID(0) {
-  m_quitMessage = RegisterWindowMessage("SynergyDaemonExit");
+  m_quitMessage = RegisterWindowMessage("DeskflowDaemonExit");
 }
 
 ArchDaemonWindows::~ArchDaemonWindows() {

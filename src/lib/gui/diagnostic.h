@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include "gui/config/ConfigScopes.h"
 
-namespace synergy::gui::diagnostic {
+namespace deskflow::gui::diagnostic {
 
 void clearSettings(ConfigScopes &scopes, bool enableRestart);
 

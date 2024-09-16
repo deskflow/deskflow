@@ -21,7 +21,7 @@ class Server;
 class LicenseHandler;
 class LicenseTests;
 
-namespace synergy::license {
+namespace deskflow::license {
 
 class ILicense {
 public:

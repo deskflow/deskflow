@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -17,12 +17,12 @@
 add_subdirectory(arch)
 add_subdirectory(base)
 add_subdirectory(client)
+add_subdirectory(deskflow)
 add_subdirectory(io)
 add_subdirectory(ipc)
 add_subdirectory(mt)
 add_subdirectory(net)
 add_subdirectory(platform)
 add_subdirectory(server)
-add_subdirectory(synergy)
 add_subdirectory(license)
 add_subdirectory(gui)

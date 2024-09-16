@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -25,7 +25,7 @@
 //
 
 StreamFilter::StreamFilter(
-    IEventQueue *events, synergy::IStream *stream, bool adoptStream)
+    IEventQueue *events, deskflow::IStream *stream, bool adoptStream)
     : m_stream(stream),
       m_adopted(adoptStream),
       m_events(events) {
@@ -68,7 +68,7 @@ bool StreamFilter::isReady() const { return getStream()->isReady(); }
 
 UInt32 StreamFilter::getSize() const { return getStream()->getSize(); }
 
-synergy::IStream *StreamFilter::getStream() const { return m_stream; }
+deskflow::IStream *StreamFilter::getStream() const { return m_stream; }
 
 void StreamFilter::filterEvent(const Event &event) {
   m_events->dispatchEvent(

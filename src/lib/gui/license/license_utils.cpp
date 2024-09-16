@@ -1,6 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2024 Synergy Ltd.
+ * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,25 +23,25 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace synergy::gui::license {
+namespace deskflow::gui::license {
 
-#ifdef SYNERGY_LICENSED_PRODUCT
+#ifdef DESKFLOW_LICENSED_PRODUCT
 const bool kLicensedProduct = true;
 #else
 const bool kLicensedProduct = false;
 #endif
 
-#ifdef SYNERGY_ENABLE_ACTIVATION
-#ifndef SYNERGY_LICENSED_PRODUCT
+#ifdef DESKFLOW_ENABLE_ACTIVATION
+#ifndef DESKFLOW_LICENSED_PRODUCT
 #error "activation requires licensed product"
 #endif
 const bool kEnableActivation = true;
 #else
 const bool kEnableActivation = false;
-#endif // SYNERGY_ENABLE_ACTIVATION
+#endif // DESKFLOW_ENABLE_ACTIVATION
 
 bool isLicensedProduct() {
-  if (strToTrue(qEnvironmentVariable("SYNERGY_LICENSED_PRODUCT"))) {
+  if (strToTrue(qEnvironmentVariable("DESKFLOW_LICENSED_PRODUCT"))) {
     return true;
   } else {
     return kLicensedProduct;
@@ -49,16 +49,16 @@ bool isLicensedProduct() {
 }
 
 bool isActivationEnabled() {
-  if (strToTrue(qEnvironmentVariable("SYNERGY_ENABLE_ACTIVATION"))) {
+  if (strToTrue(qEnvironmentVariable("DESKFLOW_ENABLE_ACTIVATION"))) {
     return true;
   } else {
     return kEnableActivation;
   }
 }
 
-synergy::license::SerialKey parseSerialKey(const QString &hexString) {
+deskflow::license::SerialKey parseSerialKey(const QString &hexString) {
   try {
-    return synergy::license::parseSerialKey(hexString.toStdString());
+    return deskflow::license::parseSerialKey(hexString.toStdString());
   } catch (const std::exception &e) {
     qFatal("failed to parse serial key: %s", e.what());
     abort();
@@ -68,4 +68,4 @@ synergy::license::SerialKey parseSerialKey(const QString &hexString) {
   }
 }
 
-} // namespace synergy::gui::license
+} // namespace deskflow::gui::license

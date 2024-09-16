@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -31,31 +31,31 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
-#include "synergy/AppUtil.h"
-#include "synergy/DropHelper.h"
-#include "synergy/FileChunk.h"
-#include "synergy/IPlatformScreen.h"
-#include "synergy/PacketStreamFilter.h"
-#include "synergy/Screen.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/DropHelper.h"
+#include "deskflow/FileChunk.h"
+#include "deskflow/IPlatformScreen.h"
+#include "deskflow/PacketStreamFilter.h"
+#include "deskflow/Screen.h"
+#include "deskflow/StreamChunker.h"
+#include "deskflow/option_types.h"
+#include "deskflow/protocol_types.h"
 
 #include <climits>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
 
-using namespace synergy::license;
-using namespace synergy::server;
+using namespace deskflow::license;
+using namespace deskflow::server;
 
 //
 // Server
 //
 
 Server::Server(
-    ServerConfig &config, PrimaryClient *primaryClient, synergy::Screen *screen,
-    IEventQueue *events, synergy::ServerArgs const &args)
+    ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen,
+    IEventQueue *events, deskflow::ServerArgs const &args)
     : m_mock(false),
       m_primaryClient(primaryClient),
       m_active(primaryClient),
@@ -1761,8 +1761,8 @@ void Server::sendDragInfoThread(void *arg) {
 
 #if defined(__APPLE__)
   // on mac it seems that after faking a LMB up, system would signal back
-  // to synergy a mouse up event, which doesn't happen on windows. as a
-  // result, synergy would send dragging file to client twice. This variable
+  // to deskflow a mouse up event, which doesn't happen on windows. as a
+  // result, deskflow would send dragging file to client twice. This variable
   // is used to ignore the first file sending.
   m_ignoreFileTransfer = true;
 #endif

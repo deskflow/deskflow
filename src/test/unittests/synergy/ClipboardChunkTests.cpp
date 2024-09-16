@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ClipboardChunk.h"
-#include "synergy/protocol_types.h"
+#include "deskflow/ClipboardChunk.h"
+#include "deskflow/protocol_types.h"
 
 #include <gtest/gtest.h>
 

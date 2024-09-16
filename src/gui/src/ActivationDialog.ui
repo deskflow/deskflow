@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>541</width>
+    <width>583</width>
     <height>241</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Activate Synergy</string>
+   <string>Activate Deskflow</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -29,7 +29,7 @@
    <item>
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>&lt;p&gt;Your serial key is on your &lt;a href=&quot;https://symless.com/synergy/account?source=gui&quot; style=&quot;color:#4285f4;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page. Don't have a license? &lt;a href=&quot;https://symless.com/synergy/purchase?source=gui&quot; style=&quot;color:#4285f4;&quot;&gt;Purchase Synergy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;</string>
+      <string>&lt;p&gt;Your serial key is on your &lt;a href=&quot;https://symless.com/synergy/account?source=gui&quot; style=&quot;color:#4285f4;&quot;&gt;account&lt;/span&gt;&lt;/a&gt; page. Don't have a license? &lt;a href=&quot;https://symless.com/synergy/purchase?source=gui&quot; style=&quot;color:#4285f4;&quot;&gt;Purchase Deskflow&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -51,7 +51,7 @@ p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Cantarell'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans'; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="acceptRichText">
@@ -87,7 +87,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -103,10 +103,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
      </property>
     </widget>
    </item>

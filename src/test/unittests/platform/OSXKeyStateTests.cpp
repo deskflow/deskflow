@@ -23,7 +23,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask) {
+TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnDeskflowMask) {
   synergy::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);

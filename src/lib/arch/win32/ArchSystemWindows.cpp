@@ -27,7 +27,7 @@
 #include <psapi.h>
 #include <windows.h>
 
-static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T("Synergy"), NULL};
+static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T("Deskflow"), NULL};
 
 //
 // ArchSystemWindows

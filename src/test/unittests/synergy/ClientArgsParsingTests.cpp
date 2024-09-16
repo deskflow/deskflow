@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ArgParser.h"
-#include "synergy/ClientArgs.h"
-#include "test/mock/synergy/MockArgParser.h"
+#include "deskflow/ArgParser.h"
+#include "deskflow/ClientArgs.h"
+#include "test/mock/deskflow/MockArgParser.h"
 
 #include <gtest/gtest.h>
 
@@ -39,7 +39,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   const int argc = 3;
   const char *kYScrollCmd[argc] = {"stub", "--yscroll", "1"};
 
@@ -54,7 +54,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 2;
   std::array<const char *, argc> kLangCmd = {"stub", "--sync-language"};
@@ -66,14 +66,14 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync) {
 
 TEST(ClientArgsParsingTests, parseClientArgs_setInvertScroll) {
   NiceMock<MockArgParser> argParser;
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   const int argc = 2;
   std::array<const char *, argc> kLangCmd = {"stub", "--invert-scroll"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
   EXPECT_EQ(
       clientArgs.m_clientScrollDirection,
-      synergy::ClientScrollDirection::INVERT_SERVER);
+      deskflow::ClientScrollDirection::INVERT_SERVER);
 }
 
 TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
@@ -82,7 +82,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 9;
   std::array<const char *, argc> kLangCmd = {
@@ -99,13 +99,13 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
   EXPECT_TRUE(clientArgs.m_preventSleep);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setSynergyAddress) {
+TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setDeskflowAddress) {
   NiceMock<MockArgParser> argParser;
   ON_CALL(argParser, parseGenericArgs(_, _, _))
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   const int argc = 2;
   const char *kAddressCmd[argc] = {"stub", "mock_address"};
 
@@ -121,7 +121,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   const int argc = 1;
   const char *kNoAddressCmd[argc] = {"stub"};
 
@@ -136,7 +136,7 @@ TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse) {
       .WillByDefault(Invoke(client_stubParseGenericArgs));
   ON_CALL(argParser, checkUnexpectedArgs())
       .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
-  synergy::ClientArgs clientArgs;
+  deskflow::ClientArgs clientArgs;
   const int argc = 3;
   const char *kUnrecognizedCmd[argc] = {"stub", "mock_arg", "mock_address"};
 

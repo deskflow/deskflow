@@ -1,6 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2015 Synergy Ltd.
+ * deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2015 Deskflow Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,8 +29,8 @@
  */
 class LicenseHandler : public QObject {
   Q_OBJECT
-  using License = synergy::license::License;
-  using SerialKey = synergy::license::SerialKey;
+  using License = deskflow::license::License;
+  using SerialKey = deskflow::license::SerialKey;
 
 public:
   enum class ChangeSerialKeyResult {
@@ -53,6 +53,6 @@ signals:
   void invalidLicense() const;
 
 private:
-  bool m_enabled = synergy::gui::license::isActivationEnabled();
+  bool m_enabled = deskflow::gui::license::isActivationEnabled();
   License m_license = License::invalid();
 };

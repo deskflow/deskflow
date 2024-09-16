@@ -1,10 +1,10 @@
-# Maintainer: Synergy team <developers@symless.com>
+# Maintainer: Deskflow team <developers@symless.com>
 
-pkgname=synergy
-pkgver=@SYNERGY_VERSION_FOUR_PART@
+pkgname=deskflow
+pkgver=@DESKFLOW_VERSION_FOUR_PART@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
-url='https://symless.com/synergy/'
+url='https://symless.com/deskflow/'
 arch=('x86_64')
 license=('GPL-2.0-only')
 depends=(
@@ -25,7 +25,7 @@ depends=(
   'libei'
   'libportal'
 )
-conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
+conflicts=('deskflow-git' 'deskflow1-bin' 'deskflow2-bin' 'deskflow3-bin')
 options=('!debug')
 
 package() {

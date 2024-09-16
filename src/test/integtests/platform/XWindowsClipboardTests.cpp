@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -69,7 +69,7 @@ TEST_F(XWindowsClipboardTests, empty_openCalled_returnsTrue) {
 
 TEST_F(XWindowsClipboardTests, empty_singleFormat_hasReturnsFalse) {
   XWindowsClipboard &clipboard = getClipboard();
-  clipboard.add(XWindowsClipboard::kText, "synergy rocks!");
+  clipboard.add(XWindowsClipboard::kText, "deskflow rocks!");
 
   clipboard.empty();
 
@@ -80,16 +80,16 @@ TEST_F(XWindowsClipboardTests, empty_singleFormat_hasReturnsFalse) {
 TEST_F(XWindowsClipboardTests, add_newValue_valueWasStored) {
   XWindowsClipboard &clipboard = getClipboard();
 
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
 
   String actual = clipboard.get(IClipboard::kText);
-  EXPECT_EQ("synergy rocks!", actual);
+  EXPECT_EQ("deskflow rocks!", actual);
 }
 
 TEST_F(XWindowsClipboardTests, add_replaceValue_valueWasReplaced) {
   XWindowsClipboard &clipboard = getClipboard();
 
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
   clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 
   String actual = clipboard.get(IClipboard::kText);
@@ -107,7 +107,7 @@ TEST_F(XWindowsClipboardTests, close_isOpen_noErrors) {
 
 TEST_F(XWindowsClipboardTests, has_withFormatAdded_returnsTrue) {
   XWindowsClipboard &clipboard = getClipboard();
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
 
   bool actual = clipboard.has(IClipboard::kText);
 
@@ -132,11 +132,11 @@ TEST_F(XWindowsClipboardTests, get_withNoFormats_returnsEmpty) {
 
 TEST_F(XWindowsClipboardTests, get_withFormatAdded_returnsExpected) {
   XWindowsClipboard &clipboard = getClipboard();
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
 
   String actual = clipboard.get(IClipboard::kText);
 
-  EXPECT_EQ("synergy rocks!", actual);
+  EXPECT_EQ("deskflow rocks!", actual);
 }
 
 #endif

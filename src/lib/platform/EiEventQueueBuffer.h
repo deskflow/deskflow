@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -23,14 +23,14 @@
 #include "base/IEventQueueBuffer.h"
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
-#include "synergy/IScreen.h"
+#include "deskflow/IScreen.h"
 
 #include <libei.h>
 #include <memory>
 #include <mutex>
 #include <queue>
 
-namespace synergy {
+namespace deskflow {
 
 //! Event queue buffer for Ei
 class EiEventQueueBuffer : public IEventQueueBuffer {
@@ -56,4 +56,4 @@ private:
   mutable std::mutex mutex_;
 };
 
-} // namespace synergy
+} // namespace deskflow

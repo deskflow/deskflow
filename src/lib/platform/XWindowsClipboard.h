@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -21,11 +21,11 @@
 #include "common/stdlist.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
-#include "synergy/IClipboard.h"
-#include "synergy/clipboard_types.h"
+#include "deskflow/IClipboard.h"
+#include "deskflow/clipboard_types.h"
 
 #if X_DISPLAY_MISSING
-#error X11 is required to build synergy
+#error X11 is required to build deskflow
 #else
 #include <X11/Xlib.h>
 #endif

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <QLabel>
 
-namespace synergy::gui::widgets {
+namespace deskflow::gui::widgets {
 
 class ClientStateLabel : public QLabel {
 public:
@@ -27,4 +27,4 @@ public:
   void updateClientState(const QString &line);
 };
 
-} // namespace synergy::gui::widgets
+} // namespace deskflow::gui::widgets

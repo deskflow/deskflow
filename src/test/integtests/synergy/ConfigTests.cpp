@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
 
 #if HAVE_TOMLPLUSPLUS
 
-#include "synergy/Config.h"
+#include "deskflow/Config.h"
 
 #include <fstream>
 #include <gtest/gtest.h>
 
-using namespace synergy;
+using namespace deskflow;
 
 const auto kTestFilename = "tmp/test/test.toml";
 

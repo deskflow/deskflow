@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -20,8 +20,8 @@
 
 #include "base/Log.h"
 #include "platform/XWindowsUtil.h"
-#include "synergy/AppUtil.h"
-#include "synergy/ClientApp.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/ClientApp.h"
 
 #include <algorithm>
 #include <cstddef>
@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <xkbcommon/xkbcommon.h>
 
-namespace synergy {
+namespace deskflow {
 
 EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
     : KeyState(
@@ -148,7 +148,7 @@ std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const {
 // check if a modifier changed state and then release it again.
 // Luckily xkbcommon allows us to do this in a separate state.
 void EiKeyState::assign_generated_modifiers(
-    std::uint32_t keycode, synergy::KeyMap::KeyItem &item) {
+    std::uint32_t keycode, deskflow::KeyMap::KeyItem &item) {
   std::uint32_t mods_generates = 0;
   auto state = xkb_state_new(xkb_keymap_);
   enum xkb_state_component changed =
@@ -170,7 +170,7 @@ void EiKeyState::assign_generated_modifiers(
   item.m_generates = convert_mod_mask(mods_generates);
 }
 
-void EiKeyState::getKeyMap(synergy::KeyMap &keyMap) {
+void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
   auto min_keycode = xkb_keymap_min_keycode(xkb_keymap_);
   auto max_keycode = xkb_keymap_max_keycode(xkb_keymap_);
 
@@ -201,7 +201,7 @@ void EiKeyState::getKeyMap(synergy::KeyMap &keyMap) {
               "multiple keysyms per keycode are not supported, keycode %d",
               keycode);
 
-        synergy::KeyMap::KeyItem item{};
+        deskflow::KeyMap::KeyItem item{};
         xkb_keysym_t keysym = syms[0];
         KeySym sym = static_cast<KeyID>(keysym);
         item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
@@ -279,4 +279,4 @@ void EiKeyState::update_xkb_state(uint32_t keyval, bool is_pressed) {
       xkb_state_, keyval, is_pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }
 
-} // namespace synergy
+} // namespace deskflow

@@ -194,10 +194,10 @@ void MSWindowsClipboard::clearConverters() {
   m_converters.clear();
 }
 
-bool MSWindowsClipboard::isOwnedBySynergy() {
+bool MSWindowsClipboard::isOwnedByDeskflow() {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT("DeskflowOwnership"));
   }
   return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
@@ -205,7 +205,7 @@ bool MSWindowsClipboard::isOwnedBySynergy() {
 UINT MSWindowsClipboard::getOwnershipFormat() {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT("DeskflowOwnership"));
   }
 
   // return the format

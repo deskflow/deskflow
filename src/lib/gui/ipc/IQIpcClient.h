@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 #include "gui/config/ElevateMode.h"
 
-namespace synergy::gui::ipc {
+namespace deskflow::gui::ipc {
 
 class IQIpcClient : public QObject {
   Q_OBJECT
@@ -40,4 +40,4 @@ signals:
   void serviceReady();
 };
 
-} // namespace synergy::gui::ipc
+} // namespace deskflow::gui::ipc

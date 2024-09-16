@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -38,7 +38,7 @@
 
 #if !HAVE_PTHREAD_SIGNAL
 // boy, is this platform broken.  forget about pthread signal
-// handling and let signals through to every process.  synergy
+// handling and let signals through to every process.  deskflow
 // will not terminate cleanly when it gets SIGTERM or SIGINT.
 #define pthread_sigmask sigprocmask
 #define pthread_kill(tid_, sig_) kill(0, (sig_))
@@ -576,7 +576,7 @@ void ArchMultithreadPosix::insert(ArchThreadImpl *thread) {
 
   // set thread id.  note that we don't worry about m_nextID
   // wrapping back to 0 and duplicating thread ID's since the
-  // likelihood of synergy running that long is vanishingly
+  // likelihood of deskflow running that long is vanishingly
   // small.
   thread->m_id = ++m_nextID;
 

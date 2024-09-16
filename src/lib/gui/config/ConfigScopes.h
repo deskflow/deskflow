@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2020 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -24,11 +24,11 @@
 #include <QVariant>
 #include <memory>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 /// @brief Encapsulates Qt config for both user and global scopes.
 class ConfigScopes : public QObject, public IConfigScopes {
-  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
   Q_OBJECT
 
@@ -71,4 +71,4 @@ private:
   std::shared_ptr<QSettingsProxy> m_pSystemSettingsProxy;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

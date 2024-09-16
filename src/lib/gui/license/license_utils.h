@@ -1,6 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2024 Synergy Ltd.
+ * deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,10 +21,10 @@
 
 #include "license/SerialKey.h"
 
-namespace synergy::gui::license {
+namespace deskflow::gui::license {
 
 bool isLicensedProduct();
 bool isActivationEnabled();
-synergy::license::SerialKey parseSerialKey(const QString &hexString);
+deskflow::license::SerialKey parseSerialKey(const QString &hexString);
 
-} // namespace synergy::gui::license
+} // namespace deskflow::gui::license

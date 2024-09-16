@@ -412,7 +412,7 @@ void ArchTaskBarWindows::threadMainLoop() {
   m_taskBarRestart = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
   // register a window class
-  LPCTSTR className = TEXT("SynergyTaskBar");
+  LPCTSTR className = TEXT("DeskflowTaskBar");
   WNDCLASSEX classInfo;
   classInfo.cbSize = sizeof(classInfo);
   classInfo.style = CS_NOCLOSE;
@@ -430,7 +430,7 @@ void ArchTaskBarWindows::threadMainLoop() {
 
   // create window
   m_hwnd = CreateWindowEx(
-      WS_EX_TOOLWINDOW, className, TEXT("Synergy Task Bar"), WS_POPUP, 0, 0, 1,
+      WS_EX_TOOLWINDOW, className, TEXT("Deskflow Task Bar"), WS_POPUP, 0, 0, 1,
       1, NULL, NULL, instanceWin32(), static_cast<void *>(this));
 
   // signal ready

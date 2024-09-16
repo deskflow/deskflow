@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -24,10 +24,10 @@
 
 #include <QObject>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class TlsUtility : public QObject {
-  using ILicense = synergy::license::ILicense;
+  using ILicense = deskflow::license::ILicense;
   Q_OBJECT
 
 public:
@@ -56,4 +56,4 @@ private:
   TlsCertificate m_certificate;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

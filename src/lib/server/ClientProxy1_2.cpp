@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,14 +19,14 @@
 #include "server/ClientProxy1_2.h"
 
 #include "base/Log.h"
-#include "synergy/ProtocolUtil.h"
+#include "deskflow/ProtocolUtil.h"
 
 //
 // ClientProxy1_1
 //
 
 ClientProxy1_2::ClientProxy1_2(
-    const String &name, synergy::IStream *stream, IEventQueue *events)
+    const String &name, deskflow::IStream *stream, IEventQueue *events)
     : ClientProxy1_1(name, stream, events) {
   // do nothing
 }

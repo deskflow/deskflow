@@ -13,8 +13,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
    <Fragment>
       <UI>
-         <Dialog Id="SynergyMaintenanceTypeDlg" Width="370" Height="270" Title="!(loc.MaintenanceTypeDlg_Title)">
-            <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="[SynergyCommonBackground]" />
+         <Dialog Id="DeskflowMaintenanceTypeDlg" Width="370" Height="270" Title="!(loc.MaintenanceTypeDlg_Title)">
+            <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="[DeskflowCommonBackground]" />
             <Control Id="ChangeButton" Type="PushButton" X="40" Y="65" Width="80" Height="17" ToolTip="!(loc.MaintenanceTypeDlgChangeButtonTooltip)" Default="yes" Text="!(loc.MaintenanceTypeDlgChangeButton)">
                <Publish Property="WixUI_InstallMode" Value="Change">1</Publish>
                <Condition Action="disable">ARPNOMODIFY</Condition>

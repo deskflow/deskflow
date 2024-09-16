@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -32,7 +32,7 @@
 
 class EventQueueTimer {};
 
-namespace synergy {
+namespace deskflow {
 
 EiEventQueueBuffer::EiEventQueueBuffer(
     EiScreen *screen, ei *ei, IEventQueue *events)
@@ -153,4 +153,4 @@ void EiEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
   delete timer;
 }
 
-} // namespace synergy
+} // namespace deskflow

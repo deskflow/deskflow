@@ -3,7 +3,7 @@
 # Where available, we use system packages, otherwise we use subprojects.
 # Subprojects are also used to get the latest version during development.
 
-project('synergy', 'cpp')
+project('deskflow', 'cpp')
 
 subproject('tomlplusplus')
 subproject('cli11')

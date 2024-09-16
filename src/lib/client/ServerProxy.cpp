@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -24,14 +24,14 @@
 #include "base/XBase.h"
 #include "client/Client.h"
 #include "io/IStream.h"
-#include "synergy/AppUtil.h"
-#include "synergy/Clipboard.h"
-#include "synergy/ClipboardChunk.h"
-#include "synergy/FileChunk.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/ClipboardChunk.h"
+#include "deskflow/FileChunk.h"
+#include "deskflow/ProtocolUtil.h"
+#include "deskflow/StreamChunker.h"
+#include "deskflow/option_types.h"
+#include "deskflow/protocol_types.h"
 
 #include <algorithm>
 #include <cstring>
@@ -42,7 +42,7 @@
 //
 
 ServerProxy::ServerProxy(
-    Client *client, synergy::IStream *stream, IEventQueue *events)
+    Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
       m_seqNum(0),
@@ -919,7 +919,7 @@ void ServerProxy::checkMissedLanguages() const {
     LOG(
         (CLOG_WARN
          "You need to install these languages on this computer and restart "
-         "Synergy to enable support for multiple languages: %s",
+         "Deskflow to enable support for multiple languages: %s",
          missedLanguages.c_str()));
   }
 }

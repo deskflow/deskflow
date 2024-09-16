@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ArgParser.h"
+#include "deskflow/ArgParser.h"
 
 #include <gtest/gtest.h>
 
-using namespace synergy;
+using namespace deskflow;
 
 TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnTrue) {
   int i = 1;

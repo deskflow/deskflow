@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #include <QRegularExpression>
 #include <memory>
 
-const char *const kVersion = SYNERGY_VERSION;
+const char *const kVersion = DESKFLOW_VERSION;
 
 VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> network)
     : m_network(
@@ -37,22 +37,22 @@ VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> network)
 
 void VersionChecker::checkLatest() const {
   const QString url =
-      qEnvironmentVariable("SYNERGY_VERSION_URL", SYNERGY_VERSION_URL);
+      qEnvironmentVariable("DESKFLOW_VERSION_URL", DESKFLOW_VERSION_URL);
   auto request = QNetworkRequest(url);
-  auto userAgent = QString("Synergy %1 on %2")
+  auto userAgent = QString("Deskflow %1 on %2")
                        .arg(kVersion)
                        .arg(QSysInfo::prettyProductName());
   request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
-  request.setRawHeader("X-Synergy-Version", kVersion);
+  request.setRawHeader("X-Deskflow-Version", kVersion);
   request.setRawHeader(
-      "X-Synergy-Language", QLocale::system().name().toStdString().c_str());
+      "X-Deskflow-Language", QLocale::system().name().toStdString().c_str());
   m_network->get(request);
 }
 
 void VersionChecker::replyFinished(QNetworkReply *reply) {
   auto newestVersion = QString(reply->readAll());
   if (!newestVersion.isEmpty() &&
-      compareVersions(SYNERGY_VERSION, newestVersion) > 0) {
+      compareVersions(DESKFLOW_VERSION, newestVersion) > 0) {
     emit updateFound(newestVersion);
   }
 }

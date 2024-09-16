@@ -87,7 +87,7 @@ public:
   Calculates mac virtual key and mask for a key \p key and modifiers
   \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
   */
-  bool mapSynergyHotKeyToMac(
+  bool mapDeskflowHotKeyToMac(
       KeyID key, KeyModifierMask mask, UInt32 &macVirtualKey,
       UInt32 &macModifierMask) const;
 

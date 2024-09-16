@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <functional>
 #include <memory>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class TrayIcon : public QObject {
   Q_OBJECT
@@ -47,4 +47,4 @@ private:
   QIcon m_icon;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

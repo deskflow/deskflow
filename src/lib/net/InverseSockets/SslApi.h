@@ -18,7 +18,7 @@
 #include <openssl/ssl.h>
 #include <string>
 
-namespace synergy {
+namespace deskflow {
 namespace ssl {
 
 class SslApi {
@@ -52,4 +52,4 @@ private:
 };
 
 } // namespace ssl
-} // namespace synergy
+} // namespace deskflow

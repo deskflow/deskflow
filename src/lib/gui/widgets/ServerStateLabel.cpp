@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,9 +19,9 @@
 
 #include "gui/core/ServerMessage.h"
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
-namespace synergy::gui::widgets {
+namespace deskflow::gui::widgets {
 
 ServerStateLabel::ServerStateLabel(QWidget *parent) : QLabel(parent) {}
 
@@ -50,4 +50,4 @@ void ServerStateLabel::updateServerState(const QString &line) {
   }
 }
 
-} // namespace synergy::gui::widgets
+} // namespace deskflow::gui::widgets

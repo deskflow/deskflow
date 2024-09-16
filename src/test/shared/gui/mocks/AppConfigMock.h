@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -23,8 +23,8 @@
 
 #include <gmock/gmock.h>
 
-class AppConfigMock : public synergy::gui::IAppConfig {
-  using ProcessMode = synergy::gui::ProcessMode;
+class AppConfigMock : public deskflow::gui::IAppConfig {
+  using ProcessMode = deskflow::gui::ProcessMode;
 
 public:
   AppConfigMock() {
@@ -42,7 +42,7 @@ public:
   // Getters
   //
 
-  MOCK_METHOD(synergy::gui::IConfigScopes &, scopes, (), (const, override));
+  MOCK_METHOD(deskflow::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
   MOCK_METHOD(int, tlsKeyLength, (), (const, override));
   MOCK_METHOD(bool, tlsEnabled, (), (const, override));

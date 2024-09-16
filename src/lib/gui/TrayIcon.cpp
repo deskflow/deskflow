@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include "Logger.h"
 #include "common/constants.h"
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 const auto kShowRetryInterval = 1000;
 
@@ -74,4 +74,4 @@ void TrayIcon::create(std::vector<QAction *> const &actions) {
   showRetryLoop();
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

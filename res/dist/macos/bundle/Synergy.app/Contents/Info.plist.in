@@ -4,17 +4,17 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>Synergy</string>
+    <string>Deskflow</string>
     <key>CFBundleExecutable</key>
     <string>synergy</string>
     <key>CFBundleIconFile</key>
-    <string>Synergy.icns</string>
+    <string>Deskflow.icns</string>
     <key>CFBundleIdentifier</key>
     <string>synergy</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Synergy</string>
+    <string>Deskflow</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>

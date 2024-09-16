@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -121,7 +121,7 @@ void *Thread::threadFunc(void *vjob) {
     result = e.m_result;
     LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x, result %p", id, result));
   } catch (XBase &e) {
-    LOG((CLOG_ERR "synergy exception on thread 0x%08x: %s", id, e.what()));
+    LOG((CLOG_ERR "deskflow exception on thread 0x%08x: %s", id, e.what()));
     delete job;
     throw;
   } catch (std::exception &e) {

@@ -27,7 +27,7 @@
 #include <optional>
 #include <string>
 
-namespace synergy::license {
+namespace deskflow::license {
 
 struct SerialKey {
   using time_point = std::chrono::system_clock::time_point;

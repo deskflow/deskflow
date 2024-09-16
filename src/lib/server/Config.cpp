@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -23,14 +23,14 @@
 #include "common/stdostream.h"
 #include "net/XSocket.h"
 #include "server/Server.h"
-#include "synergy/KeyMap.h"
-#include "synergy/key_types.h"
+#include "deskflow/KeyMap.h"
+#include "deskflow/key_types.h"
 
 #include <cstdlib>
 
-using namespace synergy::string;
+using namespace deskflow::string;
 
-namespace synergy::server {
+namespace deskflow::server {
 
 //
 // Config
@@ -250,8 +250,8 @@ bool Config::disconnect(
   return true;
 }
 
-void Config::setSynergyAddress(const NetworkAddress &addr) {
-  m_synergyAddress = addr;
+void Config::setDeskflowAddress(const NetworkAddress &addr) {
+  m_deskflowAddress = addr;
 }
 
 bool Config::addOption(const String &name, OptionID option, OptionValue value) {
@@ -459,8 +459,8 @@ Config::link_const_iterator Config::endNeighbor(const String &srcName) const {
   return index->second.end();
 }
 
-const NetworkAddress &Config::getSynergyAddress() const {
-  return m_synergyAddress;
+const NetworkAddress &Config::getDeskflowAddress() const {
+  return m_deskflowAddress;
 }
 
 const Config::ScreenOptions *Config::getOptions(const String &name) const {
@@ -482,7 +482,7 @@ const Config::ScreenOptions *Config::getOptions(const String &name) const {
 bool Config::hasLockToScreenAction() const { return m_hasLockToScreenAction; }
 
 bool Config::operator==(const Config &x) const {
-  if (m_synergyAddress != x.m_synergyAddress) {
+  if (m_deskflowAddress != x.m_deskflowAddress) {
     return false;
   }
   if (m_map.size() != x.m_map.size()) {
@@ -555,7 +555,7 @@ String Config::formatInterval(const Interval &x) {
   if (x.first == 0.0f && x.second == 1.0f) {
     return "";
   }
-  return synergy::string::sprintf(
+  return deskflow::string::sprintf(
       "(%d,%d)", (int)(x.first * 100.0f + 0.5f),
       (int)(x.second * 100.0f + 0.5f));
 }
@@ -629,8 +629,8 @@ void Config::readSectionOptions(ConfigReadContext &s) {
     bool handled = true;
     if (name == "address") {
       try {
-        m_synergyAddress = NetworkAddress(value, kDefaultPort);
-        m_synergyAddress.resolve();
+        m_deskflowAddress = NetworkAddress(value, kDefaultPort);
+        m_deskflowAddress.resolve();
       } catch (XSocketAddress &e) {
         throw XConfigRead(s, String("invalid address argument ") + e.what());
       }
@@ -1279,7 +1279,7 @@ String Config::getOptionValue(OptionID id, OptionValue value) {
   }
   if (id == kOptionHeartbeat || id == kOptionScreenSwitchCornerSize ||
       id == kOptionScreenSwitchDelay || id == kOptionScreenSwitchTwoTap) {
-    return synergy::string::sprintf("%d", value);
+    return deskflow::string::sprintf("%d", value);
   }
   if (id == kOptionScreenSwitchCorners) {
     std::string result("none");
@@ -1621,8 +1621,8 @@ std::ostream &operator<<(std::ostream &s, const Config &config) {
       }
     }
   }
-  if (config.m_synergyAddress.isValid()) {
-    s << "\taddress = " << config.m_synergyAddress.getHostname().c_str()
+  if (config.m_deskflowAddress.isValid()) {
+    s << "\taddress = " << config.m_deskflowAddress.getHostname().c_str()
       << std::endl;
   }
   s << config.m_inputFilter.format("\t");
@@ -1671,7 +1671,7 @@ bool ConfigReadContext::readLine(String &line) {
         if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
           throw XConfigRead(
               *this, "invalid character %{1}",
-              synergy::string::sprintf("%#2x", line[i]));
+              deskflow::string::sprintf("%#2x", line[i]));
         }
       }
 
@@ -1950,12 +1950,12 @@ IPlatformScreen::KeyInfo *ConfigReadContext::parseKeystroke(
   String s = keystroke;
 
   KeyModifierMask mask;
-  if (!synergy::KeyMap::parseModifiers(s, mask)) {
+  if (!deskflow::KeyMap::parseModifiers(s, mask)) {
     throw XConfigRead(*this, "unable to parse key modifiers");
   }
 
   KeyID key;
-  if (!synergy::KeyMap::parseKey(s, key)) {
+  if (!deskflow::KeyMap::parseKey(s, key)) {
     throw XConfigRead(*this, "unable to parse key");
   }
 
@@ -1971,7 +1971,7 @@ ConfigReadContext::parseMouse(const String &mouse) const {
   String s = mouse;
 
   KeyModifierMask mask;
-  if (!synergy::KeyMap::parseModifiers(s, mask)) {
+  if (!deskflow::KeyMap::parseModifiers(s, mask)) {
     throw XConfigRead(*this, "unable to parse button modifiers");
   }
 
@@ -1992,7 +1992,7 @@ ConfigReadContext::parseModifier(const String &modifiers) const {
   String s = modifiers;
 
   KeyModifierMask mask;
-  if (!synergy::KeyMap::parseModifiers(s, mask)) {
+  if (!deskflow::KeyMap::parseModifiers(s, mask)) {
     throw XConfigRead(*this, "unable to parse modifiers");
   }
 
@@ -2020,7 +2020,7 @@ String ConfigReadContext::concatArgs(const ArgList &args) {
 //
 
 XConfigRead::XConfigRead(const ConfigReadContext &context, const String &error)
-    : m_error(synergy::string::sprintf(
+    : m_error(deskflow::string::sprintf(
           "line %d: %s", context.getLineNumber(), error.c_str())) {
   // do nothing
 }
@@ -2028,8 +2028,8 @@ XConfigRead::XConfigRead(const ConfigReadContext &context, const String &error)
 XConfigRead::XConfigRead(
     const ConfigReadContext &context, const char *errorFmt, const String &arg)
     : m_error(
-          synergy::string::sprintf("line %d: ", context.getLineNumber()) +
-          synergy::string::format(errorFmt, arg.c_str())) {
+          deskflow::string::sprintf("line %d: ", context.getLineNumber()) +
+          deskflow::string::format(errorFmt, arg.c_str())) {
   // do nothing
 }
 
@@ -2041,4 +2041,4 @@ String XConfigRead::getWhat() const throw() {
   return format("XConfigRead", "read error: %{1}", m_error.c_str());
 }
 
-} // namespace synergy::server
+} // namespace deskflow::server

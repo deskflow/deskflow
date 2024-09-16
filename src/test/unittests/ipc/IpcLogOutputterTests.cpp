@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ using ::testing::Property;
 using ::testing::Return;
 using ::testing::StrEq;
 
-using namespace synergy;
+using namespace deskflow;
 
 // TODO Fix the IPC Tests for windows, see #6709
 //  Tests disabled due to gtest/gmock update causing build problems

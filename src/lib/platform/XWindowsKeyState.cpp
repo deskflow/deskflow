@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -26,14 +26,14 @@
 #include "base/String.h"
 #include "common/stdmap.h"
 #include "platform/XWindowsUtil.h"
-#include "synergy/AppUtil.h"
-#include "synergy/ClientApp.h"
-#include "synergy/ClientArgs.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/ClientApp.h"
+#include "deskflow/ClientArgs.h"
 
 #include <algorithm>
 #include <cstddef>
 #if X_DISPLAY_MISSING
-#error X11 is required to build synergy
+#error X11 is required to build deskflow
 #else
 #include <X11/X.h>
 #include <X11/Xutil.h>
@@ -58,7 +58,7 @@ XWindowsKeyState::XWindowsKeyState(
 }
 
 XWindowsKeyState::XWindowsKeyState(
-    Display *display, bool useXKB, IEventQueue *events, synergy::KeyMap &keyMap)
+    Display *display, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap)
     : KeyState(
           events, keyMap, AppUtil::instance().getKeyboardLayoutList(),
           ClientApp::instance().args().m_enableLangSync),
@@ -207,9 +207,9 @@ void XWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const {
   }
 }
 
-void XWindowsKeyState::getKeyMap(synergy::KeyMap &keyMap) {
+void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
   // get autorepeat info.  we must use the global_auto_repeat told to
-  // us because it may have modified by synergy.
+  // us because it may have modified by deskflow.
   int oldGlobalAutoRepeat = m_keyboardState.global_auto_repeat;
   XGetKeyboardControl(m_display, &m_keyboardState);
   m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
@@ -344,7 +344,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
   XFlush(m_display);
 }
 
-void XWindowsKeyState::updateKeysymMap(synergy::KeyMap &keyMap) {
+void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
   // there are up to 4 keysyms per keycode
   static const int maxKeysyms = 4;
 
@@ -434,7 +434,7 @@ void XWindowsKeyState::updateKeysymMap(synergy::KeyMap &keyMap) {
   }
 
   // add entries for each keycode
-  synergy::KeyMap::KeyItem item;
+  deskflow::KeyMap::KeyItem item;
   for (int i = 0; i < numKeycodes; ++i) {
     KeySym *keysyms = allKeysyms + maxKeysyms * i;
     KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
@@ -533,7 +533,7 @@ void XWindowsKeyState::updateKeysymMap(synergy::KeyMap &keyMap) {
       item.m_lock = false;
       if (modifierButtons.count(keycode) > 0) {
         // get flags for modifier keys
-        synergy::KeyMap::initModifierKey(item);
+        deskflow::KeyMap::initModifierKey(item);
 
         // add mapping from X (unless we already have)
         if (item.m_generates != 0) {
@@ -579,7 +579,7 @@ void XWindowsKeyState::updateKeysymMap(synergy::KeyMap &keyMap) {
 }
 
 #if HAVE_XKB_EXTENSION
-void XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap &keyMap) {
+void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
   static const XkbKTMapEntryRec defMapEntry = {
       True, // active
       0,    // level
@@ -623,7 +623,7 @@ void XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap &keyMap) {
 
   // check every button.  on this pass we save all modifiers as native
   // X modifier masks.
-  synergy::KeyMap::KeyItem item;
+  deskflow::KeyMap::KeyItem item;
   for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
     KeyCode keycode = static_cast<KeyCode>(i);
     item.m_button = static_cast<KeyButton>(keycode);
@@ -800,7 +800,7 @@ void XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap &keyMap) {
     }
   }
 
-  // change all modifier masks to synergy masks from X masks
+  // change all modifier masks to deskflow masks from X masks
   keyMap.foreachKey(&XWindowsKeyState::remapKeyModifiers, this);
 
   // allow composition across groups
@@ -809,7 +809,7 @@ void XWindowsKeyState::updateKeysymMapXKB(synergy::KeyMap &keyMap) {
 #endif
 
 void XWindowsKeyState::remapKeyModifiers(
-    KeyID id, SInt32 group, synergy::KeyMap::KeyItem &item, void *vself) {
+    KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &item, void *vself) {
   XWindowsKeyState *self = static_cast<XWindowsKeyState *>(vself);
   item.m_required =
       self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -185,7 +185,7 @@ bool FileLogOutputter::write(ELevel level, const char *message) {
   bool moveFile = false;
 
   std::ofstream m_handle;
-  m_handle.open(synergy::filesystem::path(m_fileName), std::fstream::app);
+  m_handle.open(deskflow::filesystem::path(m_fileName), std::fstream::app);
   if (m_handle.is_open() && m_handle.fail() != true) {
     m_handle << message << std::endl;
 
@@ -199,7 +199,7 @@ bool FileLogOutputter::write(ELevel level, const char *message) {
 
   if (moveFile) {
     String oldLogFilename =
-        synergy::string::sprintf("%s.1", m_fileName.c_str());
+        deskflow::string::sprintf("%s.1", m_fileName.c_str());
     remove(oldLogFilename.c_str());
     rename(m_fileName.c_str(), oldLogFilename.c_str());
   }

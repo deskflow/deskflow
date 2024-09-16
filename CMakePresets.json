@@ -13,7 +13,7 @@
       "name": "minimal",
       "hidden": true,
       "environment": {
-        "SYNERGY_BUILD_MINIMAL": "ON"
+        "DESKFLOW_BUILD_MINIMAL": "ON"
       }
     },
     {

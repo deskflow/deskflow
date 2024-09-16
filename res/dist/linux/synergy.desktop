@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Synergy
+Name=Deskflow
 Comment=Mouse and keyboard sharing utility
 Path=/usr/bin
 Exec=/usr/bin/synergy

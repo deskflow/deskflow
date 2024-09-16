@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 #include <sstream>
 #include <stdio.h>
 
-namespace synergy {
+namespace deskflow {
 namespace string {
 
 String format(const char *fmt, ...) {
@@ -243,7 +243,7 @@ bool CaselessCmp::cmpLess(
 bool CaselessCmp::less(const String &a, const String &b) {
   return std::lexicographical_compare(
       a.begin(), a.end(), b.begin(), b.end(),
-      &synergy::string::CaselessCmp::cmpLess);
+      &deskflow::string::CaselessCmp::cmpLess);
 }
 
 bool CaselessCmp::equal(const String &a, const String &b) {
@@ -255,4 +255,4 @@ bool CaselessCmp::operator()(const String &a, const String &b) const {
 }
 
 } // namespace string
-} // namespace synergy
+} // namespace deskflow

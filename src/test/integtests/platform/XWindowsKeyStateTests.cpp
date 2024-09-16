@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -21,8 +21,8 @@
 
 #define TEST_ENV
 
-#include "test/mock/synergy/MockEventQueue.h"
-#include "test/mock/synergy/MockKeyMap.h"
+#include "test/mock/deskflow/MockEventQueue.h"
+#include "test/mock/deskflow/MockKeyMap.h"
 
 #include "base/Log.h"
 #include "platform/XWindowsKeyState.h"
@@ -151,13 +151,13 @@ TEST_F(XWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCor
 
     KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
 
-    // fake shift key down (without using synergy)
+    // fake shift key down (without using deskflow)
     XTestFakeKeyEvent(m_display, key, true, CurrentTime);
 
     // function under test (1st call)
     KeyModifierMask modDown = keyState.pollActiveModifiers();
 
-    // fake shift key up (without using synergy)
+    // fake shift key up (without using deskflow)
     XTestFakeKeyEvent(m_display, key, false, CurrentTime);
 
     // function under test (2nd call)

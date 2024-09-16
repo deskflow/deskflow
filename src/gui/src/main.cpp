@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -17,7 +17,7 @@
  */
 
 #include "MainWindow.h"
-#include "QSynergyApplication.h"
+#include "QDeskflowApplication.h"
 #include "SetupWizard.h"
 #include "common/constants.h"
 #include "common/version.h"
@@ -42,7 +42,7 @@
 #include <cstdlib>
 #endif
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 class QThreadImpl : public QThread {
 public:
@@ -74,11 +74,11 @@ int main(int argc, char *argv[]) {
   // used as a prefix for settings paths, and must not be a url.
   QCoreApplication::setOrganizationDomain(kOrgDomain);
 
-  QSynergyApplication app(argc, argv);
+  QDeskflowApplication app(argc, argv);
 
-  qInstallMessageHandler(synergy::gui::messages::messageHandler);
-  QString version = QString::fromStdString(synergy::version());
-  qInfo("Synergy v%s", qPrintable(version));
+  qInstallMessageHandler(deskflow::gui::messages::messageHandler);
+  QString version = QString::fromStdString(deskflow::version());
+  qInfo("Deskflow v%s", qPrintable(version));
 
   dotenv();
   Logger::instance().loadEnvVars();
@@ -87,8 +87,8 @@ int main(int argc, char *argv[]) {
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QMessageBox::information(
-        NULL, "Synergy",
-        "Please drag Synergy to the Applications folder, "
+        NULL, "Deskflow",
+        "Please drag Deskflow to the Applications folder, "
         "and open it from there.");
     return 1;
   }
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
   // --no-reset
   QStringList arguments = QCoreApplication::arguments();
   const auto noReset = hasArg("--no-reset", arguments);
-  const auto resetEnvVar = strToTrue(qEnvironmentVariable("SYNERGY_RESET_ALL"));
+  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
   if (resetEnvVar && !noReset) {
     diagnostic::clearSettings(configScopes, false);
   }
@@ -130,11 +130,11 @@ int main(int argc, char *argv[]) {
   MainWindow mainWindow(configScopes, appConfig);
 
   QObject::connect(
-      &app, &QSynergyApplication::aboutToQuit, &mainWindow,
+      &app, &QDeskflowApplication::aboutToQuit, &mainWindow,
       &MainWindow::onAppAboutToQuit);
 
   mainWindow.open();
-  return QSynergyApplication::exec();
+  return QDeskflowApplication::exec();
 }
 
 #if defined(Q_OS_MAC)
@@ -144,7 +144,7 @@ bool checkMacAssistiveDevices() {
   // new in mavericks, applications are trusted individually
   // with use of the accessibility api. this call will show a
   // prompt which can show the security/privacy/accessibility
-  // tab, with a list of allowed applications. synergy should
+  // tab, with a list of allowed applications. deskflow should
   // show up there automatically, but will be unchecked.
 
   if (AXIsProcessTrusted()) {
@@ -166,10 +166,10 @@ bool checkMacAssistiveDevices() {
   bool result = AXAPIEnabled();
   if (!result) {
     QMessageBox::information(
-        NULL, "Synergy",
+        NULL, "Deskflow",
         "Please enable access to assistive devices "
         "System Preferences -> Security & Privacy -> "
-        "Privacy -> Accessibility, then re-open Synergy.");
+        "Privacy -> Accessibility, then re-open Deskflow.");
   }
   return result;
 

@@ -875,7 +875,7 @@
          <property name="text">
           <string>Use a Core server config file to create complex screen layouts that are not possible with the simple grid-based screen layout editor.
 
-[How to write a config file](https://symless.com/synergy/help/creating-text-config-files)
+[How to write a config file](https://symless.com/deskflow/help/creating-text-config-files)
 
 Enabling this setting will disable the server config GUI.</string>
          </property>

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -30,13 +30,13 @@
 #include <QTimer>
 #include <memory>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class CoreProcess : public QObject {
-  using IServerConfig = synergy::gui::IServerConfig;
-  using QProcessProxy = synergy::gui::proxy::QProcessProxy;
-  using IQIpcClient = synergy::gui::ipc::IQIpcClient;
-  using ILicense = synergy::license::ILicense;
+  using IServerConfig = deskflow::gui::IServerConfig;
+  using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
+  using IQIpcClient = deskflow::gui::ipc::IQIpcClient;
+  using ILicense = deskflow::license::ILicense;
 
   Q_OBJECT
 
@@ -140,4 +140,4 @@ private:
   QTimer m_retryTimer;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

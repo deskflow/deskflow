@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ TEST(ProductTests, setEdition_pro_isValid) {
 
   EXPECT_EQ(kPro, product.edition());
   EXPECT_EQ(Product::SerialKeyEditionID::Pro, product.serialKeyId());
-  EXPECT_EQ("Synergy 1 Pro", product.name());
+  EXPECT_EQ("Deskflow 1 Pro", product.name());
   EXPECT_TRUE(product.isValid());
 }
 
@@ -67,7 +67,7 @@ TEST(ProductTests, setEdition_basic_isValid) {
 
   EXPECT_EQ(kBasic, product.edition());
   EXPECT_EQ(Product::SerialKeyEditionID::Basic, product.serialKeyId());
-  EXPECT_EQ("Synergy 1 Basic", product.name());
+  EXPECT_EQ("Deskflow 1 Basic", product.name());
 }
 
 TEST(ProductTests, setEdition_business_isValid) {
@@ -77,5 +77,5 @@ TEST(ProductTests, setEdition_business_isValid) {
 
   EXPECT_EQ(kBusiness, product.edition());
   EXPECT_EQ(Product::SerialKeyEditionID::Buisiness, product.serialKeyId());
-  EXPECT_EQ("Synergy 1 Business", product.name());
+  EXPECT_EQ("Deskflow 1 Business", product.name());
 }

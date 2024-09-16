@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -28,7 +28,7 @@
 #include <QtNetwork>
 #include <functional>
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 // this should be incremented each time the wizard is changed,
 // which will force it to re-run for existing installations.
@@ -38,15 +38,15 @@ static const char *const kLogLevelNames[] = {
     "INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 #if defined(Q_OS_WIN)
-const char AppConfig::m_CoreServerName[] = "synergys.exe";
-const char AppConfig::m_CoreClientName[] = "synergyc.exe";
+const char AppConfig::m_CoreServerName[] = "deskflows.exe";
+const char AppConfig::m_CoreClientName[] = "deskflowc.exe";
 const char AppConfig::m_LogDir[] = "log/";
-const char AppConfig::m_ConfigFilename[] = "synergy.sgc";
+const char AppConfig::m_ConfigFilename[] = "deskflow.sgc";
 #else
-const char AppConfig::m_CoreServerName[] = "synergys";
-const char AppConfig::m_CoreClientName[] = "synergyc";
+const char AppConfig::m_CoreServerName[] = "deskflows";
+const char AppConfig::m_CoreClientName[] = "deskflowc";
 const char AppConfig::m_LogDir[] = "/var/log/";
-const char AppConfig::m_ConfigFilename[] = "synergy.conf";
+const char AppConfig::m_ConfigFilename[] = "deskflow.conf";
 #endif
 
 // TODO: instead, use key value pair table, which would be less fragile.
@@ -97,7 +97,7 @@ const char *const AppConfig::m_SettingsName[] = {
 };
 
 AppConfig::AppConfig(
-    synergy::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
+    deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
     : m_Scopes(scopes),
       m_pDeps(deps),
       m_ScreenName(deps->hostname()),

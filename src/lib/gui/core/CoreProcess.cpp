@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -37,13 +37,13 @@
 #include <QTimer>
 #include <QtGlobal>
 
-using namespace synergy::license;
-using namespace synergy::gui::license;
+using namespace deskflow::license;
+using namespace deskflow::gui::license;
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 const int kRetryDelay = 1000;
-const auto kServerConfigFilename = "synergy-server.conf";
+const auto kServerConfigFilename = "deskflow-server.conf";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 //
@@ -499,9 +499,9 @@ bool CoreProcess::addGenericArgs(
     // is switched; this is because we may need to elevate or not
     // based on which desk the user is in (login always needs
     // elevation, where as default desk does not).
-    // Note that this is only enabled when synergy is set to elevate
+    // Note that this is only enabled when deskflow is set to elevate
     // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-    // unnecessary restarts when synergy was started elevated or
+    // unnecessary restarts when deskflow was started elevated or
     // when it is not allowed to elevate. In these cases restarting
     // the server is fruitless.
     if (m_appConfig.elevateMode() == ElevateMode::kAutomatic) {
@@ -709,8 +709,8 @@ void CoreProcess::checkLogLine(const QString &line) {
 
   checkSecureSocket(line);
 
-  // subprocess (synergys, synergyc) is not allowed to show notifications
-  // process the log from it and show notification from synergy instead
+  // subprocess (deskflows, deskflowc) is not allowed to show notifications
+  // process the log from it and show notification from deskflow instead
 #ifdef Q_OS_MAC
   checkOSXNotification(line);
 #endif
@@ -752,4 +752,4 @@ QString CoreProcess::correctedInterface() const {
 
 QString CoreProcess::correctedAddress() const { return wrapIpv6(m_address); }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

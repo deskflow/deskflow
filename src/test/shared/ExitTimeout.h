@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <string_view>
 #include <thread>
 
-namespace synergy::test {
+namespace deskflow::test {
 
 /**
  * @brief Exits the program after a specified timeout, unless destroyed.
@@ -44,4 +44,4 @@ private:
   std::unique_ptr<std::thread> m_thread;
 };
 
-} // namespace synergy::test
+} // namespace deskflow::test

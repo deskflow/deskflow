@@ -19,7 +19,7 @@
 
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
-#include "synergy/XSynergy.h"
+#include "synergy/XDeskflow.h"
 
 #include <Wtsapi32.h>
 

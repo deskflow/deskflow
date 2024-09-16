@@ -4,18 +4,18 @@
     <ProductVersion>3.11</ProductVersion>
     <ProjectGuid>{d4ba9f39-6a35-4c8f-9cb2-67fcbe5cab17}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Synergy</OutputName>
+    <OutputName>Deskflow</OutputName>
     <OutputType>Package</OutputType>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>wix\obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(SolutionDir)/SynergyWelcome.wxs" />
-    <Compile Include="$(SolutionDir)/SynergyInstallDlg.wxs" />
-    <Compile Include="$(SolutionDir)/SynergyBrowseDlg.wxs" />
-    <Compile Include="$(SolutionDir)/SynergyVerifyReadyDlg.wxs" />
-    <Compile Include="$(SolutionDir)/SynergyMaintenanceTypeDlg.wxs" />
-    <Compile Include="$(SolutionDir)/SynergyDlgSequence.wxs" />
+    <Compile Include="$(SolutionDir)/DeskflowWelcome.wxs" />
+    <Compile Include="$(SolutionDir)/DeskflowInstallDlg.wxs" />
+    <Compile Include="$(SolutionDir)/DeskflowBrowseDlg.wxs" />
+    <Compile Include="$(SolutionDir)/DeskflowVerifyReadyDlg.wxs" />
+    <Compile Include="$(SolutionDir)/DeskflowMaintenanceTypeDlg.wxs" />
+    <Compile Include="$(SolutionDir)/DeskflowDlgSequence.wxs" />
     <Compile Include="$(SolutionDir)/Product.wxs" />
     <Content Include="$(SolutionDir)/Include.wxi" />
 

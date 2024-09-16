@@ -4,7 +4,7 @@ index fa987bdf..9513dbf3 100644
 +++ b/res/synergy.desktop
 @@ -3,8 +3,7 @@ Type=Application
  Version=1.0
- Name=Synergy
+ Name=Deskflow
  Comment=Keyboard and mouse sharing solution
 -Path=/usr/bin
 -Exec=/usr/bin/synergy

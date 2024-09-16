@@ -32,7 +32,7 @@ public:
   virtual ~OSXClipboard();
 
   //! Test if clipboard is owned by synergy
-  static bool isOwnedBySynergy();
+  static bool isOwnedByDeskflow();
 
   // IClipboard overrides
   virtual bool empty();

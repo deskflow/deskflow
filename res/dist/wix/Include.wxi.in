@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-    <?define Name="Synergy"?>
+    <?define Name="Deskflow"?>
     <?define Version="@SYNERGY_VERSION_MS@"?>
     <?define Author="Symless"?>
     <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>

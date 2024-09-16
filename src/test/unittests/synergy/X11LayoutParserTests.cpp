@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
  */
 
 #if WINAPI_XWINDOWS
-#include "synergy/unix/X11LayoutsParser.h"
+#include "deskflow/unix/X11LayoutsParser.h"
 
 #include <fstream>
 #include <gtest/gtest.h>

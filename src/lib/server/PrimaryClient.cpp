@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,14 +19,14 @@
 #include "server/PrimaryClient.h"
 
 #include "base/Log.h"
-#include "synergy/AppUtil.h"
-#include "synergy/Clipboard.h"
-#include "synergy/Screen.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/Screen.h"
 //
 // PrimaryClient
 //
 
-PrimaryClient::PrimaryClient(const String &name, synergy::Screen *screen)
+PrimaryClient::PrimaryClient(const String &name, deskflow::Screen *screen)
     : BaseClientProxy(name),
       m_screen(screen),
       m_fakeInputCount(0) {

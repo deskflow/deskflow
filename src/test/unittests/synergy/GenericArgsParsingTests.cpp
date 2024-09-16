@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ArgParser.h"
-#include "synergy/ArgsBase.h"
-#include "test/mock/synergy/MockApp.h"
+#include "deskflow/ArgParser.h"
+#include "deskflow/ArgsBase.h"
+#include "test/mock/deskflow/MockApp.h"
 
 #include <gtest/gtest.h>
 
-using namespace synergy;
+using namespace deskflow;
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
@@ -42,11 +42,11 @@ public:
 
   void TearDown() { delete m_argParser; }
 
-  static synergy::ArgsBase argsBase;
+  static deskflow::ArgsBase argsBase;
   ArgParser *m_argParser = nullptr;
 };
 
-synergy::ArgsBase GenericArgsParsingTests::argsBase;
+deskflow::ArgsBase GenericArgsParsingTests::argsBase;
 
 TEST_F(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel) {
   int i = 1;

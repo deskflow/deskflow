@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #define TEST_ENV
 
-#include "synergy/KeyMap.h"
+#include "deskflow/KeyMap.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -29,7 +29,7 @@ using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SaveArg;
 
-namespace synergy {
+namespace deskflow {
 
 TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem) {
   KeyMap keyMap;
@@ -223,4 +223,4 @@ TEST(KeyMapTests, mapkey_handles_setmodifier_with_no_mapped) {
   EXPECT_TRUE(result == nullptr);
 }
 
-} // namespace synergy
+} // namespace deskflow

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -24,12 +24,12 @@
 #include <gtest/gtest.h>
 
 using namespace testing;
-using namespace synergy::gui::proxy;
+using namespace deskflow::gui::proxy;
 
 namespace {
 
-class ConfigScopesMock : public synergy::gui::IConfigScopes {
-  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+class ConfigScopesMock : public deskflow::gui::IConfigScopes {
+  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
   MOCK_METHOD(void, signalReady, (), (override));

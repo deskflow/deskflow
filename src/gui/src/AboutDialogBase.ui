@@ -17,7 +17,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About Synergy</string>
+   <string>About Deskflow</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -185,7 +185,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="m_pLabelSynergyVersion">
+      <widget class="QLabel" name="m_pLabelDeskflowVersion">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
          <horstretch>0</horstretch>

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -30,16 +30,16 @@
 #include "net/ISocketFactory.h"
 #include "net/SecureSocket.h"
 #include "net/TCPSocket.h"
-#include "synergy/AppUtil.h"
-#include "synergy/DropHelper.h"
-#include "synergy/FileChunk.h"
-#include "synergy/IPlatformScreen.h"
-#include "synergy/PacketStreamFilter.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/Screen.h"
-#include "synergy/StreamChunker.h"
-#include "synergy/XSynergy.h"
-#include "synergy/protocol_types.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/DropHelper.h"
+#include "deskflow/FileChunk.h"
+#include "deskflow/IPlatformScreen.h"
+#include "deskflow/PacketStreamFilter.h"
+#include "deskflow/ProtocolUtil.h"
+#include "deskflow/Screen.h"
+#include "deskflow/StreamChunker.h"
+#include "deskflow/XDeskflow.h"
+#include "deskflow/protocol_types.h"
 
 #include <algorithm>
 #include <climits>
@@ -55,8 +55,8 @@
 
 Client::Client(
     IEventQueue *events, const String &name, const NetworkAddress &address,
-    ISocketFactory *socketFactory, synergy::Screen *screen,
-    synergy::ClientArgs const &args)
+    ISocketFactory *socketFactory, deskflow::Screen *screen,
+    deskflow::ClientArgs const &args)
     : m_mock(false),
       m_name(name),
       m_serverAddress(address),
@@ -701,12 +701,12 @@ void Client::onFileRecieveCompleted() {
 
 void Client::bindNetworkInterface(IDataSocket *socket) const {
   try {
-    if (!m_args.m_synergyAddress.empty()) {
+    if (!m_args.m_deskflowAddress.empty()) {
       LOG(
           (CLOG_DEBUG1 "bind to network interface: %s",
-           m_args.m_synergyAddress.c_str()));
+           m_args.m_deskflowAddress.c_str()));
 
-      NetworkAddress bindAddress(m_args.m_synergyAddress);
+      NetworkAddress bindAddress(m_args.m_deskflowAddress);
       bindAddress.resolve();
 
       socket->bind(bindAddress);

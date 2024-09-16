@@ -27,7 +27,7 @@
 // use standard C++ string class for our string class
 using String = std::string;
 
-namespace synergy {
+namespace deskflow {
 
 //! String utilities
 /*!

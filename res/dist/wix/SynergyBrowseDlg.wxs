@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
    <Fragment>
       <UI>
-         <Dialog Id="SynergyBrowseDlg" Width="370" Height="270" Title="!(loc.BrowseDlg_Title)">
+         <Dialog Id="DeskflowBrowseDlg" Width="370" Height="270" Title="!(loc.BrowseDlg_Title)">
             <Control Id="PathEdit" Type="PathEdit" X="25" Y="202" Width="320" Height="18" Property="_BrowseProperty" Indirect="yes" />
             <Control Id="OK" Type="PushButton" X="240" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUIOK)">
                <Publish Event="SetTargetPath" Value="[_BrowseProperty]">1</Publish>

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
  */
 
 #include "arch/Arch.h"
-#include "synergy/ToolApp.h"
+#include "deskflow/ToolApp.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"

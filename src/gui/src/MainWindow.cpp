@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -65,19 +65,19 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-using namespace synergy::gui;
-using namespace synergy::license;
-using namespace synergy::gui::license;
+using namespace deskflow::gui;
+using namespace deskflow::license;
+using namespace deskflow::gui::license;
 
 using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile16 = ":/icons/16x16/synergy.png";
+const auto kIconFile16 = ":/icons/16x16/deskflow.png";
 
 #ifdef Q_OS_MAC
-const auto kLightIconFile = ":/icons/64x64/synergy-light.png";
-const auto kDarkIconFile = ":/icons/64x64/synergy-dark.png";
+const auto kLightIconFile = ":/icons/64x64/deskflow-light.png";
+const auto kDarkIconFile = ":/icons/64x64/deskflow-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
@@ -163,8 +163,8 @@ void MainWindow::setupControls() {
   m_pLabelIpAddresses->setText(
       QString("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-  if (m_AppConfig.lastVersion() != SYNERGY_VERSION) {
-    m_AppConfig.setLastVersion(SYNERGY_VERSION);
+  if (m_AppConfig.lastVersion() != DESKFLOW_VERSION) {
+    m_AppConfig.setLastVersion(DESKFLOW_VERSION);
   }
 
 #if defined(Q_OS_MAC)
@@ -589,7 +589,7 @@ void MainWindow::onCoreProcessStarting() {
   }
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-  if (synergy::platform::isWayland()) {
+  if (deskflow::platform::isWayland()) {
     m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
   }
 #endif
@@ -635,7 +635,7 @@ void MainWindow::createMenuBar() {
   m_pMenuHelp->addAction(m_pActionClearSettings);
 
   const auto enableTestMenu =
-      strToTrue(qEnvironmentVariable("SYNERGY_TEST_MENU"));
+      strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
 
   if (enableTestMenu || kDebugBuild) {
     auto testMenu = new QMenu("Test", m_pMenuBar);
@@ -851,19 +851,19 @@ void MainWindow::updateStatus() {
     using enum CoreProcessState;
 
   case Starting:
-    setStatus("Synergy is starting...");
+    setStatus("Deskflow is starting...");
     break;
 
   case RetryPending:
-    setStatus("Synergy will retry in a moment...");
+    setStatus("Deskflow will retry in a moment...");
     break;
 
   case Stopping:
-    setStatus("Synergy is stopping...");
+    setStatus("Deskflow is stopping...");
     break;
 
   case Stopped:
-    setStatus("Synergy is not running");
+    setStatus("Deskflow is not running");
     break;
 
   case Started: {
@@ -872,28 +872,28 @@ void MainWindow::updateStatus() {
 
     case Listening: {
       if (m_CoreProcess.mode() == CoreMode::Server) {
-        setStatus("Synergy is waiting for clients");
+        setStatus("Deskflow is waiting for clients");
       }
 
       break;
     }
 
     case Connecting:
-      setStatus("Synergy is connecting...");
+      setStatus("Deskflow is connecting...");
       break;
 
     case Connected: {
       if (m_SecureSocket) {
-        setStatus(QString("Synergy is connected (with %1)")
+        setStatus(QString("Deskflow is connected (with %1)")
                       .arg(m_CoreProcess.secureSocketVersion()));
       } else {
-        setStatus("Synergy is connected (without TLS encryption)");
+        setStatus("Deskflow is connected (without TLS encryption)");
       }
       break;
     }
 
     case Disconnected:
-      setStatus("Synergy is disconnected");
+      setStatus("Deskflow is disconnected");
       break;
     }
   } break;

@@ -146,7 +146,7 @@ MSWindowsScreen::MSWindowsScreen(
 
     updateScreenShape();
     m_class = createWindowClass();
-    m_window = createWindow(m_class, "Synergy");
+    m_window = createWindow(m_class, "Deskflow");
     forceShowCursor();
     LOG(
         (CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h,
@@ -418,7 +418,7 @@ void MSWindowsScreen::checkClipboards() {
   // next reboot we do this double check.  clipboard ownership
   // won't be reflected on other screens until we leave but at
   // least the clipboard itself will work.
-  if (m_ownClipboard && !MSWindowsClipboard::isOwnedBySynergy()) {
+  if (m_ownClipboard && !MSWindowsClipboard::isOwnedByDeskflow()) {
     LOG((CLOG_DEBUG
          "clipboard changed: lost ownership and no notification received"));
     m_ownClipboard = false;
@@ -822,7 +822,7 @@ ATOM MSWindowsScreen::createWindowClass() const {
   classInfo.hCursor = NULL;
   classInfo.hbrBackground = NULL;
   classInfo.lpszMenuName = NULL;
-  classInfo.lpszClassName = "Synergy";
+  classInfo.lpszClassName = "Deskflow";
   classInfo.hIconSm = NULL;
   return RegisterClassEx(&classInfo);
 }
@@ -1424,7 +1424,7 @@ bool MSWindowsScreen::onDisplayChange() {
 bool MSWindowsScreen::onClipboardChange() {
   // now notify client that somebody changed the clipboard (unless
   // we're the owner).
-  if (!MSWindowsClipboard::isOwnedBySynergy()) {
+  if (!MSWindowsClipboard::isOwnedByDeskflow()) {
     if (m_ownClipboard) {
       LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
       m_ownClipboard = false;

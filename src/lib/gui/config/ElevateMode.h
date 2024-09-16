@@ -23,8 +23,8 @@
  * The first, switch-on-desk-switch (SodS), passed through synergyd as a
  * command line argument to synergy core, determines if the server restarts
  * when switching Windows desktops (e.g. when Windows UAC dialog pops up).
- * The second, passed as a boolean flag to Synergyd over the IPC inside
- * IpcMessageType::CommandMessage, determines whether Synergy should be started
+ * The second, passed as a boolean flag to Deskflowd over the IPC inside
+ * IpcMessageType::CommandMessage, determines whether Deskflow should be started
  * with elevated privileges.
  *
  * The matrix for these two behaviors is as follows:

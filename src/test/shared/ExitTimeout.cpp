@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <string_view>
 #include <thread>
 
-namespace synergy::test {
+namespace deskflow::test {
 
 const auto checkMilliseconds = std::chrono::milliseconds(100);
 
@@ -58,4 +58,4 @@ void ExitTimeout::run() const {
   }
 }
 
-} // namespace synergy::test
+} // namespace deskflow::test

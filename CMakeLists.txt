@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 # Copyright (C) 2009 Nick Bolton
 #
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.5)
-project(synergy C CXX)
+project(deskflow C CXX)
 
 include(cmake/Version.cmake)
 include(cmake/Definitions.cmake)

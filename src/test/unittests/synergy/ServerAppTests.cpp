@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,9 +17,9 @@
 
 #define TEST_ENV
 
-#include "synergy/ArgParser.h"
-#include "synergy/ServerApp.h"
-#include "synergy/ServerArgs.h"
+#include "deskflow/ArgParser.h"
+#include "deskflow/ServerApp.h"
+#include "deskflow/ServerArgs.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -36,7 +36,7 @@ TEST(ServerAppTests, runInner_will_handle_configuration_lifetime) {
 
   EXPECT_FALSE(app.args().m_config);
 
-  const char *argv[]{"synergyc"};
+  const char *argv[]{"deskflowc"};
   app.runInner(
       1, const_cast<char **>(argv), nullptr, [](int, char **) { return 0; });
 

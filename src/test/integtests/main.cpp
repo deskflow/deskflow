@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -27,7 +27,7 @@
 #include <filesystem>
 #include <gtest/gtest.h>
 
-using synergy::test::ExitTimeout;
+using deskflow::test::ExitTimeout;
 
 const auto testDir = "tmp/test";
 

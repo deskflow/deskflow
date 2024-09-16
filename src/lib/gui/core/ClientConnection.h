@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 
 class QWidget;
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class ClientConnection : public QObject {
   Q_OBJECT
@@ -63,4 +63,4 @@ private:
   bool m_showMessage = true;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

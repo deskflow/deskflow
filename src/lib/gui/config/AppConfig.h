@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -33,10 +33,10 @@
 #include <QVariant>
 #include <optional>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
-const QString kDefaultLogFile = "synergy.log";
+const QString kDefaultLogFile = "deskflow.log";
 const int kDefaultTlsKeyLength = 2048;
 
 #if defined(Q_OS_WIN)
@@ -45,7 +45,7 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif // Q_OS_WIN
 
-} // namespace synergy::gui
+} // namespace deskflow::gui
 
 /**
  * @brief Simply reads and writes app settings.
@@ -55,9 +55,9 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
  * instance is widely accessible, but that has previously led to this class
  * becoming a god object.
  */
-class AppConfig : public QObject, public synergy::gui::IAppConfig {
-  using ProcessMode = synergy::gui::ProcessMode;
-  using IConfigScopes = synergy::gui::IConfigScopes;
+class AppConfig : public QObject, public deskflow::gui::IAppConfig {
+  using ProcessMode = deskflow::gui::ProcessMode;
+  using IConfigScopes = deskflow::gui::IConfigScopes;
 
   Q_OBJECT
 
@@ -112,7 +112,7 @@ public:
   struct Deps {
     virtual ~Deps() = default;
     virtual QString defaultTlsCertPath() const {
-      return synergy::gui::paths::defaultTlsCertPath();
+      return deskflow::gui::paths::defaultTlsCertPath();
     }
     virtual QString hostname() const { return QHostInfo::localHostName(); }
   };
@@ -302,10 +302,10 @@ private:
   QString m_Interface = "";
   int m_LogLevel = 0;
   bool m_LogToFile = false;
-  QString m_LogFilename = logDir() + synergy::gui::kDefaultLogFile;
+  QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
-  ElevateMode m_ElevateMode = synergy::gui::kDefaultElevateMode;
+  ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   QString m_ActivateEmail = "";
   bool m_TlsEnabled = true;
   bool m_AutoHide = false;
@@ -324,12 +324,12 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_EnableService =
-      synergy::gui::kDefaultProcessMode == ProcessMode::kService;
+      deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = true;
-  int m_TlsKeyLength = synergy::gui::kDefaultTlsKeyLength;
+  int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
-  bool m_ShowDevThanks = !synergy::gui::license::isLicensedProduct();
+  bool m_ShowDevThanks = !deskflow::gui::license::isLicensedProduct();
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
 
@@ -339,7 +339,7 @@ private:
    */
   bool m_TlsChanged = false;
 
-  synergy::gui::IConfigScopes &m_Scopes;
+  deskflow::gui::IConfigScopes &m_Scopes;
   std::shared_ptr<Deps> m_pDeps;
   QString m_ScreenName;
   QString m_TlsCertPath;

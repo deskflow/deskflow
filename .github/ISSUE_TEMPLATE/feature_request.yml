@@ -1,15 +1,15 @@
 name: Feature request
-description: Had an idea how to improve Synergy? Share it with us.
+description: Had an idea how to improve Deskflow? Share it with us.
 labels: ["enhancement", "triage", "unanswered"]
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to help us improve Synergy.
+      value: Thanks for taking the time to help us improve Deskflow.
 
   - type: dropdown
     id: user-type
     attributes:
-      label: What type of Synergy user are you?
+      label: What type of Deskflow user are you?
       description: This will help us understand the context of your issue.
       options:
         # Empty option to force selection
@@ -47,11 +47,11 @@ body:
     id: product
     attributes:
       label: Product name
-      description: Which Synergy product are you using?
+      description: Which Deskflow product are you using?
       options:
         # Empty option to force selection
         -
-        - Synergy 1
+        - Deskflow 1
         - Synergy 2
         - Synergy 3
       default: 0
@@ -88,11 +88,11 @@ body:
   - type: textarea
     id: config
     attributes:
-      label: Synergy configuration
+      label: Deskflow configuration
       description: |
         Please provide a very brief description of your configuration.
         Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
-        This will help us understand how you're using Synergy.
+        This will help us understand how you're using Deskflow.
       placeholder: |
         - Windows 11 server, macOS 15 client
         - Each computer has a single monitor

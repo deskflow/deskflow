@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -26,7 +26,7 @@ class IEventQueue;
 class ClientProxy1_2 : public ClientProxy1_1 {
 public:
   ClientProxy1_2(
-      const String &name, synergy::IStream *adoptedStream, IEventQueue *events);
+      const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ~ClientProxy1_2();
 
   // IClient overrides

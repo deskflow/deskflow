@@ -20,7 +20,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace synergy::license {
+namespace deskflow::license {
 
 class SerialKeyParseError : public std::runtime_error {
 public:

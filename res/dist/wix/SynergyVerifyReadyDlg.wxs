@@ -3,7 +3,7 @@
    <?include Include.wxi?>
    <Fragment>
       <UI>
-         <Dialog Id="SynergyVerifyReadyDlg" Width="370" Height="270" Title="!(loc.VerifyReadyDlg_Title)" TrackDiskSpace="yes">
+         <Dialog Id="DeskflowVerifyReadyDlg" Width="370" Height="270" Title="!(loc.VerifyReadyDlg_Title)" TrackDiskSpace="yes">
             <Control Id="Install" Type="PushButton" ElevationShield="yes" X="212" Y="243" Width="80" Height="17" Default="yes" Hidden="yes" Disabled="yes" Text="!(loc.VerifyReadyDlgInstall)">
                <Condition Action="show">NOT Installed AND ALLUSERS</Condition>
                <Condition Action="enable">NOT Installed</Condition>
@@ -132,7 +132,7 @@
             <Control Id="Back" Type="PushButton" X="156" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)">
                <Condition Action="default">WixUI_InstallMode = "Remove"</Condition>
             </Control>
-            <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="[SynergyCommonBackground]" />
+            <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="[DeskflowCommonBackground]" />
             <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
          </Dialog>
       </UI>

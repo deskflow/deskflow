@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -21,13 +21,13 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "io/IStream.h"
-#include "synergy/ProtocolUtil.h"
+#include "deskflow/ProtocolUtil.h"
 
 //
 // ClientProxy
 //
 
-ClientProxy::ClientProxy(const String &name, synergy::IStream *stream)
+ClientProxy::ClientProxy(const String &name, deskflow::IStream *stream)
     : BaseClientProxy(name),
       m_stream(stream) {}
 
@@ -41,7 +41,7 @@ void ClientProxy::close(const char *msg) {
   getStream()->flush();
 }
 
-synergy::IStream *ClientProxy::getStream() const { return m_stream; }
+deskflow::IStream *ClientProxy::getStream() const { return m_stream; }
 
 void *ClientProxy::getEventTarget() const {
   return static_cast<IScreen *>(const_cast<ClientProxy *>(this));

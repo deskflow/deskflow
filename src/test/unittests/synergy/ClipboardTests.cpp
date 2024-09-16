@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/Clipboard.h"
+#include "deskflow/Clipboard.h"
 
 #include <gtest/gtest.h>
 
@@ -32,7 +32,7 @@ TEST(ClipboardTests, empty_openCalled_returnsTrue) {
 TEST(ClipboardTests, empty_singleFormat_hasReturnsFalse) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(Clipboard::kText, "synergy rocks!");
+  clipboard.add(Clipboard::kText, "deskflow rocks!");
 
   clipboard.empty();
 
@@ -44,17 +44,17 @@ TEST(ClipboardTests, add_newValue_valueWasStored) {
   Clipboard clipboard;
   clipboard.open(0);
 
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
 
   String actual = clipboard.get(IClipboard::kText);
-  EXPECT_EQ("synergy rocks!", actual);
+  EXPECT_EQ("deskflow rocks!", actual);
 }
 
 TEST(ClipboardTests, add_replaceValue_valueWasReplaced) {
   Clipboard clipboard;
   clipboard.open(0);
 
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
   clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 
   String actual = clipboard.get(IClipboard::kText);
@@ -108,7 +108,7 @@ TEST(ClipboardTests, getTime_openAndEmpty_returnsOne) {
 TEST(ClipboardTests, has_withFormatAdded_returnsTrue) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
 
   bool actual = clipboard.has(IClipboard::kText);
 
@@ -136,11 +136,11 @@ TEST(ClipboardTests, get_withNoFormats_returnsEmpty) {
 TEST(ClipboardTests, get_withFormatAdded_returnsExpected) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
 
   String actual = clipboard.get(IClipboard::kText);
 
-  EXPECT_EQ("synergy rocks!", actual);
+  EXPECT_EQ("deskflow rocks!", actual);
 }
 
 TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero) {
@@ -156,7 +156,7 @@ TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero) {
 TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
   clipboard.close();
 
   String actual = clipboard.marshall();
@@ -168,7 +168,7 @@ TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText) {
 TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, "synergy rocks!"); // 14 chars
+  clipboard.add(IClipboard::kText, "deskflow rocks!"); // 14 chars
   clipboard.close();
 
   String actual = clipboard.marshall();
@@ -182,11 +182,11 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14) {
 TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid) {
   // 285 chars
   String data;
-  data.append("Synergy is Free and Open Source Software that lets you ");
+  data.append("Deskflow is Free and Open Source Software that lets you ");
   data.append("easily share your mouse and keyboard between multiple ");
   data.append("computers, where each computer has it's own display. No ");
   data.append("special hardware is required, all you need is a local area ");
-  data.append("network. Synergy is supported on Windows, Mac OS X and Linux.");
+  data.append("network. Deskflow is supported on Windows, Mac OS X and Linux.");
 
   Clipboard clipboard;
   clipboard.open(0);
@@ -223,7 +223,7 @@ TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml) {
 TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, "synergy rocks");
+  clipboard.add(IClipboard::kText, "deskflow rocks");
   clipboard.add(IClipboard::kHTML, "html sucks");
   clipboard.close();
 
@@ -240,13 +240,13 @@ TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats) {
 TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded) {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, "synergy rocks!");
+  clipboard.add(IClipboard::kText, "deskflow rocks!");
   clipboard.close();
 
   String actual = clipboard.marshall();
 
   // string contains other data, but should end in the string we added.
-  EXPECT_EQ("synergy rocks!", actual.substr(12));
+  EXPECT_EQ("deskflow rocks!", actual.substr(12));
 }
 
 TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse) {
@@ -270,11 +270,11 @@ TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid) {
 
   // 285 chars
   String text;
-  text.append("Synergy is Free and Open Source Software that lets you ");
+  text.append("Deskflow is Free and Open Source Software that lets you ");
   text.append("easily share your mouse and keyboard between multiple ");
   text.append("computers, where each computer has it's own display. No ");
   text.append("special hardware is required, all you need is a local area ");
-  text.append("network. Synergy is supported on Windows, Mac OS X and Linux.");
+  text.append("network. Deskflow is supported on Windows, Mac OS X and Linux.");
 
   String data;
   data += (char)0;
@@ -313,7 +313,7 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid) {
   data += (char)0;
   data += (char)0;
   data += (char)14;
-  data += "synergy rocks!";
+  data += "deskflow rocks!";
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -328,7 +328,7 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid) {
 
   clipboard.open(0);
   String actual = clipboard.get(IClipboard::kText);
-  EXPECT_EQ("synergy rocks!", actual);
+  EXPECT_EQ("deskflow rocks!", actual);
 }
 
 TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid) {
@@ -346,7 +346,7 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid) {
   data += (char)0;
   data += (char)0;
   data += (char)14;
-  data += "synergy rocks!";
+  data += "deskflow rocks!";
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -367,7 +367,7 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid) {
 TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual) {
   Clipboard clipboard1;
   clipboard1.open(0);
-  clipboard1.add(Clipboard::kText, "synergy rocks!");
+  clipboard1.add(Clipboard::kText, "deskflow rocks!");
   clipboard1.close();
 
   Clipboard clipboard2;
@@ -375,5 +375,5 @@ TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual) {
 
   clipboard2.open(0);
   String actual = clipboard2.get(Clipboard::kText);
-  EXPECT_EQ("synergy rocks!", actual);
+  EXPECT_EQ("deskflow rocks!", actual);
 }

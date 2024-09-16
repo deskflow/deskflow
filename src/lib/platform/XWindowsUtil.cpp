@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -21,7 +21,7 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "mt/Thread.h"
-#include "synergy/key_types.h"
+#include "deskflow/key_types.h"
 
 #include <X11/Xatom.h>
 #define XK_APL
@@ -1849,9 +1849,9 @@ String XWindowsUtil::atomToString(Display *display, Atom atom) {
   XWindowsUtil::ErrorLock lock(display, &error);
   char *name = XGetAtomName(display, atom);
   if (error) {
-    return synergy::string::sprintf("<UNKNOWN> (%d)", (int)atom);
+    return deskflow::string::sprintf("<UNKNOWN> (%d)", (int)atom);
   } else {
-    String msg = synergy::string::sprintf("%s (%d)", name, (int)atom);
+    String msg = deskflow::string::sprintf("%s (%d)", name, (int)atom);
     XFree(name);
     return msg;
   }
@@ -1866,11 +1866,11 @@ XWindowsUtil::atomsToString(Display *display, const Atom *atom, UInt32 num) {
   String msg;
   if (error) {
     for (UInt32 i = 0; i < num; ++i) {
-      msg += synergy::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
+      msg += deskflow::string::sprintf("<UNKNOWN> (%d), ", (int)atom[i]);
     }
   } else {
     for (UInt32 i = 0; i < num; ++i) {
-      msg += synergy::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
+      msg += deskflow::string::sprintf("%s (%d), ", names[i], (int)atom[i]);
       XFree(names[i]);
     }
   }

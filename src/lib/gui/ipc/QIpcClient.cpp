@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 const auto kRetryInterval = 1000;
 const auto kConnectTimeout = 5000;
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 QIpcClient::QIpcClient(const StreamProvider &streamProvider)
     : m_streamProvider(streamProvider) {

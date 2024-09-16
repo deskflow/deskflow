@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -25,32 +25,32 @@
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "server/Config.h"
-#include "synergy/Clipboard.h"
-#include "synergy/DragInformation.h"
-#include "synergy/INode.h"
-#include "synergy/ServerArgs.h"
-#include "synergy/clipboard_types.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/DragInformation.h"
+#include "deskflow/INode.h"
+#include "deskflow/ServerArgs.h"
+#include "deskflow/clipboard_types.h"
+#include "deskflow/key_types.h"
+#include "deskflow/mouse_types.h"
 #include <memory>
 
 class BaseClientProxy;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-namespace synergy {
+namespace deskflow {
 class Screen;
 }
 class IEventQueue;
 class Thread;
 class ClientListener;
 
-//! Synergy server
+//! Deskflow server
 /*!
-This class implements the top-level server algorithms for synergy.
+This class implements the top-level server algorithms for deskflow.
 */
 class Server : public INode {
-  using ServerConfig = synergy::server::Config;
+  using ServerConfig = deskflow::server::Config;
 
 public:
   //! Lock cursor to screen data
@@ -112,8 +112,8 @@ public:
   */
   Server(
       ServerConfig &config, PrimaryClient *primaryClient,
-      synergy::Screen *screen, IEventQueue *events,
-      synergy::ServerArgs const &args);
+      deskflow::Screen *screen, IEventQueue *events,
+      deskflow::ServerArgs const &args);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -470,7 +470,7 @@ private:
   bool m_lockedToScreen;
 
   // server screen
-  synergy::Screen *m_screen;
+  deskflow::Screen *m_screen;
 
   IEventQueue *m_events;
 
@@ -492,5 +492,5 @@ private:
   bool m_waitDragInfoThread;
 
   ClientListener *m_clientListener;
-  synergy::ServerArgs m_args;
+  deskflow::ServerArgs m_args;
 };

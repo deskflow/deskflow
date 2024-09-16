@@ -628,7 +628,7 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>Specify when the Synergy service should run at an elevated privilege level</string>
+               <string>Specify when the Deskflow service should run at an elevated privilege level</string>
               </property>
               <property name="currentIndex">
                <number>0</number>

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@
 
 #include <QString>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 enum class ProcessMode { kService, kDesktop };
 
 class IAppConfig {
-  using IConfigScopes = synergy::gui::IConfigScopes;
+  using IConfigScopes = deskflow::gui::IConfigScopes;
 
 public:
   virtual ~IAppConfig() = default;
@@ -92,4 +92,4 @@ public:
   virtual void setInvertConnection(bool invertConnection) = 0;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

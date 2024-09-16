@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -36,8 +36,8 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
-class ServerConfig : public ScreenConfig, public synergy::gui::IServerConfig {
-  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig {
+  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
   friend class ServerConfigDialog;
   friend QTextStream &

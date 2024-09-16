@@ -463,7 +463,7 @@ macro(configure_windows_libs)
     /DWIN32
     /D_WINDOWS
     /D_CRT_SECURE_NO_WARNINGS
-    /DSYNERGY_VERSION=\"${SYNERGY_VERSION}\"
+    /DDESKFLOW_VERSION=\"${DESKFLOW_VERSION}\"
     /D_XKEYCHECK_H)
 
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/win/version.rc.in
@@ -527,7 +527,7 @@ macro(configure_gtest)
   # Arch Linux package maintainers:
   # We do care about not bundling libs and didn't mean to cause upset. We made some mistakes
   # and we're trying to put that right.
-  # The comment "They BUNDLE a fucking zip for cryptopp" in synergy.git/PKGBUILD is only
+  # The comment "They BUNDLE a fucking zip for cryptopp" in deskflow.git/PKGBUILD is only
   # relevant to a very version of old the code, so the comment should probably be removed.
   # If there are any problems like this in future, please do feel free send us a patch! :)
   option(SYSTEM_GTEST "Use system GoogleTest" ${DEFAULT_SYSTEM_GTEST})

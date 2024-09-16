@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <QString>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class ServerMessage {
   QString m_message;
@@ -39,4 +39,4 @@ private:
   QString parseClientName(const QString &line) const;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

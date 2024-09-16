@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #include <gtest/gtest.h>
 
 using enum Edition;
-using namespace synergy::license;
+using namespace deskflow::license;
 using time_point = std::chrono::system_clock::time_point;
 using seconds = std::chrono::seconds;
 

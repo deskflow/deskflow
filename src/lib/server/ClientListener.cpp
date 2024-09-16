@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -28,7 +28,7 @@
 #include "net/XSocket.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
-#include "synergy/PacketStreamFilter.h"
+#include "deskflow/PacketStreamFilter.h"
 
 //
 // ClientListener
@@ -167,7 +167,7 @@ void ClientListener::handleClientAccepted(const Event &, void *vsocket) {
   IDataSocket *socket = static_cast<IDataSocket *>(vsocket);
 
   // filter socket messages, including a packetizing filter
-  synergy::IStream *stream = new PacketStreamFilter(m_events, socket, false);
+  deskflow::IStream *stream = new PacketStreamFilter(m_events, socket, false);
   assert(m_server != NULL);
 
   // create proxy for unknown client

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #include <QSettings>
 #include <memory>
 
-namespace synergy::gui::proxy {
+namespace deskflow::gui::proxy {
 
 const auto kLegacyOrgDomain = "http-symless-com";
 const auto kLegacySystemConfigFilename = "SystemConfig.ini";
@@ -43,7 +43,7 @@ const auto kUnixSystemConfigPath = "/usr/local/etc/";
  * @brief The base dir for the system settings file.
  *
  * Important: Qt will append the org name as a dir, and the app name as the
- * settings filename, i.e.: `{base-dir}/Synergy/Synergy.ini`
+ * settings filename, i.e.: `{base-dir}/Deskflow/Deskflow.ini`
  */
 QString getSystemSettingsBaseDir() {
 #if defined(Q_OS_WIN)
@@ -129,7 +129,7 @@ void QSettingsProxy::loadUser() {
   m_pSettings = std::make_unique<QSettings>();
 
 #if defined(Q_OS_MAC)
-  // on mac, we used to save settings to "com.http-symless-com.Synergy.plist"
+  // on mac, we used to save settings to "com.http-symless-com.Deskflow.plist"
   // because `setOrganizationName` was historically called using a url instead
   // of an actual domain (e.g. symless.com).
   migrateLegacyUserSettings(*m_pSettings);
@@ -205,4 +205,4 @@ bool QSettingsProxy::contains(const QString &key) const {
   return m_pSettings->contains(key);
 }
 
-} // namespace synergy::gui::proxy
+} // namespace deskflow::gui::proxy

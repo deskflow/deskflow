@@ -20,7 +20,7 @@
 
 #include "arch/IArchMultithread.h"
 #include "platform/MSWindowsSession.h"
-#include "synergy/XSynergy.h"
+#include "synergy/XDeskflow.h"
 
 #include <map>
 #include <string>
@@ -110,9 +110,9 @@ private:
 /*!
 An error occured in the process watchdog.
 */
-class XMSWindowsWatchdogError : public XSynergy {
+class XMSWindowsWatchdogError : public XDeskflow {
 public:
-  XMSWindowsWatchdogError(const String &msg) : XSynergy(msg) {}
+  XMSWindowsWatchdogError(const String &msg) : XDeskflow(msg) {}
 
   // XBase overrides
   virtual String getWhat() const throw() { return what(); }

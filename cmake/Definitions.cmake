@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -36,7 +36,7 @@ macro(configure_definitions)
   if("${VERSION_URL}" STREQUAL "")
     set(VERSION_URL "https://api.symless.com/version?version=v1")
   endif()
-  add_definitions(-DSYNERGY_VERSION_URL="${VERSION_URL}")
+  add_definitions(-DDESKFLOW_VERSION_URL="${VERSION_URL}")
 
   if(NOT "$ENV{GIT_SHA}" STREQUAL "")
     # Shorten the Git SHA to 8 chars for readability
@@ -45,25 +45,25 @@ macro(configure_definitions)
     add_definitions(-DGIT_SHA_SHORT="${GIT_SHA_SHORT}")
   endif()
 
-  if(NOT "$ENV{SYNERGY_PRODUCT_NAME}" STREQUAL "")
-    set(PRODUCT_NAME $ENV{SYNERGY_PRODUCT_NAME})
+  if(NOT "$ENV{DESKFLOW_PRODUCT_NAME}" STREQUAL "")
+    set(PRODUCT_NAME $ENV{DESKFLOW_PRODUCT_NAME})
   endif()
 
   if(LICENSED_PRODUCT)
     message(STATUS "Licensed product")
-    add_definitions(-DSYNERGY_LICENSED_PRODUCT=1)
+    add_definitions(-DDESKFLOW_LICENSED_PRODUCT=1)
 
     if(ENABLE_ACTIVATION)
       message(STATUS "Activation enabled")
-      add_definitions(-DSYNERGY_ENABLE_ACTIVATION=1)
+      add_definitions(-DDESKFLOW_ENABLE_ACTIVATION=1)
     endif()
   else()
-    set(PRODUCT_NAME "Synergy 1 Community Edition")
+    set(PRODUCT_NAME "Deskflow")
   endif()
 
   if(PRODUCT_NAME)
     message(STATUS "Product name: ${PRODUCT_NAME}")
-    add_definitions(-DSYNERGY_PRODUCT_NAME="${PRODUCT_NAME}")
+    add_definitions(-DDESKFLOW_PRODUCT_NAME="${PRODUCT_NAME}")
   endif()
 
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -120,28 +120,28 @@ macro(configure_options)
   # by default, show the dev thanks message, guides contributions, etc.
   set(DEFAULT_SHOW_DEV_THANKS ON)
 
-  if("$ENV{SYNERGY_BUILD_MINIMAL}" STREQUAL "true")
+  if("$ENV{DESKFLOW_BUILD_MINIMAL}" STREQUAL "true")
     set(DEFAULT_BUILD_GUI OFF)
     set(DEFAULT_BUILD_INSTALLER OFF)
   endif()
 
-  if("$ENV{SYNERGY_BUILD_TESTS}" STREQUAL "false")
+  if("$ENV{DESKFLOW_BUILD_TESTS}" STREQUAL "false")
     set(DEFAULT_BUILD_TESTS OFF)
   endif()
 
-  if("$ENV{SYNERGY_BUILD_UNIFIED}" STREQUAL "true")
+  if("$ENV{DESKFLOW_BUILD_UNIFIED}" STREQUAL "true")
     set(DEFAULT_BUILD_UNIFIED ON)
   endif()
 
-  if("$ENV{SYNERGY_ENABLE_ACTIVATION}" STREQUAL "true")
+  if("$ENV{DESKFLOW_ENABLE_ACTIVATION}" STREQUAL "true")
     set(DEFAULT_ENABLE_ACTIVATION ON)
   endif()
 
-  if("$ENV{SYNERGY_LICENSED_PRODUCT}" STREQUAL "true")
+  if("$ENV{DESKFLOW_LICENSED_PRODUCT}" STREQUAL "true")
     set(DEFAULT_LICENSED_PRODUCT ON)
   endif()
 
-  if("$ENV{SYNERGY_ENABLE_COVERAGE}" STREQUAL "true")
+  if("$ENV{DESKFLOW_ENABLE_COVERAGE}" STREQUAL "true")
     set(DEFAULT_ENABLE_COVERAGE ON)
   endif()
 

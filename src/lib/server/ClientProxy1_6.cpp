@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,16 +21,16 @@
 #include "base/TMethodEventJob.h"
 #include "io/IStream.h"
 #include "server/Server.h"
-#include "synergy/ClipboardChunk.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/StreamChunker.h"
+#include "deskflow/ClipboardChunk.h"
+#include "deskflow/ProtocolUtil.h"
+#include "deskflow/StreamChunker.h"
 
 //
 // ClientProxy1_6
 //
 
 ClientProxy1_6::ClientProxy1_6(
-    const String &name, synergy::IStream *stream, Server *server,
+    const String &name, deskflow::IStream *stream, Server *server,
     IEventQueue *events)
     : ClientProxy1_5(name, stream, server, events),
       m_events(events) {

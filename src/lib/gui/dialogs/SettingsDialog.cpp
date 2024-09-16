@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -33,10 +33,10 @@
 #include <QtCore>
 #include <QtGui>
 
-using namespace synergy::license;
-using namespace synergy::gui;
+using namespace deskflow::license;
+using namespace deskflow::gui;
 
-const char *const kProProductName = "Synergy 1 Pro";
+const char *const kProProductName = "Deskflow 1 Pro";
 
 SettingsDialog::SettingsDialog(
     QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
@@ -274,7 +274,7 @@ void SettingsDialog::updateTlsControlsEnabled() {
 }
 
 bool SettingsDialog::isClientMode() const {
-  return m_coreProcess.mode() == synergy::gui::CoreProcess::Mode::Client;
+  return m_coreProcess.mode() == deskflow::gui::CoreProcess::Mode::Client;
 }
 
 void SettingsDialog::updateTlsRegenerateButton() {

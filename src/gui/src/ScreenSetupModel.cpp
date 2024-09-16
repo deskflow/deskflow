@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -23,7 +23,7 @@
 #include <QtCore>
 #include <QtGui>
 
-const QString ScreenSetupModel::m_MimeType = "application/x-qsynergy-screen";
+const QString ScreenSetupModel::m_MimeType = "application/x-qdeskflow-screen";
 
 ScreenSetupModel::ScreenSetupModel(
     ScreenList &screens, int numColumns, int numRows)

@@ -46,7 +46,7 @@ desk at a time, you can't switch desks if the thread has any hooks
 installed or owns any windows, windows cannot exist on multiple
 desks at once, etc.  Basically, they're useless except for running
 the login window or the screensaver, which is what they're used
-for.  Synergy must deal with them mainly because of the login
+for.  Deskflow must deal with them mainly because of the login
 window and screensaver but users can create their own desks and
 synergy should work on those too.
 

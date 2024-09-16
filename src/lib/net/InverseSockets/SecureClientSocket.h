@@ -65,7 +65,7 @@ private:
 
   void handleTCPConnected(const Event &, void *);
 
-  synergy::ssl::SslApi m_ssl{false};
+  deskflow::ssl::SslApi m_ssl{false};
   bool m_secureReady = false;
   bool m_fatal = false;
 };

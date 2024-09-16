@@ -783,7 +783,7 @@ bool OSXKeyState::getKeyMap(
   return true;
 }
 
-bool OSXKeyState::mapSynergyHotKeyToMac(
+bool OSXKeyState::mapDeskflowHotKeyToMac(
     KeyID key, KeyModifierMask mask, UInt32 &macVirtualKey,
     UInt32 &macModifierMask) const {
   // look up button for key

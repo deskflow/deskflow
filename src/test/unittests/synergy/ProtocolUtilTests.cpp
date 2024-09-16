@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2020 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/ProtocolUtil.h"
+#include "deskflow/ProtocolUtil.h"
 #include "test/mock/io/MockStream.h"
 
 #include <array>

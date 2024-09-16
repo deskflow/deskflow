@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(synergyd)
+add_subdirectory(deskflowd)
 
 if(BUILD_UNIFIED)
-  add_subdirectory(synergy-core)
+  add_subdirectory(deskflow-core)
 else()
-  add_subdirectory(synergyc)
-  add_subdirectory(synergys)
+  add_subdirectory(deskflowc)
+  add_subdirectory(deskflows)
 endif(BUILD_UNIFIED)
 
 add_subdirectory(syntool)

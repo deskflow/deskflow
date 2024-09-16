@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -81,7 +81,7 @@ std::string ArchFileUnix::getInstalledDirectory() {
 #if WINAPI_XWINDOWS
   return "/usr/bin";
 #else
-  return "/Applications/Synergy.app/Contents/MacOS";
+  return "/Applications/Deskflow.app/Contents/MacOS";
 #endif
 }
 
@@ -105,9 +105,9 @@ std::string ArchFileUnix::getProfileDirectory() {
     dir = m_profileDirectory;
   } else {
 #if WINAPI_XWINDOWS
-    dir = getUserDirectory().append("/.synergy");
+    dir = getUserDirectory().append("/.deskflow");
 #else
-    dir = getUserDirectory().append("/Library/Synergy");
+    dir = getUserDirectory().append("/Library/Deskflow");
 #endif
   }
   return dir;

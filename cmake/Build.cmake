@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ macro(post_config)
   # Build to a temp bin dir on Windows and then copy to the final bin dir
   # (ignore copy fail). It is neccesary to do this. Since the binary may already
   # be running and you can't write to a running binary (on Windows). It's common
-  # to use Synergy to develop Synergy (i.e. eating your own dog food immediately
+  # to use Deskflow to develop Deskflow (i.e. eating your own dog food immediately
   # making it).
   if(WIN32)
 
@@ -60,10 +60,10 @@ macro(post_config_all)
 
     add_dependencies(
       run_post_build
-      synergy
-      synergyc
-      synergys
-      synergyd)
+      deskflow
+      deskflowc
+      deskflows
+      deskflowd)
   endif()
 
 endmacro()

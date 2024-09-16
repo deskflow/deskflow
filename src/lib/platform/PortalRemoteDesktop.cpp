@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -23,7 +23,7 @@
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
 
-namespace synergy {
+namespace deskflow {
 
 PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
     : screen_(screen),
@@ -203,4 +203,4 @@ void PortalRemoteDesktop::glib_thread(void *) {
   }
 }
 
-} // namespace synergy
+} // namespace deskflow

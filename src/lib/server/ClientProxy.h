@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -23,7 +23,7 @@
 #include "base/String.h"
 #include "server/BaseClientProxy.h"
 
-namespace synergy {
+namespace deskflow {
 class IStream;
 }
 
@@ -33,7 +33,7 @@ public:
   /*!
   \c name is the name of the client.
   */
-  ClientProxy(const String &name, synergy::IStream *adoptedStream);
+  ClientProxy(const String &name, deskflow::IStream *adoptedStream);
   ClientProxy(ClientProxy const &) = delete;
   ClientProxy(ClientProxy &&) = delete;
   ~ClientProxy();
@@ -58,7 +58,7 @@ public:
   /*!
   Returns the original stream passed to the c'tor.
   */
-  synergy::IStream *getStream() const override;
+  deskflow::IStream *getStream() const override;
 
   //@}
 
@@ -96,5 +96,5 @@ public:
   void secureInputNotification(const String &app) const override = 0;
 
 private:
-  synergy::IStream *m_stream;
+  deskflow::IStream *m_stream;
 };

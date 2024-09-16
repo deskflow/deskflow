@@ -1,4 +1,4 @@
-#include "lib/synergy/IKeyState.h"
+#include "lib/deskflow/IKeyState.h"
 
 #include <gtest/gtest.h>
 

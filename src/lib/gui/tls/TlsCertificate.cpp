@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -27,21 +27,21 @@
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
 static const char *const kCertificateLifetime = "365";
-static const char *const kCertificateSubjectInfo = "/CN=Synergy";
+static const char *const kCertificateSubjectInfo = "/CN=Deskflow";
 
 #if defined(Q_OS_WIN)
 static const char *const kWinOpenSslDir = "OpenSSL";
 static const char *const kWinOpenSslBinary = "openssl.exe";
-static const char *const kConfigFile = "synergy.conf";
+static const char *const kConfigFile = "deskflow.conf";
 #elif defined(Q_OS_UNIX)
 static const char *const kUnixOpenSslCommand = "openssl";
 #endif
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 #if defined(Q_OS_WIN)
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 QString openSslWindowsDir() {
 
@@ -81,9 +81,9 @@ QString openSslWindowsBinary() {
   return path;
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 #endif
 

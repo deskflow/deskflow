@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include "CoreProcess.h"
 #include "platform/wayland.h"
 
-namespace synergy::gui::core {
+namespace deskflow::gui::core {
 
 class WaylandWarnings {
 public:
@@ -46,4 +46,4 @@ private:
   std::shared_ptr<Deps> m_pDeps;
 };
 
-} // namespace synergy::gui::core
+} // namespace deskflow::gui::core

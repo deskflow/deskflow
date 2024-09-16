@@ -53,7 +53,7 @@ public:
 
   //! Get installed directory
   /*!
-  Returns the directory in which Synergy is installed.
+  Returns the directory in which Deskflow is installed.
   */
   virtual std::string getInstalledDirectory() = 0;
 

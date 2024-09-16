@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <QObject>
 #include <QProcess>
 
-namespace synergy::gui::proxy {
+namespace deskflow::gui::proxy {
 
 class QProcessProxy : public QObject {
   Q_OBJECT
@@ -45,4 +45,4 @@ private:
   std::unique_ptr<QProcess> m_pProcess;
 };
 
-} // namespace synergy::gui::proxy
+} // namespace deskflow::gui::proxy

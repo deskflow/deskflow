@@ -61,9 +61,9 @@ static const char magic_section[] = "";
 
 // This isn't in any Apple SDK that I know of as of yet.
 enum {
-	kSynergyEventMouseScroll = 11,
-	kSynergyMouseScrollAxisX = 'saxx',
-	kSynergyMouseScrollAxisY = 'saxy'
+	kDeskflowEventMouseScroll = 11,
+	kDeskflowMouseScrollAxisX = 'saxx',
+	kDeskflowMouseScrollAxisY = 'saxy'
 };
 
 enum {
@@ -349,7 +349,7 @@ OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
 	// get mac virtual key and modifier mask matching synergy key and mask
 	UInt32 macKey, macMask;
-	if (!m_keyState->mapSynergyHotKeyToMac(key, mask, macKey, macMask)) {
+	if (!m_keyState->mapDeskflowHotKeyToMac(key, mask, macKey, macMask)) {
 		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
@@ -538,7 +538,7 @@ void
 OSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	// Buttons are indexed from one, but the button down array is indexed from zero
-	UInt32 index = mapSynergyButtonToMac(id) - kButtonLeft;
+	UInt32 index = mapDeskflowButtonToMac(id) - kButtonLeft;
 	if (index >= NumButtonIDs) {
 		return;
 	}
@@ -702,8 +702,8 @@ OSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 		// is the right choice here over kCGScrollEventUnitPixel
 		CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
 			NULL, kCGScrollEventUnitLine, 2,
-			mapScrollWheelFromSynergy(yDelta),
-			mapScrollWheelFromSynergy(xDelta));
+			mapScrollWheelFromDeskflow(yDelta),
+			mapScrollWheelFromDeskflow(xDelta));
 
         // Fix for sticky keys
         CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
@@ -1023,7 +1023,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 	switch (eventClass) {
 	case kEventClassMouse:
 		switch (GetEventKind(*carbonEvent)) {
-		case kSynergyEventMouseScroll:
+		case kDeskflowEventMouseScroll:
 		{
 			OSStatus r;
 			long xScroll;
@@ -1031,7 +1031,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 
 			// get scroll amount
 			r = GetEventParameter(*carbonEvent,
-					kSynergyMouseScrollAxisX,
+					kDeskflowMouseScrollAxisX,
 					typeSInt32,
 					NULL,
 					sizeof(xScroll),
@@ -1041,7 +1041,7 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 				xScroll = 0;
 			}
 			r = GetEventParameter(*carbonEvent,
-					kSynergyMouseScrollAxisY,
+					kDeskflowMouseScrollAxisY,
 					typeSInt32,
 					NULL,
 					sizeof(yScroll),
@@ -1052,8 +1052,8 @@ OSXScreen::handleSystemEvent(const Event& event, void*)
 			}
 
 			if (xScroll != 0 || yScroll != 0) {
-				onMouseWheel(-mapScrollWheelToSynergy(xScroll),
-								mapScrollWheelToSynergy(yScroll));
+				onMouseWheel(-mapScrollWheelToDeskflow(xScroll),
+								mapScrollWheelToDeskflow(yScroll));
 			}
 		}
 		}
@@ -1167,7 +1167,7 @@ bool
 OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
 {
 	// Buttons 2 and 3 are inverted on the mac
-	ButtonID button = mapMacButtonToSynergy(macButton);
+	ButtonID button = mapMacButtonToDeskflow(macButton);
 
 	if (pressed) {
 		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
@@ -1423,7 +1423,7 @@ OSXScreen::onHotKey(EventRef event) const
 }
 
 ButtonID
-OSXScreen::mapSynergyButtonToMac(UInt16 button) const
+OSXScreen::mapDeskflowButtonToMac(UInt16 button) const
 {
     switch (button) {
     case 1:
@@ -1438,7 +1438,7 @@ OSXScreen::mapSynergyButtonToMac(UInt16 button) const
 }
 
 ButtonID 
-OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
+OSXScreen::mapMacButtonToDeskflow(UInt16 macButton) const
 {
 	switch (macButton) {
 	case 1:
@@ -1455,7 +1455,7 @@ OSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 }
 
 SInt32
-OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
+OSXScreen::mapScrollWheelToDeskflow(SInt32 x) const
 {
 	// return accelerated scrolling
 	double d = (1.0 + getScrollSpeed()) * x;
@@ -1463,7 +1463,7 @@ OSXScreen::mapScrollWheelToSynergy(SInt32 x) const
 }
 
 SInt32
-OSXScreen::mapScrollWheelFromSynergy(SInt32 x) const
+OSXScreen::mapScrollWheelFromDeskflow(SInt32 x) const
 {
 	// use server's acceleration with a little boost since other platforms
 	// take one wheel step as a larger step than the mac does.
@@ -1976,9 +1976,9 @@ OSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 			return event;
 			break;
 		case kCGEventScrollWheel:
-			screen->onMouseWheel(screen->mapScrollWheelToSynergy(
+			screen->onMouseWheel(screen->mapScrollWheelToDeskflow(
 								 CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
-								 screen->mapScrollWheelToSynergy(
+								 screen->mapScrollWheelToDeskflow(
 								 CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1)));
 			break;
 		case kCGEventKeyDown:

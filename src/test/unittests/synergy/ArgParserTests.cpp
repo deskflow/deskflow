@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,11 +18,11 @@
 #include <array>
 #include <functional>
 
-#include "synergy/ArgParser.h"
-#include "synergy/ArgsBase.h"
-#include "synergy/ClientArgs.h"
-#include "synergy/ServerArgs.h"
-#include "synergy/ToolArgs.h"
+#include "deskflow/ArgParser.h"
+#include "deskflow/ArgsBase.h"
+#include "deskflow/ClientArgs.h"
+#include "deskflow/ServerArgs.h"
+#include "deskflow/ToolArgs.h"
 
 #include <gtest/gtest.h>
 
@@ -48,7 +48,7 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse) {
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
-  static synergy::ArgsBase argsBase;
+  static deskflow::ArgsBase argsBase;
   ArgParser argParser(NULL);
   argParser.setArgsBase(argsBase);
 
@@ -222,10 +222,10 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly) {
 
 TEST(ArgParserTests, parseServerArgs_parses_each_category) {
   ArgParser parser(nullptr);
-  synergy::ServerArgs args;
+  deskflow::ServerArgs args;
   args.m_daemon = false;
   char const *argv[] = {
-      "synergy", "--help"
+      "deskflow", "--help"
 #if WINAPI_MSWINDOWS
       ,
       "--exit-pause"
@@ -242,10 +242,10 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
 
 TEST(ArgParserTests, parseClientArgs_parses_single_help) {
   ArgParser parser(nullptr);
-  synergy::ClientArgs args;
+  deskflow::ClientArgs args;
   args.m_daemon = false;
   char const *argv[] = {
-      "synergy",
+      "deskflow",
       "--help"
 #if WINAPI_MSWINDOWS
       ,

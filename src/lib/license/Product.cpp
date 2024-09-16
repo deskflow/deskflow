@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 using SKE = Product::SerialKeyEditionID;
 
-const char *const kLicensedProductName = "Synergy 1";
+const char *const kLicensedProductName = "Deskflow 1";
 
 const std::string SKE::Pro = "pro";
 const std::string SKE::Basic = "basic";

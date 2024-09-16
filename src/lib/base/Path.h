@@ -19,7 +19,7 @@
 
 #include "String.h"
 
-namespace synergy {
+namespace deskflow {
 
 namespace filesystem {
 
@@ -31,6 +31,6 @@ std::string path(const String &filePath);
 
 } // namespace filesystem
 
-} // namespace synergy
+} // namespace deskflow
 
 #endif // SYNERGY_PATH_H

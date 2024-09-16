@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -22,12 +22,12 @@
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "platform/XWindowsPowerManager.h"
-#include "synergy/ClientArgs.h"
-#include "synergy/KeyMap.h"
-#include "synergy/PlatformScreen.h"
+#include "deskflow/ClientArgs.h"
+#include "deskflow/KeyMap.h"
+#include "deskflow/PlatformScreen.h"
 
 #if X_DISPLAY_MISSING
-#error X11 is required to build synergy
+#error X11 is required to build deskflow
 #else
 #include <X11/Xlib.h>
 #endif
@@ -42,8 +42,8 @@ public:
   XWindowsScreen(
       const char *displayName, bool isPrimary, bool disableXInitThreads,
       int mouseScrollDelta, IEventQueue *events,
-      synergy::ClientScrollDirection m_clientScrollDirection =
-          synergy::ClientScrollDirection::SERVER);
+      deskflow::ClientScrollDirection m_clientScrollDirection =
+          deskflow::ClientScrollDirection::SERVER);
   virtual ~XWindowsScreen() override;
 
   //! @name manipulators
@@ -250,7 +250,7 @@ private:
   int m_xrandrEventBase;
 
   IEventQueue *m_events;
-  synergy::KeyMap m_keyMap;
+  deskflow::KeyMap m_keyMap;
 
   // pointer to (singleton) screen.  this is only needed by
   // ioErrorHandler().

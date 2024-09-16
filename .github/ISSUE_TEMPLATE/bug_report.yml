@@ -1,15 +1,15 @@
 name: Bug report
-description: If you find a bug in Synergy, please let us know so we can fix it.
+description: If you find a bug in Deskflow, please let us know so we can fix it.
 labels: ["bug", "triage", "unanswered"]
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to help us improve Synergy.
+      value: Thanks for taking the time to help us improve Deskflow.
 
   - type: dropdown
     id: user-type
     attributes:
-      label: What type of Synergy user are you?
+      label: What type of Deskflow user are you?
       description: This will help us understand the context of your issue.
       options:
         # Empty option to force selection
@@ -47,11 +47,11 @@ body:
     id: product
     attributes:
       label: Product name
-      description: Which Synergy product are you using?
+      description: Which Deskflow product are you using?
       options:
         # Empty option to force selection
         -
-        - Synergy 1
+        - Deskflow 1
         - Synergy 2
         - Synergy 3
       default: 0
@@ -61,8 +61,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: Synergy version number
-      description: You can find the Synergy version number on the about screen.
+      label: Deskflow version number
+      description: You can find the Deskflow version number on the about screen.
       placeholder: 1.2.3
     validations:
       required: true
@@ -97,11 +97,11 @@ body:
   - type: textarea
     id: config
     attributes:
-      label: Synergy configuration
+      label: Deskflow configuration
       description: |
         Please provide a very brief description of your configuration.
         Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
-        This will help us understand how you're using Synergy.
+        This will help us understand how you're using Deskflow.
       placeholder: |
         - Windows 11 server, macOS 15 client
         - Each computer has a single monitor
@@ -118,7 +118,7 @@ body:
         If you're not sure, please provide as much detail as possible.
         This will help us understand the problem.
       placeholder: |
-        1. Start Synergy
+        1. Start Deskflow
         2. Click 'Configure Server'
         3. Click 'Apply'
     validations:
@@ -143,6 +143,6 @@ body:
         - Any ideas about what maybe causing the problem?
         - Any workarounds that you've discovered?
         - What other apps are you running?
-        - Does the issue stop you using Synergy entirely?
-        - Did restarting Synergy or the computer help?
+        - Does the issue stop you using Deskflow entirely?
+        - Did restarting Deskflow or the computer help?
         - Anything else you can think of?

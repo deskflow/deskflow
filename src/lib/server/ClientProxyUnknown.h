@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -24,7 +24,7 @@
 
 class ClientProxy;
 class EventQueueTimer;
-namespace synergy {
+namespace deskflow {
 class IStream;
 }
 class Server;
@@ -33,7 +33,7 @@ class IEventQueue;
 class ClientProxyUnknown {
 public:
   ClientProxyUnknown(
-      synergy::IStream *stream, double timeout, Server *server,
+      deskflow::IStream *stream, double timeout, Server *server,
       IEventQueue *events);
   ClientProxyUnknown(ClientProxyUnknown const &) = delete;
   ClientProxyUnknown(ClientProxyUnknown &&) = delete;
@@ -54,7 +54,7 @@ public:
   ClientProxy *orphanClientProxy();
 
   //! Get the stream
-  synergy::IStream *getStream() { return m_stream; }
+  deskflow::IStream *getStream() { return m_stream; }
 
   //@}
 
@@ -73,7 +73,7 @@ private:
   void handleReady(const Event &, void *);
 
 private:
-  synergy::IStream *m_stream;
+  deskflow::IStream *m_stream;
   EventQueueTimer *m_timer;
   ClientProxy *m_proxy;
   bool m_ready;

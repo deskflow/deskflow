@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -23,13 +23,13 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "platform/XWindowsUtil.h"
-#include "synergy/IPlatformScreen.h"
+#include "deskflow/IPlatformScreen.h"
 
 #include <X11/Xatom.h>
 #if HAVE_X11_EXTENSIONS_XTEST_H
 #include <X11/extensions/XTest.h>
 #else
-#error The XTest extension is required to build synergy
+#error The XTest extension is required to build deskflow
 #endif
 #if HAVE_X11_EXTENSIONS_DPMS_H
 extern "C" {

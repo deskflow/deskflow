@@ -43,7 +43,7 @@
 				<Merge Id="VC_Redist" SourceFile="$(var.ResPath)\dist\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
 			<?endif ?>
 		</DirectoryRef>
-		<Property Id="SynergyCommonBackground">common_background</Property>
+		<Property Id="DeskflowCommonBackground">common_background</Property>
 		<Binary Id="common_background" SourceFile="$(var.ResPath)\dist\wix\images\common_background.png"/>
 		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\dist\wix\images\banner.png"/>
@@ -51,7 +51,7 @@
 		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
-			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Synergy" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
+			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Deskflow" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
 				<FileSearch Id="LegacyFileSearch" Name="uninstall.exe"/>
 			</RegistrySearch>
 		</Property>
@@ -59,7 +59,7 @@
 		</Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>
-			<UIRef Id="SynergyDlgSequence" />
+			<UIRef Id="DeskflowDlgSequence" />
 		</UI>
 	</Product>
 	<Fragment>
@@ -78,15 +78,15 @@
 		<ComponentGroup Directory="INSTALLFOLDER" Id="ProductComponents">
 			<Component Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" Id="Core">
 				<File KeyPath="yes" Source="$(var.BinPath)/synergyd.exe"/>
-				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Synergy" Start="auto" Type="ownProcess">
+				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Deskflow" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
-				<ServiceControl Id="ServiceControl" Name="Synergy" Remove="uninstall" Start="install" Stop="both"/>
+				<ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
 				<File Source="$(var.BinPath)/synergys.exe">
-					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Synergy 1 server" Scope="any"/>
+					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Deskflow 1 server" Scope="any"/>
 				</File>
 				<File Source="$(var.BinPath)/synergyc.exe">
-					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="Synergy 1 client" Scope="any"/>
+					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="Deskflow 1 client" Scope="any"/>
 				</File>
 				<File Source="$(var.BinPath)/syntool.exe"/>
 				<?if $(var.Platform) = x64 ?>

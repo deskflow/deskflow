@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Add comment for customer
         env:
-          CUSTOMER_PATTERN: What type of Synergy user are you\?\s*Customer
+          CUSTOMER_PATTERN: What type of Deskflow user are you\?\s*Customer
           NO_TICKET_PATTERN: Support ticket number \(for customers\)\s*_No response_
           COMMENT_BODY: |
             Hello! :wave: As a customer, you're entitled to tech support which is included in your

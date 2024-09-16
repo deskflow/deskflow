@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -276,7 +276,7 @@ bool SecureSocket::loadCertificates(String &filename) {
     SslLogger::logError("tls certificate is not specified");
     return false;
   } else {
-    std::ifstream file(synergy::filesystem::path(filename));
+    std::ifstream file(deskflow::filesystem::path(filename));
     bool exist = file.good();
     file.close();
 
@@ -580,11 +580,11 @@ void SecureSocket::formatFingerprint(
     String &fingerprint, bool hex, bool separator) {
   if (hex) {
     // to hexidecimal
-    synergy::string::toHex(fingerprint, 2);
+    deskflow::string::toHex(fingerprint, 2);
   }
 
   // all uppercase
-  synergy::string::uppercase(fingerprint);
+  deskflow::string::uppercase(fingerprint);
 
   if (separator) {
     // add colon to separate each 2 charactors
@@ -620,14 +620,14 @@ bool SecureSocket::verifyCertFingerprint() {
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
   String trustedServersFilename;
-  trustedServersFilename = synergy::string::sprintf(
+  trustedServersFilename = deskflow::string::sprintf(
       "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName,
       kFingerprintTrustedServersFilename);
 
   // check if this fingerprint exist
   String fileLine;
   std::ifstream file;
-  file.open(synergy::filesystem::path(trustedServersFilename));
+  file.open(deskflow::filesystem::path(trustedServersFilename));
 
   bool isValid = false;
   if (file.is_open()) {

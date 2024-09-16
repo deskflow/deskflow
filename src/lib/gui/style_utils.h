@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <QPalette>
 #include <QStyleHints>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 /**
  * @brief Detects dark mode depending on Qt version.
@@ -39,4 +39,4 @@ inline bool isDarkMode() {
 #endif // QT_VERSION
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

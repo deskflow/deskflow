@@ -1,4 +1,4 @@
-app-id: com.symless.Synergy
+app-id: com.symless.Deskflow
 runtime: org.kde.Platform
 runtime-version: "5.15-21.08"
 sdk: org.kde.Sdk

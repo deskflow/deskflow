@@ -43,16 +43,16 @@ public:
   virtual std::string getPlatformName() const = 0;
   //@}
 
-  //! Get a Synergy setting
+  //! Get a Deskflow setting
   /*!
-  Reads a Synergy setting from the system.
+  Reads a Deskflow setting from the system.
   */
   virtual std::string setting(const std::string &valueName) const = 0;
   //@}
 
-  //! Set a Synergy setting
+  //! Set a Deskflow setting
   /*!
-  Writes a Synergy setting from the system.
+  Writes a Deskflow setting from the system.
   */
   virtual void setting(
       const std::string &valueName, const std::string &valueString) const = 0;

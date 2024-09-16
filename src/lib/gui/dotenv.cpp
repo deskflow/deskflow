@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #include <QString>
 #include <QTextStream>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 QPair<QString, QString> getPair(const QString &line);
 
@@ -114,4 +114,4 @@ QPair<QString, QString> getPair(const QString &line) {
   return QPair<QString, QString>(key.trimmed(), stripQuotes(value.trimmed()));
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

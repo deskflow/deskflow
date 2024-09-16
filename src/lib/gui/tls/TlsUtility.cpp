@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -23,10 +23,10 @@
 #include <QFile>
 #include <QString>
 
-using namespace synergy::license;
-using namespace synergy::gui::license;
+using namespace deskflow::license;
+using namespace deskflow::gui::license;
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 TlsUtility::TlsUtility(const IAppConfig &appConfig, const ILicense &license)
     : m_appConfig(appConfig),
@@ -67,4 +67,4 @@ bool TlsUtility::persistCertificate() {
   return generateCertificate();
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

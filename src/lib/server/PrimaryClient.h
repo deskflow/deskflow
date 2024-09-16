@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "server/BaseClientProxy.h"
-#include "synergy/protocol_types.h"
+#include "deskflow/protocol_types.h"
 
-namespace synergy {
+namespace deskflow {
 class Screen;
 }
 
@@ -36,7 +36,7 @@ public:
   /*!
   \c name is the name of the server and \p screen is primary screen.
   */
-  PrimaryClient(const String &name, synergy::Screen *screen);
+  PrimaryClient(const String &name, deskflow::Screen *screen);
   ~PrimaryClient();
 
 #ifdef TEST_ENV
@@ -149,11 +149,11 @@ public:
   String getSecureInputApp() const override;
   void secureInputNotification(const String &app) const override;
 
-  synergy::IStream *getStream() const override { return nullptr; }
+  deskflow::IStream *getStream() const override { return nullptr; }
   bool isPrimary() const override { return true; }
 
 private:
-  synergy::Screen *m_screen;
+  deskflow::Screen *m_screen;
   bool m_clipboardDirty[kClipboardEnd];
   SInt32 m_fakeInputCount;
 };

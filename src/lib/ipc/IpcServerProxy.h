@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
@@ -21,7 +21,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
-namespace synergy {
+namespace deskflow {
 class IStream;
 }
 class IpcMessage;
@@ -32,7 +32,7 @@ class IpcServerProxy {
   friend class IpcClient;
 
 public:
-  IpcServerProxy(synergy::IStream &stream, IEventQueue *events);
+  IpcServerProxy(deskflow::IStream &stream, IEventQueue *events);
   IpcServerProxy(IpcServerProxy const &) = delete;
   virtual ~IpcServerProxy();
 
@@ -44,6 +44,6 @@ private:
   void disconnect();
 
 private:
-  synergy::IStream &m_stream;
+  deskflow::IStream &m_stream;
   IEventQueue *m_events;
 };

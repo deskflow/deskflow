@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test/mock/synergy/MockEventQueue.h"
-#include "test/mock/synergy/MockKeyMap.h"
-#include "test/mock/synergy/MockKeyState.h"
+#include "test/mock/deskflow/MockEventQueue.h"
+#include "test/mock/deskflow/MockKeyMap.h"
+#include "test/mock/deskflow/MockKeyState.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -34,14 +34,14 @@ void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys);
 
 void assertMaskIsOne(ForeachKeyCallback cb, void *userData);
 
-const synergy::KeyMap::KeyItem *stubMapKey(
-    synergy::KeyMap::Keystrokes &keys, KeyID id, SInt32 group,
-    synergy::KeyMap::ModifierToKeys &activeModifiers,
+const deskflow::KeyMap::KeyItem *stubMapKey(
+    deskflow::KeyMap::Keystrokes &keys, KeyID id, SInt32 group,
+    deskflow::KeyMap::ModifierToKeys &activeModifiers,
     KeyModifierMask &currentState, KeyModifierMask desiredMask,
     bool isAutoRepeat, const String &lang);
 
-synergy::KeyMap::Keystroke s_stubKeystroke(1, false, false);
-synergy::KeyMap::KeyItem s_stubKeyItem;
+deskflow::KeyMap::Keystroke s_stubKeystroke(1, false, false);
+deskflow::KeyMap::KeyItem s_stubKeyItem;
 
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne) {
   MockKeyMap keyMap;
@@ -302,7 +302,7 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse) {
   KeyStateImpl keyState(eventQueue, keyMap);
 
   // set the key to down (we need to make mapKey return a valid key to do this).
-  synergy::KeyMap::KeyItem keyItem;
+  deskflow::KeyMap::KeyItem keyItem;
   keyItem.m_client = 0;
   keyItem.m_button = 1;
   ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
@@ -310,7 +310,7 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse) {
   keyState.fakeKeyDown(1, 0, 0, "en");
 
   // change mapKey to return NULL so that fakeKeyRepeat exits early.
-  synergy::KeyMap::KeyItem *nullKeyItem = NULL;
+  deskflow::KeyMap::KeyItem *nullKeyItem = NULL;
   ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
       .WillByDefault(Return(nullKeyItem));
 
@@ -325,7 +325,7 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse) {
   KeyStateImpl keyState(eventQueue, keyMap);
 
   // set the key to down (we need to make mapKey return a valid key to do this).
-  synergy::KeyMap::KeyItem keyItem;
+  deskflow::KeyMap::KeyItem keyItem;
   keyItem.m_client = 0;
   keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
   ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
@@ -347,7 +347,7 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue) {
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
   s_stubKeyItem.m_client = 0;
-  s_stubKeystroke.m_type = synergy::KeyMap::Keystroke::kButton;
+  s_stubKeystroke.m_type = deskflow::KeyMap::Keystroke::kButton;
   s_stubKeystroke.m_data.m_button.m_button = 2;
 
   // set the button to 1 for fakeKeyDown call
@@ -445,8 +445,8 @@ TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse) {
 }
 
 TEST(KeyStateTests, updateKeyMap_exercised) {
-  synergy::KeyMap keyMap;
-  synergy::KeyMap::KeyItem keyItem;
+  deskflow::KeyMap keyMap;
+  deskflow::KeyMap::KeyItem keyItem;
   keyItem.m_button = 'A';
   keyItem.m_group = 1;
   keyItem.m_id = 'A';
@@ -466,9 +466,9 @@ void assertMaskIsOne(ForeachKeyCallback cb, void *userData) {
   ASSERT_EQ(1, ((KeyState::AddActiveModifierContext *)userData)->m_mask);
 }
 
-const synergy::KeyMap::KeyItem *stubMapKey(
-    synergy::KeyMap::Keystrokes &keys, KeyID, SInt32,
-    synergy::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool,
+const deskflow::KeyMap::KeyItem *stubMapKey(
+    deskflow::KeyMap::Keystrokes &keys, KeyID, SInt32,
+    deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool,
     const String &) {
   keys.push_back(s_stubKeystroke);
   return &s_stubKeyItem;

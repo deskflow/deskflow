@@ -145,16 +145,16 @@ private:
   void hideCursor();
 
   // map synergy mouse button to mac buttons
-  ButtonID mapSynergyButtonToMac(UInt16) const;
+  ButtonID mapDeskflowButtonToMac(UInt16) const;
 
   // map mac mouse button to synergy buttons
-  ButtonID mapMacButtonToSynergy(UInt16) const;
+  ButtonID mapMacButtonToDeskflow(UInt16) const;
 
   // map mac scroll wheel value to a synergy scroll wheel value
-  SInt32 mapScrollWheelToSynergy(SInt32) const;
+  SInt32 mapScrollWheelToDeskflow(SInt32) const;
 
   // map synergy scroll wheel value to a mac scroll wheel value
-  SInt32 mapScrollWheelFromSynergy(SInt32) const;
+  SInt32 mapScrollWheelFromDeskflow(SInt32) const;
 
   // get the current scroll wheel speed
   double getScrollSpeed() const;
