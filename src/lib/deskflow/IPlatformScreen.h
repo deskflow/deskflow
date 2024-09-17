@@ -67,12 +67,19 @@ public:
 
   //! Leave screen
   /*!
-  Called when the user navigates off the screen.  Returns true on
-  success, false on failure.  A typical reason for failure is being
+  Called when the user navigates off the screen.  Returns true if
+  the leave can proceed.  A typical reason for failure is being
   unable to install the keyboard and mouse snoopers on a primary
   screen.  Secondary screens should not fail.
   */
-  virtual bool leave() = 0;
+  virtual bool canLeave() = 0;
+
+  //! Leave screen
+  /*!
+  Called when the user navigates off the screen.  Should be gated
+  by canLeave().
+  */
+  virtual void leave() = 0;
 
   //! Set clipboard
   /*!

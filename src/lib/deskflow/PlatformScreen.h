@@ -88,7 +88,8 @@ public:
   virtual void enable() = 0;
   virtual void disable() = 0;
   virtual void enter() = 0;
-  virtual bool leave() = 0;
+  virtual bool canLeave() = 0;
+  virtual void leave() = 0;
   virtual bool setClipboard(ClipboardID, const IClipboard *) = 0;
   virtual void checkClipboards() = 0;
   virtual void openScreensaver(bool notify) = 0;

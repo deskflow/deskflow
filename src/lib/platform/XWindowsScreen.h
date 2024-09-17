@@ -79,7 +79,8 @@ public:
   void enable() override;
   void disable() override;
   void enter() override;
-  bool leave() override;
+  bool canLeave() override;
+  void leave() override;
   bool setClipboard(ClipboardID, const IClipboard *) override;
   void checkClipboards() override;
   void openScreensaver(bool notify) override;

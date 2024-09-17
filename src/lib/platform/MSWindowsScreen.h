@@ -128,7 +128,8 @@ public:
   virtual void enable();
   virtual void disable();
   virtual void enter();
-  virtual bool leave();
+  virtual bool canLeave();
+  virtual void leave();
   virtual bool setClipboard(ClipboardID, const IClipboard *);
   virtual void checkClipboards();
   virtual void openScreensaver(bool notify);

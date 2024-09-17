@@ -5,6 +5,7 @@ Bug fixes:
 - #7522 Fix broken CI caused by renaming project to Deskflow
 - #7524 Restore protocol compatibility with Synergy
 - #7525 Remove Google Drive upload from CI
+- #7520 Fix stuck keys on leave by separating check/leave logic
 
 Enhancements:
 

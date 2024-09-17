@@ -326,7 +326,15 @@ void XWindowsScreen::enter() {
   m_isOnScreen = true;
 }
 
-bool XWindowsScreen::leave() {
+bool XWindowsScreen::canLeave() {
+  // raise and show the window, required to grab mouse and keyboard
+  XMapRaised(m_display, m_window);
+
+  // see if grabbing the mouse and keyboard, if primary, is possible
+  return !(m_isPrimary && !grabMouseAndKeyboard());
+}
+
+void XWindowsScreen::leave() {
   if (!m_isPrimary) {
     // restore the previous keyboard auto-repeat state.  if the user
     // changed the auto-repeat configuration while on the client then
@@ -347,7 +355,6 @@ bool XWindowsScreen::leave() {
   // grab the mouse and keyboard, if primary and possible
   if (m_isPrimary && !grabMouseAndKeyboard()) {
     XUnmapWindow(m_display, m_window);
-    return false;
   }
 
   // save current focus
@@ -376,8 +383,6 @@ bool XWindowsScreen::leave() {
 
   // now off screen
   m_isOnScreen = false;
-
-  return true;
 }
 
 bool XWindowsScreen::setClipboard(ClipboardID id, const IClipboard *clipboard) {
