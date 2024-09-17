@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -22,23 +22,23 @@
 #include "base/XBase.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
+#include "deskflow/IPlatformScreen.h"
+#include "deskflow/option_types.h"
+#include "deskflow/protocol_types.h"
 #include "net/NetworkAddress.h"
 #include "server/InputFilter.h"
-#include "synergy/IPlatformScreen.h"
-#include "synergy/option_types.h"
-#include "synergy/protocol_types.h"
 
 #include <iosfwd>
 
-namespace synergy::server {
+namespace deskflow::server {
 class Config;
 class ConfigReadContext;
-} // namespace synergy::server
+} // namespace deskflow::server
 
 class IEventQueue;
 
 namespace std {
-template <> struct iterator_traits<synergy::server::Config> {
+template <> struct iterator_traits<deskflow::server::Config> {
   typedef String value_type;
   typedef ptrdiff_t difference_type;
   typedef bidirectional_iterator_tag iterator_category;
@@ -47,7 +47,7 @@ template <> struct iterator_traits<synergy::server::Config> {
 };
 }; // namespace std
 
-namespace synergy::server {
+namespace deskflow::server {
 
 //! Server configuration
 /*!
@@ -144,8 +144,8 @@ private:
   public:
     ScreenOptions m_options;
   };
-  typedef std::map<String, Cell, synergy::string::CaselessCmp> CellMap;
-  typedef std::map<String, String, synergy::string::CaselessCmp> NameMap;
+  typedef std::map<String, Cell, deskflow::string::CaselessCmp> CellMap;
+  typedef std::map<String, String, deskflow::string::CaselessCmp> NameMap;
 
 public:
   typedef Cell::const_iterator link_const_iterator;
@@ -285,10 +285,10 @@ public:
 
   //! Set server address
   /*!
-  Set the synergy listen addresses.  There is no default address so
+  Set the deskflow listen addresses.  There is no default address so
   this must be called to run a server using this configuration.
   */
-  void setSynergyAddress(const NetworkAddress &);
+  void setDeskflowAddress(const NetworkAddress &);
 
   //! Add a screen option
   /*!
@@ -390,7 +390,7 @@ public:
   link_const_iterator endNeighbor(const String &) const;
 
   //! Get the server address
-  const NetworkAddress &getSynergyAddress() const;
+  const NetworkAddress &getDeskflowAddress() const;
 
   //! Get the screen options
   /*!
@@ -479,7 +479,7 @@ private:
 private:
   CellMap m_map;
   NameMap m_nameToCanonicalName;
-  NetworkAddress m_synergyAddress;
+  NetworkAddress m_deskflowAddress;
   ScreenOptions m_globalOptions;
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction;
@@ -550,4 +550,4 @@ private:
   String m_error;
 };
 
-} // namespace synergy::server
+} // namespace deskflow::server

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 //
 // ServerConnection::Deps
@@ -118,4 +118,4 @@ void ServerConnection::handleNewClient(const QString &clientName) {
   }
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

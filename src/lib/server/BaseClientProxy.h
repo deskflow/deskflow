@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,9 +19,9 @@
 #pragma once
 
 #include "base/String.h"
-#include "synergy/IClient.h"
+#include "deskflow/IClient.h"
 
-namespace synergy {
+namespace deskflow {
 class IStream;
 }
 
@@ -94,7 +94,7 @@ public:
   virtual String getSecureInputApp() const = 0;
   virtual void secureInputNotification(const String &app) const = 0;
   virtual String getName() const;
-  virtual synergy::IStream *getStream() const = 0;
+  virtual deskflow::IStream *getStream() const = 0;
 
 private:
   String m_name;

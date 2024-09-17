@@ -26,7 +26,7 @@
    <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>Setup Synergy</string>
+   <string>Setup Deskflow</string>
   </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>

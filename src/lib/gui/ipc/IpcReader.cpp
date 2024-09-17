@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #include <QMutex>
 #include <QTcpSocket>
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
 

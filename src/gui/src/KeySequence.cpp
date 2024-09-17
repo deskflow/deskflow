@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -22,7 +22,7 @@
 #include <QtGui>
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)
-// and is heavily modified for QSynergy
+// and is heavily modified for Deskflow
 static const struct {
   int key;
   const char *name;
@@ -211,7 +211,7 @@ QString KeySequence::keyToString(int key) {
     return QString("\\u%1").arg(
         QChar(key).toLower().unicode(), 4, 16, QChar('0'));
 
-  // give up, synergy probably won't handle this
+  // give up, deskflow probably won't handle this
   return "";
 }
 

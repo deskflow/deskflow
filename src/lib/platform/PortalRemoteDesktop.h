@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -32,7 +32,7 @@
 #define XDP_OUTPUT_NONE (XdpOutputType)0
 #endif
 
-namespace synergy {
+namespace deskflow {
 
 class PortalRemoteDesktop {
 public:
@@ -72,4 +72,4 @@ private:
   guint session_iteration_ = 0;
 };
 
-} // namespace synergy
+} // namespace deskflow

@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -137,7 +137,7 @@ macro(config_test_deps)
       net
       platform
       server
-      synlib
+      app
       mt
       ipc
       license

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -18,14 +18,14 @@
 
 #pragma once
 
+#include "deskflow/KeyState.h"
 #include "platform/EiScreen.h"
-#include "synergy/KeyState.h"
 
 struct xkb_context;
 struct xkb_keymap;
 struct xkb_state;
 
-namespace synergy {
+namespace deskflow {
 
 /// A key state for Ei
 class EiKeyState : public KeyState {
@@ -60,4 +60,4 @@ private:
   xkb_state *xkb_state_ = nullptr;
 };
 
-} // namespace synergy
+} // namespace deskflow

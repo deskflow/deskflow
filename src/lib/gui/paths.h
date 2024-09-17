@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -23,10 +23,10 @@
 #include <QStandardPaths>
 #include <QString>
 
-const auto kCertificateFilename = "Synergy.pem";
+const auto kCertificateFilename = "Deskflow.pem";
 const auto kSslDir = "SSL";
 
-namespace synergy::gui::paths {
+namespace deskflow::gui::paths {
 
 /**
  * @brief Gets the org config dir (parent of app config dir).
@@ -64,4 +64,4 @@ inline QString defaultTlsCertPath() {
   return sslDirPath.filePath(kCertificateFilename);
 }
 
-} // namespace synergy::gui::paths
+} // namespace deskflow::gui::paths

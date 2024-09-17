@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Synergy</string>
+   <string>Deskflow</string>
   </property>
   <widget class="QWidget" name="m_pWidgetTopLevel">
    <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -221,7 +221,7 @@
               </widget>
              </item>
              <item>
-              <widget class="synergy::gui::widgets::ServerStateLabel" name="m_pLabelServerState">
+              <widget class="deskflow::gui::widgets::ServerStateLabel" name="m_pLabelServerState">
                <property name="text">
                 <string>No clients connected</string>
                </property>
@@ -398,7 +398,7 @@
               </layout>
              </item>
              <item>
-              <widget class="synergy::gui::widgets::ClientStateLabel" name="m_pLabelClientState">
+              <widget class="deskflow::gui::widgets::ClientStateLabel" name="m_pLabelClientState">
                <property name="text">
                 <string>Connected to server</string>
                </property>
@@ -586,7 +586,7 @@
   </widget>
   <action name="m_pActionAbout">
    <property name="text">
-    <string>&amp;About Synergy...</string>
+    <string>&amp;About Deskflow...</string>
    </property>
    <property name="shortcut">
     <string notr="true"/>
@@ -718,12 +718,12 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>synergy::gui::widgets::ServerStateLabel</class>
+   <class>deskflow::gui::widgets::ServerStateLabel</class>
    <extends>QLabel</extends>
    <header>gui/widgets/ServerStateLabel.h</header>
   </customwidget>
   <customwidget>
-   <class>synergy::gui::widgets::ClientStateLabel</class>
+   <class>deskflow::gui::widgets::ClientStateLabel</class>
    <extends>QLabel</extends>
    <header>gui/widgets/ClientStateLabel.h</header>
   </customwidget>

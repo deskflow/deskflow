@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ void UpgradeDialog::showDialog(const QString &text) {
   exec();
 
   if (clickedButton() == m_upgrade) {
-    const auto url = QUrl(synergy::gui::kUrlUpgrade);
+    const auto url = QUrl(deskflow::gui::kUrlUpgrade);
     if (QDesktopServices::openUrl(url)) {
       qDebug("opened url: %s", qUtf8Printable(url.toString()));
     } else {

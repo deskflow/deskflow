@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -31,10 +31,10 @@
 #include <QDialog>
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
-  using IAppConfig = synergy::gui::IAppConfig;
-  using IServerConfig = synergy::gui::IServerConfig;
-  using CoreProcess = synergy::gui::CoreProcess;
-  using License = synergy::license::License;
+  using IAppConfig = deskflow::gui::IAppConfig;
+  using IServerConfig = deskflow::gui::IServerConfig;
+  using CoreProcess = deskflow::gui::CoreProcess;
+  using License = deskflow::license::License;
 
   Q_OBJECT
 
@@ -90,5 +90,5 @@ private:
   const IServerConfig &m_serverConfig;
   const License &m_license;
   const CoreProcess &m_coreProcess;
-  synergy::gui::TlsUtility m_tlsUtility;
+  deskflow::gui::TlsUtility m_tlsUtility;
 };

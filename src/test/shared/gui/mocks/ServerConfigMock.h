@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #include <gmock/gmock.h>
 
-class ServerConfigMock : public synergy::gui::IServerConfig {
+class ServerConfigMock : public deskflow::gui::IServerConfig {
 public:
   ServerConfigMock() {
     ON_CALL(*this, screens()).WillByDefault(testing::ReturnRef(m_screensStub));

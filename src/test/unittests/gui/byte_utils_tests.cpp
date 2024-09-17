@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 TEST(byte_utils_tests, bytesToInt_size4) {
   char buffer[4] = {0x01, 0x02, 0x03, 0x04};

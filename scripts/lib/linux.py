@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@ class PackageType(Enum):
 
 dist_dir = "dist"
 build_dir = "build"
-package_name = "synergy"
-test_cmd = "synergys --version"
+package_name = "deskflow"
+test_cmd = "deskflows --version"
 
 
 def run_command(command, check=True):
@@ -140,19 +140,19 @@ def test_install(package_file, remove_test=True):
     if "debian" in distro_like:
         install_base = ["apt", "install", "-f", "-y"]
         remove_base = ["apt", "remove", "-y"]
-        list_cmd = ["dpkg", "-L", "synergy"]
+        list_cmd = ["dpkg", "-L", "deskflow"]
     elif "fedora" in distro_like:
         install_base = ["dnf", "install", "-y"]
         remove_base = ["dnf", "remove", "-y"]
-        list_cmd = ["rpm", "-ql", "synergy"]
+        list_cmd = ["rpm", "-ql", "deskflow"]
     elif "opensuse" in distro_like:
         install_base = ["zypper", "--no-gpg-checks", "install", "-y"]
         remove_base = ["zypper", "remove", "-y"]
-        list_cmd = ["rpm", "-ql", "synergy"]
+        list_cmd = ["rpm", "-ql", "deskflow"]
     elif "arch" in distro_like:
         install_base = ["pacman", "-U", "--noconfirm"]
         remove_base = ["pacman", "-R", "--noconfirm"]
-        list_cmd = ["pacman", "-Ql", "synergy"]
+        list_cmd = ["pacman", "-Ql", "deskflow"]
     else:
         raise RuntimeError(f"Linux distro not yet supported: {distro}")
 

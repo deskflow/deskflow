@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 
 using namespace testing;
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine) {
   Logger logger;
@@ -31,14 +31,14 @@ TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine) {
       [&newLineEmitted](const QString &line) {
         newLineEmitted = line.toStdString();
       });
-  qputenv("SYNERGY_GUI_DEBUG", "true");
+  qputenv("DESKFLOW_GUI_DEBUG", "true");
   logger.loadEnvVars();
 
   logger.handleMessage(QtDebugMsg, "stub", "test");
 
   EXPECT_THAT(newLineEmitted, HasSubstr("test"));
 
-  qputenv("SYNERGY_GUI_DEBUG", "");
+  qputenv("DESKFLOW_GUI_DEBUG", "");
 }
 
 TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine) {
@@ -47,12 +47,12 @@ TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine) {
   QObject::connect(
       &logger, &Logger::newLine, //
       [&newLineEmitted](const QString &line) { newLineEmitted = true; });
-  qputenv("SYNERGY_GUI_DEBUG", "false");
+  qputenv("DESKFLOW_GUI_DEBUG", "false");
   logger.loadEnvVars();
 
   logger.handleMessage(QtDebugMsg, "stub", "test");
 
   EXPECT_FALSE(newLineEmitted);
 
-  qputenv("SYNERGY_GUI_DEBUG", "");
+  qputenv("DESKFLOW_GUI_DEBUG", "");
 }

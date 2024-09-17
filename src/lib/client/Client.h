@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,34 +18,34 @@
 
 #pragma once
 
-#include "synergy/IClient.h"
+#include "deskflow/IClient.h"
 
 #include "base/EventTypes.h"
+#include "deskflow/ClientArgs.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/DragInformation.h"
+#include "deskflow/INode.h"
 #include "mt/CondVar.h"
 #include "net/NetworkAddress.h"
-#include "synergy/ClientArgs.h"
-#include "synergy/Clipboard.h"
-#include "synergy/DragInformation.h"
-#include "synergy/INode.h"
 #include <memory>
 
 class EventQueueTimer;
-namespace synergy {
+namespace deskflow {
 class Screen;
 }
 class ServerProxy;
 class IDataSocket;
 class ISocketFactory;
-namespace synergy {
+namespace deskflow {
 class IStream;
 }
 class IEventQueue;
 class Thread;
 class TCPSocket;
 
-//! Synergy client
+//! Deskflow client
 /*!
-This class implements the top-level client algorithms for synergy.
+This class implements the top-level client algorithms for deskflow.
 */
 class Client : public IClient, public INode {
 public:
@@ -64,8 +64,8 @@ public:
   */
   Client(
       IEventQueue *events, const String &name, const NetworkAddress &address,
-      ISocketFactory *socketFactory, synergy::Screen *screen,
-      synergy::ClientArgs const &args);
+      ISocketFactory *socketFactory, deskflow::Screen *screen,
+      deskflow::ClientArgs const &args);
   Client(Client const &) = delete;
   Client(Client &&) = delete;
   ~Client();
@@ -225,8 +225,8 @@ private:
   String m_name;
   NetworkAddress m_serverAddress;
   ISocketFactory *m_socketFactory;
-  synergy::Screen *m_screen;
-  synergy::IStream *m_stream;
+  deskflow::Screen *m_screen;
+  deskflow::IStream *m_stream;
   EventQueueTimer *m_timer;
   ServerProxy *m_server;
   bool m_ready;
@@ -248,6 +248,6 @@ private:
   bool m_useSecureNetwork;
   bool m_enableClipboard;
   size_t m_maximumClipboardSize;
-  synergy::ClientArgs m_args;
+  deskflow::ClientArgs m_args;
   size_t m_resolvedAddressesCount = 0;
 };

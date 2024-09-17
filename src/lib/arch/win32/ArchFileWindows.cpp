@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -150,7 +150,7 @@ std::string ArchFileWindows::getProfileDirectory() {
   }
 
   // HACK: append program name, this seems wrong.
-  dir.append("\\Synergy");
+  dir.append("\\Deskflow");
 
   return dir;
 }

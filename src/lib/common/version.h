@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #include <string>
 
-namespace synergy {
+namespace deskflow {
 
 inline std::string version() {
   std::string result = kVersion;
@@ -34,4 +34,4 @@ inline std::string version() {
   return result;
 }
 
-} // namespace synergy
+} // namespace deskflow

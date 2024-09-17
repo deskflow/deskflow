@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ using Parts = std::vector<std::string>;
 using system_clock = std::chrono::system_clock;
 using time_point = system_clock::time_point;
 
-namespace synergy::license {
+namespace deskflow::license {
 
 std::string decode(const std::string &hexString);
 Parts tokenize(const std::string &plainText);
@@ -147,4 +147,4 @@ std::optional<time_point> parseDate(const std::string &unixTimeString) {
   }
 }
 
-} // namespace synergy::license
+} // namespace deskflow::license

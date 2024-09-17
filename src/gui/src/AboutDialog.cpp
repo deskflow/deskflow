@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -25,7 +25,7 @@
 #include <QDateTime>
 #include <qguiapplication.h>
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 AboutDialog::AboutDialog(MainWindow *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -35,8 +35,8 @@ AboutDialog::AboutDialog(MainWindow *parent)
 
   this->setFixedSize(this->size());
 
-  QString version = QString::fromStdString(synergy::version());
-  m_pLabelSynergyVersion->setText(version);
+  QString version = QString::fromStdString(deskflow::version());
+  m_pLabelDeskflowVersion->setText(version);
 
   QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
@@ -46,7 +46,7 @@ AboutDialog::AboutDialog(MainWindow *parent)
 
 int AboutDialog::exec() {
   m_pDevelopersLabel->setText(importantDevelopers());
-  m_pCopyrightLabel->setText(QString::fromStdString(synergy::copyright()));
+  m_pCopyrightLabel->setText(QString::fromStdString(deskflow::copyright()));
   updateLogo();
 
   return QDialog::exec();
@@ -71,7 +71,7 @@ QString AboutDialog::importantDevelopers() const {
       // Chris is the ultimate creator, and the one who started it all in 2001.
       << "Chris Schoeneman"
 
-      // Richard and Adam developed CosmoSynergy, the 90's predecessor project.
+      // Richard and Adam developed CosmoDeskflow, the 90's predecessor project.
       << "Richard Lee"
       << "Adam Feder"
 

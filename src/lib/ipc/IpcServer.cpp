@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2012 Nick Bolton
  *
@@ -86,7 +86,7 @@ IpcServer::~IpcServer() {
 void IpcServer::listen() { m_socket->bind(m_address); }
 
 void IpcServer::handleClientConnecting(const Event &, void *) {
-  synergy::IStream *stream = m_socket->accept();
+  deskflow::IStream *stream = m_socket->accept();
   if (stream == NULL) {
     return;
   }

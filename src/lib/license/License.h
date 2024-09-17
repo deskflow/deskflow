@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ class Server;
 class LicenseHandler;
 class LicenseTests;
 
-namespace synergy::license {
+namespace deskflow::license {
 
 class License : public ILicense {
   friend class ::Server;
@@ -93,4 +93,4 @@ private:
   NowFunc m_nowFunc = []() { return system_clock::now(); };
 };
 
-} // namespace synergy::license
+} // namespace deskflow::license

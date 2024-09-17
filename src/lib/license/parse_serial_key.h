@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace synergy::license {
+namespace deskflow::license {
 
 class SerialKeyParseError : public std::runtime_error {
 public:
@@ -55,4 +55,4 @@ public:
 
 SerialKey parseSerialKey(const std::string &hexString);
 
-} // namespace synergy::license
+} // namespace deskflow::license

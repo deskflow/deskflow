@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -19,8 +19,8 @@
 #pragma once
 
 #include "config.h"
-#include "synergy/KeyMap.h"
-#include "synergy/PlatformScreen.h"
+#include "deskflow/KeyMap.h"
+#include "deskflow/PlatformScreen.h"
 
 #include <libei.h>
 #include <mutex>
@@ -32,7 +32,7 @@ struct ei_event;
 struct ei_seat;
 struct ei_device;
 
-namespace synergy {
+namespace deskflow {
 
 class EiClipboard;
 class EiKeyState;
@@ -198,4 +198,4 @@ private:
   HotKeyMap hotkeys_;
 };
 
-} // namespace synergy
+} // namespace deskflow

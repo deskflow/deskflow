@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Chris Schoeneman
  *
@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "platform/synwinhk.h"
+#include "platform/dfwhook.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

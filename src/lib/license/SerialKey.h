@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #include <optional>
 #include <string>
 
-namespace synergy::license {
+namespace deskflow::license {
 
 struct SerialKey {
   using time_point = std::chrono::system_clock::time_point;
@@ -57,4 +57,4 @@ private:
   explicit SerialKey(Edition edition) : product(edition) {}
 };
 
-} // namespace synergy::license
+} // namespace deskflow::license

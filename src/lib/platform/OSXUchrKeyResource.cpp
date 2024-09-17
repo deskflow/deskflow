@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -180,7 +180,7 @@ bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const {
 
   // convert keys to their dead counterparts
   for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
-    *i = synergy::KeyMap::getDeadKey(*i);
+    *i = deskflow::KeyMap::getDeadKey(*i);
   }
 
   return true;

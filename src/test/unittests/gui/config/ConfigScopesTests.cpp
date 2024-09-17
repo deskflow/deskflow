@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -23,8 +23,8 @@
 #include <memory>
 
 using namespace testing;
-using namespace synergy::gui;
-using namespace synergy::gui::proxy;
+using namespace deskflow::gui;
+using namespace deskflow::gui::proxy;
 
 namespace {
 

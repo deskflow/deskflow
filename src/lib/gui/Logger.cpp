@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -28,10 +28,10 @@
 #include <Windows.h>
 #endif
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 const auto kForceDebugMessages = QStringList{
-    "Synergy", // TEST
+    "Deskflow", // TEST
     "No functional TLS backend was found",
     "No TLS backend is available",
     "QSslSocket::connectToHostEncrypted: TLS initialization failed",
@@ -72,12 +72,12 @@ QString printLine(
 }
 
 void Logger::loadEnvVars() {
-  const auto debugEnvVar = qEnvironmentVariable("SYNERGY_GUI_DEBUG");
+  const auto debugEnvVar = qEnvironmentVariable("DESKFLOW_GUI_DEBUG");
   if (!debugEnvVar.isEmpty()) {
     m_debug = strToTrue(debugEnvVar);
   }
 
-  const auto verboseEnvVar = qEnvironmentVariable("SYNERGY_GUI_VERBOSE");
+  const auto verboseEnvVar = qEnvironmentVariable("DESKFLOW_GUI_VERBOSE");
   if (!verboseEnvVar.isEmpty()) {
     m_verbose = strToTrue(verboseEnvVar);
   }
@@ -127,4 +127,4 @@ void Logger::handleMessage(
   emit newLine(logLine);
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

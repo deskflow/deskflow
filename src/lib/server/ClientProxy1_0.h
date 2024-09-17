@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,9 +18,9 @@
 
 #pragma once
 
+#include "deskflow/Clipboard.h"
+#include "deskflow/protocol_types.h"
 #include "server/ClientProxy.h"
-#include "synergy/Clipboard.h"
-#include "synergy/protocol_types.h"
 
 class Event;
 class EventQueueTimer;
@@ -30,7 +30,8 @@ class IEventQueue;
 class ClientProxy1_0 : public ClientProxy {
 public:
   ClientProxy1_0(
-      const String &name, synergy::IStream *adoptedStream, IEventQueue *events);
+      const String &name, deskflow::IStream *adoptedStream,
+      IEventQueue *events);
   ClientProxy1_0(ClientProxy1_0 const &) = delete;
   ClientProxy1_0(ClientProxy1_0 &&) = delete;
   ~ClientProxy1_0();

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -27,8 +27,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using namespace synergy::gui;
-using namespace synergy::license;
+using namespace deskflow::gui;
+using namespace deskflow::license;
 using namespace testing;
 
 namespace {

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 const auto isNotSpace = [](unsigned char ch) { return !std::isspace(ch); };
 
-namespace synergy::utils {
+namespace deskflow::utils {
 
 /**
  * @brief A _very_ basic whitespace trimer.
@@ -36,4 +36,4 @@ inline std::string trim(const std::string &str) {
   return (front < back ? std::string(front, back) : std::string{});
 }
 
-} // namespace synergy::utils
+} // namespace deskflow::utils

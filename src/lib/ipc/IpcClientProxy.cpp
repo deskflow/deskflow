@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,16 +20,16 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/ipc.h"
+#include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcSettingMessage.h"
-#include "synergy/ProtocolUtil.h"
 
 //
 // IpcClientProxy
 //
 
-IpcClientProxy::IpcClientProxy(synergy::IStream &stream, IEventQueue *events)
+IpcClientProxy::IpcClientProxy(deskflow::IStream &stream, IEventQueue *events)
     : m_stream(stream),
       m_events(events) {
   m_events->adoptHandler(

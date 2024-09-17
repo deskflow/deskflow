@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
 
 #pragma once
 
+#include "deskflow/KeyState.h"
 #include "platform/IOSXKeyResource.h"
-#include "synergy/KeyState.h"
 
 #include <Carbon/Carbon.h>
 

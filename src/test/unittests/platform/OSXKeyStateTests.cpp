@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -17,14 +17,14 @@
  */
 
 #include "platform/OSXKeyState.h"
-#include "test/mock/synergy/MockEventQueue.h"
-#include "test/mock/synergy/MockKeyMap.h"
+#include "test/mock/deskflow/MockEventQueue.h"
+#include "test/mock/deskflow/MockKeyMap.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnSynergyMask) {
-  synergy::KeyMap keyMap;
+TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnDeskflowMask) {
+  deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
 

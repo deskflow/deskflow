@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -24,5 +24,5 @@ endif()
 add_library(client STATIC ${sources})
 
 if(UNIX)
-  target_link_libraries(client synlib io)
+  target_link_libraries(client app io)
 endif()

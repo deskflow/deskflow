@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <QString>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 const auto kColorWhite = "#ffffff";
 const auto kColorPrimary = "#ff7c00";
@@ -50,4 +50,4 @@ const auto kStyleNoticeLabel = //
             "background-color: %1; color: %2")
         .arg(kColorNotice, kColorWhite);
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

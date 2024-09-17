@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 #include <openssl/ssl.h>
 #include <string>
 
-namespace synergy {
+namespace deskflow {
 namespace ssl {
 
 class SslApi {
@@ -52,4 +52,4 @@ private:
 };
 
 } // namespace ssl
-} // namespace synergy
+} // namespace deskflow

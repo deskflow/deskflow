@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -102,8 +102,8 @@ bool ArchSystemUnix::DBusInhibitScreenCall(
     }
 
     reply = screenSaverInterface.call(
-        "Inhibit", "Synergy",
-        "Sleep is manually prevented by the Synergy preferences");
+        "Inhibit", "Deskflow",
+        "Sleep is manually prevented by the Deskflow preferences");
     if (reply.isValid())
       cookies[serviceNum] = reply.value();
   } else {

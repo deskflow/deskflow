@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
 set(target gui)
 
 set(res_dir ${CMAKE_SOURCE_DIR}/res/gui)
-set(qrc_file ${res_dir}/Synergy.qrc)
+set(qrc_file ${res_dir}/Deskflow.qrc)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)

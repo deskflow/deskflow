@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -30,7 +30,7 @@
 #include <libportal/portal.h>
 #include <memory>
 
-namespace synergy {
+namespace deskflow {
 
 class PortalInputCapture {
 public:
@@ -104,6 +104,6 @@ private:
   std::vector<XdpInputCapturePointerBarrier *> barriers_;
 };
 
-} // namespace synergy
+} // namespace deskflow
 
 #endif // HAVE_LIBPORTAL_INPUTCAPTURE

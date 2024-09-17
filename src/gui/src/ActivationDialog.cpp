@@ -1,6 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2016 Synergy Ltd.
+ * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,8 +32,8 @@
 #include <QMessageBox>
 #include <QThread>
 
-using namespace synergy::gui;
-using namespace synergy::license;
+using namespace deskflow::gui;
+using namespace deskflow::license;
 
 ActivationDialog::ActivationDialog(
     QWidget *parent, AppConfig &appConfig, LicenseHandler &licenseHandler)
@@ -52,7 +52,7 @@ ActivationDialog::ActivationDialog(
     m_ui->m_widgetNotice->hide();
   }
 
-  const QString envSerialKey = ::getenv("SYNERGY_TEST_SERIAL_KEY");
+  const QString envSerialKey = ::getenv("DESKFLOW_TEST_SERIAL_KEY");
   if (!envSerialKey.isEmpty()) {
     qDebug() << "using env test serial key:" << envSerialKey;
     m_ui->m_pTextEditSerialKey->setText(envSerialKey);
@@ -178,7 +178,7 @@ void ActivationDialog::showSuccessDialog() {
 
 void ActivationDialog::showErrorDialog(const QString &message) {
   QString fullMessage =
-      QString("<p>There was a problem activating Synergy.</p>"
+      QString("<p>There was a problem activating Deskflow.</p>"
               R"(<p>Please <a href="%1" style="color: %2">contact us</a> )"
               "and provide the following information:</p>"
               "%3")

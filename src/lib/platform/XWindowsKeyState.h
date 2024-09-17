@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -20,16 +20,16 @@
 
 #include "common/stdmap.h"
 #include "common/stdvector.h"
-#include "synergy/KeyState.h"
+#include "deskflow/KeyState.h"
 
 #if X_DISPLAY_MISSING
-#error X11 is required to build synergy
+#error X11 is required to build deskflow
 #else
 #include <X11/Xlib.h>
 #if HAVE_X11_EXTENSIONS_XTEST_H
 #include <X11/extensions/XTest.h>
 #else
-#error The XTest extension is required to build synergy
+#error The XTest extension is required to build deskflow
 #endif
 #if HAVE_XKB_EXTENSION
 #include <X11/extensions/XKBstr.h>
@@ -49,7 +49,7 @@ public:
 
   XWindowsKeyState(Display *, bool useXKB, IEventQueue *events);
   XWindowsKeyState(
-      Display *, bool useXKB, IEventQueue *events, synergy::KeyMap &keyMap);
+      Display *, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap);
   ~XWindowsKeyState();
 
   //! @name modifiers
@@ -75,24 +75,24 @@ public:
   //! @name accessors
   //@{
 
-  //! Convert X modifier mask to synergy mask
+  //! Convert X modifier mask to deskflow mask
   /*!
-  Returns the synergy modifier mask corresponding to the X modifier
+  Returns the deskflow modifier mask corresponding to the X modifier
   mask in \p state.
   */
   KeyModifierMask mapModifiersFromX(unsigned int state) const;
 
-  //! Convert synergy modifier mask to X mask
+  //! Convert deskflow modifier mask to X mask
   /*!
-  Converts the synergy modifier mask to the corresponding X modifier
+  Converts the deskflow modifier mask to the corresponding X modifier
   mask.  Returns \c true if successful and \c false if any modifier
   could not be converted.
   */
   bool mapModifiersToX(KeyModifierMask, unsigned int &) const;
 
-  //! Convert synergy key to all corresponding X keycodes
+  //! Convert deskflow key to all corresponding X keycodes
   /*!
-  Converts the synergy key \p key to all of the keycodes that map to
+  Converts the deskflow key \p key to all of the keycodes that map to
   that key.
   */
   void mapKeyToKeycodes(KeyID key, KeycodeList &keycodes) const;
@@ -107,13 +107,13 @@ public:
 
 protected:
   // KeyState overrides
-  virtual void getKeyMap(synergy::KeyMap &keyMap);
+  virtual void getKeyMap(deskflow::KeyMap &keyMap);
   virtual void fakeKey(const Keystroke &keystroke);
 
 private:
   void init(Display *display, bool useXKB);
-  void updateKeysymMap(synergy::KeyMap &);
-  void updateKeysymMapXKB(synergy::KeyMap &);
+  void updateKeysymMap(deskflow::KeyMap &);
+  void updateKeysymMapXKB(deskflow::KeyMap &);
   bool hasModifiersXKB() const;
   int getEffectiveGroup(KeyCode, int group) const;
   UInt32 getGroupFromState(unsigned int state) const;
@@ -125,7 +125,7 @@ private:
   bool setCurrentLanguageWithDBus(SInt32 group) const;
 
   static void
-  remapKeyModifiers(KeyID, SInt32, synergy::KeyMap::KeyItem &, void *);
+  remapKeyModifiers(KeyID, SInt32, deskflow::KeyMap::KeyItem &, void *);
 
 private:
   struct XKBModifierInfo {
@@ -154,10 +154,10 @@ private:
   XKBModifierMap m_lastGoodXKBModifiers;
   NonXKBModifierMap m_lastGoodNonXKBModifiers;
 
-  // X modifier (bit number) to synergy modifier (mask) mapping
+  // X modifier (bit number) to deskflow modifier (mask) mapping
   KeyModifierMaskList m_modifierFromX;
 
-  // synergy modifier (mask) to X modifier (mask)
+  // deskflow modifier (mask) to X modifier (mask)
   KeyModifierToXMask m_modifierToX;
 
   // map KeyID to all keycodes that can synthesize that KeyID

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #include "QProcessProxy.h"
 
-namespace synergy::gui::proxy {
+namespace deskflow::gui::proxy {
 
 void QProcessProxy::create() {
   m_pProcess = std::make_unique<QProcess>();
@@ -60,4 +60,4 @@ QString QProcessProxy::readAllStandardError() {
   return m_pProcess->readAllStandardError();
 }
 
-} // namespace synergy::gui::proxy
+} // namespace deskflow::gui::proxy

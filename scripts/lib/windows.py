@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@ CERTUTIL_CMD = "certutil"
 RUNNER_TEMP_ENV = "RUNNER_TEMP"
 DIST_DIR = "dist"
 BUILD_DIR = "build"
-WIX_FILE = f"{BUILD_DIR}/installer/Synergy.sln"
-MSI_FILE = f"{BUILD_DIR}/installer/bin/Release/Synergy.msi"
+WIX_FILE = f"{BUILD_DIR}/installer/Deskflow.sln"
+MSI_FILE = f"{BUILD_DIR}/installer/bin/Release/Deskflow.msi"
 
 
 def run_elevated(script, args=None, use_sys_argv=True, wait_for_exit=False):

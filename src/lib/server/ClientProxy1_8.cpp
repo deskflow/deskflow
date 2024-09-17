@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,20 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "base/Log.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/languages/LanguageManager.h"
+#include "deskflow/ProtocolUtil.h"
+#include "deskflow/languages/LanguageManager.h"
 
 #include "ClientProxy1_8.h"
 
 ClientProxy1_8::ClientProxy1_8(
-    const String &name, synergy::IStream *adoptedStream, Server *server,
+    const String &name, deskflow::IStream *adoptedStream, Server *server,
     IEventQueue *events)
     : ClientProxy1_7(name, adoptedStream, server, events) {
   synchronizeLanguages();
 }
 
 void ClientProxy1_8::synchronizeLanguages() const {
-  synergy::languages::LanguageManager languageManager;
+  deskflow::languages::LanguageManager languageManager;
   auto localLanguages = languageManager.getSerializedLocalLanguages();
   if (!localLanguages.empty()) {
     LOG(

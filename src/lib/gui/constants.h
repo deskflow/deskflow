@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <QString>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 // important: this is used for settings paths on some platforms,
 // and must not be a url. qt automatically converts this to reverse domain
@@ -47,10 +47,10 @@ const auto kUrlDownload =
     QString("%1/download?%2").arg(kUrlProduct, kUrlSourceQuery);
 const auto kUrlBugReport = QString("%1/issues").arg(kUrlGitHub);
 
-#ifdef SYNERGY_PRODUCT_NAME
-const QString kProductName = SYNERGY_PRODUCT_NAME;
+#ifdef DESKFLOW_PRODUCT_NAME
+const QString kProductName = DESKFLOW_PRODUCT_NAME;
 #else
 const QString kProductName;
 #endif
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

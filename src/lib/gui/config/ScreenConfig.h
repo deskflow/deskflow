@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -25,7 +25,7 @@
 
 /// @brief Screen configuration base class
 class ScreenConfig {
-  using QSettingsProxy = synergy::gui::proxy::QSettingsProxy;
+  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
   enum class Modifier {

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 
 #include "ScreenList.h"
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class IServerConfig {
 public:
@@ -35,4 +35,4 @@ public:
   virtual const ScreenList &screens() const = 0;
 };
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

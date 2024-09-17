@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -22,7 +22,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
-#include "synergy/KeyState.h"
+#include "deskflow/KeyState.h"
 
 #include <Carbon/Carbon.h>
 
@@ -39,8 +39,8 @@ public:
   OSXKeyState(
       IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
   OSXKeyState(
-      IEventQueue *events, synergy::KeyMap &keyMap, std::vector<String> layouts,
-      bool isLangSyncEnabled);
+      IEventQueue *events, deskflow::KeyMap &keyMap,
+      std::vector<String> layouts, bool isLangSyncEnabled);
   virtual ~OSXKeyState();
 
   //! @name modifiers
@@ -58,9 +58,9 @@ public:
   //! @name accessors
   //@{
 
-  //! Convert OS X modifier mask to synergy mask
+  //! Convert OS X modifier mask to deskflow mask
   /*!
-  Returns the synergy modifier mask corresponding to the OS X modifier
+  Returns the deskflow modifier mask corresponding to the OS X modifier
   mask in \p mask.
   */
   KeyModifierMask mapModifiersFromOSX(UInt32 mask) const;
@@ -87,7 +87,7 @@ public:
   Calculates mac virtual key and mask for a key \p key and modifiers
   \p mask.  Returns \c true if the key can be mapped, \c false otherwise.
   */
-  bool mapSynergyHotKeyToMac(
+  bool mapDeskflowHotKeyToMac(
       KeyID key, KeyModifierMask mask, UInt32 &macVirtualKey,
       UInt32 &macModifierMask) const;
 
@@ -104,18 +104,18 @@ public:
 
 protected:
   // KeyState overrides
-  virtual void getKeyMap(synergy::KeyMap &keyMap);
+  virtual void getKeyMap(deskflow::KeyMap &keyMap);
   virtual void fakeKey(const Keystroke &keystroke);
 
 private:
   class KeyResource;
 
-  // Add hard coded special keys to a synergy::KeyMap.
-  void getKeyMapForSpecialKeys(synergy::KeyMap &keyMap, SInt32 group) const;
+  // Add hard coded special keys to a deskflow::KeyMap.
+  void getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, SInt32 group) const;
 
   // Convert keyboard resource to a key map
   bool getKeyMap(
-      synergy::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const;
+      deskflow::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const;
 
   // Get the available keyboard groups
   bool getGroups(AutoCFArray &) const;
@@ -161,7 +161,7 @@ private:
   void postKeyboardKey(CGKeyCode virtualKey, bool keyDown);
 
 private:
-  // OS X uses a physical key if 0 for the 'A' key.  synergy reserves
+  // OS X uses a physical key if 0 for the 'A' key.  deskflow reserves
   // KeyButton 0 so we offset all OS X physical key ids by this much
   // when used as a KeyButton and by minus this much to map a KeyButton
   // to a physical button.

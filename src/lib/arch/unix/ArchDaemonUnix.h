@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -33,4 +33,4 @@ public:
   virtual int daemonize(const char *name, DaemonFunc func);
 };
 
-#define CONFIG_FILE "/etc/synergy/synergyd.conf"
+#define CONFIG_FILE "/etc/deskflow/deskflowd.conf"

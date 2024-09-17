@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #pragma once
 
-namespace synergy::gui::config {
+namespace deskflow::gui::config {
 
 /**
  * @brief Represents the state of the server config dialog.
@@ -35,4 +35,4 @@ private:
   bool m_isVisible = false;
 };
 
-} // namespace synergy::gui::config
+} // namespace deskflow::gui::config

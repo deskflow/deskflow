@@ -12,7 +12,7 @@ aqtinstall.log
 Brewfile.lock.json
 
 # typical developer-created files
-synergy-config.toml
+deskflow-config.toml
 .vscode
 .DS_Store
 *.code-workspace

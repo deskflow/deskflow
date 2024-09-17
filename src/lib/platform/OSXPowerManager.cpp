@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2021 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -25,7 +25,7 @@ OSXPowerManager::~OSXPowerManager() { enableSleep(); }
 
 void OSXPowerManager::disableSleep() {
   if (!m_sleepPreventionAssertionID) {
-    CFStringRef reasonForActivity = CFSTR("Synergy application");
+    CFStringRef reasonForActivity = CFSTR("Deskflow application");
     IOReturn result = IOPMAssertionCreateWithName(
         kIOPMAssertPreventUserIdleDisplaySleep, kIOPMAssertionLevelOn,
         reasonForActivity, &m_sleepPreventionAssertionID);

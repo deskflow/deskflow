@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -25,12 +25,12 @@ import psutil  # type: ignore
 import lib.colors as colors
 import lib.file_utils as file_utils
 
-DEFAULT_BIN_NAME = "synergyd"
+DEFAULT_BIN_NAME = "deskflowd"
 DEFAULT_SOURCE_DIR = os.path.join("build", "temp", "bin")
 DEFAULT_TARGET_DIR = os.path.join("build", "bin")
 SERVICE_NOT_RUNNING_ERROR = 2
 ERROR_ACCESS_VIOLATION = 0xC0000005
-IGNORE_PROCESSES = ["synergy.exe"]
+IGNORE_PROCESSES = ["deskflow.exe"]
 
 
 class Context:
@@ -140,7 +140,7 @@ def stop(context, target_dir):
     ensure_admin()
     print("Stopping daemon service")
     try:
-        subprocess.run(["net", "stop", "synergy"], shell=True, check=True)
+        subprocess.run(["net", "stop", "deskflow"], shell=True, check=True)
     except subprocess.CalledProcessError as e:
         if e.returncode == SERVICE_NOT_RUNNING_ERROR:
             print_verbose(context, "Daemon service not running")
@@ -154,7 +154,7 @@ def stop(context, target_dir):
 def start():
     ensure_admin()
     print("Starting daemon service")
-    subprocess.run(["net", "start", "synergy"], shell=True, check=True)
+    subprocess.run(["net", "start", "deskflow"], shell=True, check=True)
 
 
 def wait_for_stop(context, target_dir):

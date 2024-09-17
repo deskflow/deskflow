@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -18,13 +18,13 @@
 
 #pragma once
 
-#if !defined(SYNERGY_VERSION)
+#if !defined(DESKFLOW_VERSION)
 #error version was not passed to the compiler
 #endif
 
-const auto kAppName = "Synergy";
+const auto kAppName = "Deskflow";
 const auto kAppDescription = "Mouse and keyboard sharing utility";
-const auto kVersion = SYNERGY_VERSION;
+const auto kVersion = DESKFLOW_VERSION;
 
 #ifdef GIT_SHA_SHORT
 const auto kVersionGitSha = GIT_SHA_SHORT;

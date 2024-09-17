@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
@@ -19,8 +19,8 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
+#include "deskflow/XDeskflow.h"
 #include "platform/MSWindowsSession.h"
-#include "synergy/XSynergy.h"
 
 #include <map>
 #include <string>
@@ -110,9 +110,9 @@ private:
 /*!
 An error occured in the process watchdog.
 */
-class XMSWindowsWatchdogError : public XSynergy {
+class XMSWindowsWatchdogError : public XDeskflow {
 public:
-  XMSWindowsWatchdogError(const String &msg) : XSynergy(msg) {}
+  XMSWindowsWatchdogError(const String &msg) : XDeskflow(msg) {}
 
   // XBase overrides
   virtual String getWhat() const throw() { return what(); }

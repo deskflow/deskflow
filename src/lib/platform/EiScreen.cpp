@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2022 Red Hat, Inc.
  * Copyright (C) 2024 Symless Ltd.
  *
@@ -24,11 +24,11 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/TMethodEventJob.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/KeyMap.h"
+#include "deskflow/XScreen.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
-#include "synergy/Clipboard.h"
-#include "synergy/KeyMap.h"
-#include "synergy/XScreen.h"
 
 #if WINAPI_LIBPORTAL
 #include "platform/PortalInputCapture.h"
@@ -46,7 +46,7 @@ struct ScrollRemainder {
   double x, y; // scroll remainder in pixels
 };
 
-namespace synergy {
+namespace deskflow {
 
 EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
     : PlatformScreen(events),
@@ -141,7 +141,7 @@ void EiScreen::init_ei() {
   ei_set_user_data(ei_, this);
   ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
   ei_log_set_handler(ei_, cb_handle_ei_log_event);
-  ei_configure_name(ei_, "synergy client");
+  ei_configure_name(ei_, "deskflow client");
 
   // install the platform event queue
   events_->adoptBuffer(nullptr);
@@ -296,7 +296,7 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const {
   if (!ei_pointer_)
     return;
 
-  // libei and synergy seem to use opposite directions, so we have
+  // libei and deskflow seem to use opposite directions, so we have
   // to send EI the opposite of the value received if we want to remain
   // compatible with other platforms (including X11).
   ei_device_scroll_discrete(ei_pointer_, -xDelta, -yDelta);
@@ -615,7 +615,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   assert(!std::isnan(x) && !std::isinf(x));
   assert(!std::isnan(y) && !std::isinf(y));
 
-  // libei and synergy seem to use opposite directions, so we have
+  // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
   if (x != 0 || y != 0)
@@ -630,7 +630,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
 }
 
 void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
-  // both libei and synergy use multiples of 120 to represent
+  // both libei and deskflow use multiples of 120 to represent
   // one scroll wheel click event so we can just forward things
   // as-is.
 
@@ -641,7 +641,7 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
 
   LOG_DEBUG1("event: scroll discrete (%d, %d)", dx, dy);
 
-  // libei and synergy seem to use opposite directions, so we have
+  // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
   sendEvent(events_->forIPrimaryScreen().wheel(), WheelInfo::alloc(-dx, -dy));
@@ -847,4 +847,4 @@ std::uint32_t EiScreen::HotKeySet::find_by_mask(std::uint32_t mask) const {
   return 0;
 }
 
-} // namespace synergy
+} // namespace deskflow

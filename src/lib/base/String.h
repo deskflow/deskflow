@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -27,7 +27,7 @@
 // use standard C++ string class for our string class
 using String = std::string;
 
-namespace synergy {
+namespace deskflow {
 
 //! String utilities
 /*!
@@ -131,4 +131,4 @@ public:
 };
 
 } // namespace string
-} // namespace synergy
+} // namespace deskflow

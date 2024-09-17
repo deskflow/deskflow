@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -249,16 +249,12 @@ void ServerConfigDialog::showEvent(QShowEvent *event) {
 void ServerConfigDialog::accept() {
   if (m_pCheckBoxUseExternalConfig->isChecked() &&
       !QFile::exists(m_pEditConfigFile->text())) {
-    auto title = tr("Configuration filename invalid");
-    auto description =
-        tr("You have not filled in a valid configuration file for the synergy "
-           "server. "
-           "Do you want to browse for the configuration file now?");
 
     auto selectedButton = QMessageBox::warning(
-        this, title, description, QMessageBox::Yes | QMessageBox::No);
+        this, "Filename invalid", "Please select a valid configuration file.",
+        QMessageBox::Ok | QMessageBox::Ignore);
 
-    if (selectedButton != QMessageBox::Yes ||
+    if (selectedButton != QMessageBox::Ok ||
         !on_m_pButtonBrowseConfigFile_clicked()) {
       return;
     }
@@ -415,16 +411,15 @@ void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked) {
 
 bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked() {
 #if defined(Q_OS_WIN)
-  const QString synergyConfigFilter(
-      QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
+  const QString deskflowConfigFilter(
+      QObject::tr("Deskflow Configurations (*.sgc);;All files (*.*)"));
 #else
-  const QString synergyConfigFilter(
-      QObject::tr("Synergy Configurations (*.conf);;All files (*.*)"));
+  const QString deskflowConfigFilter(
+      QObject::tr("Deskflow Configurations (*.conf);;All files (*.*)"));
 #endif
 
   QString fileName = QFileDialog::getOpenFileName(
-      this, tr("Browse for a synergys config file"), QString(),
-      synergyConfigFilter);
+      this, "Browse for a config file", "", deskflowConfigFilter);
 
   if (!fileName.isEmpty()) {
     m_pEditConfigFile->setText(fileName);

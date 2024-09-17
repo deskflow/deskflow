@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -20,7 +20,7 @@
 
 #include "base/String.h"
 #include "common/stdvector.h"
-#include "synergy/KeyState.h"
+#include "deskflow/KeyState.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -41,7 +41,7 @@ public:
       std::vector<String> layouts, bool isLangSyncEnabled);
   MSWindowsKeyState(
       MSWindowsDesks *desks, void *eventTarget, IEventQueue *events,
-      synergy::KeyMap &keyMap, std::vector<String> layouts,
+      deskflow::KeyMap &keyMap, std::vector<String> layouts,
       bool isLangSyncEnabled);
   virtual ~MSWindowsKeyState();
 
@@ -164,7 +164,7 @@ public:
 
 protected:
   // KeyState overrides
-  virtual void getKeyMap(synergy::KeyMap &keyMap);
+  virtual void getKeyMap(deskflow::KeyMap &keyMap);
   virtual void fakeKey(const Keystroke &keystroke);
   virtual KeyModifierMask &getActiveModifiersRValue();
 
@@ -178,10 +178,10 @@ private:
   void setWindowGroup(SInt32 group);
 
   KeyID getIDForKey(
-      synergy::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey,
+      deskflow::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey,
       PBYTE keyState, HKL hkl) const;
 
-  void addKeyEntry(synergy::KeyMap &keyMap, synergy::KeyMap::KeyItem &item);
+  void addKeyEntry(deskflow::KeyMap &keyMap, deskflow::KeyMap::KeyItem &item);
 
   void init();
 

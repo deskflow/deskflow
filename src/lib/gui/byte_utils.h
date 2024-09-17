@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <QIODevice>
 #include <QtGlobal>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 inline int bytesToInt(const char *buffer, size_t size) {
   QByteArray byteArray(buffer, static_cast<int>(size));
@@ -39,4 +39,4 @@ inline QByteArray intToBytes(int value) {
   return bytes;
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #include "ServerMessage.h"
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 ServerMessage::ServerMessage(const QString &message)
     : m_message(message),
@@ -53,4 +53,4 @@ QString ServerMessage::parseClientName(const QString &line) const {
   return clientName;
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

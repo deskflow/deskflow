@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -78,7 +78,7 @@ bool MSWindowsClipboard::empty() {
     return false;
   }
 
-  // mark clipboard as being owned by synergy
+  // mark clipboard as being owned by deskflow
   HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, 1);
   if (NULL == SetClipboardData(getOwnershipFormat(), data)) {
     LOG((CLOG_DEBUG "failed to set clipboard data"));
@@ -194,10 +194,10 @@ void MSWindowsClipboard::clearConverters() {
   m_converters.clear();
 }
 
-bool MSWindowsClipboard::isOwnedBySynergy() {
+bool MSWindowsClipboard::isOwnedByDeskflow() {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT("DeskflowOwnership"));
   }
   return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
@@ -205,7 +205,7 @@ bool MSWindowsClipboard::isOwnedBySynergy() {
 UINT MSWindowsClipboard::getOwnershipFormat() {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT("DeskflowOwnership"));
   }
 
   // return the format

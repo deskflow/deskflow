@@ -1,12 +1,12 @@
-# Build Synergy
+# Build Deskflow
 
 ## Developer Quick Start
 
-Synergy 1 Community Edition is free and open source software, and anyone is welcome to build it,
+Deskflow is free and open source software, and anyone is welcome to build it,
 run it, tinker with it, redistribute it as part of their own app, etc.
 
-These instructions will build Synergy 1 Community Edition, which doesn't require a license
-or serial key. Check the [Build Guide](https://github.com/symless/synergy/wiki/Build-Guide)
+These instructions will build Deskflow, which doesn't require a license
+or serial key. Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
 wiki page if you have problems.
 
 **1. Dependencies:**
@@ -46,5 +46,5 @@ cmake --build build -j8
 
 **5. Run**
 ```
-./build/bin/synergy
+./build/bin/deskflow
 ```

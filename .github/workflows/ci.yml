@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Synergy version number
+        description: Deskflow version number
   pull_request:
     types:
       - opened
@@ -20,10 +20,10 @@ on:
 
 env:
   GIT_SHA: ${{ github.sha }}
-  SYNERGY_PRODUCT_NAME: ${{ vars.SYNERGY_PRODUCT_NAME }}
-  SYNERGY_PACKAGE_PREFIX: ${{ vars.SYNERGY_PACKAGE_PREFIX }}
-  SYNERGY_LICENSED_PRODUCT: ${{ vars.SYNERGY_LICENSED_PRODUCT }}
-  SYNERGY_ENABLE_ACTIVATION: ${{ vars.SYNERGY_ENABLE_ACTIVATION }}
+  DESKFLOW_PRODUCT_NAME: ${{ vars.DESKFLOW_PRODUCT_NAME }}
+  DESKFLOW_PACKAGE_PREFIX: ${{ vars.DESKFLOW_PACKAGE_PREFIX }}
+  DESKFLOW_LICENSED_PRODUCT: ${{ vars.DESKFLOW_LICENSED_PRODUCT }}
+  DESKFLOW_ENABLE_ACTIVATION: ${{ vars.DESKFLOW_ENABLE_ACTIVATION }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.ref_name != 'master' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
@@ -126,11 +126,11 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
+          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
           gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
-          package-version: ${{ env.SYNERGY_VERSION }}
+          package-version: ${{ env.DESKFLOW_VERSION }}
 
   macos:
     needs: setup
@@ -213,11 +213,11 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
+          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
           gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
-          package-version: ${{ env.SYNERGY_VERSION }}
+          package-version: ${{ env.DESKFLOW_VERSION }}
 
   linux-matrix:
     runs-on: ubuntu-latest
@@ -298,11 +298,11 @@ jobs:
         with:
           use_github: ${{ env.UPLOAD_TO_GITHUB }}
           use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
-          github-target-filename: "${{ env.SYNERGY_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
+          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
           gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
           gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
           gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
-          package-version: ${{ env.SYNERGY_VERSION }}
+          package-version: ${{ env.DESKFLOW_VERSION }}
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
@@ -312,7 +312,7 @@ jobs:
     timeout-minutes: 20
 
     env:
-      SYNERGY_BUILD_CMD: |
+      DESKFLOW_BUILD_CMD: |
         ./scripts/install_deps.sh;
         cmake -B build;
         cmake --build build -j16;
@@ -336,4 +336,4 @@ jobs:
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
-          run: ${{ env.SYNERGY_BUILD_CMD }}
+          run: ${{ env.DESKFLOW_BUILD_CMD }}

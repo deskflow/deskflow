@@ -1,6 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2024 Synergy Ltd.
+ * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,9 @@
 #include "license/License.h"
 #include "styles.h"
 
-using License = synergy::license::License;
+using License = deskflow::license::License;
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 QString trialLicenseNotice(const License &license);
 QString subscriptionLicenseNotice(const License &license);
@@ -74,4 +74,4 @@ QString subscriptionLicenseNotice(const License &license) {
   }
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

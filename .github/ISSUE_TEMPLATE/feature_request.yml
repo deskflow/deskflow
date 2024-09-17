@@ -1,59 +1,23 @@
 name: Feature request
-description: Had an idea how to improve Synergy? Share it with us.
+description: Had an idea how to improve Deskflow? Share it with us.
 labels: ["enhancement", "triage", "unanswered"]
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to help us improve Synergy.
+      value: Thanks for taking the time to help us improve Deskflow.
 
   - type: dropdown
-    id: user-type
+    id: project
     attributes:
-      label: What type of Synergy user are you?
-      description: This will help us understand the context of your issue.
+      label: Project
+      description: Are you using Deskflow or a fork/derivative?
       options:
         # Empty option to force selection
         -
-        - Customer
-        - Code contributor
-        - Community user
-      default: 0
-    validations:
-      required: true
-
-  - type: input
-    id: ticket-number
-    attributes:
-      label: Support ticket number (for customers)
-      description: |
-        If you have a support ticket number, please enter it here.
-        Customers are advised to open a support ticket first: https://symless.com/synergy/contact
-        This is for customers only (non-customers please ignore this field).
-        Leave this blank if you do not have a support ticket or if you're not a customer.
-    validations:
-      required: false
-
-  - type: checkboxes
-    id: discussion
-    attributes:
-      label: Discussion
-      description: |
-        Have you considered starting a discussion instead of requesting a feature?
-      options:
-        - label: I want to request a feature (I don't want to start a discussion)
-          required: true
-
-  - type: dropdown
-    id: product
-    attributes:
-      label: Product name
-      description: Which Synergy product are you using?
-      options:
-        # Empty option to force selection
-        -
-        - Synergy 1
-        - Synergy 2
-        - Synergy 3
+        - Deskflow
+        - Barrier
+        - Input Leap
+        - Synergy
       default: 0
     validations:
       required: true
@@ -66,7 +30,8 @@ body:
       options:
         - label: Windows
         - label: macOS
-        - label: Linux or Unix
+        - label: Linux
+        - label: BSD-derived
         - label: Other
     validations:
       required: true
@@ -74,7 +39,7 @@ body:
   - type: textarea
     id: os-version
     attributes:
-      label: OS versions or Linux distros
+      label: OS versions/distros
       description: |
         Please provide the version number of your operating system (OS).
         If you're using Linux, please provide the name of the distribution.
@@ -82,17 +47,18 @@ body:
         - Windows 11
         - macOS 15
         - Ubuntu 24.04
+        - FreeBSD 14.0
     validations:
       required: true
 
   - type: textarea
     id: config
     attributes:
-      label: Synergy configuration
+      label: Deskflow configuration
       description: |
         Please provide a very brief description of your configuration.
         Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
-        This will help us understand how you're using Synergy.
+        This will help us understand how you're using Deskflow.
       placeholder: |
         - Windows 11 server, macOS 15 client
         - Each computer has a single monitor

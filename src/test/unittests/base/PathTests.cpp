@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -37,6 +37,6 @@ TEST(PathTests, open_file_using_path) {
   file << "test";
   file.close();
 
-  std::ifstream inFile(synergy::filesystem::path(utf8FileName));
+  std::ifstream inFile(deskflow::filesystem::path(utf8FileName));
   EXPECT_TRUE(inFile.is_open());
 }

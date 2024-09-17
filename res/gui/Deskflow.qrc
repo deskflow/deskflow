@@ -1,0 +1,17 @@
+<RCC>
+    <qresource>
+        <file>icons/16x16/deskflow.png</file>
+        <file>icons/64x64/video-display.png</file>
+        <file>icons/64x64/user-trash.png</file>
+        <file>icons/16x16/warning.png</file>
+        <file>icons/256x256/deskflow.ico</file>
+        <file>image/about-light.png</file>
+        <file>image/about-dark.png</file>
+        <file>icons/16x16/padlock.png</file>
+        <file>icons/64x64/deskflow-dark.png</file>
+        <file>icons/64x64/deskflow-light.png</file>
+        <file>image/welcome.png</file>
+        <file>icons/64x64/folder.png</file>
+        <file>image/setup-blocker.png</file>
+    </qresource>
+</RCC>

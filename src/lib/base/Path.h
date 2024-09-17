@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SYNERGY_PATH_H
-#define SYNERGY_PATH_H
+#ifndef DESKFLOW_PATH_H
+#define DESKFLOW_PATH_H
 
 #include "String.h"
 
-namespace synergy {
+namespace deskflow {
 
 namespace filesystem {
 
@@ -31,6 +31,6 @@ std::string path(const String &filePath);
 
 } // namespace filesystem
 
-} // namespace synergy
+} // namespace deskflow
 
-#endif // SYNERGY_PATH_H
+#endif // DESKFLOW_PATH_H

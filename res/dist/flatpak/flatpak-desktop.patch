@@ -1,14 +1,14 @@
-diff --git a/res/synergy.desktop b/res/synergy.desktop
+diff --git a/res/deskflow.desktop b/res/deskflow.desktop
 index fa987bdf..9513dbf3 100644
---- a/res/synergy.desktop
-+++ b/res/synergy.desktop
+--- a/res/deskflow.desktop
++++ b/res/deskflow.desktop
 @@ -3,8 +3,7 @@ Type=Application
  Version=1.0
- Name=Synergy
+ Name=Deskflow
  Comment=Keyboard and mouse sharing solution
 -Path=/usr/bin
--Exec=/usr/bin/synergy
+-Exec=/usr/bin/deskflow
 +Exec=
- Icon=synergy
+ Icon=deskflow
  Terminal=false
  Categories=Utility;

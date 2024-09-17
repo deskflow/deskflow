@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,9 +19,9 @@
 
 #include "messages.h"
 
-using namespace synergy::platform;
+using namespace deskflow::platform;
 
-namespace synergy::gui::core {
+namespace deskflow::gui::core {
 
 //
 // WaylandWarnings::Deps
@@ -62,4 +62,4 @@ void WaylandWarnings::showOnce(
   }
 }
 
-} // namespace synergy::gui::core
+} // namespace deskflow::gui::core

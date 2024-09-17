@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -21,9 +21,9 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "deskflow/ProtocolUtil.h"
+#include "deskflow/XDeskflow.h"
 #include "io/IStream.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/XSynergy.h"
 
 #include <cstring>
 
@@ -32,7 +32,7 @@
 //
 
 ClientProxy1_0::ClientProxy1_0(
-    const String &name, synergy::IStream *stream, IEventQueue *events)
+    const String &name, deskflow::IStream *stream, IEventQueue *events)
     : ClientProxy(name, stream),
       m_heartbeatTimer(NULL),
       m_parser(&ClientProxy1_0::parseHandshakeMessage),

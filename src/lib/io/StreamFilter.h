@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -26,7 +26,7 @@
 This class wraps a stream.  Subclasses provide indirect access
 to the wrapped stream, typically performing some filtering.
 */
-class StreamFilter : public synergy::IStream {
+class StreamFilter : public deskflow::IStream {
 public:
   /*!
   Create a wrapper around \c stream.  Iff \c adoptStream is true then
@@ -34,7 +34,7 @@ public:
   d'tor.
   */
   StreamFilter(
-      IEventQueue *events, synergy::IStream *stream, bool adoptStream = true);
+      IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
   StreamFilter(StreamFilter const &) = delete;
   StreamFilter(StreamFilter &&) = delete;
   virtual ~StreamFilter();
@@ -59,7 +59,7 @@ public:
   /*!
   Returns the stream passed to the c'tor.
   */
-  synergy::IStream *getStream() const;
+  deskflow::IStream *getStream() const;
 
 protected:
   //! Handle events from source stream
@@ -73,7 +73,7 @@ private:
   void handleUpstreamEvent(const Event &, void *);
 
 private:
-  synergy::IStream *m_stream;
+  deskflow::IStream *m_stream;
   bool m_adopted;
   IEventQueue *m_events;
 };

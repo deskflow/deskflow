@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 #include <QValidator>
 
-using namespace synergy::gui;
+using namespace deskflow::gui;
 
 namespace validators {
 

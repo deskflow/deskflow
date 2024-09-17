@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -27,7 +27,7 @@
 #include <QPushButton>
 #include <QtCore>
 
-using namespace synergy::gui::proxy;
+using namespace deskflow::gui::proxy;
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;

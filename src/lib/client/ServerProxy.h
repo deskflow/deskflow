@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -21,15 +21,15 @@
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "base/String.h"
-#include "synergy/clipboard_types.h"
-#include "synergy/key_types.h"
-#include "synergy/languages/LanguageManager.h"
+#include "deskflow/clipboard_types.h"
+#include "deskflow/key_types.h"
+#include "deskflow/languages/LanguageManager.h"
 
 class Client;
 class ClientInfo;
 class EventQueueTimer;
 class IClipboard;
-namespace synergy {
+namespace deskflow {
 class IStream;
 }
 class IEventQueue;
@@ -45,7 +45,7 @@ public:
   Process messages from the server on \p stream and forward to
   \p client.
   */
-  ServerProxy(Client *client, synergy::IStream *stream, IEventQueue *events);
+  ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events);
   ServerProxy(ServerProxy const &) = delete;
   ServerProxy(ServerProxy &&) = delete;
   ~ServerProxy();
@@ -124,7 +124,7 @@ private:
   typedef EResult (ServerProxy::*MessageParser)(const UInt8 *);
 
   Client *m_client;
-  synergy::IStream *m_stream;
+  deskflow::IStream *m_stream;
 
   UInt32 m_seqNum;
 
@@ -144,5 +144,5 @@ private:
   IEventQueue *m_events;
   String m_serverLanguage = "";
   bool m_isUserNotifiedAboutLanguageSyncError = false;
-  synergy::languages::LanguageManager m_languageManager;
+  deskflow::languages::LanguageManager m_languageManager;
 };

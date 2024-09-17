@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -31,9 +31,9 @@
 #include <QTime>
 #include <memory>
 
-using namespace synergy::gui::license;
+using namespace deskflow::gui::license;
 
-namespace synergy::gui::messages {
+namespace deskflow::gui::messages {
 
 struct Errors {
   static std::unique_ptr<QMessageBox> s_criticalMessage;
@@ -72,7 +72,7 @@ void showErrorDialog(
             .arg(kUrlBugReport, kColorSecondary);
   }
 
-  const QString version = QString::fromStdString(synergy::version());
+  const QString version = QString::fromStdString(deskflow::version());
   text += QString("<pre>v%1\n%2\n%3</pre>").arg(version, message, fileLine);
 
   if (type == QtFatalMsg) {
@@ -138,8 +138,8 @@ void messageHandler(
 
 void showCloseReminder(QWidget *parent) {
   QString message =
-      "<p>Synergy will continue to run in the background and can be accessed "
-      "via the Synergy icon in your system notifications area. This setting "
+      "<p>Deskflow will continue to run in the background and can be accessed "
+      "via the Deskflow icon in your system notifications area. This setting "
       "can be disabled.</p>";
 
 #if defined(Q_OS_LINUX)
@@ -147,7 +147,7 @@ void showCloseReminder(QWidget *parent) {
                      "notification area might be disabled. "
                      "You may need to "
                      R"(<a href="%1" %2>enable an extension</a>)"
-                     " to see the Synergy tray icon.</p>")
+                     " to see the Deskflow tray icon.</p>")
                  .arg(kUrlGnomeTrayFix, kStyleLink);
 #endif
 
@@ -166,7 +166,7 @@ void showFirstServerStartMessage(QWidget *parent) {
 void showFirstConnectedMessage(
     QWidget *parent, bool closeToTray, bool enableService, bool isServer) {
 
-  auto message = QString("<p>Synergy is now connected!</p>");
+  auto message = QString("<p>Deskflow is now connected!</p>");
 
   if (isServer) {
     message +=
@@ -179,12 +179,12 @@ void showFirstConnectedMessage(
 
   if (!closeToTray && !enableService) {
     message +=
-        "<p>As you do not have the setting enabled to keep Synergy running in "
+        "<p>As you do not have the setting enabled to keep Deskflow running in "
         "the background, you'll need to keep this window open or minimized to "
-        "keep Synergy running.</p>";
+        "keep Deskflow running.</p>";
   } else {
     message +=
-        "<p>You can now close this window and Synergy will continue to run in "
+        "<p>You can now close this window and Deskflow will continue to run in "
         "the background. This setting can be disabled.</p>";
   }
 
@@ -272,7 +272,7 @@ bool showClearSettings(QWidget *parent) {
   const auto clear =
       message.addButton(QObject::tr("Clear settings"), QMessageBox::AcceptRole);
   message.setText(
-      "<p>Are you sure you want to clear all settings and restart Synergy?</p>"
+      "<p>Are you sure you want to clear all settings and restart Deskflow?</p>"
       "<p>This action cannot be undone.</p>");
   message.exec();
 
@@ -303,7 +303,7 @@ void showWaylandLibraryError(QWidget *parent) {
   QMessageBox::critical(
       parent, "Library problem",
       QString(
-          "<p>Sorry, while this version of Synergy does support Wayland, "
+          "<p>Sorry, while this version of Deskflow does support Wayland, "
           "this build was not linked with one or more of the required "
           "libraries.</p>"
           "<p>Please either switch to X from your login screen or use a build "
@@ -314,4 +314,4 @@ void showWaylandLibraryError(QWidget *parent) {
           .arg(kUrlBugReport, kColorSecondary));
 }
 
-} // namespace synergy::gui::messages
+} // namespace deskflow::gui::messages

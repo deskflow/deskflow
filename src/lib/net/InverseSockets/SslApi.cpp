@@ -8,7 +8,7 @@
 #include <base/Path.h>
 #include <openssl/err.h>
 
-namespace synergy {
+namespace deskflow {
 namespace ssl {
 
 using AutoX509 = std::unique_ptr<X509, decltype(&X509_free)>;
@@ -159,13 +159,13 @@ std::string SslApi::getFingerprint() const {
 }
 
 bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
-  auto trustedServersFilename = synergy::string::sprintf(
+  auto trustedServersFilename = deskflow::string::sprintf(
       "%s/SSL/Fingerprints/TrustedServers.txt",
       ARCH->getProfileDirectory().c_str());
 
   // check if this fingerprint exist
   std::ifstream file;
-  file.open(synergy::filesystem::path(trustedServersFilename));
+  file.open(deskflow::filesystem::path(trustedServersFilename));
 
   bool isValid = false;
   if (file.is_open()) {
@@ -217,9 +217,9 @@ int SslApi::getErrorCode(int status) const {
 
 void SslApi::formatFingerprint(std::string &fingerprint) const {
   // to hexidecimal
-  synergy::string::toHex(fingerprint, 2);
+  deskflow::string::toHex(fingerprint, 2);
   // all uppercase
-  synergy::string::uppercase(fingerprint);
+  deskflow::string::uppercase(fingerprint);
   // add colon to separate each 2 charactors
   size_t separators = fingerprint.size() / 2;
   for (size_t i = 1; i < separators; i++) {
@@ -231,7 +231,7 @@ bool SslApi::isCertificateExists(const std::string &filename) const {
   bool result = (!filename.empty());
 
   if (result) {
-    std::ifstream file(synergy::filesystem::path(filename));
+    std::ifstream file(deskflow::filesystem::path(filename));
     result = file.good();
 
     if (!result) {
@@ -247,4 +247,4 @@ bool SslApi::isCertificateExists(const std::string &filename) const {
 }
 
 } // namespace ssl
-} // namespace synergy
+} // namespace deskflow

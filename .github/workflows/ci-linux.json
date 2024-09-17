@@ -2,73 +2,73 @@
   "distro": [
     {
       "name": "debian-13-amd64",
-      "container": "symless/synergy-core:debian-13-amd64",
+      "container": "deskflow/deskflow:debian-13-amd64",
       "runs-on": "ubuntu-latest",
       "extra-packages": true
     },
     {
       "name": "debian-12-arm64",
-      "container": "symless/synergy-core:debian-12-arm64",
+      "container": "deskflow/deskflow:debian-12-arm64",
       "runs-on": "ubuntu-24.04-8-core-arm64",
       "extra-packages": true
     },
     {
       "name": "debian-12-amd64",
-      "container": "symless/synergy-core:debian-12-amd64",
+      "container": "deskflow/deskflow:debian-12-amd64",
       "runs-on": "ubuntu-latest",
       "extra-packages": true
     },
     {
       "name": "ubuntu-24.04-amd64",
-      "container": "symless/synergy-core:ubuntu-24.04-amd64",
+      "container": "deskflow/deskflow:ubuntu-24.04-amd64",
       "runs-on": "ubuntu-latest",
       "extra-dep-args": "--meson-no-system libportal --meson-static libportal --subprojects",
       "extra-cmake-args": "-DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON"
     },
     {
       "name": "ubuntu-22.04-amd64",
-      "container": "symless/synergy-core:ubuntu-22.04-amd64",
+      "container": "deskflow/deskflow:ubuntu-22.04-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
       "name": "fedora-40-arm64",
-      "container": "symless/synergy-core:fedora-40-arm64",
+      "container": "deskflow/deskflow:fedora-40-arm64",
       "runs-on": "ubuntu-24.04-8-core-arm64"
     },
     {
       "name": "fedora-40-amd64",
-      "container": "symless/synergy-core:fedora-40-amd64",
+      "container": "deskflow/deskflow:fedora-40-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
       "name": "fedora-39-amd64",
-      "container": "symless/synergy-core:fedora-39-amd64",
+      "container": "deskflow/deskflow:fedora-39-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
       "name": "opensuse-amd64",
-      "container": "symless/synergy-core:opensuse-amd64",
+      "container": "deskflow/deskflow:opensuse-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
       "name": "rockylinux-9-amd64",
-      "container": "symless/synergy-core:rockylinux-9-amd64",
+      "container": "deskflow/deskflow:rockylinux-9-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
       "name": "almalinux-9-amd64",
-      "container": "symless/synergy-core:almalinux-9-amd64",
+      "container": "deskflow/deskflow:almalinux-9-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
       "name": "archlinux-amd64",
-      "container": "symless/synergy-core:archlinux-amd64",
+      "container": "deskflow/deskflow:archlinux-amd64",
       "runs-on": "ubuntu-latest",
       "package-user": "build"
     },
     {
       "name": "manjaro-amd64",
-      "container": "symless/synergy-core:manjaro-amd64",
+      "container": "deskflow/deskflow:manjaro-amd64",
       "runs-on": "ubuntu-latest",
       "package-user": "build"
     }

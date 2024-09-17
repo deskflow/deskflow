@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 
 using namespace std::chrono;
 
-namespace synergy::license {
+namespace deskflow::license {
 
 License::License(const std::string &hexString)
     : m_serialKey(parseSerialKey(hexString)) {}
@@ -98,4 +98,4 @@ std::string License::productName() const {
   return name;
 }
 
-} // namespace synergy::license
+} // namespace deskflow::license

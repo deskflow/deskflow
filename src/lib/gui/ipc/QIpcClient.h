@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 
 class IpcReader;
 
-class QIpcClient : public synergy::gui::ipc::IQIpcClient {
+class QIpcClient : public deskflow::gui::ipc::IQIpcClient {
   Q_OBJECT
 
 public:

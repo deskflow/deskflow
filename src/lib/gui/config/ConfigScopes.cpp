@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2020 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #include <QtCore/qlogging.h>
 #include <memory>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 using namespace proxy;
 
@@ -140,4 +140,4 @@ void ConfigScopes::setInScope(
   }
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

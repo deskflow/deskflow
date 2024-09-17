@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -24,9 +24,9 @@ notary_user_env = "APPLE_NOTARY_USER"
 codesign_env = "APPLE_CODESIGN_ID"
 shell_rc = "~/.zshrc"
 dist_dir = "dist"
-product_name = "Synergy 1"
+product_name = "Deskflow"
 settings_file = "res/dist/macos/dmgbuild/settings.py"
-app_path = "build/bundle/Synergy.app"
+app_path = "build/bundle/Deskflow.app"
 security_path = "/usr/bin/security"
 sudo_path = "/usr/bin/sudo"
 notarytool_path = "/usr/bin/notarytool"

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 
 #include "ClientStateLabel.h"
 
-namespace synergy::gui::widgets {
+namespace deskflow::gui::widgets {
 
 ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
 
@@ -31,4 +31,4 @@ void ClientStateLabel::updateClientState(const QString &line) {
   }
 }
 
-} // namespace synergy::gui::widgets
+} // namespace deskflow::gui::widgets

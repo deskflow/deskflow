@@ -50,13 +50,13 @@
       "label": "clean-config",
       "type": "shell",
       "linux": {
-        "command": "rm -r ~/.config/Synergy/Synergy.conf"
+        "command": "rm -r ~/.config/Deskflow/Deskflow.conf"
       },
       "windows": {
-        "command": "remove-item -recurse $env:APPDATA\\Synergy\\Synergy"
+        "command": "remove-item -recurse $env:APPDATA\\Deskflow\\Deskflow"
       },
       "osx": {
-        "command": "rm -r ~/Library/Application\\ Support/Synergy/Synergy"
+        "command": "rm -r ~/Library/Application\\ Support/Deskflow/Deskflow"
       }
     },
     {

@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target synergy)
+set(target deskflow)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -21,7 +21,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(res_dir ${CMAKE_SOURCE_DIR}/res/gui)
-set(qrc_file ${res_dir}/Synergy.qrc)
+set(qrc_file ${res_dir}/Deskflow.qrc)
 
 file(
   GLOB
@@ -33,7 +33,7 @@ file(
 file(GLOB ui_files src/*.ui)
 
 if(WIN32)
-  set(rc_files ${res_dir}/win/Synergy.rc ${CMAKE_BINARY_DIR}/src/version.rc)
+  set(rc_files ${res_dir}/win/Deskflow.rc ${CMAKE_BINARY_DIR}/src/version.rc)
 endif()
 
 add_executable(${target} WIN32 ${sources} ${ui_files} ${rc_files} ${qrc_file})
@@ -54,9 +54,9 @@ target_link_libraries(
   Qt6::Network)
 
 target_compile_definitions(
-  ${target} PRIVATE -DSYNERGY_VERSION_STAGE="${SYNERGY_VERSION_STAGE}")
+  ${target} PRIVATE -DDESKFLOW_VERSION_STAGE="${DESKFLOW_VERSION_STAGE}")
 target_compile_definitions(${target}
-                           PRIVATE -DSYNERGY_REVISION="${SYNERGY_REVISION}")
+                           PRIVATE -DDESKFLOW_REVISION="${DESKFLOW_REVISION}")
 
 if(WIN32)
   set_target_properties(${target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
@@ -68,9 +68,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   message(STATUS "Found macdeployqt6: ${MACDEPLOYQT_BIN}")
 
   set(MACDEPLOYQT_CMD
-      "${MACDEPLOYQT_BIN} ${SYNERGY_BUNDLE_APP_DIR} -always-overwrite")
+      "${MACDEPLOYQT_BIN} ${DESKFLOW_BUNDLE_APP_DIR} -always-overwrite")
 
-  install(TARGETS ${target} DESTINATION ${SYNERGY_BUNDLE_BINARY_DIR})
+  install(TARGETS ${target} DESTINATION ${DESKFLOW_BUNDLE_BINARY_DIR})
   install(CODE "MESSAGE (\"Running: ${MACDEPLOYQT_CMD}\")")
   install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
 
@@ -109,7 +109,7 @@ elseif(WIN32)
       POST_BUILD
       COMMAND set PATH=%PATH%$<SEMICOLON>${qt6_install_prefix}/bin
       COMMAND Qt6::windeployqt
-              "$<TARGET_FILE_DIR:synergy>/$<TARGET_FILE_NAME:synergy>")
+              "$<TARGET_FILE_DIR:deskflow>/$<TARGET_FILE_NAME:deskflow>")
   endif()
 
 endif()

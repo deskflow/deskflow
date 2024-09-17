@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -53,16 +53,16 @@ class QRadioButton;
 class QMessageBox;
 class QAbstractButton;
 
-class QSynergyApplication;
+class DeskflowApplication;
 class SetupWizard;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
-  using CoreMode = synergy::gui::CoreProcess::Mode;
-  using CoreProcess = synergy::gui::CoreProcess;
+  using CoreMode = deskflow::gui::CoreProcess::Mode;
+  using CoreProcess = deskflow::gui::CoreProcess;
 
   Q_OBJECT
 
-  friend class QSynergyApplication;
+  friend class DeskflowApplication;
   friend class SetupWizard;
   friend class ActivationDialog;
   friend class SettingsDialog;
@@ -72,7 +72,7 @@ public:
 
 public:
   explicit MainWindow(
-      synergy::gui::ConfigScopes &configScopes, AppConfig &appConfig);
+      deskflow::gui::ConfigScopes &configScopes, AppConfig &appConfig);
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
@@ -184,7 +184,7 @@ private:
   void showAndActivate();
 
   VersionChecker m_VersionChecker;
-  synergy::gui::TrayIcon m_TrayIcon;
+  deskflow::gui::TrayIcon m_TrayIcon;
   bool m_ActivationDialogRunning = false;
   QStringList m_PendingClientNames;
   QMenuBar *m_pMenuBar = nullptr;
@@ -197,16 +197,16 @@ private:
   bool m_SaveWindow = false;
   LicenseHandler m_LicenseHandler;
   bool m_Quitting = false;
-  synergy::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
+  deskflow::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
   bool m_SaveOnExit = true;
-  synergy::gui::core::WaylandWarnings m_WaylandWarnings;
+  deskflow::gui::core::WaylandWarnings m_WaylandWarnings;
 
-  synergy::gui::ConfigScopes &m_ConfigScopes;
+  deskflow::gui::ConfigScopes &m_ConfigScopes;
   AppConfig &m_AppConfig;
   ServerConfig m_ServerConfig;
-  synergy::gui::CoreProcess m_CoreProcess;
-  synergy::gui::ServerConnection m_ServerConnection;
-  synergy::gui::ClientConnection m_ClientConnection;
-  synergy::gui::TlsUtility m_TlsUtility;
+  deskflow::gui::CoreProcess m_CoreProcess;
+  deskflow::gui::ServerConnection m_ServerConnection;
+  deskflow::gui::ClientConnection m_ClientConnection;
+  deskflow::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
 };

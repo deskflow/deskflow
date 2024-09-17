@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <string>
 
-namespace synergy::platform {
+namespace deskflow::platform {
 
 #if WINAPI_LIBEI
 const auto kHasEi = true;
@@ -44,4 +44,4 @@ inline bool isWayland() {
   return session != nullptr && std::string(session) == "wayland";
 }
 
-} // namespace synergy::platform
+} // namespace deskflow::platform

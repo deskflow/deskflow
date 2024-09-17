@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2005 Chris Schoeneman
  *
@@ -21,10 +21,10 @@
 #include "base/String.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
-#include "synergy/IPlatformScreen.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/protocol_types.h"
+#include "deskflow/IPlatformScreen.h"
+#include "deskflow/key_types.h"
+#include "deskflow/mouse_types.h"
+#include "deskflow/protocol_types.h"
 
 class PrimaryClient;
 class Event;

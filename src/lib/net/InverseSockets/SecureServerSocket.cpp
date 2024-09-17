@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015-2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,10 +18,10 @@
 #include "SecureServerSocket.h"
 
 #include <arch/XArch.h>
+#include <deskflow/ArgParser.h>
+#include <deskflow/ArgsBase.h>
 #include <net/SecureSocket.h>
 #include <net/TSocketMultiplexerMethodJob.h>
-#include <synergy/ArgParser.h>
-#include <synergy/ArgsBase.h>
 
 //
 // SecureServerSocket
@@ -70,8 +70,8 @@ std::string SecureServerSocket::getCertificateFileName() const {
 
   if (certificateFilename.empty()) {
     // default location of the TLS cert file in users dir
-    certificateFilename = synergy::string::sprintf(
-        "%s/SSL/Synergy.pem", ARCH->getProfileDirectory().c_str());
+    certificateFilename = deskflow::string::sprintf(
+        "%s/SSL/Deskflow.pem", ARCH->getProfileDirectory().c_str());
   }
 
   return certificateFilename;

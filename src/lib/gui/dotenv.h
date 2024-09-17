@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 #include <QString>
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 const QString kDefaultEnvFilename = ".env";
 
@@ -30,4 +30,4 @@ const QString kDefaultEnvFilename = ".env";
  */
 void dotenv(const QString &filename = kDefaultEnvFilename);
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

@@ -12,8 +12,11 @@ on:
 jobs:
   valgrind-analysis:
     runs-on: ubuntu-latest
-    container: symless/synergy-core:ubuntu-22.04-amd64
+    container: deskflow/deskflow:ubuntu-22.04-amd64
     timeout-minutes: 10
+
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Checkout

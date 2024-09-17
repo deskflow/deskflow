@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -24,12 +24,12 @@
 #include <QProcess>
 #include <QtGlobal>
 
-static const char kCoreBinary[] = "syntool";
+static const char kCoreBinary[] = "deskflow-legacy";
 
 #ifdef Q_WS_WIN
-static const char kSerialKeyFilename[] = "Synergy.subkey";
+static const char kSerialKeyFilename[] = "Deskflow.subkey";
 #else
-static const char kSerialKeyFilename[] = ".synergy.subkey";
+static const char kSerialKeyFilename[] = ".deskflow.subkey";
 #endif
 
 QString CoreTool::getProfileDir() const {

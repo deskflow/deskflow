@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ const auto kIpcHost = "127.0.0.1";
 const auto kIpcPort = 24801;
 
 // handshake: node/gui -> daemon
-// $1 = type, the client identifies it's self as gui or node (synergyc/s).
+// $1 = type, the client identifies it's self as gui or node (deskflowc/s).
 const auto kIpcMsgHello = "IHEL%1i";
 
 // handshake: daemon -> node/gui
@@ -42,16 +42,16 @@ const auto kIpcMsgHello = "IHEL%1i";
 const auto kIpcMsgHelloBack = "IHEL";
 
 // log line: daemon -> gui
-// $1 = aggregate log lines collected from synergys/c or the daemon itself.
+// $1 = aggregate log lines collected from deskflows/c or the daemon itself.
 const auto kIpcMsgLogLine = "ILOG%s";
 
 // command: gui -> daemon
 // $1 = command; the command for the daemon to launch, typically the full
-// path to synergys/c. $2 = true when process must be elevated on ms windows.
+// path to deskflows/c. $2 = true when process must be elevated on ms windows.
 const auto kIpcMsgCommand = "ICMD%s%1i";
 
 // shutdown: daemon -> node
-// the daemon tells synergys/c to shut down gracefully.
+// the daemon tells deskflows/c to shut down gracefully.
 const auto kIpcMsgShutdown = "ISDN";
 
 // set setting: gui -> daemon

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ const bool kDebug = false;
 const bool kDebug = true;
 #endif
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 class Logger : public QObject {
   Q_OBJECT
@@ -51,4 +51,4 @@ inline void logVerbose(const QString &message) {
   Logger::instance().logVerbose(message);
 }
 
-} // namespace synergy::gui
+} // namespace deskflow::gui

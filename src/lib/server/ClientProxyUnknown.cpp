@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -21,6 +21,10 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "deskflow/AppUtil.h"
+#include "deskflow/ProtocolUtil.h"
+#include "deskflow/XDeskflow.h"
+#include "deskflow/protocol_types.h"
 #include "io/IStream.h"
 #include "io/XIO.h"
 #include "server/ClientProxy1_0.h"
@@ -33,10 +37,6 @@
 #include "server/ClientProxy1_7.h"
 #include "server/ClientProxy1_8.h"
 #include "server/Server.h"
-#include "synergy/AppUtil.h"
-#include "synergy/ProtocolUtil.h"
-#include "synergy/XSynergy.h"
-#include "synergy/protocol_types.h"
 
 #include <iterator>
 #include <sstream>
@@ -46,7 +46,7 @@
 //
 
 ClientProxyUnknown::ClientProxyUnknown(
-    synergy::IStream *stream, double timeout, Server *server,
+    deskflow::IStream *stream, double timeout, Server *server,
     IEventQueue *events)
     : m_stream(stream),
       m_proxy(NULL),

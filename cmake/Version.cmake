@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -18,20 +18,20 @@
 # On Windows, we also set a special 4-digit MSI version number.
 macro(set_version)
 
-  set(SYNERGY_VERSION $ENV{SYNERGY_VERSION})
-  string(STRIP "${SYNERGY_VERSION}" SYNERGY_VERSION)
+  set(DESKFLOW_VERSION $ENV{DESKFLOW_VERSION})
+  string(STRIP "${DESKFLOW_VERSION}" DESKFLOW_VERSION)
 
-  if(NOT SYNERGY_VERSION)
-    file(READ "${CMAKE_SOURCE_DIR}/VERSION" SYNERGY_VERSION)
-    string(STRIP "${SYNERGY_VERSION}" SYNERGY_VERSION)
+  if(NOT DESKFLOW_VERSION)
+    file(READ "${CMAKE_SOURCE_DIR}/VERSION" DESKFLOW_VERSION)
+    string(STRIP "${DESKFLOW_VERSION}" DESKFLOW_VERSION)
   endif()
 
-  message(STATUS "Version number (semver): " ${SYNERGY_VERSION})
-  add_definitions(-DSYNERGY_VERSION="${SYNERGY_VERSION}")
+  message(STATUS "Version number (semver): " ${DESKFLOW_VERSION})
+  add_definitions(-DDESKFLOW_VERSION="${DESKFLOW_VERSION}")
 
   # Useful for copyright (e.g. in macOS bundle .plist.in and Windows version .rc
   # file)
-  string(TIMESTAMP SYNERGY_BUILD_YEAR "%Y")
+  string(TIMESTAMP DESKFLOW_BUILD_YEAR "%Y")
 
   if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set_windows_version()
@@ -43,19 +43,19 @@ endmacro()
 
 macro(set_four_part_version)
 
-  string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _ "${SYNERGY_VERSION}")
+  string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _ "${DESKFLOW_VERSION}")
   set(VERSION_MAJOR "${CMAKE_MATCH_1}")
   set(VERSION_MINOR "${CMAKE_MATCH_2}")
   set(VERSION_PATCH "${CMAKE_MATCH_3}")
 
   # Find the revision number, which is the number after the 'r'.
-  string(REGEX MATCH "r([0-9]+)$" _ "${SYNERGY_VERSION}")
+  string(REGEX MATCH "r([0-9]+)$" _ "${DESKFLOW_VERSION}")
   set(VERSION_REVISION "${CMAKE_MATCH_1}")
   if(NOT VERSION_REVISION)
     set(VERSION_REVISION "0")
   endif()
 
-  set(SYNERGY_VERSION_FOUR_PART
+  set(DESKFLOW_VERSION_FOUR_PART
       "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_REVISION}")
 
 endmacro()
@@ -66,15 +66,15 @@ macro(set_windows_version)
   set_four_part_version()
 
   # Dot-separated version number for MSI and Windows version .rc file.
-  set(SYNERGY_VERSION_MS ${SYNERGY_VERSION_FOUR_PART})
+  set(DESKFLOW_VERSION_MS ${DESKFLOW_VERSION_FOUR_PART})
   message(STATUS "Version number for (Microsoft 4-part): "
-                 ${SYNERGY_VERSION_MS})
+                 ${DESKFLOW_VERSION_MS})
 
   # CSV version number for Windows version .rc file.
-  set(SYNERGY_VERSION_MS_CSV
+  set(DESKFLOW_VERSION_MS_CSV
       "${VERSION_MAJOR},${VERSION_MINOR},${VERSION_PATCH},${VERSION_REVISION}")
   message(STATUS "Version number for (Microsoft CSV): "
-                 ${SYNERGY_VERSION_MS_CSV})
+                 ${DESKFLOW_VERSION_MS_CSV})
 endmacro()
 
 macro(set_linux_version)
@@ -83,12 +83,12 @@ macro(set_linux_version)
   # char is reserved for use at at the end of the version string to indicate a
   # package revision. Debian has always used this convention, but support for
   # this was also introduced in RPM 4.10.0.
-  string(REGEX REPLACE "-" "~" SYNERGY_VERSION_LINUX "${SYNERGY_VERSION}")
-  message(STATUS "Version number (DEB/RPM): ${SYNERGY_VERSION_LINUX}")
+  string(REGEX REPLACE "-" "~" DESKFLOW_VERSION_LINUX "${DESKFLOW_VERSION}")
+  message(STATUS "Version number (DEB/RPM): ${DESKFLOW_VERSION_LINUX}")
 
   # Arch does not support SemVer or DEB/RPM version format, so use the four-part
   # version format which funnily enough is what Microsoft requires for MSI.
   set_four_part_version()
-  message(STATUS "Version number (4-part): ${SYNERGY_VERSION_FOUR_PART}")
+  message(STATUS "Version number (4-part): ${DESKFLOW_VERSION_FOUR_PART}")
 
 endmacro()

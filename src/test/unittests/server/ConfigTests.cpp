@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -83,8 +83,8 @@ TEST(ServerConfigTests,
   addr1.resolve();
   NetworkAddress addr2("localhost", 8080);
   addr2.resolve();
-  a.setSynergyAddress(addr1);
-  b.setSynergyAddress(addr2);
+  a.setDeskflowAddress(addr1);
+  b.setDeskflowAddress(addr2);
 
   EXPECT_TRUE(a == b);
   EXPECT_TRUE(b == a);
@@ -214,8 +214,8 @@ TEST(ServerConfigTests,
   Config b(nullptr);
   a.addScreen("screenA");
   b.addScreen("screenA");
-  a.setSynergyAddress(NetworkAddress(8080));
-  b.setSynergyAddress(NetworkAddress(1010));
+  a.setDeskflowAddress(NetworkAddress(8080));
+  b.setDeskflowAddress(NetworkAddress(1010));
   EXPECT_FALSE(a == b);
   EXPECT_FALSE(b == a);
 }

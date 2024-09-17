@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-namespace synergy {
+namespace deskflow {
 
 const auto kCopyrightFormat = //
     "Copyright (C) 2012-%s Symless Ltd.\n"
@@ -38,4 +38,4 @@ inline std::string copyright() {
   return std::string(buffer.data());
 }
 
-} // namespace synergy
+} // namespace deskflow

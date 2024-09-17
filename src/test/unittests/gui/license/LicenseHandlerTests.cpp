@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2024 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <chrono>
 #include <gtest/gtest.h>
 
-using namespace synergy::license;
+using namespace deskflow::license;
 using namespace std::chrono;
 
 const auto kPast = system_clock::now() - hours(1);

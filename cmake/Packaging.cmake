@@ -1,4 +1,4 @@
-# Synergy -- mouse and keyboard sharing utility
+# Deskflow -- mouse and keyboard sharing utility
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -20,8 +20,8 @@
 macro(configure_packaging)
 
   if(${BUILD_INSTALLER})
-    set(CPACK_PACKAGE_NAME "synergy")
-    set(CPACK_PACKAGE_CONTACT "Synergy <support@symless.com>")
+    set(CPACK_PACKAGE_NAME "deskflow")
+    set(CPACK_PACKAGE_CONTACT "Deskflow <support@symless.com>")
     set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
     set(CPACK_PACKAGE_VENDOR "Symless")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
@@ -50,7 +50,7 @@ macro(configure_windows_packaging)
 
   message(STATUS "Configuring Windows installer")
 
-  set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION_MS})
+  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_MS})
   set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
 
   configure_files(${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix
@@ -65,17 +65,17 @@ macro(configure_macos_packaging)
 
   message(STATUS "Configuring macOS app bundle")
 
-  set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION})
+  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
 
   set(CMAKE_INSTALL_RPATH
       "@loader_path/../Libraries;@loader_path/../Frameworks")
-  set(SYNERGY_BUNDLE_SOURCE_DIR
+  set(DESKFLOW_BUNDLE_SOURCE_DIR
       ${CMAKE_CURRENT_SOURCE_DIR}/res/dist/macos/bundle)
-  set(SYNERGY_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-  set(SYNERGY_BUNDLE_APP_DIR ${SYNERGY_BUNDLE_DIR}/Synergy.app)
-  set(SYNERGY_BUNDLE_BINARY_DIR ${SYNERGY_BUNDLE_APP_DIR}/Contents/MacOS)
+  set(DESKFLOW_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
+  set(DESKFLOW_BUNDLE_APP_DIR ${DESKFLOW_BUNDLE_DIR}/Deskflow.app)
+  set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_APP_DIR}/Contents/MacOS)
 
-  configure_files(${SYNERGY_BUNDLE_SOURCE_DIR} ${SYNERGY_BUNDLE_DIR})
+  configure_files(${DESKFLOW_BUNDLE_SOURCE_DIR} ${DESKFLOW_BUNDLE_DIR})
 
 endmacro()
 
@@ -86,10 +86,10 @@ macro(configure_linux_packaging)
 
   message(STATUS "Configuring Linux packaging")
 
-  set(CPACK_PACKAGE_VERSION ${SYNERGY_VERSION_LINUX})
+  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_LINUX})
   set(CPACK_GENERATOR "DEB;RPM;TGZ")
 
-  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Synergy <developers@symless.com>")
+  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Deskflow <developers@symless.com>")
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
@@ -108,8 +108,8 @@ macro(configure_linux_packaging)
   # apps install to.
   set(CMAKE_INSTALL_PREFIX /usr)
 
-  install(FILES res/dist/linux/synergy.desktop DESTINATION share/applications)
-  install(FILES res/synergy.png DESTINATION share/pixmaps)
+  install(FILES res/dist/linux/deskflow.desktop DESTINATION share/applications)
+  install(FILES res/deskflow.png DESTINATION share/pixmaps)
 
   # Prepare PKGBUILD for Arch Linux
   configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
