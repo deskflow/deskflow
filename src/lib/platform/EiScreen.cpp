@@ -345,7 +345,9 @@ void EiScreen::enter() {
 #endif
 }
 
-bool EiScreen::leave() {
+bool EiScreen::canLeave() { return true; }
+
+void EiScreen::leave() {
   if (!is_primary_) {
     if (ei_pointer_) {
       ei_device_stop_emulating(ei_pointer_);
@@ -359,7 +361,6 @@ bool EiScreen::leave() {
   }
 
   is_on_screen_ = false;
-  return true;
 }
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard) {

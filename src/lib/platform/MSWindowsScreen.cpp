@@ -308,7 +308,7 @@ void MSWindowsScreen::enter() {
   forceShowCursor();
 }
 
-bool MSWindowsScreen::leave() {
+bool MSWindowsScreen::canLeave() {
   POINT pos;
   if (!getThisCursorPos(&pos)) {
     LOG((CLOG_DEBUG "unable to leave screen as windows security has disabled "
@@ -317,6 +317,11 @@ bool MSWindowsScreen::leave() {
     // leaves the screen
     return false;
   }
+
+  return true;
+}
+
+void MSWindowsScreen::leave() {
   // get keyboard layout of foreground window.  we'll use this
   // keyboard layout for translating keys sent to clients.
   m_keyLayout = AppUtilWindows::instance().getCurrentKeyboardLayout();
@@ -367,8 +372,6 @@ bool MSWindowsScreen::leave() {
     m_sendDragThread = new Thread(new TMethodJob<MSWindowsScreen>(
         this, &MSWindowsScreen::sendDragThread));
   }
-
-  return true;
 }
 
 void MSWindowsScreen::sendDragThread(void *) {
