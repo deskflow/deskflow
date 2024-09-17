@@ -30,7 +30,7 @@
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsScreen.h"
-#include "platform/synwinhk.h"
+#include "platform/dfwhook.h"
 
 #include <malloc.h>
 

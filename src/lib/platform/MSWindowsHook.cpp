@@ -21,7 +21,7 @@
 #include "deskflow/XScreen.h"
 #include "deskflow/protocol_types.h"
 
-static const char *g_name = "synwinhk";
+static const char *g_name = "dfwhook";
 
 static DWORD g_processID = 0;
 static DWORD g_threadID = 0;

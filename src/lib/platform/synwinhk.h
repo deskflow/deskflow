@@ -31,7 +31,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#if defined(synwinhk_EXPORTS)
+#if defined(dfwhook_EXPORTS)
 #define CDESKFLOWHOOK_API __declspec(dllexport)
 #else
 #define CDESKFLOWHOOK_API __declspec(dllimport)

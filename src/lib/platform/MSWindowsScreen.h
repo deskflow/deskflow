@@ -26,7 +26,7 @@
 #include "mt/Mutex.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
-#include "platform/synwinhk.h"
+#include "platform/dfwhook.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
