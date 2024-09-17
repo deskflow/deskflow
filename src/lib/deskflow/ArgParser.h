@@ -34,10 +34,10 @@ class ArgParser {
 public:
   ArgParser(App *app);
 
-  bool
-  parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv);
-  bool
-  parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv);
+  bool parseServerArgs(
+      deskflow::ServerArgs &args, int argc, const char *const *argv);
+  bool parseClientArgs(
+      deskflow::ClientArgs &args, int argc, const char *const *argv);
   bool parsePlatformArgs(
       deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv,
       int &i, bool isServer);

@@ -21,9 +21,9 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "io/IStream.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/XDeskflow.h"
+#include "io/IStream.h"
 
 #include <cstring>
 

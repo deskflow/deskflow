@@ -22,8 +22,8 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "platform/XWindowsUtil.h"
 #include "deskflow/IPlatformScreen.h"
+#include "platform/XWindowsUtil.h"
 
 #include <X11/Xatom.h>
 #if HAVE_X11_EXTENSIONS_XTEST_H

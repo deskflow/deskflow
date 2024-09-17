@@ -20,8 +20,8 @@
 
 #include "base/Log.h"
 #include "base/String.h"
-#include "mt/Thread.h"
 #include "deskflow/key_types.h"
+#include "mt/Thread.h"
 
 #include <X11/Xatom.h>
 #define XK_APL

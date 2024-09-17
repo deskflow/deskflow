@@ -21,10 +21,10 @@
 #include "base/IEventQueue.h"
 #include "common/stdistream.h"
 #include "common/stdostream.h"
-#include "net/XSocket.h"
-#include "server/Server.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/key_types.h"
+#include "net/XSocket.h"
+#include "server/Server.h"
 
 #include <cstdlib>
 

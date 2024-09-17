@@ -25,11 +25,6 @@
 #include "base/Stopwatch.h"
 #include "base/String.h"
 #include "base/TMethodEventJob.h"
-#include "platform/XWindowsClipboard.h"
-#include "platform/XWindowsEventQueueBuffer.h"
-#include "platform/XWindowsKeyState.h"
-#include "platform/XWindowsScreenSaver.h"
-#include "platform/XWindowsUtil.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientApp.h"
@@ -37,6 +32,11 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/XScreen.h"
+#include "platform/XWindowsClipboard.h"
+#include "platform/XWindowsEventQueueBuffer.h"
+#include "platform/XWindowsKeyState.h"
+#include "platform/XWindowsScreenSaver.h"
+#include "platform/XWindowsUtil.h"
 
 #include <algorithm>
 #include <cstdlib>

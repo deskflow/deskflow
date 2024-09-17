@@ -24,13 +24,6 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "common/stdexcept.h"
-#include "license/License.h"
-#include "mt/Thread.h"
-#include "net/TCPSocket.h"
-#include "server/ClientListener.h"
-#include "server/ClientProxy.h"
-#include "server/ClientProxyUnknown.h"
-#include "server/PrimaryClient.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DropHelper.h"
 #include "deskflow/FileChunk.h"
@@ -40,6 +33,13 @@
 #include "deskflow/StreamChunker.h"
 #include "deskflow/option_types.h"
 #include "deskflow/protocol_types.h"
+#include "license/License.h"
+#include "mt/Thread.h"
+#include "net/TCPSocket.h"
+#include "server/ClientListener.h"
+#include "server/ClientProxy.h"
+#include "server/ClientProxyUnknown.h"
+#include "server/PrimaryClient.h"
 
 #include <climits>
 #include <cstdlib>
@@ -54,8 +54,9 @@ using namespace deskflow::server;
 //
 
 Server::Server(
-    ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen,
-    IEventQueue *events, deskflow::ServerArgs const &args)
+    ServerConfig &config, PrimaryClient *primaryClient,
+    deskflow::Screen *screen, IEventQueue *events,
+    deskflow::ServerArgs const &args)
     : m_mock(false),
       m_primaryClient(primaryClient),
       m_active(primaryClient),

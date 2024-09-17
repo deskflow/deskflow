@@ -24,7 +24,8 @@
 class ClientProxy1_1 : public ClientProxy1_0 {
 public:
   ClientProxy1_1(
-      const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
+      const String &name, deskflow::IStream *adoptedStream,
+      IEventQueue *events);
   ~ClientProxy1_1();
 
   // IClient overrides

@@ -20,10 +20,10 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "common/ipc.h"
+#include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcSettingMessage.h"
-#include "deskflow/ProtocolUtil.h"
 
 //
 // IpcClientProxy

@@ -24,7 +24,6 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
-#include "server/Config.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/INode.h"
@@ -32,6 +31,7 @@
 #include "deskflow/clipboard_types.h"
 #include "deskflow/key_types.h"
 #include "deskflow/mouse_types.h"
+#include "server/Config.h"
 #include <memory>
 
 class BaseClientProxy;

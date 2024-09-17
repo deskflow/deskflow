@@ -468,8 +468,8 @@ void assertMaskIsOne(ForeachKeyCallback cb, void *userData) {
 
 const deskflow::KeyMap::KeyItem *stubMapKey(
     deskflow::KeyMap::Keystrokes &keys, KeyID, SInt32,
-    deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool,
-    const String &) {
+    deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask,
+    bool, const String &) {
   keys.push_back(s_stubKeystroke);
   return &s_stubKeyItem;
 }

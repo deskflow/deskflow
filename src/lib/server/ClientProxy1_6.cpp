@@ -19,11 +19,11 @@
 
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "io/IStream.h"
-#include "server/Server.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
+#include "io/IStream.h"
+#include "server/Server.h"
 
 //
 // ClientProxy1_6

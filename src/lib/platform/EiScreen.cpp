@@ -24,11 +24,11 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/TMethodEventJob.h"
-#include "platform/EiEventQueueBuffer.h"
-#include "platform/EiKeyState.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/XScreen.h"
+#include "platform/EiEventQueueBuffer.h"
+#include "platform/EiKeyState.h"
 
 #if WINAPI_LIBPORTAL
 #include "platform/PortalInputCapture.h"

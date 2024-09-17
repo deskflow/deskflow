@@ -25,11 +25,6 @@
 #include "base/TMethodJob.h"
 #include "client/ServerProxy.h"
 #include "common/stdexcept.h"
-#include "mt/Thread.h"
-#include "net/IDataSocket.h"
-#include "net/ISocketFactory.h"
-#include "net/SecureSocket.h"
-#include "net/TCPSocket.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DropHelper.h"
 #include "deskflow/FileChunk.h"
@@ -40,6 +35,11 @@
 #include "deskflow/StreamChunker.h"
 #include "deskflow/XDeskflow.h"
 #include "deskflow/protocol_types.h"
+#include "mt/Thread.h"
+#include "net/IDataSocket.h"
+#include "net/ISocketFactory.h"
+#include "net/SecureSocket.h"
+#include "net/TCPSocket.h"
 
 #include <algorithm>
 #include <climits>

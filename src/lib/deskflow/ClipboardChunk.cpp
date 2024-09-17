@@ -18,9 +18,9 @@
 #include "deskflow/ClipboardChunk.h"
 
 #include "base/Log.h"
-#include "io/IStream.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/protocol_types.h"
+#include "io/IStream.h"
 #include <cstring>
 
 size_t ClipboardChunk::s_expectedSize = 0;

@@ -20,9 +20,9 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "deskflow/KeyMap.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
-#include "deskflow/KeyMap.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -452,7 +452,8 @@ String InputFilter::KeystrokeAction::format() const {
   } else {
     return deskflow::string::sprintf(
         "%s(%s,%.*s)", type,
-        deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
+        deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask)
+            .c_str(),
         strnlen(m_keyInfo->m_screens + 1, SIZE_MAX) - 1,
         m_keyInfo->m_screens + 1);
   }

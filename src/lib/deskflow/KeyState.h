@@ -31,8 +31,8 @@ public:
   KeyState(
       IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
   KeyState(
-      IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts,
-      bool isLangSyncEnabled);
+      IEventQueue *events, deskflow::KeyMap &keyMap,
+      std::vector<String> layouts, bool isLangSyncEnabled);
   virtual ~KeyState();
 
   //! @name manipulators

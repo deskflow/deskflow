@@ -21,9 +21,9 @@
 #include "config.h"
 
 #include "base/IEventQueueBuffer.h"
+#include "deskflow/IScreen.h"
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
-#include "deskflow/IScreen.h"
 
 #include <libei.h>
 #include <memory>

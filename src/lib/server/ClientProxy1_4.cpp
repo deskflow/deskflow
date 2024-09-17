@@ -21,8 +21,8 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "server/Server.h"
 #include "deskflow/ProtocolUtil.h"
+#include "server/Server.h"
 
 #include <cstring>
 #include <memory>

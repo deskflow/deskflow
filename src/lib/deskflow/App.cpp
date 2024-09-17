@@ -30,12 +30,12 @@
 #include "common/copyright.h"
 #include "common/ipc.h"
 #include "common/version.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServerProxy.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
 #include "deskflow/XDeskflow.h"
 #include "deskflow/protocol_types.h"
+#include "ipc/IpcMessage.h"
+#include "ipc/IpcServerProxy.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"

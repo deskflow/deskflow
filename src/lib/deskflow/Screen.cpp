@@ -20,9 +20,9 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "server/ClientProxy.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/protocol_types.h"
+#include "server/ClientProxy.h"
 
 namespace deskflow {
 

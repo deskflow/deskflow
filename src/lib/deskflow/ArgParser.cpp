@@ -19,12 +19,12 @@
 
 #include "base/Log.h"
 #include "base/String.h"
-#include "license/parse_serial_key.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ServerArgs.h"
 #include "deskflow/ToolArgs.h"
+#include "license/parse_serial_key.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>

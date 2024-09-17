@@ -23,8 +23,8 @@
 #include "base/EventTypes.h"
 #include "base/String.h"
 #include "common/stdvector.h"
-#include "server/Server.h"
 #include "deskflow/ServerApp.h"
+#include "server/Server.h"
 
 class IEventQueue;
 

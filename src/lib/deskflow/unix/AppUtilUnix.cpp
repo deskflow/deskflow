@@ -198,8 +198,8 @@ void AppUtilUnix::showNotification(
   notify_uninit();
 
 #elif WINAPI_CARBON
-  // deskflows and deskflowc are not allowed to send native notifications on MacOS
-  // instead ask main deskflow process to show them instead
+  // deskflows and deskflowc are not allowed to send native notifications on
+  // MacOS instead ask main deskflow process to show them instead
   LOG((CLOG_INFO "mac notification: %s|%s", title.c_str(), text.c_str()));
 #endif
 }

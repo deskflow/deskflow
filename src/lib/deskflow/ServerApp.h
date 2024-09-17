@@ -22,9 +22,9 @@
 #include "arch/IArchMultithread.h"
 #include "base/EventTypes.h"
 #include "base/String.h"
+#include "deskflow/App.h"
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
-#include "deskflow/App.h"
 
 enum EServerState {
   kUninitialized,
@@ -103,7 +103,8 @@ public:
   bool initServer();
   void retryHandler(const Event &, void *);
   deskflow::Screen *openServerScreen();
-  PrimaryClient *openPrimaryClient(const String &name, deskflow::Screen *screen);
+  PrimaryClient *
+  openPrimaryClient(const String &name, deskflow::Screen *screen);
   void handleScreenError(const Event &, void *);
   void handleSuspend(const Event &, void *);
   void handleResume(const Event &, void *);

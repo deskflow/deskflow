@@ -426,7 +426,8 @@ UInt32 ProtocolUtil::eatLength(const char **pfmt) {
   }
 }
 
-void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, UInt32 count) {
+void ProtocolUtil::read(
+    deskflow::IStream *stream, void *vbuffer, UInt32 count) {
   assert(stream != NULL);
   assert(vbuffer != NULL);
 

@@ -26,23 +26,23 @@
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
 #include "common/ipc.h"
+#include "deskflow/App.h"
+#include "deskflow/ArgParser.h"
+#include "deskflow/ClientArgs.h"
+#include "deskflow/ServerArgs.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcSettingMessage.h"
 #include "net/SocketMultiplexer.h"
-#include "deskflow/App.h"
-#include "deskflow/ArgParser.h"
-#include "deskflow/ClientArgs.h"
-#include "deskflow/ServerArgs.h"
 
 #if SYSAPI_WIN32
 
 #include "arch/win32/ArchMiscWindows.h"
+#include "deskflow/Screen.h"
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
 #include "platform/MSWindowsWatchdog.h"
-#include "deskflow/Screen.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

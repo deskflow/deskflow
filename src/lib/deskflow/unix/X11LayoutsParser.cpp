@@ -20,8 +20,8 @@
 #include <fstream>
 #include <sstream>
 
-#include "ISO639Table.h"
 #include "DeskflowXkbKeyboard.h"
+#include "ISO639Table.h"
 #include "X11LayoutsParser.h"
 #include "base/Log.h"
 #include "pugixml.hpp"

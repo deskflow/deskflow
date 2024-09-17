@@ -25,6 +25,8 @@
 #include "base/TMethodJob.h"
 #include "client/Client.h"
 #include "common/stdexcept.h"
+#include "deskflow/FileChunk.h"
+#include "deskflow/StreamChunker.h"
 #include "mt/Thread.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
@@ -32,12 +34,10 @@
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/Server.h"
-#include "deskflow/FileChunk.h"
-#include "deskflow/StreamChunker.h"
+#include "test/mock/deskflow/MockScreen.h"
 #include "test/mock/server/MockConfig.h"
 #include "test/mock/server/MockInputFilter.h"
 #include "test/mock/server/MockPrimaryClient.h"
-#include "test/mock/deskflow/MockScreen.h"
 #include "test/shared/TestEventQueue.h"
 
 #include <fstream>

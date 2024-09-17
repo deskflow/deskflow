@@ -22,8 +22,8 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/common.h"
-#include "ipc/IpcClient.h"
 #include "deskflow/IApp.h"
+#include "ipc/IpcClient.h"
 
 #if SYSAPI_WIN32
 #include "deskflow/win32/AppUtilWindows.h"

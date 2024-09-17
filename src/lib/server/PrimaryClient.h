@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "server/BaseClientProxy.h"
 #include "deskflow/protocol_types.h"
+#include "server/BaseClientProxy.h"
 
 namespace deskflow {
 class Screen;

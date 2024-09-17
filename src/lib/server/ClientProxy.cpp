@@ -20,8 +20,8 @@
 
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "io/IStream.h"
 #include "deskflow/ProtocolUtil.h"
+#include "io/IStream.h"
 
 //
 // ClientProxy

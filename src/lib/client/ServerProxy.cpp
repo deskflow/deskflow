@@ -23,7 +23,6 @@
 #include "base/TMethodEventJob.h"
 #include "base/XBase.h"
 #include "client/Client.h"
-#include "io/IStream.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
@@ -32,6 +31,7 @@
 #include "deskflow/StreamChunker.h"
 #include "deskflow/option_types.h"
 #include "deskflow/protocol_types.h"
+#include "io/IStream.h"
 
 #include <algorithm>
 #include <cstring>

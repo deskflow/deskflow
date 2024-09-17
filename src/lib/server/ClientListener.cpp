@@ -22,13 +22,13 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
+#include "deskflow/PacketStreamFilter.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
 #include "net/XSocket.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
-#include "deskflow/PacketStreamFilter.h"
 
 //
 // ClientListener

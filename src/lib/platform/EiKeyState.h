@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "platform/EiScreen.h"
 #include "deskflow/KeyState.h"
+#include "platform/EiScreen.h"
 
 struct xkb_context;
 struct xkb_keymap;

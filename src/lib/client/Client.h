@@ -21,12 +21,12 @@
 #include "deskflow/IClient.h"
 
 #include "base/EventTypes.h"
-#include "mt/CondVar.h"
-#include "net/NetworkAddress.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/INode.h"
+#include "mt/CondVar.h"
+#include "net/NetworkAddress.h"
 #include <memory>
 
 class EventQueueTimer;

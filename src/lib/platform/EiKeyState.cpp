@@ -19,9 +19,9 @@
 #include "platform/EiKeyState.h"
 
 #include "base/Log.h"
-#include "platform/XWindowsUtil.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/ClientApp.h"
+#include "platform/XWindowsUtil.h"
 
 #include <algorithm>
 #include <cstddef>

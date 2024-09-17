@@ -19,9 +19,9 @@
 
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "io/IStream.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/protocol_types.h"
+#include "io/IStream.h"
 
 static const UInt16 kIntervalThreshold = 1;
 

@@ -25,10 +25,10 @@
 #include "base/Log.h"
 #include "base/String.h"
 #include "common/stdmap.h"
-#include "platform/XWindowsUtil.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ClientArgs.h"
+#include "platform/XWindowsUtil.h"
 
 #include <algorithm>
 #include <cstddef>
@@ -58,7 +58,8 @@ XWindowsKeyState::XWindowsKeyState(
 }
 
 XWindowsKeyState::XWindowsKeyState(
-    Display *display, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap)
+    Display *display, bool useXKB, IEventQueue *events,
+    deskflow::KeyMap &keyMap)
     : KeyState(
           events, keyMap, AppUtil::instance().getKeyboardLayoutList(),
           ClientApp::instance().args().m_enableLangSync),
