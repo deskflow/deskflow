@@ -78,7 +78,7 @@ QString AboutDialog::importantDevelopers() const {
       // Nick continued the legacy in 2009 started by Chris.
       << "Nick Bolton"
 
-      // Volker wrote the first version of the GUI (QDeskflow) in 2008.
+      // Volker wrote the first version of the GUI (QSynergy) in 2008.
       << "Volker Lanz"
 
       // Re-ignited the project in 2008 and rebuilt the community.
