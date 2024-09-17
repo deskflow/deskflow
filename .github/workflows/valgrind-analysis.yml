@@ -15,6 +15,9 @@ jobs:
     container: deskflow/deskflow:ubuntu-22.04-amd64
     timeout-minutes: 10
 
+    permissions:
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
