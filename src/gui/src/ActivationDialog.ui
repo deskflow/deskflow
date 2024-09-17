@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Activate Deskflow</string>
+   <string>Activate Synergy</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
