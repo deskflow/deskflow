@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "DeskflowApplication.h"
 #include "MainWindow.h"
-#include "QDeskflowApplication.h"
 #include "SetupWizard.h"
 #include "common/constants.h"
 #include "common/version.h"
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
   // used as a prefix for settings paths, and must not be a url.
   QCoreApplication::setOrganizationDomain(kOrgDomain);
 
-  QDeskflowApplication app(argc, argv);
+  DeskflowApplication app(argc, argv);
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   QString version = QString::fromStdString(deskflow::version());
@@ -105,7 +105,8 @@ int main(int argc, char *argv[]) {
   // --no-reset
   QStringList arguments = QCoreApplication::arguments();
   const auto noReset = hasArg("--no-reset", arguments);
-  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
+  const auto resetEnvVar =
+      strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
   if (resetEnvVar && !noReset) {
     diagnostic::clearSettings(configScopes, false);
   }
@@ -130,11 +131,11 @@ int main(int argc, char *argv[]) {
   MainWindow mainWindow(configScopes, appConfig);
 
   QObject::connect(
-      &app, &QDeskflowApplication::aboutToQuit, &mainWindow,
+      &app, &DeskflowApplication::aboutToQuit, &mainWindow,
       &MainWindow::onAppAboutToQuit);
 
   mainWindow.open();
-  return QDeskflowApplication::exec();
+  return DeskflowApplication::exec();
 }
 
 #if defined(Q_OS_MAC)

@@ -22,7 +22,7 @@
 #include <QtGui>
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)
-// and is heavily modified for QDeskflow
+// and is heavily modified for Deskflow
 static const struct {
   int key;
   const char *name;

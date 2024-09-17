@@ -53,7 +53,7 @@ class QRadioButton;
 class QMessageBox;
 class QAbstractButton;
 
-class QDeskflowApplication;
+class DeskflowApplication;
 class SetupWizard;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase {
@@ -62,7 +62,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase {
 
   Q_OBJECT
 
-  friend class QDeskflowApplication;
+  friend class DeskflowApplication;
   friend class SetupWizard;
   friend class ActivationDialog;
   friend class SettingsDialog;

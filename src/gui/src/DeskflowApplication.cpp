@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "QDeskflowApplication.h"
+#include "DeskflowApplication.h"
 
 #include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
 
-QDeskflowApplication::QDeskflowApplication(int &argc, char **argv)
+DeskflowApplication::DeskflowApplication(int &argc, char **argv)
     : QApplication(argc, argv) {
 
   // causes dark mode to be used on some OS (e.g. Windows)
