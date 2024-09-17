@@ -25,7 +25,7 @@ depends=(
   'libei'
   'libportal'
 )
-conflicts=('deskflow-git' 'deskflow1-bin' 'deskflow2-bin' 'deskflow3-bin')
+conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
 options=('!debug')
 
 package() {
