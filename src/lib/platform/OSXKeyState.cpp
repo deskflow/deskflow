@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -194,7 +194,7 @@ OSXKeyState::OSXKeyState(
 }
 
 OSXKeyState::OSXKeyState(
-    IEventQueue *events, synergy::KeyMap &keyMap, std::vector<String> layouts,
+    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts,
     bool isLangSyncEnabled)
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled) {
   init();
@@ -460,7 +460,7 @@ void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const {
   }
 }
 
-void OSXKeyState::getKeyMap(synergy::KeyMap &keyMap) {
+void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
   // update keyboard groups
   SInt32 numGroups{0};
   if (getGroups(m_groups)) {
@@ -640,9 +640,9 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke) {
 }
 
 void OSXKeyState::getKeyMapForSpecialKeys(
-    synergy::KeyMap &keyMap, SInt32 group) const {
+    deskflow::KeyMap &keyMap, SInt32 group) const {
   // special keys are insensitive to modifers and none are dead keys
-  synergy::KeyMap::KeyItem item;
+  deskflow::KeyMap::KeyItem item;
   for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]);
        ++i) {
     const KeyEntry &entry = s_controlKeys[i];
@@ -653,7 +653,7 @@ void OSXKeyState::getKeyMapForSpecialKeys(
     item.m_sensitive = 0;
     item.m_dead = false;
     item.m_client = 0;
-    synergy::KeyMap::initModifierKey(item);
+    deskflow::KeyMap::initModifierKey(item);
     keyMap.addKeyEntry(item);
 
     if (item.m_lock) {
@@ -670,7 +670,7 @@ void OSXKeyState::getKeyMapForSpecialKeys(
 }
 
 bool OSXKeyState::getKeyMap(
-    synergy::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const {
+    deskflow::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const {
   if (!r.isValid()) {
     return false;
   }
@@ -682,7 +682,7 @@ bool OSXKeyState::getKeyMap(
   std::vector<std::pair<KeyID, bool>> buttonKeys(r.getNumTables());
 
   // iterate over each button
-  synergy::KeyMap::KeyItem item;
+  deskflow::KeyMap::KeyItem item;
   for (UInt32 i = 0; i < r.getNumButtons(); ++i) {
     item.m_button = mapVirtualKeyToKeyButton(i);
 
@@ -692,7 +692,7 @@ bool OSXKeyState::getKeyMap(
     // convert the entry in each table for this button to a KeyID
     for (UInt32 j = 0; j < r.getNumTables(); ++j) {
       buttonKeys[j].first = r.getKey(j, i);
-      buttonKeys[j].second = synergy::KeyMap::isDeadKey(buttonKeys[j].first);
+      buttonKeys[j].second = deskflow::KeyMap::isDeadKey(buttonKeys[j].first);
     }
 
     // iterate over each character table
@@ -715,7 +715,7 @@ bool OSXKeyState::getKeyMap(
       item.m_group = group;
       item.m_dead = buttonKeys[j].second;
       item.m_client = buttonKeys[j].second ? 1 : 0;
-      synergy::KeyMap::initModifierKey(item);
+      deskflow::KeyMap::initModifierKey(item);
       if (item.m_lock) {
         // all locking keys are half duplex on OS X
         keyMap.addHalfDuplexButton(i);

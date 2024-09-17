@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "synergy/win32/AppUtilWindows.h"
+#include "deskflow/win32/AppUtilWindows.h"
 
 #include "arch/IArchTaskBarReceiver.h"
 #include "arch/win32/ArchMiscWindows.h"
@@ -27,11 +27,11 @@
 #include "base/Log.h"
 #include "base/log_outputters.h"
 #include "common/constants.h"
+#include "deskflow/App.h"
+#include "deskflow/ArgsBase.h"
+#include "deskflow/Screen.h"
+#include "deskflow/XDeskflow.h"
 #include "platform/MSWindowsScreen.h"
-#include "synergy/App.h"
-#include "synergy/ArgsBase.h"
-#include "synergy/Screen.h"
-#include "synergy/XDeskflow.h"
 
 #include <VersionHelpers.h>
 #include <Windows.h>

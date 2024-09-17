@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -20,12 +20,12 @@
 
 #include "base/String.h"
 #include "common/stdmap.h"
+#include "deskflow/key_types.h"
+#include "deskflow/mouse_types.h"
+#include "deskflow/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "platform/synwinhk.h"
-#include "synergy/key_types.h"
-#include "synergy/mouse_types.h"
-#include "synergy/option_types.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -48,7 +48,7 @@ desks at once, etc.  Basically, they're useless except for running
 the login window or the screensaver, which is what they're used
 for.  Deskflow must deal with them mainly because of the login
 window and screensaver but users can create their own desks and
-synergy should work on those too.
+deskflow should work on those too.
 
 This class encapsulates all the desk nastiness.  Clients of this
 object don't have to know anything about desks.

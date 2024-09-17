@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -21,10 +21,10 @@
 #include "base/EventTypes.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
+#include "deskflow/DragInformation.h"
+#include "deskflow/PlatformScreen.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
-#include "synergy/DragInformation.h"
-#include "synergy/PlatformScreen.h"
 
 #include <Carbon/Carbon.h>
 #include <IOKit/IOMessage.h>
@@ -56,8 +56,8 @@ class OSXScreen : public PlatformScreen {
 public:
   OSXScreen(
       IEventQueue *events, bool isPrimary, bool enableLangSync = false,
-      synergy::ClientScrollDirection scrollDirection =
-          synergy::ClientScrollDirection::SERVER);
+      deskflow::ClientScrollDirection scrollDirection =
+          deskflow::ClientScrollDirection::SERVER);
 
   virtual ~OSXScreen();
 
@@ -144,16 +144,16 @@ private:
   void showCursor();
   void hideCursor();
 
-  // map synergy mouse button to mac buttons
+  // map deskflow mouse button to mac buttons
   ButtonID mapDeskflowButtonToMac(UInt16) const;
 
-  // map mac mouse button to synergy buttons
+  // map mac mouse button to deskflow buttons
   ButtonID mapMacButtonToDeskflow(UInt16) const;
 
-  // map mac scroll wheel value to a synergy scroll wheel value
+  // map mac scroll wheel value to a deskflow scroll wheel value
   SInt32 mapScrollWheelToDeskflow(SInt32) const;
 
-  // map synergy scroll wheel value to a mac scroll wheel value
+  // map deskflow scroll wheel value to a mac scroll wheel value
   SInt32 mapScrollWheelFromDeskflow(SInt32) const;
 
   // get the current scroll wheel speed

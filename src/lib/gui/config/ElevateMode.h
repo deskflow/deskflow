@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless
  *
  * This package is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 /**
  * @brief The elevate mode tristate determines two behaviors on Windows.
  *
- * The first, switch-on-desk-switch (SodS), passed through synergyd as a
- * command line argument to synergy core, determines if the server restarts
+ * The first, switch-on-desk-switch (SodS), passed through deskflowd as a
+ * command line argument to deskflow core, determines if the server restarts
  * when switching Windows desktops (e.g. when Windows UAC dialog pops up).
  * The second, passed as a boolean flag to Deskflowd over the IPC inside
  * IpcMessageType::CommandMessage, determines whether Deskflow should be started

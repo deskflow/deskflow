@@ -21,7 +21,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/deskflow/deskflow?display_name=release&label=latest%20version)](https://github.com/deskflow/deskflow/releases)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow)](https://github.com/deskflow/deskflow/commits/master/)
 [![GitHub License](https://img.shields.io/github/license/deskflow/deskflow)](LICENSE)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=symless_synergy-core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=symless_synergy-core)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
 
 [![CI](https://github.com/deskflow/deskflow/actions/workflows/ci.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/ci.yml)
 [![CodeQL Analysis](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml)
@@ -59,8 +59,7 @@ Here are a few ways to join in with the project and get involved:
 ## Build Quick Start
 
 > [!TIP]
-> These instructions will build Deskflow 1 Community Edition, which doesn't require a license
-> or serial key. Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
+> Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
 > wiki page if you have problems.
 
 **1. Dependencies:**
@@ -102,7 +101,7 @@ cmake --build build -j8
 
 **5. Run**
 ```
-./build/bin/synergy
+./build/bin/deskflow
 ```
 
 ## How to install (packages)

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -20,7 +20,7 @@
 
 #include "base/XBase.h"
 
-//! Generic synergy exception
+//! Generic deskflow exception
 XBASE_SUBCLASS(XDeskflow, XBase);
 
 //! Subscription error

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -23,7 +23,7 @@
 #include "mt/Mutex.h"
 
 #if X_DISPLAY_MISSING
-#error X11 is required to build synergy
+#error X11 is required to build deskflow
 #else
 #include <X11/Xlib.h>
 #endif

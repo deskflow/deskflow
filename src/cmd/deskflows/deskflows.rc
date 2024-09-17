@@ -54,7 +54,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_SYNERGY             ICON                    "deskflows.ico"
+IDI_DESKFLOW             ICON                    "deskflows.ico"
 IDI_TASKBAR_NOT_RUNNING ICON                    "tb_idle.ico"
 IDI_TASKBAR_NOT_WORKING ICON                    "tb_error.ico"
 IDI_TASKBAR_NOT_CONNECTED ICON                    "tb_wait.ico"
@@ -84,7 +84,7 @@ BEGIN
         END
         MENUITEM "Reload Configuration",        IDC_RELOAD_CONFIG
         MENUITEM "Force Reconnect",             IDC_FORCE_RECONNECT
-        MENUITEM "Reset Server",                ID_SYNERGY_RESETSERVER
+        MENUITEM "Reset Server",                ID_DESKFLOW_RESETSERVER
         MENUITEM SEPARATOR
         MENUITEM "Quit",                        IDC_TASKBAR_QUIT
     END

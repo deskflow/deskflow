@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -32,26 +32,26 @@
 #include <Windows.h>
 
 #if defined(synwinhk_EXPORTS)
-#define CSYNERGYHOOK_API __declspec(dllexport)
+#define CDESKFLOWHOOK_API __declspec(dllexport)
 #else
-#define CSYNERGYHOOK_API __declspec(dllimport)
+#define CDESKFLOWHOOK_API __declspec(dllimport)
 #endif
 
-#define SYNERGY_MSG_MARK WM_APP + 0x0011         // mark id; <unused>
-#define SYNERGY_MSG_KEY WM_APP + 0x0012          // vk code; key data
-#define SYNERGY_MSG_MOUSE_BUTTON WM_APP + 0x0013 // button msg; <unused>
-#define SYNERGY_MSG_MOUSE_WHEEL WM_APP + 0x0014  // delta; <unused>
-#define SYNERGY_MSG_MOUSE_MOVE WM_APP + 0x0015   // x; y
-#define SYNERGY_MSG_POST_WARP WM_APP + 0x0016    // <unused>; <unused>
-#define SYNERGY_MSG_PRE_WARP WM_APP + 0x0017     // x; y
-#define SYNERGY_MSG_SCREEN_SAVER WM_APP + 0x0018 // activated; <unused>
-#define SYNERGY_MSG_DEBUG WM_APP + 0x0019        // data, data
-#define SYNERGY_MSG_INPUT_FIRST SYNERGY_MSG_KEY
-#define SYNERGY_MSG_INPUT_LAST SYNERGY_MSG_PRE_WARP
-#define SYNERGY_HOOK_LAST_MSG SYNERGY_MSG_DEBUG
+#define DESKFLOW_MSG_MARK WM_APP + 0x0011         // mark id; <unused>
+#define DESKFLOW_MSG_KEY WM_APP + 0x0012          // vk code; key data
+#define DESKFLOW_MSG_MOUSE_BUTTON WM_APP + 0x0013 // button msg; <unused>
+#define DESKFLOW_MSG_MOUSE_WHEEL WM_APP + 0x0014  // delta; <unused>
+#define DESKFLOW_MSG_MOUSE_MOVE WM_APP + 0x0015   // x; y
+#define DESKFLOW_MSG_POST_WARP WM_APP + 0x0016    // <unused>; <unused>
+#define DESKFLOW_MSG_PRE_WARP WM_APP + 0x0017     // x; y
+#define DESKFLOW_MSG_SCREEN_SAVER WM_APP + 0x0018 // activated; <unused>
+#define DESKFLOW_MSG_DEBUG WM_APP + 0x0019        // data, data
+#define DESKFLOW_MSG_INPUT_FIRST DESKFLOW_MSG_KEY
+#define DESKFLOW_MSG_INPUT_LAST DESKFLOW_MSG_PRE_WARP
+#define DESKFLOW_HOOK_LAST_MSG DESKFLOW_MSG_DEBUG
 
-#define SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY VK_CANCEL
-#define SYNERGY_HOOK_FAKE_INPUT_SCANCODE 0
+#define DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY VK_CANCEL
+#define DESKFLOW_HOOK_FAKE_INPUT_SCANCODE 0
 
 extern "C" {
 

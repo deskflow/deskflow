@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2018 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SYNERGY_DISPLAYINVALIDEXCEPTION_H
-#define SYNERGY_DISPLAYINVALIDEXCEPTION_H
+#ifndef DESKFLOW_DISPLAYINVALIDEXCEPTION_H
+#define DESKFLOW_DISPLAYINVALIDEXCEPTION_H
 
 #include <stdexcept>
 #include <string>
@@ -28,4 +28,4 @@ public:
   DisplayInvalidException(std::string msg) : std::runtime_error(msg) {}
 };
 
-#endif // SYNERGY_DISPLAYINVALIDEXCEPTION_H
+#endif // DESKFLOW_DISPLAYINVALIDEXCEPTION_H

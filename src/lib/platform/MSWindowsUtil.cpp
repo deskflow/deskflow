@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -45,8 +45,8 @@ MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id) {
               FORMAT_MESSAGE_FROM_SYSTEM,
           0, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer,
           0, NULL) == 0) {
-    String errorString = synergy::string::sprintf("%d", error);
-    return synergy::string::format(
+    String errorString = deskflow::string::sprintf("%d", error);
+    return deskflow::string::format(
         getString(hinstance, id).c_str(), errorString.c_str());
   } else {
     String result(buffer);

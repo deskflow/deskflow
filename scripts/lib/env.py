@@ -240,7 +240,7 @@ def get_app_version():
     """
     Returns the version either from the env var, or from the version file.
     """
-    version = get_env("SYNERGY_VERSION", required=False)
+    version = get_env("DESKFLOW_VERSION", required=False)
     if version:
         return version
 

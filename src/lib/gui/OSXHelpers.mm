@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2015 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ showOSXNotification(const QString& title, const QString& body)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
 	// accessing notification center on unsigned build causes an immidiate
-	// application shutodown (in this case synergys) and cannot be caught
+	// application shutodown (in this case deskflows) and cannot be caught
 	// to avoid issues with it need to first check if this is a dev build
 	if (isOSXDevelopmentBuild())
 	{

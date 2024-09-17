@@ -1,5 +1,5 @@
 /*
- * deskflow -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SYNERGY_CORE_CLIENTARGS_H
-#define SYNERGY_CORE_CLIENTARGS_H
+#ifndef DESKFLOW_CORE_CLIENTARGS_H
+#define DESKFLOW_CORE_CLIENTARGS_H
 
 #include "ArgsBase.h"
 
@@ -55,4 +55,4 @@ public:
 };
 } // namespace deskflow
 
-#endif // SYNERGY_CORE_CLIENTARGS_H
+#endif // DESKFLOW_CORE_CLIENTARGS_H

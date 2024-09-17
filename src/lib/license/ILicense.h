@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -29,4 +29,4 @@ public:
   virtual bool isTlsAvailable() const = 0;
 };
 
-} // namespace synergy::license
+} // namespace deskflow::license

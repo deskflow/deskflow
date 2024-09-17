@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -185,7 +185,7 @@ void MSWindowsServerTaskBarReceiver::runMenu(int x, int y) {
         m_events->getSystemTarget()));
     break;
 
-  case ID_SYNERGY_RESETSERVER:
+  case ID_DESKFLOW_RESETSERVER:
     m_events->addEvent(Event(
         m_events->forServerApp().resetServer(), m_events->getSystemTarget()));
     break;
@@ -348,10 +348,10 @@ IArchTaskBarReceiver *createTaskBarReceiver(
     const BufferedLogOutputter *logBuffer, IEventQueue *events) {
   ArchMiscWindows::setIcons(
       (HICON)LoadImage(
-          ArchMiscWindows::instanceWin32(), MAKEINTRESOURCE(IDI_SYNERGY),
+          ArchMiscWindows::instanceWin32(), MAKEINTRESOURCE(IDI_DESKFLOW),
           IMAGE_ICON, 32, 32, LR_SHARED),
       (HICON)LoadImage(
-          ArchMiscWindows::instanceWin32(), MAKEINTRESOURCE(IDI_SYNERGY),
+          ArchMiscWindows::instanceWin32(), MAKEINTRESOURCE(IDI_DESKFLOW),
           IMAGE_ICON, 16, 16, LR_SHARED));
 
   return new MSWindowsServerTaskBarReceiver(

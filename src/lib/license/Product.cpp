@@ -21,7 +21,7 @@
 
 using SKE = Product::SerialKeyEditionID;
 
-const char *const kLicensedProductName = "Deskflow 1";
+const char *const kLicensedProductName = "Deskflow";
 
 const std::string SKE::Pro = "pro";
 const std::string SKE::Basic = "basic";

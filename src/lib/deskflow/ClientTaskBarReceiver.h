@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -26,7 +26,7 @@
 
 class IEventQueue;
 
-//! Implementation of IArchTaskBarReceiver for the synergy server
+//! Implementation of IArchTaskBarReceiver for the deskflow server
 class ClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
   ClientTaskBarReceiver(IEventQueue *events);

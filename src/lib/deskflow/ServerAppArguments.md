@@ -10,7 +10,7 @@ As obtained by ```updateCommonArgs()```
 The name of the host as reported by the platform.
 
 *m_pname*
-Name of the process (synergys\[.exe])
+Name of the process (deskflows\[.exe])
 
 ## Platform Arguments
 
@@ -126,7 +126,7 @@ Enables secure data sockets.
 **--profile-dir**
 *m_profileDirectory*
 
-If the profile directory is not passed-in, then it is inferred. For XWindows as "~/.synergy" or else "~/Library/Deskflow".
+If the profile directory is not passed-in, then it is inferred. For XWindows as "~/.deskflow" or else "~/Library/Deskflow".
 
 **--plugin-dir**
 *m_pluginDirectory*
@@ -141,7 +141,7 @@ If unspecified and used, then it is sought for as prifleDirectory/SSL/Deskflow.p
 ## Uncategorised
 
 **-a** / **--address**
-*m_synergyAddress*
+*m_deskflowAddress*
 
 Used as the listening address.
 

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -37,7 +37,7 @@
 // MSWindowsKeyState
 //
 
-// map virtual keys to synergy key enumeration
+// map virtual keys to deskflow key enumeration
 const KeyID MSWindowsKeyState::s_virtualKey[] = {
     /* 0x000 */ {kKeyNone},             // reserved
     /* 0x001 */ {kKeyNone},             // VK_LBUTTON
@@ -586,7 +586,7 @@ MSWindowsKeyState::MSWindowsKeyState(
 
 MSWindowsKeyState::MSWindowsKeyState(
     MSWindowsDesks *desks, void *eventTarget, IEventQueue *events,
-    synergy::KeyMap &keyMap, std::vector<String> layouts,
+    deskflow::KeyMap &keyMap, std::vector<String> layouts,
     bool isLangSyncEnabled)
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled),
       m_eventTarget(eventTarget),
@@ -852,7 +852,7 @@ void MSWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const {
   }
 }
 
-void MSWindowsKeyState::getKeyMap(synergy::KeyMap &keyMap) {
+void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
   // update keyboard groups
   if (getGroups(m_groups)) {
     m_groupMap.clear();
@@ -867,7 +867,7 @@ void MSWindowsKeyState::getKeyMap(synergy::KeyMap &keyMap) {
   memset(m_virtualKeyToButton, 0, sizeof(m_virtualKeyToButton));
   m_keyToVKMap.clear();
 
-  synergy::KeyMap::KeyItem item;
+  deskflow::KeyMap::KeyItem item;
   SInt32 numGroups = (SInt32)m_groups.size();
   for (SInt32 g = 0; g < numGroups; ++g) {
     item.m_group = g;
@@ -1052,7 +1052,7 @@ void MSWindowsKeyState::getKeyMap(synergy::KeyMap &keyMap) {
         item.m_client = m_buttonToVK[i];
 
         // get flags for modifier keys
-        synergy::KeyMap::initModifierKey(item);
+        deskflow::KeyMap::initModifierKey(item);
 
         if (item.m_id == 0) {
           // translate virtual key to a character with and without
@@ -1286,7 +1286,7 @@ UINT MSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const {
 }
 
 KeyID MSWindowsKeyState::getIDForKey(
-    synergy::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey,
+    deskflow::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey,
     PBYTE keyState, HKL hkl) const {
   WCHAR unicode[2];
   int n = m_ToUnicodeEx(
@@ -1308,7 +1308,7 @@ KeyID MSWindowsKeyState::getIDForKey(
     // as an alternative, we could use the returned
     // buffer in unicode to look at the dead key character
     // and not rely on getDeadKey to provide the mapping
-    return synergy::KeyMap::getDeadKey(id);
+    return deskflow::KeyMap::getDeadKey(id);
   }
   default:
   case 0:
@@ -1327,7 +1327,7 @@ KeyID MSWindowsKeyState::getIDForKey(
 }
 
 void MSWindowsKeyState::addKeyEntry(
-    synergy::KeyMap &keyMap, synergy::KeyMap::KeyItem &item) {
+    deskflow::KeyMap &keyMap, deskflow::KeyMap::KeyItem &item) {
   keyMap.addKeyEntry(item);
   if (item.m_group == 0) {
     m_keyToVKMap[item.m_id] = static_cast<UINT>(item.m_client);

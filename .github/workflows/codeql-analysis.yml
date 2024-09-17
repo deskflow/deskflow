@@ -17,7 +17,7 @@ jobs:
 
     name: Analyze
     runs-on: ${{ vars.CODEQL_RUNNER || 'ubuntu-24.04' }}
-    container: symless/synergy-core:ubuntu-24.04-amd64
+    container: deskflow/deskflow:ubuntu-24.04-amd64
     timeout-minutes: 20
 
     strategy:

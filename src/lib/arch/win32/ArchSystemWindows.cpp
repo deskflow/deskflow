@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -27,7 +27,8 @@
 #include <psapi.h>
 #include <windows.h>
 
-static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T("Deskflow"), NULL};
+static const char *s_settingsKeyNames[] = {
+    _T("SOFTWARE"), _T("Deskflow"), NULL};
 
 //
 // ArchSystemWindows

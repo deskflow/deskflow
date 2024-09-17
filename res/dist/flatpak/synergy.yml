@@ -2,8 +2,8 @@ app-id: com.symless.Deskflow
 runtime: org.kde.Platform
 runtime-version: "5.15-21.08"
 sdk: org.kde.Sdk
-rename-icon: synergy
-rename-desktop-file: synergy.desktop
+rename-icon: deskflow
+rename-desktop-file: deskflow.desktop
 modules:
   - name: openssl
     buildsystem: simple
@@ -23,7 +23,7 @@ modules:
     sources:
       - type: git
         url: https://gitlab.gnome.org/GNOME/libnotify.git
-  - name: synergy
+  - name: deskflow
     buildsystem: cmake-ninja
     config-opts:
       - "-DCMAKE_BUILD_TYPE=Release"
@@ -32,7 +32,7 @@ modules:
         path: ../
       - type: patch
         path: flatpak-desktop.patch
-command: synergy
+command: deskflow
 finish-args:
   - "--share=ipc"
   - "--socket=x11"

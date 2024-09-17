@@ -19,20 +19,20 @@
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
-				<RegistryKey Id="synergys" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
-					<RegistryValue Name="[INSTALLFOLDER]synergys.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				<RegistryKey Id="deskflows" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
+					<RegistryValue Name="[INSTALLFOLDER]deskflows.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 
-				<RegistryKey Id="synergyc" Root="HKLM"
+				<RegistryKey Id="deskflowc" Root="HKLM"
 					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
 					ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
-					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergyc.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]deskflowc.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 
-				<RegistryKey Id="synergy" Root="HKLM"
+				<RegistryKey Id="deskflow" Root="HKLM"
 					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
 					ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
-					<RegistryValue Type="string" Name="[INSTALLFOLDER]synergy.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]deskflow.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
@@ -45,10 +45,10 @@
 		</DirectoryRef>
 		<Property Id="DeskflowCommonBackground">common_background</Property>
 		<Binary Id="common_background" SourceFile="$(var.ResPath)\dist\wix\images\common_background.png"/>
-		<Icon Id="synergy.ico" SourceFile="$(var.ResPath)/synergy.ico"/>
+		<Icon Id="deskflow.ico" SourceFile="$(var.ResPath)/deskflow.ico"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\dist\wix\images\banner.png"/>
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dist\wix\images\dialog.png"/>
-		<Property Id="ARPPRODUCTICON" Value="synergy.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="deskflow.ico"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
 			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Deskflow" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
@@ -77,16 +77,16 @@
 	<Fragment>
 		<ComponentGroup Directory="INSTALLFOLDER" Id="ProductComponents">
 			<Component Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" Id="Core">
-				<File KeyPath="yes" Source="$(var.BinPath)/synergyd.exe"/>
+				<File KeyPath="yes" Source="$(var.BinPath)/deskflowd.exe"/>
 				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Deskflow" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
 				<ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
-				<File Source="$(var.BinPath)/synergys.exe">
-					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Deskflow 1 server" Scope="any"/>
+				<File Source="$(var.BinPath)/deskflows.exe">
+					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Deskflow server" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/synergyc.exe">
-					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="Deskflow 1 client" Scope="any"/>
+				<File Source="$(var.BinPath)/deskflowc.exe">
+					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="Deskflow client" Scope="any"/>
 				</File>
 				<File Source="$(var.BinPath)/syntool.exe"/>
 				<?if $(var.Platform) = x64 ?>
@@ -98,9 +98,9 @@
 				<?endif ?>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
-				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/synergy.exe">
-					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="synergy.exe" Id="GuiShortcut" Name="$(var.Name)">
-						<Icon Id="synergy.exe" SourceFile="$(var.ResPath)/synergy.ico"/>
+				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/deskflow.exe">
+					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="deskflow.exe" Id="GuiShortcut" Name="$(var.Name)">
+						<Icon Id="deskflow.exe" SourceFile="$(var.ResPath)/deskflow.ico"/>
 					</Shortcut>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
@@ -147,7 +147,7 @@
 					<File Id="OpenSSLDll2" Source="$(var.OpenSslDllDir)/libssl-3.dll"/>
 				<?endif ?>
 				<File Source="$(var.OpenSslExeDir)/openssl.exe"/>
-				<File Source="$(var.ResPath)/openssl/synergy.conf"/>
+				<File Source="$(var.ResPath)/openssl/deskflow.conf"/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>

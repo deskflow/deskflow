@@ -25,7 +25,7 @@ from lib.linux import PackageType
 from dotenv import load_dotenv  # type: ignore
 
 env_file = ".env"
-default_package_prefix = "synergy"
+default_package_prefix = "deskflow"
 
 
 def main():
@@ -56,7 +56,9 @@ def main():
 def get_filename_base(version, use_linux_distro=True):
     os = env.get_os()
     machine = platform.machine().lower()
-    package_base = env.get_env("SYNERGY_PACKAGE_PREFIX", default=default_package_prefix)
+    package_base = env.get_env(
+        "DESKFLOW_PACKAGE_PREFIX", default=default_package_prefix
+    )
     os_part = os
 
     if os == "linux" and use_linux_distro:

@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -18,8 +18,8 @@
 
 #include "base/Log.h"
 #include "platform/OSXKeyState.h"
-#include "test/mock/synergy/MockEventQueue.h"
-#include "test/mock/synergy/MockKeyMap.h"
+#include "test/mock/deskflow/MockEventQueue.h"
+#include "test/mock/deskflow/MockKeyMap.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -39,7 +39,7 @@ public:
 #if __MAC_OS_X_VERSION_MIN_REQUIRED > 1060
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_shift) {
-  synergy::KeyMap keyMap;
+  deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
   keyState.updateKeyMap();
@@ -58,7 +58,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_shift) {
 }
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_charKey) {
-  synergy::KeyMap keyMap;
+  deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
   keyState.updateKeyMap();
@@ -76,7 +76,7 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey) {
 }
 
 TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier) {
-  synergy::KeyMap keyMap;
+  deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
   keyState.updateKeyMap();

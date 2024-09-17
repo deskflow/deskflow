@@ -6,11 +6,11 @@
     <key>CFBundleDisplayName</key>
     <string>Deskflow</string>
     <key>CFBundleExecutable</key>
-    <string>synergy</string>
+    <string>deskflow</string>
     <key>CFBundleIconFile</key>
     <string>Deskflow.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>synergy</string>
+    <string>deskflow</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
@@ -20,11 +20,11 @@
     <key>CFBundleSignature</key>
     <string>SYN1</string>
     <key>CFBundleShortVersionString</key>
-    <string>@SYNERGY_VERSION@</string>
+    <string>@DESKFLOW_VERSION@</string>
     <key>CFBundleVersion</key>
-    <string>@SYNERGY_VERSION@</string>
+    <string>@DESKFLOW_VERSION@</string>
     <key>NSHumanReadableCopyright</key>
-    <string>© 2012-@SYNERGY_BUILD_YEAR@ Symless Ltd</string>
+    <string>© 2012-@DESKFLOW_BUILD_YEAR@ Symless Ltd</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.9.0</string>
   </dict>

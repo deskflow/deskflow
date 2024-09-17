@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,14 +19,14 @@
 #pragma once
 
 #include "base/String.h"
+#include "deskflow/ClientArgs.h"
+#include "deskflow/DragInformation.h"
+#include "deskflow/PlatformScreen.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 #include "platform/synwinhk.h"
-#include "synergy/ClientArgs.h"
-#include "synergy/DragInformation.h"
-#include "synergy/PlatformScreen.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -44,8 +44,8 @@ public:
   MSWindowsScreen(
       bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue *events,
       bool enableLangSync = false,
-      synergy::ClientScrollDirection scrollDirection =
-          synergy::ClientScrollDirection::SERVER);
+      deskflow::ClientScrollDirection scrollDirection =
+          deskflow::ClientScrollDirection::SERVER);
   virtual ~MSWindowsScreen();
 
   //! @name manipulators

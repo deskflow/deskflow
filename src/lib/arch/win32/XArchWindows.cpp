@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -32,7 +32,7 @@ std::string XArchEvalWindows::eval() const throw() {
           0, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&cmsg,
           0, NULL) == 0) {
     cmsg = NULL;
-    return synergy::string::sprintf("Unknown error, code %d", m_error);
+    return deskflow::string::sprintf("Unknown error, code %d", m_error);
   }
   std::string smsg(cmsg);
   LocalFree(cmsg);

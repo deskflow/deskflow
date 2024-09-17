@@ -36,7 +36,7 @@
 using namespace deskflow::license;
 using namespace deskflow::gui;
 
-const char *const kProProductName = "Deskflow 1 Pro";
+const char *const kProProductName = "Deskflow";
 
 SettingsDialog::SettingsDialog(
     QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,

@@ -1,5 +1,5 @@
 /*
- * deskflow -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2014-2021 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SYNERGY_LANGUAGESLANGUAGEMANAGER_H
-#define SYNERGY_LANGUAGESLANGUAGEMANAGER_H
+#ifndef DESKFLOW_LANGUAGESLANGUAGEMANAGER_H
+#define DESKFLOW_LANGUAGESLANGUAGEMANAGER_H
 
 #include "base/String.h"
 #include "deskflow/AppUtil.h"
@@ -77,4 +77,4 @@ public:
 
 } // namespace deskflow
 
-#endif // SYNERGY_LANGUAGESLANGUAGEMANAGER_H
+#endif // DESKFLOW_LANGUAGESLANGUAGEMANAGER_H

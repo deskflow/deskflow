@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -19,8 +19,8 @@
 #pragma once
 
 #include "common/stdvector.h"
+#include "deskflow/IClipboard.h"
 #include "platform/MSWindowsClipboardFacade.h"
-#include "synergy/IClipboard.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -42,15 +42,15 @@ public:
   Return false if the clipboard ownership could not be taken;
   the clipboard should not be emptied in this case.  Unlike
   empty(), isOwnedByDeskflow() will return false when emptied
-  this way.  This is useful when synergy wants to put data on
+  this way.  This is useful when deskflow wants to put data on
   clipboard but pretend (to itself) that some other app did it.
-  When using empty(), synergy assumes the data came from the
+  When using empty(), deskflow assumes the data came from the
   server and doesn't need to be sent back.  emptyUnowned()
-  makes synergy send the data to the server.
+  makes deskflow send the data to the server.
   */
   bool emptyUnowned();
 
-  //! Test if clipboard is owned by synergy
+  //! Test if clipboard is owned by deskflow
   static bool isOwnedByDeskflow();
 
   // IClipboard overrides

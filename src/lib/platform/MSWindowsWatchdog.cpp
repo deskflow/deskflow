@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2009 Chris Schoeneman
  *
@@ -24,12 +24,12 @@
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
 #include "common/ipc.h"
+#include "deskflow/App.h"
+#include "deskflow/ArgsBase.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
-#include "synergy/App.h"
-#include "synergy/ArgsBase.h"
 
 #include <Shellapi.h>
 #include <UserEnv.h>
@@ -161,7 +161,7 @@ HANDLE
 MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security) {
   // always elevate if we are at the vista/7 login screen. we could also
   // elevate for the uac dialog (consent.exe) but this would be pointless,
-  // since synergy would re-launch as non-elevated after the desk switch,
+  // since deskflow would re-launch as non-elevated after the desk switch,
   // and so would be unusable with the new elevated process taking focus.
   if (m_elevateProcess || m_autoElevated ||
       m_session.isProcessInSession("logonui.exe", NULL)) {
@@ -526,9 +526,9 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout) {
       double elapsed = (ARCH->time() - start);
       if (elapsed > timeout) {
         // if timeout reached, kill forcefully.
-        // calling TerminateProcess on synergy is very bad!
+        // calling TerminateProcess on deskflow is very bad!
         // it causes the hook DLL to stay loaded in some apps,
-        // making it impossible to start synergy again.
+        // making it impossible to start deskflow again.
         LOG(
             (CLOG_WARN
              "shutdown timed out after %d secs, forcefully terminating",
@@ -571,9 +571,9 @@ void MSWindowsWatchdog::shutdownExistingProcesses() {
     // make sure we're not checking the system process
     if (entry.th32ProcessID != 0) {
 
-      if (_stricmp(entry.szExeFile, "synergyc.exe") == 0 ||
-          _stricmp(entry.szExeFile, "synergys.exe") == 0 ||
-          _stricmp(entry.szExeFile, "synergy-core.exe") == 0) {
+      if (_stricmp(entry.szExeFile, "deskflowc.exe") == 0 ||
+          _stricmp(entry.szExeFile, "deskflows.exe") == 0 ||
+          _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
 
         HANDLE handle =
             OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);

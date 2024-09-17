@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  *
@@ -57,13 +57,13 @@ MSWindowsClipboardHTMLConverter::doFromIClipboard(const String &data) const {
 
   prefix.replace(
       prefix.find("XXXXXXXXXX"), 10,
-      synergy::string::sprintf("%010u", StartFragment));
+      deskflow::string::sprintf("%010u", StartFragment));
   prefix.replace(
       prefix.find("YYYYYYYYYY"), 10,
-      synergy::string::sprintf("%010u", EndFragment));
+      deskflow::string::sprintf("%010u", EndFragment));
   prefix.replace(
       prefix.find("ZZZZZZZZZZ"), 10,
-      synergy::string::sprintf("%010u", EndHTML));
+      deskflow::string::sprintf("%010u", EndHTML));
 
   // concatenate
   prefix += data;

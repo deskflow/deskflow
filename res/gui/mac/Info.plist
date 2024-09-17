@@ -10,7 +10,7 @@
     <key>CFBundleIconFile</key>
     <string>Deskflow.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>synergy</string>
+    <string>deskflow</string>
     <!-- TODO: Fix this in v2.0 //-->
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>

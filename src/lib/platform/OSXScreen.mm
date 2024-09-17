@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -27,9 +27,9 @@
 #include "platform/OSXDragSimulator.h"
 #include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
-#include "synergy/Clipboard.h"
-#include "synergy/KeyMap.h"
-#include "synergy/ClientApp.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/KeyMap.h"
+#include "deskflow/ClientApp.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
@@ -39,7 +39,7 @@
 #include "base/IEventQueue.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "synergy/DisplayInvalidException.h"
+#include "deskflow/DisplayInvalidException.h"
 
 #include <math.h>
 #include <mach-o/dyld.h>
@@ -89,7 +89,7 @@ bool					OSXScreen::s_hasGHOM	    = false;
 OSXScreen::OSXScreen(IEventQueue* events,
 							bool isPrimary,
 							bool enableLangSync,
-							synergy::ClientScrollDirection scrollDirection) :
+							deskflow::ClientScrollDirection scrollDirection) :
 	PlatformScreen(events, scrollDirection),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
@@ -347,7 +347,7 @@ OSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
 UInt32
 OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
-	// get mac virtual key and modifier mask matching synergy key and mask
+	// get mac virtual key and modifier mask matching deskflow key and mask
 	UInt32 macKey, macMask;
 	if (!m_keyState->mapDeskflowHotKeyToMac(key, mask, macKey, macMask)) {
 		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
@@ -389,13 +389,13 @@ OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	if (!okay) {
 		m_oldHotKeyIDs.push_back(id);
 		m_hotKeyToIDMap.erase(HotKeyItem(macKey, macMask));
-		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
+		LOG((CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask));
 		return 0;
 	}
 
 	m_hotKeys.insert(std::make_pair(id, HotKeyItem(ref, macKey, macMask)));
 	
-	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+	LOG((CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
 	return id;
 }
 
@@ -1914,7 +1914,7 @@ OSXScreen::HotKeyItem::operator<(const HotKeyItem& x) const
 }
 
 // Quartz event tap support for the secondary display. This makes sure that we
-// will show the cursor if a local event comes in while synergy has the cursor
+// will show the cursor if a local event comes in while deskflow has the cursor
 // off the screen.
 CGEventRef
 OSXScreen::handleCGInputEventSecondary(

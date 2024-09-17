@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -26,6 +26,12 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
+#include "deskflow/App.h"
+#include "deskflow/ArgsBase.h"
+#include "deskflow/ClientApp.h"
+#include "deskflow/Clipboard.h"
+#include "deskflow/KeyMap.h"
+#include "deskflow/XScreen.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
@@ -33,12 +39,6 @@
 #include "platform/MSWindowsEventQueueBuffer.h"
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsScreenSaver.h"
-#include "synergy/App.h"
-#include "synergy/ArgsBase.h"
-#include "synergy/ClientApp.h"
-#include "synergy/Clipboard.h"
-#include "synergy/KeyMap.h"
-#include "synergy/XScreen.h"
 
 #include <Shlobj.h>
 #include <algorithm>
@@ -93,7 +93,7 @@ MSWindowsScreen *MSWindowsScreen::s_screen = NULL;
 
 MSWindowsScreen::MSWindowsScreen(
     bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue *events,
-    bool enableLangSync, synergy::ClientScrollDirection scrollDirection)
+    bool enableLangSync, deskflow::ClientScrollDirection scrollDirection)
     : PlatformScreen(events, scrollDirection),
       m_isPrimary(isPrimary),
       m_noHooks(noHooks),
@@ -313,8 +313,8 @@ bool MSWindowsScreen::leave() {
   if (!getThisCursorPos(&pos)) {
     LOG((CLOG_DEBUG "unable to leave screen as windows security has disabled "
                     "critical functions"));
-    // unable to get position this means synergy will break if the cursor leaves
-    // the screen
+    // unable to get position this means deskflow will break if the cursor
+    // leaves the screen
     return false;
   }
   // get keyboard layout of foreground window.  we'll use this
@@ -571,7 +571,8 @@ void MSWindowsScreen::warpCursor(SInt32 x, SInt32 y) {
   // remove all input events before and including warp
   MSG msg;
   while (PeekMessage(
-      &msg, NULL, SYNERGY_MSG_INPUT_FIRST, SYNERGY_MSG_INPUT_LAST, PM_REMOVE)) {
+      &msg, NULL, DESKFLOW_MSG_INPUT_FIRST, DESKFLOW_MSG_INPUT_LAST,
+      PM_REMOVE)) {
     // do nothing
   }
 
@@ -652,13 +653,13 @@ UInt32 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
     m_hotKeys.erase(id);
     LOG(
         (CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)",
-         synergy::KeyMap::formatKey(key, mask).c_str(), key, mask));
+         deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask));
     return 0;
   }
 
   LOG(
       (CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d",
-       synergy::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+       deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
   return id;
 }
 
@@ -913,10 +914,10 @@ bool MSWindowsScreen::onPreDispatch(
     HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
   // handle event
   switch (message) {
-  case SYNERGY_MSG_SCREEN_SAVER:
+  case DESKFLOW_MSG_SCREEN_SAVER:
     return onScreensaver(wParam != 0);
 
-  case SYNERGY_MSG_DEBUG:
+  case DESKFLOW_MSG_DEBUG:
     LOG((CLOG_DEBUG1 "hook: 0x%08x 0x%08x", wParam, lParam));
     return true;
   }
@@ -934,24 +935,24 @@ bool MSWindowsScreen::onPreDispatchPrimary(
 
   // handle event
   switch (message) {
-  case SYNERGY_MSG_MARK:
+  case DESKFLOW_MSG_MARK:
     return onMark(static_cast<UInt32>(wParam));
 
-  case SYNERGY_MSG_KEY:
+  case DESKFLOW_MSG_KEY:
     return onKey(wParam, lParam);
 
-  case SYNERGY_MSG_MOUSE_BUTTON:
+  case DESKFLOW_MSG_MOUSE_BUTTON:
     return onMouseButton(wParam, lParam);
 
-  case SYNERGY_MSG_MOUSE_MOVE:
+  case DESKFLOW_MSG_MOUSE_MOVE:
     return onMouseMove(
         static_cast<SInt32>(wParam), static_cast<SInt32>(lParam));
 
-  case SYNERGY_MSG_MOUSE_WHEEL:
+  case DESKFLOW_MSG_MOUSE_WHEEL:
     // XXX -- support x-axis scrolling
     return onMouseWheel(0, static_cast<SInt32>(wParam));
 
-  case SYNERGY_MSG_PRE_WARP: {
+  case DESKFLOW_MSG_PRE_WARP: {
     // save position to compute delta of next motion
     saveMousePosition(static_cast<SInt32>(wParam), static_cast<SInt32>(lParam));
 
@@ -962,12 +963,12 @@ bool MSWindowsScreen::onPreDispatchPrimary(
     // event.
     MSG msg;
     do {
-      GetMessage(&msg, NULL, SYNERGY_MSG_MOUSE_MOVE, SYNERGY_MSG_POST_WARP);
-    } while (msg.message != SYNERGY_MSG_POST_WARP);
+      GetMessage(&msg, NULL, DESKFLOW_MSG_MOUSE_MOVE, DESKFLOW_MSG_POST_WARP);
+    } while (msg.message != DESKFLOW_MSG_POST_WARP);
   }
     return true;
 
-  case SYNERGY_MSG_POST_WARP:
+  case DESKFLOW_MSG_POST_WARP:
     LOG((CLOG_WARN "unmatched post warp"));
     return true;
 
@@ -1271,7 +1272,7 @@ bool MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam) {
 }
 
 // here's how mouse movements are sent across the network to a client:
-//   1. synergy checks the mouse position on server screen
+//   1. deskflow checks the mouse position on server screen
 //   2. records the delta (current x,y minus last x,y)
 //   3. records the current x,y as "last" (so we can calc delta next time)
 //   4. on the server, puts the cursor back to the center of the screen
@@ -1364,14 +1365,14 @@ bool MSWindowsScreen::onScreensaver(bool activated) {
   // the screen saver is disabled!
   MSG msg;
   if (PeekMessage(
-          &msg, NULL, SYNERGY_MSG_SCREEN_SAVER, SYNERGY_MSG_SCREEN_SAVER,
+          &msg, NULL, DESKFLOW_MSG_SCREEN_SAVER, DESKFLOW_MSG_SCREEN_SAVER,
           PM_NOREMOVE)) {
     return true;
   }
 
   if (activated) {
     if (!m_screensaverActive &&
-        m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
+        m_screensaver->checkStarted(DESKFLOW_MSG_SCREEN_SAVER, FALSE, 0)) {
       m_screensaverActive = true;
       sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
     }
@@ -1434,7 +1435,7 @@ bool MSWindowsScreen::onClipboardChange() {
           m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
     }
   } else if (!m_ownClipboard) {
-    LOG((CLOG_DEBUG "clipboard changed: synergy owned"));
+    LOG((CLOG_DEBUG "clipboard changed: deskflow owned"));
     m_ownClipboard = true;
   }
 
@@ -1443,7 +1444,7 @@ bool MSWindowsScreen::onClipboardChange() {
 
 void MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y) {
   // send an event that we can recognize before the mouse warp
-  PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_PRE_WARP, x, y);
+  PostThreadMessage(GetCurrentThreadId(), DESKFLOW_MSG_PRE_WARP, x, y);
 
   // warp mouse.  hopefully this inserts a mouse motion event
   // between the previous message and the following message.
@@ -1493,7 +1494,7 @@ void MSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y) {
   ARCH->sleep(0.0);
 
   // send an event that we can recognize after the mouse warp
-  PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_POST_WARP, 0, 0);
+  PostThreadMessage(GetCurrentThreadId(), DESKFLOW_MSG_POST_WARP, 0, 0);
 }
 
 void MSWindowsScreen::nextMark() {
@@ -1501,7 +1502,7 @@ void MSWindowsScreen::nextMark() {
   ++m_mark;
 
   // mark point in message queue where the mark was changed
-  PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_MARK, m_mark, 0);
+  PostThreadMessage(GetCurrentThreadId(), DESKFLOW_MSG_MARK, m_mark, 0);
 }
 
 bool MSWindowsScreen::ignore() const { return (m_mark != m_markReceived); }

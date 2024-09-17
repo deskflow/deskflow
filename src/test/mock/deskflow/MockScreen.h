@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2013-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -19,13 +19,13 @@
 
 #define TEST_ENV
 
-#include "synergy/Screen.h"
+#include "deskflow/Screen.h"
 
 #include <gmock/gmock.h>
 
-class MockScreen : public synergy::Screen {
+class MockScreen : public deskflow::Screen {
 public:
-  MockScreen() : synergy::Screen() {}
+  MockScreen() : deskflow::Screen() {}
   MOCK_METHOD(void, disable, (), (override));
   MOCK_METHOD(
       void, getShape, (SInt32 &, SInt32 &, SInt32 &, SInt32 &),

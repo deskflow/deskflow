@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2011 Nick Bolton
  *
@@ -26,14 +26,14 @@
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsScreen.h"
 #include "platform/MSWindowsScreenSaver.h"
-#include "test/mock/synergy/MockEventQueue.h"
-#include "test/mock/synergy/MockKeyMap.h"
+#include "test/mock/deskflow/MockEventQueue.h"
+#include "test/mock/deskflow/MockKeyMap.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 // wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
-#define SYNERGY_MSG_FAKE_KEY SYNERGY_HOOK_LAST_MSG + 4
+#define DESKFLOW_MSG_FAKE_KEY DESKFLOW_HOOK_LAST_MSG + 4
 
 using ::testing::_;
 using ::testing::NiceMock;

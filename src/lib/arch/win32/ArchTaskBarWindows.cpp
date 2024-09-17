@@ -1,5 +1,5 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * Deskflow -- mouse and keyboard sharing utility
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2003 Chris Schoeneman
  *
@@ -21,7 +21,7 @@
 #include "arch/IArchTaskBarReceiver.h"
 #include "arch/XArch.h"
 #include "arch/win32/ArchMiscWindows.h"
-#include "synergy/win32/AppUtilWindows.h"
+#include "deskflow/win32/AppUtilWindows.h"
 
 #include <shellapi.h>
 #include <string.h>
