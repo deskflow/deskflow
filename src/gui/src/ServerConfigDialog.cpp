@@ -249,16 +249,12 @@ void ServerConfigDialog::showEvent(QShowEvent *event) {
 void ServerConfigDialog::accept() {
   if (m_pCheckBoxUseExternalConfig->isChecked() &&
       !QFile::exists(m_pEditConfigFile->text())) {
-    auto title = tr("Configuration filename invalid");
-    auto description =
-        tr("You have not filled in a valid configuration file for the deskflow "
-           "server. "
-           "Do you want to browse for the configuration file now?");
 
     auto selectedButton = QMessageBox::warning(
-        this, title, description, QMessageBox::Yes | QMessageBox::No);
+        this, "Filename invalid", "Please select a valid configuration file.",
+        QMessageBox::Ok | QMessageBox::Ignore);
 
-    if (selectedButton != QMessageBox::Yes ||
+    if (selectedButton != QMessageBox::Ok ||
         !on_m_pButtonBrowseConfigFile_clicked()) {
       return;
     }
