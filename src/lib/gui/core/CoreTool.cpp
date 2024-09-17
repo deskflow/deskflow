@@ -24,7 +24,7 @@
 #include <QProcess>
 #include <QtGlobal>
 
-static const char kCoreBinary[] = "syntool";
+static const char kCoreBinary[] = "deskflow-legacy";
 
 #ifdef Q_WS_WIN
 static const char kSerialKeyFilename[] = "Deskflow.subkey";

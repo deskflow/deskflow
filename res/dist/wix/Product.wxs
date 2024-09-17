@@ -88,7 +88,7 @@
 				<File Source="$(var.BinPath)/deskflowc.exe">
 					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="Deskflow client" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/syntool.exe"/>
+				<File Source="$(var.BinPath)/deskflow-legacy.exe"/>
 				<?if $(var.Platform) = x64 ?>
 					<File Source="$(var.OpenSslDllDir)/libssl-3-x64.dll"/>
 					<File Source="$(var.OpenSslDllDir)/libcrypto-3-x64.dll"/>

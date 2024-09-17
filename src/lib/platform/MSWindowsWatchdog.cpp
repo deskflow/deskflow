@@ -604,13 +604,13 @@ void MSWindowsWatchdog::shutdownExistingProcesses() {
 void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
   String installedDir = ARCH->getInstalledDirectory();
   if (!installedDir.empty()) {
-    String syntoolCommand;
-    syntoolCommand.append("\"")
-        .append(installedDir)
-        .append("\\")
-        .append("syntool")
-        .append("\"");
-    syntoolCommand.append(" --get-active-desktop");
+    String deskflow - legacyCommand;
+    deskflow - legacyCommand.append("\"")
+                   .append(installedDir)
+                   .append("\\")
+                   .append("deskflow-legacy")
+                   .append("\"");
+    deskflow - legacyCommand.append(" --get-active-desktop");
 
     m_session.updateActiveSession();
     bool elevateProcess = m_elevateProcess;
@@ -618,13 +618,14 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
     HANDLE userToken = getUserToken(security);
     m_elevateProcess = elevateProcess;
 
-    BOOL createRet = startProcessAsUser(syntoolCommand, userToken, security);
+    BOOL createRet =
+        startProcessAsUser(deskflow - legacyCommand, userToken, security);
     auto pid = m_processInfo.dwProcessId;
     if (!createRet) {
       DWORD rc = GetLastError();
       RevertToSelf();
     } else {
-      LOG((CLOG_DEBUG "launched syntool to check active desktop"));
+      LOG((CLOG_DEBUG "launched deskflow-legacy to check active desktop"));
     }
 
     ARCH->lockMutex(m_mutex);

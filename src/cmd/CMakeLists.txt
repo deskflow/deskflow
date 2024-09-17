@@ -23,4 +23,4 @@ else()
   add_subdirectory(deskflows)
 endif(BUILD_UNIFIED)
 
-add_subdirectory(syntool)
+add_subdirectory(deskflow-legacy)

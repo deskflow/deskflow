@@ -211,12 +211,12 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly) {
   for (auto const &test : tests) {
     ToolArgs toolArgs;
     EXPECT_FALSE(test.second(toolArgs));
-    std::array<const char *, 2> twoArgs{"syntool", test.first};
+    std::array<const char *, 2> twoArgs{"deskflow-legacy", test.first};
     EXPECT_TRUE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
     EXPECT_TRUE(test.second(toolArgs));
   }
   ToolArgs toolArgs;
-  std::array<const char *, 2> twoArgs{"syntool", "--garbage"};
+  std::array<const char *, 2> twoArgs{"deskflow-legacy", "--garbage"};
   EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
 }
 
