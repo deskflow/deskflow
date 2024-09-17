@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(lib_name app)
+
 file(GLOB headers "*.h" "languages/*.h")
 file(GLOB sources "*.cpp" "languages/*.cpp")
 
@@ -38,11 +40,11 @@ if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 
-add_library(synlib STATIC ${sources})
+add_library(${lib_name} STATIC ${sources})
 
 if(UNIX)
   target_link_libraries(
-    synlib
+    ${lib_name}
     arch
     client
     ipc
@@ -53,12 +55,12 @@ if(UNIX)
     server)
 
   if(NOT APPLE)
-    target_link_libraries(synlib pugixml)
+    target_link_libraries(${lib_name} pugixml)
 
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
-      target_link_libraries(synlib PkgConfig::lib_glib PkgConfig::lib_gdkpixbuf
-                            PkgConfig::lib_notify)
+      target_link_libraries(${lib_name} PkgConfig::lib_glib
+                            PkgConfig::lib_gdkpixbuf PkgConfig::lib_notify)
     endif()
   endif()
 endif()

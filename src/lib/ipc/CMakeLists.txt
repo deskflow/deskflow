@@ -31,5 +31,5 @@ if(UNIX)
     mt
     io
     net
-    synlib)
+    app)
 endif()

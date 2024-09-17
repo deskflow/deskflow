@@ -137,7 +137,7 @@ macro(config_test_deps)
       net
       platform
       server
-      synlib
+      app
       mt
       ipc
       license

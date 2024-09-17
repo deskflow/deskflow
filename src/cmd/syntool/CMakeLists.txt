@@ -26,7 +26,7 @@ endif()
 add_executable(${target} ${sources})
 target_link_libraries(
   ${target}
-  synlib
+  app
   arch
   base
   client

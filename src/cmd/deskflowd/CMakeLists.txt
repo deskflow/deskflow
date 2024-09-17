@@ -34,7 +34,7 @@ target_link_libraries(
   mt
   net
   platform
-  synlib
+  app
   license
   ${libs})
 

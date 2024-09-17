@@ -86,7 +86,7 @@ if(UNIX)
     io
     net
     ipc
-    synlib
+    app
     client
     ${libs})
 

@@ -34,7 +34,7 @@ target_link_libraries(
   ipc
   platform
   server
-  synlib
+  app
   ${libs})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
