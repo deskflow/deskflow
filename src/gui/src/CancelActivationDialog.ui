@@ -17,7 +17,7 @@
    <item alignment="Qt::AlignmentFlag::AlignTop">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You'll need to purchase a license to use this build of Deskflow.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/deskflow/purchase?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Purchase Deskflow&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;If you'd prefer to use the community edition instead, visit us on GitHub.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/symless/deskflow&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GitHub project&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You'll need to purchase a license to use this build of Synergy.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://symless.com/synergy/purchase?source=gui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;Purchase Synergy&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;If you'd prefer to use the community edition instead, visit us on GitHub.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/symless/synergy&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;GitHub project&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
