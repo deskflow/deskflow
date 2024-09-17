@@ -419,8 +419,7 @@ bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked() {
 #endif
 
   QString fileName = QFileDialog::getOpenFileName(
-      this, tr("Browse for a deskflows config file"), QString(),
-      deskflowConfigFilter);
+      this, "Browse for a config file", "", deskflowConfigFilter);
 
   if (!fileName.isEmpty()) {
     m_pEditConfigFile->setText(fileName);
