@@ -39,7 +39,7 @@ jobs:
             platform: amd64
 
           - name: debian-12-arm64
-            runs-on: ubuntu-24.04-8-core-arm64
+            runs-on: ubuntu-24.04-2-core-arm64
             config-dir: debian
             base-image: arm64v8/debian:12-slim
             platform: arm64
@@ -63,7 +63,7 @@ jobs:
             platform: amd64
 
           - name: fedora-40-arm64
-            runs-on: ubuntu-24.04-8-core-arm64
+            runs-on: ubuntu-24.04-2-core-arm64
             config-dir: fedora
             base-image: arm64v8/fedora:40
             platform: arm64
