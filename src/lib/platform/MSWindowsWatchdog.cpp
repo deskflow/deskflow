@@ -606,10 +606,10 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
   if (!installedDir.empty()) {
     String deskflowLegacyCommand;
     deskflowLegacyCommand.append("\"")
-                   .append(installedDir)
-                   .append("\\")
-                   .append("deskflow-legacy")
-                   .append("\"");
+        .append(installedDir)
+        .append("\\")
+        .append("deskflow-legacy")
+        .append("\"");
     deskflowLegacyCommand.append(" --get-active-desktop");
 
     m_session.updateActiveSession();

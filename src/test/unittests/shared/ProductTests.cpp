@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: Move these tests and the code under test downstream to Synergy
+
 #define TEST_ENV
 
 #include "license/Product.h"
@@ -56,7 +58,7 @@ TEST(ProductTests, setEdition_pro_isValid) {
 
   EXPECT_EQ(kPro, product.edition());
   EXPECT_EQ(Product::SerialKeyEditionID::Pro, product.serialKeyId());
-  EXPECT_EQ("Deskflow", product.name());
+  EXPECT_EQ("Deskflow Pro", product.name());
   EXPECT_TRUE(product.isValid());
 }
 
@@ -67,7 +69,7 @@ TEST(ProductTests, setEdition_basic_isValid) {
 
   EXPECT_EQ(kBasic, product.edition());
   EXPECT_EQ(Product::SerialKeyEditionID::Basic, product.serialKeyId());
-  EXPECT_EQ("Deskflow", product.name());
+  EXPECT_EQ("Deskflow Basic", product.name());
 }
 
 TEST(ProductTests, setEdition_business_isValid) {
@@ -77,5 +79,5 @@ TEST(ProductTests, setEdition_business_isValid) {
 
   EXPECT_EQ(kBusiness, product.edition());
   EXPECT_EQ(Product::SerialKeyEditionID::Buisiness, product.serialKeyId());
-  EXPECT_EQ("Deskflow", product.name());
+  EXPECT_EQ("Deskflow Business", product.name());
 }

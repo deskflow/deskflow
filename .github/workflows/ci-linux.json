@@ -9,7 +9,7 @@
     {
       "name": "debian-12-arm64",
       "container": "deskflow/deskflow:debian-12-arm64",
-      "runs-on": "ubuntu-24.04-8-core-arm64",
+      "runs-on": "ubuntu-24.04-2-core-arm64",
       "extra-packages": true
     },
     {
@@ -33,7 +33,7 @@
     {
       "name": "fedora-40-arm64",
       "container": "deskflow/deskflow:fedora-40-arm64",
-      "runs-on": "ubuntu-24.04-8-core-arm64"
+      "runs-on": "ubuntu-24.04-2-core-arm64"
     },
     {
       "name": "fedora-40-amd64",
