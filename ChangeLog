@@ -1,7 +1,7 @@
 # 1.17.0
 
 - #7519 Rename project to Deskflow (was Synergy Community Edition)
-- #7522 Fix CI broken by renaming project and relocating to new org
+- #7522 Fix broken CI caused by renaming project to Deskflow
 
 # 1.16.1
 
