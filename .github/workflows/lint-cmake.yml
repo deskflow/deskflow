@@ -1,0 +1,39 @@
+# Lints CMake config and C++ source code.
+
+name: "Lint (CMake)"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  lint-cmake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: "lint-cmake"
+
+      - name: Install dependencies
+        run: |
+          source .venv/bin/activate
+          pip install pyyaml cmake_format
+
+      - name: Linting with CMake formatter
+        id: lint-cmake
+        uses: ./.github/actions/lint-error
+        with:
+          format-command: ./scripts/lint_cmake.py -f
+          format-tool: "cmake-format"
+          comment-header: "lint-cmake"

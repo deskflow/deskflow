@@ -1,0 +1,79 @@
+name: "Lint error"
+description: "Checks for lint errors and posts a helpful comment"
+
+inputs:
+  comment-header:
+    description: "The header ID for the comment"
+    required: true
+
+  format-command:
+    description: "The command to run to fix lint errors"
+    required: true
+
+  format-tool:
+    description: "The name of the linting tool"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run format command
+      run: ${{ inputs.format-command }}
+      shell: bash
+
+    - name: Find changes
+      id: changes
+      run: |
+        file=${{ inputs.format-tool }}.diff
+        diff=$(git diff | tee $file)
+
+        if [ -z "$diff" ]; then
+          echo "No changes detected"
+          exit 0
+        fi
+
+        echo "file=$file" >> $GITHUB_OUTPUT
+
+        {
+          echo "diff<<EOF"
+          cat $file
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
+
+      shell: bash
+
+    - name: Upload to GitHub
+      id: upload
+      if: steps.changes.outputs.diff
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.changes.outputs.file }}
+        path: ${{ steps.changes.outputs.file }}
+        retention-days: 3
+        if-no-files-found: error
+
+    - name: PR comment (lint source hint)
+      if: steps.changes.outputs.diff
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: ${{ inputs.comment-header }}
+        message: |
+          ❌ `${{ inputs.format-tool }}` failed: It looks like your changes don't match our code style.
+
+          🛠️ Please either run `${{ inputs.format-command }}` or apply this patch with `git apply`:
+          ```diff
+          ${{ steps.changes.outputs.diff }}
+          ```
+          [${{ steps.changes.outputs.file }}](${{ steps.upload.outputs.artifact-url }})
+
+    - name: Delete PR comment
+      if: ${{ !steps.changes.outputs.diff }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: ${{ inputs.comment-header }}
+        delete: true
+
+    - name: Fail if diff exists
+      if: steps.changes.outputs.diff
+      run: exit 1
+      shell: bash
