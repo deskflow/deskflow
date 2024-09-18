@@ -23,9 +23,7 @@ env:
   DESKFLOW_PRODUCT_NAME: ${{ vars.DESKFLOW_PRODUCT_NAME }}
   DESKFLOW_PACKAGE_PREFIX: ${{ vars.DESKFLOW_PACKAGE_PREFIX || 'deskflow' }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
-  PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.ref_name != 'master' }}
-  UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
-  UPLOAD_TO_GDRIVE: ${{ github.event_name != 'pull_request' }}
+  PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft }}
 
 jobs:
   setup:
@@ -122,12 +120,8 @@ jobs:
         if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
-          use_github: ${{ env.UPLOAD_TO_GITHUB }}
-          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
+          use-github: true
           github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
-          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
-          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
-          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.DESKFLOW_VERSION }}
 
   macos:
@@ -209,12 +203,8 @@ jobs:
         if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
-          use_github: ${{ env.UPLOAD_TO_GITHUB }}
-          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
+          use-github: true
           github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
-          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
-          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
-          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.DESKFLOW_VERSION }}
 
   linux-matrix:
@@ -294,12 +284,8 @@ jobs:
         if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
         uses: ./.github/actions/dist-upload
         with:
-          use_github: ${{ env.UPLOAD_TO_GITHUB }}
-          use_gdrive: ${{ env.UPLOAD_TO_GDRIVE }}
+          use-github: true
           github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
-          gdrive-target-base-dir: ${{ vars.GDRIVE_TARGET_BASE_DIR }}
-          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
-          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
           package-version: ${{ env.DESKFLOW_VERSION }}
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
