@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          fetch-depth: 2
 
       - name: Setup Python venv
         uses: ./.github/actions/init-python
@@ -31,7 +34,27 @@ jobs:
           pip install pyyaml cmake_format clang_format
 
       - name: Linting with CMake formatter
-        run: ./scripts/lint_cmake.py
+        id: lint-cmake
+        run: ./scripts/lint_cmake.py -f
 
       - name: Linting with Clang format
-        run: ./scripts/lint_clang.py
+        id: lint-clang
+        run: ./scripts/lint_clang.py -f
+
+      - name: Check for changes
+        id: check
+        run: |
+          git log -2 --oneline
+          git add .
+          git status
+          if ! git diff-index --quiet HEAD; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and rebase
+        if: steps.check.outputs.changes
+        run: |
+          git config user.name "deskflow-lint[bot]"
+          git config user.email "deskflow-lint[bot]@users.noreply.github.com"
+          git commit --amend --no-edit
+          git push --force-with-lease
