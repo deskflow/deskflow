@@ -24,7 +24,7 @@ jobs:
         if:
         uses: ./.github/actions/dist-upload
         with:
-          use_github: true
+          use-github: true
           github-target-filename: "test"
 
       - name: Upload to Google Drive

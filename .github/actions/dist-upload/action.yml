@@ -1,7 +1,7 @@
 name: "Distribute upload"
 description: "Uploads the package from the dist dir to GitHub artifacts or Google Drive"
 inputs:
-  use_github:
+  use-github:
     description: "Whether to upload to GitHub artifacts"
     required: true
 
@@ -33,9 +33,9 @@ runs:
   using: "composite"
 
   steps:
-    - if: ${{ inputs.use_gdrive == inputs.use_github }}
+    - if: ${{ inputs.use_gdrive == inputs.use-github }}
       run: |
-        echo "Either 'use_github' or 'use_gdrive' must be true (and not both)"
+        echo "Either 'use-github' or 'use_gdrive' must be true (and not both)"
         exit 1
       shell: bash
 
@@ -52,7 +52,7 @@ runs:
       shell: bash
 
     - name: Upload to GitHub
-      if: ${{ inputs.use_github == 'true' }}
+      if: ${{ inputs.use-github == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.github-target-filename }}

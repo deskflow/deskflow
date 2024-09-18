@@ -2,12 +2,13 @@
 
 Bug fixes:
 
+- #7522 Fix broken CI caused by renaming project to Deskflow
 - #7524 Restore protocol compatibility with Synergy
+- #7525 Remove Google Drive upload from CI
 
 Enhancements:
 
 - #7519 Rename project to Deskflow (was Synergy Community Edition)
-- #7522 Fix broken CI caused by renaming project to Deskflow
 
 # 1.16.1
 
