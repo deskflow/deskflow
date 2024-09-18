@@ -1,5 +1,11 @@
 # 1.17.0
 
+Bug fixes:
+
+- #7524 Restore protocol compatibility with Synergy
+
+Enhancements:
+
 - #7519 Rename project to Deskflow (was Synergy Community Edition)
 - #7522 Fix broken CI caused by renaming project to Deskflow
 
