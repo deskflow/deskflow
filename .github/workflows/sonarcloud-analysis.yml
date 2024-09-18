@@ -23,7 +23,7 @@ jobs:
       SONAR_SCANNER_VERSION: 6.1.0.4477
       SONAR_SCANNER_OPTS: -server
       SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
-      CPU_CORE_COUNT: 32
+      CPU_CORE_COUNT: ${{ vars.SONAR_SCANNER_CPU_COUNT || 4 }}
 
     steps:
       - name: Checkout
