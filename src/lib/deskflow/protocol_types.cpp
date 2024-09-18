@@ -17,7 +17,8 @@
  */
 
 #include "deskflow/protocol_types.h"
-//Keep the Synergy name for hello to preserve compatibility with synergy
+
+// Keep the "Synergy" name for hello to preserve compatibility with Synergy
 const char *const kMsgHello = "Synergy%2i%2i";
 const char *const kMsgHelloBack = "Synergy%2i%2i%s";
 const char *const kMsgCNoop = "CNOP";
