@@ -1,0 +1,123 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "unix - gui",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflow",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "unix - unittests",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/unittests",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "unix - integtests",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/integtests",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "unix - server",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflows",
+      "args": ["--config-toml", "deskflow-config.toml"],
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "unix - client",
+      "type": "lldb",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflowc",
+      "args": ["--config-toml", "deskflow-config.toml"],
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "unix - attach",
+      "type": "lldb",
+      "request": "attach",
+      "pid": "${command:pickProcess}"
+    },
+    {
+      "name": "windows - gui",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflow",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "windows - unittests",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/unittests",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "windows - integtests",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/integtests",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "windows - server",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflows",
+      "args": ["--config-toml", "deskflow-config.toml"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "windows - client",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflowc",
+      "args": ["--config-toml", "deskflow-config.toml"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "kill-build"
+    },
+    {
+      "name": "windows - daemon",
+      "type": "cppvsdbg",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/deskflowd",
+      "args": ["-f"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "windows - attach",
+      "type": "cppvsdbg",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "install_deps.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "scripts/install_deps.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}

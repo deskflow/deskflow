@@ -1,0 +1,52 @@
+# Lints CMake config and C++ source code.
+
+name: "Lint source code"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  lint-source-code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: "lint-source-code"
+
+      - name: Install dependencies
+        run: |
+          source .venv/bin/activate
+          pip install pyyaml cmake_format clang_format
+
+      - name: Linting with CMake formatter
+        id: lint-cmake
+        run: ./scripts/lint_cmake.py
+        continue-on-error: true
+
+      - name: Linting with Clang format
+        id: lint-clang
+        run: ./scripts/lint_clang.py
+        continue-on-error: true
+
+      - name: Commit and rebase
+        if: ${{ steps.lint-cmake.outcome != 'success' || steps.lint-clang.outcome != 'success' }}
+        run: |
+          git config user.name "lint[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          git commit --amend --no-edit
+          git push --force-with-lease

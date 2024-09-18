@@ -1,0 +1,22 @@
+# temp dirs created during build
+/build
+/dist
+/deps
+/tmp
+/vcpkg
+/vcpkg_installed
+/scripts/**/*.pyc
+/.cache
+/.venv
+aqtinstall.log
+Brewfile.lock.json
+
+# typical developer-created files
+deskflow-config.toml
+.vscode
+.DS_Store
+*.code-workspace
+.env*
+/scripts/*.egg-info
+/*.user
+*.ui.autosave

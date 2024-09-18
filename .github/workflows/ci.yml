@@ -1,0 +1,323 @@
+# All-in-one continuous integration (CI) workflow.
+# Runs on all platforms (Windows, macOS, and Linux)
+# for all events (pull request, release, and schedule).
+
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Deskflow version number
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  schedule:
+    - cron: "0 5 * * *" # 5am UTC
+
+env:
+  GIT_SHA: ${{ github.sha }}
+  DESKFLOW_PRODUCT_NAME: ${{ vars.DESKFLOW_PRODUCT_NAME }}
+  DESKFLOW_PACKAGE_PREFIX: ${{ vars.DESKFLOW_PACKAGE_PREFIX || 'deskflow' }}
+  PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
+  PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft }}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test setup
+        uses: ./.github/actions/run-tests-setup
+
+  windows:
+    needs: setup
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.runs-on }}
+    container: ${{ matrix.target.container }}
+    timeout-minutes: 20
+
+    strategy:
+      # Normally, we want to fail fast, but in this case we shouldn't since one target may
+      # fail due to transient issues unrelated to the build.
+      fail-fast: false
+
+      matrix:
+        target:
+          - name: windows-2022-x64
+            runs-on: ${{ vars.CI_WINDOWS_RUNNER || 'windows-2022' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      - name: Cache vcpkg dir
+        uses: actions/cache@v4
+        with:
+          path: |
+            vcpkg_installed
+            ${{ env.LOCALAPPDATA }}/vcpkg
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+          restore-keys: vcpkg-${{ runner.os }}
+
+      # Should only restore the .venv directory from cache.
+      - name: Init Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: ci-${{ matrix.target.name }}
+          setup: false
+
+      - name: Cache deps dir
+        uses: actions/cache@v4
+        with:
+          path: ./deps
+          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
+
+      # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
+      # VC++ as that's already pre-installed on the Windows runner.
+      - name: Setup VC++ environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # Install Ninja with an action instead of using Chocolatey, as it's more
+      # reliable and faster. The Ninja install action is pretty good as it
+      # downloads directly from the `ninja-build` GitHub project releases.
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Install dependencies
+        run: python ./scripts/install_deps.py
+
+      - name: Configure
+        run: cmake -B build --preset=windows-release
+
+      - name: Build
+        run: cmake --build build -j8
+
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        timeout-minutes: 2
+        with:
+          job: ${{ matrix.target.name }}
+
+      - name: Package
+        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
+        run: python ./scripts/package.py
+        env:
+          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
+          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
+
+      - name: Upload
+        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
+        uses: ./.github/actions/dist-upload
+        with:
+          use-github: true
+          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
+          package-version: ${{ env.DESKFLOW_VERSION }}
+
+  macos:
+    needs: setup
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.os }}
+    timeout-minutes: ${{ matrix.target.timeout }}
+
+    defaults:
+      run:
+        shell: ${{ matrix.target.shell }}
+
+    strategy:
+      # Normally, we want to fail fast, but in this case we shouldn't since one target may
+      # fail due to transient issues unrelated to the build.
+      fail-fast: false
+
+      matrix:
+        target:
+          - name: "macos-14-arm64"
+            timeout: 10
+            os: "macos-14"
+            arch: arm64
+            shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+
+          - name: ${{ vars.CI_MAC_INTEL_NAME || 'macos-13-x64' }}
+            timeout: 20
+            os: ${{ vars.CI_MAC_INTEL_RUNNER || 'macos-13' }}
+            arch: x64
+            shell: "bash"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      # Should only restore the .venv directory from cache.
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: ci-${{ matrix.target.name }}
+          setup: false
+
+      - name: Cache deps dir
+        uses: actions/cache@v4
+        with:
+          path: ./deps
+          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
+
+      - name: Install dependencies
+        run: ./scripts/install_deps.py
+
+      - name: Configure
+        run: cmake -B build --preset=macos-release
+
+      - name: Build
+        run: cmake --build build -j8
+
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        timeout-minutes: 2
+        with:
+          job: ${{ matrix.target.name }}
+
+      - name: Package
+        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
+        run: ./scripts/package.py
+        env:
+          APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
+          APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
+          APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload
+        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
+        uses: ./.github/actions/dist-upload
+        with:
+          use-github: true
+          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
+          package-version: ${{ env.DESKFLOW_VERSION }}
+
+  linux-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      json-matrix: ${{ steps.filter.outputs.json }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Filter JSON
+        uses: ./.github/actions/filter-json
+        id: filter
+        with:
+          json-file: .github/workflows/ci-linux.json
+          condition: '"${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true"'
+          jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
+
+  linux:
+    needs: [setup, linux-matrix]
+    name: linux-${{ matrix.distro.name }}
+    runs-on: ${{ matrix.distro.runs-on }}
+    container: ${{ matrix.distro.container }}
+    timeout-minutes: 20
+
+    strategy:
+      # Normally, we want to fail fast, but in this case we shouldn't since one distro may
+      # fail due to transient issues unrelated to the build.
+      fail-fast: false
+      matrix: ${{fromJson(needs.linux-matrix.outputs.json-matrix)}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Should only restore the .venv directory from cache.
+      - name: Setup Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: ci-${{ matrix.distro.name }}
+          setup: false
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Install dependencies
+        run: ./scripts/install_deps.py ${{ matrix.distro.extra-dep-args }}
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Configure
+        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }}
+
+      - name: Build
+        run: cmake --build build -j8
+
+      - name: Tests
+        uses: ./.github/actions/run-tests
+        timeout-minutes: 2
+        with:
+          job: linux-${{ matrix.distro.name }}
+
+      - name: Package
+        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_BUILD == 'true' }}
+        env:
+          LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
+          LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
+        run: ./scripts/package.py
+
+      - name: Upload
+        if: ${{ vars.CI_ENABLE_PACKAGING && env.PACKAGE_UPLOAD == 'true' }}
+        uses: ./.github/actions/dist-upload
+        with:
+          use-github: true
+          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
+          package-version: ${{ env.DESKFLOW_VERSION }}
+
+  # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
+  unix:
+    needs: setup
+    name: unix-${{ matrix.distro.name }}
+    runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
+    timeout-minutes: 20
+
+    env:
+      DESKFLOW_BUILD_CMD: |
+        ./scripts/install_deps.sh;
+        cmake -B build;
+        cmake --build build -j16;
+        export QT_QPA_PLATFORM=offscreen;
+        ./build/bin/unittests
+        ./build/bin/integtests
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        distro:
+          - name: freebsd
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build on FreeBSD
+        if: ${{ matrix.distro.name == 'freebsd' }}
+        uses: vmactions/freebsd-vm@v1
+        with:
+          usesh: true
+          run: ${{ env.DESKFLOW_BUILD_CMD }}

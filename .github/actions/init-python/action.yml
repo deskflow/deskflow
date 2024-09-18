@@ -1,0 +1,50 @@
+name: "Setup Python venv"
+description: "Creates and caches a Python virtual environment"
+
+inputs:
+  cache:
+    description: "Cache Python venv"
+    default: true
+
+  setup:
+    description: "Setup Python venv"
+    default: true
+
+  python-bin:
+    description: "Python binary to use"
+    default: "python3"
+
+  cache-key:
+    description: "Cache key (note: hash is appended)"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Check cache key
+      if: ${{ inputs.cache }}
+      run: |
+        if [ -z "${{ inputs.cache-key }}" ]; then
+          echo "Cache key is required"
+          exit 1
+        fi
+      shell: bash
+
+    - name: Cache Python venv
+      if: ${{ inputs.cache }}
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: python-venv-${{ inputs.cache-key }}-${{ hashFiles('scripts/pyproject.toml') }}
+
+    # Use bash if to make output clearer in case of skipping.
+    - name: Setup Python venv
+      run: |
+        if [ "${{ inputs.setup }}" = "true" ]; then
+          echo "Setting up Python venv"
+          ${{ inputs.python-bin }} -m venv .venv
+        else
+          echo "Skipping Python venv setup"
+        fi
+      shell: bash

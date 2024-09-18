@@ -1,0 +1,11 @@
+# Ignore all files in the subprojects directory.
+*
+
+# Except for the wrap files.
+!.gitignore
+!*.wrap
+!packagefiles/*
+
+# Ignore wraps added by subprojects.
+gi-docgen.wrap
+munit.wrap

@@ -1,0 +1,37 @@
+# Maintainer: Deskflow team <developers@symless.com>
+
+pkgname=deskflow
+pkgver=@DESKFLOW_VERSION_FOUR_PART@
+pkgrel=1
+pkgdesc="Mouse and keyboard sharing utility"
+url='https://symless.com/deskflow/'
+arch=('x86_64')
+license=('GPL-2.0-only')
+depends=(
+  'gcc-libs'
+  'glibc'
+  'openssl'
+  'libx11'
+  'libxi'
+  'libxkbfile'
+  'libxext'
+  'libxtst'
+  'libxinerama'
+  'libxkbcommon-x11'
+  'libnotify'
+  'hicolor-icon-theme'
+  'qt6-base'
+  'qt6-tools'
+  'libei'
+  'libportal'
+)
+conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
+options=('!debug')
+
+package() {
+  # By default, `makepkg` will run from the `src` directory, which would
+  # only install the binaries, and not the .desktop file, etc. To install
+  # everything, we need to run `make install` with the root Makefile.
+  cd $startdir
+  make install DESTDIR=$pkgdir
+}
