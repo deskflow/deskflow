@@ -20,10 +20,8 @@ on:
 
 env:
   GIT_SHA: ${{ github.sha }}
-  DESKFLOW_PRODUCT_NAME: ${{ vars.DESKFLOW_PRODUCT_NAME }}
-  DESKFLOW_PACKAGE_PREFIX: ${{ vars.DESKFLOW_PACKAGE_PREFIX }}
-  DESKFLOW_LICENSED_PRODUCT: ${{ vars.DESKFLOW_LICENSED_PRODUCT }}
-  DESKFLOW_ENABLE_ACTIVATION: ${{ vars.DESKFLOW_ENABLE_ACTIVATION }}
+  DESKFLOW_PRODUCT_NAME: ${{ vars.DESKFLOW_PRODUCT_NAME || 'Deskflow' }}
+  DESKFLOW_PACKAGE_PREFIX: ${{ vars.DESKFLOW_PACKAGE_PREFIX || 'deskflow' }}
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft && github.ref_name != 'master' }}
   UPLOAD_TO_GITHUB: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
