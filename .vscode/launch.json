@@ -6,7 +6,7 @@
       "type": "lldb",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergy",
+      "program": "${workspaceFolder}/build/bin/deskflow",
       "preLaunchTask": "kill-build"
     },
     {
@@ -30,8 +30,8 @@
       "type": "lldb",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergys",
-      "args": ["--config-toml", "synergy-config.toml"],
+      "program": "${workspaceFolder}/build/bin/deskflows",
+      "args": ["--config-toml", "deskflow-config.toml"],
       "preLaunchTask": "kill-build"
     },
     {
@@ -39,8 +39,8 @@
       "type": "lldb",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergyc",
-      "args": ["--config-toml", "synergy-config.toml"],
+      "program": "${workspaceFolder}/build/bin/deskflowc",
+      "args": ["--config-toml", "deskflow-config.toml"],
       "preLaunchTask": "kill-build"
     },
     {
@@ -54,7 +54,7 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergy",
+      "program": "${workspaceFolder}/build/bin/deskflow",
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
     },
@@ -81,8 +81,8 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergys",
-      "args": ["--config-toml", "synergy-config.toml"],
+      "program": "${workspaceFolder}/build/bin/deskflows",
+      "args": ["--config-toml", "deskflow-config.toml"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
     },
@@ -91,8 +91,8 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergyc",
-      "args": ["--config-toml", "synergy-config.toml"],
+      "program": "${workspaceFolder}/build/bin/deskflowc",
+      "args": ["--config-toml", "deskflow-config.toml"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
     },
@@ -101,7 +101,7 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/synergyd",
+      "program": "${workspaceFolder}/build/bin/deskflowd",
       "args": ["-f"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "build"
