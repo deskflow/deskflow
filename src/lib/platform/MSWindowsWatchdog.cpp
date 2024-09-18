@@ -604,13 +604,13 @@ void MSWindowsWatchdog::shutdownExistingProcesses() {
 void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
   String installedDir = ARCH->getInstalledDirectory();
   if (!installedDir.empty()) {
-    String deskflow - legacyCommand;
-    deskflow - legacyCommand.append("\"")
-                   .append(installedDir)
-                   .append("\\")
-                   .append("deskflow-legacy")
-                   .append("\"");
-    deskflow - legacyCommand.append(" --get-active-desktop");
+    String legacyCommand;
+    legacyCommand.append("\"")
+        .append(installedDir)
+        .append("\\")
+        .append("deskflow-legacy")
+        .append("\"");
+    legacyCommand.append(" --get-active-desktop");
 
     m_session.updateActiveSession();
     bool elevateProcess = m_elevateProcess;
@@ -618,8 +618,7 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
     HANDLE userToken = getUserToken(security);
     m_elevateProcess = elevateProcess;
 
-    BOOL createRet =
-        startProcessAsUser(deskflow - legacyCommand, userToken, security);
+    BOOL createRet = startProcessAsUser(legacyCommand, userToken, security);
     auto pid = m_processInfo.dwProcessId;
     if (!createRet) {
       DWORD rc = GetLastError();
