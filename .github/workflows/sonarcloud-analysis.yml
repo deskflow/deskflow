@@ -1,0 +1,106 @@
+name: "SonarCloud Analysis"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  push:
+    branches: [master]
+
+jobs:
+  sonarcloud-analysis:
+    if: ${{ vars.SONAR_SCANNER_ENABLED }}
+
+    runs-on: ${{ vars.SONAR_SCANNER_RUNNER || 'ubuntu-24.04' }}
+    container: deskflow/deskflow:ubuntu-22.04-amd64
+    timeout-minutes: 20
+
+    env:
+      SONAR_SCANNER_VERSION: 6.1.0.4477
+      SONAR_SCANNER_OPTS: -server
+      SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
+      CPU_CORE_COUNT: ${{ vars.SONAR_SCANNER_CPU_COUNT || 4 }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history for SonarScanner blame data
+          fetch-depth: 0
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      # Should only restore the .venv directory from cache.
+      - name: Init Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: "sonarcloud"
+          setup: false
+
+      - name: Install dependencies
+        run: |
+          ./scripts/install_deps.py &&
+          apt install curl unzip -y &&
+          pip install gcovr
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install SonarScanner
+        run: |
+          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64
+          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip \
+            $SONAR_SCANNER_URL_BASE/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux-x64.zip
+          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+
+      - name: Install build-wrapper
+        run: |
+          file="build-wrapper-linux-x86.zip"
+          url="https://sonarcloud.io/static/cpp/$file"
+          curl --create-dirs -sSLo $HOME/.sonar/$file $url
+          unzip -o $HOME/.sonar/$file -d $HOME/.sonar/
+
+      - name: Configure
+        run: cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
+
+      - name: Build
+        run: |
+          export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
+          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
+
+      - name: Unit tests coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: cmake --build build --target coverage-unittests
+
+      # Retry integtests coverae as gcovr intermittently fails to parse .gcda files.
+      - name: Integration tests coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: cmake --build build --target coverage-integtests
+
+      - name: Get coverage report paths
+        id: coverage-paths
+        run: |
+          unittests=$(find build -name coverage-unittests.xml)
+          integtests=$(find build -name coverage-integtests.xml)
+          paths="${unittests}${integtests:+,$integtests}"
+          if [ -z "$paths" ]; then
+            echo "Error: No coverage files found"
+            exit 1
+          fi
+          echo "csv=$paths" >> $GITHUB_OUTPUT
+
+      - name: Run SonarScanner
+        run: |
+          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
+          sonar-scanner \
+            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

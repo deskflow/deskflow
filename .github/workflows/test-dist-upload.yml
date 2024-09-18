@@ -1,0 +1,38 @@
+# Used only for testing the `dist-upload` action.
+# Triggered using 'Run workflow' in the Actions tab.
+
+name: Test dist upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make test dist
+        run: |
+          mkdir dist
+          echo "test" > dist/test
+
+      - name: Upload to GitHub
+        if:
+        uses: ./.github/actions/dist-upload
+        with:
+          use-github: true
+          github-target-filename: "test"
+
+      - name: Upload to Google Drive
+        if:
+        uses: ./.github/actions/dist-upload
+        with:
+          use_gdrive: true
+          gdrive-target-base-dir: "test"
+          gdrive-secret-key: ${{ secrets.GOOGLE_DRIVE_KEY }}
+          gdrive-parent-folder-id: ${{ secrets.GOOGLE_DRIVE_TECH_DRIVE }}
+          package-version: 1.0.0-test

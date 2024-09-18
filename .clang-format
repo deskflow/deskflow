@@ -1,0 +1,28 @@
+# Important: Use the same version of clang-format as our linter, which is:
+#
+# $ ./scripts/install_deps.py --only-python
+# $ ./.venv/bin/clang-format --version
+#
+# Warning: If you use a different version, the formatting will be different.
+#
+# To install a specific version of clang-format, use pip:
+# $ pip install clang-format==<version>
+
+BasedOnStyle: LLVM
+
+# Turn off LLVM default alignment of params with the opening bracket,
+# which can be less readable in some cases in our code base.
+#
+# Using `AlwaysBreak` will result in:
+#   void fooBarBazQuxHelloWorld(
+#     int a,
+#     int b);
+#
+# Instead of:
+#   void fooBarBazQuxHelloWorld(int a,
+#                               int b);
+AlignAfterOpenBracket: AlwaysBreak
+
+# Turn off LLVM default packing of ctor initializers.
+# This makes it easier to see which members were initialized and in what order.
+PackConstructorInitializers: CurrentLine

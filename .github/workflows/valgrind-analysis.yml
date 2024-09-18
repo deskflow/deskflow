@@ -1,0 +1,86 @@
+name: "Valgrind Analysis"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  valgrind-analysis:
+    runs-on: ubuntu-latest
+    container: deskflow/deskflow:ubuntu-22.04-amd64
+    timeout-minutes: 10
+
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      # Should only restore the .venv directory from cache.
+      - name: Init Python venv
+        uses: ./.github/actions/init-python
+        with:
+          cache-key: "valgrind"
+          setup: false
+
+      - name: Install dependencies
+        run: |
+          ./scripts/install_deps.py &&
+          apt install valgrind -y
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Configure
+        run: cmake -B build --preset=linux-release
+
+      - name: Build
+        run: cmake --build build -j8
+
+      - name: Valgrind unit tests
+        id: unittests
+        uses: ./.github/actions/run-valgrind
+        with:
+          executable: ./build/bin/unittests
+
+      - name: Valgrind integration tests
+        id: integtests
+        uses: ./.github/actions/run-valgrind
+        with:
+          executable: ./build/bin/integtests
+
+      - name: Get workflow URL
+        id: workflow-url
+        run: |
+          repo_url="${{ github.server_url }}/${{ github.repository }}"
+          echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Append to PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        with:
+          recreate: true
+          header: valgrind
+          message: |
+            ## Valgrind summary
+            See [workflow run](${{ steps.workflow-url.outputs.url }}) for full `valgrind` output.
+
+            ### Unit tests
+            ```
+            ${{ steps.unittests.outputs.summary }}
+            ```
+
+            ### Integration tests
+            ```
+            ${{ steps.integtests.outputs.summary }}
+            ```

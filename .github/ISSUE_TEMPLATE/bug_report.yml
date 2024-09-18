@@ -1,0 +1,114 @@
+name: Bug report
+description: If you find a bug in Deskflow, please let us know so we can fix it.
+labels: ["bug", "triage", "unanswered"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to help us improve Deskflow.
+
+  - type: dropdown
+    id: project
+    attributes:
+      label: Project
+      description: Are you using Deskflow or a fork/derivative?
+      options:
+        # Empty option to force selection
+        -
+        - Deskflow
+        - Barrier
+        - Input Leap
+        - Synergy
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Deskflow version number
+      description: You can find the Deskflow version number on the about screen.
+      placeholder: 1.2.3
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: os
+    attributes:
+      label: Operating systems (OS)
+      description: Which operating systems (OS) are you using?
+      options:
+        - label: Windows
+        - label: macOS
+        - label: Linux
+        - label: BSD-derived
+        - label: Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: os-version
+    attributes:
+      label: OS versions/distros
+      description: |
+        Please provide the version number of your operating system (OS).
+        If you're using Linux, please provide the name of the distribution.
+      placeholder: |
+        - Windows 11
+        - macOS 15
+        - Ubuntu 24.04
+        - FreeBSD 14.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Deskflow configuration
+      description: |
+        Please provide a very brief description of your configuration.
+        Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
+        This will help us understand how you're using Deskflow.
+      placeholder: |
+        - Windows 11 server, macOS 15 client
+        - Each computer has a single monitor
+        - Windows is on the left, macOS is on the right
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: What steps will reproduce the problem?
+      description: |
+        Please list the steps to reproduce the issue.
+        If you're not sure, please provide as much detail as possible.
+        This will help us understand the problem.
+      placeholder: |
+        1. Start Deskflow
+        2. Click 'Configure Server'
+        3. Click 'Apply'
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output
+      description: |
+        Please copy and paste any relevant log output. 
+        This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional information
+      description: |
+        Please provide any additional information that may help us understand the issue.
+        This could include screenshots, error messages, or anything else you think is relevant.
+        - Any ideas about what maybe causing the problem?
+        - Any workarounds that you've discovered?
+        - What other apps are you running?
+        - Does the issue stop you using Deskflow entirely?
+        - Did restarting Deskflow or the computer help?
+        - Anything else you can think of?
