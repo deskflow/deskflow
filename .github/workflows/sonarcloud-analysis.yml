@@ -100,17 +100,7 @@ jobs:
         run: |
           export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
           sonar-scanner \
-            -Dsonar.organization=symless \
-            -Dsonar.projectKey=deskflow_deskflow \
-            -Dsonar.sources=scripts,src/cmd,src/gui,src/lib \
-            -Dsonar.tests=src/test \
-            -Dsonar.exclusions=subprojects/**,build/** \
-            -Dsonar.coverage.exclusions=subprojects/**,scripts/**,src/test/** \
-            -Dsonar.cpd.exclusions=**/*Test*.cpp \
-            -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
-            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
-            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }} \
-            -Dsonar.python.version=3.10
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
