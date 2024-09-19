@@ -147,12 +147,20 @@ Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, op
 
 We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
 
-## Similar Projects
+## Collaborative Projects
 
-* [Lan Mouse](https://github.com/feschber/lan-mouse) - A Rust implementation with the goal of
-  having native front-ends and interoperability with Deskflow.
-* [Input Leap](https://github.com/input-leap/input-leap) - A Deskflow-derivative with the goal
-  of continuing what Barrier started (a now dead Deskflow fork).
+In the open source developer community, similar projects collaborate for the betterment of all
+mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
+
+* [**Lan Mouse**](https://github.com/feschber/lan-mouse) -
+  Rust implementation with the goal of having native front-ends and interoperability with
+  Deskflow/Synergy.
+* [**Input Leap**](https://github.com/input-leap/input-leap) -
+  Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier
+  became a dead fork.
+* [**Synergy**](/deskflow/deskflow/wiki/Relationship-with-Synergy) -
+  Downstream commercial fork and Deskflow sponsor, geared toward adapting upstream to customer
+  needs, offering business and enterprise licensing.
 
 ## FAQ
 
