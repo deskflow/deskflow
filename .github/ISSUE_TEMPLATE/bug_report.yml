@@ -31,6 +31,21 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: build
+    attributes:
+      label: Build type
+      description: What kind of build are you using?
+      options:
+        # Empty option to force selection
+        -
+        - Local developer build (built it yourself)
+        - Community package (apt, dnf, brew, etc.)
+        - Deskflow package (downloaded from us)
+      default: 0
+    validations:
+      required: true
+
   - type: checkboxes
     id: os
     attributes:
