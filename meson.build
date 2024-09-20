@@ -5,11 +5,22 @@
 
 project('deskflow', 'cpp')
 
-subproject('tomlplusplus')
-subproject('cli11')
-
 if host_machine.system() == 'windows'
   subproject('wintoast')
+endif
+
+system_tomlplusplus = get_option('system-tomlplusplus')
+if system_tomlplusplus
+  dependency('tomlplusplus', required: false)
+else
+  subproject('tomlplusplus')
+endif
+
+system_cli11 = get_option('system-cli11')
+if system_cli11
+  dependency('cli11', required: false)
+else
+  subproject('cli11')
 endif
 
 system_gtest = get_option('system-gtest')

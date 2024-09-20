@@ -31,7 +31,9 @@ install_freebsd() {
     qt6-tools \
     gtk3 \
     googletest \
-    pugixml
+    pugixml \
+    tomlplusplus \
+    cli11
 }
 
 install_openbsd() {

@@ -50,8 +50,10 @@ config:
           libgmock-dev \
           libpugixml-dev \
           libei-dev \
-          libportal-dev
-        optional: [libei-dev, libportal-dev]
+          libportal-dev \
+          libtomlplusplus-dev \
+          libcli11-dev
+        optional: [libei-dev, libportal-dev, libtomlplusplus-dev]
 
     linuxmint:
       <<: *debian
@@ -82,7 +84,9 @@ config:
           gmock-devel \
           pugixml-devel \
           libei-devel \
-          libportal-devel
+          libportal-devel \
+          tomlplusplus-devel \
+          cli11-devel
         optional: [libei-devel, libportal-devel]
 
     # RHEL is not actually supported yet, since it doesn't have Qt6 libs.
@@ -128,7 +132,9 @@ config:
           googlemock-devel \
           pugixml-devel \
           libei-devel \
-          libportal-devel
+          libportal-devel \
+          tomlplusplus-devel \
+          cli11-devel
 
     arch: &arch
       dependencies:
@@ -149,7 +155,9 @@ config:
           libportal \
           qt6-base \
           qt6-tools \
-          gtk3
+          gtk3 \
+          tomlplusplus \
+          cli11
 
     manjaro:
       <<: *arch

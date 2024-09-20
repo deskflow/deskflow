@@ -12,6 +12,7 @@ Enhancements:
 - #7519 Rename project to Deskflow (was Synergy Community Edition)
 - #7533 Always upgrade packages on Arch Linux in deps script
 - #7539 Lint and add comment to PR on lint failure
+- #7544 Use system deps for `tomlplusplus` and `CLI11`
 
 # 1.16.1
 
