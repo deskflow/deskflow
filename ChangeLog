@@ -10,6 +10,7 @@ Bug fixes:
 Enhancements:
 
 - #7519 Rename project to Deskflow (was Synergy Community Edition)
+- #7533 Always upgrade packages on Arch Linux in deps script
 
 # 1.16.1
 
