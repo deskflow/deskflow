@@ -9,14 +9,14 @@ on:
       - synchronize
       - ready_for_review
 
+permissions:
+  pull-requests: write
+
 jobs:
   valgrind-analysis:
     runs-on: ubuntu-latest
     container: deskflow/deskflow:ubuntu-22.04-amd64
     timeout-minutes: 10
-
-    permissions:
-      pull-requests: write
 
     steps:
       - name: Checkout

@@ -25,6 +25,9 @@ env:
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft }}
 
+permissions:
+  pull-requests: write
+
 jobs:
   setup:
     runs-on: ubuntu-latest
