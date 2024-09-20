@@ -38,8 +38,8 @@ AboutDialog::AboutDialog(MainWindow *parent)
   QString version = QString::fromStdString(deskflow::version());
   m_pLabelDeskflowVersion->setText(version);
 
-  QString buildDateString = QString::fromLocal8Bit(__DATE__).simplified();
-  QDate buildDate = QLocale("en_US").toDate(buildDateString, "MMM d yyyy");
+  QString buildDateString = QString::fromLocal8Bit(BUILD_DATE).simplified();
+  QDate buildDate = QLocale("en_US").toDate(buildDateString, "yyyy-MM-dd");
   m_pLabelBuildDate->setText(
       buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
 }

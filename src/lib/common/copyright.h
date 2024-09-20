@@ -29,8 +29,8 @@ const auto kCopyrightFormat = //
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
 inline std::string copyright() {
-  const std::string date = __DATE__;
-  const auto year = date.substr(date.size() - 4);
+  const std::string date = BUILD_DATE;
+  const auto year = date.substr(0, 4);
   const auto kBufferLength = 256;
   std::vector<char> buffer(kBufferLength);
   std::snprintf( // NOSONAR
