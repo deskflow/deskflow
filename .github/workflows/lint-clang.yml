@@ -11,6 +11,9 @@ on:
       - synchronize
       - ready_for_review
 
+permissions:
+  pull-requests: write
+
 jobs:
   lint-clang:
     runs-on: ubuntu-latest

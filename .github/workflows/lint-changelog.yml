@@ -16,6 +16,9 @@ on:
       - ready_for_review
       - edited
 
+permissions:
+  pull-requests: write
+
 jobs:
   lint-changelog:
     if: ${{ !github.event.pull_request.draft }}
