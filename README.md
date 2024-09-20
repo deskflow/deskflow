@@ -18,8 +18,11 @@
 > 
 > [Join the discussion](https://github.com/deskflow/deskflow/discussions/7517)
 
+[![Sponsored by: Synergy](https://raw.githubusercontent.com/deskflow/deskflow-artwork/refs/heads/main/synergy-sponsor.svg)](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
+
 [![GitHub Release](https://img.shields.io/github/v/release/deskflow/deskflow?display_name=release&label=latest%20version)](https://github.com/deskflow/deskflow/releases)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow)](https://github.com/deskflow/deskflow/commits/master/)
+![GitHub top language](https://img.shields.io/github/languages/top/deskflow/deskflow)
 [![GitHub License](https://img.shields.io/github/license/deskflow/deskflow)](LICENSE)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
 
@@ -158,7 +161,7 @@ mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
 * [**Input Leap**](https://github.com/input-leap/input-leap) -
   Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier
   became a dead fork.
-* [**Synergy**](/deskflow/deskflow/wiki/Relationship-with-Synergy) -
+* [**Synergy**](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy) -
   Downstream commercial fork and Deskflow sponsor, geared toward adapting upstream to customer
   needs, offering business and enterprise licensing.
 
