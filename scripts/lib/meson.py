@@ -24,8 +24,12 @@ meson_bin = env.get_python_executable("meson")
 def setup(no_system_list, static_list):
     cmd = [meson_bin, "setup", build_dir]
 
+    # TODO: These special Windows exceptions should probably be in Meson
+    # or somewhere other than this script, as it's a bit hacky.
     if env.is_windows():
         cmd.append("-Dsystem-gtest=false")
+        cmd.append("-Dsystem-tomlplusplus=false")
+        cmd.append("-Dsystem-cli11=false")
 
     for subproject in no_system_list or []:
         cmd.append(f"-Dsystem-{subproject}=false")
