@@ -64,7 +64,7 @@ Here are a few ways to join in with the project and get involved:
 
 **1. Dependencies:**
 
-You can either copy/paste the command from [config.yaml] or use the script.
+You can either copy/paste the commands for your OS from [`config.yaml`](config.yaml) or use the deps script.
 
 *Linux, macOS, or BSD-derived:*
 ```
