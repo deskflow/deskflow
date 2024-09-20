@@ -13,13 +13,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if(WIN32)
-  message(STATUS "Enabling warnings as errors (MSVC)")
-  add_compile_options(/WX)
-elseif(UNIX)
-  message(STATUS "Enabling warnings as errors (GNU/Clang)")
-  add_compile_options(-Werror)
-endif()
+macro(configure_build)
+  warnings_as_errors()
+  set_build_date()
+endmacro()
+
+macro(warnings_as_errors)
+  if(WIN32)
+    message(STATUS "Enabling warnings as errors (MSVC)")
+    add_compile_options(/WX)
+  elseif(UNIX)
+    message(STATUS "Enabling warnings as errors (GNU/Clang)")
+    add_compile_options(-Werror)
+  endif()
+endmacro()
+
+macro(set_build_date)
+  # Since CMake 3.8.0, `string(TIMESTAMP ...)` respects `SOURCE_DATE_EPOCH` env var if set,
+  # which allows package maintainers to create reproducible builds.
+  # We require CMake 3.8.0 in the root `CMakeLists.txt` for this reason.
+  string(TIMESTAMP BUILD_DATE "%Y-%m-%d" UTC)
+  message(STATUS "Build date: ${BUILD_DATE}")
+  add_definitions(-DBUILD_DATE="${BUILD_DATE}")
+endmacro()
 
 macro(post_config)
 

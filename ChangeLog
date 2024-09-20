@@ -14,6 +14,7 @@ Enhancements:
 - #7539 Lint and add comment to PR on lint failure
 - #7544 Use system deps for `tomlplusplus` and `CLI11`
 - #7549 Script to create Python virtual environment (venv)
+- #7547 Use `SOURCE_DATE_EPOCH` for reproducible builds
 
 # 1.16.1
 
