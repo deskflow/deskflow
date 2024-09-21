@@ -645,9 +645,9 @@ macro(configure_tomlplusplus)
     set(DEFAULT_SYSTEM_TOMLPLUSPLUS ON)
   endif()
 
-  option(DEFAULT_SYSTEM_TOMLPLUSPLUS "Use system tomlplusplus"
+  option(SYSTEM_TOMLPLUSPLUS "Use system tomlplusplus"
          ${DEFAULT_SYSTEM_TOMLPLUSPLUS})
-  if(DEFAULT_SYSTEM_TOMLPLUSPLUS)
+  if(SYSTEM_TOMLPLUSPLUS)
     message(VERBOSE "Using system tomlplusplus")
     find_package(tomlplusplus)
     if(tomlplusplus_FOUND)
