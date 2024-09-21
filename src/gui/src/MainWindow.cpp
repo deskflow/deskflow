@@ -73,11 +73,11 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile16 = ":/icons/16x16/deskflow.png";
+const auto kIconFile16 = ":/icons/16x16/tray.png";
 
 #ifdef Q_OS_MAC
-const auto kLightIconFile = ":/icons/64x64/deskflow-light.png";
-const auto kDarkIconFile = ":/icons/64x64/deskflow-dark.png";
+const auto kLightIconFile = ":/icons/64x64/tray-light.png";
+const auto kDarkIconFile = ":/icons/64x64/tray-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
