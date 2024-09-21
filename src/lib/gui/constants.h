@@ -24,7 +24,7 @@ namespace deskflow::gui {
 // important: this is used for settings paths on some platforms,
 // and must not be a url. qt automatically converts this to reverse domain
 // notation (rdn), e.g. com.symless
-const auto kOrgDomain = "symless.com";
+const auto kOrgDomain = "deskflow.org";
 
 const auto kLinkBuy = R"(<a href="%1" style="color: %2">Buy now</a>)";
 const auto kLinkRenew = R"(<a href="%1" style="color: %2">Renew now</a>)";
@@ -32,7 +32,7 @@ const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
 const auto kUrlWebsite = "https://symless.com";
 const auto kUrlSourceQuery = "source=gui";
-const auto kUrlGitHub = "https://github.com/symless/synergy";
+const auto kUrlGitHub = "https://github.com/deskflow/deskflow";
 const auto kUrlGnomeTrayFix =
     "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
 const auto kUrlProduct = QString("%1/synergy").arg(kUrlWebsite);

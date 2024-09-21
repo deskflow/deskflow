@@ -1,10 +1,10 @@
-# Maintainer: Deskflow team <developers@symless.com>
+# Maintainer: Deskflow <maintainers@deskflow.org>
 
 pkgname=deskflow
 pkgver=@DESKFLOW_VERSION_FOUR_PART@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
-url='https://symless.com/deskflow/'
+url='https://deskflow.org/'
 arch=('x86_64')
 license=('GPL-2.0-only')
 depends=(
