@@ -124,7 +124,7 @@ void Client::connect(size_t addressIndex) {
   try {
     if (m_args.m_hostMode) {
       LOG(
-          (CLOG_NOTE "waiting for server conection on %i port",
+          (CLOG_NOTE "waiting for server connection on %i port",
            m_serverAddress.getPort()));
     } else {
       // resolve the server hostname.  do this every time we connect

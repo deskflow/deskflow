@@ -909,7 +909,7 @@ void ServerProxy::setActiveServerLanguage(const String &language) {
       m_isUserNotifiedAboutLanguageSyncError = false;
     }
   } else {
-    LOG((CLOG_DEBUG1 "active server langauge is empty"));
+    LOG((CLOG_DEBUG1 "active server language is empty"));
   }
 }
 

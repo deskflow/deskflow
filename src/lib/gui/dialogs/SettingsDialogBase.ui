@@ -609,7 +609,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Launch with elevated privilages</string>
+               <string>Launch with elevated privileges</string>
               </property>
              </widget>
             </item>
