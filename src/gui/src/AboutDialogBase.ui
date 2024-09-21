@@ -114,14 +114,14 @@
      <property name="maximumSize">
       <size>
        <width>200</width>
-       <height>50</height>
+       <height>39</height>
       </size>
      </property>
      <property name="text">
       <string notr="true"/>
      </property>
      <property name="pixmap">
-      <pixmap>:/image/about-light.png</pixmap>
+      <pixmap>:/image/logo-light.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
