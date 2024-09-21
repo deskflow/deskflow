@@ -131,8 +131,12 @@ def ensure_in_venv(script_file, auto_create=False):
     if not in_venv():
         if not os.path.exists(VENV_DIR):
             if not auto_create:
-                print("Hint: Run the `install_deps.py` script first.")
-                raise RuntimeError(f"Virtual environment not found at: {VENV_DIR}")
+                print(
+                    "The Python virtual environment (.venv) needs to be created before you can "
+                    "run this script.\n"
+                    "Please run: scripts/setup_venv.py"
+                )
+                sys.exit(1)
 
             print(f"Creating virtual environment at {VENV_DIR}")
             venv.create(VENV_DIR, with_pip=True)
