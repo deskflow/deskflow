@@ -17,6 +17,8 @@
 
 #include "VersionChecker.h"
 
+#include "env_vars.h"
+
 #include <QLocale>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -27,17 +29,21 @@
 
 const char *const kVersion = DESKFLOW_VERSION;
 
-VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManager> network)
+using namespace deskflow::gui;
+
+VersionChecker::VersionChecker(
+    std::shared_ptr<QNetworkAccessManagerProxy> network)
     : m_network(
-          network ? network : std::make_shared<QNetworkAccessManager>(this)) {
+          network ? network : std::make_shared<QNetworkAccessManagerProxy>()) {
+  m_network->init();
   connect(
-      m_network.get(), SIGNAL(finished(QNetworkReply *)), this,
-      SLOT(replyFinished(QNetworkReply *)));
+      m_network.get(), &QNetworkAccessManagerProxy::finished, this,
+      &VersionChecker::replyFinished);
 }
 
 void VersionChecker::checkLatest() const {
-  const QString url =
-      qEnvironmentVariable("DESKFLOW_VERSION_URL", DESKFLOW_VERSION_URL);
+  const QString url = env_vars::versionUrl();
+  qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
   auto userAgent = QString("Deskflow %1 on %2")
                        .arg(kVersion)
@@ -53,7 +59,10 @@ void VersionChecker::replyFinished(QNetworkReply *reply) {
   auto newestVersion = QString(reply->readAll());
   if (!newestVersion.isEmpty() &&
       compareVersions(DESKFLOW_VERSION, newestVersion) > 0) {
+    qDebug("update found: %s", qPrintable(newestVersion));
     emit updateFound(newestVersion);
+  } else {
+    qDebug("no updates found");
   }
 }
 

@@ -16,8 +16,13 @@
  */
 
 #include "gui/VersionChecker.h"
+#include "shared/gui/TestQtCoreApp.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
+using namespace deskflow::gui::proxy;
+using namespace testing;
 
 class VersionCheckerTests : public ::testing::Test {
 protected:
@@ -25,6 +30,22 @@ protected:
     return VersionChecker::compareVersions(left, right);
   }
 };
+
+class MockNetworkAccessManager : public QNetworkAccessManagerProxy {
+public:
+  MOCK_METHOD(void, init, (), (override));
+  MOCK_METHOD(void, get, (const QNetworkRequest &request), (const, override));
+};
+
+TEST_F(VersionCheckerTests, checkLatest_callsNetworkGet) {
+  TestQtCoreApp app;
+  const auto network = std::make_shared<NiceMock<MockNetworkAccessManager>>();
+  const VersionChecker checker(network);
+
+  EXPECT_CALL(*network, get(testing::_)).Times(1);
+
+  checker.checkLatest();
+}
 
 TEST_F(VersionCheckerTests, compareVersions_major_isValid) {
   EXPECT_EQ(compareVersions("1.0.0", "2.0.0"), 1);

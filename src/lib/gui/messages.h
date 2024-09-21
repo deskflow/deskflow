@@ -56,4 +56,6 @@ void showWaylandExperimental(QWidget *parent);
 
 void showWaylandLibraryError(QWidget *parent);
 
+bool showUpdateCheckOption(QWidget *parent);
+
 } // namespace deskflow::gui::messages

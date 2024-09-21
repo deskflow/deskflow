@@ -570,7 +570,15 @@ void MainWindow::open() {
     showAndActivate();
   }
 
-  m_VersionChecker.checkLatest();
+  if (!m_AppConfig.enableUpdateCheck().has_value()) {
+    m_AppConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
+  }
+
+  if (m_AppConfig.enableUpdateCheck().value()) {
+    m_VersionChecker.checkLatest();
+  } else {
+    qDebug("update check disabled");
+  }
 
   if (m_AppConfig.startedBefore()) {
     m_CoreProcess.start();
