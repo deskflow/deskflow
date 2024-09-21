@@ -1,4 +1,4 @@
-# Deskflow
+![Deskflow](https://github.com/user-attachments/assets/f005b958-24df-4f4a-9bfd-4f834dae59d6)
 
 > [!TIP]
 > We're on Libera Chat IRC network (`#deskflow` or `#deskflow-dev`).
@@ -39,7 +39,7 @@ and work seamlessly between them.
 [Deskflow v1.16](https://github.com/deskflow/deskflow/releases/tag/1.16.0-beta%2Br2)
 (required >= GNOME 46 or KDE Plasma 6.1).
 
-![Deskflow](https://github.com/user-attachments/assets/faf5bd69-336c-4bd0-ace3-e911f199d961)
+![Deskflow GUI](https://github.com/user-attachments/assets/883660dc-f3f5-4b69-8821-a079a58d3882)
 
 To use Deskflow you can follow the [Build Quick Start](#build-quick-start),
 use one of our packages, or if it's available by your favorite package repository,
