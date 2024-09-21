@@ -106,6 +106,7 @@ private:
     kMainWindowPosition = 40,
     kShowDevThanks = 41,
     kShowCloseReminder = 42,
+    kEnableUpdateCheck = 43,
   };
 
 public:
@@ -180,6 +181,7 @@ public:
   std::optional<QPoint> mainWindowPosition() const;
   bool showDevThanks() const;
   bool showCloseReminder() const;
+  std::optional<bool> enableUpdateCheck() const;
 
   //
   // Setters (overrides)
@@ -224,6 +226,7 @@ public:
   void setMainWindowPosition(const QPoint &position);
   void setShowDevThanks(bool show);
   void setShowCloseReminder(bool show);
+  void setEnableUpdateCheck(bool value);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -332,6 +335,7 @@ private:
   bool m_ShowDevThanks = !deskflow::gui::license::isLicensedProduct();
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
+  std::optional<bool> m_EnableUpdateCheck;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

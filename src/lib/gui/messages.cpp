@@ -18,8 +18,10 @@
 #include "messages.h"
 
 #include "Logger.h"
+#include "common/constants.h"
 #include "common/version.h"
 #include "constants.h"
+#include "env_vars.h"
 #include "gui/license/license_utils.h"
 #include "styles.h"
 
@@ -312,6 +314,21 @@ void showWaylandLibraryError(QWidget *parent) {
           R"(<a href="%1" style="color: %2">report a bug</a>.</p>)"
           "<p>Please check the logs for more information.</p>")
           .arg(kUrlBugReport, kColorSecondary));
+}
+
+bool showUpdateCheckOption(QWidget *parent) {
+  QMessageBox message(parent);
+  message.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
+  const auto checkButton = message.addButton(
+      QObject::tr("Check for updates"), QMessageBox::AcceptRole);
+  message.setText(
+      QString("<p>Would you like to check for updates when %1 starts?</p>"
+              "<p>Checking for updates requires an Internet connection.</p>"
+              "<p>URL: <pre>%2</pre></p>")
+          .arg(kAppName, env_vars::versionUrl()));
+
+  message.exec();
+  return message.clickedButton() == checkButton;
 }
 
 } // namespace deskflow::gui::messages

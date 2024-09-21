@@ -94,6 +94,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "mainWindowPosition",
     "showDevThanks",
     "showCloseReminder",
+    "enableUpdateCheck",
 };
 
 AppConfig::AppConfig(
@@ -175,6 +176,8 @@ void AppConfig::recallFromCurrentScope() {
       getFromCurrentScope(kShowDevThanks, m_ShowDevThanks).toBool();
   m_ShowCloseReminder =
       getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
+  m_EnableUpdateCheck = getFromCurrentScope<bool>(
+      kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
 }
 
 void AppConfig::recallScreenName() {
@@ -231,11 +234,11 @@ void AppConfig::commit() {
     setInCurrentScope(kInvertConnection, m_InvertConnection);
     setInCurrentScope(kEnableService, m_EnableService);
     setInCurrentScope(kCloseToTray, m_CloseToTray);
-    setInCurrentScope(kShowDevThanks, m_ShowDevThanks);
-    setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
-
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
+    setInCurrentScope(kShowDevThanks, m_ShowDevThanks);
+    setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
+    setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
   }
 
   if (m_TlsChanged) {
@@ -535,6 +538,10 @@ bool AppConfig::showDevThanks() const { return m_ShowDevThanks; }
 
 bool AppConfig::showCloseReminder() const { return m_ShowCloseReminder; }
 
+std::optional<bool> AppConfig::enableUpdateCheck() const {
+  return m_EnableUpdateCheck;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -659,6 +666,10 @@ void AppConfig::setShowDevThanks(bool value) { m_ShowDevThanks = value; }
 
 void AppConfig::setShowCloseReminder(bool value) {
   m_ShowCloseReminder = value;
+}
+
+void AppConfig::setEnableUpdateCheck(bool value) {
+  m_EnableUpdateCheck = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

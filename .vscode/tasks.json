@@ -67,9 +67,9 @@
     {
       "label": "kill",
       "type": "shell",
-      "command": "killall synergy; killall synergyc; killall synergys || true",
+      "command": "killall deskflow; killall deskflowc; killall deskflows || true",
       "windows": {
-        "command": "taskkill /F /IM synergy.exe /IM synergyc.exe /IM synergys.exe; $true"
+        "command": "taskkill /F /IM deskflow.exe /IM deskflowc.exe /IM deskflows.exe; $true"
       },
       "presentation": {
         "reveal": "silent"
@@ -83,11 +83,11 @@
     {
       "label": "gui",
       "type": "process",
-      "command": "${workspaceFolder}/build/bin/synergy",
+      "command": "${workspaceFolder}/build/bin/deskflow",
       "dependsOn": ["build", "kill"],
       "problemMatcher": [],
       "windows": {
-        "command": "${workspaceFolder}/build/bin/synergy.exe"
+        "command": "${workspaceFolder}/build/bin/deskflow.exe"
       }
     },
     {
