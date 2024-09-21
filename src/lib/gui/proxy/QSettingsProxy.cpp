@@ -131,7 +131,7 @@ void QSettingsProxy::loadUser() {
 #if defined(Q_OS_MAC)
   // on mac, we used to save settings to "com.http-symless-com.Deskflow.plist"
   // because `setOrganizationName` was historically called using a url instead
-  // of an actual domain (e.g. symless.com).
+  // of an actual domain (e.g. deskflow.org).
   migrateLegacyUserSettings(*m_pSettings);
 #endif // Q_OS_MAC
 }

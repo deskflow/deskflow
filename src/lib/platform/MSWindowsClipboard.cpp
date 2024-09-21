@@ -121,10 +121,6 @@ bool MSWindowsClipboard::open(Time time) const {
   LOG((CLOG_DEBUG "open clipboard"));
 
   if (!OpenClipboard(m_window)) {
-    // unable to cause this in integ tests; but this can happen!
-    // * http://symless.com/pm/issues/86
-    // * http://symless.com/pm/issues/1256
-    // logging improved to see if we can catch more info next time.
     LOG((CLOG_WARN "failed to open clipboard: %d", GetLastError()));
     return false;
   }

@@ -21,7 +21,7 @@ macro(configure_packaging)
 
   if(${BUILD_INSTALLER})
     set(CPACK_PACKAGE_NAME "deskflow")
-    set(CPACK_PACKAGE_CONTACT "Deskflow <support@symless.com>")
+    set(CPACK_PACKAGE_CONTACT "Deskflow <maintainers@deskflow.org>")
     set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
     set(CPACK_PACKAGE_VENDOR "Symless")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
@@ -89,7 +89,7 @@ macro(configure_linux_packaging)
   set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_LINUX})
   set(CPACK_GENERATOR "DEB;RPM;TGZ")
 
-  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Deskflow <developers@symless.com>")
+  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Deskflow <maintainers@deskflow.org>")
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 

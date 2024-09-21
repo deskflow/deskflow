@@ -34,7 +34,7 @@ macro(configure_definitions)
   set(UNIT_TESTS_BIN unittests)
 
   if("${VERSION_URL}" STREQUAL "")
-    set(VERSION_URL "https://api.symless.com/version?version=v1")
+    set(VERSION_URL "https://api.deskflow.org/version")
   endif()
   add_definitions(-DDESKFLOW_VERSION_URL="${VERSION_URL}")
 
