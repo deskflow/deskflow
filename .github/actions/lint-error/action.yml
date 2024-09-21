@@ -52,27 +52,6 @@ runs:
         retention-days: 3
         if-no-files-found: error
 
-    - name: PR comment (lint source hint)
-      if: steps.changes.outputs.diff
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        header: ${{ inputs.comment-header }}
-        message: |
-          ❌ `${{ inputs.format-tool }}` failed: It looks like your changes don't match our code style.
-
-          🛠️ Please either run `${{ inputs.format-command }}` or apply this patch with `git apply`:
-          ```diff
-          ${{ steps.changes.outputs.diff }}
-          ```
-          [${{ steps.changes.outputs.file }}](${{ steps.upload.outputs.artifact-url }})
-
-    - name: Delete PR comment
-      if: ${{ !steps.changes.outputs.diff }}
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        header: ${{ inputs.comment-header }}
-        delete: true
-
     - name: Fail if diff exists
       if: steps.changes.outputs.diff
       run: exit 1

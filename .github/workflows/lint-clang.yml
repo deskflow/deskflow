@@ -1,6 +1,4 @@
-# Lints CMake config and C++ source code.
-
-name: "Lint (Clang)"
+name: "Lint Clang"
 
 on:
   workflow_dispatch:
