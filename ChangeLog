@@ -13,6 +13,7 @@ Enhancements:
 - #7533 Always upgrade packages on Arch Linux in deps script
 - #7539 Lint and add comment to PR on lint failure
 - #7544 Use system deps for `tomlplusplus` and `CLI11`
+- #7549 Script to create Python virtual environment (venv)
 
 # 1.16.1
 
