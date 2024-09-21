@@ -19,7 +19,7 @@
 # > New in version 3.8: If the SOURCE_DATE_EPOCH environment variable is set,
 # > its value will be used instead of the current time.
 # > See https://reproducible-builds.org/specs/source-date-epoch/ for details.
-cmake_minimum_required(VERSION 3.8)
+  cmake_minimum_required(VERSION 3.8)
 
 project(deskflow C CXX)
 
