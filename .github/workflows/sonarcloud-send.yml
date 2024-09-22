@@ -1,0 +1,59 @@
+# Uses `workflow_run` to securely send coverage reports to SonarCloud.
+#
+# Important: For security, the `workflow_run` trigger runs the workflow from the default branch,
+# so any changes to this workflow must be made in the default branch to take effect.
+#
+# Warning: A malicious coverage report could intentionally inject incorrect metrics, skew the
+# quality gate, and lead to incorrect conclusions about the state of the codebase. It could hide
+# real issues or introduce false positives to sabotage development.
+#
+# This workflow is neccesary because PRs opened by external forks do not have access to secrets,
+# and SonarCloud requires a secret to send coverage reports.
+#
+# If this was in the CI workflow, it'd be tidier and easier to debug but unfortunately that
+# isn't possible due to the lower security context that the CI workflow runs in.
+name: SonarCloud Send
+
+on:
+  workflow_run:
+    workflows: ["SonarCloud Analysis"]
+    types:
+      - completed
+
+jobs:
+  sonarcloud-send:
+    runs-on: "ubuntu-24.04"
+    timeout-minutes: 20
+
+    env:
+      CPU_CORE_COUNT: ${{ vars.SONAR_SCANNER_CPU_COUNT || 4 }}
+
+    steps:
+      - name: Download summaries
+        id: download
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          name: coverage-reports
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get coverage report paths
+        id: coverage-paths
+        run: |
+          unittests=$(find build -name coverage-unittests.xml)
+          integtests=$(find build -name coverage-integtests.xml)
+          paths="${unittests}${integtests:+,$integtests}"
+          if [ -z "$paths" ]; then
+            echo "Error: No coverage files found"
+            exit 1
+          fi
+          echo "csv=$paths" >> $GITHUB_OUTPUT
+
+      - name: Run SonarScanner
+        run: |
+          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
+          sonar-scanner \
+            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
