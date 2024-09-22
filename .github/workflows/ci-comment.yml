@@ -41,16 +41,22 @@ jobs:
       - name: Merge summaries
         id: summary
         run: |
-          files=$(ls summaries)
-          if [ -z "$files" ]; then
-            echo "No summaries found"
+          dir="summaries"
+          if [ ! -d "$dir" ]; then
+            echo "Skipping, no summaries, no such dir: $dir"
             exit 0
+          fi
+
+          files=$(ls $dir)
+          if [ -z "$files" ]; then
+            echo "Error: No summaries found in dir: $dir"
+            exit 1
           fi
 
           echo "message<<EOF" >> $GITHUB_OUTPUT
           echo "## CI Summary" >> $GITHUB_OUTPUT
 
-          for file in summaries/*; do
+          for file in $dir/*; do
             echo $(cat $file) >> $GITHUB_OUTPUT
           done
 
