@@ -35,7 +35,7 @@ jobs:
         id: workflow-url
         run: |
           repo_url="${{ github.server_url }}/${{ github.repository }}"
-          echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+          echo "url=$repo_url/actions/runs/${{ github.event.workflow_run.id }}" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Merge summaries
