@@ -9,17 +9,36 @@ on:
       - completed
 
 jobs:
-  upload:
+  lint-comment:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.event == 'pull_request'
 
     steps:
+      # Modified example taken directly from the 'workflow_run' event documentation.
+      # It seems that using `actions/download-artifact@v4` with `github.event.workflow_run.id`
+      # finds no artifacts (even though this run ID does in fact have artifacts),
+      # so we have to use the GitHub API to find the artifact instead.
       - name: Download artifact
-        if: github.event.workflow_run.conclusion == 'failure'
-        id: download
-        uses: actions/download-artifact@v4
+        uses: actions/github-script@v6
         with:
-          run-id: ${{ github.event.workflow_run.id }}
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let artifact = allArtifacts.data.artifacts[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: artifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/artifact.zip`, Buffer.from(download.data));
+
+      - name: Unzip artifact
+        run: unzip artifact.zip
 
       - name: Debug
         run: ls -R
