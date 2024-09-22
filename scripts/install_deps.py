@@ -175,7 +175,7 @@ def install(args):
     if env.is_windows() and not args.skip_vcpkg:
         import lib.vcpkg as vcpkg
 
-        vcpkg.install()
+        vcpkg.install(args.ci_env)
 
     if not args.skip_meson:
         if args.subprojects:
