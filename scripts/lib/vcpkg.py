@@ -21,14 +21,15 @@ import lib.cmd_utils as cmd_utils
 GIT_REPO = "https://github.com/microsoft/vcpkg.git"
 
 
-def install():
-    vcpkg_bin = ensure_vcpkg()
+def install(ci_env):
+    vcpkg_bin = ensure_vcpkg(ci_env)
 
     cmd_utils.run([vcpkg_bin, "install"], print_cmd=True)
 
 
-def ensure_vcpkg():
-    if cmd_utils.has_command("vcpkg"):
+def ensure_vcpkg(ci_env):
+    # Don't use the local vcpkg if we're in CI, since this makes caching complicated.
+    if not ci_env and cmd_utils.has_command("vcpkg"):
         print("Using system vcpkg")
         return "vcpkg"
 

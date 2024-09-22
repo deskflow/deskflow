@@ -68,10 +68,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
+            vcpkg
             vcpkg_installed
-            ${{ env.LOCALAPPDATA }}/vcpkg
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
-          restore-keys: vcpkg-${{ runner.os }}
 
       # Should only restore the .venv directory from cache.
       - name: Init Python venv
@@ -98,6 +97,8 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Install dependencies
+        env:
+          VCPKG_ROOT: "" # Unset deliberately to suppress 'already installed' warning.
         run: python ./scripts/install_deps.py
 
       - name: Configure
