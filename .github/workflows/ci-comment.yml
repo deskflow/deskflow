@@ -31,16 +31,30 @@ jobs:
           path: summaries
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Debug
-        run: ls -R
+      - name: Get workflow URL
+        id: workflow-url
+        run: |
+          repo_url="${{ github.server_url }}/${{ github.repository }}"
+          echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Merge summaries
         id: summary
         run: |
+          files=$(ls summaries)
+          if [ -z "$files" ]; then
+            echo "No summaries found"
+            exit 0
+          fi
+
           echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo "## CI Summary" >> $GITHUB_OUTPUT
+
           for file in summaries/*; do
             echo $(cat $file) >> $GITHUB_OUTPUT
           done
+
+          echo "[Full summary](${{ steps.workflow-url.outputs.url }})" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Set PR comment
