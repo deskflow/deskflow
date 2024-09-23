@@ -41,19 +41,21 @@ jobs:
             exit 0
           fi
 
-          echo "message<<EOF" >> $GITHUB_OUTPUT
-          echo "## CI Summary" >> $GITHUB_OUTPUT
-
-          for file in $files; do
-            echo $(cat $file) >> $GITHUB_OUTPUT
-          done
-
           repo_url="${{ github.server_url }}/${{ github.repository }}"
           run_url="$repo_url/actions/runs/${{ github.event.workflow_run.id }}"
 
-          echo > $GITHUB_OUTPUT
-          echo "[Full summary]($run_url) (scroll down)" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "message<<EOF"
+            echo "## CI Summary"
+
+            for file in $files; do
+              echo $(cat $file)
+            done
+
+            echo
+            echo "[Full summary]($run_url) (scroll down)"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Set PR comment
         if: steps.summary.outputs.message
