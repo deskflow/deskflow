@@ -2,15 +2,7 @@ name: "Lint Clang"
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
-
-permissions:
-  pull-requests: write
+  workflow_call:
 
 jobs:
   lint-clang:
@@ -37,4 +29,3 @@ jobs:
         with:
           format-command: ./scripts/lint_clang.py -f
           format-tool: "clang-format"
-          comment-header: "lint-clang"

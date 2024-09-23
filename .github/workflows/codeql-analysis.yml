@@ -2,12 +2,7 @@ name: "CodeQL Analysis"
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
+  workflow_call:
   push:
     branches: [master]
 

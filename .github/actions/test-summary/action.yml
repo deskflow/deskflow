@@ -1,0 +1,67 @@
+name: "Test Summary"
+description: "Creates a markdown table from test results and uploads a summary file"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download test result rows
+      uses: actions/download-artifact@v4
+      with:
+        pattern: test-result-*
+        merge-multiple: true
+        path: rows
+
+    - name: Build markdown table
+      id: markdown-table
+      run: |
+        # Builds a markdown table from the row artifacts.
+
+        header=$(cat <<EOF
+        # Test results
+        | Job name | Unit tests | Integration tests |
+        | --- | --- | --- |
+        EOF
+        )
+
+        rows=""
+        for file in rows/*; do
+          rows+=$(cat $file)
+          rows+=$'\n'
+        done
+
+        {
+          echo "markdown<<EOF"
+          echo "$header"
+          echo "$rows"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Set step summary
+      id: summary
+      run: |
+        # Sets the step summary and creates a CI summary file.
+
+        table="${{ steps.markdown-table.outputs.markdown }}"
+        if [ -z "$table" ]; then
+          echo "No test results found" > $GITHUB_STEP_SUMMARY
+          exit 1
+        else
+          echo "$table" > $GITHUB_STEP_SUMMARY
+        fi
+
+        count=$(echo -n "$table" | grep -o "❌" | wc -l || echo 0)
+        if [ $count -gt 0 ]; then
+          file="ci-summary.md"
+          echo "❌🔬 Tests failed: $count" > $file
+          echo "file=$file" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    - name: Upload CI summary
+      if: steps.summary.outputs.file
+      uses: actions/upload-artifact@v4
+      with:
+        name: summary-tests
+        path: ${{ steps.summary.outputs.file }}
+        if-no-files-found: error
