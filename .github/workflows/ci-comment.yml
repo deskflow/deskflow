@@ -52,7 +52,7 @@ jobs:
           run_url="$repo_url/actions/runs/${{ github.event.workflow_run.id }}"
 
           echo > $GITHUB_OUTPUT
-          echo "[Full summary]($run_url)" (scroll down) >> $GITHUB_OUTPUT
+          echo "[Full summary]($run_url) (scroll down)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Set PR comment
