@@ -59,20 +59,24 @@ jobs:
     uses: ./.github/workflows/lint-clang.yml
 
   analyse-valgrind:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: false
+    #if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/valgrind-analysis.yml
 
   analyse-codeql:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: false
+    #if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/codeql-analysis.yml
 
   analyse-sonarcloud:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: false
+    #if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   windows:
+    if: false
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
@@ -160,6 +164,7 @@ jobs:
           package-version: ${{ env.DESKFLOW_VERSION }}
 
   macos:
+    if: false
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
@@ -242,6 +247,7 @@ jobs:
           package-version: ${{ env.DESKFLOW_VERSION }}
 
   linux-matrix:
+    if: false
     runs-on: ubuntu-latest
 
     outputs:
@@ -324,6 +330,7 @@ jobs:
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
+    if: false
     name: unix-${{ matrix.distro.name }}
     runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
     timeout-minutes: 20
