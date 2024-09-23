@@ -30,6 +30,10 @@ jobs:
           path: summaries
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug
+        run: |
+          echo "${{ toJson(github.event.workflow_run) }}"
+
       - name: Merge summaries
         id: summary
         run: |
