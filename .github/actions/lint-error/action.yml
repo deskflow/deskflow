@@ -2,10 +2,6 @@ name: "Lint error"
 description: "Checks for lint errors and posts a helpful comment"
 
 inputs:
-  comment-header:
-    description: "The header ID for the comment"
-    required: true
-
   format-command:
     description: "The command to run to fix lint errors"
     required: true
@@ -47,9 +43,40 @@ runs:
       if: steps.changes.outputs.diff
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ steps.changes.outputs.file }}
+        name: ${{ inputs.format-tool }}-diff
         path: ${{ steps.changes.outputs.file }}
-        retention-days: 3
+        if-no-files-found: error
+
+    - name: Set summary
+      id: summary
+      if: steps.changes.outputs.diff
+      run: |
+        code_block="\`\`\`"
+
+        summary=$(cat<<EOF
+        ❌ \`${{ inputs.format-tool }}\`: It looks like your changes don't match our code style.
+
+        🛠️ Please either run \`${{ inputs.format-command }}\` or apply this patch with \`git apply\`:
+
+        [\`${{ steps.changes.outputs.file }}\`](${{ steps.upload.outputs.artifact-url }})
+        $code_block diff
+        ${{ steps.changes.outputs.diff }}
+        $code_block
+        EOF
+        )
+        echo "$summary" >> $GITHUB_STEP_SUMMARY
+
+        file="ci_summary.md"
+        echo "❌🛠️ \`${{ inputs.format-tool }}\`: Lint errors, fix available." >> $file
+        echo "file=$file" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Upload CI summary as artifact
+      if: steps.summary.outputs.file
+      uses: actions/upload-artifact@v4
+      with:
+        name: summary-${{ inputs.format-tool }}
+        path: ${{ steps.summary.outputs.file }}
         if-no-files-found: error
 
     - name: Fail if diff exists

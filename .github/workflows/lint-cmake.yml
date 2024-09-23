@@ -2,15 +2,7 @@ name: "Lint CMake"
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
-
-permissions:
-  pull-requests: write
+  workflow_call:
 
 jobs:
   lint-cmake:
@@ -37,4 +29,3 @@ jobs:
         with:
           format-command: ./scripts/lint_cmake.py -f
           format-tool: "cmake-format"
-          comment-header: "lint-cmake"

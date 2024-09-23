@@ -14,7 +14,13 @@ runs:
       id: unittests
       env:
         QT_QPA_PLATFORM: offscreen
-      run: ./build/bin/unittests
+      run: |
+        ./build/bin/unittests
+        result=$?
+
+        if [ $result -ne 0 ]; then
+          echo "Unit tests failed with code: $result" >> $GITHUB_STEP_SUMMARY
+        fi
       shell: bash
       continue-on-error: true
 
@@ -27,7 +33,7 @@ runs:
         result=$?
 
         if [ $result -ne 0 ]; then
-          echo "::warning ::Integration tests failed with code: $result"
+          echo "Integration tests failed with code: $result" >> $GITHUB_STEP_SUMMARY
         fi
       shell: bash
       continue-on-error: true
@@ -45,14 +51,25 @@ runs:
         echo "integtests=$integtests" >> $GITHUB_OUTPUT
       shell: bash
 
-    - name: Append to PR comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event.pull_request.head.repo.full_name == github.repository
+    - name: Summary row
+      id: row
+      run: |
+        file="row-${{ inputs.job }}.md"
+
+        row=""
+        row+="| ${{ inputs.job }} "
+        row+="| ${{ steps.results.outputs.unittests }} "
+        row+="| ${{ steps.results.outputs.integtests }} |"
+        echo "$row" > $file
+
+        echo "file=$file" > $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Save summary row
+      uses: actions/upload-artifact@v4
       with:
-        header: tests
-        append: true
-        message: |
-          | ${{ inputs.job }} | ${{ steps.results.outputs.unittests }} | ${{ steps.results.outputs.integtests }} |
+        name: test-result-${{ inputs.job }}
+        path: ${{ steps.row.outputs.file }}
 
     - name: Check test outcome
       if: steps.unittests.outcome == 'failure'

@@ -25,11 +25,21 @@ env:
   PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
   PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft }}
 
-permissions:
-  pull-requests: write
-
 jobs:
-  setup:
+  # Quality gate to allow PR merge, used in the branch protection rules.
+  ci-passed:
+    runs-on: ubuntu-latest
+    needs: [lint-cmake, lint-clang, windows, macos, linux, unix]
+
+    steps:
+      - run: echo "CI passed" > $GITHUB_STEP_SUMMARY
+
+  # Summary of test results, combined from test result artifacts.
+  # Runs even if the tests fail to provide a summary of the failures.
+  test-results:
+    needs: [windows, macos, linux]
+    if: always()
+
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -37,11 +47,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Test setup
-        uses: ./.github/actions/run-tests-setup
+      - name: Test summary
+        uses: ./.github/actions/test-summary
+
+  lint-cmake:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/lint-cmake.yml
+
+  lint-clang:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/lint-clang.yml
+
+  analyse-valgrind:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/valgrind-analysis.yml
+
+  analyse-codeql:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/codeql-analysis.yml
+
+  analyse-sonarcloud:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/sonarcloud-analysis.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   windows:
-    needs: setup
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
@@ -129,7 +160,6 @@ jobs:
           package-version: ${{ env.DESKFLOW_VERSION }}
 
   macos:
-    needs: setup
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
@@ -230,7 +260,7 @@ jobs:
           jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
 
   linux:
-    needs: [setup, linux-matrix]
+    needs: linux-matrix
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
@@ -294,7 +324,6 @@ jobs:
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
-    needs: setup
     name: unix-${{ matrix.distro.name }}
     runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
     timeout-minutes: 20

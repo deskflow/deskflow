@@ -2,15 +2,7 @@ name: "Valgrind Analysis"
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
-
-permissions:
-  pull-requests: write
+  workflow_call:
 
 jobs:
   valgrind-analysis:
@@ -58,29 +50,22 @@ jobs:
         with:
           executable: ./build/bin/integtests
 
-      - name: Get workflow URL
-        id: workflow-url
+      - name: Set job summary
         run: |
-          repo_url="${{ github.server_url }}/${{ github.repository }}"
-          echo "url=$repo_url/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-        shell: bash
+          backticks='```'
+          message=$(cat <<EOF
+          ## Valgrind summary
 
-      - name: Append to PR comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        with:
-          recreate: true
-          header: valgrind
-          message: |
-            ## Valgrind summary
-            See [workflow run](${{ steps.workflow-url.outputs.url }}) for full `valgrind` output.
+          ### Unit tests
+          $backticks
+          ${{ steps.unittests.outputs.summary }}
+          $backticks
 
-            ### Unit tests
-            ```
-            ${{ steps.unittests.outputs.summary }}
-            ```
+          ### Integration tests
+          $backticks
+          ${{ steps.integtests.outputs.summary }}
+          $backticks
+          EOF
+          )
 
-            ### Integration tests
-            ```
-            ${{ steps.integtests.outputs.summary }}
-            ```
+          echo "$message" >> $GITHUB_STEP_SUMMARY
