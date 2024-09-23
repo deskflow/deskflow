@@ -27,40 +27,32 @@ jobs:
         with:
           run-id: ${{ github.event.workflow_run.id }}
           pattern: summary-*
-          merge-multiple: true
           path: summaries
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get workflow URL
-        id: workflow-url
-        run: |
-          repo_url="${{ github.server_url }}/${{ github.repository }}"
-          echo "url=$repo_url/actions/runs/${{ github.event.workflow_run.id }}" >> $GITHUB_OUTPUT
-        shell: bash
 
       - name: Merge summaries
         id: summary
         run: |
-          dir="summaries"
-          if [ ! -d "$dir" ]; then
-            echo "Skipping, no summaries, no such dir: $dir"
-            exit 0
-          fi
+          ls -R
 
-          files=$(ls $dir)
+          files=$(find $dir -type f)
           if [ -z "$files" ]; then
-            echo "Error: No summaries found in dir: $dir"
-            exit 1
+            echo "No files found in dir: $dir"
+            exit 0
           fi
 
           echo "message<<EOF" >> $GITHUB_OUTPUT
           echo "## CI Summary" >> $GITHUB_OUTPUT
 
-          for file in $dir/*; do
+          for file in $files; do
             echo $(cat $file) >> $GITHUB_OUTPUT
           done
 
-          echo "[Full summary](${{ steps.workflow-url.outputs.url }})" >> $GITHUB_OUTPUT
+          repo_url="${{ github.server_url }}/${{ github.repository }}"
+          run_url="$repo_url/actions/runs/${{ github.event.workflow_run.id }}"
+
+          echo > $GITHUB_OUTPUT
+          echo "[Full summary]($run_url)" (scroll down) >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Set PR comment
