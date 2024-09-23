@@ -30,6 +30,33 @@ jobs:
           path: summaries
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # When the triggering workflow is running in a restricted security context, some
+      # data is omitted from `github.event.workflow_run` (including `pull_requests`).
+      # Therefore, we have to take some extra steps to find out the PR that triggered
+      # the original workflow. The simplest way is to iterate through our open PRs and
+      # find the one with the same head SHA as the triggering workflow.
+      - name: Get PR number
+        id: get-pr-number
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const head_sha = "${{ github.event.workflow_run.head_sha }}";
+            console.log("Finding PR for SHA:", head_sha);
+
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+            });
+
+            const pr = prs.find(pr => pr.head.sha === head_sha);
+            if (pr) {
+              console.log("Found PR:", pr.number);
+              return pr.number;
+            } else {
+              core.setFailed("PR not found");
+            }
+
       - name: Merge summaries
         id: summary
         run: |
@@ -61,7 +88,7 @@ jobs:
         if: steps.summary.outputs.message
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          number: ${{ steps.get-pr-number.outputs.result }}
           header: ${{ github.event.workflow_run.name }}
           message: ${{ steps.summary.outputs.message }}
 
@@ -69,6 +96,6 @@ jobs:
         if: ${{ !steps.summary.outputs.message }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          number: ${{ steps.get-pr-number.outputs.result }}
           header: ${{ github.event.workflow_run.name }}
           delete: true
