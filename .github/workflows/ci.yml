@@ -37,11 +37,12 @@ jobs:
 
       - name: Check PR comment for flags
         id: check
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          pr_body="${{ github.event.pull_request.body }}"
           no_sonar="{no-sonar}"
 
-          if echo $pr_body | grep -q "$no_sonar"; then
+          if echo $PR_BODY | grep -q "$no_sonar"; then
             echo "Flag $no_sonar found in PR body."
             echo "no-sonar=true" >> $GITHUB_OUTPUT
           else
