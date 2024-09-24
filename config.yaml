@@ -12,7 +12,7 @@ config:
       # already installed on the Windows runner.
       command: if not defined CI (winget install ninja-build.ninja cmake)
       qt:
-        version: 6.7
+        version: 6.7.2
         mirror: https://qt.mirror.constant.com/
         base-dir: ./deps/qt
 
@@ -20,7 +20,7 @@ config:
     dependencies:
       command: brew bundle --file=Brewfile
       qt:
-        version: 6.7
+        version: 6.7.2
         mirror: https://qt.mirror.constant.com/
         base-dir: ./deps/qt
 
