@@ -101,3 +101,23 @@ jobs:
             -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Add report to summary
+        if: always()
+        id: summary
+        run: |
+          cat sonar_report.txt > $GITHUB_STEP_SUMMARY
+
+          if grep -q "ERROR" sonar_report.txt; then
+            file="ci-summary.md"
+            echo "❌ SonarCloud issues detected (see job summary)." > $file
+            echo "file=$file" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload CI summary
+        if: steps.summary.outputs.file
+        uses: actions/upload-artifact@v4
+        with:
+          name: summary-tests
+          path: ${{ steps.summary.outputs.file }}
+          if-no-files-found: error
