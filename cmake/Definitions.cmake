@@ -16,27 +16,12 @@
 
 macro(configure_definitions)
 
-  set(CMAKE_CXX_STANDARD 20)
-  set(CMAKE_CXX_EXTENSIONS OFF)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-
-  if(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
-  endif()
-
+  configure_meta()
   configure_ninja()
   configure_options()
-  configure_python()
 
   set(INTEG_TESTS_BIN integtests)
   set(UNIT_TESTS_BIN unittests)
-
-  if("${VERSION_URL}" STREQUAL "")
-    set(VERSION_URL "https://api.deskflow.org/version")
-  endif()
-  add_definitions(-DDESKFLOW_VERSION_URL="${VERSION_URL}")
 
   if(NOT "$ENV{GIT_SHA}" STREQUAL "")
     # Shorten the Git SHA to 8 chars for readability
@@ -44,17 +29,6 @@ macro(configure_definitions)
     message(STATUS "Short Git SHA: ${GIT_SHA_SHORT}")
     add_definitions(-DGIT_SHA_SHORT="${GIT_SHA_SHORT}")
   endif()
-
-  if(NOT "$ENV{DESKFLOW_PRODUCT_NAME}" STREQUAL "")
-    set(PRODUCT_NAME $ENV{DESKFLOW_PRODUCT_NAME})
-  endif()
-
-  if("${PRODUCT_NAME}" STREQUAL "")
-    set(PRODUCT_NAME "Deskflow")
-  endif()
-
-  message(STATUS "Product name: ${PRODUCT_NAME}")
-  add_definitions(-DDESKFLOW_PRODUCT_NAME="${PRODUCT_NAME}")
 
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Disabling debug build")
@@ -74,7 +48,130 @@ macro(configure_definitions)
     set(ADD_HEADERS_TO_SOURCES TRUE)
   endif()
 
-  set(BIN_TEMP_DIR ${CMAKE_BINARY_DIR}/temp/bin)
+  set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
+
+endmacro()
+
+macro(configure_meta)
+
+  set(DESKFLOW_APP_ID
+      "deskflow"
+      CACHE STRING "ID of the app for filenames, etc")
+
+  set(DESKFLOW_DOMAIN
+      "deskflow.org"
+      CACHE STRING "Domain of the app maintainer (not a URL)")
+
+  set(DESKFLOW_APP_NAME
+      "Deskflow"
+      CACHE STRING "App name (used in GUI title bar, etc)")
+
+  set(DESKFLOW_AUTHOR_NAME
+      "Deskflow"
+      CACHE STRING "Author name (also used as organization name)")
+
+  set(DESKFLOW_MAINTAINER
+      "Deskflow <maintainers@deskflow.org>"
+      CACHE STRING "Maintainer email address in RFC 5322 mailbox format")
+
+  set(DESKFLOW_WEBSITE_URL
+      "https://deskflow.org"
+      CACHE STRING "URL of the app website")
+
+  set(DESKFLOW_VERSION_URL
+      "https://api.deskflow.org/version"
+      CACHE STRING "URL to get the latest version")
+
+  set(DESKFLOW_HELP_TEXT
+      "Report a bug"
+      CACHE STRING "Text label for the help menu item")
+
+  set(DESKFLOW_RES_DIR
+      "${PROJECT_SOURCE_DIR}/res"
+      CACHE STRING "Resource directory for images, etc")
+
+  set(DESKFLOW_MAC_BUNDLE_CODE
+      "DFLW"
+      CACHE STRING "Mac bundle code (4 characters)")
+
+  set(DESKFLOW_SHOW_DEV_THANKS
+      true
+      CACHE BOOL "Show developer thanks message")
+
+  message(VERBOSE "App ID: ${DESKFLOW_APP_ID}")
+  message(VERBOSE "App domain: ${DESKFLOW_DOMAIN}")
+  message(VERBOSE "App name: ${DESKFLOW_APP_NAME}")
+  message(VERBOSE "Author name: ${DESKFLOW_AUTHOR_NAME}")
+  message(VERBOSE "Maintainer: ${DESKFLOW_MAINTAINER}")
+  message(VERBOSE "Website URL: ${DESKFLOW_WEBSITE_URL}")
+  message(VERBOSE "Version URL: ${DESKFLOW_VERSION_URL}")
+  message(VERBOSE "Help text: ${DESKFLOW_HELP_TEXT}")
+  message(VERBOSE "Res dir: ${DESKFLOW_RES_DIR}")
+  message(VERBOSE "Mac bundle code: ${DESKFLOW_MAC_BUNDLE_CODE}")
+  message(VERBOSE "Show dev thanks: ${DESKFLOW_SHOW_DEV_THANKS}")
+
+  # TODO: We need to move this to configure_file() in the future, which is much cleaner.
+  add_definitions(-DDESKFLOW_APP_ID="${DESKFLOW_APP_ID}")
+  add_definitions(-DDESKFLOW_DOMAIN="${DESKFLOW_DOMAIN}")
+  add_definitions(-DDESKFLOW_APP_NAME="${DESKFLOW_APP_NAME}")
+  add_definitions(-DDESKFLOW_AUTHOR_NAME="${DESKFLOW_AUTHOR_NAME}")
+  add_definitions(-DDESKFLOW_MAINTAINER="${DESKFLOW_MAINTAINER}")
+  add_definitions(-DDESKFLOW_WEBSITE_URL="${DESKFLOW_WEBSITE_URL}")
+  add_definitions(-DDESKFLOW_VERSION_URL="${DESKFLOW_VERSION_URL}")
+  add_definitions(-DDESKFLOW_HELP_TEXT="${DESKFLOW_HELP_TEXT}")
+  add_definitions(-DDESKFLOW_RES_DIR="${DESKFLOW_RES_DIR}")
+
+  if(DESKFLOW_SHOW_DEV_THANKS)
+    message(VERBOSE "Showing developer thanks message")
+    add_definitions(-DDESKFLOW_SHOW_DEV_THANKS)
+  else()
+    message(VERBOSE "Not showing developer thanks message")
+  endif()
+
+  configure_bin_names()
+
+endmacro()
+
+macro(configure_bin_names)
+
+  set(GUI_BINARY_NAME
+      "deskflow"
+      CACHE STRING "Filename of the GUI binary")
+
+  set(SERVER_BINARY_NAME
+      "deskflow-server"
+      CACHE STRING "Filename of the server binary")
+
+  set(CLIENT_BINARY_NAME
+      "deskflow-client"
+      CACHE STRING "Filename of the client binary")
+
+  set(CORE_BINARY_NAME
+      "deskflow-core"
+      CACHE STRING "Filename of the core binary")
+
+  set(DAEMON_BINARY_NAME
+      "deskflow-daemon"
+      CACHE STRING "Filename of the daemon binary")
+
+  set(LEGACY_BINARY_NAME
+      "deskflow-legacy"
+      CACHE STRING "Filename of the legacy binary")
+
+  message(VERBOSE "GUI binary: ${GUI_BINARY_NAME}")
+  message(VERBOSE "Server binary: ${SERVER_BINARY_NAME}")
+  message(VERBOSE "Client binary: ${CLIENT_BINARY_NAME}")
+  message(VERBOSE "Core binary: ${CORE_BINARY_NAME}")
+  message(VERBOSE "Daemon binary: ${DAEMON_BINARY_NAME}")
+  message(VERBOSE "Legacy binary: ${LEGACY_BINARY_NAME}")
+
+  add_definitions(-DGUI_BINARY_NAME="${GUI_BINARY_NAME}")
+  add_definitions(-DSERVER_BINARY_NAME="${SERVER_BINARY_NAME}")
+  add_definitions(-DCLIENT_BINARY_NAME="${CLIENT_BINARY_NAME}")
+  add_definitions(-DCORE_BINARY_NAME="${CORE_BINARY_NAME}")
+  add_definitions(-DDAEMON_BINARY_NAME="${DAEMON_BINARY_NAME}")
+  add_definitions(-DLEGACY_BINARY_NAME="${LEGACY_BINARY_NAME}")
+
 endmacro()
 
 macro(configure_ninja)
@@ -101,15 +198,6 @@ macro(configure_options)
   # coverage is off by default because it's GCC only and a developer preference.
   set(DEFAULT_ENABLE_COVERAGE OFF)
 
-  # licensed product is off by default to show links to github, etc.
-  set(DEFAULT_LICENSED_PRODUCT OFF)
-
-  # activation is off by default to make life easier for contributors.
-  set(DEFAULT_ENABLE_ACTIVATION OFF)
-
-  # by default, show the dev thanks message, guides contributions, etc.
-  set(DEFAULT_SHOW_DEV_THANKS ON)
-
   if("$ENV{DESKFLOW_BUILD_MINIMAL}" STREQUAL "true")
     set(DEFAULT_BUILD_GUI OFF)
     set(DEFAULT_BUILD_INSTALLER OFF)
@@ -123,14 +211,6 @@ macro(configure_options)
     set(DEFAULT_BUILD_UNIFIED ON)
   endif()
 
-  if("$ENV{DESKFLOW_ENABLE_ACTIVATION}" STREQUAL "true")
-    set(DEFAULT_ENABLE_ACTIVATION ON)
-  endif()
-
-  if("$ENV{DESKFLOW_LICENSED_PRODUCT}" STREQUAL "true")
-    set(DEFAULT_LICENSED_PRODUCT ON)
-  endif()
-
   if("$ENV{DESKFLOW_ENABLE_COVERAGE}" STREQUAL "true")
     set(DEFAULT_ENABLE_COVERAGE ON)
   endif()
@@ -139,8 +219,6 @@ macro(configure_options)
   option(BUILD_INSTALLER "Build installer" ${DEFAULT_BUILD_INSTALLER})
   option(BUILD_TESTS "Build tests" ${DEFAULT_BUILD_TESTS})
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
-  option(ENABLE_ACTIVATION "Enable activation" ${DEFAULT_ENABLE_ACTIVATION})
-  option(LICENSED_PRODUCT "Show licensing info" ${DEFAULT_LICENSED_PRODUCT})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
 
 endmacro()

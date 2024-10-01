@@ -25,7 +25,6 @@
 #include <QSystemTrayIcon>
 #include <QThread>
 
-#include "ActivationDialog.h"
 #include "ServerConfig.h"
 #include "common/ipc.h"
 #include "gui/TrayIcon.h"
@@ -64,7 +63,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase {
 
   friend class DeskflowApplication;
   friend class SetupWizard;
-  friend class ActivationDialog;
   friend class SettingsDialog;
 
 public:
@@ -81,7 +79,6 @@ public:
   void open();
   ServerConfig &serverConfig() { return m_ServerConfig; }
   void autoAddScreen(const QString name);
-  int showActivationDialog();
 
 signals:
   void created();
@@ -105,8 +102,6 @@ private slots:
   void onCoreConnectionStateChanged(CoreProcess::ConnectionState state);
   void onCoreProcessStateChanged(CoreProcess::ProcessState state);
   void onCoreProcessSecureSocket(bool enabled);
-  void onLicenseHandlerSerialKeyChanged(const QString &serialKey);
-  void onLicenseHandlerInvalidLicense();
   void onVersionCheckerUpdateFound(const QString &version);
   void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void onWindowSaveTimerTimeout();
@@ -127,7 +122,6 @@ private slots:
   void on_m_pActionAbout_triggered();
   void on_m_pActionHelp_triggered() const;
   void on_m_pActionSettings_triggered();
-  void on_m_pActionActivate_triggered();
   void on_m_pActionStartCore_triggered();
   void on_m_pActionStopCore_triggered();
   void on_m_pActionTestFatalError_triggered() const;
@@ -156,7 +150,6 @@ private:
   void enableClient(bool enable);
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
-  void checkLicense(const QString &line);
   QString getTimeStamp() const;
   void showEvent(QShowEvent *) override;
   void closeEvent(QCloseEvent *event) override;
@@ -171,7 +164,6 @@ private:
   QString configFilename();
   void showConfigureServer(const QString &message);
   void showConfigureServer() { showConfigureServer(""); }
-  void showLicenseNotice();
   void restoreWindow();
   void saveWindow();
   void setupControls();
@@ -179,14 +171,11 @@ private:
   void moveEvent(QMoveEvent *event) override;
   void showFirstConnectedMessage();
   void showDevThanksMessage();
-  QString productName() const;
   void updateStatus();
   void showAndActivate();
 
   VersionChecker m_VersionChecker;
   deskflow::gui::TrayIcon m_TrayIcon;
-  bool m_ActivationDialogRunning = false;
-  QStringList m_PendingClientNames;
   QMenuBar *m_pMenuBar = nullptr;
   QMenu *m_pMenuFile = nullptr;
   QMenu *m_pMenuEdit = nullptr;
@@ -195,7 +184,6 @@ private:
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
   bool m_SaveWindow = false;
-  LicenseHandler m_LicenseHandler;
   bool m_Quitting = false;
   deskflow::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
   bool m_SaveOnExit = true;

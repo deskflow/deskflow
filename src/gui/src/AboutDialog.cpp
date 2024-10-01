@@ -23,7 +23,8 @@
 #include "gui/style_utils.h"
 
 #include <QDateTime>
-#include <qguiapplication.h>
+#include <QGuiApplication>
+#include <QtCore>
 
 using namespace deskflow::gui;
 
@@ -42,6 +43,8 @@ AboutDialog::AboutDialog(MainWindow *parent)
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "yyyy-MM-dd");
   m_pLabelBuildDate->setText(
       buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
+
+  this->setWindowTitle(QString("About %1").arg(DESKFLOW_APP_NAME));
 }
 
 int AboutDialog::exec() {
@@ -52,15 +55,22 @@ int AboutDialog::exec() {
   return QDialog::exec();
 }
 
+void AboutDialog::setLogo(const char *const &filename) const {
+  QPixmap logo(filename);
+  if (!logo.isNull()) {
+    m_pLabel_Logo->setPixmap(logo);
+  } else {
+    qCritical("logo file not found: %s", qPrintable(filename));
+  }
+}
+
 void AboutDialog::updateLogo() const {
   if (isDarkMode()) {
-    qDebug("dark mode detected, showing dark logo");
-    QPixmap logo(":/image/logo-dark.png");
-    if (!logo.isNull()) {
-      m_pLabel_Logo->setPixmap(logo);
-    }
+    qDebug("showing dark logo");
+    setLogo(":/image/logo-dark.png");
   } else {
-    qDebug("light mode detected, keeping light logo");
+    qDebug("showing light logo");
+    setLogo(":/image/logo-light.png");
   }
 }
 

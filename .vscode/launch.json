@@ -39,7 +39,7 @@
       "type": "lldb",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/deskflowc",
+      "program": "${workspaceFolder}/build/bin/deskflow-client",
       "args": ["--config-toml", "deskflow-config.toml"],
       "preLaunchTask": "kill-build"
     },
@@ -81,7 +81,7 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/deskflows",
+      "program": "${workspaceFolder}/build/bin/deskflow-server",
       "args": ["--config-toml", "deskflow-config.toml"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
@@ -91,7 +91,7 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/deskflowc",
+      "program": "${workspaceFolder}/build/bin/deskflow-client",
       "args": ["--config-toml", "deskflow-config.toml"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "kill-build"
@@ -101,7 +101,7 @@
       "type": "cppvsdbg",
       "cwd": "${workspaceRoot}",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/deskflowd",
+      "program": "${workspaceFolder}/build/bin/deskflow-daemon",
       "args": ["-f"],
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "build"

@@ -19,7 +19,6 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/IQIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
-#include "license/ILicense.h"
 #include "shared/gui/mocks/AppConfigMock.h"
 #include "shared/gui/mocks/ServerConfigMock.h"
 
@@ -28,7 +27,6 @@
 #include <gtest/gtest.h>
 
 using namespace deskflow::gui;
-using namespace deskflow::license;
 using namespace testing;
 
 namespace {
@@ -91,23 +89,12 @@ public:
   NiceMock<QIpcClientMock> m_ipcClient;
 };
 
-class LicenseMock : public ILicense {
-public:
-  LicenseMock() {
-    ON_CALL(*this, isTlsAvailable()).WillByDefault(Return(true));
-  }
-
-  MOCK_METHOD(bool, isTlsAvailable, (), (const, override));
-};
-
 class CoreProcessTests : public Test {
 public:
-  CoreProcessTests()
-      : m_coreProcess(m_appConfig, m_serverConfig, m_license, m_pDeps) {}
+  CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps) {}
 
   NiceMock<AppConfigMock> m_appConfig;
   NiceMock<ServerConfigMock> m_serverConfig;
-  NiceMock<LicenseMock> m_license;
   std::shared_ptr<NiceMock<DepsMock>> m_pDeps =
       std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;

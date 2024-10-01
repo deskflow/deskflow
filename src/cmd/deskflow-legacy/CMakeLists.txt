@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflow-legacy)
+set(target ${LEGACY_BINARY_NAME})
 
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
 if(WIN32)
-  list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
+  list(APPEND sources ${PROJECT_BINARY_DIR}/src/version.rc)
 endif()
 
 add_executable(${target} ${sources})

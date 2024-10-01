@@ -19,25 +19,18 @@
 #include "MainWindow.h"
 
 #include "AboutDialog.h"
-#include "ActivationDialog.h"
 #include "ServerConfigDialog.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
-#include "gui/TrayIcon.h"
-#include "gui/VersionChecker.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
 #include "gui/dialogs/SettingsDialog.h"
-#include "gui/license/LicenseHandler.h"
-#include "gui/license/license_notices.h"
-#include "gui/license/license_utils.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
 #include "gui/styles.h"
 #include "gui/tls/TlsFingerprint.h"
-#include "license/License.h"
 #include "platform/wayland.h"
 
 #if defined(Q_OS_MAC)
@@ -66,8 +59,6 @@
 #endif
 
 using namespace deskflow::gui;
-using namespace deskflow::license;
-using namespace deskflow::gui::license;
 
 using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
@@ -84,11 +75,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
-      m_CoreProcess(appConfig, m_ServerConfig, m_LicenseHandler.license()),
+      m_CoreProcess(appConfig, m_ServerConfig),
       m_ServerConnection(
           this, appConfig, m_ServerConfig, m_ServerConfigDialogState),
       m_ClientConnection(this, appConfig),
-      m_TlsUtility(appConfig, m_LicenseHandler.license()),
+      m_TlsUtility(appConfig),
       m_WindowSaveTimer(this) {
 
   setupUi(this);
@@ -140,16 +131,9 @@ void MainWindow::saveWindow() {
 }
 
 void MainWindow::setupControls() {
-  if (!isActivationEnabled()) {
-    updateWindowTitle();
-  }
+  setWindowTitle(kAppName);
 
-  if (!isLicensedProduct()) {
-    m_pActionHelp->setText("Report a bug");
-    m_pActionActivate->setText("Purchase");
-  } else if (!isActivationEnabled()) {
-    m_pActionActivate->setVisible(false);
-  }
+  m_pActionHelp->setText(DESKFLOW_HELP_TEXT);
 
   secureSocket(false);
   updateLocalFingerprint();
@@ -234,14 +218,6 @@ void MainWindow::connectSlots() {
       &m_CoreProcess, &CoreProcess::secureSocket, this,
       &MainWindow::onCoreProcessSecureSocket);
 
-  connect(
-      &m_LicenseHandler, &LicenseHandler::serialKeyChanged, this,
-      &MainWindow::onLicenseHandlerSerialKeyChanged);
-
-  connect(
-      &m_LicenseHandler, &LicenseHandler::invalidLicense, this,
-      &MainWindow::onLicenseHandlerInvalidLicense);
-
   connect(m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(
@@ -293,10 +269,6 @@ void MainWindow::onCreated() {
 
   applyCloseToTray();
 
-  if (isActivationEnabled() && !m_AppConfig.serialKey().isEmpty()) {
-    m_LicenseHandler.changeSerialKey(m_AppConfig.serialKey());
-  }
-
   updateScreenName();
   applyConfig();
   restoreWindow();
@@ -306,14 +278,6 @@ void MainWindow::onCreated() {
 }
 
 void MainWindow::onShown() {
-  if (isActivationEnabled()) {
-    const auto &license = m_LicenseHandler.license();
-    if (!m_AppConfig.activationHasRun() || !license.isValid() ||
-        license.isExpired()) {
-      showActivationDialog();
-    }
-  }
-
   // if a critical error was shown just before the main window (i.e. on app
   // load), it will be hidden behind the main window. therefore we need to raise
   // it up in front of the main window.
@@ -326,26 +290,11 @@ void MainWindow::onShown() {
       kCriticalDialogDelay, [] { messages::raiseCriticalDialog(); });
 }
 
-void MainWindow::onLicenseHandlerSerialKeyChanged(const QString &serialKey) {
-  updateWindowTitle();
-  showLicenseNotice();
-
-  if (m_AppConfig.serialKey() != serialKey) {
-    m_AppConfig.setSerialKey(serialKey);
-    m_ConfigScopes.save();
-  }
-}
-
-void MainWindow::onLicenseHandlerInvalidLicense() {
-  m_CoreProcess.stop();
-  showActivationDialog();
-}
-
 void MainWindow::onConfigScopesSaving() { m_ServerConfig.commit(); }
 
 void MainWindow::onAppConfigTlsChanged() {
   updateLocalFingerprint();
-  if (m_TlsUtility.isAvailableAndEnabled()) {
+  if (m_TlsUtility.isEnabled()) {
     m_TlsUtility.generateCertificate();
   }
 }
@@ -441,17 +390,12 @@ void MainWindow::on_m_pActionAbout_triggered() {
 }
 
 void MainWindow::on_m_pActionHelp_triggered() const {
-  if (isLicensedProduct()) {
-    QDesktopServices::openUrl(QUrl(kUrlHelp));
-  } else {
-    QDesktopServices::openUrl(QUrl(kUrlBugReport));
-  }
+  QDesktopServices::openUrl(QUrl(kUrlHelp));
 }
 
 void MainWindow::on_m_pActionSettings_triggered() {
-  auto dialog = SettingsDialog(
-      this, m_AppConfig, m_ServerConfig, m_LicenseHandler.license(),
-      m_CoreProcess);
+  auto dialog =
+      SettingsDialog(this, m_AppConfig, m_ServerConfig, m_CoreProcess);
 
   if (dialog.exec() == QDialog::Accepted) {
     m_ConfigScopes.save();
@@ -467,14 +411,6 @@ void MainWindow::on_m_pActionSettings_triggered() {
 
 void MainWindow::on_m_pButtonConfigureServer_clicked() {
   showConfigureServer();
-}
-
-void MainWindow::on_m_pActionActivate_triggered() {
-  if (isLicensedProduct()) {
-    showActivationDialog();
-  } else {
-    QDesktopServices::openUrl(QUrl(kUrlPurchase));
-  }
 }
 
 void MainWindow::on_m_pLineEditHostname_returnPressed() {
@@ -587,15 +523,6 @@ void MainWindow::open() {
 
 void MainWindow::onCoreProcessStarting() {
 
-  if (isActivationEnabled()) {
-    const auto &license = m_LicenseHandler.license();
-    if (license.isExpired() && showActivationDialog() == QDialog::Rejected) {
-      qDebug("license expired, cancelling core start");
-      m_CoreProcess.stop();
-      return;
-    }
-  }
-
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
   if (deskflow::platform::isWayland()) {
     m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
@@ -626,8 +553,6 @@ void MainWindow::createMenuBar() {
   m_pMenuFile->addAction(m_pActionStartCore);
   m_pMenuFile->addAction(m_pActionStopCore);
   m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(m_pActionActivate);
-  m_pMenuFile->addSeparator();
   m_pMenuFile->addAction(m_pActionSave);
   m_pMenuFile->addSeparator();
   m_pMenuFile->addAction(m_pActionQuit);
@@ -641,6 +566,8 @@ void MainWindow::createMenuBar() {
   m_pMenuHelp->addAction(m_pActionHelp);
   m_pMenuFile->addSeparator();
   m_pMenuHelp->addAction(m_pActionClearSettings);
+
+  m_pActionAbout->setText(QString("About %1...").arg(kAppName));
 
   const auto enableTestMenu =
       strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
@@ -723,10 +650,6 @@ void MainWindow::handleLogLine(const QString &line) {
 void MainWindow::updateFromLogLine(const QString &line) {
   checkConnected(line);
   checkFingerprint(line);
-
-  if (isActivationEnabled()) {
-    checkLicense(line);
-  }
 }
 
 void MainWindow::checkConnected(const QString &line) {
@@ -736,12 +659,6 @@ void MainWindow::checkConnected(const QString &line) {
   } else {
     m_ClientConnection.handleLogLine(line);
     m_pLabelClientState->updateClientState(line);
-  }
-}
-
-void MainWindow::checkLicense(const QString &line) {
-  if (line.contains("trial has expired")) {
-    showActivationDialog();
   }
 }
 
@@ -836,15 +753,10 @@ void MainWindow::showDevThanksMessage() {
     return;
   }
 
-  if (isActivationEnabled()) {
-    qDebug("activation enabled, skipping dev thanks message");
-    return;
-  }
-
   m_AppConfig.setShowDevThanks(false);
   m_ConfigScopes.save();
 
-  messages::showDevThanks(this, kProductName);
+  messages::showDevThanks(this, kAppName);
 }
 
 void MainWindow::onCoreProcessSecureSocket(bool enabled) {
@@ -859,19 +771,19 @@ void MainWindow::updateStatus() {
     using enum CoreProcessState;
 
   case Starting:
-    setStatus("Deskflow is starting...");
+    setStatus(QString("%1 is starting...").arg(kAppName));
     break;
 
   case RetryPending:
-    setStatus("Deskflow will retry in a moment...");
+    setStatus(QString("%1 will retry in a moment...").arg(kAppName));
     break;
 
   case Stopping:
-    setStatus("Deskflow is stopping...");
+    setStatus(QString("%1 is stopping...").arg(kAppName));
     break;
 
   case Stopped:
-    setStatus("Deskflow is not running");
+    setStatus(QString("%1 is not running").arg(kAppName));
     break;
 
   case Started: {
@@ -880,28 +792,29 @@ void MainWindow::updateStatus() {
 
     case Listening: {
       if (m_CoreProcess.mode() == CoreMode::Server) {
-        setStatus("Deskflow is waiting for clients");
+        setStatus(QString("%1 is waiting for clients").arg(kAppName));
       }
 
       break;
     }
 
     case Connecting:
-      setStatus("Deskflow is connecting...");
+      setStatus(QString("%1 is connecting...").arg(kAppName));
       break;
 
     case Connected: {
       if (m_SecureSocket) {
-        setStatus(QString("Deskflow is connected (with %1)")
-                      .arg(m_CoreProcess.secureSocketVersion()));
+        setStatus(QString("%1 is connected (with %2)")
+                      .arg(kAppName, m_CoreProcess.secureSocketVersion()));
       } else {
-        setStatus("Deskflow is connected (without TLS encryption)");
+        setStatus(
+            QString("%1 is connected (without TLS encryption)").arg(kAppName));
       }
       break;
     }
 
     case Disconnected:
-      setStatus("Deskflow is disconnected");
+      setStatus(QString("%1 is disconnected").arg(kAppName));
       break;
     }
   } break;
@@ -1014,17 +927,6 @@ QString MainWindow::getIPAddresses() const {
   return result.join(", ");
 }
 
-void MainWindow::showLicenseNotice() {
-  const auto &license = m_LicenseHandler.license();
-  const bool timeLimited = license.isTimeLimited();
-
-  m_pLabelNotice->setVisible(timeLimited);
-  if (timeLimited) {
-    auto notice = licenseNotice(m_LicenseHandler.license());
-    this->m_pLabelNotice->setText(notice);
-  }
-}
-
 void MainWindow::updateLocalFingerprint() {
   bool fingerprintExists = false;
   try {
@@ -1042,27 +944,7 @@ void MainWindow::updateLocalFingerprint() {
   }
 }
 
-QString MainWindow::productName() const {
-  if (isActivationEnabled()) {
-    return m_LicenseHandler.productName();
-  } else if (!kProductName.isEmpty()) {
-    return kProductName;
-  } else {
-    qFatal("product name not set");
-    return "";
-  }
-}
-
-void MainWindow::updateWindowTitle() { setWindowTitle(productName()); }
-
 void MainWindow::autoAddScreen(const QString name) {
-
-  if (m_ActivationDialogRunning) {
-    // add this screen to the pending list if the activation dialog is
-    // running.
-    m_PendingClientNames.append(name);
-    return;
-  }
 
   int r = m_ServerConfig.autoAddScreen(name);
   if (r != kAutoAddScreenOk) {
@@ -1087,48 +969,6 @@ void MainWindow::showConfigureServer(const QString &message) {
   if ((dialog.exec() == QDialog::Accepted) && m_CoreProcess.isStarted()) {
     m_CoreProcess.restart();
   }
-}
-
-int MainWindow::showActivationDialog() {
-  if (!isActivationEnabled()) {
-    qFatal("cannot show activation dialog when activation is disabled");
-  }
-
-  if (m_ActivationDialogRunning) {
-    return QDialog::Rejected;
-  }
-
-  ActivationDialog activationDialog(this, m_AppConfig, m_LicenseHandler);
-
-  m_ActivationDialogRunning = true;
-  int result = activationDialog.exec();
-  m_ActivationDialogRunning = false;
-
-  if (result == QDialog::Accepted) {
-    m_AppConfig.setActivationHasRun(true);
-
-    // customers who are activating a pro license are usually doing so because
-    // they want tls. so, if it's available, turn it on after activating.
-    m_AppConfig.setTlsEnabled(m_LicenseHandler.license().isTlsAvailable());
-
-    m_ConfigScopes.save();
-  }
-
-  if (!m_PendingClientNames.empty()) {
-    foreach (const QString &name, m_PendingClientNames) {
-      autoAddScreen(name);
-    }
-
-    m_PendingClientNames.clear();
-  }
-
-  // restart core process after activation in case switching on tls.
-  // this saves customer from having to figure out they need to click apply.
-  if (m_CoreProcess.isStarted()) {
-    m_CoreProcess.restart();
-  }
-
-  return result;
 }
 
 void MainWindow::secureSocket(bool secureSocket) {

@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflows)
-
-set(sources ${target}.cpp)
+set(server_source_name "deskflows")
+set(target ${SERVER_BINARY_NAME})
+set(sources ${server_source_name}.cpp)
 
 if(WIN32)
   file(GLOB arch_headers "MSWindows*.h")
@@ -25,14 +25,14 @@ if(WIN32)
     APPEND
     sources
     resource.h
-    ${target}.ico
-    ${target}.rc
+    ${server_source_name}.ico
+    ${server_source_name}.rc
     tb_error.ico
     tb_idle.ico
     tb_run.ico
     tb_wait.ico
-    ${target}.exe.manifest
-    ${CMAKE_BINARY_DIR}/src/version.rc)
+    ${server_source_name}.exe.manifest
+    ${PROJECT_BINARY_DIR}/src/version.rc)
 elseif(APPLE)
   file(GLOB arch_headers "OSX*.h")
   file(GLOB arch_sources "OSX*.cpp")

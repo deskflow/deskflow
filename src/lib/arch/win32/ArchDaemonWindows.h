@@ -137,12 +137,9 @@ private:
   std::string m_commandLine;
 };
 
-#define DEFAULT_DAEMON_NAME _T("Deskflow")
-#define DEFAULT_DAEMON_INFO _T("Manages the Deskflow foreground processes.")
+#define DEFAULT_DAEMON_NAME _T(DESKFLOW_APP_NAME)
+#define DEFAULT_DAEMON_INFO                                                    \
+  _T("Manages the " DESKFLOW_APP_NAME " foreground processes.")
 
-#define LEGACY_SERVER_DAEMON_NAME _T("Deskflow Server")
-#define LEGACY_CLIENT_DAEMON_NAME _T("Deskflow Client")
-
-static const TCHAR *const g_daemonKeyPath[] = {
-    _T("SOFTWARE"), _T("The Deskflow Project"), _T("Deskflow"), _T("Service"),
-    NULL};
+#define LEGACY_SERVER_DAEMON_NAME _T(DESKFLOW_APP_NAME " Server")
+#define LEGACY_CLIENT_DAEMON_NAME _T(DESKFLOW_APP_NAME " Client")

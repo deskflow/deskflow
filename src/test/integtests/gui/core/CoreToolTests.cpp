@@ -46,12 +46,3 @@ TEST(CoreToolTests, getArch_noMock_returnsNonEmpty) {
 
   EXPECT_FALSE(arch.isEmpty());
 }
-
-TEST(CoreToolTests, getSerialKeyFilePath_noMock_returnsNonEmpty) {
-  TestQtCoreApp app;
-  CoreTool coreTool;
-
-  QString serialKeyFilePath = coreTool.getSerialKeyFilePath();
-
-  EXPECT_FALSE(serialKeyFilePath.isEmpty());
-}

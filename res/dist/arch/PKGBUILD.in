@@ -1,10 +1,10 @@
-# Maintainer: Deskflow <maintainers@deskflow.org>
+# Maintainer: @DESKFLOW_MAINTAINER@
 
-pkgname=deskflow
+pkgname=@DESKFLOW_APP_ID@
 pkgver=@DESKFLOW_VERSION_FOUR_PART@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
-url='https://deskflow.org/'
+url='@DESKFLOW_WEBSITE_URL@'
 arch=('x86_64')
 license=('GPL-2.0-only')
 depends=(

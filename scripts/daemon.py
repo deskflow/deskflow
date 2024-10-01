@@ -19,23 +19,15 @@ import lib.env as env
 
 env.ensure_in_venv(__file__)
 
-import os, sys, time, subprocess, argparse
+import os, sys, argparse
 import lib.windows as windows
-import psutil  # type: ignore
 import lib.colors as colors
-import lib.file_utils as file_utils
 
-DEFAULT_BIN_NAME = "deskflowd"
+DEFAULT_SERVICE_ID = "deskflow"
+DEFAULT_BIN_NAME = "deskflow-daemon"
 DEFAULT_SOURCE_DIR = os.path.join("build", "temp", "bin")
 DEFAULT_TARGET_DIR = os.path.join("build", "bin")
-SERVICE_NOT_RUNNING_ERROR = 2
-ERROR_ACCESS_VIOLATION = 0xC0000005
 IGNORE_PROCESSES = ["deskflow.exe"]
-
-
-class Context:
-    def __init__(self, verbose):
-        self.verbose = verbose
 
 
 def main():
@@ -49,6 +41,8 @@ def main():
     parser.add_argument("--source-dir", default=DEFAULT_SOURCE_DIR)
     parser.add_argument("--target-dir", default=DEFAULT_TARGET_DIR)
     parser.add_argument("--bin-name", default=DEFAULT_BIN_NAME)
+    parser.add_argument("--ignore-processes", nargs="+", default=IGNORE_PROCESSES)
+    parser.add_argument("--service-id", default=DEFAULT_SERVICE_ID)
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -59,15 +53,15 @@ def main():
         )
         sys.exit(1)
 
-    context = Context(args.verbose)
+    service = windows.WindowsService(__file__, args)
 
     try:
         if args.reinstall:
-            reinstall(context, args.source_dir, args.target_dir, args.bin_name)
+            service.reinstall()
         elif args.stop:
-            stop(context, args.target_dir)
+            service.stop()
         elif args.restart:
-            restart(context, args.source_dir, args.target_dir)
+            service.restart()
         else:
             print("No action specified", file=sys.stderr)
             exit(1)
@@ -78,135 +72,5 @@ def main():
         input("Press enter to continue...")
 
 
-def print_verbose(context, message):
-    if context.verbose:
-        print(message)
-
-
-def ensure_admin():
-    if not windows.is_admin():
-        windows.run_elevated(__file__)
-        sys.exit()
-
-
-def restart(context, source_dir, target_dir):
-    """Stops the daemon service, copies files, and restarts the daemon service."""
-
-    ensure_admin()
-    stop(context, target_dir)
-    copy_files(source_dir, target_dir)
-    start()
-
-
-def reinstall(context, source_dir, target_dir, bin_name):
-    """Stops and uninstalls daemon service, copies files, and reinstalls the daemon service."""
-
-    ensure_admin()
-    stop(context, target_dir)
-
-    source_bin_path = f"{os.path.join(source_dir, bin_name)}.exe"
-
-    copy_files(source_dir, target_dir)
-
-    print("Removing old daemon service")
-    try:
-        subprocess.run([source_bin_path, "/uninstall"], shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        check_access_violation(e.returncode, source_bin_path)
-        if e.returncode != 0:
-            print(
-                f"{colors.WARNING_TEXT} Uninstall failed, return code: {e.returncode}",
-                file=sys.stderr,
-            )
-
-    target_bin_path = os.path.join(target_dir, bin_name + ".exe")
-
-    try:
-        print("Installing daemon service")
-        subprocess.run([target_bin_path, "/install"], shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        check_access_violation(e.returncode, target_bin_path)
-        if e.returncode != 0:
-            print(f"{colors.WARNING_TEXT} Install failed, return code: {e.returncode}")
-
-
-def copy_files(source_dir, target_dir):
-    options = file_utils.CopyOptions(ignore_errors=True, verbose=False)
-    print(f"Copying files from {source_dir} to {target_dir}")
-    file_utils.copy(f"{source_dir}/*", target_dir, options)
-
-
-def stop(context, target_dir):
-    ensure_admin()
-    print("Stopping daemon service")
-    try:
-        subprocess.run(["net", "stop", "deskflow"], shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        if e.returncode == SERVICE_NOT_RUNNING_ERROR:
-            print_verbose(context, "Daemon service not running")
-        else:
-            raise e
-
-    # Wait for Windows to release the file handles after process termination.
-    wait_for_stop(context, target_dir)
-
-
-def start():
-    ensure_admin()
-    print("Starting daemon service")
-    subprocess.run(["net", "start", "deskflow"], shell=True, check=True)
-
-
-def wait_for_stop(context, target_dir):
-    if is_any_process_running(context, target_dir):
-        print("Waiting for file handles to release...", end="", flush=True)
-        while is_any_process_running(context, target_dir):
-            if not context.verbose:
-                print(".", end="", flush=True)
-            time.sleep(1)
-        if not context.verbose:
-            print()
-
-
-def check_access_violation(return_code, bin_path):
-    if return_code == ERROR_ACCESS_VIOLATION:
-        print(
-            f"{colors.WARNING_TEXT} Process crashed with memory access violation: {bin_path}",
-            file=sys.stderr,
-        )
-
-
-def is_ignored_process(exe):
-    for ignore_process in IGNORE_PROCESSES:
-        if exe.endswith(ignore_process):
-            return True
-    return False
-
-
-def is_any_process_running(context, dir):
-    """Check if there is any running process that contains the given directory."""
-
-    print_verbose(context, f"Checking if any process is running in: {dir}")
-
-    for proc in psutil.process_iter(attrs=["name", "exe"]):
-        exe = proc.info["exe"]
-
-        if not exe:
-            print_verbose(context, f"Skipping process with no exe: {proc}")
-            continue
-
-        if is_ignored_process(exe):
-            print_verbose(context, f"Ignoring process: {exe}")
-            continue
-
-        try:
-            if dir.lower() in exe.lower():
-                print_verbose(context, f"Process found: {exe}")
-                return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
-
-    return False
-
-
-main()
+if __name__ == "__main__":
+    main()

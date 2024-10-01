@@ -23,34 +23,20 @@ namespace deskflow::gui {
 
 // important: this is used for settings paths on some platforms,
 // and must not be a url. qt automatically converts this to reverse domain
-// notation (rdn), e.g. com.symless
-const auto kOrgDomain = "deskflow.org";
+// notation (rdn), e.g. org.deskflow
+const auto kOrgDomain = DESKFLOW_DOMAIN;
 
-const auto kLinkBuy = R"(<a href="%1" style="color: %2">Buy now</a>)";
-const auto kLinkRenew = R"(<a href="%1" style="color: %2">Renew now</a>)";
 const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
-const auto kUrlWebsite = "https://symless.com";
 const auto kUrlSourceQuery = "source=gui";
-const auto kUrlGitHub = "https://github.com/deskflow/deskflow";
+const auto kUrlApp = DESKFLOW_WEBSITE_URL;
+const auto kUrlHelp = QString("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
+const auto kUrlDownload =
+    QString("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
+
+#if defined(Q_OS_LINUX)
 const auto kUrlGnomeTrayFix =
     "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
-const auto kUrlProduct = QString("%1/synergy").arg(kUrlWebsite);
-const auto kUrlPurchase =
-    QString("%1/purchase?%2").arg(kUrlProduct, kUrlSourceQuery);
-const auto kUrlUpgrade =
-    QString("%1/purchase/upgrade?%2").arg(kUrlProduct, kUrlSourceQuery);
-const auto kUrlContact =
-    QString("%1/contact?%2").arg(kUrlProduct, kUrlSourceQuery);
-const auto kUrlHelp = QString("%1/help?%2").arg(kUrlProduct, kUrlSourceQuery);
-const auto kUrlDownload =
-    QString("%1/download?%2").arg(kUrlProduct, kUrlSourceQuery);
-const auto kUrlBugReport = QString("%1/issues").arg(kUrlGitHub);
-
-#ifdef DESKFLOW_PRODUCT_NAME
-const QString kProductName = DESKFLOW_PRODUCT_NAME;
-#else
-const QString kProductName;
 #endif
 
 } // namespace deskflow::gui

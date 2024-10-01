@@ -19,20 +19,17 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 from lib.certificate import Certificate
 
-cert_p12_env = "APPLE_P12_CERTIFICATE"
-notary_user_env = "APPLE_NOTARY_USER"
-codesign_env = "APPLE_CODESIGN_ID"
-shell_rc = "~/.zshrc"
-dist_dir = "dist"
-product_name = "Deskflow"
-settings_file = "res/dist/macos/dmgbuild/settings.py"
-app_path = "build/bundle/Deskflow.app"
-security_path = "/usr/bin/security"
-sudo_path = "/usr/bin/sudo"
-notarytool_path = "/usr/bin/notarytool"
-codesign_path = "/usr/bin/codesign"
-xcode_select_path = "/usr/bin/xcode-select"
-keychain_path = "/Library/Keychains/System.keychain"
+CERT_P12_ENV = "APPLE_P12_CERTIFICATE"
+NOTARY_USER_ENV = "APPLE_NOTARY_USER"
+CODESIGN_ENV = "APPLE_CODESIGN_ID"
+SHELL_RC = "~/.zshrc"
+SETTINGS_FILE = "res/dist/mac/dmgbuild/settings.py"
+SECURITY_PATH = "/usr/bin/security"
+SUDO_PATH = "/usr/bin/sudo"
+NOTARYTOOL_PATH = "/usr/bin/notarytool"
+CODESIGN_PATH = "/usr/bin/codesign"
+XCODE_SELECT_PATH = "/usr/bin/xcode-select"
+KEYCHAIN_PATH = "/Library/Keychains/System.keychain"
 
 
 def set_env_var(name, value):
@@ -42,7 +39,7 @@ def set_env_var(name, value):
     Returns True if the variable was added, False if it already exists.
     """
     text = f'export {name}="{value}:${name}"'
-    file = os.path.expanduser(shell_rc)
+    file = os.path.expanduser(SHELL_RC)
     if os.path.exists(file):
         with open(file, "r") as f:
             if text in f.read():
@@ -51,11 +48,11 @@ def set_env_var(name, value):
     print(f"Setting environment variable: {name}={name}")
     with open(file, "a") as f:
         f.write(f"\n{text}\n")
-        print(f"Appended to {shell_rc}: {text}")
+        print(f"Appended to {SHELL_RC}: {text}")
         return True
 
 
-def package(filename_base):
+def package(filename_base, source_dir, build_dir, dist_dir, product_name):
     """
     Package the application for macOS.
     The app bundle must be signed, or an error will occur:
@@ -76,35 +73,40 @@ def package(filename_base):
         install_certificate(cert_base64, cert_password)
     else:
         print(
-            f"Warning: Skipped certificate installation, env var {cert_p12_env} not set",
+            f"Warning: Skipped certificate installation, env var {CERT_P12_ENV} not set",
             file=sys.stderr,
         )
 
-    build_bundle()
+    bundle_source_dir = os.path.join(
+        build_dir, os.path.join("bundle", product_name + ".app")
+    )
+    build_bundle(bundle_source_dir)
 
     if codesign_id:
-        sign_bundle(codesign_id)
+        sign_bundle(bundle_source_dir, codesign_id)
     else:
         print(
-            f"Warning: Skipped code signing, env var {codesign_env} not set",
+            f"Warning: Skipped code signing, env var {CODESIGN_ENV} not set",
             file=sys.stderr,
         )
 
-    dmg_path = build_dmg(filename_base)
+    dmg_path = build_dmg(
+        bundle_source_dir, filename_base, source_dir, dist_dir, product_name
+    )
 
     if notary_user:
         notarize_package(dmg_path, notary_user, notary_password, notary_team_id)
     else:
         print(
-            f"Warning: Skipped notarization, env var {notary_user_env} not set",
+            f"Warning: Skipped notarization, env var {NOTARY_USER_ENV} not set",
             file=sys.stderr,
         )
 
 
 def package_env_vars():
-    codesign_id = env.get_env(codesign_env, required=False)
-    cert_base64 = env.get_env(cert_p12_env, required=False)
-    notary_user = env.get_env(notary_user_env, required=False)
+    codesign_id = env.get_env(CODESIGN_ENV, required=False)
+    cert_base64 = env.get_env(CERT_P12_ENV, required=False)
+    notary_user = env.get_env(NOTARY_USER_ENV, required=False)
 
     if notary_user:
         notary_password = env.get_env("APPLE_NOTARY_PASSWORD")
@@ -128,11 +130,12 @@ def package_env_vars():
     )
 
 
-def build_bundle():
+def build_bundle(bundle_source_dir):
+
     # it's important to build a new bundle every time, so that we catch bugs with fresh builds.
-    if os.path.exists(app_path):
-        print(f"Bundle already exists, deleting: {app_path}")
-        shutil.rmtree(app_path)
+    if os.path.exists(bundle_source_dir):
+        print(f"Bundle already exists, deleting: {bundle_source_dir}")
+        shutil.rmtree(bundle_source_dir)
 
     print("Building bundle...")
 
@@ -140,20 +143,20 @@ def build_bundle():
     cmd_utils.run("cmake --build build --target install", shell=True, print_cmd=True)
 
 
-def sign_bundle(codesign_id):
-    print(f"Signing bundle {app_path}...")
+def sign_bundle(bundle_source_dir, codesign_id):
+    print(f"Signing bundle {bundle_source_dir}...")
 
     assert_certificate_installed(codesign_id)
     cmd_utils.run(
         [
-            codesign_path,
+            CODESIGN_PATH,
             "-f",
             "--options",
             "runtime",
             "--deep",
             "-s",
             codesign_id,
-            app_path,
+            bundle_source_dir,
         ]
     )
 
@@ -172,9 +175,12 @@ def assert_certificate_installed(codesign_id):
         raise RuntimeError("Code signing certificate not installed or has expired")
 
 
-def build_dmg(filename_base):
-    settings_file_abs = os.path.abspath(settings_file)
-    app_path_abs = os.path.abspath(app_path)
+def build_dmg(bundle_source_dir, filename_base, source_dir, dist_dir, product_name):
+    settings_path = (
+        SETTINGS_FILE if source_dir is None else os.path.join(source_dir, SETTINGS_FILE)
+    )
+    settings_path_abs = os.path.abspath(settings_path)
+    app_path_abs = os.path.abspath(bundle_source_dir)
 
     # cwd for dmgbuild, since setting the dmg filename to a path (include the dist dir) seems to
     # make the dmg disappear and never writes to the specified path. the dmgbuild module also
@@ -191,7 +197,7 @@ def build_dmg(filename_base):
         dmgbuild.build_dmg(
             dmg_filename,
             product_name,
-            settings_file=settings_file_abs,
+            settings_file=settings_path_abs,
             defines={
                 "app": app_path_abs,
             },
@@ -216,18 +222,18 @@ def install_certificate(cert_base64, cert_password):
         # WARNING: contains private key password, never print this command
         cmd_utils.run(
             [
-                sudo_path,
-                security_path,
+                SUDO_PATH,
+                SECURITY_PATH,
                 "import",
                 cert_path,
                 "-k",
-                keychain_path,
+                KEYCHAIN_PATH,
                 "-P",
                 cert_password,
                 "-T",
-                codesign_path,
+                CODESIGN_PATH,
                 "-T",
-                security_path,
+                SECURITY_PATH,
             ],
         )
 
@@ -241,7 +247,7 @@ def notarize_package(dmg_path, user, password, team_id):
 
 def get_xcode_path():
     result = cmd_utils.run(
-        [xcode_select_path, "-p"], get_output=True, shell=False, print_cmd=True
+        [XCODE_SELECT_PATH, "-p"], get_output=True, shell=False, print_cmd=True
     )
     return result.stdout.strip()
 
@@ -255,7 +261,7 @@ class NotaryTool:
         self.xcode_path = get_xcode_path()
 
     def get_path(self):
-        return f"{self.xcode_path}{notarytool_path}"
+        return f"{self.xcode_path}{NOTARYTOOL_PATH}"
 
     def store_credentials(self, user, password, team_id):
         print("Storing credentials for notary tool...")

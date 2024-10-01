@@ -1,3 +1,18 @@
+# Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Symless Ltd.
+#
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file LICENSE that should have accompanied this file.
+#
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 set(LIBEI_MIN_VERSION 1.2.1)
 set(LIBPORTAL_MIN_VERSION 0.6)
 
@@ -10,6 +25,7 @@ macro(configure_libs)
     configure_windows_libs()
   endif()
 
+  configure_python()
   configure_qt()
   configure_openssl()
   configure_coverage()
@@ -215,8 +231,8 @@ macro(configure_libei)
       message(WARNING "libei >= ${LIBEI_MIN_VERSION} not found")
     endif()
   else()
-    set(libei_bin_dir ${CMAKE_BINARY_DIR}/meson/subprojects/libei/src)
-    set(libei_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libei)
+    set(libei_bin_dir ${PROJECT_BINARY_DIR}/meson/subprojects/libei/src)
+    set(libei_src_dir ${PROJECT_SOURCE_DIR}/subprojects/libei)
     find_library(
       LIBEI_LINK_LIBRARIES
       NAMES ei
@@ -246,8 +262,8 @@ macro(configure_libportal)
     endif()
   else()
     set(libportal_bin_dir
-        ${CMAKE_BINARY_DIR}/meson/subprojects/libportal/libportal)
-    set(libportal_src_dir ${CMAKE_SOURCE_DIR}/subprojects/libportal)
+        ${PROJECT_BINARY_DIR}/meson/subprojects/libportal/libportal)
+    set(libportal_src_dir ${PROJECT_SOURCE_DIR}/subprojects/libportal)
 
     option(LIBPORTAL_STATIC "Use the static libportal binary" OFF)
     if(LIBPORTAL_STATIC)
@@ -466,28 +482,36 @@ macro(configure_windows_libs)
     /DDESKFLOW_VERSION=\"${DESKFLOW_VERSION}\"
     /D_XKEYCHECK_H)
 
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/win/version.rc.in
-                 ${CMAKE_BINARY_DIR}/src/version.rc @ONLY)
+  configure_file(${PROJECT_SOURCE_DIR}/res/win/version.rc.in
+                 ${PROJECT_BINARY_DIR}/src/version.rc @ONLY)
 
   configure_windows_openssl()
 
 endmacro()
 
 macro(configure_windows_openssl)
-  set(OPENSSL_ROOT_DIR ${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows)
+  set(OPENSSL_ROOT_DIR ${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows)
   set(OPENSSL_EXE_DIR ${OPENSSL_ROOT_DIR}/tools/openssl)
 
   if(EXISTS ${OPENSSL_EXE_DIR})
-    message(STATUS "OpenSSL exe dir: ${OPENSSL_EXE_DIR}")
+    message(VERBOSE "OpenSSL exe dir: ${OPENSSL_EXE_DIR}")
     add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
   else()
     message(FATAL_ERROR "OpenSSL exe dir not found: ${OPENSSL_EXE_DIR}")
   endif()
 
   if(EXISTS ${OPENSSL_ROOT_DIR})
-    message(STATUS "OpenSSL root dir: ${OPENSSL_ROOT_DIR}")
+    message(VERBOSE "OpenSSL root dir: ${OPENSSL_ROOT_DIR}")
   else()
     message(FATAL_ERROR "OpenSSL root dir not found: ${OPENSSL_ROOT_DIR}")
+  endif()
+endmacro()
+
+macro(configure_python)
+  if(WIN32)
+    find_package(Python REQUIRED QUIET)
+  else()
+    find_package(Python3 REQUIRED QUIET)
   endif()
 endmacro()
 
@@ -499,6 +523,9 @@ macro(configure_qt)
     REQUIRED)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
+
+  set(GUI_RES_DIR ${DESKFLOW_RES_DIR}/gui)
+  set(GUI_QRC_FILE ${GUI_RES_DIR}/app.qrc)
 
 endmacro()
 
@@ -553,7 +580,7 @@ macro(configure_gtest)
       )
     endif()
 
-    message(STATUS "Building GoogleTest")
+    message(VERBOSE "Using local GoogleTest")
     set(gtest_dir ${gtest_base_dir}/googletest)
     set(gmock_dir ${gtest_base_dir}/googlemock)
     include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
@@ -613,19 +640,10 @@ macro(configure_coverage)
   endif()
 endmacro()
 
-macro(configure_python)
-  set(python_venv_dir ${CMAKE_SOURCE_DIR}/.venv)
-  if(WIN32)
-    set(PYTHON_BIN ${python_venv_dir}/Scripts/python.exe)
-  else()
-    set(PYTHON_BIN ${python_venv_dir}/bin/python)
-  endif()
-endmacro()
-
 macro(configure_wintoast)
   # WinToast is a pretty niche library, and there doesn't seem to be an installable package,
   # so we rely on building from source.
-  file(GLOB WINTOAST_DIR ${CMAKE_SOURCE_DIR}/subprojects/WinToast-*)
+  file(GLOB WINTOAST_DIR ${PROJECT_SOURCE_DIR}/subprojects/WinToast-*)
   if(WINTOAST_DIR)
     set(HAVE_WINTOAST true)
     add_definitions(-DHAVE_WINTOAST=1)
@@ -637,7 +655,7 @@ macro(configure_wintoast)
 endmacro()
 
 macro(configure_tomlplusplus)
-  file(GLOB tomlplusplus_dir ${CMAKE_SOURCE_DIR}/subprojects/tomlplusplus-*)
+  file(GLOB tomlplusplus_dir ${PROJECT_SOURCE_DIR}/subprojects/tomlplusplus-*)
 
   if(tomlplusplus_dir)
     set(DEFAULT_SYSTEM_TOMLPLUSPLUS OFF)
@@ -657,6 +675,7 @@ macro(configure_tomlplusplus)
     endif()
   else()
     if(EXISTS ${tomlplusplus_dir})
+      message(VERBOSE "Using local tomlplusplus")
       set(HAVE_TOMLPLUSPLUS true)
       add_definitions(-DHAVE_TOMLPLUSPLUS=1)
       include_directories(${tomlplusplus_dir}/include)
@@ -667,7 +686,7 @@ macro(configure_tomlplusplus)
 endmacro()
 
 macro(configure_cli11)
-  file(GLOB cli11_dir ${CMAKE_SOURCE_DIR}/subprojects/CLI11-*)
+  file(GLOB cli11_dir ${PROJECT_SOURCE_DIR}/subprojects/CLI11-*)
 
   if(cli11_dir)
     set(DEFAULT_SYSTEM_CLI11 OFF)
@@ -685,12 +704,13 @@ macro(configure_cli11)
       message(WARNING "System CLI11 not found")
     endif()
   else()
-    if(EXISTS ${CLI11_dir})
+    if(EXISTS ${cli11_dir})
+      message(VERBOSE "Using local CLI11")
       set(HAVE_CLI11 true)
       add_definitions(-DHAVE_CLI11=1)
       include_directories(${cli11_dir}/include)
     else()
-      message(WARNING "Local CLI11 subproject not found")
+      message(WARNING "Local CLI11 subproject not found at: ${cli11_dir}")
     endif()
 
   endif()

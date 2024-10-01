@@ -24,13 +24,7 @@
 #include <QProcess>
 #include <QtGlobal>
 
-static const char kCoreBinary[] = "deskflow-legacy";
-
-#ifdef Q_WS_WIN
-static const char kSerialKeyFilename[] = "Deskflow.subkey";
-#else
-static const char kSerialKeyFilename[] = ".deskflow.subkey";
-#endif
+static const char kCoreBinary[] = LEGACY_BINARY_NAME;
 
 QString CoreTool::getProfileDir() const {
   QStringList args("--get-profile-dir");
@@ -45,11 +39,6 @@ QString CoreTool::getInstalledDir() const {
 QString CoreTool::getArch() const {
   QStringList args("--get-arch");
   return run(args);
-}
-
-QString CoreTool::getSerialKeyFilePath() const {
-  auto filename = getProfileDir() + QDir::separator() + kSerialKeyFilename;
-  return QDir::cleanPath(filename);
 }
 
 QString CoreTool::run(const QStringList &args, const QString &input) const {

@@ -19,7 +19,6 @@
 
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
-#include "gui/license/license_utils.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
 
@@ -37,13 +36,10 @@
 #include <QTimer>
 #include <QtGlobal>
 
-using namespace deskflow::license;
-using namespace deskflow::gui::license;
-
 namespace deskflow::gui {
 
 const int kRetryDelay = 1000;
-const auto kServerConfigFilename = "deskflow-server.conf";
+const auto kServerConfigFilename = DESKFLOW_APP_ID "-server.conf";
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 //
@@ -161,10 +157,9 @@ QString CoreProcess::Deps::getProfileRoot() const {
 
 CoreProcess::CoreProcess(
     const IAppConfig &appConfig, const IServerConfig &serverConfig,
-    const ILicense &license, std::shared_ptr<Deps> deps)
+    std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig),
-      m_license(license),
       m_pDeps(deps) {
 
   connect(
@@ -575,16 +570,11 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app) {
 
   args << "-c" << configFilename;
   qInfo("core config file: %s", qPrintable(configFilename));
-
-  if (isActivationEnabled() && !m_appConfig.serialKey().isEmpty()) {
-    args << "--serial-key" << m_appConfig.serialKey();
-  }
-
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
   if (m_appConfig.tlsEnabled()) {
-    TlsUtility tlsUtility(m_appConfig, m_license);
+    TlsUtility tlsUtility(m_appConfig);
     if (!tlsUtility.persistCertificate()) {
       qCritical("failed to persist tls certificate");
       return false;
@@ -709,8 +699,8 @@ void CoreProcess::checkLogLine(const QString &line) {
 
   checkSecureSocket(line);
 
-  // subprocess (deskflows, deskflowc) is not allowed to show notifications
-  // process the log from it and show notification from deskflow instead
+  // server and client processes are not allowed to show notifications.
+  // process the log from it and show notification from deskflow instead.
 #ifdef Q_OS_MAC
   checkOSXNotification(line);
 #endif

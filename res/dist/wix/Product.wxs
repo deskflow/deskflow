@@ -19,39 +19,39 @@
 		</Feature>
 		<DirectoryRef Id="TARGETDIR">
 			<Component Guid="7CF3564D-1F8E-4D3D-9781-E1EE22D5BD67" Id="RegistryEntries">
-				<RegistryKey Id="deskflows" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
-					<RegistryValue Name="[INSTALLFOLDER]deskflows.exe" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
+				<RegistryKey Id="$(var.AppId)_server" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes" Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" Root="HKLM">
+					<RegistryValue Name="[INSTALLFOLDER]$(var.ServerBin)" Type="string" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 
-				<RegistryKey Id="deskflowc" Root="HKLM"
+				<RegistryKey Id="$(var.AppId)_client" Root="HKLM"
 					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
 					ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
-					<RegistryValue Type="string" Name="[INSTALLFOLDER]deskflowc.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]$(var.ClientBin)" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 
-				<RegistryKey Id="deskflow" Root="HKLM"
+				<RegistryKey Id="$(var.AppId)" Root="HKLM"
 					Key="Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
 					ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
-					<RegistryValue Type="string" Name="[INSTALLFOLDER]deskflow.exe" Value="~ HIGHDPIAWARE WIN7RTM"/>
+					<RegistryValue Type="string" Name="[INSTALLFOLDER]$(var.GuiBin)" Value="~ HIGHDPIAWARE WIN7RTM"/>
 				</RegistryKey>
 				<!-- Windows 8 and later only -->
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 			<?if $(var.Platform) = x64 ?>
-				<Merge Id="VC_Redist" SourceFile="$(var.ResPath)\dist\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+				<Merge Id="VC_Redist" SourceFile="$(var.ProjectResDir)\dist\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
 			<?else ?>
-				<Merge Id="VC_Redist" SourceFile="$(var.ResPath)\dist\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+				<Merge Id="VC_Redist" SourceFile="$(var.ProjectResDir)\dist\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
 			<?endif ?>
 		</DirectoryRef>
-		<Property Id="DeskflowCommonBackground">common_background</Property>
-		<Binary Id="common_background" SourceFile="$(var.ResPath)\dist\wix\images\common_background.png"/>
-		<Icon Id="deskflow.ico" SourceFile="$(var.ResPath)/deskflow.ico"/>
-		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResPath)\dist\wix\images\banner.png"/>
-		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResPath)\dist\wix\images\dialog.png"/>
-		<Property Id="ARPPRODUCTICON" Value="deskflow.ico"/>
+		<Property Id="CommonBackground">CommonBackground</Property>
+		<Binary Id="CommonBackground" SourceFile="$(var.ResDir)\dist\wix\images\common_background.png"/>
+		<Icon Id="AppIcon" SourceFile="$(var.ResDir)/app.ico"/>
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResDir)\dist\wix\images\banner.png"/>
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResDir)\dist\wix\images\dialog.png"/>
+		<Property Id="ARPPRODUCTICON" Value="AppIcon"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
-			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Deskflow" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
+			<RegistrySearch Id="LegacyRegistrySearch" Key="SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\$(var.Name)" Name="UninstallString" Root="HKLM" Type="file" Win64="no">
 				<FileSearch Id="LegacyFileSearch" Name="uninstall.exe"/>
 			</RegistrySearch>
 		</Property>
@@ -59,7 +59,7 @@
 		</Condition>
 		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
 		<UI>
-			<UIRef Id="DeskflowDlgSequence" />
+			<UIRef Id="AppDlgSequence" />
 		</UI>
 	</Product>
 	<Fragment>
@@ -77,18 +77,18 @@
 	<Fragment>
 		<ComponentGroup Directory="INSTALLFOLDER" Id="ProductComponents">
 			<Component Guid="EC9AD3B0-277C-4157-B5C8-5FD5B6A5F4AD" Id="Core">
-				<File KeyPath="yes" Source="$(var.BinPath)/deskflowd.exe"/>
-				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="Deskflow" Start="auto" Type="ownProcess">
+				<File KeyPath="yes" Source="$(var.BinDir)/$(var.DaemonBin)"/>
+				<ServiceInstall Description="Controls the $(var.Name) foreground processes." DisplayName="$(var.Name)" ErrorControl="normal" Id="ServiceInstall" Name="$(var.Name)" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
-				<ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
-				<File Source="$(var.BinPath)/deskflows.exe">
-					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Deskflow server" Scope="any"/>
+				<ServiceControl Id="ServiceControl" Name="$(var.Name)" Remove="uninstall" Start="install" Stop="both"/>
+				<File Source="$(var.BinDir)/$(var.ServerBin)">
+					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="$(var.Name) Server" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/deskflowc.exe">
-					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="Deskflow client" Scope="any"/>
+				<File Source="$(var.BinDir)/$(var.ClientBin)">
+					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="$(var.Name) Client" Scope="any"/>
 				</File>
-				<File Source="$(var.BinPath)/deskflow-legacy.exe"/>
+				<File Source="$(var.BinDir)/$(var.LegacyBin)" />
 				<?if $(var.Platform) = x64 ?>
 					<File Source="$(var.OpenSslDllDir)/libssl-3-x64.dll"/>
 					<File Source="$(var.OpenSslDllDir)/libcrypto-3-x64.dll"/>
@@ -98,42 +98,42 @@
 				<?endif ?>
 			</Component>
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
-				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinPath)/deskflow.exe">
-					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="deskflow.exe" Id="GuiShortcut" Name="$(var.Name)">
-						<Icon Id="deskflow.exe" SourceFile="$(var.ResPath)/deskflow.ico"/>
+				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinDir)/$(var.GuiBin)">
+					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="$(var.GuiBin)" Id="GuiShortcut" Name="$(var.Name)">
+						<Icon Id="$(var.GuiBin)" SourceFile="$(var.ResDir)/app.ico"/>
 					</Shortcut>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.BinPath)\Qt6Cored.dll"/>
-				<File Source="$(var.BinPath)\Qt6Guid.dll"/>
-				<File Source="$(var.BinPath)\Qt6Networkd.dll"/>
-				<File Source="$(var.BinPath)\Qt6Svgd.dll"/>
-				<File Source="$(var.BinPath)\Qt6Widgetsd.dll"/>
-				<File Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
+				<File Source="$(var.BinDir)\Qt6Cored.dll"/>
+				<File Source="$(var.BinDir)\Qt6Guid.dll"/>
+				<File Source="$(var.BinDir)\Qt6Networkd.dll"/>
+				<File Source="$(var.BinDir)\Qt6Svgd.dll"/>
+				<File Source="$(var.BinDir)\Qt6Widgetsd.dll"/>
+				<File Source="$(var.BinDir)\styles\qmodernwindowsstyle.dll"/>
 				<!-- HACK: Normally the C++ redistributable solves this dependency, including it can cause problems -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
-				<File Source="$(var.BinPath)\Qt6Core.dll"/>
-				<File Source="$(var.BinPath)\Qt6Gui.dll"/>
-				<File Source="$(var.BinPath)\Qt6Network.dll"/>
-				<File Source="$(var.BinPath)\Qt6Svg.dll"/>
-				<File Source="$(var.BinPath)\Qt6Widgets.dll"/>
-				<File Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
+				<File Source="$(var.BinDir)\Qt6Core.dll"/>
+				<File Source="$(var.BinDir)\Qt6Gui.dll"/>
+				<File Source="$(var.BinDir)\Qt6Network.dll"/>
+				<File Source="$(var.BinDir)\Qt6Svg.dll"/>
+				<File Source="$(var.BinDir)\Qt6Widgets.dll"/>
+				<File Source="$(var.BinDir)\styles\qmodernwindowsstyle.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="QTStylesDir" Id="ProductQtStylesComponents">
 			<Component Guid="96E0F8D8-64FD-4CE8-94D1-F6EDCBBB4995" Id="Styles">
-				<File Id="qmodernwindowsstyle" Source="$(var.BinPath)\styles\qmodernwindowsstyle.dll"/>
+				<File Id="qmodernwindowsstyle" Source="$(var.BinDir)\styles\qmodernwindowsstyle.dll"/>
 			</Component>
 		</ComponentGroup>
 		<ComponentGroup Directory="PlatformsDir" Id="ProductQtPluginComponents">
 			<Component Guid="684EFA14-856B-440E-A5E6-E90E04E36B41" Id="QtPlatformPlugin">
 				<?if $(var.Configuration) = "Debug" ?>
-				<File Source="$(var.BinPath)\platforms\qwindowsd.dll"/>
+				<File Source="$(var.BinDir)\platforms\qwindowsd.dll"/>
 				<?else ?>
-				<File Source="$(var.BinPath)\platforms\qwindows.dll"/>
+				<File Source="$(var.BinDir)\platforms\qwindows.dll"/>
 				<?endif ?>
 			</Component>
 		</ComponentGroup>

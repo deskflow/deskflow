@@ -54,7 +54,7 @@ bool
 isOSXDevelopmentBuild()
 {
 	std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
-	return (bundleURL.find("Applications/Deskflow.app") == std::string::npos);
+	return (bundleURL.find("Applications/" DESKFLOW_APP_NAME ".app") == std::string::npos);
 }
 
 bool
@@ -62,7 +62,7 @@ showOSXNotification(const QString& title, const QString& body)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014
 	// accessing notification center on unsigned build causes an immidiate
-	// application shutodown (in this case deskflows) and cannot be caught
+	// application shutodown (in this case, server) and cannot be caught
 	// to avoid issues with it need to first check if this is a dev build
 	if (isOSXDevelopmentBuild())
 	{

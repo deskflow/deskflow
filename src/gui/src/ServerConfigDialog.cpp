@@ -412,10 +412,12 @@ void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked) {
 bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked() {
 #if defined(Q_OS_WIN)
   const QString deskflowConfigFilter(
-      QObject::tr("Deskflow Configurations (*.sgc);;All files (*.*)"));
+      QString("%1 Configurations (*.sgc);;All files (*.*)")
+          .arg(DESKFLOW_APP_NAME));
 #else
   const QString deskflowConfigFilter(
-      QObject::tr("Deskflow Configurations (*.conf);;All files (*.*)"));
+      QString("%1 Configurations (*.conf);;All files (*.*)")
+          .arg(DESKFLOW_APP_NAME));
 #endif
 
   QString fileName = QFileDialog::getOpenFileName(

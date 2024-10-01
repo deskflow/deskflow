@@ -943,7 +943,7 @@ Enabling this setting will disable the server config GUI.</string>
             </size>
            </property>
            <property name="text">
-            <string>Use Core server config file</string>
+            <string>Use a server config file</string>
            </property>
           </widget>
          </item>

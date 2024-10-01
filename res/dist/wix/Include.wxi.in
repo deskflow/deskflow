@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-    <?define Name="Deskflow"?>
+    <?define AppId="@DESKFLOW_APP_ID@"?>
+    <?define Name="@DESKFLOW_APP_NAME@"?>
     <?define Version="@DESKFLOW_VERSION_MS@"?>
-    <?define Author="Symless"?>
-    <?define BinPath="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
-    <?define ResPath="@CMAKE_CURRENT_SOURCE_DIR@/res"?>
-    <?define ExtPath="@CMAKE_CURRENT_SOURCE_DIR@/ext"?>
+    <?define Author="@DESKFLOW_AUTHOR_NAME@"?>
+    <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
+    <?define ProjectResDir="@DESKFLOW_PROJECT_RES_DIR@"?>
+    <?define ResDir="@DESKFLOW_RES_DIR@"?>
+    <?define QtDir="@QT_PATH@"?>
+    <?define QtBinDir="$(var.QtDir)\bin"?>
     <?if $(var.Platform) = "x64"?>
     <?define ProgramFilesFolder="ProgramFiles64Folder"?>
     <?define PlatformSimpleName="64-bit"?>
-    <?define UpgradeGuid="E8A4FA54-14B9-4FD1-8E00-7BC46555FDA0"?>
+    <?define UpgradeGuid="@DESKFLOW_MSI_64_GUID@"?>
     <?else?>
     <?define ProgramFilesFolder="ProgramFilesFolder"?>
     <?define PlatformSimpleName="32-bit"?>
-    <?define UpgradeGuid="BE0B9FD8-45E2-4A8E-A0D8-1F774D074A78"?>
+    <?define UpgradeGuid="@DESKFLOW_MSI_32_GUID@"?>
     <?endif?>
-    <?define QtPath="@QT_PATH@"?>
-    <?define QtBinPath="$(var.QtPath)\bin"?>
-    <?define QtPluginsPath="$(var.QtPath)\plugins"?>
+    <?define QtPluginsPath="$(var.QtDir)\plugins"?>
     <?define OpenSslExeDir="@OPENSSL_EXE_DIR@"?>
     <?define OpenSslDllDir="@OPENSSL_ROOT_DIR@/bin"?>
+    <?define GuiBin="@GUI_BINARY_NAME@.exe"?>
+    <?define ServerBin="@SERVER_BINARY_NAME@.exe"?>
+    <?define ClientBin="@CLIENT_BINARY_NAME@.exe"?>
+    <?define CoreBin="@CORE_BINARY_NAME@.exe"?>
+    <?define DaemonBin="@DAEMON_BINARY_NAME@.exe"?>
+    <?define LegacyBin="@LEGACY_BINARY_NAME@.exe"?>
 </Include>

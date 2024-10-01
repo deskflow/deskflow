@@ -28,7 +28,7 @@
 #include <windows.h>
 
 static const char *s_settingsKeyNames[] = {
-    _T("SOFTWARE"), _T("Deskflow"), NULL};
+    _T("SOFTWARE"), _T(DESKFLOW_APP_NAME), NULL};
 
 //
 // ArchSystemWindows

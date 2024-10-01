@@ -16,7 +16,7 @@
 
 macro(config_all_tests)
 
-  set(base_dir ${CMAKE_SOURCE_DIR})
+  set(base_dir ${PROJECT_SOURCE_DIR})
   set(src_dir ${base_dir}/src)
   set(test_base_dir ${src_dir}/test)
   set(gui_dir ${src_dir}/gui/src)
@@ -63,7 +63,7 @@ macro(set_sources)
   endif()
 
   if(WIN32)
-    list(APPEND sources ${CMAKE_BINARY_DIR}/src/version.rc)
+    list(APPEND sources ${PROJECT_BINARY_DIR}/src/version.rc)
   endif()
 
   replace_platform_sources()
@@ -126,7 +126,7 @@ macro(config_test_deps)
 
   # gui library autogen headers:
   # qt doesn't seem to auto include the autogen headers for libraries.
-  include_directories(${CMAKE_BINARY_DIR}/src/lib/gui/gui_autogen/include)
+  include_directories(${PROJECT_BINARY_DIR}/src/lib/gui/gui_autogen/include)
 
   set(test_libs
       arch
@@ -140,7 +140,6 @@ macro(config_test_deps)
       app
       mt
       ipc
-      license
       gui
       ${GMOCK_LIB}
       ${GTEST_LIB}

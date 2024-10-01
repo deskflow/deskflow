@@ -67,9 +67,9 @@
     {
       "label": "kill",
       "type": "shell",
-      "command": "killall deskflow; killall deskflowc; killall deskflows || true",
+      "command": "killall deskflow; killall deskflow-client; killall deskflow-server || true",
       "windows": {
-        "command": "taskkill /F /IM deskflow.exe /IM deskflowc.exe /IM deskflows.exe; $true"
+        "command": "taskkill /F /IM deskflow.exe /IM deskflow-client.exe /IM deskflow-client.exe; $true"
       },
       "presentation": {
         "reveal": "silent"

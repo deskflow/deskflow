@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=@DESKFLOW_APP_NAME@
+Comment=Mouse and keyboard sharing utility
+Path=/usr/bin
+Exec=/usr/bin/@GUI_BINARY_NAME@
+Icon=@DESKFLOW_APP_ID@
+Terminal=false
+Categories=Utility;
+Keywords=keyboard;mouse;sharing;network;share;

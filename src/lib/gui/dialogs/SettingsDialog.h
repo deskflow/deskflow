@@ -26,7 +26,6 @@
 #include "gui/core/CoreTool.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ValidationError.h"
-#include "license/License.h"
 
 #include <QDialog>
 
@@ -34,7 +33,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
   using IAppConfig = deskflow::gui::IAppConfig;
   using IServerConfig = deskflow::gui::IServerConfig;
   using CoreProcess = deskflow::gui::CoreProcess;
-  using License = deskflow::license::License;
 
   Q_OBJECT
 
@@ -42,7 +40,7 @@ public:
   void extracted();
   SettingsDialog(
       QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
-      const License &license, const CoreProcess &coreProcess);
+      const CoreProcess &coreProcess);
 
 signals:
   void shown();
@@ -87,7 +85,6 @@ private:
 
   IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
-  const License &m_license;
   const CoreProcess &m_coreProcess;
   deskflow::gui::TlsUtility m_tlsUtility;
 };

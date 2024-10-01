@@ -18,7 +18,6 @@
 #pragma once
 
 #include "ArgsBase.h"
-#include "license/License.h"
 #include "server/Config.h"
 
 #include <memory>
@@ -26,7 +25,6 @@
 namespace deskflow {
 
 class ServerArgs : public ArgsBase {
-  using License = deskflow::license::License;
   using Config = deskflow::server::Config;
 
 public:
@@ -40,7 +38,6 @@ public:
 
 public:
   String m_configFile = "";
-  license::SerialKey m_serialKey = license::SerialKey::invalid();
   std::shared_ptr<Config> m_config;
 };
 

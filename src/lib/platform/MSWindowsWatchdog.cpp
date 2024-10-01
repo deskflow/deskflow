@@ -571,9 +571,9 @@ void MSWindowsWatchdog::shutdownExistingProcesses() {
     // make sure we're not checking the system process
     if (entry.th32ProcessID != 0) {
 
-      if (_stricmp(entry.szExeFile, "deskflowc.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflows.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
+      if (_stricmp(entry.szExeFile, CLIENT_BINARY_NAME ".exe") == 0 ||
+          _stricmp(entry.szExeFile, SERVER_BINARY_NAME ".exe") == 0 ||
+          _stricmp(entry.szExeFile, CORE_BINARY_NAME ".exe") == 0) {
 
         HANDLE handle =
             OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
@@ -608,7 +608,7 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
     deskflowLegacyCommand.append("\"")
         .append(installedDir)
         .append("\\")
-        .append("deskflow-legacy")
+        .append(LEGACY_BINARY_NAME)
         .append("\"");
     deskflowLegacyCommand.append(" --get-active-desktop");
 
@@ -625,7 +625,9 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security) {
       DWORD rc = GetLastError();
       RevertToSelf();
     } else {
-      LOG((CLOG_DEBUG "launched deskflow-legacy to check active desktop"));
+      LOG(
+          (CLOG_DEBUG "launched %s to check active desktop",
+           LEGACY_BINARY_NAME));
     }
 
     ARCH->lockMutex(m_mutex);

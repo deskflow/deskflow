@@ -19,17 +19,19 @@
 #
 macro(configure_packaging)
 
+  set(DESKFLOW_PROJECT_RES_DIR ${PROJECT_SOURCE_DIR}/res)
+
   if(${BUILD_INSTALLER})
-    set(CPACK_PACKAGE_NAME "deskflow")
-    set(CPACK_PACKAGE_CONTACT "Deskflow <maintainers@deskflow.org>")
+    set(CPACK_PACKAGE_NAME ${DESKFLOW_APP_ID})
+    set(CPACK_PACKAGE_CONTACT ${DESKFLOW_MAINTAINER})
     set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
-    set(CPACK_PACKAGE_VENDOR "Symless")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+    set(CPACK_PACKAGE_VENDOR ${DESKFLOW_AUTHOR_NAME})
+    set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       configure_windows_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      configure_macos_packaging()
+      configure_mac_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       configure_linux_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "|.*BSD")
@@ -48,34 +50,45 @@ endmacro()
 #
 macro(configure_windows_packaging)
 
-  message(STATUS "Configuring Windows installer")
+  message(VERBOSE "Configuring Windows installer")
 
   set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_MS})
   set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
 
-  configure_files(${CMAKE_CURRENT_SOURCE_DIR}/res/dist/wix
-                  ${CMAKE_BINARY_DIR}/installer)
+  set(DESKFLOW_MSI_64_GUID
+      "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8"
+      CACHE STRING "GUID for 64-bit MSI installer")
+
+  set(DESKFLOW_MSI_32_GUID
+      "8F57C657-BC87-45E6-840E-41242A93511C"
+      CACHE STRING "GUID for 32-bit MSI installer")
+
+  configure_files(${PROJECT_SOURCE_DIR}/res/dist/wix
+                  ${PROJECT_BINARY_DIR}/installer)
 
 endmacro()
 
 #
 # macOS app bundle
 #
-macro(configure_macos_packaging)
+macro(configure_mac_packaging)
 
-  message(STATUS "Configuring macOS app bundle")
+  message(VERBOSE "Configuring macOS app bundle")
 
   set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
 
   set(CMAKE_INSTALL_RPATH
       "@loader_path/../Libraries;@loader_path/../Frameworks")
   set(DESKFLOW_BUNDLE_SOURCE_DIR
-      ${CMAKE_CURRENT_SOURCE_DIR}/res/dist/macos/bundle)
-  set(DESKFLOW_BUNDLE_DIR ${CMAKE_BINARY_DIR}/bundle)
-  set(DESKFLOW_BUNDLE_APP_DIR ${DESKFLOW_BUNDLE_DIR}/Deskflow.app)
-  set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_APP_DIR}/Contents/MacOS)
+      ${PROJECT_SOURCE_DIR}/res/dist/mac/bundle
+      CACHE PATH "Path to the macOS app bundle")
+  set(DESKFLOW_BUNDLE_DIR ${PROJECT_BINARY_DIR}/bundle/${DESKFLOW_APP_NAME}.app)
+  set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_DIR}/Contents/MacOS)
 
   configure_files(${DESKFLOW_BUNDLE_SOURCE_DIR} ${DESKFLOW_BUNDLE_DIR})
+
+  file(RENAME ${DESKFLOW_BUNDLE_DIR}/Contents/Resources/App.icns
+       ${DESKFLOW_BUNDLE_DIR}/Contents/Resources/${DESKFLOW_APP_NAME}.icns)
 
 endmacro()
 
@@ -84,12 +97,12 @@ endmacro()
 #
 macro(configure_linux_packaging)
 
-  message(STATUS "Configuring Linux packaging")
+  message(VERBOSE "Configuring Linux packaging")
 
   set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_LINUX})
   set(CPACK_GENERATOR "DEB;RPM;TGZ")
 
-  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Deskflow <maintainers@deskflow.org>")
+  set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${DESKFLOW_MAINTAINER})
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
@@ -108,11 +121,25 @@ macro(configure_linux_packaging)
   # apps install to.
   set(CMAKE_INSTALL_PREFIX /usr)
 
-  install(FILES res/dist/linux/deskflow.desktop DESTINATION share/applications)
-  install(FILES res/deskflow.png DESTINATION share/pixmaps)
+  set(source_desktop_file ${DESKFLOW_PROJECT_RES_DIR}/dist/linux/app.desktop.in)
+  set(configured_desktop_file ${PROJECT_BINARY_DIR}/app.desktop)
+  set(install_desktop_file ${DESKFLOW_APP_ID}.desktop)
+
+  configure_file(${source_desktop_file} ${configured_desktop_file} @ONLY)
+
+  install(
+    FILES ${configured_desktop_file}
+    DESTINATION share/applications
+    RENAME ${install_desktop_file})
+
+  install(
+    FILES ${DESKFLOW_RES_DIR}/app.png
+    DESTINATION share/pixmaps
+    RENAME ${DESKFLOW_APP_ID}.png)
 
   # Prepare PKGBUILD for Arch Linux
-  configure_file(res/dist/arch/PKGBUILD.in ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
+  configure_file(${DESKFLOW_PROJECT_RES_DIR}/dist/arch/PKGBUILD.in
+                 ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
 
 endmacro()
 

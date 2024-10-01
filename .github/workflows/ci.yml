@@ -19,20 +19,42 @@ on:
     - cron: "0 5 * * *" # 5am UTC
 
 env:
-  GIT_SHA: ${{ github.sha }}
-  DESKFLOW_PRODUCT_NAME: ${{ vars.DESKFLOW_PRODUCT_NAME }}
-  DESKFLOW_PACKAGE_PREFIX: ${{ vars.DESKFLOW_PACKAGE_PREFIX || 'deskflow' }}
-  PACKAGE_BUILD: ${{ !github.event.pull_request.draft }}
-  PACKAGE_UPLOAD: ${{ !github.event.pull_request.draft }}
+  GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PACKAGE_PREFIX: "deskflow"
+  PACKAGE_PATH: ./dist
 
 jobs:
+  pr-comment-flags:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+
+    outputs:
+      no-sonar: ${{ steps.check.outputs.no-sonar }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check PR comment for flags
+        id: check
+        run: |
+          pr_body="${{ github.event.pull_request.body }}"
+          no_sonar="{no-sonar}"
+
+          if echo $pr_body | grep -q "$no_sonar"; then
+            echo "Flag $no_sonar found in PR body."
+            echo "no-sonar=true" >> $GITHUB_OUTPUT
+          else
+            echo "No $no_sonar flag found in PR body."
+          fi
+
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
     runs-on: ubuntu-latest
     needs: [lint-cmake, lint-clang, windows, macos, linux, unix]
 
     steps:
-      - run: echo "CI passed" > $GITHUB_STEP_SUMMARY
+      - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
 
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
@@ -67,7 +89,8 @@ jobs:
     uses: ./.github/workflows/codeql-analysis.yml
 
   analyse-sonarcloud:
-    if: ${{ github.event_name == 'pull_request' }}
+    needs: pr-comment-flags
+    if: ${{ github.event_name == 'pull_request' && needs.pr-comment-flags.outputs.no-sonar != 'true' }}
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -98,9 +121,12 @@ jobs:
       - name: Cache vcpkg dir
         uses: actions/cache@v4
         with:
+          # We also need to cache the `LOCALAPPDATA` dir; without doing so, openssl
+          # rebuilds (after it is detected in cache) every time, which takes around 10 mins.
           path: |
             vcpkg
             vcpkg_installed
+            ${{ env.LOCALAPPDATA }}/vcpkg
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
 
       # Should only restore the .venv directory from cache.
@@ -145,19 +171,16 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Package
-        if: ${{ env.PACKAGE_BUILD == 'true' }}
         run: python ./scripts/package.py
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
 
       - name: Upload
-        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
-        uses: ./.github/actions/dist-upload
+        uses: actions/upload-artifact@v4
         with:
-          use-github: true
-          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
-          package-version: ${{ env.DESKFLOW_VERSION }}
+          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
+          path: ${{ env.PACKAGE_PATH }}
 
   macos:
     name: ${{ matrix.target.name }}
@@ -223,7 +246,6 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Package
-        if: ${{ env.PACKAGE_BUILD == 'true' }}
         run: ./scripts/package.py
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
@@ -234,12 +256,10 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
-        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
-        uses: ./.github/actions/dist-upload
+        uses: actions/upload-artifact@v4
         with:
-          use-github: true
-          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.target.name }}"
-          package-version: ${{ env.DESKFLOW_VERSION }}
+          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
+          path: ${{ env.PACKAGE_PATH }}
 
   linux-matrix:
     runs-on: ubuntu-latest
@@ -308,19 +328,16 @@ jobs:
           job: linux-${{ matrix.distro.name }}
 
       - name: Package
-        if: ${{ env.PACKAGE_BUILD == 'true' }}
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
           LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
         run: ./scripts/package.py
 
       - name: Upload
-        if: ${{ env.PACKAGE_UPLOAD == 'true' }}
-        uses: ./.github/actions/dist-upload
+        uses: actions/upload-artifact@v4
         with:
-          use-github: true
-          github-target-filename: "${{ env.DESKFLOW_PACKAGE_PREFIX }}-${{ matrix.distro.name }}"
-          package-version: ${{ env.DESKFLOW_VERSION }}
+          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
+          path: ${{ env.PACKAGE_PATH }}
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:

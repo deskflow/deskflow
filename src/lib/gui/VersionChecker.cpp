@@ -17,6 +17,7 @@
 
 #include "VersionChecker.h"
 
+#include "common/constants.h"
 #include "env_vars.h"
 
 #include <QLocale>
@@ -26,8 +27,6 @@
 #include <QProcess>
 #include <QRegularExpression>
 #include <memory>
-
-const char *const kVersion = DESKFLOW_VERSION;
 
 using namespace deskflow::gui;
 
@@ -45,13 +44,15 @@ void VersionChecker::checkLatest() const {
   const QString url = env_vars::versionUrl();
   qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
-  auto userAgent = QString("Deskflow %1 on %2")
+  auto userAgent = QString("%1 %2 on %3")
+                       .arg(kAppName)
                        .arg(kVersion)
                        .arg(QSysInfo::prettyProductName());
   request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
-  request.setRawHeader("X-Deskflow-Version", kVersion);
+  request.setRawHeader("X-" DESKFLOW_APP_NAME "-Version", kVersion);
   request.setRawHeader(
-      "X-Deskflow-Language", QLocale::system().name().toStdString().c_str());
+      "X-" DESKFLOW_APP_NAME "-Language",
+      QLocale::system().name().toStdString().c_str());
   m_network->get(request);
 }
 
