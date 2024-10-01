@@ -53,7 +53,6 @@ private slots:
   void on_m_pButtonBrowseLog_clicked();
   void on_m_pRadioSystemScope_toggled(bool checked);
   void on_m_pPushButtonTlsCertPath_clicked();
-  void on_m_pComboBoxTlsKeyLength_currentIndexChanged(int index);
   void on_m_pPushButtonTlsRegenCert_clicked();
   void on_m_pCheckBoxServiceEnabled_toggled(bool checked);
 

@@ -18,7 +18,6 @@
 #include "TlsCertificate.h"
 
 #include "TlsFingerprint.h"
-#include "gui/paths.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -32,12 +31,10 @@ static const char *const kCertificateSubjectInfo = "/CN=Deskflow";
 #if defined(Q_OS_WIN)
 static const char *const kWinOpenSslDir = "OpenSSL";
 static const char *const kWinOpenSslBinary = "openssl.exe";
-static const char *const kConfigFile = "deskflow.conf";
+static const char *const kConfigFile = "openssl.cnf";
 #elif defined(Q_OS_UNIX)
 static const char *const kUnixOpenSslCommand = "openssl";
 #endif
-
-using namespace deskflow::gui;
 
 #if defined(Q_OS_WIN)
 
@@ -90,61 +87,43 @@ using namespace deskflow::gui;
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {}
 
 bool TlsCertificate::runTool(const QStringList &args) {
-  QString program;
 #if defined(Q_OS_WIN)
-  program = openSslWindowsBinary();
+  const auto program = openSslWindowsBinary();
 #else
-  program = kUnixOpenSslCommand;
+  const auto program = kUnixOpenSslCommand;
 #endif
 
   QStringList environment;
 #if defined(Q_OS_WIN)
-  auto openSslDir = QDir(openSslWindowsDir());
-  auto config = QDir::cleanPath(openSslDir.filePath(kConfigFile));
-  if (!QFile::exists(config)) {
-    qDebug("openssl config file not found: %s", qUtf8Printable(config));
-
-    // if the expected production file location doesn't exist, try the dev path.
-    config = QDir::cleanPath(QString("res/openssl/%1").arg(kConfigFile));
-
-    // if it still isn't there, then there's something seriously wrong.
-    if (!QFile::exists(config)) {
-      qFatal() << "openssl config file not found: " << config;
-    }
-  }
-
+  const auto openSslDir = QDir(openSslWindowsDir());
+  const auto config = QDir::cleanPath(openSslDir.filePath(kConfigFile));
   environment << QString("OPENSSL_CONF=%1").arg(config);
 #endif
+
+  QProcess process;
+  process.setEnvironment(environment);
+  for (const auto &envVar : environment) {
+    qDebug("set env var: %s", qUtf8Printable(envVar));
+  }
 
   qDebug(
       "running: %s %s", qUtf8Printable(program),
       qUtf8Printable(args.join(" ")));
-
-  QProcess process;
-
-  for (const auto &envVar : environment) {
-    qDebug("setting env var %s", qUtf8Printable(envVar));
-  }
-
-  process.setEnvironment(environment);
-
   process.start(program, args);
-
   bool success = process.waitForStarted();
 
-  QString stderrOutput;
+  QString toolStderr;
   if (success && process.waitForFinished()) {
     m_toolStdout = process.readAllStandardOutput().trimmed();
-    stderrOutput = process.readAllStandardError().trimmed();
+    toolStderr = process.readAllStandardError().trimmed();
   }
 
   if (int code = process.exitCode(); !success || code != 0) {
-    qDebug(
-        "openssl failed with code %d: %s", code, qUtf8Printable(stderrOutput));
+    qDebug("openssl failed with code %d: %s", code, qUtf8Printable(toolStderr));
 
     qCritical(
-        "failed to generate TLS certificate:\n\n%s",
-        qUtf8Printable(stderrOutput));
+        "failed to generate tls certificate:\n\n%s",
+        qUtf8Printable(toolStderr));
     return false;
   }
 

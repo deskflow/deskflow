@@ -138,11 +138,6 @@ void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
       qDebug("no tls certificate file at: %s", qUtf8Printable(fileName));
     }
   }
-  updateTlsRegenerateButton();
-}
-
-void SettingsDialog::on_m_pComboBoxTlsKeyLength_currentIndexChanged(int) {
-  updateTlsRegenerateButton();
 }
 
 void SettingsDialog::on_m_pPushButtonTlsRegenCert_clicked() {
@@ -277,18 +272,6 @@ bool SettingsDialog::isClientMode() const {
   return m_coreProcess.mode() == deskflow::gui::CoreProcess::Mode::Client;
 }
 
-void SettingsDialog::updateTlsRegenerateButton() {
-  const auto writable = m_appConfig.isActiveScopeWritable();
-  const auto keyLength = m_pComboBoxTlsKeyLength->currentText().toInt();
-  const auto path = m_pLineEditTlsCertPath->text();
-  const auto keyChanged = m_appConfig.tlsKeyLength() != keyLength;
-  const auto pathChanged = m_appConfig.tlsCertPath() != path;
-  const auto tlsEnabled = m_pCheckBoxEnableTls->isChecked();
-
-  m_pPushButtonTlsRegenCert->setEnabled(
-      writable && tlsEnabled && (keyChanged || pathChanged));
-}
-
 void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
   TlsCertificate ssl;
   if (!QFile(path).exists()) {
@@ -337,7 +320,5 @@ void SettingsDialog::updateControls() {
   m_pLineEditLogFilename->setEnabled(writable && logToFile);
   m_pButtonBrowseLog->setEnabled(writable && logToFile);
 
-  updateTlsControlsEnabled();
-  updateTlsRegenerateButton();
   updateTlsControls();
 }
