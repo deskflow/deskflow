@@ -146,8 +146,8 @@
 					<File Id="OpenSSLDll1" Source="$(var.OpenSslDllDir)/libcrypto-3.dll"/>
 					<File Id="OpenSSLDll2" Source="$(var.OpenSslDllDir)/libssl-3.dll"/>
 				<?endif ?>
-				<File Source="$(var.OpenSslExeDir)/openssl.exe"/>
-				<File Source="$(var.ResPath)/openssl/deskflow.conf"/>
+				<File Source="$(var.OpenSslExeDir)/openssl.exe"/>			
+				<File Source="$(var.OpenSslExeDir)/openssl.cnf"/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>
