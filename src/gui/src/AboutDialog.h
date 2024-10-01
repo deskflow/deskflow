@@ -36,6 +36,7 @@ public:
 private:
   VersionChecker m_versionChecker;
   void updateLogo() const;
+  void setLogo(const char *const &filename) const;
 
   virtual QString importantDevelopers() const;
 };

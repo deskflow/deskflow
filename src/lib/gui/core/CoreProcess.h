@@ -21,7 +21,6 @@
 #include "gui/config/IServerConfig.h"
 #include "gui/ipc/QIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
-#include "license/ILicense.h"
 
 #include <QMutex>
 #include <QObject>
@@ -36,7 +35,6 @@ class CoreProcess : public QObject {
   using IServerConfig = deskflow::gui::IServerConfig;
   using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
   using IQIpcClient = deskflow::gui::ipc::IQIpcClient;
-  using ILicense = deskflow::license::ILicense;
 
   Q_OBJECT
 
@@ -67,7 +65,6 @@ public:
 
   explicit CoreProcess(
       const IAppConfig &appConfig, const IServerConfig &serverConfig,
-      const ILicense &license,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   void extracted(QString &app, QStringList &args);
@@ -128,7 +125,6 @@ private:
 
   const IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
-  const ILicense &m_license;
   std::shared_ptr<Deps> m_pDeps;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;

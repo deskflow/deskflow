@@ -32,5 +32,3 @@ public:
   // IArchDaemon overrides
   virtual int daemonize(const char *name, DaemonFunc func);
 };
-
-#define CONFIG_FILE "/etc/deskflow/deskflowd.conf"

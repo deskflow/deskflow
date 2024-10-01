@@ -1,0 +1,31 @@
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleDisplayName</key>
+    <string>@DESKFLOW_APP_NAME@</string>
+    <key>CFBundleExecutable</key>
+    <string>@DESKFLOW_APP_ID@</string>
+    <key>CFBundleIconFile</key>
+    <string>@DESKFLOW_APP_NAME@.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>@DESKFLOW_APP_ID@</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>@DESKFLOW_APP_NAME@</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>@DESKFLOW_MAC_BUNDLE_CODE@</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@DESKFLOW_VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@DESKFLOW_VERSION@</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>© 2012-@DESKFLOW_BUILD_YEAR@ Symless Ltd</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.9.0</string>
+  </dict>
+</plist>

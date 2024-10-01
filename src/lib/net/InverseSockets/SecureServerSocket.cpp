@@ -71,7 +71,8 @@ std::string SecureServerSocket::getCertificateFileName() const {
   if (certificateFilename.empty()) {
     // default location of the TLS cert file in users dir
     certificateFilename = deskflow::string::sprintf(
-        "%s/SSL/Deskflow.pem", ARCH->getProfileDirectory().c_str());
+        "%s/SSL/" DESKFLOW_APP_NAME ".pem",
+        ARCH->getProfileDirectory().c_str());
   }
 
   return certificateFilename;

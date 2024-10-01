@@ -52,7 +52,6 @@ public:
   virtual QString coreClientName() const = 0;
   virtual bool invertConnection() const = 0;
   virtual void persistLogDir() const = 0;
-  virtual QString serialKey() const = 0;
   virtual bool languageSync() const = 0;
   virtual bool invertScrollDirection() const = 0;
   virtual int port() const = 0;

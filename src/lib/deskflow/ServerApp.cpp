@@ -140,7 +140,7 @@ void ServerApp::help() {
 #endif
 
       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
-      << "Start the deskflow mouse/keyboard sharing server.\n"
+      << "Start the " DESKFLOW_APP_NAME " mouse/keyboard sharing server.\n"
       << "\n"
       << "  -a, --address <address>  listen for clients on the given address.\n"
       << "  -c, --config <pathname>  use the named configuration file "
@@ -720,7 +720,7 @@ int ServerApp::mainLoop() {
       new TMethodEventJob<ServerApp>(this, &ServerApp::forceReconnect));
 
   // to work around the sticky meta keys problem, we'll give users
-  // the option to reset the state of deskflows
+  // the option to reset the state of the server.
   m_events->adoptHandler(
       m_events->forServerApp().resetServer(), m_events->getSystemTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::resetServer));
@@ -819,9 +819,9 @@ int ServerApp::foregroundStartup(int argc, char **argv) {
 
 const char *ServerApp::daemonName() const {
 #if SYSAPI_WIN32
-  return "Deskflow Server";
+  return DESKFLOW_APP_NAME " Server";
 #elif SYSAPI_UNIX
-  return "deskflows";
+  return SERVER_BINARY_NAME;
 #endif
 }
 

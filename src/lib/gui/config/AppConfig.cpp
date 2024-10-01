@@ -38,15 +38,15 @@ static const char *const kLogLevelNames[] = {
     "INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 #if defined(Q_OS_WIN)
-const char AppConfig::m_CoreServerName[] = "deskflows.exe";
-const char AppConfig::m_CoreClientName[] = "deskflowc.exe";
+const char AppConfig::m_CoreServerName[] = SERVER_BINARY_NAME ".exe";
+const char AppConfig::m_CoreClientName[] = CLIENT_BINARY_NAME ".exe";
 const char AppConfig::m_LogDir[] = "log/";
-const char AppConfig::m_ConfigFilename[] = "deskflow.sgc";
+const char AppConfig::m_ConfigFilename[] = DESKFLOW_APP_ID ".sgc";
 #else
-const char AppConfig::m_CoreServerName[] = "deskflows";
-const char AppConfig::m_CoreClientName[] = "deskflowc";
+const char AppConfig::m_CoreServerName[] = SERVER_BINARY_NAME;
+const char AppConfig::m_CoreClientName[] = CLIENT_BINARY_NAME;
 const char AppConfig::m_LogDir[] = "/var/log/";
-const char AppConfig::m_ConfigFilename[] = "deskflow.conf";
+const char AppConfig::m_ConfigFilename[] = DESKFLOW_APP_ID ".conf";
 #endif
 
 // TODO: instead, use key value pair table, which would be less fragile.
@@ -62,12 +62,12 @@ const char *const AppConfig::m_SettingsName[] = {
     "elevateMode",
     "elevateModeEnum",
     "",              // 10 = edition, obsolete (using serial key instead)
-    "cryptoEnabled", // kTlsEnabled (retain legacy string value)
+    "cryptoEnabled", // 11 = kTlsEnabled (retain legacy string value)
     "autoHide",
-    "serialKey",
+    "", // 13 = serialKey, obsolete
     "lastVersion",
     "", // 15 = lastExpiringWarningTime, obsolete
-    "activationHasRun",
+    "", // 16 = activationHasRun, obsolete
     "", // 17 = minimizeToTray, obsolete
     "", // 18 = ActivateEmail, obsolete
     "loadFromSystemScope",
@@ -82,9 +82,9 @@ const char *const AppConfig::m_SettingsName[] = {
     "preventSleep",
     "languageSync",
     "invertScrollDirection",
-    "", // 31 = guid, obsolete
-    "", // 32 = licenseRegistryUrl, obsolete
-    "licenseNextCheck",
+    "",                             // 31 = guid, obsolete
+    "",                             // 32 = licenseRegistryUrl, obsolete
+    "",                             // 33 = licenseNextCheck, obsolete
     "initiateConnectionFromServer", // kInvertConnection
     "",                             // 35 = clientHostMode, obsolete
     "",                             // 36 = serverClientMode, obsolete
@@ -122,15 +122,12 @@ void AppConfig::recallFromAllScopes() {
   m_WizardLastRun = findInAllScopes(kWizardLastRun, m_WizardLastRun).toInt();
   m_LoadFromSystemScope =
       findInAllScopes(kLoadSystemSettings, m_LoadFromSystemScope).toBool();
-  m_LicenseNextCheck =
-      findInAllScopes(kLicenseNextCheck, m_LicenseNextCheck).toULongLong();
 }
 
 void AppConfig::recallFromCurrentScope() {
   using enum Setting;
 
   recallScreenName();
-  recallSerialKey();
   recallElevateMode();
 
   m_Port = getFromCurrentScope(kPort, m_Port).toInt();
@@ -142,8 +139,6 @@ void AppConfig::recallFromCurrentScope() {
       getFromCurrentScope(kStartedBefore, m_StartedBefore).toBool();
   m_AutoHide = getFromCurrentScope(kAutoHide, m_AutoHide).toBool();
   m_LastVersion = getFromCurrentScope(kLastVersion, m_LastVersion).toString();
-  m_ActivationHasRun =
-      getFromCurrentScope(kActivationHasRun, m_ActivationHasRun).toBool();
   m_ServerGroupChecked =
       getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseExternalConfig =
@@ -206,7 +201,6 @@ void AppConfig::commit() {
   saveToAllScopes(kLoadSystemSettings, m_LoadFromSystemScope);
   saveToAllScopes(kClientGroupChecked, m_ClientGroupChecked);
   saveToAllScopes(kServerGroupChecked, m_ServerGroupChecked);
-  saveToAllScopes(kLicenseNextCheck, m_LicenseNextCheck);
 
   if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
@@ -221,9 +215,7 @@ void AppConfig::commit() {
         kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kTlsEnabled, m_TlsEnabled);
     setInCurrentScope(kAutoHide, m_AutoHide);
-    setInCurrentScope(kSerialKey, m_SerialKey);
     setInCurrentScope(kLastVersion, m_LastVersion);
-    setInCurrentScope(kActivationHasRun, m_ActivationHasRun);
     setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
@@ -279,25 +271,6 @@ void AppConfig::determineScope() {
     qDebug("system settings scope contains screen name, using system scope");
     setLoadFromSystemScope(true);
   }
-}
-
-void AppConfig::recallSerialKey() {
-  using enum Setting;
-
-  if (!m_Scopes.scopeContains(settingName(kLoadSystemSettings))) {
-    qDebug("no serial key in current scope, skipping");
-    return;
-  }
-
-  const auto &serialKey =
-      getFromCurrentScope(kSerialKey, m_SerialKey).toString().trimmed();
-
-  if (serialKey.isEmpty()) {
-    qDebug("serial key is empty, skipping");
-    return;
-  }
-
-  m_SerialKey = serialKey;
 }
 
 void AppConfig::recallElevateMode() {
@@ -450,10 +423,6 @@ void AppConfig::persistLogDir() const {
 
 IConfigScopes &AppConfig::scopes() const { return m_Scopes; }
 
-bool AppConfig::activationHasRun() const { return m_ActivationHasRun; }
-
-QString AppConfig::serialKey() const { return m_SerialKey; }
-
 const QString &AppConfig::screenName() const { return m_ScreenName; }
 
 int AppConfig::port() const { return m_Port; }
@@ -494,10 +463,6 @@ bool AppConfig::invertScrollDirection() const {
   return m_InvertScrollDirection;
 }
 
-unsigned long long AppConfig::licenseNextCheck() const {
-  return m_LicenseNextCheck;
-}
-
 bool AppConfig::languageSync() const { return m_LanguageSync; }
 
 bool AppConfig::preventSleep() const { return m_PreventSleep; }
@@ -524,8 +489,6 @@ bool AppConfig::clientGroupChecked() const { return m_ClientGroupChecked; }
 
 const QString &AppConfig::serverHostname() const { return m_ServerHostname; }
 
-void AppConfig::setActivationHasRun(bool value) { m_ActivationHasRun = value; }
-
 std::optional<QSize> AppConfig::mainWindowSize() const {
   return m_MainWindowSize;
 }
@@ -549,8 +512,6 @@ std::optional<bool> AppConfig::enableUpdateCheck() const {
 ///////////////////////////////////////////////////////////////////////////////
 // Begin setters
 ///////////////////////////////////////////////////////////////////////////////
-
-void AppConfig::clearSerialKey() { m_SerialKey.clear(); }
 
 void AppConfig::setTlsEnabled(bool value) {
   // we purposefully do not set the 'tls changed' flag when enabling/disabling
@@ -576,11 +537,6 @@ void AppConfig::setTlsKeyLength(int value) {
     m_TlsChanged = true;
   }
   m_TlsKeyLength = value;
-}
-
-void AppConfig::setSerialKey(const QString &serialKey) {
-  m_SerialKey = serialKey;
-  saveToAllScopes(Setting::kSerialKey, m_SerialKey);
 }
 
 void AppConfig::setServerGroupChecked(bool newValue) {
@@ -632,10 +588,6 @@ void AppConfig::setStartedBefore(bool b) { m_StartedBefore = b; }
 void AppConfig::setElevateMode(ElevateMode em) { m_ElevateMode = em; }
 
 void AppConfig::setAutoHide(bool b) { m_AutoHide = b; }
-
-void AppConfig::setLicenseNextCheck(unsigned long long time) {
-  m_LicenseNextCheck = time;
-}
 
 void AppConfig::setInvertScrollDirection(bool newValue) {
   m_InvertScrollDirection = newValue;

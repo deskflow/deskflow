@@ -23,7 +23,8 @@
 #include <QtCore>
 #include <QtGui>
 
-const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
+const QString ScreenSetupModel::m_MimeType =
+    "application/x-" DESKFLOW_APP_ID "-screen";
 
 ScreenSetupModel::ScreenSetupModel(
     ScreenList &screens, int numColumns, int numRows)

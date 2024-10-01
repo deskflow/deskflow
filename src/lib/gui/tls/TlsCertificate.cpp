@@ -26,7 +26,7 @@
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
 static const char *const kCertificateLifetime = "365";
-static const char *const kCertificateSubjectInfo = "/CN=Deskflow";
+static const char *const kCertificateSubjectInfo = "/CN=" DESKFLOW_APP_NAME;
 
 #if defined(Q_OS_WIN)
 static const char *const kWinOpenSslDir = "OpenSSL";
@@ -94,6 +94,12 @@ bool TlsCertificate::runTool(const QStringList &args) {
 #endif
 
   QStringList environment;
+
+// Windows is special! :)
+// For OpenSSL, it's very common to bundle the openssl.exe and openssl.cnf files
+// with the application. This is made a little more complex in the Windows dev
+// env, because vcpkg can't find the openssl.cnf file by default, so we need to
+// give it a bit of guidance by setting the `OPENSSL_CONF` env var.
 #if defined(Q_OS_WIN)
   const auto openSslDir = QDir(openSslWindowsDir());
   const auto config = QDir::cleanPath(openSslDir.filePath(kConfigFile));

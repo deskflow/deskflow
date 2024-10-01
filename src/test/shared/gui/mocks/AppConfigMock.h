@@ -57,7 +57,6 @@ public:
   MOCK_METHOD(QString, coreClientName, (), (const, override));
   MOCK_METHOD(bool, invertConnection, (), (const, override));
   MOCK_METHOD(void, persistLogDir, (), (const, override));
-  MOCK_METHOD(QString, serialKey, (), (const, override));
   MOCK_METHOD(bool, languageSync, (), (const, override));
   MOCK_METHOD(bool, invertScrollDirection, (), (const, override));
   MOCK_METHOD(int, port, (), (const, override));

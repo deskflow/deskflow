@@ -18,14 +18,17 @@
 
 #include "SettingsDialog.h"
 
-#include "UpgradeDialog.h"
 #include "gui/core/CoreProcess.h"
-#include "gui/license/license_utils.h"
 #include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ScreenNameValidator.h"
 #include "gui/validators/ValidationError.h"
+#include "gui_config.h" // IWYU pragma: keep
+
+#ifdef DESKFLOW_GUI_HOOK_HEADER
+#include DESKFLOW_GUI_HOOK_HEADER
+#endif
 
 #include <QDir>
 #include <QFileDialog>
@@ -33,21 +36,17 @@
 #include <QtCore>
 #include <QtGui>
 
-using namespace deskflow::license;
 using namespace deskflow::gui;
-
-const char *const kProProductName = "Deskflow";
 
 SettingsDialog::SettingsDialog(
     QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
-    const License &license, const CoreProcess &coreProcess)
+    const CoreProcess &coreProcess)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),
       m_appConfig(appConfig),
       m_serverConfig(serverConfig),
-      m_license(license),
       m_coreProcess(coreProcess),
-      m_tlsUtility(appConfig, license) {
+      m_tlsUtility(appConfig) {
 
   setupUi(this);
 
@@ -64,6 +63,10 @@ SettingsDialog::SettingsDialog(
       m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
 
   connect(
+      m_pCheckBoxEnableTls, &QCheckBox::toggled, this,
+      &SettingsDialog::updateTlsControlsEnabled);
+
+  connect(
       this, &SettingsDialog::shown, this,
       [this] {
         if (!m_appConfig.isActiveScopeWritable()) {
@@ -71,6 +74,10 @@ SettingsDialog::SettingsDialog(
         }
       },
       Qt::QueuedConnection);
+
+#ifdef DESKFLOW_GUI_HOOK_SETTINGS
+  DESKFLOW_GUI_HOOK_SETTINGS
+#endif
 }
 
 //
@@ -97,19 +104,6 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
 
 void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool) {
   updateTlsControlsEnabled();
-
-  if (license::isActivationEnabled() && !m_tlsUtility.isAvailable()) {
-    m_pCheckBoxEnableTls->setChecked(false);
-    updateTlsControlsEnabled();
-
-    auto edition = m_license.productEdition();
-    if (edition == Edition::kBasic) {
-      UpgradeDialog upgradeDialog(this);
-      upgradeDialog.showDialog(
-          QString("Upgrade to %1 to enable TLS encryption.")
-              .arg(kProProductName));
-    }
-  }
 }
 
 void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
@@ -228,8 +222,6 @@ void SettingsDialog::loadFromConfig() {
   }
 
   m_pInvertConnection->setChecked(m_appConfig.invertConnection());
-  m_pInvertConnection->setEnabled(
-      m_license.productEdition() == Edition::kBusiness);
 
   updateTlsControls();
 }
@@ -244,14 +236,12 @@ void SettingsDialog::updateTlsControls() {
         m_pComboBoxTlsKeyLength->findText(keyLengthText));
   }
 
-  const auto tlsEnabled = m_tlsUtility.isAvailableAndEnabled();
+  const auto tlsEnabled = m_tlsUtility.isEnabled();
   const auto writable = m_appConfig.isActiveScopeWritable();
 
   m_pCheckBoxEnableTls->setEnabled(writable);
   m_pCheckBoxEnableTls->setChecked(writable && tlsEnabled);
   m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
-
-  updateTlsControlsEnabled();
 }
 
 void SettingsDialog::updateTlsControlsEnabled() {

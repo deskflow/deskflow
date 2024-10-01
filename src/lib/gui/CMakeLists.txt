@@ -15,8 +15,8 @@
 
 set(target gui)
 
-set(res_dir ${CMAKE_SOURCE_DIR}/res/gui)
-set(qrc_file ${res_dir}/Deskflow.qrc)
+set(res_dir ${GUI_RES_DIR})
+set(qrc_file ${GUI_QRC_FILE})
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -36,11 +36,14 @@ if(ADD_HEADERS_TO_SOURCES)
   list(APPEND sources ${headers})
 endif()
 
+# generated includes
+include_directories(${PROJECT_BINARY_DIR}/config)
+
 add_library(${target} STATIC ${sources} ${ui_files} ${qrc_file})
 
 target_link_libraries(
   ${target}
-  license
+  ${DESKFLOW_GUI_HOOK_LIB}
   Qt6::Core
   Qt6::Widgets
   Qt6::Network)

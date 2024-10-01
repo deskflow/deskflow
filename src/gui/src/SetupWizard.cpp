@@ -26,6 +26,8 @@ using namespace deskflow::gui;
 SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig) {
   setupUi(this);
 
+  setWindowTitle(QString("Setup %1").arg(DESKFLOW_APP_NAME));
+
   m_pLabelError->setStyleSheet(kStyleErrorActiveLabel);
 
   m_pLineEditName->setText(appConfig.screenName());

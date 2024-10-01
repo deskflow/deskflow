@@ -69,23 +69,6 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile) {
   EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_serialKey_isSet) {
-  NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(server_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
-  deskflow::ServerArgs serverArgs;
-  const int argc = 3;
-  const char *serial =
-      "7B76323B737562736372697074696F6E3B62617369633B426F623B313B656D61696C3B63"
-      "6F6D70616E79206E616D653B303B38363430307D";
-  std::array<const char *, argc> kSerialCmd = {"stub", "--serial-key", serial};
-
-  argParser.parseServerArgs(serverArgs, argc, kSerialCmd.data());
-  EXPECT_EQ(serial, serverArgs.m_serialKey.toString());
-}
-
 TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams) {
   NiceMock<MockArgParser> argParser;
   ON_CALL(argParser, parseGenericArgs(_, _, _))

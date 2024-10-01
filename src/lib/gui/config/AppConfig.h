@@ -21,7 +21,6 @@
 #include "ElevateMode.h"
 #include "IAppConfig.h"
 #include "IConfigScopes.h"
-#include "gui/license/license_utils.h"
 #include "gui/paths.h"
 
 #include <QDir>
@@ -36,8 +35,14 @@
 namespace deskflow::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
-const QString kDefaultLogFile = "deskflow.log";
+const QString kDefaultLogFile = QString("%1.log").arg(DESKFLOW_APP_ID);
 const int kDefaultTlsKeyLength = 2048;
+
+#ifdef DESKFLOW_SHOW_DEV_THANKS
+const bool kDefaultShowDevThanks = true;
+#else
+const bool kDefaultShowDevThanks = false;
+#endif
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -73,13 +78,13 @@ private:
     kStartedBefore = 7,
     kElevateModeLegacy = 8,
     kElevateMode = 9,
-    // 10 = edition, obsolete (using serial key instead)
+    // 10 = edition, obsolete (related to obsolete licensing)
     kTlsEnabled = 11,
     kAutoHide = 12,
-    kSerialKey = 13,
+    // 13 = serial key, obsolete
     kLastVersion = 14,
     // 15 = last expire time, obsolete
-    kActivationHasRun = 16,
+    // 16 = activation has run, obsolete
     // 17 = minimize to tray, obsolete
     // 18 = activate email, obsolete
     kLoadSystemSettings = 19,
@@ -96,7 +101,7 @@ private:
     kInvertScrollDirection = 30,
     // 31 = guid, obsolete
     // 32 = license registry url, obsolete
-    kLicenseNextCheck = 33,
+    // 33 = license next check, obsolete
     kInvertConnection = 34,
     // 35 = client-host-mode, obsolete
     // 36 = server-client-mode, obsolete
@@ -149,7 +154,6 @@ public:
   QString coreClientName() const override;
   bool invertConnection() const override;
   void persistLogDir() const override;
-  QString serialKey() const override;
   bool languageSync() const override;
   bool invertScrollDirection() const override;
   int port() const override;
@@ -172,11 +176,9 @@ public:
   bool wizardShouldRun() const;
   bool startedBefore() const;
   QString logDir() const;
-  unsigned long long licenseNextCheck() const;
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
   QString lastVersion() const;
-  bool activationHasRun() const;
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
   bool showDevThanks() const;
@@ -210,11 +212,7 @@ public:
   //
 
   void setStartedBefore(bool b);
-  void setActivationHasRun(bool value);
   void setWizardHasRun();
-  void setSerialKey(const QString &serialKey);
-  void clearSerialKey();
-  void setLicenseNextCheck(unsigned long long);
   void setServerGroupChecked(bool);
   void setUseExternalConfig(bool);
   void setConfigFile(const QString &);
@@ -240,7 +238,6 @@ private:
 
   void recall();
   void recallScreenName();
-  void recallSerialKey();
   void recallElevateMode();
   void recallFromAllScopes();
   void recallFromCurrentScope();
@@ -309,13 +306,9 @@ private:
   int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
-  QString m_ActivateEmail = "";
   bool m_TlsEnabled = true;
   bool m_AutoHide = false;
-  QString m_SerialKey = "";
   QString m_LastVersion = "";
-  unsigned long long m_LicenseNextCheck = 0;
-  bool m_ActivationHasRun = false;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
@@ -332,7 +325,7 @@ private:
   int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
-  bool m_ShowDevThanks = !deskflow::gui::license::isLicensedProduct();
+  bool m_ShowDevThanks = deskflow::gui::kDefaultShowDevThanks;
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;

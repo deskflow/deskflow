@@ -416,11 +416,8 @@
           </item>
           <item>
            <widget class="QCheckBox" name="m_pInvertConnection">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
-             <string>Invert server/client TCP connection (business edition)</string>
+             <string>Invert server/client TCP connection</string>
             </property>
            </widget>
           </item>

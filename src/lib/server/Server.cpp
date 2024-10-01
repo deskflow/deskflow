@@ -33,7 +33,6 @@
 #include "deskflow/StreamChunker.h"
 #include "deskflow/option_types.h"
 #include "deskflow/protocol_types.h"
-#include "license/License.h"
 #include "mt/Thread.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
@@ -47,7 +46,6 @@
 #include <cstring>
 #include <ctime>
 
-using namespace deskflow::license;
 using namespace deskflow::server;
 
 //
@@ -429,15 +427,6 @@ SInt32 Server::getJumpZoneSize(BaseClientProxy *client) const {
 void Server::switchScreen(
     BaseClientProxy *dst, SInt32 x, SInt32 y, bool forScreensaver) {
   assert(dst != NULL);
-
-  if (m_args.m_serialKey.isValid) {
-    // if license is expired, exit the process
-    License license(m_args.m_serialKey);
-    if (license.isExpired()) {
-      LOG((CLOG_ERR "trial has expired, aborting server"));
-      exit(kExitSuccess);
-    }
-  }
 
 #ifndef NDEBUG
   {

@@ -131,7 +131,7 @@ def parse_args(is_ci):
 
 def run(args):
     env.ensure_dependencies()
-    env.ensure_in_venv(__file__, auto_create=True)
+    env.ensure_in_venv(__file__, create_venv=True)
 
     if not args.skip_python:
         env.install_requirements()
@@ -280,7 +280,7 @@ class Dependencies:
         cmd_utils.run(command, shell=True, print_cmd=True)
 
         if env_vars_set:
-            print(f"To load env vars, run: source {mac.shell_rc}")
+            print(f"To load env vars, run: source {mac.SHELL_RC}")
 
     def linux(self):
         """Installs dependencies on Linux."""

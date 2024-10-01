@@ -22,7 +22,7 @@ macro(set_version)
   string(STRIP "${DESKFLOW_VERSION}" DESKFLOW_VERSION)
 
   if(NOT DESKFLOW_VERSION)
-    file(READ "${CMAKE_SOURCE_DIR}/VERSION" DESKFLOW_VERSION)
+    file(READ "${PROJECT_SOURCE_DIR}/VERSION" DESKFLOW_VERSION)
     string(STRIP "${DESKFLOW_VERSION}" DESKFLOW_VERSION)
   endif()
 
@@ -67,14 +67,14 @@ macro(set_windows_version)
 
   # Dot-separated version number for MSI and Windows version .rc file.
   set(DESKFLOW_VERSION_MS ${DESKFLOW_VERSION_FOUR_PART})
-  message(STATUS "Version number for (Microsoft 4-part): "
-                 ${DESKFLOW_VERSION_MS})
+  message(VERBOSE "Version number for (Microsoft 4-part): "
+          ${DESKFLOW_VERSION_MS})
 
   # CSV version number for Windows version .rc file.
   set(DESKFLOW_VERSION_MS_CSV
       "${VERSION_MAJOR},${VERSION_MINOR},${VERSION_PATCH},${VERSION_REVISION}")
-  message(STATUS "Version number for (Microsoft CSV): "
-                 ${DESKFLOW_VERSION_MS_CSV})
+  message(VERBOSE "Version number for (Microsoft CSV): "
+          ${DESKFLOW_VERSION_MS_CSV})
 endmacro()
 
 macro(set_linux_version)

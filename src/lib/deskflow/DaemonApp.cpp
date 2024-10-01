@@ -59,7 +59,7 @@
 
 using namespace std;
 
-const char *const kLogFilename = "deskflowd.log";
+const char *const kLogFilename = DAEMON_BINARY_NAME ".log";
 
 namespace {
 void updateSetting(const IpcMessage &message) {
@@ -76,8 +76,8 @@ bool isServerCommandLine(const std::vector<String> &cmd) {
 
   if (cmd.size() > 1) {
     isServer =
-        (cmd[0].find("deskflows") != String::npos) ||
-        (cmd[0].find("deskflow-core") != String::npos && cmd[1] == "server");
+        (cmd[0].find(SERVER_BINARY_NAME) != String::npos) ||
+        (cmd[0].find(CORE_BINARY_NAME) != String::npos && cmd[1] == "server");
   }
 
   return isServer;
@@ -165,10 +165,10 @@ int DaemonApp::run(int argc, char **argv) {
     } else {
 #if SYSAPI_WIN32
       LOG((CLOG_PRINT "daemonizing windows service"));
-      arch.daemonize("Deskflow", winMainLoopStatic);
+      arch.daemonize(DESKFLOW_APP_NAME, winMainLoopStatic);
 #elif SYSAPI_UNIX
       LOG((CLOG_PRINT "daemonizing unix service"));
-      arch.daemonize("Deskflow", unixMainLoopStatic);
+      arch.daemonize(DESKFLOW_APP_NAME, unixMainLoopStatic);
 #endif
     }
 

@@ -17,7 +17,7 @@
 
 import lib.env as env
 
-env.ensure_in_venv(__file__, auto_create=True)
+env.ensure_in_venv(__file__, create_venv=True)
 env.install_requirements()
 
 import lib.colors as colors

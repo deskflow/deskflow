@@ -26,7 +26,7 @@
 #include "net/TSocketMultiplexerMethodJob.h"
 
 static const char s_certificateDir[] = {"SSL"};
-static const char s_certificateFilename[] = {"Deskflow.pem"};
+static const char s_certificateFilename[] = {DESKFLOW_APP_NAME ".pem"};
 
 //
 // SecureListenSocket

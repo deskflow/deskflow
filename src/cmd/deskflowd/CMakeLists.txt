@@ -14,28 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflowd)
+set(target ${DAEMON_BINARY_NAME})
 
 file(GLOB headers "*.h")
 file(GLOB sources "*.cpp")
 
+# Daemon is only needed on Windows for elevating processes to deal with UAC.
 if(WIN32)
-  add_executable(${target} WIN32 ${sources} ${CMAKE_BINARY_DIR}/src/version.rc)
-else()
-  add_executable(${target} ${sources})
+  add_executable(${target} WIN32 ${sources}
+                                 ${PROJECT_BINARY_DIR}/src/version.rc)
+
+  target_link_libraries(
+    ${target}
+    arch
+    base
+    io
+    ipc
+    mt
+    net
+    platform
+    app
+    ${libs})
+
+  post_config()
+
 endif()
-
-target_link_libraries(
-  ${target}
-  arch
-  base
-  io
-  ipc
-  mt
-  net
-  platform
-  app
-  license
-  ${libs})
-
-post_config()

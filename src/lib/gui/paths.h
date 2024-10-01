@@ -23,7 +23,7 @@
 #include <QStandardPaths>
 #include <QString>
 
-const auto kCertificateFilename = "Deskflow.pem";
+const auto kCertificateFilename = QString("%1.pem").arg(DESKFLOW_APP_NAME);
 const auto kSslDir = "SSL";
 
 namespace deskflow::gui::paths {

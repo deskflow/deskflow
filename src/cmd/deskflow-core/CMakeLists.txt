@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflow-core)
-
+set(target ${CORE_BINARY_NAME})
 set(sources ${target}.cpp)
 
 if(WIN32)
-  list(APPEND sources ${target}.exe.manifest ${CMAKE_BINARY_DIR}/src/version.rc)
+  list(APPEND sources ${target}.exe.manifest
+       ${PROJECT_BINARY_DIR}/src/version.rc)
 endif()
 
 add_executable(${target} ${sources})

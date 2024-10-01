@@ -107,7 +107,7 @@ def get_env_bool(name, default=False):
     return value.lower() in ["true", "1", "yes"]
 
 
-def get_python_executable(binary="python"):
+def get_venv_executable(binary="python"):
     if sys.platform == "win32":
         return os.path.join(VENV_DIR, "Scripts", binary)
     else:
@@ -119,7 +119,7 @@ def in_venv():
     return sys.prefix != sys.base_prefix
 
 
-def ensure_in_venv(script_file, auto_create=False):
+def ensure_in_venv(script_file, create_venv=False):
     """
     Ensures the script is running in a Python virtual environment (venv).
     If the script is not running in a venv, it will create one and re-run the script in the venv.
@@ -128,24 +128,27 @@ def ensure_in_venv(script_file, auto_create=False):
     check_dependencies(raise_error=True)
     import venv
 
-    if not in_venv():
-        if not os.path.exists(VENV_DIR):
-            if not auto_create:
-                print(
-                    "The Python virtual environment (.venv) needs to be created before you can "
-                    "run this script.\n"
-                    "Please run: scripts/setup_venv.py"
-                )
-                sys.exit(1)
+    if in_venv():
+        print(f"Running in venv, executable: {sys.executable}", flush=True)
+        return
 
-            print(f"Creating virtual environment at {VENV_DIR}")
-            venv.create(VENV_DIR, with_pip=True)
+    if create_venv and not os.path.exists(VENV_DIR):
+        print(f"Creating virtual environment at {VENV_DIR}")
+        venv.create(VENV_DIR, with_pip=True)
 
+    if os.path.exists(VENV_DIR):
         script_file_abs = os.path.abspath(script_file)
         print(f"Using virtual environment for: {script_file_abs}", flush=True)
-        python_executable = get_python_executable()
+        python_executable = get_venv_executable()
         result = subprocess.run([python_executable, script_file_abs] + sys.argv[1:])
         sys.exit(result.returncode)
+    else:
+        print(
+            "The Python virtual environment (.venv) needs to be created before you can "
+            "run this script.\n"
+            "Please run: scripts/setup_venv.py"
+        )
+        sys.exit(1)
 
 
 def install_requirements():
@@ -238,18 +241,6 @@ def ensure_dependencies():
         )
 
     cmd_utils.run(f"{sudo} {install_cmd}".strip(), shell=True, print_cmd=True)
-
-
-def get_app_version():
-    """
-    Returns the version either from the env var, or from the version file.
-    """
-    version = get_env("DESKFLOW_VERSION", required=False)
-    if version:
-        return version
-
-    with open("VERSION", "r") as f:
-        return f.read().strip()
 
 
 def import_colors():

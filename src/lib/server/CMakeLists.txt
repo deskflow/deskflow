@@ -23,8 +23,6 @@ endif()
 
 add_library(server STATIC ${sources})
 
-target_link_libraries(server license)
-
 if(UNIX)
   target_link_libraries(server app)
 endif()

@@ -177,7 +177,7 @@ void AppUtilUnix::showNotification(
   LOG(
       (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
        title.c_str(), text.c_str()));
-  if (!notify_init("Deskflow")) {
+  if (!notify_init(DESKFLOW_APP_NAME)) {
     LOG((CLOG_INFO "failed to initialize libnotify"));
     return;
   }
@@ -198,8 +198,8 @@ void AppUtilUnix::showNotification(
   notify_uninit();
 
 #elif WINAPI_CARBON
-  // deskflows and deskflowc are not allowed to send native notifications on
-  // MacOS instead ask main deskflow process to show them instead
+  // server and client processes are not allowed to show notifications.
+  // MacOS instead ask main deskflow process to show them instead.
   LOG((CLOG_INFO "mac notification: %s|%s", title.c_str(), text.c_str()));
 #endif
 }

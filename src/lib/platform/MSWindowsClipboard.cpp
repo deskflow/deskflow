@@ -193,7 +193,8 @@ void MSWindowsClipboard::clearConverters() {
 bool MSWindowsClipboard::isOwnedByDeskflow() {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT("DeskflowOwnership"));
+    s_ownershipFormat =
+        RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
   }
   return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
@@ -201,7 +202,8 @@ bool MSWindowsClipboard::isOwnedByDeskflow() {
 UINT MSWindowsClipboard::getOwnershipFormat() {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT("DeskflowOwnership"));
+    s_ownershipFormat =
+        RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
   }
 
   // return the format

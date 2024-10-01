@@ -18,34 +18,24 @@
 #include "TlsUtility.h"
 
 #include "TlsCertificate.h"
-#include "gui/license/license_utils.h"
 
 #include <QFile>
 #include <QString>
 
-using namespace deskflow::license;
-using namespace deskflow::gui::license;
-
 namespace deskflow::gui {
 
-TlsUtility::TlsUtility(const IAppConfig &appConfig, const ILicense &license)
-    : m_appConfig(appConfig),
-      m_license(license) {}
+TlsUtility::TlsUtility(const IAppConfig &appConfig) : m_appConfig(appConfig) {}
 
-bool TlsUtility::isAvailable() const {
-  return !isActivationEnabled() || m_license.isTlsAvailable();
-}
-
-bool TlsUtility::isAvailableAndEnabled() const {
+bool TlsUtility::isEnabled() const {
   const auto &config = m_appConfig;
-  return isAvailable() && config.tlsEnabled();
+  return config.tlsEnabled();
 }
 
 bool TlsUtility::generateCertificate() {
   qDebug("generating tls certificate, "
          "all clients must trust the new fingerprint");
 
-  if (!isAvailableAndEnabled()) {
+  if (!isEnabled()) {
     qCritical("unable to generate tls certificate, "
               "tls is either not available or not enabled");
     return false;

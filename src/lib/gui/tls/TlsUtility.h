@@ -20,18 +20,16 @@
 #include "gui/config/IAppConfig.h"
 
 #include "TlsCertificate.h"
-#include "license/ILicense.h"
 
 #include <QObject>
 
 namespace deskflow::gui {
 
 class TlsUtility : public QObject {
-  using ILicense = deskflow::license::ILicense;
   Q_OBJECT
 
 public:
-  explicit TlsUtility(const IAppConfig &appConfig, const ILicense &license);
+  explicit TlsUtility(const IAppConfig &appConfig);
 
   bool generateCertificate();
   bool persistCertificate();
@@ -43,16 +41,10 @@ public:
    * If licensing is enabled, it checks whether the product has TLS
    * available, and if licensing is not enabled, true is returned.
    */
-  bool isAvailableAndEnabled() const;
-
-  /**
-   * @return true if TLS is available, regardless of whether it is enabled.
-   */
-  bool isAvailable() const;
+  bool isEnabled() const;
 
 private:
   const IAppConfig &m_appConfig;
-  const ILicense &m_license;
   TlsCertificate m_certificate;
 };
 

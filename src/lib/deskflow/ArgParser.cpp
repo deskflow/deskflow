@@ -24,13 +24,10 @@
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ServerArgs.h"
 #include "deskflow/ToolArgs.h"
-#include "license/parse_serial_key.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
 #endif
-
-using namespace deskflow::license;
 
 deskflow::ArgsBase *ArgParser::m_argsBase = nullptr;
 
@@ -54,8 +51,6 @@ bool ArgParser::parseServerArgs(
     } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
       // save configuration file path
       args.m_configFile = argv[++i];
-    } else if (isArg(i, argc, argv, "", "--serial-key", 1)) {
-      args.m_serialKey = parseSerialKey(argv[++i]);
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
@@ -141,10 +136,7 @@ bool ArgParser::parsePlatformArgs(
     deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv,
     int &i, bool isServer) {
 #if WINAPI_MSWINDOWS
-  if (isArg(i, argc, argv, nullptr, "--service")) {
-    LOG((CLOG_WARN "obsolete argument --service, use deskflowd instead."));
-    argsBase.m_shouldExitFail = true;
-  } else if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
+  if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
     argsBase.m_pauseOnExit = true;
   } else if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
     argsBase.m_stopOnDeskSwitch = true;

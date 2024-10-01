@@ -18,16 +18,12 @@ import lib.cmd_utils as cmd_utils
 import lib.env as env
 from enum import Enum, auto
 
+BUILD_ROOT_DIR = "build"
+
 
 class PackageType(Enum):
     DISTRO = auto()
     TGZ = auto()
-
-
-dist_dir = "dist"
-build_dir = "build"
-package_name = "deskflow"
-test_cmd = "deskflows --version"
 
 
 def run_command(command, check=True):
@@ -44,19 +40,31 @@ def run_command(command, check=True):
     cmd_utils.run(command, check, shell=True, print_cmd=True)
 
 
-def package(filename_base, package_type: PackageType, leave_test_installed=False):
+def package(
+    filename_base,
+    dist_dir,
+    test_cmd,
+    package_name,
+    package_type: PackageType,
+    leave_test_installed=False,
+):
+    working_dir = BUILD_ROOT_DIR
+    extension, cmd = get_package_build_info(
+        package_type,
+    )
+    run_package_cmd(cmd, working_dir)
 
-    extension, cmd = get_package_info(package_type)
-    run_package_cmd(cmd)
-    package_filename = get_package_filename(extension)
+    package_filename = get_package_filename(extension, working_dir)
     target_file = f"{filename_base}.{extension}"
-    target_path = copy_to_dist_dir(package_filename, target_file)
+    target_path = copy_to_dist_dir(package_filename, dist_dir, target_file)
 
     if package_type == PackageType.DISTRO:
-        test_install(target_path, remove_test=not leave_test_installed)
+        test_install(
+            target_path, package_name, test_cmd, remove_test=not leave_test_installed
+        )
 
 
-def get_package_info(package_type: PackageType):
+def get_package_build_info(package_type: PackageType):
 
     command = None
     cpack_generator = None
@@ -93,32 +101,36 @@ def get_package_info(package_type: PackageType):
     return file_extension, command
 
 
-def run_package_cmd(command):
+def run_package_cmd(command, working_dir):
     package_user = env.get_env("LINUX_PACKAGE_USER", required=False)
     if package_user:
         cmd_utils.run(
-            ["sudo", "chown", "-R", package_user, "build"], check=True, print_cmd=True
+            ["sudo", "chown", "-R", package_user, working_dir],
+            check=True,
+            print_cmd=True,
         )
         command = ["sudo", "-u", package_user] + command
 
     cwd = os.getcwd()
     try:
-        os.chdir("build")
+        os.chdir(working_dir)
         cmd_utils.run(command, check=True, print_cmd=True)
     finally:
         os.chdir(cwd)
 
 
-def get_package_filename(extension):
-    files = glob.glob(f"build/*.{extension}")
+def get_package_filename(extension, working_dir):
+    files = glob.glob(f"{working_dir}/*.{extension}")
 
     if not files:
-        raise ValueError(f"No .{extension} file found in build directory")
+        raise ValueError(
+            f"No .{extension} file found in build directory: {working_dir}"
+        )
 
     return files[0]
 
 
-def copy_to_dist_dir(source_file, target_file):
+def copy_to_dist_dir(source_file, dist_dir, target_file):
     os.makedirs(dist_dir, exist_ok=True)
 
     target_path = f"{dist_dir}/{target_file}"
@@ -128,7 +140,7 @@ def copy_to_dist_dir(source_file, target_file):
     return target_path
 
 
-def test_install(package_file, remove_test=True):
+def test_install(package_file, package_name, test_cmd, remove_test=True):
 
     distro, distro_like, _distro_version = env.get_linux_distro()
     if not distro_like:
@@ -140,19 +152,19 @@ def test_install(package_file, remove_test=True):
     if "debian" in distro_like:
         install_base = ["apt", "install", "-f", "-y"]
         remove_base = ["apt", "remove", "-y"]
-        list_cmd = ["dpkg", "-L", "deskflow"]
+        list_cmd = ["dpkg", "-L", package_name]
     elif "fedora" in distro_like:
         install_base = ["dnf", "install", "-y"]
         remove_base = ["dnf", "remove", "-y"]
-        list_cmd = ["rpm", "-ql", "deskflow"]
+        list_cmd = ["rpm", "-ql", package_name]
     elif "opensuse" in distro_like:
         install_base = ["zypper", "--no-gpg-checks", "install", "-y"]
         remove_base = ["zypper", "remove", "-y"]
-        list_cmd = ["rpm", "-ql", "deskflow"]
+        list_cmd = ["rpm", "-ql", package_name]
     elif "arch" in distro_like:
         install_base = ["pacman", "-U", "--noconfirm"]
         remove_base = ["pacman", "-R", "--noconfirm"]
-        list_cmd = ["pacman", "-Ql", "deskflow"]
+        list_cmd = ["pacman", "-Ql", package_name]
     else:
         raise RuntimeError(f"Linux distro not yet supported: {distro}")
 

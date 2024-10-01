@@ -146,7 +146,7 @@ MSWindowsScreen::MSWindowsScreen(
 
     updateScreenShape();
     m_class = createWindowClass();
-    m_window = createWindow(m_class, "Deskflow");
+    m_window = createWindow(m_class, DESKFLOW_APP_NAME);
     forceShowCursor();
     LOG(
         (CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h,
@@ -826,7 +826,7 @@ ATOM MSWindowsScreen::createWindowClass() const {
   classInfo.hCursor = NULL;
   classInfo.hbrBackground = NULL;
   classInfo.lpszMenuName = NULL;
-  classInfo.lpszClassName = "Deskflow";
+  classInfo.lpszClassName = DESKFLOW_APP_NAME;
   classInfo.hIconSm = NULL;
   return RegisterClassEx(&classInfo);
 }
@@ -1438,7 +1438,7 @@ bool MSWindowsScreen::onClipboardChange() {
           m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
     }
   } else if (!m_ownClipboard) {
-    LOG((CLOG_DEBUG "clipboard changed: deskflow owned"));
+    LOG((CLOG_DEBUG "clipboard changed: " DESKFLOW_APP_ID " owned"));
     m_ownClipboard = true;
   }
 

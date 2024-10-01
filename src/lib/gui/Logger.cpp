@@ -31,12 +31,9 @@
 namespace deskflow::gui {
 
 const auto kForceDebugMessages = QStringList{
-    "Deskflow", // TEST
-    "No functional TLS backend was found",
-    "No TLS backend is available",
+    "No functional TLS backend was found", "No TLS backend is available",
     "QSslSocket::connectToHostEncrypted: TLS initialization failed",
-    "Retrying to obtain clipboard.",
-    "Unable to obtain clipboard."};
+    "Retrying to obtain clipboard.", "Unable to obtain clipboard."};
 
 Logger Logger::s_instance;
 

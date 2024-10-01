@@ -24,13 +24,20 @@
 #include "gui/Logger.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
+#include "gui/constants.h"
 #include "gui/diagnostic.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
+#include "gui_config.h" // IWYU pragma: keep
+
+#ifdef DESKFLOW_GUI_HOOK_HEADER
+#include DESKFLOW_GUI_HOOK_HEADER
+#endif
 
 #include <QApplication>
 #include <QDebug>
+#include <QGuiApplication>
 #include <QMessageBox>
 #include <QObject>
 #include <QtCore>
@@ -67,8 +74,6 @@ int main(int argc, char *argv[]) {
 #endif
 
   QCoreApplication::setApplicationName(kAppName);
-
-  // HACK: set org name to app name for backwards compatibility.
   QCoreApplication::setOrganizationName(kAppName);
 
   // used as a prefix for settings paths, and must not be a url.
@@ -78,7 +83,7 @@ int main(int argc, char *argv[]) {
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   QString version = QString::fromStdString(deskflow::version());
-  qInfo("Deskflow v%s", qPrintable(version));
+  qInfo(DESKFLOW_APP_NAME " v%s", qPrintable(version));
 
   dotenv();
   Logger::instance().loadEnvVars();
@@ -87,8 +92,8 @@ int main(int argc, char *argv[]) {
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QMessageBox::information(
-        NULL, "Deskflow",
-        "Please drag Deskflow to the Applications folder, "
+        NULL, DESKFLOW_APP_NAME,
+        "Please drag " DESKFLOW_APP_NAME " to the Applications folder, "
         "and open it from there.");
     return 1;
   }
@@ -97,8 +102,6 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 #endif
-
-  qRegisterMetaType<Edition>("Edition");
 
   ConfigScopes configScopes;
 
@@ -135,6 +138,11 @@ int main(int argc, char *argv[]) {
       &MainWindow::onAppAboutToQuit);
 
   mainWindow.open();
+
+#ifdef DESKFLOW_GUI_HOOK_START
+  DESKFLOW_GUI_HOOK_START
+#endif
+
   return DeskflowApplication::exec();
 }
 
@@ -167,10 +175,10 @@ bool checkMacAssistiveDevices() {
   bool result = AXAPIEnabled();
   if (!result) {
     QMessageBox::information(
-        NULL, "Deskflow",
+        NULL, DESKFLOW_APP_NAME,
         "Please enable access to assistive devices "
         "System Preferences -> Security & Privacy -> "
-        "Privacy -> Accessibility, then re-open Deskflow.");
+        "Privacy -> Accessibility, then re-open " DESKFLOW_APP_NAME ".");
   }
   return result;
 

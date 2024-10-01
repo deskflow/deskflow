@@ -13,9 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+import os, sys
 import lib.cmd_utils as cmd_utils
-import lib.env as env
 import glob
 
 
@@ -43,7 +42,7 @@ class Qt:
             print(f"Skipping Qt, already installed at: {self.dir_pattern}")
             return
 
-        args = [env.get_python_executable(), "-m", "aqt", "install-qt"]
+        args = [sys.executable, "-m", "aqt", "install-qt"]
         args.extend(["--outputdir", self.base_dir])
         args.extend(["--base", self.mirror_url])
         args.extend([self.os_name, "desktop", str(self.version), self.compiler])

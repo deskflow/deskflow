@@ -13,16 +13,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os, sys
 import lib.cmd_utils as cmd_utils
 import lib.env as env
-import os
 
 build_dir = "build/meson"
-meson_bin = env.get_python_executable("meson")
+
+
+def meson_venv_bin():
+    if not env.in_venv():
+        raise RuntimeError("Not in a virtual environment")
+
+    return os.path.join(os.path.dirname(sys.executable), "meson")
 
 
 def setup(no_system_list, static_list):
-    cmd = [meson_bin, "setup", build_dir]
+    cmd = [meson_venv_bin(), "setup", build_dir]
 
     # TODO: These special Windows exceptions should probably be in Meson
     # or somewhere other than this script, as it's a bit hacky.
@@ -72,11 +78,11 @@ def static_subproject(subproject):
 
 
 def compile():
-    cmd_utils.run([meson_bin, "compile", "-C", build_dir], print_cmd=True)
+    cmd_utils.run([meson_venv_bin(), "compile", "-C", build_dir], print_cmd=True)
 
 
 def install():
-    cmd = [meson_bin, "install", "-C", build_dir]
+    cmd = [meson_venv_bin(), "install", "-C", build_dir]
 
     has_sudo = cmd_utils.has_command("sudo")
     if has_sudo:
