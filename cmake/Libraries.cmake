@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(LIBEI_MIN_VERSION 1.2.1)
-set(LIBPORTAL_MIN_VERSION 0.6)
+set(LIBEI_MIN_VERSION 1.3)
+set(LIBPORTAL_MIN_VERSION 0.8)
 
 macro(configure_libs)
 
