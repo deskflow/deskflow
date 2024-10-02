@@ -230,7 +230,8 @@ class WindowsService:
     def __init__(self, script, args):
         self.script = script
         self.verbose = args.verbose
-        self.bin_name = args.bin_name
+        self.source_bin = args.source_bin
+        self.target_bin = args.target_bin
         self.source_dir = os.path.abspath(args.source_dir)
         self.target_dir = os.path.abspath(args.target_dir)
         self.service_id = args.service_id
@@ -259,7 +260,7 @@ class WindowsService:
         self.ensure_admin()
         self.stop()
 
-        source_bin_path = f"{os.path.join(self.source_dir, self.bin_name)}.exe"
+        source_bin_path = f"{os.path.join(self.source_dir, self.source_bin)}.exe"
 
         self.copy_files()
 
@@ -274,7 +275,7 @@ class WindowsService:
                     file=sys.stderr,
                 )
 
-        target_bin_path = os.path.join(self.target_dir, self.bin_name + ".exe")
+        target_bin_path = os.path.join(self.target_dir, self.target_bin + ".exe")
 
         try:
             print("Installing daemon service")

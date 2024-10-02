@@ -24,7 +24,8 @@ import lib.windows as windows
 import lib.colors as colors
 
 DEFAULT_SERVICE_ID = "deskflow"
-DEFAULT_BIN_NAME = "deskflow-daemon"
+DEFAULT_SOURCE_BIN = "deskflow-daemon"
+DEFAULT_TARGET_BIN = "deskflow-daemon"
 DEFAULT_SOURCE_DIR = os.path.join("build", "temp", "bin")
 DEFAULT_TARGET_DIR = os.path.join("build", "bin")
 IGNORE_PROCESSES = ["deskflow.exe"]
@@ -40,7 +41,8 @@ def main():
     parser.add_argument("--pause-on-exit", action="store_true")
     parser.add_argument("--source-dir", default=DEFAULT_SOURCE_DIR)
     parser.add_argument("--target-dir", default=DEFAULT_TARGET_DIR)
-    parser.add_argument("--bin-name", default=DEFAULT_BIN_NAME)
+    parser.add_argument("--source-bin", default=DEFAULT_SOURCE_BIN)
+    parser.add_argument("--target-bin", default=DEFAULT_TARGET_BIN)
     parser.add_argument("--ignore-processes", nargs="+", default=IGNORE_PROCESSES)
     parser.add_argument("--service-id", default=DEFAULT_SERVICE_ID)
     parser.add_argument("--verbose", action="store_true")
