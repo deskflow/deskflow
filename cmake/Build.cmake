@@ -104,16 +104,19 @@ macro(post_config_all)
       VERBATIM
       COMMENT "Copying files to bin dir")
 
-    if(BUILD_UNIFIED)
-      add_dependencies(run_post_build synergy synergy-core synergyd)
-    else()
-      add_dependencies(
-        run_post_build
-        synergy
-        synergyc
-        synergys
-        synergyd)
+    set(dependencies synergyd)
+
+    if(BUILD_GUI)
+      list(APPEND dependencies synergy)
     endif()
+
+    if(BUILD_UNIFIED)
+      list(APPEND dependencies synergy-core)
+    else()
+      list(APPEND dependencies synergyc synergys)
+    endif()
+
+    add_dependencies(run_post_build ${dependencies})
 
   endif()
 
