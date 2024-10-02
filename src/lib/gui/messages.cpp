@@ -287,13 +287,13 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath) {
 
 void showWaylandExperimental(QWidget *parent) {
   QMessageBox::information(
-      parent, "Experimental feature",
+      parent, "Wayland support (experimental)",
       QString(
-          "<p>Thanks for trying the beta version!</p>"
+          "<p>Heads up!</p>"
           "<p>Wayland support is experimental and contains bugs.</p>"
           R"(<p>Please <a href="%1" style="color: %2">report bugs</a> to us if you find any.</p>)"
           "<p>Happy testing!</p>")
-          .arg(kUrlHelp, kColorSecondary));
+          .arg(kAppName, kUrlHelp, kColorSecondary));
 }
 
 void showWaylandLibraryError(QWidget *parent) {
