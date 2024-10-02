@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+set(core_source_name "deskflow-core")
 set(target ${CORE_BINARY_NAME})
-set(sources ${target}.cpp)
+set(sources ${core_source_name}.cpp)
 
 if(WIN32)
-  list(APPEND sources ${target}.exe.manifest
+  list(APPEND sources ${core_source_name}.exe.manifest
        ${PROJECT_BINARY_DIR}/src/version.rc)
 endif()
 
