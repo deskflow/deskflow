@@ -5,26 +5,17 @@
 >
 > Alternatively, we have [other ways](https://github.com/deskflow/deskflow/wiki/Chat-with-us) to communicate.
 
-> [!IMPORTANT]
-> 🚀 Deskflow is now the upstream project for Synergy.
->
-> The project has been renamed to draw a line between the community-run project (now Deskflow),
-> and the commercially licensed product, Synergy.
->
-> We are currently in the process of renaming the project to Deskflow and moving all licensing code 
-> downstream.
-> 
-> Hold on to your butts, this is going to be a hell of a ride.
-> 
-> [Join the discussion](https://github.com/deskflow/deskflow/discussions/7517)
-
 [![Sponsored by: Synergy](https://raw.githubusercontent.com/deskflow/deskflow-artwork/b2c72a3e60a42dee793bd47efc275b5ee0bdaa5f/misc/synergy-sponsor.svg)](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
 
 [![GitHub Release](https://img.shields.io/github/v/release/deskflow/deskflow?display_name=release&label=latest%20version)](https://github.com/deskflow/deskflow/releases)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow)](https://github.com/deskflow/deskflow/commits/master/)
 ![GitHub top language](https://img.shields.io/github/languages/top/deskflow/deskflow)
 [![GitHub License](https://img.shields.io/github/license/deskflow/deskflow)](LICENSE)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=coverage)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
 
 [![CI](https://github.com/deskflow/deskflow/actions/workflows/ci.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/ci.yml)
 [![CodeQL Analysis](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml)
@@ -45,10 +36,19 @@ To use Deskflow you can follow the [Build Quick Start](#build-quick-start),
 use one of our packages, or if it's available by your favorite package repository,
 install `deskflow` (see: [installing packages](#how-to-install-packages)).
 
-## Project values
+> [!NOTE]
+> 🚀 **Deskflow** is now the upstream project for Synergy.
+>
+> The Deskflow project was established to cultivate community-driven development where everyone can collaborate.
+>
+> Synergy supports and contributes to the Deskflow project while maintaining its customer-oriented code downstream.
+>
+> More info: [Relationship with Synergy](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
+
+## Project Values
 
 - Motivated by the community interests (not business-driven)
-- Privacy by default (no update check or phone home on by default)
+- Privacy by default (e.g. update check is off by default)
 - Nothing customer-related (this is all moved downstream to Synergy)
 - Have fun; we don't need to worry about impressing anyone
 
@@ -162,7 +162,7 @@ mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
   Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier
   became a dead fork.
 * [**Synergy**](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy) -
-  Downstream commercial fork and Deskflow sponsor, geared toward adapting upstream to customer
+  Downstream commercial fork and Deskflow sponsor, geared toward adapting to customer
   needs, offering business and enterprise licensing.
 
 ## FAQ
@@ -170,7 +170,7 @@ mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
 ### Is Deskflow compatible with Lan Mouse or Input Leap?
 
 We would love to see compatibility between our fellow open source projects, Lan Mouse and 
-Input Leap. This idea is discussed from time in the communities for all of our projects,
+Input Leap. This idea is discussed occasionally in the communities for all of our projects,
 so it may happen in the not-too-distant future.
 
 ### If I want to solve issues in Deskflow do I need to contribute to a fork?
@@ -207,6 +207,10 @@ Repology monitors a huge number of package repositories and other sources compar
 versions across them and gathering other information.
 
 [![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?exclude_unsupported=1)](https://repology.org/project/deskflow/versions)
+
+## Meow'Dib (our mascot)
+
+![Meow'Dib](https://github.com/user-attachments/assets/726f695c-3dfb-4abd-875d-ed658f6c610f)
 
 ## License
 
