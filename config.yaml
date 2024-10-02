@@ -169,8 +169,7 @@ config:
           sudo apt-get install -y \
           python3-attr \
           python3-jinja2 \
-          libsystemd-dev &&
-          pip install attrs jinja2
+          libsystemd-dev
 
         ubuntu: *debian_libei
         linuxmint: *debian_libei
@@ -179,8 +178,7 @@ config:
           sudo dnf install -y \
           python3-attrs \
           python3-jinja2 \
-          systemd-devel &&
-          pip install attrs jinja2
+          systemd-devel
 
         rhel: *fedora_libei
         rocky: *fedora_libei
