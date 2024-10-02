@@ -25,7 +25,8 @@ import psutil  # type: ignore
 import lib.colors as colors
 import lib.file_utils as file_utils
 
-DEFAULT_BIN_NAME = "synergyd"
+DEFAULT_SOURCE_BIN = "synergyd"
+DEFAULT_TARGET_BIN = "synergyd"
 DEFAULT_SOURCE_DIR = os.path.join("build", "temp", "bin")
 DEFAULT_TARGET_DIR = os.path.join("build", "bin")
 SERVICE_NOT_RUNNING_ERROR = 2
@@ -48,7 +49,8 @@ def main():
     parser.add_argument("--pause-on-exit", action="store_true")
     parser.add_argument("--source-dir", default=DEFAULT_SOURCE_DIR)
     parser.add_argument("--target-dir", default=DEFAULT_TARGET_DIR)
-    parser.add_argument("--bin-name", default=DEFAULT_BIN_NAME)
+    parser.add_argument("--source-bin", default=DEFAULT_SOURCE_BIN)
+    parser.add_argument("--target-bin", default=DEFAULT_TARGET_BIN)
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -63,7 +65,13 @@ def main():
 
     try:
         if args.reinstall:
-            reinstall(context, args.source_dir, args.target_dir, args.bin_name)
+            reinstall(
+                context,
+                args.source_dir,
+                args.target_dir,
+                args.source_bin,
+                args.target_bin,
+            )
         elif args.stop:
             stop(context, args.target_dir)
         elif args.restart:
@@ -98,13 +106,13 @@ def restart(context, source_dir, target_dir):
     start()
 
 
-def reinstall(context, source_dir, target_dir, bin_name):
+def reinstall(context, source_dir, target_dir, source_bin, target_bin):
     """Stops and uninstalls daemon service, copies files, and reinstalls the daemon service."""
 
     ensure_admin()
     stop(context, target_dir)
 
-    source_bin_path = f"{os.path.join(source_dir, bin_name)}.exe"
+    source_bin_path = f"{os.path.join(source_dir, source_bin)}.exe"
 
     copy_files(source_dir, target_dir)
 
@@ -119,7 +127,7 @@ def reinstall(context, source_dir, target_dir, bin_name):
                 file=sys.stderr,
             )
 
-    target_bin_path = os.path.join(target_dir, bin_name + ".exe")
+    target_bin_path = os.path.join(target_dir, target_bin + ".exe")
 
     try:
         print("Installing daemon service")
