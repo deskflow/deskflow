@@ -1,9 +1,9 @@
 ![Deskflow](https://github.com/user-attachments/assets/f005b958-24df-4f4a-9bfd-4f834dae59d6)
 
 > [!TIP]
-> We're on Libera Chat IRC network (`#deskflow` or `#deskflow-dev`).
-> 
-> Or if you want to stay on GitHub, you can [start a new discussion](https://github.com/deskflow/deskflow/discussions).
+> Join us! Real-time discussion on Matrix: [`#deskflow:matrix.org`](https://matrix.to/#/#deskflow:matrix.org)
+>
+> Alternatively, we have [other ways](https://github.com/deskflow/deskflow/wiki/Chat-with-us) to communicate.
 
 > [!IMPORTANT]
 > 🚀 Deskflow is now the upstream project for Synergy.
