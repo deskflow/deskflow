@@ -104,12 +104,19 @@ macro(post_config_all)
       VERBATIM
       COMMENT "Copying files to bin dir")
 
-    add_dependencies(
-      run_post_build
-      ${GUI_BINARY_NAME}
-      ${CLIENT_BINARY_NAME}
-      ${SERVER_BINARY_NAME}
-      ${DAEMON_BINARY_NAME})
+    set(dependencies ${DAEMON_BINARY_NAME})
+
+    if(BUILD_GUI)
+      list(APPEND dependencies ${GUI_BINARY_NAME})
+    endif()
+
+    if(BUILD_UNIFIED)
+      list(APPEND dependencies ${CORE_BINARY_NAME})
+    else()
+      list(APPEND dependencies ${CLIENT_BINARY_NAME} ${SERVER_BINARY_NAME})
+    endif()
+
+    add_dependencies(run_post_build ${dependencies})
   endif()
 
 endmacro()
