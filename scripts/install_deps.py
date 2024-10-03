@@ -20,7 +20,7 @@ import lib.env as env
 import lib.cmd_utils as cmd_utils
 import lib.qt_utils as qt_utils
 import lib.github as github
-import lib.meson as meson
+import lib.meson as meson_utils
 
 path_env_var = "PATH"
 cmake_prefix_env_var = "CMAKE_PREFIX_PATH"
@@ -103,6 +103,11 @@ def parse_args(is_ci):
         nargs="+",
         help="Specify which Meson subprojects to build as static libraries",
     )
+    parser.add_argument(
+        "--build-dir",
+        default="build",
+        help="Specify the Meson build directory",
+    )
 
     if env.is_windows():
         parser.add_argument(
@@ -183,14 +188,17 @@ def install(args):
                 deps = SubprojectDependencies(subproject)
                 deps.install()
 
-        run_meson(args.meson_install, args.meson_no_system, args.meson_static)
+        run_meson(
+            args.meson_install, args.meson_no_system, args.meson_static, args.build_dir
+        )
 
 
 # It's a bit weird to use Meson just for installing deps, but it's a stopgap until
 # we fully switch from CMake to Meson. For the meantime, Meson will install the deps
 # so that CMake can find them easily. Once we switch to Meson, it might be possible for
 # Meson handle the deps resolution, so that we won't need to install them on the system.
-def run_meson(install, no_system_list, static_list):
+def run_meson(install, no_system_list, static_list, build_dir):
+    meson = meson_utils.Meson(build_dir)
     meson.setup(no_system_list, static_list)
 
     # Only compile and install on Linux for now, since we're only using Meson to fetch
