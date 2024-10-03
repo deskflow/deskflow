@@ -108,10 +108,11 @@ def get_env_bool(name, default=False):
 
 
 def get_venv_executable(binary="python"):
-    if sys.platform == "win32":
-        return os.path.join(VENV_DIR, "Scripts", binary)
-    else:
-        return os.path.join(VENV_DIR, "bin", binary)
+    if not in_venv():
+        raise RuntimeError("Not running in a Python virtual environment")
+
+    venv_dir = os.path.dirname(sys.executable)
+    return os.path.join(venv_dir, binary)
 
 
 def in_venv():
