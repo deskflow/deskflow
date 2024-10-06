@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DATADOWNLOADER_H
-#define DATADOWNLOADER_H
+#pragma once
 
 #include <QByteArray>
 #include <QNetworkAccessManager>
@@ -48,5 +47,3 @@ private:
   QNetworkReply *m_pReply;
   bool m_IsFinished;
 };
-
-#endif // DATADOWNLOADER_H

@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DESKFLOW_PATH_H
-#define DESKFLOW_PATH_H
+#pragma once
 
 #include "String.h"
 
@@ -32,5 +31,3 @@ std::string path(const String &filePath);
 } // namespace filesystem
 
 } // namespace deskflow
-
-#endif // DESKFLOW_PATH_H

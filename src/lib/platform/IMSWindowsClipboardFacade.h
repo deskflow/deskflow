@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IMWINDOWSCLIPBOARDFACADE
-#define IMWINDOWSCLIPBOARDFACADE
+#pragma once
 
 #include "common/IInterface.h"
 
@@ -31,5 +30,3 @@ public:
   virtual void write(HANDLE win32Data, UINT win32Format) = 0;
   virtual ~IMSWindowsClipboardFacade() {}
 };
-
-#endif

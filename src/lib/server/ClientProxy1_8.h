@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SERVER_CLIENTPROXY1_8_H
-#define SERVER_CLIENTPROXY1_8_H
+#pragma once
 
 #include "server/ClientProxy1_7.h"
 
@@ -31,5 +30,3 @@ public:
 private:
   void synchronizeLanguages() const;
 };
-
-#endif // SERVER_CLIENTPROXY1_8_H

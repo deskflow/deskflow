@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DESKFLOW_CORE_CLIENTARGS_H
-#define DESKFLOW_CORE_CLIENTARGS_H
+#pragma once
 
 #include "ArgsBase.h"
 
@@ -54,5 +53,3 @@ public:
   std::string m_serverAddress;
 };
 } // namespace deskflow
-
-#endif // DESKFLOW_CORE_CLIENTARGS_H
