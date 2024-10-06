@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DESKFLOW_LANGUAGESLANGUAGEMANAGER_H
-#define DESKFLOW_LANGUAGESLANGUAGEMANAGER_H
+#pragma once
 
 #include "base/String.h"
 #include "deskflow/AppUtil.h"
@@ -76,5 +75,3 @@ public:
 } // namespace languages
 
 } // namespace deskflow
-
-#endif // DESKFLOW_LANGUAGESLANGUAGEMANAGER_H

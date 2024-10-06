@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(SERVERCONFIGDIALOG__H)
-
-#define SERVERCONFIGDIALOG__H
+#pragma once
 
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
@@ -78,5 +76,3 @@ private:
 private slots:
   void onChange();
 };
-
-#endif

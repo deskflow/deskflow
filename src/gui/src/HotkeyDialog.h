@@ -15,10 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#if !defined(HOTKEYDIALOG_H)
-
-#define HOTKEYDIALOG_H
+#pragma once
 
 #include "Hotkey.h"
 #include "ui_HotkeyDialogBase.h"
@@ -46,5 +43,3 @@ protected:
 private:
   Hotkey &m_Hotkey;
 };
-
-#endif

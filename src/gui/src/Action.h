@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined(ACTION_H)
-
-#define ACTION_H
+#pragma once
 
 #include "KeySequence.h"
 
@@ -100,5 +98,3 @@ private:
 typedef QList<Action> ActionList;
 
 QTextStream &operator<<(QTextStream &outStream, const Action &action);
-
-#endif

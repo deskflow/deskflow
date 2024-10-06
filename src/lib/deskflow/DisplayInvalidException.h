@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DESKFLOW_DISPLAYINVALIDEXCEPTION_H
-#define DESKFLOW_DISPLAYINVALIDEXCEPTION_H
+#pragma once
 
 #include <stdexcept>
 #include <string>
@@ -27,5 +26,3 @@ public:
 
   DisplayInvalidException(std::string msg) : std::runtime_error(msg) {}
 };
-
-#endif // DESKFLOW_DISPLAYINVALIDEXCEPTION_H

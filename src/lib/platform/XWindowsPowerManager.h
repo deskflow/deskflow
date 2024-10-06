@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef XWINDOWSPOWERMANAGER_H
-#define XWINDOWSPOWERMANAGER_H
+#pragma once
 
 class XWindowsPowerManager {
 public:
@@ -36,5 +35,3 @@ public:
   XWindowsPowerManager(const XWindowsPowerManager &) = delete;
   XWindowsPowerManager &operator=(const XWindowsPowerManager &) = delete;
 };
-
-#endif // XWINDOWSPOWERMANAGER_H

@@ -17,8 +17,7 @@
  */
 #if WINAPI_XWINDOWS
 
-#ifndef XKBKEYBOARD_H
-#define XKBKEYBOARD_H
+#pragma once
 
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
@@ -45,7 +44,5 @@ public:
 } // namespace linux
 
 } // namespace deskflow
-
-#endif // XKBKEYBOARD_H
 
 #endif // WINAPI_XWINDOWS

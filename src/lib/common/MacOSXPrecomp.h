@@ -20,5 +20,5 @@
 // Prefix header for all source files of the 'deleteme' target in the 'deleteme'
 // project.
 //
-
+#pragma once
 #include <Carbon/Carbon.h>

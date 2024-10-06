@@ -18,6 +18,7 @@
 
 // ScreenSaver.framework private API
 // Class dumping by Alex Harper http://www.ragingmenace.com/
+#pragma once
 
 #import <Foundation/NSObject.h>
 

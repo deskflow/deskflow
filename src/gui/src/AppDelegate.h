@@ -1,5 +1,4 @@
-#ifndef APPDELEGATE_H
-#define APPDELEGATE_H
+#pragma once
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,4 +20,3 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif // APPDELEGATE_H
