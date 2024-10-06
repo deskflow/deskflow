@@ -107,8 +107,8 @@ ServerConfigDialog::ServerConfigDialog(
 
   m_pButtonAddComputer->setEnabled(!model().isFull());
   connect(
-      m_pTrashScreenWidget, SIGNAL(screenRemoved()), this,
-      SLOT(onScreenRemoved()));
+      m_pTrashScreenWidget, &TrashScreenWidget::screenRemoved, this,
+      &ServerConfigDialog::onScreenRemoved);
 
   onChange();
 
