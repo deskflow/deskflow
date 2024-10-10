@@ -64,7 +64,7 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile16 = ":/icons/16x16/tray.png";
+const auto kIconFile = ":/icons/128x128/tray.png";
 
 #ifdef Q_OS_MAC
 const auto kLightIconFile = ":/icons/64x64/tray-light.png";
@@ -620,7 +620,7 @@ void MainWindow::setIcon() {
     break;
   }
 #else
-  icon.addFile(kIconFile16);
+  icon.addFile(kIconFile);
 #endif
 
   m_TrayIcon.setIcon(icon);
