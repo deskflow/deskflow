@@ -67,8 +67,8 @@ using CoreProcessState = CoreProcess::ProcessState;
 const auto kIconFile = ":/icons/128x128/tray.png";
 
 #ifdef Q_OS_MAC
-const auto kLightIconFile = ":/icons/64x64/tray-light.png";
-const auto kDarkIconFile = ":/icons/64x64/tray-dark.png";
+const auto kLightIconFile = ":/icons/128x128/tray-light.png";
+const auto kDarkIconFile = ":/icons/128x128/tray-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
