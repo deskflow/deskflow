@@ -7,7 +7,7 @@
         <file>icons/256x256/app.ico</file>
         <file>image/logo-light.png</file>
         <file>image/logo-dark.png</file>
-        <file>icons/16x16/padlock.png</file>
+        <file>icons/64x64/padlock.png</file>
         <file>icons/64x64/tray-dark.png</file>
         <file>icons/64x64/tray-light.png</file>
         <file>image/welcome.png</file>
