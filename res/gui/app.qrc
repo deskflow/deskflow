@@ -5,8 +5,8 @@
         <file>image/logo-light.png</file>
         <file>image/logo-dark.png</file>
         <file>icons/64x64/padlock.png</file>
-        <file>icons/64x64/tray-dark.png</file>
-        <file>icons/64x64/tray-light.png</file>
+        <file>icons/128x128/tray-dark.png</file>
+        <file>icons/128x128/tray-light.png</file>
         <file>icons/128x128/tray.png</file>
         <file>image/welcome.png</file>
         <file>icons/64x64/folder.png</file>
