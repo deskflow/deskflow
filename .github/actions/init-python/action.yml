@@ -1,50 +1,23 @@
+# Important: Do not be tempted to cache the .venv dir (Python virtual environment).
+# When the runner environment changes (e.g. Python is upgraded), the venv will need to be
+# re-created. Trying to upgrade a venv can be complex and it's usually more practical re-create it.
+# We don't save much time anyway by caching the venv so it's not worth the added complexity.
+
 name: "Setup Python venv"
-description: "Creates and caches a Python virtual environment"
-
-inputs:
-  cache:
-    description: "Cache Python venv"
-    default: true
-
-  setup:
-    description: "Setup Python venv"
-    default: true
-
-  python-bin:
-    description: "Python binary to use"
-    default: "python3"
-
-  cache-key:
-    description: "Cache key (note: hash is appended)"
-    required: true
+description: "Creates a Python virtual environment (venv)"
 
 runs:
   using: "composite"
 
   steps:
-    - name: Check cache key
-      if: ${{ inputs.cache }}
-      run: |
-        if [ -z "${{ inputs.cache-key }}" ]; then
-          echo "Cache key is required"
-          exit 1
-        fi
-      shell: bash
-
-    - name: Cache Python venv
-      if: ${{ inputs.cache }}
-      uses: actions/cache@v4
-      with:
-        path: .venv
-        key: python-venv-${{ inputs.cache-key }}-${{ hashFiles('scripts/pyproject.toml') }}
-
-    # Use bash if to make output clearer in case of skipping.
     - name: Setup Python venv
       run: |
-        if [ "${{ inputs.setup }}" = "true" ]; then
-          echo "Setting up Python venv"
-          ${{ inputs.python-bin }} -m venv .venv
+        if [ "${{ runner.os }}" == "Windows" ]; then
+          python=python
         else
-          echo "Skipping Python venv setup"
+          python=python3
         fi
+
+        echo "Setting up Python venv, bin=$python"
+        $python -m venv .venv
       shell: bash

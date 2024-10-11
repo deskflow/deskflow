@@ -15,8 +15,6 @@ jobs:
 
       - name: Setup Python venv
         uses: ./.github/actions/init-python
-        with:
-          cache-key: "lint-clang"
 
       - name: Install dependencies
         run: |
