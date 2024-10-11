@@ -485,26 +485,8 @@ macro(configure_windows_libs)
   configure_file(${PROJECT_SOURCE_DIR}/res/win/version.rc.in
                  ${PROJECT_BINARY_DIR}/src/version.rc @ONLY)
 
-  configure_windows_openssl()
+  configure_openssl()
 
-endmacro()
-
-macro(configure_windows_openssl)
-  set(OPENSSL_ROOT_DIR ${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows)
-  set(OPENSSL_EXE_DIR ${OPENSSL_ROOT_DIR}/tools/openssl)
-
-  if(EXISTS ${OPENSSL_EXE_DIR})
-    message(VERBOSE "OpenSSL exe dir: ${OPENSSL_EXE_DIR}")
-    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
-  else()
-    message(FATAL_ERROR "OpenSSL exe dir not found: ${OPENSSL_EXE_DIR}")
-  endif()
-
-  if(EXISTS ${OPENSSL_ROOT_DIR})
-    message(VERBOSE "OpenSSL root dir: ${OPENSSL_ROOT_DIR}")
-  else()
-    message(FATAL_ERROR "OpenSSL root dir not found: ${OPENSSL_ROOT_DIR}")
-  endif()
 endmacro()
 
 macro(configure_python)
@@ -538,8 +520,15 @@ macro(configure_openssl)
     set(OPENSSL_USE_STATIC_LIBS TRUE)
   endif()
 
-  find_package(OpenSSL REQUIRED)
-  include_directories(${OPENSSL_INCLUDE_DIR})
+  find_package(OpenSSL 1.1.1 REQUIRED COMPONENTS SSL Crypto)
+  if(WIN32) #Used for dev in TLS and WIX
+    cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE
+               "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows")
+    message(STATUS "SET OPENSSL ROOT: ${OPENSSL_ROOT_DIR}")
+    set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
+    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_ROOT_DIR}")
+  endif()
+
 endmacro()
 
 macro(configure_gtest)

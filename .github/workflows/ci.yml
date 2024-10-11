@@ -149,10 +149,12 @@ jobs:
 
       - name: Install dependencies
         env:
-          VCPKG_ROOT: "" # Unset deliberately to suppress 'already installed' warning.
+          VCPKG_ROOT: ${{github.workspace}}/vcpkg
         run: python ./scripts/install_deps.py
 
       - name: Configure
+        env:
+          VCPKG_ROOT: ${{github.workspace}}/vcpkg
         run: cmake -B build --preset=windows-release
 
       - name: Build
