@@ -50,6 +50,7 @@ install `deskflow` (see: [installing packages](#how-to-install-packages)).
 - Motivated by the community interests (not business-driven)
 - Privacy by default (e.g. update check is off by default)
 - Nothing customer-related (this is all moved downstream to Synergy)
+- Decisions are discussed and documented publicly with majority rule
 - Have fun; we don't need to worry about impressing anyone
 
 ## Ways to get involved
