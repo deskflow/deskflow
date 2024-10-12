@@ -298,7 +298,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
-        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }}
+        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr
 
       - name: Build
         run: cmake --build build -j8
