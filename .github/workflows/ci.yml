@@ -82,21 +82,24 @@ jobs:
     uses: ./.github/workflows/lint-clang.yml
 
   analyse-valgrind:
+    needs: [lint-cmake, lint-clang]
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/valgrind-analysis.yml
 
   analyse-codeql:
+    needs: [lint-cmake, lint-clang]
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/codeql-analysis.yml
 
   analyse-sonarcloud:
-    needs: pr-comment-flags
+    needs: [lint-cmake, lint-clang, pr-comment-flags]
     if: ${{ github.event_name == 'pull_request' && needs.pr-comment-flags.outputs.no-sonar != 'true' }}
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   windows:
+    needs: [lint-cmake, lint-clang]
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
@@ -179,6 +182,7 @@ jobs:
           path: ${{ env.PACKAGE_PATH }}
 
   macos:
+    needs: [lint-cmake, lint-clang]
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
@@ -269,7 +273,7 @@ jobs:
           jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
 
   linux:
-    needs: linux-matrix
+    needs: [linux-matrix, lint-cmake, lint-clang]
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
@@ -323,6 +327,7 @@ jobs:
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
+    needs: [lint-cmake, lint-clang]
     name: unix-${{ matrix.distro.name }}
     runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
     timeout-minutes: 20
