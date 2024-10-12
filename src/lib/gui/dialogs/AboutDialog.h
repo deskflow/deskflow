@@ -18,25 +18,32 @@
 
 #pragma once
 
-#include "MainWindow.h"
-#include "gui/VersionChecker.h"
 #include "ui_AboutDialogBase.h"
 
 #include <QDialog>
+#include <QMainWindow>
 
 class QWidget;
 class QString;
 
 class AboutDialog : public QDialog, public Ui::AboutDialogBase {
   Q_OBJECT
+
 public:
-  explicit AboutDialog(MainWindow *parent);
+  struct Deps {
+    virtual ~Deps() = default;
+    virtual bool isDarkMode() const;
+  };
+
+  explicit AboutDialog(
+      QMainWindow *parent,
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   int exec() override;
 
 private:
-  VersionChecker m_versionChecker;
+  std::shared_ptr<Deps> m_pDeps;
+
   void updateLogo() const;
   void setLogo(const char *const &filename) const;
-
-  virtual QString importantDevelopers() const;
+  QString importantDevelopers() const;
 };

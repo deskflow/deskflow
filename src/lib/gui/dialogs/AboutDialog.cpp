@@ -28,9 +28,20 @@
 
 using namespace deskflow::gui;
 
-AboutDialog::AboutDialog(MainWindow *parent)
+//
+// AboutDialog::Deps
+//
+
+bool AboutDialog::Deps::isDarkMode() const { return ::isDarkMode(); }
+
+//
+// AboutDialog
+//
+
+AboutDialog::AboutDialog(QMainWindow *parent, std::shared_ptr<Deps> deps)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::AboutDialogBase() {
+      Ui::AboutDialogBase(),
+      m_pDeps(deps) {
 
   setupUi(this);
 
@@ -65,7 +76,7 @@ void AboutDialog::setLogo(const char *const &filename) const {
 }
 
 void AboutDialog::updateLogo() const {
-  if (isDarkMode()) {
+  if (m_pDeps->isDarkMode()) {
     qDebug("showing dark logo");
     setLogo(":/image/logo-dark.png");
   } else {

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// `TestQtFullApp` freezes on windows ci, so exclude this test for now.
+// `TestQtFullApp` freezes on Windows CI, so exclude this test for now.
 #ifndef WIN32
 
 #include "gui/core/CoreProcess.h"
