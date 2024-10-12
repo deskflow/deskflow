@@ -15,6 +15,13 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+    paths-ignore:
+      - '**/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.env-example'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'cspell.json'
   schedule:
     - cron: "0 5 * * *" # 5am UTC
 
