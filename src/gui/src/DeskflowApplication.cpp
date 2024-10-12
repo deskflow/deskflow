@@ -26,6 +26,8 @@
 DeskflowApplication::DeskflowApplication(int &argc, char **argv)
     : QApplication(argc, argv) {
 
-  // causes dark mode to be used on some OS (e.g. Windows)
-  setStyle("fusion");
+  if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") != QLatin1String("KDE")) {
+    // causes dark mode to be used on some OS (e.g. Windows)
+    setStyle("fusion");
+  }
 }
