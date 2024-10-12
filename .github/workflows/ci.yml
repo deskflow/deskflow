@@ -165,7 +165,7 @@ jobs:
       - name: Configure
         env:
           VCPKG_ROOT: ${{github.workspace}}/vcpkg
-        run: cmake -B build --preset=windows-release
+        run: cmake -B build --preset=windows-release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -234,7 +234,7 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Configure
-        run: cmake -B build --preset=macos-release
+        run: cmake -B build --preset=macos-release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -309,7 +309,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
-        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr
+        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -343,7 +343,7 @@ jobs:
       DESKFLOW_BUILD_CMD: |
         ./scripts/install_deps.sh;
         cmake -B build;
-        cmake --build build -j16;
+        cmake --build build -j16; -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
         export QT_QPA_PLATFORM=offscreen;
         ./build/bin/unittests
         ./build/bin/integtests
