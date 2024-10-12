@@ -54,11 +54,21 @@ body:
       options:
         - label: Windows
         - label: macOS
-        - label: Linux
+        - label: Linux (X11)
+        - label: Linux (Wayland)
         - label: BSD-derived
         - label: Other
     validations:
       required: true
+
+  - type: checkboxes
+    id: linux-wayland
+    attributes:
+      label: Wayland on Linux
+      description: If you using Wayland on Linux, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499) before reporting.
+      options:
+        - label: I have reviewed the Wayland known issues and my issue is new
+        - label: I am not using Wayland on Linux
 
   - type: textarea
     id: os-version
