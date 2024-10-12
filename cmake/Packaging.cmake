@@ -114,13 +114,6 @@ macro(configure_linux_packaging)
   # 12), so we must add it manually.
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
 
-  # The default for CMake seems to be /usr/local, which seems uncommon. While
-  # the default /usr/local prefix causes the app to appear on Debian and Fedora,
-  # it doesn't seem to appear on Arch Linux. Setting the prefix to /usr seems to
-  # work on a wider variety of distros, and that also seems to be where most
-  # apps install to.
-  set(CMAKE_INSTALL_PREFIX /usr)
-
   set(source_desktop_file ${DESKFLOW_PROJECT_RES_DIR}/dist/linux/app.desktop.in)
   set(configured_desktop_file ${PROJECT_BINARY_DIR}/app.desktop)
   set(install_desktop_file ${DESKFLOW_APP_ID}.desktop)
