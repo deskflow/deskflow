@@ -164,7 +164,7 @@ macro(configure_unix_libs)
   # Note that this won't work on Windows because filenames are not case sensitive,
   # and we have header files named "Config.h" (upper case 'C').
   configure_file(${CMAKE_SOURCE_DIR}/src/lib/config.h.in
-                 ${CMAKE_BINARY_DIR}/src/lib/config.h)
+                 ${CMAKE_BINARY_DIR}/src/lib/config.h @ONLY)
 
   add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
