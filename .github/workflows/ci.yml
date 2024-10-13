@@ -147,13 +147,10 @@ jobs:
       - name: Cache vcpkg dir
         uses: actions/cache@v4
         with:
-          # We also need to cache the `LOCALAPPDATA` dir; without doing so, openssl
-          # rebuilds (after it is detected in cache) every time, which takes around 10 mins.
           path: |
-            vcpkg
-            vcpkg_installed
-            ${{ env.LOCALAPPDATA }}/vcpkg
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+            ${{github.workspace}}/vcpkg
+
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg/**') }}
 
       - name: Cache deps dir
         uses: actions/cache@v4
