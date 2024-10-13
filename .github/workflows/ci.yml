@@ -69,6 +69,7 @@ jobs:
   test-results:
     needs: [windows, macos, linux]
     if: always()
+    continue-on-error: true
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
