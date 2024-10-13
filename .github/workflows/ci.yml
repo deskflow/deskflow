@@ -83,8 +83,15 @@ jobs:
         uses: ./.github/actions/test-summary
 
   lint-cmake:
-    if: ${{ github.event_name == 'pull_request' }}
-    uses: ./.github/workflows/lint-cmake.yml
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint Cmake
+        uses: ./.github/actions/lint-cmake
 
   lint-clang:
     if: ${{ github.event_name == 'pull_request' }}
