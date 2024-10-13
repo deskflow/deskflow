@@ -25,11 +25,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Fetch all history for SonarScanner blame data
           fetch-depth: 0
 
-      - name: Config Git safe dir
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Install dependencies
         run: |

@@ -140,9 +140,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get version
-        uses: ./.github/actions/get-version
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Cache vcpkg dir
         uses: actions/cache@v4
@@ -232,9 +237,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get version
-        uses: ./.github/actions/get-version
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Cache deps dir
         uses: actions/cache@v4
@@ -307,12 +317,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      - name: Config Git safe dir
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Install dependencies
         run: ./scripts/install_deps.py ${{ matrix.distro.extra-dep-args }}
@@ -370,6 +382,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
