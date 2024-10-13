@@ -70,6 +70,15 @@ body:
         - label: I have reviewed the Wayland known issues and my issue is new
         - label: I am not using Wayland on Linux
 
+  - type: checkboxes
+    id: mac-signcheck
+    attributes:
+      label: Signing on mac os
+      description: If you using Mac os, and the app seams to just crash try [Apple's Solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac) before reporting.
+      options:
+        - label: I have Authrized the application to run on my mac
+        - label: I am not using Mac os
+
   - type: textarea
     id: os-version
     attributes:
