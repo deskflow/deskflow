@@ -68,7 +68,7 @@ jobs:
   # Runs even if the tests fail to provide a summary of the failures.
   test-results:
     needs: [windows, macos, linux]
-    if: always()
+    if: always() && needs.windows.result != 'skipped' && needs.macos.result != 'skipped' && needs.linux.result != 'skipped'
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
