@@ -57,18 +57,21 @@ jobs:
           fi
 
   # Quality gate to allow PR merge, used in the branch protection rules.
+  # should always run if the jobs were not cancelled and did not fail
   ci-passed:
     runs-on: ubuntu-latest
     needs: [lint-cmake, lint-clang, windows, macos, linux, unix]
+    if: always() && !failure() && !cancelled()
 
     steps:
       - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
 
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
+  # Does not run if jobs were skiped
   test-results:
     needs: [windows, macos, linux]
-    if: always()
+    if: always() && needs.windows.result != 'skipped' && needs.macos.result != 'skipped' && needs.linux.result != 'skipped'
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
