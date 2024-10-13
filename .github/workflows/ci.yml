@@ -197,7 +197,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
+          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
           path: ${{ env.PACKAGE_PATH }}
 
   macos:
@@ -270,7 +270,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
+          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
           path: ${{ env.PACKAGE_PATH }}
 
   linux-matrix:
@@ -341,7 +341,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
+          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
           path: ${{ env.PACKAGE_PATH }}
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
@@ -377,3 +377,31 @@ jobs:
         with:
           usesh: true
           run: ${{ env.DESKFLOW_BUILD_CMD }}
+
+  release_assets:
+    name: Release
+    needs: [windows, linux, macos]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Files
+      uses: actions/download-artifact@v4
+
+    - name: Deploy Continuous
+      if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
+      uses: crowbarmaster/GH-Automatic-Releases@latest
+      with:
+       repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+       automatic_release_tag: "continuous"
+       prerelease: false
+       title: "Continuous Build"
+       files: |
+         package-*/*
+
+    - name: Deploy Release
+      if: contains(github.ref, '/tags/v')
+      uses: crowbarmaster/GH-Automatic-Releases@latest
+      with:
+       repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+       prerelease: false
+       files: |
+         package-*/*

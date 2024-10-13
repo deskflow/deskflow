@@ -100,7 +100,7 @@ macro(configure_linux_packaging)
   message(VERBOSE "Configuring Linux packaging")
 
   set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_LINUX})
-  set(CPACK_GENERATOR "DEB;RPM;TGZ")
+  set(CPACK_GENERATOR "DEB;RPM")
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${DESKFLOW_MAINTAINER})
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
