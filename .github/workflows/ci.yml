@@ -9,6 +9,8 @@ on:
     inputs:
       version:
         description: Deskflow version number
+  push:
+    branches: [ master ]
   pull_request:
     types:
       - opened
@@ -95,12 +97,11 @@ jobs:
 
   analyse-codeql:
     needs: [lint-cmake, lint-clang]
-    if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/codeql-analysis.yml
 
   analyse-sonarcloud:
     needs: [lint-cmake, lint-clang, pr-comment-flags]
-    if: ${{ github.event_name == 'pull_request' && needs.pr-comment-flags.outputs.no-sonar != 'true' }}
+    if: ${{ needs.pr-comment-flags.outputs.no-sonar != 'true' }}
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
