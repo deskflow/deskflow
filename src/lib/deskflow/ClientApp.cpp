@@ -145,7 +145,7 @@ void ClientApp::help() {
       << "                             and listen instead of connecting.\n"
 #if WINAPI_XWINDOWS
       << "      --display <display>  when in X mode, connect to the X server\n"
-      << "                             at <display>\n."
+      << "                             at <display>.\n"
       << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
       << HELP_COMMON_INFO_2 << "\n"
