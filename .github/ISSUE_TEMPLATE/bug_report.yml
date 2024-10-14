@@ -65,19 +65,19 @@ body:
     id: linux-wayland
     attributes:
       label: Wayland on Linux
-      description: If you using Wayland on Linux, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499) before reporting.
+      description: If using Wayland on Linux, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499) before reporting.
       options:
         - label: I have reviewed the Wayland known issues and my issue is new
         - label: I am not using Wayland on Linux
 
   - type: checkboxes
-    id: mac-signcheck
+    id: mac-signing
     attributes:
-      label: Signing on mac os
-      description: If you using Mac os, and the app seams to just crash try [Apple's Solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac) before reporting.
+      label: Signing on macOS
+      description: If using macOS and the app crashes, try [Apple's solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac) before reporting.
       options:
-        - label: I have authorized the application to run on my mac
-        - label: I am not using Mac os
+        - label: I have authorized the app to run on my Mac
+        - label: I am not using macOS
 
   - type: textarea
     id: os-version
