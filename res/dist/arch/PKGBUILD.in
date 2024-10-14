@@ -1,7 +1,7 @@
 # Maintainer: @DESKFLOW_MAINTAINER@
 
 pkgname=@DESKFLOW_APP_ID@
-pkgver=@DESKFLOW_VERSION_FOUR_PART@
+pkgver=@DESKFLOW_VERSION@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
 url='@DESKFLOW_WEBSITE_URL@'

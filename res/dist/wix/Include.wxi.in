@@ -2,7 +2,7 @@
 <Include>
     <?define AppId="@DESKFLOW_APP_ID@"?>
     <?define Name="@DESKFLOW_APP_NAME@"?>
-    <?define Version="@DESKFLOW_VERSION_MS@"?>
+    <?define Version="@DESKFLOW_VERSION@"?>
     <?define Author="@DESKFLOW_AUTHOR_NAME@"?>
     <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
     <?define ProjectResDir="@DESKFLOW_PROJECT_RES_DIR@"?>
