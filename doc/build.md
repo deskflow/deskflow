@@ -11,6 +11,8 @@ wiki page if you have problems.
 
 **1. Dependencies:**
 
+You can either copy/paste the commands for your OS from [`config.yaml`](../config.yaml) or use the deps script.
+
 *Linux, macOS, or BSD-derived:*
 ```
 ./scripts/install_deps.sh
@@ -44,7 +46,7 @@ cmake --build build -j8
 ./build/bin/integtests
 ```
 
-**5. Run**
+**5. Run:**
 ```
 ./build/bin/deskflow
 ```
