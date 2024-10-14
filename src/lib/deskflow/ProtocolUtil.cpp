@@ -502,11 +502,15 @@ void ProtocolUtil::readVector4BytesInt(deskflow::IStream *stream, std::vector<UI
 
 void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, String *destination)
 {
-  assert(len == 0);
-
   // read the string length
   UInt8 buffer[128];
-  len = read4BytesInt(stream);
+
+  // when string length is 0, this implies that the size of the string is
+  // variable and embedded and will be found in the stream.
+  if (len == 0) {
+    len = read4BytesInt(stream);
+  }
+
   // use a fixed size buffer if its big enough
   const bool useFixed = (len <= sizeof(buffer));
 
