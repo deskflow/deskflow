@@ -674,22 +674,31 @@ bool Client::isCompatible(int major, int minor) const
 void Client::handleHello(const Event &, void *)
 {
   SInt16 major, minor;
-  if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
-    sendConnectionFailedEvent("Protocol error from server, check encryption settings");
+
+  // as luck would have it, both "Synergy" and "Barrier" are 7 chars,
+  // so we eat 7 chars and then test for either protocol name.
+  // we cannot re-use `readf` to check for various hello messages,
+  // as `readf` eats bytes (advances the stream position reference).
+  std::string protocolName;
+  ProtocolUtil::readf(m_stream, kMsgHello, &protocolName, &major, &minor);
+
+  if (protocolName != kSynergyProtocolName && protocolName != kBarrierProtocolName) {
+    sendConnectionFailedEvent("got invalid hello message from server");
     cleanupTimer();
     cleanupConnection();
     return;
   }
 
   // check versions
-  LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
+  LOG_DEBUG("got hello version %s, %d.%d", protocolName.c_str(), major, minor);
+
   SInt16 helloBackMajor = kProtocolMajorVersion;
   SInt16 helloBackMinor = kProtocolMinorVersion;
 
   if (isCompatible(major, minor)) {
-    // because 1.6 is comptable with 1.7 and 1.8 - downgrading protocol for
+    // because 1.6 is compatable with 1.7 and 1.8 - downgrading protocol for
     // server
-    LOG((CLOG_NOTE "downgrading protocol version for server"));
+    LOG_NOTE("downgrading protocol version for server");
     helloBackMinor = minor;
   } else if (major < kProtocolMajorVersion || (major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
     sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
@@ -699,8 +708,12 @@ void Client::handleHello(const Event &, void *)
   }
 
   // say hello back
-  LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
-  ProtocolUtil::writef(m_stream, kMsgHelloBack, helloBackMajor, helloBackMinor, &m_name);
+  LOG_DEBUG("say hello version %s %d.%d", protocolName.c_str(), helloBackMajor, helloBackMinor);
+
+  // dynamically build write format for hello back since `writef` doesn't
+  // support fixed length strings yet.
+  std::string helloBackMessage = protocolName + "%2i%2i%s";
+  ProtocolUtil::writef(m_stream, helloBackMessage.c_str(), helloBackMajor, helloBackMinor, &m_name);
 
   // now connected but waiting to complete handshake
   setupScreen();

@@ -106,6 +106,12 @@ enum EDataReceived
 // greeting handshake messages
 //
 
+// used to say hello back to the server as Synergy
+extern const char *const kSynergyProtocolName;
+
+// used to say hello back to the server as Barrier
+extern const char *const kBarrierProtocolName;
+
 // say hello to client;  primary -> secondary
 // $1 = protocol major version number supported by server.  $2 =
 // protocol minor version number supported by server. $3 = server

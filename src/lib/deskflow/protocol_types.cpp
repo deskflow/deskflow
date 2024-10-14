@@ -18,9 +18,13 @@
 
 #include "deskflow/protocol_types.h"
 
-// Keep the "Synergy" name for hello to preserve compatibility with Synergy
-const char *const kMsgHello = "Synergy%2i%2i";
-const char *const kMsgHelloBack = "Synergy%2i%2i%s";
+const char *const kSynergyProtocolName = "Synergy";
+const char *const kBarrierProtocolName = "Barrier";
+
+// The protocol name string within the hello and hello back messages must be
+// 7 chars for backward compatibility (Synergy and Barrier are 7 chars).
+const char *const kMsgHello = "%7s%2i%2i";
+const char *const kMsgHelloBack = "%7s%2i%2i%s";
 const char *const kMsgCNoop = "CNOP";
 const char *const kMsgCClose = "CBYE";
 const char *const kMsgCEnter = "CINN%2i%2i%4i%2i";
