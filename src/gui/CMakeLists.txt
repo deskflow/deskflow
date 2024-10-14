@@ -23,13 +23,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(res_dir ${GUI_RES_DIR})
 set(qrc_file ${GUI_QRC_FILE})
 
-file(
-  GLOB
-  sources
-  src/*.cpp
-  src/*.h
-  src/validators/*
-  src/widgets/*)
+file(GLOB sources src/*.cpp src/*.h src/validators/* src/widgets/*)
 file(GLOB ui_files src/*.ui)
 
 if(WIN32)
@@ -48,13 +42,8 @@ include_directories(${PROJECT_BINARY_DIR}/config)
 
 add_executable(${target} WIN32 ${sources} ${ui_files} ${rc_files} ${qrc_file})
 
-target_link_libraries(
-  ${target}
-  ${DESKFLOW_GUI_HOOK_LIB}
-  gui
-  Qt6::Core
-  Qt6::Widgets
-  Qt6::Network)
+target_link_libraries(${target} ${DESKFLOW_GUI_HOOK_LIB} gui Qt6::Core
+                      Qt6::Widgets Qt6::Network)
 
 target_compile_definitions(
   ${target} PRIVATE -DDESKFLOW_VERSION_STAGE="${DESKFLOW_VERSION_STAGE}")

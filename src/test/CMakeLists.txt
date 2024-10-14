@@ -33,12 +33,8 @@ endmacro()
 
 macro(config_test)
 
-  include_directories(
-    ${test_base_dir}
-    ${src_dir}
-    ${src_dir}/lib
-    ${gui_dir}
-    ${ext_dir})
+  include_directories(${test_base_dir} ${src_dir} ${src_dir}/lib ${gui_dir}
+                      ${ext_dir})
 
   set_sources()
 

@@ -19,13 +19,7 @@ if(WIN32)
   file(GLOB sources "MSWindows*.cpp")
 elseif(APPLE)
   file(GLOB headers "OSX*.h" "IOSX*.h")
-  file(
-    GLOB
-    sources
-    "OSX*.cpp"
-    "IOSX*.cpp"
-    "OSX*.m"
-    "OSX*.mm")
+  file(GLOB sources "OSX*.cpp" "IOSX*.cpp" "OSX*.m" "OSX*.mm")
 elseif(UNIX)
   file(GLOB x_headers "XWindows*.h")
   file(GLOB x_sources "XWindows*.cpp")
@@ -41,18 +35,8 @@ elseif(UNIX)
     endif()
   endif()
 
-  list(
-    APPEND
-    headers
-    ${x_headers}
-    ${ei_headers}
-    ${portal_headers})
-  list(
-    APPEND
-    sources
-    ${x_sources}
-    ${ei_sources}
-    ${portal_sources})
+  list(APPEND headers ${x_headers} ${ei_headers} ${portal_headers})
+  list(APPEND sources ${x_sources} ${ei_sources} ${portal_sources})
 endif()
 
 if(ADD_HEADERS_TO_SOURCES)

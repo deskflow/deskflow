@@ -164,11 +164,8 @@ set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE
           "Flags used by the shared libraries linker during coverage builds."
           FORCE)
 mark_as_advanced(
-  CMAKE_Fortran_FLAGS_COVERAGE
-  CMAKE_CXX_FLAGS_COVERAGE
-  CMAKE_C_FLAGS_COVERAGE
-  CMAKE_EXE_LINKER_FLAGS_COVERAGE
-  CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
+  CMAKE_Fortran_FLAGS_COVERAGE CMAKE_CXX_FLAGS_COVERAGE CMAKE_C_FLAGS_COVERAGE
+  CMAKE_EXE_LINKER_FLAGS_COVERAGE CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
 
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(
@@ -199,19 +196,10 @@ function(setup_target_for_coverage_lcov)
 
   set(options NO_DEMANGLE)
   set(oneValueArgs BASE_DIRECTORY NAME)
-  set(multiValueArgs
-      EXCLUDE
-      EXECUTABLE
-      EXECUTABLE_ARGS
-      DEPENDENCIES
-      LCOV_ARGS
-      GENHTML_ARGS)
-  cmake_parse_arguments(
-    Coverage
-    "${options}"
-    "${oneValueArgs}"
-    "${multiValueArgs}"
-    ${ARGN})
+  set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES LCOV_ARGS
+                     GENHTML_ARGS)
+  cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}"
+                        "${multiValueArgs}" ${ARGN})
 
   if(NOT LCOV_PATH)
     message(FATAL_ERROR "lcov not found! Aborting...")
@@ -233,12 +221,7 @@ function(setup_target_for_coverage_lcov)
   foreach(EXCLUDE ${Coverage_EXCLUDE} ${COVERAGE_EXCLUDES}
                   ${COVERAGE_LCOV_EXCLUDES})
     if(CMAKE_VERSION VERSION_GREATER 3.4)
-      get_filename_component(
-        EXCLUDE
-        ${EXCLUDE}
-        ABSOLUTE
-        BASE_DIR
-        ${BASEDIR})
+      get_filename_component(EXCLUDE ${EXCLUDE} ABSOLUTE BASE_DIR ${BASEDIR})
     endif()
     list(APPEND LCOV_EXCLUDES "${EXCLUDE}")
   endforeach()
@@ -278,10 +261,8 @@ function(setup_target_for_coverage_lcov)
     COMMAND ${GENHTML_PATH} ${GENHTML_EXTRA_ARGS} ${Coverage_GENHTML_ARGS} -o
             ${Coverage_NAME} ${Coverage_NAME}.info
     # Set output files as GENERATED (will be removed on 'make clean')
-    BYPRODUCTS ${Coverage_NAME}.base
-               ${Coverage_NAME}.capture
-               ${Coverage_NAME}.total
-               ${Coverage_NAME}.info
+    BYPRODUCTS ${Coverage_NAME}.base ${Coverage_NAME}.capture
+               ${Coverage_NAME}.total ${Coverage_NAME}.info
                ${Coverage_NAME} # report directory
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     DEPENDS ${Coverage_DEPENDENCIES}
@@ -324,12 +305,8 @@ function(setup_target_for_coverage_gcovr_xml)
   set(options NONE)
   set(oneValueArgs BASE_DIRECTORY NAME)
   set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
-  cmake_parse_arguments(
-    Coverage
-    "${options}"
-    "${oneValueArgs}"
-    "${multiValueArgs}"
-    ${ARGN})
+  cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}"
+                        "${multiValueArgs}" ${ARGN})
 
   if(NOT GCOVR_PATH)
     message(FATAL_ERROR "gcovr not found! Aborting...")
@@ -347,12 +324,7 @@ function(setup_target_for_coverage_gcovr_xml)
   foreach(EXCLUDE ${Coverage_EXCLUDE} ${COVERAGE_EXCLUDES}
                   ${COVERAGE_GCOVR_EXCLUDES})
     if(CMAKE_VERSION VERSION_GREATER 3.4)
-      get_filename_component(
-        EXCLUDE
-        ${EXCLUDE}
-        ABSOLUTE
-        BASE_DIR
-        ${BASEDIR})
+      get_filename_component(EXCLUDE ${EXCLUDE} ABSOLUTE BASE_DIR ${BASEDIR})
     endif()
     list(APPEND GCOVR_EXCLUDES "${EXCLUDE}")
   endforeach()
@@ -402,12 +374,8 @@ function(setup_target_for_coverage_gcovr_html)
   set(options NONE)
   set(oneValueArgs BASE_DIRECTORY NAME)
   set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
-  cmake_parse_arguments(
-    Coverage
-    "${options}"
-    "${oneValueArgs}"
-    "${multiValueArgs}"
-    ${ARGN})
+  cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}"
+                        "${multiValueArgs}" ${ARGN})
 
   if(NOT GCOVR_PATH)
     message(FATAL_ERROR "gcovr not found! Aborting...")
@@ -425,12 +393,7 @@ function(setup_target_for_coverage_gcovr_html)
   foreach(EXCLUDE ${Coverage_EXCLUDE} ${COVERAGE_EXCLUDES}
                   ${COVERAGE_GCOVR_EXCLUDES})
     if(CMAKE_VERSION VERSION_GREATER 3.4)
-      get_filename_component(
-        EXCLUDE
-        ${EXCLUDE}
-        ABSOLUTE
-        BASE_DIR
-        ${BASEDIR})
+      get_filename_component(EXCLUDE ${EXCLUDE} ABSOLUTE BASE_DIR ${BASEDIR})
     endif()
     list(APPEND GCOVR_EXCLUDES "${EXCLUDE}")
   endforeach()

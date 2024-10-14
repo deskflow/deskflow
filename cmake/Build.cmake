@@ -93,12 +93,8 @@ macro(post_config_all)
       VERBATIM
       COMMENT "Copying files to bin dir")
 
-    add_dependencies(
-      run_post_build
-      ${GUI_BINARY_NAME}
-      ${CLIENT_BINARY_NAME}
-      ${SERVER_BINARY_NAME}
-      ${DAEMON_BINARY_NAME})
+    add_dependencies(run_post_build ${GUI_BINARY_NAME} ${CLIENT_BINARY_NAME}
+                     ${SERVER_BINARY_NAME} ${DAEMON_BINARY_NAME})
   endif()
 
 endmacro()
