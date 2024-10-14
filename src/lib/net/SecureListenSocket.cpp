@@ -25,8 +25,9 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 
-static const char s_certificateDir[] = {"SSL"};
-static const char s_certificateFilename[] = {DESKFLOW_APP_NAME ".pem"};
+// TODO: Reduce duplication of these strings between here and SecureSocket.cpp
+static const char s_certificateDir[] = {"tls"};
+static const char s_certificateFilename[] = {DESKFLOW_APP_ID ".pem"};
 
 //
 // SecureListenSocket
