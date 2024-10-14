@@ -19,6 +19,7 @@
 #include "arch/unix/ArchFileUnix.h"
 
 #include <cstring>
+#include <filesystem>
 #include <pwd.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -100,17 +101,21 @@ std::string ArchFileUnix::getPluginDirectory() {
 }
 
 std::string ArchFileUnix::getProfileDirectory() {
-  String dir;
   if (!m_profileDirectory.empty()) {
-    dir = m_profileDirectory;
+    return m_profileDirectory;
   } else {
+    const std::filesystem::path homeDir = getUserDirectory();
 #if WINAPI_XWINDOWS
-    dir = getUserDirectory().append("/.config/" DESKFLOW_APP_NAME);
+    const auto xdgDir = std::getenv("XDG_CONFIG_HOME");
+    if (xdgDir != nullptr) {
+      return std::filesystem::path(xdgDir) / DESKFLOW_APP_NAME;
+    } else {
+      return homeDir / ".config" / DESKFLOW_APP_NAME;
+    }
 #else
-    dir = getUserDirectory().append("/Library/" DESKFLOW_APP_NAME);
+    return homeDir / "Library" / DESKFLOW_APP_NAME;
 #endif
   }
-  return dir;
 }
 
 std::string
