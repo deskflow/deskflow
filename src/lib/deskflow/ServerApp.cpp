@@ -148,7 +148,7 @@ void ServerApp::help() {
 
 #if WINAPI_XWINDOWS
       << "      --display <display>  when in X mode, connect to the X server\n"
-      << "                             at <display>\n."
+      << "                             at <display>.\n"
       << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 
