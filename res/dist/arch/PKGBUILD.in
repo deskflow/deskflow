@@ -5,7 +5,7 @@ pkgver=@DESKFLOW_VERSION@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
 url='@DESKFLOW_WEBSITE_URL@'
-arch=('x86_64')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 license=('GPL-2.0-only')
 depends=(
   'gcc-libs'
