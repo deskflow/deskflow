@@ -1,0 +1,41 @@
+name: Test actions
+
+# Intended to only be run manually for testing actions in isolation.
+on:
+  workflow_dispatch:
+
+jobs:
+  test-summary:
+    runs-on: ubuntu-latest
+    name: Test summary (${{ matrix.message.name }})
+
+    strategy:
+      matrix:
+        message:
+          - name: success
+            text: "|Success|✅|✅|"
+            expect: ""
+          - name: failure
+            text: "|Failure|❌|❌|"
+            expect: "❌🔬 Tests failed: 2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate
+        shell: bash
+        run: |
+          echo "${{ matrix.message.text }}" > test-result.md
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: test-result.md
+          name: test-result-${{ matrix.message.name }}
+
+      - name: Test
+        uses: ./.github/actions/test-summary
+        with:
+          download-pattern: test-result-${{ matrix.message.name }}
+          upload-name: summary-${{ matrix.message.name }}

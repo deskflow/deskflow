@@ -1,13 +1,24 @@
 name: "Test Summary"
 description: "Creates a markdown table from test results and uploads a summary file"
 
+inputs:
+  download-pattern:
+    description: "The pattern to download test result rows"
+    required: false
+    default: test-result-*
+
+  upload-name:
+    description: "The artifact upload name for the summary"
+    required: false
+    default: summary-tests
+
 runs:
   using: "composite"
   steps:
     - name: Download test result rows
       uses: actions/download-artifact@v4
       with:
-        pattern: test-result-*
+        pattern: ${{ inputs.download-pattern }}
         merge-multiple: true
         path: rows
 
@@ -44,24 +55,30 @@ runs:
 
         table="${{ steps.markdown-table.outputs.markdown }}"
         if [ -z "$table" ]; then
-          echo "No test results found" > $GITHUB_STEP_SUMMARY
+          echo "No test results found" | tee $GITHUB_STEP_SUMMARY >&2
           exit 1
         else
           echo "$table" > $GITHUB_STEP_SUMMARY
         fi
 
-        count=$(echo -n "$table" | grep -o "❌" | wc -l || echo 0)
+        count=$(echo "$table" | awk -v RS='' '{gsub(/[^❌]/, ""); print length}')
+        file="ci-summary.md"
+
         if [ $count -gt 0 ]; then
-          file="ci-summary.md"
-          echo "❌🔬 Tests failed: $count" > $file
+          echo "❌🔬 Tests failed: $count" | tee $file
           echo "file=$file" >> $GITHUB_OUTPUT
+        else
+          # For debugging; don't send success to CI summary (reduce noise).
+          echo > $file
+          echo "✅🔬 All tests passed"
         fi
+
       shell: bash
 
     - name: Upload CI summary
       if: steps.summary.outputs.file
       uses: actions/upload-artifact@v4
       with:
-        name: summary-tests
+        name: ${{ inputs.upload-name }}
         path: ${{ steps.summary.outputs.file }}
         if-no-files-found: error
