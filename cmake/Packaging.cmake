@@ -20,6 +20,9 @@
 macro(configure_packaging)
 
   set(DESKFLOW_PROJECT_RES_DIR ${PROJECT_SOURCE_DIR}/res)
+  configure_file(${CMAKE_SOURCE_DIR}/cmake/CPackOptions.cmake.in
+                 ${CMAKE_BINARY_DIR}/cmake/CPackOptions.cmake @ONLY)
+  set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/CPackOptions.cmake)
 
   if(${BUILD_INSTALLER})
     set(CPACK_PACKAGE_NAME ${DESKFLOW_APP_ID})
@@ -28,6 +31,9 @@ macro(configure_packaging)
     set(CPACK_PACKAGE_VENDOR ${DESKFLOW_AUTHOR_NAME})
     set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 
+    if(NOT CPACK_PACKAGE_VERSION)
+      set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
+    endif()
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       configure_windows_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -52,7 +58,6 @@ macro(configure_windows_packaging)
 
   message(VERBOSE "Configuring Windows installer")
 
-  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_MS})
   set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
 
   set(DESKFLOW_MSI_64_GUID
@@ -74,8 +79,6 @@ endmacro()
 macro(configure_mac_packaging)
 
   message(VERBOSE "Configuring macOS app bundle")
-
-  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
 
   set(CMAKE_INSTALL_RPATH
       "@loader_path/../Libraries;@loader_path/../Frameworks")
@@ -99,7 +102,6 @@ macro(configure_linux_packaging)
 
   message(VERBOSE "Configuring Linux packaging")
 
-  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_LINUX})
   set(CPACK_GENERATOR "DEB;RPM")
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${DESKFLOW_MAINTAINER})
