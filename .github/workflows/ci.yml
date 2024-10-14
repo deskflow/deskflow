@@ -5,12 +5,10 @@
 name: CI
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Deskflow version number
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
   pull_request:
     types:
       - opened
@@ -24,8 +22,6 @@ on:
       - '.gitignore'
       - '.gitattributes'
       - 'cspell.json'
-  schedule:
-    - cron: "0 5 * * *" # 5am UTC
 
 env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
