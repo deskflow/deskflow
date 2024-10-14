@@ -105,7 +105,7 @@ std::string ArchFileUnix::getProfileDirectory() {
     dir = m_profileDirectory;
   } else {
 #if WINAPI_XWINDOWS
-    dir = getUserDirectory().append("/." DESKFLOW_APP_ID);
+    dir = getUserDirectory().append("/.config/" DESKFLOW_APP_NAME);
 #else
     dir = getUserDirectory().append("/Library/" DESKFLOW_APP_NAME);
 #endif

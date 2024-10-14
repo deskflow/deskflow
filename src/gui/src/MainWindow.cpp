@@ -440,7 +440,7 @@ void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
 
 void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
   QMessageBox::information(
-      this, "SSL/TLS fingerprint", TlsFingerprint::local().readFirst());
+      this, "TLS fingerprint", TlsFingerprint::local().readFirst());
 }
 
 void MainWindow::on_m_pRadioGroupServer_clicked(bool) {

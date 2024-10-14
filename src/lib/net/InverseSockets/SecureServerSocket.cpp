@@ -69,10 +69,10 @@ std::string SecureServerSocket::getCertificateFileName() const {
   auto certificateFilename = ArgParser::argsBase().m_tlsCertFile;
 
   if (certificateFilename.empty()) {
-    // default location of the TLS cert file in users dir
+    // TODO: Reduce duplication of these strings between here and
+    // SecureSocket.cpp
     certificateFilename = deskflow::string::sprintf(
-        "%s/SSL/" DESKFLOW_APP_NAME ".pem",
-        ARCH->getProfileDirectory().c_str());
+        "%s/tls/" DESKFLOW_APP_ID ".pem", ARCH->getProfileDirectory().c_str());
   }
 
   return certificateFilename;
