@@ -1,4 +1,32 @@
-# Build Deskflow
+<!--
+    SPDX-FileCopyrightText: 2024 Symless Ltd.
+    SPDX-License-Identifier: CC0-1.0
+-->
+
+# Building Deskflow
+
+## Configuration
+
+CMake options:
+
+|         Option           |            Description                  |   Default Value    | Additional requirements |
+:-------------------------:|:---------------------------------------:|:------------------:|:-----------------------:|
+| CMAKE_BUILD_TYPE         | Type of Build that is produced          | ReleaseWithDebInfo | |
+| DOCS                     | Build Documentation                     | ON                 | `doxygen` |
+| BUILD_GUI                | Build GUI                               | ON                 | |
+| BUILD_INSTALLER          | Build installers/packages               | ON                 | |
+| BUILD_TESTS              | Build unit tests and integration tests  | ON                 | |
+| BUILD_UNIFIED            | Build unified binary (client+server)    | OFF                | |
+| ENABLE_COVERAGE          | Enable test coverage                    | OFF                | `gcov` |
+| SYSTEM_LIBEI             | Use system libei (use local dep)        | ON                 | |
+| SYSTEM_LIBPORTAL         | Use system libportal (or local dep)     | ON                 | |
+| SYSTEM_GTEST             | Use system GoogleTest (or local dep)    | ON                 | |
+| SYSTEM_TOMLPLUSPLUS      | Use system tomlplusplus (or local dep)  | ON                 | |
+| SYSTEM_CLI11             | Use system CLI11                        | ON                 | |
+| LIBPORTAL_STATIC         | Use static libportal (hacky)            | OFF                | `subprojects/packagefiles/libportal/static-lib.diff` |
+
+Example cmake configuration.
+`cmake -S. -Bbuild -DSYSTEM_LIBEI=OFF`
 
 ## Developer Quick Start
 
