@@ -193,8 +193,11 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Package
-        run: python ./scripts/package.py
+        run: python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
@@ -267,8 +270,11 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Package
-        run: ./scripts/package.py
+        run: ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
           APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
@@ -344,11 +350,14 @@ jobs:
         with:
           job: linux-${{ matrix.distro.name }}
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Package
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
           LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
-        run: ./scripts/package.py
+        run: ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
 
       - name: Upload
         uses: actions/upload-artifact@v4

@@ -6,10 +6,9 @@ runs:
 
   steps:
     - run: |
-        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-          echo "DESKFLOW_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
-        fi
-        if [[ "${{ github.event.inputs.version }}" != "" ]]; then
-          echo "DESKFLOW_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        if [[ "$GITHUB_REF" == *"tags/v"* ]]; then
+          echo "DESKFLOW_VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        else
+          echo "DESKFLOW_VERSION=$(git describe --long | sed 's/-/./g;s/v//g'  | grep -o '^[0-9]*.[0-9]*.[0-9]*.[0-9]*')">> $GITHUB_ENV
         fi
       shell: bash
