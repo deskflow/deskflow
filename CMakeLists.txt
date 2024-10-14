@@ -80,10 +80,15 @@ include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
 include(cmake/Packaging.cmake)
 
+include(GNUInstallDirs)
+
 configure_definitions()
 configure_build()
 configure_libs()
 configure_packaging()
+
+option(BUILD_DOCS "Build documentation" ON)
+add_subdirectory(doc)
 
 add_subdirectory(src)
 
