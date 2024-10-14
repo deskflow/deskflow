@@ -1,8 +1,19 @@
 name: "CodeQL Analysis"
 
+# According to the docs, the CodeQL workflow should be triggered directly by push to master
+# and by pull requests (we only run this on open PRs as it's very slow). We also use the
+# `workflow_dispatch` event is also enabled to allow manual triggering of the workflow for testing.
+#
+# We should not trigger this workflow with `workflow_call` as this causes the error:
+#   "1 configuration present on `master` was not found"
+#
+# Sadly, this means we can't roll it into our monolithic CI workflow.
 on:
   workflow_dispatch:
-  workflow_call:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [master]
 
 jobs:
   analyze:
