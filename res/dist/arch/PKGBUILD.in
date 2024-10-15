@@ -20,6 +20,7 @@ depends=(
   'libxkbcommon-x11'
   'libnotify'
   'hicolor-icon-theme'
+  'pugixml'
   'qt6-base'
   'qt6-tools'
   'libei'
