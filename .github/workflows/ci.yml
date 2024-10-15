@@ -6,7 +6,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     tags:
       - 'v*'
   pull_request:
@@ -401,30 +401,30 @@ jobs:
           usesh: true
           run: ${{ env.DESKFLOW_BUILD_CMD }}
 
-  release_assets:
-    name: Release
+  release:
     needs: ci-passed
     runs-on: ubuntu-latest
+
     steps:
-    - name: Download Files
-      uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
 
-    - name: Deploy Continuous
-      if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
-      uses: crowbarmaster/GH-Automatic-Releases@latest
-      with:
-       repo_token: "${{ secrets.DEPLOY_TOKEN }}"
-       automatic_release_tag: "continuous"
-       prerelease: false
-       title: "Continuous Build"
-       files: |
-         package-*/*
+      - name: Deploy continuous
+        if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
+        uses: crowbarmaster/GH-Automatic-Releases@latest
+        with:
+          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+          automatic_release_tag: "continuous"
+          prerelease: false
+          title: "Continuous Build"
+          files: |
+            package-*/*
 
-    - name: Deploy Release
-      if: contains(github.ref, '/tags/v')
-      uses: crowbarmaster/GH-Automatic-Releases@latest
-      with:
-       repo_token: "${{ secrets.DEPLOY_TOKEN }}"
-       prerelease: false
-       files: |
-         package-*/*
+      - name: Deploy release
+        if: contains(github.ref, '/tags/v')
+        uses: crowbarmaster/GH-Automatic-Releases@latest
+        with:
+          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+          prerelease: false
+          files: |
+            package-*/*
