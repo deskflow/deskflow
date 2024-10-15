@@ -104,16 +104,16 @@ macro(post_config_all)
       VERBATIM
       COMMENT "Copying files to bin dir")
 
-    set(dependencies synergyd)
+    set(dependencies ${DAEMON_BINARY_NAME})
 
     if(BUILD_GUI)
-      list(APPEND dependencies synergy)
+      list(APPEND dependencies ${GUI_BINARY_NAME})
     endif()
 
     if(BUILD_UNIFIED)
-      list(APPEND dependencies synergy-core)
+      list(APPEND dependencies ${CORE_BINARY_NAME})
     else()
-      list(APPEND dependencies synergyc synergys)
+      list(APPEND dependencies ${CLIENT_BINARY_NAME} ${SERVER_BINARY_NAME})
     endif()
 
     add_dependencies(run_post_build ${dependencies})
