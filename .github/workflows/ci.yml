@@ -326,8 +326,22 @@ jobs:
       - name: Configure
         run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
-      - name: Build
-        run: cmake --build build -j8
+      - name: Build Package
+        if: ${{ matrix.distro.arch-like != 'true'}}
+        run: cmake --build build -j8 --target package
+
+      - name: Build Package (Arch-like)
+        if: ${{ matrix.distro.arch-like == 'true' }}
+        run: |
+          cmake --build build -j8
+          sudo chown -R build build
+          cd build
+          sudo -u build makepkg -s
+          export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
+          export ARCH=$(uname -m)
+          mv *.pkg.* $(ls *.pkg.* | sed "s/$ARCH/$OSNAME-$ARCH/g")
+          cd ..
+
 
       - name: Tests
         uses: ./.github/actions/run-tests
@@ -335,20 +349,11 @@ jobs:
         with:
           job: linux-${{ matrix.distro.name }}
 
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      - name: Package
-        env:
-          LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
-          LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
-        run: ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
-
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
-          path: ${{ env.PACKAGE_PATH }}
+          path: ${{github.workspace}}/build/deskflow[-_]*.*
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
