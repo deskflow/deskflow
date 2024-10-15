@@ -92,11 +92,9 @@ def package(
     elif env.is_linux():
         linux_package(
             filename_base,
-            filename_prefix,
             dist_dir,
             test_cmd,
             package_name,
-            version,
             leave_test_installed,
         )
     else:
@@ -149,16 +147,12 @@ def mac_package(filename_base, source_dir, project_build_dir, dist_dir, product_
 
 def linux_package(
     filename_base,
-    filename_prefix,
     dist_dir,
     test_cmd,
     package_name,
-    version,
     leave_test_installed,
 ):
     import lib.linux as linux
-
-    extra_packages = env.get_env_bool("LINUX_EXTRA_PACKAGES", False)
 
     linux.package(
         filename_base,
@@ -168,18 +162,6 @@ def linux_package(
         PackageType.DISTRO,
         leave_test_installed,
     )
-
-    if extra_packages:
-        filename_base = get_filename_base(
-            version, filename_base, use_linux_distro=False
-        )
-        linux.package(
-            filename_prefix,
-            dist_dir,
-            test_cmd,
-            package_name,
-            PackageType.TGZ,
-        )
 
 
 if __name__ == "__main__":

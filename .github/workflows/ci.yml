@@ -330,7 +330,6 @@ jobs:
 
       - name: Package
         env:
-          LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
           LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
         run: ./scripts/package.py
 

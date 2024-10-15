@@ -3,20 +3,17 @@
     {
       "name": "debian-13-amd64",
       "container": "deskflow/deskflow:debian-13-amd64",
-      "runs-on": "ubuntu-latest",
-      "extra-packages": true
+      "runs-on": "ubuntu-latest"
     },
     {
       "name": "debian-12-arm64",
       "container": "deskflow/deskflow:debian-12-arm64",
-      "runs-on": "ubuntu-24.04-4-core-arm64",
-      "extra-packages": true
+      "runs-on": "ubuntu-24.04-4-core-arm64"
     },
     {
       "name": "debian-12-amd64",
       "container": "deskflow/deskflow:debian-12-amd64",
-      "runs-on": "ubuntu-latest",
-      "extra-packages": true
+      "runs-on": "ubuntu-latest"
     },
     {
       "name": "ubuntu-24.04-amd64",
