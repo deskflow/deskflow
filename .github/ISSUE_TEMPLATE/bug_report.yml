@@ -27,7 +27,7 @@ body:
     attributes:
       label: Deskflow version number
       description: You can find the Deskflow version number on the about screen.
-      placeholder: 1.2.3
+      placeholder: 1.2.3.4
     validations:
       required: true
 
@@ -39,9 +39,10 @@ body:
       options:
         # Empty option to force selection
         -
-        - Local developer build (built it yourself)
+        - Deskflow package (downloaded from Deskflow)
         - Community package (apt, dnf, brew, etc.)
-        - Deskflow package (downloaded from us)
+        - Local developer build (built it myself)
+        - Other (please specify)
       default: 0
     validations:
       required: true
@@ -57,7 +58,7 @@ body:
         - label: Linux (X11)
         - label: Linux (Wayland)
         - label: BSD-derived
-        - label: Other
+        - label: Other (please specify)
     validations:
       required: true
 
@@ -106,8 +107,6 @@ body:
         - Windows 11 server, macOS 15 client
         - Each computer has a single monitor
         - Windows is on the left, macOS is on the right
-    validations:
-      required: true
 
   - type: textarea
     id: repro-steps
@@ -121,8 +120,6 @@ body:
         1. Start Deskflow
         2. Click 'Configure Server'
         3. Click 'Apply'
-    validations:
-      required: true
 
   - type: textarea
     id: logs
