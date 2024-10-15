@@ -31,6 +31,7 @@ env:
 jobs:
   pr-comment-flags:
     runs-on: ubuntu-latest
+    needs: [lint-cmake, lint-clang]
     if: ${{ github.event_name == 'pull_request' }}
 
     outputs:
@@ -57,7 +58,7 @@ jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
     runs-on: ubuntu-latest
-    needs: [lint-cmake, lint-clang, windows, macos, linux, unix]
+    needs: [test-results, unix]
 
     steps:
       - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
@@ -106,7 +107,7 @@ jobs:
     uses: ./.github/workflows/valgrind-analysis.yml
 
   analyse-sonarcloud:
-    needs: [lint-cmake, lint-clang, pr-comment-flags]
+    needs: pr-comment-flags
     if: ${{ needs.pr-comment-flags.outputs.no-sonar != 'true' }}
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
@@ -282,6 +283,7 @@ jobs:
           path: ${{ env.PACKAGE_PATH }}
 
   linux-matrix:
+    needs: [lint-cmake, lint-clang]
     runs-on: ubuntu-latest
 
     outputs:
@@ -300,7 +302,7 @@ jobs:
           jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
 
   linux:
-    needs: [linux-matrix, lint-cmake, lint-clang]
+    needs: linux-matrix
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
@@ -401,7 +403,7 @@ jobs:
 
   release_assets:
     name: Release
-    needs: [windows, linux, macos]
+    needs: ci-passed
     runs-on: ubuntu-latest
     steps:
     - name: Download Files
