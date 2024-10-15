@@ -1,5 +1,5 @@
 name: "Lint clang"
-description: "Clang Ling Sources"
+description: "Lint with Clang formatter"
 
 runs:
   using: "composite"
@@ -14,8 +14,8 @@ runs:
         source .venv/bin/activate
         pip install pyyaml clang_format
 
-    - name: Linting with CMake formatter
+    - name: Linting with Clang formatter
       uses: ./.github/actions/lint-error
       with:
         format-command: ./scripts/lint_clang.py -f
-        format-tool: "cmake-format"
+        format-tool: "clang-format"
