@@ -131,6 +131,9 @@ jobs:
             runs-on: ${{ vars.CI_WINDOWS_RUNNER || 'windows-2022' }}
 
     steps:
+      - name: Test fail
+        run: exit 1
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
