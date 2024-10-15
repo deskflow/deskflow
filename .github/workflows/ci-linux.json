@@ -64,13 +64,13 @@
       "name": "archlinux-amd64",
       "container": "deskflow/deskflow:archlinux-amd64",
       "runs-on": "ubuntu-latest",
-      "package-user": "build"
+      "arch-like": "true"
     },
     {
       "name": "manjaro-amd64",
       "container": "deskflow/deskflow:manjaro-amd64",
       "runs-on": "ubuntu-latest",
-      "package-user": "build"
+      "arch-like": "true"
     }
   ]
 }
