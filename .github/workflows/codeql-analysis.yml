@@ -15,6 +15,7 @@ on:
     paths-ignore:
       - '**/*.md'
       - '.github/ISSUE_TEMPLATE/**'
+      - '.editorconfig'
       - '.env-example'
       - '.gitignore'
       - '.gitattributes'
