@@ -70,6 +70,7 @@ add_definitions(-DDESKFLOW_VERSION="${DESKFLOW_VERSION}")
 project(
   deskflow
   VERSION ${DESKFLOW_VERSION}
+  DESCRIPTION "Mouse and keyboard sharing utility"
   LANGUAGES C CXX)
 
 message(STATUS "Building ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}")
