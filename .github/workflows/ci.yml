@@ -137,7 +137,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{github.workspace}}/vcpkg
+            ${{github.workspace}}/build/vcpkg
 
           key: vcpkg-${{ runner.os }}-1
 
