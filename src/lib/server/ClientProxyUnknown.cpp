@@ -62,9 +62,13 @@ ClientProxyUnknown::ClientProxyUnknown(
   m_timer = m_events->newOneShotTimer(timeout, this);
   addStreamHandlers();
 
+  std::string helloMessage =
+      std::string(kSynergyProtocolName).append(kMsgHelloArgs);
+
   LOG((CLOG_DEBUG1 "saying hello"));
   ProtocolUtil::writef(
-      m_stream, kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
+      m_stream, helloMessage.c_str(), kProtocolMajorVersion,
+      kProtocolMinorVersion);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown() {
