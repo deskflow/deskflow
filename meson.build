@@ -9,13 +9,6 @@ if host_machine.system() == 'windows'
   subproject('wintoast')
 endif
 
-system_gtest = get_option('system-gtest')
-if system_gtest
-  dependency('gtest', required: false)
-else
-  subproject('gtest')
-endif
-
 if host_machine.system() == 'linux'
 
   system_libei = get_option('system-libei')

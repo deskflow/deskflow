@@ -14,6 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include(FetchContent)
+set(INSTALL_GTEST OFF)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        b514bdc898e2951020cbdca1304b75f5950d1f59 # release-1.15.2
+    GIT_SHALLOW 1
+    FIND_PACKAGE_ARGS NAMES GTest
+)
+FetchContent_MakeAvailable(googletest)
+
 macro(config_all_tests)
 
   # Required to load images from .qrc file.
@@ -146,8 +157,8 @@ macro(config_test_deps)
       mt
       ipc
       gui
-      ${GMOCK_LIB}
-      ${GTEST_LIB}
+      GTest::gtest
+      GTest::gmock
       ${libs})
 
 endmacro()
