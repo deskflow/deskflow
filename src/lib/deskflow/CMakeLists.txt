@@ -16,12 +16,20 @@
 
 include(FetchContent)
 FetchContent_Declare(
-  tomlplusplus
+  tomlplusplus-proj
   GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
   GIT_TAG        v3.4.0
   FIND_PACKAGE_ARGS NAMES tomlplusplus
 )
-FetchContent_MakeAvailable(tomlplusplus)
+
+FetchContent_Declare(
+  cli11-proj
+  QUIET
+  GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+  GIT_TAG v2.4.2
+  FIND_PACKAGE_ARGS NAMES CLI11
+)
+FetchContent_MakeAvailable(tomlplusplus-proj cli11-proj)
 
 set(lib_name app)
 
@@ -63,6 +71,7 @@ if(UNIX)
     mt
     server
     tomlplusplus::tomlplusplus
+    CLI11::CLI11
 )
 
   if(NOT APPLE)
