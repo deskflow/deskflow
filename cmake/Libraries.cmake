@@ -525,9 +525,9 @@ macro(configure_openssl)
   if(WIN32) #Used for dev in TLS and WIX
     cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE
                "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows")
-    message(STATUS "SET OPENSSL ROOT: ${OPENSSL_ROOT_DIR}")
+    message(VERBOSE "Set OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
     set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
-    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_ROOT_DIR}")
+    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
   endif()
 
 endmacro()
