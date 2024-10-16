@@ -1,4 +1,3 @@
 option('system-libportal', type: 'boolean', value: true, description: 'Use system libportal')
 option('system-libei', type: 'boolean', value: true, description: 'Use system libei')
-option('system-tomlplusplus', type: 'boolean', value: true, description: 'Use system tomlplusplus')
 option('system-cli11', type: 'boolean', value: true, description: 'Use system cli11')

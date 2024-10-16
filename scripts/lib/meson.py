@@ -33,7 +33,6 @@ def setup(no_system_list, static_list):
     # TODO: These special Windows exceptions should probably be in Meson
     # or somewhere other than this script, as it's a bit hacky.
     if env.is_windows():
-        cmd.append("-Dsystem-tomlplusplus=false")
         cmd.append("-Dsystem-cli11=false")
 
     for subproject in no_system_list or []:
