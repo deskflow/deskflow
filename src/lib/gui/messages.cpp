@@ -285,17 +285,6 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath) {
           .arg(nativePath));
 }
 
-void showWaylandExperimental(QWidget *parent) {
-  QMessageBox::information(
-      parent, "Wayland support (experimental)",
-      QString(
-          "<p>Heads up!</p>"
-          "<p>Wayland support is experimental and contains bugs.</p>"
-          R"(<p>Please <a href="%1" style="color: %2">report bugs</a> to us if you find any.</p>)"
-          "<p>Happy testing!</p>")
-          .arg(kAppName, kUrlHelp, kColorSecondary));
-}
-
 void showWaylandLibraryError(QWidget *parent) {
   QMessageBox::critical(
       parent, "Library problem",

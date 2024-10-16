@@ -29,7 +29,6 @@ class WaylandWarnings {
 public:
   struct Deps {
     virtual ~Deps() = default;
-    virtual void showWaylandExperimental(QWidget *parent);
     virtual void showWaylandLibraryError(QWidget *parent);
   };
 
@@ -44,7 +43,6 @@ public:
 
 private:
   bool m_errorShown{false};
-  bool m_warningShown{false};
   std::shared_ptr<Deps> m_pDeps;
 };
 
