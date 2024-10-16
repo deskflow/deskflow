@@ -31,10 +31,6 @@ void WaylandWarnings::Deps::showWaylandLibraryError(QWidget *parent) {
   messages::showWaylandLibraryError(parent);
 }
 
-void WaylandWarnings::Deps::showWaylandExperimental(QWidget *parent) {
-  messages::showWaylandExperimental(parent);
-}
-
 //
 // WaylandWarnings
 //
@@ -54,11 +50,6 @@ void WaylandWarnings::showOnce(
       qWarning("missing required wayland lib(s) or feature");
     }
     return;
-  }
-
-  if (!m_warningShown) {
-    m_warningShown = true;
-    m_pDeps->showWaylandExperimental(parent);
   }
 }
 
