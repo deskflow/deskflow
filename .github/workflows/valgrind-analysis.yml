@@ -22,10 +22,15 @@ jobs:
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git fetch --tags --force
 
+      - name: Add Kitware repo
+        uses: ./.github/actions/add-kitware-repo
+        with:
+          distro: jammy
+
       - name: Install dependencies
         run: |
-          ./scripts/install_deps.py &&
-          apt install valgrind -y
+          ./scripts/install_deps.py
+          apt install valgrind cmake -y
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive

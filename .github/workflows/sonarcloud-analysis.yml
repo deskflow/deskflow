@@ -33,10 +33,15 @@ jobs:
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git fetch --tags --force
 
+      - name: Add Kitware repo
+        uses: ./.github/actions/add-kitware-repo
+        with:
+          distro: jammy
+
       - name: Install dependencies
         run: |
-          ./scripts/install_deps.py &&
-          apt install curl unzip -y &&
+          ./scripts/install_deps.py
+          apt install curl unzip cmake -y
           pip install gcovr
         env:
           # Prevent apt prompting for input.

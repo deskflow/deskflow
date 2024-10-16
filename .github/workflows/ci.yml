@@ -317,8 +317,19 @@ jobs:
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git fetch --tags --force
 
+      - name: Add Kitware repo
+        if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
+        uses: ./.github/actions/add-kitware-repo
+        with:
+          distro: jammy
+
+      - name: Update Cmake
+        if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
+        run: apt install cmake -y
+
       - name: Install dependencies
-        run: ./scripts/install_deps.py ${{ matrix.distro.extra-dep-args }}
+        run: |
+          ./scripts/install_deps.py
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive
