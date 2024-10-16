@@ -25,7 +25,7 @@
 #include <vector>
 
 #if HAVE_TOMLPLUSPLUS
-#include <toml++/toml.hpp>
+#include <toml++/toml.h>
 #endif
 
 namespace deskflow {
