@@ -1,0 +1,32 @@
+# Add Kitware repo action
+# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-License-Identifier: MIT
+
+name: "Add Kitware repo"
+description: "Add kitware repo for debian like distros"
+
+inputs:
+  distro:
+    description: "The Distro codename, kitware uses ubuntu code names [noble, jammy, focal] "
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Cmake-3.24
+      run: |
+          apt update -y -qqq
+          apt install ca-certificates gpg wget -y -qqq
+          # Deskflow requires at least CMake 3.24
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ ${{ inputs.distro }} main' \
+            > /etc/apt/sources.list.d/kitware.list
+          apt update -y -qqq
+      env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
+      shell: bash
