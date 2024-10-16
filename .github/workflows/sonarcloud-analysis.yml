@@ -35,8 +35,17 @@ jobs:
 
       - name: Install dependencies
         run: |
+          apt-get update -y
+          apt-get install ca-certificates gpg wget -y
+          # Deskflow requires at least CMake 3.24
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' \
+            > /etc/apt/sources.list.d/kitware.list
           ./scripts/install_deps.py &&
-          apt install curl unzip -y &&
+          apt install curl unzip cmake -y &&
           pip install gcovr
         env:
           # Prevent apt prompting for input.
