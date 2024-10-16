@@ -118,11 +118,23 @@ extern const char *const kBarrierProtocolName;
 // keyboard layout list.
 extern const char *const kMsgHello;
 
+// args part of kMsgHello.
+// used as part of a dynamic hello message.
+// this can be superseded by kMsgHello once `ProtocolUtil::writef`
+// supports fixed length strings (e.g. %7s).
+extern const char *const kMsgHelloArgs;
+
 // respond to hello from server;  secondary -> primary
 // $1 = protocol major version number supported by client.  $2 =
 // protocol minor version number supported by client.  $3 = client
 // name.
 extern const char *const kMsgHelloBack;
+
+// args part of kMsgHelloBack.
+// used as part of a dynamic hello message.
+// this can be superseded by kMsgHelloBack once `ProtocolUtil::writef`
+// supports fixed length strings (e.g. %7s).
+extern const char *const kMsgHelloBackArgs;
 
 //
 // command codes

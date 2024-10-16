@@ -60,8 +60,10 @@ ClientProxyUnknown::ClientProxyUnknown(deskflow::IStream *stream, double timeout
   m_timer = m_events->newOneShotTimer(timeout, this);
   addStreamHandlers();
 
+  std::string helloMessage = std::string(kSynergyProtocolName).append(kMsgHelloArgs);
+
   LOG((CLOG_DEBUG1 "saying hello"));
-  ProtocolUtil::writef(m_stream, kMsgHello, kProtocolMajorVersion, kProtocolMinorVersion);
+  ProtocolUtil::writef(m_stream, helloMessage.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
@@ -225,8 +227,7 @@ void ClientProxyUnknown::handleData(const Event &, void *)
     // parse the reply to hello
     SInt16 major, minor;
     std::string protocolName;
-    if (!ProtocolUtil::readf(
-            m_stream, kMsgHelloBack, &protocolName, &major, &minor, &name)) {
+    if (!ProtocolUtil::readf(m_stream, kMsgHelloBack, &protocolName, &major, &minor, &name)) {
       throw XBadClient();
     }
 

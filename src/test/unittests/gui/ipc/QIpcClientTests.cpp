@@ -23,11 +23,15 @@
 using testing::_;
 using testing::StrEq;
 
+namespace {
+
 class MockStream : public QDataStreamProxy
 {
 public:
   MOCK_METHOD(qint64, writeRawData, (const char *, int), (override));
 };
+
+} // namespace
 
 TEST(QIpcClientTests, sendCommand_anyCommand_commandSent)
 {

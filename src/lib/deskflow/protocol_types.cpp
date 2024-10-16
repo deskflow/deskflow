@@ -24,7 +24,9 @@ const char *const kBarrierProtocolName = "Barrier";
 // The protocol name string within the hello and hello back messages must be
 // 7 chars for backward compatibility (Synergy and Barrier are 7 chars).
 const char *const kMsgHello = "%7s%2i%2i";
+const char *const kMsgHelloArgs = "%2i%2i";
 const char *const kMsgHelloBack = "%7s%2i%2i%s";
+const char *const kMsgHelloBackArgs = "%2i%2i%s";
 const char *const kMsgCNoop = "CNOP";
 const char *const kMsgCClose = "CBYE";
 const char *const kMsgCEnter = "CINN%2i%2i%4i%2i";
