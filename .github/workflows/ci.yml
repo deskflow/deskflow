@@ -318,10 +318,25 @@ jobs:
           git fetch --tags --force
 
       - name: Install dependencies
-        run: ./scripts/install_deps.py ${{ matrix.distro.extra-dep-args }}
+        run: ./scripts/install_deps.py
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive
+
+      - name: Install Cmake
+        if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
+        run: |
+          apt-get update -y
+          apt-get install ca-certificates gpg wget -y
+          # Deskflow requires at least CMake 3.24
+          # This mirrors instructions at https://apt.kitware.com
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+            | gpg --dearmor - \
+            > /usr/share/keyrings/kitware-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' \
+            > /etc/apt/sources.list.d/kitware.list
+          apt update -y
+          apt install cmake -y
 
       - name: Configure
         run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
