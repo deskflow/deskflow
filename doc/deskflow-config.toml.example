@@ -1,0 +1,12 @@
+[client.args]
+no-daemon = true
+no-tray = true
+debug = "DEBUG2"
+name = "tuvok-tux"
+_last = "spock.local:24800"
+
+[server.args]
+no-daemon = true
+no-tray = true
+debug = "DEBUG2"
+name = "spock.local"
