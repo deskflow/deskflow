@@ -15,8 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if HAVE_TOMLPLUSPLUS
-
 #include "deskflow/Config.h"
 
 #include <fstream>
@@ -133,5 +131,3 @@ TEST(ConfigTests, load_noArgs_returnsFalse)
 
   ASSERT_FALSE(result);
 }
-
-#endif // HAVE_TOMLPLUSPLUS

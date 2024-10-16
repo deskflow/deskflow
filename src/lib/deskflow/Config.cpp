@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 
-#if HAVE_TOMLPLUSPLUS
-#include <toml++/toml.hpp>
-#endif
+// versiion 3.4.0 changes it to .hpp
+// it provides a fall back .h
+#include <toml++/toml.h>
 
 namespace deskflow {
 
@@ -47,7 +47,6 @@ int Config::argc() const
 bool Config::load(const std::string &firstArg)
 {
 
-#if HAVE_TOMLPLUSPLUS
   if (!firstArg.empty()) {
     m_args.push_back(firstArg);
   }
@@ -114,10 +113,6 @@ bool Config::load(const std::string &firstArg)
   }
 
   return true;
-#else
-  LOG((CLOG_ERR "toml++ not available, config file not loaded"));
-  return false;
-#endif // HAVE_TOMLPLUSPLUS
 }
 
 } // namespace deskflow
