@@ -47,7 +47,10 @@
 #include <cstring>
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <sstream>
+
+using namespace deskflow::client;
 
 //
 // Client
@@ -97,6 +100,19 @@ Client::Client(
         new TMethodEventJob<Client>(this, &Client::handleFileRecieveCompleted)
     );
   }
+
+  m_pHelloBack = std::make_unique<HelloBack>(std::make_shared<HelloBack::Deps>(
+      [this]() {
+        sendConnectionFailedEvent("got invalid hello message from server");
+        cleanupTimer();
+        cleanupConnection();
+      },
+      [this](int major, int minor) {
+        sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
+        cleanupTimer();
+        cleanupConnection();
+      }
+  ));
 }
 
 Client::~Client()
@@ -570,7 +586,7 @@ void Client::cleanupStream()
 
 void Client::handleConnected(const Event &, void *)
 {
-  LOG((CLOG_DEBUG1 "connected;  wait for hello"));
+  LOG((CLOG_DEBUG1 "connected, waiting for hello"));
   cleanupConnecting();
   setupConnection();
 
@@ -651,69 +667,9 @@ void Client::handleClipboardGrabbed(const Event &event, void *)
   }
 }
 
-bool Client::isCompatible(int major, int minor) const
-{
-  const std::map<int, std::set<int>> compatibleTable{
-      {6, {7, 8}}, // 1.6 is compatible with 1.7 and 1.8
-      {7, {8}}     // 1.7 is compatible with 1.8
-  };
-
-  bool isCompatible = false;
-
-  if (major == kProtocolMajorVersion) {
-    auto versions = compatibleTable.find(minor);
-    if (versions != compatibleTable.end()) {
-      auto compatibleVersions = versions->second;
-      isCompatible = compatibleVersions.find(kProtocolMinorVersion) != compatibleVersions.end();
-    }
-  }
-
-  return isCompatible;
-}
-
 void Client::handleHello(const Event &, void *)
 {
-  SInt16 major, minor;
-
-  // as luck would have it, both "Synergy" and "Barrier" are 7 chars,
-  // so we eat 7 chars and then test for either protocol name.
-  // we cannot re-use `readf` to check for various hello messages,
-  // as `readf` eats bytes (advances the stream position reference).
-  std::string protocolName;
-  ProtocolUtil::readf(m_stream, kMsgHello, &protocolName, &major, &minor);
-
-  if (protocolName != kSynergyProtocolName && protocolName != kBarrierProtocolName) {
-    sendConnectionFailedEvent("got invalid hello message from server");
-    cleanupTimer();
-    cleanupConnection();
-    return;
-  }
-
-  // check versions
-  LOG_DEBUG("got hello version %s, %d.%d", protocolName.c_str(), major, minor);
-
-  SInt16 helloBackMajor = kProtocolMajorVersion;
-  SInt16 helloBackMinor = kProtocolMinorVersion;
-
-  if (isCompatible(major, minor)) {
-    // because 1.6 is compatable with 1.7 and 1.8 - downgrading protocol for
-    // server
-    LOG_NOTE("downgrading protocol version for server");
-    helloBackMinor = minor;
-  } else if (major < kProtocolMajorVersion || (major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
-    sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
-    cleanupTimer();
-    cleanupConnection();
-    return;
-  }
-
-  // say hello back
-  LOG_DEBUG("say hello version %s %d.%d", protocolName.c_str(), helloBackMajor, helloBackMinor);
-
-  // dynamically build write format for hello back since `writef` doesn't
-  // support fixed length strings yet.
-  std::string helloBackMessage = protocolName + "%2i%2i%s";
-  ProtocolUtil::writef(m_stream, helloBackMessage.c_str(), helloBackMajor, helloBackMinor, &m_name);
+  m_pHelloBack->handleHello(m_stream, m_name);
 
   // now connected but waiting to complete handshake
   setupScreen();
