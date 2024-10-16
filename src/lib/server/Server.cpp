@@ -428,13 +428,34 @@ void Server::switchScreen(
     BaseClientProxy *dst, SInt32 x, SInt32 y, bool forScreensaver) {
   assert(dst != NULL);
 
-#ifndef NDEBUG
-  {
-    SInt32 dx, dy, dw, dh;
-    dst->getShape(dx, dy, dw, dh);
-    assert(x >= dx && y >= dy && x < dx + dw && y < dy + dh);
+  SInt32 dx, dy, dw, dh;
+  dst->getShape(dx, dy, dw, dh);
+
+  // any of these conditions seem to trigger when the portal permission dialog
+  // is visible on wayland. this was previously an assert, but that's pretty
+  // annoying since it makes the mouse unusable on the server and you'll have to
+  // ssh into your machine to kill it. better to just log a warning.
+  if (x < dx) {
+    LOG_WARN(
+        "on switch, x (%d) is less than the left boundary dx (%d)", //
+        x, dx);
   }
-#endif
+  if (y < dy) {
+    LOG_WARN(
+        "on switch, y (%d) is less than the top boundary dy (%d)", //
+        y, dy);
+  }
+  if (x >= dx + dw) {
+    LOG_WARN(
+        "on switch, x (%d) exceeds the right boundary (dx + width = %d)", //
+        x, dx + dw);
+  }
+  if (y >= dy + dh) {
+    LOG_WARN(
+        "on switch, y (%d) exceeds the bottom boundary (dy + height = %d)", //
+        y, dy + dh);
+  }
+
   assert(m_active != NULL);
 
   LOG(
