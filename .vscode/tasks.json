@@ -14,9 +14,6 @@
       "problemMatcher": {
         "base": "$gcc",
         "fileLocation": ["absolute"]
-      },
-      "presentation": {
-        "revealProblems": "onProblem"
       }
     },
     {
