@@ -24,6 +24,8 @@
 
 class IEventQueue;
 
+namespace {
+
 class MockStream : public deskflow::IStream
 {
 public:
@@ -44,3 +46,5 @@ public:
   MOCK_METHOD(bool, isReady, (), (const, override));
   MOCK_METHOD(UInt32, getSize, (), (const, override));
 };
+
+} // namespace

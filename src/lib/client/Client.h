@@ -20,6 +20,7 @@
 
 #include "deskflow/IClient.h"
 
+#include "HelloBack.h"
 #include "base/EventTypes.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
@@ -27,6 +28,7 @@
 #include "deskflow/INode.h"
 #include "mt/CondVar.h"
 #include "net/NetworkAddress.h"
+
 #include <memory>
 
 class EventQueueTimer;
@@ -217,7 +219,6 @@ private:
   void handleDisconnected(const Event &, void *);
   void handleShapeChanged(const Event &, void *);
   void handleClipboardGrabbed(const Event &, void *);
-  bool isCompatible(int major, int minor) const;
   void handleHello(const Event &, void *);
   void handleSuspend(const Event &event, void *);
   void handleResume(const Event &event, void *);
@@ -260,4 +261,5 @@ private:
   size_t m_maximumClipboardSize;
   deskflow::ClientArgs m_args;
   size_t m_resolvedAddressesCount = 0;
+  std::unique_ptr<deskflow::client::HelloBack> m_pHelloBack;
 };
