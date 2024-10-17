@@ -59,9 +59,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#if HAVE_CLI11
 #include <CLI/CLI.hpp>
-#endif
 
 using namespace deskflow;
 
@@ -189,7 +187,6 @@ void App::initApp(int argc, const char **argv)
 {
 
   std::string configFilename;
-#if HAVE_CLI11
   CLI::App cliApp{kAppDescription, kAppName};
   cliApp.add_option("--config-toml", configFilename, "Use TOML configuration file");
 
@@ -197,7 +194,6 @@ void App::initApp(int argc, const char **argv)
   cliApp.allow_extras();
 
   cliApp.parse(argc, argv);
-#endif // HAVE_CLI11
 
   if (!configFilename.empty()) {
     Config config(configFilename, configSection());

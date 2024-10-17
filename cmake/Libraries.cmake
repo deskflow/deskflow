@@ -29,12 +29,6 @@ macro(configure_libs)
   configure_qt()
   configure_openssl()
   configure_coverage()
-  configure_tomlplusplus()
-  configure_cli11()
-
-  if(BUILD_TESTS)
-    configure_gtest()
-  endif()
 
 endmacro()
 
@@ -532,65 +526,6 @@ macro(configure_openssl)
 
 endmacro()
 
-macro(configure_gtest)
-
-  file(GLOB gtest_base_dir ${PROJECT_SOURCE_DIR}/subprojects/googletest-*)
-  if(gtest_base_dir)
-    set(DEFAULT_SYSTEM_GTEST OFF)
-  else()
-    set(DEFAULT_SYSTEM_GTEST ON)
-  endif()
-
-  # Arch Linux package maintainers:
-  # We do care about not bundling libs and didn't mean to cause upset. We made some mistakes
-  # and we're trying to put that right.
-  # The comment "They BUNDLE a fucking zip for cryptopp" in deskflow.git/PKGBUILD is only
-  # relevant to a very version of old the code, so the comment should probably be removed.
-  # If there are any problems like this in future, please do feel free send us a patch! :)
-  option(SYSTEM_GTEST "Use system GoogleTest" ${DEFAULT_SYSTEM_GTEST})
-  if(SYSTEM_GTEST)
-    message(VERBOSE "Using system GoogleTest")
-    find_package(GTest)
-    if(GTEST_FOUND)
-      # Ordinarily, we'd use GTEST_LIBRARIES, but it seems that these do not always export
-      # the required libraries (e.g. gmock) on some OS (e.g macOS with brew).
-      set(GTEST_LIB GTest::gtest)
-      set(GMOCK_LIB GTest::gmock)
-    else()
-      message(
-        FATAL_ERROR
-          "Google Test not found, re-configure with -DBUILD_TESTS=OFF or -DSYSTEM_GTEST=OFF"
-      )
-    endif()
-  else()
-    if(NOT EXISTS ${gtest_base_dir})
-      message(
-        FATAL_ERROR
-          "Google Test subproject not found, reconfigure with -DBUILD_TESTS=OFF"
-      )
-    endif()
-
-    message(VERBOSE "Using local GoogleTest")
-    set(gtest_dir ${gtest_base_dir}/googletest)
-    set(gmock_dir ${gtest_base_dir}/googlemock)
-    include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
-                        ${gmock_dir}/include)
-
-    add_library(gtest STATIC ${gtest_dir}/src/gtest-all.cc)
-    add_library(gmock STATIC ${gmock_dir}/src/gmock-all.cc)
-
-    if(UNIX)
-      # Ignore noisy GoogleTest warnings
-      set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
-      set_target_properties(gmock PROPERTIES COMPILE_FLAGS "-w")
-    endif()
-
-    set(GTEST_LIB gtest)
-    set(GMOCK_LIB gmock)
-  endif()
-
-endmacro()
-
 macro(configure_coverage)
 
   if(ENABLE_COVERAGE)
@@ -640,69 +575,6 @@ macro(configure_wintoast)
     include_directories(${WINTOAST_DIR}/include)
   else()
     message(WARNING "Subproject 'WinToast' not found")
-  endif()
-
-endmacro()
-
-macro(configure_tomlplusplus)
-  file(GLOB tomlplusplus_dir ${PROJECT_SOURCE_DIR}/subprojects/tomlplusplus-*)
-
-  if(tomlplusplus_dir)
-    set(DEFAULT_SYSTEM_TOMLPLUSPLUS OFF)
-  else()
-    set(DEFAULT_SYSTEM_TOMLPLUSPLUS ON)
-  endif()
-
-  option(SYSTEM_TOMLPLUSPLUS "Use system tomlplusplus"
-         ${DEFAULT_SYSTEM_TOMLPLUSPLUS})
-  if(SYSTEM_TOMLPLUSPLUS)
-    message(VERBOSE "Using system tomlplusplus")
-    find_package(tomlplusplus)
-    if(tomlplusplus_FOUND)
-      message(STATUS "tomlplusplus version: ${tomlplusplus_VERSION}")
-    else()
-      message(WARNING "System tomlplusplus not found")
-    endif()
-  else()
-    if(EXISTS ${tomlplusplus_dir})
-      message(VERBOSE "Using local tomlplusplus")
-      set(HAVE_TOMLPLUSPLUS true)
-      add_definitions(-DHAVE_TOMLPLUSPLUS=1)
-      include_directories(${tomlplusplus_dir}/include)
-    else()
-      message(WARNING "Local tomlplusplus subproject not found")
-    endif()
-  endif()
-endmacro()
-
-macro(configure_cli11)
-  file(GLOB cli11_dir ${PROJECT_SOURCE_DIR}/subprojects/CLI11-*)
-
-  if(cli11_dir)
-    set(DEFAULT_SYSTEM_CLI11 OFF)
-  else()
-    set(DEFAULT_SYSTEM_CLI11 ON)
-  endif()
-
-  option(SYSTEM_CLI11 "Use system CLI11" ${DEFAULT_SYSTEM_CLI11})
-  if(SYSTEM_CLI11)
-    message(VERBOSE "Using system CLI11")
-    find_package(CLI11)
-    if(CLI11_FOUND)
-      message(STATUS "CLI11 version: ${CLI11_VERSION}")
-    else()
-      message(WARNING "System CLI11 not found")
-    endif()
-  else()
-    if(EXISTS ${cli11_dir})
-      message(VERBOSE "Using local CLI11")
-      set(HAVE_CLI11 true)
-      add_definitions(-DHAVE_CLI11=1)
-      include_directories(${cli11_dir}/include)
-    else()
-      message(WARNING "Local CLI11 subproject not found at: ${cli11_dir}")
-    endif()
-
   endif()
 
 endmacro()
