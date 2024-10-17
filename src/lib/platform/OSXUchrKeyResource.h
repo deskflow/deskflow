@@ -24,7 +24,8 @@
 
 typedef TISInputSourceRef KeyLayout;
 
-class OSXUchrKeyResource : public IOSXKeyResource {
+class OSXUchrKeyResource : public IOSXKeyResource
+{
 public:
   OSXUchrKeyResource(const void *, UInt32 keyboardType);
 

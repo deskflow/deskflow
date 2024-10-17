@@ -43,50 +43,62 @@
 
 static const float s_retryDelay = 0.01f;
 
-enum { kMsgSize = 128 };
+enum
+{
+  kMsgSize = 128
+};
 
 // TODO: Reduce duplication of these strings between here and TlsFingerprint.cpp
 static const char kFingerprintDirName[] = "tls";
 static const char kFingerprintTrustedServersFilename[] = "trusted-servers";
 
-struct Ssl {
+struct Ssl
+{
   SSL_CTX *m_context;
   SSL *m_ssl;
 };
 
 SecureSocket::SecureSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+)
     : TCPSocket(events, socketMultiplexer, family),
       m_ssl(nullptr),
       m_secureReady(false),
-      m_fatal(false) {}
+      m_fatal(false)
+{
+}
 
-SecureSocket::SecureSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    ArchSocket socket)
+SecureSocket::SecureSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket)
     : TCPSocket(events, socketMultiplexer, socket),
       m_ssl(nullptr),
       m_secureReady(false),
-      m_fatal(false) {}
+      m_fatal(false)
+{
+}
 
-SecureSocket::~SecureSocket() { freeSSL(); }
+SecureSocket::~SecureSocket()
+{
+  freeSSL();
+}
 
-void SecureSocket::close() {
+void SecureSocket::close()
+{
   freeSSL();
   TCPSocket::close();
 }
 
-void SecureSocket::connect(const NetworkAddress &addr) {
+void SecureSocket::connect(const NetworkAddress &addr)
+{
   m_events->adoptHandler(
       m_events->forIDataSocket().connected(), getEventTarget(),
-      new TMethodEventJob<SecureSocket>(
-          this, &SecureSocket::handleTCPConnected));
+      new TMethodEventJob<SecureSocket>(this, &SecureSocket::handleTCPConnected)
+  );
 
   TCPSocket::connect(addr);
 }
 
-ISocketMultiplexerJob *SecureSocket::newJob() {
+ISocketMultiplexerJob *SecureSocket::newJob()
+{
   // after TCP connection is established, SecureSocket will pick up
   // connected event and do secureConnect
   if (m_connected && !m_secureReady) {
@@ -96,19 +108,22 @@ ISocketMultiplexerJob *SecureSocket::newJob() {
   return TCPSocket::newJob();
 }
 
-void SecureSocket::secureConnect() {
+void SecureSocket::secureConnect()
+{
   setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceConnect, getSocket(), isReadable(),
-      isWritable()));
+      this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+  ));
 }
 
-void SecureSocket::secureAccept() {
+void SecureSocket::secureAccept()
+{
   setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceAccept, getSocket(), isReadable(),
-      isWritable()));
+      this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
+  ));
 }
 
-TCPSocket::EJobResult SecureSocket::doRead() {
+TCPSocket::EJobResult SecureSocket::doRead()
+{
   static UInt8 buffer[4096];
   memset(buffer, 0, sizeof(buffer));
   int bytesRead = 0;
@@ -158,7 +173,8 @@ TCPSocket::EJobResult SecureSocket::doRead() {
   return kRetry;
 }
 
-TCPSocket::EJobResult SecureSocket::doWrite() {
+TCPSocket::EJobResult SecureSocket::doWrite()
+{
   static bool s_retry = false;
   static int s_retrySize = 0;
   static int s_staticBufferSize = 0;
@@ -210,7 +226,8 @@ TCPSocket::EJobResult SecureSocket::doWrite() {
   return kRetry;
 }
 
-int SecureSocket::secureRead(void *buffer, int size, int &read) {
+int SecureSocket::secureRead(void *buffer, int size, int &read)
+{
   if (m_ssl->m_ssl != NULL) {
     LOG((CLOG_DEBUG2 "reading secure socket"));
     read = SSL_read(m_ssl->m_ssl, buffer, size);
@@ -234,7 +251,8 @@ int SecureSocket::secureRead(void *buffer, int size, int &read) {
   return read;
 }
 
-int SecureSocket::secureWrite(const void *buffer, int size, int &wrote) {
+int SecureSocket::secureWrite(const void *buffer, int size, int &wrote)
+{
   if (m_ssl->m_ssl != NULL) {
     LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
 
@@ -259,9 +277,13 @@ int SecureSocket::secureWrite(const void *buffer, int size, int &wrote) {
   return wrote;
 }
 
-bool SecureSocket::isSecureReady() { return m_secureReady; }
+bool SecureSocket::isSecureReady()
+{
+  return m_secureReady;
+}
 
-void SecureSocket::initSsl(bool server) {
+void SecureSocket::initSsl(bool server)
+{
   m_ssl = new Ssl();
   m_ssl->m_context = NULL;
   m_ssl->m_ssl = NULL;
@@ -269,7 +291,8 @@ void SecureSocket::initSsl(bool server) {
   initContext(server);
 }
 
-bool SecureSocket::loadCertificates(String &filename) {
+bool SecureSocket::loadCertificates(String &filename)
+{
   if (filename.empty()) {
     SslLogger::logError("tls certificate is not specified");
     return false;
@@ -287,15 +310,13 @@ bool SecureSocket::loadCertificates(String &filename) {
   }
 
   int r = 0;
-  r = SSL_CTX_use_certificate_file(
-      m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+  r = SSL_CTX_use_certificate_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
   if (r <= 0) {
     SslLogger::logError("could not use tls certificate");
     return false;
   }
 
-  r = SSL_CTX_use_PrivateKey_file(
-      m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
+  r = SSL_CTX_use_PrivateKey_file(m_ssl->m_context, filename.c_str(), SSL_FILETYPE_PEM);
   if (r <= 0) {
     SslLogger::logError("could not use tls private key");
     return false;
@@ -310,7 +331,8 @@ bool SecureSocket::loadCertificates(String &filename) {
   return true;
 }
 
-void SecureSocket::initContext(bool server) {
+void SecureSocket::initContext(bool server)
+{
   SSL_library_init();
 
   const SSL_METHOD *method;
@@ -334,16 +356,15 @@ void SecureSocket::initContext(bool server) {
 
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
   // be vulnerable
-  SSL_CTX_set_options(
-      m_ssl->m_context,
-      SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
+  SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
   if (m_ssl->m_context == NULL) {
     SslLogger::logError();
   }
 }
 
-void SecureSocket::createSSL() {
+void SecureSocket::createSSL()
+{
   // I assume just one instance is needed
   // get new SSL state with context
   if (m_ssl->m_ssl == NULL) {
@@ -352,7 +373,8 @@ void SecureSocket::createSSL() {
   }
 }
 
-void SecureSocket::freeSSL() {
+void SecureSocket::freeSSL()
+{
   isFatal(true);
   // take socket from multiplexer ASAP otherwise the race condition
   // could cause events to get called on a dead object. TCPSocket
@@ -374,7 +396,8 @@ void SecureSocket::freeSSL() {
   }
 }
 
-int SecureSocket::secureAccept(int socket) {
+int SecureSocket::secureAccept(int socket)
+{
   createSSL();
 
   // set connection socket to SSL state
@@ -419,7 +442,8 @@ int SecureSocket::secureAccept(int socket) {
   return -1;
 }
 
-int SecureSocket::secureConnect(int socket) {
+int SecureSocket::secureConnect(int socket)
+{
   createSSL();
 
   // attach the socket descriptor
@@ -470,7 +494,8 @@ int SecureSocket::secureConnect(int socket) {
   return 1;
 }
 
-bool SecureSocket::showCertificate() const {
+bool SecureSocket::showCertificate() const
+{
   X509 *cert;
   char *line;
 
@@ -489,7 +514,8 @@ bool SecureSocket::showCertificate() const {
   return true;
 }
 
-void SecureSocket::checkResult(int status, int &retry) {
+void SecureSocket::checkResult(int status, int &retry)
+{
   // ssl errors are a little quirky. the "want" errors are normal and
   // should result in a retry.
 
@@ -523,8 +549,7 @@ void SecureSocket::checkResult(int status, int &retry) {
 
   case SSL_ERROR_WANT_CONNECT:
     retry++;
-    LOG((
-        CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
+    LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", errorCode, retry));
     break;
 
   case SSL_ERROR_WANT_ACCEPT:
@@ -568,14 +593,15 @@ void SecureSocket::checkResult(int status, int &retry) {
   }
 }
 
-void SecureSocket::disconnect() {
+void SecureSocket::disconnect()
+{
   sendEvent(getEvents()->forISocket().stopRetry());
   sendEvent(getEvents()->forISocket().disconnected());
   sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void SecureSocket::formatFingerprint(
-    String &fingerprint, bool hex, bool separator) {
+void SecureSocket::formatFingerprint(String &fingerprint, bool hex, bool separator)
+{
   if (hex) {
     // to hexidecimal
     deskflow::string::toHex(fingerprint, 2);
@@ -593,34 +619,30 @@ void SecureSocket::formatFingerprint(
   }
 }
 
-bool SecureSocket::verifyCertFingerprint() {
+bool SecureSocket::verifyCertFingerprint()
+{
   // calculate received certificate fingerprint
   using AutoX509 = std::unique_ptr<X509, decltype(&X509_free)>;
   AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), &X509_free);
 
   unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
   unsigned int tempFingerprintLen;
-  int digestResult = X509_digest(
-      cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
+  int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
   if (digestResult <= 0) {
-    LOG(
-        (CLOG_ERR "failed to calculate fingerprint, digest result: %d",
-         digestResult));
+    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
     return false;
   }
 
   // format fingerprint into hexdecimal format with colon separator
-  String fingerprint(
-      static_cast<char *>(static_cast<void *>(tempFingerprint)),
-      tempFingerprintLen);
+  String fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
   formatFingerprint(fingerprint);
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
   String trustedServersFilename;
   trustedServersFilename = deskflow::string::sprintf(
-      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName,
-      kFingerprintTrustedServersFilename);
+      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName, kFingerprintTrustedServersFilename
+  );
 
   // check if this fingerprint exist
   String fileLine;
@@ -637,17 +659,15 @@ bool SecureSocket::verifyCertFingerprint() {
       }
     }
   } else {
-    LOG(
-        (CLOG_ERR "fail to open trusted fingerprints file: %s",
-         trustedServersFilename.c_str()));
+    LOG((CLOG_ERR "fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
   }
 
   file.close();
   return isValid;
 }
 
-ISocketMultiplexerJob *SecureSocket::serviceConnect(
-    ISocketMultiplexerJob *job, bool, bool write, bool error) {
+ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, bool, bool write, bool error)
+{
   Lock lock(&getMutex());
 
   int status = 0;
@@ -670,12 +690,12 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceConnect, getSocket(), isReadable(),
-      isWritable());
+      this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+  );
 }
 
-ISocketMultiplexerJob *SecureSocket::serviceAccept(
-    ISocketMultiplexerJob *job, bool, bool write, bool error) {
+ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, bool, bool write, bool error)
+{
   Lock lock(&getMutex());
 
   int status = 0;
@@ -697,11 +717,12 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceAccept, getSocket(), isReadable(),
-      isWritable());
+      this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
+  );
 }
 
-void SecureSocket::handleTCPConnected(const Event &, void *) {
+void SecureSocket::handleTCPConnected(const Event &, void *)
+{
   if (getSocket() == nullptr) {
     LOG((CLOG_DEBUG "disregarding stale connect event"));
     return;

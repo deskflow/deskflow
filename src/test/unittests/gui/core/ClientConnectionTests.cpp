@@ -31,20 +31,21 @@ using enum messages::ClientError;
 
 namespace {
 
-struct DepsMock : public ClientConnection::Deps {
+struct DepsMock : public ClientConnection::Deps
+{
   MOCK_METHOD(
-      void, showError,
-      (QWidget * parent, messages::ClientError error, const QString &address),
-      (const, override));
+      void, showError, (QWidget * parent, messages::ClientError error, const QString &address), (const, override)
+  );
 };
 
 } // namespace
 
-class ClientConnectionTests : public testing::Test {
+class ClientConnectionTests : public testing::Test
+{
 public:
-  ClientConnectionTests() {
-    ON_CALL(m_appConfig, serverHostname())
-        .WillByDefault(testing::ReturnRef(stub));
+  ClientConnectionTests()
+  {
+    ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(stub));
   }
 
   std::shared_ptr<DepsMock> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
@@ -54,42 +55,42 @@ private:
   const QString stub = "stub";
 };
 
-TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError) {
+TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
   const QString serverName = "test server";
-  ON_CALL(m_appConfig, serverHostname())
-      .WillByDefault(testing::ReturnRef(serverName));
+  ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(serverName));
 
   EXPECT_CALL(*m_pDeps, showError(_, AlreadyConnected, serverName));
 
-  clientConnection.handleLogLine(
-      "failed to connect to server\n"
-      "server already has a connected client with our name");
+  clientConnection.handleLogLine("failed to connect to server\n"
+                                 "server already has a connected client with our name");
 }
 
-TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError) {
+TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
   const QString serverName = "test-hostname";
-  ON_CALL(m_appConfig, serverHostname())
-      .WillByDefault(testing::ReturnRef(serverName));
+  ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(serverName));
 
   EXPECT_CALL(*m_pDeps, showError(_, HostnameError, serverName));
 
   clientConnection.handleLogLine("failed to connect to server");
 }
 
-TEST_F(ClientConnectionTests, handleLogLine_withIpAddress_showError) {
+TEST_F(ClientConnectionTests, handleLogLine_withIpAddress_showError)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
   const QString serverName = "1.1.1.1";
-  ON_CALL(m_appConfig, serverHostname())
-      .WillByDefault(testing::ReturnRef(serverName));
+  ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(serverName));
 
   EXPECT_CALL(*m_pDeps, showError(_, GenericError, serverName));
 
   clientConnection.handleLogLine("failed to connect to server");
 }
 
-TEST_F(ClientConnectionTests, handleLogLine_messageShown_shouldNotShowAgain) {
+TEST_F(ClientConnectionTests, handleLogLine_messageShown_shouldNotShowAgain)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
 
   clientConnection.handleLogLine("failed to connect to server");
@@ -99,9 +100,8 @@ TEST_F(ClientConnectionTests, handleLogLine_messageShown_shouldNotShowAgain) {
   clientConnection.handleLogLine("failed to connect to server");
 }
 
-TEST_F(
-    ClientConnectionTests,
-    handleLogLine_serverRefusedClient_shouldNotShowError) {
+TEST_F(ClientConnectionTests, handleLogLine_serverRefusedClient_shouldNotShowError)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
 
   EXPECT_CALL(*m_pDeps, showError(_, _, _)).Times(0);
@@ -110,8 +110,8 @@ TEST_F(
                                  "server refused client with our name");
 }
 
-TEST_F(
-    ClientConnectionTests, handleLogLine_connected_shouldPreventFutureError) {
+TEST_F(ClientConnectionTests, handleLogLine_connected_shouldPreventFutureError)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
   clientConnection.handleLogLine("connected to server");
 
@@ -120,7 +120,8 @@ TEST_F(
   clientConnection.handleLogLine("failed to connect to server");
 }
 
-TEST_F(ClientConnectionTests, handleLogLine_otherMessage_shouldNotShowError) {
+TEST_F(ClientConnectionTests, handleLogLine_otherMessage_shouldNotShowError)
+{
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
 
   EXPECT_CALL(*m_pDeps, showError(_, _, _)).Times(0);

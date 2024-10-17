@@ -23,14 +23,14 @@
 using namespace testing;
 using namespace deskflow::gui;
 
-TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine) {
+TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine)
+{
   Logger logger;
   std::string newLineEmitted;
   QObject::connect(
       &logger, &Logger::newLine, //
-      [&newLineEmitted](const QString &line) {
-        newLineEmitted = line.toStdString();
-      });
+      [&newLineEmitted](const QString &line) { newLineEmitted = line.toStdString(); }
+  );
   qputenv("DESKFLOW_GUI_DEBUG", "true");
   logger.loadEnvVars();
 
@@ -41,12 +41,14 @@ TEST(LoggerTests, handleMessage_withDebugEnvVarOn_emitsNewLine) {
   qputenv("DESKFLOW_GUI_DEBUG", "");
 }
 
-TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine) {
+TEST(LoggerTests, handleMessage_withDebugEnvVarOff_doesNotEmitNewLine)
+{
   Logger logger;
   bool newLineEmitted = false;
   QObject::connect(
       &logger, &Logger::newLine, //
-      [&newLineEmitted](const QString &line) { newLineEmitted = true; });
+      [&newLineEmitted](const QString &line) { newLineEmitted = true; }
+  );
   qputenv("DESKFLOW_GUI_DEBUG", "false");
   logger.loadEnvVars();
 

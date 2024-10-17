@@ -31,13 +31,11 @@
 const int kPriorityPrefixLength = 3;
 
 // names of priorities
-static const char *g_priority[] = {"FATAL",  "ERROR",  "WARNING", "NOTE",
-                                   "INFO",   "DEBUG",  "DEBUG1",  "DEBUG2",
-                                   "DEBUG3", "DEBUG4", "DEBUG5"};
+static const char *g_priority[] = {"FATAL",  "ERROR",  "WARNING", "NOTE",   "INFO",  "DEBUG",
+                                   "DEBUG1", "DEBUG2", "DEBUG3",  "DEBUG4", "DEBUG5"};
 
 // number of priorities
-static const int g_numPriority =
-    (int)(sizeof(g_priority) / sizeof(g_priority[0]));
+static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
 
 // if NDEBUG (not debug) is not specified, i.e. you're building in debug,
 // then set default log level to DEBUG, otherwise the max level is INFO.
@@ -53,7 +51,8 @@ static const int g_defaultMaxPriority = kINFO;
 
 namespace {
 
-ELevel getPriority(const char *&fmt) {
+ELevel getPriority(const char *&fmt)
+{
   if (strnlen(fmt, SIZE_MAX) < kPriorityPrefixLength) {
     throw std::invalid_argument("invalid format string, too short");
   }
@@ -65,7 +64,8 @@ ELevel getPriority(const char *&fmt) {
   return static_cast<ELevel>(fmt[2] - '0');
 }
 
-void makeTimeString(std::vector<char> &buffer) {
+void makeTimeString(std::vector<char> &buffer)
+{
   const int yearOffset = 1900;
   const int monthOffset = 1;
 
@@ -80,14 +80,13 @@ void makeTimeString(std::vector<char> &buffer) {
 #endif
 
   snprintf(
-      buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i",
-      tm.tm_year + yearOffset, tm.tm_mon + monthOffset, tm.tm_mday, tm.tm_hour,
-      tm.tm_min, tm.tm_sec);
+      buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i", tm.tm_year + yearOffset, tm.tm_mon + monthOffset,
+      tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec
+  );
 }
 
-std::vector<char> makeMessage(
-    const char *filename, int lineNumber, const char *message,
-    ELevel priority) {
+std::vector<char> makeMessage(const char *filename, int lineNumber, const char *message, ELevel priority)
+{
 
   // base size includes null terminator, colon, space, etc.
   const int baseSize = 10;
@@ -101,8 +100,7 @@ std::vector<char> makeMessage(
   size_t timestampLength = strnlen(timeBuffer.data(), timeBufferSize);
   size_t priorityLength = strnlen(g_priority[priority], priorityMaxSize);
   size_t messageLength = strnlen(message, SIZE_MAX);
-  size_t bufferSize =
-      baseSize + timestampLength + priorityLength + messageLength;
+  size_t bufferSize = baseSize + timestampLength + priorityLength + messageLength;
 
   const auto filenameSet = filename != nullptr && filename[0] != '\0';
   if (filenameSet) {
@@ -112,14 +110,13 @@ std::vector<char> makeMessage(
 
     std::vector<char> buffer(bufferSize);
     snprintf(
-        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(),
-        g_priority[priority], message, filename, lineNumber);
+        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(), g_priority[priority], message, filename,
+        lineNumber
+    );
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
-    snprintf(
-        buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(),
-        g_priority[priority], message);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(), g_priority[priority], message);
     return buffer;
   }
 }
@@ -131,7 +128,8 @@ std::vector<char> makeMessage(
 
 Log *Log::s_log = NULL;
 
-Log::Log(bool singleton) {
+Log::Log(bool singleton)
+{
   if (singleton) {
     assert(s_log == NULL);
   }
@@ -148,36 +146,44 @@ Log::Log(bool singleton) {
   }
 }
 
-Log::Log(Log *src) { s_log = src; }
+Log::Log(Log *src)
+{
+  s_log = src;
+}
 
-Log::~Log() {
+Log::~Log()
+{
   // clean up
-  for (OutputterList::iterator index = m_outputters.begin();
-       index != m_outputters.end(); ++index) {
+  for (OutputterList::iterator index = m_outputters.begin(); index != m_outputters.end(); ++index) {
     delete *index;
   }
-  for (OutputterList::iterator index = m_alwaysOutputters.begin();
-       index != m_alwaysOutputters.end(); ++index) {
+  for (OutputterList::iterator index = m_alwaysOutputters.begin(); index != m_alwaysOutputters.end(); ++index) {
     delete *index;
   }
   ARCH->closeMutex(m_mutex);
 }
 
-Log *Log::getInstance() {
+Log *Log::getInstance()
+{
   assert(s_log != NULL);
   return s_log;
 }
 
-const char *Log::getFilterName() const { return getFilterName(getFilter()); }
+const char *Log::getFilterName() const
+{
+  return getFilterName(getFilter());
+}
 
-const char *Log::getFilterName(int level) const {
+const char *Log::getFilterName(int level) const
+{
   if (level < 0) {
     return "Message";
   }
   return g_priority[level];
 }
 
-void Log::print(const char *file, int line, const char *fmt, ...) {
+void Log::print(const char *file, int line, const char *fmt, ...)
+{
   const int initBufferSize = 1024;
   const int bufferResizeScale = 2;
 
@@ -213,7 +219,8 @@ void Log::print(const char *file, int line, const char *fmt, ...) {
   }
 }
 
-void Log::insert(ILogOutputter *outputter, bool alwaysAtHead) {
+void Log::insert(ILogOutputter *outputter, bool alwaysAtHead)
+{
   assert(outputter != NULL);
 
   ArchMutexLock lock(m_mutex);
@@ -235,13 +242,15 @@ void Log::insert(ILogOutputter *outputter, bool alwaysAtHead) {
   // outputter->show(false);
 }
 
-void Log::remove(ILogOutputter *outputter) {
+void Log::remove(ILogOutputter *outputter)
+{
   ArchMutexLock lock(m_mutex);
   m_outputters.remove(outputter);
   m_alwaysOutputters.remove(outputter);
 }
 
-void Log::pop_front(bool alwaysAtHead) {
+void Log::pop_front(bool alwaysAtHead)
+{
   ArchMutexLock lock(m_mutex);
   OutputterList *list = alwaysAtHead ? &m_alwaysOutputters : &m_outputters;
   if (!list->empty()) {
@@ -250,7 +259,8 @@ void Log::pop_front(bool alwaysAtHead) {
   }
 }
 
-bool Log::setFilter(const char *maxPriority) {
+bool Log::setFilter(const char *maxPriority)
+{
   if (maxPriority != NULL) {
     for (int i = 0; i < g_numPriority; ++i) {
       if (strcmp(maxPriority, g_priority[i]) == 0) {
@@ -263,17 +273,20 @@ bool Log::setFilter(const char *maxPriority) {
   return true;
 }
 
-void Log::setFilter(int maxPriority) {
+void Log::setFilter(int maxPriority)
+{
   ArchMutexLock lock(m_mutex);
   m_maxPriority = maxPriority;
 }
 
-int Log::getFilter() const {
+int Log::getFilter() const
+{
   ArchMutexLock lock(m_mutex);
   return m_maxPriority;
 }
 
-void Log::output(ELevel priority, char *msg) {
+void Log::output(ELevel priority, char *msg)
+{
   assert(priority >= -1 && priority < g_numPriority);
   assert(msg != NULL);
   if (!msg)

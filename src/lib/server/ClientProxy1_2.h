@@ -23,11 +23,10 @@
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.2
-class ClientProxy1_2 : public ClientProxy1_1 {
+class ClientProxy1_2 : public ClientProxy1_1
+{
 public:
-  ClientProxy1_2(
-      const String &name, deskflow::IStream *adoptedStream,
-      IEventQueue *events);
+  ClientProxy1_2(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ~ClientProxy1_2();
 
   // IClient overrides

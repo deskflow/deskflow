@@ -31,7 +31,8 @@
 // OSXClipboard
 //
 
-OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL) {
+OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL)
+{
   m_converters.push_back(new OSXClipboardHTMLConverter);
   m_converters.push_back(new OSXClipboardBMPConverter);
   m_converters.push_back(new OSXClipboardUTF8Converter);
@@ -40,12 +41,8 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL) {
 
   OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
   if (createErr != noErr) {
-    LOG(
-        (CLOG_DEBUG "failed to create clipboard reference: error %i",
-         createErr));
-    LOG(
-        (CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled",
-         createErr));
+    LOG((CLOG_DEBUG "failed to create clipboard reference: error %i", createErr));
+    LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled", createErr));
     m_pboard = NULL;
     return;
   }
@@ -56,9 +53,13 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL) {
   }
 }
 
-OSXClipboard::~OSXClipboard() { clearConverters(); }
+OSXClipboard::~OSXClipboard()
+{
+  clearConverters();
+}
 
-bool OSXClipboard::empty() {
+bool OSXClipboard::empty()
+{
   LOG((CLOG_DEBUG "emptying clipboard"));
   if (m_pboard == NULL)
     return false;
@@ -72,7 +73,8 @@ bool OSXClipboard::empty() {
   return true;
 }
 
-bool OSXClipboard::synchronize() {
+bool OSXClipboard::synchronize()
+{
   if (m_pboard == NULL)
     return false;
 
@@ -85,7 +87,8 @@ bool OSXClipboard::synchronize() {
   return false;
 }
 
-void OSXClipboard::add(EFormat format, const String &data) {
+void OSXClipboard::add(EFormat format, const String &data)
+{
   if (m_pboard == NULL)
     return;
 
@@ -98,8 +101,7 @@ void OSXClipboard::add(EFormat format, const String &data) {
     LOG((CLOG_DEBUG "format of data to be added to clipboard was kHTML"));
   }
 
-  for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
 
     IOSXClipboardConverter *converter = *index;
 
@@ -107,24 +109,21 @@ void OSXClipboard::add(EFormat format, const String &data) {
     if (converter->getFormat() == format) {
       String osXData = converter->fromIClipboard(data);
       CFStringRef flavorType = converter->getOSXFormat();
-      CFDataRef dataRef = CFDataCreate(
-          kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
+      CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
       PasteboardItemID itemID = 0;
 
       if (dataRef) {
-        PasteboardPutItemFlavor(
-            m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
+        PasteboardPutItemFlavor(m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
 
         CFRelease(dataRef);
-        LOG(
-            (CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(),
-             format));
+        LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
       }
     }
   }
 }
 
-bool OSXClipboard::open(Time time) const {
+bool OSXClipboard::open(Time time) const
+{
   if (m_pboard == NULL)
     return false;
 
@@ -133,22 +132,26 @@ bool OSXClipboard::open(Time time) const {
   return true;
 }
 
-void OSXClipboard::close() const {
+void OSXClipboard::close() const
+{
   LOG((CLOG_DEBUG "closing clipboard"));
   /* not needed */
 }
 
-IClipboard::Time OSXClipboard::getTime() const { return m_time; }
+IClipboard::Time OSXClipboard::getTime() const
+{
+  return m_time;
+}
 
-bool OSXClipboard::has(EFormat format) const {
+bool OSXClipboard::has(EFormat format) const
+{
   if (m_pboard == NULL)
     return false;
 
   PasteboardItemID item;
   PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
 
-  for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     IOSXClipboardConverter *converter = *index;
     if (converter->getFormat() == format) {
       PasteboardFlavorFlags flags;
@@ -156,8 +159,7 @@ bool OSXClipboard::has(EFormat format) const {
 
       OSStatus res;
 
-      if ((res = PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags)) ==
-          noErr) {
+      if ((res = PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags)) == noErr) {
         return true;
       }
     }
@@ -166,7 +168,8 @@ bool OSXClipboard::has(EFormat format) const {
   return false;
 }
 
-String OSXClipboard::get(EFormat format) const {
+String OSXClipboard::get(EFormat format) const
+{
   CFStringRef type;
   PasteboardItemID item;
   String result;
@@ -178,15 +181,13 @@ String OSXClipboard::get(EFormat format) const {
 
   // find the converter for the first clipboard format we can handle
   IOSXClipboardConverter *converter = NULL;
-  for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     converter = *index;
 
     PasteboardFlavorFlags flags;
     type = converter->getOSXFormat();
 
-    if (converter->getFormat() == format &&
-        PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr) {
+    if (converter->getFormat() == format && PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr) {
       break;
     }
     converter = NULL;
@@ -209,8 +210,7 @@ String OSXClipboard::get(EFormat format) const {
 
     result = String((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
   } catch (OSStatus err) {
-    LOG((
-        CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)", err));
+    LOG((CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)", err));
   } catch (...) {
     LOG((CLOG_DEBUG "unknown exception in OSXClipboard::get"));
     RETHROW_XTHREAD
@@ -222,12 +222,12 @@ String OSXClipboard::get(EFormat format) const {
   return converter->toIClipboard(result);
 }
 
-void OSXClipboard::clearConverters() {
+void OSXClipboard::clearConverters()
+{
   if (m_pboard == NULL)
     return;
 
-  for (ConverterList::iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+  for (ConverterList::iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     delete *index;
   }
   m_converters.clear();

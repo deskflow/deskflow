@@ -38,7 +38,8 @@ It supports multithread safe operation, several message priority levels,
 filtering by priority, and output redirection.  The macros LOG() and
 LOGC() provide convenient access.
 */
-class Log {
+class Log
+{
 public:
   Log(bool singleton = true);
   Log(Log *src);
@@ -124,7 +125,10 @@ public:
 
   //! Get the console filter level (messages above this are not sent to
   //! console).
-  int getConsoleMaxLevel() const { return kDEBUG2; }
+  int getConsoleMaxLevel() const
+  {
+    return kDEBUG2;
+  }
 
   //@}
 
@@ -187,14 +191,14 @@ otherwise it expands to a call that doesn't.
 #define CLOG_TRACE
 #elif defined(NDEBUG)
 #define LOG(_a1) CLOG->print _a1
-#define LOGC(_a1, _a2)                                                         \
-  if (_a1)                                                                     \
+#define LOGC(_a1, _a2)                                                                                                 \
+  if (_a1)                                                                                                             \
   CLOG->print _a2
 #define CLOG_TRACE NULL, 0,
 #else
 #define LOG(_a1) CLOG->print _a1
-#define LOGC(_a1, _a2)                                                         \
-  if (_a1)                                                                     \
+#define LOGC(_a1, _a2)                                                                                                 \
+  if (_a1)                                                                                                             \
   CLOG->print _a2
 #define CLOG_TRACE __FILE__, __LINE__,
 #endif

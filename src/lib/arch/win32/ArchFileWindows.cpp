@@ -28,15 +28,18 @@
 // ArchFileWindows
 //
 
-ArchFileWindows::ArchFileWindows() {
+ArchFileWindows::ArchFileWindows()
+{
   // do nothing
 }
 
-ArchFileWindows::~ArchFileWindows() {
+ArchFileWindows::~ArchFileWindows()
+{
   // do nothing
 }
 
-const char *ArchFileWindows::getBasename(const char *pathname) {
+const char *ArchFileWindows::getBasename(const char *pathname)
+{
   if (pathname == NULL) {
     return NULL;
   }
@@ -58,7 +61,8 @@ const char *ArchFileWindows::getBasename(const char *pathname) {
   return basename;
 }
 
-std::string ArchFileWindows::getUserDirectory() {
+std::string ArchFileWindows::getUserDirectory()
+{
   // try %HOMEPATH%
   TCHAR dir[MAX_PATH];
   DWORD size = sizeof(dir) / sizeof(TCHAR);
@@ -67,9 +71,7 @@ std::string ArchFileWindows::getUserDirectory() {
     // sanity check -- if dir doesn't appear to start with a
     // drive letter and isn't a UNC name then don't use it
     // FIXME -- allow UNC names
-    if (dir[0] != '\0' &&
-        (dir[1] == ':' || ((dir[0] == '\\' || dir[0] == '/') &&
-                           (dir[1] == '\\' || dir[1] == '/')))) {
+    if (dir[0] != '\0' && (dir[1] == ':' || ((dir[0] == '\\' || dir[0] == '/') && (dir[1] == '\\' || dir[1] == '/')))) {
       return dir;
     }
   }
@@ -100,7 +102,8 @@ std::string ArchFileWindows::getUserDirectory() {
   return "C:";
 }
 
-std::string ArchFileWindows::getSystemDirectory() {
+std::string ArchFileWindows::getSystemDirectory()
+{
   // get windows directory
   char dir[MAX_PATH];
   if (GetWindowsDirectory(dir, sizeof(dir)) != 0) {
@@ -111,7 +114,8 @@ std::string ArchFileWindows::getSystemDirectory() {
   }
 }
 
-std::string ArchFileWindows::getInstalledDirectory() {
+std::string ArchFileWindows::getInstalledDirectory()
+{
   char fileNameBuffer[MAX_PATH];
   GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
   std::string fileName(fileNameBuffer);
@@ -121,11 +125,13 @@ std::string ArchFileWindows::getInstalledDirectory() {
   return fileName;
 }
 
-std::string ArchFileWindows::getLogDirectory() {
+std::string ArchFileWindows::getLogDirectory()
+{
   return getInstalledDirectory();
 }
 
-std::string ArchFileWindows::getPluginDirectory() {
+std::string ArchFileWindows::getPluginDirectory()
+{
   if (!m_pluginDirectory.empty()) {
     return m_pluginDirectory;
   }
@@ -135,14 +141,14 @@ std::string ArchFileWindows::getPluginDirectory() {
   return dir;
 }
 
-std::string ArchFileWindows::getProfileDirectory() {
+std::string ArchFileWindows::getProfileDirectory()
+{
   String dir;
   if (!m_profileDirectory.empty()) {
     dir = m_profileDirectory;
   } else {
     TCHAR result[MAX_PATH];
-    if (SUCCEEDED(
-            SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, result))) {
+    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, result))) {
       dir = result;
     } else {
       dir = getUserDirectory();
@@ -155,23 +161,24 @@ std::string ArchFileWindows::getProfileDirectory() {
   return dir;
 }
 
-std::string ArchFileWindows::concatPath(
-    const std::string &prefix, const std::string &suffix) {
+std::string ArchFileWindows::concatPath(const std::string &prefix, const std::string &suffix)
+{
   std::string path;
   path.reserve(prefix.size() + 1 + suffix.size());
   path += prefix;
-  if (path.size() == 0 ||
-      (path[path.size() - 1] != '\\' && path[path.size() - 1] != '/')) {
+  if (path.size() == 0 || (path[path.size() - 1] != '\\' && path[path.size() - 1] != '/')) {
     path += '\\';
   }
   path += suffix;
   return path;
 }
 
-void ArchFileWindows::setProfileDirectory(const String &s) {
+void ArchFileWindows::setProfileDirectory(const String &s)
+{
   m_profileDirectory = s;
 }
 
-void ArchFileWindows::setPluginDirectory(const String &s) {
+void ArchFileWindows::setPluginDirectory(const String &s)
+{
   m_pluginDirectory = s;
 }

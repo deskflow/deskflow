@@ -22,7 +22,8 @@
 
 #define ARCH_CONSOLE ArchConsoleWindows
 
-class ArchConsoleWindows : public ArchConsoleStd {
+class ArchConsoleWindows : public ArchConsoleStd
+{
 public:
   ArchConsoleWindows();
   virtual ~ArchConsoleWindows();

@@ -28,13 +28,15 @@ using ::testing::Invoke;
 
 class IEventQueue;
 
-class MockIpcServer : public IpcServer {
+class MockIpcServer : public IpcServer
+{
 public:
-  MockIpcServer()
-      : m_sendCond(ARCH->newCondVar()),
-        m_sendMutex(ARCH->newMutex()) {}
+  MockIpcServer() : m_sendCond(ARCH->newCondVar()), m_sendMutex(ARCH->newMutex())
+  {
+  }
 
-  ~MockIpcServer() {
+  ~MockIpcServer()
+  {
     if (m_sendCond != NULL) {
       ARCH->closeCondVar(m_sendCond);
     }
@@ -48,15 +50,19 @@ public:
   MOCK_METHOD(void, send, (const IpcMessage &, IpcClientType), (override));
   MOCK_METHOD(bool, hasClients, (IpcClientType), (const, override));
 
-  void delegateToFake() {
-    ON_CALL(*this, send(_, _))
-        .WillByDefault(Invoke(this, &MockIpcServer::mockSend));
+  void delegateToFake()
+  {
+    ON_CALL(*this, send(_, _)).WillByDefault(Invoke(this, &MockIpcServer::mockSend));
   }
 
-  void waitForSend() { ARCH->waitCondVar(m_sendCond, m_sendMutex, 5); }
+  void waitForSend()
+  {
+    ARCH->waitCondVar(m_sendCond, m_sendMutex, 5);
+  }
 
 private:
-  void mockSend(const IpcMessage &, IpcClientType) {
+  void mockSend(const IpcMessage &, IpcClientType)
+  {
     ArchMutexLock lock(m_sendMutex);
     ARCH->broadcastCondVar(m_sendCond);
   }

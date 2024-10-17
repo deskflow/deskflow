@@ -25,7 +25,8 @@
 class IEventQueue;
 
 //! Event queue buffer for OS X
-class OSXEventQueueBuffer : public IEventQueueBuffer {
+class OSXEventQueueBuffer : public IEventQueueBuffer
+{
 public:
   OSXEventQueueBuffer(IEventQueue *eventQueue);
   virtual ~OSXEventQueueBuffer();

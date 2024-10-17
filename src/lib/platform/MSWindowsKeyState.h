@@ -34,15 +34,16 @@ class IEventQueue;
 /*!
 This class maps KeyIDs to keystrokes.
 */
-class MSWindowsKeyState : public KeyState {
+class MSWindowsKeyState : public KeyState
+{
 public:
   MSWindowsKeyState(
-      MSWindowsDesks *desks, void *eventTarget, IEventQueue *events,
-      std::vector<String> layouts, bool isLangSyncEnabled);
+      MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled
+  );
   MSWindowsKeyState(
-      MSWindowsDesks *desks, void *eventTarget, IEventQueue *events,
-      deskflow::KeyMap &keyMap, std::vector<String> layouts,
-      bool isLangSyncEnabled);
+      MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, deskflow::KeyMap &keyMap,
+      std::vector<String> layouts, bool isLangSyncEnabled
+  );
   virtual ~MSWindowsKeyState();
 
   //! @name manipulators
@@ -104,8 +105,7 @@ public:
   Converts a key event into a KeyID and the shadow modifier state
   to a modifier mask.
   */
-  KeyID mapKeyFromEvent(
-      WPARAM charAndVirtKey, LPARAM info, KeyModifierMask *maskOut) const;
+  KeyID mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info, KeyModifierMask *maskOut) const;
 
   //! Check if keyboard groups have changed
   /*!
@@ -140,11 +140,8 @@ public:
   //@}
 
   // IKeyState overrides
-  virtual void fakeKeyDown(
-      KeyID id, KeyModifierMask mask, KeyButton button, const String &lang);
-  virtual bool fakeKeyRepeat(
-      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
-      const String &lang);
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang);
   virtual bool fakeCtrlAltDel();
   virtual KeyModifierMask pollActiveModifiers() const;
   virtual SInt32 pollActiveGroup() const;
@@ -153,14 +150,26 @@ public:
   // KeyState overrides
   virtual void onKey(KeyButton button, bool down, KeyModifierMask newState);
   virtual void sendKeyEvent(
-      void *target, bool press, bool isAutoRepeat, KeyID key,
-      KeyModifierMask mask, SInt32 count, KeyButton button);
+      void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button
+  );
 
   // Unit test accessors
-  KeyButton getLastDown() const { return m_lastDown; }
-  void setLastDown(KeyButton value) { m_lastDown = value; }
-  KeyModifierMask getSavedModifiers() const { return m_savedModifiers; }
-  void setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
+  KeyButton getLastDown() const
+  {
+    return m_lastDown;
+  }
+  void setLastDown(KeyButton value)
+  {
+    m_lastDown = value;
+  }
+  KeyModifierMask getSavedModifiers() const
+  {
+    return m_savedModifiers;
+  }
+  void setSavedModifiers(KeyModifierMask value)
+  {
+    m_savedModifiers = value;
+  }
 
 protected:
   // KeyState overrides
@@ -177,9 +186,7 @@ private:
   bool getGroups(GroupList &) const;
   void setWindowGroup(SInt32 group);
 
-  KeyID getIDForKey(
-      deskflow::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey,
-      PBYTE keyState, HKL hkl) const;
+  KeyID getIDForKey(deskflow::KeyMap::KeyItem &item, KeyButton button, UINT virtualKey, PBYTE keyState, HKL hkl) const;
 
   void addKeyEntry(deskflow::KeyMap &keyMap, deskflow::KeyMap::KeyItem &item);
 
@@ -223,8 +230,8 @@ private:
 
   // pointer to ToUnicodeEx.  on win95 family this will be NULL.
   typedef int(WINAPI *ToUnicodeEx_t)(
-      UINT wVirtKey, UINT wScanCode, PBYTE lpKeyState, LPWSTR pwszBuff,
-      int cchBuff, UINT wFlags, HKL dwhkl);
+      UINT wVirtKey, UINT wScanCode, PBYTE lpKeyState, LPWSTR pwszBuff, int cchBuff, UINT wFlags, HKL dwhkl
+  );
   ToUnicodeEx_t m_ToUnicodeEx;
 
   static const KeyID s_virtualKey[];

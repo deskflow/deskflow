@@ -28,27 +28,30 @@
 // PacketStreamFilter
 //
 
-PacketStreamFilter::PacketStreamFilter(
-    IEventQueue *events, deskflow::IStream *stream, bool adoptStream)
+PacketStreamFilter::PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream)
     : StreamFilter(events, stream, adoptStream),
       m_size(0),
       m_inputShutdown(false),
-      m_events(events) {
+      m_events(events)
+{
   // do nothing
 }
 
-PacketStreamFilter::~PacketStreamFilter() {
+PacketStreamFilter::~PacketStreamFilter()
+{
   // do nothing
 }
 
-void PacketStreamFilter::close() {
+void PacketStreamFilter::close()
+{
   Lock lock(&m_mutex);
   m_size = 0;
   m_buffer.pop(m_buffer.getSize());
   StreamFilter::close();
 }
 
-UInt32 PacketStreamFilter::read(void *buffer, UInt32 n) {
+UInt32 PacketStreamFilter::read(void *buffer, UInt32 n)
+{
   if (n == 0) {
     return 0;
   }
@@ -77,14 +80,14 @@ UInt32 PacketStreamFilter::read(void *buffer, UInt32 n) {
   readPacketSize();
 
   if (m_inputShutdown && m_size == 0) {
-    m_events->addEvent(
-        Event(m_events->forIStream().inputShutdown(), getEventTarget()));
+    m_events->addEvent(Event(m_events->forIStream().inputShutdown(), getEventTarget()));
   }
 
   return n;
 }
 
-void PacketStreamFilter::write(const void *buffer, UInt32 count) {
+void PacketStreamFilter::write(const void *buffer, UInt32 count)
+{
   // write the length of the payload
   UInt8 length[4];
   length[0] = (UInt8)((count >> 24) & 0xff);
@@ -97,40 +100,45 @@ void PacketStreamFilter::write(const void *buffer, UInt32 count) {
   getStream()->write(buffer, count);
 }
 
-void PacketStreamFilter::shutdownInput() {
+void PacketStreamFilter::shutdownInput()
+{
   Lock lock(&m_mutex);
   m_size = 0;
   m_buffer.pop(m_buffer.getSize());
   StreamFilter::shutdownInput();
 }
 
-bool PacketStreamFilter::isReady() const {
+bool PacketStreamFilter::isReady() const
+{
   Lock lock(&m_mutex);
   return isReadyNoLock();
 }
 
-UInt32 PacketStreamFilter::getSize() const {
+UInt32 PacketStreamFilter::getSize() const
+{
   Lock lock(&m_mutex);
   return isReadyNoLock() ? m_size : 0;
 }
 
-bool PacketStreamFilter::isReadyNoLock() const {
+bool PacketStreamFilter::isReadyNoLock() const
+{
   return (m_size != 0 && m_buffer.getSize() >= m_size);
 }
 
-void PacketStreamFilter::readPacketSize() {
+void PacketStreamFilter::readPacketSize()
+{
   // note -- m_mutex must be locked on entry
 
   if (m_size == 0 && m_buffer.getSize() >= 4) {
     UInt8 buffer[4];
     memcpy(buffer, m_buffer.peek(sizeof(buffer)), sizeof(buffer));
     m_buffer.pop(sizeof(buffer));
-    m_size = ((UInt32)buffer[0] << 24) | ((UInt32)buffer[1] << 16) |
-             ((UInt32)buffer[2] << 8) | (UInt32)buffer[3];
+    m_size = ((UInt32)buffer[0] << 24) | ((UInt32)buffer[1] << 16) | ((UInt32)buffer[2] << 8) | (UInt32)buffer[3];
   }
 }
 
-bool PacketStreamFilter::readMore() {
+bool PacketStreamFilter::readMore()
+{
   // note if we have whole packet
   bool wasReady = isReadyNoLock();
 
@@ -154,7 +162,8 @@ bool PacketStreamFilter::readMore() {
   return (wasReady != isReady);
 }
 
-void PacketStreamFilter::filterEvent(const Event &event) {
+void PacketStreamFilter::filterEvent(const Event &event)
+{
   if (event.getType() == m_events->forIStream().inputReady()) {
     Lock lock(&m_mutex);
     if (!readMore()) {

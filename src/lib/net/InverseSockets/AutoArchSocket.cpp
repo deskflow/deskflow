@@ -22,7 +22,8 @@
 #include "base/Log.h"
 #include "net/XSocket.h"
 
-AutoArchSocket::AutoArchSocket(IArchNetwork::EAddressFamily family) {
+AutoArchSocket::AutoArchSocket(IArchNetwork::EAddressFamily family)
+{
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
     LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
@@ -31,21 +32,27 @@ AutoArchSocket::AutoArchSocket(IArchNetwork::EAddressFamily family) {
   }
 }
 
-AutoArchSocket::~AutoArchSocket() { closeSocket(); }
+AutoArchSocket::~AutoArchSocket()
+{
+  closeSocket();
+}
 
-void AutoArchSocket::setNoDelayOnSocket(bool value) {
+void AutoArchSocket::setNoDelayOnSocket(bool value)
+{
   if (isValid()) {
     ARCH->setNoDelayOnSocket(m_socket, value);
   }
 }
 
-void AutoArchSocket::setReuseAddrOnSocket(bool value) {
+void AutoArchSocket::setReuseAddrOnSocket(bool value)
+{
   if (isValid()) {
     ARCH->setReuseAddrOnSocket(m_socket, value);
   }
 }
 
-void AutoArchSocket::closeSocket() {
+void AutoArchSocket::closeSocket()
+{
   if (isValid()) {
     try {
       LOG((CLOG_DEBUG "closing socket: %08X", m_socket));
@@ -60,7 +67,8 @@ void AutoArchSocket::closeSocket() {
   }
 }
 
-void AutoArchSocket::bindSocket(const NetworkAddress &addr) {
+void AutoArchSocket::bindSocket(const NetworkAddress &addr)
+{
   if (isValid()) {
     try {
       ARCH->bindSocket(m_socket, addr.getAddress());
@@ -72,7 +80,8 @@ void AutoArchSocket::bindSocket(const NetworkAddress &addr) {
   }
 }
 
-void AutoArchSocket::bindAndListen(const NetworkAddress &addr) {
+void AutoArchSocket::bindAndListen(const NetworkAddress &addr)
+{
   try {
     setReuseAddrOnSocket();
     bindSocket(addr);
@@ -84,17 +93,20 @@ void AutoArchSocket::bindAndListen(const NetworkAddress &addr) {
   }
 }
 
-void AutoArchSocket::listenOnSocket() {
+void AutoArchSocket::listenOnSocket()
+{
   if (isValid()) {
     ARCH->listenOnSocket(m_socket);
   }
 }
 
-ArchSocket AutoArchSocket::acceptSocket() {
+ArchSocket AutoArchSocket::acceptSocket()
+{
   return ARCH->acceptSocket(m_socket, nullptr);
 }
 
-void AutoArchSocket::closeSocketForRead() {
+void AutoArchSocket::closeSocketForRead()
+{
   if (isValid()) {
     try {
       ARCH->closeSocketForRead(m_socket);
@@ -105,7 +117,8 @@ void AutoArchSocket::closeSocketForRead() {
   }
 }
 
-void AutoArchSocket::closeSocketForWrite() {
+void AutoArchSocket::closeSocketForWrite()
+{
   if (isValid()) {
     try {
       ARCH->closeSocketForWrite(m_socket);
@@ -116,7 +129,8 @@ void AutoArchSocket::closeSocketForWrite() {
   }
 }
 
-bool AutoArchSocket::connectSocket(const NetworkAddress &addr) {
+bool AutoArchSocket::connectSocket(const NetworkAddress &addr)
+{
   bool result = false;
 
   if (isValid()) {
@@ -130,7 +144,8 @@ bool AutoArchSocket::connectSocket(const NetworkAddress &addr) {
   return result;
 }
 
-size_t AutoArchSocket::readSocket(UInt8 *buffer, size_t size) {
+size_t AutoArchSocket::readSocket(UInt8 *buffer, size_t size)
+{
   size_t result = 0;
 
   if (isValid()) {
@@ -140,7 +155,8 @@ size_t AutoArchSocket::readSocket(UInt8 *buffer, size_t size) {
   return result;
 }
 
-size_t AutoArchSocket::writeSocket(const UInt8 *buffer, size_t size) {
+size_t AutoArchSocket::writeSocket(const UInt8 *buffer, size_t size)
+{
   size_t result = 0;
 
   if (isValid()) {
@@ -150,17 +166,25 @@ size_t AutoArchSocket::writeSocket(const UInt8 *buffer, size_t size) {
   return result;
 }
 
-void AutoArchSocket::throwErrorOnSocket() {
+void AutoArchSocket::throwErrorOnSocket()
+{
   if (isValid()) {
     ARCH->throwErrorOnSocket(m_socket);
   }
 }
 
-ArchSocket AutoArchSocket::getRawSocket() const { return m_socket; }
+ArchSocket AutoArchSocket::getRawSocket() const
+{
+  return m_socket;
+}
 
-bool AutoArchSocket::isValid() const { return (m_socket != nullptr); }
+bool AutoArchSocket::isValid() const
+{
+  return (m_socket != nullptr);
+}
 
-void AutoArchSocket::operator=(ArchSocket socket) {
+void AutoArchSocket::operator=(ArchSocket socket)
+{
   if (isValid()) {
     closeSocket();
   }

@@ -38,16 +38,19 @@
 //
 
 InverseClientSocket::InverseClientSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+)
     : IDataSocket(events),
       m_events(events),
       m_socket(family),
       m_listener(family),
       m_flushed(&m_mutex, true),
-      m_socketMultiplexer(socketMultiplexer) {}
+      m_socketMultiplexer(socketMultiplexer)
+{
+}
 
-InverseClientSocket::~InverseClientSocket() {
+InverseClientSocket::~InverseClientSocket()
+{
   try {
     // warning virtual function in destructor is very danger practice
     InverseClientSocket::close();
@@ -56,22 +59,26 @@ InverseClientSocket::~InverseClientSocket() {
   }
 }
 
-void InverseClientSocket::bind(const NetworkAddress &addr) {
+void InverseClientSocket::bind(const NetworkAddress &addr)
+{
   m_socket.bindSocket(addr);
 }
 
-void InverseClientSocket::close() {
+void InverseClientSocket::close()
+{
   setJob(nullptr);
 
   Lock lock(&m_mutex);
   onDisconnected();
 }
 
-void *InverseClientSocket::getEventTarget() const {
+void *InverseClientSocket::getEventTarget() const
+{
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
-UInt32 InverseClientSocket::read(void *buffer, UInt32 n) {
+UInt32 InverseClientSocket::read(void *buffer, UInt32 n)
+{
   // copy data directly from our input buffer
   Lock lock(&m_mutex);
   UInt32 size = m_inputBuffer.getSize();
@@ -92,7 +99,8 @@ UInt32 InverseClientSocket::read(void *buffer, UInt32 n) {
   return n;
 }
 
-void InverseClientSocket::write(const void *buffer, UInt32 n) {
+void InverseClientSocket::write(const void *buffer, UInt32 n)
+{
   bool wasEmpty;
   {
     Lock lock(&m_mutex);
@@ -122,14 +130,16 @@ void InverseClientSocket::write(const void *buffer, UInt32 n) {
   }
 }
 
-void InverseClientSocket::flush() {
+void InverseClientSocket::flush()
+{
   Lock lock(&m_mutex);
   while (m_flushed == false) {
     m_flushed.wait();
   }
 }
 
-void InverseClientSocket::shutdownInput() {
+void InverseClientSocket::shutdownInput()
+{
   bool useNewJob = false;
   {
     Lock lock(&m_mutex);
@@ -149,7 +159,8 @@ void InverseClientSocket::shutdownInput() {
   }
 }
 
-void InverseClientSocket::shutdownOutput() {
+void InverseClientSocket::shutdownOutput()
+{
   bool useNewJob = false;
   {
     Lock lock(&m_mutex);
@@ -169,23 +180,27 @@ void InverseClientSocket::shutdownOutput() {
   }
 }
 
-bool InverseClientSocket::isReady() const {
+bool InverseClientSocket::isReady() const
+{
   Lock lock(&m_mutex);
   return (m_inputBuffer.getSize() > 0);
 }
 
-bool InverseClientSocket::isFatal() const {
+bool InverseClientSocket::isFatal() const
+{
   // TCP sockets aren't ever left in a fatal state.
   LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
   return false;
 }
 
-UInt32 InverseClientSocket::getSize() const {
+UInt32 InverseClientSocket::getSize() const
+{
   Lock lock(&m_mutex);
   return m_inputBuffer.getSize();
 }
 
-void InverseClientSocket::connect(const NetworkAddress &addr) {
+void InverseClientSocket::connect(const NetworkAddress &addr)
+{
   {
     Lock lock(&m_mutex);
     m_listener.bindAndListen(addr);
@@ -195,7 +210,8 @@ void InverseClientSocket::connect(const NetworkAddress &addr) {
   setJob(newJob(m_listener.getRawSocket()));
 }
 
-InverseClientSocket::EJobResult InverseClientSocket::doRead() {
+InverseClientSocket::EJobResult InverseClientSocket::doRead()
+{
   UInt8 buffer[4096] = {0};
   size_t bytesRead = m_socket.readSocket(buffer, sizeof(buffer));
 
@@ -229,11 +245,11 @@ InverseClientSocket::EJobResult InverseClientSocket::doRead() {
   return InverseClientSocket::EJobResult::kRetry;
 }
 
-InverseClientSocket::EJobResult InverseClientSocket::doWrite() {
+InverseClientSocket::EJobResult InverseClientSocket::doWrite()
+{
   UInt32 bufferSize = m_outputBuffer.getSize();
   auto buffer = static_cast<const UInt8 *>(m_outputBuffer.peek(bufferSize));
-  const auto bytesWrote =
-      static_cast<UInt32>(m_socket.writeSocket(buffer, bufferSize));
+  const auto bytesWrote = static_cast<UInt32>(m_socket.writeSocket(buffer, bufferSize));
 
   if (bytesWrote > 0) {
     discardWrittenData(bytesWrote);
@@ -243,7 +259,8 @@ InverseClientSocket::EJobResult InverseClientSocket::doWrite() {
   return InverseClientSocket::EJobResult::kRetry;
 }
 
-void InverseClientSocket::setJob(ISocketMultiplexerJob *job) {
+void InverseClientSocket::setJob(ISocketMultiplexerJob *job)
+{
   // multiplexer will delete the old job
   if (job == nullptr) {
     m_socketMultiplexer->removeSocket(this);
@@ -252,7 +269,8 @@ void InverseClientSocket::setJob(ISocketMultiplexerJob *job) {
   }
 }
 
-ISocketMultiplexerJob *InverseClientSocket::newJob(ArchSocket socket) {
+ISocketMultiplexerJob *InverseClientSocket::newJob(ArchSocket socket)
+{
   // note -- must have m_mutex locked on entry
 
   ISocketMultiplexerJob *result = nullptr;
@@ -267,26 +285,27 @@ ISocketMultiplexerJob *InverseClientSocket::newJob(ArchSocket socket) {
     }
 
     if (m_readable || isWritable) {
-      result = new TSocketMultiplexerMethodJob<InverseClientSocket>(
-          this, handler, socket, m_readable, isWritable);
+      result = new TSocketMultiplexerMethodJob<InverseClientSocket>(this, handler, socket, m_readable, isWritable);
     }
   }
 
   return result;
 }
 
-void InverseClientSocket::sendConnectionFailedEvent(const char *msg) {
+void InverseClientSocket::sendConnectionFailedEvent(const char *msg)
+{
   auto info = new ConnectionFailedInfo(msg);
-  m_events->addEvent(Event(
-      m_events->forIDataSocket().connectionFailed(), getEventTarget(), info,
-      Event::kDontFreeData));
+  m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(), getEventTarget(), info, Event::kDontFreeData)
+  );
 }
 
-void InverseClientSocket::sendEvent(Event::Type type) {
+void InverseClientSocket::sendEvent(Event::Type type)
+{
   m_events->addEvent(Event(type, getEventTarget()));
 }
 
-void InverseClientSocket::discardWrittenData(int bytesWrote) {
+void InverseClientSocket::discardWrittenData(int bytesWrote)
+{
   m_outputBuffer.pop(bytesWrote);
   if (m_outputBuffer.getSize() == 0) {
     sendEvent(m_events->forIStream().outputFlushed());
@@ -295,19 +314,22 @@ void InverseClientSocket::discardWrittenData(int bytesWrote) {
   }
 }
 
-void InverseClientSocket::onConnected() {
+void InverseClientSocket::onConnected()
+{
   sendEvent(m_events->forIDataSocket().connected());
   m_connected = true;
   m_readable = true;
   m_writable = true;
 }
 
-void InverseClientSocket::onInputShutdown() {
+void InverseClientSocket::onInputShutdown()
+{
   m_inputBuffer.pop(m_inputBuffer.getSize());
   m_readable = false;
 }
 
-void InverseClientSocket::onOutputShutdown() {
+void InverseClientSocket::onOutputShutdown()
+{
   m_outputBuffer.pop(m_outputBuffer.getSize());
   m_writable = false;
 
@@ -316,7 +338,8 @@ void InverseClientSocket::onOutputShutdown() {
   m_flushed.broadcast();
 }
 
-void InverseClientSocket::onDisconnected() {
+void InverseClientSocket::onDisconnected()
+{
   if (m_connected) {
     sendEvent(m_events->forISocket().disconnected());
   }
@@ -326,8 +349,8 @@ void InverseClientSocket::onDisconnected() {
   m_connected = false;
 }
 
-ISocketMultiplexerJob *InverseClientSocket::serviceConnecting(
-    ISocketMultiplexerJob *job, bool read, bool, bool) {
+ISocketMultiplexerJob *InverseClientSocket::serviceConnecting(ISocketMultiplexerJob *job, bool read, bool, bool)
+{
   Lock lock(&m_mutex);
 
   if (read) {
@@ -339,8 +362,9 @@ ISocketMultiplexerJob *InverseClientSocket::serviceConnecting(
   return job;
 }
 
-ISocketMultiplexerJob *InverseClientSocket::serviceConnected(
-    ISocketMultiplexerJob *job, bool read, bool write, bool error) {
+ISocketMultiplexerJob *
+InverseClientSocket::serviceConnected(ISocketMultiplexerJob *job, bool read, bool write, bool error)
+{
   Lock lock(&m_mutex);
 
   if (error) {
@@ -392,7 +416,5 @@ ISocketMultiplexerJob *InverseClientSocket::serviceConnected(
     return nullptr;
   }
 
-  return result == InverseClientSocket::EJobResult::kNew
-             ? newJob(m_socket.getRawSocket())
-             : job;
+  return result == InverseClientSocket::EJobResult::kNew ? newJob(m_socket.getRawSocket()) : job;
 }

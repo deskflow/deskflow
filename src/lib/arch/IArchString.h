@@ -28,7 +28,8 @@
 This interface defines the string operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchString : public IInterface {
+class IArchString : public IInterface
+{
 public:
   IArchString() = default;
   IArchString(const IArchString &) = delete;
@@ -42,7 +43,8 @@ public:
   /*!
   The known wide character encodings
   */
-  enum EWideCharEncoding {
+  enum EWideCharEncoding
+  {
     kUCS2,  //!< The UCS-2 encoding
     kUCS4,  //!< The UCS-4 encoding
     kUTF16, //!< The UTF-16 encoding

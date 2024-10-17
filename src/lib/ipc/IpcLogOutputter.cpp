@@ -30,15 +30,15 @@
 #include "ipc/IpcServer.h"
 #include "mt/Thread.h"
 
-enum EIpcLogOutputter {
+enum EIpcLogOutputter
+{
   kBufferMaxSize = 1000,
   kMaxSendLines = 100,
   kBufferRateWriteLimit = 1000, // writes per kBufferRateTime
   kBufferRateTimeLimit = 1      // seconds
 };
 
-IpcLogOutputter::IpcLogOutputter(
-    IpcServer &ipcServer, IpcClientType clientType, bool useThread)
+IpcLogOutputter::IpcLogOutputter(IpcServer &ipcServer, IpcClientType clientType, bool useThread)
     : m_ipcServer(ipcServer),
       m_bufferMutex(ARCH->newMutex()),
       m_sending(false),
@@ -54,14 +54,15 @@ IpcLogOutputter::IpcLogOutputter(
       m_bufferWriteCount(0),
       m_bufferRateStart(ARCH->time()),
       m_clientType(clientType),
-      m_runningMutex(ARCH->newMutex()) {
+      m_runningMutex(ARCH->newMutex())
+{
   if (useThread) {
-    m_bufferThread = new Thread(
-        new TMethodJob<IpcLogOutputter>(this, &IpcLogOutputter::bufferThread));
+    m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(this, &IpcLogOutputter::bufferThread));
   }
 }
 
-IpcLogOutputter::~IpcLogOutputter() {
+IpcLogOutputter::~IpcLogOutputter()
+{
   close();
 
   ARCH->closeMutex(m_bufferMutex);
@@ -76,9 +77,12 @@ IpcLogOutputter::~IpcLogOutputter() {
   ARCH->closeMutex(m_notifyMutex);
 }
 
-void IpcLogOutputter::open(const char *title) {}
+void IpcLogOutputter::open(const char *title)
+{
+}
 
-void IpcLogOutputter::close() {
+void IpcLogOutputter::close()
+{
   if (m_bufferThread != nullptr) {
     ArchMutexLock lock(m_runningMutex);
     m_running = false;
@@ -87,12 +91,14 @@ void IpcLogOutputter::close() {
   }
 }
 
-void IpcLogOutputter::show(bool showIfEmpty) {}
+void IpcLogOutputter::show(bool showIfEmpty)
+{
+}
 
-bool IpcLogOutputter::write(ELevel, const char *text) {
+bool IpcLogOutputter::write(ELevel, const char *text)
+{
   // ignore events from the buffer thread (would cause recursion).
-  if (m_bufferThread != nullptr &&
-      Thread::getCurrentThread().getID() == m_bufferThreadId) {
+  if (m_bufferThread != nullptr && Thread::getCurrentThread().getID() == m_bufferThreadId) {
     return true;
   }
 
@@ -102,7 +108,8 @@ bool IpcLogOutputter::write(ELevel, const char *text) {
   return true;
 }
 
-void IpcLogOutputter::appendBuffer(const String &text) {
+void IpcLogOutputter::appendBuffer(const String &text)
+{
   ArchMutexLock lock(m_bufferMutex);
 
   double elapsed = ARCH->time() - m_bufferRateStart;
@@ -126,12 +133,14 @@ void IpcLogOutputter::appendBuffer(const String &text) {
   m_bufferWriteCount++;
 }
 
-bool IpcLogOutputter::isRunning() {
+bool IpcLogOutputter::isRunning()
+{
   ArchMutexLock lock(m_runningMutex);
   return m_running;
 }
 
-void IpcLogOutputter::bufferThread(void *) {
+void IpcLogOutputter::bufferThread(void *)
+{
   m_bufferThreadId = m_bufferThread->getID();
   m_running = true;
 
@@ -151,12 +160,14 @@ void IpcLogOutputter::bufferThread(void *) {
   LOG((CLOG_DEBUG "ipc log buffer thread finished"));
 }
 
-void IpcLogOutputter::notifyBuffer() {
+void IpcLogOutputter::notifyBuffer()
+{
   ArchMutexLock lock(m_notifyMutex);
   ARCH->broadcastCondVar(m_notifyCond);
 }
 
-String IpcLogOutputter::getChunk(size_t count) {
+String IpcLogOutputter::getChunk(size_t count)
+{
   ArchMutexLock lock(m_bufferMutex);
 
   if (m_buffer.size() < count) {
@@ -172,7 +183,8 @@ String IpcLogOutputter::getChunk(size_t count) {
   return chunk;
 }
 
-void IpcLogOutputter::sendBuffer() {
+void IpcLogOutputter::sendBuffer()
+{
   if (m_buffer.empty() || !m_ipcServer.hasClients(m_clientType)) {
     return;
   }
@@ -183,13 +195,18 @@ void IpcLogOutputter::sendBuffer() {
   m_sending = false;
 }
 
-void IpcLogOutputter::bufferMaxSize(UInt16 bufferMaxSize) {
+void IpcLogOutputter::bufferMaxSize(UInt16 bufferMaxSize)
+{
   m_bufferMaxSize = bufferMaxSize;
 }
 
-UInt16 IpcLogOutputter::bufferMaxSize() const { return m_bufferMaxSize; }
+UInt16 IpcLogOutputter::bufferMaxSize() const
+{
+  return m_bufferMaxSize;
+}
 
-void IpcLogOutputter::bufferRateLimit(UInt16 writeLimit, double timeLimit) {
+void IpcLogOutputter::bufferRateLimit(UInt16 writeLimit, double timeLimit)
+{
   m_bufferRateWriteLimit = writeLimit;
   m_bufferRateTimeLimit = timeLimit;
 }

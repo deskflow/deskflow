@@ -29,18 +29,18 @@ This screen implementation is the superclass of all other screen
 implementations.  It implements a handful of methods and requires
 subclasses to implement the rest.
 */
-class PlatformScreen : public IPlatformScreen {
+class PlatformScreen : public IPlatformScreen
+{
 public:
   PlatformScreen(
-      IEventQueue *events, deskflow::ClientScrollDirection scrollDirection =
-                               deskflow::ClientScrollDirection::SERVER);
+      IEventQueue *events, deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::SERVER
+  );
   virtual ~PlatformScreen();
 
   // IScreen overrides
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
 
   // IPrimaryScreen overrides
@@ -64,11 +64,8 @@ public:
   virtual void updateKeyMap();
   virtual void updateKeyState();
   virtual void setHalfDuplexMask(KeyModifierMask);
-  virtual void
-  fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &);
-  virtual bool fakeKeyRepeat(
-      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
-      const String &lang);
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
   virtual bool fakeCtrlAltDel();
@@ -78,11 +75,22 @@ public:
   virtual SInt32 pollActiveGroup() const;
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const;
 
-  virtual void setDraggingStarted(bool started) { m_draggingStarted = started; }
+  virtual void setDraggingStarted(bool started)
+  {
+    m_draggingStarted = started;
+  }
   virtual bool isDraggingStarted();
-  virtual bool isFakeDraggingStarted() { return m_fakeDraggingStarted; }
-  virtual String &getDraggingFilename() { return m_draggingFilename; }
-  virtual void clearDraggingFilename() {}
+  virtual bool isFakeDraggingStarted()
+  {
+    return m_fakeDraggingStarted;
+  }
+  virtual String &getDraggingFilename()
+  {
+    return m_draggingFilename;
+  }
+  virtual void clearDraggingFilename()
+  {
+  }
 
   // IPlatformScreen overrides
   virtual void enable() = 0;
@@ -100,10 +108,12 @@ public:
   virtual void setSequenceNumber(UInt32) = 0;
   virtual bool isPrimary() const = 0;
 
-  virtual void fakeDraggingFiles(DragFileList fileList) {
+  virtual void fakeDraggingFiles(DragFileList fileList)
+  {
     throw std::runtime_error("fakeDraggingFiles not implemented");
   }
-  virtual const String &getDropTarget() const {
+  virtual const String &getDropTarget() const
+  {
     throw std::runtime_error("getDropTarget not implemented");
   }
 
@@ -143,6 +153,5 @@ private:
    * This member contains client scroll direction.
    * This member is used only on client side.
    */
-  deskflow::ClientScrollDirection m_clientScrollDirection =
-      deskflow::ClientScrollDirection::SERVER;
+  deskflow::ClientScrollDirection m_clientScrollDirection = deskflow::ClientScrollDirection::SERVER;
 };

@@ -22,11 +22,9 @@
 #include <QTextStream>
 
 const char *Action::m_ActionTypeNames[] = {
-    "keyDown",           "keyUp",
-    "keystroke",         "switchToScreen",
-    "switchInDirection", "lockCursorToScreen",
-    "restartServer",     "mouseDown",
-    "mouseUp",           "mousebutton"};
+    "keyDown",       "keyUp",     "keystroke", "switchToScreen", "switchInDirection", "lockCursorToScreen",
+    "restartServer", "mouseDown", "mouseUp",   "mousebutton"
+};
 
 const char *Action::m_SwitchDirectionNames[] = {"left", "right", "up", "down"};
 const char *Action::m_LockCursorModeNames[] = {"toggle", "on", "off"};
@@ -39,13 +37,13 @@ Action::Action()
       m_SwitchDirection(switchLeft),
       m_LockCursorMode(lockCursorToggle),
       m_ActiveOnRelease(false),
-      m_HasScreens(false) {}
+      m_HasScreens(false)
+{
+}
 
-QString Action::text() const {
-  QString text =
-      QString(m_ActionTypeNames
-                  [keySequence().isMouseButton() ? type() + 6 : type()]) +
-      "(";
+QString Action::text() const
+{
+  QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]) + "(";
 
   switch (type()) {
   case keyDown:
@@ -93,7 +91,8 @@ QString Action::text() const {
   return text;
 }
 
-void Action::loadSettings(QSettings &settings) {
+void Action::loadSettings(QSettings &settings)
+{
   keySequence().loadSettings(settings);
   setType(settings.value("type", keyDown).toInt());
 
@@ -107,14 +106,14 @@ void Action::loadSettings(QSettings &settings) {
 
   setSwitchScreenName(settings.value("switchScreenName").toString());
   setSwitchDirection(settings.value("switchInDirection", switchLeft).toInt());
-  setLockCursorMode(
-      settings.value("lockCursorToScreen", lockCursorToggle).toInt());
+  setLockCursorMode(settings.value("lockCursorToScreen", lockCursorToggle).toInt());
   setActiveOnRelease(settings.value("activeOnRelease", false).toBool());
   setHaveScreens(settings.value("hasScreens", false).toBool());
   setRestartServer(settings.value("restartServer", false).toBool());
 }
 
-void Action::saveSettings(QSettings &settings) const {
+void Action::saveSettings(QSettings &settings) const
+{
   keySequence().saveSettings(settings);
   settings.setValue("type", type());
 
@@ -133,17 +132,16 @@ void Action::saveSettings(QSettings &settings) const {
   settings.setValue("restartServer", restartServer());
 }
 
-bool Action::operator==(const Action &a) const {
-  return m_KeySequence == a.m_KeySequence && m_Type == a.m_Type &&
-         m_TypeScreenNames == a.m_TypeScreenNames &&
-         m_SwitchScreenName == a.m_SwitchScreenName &&
-         m_SwitchDirection == a.m_SwitchDirection &&
-         m_LockCursorMode == a.m_LockCursorMode &&
-         m_ActiveOnRelease == a.m_ActiveOnRelease &&
+bool Action::operator==(const Action &a) const
+{
+  return m_KeySequence == a.m_KeySequence && m_Type == a.m_Type && m_TypeScreenNames == a.m_TypeScreenNames &&
+         m_SwitchScreenName == a.m_SwitchScreenName && m_SwitchDirection == a.m_SwitchDirection &&
+         m_LockCursorMode == a.m_LockCursorMode && m_ActiveOnRelease == a.m_ActiveOnRelease &&
          m_HasScreens == a.m_HasScreens && m_restartServer == a.m_restartServer;
 }
 
-QTextStream &operator<<(QTextStream &outStream, const Action &action) {
+QTextStream &operator<<(QTextStream &outStream, const Action &action)
+{
   if (action.activeOnRelease())
     outStream << ";";
 

@@ -35,7 +35,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum {
+enum
+{
   kExitSuccess = 0,     // successful completion
   kExitFailed = 1,      // general failure
   kExitTerminated = 2,  // killed by signal

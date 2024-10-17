@@ -24,7 +24,8 @@
 
 namespace deskflow::gui {
 
-class IServerConfig {
+class IServerConfig
+{
 public:
   virtual ~IServerConfig() = default;
   virtual bool isFull() const = 0;

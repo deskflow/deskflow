@@ -59,9 +59,11 @@ on any event becoming available at the head of the queue and can place
 new events at the end of the queue.  Clients can also add and remove
 timers which generate events periodically.
 */
-class IEventQueue : public IInterface {
+class IEventQueue : public IInterface
+{
 public:
-  class TimerEvent {
+  class TimerEvent
+  {
   public:
     EventQueueTimer *m_timer; //!< The timer
     UInt32 m_count;           //!< Number of repeats
@@ -150,8 +152,7 @@ public:
   of type \p type.  If no such handler exists it will use the handler
   for \p target and type \p kUnknown if it exists.
   */
-  virtual void
-  adoptHandler(Event::Type type, void *target, IEventJob *handler) = 0;
+  virtual void adoptHandler(Event::Type type, void *target, IEventJob *handler) = 0;
 
   //! Unregister an event handler for an event type
   /*!

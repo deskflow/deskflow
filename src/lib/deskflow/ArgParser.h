@@ -29,36 +29,36 @@ class ClientArgs;
 class ToolArgs;
 class App;
 
-class ArgParser {
+class ArgParser
+{
 
 public:
   ArgParser(App *app);
 
-  bool parseServerArgs(
-      deskflow::ServerArgs &args, int argc, const char *const *argv);
-  bool parseClientArgs(
-      deskflow::ClientArgs &args, int argc, const char *const *argv);
-  bool parsePlatformArgs(
-      deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv,
-      int &i, bool isServer);
+  bool parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv);
+  bool parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv);
+  bool parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer);
   bool parseToolArgs(ToolArgs &args, int argc, const char *const *argv);
   bool parseGenericArgs(int argc, const char *const *argv, int &i);
   bool parseDeprecatedArgs(int argc, const char *const *argv, int &i);
-  void setArgsBase(deskflow::ArgsBase &argsBase) { m_argsBase = &argsBase; }
+  void setArgsBase(deskflow::ArgsBase &argsBase)
+  {
+    m_argsBase = &argsBase;
+  }
 
   static bool isArg(
-      int argi, int argc, const char *const *argv, const char *name1,
-      const char *name2, int minRequiredParameters = 0);
+      int argi, int argc, const char *const *argv, const char *name1, const char *name2, int minRequiredParameters = 0
+  );
   static void splitCommandString(String &command, std::vector<String> &argv);
-  static bool searchDoubleQuotes(
-      String &command, size_t &left, size_t &right, size_t startPos = 0);
+  static bool searchDoubleQuotes(String &command, size_t &left, size_t &right, size_t startPos = 0);
   static void removeDoubleQuotes(String &arg);
   static const char **getArgv(std::vector<String> &argsArray);
-  static String assembleCommand(
-      std::vector<String> &argsArray, String ignoreArg = "",
-      int parametersRequired = 0);
+  static String assembleCommand(std::vector<String> &argsArray, String ignoreArg = "", int parametersRequired = 0);
 
-  static deskflow::ArgsBase &argsBase() { return *m_argsBase; }
+  static deskflow::ArgsBase &argsBase()
+  {
+    return *m_argsBase;
+  }
 
 private:
   void updateCommonArgs(const char *const *argv);

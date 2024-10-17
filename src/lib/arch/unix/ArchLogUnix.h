@@ -23,7 +23,8 @@
 #define ARCH_LOG ArchLogUnix
 
 //! Unix implementation of IArchLog
-class ArchLogUnix : public IArchLog {
+class ArchLogUnix : public IArchLog
+{
 public:
   ArchLogUnix();
   virtual ~ArchLogUnix();

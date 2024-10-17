@@ -31,7 +31,8 @@
 
 namespace deskflow::gui {
 
-class CoreProcess : public QObject {
+class CoreProcess : public QObject
+{
   using IServerConfig = deskflow::gui::IServerConfig;
   using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
   using IQIpcClient = deskflow::gui::ipc::IQIpcClient;
@@ -39,10 +40,17 @@ class CoreProcess : public QObject {
   Q_OBJECT
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
-    virtual QProcessProxy &process() { return m_process; }
-    virtual IQIpcClient &ipcClient() { return m_ipcClient; }
+    virtual QProcessProxy &process()
+    {
+      return m_process;
+    }
+    virtual IQIpcClient &ipcClient()
+    {
+      return m_ipcClient;
+    }
     virtual QString appPath(const QString &name) const;
     virtual bool fileExists(const QString &path) const;
     virtual QString getProfileRoot() const;
@@ -52,20 +60,37 @@ public:
     QIpcClient m_ipcClient;
   };
 
-  enum class Mode { None, Client, Server };
-  enum class Error { AddressMissing, StartFailed };
-  enum class ProcessState {
+  enum class Mode
+  {
+    None,
+    Client,
+    Server
+  };
+  enum class Error
+  {
+    AddressMissing,
+    StartFailed
+  };
+  enum class ProcessState
+  {
     Starting,
     Started,
     Stopping,
     Stopped,
     RetryPending
   };
-  enum class ConnectionState { Disconnected, Connecting, Connected, Listening };
+  enum class ConnectionState
+  {
+    Disconnected,
+    Connecting,
+    Connected,
+    Listening
+  };
 
   explicit CoreProcess(
       const IAppConfig &appConfig, const IServerConfig &serverConfig,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>()
+  );
 
   void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
@@ -74,15 +99,36 @@ public:
   void cleanup();
 
   // getters
-  Mode mode() const { return m_mode; }
-  QString secureSocketVersion() const { return m_secureSocketVersion; }
-  bool isStarted() const { return m_processState == ProcessState::Started; }
-  ProcessState processState() const { return m_processState; }
-  ConnectionState connectionState() const { return m_connectionState; }
+  Mode mode() const
+  {
+    return m_mode;
+  }
+  QString secureSocketVersion() const
+  {
+    return m_secureSocketVersion;
+  }
+  bool isStarted() const
+  {
+    return m_processState == ProcessState::Started;
+  }
+  ProcessState processState() const
+  {
+    return m_processState;
+  }
+  ConnectionState connectionState() const
+  {
+    return m_connectionState;
+  }
 
   // setters
-  void setAddress(const QString &address) { m_address = address.trimmed(); }
-  void setMode(Mode mode) { m_mode = mode; }
+  void setAddress(const QString &address)
+  {
+    m_address = address.trimmed();
+  }
+  void setMode(Mode mode)
+  {
+    m_mode = mode;
+  }
 
 signals:
   void starting();

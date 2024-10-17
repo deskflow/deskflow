@@ -21,7 +21,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(IpcSettingMessage, testIpcSettingMessage) {
+TEST(IpcSettingMessage, testIpcSettingMessage)
+{
   const std::string expected_name = "test";
   const std::string expected_value = "test_value";
 

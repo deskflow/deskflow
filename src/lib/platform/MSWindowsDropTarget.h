@@ -24,7 +24,8 @@
 
 class MSWindowsScreen;
 
-class MSWindowsDropTarget : public IDropTarget {
+class MSWindowsDropTarget : public IDropTarget
+{
 public:
   MSWindowsDropTarget();
   ~MSWindowsDropTarget();
@@ -35,12 +36,10 @@ public:
   ULONG __stdcall Release(void);
 
   // IDropTarget implementation
-  HRESULT __stdcall DragEnter(
-      IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect);
+  HRESULT __stdcall DragEnter(IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect);
   HRESULT __stdcall DragOver(DWORD keyState, POINTL point, DWORD *effect);
   HRESULT __stdcall DragLeave(void);
-  HRESULT __stdcall Drop(
-      IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect);
+  HRESULT __stdcall Drop(IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect);
 
   void setDraggingFilename(char *const);
   std::string getDraggingFilename();

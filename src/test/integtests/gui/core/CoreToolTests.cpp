@@ -20,7 +20,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(CoreToolTests, getProfileDir_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getProfileDir_noMock_returnsNonEmpty)
+{
   TestQtCoreApp app;
   CoreTool coreTool;
 
@@ -29,7 +30,8 @@ TEST(CoreToolTests, getProfileDir_noMock_returnsNonEmpty) {
   EXPECT_FALSE(profileDir.isEmpty());
 }
 
-TEST(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty)
+{
   TestQtCoreApp app;
   CoreTool coreTool;
 
@@ -38,7 +40,8 @@ TEST(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty) {
   EXPECT_FALSE(installedDir.isEmpty());
 }
 
-TEST(CoreToolTests, getArch_noMock_returnsNonEmpty) {
+TEST(CoreToolTests, getArch_noMock_returnsNonEmpty)
+{
   TestQtCoreApp app;
   CoreTool coreTool;
 

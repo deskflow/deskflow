@@ -35,7 +35,8 @@
 #error Platform not supported.
 #endif
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 #if SYSAPI_WIN32
   // record window instance for tray icon, etc
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));

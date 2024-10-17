@@ -30,7 +30,8 @@
 
 class IpcReader;
 
-class QIpcClient : public deskflow::gui::ipc::IQIpcClient {
+class QIpcClient : public deskflow::gui::ipc::IQIpcClient
+{
   Q_OBJECT
 
 public:
@@ -42,7 +43,10 @@ public:
   void sendCommand(const QString &command, ElevateMode elevate) const override;
   void connectToHost() override;
   void disconnectFromHost() override;
-  bool isConnected() const override { return m_isConnected; }
+  bool isConnected() const override
+  {
+    return m_isConnected;
+  }
 
 private slots:
   void onRetryConnect();

@@ -27,7 +27,8 @@
 class Thread;
 
 //! Microsoft windows screen saver implementation
-class MSWindowsScreenSaver : public IScreenSaver {
+class MSWindowsScreenSaver : public IScreenSaver
+{
 public:
   MSWindowsScreenSaver();
   virtual ~MSWindowsScreenSaver();
@@ -54,7 +55,8 @@ public:
   virtual bool isActive() const;
 
 private:
-  class FindScreenSaverInfo {
+  class FindScreenSaverInfo
+  {
   public:
     HDESK m_desktop;
     HWND m_window;

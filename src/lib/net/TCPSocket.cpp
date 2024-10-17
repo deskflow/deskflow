@@ -37,14 +37,13 @@
 // TCPSocket
 //
 
-TCPSocket::TCPSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
+TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family)
     : IDataSocket(events),
       m_events(events),
       m_mutex(),
       m_flushed(&m_mutex, true),
-      m_socketMultiplexer(socketMultiplexer) {
+      m_socketMultiplexer(socketMultiplexer)
+{
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
   } catch (const XArchNetwork &e) {
@@ -56,15 +55,14 @@ TCPSocket::TCPSocket(
   init();
 }
 
-TCPSocket::TCPSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    ArchSocket socket)
+TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket)
     : IDataSocket(events),
       m_events(events),
       m_mutex(),
       m_socket(socket),
       m_flushed(&m_mutex, true),
-      m_socketMultiplexer(socketMultiplexer) {
+      m_socketMultiplexer(socketMultiplexer)
+{
   assert(m_socket != nullptr);
 
   LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
@@ -75,7 +73,8 @@ TCPSocket::TCPSocket(
   setJob(newJob());
 }
 
-TCPSocket::~TCPSocket() {
+TCPSocket::~TCPSocket()
+{
   try {
     // warning virtual function in destructor is very danger practice
     close();
@@ -84,7 +83,8 @@ TCPSocket::~TCPSocket() {
   }
 }
 
-void TCPSocket::bind(const NetworkAddress &addr) {
+void TCPSocket::bind(const NetworkAddress &addr)
+{
   try {
     ARCH->bindSocket(m_socket, addr.getAddress());
   } catch (const XArchNetworkAddressInUse &e) {
@@ -94,7 +94,8 @@ void TCPSocket::bind(const NetworkAddress &addr) {
   }
 }
 
-void TCPSocket::close() {
+void TCPSocket::close()
+{
   LOG((CLOG_DEBUG "closing socket: %08X", m_socket));
 
   // remove ourself from the multiplexer
@@ -121,11 +122,13 @@ void TCPSocket::close() {
   }
 }
 
-void *TCPSocket::getEventTarget() const {
+void *TCPSocket::getEventTarget() const
+{
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
-UInt32 TCPSocket::read(void *buffer, UInt32 n) {
+UInt32 TCPSocket::read(void *buffer, UInt32 n)
+{
   // copy data directly from our input buffer
   Lock lock(&m_mutex);
   UInt32 size = m_inputBuffer.getSize();
@@ -146,7 +149,8 @@ UInt32 TCPSocket::read(void *buffer, UInt32 n) {
   return n;
 }
 
-void TCPSocket::write(const void *buffer, UInt32 n) {
+void TCPSocket::write(const void *buffer, UInt32 n)
+{
   bool wasEmpty;
   {
     Lock lock(&m_mutex);
@@ -176,14 +180,16 @@ void TCPSocket::write(const void *buffer, UInt32 n) {
   }
 }
 
-void TCPSocket::flush() {
+void TCPSocket::flush()
+{
   Lock lock(&m_mutex);
   while (m_flushed == false) {
     m_flushed.wait();
   }
 }
 
-void TCPSocket::shutdownInput() {
+void TCPSocket::shutdownInput()
+{
   bool useNewJob = false;
   {
     Lock lock(&m_mutex);
@@ -208,7 +214,8 @@ void TCPSocket::shutdownInput() {
   }
 }
 
-void TCPSocket::shutdownOutput() {
+void TCPSocket::shutdownOutput()
+{
   bool useNewJob = false;
   {
     Lock lock(&m_mutex);
@@ -233,23 +240,27 @@ void TCPSocket::shutdownOutput() {
   }
 }
 
-bool TCPSocket::isReady() const {
+bool TCPSocket::isReady() const
+{
   Lock lock(&m_mutex);
   return (m_inputBuffer.getSize() > 0);
 }
 
-bool TCPSocket::isFatal() const {
+bool TCPSocket::isFatal() const
+{
   // TCP sockets aren't ever left in a fatal state.
   LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
   return false;
 }
 
-UInt32 TCPSocket::getSize() const {
+UInt32 TCPSocket::getSize() const
+{
   Lock lock(&m_mutex);
   return m_inputBuffer.getSize();
 }
 
-void TCPSocket::connect(const NetworkAddress &addr) {
+void TCPSocket::connect(const NetworkAddress &addr)
+{
   {
     Lock lock(&m_mutex);
 
@@ -274,7 +285,8 @@ void TCPSocket::connect(const NetworkAddress &addr) {
   setJob(newJob());
 }
 
-void TCPSocket::init() {
+void TCPSocket::init()
+{
   // default state
   m_connected = false;
   m_readable = false;
@@ -297,7 +309,8 @@ void TCPSocket::init() {
   }
 }
 
-TCPSocket::EJobResult TCPSocket::doRead() {
+TCPSocket::EJobResult TCPSocket::doRead()
+{
   UInt8 buffer[4096];
   memset(buffer, 0, sizeof(buffer));
   size_t bytesRead = 0;
@@ -334,7 +347,8 @@ TCPSocket::EJobResult TCPSocket::doRead() {
   return kRetry;
 }
 
-TCPSocket::EJobResult TCPSocket::doWrite() {
+TCPSocket::EJobResult TCPSocket::doWrite()
+{
   // write data
   UInt32 bufferSize = 0;
   int bytesWrote = 0;
@@ -351,7 +365,8 @@ TCPSocket::EJobResult TCPSocket::doWrite() {
   return kRetry;
 }
 
-void TCPSocket::setJob(ISocketMultiplexerJob *job) {
+void TCPSocket::setJob(ISocketMultiplexerJob *job)
+{
   // multiplexer will delete the old job
   if (job == nullptr) {
     m_socketMultiplexer->removeSocket(this);
@@ -360,7 +375,8 @@ void TCPSocket::setJob(ISocketMultiplexerJob *job) {
   }
 }
 
-ISocketMultiplexerJob *TCPSocket::newJob() {
+ISocketMultiplexerJob *TCPSocket::newJob()
+{
   // note -- must have m_mutex locked on entry
 
   if (m_socket == nullptr) {
@@ -371,29 +387,32 @@ ISocketMultiplexerJob *TCPSocket::newJob() {
       return nullptr;
     }
     return new TSocketMultiplexerMethodJob<TCPSocket>(
-        this, &TCPSocket::serviceConnecting, m_socket, m_readable, m_writable);
+        this, &TCPSocket::serviceConnecting, m_socket, m_readable, m_writable
+    );
   } else {
     if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
       return nullptr;
     }
     return new TSocketMultiplexerMethodJob<TCPSocket>(
-        this, &TCPSocket::serviceConnected, m_socket, m_readable,
-        m_writable && (m_outputBuffer.getSize() > 0));
+        this, &TCPSocket::serviceConnected, m_socket, m_readable, m_writable && (m_outputBuffer.getSize() > 0)
+    );
   }
 }
 
-void TCPSocket::sendConnectionFailedEvent(const char *msg) {
+void TCPSocket::sendConnectionFailedEvent(const char *msg)
+{
   ConnectionFailedInfo *info = new ConnectionFailedInfo(msg);
-  m_events->addEvent(Event(
-      m_events->forIDataSocket().connectionFailed(), getEventTarget(), info,
-      Event::kDontFreeData));
+  m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(), getEventTarget(), info, Event::kDontFreeData)
+  );
 }
 
-void TCPSocket::sendEvent(Event::Type type) {
+void TCPSocket::sendEvent(Event::Type type)
+{
   m_events->addEvent(Event(type, getEventTarget()));
 }
 
-void TCPSocket::discardWrittenData(int bytesWrote) {
+void TCPSocket::discardWrittenData(int bytesWrote)
+{
   m_outputBuffer.pop(bytesWrote);
   if (m_outputBuffer.getSize() == 0) {
     sendEvent(m_events->forIStream().outputFlushed());
@@ -402,18 +421,21 @@ void TCPSocket::discardWrittenData(int bytesWrote) {
   }
 }
 
-void TCPSocket::onConnected() {
+void TCPSocket::onConnected()
+{
   m_connected = true;
   m_readable = true;
   m_writable = true;
 }
 
-void TCPSocket::onInputShutdown() {
+void TCPSocket::onInputShutdown()
+{
   m_inputBuffer.pop(m_inputBuffer.getSize());
   m_readable = false;
 }
 
-void TCPSocket::onOutputShutdown() {
+void TCPSocket::onOutputShutdown()
+{
   m_outputBuffer.pop(m_outputBuffer.getSize());
   m_writable = false;
 
@@ -422,15 +444,16 @@ void TCPSocket::onOutputShutdown() {
   m_flushed.broadcast();
 }
 
-void TCPSocket::onDisconnected() {
+void TCPSocket::onDisconnected()
+{
   // disconnected
   onInputShutdown();
   onOutputShutdown();
   m_connected = false;
 }
 
-ISocketMultiplexerJob *TCPSocket::serviceConnecting(
-    ISocketMultiplexerJob *job, bool, bool write, bool error) {
+ISocketMultiplexerJob *TCPSocket::serviceConnecting(ISocketMultiplexerJob *job, bool, bool write, bool error)
+{
   Lock lock(&m_mutex);
 
   // should only check for errors if error is true but checking a new
@@ -470,8 +493,8 @@ ISocketMultiplexerJob *TCPSocket::serviceConnecting(
   return job;
 }
 
-ISocketMultiplexerJob *TCPSocket::serviceConnected(
-    ISocketMultiplexerJob *job, bool read, bool write, bool error) {
+ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, bool read, bool write, bool error)
+{
   Lock lock(&m_mutex);
 
   if (error) {

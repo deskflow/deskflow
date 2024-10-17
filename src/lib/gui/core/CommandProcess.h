@@ -20,7 +20,8 @@
 #include <QObject>
 #include <QStringList>
 
-class CommandProcess : public QObject {
+class CommandProcess : public QObject
+{
   Q_OBJECT
 
 public:

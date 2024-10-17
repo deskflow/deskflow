@@ -31,38 +31,29 @@ static const int s_family[] = {
 };
 static const int s_type[] = {SOCK_DGRAM, SOCK_STREAM};
 
-static SOCKET(PASCAL FAR *accept_winsock)(
-    SOCKET s, struct sockaddr FAR *addr, int FAR *addrlen);
-static int(PASCAL FAR *bind_winsock)(
-    SOCKET s, const struct sockaddr FAR *addr, int namelen);
+static SOCKET(PASCAL FAR *accept_winsock)(SOCKET s, struct sockaddr FAR *addr, int FAR *addrlen);
+static int(PASCAL FAR *bind_winsock)(SOCKET s, const struct sockaddr FAR *addr, int namelen);
 static int(PASCAL FAR *close_winsock)(SOCKET s);
-static int(PASCAL FAR *connect_winsock)(
-    SOCKET s, const struct sockaddr FAR *name, int namelen);
+static int(PASCAL FAR *connect_winsock)(SOCKET s, const struct sockaddr FAR *name, int namelen);
 static int(PASCAL FAR *gethostname_winsock)(char FAR *name, int namelen);
 static int(PASCAL FAR *getsockerror_winsock)(void);
-static int(PASCAL FAR *getsockopt_winsock)(
-    SOCKET s, int level, int optname, void FAR *optval, int FAR *optlen);
+static int(PASCAL FAR *getsockopt_winsock)(SOCKET s, int level, int optname, void FAR *optval, int FAR *optlen);
 static u_short(PASCAL FAR *htons_winsock)(u_short v);
 static char FAR *(PASCAL FAR *inet_ntoa_winsock)(struct in_addr in);
 static unsigned long(PASCAL FAR *inet_addr_winsock)(const char FAR *cp);
 static int(PASCAL FAR *ioctl_winsock)(SOCKET s, int cmd, void FAR *data);
 static int(PASCAL FAR *listen_winsock)(SOCKET s, int backlog);
 static u_short(PASCAL FAR *ntohs_winsock)(u_short v);
-static int(PASCAL FAR *recv_winsock)(
-    SOCKET s, void FAR *buf, int len, int flags);
+static int(PASCAL FAR *recv_winsock)(SOCKET s, void FAR *buf, int len, int flags);
 static int(PASCAL FAR *select_winsock)(
-    int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds,
-    const struct timeval FAR *timeout);
-static int(PASCAL FAR *send_winsock)(
-    SOCKET s, const void FAR *buf, int len, int flags);
-static int(PASCAL FAR *setsockopt_winsock)(
-    SOCKET s, int level, int optname, const void FAR *optval, int optlen);
+    int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout
+);
+static int(PASCAL FAR *send_winsock)(SOCKET s, const void FAR *buf, int len, int flags);
+static int(PASCAL FAR *setsockopt_winsock)(SOCKET s, int level, int optname, const void FAR *optval, int optlen);
 static int(PASCAL FAR *shutdown_winsock)(SOCKET s, int how);
 static SOCKET(PASCAL FAR *socket_winsock)(int af, int type, int protocol);
-static struct hostent FAR *(PASCAL FAR *gethostbyaddr_winsock)(
-    const char FAR *addr, int len, int type);
-static struct hostent FAR *(PASCAL FAR *gethostbyname_winsock)(
-    const char FAR *name);
+static struct hostent FAR *(PASCAL FAR *gethostbyaddr_winsock)(const char FAR *addr, int len, int type);
+static struct hostent FAR *(PASCAL FAR *gethostbyname_winsock)(const char FAR *name);
 static int(PASCAL FAR *WSACleanup_winsock)(void);
 static int(PASCAL FAR *WSAFDIsSet_winsock)(SOCKET, fd_set FAR *fdset);
 static WSAEVENT(PASCAL FAR *WSACreateEvent_winsock)(void);
@@ -70,10 +61,8 @@ static BOOL(PASCAL FAR *WSACloseEvent_winsock)(WSAEVENT);
 static BOOL(PASCAL FAR *WSASetEvent_winsock)(WSAEVENT);
 static BOOL(PASCAL FAR *WSAResetEvent_winsock)(WSAEVENT);
 static int(PASCAL FAR *WSAEventSelect_winsock)(SOCKET, WSAEVENT, long);
-static DWORD(PASCAL FAR *WSAWaitForMultipleEvents_winsock)(
-    DWORD, const WSAEVENT FAR *, BOOL, DWORD, BOOL);
-static int(PASCAL FAR *WSAEnumNetworkEvents_winsock)(
-    SOCKET, WSAEVENT, LPWSANETWORKEVENTS);
+static DWORD(PASCAL FAR *WSAWaitForMultipleEvents_winsock)(DWORD, const WSAEVENT FAR *, BOOL, DWORD, BOOL);
+static int(PASCAL FAR *WSAEnumNetworkEvents_winsock)(SOCKET, WSAEVENT, LPWSANETWORKEVENTS);
 
 #undef FD_ISSET
 #define FD_ISSET(fd, set) WSAFDIsSet_winsock((SOCKET)(fd), (fd_set FAR *)(set))
@@ -82,7 +71,8 @@ static int(PASCAL FAR *WSAEnumNetworkEvents_winsock)(
 
 static HMODULE s_networkModule = NULL;
 
-static FARPROC netGetProcAddress(HMODULE module, LPCSTR name) {
+static FARPROC netGetProcAddress(HMODULE module, LPCSTR name)
+{
   FARPROC func = ::GetProcAddress(module, name);
   if (!func) {
     throw XArchNetworkSupport("");
@@ -90,7 +80,8 @@ static FARPROC netGetProcAddress(HMODULE module, LPCSTR name) {
   return func;
 }
 
-ArchNetAddressImpl *ArchNetAddressImpl::alloc(size_t size) {
+ArchNetAddressImpl *ArchNetAddressImpl::alloc(size_t size)
+{
   size_t totalSize = size + ADDR_HDR_SIZE;
   ArchNetAddressImpl *addr = (ArchNetAddressImpl *)malloc(totalSize);
   addr->m_len = (int)size;
@@ -101,9 +92,12 @@ ArchNetAddressImpl *ArchNetAddressImpl::alloc(size_t size) {
 // ArchNetworkWinsock
 //
 
-ArchNetworkWinsock::ArchNetworkWinsock() : m_mutex(NULL) {}
+ArchNetworkWinsock::ArchNetworkWinsock() : m_mutex(NULL)
+{
+}
 
-ArchNetworkWinsock::~ArchNetworkWinsock() {
+ArchNetworkWinsock::~ArchNetworkWinsock()
+{
   if (s_networkModule != NULL) {
     WSACleanup_winsock();
     ::FreeLibrary(s_networkModule);
@@ -121,7 +115,8 @@ ArchNetworkWinsock::~ArchNetworkWinsock() {
   }
 }
 
-void ArchNetworkWinsock::init() {
+void ArchNetworkWinsock::init()
+{
   static const char *s_library[] = {"ws2_32.dll"};
 
   assert(WSACleanup_winsock == NULL);
@@ -142,7 +137,8 @@ void ArchNetworkWinsock::init() {
   throw XArchNetworkSupport("Cannot load winsock library");
 }
 
-void ArchNetworkWinsock::initModule(HMODULE module) {
+void ArchNetworkWinsock::initModule(HMODULE module)
+{
   if (module == NULL) {
     throw XArchNetworkSupport("");
   }
@@ -164,89 +160,58 @@ void ArchNetworkWinsock::initModule(HMODULE module) {
   }
 
   // get function addresses
-  setfunc(
-      accept_winsock, accept,
-      SOCKET(PASCAL FAR *)(
-          SOCKET s, struct sockaddr FAR * addr, int FAR *addrlen));
-  setfunc(
-      bind_winsock, bind,
-      int(PASCAL FAR *)(
-          SOCKET s, const struct sockaddr FAR *addr, int namelen));
+  setfunc(accept_winsock, accept, SOCKET(PASCAL FAR *)(SOCKET s, struct sockaddr FAR * addr, int FAR *addrlen));
+  setfunc(bind_winsock, bind, int(PASCAL FAR *)(SOCKET s, const struct sockaddr FAR *addr, int namelen));
   setfunc(close_winsock, closesocket, int(PASCAL FAR *)(SOCKET s));
-  setfunc(
-      connect_winsock, connect,
-      int(PASCAL FAR *)(
-          SOCKET s, const struct sockaddr FAR *name, int namelen));
-  setfunc(
-      gethostname_winsock, gethostname,
-      int(PASCAL FAR *)(char FAR *name, int namelen));
+  setfunc(connect_winsock, connect, int(PASCAL FAR *)(SOCKET s, const struct sockaddr FAR *name, int namelen));
+  setfunc(gethostname_winsock, gethostname, int(PASCAL FAR *)(char FAR *name, int namelen));
   setfunc(getsockerror_winsock, WSAGetLastError, int(PASCAL FAR *)(void));
   setfunc(
       getsockopt_winsock, getsockopt,
-      int(PASCAL FAR *)(
-          SOCKET s, int level, int optname, void FAR *optval, int FAR *optlen));
+      int(PASCAL FAR *)(SOCKET s, int level, int optname, void FAR *optval, int FAR *optlen)
+  );
   setfunc(htons_winsock, htons, u_short(PASCAL FAR *)(u_short v));
-  setfunc(
-      inet_ntoa_winsock, inet_ntoa,
-      char FAR *(PASCAL FAR *)(struct in_addr in));
-  setfunc(
-      inet_addr_winsock, inet_addr,
-      unsigned long(PASCAL FAR *)(const char FAR *cp));
-  setfunc(
-      ioctl_winsock, ioctlsocket,
-      int(PASCAL FAR *)(SOCKET s, int cmd, void FAR *));
+  setfunc(inet_ntoa_winsock, inet_ntoa, char FAR *(PASCAL FAR *)(struct in_addr in));
+  setfunc(inet_addr_winsock, inet_addr, unsigned long(PASCAL FAR *)(const char FAR *cp));
+  setfunc(ioctl_winsock, ioctlsocket, int(PASCAL FAR *)(SOCKET s, int cmd, void FAR *));
   setfunc(listen_winsock, listen, int(PASCAL FAR *)(SOCKET s, int backlog));
   setfunc(ntohs_winsock, ntohs, u_short(PASCAL FAR *)(u_short v));
-  setfunc(
-      recv_winsock, recv,
-      int(PASCAL FAR *)(SOCKET s, void FAR *buf, int len, int flags));
+  setfunc(recv_winsock, recv, int(PASCAL FAR *)(SOCKET s, void FAR *buf, int len, int flags));
   setfunc(
       select_winsock, select,
       int(PASCAL FAR *)(
-          int nfds, fd_set FAR *readfds, fd_set FAR *writefds,
-          fd_set FAR *exceptfds, const struct timeval FAR *timeout));
-  setfunc(
-      send_winsock, send,
-      int(PASCAL FAR *)(SOCKET s, const void FAR *buf, int len, int flags));
+          int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout
+      )
+  );
+  setfunc(send_winsock, send, int(PASCAL FAR *)(SOCKET s, const void FAR *buf, int len, int flags));
   setfunc(
       setsockopt_winsock, setsockopt,
-      int(PASCAL FAR *)(
-          SOCKET s, int level, int optname, const void FAR *optval,
-          int optlen));
+      int(PASCAL FAR *)(SOCKET s, int level, int optname, const void FAR *optval, int optlen)
+  );
   setfunc(shutdown_winsock, shutdown, int(PASCAL FAR *)(SOCKET s, int how));
+  setfunc(socket_winsock, socket, SOCKET(PASCAL FAR *)(int af, int type, int protocol));
   setfunc(
-      socket_winsock, socket,
-      SOCKET(PASCAL FAR *)(int af, int type, int protocol));
-  setfunc(
-      gethostbyaddr_winsock, gethostbyaddr,
-      struct hostent FAR *
-          (PASCAL FAR *)(const char FAR *addr, int len, int type));
-  setfunc(
-      gethostbyname_winsock, gethostbyname,
-      struct hostent FAR * (PASCAL FAR *)(const char FAR *name));
+      gethostbyaddr_winsock, gethostbyaddr, struct hostent FAR * (PASCAL FAR *)(const char FAR *addr, int len, int type)
+  );
+  setfunc(gethostbyname_winsock, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR *name));
   setfunc(WSACleanup_winsock, WSACleanup, int(PASCAL FAR *)(void));
-  setfunc(
-      WSAFDIsSet_winsock, __WSAFDIsSet,
-      int(PASCAL FAR *)(SOCKET, fd_set FAR *));
+  setfunc(WSAFDIsSet_winsock, __WSAFDIsSet, int(PASCAL FAR *)(SOCKET, fd_set FAR *));
   setfunc(WSACreateEvent_winsock, WSACreateEvent, WSAEVENT(PASCAL FAR *)(void));
   setfunc(WSACloseEvent_winsock, WSACloseEvent, BOOL(PASCAL FAR *)(WSAEVENT));
   setfunc(WSASetEvent_winsock, WSASetEvent, BOOL(PASCAL FAR *)(WSAEVENT));
   setfunc(WSAResetEvent_winsock, WSAResetEvent, BOOL(PASCAL FAR *)(WSAEVENT));
-  setfunc(
-      WSAEventSelect_winsock, WSAEventSelect,
-      int(PASCAL FAR *)(SOCKET, WSAEVENT, long));
+  setfunc(WSAEventSelect_winsock, WSAEventSelect, int(PASCAL FAR *)(SOCKET, WSAEVENT, long));
   setfunc(
       WSAWaitForMultipleEvents_winsock, WSAWaitForMultipleEvents,
-      DWORD(PASCAL FAR *)(DWORD, const WSAEVENT FAR *, BOOL, DWORD, BOOL));
-  setfunc(
-      WSAEnumNetworkEvents_winsock, WSAEnumNetworkEvents,
-      int(PASCAL FAR *)(SOCKET, WSAEVENT, LPWSANETWORKEVENTS));
+      DWORD(PASCAL FAR *)(DWORD, const WSAEVENT FAR *, BOOL, DWORD, BOOL)
+  );
+  setfunc(WSAEnumNetworkEvents_winsock, WSAEnumNetworkEvents, int(PASCAL FAR *)(SOCKET, WSAEVENT, LPWSANETWORKEVENTS));
 
   s_networkModule = module;
 }
 
-ArchSocket
-ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type) {
+ArchSocket ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
+{
   // create socket
   SOCKET fd = socket_winsock(s_family[family], s_type[type], 0);
   if (fd == INVALID_SOCKET) {
@@ -256,8 +221,7 @@ ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type) {
     setBlockingOnSocket(fd, false);
     BOOL flag = 0;
     int size = sizeof(flag);
-    if (setsockopt_winsock(fd, IPPROTO_IPV6, IPV6_V6ONLY, &flag, size) ==
-        SOCKET_ERROR) {
+    if (setsockopt_winsock(fd, IPPROTO_IPV6, IPV6_V6ONLY, &flag, size) == SOCKET_ERROR) {
       throwError(getsockerror_winsock());
     }
   } catch (...) {
@@ -274,7 +238,8 @@ ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type) {
   return socket;
 }
 
-ArchSocket ArchNetworkWinsock::copySocket(ArchSocket s) {
+ArchSocket ArchNetworkWinsock::copySocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // ref the socket and return it
@@ -284,7 +249,8 @@ ArchSocket ArchNetworkWinsock::copySocket(ArchSocket s) {
   return s;
 }
 
-void ArchNetworkWinsock::closeSocket(ArchSocket s) {
+void ArchNetworkWinsock::closeSocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // unref the socket and note if it should be released
@@ -307,7 +273,8 @@ void ArchNetworkWinsock::closeSocket(ArchSocket s) {
   }
 }
 
-void ArchNetworkWinsock::closeSocketForRead(ArchSocket s) {
+void ArchNetworkWinsock::closeSocketForRead(ArchSocket s)
+{
   assert(s != NULL);
 
   if (shutdown_winsock(s->m_socket, SD_RECEIVE) == SOCKET_ERROR) {
@@ -317,7 +284,8 @@ void ArchNetworkWinsock::closeSocketForRead(ArchSocket s) {
   }
 }
 
-void ArchNetworkWinsock::closeSocketForWrite(ArchSocket s) {
+void ArchNetworkWinsock::closeSocketForWrite(ArchSocket s)
+{
   assert(s != NULL);
 
   if (shutdown_winsock(s->m_socket, SD_SEND) == SOCKET_ERROR) {
@@ -327,18 +295,18 @@ void ArchNetworkWinsock::closeSocketForWrite(ArchSocket s) {
   }
 }
 
-void ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr) {
+void ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr)
+{
   assert(s != NULL);
   assert(addr != NULL);
 
-  if (bind_winsock(
-          s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) ==
-      SOCKET_ERROR) {
+  if (bind_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == SOCKET_ERROR) {
     throwError(getsockerror_winsock());
   }
 }
 
-void ArchNetworkWinsock::listenOnSocket(ArchSocket s) {
+void ArchNetworkWinsock::listenOnSocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // hardcoding backlog
@@ -347,8 +315,8 @@ void ArchNetworkWinsock::listenOnSocket(ArchSocket s) {
   }
 }
 
-ArchSocket
-ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const addr) {
+ArchSocket ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const addr)
+{
   assert(s != NULL);
 
   // create new socket and temporary address
@@ -356,8 +324,7 @@ ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const addr) {
   ArchNetAddress tmp = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in6));
 
   // accept on socket
-  SOCKET fd = accept_winsock(
-      s->m_socket, TYPED_ADDR(struct sockaddr, tmp), &tmp->m_len);
+  SOCKET fd = accept_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, tmp), &tmp->m_len);
   if (fd == INVALID_SOCKET) {
     int err = getsockerror_winsock();
     delete socket;
@@ -398,13 +365,12 @@ ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const addr) {
   return socket;
 }
 
-bool ArchNetworkWinsock::connectSocket(ArchSocket s, ArchNetAddress addr) {
+bool ArchNetworkWinsock::connectSocket(ArchSocket s, ArchNetAddress addr)
+{
   assert(s != NULL);
   assert(addr != NULL);
 
-  if (connect_winsock(
-          s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) ==
-      SOCKET_ERROR) {
+  if (connect_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == SOCKET_ERROR) {
     if (getsockerror_winsock() == WSAEISCONN) {
       return true;
     }
@@ -416,7 +382,8 @@ bool ArchNetworkWinsock::connectSocket(ArchSocket s, ArchNetAddress addr) {
   return true;
 }
 
-int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout) {
+int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
+{
   int i;
   DWORD n;
 
@@ -456,8 +423,7 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout) {
     }
 
     // select socket for desired events
-    WSAEventSelect_winsock(
-        pe[i].m_socket->m_socket, pe[i].m_socket->m_event, socketEvents);
+    WSAEventSelect_winsock(pe[i].m_socket->m_socket, pe[i].m_socket->m_event, socketEvents);
 
     // add socket event to wait list
     events[n++] = pe[i].m_socket->m_event;
@@ -512,16 +478,13 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout) {
   }
   for (i = 0, n = 0; i < num; ++i) {
     // skip events we didn't check
-    if (pe[i].m_socket == NULL ||
-        (pe[i].m_events & (kPOLLIN | kPOLLOUT)) == 0) {
+    if (pe[i].m_socket == NULL || (pe[i].m_events & (kPOLLIN | kPOLLOUT)) == 0) {
       continue;
     }
 
     // get events
     WSANETWORKEVENTS info;
-    if (WSAEnumNetworkEvents_winsock(
-            pe[i].m_socket->m_socket, pe[i].m_socket->m_event, &info) ==
-        SOCKET_ERROR) {
+    if (WSAEnumNetworkEvents_winsock(pe[i].m_socket->m_socket, pe[i].m_socket->m_event, &info) == SOCKET_ERROR) {
       continue;
     }
     if ((info.lNetworkEvents & FD_READ) != 0) {
@@ -565,7 +528,8 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout) {
   return (int)n;
 }
 
-void ArchNetworkWinsock::unblockPollSocket(ArchThread thread) {
+void ArchNetworkWinsock::unblockPollSocket(ArchThread thread)
+{
   // set the unblock event
   ArchMultithreadWindows *mt = ArchMultithreadWindows::getInstance();
   WSAEVENT *unblockEvent = (WSAEVENT *)mt->getNetworkDataForThread(thread);
@@ -574,7 +538,8 @@ void ArchNetworkWinsock::unblockPollSocket(ArchThread thread) {
   }
 }
 
-size_t ArchNetworkWinsock::readSocket(ArchSocket s, void *buf, size_t len) {
+size_t ArchNetworkWinsock::readSocket(ArchSocket s, void *buf, size_t len)
+{
   assert(s != NULL);
 
   int n = recv_winsock(s->m_socket, buf, (int)len, 0);
@@ -588,8 +553,8 @@ size_t ArchNetworkWinsock::readSocket(ArchSocket s, void *buf, size_t len) {
   return static_cast<size_t>(n);
 }
 
-size_t
-ArchNetworkWinsock::writeSocket(ArchSocket s, const void *buf, size_t len) {
+size_t ArchNetworkWinsock::writeSocket(ArchSocket s, const void *buf, size_t len)
+{
   assert(s != NULL);
 
   int n = send_winsock(s->m_socket, buf, (int)len, 0);
@@ -607,14 +572,14 @@ ArchNetworkWinsock::writeSocket(ArchSocket s, const void *buf, size_t len) {
   return static_cast<size_t>(n);
 }
 
-void ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s) {
+void ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // get the error from the socket layer
   int err = 0;
   int size = sizeof(err);
-  if (getsockopt_winsock(s->m_socket, SOL_SOCKET, SO_ERROR, &err, &size) ==
-      SOCKET_ERROR) {
+  if (getsockopt_winsock(s->m_socket, SOL_SOCKET, SO_ERROR, &err, &size) == SOCKET_ERROR) {
     err = getsockerror_winsock();
   }
 
@@ -624,7 +589,8 @@ void ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s) {
   }
 }
 
-void ArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking) {
+void ArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
+{
   assert(s != 0);
 
   int flag = blocking ? 0 : 1;
@@ -633,53 +599,50 @@ void ArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking) {
   }
 }
 
-bool ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay) {
+bool ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
+{
   assert(s != NULL);
 
   // get old state
   BOOL oflag;
   int size = sizeof(oflag);
-  if (getsockopt_winsock(
-          s->m_socket, IPPROTO_TCP, TCP_NODELAY, &oflag, &size) ==
-      SOCKET_ERROR) {
+  if (getsockopt_winsock(s->m_socket, IPPROTO_TCP, TCP_NODELAY, &oflag, &size) == SOCKET_ERROR) {
     throwError(getsockerror_winsock());
   }
 
   // set new state
   BOOL flag = noDelay ? 1 : 0;
   size = sizeof(flag);
-  if (setsockopt_winsock(s->m_socket, IPPROTO_TCP, TCP_NODELAY, &flag, size) ==
-      SOCKET_ERROR) {
+  if (setsockopt_winsock(s->m_socket, IPPROTO_TCP, TCP_NODELAY, &flag, size) == SOCKET_ERROR) {
     throwError(getsockerror_winsock());
   }
 
   return (oflag != 0);
 }
 
-bool ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse) {
+bool ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
+{
   assert(s != NULL);
 
   // get old state
   BOOL oflag;
   int size = sizeof(oflag);
-  if (getsockopt_winsock(
-          s->m_socket, SOL_SOCKET, SO_REUSEADDR, &oflag, &size) ==
-      SOCKET_ERROR) {
+  if (getsockopt_winsock(s->m_socket, SOL_SOCKET, SO_REUSEADDR, &oflag, &size) == SOCKET_ERROR) {
     throwError(getsockerror_winsock());
   }
 
   // set new state
   BOOL flag = reuse ? 1 : 0;
   size = sizeof(flag);
-  if (setsockopt_winsock(s->m_socket, SOL_SOCKET, SO_REUSEADDR, &flag, size) ==
-      SOCKET_ERROR) {
+  if (setsockopt_winsock(s->m_socket, SOL_SOCKET, SO_REUSEADDR, &flag, size) == SOCKET_ERROR) {
     throwError(getsockerror_winsock());
   }
 
   return (oflag != 0);
 }
 
-std::string ArchNetworkWinsock::getHostName() {
+std::string ArchNetworkWinsock::getHostName()
+{
   char name[256];
   if (gethostname_winsock(name, sizeof(name)) == -1) {
     name[0] = '\0';
@@ -689,7 +652,8 @@ std::string ArchNetworkWinsock::getHostName() {
   return name;
 }
 
-ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family) {
+ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
+{
   ArchNetAddressImpl *addr = NULL;
   switch (family) {
   case kINET: {
@@ -716,7 +680,8 @@ ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family) {
   return addr;
 }
 
-ArchNetAddress ArchNetworkWinsock::copyAddr(ArchNetAddress addr) {
+ArchNetAddress ArchNetworkWinsock::copyAddr(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   ArchNetAddressImpl *copy = ArchNetAddressImpl::alloc(addr->m_len);
@@ -724,8 +689,8 @@ ArchNetAddress ArchNetworkWinsock::copyAddr(ArchNetAddress addr) {
   return copy;
 }
 
-std::vector<ArchNetAddress>
-ArchNetworkWinsock::nameToAddr(const std::string &name) {
+std::vector<ArchNetAddress> ArchNetworkWinsock::nameToAddr(const std::string &name)
+{
   // allocate address
   std::vector<ArchNetAddressImpl *> addresses;
 
@@ -749,8 +714,7 @@ ArchNetworkWinsock::nameToAddr(const std::string &name) {
       addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
     }
 
-    memcpy(
-        &addresses.back()->m_addr, address->ai_addr, addresses.back()->m_len);
+    memcpy(&addresses.back()->m_addr, address->ai_addr, addresses.back()->m_len);
   }
 
   freeaddrinfo(pResult);
@@ -758,20 +722,21 @@ ArchNetworkWinsock::nameToAddr(const std::string &name) {
   return addresses;
 }
 
-void ArchNetworkWinsock::closeAddr(ArchNetAddress addr) {
+void ArchNetworkWinsock::closeAddr(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   free(addr);
 }
 
-std::string ArchNetworkWinsock::addrToName(ArchNetAddress addr) {
+std::string ArchNetworkWinsock::addrToName(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   char host[1024];
   char service[20];
-  int ret = getnameinfo(
-      TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host),
-      service, sizeof(service), 0);
+  int ret =
+      getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host), service, sizeof(service), 0);
 
   if (ret != NULL) {
     throwNameError(ret);
@@ -782,7 +747,8 @@ std::string ArchNetworkWinsock::addrToName(ArchNetAddress addr) {
   return name;
 }
 
-std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr) {
+std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
@@ -804,8 +770,8 @@ std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr) {
   }
 }
 
-IArchNetwork::EAddressFamily
-ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr) {
+IArchNetwork::EAddressFamily ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (addr->m_addr.ss_family) {
@@ -820,7 +786,8 @@ ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr) {
   }
 }
 
-void ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port) {
+void ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
@@ -842,7 +809,8 @@ void ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port) {
   }
 }
 
-int ArchNetworkWinsock::getAddrPort(ArchNetAddress addr) {
+int ArchNetworkWinsock::getAddrPort(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
@@ -862,22 +830,21 @@ int ArchNetworkWinsock::getAddrPort(ArchNetAddress addr) {
   }
 }
 
-bool ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr) {
+bool ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
   case kINET: {
     struct sockaddr_in *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
-    return (
-        addr->m_len == sizeof(struct sockaddr_in) &&
-        ipAddr->sin_addr.s_addr == INADDR_ANY);
+    return (addr->m_len == sizeof(struct sockaddr_in) && ipAddr->sin_addr.s_addr == INADDR_ANY);
   }
 
   case kINET6: {
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return (
-        addr->m_len == sizeof(struct sockaddr_in) &&
-        memcmp(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0);
+        addr->m_len == sizeof(struct sockaddr_in) && memcmp(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0
+    );
   }
 
   default:
@@ -886,13 +853,13 @@ bool ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr) {
   }
 }
 
-bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b) {
-  return (
-      a == b ||
-      (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0));
+bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
+{
+  return (a == b || (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0));
 }
 
-void ArchNetworkWinsock::throwError(int err) {
+void ArchNetworkWinsock::throwError(int err)
+{
   switch (err) {
   case WSAEACCES:
     throw XArchNetworkAccess(new XArchEvalWinsock(err));
@@ -961,7 +928,8 @@ void ArchNetworkWinsock::throwError(int err) {
   }
 }
 
-void ArchNetworkWinsock::throwNameError(int err) {
+void ArchNetworkWinsock::throwNameError(int err)
+{
   switch (err) {
   case WSAHOST_NOT_FOUND:
     throw XArchNetworkNameUnknown(new XArchEvalWinsock(err));

@@ -25,7 +25,8 @@
 This interface defines the time operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchTime : public IInterface {
+class IArchTime : public IInterface
+{
 public:
   //! @name manipulators
   //@{

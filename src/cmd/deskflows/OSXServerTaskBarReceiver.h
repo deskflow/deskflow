@@ -23,7 +23,8 @@
 class BufferedLogOutputter;
 
 //! Implementation of ServerTaskBarReceiver for OS X
-class OSXServerTaskBarReceiver : public ServerTaskBarReceiver {
+class OSXServerTaskBarReceiver : public ServerTaskBarReceiver
+{
 public:
   OSXServerTaskBarReceiver(const BufferedLogOutputter *, IEventQueue *events);
   virtual ~OSXServerTaskBarReceiver();

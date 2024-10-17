@@ -35,13 +35,14 @@
 //
 
 ClientListener::ClientListener(
-    const NetworkAddress &address, ISocketFactory *socketFactory,
-    IEventQueue *events, bool enableCrypto)
+    const NetworkAddress &address, ISocketFactory *socketFactory, IEventQueue *events, bool enableCrypto
+)
     : m_socketFactory(socketFactory),
       m_server(NULL),
       m_events(events),
       m_useSecureNetwork(enableCrypto),
-      m_address(address) {
+      m_address(address)
+{
   assert(m_socketFactory != NULL);
 
   try {
@@ -58,17 +59,20 @@ ClientListener::ClientListener(
   LOG((CLOG_DEBUG1 "listening for clients"));
 }
 
-ClientListener::~ClientListener() {
+ClientListener::~ClientListener()
+{
   stop();
   delete m_socketFactory;
 }
 
-void ClientListener::setServer(Server *server) {
+void ClientListener::setServer(Server *server)
+{
   assert(server != NULL);
   m_server = server;
 }
 
-ClientProxy *ClientListener::getNextClient() {
+ClientProxy *ClientListener::getNextClient()
+{
   ClientProxy *client = NULL;
   if (!m_waitingClients.empty()) {
     client = m_waitingClients.front();
@@ -78,32 +82,30 @@ ClientProxy *ClientListener::getNextClient() {
   return client;
 }
 
-void ClientListener::start() {
-  m_listen = m_socketFactory->createListen(
-      m_useSecureNetwork, ARCH->getAddrFamily(m_address.getAddress()));
+void ClientListener::start()
+{
+  m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(m_address.getAddress()));
 
   // setup event handler
   m_events->adoptHandler(
       m_events->forIListenSocket().connecting(), m_listen,
-      new TMethodEventJob<ClientListener>(
-          this, &ClientListener::handleClientConnecting));
+      new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientConnecting)
+  );
 
   // bind listen address
   LOG((CLOG_DEBUG1 "binding listen socket"));
   m_listen->bind(m_address);
 }
 
-void ClientListener::stop() {
+void ClientListener::stop()
+{
   LOG((CLOG_DEBUG1 "stop listening for clients"));
 
   // discard already connected clients
-  for (NewClients::iterator index = m_newClients.begin();
-       index != m_newClients.end(); ++index) {
+  for (NewClients::iterator index = m_newClients.begin(); index != m_newClients.end(); ++index) {
     ClientProxyUnknown *client = *index;
-    m_events->removeHandler(
-        m_events->forClientProxyUnknown().success(), client);
-    m_events->removeHandler(
-        m_events->forClientProxyUnknown().failure(), client);
+    m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
+    m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
     m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
     delete client;
   }
@@ -120,25 +122,26 @@ void ClientListener::stop() {
   cleanupClientSockets();
 }
 
-void ClientListener::removeUnknownClient(ClientProxyUnknown *unknownClient) {
+void ClientListener::removeUnknownClient(ClientProxyUnknown *unknownClient)
+{
   if (unknownClient) {
-    m_events->removeHandler(
-        m_events->forClientProxyUnknown().success(), unknownClient);
-    m_events->removeHandler(
-        m_events->forClientProxyUnknown().failure(), unknownClient);
+    m_events->removeHandler(m_events->forClientProxyUnknown().success(), unknownClient);
+    m_events->removeHandler(m_events->forClientProxyUnknown().failure(), unknownClient);
     m_newClients.erase(unknownClient);
     delete unknownClient;
   }
 }
 
-void ClientListener::restart() {
+void ClientListener::restart()
+{
   if (m_server && m_server->isClientMode()) {
     stop();
     start();
   }
 }
 
-void ClientListener::handleClientConnecting(const Event &, void *) {
+void ClientListener::handleClientConnecting(const Event &, void *)
+{
   // accept client connection
   IDataSocket *socket = m_listen->accept();
 
@@ -150,18 +153,18 @@ void ClientListener::handleClientConnecting(const Event &, void *) {
 
   m_events->adoptHandler(
       m_events->forClientListener().accepted(), socket->getEventTarget(),
-      new TMethodEventJob<ClientListener>(
-          this, &ClientListener::handleClientAccepted, socket));
+      new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientAccepted, socket)
+  );
 
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
   if (!m_useSecureNetwork) {
-    m_events->addEvent(Event(
-        m_events->forClientListener().accepted(), socket->getEventTarget()));
+    m_events->addEvent(Event(m_events->forClientListener().accepted(), socket->getEventTarget()));
   }
 }
 
-void ClientListener::handleClientAccepted(const Event &, void *vsocket) {
+void ClientListener::handleClientAccepted(const Event &, void *vsocket)
+{
   LOG((CLOG_NOTE "accepted client connection"));
 
   IDataSocket *socket = static_cast<IDataSocket *>(vsocket);
@@ -171,23 +174,23 @@ void ClientListener::handleClientAccepted(const Event &, void *vsocket) {
   assert(m_server != NULL);
 
   // create proxy for unknown client
-  ClientProxyUnknown *client =
-      new ClientProxyUnknown(stream, 30.0, m_server, m_events);
+  ClientProxyUnknown *client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
 
   m_newClients.insert(client);
 
   // watch for events from unknown client
   m_events->adoptHandler(
       m_events->forClientProxyUnknown().success(), client,
-      new TMethodEventJob<ClientListener>(
-          this, &ClientListener::handleUnknownClient, client));
+      new TMethodEventJob<ClientListener>(this, &ClientListener::handleUnknownClient, client)
+  );
   m_events->adoptHandler(
       m_events->forClientProxyUnknown().failure(), client,
-      new TMethodEventJob<ClientListener>(
-          this, &ClientListener::handleUnknownClientFailure, client));
+      new TMethodEventJob<ClientListener>(this, &ClientListener::handleUnknownClientFailure, client)
+  );
 }
 
-void ClientListener::handleUnknownClient(const Event &, void *vclient) {
+void ClientListener::handleUnknownClient(const Event &, void *vclient)
+{
   auto unknownClient = static_cast<ClientProxyUnknown *>(vclient);
 
   // we should have the client in our new client list
@@ -203,31 +206,30 @@ void ClientListener::handleUnknownClient(const Event &, void *vclient) {
     // watch for client to disconnect while it's in our queue
     m_events->adoptHandler(
         m_events->forClientProxy().disconnected(), client,
-        new TMethodEventJob<ClientListener>(
-            this, &ClientListener::handleClientDisconnected, client));
+        new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientDisconnected, client)
+    );
   }
 
   // now finished with unknown client
   removeUnknownClient(unknownClient);
 }
 
-void ClientListener::handleUnknownClientFailure(const Event &, void *vclient) {
+void ClientListener::handleUnknownClientFailure(const Event &, void *vclient)
+{
   auto unknownClient = static_cast<ClientProxyUnknown *>(vclient);
   removeUnknownClient(unknownClient);
   restart();
 }
 
-void ClientListener::handleClientDisconnected(const Event &, void *vclient) {
+void ClientListener::handleClientDisconnected(const Event &, void *vclient)
+{
   ClientProxy *client = static_cast<ClientProxy *>(vclient);
 
   // find client in waiting clients queue
-  for (WaitingClients::iterator i = m_waitingClients.begin(),
-                                n = m_waitingClients.end();
-       i != n; ++i) {
+  for (WaitingClients::iterator i = m_waitingClients.begin(), n = m_waitingClients.end(); i != n; ++i) {
     if (*i == client) {
       m_waitingClients.erase(i);
-      m_events->removeHandler(
-          m_events->forClientProxy().disconnected(), client);
+      m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
 
       // pull out the socket before deleting the client so
       // we know which socket we no longer need
@@ -241,9 +243,13 @@ void ClientListener::handleClientDisconnected(const Event &, void *vclient) {
   }
 }
 
-void ClientListener::cleanupListenSocket() { delete m_listen; }
+void ClientListener::cleanupListenSocket()
+{
+  delete m_listen;
+}
 
-void ClientListener::cleanupClientSockets() {
+void ClientListener::cleanupClientSockets()
+{
   ClientSockets::iterator it;
   for (it = m_clientSockets.begin(); it != m_clientSockets.end(); it++) {
     delete *it;

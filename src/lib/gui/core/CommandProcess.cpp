@@ -19,13 +19,15 @@
 
 #include <QProcess>
 
-CommandProcess::CommandProcess(
-    QString command, QStringList arguments, QString input)
+CommandProcess::CommandProcess(QString command, QStringList arguments, QString input)
     : m_Command(command),
       m_Arguments(arguments),
-      m_Input(input) {}
+      m_Input(input)
+{
+}
 
-QString CommandProcess::run() {
+QString CommandProcess::run()
+{
   QProcess process;
   process.setReadChannel(QProcess::StandardOutput);
   process.start(m_Command, m_Arguments);
@@ -46,9 +48,9 @@ QString CommandProcess::run() {
 
   if (int code = process.exitCode(); !success || code != 0) {
     qFatal(
-        "command failed: %s %s\ncode: %d\nerror: %s", qUtf8Printable(m_Command),
-        qUtf8Printable(m_Arguments.join(" ")), code,
-        error.isEmpty() ? "none" : qUtf8Printable(error));
+        "command failed: %s %s\ncode: %d\nerror: %s", qUtf8Printable(m_Command), qUtf8Printable(m_Arguments.join(" ")),
+        code, error.isEmpty() ? "none" : qUtf8Printable(error)
+    );
   }
 
   emit finished();

@@ -28,7 +28,8 @@ class IpcMessage;
 class IpcLogLineMessage;
 class IEventQueue;
 
-class IpcServerProxy {
+class IpcServerProxy
+{
   friend class IpcClient;
 
 public:

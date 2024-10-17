@@ -28,10 +28,23 @@
 #include <Tlhelp32.h>
 
 //! Miscellaneous win32 functions.
-class ArchMiscWindows {
+class ArchMiscWindows
+{
 public:
-  enum EValueType { kUNKNOWN, kNO_VALUE, kUINT, kSTRING, kBINARY };
-  enum EBusyModes { kIDLE = 0x0000, kSYSTEM = 0x0001, kDISPLAY = 0x0002 };
+  enum EValueType
+  {
+    kUNKNOWN,
+    kNO_VALUE,
+    kUINT,
+    kSTRING,
+    kBINARY
+  };
+  enum EBusyModes
+  {
+    kIDLE = 0x0000,
+    kSYSTEM = 0x0001,
+    kDISPLAY = 0x0002
+  };
 
   typedef int (*RunFunc)(void);
 
@@ -114,8 +127,7 @@ public:
   /*!
   Sets the \p name value of \p key to \p value.data().
   */
-  static void
-  setValueBinary(HKEY key, const TCHAR *name, const std::string &value);
+  static void setValueBinary(HKEY key, const TCHAR *name, const std::string &value);
 
   //! Read a string value from the registry
   static std::string readValueString(HKEY, const TCHAR *name);

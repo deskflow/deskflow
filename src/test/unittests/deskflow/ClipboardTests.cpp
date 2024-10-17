@@ -20,7 +20,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(ClipboardTests, empty_openCalled_returnsTrue) {
+TEST(ClipboardTests, empty_openCalled_returnsTrue)
+{
   Clipboard clipboard;
   clipboard.open(0);
 
@@ -29,7 +30,8 @@ TEST(ClipboardTests, empty_openCalled_returnsTrue) {
   EXPECT_EQ(true, actual);
 }
 
-TEST(ClipboardTests, empty_singleFormat_hasReturnsFalse) {
+TEST(ClipboardTests, empty_singleFormat_hasReturnsFalse)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(Clipboard::kText, "synergy rocks!");
@@ -40,7 +42,8 @@ TEST(ClipboardTests, empty_singleFormat_hasReturnsFalse) {
   EXPECT_FALSE(actual);
 }
 
-TEST(ClipboardTests, add_newValue_valueWasStored) {
+TEST(ClipboardTests, add_newValue_valueWasStored)
+{
   Clipboard clipboard;
   clipboard.open(0);
 
@@ -50,7 +53,8 @@ TEST(ClipboardTests, add_newValue_valueWasStored) {
   EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST(ClipboardTests, add_replaceValue_valueWasReplaced) {
+TEST(ClipboardTests, add_replaceValue_valueWasReplaced)
+{
   Clipboard clipboard;
   clipboard.open(0);
 
@@ -61,7 +65,8 @@ TEST(ClipboardTests, add_replaceValue_valueWasReplaced) {
   EXPECT_EQ("maxivista sucks", actual);
 }
 
-TEST(ClipboardTests, open_timeIsZero_returnsTrue) {
+TEST(ClipboardTests, open_timeIsZero_returnsTrue)
+{
   Clipboard clipboard;
 
   bool actual = clipboard.open(0);
@@ -69,7 +74,8 @@ TEST(ClipboardTests, open_timeIsZero_returnsTrue) {
   EXPECT_EQ(true, actual);
 }
 
-TEST(ClipboardTests, open_timeIsOne_returnsTrue) {
+TEST(ClipboardTests, open_timeIsOne_returnsTrue)
+{
   Clipboard clipboard;
 
   bool actual = clipboard.open(1);
@@ -77,7 +83,8 @@ TEST(ClipboardTests, open_timeIsOne_returnsTrue) {
   EXPECT_EQ(true, actual);
 }
 
-TEST(ClipboardTests, close_isOpen_noErrors) {
+TEST(ClipboardTests, close_isOpen_noErrors)
+{
   Clipboard clipboard;
   clipboard.open(0);
 
@@ -86,7 +93,8 @@ TEST(ClipboardTests, close_isOpen_noErrors) {
   // can't assert anything
 }
 
-TEST(ClipboardTests, getTime_openWithNoEmpty_returnsZero) {
+TEST(ClipboardTests, getTime_openWithNoEmpty_returnsZero)
+{
   Clipboard clipboard;
   clipboard.open(1);
 
@@ -95,7 +103,8 @@ TEST(ClipboardTests, getTime_openWithNoEmpty_returnsZero) {
   EXPECT_EQ(0, actual);
 }
 
-TEST(ClipboardTests, getTime_openAndEmpty_returnsOne) {
+TEST(ClipboardTests, getTime_openAndEmpty_returnsOne)
+{
   Clipboard clipboard;
   clipboard.open(1);
   clipboard.empty();
@@ -105,7 +114,8 @@ TEST(ClipboardTests, getTime_openAndEmpty_returnsOne) {
   EXPECT_EQ(1, actual);
 }
 
-TEST(ClipboardTests, has_withFormatAdded_returnsTrue) {
+TEST(ClipboardTests, has_withFormatAdded_returnsTrue)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -115,7 +125,8 @@ TEST(ClipboardTests, has_withFormatAdded_returnsTrue) {
   EXPECT_EQ(true, actual);
 }
 
-TEST(ClipboardTests, has_withNoFormats_returnsFalse) {
+TEST(ClipboardTests, has_withNoFormats_returnsFalse)
+{
   Clipboard clipboard;
   clipboard.open(0);
 
@@ -124,7 +135,8 @@ TEST(ClipboardTests, has_withNoFormats_returnsFalse) {
   EXPECT_FALSE(actual);
 }
 
-TEST(ClipboardTests, get_withNoFormats_returnsEmpty) {
+TEST(ClipboardTests, get_withNoFormats_returnsEmpty)
+{
   Clipboard clipboard;
   clipboard.open(0);
 
@@ -133,7 +145,8 @@ TEST(ClipboardTests, get_withNoFormats_returnsEmpty) {
   EXPECT_EQ("", actual);
 }
 
-TEST(ClipboardTests, get_withFormatAdded_returnsExpected) {
+TEST(ClipboardTests, get_withFormatAdded_returnsExpected)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -143,7 +156,8 @@ TEST(ClipboardTests, get_withFormatAdded_returnsExpected) {
   EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero) {
+TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero)
+{
   Clipboard clipboard;
 
   String actual = clipboard.marshall();
@@ -153,7 +167,8 @@ TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero) {
   EXPECT_EQ(0, (int)actual[0]);
 }
 
-TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText) {
+TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -165,7 +180,8 @@ TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText) {
   EXPECT_EQ(IClipboard::kText, (int)actual[7]);
 }
 
-TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14) {
+TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks!"); // 14 chars
@@ -179,7 +195,8 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14) {
 // TODO: there's some integer -> char encoding going on here. i find it
 // hard to believe that the clipboard is the only thing doing this. maybe
 // we should refactor this stuff out of the clipboard.
-TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid) {
+TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
+{
   // 285 chars
   String data;
   data.append("Synergy is Free and Open Source Software that lets you ");
@@ -208,7 +225,8 @@ TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid) {
   EXPECT_EQ(29, actual[11]); // 285 - 256 = 29
 }
 
-TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml) {
+TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kHTML, "html sucks");
@@ -220,7 +238,8 @@ TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml) {
   EXPECT_EQ(IClipboard::kHTML, (int)actual[7]);
 }
 
-TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats) {
+TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks");
@@ -237,7 +256,8 @@ TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats) {
   EXPECT_EQ(2, (int)actual[3]);
 }
 
-TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded) {
+TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded)
+{
   Clipboard clipboard;
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -249,7 +269,8 @@ TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded) {
   EXPECT_EQ("synergy rocks!", actual.substr(12));
 }
 
-TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse) {
+TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse)
+{
   Clipboard clipboard;
 
   String data;
@@ -265,7 +286,8 @@ TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse) {
   EXPECT_FALSE(actual);
 }
 
-TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid) {
+TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid)
+{
   Clipboard clipboard;
 
   // 285 chars
@@ -298,7 +320,8 @@ TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid) {
   EXPECT_EQ(text, actual);
 }
 
-TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid) {
+TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
+{
   Clipboard clipboard;
   String data;
   data += (char)0;
@@ -331,7 +354,8 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid) {
   EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid) {
+TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
+{
   Clipboard clipboard;
   String data;
   data += (char)0;
@@ -364,7 +388,8 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid) {
   EXPECT_EQ("html sucks", actual);
 }
 
-TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual) {
+TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual)
+{
   Clipboard clipboard1;
   clipboard1.open(0);
   clipboard1.add(Clipboard::kText, "synergy rocks!");

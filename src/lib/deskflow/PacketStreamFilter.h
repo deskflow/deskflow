@@ -28,10 +28,10 @@ class IEventQueue;
 /*!
 Filters a stream to read and write packets.
 */
-class PacketStreamFilter : public StreamFilter {
+class PacketStreamFilter : public StreamFilter
+{
 public:
-  PacketStreamFilter(
-      IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
+  PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
   ~PacketStreamFilter();
 
   // IStream overrides

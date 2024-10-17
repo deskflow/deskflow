@@ -33,15 +33,18 @@
 // ArchTimeUnix
 //
 
-ArchTimeUnix::ArchTimeUnix() {
+ArchTimeUnix::ArchTimeUnix()
+{
   // do nothing
 }
 
-ArchTimeUnix::~ArchTimeUnix() {
+ArchTimeUnix::~ArchTimeUnix()
+{
   // do nothing
 }
 
-double ArchTimeUnix::time() {
+double ArchTimeUnix::time()
+{
   struct timeval t;
   gettimeofday(&t, NULL);
   return (double)t.tv_sec + 1.0e-6 * (double)t.tv_usec;

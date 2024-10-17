@@ -19,14 +19,16 @@
 
 namespace deskflow::gui::widgets {
 
-ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent) { hide(); }
+ClientStateLabel::ClientStateLabel(QWidget *parent) : QLabel(parent)
+{
+  hide();
+}
 
-void ClientStateLabel::updateClientState(const QString &line) {
+void ClientStateLabel::updateClientState(const QString &line)
+{
   if (line.contains("connected to server")) {
     show();
-  } else if (
-      line.contains("disconnected from server") ||
-      line.contains("process exited")) {
+  } else if (line.contains("disconnected from server") || line.contains("process exited")) {
     hide();
   }
 }

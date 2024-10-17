@@ -28,9 +28,8 @@ namespace deskflow::gui {
 // ClientConnection::Deps
 //
 
-void ClientConnection::Deps::showError(
-    QWidget *parent, messages::ClientError error,
-    const QString &address) const {
+void ClientConnection::Deps::showError(QWidget *parent, messages::ClientError error, const QString &address) const
+{
   messages::showClientConnectError(parent, error, address);
 }
 
@@ -38,7 +37,8 @@ void ClientConnection::Deps::showError(
 // ClientConnection
 //
 
-void ClientConnection::handleLogLine(const QString &logLine) {
+void ClientConnection::handleLogLine(const QString &logLine)
+{
 
   if (logLine.contains("failed to connect to server")) {
 
@@ -62,14 +62,14 @@ void ClientConnection::handleLogLine(const QString &logLine) {
   }
 }
 
-void ClientConnection::showMessage(const QString &logLine) {
+void ClientConnection::showMessage(const QString &logLine)
+{
   using enum messages::ClientError;
 
   emit messageShowing();
 
   const auto address = m_appConfig.serverHostname();
-  auto message =
-      QString("<p>The connection to server '%1' didn't work.</p>").arg(address);
+  auto message = QString("<p>The connection to server '%1' didn't work.</p>").arg(address);
 
   if (logLine.contains("server already has a connected client with our name")) {
     m_deps->showError(m_pParent, AlreadyConnected, address);

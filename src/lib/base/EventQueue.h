@@ -37,7 +37,8 @@ class Mutex;
 An event queue that implements the platform independent parts and
 delegates the platform dependent parts to a subclass.
 */
-class EventQueue : public IEventQueue {
+class EventQueue : public IEventQueue
+{
 public:
   EventQueue();
   EventQueue(EventQueue const &) = delete;
@@ -74,11 +75,10 @@ private:
   void addEventToBuffer(const Event &event);
 
 private:
-  class Timer {
+  class Timer
+  {
   public:
-    Timer(
-        EventQueueTimer *, double timeout, double initialTime, void *target,
-        bool oneShot);
+    Timer(EventQueueTimer *, double timeout, double initialTime, void *target, bool oneShot);
     ~Timer();
 
     void reset();
@@ -188,12 +188,13 @@ private:
   std::queue<Event> m_pending;
 };
 
-#define EVENT_TYPE_ACCESSOR(type_)                                             \
+#define EVENT_TYPE_ACCESSOR(type_)                                                                                     \
 type_##Events&                                                                \
-EventQueue::for##type_() {                                                     \
-    if (m_typesFor##type_ == NULL) {                                           \
-      m_typesFor##type_ = new type_##Events();                                 \
-      m_typesFor##type_->setEvents(dynamic_cast<IEventQueue *>(this));         \
-    }                                                                          \
-    return *m_typesFor##type_;                                                 \
+EventQueue::for##type_()                                                                                               \
+  {                                                                                                                    \
+    if (m_typesFor##type_ == NULL) {                                                                                   \
+      m_typesFor##type_ = new type_##Events();                                                                         \
+      m_typesFor##type_->setEvents(dynamic_cast<IEventQueue *>(this));                                                 \
+    }                                                                                                                  \
+    return *m_typesFor##type_;                                                                                         \
   }

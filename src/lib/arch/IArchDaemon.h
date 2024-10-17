@@ -27,7 +27,8 @@ This interface defines the operations required by deskflow for installing
 uninstalling daeamons and daemonizing a process.  Each architecture must
 implement this interface.
 */
-class IArchDaemon : public IInterface {
+class IArchDaemon : public IInterface
+{
 public:
   typedef int (*DaemonFunc)(int argc, const char **argv);
 
@@ -48,8 +49,8 @@ public:
   the listed daemons.  Throws an \c XArchDaemon exception on failure.
   */
   virtual void installDaemon(
-      const char *name, const char *description, const char *pathname,
-      const char *commandLine, const char *dependencies) = 0;
+      const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
+  ) = 0;
 
   //! Uninstall daemon
   /*!

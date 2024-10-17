@@ -31,14 +31,16 @@ using namespace testing;
 
 namespace {
 
-class DepsMock : public AboutDialog::Deps {
+class DepsMock : public AboutDialog::Deps
+{
 public:
   MOCK_METHOD(bool, isDarkMode, (), (const, override));
 };
 
 } // namespace
 
-TEST(AboutDialogTests, exec_setsDevelopersLabel) {
+TEST(AboutDialogTests, exec_setsDevelopersLabel)
+{
   TestQtFullApp app;
   const auto deps = std::make_shared<NiceMock<DepsMock>>();
   AboutDialog aboutDialog(nullptr, deps);
@@ -50,7 +52,8 @@ TEST(AboutDialogTests, exec_setsDevelopersLabel) {
   EXPECT_TRUE(label->text().contains("Chris&nbsp;Schoeneman"));
 }
 
-TEST(AboutDialogTests, exec_setsCopyrightLabel) {
+TEST(AboutDialogTests, exec_setsCopyrightLabel)
+{
   TestQtFullApp app;
   const auto deps = std::make_shared<NiceMock<DepsMock>>();
   AboutDialog aboutDialog(nullptr, deps);
@@ -59,11 +62,12 @@ TEST(AboutDialogTests, exec_setsCopyrightLabel) {
   aboutDialog.exec();
 
   EXPECT_EQ(
-      aboutDialog.findChild<QLabel *>("m_pCopyrightLabel")->text(),
-      QString::fromStdString(deskflow::copyright()));
+      aboutDialog.findChild<QLabel *>("m_pCopyrightLabel")->text(), QString::fromStdString(deskflow::copyright())
+  );
 }
 
-TEST(AboutDialogTests, exec_inDarkMode_usesDarkLogo) {
+TEST(AboutDialogTests, exec_inDarkMode_usesDarkLogo)
+{
   TestQtFullApp app;
   const auto deps = std::make_shared<NiceMock<DepsMock>>();
   AboutDialog aboutDialog(nullptr, deps);
@@ -73,13 +77,13 @@ TEST(AboutDialogTests, exec_inDarkMode_usesDarkLogo) {
   aboutDialog.exec();
 
   const QPixmap expectedLogo(":/image/logo-dark.png");
-  const auto actualLogo =
-      aboutDialog.findChild<QLabel *>("m_pLabel_Logo")->pixmap();
+  const auto actualLogo = aboutDialog.findChild<QLabel *>("m_pLabel_Logo")->pixmap();
   EXPECT_FALSE(actualLogo.isNull());
   EXPECT_EQ(actualLogo.toImage(), expectedLogo.toImage());
 }
 
-TEST(AboutDialogTests, exec_notInDarkMode_usesLightLogo) {
+TEST(AboutDialogTests, exec_notInDarkMode_usesLightLogo)
+{
   TestQtFullApp app;
   const auto deps = std::make_shared<NiceMock<DepsMock>>();
   AboutDialog aboutDialog(nullptr, deps);
@@ -89,8 +93,7 @@ TEST(AboutDialogTests, exec_notInDarkMode_usesLightLogo) {
   aboutDialog.exec();
 
   const QPixmap expectedLogo(":/image/logo-light.png");
-  const auto actualLogo =
-      aboutDialog.findChild<QLabel *>("m_pLabel_Logo")->pixmap();
+  const auto actualLogo = aboutDialog.findChild<QLabel *>("m_pLabel_Logo")->pixmap();
   EXPECT_FALSE(actualLogo.isNull());
   EXPECT_EQ(actualLogo.toImage(), expectedLogo.toImage());
 }

@@ -29,12 +29,14 @@ KeySequenceWidget::KeySequenceWidget(QWidget *parent, const KeySequence &seq)
       m_MousePrefix("mousebutton("),
       m_MousePostfix(")"),
       m_KeyPrefix("keystroke("),
-      m_KeyPostfix(")") {
+      m_KeyPostfix(")")
+{
   setFocusPolicy(Qt::NoFocus);
   updateOutput();
 }
 
-void KeySequenceWidget::setKeySequence(const KeySequence &seq) {
+void KeySequenceWidget::setKeySequence(const KeySequence &seq)
+{
   keySequence() = seq;
   backupSequence() = seq;
 
@@ -42,7 +44,8 @@ void KeySequenceWidget::setKeySequence(const KeySequence &seq) {
   updateOutput();
 }
 
-void KeySequenceWidget::mousePressEvent(QMouseEvent *event) {
+void KeySequenceWidget::mousePressEvent(QMouseEvent *event)
+{
   event->accept();
 
   if (status() == Stopped) {
@@ -56,7 +59,8 @@ void KeySequenceWidget::mousePressEvent(QMouseEvent *event) {
   updateOutput();
 }
 
-void KeySequenceWidget::startRecording() {
+void KeySequenceWidget::startRecording()
+{
   keySequence() = KeySequence();
   setDown(true);
   setFocus();
@@ -64,7 +68,8 @@ void KeySequenceWidget::startRecording() {
   setStatus(Recording);
 }
 
-void KeySequenceWidget::stopRecording() {
+void KeySequenceWidget::stopRecording()
+{
   if (!keySequence().valid()) {
     keySequence() = backupSequence();
     updateOutput();
@@ -77,7 +82,8 @@ void KeySequenceWidget::stopRecording() {
   emit keySequenceChanged();
 }
 
-bool KeySequenceWidget::event(QEvent *event) {
+bool KeySequenceWidget::event(QEvent *event)
+{
   if (status() == Recording) {
     switch (event->type()) {
     case QEvent::KeyPress:
@@ -108,7 +114,8 @@ bool KeySequenceWidget::event(QEvent *event) {
   return QPushButton::event(event);
 }
 
-void KeySequenceWidget::keyPressEvent(QKeyEvent *event) {
+void KeySequenceWidget::keyPressEvent(QKeyEvent *event)
+{
   event->accept();
 
   if (status() == Stopped)
@@ -120,7 +127,8 @@ void KeySequenceWidget::keyPressEvent(QKeyEvent *event) {
   updateOutput();
 }
 
-void KeySequenceWidget::updateOutput() {
+void KeySequenceWidget::updateOutput()
+{
   QString s;
 
   if (m_KeySequence.isMouseButton())

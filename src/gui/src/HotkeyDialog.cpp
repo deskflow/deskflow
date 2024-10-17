@@ -24,13 +24,15 @@
 HotkeyDialog::HotkeyDialog(QWidget *parent, Hotkey &hotkey)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::HotkeyDialogBase(),
-      m_Hotkey(hotkey) {
+      m_Hotkey(hotkey)
+{
   setupUi(this);
 
   m_pKeySequenceWidgetHotkey->setText(m_Hotkey.text());
 }
 
-void HotkeyDialog::accept() {
+void HotkeyDialog::accept()
+{
   if (!sequenceWidget()->valid())
     return;
 

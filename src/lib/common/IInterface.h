@@ -25,8 +25,11 @@
 This is the base class of all interface classes.  An interface class has
 only pure virtual methods.
 */
-class IInterface {
+class IInterface
+{
 public:
   //! Interface destructor does nothing
-  virtual ~IInterface() {}
+  virtual ~IInterface()
+  {
+  }
 };

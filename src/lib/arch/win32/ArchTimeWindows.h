@@ -23,7 +23,8 @@
 #define ARCH_TIME ArchTimeWindows
 
 //! Win32 implementation of IArchTime
-class ArchTimeWindows : public IArchTime {
+class ArchTimeWindows : public IArchTime
+{
 public:
   ArchTimeWindows();
   virtual ~ArchTimeWindows();

@@ -28,7 +28,8 @@ This interface defines the task bar icon operations required
 by deskflow.  Each architecture must implement this interface
 though each operation can be a no-op.
 */
-class IArchTaskBar : public IInterface {
+class IArchTaskBar : public IInterface
+{
 public:
   //! @name manipulators
   //@{

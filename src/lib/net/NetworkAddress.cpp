@@ -31,25 +31,23 @@
 
 // name re-resolution adapted from a patch by Brent Priddy.
 
-NetworkAddress::NetworkAddress(int port) : m_port(port) {
+NetworkAddress::NetworkAddress(int port) : m_port(port)
+{
   checkPort();
   m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
   ARCH->setAddrPort(m_address, m_port);
 }
 
-NetworkAddress::NetworkAddress(const NetworkAddress &addr)
-    : m_hostname(addr.m_hostname),
-      m_port(addr.m_port) {
+NetworkAddress::NetworkAddress(const NetworkAddress &addr) : m_hostname(addr.m_hostname), m_port(addr.m_port)
+{
   *this = addr;
 }
 
-NetworkAddress::NetworkAddress(const String &hostname, int port)
-    : m_hostname(hostname),
-      m_port(port) {
+NetworkAddress::NetworkAddress(const String &hostname, int port) : m_hostname(hostname), m_port(port)
+{
   // detect internet protocol version with colom count
   auto isColomPredicate = [](char c) { return c == ':'; };
-  auto colomCount =
-      std::count_if(m_hostname.begin(), m_hostname.end(), isColomPredicate);
+  auto colomCount = std::count_if(m_hostname.begin(), m_hostname.end(), isColomPredicate);
 
   if (colomCount == 1) {
     // ipv4 with port part
@@ -91,8 +89,7 @@ NetworkAddress::NetworkAddress(const String &hostname, int port)
     }
 
     // ensure that ipv6 link-local adress ended with scope id
-    if (m_hostname.rfind("fe80:", 0) == 0 &&
-        m_hostname.find('%') == String::npos) {
+    if (m_hostname.rfind("fe80:", 0) == 0 && m_hostname.find('%') == String::npos) {
       throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
     }
   }
@@ -101,14 +98,16 @@ NetworkAddress::NetworkAddress(const String &hostname, int port)
   checkPort();
 }
 
-NetworkAddress::~NetworkAddress() {
+NetworkAddress::~NetworkAddress()
+{
   if (m_address != nullptr) {
     ARCH->closeAddr(m_address);
     m_address = nullptr;
   }
 }
 
-NetworkAddress &NetworkAddress::operator=(const NetworkAddress &addr) {
+NetworkAddress &NetworkAddress::operator=(const NetworkAddress &addr)
+{
   if (m_address != nullptr) {
     ARCH->closeAddr(m_address);
     m_address = nullptr;
@@ -125,7 +124,8 @@ NetworkAddress &NetworkAddress::operator=(const NetworkAddress &addr) {
   return *this;
 }
 
-size_t NetworkAddress::resolve(size_t index) {
+size_t NetworkAddress::resolve(size_t index)
+{
   size_t resolvedAddressesCount = 0;
   // discard previous address
   if (m_address != nullptr) {
@@ -183,24 +183,38 @@ size_t NetworkAddress::resolve(size_t index) {
   return resolvedAddressesCount;
 }
 
-bool NetworkAddress::operator==(const NetworkAddress &addr) const {
-  return m_address == addr.m_address ||
-         ARCH->isEqualAddr(m_address, addr.m_address);
+bool NetworkAddress::operator==(const NetworkAddress &addr) const
+{
+  return m_address == addr.m_address || ARCH->isEqualAddr(m_address, addr.m_address);
 }
 
-bool NetworkAddress::operator!=(const NetworkAddress &addr) const {
+bool NetworkAddress::operator!=(const NetworkAddress &addr) const
+{
   return !operator==(addr);
 }
 
-bool NetworkAddress::isValid() const { return (m_address != nullptr); }
+bool NetworkAddress::isValid() const
+{
+  return (m_address != nullptr);
+}
 
-const ArchNetAddress &NetworkAddress::getAddress() const { return m_address; }
+const ArchNetAddress &NetworkAddress::getAddress() const
+{
+  return m_address;
+}
 
-int NetworkAddress::getPort() const { return m_port; }
+int NetworkAddress::getPort() const
+{
+  return m_port;
+}
 
-String NetworkAddress::getHostname() const { return m_hostname; }
+String NetworkAddress::getHostname() const
+{
+  return m_hostname;
+}
 
-void NetworkAddress::checkPort() {
+void NetworkAddress::checkPort()
+{
   // check port number
   if (m_port < 0 || m_port > 65535) {
     throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);

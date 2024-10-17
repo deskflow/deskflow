@@ -24,7 +24,8 @@
 
 namespace {
 
-void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
+void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack)
+{
   char msg[128] = {0};
   for (int i = 0; i < sk_SSL_CIPHER_num(stack); ++i) {
     auto cipher = sk_SSL_CIPHER_value(stack, i);
@@ -40,7 +41,8 @@ void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack) {
   }
 }
 
-void logLocalSecureCipherInfo(const SSL *ssl) {
+void logLocalSecureCipherInfo(const SSL *ssl)
+{
   auto sStack = SSL_get_ciphers(ssl);
 
   if (sStack) {
@@ -51,7 +53,8 @@ void logLocalSecureCipherInfo(const SSL *ssl) {
   }
 }
 
-void logRemoteSecureCipherInfo(const SSL *ssl) {
+void logRemoteSecureCipherInfo(const SSL *ssl)
+{
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
   // ssl->session->ciphers is not forward compatable,
   // In future release of OpenSSL, it's not visible,
@@ -71,7 +74,8 @@ void logRemoteSecureCipherInfo(const SSL *ssl) {
 
 } // namespace
 
-void SslLogger::logSecureLibInfo() {
+void SslLogger::logSecureLibInfo()
+{
   if (CLOG->getFilter() >= kDEBUG) {
     LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
     LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
@@ -81,14 +85,16 @@ void SslLogger::logSecureLibInfo() {
   }
 }
 
-void SslLogger::logSecureCipherInfo(const SSL *ssl) {
+void SslLogger::logSecureCipherInfo(const SSL *ssl)
+{
   if (ssl && CLOG->getFilter() >= kDEBUG1) {
     logLocalSecureCipherInfo(ssl);
     logRemoteSecureCipherInfo(ssl);
   }
 }
 
-void SslLogger::logSecureConnectInfo(const SSL *ssl) {
+void SslLogger::logSecureConnectInfo(const SSL *ssl)
+{
   if (ssl) {
     auto cipher = SSL_get_current_cipher(ssl);
 
@@ -107,8 +113,8 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl) {
 
       // Take the stream input and splits it into a vetor directly
       const std::vector<std::string> parts{
-          std::istream_iterator<std::string>{iss},
-          std::istream_iterator<std::string>{}};
+          std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}
+      };
       if (parts.size() > 2) {
         // log the section containing the protocol version
         LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
@@ -124,7 +130,8 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl) {
   }
 }
 
-void SslLogger::logError(const std::string &reason) {
+void SslLogger::logError(const std::string &reason)
+{
   if (!reason.empty()) {
     LOG((CLOG_ERR "secure socket error: %s", reason.c_str()));
   }
@@ -137,7 +144,8 @@ void SslLogger::logError(const std::string &reason) {
   }
 }
 
-void SslLogger::logErrorByCode(int code, int retry) {
+void SslLogger::logErrorByCode(int code, int retry)
+{
   switch (code) {
   case SSL_ERROR_NONE:
     break;

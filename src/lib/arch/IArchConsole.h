@@ -26,7 +26,8 @@
 This interface defines the console operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchConsole : public IInterface {
+class IArchConsole : public IInterface
+{
 public:
   //! @name manipulators
   //@{

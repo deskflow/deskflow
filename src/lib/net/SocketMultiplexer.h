@@ -32,7 +32,8 @@ class ISocketMultiplexerJob;
 /*!
 A socket multiplexer services multiple sockets simultaneously.
 */
-class SocketMultiplexer {
+class SocketMultiplexer
+{
 public:
   SocketMultiplexer();
   SocketMultiplexer(SocketMultiplexer const &) = delete;

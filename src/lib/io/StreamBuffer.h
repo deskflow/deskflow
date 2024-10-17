@@ -26,7 +26,8 @@
 /*!
 This class maintains a FIFO (first-in, last-out) buffer of bytes.
 */
-class StreamBuffer {
+class StreamBuffer
+{
 public:
   StreamBuffer();
   ~StreamBuffer();

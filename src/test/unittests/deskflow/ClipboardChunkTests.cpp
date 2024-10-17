@@ -20,7 +20,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(ClipboardChunkTests, start_formatStartChunk) {
+TEST(ClipboardChunkTests, start_formatStartChunk)
+{
   ClipboardID id = 0;
   UInt32 sequence = 0;
   String mockDataSize("10");
@@ -38,7 +39,8 @@ TEST(ClipboardChunkTests, start_formatStartChunk) {
   delete chunk;
 }
 
-TEST(ClipboardChunkTests, data_formatDataChunk) {
+TEST(ClipboardChunkTests, data_formatDataChunk)
+{
   ClipboardID id = 0;
   UInt32 sequence = 1;
   String mockData("mock data");
@@ -61,7 +63,8 @@ TEST(ClipboardChunkTests, data_formatDataChunk) {
   delete chunk;
 }
 
-TEST(ClipboardChunkTests, end_formatDataChunk) {
+TEST(ClipboardChunkTests, end_formatDataChunk)
+{
   ClipboardID id = 1;
   UInt32 sequence = 1;
   ClipboardChunk *chunk = ClipboardChunk::end(id, sequence);

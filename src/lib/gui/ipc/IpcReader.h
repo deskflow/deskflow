@@ -22,7 +22,8 @@
 
 class QTcpSocket;
 
-class IpcReader : public QObject {
+class IpcReader : public QObject
+{
   Q_OBJECT;
 
 public:

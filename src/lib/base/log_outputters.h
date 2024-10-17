@@ -33,7 +33,8 @@ This outputter performs no output and returns false from \c write(),
 causing the logger to stop traversing the outputter chain.  Insert
 this to prevent already inserted outputters from writing.
 */
-class StopLogOutputter : public ILogOutputter {
+class StopLogOutputter : public ILogOutputter
+{
 public:
   StopLogOutputter();
   virtual ~StopLogOutputter();
@@ -50,7 +51,8 @@ public:
 This outputter writes output to the console.  The level for each
 message is ignored.
 */
-class ConsoleLogOutputter : public ILogOutputter {
+class ConsoleLogOutputter : public ILogOutputter
+{
 public:
   ConsoleLogOutputter();
   virtual ~ConsoleLogOutputter();
@@ -69,7 +71,8 @@ This outputter writes output to the file.  The level for each
 message is ignored.
 */
 
-class FileLogOutputter : public ILogOutputter {
+class FileLogOutputter : public ILogOutputter
+{
 public:
   FileLogOutputter(const char *logFile);
   virtual ~FileLogOutputter();
@@ -90,7 +93,8 @@ private:
 /*!
 This outputter writes output to the system log.
 */
-class SystemLogOutputter : public ILogOutputter {
+class SystemLogOutputter : public ILogOutputter
+{
 public:
   SystemLogOutputter();
   virtual ~SystemLogOutputter();
@@ -110,7 +114,8 @@ outputters.  Add one of these to any scope that needs to write to
 the system log (only) and restore the old outputters when exiting
 the scope.
 */
-class SystemLogger {
+class SystemLogger
+{
 public:
   SystemLogger(const char *title, bool blockConsole);
   SystemLogger(SystemLogger const &) = delete;
@@ -129,7 +134,8 @@ private:
 /*!
 This outputter records the last N log messages.
 */
-class BufferedLogOutputter : public ILogOutputter {
+class BufferedLogOutputter : public ILogOutputter
+{
 private:
   typedef std::deque<String> Buffer;
 

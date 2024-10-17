@@ -22,19 +22,32 @@
 #include <Windows.h>
 #include <string>
 
-MSWindowsDebugOutputter::MSWindowsDebugOutputter() {}
+MSWindowsDebugOutputter::MSWindowsDebugOutputter()
+{
+}
 
-MSWindowsDebugOutputter::~MSWindowsDebugOutputter() {}
+MSWindowsDebugOutputter::~MSWindowsDebugOutputter()
+{
+}
 
-void MSWindowsDebugOutputter::open(const char *title) {}
+void MSWindowsDebugOutputter::open(const char *title)
+{
+}
 
-void MSWindowsDebugOutputter::close() {}
+void MSWindowsDebugOutputter::close()
+{
+}
 
-void MSWindowsDebugOutputter::show(bool showIfEmpty) {}
+void MSWindowsDebugOutputter::show(bool showIfEmpty)
+{
+}
 
-bool MSWindowsDebugOutputter::write(ELevel level, const char *msg) {
+bool MSWindowsDebugOutputter::write(ELevel level, const char *msg)
+{
   OutputDebugString((std::string(msg) + "\n").c_str());
   return true;
 }
 
-void MSWindowsDebugOutputter::flush() {}
+void MSWindowsDebugOutputter::flush()
+{
+}

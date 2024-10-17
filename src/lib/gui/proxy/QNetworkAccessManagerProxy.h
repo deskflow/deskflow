@@ -22,7 +22,8 @@
 
 namespace deskflow::gui::proxy {
 
-class QNetworkAccessManagerProxy : public QObject {
+class QNetworkAccessManagerProxy : public QObject
+{
   Q_OBJECT
 
 public:

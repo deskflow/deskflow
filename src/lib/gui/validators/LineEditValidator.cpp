@@ -25,22 +25,23 @@ using namespace deskflow::gui;
 
 namespace validators {
 
-LineEditValidator::LineEditValidator(
-    QLineEdit *lineEdit, ValidationError *error)
+LineEditValidator::LineEditValidator(QLineEdit *lineEdit, ValidationError *error)
     : m_pError(error),
-      m_pLineEdit(lineEdit) {
+      m_pLineEdit(lineEdit)
+{
 
   if (!m_pLineEdit) {
     qFatal("validator line edit not set");
   }
 }
 
-void LineEditValidator::addValidator(
-    std::unique_ptr<IStringValidator> validator) {
+void LineEditValidator::addValidator(std::unique_ptr<IStringValidator> validator)
+{
   m_Validators.push_back(std::move(validator));
 }
 
-QValidator::State LineEditValidator::validate(QString &input, int &pos) const {
+QValidator::State LineEditValidator::validate(QString &input, int &pos) const
+{
   assert(m_pLineEdit);
 
   QString errorMessage;

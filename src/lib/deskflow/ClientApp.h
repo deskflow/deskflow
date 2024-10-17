@@ -33,10 +33,10 @@ namespace deskflow {
 class ClientArgs;
 }
 
-class ClientApp : public App {
+class ClientApp : public App
+{
 public:
-  ClientApp(
-      IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
+  ClientApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ClientApp();
 
   //
@@ -47,13 +47,16 @@ public:
   void help() override;
   const char *daemonName() const override;
   const char *daemonInfo() const override;
-  void loadConfig() override {}
-  bool loadConfig(const String &pathname) override { return false; }
+  void loadConfig() override
+  {
+  }
+  bool loadConfig(const String &pathname) override
+  {
+    return false;
+  }
   int foregroundStartup(int argc, char **argv) override;
   int standardStartup(int argc, char **argv) override;
-  int runInner(
-      int argc, char **argv, ILogOutputter *outputter,
-      StartupFunc startup) override;
+  int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
   void startNode() override;
@@ -62,7 +65,10 @@ public:
   // App overrides
   //
 
-  std::string configSection() const override { return "client"; }
+  std::string configSection() const override
+  {
+    return "client";
+  }
 
   //
   // Regular functions
@@ -81,15 +87,17 @@ public:
   void handleClientFailed(const Event &e, void *);
   void handleClientRefused(const Event &e, void *);
   void handleClientDisconnected(const Event &, void *);
-  Client *openClient(
-      const String &name, const NetworkAddress &address,
-      deskflow::Screen *screen);
+  Client *openClient(const String &name, const NetworkAddress &address, deskflow::Screen *screen);
   void closeClient(Client *client);
   bool startClient();
   void stopClient();
-  Client *getClientPtr() { return m_client; }
+  Client *getClientPtr()
+  {
+    return m_client;
+  }
 
-  deskflow::ClientArgs &args() const {
+  deskflow::ClientArgs &args() const
+  {
     return (deskflow::ClientArgs &)argsBase();
   }
 
@@ -97,7 +105,10 @@ public:
   // Static functions
   //
 
-  static ClientApp &instance() { return (ClientApp &)App::instance(); }
+  static ClientApp &instance()
+  {
+    return (ClientApp &)App::instance();
+  }
 
 private:
   ISocketFactory *getSocketFactory() const;

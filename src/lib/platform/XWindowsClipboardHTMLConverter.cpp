@@ -24,30 +24,39 @@
 // XWindowsClipboardHTMLConverter
 //
 
-XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(
-    Display *display, const char *name)
-    : m_atom(XInternAtom(display, name, False)) {
+XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(Display *display, const char *name)
+    : m_atom(XInternAtom(display, name, False))
+{
   // do nothing
 }
 
-XWindowsClipboardHTMLConverter::~XWindowsClipboardHTMLConverter() {
+XWindowsClipboardHTMLConverter::~XWindowsClipboardHTMLConverter()
+{
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardHTMLConverter::getFormat() const {
+IClipboard::EFormat XWindowsClipboardHTMLConverter::getFormat() const
+{
   return IClipboard::kHTML;
 }
 
-Atom XWindowsClipboardHTMLConverter::getAtom() const { return m_atom; }
+Atom XWindowsClipboardHTMLConverter::getAtom() const
+{
+  return m_atom;
+}
 
-int XWindowsClipboardHTMLConverter::getDataSize() const { return 8; }
+int XWindowsClipboardHTMLConverter::getDataSize() const
+{
+  return 8;
+}
 
-String
-XWindowsClipboardHTMLConverter::fromIClipboard(const String &data) const {
+String XWindowsClipboardHTMLConverter::fromIClipboard(const String &data) const
+{
   return data;
 }
 
-String XWindowsClipboardHTMLConverter::toIClipboard(const String &data) const {
+String XWindowsClipboardHTMLConverter::toIClipboard(const String &data) const
+{
   if (Unicode::isUTF8(data)) {
     return data;
   } else {

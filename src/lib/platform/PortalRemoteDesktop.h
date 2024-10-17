@@ -34,7 +34,8 @@
 
 namespace deskflow {
 
-class PortalRemoteDesktop {
+class PortalRemoteDesktop
+{
 public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
   ~PortalRemoteDesktop();
@@ -49,7 +50,8 @@ private:
   void reconnect(unsigned int timeout = 1000);
 
   /// g_signal_connect callback wrapper
-  static void cb_session_closed_cb(XdpSession *session, gpointer data) {
+  static void cb_session_closed_cb(XdpSession *session, gpointer data)
+  {
     reinterpret_cast<PortalRemoteDesktop *>(data)->cb_session_closed(session);
   }
 

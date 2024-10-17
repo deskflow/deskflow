@@ -76,7 +76,8 @@
  * This software is in the public domain. Share and enjoy!
  */
 
-struct codepair {
+struct codepair
+{
   KeySym keysym;
   UInt32 ucs4;
 } s_keymap[] = {
@@ -239,55 +240,55 @@ struct codepair {
     {XK_kana_yu, 0x30e5},             /* KATAKANA LETTER SMALL YU */
     {XK_kana_yo, 0x30e7},             /* KATAKANA LETTER SMALL YO */
     {XK_kana_tsu, 0x30c3},            /* KATAKANA LETTER SMALL TU */
-    {XK_prolongedsound, 0x30fc},  /* KATAKANA-HIRAGANA PROLONGED SOUND MARK */
-    {XK_kana_A, 0x30a2},          /* KATAKANA LETTER A */
-    {XK_kana_I, 0x30a4},          /* KATAKANA LETTER I */
-    {XK_kana_U, 0x30a6},          /* KATAKANA LETTER U */
-    {XK_kana_E, 0x30a8},          /* KATAKANA LETTER E */
-    {XK_kana_O, 0x30aa},          /* KATAKANA LETTER O */
-    {XK_kana_KA, 0x30ab},         /* KATAKANA LETTER KA */
-    {XK_kana_KI, 0x30ad},         /* KATAKANA LETTER KI */
-    {XK_kana_KU, 0x30af},         /* KATAKANA LETTER KU */
-    {XK_kana_KE, 0x30b1},         /* KATAKANA LETTER KE */
-    {XK_kana_KO, 0x30b3},         /* KATAKANA LETTER KO */
-    {XK_kana_SA, 0x30b5},         /* KATAKANA LETTER SA */
-    {XK_kana_SHI, 0x30b7},        /* KATAKANA LETTER SI */
-    {XK_kana_SU, 0x30b9},         /* KATAKANA LETTER SU */
-    {XK_kana_SE, 0x30bb},         /* KATAKANA LETTER SE */
-    {XK_kana_SO, 0x30bd},         /* KATAKANA LETTER SO */
-    {XK_kana_TA, 0x30bf},         /* KATAKANA LETTER TA */
-    {XK_kana_CHI, 0x30c1},        /* KATAKANA LETTER TI */
-    {XK_kana_TSU, 0x30c4},        /* KATAKANA LETTER TU */
-    {XK_kana_TE, 0x30c6},         /* KATAKANA LETTER TE */
-    {XK_kana_TO, 0x30c8},         /* KATAKANA LETTER TO */
-    {XK_kana_NA, 0x30ca},         /* KATAKANA LETTER NA */
-    {XK_kana_NI, 0x30cb},         /* KATAKANA LETTER NI */
-    {XK_kana_NU, 0x30cc},         /* KATAKANA LETTER NU */
-    {XK_kana_NE, 0x30cd},         /* KATAKANA LETTER NE */
-    {XK_kana_NO, 0x30ce},         /* KATAKANA LETTER NO */
-    {XK_kana_HA, 0x30cf},         /* KATAKANA LETTER HA */
-    {XK_kana_HI, 0x30d2},         /* KATAKANA LETTER HI */
-    {XK_kana_FU, 0x30d5},         /* KATAKANA LETTER HU */
-    {XK_kana_HE, 0x30d8},         /* KATAKANA LETTER HE */
-    {XK_kana_HO, 0x30db},         /* KATAKANA LETTER HO */
-    {XK_kana_MA, 0x30de},         /* KATAKANA LETTER MA */
-    {XK_kana_MI, 0x30df},         /* KATAKANA LETTER MI */
-    {XK_kana_MU, 0x30e0},         /* KATAKANA LETTER MU */
-    {XK_kana_ME, 0x30e1},         /* KATAKANA LETTER ME */
-    {XK_kana_MO, 0x30e2},         /* KATAKANA LETTER MO */
-    {XK_kana_YA, 0x30e4},         /* KATAKANA LETTER YA */
-    {XK_kana_YU, 0x30e6},         /* KATAKANA LETTER YU */
-    {XK_kana_YO, 0x30e8},         /* KATAKANA LETTER YO */
-    {XK_kana_RA, 0x30e9},         /* KATAKANA LETTER RA */
-    {XK_kana_RI, 0x30ea},         /* KATAKANA LETTER RI */
-    {XK_kana_RU, 0x30eb},         /* KATAKANA LETTER RU */
-    {XK_kana_RE, 0x30ec},         /* KATAKANA LETTER RE */
-    {XK_kana_RO, 0x30ed},         /* KATAKANA LETTER RO */
-    {XK_kana_WA, 0x30ef},         /* KATAKANA LETTER WA */
-    {XK_kana_N, 0x30f3},          /* KATAKANA LETTER N */
-    {XK_voicedsound, 0x309b},     /* KATAKANA-HIRAGANA VOICED SOUND MARK */
-    {XK_semivoicedsound, 0x309c}, /* KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK */
-#endif                            // defined(XK_overline)
+    {XK_prolongedsound, 0x30fc},      /* KATAKANA-HIRAGANA PROLONGED SOUND MARK */
+    {XK_kana_A, 0x30a2},              /* KATAKANA LETTER A */
+    {XK_kana_I, 0x30a4},              /* KATAKANA LETTER I */
+    {XK_kana_U, 0x30a6},              /* KATAKANA LETTER U */
+    {XK_kana_E, 0x30a8},              /* KATAKANA LETTER E */
+    {XK_kana_O, 0x30aa},              /* KATAKANA LETTER O */
+    {XK_kana_KA, 0x30ab},             /* KATAKANA LETTER KA */
+    {XK_kana_KI, 0x30ad},             /* KATAKANA LETTER KI */
+    {XK_kana_KU, 0x30af},             /* KATAKANA LETTER KU */
+    {XK_kana_KE, 0x30b1},             /* KATAKANA LETTER KE */
+    {XK_kana_KO, 0x30b3},             /* KATAKANA LETTER KO */
+    {XK_kana_SA, 0x30b5},             /* KATAKANA LETTER SA */
+    {XK_kana_SHI, 0x30b7},            /* KATAKANA LETTER SI */
+    {XK_kana_SU, 0x30b9},             /* KATAKANA LETTER SU */
+    {XK_kana_SE, 0x30bb},             /* KATAKANA LETTER SE */
+    {XK_kana_SO, 0x30bd},             /* KATAKANA LETTER SO */
+    {XK_kana_TA, 0x30bf},             /* KATAKANA LETTER TA */
+    {XK_kana_CHI, 0x30c1},            /* KATAKANA LETTER TI */
+    {XK_kana_TSU, 0x30c4},            /* KATAKANA LETTER TU */
+    {XK_kana_TE, 0x30c6},             /* KATAKANA LETTER TE */
+    {XK_kana_TO, 0x30c8},             /* KATAKANA LETTER TO */
+    {XK_kana_NA, 0x30ca},             /* KATAKANA LETTER NA */
+    {XK_kana_NI, 0x30cb},             /* KATAKANA LETTER NI */
+    {XK_kana_NU, 0x30cc},             /* KATAKANA LETTER NU */
+    {XK_kana_NE, 0x30cd},             /* KATAKANA LETTER NE */
+    {XK_kana_NO, 0x30ce},             /* KATAKANA LETTER NO */
+    {XK_kana_HA, 0x30cf},             /* KATAKANA LETTER HA */
+    {XK_kana_HI, 0x30d2},             /* KATAKANA LETTER HI */
+    {XK_kana_FU, 0x30d5},             /* KATAKANA LETTER HU */
+    {XK_kana_HE, 0x30d8},             /* KATAKANA LETTER HE */
+    {XK_kana_HO, 0x30db},             /* KATAKANA LETTER HO */
+    {XK_kana_MA, 0x30de},             /* KATAKANA LETTER MA */
+    {XK_kana_MI, 0x30df},             /* KATAKANA LETTER MI */
+    {XK_kana_MU, 0x30e0},             /* KATAKANA LETTER MU */
+    {XK_kana_ME, 0x30e1},             /* KATAKANA LETTER ME */
+    {XK_kana_MO, 0x30e2},             /* KATAKANA LETTER MO */
+    {XK_kana_YA, 0x30e4},             /* KATAKANA LETTER YA */
+    {XK_kana_YU, 0x30e6},             /* KATAKANA LETTER YU */
+    {XK_kana_YO, 0x30e8},             /* KATAKANA LETTER YO */
+    {XK_kana_RA, 0x30e9},             /* KATAKANA LETTER RA */
+    {XK_kana_RI, 0x30ea},             /* KATAKANA LETTER RI */
+    {XK_kana_RU, 0x30eb},             /* KATAKANA LETTER RU */
+    {XK_kana_RE, 0x30ec},             /* KATAKANA LETTER RE */
+    {XK_kana_RO, 0x30ed},             /* KATAKANA LETTER RO */
+    {XK_kana_WA, 0x30ef},             /* KATAKANA LETTER WA */
+    {XK_kana_N, 0x30f3},              /* KATAKANA LETTER N */
+    {XK_voicedsound, 0x309b},         /* KATAKANA-HIRAGANA VOICED SOUND MARK */
+    {XK_semivoicedsound, 0x309c},     /* KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK */
+#endif                                // defined(XK_overline)
 #if defined(XK_Farsi_0)
     {XK_Farsi_0, 0x06f0},                 /* EXTENDED ARABIC-INDIC DIGIT 0 */
     {XK_Farsi_1, 0x06f1},                 /* EXTENDED ARABIC-INDIC DIGIT 1 */
@@ -321,72 +322,70 @@ struct codepair {
     {XK_Arabic_9, 0x0669},                /* ARABIC 9 */
     {XK_Arabic_question_mark, 0x061f},    /* ARABIC QUESTION MARK */
     {XK_Arabic_hamza, 0x0621},            /* ARABIC LETTER HAMZA */
-    {XK_Arabic_maddaonalef, 0x0622}, /* ARABIC LETTER ALEF WITH MADDA ABOVE */
-    {XK_Arabic_hamzaonalef, 0x0623}, /* ARABIC LETTER ALEF WITH HAMZA ABOVE */
-    {XK_Arabic_hamzaonwaw, 0x0624},  /* ARABIC LETTER WAW WITH HAMZA ABOVE */
-    {XK_Arabic_hamzaunderalef,
-     0x0625},                        /* ARABIC LETTER ALEF WITH HAMZA BELOW */
-    {XK_Arabic_hamzaonyeh, 0x0626},  /* ARABIC LETTER YEH WITH HAMZA ABOVE */
-    {XK_Arabic_alef, 0x0627},        /* ARABIC LETTER ALEF */
-    {XK_Arabic_beh, 0x0628},         /* ARABIC LETTER BEH */
-    {XK_Arabic_tehmarbuta, 0x0629},  /* ARABIC LETTER TEH MARBUTA */
-    {XK_Arabic_teh, 0x062a},         /* ARABIC LETTER TEH */
-    {XK_Arabic_theh, 0x062b},        /* ARABIC LETTER THEH */
-    {XK_Arabic_jeem, 0x062c},        /* ARABIC LETTER JEEM */
-    {XK_Arabic_hah, 0x062d},         /* ARABIC LETTER HAH */
-    {XK_Arabic_khah, 0x062e},        /* ARABIC LETTER KHAH */
-    {XK_Arabic_dal, 0x062f},         /* ARABIC LETTER DAL */
-    {XK_Arabic_thal, 0x0630},        /* ARABIC LETTER THAL */
-    {XK_Arabic_ra, 0x0631},          /* ARABIC LETTER REH */
-    {XK_Arabic_zain, 0x0632},        /* ARABIC LETTER ZAIN */
-    {XK_Arabic_seen, 0x0633},        /* ARABIC LETTER SEEN */
-    {XK_Arabic_sheen, 0x0634},       /* ARABIC LETTER SHEEN */
-    {XK_Arabic_sad, 0x0635},         /* ARABIC LETTER SAD */
-    {XK_Arabic_dad, 0x0636},         /* ARABIC LETTER DAD */
-    {XK_Arabic_tah, 0x0637},         /* ARABIC LETTER TAH */
-    {XK_Arabic_zah, 0x0638},         /* ARABIC LETTER ZAH */
-    {XK_Arabic_ain, 0x0639},         /* ARABIC LETTER AIN */
-    {XK_Arabic_ghain, 0x063a},       /* ARABIC LETTER GHAIN */
-    {XK_Arabic_tatweel, 0x0640},     /* ARABIC TATWEEL */
-    {XK_Arabic_feh, 0x0641},         /* ARABIC LETTER FEH */
-    {XK_Arabic_qaf, 0x0642},         /* ARABIC LETTER QAF */
-    {XK_Arabic_kaf, 0x0643},         /* ARABIC LETTER KAF */
-    {XK_Arabic_lam, 0x0644},         /* ARABIC LETTER LAM */
-    {XK_Arabic_meem, 0x0645},        /* ARABIC LETTER MEEM */
-    {XK_Arabic_noon, 0x0646},        /* ARABIC LETTER NOON */
-    {XK_Arabic_ha, 0x0647},          /* ARABIC LETTER HEH */
-    {XK_Arabic_waw, 0x0648},         /* ARABIC LETTER WAW */
-    {XK_Arabic_alefmaksura, 0x0649}, /* ARABIC LETTER ALEF MAKSURA */
-    {XK_Arabic_yeh, 0x064a},         /* ARABIC LETTER YEH */
-    {XK_Arabic_fathatan, 0x064b},    /* ARABIC FATHATAN */
-    {XK_Arabic_dammatan, 0x064c},    /* ARABIC DAMMATAN */
-    {XK_Arabic_kasratan, 0x064d},    /* ARABIC KASRATAN */
-    {XK_Arabic_fatha, 0x064e},       /* ARABIC FATHA */
-    {XK_Arabic_damma, 0x064f},       /* ARABIC DAMMA */
-    {XK_Arabic_kasra, 0x0650},       /* ARABIC KASRA */
-    {XK_Arabic_shadda, 0x0651},      /* ARABIC SHADDA */
-    {XK_Arabic_sukun, 0x0652},       /* ARABIC SUKUN */
-    {XK_Arabic_madda_above, 0x0653}, /* ARABIC MADDA ABOVE */
-    {XK_Arabic_hamza_above, 0x0654}, /* ARABIC HAMZA ABOVE */
-    {XK_Arabic_hamza_below, 0x0655}, /* ARABIC HAMZA BELOW */
-    {XK_Arabic_jeh, 0x0698},         /* ARABIC LETTER JEH */
-    {XK_Arabic_veh, 0x06a4},         /* ARABIC LETTER VEH */
-    {XK_Arabic_keheh, 0x06a9},       /* ARABIC LETTER KEHEH */
-    {XK_Arabic_gaf, 0x06af},         /* ARABIC LETTER GAF */
-    {XK_Arabic_noon_ghunna, 0x06ba}, /* ARABIC LETTER NOON GHUNNA */
-    {XK_Arabic_heh_doachashmee, 0x06be}, /* ARABIC LETTER HEH DOACHASHMEE */
-    {XK_Arabic_farsi_yeh, 0x06cc},       /* ARABIC LETTER FARSI YEH */
-    {XK_Arabic_yeh_baree, 0x06d2},       /* ARABIC LETTER YEH BAREE */
-    {XK_Arabic_heh_goal, 0x06c1},        /* ARABIC LETTER HEH GOAL */
-#endif                                   // defined(XK_Farsi_0)
+    {XK_Arabic_maddaonalef, 0x0622},      /* ARABIC LETTER ALEF WITH MADDA ABOVE */
+    {XK_Arabic_hamzaonalef, 0x0623},      /* ARABIC LETTER ALEF WITH HAMZA ABOVE */
+    {XK_Arabic_hamzaonwaw, 0x0624},       /* ARABIC LETTER WAW WITH HAMZA ABOVE */
+    {XK_Arabic_hamzaunderalef, 0x0625},   /* ARABIC LETTER ALEF WITH HAMZA BELOW */
+    {XK_Arabic_hamzaonyeh, 0x0626},       /* ARABIC LETTER YEH WITH HAMZA ABOVE */
+    {XK_Arabic_alef, 0x0627},             /* ARABIC LETTER ALEF */
+    {XK_Arabic_beh, 0x0628},              /* ARABIC LETTER BEH */
+    {XK_Arabic_tehmarbuta, 0x0629},       /* ARABIC LETTER TEH MARBUTA */
+    {XK_Arabic_teh, 0x062a},              /* ARABIC LETTER TEH */
+    {XK_Arabic_theh, 0x062b},             /* ARABIC LETTER THEH */
+    {XK_Arabic_jeem, 0x062c},             /* ARABIC LETTER JEEM */
+    {XK_Arabic_hah, 0x062d},              /* ARABIC LETTER HAH */
+    {XK_Arabic_khah, 0x062e},             /* ARABIC LETTER KHAH */
+    {XK_Arabic_dal, 0x062f},              /* ARABIC LETTER DAL */
+    {XK_Arabic_thal, 0x0630},             /* ARABIC LETTER THAL */
+    {XK_Arabic_ra, 0x0631},               /* ARABIC LETTER REH */
+    {XK_Arabic_zain, 0x0632},             /* ARABIC LETTER ZAIN */
+    {XK_Arabic_seen, 0x0633},             /* ARABIC LETTER SEEN */
+    {XK_Arabic_sheen, 0x0634},            /* ARABIC LETTER SHEEN */
+    {XK_Arabic_sad, 0x0635},              /* ARABIC LETTER SAD */
+    {XK_Arabic_dad, 0x0636},              /* ARABIC LETTER DAD */
+    {XK_Arabic_tah, 0x0637},              /* ARABIC LETTER TAH */
+    {XK_Arabic_zah, 0x0638},              /* ARABIC LETTER ZAH */
+    {XK_Arabic_ain, 0x0639},              /* ARABIC LETTER AIN */
+    {XK_Arabic_ghain, 0x063a},            /* ARABIC LETTER GHAIN */
+    {XK_Arabic_tatweel, 0x0640},          /* ARABIC TATWEEL */
+    {XK_Arabic_feh, 0x0641},              /* ARABIC LETTER FEH */
+    {XK_Arabic_qaf, 0x0642},              /* ARABIC LETTER QAF */
+    {XK_Arabic_kaf, 0x0643},              /* ARABIC LETTER KAF */
+    {XK_Arabic_lam, 0x0644},              /* ARABIC LETTER LAM */
+    {XK_Arabic_meem, 0x0645},             /* ARABIC LETTER MEEM */
+    {XK_Arabic_noon, 0x0646},             /* ARABIC LETTER NOON */
+    {XK_Arabic_ha, 0x0647},               /* ARABIC LETTER HEH */
+    {XK_Arabic_waw, 0x0648},              /* ARABIC LETTER WAW */
+    {XK_Arabic_alefmaksura, 0x0649},      /* ARABIC LETTER ALEF MAKSURA */
+    {XK_Arabic_yeh, 0x064a},              /* ARABIC LETTER YEH */
+    {XK_Arabic_fathatan, 0x064b},         /* ARABIC FATHATAN */
+    {XK_Arabic_dammatan, 0x064c},         /* ARABIC DAMMATAN */
+    {XK_Arabic_kasratan, 0x064d},         /* ARABIC KASRATAN */
+    {XK_Arabic_fatha, 0x064e},            /* ARABIC FATHA */
+    {XK_Arabic_damma, 0x064f},            /* ARABIC DAMMA */
+    {XK_Arabic_kasra, 0x0650},            /* ARABIC KASRA */
+    {XK_Arabic_shadda, 0x0651},           /* ARABIC SHADDA */
+    {XK_Arabic_sukun, 0x0652},            /* ARABIC SUKUN */
+    {XK_Arabic_madda_above, 0x0653},      /* ARABIC MADDA ABOVE */
+    {XK_Arabic_hamza_above, 0x0654},      /* ARABIC HAMZA ABOVE */
+    {XK_Arabic_hamza_below, 0x0655},      /* ARABIC HAMZA BELOW */
+    {XK_Arabic_jeh, 0x0698},              /* ARABIC LETTER JEH */
+    {XK_Arabic_veh, 0x06a4},              /* ARABIC LETTER VEH */
+    {XK_Arabic_keheh, 0x06a9},            /* ARABIC LETTER KEHEH */
+    {XK_Arabic_gaf, 0x06af},              /* ARABIC LETTER GAF */
+    {XK_Arabic_noon_ghunna, 0x06ba},      /* ARABIC LETTER NOON GHUNNA */
+    {XK_Arabic_heh_doachashmee, 0x06be},  /* ARABIC LETTER HEH DOACHASHMEE */
+    {XK_Arabic_farsi_yeh, 0x06cc},        /* ARABIC LETTER FARSI YEH */
+    {XK_Arabic_yeh_baree, 0x06d2},        /* ARABIC LETTER YEH BAREE */
+    {XK_Arabic_heh_goal, 0x06c1},         /* ARABIC LETTER HEH GOAL */
+#endif                                    // defined(XK_Farsi_0)
 #if defined(XK_Serbian_dje)
     {XK_Serbian_dje, 0x0452},   /* CYRILLIC SMALL LETTER DJE */
     {XK_Macedonia_gje, 0x0453}, /* CYRILLIC SMALL LETTER GJE */
     {XK_Cyrillic_io, 0x0451},   /* CYRILLIC SMALL LETTER IO */
     {XK_Ukrainian_ie, 0x0454},  /* CYRILLIC SMALL LETTER UKRAINIAN IE */
     {XK_Macedonia_dse, 0x0455}, /* CYRILLIC SMALL LETTER DZE */
-    {XK_Ukrainian_i,
-     0x0456}, /* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I */
+    {XK_Ukrainian_i, 0x0456},   /* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I */
     {XK_Ukrainian_yi, 0x0457},  /* CYRILLIC SMALL LETTER YI */
     {XK_Cyrillic_je, 0x0458},   /* CYRILLIC SMALL LETTER JE */
     {XK_Cyrillic_lje, 0x0459},  /* CYRILLIC SMALL LETTER LJE */
@@ -394,8 +393,7 @@ struct codepair {
     {XK_Serbian_tshe, 0x045b},  /* CYRILLIC SMALL LETTER TSHE */
     {XK_Macedonia_kje, 0x045c}, /* CYRILLIC SMALL LETTER KJE */
 #if defined(XK_Ukrainian_ghe_with_upturn)
-    {XK_Ukrainian_ghe_with_upturn,
-     0x0491}, /* CYRILLIC SMALL LETTER GHE WITH UPTURN */
+    {XK_Ukrainian_ghe_with_upturn, 0x0491}, /* CYRILLIC SMALL LETTER GHE WITH UPTURN */
 #endif
     {XK_Byelorussian_shortu, 0x045e}, /* CYRILLIC SMALL LETTER SHORT U */
     {XK_Cyrillic_dzhe, 0x045f},       /* CYRILLIC SMALL LETTER DZHE */
@@ -405,17 +403,15 @@ struct codepair {
     {XK_Cyrillic_IO, 0x0401},         /* CYRILLIC CAPITAL LETTER IO */
     {XK_Ukrainian_IE, 0x0404},        /* CYRILLIC CAPITAL LETTER UKRAINIAN IE */
     {XK_Macedonia_DSE, 0x0405},       /* CYRILLIC CAPITAL LETTER DZE */
-    {XK_Ukrainian_I,
-     0x0406}, /* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
-    {XK_Ukrainian_YI, 0x0407},  /* CYRILLIC CAPITAL LETTER YI */
-    {XK_Cyrillic_JE, 0x0408},   /* CYRILLIC CAPITAL LETTER JE */
-    {XK_Cyrillic_LJE, 0x0409},  /* CYRILLIC CAPITAL LETTER LJE */
-    {XK_Cyrillic_NJE, 0x040a},  /* CYRILLIC CAPITAL LETTER NJE */
-    {XK_Serbian_TSHE, 0x040b},  /* CYRILLIC CAPITAL LETTER TSHE */
-    {XK_Macedonia_KJE, 0x040c}, /* CYRILLIC CAPITAL LETTER KJE */
+    {XK_Ukrainian_I, 0x0406},         /* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
+    {XK_Ukrainian_YI, 0x0407},        /* CYRILLIC CAPITAL LETTER YI */
+    {XK_Cyrillic_JE, 0x0408},         /* CYRILLIC CAPITAL LETTER JE */
+    {XK_Cyrillic_LJE, 0x0409},        /* CYRILLIC CAPITAL LETTER LJE */
+    {XK_Cyrillic_NJE, 0x040a},        /* CYRILLIC CAPITAL LETTER NJE */
+    {XK_Serbian_TSHE, 0x040b},        /* CYRILLIC CAPITAL LETTER TSHE */
+    {XK_Macedonia_KJE, 0x040c},       /* CYRILLIC CAPITAL LETTER KJE */
 #if defined(XK_Ukrainian_GHE_WITH_UPTURN)
-    {XK_Ukrainian_GHE_WITH_UPTURN,
-     0x0490}, /* CYRILLIC CAPITAL LETTER GHE WITH UPTURN */
+    {XK_Ukrainian_GHE_WITH_UPTURN, 0x0490}, /* CYRILLIC CAPITAL LETTER GHE WITH UPTURN */
 #endif
     {XK_Byelorussian_SHORTU, 0x040e}, /* CYRILLIC CAPITAL LETTER SHORT U */
     {XK_Cyrillic_DZHE, 0x040f},       /* CYRILLIC CAPITAL LETTER DZHE */
@@ -485,132 +481,120 @@ struct codepair {
     {XK_Cyrillic_HARDSIGN, 0x042a},   /* CYRILLIC CAPITAL LETTER HARD SIGN */
 #endif                                // defined(XK_Serbian_dje)
 #if defined(XK_Greek_ALPHAaccent)
-    {XK_Greek_ALPHAaccent, 0x0386}, /* GREEK CAPITAL LETTER ALPHA WITH TONOS */
-    {XK_Greek_EPSILONaccent,
-     0x0388},                      /* GREEK CAPITAL LETTER EPSILON WITH TONOS */
-    {XK_Greek_ETAaccent, 0x0389},  /* GREEK CAPITAL LETTER ETA WITH TONOS */
-    {XK_Greek_IOTAaccent, 0x038a}, /* GREEK CAPITAL LETTER IOTA WITH TONOS */
-    {XK_Greek_IOTAdiaeresis,
-     0x03aa}, /* GREEK CAPITAL LETTER IOTA WITH DIALYTIKA */
-    {XK_Greek_OMICRONaccent,
-     0x038c}, /* GREEK CAPITAL LETTER OMICRON WITH TONOS */
-    {XK_Greek_UPSILONaccent,
-     0x038e}, /* GREEK CAPITAL LETTER UPSILON WITH TONOS */
-    {XK_Greek_UPSILONdieresis,
-     0x03ab}, /* GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA */
-    {XK_Greek_OMEGAaccent, 0x038f}, /* GREEK CAPITAL LETTER OMEGA WITH TONOS */
-    {XK_Greek_accentdieresis, 0x0385}, /* GREEK DIALYTIKA TONOS */
-    {XK_Greek_horizbar, 0x2015},       /* HORIZONTAL BAR */
-    {XK_Greek_alphaaccent, 0x03ac},    /* GREEK SMALL LETTER ALPHA WITH TONOS */
-    {XK_Greek_epsilonaccent,
-     0x03ad},                      /* GREEK SMALL LETTER EPSILON WITH TONOS */
-    {XK_Greek_etaaccent, 0x03ae},  /* GREEK SMALL LETTER ETA WITH TONOS */
-    {XK_Greek_iotaaccent, 0x03af}, /* GREEK SMALL LETTER IOTA WITH TONOS */
-    {XK_Greek_iotadieresis,
-     0x03ca}, /* GREEK SMALL LETTER IOTA WITH DIALYTIKA */
-    {XK_Greek_iotaaccentdieresis,
-     0x0390}, /* GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS */
-    {XK_Greek_omicronaccent,
-     0x03cc}, /* GREEK SMALL LETTER OMICRON WITH TONOS */
-    {XK_Greek_upsilonaccent,
-     0x03cd}, /* GREEK SMALL LETTER UPSILON WITH TONOS */
-    {XK_Greek_upsilondieresis,
-     0x03cb}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA */
-    {XK_Greek_upsilonaccentdieresis,
-     0x03b0}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA AND TONOS */
-    {XK_Greek_omegaaccent, 0x03ce}, /* GREEK SMALL LETTER OMEGA WITH TONOS */
-    {XK_Greek_ALPHA, 0x0391},       /* GREEK CAPITAL LETTER ALPHA */
-    {XK_Greek_BETA, 0x0392},        /* GREEK CAPITAL LETTER BETA */
-    {XK_Greek_GAMMA, 0x0393},       /* GREEK CAPITAL LETTER GAMMA */
-    {XK_Greek_DELTA, 0x0394},       /* GREEK CAPITAL LETTER DELTA */
-    {XK_Greek_EPSILON, 0x0395},     /* GREEK CAPITAL LETTER EPSILON */
-    {XK_Greek_ZETA, 0x0396},        /* GREEK CAPITAL LETTER ZETA */
-    {XK_Greek_ETA, 0x0397},         /* GREEK CAPITAL LETTER ETA */
-    {XK_Greek_THETA, 0x0398},       /* GREEK CAPITAL LETTER THETA */
-    {XK_Greek_IOTA, 0x0399},        /* GREEK CAPITAL LETTER IOTA */
-    {XK_Greek_KAPPA, 0x039a},       /* GREEK CAPITAL LETTER KAPPA */
-    {XK_Greek_LAMBDA, 0x039b},      /* GREEK CAPITAL LETTER LAMDA */
-    {XK_Greek_MU, 0x039c},          /* GREEK CAPITAL LETTER MU */
-    {XK_Greek_NU, 0x039d},          /* GREEK CAPITAL LETTER NU */
-    {XK_Greek_XI, 0x039e},          /* GREEK CAPITAL LETTER XI */
-    {XK_Greek_OMICRON, 0x039f},     /* GREEK CAPITAL LETTER OMICRON */
-    {XK_Greek_PI, 0x03a0},          /* GREEK CAPITAL LETTER PI */
-    {XK_Greek_RHO, 0x03a1},         /* GREEK CAPITAL LETTER RHO */
-    {XK_Greek_SIGMA, 0x03a3},       /* GREEK CAPITAL LETTER SIGMA */
-    {XK_Greek_TAU, 0x03a4},         /* GREEK CAPITAL LETTER TAU */
-    {XK_Greek_UPSILON, 0x03a5},     /* GREEK CAPITAL LETTER UPSILON */
-    {XK_Greek_PHI, 0x03a6},         /* GREEK CAPITAL LETTER PHI */
-    {XK_Greek_CHI, 0x03a7},         /* GREEK CAPITAL LETTER CHI */
-    {XK_Greek_PSI, 0x03a8},         /* GREEK CAPITAL LETTER PSI */
-    {XK_Greek_OMEGA, 0x03a9},       /* GREEK CAPITAL LETTER OMEGA */
-    {XK_Greek_alpha, 0x03b1},       /* GREEK SMALL LETTER ALPHA */
-    {XK_Greek_beta, 0x03b2},        /* GREEK SMALL LETTER BETA */
-    {XK_Greek_gamma, 0x03b3},       /* GREEK SMALL LETTER GAMMA */
-    {XK_Greek_delta, 0x03b4},       /* GREEK SMALL LETTER DELTA */
-    {XK_Greek_epsilon, 0x03b5},     /* GREEK SMALL LETTER EPSILON */
-    {XK_Greek_zeta, 0x03b6},        /* GREEK SMALL LETTER ZETA */
-    {XK_Greek_eta, 0x03b7},         /* GREEK SMALL LETTER ETA */
-    {XK_Greek_theta, 0x03b8},       /* GREEK SMALL LETTER THETA */
-    {XK_Greek_iota, 0x03b9},        /* GREEK SMALL LETTER IOTA */
-    {XK_Greek_kappa, 0x03ba},       /* GREEK SMALL LETTER KAPPA */
-    {XK_Greek_lambda, 0x03bb},      /* GREEK SMALL LETTER LAMDA */
-    {XK_Greek_mu, 0x03bc},          /* GREEK SMALL LETTER MU */
-    {XK_Greek_nu, 0x03bd},          /* GREEK SMALL LETTER NU */
-    {XK_Greek_xi, 0x03be},          /* GREEK SMALL LETTER XI */
-    {XK_Greek_omicron, 0x03bf},     /* GREEK SMALL LETTER OMICRON */
-    {XK_Greek_pi, 0x03c0},          /* GREEK SMALL LETTER PI */
-    {XK_Greek_rho, 0x03c1},         /* GREEK SMALL LETTER RHO */
-    {XK_Greek_sigma, 0x03c3},       /* GREEK SMALL LETTER SIGMA */
-    {XK_Greek_finalsmallsigma, 0x03c2}, /* GREEK SMALL LETTER FINAL SIGMA */
-    {XK_Greek_tau, 0x03c4},             /* GREEK SMALL LETTER TAU */
-    {XK_Greek_upsilon, 0x03c5},         /* GREEK SMALL LETTER UPSILON */
-    {XK_Greek_phi, 0x03c6},             /* GREEK SMALL LETTER PHI */
-    {XK_Greek_chi, 0x03c7},             /* GREEK SMALL LETTER CHI */
-    {XK_Greek_psi, 0x03c8},             /* GREEK SMALL LETTER PSI */
-    {XK_Greek_omega, 0x03c9},           /* GREEK SMALL LETTER OMEGA */
-#endif                                  // defined(XK_Greek_ALPHAaccent)
-    {XK_leftradical, 0x23b7},           /* ??? */
-    {XK_topleftradical, 0x250c},        /* BOX DRAWINGS LIGHT DOWN AND RIGHT */
-    {XK_horizconnector, 0x2500},        /* BOX DRAWINGS LIGHT HORIZONTAL */
-    {XK_topintegral, 0x2320},           /* TOP HALF INTEGRAL */
-    {XK_botintegral, 0x2321},           /* BOTTOM HALF INTEGRAL */
-    {XK_vertconnector, 0x2502},         /* BOX DRAWINGS LIGHT VERTICAL */
-    {XK_topleftsqbracket, 0x23a1},      /* ??? */
-    {XK_botleftsqbracket, 0x23a3},      /* ??? */
-    {XK_toprightsqbracket, 0x23a4},     /* ??? */
-    {XK_botrightsqbracket, 0x23a6},     /* ??? */
-    {XK_topleftparens, 0x239b},         /* ??? */
-    {XK_botleftparens, 0x239d},         /* ??? */
-    {XK_toprightparens, 0x239e},        /* ??? */
-    {XK_botrightparens, 0x23a0},        /* ??? */
-    {XK_leftmiddlecurlybrace, 0x23a8},  /* ??? */
-    {XK_rightmiddlecurlybrace, 0x23ac}, /* ??? */
-    {XK_lessthanequal, 0x2264},         /* LESS-THAN OR EQUAL TO */
-    {XK_notequal, 0x2260},              /* NOT EQUAL TO */
-    {XK_greaterthanequal, 0x2265},      /* GREATER-THAN OR EQUAL TO */
-    {XK_integral, 0x222b},              /* INTEGRAL */
-    {XK_therefore, 0x2234},             /* THEREFORE */
-    {XK_variation, 0x221d},             /* PROPORTIONAL TO */
-    {XK_infinity, 0x221e},              /* INFINITY */
-    {XK_nabla, 0x2207},                 /* NABLA */
-    {XK_approximate, 0x223c},           /* TILDE OPERATOR */
-    {XK_similarequal, 0x2243},          /* ASYMPTOTICALLY EQUAL TO */
-    {XK_ifonlyif, 0x21d4},              /* LEFT RIGHT DOUBLE ARROW */
-    {XK_implies, 0x21d2},               /* RIGHTWARDS DOUBLE ARROW */
-    {XK_identical, 0x2261},             /* IDENTICAL TO */
-    {XK_radical, 0x221a},               /* SQUARE ROOT */
-    {XK_includedin, 0x2282},            /* SUBSET OF */
-    {XK_includes, 0x2283},              /* SUPERSET OF */
-    {XK_intersection, 0x2229},          /* INTERSECTION */
-    {XK_union, 0x222a},                 /* UNION */
-    {XK_logicaland, 0x2227},            /* LOGICAL AND */
-    {XK_logicalor, 0x2228},             /* LOGICAL OR */
-    {XK_partialderivative, 0x2202},     /* PARTIAL DIFFERENTIAL */
-    {XK_function, 0x0192},              /* LATIN SMALL LETTER F WITH HOOK */
-    {XK_leftarrow, 0x2190},             /* LEFTWARDS ARROW */
-    {XK_uparrow, 0x2191},               /* UPWARDS ARROW */
-    {XK_rightarrow, 0x2192},            /* RIGHTWARDS ARROW */
-    {XK_downarrow, 0x2193},             /* DOWNWARDS ARROW */
+    {XK_Greek_ALPHAaccent, 0x0386},           /* GREEK CAPITAL LETTER ALPHA WITH TONOS */
+    {XK_Greek_EPSILONaccent, 0x0388},         /* GREEK CAPITAL LETTER EPSILON WITH TONOS */
+    {XK_Greek_ETAaccent, 0x0389},             /* GREEK CAPITAL LETTER ETA WITH TONOS */
+    {XK_Greek_IOTAaccent, 0x038a},            /* GREEK CAPITAL LETTER IOTA WITH TONOS */
+    {XK_Greek_IOTAdiaeresis, 0x03aa},         /* GREEK CAPITAL LETTER IOTA WITH DIALYTIKA */
+    {XK_Greek_OMICRONaccent, 0x038c},         /* GREEK CAPITAL LETTER OMICRON WITH TONOS */
+    {XK_Greek_UPSILONaccent, 0x038e},         /* GREEK CAPITAL LETTER UPSILON WITH TONOS */
+    {XK_Greek_UPSILONdieresis, 0x03ab},       /* GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA */
+    {XK_Greek_OMEGAaccent, 0x038f},           /* GREEK CAPITAL LETTER OMEGA WITH TONOS */
+    {XK_Greek_accentdieresis, 0x0385},        /* GREEK DIALYTIKA TONOS */
+    {XK_Greek_horizbar, 0x2015},              /* HORIZONTAL BAR */
+    {XK_Greek_alphaaccent, 0x03ac},           /* GREEK SMALL LETTER ALPHA WITH TONOS */
+    {XK_Greek_epsilonaccent, 0x03ad},         /* GREEK SMALL LETTER EPSILON WITH TONOS */
+    {XK_Greek_etaaccent, 0x03ae},             /* GREEK SMALL LETTER ETA WITH TONOS */
+    {XK_Greek_iotaaccent, 0x03af},            /* GREEK SMALL LETTER IOTA WITH TONOS */
+    {XK_Greek_iotadieresis, 0x03ca},          /* GREEK SMALL LETTER IOTA WITH DIALYTIKA */
+    {XK_Greek_iotaaccentdieresis, 0x0390},    /* GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS */
+    {XK_Greek_omicronaccent, 0x03cc},         /* GREEK SMALL LETTER OMICRON WITH TONOS */
+    {XK_Greek_upsilonaccent, 0x03cd},         /* GREEK SMALL LETTER UPSILON WITH TONOS */
+    {XK_Greek_upsilondieresis, 0x03cb},       /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA */
+    {XK_Greek_upsilonaccentdieresis, 0x03b0}, /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA AND TONOS */
+    {XK_Greek_omegaaccent, 0x03ce},           /* GREEK SMALL LETTER OMEGA WITH TONOS */
+    {XK_Greek_ALPHA, 0x0391},                 /* GREEK CAPITAL LETTER ALPHA */
+    {XK_Greek_BETA, 0x0392},                  /* GREEK CAPITAL LETTER BETA */
+    {XK_Greek_GAMMA, 0x0393},                 /* GREEK CAPITAL LETTER GAMMA */
+    {XK_Greek_DELTA, 0x0394},                 /* GREEK CAPITAL LETTER DELTA */
+    {XK_Greek_EPSILON, 0x0395},               /* GREEK CAPITAL LETTER EPSILON */
+    {XK_Greek_ZETA, 0x0396},                  /* GREEK CAPITAL LETTER ZETA */
+    {XK_Greek_ETA, 0x0397},                   /* GREEK CAPITAL LETTER ETA */
+    {XK_Greek_THETA, 0x0398},                 /* GREEK CAPITAL LETTER THETA */
+    {XK_Greek_IOTA, 0x0399},                  /* GREEK CAPITAL LETTER IOTA */
+    {XK_Greek_KAPPA, 0x039a},                 /* GREEK CAPITAL LETTER KAPPA */
+    {XK_Greek_LAMBDA, 0x039b},                /* GREEK CAPITAL LETTER LAMDA */
+    {XK_Greek_MU, 0x039c},                    /* GREEK CAPITAL LETTER MU */
+    {XK_Greek_NU, 0x039d},                    /* GREEK CAPITAL LETTER NU */
+    {XK_Greek_XI, 0x039e},                    /* GREEK CAPITAL LETTER XI */
+    {XK_Greek_OMICRON, 0x039f},               /* GREEK CAPITAL LETTER OMICRON */
+    {XK_Greek_PI, 0x03a0},                    /* GREEK CAPITAL LETTER PI */
+    {XK_Greek_RHO, 0x03a1},                   /* GREEK CAPITAL LETTER RHO */
+    {XK_Greek_SIGMA, 0x03a3},                 /* GREEK CAPITAL LETTER SIGMA */
+    {XK_Greek_TAU, 0x03a4},                   /* GREEK CAPITAL LETTER TAU */
+    {XK_Greek_UPSILON, 0x03a5},               /* GREEK CAPITAL LETTER UPSILON */
+    {XK_Greek_PHI, 0x03a6},                   /* GREEK CAPITAL LETTER PHI */
+    {XK_Greek_CHI, 0x03a7},                   /* GREEK CAPITAL LETTER CHI */
+    {XK_Greek_PSI, 0x03a8},                   /* GREEK CAPITAL LETTER PSI */
+    {XK_Greek_OMEGA, 0x03a9},                 /* GREEK CAPITAL LETTER OMEGA */
+    {XK_Greek_alpha, 0x03b1},                 /* GREEK SMALL LETTER ALPHA */
+    {XK_Greek_beta, 0x03b2},                  /* GREEK SMALL LETTER BETA */
+    {XK_Greek_gamma, 0x03b3},                 /* GREEK SMALL LETTER GAMMA */
+    {XK_Greek_delta, 0x03b4},                 /* GREEK SMALL LETTER DELTA */
+    {XK_Greek_epsilon, 0x03b5},               /* GREEK SMALL LETTER EPSILON */
+    {XK_Greek_zeta, 0x03b6},                  /* GREEK SMALL LETTER ZETA */
+    {XK_Greek_eta, 0x03b7},                   /* GREEK SMALL LETTER ETA */
+    {XK_Greek_theta, 0x03b8},                 /* GREEK SMALL LETTER THETA */
+    {XK_Greek_iota, 0x03b9},                  /* GREEK SMALL LETTER IOTA */
+    {XK_Greek_kappa, 0x03ba},                 /* GREEK SMALL LETTER KAPPA */
+    {XK_Greek_lambda, 0x03bb},                /* GREEK SMALL LETTER LAMDA */
+    {XK_Greek_mu, 0x03bc},                    /* GREEK SMALL LETTER MU */
+    {XK_Greek_nu, 0x03bd},                    /* GREEK SMALL LETTER NU */
+    {XK_Greek_xi, 0x03be},                    /* GREEK SMALL LETTER XI */
+    {XK_Greek_omicron, 0x03bf},               /* GREEK SMALL LETTER OMICRON */
+    {XK_Greek_pi, 0x03c0},                    /* GREEK SMALL LETTER PI */
+    {XK_Greek_rho, 0x03c1},                   /* GREEK SMALL LETTER RHO */
+    {XK_Greek_sigma, 0x03c3},                 /* GREEK SMALL LETTER SIGMA */
+    {XK_Greek_finalsmallsigma, 0x03c2},       /* GREEK SMALL LETTER FINAL SIGMA */
+    {XK_Greek_tau, 0x03c4},                   /* GREEK SMALL LETTER TAU */
+    {XK_Greek_upsilon, 0x03c5},               /* GREEK SMALL LETTER UPSILON */
+    {XK_Greek_phi, 0x03c6},                   /* GREEK SMALL LETTER PHI */
+    {XK_Greek_chi, 0x03c7},                   /* GREEK SMALL LETTER CHI */
+    {XK_Greek_psi, 0x03c8},                   /* GREEK SMALL LETTER PSI */
+    {XK_Greek_omega, 0x03c9},                 /* GREEK SMALL LETTER OMEGA */
+#endif                                        // defined(XK_Greek_ALPHAaccent)
+    {XK_leftradical, 0x23b7},                 /* ??? */
+    {XK_topleftradical, 0x250c},              /* BOX DRAWINGS LIGHT DOWN AND RIGHT */
+    {XK_horizconnector, 0x2500},              /* BOX DRAWINGS LIGHT HORIZONTAL */
+    {XK_topintegral, 0x2320},                 /* TOP HALF INTEGRAL */
+    {XK_botintegral, 0x2321},                 /* BOTTOM HALF INTEGRAL */
+    {XK_vertconnector, 0x2502},               /* BOX DRAWINGS LIGHT VERTICAL */
+    {XK_topleftsqbracket, 0x23a1},            /* ??? */
+    {XK_botleftsqbracket, 0x23a3},            /* ??? */
+    {XK_toprightsqbracket, 0x23a4},           /* ??? */
+    {XK_botrightsqbracket, 0x23a6},           /* ??? */
+    {XK_topleftparens, 0x239b},               /* ??? */
+    {XK_botleftparens, 0x239d},               /* ??? */
+    {XK_toprightparens, 0x239e},              /* ??? */
+    {XK_botrightparens, 0x23a0},              /* ??? */
+    {XK_leftmiddlecurlybrace, 0x23a8},        /* ??? */
+    {XK_rightmiddlecurlybrace, 0x23ac},       /* ??? */
+    {XK_lessthanequal, 0x2264},               /* LESS-THAN OR EQUAL TO */
+    {XK_notequal, 0x2260},                    /* NOT EQUAL TO */
+    {XK_greaterthanequal, 0x2265},            /* GREATER-THAN OR EQUAL TO */
+    {XK_integral, 0x222b},                    /* INTEGRAL */
+    {XK_therefore, 0x2234},                   /* THEREFORE */
+    {XK_variation, 0x221d},                   /* PROPORTIONAL TO */
+    {XK_infinity, 0x221e},                    /* INFINITY */
+    {XK_nabla, 0x2207},                       /* NABLA */
+    {XK_approximate, 0x223c},                 /* TILDE OPERATOR */
+    {XK_similarequal, 0x2243},                /* ASYMPTOTICALLY EQUAL TO */
+    {XK_ifonlyif, 0x21d4},                    /* LEFT RIGHT DOUBLE ARROW */
+    {XK_implies, 0x21d2},                     /* RIGHTWARDS DOUBLE ARROW */
+    {XK_identical, 0x2261},                   /* IDENTICAL TO */
+    {XK_radical, 0x221a},                     /* SQUARE ROOT */
+    {XK_includedin, 0x2282},                  /* SUBSET OF */
+    {XK_includes, 0x2283},                    /* SUPERSET OF */
+    {XK_intersection, 0x2229},                /* INTERSECTION */
+    {XK_union, 0x222a},                       /* UNION */
+    {XK_logicaland, 0x2227},                  /* LOGICAL AND */
+    {XK_logicalor, 0x2228},                   /* LOGICAL OR */
+    {XK_partialderivative, 0x2202},           /* PARTIAL DIFFERENTIAL */
+    {XK_function, 0x0192},                    /* LATIN SMALL LETTER F WITH HOOK */
+    {XK_leftarrow, 0x2190},                   /* LEFTWARDS ARROW */
+    {XK_uparrow, 0x2191},                     /* UPWARDS ARROW */
+    {XK_rightarrow, 0x2192},                  /* RIGHTWARDS ARROW */
+    {XK_downarrow, 0x2193},                   /* DOWNWARDS ARROW */
     /*{ XK_blank,                        ??? }, */
     {XK_soliddiamond, 0x25c6},   /* BLACK DIAMOND */
     {XK_checkerboard, 0x2592},   /* MEDIUM SHADE */
@@ -624,31 +608,27 @@ struct codepair {
     {XK_uprightcorner, 0x2510},  /* BOX DRAWINGS LIGHT DOWN AND LEFT */
     {XK_upleftcorner, 0x250c},   /* BOX DRAWINGS LIGHT DOWN AND RIGHT */
     {XK_lowleftcorner, 0x2514},  /* BOX DRAWINGS LIGHT UP AND RIGHT */
-    {XK_crossinglines, 0x253c}, /* BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL */
-    {XK_horizlinescan1,
-     0x23ba}, /* HORIZONTAL SCAN LINE-1 (Unicode 3.2 draft) */
-    {XK_horizlinescan3,
-     0x23bb}, /* HORIZONTAL SCAN LINE-3 (Unicode 3.2 draft) */
+    {XK_crossinglines, 0x253c},  /* BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL */
+    {XK_horizlinescan1, 0x23ba}, /* HORIZONTAL SCAN LINE-1 (Unicode 3.2 draft) */
+    {XK_horizlinescan3, 0x23bb}, /* HORIZONTAL SCAN LINE-3 (Unicode 3.2 draft) */
     {XK_horizlinescan5, 0x2500}, /* BOX DRAWINGS LIGHT HORIZONTAL */
-    {XK_horizlinescan7,
-     0x23bc}, /* HORIZONTAL SCAN LINE-7 (Unicode 3.2 draft) */
-    {XK_horizlinescan9,
-     0x23bd},                /* HORIZONTAL SCAN LINE-9 (Unicode 3.2 draft) */
-    {XK_leftt, 0x251c},      /* BOX DRAWINGS LIGHT VERTICAL AND RIGHT */
-    {XK_rightt, 0x2524},     /* BOX DRAWINGS LIGHT VERTICAL AND LEFT */
-    {XK_bott, 0x2534},       /* BOX DRAWINGS LIGHT UP AND HORIZONTAL */
-    {XK_topt, 0x252c},       /* BOX DRAWINGS LIGHT DOWN AND HORIZONTAL */
-    {XK_vertbar, 0x2502},    /* BOX DRAWINGS LIGHT VERTICAL */
-    {XK_emspace, 0x2003},    /* EM SPACE */
-    {XK_enspace, 0x2002},    /* EN SPACE */
-    {XK_em3space, 0x2004},   /* THREE-PER-EM SPACE */
-    {XK_em4space, 0x2005},   /* FOUR-PER-EM SPACE */
-    {XK_digitspace, 0x2007}, /* FIGURE SPACE */
-    {XK_punctspace, 0x2008}, /* PUNCTUATION SPACE */
-    {XK_thinspace, 0x2009},  /* THIN SPACE */
-    {XK_hairspace, 0x200a},  /* HAIR SPACE */
-    {XK_emdash, 0x2014},     /* EM DASH */
-    {XK_endash, 0x2013},     /* EN DASH */
+    {XK_horizlinescan7, 0x23bc}, /* HORIZONTAL SCAN LINE-7 (Unicode 3.2 draft) */
+    {XK_horizlinescan9, 0x23bd}, /* HORIZONTAL SCAN LINE-9 (Unicode 3.2 draft) */
+    {XK_leftt, 0x251c},          /* BOX DRAWINGS LIGHT VERTICAL AND RIGHT */
+    {XK_rightt, 0x2524},         /* BOX DRAWINGS LIGHT VERTICAL AND LEFT */
+    {XK_bott, 0x2534},           /* BOX DRAWINGS LIGHT UP AND HORIZONTAL */
+    {XK_topt, 0x252c},           /* BOX DRAWINGS LIGHT DOWN AND HORIZONTAL */
+    {XK_vertbar, 0x2502},        /* BOX DRAWINGS LIGHT VERTICAL */
+    {XK_emspace, 0x2003},        /* EM SPACE */
+    {XK_enspace, 0x2002},        /* EN SPACE */
+    {XK_em3space, 0x2004},       /* THREE-PER-EM SPACE */
+    {XK_em4space, 0x2005},       /* FOUR-PER-EM SPACE */
+    {XK_digitspace, 0x2007},     /* FIGURE SPACE */
+    {XK_punctspace, 0x2008},     /* PUNCTUATION SPACE */
+    {XK_thinspace, 0x2009},      /* THIN SPACE */
+    {XK_hairspace, 0x200a},      /* HAIR SPACE */
+    {XK_emdash, 0x2014},         /* EM DASH */
+    {XK_endash, 0x2013},         /* EN DASH */
     /*{ XK_signifblank,                  ??? }, */
     {XK_ellipsis, 0x2026},         /* HORIZONTAL ELLIPSIS */
     {XK_doubbaselinedot, 0x2025},  /* TWO DOT LEADER */
@@ -858,89 +838,89 @@ struct codepair {
     {XK_Thai_lekkao, 0x0e59},         /* THAI DIGIT NINE */
 #endif                                // defined(XK_Thai_kokai)
 #if defined(XK_Hangul_Kiyeog)
-    {XK_Hangul_Kiyeog, 0x3131},            /* HANGUL LETTER KIYEOK */
-    {XK_Hangul_SsangKiyeog, 0x3132},       /* HANGUL LETTER SSANGKIYEOK */
-    {XK_Hangul_KiyeogSios, 0x3133},        /* HANGUL LETTER KIYEOK-SIOS */
-    {XK_Hangul_Nieun, 0x3134},             /* HANGUL LETTER NIEUN */
-    {XK_Hangul_NieunJieuj, 0x3135},        /* HANGUL LETTER NIEUN-CIEUC */
-    {XK_Hangul_NieunHieuh, 0x3136},        /* HANGUL LETTER NIEUN-HIEUH */
-    {XK_Hangul_Dikeud, 0x3137},            /* HANGUL LETTER TIKEUT */
-    {XK_Hangul_SsangDikeud, 0x3138},       /* HANGUL LETTER SSANGTIKEUT */
-    {XK_Hangul_Rieul, 0x3139},             /* HANGUL LETTER RIEUL */
-    {XK_Hangul_RieulKiyeog, 0x313a},       /* HANGUL LETTER RIEUL-KIYEOK */
-    {XK_Hangul_RieulMieum, 0x313b},        /* HANGUL LETTER RIEUL-MIEUM */
-    {XK_Hangul_RieulPieub, 0x313c},        /* HANGUL LETTER RIEUL-PIEUP */
-    {XK_Hangul_RieulSios, 0x313d},         /* HANGUL LETTER RIEUL-SIOS */
-    {XK_Hangul_RieulTieut, 0x313e},        /* HANGUL LETTER RIEUL-THIEUTH */
-    {XK_Hangul_RieulPhieuf, 0x313f},       /* HANGUL LETTER RIEUL-PHIEUPH */
-    {XK_Hangul_RieulHieuh, 0x3140},        /* HANGUL LETTER RIEUL-HIEUH */
-    {XK_Hangul_Mieum, 0x3141},             /* HANGUL LETTER MIEUM */
-    {XK_Hangul_Pieub, 0x3142},             /* HANGUL LETTER PIEUP */
-    {XK_Hangul_SsangPieub, 0x3143},        /* HANGUL LETTER SSANGPIEUP */
-    {XK_Hangul_PieubSios, 0x3144},         /* HANGUL LETTER PIEUP-SIOS */
-    {XK_Hangul_Sios, 0x3145},              /* HANGUL LETTER SIOS */
-    {XK_Hangul_SsangSios, 0x3146},         /* HANGUL LETTER SSANGSIOS */
-    {XK_Hangul_Ieung, 0x3147},             /* HANGUL LETTER IEUNG */
-    {XK_Hangul_Jieuj, 0x3148},             /* HANGUL LETTER CIEUC */
-    {XK_Hangul_SsangJieuj, 0x3149},        /* HANGUL LETTER SSANGCIEUC */
-    {XK_Hangul_Cieuc, 0x314a},             /* HANGUL LETTER CHIEUCH */
-    {XK_Hangul_Khieuq, 0x314b},            /* HANGUL LETTER KHIEUKH */
-    {XK_Hangul_Tieut, 0x314c},             /* HANGUL LETTER THIEUTH */
-    {XK_Hangul_Phieuf, 0x314d},            /* HANGUL LETTER PHIEUPH */
-    {XK_Hangul_Hieuh, 0x314e},             /* HANGUL LETTER HIEUH */
-    {XK_Hangul_A, 0x314f},                 /* HANGUL LETTER A */
-    {XK_Hangul_AE, 0x3150},                /* HANGUL LETTER AE */
-    {XK_Hangul_YA, 0x3151},                /* HANGUL LETTER YA */
-    {XK_Hangul_YAE, 0x3152},               /* HANGUL LETTER YAE */
-    {XK_Hangul_EO, 0x3153},                /* HANGUL LETTER EO */
-    {XK_Hangul_E, 0x3154},                 /* HANGUL LETTER E */
-    {XK_Hangul_YEO, 0x3155},               /* HANGUL LETTER YEO */
-    {XK_Hangul_YE, 0x3156},                /* HANGUL LETTER YE */
-    {XK_Hangul_O, 0x3157},                 /* HANGUL LETTER O */
-    {XK_Hangul_WA, 0x3158},                /* HANGUL LETTER WA */
-    {XK_Hangul_WAE, 0x3159},               /* HANGUL LETTER WAE */
-    {XK_Hangul_OE, 0x315a},                /* HANGUL LETTER OE */
-    {XK_Hangul_YO, 0x315b},                /* HANGUL LETTER YO */
-    {XK_Hangul_U, 0x315c},                 /* HANGUL LETTER U */
-    {XK_Hangul_WEO, 0x315d},               /* HANGUL LETTER WEO */
-    {XK_Hangul_WE, 0x315e},                /* HANGUL LETTER WE */
-    {XK_Hangul_WI, 0x315f},                /* HANGUL LETTER WI */
-    {XK_Hangul_YU, 0x3160},                /* HANGUL LETTER YU */
-    {XK_Hangul_EU, 0x3161},                /* HANGUL LETTER EU */
-    {XK_Hangul_YI, 0x3162},                /* HANGUL LETTER YI */
-    {XK_Hangul_I, 0x3163},                 /* HANGUL LETTER I */
-    {XK_Hangul_J_Kiyeog, 0x11a8},          /* HANGUL JONGSEONG KIYEOK */
-    {XK_Hangul_J_SsangKiyeog, 0x11a9},     /* HANGUL JONGSEONG SSANGKIYEOK */
-    {XK_Hangul_J_KiyeogSios, 0x11aa},      /* HANGUL JONGSEONG KIYEOK-SIOS */
-    {XK_Hangul_J_Nieun, 0x11ab},           /* HANGUL JONGSEONG NIEUN */
-    {XK_Hangul_J_NieunJieuj, 0x11ac},      /* HANGUL JONGSEONG NIEUN-CIEUC */
-    {XK_Hangul_J_NieunHieuh, 0x11ad},      /* HANGUL JONGSEONG NIEUN-HIEUH */
-    {XK_Hangul_J_Dikeud, 0x11ae},          /* HANGUL JONGSEONG TIKEUT */
-    {XK_Hangul_J_Rieul, 0x11af},           /* HANGUL JONGSEONG RIEUL */
-    {XK_Hangul_J_RieulKiyeog, 0x11b0},     /* HANGUL JONGSEONG RIEUL-KIYEOK */
-    {XK_Hangul_J_RieulMieum, 0x11b1},      /* HANGUL JONGSEONG RIEUL-MIEUM */
-    {XK_Hangul_J_RieulPieub, 0x11b2},      /* HANGUL JONGSEONG RIEUL-PIEUP */
-    {XK_Hangul_J_RieulSios, 0x11b3},       /* HANGUL JONGSEONG RIEUL-SIOS */
-    {XK_Hangul_J_RieulTieut, 0x11b4},      /* HANGUL JONGSEONG RIEUL-THIEUTH */
-    {XK_Hangul_J_RieulPhieuf, 0x11b5},     /* HANGUL JONGSEONG RIEUL-PHIEUPH */
-    {XK_Hangul_J_RieulHieuh, 0x11b6},      /* HANGUL JONGSEONG RIEUL-HIEUH */
-    {XK_Hangul_J_Mieum, 0x11b7},           /* HANGUL JONGSEONG MIEUM */
-    {XK_Hangul_J_Pieub, 0x11b8},           /* HANGUL JONGSEONG PIEUP */
-    {XK_Hangul_J_PieubSios, 0x11b9},       /* HANGUL JONGSEONG PIEUP-SIOS */
-    {XK_Hangul_J_Sios, 0x11ba},            /* HANGUL JONGSEONG SIOS */
-    {XK_Hangul_J_SsangSios, 0x11bb},       /* HANGUL JONGSEONG SSANGSIOS */
-    {XK_Hangul_J_Ieung, 0x11bc},           /* HANGUL JONGSEONG IEUNG */
-    {XK_Hangul_J_Jieuj, 0x11bd},           /* HANGUL JONGSEONG CIEUC */
-    {XK_Hangul_J_Cieuc, 0x11be},           /* HANGUL JONGSEONG CHIEUCH */
-    {XK_Hangul_J_Khieuq, 0x11bf},          /* HANGUL JONGSEONG KHIEUKH */
-    {XK_Hangul_J_Tieut, 0x11c0},           /* HANGUL JONGSEONG THIEUTH */
-    {XK_Hangul_J_Phieuf, 0x11c1},          /* HANGUL JONGSEONG PHIEUPH */
-    {XK_Hangul_J_Hieuh, 0x11c2},           /* HANGUL JONGSEONG HIEUH */
-    {XK_Hangul_RieulYeorinHieuh, 0x316d},  /* HANGUL LETTER RIEUL-YEORINHIEUH */
-    {XK_Hangul_SunkyeongeumMieum, 0x3171}, /* HANGUL LETTER KAPYEOUNMIEUM */
-    {XK_Hangul_SunkyeongeumPieub, 0x3178}, /* HANGUL LETTER KAPYEOUNPIEUP */
-    {XK_Hangul_PanSios, 0x317f},           /* HANGUL LETTER PANSIOS */
-    {XK_Hangul_KkogjiDalrinIeung, 0x3181}, /* HANGUL LETTER YESIEUNG */
+    {XK_Hangul_Kiyeog, 0x3131},              /* HANGUL LETTER KIYEOK */
+    {XK_Hangul_SsangKiyeog, 0x3132},         /* HANGUL LETTER SSANGKIYEOK */
+    {XK_Hangul_KiyeogSios, 0x3133},          /* HANGUL LETTER KIYEOK-SIOS */
+    {XK_Hangul_Nieun, 0x3134},               /* HANGUL LETTER NIEUN */
+    {XK_Hangul_NieunJieuj, 0x3135},          /* HANGUL LETTER NIEUN-CIEUC */
+    {XK_Hangul_NieunHieuh, 0x3136},          /* HANGUL LETTER NIEUN-HIEUH */
+    {XK_Hangul_Dikeud, 0x3137},              /* HANGUL LETTER TIKEUT */
+    {XK_Hangul_SsangDikeud, 0x3138},         /* HANGUL LETTER SSANGTIKEUT */
+    {XK_Hangul_Rieul, 0x3139},               /* HANGUL LETTER RIEUL */
+    {XK_Hangul_RieulKiyeog, 0x313a},         /* HANGUL LETTER RIEUL-KIYEOK */
+    {XK_Hangul_RieulMieum, 0x313b},          /* HANGUL LETTER RIEUL-MIEUM */
+    {XK_Hangul_RieulPieub, 0x313c},          /* HANGUL LETTER RIEUL-PIEUP */
+    {XK_Hangul_RieulSios, 0x313d},           /* HANGUL LETTER RIEUL-SIOS */
+    {XK_Hangul_RieulTieut, 0x313e},          /* HANGUL LETTER RIEUL-THIEUTH */
+    {XK_Hangul_RieulPhieuf, 0x313f},         /* HANGUL LETTER RIEUL-PHIEUPH */
+    {XK_Hangul_RieulHieuh, 0x3140},          /* HANGUL LETTER RIEUL-HIEUH */
+    {XK_Hangul_Mieum, 0x3141},               /* HANGUL LETTER MIEUM */
+    {XK_Hangul_Pieub, 0x3142},               /* HANGUL LETTER PIEUP */
+    {XK_Hangul_SsangPieub, 0x3143},          /* HANGUL LETTER SSANGPIEUP */
+    {XK_Hangul_PieubSios, 0x3144},           /* HANGUL LETTER PIEUP-SIOS */
+    {XK_Hangul_Sios, 0x3145},                /* HANGUL LETTER SIOS */
+    {XK_Hangul_SsangSios, 0x3146},           /* HANGUL LETTER SSANGSIOS */
+    {XK_Hangul_Ieung, 0x3147},               /* HANGUL LETTER IEUNG */
+    {XK_Hangul_Jieuj, 0x3148},               /* HANGUL LETTER CIEUC */
+    {XK_Hangul_SsangJieuj, 0x3149},          /* HANGUL LETTER SSANGCIEUC */
+    {XK_Hangul_Cieuc, 0x314a},               /* HANGUL LETTER CHIEUCH */
+    {XK_Hangul_Khieuq, 0x314b},              /* HANGUL LETTER KHIEUKH */
+    {XK_Hangul_Tieut, 0x314c},               /* HANGUL LETTER THIEUTH */
+    {XK_Hangul_Phieuf, 0x314d},              /* HANGUL LETTER PHIEUPH */
+    {XK_Hangul_Hieuh, 0x314e},               /* HANGUL LETTER HIEUH */
+    {XK_Hangul_A, 0x314f},                   /* HANGUL LETTER A */
+    {XK_Hangul_AE, 0x3150},                  /* HANGUL LETTER AE */
+    {XK_Hangul_YA, 0x3151},                  /* HANGUL LETTER YA */
+    {XK_Hangul_YAE, 0x3152},                 /* HANGUL LETTER YAE */
+    {XK_Hangul_EO, 0x3153},                  /* HANGUL LETTER EO */
+    {XK_Hangul_E, 0x3154},                   /* HANGUL LETTER E */
+    {XK_Hangul_YEO, 0x3155},                 /* HANGUL LETTER YEO */
+    {XK_Hangul_YE, 0x3156},                  /* HANGUL LETTER YE */
+    {XK_Hangul_O, 0x3157},                   /* HANGUL LETTER O */
+    {XK_Hangul_WA, 0x3158},                  /* HANGUL LETTER WA */
+    {XK_Hangul_WAE, 0x3159},                 /* HANGUL LETTER WAE */
+    {XK_Hangul_OE, 0x315a},                  /* HANGUL LETTER OE */
+    {XK_Hangul_YO, 0x315b},                  /* HANGUL LETTER YO */
+    {XK_Hangul_U, 0x315c},                   /* HANGUL LETTER U */
+    {XK_Hangul_WEO, 0x315d},                 /* HANGUL LETTER WEO */
+    {XK_Hangul_WE, 0x315e},                  /* HANGUL LETTER WE */
+    {XK_Hangul_WI, 0x315f},                  /* HANGUL LETTER WI */
+    {XK_Hangul_YU, 0x3160},                  /* HANGUL LETTER YU */
+    {XK_Hangul_EU, 0x3161},                  /* HANGUL LETTER EU */
+    {XK_Hangul_YI, 0x3162},                  /* HANGUL LETTER YI */
+    {XK_Hangul_I, 0x3163},                   /* HANGUL LETTER I */
+    {XK_Hangul_J_Kiyeog, 0x11a8},            /* HANGUL JONGSEONG KIYEOK */
+    {XK_Hangul_J_SsangKiyeog, 0x11a9},       /* HANGUL JONGSEONG SSANGKIYEOK */
+    {XK_Hangul_J_KiyeogSios, 0x11aa},        /* HANGUL JONGSEONG KIYEOK-SIOS */
+    {XK_Hangul_J_Nieun, 0x11ab},             /* HANGUL JONGSEONG NIEUN */
+    {XK_Hangul_J_NieunJieuj, 0x11ac},        /* HANGUL JONGSEONG NIEUN-CIEUC */
+    {XK_Hangul_J_NieunHieuh, 0x11ad},        /* HANGUL JONGSEONG NIEUN-HIEUH */
+    {XK_Hangul_J_Dikeud, 0x11ae},            /* HANGUL JONGSEONG TIKEUT */
+    {XK_Hangul_J_Rieul, 0x11af},             /* HANGUL JONGSEONG RIEUL */
+    {XK_Hangul_J_RieulKiyeog, 0x11b0},       /* HANGUL JONGSEONG RIEUL-KIYEOK */
+    {XK_Hangul_J_RieulMieum, 0x11b1},        /* HANGUL JONGSEONG RIEUL-MIEUM */
+    {XK_Hangul_J_RieulPieub, 0x11b2},        /* HANGUL JONGSEONG RIEUL-PIEUP */
+    {XK_Hangul_J_RieulSios, 0x11b3},         /* HANGUL JONGSEONG RIEUL-SIOS */
+    {XK_Hangul_J_RieulTieut, 0x11b4},        /* HANGUL JONGSEONG RIEUL-THIEUTH */
+    {XK_Hangul_J_RieulPhieuf, 0x11b5},       /* HANGUL JONGSEONG RIEUL-PHIEUPH */
+    {XK_Hangul_J_RieulHieuh, 0x11b6},        /* HANGUL JONGSEONG RIEUL-HIEUH */
+    {XK_Hangul_J_Mieum, 0x11b7},             /* HANGUL JONGSEONG MIEUM */
+    {XK_Hangul_J_Pieub, 0x11b8},             /* HANGUL JONGSEONG PIEUP */
+    {XK_Hangul_J_PieubSios, 0x11b9},         /* HANGUL JONGSEONG PIEUP-SIOS */
+    {XK_Hangul_J_Sios, 0x11ba},              /* HANGUL JONGSEONG SIOS */
+    {XK_Hangul_J_SsangSios, 0x11bb},         /* HANGUL JONGSEONG SSANGSIOS */
+    {XK_Hangul_J_Ieung, 0x11bc},             /* HANGUL JONGSEONG IEUNG */
+    {XK_Hangul_J_Jieuj, 0x11bd},             /* HANGUL JONGSEONG CIEUC */
+    {XK_Hangul_J_Cieuc, 0x11be},             /* HANGUL JONGSEONG CHIEUCH */
+    {XK_Hangul_J_Khieuq, 0x11bf},            /* HANGUL JONGSEONG KHIEUKH */
+    {XK_Hangul_J_Tieut, 0x11c0},             /* HANGUL JONGSEONG THIEUTH */
+    {XK_Hangul_J_Phieuf, 0x11c1},            /* HANGUL JONGSEONG PHIEUPH */
+    {XK_Hangul_J_Hieuh, 0x11c2},             /* HANGUL JONGSEONG HIEUH */
+    {XK_Hangul_RieulYeorinHieuh, 0x316d},    /* HANGUL LETTER RIEUL-YEORINHIEUH */
+    {XK_Hangul_SunkyeongeumMieum, 0x3171},   /* HANGUL LETTER KAPYEOUNMIEUM */
+    {XK_Hangul_SunkyeongeumPieub, 0x3178},   /* HANGUL LETTER KAPYEOUNPIEUP */
+    {XK_Hangul_PanSios, 0x317f},             /* HANGUL LETTER PANSIOS */
+    {XK_Hangul_KkogjiDalrinIeung, 0x3181},   /* HANGUL LETTER YESIEUNG */
     {XK_Hangul_SunkyeongeumPhieuf, 0x3184},  /* HANGUL LETTER KAPYEOUNPHIEUPH */
     {XK_Hangul_YeorinHieuh, 0x3186},         /* HANGUL LETTER YEORINHIEUH */
     {XK_Hangul_AraeA, 0x318d},               /* HANGUL LETTER ARAEA */
@@ -952,8 +932,8 @@ struct codepair {
 #endif                                       // defined(XK_Hangul_Kiyeog)
     {XK_OE, 0x0152},                         /* LATIN CAPITAL LIGATURE OE */
     {XK_oe, 0x0153},                         /* LATIN SMALL LIGATURE OE */
-    {XK_Ydiaeresis, 0x0178}, /* LATIN CAPITAL LETTER Y WITH DIAERESIS */
-    {XK_EuroSign, 0x20ac},   /* EURO SIGN */
+    {XK_Ydiaeresis, 0x0178},                 /* LATIN CAPITAL LETTER Y WITH DIAERESIS */
+    {XK_EuroSign, 0x20ac},                   /* EURO SIGN */
 
     /* combining dead keys */
     {XK_dead_abovedot, 0x0307},    /* COMBINING DOT ABOVE */
@@ -1525,7 +1505,8 @@ static const KeySym s_map1008FF[] = {
     0,
     0,
     0,
-    0};
+    0
+};
 
 //
 // XWindowsUtil
@@ -1534,8 +1515,9 @@ static const KeySym s_map1008FF[] = {
 XWindowsUtil::KeySymMap XWindowsUtil::s_keySymToUCS4;
 
 bool XWindowsUtil::getWindowProperty(
-    Display *display, Window window, Atom property, String *data, Atom *type,
-    SInt32 *format, bool deleteProperty) {
+    Display *display, Window window, Atom property, String *data, Atom *type, SInt32 *format, bool deleteProperty
+)
+{
   assert(display != NULL);
 
   Atom actualType;
@@ -1554,9 +1536,9 @@ bool XWindowsUtil::getWindowProperty(
     unsigned long numItems;
     unsigned char *rawData;
     if (XGetWindowProperty(
-            display, window, property, offset, length, False, AnyPropertyType,
-            &actualType, &actualDatumSize, &numItems, &bytesLeft,
-            &rawData) != Success ||
+            display, window, property, offset, length, False, AnyPropertyType, &actualType, &actualDatumSize, &numItems,
+            &bytesLeft, &rawData
+        ) != Success ||
         actualType == None || actualDatumSize == 0) {
       // failed
       okay = false;
@@ -1609,21 +1591,19 @@ bool XWindowsUtil::getWindowProperty(
   }
 
   if (okay) {
-    LOG(
-        (CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property,
-         window, (data == NULL) ? 0 : data->size()));
+    LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size())
+    );
     return true;
   } else {
-    LOG(
-        (CLOG_DEBUG2 "can't read property %d on window 0x%08x", property,
-         window));
+    LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
     return false;
   }
 }
 
 bool XWindowsUtil::setWindowProperty(
-    Display *display, Window window, Atom property, const void *vdata,
-    UInt32 size, Atom type, SInt32 format) {
+    Display *display, Window window, Atom property, const void *vdata, UInt32 size, Atom type, SInt32 format
+)
+{
   const UInt32 length = 4 * XMaxRequestSize(display);
   const unsigned char *data = static_cast<const unsigned char *>(vdata);
   UInt32 datumSize = static_cast<UInt32>(format / 8);
@@ -1643,9 +1623,7 @@ bool XWindowsUtil::setWindowProperty(
   }
 
   // send first chunk
-  XChangeProperty(
-      display, window, property, type, format, PropModeReplace, data,
-      chunkSize / datumSize);
+  XChangeProperty(display, window, property, type, format, PropModeReplace, data, chunkSize / datumSize);
 
   // append remaining chunks
   data += chunkSize;
@@ -1655,9 +1633,7 @@ bool XWindowsUtil::setWindowProperty(
     if (chunkSize > length) {
       chunkSize = length;
     }
-    XChangeProperty(
-        display, window, property, type, format, PropModeAppend, data,
-        chunkSize / datumSize);
+    XChangeProperty(display, window, property, type, format, PropModeAppend, data, chunkSize / datumSize);
     data += chunkSize;
     size -= chunkSize;
   }
@@ -1665,7 +1641,8 @@ bool XWindowsUtil::setWindowProperty(
   return !error;
 }
 
-Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
+Time XWindowsUtil::getCurrentTime(Display *display, Window window)
+{
   XLockDisplay(display);
   // select property events on window
   XWindowAttributes attr;
@@ -1677,8 +1654,7 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
 
   // do a zero-length append to get the current time
   unsigned char dummy;
-  XChangeProperty(
-      display, window, atom, XA_INTEGER, 8, PropModeAppend, &dummy, 0);
+  XChangeProperty(display, window, atom, XA_INTEGER, 8, PropModeAppend, &dummy, 0);
 
   // look for property notify events with the following
   PropertyNotifyPredicateInfo filter;
@@ -1687,9 +1663,7 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
 
   // wait for reply
   XEvent xevent;
-  XIfEvent(
-      display, &xevent, &XWindowsUtil::propertyNotifyPredicate,
-      (XPointer)&filter);
+  XIfEvent(display, &xevent, &XWindowsUtil::propertyNotifyPredicate, (XPointer)&filter);
   assert(xevent.type == PropertyNotify);
   assert(xevent.xproperty.window == window);
   assert(xevent.xproperty.atom == atom);
@@ -1701,7 +1675,8 @@ Time XWindowsUtil::getCurrentTime(Display *display, Window window) {
   return xevent.xproperty.time;
 }
 
-KeyID XWindowsUtil::mapKeySymToKeyID(KeySym k) {
+KeyID XWindowsUtil::mapKeySymToKeyID(KeySym k)
+{
   initKeyMaps();
 
   switch (k & 0xffffff00) {
@@ -1793,7 +1768,8 @@ KeyID XWindowsUtil::mapKeySymToKeyID(KeySym k) {
   }
 }
 
-UInt32 XWindowsUtil::getModifierBitForKeySym(KeySym keysym) {
+UInt32 XWindowsUtil::getModifierBitForKeySym(KeySym keysym)
+{
   switch (keysym) {
   case XK_Shift_L:
   case XK_Shift_R:
@@ -1840,7 +1816,8 @@ UInt32 XWindowsUtil::getModifierBitForKeySym(KeySym keysym) {
   }
 }
 
-String XWindowsUtil::atomToString(Display *display, Atom atom) {
+String XWindowsUtil::atomToString(Display *display, Atom atom)
+{
   if (atom == 0) {
     return "None";
   }
@@ -1857,8 +1834,8 @@ String XWindowsUtil::atomToString(Display *display, Atom atom) {
   }
 }
 
-String
-XWindowsUtil::atomsToString(Display *display, const Atom *atom, UInt32 num) {
+String XWindowsUtil::atomsToString(Display *display, const Atom *atom, UInt32 num)
+{
   char **names = new char *[num];
   bool error = false;
   XWindowsUtil::ErrorLock lock(display, &error);
@@ -1881,7 +1858,8 @@ XWindowsUtil::atomsToString(Display *display, const Atom *atom, UInt32 num) {
   return msg;
 }
 
-void XWindowsUtil::convertAtomProperty(String &data) {
+void XWindowsUtil::convertAtomProperty(String &data)
+{
   // as best i can tell, 64-bit systems don't pack Atoms into properties
   // as 32-bit numbers but rather as the 64-bit numbers they are.  that
   // seems wrong but we have to cope.  sometimes we'll get a list of
@@ -1894,33 +1872,32 @@ void XWindowsUtil::convertAtomProperty(String &data) {
   }
 }
 
-void XWindowsUtil::appendAtomData(String &data, Atom atom) {
+void XWindowsUtil::appendAtomData(String &data, Atom atom)
+{
   data.append(reinterpret_cast<char *>(&atom), sizeof(Atom));
 }
 
-void XWindowsUtil::replaceAtomData(String &data, UInt32 index, Atom atom) {
-  data.replace(
-      index * sizeof(Atom), sizeof(Atom), reinterpret_cast<const char *>(&atom),
-      sizeof(Atom));
+void XWindowsUtil::replaceAtomData(String &data, UInt32 index, Atom atom)
+{
+  data.replace(index * sizeof(Atom), sizeof(Atom), reinterpret_cast<const char *>(&atom), sizeof(Atom));
 }
 
-void XWindowsUtil::appendTimeData(String &data, Time time) {
+void XWindowsUtil::appendTimeData(String &data, Time time)
+{
   data.append(reinterpret_cast<char *>(&time), sizeof(Time));
 }
 
-Bool XWindowsUtil::propertyNotifyPredicate(
-    Display *, XEvent *xevent, XPointer arg) {
-  PropertyNotifyPredicateInfo *filter =
-      reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
-  return (xevent->type == PropertyNotify &&
-          xevent->xproperty.window == filter->m_window &&
-          xevent->xproperty.atom == filter->m_property &&
-          xevent->xproperty.state == PropertyNewValue)
+Bool XWindowsUtil::propertyNotifyPredicate(Display *, XEvent *xevent, XPointer arg)
+{
+  PropertyNotifyPredicateInfo *filter = reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
+  return (xevent->type == PropertyNotify && xevent->xproperty.window == filter->m_window &&
+          xevent->xproperty.atom == filter->m_property && xevent->xproperty.state == PropertyNewValue)
              ? True
              : False;
 }
 
-void XWindowsUtil::initKeyMaps() {
+void XWindowsUtil::initKeyMaps()
+{
   if (s_keySymToUCS4.empty()) {
     for (size_t i = 0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
       s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
@@ -1934,22 +1911,23 @@ void XWindowsUtil::initKeyMaps() {
 
 XWindowsUtil::ErrorLock *XWindowsUtil::ErrorLock::s_top = NULL;
 
-XWindowsUtil::ErrorLock::ErrorLock(Display *display) : m_display(display) {
+XWindowsUtil::ErrorLock::ErrorLock(Display *display) : m_display(display)
+{
   install(&XWindowsUtil::ErrorLock::ignoreHandler, NULL);
 }
 
-XWindowsUtil::ErrorLock::ErrorLock(Display *display, bool *flag)
-    : m_display(display) {
+XWindowsUtil::ErrorLock::ErrorLock(Display *display, bool *flag) : m_display(display)
+{
   install(&XWindowsUtil::ErrorLock::saveHandler, flag);
 }
 
-XWindowsUtil::ErrorLock::ErrorLock(
-    Display *display, ErrorHandler handler, void *data)
-    : m_display(display) {
+XWindowsUtil::ErrorLock::ErrorLock(Display *display, ErrorHandler handler, void *data) : m_display(display)
+{
   install(handler, data);
 }
 
-XWindowsUtil::ErrorLock::~ErrorLock() {
+XWindowsUtil::ErrorLock::~ErrorLock()
+{
   // make sure everything finishes before uninstalling handler
   if (m_display != NULL) {
     XSync(m_display, False);
@@ -1960,7 +1938,8 @@ XWindowsUtil::ErrorLock::~ErrorLock() {
   s_top = m_next;
 }
 
-void XWindowsUtil::ErrorLock::install(ErrorHandler handler, void *data) {
+void XWindowsUtil::ErrorLock::install(ErrorHandler handler, void *data)
+{
   // make sure everything finishes before installing handler
   if (m_display != NULL) {
     XSync(m_display, False);
@@ -1974,20 +1953,21 @@ void XWindowsUtil::ErrorLock::install(ErrorHandler handler, void *data) {
   s_top = this;
 }
 
-int XWindowsUtil::ErrorLock::internalHandler(
-    Display *display, XErrorEvent *event) {
+int XWindowsUtil::ErrorLock::internalHandler(Display *display, XErrorEvent *event)
+{
   if (s_top != NULL && s_top->m_handler != NULL) {
     s_top->m_handler(display, event, s_top->m_userData);
   }
   return 0;
 }
 
-void XWindowsUtil::ErrorLock::ignoreHandler(Display *, XErrorEvent *e, void *) {
+void XWindowsUtil::ErrorLock::ignoreHandler(Display *, XErrorEvent *e, void *)
+{
   LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
-void XWindowsUtil::ErrorLock::saveHandler(
-    Display *display, XErrorEvent *e, void *flag) {
+void XWindowsUtil::ErrorLock::saveHandler(Display *display, XErrorEvent *e, void *flag)
+{
   char errtxt[1024];
   XGetErrorText(display, e->error_code, errtxt, 1023);
   LOG((CLOG_DEBUG1 "flagging X error: %d - %.1023s", e->error_code, errtxt));

@@ -31,10 +31,12 @@
 
 deskflow::ArgsBase *ArgParser::m_argsBase = nullptr;
 
-ArgParser::ArgParser(App *app) : m_app(app) {}
+ArgParser::ArgParser(App *app) : m_app(app)
+{
+}
 
-bool ArgParser::parseServerArgs(
-    deskflow::ServerArgs &args, int argc, const char *const *argv) {
+bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv)
+{
   setArgsBase(args);
   updateCommonArgs(argv);
   int i = 1;
@@ -55,9 +57,7 @@ bool ArgParser::parseServerArgs(
       ++i;
       continue;
     } else {
-      LOG(
-          (CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i],
-           args.m_pname));
+      LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
       return false;
     }
     ++i;
@@ -70,8 +70,8 @@ bool ArgParser::parseServerArgs(
   return true;
 }
 
-bool ArgParser::parseClientArgs(
-    deskflow::ClientArgs &args, int argc, const char *const *argv) {
+bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv)
+{
   setArgsBase(args);
   updateCommonArgs(argv);
 
@@ -96,8 +96,7 @@ bool ArgParser::parseClientArgs(
     } else if (isArg(i, argc, argv, nullptr, "--sync-language")) {
       args.m_enableLangSync = true;
     } else if (isArg(i, argc, argv, nullptr, "--invert-scroll")) {
-      args.m_clientScrollDirection =
-          deskflow::ClientScrollDirection::INVERT_SERVER;
+      args.m_clientScrollDirection = deskflow::ClientScrollDirection::INVERT_SERVER;
     } else if (isArg(i, argc, argv, nullptr, "--host")) {
       args.m_hostMode = true;
     } else if (isArg(i, argc, argv, nullptr, "client")) {
@@ -109,9 +108,7 @@ bool ArgParser::parseClientArgs(
         return true;
       }
 
-      LOG(
-          (CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i],
-           args.m_pname));
+      LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
       return false;
     }
     ++i;
@@ -119,9 +116,7 @@ bool ArgParser::parseClientArgs(
 
   // exactly one non-option argument (server-address)
   if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
-    LOG(
-        (CLOG_CRIT "%s: a server address or name is required" BYE, args.m_pname,
-         args.m_pname));
+    LOG((CLOG_CRIT "%s: a server address or name is required" BYE, args.m_pname, args.m_pname));
     return false;
   }
 
@@ -133,8 +128,9 @@ bool ArgParser::parseClientArgs(
 }
 
 bool ArgParser::parsePlatformArgs(
-    deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv,
-    int &i, bool isServer) {
+    deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer
+)
+{
 #if WINAPI_MSWINDOWS
   if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
     argsBase.m_pauseOnExit = true;
@@ -169,8 +165,8 @@ bool ArgParser::parsePlatformArgs(
 #endif
 }
 
-bool ArgParser::parseToolArgs(
-    ToolArgs &args, int argc, const char *const *argv) {
+bool ArgParser::parseToolArgs(ToolArgs &args, int argc, const char *const *argv)
+{
   // We support exactly one argument at a fix position
   static const int only_index{1};
   if (isArg(only_index, argc, argv, nullptr, "--get-active-desktop", 0)) {
@@ -189,7 +185,8 @@ bool ArgParser::parseToolArgs(
   return false;
 }
 
-bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) {
+bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)
+{
   if (isArg(i, argc, argv, "-a", "--address", 1)) {
     argsBase().m_deskflowAddress = argv[++i];
   } else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
@@ -246,8 +243,7 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) {
 
     if (!IsWindowsVistaOrGreater()) {
       useDragDrop = false;
-      LOG((CLOG_INFO
-           "ignoring --enable-drag-drop, not supported below vista."));
+      LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
     }
 #endif
 
@@ -272,9 +268,11 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) {
   return true;
 }
 
-bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) {
+bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i)
+{
   static const std::vector<const char *> deprecatedArgs = {
-      "--crypto-pass", "--res-w", "--res-h", "--prm-wc", "--prm-hc"};
+      "--crypto-pass", "--res-w", "--res-h", "--prm-wc", "--prm-hc"
+  };
 
   for (auto &arg : deprecatedArgs) {
     if (isArg(i, argc, argv, nullptr, arg)) {
@@ -288,16 +286,15 @@ bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) {
 }
 
 bool ArgParser::isArg(
-    int argi, int argc, const char *const *argv, const char *name1,
-    const char *name2, int minRequiredParameters) {
+    int argi, int argc, const char *const *argv, const char *name1, const char *name2, int minRequiredParameters
+)
+{
   const auto match1 = (name1 != nullptr && strcmp(argv[argi], name1) == 0);
   const auto match2 = (name2 != nullptr && strcmp(argv[argi], name2) == 0);
   if (match1 || match2) {
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
-      LOG(
-          (CLOG_PRINT "%s: missing arguments for `%s'" BYE, argsBase().m_pname,
-           argv[argi], argsBase().m_pname));
+      LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE, argsBase().m_pname, argv[argi], argsBase().m_pname));
       argsBase().m_shouldExitFail = true;
       return false;
     }
@@ -308,7 +305,8 @@ bool ArgParser::isArg(
   return false;
 }
 
-void ArgParser::splitCommandString(String &command, std::vector<String> &argv) {
+void ArgParser::splitCommandString(String &command, std::vector<String> &argv)
+{
   if (command.empty()) {
     return;
   }
@@ -327,8 +325,7 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv) {
     if (space > leftDoubleQuote && space < rightDoubleQuote) {
       ignoreThisSpace = true;
     } else if (space > rightDoubleQuote) {
-      searchDoubleQuotes(
-          command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
+      searchDoubleQuotes(command, leftDoubleQuote, rightDoubleQuote, rightDoubleQuote + 1);
     }
 
     if (!ignoreThisSpace) {
@@ -352,8 +349,8 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv) {
   argv.push_back(subString);
 }
 
-bool ArgParser::searchDoubleQuotes(
-    String &command, size_t &left, size_t &right, size_t startPos) {
+bool ArgParser::searchDoubleQuotes(String &command, size_t &left, size_t &right, size_t startPos)
+{
   bool result = false;
   left = String::npos;
   right = String::npos;
@@ -374,14 +371,16 @@ bool ArgParser::searchDoubleQuotes(
   return result;
 }
 
-void ArgParser::removeDoubleQuotes(String &arg) {
+void ArgParser::removeDoubleQuotes(String &arg)
+{
   // if string is surrounded by double quotes, remove them
   if (arg[0] == '\"' && arg[arg.size() - 1] == '\"') {
     arg = arg.substr(1, arg.size() - 2);
   }
 }
 
-const char **ArgParser::getArgv(std::vector<String> &argsArray) {
+const char **ArgParser::getArgv(std::vector<String> &argsArray)
+{
   size_t argc = argsArray.size();
 
   // caller is responsible for deleting the outer array only
@@ -397,12 +396,11 @@ const char **ArgParser::getArgv(std::vector<String> &argsArray) {
   return argv;
 }
 
-String ArgParser::assembleCommand(
-    std::vector<String> &argsArray, String ignoreArg, int parametersRequired) {
+String ArgParser::assembleCommand(std::vector<String> &argsArray, String ignoreArg, int parametersRequired)
+{
   String result;
 
-  for (std::vector<String>::iterator it = argsArray.begin();
-       it != argsArray.end(); ++it) {
+  for (std::vector<String>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
     if (it->compare(ignoreArg) == 0) {
       it = it + parametersRequired;
       continue;
@@ -427,12 +425,14 @@ String ArgParser::assembleCommand(
   return result;
 }
 
-void ArgParser::updateCommonArgs(const char *const *argv) {
+void ArgParser::updateCommonArgs(const char *const *argv)
+{
   argsBase().m_name = ARCH->getHostName();
   argsBase().m_pname = ARCH->getBasename(argv[0]);
 }
 
-bool ArgParser::checkUnexpectedArgs() {
+bool ArgParser::checkUnexpectedArgs()
+{
 #if SYSAPI_WIN32
   // suggest that user installs as a windows service. when launched as
   // service, process should automatically detect that it should run in
@@ -441,7 +441,8 @@ bool ArgParser::checkUnexpectedArgs() {
     LOG(
         (CLOG_ERR "the --daemon argument is not supported on windows. "
                   "instead, install %s as a service (--service install)",
-         argsBase().m_pname));
+         argsBase().m_pname)
+    );
     return true;
   }
 #endif

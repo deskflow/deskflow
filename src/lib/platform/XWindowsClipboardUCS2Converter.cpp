@@ -24,29 +24,38 @@
 // XWindowsClipboardUCS2Converter
 //
 
-XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(
-    Display *display, const char *name)
-    : m_atom(XInternAtom(display, name, False)) {
+XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(Display *display, const char *name)
+    : m_atom(XInternAtom(display, name, False))
+{
   // do nothing
 }
 
-XWindowsClipboardUCS2Converter::~XWindowsClipboardUCS2Converter() {
+XWindowsClipboardUCS2Converter::~XWindowsClipboardUCS2Converter()
+{
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardUCS2Converter::getFormat() const {
+IClipboard::EFormat XWindowsClipboardUCS2Converter::getFormat() const
+{
   return IClipboard::kText;
 }
 
-Atom XWindowsClipboardUCS2Converter::getAtom() const { return m_atom; }
+Atom XWindowsClipboardUCS2Converter::getAtom() const
+{
+  return m_atom;
+}
 
-int XWindowsClipboardUCS2Converter::getDataSize() const { return 16; }
+int XWindowsClipboardUCS2Converter::getDataSize() const
+{
+  return 16;
+}
 
-String
-XWindowsClipboardUCS2Converter::fromIClipboard(const String &data) const {
+String XWindowsClipboardUCS2Converter::fromIClipboard(const String &data) const
+{
   return Unicode::UTF8ToUCS2(data);
 }
 
-String XWindowsClipboardUCS2Converter::toIClipboard(const String &data) const {
+String XWindowsClipboardUCS2Converter::toIClipboard(const String &data) const
+{
   return Unicode::UCS2ToUTF8(data);
 }

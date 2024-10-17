@@ -17,7 +17,8 @@
  */
 #pragma once
 
-class MSWindowsPowerManager {
+class MSWindowsPowerManager
+{
 public:
   ~MSWindowsPowerManager();
 

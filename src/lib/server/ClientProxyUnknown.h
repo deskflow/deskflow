@@ -30,11 +30,10 @@ class IStream;
 class Server;
 class IEventQueue;
 
-class ClientProxyUnknown {
+class ClientProxyUnknown
+{
 public:
-  ClientProxyUnknown(
-      deskflow::IStream *stream, double timeout, Server *server,
-      IEventQueue *events);
+  ClientProxyUnknown(deskflow::IStream *stream, double timeout, Server *server, IEventQueue *events);
   ClientProxyUnknown(ClientProxyUnknown const &) = delete;
   ClientProxyUnknown(ClientProxyUnknown &&) = delete;
   ~ClientProxyUnknown();
@@ -54,7 +53,10 @@ public:
   ClientProxy *orphanClientProxy();
 
   //! Get the stream
-  deskflow::IStream *getStream() { return m_stream; }
+  deskflow::IStream *getStream()
+  {
+    return m_stream;
+  }
 
   //@}
 

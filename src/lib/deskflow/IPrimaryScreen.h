@@ -29,10 +29,12 @@
 This interface defines the methods common to all platform dependent
 primary screen implementations.
 */
-class IPrimaryScreen : public IInterface {
+class IPrimaryScreen : public IInterface
+{
 public:
   //! Button event data
-  class ButtonInfo {
+  class ButtonInfo
+  {
   public:
     static ButtonInfo *alloc(ButtonID, KeyModifierMask);
     static ButtonInfo *alloc(const ButtonInfo &);
@@ -44,7 +46,8 @@ public:
     KeyModifierMask m_mask;
   };
   //! Motion event data
-  class MotionInfo {
+  class MotionInfo
+  {
   public:
     static MotionInfo *alloc(SInt32 x, SInt32 y);
 
@@ -53,7 +56,8 @@ public:
     SInt32 m_y;
   };
   //! Wheel motion event data
-  class WheelInfo {
+  class WheelInfo
+  {
   public:
     static WheelInfo *alloc(SInt32 xDelta, SInt32 yDelta);
 
@@ -62,7 +66,8 @@ public:
     SInt32 m_yDelta;
   };
   //! Hot key event data
-  class HotKeyInfo {
+  class HotKeyInfo
+  {
   public:
     static HotKeyInfo *alloc(UInt32 id);
 
@@ -70,7 +75,8 @@ public:
     UInt32 m_id;
   };
 
-  class EiConnectInfo {
+  class EiConnectInfo
+  {
   public:
     static EiConnectInfo *alloc(int fd);
 

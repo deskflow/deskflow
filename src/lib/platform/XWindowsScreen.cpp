@@ -50,7 +50,8 @@
 #define XK_XKB_KEYS
 #include <X11/keysymdef.h>
 #if HAVE_X11_EXTENSIONS_DPMS_H
-extern "C" {
+extern "C"
+{
 #include <X11/extensions/dpms.h>
 }
 #endif
@@ -61,7 +62,8 @@ extern "C" {
 #endif
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
 // Xinerama.h may lack extern "C" for inclusion by C++
-extern "C" {
+extern "C"
+{
 #include <X11/extensions/Xinerama.h>
 }
 #endif
@@ -96,9 +98,9 @@ static int xi_opcode;
 XWindowsScreen *XWindowsScreen::s_screen = NULL;
 
 XWindowsScreen::XWindowsScreen(
-    const char *displayName, bool isPrimary, bool disableXInitThreads,
-    int mouseScrollDelta, IEventQueue *events,
-    deskflow::ClientScrollDirection scrollDirection)
+    const char *displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
+    deskflow::ClientScrollDirection scrollDirection
+)
     : PlatformScreen(events, scrollDirection),
       m_isPrimary(isPrimary),
       m_mouseScrollDelta(mouseScrollDelta),
@@ -128,7 +130,8 @@ XWindowsScreen::XWindowsScreen(
       m_xkb(false),
       m_xi2detected(false),
       m_xrandr(false),
-      m_events(events) {
+      m_events(events)
+{
   assert(s_screen == NULL);
 
   if (mouseScrollDelta == 0)
@@ -151,12 +154,9 @@ XWindowsScreen::XWindowsScreen(
     m_root = DefaultRootWindow(m_display);
     saveShape();
     m_window = openWindow();
-    m_screensaver =
-        new XWindowsScreenSaver(m_display, m_window, getEventTarget(), events);
+    m_screensaver = new XWindowsScreenSaver(m_display, m_window, getEventTarget(), events);
     m_keyState = new XWindowsKeyState(m_display, m_xkb, events, m_keyMap);
-    LOG(
-        (CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h,
-         m_xinerama ? "(xinerama)" : ""));
+    LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
     LOG((CLOG_DEBUG "window is 0x%08x", m_window));
   } catch (...) {
     if (m_display != NULL) {
@@ -198,15 +198,15 @@ XWindowsScreen::XWindowsScreen(
   // install event handlers
   m_events->adoptHandler(
       Event::kSystem, m_events->getSystemTarget(),
-      new TMethodEventJob<XWindowsScreen>(
-          this, &XWindowsScreen::handleSystemEvent));
+      new TMethodEventJob<XWindowsScreen>(this, &XWindowsScreen::handleSystemEvent)
+  );
 
   // install the platform event queue
-  m_events->adoptBuffer(
-      new XWindowsEventQueueBuffer(m_display, m_window, m_events));
+  m_events->adoptBuffer(new XWindowsEventQueueBuffer(m_display, m_window, m_events));
 }
 
-XWindowsScreen::~XWindowsScreen() {
+XWindowsScreen::~XWindowsScreen()
+{
   assert(s_screen != NULL);
   assert(m_display != NULL);
 
@@ -235,7 +235,8 @@ XWindowsScreen::~XWindowsScreen() {
   s_screen = NULL;
 }
 
-void XWindowsScreen::enable() {
+void XWindowsScreen::enable()
+{
   if (!m_isPrimary) {
     // get the keyboard control state
     XKeyboardState keyControl;
@@ -255,7 +256,8 @@ void XWindowsScreen::enable() {
   }
 }
 
-void XWindowsScreen::disable() {
+void XWindowsScreen::disable()
+{
   // release input context focus
   if (m_ic != NULL) {
     XUnsetICFocus(m_ic);
@@ -271,7 +273,8 @@ void XWindowsScreen::disable() {
   }
 }
 
-void XWindowsScreen::enter() {
+void XWindowsScreen::enter()
+{
   screensaver(false);
 
   // release input context focus
@@ -326,7 +329,8 @@ void XWindowsScreen::enter() {
   m_isOnScreen = true;
 }
 
-bool XWindowsScreen::canLeave() {
+bool XWindowsScreen::canLeave()
+{
   // raise and show the window, required to grab mouse and keyboard
   XMapRaised(m_display, m_window);
 
@@ -334,7 +338,8 @@ bool XWindowsScreen::canLeave() {
   return !(m_isPrimary && !grabMouseAndKeyboard());
 }
 
-void XWindowsScreen::leave() {
+void XWindowsScreen::leave()
+{
   if (!m_isPrimary) {
     // restore the previous keyboard auto-repeat state.  if the user
     // changed the auto-repeat configuration while on the client then
@@ -385,15 +390,15 @@ void XWindowsScreen::leave() {
   m_isOnScreen = false;
 }
 
-bool XWindowsScreen::setClipboard(ClipboardID id, const IClipboard *clipboard) {
+bool XWindowsScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
+{
   // fail if we don't have the requested clipboard
   if (m_clipboard[id] == NULL) {
     return false;
   }
 
   // get the actual time.  ICCCM does not allow CurrentTime.
-  Time timestamp =
-      XWindowsUtil::getCurrentTime(m_display, m_clipboard[id]->getWindow());
+  Time timestamp = XWindowsUtil::getCurrentTime(m_display, m_clipboard[id]->getWindow());
 
   if (clipboard != NULL) {
     // save clipboard data
@@ -409,24 +414,28 @@ bool XWindowsScreen::setClipboard(ClipboardID id, const IClipboard *clipboard) {
   }
 }
 
-void XWindowsScreen::checkClipboards() {
+void XWindowsScreen::checkClipboards()
+{
   // do nothing, we're always up to date
 }
 
-void XWindowsScreen::openScreensaver(bool notify) {
+void XWindowsScreen::openScreensaver(bool notify)
+{
   m_screensaverNotify = notify;
   if (!m_screensaverNotify) {
     m_screensaver->disable();
   }
 }
 
-void XWindowsScreen::closeScreensaver() {
+void XWindowsScreen::closeScreensaver()
+{
   if (!m_screensaverNotify) {
     m_screensaver->enable();
   }
 }
 
-void XWindowsScreen::screensaver(bool activate) {
+void XWindowsScreen::screensaver(bool activate)
+{
   if (activate) {
     m_screensaver->activate();
   } else {
@@ -434,43 +443,48 @@ void XWindowsScreen::screensaver(bool activate) {
   }
 }
 
-void XWindowsScreen::resetOptions() {
+void XWindowsScreen::resetOptions()
+{
   m_xtestIsXineramaUnaware = true;
   m_preserveFocus = false;
 }
 
-void XWindowsScreen::setOptions(const OptionsList &options) {
+void XWindowsScreen::setOptions(const OptionsList &options)
+{
   for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
     if (options[i] == kOptionXTestXineramaUnaware) {
       m_xtestIsXineramaUnaware = (options[i + 1] != 0);
-      LOG(
-          (CLOG_DEBUG1 "library, XTest is Xinerama unaware %s",
-           m_xtestIsXineramaUnaware ? "true" : "false"));
+      LOG((CLOG_DEBUG1 "library, XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
     } else if (options[i] == kOptionScreenPreserveFocus) {
       m_preserveFocus = (options[i + 1] != 0);
-      LOG(
-          (CLOG_DEBUG1 "preserve focus: %s",
-           m_preserveFocus ? "true" : "false"));
+      LOG((CLOG_DEBUG1 "preserve focus: %s", m_preserveFocus ? "true" : "false"));
     }
   }
 }
 
-void XWindowsScreen::setSequenceNumber(UInt32 seqNum) {
+void XWindowsScreen::setSequenceNumber(UInt32 seqNum)
+{
   m_sequenceNumber = seqNum;
 }
 
-bool XWindowsScreen::isPrimary() const { return m_isPrimary; }
+bool XWindowsScreen::isPrimary() const
+{
+  return m_isPrimary;
+}
 
-String XWindowsScreen::getSecureInputApp() const {
+String XWindowsScreen::getSecureInputApp() const
+{
   // ignore on Linux
   return "";
 }
 
-void *XWindowsScreen::getEventTarget() const {
+void *XWindowsScreen::getEventTarget() const
+{
   return const_cast<XWindowsScreen *>(this);
 }
 
-bool XWindowsScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const {
+bool XWindowsScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
+{
   assert(clipboard != NULL);
 
   // fail if we don't have the requested clipboard
@@ -479,28 +493,26 @@ bool XWindowsScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const {
   }
 
   // get the actual time.  ICCCM does not allow CurrentTime.
-  Time timestamp =
-      XWindowsUtil::getCurrentTime(m_display, m_clipboard[id]->getWindow());
+  Time timestamp = XWindowsUtil::getCurrentTime(m_display, m_clipboard[id]->getWindow());
 
   // copy the clipboard
   return Clipboard::copy(clipboard, m_clipboard[id], timestamp);
 }
 
-void XWindowsScreen::getShape(
-    SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const {
+void XWindowsScreen::getShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const
+{
   x = m_x;
   y = m_y;
   w = m_w;
   h = m_h;
 }
 
-void XWindowsScreen::getCursorPos(SInt32 &x, SInt32 &y) const {
+void XWindowsScreen::getCursorPos(SInt32 &x, SInt32 &y) const
+{
   Window root, window;
   int mx, my, xWindow, yWindow;
   unsigned int mask;
-  if (XQueryPointer(
-          m_display, m_root, &root, &window, &mx, &my, &xWindow, &yWindow,
-          &mask)) {
+  if (XQueryPointer(m_display, m_root, &root, &window, &mx, &my, &xWindow, &yWindow, &mask)) {
     x = mx;
     y = my;
   } else {
@@ -509,11 +521,13 @@ void XWindowsScreen::getCursorPos(SInt32 &x, SInt32 &y) const {
   }
 }
 
-void XWindowsScreen::reconfigure(UInt32) {
+void XWindowsScreen::reconfigure(UInt32)
+{
   // do nothing
 }
 
-void XWindowsScreen::warpCursor(SInt32 x, SInt32 y) {
+void XWindowsScreen::warpCursor(SInt32 x, SInt32 y)
+{
   // warp mouse
   warpCursorNoFlush(x, y);
 
@@ -521,9 +535,8 @@ void XWindowsScreen::warpCursor(SInt32 x, SInt32 y) {
   XEvent event;
   while (XCheckMaskEvent(
       m_display,
-      PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask |
-          KeyReleaseMask | KeymapStateMask,
-      &event)) {
+      PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | KeymapStateMask, &event
+  )) {
     // do nothing
   }
 
@@ -532,10 +545,10 @@ void XWindowsScreen::warpCursor(SInt32 x, SInt32 y) {
   m_yCursor = y;
 }
 
-UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
+UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+{
   // only allow certain modifiers
-  if ((mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt |
-                KeyModifierSuper)) != 0) {
+  if ((mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierSuper)) != 0) {
     LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
     return 0;
   }
@@ -578,13 +591,11 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
     XWindowsUtil::ErrorLock lock(m_display, &err);
     if (key == kKeyNone) {
       static const KeyModifierMask s_hotKeyModifiers[] = {
-          KeyModifierShift, KeyModifierControl, KeyModifierAlt, KeyModifierMeta,
-          KeyModifierSuper};
+          KeyModifierShift, KeyModifierControl, KeyModifierAlt, KeyModifierMeta, KeyModifierSuper
+      };
 
       XModifierKeymap *modKeymap = XGetModifierMapping(m_display);
-      for (size_t j = 0;
-           j < sizeof(s_hotKeyModifiers) / sizeof(s_hotKeyModifiers[0]) && !err;
-           ++j) {
+      for (size_t j = 0; j < sizeof(s_hotKeyModifiers) / sizeof(s_hotKeyModifiers[0]) && !err; ++j) {
         // skip modifier if not in mask
         if ((mask & s_hotKeyModifiers[j]) == 0) {
           continue;
@@ -640,14 +651,11 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
         }
 
         // grab each key for the modifier
-        const KeyCode *modifiermap =
-            modKeymap->modifiermap + index * modKeymap->max_keypermod;
+        const KeyCode *modifiermap = modKeymap->modifiermap + index * modKeymap->max_keypermod;
         for (int k = 0; k < modKeymap->max_keypermod && !err; ++k) {
           KeyCode code = modifiermap[k];
           if (modifiermap[k] != 0) {
-            XGrabKey(
-                m_display, code, modifiers2, m_root, False, GrabModeAsync,
-                GrabModeAsync);
+            XGrabKey(m_display, code, modifiers2, m_root, False, GrabModeAsync, GrabModeAsync);
             if (!err) {
               hotKeys.push_back(std::make_pair(code, modifiers2));
               m_hotKeyToIDMap[HotKeyItem(code, modifiers2)] = id;
@@ -676,8 +684,7 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
         toggleModifiers[numToggleModifiers++] = modifier;
       }
 
-      for (XWindowsKeyState::KeycodeList::iterator j = keycodes.begin();
-           j != keycodes.end() && !err; ++j) {
+      for (XWindowsKeyState::KeycodeList::iterator j = keycodes.begin(); j != keycodes.end() && !err; ++j) {
         for (size_t i = 0; i < (1u << numToggleModifiers); ++i) {
           // add toggle modifiers for index i
           unsigned int tmpModifiers = modifiers;
@@ -692,9 +699,7 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
           }
 
           // add grab
-          XGrabKey(
-              m_display, *j, tmpModifiers, m_root, False, GrabModeAsync,
-              GrabModeAsync);
+          XGrabKey(m_display, *j, tmpModifiers, m_root, False, GrabModeAsync, GrabModeAsync);
           if (!err) {
             hotKeys.push_back(std::make_pair(*j, tmpModifiers));
             m_hotKeyToIDMap[HotKeyItem(*j, tmpModifiers)] = id;
@@ -714,18 +719,21 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
     m_oldHotKeyIDs.push_back(id);
     m_hotKeys.erase(id);
     LOG(
-        (CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)",
-         deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask));
+        (CLOG_WARN "failed to register hotkey %s (id=%04x mask=%04x)", deskflow::KeyMap::formatKey(key, mask).c_str(),
+         key, mask)
+    );
     return 0;
   }
 
   LOG(
-      (CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d",
-       deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, id));
+      (CLOG_DEBUG "registered hotkey %s (id=%04x mask=%04x) as id=%d", deskflow::KeyMap::formatKey(key, mask).c_str(),
+       key, mask, id)
+  );
   return id;
 }
 
-void XWindowsScreen::unregisterHotKey(UInt32 id) {
+void XWindowsScreen::unregisterHotKey(UInt32 id)
+{
   // look up hotkey
   HotKeyMap::iterator i = m_hotKeys.find(id);
   if (i == m_hotKeys.end()) {
@@ -753,38 +761,42 @@ void XWindowsScreen::unregisterHotKey(UInt32 id) {
   m_oldHotKeyIDs.push_back(id);
 }
 
-void XWindowsScreen::fakeInputBegin() {
+void XWindowsScreen::fakeInputBegin()
+{
   // FIXME -- not implemented
 }
 
-void XWindowsScreen::fakeInputEnd() {
+void XWindowsScreen::fakeInputEnd()
+{
   // FIXME -- not implemented
 }
 
-SInt32 XWindowsScreen::getJumpZoneSize() const { return 1; }
+SInt32 XWindowsScreen::getJumpZoneSize() const
+{
+  return 1;
+}
 
-bool XWindowsScreen::isAnyMouseButtonDown(UInt32 &buttonID) const {
+bool XWindowsScreen::isAnyMouseButtonDown(UInt32 &buttonID) const
+{
   // query the pointer to get the button state
   Window root, window;
   int xRoot, yRoot, xWindow, yWindow;
   unsigned int state;
-  if (XQueryPointer(
-          m_display, m_root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow,
-          &state)) {
-    return (
-        (state & (Button1Mask | Button2Mask | Button3Mask | Button4Mask |
-                  Button5Mask)) != 0);
+  if (XQueryPointer(m_display, m_root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+    return ((state & (Button1Mask | Button2Mask | Button3Mask | Button4Mask | Button5Mask)) != 0);
   }
 
   return false;
 }
 
-void XWindowsScreen::getCursorCenter(SInt32 &x, SInt32 &y) const {
+void XWindowsScreen::getCursorCenter(SInt32 &x, SInt32 &y) const
+{
   x = m_xCenter;
   y = m_yCenter;
 }
 
-void XWindowsScreen::fakeMouseButton(ButtonID button, bool press) {
+void XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
+{
   const unsigned int xButton = mapButtonToX(button);
   if (xButton > 0 && xButton < 11) {
     XTestFakeButtonEvent(m_display, xButton, press ? True : False, CurrentTime);
@@ -792,23 +804,25 @@ void XWindowsScreen::fakeMouseButton(ButtonID button, bool press) {
   }
 }
 
-void XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y) {
+void XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
+{
   if (m_xinerama && m_xtestIsXineramaUnaware) {
     XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
   } else {
-    XTestFakeMotionEvent(
-        m_display, DefaultScreen(m_display), x, y, CurrentTime);
+    XTestFakeMotionEvent(m_display, DefaultScreen(m_display), x, y, CurrentTime);
   }
   XFlush(m_display);
 }
 
-void XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const {
+void XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
   // FIXME -- ignore xinerama for now
   XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
   XFlush(m_display);
 }
 
-void XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const {
+void XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
+{
   // XXX -- support x-axis scrolling
   if (yDelta == 0) {
     return;
@@ -817,8 +831,7 @@ void XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const {
   yDelta = mapClientScrollDirection(yDelta);
 
   // choose button depending on rotation direction
-  const unsigned int xButton =
-      mapButtonToX(static_cast<ButtonID>((yDelta >= 0) ? -1 : -2));
+  const unsigned int xButton = mapButtonToX(static_cast<ButtonID>((yDelta >= 0) ? -1 : -2));
   if (xButton == 0) {
     // If we get here, then the XServer does not support the scroll
     // wheel buttons, so send PageUp/PageDown keystrokes instead.
@@ -842,9 +855,7 @@ void XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const {
   }
 
   if (yDelta < m_mouseScrollDelta) {
-    LOG(
-        (CLOG_WARN "wheel scroll delta (%d) smaller than threshold (%d)",
-         yDelta, m_mouseScrollDelta));
+    LOG((CLOG_WARN "wheel scroll delta (%d) smaller than threshold (%d)", yDelta, m_mouseScrollDelta));
   }
 
   // send as many clicks as necessary
@@ -855,7 +866,8 @@ void XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const {
   XFlush(m_display);
 }
 
-Display *XWindowsScreen::openDisplay(const char *displayName) {
+Display *XWindowsScreen::openDisplay(const char *displayName)
+{
   // get the DISPLAY
   if (displayName == NULL) {
     displayName = getenv("DISPLAY");
@@ -874,9 +886,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName) {
   // verify the availability of the XTest extension
   if (!m_isPrimary) {
     int majorOpcode, firstEvent, firstError;
-    if (!XQueryExtension(
-            display, XTestExtensionName, &majorOpcode, &firstEvent,
-            &firstError)) {
+    if (!XQueryExtension(display, XTestExtensionName, &majorOpcode, &firstEvent, &firstError)) {
       LOG((CLOG_ERR "the XTest extension is not available"));
       XCloseDisplay(display);
       throw XScreenOpenFailure();
@@ -889,14 +899,10 @@ Display *XWindowsScreen::openDisplay(const char *displayName) {
     int major = XkbMajorVersion, minor = XkbMinorVersion;
     if (XkbLibraryVersion(&major, &minor)) {
       int opcode, firstError;
-      if (XkbQueryExtension(
-              display, &opcode, &m_xkbEventBase, &firstError, &major, &minor)) {
+      if (XkbQueryExtension(display, &opcode, &m_xkbEventBase, &firstError, &major, &minor)) {
         m_xkb = true;
-        XkbSelectEvents(
-            display, XkbUseCoreKbd, XkbMapNotifyMask, XkbMapNotifyMask);
-        XkbSelectEventDetails(
-            display, XkbUseCoreKbd, XkbStateNotifyMask, XkbGroupStateMask,
-            XkbGroupStateMask);
+        XkbSelectEvents(display, XkbUseCoreKbd, XkbMapNotifyMask, XkbMapNotifyMask);
+        XkbSelectEventDetails(display, XkbUseCoreKbd, XkbStateNotifyMask, XkbGroupStateMask, XkbGroupStateMask);
       }
     }
   }
@@ -908,16 +914,15 @@ Display *XWindowsScreen::openDisplay(const char *displayName) {
   m_xrandr = XRRQueryExtension(display, &m_xrandrEventBase, &dummyError);
   if (m_xrandr) {
     // enable XRRScreenChangeNotifyEvent
-    XRRSelectInput(
-        display, DefaultRootWindow(display),
-        RRScreenChangeNotifyMask | RRCrtcChangeNotifyMask);
+    XRRSelectInput(display, DefaultRootWindow(display), RRScreenChangeNotifyMask | RRCrtcChangeNotifyMask);
   }
 #endif
 
   return display;
 }
 
-void XWindowsScreen::saveShape() {
+void XWindowsScreen::saveShape()
+{
   // get shape of default screen
   m_x = 0;
   m_y = 0;
@@ -945,8 +950,7 @@ void XWindowsScreen::saveShape() {
   m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
   int eventBase, errorBase;
-  if (XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
-      XineramaIsActive(m_display)) {
+  if (XineramaQueryExtension(m_display, &eventBase, &errorBase) && XineramaIsActive(m_display)) {
     int numScreens;
     XineramaScreenInfo *screens;
     screens = XineramaQueryScreens(m_display, &numScreens);
@@ -962,7 +966,8 @@ void XWindowsScreen::saveShape() {
 #endif
 }
 
-void XWindowsScreen::setShape(SInt32 width, SInt32 height) {
+void XWindowsScreen::setShape(SInt32 width, SInt32 height)
+{
   // set shape
   m_x = 0;
   m_y = 0;
@@ -990,8 +995,7 @@ void XWindowsScreen::setShape(SInt32 width, SInt32 height) {
   m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
   int eventBase, errorBase;
-  if ((XineramaQueryExtension(m_display, &eventBase, &errorBase) != 0) &&
-      (XineramaIsActive(m_display) != 0)) {
+  if ((XineramaQueryExtension(m_display, &eventBase, &errorBase) != 0) && (XineramaIsActive(m_display) != 0)) {
     int numScreens;
     XineramaScreenInfo *screens;
     screens = XineramaQueryScreens(m_display, &numScreens);
@@ -1007,7 +1011,8 @@ void XWindowsScreen::setShape(SInt32 width, SInt32 height) {
 #endif
 }
 
-Window XWindowsScreen::openWindow() const {
+Window XWindowsScreen::openWindow() const
+{
   // default window attributes.  we don't want the window manager
   // messing with our window and we don't want the cursor to be
   // visible inside the window.
@@ -1022,9 +1027,8 @@ Window XWindowsScreen::openWindow() const {
     // grab window attributes.  this window is used to capture user
     // input when the user is focused on another client.  it covers
     // the whole screen.
-    attr.event_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask |
-                      KeyPressMask | KeyReleaseMask | KeymapStateMask |
-                      PropertyChangeMask;
+    attr.event_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask |
+                      KeymapStateMask | PropertyChangeMask;
     x = m_x;
     y = m_y;
     w = m_w;
@@ -1046,14 +1050,16 @@ Window XWindowsScreen::openWindow() const {
   // create and return the window
   Window window = XCreateWindow(
       m_display, m_root, x, y, w, h, 0, 0, InputOnly, CopyFromParent,
-      CWDontPropagate | CWEventMask | CWOverrideRedirect | CWCursor, &attr);
+      CWDontPropagate | CWEventMask | CWOverrideRedirect | CWCursor, &attr
+  );
   if (window == None) {
     throw XScreenOpenFailure();
   }
   return window;
 }
 
-void XWindowsScreen::openIM() {
+void XWindowsScreen::openIM()
+{
   // open the input methods
   XIM im = XOpenIM(m_display, NULL, NULL, NULL);
   if (im == NULL) {
@@ -1064,8 +1070,7 @@ void XWindowsScreen::openIM() {
   // find the appropriate style.  deskflow supports XIMPreeditNothing
   // only at the moment.
   XIMStyles *styles;
-  if (XGetIMValues(im, XNQueryInputStyle, &styles, NULL) != NULL ||
-      styles == NULL) {
+  if (XGetIMValues(im, XNQueryInputStyle, &styles, NULL) != NULL || styles == NULL) {
     LOG((CLOG_WARN "cannot get IM styles"));
     XCloseIM(im);
     return;
@@ -1117,30 +1122,35 @@ void XWindowsScreen::openIM() {
   XSelectInput(m_display, m_root, StructureNotifyMask);
 }
 
-void XWindowsScreen::sendEvent(Event::Type type, void *data) {
+void XWindowsScreen::sendEvent(Event::Type type, void *data)
+{
   m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
-void XWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id) {
+void XWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
+{
   ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
   info->m_id = id;
   info->m_sequenceNumber = m_sequenceNumber;
   sendEvent(type, info);
 }
 
-IKeyState *XWindowsScreen::getKeyState() const { return m_keyState; }
+IKeyState *XWindowsScreen::getKeyState() const
+{
+  return m_keyState;
+}
 
-Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg) {
+Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg)
+{
   KeyEventFilter *filter = reinterpret_cast<KeyEventFilter *>(arg);
-  return (xevent->type == filter->m_event &&
-          xevent->xkey.window == filter->m_window &&
-          xevent->xkey.time == filter->m_time &&
-          xevent->xkey.keycode == filter->m_keycode)
+  return (xevent->type == filter->m_event && xevent->xkey.window == filter->m_window &&
+          xevent->xkey.time == filter->m_time && xevent->xkey.keycode == filter->m_keycode)
              ? True
              : False;
 }
 
-void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
+void XWindowsScreen::handleSystemEvent(const Event &event, void *)
+{
   XEvent *xevent = static_cast<XEvent *>(event.getData());
   assert(xevent != NULL);
 
@@ -1158,10 +1168,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
       filter.m_time = xevent->xkey.time;
       filter.m_keycode = xevent->xkey.keycode;
       XEvent xevent2;
-      isRepeat =
-          (XCheckIfEvent(
-               m_display, &xevent2, &XWindowsScreen::findKeyEvent,
-               (XPointer)&filter) == True);
+      isRepeat = (XCheckIfEvent(m_display, &xevent2, &XWindowsScreen::findKeyEvent, (XPointer)&filter) == True);
     }
 
     if (xevent->type == KeyPress || xevent->type == KeyRelease) {
@@ -1195,8 +1202,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
     // KeyRelease) so we have a keycode for a synthesized KeyPress.
     if (xevent->type == KeyPress && xevent->xkey.keycode != 0) {
       m_lastKeycode = xevent->xkey.keycode;
-    } else if (
-        xevent->type == KeyRelease && xevent->xkey.keycode == m_lastKeycode) {
+    } else if (xevent->type == KeyRelease && xevent->xkey.keycode == m_lastKeycode) {
       m_lastKeycode = 0;
     }
 
@@ -1211,9 +1217,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
 
     // discard matching key releases for key presses that were
     // filtered and remove them from our filtered list.
-    else if (
-        xevent->type == KeyRelease &&
-        m_filtered.count(xevent->xkey.keycode) > 0) {
+    else if (xevent->type == KeyRelease && m_filtered.count(xevent->xkey.keycode) > 0) {
       m_filtered.erase(xevent->xkey.keycode);
       return;
     }
@@ -1229,8 +1233,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
   if (m_xi2detected) {
     // Process RawMotion
     XGenericEventCookie *cookie = (XGenericEventCookie *)&xevent->xcookie;
-    if (XGetEventData(m_display, cookie) && cookie->type == GenericEvent &&
-        cookie->extension == xi_opcode) {
+    if (XGetEventData(m_display, cookie) && cookie->type == GenericEvent && cookie->extension == xi_opcode) {
       if (cookie->evtype == XI_RawMotion) {
         // Get current pointer's position
         Window root, child;
@@ -1242,8 +1245,9 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
         /* xmotion's time, state and is_hint are not used */
         unsigned int msk;
         xmotion.same_screen = XQueryPointer(
-            m_display, m_root, &xmotion.root, &xmotion.subwindow,
-            &xmotion.x_root, &xmotion.y_root, &xmotion.x, &xmotion.y, &msk);
+            m_display, m_root, &xmotion.root, &xmotion.subwindow, &xmotion.x_root, &xmotion.y_root, &xmotion.x,
+            &xmotion.y, &msk
+        );
         onMouseMove(xmotion);
         XFreeEventData(m_display, cookie);
         return;
@@ -1291,8 +1295,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
     // retrieval methods.  we'll just delete the property
     // with the data (satisfying the usual ICCCM protocol).
     if (xevent->xselection.property != None) {
-      XDeleteProperty(
-          m_display, xevent->xselection.requestor, xevent->xselection.property);
+      XDeleteProperty(m_display, xevent->xselection.requestor, xevent->xselection.property);
     }
     break;
 
@@ -1301,9 +1304,9 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
     ClipboardID id = getClipboardID(xevent->xselectionrequest.selection);
     if (id != kClipboardEnd) {
       m_clipboard[id]->addRequest(
-          xevent->xselectionrequest.owner, xevent->xselectionrequest.requestor,
-          xevent->xselectionrequest.target, xevent->xselectionrequest.time,
-          xevent->xselectionrequest.property);
+          xevent->xselectionrequest.owner, xevent->xselectionrequest.requestor, xevent->xselectionrequest.target,
+          xevent->xselectionrequest.time, xevent->xselectionrequest.property
+      );
       return;
     }
   } break;
@@ -1311,9 +1314,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
   case PropertyNotify:
     // property delete may be part of a selection conversion
     if (xevent->xproperty.state == PropertyDelete) {
-      processClipboardRequest(
-          xevent->xproperty.window, xevent->xproperty.time,
-          xevent->xproperty.atom);
+      processClipboardRequest(xevent->xproperty.window, xevent->xproperty.time, xevent->xproperty.atom);
     }
     break;
 
@@ -1381,8 +1382,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
     if (m_xrandr) {
       if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify ||
           xevent->type == m_xrandrEventBase + RRNotify &&
-              reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype ==
-                  RRNotify_CrtcChange) {
+              reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
         LOG((CLOG_INFO "either XRRScreenChangeNotifyEvent or "
                        "RRNotify_CrtcChange received"));
 
@@ -1411,17 +1411,15 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *) {
   }
 }
 
-void XWindowsScreen::onKeyPress(XKeyEvent &xkey) {
-  LOG(
-      (CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xkey.keycode,
-       xkey.state));
+void XWindowsScreen::onKeyPress(XKeyEvent &xkey)
+{
+  LOG((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xkey.keycode, xkey.state));
   const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
   KeyID key = mapKeyFromX(&xkey);
   if (key != kKeyNone) {
     // check for ctrl+alt+del emulation
     if ((key == kKeyPause || key == kKeyBreak) &&
-        (mask & (KeyModifierControl | KeyModifierAlt)) ==
-            (KeyModifierControl | KeyModifierAlt)) {
+        (mask & (KeyModifierControl | KeyModifierAlt)) == (KeyModifierControl | KeyModifierAlt)) {
       // pretend it's ctrl+alt+del
       LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
       key = kKeyDelete;
@@ -1442,27 +1440,25 @@ void XWindowsScreen::onKeyPress(XKeyEvent &xkey) {
     }
 
     // handle key
-    m_keyState->sendKeyEvent(
-        getEventTarget(), true, false, key, mask, 1, keycode);
+    m_keyState->sendKeyEvent(getEventTarget(), true, false, key, mask, 1, keycode);
 
     // do fake release if this is a fake press
     if (isFake) {
-      m_keyState->sendKeyEvent(
-          getEventTarget(), false, false, key, mask, 1, keycode);
+      m_keyState->sendKeyEvent(getEventTarget(), false, false, key, mask, 1, keycode);
     }
   } else {
     LOG((CLOG_DEBUG1 "can't map keycode to key id"));
   }
 }
 
-void XWindowsScreen::onKeyRelease(XKeyEvent &xkey, bool isRepeat) {
+void XWindowsScreen::onKeyRelease(XKeyEvent &xkey, bool isRepeat)
+{
   const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
   KeyID key = mapKeyFromX(&xkey);
   if (key != kKeyNone) {
     // check for ctrl+alt+del emulation
     if ((key == kKeyPause || key == kKeyBreak) &&
-        (mask & (KeyModifierControl | KeyModifierAlt)) ==
-            (KeyModifierControl | KeyModifierAlt)) {
+        (mask & (KeyModifierControl | KeyModifierAlt)) == (KeyModifierControl | KeyModifierAlt)) {
       // pretend it's ctrl+alt+del and ignore autorepeat
       LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
       key = kKeyDelete;
@@ -1472,29 +1468,23 @@ void XWindowsScreen::onKeyRelease(XKeyEvent &xkey, bool isRepeat) {
     KeyButton keycode = static_cast<KeyButton>(xkey.keycode);
     if (!isRepeat) {
       // no press event follows so it's a plain release
-      LOG(
-          (CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode,
-           xkey.state));
-      m_keyState->sendKeyEvent(
-          getEventTarget(), false, false, key, mask, 1, keycode);
+      LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state));
+      m_keyState->sendKeyEvent(getEventTarget(), false, false, key, mask, 1, keycode);
     } else {
       // found a press event following so it's a repeat.
       // we could attempt to count the already queued
       // repeats but we'll just send a repeat of 1.
       // note that we discard the press event.
-      LOG(
-          (CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", keycode,
-           xkey.state));
-      m_keyState->sendKeyEvent(
-          getEventTarget(), false, true, key, mask, 1, keycode);
+      LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", keycode, xkey.state));
+      m_keyState->sendKeyEvent(getEventTarget(), false, true, key, mask, 1, keycode);
     }
   }
 }
 
-bool XWindowsScreen::onHotKey(XKeyEvent &xkey, bool isRepeat) {
+bool XWindowsScreen::onHotKey(XKeyEvent &xkey, bool isRepeat)
+{
   // find the hot key id
-  HotKeyToIDMap::const_iterator i =
-      m_hotKeyToIDMap.find(HotKeyItem(xkey.keycode, xkey.state));
+  HotKeyToIDMap::const_iterator i = m_hotKeyToIDMap.find(HotKeyItem(xkey.keycode, xkey.state));
   if (i == m_hotKeyToIDMap.end()) {
     return false;
   }
@@ -1511,31 +1501,28 @@ bool XWindowsScreen::onHotKey(XKeyEvent &xkey, bool isRepeat) {
 
   // generate event (ignore key repeats)
   if (!isRepeat) {
-    m_events->addEvent(
-        Event(type, getEventTarget(), HotKeyInfo::alloc(i->second)));
+    m_events->addEvent(Event(type, getEventTarget(), HotKeyInfo::alloc(i->second)));
   }
   return true;
 }
 
-void XWindowsScreen::onMousePress(const XButtonEvent &xbutton) {
+void XWindowsScreen::onMousePress(const XButtonEvent &xbutton)
+{
   LOG((CLOG_DEBUG1 "event: ButtonPress button=%d", xbutton.button));
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
-    sendEvent(
-        m_events->forIPrimaryScreen().buttonDown(),
-        ButtonInfo::alloc(button, mask));
+    sendEvent(m_events->forIPrimaryScreen().buttonDown(), ButtonInfo::alloc(button, mask));
   }
 }
 
-void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton) {
+void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton)
+{
   LOG((CLOG_DEBUG1 "event: ButtonRelease button=%d", xbutton.button));
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
-    sendEvent(
-        m_events->forIPrimaryScreen().buttonUp(),
-        ButtonInfo::alloc(button, mask));
+    sendEvent(m_events->forIPrimaryScreen().buttonUp(), ButtonInfo::alloc(button, mask));
   } else if (xbutton.button == 4) {
     // wheel forward (away from user)
     sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(0, 120));
@@ -1546,9 +1533,9 @@ void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton) {
   // XXX -- support x-axis scrolling
 }
 
-void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion) {
-  LOG((
-      CLOG_DEBUG2 "event: MotionNotify %d,%d", xmotion.x_root, xmotion.y_root));
+void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
+{
+  LOG((CLOG_DEBUG2 "event: MotionNotify %d,%d", xmotion.x_root, xmotion.y_root));
 
   // compute motion delta (relative to the last known
   // mouse position)
@@ -1577,9 +1564,7 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion) {
     cntr = 0;
   } else if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(
-        m_events->forIPrimaryScreen().motionOnPrimary(),
-        MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(), MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
     // motion on secondary screen.  warp mouse back to
     // center.
@@ -1594,10 +1579,8 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion) {
     // it we only warp when the mouse has moved more
     // than s_size pixels from the center.
     static const SInt32 s_size = 32;
-    if (xmotion.x_root - m_xCenter < -s_size ||
-        xmotion.x_root - m_xCenter > s_size ||
-        xmotion.y_root - m_yCenter < -s_size ||
-        xmotion.y_root - m_yCenter > s_size) {
+    if (xmotion.x_root - m_xCenter < -s_size || xmotion.x_root - m_xCenter > s_size ||
+        xmotion.y_root - m_yCenter < -s_size || xmotion.y_root - m_yCenter > s_size) {
       warpCursorNoFlush(m_xCenter, m_yCenter);
     }
 
@@ -1608,14 +1591,13 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion) {
     // warping to the primary screen's enter position,
     // effectively overriding it.
     if (x != 0 || y != 0) {
-      sendEvent(
-          m_events->forIPrimaryScreen().motionOnSecondary(),
-          MotionInfo::alloc(x, y));
+      sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
     }
   }
 }
 
-Cursor XWindowsScreen::createBlankCursor() const {
+Cursor XWindowsScreen::createBlankCursor() const
+{
   // this seems just a bit more complicated than really necessary
 
   // get the closet cursor size to 1x1
@@ -1641,8 +1623,7 @@ Cursor XWindowsScreen::createBlankCursor() const {
   color.flags = DoRed | DoGreen | DoBlue;
 
   // make cursor from bitmap
-  Cursor cursor =
-      XCreatePixmapCursor(m_display, bitmap, bitmap, &color, &color, 0, 0);
+  Cursor cursor = XCreatePixmapCursor(m_display, bitmap, bitmap, &color, &color, 0, 0);
 
   // don't need bitmap or the data anymore
   delete[] data;
@@ -1651,28 +1632,28 @@ Cursor XWindowsScreen::createBlankCursor() const {
   return cursor;
 }
 
-ClipboardID XWindowsScreen::getClipboardID(Atom selection) const {
+ClipboardID XWindowsScreen::getClipboardID(Atom selection) const
+{
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != NULL &&
-        m_clipboard[id]->getSelection() == selection) {
+    if (m_clipboard[id] != NULL && m_clipboard[id]->getSelection() == selection) {
       return id;
     }
   }
   return kClipboardEnd;
 }
 
-void XWindowsScreen::processClipboardRequest(
-    Window requestor, Time time, Atom property) {
+void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom property)
+{
   // check every clipboard until one returns success
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != NULL &&
-        m_clipboard[id]->processRequest(requestor, time, property)) {
+    if (m_clipboard[id] != NULL && m_clipboard[id]->processRequest(requestor, time, property)) {
       break;
     }
   }
 }
 
-void XWindowsScreen::destroyClipboardRequest(Window requestor) {
+void XWindowsScreen::destroyClipboardRequest(Window requestor)
+{
   // check every clipboard until one returns success
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
     if (m_clipboard[id] != NULL && m_clipboard[id]->destroyRequest(requestor)) {
@@ -1681,7 +1662,8 @@ void XWindowsScreen::destroyClipboardRequest(Window requestor) {
   }
 }
 
-void XWindowsScreen::onError() {
+void XWindowsScreen::onError()
+{
   // prevent further access to the X display
   m_events->adoptBuffer(NULL);
   m_screensaver->destroy();
@@ -1701,7 +1683,8 @@ void XWindowsScreen::onError() {
   // don't use X11.  on error, we'd switch to the latter.
 }
 
-int XWindowsScreen::ioErrorHandler(Display *) {
+int XWindowsScreen::ioErrorHandler(Display *)
+{
   // the display has disconnected, probably because X is shutting
   // down.  X forces us to exit at this point which is annoying.
   // we'll pretend as if we won't exit so we try to make sure we
@@ -1711,7 +1694,8 @@ int XWindowsScreen::ioErrorHandler(Display *) {
   return 0;
 }
 
-void XWindowsScreen::selectEvents(Window w) const {
+void XWindowsScreen::selectEvents(Window w) const
+{
   // ignore errors while we adjust event masks.  windows could be
   // destroyed at any time after the XQueryTree() in doSelectEvents()
   // so we must ignore BadWindow errors.
@@ -1721,7 +1705,8 @@ void XWindowsScreen::selectEvents(Window w) const {
   doSelectEvents(w);
 }
 
-void XWindowsScreen::doSelectEvents(Window w) const {
+void XWindowsScreen::doSelectEvents(Window w) const
+{
   // we want to track the mouse everywhere on the display.  to achieve
   // that we select PointerMotionMask on every window.  we also select
   // SubstructureNotifyMask in order to get CreateNotify events so we
@@ -1764,7 +1749,8 @@ void XWindowsScreen::doSelectEvents(Window w) const {
   }
 }
 
-KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const {
+KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const
+{
   // convert to a keysym
   KeySym keysym;
   if (event->type == KeyPress && m_ic != NULL) {
@@ -1809,7 +1795,8 @@ KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const {
   return result;
 }
 
-ButtonID XWindowsScreen::mapButtonFromX(const XButtonEvent *event) const {
+ButtonID XWindowsScreen::mapButtonFromX(const XButtonEvent *event) const
+{
   unsigned int button = event->button;
 
   // first three buttons map to 1, 2, 3 (kButtonLeft, Middle, Right)
@@ -1829,7 +1816,8 @@ ButtonID XWindowsScreen::mapButtonFromX(const XButtonEvent *event) const {
   }
 }
 
-unsigned int XWindowsScreen::mapButtonToX(ButtonID id) const {
+unsigned int XWindowsScreen::mapButtonToX(ButtonID id) const
+{
   // map button -1 to button 4 (+wheel)
   if (id == static_cast<ButtonID>(-1)) {
     id = 4;
@@ -1856,7 +1844,8 @@ unsigned int XWindowsScreen::mapButtonToX(ButtonID id) const {
   return static_cast<unsigned int>(id);
 }
 
-void XWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y) {
+void XWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
+{
   assert(m_window != None);
 
   // send an event that we can recognize before the mouse warp
@@ -1887,7 +1876,8 @@ void XWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y) {
   LOG((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
 
-void XWindowsScreen::updateButtons() {
+void XWindowsScreen::updateButtons()
+{
   // query the button mapping
   UInt32 numButtons = XGetPointerMapping(m_display, NULL, 0);
   unsigned char *tmpButtons = new unsigned char[numButtons];
@@ -1917,10 +1907,9 @@ void XWindowsScreen::updateButtons() {
   delete[] tmpButtons;
 }
 
-bool XWindowsScreen::grabMouseAndKeyboard() {
-  unsigned int event_mask = ButtonPressMask | ButtonReleaseMask |
-                            EnterWindowMask | LeaveWindowMask |
-                            PointerMotionMask;
+bool XWindowsScreen::grabMouseAndKeyboard()
+{
+  unsigned int event_mask = ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask;
 
   // grab the mouse and keyboard.  keep trying until we get them.
   // if we can't grab one after grabbing the other then ungrab
@@ -1931,8 +1920,7 @@ bool XWindowsScreen::grabMouseAndKeyboard() {
   do {
     // keyboard first
     do {
-      result = XGrabKeyboard(
-          m_display, m_window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+      result = XGrabKeyboard(m_display, m_window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
       assert(result != GrabNotViewable);
       if (result != GrabSuccess) {
         LOG((CLOG_DEBUG2 "waiting to grab keyboard"));
@@ -1946,9 +1934,8 @@ bool XWindowsScreen::grabMouseAndKeyboard() {
     LOG((CLOG_DEBUG2 "grabbed keyboard"));
 
     // now the mouse --- use event_mask to get EnterNotify, LeaveNotify events
-    result = XGrabPointer(
-        m_display, m_window, False, event_mask, GrabModeAsync, GrabModeAsync,
-        m_window, None, CurrentTime);
+    result =
+        XGrabPointer(m_display, m_window, False, event_mask, GrabModeAsync, GrabModeAsync, m_window, None, CurrentTime);
     assert(result != GrabNotViewable);
     if (result != GrabSuccess) {
       // back off to avoid grab deadlock
@@ -1966,7 +1953,8 @@ bool XWindowsScreen::grabMouseAndKeyboard() {
   return true;
 }
 
-void XWindowsScreen::refreshKeyboard(XEvent *event) {
+void XWindowsScreen::refreshKeyboard(XEvent *event)
+{
   if (XPending(m_display) > 0) {
     XEvent tmpEvent;
     XPeekEvent(m_display, &tmpEvent);
@@ -1995,26 +1983,25 @@ void XWindowsScreen::refreshKeyboard(XEvent *event) {
 // XWindowsScreen::HotKeyItem
 //
 
-XWindowsScreen::HotKeyItem::HotKeyItem(int keycode, unsigned int mask)
-    : m_keycode(keycode),
-      m_mask(mask) {
+XWindowsScreen::HotKeyItem::HotKeyItem(int keycode, unsigned int mask) : m_keycode(keycode), m_mask(mask)
+{
   // do nothing
 }
 
-bool XWindowsScreen::HotKeyItem::operator<(const HotKeyItem &x) const {
-  return (
-      m_keycode < x.m_keycode ||
-      (m_keycode == x.m_keycode && m_mask < x.m_mask));
+bool XWindowsScreen::HotKeyItem::operator<(const HotKeyItem &x) const
+{
+  return (m_keycode < x.m_keycode || (m_keycode == x.m_keycode && m_mask < x.m_mask));
 }
 
-bool XWindowsScreen::detectXI2() {
+bool XWindowsScreen::detectXI2()
+{
   int event, error;
-  return XQueryExtension(
-      m_display, "XInputExtension", &xi_opcode, &event, &error);
+  return XQueryExtension(m_display, "XInputExtension", &xi_opcode, &event, &error);
 }
 
 #ifdef HAVE_XI2
-void XWindowsScreen::selectXIRawMotion() {
+void XWindowsScreen::selectXIRawMotion()
+{
   XIEventMask mask;
 
   mask.deviceid = XIAllDevices;

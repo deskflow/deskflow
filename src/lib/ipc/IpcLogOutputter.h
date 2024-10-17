@@ -33,15 +33,15 @@ class IpcClientProxy;
 /*!
 This outputter writes output to the GUI via IPC.
 */
-class IpcLogOutputter : public ILogOutputter {
+class IpcLogOutputter : public ILogOutputter
+{
 public:
   /*!
   If \p useThread is \c true, the buffer will be sent using a thread.
   If \p useThread is \c false, then the buffer needs to be sent manually
   using the \c sendBuffer() function.
   */
-  IpcLogOutputter(
-      IpcServer &ipcServer, IpcClientType clientType, bool useThread);
+  IpcLogOutputter(IpcServer &ipcServer, IpcClientType clientType, bool useThread);
   IpcLogOutputter(IpcLogOutputter const &) = delete;
   virtual ~IpcLogOutputter();
 

@@ -21,18 +21,27 @@
 #include "deskflow/IAppUtil.h"
 #include "deskflow/XDeskflow.h"
 
-class AppUtil : public IAppUtil {
+class AppUtil : public IAppUtil
+{
 public:
   AppUtil();
   virtual ~AppUtil();
 
   virtual void adoptApp(IApp *app);
   IApp &app() const;
-  virtual void exitApp(int code) { throw XExitApp(code); }
+  virtual void exitApp(int code)
+  {
+    throw XExitApp(code);
+  }
 
   static AppUtil &instance();
-  static void exitAppStatic(int code) { instance().exitApp(code); }
-  virtual void beforeAppExit() {}
+  static void exitAppStatic(int code)
+  {
+    instance().exitApp(code);
+  }
+  virtual void beforeAppExit()
+  {
+  }
 
 private:
   IApp *m_app;

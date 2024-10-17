@@ -37,13 +37,13 @@ class XWindowsKeyState;
 class XWindowsScreenSaver;
 
 //! Implementation of IPlatformScreen for X11
-class XWindowsScreen : public PlatformScreen {
+class XWindowsScreen : public PlatformScreen
+{
 public:
   XWindowsScreen(
-      const char *displayName, bool isPrimary, bool disableXInitThreads,
-      int mouseScrollDelta, IEventQueue *events,
-      deskflow::ClientScrollDirection m_clientScrollDirection =
-          deskflow::ClientScrollDirection::SERVER);
+      const char *displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
+      deskflow::ClientScrollDirection m_clientScrollDirection = deskflow::ClientScrollDirection::SERVER
+  );
   virtual ~XWindowsScreen() override;
 
   //! @name manipulators
@@ -54,8 +54,7 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
+  void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
   void getCursorPos(SInt32 &x, SInt32 &y) const override;
 
   // IPrimaryScreen overrides
@@ -121,7 +120,8 @@ private:
   static int ioErrorHandler(Display *);
 
 private:
-  class KeyEventFilter {
+  class KeyEventFilter
+  {
   public:
     int m_event;
     Window m_window;
@@ -161,7 +161,8 @@ private:
   static Bool findKeyEvent(Display *, XEvent *xevent, XPointer arg);
 
 private:
-  struct HotKeyItem {
+  struct HotKeyItem
+  {
   public:
     HotKeyItem(int, unsigned int);
 

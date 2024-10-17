@@ -26,25 +26,29 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
-bool server_stubParseGenericArgs(int, const char *const *, int &) {
+bool server_stubParseGenericArgs(int, const char *const *, int &)
+{
   return false;
 }
 
-bool server_stubCheckUnexpectedArgs() { return false; }
+bool server_stubCheckUnexpectedArgs()
+{
+  return false;
+}
 
-TEST(ServerArgs, ServerArgs_will_construct_from_copy) {
+TEST(ServerArgs, ServerArgs_will_construct_from_copy)
+{
   deskflow::ServerArgs serverArgs;
   serverArgs.m_display = "display0";
   deskflow::ServerArgs serverArgs2{serverArgs};
   EXPECT_EQ(serverArgs.m_display, serverArgs2.m_display);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setDeskflowAddress) {
+TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setDeskflowAddress)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(server_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
   deskflow::ServerArgs serverArgs;
   const int argc = 3;
   const char *kAddressCmd[argc] = {"stub", "--address", "mock_address"};
@@ -54,12 +58,11 @@ TEST(ServerArgsParsingTests, parseServerArgs_addressArg_setDeskflowAddress) {
   EXPECT_EQ("mock_address", serverArgs.m_deskflowAddress);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile) {
+TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(server_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
   deskflow::ServerArgs serverArgs;
   const int argc = 3;
   const char *kConfigCmd[argc] = {"stub", "--config", "mock_configFile"};
@@ -69,12 +72,11 @@ TEST(ServerArgsParsingTests, parseServerArgs_configArg_setConfigFile) {
   EXPECT_EQ("mock_configFile", serverArgs.m_configFile);
 }
 
-TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams) {
+TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(server_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
   deskflow::ServerArgs serverArgs;
   const int argc = 2;
   std::array<const char *, argc> kUnknownCmd = {"stub", "--unknown"};

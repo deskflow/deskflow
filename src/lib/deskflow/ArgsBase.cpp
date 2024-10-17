@@ -19,7 +19,8 @@
 #include "ArgsBase.h"
 
 namespace deskflow {
-ArgsBase::~ArgsBase() {
+ArgsBase::~ArgsBase()
+{
   //
 }
 } // namespace deskflow

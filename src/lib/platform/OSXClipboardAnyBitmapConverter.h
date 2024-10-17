@@ -21,7 +21,8 @@
 #include "platform/OSXClipboard.h"
 
 //! Convert to/from some text encoding
-class OSXClipboardAnyBitmapConverter : public IOSXClipboardConverter {
+class OSXClipboardAnyBitmapConverter : public IOSXClipboardConverter
+{
 public:
   OSXClipboardAnyBitmapConverter();
   virtual ~OSXClipboardAnyBitmapConverter();

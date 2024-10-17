@@ -21,9 +21,12 @@
 
 class EventQueueTimer;
 
-class TestEventQueue : public EventQueue {
+class TestEventQueue : public EventQueue
+{
 public:
-  TestEventQueue() : m_pQuitTimeoutTimer(nullptr) {}
+  TestEventQueue() : m_pQuitTimeoutTimer(nullptr)
+  {
+  }
 
   void handleQuitTimeout(const Event &, void *vclient);
   void raiseQuitEvent();

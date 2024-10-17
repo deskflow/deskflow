@@ -29,7 +29,8 @@
 class IEventQueue;
 
 //! Implementation of IArchTaskBarReceiver for the deskflow server
-class ServerTaskBarReceiver : public IArchTaskBarReceiver {
+class ServerTaskBarReceiver : public IArchTaskBarReceiver
+{
 public:
   ServerTaskBarReceiver(IEventQueue *events);
   virtual ~ServerTaskBarReceiver();
@@ -43,7 +44,8 @@ public:
   */
   void updateStatus(Server *, const String &errorMsg);
 
-  void updateStatus(INode *n, const String &errorMsg) {
+  void updateStatus(INode *n, const String &errorMsg)
+  {
     updateStatus((Server *)n, errorMsg);
   }
 
@@ -60,7 +62,8 @@ public:
 
 protected:
   typedef std::vector<String> Clients;
-  enum EState {
+  enum EState
+  {
     kNotRunning,
     kNotWorking,
     kNotConnected,
@@ -97,5 +100,4 @@ private:
   IEventQueue *m_events;
 };
 
-IArchTaskBarReceiver *createTaskBarReceiver(
-    const BufferedLogOutputter *logBuffer, IEventQueue *events);
+IArchTaskBarReceiver *createTaskBarReceiver(const BufferedLogOutputter *logBuffer, IEventQueue *events);

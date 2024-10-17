@@ -27,20 +27,24 @@ void getDropData(IDataObject *pDataObject);
 
 MSWindowsDropTarget *MSWindowsDropTarget::s_instance = NULL;
 
-MSWindowsDropTarget::MSWindowsDropTarget() : m_refCount(1), m_allowDrop(false) {
+MSWindowsDropTarget::MSWindowsDropTarget() : m_refCount(1), m_allowDrop(false)
+{
   s_instance = this;
 }
 
-MSWindowsDropTarget::~MSWindowsDropTarget() {}
+MSWindowsDropTarget::~MSWindowsDropTarget()
+{
+}
 
-MSWindowsDropTarget &MSWindowsDropTarget::instance() {
+MSWindowsDropTarget &MSWindowsDropTarget::instance()
+{
   assert(s_instance != NULL);
   return *s_instance;
 }
 
 HRESULT
-MSWindowsDropTarget::DragEnter(
-    IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect) {
+MSWindowsDropTarget::DragEnter(IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect)
+{
   // check if data object contain drop
   m_allowDrop = queryDataObject(dataObject);
   if (m_allowDrop) {
@@ -53,41 +57,52 @@ MSWindowsDropTarget::DragEnter(
 }
 
 HRESULT
-MSWindowsDropTarget::DragOver(DWORD keyState, POINTL point, DWORD *effect) {
+MSWindowsDropTarget::DragOver(DWORD keyState, POINTL point, DWORD *effect)
+{
   *effect = DROPEFFECT_NONE;
 
   return S_OK;
 }
 
 HRESULT
-MSWindowsDropTarget::DragLeave(void) { return S_OK; }
+MSWindowsDropTarget::DragLeave(void)
+{
+  return S_OK;
+}
 
 HRESULT
-MSWindowsDropTarget::Drop(
-    IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect) {
+MSWindowsDropTarget::Drop(IDataObject *dataObject, DWORD keyState, POINTL point, DWORD *effect)
+{
   *effect = DROPEFFECT_NONE;
 
   return S_OK;
 }
 
-bool MSWindowsDropTarget::queryDataObject(IDataObject *dataObject) {
+bool MSWindowsDropTarget::queryDataObject(IDataObject *dataObject)
+{
   // check if it supports CF_HDROP using a HGLOBAL
   FORMATETC fmtetc = {CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 
   return dataObject->QueryGetData(&fmtetc) == S_OK ? true : false;
 }
 
-void MSWindowsDropTarget::setDraggingFilename(char *const filename) {
+void MSWindowsDropTarget::setDraggingFilename(char *const filename)
+{
   m_dragFilename = filename;
 }
 
-std::string MSWindowsDropTarget::getDraggingFilename() {
+std::string MSWindowsDropTarget::getDraggingFilename()
+{
   return m_dragFilename;
 }
 
-void MSWindowsDropTarget::clearDraggingFilename() { m_dragFilename.clear(); }
+void MSWindowsDropTarget::clearDraggingFilename()
+{
+  m_dragFilename.clear();
+}
 
-void getDropData(IDataObject *dataObject) {
+void getDropData(IDataObject *dataObject)
+{
   // construct a FORMATETC object
   FORMATETC fmtEtc = {CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
   STGMEDIUM stgMed;
@@ -120,8 +135,8 @@ void getDropData(IDataObject *dataObject) {
   }
 }
 
-HRESULT __stdcall MSWindowsDropTarget::QueryInterface(
-    REFIID iid, void **object) {
+HRESULT __stdcall MSWindowsDropTarget::QueryInterface(REFIID iid, void **object)
+{
   if (iid == IID_IDropTarget || iid == IID_IUnknown) {
     AddRef();
     *object = this;
@@ -132,11 +147,13 @@ HRESULT __stdcall MSWindowsDropTarget::QueryInterface(
   }
 }
 
-ULONG __stdcall MSWindowsDropTarget::AddRef(void) {
+ULONG __stdcall MSWindowsDropTarget::AddRef(void)
+{
   return InterlockedIncrement(&m_refCount);
 }
 
-ULONG __stdcall MSWindowsDropTarget::Release(void) {
+ULONG __stdcall MSWindowsDropTarget::Release(void)
+{
   LONG count = InterlockedDecrement(&m_refCount);
 
   if (count == 0) {

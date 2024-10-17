@@ -18,7 +18,8 @@
 #pragma once
 #include "net/NetworkAddress.h"
 
-class AutoArchSocket {
+class AutoArchSocket
+{
 public:
   explicit AutoArchSocket(IArchNetwork::EAddressFamily family);
   ~AutoArchSocket();

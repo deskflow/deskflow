@@ -27,7 +27,8 @@ namespace deskflow::gui {
  * @brief Detects dark mode depending on Qt version.
  * https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5
  */
-inline bool isDarkMode() {
+inline bool isDarkMode()
+{
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   const auto scheme = QGuiApplication::styleHints()->colorScheme();
   return scheme == Qt::ColorScheme::Dark;

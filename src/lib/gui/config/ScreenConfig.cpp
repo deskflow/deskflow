@@ -18,12 +18,10 @@
 
 #include "ScreenConfig.h"
 
-const char *ScreenConfig::m_ModifierNames[] = {"shift", "ctrl",  "alt",
-                                               "meta",  "super", "none"};
+const char *ScreenConfig::m_ModifierNames[] = {"shift", "ctrl", "alt", "meta", "super", "none"};
 
 const char *ScreenConfig::m_FixNames[] = {
-    "halfDuplexCapsLock", "halfDuplexNumLock", "halfDuplexScrollLock",
-    "xtestIsXineramaUnaware"};
+    "halfDuplexCapsLock", "halfDuplexNumLock", "halfDuplexScrollLock", "xtestIsXineramaUnaware"
+};
 
-const char *ScreenConfig::m_SwitchCornerNames[] = {
-    "top-left", "top-right", "bottom-left", "bottom-right"};
+const char *ScreenConfig::m_SwitchCornerNames[] = {"top-left", "top-right", "bottom-left", "bottom-right"};

@@ -22,18 +22,18 @@
 // FunctionEventJob
 //
 
-FunctionEventJob::FunctionEventJob(
-    void (*func)(const Event &, void *), void *arg)
-    : m_func(func),
-      m_arg(arg) {
+FunctionEventJob::FunctionEventJob(void (*func)(const Event &, void *), void *arg) : m_func(func), m_arg(arg)
+{
   // do nothing
 }
 
-FunctionEventJob::~FunctionEventJob() {
+FunctionEventJob::~FunctionEventJob()
+{
   // do nothing
 }
 
-void FunctionEventJob::run(const Event &event) {
+void FunctionEventJob::run(const Event &event)
+{
   if (m_func != NULL) {
     m_func(event, m_arg);
   }

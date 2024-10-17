@@ -26,7 +26,8 @@
 #define ARCH_LOG ArchLogWindows
 
 //! Win32 implementation of IArchLog
-class ArchLogWindows : public IArchLog {
+class ArchLogWindows : public IArchLog
+{
 public:
   ArchLogWindows();
   virtual ~ArchLogWindows();

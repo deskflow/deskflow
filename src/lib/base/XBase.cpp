@@ -27,21 +27,24 @@
 // XBase
 //
 
-XBase::XBase() : std::runtime_error("") {
+XBase::XBase() : std::runtime_error("")
+{
   // do nothing
 }
 
-XBase::XBase(const String &msg) : std::runtime_error(msg) {
+XBase::XBase(const String &msg) : std::runtime_error(msg)
+{
   // do nothing
 }
 
-XBase::~XBase() _NOEXCEPT {
+XBase::~XBase() _NOEXCEPT
+{
   // do nothing
 }
 
-const char *XBase::what() const _NOEXCEPT {
-  if (const char *what = std::runtime_error::what();
-      what != nullptr && what[0] != '\0') {
+const char *XBase::what() const _NOEXCEPT
+{
+  if (const char *what = std::runtime_error::what(); what != nullptr && what[0] != '\0') {
     return what;
   }
 
@@ -49,7 +52,8 @@ const char *XBase::what() const _NOEXCEPT {
   return m_what.c_str();
 }
 
-String XBase::format(const char * /*id*/, const char *fmt, ...) const throw() {
+String XBase::format(const char * /*id*/, const char *fmt, ...) const throw()
+{
   // FIXME -- lookup message string using id as an index.  set
   // fmt to that string if it exists.
 

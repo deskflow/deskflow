@@ -24,11 +24,18 @@
 #include <Windows.h>
 
 //! Lazy error message string evaluation for windows
-class XArchEvalWindows : public XArchEval {
+class XArchEvalWindows : public XArchEval
+{
 public:
-  XArchEvalWindows() : m_error(GetLastError()) {}
-  XArchEvalWindows(DWORD error) : m_error(error) {}
-  virtual ~XArchEvalWindows() {}
+  XArchEvalWindows() : m_error(GetLastError())
+  {
+  }
+  XArchEvalWindows(DWORD error) : m_error(error)
+  {
+  }
+  virtual ~XArchEvalWindows()
+  {
+  }
 
   virtual std::string eval() const throw();
 
@@ -37,10 +44,15 @@ private:
 };
 
 //! Lazy error message string evaluation for winsock
-class XArchEvalWinsock : public XArchEval {
+class XArchEvalWinsock : public XArchEval
+{
 public:
-  XArchEvalWinsock(int error) : m_error(error) {}
-  virtual ~XArchEvalWinsock() {}
+  XArchEvalWinsock(int error) : m_error(error)
+  {
+  }
+  virtual ~XArchEvalWinsock()
+  {
+  }
 
   virtual std::string eval() const throw();
 

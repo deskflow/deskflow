@@ -39,7 +39,8 @@ const auto kHasPortalInputCapture = true;
 const auto kHasPortalInputCapture = false;
 #endif
 
-inline bool isWayland() {
+inline bool isWayland()
+{
   const auto session = getenv("XDG_SESSION_TYPE");
   return session != nullptr && std::string(session) == "wayland";
 }

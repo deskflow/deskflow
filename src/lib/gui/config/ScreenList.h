@@ -19,7 +19,8 @@
 
 #include "Screen.h"
 
-class ScreenList : public QList<Screen> {
+class ScreenList : public QList<Screen>
+{
   int m_width = 5;
 
 public:

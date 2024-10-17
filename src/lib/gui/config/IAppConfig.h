@@ -25,9 +25,14 @@
 
 namespace deskflow::gui {
 
-enum class ProcessMode { kService, kDesktop };
+enum class ProcessMode
+{
+  kService,
+  kDesktop
+};
 
-class IAppConfig {
+class IAppConfig
+{
   using IConfigScopes = deskflow::gui::IConfigScopes;
 
 public:

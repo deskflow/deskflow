@@ -22,7 +22,8 @@
 
 namespace deskflow::gui::env_vars {
 
-inline QString versionUrl() {
+inline QString versionUrl()
+{
   if (QString(DESKFLOW_VERSION_URL).isEmpty()) {
     qFatal("version url is not set");
   }

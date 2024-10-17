@@ -38,7 +38,8 @@ class ConfigReadContext;
 class IEventQueue;
 
 namespace std {
-template <> struct iterator_traits<deskflow::server::Config> {
+template <> struct iterator_traits<deskflow::server::Config>
+{
   typedef String value_type;
   typedef ptrdiff_t difference_type;
   typedef bidirectional_iterator_tag iterator_category;
@@ -59,12 +60,14 @@ Note that case is preserved in screen names but is ignored when
 comparing names.  Screen names and their aliases share a
 namespace and must be unique.
 */
-class Config {
+class Config
+{
 public:
   typedef std::map<OptionID, OptionValue> ScreenOptions;
   typedef std::pair<float, float> Interval;
 
-  class CellEdge {
+  class CellEdge
+  {
   public:
     CellEdge(EDirection side, float position);
     CellEdge(EDirection side, const Interval &);
@@ -101,7 +104,8 @@ public:
   };
 
 private:
-  class Name {
+  class Name
+  {
   public:
     Name(Config *, const String &name);
 
@@ -112,7 +116,8 @@ private:
     String m_name;
   };
 
-  class Cell {
+  class Cell
+  {
   private:
     typedef std::map<CellEdge, CellEdge> EdgeLinks;
 
@@ -128,9 +133,7 @@ private:
     bool hasEdge(const CellEdge &) const;
     bool overlaps(const CellEdge &) const;
 
-    bool getLink(
-        EDirection side, float position, const CellEdge *&src,
-        const CellEdge *&dst) const;
+    bool getLink(EDirection side, float position, const CellEdge *&src, const CellEdge *&dst) const;
 
     bool operator==(const Cell &) const;
     bool operator!=(const Cell &) const;
@@ -151,31 +154,57 @@ public:
   typedef Cell::const_iterator link_const_iterator;
   typedef CellMap::const_iterator internal_const_iterator;
   typedef NameMap::const_iterator all_const_iterator;
-  class const_iterator : std::iterator_traits<Config> {
+  class const_iterator : std::iterator_traits<Config>
+  {
   public:
-    explicit const_iterator() : m_i() {}
-    explicit const_iterator(const internal_const_iterator &i) : m_i(i) {}
+    explicit const_iterator() : m_i()
+    {
+    }
+    explicit const_iterator(const internal_const_iterator &i) : m_i(i)
+    {
+    }
     const_iterator(const const_iterator &src) = default;
     ~const_iterator() = default;
 
-    const_iterator &operator=(const const_iterator &i) {
+    const_iterator &operator=(const const_iterator &i)
+    {
       m_i = i.m_i;
       return *this;
     }
-    String operator*() { return m_i->first; }
-    const String *operator->() { return &(m_i->first); }
-    const_iterator &operator++() {
+    String operator*()
+    {
+      return m_i->first;
+    }
+    const String *operator->()
+    {
+      return &(m_i->first);
+    }
+    const_iterator &operator++()
+    {
       ++m_i;
       return *this;
     }
-    const_iterator operator++(int) { return const_iterator(m_i++); }
-    const_iterator &operator--() {
+    const_iterator operator++(int)
+    {
+      return const_iterator(m_i++);
+    }
+    const_iterator &operator--()
+    {
       --m_i;
       return *this;
     }
-    const_iterator operator--(int) { return const_iterator(m_i--); }
-    bool operator==(const const_iterator &i) const { return (m_i == i.m_i); }
-    bool operator!=(const const_iterator &i) const { return (m_i != i.m_i); }
+    const_iterator operator--(int)
+    {
+      return const_iterator(m_i--);
+    }
+    bool operator==(const const_iterator &i) const
+    {
+      return (m_i == i.m_i);
+    }
+    bool operator!=(const const_iterator &i) const
+    {
+      return (m_i != i.m_i);
+    }
 
   private:
     internal_const_iterator m_i;
@@ -185,7 +214,9 @@ public:
   virtual ~Config();
 
 #ifdef TEST_ENV
-  Config() : m_inputFilter(NULL) {}
+  Config() : m_inputFilter(NULL)
+  {
+  }
 #endif
 
   //! @name manipulators
@@ -265,8 +296,9 @@ public:
   be inside the range [0,1].
   */
   bool connect(
-      const String &srcName, EDirection srcSide, float srcStart, float srcEnd,
-      const String &dstName, float dstStart, float dstEnd);
+      const String &srcName, EDirection srcSide, float srcStart, float srcEnd, const String &dstName, float dstStart,
+      float dstEnd
+  );
 
   //! Disconnect screens
   /*!
@@ -367,8 +399,7 @@ public:
   saves the position on the neighbor in \c positionOut if it's not
   \c NULL.
   */
-  String getNeighbor(
-      const String &, EDirection, float position, float *positionOut) const;
+  String getNeighbor(const String &, EDirection, float position, float *positionOut) const;
 
   //! Check for neighbor
   /*!
@@ -464,15 +495,12 @@ private:
   void readSectionLinks(ConfigReadContext &);
   void readSectionAliases(ConfigReadContext &);
 
-  InputFilter::Condition *parseCondition(
-      ConfigReadContext &, const String &condition,
-      const std::vector<String> &args);
+  InputFilter::Condition *parseCondition(ConfigReadContext &, const String &condition, const std::vector<String> &args);
   void parseAction(
-      ConfigReadContext &, const String &action,
-      const std::vector<String> &args, InputFilter::Rule &, bool activate);
+      ConfigReadContext &, const String &action, const std::vector<String> &args, InputFilter::Rule &, bool activate
+  );
 
-  void parseScreens(
-      ConfigReadContext &, const String &, std::set<String> &screens) const;
+  void parseScreens(ConfigReadContext &, const String &, std::set<String> &screens) const;
   static const char *getOptionName(OptionID);
   static String getOptionValue(OptionID, OptionValue);
 
@@ -491,7 +519,8 @@ private:
 /*!
 Maintains a context when reading a configuration from a stream.
 */
-class ConfigReadContext {
+class ConfigReadContext
+{
 public:
   typedef std::vector<String> ArgList;
 
@@ -510,14 +539,16 @@ public:
   OptionValue parseCorners(const String &) const;
   Config::Interval parseInterval(const ArgList &args) const;
   void parseNameWithArgs(
-      const String &type, const String &line, const String &delim,
-      String::size_type &index, String &name, ArgList &args) const;
+      const String &type, const String &line, const String &delim, String::size_type &index, String &name, ArgList &args
+  ) const;
   IPlatformScreen::KeyInfo *parseKeystroke(const String &keystroke) const;
-  IPlatformScreen::KeyInfo *parseKeystroke(
-      const String &keystroke, const std::set<String> &screens) const;
+  IPlatformScreen::KeyInfo *parseKeystroke(const String &keystroke, const std::set<String> &screens) const;
   IPlatformScreen::ButtonInfo *parseMouse(const String &mouse) const;
   KeyModifierMask parseModifier(const String &modifiers) const;
-  std::istream &getStream() const { return m_stream; };
+  std::istream &getStream() const
+  {
+    return m_stream;
+  };
 
 private:
   // not implemented
@@ -534,12 +565,11 @@ private:
 /*!
 Thrown when a configuration stream cannot be parsed.
 */
-class XConfigRead : public XBase {
+class XConfigRead : public XBase
+{
 public:
   XConfigRead(const ConfigReadContext &context, const String &);
-  XConfigRead(
-      const ConfigReadContext &context, const char *errorFmt,
-      const String &arg);
+  XConfigRead(const ConfigReadContext &context, const char *errorFmt, const String &arg);
   virtual ~XConfigRead() _NOEXCEPT;
 
 protected:

@@ -23,7 +23,8 @@
 #define ARCH_TASKBAR ArchTaskBarXWindows
 
 //! X11 implementation of IArchTaskBar
-class ArchTaskBarXWindows : public IArchTaskBar {
+class ArchTaskBarXWindows : public IArchTaskBar
+{
 public:
   ArchTaskBarXWindows();
   virtual ~ArchTaskBarXWindows();

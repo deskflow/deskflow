@@ -21,7 +21,8 @@
 #include "IpcMessage.h"
 #include <string>
 
-class IpcSettingMessage : public IpcMessage {
+class IpcSettingMessage : public IpcMessage
+{
 public:
   //!
   //! \brief IpcSettingMessage constructor

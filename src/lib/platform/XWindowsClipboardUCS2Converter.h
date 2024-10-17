@@ -21,7 +21,8 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from UCS-2 encoding
-class XWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
+class XWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter
+{
 public:
   /*!
   \c name is converted to an atom and that is reported by getAtom().

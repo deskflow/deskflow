@@ -20,24 +20,29 @@
 #include "arch/Arch.h"
 #include "base/Stopwatch.h"
 
-class EventQueueTimer {};
+class EventQueueTimer
+{
+};
 
 //
 // SimpleEventQueueBuffer
 //
 
-SimpleEventQueueBuffer::SimpleEventQueueBuffer() {
+SimpleEventQueueBuffer::SimpleEventQueueBuffer()
+{
   m_queueMutex = ARCH->newMutex();
   m_queueReadyCond = ARCH->newCondVar();
   m_queueReady = false;
 }
 
-SimpleEventQueueBuffer::~SimpleEventQueueBuffer() {
+SimpleEventQueueBuffer::~SimpleEventQueueBuffer()
+{
   ARCH->closeCondVar(m_queueReadyCond);
   ARCH->closeMutex(m_queueMutex);
 }
 
-void SimpleEventQueueBuffer::waitForEvent(double timeout) {
+void SimpleEventQueueBuffer::waitForEvent(double timeout)
+{
   ArchMutexLock lock(m_queueMutex);
   Stopwatch timer(true);
   while (!m_queueReady) {
@@ -52,8 +57,8 @@ void SimpleEventQueueBuffer::waitForEvent(double timeout) {
   }
 }
 
-IEventQueueBuffer::Type
-SimpleEventQueueBuffer::getEvent(Event &, UInt32 &dataID) {
+IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event &, UInt32 &dataID)
+{
   ArchMutexLock lock(m_queueMutex);
   if (!m_queueReady) {
     return kNone;
@@ -64,7 +69,8 @@ SimpleEventQueueBuffer::getEvent(Event &, UInt32 &dataID) {
   return kUser;
 }
 
-bool SimpleEventQueueBuffer::addEvent(UInt32 dataID) {
+bool SimpleEventQueueBuffer::addEvent(UInt32 dataID)
+{
   ArchMutexLock lock(m_queueMutex);
   m_queue.push_front(dataID);
   if (!m_queueReady) {
@@ -74,15 +80,18 @@ bool SimpleEventQueueBuffer::addEvent(UInt32 dataID) {
   return true;
 }
 
-bool SimpleEventQueueBuffer::isEmpty() const {
+bool SimpleEventQueueBuffer::isEmpty() const
+{
   ArchMutexLock lock(m_queueMutex);
   return !m_queueReady;
 }
 
-EventQueueTimer *SimpleEventQueueBuffer::newTimer(double, bool) const {
+EventQueueTimer *SimpleEventQueueBuffer::newTimer(double, bool) const
+{
   return new EventQueueTimer;
 }
 
-void SimpleEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
+void SimpleEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
+{
   delete timer;
 }

@@ -23,7 +23,8 @@
 #include <QNetworkRequest>
 #include <QObject>
 
-class DataDownloader : public QObject {
+class DataDownloader : public QObject
+{
   Q_OBJECT
 
 public:
@@ -33,7 +34,10 @@ public:
   QByteArray data() const;
   void cancel();
   void download(QUrl url);
-  bool isFinished() const { return m_IsFinished; }
+  bool isFinished() const
+  {
+    return m_IsFinished;
+  }
 
 signals:
   void isComplete();

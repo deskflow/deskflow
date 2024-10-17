@@ -26,18 +26,18 @@
 class QWidget;
 class QString;
 
-class AboutDialog : public QDialog, public Ui::AboutDialogBase {
+class AboutDialog : public QDialog, public Ui::AboutDialogBase
+{
   Q_OBJECT
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
     virtual bool isDarkMode() const;
   };
 
-  explicit AboutDialog(
-      QMainWindow *parent,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+  explicit AboutDialog(QMainWindow *parent, std::shared_ptr<Deps> deps = std::make_shared<Deps>());
   int exec() override;
 
 private:

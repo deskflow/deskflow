@@ -29,7 +29,8 @@
 // Thread
 //
 
-Thread::Thread(IJob *job) {
+Thread::Thread(IJob *job)
+{
   m_thread = ARCH->newThread(&Thread::threadFunc, job);
   if (m_thread == NULL) {
     // couldn't create thread
@@ -38,15 +39,23 @@ Thread::Thread(IJob *job) {
   }
 }
 
-Thread::Thread(const Thread &thread) {
+Thread::Thread(const Thread &thread)
+{
   m_thread = ARCH->copyThread(thread.m_thread);
 }
 
-Thread::Thread(ArchThread adoptedThread) { m_thread = adoptedThread; }
+Thread::Thread(ArchThread adoptedThread)
+{
+  m_thread = adoptedThread;
+}
 
-Thread::~Thread() { ARCH->closeThread(m_thread); }
+Thread::~Thread()
+{
+  ARCH->closeThread(m_thread);
+}
 
-Thread &Thread::operator=(const Thread &thread) {
+Thread &Thread::operator=(const Thread &thread)
+{
   // copy given thread and release ours
   ArchThread copy = ARCH->copyThread(thread.m_thread);
   ARCH->closeThread(m_thread);
@@ -57,42 +66,66 @@ Thread &Thread::operator=(const Thread &thread) {
   return *this;
 }
 
-void Thread::exit(void *result) { throw XThreadExit(result); }
+void Thread::exit(void *result)
+{
+  throw XThreadExit(result);
+}
 
-void Thread::cancel() { ARCH->cancelThread(m_thread); }
+void Thread::cancel()
+{
+  ARCH->cancelThread(m_thread);
+}
 
-void Thread::setPriority(int n) { ARCH->setPriorityOfThread(m_thread, n); }
+void Thread::setPriority(int n)
+{
+  ARCH->setPriorityOfThread(m_thread, n);
+}
 
-void Thread::unblockPollSocket() { ARCH->unblockPollSocket(m_thread); }
+void Thread::unblockPollSocket()
+{
+  ARCH->unblockPollSocket(m_thread);
+}
 
-Thread Thread::getCurrentThread() { return Thread(ARCH->newCurrentThread()); }
+Thread Thread::getCurrentThread()
+{
+  return Thread(ARCH->newCurrentThread());
+}
 
-void Thread::testCancel() { ARCH->testCancelThread(); }
+void Thread::testCancel()
+{
+  ARCH->testCancelThread();
+}
 
-bool Thread::wait(double timeout) const {
+bool Thread::wait(double timeout) const
+{
   return ARCH->wait(m_thread, timeout);
 }
 
-void *Thread::getResult() const {
+void *Thread::getResult() const
+{
   if (wait())
     return ARCH->getResultOfThread(m_thread);
   else
     return NULL;
 }
 
-IArchMultithread::ThreadID Thread::getID() const {
+IArchMultithread::ThreadID Thread::getID() const
+{
   return ARCH->getIDOfThread(m_thread);
 }
 
-bool Thread::operator==(const Thread &thread) const {
+bool Thread::operator==(const Thread &thread) const
+{
   return ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-bool Thread::operator!=(const Thread &thread) const {
+bool Thread::operator!=(const Thread &thread) const
+{
   return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-void *Thread::threadFunc(void *vjob) {
+void *Thread::threadFunc(void *vjob)
+{
   // get this thread's id for logging
   IArchMultithread::ThreadID id;
   {

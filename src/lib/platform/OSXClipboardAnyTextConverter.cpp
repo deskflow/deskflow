@@ -24,33 +24,45 @@
 // OSXClipboardAnyTextConverter
 //
 
-OSXClipboardAnyTextConverter::OSXClipboardAnyTextConverter() {
+OSXClipboardAnyTextConverter::OSXClipboardAnyTextConverter()
+{
   // do nothing
 }
 
-OSXClipboardAnyTextConverter::~OSXClipboardAnyTextConverter() {
+OSXClipboardAnyTextConverter::~OSXClipboardAnyTextConverter()
+{
   // do nothing
 }
 
-IClipboard::EFormat OSXClipboardAnyTextConverter::getFormat() const {
+IClipboard::EFormat OSXClipboardAnyTextConverter::getFormat() const
+{
   return IClipboard::kText;
 }
 
-String OSXClipboardAnyTextConverter::fromIClipboard(const String &data) const {
+String OSXClipboardAnyTextConverter::fromIClipboard(const String &data) const
+{
   // convert linefeeds and then convert to desired encoding
   return doFromIClipboard(convertLinefeedToMacOS(data));
 }
 
-String OSXClipboardAnyTextConverter::toIClipboard(const String &data) const {
+String OSXClipboardAnyTextConverter::toIClipboard(const String &data) const
+{
   // convert text then newlines
   return convertLinefeedToUnix(doToIClipboard(data));
 }
 
-static bool isLF(char ch) { return (ch == '\n'); }
+static bool isLF(char ch)
+{
+  return (ch == '\n');
+}
 
-static bool isCR(char ch) { return (ch == '\r'); }
+static bool isCR(char ch)
+{
+  return (ch == '\r');
+}
 
-String OSXClipboardAnyTextConverter::convertLinefeedToMacOS(const String &src) {
+String OSXClipboardAnyTextConverter::convertLinefeedToMacOS(const String &src)
+{
   // note -- we assume src is a valid UTF-8 string
   String copy = src;
 
@@ -59,7 +71,8 @@ String OSXClipboardAnyTextConverter::convertLinefeedToMacOS(const String &src) {
   return copy;
 }
 
-String OSXClipboardAnyTextConverter::convertLinefeedToUnix(const String &src) {
+String OSXClipboardAnyTextConverter::convertLinefeedToUnix(const String &src)
+{
   String copy = src;
 
   std::replace_if(copy.begin(), copy.end(), isCR, '\n');

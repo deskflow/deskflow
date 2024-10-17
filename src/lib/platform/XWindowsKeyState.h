@@ -42,14 +42,18 @@ class IEventQueue;
 /*!
 A key state for X Windows.
 */
-class XWindowsKeyState : public KeyState {
+class XWindowsKeyState : public KeyState
+{
 public:
   typedef std::vector<int> KeycodeList;
-  enum { kGroupPoll = -1, kGroupPollAndSet = -2 };
+  enum
+  {
+    kGroupPoll = -1,
+    kGroupPollAndSet = -2
+  };
 
   XWindowsKeyState(Display *, bool useXKB, IEventQueue *events);
-  XWindowsKeyState(
-      Display *, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap);
+  XWindowsKeyState(Display *, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap);
   ~XWindowsKeyState();
 
   //! @name modifiers
@@ -124,11 +128,11 @@ private:
   */
   bool setCurrentLanguageWithDBus(SInt32 group) const;
 
-  static void
-  remapKeyModifiers(KeyID, SInt32, deskflow::KeyMap::KeyItem &, void *);
+  static void remapKeyModifiers(KeyID, SInt32, deskflow::KeyMap::KeyItem &, void *);
 
 private:
-  struct XKBModifierInfo {
+  struct XKBModifierInfo
+  {
   public:
     unsigned char m_level;
     UInt32 m_mask;
@@ -168,8 +172,17 @@ private:
 
 #ifdef TEST_ENV
 public:
-  SInt32 group() const { return m_group; }
-  void group(const SInt32 &group) { m_group = group; }
-  KeyModifierMaskList modifierFromX() const { return m_modifierFromX; }
+  SInt32 group() const
+  {
+    return m_group;
+  }
+  void group(const SInt32 &group)
+  {
+    m_group = group;
+  }
+  KeyModifierMaskList modifierFromX() const
+  {
+    return m_modifierFromX;
+  }
 #endif
 };

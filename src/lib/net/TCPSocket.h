@@ -34,14 +34,14 @@ class SocketMultiplexer;
 /*!
 A data socket using TCP.
 */
-class TCPSocket : public IDataSocket {
+class TCPSocket : public IDataSocket
+{
 public:
   TCPSocket(
       IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
-  TCPSocket(
-      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-      ArchSocket socket);
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET
+  );
+  TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket);
   TCPSocket(TCPSocket const &) = delete;
   TCPSocket(TCPSocket &&) = delete;
   virtual ~TCPSocket();
@@ -70,23 +70,39 @@ public:
   virtual ISocketMultiplexerJob *newJob();
 
 protected:
-  enum EJobResult {
+  enum EJobResult
+  {
     kBreak = -1, //!< Break the Job chain
     kRetry,      //!< Retry the same job
     kNew         //!< Require a new job
   };
 
-  ArchSocket getSocket() { return m_socket; }
-  IEventQueue *getEvents() { return m_events; }
+  ArchSocket getSocket()
+  {
+    return m_socket;
+  }
+  IEventQueue *getEvents()
+  {
+    return m_events;
+  }
   virtual EJobResult doRead();
   virtual EJobResult doWrite();
 
   void setJob(ISocketMultiplexerJob *);
 
-  bool isReadable() { return m_readable; }
-  bool isWritable() { return m_writable; }
+  bool isReadable()
+  {
+    return m_readable;
+  }
+  bool isWritable()
+  {
+    return m_writable;
+  }
 
-  Mutex &getMutex() { return m_mutex; }
+  Mutex &getMutex()
+  {
+    return m_mutex;
+  }
 
   void sendEvent(Event::Type);
   void discardWrittenData(int bytesWrote);
@@ -100,10 +116,8 @@ private:
   void onOutputShutdown();
   void onDisconnected();
 
-  ISocketMultiplexerJob *
-  serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
-  ISocketMultiplexerJob *
-  serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   bool m_readable;

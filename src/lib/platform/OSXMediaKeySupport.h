@@ -23,12 +23,12 @@
 #include "deskflow/key_types.h"
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
-bool fakeNativeMediaKey(KeyID id);
-bool isMediaKeyEvent(CGEventRef event);
-bool getMediaKeyEventInfo(
-    CGEventRef event, KeyID *keyId, bool *down, bool *isRepeat);
+  bool fakeNativeMediaKey(KeyID id);
+  bool isMediaKeyEvent(CGEventRef event);
+  bool getMediaKeyEventInfo(CGEventRef event, KeyID *keyId, bool *down, bool *isRepeat);
 #if defined(__cplusplus)
 }
 #endif

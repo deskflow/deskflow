@@ -21,7 +21,8 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from locale text encoding
-class XWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
+class XWindowsClipboardTextConverter : public IXWindowsClipboardConverter
+{
 public:
   /*!
   \c name is converted to an atom and that is reported by getAtom().

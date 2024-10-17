@@ -32,7 +32,10 @@ using namespace deskflow::gui;
 // AboutDialog::Deps
 //
 
-bool AboutDialog::Deps::isDarkMode() const { return ::isDarkMode(); }
+bool AboutDialog::Deps::isDarkMode() const
+{
+  return ::isDarkMode();
+}
 
 //
 // AboutDialog
@@ -41,7 +44,8 @@ bool AboutDialog::Deps::isDarkMode() const { return ::isDarkMode(); }
 AboutDialog::AboutDialog(QMainWindow *parent, std::shared_ptr<Deps> deps)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::AboutDialogBase(),
-      m_pDeps(deps) {
+      m_pDeps(deps)
+{
 
   setupUi(this);
 
@@ -54,13 +58,13 @@ AboutDialog::AboutDialog(QMainWindow *parent, std::shared_ptr<Deps> deps)
   QString buildDateString = QString::fromLocal8Bit(BUILD_DATE).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "yyyy-MM-dd");
   m_pLabelBuildDate->setTextInteractionFlags(Qt::TextSelectableByMouse);
-  m_pLabelBuildDate->setText(
-      buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
+  m_pLabelBuildDate->setText(buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
 
   this->setWindowTitle(QString("About %1").arg(DESKFLOW_APP_NAME));
 }
 
-int AboutDialog::exec() {
+int AboutDialog::exec()
+{
   m_pDevelopersLabel->setText(importantDevelopers());
   m_pCopyrightLabel->setText(QString::fromStdString(deskflow::copyright()));
   updateLogo();
@@ -68,7 +72,8 @@ int AboutDialog::exec() {
   return QDialog::exec();
 }
 
-void AboutDialog::setLogo(const char *const &filename) const {
+void AboutDialog::setLogo(const char *const &filename) const
+{
   QPixmap logo(filename);
   if (!logo.isNull()) {
     m_pLabel_Logo->setPixmap(logo);
@@ -77,7 +82,8 @@ void AboutDialog::setLogo(const char *const &filename) const {
   }
 }
 
-void AboutDialog::updateLogo() const {
+void AboutDialog::updateLogo() const
+{
   if (m_pDeps->isDarkMode()) {
     qDebug("showing dark logo");
     setLogo(":/image/logo-dark.png");
@@ -87,7 +93,8 @@ void AboutDialog::updateLogo() const {
   }
 }
 
-QString AboutDialog::importantDevelopers() const {
+QString AboutDialog::importantDevelopers() const
+{
   QStringList awesomePeople;
   awesomePeople
 

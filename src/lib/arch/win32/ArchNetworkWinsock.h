@@ -37,7 +37,8 @@
 
 #define ARCH_NETWORK ArchNetworkWinsock
 
-class ArchSocketImpl {
+class ArchSocketImpl
+{
 public:
   SOCKET m_socket;
   int m_refCount;
@@ -45,7 +46,8 @@ public:
   bool m_pollWrite;
 };
 
-class ArchNetAddressImpl {
+class ArchNetAddressImpl
+{
 public:
   static ArchNetAddressImpl *alloc(size_t);
 
@@ -57,7 +59,8 @@ public:
 #define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_ *>(&addr_->m_addr))
 
 //! Win32 implementation of IArchNetwork
-class ArchNetworkWinsock : public IArchNetwork {
+class ArchNetworkWinsock : public IArchNetwork
+{
 public:
   ArchNetworkWinsock();
   virtual ~ArchNetworkWinsock();

@@ -46,7 +46,8 @@ const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 // free functions
 //
 
-QString processModeToString(ProcessMode mode) {
+QString processModeToString(ProcessMode mode)
+{
   using enum ProcessMode;
 
   switch (mode) {
@@ -60,7 +61,8 @@ QString processModeToString(ProcessMode mode) {
   }
 }
 
-QString processStateToString(CoreProcess::ProcessState state) {
+QString processStateToString(CoreProcess::ProcessState state)
+{
   using enum CoreProcess::ProcessState;
 
   switch (state) {
@@ -88,7 +90,8 @@ QString processStateToString(CoreProcess::ProcessState state) {
  * Can also be used to create a representation of a command that can be pasted
  * into a terminal.
  */
-QString makeQuotedArgs(const QString &app, const QStringList &args) {
+QString makeQuotedArgs(const QString &app, const QStringList &args)
+{
   QStringList command;
   command << app;
   command << args;
@@ -108,7 +111,8 @@ QString makeQuotedArgs(const QString &app, const QStringList &args) {
 /**
  * @brief If IPv6, ensures the IP is surround in square brackets.
  */
-QString wrapIpv6(const QString &address) {
+QString wrapIpv6(const QString &address)
+{
   if (!address.contains(':') || address.isEmpty()) {
     return address;
   }
@@ -130,16 +134,19 @@ QString wrapIpv6(const QString &address) {
 // CoreProcess::Deps
 //
 
-QString CoreProcess::Deps::appPath(const QString &name) const {
+QString CoreProcess::Deps::appPath(const QString &name) const
+{
   QDir dir(QCoreApplication::applicationDirPath());
   return dir.filePath(name);
 }
 
-bool CoreProcess::Deps::fileExists(const QString &path) const {
+bool CoreProcess::Deps::fileExists(const QString &path) const
+{
   return QFile::exists(path);
 }
 
-QString CoreProcess::Deps::getProfileRoot() const {
+QString CoreProcess::Deps::getProfileRoot() const
+{
   CoreTool coreTool;
   QDir appDir = coreTool.getProfileDir();
 
@@ -155,32 +162,31 @@ QString CoreProcess::Deps::getProfileRoot() const {
 // CoreProcess
 //
 
-CoreProcess::CoreProcess(
-    const IAppConfig &appConfig, const IServerConfig &serverConfig,
-    std::shared_ptr<Deps> deps)
+CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig),
-      m_pDeps(deps) {
+      m_pDeps(deps)
+{
 
   connect(
       &m_pDeps->ipcClient(), &QIpcClient::read, this, //
-      &CoreProcess::onIpcClientRead);
+      &CoreProcess::onIpcClientRead
+  );
 
   connect(
       &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
-      &CoreProcess::onIpcClientServiceReady);
+      &CoreProcess::onIpcClientServiceReady
+  );
+
+  connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
 
   connect(
-      &m_pDeps->process(), &QProcessProxy::finished, this,
-      &CoreProcess::onProcessFinished);
+      &m_pDeps->process(), &QProcessProxy::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput
+  );
 
   connect(
-      &m_pDeps->process(), &QProcessProxy::readyReadStandardOutput, this,
-      &CoreProcess::onProcessReadyReadStandardOutput);
-
-  connect(
-      &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this,
-      &CoreProcess::onProcessReadyReadStandardError);
+      &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError
+  );
 
   connect(&m_retryTimer, &QTimer::timeout, [this] {
     if (m_processState == ProcessState::RetryPending) {
@@ -191,7 +197,8 @@ CoreProcess::CoreProcess(
   });
 }
 
-void CoreProcess::onIpcClientServiceReady() {
+void CoreProcess::onIpcClientServiceReady()
+{
   if (m_processState == ProcessState::Starting) {
     qDebug("service ready, continuing core process start");
     start();
@@ -200,12 +207,12 @@ void CoreProcess::onIpcClientServiceReady() {
     stop();
   } else {
     // This may happen when the IPC connection fails and then reconnects.
-    qWarning(
-        "ignoring service ready, process state is not starting or stopping");
+    qWarning("ignoring service ready, process state is not starting or stopping");
   }
 }
 
-void CoreProcess::onIpcClientError(const QString &text) const {
+void CoreProcess::onIpcClientError(const QString &text) const
+{
   qCritical().noquote() << text;
 
   if (m_appConfig.processMode() != ProcessMode::kService) {
@@ -215,21 +222,27 @@ void CoreProcess::onIpcClientError(const QString &text) const {
   }
 }
 
-void CoreProcess::onIpcClientRead(const QString &text) { handleLogLines(text); }
+void CoreProcess::onIpcClientRead(const QString &text)
+{
+  handleLogLines(text);
+}
 
-void CoreProcess::onProcessReadyReadStandardOutput() {
+void CoreProcess::onProcessReadyReadStandardOutput()
+{
   if (m_pDeps->process()) {
     handleLogLines(m_pDeps->process().readAllStandardOutput());
   }
 }
 
-void CoreProcess::onProcessReadyReadStandardError() {
+void CoreProcess::onProcessReadyReadStandardError()
+{
   if (m_pDeps->process()) {
     handleLogLines(m_pDeps->process().readAllStandardError());
   }
 }
 
-void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
+void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
+{
   const auto wasStarted = m_processState == ProcessState::Started;
 
   setConnectionState(ConnectionState::Disconnected);
@@ -255,7 +268,8 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus) {
   }
 }
 
-void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
+void CoreProcess::startDesktop(const QString &app, const QStringList &args)
+{
   using enum ProcessState;
 
   if (m_processState != Starting) {
@@ -277,7 +291,8 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args) {
   }
 }
 
-void CoreProcess::startService(const QString &app, const QStringList &args) {
+void CoreProcess::startService(const QString &app, const QStringList &args)
+{
   using enum ProcessState;
 
   if (m_processState != Starting) {
@@ -298,7 +313,8 @@ void CoreProcess::startService(const QString &app, const QStringList &args) {
   setProcessState(Started);
 }
 
-void CoreProcess::stopDesktop() const {
+void CoreProcess::stopDesktop() const
+{
   if (m_processState != ProcessState::Stopping) {
     qFatal("core process must be in stopping state");
   }
@@ -317,7 +333,8 @@ void CoreProcess::stopDesktop() const {
   }
 }
 
-void CoreProcess::stopService() {
+void CoreProcess::stopService()
+{
   if (m_processState != ProcessState::Stopping) {
     qFatal("core process must be in stopping state");
   }
@@ -331,7 +348,8 @@ void CoreProcess::stopService() {
   setProcessState(ProcessState::Stopped);
 }
 
-void CoreProcess::handleLogLines(const QString &text) {
+void CoreProcess::handleLogLines(const QString &text)
+{
   for (const auto &line : text.split(kLineSplitRegex)) {
     if (line.isEmpty()) {
       continue;
@@ -350,15 +368,13 @@ void CoreProcess::handleLogLines(const QString &text) {
   }
 }
 
-void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
+void CoreProcess::start(std::optional<ProcessMode> processModeOption)
+{
   QMutexLocker locker(&m_processMutex);
 
-  const auto processMode =
-      processModeOption.value_or(m_appConfig.processMode());
+  const auto processMode = processModeOption.value_or(m_appConfig.processMode());
 
-  qInfo(
-      "starting core %s process (%s mode)", qPrintable(modeString()),
-      qPrintable(processModeToString(processMode)));
+  qInfo("starting core %s process (%s mode)", qPrintable(modeString()), qPrintable(processModeToString(processMode)));
 
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
@@ -409,15 +425,13 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption) {
   m_lastProcessMode = processMode;
 }
 
-void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
+void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
+{
   QMutexLocker locker(&m_processMutex);
 
-  const auto processMode =
-      processModeOption.value_or(m_appConfig.processMode());
+  const auto processMode = processModeOption.value_or(m_appConfig.processMode());
 
-  qInfo(
-      "stopping core process (%s mode)",
-      qPrintable(processModeToString(processMode)));
+  qInfo("stopping core process (%s mode)", qPrintable(processModeToString(processMode)));
 
   if (m_processState == ProcessState::Starting) {
     qDebug("core process is starting, cancelling");
@@ -438,7 +452,8 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption) {
   setConnectionState(ConnectionState::Disconnected);
 }
 
-void CoreProcess::restart() {
+void CoreProcess::restart()
+{
   using enum ProcessMode;
 
   qDebug("restarting core process");
@@ -465,7 +480,8 @@ void CoreProcess::restart() {
   start();
 }
 
-void CoreProcess::cleanup() {
+void CoreProcess::cleanup()
+{
   qInfo("cleaning up core process");
 
   const auto isDesktop = m_appConfig.processMode() == ProcessMode::kDesktop;
@@ -477,8 +493,8 @@ void CoreProcess::cleanup() {
   m_pDeps->ipcClient().disconnectFromHost();
 }
 
-bool CoreProcess::addGenericArgs(
-    QStringList &args, const ProcessMode processMode) const {
+bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
+{
   args << "-f"
        << "--no-tray"
        << "--debug" << m_appConfig.logLevelText();
@@ -532,7 +548,8 @@ bool CoreProcess::addGenericArgs(
   return true;
 }
 
-bool CoreProcess::addServerArgs(QStringList &args, QString &app) {
+bool CoreProcess::addServerArgs(QStringList &args, QString &app)
+{
   app = m_pDeps->appPath(m_appConfig.coreServerName());
 
   if (!m_pDeps->fileExists(app)) {
@@ -585,7 +602,8 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app) {
   return true;
 }
 
-bool CoreProcess::addClientArgs(QStringList &args, QString &app) {
+bool CoreProcess::addClientArgs(QStringList &args, QString &app)
+{
   app = m_pDeps->appPath(m_appConfig.coreClientName());
 
   if (!m_pDeps->fileExists(app)) {
@@ -624,7 +642,8 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app) {
   return true;
 }
 
-QString CoreProcess::persistServerConfig() const {
+QString CoreProcess::persistServerConfig() const
+{
   QString configFullPath;
   if (m_appConfig.useExternalConfig()) {
     return m_appConfig.configFile();
@@ -635,9 +654,7 @@ QString CoreProcess::persistServerConfig() const {
 
   QFile configFile(configDirPath + "/" + kServerConfigFilename);
   if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    qFatal(
-        "failed to open core config file for write: %s",
-        qPrintable(configFile.fileName()));
+    qFatal("failed to open core config file for write: %s", qPrintable(configFile.fileName()));
   }
 
   m_serverConfig.save(configFile);
@@ -645,7 +662,8 @@ QString CoreProcess::persistServerConfig() const {
   return configFile.fileName();
 }
 
-QString CoreProcess::modeString() const {
+QString CoreProcess::modeString() const
+{
   using enum Mode;
 
   switch (m_mode) {
@@ -659,7 +677,8 @@ QString CoreProcess::modeString() const {
   }
 }
 
-void CoreProcess::setConnectionState(ConnectionState state) {
+void CoreProcess::setConnectionState(ConnectionState state)
+{
   if (m_connectionState == state) {
     return;
   }
@@ -668,20 +687,22 @@ void CoreProcess::setConnectionState(ConnectionState state) {
   emit connectionStateChanged(state);
 }
 
-void CoreProcess::setProcessState(ProcessState state) {
+void CoreProcess::setProcessState(ProcessState state)
+{
   if (m_processState == state) {
     return;
   }
 
   qDebug(
       "core process state changed: %s -> %s", //
-      qPrintable(processStateToString(m_processState)),
-      qPrintable(processStateToString(state)));
+      qPrintable(processStateToString(m_processState)), qPrintable(processStateToString(state))
+  );
   m_processState = state;
   emit processStateChanged(state);
 }
 
-void CoreProcess::checkLogLine(const QString &line) {
+void CoreProcess::checkLogLine(const QString &line)
+{
   using enum ConnectionState;
 
   if (line.contains("connected to server") || line.contains("has connected")) {
@@ -689,9 +710,7 @@ void CoreProcess::checkLogLine(const QString &line) {
 
   } else if (line.contains("started server")) {
     setConnectionState(Listening);
-  } else if (
-      line.contains("disconnected from server") ||
-      line.contains("process exited")) {
+  } else if (line.contains("disconnected from server") || line.contains("process exited")) {
     setConnectionState(Disconnected);
   } else if (line.contains("connecting to")) {
     setConnectionState(Connecting);
@@ -706,7 +725,8 @@ void CoreProcess::checkLogLine(const QString &line) {
 #endif
 }
 
-bool CoreProcess::checkSecureSocket(const QString &line) {
+bool CoreProcess::checkSecureSocket(const QString &line)
+{
   static const QString tlsCheckString = "network encryption protocol: ";
   const auto index = line.indexOf(tlsCheckString, 0, Qt::CaseInsensitive);
   if (index == -1) {
@@ -719,15 +739,14 @@ bool CoreProcess::checkSecureSocket(const QString &line) {
 }
 
 #ifdef Q_OS_MAC
-void CoreProcess::checkOSXNotification(const QString &line) {
+void CoreProcess::checkOSXNotification(const QString &line)
+{
   static const QString needle = "OSX Notification: ";
   if (line.contains(needle) && line.contains('|')) {
     int delimiterPosition = line.indexOf('|');
     int start = line.indexOf(needle);
-    QString title = line.mid(
-        start + needle.length(), delimiterPosition - start - needle.length());
-    QString body =
-        line.mid(delimiterPosition + 1, line.length() - delimiterPosition);
+    QString title = line.mid(start + needle.length(), delimiterPosition - start - needle.length());
+    QString body = line.mid(delimiterPosition + 1, line.length() - delimiterPosition);
     if (!showOSXNotification(title, body)) {
       qDebug("osx notification was not shown");
     }
@@ -735,11 +754,15 @@ void CoreProcess::checkOSXNotification(const QString &line) {
 }
 #endif
 
-QString CoreProcess::correctedInterface() const {
+QString CoreProcess::correctedInterface() const
+{
   QString interface = wrapIpv6(m_appConfig.networkInterface());
   return interface + ":" + QString::number(m_appConfig.port());
 }
 
-QString CoreProcess::correctedAddress() const { return wrapIpv6(m_address); }
+QString CoreProcess::correctedAddress() const
+{
+  return wrapIpv6(m_address);
+}
 
 } // namespace deskflow::gui

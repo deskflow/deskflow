@@ -36,7 +36,8 @@ template <
 #else
     class Compare = std::greater<typename Container::value_type>>
 #endif
-class PriorityQueue {
+class PriorityQueue
+{
 public:
   typedef typename Container::value_type value_type;
   typedef typename Container::size_type size_type;
@@ -44,42 +45,62 @@ public:
   typedef typename Container::const_iterator const_iterator;
   typedef Container container_type;
 
-  PriorityQueue() {}
-  PriorityQueue(Container &swappedIn) { swap(swappedIn); }
-  ~PriorityQueue() {}
+  PriorityQueue()
+  {
+  }
+  PriorityQueue(Container &swappedIn)
+  {
+    swap(swappedIn);
+  }
+  ~PriorityQueue()
+  {
+  }
 
   //! @name manipulators
   //@{
 
   //! Add element
-  void push(const value_type &v) {
+  void push(const value_type &v)
+  {
     c.push_back(v);
     std::push_heap(c.begin(), c.end(), comp);
   }
 
   //! Remove head element
-  void pop() {
+  void pop()
+  {
     std::pop_heap(c.begin(), c.end(), comp);
     c.pop_back();
   }
 
   //! Erase element
-  void erase(iterator i) {
+  void erase(iterator i)
+  {
     c.erase(i);
     std::make_heap(c.begin(), c.end(), comp);
   }
 
   //! Get start iterator
-  iterator begin() { return c.begin(); }
+  iterator begin()
+  {
+    return c.begin();
+  }
 
   //! Get end iterator
-  iterator end() { return c.end(); }
+  iterator end()
+  {
+    return c.end();
+  }
 
   //! Swap contents with another priority queue
-  void swap(PriorityQueue<T, Container, Compare> &q) { c.swap(q.c); }
+  void swap(PriorityQueue<T, Container, Compare> &q)
+  {
+    c.swap(q.c);
+  }
 
   //! Swap contents with another container
-  void swap(Container &c2) {
+  void swap(Container &c2)
+  {
     c.swap(c2);
     std::make_heap(c.begin(), c.end(), comp);
   }
@@ -89,19 +110,34 @@ public:
   //@{
 
   //! Returns true if there are no elements
-  bool empty() const { return c.empty(); }
+  bool empty() const
+  {
+    return c.empty();
+  }
 
   //! Returns the number of elements
-  size_type size() const { return c.size(); }
+  size_type size() const
+  {
+    return c.size();
+  }
 
   //! Returns the head element
-  const value_type &top() const { return c.front(); }
+  const value_type &top() const
+  {
+    return c.front();
+  }
 
   //! Get start iterator
-  const_iterator begin() const { return c.begin(); }
+  const_iterator begin() const
+  {
+    return c.begin();
+  }
 
   //! Get end iterator
-  const_iterator end() const { return c.end(); }
+  const_iterator end() const
+  {
+    return c.end();
+  }
 
   //@}
 

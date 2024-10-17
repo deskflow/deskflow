@@ -25,18 +25,21 @@
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
 
-class ArchCondImpl {
+class ArchCondImpl
+{
 public:
   pthread_cond_t m_cond;
 };
 
-class ArchMutexImpl {
+class ArchMutexImpl
+{
 public:
   pthread_mutex_t m_mutex;
 };
 
 //! Posix implementation of IArchMultithread
-class ArchMultithreadPosix : public IArchMultithread {
+class ArchMultithreadPosix : public IArchMultithread
+{
 public:
   ArchMultithreadPosix();
   ArchMultithreadPosix(ArchMultithreadPosix const &) = delete;

@@ -26,13 +26,16 @@
 class IEventQueue;
 
 //! Event queue buffer for Win32
-class MSWindowsEventQueueBuffer : public IEventQueueBuffer {
+class MSWindowsEventQueueBuffer : public IEventQueueBuffer
+{
 public:
   MSWindowsEventQueueBuffer(IEventQueue *events);
   virtual ~MSWindowsEventQueueBuffer();
 
   // IEventQueueBuffer overrides
-  virtual void init() {}
+  virtual void init()
+  {
+  }
   virtual void waitForEvent(double timeout);
   virtual Type getEvent(Event &event, UInt32 &dataID);
   virtual bool addEvent(UInt32 dataID);

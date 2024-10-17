@@ -25,11 +25,17 @@
 
 namespace deskflow::gui {
 
-class IConfigScopes {
+class IConfigScopes
+{
   using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
-  enum class Scope { Current, System, User };
+  enum class Scope
+  {
+    Current,
+    System,
+    User
+  };
 
   virtual ~IConfigScopes() = default;
 
@@ -57,22 +63,18 @@ public:
   /**
    * @brief Check a scope for a config value (default is current scope).
    */
-  virtual bool
-  scopeContains(const QString &name, Scope scope = Scope::Current) const = 0;
+  virtual bool scopeContains(const QString &name, Scope scope = Scope::Current) const = 0;
 
   /**
    * @brief Load a config value from a scope (default is current scope).
    */
-  virtual QVariant getFromScope(
-      const QString &name, const QVariant &defaultValue = QVariant(),
-      Scope scope = Scope::Current) const = 0;
+  virtual QVariant
+  getFromScope(const QString &name, const QVariant &defaultValue = QVariant(), Scope scope = Scope::Current) const = 0;
 
   /**
    * @brief Set a config value in a scope (default is current scope).
    */
-  virtual void setInScope(
-      const QString &name, const QVariant &value,
-      Scope scope = Scope::Current) = 0;
+  virtual void setInScope(const QString &name, const QVariant &value, Scope scope = Scope::Current) = 0;
 };
 
 } // namespace deskflow::gui

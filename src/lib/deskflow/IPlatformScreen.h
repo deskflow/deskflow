@@ -34,15 +34,15 @@ This interface defines the methods common to all platform dependent
 screen implementations that are used by both primary and secondary
 screens.
 */
-class IPlatformScreen : public IScreen,
-                        public IPrimaryScreen,
-                        public ISecondaryScreen,
-                        public IKeyState {
+class IPlatformScreen : public IScreen, public IPrimaryScreen, public ISecondaryScreen, public IKeyState
+{
 public:
   //! @name manipulators
   //@{
 
-  IPlatformScreen(IEventQueue *events) : IKeyState(events) {}
+  IPlatformScreen(IEventQueue *events) : IKeyState(events)
+  {
+  }
 
   //! Enable screen
   /*!
@@ -163,8 +163,7 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
 
   // IPrimaryScreen overrides
@@ -188,11 +187,8 @@ public:
   virtual void updateKeyMap() = 0;
   virtual void updateKeyState() = 0;
   virtual void setHalfDuplexMask(KeyModifierMask) = 0;
-  virtual void fakeKeyDown(
-      KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) = 0;
-  virtual bool fakeKeyRepeat(
-      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
-      const String &lang) = 0;
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) = 0;
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang) = 0;
   virtual bool fakeKeyUp(KeyButton button) = 0;
   virtual void fakeAllKeysUp() = 0;
   virtual bool fakeCtrlAltDel() = 0;

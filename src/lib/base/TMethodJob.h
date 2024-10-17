@@ -24,7 +24,8 @@
 /*!
 A job class that invokes a member function.
 */
-template <class T> class TMethodJob : public IJob {
+template <class T> class TMethodJob : public IJob
+{
 public:
   //! run() invokes \c object->method(arg)
   TMethodJob(T *object, void (T::*method)(void *), void *arg = NULL);
@@ -40,19 +41,21 @@ private:
 };
 
 template <class T>
-inline TMethodJob<T>::TMethodJob(
-    T *object, void (T::*method)(void *), void *arg)
+inline TMethodJob<T>::TMethodJob(T *object, void (T::*method)(void *), void *arg)
     : m_object(object),
       m_method(method),
-      m_arg(arg) {
+      m_arg(arg)
+{
   // do nothing
 }
 
-template <class T> inline TMethodJob<T>::~TMethodJob() {
+template <class T> inline TMethodJob<T>::~TMethodJob()
+{
   // do nothing
 }
 
-template <class T> inline void TMethodJob<T>::run() {
+template <class T> inline void TMethodJob<T>::run()
+{
   if (m_object != NULL) {
     (m_object->*m_method)(m_arg);
   }

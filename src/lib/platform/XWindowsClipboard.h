@@ -33,7 +33,8 @@
 class IXWindowsClipboardConverter;
 
 //! X11 clipboard implementation
-class XWindowsClipboard : public IClipboard {
+class XWindowsClipboard : public IClipboard
+{
 public:
   /*!
   Use \c window as the window that owns or interacts with the
@@ -59,8 +60,7 @@ public:
   owner window isn't this clipboard's window then this simply
   sends a failure event to the requestor.
   */
-  void addRequest(
-      Window owner, Window requestor, Atom target, ::Time time, Atom property);
+  void addRequest(Window owner, Window requestor, Atom target, ::Time time, Atom property);
 
   //! Process clipboard request
   /*!
@@ -106,8 +106,7 @@ private:
   // suitable converter.  iff onlyIfNotAdded is true then also
   // return NULL if a suitable converter was found but we already
   // have data of the converter's clipboard format.
-  IXWindowsClipboardConverter *
-  getConverter(Atom target, bool onlyIfNotAdded = false) const;
+  IXWindowsClipboardConverter *getConverter(Atom target, bool onlyIfNotAdded = false) const;
 
   // convert target atom to clipboard format
   EFormat getFormat(Atom target) const;
@@ -116,8 +115,7 @@ private:
   // was owned at the given time.  returns true if the conversion
   // could be performed, false otherwise.  in either case, the
   // reply is inserted.
-  bool
-  addSimpleRequest(Window requestor, Atom target, ::Time time, Atom property);
+  bool addSimpleRequest(Window requestor, Atom target, ::Time time, Atom property);
 
   // if not already checked then see if the cache is stale and, if so,
   // clear it.  this has the side effect of updating m_timeOwned.
@@ -138,7 +136,8 @@ protected:
   //
 
   // read an ICCCM conforming selection
-  class CICCCMGetClipboard {
+  class CICCCMGetClipboard
+  {
   public:
     CICCCMGetClipboard(Window requestor, Time time, Atom property);
     ~CICCCMGetClipboard() = default;
@@ -146,9 +145,7 @@ protected:
     // convert the given selection to the given type.  returns
     // true iff the conversion was successful or the conversion
     // cannot be performed (in which case *actualTarget == None).
-    bool readClipboard(
-        Display *display, Atom selection, Atom target, Atom *actualTarget,
-        String *data);
+    bool readClipboard(Display *display, Atom selection, Atom target, Atom *actualTarget, String *data);
 
   private:
     bool processEvent(Display *display, XEvent *event);
@@ -179,14 +176,23 @@ protected:
     bool m_error = false;
 
   public:
-    bool error() const { return m_error; }
+    bool error() const
+    {
+      return m_error;
+    }
   };
 
   // Motif structure IDs
-  enum class MotifClip : SInt32 { Format = 1, Item = 2, Header = 3 };
+  enum class MotifClip : SInt32
+  {
+    Format = 1,
+    Item = 2,
+    Header = 3
+  };
 
   // _MOTIF_CLIP_HEADER structure
-  class MotifClipHeader {
+  class MotifClipHeader
+  {
   public:
     MotifClip m_id;
     SInt32 m_pad1[3];
@@ -199,7 +205,8 @@ protected:
   };
 
   // Motif clip item structure
-  class MotifClipItem {
+  class MotifClipItem
+  {
   public:
     MotifClip m_id;
     SInt32 m_pad1[5];
@@ -210,7 +217,8 @@ protected:
   };
 
   // Motif clip format structure
-  class MotifClipFormat {
+  class MotifClipFormat
+  {
   public:
     MotifClip m_id;
     SInt32 m_pad1[6];
@@ -223,12 +231,11 @@ protected:
   };
 
   // stores data needed to respond to a selection request
-  class Reply {
+  class Reply
+  {
   public:
     Reply(Window, Atom target, ::Time);
-    Reply(
-        Window, Atom target, ::Time, Atom property, const String &data,
-        Atom type, int format);
+    Reply(Window, Atom target, ::Time, Atom property, const String &data, Atom type, int format);
 
   public:
     // information about the request
@@ -265,8 +272,7 @@ protected:
   void motifUnlockClipboard() const;
   bool motifOwnsClipboard() const;
   void motifFillCache();
-  bool motifGetSelection(
-      const MotifClipFormat *, Atom *actualTarget, String *data) const;
+  bool motifGetSelection(const MotifClipFormat *, Atom *actualTarget, String *data) const;
   Time motifGetTime() const;
 
   // reply methods
@@ -277,8 +283,7 @@ protected:
   bool sendReply(Reply *);
   void clearReplies();
   void clearReplies(ReplyList &);
-  void sendNotify(
-      Window requestor, Atom selection, Atom target, Atom property, Time time);
+  void sendNotify(Window requestor, Atom selection, Atom target, Atom property, Time time);
   bool wasOwnedAtTime(::Time) const;
 
   // data conversion methods
@@ -335,7 +340,8 @@ private:
 This interface defines the methods common to all X11 clipboard format
 converters.
 */
-class IXWindowsClipboardConverter : public IInterface {
+class IXWindowsClipboardConverter : public IInterface
+{
 public:
   //! @name accessors
   //@{

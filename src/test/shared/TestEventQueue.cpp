@@ -20,23 +20,28 @@
 #include "base/TMethodEventJob.h"
 #include "common/stdexcept.h"
 
-void TestEventQueue::raiseQuitEvent() { addEvent(Event(Event::kQuit)); }
+void TestEventQueue::raiseQuitEvent()
+{
+  addEvent(Event(Event::kQuit));
+}
 
-void TestEventQueue::initQuitTimeout(double timeout) {
+void TestEventQueue::initQuitTimeout(double timeout)
+{
   assert(m_pQuitTimeoutTimer == nullptr);
   m_pQuitTimeoutTimer = newOneShotTimer(timeout, NULL);
   adoptHandler(
-      Event::kTimer, m_pQuitTimeoutTimer,
-      new TMethodEventJob<TestEventQueue>(
-          this, &TestEventQueue::handleQuitTimeout));
+      Event::kTimer, m_pQuitTimeoutTimer, new TMethodEventJob<TestEventQueue>(this, &TestEventQueue::handleQuitTimeout)
+  );
 }
 
-void TestEventQueue::cleanupQuitTimeout() {
+void TestEventQueue::cleanupQuitTimeout()
+{
   removeHandler(Event::kTimer, m_pQuitTimeoutTimer);
   deleteTimer(m_pQuitTimeoutTimer);
   m_pQuitTimeoutTimer = nullptr;
 }
 
-void TestEventQueue::handleQuitTimeout(const Event &, void *vclient) {
+void TestEventQueue::handleQuitTimeout(const Event &, void *vclient)
+{
   throw std::runtime_error("test event queue timeout");
 }

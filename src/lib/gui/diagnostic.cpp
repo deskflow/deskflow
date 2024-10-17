@@ -26,7 +26,8 @@
 
 namespace deskflow::gui::diagnostic {
 
-void restart() {
+void restart()
+{
   QString program = QCoreApplication::applicationFilePath();
   QStringList arguments = QCoreApplication::arguments();
 
@@ -40,7 +41,8 @@ void restart() {
   QApplication::exit();
 }
 
-void clearSettings(ConfigScopes &scopes, bool enableRestart) {
+void clearSettings(ConfigScopes &scopes, bool enableRestart)
+{
   qDebug("clearing settings");
   scopes.clear();
 

@@ -24,7 +24,8 @@
 #include <Windows.h>
 
 //! Loads and provides functions for the Windows hook
-class MSWindowsHook {
+class MSWindowsHook
+{
 public:
   MSWindowsHook();
   virtual ~MSWindowsHook();

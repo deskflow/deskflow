@@ -27,17 +27,16 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class VersionCheckerTests;
 
-class VersionChecker : public QObject {
-  using QNetworkAccessManagerProxy =
-      deskflow::gui::proxy::QNetworkAccessManagerProxy;
+class VersionChecker : public QObject
+{
+  using QNetworkAccessManagerProxy = deskflow::gui::proxy::QNetworkAccessManagerProxy;
 
   Q_OBJECT
 
   friend class VersionCheckerTests;
 
 public:
-  explicit VersionChecker(
-      std::shared_ptr<QNetworkAccessManagerProxy> network = nullptr);
+  explicit VersionChecker(std::shared_ptr<QNetworkAccessManagerProxy> network = nullptr);
   void checkLatest() const;
 public slots:
   void replyFinished(QNetworkReply *reply);

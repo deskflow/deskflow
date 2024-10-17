@@ -17,18 +17,17 @@
 
 #include "DataDownloader.h"
 
-DataDownloader::DataDownloader(QObject *parent)
-    : QObject(parent),
-      m_pReply(nullptr),
-      m_IsFinished(false) {
-  connect(
-      &m_NetworkManager, &QNetworkAccessManager::finished, this,
-      &DataDownloader::complete);
+DataDownloader::DataDownloader(QObject *parent) : QObject(parent), m_pReply(nullptr), m_IsFinished(false)
+{
+  connect(&m_NetworkManager, &QNetworkAccessManager::finished, this, &DataDownloader::complete);
 }
 
-DataDownloader::~DataDownloader() {}
+DataDownloader::~DataDownloader()
+{
+}
 
-void DataDownloader::complete(QNetworkReply *reply) {
+void DataDownloader::complete(QNetworkReply *reply)
+{
   m_Data = reply->readAll();
   reply->deleteLater();
   m_pReply = nullptr;
@@ -39,15 +38,20 @@ void DataDownloader::complete(QNetworkReply *reply) {
   }
 }
 
-QByteArray DataDownloader::data() const { return m_Data; }
+QByteArray DataDownloader::data() const
+{
+  return m_Data;
+}
 
-void DataDownloader::cancel() {
+void DataDownloader::cancel()
+{
   if (m_pReply != nullptr) {
     m_pReply->abort();
   }
 }
 
-void DataDownloader::download(QUrl url) {
+void DataDownloader::download(QUrl url)
+{
   QNetworkRequest request(url);
   m_pReply = m_NetworkManager.get(request);
 }

@@ -30,7 +30,8 @@ but doesn't provide the actual variable storage.  A condition variable
 is a multiprocessing primitive that can be waited on.  Every condition
 variable has an associated mutex.
 */
-class CondVarBase {
+class CondVarBase
+{
 public:
   /*!
   \c mutex must not be NULL.  All condition variables have an
@@ -128,7 +129,8 @@ private:
 /*!
 A condition variable with storage for type \c T.
 */
-template <class T> class CondVar : public CondVarBase {
+template <class T> class CondVar : public CondVarBase
+{
 public:
   //! Initialize using \c value
   CondVar(Mutex *mutex, const T &value);
@@ -170,35 +172,34 @@ private:
   volatile T m_data;
 };
 
-template <class T>
-inline CondVar<T>::CondVar(Mutex *mutex, const T &data)
-    : CondVarBase(mutex),
-      m_data(data) {
+template <class T> inline CondVar<T>::CondVar(Mutex *mutex, const T &data) : CondVarBase(mutex), m_data(data)
+{
   // do nothing
 }
 
-template <class T>
-inline CondVar<T>::CondVar(const CondVar &cv)
-    : CondVarBase(cv.getMutex()),
-      m_data(cv.m_data) {
+template <class T> inline CondVar<T>::CondVar(const CondVar &cv) : CondVarBase(cv.getMutex()), m_data(cv.m_data)
+{
   // do nothing
 }
 
-template <class T> inline CondVar<T>::~CondVar() {
+template <class T> inline CondVar<T>::~CondVar()
+{
   // do nothing
 }
 
-template <class T>
-inline CondVar<T> &CondVar<T>::operator=(const CondVar<T> &cv) {
+template <class T> inline CondVar<T> &CondVar<T>::operator=(const CondVar<T> &cv)
+{
   m_data = cv.m_data;
   return *this;
 }
 
-template <class T> inline CondVar<T> &CondVar<T>::operator=(const T &data) {
+template <class T> inline CondVar<T> &CondVar<T>::operator=(const T &data)
+{
   m_data = data;
   return *this;
 }
 
-template <class T> inline CondVar<T>::operator const volatile T &() const {
+template <class T> inline CondVar<T>::operator const volatile T &() const
+{
   return m_data;
 }

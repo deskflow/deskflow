@@ -19,7 +19,8 @@
 
 #include "common/basic_types.h"
 
-enum class IpcMessageType : UInt8 {
+enum class IpcMessageType : UInt8
+{
   Hello,
   HelloBack,
   LogLine,
@@ -28,7 +29,12 @@ enum class IpcMessageType : UInt8 {
   Setting
 };
 
-enum class IpcClientType { Unknown, GUI, Node };
+enum class IpcClientType
+{
+  Unknown,
+  GUI,
+  Node
+};
 
 const auto kIpcHost = "127.0.0.1";
 const auto kIpcPort = 24801;

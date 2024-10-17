@@ -26,13 +26,19 @@ namespace deskflow {
  *        arguments passed into the applications this will be derived
  *        from and expanded to include application specific arguments
  */
-class ArgsBase {
+class ArgsBase
+{
 public:
   ArgsBase() = default;
   virtual ~ArgsBase();
 
   /// @brief This sets the type of the derived class
-  enum Type { kBase, kServer, kClient };
+  enum Type
+  {
+    kBase,
+    kServer,
+    kClient
+  };
 
   /// @brief Stores what type of object this is
   Type m_classType = kBase;
@@ -106,7 +112,8 @@ public:
 
 protected:
   /// @brief deletes pointers and sets the value to null
-  template <class T> static inline void destroy(T *&p) {
+  template <class T> static inline void destroy(T *&p)
+  {
     delete p;
     p = 0;
   }

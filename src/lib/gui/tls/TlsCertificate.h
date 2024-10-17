@@ -21,7 +21,8 @@
 
 #include <QObject>
 
-class TlsCertificate : public QObject {
+class TlsCertificate : public QObject
+{
   Q_OBJECT
 
 public:

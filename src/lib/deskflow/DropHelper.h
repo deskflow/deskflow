@@ -20,8 +20,8 @@
 #include "base/String.h"
 #include "deskflow/DragInformation.h"
 
-class DropHelper {
+class DropHelper
+{
 public:
-  static void
-  writeToDir(const String &destination, DragFileList &fileList, String &data);
+  static void writeToDir(const String &destination, DragFileList &fileList, String &data);
 };

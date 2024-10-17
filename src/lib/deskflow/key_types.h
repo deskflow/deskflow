@@ -289,11 +289,13 @@ static const KeyID kKeyLaunchpad = 0xE0C1;
 
 //@}
 
-struct KeyNameMapEntry {
+struct KeyNameMapEntry
+{
   const char *m_name;
   KeyID m_id;
 };
-struct KeyModifierNameMapEntry {
+struct KeyModifierNameMapEntry
+{
   const char *m_name;
   KeyModifierMask m_mask;
 };

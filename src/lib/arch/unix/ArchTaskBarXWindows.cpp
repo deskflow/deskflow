@@ -22,22 +22,27 @@
 // ArchTaskBarXWindows
 //
 
-ArchTaskBarXWindows::ArchTaskBarXWindows() {
+ArchTaskBarXWindows::ArchTaskBarXWindows()
+{
   // do nothing
 }
 
-ArchTaskBarXWindows::~ArchTaskBarXWindows() {
+ArchTaskBarXWindows::~ArchTaskBarXWindows()
+{
   // do nothing
 }
 
-void ArchTaskBarXWindows::addReceiver(IArchTaskBarReceiver * /*receiver*/) {
+void ArchTaskBarXWindows::addReceiver(IArchTaskBarReceiver * /*receiver*/)
+{
   // do nothing
 }
 
-void ArchTaskBarXWindows::removeReceiver(IArchTaskBarReceiver * /*receiver*/) {
+void ArchTaskBarXWindows::removeReceiver(IArchTaskBarReceiver * /*receiver*/)
+{
   // do nothing
 }
 
-void ArchTaskBarXWindows::updateReceiver(IArchTaskBarReceiver * /*receiver*/) {
+void ArchTaskBarXWindows::updateReceiver(IArchTaskBarReceiver * /*receiver*/)
+{
   // do nothing
 }

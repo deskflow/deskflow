@@ -25,7 +25,9 @@
 // EventQueueTimer
 //
 
-class EventQueueTimer {};
+class EventQueueTimer
+{
+};
 
 //
 // OSXEventQueueBuffer
@@ -34,28 +36,32 @@ class EventQueueTimer {};
 OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue *events)
     : m_event(NULL),
       m_eventQueue(events),
-      m_carbonEventQueue(NULL) {
+      m_carbonEventQueue(NULL)
+{
   // do nothing
 }
 
-OSXEventQueueBuffer::~OSXEventQueueBuffer() {
+OSXEventQueueBuffer::~OSXEventQueueBuffer()
+{
   // release the last event
   if (m_event != NULL) {
     ReleaseEvent(m_event);
   }
 }
 
-void OSXEventQueueBuffer::init() {
+void OSXEventQueueBuffer::init()
+{
   m_carbonEventQueue = GetCurrentEventQueue();
 }
 
-void OSXEventQueueBuffer::waitForEvent(double timeout) {
+void OSXEventQueueBuffer::waitForEvent(double timeout)
+{
   EventRef event;
   ReceiveNextEvent(0, NULL, timeout, false, &event);
 }
 
-IEventQueueBuffer::Type
-OSXEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
+IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, UInt32 &dataID)
+{
   // release the previous event
   if (m_event != NULL) {
     ReleaseEvent(m_event);
@@ -85,10 +91,10 @@ OSXEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
   }
 }
 
-bool OSXEventQueueBuffer::addEvent(UInt32 dataID) {
+bool OSXEventQueueBuffer::addEvent(UInt32 dataID)
+{
   EventRef event;
-  OSStatus error = CreateEvent(
-      kCFAllocatorDefault, 'Syne', dataID, 0, kEventAttributeNone, &event);
+  OSStatus error = CreateEvent(kCFAllocatorDefault, 'Syne', dataID, 0, kEventAttributeNone, &event);
 
   if (error == noErr) {
 
@@ -102,16 +108,19 @@ bool OSXEventQueueBuffer::addEvent(UInt32 dataID) {
   return (error == noErr);
 }
 
-bool OSXEventQueueBuffer::isEmpty() const {
+bool OSXEventQueueBuffer::isEmpty() const
+{
   EventRef event;
   OSStatus status = ReceiveNextEvent(0, NULL, 0.0, false, &event);
   return (status == eventLoopTimedOutErr);
 }
 
-EventQueueTimer *OSXEventQueueBuffer::newTimer(double, bool) const {
+EventQueueTimer *OSXEventQueueBuffer::newTimer(double, bool) const
+{
   return new EventQueueTimer;
 }
 
-void OSXEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
+void OSXEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
+{
   delete timer;
 }

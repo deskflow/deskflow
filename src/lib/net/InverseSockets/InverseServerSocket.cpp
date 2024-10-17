@@ -36,38 +36,44 @@
 //
 
 InverseServerSocket::InverseServerSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+)
     : m_socket(family),
       m_events(events),
-      m_socketMultiplexer(socketMultiplexer) {}
+      m_socketMultiplexer(socketMultiplexer)
+{
+}
 
-InverseServerSocket::~InverseServerSocket() {
+InverseServerSocket::~InverseServerSocket()
+{
   m_socketMultiplexer->removeSocket(this);
 }
 
-void InverseServerSocket::bind(const NetworkAddress &addr) {
+void InverseServerSocket::bind(const NetworkAddress &addr)
+{
   Lock lock(&m_mutex);
   m_address = addr;
   m_socket.connectSocket(m_address);
   setListeningJob(true);
 }
 
-void InverseServerSocket::close() {
+void InverseServerSocket::close()
+{
   Lock lock(&m_mutex);
   m_socketMultiplexer->removeSocket(this);
   m_socket.closeSocket();
 }
 
-void *InverseServerSocket::getEventTarget() const {
+void *InverseServerSocket::getEventTarget() const
+{
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
-IDataSocket *InverseServerSocket::accept() {
+IDataSocket *InverseServerSocket::accept()
+{
   IDataSocket *socket = nullptr;
   try {
-    socket =
-        new TCPSocket(m_events, m_socketMultiplexer, m_socket.getRawSocket());
+    socket = new TCPSocket(m_events, m_socketMultiplexer, m_socket.getRawSocket());
     if (socket != nullptr) {
       setListeningJob();
     }
@@ -87,15 +93,17 @@ IDataSocket *InverseServerSocket::accept() {
   }
 }
 
-void InverseServerSocket::setListeningJob(bool read) {
+void InverseServerSocket::setListeningJob(bool read)
+{
   m_socketMultiplexer->addSocket(
       this, new TSocketMultiplexerMethodJob<InverseServerSocket>(
-                this, &InverseServerSocket::serviceListening,
-                m_socket.getRawSocket(), true, read));
+                this, &InverseServerSocket::serviceListening, m_socket.getRawSocket(), true, read
+            )
+  );
 }
 
-ISocketMultiplexerJob *InverseServerSocket::serviceListening(
-    ISocketMultiplexerJob *job, bool, bool write, bool error) {
+ISocketMultiplexerJob *InverseServerSocket::serviceListening(ISocketMultiplexerJob *job, bool, bool write, bool error)
+{
   if (error) {
     m_socket.connectSocket(m_address);
     return job;

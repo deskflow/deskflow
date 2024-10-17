@@ -54,7 +54,8 @@ static const double kHeartRate = -1.0;
 static const double kHeartBeatsUntilDeath = 3.0;
 
 // direction constants
-enum EDirection {
+enum EDirection
+{
   kNoDirection,
   kLeft,
   kRight,
@@ -64,7 +65,8 @@ enum EDirection {
   kLastDirection = kBottom,
   kNumDirections = kLastDirection - kFirstDirection + 1
 };
-enum EDirectionMask {
+enum EDirectionMask
+{
   kNoDirMask = 0,
   kLeftMask = 1 << kLeft,
   kRightMask = 1 << kRight,
@@ -73,10 +75,21 @@ enum EDirectionMask {
 };
 
 // Data transfer constants
-enum EDataTransfer { kDataStart = 1, kDataChunk = 2, kDataEnd = 3 };
+enum EDataTransfer
+{
+  kDataStart = 1,
+  kDataChunk = 2,
+  kDataEnd = 3
+};
 
 // Data received constants
-enum EDataReceived { kStart, kNotFinish, kFinish, kError };
+enum EDataReceived
+{
+  kStart,
+  kNotFinish,
+  kFinish,
+  kError
+};
 
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
@@ -317,7 +330,8 @@ extern const char *const kMsgEBad;
 /*!
 This class contains information about a screen.
 */
-class ClientInfo {
+class ClientInfo
+{
 public:
   //! Screen position
   /*!

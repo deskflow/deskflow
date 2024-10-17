@@ -32,7 +32,8 @@
 
 namespace {
 
-void writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8> &Buffer) {
+void writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8> &Buffer)
+{
   switch (Length) {
   case 1:
     Buffer.push_back(static_cast<UInt8>(Value & 0xffU));
@@ -53,9 +54,8 @@ void writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8> &Buffer) {
   }
 }
 
-template <typename T>
-void writeVectorInt(
-    const std::vector<T> *VectorData, std::vector<UInt8> &Buffer) {
+template <typename T> void writeVectorInt(const std::vector<T> *VectorData, std::vector<UInt8> &Buffer)
+{
   if (VectorData) {
     const std::vector<T> &Vector = *VectorData;
     writeInt((UInt32)Vector.size(), sizeof(UInt32), Buffer);
@@ -65,18 +65,19 @@ void writeVectorInt(
   }
 }
 
-void writeString(const String *StringData, std::vector<UInt8> &Buffer) {
+void writeString(const String *StringData, std::vector<UInt8> &Buffer)
+{
   const UInt32 len = (StringData != NULL) ? (UInt32)StringData->size() : 0;
   writeInt(len, sizeof(len), Buffer);
   if (len != 0) {
-    std::copy(
-        StringData->begin(), StringData->end(), std::back_inserter(Buffer));
+    std::copy(StringData->begin(), StringData->end(), std::back_inserter(Buffer));
   }
 }
 
 } // namespace
 
-void ProtocolUtil::writef(deskflow::IStream *stream, const char *fmt, ...) {
+void ProtocolUtil::writef(deskflow::IStream *stream, const char *fmt, ...)
+{
   assert(stream != NULL);
   assert(fmt != NULL);
   LOG((CLOG_DEBUG2 "writef(%s)", fmt));
@@ -90,7 +91,8 @@ void ProtocolUtil::writef(deskflow::IStream *stream, const char *fmt, ...) {
   va_end(args);
 }
 
-bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...) {
+bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...)
+{
   bool result = false;
 
   if (stream && fmt) {
@@ -111,8 +113,8 @@ bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...) {
   return result;
 }
 
-void ProtocolUtil::vwritef(
-    deskflow::IStream *stream, const char *fmt, UInt32 size, va_list args) {
+void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, UInt32 size, va_list args)
+{
   assert(stream != NULL);
   assert(fmt != NULL);
 
@@ -130,15 +132,13 @@ void ProtocolUtil::vwritef(
     stream->write(Buffer.data(), size);
     LOG((CLOG_DEBUG2 "wrote %d bytes", size));
   } catch (const XBase &exception) {
-    LOG(
-        (CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream",
-         exception.what(), size));
+    LOG((CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream", exception.what(), size));
     throw;
   }
 }
 
-void ProtocolUtil::vreadf(
-    deskflow::IStream *stream, const char *fmt, va_list args) {
+void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list args)
+{
   assert(stream != NULL);
   assert(fmt != NULL);
 
@@ -166,10 +166,7 @@ void ProtocolUtil::vreadf(
           break;
         default:
           // the length is wrong
-          LOG(
-              (CLOG_ERR
-               "read: length to be read is wrong: '%d' should be 1,2, or 4",
-               len));
+          LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
           assert(false); // assert for debugging
           break;
         }
@@ -181,25 +178,19 @@ void ProtocolUtil::vreadf(
         switch (len) {
         case 1:
           // 1 byte integer
-          readVector1ByteInt(
-              stream, *static_cast<std::vector<UInt8> *>(destination));
+          readVector1ByteInt(stream, *static_cast<std::vector<UInt8> *>(destination));
           break;
         case 2:
           // 2 byte integer
-          readVector2BytesInt(
-              stream, *static_cast<std::vector<UInt16> *>(destination));
+          readVector2BytesInt(stream, *static_cast<std::vector<UInt16> *>(destination));
           break;
         case 4:
           // 4 byte integer
-          readVector4BytesInt(
-              stream, *static_cast<std::vector<UInt32> *>(destination));
+          readVector4BytesInt(stream, *static_cast<std::vector<UInt32> *>(destination));
           break;
         default:
           // the length is wrong
-          LOG(
-              (CLOG_ERR
-               "read: length to be read is wrong: '%d' should be 1,2, or 4",
-               len));
+          LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
           assert(false); // assert for debugging
           break;
         }
@@ -239,7 +230,8 @@ void ProtocolUtil::vreadf(
   }
 }
 
-UInt32 ProtocolUtil::getLength(const char *fmt, va_list args) {
+UInt32 ProtocolUtil::getLength(const char *fmt, va_list args)
+{
   UInt32 n = 0;
   while (*fmt) {
     if (*fmt == '%') {
@@ -300,8 +292,8 @@ UInt32 ProtocolUtil::getLength(const char *fmt, va_list args) {
   return n;
 }
 
-void ProtocolUtil::writef(
-    std::vector<UInt8> &buffer, const char *fmt, va_list args) {
+void ProtocolUtil::writef(std::vector<UInt8> &buffer, const char *fmt, va_list args)
+{
   while (*fmt) {
     if (*fmt == '%') {
       // format specifier.  determine argument size.
@@ -318,24 +310,21 @@ void ProtocolUtil::writef(
         switch (len) {
         case 1: {
           // 1 byte integers
-          const std::vector<UInt8> *list =
-              va_arg(args, const std::vector<UInt8> *);
+          const std::vector<UInt8> *list = va_arg(args, const std::vector<UInt8> *);
           writeVectorInt(list, buffer);
           break;
         }
 
         case 2: {
           // 2 byte integers
-          const std::vector<UInt16> *list =
-              va_arg(args, const std::vector<UInt16> *);
+          const std::vector<UInt16> *list = va_arg(args, const std::vector<UInt16> *);
           writeVectorInt(list, buffer);
           break;
         }
 
         case 4: {
           // 4 byte integers
-          const std::vector<UInt32> *list =
-              va_arg(args, const std::vector<UInt32> *);
+          const std::vector<UInt32> *list = va_arg(args, const std::vector<UInt32> *);
           writeVectorInt(list, buffer);
           break;
         }
@@ -381,7 +370,8 @@ void ProtocolUtil::writef(
   }
 }
 
-UInt32 ProtocolUtil::eatLength(const char **pfmt) {
+UInt32 ProtocolUtil::eatLength(const char **pfmt)
+{
   const char *fmt = *pfmt;
   UInt32 n = 0;
   for (;;) {
@@ -426,8 +416,8 @@ UInt32 ProtocolUtil::eatLength(const char **pfmt) {
   }
 }
 
-void ProtocolUtil::read(
-    deskflow::IStream *stream, void *vbuffer, UInt32 count) {
+void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, UInt32 count)
+{
   assert(stream != NULL);
   assert(vbuffer != NULL);
 
@@ -438,9 +428,7 @@ void ProtocolUtil::read(
 
     // bail if stream has hungup
     if (n == 0) {
-      LOG(
-          (CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left",
-           count));
+      LOG((CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left", count));
       throw XIOEndOfStream();
     }
 
@@ -450,7 +438,8 @@ void ProtocolUtil::read(
   }
 }
 
-UInt8 ProtocolUtil::read1ByteInt(deskflow::IStream *stream) {
+UInt8 ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
+{
   const UInt32 BufferSize = 1;
   std::array<UInt8, 1> buffer = {};
   read(stream, buffer.data(), BufferSize);
@@ -461,59 +450,58 @@ UInt8 ProtocolUtil::read1ByteInt(deskflow::IStream *stream) {
   return Result;
 }
 
-UInt16 ProtocolUtil::read2BytesInt(deskflow::IStream *stream) {
+UInt16 ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
+{
   const UInt32 BufferSize = 2;
   std::array<UInt8, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
-  UInt16 Result = static_cast<UInt16>(
-      (static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]));
+  UInt16 Result = static_cast<UInt16>((static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]));
   LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
 
   return Result;
 }
 
-UInt32 ProtocolUtil::read4BytesInt(deskflow::IStream *stream) {
+UInt32 ProtocolUtil::read4BytesInt(deskflow::IStream *stream)
+{
   const int BufferSize = 4;
   std::array<UInt8, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
-  UInt32 Result = (static_cast<UInt32>(buffer[0]) << 24) |
-                  (static_cast<UInt32>(buffer[1]) << 16) |
-                  (static_cast<UInt32>(buffer[2]) << 8) |
-                  (static_cast<UInt32>(buffer[3]));
+  UInt32 Result = (static_cast<UInt32>(buffer[0]) << 24) | (static_cast<UInt32>(buffer[1]) << 16) |
+                  (static_cast<UInt32>(buffer[2]) << 8) | (static_cast<UInt32>(buffer[3]));
 
   LOG((CLOG_DEBUG2 "readf: read 4 byte integer: %d (0x%x)", Result, Result));
 
   return Result;
 }
 
-void ProtocolUtil::readVector1ByteInt(
-    deskflow::IStream *stream, std::vector<UInt8> &destination) {
+void ProtocolUtil::readVector1ByteInt(deskflow::IStream *stream, std::vector<UInt8> &destination)
+{
   UInt32 size = read4BytesInt(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read1ByteInt(stream));
   }
 }
 
-void ProtocolUtil::readVector2BytesInt(
-    deskflow::IStream *stream, std::vector<UInt16> &destination) {
+void ProtocolUtil::readVector2BytesInt(deskflow::IStream *stream, std::vector<UInt16> &destination)
+{
   UInt32 size = read4BytesInt(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read2BytesInt(stream));
   }
 }
 
-void ProtocolUtil::readVector4BytesInt(
-    deskflow::IStream *stream, std::vector<UInt32> &destination) {
+void ProtocolUtil::readVector4BytesInt(deskflow::IStream *stream, std::vector<UInt32> &destination)
+{
   UInt32 size = read4BytesInt(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read4BytesInt(stream));
   }
 }
 
-void ProtocolUtil::readBytes(
-    deskflow::IStream *stream, UInt32 len, String *destination) {
+void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, String *destination)
+{
   assert(len == 0);
 
   // read the string length
@@ -563,6 +551,7 @@ void ProtocolUtil::readBytes(
 // XIOReadMismatch
 //
 
-String XIOReadMismatch::getWhat() const throw() {
+String XIOReadMismatch::getWhat() const throw()
+{
   return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }

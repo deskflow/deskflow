@@ -22,7 +22,8 @@
 #include <QtCore>
 #include <QtGui>
 
-void TrashScreenWidget::dragEnterEvent(QDragEnterEvent *event) {
+void TrashScreenWidget::dragEnterEvent(QDragEnterEvent *event)
+{
   if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
     event->setDropAction(Qt::MoveAction);
     event->accept();
@@ -30,7 +31,8 @@ void TrashScreenWidget::dragEnterEvent(QDragEnterEvent *event) {
     event->ignore();
 }
 
-void TrashScreenWidget::dropEvent(QDropEvent *event) {
+void TrashScreenWidget::dropEvent(QDropEvent *event)
+{
   if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
     event->acceptProposedAction();
     emit screenRemoved();

@@ -26,15 +26,15 @@
 This class wraps a stream.  Subclasses provide indirect access
 to the wrapped stream, typically performing some filtering.
 */
-class StreamFilter : public deskflow::IStream {
+class StreamFilter : public deskflow::IStream
+{
 public:
   /*!
   Create a wrapper around \c stream.  Iff \c adoptStream is true then
   this object takes ownership of the stream and will delete it in the
   d'tor.
   */
-  StreamFilter(
-      IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
+  StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
   StreamFilter(StreamFilter const &) = delete;
   StreamFilter(StreamFilter &&) = delete;
   virtual ~StreamFilter();

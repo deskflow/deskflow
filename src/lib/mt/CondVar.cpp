@@ -24,22 +24,39 @@
 // CondVarBase
 //
 
-CondVarBase::CondVarBase(Mutex *mutex) : m_mutex(mutex) {
+CondVarBase::CondVarBase(Mutex *mutex) : m_mutex(mutex)
+{
   assert(m_mutex != NULL);
   m_cond = ARCH->newCondVar();
 }
 
-CondVarBase::~CondVarBase() { ARCH->closeCondVar(m_cond); }
+CondVarBase::~CondVarBase()
+{
+  ARCH->closeCondVar(m_cond);
+}
 
-void CondVarBase::lock() const { m_mutex->lock(); }
+void CondVarBase::lock() const
+{
+  m_mutex->lock();
+}
 
-void CondVarBase::unlock() const { m_mutex->unlock(); }
+void CondVarBase::unlock() const
+{
+  m_mutex->unlock();
+}
 
-void CondVarBase::signal() { ARCH->signalCondVar(m_cond); }
+void CondVarBase::signal()
+{
+  ARCH->signalCondVar(m_cond);
+}
 
-void CondVarBase::broadcast() { ARCH->broadcastCondVar(m_cond); }
+void CondVarBase::broadcast()
+{
+  ARCH->broadcastCondVar(m_cond);
+}
 
-bool CondVarBase::wait(Stopwatch &timer, double timeout) const {
+bool CondVarBase::wait(Stopwatch &timer, double timeout) const
+{
   double remain = timeout - timer.getTime();
   // Some ARCH wait()s return prematurely, retry until really timed out
   // In particular, ArchMultithreadPosix::waitCondVar() returns every 100ms
@@ -56,8 +73,12 @@ bool CondVarBase::wait(Stopwatch &timer, double timeout) const {
   return false;
 }
 
-bool CondVarBase::wait(double timeout) const {
+bool CondVarBase::wait(double timeout) const
+{
   return ARCH->waitCondVar(m_cond, m_mutex->m_mutex, timeout);
 }
 
-Mutex *CondVarBase::getMutex() const { return m_mutex; }
+Mutex *CondVarBase::getMutex() const
+{
+  return m_mutex;
+}

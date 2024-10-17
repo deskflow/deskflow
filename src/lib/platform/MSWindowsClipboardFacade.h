@@ -22,7 +22,8 @@
 
 #include "deskflow/IClipboard.h"
 
-class MSWindowsClipboardFacade : public IMSWindowsClipboardFacade {
+class MSWindowsClipboardFacade : public IMSWindowsClipboardFacade
+{
 public:
   virtual void write(HANDLE win32Data, UINT win32Format);
 };

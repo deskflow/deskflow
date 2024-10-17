@@ -35,15 +35,15 @@ void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys);
 void assertMaskIsOne(ForeachKeyCallback cb, void *userData);
 
 const deskflow::KeyMap::KeyItem *stubMapKey(
-    deskflow::KeyMap::Keystrokes &keys, KeyID id, SInt32 group,
-    deskflow::KeyMap::ModifierToKeys &activeModifiers,
-    KeyModifierMask &currentState, KeyModifierMask desiredMask,
-    bool isAutoRepeat, const String &lang);
+    deskflow::KeyMap::Keystrokes &keys, KeyID id, SInt32 group, deskflow::KeyMap::ModifierToKeys &activeModifiers,
+    KeyModifierMask &currentState, KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+);
 
 deskflow::KeyMap::Keystroke s_stubKeystroke(1, false, false);
 deskflow::KeyMap::KeyItem s_stubKeyItem;
 
-TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne) {
+TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -53,7 +53,8 @@ TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne) {
   EXPECT_EQ(1, keyState.getKeyState(1));
 }
 
-TEST(KeyStateTests, onKey_aKeyUp_keyStateZero) {
+TEST(KeyStateTests, onKey_aKeyUp_keyStateZero)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -63,7 +64,8 @@ TEST(KeyStateTests, onKey_aKeyUp_keyStateZero) {
   EXPECT_EQ(0, keyState.getKeyState(1));
 }
 
-TEST(KeyStateTests, onKey_invalidKey_keyStateZero) {
+TEST(KeyStateTests, onKey_invalidKey_keyStateZero)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -73,7 +75,8 @@ TEST(KeyStateTests, onKey_invalidKey_keyStateZero) {
   EXPECT_EQ(0, keyState.getKeyState(0));
 }
 
-TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled) {
+TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
+{
   NiceMock<MockKeyMap> keyMap;
   NiceMock<MockEventQueue> eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -85,7 +88,8 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled) {
   keyState.sendKeyEvent(NULL, false, true, kKeyCapsLock, 0, 0, 0);
 }
 
-TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice) {
+TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
+{
   NiceMock<MockKeyMap> keyMap;
   NiceMock<MockEventQueue> eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -100,7 +104,8 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice) {
   keyState.sendKeyEvent(NULL, false, false, kKeyCapsLock, 0, 0, 0);
 }
 
-TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce) {
+TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
+{
   NiceMock<MockKeyMap> keyMap;
   NiceMock<MockEventQueue> eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -114,7 +119,8 @@ TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce) {
   keyState.sendKeyEvent(NULL, false, true, 1, 0, 0, 0);
 }
 
-TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce) {
+TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
+{
   NiceMock<MockKeyMap> keyMap;
   NiceMock<MockEventQueue> eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -128,7 +134,8 @@ TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce) {
   keyState.sendKeyEvent(NULL, true, false, 1, 0, 0, 0);
 }
 
-TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce) {
+TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
+{
   NiceMock<MockKeyMap> keyMap;
   NiceMock<MockEventQueue> eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -142,7 +149,8 @@ TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce) {
   keyState.sendKeyEvent(NULL, false, false, 1, 0, 0, 0);
 }
 
-TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock) {
+TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -153,12 +161,12 @@ TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock) {
   keyState.updateKeyMap();
 }
 
-TEST(KeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown) {
+TEST(KeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
-  ON_CALL(keyState, pollPressedKeys(_))
-      .WillByDefault(Invoke(stubPollPressedKeys));
+  ON_CALL(keyState, pollPressedKeys(_)).WillByDefault(Invoke(stubPollPressedKeys));
 
   keyState.updateKeyState();
 
@@ -166,7 +174,8 @@ TEST(KeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown) {
   ASSERT_TRUE(actual);
 }
 
-TEST(KeyStateTests, updateKeyState_pollDoesNothing_keyNotSet) {
+TEST(KeyStateTests, updateKeyState_pollDoesNothing_keyNotSet)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -177,12 +186,12 @@ TEST(KeyStateTests, updateKeyState_pollDoesNothing_keyNotSet) {
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, updateKeyState_activeModifiers_maskSet) {
+TEST(KeyStateTests, updateKeyState_activeModifiers_maskSet)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
-  ON_CALL(keyState, pollActiveModifiers())
-      .WillByDefault(Return(KeyModifierAlt));
+  ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));
 
   keyState.updateKeyState();
 
@@ -190,7 +199,8 @@ TEST(KeyStateTests, updateKeyState_activeModifiers_maskSet) {
   ASSERT_EQ(KeyModifierAlt, actual);
 }
 
-TEST(KeyStateTests, updateKeyState_activeModifiers_maskNotSet) {
+TEST(KeyStateTests, updateKeyState_activeModifiers_maskNotSet)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -201,7 +211,8 @@ TEST(KeyStateTests, updateKeyState_activeModifiers_maskNotSet) {
   ASSERT_EQ(0, actual);
 }
 
-TEST(KeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers) {
+TEST(KeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -214,7 +225,8 @@ TEST(KeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers) {
   keyState.updateKeyState();
 }
 
-TEST(KeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded) {
+TEST(KeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -224,7 +236,8 @@ TEST(KeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded) {
   keyState.setHalfDuplexMask(KeyModifierCapsLock);
 }
 
-TEST(KeyStateTests, setHalfDuplexMask_numLock_halfDuplexNumLockAdded) {
+TEST(KeyStateTests, setHalfDuplexMask_numLock_halfDuplexNumLockAdded)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -234,7 +247,8 @@ TEST(KeyStateTests, setHalfDuplexMask_numLock_halfDuplexNumLockAdded) {
   keyState.setHalfDuplexMask(KeyModifierNumLock);
 }
 
-TEST(KeyStateTests, setHalfDuplexMask_scrollLock_halfDuplexScollLockAdded) {
+TEST(KeyStateTests, setHalfDuplexMask_scrollLock_halfDuplexScollLockAdded)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -244,14 +258,14 @@ TEST(KeyStateTests, setHalfDuplexMask_scrollLock_halfDuplexScollLockAdded) {
   keyState.setHalfDuplexMask(KeyModifierScrollLock);
 }
 
-TEST(KeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyCalledTwice) {
+TEST(KeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyCalledTwice)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
   s_stubKeyItem.m_client = 0;
   s_stubKeyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
   // 2 calls to fakeKeyDown should still call fakeKey, even though
   // repeated keys are handled differently.
@@ -262,7 +276,8 @@ TEST(KeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyCalledTwice) {
   keyState.fakeKeyDown(1, 0, 0, "en");
 }
 
-TEST(KeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled) {
+TEST(KeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -272,21 +287,22 @@ TEST(KeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled) {
   keyState.fakeKeyDown(kKeyCapsLock, 0, 0, "en");
 }
 
-TEST(KeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled) {
+TEST(KeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
   s_stubKeyItem.m_button = 0;
   s_stubKeyItem.m_client = 0;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
   EXPECT_CALL(keyState, fakeKey(_)).Times(1);
 
   keyState.fakeKeyDown(1, 0, 0, "en");
 }
 
-TEST(KeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse) {
+TEST(KeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -296,7 +312,8 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse) {
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse) {
+TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -305,21 +322,20 @@ TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse) {
   deskflow::KeyMap::KeyItem keyItem;
   keyItem.m_client = 0;
   keyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Return(&keyItem));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
   keyState.fakeKeyDown(1, 0, 0, "en");
 
   // change mapKey to return NULL so that fakeKeyRepeat exits early.
   deskflow::KeyMap::KeyItem *nullKeyItem = NULL;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Return(nullKeyItem));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
 
   bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0, "en");
 
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse) {
+TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -328,21 +344,20 @@ TEST(KeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse) {
   deskflow::KeyMap::KeyItem keyItem;
   keyItem.m_client = 0;
   keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Return(&keyItem));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
   keyState.fakeKeyDown(1, 0, 0, "en");
 
   // change button to 0 so that fakeKeyRepeat will return early.
   keyItem.m_button = 0;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Return(&keyItem));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 
   bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0, "en");
 
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue) {
+TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -352,21 +367,20 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue) {
 
   // set the button to 1 for fakeKeyDown call
   s_stubKeyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
   keyState.fakeKeyDown(1, 0, 0, "en");
 
   // change the button to 2
   s_stubKeyItem.m_button = 2;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
   bool actual = keyState.fakeKeyRepeat(1, 0, 0, 0, "en");
 
   ASSERT_TRUE(actual);
 }
 
-TEST(KeyStateTests, fakeKeyUp_buttonNotDown_returnsFalse) {
+TEST(KeyStateTests, fakeKeyUp_buttonNotDown_returnsFalse)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -376,20 +390,19 @@ TEST(KeyStateTests, fakeKeyUp_buttonNotDown_returnsFalse) {
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue) {
+TEST(KeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
 
   // press alt down so we get full coverage.
-  ON_CALL(keyState, pollActiveModifiers())
-      .WillByDefault(Return(KeyModifierAlt));
+  ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));
   keyState.updateKeyState();
 
   // press button 1 down.
   s_stubKeyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
   keyState.fakeKeyDown(1, 0, 1, "en");
 
   // this takes the button id, which is the 3rd arg of fakeKeyDown
@@ -398,15 +411,15 @@ TEST(KeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue) {
   ASSERT_TRUE(actual);
 }
 
-TEST(KeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp) {
+TEST(KeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
 
   // press button 1 down.
   s_stubKeyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
   keyState.fakeKeyDown(1, 0, 1, "en");
 
   // method under test
@@ -416,15 +429,15 @@ TEST(KeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp) {
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, isKeyDown_keyDown_returnsTrue) {
+TEST(KeyStateTests, isKeyDown_keyDown_returnsTrue)
+{
   NiceMock<MockKeyMap> keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
 
   // press button 1 down.
   s_stubKeyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _))
-      .WillByDefault(Invoke(stubMapKey));
+  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
   keyState.fakeKeyDown(1, 0, 1, "en");
 
   // method under test
@@ -433,7 +446,8 @@ TEST(KeyStateTests, isKeyDown_keyDown_returnsTrue) {
   ASSERT_TRUE(actual);
 }
 
-TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse) {
+TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse)
+{
   MockKeyMap keyMap;
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
@@ -444,7 +458,8 @@ TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse) {
   ASSERT_FALSE(actual);
 }
 
-TEST(KeyStateTests, updateKeyMap_exercised) {
+TEST(KeyStateTests, updateKeyMap_exercised)
+{
   deskflow::KeyMap keyMap;
   deskflow::KeyMap::KeyItem keyItem;
   keyItem.m_button = 'A';
@@ -458,18 +473,19 @@ TEST(KeyStateTests, updateKeyMap_exercised) {
   keyState.updateKeyMap(&keyMap);
 }
 
-void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys) {
+void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys)
+{
   pressedKeys.insert(1);
 }
 
-void assertMaskIsOne(ForeachKeyCallback cb, void *userData) {
+void assertMaskIsOne(ForeachKeyCallback cb, void *userData)
+{
   ASSERT_EQ(1, ((KeyState::AddActiveModifierContext *)userData)->m_mask);
 }
 
-const deskflow::KeyMap::KeyItem *stubMapKey(
-    deskflow::KeyMap::Keystrokes &keys, KeyID, SInt32,
-    deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask,
-    bool, const String &) {
+const deskflow::KeyMap::KeyItem *
+stubMapKey(deskflow::KeyMap::Keystrokes &keys, KeyID, SInt32, deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const String &)
+{
   keys.push_back(s_stubKeystroke);
   return &s_stubKeyItem;
 }

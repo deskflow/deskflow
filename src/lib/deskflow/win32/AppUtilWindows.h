@@ -27,9 +27,14 @@
 
 class IEventQueue;
 
-enum AppExitMode { kExitModeNormal, kExitModeDaemon };
+enum AppExitMode
+{
+  kExitModeNormal,
+  kExitModeDaemon
+};
 
-class AppUtilWindows : public AppUtil {
+class AppUtilWindows : public AppUtil
+{
 public:
   AppUtilWindows(IEventQueue *events);
   virtual ~AppUtilWindows();

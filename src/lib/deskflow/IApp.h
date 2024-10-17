@@ -33,13 +33,13 @@ class Screen;
 }
 class IEventQueue;
 
-class IApp : public IInterface {
+class IApp : public IInterface
+{
 public:
   virtual void setByeFunc(void (*bye)(int)) = 0;
   virtual deskflow::ArgsBase &argsBase() const = 0;
   virtual int standardStartup(int argc, char **argv) = 0;
-  virtual int runInner(
-      int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) = 0;
+  virtual int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) = 0;
   virtual void startNode() = 0;
   virtual IArchTaskBarReceiver *taskBarReceiver() const = 0;
   virtual void bye(int error) = 0;

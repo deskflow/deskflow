@@ -34,15 +34,17 @@ static const char s_certificateFilename[] = {DESKFLOW_APP_ID ".pem"};
 //
 
 SecureListenSocket::SecureListenSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
-    : TCPListenSocket(events, socketMultiplexer, family) {}
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+)
+    : TCPListenSocket(events, socketMultiplexer, family)
+{
+}
 
-IDataSocket *SecureListenSocket::accept() {
+IDataSocket *SecureListenSocket::accept()
+{
   SecureSocket *socket = NULL;
   try {
-    socket = new SecureSocket(
-        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+    socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
     socket->initSsl(true);
 
     if (socket != NULL) {
@@ -51,8 +53,8 @@ IDataSocket *SecureListenSocket::accept() {
 
     // default location of the TLS cert file in users dir
     String certificateFilename = deskflow::string::sprintf(
-        "%s/%s/%s", ARCH->getProfileDirectory().c_str(), s_certificateDir,
-        s_certificateFilename);
+        "%s/%s/%s", ARCH->getProfileDirectory().c_str(), s_certificateDir, s_certificateFilename
+    );
 
     // if the tls cert option is set use that for the certificate file
     if (!ArgParser::argsBase().m_tlsCertFile.empty()) {

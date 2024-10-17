@@ -26,7 +26,8 @@
 This interface defines the logging operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchLog : public IInterface {
+class IArchLog : public IInterface
+{
 public:
   //! @name manipulators
   //@{

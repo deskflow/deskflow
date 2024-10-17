@@ -28,13 +28,15 @@ const auto kCopyrightFormat = //
     "Copyright (C) 2009-2012 Nick Bolton\n"
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
-inline std::string copyright() {
+inline std::string copyright()
+{
   const std::string date = BUILD_DATE;
   const auto year = date.substr(0, 4);
   const auto kBufferLength = 256;
   std::vector<char> buffer(kBufferLength);
   std::snprintf( // NOSONAR
-      buffer.data(), kBufferLength, kCopyrightFormat, year.c_str());
+      buffer.data(), kBufferLength, kCopyrightFormat, year.c_str()
+  );
   return std::string(buffer.data());
 }
 

@@ -19,7 +19,8 @@
 #include "platform/XWindowsClipboardBMPConverter.h"
 
 // BMP file header structure
-struct CBMPHeader {
+struct CBMPHeader
+{
 public:
   UInt16 type;
   UInt32 size;
@@ -29,24 +30,27 @@ public:
 };
 
 // BMP is little-endian
-static inline UInt32 fromLEU32(const UInt8 *data) {
-  return static_cast<UInt32>(data[0]) | (static_cast<UInt32>(data[1]) << 8) |
-         (static_cast<UInt32>(data[2]) << 16) |
+static inline UInt32 fromLEU32(const UInt8 *data)
+{
+  return static_cast<UInt32>(data[0]) | (static_cast<UInt32>(data[1]) << 8) | (static_cast<UInt32>(data[2]) << 16) |
          (static_cast<UInt32>(data[3]) << 24);
 }
 
-static void toLE(UInt8 *&dst, char src) {
+static void toLE(UInt8 *&dst, char src)
+{
   dst[0] = static_cast<UInt8>(src);
   dst += 1;
 }
 
-static void toLE(UInt8 *&dst, UInt16 src) {
+static void toLE(UInt8 *&dst, UInt16 src)
+{
   dst[0] = static_cast<UInt8>(src & 0xffu);
   dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
   dst += 2;
 }
 
-static void toLE(UInt8 *&dst, UInt32 src) {
+static void toLE(UInt8 *&dst, UInt32 src)
+{
   dst[0] = static_cast<UInt8>(src & 0xffu);
   dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
   dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
@@ -59,23 +63,33 @@ static void toLE(UInt8 *&dst, UInt32 src) {
 //
 
 XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(Display *display)
-    : m_atom(XInternAtom(display, "image/bmp", False)) {
+    : m_atom(XInternAtom(display, "image/bmp", False))
+{
   // do nothing
 }
 
-XWindowsClipboardBMPConverter::~XWindowsClipboardBMPConverter() {
+XWindowsClipboardBMPConverter::~XWindowsClipboardBMPConverter()
+{
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardBMPConverter::getFormat() const {
+IClipboard::EFormat XWindowsClipboardBMPConverter::getFormat() const
+{
   return IClipboard::kBitmap;
 }
 
-Atom XWindowsClipboardBMPConverter::getAtom() const { return m_atom; }
+Atom XWindowsClipboardBMPConverter::getAtom() const
+{
+  return m_atom;
+}
 
-int XWindowsClipboardBMPConverter::getDataSize() const { return 8; }
+int XWindowsClipboardBMPConverter::getDataSize() const
+{
+  return 8;
+}
 
-String XWindowsClipboardBMPConverter::fromIClipboard(const String &bmp) const {
+String XWindowsClipboardBMPConverter::fromIClipboard(const String &bmp) const
+{
   // create BMP image
   UInt8 header[14];
   UInt8 *dst = header;
@@ -88,7 +102,8 @@ String XWindowsClipboardBMPConverter::fromIClipboard(const String &bmp) const {
   return String(reinterpret_cast<const char *>(header), 14) + bmp;
 }
 
-String XWindowsClipboardBMPConverter::toIClipboard(const String &bmp) const {
+String XWindowsClipboardBMPConverter::toIClipboard(const String &bmp) const
+{
   // make sure data is big enough for a BMP file
   if (bmp.size() <= 14 + 40) {
     return String();

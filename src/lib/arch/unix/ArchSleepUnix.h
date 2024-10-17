@@ -23,7 +23,8 @@
 #define ARCH_SLEEP ArchSleepUnix
 
 //! Unix implementation of IArchSleep
-class ArchSleepUnix : public IArchSleep {
+class ArchSleepUnix : public IArchSleep
+{
 public:
   ArchSleepUnix();
   virtual ~ArchSleepUnix();

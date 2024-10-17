@@ -31,9 +31,12 @@ namespace deskflow {
 /*!
 Defines the interface for all streams.
 */
-class IStream : public IInterface {
+class IStream : public IInterface
+{
 public:
-  IStream() {}
+  IStream()
+  {
+  }
 
   //! @name manipulators
   //@{

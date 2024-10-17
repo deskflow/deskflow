@@ -40,7 +40,8 @@ a request to cancel the thread.  Cancellation points are noted in the
 documentation.
 */
 // note -- do not derive from this class
-class Thread {
+class Thread
+{
 public:
   //! Run \c adoptedJob in a new thread
   /*!

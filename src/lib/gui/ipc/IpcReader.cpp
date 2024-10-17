@@ -27,19 +27,22 @@
 
 using namespace deskflow::gui;
 
-IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket) {}
-
-void IpcReader::start() const {
-  connect(
-      m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
+IpcReader::IpcReader(QTcpSocket *socket) : m_Socket(socket)
+{
 }
 
-void IpcReader::stop() const {
-  disconnect(
-      m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
+void IpcReader::start() const
+{
+  connect(m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
 }
 
-void IpcReader::onSocketReadyRead() {
+void IpcReader::stop() const
+{
+  disconnect(m_Socket, &QTcpSocket::readyRead, this, &IpcReader::onSocketReadyRead);
+}
+
+void IpcReader::onSocketReadyRead()
+{
   QMutexLocker locker(&m_Mutex);
   logVerbose("ready read");
 
@@ -75,7 +78,8 @@ void IpcReader::onSocketReadyRead() {
   logVerbose("read done");
 }
 
-bool IpcReader::readStream(char *buffer, int length) {
+bool IpcReader::readStream(char *buffer, int length)
+{
   logVerbose("reading stream");
 
   int read = 0;

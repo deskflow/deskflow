@@ -21,7 +21,8 @@
 
 class IEventQueue;
 
-class EventTypes {
+class EventTypes
+{
 public:
   EventTypes();
   void setEvents(IEventQueue *events);
@@ -33,12 +34,14 @@ private:
   IEventQueue *m_events;
 };
 
-#define REGISTER_EVENT(type_, name_)                                           \
-  Event::Type type_##Events::name_() {                                         \
-    return getEvents()->registerTypeOnce(m_##name_, __FUNCTION__);             \
+#define REGISTER_EVENT(type_, name_)                                                                                   \
+  Event::Type type_##Events::name_()                                                                                   \
+  {                                                                                                                    \
+    return getEvents()->registerTypeOnce(m_##name_, __FUNCTION__);                                                     \
   }
 
-class ClientEvents : public EventTypes {
+class ClientEvents : public EventTypes
+{
 public:
   //! @name accessors
   //@{
@@ -81,14 +84,17 @@ private:
   Event::Type m_disconnected = Event::kUnknown;
 };
 
-class IStreamEvents : public EventTypes {
+class IStreamEvents : public EventTypes
+{
 public:
   IStreamEvents()
       : m_inputReady(Event::kUnknown),
         m_outputFlushed(Event::kUnknown),
         m_outputError(Event::kUnknown),
         m_inputShutdown(Event::kUnknown),
-        m_outputShutdown(Event::kUnknown) {}
+        m_outputShutdown(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -144,11 +150,12 @@ private:
   Event::Type m_outputShutdown;
 };
 
-class IpcClientEvents : public EventTypes {
+class IpcClientEvents : public EventTypes
+{
 public:
-  IpcClientEvents()
-      : m_connected(Event::kUnknown),
-        m_messageReceived(Event::kUnknown) {}
+  IpcClientEvents() : m_connected(Event::kUnknown), m_messageReceived(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -166,11 +173,12 @@ private:
   Event::Type m_messageReceived;
 };
 
-class IpcClientProxyEvents : public EventTypes {
+class IpcClientProxyEvents : public EventTypes
+{
 public:
-  IpcClientProxyEvents()
-      : m_messageReceived(Event::kUnknown),
-        m_disconnected(Event::kUnknown) {}
+  IpcClientProxyEvents() : m_messageReceived(Event::kUnknown), m_disconnected(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -188,11 +196,12 @@ private:
   Event::Type m_disconnected;
 };
 
-class IpcServerEvents : public EventTypes {
+class IpcServerEvents : public EventTypes
+{
 public:
-  IpcServerEvents()
-      : m_clientConnected(Event::kUnknown),
-        m_messageReceived(Event::kUnknown) {}
+  IpcServerEvents() : m_clientConnected(Event::kUnknown), m_messageReceived(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -210,9 +219,12 @@ private:
   Event::Type m_messageReceived;
 };
 
-class IpcServerProxyEvents : public EventTypes {
+class IpcServerProxyEvents : public EventTypes
+{
 public:
-  IpcServerProxyEvents() : m_messageReceived(Event::kUnknown) {}
+  IpcServerProxyEvents() : m_messageReceived(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -226,12 +238,15 @@ private:
   Event::Type m_messageReceived;
 };
 
-class IDataSocketEvents : public EventTypes {
+class IDataSocketEvents : public EventTypes
+{
 public:
   IDataSocketEvents()
       : m_connected(Event::kUnknown),
         m_secureConnected(Event::kUnknown),
-        m_connectionFailed(Event::kUnknown) {}
+        m_connectionFailed(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -266,9 +281,12 @@ private:
   Event::Type m_connectionFailed;
 };
 
-class IListenSocketEvents : public EventTypes {
+class IListenSocketEvents : public EventTypes
+{
 public:
-  IListenSocketEvents() : m_connecting(Event::kUnknown) {}
+  IListenSocketEvents() : m_connecting(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -286,11 +304,12 @@ private:
   Event::Type m_connecting;
 };
 
-class ISocketEvents : public EventTypes {
+class ISocketEvents : public EventTypes
+{
 public:
-  ISocketEvents()
-      : m_disconnected(Event::kUnknown),
-        m_stopRetry(Event::kUnknown) {}
+  ISocketEvents() : m_disconnected(Event::kUnknown), m_stopRetry(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -317,9 +336,12 @@ private:
   Event::Type m_stopRetry;
 };
 
-class OSXScreenEvents : public EventTypes {
+class OSXScreenEvents : public EventTypes
+{
 public:
-  OSXScreenEvents() : m_confirmSleep(Event::kUnknown) {}
+  OSXScreenEvents() : m_confirmSleep(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -332,11 +354,12 @@ private:
   Event::Type m_confirmSleep;
 };
 
-class ClientListenerEvents : public EventTypes {
+class ClientListenerEvents : public EventTypes
+{
 public:
-  ClientListenerEvents()
-      : m_accepted(Event::kUnknown),
-        m_connected(Event::kUnknown) {}
+  ClientListenerEvents() : m_accepted(Event::kUnknown), m_connected(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -362,11 +385,12 @@ private:
   Event::Type m_connected;
 };
 
-class ClientProxyEvents : public EventTypes {
+class ClientProxyEvents : public EventTypes
+{
 public:
-  ClientProxyEvents()
-      : m_ready(Event::kUnknown),
-        m_disconnected(Event::kUnknown) {}
+  ClientProxyEvents() : m_ready(Event::kUnknown), m_disconnected(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -393,11 +417,12 @@ private:
   Event::Type m_disconnected;
 };
 
-class ClientProxyUnknownEvents : public EventTypes {
+class ClientProxyUnknownEvents : public EventTypes
+{
 public:
-  ClientProxyUnknownEvents()
-      : m_success(Event::kUnknown),
-        m_failure(Event::kUnknown) {}
+  ClientProxyUnknownEvents() : m_success(Event::kUnknown), m_failure(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -423,7 +448,8 @@ private:
   Event::Type m_failure;
 };
 
-class ServerEvents : public EventTypes {
+class ServerEvents : public EventTypes
+{
 public:
   ServerEvents()
       : m_error(Event::kUnknown),
@@ -433,7 +459,9 @@ public:
         m_switchInDirection(Event::kUnknown),
         m_keyboardBroadcast(Event::kUnknown),
         m_lockCursorToScreen(Event::kUnknown),
-        m_screenSwitched(Event::kUnknown) {}
+        m_screenSwitched(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -512,12 +540,12 @@ private:
   Event::Type m_screenSwitched;
 };
 
-class ServerAppEvents : public EventTypes {
+class ServerAppEvents : public EventTypes
+{
 public:
-  ServerAppEvents()
-      : m_reloadConfig(Event::kUnknown),
-        m_forceReconnect(Event::kUnknown),
-        m_resetServer(Event::kUnknown) {}
+  ServerAppEvents() : m_reloadConfig(Event::kUnknown), m_forceReconnect(Event::kUnknown), m_resetServer(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -534,12 +562,12 @@ private:
   Event::Type m_resetServer;
 };
 
-class IKeyStateEvents : public EventTypes {
+class IKeyStateEvents : public EventTypes
+{
 public:
-  IKeyStateEvents()
-      : m_keyDown(Event::kUnknown),
-        m_keyUp(Event::kUnknown),
-        m_keyRepeat(Event::kUnknown) {}
+  IKeyStateEvents() : m_keyDown(Event::kUnknown), m_keyUp(Event::kUnknown), m_keyRepeat(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -561,7 +589,8 @@ private:
   Event::Type m_keyRepeat;
 };
 
-class IPrimaryScreenEvents : public EventTypes {
+class IPrimaryScreenEvents : public EventTypes
+{
 public:
   IPrimaryScreenEvents()
       : m_buttonDown(Event::kUnknown),
@@ -574,7 +603,9 @@ public:
         m_hotKeyDown(Event::kUnknown),
         m_hotKeyUp(Event::kUnknown),
         m_fakeInputBegin(Event::kUnknown),
-        m_fakeInputEnd(Event::kUnknown) {}
+        m_fakeInputEnd(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -635,13 +666,16 @@ private:
   Event::Type m_fakeInputEnd;
 };
 
-class IScreenEvents : public EventTypes {
+class IScreenEvents : public EventTypes
+{
 public:
   IScreenEvents()
       : m_error(Event::kUnknown),
         m_shapeChanged(Event::kUnknown),
         m_suspend(Event::kUnknown),
-        m_resume(Event::kUnknown) {}
+        m_resume(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -683,12 +717,15 @@ private:
   Event::Type m_resume;
 };
 
-class ClipboardEvents : public EventTypes {
+class ClipboardEvents : public EventTypes
+{
 public:
   ClipboardEvents()
       : m_clipboardGrabbed(Event::kUnknown),
         m_clipboardChanged(Event::kUnknown),
-        m_clipboardSending(Event::kUnknown) {}
+        m_clipboardSending(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -724,12 +761,15 @@ private:
   Event::Type m_clipboardSending;
 };
 
-class FileEvents : public EventTypes {
+class FileEvents : public EventTypes
+{
 public:
   FileEvents()
       : m_fileChunkSending(Event::kUnknown),
         m_fileRecieveCompleted(Event::kUnknown),
-        m_keepAlive(Event::kUnknown) {}
+        m_keepAlive(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{
@@ -751,9 +791,12 @@ private:
   Event::Type m_keepAlive;
 };
 
-class EiEvents : public EventTypes {
+class EiEvents : public EventTypes
+{
 public:
-  EiEvents() : m_connected(Event::kUnknown), m_sessionClosed(Event::kUnknown) {}
+  EiEvents() : m_connected(Event::kUnknown), m_sessionClosed(Event::kUnknown)
+  {
+  }
 
   //! @name accessors
   //@{

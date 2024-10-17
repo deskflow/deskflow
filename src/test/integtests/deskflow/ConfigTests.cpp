@@ -26,7 +26,8 @@ using namespace deskflow;
 
 const auto kTestFilename = "tmp/test/test.toml";
 
-TEST(ConfigTests, load_fileExists_loadsConfig) {
+TEST(ConfigTests, load_fileExists_loadsConfig)
+{
   std::ofstream testFile(kTestFilename);
   testFile << "[test.args]\n"
               R"(test-arg = "test opt")";
@@ -42,17 +43,20 @@ TEST(ConfigTests, load_fileExists_loadsConfig) {
   ASSERT_STREQ(config.argv()[2], "test opt");
 }
 
-TEST(ConfigTests, load_filenameEmpty_throwsException) {
+TEST(ConfigTests, load_filenameEmpty_throwsException)
+{
   EXPECT_THROW(
       {
         Config config("", "test");
 
         config.load("test");
       },
-      Config::NoConfigFilenameError);
+      Config::NoConfigFilenameError
+  );
 }
 
-TEST(ConfigTests, load_fileDoesNotExist_returnsFalse) {
+TEST(ConfigTests, load_fileDoesNotExist_returnsFalse)
+{
   Config config("nonexistent.toml", "test");
 
   const auto result = config.load("test");
@@ -60,7 +64,8 @@ TEST(ConfigTests, load_fileDoesNotExist_returnsFalse) {
   ASSERT_FALSE(result);
 }
 
-TEST(ConfigTests, load_invalidConfig_throwsException) {
+TEST(ConfigTests, load_invalidConfig_throwsException)
+{
   EXPECT_THROW(
       {
         std::ofstream testFile(kTestFilename);
@@ -71,10 +76,12 @@ TEST(ConfigTests, load_invalidConfig_throwsException) {
 
         config.load("test");
       },
-      Config::ParseError);
+      Config::ParseError
+  );
 }
 
-TEST(ConfigTests, load_sectionMissing_returnsFalse) {
+TEST(ConfigTests, load_sectionMissing_returnsFalse)
+{
   std::ofstream testFile(kTestFilename);
   testFile.close();
   Config config(kTestFilename, "missing");
@@ -84,7 +91,8 @@ TEST(ConfigTests, load_sectionMissing_returnsFalse) {
   ASSERT_FALSE(result);
 }
 
-TEST(ConfigTests, load_notTable_returnsFalse) {
+TEST(ConfigTests, load_notTable_returnsFalse)
+{
   std::ofstream testFile(kTestFilename);
   testFile << "[test]";
   testFile.close();
@@ -95,7 +103,8 @@ TEST(ConfigTests, load_notTable_returnsFalse) {
   ASSERT_FALSE(result);
 }
 
-TEST(ConfigTests, load_lastArg_returnsLast) {
+TEST(ConfigTests, load_lastArg_returnsLast)
+{
   std::ofstream testFile(kTestFilename);
   testFile << "[test.args]\n"
               R"(_last = "test last")"
@@ -113,7 +122,8 @@ TEST(ConfigTests, load_lastArg_returnsLast) {
   ASSERT_STREQ(config.argv()[2], "test last");
 }
 
-TEST(ConfigTests, load_noArgs_returnsFalse) {
+TEST(ConfigTests, load_noArgs_returnsFalse)
+{
   std::ofstream testFile(kTestFilename);
   testFile << "[test.args]";
   testFile.close();

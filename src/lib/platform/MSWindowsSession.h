@@ -24,7 +24,8 @@
 
 #include <Tlhelp32.h>
 
-class MSWindowsSession {
+class MSWindowsSession
+{
 public:
   MSWindowsSession();
   ~MSWindowsSession();
@@ -40,7 +41,10 @@ public:
 
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
 
-  DWORD getActiveSessionId() { return m_activeSessionId; }
+  DWORD getActiveSessionId()
+  {
+    return m_activeSessionId;
+  }
 
   void updateActiveSession();
 

@@ -22,17 +22,18 @@
 // FunctionJob
 //
 
-FunctionJob::FunctionJob(void (*func)(void *), void *arg)
-    : m_func(func),
-      m_arg(arg) {
+FunctionJob::FunctionJob(void (*func)(void *), void *arg) : m_func(func), m_arg(arg)
+{
   // do nothing
 }
 
-FunctionJob::~FunctionJob() {
+FunctionJob::~FunctionJob()
+{
   // do nothing
 }
 
-void FunctionJob::run() {
+void FunctionJob::run()
+{
   if (m_func != NULL) {
     m_func(m_arg);
   }

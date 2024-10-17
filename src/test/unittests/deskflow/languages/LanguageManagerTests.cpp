@@ -19,29 +19,28 @@
 
 #include <gtest/gtest.h>
 
-TEST(LanguageManager, RemoteLanguagesTest) {
+TEST(LanguageManager, RemoteLanguagesTest)
+{
   std::string remoteLanguages = "ruenuk";
   deskflow::languages::LanguageManager manager({"ru", "en", "uk"});
 
   manager.setRemoteLanguages(remoteLanguages);
-  EXPECT_EQ(
-      (std::vector<std::string>{"ru", "en", "uk"}),
-      manager.getRemoteLanguages());
+  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}), manager.getRemoteLanguages());
 
   manager.setRemoteLanguages(String());
   EXPECT_TRUE(manager.getRemoteLanguages().empty());
 }
 
-TEST(LanguageManager, LocalLanguagesTest) {
+TEST(LanguageManager, LocalLanguagesTest)
+{
   std::vector<String> localLanguages = {"ru", "en", "uk"};
   deskflow::languages::LanguageManager manager(localLanguages);
 
-  EXPECT_EQ(
-      (std::vector<std::string>{"ru", "en", "uk"}),
-      manager.getLocalLanguages());
+  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}), manager.getLocalLanguages());
 }
 
-TEST(LanguageManager, MissedLanguagesTest) {
+TEST(LanguageManager, MissedLanguagesTest)
+{
   String remoteLanguages = "ruenuk";
   std::vector<String> localLanguages = {"en"};
   deskflow::languages::LanguageManager manager(localLanguages);
@@ -50,14 +49,16 @@ TEST(LanguageManager, MissedLanguagesTest) {
   EXPECT_EQ("ru, uk", manager.getMissedLanguages());
 }
 
-TEST(LanguageManager, SerializeLocalLanguagesTest) {
+TEST(LanguageManager, SerializeLocalLanguagesTest)
+{
   std::vector<String> localLanguages = {"ru", "en", "uk"};
   deskflow::languages::LanguageManager manager(localLanguages);
 
   EXPECT_EQ("ruenuk", manager.getSerializedLocalLanguages());
 }
 
-TEST(LanguageManager, LanguageInstalledTest) {
+TEST(LanguageManager, LanguageInstalledTest)
+{
   std::vector<String> localLanguages = {"ru", "en", "uk"};
   deskflow::languages::LanguageManager manager(localLanguages);
 

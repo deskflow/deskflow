@@ -22,7 +22,8 @@
 /*!
 The logging priority levels in order of highest to lowest priority.
 */
-enum ELevel {
+enum ELevel
+{
   kPRINT = -1, //!< For print only (no file or time)
   kFATAL,      //!< For fatal errors
   kERROR,      //!< For serious errors

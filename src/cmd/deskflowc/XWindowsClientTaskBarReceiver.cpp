@@ -23,35 +23,39 @@
 // CXWindowsClientTaskBarReceiver
 //
 
-CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver(
-    const BufferedLogOutputter *, IEventQueue *events)
-    : ClientTaskBarReceiver(events) {
+CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver(const BufferedLogOutputter *, IEventQueue *events)
+    : ClientTaskBarReceiver(events)
+{
   // add ourself to the task bar
   ARCH->addReceiver(this);
 }
 
-CXWindowsClientTaskBarReceiver::~CXWindowsClientTaskBarReceiver() {
+CXWindowsClientTaskBarReceiver::~CXWindowsClientTaskBarReceiver()
+{
   ARCH->removeReceiver(this);
 }
 
-void CXWindowsClientTaskBarReceiver::showStatus() {
+void CXWindowsClientTaskBarReceiver::showStatus()
+{
   // do nothing
 }
 
-void CXWindowsClientTaskBarReceiver::runMenu(int, int) {
+void CXWindowsClientTaskBarReceiver::runMenu(int, int)
+{
   // do nothing
 }
 
-void CXWindowsClientTaskBarReceiver::primaryAction() {
+void CXWindowsClientTaskBarReceiver::primaryAction()
+{
   // do nothing
 }
 
-const IArchTaskBarReceiver::Icon
-CXWindowsClientTaskBarReceiver::getIcon() const {
+const IArchTaskBarReceiver::Icon CXWindowsClientTaskBarReceiver::getIcon() const
+{
   return NULL;
 }
 
-IArchTaskBarReceiver *createTaskBarReceiver(
-    const BufferedLogOutputter *logBuffer, IEventQueue *events) {
+IArchTaskBarReceiver *createTaskBarReceiver(const BufferedLogOutputter *logBuffer, IEventQueue *events)
+{
   return new CXWindowsClientTaskBarReceiver(logBuffer, events);
 }

@@ -23,7 +23,8 @@
 
 #include <fstream>
 
-enum EFileLogOutputter {
+enum EFileLogOutputter
+{
   kFileSizeLimit = 1024 // kb
 };
 
@@ -31,70 +32,104 @@ enum EFileLogOutputter {
 // StopLogOutputter
 //
 
-StopLogOutputter::StopLogOutputter() {
+StopLogOutputter::StopLogOutputter()
+{
   // do nothing
 }
 
-StopLogOutputter::~StopLogOutputter() {
+StopLogOutputter::~StopLogOutputter()
+{
   // do nothing
 }
 
-void StopLogOutputter::open(const char *) {
+void StopLogOutputter::open(const char *)
+{
   // do nothing
 }
 
-void StopLogOutputter::close() {
+void StopLogOutputter::close()
+{
   // do nothing
 }
 
-void StopLogOutputter::show(bool) {
+void StopLogOutputter::show(bool)
+{
   // do nothing
 }
 
-bool StopLogOutputter::write(ELevel, const char *) { return false; }
+bool StopLogOutputter::write(ELevel, const char *)
+{
+  return false;
+}
 
 //
 // ConsoleLogOutputter
 //
 
-ConsoleLogOutputter::ConsoleLogOutputter() {}
+ConsoleLogOutputter::ConsoleLogOutputter()
+{
+}
 
-ConsoleLogOutputter::~ConsoleLogOutputter() {}
+ConsoleLogOutputter::~ConsoleLogOutputter()
+{
+}
 
-void ConsoleLogOutputter::open(const char *title) { ARCH->openConsole(title); }
+void ConsoleLogOutputter::open(const char *title)
+{
+  ARCH->openConsole(title);
+}
 
-void ConsoleLogOutputter::close() { ARCH->closeConsole(); }
+void ConsoleLogOutputter::close()
+{
+  ARCH->closeConsole();
+}
 
-void ConsoleLogOutputter::show(bool showIfEmpty) {
+void ConsoleLogOutputter::show(bool showIfEmpty)
+{
   ARCH->showConsole(showIfEmpty);
 }
 
-bool ConsoleLogOutputter::write(ELevel level, const char *msg) {
+bool ConsoleLogOutputter::write(ELevel level, const char *msg)
+{
   ARCH->writeConsole(level, msg);
   return true;
 }
 
-void ConsoleLogOutputter::flush() {}
+void ConsoleLogOutputter::flush()
+{
+}
 
 //
 // SystemLogOutputter
 //
 
-SystemLogOutputter::SystemLogOutputter() {
+SystemLogOutputter::SystemLogOutputter()
+{
   // do nothing
 }
 
-SystemLogOutputter::~SystemLogOutputter() {
+SystemLogOutputter::~SystemLogOutputter()
+{
   // do nothing
 }
 
-void SystemLogOutputter::open(const char *title) { ARCH->openLog(title); }
+void SystemLogOutputter::open(const char *title)
+{
+  ARCH->openLog(title);
+}
 
-void SystemLogOutputter::close() { ARCH->closeLog(); }
+void SystemLogOutputter::close()
+{
+  ARCH->closeLog();
+}
 
-void SystemLogOutputter::show(bool showIfEmpty) { ARCH->showLog(showIfEmpty); }
+void SystemLogOutputter::show(bool showIfEmpty)
+{
+  ARCH->showLog(showIfEmpty);
+}
 
-bool SystemLogOutputter::write(ELevel level, const char *msg) {
+bool SystemLogOutputter::write(ELevel level, const char *msg)
+{
   ARCH->writeLog(level, msg);
   return true;
 }
@@ -103,8 +138,8 @@ bool SystemLogOutputter::write(ELevel level, const char *msg) {
 // SystemLogger
 //
 
-SystemLogger::SystemLogger(const char *title, bool blockConsole)
-    : m_stop(NULL) {
+SystemLogger::SystemLogger(const char *title, bool blockConsole) : m_stop(NULL)
+{
   // redirect log messages
   if (blockConsole) {
     m_stop = new StopLogOutputter;
@@ -115,7 +150,8 @@ SystemLogger::SystemLogger(const char *title, bool blockConsole)
   CLOG->insert(m_syslog);
 }
 
-SystemLogger::~SystemLogger() {
+SystemLogger::~SystemLogger()
+{
   CLOG->remove(m_syslog);
   delete m_syslog;
   if (m_stop != NULL) {
@@ -128,37 +164,44 @@ SystemLogger::~SystemLogger() {
 // BufferedLogOutputter
 //
 
-BufferedLogOutputter::BufferedLogOutputter(UInt32 maxBufferSize)
-    : m_maxBufferSize(maxBufferSize) {
+BufferedLogOutputter::BufferedLogOutputter(UInt32 maxBufferSize) : m_maxBufferSize(maxBufferSize)
+{
   // do nothing
 }
 
-BufferedLogOutputter::~BufferedLogOutputter() {
+BufferedLogOutputter::~BufferedLogOutputter()
+{
   // do nothing
 }
 
-BufferedLogOutputter::const_iterator BufferedLogOutputter::begin() const {
+BufferedLogOutputter::const_iterator BufferedLogOutputter::begin() const
+{
   return m_buffer.begin();
 }
 
-BufferedLogOutputter::const_iterator BufferedLogOutputter::end() const {
+BufferedLogOutputter::const_iterator BufferedLogOutputter::end() const
+{
   return m_buffer.end();
 }
 
-void BufferedLogOutputter::open(const char *) {
+void BufferedLogOutputter::open(const char *)
+{
   // do nothing
 }
 
-void BufferedLogOutputter::close() {
+void BufferedLogOutputter::close()
+{
   // remove all elements from the buffer
   m_buffer.clear();
 }
 
-void BufferedLogOutputter::show(bool) {
+void BufferedLogOutputter::show(bool)
+{
   // do nothing
 }
 
-bool BufferedLogOutputter::write(ELevel, const char *message) {
+bool BufferedLogOutputter::write(ELevel, const char *message)
+{
   while (m_buffer.size() >= m_maxBufferSize) {
     m_buffer.pop_front();
   }
@@ -170,18 +213,23 @@ bool BufferedLogOutputter::write(ELevel, const char *message) {
 // FileLogOutputter
 //
 
-FileLogOutputter::FileLogOutputter(const char *logFile) {
+FileLogOutputter::FileLogOutputter(const char *logFile)
+{
   setLogFilename(logFile);
 }
 
-FileLogOutputter::~FileLogOutputter() {}
+FileLogOutputter::~FileLogOutputter()
+{
+}
 
-void FileLogOutputter::setLogFilename(const char *logFile) {
+void FileLogOutputter::setLogFilename(const char *logFile)
+{
   assert(logFile != NULL);
   m_fileName = logFile;
 }
 
-bool FileLogOutputter::write(ELevel level, const char *message) {
+bool FileLogOutputter::write(ELevel level, const char *message)
+{
   bool moveFile = false;
 
   std::ofstream m_handle;
@@ -198,8 +246,7 @@ bool FileLogOutputter::write(ELevel level, const char *message) {
   m_handle.close();
 
   if (moveFile) {
-    String oldLogFilename =
-        deskflow::string::sprintf("%s.1", m_fileName.c_str());
+    String oldLogFilename = deskflow::string::sprintf("%s.1", m_fileName.c_str());
     remove(oldLogFilename.c_str());
     rename(m_fileName.c_str(), oldLogFilename.c_str());
   }
@@ -207,8 +254,14 @@ bool FileLogOutputter::write(ELevel level, const char *message) {
   return true;
 }
 
-void FileLogOutputter::open(const char *title) {}
+void FileLogOutputter::open(const char *title)
+{
+}
 
-void FileLogOutputter::close() {}
+void FileLogOutputter::close()
+{
+}
 
-void FileLogOutputter::show(bool showIfEmpty) {}
+void FileLogOutputter::show(bool showIfEmpty)
+{
+}

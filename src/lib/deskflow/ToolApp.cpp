@@ -28,9 +28,16 @@
 #include "platform/MSWindowsSession.h"
 #endif
 
-enum { kErrorOk, kErrorArgs, kErrorException, kErrorUnknown };
+enum
+{
+  kErrorOk,
+  kErrorArgs,
+  kErrorException,
+  kErrorUnknown
+};
 
-UInt32 ToolApp::run(int argc, char **argv) {
+UInt32 ToolApp::run(int argc, char **argv)
+{
   if (argc <= 1) {
     std::cerr << "no args" << std::endl;
     return kErrorArgs;
@@ -52,8 +59,7 @@ UInt32 ToolApp::run(int argc, char **argv) {
         LOG((CLOG_CRIT "failed to get active desktop name"));
         return kExitFailed;
       } else {
-        String output =
-            deskflow::string::sprintf("activeDesktop:%s", name.c_str());
+        String output = deskflow::string::sprintf("activeDesktop:%s", name.c_str());
         LOG((CLOG_INFO "%s", output.c_str()));
       }
 #endif
@@ -82,4 +88,6 @@ UInt32 ToolApp::run(int argc, char **argv) {
   return kErrorOk;
 }
 
-void ToolApp::help() {}
+void ToolApp::help()
+{
+}

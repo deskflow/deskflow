@@ -13,7 +13,8 @@ namespace ssl {
 
 using AutoX509 = std::unique_ptr<X509, decltype(&X509_free)>;
 
-SslApi::SslApi(bool isServer) {
+SslApi::SslApi(bool isServer)
+{
   SSL_library_init();
   // load & register all cryptos, etc.
   OpenSSL_add_all_algorithms();
@@ -23,7 +24,8 @@ SslApi::SslApi(bool isServer) {
   SslLogger::logSecureLibInfo();
 }
 
-SslApi::~SslApi() {
+SslApi::~SslApi()
+{
   if (m_ssl) {
     SSL_shutdown(m_ssl);
     SSL_free(m_ssl);
@@ -36,7 +38,8 @@ SslApi::~SslApi() {
   }
 }
 
-int SslApi::read(char *buffer, int size) {
+int SslApi::read(char *buffer, int size)
+{
   auto read = 0;
 
   if (m_ssl) {
@@ -46,7 +49,8 @@ int SslApi::read(char *buffer, int size) {
   return read;
 }
 
-int SslApi::write(const char *buffer, int size) {
+int SslApi::write(const char *buffer, int size)
+{
   auto wrote = 0;
 
   if (m_ssl) {
@@ -56,7 +60,8 @@ int SslApi::write(const char *buffer, int size) {
   return wrote;
 }
 
-int SslApi::accept(int socket) {
+int SslApi::accept(int socket)
+{
   int result = 0;
 
   if (m_ssl) {
@@ -68,7 +73,8 @@ int SslApi::accept(int socket) {
   return result;
 }
 
-int SslApi::connect(int socket) {
+int SslApi::connect(int socket)
+{
   auto result = 0;
 
   if (m_ssl) {
@@ -80,25 +86,25 @@ int SslApi::connect(int socket) {
   return result;
 }
 
-void SslApi::createSSL() {
+void SslApi::createSSL()
+{
   if (m_ssl == nullptr && m_context != nullptr) {
     m_ssl = SSL_new(m_context);
   }
 }
 
-bool SslApi::loadCertificate(const std::string &filename) {
+bool SslApi::loadCertificate(const std::string &filename)
+{
   bool result = false;
 
   if (isCertificateExists(filename)) {
-    auto r = SSL_CTX_use_certificate_file(
-        m_context, filename.c_str(), SSL_FILETYPE_PEM);
+    auto r = SSL_CTX_use_certificate_file(m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
       SslLogger::logError("could not use tls certificate");
       return false;
     }
 
-    r = SSL_CTX_use_PrivateKey_file(
-        m_context, filename.c_str(), SSL_FILETYPE_PEM);
+    r = SSL_CTX_use_PrivateKey_file(m_context, filename.c_str(), SSL_FILETYPE_PEM);
     if (r <= 0) {
       SslLogger::logError("could not use tls private key");
       return false;
@@ -114,15 +120,15 @@ bool SslApi::loadCertificate(const std::string &filename) {
   return result;
 }
 
-bool SslApi::showCertificate() const {
+bool SslApi::showCertificate() const
+{
   bool result = false;
 
   if (m_ssl) {
     // get the server's certificate
     AutoX509 cert(SSL_get_peer_certificate(m_ssl), &X509_free);
     if (cert) {
-      auto line =
-          X509_NAME_oneline(X509_get_subject_name(cert.get()), nullptr, 0);
+      auto line = X509_NAME_oneline(X509_get_subject_name(cert.get()), nullptr, 0);
       LOG((CLOG_INFO "server tls certificate info: %s", line));
       OPENSSL_free(line);
       result = true;
@@ -134,34 +140,31 @@ bool SslApi::showCertificate() const {
   return result;
 }
 
-std::string SslApi::getFingerprint() const {
+std::string SslApi::getFingerprint() const
+{
   // calculate received certificate fingerprint
   AutoX509 cert(SSL_get_peer_certificate(m_ssl), &X509_free);
   unsigned int tempFingerprintLen = 0;
   unsigned char tempFingerprint[EVP_MAX_MD_SIZE] = {0};
-  int digestResult = X509_digest(
-      cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
+  int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
 
   if (digestResult <= 0) {
-    LOG(
-        (CLOG_ERR "failed to calculate fingerprint, digest result: %d",
-         digestResult));
+    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
     return "";
   }
 
   // format fingerprint into hexdecimal format with colon separator
-  std::string fingerprint(
-      static_cast<char *>(static_cast<void *>(tempFingerprint)),
-      tempFingerprintLen);
+  std::string fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
   formatFingerprint(fingerprint);
 
   return fingerprint;
 }
 
-bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
+bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const
+{
   // TODO: Reduce duplication of these strings between here and SecureSocket.cpp
-  auto trustedServersFilename = deskflow::string::sprintf(
-      "%s/tls/trusted-servers", ARCH->getProfileDirectory().c_str());
+  auto trustedServersFilename =
+      deskflow::string::sprintf("%s/tls/trusted-servers", ARCH->getProfileDirectory().c_str());
 
   // check if this fingerprint exist
   std::ifstream file;
@@ -178,15 +181,14 @@ bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
       }
     }
   } else {
-    LOG(
-        (CLOG_ERR "failed to open trusted fingerprints file: %s",
-         trustedServersFilename.c_str()));
+    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
   }
 
   return (isValid && showCertificate());
 }
 
-void SslApi::createContext(bool isServer) {
+void SslApi::createContext(bool isServer)
+{
   // create new context from method
   if (isServer) {
     m_context = SSL_CTX_new(SSLv23_server_method());
@@ -195,9 +197,7 @@ void SslApi::createContext(bool isServer) {
   }
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
   // be vulnerable
-  SSL_CTX_set_options(
-      m_context,
-      SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
+  SSL_CTX_set_options(m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
   if (m_context) {
     m_ssl = SSL_new(m_context);
@@ -206,16 +206,19 @@ void SslApi::createContext(bool isServer) {
   }
 }
 
-void SslApi::logSecureInfo() const {
+void SslApi::logSecureInfo() const
+{
   SslLogger::logSecureCipherInfo(m_ssl);
   SslLogger::logSecureConnectInfo(m_ssl);
 }
 
-int SslApi::getErrorCode(int status) const {
+int SslApi::getErrorCode(int status) const
+{
   return SSL_get_error(m_ssl, status);
 }
 
-void SslApi::formatFingerprint(std::string &fingerprint) const {
+void SslApi::formatFingerprint(std::string &fingerprint) const
+{
   // to hexidecimal
   deskflow::string::toHex(fingerprint, 2);
   // all uppercase
@@ -227,7 +230,8 @@ void SslApi::formatFingerprint(std::string &fingerprint) const {
   }
 }
 
-bool SslApi::isCertificateExists(const std::string &filename) const {
+bool SslApi::isCertificateExists(const std::string &filename) const
+{
   bool result = (!filename.empty());
 
   if (result) {

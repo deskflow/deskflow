@@ -21,20 +21,27 @@
 #include "common/basic_types.h"
 #include "common/stdmap.h"
 
-class EventData {
+class EventData
+{
 public:
-  EventData() {}
-  virtual ~EventData() {}
+  EventData()
+  {
+  }
+  virtual ~EventData()
+  {
+  }
 };
 
 //! Event
 /*!
 A \c Event holds an event type and a pointer to event data.
 */
-class Event {
+class Event
+{
 public:
   typedef UInt32 Type;
-  enum {
+  enum
+  {
     kUnknown, //!< The event type is unknown
     kQuit,    //!< The quit event
     kSystem,  //!< The data points to a system event type
@@ -43,7 +50,8 @@ public:
   };
 
   typedef UInt32 Flags;
-  enum {
+  enum
+  {
     kNone = 0x00,               //!< No flags
     kDeliverImmediately = 0x01, //!< Dispatch and free event immediately
     kDontFreeData = 0x02        //!< Don't free data in deleteData

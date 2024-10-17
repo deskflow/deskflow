@@ -31,19 +31,21 @@
 class IEventQueue;
 
 //! Event queue buffer for X11
-class XWindowsEventQueueBuffer : public IEventQueueBuffer {
+class XWindowsEventQueueBuffer : public IEventQueueBuffer
+{
 public:
   XWindowsEventQueueBuffer(Display *, Window, IEventQueue *events);
   XWindowsEventQueueBuffer(XWindowsEventQueueBuffer const &) = delete;
   XWindowsEventQueueBuffer(XWindowsEventQueueBuffer &&) = delete;
   virtual ~XWindowsEventQueueBuffer();
 
-  XWindowsEventQueueBuffer &
-  operator=(XWindowsEventQueueBuffer const &) = delete;
+  XWindowsEventQueueBuffer &operator=(XWindowsEventQueueBuffer const &) = delete;
   XWindowsEventQueueBuffer &operator=(XWindowsEventQueueBuffer &&) = delete;
 
   // IEventQueueBuffer overrides
-  virtual void init() {}
+  virtual void init()
+  {
+  }
   virtual void waitForEvent(double timeout);
   virtual Type getEvent(Event &event, UInt32 &dataID);
   virtual bool addEvent(UInt32 dataID);

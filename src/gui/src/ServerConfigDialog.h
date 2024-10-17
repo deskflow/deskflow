@@ -25,19 +25,22 @@
 
 #include <QDialog>
 
-class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase {
+class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
+{
   Q_OBJECT
 
 public:
-  ServerConfigDialog(
-      QWidget *parent, ServerConfig &config, AppConfig &appConfig);
+  ServerConfigDialog(QWidget *parent, ServerConfig &config, AppConfig &appConfig);
   bool addClient(const QString &clientName);
 
 public slots:
   void accept() override;
   void reject() override;
   void showEvent(QShowEvent *event) override;
-  void message(const QString &message) { m_Message = message; }
+  void message(const QString &message)
+  {
+    m_Message = message;
+  }
 
 protected slots:
   void on_m_pButtonNewHotkey_clicked();
@@ -57,12 +60,22 @@ protected slots:
 
 protected:
   bool addComputer(const QString &clientName, bool doSilent);
-  ServerConfig &serverConfig() { return m_ServerConfig; }
-  void setOriginalServerConfig(const ServerConfig &s) {
+  ServerConfig &serverConfig()
+  {
+    return m_ServerConfig;
+  }
+  void setOriginalServerConfig(const ServerConfig &s)
+  {
     m_OriginalServerConfig = s;
   }
-  ScreenSetupModel &model() { return m_ScreenSetupModel; }
-  AppConfig &appConfig() { return m_appConfig; }
+  ScreenSetupModel &model()
+  {
+    return m_ScreenSetupModel;
+  }
+  AppConfig &appConfig()
+  {
+    return m_appConfig;
+  }
 
 private:
   ServerConfig &m_OriginalServerConfig;

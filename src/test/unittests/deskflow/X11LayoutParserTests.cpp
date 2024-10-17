@@ -23,7 +23,8 @@
 
 const std::string testDir = "tmp/test";
 
-void createTestFiles() {
+void createTestFiles()
+{
   std::ofstream correctEvdevFile(testDir + "/correctEvdev.xml");
   if (!correctEvdevFile.is_open()) {
     FAIL();
@@ -35,12 +36,9 @@ void createTestFiles() {
   correctEvdevFile << "    <layout>" << std::endl;
   correctEvdevFile << "      <configItem>" << std::endl;
   correctEvdevFile << "        <name>us</name>" << std::endl;
-  correctEvdevFile << "        <!-- Keyboard indicator for English layouts -->"
-                   << std::endl;
-  correctEvdevFile << "        <shortDescription>en</shortDescription>"
-                   << std::endl;
-  correctEvdevFile << "        <description>English (US)</description>"
-                   << std::endl;
+  correctEvdevFile << "        <!-- Keyboard indicator for English layouts -->" << std::endl;
+  correctEvdevFile << "        <shortDescription>en</shortDescription>" << std::endl;
+  correctEvdevFile << "        <description>English (US)</description>" << std::endl;
   correctEvdevFile << "        <languageList>" << std::endl;
   correctEvdevFile << "          <iso639Id>eng</iso639Id>" << std::endl;
   correctEvdevFile << "        </languageList>" << std::endl;
@@ -49,10 +47,8 @@ void createTestFiles() {
   correctEvdevFile << "        <variant>" << std::endl;
   correctEvdevFile << "          <configItem>" << std::endl;
   correctEvdevFile << "            <name>eng</name>" << std::endl;
-  correctEvdevFile << "            <shortDescription>eng</shortDescription>"
-                   << std::endl;
-  correctEvdevFile << "            <description>Cherokee</description>"
-                   << std::endl;
+  correctEvdevFile << "            <shortDescription>eng</shortDescription>" << std::endl;
+  correctEvdevFile << "            <description>Cherokee</description>" << std::endl;
   correctEvdevFile << "            <languageList>" << std::endl;
   correctEvdevFile << "              <iso639Id>eng</iso639Id>" << std::endl;
   correctEvdevFile << "            </languageList>" << std::endl;
@@ -63,10 +59,8 @@ void createTestFiles() {
   correctEvdevFile << "    <layout>" << std::endl;
   correctEvdevFile << "      <configItem>" << std::endl;
   correctEvdevFile << "        <name>ru</name>" << std::endl;
-  correctEvdevFile << "        <!-- Keyboard indicator for Russian layouts -->"
-                   << std::endl;
-  correctEvdevFile << "        <shortDescription>ru</shortDescription>"
-                   << std::endl;
+  correctEvdevFile << "        <!-- Keyboard indicator for Russian layouts -->" << std::endl;
+  correctEvdevFile << "        <shortDescription>ru</shortDescription>" << std::endl;
   correctEvdevFile << "        <description>Russian</description>" << std::endl;
   correctEvdevFile << "        <languageList>" << std::endl;
   correctEvdevFile << "          <iso639Id>rus</iso639Id>" << std::endl;
@@ -82,8 +76,7 @@ void createTestFiles() {
     FAIL();
   }
 
-  evdevFromFutureFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                      << std::endl;
+  evdevFromFutureFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
   evdevFromFutureFile << "<xkbConfigRegistry version=\"1.1\">" << std::endl;
   evdevFromFutureFile << "  <layoutList>" << std::endl;
   evdevFromFutureFile << "    <layout>" << std::endl;
@@ -111,8 +104,7 @@ void createTestFiles() {
     FAIL();
   }
 
-  incorrectEvdevFile2 << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                      << std::endl;
+  incorrectEvdevFile2 << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
   incorrectEvdevFile2 << "<xkbConfigRegistry version=\"1.1\">" << std::endl;
   incorrectEvdevFile2 << "</xkbConfigRegistry>" << std::endl;
   incorrectEvdevFile2.close();
@@ -122,8 +114,7 @@ void createTestFiles() {
     FAIL();
   }
 
-  incorrectEvdevFile3 << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                      << std::endl;
+  incorrectEvdevFile3 << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
   incorrectEvdevFile3 << "<xkbConfigRegistry version=\"1.1\">" << std::endl;
   incorrectEvdevFile3 << "  <layoutList>" << std::endl;
   incorrectEvdevFile3 << "    <layout>" << std::endl;
@@ -133,47 +124,37 @@ void createTestFiles() {
   incorrectEvdevFile3.close();
 }
 
-TEST(X11LayoutsParsingTests, xmlCorrectParsingTest) {
+TEST(X11LayoutsParsingTests, xmlCorrectParsingTest)
+{
   createTestFiles();
   std::vector<String> expectedResult = {"en", "ru"};
-  auto parsedResult =
-      X11LayoutsParser::getX11LanguageList(testDir + "/correctEvdev.xml");
+  auto parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/correctEvdev.xml");
 
   EXPECT_EQ(parsedResult, parsedResult);
 }
 
-TEST(X11LayoutsParsingTests, xmlParsingMissedEvdevFileTest) {
-  auto parsedResult =
-      X11LayoutsParser::getX11LanguageList(testDir + "/missedFile");
+TEST(X11LayoutsParsingTests, xmlParsingMissedEvdevFileTest)
+{
+  auto parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/missedFile");
   EXPECT_TRUE(parsedResult.empty());
 }
 
-TEST(X11LayoutsParsingTests, xmlParsingIncorrectEvdevFileTest) {
+TEST(X11LayoutsParsingTests, xmlParsingIncorrectEvdevFileTest)
+{
   std::vector<String> parsedResult;
-  parsedResult =
-      X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev1.xml");
+  parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev1.xml");
   EXPECT_TRUE(parsedResult.empty());
-  parsedResult =
-      X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev2.xml");
+  parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev2.xml");
   EXPECT_TRUE(parsedResult.empty());
-  parsedResult =
-      X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev3.xml");
+  parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev3.xml");
   EXPECT_TRUE(parsedResult.empty());
 }
 
-TEST(X11LayoutsParsingTests, layoutConvertTest) {
-  EXPECT_EQ(
-      X11LayoutsParser::convertLayotToISO(
-          testDir + "/correctEvdev.xml", "us", true),
-      "en");
-  EXPECT_EQ(
-      X11LayoutsParser::convertLayotToISO(
-          testDir + "/incorrectEvdev1.xml", "us", true),
-      "");
-  EXPECT_EQ(
-      X11LayoutsParser::convertLayotToISO(
-          testDir + "/evdevFromFuture.xml", "us", true),
-      "");
+TEST(X11LayoutsParsingTests, layoutConvertTest)
+{
+  EXPECT_EQ(X11LayoutsParser::convertLayotToISO(testDir + "/correctEvdev.xml", "us", true), "en");
+  EXPECT_EQ(X11LayoutsParser::convertLayotToISO(testDir + "/incorrectEvdev1.xml", "us", true), "");
+  EXPECT_EQ(X11LayoutsParser::convertLayotToISO(testDir + "/evdevFromFuture.xml", "us", true), "");
 }
 
 #endif

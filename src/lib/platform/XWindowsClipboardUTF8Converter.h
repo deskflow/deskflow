@@ -21,13 +21,13 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from UTF-8 encoding
-class XWindowsClipboardUTF8Converter : public IXWindowsClipboardConverter {
+class XWindowsClipboardUTF8Converter : public IXWindowsClipboardConverter
+{
 public:
   /*!
   \c name is converted to an atom and that is reported by getAtom().
   */
-  XWindowsClipboardUTF8Converter(
-      Display *display, const char *name, bool normalize = false);
+  XWindowsClipboardUTF8Converter(Display *display, const char *name, bool normalize = false);
   virtual ~XWindowsClipboardUTF8Converter();
 
   // IXWindowsClipboardConverter overrides

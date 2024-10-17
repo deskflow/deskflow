@@ -37,7 +37,8 @@ namespace deskflow {
 This is a platform independent screen.  It can work as either a
 primary or secondary screen.
 */
-class Screen : public IScreen {
+class Screen : public IScreen
+{
 public:
   Screen(IPlatformScreen *platformScreen, IEventQueue *events);
   Screen(Screen const &) = delete;
@@ -48,7 +49,9 @@ public:
   Screen &operator&(Screen &&) = delete;
 
 #ifdef TEST_ENV
-  Screen() : m_mock(true) {}
+  Screen() : m_mock(true)
+  {
+  }
 #endif
 
   //! @name manipulators
@@ -134,8 +137,7 @@ public:
   Synthesize key events to generate a press and release of key \c id
   \c count times.  If possible match the given modifier mask.
   */
-  void keyRepeat(
-      KeyID id, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
+  void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
 
   //! Notify of key release
   /*!
@@ -309,11 +311,13 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
-  IPlatformScreen *getPlatformScreen() { return m_screen; }
+  IPlatformScreen *getPlatformScreen()
+  {
+    return m_screen;
+  }
 
 protected:
   void enablePrimary();

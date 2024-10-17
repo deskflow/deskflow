@@ -26,7 +26,8 @@
 #define ARCH_VSNPRINTF vsnprintf
 #endif
 
-int IArchString::vsnprintf(char *str, int size, const char *fmt, va_list ap) {
+int IArchString::vsnprintf(char *str, int size, const char *fmt, va_list ap)
+{
   int n = ::ARCH_VSNPRINTF(str, size, fmt, ap);
   if (n > size) {
     n = -1;
@@ -38,7 +39,8 @@ int IArchString::vsnprintf(char *str, int size, const char *fmt, va_list ap) {
 
 #include <stdio.h>
 
-int IArchString::vsnprintf(char *str, int size, const char *fmt, va_list ap) {
+int IArchString::vsnprintf(char *str, int size, const char *fmt, va_list ap)
+{
   static FILE *bitbucket = fopen("/dev/null", "w");
   if (bitbucket == NULL) {
     // uh oh

@@ -17,7 +17,8 @@
 
 #pragma once
 
-enum qProcessorArch {
+enum qProcessorArch
+{
   kProcessorArchWin32,
   kProcessorArchWin64,
   kProcessorArchMac32,

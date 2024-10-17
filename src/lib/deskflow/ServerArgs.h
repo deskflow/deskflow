@@ -24,7 +24,8 @@
 
 namespace deskflow {
 
-class ServerArgs : public ArgsBase {
+class ServerArgs : public ArgsBase
+{
   using Config = deskflow::server::Config;
 
 public:

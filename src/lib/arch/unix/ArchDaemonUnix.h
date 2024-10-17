@@ -24,7 +24,8 @@
 #define ARCH_DAEMON ArchDaemonUnix
 
 //! Unix implementation of IArchDaemon
-class ArchDaemonUnix : public ArchDaemonNone {
+class ArchDaemonUnix : public ArchDaemonNone
+{
 public:
   ArchDaemonUnix();
   virtual ~ArchDaemonUnix();

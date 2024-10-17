@@ -28,20 +28,26 @@
 
 Arch *Arch::s_instance = NULL;
 
-Arch::Arch() {
+Arch::Arch()
+{
   assert(s_instance == NULL);
   s_instance = this;
 }
 
-Arch::Arch(Arch *arch) { s_instance = arch; }
+Arch::Arch(Arch *arch)
+{
+  s_instance = arch;
+}
 
-Arch::~Arch() {
+Arch::~Arch()
+{
 #if SYSAPI_WIN32
   ArchMiscWindows::cleanup();
 #endif
 }
 
-void Arch::init() {
+void Arch::init()
+{
   ARCH_NETWORK::init();
 #if SYSAPI_WIN32
   ARCH_TASKBAR::init();
@@ -49,7 +55,8 @@ void Arch::init() {
 #endif
 }
 
-Arch *Arch::getInstance() {
+Arch *Arch::getInstance()
+{
   assert(s_instance != NULL);
   return s_instance;
 }

@@ -27,21 +27,23 @@
 
 namespace deskflow::gui {
 
-class ServerConnection : public QObject {
+class ServerConnection : public QObject
+{
   Q_OBJECT
   using IServerConfig = deskflow::gui::IServerConfig;
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
-    virtual messages::NewClientPromptResult
-    showNewClientPrompt(QWidget *parent, const QString &clientName) const;
+    virtual messages::NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName) const;
   };
 
   explicit ServerConnection(
       QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
       const config::ServerConfigDialogState &serverConfigDialogState,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+      std::shared_ptr<Deps> deps = std::make_shared<Deps>()
+  );
   void handleLogLine(const QString &logLine);
 
 signals:

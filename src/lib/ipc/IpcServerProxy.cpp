@@ -29,20 +29,21 @@
 // IpcServerProxy
 //
 
-IpcServerProxy::IpcServerProxy(deskflow::IStream &stream, IEventQueue *events)
-    : m_stream(stream),
-      m_events(events) {
+IpcServerProxy::IpcServerProxy(deskflow::IStream &stream, IEventQueue *events) : m_stream(stream), m_events(events)
+{
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), stream.getEventTarget(),
-      new TMethodEventJob<IpcServerProxy>(this, &IpcServerProxy::handleData));
+      new TMethodEventJob<IpcServerProxy>(this, &IpcServerProxy::handleData)
+  );
 }
 
-IpcServerProxy::~IpcServerProxy() {
-  m_events->removeHandler(
-      m_events->forIStream().inputReady(), m_stream.getEventTarget());
+IpcServerProxy::~IpcServerProxy()
+{
+  m_events->removeHandler(m_events->forIStream().inputReady(), m_stream.getEventTarget());
 }
 
-void IpcServerProxy::handleData(const Event &, void *) {
+void IpcServerProxy::handleData(const Event &, void *)
+{
   LOG((CLOG_DEBUG "start ipc handle data"));
 
   UInt8 code[4];
@@ -62,9 +63,7 @@ void IpcServerProxy::handleData(const Event &, void *) {
     }
 
     // don't delete with this event; the data is passed to a new event.
-    Event e(
-        m_events->forIpcServerProxy().messageReceived(), this, NULL,
-        Event::kDontFreeData);
+    Event e(m_events->forIpcServerProxy().messageReceived(), this, NULL, Event::kDontFreeData);
     e.setDataObject(m);
     m_events->addEvent(e);
 
@@ -74,7 +73,8 @@ void IpcServerProxy::handleData(const Event &, void *) {
   LOG((CLOG_DEBUG "finished ipc handle data"));
 }
 
-void IpcServerProxy::send(const IpcMessage &message) {
+void IpcServerProxy::send(const IpcMessage &message)
+{
   LOG((CLOG_DEBUG4 "ipc write: %d", message.type()));
 
   switch (message.type()) {
@@ -85,8 +85,7 @@ void IpcServerProxy::send(const IpcMessage &message) {
   }
 
   case IpcMessageType::Command: {
-    const IpcCommandMessage &cm =
-        static_cast<const IpcCommandMessage &>(message);
+    const IpcCommandMessage &cm = static_cast<const IpcCommandMessage &>(message);
     const String command = cm.command();
     ProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
     break;
@@ -98,7 +97,8 @@ void IpcServerProxy::send(const IpcMessage &message) {
   }
 }
 
-IpcLogLineMessage *IpcServerProxy::parseLogLine() {
+IpcLogLineMessage *IpcServerProxy::parseLogLine()
+{
   String logLine;
   ProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
 
@@ -106,7 +106,8 @@ IpcLogLineMessage *IpcServerProxy::parseLogLine() {
   return new IpcLogLineMessage(logLine);
 }
 
-void IpcServerProxy::disconnect() {
+void IpcServerProxy::disconnect()
+{
   LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
   m_stream.close();
 }

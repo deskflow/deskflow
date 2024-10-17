@@ -30,8 +30,9 @@ namespace deskflow::gui {
 // ServerConnection::Deps
 //
 
-messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
-    QWidget *parent, const QString &clientName) const {
+messages::NewClientPromptResult
+ServerConnection::Deps::showNewClientPrompt(QWidget *parent, const QString &clientName) const
+{
   return messages::showNewClientPrompt(parent, clientName);
 }
 
@@ -41,15 +42,18 @@ messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
 
 ServerConnection::ServerConnection(
     QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
-    const config::ServerConfigDialogState &serverConfigDialogState,
-    std::shared_ptr<Deps> deps)
+    const config::ServerConfigDialogState &serverConfigDialogState, std::shared_ptr<Deps> deps
+)
     : m_pParent(parent),
       m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_serverConfigDialogState(serverConfigDialogState),
-      m_pDeps(deps) {}
+      m_pDeps(deps)
+{
+}
 
-void ServerConnection::handleLogLine(const QString &logLine) {
+void ServerConnection::handleLogLine(const QString &logLine)
+{
   ServerMessage message(logLine);
 
   if (!message.isNewClientMessage()) {
@@ -74,31 +78,26 @@ void ServerConnection::handleLogLine(const QString &logLine) {
   const auto client = message.getClientName();
 
   if (m_receivedClients.contains(client)) {
-    qDebug(
-        "already got request, skipping new client prompt for: %s",
-        qPrintable(client));
+    qDebug("already got request, skipping new client prompt for: %s", qPrintable(client));
     return;
   }
 
   handleNewClient(message.getClientName());
 }
 
-void ServerConnection::handleNewClient(const QString &clientName) {
+void ServerConnection::handleNewClient(const QString &clientName)
+{
   using enum messages::NewClientPromptResult;
 
   m_receivedClients.append(clientName);
 
   if (m_serverConfig.isFull()) {
-    qDebug(
-        "server config full, skipping new client prompt for: %s",
-        qPrintable(clientName));
+    qDebug("server config full, skipping new client prompt for: %s", qPrintable(clientName));
     return;
   }
 
   if (m_serverConfig.screenExists(clientName)) {
-    qDebug(
-        "client already added, skipping new client prompt for: %s",
-        qPrintable(clientName));
+    qDebug("client already added, skipping new client prompt for: %s", qPrintable(clientName));
     return;
   }
 

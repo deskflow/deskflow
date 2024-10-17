@@ -24,29 +24,34 @@ class QWidget;
 
 namespace deskflow::gui::messages {
 
-enum class ClientError { AlreadyConnected, HostnameError, GenericError };
+enum class ClientError
+{
+  AlreadyConnected,
+  HostnameError,
+  GenericError
+};
 
-enum class NewClientPromptResult { Add, Ignore };
+enum class NewClientPromptResult
+{
+  Add,
+  Ignore
+};
 
-void messageHandler(
-    QtMsgType type, const QMessageLogContext &context, const QString &msg);
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 void raiseCriticalDialog();
 
 void showFirstServerStartMessage(QWidget *parent);
 
-void showFirstConnectedMessage(
-    QWidget *parent, bool closeToTray, bool enableService, bool isServer);
+void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableService, bool isServer);
 
 void showCloseReminder(QWidget *parent);
 
 void showDevThanks(QWidget *parent, const QString &productName);
 
-void showClientConnectError(
-    QWidget *parent, ClientError error, const QString &address);
+void showClientConnectError(QWidget *parent, ClientError error, const QString &address);
 
-NewClientPromptResult
-showNewClientPrompt(QWidget *parent, const QString &clientName);
+NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName);
 
 bool showClearSettings(QWidget *parent);
 

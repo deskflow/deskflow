@@ -27,18 +27,21 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 
-bool client_stubParseGenericArgs(int, const char *const *, int &) {
+bool client_stubParseGenericArgs(int, const char *const *, int &)
+{
   return false;
 }
 
-bool client_stubCheckUnexpectedArgs() { return false; }
+bool client_stubCheckUnexpectedArgs()
+{
+  return false;
+}
 
-TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll) {
+TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(client_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   const int argc = 3;
   const char *kYScrollCmd[argc] = {"stub", "--yscroll", "1"};
@@ -48,12 +51,11 @@ TEST(ClientArgsParsingTests, parseClientArgs_yScrollArg_setYScroll) {
   EXPECT_EQ(1, clientArgs.m_yscroll);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_setLangSync) {
+TEST(ClientArgsParsingTests, parseClientArgs_setLangSync)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(client_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 2;
@@ -64,31 +66,28 @@ TEST(ClientArgsParsingTests, parseClientArgs_setLangSync) {
   EXPECT_TRUE(clientArgs.m_enableLangSync);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_setInvertScroll) {
+TEST(ClientArgsParsingTests, parseClientArgs_setInvertScroll)
+{
   NiceMock<MockArgParser> argParser;
   deskflow::ClientArgs clientArgs;
   const int argc = 2;
   std::array<const char *, argc> kLangCmd = {"stub", "--invert-scroll"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
-  EXPECT_EQ(
-      clientArgs.m_clientScrollDirection,
-      deskflow::ClientScrollDirection::INVERT_SERVER);
+  EXPECT_EQ(clientArgs.m_clientScrollDirection, deskflow::ClientScrollDirection::INVERT_SERVER);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
+TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(client_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
   const int argc = 9;
-  std::array<const char *, argc> kLangCmd = {
-      "stub",       "--enable-crypto", "--profile-dir",
-      "profileDir", "--plugin-dir",    "pluginDir",
-      "--tls-cert", "tlsCertPath",     "--prevent-sleep"};
+  std::array<const char *, argc> kLangCmd = {"stub",       "--enable-crypto", "--profile-dir",
+                                             "profileDir", "--plugin-dir",    "pluginDir",
+                                             "--tls-cert", "tlsCertPath",     "--prevent-sleep"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 
@@ -99,12 +98,11 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs) {
   EXPECT_TRUE(clientArgs.m_preventSleep);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setDeskflowAddress) {
+TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setDeskflowAddress)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(client_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   const int argc = 2;
   const char *kAddressCmd[argc] = {"stub", "mock_address"};
@@ -115,12 +113,11 @@ TEST(ClientArgsParsingTests, parseClientArgs_addressArg_setDeskflowAddress) {
   EXPECT_EQ(true, result);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse) {
+TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(client_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   const int argc = 1;
   const char *kNoAddressCmd[argc] = {"stub"};
@@ -130,12 +127,11 @@ TEST(ClientArgsParsingTests, parseClientArgs_noAddressArg_returnFalse) {
   EXPECT_FALSE(result);
 }
 
-TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse) {
+TEST(ClientArgsParsingTests, parseClientArgs_unrecognizedArg_returnFalse)
+{
   NiceMock<MockArgParser> argParser;
-  ON_CALL(argParser, parseGenericArgs(_, _, _))
-      .WillByDefault(Invoke(client_stubParseGenericArgs));
-  ON_CALL(argParser, checkUnexpectedArgs())
-      .WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(client_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   const int argc = 3;
   const char *kUnrecognizedCmd[argc] = {"stub", "mock_arg", "mock_address"};

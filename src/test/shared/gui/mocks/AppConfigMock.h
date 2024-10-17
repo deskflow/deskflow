@@ -23,15 +23,16 @@
 
 #include <gmock/gmock.h>
 
-class AppConfigMock : public deskflow::gui::IAppConfig {
+class AppConfigMock : public deskflow::gui::IAppConfig
+{
   using ProcessMode = deskflow::gui::ProcessMode;
 
 public:
-  AppConfigMock() {
+  AppConfigMock()
+  {
     ON_CALL(*this, screenName()).WillByDefault(testing::ReturnRef(m_stub));
 
-    ON_CALL(*this, networkInterface())
-        .WillByDefault(testing::ReturnRef(m_stub));
+    ON_CALL(*this, networkInterface()).WillByDefault(testing::ReturnRef(m_stub));
 
     ON_CALL(*this, logLevelText()).WillByDefault(testing::Return(m_stub));
 
@@ -76,12 +77,10 @@ public:
   // Setters
   //
 
-  MOCK_METHOD(
-      void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
+  MOCK_METHOD(void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
   MOCK_METHOD(void, setScreenName, (const QString &screenName), (override));
   MOCK_METHOD(void, setPort, (int port), (override));
-  MOCK_METHOD(
-      void, setNetworkInterface, (const QString &networkInterface), (override));
+  MOCK_METHOD(void, setNetworkInterface, (const QString &networkInterface), (override));
   MOCK_METHOD(void, setLogLevel, (int logLevel), (override));
   MOCK_METHOD(void, setLogToFile, (bool logToFile), (override));
   MOCK_METHOD(void, setLogFilename, (const QString &logFilename), (override));
@@ -92,8 +91,7 @@ public:
   MOCK_METHOD(void, setTlsKeyLength, (int tlsKeyLength), (override));
   MOCK_METHOD(void, setTlsEnabled, (bool tlsEnabled), (override));
   MOCK_METHOD(void, setLanguageSync, (bool languageSync), (override));
-  MOCK_METHOD(
-      void, setInvertScrollDirection, (bool invertScrollDirection), (override));
+  MOCK_METHOD(void, setInvertScrollDirection, (bool invertScrollDirection), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
   MOCK_METHOD(void, setCloseToTray, (bool closeToTray), (override));
   MOCK_METHOD(void, setInvertConnection, (bool invertConnection), (override));

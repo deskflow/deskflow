@@ -23,12 +23,16 @@
 
 #include <Wtsapi32.h>
 
-MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1) {}
+MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1)
+{
+}
 
-MSWindowsSession::~MSWindowsSession() {}
+MSWindowsSession::~MSWindowsSession()
+{
+}
 
-bool MSWindowsSession::isProcessInSession(
-    const char *name, PHANDLE process = NULL) {
+bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = NULL)
+{
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (snapshot == INVALID_HANDLE_VALUE) {
@@ -58,15 +62,15 @@ bool MSWindowsSession::isProcessInSession(
     if (entry.th32ProcessID != 0) {
 
       DWORD processSessionId;
-      BOOL pidToSidRet =
-          ProcessIdToSessionId(entry.th32ProcessID, &processSessionId);
+      BOOL pidToSidRet = ProcessIdToSessionId(entry.th32ProcessID, &processSessionId);
 
       if (!pidToSidRet) {
         // if we can not acquire session associated with a specified process,
         // simply ignore it
         LOG(
-            (CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i",
-             entry.th32ProcessID, entry.szExeFile, GetLastError()));
+            (CLOG_DEBUG2 "could not get session id for process: %i %s, code=%i", entry.th32ProcessID, entry.szExeFile,
+             GetLastError())
+        );
         gotEntry = nextProcessEntry(snapshot, &entry);
         continue;
       } else {
@@ -88,15 +92,12 @@ bool MSWindowsSession::isProcessInSession(
   }
 
   std::string nameListJoin;
-  for (std::list<std::string>::iterator it = nameList.begin();
-       it != nameList.end(); it++) {
+  for (std::list<std::string>::iterator it = nameList.begin(); it != nameList.end(); it++) {
     nameListJoin.append(*it);
     nameListJoin.append(", ");
   }
 
-  LOG(
-      (CLOG_DEBUG2 "processes in session %d: %s", m_activeSessionId,
-       nameListJoin.c_str()));
+  LOG((CLOG_DEBUG2 "processes in session %d: %s", m_activeSessionId, nameListJoin.c_str()));
 
   CloseHandle(snapshot);
 
@@ -114,7 +115,8 @@ bool MSWindowsSession::isProcessInSession(
 }
 
 HANDLE
-MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security) {
+MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
+{
   HANDLE sourceToken;
   if (!WTSQueryUserToken(m_activeSessionId, &sourceToken)) {
     LOG((CLOG_ERR "could not get token from session %d", m_activeSessionId));
@@ -123,8 +125,8 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security) {
 
   HANDLE newToken;
   if (!DuplicateTokenEx(
-          sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
-          SecurityImpersonation, TokenPrimary, &newToken)) {
+          sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security, SecurityImpersonation, TokenPrimary, &newToken
+      )) {
 
     LOG((CLOG_ERR "could not duplicate token"));
     throw XArch(new XArchEvalWindows);
@@ -134,16 +136,18 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security) {
   return newToken;
 }
 
-BOOL MSWindowsSession::hasChanged() {
+BOOL MSWindowsSession::hasChanged()
+{
   return (m_activeSessionId != WTSGetActiveConsoleSessionId());
 }
 
-void MSWindowsSession::updateActiveSession() {
+void MSWindowsSession::updateActiveSession()
+{
   m_activeSessionId = WTSGetActiveConsoleSessionId();
 }
 
-BOOL MSWindowsSession::nextProcessEntry(
-    HANDLE snapshot, LPPROCESSENTRY32 entry) {
+BOOL MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
+{
   // TODO: issue S3-2021
   // resetting the error state here is acceptable, but having to do so indicates
   // that a different win32 function call has failed beforehand. we should
@@ -166,7 +170,8 @@ BOOL MSWindowsSession::nextProcessEntry(
   return gotEntry;
 }
 
-String MSWindowsSession::getActiveDesktopName() {
+String MSWindowsSession::getActiveDesktopName()
+{
   String result;
   try {
     HDESK hd = OpenInputDesktop(0, TRUE, GENERIC_READ);

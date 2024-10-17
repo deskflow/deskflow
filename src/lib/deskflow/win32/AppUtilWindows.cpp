@@ -44,33 +44,40 @@
 #include "wintoastlib.h"
 #endif
 
-AppUtilWindows::AppUtilWindows(IEventQueue *events)
-    : m_events(events),
-      m_exitMode(kExitModeNormal) {
+AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMode(kExitModeNormal)
+{
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
     throw XArch(new XArchEvalWindows());
   }
 }
 
-AppUtilWindows::~AppUtilWindows() {}
+AppUtilWindows::~AppUtilWindows()
+{
+}
 
-BOOL WINAPI AppUtilWindows::consoleHandler(DWORD) {
+BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
+{
   LOG((CLOG_INFO "got shutdown signal"));
   IEventQueue *events = AppUtil::instance().app().getEvents();
   events->addEvent(Event(Event::kQuit));
   return TRUE;
 }
 
-static int mainLoopStatic() { return AppUtil::instance().app().mainLoop(); }
+static int mainLoopStatic()
+{
+  return AppUtil::instance().app().mainLoop();
+}
 
-int AppUtilWindows::daemonNTMainLoop(int argc, const char **argv) {
+int AppUtilWindows::daemonNTMainLoop(int argc, const char **argv)
+{
   app().initApp(argc, argv);
   debugServiceWait();
 
   return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
-void AppUtilWindows::exitApp(int code) {
+void AppUtilWindows::exitApp(int code)
+{
   switch (m_exitMode) {
 
   case kExitModeDaemon:
@@ -82,25 +89,30 @@ void AppUtilWindows::exitApp(int code) {
   }
 }
 
-int daemonNTMainLoopStatic(int argc, const char **argv) {
+int daemonNTMainLoopStatic(int argc, const char **argv)
+{
   return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
-int AppUtilWindows::daemonNTStartup(int, char **) {
+int AppUtilWindows::daemonNTStartup(int, char **)
+{
   SystemLogger sysLogger(app().daemonName(), false);
   m_exitMode = kExitModeDaemon;
   return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
 
-static int daemonNTStartupStatic(int argc, char **argv) {
+static int daemonNTStartupStatic(int argc, char **argv)
+{
   return AppUtilWindows::instance().daemonNTStartup(argc, argv);
 }
 
-static int foregroundStartupStatic(int argc, char **argv) {
+static int foregroundStartupStatic(int argc, char **argv)
+{
   return AppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
-void AppUtilWindows::beforeAppExit() {
+void AppUtilWindows::beforeAppExit()
+{
   // this can be handy for debugging, since the application is launched in
   // a new console window, and will normally close on exit (making it so
   // that we can't see error messages).
@@ -110,10 +122,10 @@ void AppUtilWindows::beforeAppExit() {
   }
 }
 
-int AppUtilWindows::run(int argc, char **argv) {
+int AppUtilWindows::run(int argc, char **argv)
+{
   if (!IsWindowsXPSP3OrGreater()) {
-    throw std::runtime_error(
-        "unsupported os version, xp sp3 or greater required");
+    throw std::runtime_error("unsupported os version, xp sp3 or greater required");
   }
 
   // record window instance for tray icon, etc
@@ -133,11 +145,13 @@ int AppUtilWindows::run(int argc, char **argv) {
   return app().runInner(argc, argv, NULL, startup);
 }
 
-AppUtilWindows &AppUtilWindows::instance() {
+AppUtilWindows &AppUtilWindows::instance()
+{
   return (AppUtilWindows &)AppUtil::instance();
 }
 
-void AppUtilWindows::debugServiceWait() {
+void AppUtilWindows::debugServiceWait()
+{
   if (app().argsBase().m_debugServiceWait) {
     while (true) {
       // this code is only executed when the process is launched via the
@@ -150,9 +164,13 @@ void AppUtilWindows::debugServiceWait() {
   }
 }
 
-void AppUtilWindows::startNode() { app().startNode(); }
+void AppUtilWindows::startNode()
+{
+  app().startNode();
+}
 
-std::vector<String> AppUtilWindows::getKeyboardLayoutList() {
+std::vector<String> AppUtilWindows::getKeyboardLayoutList()
+{
   std::vector<String> layoutLangCodes;
   {
     auto uLayouts = GetKeyboardLayoutList(0, NULL);
@@ -162,8 +180,9 @@ std::vector<String> AppUtilWindows::getKeyboardLayoutList() {
     for (int i = 0; i < uLayouts; ++i) {
       String code("", 2);
       GetLocaleInfoA(
-          MAKELCID(((ULONG_PTR)lpList[i] & 0xffffffff), SORT_DEFAULT),
-          LOCALE_SISO639LANGNAME, &code[0], static_cast<int>(code.size()));
+          MAKELCID(((ULONG_PTR)lpList[i] & 0xffffffff), SORT_DEFAULT), LOCALE_SISO639LANGNAME, &code[0],
+          static_cast<int>(code.size())
+      );
       layoutLangCodes.push_back(code);
     }
 
@@ -174,21 +193,21 @@ std::vector<String> AppUtilWindows::getKeyboardLayoutList() {
   return layoutLangCodes;
 }
 
-String AppUtilWindows::getCurrentLanguageCode() {
+String AppUtilWindows::getCurrentLanguageCode()
+{
   String code("", 2);
 
   auto hklLayout = getCurrentKeyboardLayout();
   if (hklLayout) {
     auto localLayoutID = MAKELCID(LOWORD(hklLayout), SORT_DEFAULT);
-    GetLocaleInfoA(
-        localLayoutID, LOCALE_SISO639LANGNAME, &code[0],
-        static_cast<int>(code.size()));
+    GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0], static_cast<int>(code.size()));
   }
 
   return code;
 }
 
-HKL AppUtilWindows::getCurrentKeyboardLayout() const {
+HKL AppUtilWindows::getCurrentKeyboardLayout() const
+{
   HKL layout = nullptr;
 
   GUITHREADINFO gti = {sizeof(GUITHREADINFO)};
@@ -202,23 +221,32 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const {
 }
 
 #if HAVE_WINTOAST
-class WinToastHandler : public WinToastLib::IWinToastHandler {
+class WinToastHandler : public WinToastLib::IWinToastHandler
+{
 public:
-  WinToastHandler() {}
+  WinToastHandler()
+  {
+  }
   // Public interfaces
-  void toastActivated() const override {}
-  void toastActivated(int actionIndex) const override {}
-  void toastDismissed(WinToastDismissalReason state) const override {}
-  void toastFailed() const override {}
+  void toastActivated() const override
+  {
+  }
+  void toastActivated(int actionIndex) const override
+  {
+  }
+  void toastDismissed(WinToastDismissalReason state) const override
+  {
+  }
+  void toastFailed() const override
+  {
+  }
 };
 #endif
 
-void AppUtilWindows::showNotification(
-    const String &title, const String &text) const {
+void AppUtilWindows::showNotification(const String &title, const String &text) const
+{
 #if HAVE_WINTOAST
-  LOG(
-      (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
-       title.c_str(), text.c_str()));
+  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
   if (!WinToastLib::WinToast::isCompatible()) {
     LOG((CLOG_INFO "this system does not support toast notifications"));
     return;
@@ -226,8 +254,8 @@ void AppUtilWindows::showNotification(
   if (!WinToastLib::WinToast::instance()->isInitialized()) {
     WinToastLib::WinToast::instance()->setAppName(L"" DESKFLOW_APP_NAME);
     const auto aumi = WinToastLib::WinToast::configureAUMI(
-        L"" DESKFLOW_AUTHOR_NAME, L"" DESKFLOW_APP_NAME, L"" DESKFLOW_APP_NAME,
-        L"1.14.1+");
+        L"" DESKFLOW_AUTHOR_NAME, L"" DESKFLOW_APP_NAME, L"" DESKFLOW_APP_NAME, L"1.14.1+"
+    );
     WinToastLib::WinToast::instance()->setAppUserModelId(aumi);
 
     if (!WinToastLib::WinToast::instance()->initialize()) {
@@ -238,20 +266,13 @@ void AppUtilWindows::showNotification(
 
   WinToastLib::WinToast::WinToastError error;
   auto handler = std::make_unique<WinToastHandler>();
-  WinToastLib::WinToastTemplate templ =
-      WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
-  templ.setTextField(
-      std::wstring(title.begin(), title.end()),
-      WinToastLib::WinToastTemplate::FirstLine);
-  templ.setTextField(
-      std::wstring(text.begin(), text.end()),
-      WinToastLib::WinToastTemplate::SecondLine);
+  WinToastLib::WinToastTemplate templ = WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
+  templ.setTextField(std::wstring(title.begin(), title.end()), WinToastLib::WinToastTemplate::FirstLine);
+  templ.setTextField(std::wstring(text.begin(), text.end()), WinToastLib::WinToastTemplate::SecondLine);
 
-  const bool launched = WinToastLib::WinToast::instance()->showToast(
-      templ, handler.get(), &error);
+  const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler.get(), &error);
   if (!launched) {
-    LOG((
-        CLOG_DEBUG "failed to show toast notification, error code: %d", error));
+    LOG((CLOG_DEBUG "failed to show toast notification, error code: %d", error));
     return;
   }
 #else

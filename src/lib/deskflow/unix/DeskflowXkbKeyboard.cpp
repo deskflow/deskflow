@@ -26,11 +26,10 @@ namespace deskflow {
 
 namespace linux {
 
-DeskflowXkbKeyboard::DeskflowXkbKeyboard() {
+DeskflowXkbKeyboard::DeskflowXkbKeyboard()
+{
   using XkbDisplay = std::unique_ptr<Display, decltype(&XCloseDisplay)>;
-  XkbDisplay display(
-      XkbOpenDisplay(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr),
-      &XCloseDisplay);
+  XkbDisplay display(XkbOpenDisplay(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr), &XCloseDisplay);
 
   if (display) {
     if (!XkbRF_GetNamesProp(display.get(), nullptr, &m_data)) {
@@ -41,15 +40,18 @@ DeskflowXkbKeyboard::DeskflowXkbKeyboard() {
   }
 }
 
-const char *DeskflowXkbKeyboard::getLayout() const {
+const char *DeskflowXkbKeyboard::getLayout() const
+{
   return m_data.layout ? m_data.layout : "us";
 }
 
-const char *DeskflowXkbKeyboard::getVariant() const {
+const char *DeskflowXkbKeyboard::getVariant() const
+{
   return m_data.variant ? m_data.variant : "";
 }
 
-DeskflowXkbKeyboard::~DeskflowXkbKeyboard() {
+DeskflowXkbKeyboard::~DeskflowXkbKeyboard()
+{
   std::free(m_data.model);
   std::free(m_data.layout);
   std::free(m_data.variant);

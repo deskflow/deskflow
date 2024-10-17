@@ -27,35 +27,35 @@
 #include <psapi.h>
 #include <windows.h>
 
-static const char *s_settingsKeyNames[] = {
-    _T("SOFTWARE"), _T(DESKFLOW_APP_NAME), NULL};
+static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T(DESKFLOW_APP_NAME), NULL};
 
 //
 // ArchSystemWindows
 //
 
-ArchSystemWindows::ArchSystemWindows() {
+ArchSystemWindows::ArchSystemWindows()
+{
   // do nothing
 }
 
-ArchSystemWindows::~ArchSystemWindows() {
+ArchSystemWindows::~ArchSystemWindows()
+{
   // do nothing
 }
 
-std::string ArchSystemWindows::getOSName() const {
+std::string ArchSystemWindows::getOSName() const
+{
   std::string osName("Microsoft Windows <unknown>");
   static const TCHAR *const windowsVersionKeyNames[] = {
-      _T("SOFTWARE"), _T("Microsoft"), _T("Windows NT"), _T("CurrentVersion"),
-      NULL};
+      _T("SOFTWARE"), _T("Microsoft"), _T("Windows NT"), _T("CurrentVersion"), NULL
+  };
 
-  HKEY key =
-      ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
+  HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
   if (key == NULL) {
     return osName;
   }
 
-  std::string productName =
-      ArchMiscWindows::readValueString(key, "ProductName");
+  std::string productName = ArchMiscWindows::readValueString(key, "ProductName");
   if (osName.empty()) {
     return osName;
   }
@@ -63,7 +63,8 @@ std::string ArchSystemWindows::getOSName() const {
   return "Microsoft " + productName;
 }
 
-std::string ArchSystemWindows::getPlatformName() const {
+std::string ArchSystemWindows::getPlatformName() const
+{
 #ifdef _X86_
   if (isWOW64())
     return "x86 (WOW64)";
@@ -78,7 +79,8 @@ std::string ArchSystemWindows::getPlatformName() const {
 #endif
 }
 
-std::string ArchSystemWindows::setting(const std::string &valueName) const {
+std::string ArchSystemWindows::setting(const std::string &valueName) const
+{
   HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
   if (key == NULL)
     return "";
@@ -86,27 +88,26 @@ std::string ArchSystemWindows::setting(const std::string &valueName) const {
   return ArchMiscWindows::readValueString(key, valueName.c_str());
 }
 
-void ArchSystemWindows::setting(
-    const std::string &valueName, const std::string &valueString) const {
+void ArchSystemWindows::setting(const std::string &valueName, const std::string &valueString) const
+{
   HKEY key = ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
   if (key == NULL)
     throw XArch(std::string("could not access registry key: ") + valueName);
   ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
 
-bool ArchSystemWindows::isWOW64() const {
+bool ArchSystemWindows::isWOW64() const
+{
 #if WINVER >= _WIN32_WINNT_WINXP
   typedef BOOL(WINAPI * LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
   HMODULE hModule = GetModuleHandle(TEXT("kernel32"));
   if (!hModule)
     return FALSE;
 
-  LPFN_ISWOW64PROCESS fnIsWow64Process =
-      (LPFN_ISWOW64PROCESS)GetProcAddress(hModule, "IsWow64Process");
+  LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hModule, "IsWow64Process");
 
   BOOL bIsWow64 = FALSE;
-  if (NULL != fnIsWow64Process &&
-      fnIsWow64Process(GetCurrentProcess(), &bIsWow64) && bIsWow64) {
+  if (NULL != fnIsWow64Process && fnIsWow64Process(GetCurrentProcess(), &bIsWow64) && bIsWow64) {
     return true;
   }
 #endif

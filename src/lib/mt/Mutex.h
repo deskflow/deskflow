@@ -29,7 +29,8 @@ blocked, exactly one waiting thread will acquire the lock and continue
 running.  A thread may not lock a mutex it already owns the lock on;  if
 it tries it will deadlock itself.
 */
-class Mutex {
+class Mutex
+{
 public:
   Mutex();
   //! Equivalent to default c'tor

@@ -18,6 +18,10 @@
 
 #include "arch/win32/ArchConsoleWindows.h"
 
-ArchConsoleWindows::ArchConsoleWindows() {}
+ArchConsoleWindows::ArchConsoleWindows()
+{
+}
 
-ArchConsoleWindows::~ArchConsoleWindows() {}
+ArchConsoleWindows::~ArchConsoleWindows()
+{
+}

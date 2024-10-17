@@ -19,7 +19,8 @@
 
 #include "base/String.h"
 
-class ToolArgs {
+class ToolArgs
+{
 public:
   ToolArgs();
 

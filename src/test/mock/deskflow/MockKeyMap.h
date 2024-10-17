@@ -22,7 +22,8 @@
 
 #include <gmock/gmock.h>
 
-class MockKeyMap : public deskflow::KeyMap {
+class MockKeyMap : public deskflow::KeyMap
+{
 public:
   MOCK_METHOD(void, swap, (KeyMap &), (override));
   MOCK_METHOD(void, finish, (), (override));
@@ -31,7 +32,7 @@ public:
   MOCK_METHOD(bool, isHalfDuplex, (KeyID, KeyButton), (const, override));
   MOCK_METHOD(
       const KeyMap::KeyItem *, mapKey,
-      (Keystrokes &, KeyID, SInt32, ModifierToKeys &, KeyModifierMask &,
-       KeyModifierMask, bool, const String &),
-      (const, override));
+      (Keystrokes &, KeyID, SInt32, ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const String &),
+      (const, override)
+  );
 };

@@ -19,7 +19,8 @@
 
 #include <Carbon/Carbon.h>
 
-KeyID IOSXKeyResource::getKeyID(UInt8 c) {
+KeyID IOSXKeyResource::getKeyID(UInt8 c)
+{
   if (c == 0) {
     return kKeyNone;
   } else if (c >= 32 && c < 127) {
@@ -112,13 +113,10 @@ KeyID IOSXKeyResource::getKeyID(UInt8 c) {
 
     // get current keyboard script
     TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
-    CFArrayRef langs = (CFArrayRef)TISGetInputSourceProperty(
-        isref, kTISPropertyInputSourceLanguages);
-    CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding(
-        (CFStringRef)CFArrayGetValueAtIndex(langs, 0));
+    CFArrayRef langs = (CFArrayRef)TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
+    CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
     // convert to unicode
-    CFStringRef cfString = CFStringCreateWithCStringNoCopy(
-        kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
+    CFStringRef cfString = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
 
     // sometimes CFStringCreate...() returns NULL (e.g. Apple Korean
     // encoding with char value 214).  if it did then make no key,
@@ -128,8 +126,7 @@ KeyID IOSXKeyResource::getKeyID(UInt8 c) {
     }
 
     // convert to precomposed
-    CFMutableStringRef mcfString =
-        CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
+    CFMutableStringRef mcfString = CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
     CFRelease(cfString);
     CFStringNormalize(mcfString, kCFStringNormalizationFormC);
 
@@ -154,7 +151,8 @@ KeyID IOSXKeyResource::getKeyID(UInt8 c) {
   }
 }
 
-KeyID IOSXKeyResource::unicharToKeyID(UniChar c) {
+KeyID IOSXKeyResource::unicharToKeyID(UniChar c)
+{
   switch (c) {
   case 3:
     return kKeyKP_Enter;

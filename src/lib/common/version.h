@@ -23,7 +23,8 @@
 
 namespace deskflow {
 
-inline std::string version() {
+inline std::string version()
+{
   std::string result = kVersion;
   std::string gitSha = kVersionGitSha;
   if (!gitSha.empty()) {

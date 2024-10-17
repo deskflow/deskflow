@@ -24,7 +24,8 @@
 
 class IEventQueue;
 
-class AppUtilUnix : public AppUtil {
+class AppUtilUnix : public AppUtil
+{
 public:
   AppUtilUnix(IEventQueue *events);
   virtual ~AppUtilUnix();

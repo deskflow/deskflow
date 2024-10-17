@@ -29,11 +29,13 @@ class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
 
-class InverseClientSocket : public IDataSocket {
+class InverseClientSocket : public IDataSocket
+{
 public:
   InverseClientSocket(
       IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET);
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET
+  );
   InverseClientSocket(InverseClientSocket const &) = delete;
   InverseClientSocket(InverseClientSocket &&) = delete;
   ~InverseClientSocket() override;
@@ -62,23 +64,39 @@ public:
   virtual ISocketMultiplexerJob *newJob(ArchSocket socket);
 
 protected:
-  enum class EJobResult {
+  enum class EJobResult
+  {
     kBreak = -1, //!< Break the Job chain
     kRetry,      //!< Retry the same job
     kNew         //!< Require a new job
   };
 
-  ArchSocket getSocket() { return m_socket.getRawSocket(); }
-  IEventQueue *getEvents() { return m_events; }
+  ArchSocket getSocket()
+  {
+    return m_socket.getRawSocket();
+  }
+  IEventQueue *getEvents()
+  {
+    return m_events;
+  }
   virtual EJobResult doRead();
   virtual EJobResult doWrite();
 
   void setJob(ISocketMultiplexerJob *);
 
-  bool isReadable() const { return m_readable; }
-  bool isWritable() const { return m_writable; }
+  bool isReadable() const
+  {
+    return m_readable;
+  }
+  bool isWritable() const
+  {
+    return m_writable;
+  }
 
-  Mutex &getMutex() { return m_mutex; }
+  Mutex &getMutex()
+  {
+    return m_mutex;
+  }
 
   void sendEvent(Event::Type);
   void discardWrittenData(int bytesWrote);
@@ -90,10 +108,8 @@ private:
   void onOutputShutdown();
   void onDisconnected();
 
-  ISocketMultiplexerJob *
-  serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
-  ISocketMultiplexerJob *
-  serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   bool m_readable = false;

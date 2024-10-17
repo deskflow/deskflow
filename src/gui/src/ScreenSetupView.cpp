@@ -25,7 +25,8 @@
 #include <QtCore>
 #include <QtGui>
 
-ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent) {
+ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
+{
   setDropIndicatorShown(true);
   setDragDropMode(DragDrop);
   setSelectionMode(SingleSelection);
@@ -38,16 +39,19 @@ ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent) {
   verticalHeader()->hide();
 }
 
-void ScreenSetupView::setModel(QAbstractItemModel *model) {
+void ScreenSetupView::setModel(QAbstractItemModel *model)
+{
   QTableView::setModel(model);
   setTableSize();
 }
 
-ScreenSetupModel *ScreenSetupView::model() const {
+ScreenSetupModel *ScreenSetupView::model() const
+{
   return qobject_cast<ScreenSetupModel *>(QTableView::model());
 }
 
-void ScreenSetupView::setTableSize() {
+void ScreenSetupView::setTableSize()
+{
   for (int i = 0; i < model()->columnCount(); i++)
     setColumnWidth(i, width() / model()->columnCount());
 
@@ -55,19 +59,20 @@ void ScreenSetupView::setTableSize() {
     setRowHeight(i, height() / model()->rowCount());
 }
 
-void ScreenSetupView::resizeEvent(QResizeEvent *event) {
+void ScreenSetupView::resizeEvent(QResizeEvent *event)
+{
   setTableSize();
   event->ignore();
 }
 
-void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event) {
+void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
+{
   if (event->buttons() & Qt::LeftButton) {
     int col = columnAt(event->pos().x());
     int row = rowAt(event->pos().y());
 
     if (!model()->screen(col, row).isNull()) {
-      ScreenSettingsDialog dlg(
-          this, &model()->screen(col, row), &model()->m_Screens);
+      ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
       dlg.exec();
       emit model() -> screensChanged();
     }
@@ -75,7 +80,8 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event) {
     event->ignore();
 }
 
-void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event) {
+void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event)
+{
   // we accept anything that enters us by a drag as long as the
   // mime type is okay. anything else is dealt with in dragMoveEvent()
   if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType()))
@@ -84,7 +90,8 @@ void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event) {
     event->ignore();
 }
 
-void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event) {
+void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
+{
   if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
     // where does the event come from? myself or someone else?
     if (event->source() == this) {
@@ -107,7 +114,8 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event) {
 }
 
 // this is reimplemented from QAbstractItemView::startDrag()
-void ScreenSetupView::startDrag(Qt::DropActions) {
+void ScreenSetupView::startDrag(Qt::DropActions)
+{
   QModelIndexList indexes = selectedIndexes();
 
   if (indexes.count() != 1)
@@ -137,7 +145,8 @@ void ScreenSetupView::startDrag(Qt::DropActions) {
   }
 }
 
-void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const {
+void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
+{
   option->showDecorationSelected = true;
   option->decorationPosition = QStyleOptionViewItem::Top;
   option->displayAlignment = Qt::AlignCenter;

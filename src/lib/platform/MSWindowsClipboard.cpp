@@ -36,14 +36,16 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window)
     : m_window(window),
       m_time(0),
       m_facade(new MSWindowsClipboardFacade()),
-      m_deleteFacade(true) {
+      m_deleteFacade(true)
+{
   // add converters, most desired first
   m_converters.push_back(new MSWindowsClipboardUTF16Converter);
   m_converters.push_back(new MSWindowsClipboardBitmapConverter);
   m_converters.push_back(new MSWindowsClipboardHTMLConverter);
 }
 
-MSWindowsClipboard::~MSWindowsClipboard() {
+MSWindowsClipboard::~MSWindowsClipboard()
+{
   clearConverters();
 
   // dependency injection causes confusion over ownership, so we need
@@ -53,13 +55,15 @@ MSWindowsClipboard::~MSWindowsClipboard() {
     delete m_facade;
 }
 
-void MSWindowsClipboard::setFacade(IMSWindowsClipboardFacade &facade) {
+void MSWindowsClipboard::setFacade(IMSWindowsClipboardFacade &facade)
+{
   delete m_facade;
   m_facade = &facade;
   m_deleteFacade = false;
 }
 
-bool MSWindowsClipboard::emptyUnowned() {
+bool MSWindowsClipboard::emptyUnowned()
+{
   LOG((CLOG_DEBUG "empty clipboard"));
 
   // empty the clipboard (and take ownership)
@@ -73,7 +77,8 @@ bool MSWindowsClipboard::emptyUnowned() {
   return true;
 }
 
-bool MSWindowsClipboard::empty() {
+bool MSWindowsClipboard::empty()
+{
   if (!emptyUnowned()) {
     return false;
   }
@@ -89,20 +94,18 @@ bool MSWindowsClipboard::empty() {
   return true;
 }
 
-void MSWindowsClipboard::add(EFormat format, const String &data) {
+void MSWindowsClipboard::add(EFormat format, const String &data)
+{
   bool isSucceeded = false;
   // convert data to win32 form
-  for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     IMSWindowsClipboardConverter *converter = *index;
 
     // skip converters for other formats
     if (converter->getFormat() == format) {
       HANDLE win32Data = converter->fromIClipboard(data);
       if (win32Data != NULL) {
-        LOG(
-            (CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(),
-             format));
+        LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
         m_facade->write(win32Data, converter->getWin32Format());
         isSucceeded = true;
         break;
@@ -117,7 +120,8 @@ void MSWindowsClipboard::add(EFormat format, const String &data) {
   }
 }
 
-bool MSWindowsClipboard::open(Time time) const {
+bool MSWindowsClipboard::open(Time time) const
+{
   LOG((CLOG_DEBUG "open clipboard"));
 
   if (!OpenClipboard(m_window)) {
@@ -130,16 +134,20 @@ bool MSWindowsClipboard::open(Time time) const {
   return true;
 }
 
-void MSWindowsClipboard::close() const {
+void MSWindowsClipboard::close() const
+{
   LOG((CLOG_DEBUG "close clipboard"));
   CloseClipboard();
 }
 
-IClipboard::Time MSWindowsClipboard::getTime() const { return m_time; }
+IClipboard::Time MSWindowsClipboard::getTime() const
+{
+  return m_time;
+}
 
-bool MSWindowsClipboard::has(EFormat format) const {
-  for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+bool MSWindowsClipboard::has(EFormat format) const
+{
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     IMSWindowsClipboardConverter *converter = *index;
     if (converter->getFormat() == format) {
       if (IsClipboardFormatAvailable(converter->getWin32Format())) {
@@ -150,11 +158,11 @@ bool MSWindowsClipboard::has(EFormat format) const {
   return false;
 }
 
-String MSWindowsClipboard::get(EFormat format) const {
+String MSWindowsClipboard::get(EFormat format) const
+{
   // find the converter for the first clipboard format we can handle
   IMSWindowsClipboardConverter *converter = NULL;
-  for (ConverterList::const_iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
 
     converter = *index;
     if (converter->getFormat() == format) {
@@ -182,28 +190,28 @@ String MSWindowsClipboard::get(EFormat format) const {
   return converter->toIClipboard(win32Data);
 }
 
-void MSWindowsClipboard::clearConverters() {
-  for (ConverterList::iterator index = m_converters.begin();
-       index != m_converters.end(); ++index) {
+void MSWindowsClipboard::clearConverters()
+{
+  for (ConverterList::iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     delete *index;
   }
   m_converters.clear();
 }
 
-bool MSWindowsClipboard::isOwnedByDeskflow() {
+bool MSWindowsClipboard::isOwnedByDeskflow()
+{
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat =
-        RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
   }
   return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
 
-UINT MSWindowsClipboard::getOwnershipFormat() {
+UINT MSWindowsClipboard::getOwnershipFormat()
+{
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat =
-        RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
   }
 
   // return the format

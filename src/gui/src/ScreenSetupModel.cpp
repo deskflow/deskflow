@@ -23,35 +23,30 @@
 #include <QtCore>
 #include <QtGui>
 
-const QString ScreenSetupModel::m_MimeType =
-    "application/x-" DESKFLOW_APP_ID "-screen";
+const QString ScreenSetupModel::m_MimeType = "application/x-" DESKFLOW_APP_ID "-screen";
 
-ScreenSetupModel::ScreenSetupModel(
-    ScreenList &screens, int numColumns, int numRows)
+ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numRows)
     : QAbstractTableModel(NULL),
       m_Screens(screens),
       m_NumColumns(numColumns),
-      m_NumRows(numRows) {
+      m_NumRows(numRows)
+{
 
   // bound rows and columns to prevent multiply overflow.
   // this is unlikely to happen, as the grid size is only 3x9.
   if (m_NumColumns > 100 || m_NumRows > 100) {
-    qFatal(
-        "grid size out of bounds: %d columns x %d rows", m_NumColumns,
-        m_NumRows);
+    qFatal("grid size out of bounds: %d columns x %d rows", m_NumColumns, m_NumRows);
     return;
   }
 
   if (m_NumColumns * m_NumRows > screens.size()) {
-    qFatal(
-        "scrren list (%lld) too small for %d columns x %d rows", screens.size(),
-        m_NumColumns, m_NumRows);
+    qFatal("scrren list (%lld) too small for %d columns x %d rows", screens.size(), m_NumColumns, m_NumRows);
   }
 }
 
-QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const {
-  if (index.isValid() && index.row() < m_NumRows &&
-      index.column() < m_NumColumns) {
+QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
+{
+  if (index.isValid() && index.row() < m_NumRows && index.column() < m_NumColumns) {
     switch (role) {
     case Qt::DecorationRole:
       if (screen(index).isNull())
@@ -76,27 +71,29 @@ QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const {
   return QVariant();
 }
 
-Qt::ItemFlags ScreenSetupModel::flags(const QModelIndex &index) const {
-  if (!index.isValid() || index.row() >= m_NumRows ||
-      index.column() >= m_NumColumns)
+Qt::ItemFlags ScreenSetupModel::flags(const QModelIndex &index) const
+{
+  if (!index.isValid() || index.row() >= m_NumRows || index.column() >= m_NumColumns)
     return Qt::NoItemFlags;
 
   if (!screen(index).isNull())
-    return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable |
-           Qt::ItemIsDropEnabled;
+    return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 
   return Qt::ItemIsDropEnabled;
 }
 
-Qt::DropActions ScreenSetupModel::supportedDropActions() const {
+Qt::DropActions ScreenSetupModel::supportedDropActions() const
+{
   return Qt::MoveAction | Qt::CopyAction;
 }
 
-QStringList ScreenSetupModel::mimeTypes() const {
+QStringList ScreenSetupModel::mimeTypes() const
+{
   return QStringList() << m_MimeType;
 }
 
-QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const {
+QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const
+{
   QMimeData *pMimeData = new QMimeData();
   QByteArray encodedData;
 
@@ -112,8 +109,9 @@ QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const {
 }
 
 bool ScreenSetupModel::dropMimeData(
-    const QMimeData *data, Qt::DropAction action, int row, int column,
-    const QModelIndex &parent) {
+    const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent
+)
+{
   if (action == Qt::IgnoreAction)
     return true;
 
@@ -154,15 +152,16 @@ bool ScreenSetupModel::dropMimeData(
   return true;
 }
 
-void ScreenSetupModel::addScreen(const Screen &newScreen) {
+void ScreenSetupModel::addScreen(const Screen &newScreen)
+{
   m_Screens.addScreenByPriority(newScreen);
   emit screensChanged();
 }
 
-bool ScreenSetupModel::isFull() const {
-  auto emptyScreen = std::find_if(
-      m_Screens.cbegin(), m_Screens.cend(),
-      [](const Screen &item) { return item.isNull(); });
+bool ScreenSetupModel::isFull() const
+{
+  auto emptyScreen =
+      std::find_if(m_Screens.cbegin(), m_Screens.cend(), [](const Screen &item) { return item.isNull(); });
 
   return (emptyScreen == m_Screens.cend());
 }

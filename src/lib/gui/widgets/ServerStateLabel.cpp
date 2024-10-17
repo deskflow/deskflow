@@ -23,9 +23,12 @@ using namespace deskflow::gui;
 
 namespace deskflow::gui::widgets {
 
-ServerStateLabel::ServerStateLabel(QWidget *parent) : QLabel(parent) {}
+ServerStateLabel::ServerStateLabel(QWidget *parent) : QLabel(parent)
+{
+}
 
-void ServerStateLabel::updateServerState(const QString &line) {
+void ServerStateLabel::updateServerState(const QString &line)
+{
   ServerMessage message(line);
 
   if (message.isExitMessage()) {

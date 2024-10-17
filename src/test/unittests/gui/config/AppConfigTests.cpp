@@ -28,21 +28,17 @@ using namespace deskflow::gui::proxy;
 
 namespace {
 
-class ConfigScopesMock : public deskflow::gui::IConfigScopes {
+class ConfigScopesMock : public deskflow::gui::IConfigScopes
+{
   using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
   MOCK_METHOD(void, signalReady, (), (override));
+  MOCK_METHOD(bool, scopeContains, (const QString &name, Scope scope), (const, override));
   MOCK_METHOD(
-      bool, scopeContains, (const QString &name, Scope scope),
-      (const, override));
-  MOCK_METHOD(
-      QVariant, getFromScope,
-      (const QString &name, const QVariant &defaultValue, Scope scope),
-      (const, override));
-  MOCK_METHOD(
-      void, setInScope,
-      (const QString &name, const QVariant &value, Scope scope), (override));
+      QVariant, getFromScope, (const QString &name, const QVariant &defaultValue, Scope scope), (const, override)
+  );
+  MOCK_METHOD(void, setInScope, (const QString &name, const QVariant &value, Scope scope), (override));
   MOCK_METHOD(Scope, activeScope, (), (const, override));
   MOCK_METHOD(void, setActiveScope, (Scope scope), (override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
@@ -52,13 +48,16 @@ public:
   MOCK_METHOD(QString, activeFilePath, (), (const, override));
 };
 
-struct DepsMock : public AppConfig::Deps {
-  DepsMock() {
+struct DepsMock : public AppConfig::Deps
+{
+  DepsMock()
+  {
     ON_CALL(*this, defaultTlsCertPath()).WillByDefault(Return("stub"));
     ON_CALL(*this, hostname()).WillByDefault(Return("stub"));
   }
 
-  static std::shared_ptr<NiceMock<DepsMock>> makeNice() {
+  static std::shared_ptr<NiceMock<DepsMock>> makeNice()
+  {
     return std::make_shared<NiceMock<DepsMock>>();
   }
 
@@ -68,9 +67,12 @@ struct DepsMock : public AppConfig::Deps {
 
 } // namespace
 
-class AppConfigTests : public Test {};
+class AppConfigTests : public Test
+{
+};
 
-TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
+TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname)
+{
   NiceMock<ConfigScopesMock> scopes;
   auto deps = DepsMock::makeNice();
   ON_CALL(*deps, hostname()).WillByDefault(Return("test hostname"));
@@ -80,13 +82,13 @@ TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname) {
   ASSERT_EQ(appConfig.screenName().toStdString(), "test hostname");
 }
 
-TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
+TEST_F(AppConfigTests, ctor_byDefault_getsFromScope)
+{
   NiceMock<ConfigScopesMock> scopes;
   auto deps = DepsMock::makeNice();
 
   ON_CALL(scopes, scopeContains(_, _)).WillByDefault(Return(true));
-  ON_CALL(scopes, getFromScope(_, _, _))
-      .WillByDefault(Return(QVariant("test screen")));
+  ON_CALL(scopes, getFromScope(_, _, _)).WillByDefault(Return(QVariant("test screen")));
   EXPECT_CALL(scopes, getFromScope(_, _, _)).Times(AnyNumber());
 
   AppConfig appConfig(scopes, deps);
@@ -94,7 +96,8 @@ TEST_F(AppConfigTests, ctor_byDefault_getsFromScope) {
   ASSERT_EQ(appConfig.screenName().toStdString(), "test screen");
 }
 
-TEST_F(AppConfigTests, commit_byDefault_setsToScope) {
+TEST_F(AppConfigTests, commit_byDefault_setsToScope)
+{
   NiceMock<ConfigScopesMock> scopes;
   auto deps = DepsMock::makeNice();
   AppConfig appConfig(scopes, deps);

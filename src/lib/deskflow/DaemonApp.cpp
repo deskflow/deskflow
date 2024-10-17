@@ -62,7 +62,8 @@ using namespace std;
 const char *const kLogFilename = DAEMON_BINARY_NAME ".log";
 
 namespace {
-void updateSetting(const IpcMessage &message) {
+void updateSetting(const IpcMessage &message)
+{
   try {
     auto setting = static_cast<const IpcSettingMessage &>(message);
     ARCH->setting(setting.getName(), setting.getValue());
@@ -71,13 +72,13 @@ void updateSetting(const IpcMessage &message) {
   }
 }
 
-bool isServerCommandLine(const std::vector<String> &cmd) {
+bool isServerCommandLine(const std::vector<String> &cmd)
+{
   auto isServer = false;
 
   if (cmd.size() > 1) {
-    isServer =
-        (cmd[0].find(SERVER_BINARY_NAME) != String::npos) ||
-        (cmd[0].find(CORE_BINARY_NAME) != String::npos && cmd[1] == "server");
+    isServer = (cmd[0].find(SERVER_BINARY_NAME) != String::npos) ||
+               (cmd[0].find(CORE_BINARY_NAME) != String::npos && cmd[1] == "server");
   }
 
   return isServer;
@@ -87,24 +88,36 @@ bool isServerCommandLine(const std::vector<String> &cmd) {
 
 DaemonApp *DaemonApp::s_instance = nullptr;
 
-int mainLoopStatic() {
+int mainLoopStatic()
+{
   DaemonApp::s_instance->mainLoop(true);
   return kExitSuccess;
 }
 
-int unixMainLoopStatic(int, const char **) { return mainLoopStatic(); }
+int unixMainLoopStatic(int, const char **)
+{
+  return mainLoopStatic();
+}
 
 #if SYSAPI_WIN32
-int winMainLoopStatic(int, const char **) {
+int winMainLoopStatic(int, const char **)
+{
   return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
 #endif
 
-DaemonApp::DaemonApp() { s_instance = this; }
+DaemonApp::DaemonApp()
+{
+  s_instance = this;
+}
 
-DaemonApp::~DaemonApp() { s_instance = nullptr; }
+DaemonApp::~DaemonApp()
+{
+  s_instance = nullptr;
+}
 
-int DaemonApp::run(int argc, char **argv) {
+int DaemonApp::run(int argc, char **argv)
+{
 #if SYSAPI_WIN32
   // win32 instance needed for threading, etc.
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
@@ -175,8 +188,7 @@ int DaemonApp::run(int argc, char **argv) {
     return kExitSuccess;
   } catch (XArch &e) {
     String message = e.what();
-    if (uninstall &&
-        (message.find("The service has not been started") != String::npos)) {
+    if (uninstall && (message.find("The service has not been started") != String::npos)) {
       // TODO: if we're keeping this use error code instead (what is it?!).
       // HACK: this message happens intermittently, not sure where from but
       // it's quite misleading for the user. they thing something has gone
@@ -195,13 +207,13 @@ int DaemonApp::run(int argc, char **argv) {
   }
 }
 
-void DaemonApp::mainLoop(bool logToFile, bool foreground) {
+void DaemonApp::mainLoop(bool logToFile, bool foreground)
+{
   try {
     DAEMON_RUNNING(true);
 
     if (logToFile) {
-      m_fileLogOutputter =
-          std::make_unique<FileLogOutputter>(logFilename().c_str());
+      m_fileLogOutputter = std::make_unique<FileLogOutputter>(logFilename().c_str());
       CLOG->insert(m_fileLogOutputter.get());
     }
 
@@ -213,19 +225,18 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     m_ipcServer = std::make_unique<IpcServer>(m_events.get(), &multiplexer);
 
     // send logging to gui via ipc, log system adopts outputter.
-    m_ipcLogOutputter = std::make_unique<IpcLogOutputter>(
-        *m_ipcServer, IpcClientType::GUI, true);
+    m_ipcLogOutputter = std::make_unique<IpcLogOutputter>(*m_ipcServer, IpcClientType::GUI, true);
     CLOG->insert(m_ipcLogOutputter.get());
 
 #if SYSAPI_WIN32
-    m_watchdog = std::make_unique<MSWindowsWatchdog>(
-        false, *m_ipcServer, *m_ipcLogOutputter, foreground);
+    m_watchdog = std::make_unique<MSWindowsWatchdog>(false, *m_ipcServer, *m_ipcLogOutputter, foreground);
     m_watchdog->setFileLogOutputter(m_fileLogOutputter.get());
 #endif
 
     m_events->adoptHandler(
         m_events->forIpcServer().messageReceived(), m_ipcServer.get(),
-        new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage));
+        new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage)
+    );
 
     m_ipcServer->listen();
 
@@ -249,8 +260,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
     m_watchdog->stop();
 #endif
 
-    m_events->removeHandler(
-        m_events->forIpcServer().messageReceived(), m_ipcServer.get());
+    m_events->removeHandler(m_events->forIpcServer().messageReceived(), m_ipcServer.get());
 
     CLOG->remove(m_ipcLogOutputter.get());
 
@@ -262,7 +272,8 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground) {
   }
 }
 
-void DaemonApp::foregroundError(const char *message) {
+void DaemonApp::foregroundError(const char *message)
+{
 #if SYSAPI_WIN32
   MessageBox(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
 #elif SYSAPI_UNIX
@@ -270,7 +281,8 @@ void DaemonApp::foregroundError(const char *message) {
 #endif
 }
 
-std::string DaemonApp::logFilename() {
+std::string DaemonApp::logFilename()
+{
   string logFilename;
   logFilename = ARCH->setting("LogFilename");
   if (logFilename.empty()) {
@@ -282,7 +294,8 @@ std::string DaemonApp::logFilename() {
   return logFilename;
 }
 
-void DaemonApp::handleIpcMessage(const Event &e, void *) {
+void DaemonApp::handleIpcMessage(const Event &e, void *)
+{
   IpcMessage *m = static_cast<IpcMessage *>(e.getDataObject());
   switch (m->type()) {
   case IpcMessageType::Command: {
@@ -296,9 +309,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *) {
 
     if (!command.empty()) {
       LOG((CLOG_DEBUG "daemon got new core command"));
-      LOG(
-          (CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(),
-           command.c_str()));
+      LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
       std::vector<String> argsArray;
       ArgParser::splitCommandString(command, argsArray);

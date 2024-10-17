@@ -25,21 +25,23 @@
 
 namespace deskflow::gui::core {
 
-class WaylandWarnings {
+class WaylandWarnings
+{
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
     virtual void showWaylandLibraryError(QWidget *parent);
   };
 
-  explicit WaylandWarnings(
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>())
-      : m_pDeps(deps) {}
+  explicit WaylandWarnings(std::shared_ptr<Deps> deps = std::make_shared<Deps>()) : m_pDeps(deps)
+  {
+  }
 
   void showOnce(
-      QWidget *parent, CoreProcess::Mode mode, bool hasEi = platform::kHasEi,
-      bool hasPortal = platform::kHasPortal,
-      bool hasPortalInputCapture = platform::kHasPortalInputCapture);
+      QWidget *parent, CoreProcess::Mode mode, bool hasEi = platform::kHasEi, bool hasPortal = platform::kHasPortal,
+      bool hasPortalInputCapture = platform::kHasPortalInputCapture
+  );
 
 private:
   bool m_errorShown{false};

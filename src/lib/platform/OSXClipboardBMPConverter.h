@@ -21,7 +21,8 @@
 #include "platform/OSXClipboard.h"
 
 //! Convert to/from some text encoding
-class OSXClipboardBMPConverter : public IOSXClipboardConverter {
+class OSXClipboardBMPConverter : public IOSXClipboardConverter
+{
 public:
   OSXClipboardBMPConverter();
   virtual ~OSXClipboardBMPConverter();
@@ -36,7 +37,5 @@ public:
   virtual String toIClipboard(const String &) const;
 
   // generic encoding converter
-  static String convertString(
-      const String &data, CFStringEncoding fromEncoding,
-      CFStringEncoding toEncoding);
+  static String convertString(const String &data, CFStringEncoding fromEncoding, CFStringEncoding toEncoding);
 };

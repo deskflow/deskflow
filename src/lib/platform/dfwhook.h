@@ -53,9 +53,20 @@
 #define DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY VK_CANCEL
 #define DESKFLOW_HOOK_FAKE_INPUT_SCANCODE 0
 
-extern "C" {
+extern "C"
+{
 
-enum EHookResult { kHOOK_FAILED, kHOOK_OKAY, kHOOK_OKAY_LL };
+  enum EHookResult
+  {
+    kHOOK_FAILED,
+    kHOOK_OKAY,
+    kHOOK_OKAY_LL
+  };
 
-enum EHookMode { kHOOK_DISABLE, kHOOK_WATCH_JUMP_ZONE, kHOOK_RELAY_EVENTS };
+  enum EHookMode
+  {
+    kHOOK_DISABLE,
+    kHOOK_WATCH_JUMP_ZONE,
+    kHOOK_RELAY_EVENTS
+  };
 }

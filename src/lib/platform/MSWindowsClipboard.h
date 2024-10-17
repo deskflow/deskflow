@@ -29,7 +29,8 @@ class IMSWindowsClipboardConverter;
 class IMSWindowsClipboardFacade;
 
 //! Microsoft windows clipboard implementation
-class MSWindowsClipboard : public IClipboard {
+class MSWindowsClipboard : public IClipboard
+{
 public:
   MSWindowsClipboard(HWND window);
   MSWindowsClipboard(HWND window, IMSWindowsClipboardFacade &facade);
@@ -89,7 +90,8 @@ private:
 This interface defines the methods common to all win32 clipboard format
 converters.
 */
-class IMSWindowsClipboardConverter : public IInterface {
+class IMSWindowsClipboardConverter : public IInterface
+{
 public:
   // accessors
 

@@ -60,7 +60,8 @@ the executable file might be covered by the GNU General Public License. */
 #include <string>
 
 namespace std {
-class stringbuf : public streambuf {
+class stringbuf : public streambuf
+{
 public:
   typedef char char_type;
   typedef int int_type;
@@ -71,7 +72,8 @@ public:
       : streambuf(),
         mode(static_cast<ios::open_mode>(which)),
         stream(NULL),
-        stream_len(0) {
+        stream_len(0)
+  {
     stringbuf_init();
   }
 
@@ -79,7 +81,8 @@ public:
       : streambuf(),
         mode(static_cast<ios::open_mode>(which)),
         stream(NULL),
-        stream_len(0) {
+        stream_len(0)
+  {
     if (mode & (ios::in | ios::out)) {
       stream_len = str.size();
       stream = new char_type[stream_len];
@@ -88,16 +91,21 @@ public:
     stringbuf_init();
   }
 
-  virtual ~stringbuf() { delete[] stream; }
+  virtual ~stringbuf()
+  {
+    delete[] stream;
+  }
 
-  string str() const {
+  string str() const
+  {
     if (pbase() != 0)
       return string(stream, pptr() - pbase());
     else
       return string();
   }
 
-  void str(const string &str) {
+  void str(const string &str)
+  {
     delete[] stream;
     stream_len = str.size();
     stream = new char_type[stream_len];
@@ -107,9 +115,13 @@ public:
 
 protected:
   // The buffer is already in gptr, so if it ends then it is out of data.
-  virtual int underflow() { return EOF; }
+  virtual int underflow()
+  {
+    return EOF;
+  }
 
-  virtual int overflow(int c = EOF) {
+  virtual int overflow(int c = EOF)
+  {
     int res;
     if (mode & ios::out) {
       if (c != EOF) {
@@ -129,7 +141,8 @@ protected:
     return res;
   }
 
-  virtual streambuf *setbuf(char_type *s, streamsize n) {
+  virtual streambuf *setbuf(char_type *s, streamsize n)
+  {
     if (n != 0) {
       delete[] stream;
       stream = new char_type[n];
@@ -140,8 +153,8 @@ protected:
     return this;
   }
 
-  virtual pos_type
-  seekoff(off_type off, ios::seek_dir way, int which = ios::in | ios::out) {
+  virtual pos_type seekoff(off_type off, ios::seek_dir way, int which = ios::in | ios::out)
+  {
     pos_type ret = pos_type(off_type(-1));
     bool testin = which & ios::in && mode & ios::in;
     bool testout = which & ios::out && mode & ios::out;
@@ -173,13 +186,11 @@ protected:
         newoffo = endo - curo;
       }
 
-      if (testin && newoffi + off + curi - beg >= 0 &&
-          endi - beg >= newoffi + off + curi - beg) {
+      if (testin && newoffi + off + curi - beg >= 0 && endi - beg >= newoffi + off + curi - beg) {
         gbump(newoffi + off);
         ret = pos_type(newoffi + off + curi);
       }
-      if (testout && newoffo + off + curo - beg >= 0 &&
-          endo - beg >= newoffo + off + curo - beg) {
+      if (testout && newoffo + off + curo - beg >= 0 && endo - beg >= newoffo + off + curo - beg) {
         pbump(newoffo + off);
         ret = pos_type(newoffo + off + curo);
       }
@@ -187,13 +198,15 @@ protected:
     return ret;
   }
 
-  virtual pos_type seekpos(pos_type sp, int which = ios::in | ios::out) {
+  virtual pos_type seekpos(pos_type sp, int which = ios::in | ios::out)
+  {
     pos_type ret = seekoff(sp, ios::beg, which);
     return ret;
   }
 
 private:
-  void stringbuf_sync(streamsize i, streamsize o) {
+  void stringbuf_sync(streamsize i, streamsize o)
+  {
     if (mode & ios::in)
       setg(stream, stream + i, stream + stream_len);
     if (mode & ios::out) {
@@ -201,7 +214,8 @@ private:
       pbump(o);
     }
   }
-  void stringbuf_init() {
+  void stringbuf_init()
+  {
     if (mode & ios::ate)
       stringbuf_sync(0, stream_len);
     else
@@ -214,75 +228,105 @@ private:
   streamsize stream_len;
 };
 
-class istringstream : public istream {
+class istringstream : public istream
+{
 public:
   typedef char char_type;
   typedef int int_type;
   typedef streampos pos_type;
   typedef streamoff off_type;
 
-  explicit istringstream(int which = ios::in)
-      : istream(&sb),
-        sb(which | ios::in) {}
+  explicit istringstream(int which = ios::in) : istream(&sb), sb(which | ios::in)
+  {
+  }
 
-  explicit istringstream(const string &str, int which = ios::in)
-      : istream(&sb),
-        sb(str, which | ios::in) {}
+  explicit istringstream(const string &str, int which = ios::in) : istream(&sb), sb(str, which | ios::in)
+  {
+  }
 
-  stringbuf *rdbuf() const { return const_cast<stringbuf *>(&sb); }
+  stringbuf *rdbuf() const
+  {
+    return const_cast<stringbuf *>(&sb);
+  }
 
-  string str() const { return rdbuf()->str(); }
-  void str(const string &s) { rdbuf()->str(s); }
+  string str() const
+  {
+    return rdbuf()->str();
+  }
+  void str(const string &s)
+  {
+    rdbuf()->str(s);
+  }
 
 private:
   stringbuf sb;
 };
 
-class ostringstream : public ostream {
+class ostringstream : public ostream
+{
 public:
   typedef char char_type;
   typedef int int_type;
   typedef streampos pos_type;
   typedef streamoff off_type;
 
-  explicit ostringstream(int which = ios::out)
-      : ostream(&sb),
-        sb(which | ios::out) {}
+  explicit ostringstream(int which = ios::out) : ostream(&sb), sb(which | ios::out)
+  {
+  }
 
-  explicit ostringstream(const string &str, int which = ios::out)
-      : ostream(&sb),
-        sb(str, which | ios::out) {}
+  explicit ostringstream(const string &str, int which = ios::out) : ostream(&sb), sb(str, which | ios::out)
+  {
+  }
 
-  stringbuf *rdbuf() const { return const_cast<stringbuf *>(&sb); }
+  stringbuf *rdbuf() const
+  {
+    return const_cast<stringbuf *>(&sb);
+  }
 
-  string str() const { return rdbuf()->str(); }
+  string str() const
+  {
+    return rdbuf()->str();
+  }
 
-  void str(const string &s) { rdbuf()->str(s); }
+  void str(const string &s)
+  {
+    rdbuf()->str(s);
+  }
 
 private:
   stringbuf sb;
 };
 
-class stringstream : public iostream {
+class stringstream : public iostream
+{
 public:
   typedef char char_type;
   typedef int int_type;
   typedef streampos pos_type;
   typedef streamoff off_type;
 
-  explicit stringstream(int which = ios::out | ios::in)
-      : iostream(&sb),
-        sb(which) {}
+  explicit stringstream(int which = ios::out | ios::in) : iostream(&sb), sb(which)
+  {
+  }
 
-  explicit stringstream(const string &str, int which = ios::out | ios::in)
-      : iostream(&sb),
-        sb(str, which) {}
+  explicit stringstream(const string &str, int which = ios::out | ios::in) : iostream(&sb), sb(str, which)
+  {
+  }
 
-  stringbuf *rdbuf() const { return const_cast<stringbuf *>(&sb); }
+  stringbuf *rdbuf() const
+  {
+    return const_cast<stringbuf *>(&sb);
+  }
 
-  string str() const { return rdbuf()->str(); }
+  string str() const
+  {
+    return rdbuf()->str();
+  }
 
-  void str(const string &s) { rdbuf()->str(s); }
+  void str(const string &s)
+  {
+    rdbuf()->str(s);
+  }
 
 private:
   stringbuf sb;

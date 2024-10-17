@@ -24,30 +24,39 @@
 // XWindowsClipboardTextConverter
 //
 
-XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(
-    Display *display, const char *name)
-    : m_atom(XInternAtom(display, name, False)) {
+XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(Display *display, const char *name)
+    : m_atom(XInternAtom(display, name, False))
+{
   // do nothing
 }
 
-XWindowsClipboardTextConverter::~XWindowsClipboardTextConverter() {
+XWindowsClipboardTextConverter::~XWindowsClipboardTextConverter()
+{
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardTextConverter::getFormat() const {
+IClipboard::EFormat XWindowsClipboardTextConverter::getFormat() const
+{
   return IClipboard::kText;
 }
 
-Atom XWindowsClipboardTextConverter::getAtom() const { return m_atom; }
+Atom XWindowsClipboardTextConverter::getAtom() const
+{
+  return m_atom;
+}
 
-int XWindowsClipboardTextConverter::getDataSize() const { return 8; }
+int XWindowsClipboardTextConverter::getDataSize() const
+{
+  return 8;
+}
 
-String
-XWindowsClipboardTextConverter::fromIClipboard(const String &data) const {
+String XWindowsClipboardTextConverter::fromIClipboard(const String &data) const
+{
   return Unicode::UTF8ToText(data);
 }
 
-String XWindowsClipboardTextConverter::toIClipboard(const String &data) const {
+String XWindowsClipboardTextConverter::toIClipboard(const String &data) const
+{
   // convert to UTF-8
   bool errors;
   String utf8 = Unicode::textToUTF8(data, &errors);

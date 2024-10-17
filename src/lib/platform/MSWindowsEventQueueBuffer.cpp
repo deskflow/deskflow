@@ -26,14 +26,16 @@
 // EventQueueTimer
 //
 
-class EventQueueTimer {};
+class EventQueueTimer
+{
+};
 
 //
 // MSWindowsEventQueueBuffer
 //
 
-MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue *events)
-    : m_events(events) {
+MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue *events) : m_events(events)
+{
   // remember thread.  we'll be posting messages to it.
   m_thread = GetCurrentThreadId();
 
@@ -48,11 +50,13 @@ MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue *events)
   PeekMessage(&dummy, NULL, WM_USER, WM_USER, PM_NOREMOVE);
 }
 
-MSWindowsEventQueueBuffer::~MSWindowsEventQueueBuffer() {
+MSWindowsEventQueueBuffer::~MSWindowsEventQueueBuffer()
+{
   // do nothing
 }
 
-void MSWindowsEventQueueBuffer::waitForEvent(double timeout) {
+void MSWindowsEventQueueBuffer::waitForEvent(double timeout)
+{
   // check if messages are available first.  if we don't do this then
   // MsgWaitForMultipleObjects() will block even if the queue isn't
   // empty if the messages in the queue were there before the last
@@ -76,16 +80,15 @@ void MSWindowsEventQueueBuffer::waitForEvent(double timeout) {
   MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLPOSTMESSAGE);
 }
 
-IEventQueueBuffer::Type
-MSWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
+IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID)
+{
   // NOTE: QS_ALLINPUT was replaced with QS_ALLPOSTMESSAGE.
   //
   // peek at messages first.  waiting for QS_ALLINPUT will return
   // if a message has been sent to our window but GetMessage will
   // dispatch that message behind our backs and block.  PeekMessage
   // will also dispatch behind our backs but won't block.
-  if (!PeekMessage(&m_event, NULL, 0, 0, PM_NOREMOVE) &&
-      !PeekMessage(&m_event, (HWND)-1, 0, 0, PM_NOREMOVE)) {
+  if (!PeekMessage(&m_event, NULL, 0, 0, PM_NOREMOVE) && !PeekMessage(&m_event, (HWND)-1, 0, 0, PM_NOREMOVE)) {
     return kNone;
   }
 
@@ -108,20 +111,22 @@ MSWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
   }
 }
 
-bool MSWindowsEventQueueBuffer::addEvent(UInt32 dataID) {
-  return (
-      PostThreadMessage(
-          m_thread, m_userEvent, static_cast<WPARAM>(dataID), 0) != 0);
+bool MSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+{
+  return (PostThreadMessage(m_thread, m_userEvent, static_cast<WPARAM>(dataID), 0) != 0);
 }
 
-bool MSWindowsEventQueueBuffer::isEmpty() const {
+bool MSWindowsEventQueueBuffer::isEmpty() const
+{
   return (HIWORD(GetQueueStatus(QS_ALLPOSTMESSAGE)) == 0);
 }
 
-EventQueueTimer *MSWindowsEventQueueBuffer::newTimer(double, bool) const {
+EventQueueTimer *MSWindowsEventQueueBuffer::newTimer(double, bool) const
+{
   return new EventQueueTimer;
 }
 
-void MSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
+void MSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
+{
   delete timer;
 }

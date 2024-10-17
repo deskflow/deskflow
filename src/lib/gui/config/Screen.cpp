@@ -27,14 +27,19 @@ using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
-Screen::Screen() { init(); }
+Screen::Screen()
+{
+  init();
+}
 
-Screen::Screen(const QString &name) {
+Screen::Screen(const QString &name)
+{
   init();
   setName(name);
 }
 
-void Screen::init() {
+void Screen::init()
+{
   name().clear();
   aliases().clear();
   modifiers().clear();
@@ -55,7 +60,8 @@ void Screen::init() {
     fixes() << false;
 }
 
-void Screen::loadSettings(QSettingsProxy &settings) {
+void Screen::loadSettings(QSettingsProxy &settings)
+{
   setName(settings.value("name").toString());
 
   if (name().isEmpty())
@@ -64,16 +70,13 @@ void Screen::loadSettings(QSettingsProxy &settings) {
   setSwitchCornerSize(settings.value("switchCornerSize").toInt());
 
   readSettings(settings, aliases(), "alias", QString(""));
-  readSettings(
-      settings, modifiers(), "modifier", static_cast<int>(DefaultMod),
-      static_cast<int>(NumModifiers));
-  readSettings(
-      settings, switchCorners(), "switchCorner", 0,
-      static_cast<int>(NumSwitchCorners));
+  readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
+  readSettings(settings, switchCorners(), "switchCorner", 0, static_cast<int>(NumSwitchCorners));
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 }
 
-void Screen::saveSettings(QSettingsProxy &settings) const {
+void Screen::saveSettings(QSettingsProxy &settings) const
+{
   settings.setValue("name", name());
 
   if (name().isEmpty())
@@ -87,17 +90,16 @@ void Screen::saveSettings(QSettingsProxy &settings) const {
   writeSettings(settings, fixes(), "fix");
 }
 
-QTextStream &Screen::writeScreensSection(QTextStream &outStream) const {
+QTextStream &Screen::writeScreensSection(QTextStream &outStream) const
+{
   outStream << "\t" << name() << ":" << Qt::endl;
 
   for (int i = 0; i < modifiers().size(); i++)
     if (modifier(i) != i)
-      outStream << "\t\t" << modifierName(i) << " = "
-                << modifierName(modifier(i)) << Qt::endl;
+      outStream << "\t\t" << modifierName(i) << " = " << modifierName(modifier(i)) << Qt::endl;
 
   for (int i = 0; i < fixes().size(); i++)
-    outStream << "\t\t" << fixName(i) << " = "
-              << (fixes()[i] ? "true" : "false") << Qt::endl;
+    outStream << "\t\t" << fixName(i) << " = " << (fixes()[i] ? "true" : "false") << Qt::endl;
 
   outStream << "\t\t"
             << "switchCorners = none ";
@@ -112,7 +114,8 @@ QTextStream &Screen::writeScreensSection(QTextStream &outStream) const {
   return outStream;
 }
 
-QTextStream &Screen::writeAliasesSection(QTextStream &outStream) const {
+QTextStream &Screen::writeAliasesSection(QTextStream &outStream) const
+{
   if (!aliases().isEmpty()) {
     outStream << "\t" << name() << ":" << Qt::endl;
 
@@ -123,11 +126,9 @@ QTextStream &Screen::writeAliasesSection(QTextStream &outStream) const {
   return outStream;
 }
 
-bool Screen::operator==(const Screen &screen) const {
-  return m_Name == screen.m_Name && m_Aliases == screen.m_Aliases &&
-         m_Modifiers == screen.m_Modifiers &&
-         m_SwitchCorners == screen.m_SwitchCorners &&
-         m_SwitchCornerSize == screen.m_SwitchCornerSize &&
-         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped &&
-         m_isServer == screen.m_isServer;
+bool Screen::operator==(const Screen &screen) const
+{
+  return m_Name == screen.m_Name && m_Aliases == screen.m_Aliases && m_Modifiers == screen.m_Modifiers &&
+         m_SwitchCorners == screen.m_SwitchCorners && m_SwitchCornerSize == screen.m_SwitchCornerSize &&
+         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped && m_isServer == screen.m_isServer;
 }

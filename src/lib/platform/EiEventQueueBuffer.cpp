@@ -30,14 +30,14 @@
 #include <poll.h>
 #include <unistd.h>
 
-class EventQueueTimer {};
+class EventQueueTimer
+{
+};
 
 namespace deskflow {
 
-EiEventQueueBuffer::EiEventQueueBuffer(
-    EiScreen *screen, ei *ei, IEventQueue *events)
-    : ei_(ei_ref(ei)),
-      events_(events) {
+EiEventQueueBuffer::EiEventQueueBuffer(EiScreen *screen, ei *ei, IEventQueue *events) : ei_(ei_ref(ei)), events_(events)
+{
   // We need a pipe to signal ourselves when addEvent() is called
   int pipefd[2];
   int result = pipe2(pipefd, O_NONBLOCK);
@@ -47,16 +47,19 @@ EiEventQueueBuffer::EiEventQueueBuffer(
   pipe_w_ = pipefd[1];
 }
 
-EiEventQueueBuffer::~EiEventQueueBuffer() {
+EiEventQueueBuffer::~EiEventQueueBuffer()
+{
   ei_unref(ei_);
   close(pipe_r_);
   close(pipe_w_);
 }
 
-void EiEventQueueBuffer::waitForEvent(double timeout_in_ms) {
+void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
+{
   Thread::testCancel();
 
-  enum {
+  enum
+  {
     EIFD,
     PIPEFD,
     POLLFD_COUNT, // Last element
@@ -68,8 +71,7 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms) {
   pfds[PIPEFD].fd = pipe_r_;
   pfds[PIPEFD].events = POLLIN;
 
-  int timeout =
-      (timeout_in_ms < 0.0) ? -1 : static_cast<int>(1000.0 * timeout_in_ms);
+  int timeout = (timeout_in_ms < 0.0) ? -1 : static_cast<int>(1000.0 * timeout_in_ms);
 
   int retval = poll(pfds, POLLFD_COUNT, timeout);
   if (retval > 0) {
@@ -97,8 +99,8 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms) {
   Thread::testCancel();
 }
 
-IEventQueueBuffer::Type
-EiEventQueueBuffer::getEvent(Event &event, uint32_t &dataID) {
+IEventQueueBuffer::Type EiEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
+{
   // the addEvent/getEvent pair is a bit awkward for libei.
   //
   // it assumes that there's a nice queue of events sitting there that we can
@@ -127,7 +129,8 @@ EiEventQueueBuffer::getEvent(Event &event, uint32_t &dataID) {
   return kSystem;
 }
 
-bool EiEventQueueBuffer::addEvent(uint32_t dataID) {
+bool EiEventQueueBuffer::addEvent(uint32_t dataID)
+{
   std::lock_guard<std::mutex> lock(mutex_);
   queue_.push({false, dataID});
 
@@ -138,18 +141,20 @@ bool EiEventQueueBuffer::addEvent(uint32_t dataID) {
   return true;
 }
 
-bool EiEventQueueBuffer::isEmpty() const {
+bool EiEventQueueBuffer::isEmpty() const
+{
   std::lock_guard<std::mutex> lock(mutex_);
 
   return queue_.empty();
 }
 
-EventQueueTimer *
-EiEventQueueBuffer::newTimer(double duration, bool oneShot) const {
+EventQueueTimer *EiEventQueueBuffer::newTimer(double duration, bool oneShot) const
+{
   return new EventQueueTimer;
 }
 
-void EiEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
+void EiEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
+{
   delete timer;
 }
 

@@ -26,7 +26,8 @@ class IStream;
 }
 
 //! Generic proxy for client or primary
-class BaseClientProxy : public IClient {
+class BaseClientProxy : public IClient
+{
 public:
   /*!
   \c name is the name of the client.
@@ -57,28 +58,27 @@ public:
   /*!
   Return if this proxy is for client or primary.
   */
-  virtual bool isPrimary() const { return false; }
+  virtual bool isPrimary() const
+  {
+    return false;
+  }
 
   //@}
 
   // IScreen
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
 
   // IClient overrides
-  virtual void enter(
-      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
-      bool forScreensaver) = 0;
+  virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
   virtual bool leave() = 0;
   virtual void setClipboard(ClipboardID, const IClipboard *) = 0;
   virtual void grabClipboard(ClipboardID) = 0;
   virtual void setClipboardDirty(ClipboardID, bool) = 0;
   virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) = 0;
-  virtual void keyRepeat(
-      KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang) = 0;
+  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang) = 0;
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton) = 0;
   virtual void mouseDown(ButtonID) = 0;
   virtual void mouseUp(ButtonID) = 0;
@@ -88,8 +88,7 @@ public:
   virtual void screensaver(bool activate) = 0;
   virtual void resetOptions() = 0;
   virtual void setOptions(const OptionsList &options) = 0;
-  virtual void
-  sendDragInfo(UInt32 fileCount, const char *info, size_t size) = 0;
+  virtual void sendDragInfo(UInt32 fileCount, const char *info, size_t size) = 0;
   virtual void fileChunkSending(UInt8 mark, char *data, size_t dataSize) = 0;
   virtual String getSecureInputApp() const = 0;
   virtual void secureInputNotification(const String &app) const = 0;

@@ -36,10 +36,11 @@
 //
 
 TCPListenSocket::TCPListenSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+)
     : m_events(events),
-      m_socketMultiplexer(socketMultiplexer) {
+      m_socketMultiplexer(socketMultiplexer)
+{
   m_mutex = new Mutex;
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
@@ -48,7 +49,8 @@ TCPListenSocket::TCPListenSocket(
   }
 }
 
-TCPListenSocket::~TCPListenSocket() {
+TCPListenSocket::~TCPListenSocket()
+{
   try {
     if (m_socket != NULL) {
       m_socketMultiplexer->removeSocket(this);
@@ -61,16 +63,18 @@ TCPListenSocket::~TCPListenSocket() {
   delete m_mutex;
 }
 
-void TCPListenSocket::bind(const NetworkAddress &addr) {
+void TCPListenSocket::bind(const NetworkAddress &addr)
+{
   try {
     Lock lock(m_mutex);
     ARCH->setReuseAddrOnSocket(m_socket, true);
     ARCH->bindSocket(m_socket, addr.getAddress());
     ARCH->listenOnSocket(m_socket);
     m_socketMultiplexer->addSocket(
-        this,
-        new TSocketMultiplexerMethodJob<TCPListenSocket>(
-            this, &TCPListenSocket::serviceListening, m_socket, true, false));
+        this, new TSocketMultiplexerMethodJob<TCPListenSocket>(
+                  this, &TCPListenSocket::serviceListening, m_socket, true, false
+              )
+    );
   } catch (XArchNetworkAddressInUse &e) {
     throw XSocketAddressInUse(e.what());
   } catch (XArchNetwork &e) {
@@ -78,7 +82,8 @@ void TCPListenSocket::bind(const NetworkAddress &addr) {
   }
 }
 
-void TCPListenSocket::close() {
+void TCPListenSocket::close()
+{
   Lock lock(m_mutex);
   if (m_socket == NULL) {
     throw XIOClosed();
@@ -92,15 +97,16 @@ void TCPListenSocket::close() {
   }
 }
 
-void *TCPListenSocket::getEventTarget() const {
+void *TCPListenSocket::getEventTarget() const
+{
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
-IDataSocket *TCPListenSocket::accept() {
+IDataSocket *TCPListenSocket::accept()
+{
   IDataSocket *socket = NULL;
   try {
-    socket = new TCPSocket(
-        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+    socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
     if (socket != NULL) {
       setListeningJob();
     }
@@ -120,15 +126,16 @@ IDataSocket *TCPListenSocket::accept() {
   }
 }
 
-void TCPListenSocket::setListeningJob() {
+void TCPListenSocket::setListeningJob()
+{
   m_socketMultiplexer->addSocket(
       this,
-      new TSocketMultiplexerMethodJob<TCPListenSocket>(
-          this, &TCPListenSocket::serviceListening, m_socket, true, false));
+      new TSocketMultiplexerMethodJob<TCPListenSocket>(this, &TCPListenSocket::serviceListening, m_socket, true, false)
+  );
 }
 
-ISocketMultiplexerJob *TCPListenSocket::serviceListening(
-    ISocketMultiplexerJob *job, bool read, bool, bool error) {
+ISocketMultiplexerJob *TCPListenSocket::serviceListening(ISocketMultiplexerJob *job, bool read, bool, bool error)
+{
   if (error) {
     close();
     return NULL;

@@ -26,10 +26,17 @@ namespace deskflow::gui::config {
  * lib, we can probably just pass a reference to that rather than needing an
  * object to track it's state.
  */
-class ServerConfigDialogState {
+class ServerConfigDialogState
+{
 public:
-  bool isVisible() const { return m_isVisible; }
-  void setVisible(bool isVisible) { m_isVisible = isVisible; }
+  bool isVisible() const
+  {
+    return m_isVisible;
+  }
+  void setVisible(bool isVisible)
+  {
+    m_isVisible = isVisible;
+  }
 
 private:
   bool m_isVisible = false;

@@ -27,15 +27,17 @@ class MockEventQueue;
 
 // NOTE: do not mock methods that are not pure virtual. this mock exists only
 // to provide an implementation of the KeyState abstract class.
-class MockKeyState : public KeyState {
+class MockKeyState : public KeyState
+{
 public:
-  MockKeyState(const MockEventQueue &eventQueue)
-      : KeyState((IEventQueue *)&eventQueue, {"en"}, true) {}
+  MockKeyState(const MockEventQueue &eventQueue) : KeyState((IEventQueue *)&eventQueue, {"en"}, true)
+  {
+  }
 
   MockKeyState(const MockEventQueue &eventQueue, const deskflow::KeyMap &keyMap)
-      : KeyState(
-            (IEventQueue *)&eventQueue, (deskflow::KeyMap &)keyMap, {"en"},
-            true) {}
+      : KeyState((IEventQueue *)&eventQueue, (deskflow::KeyMap &)keyMap, {"en"}, true)
+  {
+  }
 
   MOCK_METHOD(SInt32, pollActiveGroup, (), (const, override));
   MOCK_METHOD(KeyModifierMask, pollActiveModifiers, (), (const, override));
@@ -50,5 +52,4 @@ typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 
 typedef UInt32 KeyID;
 
-typedef void (*ForeachKeyCallback)(
-    KeyID, SInt32 group, deskflow::KeyMap::KeyItem &, void *userData);
+typedef void (*ForeachKeyCallback)(KeyID, SInt32 group, deskflow::KeyMap::KeyItem &, void *userData);

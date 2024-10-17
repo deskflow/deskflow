@@ -68,7 +68,8 @@ typedef ArchThreadImpl *ArchThread;
 This interface defines the multithreading operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchMultithread : public IInterface {
+class IArchMultithread : public IInterface
+{
 public:
   //! Type of thread entry point
   typedef void *(*ThreadFunc)(void *);
@@ -79,7 +80,8 @@ public:
   Not all platforms support all signals.  Unsupported signals are
   ignored.
   */
-  enum ESignal {
+  enum ESignal
+  {
     kINTERRUPT, //!< Interrupt (e.g. Ctrl+C)
     kTERMINATE, //!< Terminate (e.g. Ctrl+Break)
     kHANGUP,    //!< Hangup (SIGHUP)

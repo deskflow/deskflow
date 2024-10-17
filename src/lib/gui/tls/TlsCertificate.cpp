@@ -40,7 +40,8 @@ static const char *const kUnixOpenSslCommand = "openssl";
 
 namespace deskflow::gui {
 
-QString openSslWindowsDir() {
+QString openSslWindowsDir()
+{
 
   auto appDir = QDir(QCoreApplication::applicationDirPath());
   auto openSslDir = QDir(appDir.filePath(kWinOpenSslDir));
@@ -62,7 +63,8 @@ QString openSslWindowsDir() {
   return QDir::cleanPath(path);
 }
 
-QString openSslWindowsBinary() {
+QString openSslWindowsBinary()
+{
   auto dir = QDir(openSslWindowsDir());
   auto path = dir.filePath(kWinOpenSslBinary);
 
@@ -87,9 +89,12 @@ using namespace deskflow::gui;
 
 #endif
 
-TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent) {}
+TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent)
+{
+}
 
-bool TlsCertificate::runTool(const QStringList &args) {
+bool TlsCertificate::runTool(const QStringList &args)
+{
 #if defined(Q_OS_WIN)
   const auto program = openSslWindowsBinary();
 #else
@@ -115,9 +120,7 @@ bool TlsCertificate::runTool(const QStringList &args) {
     qDebug("set env var: %s", qUtf8Printable(envVar));
   }
 
-  qDebug(
-      "running: %s %s", qUtf8Printable(program),
-      qUtf8Printable(args.join(" ")));
+  qDebug("running: %s %s", qUtf8Printable(program), qUtf8Printable(args.join(" ")));
   process.start(program, args);
   bool success = process.waitForStarted();
 
@@ -130,16 +133,15 @@ bool TlsCertificate::runTool(const QStringList &args) {
   if (int code = process.exitCode(); !success || code != 0) {
     qDebug("openssl failed with code %d: %s", code, qUtf8Printable(toolStderr));
 
-    qCritical(
-        "failed to generate tls certificate:\n\n%s",
-        qUtf8Printable(toolStderr));
+    qCritical("failed to generate tls certificate:\n\n%s", qUtf8Printable(toolStderr));
     return false;
   }
 
   return true;
 }
 
-bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
+bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
+{
   qDebug("generating tls certificate: %s", qUtf8Printable(path));
 
   QFileInfo info(path);
@@ -190,7 +192,8 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
   }
 }
 
-bool TlsCertificate::generateFingerprint(const QString &certificateFilename) {
+bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
+{
   qDebug("generating tls fingerprint");
 
   QStringList arguments;
@@ -221,7 +224,8 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename) {
   }
 }
 
-int TlsCertificate::getCertKeyLength(const QString &path) {
+int TlsCertificate::getCertKeyLength(const QString &path)
+{
 
   QStringList arguments;
   arguments.append("rsa");

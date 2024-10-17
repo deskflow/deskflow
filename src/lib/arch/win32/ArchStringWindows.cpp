@@ -31,10 +31,15 @@
 #define ARCH_VSNPRINTF _vsnprintf
 #include "arch/vsnprintf.h"
 
-ArchStringWindows::ArchStringWindows() {}
+ArchStringWindows::ArchStringWindows()
+{
+}
 
-ArchStringWindows::~ArchStringWindows() {}
+ArchStringWindows::~ArchStringWindows()
+{
+}
 
-IArchString::EWideCharEncoding ArchStringWindows::getWideCharEncoding() {
+IArchString::EWideCharEncoding ArchStringWindows::getWideCharEncoding()
+{
   return kUTF16;
 }
