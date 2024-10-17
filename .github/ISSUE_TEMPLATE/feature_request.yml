@@ -6,85 +6,11 @@ body:
     attributes:
       value: Thanks for taking the time to help us improve Deskflow.
 
-  - type: dropdown
-    id: project
-    attributes:
-      label: Project
-      description: Are you using Deskflow or a fork/derivative?
-      options:
-        # Empty option to force selection
-        -
-        - Deskflow
-        - Barrier
-        - Input Leap
-        - Synergy
-      default: 0
-    validations:
-      required: true
-
-  - type: checkboxes
-    id: os
-    attributes:
-      label: Operating systems (OS)
-      description: Which operating systems (OS) are you using?
-      options:
-        - label: Windows
-        - label: macOS
-        - label: Linux
-        - label: BSD-derived
-        - label: Other
-    validations:
-      required: true
-
   - type: textarea
-    id: os-version
+    id: request
     attributes:
-      label: OS versions/distros
+      label: Feature Request
       description: |
-        Please provide the version number of your operating system (OS).
-        If you're using Linux, please provide the name of the distribution.
-      placeholder: |
-        - Windows 11
-        - macOS 15
-        - Ubuntu 24.04
-        - FreeBSD 14.0
-    validations:
-      required: true
-
-  - type: textarea
-    id: config
-    attributes:
-      label: Deskflow configuration
-      description: |
-        Please provide a very brief description of your configuration.
-        Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
-        This will help us understand how you're using Deskflow.
-      placeholder: |
-        - Windows 11 server, macOS 15 client
-        - Each computer has a single monitor
-        - Windows is on the left, macOS is on the right
-    validations:
-      required: true
-
-  - type: textarea
-    id: problem
-    attributes:
-      label: What problem are you trying to solve?
-      description: |
-        The most important part of problem solving is understanding the problem.
-        The more detail you provide, the better we can understand your idea.
-        “If I had only one hour to save the world, 
-        I would spend fifty-five minutes defining the problem,
-        and only five minutes finding the solution.”
-        — Albert Einstein
-    validations:
-      required: true
-
-  - type: textarea
-    id: solution
-    attributes:
-      label: What solution do you propose?
-      description: |
-        Please describe the solution you have in mind.
+        Please describe the feature you have in mind.
     validations:
       required: true
