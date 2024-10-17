@@ -61,55 +61,17 @@ Here are a few ways to join in with the project and get involved:
 * [Submit a PR](https://github.com/deskflow/deskflow/wiki/Contributing) (pull request) with a bug fix or improvement
 * [Let us know](https://github.com/deskflow/deskflow/issues) if you have an idea for an improvement
 
-## Build Quick Start
+## Building
+
+See:  [`BUILD.md`](BUILD.md)
 
 > [!TIP]
 > Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
 > wiki page if you have problems.
 
-**1. Dependencies:**
+## Installing
 
-You can either copy/paste the commands for your OS from [`config.yaml`](config.yaml) or use the deps script.
-
-*Linux, macOS, or BSD-derived:*
-```
-./scripts/install_deps.sh
-```
-
-*Windows:*
-```
-python scripts/install_deps.py
-```
-
-**2. Configure:**
-
-*Linux, macOS, or BSD-derived:*
-```
-cmake -B build
-```
-
-*Windows:*
-```
-cmake -B build --preset=windows-release
-```
-
-**3. Build:**
-```
-cmake --build build -j8
-```
-
-**4. Test:**
-```
-./build/bin/unittests
-./build/bin/integtests
-```
-
-**5. Run**
-```
-./build/bin/deskflow
-```
-
-## How to install (packages)
+Community packages coming soon, for now please use: [Continuous Build](https://github.com/deskflow/deskflow/releases)
 
 *macOS:*
 *(coming soon)*

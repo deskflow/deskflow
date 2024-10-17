@@ -46,7 +46,7 @@ jobs:
         uses: sonarsource/sonarcloud-github-c-cpp@v3
 
       - name: Configure
-        run: cmake -B build --preset=linux-debug -DENABLE_COVERAGE=ON
+        run: cmake -B build --preset=dev-linux-debug -DENABLE_COVERAGE=ON
 
       - name: Build
         run: |

@@ -31,7 +31,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
-        run: cmake -B build --preset=linux-release
+        run: cmake -B build --preset=dev-linux-release
 
       - name: Build
         run: cmake --build build -j8
