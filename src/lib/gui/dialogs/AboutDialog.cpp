@@ -48,10 +48,12 @@ AboutDialog::AboutDialog(QMainWindow *parent, std::shared_ptr<Deps> deps)
   this->setFixedSize(this->size());
 
   QString version = QString::fromStdString(deskflow::version());
+  m_pLabelDeskflowVersion->setTextInteractionFlags(Qt::TextSelectableByMouse);
   m_pLabelDeskflowVersion->setText(version);
 
   QString buildDateString = QString::fromLocal8Bit(BUILD_DATE).simplified();
   QDate buildDate = QLocale("en_US").toDate(buildDateString, "yyyy-MM-dd");
+  m_pLabelBuildDate->setTextInteractionFlags(Qt::TextSelectableByMouse);
   m_pLabelBuildDate->setText(
       buildDate.toString(QLocale::system().dateFormat(QLocale::LongFormat)));
 
