@@ -9,6 +9,7 @@
 #
 macro(configure_packaging)
 
+  message(VERBOSE "Configuring Packaging")
   set(DESKFLOW_PROJECT_RES_DIR ${PROJECT_SOURCE_DIR}/res)
   configure_file(${CMAKE_SOURCE_DIR}/cmake/CPackOptions.cmake.in
                  ${CMAKE_BINARY_DIR}/cmake/CPackOptions.cmake @ONLY)
@@ -36,9 +37,8 @@ macro(configure_packaging)
       set(OS_STRING ${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_PROCESSOR})
     endif()
 
-    # cmake-format: off
-   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${OS_STRING}")
-   # cmake-format: on
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${OS_STRING}")
+    message(STATUS "Package Basename: ${CPACK_PACKAGE_NAME}")
 
     include(CPack)
   else()
@@ -51,8 +51,6 @@ endmacro()
 # Windows installer
 #
 macro(configure_windows_packaging)
-
-  message(VERBOSE "Configuring Windows installer")
 
   set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
 
@@ -79,8 +77,6 @@ endmacro()
 # macOS app bundle
 #
 macro(configure_mac_packaging)
-
-  message(VERBOSE "Configuring macOS app bundle")
 
   set(CMAKE_INSTALL_RPATH
       "@loader_path/../Libraries;@loader_path/../Frameworks")
@@ -109,7 +105,7 @@ macro(configure_linux_package_name)
     OUTPUT_VARIABLE _DISTRO_NAME
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   string(REPLACE "\"" "" DISTRO_NAME "${_DISTRO_NAME}")
-  message(STATUS "DISTRO NAME: ${DISTRO_NAME}")
+  message(STATUS "Distro Name: ${DISTRO_NAME}")
 
   execute_process(
     COMMAND bash "-c"
@@ -117,7 +113,7 @@ macro(configure_linux_package_name)
     OUTPUT_VARIABLE _DISTRO_LIKE
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   string(REPLACE "\"" "" DISTRO_LIKE "${_DISTRO_LIKE}")
-  message(STATUS "DISTRO LIKE: ${DISTRO_LIKE}")
+  message(STATUS "Distro Like: ${DISTRO_LIKE}")
 
   execute_process(
     COMMAND
@@ -126,7 +122,7 @@ macro(configure_linux_package_name)
     OUTPUT_VARIABLE _DISTRO_CODENAME
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   string(REPLACE "\"" "" DISTRO_CODENAME "${_DISTRO_CODENAME}")
-  message(STATUS "DISTRO CODENAME: ${DISTRO_CODENAME}")
+  message(STATUS "Distro Codename: ${DISTRO_CODENAME}")
 
   execute_process(
     COMMAND bash "-c"
@@ -134,7 +130,7 @@ macro(configure_linux_package_name)
     OUTPUT_VARIABLE _DISTRO_VERSION_ID
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   string(REPLACE "\"" "" DISTRO_VERSION_ID "${_DISTRO_VERSION_ID}")
-  message(STATUS "DISTRO ID: ${DISTRO_VERSION_ID}")
+  message(STATUS "Distro ID: ${DISTRO_VERSION_ID}")
 
   # Set Run Attempt portion of package name
   # GITHUB_RUN_ATTEMPT is set by GITHUB when a job is run
@@ -152,7 +148,7 @@ macro(configure_linux_package_name)
           "${PACKAGE_BUILD_ATTEMPT}~${DISTRO_CODENAME}")
     endif()
     set(CPACK_GENERATOR "DEB")
-    message(STATUS "DEB RELEASE INFO: ${CPACK_DEBIAN_PACKAGE_RELEASE}")
+    message(STATUS "DEB Revision: ${CPACK_DEBIAN_PACKAGE_RELEASE}")
   endif()
 
   check_is_rpm()
@@ -172,13 +168,9 @@ macro(configure_linux_package_name)
   endif()
   set(OS_STRING "${DISTRO_NAME}-${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
 
-  message(STATUS "OS INFO: ${OS_STRING}")
-
 endmacro()
 
 macro(configure_linux_packaging)
-
-  message(VERBOSE "Configuring Linux packaging")
 
   # Gather distro info
   # This is used in package names
@@ -291,7 +283,7 @@ macro(check_is_rpm)
     endif()
 
     set(CPACK_GENERATOR "RPM")
-    message(STATUS "RPM RELEASE INFO: ${CPACK_RPM_PACKAGE_RELEASE}")
+    message(STATUS "RPM Revision: ${CPACK_RPM_PACKAGE_RELEASE}")
 
   endif()
 endmacro()
