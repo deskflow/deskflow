@@ -54,6 +54,14 @@ if(UNIX)
     mt
     server)
 
+  if(CLI11_FOUND)
+    target_link_libraries(${lib_name} CLI11::CLI11)
+  endif()
+
+  if(tomlplusplus_FOUND)
+    target_link_libraries(${lib_name} tomlplusplus::tomlplusplus)
+  endif()
+
   if(NOT APPLE)
     target_link_libraries(${lib_name} pugixml)
 
