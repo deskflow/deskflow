@@ -21,12 +21,13 @@
 
 namespace validators {
 
-ComputerNameValidator::ComputerNameValidator(const QString &message)
-    : IStringValidator(message) {}
+ComputerNameValidator::ComputerNameValidator(const QString &message) : IStringValidator(message)
+{
+}
 
-bool ComputerNameValidator::validate(const QString &input) const {
-  const QRegularExpression re(
-      "^[\\w\\._-]{0,255}$", QRegularExpression::CaseInsensitiveOption);
+bool ComputerNameValidator::validate(const QString &input) const
+{
+  const QRegularExpression re("^[\\w\\._-]{0,255}$", QRegularExpression::CaseInsensitiveOption);
   auto match = re.match(input);
   auto result = match.hasMatch();
   return result;

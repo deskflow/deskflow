@@ -60,14 +60,16 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
  * instance is widely accessible, but that has previously led to this class
  * becoming a god object.
  */
-class AppConfig : public QObject, public deskflow::gui::IAppConfig {
+class AppConfig : public QObject, public deskflow::gui::IAppConfig
+{
   using ProcessMode = deskflow::gui::ProcessMode;
   using IConfigScopes = deskflow::gui::IConfigScopes;
 
   Q_OBJECT
 
 private:
-  enum class Setting {
+  enum class Setting
+  {
     kScreenName = 0,
     kPort = 1,
     kInterface = 2,
@@ -115,17 +117,20 @@ private:
   };
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
-    virtual QString defaultTlsCertPath() const {
+    virtual QString defaultTlsCertPath() const
+    {
       return deskflow::gui::paths::defaultTlsCertPath();
     }
-    virtual QString hostname() const { return QHostInfo::localHostName(); }
+    virtual QString hostname() const
+    {
+      return QHostInfo::localHostName();
+    }
   };
 
-  explicit AppConfig(
-      IConfigScopes &scopes,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+  explicit AppConfig(IConfigScopes &scopes, std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   void determineScope();
 
@@ -248,20 +253,17 @@ private:
    * @param toType A function to convert the QVariant to the desired type.
    */
   template <typename T>
-  std::optional<T> getFromCurrentScope(
-      Setting name, std::function<T(const QVariant &)> toType) const;
+  std::optional<T> getFromCurrentScope(Setting name, std::function<T(const QVariant &)> toType) const;
 
   /**
    * @brief Sets a setting if the value is not `std::nullopt`.
    */
-  template <typename T>
-  void setInCurrentScope(Setting name, const std::optional<T> &value);
+  template <typename T> void setInCurrentScope(Setting name, const std::optional<T> &value);
 
   /// @brief Sets the value of a setting
   /// @param [in] name The Setting to be saved
   /// @param [in] value The Value to be saved
-  template <typename T>
-  void setInCurrentScope(AppConfig::Setting name, T value);
+  template <typename T> void setInCurrentScope(AppConfig::Setting name, T value);
 
   /// @brief Sets the value of a common setting
   /// which should have the same value for all scopes
@@ -269,15 +271,13 @@ private:
   /// @param [in] value The Value to be saved
   template <typename T> void saveToAllScopes(AppConfig::Setting name, T value);
 
-  QVariant getFromCurrentScope(
-      AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
+  QVariant getFromCurrentScope(AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
 
   /**
    * @brief Finds a value by searching each scope starting with the current
    * scope.
    */
-  QVariant findInAllScopes(
-      AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
+  QVariant findInAllScopes(AppConfig::Setting name, const QVariant &defaultValue = QVariant()) const;
 
   /// @brief This method loads config from specified scope
   /// @param [in] scope which should be loaded.
@@ -319,8 +319,7 @@ private:
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
-  bool m_EnableService =
-      deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
+  bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_CloseToTray = true;
   int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;

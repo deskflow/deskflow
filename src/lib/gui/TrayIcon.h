@@ -26,7 +26,8 @@
 
 namespace deskflow::gui {
 
-class TrayIcon : public QObject {
+class TrayIcon : public QObject
+{
   Q_OBJECT
 public:
   explicit TrayIcon() = default;

@@ -21,10 +21,15 @@
 #include "arch/XArch.h"
 
 //! Lazy error message string evaluation for unix
-class XArchEvalUnix : public XArchEval {
+class XArchEvalUnix : public XArchEval
+{
 public:
-  XArchEvalUnix(int error) : m_error(error) {}
-  virtual ~XArchEvalUnix() _NOEXCEPT {}
+  XArchEvalUnix(int error) : m_error(error)
+  {
+  }
+  virtual ~XArchEvalUnix() _NOEXCEPT
+  {
+  }
 
   virtual std::string eval() const;
 

@@ -29,15 +29,16 @@ daemons.  The install and uninstall functions do nothing, the query
 functions return false, and \c daemonize() simply calls the passed
 function and returns its result.
 */
-class ArchDaemonNone : public IArchDaemon {
+class ArchDaemonNone : public IArchDaemon
+{
 public:
   ArchDaemonNone();
   virtual ~ArchDaemonNone();
 
   // IArchDaemon overrides
   virtual void installDaemon(
-      const char *name, const char *description, const char *pathname,
-      const char *commandLine, const char *dependencies);
+      const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
+  );
   virtual void uninstallDaemon(const char *name);
   virtual int daemonize(const char *name, DaemonFunc func);
   virtual bool canInstallDaemon(const char *name);

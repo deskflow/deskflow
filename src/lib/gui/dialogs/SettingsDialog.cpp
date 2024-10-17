@@ -39,14 +39,15 @@
 using namespace deskflow::gui;
 
 SettingsDialog::SettingsDialog(
-    QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
-    const CoreProcess &coreProcess)
+    QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
+)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::SettingsDialogBase(),
       m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_coreProcess(coreProcess),
-      m_tlsUtility(appConfig) {
+      m_tlsUtility(appConfig)
+{
 
   setupUi(this);
 
@@ -59,12 +60,11 @@ SettingsDialog::SettingsDialog(
   updateControls();
 
   m_pScreenNameError = new validators::ValidationError(this);
-  m_pLineEditScreenName->setValidator(new validators::ScreenNameValidator(
-      m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens()));
+  m_pLineEditScreenName->setValidator(
+      new validators::ScreenNameValidator(m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens())
+  );
 
-  connect(
-      m_pCheckBoxEnableTls, &QCheckBox::toggled, this,
-      &SettingsDialog::updateTlsControlsEnabled);
+  connect(m_pCheckBoxEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
 
   connect(
       this, &SettingsDialog::shown, this,
@@ -73,7 +73,8 @@ SettingsDialog::SettingsDialog(
           showReadOnlyMessage();
         }
       },
-      Qt::QueuedConnection);
+      Qt::QueuedConnection
+  );
 
 #ifdef DESKFLOW_GUI_HOOK_SETTINGS
   DESKFLOW_GUI_HOOK_SETTINGS
@@ -84,7 +85,8 @@ SettingsDialog::SettingsDialog(
 // Auto-connect slots
 //
 
-void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
+void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
+{
   bool checked = i == 2;
 
   m_pLabelLogPath->setEnabled(checked);
@@ -92,21 +94,24 @@ void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i) {
   m_pButtonBrowseLog->setEnabled(checked);
 }
 
-void SettingsDialog::on_m_pButtonBrowseLog_clicked() {
+void SettingsDialog::on_m_pButtonBrowseLog_clicked()
+{
   QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Save log file to..."), m_pLineEditLogFilename->text(),
-      "Logs (*.log *.txt)");
+      this, tr("Save log file to..."), m_pLineEditLogFilename->text(), "Logs (*.log *.txt)"
+  );
 
   if (!fileName.isEmpty()) {
     m_pLineEditLogFilename->setText(fileName);
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool) {
+void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool)
+{
   updateTlsControlsEnabled();
 }
 
-void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
+void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
+{
   // We only need to test the System scoped Radio as they are connected
   m_appConfig.setLoadFromSystemScope(checked);
   loadFromConfig();
@@ -117,11 +122,12 @@ void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked) {
   }
 }
 
-void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
+void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked()
+{
   QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Select a TLS certificate to use..."),
-      m_pLineEditTlsCertPath->text(), "Cert (*.pem)", nullptr,
-      QFileDialog::DontConfirmOverwrite);
+      this, tr("Select a TLS certificate to use..."), m_pLineEditTlsCertPath->text(), "Cert (*.pem)", nullptr,
+      QFileDialog::DontConfirmOverwrite
+  );
 
   if (!fileName.isEmpty()) {
     m_pLineEditTlsCertPath->setText(fileName);
@@ -134,15 +140,15 @@ void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked() {
   }
 }
 
-void SettingsDialog::on_m_pPushButtonTlsRegenCert_clicked() {
+void SettingsDialog::on_m_pPushButtonTlsRegenCert_clicked()
+{
   if (m_tlsUtility.generateCertificate()) {
-    QMessageBox::information(
-        this, tr("TLS Certificate Regenerated"),
-        tr("TLS certificate regenerated successfully."));
+    QMessageBox::information(this, tr("TLS Certificate Regenerated"), tr("TLS certificate regenerated successfully."));
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool) {
+void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool)
+{
   updateControls();
 }
 
@@ -150,20 +156,22 @@ void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool) {
 // End of auto-connect slots
 //
 
-void SettingsDialog::showEvent(QShowEvent *event) {
+void SettingsDialog::showEvent(QShowEvent *event)
+{
   QDialog::showEvent(event);
   emit shown();
 }
 
-void SettingsDialog::showReadOnlyMessage() {
+void SettingsDialog::showReadOnlyMessage()
+{
   const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
   messages::showReadOnlySettings(this, activeScopeFilename);
 }
 
-void SettingsDialog::accept() {
+void SettingsDialog::accept()
+{
   if (!m_pLineEditScreenName->hasAcceptableInput()) {
-    QMessageBox::warning(
-        this, tr("Invalid screen name"), m_pScreenNameError->message());
+    QMessageBox::warning(this, tr("Invalid screen name"), m_pScreenNameError->message());
     return;
   }
 
@@ -174,8 +182,7 @@ void SettingsDialog::accept() {
   m_appConfig.setLogLevel(m_pComboLogLevel->currentIndex());
   m_appConfig.setLogToFile(m_pCheckBoxLogToFile->isChecked());
   m_appConfig.setLogFilename(m_pLineEditLogFilename->text());
-  m_appConfig.setElevateMode(
-      static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
+  m_appConfig.setElevateMode(static_cast<ElevateMode>(m_pComboElevate->currentIndex()));
   m_appConfig.setAutoHide(m_pCheckBoxAutoHide->isChecked());
   m_appConfig.setPreventSleep(m_pCheckBoxPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(m_pLineEditTlsCertPath->text());
@@ -190,7 +197,8 @@ void SettingsDialog::accept() {
   QDialog::accept();
 }
 
-void SettingsDialog::reject() {
+void SettingsDialog::reject()
+{
   // restore original system scope value on reject.
   if (m_appConfig.isActiveScopeSystem() != m_wasOriginallySystemScope) {
     m_appConfig.setLoadFromSystemScope(m_wasOriginallySystemScope);
@@ -199,7 +207,8 @@ void SettingsDialog::reject() {
   QDialog::reject();
 }
 
-void SettingsDialog::loadFromConfig() {
+void SettingsDialog::loadFromConfig()
+{
 
   m_pLineEditScreenName->setText(m_appConfig.screenName());
   m_pSpinBoxPort->setValue(m_appConfig.port());
@@ -226,14 +235,14 @@ void SettingsDialog::loadFromConfig() {
   updateTlsControls();
 }
 
-void SettingsDialog::updateTlsControls() {
+void SettingsDialog::updateTlsControls()
+{
 
   if (QFile(m_appConfig.tlsCertPath()).exists()) {
     updateKeyLengthOnFile(m_appConfig.tlsCertPath());
   } else {
     const auto keyLengthText = QString::number(m_appConfig.tlsKeyLength());
-    m_pComboBoxTlsKeyLength->setCurrentIndex(
-        m_pComboBoxTlsKeyLength->findText(keyLengthText));
+    m_pComboBoxTlsKeyLength->setCurrentIndex(m_pComboBoxTlsKeyLength->findText(keyLengthText));
   }
 
   const auto tlsEnabled = m_tlsUtility.isEnabled();
@@ -244,7 +253,8 @@ void SettingsDialog::updateTlsControls() {
   m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
 }
 
-void SettingsDialog::updateTlsControlsEnabled() {
+void SettingsDialog::updateTlsControlsEnabled()
+{
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto clientMode = m_appConfig.clientGroupChecked();
   const auto tlsChecked = m_pCheckBoxEnableTls->isChecked();
@@ -258,11 +268,13 @@ void SettingsDialog::updateTlsControlsEnabled() {
   m_pPushButtonTlsRegenCert->setEnabled(enabled);
 }
 
-bool SettingsDialog::isClientMode() const {
+bool SettingsDialog::isClientMode() const
+{
   return m_coreProcess.mode() == deskflow::gui::CoreProcess::Mode::Client;
 }
 
-void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
+void SettingsDialog::updateKeyLengthOnFile(const QString &path)
+{
   TlsCertificate ssl;
   if (!QFile(path).exists()) {
     qFatal("tls certificate file not found: %s", qUtf8Printable(path));
@@ -274,7 +286,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path) {
   m_appConfig.setTlsKeyLength(length);
 }
 
-void SettingsDialog::updateControls() {
+void SettingsDialog::updateControls()
+{
 
 #if defined(Q_OS_WIN)
   const auto serviceAvailable = true;

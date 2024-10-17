@@ -27,14 +27,14 @@
 #include <QtCore>
 #include <QtGui>
 
-ActionDialog::ActionDialog(
-    QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action)
+ActionDialog::ActionDialog(QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       Ui::ActionDialogBase(),
       m_ServerConfig(config),
       m_Hotkey(hotkey),
       m_Action(action),
-      m_pButtonGroupType(new QButtonGroup(this)) {
+      m_pButtonGroupType(new QButtonGroup(this))
+{
   setupUi(this);
 
   // work around Qt Designer's lack of a QButtonGroup; we need it to get
@@ -46,10 +46,10 @@ ActionDialog::ActionDialog(
       m_pRadioSwitchToScreen,
       m_pRadioSwitchInDirection,
       m_pRadioLockCursorToScreen,
-      m_pRadioRestartAllConnections};
+      m_pRadioRestartAllConnections
+  };
 
-  for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]);
-       i++)
+  for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
     m_pButtonGroupType->addButton(typeButtons[i], i);
 
   m_pKeySequenceWidgetHotkey->setText(m_Action.keySequence().toString());
@@ -81,9 +81,9 @@ ActionDialog::ActionDialog(
     }
 }
 
-void ActionDialog::accept() {
-  if (!sequenceWidget()->valid() && m_pButtonGroupType->checkedId() >= 0 &&
-      m_pButtonGroupType->checkedId() < 3)
+void ActionDialog::accept()
+{
+  if (!sequenceWidget()->valid() && m_pButtonGroupType->checkedId() >= 0 && m_pButtonGroupType->checkedId() < 3)
     return;
 
   m_Action.setKeySequence(sequenceWidget()->keySequence());
@@ -103,7 +103,8 @@ void ActionDialog::accept() {
   QDialog::accept();
 }
 
-void ActionDialog::on_m_pKeySequenceWidgetHotkey_keySequenceChanged() {
+void ActionDialog::on_m_pKeySequenceWidgetHotkey_keySequenceChanged()
+{
   if (sequenceWidget()->keySequence().isMouseButton()) {
     m_pGroupBoxScreens->setEnabled(false);
     m_pListScreens->setEnabled(false);

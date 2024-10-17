@@ -31,36 +31,33 @@ const auto kConnectTimeout = 5000;
 
 using namespace deskflow::gui;
 
-QIpcClient::QIpcClient(const StreamProvider &streamProvider)
-    : m_streamProvider(streamProvider) {
+QIpcClient::QIpcClient(const StreamProvider &streamProvider) : m_streamProvider(streamProvider)
+{
 
   m_pSocket = std::make_unique<QTcpSocket>();
 
   if (!m_streamProvider) {
-    m_streamProvider = [this]() {
-      return std::make_shared<QDataStreamProxy>(m_pSocket.get());
-    };
+    m_streamProvider = [this]() { return std::make_shared<QDataStreamProxy>(m_pSocket.get()); };
   }
 
-  connect(
-      m_pSocket.get(), &QTcpSocket::connected, this,
-      &QIpcClient::onSocketConnected);
-  connect(
-      m_pSocket.get(), &QTcpSocket::errorOccurred, this,
-      &QIpcClient::onSocketError);
+  connect(m_pSocket.get(), &QTcpSocket::connected, this, &QIpcClient::onSocketConnected);
+  connect(m_pSocket.get(), &QTcpSocket::errorOccurred, this, &QIpcClient::onSocketError);
 
   m_pReader = std::make_unique<IpcReader>(m_pSocket.get());
   connect(
       m_pReader.get(), &IpcReader::read, this, //
-      &QIpcClient::onIpcReaderRead);
-  connect(
-      m_pReader.get(), &IpcReader::helloBack, this,
-      &QIpcClient::onIpcReaderHelloBack);
+      &QIpcClient::onIpcReaderRead
+  );
+  connect(m_pReader.get(), &IpcReader::helloBack, this, &QIpcClient::onIpcReaderHelloBack);
 }
 
-void QIpcClient::onSocketConnected() const { sendHello(); }
+void QIpcClient::onSocketConnected() const
+{
+  sendHello();
+}
 
-void QIpcClient::connectToHost() {
+void QIpcClient::connectToHost()
+{
   m_isConnecting = true;
   qInfo("connecting to background service...");
   const auto port = static_cast<quint16>(kIpcPort);
@@ -78,7 +75,8 @@ void QIpcClient::connectToHost() {
   });
 }
 
-void QIpcClient::disconnectFromHost() {
+void QIpcClient::disconnectFromHost()
+{
   m_pReader->stop();
   m_pSocket->flush();
   m_pSocket->close();
@@ -89,7 +87,8 @@ void QIpcClient::disconnectFromHost() {
   qInfo("disconnected from background service");
 }
 
-void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) {
+void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError)
+{
   QString text;
   switch (socketError) {
   case 0:
@@ -109,7 +108,8 @@ void QIpcClient::onSocketError(QAbstractSocket::SocketError socketError) {
   QTimer::singleShot(kRetryInterval, this, &QIpcClient::onRetryConnect);
 }
 
-void QIpcClient::onRetryConnect() {
+void QIpcClient::onRetryConnect()
+{
   if (m_isConnected) {
     qDebug("ipc already connected, skipping retry");
     return;
@@ -122,7 +122,8 @@ void QIpcClient::onRetryConnect() {
   connectToHost();
 }
 
-void QIpcClient::sendHello() const {
+void QIpcClient::sendHello() const
+{
   qDebug("sending ipc hello message");
   auto stream = m_streamProvider();
   stream->writeRawData(kIpcMsgHello, 4);
@@ -132,8 +133,8 @@ void QIpcClient::sendHello() const {
   stream->writeRawData(typeBuf, 1);
 }
 
-void QIpcClient::sendCommand(
-    const QString &command, ElevateMode const elevate) const {
+void QIpcClient::sendCommand(const QString &command, ElevateMode const elevate) const
+{
   qDebug("sending ipc command: %s", qUtf8Printable(command));
 
   auto stream = m_streamProvider();
@@ -156,7 +157,8 @@ void QIpcClient::sendCommand(
   stream->writeRawData(elevateBuf, 1);
 }
 
-void QIpcClient::onIpcReaderHelloBack() {
+void QIpcClient::onIpcReaderHelloBack()
+{
   qDebug("ipc hello back received");
 
   if (m_isConnected) {
@@ -168,4 +170,7 @@ void QIpcClient::onIpcReaderHelloBack() {
   serviceReady();
 }
 
-void QIpcClient::onIpcReaderRead(const QString &text) { emit read(text); }
+void QIpcClient::onIpcReaderRead(const QString &text)
+{
+  emit read(text);
+}

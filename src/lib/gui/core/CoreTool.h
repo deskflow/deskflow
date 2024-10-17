@@ -19,7 +19,8 @@
 
 #include <QString>
 
-class CoreTool {
+class CoreTool
+{
 public:
   QString getProfileDir() const;
   QString getInstalledDir() const;

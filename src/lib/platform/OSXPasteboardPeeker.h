@@ -22,10 +22,11 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
-CFStringRef getDraggedFileURL();
+  CFStringRef getDraggedFileURL();
 
 #if defined(__cplusplus)
 }

@@ -32,7 +32,8 @@ class IpcSettingMessage;
 class IpcHelloMessage;
 class IEventQueue;
 
-class IpcClientProxy {
+class IpcClientProxy
+{
   friend class IpcServer;
 
 public:

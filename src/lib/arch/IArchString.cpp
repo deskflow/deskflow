@@ -30,15 +30,16 @@ static ArchMutex s_mutex = NULL;
 // use C library non-reentrant multibyte conversion with mutex
 //
 
-IArchString::~IArchString() {
+IArchString::~IArchString()
+{
   if (s_mutex != NULL) {
     ARCH->closeMutex(s_mutex);
     s_mutex = NULL;
   }
 }
 
-int IArchString::convStringWCToMB(
-    char *dst, const wchar_t *src, UInt32 n, bool *errors) {
+int IArchString::convStringWCToMB(char *dst, const wchar_t *src, UInt32 n, bool *errors)
+{
   ptrdiff_t len = 0;
 
   bool dummyErrors;
@@ -94,8 +95,8 @@ int IArchString::convStringWCToMB(
   return static_cast<int>(len);
 }
 
-int IArchString::convStringMBToWC(
-    wchar_t *dst, const char *src, UInt32 n, bool *errors) {
+int IArchString::convStringMBToWC(wchar_t *dst, const char *src, UInt32 n, bool *errors)
+{
   ptrdiff_t len = 0;
   wchar_t dummy;
 

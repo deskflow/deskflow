@@ -27,13 +27,15 @@
 namespace deskflow::gui {
 
 /// @brief Encapsulates Qt config for both user and global scopes.
-class ConfigScopes : public QObject, public IConfigScopes {
+class ConfigScopes : public QObject, public IConfigScopes
+{
   using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
   Q_OBJECT
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
     virtual std::shared_ptr<QSettingsProxy> makeUserSettings();
     virtual std::shared_ptr<QSettingsProxy> makeSystemSettings();
@@ -46,15 +48,11 @@ public:
 
   void signalReady() override;
   void save(bool emitSaving = true) override;
-  bool scopeContains(
-      const QString &name, Scope scope = Scope::Current) const override;
+  bool scopeContains(const QString &name, Scope scope = Scope::Current) const override;
   bool isActiveScopeWritable() const override;
-  void setInScope(
-      const QString &name, const QVariant &value,
-      Scope scope = Scope::Current) override;
-  QVariant getFromScope(
-      const QString &name, const QVariant &defaultValue = QVariant(),
-      Scope scope = Scope::Current) const override;
+  void setInScope(const QString &name, const QVariant &value, Scope scope = Scope::Current) override;
+  QVariant getFromScope(const QString &name, const QVariant &defaultValue = QVariant(), Scope scope = Scope::Current)
+      const override;
   void setActiveScope(Scope scope = Scope::User) override;
   Scope activeScope() const override;
   QSettingsProxy &activeSettings() override;

@@ -22,20 +22,24 @@
 // MSWindowsClipboardAnyTextConverter
 //
 
-MSWindowsClipboardAnyTextConverter::MSWindowsClipboardAnyTextConverter() {
+MSWindowsClipboardAnyTextConverter::MSWindowsClipboardAnyTextConverter()
+{
   // do nothing
 }
 
-MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter() {
+MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter()
+{
   // do nothing
 }
 
-IClipboard::EFormat MSWindowsClipboardAnyTextConverter::getFormat() const {
+IClipboard::EFormat MSWindowsClipboardAnyTextConverter::getFormat() const
+{
   return IClipboard::kText;
 }
 
 HANDLE
-MSWindowsClipboardAnyTextConverter::fromIClipboard(const String &data) const {
+MSWindowsClipboardAnyTextConverter::fromIClipboard(const String &data) const
+{
   // convert linefeeds and then convert to desired encoding
   String text = doFromIClipboard(convertLinefeedToWin32(data));
   UInt32 size = (UInt32)text.size();
@@ -57,7 +61,8 @@ MSWindowsClipboardAnyTextConverter::fromIClipboard(const String &data) const {
   return gData;
 }
 
-String MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const {
+String MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
+{
   // get datator
   const char *src = (const char *)GlobalLock(data);
   UInt32 srcSize = (UInt32)GlobalSize(data);
@@ -75,8 +80,8 @@ String MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const {
   return convertLinefeedToUnix(text);
 }
 
-String MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
-    const String &src) const {
+String MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(const String &src) const
+{
   // note -- we assume src is a valid UTF-8 string
 
   // count newlines in string
@@ -107,8 +112,8 @@ String MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
   return dst;
 }
 
-String MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
-    const String &src) const {
+String MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(const String &src) const
+{
   // count newlines in string
   UInt32 numNewlines = 0;
   UInt32 n = (UInt32)src.size();

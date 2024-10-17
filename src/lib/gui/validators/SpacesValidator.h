@@ -21,7 +21,8 @@
 
 namespace validators {
 
-class SpacesValidator : public IStringValidator {
+class SpacesValidator : public IStringValidator
+{
 public:
   explicit SpacesValidator(const QString &message);
   bool validate(const QString &input) const override;

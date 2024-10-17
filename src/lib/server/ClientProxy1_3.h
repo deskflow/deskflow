@@ -21,11 +21,10 @@
 #include "server/ClientProxy1_2.h"
 
 //! Proxy for client implementing protocol version 1.3
-class ClientProxy1_3 : public ClientProxy1_2 {
+class ClientProxy1_3 : public ClientProxy1_2
+{
 public:
-  ClientProxy1_3(
-      const String &name, deskflow::IStream *adoptedStream,
-      IEventQueue *events);
+  ClientProxy1_3(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ClientProxy1_3(ClientProxy1_3 const &) = delete;
   ClientProxy1_3(ClientProxy1_3 &&) = delete;
   ~ClientProxy1_3();

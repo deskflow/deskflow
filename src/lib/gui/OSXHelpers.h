@@ -19,7 +19,12 @@
 
 #include <QString>
 
-enum class IconsTheme { ICONS_DARK, ICONS_LIGHT, ICONS_TEMPLATE };
+enum class IconsTheme
+{
+  ICONS_DARK,
+  ICONS_LIGHT,
+  ICONS_TEMPLATE
+};
 
 void requestOSXNotificationPermission();
 bool isOSXDevelopmentBuild();

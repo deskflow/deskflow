@@ -51,7 +51,8 @@ EVENT_TYPE_ACCESSOR(File)
 EVENT_TYPE_ACCESSOR(Ei)
 
 // interrupt handler.  this just adds a quit event to the queue.
-static void interrupt(Arch::ESignal, void *data) {
+static void interrupt(Arch::ESignal, void *data)
+{
   EventQueue *events = static_cast<EventQueue *>(data);
   events->addEvent(Event(Event::kQuit));
 }
@@ -85,14 +86,16 @@ EventQueue::EventQueue()
       m_typesForFile(NULL),
       m_typesForEi(NULL),
       m_readyMutex(new Mutex),
-      m_readyCondVar(new CondVar<bool>(m_readyMutex, false)) {
+      m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
+{
   m_mutex = ARCH->newMutex();
   ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
   ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
   m_buffer = new SimpleEventQueueBuffer;
 }
 
-EventQueue::~EventQueue() {
+EventQueue::~EventQueue()
+{
   delete m_buffer;
   delete m_readyCondVar;
   delete m_readyMutex;
@@ -102,7 +105,8 @@ EventQueue::~EventQueue() {
   ARCH->closeMutex(m_mutex);
 }
 
-void EventQueue::loop() {
+void EventQueue::loop()
+{
   m_buffer->init();
   {
     Lock lock(m_readyMutex);
@@ -126,7 +130,8 @@ void EventQueue::loop() {
   }
 }
 
-Event::Type EventQueue::registerTypeOnce(Event::Type &type, const char *name) {
+Event::Type EventQueue::registerTypeOnce(Event::Type &type, const char *name)
+{
   ArchMutexLock lock(m_mutex);
   if (type == Event::kUnknown) {
     m_typeMap.insert(std::make_pair(m_nextType, name));
@@ -137,7 +142,8 @@ Event::Type EventQueue::registerTypeOnce(Event::Type &type, const char *name) {
   return type;
 }
 
-const char *EventQueue::getTypeName(Event::Type type) {
+const char *EventQueue::getTypeName(Event::Type type)
+{
   switch (type) {
   case Event::kUnknown:
     return "nil";
@@ -161,7 +167,8 @@ const char *EventQueue::getTypeName(Event::Type type) {
   }
 }
 
-void EventQueue::adoptBuffer(IEventQueueBuffer *buffer) {
+void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)
+{
   ArchMutexLock lock(m_mutex);
 
   LOG((CLOG_DEBUG "adopting new buffer"));
@@ -187,7 +194,8 @@ void EventQueue::adoptBuffer(IEventQueueBuffer *buffer) {
   }
 }
 
-bool EventQueue::getEvent(Event &event, double timeout) {
+bool EventQueue::getEvent(Event &event, double timeout)
+{
   Stopwatch timer(true);
 retry:
   // if no events are waiting then handle timers and then wait
@@ -243,7 +251,8 @@ retry:
   }
 }
 
-bool EventQueue::dispatchEvent(const Event &event) {
+bool EventQueue::dispatchEvent(const Event &event)
+{
   void *target = event.getTarget();
   IEventJob *job = getHandler(event.getType(), target);
   if (job == NULL) {
@@ -256,7 +265,8 @@ bool EventQueue::dispatchEvent(const Event &event) {
   return false;
 }
 
-void EventQueue::addEvent(const Event &event) {
+void EventQueue::addEvent(const Event &event)
+{
   // discard bogus event types
   switch (event.getType()) {
   case Event::kUnknown:
@@ -278,7 +288,8 @@ void EventQueue::addEvent(const Event &event) {
   }
 }
 
-void EventQueue::addEventToBuffer(const Event &event) {
+void EventQueue::addEventToBuffer(const Event &event)
+{
   ArchMutexLock lock(m_mutex);
 
   // store the event's data locally
@@ -292,7 +303,8 @@ void EventQueue::addEventToBuffer(const Event &event) {
   }
 }
 
-EventQueueTimer *EventQueue::newTimer(double duration, void *target) {
+EventQueueTimer *EventQueue::newTimer(double duration, void *target)
+{
   assert(duration > 0.0);
 
   EventQueueTimer *timer = m_buffer->newTimer(duration, false);
@@ -304,12 +316,12 @@ EventQueueTimer *EventQueue::newTimer(double duration, void *target) {
   // initial duration is requested duration plus whatever's on
   // the clock currently because the latter will be subtracted
   // the next time we check for timers.
-  m_timerQueue.push(
-      Timer(timer, duration, duration + m_time.getTime(), target, false));
+  m_timerQueue.push(Timer(timer, duration, duration + m_time.getTime(), target, false));
   return timer;
 }
 
-EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target) {
+EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target)
+{
   assert(duration > 0.0);
 
   EventQueueTimer *timer = m_buffer->newTimer(duration, true);
@@ -321,15 +333,14 @@ EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target) {
   // initial duration is requested duration plus whatever's on
   // the clock currently because the latter will be subtracted
   // the next time we check for timers.
-  m_timerQueue.push(
-      Timer(timer, duration, duration + m_time.getTime(), target, true));
+  m_timerQueue.push(Timer(timer, duration, duration + m_time.getTime(), target, true));
   return timer;
 }
 
-void EventQueue::deleteTimer(EventQueueTimer *timer) {
+void EventQueue::deleteTimer(EventQueueTimer *timer)
+{
   ArchMutexLock lock(m_mutex);
-  for (TimerQueue::iterator index = m_timerQueue.begin();
-       index != m_timerQueue.end(); ++index) {
+  for (TimerQueue::iterator index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
     if (index->getTimer() == timer) {
       m_timerQueue.erase(index);
       break;
@@ -342,15 +353,16 @@ void EventQueue::deleteTimer(EventQueueTimer *timer) {
   m_buffer->deleteTimer(timer);
 }
 
-void EventQueue::adoptHandler(
-    Event::Type type, void *target, IEventJob *handler) {
+void EventQueue::adoptHandler(Event::Type type, void *target, IEventJob *handler)
+{
   ArchMutexLock lock(m_mutex);
   IEventJob *&job = m_handlers[target][type];
   delete job;
   job = handler;
 }
 
-void EventQueue::removeHandler(Event::Type type, void *target) {
+void EventQueue::removeHandler(Event::Type type, void *target)
+{
   IEventJob *handler = NULL;
   {
     ArchMutexLock lock(m_mutex);
@@ -367,7 +379,8 @@ void EventQueue::removeHandler(Event::Type type, void *target) {
   delete handler;
 }
 
-void EventQueue::removeHandlers(void *target) {
+void EventQueue::removeHandlers(void *target)
+{
   std::vector<IEventJob *> handlers;
   {
     ArchMutexLock lock(m_mutex);
@@ -375,8 +388,7 @@ void EventQueue::removeHandlers(void *target) {
     if (index != m_handlers.end()) {
       // copy to handlers array and clear table for target
       TypeHandlerTable &typeHandlers = index->second;
-      for (TypeHandlerTable::iterator index2 = typeHandlers.begin();
-           index2 != typeHandlers.end(); ++index2) {
+      for (TypeHandlerTable::iterator index2 = typeHandlers.begin(); index2 != typeHandlers.end(); ++index2) {
         handlers.push_back(index2->second);
       }
       typeHandlers.clear();
@@ -384,17 +396,18 @@ void EventQueue::removeHandlers(void *target) {
   }
 
   // delete handlers
-  for (std::vector<IEventJob *>::iterator index = handlers.begin();
-       index != handlers.end(); ++index) {
+  for (std::vector<IEventJob *>::iterator index = handlers.begin(); index != handlers.end(); ++index) {
     delete *index;
   }
 }
 
-bool EventQueue::isEmpty() const {
+bool EventQueue::isEmpty() const
+{
   return (m_buffer->isEmpty() && getNextTimerTimeout() != 0.0);
 }
 
-IEventJob *EventQueue::getHandler(Event::Type type, void *target) const {
+IEventJob *EventQueue::getHandler(Event::Type type, void *target) const
+{
   ArchMutexLock lock(m_mutex);
   HandlerTable::const_iterator index = m_handlers.find(target);
   if (index != m_handlers.end()) {
@@ -407,7 +420,8 @@ IEventJob *EventQueue::getHandler(Event::Type type, void *target) const {
   return NULL;
 }
 
-UInt32 EventQueue::saveEvent(const Event &event) {
+UInt32 EventQueue::saveEvent(const Event &event)
+{
   // choose id
   UInt32 id;
   if (!m_oldEventIDs.empty()) {
@@ -424,7 +438,8 @@ UInt32 EventQueue::saveEvent(const Event &event) {
   return id;
 }
 
-Event EventQueue::removeEvent(UInt32 eventID) {
+Event EventQueue::removeEvent(UInt32 eventID)
+{
   // look up id
   EventTable::iterator index = m_events.find(eventID);
   if (index == m_events.end()) {
@@ -441,7 +456,8 @@ Event EventQueue::removeEvent(UInt32 eventID) {
   return event;
 }
 
-bool EventQueue::hasTimerExpired(Event &event) {
+bool EventQueue::hasTimerExpired(Event &event)
+{
   // return true if there's a timer in the timer priority queue that
   // has expired.  if returning true then fill in event appropriately
   // and reset and reinsert the timer.
@@ -454,8 +470,7 @@ bool EventQueue::hasTimerExpired(Event &event) {
   m_time.reset();
 
   // countdown elapsed time
-  for (TimerQueue::iterator index = m_timerQueue.begin();
-       index != m_timerQueue.end(); ++index) {
+  for (TimerQueue::iterator index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
     (*index) -= time;
   }
 
@@ -481,7 +496,8 @@ bool EventQueue::hasTimerExpired(Event &event) {
   return true;
 }
 
-double EventQueue::getNextTimerTimeout() const {
+double EventQueue::getNextTimerTimeout() const
+{
   // return -1 if no timers, 0 if the top timer has expired, otherwise
   // the time until the top timer in the timer priority queue will
   // expire.
@@ -494,7 +510,8 @@ double EventQueue::getNextTimerTimeout() const {
   return m_timerQueue.top();
 }
 
-Event::Type EventQueue::getRegisteredType(const String &name) const {
+Event::Type EventQueue::getRegisteredType(const String &name) const
+{
   NameMap::const_iterator found = m_nameMap.find(name);
   if (found != m_nameMap.end())
     return found->second;
@@ -502,12 +519,14 @@ Event::Type EventQueue::getRegisteredType(const String &name) const {
   return Event::kUnknown;
 }
 
-void *EventQueue::getSystemTarget() {
+void *EventQueue::getSystemTarget()
+{
   // any unique arbitrary pointer will do
   return &m_systemTarget;
 }
 
-void EventQueue::waitForReady() const {
+void EventQueue::waitForReady() const
+{
   double timeout = ARCH->time() + 10;
   Lock lock(m_readyMutex);
 
@@ -522,37 +541,54 @@ void EventQueue::waitForReady() const {
 // EventQueue::Timer
 //
 
-EventQueue::Timer::Timer(
-    EventQueueTimer *timer, double timeout, double initialTime, void *target,
-    bool oneShot)
+EventQueue::Timer::Timer(EventQueueTimer *timer, double timeout, double initialTime, void *target, bool oneShot)
     : m_timer(timer),
       m_timeout(timeout),
       m_target(target),
       m_oneShot(oneShot),
-      m_time(initialTime) {
+      m_time(initialTime)
+{
   assert(m_timeout > 0.0);
 }
 
-EventQueue::Timer::~Timer() {
+EventQueue::Timer::~Timer()
+{
   // do nothing
 }
 
-void EventQueue::Timer::reset() { m_time = m_timeout; }
+void EventQueue::Timer::reset()
+{
+  m_time = m_timeout;
+}
 
-EventQueue::Timer &EventQueue::Timer::operator-=(double dt) {
+EventQueue::Timer &EventQueue::Timer::operator-=(double dt)
+{
   m_time -= dt;
   return *this;
 }
 
-EventQueue::Timer::operator double() const { return m_time; }
+EventQueue::Timer::operator double() const
+{
+  return m_time;
+}
 
-bool EventQueue::Timer::isOneShot() const { return m_oneShot; }
+bool EventQueue::Timer::isOneShot() const
+{
+  return m_oneShot;
+}
 
-EventQueueTimer *EventQueue::Timer::getTimer() const { return m_timer; }
+EventQueueTimer *EventQueue::Timer::getTimer() const
+{
+  return m_timer;
+}
 
-void *EventQueue::Timer::getTarget() const { return m_target; }
+void *EventQueue::Timer::getTarget() const
+{
+  return m_target;
+}
 
-void EventQueue::Timer::fillEvent(TimerEvent &event) const {
+void EventQueue::Timer::fillEvent(TimerEvent &event) const
+{
   event.m_timer = m_timer;
   event.m_count = 0;
   if (m_time <= 0.0) {
@@ -560,6 +596,7 @@ void EventQueue::Timer::fillEvent(TimerEvent &event) const {
   }
 }
 
-bool EventQueue::Timer::operator<(const Timer &t) const {
+bool EventQueue::Timer::operator<(const Timer &t) const
+{
   return m_time < t.m_time;
 }

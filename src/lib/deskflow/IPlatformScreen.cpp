@@ -17,4 +17,7 @@
 
 #include "deskflow/IPlatformScreen.h"
 
-bool IPlatformScreen::fakeMediaKey(KeyID id) { return false; }
+bool IPlatformScreen::fakeMediaKey(KeyID id)
+{
+  return false;
+}

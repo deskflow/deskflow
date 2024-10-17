@@ -23,15 +23,20 @@
 
 const auto None = 0L;
 
-class TestXWindowsClipboard : public XWindowsClipboard {
+class TestXWindowsClipboard : public XWindowsClipboard
+{
 public:
-  class TestCICCCMGetClipboard : public CICCCMGetClipboard {
+  class TestCICCCMGetClipboard : public CICCCMGetClipboard
+  {
   public:
-    TestCICCCMGetClipboard() : CICCCMGetClipboard(None, None, None) {}
+    TestCICCCMGetClipboard() : CICCCMGetClipboard(None, None, None)
+    {
+    }
   };
 };
 
-TEST(XWindowsClipboardTests_CICCCMGetClipboard, ctor_default_errorNone) {
+TEST(XWindowsClipboardTests_CICCCMGetClipboard, ctor_default_errorNone)
+{
   TestXWindowsClipboard::TestCICCCMGetClipboard clipboard;
 
   EXPECT_EQ(None, clipboard.error());

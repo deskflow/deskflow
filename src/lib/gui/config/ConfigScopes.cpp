@@ -34,11 +34,13 @@ using namespace proxy;
 // ConfigScopes::Deps
 //
 
-std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeUserSettings() {
+std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeUserSettings()
+{
   return std::make_shared<QSettingsProxy>();
 }
 
-std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeSystemSettings() {
+std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeSystemSettings()
+{
   return std::make_shared<QSettingsProxy>();
 }
 
@@ -48,20 +50,26 @@ std::shared_ptr<QSettingsProxy> ConfigScopes::Deps::makeSystemSettings() {
 
 ConfigScopes::ConfigScopes(std::shared_ptr<Deps> deps)
     : m_pUserSettingsProxy(deps->makeUserSettings()),
-      m_pSystemSettingsProxy(deps->makeSystemSettings()) {
+      m_pSystemSettingsProxy(deps->makeSystemSettings())
+{
 
   m_pUserSettingsProxy->loadUser();
   m_pSystemSettingsProxy->loadSystem();
 }
 
-void ConfigScopes::clear() const {
+void ConfigScopes::clear() const
+{
   m_pUserSettingsProxy->clear();
   m_pSystemSettingsProxy->clear();
 }
 
-void ConfigScopes::signalReady() { emit ready(); }
+void ConfigScopes::signalReady()
+{
+  emit ready();
+}
 
-void ConfigScopes::save(bool emitSaving) {
+void ConfigScopes::save(bool emitSaving)
+{
   if (emitSaving) {
     qDebug("emitting config saving signal");
     emit saving();
@@ -72,17 +80,23 @@ void ConfigScopes::save(bool emitSaving) {
   m_pSystemSettingsProxy->sync();
 }
 
-bool ConfigScopes::isActiveScopeWritable() const {
+bool ConfigScopes::isActiveScopeWritable() const
+{
   return activeSettings().isWritable();
 }
 
-void ConfigScopes::setActiveScope(ConfigScopes::Scope scope) {
+void ConfigScopes::setActiveScope(ConfigScopes::Scope scope)
+{
   m_currentScope = scope;
 }
 
-ConfigScopes::Scope ConfigScopes::activeScope() const { return m_currentScope; }
+ConfigScopes::Scope ConfigScopes::activeScope() const
+{
+  return m_currentScope;
+}
 
-bool ConfigScopes::scopeContains(const QString &name, Scope scope) const {
+bool ConfigScopes::scopeContains(const QString &name, Scope scope) const
+{
   switch (scope) {
   case Scope::User:
     return m_pUserSettingsProxy->contains(name);
@@ -93,7 +107,8 @@ bool ConfigScopes::scopeContains(const QString &name, Scope scope) const {
   }
 }
 
-QSettingsProxy &ConfigScopes::activeSettings() {
+QSettingsProxy &ConfigScopes::activeSettings()
+{
   if (m_currentScope == Scope::User) {
     return *m_pUserSettingsProxy;
   } else {
@@ -101,7 +116,8 @@ QSettingsProxy &ConfigScopes::activeSettings() {
   }
 }
 
-const QSettingsProxy &ConfigScopes::activeSettings() const {
+const QSettingsProxy &ConfigScopes::activeSettings() const
+{
   if (m_currentScope == Scope::User) {
     return *m_pUserSettingsProxy;
   } else {
@@ -109,12 +125,13 @@ const QSettingsProxy &ConfigScopes::activeSettings() const {
   }
 }
 
-QString ConfigScopes::activeFilePath() const {
+QString ConfigScopes::activeFilePath() const
+{
   return activeSettings().fileName();
 }
 
-QVariant ConfigScopes::getFromScope(
-    const QString &name, const QVariant &defaultValue, Scope scope) const {
+QVariant ConfigScopes::getFromScope(const QString &name, const QVariant &defaultValue, Scope scope) const
+{
   switch (scope) {
   case Scope::User:
     return m_pUserSettingsProxy->value(name, defaultValue);
@@ -125,8 +142,8 @@ QVariant ConfigScopes::getFromScope(
   }
 }
 
-void ConfigScopes::setInScope(
-    const QString &name, const QVariant &value, Scope scope) {
+void ConfigScopes::setInScope(const QString &name, const QVariant &value, Scope scope)
+{
   switch (scope) {
   case Scope::User:
     m_pUserSettingsProxy->setValue(name, value);

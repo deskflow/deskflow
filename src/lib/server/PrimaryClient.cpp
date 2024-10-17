@@ -29,81 +29,100 @@
 PrimaryClient::PrimaryClient(const String &name, deskflow::Screen *screen)
     : BaseClientProxy(name),
       m_screen(screen),
-      m_fakeInputCount(0) {
+      m_fakeInputCount(0)
+{
   // all clipboards are clean
   for (UInt32 i = 0; i < kClipboardEnd; ++i) {
     m_clipboardDirty[i] = false;
   }
 }
 
-PrimaryClient::~PrimaryClient() {
+PrimaryClient::~PrimaryClient()
+{
   // do nothing
 }
 
-void PrimaryClient::reconfigure(UInt32 activeSides) {
+void PrimaryClient::reconfigure(UInt32 activeSides)
+{
   m_screen->reconfigure(activeSides);
 }
 
-UInt32 PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask) {
+UInt32 PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
+{
   return m_screen->registerHotKey(key, mask);
 }
 
-void PrimaryClient::unregisterHotKey(UInt32 id) {
+void PrimaryClient::unregisterHotKey(UInt32 id)
+{
   m_screen->unregisterHotKey(id);
 }
 
-void PrimaryClient::fakeInputBegin() {
+void PrimaryClient::fakeInputBegin()
+{
   if (++m_fakeInputCount == 1) {
     m_screen->fakeInputBegin();
   }
 }
 
-void PrimaryClient::fakeInputEnd() {
+void PrimaryClient::fakeInputEnd()
+{
   if (--m_fakeInputCount == 0) {
     m_screen->fakeInputEnd();
   }
 }
 
-SInt32 PrimaryClient::getJumpZoneSize() const {
+SInt32 PrimaryClient::getJumpZoneSize() const
+{
   return m_screen->getJumpZoneSize();
 }
 
-void PrimaryClient::getCursorCenter(SInt32 &x, SInt32 &y) const {
+void PrimaryClient::getCursorCenter(SInt32 &x, SInt32 &y) const
+{
   m_screen->getCursorCenter(x, y);
 }
 
-KeyModifierMask PrimaryClient::getToggleMask() const {
+KeyModifierMask PrimaryClient::getToggleMask() const
+{
   return m_screen->pollActiveModifiers();
 }
 
-bool PrimaryClient::isLockedToScreen() const {
+bool PrimaryClient::isLockedToScreen() const
+{
   return m_screen->isLockedToScreen();
 }
 
-void *PrimaryClient::getEventTarget() const {
+void *PrimaryClient::getEventTarget() const
+{
   return m_screen->getEventTarget();
 }
 
-bool PrimaryClient::getClipboard(ClipboardID id, IClipboard *clipboard) const {
+bool PrimaryClient::getClipboard(ClipboardID id, IClipboard *clipboard) const
+{
   return m_screen->getClipboard(id, clipboard);
 }
 
-void PrimaryClient::getShape(
-    SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const {
+void PrimaryClient::getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const
+{
   m_screen->getShape(x, y, width, height);
 }
 
-void PrimaryClient::getCursorPos(SInt32 &x, SInt32 &y) const {
+void PrimaryClient::getCursorPos(SInt32 &x, SInt32 &y) const
+{
   m_screen->getCursorPos(x, y);
 }
 
-void PrimaryClient::enable() { m_screen->enable(); }
+void PrimaryClient::enable()
+{
+  m_screen->enable();
+}
 
-void PrimaryClient::disable() { m_screen->disable(); }
+void PrimaryClient::disable()
+{
+  m_screen->disable();
+}
 
-void PrimaryClient::enter(
-    SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
-    bool screensaver) {
+void PrimaryClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool screensaver)
+{
   m_screen->setSequenceNumber(seqNum);
   if (!screensaver) {
     m_screen->warpCursor(xAbs, yAbs);
@@ -111,9 +130,13 @@ void PrimaryClient::enter(
   m_screen->enter(mask);
 }
 
-bool PrimaryClient::leave() { return m_screen->leave(); }
+bool PrimaryClient::leave()
+{
+  return m_screen->leave();
+}
 
-void PrimaryClient::setClipboard(ClipboardID id, const IClipboard *clipboard) {
+void PrimaryClient::setClipboard(ClipboardID id, const IClipboard *clipboard)
+{
   // ignore if this clipboard is already clean
   if (m_clipboardDirty[id]) {
     // this clipboard is now clean
@@ -124,7 +147,8 @@ void PrimaryClient::setClipboard(ClipboardID id, const IClipboard *clipboard) {
   }
 }
 
-void PrimaryClient::grabClipboard(ClipboardID id) {
+void PrimaryClient::grabClipboard(ClipboardID id)
+{
   // grab clipboard
   m_screen->grabClipboard(id);
 
@@ -132,12 +156,13 @@ void PrimaryClient::grabClipboard(ClipboardID id) {
   m_clipboardDirty[id] = true;
 }
 
-void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty) {
+void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
+{
   m_clipboardDirty[id] = dirty;
 }
 
-void PrimaryClient::keyDown(
-    KeyID key, KeyModifierMask mask, KeyButton button, const String &) {
+void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String &)
+{
   if (m_fakeInputCount > 0) {
     // XXX -- don't forward keystrokes to primary screen for now
     (void)key;
@@ -147,12 +172,13 @@ void PrimaryClient::keyDown(
   }
 }
 
-void PrimaryClient::keyRepeat(
-    KeyID, KeyModifierMask, SInt32, KeyButton, const String &) {
+void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const String &)
+{
   // ignore
 }
 
-void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button) {
+void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+{
   if (m_fakeInputCount > 0) {
     // XXX -- don't forward keystrokes to primary screen for now
     (void)key;
@@ -162,61 +188,74 @@ void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button) {
   }
 }
 
-void PrimaryClient::mouseDown(ButtonID) {
+void PrimaryClient::mouseDown(ButtonID)
+{
   // ignore
 }
 
-void PrimaryClient::mouseUp(ButtonID) {
+void PrimaryClient::mouseUp(ButtonID)
+{
   // ignore
 }
 
-void PrimaryClient::mouseMove(SInt32 x, SInt32 y) {
+void PrimaryClient::mouseMove(SInt32 x, SInt32 y)
+{
   m_screen->warpCursor(x, y);
 }
 
-void PrimaryClient::mouseRelativeMove(SInt32, SInt32) {
+void PrimaryClient::mouseRelativeMove(SInt32, SInt32)
+{
   // ignore
 }
 
-void PrimaryClient::mouseWheel(SInt32, SInt32) {
+void PrimaryClient::mouseWheel(SInt32, SInt32)
+{
   // ignore
 }
 
-void PrimaryClient::screensaver(bool) {
+void PrimaryClient::screensaver(bool)
+{
   // ignore
 }
 
-void PrimaryClient::sendDragInfo(
-    UInt32 fileCount, const char *info, size_t size) {
+void PrimaryClient::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+{
   // ignore
 }
 
-void PrimaryClient::fileChunkSending(UInt8 mark, char *data, size_t dataSize) {
+void PrimaryClient::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
+{
   // ignore
 }
 
-String PrimaryClient::getSecureInputApp() const {
+String PrimaryClient::getSecureInputApp() const
+{
   return m_screen->getSecureInputApp();
 }
 
-void PrimaryClient::secureInputNotification(const String &app) const {
+void PrimaryClient::secureInputNotification(const String &app) const
+{
   if (app != "unknown") {
     AppUtil::instance().showNotification(
-        "The client keyboards may stop working.",
-        "'Secure input' enabled by " + app +
-            ". "
-            "Close " +
-            app + " to continue using keyboards on the clients.");
+        "The client keyboards may stop working.", "'Secure input' enabled by " + app +
+                                                      ". "
+                                                      "Close " +
+                                                      app + " to continue using keyboards on the clients."
+    );
   } else {
     AppUtil::instance().showNotification(
-        "The client keyboards may stop working.",
-        "'Secure input' enabled by an application. "
-        "Close the application to continue using keyboards on the clients.");
+        "The client keyboards may stop working.", "'Secure input' enabled by an application. "
+                                                  "Close the application to continue using keyboards on the clients."
+    );
   }
 }
 
-void PrimaryClient::resetOptions() { m_screen->resetOptions(); }
+void PrimaryClient::resetOptions()
+{
+  m_screen->resetOptions();
+}
 
-void PrimaryClient::setOptions(const OptionsList &options) {
+void PrimaryClient::setOptions(const OptionsList &options)
+{
   m_screen->setOptions(options);
 }

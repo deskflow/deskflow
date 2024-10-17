@@ -28,7 +28,8 @@
 
 namespace {
 
-void splitLine(std::vector<String> &parts, const String &line, char delimiter) {
+void splitLine(std::vector<String> &parts, const String &line, char delimiter)
+{
   std::stringstream stream(line);
   while (stream.good()) {
     String part;
@@ -39,8 +40,8 @@ void splitLine(std::vector<String> &parts, const String &line, char delimiter) {
 
 } // namespace
 
-bool X11LayoutsParser::readXMLConfigItemElem(
-    const pugi::xml_node *root, std::vector<Lang> &langList) {
+bool X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node *root, std::vector<Lang> &langList)
+{
   auto configItemElem = root->child("configItem");
   if (!configItemElem) {
     LOG((CLOG_WARN "failed to read \"configItem\" in xml file"));
@@ -56,16 +57,15 @@ bool X11LayoutsParser::readXMLConfigItemElem(
   auto languageListElem = configItemElem.child("languageList");
   if (languageListElem) {
     for (pugi::xml_node isoElem : languageListElem.children("iso639Id")) {
-      langList.back().layoutBaseISO639_2.emplace_back(
-          isoElem.text().as_string());
+      langList.back().layoutBaseISO639_2.emplace_back(isoElem.text().as_string());
     }
   }
 
   return true;
 }
 
-std::vector<X11LayoutsParser::Lang>
-X11LayoutsParser::getAllLanguageData(const String &pathToEvdevFile) {
+std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const String &pathToEvdevFile)
+{
   std::vector<Lang> allCodes;
   pugi::xml_document doc;
   if (!doc.load_file(pathToEvdevFile.c_str())) {
@@ -75,9 +75,7 @@ X11LayoutsParser::getAllLanguageData(const String &pathToEvdevFile) {
 
   auto xkbConfigElem = doc.child("xkbConfigRegistry");
   if (!xkbConfigElem) {
-    LOG(
-        (CLOG_WARN "failed to read xkbConfigRegistry in %s",
-         pathToEvdevFile.c_str()));
+    LOG((CLOG_WARN "failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str()));
     return allCodes;
   }
 
@@ -103,25 +101,22 @@ X11LayoutsParser::getAllLanguageData(const String &pathToEvdevFile) {
   return allCodes;
 }
 
-void X11LayoutsParser::appendVectorUniq(
-    const std::vector<String> &source, std::vector<String> &dst) {
+void X11LayoutsParser::appendVectorUniq(const std::vector<String> &source, std::vector<String> &dst)
+{
   for (const auto &elem : source) {
-    if (std::find_if(dst.begin(), dst.end(), [elem](const String &s) {
-          return s == elem;
-        }) == dst.end()) {
+    if (std::find_if(dst.begin(), dst.end(), [elem](const String &s) { return s == elem; }) == dst.end()) {
       dst.push_back(elem);
     }
   }
 };
 
 void X11LayoutsParser::convertLayoutToISO639_2(
-    const String &pathToEvdevFile, bool needToReloadEvdev,
-    const std::vector<String> &layoutNames,
-    const std::vector<String> &layoutVariantNames,
-    std::vector<String> &iso639_2Codes) {
+    const String &pathToEvdevFile, bool needToReloadEvdev, const std::vector<String> &layoutNames,
+    const std::vector<String> &layoutVariantNames, std::vector<String> &iso639_2Codes
+)
+{
   if (layoutNames.size() != layoutVariantNames.size()) {
-    LOG((CLOG_WARN
-         "error in language layout or language layout variants list"));
+    LOG((CLOG_WARN "error in language layout or language layout variants list"));
     return;
   }
 
@@ -131,9 +126,8 @@ void X11LayoutsParser::convertLayoutToISO639_2(
   }
   for (size_t i = 0; i < layoutNames.size(); i++) {
     const auto &layoutName = layoutNames[i];
-    auto langIter = std::find_if(
-        allLang.begin(), allLang.end(),
-        [&layoutName](const Lang &l) { return l.name == layoutName; });
+    auto langIter =
+        std::find_if(allLang.begin(), allLang.end(), [&layoutName](const Lang &l) { return l.name == layoutName; });
     if (langIter == allLang.end()) {
       LOG((CLOG_WARN "language \"%s\" is unknown", layoutNames[i].c_str()));
       continue;
@@ -144,13 +138,15 @@ void X11LayoutsParser::convertLayoutToISO639_2(
       toCopy = &langIter->layoutBaseISO639_2;
     } else {
       const auto &variantName = layoutVariantNames[i];
-      auto langVariantIter = std::find_if(
-          langIter->variants.begin(), langIter->variants.end(),
-          [&variantName](const Lang &l) { return l.name == variantName; });
+      auto langVariantIter =
+          std::find_if(langIter->variants.begin(), langIter->variants.end(), [&variantName](const Lang &l) {
+            return l.name == variantName;
+          });
       if (langVariantIter == langIter->variants.end()) {
         LOG(
-            (CLOG_WARN "variant \"%s\" of language \"%s\" is unknown",
-             layoutVariantNames[i].c_str(), layoutNames[i].c_str()));
+            (CLOG_WARN "variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(),
+             layoutNames[i].c_str())
+        );
         continue;
       }
 
@@ -167,8 +163,8 @@ void X11LayoutsParser::convertLayoutToISO639_2(
   }
 }
 
-std::vector<String>
-X11LayoutsParser::getX11LanguageList(const String &pathToEvdevFile) {
+std::vector<String> X11LayoutsParser::getX11LanguageList(const String &pathToEvdevFile)
+{
   std::vector<String> layoutNames;
   std::vector<String> layoutVariantNames;
 
@@ -178,22 +174,17 @@ X11LayoutsParser::getX11LanguageList(const String &pathToEvdevFile) {
 
   std::vector<String> iso639_2Codes;
   iso639_2Codes.reserve(layoutNames.size());
-  convertLayoutToISO639_2(
-      pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
+  convertLayoutToISO639_2(pathToEvdevFile, true, layoutNames, layoutVariantNames, iso639_2Codes);
   return convertISO639_2ToISO639_1(iso639_2Codes);
 }
 
-String X11LayoutsParser::convertLayotToISO(
-    const String &pathToEvdevFile, const String &layoutLangCode,
-    bool needToReloadFiles) {
+String
+X11LayoutsParser::convertLayotToISO(const String &pathToEvdevFile, const String &layoutLangCode, bool needToReloadFiles)
+{
   std::vector<String> iso639_2Codes;
-  convertLayoutToISO639_2(
-      pathToEvdevFile, needToReloadFiles, {layoutLangCode}, {""},
-      iso639_2Codes);
+  convertLayoutToISO639_2(pathToEvdevFile, needToReloadFiles, {layoutLangCode}, {""}, iso639_2Codes);
   if (iso639_2Codes.empty()) {
-    LOG(
-        (CLOG_WARN "failed to convert layout lang code: \"%s\"",
-         layoutLangCode.c_str()));
+    LOG((CLOG_WARN "failed to convert layout lang code: \"%s\"", layoutLangCode.c_str()));
     return "";
   }
 
@@ -206,19 +197,16 @@ String X11LayoutsParser::convertLayotToISO(
   return *iso639_1Codes.begin();
 }
 
-std::vector<String> X11LayoutsParser::convertISO639_2ToISO639_1(
-    const std::vector<String> &iso639_2Codes) {
+std::vector<String> X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<String> &iso639_2Codes)
+{
   std::vector<String> result;
   for (const auto &isoCode : iso639_2Codes) {
-    const auto &tableIter = std::find_if(
-        ISO_Table.begin(), ISO_Table.end(),
-        [&isoCode](const std::pair<String, String> &c) {
+    const auto &tableIter =
+        std::find_if(ISO_Table.begin(), ISO_Table.end(), [&isoCode](const std::pair<String, String> &c) {
           return c.first == isoCode;
         });
     if (tableIter == ISO_Table.end()) {
-      LOG(
-          (CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table",
-           isoCode.c_str()));
+      LOG((CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));
       continue;
     }
 

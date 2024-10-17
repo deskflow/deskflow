@@ -25,11 +25,13 @@
 
 static const UInt16 kIntervalThreshold = 1;
 
-FileChunk::FileChunk(size_t size) : Chunk(size) {
+FileChunk::FileChunk(size_t size) : Chunk(size)
+{
   m_dataSize = size - FILE_CHUNK_META_SIZE;
 }
 
-FileChunk *FileChunk::start(const String &size) {
+FileChunk *FileChunk::start(const String &size)
+{
   size_t sizeLength = size.size();
   FileChunk *start = new FileChunk(sizeLength + FILE_CHUNK_META_SIZE);
   char *chunk = start->m_chunk;
@@ -40,7 +42,8 @@ FileChunk *FileChunk::start(const String &size) {
   return start;
 }
 
-FileChunk *FileChunk::data(UInt8 *data, size_t dataSize) {
+FileChunk *FileChunk::data(UInt8 *data, size_t dataSize)
+{
   FileChunk *chunk = new FileChunk(dataSize + FILE_CHUNK_META_SIZE);
   char *chunkData = chunk->m_chunk;
   chunkData[0] = kDataChunk;
@@ -50,7 +53,8 @@ FileChunk *FileChunk::data(UInt8 *data, size_t dataSize) {
   return chunk;
 }
 
-FileChunk *FileChunk::end() {
+FileChunk *FileChunk::end()
+{
   FileChunk *end = new FileChunk(FILE_CHUNK_META_SIZE);
   char *chunk = end->m_chunk;
   chunk[0] = kDataEnd;
@@ -59,8 +63,8 @@ FileChunk *FileChunk::end() {
   return end;
 }
 
-int FileChunk::assemble(
-    deskflow::IStream *stream, String &dataReceived, size_t &expectedSize) {
+int FileChunk::assemble(deskflow::IStream *stream, String &dataReceived, size_t &expectedSize)
+{
   // parse
   UInt8 mark = 0;
   String content;
@@ -106,9 +110,7 @@ int FileChunk::assemble(
 
   case kDataEnd:
     if (expectedSize != dataReceived.size()) {
-      LOG(
-          (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
-           expectedSize, dataReceived.size()));
+      LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", expectedSize, dataReceived.size()));
       return kError;
     }
 
@@ -116,15 +118,9 @@ int FileChunk::assemble(
       LOG((CLOG_DEBUG2 "file transfer finished"));
       elapsedTime += stopwatch.getTime();
       double averageSpeed = expectedSize / elapsedTime / 1000;
-      LOG(
-          (CLOG_DEBUG2 "file transfer finished: total time consumed=%f s",
-           elapsedTime));
-      LOG(
-          (CLOG_DEBUG2 "file transfer finished: total data received=%i kb",
-           expectedSize / 1000));
-      LOG(
-          (CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s",
-           averageSpeed));
+      LOG((CLOG_DEBUG2 "file transfer finished: total time consumed=%f s", elapsedTime));
+      LOG((CLOG_DEBUG2 "file transfer finished: total data received=%i kb", expectedSize / 1000));
+      LOG((CLOG_DEBUG2 "file transfer finished: total average speed=%f kb/s", averageSpeed));
     }
     return kFinish;
   }
@@ -132,8 +128,8 @@ int FileChunk::assemble(
   return kError;
 }
 
-void FileChunk::send(
-    deskflow::IStream *stream, UInt8 mark, char *data, size_t dataSize) {
+void FileChunk::send(deskflow::IStream *stream, UInt8 mark, char *data, size_t dataSize)
+{
   String chunk(data, dataSize);
 
   switch (mark) {

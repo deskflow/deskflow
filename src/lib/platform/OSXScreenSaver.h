@@ -25,7 +25,8 @@
 class IEventQueue;
 
 //! OSX screen saver implementation
-class OSXScreenSaver : public IScreenSaver {
+class OSXScreenSaver : public IScreenSaver
+{
 public:
   OSXScreenSaver(IEventQueue *events, void *eventTarget);
   virtual ~OSXScreenSaver();
@@ -41,8 +42,7 @@ private:
   void processLaunched(ProcessSerialNumber psn);
   void processTerminated(ProcessSerialNumber psn);
 
-  static pascal OSStatus launchTerminationCallback(
-      EventHandlerCallRef nextHandler, EventRef theEvent, void *userData);
+  static pascal OSStatus launchTerminationCallback(EventHandlerCallRef nextHandler, EventRef theEvent, void *userData);
 
 private:
   // the target for the events we generate

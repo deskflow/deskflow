@@ -24,14 +24,13 @@ namespace deskflow {
 
 namespace languages {
 
-class LanguageManager {
+class LanguageManager
+{
   std::vector<String> m_remoteLanguages;
   std::vector<String> m_localLanguages;
 
 public:
-  explicit LanguageManager(
-      const std::vector<String> &localLanguages =
-          AppUtil::instance().getKeyboardLayoutList());
+  explicit LanguageManager(const std::vector<String> &localLanguages = AppUtil::instance().getKeyboardLayoutList());
 
   /**
    * @brief setRemoteLanguages sets remote languages

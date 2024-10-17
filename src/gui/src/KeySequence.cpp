@@ -23,7 +23,8 @@
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)
 // and is heavily modified for Deskflow
-static const struct {
+static const struct
+{
   int key;
   const char *name;
 } keyname[] = {
@@ -75,15 +76,20 @@ static const struct {
     {Qt::Key_Launch1, "AppUser2"},
     {Qt::Key_Select, "Select"},
 
-    {0, 0}};
+    {0, 0}
+};
 
-KeySequence::KeySequence() : m_Sequence(), m_Modifiers(0), m_IsValid(false) {}
+KeySequence::KeySequence() : m_Sequence(), m_Modifiers(0), m_IsValid(false)
+{
+}
 
-bool KeySequence::isMouseButton() const {
+bool KeySequence::isMouseButton() const
+{
   return !m_Sequence.isEmpty() && m_Sequence.last() < Qt::Key_Space;
 }
 
-QString KeySequence::toString() const {
+QString KeySequence::toString() const
+{
   QString result;
 
   for (int i = 0; i < m_Sequence.size(); i++) {
@@ -96,9 +102,13 @@ QString KeySequence::toString() const {
   return result;
 }
 
-bool KeySequence::appendMouseButton(int button) { return appendKey(button, 0); }
+bool KeySequence::appendMouseButton(int button)
+{
+  return appendKey(button, 0);
+}
 
-bool KeySequence::appendKey(int key, int modifiers) {
+bool KeySequence::appendKey(int key, int modifiers)
+{
   if (m_Sequence.size() == 4)
     return true;
 
@@ -131,7 +141,8 @@ bool KeySequence::appendKey(int key, int modifiers) {
   return false;
 }
 
-void KeySequence::loadSettings(QSettings &settings) {
+void KeySequence::loadSettings(QSettings &settings)
+{
   sequence().clear();
   int num = settings.beginReadArray("keys");
   for (int i = 0; i < num; i++) {
@@ -144,7 +155,8 @@ void KeySequence::loadSettings(QSettings &settings) {
   setValid(true);
 }
 
-void KeySequence::saveSettings(QSettings &settings) const {
+void KeySequence::saveSettings(QSettings &settings) const
+{
   settings.beginWriteArray("keys");
   for (int i = 0; i < sequence().size(); i++) {
     settings.setArrayIndex(i);
@@ -153,7 +165,8 @@ void KeySequence::saveSettings(QSettings &settings) const {
   settings.endArray();
 }
 
-QString KeySequence::keyToString(int key) {
+QString KeySequence::keyToString(int key)
+{
   // nothing there?
   if (key == 0)
     return "";
@@ -208,14 +221,13 @@ QString KeySequence::keyToString(int key) {
 
   // representable in ucs2?
   if (key < 0x10000)
-    return QString("\\u%1").arg(
-        QChar(key).toLower().unicode(), 4, 16, QChar('0'));
+    return QString("\\u%1").arg(QChar(key).toLower().unicode(), 4, 16, QChar('0'));
 
   // give up, deskflow probably won't handle this
   return "";
 }
 
-bool KeySequence::operator==(const KeySequence &ks) const {
-  return m_Sequence == ks.m_Sequence && m_Modifiers == ks.m_Modifiers &&
-         m_IsValid == ks.m_IsValid;
+bool KeySequence::operator==(const KeySequence &ks) const
+{
+  return m_Sequence == ks.m_Sequence && m_Modifiers == ks.m_Modifiers && m_IsValid == ks.m_IsValid;
 }

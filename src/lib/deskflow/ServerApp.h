@@ -26,7 +26,8 @@
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
 
-enum EServerState {
+enum EServerState
+{
   kUninitialized,
   kInitializing,
   kInitializingToStart,
@@ -49,12 +50,12 @@ namespace deskflow {
 class ServerArgs;
 }
 
-class ServerApp : public App {
+class ServerApp : public App
+{
   using ServerConfig = deskflow::server::Config;
 
 public:
-  ServerApp(
-      IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
+  ServerApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
   virtual ~ServerApp();
 
   //
@@ -69,9 +70,7 @@ public:
   bool loadConfig(const String &pathname) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
-  int runInner(
-      int argc, char **argv, ILogOutputter *outputter,
-      StartupFunc startup) override;
+  int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
   int standardStartup(int argc, char **argv) override;
   int foregroundStartup(int argc, char **argv) override;
   void startNode() override;
@@ -80,7 +79,10 @@ public:
   // App overrides
   //
 
-  std::string configSection() const override { return "server"; }
+  std::string configSection() const override
+  {
+    return "server";
+  }
 
   //
   // Regular functions
@@ -103,8 +105,7 @@ public:
   bool initServer();
   void retryHandler(const Event &, void *);
   deskflow::Screen *openServerScreen();
-  PrimaryClient *
-  openPrimaryClient(const String &name, deskflow::Screen *screen);
+  PrimaryClient *openPrimaryClient(const String &name, deskflow::Screen *screen);
   void handleScreenError(const Event &, void *);
   void handleSuspend(const Event &, void *);
   void handleResume(const Event &, void *);
@@ -112,9 +113,13 @@ public:
   Server *openServer(ServerConfig &config, PrimaryClient *primaryClient);
   void handleNoClients(const Event &, void *);
   bool startServer();
-  Server *getServerPtr() { return m_server; }
+  Server *getServerPtr()
+  {
+    return m_server;
+  }
 
-  deskflow::ServerArgs &args() const {
+  deskflow::ServerArgs &args() const
+  {
     return (deskflow::ServerArgs &)argsBase();
   }
 
@@ -123,7 +128,10 @@ public:
   //
 
   static void reloadSignalHandler(Arch::ESignal, void *);
-  static ServerApp &instance() { return (ServerApp &)App::instance(); }
+  static ServerApp &instance()
+  {
+    return (ServerApp &)App::instance();
+  }
 
 private:
   void handleScreenSwitched(const Event &, void *data);

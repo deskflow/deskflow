@@ -19,7 +19,8 @@
 
 #include <QString>
 
-class TlsFingerprint {
+class TlsFingerprint
+{
 private:
   explicit TlsFingerprint(const QString &filename);
 

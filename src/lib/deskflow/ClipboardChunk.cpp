@@ -25,15 +25,15 @@
 
 size_t ClipboardChunk::s_expectedSize = 0;
 
-ClipboardChunk::ClipboardChunk(size_t size) : Chunk(size) {
+ClipboardChunk::ClipboardChunk(size_t size) : Chunk(size)
+{
   m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk *
-ClipboardChunk::start(ClipboardID id, UInt32 sequence, const String &size) {
+ClipboardChunk *ClipboardChunk::start(ClipboardID id, UInt32 sequence, const String &size)
+{
   size_t sizeLength = size.size();
-  ClipboardChunk *start =
-      new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
+  ClipboardChunk *start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
   char *chunk = start->m_chunk;
 
   chunk[0] = id;
@@ -45,11 +45,10 @@ ClipboardChunk::start(ClipboardID id, UInt32 sequence, const String &size) {
   return start;
 }
 
-ClipboardChunk *
-ClipboardChunk::data(ClipboardID id, UInt32 sequence, const String &data) {
+ClipboardChunk *ClipboardChunk::data(ClipboardID id, UInt32 sequence, const String &data)
+{
   size_t dataSize = data.size();
-  ClipboardChunk *chunk =
-      new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
+  ClipboardChunk *chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
   char *chunkData = chunk->m_chunk;
 
   chunkData[0] = id;
@@ -61,7 +60,8 @@ ClipboardChunk::data(ClipboardID id, UInt32 sequence, const String &data) {
   return chunk;
 }
 
-ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence) {
+ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence)
+{
   ClipboardChunk *end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
   char *chunk = end->m_chunk;
 
@@ -73,14 +73,12 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence) {
   return end;
 }
 
-int ClipboardChunk::assemble(
-    deskflow::IStream *stream, String &dataCached, ClipboardID &id,
-    UInt32 &sequence) {
+int ClipboardChunk::assemble(deskflow::IStream *stream, String &dataCached, ClipboardID &id, UInt32 &sequence)
+{
   UInt8 mark;
   String data;
 
-  if (!ProtocolUtil::readf(
-          stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
+  if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
     return kError;
   }
 
@@ -97,9 +95,7 @@ int ClipboardChunk::assemble(
     if (id >= kClipboardEnd) {
       return kError;
     } else if (s_expectedSize != dataCached.size()) {
-      LOG(
-          (CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d",
-           s_expectedSize, dataCached.size()));
+      LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
       return kError;
     }
     return kFinish;
@@ -109,7 +105,8 @@ int ClipboardChunk::assemble(
   return kError;
 }
 
-void ClipboardChunk::send(deskflow::IStream *stream, void *data) {
+void ClipboardChunk::send(deskflow::IStream *stream, void *data)
+{
   ClipboardChunk *clipboardData = static_cast<ClipboardChunk *>(data);
 
   LOG((CLOG_DEBUG1 "sending clipboard chunk"));
@@ -123,14 +120,11 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data) {
 
   switch (mark) {
   case kDataStart:
-    LOG(
-        (CLOG_DEBUG2 "sending clipboard chunk start: size=%s",
-         dataChunk.c_str()));
+    LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s", dataChunk.c_str()));
     break;
 
   case kDataChunk:
-    LOG((
-        CLOG_DEBUG2 "sending clipboard chunk data: size=%i", dataChunk.size()));
+    LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", dataChunk.size()));
     break;
 
   case kDataEnd:

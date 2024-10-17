@@ -30,7 +30,8 @@
 #endif
 
 //! X11 utility functions
-class XWindowsUtil {
+class XWindowsUtil
+{
 public:
   typedef std::vector<KeySym> KeySyms;
 
@@ -43,17 +44,16 @@ public:
   property is deleted after being read.
   */
   static bool getWindowProperty(
-      Display *, Window window, Atom property, String *data, Atom *type,
-      SInt32 *format, bool deleteProperty);
+      Display *, Window window, Atom property, String *data, Atom *type, SInt32 *format, bool deleteProperty
+  );
 
   //! Set property
   /*!
   Sets property \c property on \c window to \c size bytes of data from
   \c data.
   */
-  static bool setWindowProperty(
-      Display *, Window window, Atom property, const void *data, UInt32 size,
-      Atom type, SInt32 format);
+  static bool
+  setWindowProperty(Display *, Window window, Atom property, const void *data, UInt32 size, Atom type, SInt32 format);
 
   //! Get X server time
   /*!
@@ -125,7 +125,8 @@ public:
   ErrorLock() ignores errors
   ErrorLock(bool* flag) sets *flag to true if any error occurs
   */
-  class ErrorLock {
+  class ErrorLock
+  {
   public:
     //! Error handler type
     typedef void (*ErrorHandler)(Display *, XErrorEvent *, void *userData);
@@ -170,7 +171,8 @@ public:
   };
 
 private:
-  class PropertyNotifyPredicateInfo {
+  class PropertyNotifyPredicateInfo
+  {
   public:
     Window m_window;
     Atom m_property;

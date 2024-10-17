@@ -28,7 +28,8 @@ struct xkb_state;
 namespace deskflow {
 
 /// A key state for Ei
-class EiKeyState : public KeyState {
+class EiKeyState : public KeyState
+{
 public:
   EiKeyState(EiScreen *screen, IEventQueue *events);
   ~EiKeyState();

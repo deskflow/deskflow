@@ -21,14 +21,25 @@
 #include "arch/IArchConsole.h"
 
 //! Cross platform implementation of IArchConsole
-class ArchConsoleStd : public IArchConsole {
+class ArchConsoleStd : public IArchConsole
+{
 public:
-  ArchConsoleStd() {}
-  virtual ~ArchConsoleStd() {}
+  ArchConsoleStd()
+  {
+  }
+  virtual ~ArchConsoleStd()
+  {
+  }
 
   // IArchConsole overrides
-  virtual void openConsole(const char *title) {}
-  virtual void closeConsole() {}
-  virtual void showConsole(bool) {}
+  virtual void openConsole(const char *title)
+  {
+  }
+  virtual void closeConsole()
+  {
+  }
+  virtual void showConsole(bool)
+  {
+  }
   virtual void writeConsole(ELevel level, const char *);
 };

@@ -21,7 +21,8 @@
 namespace deskflow {
 namespace ssl {
 
-class SslApi {
+class SslApi
+{
 public:
   explicit SslApi(bool isServer = false);
   SslApi(SslApi const &) = delete;

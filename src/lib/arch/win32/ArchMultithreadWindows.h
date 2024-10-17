@@ -26,22 +26,29 @@
 
 #define ARCH_MULTITHREAD ArchMultithreadWindows
 
-class ArchCondImpl {
+class ArchCondImpl
+{
 public:
-  enum { kSignal = 0, kBroadcast };
+  enum
+  {
+    kSignal = 0,
+    kBroadcast
+  };
 
   HANDLE m_events[2];
   mutable int m_waitCount;
   ArchMutex m_waitCountMutex;
 };
 
-class ArchMutexImpl {
+class ArchMutexImpl
+{
 public:
   CRITICAL_SECTION m_mutex;
 };
 
 //! Win32 implementation of IArchMultithread
-class ArchMultithreadWindows : public IArchMultithread {
+class ArchMultithreadWindows : public IArchMultithread
+{
 public:
   ArchMultithreadWindows();
   virtual ~ArchMultithreadWindows();

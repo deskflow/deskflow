@@ -23,13 +23,13 @@
 // OSXUchrKeyResource
 //
 
-OSXUchrKeyResource::OSXUchrKeyResource(
-    const void *resource, UInt32 keyboardType)
+OSXUchrKeyResource::OSXUchrKeyResource(const void *resource, UInt32 keyboardType)
     : m_m(NULL),
       m_cti(NULL),
       m_sdi(NULL),
       m_sri(NULL),
-      m_st(NULL) {
+      m_st(NULL)
+{
   m_resource = static_cast<const UCKeyboardLayout *>(resource);
   if (m_resource == NULL) {
     return;
@@ -56,19 +56,14 @@ OSXUchrKeyResource::OSXUchrKeyResource(
 
   // get tables for keyboard type
   const UInt8 *const base = reinterpret_cast<const UInt8 *>(m_resource);
-  m_m = reinterpret_cast<const UCKeyModifiersToTableNum *>(
-      base + th->keyModifiersToTableNumOffset);
-  m_cti = reinterpret_cast<const UCKeyToCharTableIndex *>(
-      base + th->keyToCharTableIndexOffset);
-  m_sdi = reinterpret_cast<const UCKeySequenceDataIndex *>(
-      base + th->keySequenceDataIndexOffset);
+  m_m = reinterpret_cast<const UCKeyModifiersToTableNum *>(base + th->keyModifiersToTableNumOffset);
+  m_cti = reinterpret_cast<const UCKeyToCharTableIndex *>(base + th->keyToCharTableIndexOffset);
+  m_sdi = reinterpret_cast<const UCKeySequenceDataIndex *>(base + th->keySequenceDataIndexOffset);
   if (th->keyStateRecordsIndexOffset != 0) {
-    m_sri = reinterpret_cast<const UCKeyStateRecordsIndex *>(
-        base + th->keyStateRecordsIndexOffset);
+    m_sri = reinterpret_cast<const UCKeyStateRecordsIndex *>(base + th->keyStateRecordsIndexOffset);
   }
   if (th->keyStateTerminatorsOffset != 0) {
-    m_st = reinterpret_cast<const UCKeyStateTerminators *>(
-        base + th->keyStateTerminatorsOffset);
+    m_st = reinterpret_cast<const UCKeyStateTerminators *>(base + th->keyStateTerminatorsOffset);
   }
 
   // find the space key, but only if it can combine with dead keys.
@@ -79,8 +74,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(
   for (UInt32 button = 0, n = getNumButtons(); button < n; ++button) {
     KeyID id = getKey(table, button);
     if (id == 0x20) {
-      UCKeyOutput c = reinterpret_cast<const UCKeyOutput *>(
-          base + m_cti->keyToCharTableOffsets[table])[button];
+      UCKeyOutput c = reinterpret_cast<const UCKeyOutput *>(base + m_cti->keyToCharTableOffsets[table])[button];
       if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputStateIndexMask) {
         m_spaceOutput = (c & kUCKeyOutputGetIndexMask);
         break;
@@ -89,22 +83,29 @@ OSXUchrKeyResource::OSXUchrKeyResource(
   }
 }
 
-bool OSXUchrKeyResource::isValid() const { return (m_m != NULL); }
+bool OSXUchrKeyResource::isValid() const
+{
+  return (m_m != NULL);
+}
 
-UInt32 OSXUchrKeyResource::getNumModifierCombinations() const {
+UInt32 OSXUchrKeyResource::getNumModifierCombinations() const
+{
   // only 32 (not 256) because the righthanded modifier bits are ignored
   return 32;
 }
 
-UInt32 OSXUchrKeyResource::getNumTables() const {
+UInt32 OSXUchrKeyResource::getNumTables() const
+{
   return m_cti->keyToCharTableCount;
 }
 
-UInt32 OSXUchrKeyResource::getNumButtons() const {
+UInt32 OSXUchrKeyResource::getNumButtons() const
+{
   return m_cti->keyToCharTableSize;
 }
 
-UInt32 OSXUchrKeyResource::getTableForModifier(UInt32 mask) const {
+UInt32 OSXUchrKeyResource::getTableForModifier(UInt32 mask) const
+{
   if (mask >= m_m->modifiersCount) {
     return m_m->defaultTableNum;
   } else {
@@ -112,13 +113,13 @@ UInt32 OSXUchrKeyResource::getTableForModifier(UInt32 mask) const {
   }
 }
 
-KeyID OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const {
+KeyID OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
+{
   assert(table < getNumTables());
   assert(button < getNumButtons());
 
   const UInt8 *const base = reinterpret_cast<const UInt8 *>(m_resource);
-  const UCKeyOutput *cPtr = reinterpret_cast<const UCKeyOutput *>(
-      base + m_cti->keyToCharTableOffsets[table]);
+  const UCKeyOutput *cPtr = reinterpret_cast<const UCKeyOutput *>(base + m_cti->keyToCharTableOffsets[table]);
 
   const UCKeyOutput c = cPtr[button];
 
@@ -146,7 +147,8 @@ KeyID OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const {
   return keys.front();
 }
 
-bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const {
+bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const
+{
   if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
     // XXX -- should we be using some other fallback?
     return false;
@@ -186,13 +188,11 @@ bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const {
   return true;
 }
 
-bool OSXUchrKeyResource::getKeyRecord(
-    KeySequence &keys, UInt16 index, UInt16 &state) const {
+bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, UInt16 index, UInt16 &state) const
+{
   const UInt8 *const base = reinterpret_cast<const UInt8 *>(m_resource);
-  const UCKeyStateRecord *sr = reinterpret_cast<const UCKeyStateRecord *>(
-      base + m_sri->keyStateRecordOffsets[index]);
-  const UCKeyStateEntryTerminal *kset =
-      reinterpret_cast<const UCKeyStateEntryTerminal *>(sr->stateEntryData);
+  const UCKeyStateRecord *sr = reinterpret_cast<const UCKeyStateRecord *>(base + m_sri->keyStateRecordOffsets[index]);
+  const UCKeyStateEntryTerminal *kset = reinterpret_cast<const UCKeyStateEntryTerminal *>(sr->stateEntryData);
 
   UInt16 nextState = 0;
   bool found = false;
@@ -246,12 +246,12 @@ bool OSXUchrKeyResource::getKeyRecord(
   return true;
 }
 
-bool OSXUchrKeyResource::addSequence(KeySequence &keys, UCKeyCharSeq c) const {
+bool OSXUchrKeyResource::addSequence(KeySequence &keys, UCKeyCharSeq c) const
+{
   if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
     UInt16 index = (c & kUCKeyOutputGetIndexMask);
     if (index < m_sdi->charSequenceCount &&
-        m_sdi->charSequenceOffsets[index] !=
-            m_sdi->charSequenceOffsets[index + 1]) {
+        m_sdi->charSequenceOffsets[index] != m_sdi->charSequenceOffsets[index + 1]) {
       // XXX -- sequences not supported yet
       return false;
     }

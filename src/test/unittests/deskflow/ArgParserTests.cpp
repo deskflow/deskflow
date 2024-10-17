@@ -26,7 +26,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue) {
+TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
@@ -35,7 +36,8 @@ TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue) {
   EXPECT_EQ(true, result);
 }
 
-TEST(ArgParserTests, isArg_fullArg_returnTrue) {
+TEST(ArgParserTests, isArg_fullArg_returnTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "--test"};
@@ -44,7 +46,8 @@ TEST(ArgParserTests, isArg_fullArg_returnTrue) {
   EXPECT_EQ(true, result);
 }
 
-TEST(ArgParserTests, isArg_missingArgs_returnFalse) {
+TEST(ArgParserTests, isArg_missingArgs_returnFalse)
+{
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
@@ -58,7 +61,8 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse) {
   EXPECT_EQ(true, argsBase.m_shouldExitFail);
 }
 
-TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue) {
+TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue)
+{
   String command("\"stub\"");
   size_t left = 0;
   size_t right = 0;
@@ -70,7 +74,8 @@ TEST(ArgParserTests, searchDoubleQuotes_doubleQuotedArg_returnTrue) {
   EXPECT_EQ(5, right);
 }
 
-TEST(ArgParserTests, searchDoubleQuotes_noDoubleQuotedArg_returnfalse) {
+TEST(ArgParserTests, searchDoubleQuotes_noDoubleQuotedArg_returnfalse)
+{
   String command("stub");
   size_t left = 0;
   size_t right = 0;
@@ -82,7 +87,8 @@ TEST(ArgParserTests, searchDoubleQuotes_noDoubleQuotedArg_returnfalse) {
   EXPECT_EQ(0, right);
 }
 
-TEST(ArgParserTests, searchDoubleQuotes_oneDoubleQuoteArg_returnfalse) {
+TEST(ArgParserTests, searchDoubleQuotes_oneDoubleQuoteArg_returnfalse)
+{
   String command("\"stub");
   size_t left = 0;
   size_t right = 0;
@@ -94,7 +100,8 @@ TEST(ArgParserTests, searchDoubleQuotes_oneDoubleQuoteArg_returnfalse) {
   EXPECT_EQ(0, right);
 }
 
-TEST(ArgParserTests, splitCommandString_oneArg_returnArgv) {
+TEST(ArgParserTests, splitCommandString_oneArg_returnArgv)
+{
   String command("stub");
   std::vector<String> argv;
 
@@ -104,7 +111,8 @@ TEST(ArgParserTests, splitCommandString_oneArg_returnArgv) {
   EXPECT_EQ("stub", argv.at(0));
 }
 
-TEST(ArgParserTests, splitCommandString_twoArgs_returnArgv) {
+TEST(ArgParserTests, splitCommandString_twoArgs_returnArgv)
+{
   String command("stub1 stub2");
   std::vector<String> argv;
 
@@ -115,7 +123,8 @@ TEST(ArgParserTests, splitCommandString_twoArgs_returnArgv) {
   EXPECT_EQ("stub2", argv.at(1));
 }
 
-TEST(ArgParserTests, splitCommandString_doubleQuotedArgs_returnArgv) {
+TEST(ArgParserTests, splitCommandString_doubleQuotedArgs_returnArgv)
+{
   String command("\"stub1\" stub2 \"stub3\"");
   std::vector<String> argv;
 
@@ -127,7 +136,8 @@ TEST(ArgParserTests, splitCommandString_doubleQuotedArgs_returnArgv) {
   EXPECT_EQ("stub3", argv.at(2));
 }
 
-TEST(ArgParserTests, splitCommandString_spaceDoubleQuotedArgs_returnArgv) {
+TEST(ArgParserTests, splitCommandString_spaceDoubleQuotedArgs_returnArgv)
+{
   String command("\"stub1\" stub2 \"stub3 space\"");
   std::vector<String> argv;
 
@@ -139,7 +149,8 @@ TEST(ArgParserTests, splitCommandString_spaceDoubleQuotedArgs_returnArgv) {
   EXPECT_EQ("stub3 space", argv.at(2));
 }
 
-TEST(ArgParserTests, getArgv_stringArray_return2DArray) {
+TEST(ArgParserTests, getArgv_stringArray_return2DArray)
+{
   std::vector<String> argArray;
   argArray.push_back("stub1");
   argArray.push_back("stub2");
@@ -157,7 +168,8 @@ TEST(ArgParserTests, getArgv_stringArray_return2DArray) {
   delete[] argv;
 }
 
-TEST(ArgParserTests, assembleCommand_stringArray_returnCommand) {
+TEST(ArgParserTests, assembleCommand_stringArray_returnCommand)
+{
   std::vector<String> argArray;
   argArray.push_back("stub1");
   argArray.push_back("stub2");
@@ -166,7 +178,8 @@ TEST(ArgParserTests, assembleCommand_stringArray_returnCommand) {
   EXPECT_EQ("stub1 stub2", command);
 }
 
-TEST(ArgParserTests, assembleCommand_ignoreSecondArg_returnCommand) {
+TEST(ArgParserTests, assembleCommand_ignoreSecondArg_returnCommand)
+{
   std::vector<String> argArray;
   argArray.push_back("stub1");
   argArray.push_back("stub2");
@@ -175,9 +188,8 @@ TEST(ArgParserTests, assembleCommand_ignoreSecondArg_returnCommand) {
   EXPECT_EQ("stub1", command);
 }
 
-TEST(
-    ArgParserTests,
-    assembleCommand_ignoreSecondArgWithOneParameter_returnCommand) {
+TEST(ArgParserTests, assembleCommand_ignoreSecondArgWithOneParameter_returnCommand)
+{
   std::vector<String> argArray;
   argArray.push_back("stub1");
   argArray.push_back("stub2");
@@ -188,7 +200,8 @@ TEST(
   EXPECT_EQ("stub1 stub4", command);
 }
 
-TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand) {
+TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand)
+{
   std::vector<String> argArray;
   argArray.push_back("stub1 space");
   argArray.push_back("stub2");
@@ -198,16 +211,15 @@ TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand) {
   EXPECT_EQ("\"stub1 space\" stub2 \"stub3 space\"", command);
 }
 
-TEST(ArgParserTests, parseToolArgs_matches_correspondingly) {
+TEST(ArgParserTests, parseToolArgs_matches_correspondingly)
+{
   ArgParser parser(nullptr);
   std::map<const char *, std::function<bool(ToolArgs const &)>> tests = {
-      {"--get-active-desktop",
-       [](ToolArgs const &a) { return a.m_printActiveDesktopName; }},
-      {"--get-installed-dir",
-       [](ToolArgs const &a) { return a.m_getInstalledDir; }},
-      {"--get-profile-dir",
-       [](ToolArgs const &a) { return a.m_getProfileDir; }},
-      {"--get-arch", [](ToolArgs const &a) { return a.m_getArch; }}};
+      {"--get-active-desktop", [](ToolArgs const &a) { return a.m_printActiveDesktopName; }},
+      {"--get-installed-dir", [](ToolArgs const &a) { return a.m_getInstalledDir; }},
+      {"--get-profile-dir", [](ToolArgs const &a) { return a.m_getProfileDir; }},
+      {"--get-arch", [](ToolArgs const &a) { return a.m_getArch; }}
+  };
   for (auto const &test : tests) {
     ToolArgs toolArgs;
     EXPECT_FALSE(test.second(toolArgs));
@@ -220,7 +232,8 @@ TEST(ArgParserTests, parseToolArgs_matches_correspondingly) {
   EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
 }
 
-TEST(ArgParserTests, parseServerArgs_parses_each_category) {
+TEST(ArgParserTests, parseServerArgs_parses_each_category)
+{
   ArgParser parser(nullptr);
   deskflow::ServerArgs args;
   args.m_daemon = false;
@@ -234,13 +247,14 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category) {
       "--no-xinitthreads"
 #endif
       ,
-      "--res-w", "888"};
-  EXPECT_TRUE(
-      parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
+      "--res-w", "888"
+  };
+  EXPECT_TRUE(parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExitOk, true);
 }
 
-TEST(ArgParserTests, parseClientArgs_parses_single_help) {
+TEST(ArgParserTests, parseClientArgs_parses_single_help)
+{
   ArgParser parser(nullptr);
   deskflow::ClientArgs args;
   args.m_daemon = false;
@@ -257,8 +271,8 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help) {
       ,
       "--res-w",
       "888",
-      "127.0.0.1"};
-  EXPECT_TRUE(
-      parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
+      "127.0.0.1"
+  };
+  EXPECT_TRUE(parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   EXPECT_EQ(args.m_shouldExitOk, true);
 }

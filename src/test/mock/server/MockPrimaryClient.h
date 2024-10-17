@@ -24,7 +24,8 @@
 
 #include <gmock/gmock.h>
 
-class MockPrimaryClient : public PrimaryClient {
+class MockPrimaryClient : public PrimaryClient
+{
 public:
   MOCK_METHOD(void *, getEventTarget, (), (const, override));
   MOCK_METHOD(void, getCursorPos, (SInt32 &, SInt32 &), (const, override));

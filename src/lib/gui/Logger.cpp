@@ -32,14 +32,14 @@ namespace deskflow::gui {
 
 const auto kForceDebugMessages = QStringList{
     "No functional TLS backend was found", "No TLS backend is available",
-    "QSslSocket::connectToHostEncrypted: TLS initialization failed",
-    "Retrying to obtain clipboard.", "Unable to obtain clipboard."};
+    "QSslSocket::connectToHostEncrypted: TLS initialization failed", "Retrying to obtain clipboard.",
+    "Unable to obtain clipboard."
+};
 
 Logger Logger::s_instance;
 
-QString printLine(
-    FILE *out, const QString &type, const QString &message,
-    const QString &fileLine = "") {
+QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = "")
+{
 
   auto datetime = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
   auto logLine = QString("[%1] %2: %3").arg(datetime).arg(type).arg(message);
@@ -68,7 +68,8 @@ QString printLine(
   return logLine;
 }
 
-void Logger::loadEnvVars() {
+void Logger::loadEnvVars()
+{
   const auto debugEnvVar = qEnvironmentVariable("DESKFLOW_GUI_DEBUG");
   if (!debugEnvVar.isEmpty()) {
     m_debug = strToTrue(debugEnvVar);
@@ -80,14 +81,15 @@ void Logger::loadEnvVars() {
   }
 }
 
-void Logger::logVerbose(const QString &message) const {
+void Logger::logVerbose(const QString &message) const
+{
   if (m_verbose) {
     printLine(stdout, "VERBOSE", message);
   }
 }
 
-void Logger::handleMessage(
-    const QtMsgType type, const QString &fileLine, const QString &message) {
+void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const QString &message)
+{
 
   auto mutatedType = type;
   if (kForceDebugMessages.contains(message)) {

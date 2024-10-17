@@ -30,7 +30,8 @@ This interface defines the task bar icon event handlers required
 by deskflow.  Each architecture must implement this interface
 though each operation can be a no-op.
 */
-class IArchTaskBarReceiver : public IInterface {
+class IArchTaskBarReceiver : public IInterface
+{
 public:
   // Icon data is architecture dependent
   typedef void *Icon;
@@ -92,7 +93,9 @@ public:
 
   virtual void updateStatus(INode *, const String &errorMsg) = 0;
 
-  virtual void cleanup() {}
+  virtual void cleanup()
+  {
+  }
 
   //@}
 };

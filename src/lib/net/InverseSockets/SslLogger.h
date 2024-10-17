@@ -18,7 +18,8 @@
 #include <openssl/ssl.h>
 #include <string>
 
-class SslLogger {
+class SslLogger
+{
 public:
   static void logSecureLibInfo();
   static void logSecureCipherInfo(const SSL *ssl);

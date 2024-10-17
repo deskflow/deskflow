@@ -42,7 +42,8 @@
 #include <unistd.h>
 #include <vector>
 
-struct ScrollRemainder {
+struct ScrollRemainder
+{
   double x, y; // scroll remainder in pixels
 };
 
@@ -54,19 +55,20 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
       events_(events),
       w_(1),
       h_(1),
-      is_on_screen_(is_primary) {
+      is_on_screen_(is_primary)
+{
   init_ei();
   key_state_ = new EiKeyState(this, events);
   // install event handlers
   events_->adoptHandler(
-      Event::kSystem, events_->getSystemTarget(),
-      new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent));
+      Event::kSystem, events_->getSystemTarget(), new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent)
+  );
 
   if (use_portal) {
     events_->adoptHandler(
         events_->forEi().connected(), getEventTarget(),
-        new TMethodEventJob<EiScreen>(
-            this, &EiScreen::handle_connected_to_eis_event));
+        new TMethodEventJob<EiScreen>(this, &EiScreen::handle_connected_to_eis_event)
+    );
     if (is_primary) {
 #if HAVE_LIBPORTAL_INPUTCAPTURE
       portal_input_capture_ = new PortalInputCapture(this, events_);
@@ -77,8 +79,8 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 #if WINAPI_LIBPORTAL
       events_->adoptHandler(
           events_->forEi().sessionClosed(), getEventTarget(),
-          new TMethodEventJob<EiScreen>(
-              this, &EiScreen::handle_portal_session_closed));
+          new TMethodEventJob<EiScreen>(this, &EiScreen::handle_portal_session_closed)
+      );
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
 #else
       throw std::invalid_argument("missing libportal remote desktop support");
@@ -94,7 +96,8 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
   }
 }
 
-EiScreen::~EiScreen() {
+EiScreen::~EiScreen()
+{
   events_->adoptBuffer(nullptr);
   events_->removeHandler(Event::kSystem, events_->getSystemTarget());
 
@@ -110,9 +113,8 @@ EiScreen::~EiScreen() {
 #endif
 }
 
-void EiScreen::handle_ei_log_event(
-    ei *ei, ei_log_priority priority, const char *message,
-    ei_log_context *context) {
+void EiScreen::handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
+{
   switch (priority) {
   case EI_LOG_PRIORITY_DEBUG:
     LOG_DEBUG1("ei: %s", message);
@@ -132,7 +134,8 @@ void EiScreen::handle_ei_log_event(
   }
 }
 
-void EiScreen::init_ei() {
+void EiScreen::init_ei()
+{
   if (is_primary_) {
     ei_ = ei_new_receiver(nullptr); // we receive from the display server
   } else {
@@ -148,7 +151,8 @@ void EiScreen::init_ei() {
   events_->adoptBuffer(new EiEventQueueBuffer(this, ei_, events_));
 }
 
-void EiScreen::cleanup_ei() {
+void EiScreen::cleanup_ei()
+{
   if (ei_pointer_) {
     free(ei_device_get_user_data(ei_pointer_));
     ei_device_set_user_data(ei_pointer_, nullptr);
@@ -174,36 +178,43 @@ void EiScreen::cleanup_ei() {
   ei_ = ei_unref(ei_);
 }
 
-void *EiScreen::getEventTarget() const {
+void *EiScreen::getEventTarget() const
+{
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
-bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const {
+bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
+{
   return false;
 }
 
-void EiScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const {
+void EiScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
+{
   x = x_;
   y = y_;
   w = w_;
   h = h_;
 }
 
-void EiScreen::getCursorPos(int32_t &x, int32_t &y) const {
+void EiScreen::getCursorPos(int32_t &x, int32_t &y) const
+{
   x = cursor_x_;
   y = cursor_y_;
 }
 
-void EiScreen::reconfigure(uint32_t) {
+void EiScreen::reconfigure(uint32_t)
+{
   // do nothing
 }
 
-void EiScreen::warpCursor(int32_t x, int32_t y) {
+void EiScreen::warpCursor(int32_t x, int32_t y)
+{
   cursor_x_ = x;
   cursor_y_ = y;
 }
 
-std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
+std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+{
   static std::uint32_t next_id;
   std::uint32_t id = std::min(++next_id, 1u);
 
@@ -219,7 +230,8 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask) {
   return id;
 }
 
-void EiScreen::unregisterHotKey(uint32_t id) {
+void EiScreen::unregisterHotKey(uint32_t id)
+{
   for (auto &set : hotkeys_) {
     if (set.second.remove_by_id(id)) {
       break;
@@ -227,24 +239,34 @@ void EiScreen::unregisterHotKey(uint32_t id) {
   }
 }
 
-void EiScreen::fakeInputBegin() {
+void EiScreen::fakeInputBegin()
+{
   // FIXME -- not implemented
 }
 
-void EiScreen::fakeInputEnd() {
+void EiScreen::fakeInputEnd()
+{
   // FIXME -- not implemented
 }
 
-std::int32_t EiScreen::getJumpZoneSize() const { return 1; }
+std::int32_t EiScreen::getJumpZoneSize() const
+{
+  return 1;
+}
 
-bool EiScreen::isAnyMouseButtonDown(uint32_t &buttonID) const { return false; }
+bool EiScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
+{
+  return false;
+}
 
-void EiScreen::getCursorCenter(int32_t &x, int32_t &y) const {
+void EiScreen::getCursorCenter(int32_t &x, int32_t &y) const
+{
   x = x_ + w_ / 2;
   y = y_ + h_ / 2;
 }
 
-void EiScreen::fakeMouseButton(ButtonID button, bool press) {
+void EiScreen::fakeMouseButton(ButtonID button, bool press)
+{
   uint32_t code;
 
   if (!ei_pointer_)
@@ -269,7 +291,8 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press) {
   ei_device_frame(ei_pointer_, ei_now(ei_));
 }
 
-void EiScreen::fakeMouseMove(int32_t x, int32_t y) {
+void EiScreen::fakeMouseMove(int32_t x, int32_t y)
+{
   // We get one motion event before enter() with the target position
   if (!is_on_screen_) {
     cursor_x_ = x;
@@ -284,7 +307,8 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y) {
   ei_device_frame(ei_abs_, ei_now(ei_));
 }
 
-void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const {
+void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
+{
   if (!ei_pointer_)
     return;
 
@@ -292,7 +316,8 @@ void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const {
   ei_device_frame(ei_pointer_, ei_now(ei_));
 }
 
-void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const {
+void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
+{
   if (!ei_pointer_)
     return;
 
@@ -303,7 +328,8 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const {
   ei_device_frame(ei_pointer_, ei_now(ei_));
 }
 
-void EiScreen::fakeKey(uint32_t keycode, bool is_down) const {
+void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
+{
   if (!ei_keyboard_)
     return;
 
@@ -313,16 +339,19 @@ void EiScreen::fakeKey(uint32_t keycode, bool is_down) const {
   ei_device_frame(ei_keyboard_, ei_now(ei_));
 }
 
-void EiScreen::enable() {
+void EiScreen::enable()
+{
   // Nothing really to be done here
 }
 
-void EiScreen::disable() {
+void EiScreen::disable()
+{
   // Nothing really to be done here, maybe cleanup in the future but ideally
   // that's handled elsewhere
 }
 
-void EiScreen::enter() {
+void EiScreen::enter()
+{
   is_on_screen_ = true;
   if (!is_primary_) {
     ++sequence_number_;
@@ -345,9 +374,13 @@ void EiScreen::enter() {
 #endif
 }
 
-bool EiScreen::canLeave() { return true; }
+bool EiScreen::canLeave()
+{
+  return true;
+}
 
-void EiScreen::leave() {
+void EiScreen::leave()
+{
   if (!is_primary_) {
     if (ei_pointer_) {
       ei_device_stop_emulating(ei_pointer_);
@@ -363,42 +396,54 @@ void EiScreen::leave() {
   is_on_screen_ = false;
 }
 
-bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard) {
+bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
+{
   return false;
 }
 
-void EiScreen::checkClipboards() {
+void EiScreen::checkClipboards()
+{
   // do nothing, we're always up to date
 }
 
-void EiScreen::openScreensaver(bool notify) {
+void EiScreen::openScreensaver(bool notify)
+{
   // FIXME
 }
 
-void EiScreen::closeScreensaver() {
+void EiScreen::closeScreensaver()
+{
   // FIXME
 }
 
-void EiScreen::screensaver(bool activate) {
+void EiScreen::screensaver(bool activate)
+{
   // FIXME
 }
 
-void EiScreen::resetOptions() {
+void EiScreen::resetOptions()
+{
   // Should reset options to neutral, see setOptions().
   // We don't have ei-specific options, nothing to do here
 }
 
-void EiScreen::setOptions(const OptionsList &options) {
+void EiScreen::setOptions(const OptionsList &options)
+{
   // We don't have ei-specific options, nothing to do here
 }
 
-void EiScreen::setSequenceNumber(uint32_t seqNum) {
+void EiScreen::setSequenceNumber(uint32_t seqNum)
+{
   // FIXME: what is this used for?
 }
 
-bool EiScreen::isPrimary() const { return is_primary_; }
+bool EiScreen::isPrimary() const
+{
+  return is_primary_;
+}
 
-void EiScreen::update_shape() {
+void EiScreen::update_shape()
+{
 
   for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
     auto idx = 0;
@@ -418,7 +463,8 @@ void EiScreen::update_shape() {
   sendEvent(events_->forIScreen().shapeChanged(), nullptr);
 }
 
-void EiScreen::add_device(struct ei_device *device) {
+void EiScreen::add_device(struct ei_device *device)
+{
   LOG_DEBUG("adding device %s", ei_device_get_name(device));
 
   // Noteworthy: EI in principle supports multiple devices with multiple
@@ -433,8 +479,7 @@ void EiScreen::add_device(struct ei_device *device) {
     ei_pointer_ = ei_device_ref(device);
   }
 
-  if (!ei_keyboard_ &&
-      ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
+  if (!ei_keyboard_ && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
     ei_keyboard_ = ei_device_ref(device);
 
     struct ei_keymap *keymap = ei_device_keyboard_get_keymap(device);
@@ -448,16 +493,13 @@ void EiScreen::add_device(struct ei_device *device) {
       // code) Where the EIS implementation does not tell us, we just default to
       // whatever libxkbcommon thinks is default. At least this way we can
       // influence with env vars what we get
-      LOG_WARN(
-          "keyboard device %s does not have a keymap, we are guessing",
-          ei_device_get_name(device));
+      LOG_WARN("keyboard device %s does not have a keymap, we are guessing", ei_device_get_name(device));
       key_state_->init_default_keymap();
     }
     key_state_->updateKeyMap();
   }
 
-  if (!ei_abs_ &&
-      ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE) &&
+  if (!ei_abs_ && ei_device_has_capability(device, EI_DEVICE_CAP_POINTER_ABSOLUTE) &&
       ei_device_has_capability(device, EI_DEVICE_CAP_BUTTON) &&
       ei_device_has_capability(device, EI_DEVICE_CAP_SCROLL)) {
     ei_abs_ = ei_device_ref(device);
@@ -468,7 +510,8 @@ void EiScreen::add_device(struct ei_device *device) {
   update_shape();
 }
 
-void EiScreen::remove_device(struct ei_device *device) {
+void EiScreen::remove_device(struct ei_device *device)
+{
   LOG_DEBUG("removing device %s", ei_device_get_name(device));
 
   if (device == ei_pointer_)
@@ -489,11 +532,13 @@ void EiScreen::remove_device(struct ei_device *device) {
   update_shape();
 }
 
-void EiScreen::sendEvent(Event::Type type, void *data) {
+void EiScreen::sendEvent(Event::Type type, void *data)
+{
   events_->addEvent(Event(type, getEventTarget(), data));
 }
 
-ButtonID EiScreen::map_button_from_evdev(ei_event *event) const {
+ButtonID EiScreen::map_button_from_evdev(ei_event *event) const
+{
   uint32_t button = ei_event_button_get_button(event);
 
   switch (button) {
@@ -514,7 +559,8 @@ ButtonID EiScreen::map_button_from_evdev(ei_event *event) const {
   return kButtonNone;
 }
 
-bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask) {
+bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
+{
   auto it = hotkeys_.find(keyid);
 
   if (it == hotkeys_.end()) {
@@ -526,8 +572,7 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask) {
   // key combinations may not work correctly, more effort is needed here.
   auto id = it->second.find_by_mask(mask);
   if (id != 0) {
-    Event::Type type = is_pressed ? events_->forIPrimaryScreen().hotKeyDown()
-                                  : events_->forIPrimaryScreen().hotKeyUp();
+    Event::Type type = is_pressed ? events_->forIPrimaryScreen().hotKeyDown() : events_->forIPrimaryScreen().hotKeyUp();
     sendEvent(type, HotKeyInfo::alloc(id));
     return true;
   }
@@ -535,7 +580,8 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask) {
   return false;
 }
 
-void EiScreen::on_key_event(ei_event *event) {
+void EiScreen::on_key_event(ei_event *event)
+{
   uint32_t keycode = ei_event_keyboard_get_key(event);
   uint32_t keyval = keycode + 8;
   bool pressed = ei_event_keyboard_get_key_is_press(event);
@@ -545,43 +591,39 @@ void EiScreen::on_key_event(ei_event *event) {
   key_state_->update_xkb_state(keyval, pressed);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
-  LOG_DEBUG1(
-      "event: key %s keycode=%d keyid=%d mask=0x%x",
-      pressed ? "press" : "release", keycode, keyid, mask);
+  LOG_DEBUG1("event: key %s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", keycode, keyid, mask);
 
   if (is_primary_ && on_hotkey(keyid, pressed, mask)) {
     return;
   }
 
   if (keyid != kKeyNone) {
-    key_state_->sendKeyEvent(
-        getEventTarget(), pressed, false, keyid, mask, 1, keybutton);
+    key_state_->sendKeyEvent(getEventTarget(), pressed, false, keyid, mask, 1, keybutton);
   }
 }
 
-void EiScreen::on_button_event(ei_event *event) {
+void EiScreen::on_button_event(ei_event *event)
+{
   assert(is_primary_);
 
   ButtonID button = map_button_from_evdev(event);
   bool pressed = ei_event_button_get_is_press(event);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
-  LOG_DEBUG1(
-      "event: button %s button=%d mask=0x%x", pressed ? "press" : "release",
-      button, mask);
+  LOG_DEBUG1("event: button %s button=%d mask=0x%x", pressed ? "press" : "release", button, mask);
 
   if (button == kButtonNone) {
     LOG_DEBUG("event: button not recognized");
     return;
   }
 
-  auto eventType = pressed ? events_->forIPrimaryScreen().buttonDown()
-                           : events_->forIPrimaryScreen().buttonUp();
+  auto eventType = pressed ? events_->forIPrimaryScreen().buttonDown() : events_->forIPrimaryScreen().buttonUp();
 
   sendEvent(eventType, ButtonInfo::alloc(button, mask));
 }
 
-void EiScreen::on_pointer_scroll_event(ei_event *event) {
+void EiScreen::on_pointer_scroll_event(ei_event *event)
+{
   // Ratio of 10 pixels == one wheel click because that's what mutter/gtk
   // use (for historical reasons).
   const int PIXELS_PER_WHEEL_CLICK = 10;
@@ -599,8 +641,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
 
   LOG_DEBUG1("event: scroll (%.2f, %.2f)", dx, dy);
 
-  struct ScrollRemainder *remainder =
-      static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
+  struct ScrollRemainder *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
   if (!remainder) {
     remainder = new ScrollRemainder();
     ei_device_set_user_data(device, remainder);
@@ -622,15 +663,15 @@ void EiScreen::on_pointer_scroll_event(ei_event *event) {
   if (x != 0 || y != 0)
     sendEvent(
         events_->forIPrimaryScreen().wheel(),
-        WheelInfo::alloc(
-            (int32_t)-x * PIXEL_TO_WHEEL_RATIO,
-            (int32_t)-y * PIXEL_TO_WHEEL_RATIO));
+        WheelInfo::alloc((int32_t)-x * PIXEL_TO_WHEEL_RATIO, (int32_t)-y * PIXEL_TO_WHEEL_RATIO)
+    );
 
   remainder->x = rx;
   remainder->y = ry;
 }
 
-void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
+void EiScreen::on_pointer_scroll_discrete_event(ei_event *event)
+{
   // both libei and deskflow use multiples of 120 to represent
   // one scroll wheel click event so we can just forward things
   // as-is.
@@ -648,7 +689,8 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event) {
   sendEvent(events_->forIPrimaryScreen().wheel(), WheelInfo::alloc(-dx, -dy));
 }
 
-void EiScreen::on_motion_event(ei_event *event) {
+void EiScreen::on_motion_event(ei_event *event)
+{
   assert(is_primary_);
 
   double dx = ei_event_pointer_get_dx(event);
@@ -656,9 +698,7 @@ void EiScreen::on_motion_event(ei_event *event) {
 
   if (is_on_screen_) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", cursor_x_, cursor_y_);
-    sendEvent(
-        events_->forIPrimaryScreen().motionOnPrimary(),
-        MotionInfo::alloc(cursor_x_, cursor_y_));
+    sendEvent(events_->forIPrimaryScreen().motionOnPrimary(), MotionInfo::alloc(cursor_x_, cursor_y_));
 
 #if HAVE_LIBPORTAL_INPUTCAPTURE
     if (portal_input_capture_->is_active()) {
@@ -672,18 +712,20 @@ void EiScreen::on_motion_event(ei_event *event) {
     auto pixel_dy = static_cast<std::int32_t>(buffer_dy);
     if (pixel_dx || pixel_dy) {
       LOG_DEBUG1("event: motion on secondary x=%d y=%d", pixel_dx, pixel_dy);
-      sendEvent(
-          events_->forIPrimaryScreen().motionOnSecondary(),
-          MotionInfo::alloc(pixel_dx, pixel_dy));
+      sendEvent(events_->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(pixel_dx, pixel_dy));
       buffer_dx -= pixel_dx;
       buffer_dy -= pixel_dy;
     }
   }
 }
 
-void EiScreen::on_abs_motion_event(ei_event *event) { assert(is_primary_); }
+void EiScreen::on_abs_motion_event(ei_event *event)
+{
+  assert(is_primary_);
+}
 
-void EiScreen::handle_connected_to_eis_event(const Event &event, void *) {
+void EiScreen::handle_connected_to_eis_event(const Event &event, void *)
+{
   int fd = static_cast<EiConnectInfo *>(event.getData())->m_fd;
   LOG_DEBUG("eis connection established, fd=%d", fd);
 
@@ -693,14 +735,16 @@ void EiScreen::handle_connected_to_eis_event(const Event &event, void *) {
   }
 }
 
-void EiScreen::handle_portal_session_closed(const Event &event, void *) {
+void EiScreen::handle_portal_session_closed(const Event &event, void *)
+{
   // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed
   // signal Let's clean up either way.
   cleanup_ei();
   init_ei();
 }
 
-void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
+void EiScreen::handleSystemEvent(const Event &sysevent, void *)
+{
   std::lock_guard<std::mutex> lock(mutex_);
   bool disconnected = false;
 
@@ -722,9 +766,9 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
       if (!ei_seat_) {
         ei_seat_ = ei_seat_ref(seat);
         ei_seat_bind_capabilities(
-            ei_seat_, EI_DEVICE_CAP_POINTER, EI_DEVICE_CAP_POINTER_ABSOLUTE,
-            EI_DEVICE_CAP_KEYBOARD, EI_DEVICE_CAP_BUTTON, EI_DEVICE_CAP_SCROLL,
-            nullptr);
+            ei_seat_, EI_DEVICE_CAP_POINTER, EI_DEVICE_CAP_POINTER_ABSOLUTE, EI_DEVICE_CAP_KEYBOARD,
+            EI_DEVICE_CAP_BUTTON, EI_DEVICE_CAP_SCROLL, nullptr
+        );
         LOG_DEBUG("ei: using seat %s", ei_seat_get_name(ei_seat_));
         // we don't care about touch
       }
@@ -810,24 +854,32 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *) {
     ei_ = ei_unref(ei_);
 }
 
-void EiScreen::updateButtons() {
+void EiScreen::updateButtons()
+{
   // libei relies on the EIS implementation to keep our button count correct,
   // so there's not much we need to/can do here.
 }
 
-IKeyState *EiScreen::getKeyState() const { return key_state_; }
+IKeyState *EiScreen::getKeyState() const
+{
+  return key_state_;
+}
 
-String EiScreen::getSecureInputApp() const {
+String EiScreen::getSecureInputApp() const
+{
   throw std::runtime_error("get security input app not implemented");
 }
 
-EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id)
-    : mask_(mask),
-      id_(id) {}
+EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id) : mask_(mask), id_(id)
+{
+}
 
-EiScreen::HotKeySet::HotKeySet(KeyID key) : id_(key) {}
+EiScreen::HotKeySet::HotKeySet(KeyID key) : id_(key)
+{
+}
 
-bool EiScreen::HotKeySet::remove_by_id(std::uint32_t id) {
+bool EiScreen::HotKeySet::remove_by_id(std::uint32_t id)
+{
   for (auto it = set_.begin(); it != set_.end(); ++it) {
     if (it->id_ == id) {
       set_.erase(it);
@@ -837,9 +889,13 @@ bool EiScreen::HotKeySet::remove_by_id(std::uint32_t id) {
   return false;
 }
 
-void EiScreen::HotKeySet::add_item(HotKeyItem item) { set_.push_back(item); }
+void EiScreen::HotKeySet::add_item(HotKeyItem item)
+{
+  set_.push_back(item);
+}
 
-std::uint32_t EiScreen::HotKeySet::find_by_mask(std::uint32_t mask) const {
+std::uint32_t EiScreen::HotKeySet::find_by_mask(std::uint32_t mask) const
+{
   for (const auto &item : set_) {
     if (item.mask_ == mask) {
       return item.id_;

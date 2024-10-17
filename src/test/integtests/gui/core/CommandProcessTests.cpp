@@ -19,7 +19,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(CommandProcessTests, run_commandSucceeds_returnsOutput) {
+TEST(CommandProcessTests, run_commandSucceeds_returnsOutput)
+{
 
   // it seems that on windows, you can sometimes just call echo (this worked
   // with windows 2022), but on windows 10 you can't call echo directly.

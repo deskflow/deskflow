@@ -30,14 +30,21 @@ class PrimaryClient;
 class Event;
 class IEventQueue;
 
-class InputFilter {
+class InputFilter
+{
 public:
   // -------------------------------------------------------------------------
   // Input Filter Condition Classes
   // -------------------------------------------------------------------------
-  enum EFilterStatus { kNoMatch, kActivate, kDeactivate };
+  enum EFilterStatus
+  {
+    kNoMatch,
+    kActivate,
+    kDeactivate
+  };
 
-  class Condition {
+  class Condition
+  {
   public:
     Condition();
     virtual ~Condition();
@@ -52,7 +59,8 @@ public:
   };
 
   // KeystrokeCondition
-  class KeystrokeCondition : public Condition {
+  class KeystrokeCondition : public Condition
+  {
   public:
     KeystrokeCondition(IEventQueue *events, IPlatformScreen::KeyInfo *);
     KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask);
@@ -76,7 +84,8 @@ public:
   };
 
   // MouseButtonCondition
-  class MouseButtonCondition : public Condition {
+  class MouseButtonCondition : public Condition
+  {
   public:
     MouseButtonCondition(IEventQueue *events, IPlatformScreen::ButtonInfo *);
     MouseButtonCondition(IEventQueue *events, ButtonID, KeyModifierMask mask);
@@ -97,7 +106,8 @@ public:
   };
 
   // ScreenConnectedCondition
-  class ScreenConnectedCondition : public Condition {
+  class ScreenConnectedCondition : public Condition
+  {
   public:
     ScreenConnectedCondition(IEventQueue *events, const String &screen);
     virtual ~ScreenConnectedCondition();
@@ -116,7 +126,8 @@ public:
   // Input Filter Action Classes
   // -------------------------------------------------------------------------
 
-  class Action {
+  class Action
+  {
   public:
     Action();
     virtual ~Action();
@@ -128,9 +139,15 @@ public:
   };
 
   // LockCursorToScreenAction
-  class LockCursorToScreenAction : public Action {
+  class LockCursorToScreenAction : public Action
+  {
   public:
-    enum Mode { kOff, kOn, kToggle };
+    enum Mode
+    {
+      kOff,
+      kOn,
+      kToggle
+    };
 
     LockCursorToScreenAction(IEventQueue *events, Mode = kToggle);
 
@@ -146,9 +163,13 @@ public:
     IEventQueue *m_events;
   };
 
-  class RestartServer : public Action {
+  class RestartServer : public Action
+  {
   public:
-    enum Mode { restart };
+    enum Mode
+    {
+      restart
+    };
 
     RestartServer(IEventQueue *events, Mode = restart);
 
@@ -165,7 +186,8 @@ public:
   };
 
   // SwitchToScreenAction
-  class SwitchToScreenAction : public Action {
+  class SwitchToScreenAction : public Action
+  {
   public:
     SwitchToScreenAction(IEventQueue *events, const String &screen);
 
@@ -182,7 +204,8 @@ public:
   };
 
   // SwitchInDirectionAction
-  class SwitchInDirectionAction : public Action {
+  class SwitchInDirectionAction : public Action
+  {
   public:
     SwitchInDirectionAction(IEventQueue *events, EDirection);
 
@@ -199,13 +222,18 @@ public:
   };
 
   // KeyboardBroadcastAction
-  class KeyboardBroadcastAction : public Action {
+  class KeyboardBroadcastAction : public Action
+  {
   public:
-    enum Mode { kOff, kOn, kToggle };
+    enum Mode
+    {
+      kOff,
+      kOn,
+      kToggle
+    };
 
     KeyboardBroadcastAction(IEventQueue *events, Mode = kToggle);
-    KeyboardBroadcastAction(
-        IEventQueue *events, Mode, const std::set<String> &screens);
+    KeyboardBroadcastAction(IEventQueue *events, Mode, const std::set<String> &screens);
 
     Mode getMode() const;
     std::set<String> getScreens() const;
@@ -222,10 +250,10 @@ public:
   };
 
   // KeystrokeAction
-  class KeystrokeAction : public Action {
+  class KeystrokeAction : public Action
+  {
   public:
-    KeystrokeAction(
-        IEventQueue *events, IPlatformScreen::KeyInfo *adoptedInfo, bool press);
+    KeystrokeAction(IEventQueue *events, IPlatformScreen::KeyInfo *adoptedInfo, bool press);
     KeystrokeAction(KeystrokeAction const &) = delete;
     KeystrokeAction(KeystrokeAction &&) = delete;
     ~KeystrokeAction();
@@ -252,11 +280,10 @@ public:
   };
 
   // MouseButtonAction -- modifier combinations not implemented yet
-  class MouseButtonAction : public Action {
+  class MouseButtonAction : public Action
+  {
   public:
-    MouseButtonAction(
-        IEventQueue *events, IPlatformScreen::ButtonInfo *adoptedInfo,
-        bool press);
+    MouseButtonAction(IEventQueue *events, IPlatformScreen::ButtonInfo *adoptedInfo, bool press);
     MouseButtonAction(MouseButtonAction const &) = delete;
     MouseButtonAction(MouseButtonAction &&) = delete;
     ~MouseButtonAction();
@@ -281,7 +308,8 @@ public:
     IEventQueue *m_events;
   };
 
-  class Rule {
+  class Rule
+  {
   public:
     Rule();
     Rule(Condition *adopted);
@@ -343,7 +371,9 @@ public:
   virtual ~InputFilter();
 
 #ifdef TEST_ENV
-  InputFilter() : m_primaryClient(NULL) {}
+  InputFilter() : m_primaryClient(NULL)
+  {
+  }
 #endif
 
   InputFilter &operator=(const InputFilter &);

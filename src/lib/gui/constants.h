@@ -31,12 +31,10 @@ const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 const auto kUrlSourceQuery = "source=gui";
 const auto kUrlApp = DESKFLOW_WEBSITE_URL;
 const auto kUrlHelp = QString("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
-const auto kUrlDownload =
-    QString("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
+const auto kUrlDownload = QString("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
 
 #if defined(Q_OS_LINUX)
-const auto kUrlGnomeTrayFix =
-    "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
+const auto kUrlGnomeTrayFix = "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
 #endif
 
 } // namespace deskflow::gui

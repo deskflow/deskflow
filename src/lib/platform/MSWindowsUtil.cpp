@@ -26,7 +26,8 @@
 // MSWindowsUtil
 //
 
-String MSWindowsUtil::getString(HINSTANCE instance, DWORD id) {
+String MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
+{
   char *msg = NULL;
   int n = LoadString(instance, id, reinterpret_cast<LPSTR>(&msg), 0);
 
@@ -37,17 +38,15 @@ String MSWindowsUtil::getString(HINSTANCE instance, DWORD id) {
   return String(msg, n);
 }
 
-String
-MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id) {
+String MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWORD id)
+{
   char *buffer;
   if (FormatMessage(
-          FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS |
-              FORMAT_MESSAGE_FROM_SYSTEM,
-          0, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer,
-          0, NULL) == 0) {
+          FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM, 0, error,
+          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer, 0, NULL
+      ) == 0) {
     String errorString = deskflow::string::sprintf("%d", error);
-    return deskflow::string::format(
-        getString(hinstance, id).c_str(), errorString.c_str());
+    return deskflow::string::format(getString(hinstance, id).c_str(), errorString.c_str());
   } else {
     String result(buffer);
     LocalFree(buffer);

@@ -30,7 +30,8 @@
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
 
-class OSXKeyStateTests : public ::testing::Test {
+class OSXKeyStateTests : public ::testing::Test
+{
 public:
   static bool isKeyPressed(const OSXKeyState &keyState, KeyButton button);
 };
@@ -38,7 +39,8 @@ public:
 // fakeAndPoll_shift seems to always fail on osx10.6
 #if __MAC_OS_X_VERSION_MIN_REQUIRED > 1060
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_shift) {
+TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
+{
   deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
@@ -57,7 +59,8 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_shift) {
   EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_charKey) {
+TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
+{
   deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
@@ -75,7 +78,8 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey) {
   keyState.fakeKeyUp(2);
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier) {
+TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
+{
   deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
@@ -93,8 +97,8 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier) {
   keyState.fakeKeyUp(2);
 }
 
-bool OSXKeyStateTests::isKeyPressed(
-    const OSXKeyState &keyState, KeyButton button) {
+bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState, KeyButton button)
+{
   // HACK: allow os to realize key state changes.
   ARCH->sleep(.2);
 

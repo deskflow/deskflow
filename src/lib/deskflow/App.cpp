@@ -71,9 +71,7 @@ App *App::s_instance = nullptr;
 // App
 //
 
-App::App(
-    IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
-    deskflow::ArgsBase *args)
+App::App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver, deskflow::ArgsBase *args)
     : m_bye(&exit),
       m_taskBarReceiver(NULL),
       m_suspended(false),
@@ -83,17 +81,20 @@ App::App(
       m_createTaskBarReceiver(createTaskBarReceiver),
       m_appUtil(events),
       m_ipcClient(nullptr),
-      m_socketMultiplexer(nullptr) {
+      m_socketMultiplexer(nullptr)
+{
   assert(s_instance == nullptr);
   s_instance = this;
 }
 
-App::~App() {
+App::~App()
+{
   s_instance = nullptr;
   delete m_args;
 }
 
-void App::version() {
+void App::version()
+{
   const auto version = deskflow::version();
   const auto copyright = deskflow::copyright();
 
@@ -101,13 +102,14 @@ void App::version() {
   std::vector<char> buffer(kBufferLength);
   std::snprintf(                                                   // NOSONAR
       buffer.data(), kBufferLength, "%s v%s, protocol v%d.%d\n%s", //
-      argsBase().m_pname, version.c_str(), kProtocolMajorVersion,
-      kProtocolMinorVersion, copyright.c_str());
+      argsBase().m_pname, version.c_str(), kProtocolMajorVersion, kProtocolMinorVersion, copyright.c_str()
+  );
 
   std::cout << std::string(buffer.data()) << std::endl;
 }
 
-int App::run(int argc, char **argv) {
+int App::run(int argc, char **argv)
+{
 #if MAC_OS_X_VERSION_10_7
   // dock hide only supported on lion :(
   ProcessSerialNumber psn = {0, kCurrentProcess};
@@ -134,9 +136,7 @@ int App::run(int argc, char **argv) {
     // using the exit(int) function!
     result = e.getCode();
   } catch (DisplayInvalidException &die) {
-    LOG(
-        (CLOG_CRIT "a display invalid exception error occurred: %s\n",
-         die.what()));
+    LOG((CLOG_CRIT "a display invalid exception error occurred: %s\n", die.what()));
     // display invalid exceptions can occur when going to sleep. When this
     // process exits, the UI will restart us instantly. We don't really want
     // that behevior, so we quies for a bit
@@ -154,7 +154,8 @@ int App::run(int argc, char **argv) {
   return result;
 }
 
-int App::daemonMainLoop(int, const char **) {
+int App::daemonMainLoop(int, const char **)
+{
 #if SYSAPI_WIN32
   SystemLogger sysLogger(daemonName(), false);
 #else
@@ -163,7 +164,8 @@ int App::daemonMainLoop(int, const char **) {
   return mainLoop();
 }
 
-void App::setupFileLogging() {
+void App::setupFileLogging()
+{
   if (argsBase().m_logFile != NULL) {
     m_fileLog = new FileLogOutputter(argsBase().m_logFile);
     CLOG->insert(m_fileLog);
@@ -171,24 +173,25 @@ void App::setupFileLogging() {
   }
 }
 
-void App::loggingFilterWarning() {
+void App::loggingFilterWarning()
+{
   if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
     if (argsBase().m_logFile == NULL) {
       LOG(
-          (CLOG_WARN
-           "log messages above %s are NOT sent to console (use file logging)",
-           CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
+          (CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
+           CLOG->getFilterName(CLOG->getConsoleMaxLevel()))
+      );
     }
   }
 }
 
-void App::initApp(int argc, const char **argv) {
+void App::initApp(int argc, const char **argv)
+{
 
   std::string configFilename;
 #if HAVE_CLI11
   CLI::App cliApp{kAppDescription, kAppName};
-  cliApp.add_option(
-      "--config-toml", configFilename, "Use TOML configuration file");
+  cliApp.add_option("--config-toml", configFilename, "Use TOML configuration file");
 
   // Allow legacy args.
   cliApp.allow_extras();
@@ -210,9 +213,9 @@ void App::initApp(int argc, const char **argv) {
 
   // set log filter
   if (!CLOG->setFilter(argsBase().m_logFilter)) {
-    LOG(
-        (CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname,
-         argsBase().m_logFilter, argsBase().m_pname));
+    LOG((
+        CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname
+    ));
     m_bye(kExitArgs);
   }
   loggingFilterWarning();
@@ -236,23 +239,25 @@ void App::initApp(int argc, const char **argv) {
   }
 }
 
-void App::initIpcClient() {
+void App::initIpcClient()
+{
   m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
   m_ipcClient->connect();
 
   m_events->adoptHandler(
-      m_events->forIpcClient().messageReceived(), m_ipcClient,
-      new TMethodEventJob<App>(this, &App::handleIpcMessage));
+      m_events->forIpcClient().messageReceived(), m_ipcClient, new TMethodEventJob<App>(this, &App::handleIpcMessage)
+  );
 }
 
-void App::cleanupIpcClient() {
+void App::cleanupIpcClient()
+{
   m_ipcClient->disconnect();
-  m_events->removeHandler(
-      m_events->forIpcClient().messageReceived(), m_ipcClient);
+  m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
   delete m_ipcClient;
 }
 
-void App::handleIpcMessage(const Event &e, void *) {
+void App::handleIpcMessage(const Event &e, void *)
+{
   IpcMessage *m = static_cast<IpcMessage *>(e.getDataObject());
   if (m->type() == IpcMessageType::Shutdown) {
     LOG((CLOG_INFO "got ipc shutdown message"));
@@ -260,7 +265,8 @@ void App::handleIpcMessage(const Event &e, void *) {
   }
 }
 
-void App::runEventsLoop(void *) {
+void App::runEventsLoop(void *)
+{
   m_events->loop();
 
 #if defined(MAC_OS_X_VERSION_10_7)
@@ -274,34 +280,64 @@ void App::runEventsLoop(void *) {
 // MinimalApp
 //
 
-MinimalApp::MinimalApp() : App(NULL, NULL, new deskflow::ArgsBase()) {
+MinimalApp::MinimalApp() : App(NULL, NULL, new deskflow::ArgsBase())
+{
   m_arch.init();
   setEvents(m_events);
 }
 
-MinimalApp::~MinimalApp() {}
+MinimalApp::~MinimalApp()
+{
+}
 
-int MinimalApp::standardStartup(int argc, char **argv) { return 0; }
-
-int MinimalApp::runInner(
-    int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) {
+int MinimalApp::standardStartup(int argc, char **argv)
+{
   return 0;
 }
 
-void MinimalApp::startNode() {}
+int MinimalApp::runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup)
+{
+  return 0;
+}
 
-int MinimalApp::mainLoop() { return 0; }
+void MinimalApp::startNode()
+{
+}
 
-int MinimalApp::foregroundStartup(int argc, char **argv) { return 0; }
+int MinimalApp::mainLoop()
+{
+  return 0;
+}
 
-deskflow::Screen *MinimalApp::createScreen() { return NULL; }
+int MinimalApp::foregroundStartup(int argc, char **argv)
+{
+  return 0;
+}
 
-void MinimalApp::loadConfig() {}
+deskflow::Screen *MinimalApp::createScreen()
+{
+  return NULL;
+}
 
-bool MinimalApp::loadConfig(const String &pathname) { return false; }
+void MinimalApp::loadConfig()
+{
+}
 
-const char *MinimalApp::daemonInfo() const { return ""; }
+bool MinimalApp::loadConfig(const String &pathname)
+{
+  return false;
+}
 
-const char *MinimalApp::daemonName() const { return ""; }
+const char *MinimalApp::daemonInfo() const
+{
+  return "";
+}
 
-void MinimalApp::parseArgs(int argc, const char *const *argv) {}
+const char *MinimalApp::daemonName() const
+{
+  return "";
+}
+
+void MinimalApp::parseArgs(int argc, const char *const *argv)
+{
+}

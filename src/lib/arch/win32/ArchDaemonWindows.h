@@ -29,7 +29,8 @@
 #define ARCH_DAEMON ArchDaemonWindows
 
 //! Win32 implementation of IArchDaemon
-class ArchDaemonWindows : public IArchDaemon {
+class ArchDaemonWindows : public IArchDaemon
+{
 public:
   typedef int (*RunFunc)(void);
 
@@ -76,15 +77,18 @@ public:
 
   // IArchDaemon overrides
   virtual void installDaemon(
-      const char *name, const char *description, const char *pathname,
-      const char *commandLine, const char *dependencies);
+      const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
+  );
   virtual void uninstallDaemon(const char *name);
   virtual void installDaemon();
   virtual void uninstallDaemon();
   virtual int daemonize(const char *name, DaemonFunc func);
   virtual bool canInstallDaemon(const char *name);
   virtual bool isDaemonInstalled(const char *name);
-  std::string commandLine() const { return m_commandLine; }
+  std::string commandLine() const
+  {
+    return m_commandLine;
+  }
 
 private:
   static HKEY openNTServicesKey();
@@ -109,9 +113,12 @@ private:
   void stop(const char *name);
 
 private:
-  class XArchDaemonRunFailed {
+  class XArchDaemonRunFailed
+  {
   public:
-    XArchDaemonRunFailed(int result) : m_result(result) {}
+    XArchDaemonRunFailed(int result) : m_result(result)
+    {
+    }
 
   public:
     int m_result;
@@ -138,8 +145,7 @@ private:
 };
 
 #define DEFAULT_DAEMON_NAME _T(DESKFLOW_APP_NAME)
-#define DEFAULT_DAEMON_INFO                                                    \
-  _T("Manages the " DESKFLOW_APP_NAME " foreground processes.")
+#define DEFAULT_DAEMON_INFO _T("Manages the " DESKFLOW_APP_NAME " foreground processes.")
 
 #define LEGACY_SERVER_DAEMON_NAME _T(DESKFLOW_APP_NAME " Server")
 #define LEGACY_CLIENT_DAEMON_NAME _T(DESKFLOW_APP_NAME " Client")

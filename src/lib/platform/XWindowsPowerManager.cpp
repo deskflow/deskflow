@@ -21,8 +21,8 @@
 
 namespace {
 
-bool sleepInhibitCall(
-    bool state, ArchSystemUnix::InhibitScreenServices serviceID) {
+bool sleepInhibitCall(bool state, ArchSystemUnix::InhibitScreenServices serviceID)
+{
   std::string error;
 
   if (!ArchSystemUnix::DBusInhibitScreenCall(serviceID, state, error)) {
@@ -35,22 +35,23 @@ bool sleepInhibitCall(
 
 } // namespace
 
-XWindowsPowerManager::~XWindowsPowerManager() { enableSleep(); }
+XWindowsPowerManager::~XWindowsPowerManager()
+{
+  enableSleep();
+}
 
-void XWindowsPowerManager::disableSleep() const {
-  if (!sleepInhibitCall(
-          true, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
-      !sleepInhibitCall(
-          true, ArchSystemUnix::InhibitScreenServices::kSessionManager)) {
+void XWindowsPowerManager::disableSleep() const
+{
+  if (!sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
+      !sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kSessionManager)) {
     LOG((CLOG_INFO "failed to prevent system from going to sleep"));
   }
 }
 
-void XWindowsPowerManager::enableSleep() const {
-  if (!sleepInhibitCall(
-          false, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
-      !sleepInhibitCall(
-          false, ArchSystemUnix::InhibitScreenServices::kSessionManager)) {
+void XWindowsPowerManager::enableSleep() const
+{
+  if (!sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
+      !sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kSessionManager)) {
     LOG((CLOG_INFO "failed to enable system idle sleep"));
   }
 }

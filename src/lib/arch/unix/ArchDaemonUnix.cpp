@@ -32,11 +32,13 @@
 // ArchDaemonUnix
 //
 
-ArchDaemonUnix::ArchDaemonUnix() {
+ArchDaemonUnix::ArchDaemonUnix()
+{
   // do nothing
 }
 
-ArchDaemonUnix::~ArchDaemonUnix() {
+ArchDaemonUnix::~ArchDaemonUnix()
+{
   // do nothing
 }
 
@@ -45,7 +47,8 @@ ArchDaemonUnix::~ArchDaemonUnix() {
 // In Mac OS X, fork()'d child processes can't use most APIs (the frameworks
 // that Deskflow uses in fact prevent it and make the process just up and die),
 // so need to exec a copy of the program that doesn't fork so isn't limited.
-int execSelfNonDaemonized() {
+int execSelfNonDaemonized()
+{
   extern char **NXArgv;
   char **selfArgv = NXArgv;
 
@@ -55,11 +58,15 @@ int execSelfNonDaemonized() {
   return 0;
 }
 
-bool alreadyDaemonized() { return getenv("_DESKFLOW_DAEMONIZED") != NULL; }
+bool alreadyDaemonized()
+{
+  return getenv("_DESKFLOW_DAEMONIZED") != NULL;
+}
 
 #endif
 
-int ArchDaemonUnix::daemonize(const char *name, DaemonFunc func) {
+int ArchDaemonUnix::daemonize(const char *name, DaemonFunc func)
+{
 #ifdef __APPLE__
   if (alreadyDaemonized())
     return func(1, &name);

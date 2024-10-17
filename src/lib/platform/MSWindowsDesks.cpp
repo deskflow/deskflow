@@ -88,11 +88,11 @@
 // enable; <unused>
 #define DESKFLOW_MSG_FAKE_INPUT DESKFLOW_HOOK_LAST_MSG + 12
 
-static void send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags) {
+static void send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags)
+{
   INPUT inp;
   inp.type = INPUT_KEYBOARD;
-  inp.ki.wVk =
-      (dwFlags & KEYEVENTF_UNICODE) ? 0 : wVk; // 1..254 inclusive otherwise
+  inp.ki.wVk = (dwFlags & KEYEVENTF_UNICODE) ? 0 : wVk; // 1..254 inclusive otherwise
   inp.ki.wScan = wScan;
   inp.ki.dwFlags = dwFlags & 0xF;
   inp.ki.time = 0;
@@ -100,7 +100,8 @@ static void send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags) {
   SendInput(1, &inp, sizeof(inp));
 }
 
-static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData) {
+static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
+{
   INPUT inp;
   inp.type = INPUT_MOUSE;
   inp.mi.dwFlags = dwFlags;
@@ -117,8 +118,9 @@ static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData) {
 //
 
 MSWindowsDesks::MSWindowsDesks(
-    bool isPrimary, bool noHooks, const IScreenSaver *screensaver,
-    IEventQueue *events, IJob *updateKeys, bool stopOnDeskSwitch)
+    bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys,
+    bool stopOnDeskSwitch
+)
     : m_isPrimary(isPrimary),
       m_noHooks(noHooks),
       m_isOnScreen(m_isPrimary),
@@ -138,7 +140,8 @@ MSWindowsDesks::MSWindowsDesks(
       m_deskReady(&m_mutex, false),
       m_updateKeys(updateKeys),
       m_events(events),
-      m_stopOnDeskSwitch(stopOnDeskSwitch) {
+      m_stopOnDeskSwitch(stopOnDeskSwitch)
+{
 
   m_cursor = createBlankCursor();
   m_deskClass = createDeskWindowClass(m_isPrimary);
@@ -146,14 +149,16 @@ MSWindowsDesks::MSWindowsDesks(
   resetOptions();
 }
 
-MSWindowsDesks::~MSWindowsDesks() {
+MSWindowsDesks::~MSWindowsDesks()
+{
   disable();
   destroyClass(m_deskClass);
   destroyCursor(m_cursor);
   delete m_updateKeys;
 }
 
-void MSWindowsDesks::enable() {
+void MSWindowsDesks::enable()
+{
   m_threadID = GetCurrentThreadId();
 
   // set the active desk and (re)install the hooks
@@ -165,14 +170,14 @@ void MSWindowsDesks::enable() {
   // change but as far as i can tell it doesn't.
   m_timer = m_events->newTimer(0.2, NULL);
   m_events->adoptHandler(
-      Event::kTimer, m_timer,
-      new TMethodEventJob<MSWindowsDesks>(
-          this, &MSWindowsDesks::handleCheckDesk));
+      Event::kTimer, m_timer, new TMethodEventJob<MSWindowsDesks>(this, &MSWindowsDesks::handleCheckDesk)
+  );
 
   updateKeys();
 }
 
-void MSWindowsDesks::disable() {
+void MSWindowsDesks::disable()
+{
   // remove timer
   if (m_timer != NULL) {
     m_events->removeHandler(Event::kTimer, m_timer);
@@ -186,30 +191,40 @@ void MSWindowsDesks::disable() {
   m_isOnScreen = m_isPrimary;
 }
 
-void MSWindowsDesks::enter() { sendMessage(DESKFLOW_MSG_ENTER, 0, 0); }
+void MSWindowsDesks::enter()
+{
+  sendMessage(DESKFLOW_MSG_ENTER, 0, 0);
+}
 
-void MSWindowsDesks::leave(HKL keyLayout) {
+void MSWindowsDesks::leave(HKL keyLayout)
+{
   sendMessage(DESKFLOW_MSG_LEAVE, (WPARAM)keyLayout, 0);
 }
 
-void MSWindowsDesks::resetOptions() { m_leaveForegroundOption = false; }
+void MSWindowsDesks::resetOptions()
+{
+  m_leaveForegroundOption = false;
+}
 
-void MSWindowsDesks::setOptions(const OptionsList &options) {
+void MSWindowsDesks::setOptions(const OptionsList &options)
+{
   for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
     if (options[i] == kOptionWin32KeepForeground) {
       m_leaveForegroundOption = (options[i + 1] != 0);
-      LOG(
-          (CLOG_DEBUG1 "%s the foreground window",
-           m_leaveForegroundOption ? "don\'t grab" : "grab"));
+      LOG((CLOG_DEBUG1 "%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab"));
     }
   }
 }
 
-void MSWindowsDesks::updateKeys() { sendMessage(DESKFLOW_MSG_SYNC_KEYS, 0, 0); }
+void MSWindowsDesks::updateKeys()
+{
+  sendMessage(DESKFLOW_MSG_SYNC_KEYS, 0, 0);
+}
 
 void MSWindowsDesks::setShape(
-    SInt32 x, SInt32 y, SInt32 width, SInt32 height, SInt32 xCenter,
-    SInt32 yCenter, bool isMultimon) {
+    SInt32 x, SInt32 y, SInt32 width, SInt32 height, SInt32 xCenter, SInt32 yCenter, bool isMultimon
+)
+{
   m_x = x;
   m_y = y;
   m_w = width;
@@ -219,34 +234,39 @@ void MSWindowsDesks::setShape(
   m_multimon = isMultimon;
 }
 
-void MSWindowsDesks::installScreensaverHooks(bool install) {
+void MSWindowsDesks::installScreensaverHooks(bool install)
+{
   if (m_isPrimary && m_screensaverNotify != install) {
     m_screensaverNotify = install;
     sendMessage(DESKFLOW_MSG_SCREENSAVER, install, 0);
   }
 }
 
-void MSWindowsDesks::fakeInputBegin() {
+void MSWindowsDesks::fakeInputBegin()
+{
   sendMessage(DESKFLOW_MSG_FAKE_INPUT, 1, 0);
 }
 
-void MSWindowsDesks::fakeInputEnd() {
+void MSWindowsDesks::fakeInputEnd()
+{
   sendMessage(DESKFLOW_MSG_FAKE_INPUT, 0, 0);
 }
 
-void MSWindowsDesks::getCursorPos(SInt32 &x, SInt32 &y) const {
+void MSWindowsDesks::getCursorPos(SInt32 &x, SInt32 &y) const
+{
   POINT pos;
   sendMessage(DESKFLOW_MSG_CURSOR_POS, reinterpret_cast<WPARAM>(&pos), 0);
   x = pos.x;
   y = pos.y;
 }
 
-void MSWindowsDesks::fakeKeyEvent(
-    WORD virtualKey, WORD scanCode, DWORD flags, bool /*isAutoRepeat*/) const {
+void MSWindowsDesks::fakeKeyEvent(WORD virtualKey, WORD scanCode, DWORD flags, bool /*isAutoRepeat*/) const
+{
   sendMessage(DESKFLOW_MSG_FAKE_KEY, flags, MAKELPARAM(scanCode, virtualKey));
 }
 
-void MSWindowsDesks::fakeMouseButton(ButtonID button, bool press) {
+void MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
+{
   // the system will swap the meaning of left/right for us if
   // the user has configured a left-handed mouse but we don't
   // want it to swap since we want the handedness of the
@@ -297,22 +317,23 @@ void MSWindowsDesks::fakeMouseButton(ButtonID button, bool press) {
   sendMessage(DESKFLOW_MSG_FAKE_BUTTON, flags, data);
 }
 
-void MSWindowsDesks::fakeMouseMove(SInt32 x, SInt32 y) const {
-  sendMessage(
-      DESKFLOW_MSG_FAKE_MOVE, static_cast<WPARAM>(x), static_cast<LPARAM>(y));
+void MSWindowsDesks::fakeMouseMove(SInt32 x, SInt32 y) const
+{
+  sendMessage(DESKFLOW_MSG_FAKE_MOVE, static_cast<WPARAM>(x), static_cast<LPARAM>(y));
 }
 
-void MSWindowsDesks::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const {
-  sendMessage(
-      DESKFLOW_MSG_FAKE_REL_MOVE, static_cast<WPARAM>(dx),
-      static_cast<LPARAM>(dy));
+void MSWindowsDesks::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
+  sendMessage(DESKFLOW_MSG_FAKE_REL_MOVE, static_cast<WPARAM>(dx), static_cast<LPARAM>(dy));
 }
 
-void MSWindowsDesks::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const {
+void MSWindowsDesks::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
+{
   sendMessage(DESKFLOW_MSG_FAKE_WHEEL, xDelta, yDelta);
 }
 
-void MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const {
+void MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
+{
   if (m_activeDesk != NULL && m_activeDesk->m_window != NULL) {
     PostThreadMessage(m_activeDesk->m_threadID, msg, wParam, lParam);
     waitForDesk();
@@ -320,7 +341,8 @@ void MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const {
 }
 
 HCURSOR
-MSWindowsDesks::createBlankCursor() const {
+MSWindowsDesks::createBlankCursor() const
+{
   // create a transparent cursor
   int cw = GetSystemMetrics(SM_CXCURSOR);
   int ch = GetSystemMetrics(SM_CYCURSOR);
@@ -328,25 +350,25 @@ MSWindowsDesks::createBlankCursor() const {
   UInt8 *cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
   memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
   memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
-  HCURSOR c = CreateCursor(
-      MSWindowsScreen::getWindowInstance(), 0, 0, cw, ch, cursorAND, cursorXOR);
+  HCURSOR c = CreateCursor(MSWindowsScreen::getWindowInstance(), 0, 0, cw, ch, cursorAND, cursorXOR);
   delete[] cursorXOR;
   delete[] cursorAND;
   return c;
 }
 
-void MSWindowsDesks::destroyCursor(HCURSOR cursor) const {
+void MSWindowsDesks::destroyCursor(HCURSOR cursor) const
+{
   if (cursor != NULL) {
     DestroyCursor(cursor);
   }
 }
 
-ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const {
+ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
+{
   WNDCLASSEX classInfo;
   classInfo.cbSize = sizeof(classInfo);
   classInfo.style = CS_DBLCLKS | CS_NOCLOSE;
-  classInfo.lpfnWndProc = isPrimary ? &MSWindowsDesks::primaryDeskProc
-                                    : &MSWindowsDesks::secondaryDeskProc;
+  classInfo.lpfnWndProc = isPrimary ? &MSWindowsDesks::primaryDeskProc : &MSWindowsDesks::secondaryDeskProc;
   classInfo.cbClsExtra = 0;
   classInfo.cbWndExtra = 0;
   classInfo.hInstance = MSWindowsScreen::getWindowInstance();
@@ -359,18 +381,19 @@ ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const {
   return RegisterClassEx(&classInfo);
 }
 
-void MSWindowsDesks::destroyClass(ATOM windowClass) const {
+void MSWindowsDesks::destroyClass(ATOM windowClass) const
+{
   if (windowClass != 0) {
-    UnregisterClass(
-        MAKEINTATOM(windowClass), MSWindowsScreen::getWindowInstance());
+    UnregisterClass(MAKEINTATOM(windowClass), MSWindowsScreen::getWindowInstance());
   }
 }
 
-HWND MSWindowsDesks::createWindow(ATOM windowClass, const char *name) const {
+HWND MSWindowsDesks::createWindow(ATOM windowClass, const char *name) const
+{
   HWND window = CreateWindowEx(
-      WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name,
-      WS_POPUP, 0, 0, 1, 1, NULL, NULL, MSWindowsScreen::getWindowInstance(),
-      NULL);
+      WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, NULL, NULL,
+      MSWindowsScreen::getWindowInstance(), NULL
+  );
   if (window == NULL) {
     LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
     throw XScreenOpenFailure();
@@ -378,19 +401,20 @@ HWND MSWindowsDesks::createWindow(ATOM windowClass, const char *name) const {
   return window;
 }
 
-void MSWindowsDesks::destroyWindow(HWND hwnd) const {
+void MSWindowsDesks::destroyWindow(HWND hwnd) const
+{
   if (hwnd != NULL) {
     DestroyWindow(hwnd);
   }
 }
 
-LRESULT CALLBACK MSWindowsDesks::primaryDeskProc(
-    HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK MSWindowsDesks::primaryDeskProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-LRESULT CALLBACK MSWindowsDesks::secondaryDeskProc(
-    HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK MSWindowsDesks::secondaryDeskProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
   // would like to detect any local user input and hide the hider
   // window but for now we just detect mouse motion.
   bool hide = false;
@@ -404,27 +428,27 @@ LRESULT CALLBACK MSWindowsDesks::secondaryDeskProc(
 
   if (hide && IsWindowVisible(hwnd)) {
     ReleaseCapture();
-    SetWindowPos(
-        hwnd, HWND_BOTTOM, 0, 0, 0, 0,
-        SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
+    SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
   }
 
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-void MSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const {
+void MSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
+{
   // when using absolute positioning with mouse_event(),
   // the normalized device coordinates range over only
   // the primary screen.
   SInt32 w = GetSystemMetrics(SM_CXSCREEN);
   SInt32 h = GetSystemMetrics(SM_CYSCREEN);
   send_mouse_input(
-      MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-      (DWORD)((65535.0f * x) / (w - 1) + 0.5f),
-      (DWORD)((65535.0f * y) / (h - 1) + 0.5f), 0);
+      MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE, (DWORD)((65535.0f * x) / (w - 1) + 0.5f),
+      (DWORD)((65535.0f * y) / (h - 1) + 0.5f), 0
+  );
 }
 
-void MSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const {
+void MSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
   // relative moves are subject to cursor acceleration which we don't
   // want.so we disable acceleration, do the relative move, then
   // restore acceleration.  there's a slight chance we'll end up in
@@ -437,8 +461,7 @@ void MSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const {
   // save mouse speed & acceleration
   int oldSpeed[4];
   bool accelChanged =
-      SystemParametersInfo(SPI_GETMOUSE, 0, oldSpeed, 0) &&
-      SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
+      SystemParametersInfo(SPI_GETMOUSE, 0, oldSpeed, 0) && SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
 
   // use 1:1 motion
   if (accelChanged) {
@@ -457,14 +480,13 @@ void MSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const {
   }
 }
 
-void MSWindowsDesks::deskEnter(Desk *desk) {
+void MSWindowsDesks::deskEnter(Desk *desk)
+{
   if (!m_isPrimary) {
     ReleaseCapture();
   }
   ShowCursor(TRUE);
-  SetWindowPos(
-      desk->m_window, HWND_BOTTOM, 0, 0, 0, 0,
-      SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
+  SetWindowPos(desk->m_window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
 
   // restore the foreground window
   // XXX -- this raises the window to the top of the Z-order.  we
@@ -481,7 +503,8 @@ void MSWindowsDesks::deskEnter(Desk *desk) {
   desk->m_foregroundWindow = NULL;
 }
 
-void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout) {
+void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
+{
   ShowCursor(FALSE);
   if (m_isPrimary) {
     // map a window to hide the cursor and to use whatever keyboard
@@ -504,8 +527,7 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout) {
       w = m_w;
       h = m_h;
     }
-    SetWindowPos(
-        desk->m_window, HWND_TOP, x, y, w, h, SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h, SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
     // switch to requested keyboard layout
     ActivateKeyboardLayout(keyLayout, 0);
@@ -532,8 +554,7 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout) {
         EnableWindow(desk->m_window, TRUE);
         SetActiveWindow(desk->m_window);
         DWORD thisThread = GetWindowThreadProcessId(desk->m_window, NULL);
-        DWORD thatThread =
-            GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+        DWORD thatThread = GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
 
         AttachThreadInput(thatThread, thisThread, TRUE);
         SetForegroundWindow(desk->m_window);
@@ -542,9 +563,7 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout) {
     }
   } else {
     // move hider window under the cursor center, raise, and show it
-    SetWindowPos(
-        desk->m_window, HWND_TOP, m_xCenter, m_yCenter, 1, 1,
-        SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    SetWindowPos(desk->m_window, HWND_TOP, m_xCenter, m_yCenter, 1, 1, SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
     // watch for mouse motion.  if we see any then we hide the
     // hider window so the user can use the physically attached
@@ -553,13 +572,13 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout) {
     SetCapture(desk->m_window);
 
     // warp the mouse to the cursor center
-    LOG((
-        CLOG_DEBUG2 "warping cursor to center: %+d,%+d", m_xCenter, m_yCenter));
+    LOG((CLOG_DEBUG2 "warping cursor to center: %+d,%+d", m_xCenter, m_yCenter));
     deskMouseMove(m_xCenter, m_yCenter);
   }
 }
 
-void MSWindowsDesks::deskThread(void *vdesk) {
+void MSWindowsDesks::deskThread(void *vdesk)
+{
   MSG msg;
 
   // use given desktop for this thread
@@ -574,9 +593,7 @@ void MSWindowsDesks::deskThread(void *vdesk) {
     // create a window.  we use this window to hide the cursor.
     try {
       desk->m_window = createWindow(m_deskClass, DESKFLOW_APP_NAME "Desk");
-      LOG(
-          (CLOG_DEBUG "desk %s window is 0x%08x", desk->m_name.c_str(),
-           desk->m_window));
+      LOG((CLOG_DEBUG "desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window));
     } catch (...) {
       // ignore
       LOG((CLOG_DEBUG "can't create desk window for %s", desk->m_name.c_str()));
@@ -639,8 +656,7 @@ void MSWindowsDesks::deskThread(void *vdesk) {
 
     case DESKFLOW_MSG_FAKE_KEY:
       // Note, this is intended to be HI/LOWORD and not HI/LOBYTE
-      send_keyboard_input(
-          HIWORD(msg.lParam), LOWORD(msg.lParam), (DWORD)msg.wParam);
+      send_keyboard_input(HIWORD(msg.lParam), LOWORD(msg.lParam), (DWORD)msg.wParam);
       break;
 
     case DESKFLOW_MSG_FAKE_BUTTON:
@@ -650,13 +666,11 @@ void MSWindowsDesks::deskThread(void *vdesk) {
       break;
 
     case DESKFLOW_MSG_FAKE_MOVE:
-      deskMouseMove(
-          static_cast<SInt32>(msg.wParam), static_cast<SInt32>(msg.lParam));
+      deskMouseMove(static_cast<SInt32>(msg.wParam), static_cast<SInt32>(msg.lParam));
       break;
 
     case DESKFLOW_MSG_FAKE_REL_MOVE:
-      deskMouseRelativeMove(
-          static_cast<SInt32>(msg.wParam), static_cast<SInt32>(msg.lParam));
+      deskMouseRelativeMove(static_cast<SInt32>(msg.wParam), static_cast<SInt32>(msg.lParam));
       break;
 
     case DESKFLOW_MSG_FAKE_WHEEL:
@@ -691,8 +705,8 @@ void MSWindowsDesks::deskThread(void *vdesk) {
 
     case DESKFLOW_MSG_FAKE_INPUT:
       send_keyboard_input(
-          DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY,
-          DESKFLOW_HOOK_FAKE_INPUT_SCANCODE, msg.wParam ? 0 : KEYEVENTF_KEYUP);
+          DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY, DESKFLOW_HOOK_FAKE_INPUT_SCANCODE, msg.wParam ? 0 : KEYEVENTF_KEYUP
+      );
       break;
     }
 
@@ -712,21 +726,21 @@ void MSWindowsDesks::deskThread(void *vdesk) {
   }
 }
 
-MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const String &name, HDESK hdesk) {
+MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const String &name, HDESK hdesk)
+{
   Desk *desk = new Desk;
   desk->m_name = name;
   desk->m_desk = hdesk;
   desk->m_targetID = GetCurrentThreadId();
-  desk->m_thread = new Thread(
-      new TMethodJob<MSWindowsDesks>(this, &MSWindowsDesks::deskThread, desk));
+  desk->m_thread = new Thread(new TMethodJob<MSWindowsDesks>(this, &MSWindowsDesks::deskThread, desk));
   waitForDesk();
   m_desks.insert(std::make_pair(name, desk));
   return desk;
 }
 
-void MSWindowsDesks::removeDesks() {
-  for (Desks::iterator index = m_desks.begin(); index != m_desks.end();
-       ++index) {
+void MSWindowsDesks::removeDesks()
+{
+  for (Desks::iterator index = m_desks.begin(); index != m_desks.end(); ++index) {
     Desk *desk = index->second;
     PostThreadMessage(desk->m_threadID, WM_QUIT, 0, 0);
     desk->m_thread->wait();
@@ -738,7 +752,8 @@ void MSWindowsDesks::removeDesks() {
   m_activeDeskName = "";
 }
 
-void MSWindowsDesks::checkDesk() {
+void MSWindowsDesks::checkDesk()
+{
   // get current desktop.  if we already know about it then return.
   Desk *desk;
   HDESK hdesk = openInputDesktop();
@@ -756,9 +771,7 @@ void MSWindowsDesks::checkDesk() {
   // if we are told to shut down on desk switch, and this is not the
   // first switch, then shut down.
   if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
-    LOG(
-        (CLOG_DEBUG "shutting down because of desk switch to \"%s\"",
-         name.c_str()));
+    LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
     m_events->addEvent(Event(Event::kQuit));
     return;
   }
@@ -811,11 +824,13 @@ void MSWindowsDesks::checkDesk() {
   }
 }
 
-bool MSWindowsDesks::isDeskAccessible(const Desk *desk) const {
+bool MSWindowsDesks::isDeskAccessible(const Desk *desk) const
+{
   return (desk != NULL && desk->m_desk != NULL);
 }
 
-void MSWindowsDesks::waitForDesk() const {
+void MSWindowsDesks::waitForDesk() const
+{
   MSWindowsDesks *self = const_cast<MSWindowsDesks *>(this);
 
   Lock lock(&m_mutex);
@@ -825,7 +840,8 @@ void MSWindowsDesks::waitForDesk() const {
   self->m_deskReady = false;
 }
 
-void MSWindowsDesks::handleCheckDesk(const Event &, void *) {
+void MSWindowsDesks::handleCheckDesk(const Event &, void *)
+{
   checkDesk();
 
   // also check if screen saver is running if on a modern OS and
@@ -838,19 +854,20 @@ void MSWindowsDesks::handleCheckDesk(const Event &, void *) {
 }
 
 HDESK
-MSWindowsDesks::openInputDesktop() {
-  return OpenInputDesktop(
-      DF_ALLOWOTHERACCOUNTHOOK, TRUE,
-      DESKTOP_CREATEWINDOW | DESKTOP_HOOKCONTROL | GENERIC_WRITE);
+MSWindowsDesks::openInputDesktop()
+{
+  return OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, TRUE, DESKTOP_CREATEWINDOW | DESKTOP_HOOKCONTROL | GENERIC_WRITE);
 }
 
-void MSWindowsDesks::closeDesktop(HDESK desk) {
+void MSWindowsDesks::closeDesktop(HDESK desk)
+{
   if (desk != NULL) {
     CloseDesktop(desk);
   }
 }
 
-String MSWindowsDesks::getDesktopName(HDESK desk) {
+String MSWindowsDesks::getDesktopName(HDESK desk)
+{
   if (desk == NULL) {
     return String();
   } else {
@@ -863,7 +880,8 @@ String MSWindowsDesks::getDesktopName(HDESK desk) {
   }
 }
 
-HWND MSWindowsDesks::getForegroundWindow() const {
+HWND MSWindowsDesks::getForegroundWindow() const
+{
   // Ideally we'd return NULL as much as possible, only returning
   // the actual foreground window when we know it's going to mess
   // up our keyboard input.  For now we'll just let the user

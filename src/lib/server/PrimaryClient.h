@@ -31,7 +31,8 @@ The primary screen does not have a client associated with it.  This
 class provides a pseudo-client to allow the primary screen to be
 treated as if it was a client.
 */
-class PrimaryClient : public BaseClientProxy {
+class PrimaryClient : public BaseClientProxy
+{
 public:
   /*!
   \c name is the name of the server and \p screen is primary screen.
@@ -40,7 +41,9 @@ public:
   ~PrimaryClient();
 
 #ifdef TEST_ENV
-  PrimaryClient() : BaseClientProxy("") {}
+  PrimaryClient() : BaseClientProxy("")
+  {
+  }
 #endif
 
   //! @name manipulators
@@ -120,21 +123,17 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
+  void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
   void getCursorPos(SInt32 &x, SInt32 &y) const override;
 
   // IClient overrides
-  void enter(
-      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
-      bool forScreensaver) override;
+  void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) override;
   bool leave() override;
   void setClipboard(ClipboardID, const IClipboard *) override;
   void grabClipboard(ClipboardID) override;
   void setClipboardDirty(ClipboardID, bool) override;
   void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override;
-  void keyRepeat(
-      KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &) override;
+  void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &) override;
   void keyUp(KeyID, KeyModifierMask, KeyButton) override;
   void mouseDown(ButtonID) override;
   void mouseUp(ButtonID) override;
@@ -149,8 +148,14 @@ public:
   String getSecureInputApp() const override;
   void secureInputNotification(const String &app) const override;
 
-  deskflow::IStream *getStream() const override { return nullptr; }
-  bool isPrimary() const override { return true; }
+  deskflow::IStream *getStream() const override
+  {
+    return nullptr;
+  }
+  bool isPrimary() const override
+  {
+    return true;
+  }
 
 private:
   deskflow::Screen *m_screen;

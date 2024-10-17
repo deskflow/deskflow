@@ -33,7 +33,8 @@ namespace deskflow::gui {
 
 QPair<QString, QString> getPair(const QString &line);
 
-bool open(QFile &file, const QString &filePath) {
+bool open(QFile &file, const QString &filePath)
+{
   file.setFileName(filePath);
   return file.open(QIODevice::ReadOnly | QIODevice::Text);
 }
@@ -48,14 +49,13 @@ bool open(QFile &file, const QString &filePath) {
  * If this function is not sufficient, replace it with a library such as:
  * https://github.com/adeharo9/cpp-dotenv
  */
-void dotenv(const QString &filename) {
+void dotenv(const QString &filename)
+{
   QString filePath = filename;
   QFile file;
   if (!open(file, filePath)) {
     QFileInfo fileInfo(filePath);
-    qInfo(
-        "no %s file in dir: %s", qPrintable(filename),
-        qPrintable(fileInfo.absolutePath()));
+    qInfo("no %s file in dir: %s", qPrintable(filename), qPrintable(fileInfo.absolutePath()));
 
     // if nothing in current dir, then try the config dir.
     // this makes it a bit easier for engineers in the field to have an easily
@@ -64,9 +64,7 @@ void dotenv(const QString &filename) {
 
     filePath = orgDir.filePath(filename);
     if (!open(file, filePath)) {
-      qInfo(
-          "no %s file in app config dir: %s", qPrintable(filename),
-          qPrintable(orgDir.absolutePath()));
+      qInfo("no %s file in app config dir: %s", qPrintable(filename), qPrintable(orgDir.absolutePath()));
       return;
     }
   }
@@ -94,7 +92,8 @@ void dotenv(const QString &filename) {
   }
 }
 
-QString stripQuotes(const QString &value) {
+QString stripQuotes(const QString &value)
+{
   QString result = value;
   if (result.startsWith('"') && result.endsWith('"')) {
     result = result.mid(1, result.length() - 2);
@@ -102,7 +101,8 @@ QString stripQuotes(const QString &value) {
   return result;
 }
 
-QPair<QString, QString> getPair(const QString &line) {
+QPair<QString, QString> getPair(const QString &line)
+{
   auto pos = line.indexOf('=');
   if (pos == -1) {
     return QPair<QString, QString>("", "");

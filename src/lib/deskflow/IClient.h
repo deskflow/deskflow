@@ -30,7 +30,8 @@
 This interface defines the methods necessary for the server to
 communicate with a client.
 */
-class IClient : public IScreen {
+class IClient : public IScreen
+{
 public:
   //! @name manipulators
   //@{
@@ -43,9 +44,7 @@ public:
   screen is being entered because the screen saver is starting.
   Subsequent clipboard events should report \p seqNum.
   */
-  virtual void enter(
-      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
-      bool forScreensaver) = 0;
+  virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
 
   //! Leave screen
   /*!
@@ -87,17 +86,14 @@ public:
   synthesize an up or repeat for the same client key synthesized by
   keyDown().
   */
-  virtual void
-  keyDown(KeyID id, KeyModifierMask, KeyButton, const String &) = 0;
+  virtual void keyDown(KeyID id, KeyModifierMask, KeyButton, const String &) = 0;
 
   //! Notify of key repeat
   /*!
   Synthesize key events to generate a press and release of key \c id
   \c count times.  If possible match the given modifier mask.
   */
-  virtual void keyRepeat(
-      KeyID id, KeyModifierMask, SInt32 count, KeyButton,
-      const String &lang) = 0;
+  virtual void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const String &lang) = 0;
 
   //! Notify of key release
   /*!
@@ -172,7 +168,6 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
 };

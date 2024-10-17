@@ -29,7 +29,8 @@ class QResizeEvent;
 class QDragEnterEvent;
 class ScreenSetupModel;
 
-class ScreenSetupView : public QTableView {
+class ScreenSetupView : public QTableView
+{
   Q_OBJECT
 
 public:
@@ -47,5 +48,7 @@ protected:
   void dragMoveEvent(QDragMoveEvent *event) override;
   void startDrag(Qt::DropActions supportedActions) override;
   void initViewItemOption(QStyleOptionViewItem *option) const override;
-  void scrollTo(const QModelIndex &, ScrollHint) override {}
+  void scrollTo(const QModelIndex &, ScrollHint) override
+  {
+  }
 };

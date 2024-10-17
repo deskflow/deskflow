@@ -17,7 +17,8 @@
  */
 #pragma once
 
-class XWindowsPowerManager {
+class XWindowsPowerManager
+{
 public:
   XWindowsPowerManager() = default;
   ~XWindowsPowerManager();

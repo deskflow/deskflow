@@ -30,7 +30,8 @@
 #if HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #else
-struct sockaddr_storage {
+struct sockaddr_storage
+{
   unsigned char ss_len;    /* address length */
   unsigned char ss_family; /* [XSI] address family */
   char __ss_pad1[_SS_PAD1SIZE];
@@ -53,15 +54,19 @@ typedef int socklen_t;
 // compatible so we always use it.
 typedef char optval_t;
 
-class ArchSocketImpl {
+class ArchSocketImpl
+{
 public:
   int m_fd;
   int m_refCount;
 };
 
-class ArchNetAddressImpl {
+class ArchNetAddressImpl
+{
 public:
-  ArchNetAddressImpl() : m_len(sizeof(m_addr)) {}
+  ArchNetAddressImpl() : m_len(sizeof(m_addr))
+  {
+  }
 
 public:
   struct sockaddr_storage m_addr;
@@ -69,10 +74,12 @@ public:
 };
 
 //! Berkeley (BSD) sockets implementation of IArchNetwork
-class ArchNetworkBSD : public IArchNetwork {
+class ArchNetworkBSD : public IArchNetwork
+{
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
     virtual void sleep(double);
     virtual int poll(struct pollfd *, nfds_t, int);
@@ -81,8 +88,9 @@ public:
     virtual void testCancelThread();
   };
 
-  explicit ArchNetworkBSD(std::shared_ptr<Deps> deps = std::make_shared<Deps>())
-      : m_pDeps(deps) {}
+  explicit ArchNetworkBSD(std::shared_ptr<Deps> deps = std::make_shared<Deps>()) : m_pDeps(deps)
+  {
+  }
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
   ~ArchNetworkBSD() override;

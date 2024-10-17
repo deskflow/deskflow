@@ -29,38 +29,35 @@
 // IpcClientProxy
 //
 
-IpcClientProxy::IpcClientProxy(deskflow::IStream &stream, IEventQueue *events)
-    : m_stream(stream),
-      m_events(events) {
+IpcClientProxy::IpcClientProxy(deskflow::IStream &stream, IEventQueue *events) : m_stream(stream), m_events(events)
+{
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), stream.getEventTarget(),
-      new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleData));
+      new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleData)
+  );
 
   m_events->adoptHandler(
       m_events->forIStream().outputError(), stream.getEventTarget(),
-      new TMethodEventJob<IpcClientProxy>(
-          this, &IpcClientProxy::handleWriteError));
+      new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleWriteError)
+  );
 
   m_events->adoptHandler(
       m_events->forIStream().inputShutdown(), stream.getEventTarget(),
-      new TMethodEventJob<IpcClientProxy>(
-          this, &IpcClientProxy::handleDisconnect));
+      new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleDisconnect)
+  );
 
   m_events->adoptHandler(
       m_events->forIStream().outputShutdown(), stream.getEventTarget(),
-      new TMethodEventJob<IpcClientProxy>(
-          this, &IpcClientProxy::handleWriteError));
+      new TMethodEventJob<IpcClientProxy>(this, &IpcClientProxy::handleWriteError)
+  );
 }
 
-IpcClientProxy::~IpcClientProxy() {
-  m_events->removeHandler(
-      m_events->forIStream().inputReady(), m_stream.getEventTarget());
-  m_events->removeHandler(
-      m_events->forIStream().outputError(), m_stream.getEventTarget());
-  m_events->removeHandler(
-      m_events->forIStream().inputShutdown(), m_stream.getEventTarget());
-  m_events->removeHandler(
-      m_events->forIStream().outputShutdown(), m_stream.getEventTarget());
+IpcClientProxy::~IpcClientProxy()
+{
+  m_events->removeHandler(m_events->forIStream().inputReady(), m_stream.getEventTarget());
+  m_events->removeHandler(m_events->forIStream().outputError(), m_stream.getEventTarget());
+  m_events->removeHandler(m_events->forIStream().inputShutdown(), m_stream.getEventTarget());
+  m_events->removeHandler(m_events->forIStream().outputShutdown(), m_stream.getEventTarget());
 
   // don't delete the stream while it's being used.
   ARCH->lockMutex(m_readMutex);
@@ -73,17 +70,20 @@ IpcClientProxy::~IpcClientProxy() {
   ARCH->closeMutex(m_writeMutex);
 }
 
-void IpcClientProxy::handleDisconnect(const Event &, void *) {
+void IpcClientProxy::handleDisconnect(const Event &, void *)
+{
   disconnect();
   LOG((CLOG_DEBUG "ipc client disconnected"));
 }
 
-void IpcClientProxy::handleWriteError(const Event &, void *) {
+void IpcClientProxy::handleWriteError(const Event &, void *)
+{
   disconnect();
   LOG((CLOG_DEBUG "ipc client write error"));
 }
 
-void IpcClientProxy::handleData(const Event &, void *) {
+void IpcClientProxy::handleData(const Event &, void *)
+{
   // don't allow the dtor to destroy the stream while we're using it.
   ArchMutexLock lock(m_readMutex);
 
@@ -108,9 +108,7 @@ void IpcClientProxy::handleData(const Event &, void *) {
     }
 
     // don't delete with this event; the data is passed to a new event.
-    Event e(
-        m_events->forIpcClientProxy().messageReceived(), this, NULL,
-        Event::kDontFreeData);
+    Event e(m_events->forIpcClientProxy().messageReceived(), this, NULL, Event::kDontFreeData);
     e.setDataObject(m);
     m_events->addEvent(e);
 
@@ -120,7 +118,8 @@ void IpcClientProxy::handleData(const Event &, void *) {
   LOG((CLOG_DEBUG "finished ipc handle data"));
 }
 
-void IpcClientProxy::send(const IpcMessage &message) {
+void IpcClientProxy::send(const IpcMessage &message)
+{
   // don't allow other threads to write until we've finished the entire
   // message. stream write is locked, but only for that single write.
   // also, don't allow the dtor to destroy the stream while we're using it.
@@ -130,8 +129,7 @@ void IpcClientProxy::send(const IpcMessage &message) {
 
   switch (message.type()) {
   case IpcMessageType::LogLine: {
-    const IpcLogLineMessage &llm =
-        static_cast<const IpcLogLineMessage &>(message);
+    const IpcLogLineMessage &llm = static_cast<const IpcLogLineMessage &>(message);
     const String logLine = llm.logLine();
     ProtocolUtil::writef(&m_stream, kIpcMsgLogLine, &logLine);
     break;
@@ -151,7 +149,8 @@ void IpcClientProxy::send(const IpcMessage &message) {
   }
 }
 
-IpcHelloMessage *IpcClientProxy::parseHello() {
+IpcHelloMessage *IpcClientProxy::parseHello()
+{
   UInt8 type;
   ProtocolUtil::readf(&m_stream, kIpcMsgHello + 4, &type);
 
@@ -161,7 +160,8 @@ IpcHelloMessage *IpcClientProxy::parseHello() {
   return new IpcHelloMessage(m_clientType);
 }
 
-IpcCommandMessage *IpcClientProxy::parseCommand() {
+IpcCommandMessage *IpcClientProxy::parseCommand()
+{
   String command;
   UInt8 elevate;
   ProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command, &elevate);
@@ -170,7 +170,8 @@ IpcCommandMessage *IpcClientProxy::parseCommand() {
   return new IpcCommandMessage(command, elevate != 0);
 }
 
-IpcSettingMessage *IpcClientProxy::parseSetting() const {
+IpcSettingMessage *IpcClientProxy::parseSetting() const
+{
   String name;
   String value;
 
@@ -180,7 +181,8 @@ IpcSettingMessage *IpcClientProxy::parseSetting() const {
   return new IpcSettingMessage(name, value);
 }
 
-void IpcClientProxy::disconnect() {
+void IpcClientProxy::disconnect()
+{
   LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
   m_disconnecting = true;
   m_stream.close();

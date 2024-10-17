@@ -32,7 +32,8 @@ class IStream;
 This class provides various functions for implementing the deskflow
 protocol.
 */
-class ProtocolUtil {
+class ProtocolUtil
+{
 public:
   //! Write formatted data
   /*!
@@ -73,8 +74,7 @@ public:
   static bool readf(deskflow::IStream *, const char *fmt, ...);
 
 private:
-  static void
-  vwritef(deskflow::IStream *, const char *fmt, UInt32 size, va_list);
+  static void vwritef(deskflow::IStream *, const char *fmt, UInt32 size, va_list);
   static void vreadf(deskflow::IStream *, const char *fmt, va_list);
 
   static UInt32 getLength(const char *fmt, va_list);
@@ -107,7 +107,8 @@ private:
 Thrown by ProtocolUtil::readf() when the data being read does not
 match the format.
 */
-class XIOReadMismatch : public XIO {
+class XIOReadMismatch : public XIO
+{
 public:
   // XBase overrides
   virtual String getWhat() const throw();

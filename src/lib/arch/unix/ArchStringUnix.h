@@ -23,7 +23,8 @@
 #define ARCH_STRING ArchStringUnix
 
 //! Unix implementation of IArchString
-class ArchStringUnix : public IArchString {
+class ArchStringUnix : public IArchString
+{
 public:
   ArchStringUnix();
   virtual ~ArchStringUnix();

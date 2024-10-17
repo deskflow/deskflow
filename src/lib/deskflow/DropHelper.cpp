@@ -21,11 +21,9 @@
 
 #include <fstream>
 
-void DropHelper::writeToDir(
-    const String &destination, DragFileList &fileList, String &data) {
-  LOG(
-      (CLOG_DEBUG "dropping file, files=%i target=%s", fileList.size(),
-       destination.c_str()));
+void DropHelper::writeToDir(const String &destination, DragFileList &fileList, String &data)
+{
+  LOG((CLOG_DEBUG "dropping file, files=%i target=%s", fileList.size(), destination.c_str()));
 
   if (!destination.empty() && fileList.size() > 0) {
     std::fstream file;
@@ -44,9 +42,7 @@ void DropHelper::writeToDir(
     file.write(data.c_str(), data.size());
     file.close();
 
-    LOG(
-        (CLOG_DEBUG "%s is saved to %s", fileList.at(0).getFilename().c_str(),
-         destination.c_str()));
+    LOG((CLOG_DEBUG "%s is saved to %s", fileList.at(0).getFilename().c_str(), destination.c_str()));
 
     fileList.clear();
   } else {

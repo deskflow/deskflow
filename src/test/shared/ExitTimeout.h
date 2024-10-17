@@ -31,7 +31,8 @@ namespace deskflow::test {
  * TODO: Switch to regular Clang instead of Apple Clang:
  * https://symless.atlassian.net/browse/S1-1754
  */
-class ExitTimeout {
+class ExitTimeout
+{
 public:
   ExitTimeout(const int minutes, const std::string_view &name);
   ~ExitTimeout();

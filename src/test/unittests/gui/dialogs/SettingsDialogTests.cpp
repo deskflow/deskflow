@@ -29,7 +29,8 @@
 using namespace testing;
 using namespace deskflow::gui;
 
-TEST(SettingsDialogTests, ctor_getsScreenName) {
+TEST(SettingsDialogTests, ctor_getsScreenName)
+{
   TestQtFullApp app;
   NiceMock<AppConfigMock> appConfig;
   NiceMock<ServerConfigMock> serverConfig;

@@ -45,9 +45,12 @@ static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
 static BOOL g_isPrimary = TRUE;
 
-MSWindowsHook::MSWindowsHook() {}
+MSWindowsHook::MSWindowsHook()
+{
+}
 
-MSWindowsHook::~MSWindowsHook() {
+MSWindowsHook::~MSWindowsHook()
+{
   cleanup();
 
   if (g_processID == GetCurrentProcessId()) {
@@ -57,22 +60,22 @@ MSWindowsHook::~MSWindowsHook() {
   }
 }
 
-void MSWindowsHook::loadLibrary() {
+void MSWindowsHook::loadLibrary()
+{
   if (g_processID == 0) {
     g_processID = GetCurrentProcessId();
   }
 
   // initialize library
   if (init(GetCurrentThreadId()) == 0) {
-    LOG(
-        (CLOG_ERR "failed to init %s.dll, another program may be using it",
-         g_name));
+    LOG((CLOG_ERR "failed to init %s.dll, another program may be using it", g_name));
     LOG((CLOG_INFO "restarting your computer may solve this error"));
     throw XScreenOpenFailure();
   }
 }
 
-int MSWindowsHook::init(DWORD threadID) {
+int MSWindowsHook::init(DWORD threadID)
+{
   // try to open process that last called init() to see if it's
   // still running or if it died without cleaning up.
   if (g_processID != 0 && g_processID != GetCurrentProcessId()) {
@@ -113,7 +116,8 @@ int MSWindowsHook::init(DWORD threadID) {
   return 1;
 }
 
-int MSWindowsHook::cleanup() {
+int MSWindowsHook::cleanup()
+{
   if (g_processID == GetCurrentProcessId()) {
     g_threadID = 0;
   }
@@ -121,10 +125,13 @@ int MSWindowsHook::cleanup() {
   return 1;
 }
 
-void MSWindowsHook::setSides(UInt32 sides) { g_zoneSides = sides; }
+void MSWindowsHook::setSides(UInt32 sides)
+{
+  g_zoneSides = sides;
+}
 
-void MSWindowsHook::setZone(
-    SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize) {
+void MSWindowsHook::setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
+{
   g_zoneSize = jumpZoneSize;
   g_xScreen = x;
   g_yScreen = y;
@@ -132,7 +139,8 @@ void MSWindowsHook::setZone(
   g_hScreen = h;
 }
 
-void MSWindowsHook::setMode(EHookMode mode) {
+void MSWindowsHook::setMode(EHookMode mode)
+{
   if (mode == g_mode) {
     // no change
     return;
@@ -140,7 +148,8 @@ void MSWindowsHook::setMode(EHookMode mode) {
   g_mode = mode;
 }
 
-static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up) {
+static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
+{
   // we have to use GetAsyncKeyState() rather than GetKeyState() because
   // we don't pass through most keys so the event synchronous state
   // doesn't get updated.  we do that because certain modifier keys have
@@ -178,11 +187,13 @@ static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up) {
   keys[VK_CAPITAL] = (BYTE)(((key < 0) ? 0x80 : 0) | (key & 1));
 }
 
-static WPARAM makeKeyMsg(UINT virtKey, WCHAR wc, bool noAltGr) {
+static WPARAM makeKeyMsg(UINT virtKey, WCHAR wc, bool noAltGr)
+{
   return MAKEWPARAM((WORD)wc, MAKEWORD(virtKey & 0xff, noAltGr ? 1 : 0));
 }
 
-static void setDeadKey(WCHAR wc[], int size, UINT flags) {
+static void setDeadKey(WCHAR wc[], int size, UINT flags)
+{
   if (g_deadVirtKey != 0) {
     auto virtualKey = static_cast<UINT>(g_deadVirtKey);
     auto scanCode = static_cast<UINT>((g_deadLParam & 0x10ff0000u) >> 16);
@@ -201,7 +212,8 @@ static void setDeadKey(WCHAR wc[], int size, UINT flags) {
   }
 }
 
-static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
+static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
+{
   DWORD vkCode = static_cast<DWORD>(wParam);
   bool kf_up = (lParam & (KF_UP << 16)) != 0;
 
@@ -209,12 +221,10 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   // passing events through and not report them to the server.  this
   // is used to allow the server to synthesize events locally but
   // not pick them up as user events.
-  if (wParam == DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY &&
-      ((lParam >> 16) & 0xffu) == DESKFLOW_HOOK_FAKE_INPUT_SCANCODE) {
+  if (wParam == DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY && ((lParam >> 16) & 0xffu) == DESKFLOW_HOOK_FAKE_INPUT_SCANCODE) {
     // update flag
     g_fakeServerInput = ((lParam & 0x80000000u) == 0);
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_DEBUG, 0xff000000u | wParam, lParam);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xff000000u | wParam, lParam);
 
     // discard event
     return true;
@@ -223,8 +233,7 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   // if we're expecting fake input then just pass the event through
   // and do not forward to the server
   if (g_fakeServerInput) {
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_DEBUG, 0xfe000000u | wParam, lParam);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xfe000000u | wParam, lParam);
     return false;
   }
 
@@ -238,11 +247,9 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam, lParam);
 
   // ignore dead key release
-  if ((g_deadVirtKey == wParam || g_deadRelease == wParam) &&
-      (lParam & 0x80000000u) != 0) {
+  if ((g_deadVirtKey == wParam || g_deadRelease == wParam) && (lParam & 0x80000000u) != 0) {
     g_deadRelease = 0;
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
     return false;
   }
 
@@ -310,8 +317,7 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   bool noAltGr = false;
   if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
     noAltGr = true;
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
     setDeadKey(wc, 2, flags);
 
     BYTE keys2[256];
@@ -328,10 +334,9 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   }
 
   PostThreadMessage(
-      g_threadID, DESKFLOW_MSG_DEBUG,
-      (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) |
-          0x60000000,
-      lParam);
+      g_threadID, DESKFLOW_MSG_DEBUG, (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) | 0x60000000,
+      lParam
+  );
   WPARAM charAndVirtKey = 0;
   bool clearDeadKey = false;
   switch (n) {
@@ -369,12 +374,8 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
     // previous dead key not composed.  send a fake key press
     // and release for the dead key to our window.
     WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey,
-        g_deadLParam & 0x7fffffffu);
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey,
-        g_deadLParam | 0x80000000u);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam | 0x80000000u);
 
     // use uncomposed character
     charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
@@ -385,9 +386,7 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
 
   // put back the dead key, if any, for the application to use
   if (g_deadVirtKey != 0) {
-    ToUnicode(
-        (UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState,
-        wc, 2, flags);
+    ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState, wc, 2, flags);
   }
 
   // clear out old dead key state
@@ -403,8 +402,7 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
   // XXX -- with hot keys for actions we may only need to do this when
   // forwarding.
   if (charAndVirtKey != 0) {
-    PostThreadMessage(
-        g_threadID, DESKFLOW_MSG_DEBUG, charAndVirtKey | 0x07000000, lParam);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, charAndVirtKey | 0x07000000, lParam);
     PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, charAndVirtKey, lParam);
   }
 
@@ -437,7 +435,8 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam) {
 }
 
 #if !NO_GRAB_KEYBOARD
-static LRESULT CALLBACK keyboardLLHook(int code, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
+{
   if (code >= 0) {
     // decode the message
     KBDLLHOOKSTRUCT *info = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
@@ -478,7 +477,8 @@ static LRESULT CALLBACK keyboardLLHook(int code, WPARAM wParam, LPARAM lParam) {
 // events very early.  the earlier the better.
 //
 
-static bool mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data) {
+static bool mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
+{
   switch (wParam) {
   case WM_LBUTTONDOWN:
   case WM_MBUTTONDOWN:
@@ -574,7 +574,8 @@ static bool mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data) {
   return false;
 }
 
-static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
+{
   if (code >= 0) {
     // decode the message
     MSLLHOOKSTRUCT *info = reinterpret_cast<MSLLHOOKSTRUCT *>(lParam);
@@ -597,7 +598,8 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam) {
   return CallNextHookEx(g_mouseLL, code, wParam, lParam);
 }
 
-EHookResult MSWindowsHook::install() {
+EHookResult MSWindowsHook::install()
+{
   assert(g_getMessage == NULL || g_screenSaver);
 
   // must be initialized
@@ -646,7 +648,8 @@ EHookResult MSWindowsHook::install() {
   return kHOOK_OKAY;
 }
 
-int MSWindowsHook::uninstall() {
+int MSWindowsHook::uninstall()
+{
   // discard old dead keys
   g_deadVirtKey = 0;
   g_deadLParam = 0;
@@ -668,7 +671,8 @@ int MSWindowsHook::uninstall() {
   return 1;
 }
 
-static LRESULT CALLBACK getMessageHook(int code, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK getMessageHook(int code, WPARAM wParam, LPARAM lParam)
+{
   if (code >= 0) {
     if (g_screenSaver) {
       MSG *msg = reinterpret_cast<MSG *>(lParam);
@@ -682,7 +686,8 @@ static LRESULT CALLBACK getMessageHook(int code, WPARAM wParam, LPARAM lParam) {
   return CallNextHookEx(g_getMessage, code, wParam, lParam);
 }
 
-int MSWindowsHook::installScreenSaver() {
+int MSWindowsHook::installScreenSaver()
+{
   // must be initialized
   if (g_threadID == 0) {
     return 0;
@@ -699,7 +704,8 @@ int MSWindowsHook::installScreenSaver() {
   return (g_getMessage != NULL) ? 1 : 0;
 }
 
-int MSWindowsHook::uninstallScreenSaver() {
+int MSWindowsHook::uninstallScreenSaver()
+{
   // uninstall hook unless the mouse wheel hook is installed
   if (g_getMessage != NULL) {
     UnhookWindowsHookEx(g_getMessage);

@@ -39,7 +39,8 @@ class IEventQueue;
 This class acts a proxy for the server, converting calls into messages
 to the server and messages from the server to calls on the client.
 */
-class ServerProxy {
+class ServerProxy
+{
 public:
   /*!
   Process messages from the server on \p stream and forward to
@@ -69,11 +70,19 @@ public:
   void sendDragInfo(UInt32 fileCount, const char *info, size_t size);
 
 #ifdef TEST_ENV
-  void handleDataForTest() { handleData(Event(), NULL); }
+  void handleDataForTest()
+  {
+    handleData(Event(), NULL);
+  }
 #endif
 
 protected:
-  enum EResult { kOkay, kUnknown, kDisconnect };
+  enum EResult
+  {
+    kOkay,
+    kUnknown,
+    kDisconnect
+  };
   EResult parseHandshakeMessage(const UInt8 *code);
   EResult parseMessage(const UInt8 *code);
 

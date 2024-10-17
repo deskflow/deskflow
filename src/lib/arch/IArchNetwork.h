@@ -60,24 +60,31 @@ typedef ArchNetAddressImpl *ArchNetAddress;
 This interface defines the networking operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchNetwork : public IInterface {
+class IArchNetwork : public IInterface
+{
 public:
   //! Supported address families
-  enum EAddressFamily {
+  enum EAddressFamily
+  {
     kUNKNOWN,
     kINET,
     kINET6,
   };
 
   //! Supported socket types
-  enum ESocketType { kDGRAM, kSTREAM };
+  enum ESocketType
+  {
+    kDGRAM,
+    kSTREAM
+  };
 
   //! Events for \c poll()
   /*!
   Events for \c poll() are bitmasks and can be combined using the
   bitwise operators.
   */
-  enum {
+  enum
+  {
     kPOLLIN = 1,  //!< Socket is readable
     kPOLLOUT = 2, //!< Socket is writable
     kPOLLERR = 4, //!< The socket is in an error state
@@ -85,7 +92,8 @@ public:
   };
 
   //! A socket query for \c poll()
-  class PollEntry {
+  class PollEntry
+  {
   public:
     //! The socket to query
     ArchSocket m_socket;

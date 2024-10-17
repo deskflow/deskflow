@@ -23,7 +23,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnDeskflowMask) {
+TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnDeskflowMask)
+{
   deskflow::KeyMap keyMap;
   MockEventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);

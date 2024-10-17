@@ -28,14 +28,12 @@ class QString;
 class Screen;
 class ScreenList;
 
-class ScreenSettingsDialog : public QDialog,
-                             public Ui::ScreenSettingsDialogBase {
+class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
+{
   Q_OBJECT
 
 public:
-  ScreenSettingsDialog(
-      QWidget *parent, Screen *pScreen = nullptr,
-      const ScreenList *pScreens = nullptr);
+  ScreenSettingsDialog(QWidget *parent, Screen *pScreen = nullptr, const ScreenList *pScreens = nullptr);
 
 public slots:
   void accept();

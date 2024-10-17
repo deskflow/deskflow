@@ -20,4 +20,6 @@
 
 #include "common/IInterface.h"
 
-class INode : IInterface {};
+class INode : IInterface
+{
+};

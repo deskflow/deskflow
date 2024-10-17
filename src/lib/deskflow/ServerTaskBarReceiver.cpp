@@ -28,18 +28,18 @@
 // ServerTaskBarReceiver
 //
 
-ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue *events)
-    : m_state(kNotRunning),
-      m_events(events) {
+ServerTaskBarReceiver::ServerTaskBarReceiver(IEventQueue *events) : m_state(kNotRunning), m_events(events)
+{
   // do nothing
 }
 
-ServerTaskBarReceiver::~ServerTaskBarReceiver() {
+ServerTaskBarReceiver::~ServerTaskBarReceiver()
+{
   // do nothing
 }
 
-void ServerTaskBarReceiver::updateStatus(
-    Server *server, const String &errorMsg) {
+void ServerTaskBarReceiver::updateStatus(Server *server, const String &errorMsg)
+{
   {
     // update our status
     m_errorMessage = errorMsg;
@@ -67,41 +67,49 @@ void ServerTaskBarReceiver::updateStatus(
   ARCH->updateReceiver(this);
 }
 
-ServerTaskBarReceiver::EState ServerTaskBarReceiver::getStatus() const {
+ServerTaskBarReceiver::EState ServerTaskBarReceiver::getStatus() const
+{
   return m_state;
 }
 
-const String &ServerTaskBarReceiver::getErrorMessage() const {
+const String &ServerTaskBarReceiver::getErrorMessage() const
+{
   return m_errorMessage;
 }
 
-const ServerTaskBarReceiver::Clients &
-ServerTaskBarReceiver::getClients() const {
+const ServerTaskBarReceiver::Clients &ServerTaskBarReceiver::getClients() const
+{
   return m_clients;
 }
 
-void ServerTaskBarReceiver::quit() { m_events->addEvent(Event(Event::kQuit)); }
+void ServerTaskBarReceiver::quit()
+{
+  m_events->addEvent(Event(Event::kQuit));
+}
 
-void ServerTaskBarReceiver::onStatusChanged(Server *) {
+void ServerTaskBarReceiver::onStatusChanged(Server *)
+{
   // do nothing
 }
 
-void ServerTaskBarReceiver::lock() const {
+void ServerTaskBarReceiver::lock() const
+{
   // do nothing
 }
 
-void ServerTaskBarReceiver::unlock() const {
+void ServerTaskBarReceiver::unlock() const
+{
   // do nothing
 }
 
-std::string ServerTaskBarReceiver::getToolTip() const {
+std::string ServerTaskBarReceiver::getToolTip() const
+{
   switch (m_state) {
   case kNotRunning:
     return deskflow::string::sprintf("%s:  Not running", kAppName);
 
   case kNotWorking:
-    return deskflow::string::sprintf(
-        "%s:  %s", kAppName, m_errorMessage.c_str());
+    return deskflow::string::sprintf("%s:  %s", kAppName, m_errorMessage.c_str());
 
   case kNotConnected:
     return deskflow::string::sprintf("%s:  Waiting for clients", kAppName);

@@ -30,15 +30,22 @@
 
 namespace deskflow {
 
-Config::Config(const std::string &filename, const std::string &section)
-    : m_filename(filename),
-      m_section(section) {}
+Config::Config(const std::string &filename, const std::string &section) : m_filename(filename), m_section(section)
+{
+}
 
-const char *const *Config::argv() const { return m_argv.data(); }
+const char *const *Config::argv() const
+{
+  return m_argv.data();
+}
 
-int Config::argc() const { return static_cast<int>(m_argv.size()); }
+int Config::argc() const
+{
+  return static_cast<int>(m_argv.size());
+}
 
-bool Config::load(const std::string &firstArg) {
+bool Config::load(const std::string &firstArg)
+{
 
 #if HAVE_TOMLPLUSPLUS
   if (!firstArg.empty()) {

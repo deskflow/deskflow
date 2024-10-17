@@ -31,11 +31,11 @@ class SocketMultiplexer;
 /*!
  * See \ref IpcServer description.
  */
-class IpcClient {
+class IpcClient
+{
 public:
   IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
-  IpcClient(
-      IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port);
+  IpcClient(IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port);
   virtual ~IpcClient();
 
   //! @name manipulators

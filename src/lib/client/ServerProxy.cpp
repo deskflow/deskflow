@@ -41,8 +41,7 @@
 // ServerProxy
 //
 
-ServerProxy::ServerProxy(
-    Client *client, deskflow::IStream *stream, IEventQueue *events)
+ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
       m_seqNum(0),
@@ -56,7 +55,8 @@ ServerProxy::ServerProxy(
       m_keepAliveAlarm(0.0),
       m_keepAliveAlarmTimer(NULL),
       m_parser(&ServerProxy::parseHandshakeMessage),
-      m_events(events) {
+      m_events(events)
+{
   assert(m_client != NULL);
   assert(m_stream != NULL);
 
@@ -67,24 +67,26 @@ ServerProxy::ServerProxy(
   // handle data on stream
   m_events->adoptHandler(
       m_events->forIStream().inputReady(), m_stream->getEventTarget(),
-      new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleData));
+      new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleData)
+  );
 
   m_events->adoptHandler(
       m_events->forClipboard().clipboardSending(), this,
-      new TMethodEventJob<ServerProxy>(
-          this, &ServerProxy::handleClipboardSendingEvent));
+      new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleClipboardSendingEvent)
+  );
 
   // send heartbeat
   setKeepAliveRate(kKeepAliveRate);
 }
 
-ServerProxy::~ServerProxy() {
+ServerProxy::~ServerProxy()
+{
   setKeepAliveRate(-1.0);
-  m_events->removeHandler(
-      m_events->forIStream().inputReady(), m_stream->getEventTarget());
+  m_events->removeHandler(m_events->forIStream().inputReady(), m_stream->getEventTarget());
 }
 
-void ServerProxy::resetKeepAliveAlarm() {
+void ServerProxy::resetKeepAliveAlarm()
+{
   if (m_keepAliveAlarmTimer != NULL) {
     m_events->removeHandler(Event::kTimer, m_keepAliveAlarmTimer);
     m_events->deleteTimer(m_keepAliveAlarmTimer);
@@ -93,18 +95,19 @@ void ServerProxy::resetKeepAliveAlarm() {
   if (m_keepAliveAlarm > 0.0) {
     m_keepAliveAlarmTimer = m_events->newOneShotTimer(m_keepAliveAlarm, NULL);
     m_events->adoptHandler(
-        Event::kTimer, m_keepAliveAlarmTimer,
-        new TMethodEventJob<ServerProxy>(
-            this, &ServerProxy::handleKeepAliveAlarm));
+        Event::kTimer, m_keepAliveAlarmTimer, new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleKeepAliveAlarm)
+    );
   }
 }
 
-void ServerProxy::setKeepAliveRate(double rate) {
+void ServerProxy::setKeepAliveRate(double rate)
+{
   m_keepAliveAlarm = rate * kKeepAlivesUntilDeath;
   resetKeepAliveAlarm();
 }
 
-void ServerProxy::handleData(const Event &, void *) {
+void ServerProxy::handleData(const Event &, void *)
+{
   // handle messages until there are no more.  first read message code.
   UInt8 code[4];
   UInt32 n = m_stream->read(code, 4);
@@ -117,17 +120,13 @@ void ServerProxy::handleData(const Event &, void *) {
     }
 
     // parse message
-    LOG(
-        (CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2],
-         code[3]));
+    LOG((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
     switch ((this->*m_parser)(code)) {
     case kOkay:
       break;
 
     case kUnknown:
-      LOG(
-          (CLOG_ERR "invalid message from server: %c%c%c%c", code[0], code[1],
-           code[2], code[3]));
+      LOG((CLOG_ERR "invalid message from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
       // not possible to determine message boundaries
       // read the whole stream to discard unkonwn data
       while (m_stream->read(nullptr, 4))
@@ -145,7 +144,8 @@ void ServerProxy::handleData(const Event &, void *) {
   flushCompressedMouse();
 }
 
-ServerProxy::EResult ServerProxy::parseHandshakeMessage(const UInt8 *code) {
+ServerProxy::EResult ServerProxy::parseHandshakeMessage(const UInt8 *code)
+{
   if (memcmp(code, kMsgQInfo, 4) == 0) {
     queryInfo();
   }
@@ -193,18 +193,13 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const UInt8 *code) {
   }
 
   else if (memcmp(code, kMsgEBusy, 4) == 0) {
-    LOG(
-        (CLOG_ERR "server already has a connected client with name \"%s\"",
-         m_client->getName().c_str()));
-    m_client->refuseConnection(
-        "server already has a connected client with our name");
+    LOG((CLOG_ERR "server already has a connected client with name \"%s\"", m_client->getName().c_str()));
+    m_client->refuseConnection("server already has a connected client with our name");
     return kDisconnect;
   }
 
   else if (memcmp(code, kMsgEUnknown, 4) == 0) {
-    LOG(
-        (CLOG_ERR "server refused client with name \"%s\"",
-         m_client->getName().c_str()));
+    LOG((CLOG_ERR "server refused client with name \"%s\"", m_client->getName().c_str()));
     m_client->refuseConnection("server refused client with our name");
     return kDisconnect;
   }
@@ -222,7 +217,8 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const UInt8 *code) {
   return kOkay;
 }
 
-ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code) {
+ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code)
+{
   if (memcmp(code, kMsgDMouseMove, 4) == 0) {
     mouseMove();
   }
@@ -240,9 +236,7 @@ ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code) {
     UInt16 mask = 0;
     UInt16 button = 0;
     ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
-    LOG(
-        (CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id,
-         mask, button));
+    LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
     keyDown(id, mask, button, "");
   }
@@ -253,12 +247,9 @@ ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code) {
     UInt16 mask = 0;
     UInt16 button = 0;
 
-    ProtocolUtil::readf(
-        m_stream, kMsgDKeyDownLang + 4, &id, &mask, &button, &lang);
-    LOG(
-        (CLOG_DEBUG1
-         "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"",
-         id, mask, button, lang.c_str()));
+    ProtocolUtil::readf(m_stream, kMsgDKeyDownLang + 4, &id, &mask, &button, &lang);
+    LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str())
+    );
 
     keyDown(id, mask, button, lang);
   }
@@ -358,12 +349,14 @@ ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code) {
   return kOkay;
 }
 
-void ServerProxy::handleKeepAliveAlarm(const Event &, void *) {
+void ServerProxy::handleKeepAliveAlarm(const Event &, void *)
+{
   LOG((CLOG_NOTE "server is dead"));
   m_client->disconnect("server is not responding");
 }
 
-void ServerProxy::onInfoChanged() {
+void ServerProxy::onInfoChanged()
+{
   // ignore mouse motion until we receive acknowledgment of our info
   // change message.
   m_ignoreMouse = true;
@@ -372,21 +365,23 @@ void ServerProxy::onInfoChanged() {
   queryInfo();
 }
 
-bool ServerProxy::onGrabClipboard(ClipboardID id) {
+bool ServerProxy::onGrabClipboard(ClipboardID id)
+{
   LOG((CLOG_DEBUG1 "sending clipboard %d changed", id));
   ProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
   return true;
 }
 
-void ServerProxy::onClipboardChanged(
-    ClipboardID id, const IClipboard *clipboard) {
+void ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard *clipboard)
+{
   String data = IClipboard::marshall(clipboard);
   LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
 
   StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
 }
 
-void ServerProxy::flushCompressedMouse() {
+void ServerProxy::flushCompressedMouse()
+{
   if (m_compressMouse) {
     m_compressMouse = false;
     m_client->mouseMove(m_xMouse, m_yMouse);
@@ -399,21 +394,18 @@ void ServerProxy::flushCompressedMouse() {
   }
 }
 
-void ServerProxy::sendInfo(const ClientInfo &info) {
-  LOG(
-      (CLOG_DEBUG1 "sending info shape=%d,%d %dx%d", info.m_x, info.m_y,
-       info.m_w, info.m_h));
-  ProtocolUtil::writef(
-      m_stream, kMsgDInfo, info.m_x, info.m_y, info.m_w, info.m_h, 0, info.m_mx,
-      info.m_my);
+void ServerProxy::sendInfo(const ClientInfo &info)
+{
+  LOG((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d", info.m_x, info.m_y, info.m_w, info.m_h));
+  ProtocolUtil::writef(m_stream, kMsgDInfo, info.m_x, info.m_y, info.m_w, info.m_h, 0, info.m_mx, info.m_my);
 }
 
-KeyID ServerProxy::translateKey(KeyID id) const {
+KeyID ServerProxy::translateKey(KeyID id) const
+{
   static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
-      {kKeyNone, kKeyNone},           {kKeyShift_L, kKeyShift_R},
-      {kKeyControl_L, kKeyControl_R}, {kKeyAlt_L, kKeyAlt_R},
-      {kKeyMeta_L, kKeyMeta_R},       {kKeySuper_L, kKeySuper_R},
-      {kKeyAltGr, kKeyAltGr}};
+      {kKeyNone, kKeyNone},     {kKeyShift_L, kKeyShift_R}, {kKeyControl_L, kKeyControl_R}, {kKeyAlt_L, kKeyAlt_R},
+      {kKeyMeta_L, kKeyMeta_R}, {kKeySuper_L, kKeySuper_R}, {kKeyAltGr, kKeyAltGr}
+  };
 
   KeyModifierID id2 = kKeyModifierIDNull;
   UInt32 side = 0;
@@ -481,14 +473,14 @@ KeyID ServerProxy::translateKey(KeyID id) const {
   }
 }
 
-KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const {
-  static const KeyModifierMask s_masks[kKeyModifierIDLast] = {
-      0x0000,          KeyModifierShift, KeyModifierControl, KeyModifierAlt,
-      KeyModifierMeta, KeyModifierSuper, KeyModifierAltGr};
+KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
+{
+  static const KeyModifierMask s_masks[kKeyModifierIDLast] = {0x0000,          KeyModifierShift, KeyModifierControl,
+                                                              KeyModifierAlt,  KeyModifierMeta,  KeyModifierSuper,
+                                                              KeyModifierAltGr};
 
-  KeyModifierMask newMask =
-      mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt |
-               KeyModifierMeta | KeyModifierSuper | KeyModifierAltGr);
+  KeyModifierMask newMask = mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierMeta |
+                                     KeyModifierSuper | KeyModifierAltGr);
   if ((mask & KeyModifierShift) != 0) {
     newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
   }
@@ -510,7 +502,8 @@ KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const {
   return newMask;
 }
 
-void ServerProxy::enter() {
+void ServerProxy::enter()
+{
   // parse
   SInt16 x, y;
   UInt16 mask;
@@ -531,7 +524,8 @@ void ServerProxy::enter() {
   m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
 }
 
-void ServerProxy::leave() {
+void ServerProxy::leave()
+{
   // parse
   LOG((CLOG_DEBUG1 "recv leave"));
 
@@ -542,7 +536,8 @@ void ServerProxy::leave() {
   m_client->leave();
 }
 
-void ServerProxy::setClipboard() {
+void ServerProxy::setClipboard()
+{
   // parse
   static String dataCached;
   ClipboardID id;
@@ -565,7 +560,8 @@ void ServerProxy::setClipboard() {
   }
 }
 
-void ServerProxy::grabClipboard() {
+void ServerProxy::grabClipboard()
+{
   // parse
   ClipboardID id;
   UInt32 seqNum;
@@ -581,79 +577,69 @@ void ServerProxy::grabClipboard() {
   m_client->grabClipboard(id);
 }
 
-void ServerProxy::keyDown(
-    UInt16 id, UInt16 mask, UInt16 button, const String &lang) {
+void ServerProxy::keyDown(UInt16 id, UInt16 mask, UInt16 button, const String &lang)
+{
   // get mouse up to date
   flushCompressedMouse();
   setActiveServerLanguage(lang);
 
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
-  KeyModifierMask mask2 =
-      translateModifierMask(static_cast<KeyModifierMask>(mask));
-  if (id2 != static_cast<KeyID>(id) ||
-      mask2 != static_cast<KeyModifierMask>(mask))
-    LOG(
-        (CLOG_DEBUG1 "key down translated to id=0x%08x, mask=0x%04x", id2,
-         mask2));
+  KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
+    LOG((CLOG_DEBUG1 "key down translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
   // forward
   m_client->keyDown(id2, mask2, button, lang);
 }
 
-void ServerProxy::keyRepeat() {
+void ServerProxy::keyRepeat()
+{
   // get mouse up to date
   flushCompressedMouse();
 
   // parse
   UInt16 id, mask, count, button;
   String lang;
-  ProtocolUtil::readf(
-      m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
+  ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
   LOG(
       (CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, "
                    "button=0x%04x, lang=\"%s\"",
-       id, mask, count, button, lang.c_str()));
+       id, mask, count, button, lang.c_str())
+  );
 
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
-  KeyModifierMask mask2 =
-      translateModifierMask(static_cast<KeyModifierMask>(mask));
-  if (id2 != static_cast<KeyID>(id) ||
-      mask2 != static_cast<KeyModifierMask>(mask))
-    LOG(
-        (CLOG_DEBUG1 "key repeat translated to id=0x%08x, mask=0x%04x", id2,
-         mask2));
+  KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
+    LOG((CLOG_DEBUG1 "key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
   // forward
   m_client->keyRepeat(id2, mask2, count, button, lang);
 }
 
-void ServerProxy::keyUp() {
+void ServerProxy::keyUp()
+{
   // get mouse up to date
   flushCompressedMouse();
 
   // parse
   UInt16 id, mask, button;
   ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
-  LOG(
-      (CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id,
-       mask, button));
+  LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
-  KeyModifierMask mask2 =
-      translateModifierMask(static_cast<KeyModifierMask>(mask));
-  if (id2 != static_cast<KeyID>(id) ||
-      mask2 != static_cast<KeyModifierMask>(mask))
-    LOG((
-        CLOG_DEBUG1 "key up translated to id=0x%08x, mask=0x%04x", id2, mask2));
+  KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
+    LOG((CLOG_DEBUG1 "key up translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
   // forward
   m_client->keyUp(id2, mask2, button);
 }
 
-void ServerProxy::mouseDown() {
+void ServerProxy::mouseDown()
+{
   // get mouse up to date
   flushCompressedMouse();
 
@@ -666,7 +652,8 @@ void ServerProxy::mouseDown() {
   m_client->mouseDown(static_cast<ButtonID>(id));
 }
 
-void ServerProxy::mouseUp() {
+void ServerProxy::mouseUp()
+{
   // get mouse up to date
   flushCompressedMouse();
 
@@ -679,7 +666,8 @@ void ServerProxy::mouseUp() {
   m_client->mouseUp(static_cast<ButtonID>(id));
 }
 
-void ServerProxy::mouseMove() {
+void ServerProxy::mouseMove()
+{
   // parse
   bool ignore;
   SInt16 x, y;
@@ -710,7 +698,8 @@ void ServerProxy::mouseMove() {
   }
 }
 
-void ServerProxy::mouseRelativeMove() {
+void ServerProxy::mouseRelativeMove()
+{
   // parse
   bool ignore;
   SInt16 dx, dy;
@@ -738,7 +727,8 @@ void ServerProxy::mouseRelativeMove() {
   }
 }
 
-void ServerProxy::mouseWheel() {
+void ServerProxy::mouseWheel()
+{
   // get mouse up to date
   flushCompressedMouse();
 
@@ -751,7 +741,8 @@ void ServerProxy::mouseWheel() {
   m_client->mouseWheel(xDelta, yDelta);
 }
 
-void ServerProxy::screensaver() {
+void ServerProxy::screensaver()
+{
   // parse
   SInt8 on;
   ProtocolUtil::readf(m_stream, kMsgCScreenSaver + 4, &on);
@@ -761,7 +752,8 @@ void ServerProxy::screensaver() {
   m_client->screensaver(on != 0);
 }
 
-void ServerProxy::resetOptions() {
+void ServerProxy::resetOptions()
+{
   // parse
   LOG((CLOG_DEBUG1 "recv reset options"));
 
@@ -777,7 +769,8 @@ void ServerProxy::resetOptions() {
   }
 }
 
-void ServerProxy::setOptions() {
+void ServerProxy::setOptions()
+{
   // parse
   OptionsList options;
   ProtocolUtil::readf(m_stream, kMsgDSetOptions + 4, &options);
@@ -807,35 +800,32 @@ void ServerProxy::setOptions() {
     }
 
     if (id != kKeyModifierIDNull) {
-      m_modifierTranslationTable[id] =
-          static_cast<KeyModifierID>(options[i + 1]);
-      LOG(
-          (CLOG_DEBUG1 "modifier %d mapped to %d", id,
-           m_modifierTranslationTable[id]));
+      m_modifierTranslationTable[id] = static_cast<KeyModifierID>(options[i + 1]);
+      LOG((CLOG_DEBUG1 "modifier %d mapped to %d", id, m_modifierTranslationTable[id]));
     }
   }
 }
 
-void ServerProxy::queryInfo() {
+void ServerProxy::queryInfo()
+{
   ClientInfo info;
   m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
   m_client->getCursorPos(info.m_mx, info.m_my);
   sendInfo(info);
 }
 
-void ServerProxy::infoAcknowledgment() {
+void ServerProxy::infoAcknowledgment()
+{
   LOG((CLOG_DEBUG1 "recv info acknowledgment"));
   m_ignoreMouse = false;
 }
 
-void ServerProxy::fileChunkReceived() {
-  int result = FileChunk::assemble(
-      m_stream, m_client->getReceivedFileData(),
-      m_client->getExpectedFileSize());
+void ServerProxy::fileChunkReceived()
+{
+  int result = FileChunk::assemble(m_stream, m_client->getReceivedFileData(), m_client->getExpectedFileSize());
 
   if (result == kFinish) {
-    m_events->addEvent(
-        Event(m_events->forFile().fileRecieveCompleted(), m_client));
+    m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
   } else if (result == kStart) {
     if (m_client->getDragFileList().size() > 0) {
       String filename = m_client->getDragFileList().at(0).getFilename();
@@ -844,7 +834,8 @@ void ServerProxy::fileChunkReceived() {
   }
 }
 
-void ServerProxy::dragInfoReceived() {
+void ServerProxy::dragInfoReceived()
+{
   // parse
   UInt32 fileNum = 0;
   String content;
@@ -853,21 +844,24 @@ void ServerProxy::dragInfoReceived() {
   m_client->dragInfoReceived(fileNum, content);
 }
 
-void ServerProxy::handleClipboardSendingEvent(const Event &event, void *) {
+void ServerProxy::handleClipboardSendingEvent(const Event &event, void *)
+{
   ClipboardChunk::send(m_stream, event.getDataObject());
 }
 
-void ServerProxy::fileChunkSending(UInt8 mark, char *data, size_t dataSize) {
+void ServerProxy::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
+{
   FileChunk::send(m_stream, mark, data, dataSize);
 }
 
-void ServerProxy::sendDragInfo(
-    UInt32 fileCount, const char *info, size_t size) {
+void ServerProxy::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+{
   String data(info, size);
   ProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);
 }
 
-void ServerProxy::secureInputNotification() {
+void ServerProxy::secureInputNotification()
+{
   String app;
   ProtocolUtil::readf(m_stream, kMsgDSecureInputNotification + 4, &app);
 
@@ -877,23 +871,25 @@ void ServerProxy::secureInputNotification() {
         "The keyboard may stop working.", "'Secure input' enabled by " + app +
                                               " on the server. "
                                               "To fix the keyboard, " +
-                                              app + " must be closed.");
+                                              app + " must be closed."
+    );
   } else {
     AppUtil::instance().showNotification(
-        "The keyboard may stop working.",
-        "'Secure input' enabled by an application on the server. "
-        "To fix the keyboard, the application must be closed.");
+        "The keyboard may stop working.", "'Secure input' enabled by an application on the server. "
+                                          "To fix the keyboard, the application must be closed."
+    );
   }
 }
 
-void ServerProxy::setServerLanguages() {
+void ServerProxy::setServerLanguages()
+{
   String serverLanguages;
-  ProtocolUtil::readf(
-      m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
+  ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
   m_languageManager.setRemoteLanguages(serverLanguages);
 }
 
-void ServerProxy::setActiveServerLanguage(const String &language) {
+void ServerProxy::setActiveServerLanguage(const String &language)
+{
   if (!language.empty() && std::strlen(language.c_str()) > 0) {
     if (m_serverLanguage != language) {
       m_isUserNotifiedAboutLanguageSyncError = false;
@@ -913,13 +909,14 @@ void ServerProxy::setActiveServerLanguage(const String &language) {
   }
 }
 
-void ServerProxy::checkMissedLanguages() const {
+void ServerProxy::checkMissedLanguages() const
+{
   auto missedLanguages = m_languageManager.getMissedLanguages();
   if (!missedLanguages.empty()) {
     LOG(
-        (CLOG_WARN
-         "You need to install these languages on this computer and restart "
-         "Deskflow to enable support for multiple languages: %s",
-         missedLanguages.c_str()));
+        (CLOG_WARN "You need to install these languages on this computer and restart "
+                   "Deskflow to enable support for multiple languages: %s",
+         missedLanguages.c_str())
+    );
   }
 }

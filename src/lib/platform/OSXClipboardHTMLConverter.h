@@ -21,7 +21,8 @@
 #include "OSXClipboardAnyTextConverter.h"
 
 //! Convert to/from HTML encoding
-class OSXClipboardHTMLConverter : public OSXClipboardAnyTextConverter {
+class OSXClipboardHTMLConverter : public OSXClipboardAnyTextConverter
+{
 public:
   OSXClipboardHTMLConverter();
   virtual ~OSXClipboardHTMLConverter();
@@ -37,7 +38,5 @@ protected:
   virtual String doToIClipboard(const String &) const;
 
   // generic encoding converter
-  static String convertString(
-      const String &data, CFStringEncoding fromEncoding,
-      CFStringEncoding toEncoding);
+  static String convertString(const String &data, CFStringEncoding fromEncoding, CFStringEncoding toEncoding);
 };

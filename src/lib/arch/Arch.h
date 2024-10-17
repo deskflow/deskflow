@@ -96,7 +96,8 @@ class Arch : public ARCH_CONSOLE,
              public ARCH_STRING,
              public ARCH_SYSTEM,
              public ARCH_TASKBAR,
-             public ARCH_TIME {
+             public ARCH_TIME
+{
 public:
   Arch();
   Arch(Arch *arch);
@@ -120,19 +121,29 @@ public:
   */
   static Arch *getInstance();
 
-  static void setInstance(Arch *s) { s_instance = s; }
+  static void setInstance(Arch *s)
+  {
+    s_instance = s;
+  }
 
 private:
   static Arch *s_instance;
 };
 
 //! Convenience object to lock/unlock an arch mutex
-class ArchMutexLock {
+class ArchMutexLock
+{
 public:
-  ArchMutexLock(ArchMutex mutex) : m_mutex(mutex) { ARCH->lockMutex(m_mutex); }
+  ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
+  {
+    ARCH->lockMutex(m_mutex);
+  }
   ArchMutexLock(ArchMutexLock const &) = delete;
   ArchMutexLock(ArchMutexLock &&) = delete;
-  ~ArchMutexLock() { ARCH->unlockMutex(m_mutex); }
+  ~ArchMutexLock()
+  {
+    ARCH->unlockMutex(m_mutex);
+  }
 
   ArchMutexLock &operator=(ArchMutexLock const &) = delete;
   ArchMutexLock &operator=(ArchMutexLock &&) = delete;

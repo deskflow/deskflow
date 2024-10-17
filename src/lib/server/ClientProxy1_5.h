@@ -25,11 +25,10 @@ class Server;
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.5
-class ClientProxy1_5 : public ClientProxy1_4 {
+class ClientProxy1_5 : public ClientProxy1_4
+{
 public:
-  ClientProxy1_5(
-      const String &name, deskflow::IStream *adoptedStream, Server *server,
-      IEventQueue *events);
+  ClientProxy1_5(const String &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
   ClientProxy1_5(ClientProxy1_5 const &) = delete;
   ClientProxy1_5(ClientProxy1_5 &&) = delete;
   ~ClientProxy1_5();

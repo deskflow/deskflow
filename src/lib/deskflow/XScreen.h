@@ -40,7 +40,8 @@ XBASE_SUBCLASS_WHAT(XScreenXInputFailure, XScreen);
 Thrown when a screen cannot be opened or initialized but retrying later
 may be successful.
 */
-class XScreenUnavailable : public XScreenOpenFailure {
+class XScreenUnavailable : public XScreenOpenFailure
+{
 public:
   /*!
   \c timeUntilRetry is the suggested time the caller should wait until

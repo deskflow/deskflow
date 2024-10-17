@@ -52,7 +52,8 @@ static const int s_type[] = {SOCK_DGRAM, SOCK_STREAM};
 #if !HAVE_INET_ATON
 // parse dotted quad addresses.  we don't bother with the weird BSD'ism
 // of handling octal and hex and partial forms.
-static in_addr_t inet_aton(const char *cp, struct in_addr *inp) {
+static in_addr_t inet_aton(const char *cp, struct in_addr *inp)
+{
   unsigned int a, b, c, d;
   if (sscanf(cp, "%u.%u.%u.%u", &a, &b, &c, &d) != 4) {
     return 0;
@@ -73,44 +74,53 @@ static in_addr_t inet_aton(const char *cp, struct in_addr *inp) {
 // ArchNetworkBSD::Deps
 //
 
-void ArchNetworkBSD::Deps::sleep(double seconds) {
+void ArchNetworkBSD::Deps::sleep(double seconds)
+{
   //
   ARCH->sleep(seconds);
 }
 
-int ArchNetworkBSD::Deps::poll(struct pollfd *fds, nfds_t nfds, int timeout) {
+int ArchNetworkBSD::Deps::poll(struct pollfd *fds, nfds_t nfds, int timeout)
+{
   return ::poll(fds, nfds, timeout);
 }
 
-std::shared_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n) {
+std::shared_ptr<struct pollfd[]> ArchNetworkBSD::Deps::makePollFD(nfds_t n)
+{
   // C++20 supports std::make_shared<struct pollfd[]>(n) but this is not
   // implemented on the compiler that comes with Ubuntu 22 and a few other
   // distros, so use the manual new and delete until we drop those distros.
-  return std::shared_ptr<struct pollfd[]>(
-      new struct pollfd[n], std::default_delete<struct pollfd[]>());
+  return std::shared_ptr<struct pollfd[]>(new struct pollfd[n], std::default_delete<struct pollfd[]>());
 }
 
-ssize_t ArchNetworkBSD::Deps::read(int fd, void *buf, size_t len) {
+ssize_t ArchNetworkBSD::Deps::read(int fd, void *buf, size_t len)
+{
   return ::read(fd, buf, len);
 }
 
-void ArchNetworkBSD::Deps::testCancelThread() { ARCH->testCancelThread(); }
+void ArchNetworkBSD::Deps::testCancelThread()
+{
+  ARCH->testCancelThread();
+}
 
 //
 // ArchNetworkBSD
 //
 
-ArchNetworkBSD::~ArchNetworkBSD() {
+ArchNetworkBSD::~ArchNetworkBSD()
+{
   if (m_mutex)
     ARCH->closeMutex(m_mutex);
 }
 
-void ArchNetworkBSD::init() {
+void ArchNetworkBSD::init()
+{
   // create mutex to make some calls thread safe
   m_mutex = ARCH->newMutex();
 }
 
-ArchSocket ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type) {
+ArchSocket ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
+{
   // create socket
   int fd = socket(s_family[family], s_type[type], 0);
   if (fd == -1) {
@@ -130,7 +140,8 @@ ArchSocket ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type) {
   return newSocket;
 }
 
-ArchSocket ArchNetworkBSD::copySocket(ArchSocket s) {
+ArchSocket ArchNetworkBSD::copySocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // ref the socket and return it
@@ -140,7 +151,8 @@ ArchSocket ArchNetworkBSD::copySocket(ArchSocket s) {
   return s;
 }
 
-void ArchNetworkBSD::closeSocket(ArchSocket s) {
+void ArchNetworkBSD::closeSocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // unref the socket and note if it should be released
@@ -162,7 +174,8 @@ void ArchNetworkBSD::closeSocket(ArchSocket s) {
   }
 }
 
-void ArchNetworkBSD::closeSocketForRead(ArchSocket s) {
+void ArchNetworkBSD::closeSocketForRead(ArchSocket s)
+{
   assert(s != NULL);
 
   if (shutdown(s->m_fd, 0) == -1) {
@@ -172,7 +185,8 @@ void ArchNetworkBSD::closeSocketForRead(ArchSocket s) {
   }
 }
 
-void ArchNetworkBSD::closeSocketForWrite(ArchSocket s) {
+void ArchNetworkBSD::closeSocketForWrite(ArchSocket s)
+{
   assert(s != NULL);
 
   if (shutdown(s->m_fd, 1) == -1) {
@@ -182,7 +196,8 @@ void ArchNetworkBSD::closeSocketForWrite(ArchSocket s) {
   }
 }
 
-void ArchNetworkBSD::bindSocket(ArchSocket s, ArchNetAddress addr) {
+void ArchNetworkBSD::bindSocket(ArchSocket s, ArchNetAddress addr)
+{
   assert(s != NULL);
   assert(addr != NULL);
 
@@ -191,7 +206,8 @@ void ArchNetworkBSD::bindSocket(ArchSocket s, ArchNetAddress addr) {
   }
 }
 
-void ArchNetworkBSD::listenOnSocket(ArchSocket s) {
+void ArchNetworkBSD::listenOnSocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // hardcoding backlog
@@ -200,7 +216,8 @@ void ArchNetworkBSD::listenOnSocket(ArchSocket s) {
   }
 }
 
-ArchSocket ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress *addr) {
+ArchSocket ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress *addr)
+{
   assert(s != NULL);
 
   // if user passed NULL in addr then use scratch space
@@ -250,7 +267,8 @@ ArchSocket ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress *addr) {
   return newSocket;
 }
 
-bool ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr) {
+bool ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr)
+{
   assert(s != NULL);
   assert(addr != NULL);
 
@@ -266,7 +284,8 @@ bool ArchNetworkBSD::connectSocket(ArchSocket s, ArchNetAddress addr) {
   return true;
 }
 
-int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
+int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
+{
   assert((pe != nullptr && num > 0) || num == 0);
 
   // return if nothing to do
@@ -351,7 +370,8 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout) {
   return n;
 }
 
-void ArchNetworkBSD::unblockPollSocket(ArchThread thread) {
+void ArchNetworkBSD::unblockPollSocket(ArchThread thread)
+{
   const int *unblockPipe = getUnblockPipeForThread(thread);
   if (unblockPipe != nullptr) {
     char dummy = 0;
@@ -361,7 +381,8 @@ void ArchNetworkBSD::unblockPollSocket(ArchThread thread) {
   }
 }
 
-size_t ArchNetworkBSD::readSocket(ArchSocket s, void *buf, size_t len) {
+size_t ArchNetworkBSD::readSocket(ArchSocket s, void *buf, size_t len)
+{
   assert(s != NULL);
 
   ssize_t n = read(s->m_fd, buf, len);
@@ -374,7 +395,8 @@ size_t ArchNetworkBSD::readSocket(ArchSocket s, void *buf, size_t len) {
   return n;
 }
 
-size_t ArchNetworkBSD::writeSocket(ArchSocket s, const void *buf, size_t len) {
+size_t ArchNetworkBSD::writeSocket(ArchSocket s, const void *buf, size_t len)
+{
   assert(s != NULL);
 
   ssize_t n = write(s->m_fd, buf, len);
@@ -387,15 +409,14 @@ size_t ArchNetworkBSD::writeSocket(ArchSocket s, const void *buf, size_t len) {
   return n;
 }
 
-void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s) {
+void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s)
+{
   assert(s != NULL);
 
   // get the error from the socket layer
   int err = 0;
   auto size = static_cast<socklen_t>(sizeof(err));
-  if (getsockopt(
-          s->m_fd, SOL_SOCKET, SO_ERROR, reinterpret_cast<optval_t *>(&err),
-          &size) == -1) {
+  if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR, reinterpret_cast<optval_t *>(&err), &size) == -1) {
     err = errno;
   }
 
@@ -405,7 +426,8 @@ void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s) {
   }
 }
 
-void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking) {
+void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
+{
   assert(fd != -1);
 
   int mode = fcntl(fd, F_GETFL, 0);
@@ -422,53 +444,48 @@ void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking) {
   }
 }
 
-bool ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay) {
+bool ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay)
+{
   assert(s != NULL);
 
   // get old state
   int oflag;
   auto size = static_cast<socklen_t>(sizeof(oflag));
-  if (getsockopt(
-          s->m_fd, IPPROTO_TCP, TCP_NODELAY,
-          reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
+  if (getsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
     throwError(errno);
   }
 
   int flag = noDelay ? 1 : 0;
   size = static_cast<socklen_t>(sizeof(flag));
-  if (setsockopt(
-          s->m_fd, IPPROTO_TCP, TCP_NODELAY,
-          reinterpret_cast<optval_t *>(&flag), size) == -1) {
+  if (setsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<optval_t *>(&flag), size) == -1) {
     throwError(errno);
   }
 
   return (oflag != 0);
 }
 
-bool ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse) {
+bool ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse)
+{
   assert(s != NULL);
 
   // get old state
   int oflag;
   auto size = static_cast<socklen_t>(sizeof(oflag));
-  if (getsockopt(
-          s->m_fd, SOL_SOCKET, SO_REUSEADDR,
-          reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
+  if (getsockopt(s->m_fd, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<optval_t *>(&oflag), &size) == -1) {
     throwError(errno);
   }
 
   int flag = reuse ? 1 : 0;
   size = static_cast<socklen_t>(sizeof(flag));
-  if (setsockopt(
-          s->m_fd, SOL_SOCKET, SO_REUSEADDR,
-          reinterpret_cast<optval_t *>(&flag), size) == -1) {
+  if (setsockopt(s->m_fd, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<optval_t *>(&flag), size) == -1) {
     throwError(errno);
   }
 
   return (oflag != 0);
 }
 
-std::string ArchNetworkBSD::getHostName() {
+std::string ArchNetworkBSD::getHostName()
+{
   char name[256];
   if (gethostname(name, sizeof(name)) == -1) {
     name[0] = '\0';
@@ -478,7 +495,8 @@ std::string ArchNetworkBSD::getHostName() {
   return name;
 }
 
-ArchNetAddress ArchNetworkBSD::newAnyAddr(EAddressFamily family) {
+ArchNetAddress ArchNetworkBSD::newAnyAddr(EAddressFamily family)
+{
   // allocate address
   auto *addr = new ArchNetAddressImpl;
 
@@ -509,15 +527,16 @@ ArchNetAddress ArchNetworkBSD::newAnyAddr(EAddressFamily family) {
   return addr;
 }
 
-ArchNetAddress ArchNetworkBSD::copyAddr(ArchNetAddress addr) {
+ArchNetAddress ArchNetworkBSD::copyAddr(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   // allocate and copy address
   return new ArchNetAddressImpl(*addr);
 }
 
-std::vector<ArchNetAddress>
-ArchNetworkBSD::nameToAddr(const std::string &name) {
+std::vector<ArchNetAddress> ArchNetworkBSD::nameToAddr(const std::string &name)
+{
   struct addrinfo hints;
   struct in6_addr serveraddr;
 
@@ -553,8 +572,7 @@ ArchNetworkBSD::nameToAddr(const std::string &name) {
       addresses.back()->m_len = (socklen_t)sizeof(struct sockaddr_in6);
     }
 
-    memcpy(
-        &addresses.back()->m_addr, address->ai_addr, addresses.back()->m_len);
+    memcpy(&addresses.back()->m_addr, address->ai_addr, addresses.back()->m_len);
   }
 
   freeaddrinfo(pResult);
@@ -563,22 +581,23 @@ ArchNetworkBSD::nameToAddr(const std::string &name) {
   return addresses;
 }
 
-void ArchNetworkBSD::closeAddr(ArchNetAddress addr) {
+void ArchNetworkBSD::closeAddr(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   delete addr;
 }
 
-std::string ArchNetworkBSD::addrToName(ArchNetAddress addr) {
+std::string ArchNetworkBSD::addrToName(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   // mutexed name lookup (ugh)
   ARCH->lockMutex(m_mutex);
   char host[1024];
   char service[20];
-  int ret = getnameinfo(
-      TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host),
-      service, sizeof(service), 0);
+  int ret =
+      getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host), service, sizeof(service), 0);
   if (ret != 0) {
     ARCH->unlockMutex(m_mutex);
     throwNameError(ret);
@@ -593,7 +612,8 @@ std::string ArchNetworkBSD::addrToName(ArchNetAddress addr) {
   return name;
 }
 
-std::string ArchNetworkBSD::addrToString(ArchNetAddress addr) {
+std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
@@ -620,8 +640,8 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr) {
   }
 }
 
-IArchNetwork::EAddressFamily
-ArchNetworkBSD::getAddrFamily(ArchNetAddress addr) {
+IArchNetwork::EAddressFamily ArchNetworkBSD::getAddrFamily(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (addr->m_addr.ss_family) {
@@ -635,7 +655,8 @@ ArchNetworkBSD::getAddrFamily(ArchNetAddress addr) {
   }
 }
 
-void ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port) {
+void ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
@@ -657,7 +678,8 @@ void ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port) {
   }
 }
 
-int ArchNetworkBSD::getAddrPort(ArchNetAddress addr) {
+int ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
@@ -677,15 +699,14 @@ int ArchNetworkBSD::getAddrPort(ArchNetAddress addr) {
   }
 }
 
-bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr) {
+bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
+{
   assert(addr != NULL);
 
   switch (getAddrFamily(addr)) {
   case kINET: {
     auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
-    return (
-        ipAddr->sin_addr.s_addr == INADDR_ANY &&
-        addr->m_len == static_cast<socklen_t>(sizeof(struct sockaddr_in)));
+    return (ipAddr->sin_addr.s_addr == INADDR_ANY && addr->m_len == static_cast<socklen_t>(sizeof(struct sockaddr_in)));
   }
 
   case kINET6: {
@@ -693,8 +714,9 @@ bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr) {
     return (
         addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&
         memcmp(
-            static_cast<const void *>(&ipAddr->sin6_addr),
-            static_cast<const void *>(&in6addr_any), sizeof(in6_addr)) == 0);
+            static_cast<const void *>(&ipAddr->sin6_addr), static_cast<const void *>(&in6addr_any), sizeof(in6_addr)
+        ) == 0
+    );
   }
 
   default:
@@ -703,12 +725,13 @@ bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr) {
   }
 }
 
-bool ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b) {
-  return (
-      a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
+bool ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
+{
+  return (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
-const int *ArchNetworkBSD::getUnblockPipe() {
+const int *ArchNetworkBSD::getUnblockPipe()
+{
   ArchMultithreadPosix *mt = ArchMultithreadPosix::getInstance();
   ArchThread thread = mt->newCurrentThread();
   const int *p = getUnblockPipeForThread(thread);
@@ -716,7 +739,8 @@ const int *ArchNetworkBSD::getUnblockPipe() {
   return p;
 }
 
-const int *ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread) {
+const int *ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
+{
   ArchMultithreadPosix *mt = ArchMultithreadPosix::getInstance();
   auto *unblockPipe = static_cast<int *>(mt->getNetworkDataForThread(thread));
   if (unblockPipe == nullptr) {
@@ -737,7 +761,8 @@ const int *ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread) {
   return unblockPipe;
 }
 
-void ArchNetworkBSD::throwError(int err) {
+void ArchNetworkBSD::throwError(int err)
+{
   switch (err) {
   case EINTR:
     ARCH->testCancelThread();
@@ -807,13 +832,13 @@ void ArchNetworkBSD::throwError(int err) {
   }
 }
 
-void ArchNetworkBSD::throwNameError(int err) {
+void ArchNetworkBSD::throwNameError(int err)
+{
   static const char *s_msg[] = {
-      "The specified host is unknown",
-      "The requested name is valid but does not have an IP address",
-      "A non-recoverable name server error occurred",
-      "A temporary error occurred on an authoritative name server",
-      "An unknown name server error occurred"};
+      "The specified host is unknown", "The requested name is valid but does not have an IP address",
+      "A non-recoverable name server error occurred", "A temporary error occurred on an authoritative name server",
+      "An unknown name server error occurred"
+  };
 
   switch (err) {
   case HOST_NOT_FOUND:

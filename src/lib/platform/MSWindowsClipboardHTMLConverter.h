@@ -21,8 +21,8 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from HTML encoding
-class MSWindowsClipboardHTMLConverter
-    : public MSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardHTMLConverter : public MSWindowsClipboardAnyTextConverter
+{
 public:
   MSWindowsClipboardHTMLConverter();
   virtual ~MSWindowsClipboardHTMLConverter();

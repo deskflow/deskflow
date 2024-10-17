@@ -33,12 +33,11 @@ class Server;
 class IEventQueue;
 class IDataSocket;
 
-class ClientListener {
+class ClientListener
+{
 public:
   // The factories are adopted.
-  ClientListener(
-      const NetworkAddress &, ISocketFactory *, IEventQueue *events,
-      bool enableCrypto);
+  ClientListener(const NetworkAddress &, ISocketFactory *, IEventQueue *events, bool enableCrypto);
   ClientListener(ClientListener const &) = delete;
   ClientListener(ClientListener &&) = delete;
   ~ClientListener();
@@ -65,7 +64,10 @@ public:
   ClientProxy *getNextClient();
 
   //! Get server which owns this listener
-  Server *getServer() { return m_server; }
+  Server *getServer()
+  {
+    return m_server;
+  }
 
   //! This method restarts the listener
   void restart();

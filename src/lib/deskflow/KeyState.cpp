@@ -634,70 +634,65 @@ static const KeyID s_decomposeTable[] = {
     0, // yen,            y, equal
 
     // end of table
-    0};
+    0
+};
 
 static const KeyID s_numpadTable[] = {
-    kKeyKP_Space,    0x0020,     kKeyKP_Tab,       kKeyTab,
-    kKeyKP_Enter,    kKeyReturn, kKeyKP_F1,        kKeyF1,
-    kKeyKP_F2,       kKeyF2,     kKeyKP_F3,        kKeyF3,
-    kKeyKP_F4,       kKeyF4,     kKeyKP_Home,      kKeyHome,
-    kKeyKP_Left,     kKeyLeft,   kKeyKP_Up,        kKeyUp,
-    kKeyKP_Right,    kKeyRight,  kKeyKP_Down,      kKeyDown,
-    kKeyKP_PageUp,   kKeyPageUp, kKeyKP_PageDown,  kKeyPageDown,
-    kKeyKP_End,      kKeyEnd,    kKeyKP_Begin,     kKeyBegin,
-    kKeyKP_Insert,   kKeyInsert, kKeyKP_Delete,    kKeyDelete,
-    kKeyKP_Equal,    0x003d,     kKeyKP_Multiply,  0x002a,
-    kKeyKP_Add,      0x002b,     kKeyKP_Separator, 0x002c,
-    kKeyKP_Subtract, 0x002d,     kKeyKP_Decimal,   0x002e,
-    kKeyKP_Divide,   0x002f,     kKeyKP_0,         0x0030,
-    kKeyKP_1,        0x0031,     kKeyKP_2,         0x0032,
-    kKeyKP_3,        0x0033,     kKeyKP_4,         0x0034,
-    kKeyKP_5,        0x0035,     kKeyKP_6,         0x0036,
-    kKeyKP_7,        0x0037,     kKeyKP_8,         0x0038,
-    kKeyKP_9,        0x0039};
+    kKeyKP_Space,  0x0020,     kKeyKP_Tab,       kKeyTab,      kKeyKP_Enter,    kKeyReturn, kKeyKP_F1,       kKeyF1,
+    kKeyKP_F2,     kKeyF2,     kKeyKP_F3,        kKeyF3,       kKeyKP_F4,       kKeyF4,     kKeyKP_Home,     kKeyHome,
+    kKeyKP_Left,   kKeyLeft,   kKeyKP_Up,        kKeyUp,       kKeyKP_Right,    kKeyRight,  kKeyKP_Down,     kKeyDown,
+    kKeyKP_PageUp, kKeyPageUp, kKeyKP_PageDown,  kKeyPageDown, kKeyKP_End,      kKeyEnd,    kKeyKP_Begin,    kKeyBegin,
+    kKeyKP_Insert, kKeyInsert, kKeyKP_Delete,    kKeyDelete,   kKeyKP_Equal,    0x003d,     kKeyKP_Multiply, 0x002a,
+    kKeyKP_Add,    0x002b,     kKeyKP_Separator, 0x002c,       kKeyKP_Subtract, 0x002d,     kKeyKP_Decimal,  0x002e,
+    kKeyKP_Divide, 0x002f,     kKeyKP_0,         0x0030,       kKeyKP_1,        0x0031,     kKeyKP_2,        0x0032,
+    kKeyKP_3,      0x0033,     kKeyKP_4,         0x0034,       kKeyKP_5,        0x0035,     kKeyKP_6,        0x0036,
+    kKeyKP_7,      0x0037,     kKeyKP_8,         0x0038,       kKeyKP_9,        0x0039
+};
 
 //
 // KeyState
 //
 
-KeyState::KeyState(
-    IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled)
+KeyState::KeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled)
     : IKeyState(events),
       m_keyMapPtr(new deskflow::KeyMap()),
       m_keyMap(*m_keyMapPtr),
       m_mask(0),
       m_events(events),
-      m_isLangSyncEnabled(isLangSyncEnabled) {
+      m_isLangSyncEnabled(isLangSyncEnabled)
+{
   m_keyMap.setLanguageData(std::move(layouts));
   init();
 }
 
-KeyState::KeyState(
-    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts,
-    bool isLangSyncEnabled)
+KeyState::KeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled)
     : IKeyState(events),
       m_keyMapPtr(0),
       m_keyMap(keyMap),
       m_mask(0),
       m_events(events),
-      m_isLangSyncEnabled(isLangSyncEnabled) {
+      m_isLangSyncEnabled(isLangSyncEnabled)
+{
   m_keyMap.setLanguageData(std::move(layouts));
   init();
 }
 
-KeyState::~KeyState() {
+KeyState::~KeyState()
+{
   if (m_keyMapPtr)
     delete m_keyMapPtr;
 }
 
-void KeyState::init() {
+void KeyState::init()
+{
   memset(&m_keys, 0, sizeof(m_keys));
   memset(&m_syntheticKeys, 0, sizeof(m_syntheticKeys));
   memset(&m_keyClientData, 0, sizeof(m_keyClientData));
   memset(&m_serverKeys, 0, sizeof(m_serverKeys));
 }
 
-void KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState) {
+void KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
+{
   // update modifier state
   m_mask = newState;
   LOG((CLOG_DEBUG1 "new mask: 0x%04x", m_mask));
@@ -719,37 +714,29 @@ void KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState) {
 }
 
 void KeyState::sendKeyEvent(
-    void *target, bool press, bool isAutoRepeat, KeyID key,
-    KeyModifierMask mask, SInt32 count, KeyButton button) {
+    void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button
+)
+{
   if (m_keyMap.isHalfDuplex(key, button)) {
     if (isAutoRepeat) {
       // ignore auto-repeat on half-duplex keys
     } else {
-      m_events->addEvent(Event(
-          m_events->forIKeyState().keyDown(), target,
-          KeyInfo::alloc(key, mask, button, 1)));
-      m_events->addEvent(Event(
-          m_events->forIKeyState().keyUp(), target,
-          KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target, KeyInfo::alloc(key, mask, button, 1)));
     }
   } else {
     if (isAutoRepeat) {
-      m_events->addEvent(Event(
-          m_events->forIKeyState().keyRepeat(), target,
-          KeyInfo::alloc(key, mask, button, count)));
+      m_events->addEvent(Event(m_events->forIKeyState().keyRepeat(), target, KeyInfo::alloc(key, mask, button, count)));
     } else if (press) {
-      m_events->addEvent(Event(
-          m_events->forIKeyState().keyDown(), target,
-          KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target, KeyInfo::alloc(key, mask, button, 1)));
     } else {
-      m_events->addEvent(Event(
-          m_events->forIKeyState().keyUp(), target,
-          KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target, KeyInfo::alloc(key, mask, button, 1)));
     }
   }
 }
 
-void KeyState::updateKeyMap(deskflow::KeyMap *existing) {
+void KeyState::updateKeyMap(deskflow::KeyMap *existing)
+{
   if (existing) {
     m_keyMap.swap(*existing);
   } else {
@@ -766,7 +753,8 @@ void KeyState::updateKeyMap(deskflow::KeyMap *existing) {
   addAliasEntries();
 }
 
-void KeyState::updateKeyState() {
+void KeyState::updateKeyState()
+{
   // reset our state
   memset(&m_keys, 0, sizeof(m_keys));
   memset(&m_syntheticKeys, 0, sizeof(m_syntheticKeys));
@@ -777,8 +765,7 @@ void KeyState::updateKeyState() {
   // get the current keyboard state
   KeyButtonSet keysDown;
   pollPressedKeys(keysDown);
-  for (KeyButtonSet::const_iterator i = keysDown.begin(); i != keysDown.end();
-       ++i) {
+  for (KeyButtonSet::const_iterator i = keysDown.begin(); i != keysDown.end(); ++i) {
     m_keys[*i] = 1;
   }
 
@@ -786,25 +773,22 @@ void KeyState::updateKeyState() {
   m_mask = pollActiveModifiers();
 
   // set active modifiers
-  AddActiveModifierContext addModifierContext(
-      pollActiveGroup(), m_mask, m_activeModifiers);
+  AddActiveModifierContext addModifierContext(pollActiveGroup(), m_mask, m_activeModifiers);
   m_keyMap.foreachKey(&KeyState::addActiveModifierCB, &addModifierContext);
 
   LOG((CLOG_DEBUG1 "modifiers on update: 0x%04x", m_mask));
 }
 
-void KeyState::addActiveModifierCB(
-    KeyID, SInt32 group, deskflow::KeyMap::KeyItem &keyItem, void *vcontext) {
-  AddActiveModifierContext *context =
-      static_cast<AddActiveModifierContext *>(vcontext);
-  if (group == context->m_activeGroup &&
-      (keyItem.m_generates & context->m_mask) != 0) {
-    context->m_activeModifiers.insert(
-        std::make_pair(keyItem.m_generates, keyItem));
+void KeyState::addActiveModifierCB(KeyID, SInt32 group, deskflow::KeyMap::KeyItem &keyItem, void *vcontext)
+{
+  AddActiveModifierContext *context = static_cast<AddActiveModifierContext *>(vcontext);
+  if (group == context->m_activeGroup && (keyItem.m_generates & context->m_mask) != 0) {
+    context->m_activeModifiers.insert(std::make_pair(keyItem.m_generates, keyItem));
   }
 }
 
-void KeyState::setHalfDuplexMask(KeyModifierMask mask) {
+void KeyState::setHalfDuplexMask(KeyModifierMask mask)
+{
   m_keyMap.clearHalfDuplexModifiers();
   if ((mask & KeyModifierCapsLock) != 0) {
     m_keyMap.addHalfDuplexModifier(kKeyCapsLock);
@@ -817,8 +801,8 @@ void KeyState::setHalfDuplexMask(KeyModifierMask mask) {
   }
 }
 
-void KeyState::fakeKeyDown(
-    KeyID id, KeyModifierMask mask, KeyButton serverID, const String &lang) {
+void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const String &lang)
+{
   // if this server key is already down then this is probably a
   // mis-reported autorepeat.
   serverID &= kButtonMask;
@@ -835,16 +819,14 @@ void KeyState::fakeKeyDown(
 
   Keystrokes keys;
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
-  const deskflow::KeyMap::KeyItem *keyItem = m_keyMap.mapKey(
-      keys, id, pollActiveGroup(), m_activeModifiers,
-      getActiveModifiersRValue(), mask, false, lang);
+  const deskflow::KeyMap::KeyItem *keyItem =
+      m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, false, lang);
 
   if (keyItem == nullptr) {
     // a media key won't be mapped on mac, so we need to fake it in a
     // special way
-    if (id == kKeyAudioDown || id == kKeyAudioUp || id == kKeyAudioMute ||
-        id == kKeyAudioPlay || id == kKeyAudioPrev || id == kKeyAudioNext ||
-        id == kKeyBrightnessDown || id == kKeyBrightnessUp) {
+    if (id == kKeyAudioDown || id == kKeyAudioUp || id == kKeyAudioMute || id == kKeyAudioPlay || id == kKeyAudioPrev ||
+        id == kKeyAudioNext || id == kKeyBrightnessDown || id == kKeyBrightnessUp) {
       LOG((CLOG_DEBUG1 "emulating media key"));
       fakeMediaKey(id);
     }
@@ -866,9 +848,8 @@ void KeyState::fakeKeyDown(
   fakeKeys(keys, 1);
 }
 
-bool KeyState::fakeKeyRepeat(
-    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton serverID,
-    const String &lang) {
+bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton serverID, const String &lang)
+{
   LOG((CLOG_DEBUG2 "fakeKeyRepeat"));
   serverID &= kButtonMask;
 
@@ -881,9 +862,8 @@ bool KeyState::fakeKeyRepeat(
   // get keys for key repeat
   Keystrokes keys;
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
-  const deskflow::KeyMap::KeyItem *keyItem = m_keyMap.mapKey(
-      keys, id, pollActiveGroup(), m_activeModifiers,
-      getActiveModifiersRValue(), mask, true, lang);
+  const deskflow::KeyMap::KeyItem *keyItem =
+      m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, true, lang);
   if (keyItem == NULL) {
     return false;
   }
@@ -901,10 +881,8 @@ bool KeyState::fakeKeyRepeat(
   if (localID != oldLocalID) {
     // replace key up with previous KeyButton but leave key down
     // alone so it uses the new KeyButton.
-    for (Keystrokes::iterator index = keys.begin(); index != keys.end();
-         ++index) {
-      if (index->m_type == Keystroke::kButton &&
-          index->m_data.m_button.m_button == localID) {
+    for (Keystrokes::iterator index = keys.begin(); index != keys.end(); ++index) {
+      if (index->m_type == Keystroke::kButton && index->m_data.m_button.m_button == localID) {
         index->m_data.m_button.m_button = oldLocalID;
         break;
       }
@@ -927,7 +905,8 @@ bool KeyState::fakeKeyRepeat(
   return true;
 }
 
-bool KeyState::fakeKeyUp(KeyButton serverID) {
+bool KeyState::fakeKeyUp(KeyButton serverID)
+{
   // if we haven't seen this button go down then ignore it
   KeyButton localID = m_serverKeys[serverID & kButtonMask];
   if (localID == 0) {
@@ -969,7 +948,8 @@ bool KeyState::fakeKeyUp(KeyButton serverID) {
   return true;
 }
 
-void KeyState::fakeAllKeysUp() {
+void KeyState::fakeAllKeysUp()
+{
   Keystrokes keys;
   for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
     if (m_syntheticKeys[i] > 0) {
@@ -984,21 +964,33 @@ void KeyState::fakeAllKeysUp() {
   m_mask = pollActiveModifiers();
 }
 
-bool KeyState::fakeMediaKey(KeyID id) { return false; }
+bool KeyState::fakeMediaKey(KeyID id)
+{
+  return false;
+}
 
-bool KeyState::isKeyDown(KeyButton button) const {
+bool KeyState::isKeyDown(KeyButton button) const
+{
   return (m_keys[button & kButtonMask] > 0);
 }
 
-KeyModifierMask KeyState::getActiveModifiers() const { return m_mask; }
+KeyModifierMask KeyState::getActiveModifiers() const
+{
+  return m_mask;
+}
 
-KeyModifierMask &KeyState::getActiveModifiersRValue() { return m_mask; }
+KeyModifierMask &KeyState::getActiveModifiersRValue()
+{
+  return m_mask;
+}
 
-SInt32 KeyState::getEffectiveGroup(SInt32 group, SInt32 offset) const {
+SInt32 KeyState::getEffectiveGroup(SInt32 group, SInt32 offset) const
+{
   return m_keyMap.getEffectiveGroup(group, offset);
 }
 
-bool KeyState::isIgnoredKey(KeyID key, KeyModifierMask) const {
+bool KeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
+{
   switch (key) {
   case kKeyCapsLock:
   case kKeyNumLock:
@@ -1010,9 +1002,9 @@ bool KeyState::isIgnoredKey(KeyID key, KeyModifierMask) const {
   }
 }
 
-KeyButton KeyState::getButton(KeyID id, SInt32 group) const {
-  const deskflow::KeyMap::KeyItemList *items =
-      m_keyMap.findCompatibleKey(id, group, 0, 0);
+KeyButton KeyState::getButton(KeyID id, SInt32 group) const
+{
+  const deskflow::KeyMap::KeyItemList *items = m_keyMap.findCompatibleKey(id, group, 0, 0);
   if (items == NULL) {
     return 0;
   } else {
@@ -1020,39 +1012,38 @@ KeyButton KeyState::getButton(KeyID id, SInt32 group) const {
   }
 }
 
-void KeyState::addAliasEntries() {
+void KeyState::addAliasEntries()
+{
   for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
     // if we can't shift any kKeyTab key in a particular group but we can
     // shift kKeyLeftTab then add a shifted kKeyTab entry that matches a
     // shifted kKeyLeftTab entry.
     m_keyMap.addKeyAliasEntry(
-        kKeyTab, g, KeyModifierShift, KeyModifierShift, kKeyLeftTab,
-        KeyModifierShift, KeyModifierShift);
+        kKeyTab, g, KeyModifierShift, KeyModifierShift, kKeyLeftTab, KeyModifierShift, KeyModifierShift
+    );
 
     // if we have no kKeyLeftTab but we do have a kKeyTab that can be
     // shifted then add kKeyLeftTab that matches a kKeyTab.
-    m_keyMap.addKeyAliasEntry(
-        kKeyLeftTab, g, KeyModifierShift, KeyModifierShift, kKeyTab, 0,
-        KeyModifierShift);
+    m_keyMap.addKeyAliasEntry(kKeyLeftTab, g, KeyModifierShift, KeyModifierShift, kKeyTab, 0, KeyModifierShift);
 
     // map non-breaking space to space
     m_keyMap.addKeyAliasEntry(0x20, g, 0, 0, 0xa0, 0, 0);
   }
 }
 
-void KeyState::addKeypadEntries() {
+void KeyState::addKeypadEntries()
+{
   // map every numpad key to its equivalent non-numpad key if it's not
   // on the keyboard.
   for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
-    for (size_t i = 0; i < sizeof(s_numpadTable) / sizeof(s_numpadTable[0]);
-         i += 2) {
-      m_keyMap.addKeyCombinationEntry(
-          s_numpadTable[i], g, s_numpadTable + i + 1, 1);
+    for (size_t i = 0; i < sizeof(s_numpadTable) / sizeof(s_numpadTable[0]); i += 2) {
+      m_keyMap.addKeyCombinationEntry(s_numpadTable[i], g, s_numpadTable + i + 1, 1);
     }
   }
 }
 
-void KeyState::addCombinationEntries() {
+void KeyState::addCombinationEntries()
+{
   for (SInt32 g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
     // add dead and compose key composition sequences
     const KeyID *i = s_decomposeTable;
@@ -1074,7 +1065,8 @@ void KeyState::addCombinationEntries() {
   }
 }
 
-void KeyState::fakeKeys(const Keystrokes &keys, UInt32 count) {
+void KeyState::fakeKeys(const Keystrokes &keys, UInt32 count)
+{
   // do nothing if no keys or no repeats
   if (count == 0 || keys.empty()) {
     return;
@@ -1089,18 +1081,14 @@ void KeyState::fakeKeys(const Keystrokes &keys, UInt32 count) {
       Keystrokes::const_iterator start = k;
       while (count-- > 0) {
         // send repeating events
-        for (k = start; k != keys.end() && k->m_type == Keystroke::kButton &&
-                        k->m_data.m_button.m_repeat;
-             ++k) {
+        for (k = start; k != keys.end() && k->m_type == Keystroke::kButton && k->m_data.m_button.m_repeat; ++k) {
           fakeKey(*k);
         }
       }
 
       // note -- k is now on the first non-repeat key after the
       // repeat keys, exactly where we'd like to continue from.
-    } else if (
-        k->m_type != Keystroke::kGroup ||
-        (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
+    } else if (k->m_type != Keystroke::kGroup || (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
       // send event
       fakeKey(*k);
 
@@ -1114,38 +1102,37 @@ void KeyState::fakeKeys(const Keystrokes &keys, UInt32 count) {
 }
 
 void KeyState::updateModifierKeyState(
-    KeyButton button, const ModifierToKeys &oldModifiers,
-    const ModifierToKeys &newModifiers) {
+    KeyButton button, const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers
+)
+{
   // get the pressed modifier buttons before and after
   deskflow::KeyMap::ButtonToKeyMap oldKeys, newKeys;
-  for (ModifierToKeys::const_iterator i = oldModifiers.begin();
-       i != oldModifiers.end(); ++i) {
+  for (ModifierToKeys::const_iterator i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
     oldKeys.insert(std::make_pair(i->second.m_button, &i->second));
   }
-  for (ModifierToKeys::const_iterator i = newModifiers.begin();
-       i != newModifiers.end(); ++i) {
+  for (ModifierToKeys::const_iterator i = newModifiers.begin(); i != newModifiers.end(); ++i) {
     newKeys.insert(std::make_pair(i->second.m_button, &i->second));
   }
 
   // get the modifier buttons that were pressed or released
   deskflow::KeyMap::ButtonToKeyMap pressed, released;
   std::set_difference(
-      oldKeys.begin(), oldKeys.end(), newKeys.begin(), newKeys.end(),
-      std::inserter(released, released.end()), ButtonToKeyLess());
+      oldKeys.begin(), oldKeys.end(), newKeys.begin(), newKeys.end(), std::inserter(released, released.end()),
+      ButtonToKeyLess()
+  );
   std::set_difference(
-      newKeys.begin(), newKeys.end(), oldKeys.begin(), oldKeys.end(),
-      std::inserter(pressed, pressed.end()), ButtonToKeyLess());
+      newKeys.begin(), newKeys.end(), oldKeys.begin(), oldKeys.end(), std::inserter(pressed, pressed.end()),
+      ButtonToKeyLess()
+  );
 
   // update state
-  for (deskflow::KeyMap::ButtonToKeyMap::const_iterator i = released.begin();
-       i != released.end(); ++i) {
+  for (deskflow::KeyMap::ButtonToKeyMap::const_iterator i = released.begin(); i != released.end(); ++i) {
     if (i->first != button) {
       m_keys[i->first] = 0;
       m_syntheticKeys[i->first] = 0;
     }
   }
-  for (deskflow::KeyMap::ButtonToKeyMap::const_iterator i = pressed.begin();
-       i != pressed.end(); ++i) {
+  for (deskflow::KeyMap::ButtonToKeyMap::const_iterator i = pressed.begin(); i != pressed.end(); ++i) {
     if (i->first != button) {
       m_keys[i->first] = 1;
       m_syntheticKeys[i->first] = 1;
@@ -1159,9 +1146,11 @@ void KeyState::updateModifierKeyState(
 //
 
 KeyState::AddActiveModifierContext::AddActiveModifierContext(
-    SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers)
+    SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers
+)
     : m_activeGroup(group),
       m_mask(mask),
-      m_activeModifiers(activeModifiers) {
+      m_activeModifiers(activeModifiers)
+{
   // do nothing
 }

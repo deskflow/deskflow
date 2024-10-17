@@ -30,10 +30,12 @@ XBASE_SUBCLASS(XSocket, XBase);
 /*!
 Thrown when attempting to create an invalid network address.
 */
-class XSocketAddress : public XSocket {
+class XSocketAddress : public XSocket
+{
 public:
   //! Failure codes
-  enum EError {
+  enum EError
+  {
     kUnknown,     //!< Unknown error
     kNotFound,    //!< The hostname is unknown
     kNoAddress,   //!< The hostname is valid but has no IP address
@@ -42,7 +44,9 @@ public:
   };
 
   XSocketAddress(EError, const String &hostname, int port) _NOEXCEPT;
-  virtual ~XSocketAddress() _NOEXCEPT {}
+  virtual ~XSocketAddress() _NOEXCEPT
+  {
+  }
 
   //! @name accessors
   //@{

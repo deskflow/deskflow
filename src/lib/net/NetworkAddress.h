@@ -26,7 +26,8 @@
 /*!
 This class represents a network address.
 */
-class NetworkAddress {
+class NetworkAddress
+{
 public:
   /*!
   Constructs the invalid address

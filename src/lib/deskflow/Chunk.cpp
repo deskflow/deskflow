@@ -18,9 +18,13 @@
 #include "deskflow/Chunk.h"
 #include "base/String.h"
 
-Chunk::Chunk(size_t size) : m_dataSize(0) {
+Chunk::Chunk(size_t size) : m_dataSize(0)
+{
   m_chunk = new char[size];
   memset(m_chunk, 0, size);
 }
 
-Chunk::~Chunk() { delete[] m_chunk; }
+Chunk::~Chunk()
+{
+  delete[] m_chunk;
+}

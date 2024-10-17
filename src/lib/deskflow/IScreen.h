@@ -29,9 +29,11 @@ class IClipboard;
 /*!
 This interface defines the methods common to all screens.
 */
-class IScreen : public IInterface {
+class IScreen : public IInterface
+{
 public:
-  struct ClipboardInfo {
+  struct ClipboardInfo
+  {
   public:
     ClipboardID m_id;
     UInt32 m_sequenceNumber;
@@ -58,8 +60,7 @@ public:
   Return the position of the upper-left corner of the screen in \c x and
   \c y and the size of the screen in \c width and \c height.
   */
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
 
   //! Get cursor position
   /*!

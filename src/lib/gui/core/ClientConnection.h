@@ -30,26 +30,31 @@ class QWidget;
 
 namespace deskflow::gui {
 
-class ClientConnection : public QObject {
+class ClientConnection : public QObject
+{
   Q_OBJECT
 
 public:
-  struct Deps {
+  struct Deps
+  {
     virtual ~Deps() = default;
-    virtual void showError(
-        QWidget *parent, messages::ClientError error,
-        const QString &address) const;
+    virtual void showError(QWidget *parent, messages::ClientError error, const QString &address) const;
   };
 
   explicit ClientConnection(
-      QWidget *parent, IAppConfig &appConfig,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>())
+      QWidget *parent, IAppConfig &appConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>()
+  )
       : m_pParent(parent),
         m_appConfig(appConfig),
-        m_deps(deps) {}
+        m_deps(deps)
+  {
+  }
 
   void handleLogLine(const QString &line);
-  void setShowMessage() { m_showMessage = true; }
+  void setShowMessage()
+  {
+    m_showMessage = true;
+  }
 
 signals:
   void messageShowing();

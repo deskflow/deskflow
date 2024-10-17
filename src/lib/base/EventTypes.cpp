@@ -21,14 +21,20 @@
 #include <assert.h>
 #include <stddef.h>
 
-EventTypes::EventTypes() : m_events(NULL) {}
+EventTypes::EventTypes() : m_events(NULL)
+{
+}
 
-IEventQueue *EventTypes::getEvents() const {
+IEventQueue *EventTypes::getEvents() const
+{
   assert(m_events != NULL);
   return m_events;
 }
 
-void EventTypes::setEvents(IEventQueue *events) { m_events = events; }
+void EventTypes::setEvents(IEventQueue *events)
+{
+  m_events = events;
+}
 
 //
 // Client

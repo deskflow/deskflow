@@ -2,7 +2,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(XBaseTests, what_emptyWhat_returnsWhatFromGetWhat) {
+TEST(XBaseTests, what_emptyWhat_returnsWhatFromGetWhat)
+{
   XBase xbase;
 
   const char *result = xbase.what();
@@ -10,7 +11,8 @@ TEST(XBaseTests, what_emptyWhat_returnsWhatFromGetWhat) {
   EXPECT_STREQ("", result);
 }
 
-TEST(XBaseTests, what_nonEmptyWhat_returnsWhatFromGetWhat) {
+TEST(XBaseTests, what_nonEmptyWhat_returnsWhatFromGetWhat)
+{
   XBase xbase("test");
 
   const char *result = xbase.what();

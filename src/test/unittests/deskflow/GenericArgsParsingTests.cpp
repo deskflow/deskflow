@@ -29,18 +29,29 @@ using ::testing::NiceMock;
 bool g_helpShowed = false;
 bool g_versionShowed = false;
 
-void showMockHelp() { g_helpShowed = true; }
+void showMockHelp()
+{
+  g_helpShowed = true;
+}
 
-void showMockVersion() { g_versionShowed = true; }
+void showMockVersion()
+{
+  g_versionShowed = true;
+}
 
-class GenericArgsParsingTests : public ::testing::Test {
+class GenericArgsParsingTests : public ::testing::Test
+{
 public:
-  void SetUp() {
+  void SetUp()
+  {
     m_argParser = new ArgParser(nullptr);
     m_argParser->setArgsBase(argsBase);
   }
 
-  void TearDown() { delete m_argParser; }
+  void TearDown()
+  {
+    delete m_argParser;
+  }
 
   static deskflow::ArgsBase argsBase;
   ArgParser *m_argParser = nullptr;
@@ -48,7 +59,8 @@ public:
 
 deskflow::ArgsBase GenericArgsParsingTests::argsBase;
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel)
+{
   int i = 1;
   const int argc = 3;
   const char *kLogLevelCmd[argc] = {"stub", "--debug", "DEBUG"};
@@ -60,7 +72,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_logLevelCmd_setLogLevel) {
   EXPECT_EQ(2, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename)
+{
   int i = 1;
   const int argc = 3;
   const char *kLogFileCmd[argc] = {"stub", "--log", "mock_filename"};
@@ -72,9 +85,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_logFileCmd_saveLogFilename) {
   EXPECT_EQ(2, i);
 }
 
-TEST_F(
-    GenericArgsParsingTests,
-    parseGenericArgs_logFileCmdWithSpace_saveLogFilename) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_logFileCmdWithSpace_saveLogFilename)
+{
   int i = 1;
   const int argc = 3;
   const char *kLogFileCmdWithSpace[argc] = {"stub", "--log", "mo ck_filename"};
@@ -86,7 +98,8 @@ TEST_F(
   EXPECT_EQ(2, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse)
+{
   int i = 1;
   const int argc = 2;
   const char *kNoDeamonCmd[argc] = {"stub", "-f"};
@@ -97,7 +110,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_noDeamonCmd_daemonFalse) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *kDeamonCmd[argc] = {"stub", "--daemon"};
@@ -108,7 +122,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_deamonCmd_daemonTrue) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName)
+{
   int i = 1;
   const int argc = 3;
   const char *kNameCmd[argc] = {"stub", "--name", "mock"};
@@ -119,7 +134,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_nameCmd_saveName) {
   EXPECT_EQ(2, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse)
+{
   int i = 1;
   const int argc = 2;
   const char *kNoRestartCmd[argc] = {"stub", "--no-restart"};
@@ -130,7 +146,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_noRestartCmd_restartFalse) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *kRestartCmd[argc] = {"stub", "--restart"};
@@ -141,7 +158,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_restartCmd_restartTrue) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_backendCmd_rejected) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_backendCmd_rejected)
+{
   int i = 1;
   const int argc = 2;
   const char *kBackendCmd[argc] = {"stub", "-z"};
@@ -149,7 +167,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_backendCmd_rejected) {
   EXPECT_FALSE(m_argParser->parseGenericArgs(argc, kBackendCmd, i));
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *kNoHookCmd[argc] = {"stub", "--no-hooks"};
@@ -160,7 +179,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_noHookCmd_noHookTrue) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp)
+{
   g_helpShowed = false;
   int i = 1;
   const int argc = 2;
@@ -177,7 +197,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_helpCmd_showHelp) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
+{
   g_versionShowed = false;
   int i = 1;
   const int argc = 2;
@@ -195,7 +216,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *kNoTrayCmd[argc] = {"stub", "--no-tray"};
@@ -206,7 +228,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue) {
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *kIpcCmd[argc] = {"stub", "--ipc"};
@@ -218,9 +241,8 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue) {
 }
 
 #ifndef WINAPI_XWINDOWS
-TEST_F(
-    GenericArgsParsingTests,
-    parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
+{
   int i = 1;
   const int argc = 2;
   const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
@@ -233,9 +255,8 @@ TEST_F(
 #endif
 
 #ifdef WINAPI_XWINDOWS
-TEST_F(
-    GenericArgsParsingTests,
-    parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse) {
+TEST_F(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse)
+{
   int i = 1;
   const int argc = 2;
   const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};

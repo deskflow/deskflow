@@ -23,40 +23,54 @@
 // XBadClient
 //
 
-String XBadClient::getWhat() const throw() { return "XBadClient"; }
+String XBadClient::getWhat() const throw()
+{
+  return "XBadClient";
+}
 
 //
 // XIncompatibleClient
 //
 
-XIncompatibleClient::XIncompatibleClient(int major, int minor)
-    : m_major(major),
-      m_minor(minor) {
+XIncompatibleClient::XIncompatibleClient(int major, int minor) : m_major(major), m_minor(minor)
+{
   // do nothing
 }
 
-int XIncompatibleClient::getMajor() const throw() { return m_major; }
+int XIncompatibleClient::getMajor() const throw()
+{
+  return m_major;
+}
 
-int XIncompatibleClient::getMinor() const throw() { return m_minor; }
+int XIncompatibleClient::getMinor() const throw()
+{
+  return m_minor;
+}
 
-String XIncompatibleClient::getWhat() const throw() {
+String XIncompatibleClient::getWhat() const throw()
+{
   return format(
-      "XIncompatibleClient", "incompatible client %{1}.%{2}",
-      deskflow::string::sprintf("%d", m_major).c_str(),
-      deskflow::string::sprintf("%d", m_minor).c_str());
+      "XIncompatibleClient", "incompatible client %{1}.%{2}", deskflow::string::sprintf("%d", m_major).c_str(),
+      deskflow::string::sprintf("%d", m_minor).c_str()
+  );
 }
 
 //
 // XDuplicateClient
 //
 
-XDuplicateClient::XDuplicateClient(const String &name) : m_name(name) {
+XDuplicateClient::XDuplicateClient(const String &name) : m_name(name)
+{
   // do nothing
 }
 
-const String &XDuplicateClient::getName() const throw() { return m_name; }
+const String &XDuplicateClient::getName() const throw()
+{
+  return m_name;
+}
 
-String XDuplicateClient::getWhat() const throw() {
+String XDuplicateClient::getWhat() const throw()
+{
   return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
 }
 
@@ -64,13 +78,18 @@ String XDuplicateClient::getWhat() const throw() {
 // XUnknownClient
 //
 
-XUnknownClient::XUnknownClient(const String &name) : m_name(name) {
+XUnknownClient::XUnknownClient(const String &name) : m_name(name)
+{
   // do nothing
 }
 
-const String &XUnknownClient::getName() const throw() { return m_name; }
+const String &XUnknownClient::getName() const throw()
+{
+  return m_name;
+}
 
-String XUnknownClient::getWhat() const throw() {
+String XUnknownClient::getWhat() const throw()
+{
   return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }
 
@@ -78,14 +97,17 @@ String XUnknownClient::getWhat() const throw() {
 // XExitApp
 //
 
-XExitApp::XExitApp(int code) : m_code(code) {
+XExitApp::XExitApp(int code) : m_code(code)
+{
   // do nothing
 }
 
-int XExitApp::getCode() const throw() { return m_code; }
+int XExitApp::getCode() const throw()
+{
+  return m_code;
+}
 
-String XExitApp::getWhat() const throw() {
-  return format(
-      "XExitApp", "exiting with code %{1}",
-      deskflow::string::sprintf("%d", m_code).c_str());
+String XExitApp::getWhat() const throw()
+{
+  return format("XExitApp", "exiting with code %{1}", deskflow::string::sprintf("%d", m_code).c_str());
 }

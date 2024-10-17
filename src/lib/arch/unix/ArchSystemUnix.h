@@ -23,7 +23,8 @@
 #define ARCH_SYSTEM ArchSystemUnix
 
 //! Unix implementation of IArchString
-class ArchSystemUnix : public IArchSystem {
+class ArchSystemUnix : public IArchSystem
+{
 public:
   ArchSystemUnix();
   virtual ~ArchSystemUnix();
@@ -36,8 +37,11 @@ public:
   virtual std::string getLibsUsed(void) const;
 
 #ifndef __APPLE__
-  enum class InhibitScreenServices { kScreenSaver, kSessionManager };
-  static bool DBusInhibitScreenCall(
-      InhibitScreenServices serviceID, bool state, std::string &error);
+  enum class InhibitScreenServices
+  {
+    kScreenSaver,
+    kSessionManager
+  };
+  static bool DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error);
 #endif
 };

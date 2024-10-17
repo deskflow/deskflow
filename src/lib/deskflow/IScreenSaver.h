@@ -25,7 +25,8 @@
 /*!
 This interface defines the methods common to all screen savers.
 */
-class IScreenSaver : public IInterface {
+class IScreenSaver : public IInterface
+{
 public:
   // note -- the c'tor/d'tor must *not* enable/disable the screen saver
 

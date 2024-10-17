@@ -21,7 +21,8 @@
 
 using namespace deskflow::gui;
 
-TEST(byte_utils_tests, bytesToInt_size4) {
+TEST(byte_utils_tests, bytesToInt_size4)
+{
   char buffer[4] = {0x01, 0x02, 0x03, 0x04};
 
   const auto i = bytesToInt(buffer, 4);
@@ -29,7 +30,8 @@ TEST(byte_utils_tests, bytesToInt_size4) {
   EXPECT_EQ(i, 0x01020304);
 }
 
-TEST(byte_utils_tests, intToBytes_size4) {
+TEST(byte_utils_tests, intToBytes_size4)
+{
   QByteArray bytes = intToBytes(0x01020304);
 
   EXPECT_EQ(bytes.size(), 4);

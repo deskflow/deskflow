@@ -32,7 +32,8 @@ class MSWindowsWatchdog;
 
 extern const char *const kLogFilename;
 
-class DaemonApp {
+class DaemonApp
+{
 
 public:
   DaemonApp();

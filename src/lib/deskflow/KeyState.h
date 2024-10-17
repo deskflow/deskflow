@@ -26,13 +26,11 @@
 This class provides key state services.  Subclasses must implement a few
 platform specific methods.
 */
-class KeyState : public IKeyState {
+class KeyState : public IKeyState
+{
 public:
-  KeyState(
-      IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
-  KeyState(
-      IEventQueue *events, deskflow::KeyMap &keyMap,
-      std::vector<String> layouts, bool isLangSyncEnabled);
+  KeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
+  KeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled);
   virtual ~KeyState();
 
   //! @name manipulators
@@ -54,8 +52,8 @@ public:
   to the superclass.
   */
   virtual void sendKeyEvent(
-      void *target, bool press, bool isAutoRepeat, KeyID key,
-      KeyModifierMask mask, SInt32 count, KeyButton button);
+      void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button
+  );
 
   //@}
   //! @name accessors
@@ -65,15 +63,14 @@ public:
 
   void updateKeyMap(deskflow::KeyMap *existing);
   // IKeyState overrides
-  void updateKeyMap() override { this->updateKeyMap(nullptr); }
+  void updateKeyMap() override
+  {
+    this->updateKeyMap(nullptr);
+  }
   void updateKeyState() override;
   void setHalfDuplexMask(KeyModifierMask) override;
-  void fakeKeyDown(
-      KeyID id, KeyModifierMask mask, KeyButton button,
-      const String &lang) override;
-  bool fakeKeyRepeat(
-      KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
-      const String &lang) override;
+  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) override;
+  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang) override;
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
   bool fakeMediaKey(KeyID id) override;
@@ -86,7 +83,10 @@ public:
   virtual SInt32 pollActiveGroup() const override = 0;
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
 
-  SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
+  SInt32 getKeyState(KeyButton keyButton)
+  {
+    return m_keys[keyButton];
+  }
 
 protected:
   typedef deskflow::KeyMap::Keystroke Keystroke;
@@ -144,10 +144,10 @@ private:
   typedef deskflow::KeyMap::ModifierToKeys ModifierToKeys;
 
 public:
-  struct AddActiveModifierContext {
+  struct AddActiveModifierContext
+  {
   public:
-    AddActiveModifierContext(
-        SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers);
+    AddActiveModifierContext(SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers);
 
   public:
     SInt32 m_activeGroup;
@@ -161,11 +161,13 @@ public:
   };
 
 private:
-  class ButtonToKeyLess {
+  class ButtonToKeyLess
+  {
   public:
     bool operator()(
-        const deskflow::KeyMap::ButtonToKeyMap::value_type &a,
-        const deskflow::KeyMap::ButtonToKeyMap::value_type b) const {
+        const deskflow::KeyMap::ButtonToKeyMap::value_type &a, const deskflow::KeyMap::ButtonToKeyMap::value_type b
+    ) const
+    {
       return (a.first < b.first);
     }
   };
@@ -192,14 +194,10 @@ private:
   void fakeKeys(const Keystrokes &, UInt32 count);
 
   // update key state to match changes to modifiers
-  void updateModifierKeyState(
-      KeyButton button, const ModifierToKeys &oldModifiers,
-      const ModifierToKeys &newModifiers);
+  void updateModifierKeyState(KeyButton button, const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers);
 
   // active modifiers collection callback
-  static void addActiveModifierCB(
-      KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &keyItem,
-      void *vcontext);
+  static void addActiveModifierCB(KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &keyItem, void *vcontext);
 
 private:
   // must be declared before m_keyMap. used when this class owns the key map.

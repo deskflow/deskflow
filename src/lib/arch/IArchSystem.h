@@ -25,7 +25,8 @@
 /*!
 This interface defines operations for querying system info.
 */
-class IArchSystem : public IInterface {
+class IArchSystem : public IInterface
+{
 public:
   //! @name accessors
   //@{
@@ -54,7 +55,6 @@ public:
   /*!
   Writes a Deskflow setting from the system.
   */
-  virtual void setting(
-      const std::string &valueName, const std::string &valueString) const = 0;
+  virtual void setting(const std::string &valueName, const std::string &valueString) const = 0;
   //@}
 };

@@ -24,9 +24,12 @@
 
 class IEventQueue;
 
-class MockStream : public deskflow::IStream {
+class MockStream : public deskflow::IStream
+{
 public:
-  MockStream() {}
+  MockStream()
+  {
+  }
   MOCK_METHOD(void, close, (), (override));
   MOCK_METHOD(UInt32, read, (void *, UInt32), (override));
   MOCK_METHOD(void, write, (const void *, UInt32), (override));

@@ -31,22 +31,24 @@ using namespace testing;
 
 namespace {
 
-class QProcessProxyMock : public proxy::QProcessProxy {
+class QProcessProxyMock : public proxy::QProcessProxy
+{
 public:
-  operator bool() const override { return toBool(); }
+  operator bool() const override
+  {
+    return toBool();
+  }
 
-  QProcessProxyMock() {
+  QProcessProxyMock()
+  {
     ON_CALL(*this, toBool()).WillByDefault(Return(true));
-    ON_CALL(*this, state())
-        .WillByDefault(Return(QProcess::ProcessState::Running));
+    ON_CALL(*this, state()).WillByDefault(Return(QProcess::ProcessState::Running));
     ON_CALL(*this, waitForStarted()).WillByDefault(Return(true));
   }
 
   MOCK_METHOD(bool, toBool, (), (const));
   MOCK_METHOD(void, create, (), (override));
-  MOCK_METHOD(
-      void, start, (const QString &program, const QStringList &arguments),
-      (override));
+  MOCK_METHOD(void, start, (const QString &program, const QStringList &arguments), (override));
   MOCK_METHOD(bool, waitForStarted, (), (override));
   MOCK_METHOD(QProcess::ProcessState, state, (), (const, override));
   MOCK_METHOD(void, close, (), (override));
@@ -54,24 +56,26 @@ public:
   MOCK_METHOD(QString, readAllStandardError, (), (override));
 };
 
-class QIpcClientMock : public ipc::IQIpcClient {
+class QIpcClientMock : public ipc::IQIpcClient
+{
 public:
-  QIpcClientMock() {
+  QIpcClientMock()
+  {
     ON_CALL(*this, isConnected()).WillByDefault(Return(true));
   }
 
   MOCK_METHOD(void, sendHello, (), (const, override));
-  MOCK_METHOD(
-      void, sendCommand, (const QString &command, ElevateMode elevate),
-      (const, override));
+  MOCK_METHOD(void, sendCommand, (const QString &command, ElevateMode elevate), (const, override));
   MOCK_METHOD(void, connectToHost, (), (override));
   MOCK_METHOD(void, disconnectFromHost, (), (override));
   MOCK_METHOD(bool, isConnected, (), (const, override));
 };
 
-class DepsMock : public CoreProcess::Deps {
+class DepsMock : public CoreProcess::Deps
+{
 public:
-  DepsMock() {
+  DepsMock()
+  {
     ON_CALL(*this, process()).WillByDefault(ReturnRef(m_process));
     ON_CALL(*this, ipcClient()).WillByDefault(ReturnRef(m_ipcClient));
     ON_CALL(*this, appPath(_)).WillByDefault(Return("stub app path"));
@@ -89,20 +93,23 @@ public:
   NiceMock<QIpcClientMock> m_ipcClient;
 };
 
-class CoreProcessTests : public Test {
+class CoreProcessTests : public Test
+{
 public:
-  CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps) {}
+  CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps)
+  {
+  }
 
   NiceMock<AppConfigMock> m_appConfig;
   NiceMock<ServerConfigMock> m_serverConfig;
-  std::shared_ptr<NiceMock<DepsMock>> m_pDeps =
-      std::make_shared<NiceMock<DepsMock>>();
+  std::shared_ptr<NiceMock<DepsMock>> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;
 };
 
 } // namespace
 
-TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart) {
+TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Server);
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
@@ -110,7 +117,8 @@ TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart) {
   m_coreProcess.start(ProcessMode::kDesktop);
 }
 
-TEST_F(CoreProcessTests, start_serverService_callsSendCommand) {
+TEST_F(CoreProcessTests, start_serverService_callsSendCommand)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Server);
 
   EXPECT_CALL(m_pDeps->m_ipcClient, sendCommand(_, _)).Times(1);
@@ -118,7 +126,8 @@ TEST_F(CoreProcessTests, start_serverService_callsSendCommand) {
   m_coreProcess.start(ProcessMode::kService);
 }
 
-TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart) {
+TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Client);
   m_coreProcess.setAddress("stub address");
 
@@ -127,7 +136,8 @@ TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart) {
   m_coreProcess.start(ProcessMode::kDesktop);
 }
 
-TEST_F(CoreProcessTests, start_clientService_callsSendCommand) {
+TEST_F(CoreProcessTests, start_clientService_callsSendCommand)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Client);
   m_coreProcess.setAddress("stub address");
 
@@ -136,7 +146,8 @@ TEST_F(CoreProcessTests, start_clientService_callsSendCommand) {
   m_coreProcess.start(ProcessMode::kService);
 }
 
-TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose) {
+TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Server);
   m_coreProcess.start();
 
@@ -145,7 +156,8 @@ TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose) {
   m_coreProcess.stop(ProcessMode::kDesktop);
 }
 
-TEST_F(CoreProcessTests, stop_serverService_callsSendCommand) {
+TEST_F(CoreProcessTests, stop_serverService_callsSendCommand)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Server);
   m_coreProcess.start();
 
@@ -154,7 +166,8 @@ TEST_F(CoreProcessTests, stop_serverService_callsSendCommand) {
   m_coreProcess.stop(ProcessMode::kService);
 }
 
-TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose) {
+TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Client);
   m_coreProcess.setAddress("stub address");
   m_coreProcess.start();
@@ -164,7 +177,8 @@ TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose) {
   m_coreProcess.stop(ProcessMode::kDesktop);
 }
 
-TEST_F(CoreProcessTests, stop_clientService_callsSendCommand) {
+TEST_F(CoreProcessTests, stop_clientService_callsSendCommand)
+{
   m_coreProcess.setMode(CoreProcess::Mode::Client);
   m_coreProcess.setAddress("stub address");
   m_coreProcess.start();
@@ -174,9 +188,9 @@ TEST_F(CoreProcessTests, stop_clientService_callsSendCommand) {
   m_coreProcess.stop(ProcessMode::kService);
 }
 
-TEST_F(CoreProcessTests, restart_serverDesktop_callsProcessStart) {
-  ON_CALL(m_appConfig, processMode())
-      .WillByDefault(Return(ProcessMode::kDesktop));
+TEST_F(CoreProcessTests, restart_serverDesktop_callsProcessStart)
+{
+  ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
   m_coreProcess.setMode(CoreProcess::Mode::Server);
   m_coreProcess.start();
 

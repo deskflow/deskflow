@@ -27,15 +27,18 @@ const bool kDebug = true;
 
 namespace deskflow::gui {
 
-class Logger : public QObject {
+class Logger : public QObject
+{
   Q_OBJECT
 
 public:
-  static Logger &instance() { return s_instance; }
+  static Logger &instance()
+  {
+    return s_instance;
+  }
 
   void loadEnvVars();
-  void handleMessage(
-      const QtMsgType type, const QString &fileLine, const QString &message);
+  void handleMessage(const QtMsgType type, const QString &fileLine, const QString &message);
   void logVerbose(const QString &message) const;
 
 signals:
@@ -47,7 +50,8 @@ private:
   bool m_verbose = false;
 };
 
-inline void logVerbose(const QString &message) {
+inline void logVerbose(const QString &message)
+{
   Logger::instance().logVerbose(message);
 }
 

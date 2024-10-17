@@ -22,15 +22,17 @@
 
 namespace deskflow::gui::proxy {
 
-void QNetworkAccessManagerProxy::init() {
+void QNetworkAccessManagerProxy::init()
+{
   m_network = std::make_shared<QNetworkAccessManager>();
 
-  connect(
-      m_network.get(), &QNetworkAccessManager::finished, this,
-      [this](QNetworkReply *reply) { emit finished(reply); });
+  connect(m_network.get(), &QNetworkAccessManager::finished, this, [this](QNetworkReply *reply) {
+    emit finished(reply);
+  });
 }
 
-void QNetworkAccessManagerProxy::get(const QNetworkRequest &request) const {
+void QNetworkAccessManagerProxy::get(const QNetworkRequest &request) const
+{
   m_network->get(request);
 }
 

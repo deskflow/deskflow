@@ -23,8 +23,8 @@
 // IClipboard
 //
 
-void IClipboard::unmarshall(
-    IClipboard *clipboard, const String &data, Time time) {
+void IClipboard::unmarshall(IClipboard *clipboard, const String &data, Time time)
+{
   assert(clipboard != NULL);
 
   const char *index = data.data();
@@ -40,8 +40,7 @@ void IClipboard::unmarshall(
     // read each format
     for (UInt32 i = 0; i < numFormats; ++i) {
       // get the format id
-      IClipboard::EFormat format =
-          static_cast<IClipboard::EFormat>(readUInt32(index));
+      IClipboard::EFormat format = static_cast<IClipboard::EFormat>(readUInt32(index));
       index += 4;
 
       // get the size of the format data
@@ -62,7 +61,8 @@ void IClipboard::unmarshall(
   }
 }
 
-String IClipboard::marshall(const IClipboard *clipboard) {
+String IClipboard::marshall(const IClipboard *clipboard)
+{
   // return data format:
   // 4 bytes => number of formats included
   // 4 bytes => format enum
@@ -85,8 +85,7 @@ String IClipboard::marshall(const IClipboard *clipboard) {
     for (UInt32 format = 0; format != IClipboard::kNumFormats; ++format) {
       if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
         ++numFormats;
-        formatData[format] =
-            clipboard->get(static_cast<IClipboard::EFormat>(format));
+        formatData[format] = clipboard->get(static_cast<IClipboard::EFormat>(format));
         size += 4 + 4 + (UInt32)formatData[format].size();
       }
     }
@@ -109,14 +108,16 @@ String IClipboard::marshall(const IClipboard *clipboard) {
   return data;
 }
 
-bool IClipboard::copy(IClipboard *dst, const IClipboard *src) {
+bool IClipboard::copy(IClipboard *dst, const IClipboard *src)
+{
   assert(dst != NULL);
   assert(src != NULL);
 
   return copy(dst, src, src->getTime());
 }
 
-bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time) {
+bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time)
+{
   assert(dst != NULL);
   assert(src != NULL);
 
@@ -140,14 +141,15 @@ bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time) {
   return success;
 }
 
-UInt32 IClipboard::readUInt32(const char *buf) {
+UInt32 IClipboard::readUInt32(const char *buf)
+{
   const unsigned char *ubuf = reinterpret_cast<const unsigned char *>(buf);
-  return (static_cast<UInt32>(ubuf[0]) << 24) |
-         (static_cast<UInt32>(ubuf[1]) << 16) |
+  return (static_cast<UInt32>(ubuf[0]) << 24) | (static_cast<UInt32>(ubuf[1]) << 16) |
          (static_cast<UInt32>(ubuf[2]) << 8) | static_cast<UInt32>(ubuf[3]);
 }
 
-void IClipboard::writeUInt32(String *buf, UInt32 v) {
+void IClipboard::writeUInt32(String *buf, UInt32 v)
+{
   *buf += static_cast<UInt8>((v >> 24) & 0xff);
   *buf += static_cast<UInt8>((v >> 16) & 0xff);
   *buf += static_cast<UInt8>((v >> 8) & 0xff);

@@ -34,7 +34,8 @@
 namespace deskflow {
 namespace string {
 
-String format(const char *fmt, ...) {
+String format(const char *fmt, ...)
+{
   va_list args;
   va_start(args, fmt);
   String result = vformat(fmt, args);
@@ -42,7 +43,8 @@ String format(const char *fmt, ...) {
   return result;
 }
 
-String vformat(const char *fmt, va_list args) {
+String vformat(const char *fmt, va_list args)
+{
   // find highest indexed substitution and the locations of substitutions
   std::vector<size_t> pos;
   std::vector<size_t> width;
@@ -119,7 +121,8 @@ String vformat(const char *fmt, va_list args) {
   return result;
 }
 
-String sprintf(const char *fmt, ...) {
+String sprintf(const char *fmt, ...)
+{
   char tmp[1024];
   char *buffer = tmp;
   int len = (int)(sizeof(tmp) / sizeof(tmp[0]));
@@ -153,8 +156,8 @@ String sprintf(const char *fmt, ...) {
   return result;
 }
 
-void findReplaceAll(
-    String &subject, const String &find, const String &replace) {
+void findReplaceAll(String &subject, const String &find, const String &replace)
+{
   size_t pos = 0;
   while ((pos = subject.find(find, pos)) != String::npos) {
     subject.replace(pos, find.length(), replace);
@@ -162,7 +165,8 @@ void findReplaceAll(
   }
 }
 
-String removeFileExt(String filename) {
+String removeFileExt(String filename)
+{
   size_t dot = filename.find_last_of('.');
 
   if (dot == String::npos) {
@@ -172,39 +176,44 @@ String removeFileExt(String filename) {
   return filename.substr(0, dot);
 }
 
-void toHex(String &subject, int width, const char fill) {
+void toHex(String &subject, int width, const char fill)
+{
   std::stringstream ss;
   ss << std::hex;
   for (unsigned int i = 0; i < subject.length(); i++) {
-    ss << std::setw(width) << std::setfill(fill)
-       << (int)(unsigned char)subject[i];
+    ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
   }
 
   subject = ss.str();
 }
 
-void uppercase(String &subject) {
+void uppercase(String &subject)
+{
   std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
-void removeChar(String &subject, const char c) {
+void removeChar(String &subject, const char c)
+{
   subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
 
-String sizeTypeToString(size_t n) {
+String sizeTypeToString(size_t n)
+{
   std::stringstream ss;
   ss << n;
   return ss.str();
 }
 
-size_t stringToSizeType(String string) {
+size_t stringToSizeType(String string)
+{
   std::istringstream iss(string);
   size_t value;
   iss >> value;
   return value;
 }
 
-std::vector<String> splitString(String string, const char c) {
+std::vector<String> splitString(String string, const char c)
+{
   std::vector<String> results;
 
   size_t head = 0;
@@ -228,29 +237,30 @@ std::vector<String> splitString(String string, const char c) {
 // CaselessCmp
 //
 
-bool CaselessCmp::cmpEqual(
-    const String::value_type &a, const String::value_type &b) {
+bool CaselessCmp::cmpEqual(const String::value_type &a, const String::value_type &b)
+{
   // should use std::tolower but not in all versions of libstdc++ have it
   return tolower(a) == tolower(b);
 }
 
-bool CaselessCmp::cmpLess(
-    const String::value_type &a, const String::value_type &b) {
+bool CaselessCmp::cmpLess(const String::value_type &a, const String::value_type &b)
+{
   // should use std::tolower but not in all versions of libstdc++ have it
   return tolower(a) < tolower(b);
 }
 
-bool CaselessCmp::less(const String &a, const String &b) {
-  return std::lexicographical_compare(
-      a.begin(), a.end(), b.begin(), b.end(),
-      &deskflow::string::CaselessCmp::cmpLess);
+bool CaselessCmp::less(const String &a, const String &b)
+{
+  return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), &deskflow::string::CaselessCmp::cmpLess);
 }
 
-bool CaselessCmp::equal(const String &a, const String &b) {
+bool CaselessCmp::equal(const String &a, const String &b)
+{
   return !(less(a, b) || less(b, a));
 }
 
-bool CaselessCmp::operator()(const String &a, const String &b) const {
+bool CaselessCmp::operator()(const String &a, const String &b) const
+{
   return less(a, b);
 }
 

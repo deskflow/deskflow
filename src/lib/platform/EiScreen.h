@@ -42,7 +42,8 @@ class PortalInputCapture;
 #endif
 
 //! Implementation of IPlatformScreen for X11
-class EiScreen : public PlatformScreen {
+class EiScreen : public PlatformScreen
+{
 public:
   EiScreen(bool is_primary, IEventQueue *events, bool use_portal);
   ~EiScreen();
@@ -50,9 +51,7 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void getShape(
-      std::int32_t &x, std::int32_t &y, std::int32_t &width,
-      std::int32_t &height) const override;
+  void getShape(std::int32_t &x, std::int32_t &y, std::int32_t &width, std::int32_t &height) const override;
   void getCursorPos(std::int32_t &x, std::int32_t &y) const override;
 
   // IPrimaryScreen overrides
@@ -107,23 +106,18 @@ private:
   ButtonID map_button_from_evdev(ei_event *event) const;
   void on_key_event(ei_event *event);
   void on_button_event(ei_event *event);
-  void send_wheel_events(
-      ei_device *device, const int threshold, double dx, double dy,
-      bool is_discrete);
+  void send_wheel_events(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
   void on_pointer_scroll_event(ei_event *event);
   void on_pointer_scroll_discrete_event(ei_event *event);
   void on_motion_event(ei_event *event);
   void on_abs_motion_event(ei_event *event);
   bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
-  void handle_ei_log_event(
-      ei *ei, ei_log_priority priority, const char *message,
-      ei_log_context *context);
+  void handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context);
   void handle_connected_to_eis_event(const Event &event, void *);
   void handle_portal_session_closed(const Event &event, void *);
 
-  static void cb_handle_ei_log_event(
-      ei *ei, ei_log_priority priority, const char *message,
-      ei_log_context *context) {
+  static void cb_handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
+  {
     auto screen = reinterpret_cast<EiScreen *>(ei_get_user_data(ei));
     screen->handle_ei_log_event(ei, priority, message, context);
   }
@@ -169,10 +163,12 @@ private:
   PortalInputCapture *portal_input_capture_ = nullptr;
 #endif
 
-  struct HotKeyItem {
+  struct HotKeyItem
+  {
   public:
     HotKeyItem(std::uint32_t mask, std::uint32_t id);
-    bool operator<(const HotKeyItem &other) const {
+    bool operator<(const HotKeyItem &other) const
+    {
       return mask_ < other.mask_;
     };
 
@@ -181,10 +177,14 @@ private:
     std::uint32_t id_ = 0; // for registering the hotkey
   };
 
-  class HotKeySet {
+  class HotKeySet
+  {
   public:
     HotKeySet(KeyID keyid);
-    KeyID keyid() const { return id_; };
+    KeyID keyid() const
+    {
+      return id_;
+    };
     bool remove_by_id(std::uint32_t id);
     void add_item(HotKeyItem item);
     std::uint32_t find_by_mask(std::uint32_t mask) const;

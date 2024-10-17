@@ -34,8 +34,7 @@
 
 static const TCHAR *g_isSecureNT = "ScreenSaverIsSecure";
 static const TCHAR *g_isSecure9x = "ScreenSaveUsePassword";
-static const TCHAR *const g_pathScreenSaverIsSecure[] = {
-    "Control Panel", "Desktop", NULL};
+static const TCHAR *const g_pathScreenSaverIsSecure[] = {"Control Panel", "Desktop", NULL};
 
 //
 // MSWindowsScreenSaver
@@ -50,15 +49,19 @@ MSWindowsScreenSaver::MSWindowsScreenSaver()
       m_msg(0),
       m_wParam(0),
       m_lParam(0),
-      m_active(false) {
+      m_active(false)
+{
   // check if screen saver is enabled
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
 }
 
-MSWindowsScreenSaver::~MSWindowsScreenSaver() { unwatchProcess(); }
+MSWindowsScreenSaver::~MSWindowsScreenSaver()
+{
+  unwatchProcess();
+}
 
-bool MSWindowsScreenSaver::checkStarted(
-    UINT msg, WPARAM wParam, LPARAM lParam) {
+bool MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
+{
   // if already started then say it didn't just start
   if (m_active) {
     return false;
@@ -96,7 +99,8 @@ bool MSWindowsScreenSaver::checkStarted(
   return true;
 }
 
-void MSWindowsScreenSaver::enable() {
+void MSWindowsScreenSaver::enable()
+{
   SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, 0);
 
   // restore password protection
@@ -105,7 +109,8 @@ void MSWindowsScreenSaver::enable() {
   }
 }
 
-void MSWindowsScreenSaver::disable() {
+void MSWindowsScreenSaver::disable()
+{
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
   SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, 0, 0);
 
@@ -116,7 +121,8 @@ void MSWindowsScreenSaver::disable() {
   }
 }
 
-void MSWindowsScreenSaver::activate() {
+void MSWindowsScreenSaver::activate()
+{
   // don't activate if already active
   if (!isActive()) {
     // activate
@@ -130,16 +136,14 @@ void MSWindowsScreenSaver::activate() {
   }
 }
 
-void MSWindowsScreenSaver::deactivate() {
+void MSWindowsScreenSaver::deactivate()
+{
   bool killed = false;
 
   // NT runs screen saver in another desktop
-  HDESK desktop = OpenDesktop(
-      "Screen-saver", 0, FALSE, DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
+  HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE, DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
   if (desktop != NULL) {
-    EnumDesktopWindows(
-        desktop, &MSWindowsScreenSaver::killScreenSaverFunc,
-        reinterpret_cast<LPARAM>(&killed));
+    EnumDesktopWindows(desktop, &MSWindowsScreenSaver::killScreenSaverFunc, reinterpret_cast<LPARAM>(&killed));
     CloseDesktop(desktop);
   }
 
@@ -158,19 +162,19 @@ void MSWindowsScreenSaver::deactivate() {
 
   // force timer to restart
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
-  SystemParametersInfo(
-      SPI_SETSCREENSAVEACTIVE, !m_wasEnabled, 0, SPIF_SENDWININICHANGE);
-  SystemParametersInfo(
-      SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, SPIF_SENDWININICHANGE);
+  SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, !m_wasEnabled, 0, SPIF_SENDWININICHANGE);
+  SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, SPIF_SENDWININICHANGE);
 }
 
-bool MSWindowsScreenSaver::isActive() const {
+bool MSWindowsScreenSaver::isActive() const
+{
   BOOL running;
   SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);
   return (running != FALSE);
 }
 
-BOOL CALLBACK MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg) {
+BOOL CALLBACK MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
+{
   if (IsWindowVisible(hwnd)) {
     HINSTANCE instance = (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
     if (instance != MSWindowsScreen::getWindowInstance()) {
@@ -181,18 +185,19 @@ BOOL CALLBACK MSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg) {
   return TRUE;
 }
 
-void MSWindowsScreenSaver::watchDesktop() {
+void MSWindowsScreenSaver::watchDesktop()
+{
   // stop watching previous process/desktop
   unwatchProcess();
 
   // watch desktop in another thread
   LOG((CLOG_DEBUG "watching screen saver desktop"));
   m_active = true;
-  m_watch = new Thread(new TMethodJob<MSWindowsScreenSaver>(
-      this, &MSWindowsScreenSaver::watchDesktopThread));
+  m_watch = new Thread(new TMethodJob<MSWindowsScreenSaver>(this, &MSWindowsScreenSaver::watchDesktopThread));
 }
 
-void MSWindowsScreenSaver::watchProcess(HANDLE process) {
+void MSWindowsScreenSaver::watchProcess(HANDLE process)
+{
   // stop watching previous process/desktop
   unwatchProcess();
 
@@ -201,12 +206,12 @@ void MSWindowsScreenSaver::watchProcess(HANDLE process) {
     LOG((CLOG_DEBUG "watching screen saver process"));
     m_process = process;
     m_active = true;
-    m_watch = new Thread(new TMethodJob<MSWindowsScreenSaver>(
-        this, &MSWindowsScreenSaver::watchProcessThread));
+    m_watch = new Thread(new TMethodJob<MSWindowsScreenSaver>(this, &MSWindowsScreenSaver::watchProcessThread));
   }
 }
 
-void MSWindowsScreenSaver::unwatchProcess() {
+void MSWindowsScreenSaver::unwatchProcess()
+{
   if (m_watch != NULL) {
     LOG((CLOG_DEBUG "stopped watching screen saver process/desktop"));
     m_watch->cancel();
@@ -221,7 +226,8 @@ void MSWindowsScreenSaver::unwatchProcess() {
   }
 }
 
-void MSWindowsScreenSaver::watchDesktopThread(void *) {
+void MSWindowsScreenSaver::watchDesktopThread(void *)
+{
   DWORD reserved = 0;
   TCHAR *name = NULL;
 
@@ -242,7 +248,8 @@ void MSWindowsScreenSaver::watchDesktopThread(void *) {
   }
 }
 
-void MSWindowsScreenSaver::watchProcessThread(void *) {
+void MSWindowsScreenSaver::watchProcessThread(void *)
+{
   for (;;) {
     Thread::testCancel();
     if (WaitForSingleObject(m_process, 50) == WAIT_OBJECT_0) {
@@ -257,9 +264,9 @@ void MSWindowsScreenSaver::watchProcessThread(void *) {
   }
 }
 
-void MSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt) {
-  HKEY hkey =
-      ArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+void MSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
+{
+  HKEY hkey = ArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
   if (hkey == NULL) {
     return;
   }
@@ -273,10 +280,10 @@ void MSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt) {
   ArchMiscWindows::closeKey(hkey);
 }
 
-bool MSWindowsScreenSaver::isSecure(bool *wasSecureFlagAnInt) const {
+bool MSWindowsScreenSaver::isSecure(bool *wasSecureFlagAnInt) const
+{
   // get the password protection setting key
-  HKEY hkey =
-      ArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+  HKEY hkey = ArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
   if (hkey == NULL) {
     return false;
   }

@@ -19,7 +19,12 @@
 
 namespace deskflow {
 
-ClientArgs::~ClientArgs() {}
+ClientArgs::~ClientArgs()
+{
+}
 
-ClientArgs::ClientArgs() { m_classType = kClient; }
+ClientArgs::ClientArgs()
+{
+  m_classType = kClient;
+}
 } // namespace deskflow

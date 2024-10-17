@@ -47,11 +47,15 @@ class TCPSocket;
 /*!
 This class implements the top-level client algorithms for deskflow.
 */
-class Client : public IClient, public INode {
+class Client : public IClient, public INode
+{
 public:
-  class FailInfo {
+  class FailInfo
+  {
   public:
-    FailInfo(const char *what) : m_retry(false), m_what(what) {}
+    FailInfo(const char *what) : m_retry(false), m_what(what)
+    {
+    }
     bool m_retry;
     String m_what;
   };
@@ -63,9 +67,9 @@ public:
   to create the socket.  \p screen is    the local screen.
   */
   Client(
-      IEventQueue *events, const String &name, const NetworkAddress &address,
-      ISocketFactory *socketFactory, deskflow::Screen *screen,
-      deskflow::ClientArgs const &args);
+      IEventQueue *events, const String &name, const NetworkAddress &address, ISocketFactory *socketFactory,
+      deskflow::Screen *screen, deskflow::ClientArgs const &args
+  );
   Client(Client const &) = delete;
   Client(Client &&) = delete;
   ~Client();
@@ -139,16 +143,26 @@ public:
   bool isReceivedFileSizeValid();
 
   //! Return expected file size
-  size_t &getExpectedFileSize() { return m_expectedFileSize; }
+  size_t &getExpectedFileSize()
+  {
+    return m_expectedFileSize;
+  }
 
   //! Return received file data
-  String &getReceivedFileData() { return m_receivedFileData; }
+  String &getReceivedFileData()
+  {
+    return m_receivedFileData;
+  }
 
   //! Return drag file list
-  DragFileList getDragFileList() { return m_dragFileList; }
+  DragFileList getDragFileList()
+  {
+    return m_dragFileList;
+  }
 
   //! Return last resolved adresses count
-  size_t getLastResolvedAddressesCount() const {
+  size_t getLastResolvedAddressesCount() const
+  {
     return m_resolvedAddressesCount;
   }
 
@@ -157,21 +171,17 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
+  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
   virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
 
   // IClient overrides
-  virtual void enter(
-      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
-      bool forScreensaver);
+  virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver);
   virtual bool leave();
   virtual void setClipboard(ClipboardID, const IClipboard *);
   virtual void grabClipboard(ClipboardID);
   virtual void setClipboardDirty(ClipboardID, bool);
   virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const String &);
-  virtual void keyRepeat(
-      KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
+  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton);
   virtual void mouseDown(ButtonID);
   virtual void mouseUp(ButtonID);

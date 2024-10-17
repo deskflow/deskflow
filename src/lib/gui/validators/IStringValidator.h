@@ -21,7 +21,8 @@
 
 namespace validators {
 
-class IStringValidator {
+class IStringValidator
+{
   QString m_Message;
 
 public:

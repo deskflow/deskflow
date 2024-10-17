@@ -19,10 +19,12 @@
 
 namespace validators {
 
-SpacesValidator::SpacesValidator(const QString &message)
-    : IStringValidator(message) {}
+SpacesValidator::SpacesValidator(const QString &message) : IStringValidator(message)
+{
+}
 
-bool SpacesValidator::validate(const QString &input) const {
+bool SpacesValidator::validate(const QString &input) const
+{
   return !input.contains(' ');
 }
 

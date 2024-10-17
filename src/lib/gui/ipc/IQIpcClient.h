@@ -24,13 +24,13 @@
 
 namespace deskflow::gui::ipc {
 
-class IQIpcClient : public QObject {
+class IQIpcClient : public QObject
+{
   Q_OBJECT
 public:
   ~IQIpcClient() override = default;
   virtual void sendHello() const = 0;
-  virtual void
-  sendCommand(const QString &command, ElevateMode elevate) const = 0;
+  virtual void sendCommand(const QString &command, ElevateMode elevate) const = 0;
   virtual void connectToHost() = 0;
   virtual void disconnectFromHost() = 0;
   virtual bool isConnected() const = 0;

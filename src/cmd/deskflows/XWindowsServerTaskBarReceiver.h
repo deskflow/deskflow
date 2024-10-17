@@ -24,19 +24,16 @@ class BufferedLogOutputter;
 class IEventQueue;
 
 //! Implementation of ServerTaskBarReceiver for X Windows
-class CXWindowsServerTaskBarReceiver : public ServerTaskBarReceiver {
+class CXWindowsServerTaskBarReceiver : public ServerTaskBarReceiver
+{
 public:
-  CXWindowsServerTaskBarReceiver(
-      const BufferedLogOutputter *, IEventQueue *events);
-  CXWindowsServerTaskBarReceiver(const CXWindowsServerTaskBarReceiver &) =
-      delete;
+  CXWindowsServerTaskBarReceiver(const BufferedLogOutputter *, IEventQueue *events);
+  CXWindowsServerTaskBarReceiver(const CXWindowsServerTaskBarReceiver &) = delete;
   CXWindowsServerTaskBarReceiver(CXWindowsServerTaskBarReceiver &&) = delete;
   virtual ~CXWindowsServerTaskBarReceiver();
 
-  CXWindowsServerTaskBarReceiver &
-  operator=(const CXWindowsServerTaskBarReceiver &) = delete;
-  CXWindowsServerTaskBarReceiver &
-  operator=(const CXWindowsServerTaskBarReceiver &&) = delete;
+  CXWindowsServerTaskBarReceiver &operator=(const CXWindowsServerTaskBarReceiver &) = delete;
+  CXWindowsServerTaskBarReceiver &operator=(const CXWindowsServerTaskBarReceiver &&) = delete;
 
   // IArchTaskBarReceiver overrides
   virtual void showStatus();

@@ -43,18 +43,20 @@ class Screen;
 class IEventQueue;
 class SocketMultiplexer;
 
-typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(
-    const BufferedLogOutputter *, IEventQueue *events);
+typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(const BufferedLogOutputter *, IEventQueue *events);
 
-class App : public IApp {
+class App : public IApp
+{
 public:
-  class XNoEiSupport : public std::runtime_error {
+  class XNoEiSupport : public std::runtime_error
+  {
   public:
-    XNoEiSupport() : std::runtime_error("libei is not supported") {}
+    XNoEiSupport() : std::runtime_error("libei is not supported")
+    {
+    }
   };
 
-  App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver,
-      deskflow::ArgsBase *args);
+  App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver, deskflow::ArgsBase *args);
   App(App const &) = delete;
   App(App &&) = delete;
   virtual ~App();
@@ -70,30 +72,57 @@ public:
   virtual std::string configSection() const = 0;
 
   virtual void version();
-  virtual void setByeFunc(void (*bye)(int)) { m_bye = bye; }
-  virtual void bye(int error) { m_bye(error); }
-  virtual IEventQueue *getEvents() const { return m_events; }
+  virtual void setByeFunc(void (*bye)(int))
+  {
+    m_bye = bye;
+  }
+  virtual void bye(int error)
+  {
+    m_bye(error);
+  }
+  virtual IEventQueue *getEvents() const
+  {
+    return m_events;
+  }
 
-  ARCH_APP_UTIL &appUtil() { return m_appUtil; }
-  deskflow::ArgsBase &argsBase() const { return *m_args; }
+  ARCH_APP_UTIL &appUtil()
+  {
+    return m_appUtil;
+  }
+  deskflow::ArgsBase &argsBase() const
+  {
+    return *m_args;
+  }
   int run(int argc, char **argv);
   int daemonMainLoop(int, const char **);
   void setupFileLogging();
   void loggingFilterWarning();
   void initApp(int argc, const char **argv);
-  void initApp(int argc, char **argv) { initApp(argc, (const char **)argv); }
-  void setEvents(EventQueue &events) { m_events = &events; }
-  void setSocketMultiplexer(SocketMultiplexer *sm) { m_socketMultiplexer = sm; }
+  void initApp(int argc, char **argv)
+  {
+    initApp(argc, (const char **)argv);
+  }
+  void setEvents(EventQueue &events)
+  {
+    m_events = &events;
+  }
+  void setSocketMultiplexer(SocketMultiplexer *sm)
+  {
+    m_socketMultiplexer = sm;
+  }
 
-  virtual IArchTaskBarReceiver *taskBarReceiver() const {
+  virtual IArchTaskBarReceiver *taskBarReceiver() const
+  {
     return m_taskBarReceiver;
   }
 
-  SocketMultiplexer *getSocketMultiplexer() const {
+  SocketMultiplexer *getSocketMultiplexer() const
+  {
     return m_socketMultiplexer;
   }
 
-  static App &instance() {
+  static App &instance()
+  {
     assert(s_instance != nullptr);
     return *s_instance;
   }
@@ -122,16 +151,15 @@ private:
   SocketMultiplexer *m_socketMultiplexer;
 };
 
-class MinimalApp : public App {
+class MinimalApp : public App
+{
 public:
   MinimalApp();
   virtual ~MinimalApp();
 
   // IApp overrides
   virtual int standardStartup(int argc, char **argv) override;
-  virtual int runInner(
-      int argc, char **argv, ILogOutputter *outputter,
-      StartupFunc startup) override;
+  virtual int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
   virtual void startNode() override;
   virtual int mainLoop() override;
   virtual int foregroundStartup(int argc, char **argv) override;
@@ -145,7 +173,10 @@ public:
   //
   // App overrides
   //
-  std::string configSection() const override { return ""; }
+  std::string configSection() const override
+  {
+    return "";
+  }
 
 private:
   Arch m_arch;
@@ -159,30 +190,30 @@ private:
 #define DAEMON_RUNNING(running_)
 #endif
 
-#define HELP_COMMON_INFO_1                                                     \
-  "  -d, --debug <level>      filter out log messages with priority below "    \
-  "level.\n"                                                                   \
-  "                             level may be: FATAL, ERROR, WARNING, NOTE, "   \
-  "INFO,\n"                                                                    \
-  "                             DEBUG, DEBUG1, DEBUG2.\n"                      \
-  "  -n, --name <screen-name> use screen-name instead the hostname to "        \
-  "identify\n"                                                                 \
-  "                             this screen in the configuration.\n"           \
-  "  -1, --no-restart         do not try to restart on failure.\n"             \
-  "*     --restart            restart the server automatically if it fails.\n" \
-  "  -l  --log <file>         write log messages to file.\n"                   \
-  "      --no-tray            disable the system tray icon.\n"                 \
-  "      --enable-drag-drop   enable file drag & drop.\n"                      \
-  "      --enable-crypto      enable TLS encryption.\n"                        \
+#define HELP_COMMON_INFO_1                                                                                             \
+  "  -d, --debug <level>      filter out log messages with priority below "                                            \
+  "level.\n"                                                                                                           \
+  "                             level may be: FATAL, ERROR, WARNING, NOTE, "                                           \
+  "INFO,\n"                                                                                                            \
+  "                             DEBUG, DEBUG1, DEBUG2.\n"                                                              \
+  "  -n, --name <screen-name> use screen-name instead the hostname to "                                                \
+  "identify\n"                                                                                                         \
+  "                             this screen in the configuration.\n"                                                   \
+  "  -1, --no-restart         do not try to restart on failure.\n"                                                     \
+  "*     --restart            restart the server automatically if it fails.\n"                                         \
+  "  -l  --log <file>         write log messages to file.\n"                                                           \
+  "      --no-tray            disable the system tray icon.\n"                                                         \
+  "      --enable-drag-drop   enable file drag & drop.\n"                                                              \
+  "      --enable-crypto      enable TLS encryption.\n"                                                                \
   "      --tls-cert           specify the path to the TLS certificate file.\n"
 
-#define HELP_COMMON_INFO_2                                                     \
-  "  -h, --help               display this help and exit.\n"                   \
+#define HELP_COMMON_INFO_2                                                                                             \
+  "  -h, --help               display this help and exit.\n"                                                           \
   "      --version            display version information and exit.\n"
 
-#define HELP_COMMON_ARGS                                                       \
-  " [--name <screen-name>]"                                                    \
-  " [--restart|--no-restart]"                                                  \
+#define HELP_COMMON_ARGS                                                                                               \
+  " [--name <screen-name>]"                                                                                            \
+  " [--restart|--no-restart]"                                                                                          \
   " [--debug <level>]"
 
 // system args (windows/unix)
@@ -190,31 +221,30 @@ private:
 
 // unix daemon mode args
 #define HELP_SYS_ARGS " [--daemon|--no-daemon]"
-#define HELP_SYS_INFO                                                          \
-  "  -f, --no-daemon          run in the foreground.\n"                        \
+#define HELP_SYS_INFO                                                                                                  \
+  "  -f, --no-daemon          run in the foreground.\n"                                                                \
   "*     --daemon             run as a daemon.\n"
 
 #elif SYSAPI_WIN32
 
 // windows args
 #define HELP_SYS_ARGS " [--service <action>] [--relaunch] [--exit-pause]"
-#define HELP_SYS_INFO                                                          \
-  "      --service <action>   manage the windows service, valid options "      \
-  "are:\n"                                                                     \
-  "                             install/uninstall/start/stop\n"                \
-  "      --relaunch           persistently relaunches process in current "     \
-  "user \n"                                                                    \
-  "                             session (useful for vista and upward).\n"      \
-  "      --exit-pause         wait for key press on exit, can be useful for\n" \
+#define HELP_SYS_INFO                                                                                                  \
+  "      --service <action>   manage the windows service, valid options "                                              \
+  "are:\n"                                                                                                             \
+  "                             install/uninstall/start/stop\n"                                                        \
+  "      --relaunch           persistently relaunches process in current "                                             \
+  "user \n"                                                                                                            \
+  "                             session (useful for vista and upward).\n"                                              \
+  "      --exit-pause         wait for key press on exit, can be useful for\n"                                         \
   "                             reading error messages that occur on exit.\n"
 #endif
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
-const auto kHelpNoWayland =
-    "\n"
-    "Your Linux distribution does not support Wayland EI (emulated input)\n"
-    "which is required for Wayland support.  Please use a Linux distribution\n"
-    "that supports Wayland EI.\n";
+const auto kHelpNoWayland = "\n"
+                            "Your Linux distribution does not support Wayland EI (emulated input)\n"
+                            "which is required for Wayland support.  Please use a Linux distribution\n"
+                            "that supports Wayland EI.\n";
 
 #else
 const auto kHelpNoWayland = "";

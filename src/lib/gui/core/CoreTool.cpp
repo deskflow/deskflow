@@ -26,22 +26,26 @@
 
 static const char kCoreBinary[] = LEGACY_BINARY_NAME;
 
-QString CoreTool::getProfileDir() const {
+QString CoreTool::getProfileDir() const
+{
   QStringList args("--get-profile-dir");
   return QDir::cleanPath(run(args));
 }
 
-QString CoreTool::getInstalledDir() const {
+QString CoreTool::getInstalledDir() const
+{
   QStringList args("--get-installed-dir");
   return QDir::cleanPath(run(args));
 }
 
-QString CoreTool::getArch() const {
+QString CoreTool::getArch() const
+{
   QStringList args("--get-arch");
   return run(args);
 }
 
-QString CoreTool::run(const QStringList &args, const QString &input) const {
+QString CoreTool::run(const QStringList &args, const QString &input) const
+{
   QString program(QCoreApplication::applicationDirPath() + "/" + kCoreBinary);
 
   CommandProcess commandProcess(program, args, input);

@@ -27,11 +27,10 @@ class EventQueueTimer;
 class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.0
-class ClientProxy1_0 : public ClientProxy {
+class ClientProxy1_0 : public ClientProxy
+{
 public:
-  ClientProxy1_0(
-      const String &name, deskflow::IStream *adoptedStream,
-      IEventQueue *events);
+  ClientProxy1_0(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ClientProxy1_0(ClientProxy1_0 const &) = delete;
   ClientProxy1_0(ClientProxy1_0 &&) = delete;
   ~ClientProxy1_0();
@@ -41,21 +40,17 @@ public:
 
   // IScreen
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void
-  getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
+  void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
   void getCursorPos(SInt32 &x, SInt32 &y) const override;
 
   // IClient overrides
-  void enter(
-      SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask,
-      bool forScreensaver) override;
+  void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) override;
   bool leave() override;
   void setClipboard(ClipboardID, const IClipboard *) override;
   void grabClipboard(ClipboardID) override;
   void setClipboardDirty(ClipboardID, bool) override;
   void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override;
-  void keyRepeat(
-      KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &) override;
+  void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &) override;
   void keyUp(KeyID, KeyModifierMask, KeyButton) override;
   void mouseDown(ButtonID) override;
   void mouseUp(ButtonID) override;
@@ -94,7 +89,8 @@ private:
   bool recvGrabClipboard();
 
 protected:
-  struct ClientClipboard {
+  struct ClientClipboard
+  {
   public:
     ClientClipboard();
 

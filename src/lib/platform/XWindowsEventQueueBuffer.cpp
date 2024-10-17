@@ -34,18 +34,20 @@
 // EventQueueTimer
 //
 
-class EventQueueTimer {};
+class EventQueueTimer
+{
+};
 
 //
 // XWindowsEventQueueBuffer
 //
 
-XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
-    Display *display, Window window, IEventQueue *events)
+XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(Display *display, Window window, IEventQueue *events)
     : m_events(events),
       m_display(display),
       m_window(window),
-      m_waiting(false) {
+      m_waiting(false)
+{
   assert(m_display != NULL);
   assert(m_window != None);
 
@@ -55,18 +57,21 @@ XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(
   assert(result == 0);
 }
 
-XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer() {
+XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
+{
   // release pipe hack resources
   close(m_pipefd[0]);
   close(m_pipefd[1]);
 }
 
-int XWindowsEventQueueBuffer::getPendingCountLocked() {
+int XWindowsEventQueueBuffer::getPendingCountLocked()
+{
   Lock lock(&m_mutex);
   return XPending(m_display);
 }
 
-void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
+void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
+{
   Thread::testCancel();
 
   // clear out the pipe in preparation for waiting.
@@ -117,8 +122,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
   // we want to give the cpu a chance s owe up this to 25ms
 #define TIMEOUT_DELAY 25
 
-  while (((dtimeout < 0.0) || (remaining > 0)) &&
-         getPendingCountLocked() == 0 && retval == 0) {
+  while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
 
     retval = poll(pfds, 2, TIMEOUT_DELAY); // 16ms = 60hz, but we make it > to
                                            // play nicely with the cpu
@@ -142,8 +146,8 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout) {
   Thread::testCancel();
 }
 
-IEventQueueBuffer::Type
-XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
+IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID)
+{
   Lock lock(&m_mutex);
 
   // push out pending events
@@ -153,8 +157,7 @@ XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
   XNextEvent(m_display, &m_event);
 
   // process event
-  if (m_event.xany.type == ClientMessage &&
-      m_event.xclient.message_type == m_userEvent) {
+  if (m_event.xany.type == ClientMessage && m_event.xclient.message_type == m_userEvent) {
     dataID = static_cast<UInt32>(m_event.xclient.data.l[0]);
     return kUser;
   } else {
@@ -163,7 +166,8 @@ XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID) {
   }
 }
 
-bool XWindowsEventQueueBuffer::addEvent(UInt32 dataID) {
+bool XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+{
   // prepare a message
   XEvent xevent;
   xevent.xclient.type = ClientMessage;
@@ -197,20 +201,24 @@ bool XWindowsEventQueueBuffer::addEvent(UInt32 dataID) {
   return true;
 }
 
-bool XWindowsEventQueueBuffer::isEmpty() const {
+bool XWindowsEventQueueBuffer::isEmpty() const
+{
   Lock lock(&m_mutex);
   return (XPending(m_display) == 0);
 }
 
-EventQueueTimer *XWindowsEventQueueBuffer::newTimer(double, bool) const {
+EventQueueTimer *XWindowsEventQueueBuffer::newTimer(double, bool) const
+{
   return new EventQueueTimer;
 }
 
-void XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const {
+void XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
+{
   delete timer;
 }
 
-void XWindowsEventQueueBuffer::flush() {
+void XWindowsEventQueueBuffer::flush()
+{
   // note -- m_mutex must be locked on entry
 
   // flush the posted event list to the X server

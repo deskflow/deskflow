@@ -28,7 +28,8 @@
 class ScreenSetupView;
 class ServerConfigDialog;
 
-class ScreenSetupModel : public QAbstractTableModel {
+class ScreenSetupModel : public QAbstractTableModel
+{
   Q_OBJECT
 
   friend class ScreenSetupView;
@@ -38,12 +39,27 @@ public:
   ScreenSetupModel(ScreenList &screens, int numColumns, int numRows);
 
 public:
-  static const QString &mimeType() { return m_MimeType; }
+  static const QString &mimeType()
+  {
+    return m_MimeType;
+  }
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-  int rowCount() const { return m_NumRows; }
-  int columnCount() const { return m_NumColumns; }
-  int rowCount(const QModelIndex &) const { return rowCount(); }
-  int columnCount(const QModelIndex &) const { return columnCount(); }
+  int rowCount() const
+  {
+    return m_NumRows;
+  }
+  int columnCount() const
+  {
+    return m_NumColumns;
+  }
+  int rowCount(const QModelIndex &) const
+  {
+    return rowCount();
+  }
+  int columnCount(const QModelIndex &) const
+  {
+    return columnCount();
+  }
   Qt::DropActions supportedDropActions() const;
   Qt::ItemFlags flags(const QModelIndex &index) const;
   QStringList mimeTypes() const;
@@ -54,19 +70,21 @@ signals:
   void screensChanged();
 
 protected:
-  bool dropMimeData(
-      const QMimeData *data, Qt::DropAction action, int row, int column,
-      const QModelIndex &parent);
-  const Screen &screen(const QModelIndex &index) const {
+  bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+  const Screen &screen(const QModelIndex &index) const
+  {
     return screen(index.column(), index.row());
   }
-  Screen &screen(const QModelIndex &index) {
+  Screen &screen(const QModelIndex &index)
+  {
     return screen(index.column(), index.row());
   }
-  const Screen &screen(int column, int row) const {
+  const Screen &screen(int column, int row) const
+  {
     return m_Screens[row * m_NumColumns + column];
   }
-  Screen &screen(int column, int row) {
+  Screen &screen(int column, int row)
+  {
     return m_Screens[row * m_NumColumns + column];
   }
   void addScreen(const Screen &newScreen);

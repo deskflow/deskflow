@@ -31,34 +31,36 @@
 // ClientProxy1_5
 //
 
-ClientProxy1_5::ClientProxy1_5(
-    const String &name, deskflow::IStream *stream, Server *server,
-    IEventQueue *events)
+ClientProxy1_5::ClientProxy1_5(const String &name, deskflow::IStream *stream, Server *server, IEventQueue *events)
     : ClientProxy1_4(name, stream, server, events),
-      m_events(events) {
+      m_events(events)
+{
 
   m_events->adoptHandler(
       m_events->forFile().keepAlive(), this,
-      new TMethodEventJob<ClientProxy1_3>(
-          this, &ClientProxy1_3::handleKeepAlive, NULL));
+      new TMethodEventJob<ClientProxy1_3>(this, &ClientProxy1_3::handleKeepAlive, NULL)
+  );
 }
 
-ClientProxy1_5::~ClientProxy1_5() {
+ClientProxy1_5::~ClientProxy1_5()
+{
   m_events->removeHandler(m_events->forFile().keepAlive(), this);
 }
 
-void ClientProxy1_5::sendDragInfo(
-    UInt32 fileCount, const char *info, size_t size) {
+void ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+{
   String data(info, size);
 
   ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
 
-void ClientProxy1_5::fileChunkSending(UInt8 mark, char *data, size_t dataSize) {
+void ClientProxy1_5::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
+{
   FileChunk::send(getStream(), mark, data, dataSize);
 }
 
-bool ClientProxy1_5::parseMessage(const UInt8 *code) {
+bool ClientProxy1_5::parseMessage(const UInt8 *code)
+{
   if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
     fileChunkReceived();
   } else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
@@ -70,15 +72,13 @@ bool ClientProxy1_5::parseMessage(const UInt8 *code) {
   return true;
 }
 
-void ClientProxy1_5::fileChunkReceived() {
+void ClientProxy1_5::fileChunkReceived()
+{
   Server *server = getServer();
-  int result = FileChunk::assemble(
-      getStream(), server->getReceivedFileData(),
-      server->getExpectedFileSize());
+  int result = FileChunk::assemble(getStream(), server->getReceivedFileData(), server->getExpectedFileSize());
 
   if (result == kFinish) {
-    m_events->addEvent(
-        Event(m_events->forFile().fileRecieveCompleted(), server));
+    m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
   } else if (result == kStart) {
     if (server->getFakeDragFileList().size() > 0) {
       String filename = server->getFakeDragFileList().at(0).getFilename();
@@ -87,7 +87,8 @@ void ClientProxy1_5::fileChunkReceived() {
   }
 }
 
-void ClientProxy1_5::dragInfoReceived() {
+void ClientProxy1_5::dragInfoReceived()
+{
   // parse
   UInt32 fileNum = 0;
   String content;

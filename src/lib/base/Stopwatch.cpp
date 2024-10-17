@@ -23,20 +23,20 @@
 // Stopwatch
 //
 
-Stopwatch::Stopwatch(bool triggered)
-    : m_mark(0.0),
-      m_triggered(triggered),
-      m_stopped(triggered) {
+Stopwatch::Stopwatch(bool triggered) : m_mark(0.0), m_triggered(triggered), m_stopped(triggered)
+{
   if (!triggered) {
     m_mark = ARCH->time();
   }
 }
 
-Stopwatch::~Stopwatch() {
+Stopwatch::~Stopwatch()
+{
   // do nothing
 }
 
-double Stopwatch::reset() {
+double Stopwatch::reset()
+{
   if (m_stopped) {
     const double dt = m_mark;
     m_mark = 0.0;
@@ -49,7 +49,8 @@ double Stopwatch::reset() {
   }
 }
 
-void Stopwatch::stop() {
+void Stopwatch::stop()
+{
   if (m_stopped) {
     return;
   }
@@ -59,7 +60,8 @@ void Stopwatch::stop() {
   m_stopped = true;
 }
 
-void Stopwatch::start() {
+void Stopwatch::start()
+{
   m_triggered = false;
   if (!m_stopped) {
     return;
@@ -70,12 +72,14 @@ void Stopwatch::start() {
   m_stopped = false;
 }
 
-void Stopwatch::setTrigger() {
+void Stopwatch::setTrigger()
+{
   stop();
   m_triggered = true;
 }
 
-double Stopwatch::getTime() {
+double Stopwatch::getTime()
+{
   if (m_triggered) {
     const double dt = m_mark;
     start();
@@ -87,11 +91,18 @@ double Stopwatch::getTime() {
   }
 }
 
-Stopwatch::operator double() { return getTime(); }
+Stopwatch::operator double()
+{
+  return getTime();
+}
 
-bool Stopwatch::isStopped() const { return m_stopped; }
+bool Stopwatch::isStopped() const
+{
+  return m_stopped;
+}
 
-double Stopwatch::getTime() const {
+double Stopwatch::getTime() const
+{
   if (m_stopped) {
     return m_mark;
   } else {
@@ -99,4 +110,7 @@ double Stopwatch::getTime() const {
   }
 }
 
-Stopwatch::operator double() const { return getTime(); }
+Stopwatch::operator double() const
+{
+  return getTime();
+}

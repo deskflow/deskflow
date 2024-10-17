@@ -28,15 +28,18 @@
 // ArchSystemUnix
 //
 
-ArchSystemUnix::ArchSystemUnix() {
+ArchSystemUnix::ArchSystemUnix()
+{
   // do nothing
 }
 
-ArchSystemUnix::~ArchSystemUnix() {
+ArchSystemUnix::~ArchSystemUnix()
+{
   // do nothing
 }
 
-std::string ArchSystemUnix::getOSName() const {
+std::string ArchSystemUnix::getOSName() const
+{
 #if defined(HAVE_SYS_UTSNAME_H)
   struct utsname info;
   if (uname(&info) == 0) {
@@ -50,7 +53,8 @@ std::string ArchSystemUnix::getOSName() const {
   return "Unix";
 }
 
-std::string ArchSystemUnix::getPlatformName() const {
+std::string ArchSystemUnix::getPlatformName() const
+{
 #if defined(HAVE_SYS_UTSNAME_H)
   struct utsname info;
   if (uname(&info) == 0) {
@@ -60,22 +64,26 @@ std::string ArchSystemUnix::getPlatformName() const {
   return "unknown";
 }
 
-std::string ArchSystemUnix::setting(const std::string &) const { return ""; }
+std::string ArchSystemUnix::setting(const std::string &) const
+{
+  return "";
+}
 
-void ArchSystemUnix::setting(const std::string &, const std::string &) const {}
+void ArchSystemUnix::setting(const std::string &, const std::string &) const
+{
+}
 
-std::string ArchSystemUnix::getLibsUsed(void) const {
+std::string ArchSystemUnix::getLibsUsed(void) const
+{
   return "not implemented.\nuse lsof on shell";
 }
 
 #ifndef __APPLE__
-bool ArchSystemUnix::DBusInhibitScreenCall(
-    InhibitScreenServices serviceID, bool state, std::string &error) {
+bool ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error)
+{
   error = "";
-  static const std::array<QString, 2> services = {
-      "org.freedesktop.ScreenSaver", "org.gnome.SessionManager"};
-  static const std::array<QString, 2> paths = {
-      "/org/freedesktop/ScreenSaver", "/org/gnome/SessionManager"};
+  static const std::array<QString, 2> services = {"org.freedesktop.ScreenSaver", "org.gnome.SessionManager"};
+  static const std::array<QString, 2> paths = {"/org/freedesktop/ScreenSaver", "/org/gnome/SessionManager"};
   static std::array<uint, 2> cookies;
 
   auto serviceNum = static_cast<uint8_t>(serviceID);
@@ -86,8 +94,7 @@ bool ArchSystemUnix::DBusInhibitScreenCall(
     return false;
   }
 
-  QDBusInterface screenSaverInterface(
-      services[serviceNum], paths[serviceNum], services[serviceNum], bus);
+  QDBusInterface screenSaverInterface(services[serviceNum], paths[serviceNum], services[serviceNum], bus);
 
   if (!screenSaverInterface.isValid()) {
     error = "screen saver interface failed to initialize";
@@ -102,8 +109,8 @@ bool ArchSystemUnix::DBusInhibitScreenCall(
     }
 
     reply = screenSaverInterface.call(
-        "Inhibit", DESKFLOW_APP_NAME,
-        "Sleep is manually prevented by the " DESKFLOW_APP_NAME " preferences");
+        "Inhibit", DESKFLOW_APP_NAME, "Sleep is manually prevented by the " DESKFLOW_APP_NAME " preferences"
+    );
     if (reply.isValid())
       cookies[serviceNum] = reply.value();
   } else {
@@ -117,8 +124,7 @@ bool ArchSystemUnix::DBusInhibitScreenCall(
 
   if (!reply.isValid()) {
     QDBusError qerror = reply.error();
-    error =
-        qerror.name().toStdString() + " : " + qerror.message().toStdString();
+    error = qerror.name().toStdString() + " : " + qerror.message().toStdString();
     return false;
   }
 

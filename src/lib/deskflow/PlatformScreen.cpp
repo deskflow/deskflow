@@ -20,76 +20,94 @@
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 
-PlatformScreen::PlatformScreen(
-    IEventQueue *events, deskflow::ClientScrollDirection scrollDirection)
+PlatformScreen::PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirection scrollDirection)
     : IPlatformScreen(events),
       m_draggingStarted(false),
       m_fakeDraggingStarted(false),
-      m_clientScrollDirection(scrollDirection) {}
+      m_clientScrollDirection(scrollDirection)
+{
+}
 
-PlatformScreen::~PlatformScreen() {
+PlatformScreen::~PlatformScreen()
+{
   // do nothing
 }
 
-void PlatformScreen::updateKeyMap() { getKeyState()->updateKeyMap(); }
+void PlatformScreen::updateKeyMap()
+{
+  getKeyState()->updateKeyMap();
+}
 
-void PlatformScreen::updateKeyState() {
+void PlatformScreen::updateKeyState()
+{
   getKeyState()->updateKeyState();
   updateButtons();
 }
 
-void PlatformScreen::setHalfDuplexMask(KeyModifierMask mask) {
+void PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
+{
   getKeyState()->setHalfDuplexMask(mask);
 }
 
-void PlatformScreen::fakeKeyDown(
-    KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) {
+void PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
+{
   getKeyState()->fakeKeyDown(id, mask, button, lang);
 }
 
-bool PlatformScreen::fakeKeyRepeat(
-    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button,
-    const String &lang) {
+bool PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang)
+{
   return getKeyState()->fakeKeyRepeat(id, mask, count, button, lang);
 }
 
-bool PlatformScreen::fakeKeyUp(KeyButton button) {
+bool PlatformScreen::fakeKeyUp(KeyButton button)
+{
   return getKeyState()->fakeKeyUp(button);
 }
 
-void PlatformScreen::fakeAllKeysUp() { getKeyState()->fakeAllKeysUp(); }
+void PlatformScreen::fakeAllKeysUp()
+{
+  getKeyState()->fakeAllKeysUp();
+}
 
-bool PlatformScreen::fakeCtrlAltDel() {
+bool PlatformScreen::fakeCtrlAltDel()
+{
   return getKeyState()->fakeCtrlAltDel();
 }
 
-bool PlatformScreen::isKeyDown(KeyButton button) const {
+bool PlatformScreen::isKeyDown(KeyButton button) const
+{
   return getKeyState()->isKeyDown(button);
 }
 
-KeyModifierMask PlatformScreen::getActiveModifiers() const {
+KeyModifierMask PlatformScreen::getActiveModifiers() const
+{
   return getKeyState()->getActiveModifiers();
 }
 
-KeyModifierMask PlatformScreen::pollActiveModifiers() const {
+KeyModifierMask PlatformScreen::pollActiveModifiers() const
+{
   return getKeyState()->pollActiveModifiers();
 }
 
-SInt32 PlatformScreen::pollActiveGroup() const {
+SInt32 PlatformScreen::pollActiveGroup() const
+{
   return getKeyState()->pollActiveGroup();
 }
 
-void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const {
+void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
+{
   getKeyState()->pollPressedKeys(pressedKeys);
 }
 
-bool PlatformScreen::isDraggingStarted() {
+bool PlatformScreen::isDraggingStarted()
+{
   if (App::instance().argsBase().m_enableDragDrop) {
     return m_draggingStarted;
   }
   return false;
 }
 
-SInt32 PlatformScreen::mapClientScrollDirection(SInt32 x) const {
+SInt32 PlatformScreen::mapClientScrollDirection(SInt32 x) const
+{
   return (x * m_clientScrollDirection);
 }

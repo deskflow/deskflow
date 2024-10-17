@@ -47,28 +47,26 @@
 
 static const size_t ModifiersFromXDefaultSize = 32;
 
-XWindowsKeyState::XWindowsKeyState(
-    Display *display, bool useXKB, IEventQueue *events)
-    : KeyState(
-          events, AppUtil::instance().getKeyboardLayoutList(),
-          ClientApp::instance().args().m_enableLangSync),
+XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *events)
+    : KeyState(events, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
       m_display(display),
-      m_modifierFromX(ModifiersFromXDefaultSize) {
+      m_modifierFromX(ModifiersFromXDefaultSize)
+{
   init(display, useXKB);
 }
 
-XWindowsKeyState::XWindowsKeyState(
-    Display *display, bool useXKB, IEventQueue *events,
-    deskflow::KeyMap &keyMap)
+XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap)
     : KeyState(
-          events, keyMap, AppUtil::instance().getKeyboardLayoutList(),
-          ClientApp::instance().args().m_enableLangSync),
+          events, keyMap, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync
+      ),
       m_display(display),
-      m_modifierFromX(ModifiersFromXDefaultSize) {
+      m_modifierFromX(ModifiersFromXDefaultSize)
+{
   init(display, useXKB);
 }
 
-XWindowsKeyState::~XWindowsKeyState() {
+XWindowsKeyState::~XWindowsKeyState()
+{
 #if HAVE_XKB_EXTENSION
   if (m_xkb != NULL) {
     XkbFreeKeyboard(m_xkb, 0, True);
@@ -76,14 +74,12 @@ XWindowsKeyState::~XWindowsKeyState() {
 #endif
 }
 
-void XWindowsKeyState::init(Display *display, bool useXKB) {
+void XWindowsKeyState::init(Display *display, bool useXKB)
+{
   XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
   if (useXKB) {
-    m_xkb = XkbGetMap(
-        m_display,
-        XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask,
-        XkbUseCoreKbd);
+    m_xkb = XkbGetMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask, XkbUseCoreKbd);
   } else {
     m_xkb = NULL;
   }
@@ -91,7 +87,8 @@ void XWindowsKeyState::init(Display *display, bool useXKB) {
   setActiveGroup(kGroupPoll);
 }
 
-void XWindowsKeyState::setActiveGroup(SInt32 group) {
+void XWindowsKeyState::setActiveGroup(SInt32 group)
+{
   if (group == kGroupPollAndSet) {
     // we need to set the group to -1 in order for pollActiveGroup() to
     // actually poll for the group
@@ -105,11 +102,13 @@ void XWindowsKeyState::setActiveGroup(SInt32 group) {
   }
 }
 
-void XWindowsKeyState::setAutoRepeat(const XKeyboardState &state) {
+void XWindowsKeyState::setAutoRepeat(const XKeyboardState &state)
+{
   m_keyboardState = state;
 }
 
-KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const {
+KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const
+{
   LOG((CLOG_DEBUG2 "mapping state: %i", state));
   UInt32 offset = 8 * getGroupFromState(state);
   KeyModifierMask mask = 0;
@@ -120,7 +119,8 @@ KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const {
         LOG(
             (CLOG_ERR "m_modifierFromX is too small (%d) for the "
                       "requested offset (%d)",
-             m_modifierFromX.size(), offset + i));
+             m_modifierFromX.size(), offset + i)
+        );
       } else {
         mask |= m_modifierFromX[offset + i];
       }
@@ -129,8 +129,8 @@ KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const {
   return mask;
 }
 
-bool XWindowsKeyState::mapModifiersToX(
-    KeyModifierMask mask, unsigned int &modifiers) const {
+bool XWindowsKeyState::mapModifiersToX(KeyModifierMask mask, unsigned int &modifiers) const
+{
   modifiers = 0;
 
   for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
@@ -148,35 +148,34 @@ bool XWindowsKeyState::mapModifiersToX(
   return true;
 }
 
-void XWindowsKeyState::mapKeyToKeycodes(
-    KeyID key, KeycodeList &keycodes) const {
+void XWindowsKeyState::mapKeyToKeycodes(KeyID key, KeycodeList &keycodes) const
+{
   keycodes.clear();
-  std::pair<KeyToKeyCodeMap::const_iterator, KeyToKeyCodeMap::const_iterator>
-      range = m_keyCodeFromKey.equal_range(key);
-  for (KeyToKeyCodeMap::const_iterator i = range.first; i != range.second;
-       ++i) {
+  std::pair<KeyToKeyCodeMap::const_iterator, KeyToKeyCodeMap::const_iterator> range = m_keyCodeFromKey.equal_range(key);
+  for (KeyToKeyCodeMap::const_iterator i = range.first; i != range.second; ++i) {
     keycodes.push_back(i->second);
   }
 }
 
-bool XWindowsKeyState::fakeCtrlAltDel() {
+bool XWindowsKeyState::fakeCtrlAltDel()
+{
   // pass keys through unchanged
   return false;
 }
 
-KeyModifierMask XWindowsKeyState::pollActiveModifiers() const {
+KeyModifierMask XWindowsKeyState::pollActiveModifiers() const
+{
   Window root = DefaultRootWindow(m_display), window;
   int xRoot, yRoot, xWindow, yWindow;
   unsigned int state = 0;
-  if (XQueryPointer(
-          m_display, root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow,
-          &state) == False) {
+  if (XQueryPointer(m_display, root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow, &state) == False) {
     state = 0;
   }
   return mapModifiersFromX(state);
 }
 
-SInt32 XWindowsKeyState::pollActiveGroup() const {
+SInt32 XWindowsKeyState::pollActiveGroup() const
+{
   // fixed condition where any group < -1 would have undetermined behaviour
   if (m_group >= 0) {
     return m_group;
@@ -196,7 +195,8 @@ SInt32 XWindowsKeyState::pollActiveGroup() const {
   return 0;
 }
 
-void XWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const {
+void XWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
+{
   char keys[32];
   XQueryKeymap(m_display, keys);
   for (UInt32 i = 0; i < 32; ++i) {
@@ -208,7 +208,8 @@ void XWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const {
   }
 }
 
-void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
+void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
+{
   // get autorepeat info.  we must use the global_auto_repeat told to
   // us because it may have modified by deskflow.
   int oldGlobalAutoRepeat = m_keyboardState.global_auto_repeat;
@@ -217,10 +218,7 @@ void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
 
 #if HAVE_XKB_EXTENSION
   if (m_xkb != NULL) {
-    if (XkbGetUpdatedMap(
-            m_display,
-            XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask,
-            m_xkb) == Success) {
+    if (XkbGetUpdatedMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask, m_xkb) == Success) {
       updateKeysymMapXKB(keyMap);
       return;
     }
@@ -229,13 +227,13 @@ void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap) {
   updateKeysymMap(keyMap);
 }
 
-bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const {
+bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
+{
   QString service = "org.gnome.Shell";
   QString path = "/org/gnome/Shell";
   QString method = "Eval";
   QString param =
-      "imports.ui.status.keyboard.getInputSourceManager().inputSources[" +
-      QString::number(group) + "].activate()";
+      "imports.ui.status.keyboard.getInputSourceManager().inputSources[" + QString::number(group) + "].activate()";
 
   auto bus = QDBusConnection::sessionBus();
   if (!bus.isConnected()) {
@@ -248,16 +246,15 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const {
     return false;
   }
 
-  QDBusPendingReply<bool, QString> reply =
-      screenSaverInterface.call(method, param);
+  QDBusPendingReply<bool, QString> reply = screenSaverInterface.call(method, param);
   reply.waitForFinished();
 
   if (!reply.isValid()) {
     auto qerror = reply.error();
     LOG(
-        (CLOG_WARN "keyboard layout fail %s : %s",
-         qerror.name().toStdString().c_str(),
-         qerror.message().toStdString().c_str()));
+        (CLOG_WARN "keyboard layout fail %s : %s", qerror.name().toStdString().c_str(),
+         qerror.message().toStdString().c_str())
+    );
     return true;
   }
 
@@ -274,7 +271,8 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const {
   return true;
 }
 
-void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
+void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
+{
   switch (keystroke.m_type) {
   case Keystroke::kButton:
     if (keystroke.m_data.m_button.m_repeat) {
@@ -282,15 +280,14 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
       int i = (c >> 3);
       int b = 1 << (c & 7);
       if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
-          (c != 113 && c != 116 &&
-           (m_keyboardState.auto_repeats[i] & b) == 0)) {
+          (c != 113 && c != 116 && (m_keyboardState.auto_repeats[i] & b) == 0)) {
         LOG((CLOG_DEBUG1 "  discard autorepeat"));
         break;
       }
     }
     XTestFakeKeyEvent(
-        m_display, keystroke.m_data.m_button.m_button,
-        keystroke.m_data.m_button.m_press ? True : False, CurrentTime);
+        m_display, keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press ? True : False, CurrentTime
+    );
     break;
 
   case Keystroke::kGroup:
@@ -307,9 +304,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
 #endif
 #if HAVE_XKB_EXTENSION
       if (m_xkb != NULL) {
-        if (XkbLockGroup(
-                m_display, XkbUseCoreKbd, keystroke.m_data.m_group.m_group) ==
-            False) {
+        if (XkbLockGroup(m_display, XkbUseCoreKbd, keystroke.m_data.m_group.m_group) == False) {
           LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
         }
       } else
@@ -327,10 +322,8 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
 #if HAVE_XKB_EXTENSION
       if (m_xkb != NULL) {
         if (XkbLockGroup(
-                m_display, XkbUseCoreKbd,
-                getEffectiveGroup(
-                    pollActiveGroup(), keystroke.m_data.m_group.m_group)) ==
-            False) {
+                m_display, XkbUseCoreKbd, getEffectiveGroup(pollActiveGroup(), keystroke.m_data.m_group.m_group)
+            ) == False) {
           LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
         }
       } else
@@ -345,7 +338,8 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke) {
   XFlush(m_display);
 }
 
-void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
+void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
+{
   // there are up to 4 keysyms per keycode
   static const int maxKeysyms = 4;
 
@@ -372,8 +366,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
 
   // get the keyboard mapping for all keys
   int keysymsPerKeycode;
-  KeySym *allKeysyms = XGetKeyboardMapping(
-      m_display, minKeycode, numKeycodes, &keysymsPerKeycode);
+  KeySym *allKeysyms = XGetKeyboardMapping(m_display, minKeycode, numKeycodes, &keysymsPerKeycode);
 
   // it's more convenient to always have maxKeysyms KeySyms per key
   {
@@ -381,8 +374,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
     for (int i = 0; i < numKeycodes; ++i) {
       for (int j = 0; j < maxKeysyms; ++j) {
         if (j < keysymsPerKeycode) {
-          tmpKeysyms[maxKeysyms * i + j] =
-              allKeysyms[keysymsPerKeycode * i + j];
+          tmpKeysyms[maxKeysyms * i + j] = allKeysyms[keysymsPerKeycode * i + j];
         } else {
           tmpKeysyms[maxKeysyms * i + j] = NoSymbol;
         }
@@ -412,8 +404,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
   std::map<KeyCode, unsigned int> modifierButtons;
   XModifierKeymap *modifiers = XGetModifierMapping(m_display);
   for (unsigned int i = 0; i < 8; ++i) {
-    const KeyCode *buttons =
-        modifiers->modifiermap + i * modifiers->max_keypermod;
+    const KeyCode *buttons = modifiers->modifiermap + i * modifiers->max_keypermod;
     for (int j = 0; j < modifiers->max_keypermod; ++j) {
       modifierButtons.insert(std::make_pair(buttons[j], i));
     }
@@ -447,16 +438,14 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
 
     // if the keysyms in levels 2 or 3 exist and differ from levels
     // 0 and 1 then the key is sensitive AltGr (Mode_switch)
-    if ((keysyms[2] != NoSymbol && keysyms[2] != keysyms[0]) ||
-        (keysyms[3] != NoSymbol && keysyms[2] != keysyms[1])) {
+    if ((keysyms[2] != NoSymbol && keysyms[2] != keysyms[0]) || (keysyms[3] != NoSymbol && keysyms[2] != keysyms[1])) {
       item.m_sensitive |= KeyModifierAltGr;
     }
 
     // check if the key is caps-lock sensitive.  some systems only
     // provide one keysym for keys sensitive to caps-lock.  if we
     // find that then fill in the missing keysym.
-    if (keysyms[0] != NoSymbol && keysyms[1] == NoSymbol &&
-        keysyms[2] == NoSymbol && keysyms[3] == NoSymbol) {
+    if (keysyms[0] != NoSymbol && keysyms[1] == NoSymbol && keysyms[2] == NoSymbol && keysyms[3] == NoSymbol) {
       KeySym lKeysym, uKeysym;
       XConvertCase(keysyms[0], &lKeysym, &uKeysym);
       if (lKeysym != uKeysym) {
@@ -467,13 +456,11 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
     } else if (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol) {
       KeySym lKeysym, uKeysym;
       XConvertCase(keysyms[0], &lKeysym, &uKeysym);
-      if (lKeysym != uKeysym && lKeysym == keysyms[0] &&
-          uKeysym == keysyms[1]) {
+      if (lKeysym != uKeysym && lKeysym == keysyms[0] && uKeysym == keysyms[1]) {
         item.m_sensitive |= KeyModifierCapsLock;
       } else if (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol) {
         XConvertCase(keysyms[2], &lKeysym, &uKeysym);
-        if (lKeysym != uKeysym && lKeysym == keysyms[2] &&
-            uKeysym == keysyms[3]) {
+        if (lKeysym != uKeysym && lKeysym == keysyms[2] && uKeysym == keysyms[3]) {
           item.m_sensitive |= KeyModifierCapsLock;
         }
       }
@@ -484,18 +471,14 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
     // if it's sensitive to caps-lock.
     if ((item.m_sensitive & KeyModifierCapsLock) != 0) {
       item.m_sensitive |= KeyModifierShift;
-    } else if (
-        (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol &&
-         keysyms[0] != keysyms[1]) ||
-        (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol &&
-         keysyms[2] != keysyms[3])) {
+    } else if ((keysyms[0] != NoSymbol && keysyms[1] != NoSymbol && keysyms[0] != keysyms[1]) ||
+               (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol && keysyms[2] != keysyms[3])) {
       item.m_sensitive |= KeyModifierShift;
     }
 
     // key is sensitive to numlock if any keysym on it is
-    if (IsKeypadKey(keysyms[0]) || IsPrivateKeypadKey(keysyms[0]) ||
-        IsKeypadKey(keysyms[1]) || IsPrivateKeypadKey(keysyms[1]) ||
-        IsKeypadKey(keysyms[2]) || IsPrivateKeypadKey(keysyms[2]) ||
+    if (IsKeypadKey(keysyms[0]) || IsPrivateKeypadKey(keysyms[0]) || IsKeypadKey(keysyms[1]) ||
+        IsPrivateKeypadKey(keysyms[1]) || IsKeypadKey(keysyms[2]) || IsPrivateKeypadKey(keysyms[2]) ||
         IsKeypadKey(keysyms[3]) || IsPrivateKeypadKey(keysyms[3])) {
       item.m_sensitive |= KeyModifierNumLock;
     }
@@ -555,8 +538,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
         // add capslock version of key is sensitive to capslock
         KeySym lKeysym, uKeysym;
         XConvertCase(keysyms[j], &lKeysym, &uKeysym);
-        if (lKeysym != uKeysym && lKeysym == keysyms[j - 1] &&
-            uKeysym == keysyms[j]) {
+        if (lKeysym != uKeysym && lKeysym == keysyms[j - 1] && uKeysym == keysyms[j]) {
           item.m_required &= ~KeyModifierShift;
           item.m_required |= KeyModifierCapsLock;
           keyMap.addKeyEntry(item);
@@ -580,7 +562,8 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap) {
 }
 
 #if HAVE_XKB_EXTENSION
-void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
+void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
+{
   static const XkbKTMapEntryRec defMapEntry = {
       True, // active
       0,    // level
@@ -588,7 +571,8 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
           0, // mods.mask
           0, // mods.real_mods
           0  // mods.vmods
-      }};
+      }
+  };
 
   LOG((CLOG_DEBUG1 "xkb mapping"));
 
@@ -654,8 +638,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
 
       // iterate over all shift levels for the button (including none)
       for (int j = -1; j < type->map_count; ++j) {
-        const XkbKTMapEntryRec *mapEntry =
-            ((j == -1) ? &defMapEntry : type->map + j);
+        const XkbKTMapEntryRec *mapEntry = ((j == -1) ? &defMapEntry : type->map + j);
         if (!mapEntry->active) {
           continue;
         }
@@ -663,8 +646,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
 
         // set required modifiers for this item
         item.m_required = mapEntry->mods.mask;
-        if ((item.m_required & LockMask) != 0 && j != -1 &&
-            type->preserve != NULL &&
+        if ((item.m_required & LockMask) != 0 && j != -1 && type->preserve != NULL &&
             (type->preserve[j].mask & LockMask) != 0) {
           // sensitive caps lock and we preserve caps-lock.
           // preserving caps-lock means we Xlib functions would
@@ -695,10 +677,8 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
             if ((action->mods.flags & XkbSA_UseModMapMods) == 0) {
               modifierMask = action->mods.mask;
             }
-          } else if (
-              action->type == XkbSA_SetGroup ||
-              action->type == XkbSA_LatchGroup ||
-              action->type == XkbSA_LockGroup) {
+          } else if (action->type == XkbSA_SetGroup || action->type == XkbSA_LatchGroup ||
+                     action->type == XkbSA_LockGroup) {
             // ignore group change key
             continue;
           }
@@ -707,8 +687,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
 
         // VMware modifier hack
         if (useLastGoodModifiers) {
-          XKBModifierMap::const_iterator k =
-              m_lastGoodXKBModifiers.find(eGroup * 256 + keycode);
+          XKBModifierMap::const_iterator k = m_lastGoodXKBModifiers.find(eGroup * 256 + keycode);
           if (k != m_lastGoodXKBModifiers.end()) {
             // Use last known good modifier
             isModifier = true;
@@ -718,8 +697,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
           }
         } else if (isModifier) {
           // Save known good modifier
-          XKBModifierInfo &info =
-              m_lastGoodXKBModifiers[eGroup * 256 + keycode];
+          XKBModifierInfo &info = m_lastGoodXKBModifiers[eGroup * 256 + keycode];
           info.m_level = level;
           info.m_mask = modifierMask;
           info.m_lock = item.m_lock;
@@ -809,16 +787,15 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap) {
 }
 #endif
 
-void XWindowsKeyState::remapKeyModifiers(
-    KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &item, void *vself) {
+void XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &item, void *vself)
+{
   XWindowsKeyState *self = static_cast<XWindowsKeyState *>(vself);
-  item.m_required =
-      self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
-  item.m_sensitive =
-      self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
+  item.m_required = self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
+  item.m_sensitive = self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
 }
 
-bool XWindowsKeyState::hasModifiersXKB() const {
+bool XWindowsKeyState::hasModifiersXKB() const
+{
 #if HAVE_XKB_EXTENSION
   // iterate over all keycodes
   for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
@@ -846,7 +823,8 @@ bool XWindowsKeyState::hasModifiersXKB() const {
   return false;
 }
 
-int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const {
+int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
+{
   (void)keycode;
 #if HAVE_XKB_EXTENSION
   // get effective group for key
@@ -875,7 +853,8 @@ int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const {
   return group;
 }
 
-UInt32 XWindowsKeyState::getGroupFromState(unsigned int state) const {
+UInt32 XWindowsKeyState::getGroupFromState(unsigned int state) const
+{
 #if HAVE_XKB_EXTENSION
   if (m_xkb != NULL) {
     return XkbGroupForCoreState(state);

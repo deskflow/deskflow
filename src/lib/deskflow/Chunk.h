@@ -20,7 +20,8 @@
 #include "common/basic_types.h"
 #include <base/EventTypes.h>
 
-class Chunk : public EventData {
+class Chunk : public EventData
+{
 public:
   Chunk(size_t size);
   Chunk(Chunk const &) = delete;

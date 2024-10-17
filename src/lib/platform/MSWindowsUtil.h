@@ -23,7 +23,8 @@
 #define WINDOWS_LEAN_AND_MEAN
 #include <Windows.h>
 
-class MSWindowsUtil {
+class MSWindowsUtil
+{
 public:
   //! Get message string
   /*!

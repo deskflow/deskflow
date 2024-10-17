@@ -49,14 +49,21 @@ class ClientListener;
 /*!
 This class implements the top-level server algorithms for deskflow.
 */
-class Server : public INode {
+class Server : public INode
+{
   using ServerConfig = deskflow::server::Config;
 
 public:
   //! Lock cursor to screen data
-  class LockCursorToScreenInfo {
+  class LockCursorToScreenInfo
+  {
   public:
-    enum State { kOff, kOn, kToggle };
+    enum State
+    {
+      kOff,
+      kOn,
+      kToggle
+    };
 
     static LockCursorToScreenInfo *alloc(State state = kToggle);
 
@@ -65,7 +72,8 @@ public:
   };
 
   //! Switch to screen data
-  class SwitchToScreenInfo {
+  class SwitchToScreenInfo
+  {
   public:
     static SwitchToScreenInfo *alloc(const String &screen);
 
@@ -75,7 +83,8 @@ public:
   };
 
   //! Switch in direction data
-  class SwitchInDirectionInfo {
+  class SwitchInDirectionInfo
+  {
   public:
     static SwitchInDirectionInfo *alloc(EDirection direction);
 
@@ -84,18 +93,27 @@ public:
   };
 
   //! Screen connected data
-  class ScreenConnectedInfo {
+  class ScreenConnectedInfo
+  {
   public:
-    ScreenConnectedInfo(String screen) : m_screen(screen) {}
+    ScreenConnectedInfo(String screen) : m_screen(screen)
+    {
+    }
 
   public:
     String m_screen; // was char[1]
   };
 
   //! Keyboard broadcast data
-  class KeyboardBroadcastInfo {
+  class KeyboardBroadcastInfo
+  {
   public:
-    enum State { kOff, kOn, kToggle };
+    enum State
+    {
+      kOff,
+      kOn,
+      kToggle
+    };
 
     static KeyboardBroadcastInfo *alloc(State state = kToggle);
     static KeyboardBroadcastInfo *alloc(State state, const String &screens);
@@ -111,9 +129,9 @@ public:
   ownership of \p primaryClient.
   */
   Server(
-      ServerConfig &config, PrimaryClient *primaryClient,
-      deskflow::Screen *screen, IEventQueue *events,
-      deskflow::ServerArgs const &args);
+      ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events,
+      deskflow::ServerArgs const &args
+  );
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -122,8 +140,13 @@ public:
   Server &operator=(Server &&) = delete;
 
 #ifdef TEST_ENV
-  Server() : m_mock(true), m_config(NULL) {}
-  void setActive(BaseClientProxy *active) { m_active = active; }
+  Server() : m_mock(true), m_config(NULL)
+  {
+  }
+  void setActive(BaseClientProxy *active)
+  {
+    m_active = active;
+  }
 #endif
 
   //! @name manipulators
@@ -160,7 +183,10 @@ public:
   void dragInfoReceived(UInt32 fileNum, String content);
 
   //! Store ClientListener pointer
-  void setListener(ClientListener *p) { m_clientListener = p; }
+  void setListener(ClientListener *p)
+  {
+    m_clientListener = p;
+  }
 
   //@}
   //! @name accessors
@@ -182,13 +208,22 @@ public:
   bool isReceivedFileSizeValid();
 
   //! Return expected file data size
-  size_t &getExpectedFileSize() { return m_expectedFileSize; }
+  size_t &getExpectedFileSize()
+  {
+    return m_expectedFileSize;
+  }
 
   //! Return received file data
-  String &getReceivedFileData() { return m_receivedFileData; }
+  String &getReceivedFileData()
+  {
+    return m_receivedFileData;
+  }
 
   //! Return fake drag file list
-  DragFileList getFakeDragFileList() { return m_fakeDragFileList; }
+  DragFileList getFakeDragFileList()
+  {
+    return m_fakeDragFileList;
+  }
 
   //! Returns true if it's client mode and server initiates connection
   bool isClientMode() const;
@@ -226,8 +261,7 @@ private:
 
   // convert fraction to pixel position, writing only x or y depending
   // on the direction.
-  void mapToPixel(
-      BaseClientProxy *, EDirection, float f, SInt32 &x, SInt32 &y) const;
+  void mapToPixel(BaseClientProxy *, EDirection, float f, SInt32 &x, SInt32 &y) const;
 
   // returns true if the client has a neighbor anywhere along the edge
   // indicated by the direction.
@@ -235,16 +269,14 @@ private:
 
   // lookup neighboring screen, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
-  BaseClientProxy *
-  getNeighbor(BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
+  BaseClientProxy *getNeighbor(BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
 
   // lookup neighboring screen.  given a position relative to the
   // source screen, find the screen we should move onto and where.
   // if the position is sufficiently far from the source then we
   // cross multiple screens.  if there is no suitable screen then
   // return NULL and x,y are not modified.
-  BaseClientProxy *
-  mapToNeighbor(BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
+  BaseClientProxy *mapToNeighbor(BaseClientProxy *, EDirection, SInt32 &x, SInt32 &y) const;
 
   // adjusts x and y or neither to avoid ending up in a jump zone
   // after entering the client in the given direction.
@@ -253,9 +285,7 @@ private:
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
-  bool isSwitchOkay(
-      BaseClientProxy *dst, EDirection, SInt32 x, SInt32 y, SInt32 xActive,
-      SInt32 yActive);
+  bool isSwitchOkay(BaseClientProxy *dst, EDirection, SInt32 x, SInt32 y, SInt32 xActive, SInt32 yActive);
 
   // update switch state due to a mouse move at \p x, \p y that
   // doesn't switch screens.
@@ -328,11 +358,9 @@ private:
   void handleFileRecieveCompletedEvent(const Event &, void *);
 
   // event processing
-  void
-  onClipboardChanged(BaseClientProxy *sender, ClipboardID id, UInt32 seqNum);
+  void onClipboardChanged(BaseClientProxy *sender, ClipboardID id, UInt32 seqNum);
   void onScreensaver(bool activated);
-  void onKeyDown(
-      KeyID, KeyModifierMask, KeyButton, const String &, const char *screens);
+  void onKeyDown(KeyID, KeyModifierMask, KeyButton, const String &, const char *screens);
   void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *screens);
   void onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const String &);
   void onMouseDown(ButtonID);
@@ -382,7 +410,8 @@ public:
   bool m_mock;
 
 private:
-  class ClipboardInfo {
+  class ClipboardInfo
+  {
   public:
     ClipboardInfo();
 

@@ -51,21 +51,26 @@
 
 using namespace deskflow::gui;
 
-class QThreadImpl : public QThread {
+class QThreadImpl : public QThread
+{
 public:
-  static void msleep(unsigned long msecs) { QThread::msleep(msecs); }
+  static void msleep(unsigned long msecs)
+  {
+    QThread::msleep(msecs);
+  }
 };
 
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
 #endif
 
-bool hasArg(const QString &arg, const QStringList &args) {
-  return std::ranges::any_of(
-      args, [&arg](const QString &a) { return a == arg; });
+bool hasArg(const QString &arg, const QStringList &args)
+{
+  return std::ranges::any_of(args, [&arg](const QString &a) { return a == arg; });
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
 #if defined(Q_OS_MAC)
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
@@ -95,7 +100,8 @@ int main(int argc, char *argv[]) {
     QMessageBox::information(
         NULL, DESKFLOW_APP_NAME,
         "Please drag " DESKFLOW_APP_NAME " to the Applications folder, "
-        "and open it from there.");
+        "and open it from there."
+    );
     return 1;
   }
 
@@ -109,8 +115,7 @@ int main(int argc, char *argv[]) {
   // --no-reset
   QStringList arguments = QCoreApplication::arguments();
   const auto noReset = hasArg("--no-reset", arguments);
-  const auto resetEnvVar =
-      strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
+  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
   if (resetEnvVar && !noReset) {
     diagnostic::clearSettings(configScopes, false);
   }
@@ -118,8 +123,8 @@ int main(int argc, char *argv[]) {
   AppConfig appConfig(configScopes);
 
   QObject::connect(
-      &configScopes, &ConfigScopes::saving, &appConfig,
-      [&appConfig]() { appConfig.commit(); }, Qt::DirectConnection);
+      &configScopes, &ConfigScopes::saving, &appConfig, [&appConfig]() { appConfig.commit(); }, Qt::DirectConnection
+  );
 
   if (appConfig.wizardShouldRun()) {
     SetupWizard wizard(appConfig);
@@ -134,9 +139,7 @@ int main(int argc, char *argv[]) {
 
   MainWindow mainWindow(configScopes, appConfig);
 
-  QObject::connect(
-      &app, &DeskflowApplication::aboutToQuit, &mainWindow,
-      &MainWindow::onAppAboutToQuit);
+  QObject::connect(&app, &DeskflowApplication::aboutToQuit, &mainWindow, &MainWindow::onAppAboutToQuit);
 
   mainWindow.open();
 
@@ -148,7 +151,8 @@ int main(int argc, char *argv[]) {
 }
 
 #if defined(Q_OS_MAC)
-bool checkMacAssistiveDevices() {
+bool checkMacAssistiveDevices()
+{
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
 
   // new in mavericks, applications are trusted individually
@@ -163,8 +167,7 @@ bool checkMacAssistiveDevices() {
 
   const void *keys[] = {kAXTrustedCheckOptionPrompt};
   const void *trueValue[] = {kCFBooleanTrue};
-  CFDictionaryRef options =
-      CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
+  CFDictionaryRef options = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
 
   bool result = AXIsProcessTrustedWithOptions(options);
   CFRelease(options);
@@ -179,7 +182,8 @@ bool checkMacAssistiveDevices() {
         NULL, DESKFLOW_APP_NAME,
         "Please enable access to assistive devices "
         "System Preferences -> Security & Privacy -> "
-        "Privacy -> Accessibility, then re-open " DESKFLOW_APP_NAME ".");
+        "Privacy -> Accessibility, then re-open " DESKFLOW_APP_NAME "."
+    );
   }
   return result;
 

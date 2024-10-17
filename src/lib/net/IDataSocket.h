@@ -28,15 +28,21 @@
 This interface defines the methods common to all network sockets that
 represent a full-duplex data stream.
 */
-class IDataSocket : public ISocket, public deskflow::IStream {
+class IDataSocket : public ISocket, public deskflow::IStream
+{
 public:
-  class ConnectionFailedInfo {
+  class ConnectionFailedInfo
+  {
   public:
-    ConnectionFailedInfo(const char *what) : m_what(what) {}
+    ConnectionFailedInfo(const char *what) : m_what(what)
+    {
+    }
     String m_what;
   };
 
-  IDataSocket(IEventQueue *events) {}
+  IDataSocket(IEventQueue *events)
+  {
+  }
 
   //! @name manipulators
   //@{

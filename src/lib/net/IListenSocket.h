@@ -28,7 +28,8 @@ class IDataSocket;
 This interface defines the methods common to all network sockets that
 listen for incoming connections.
 */
-class IListenSocket : public ISocket {
+class IListenSocket : public ISocket
+{
 public:
   //! @name manipulators
   //@{

@@ -41,20 +41,24 @@
 constexpr float s_retryDelay = 0.01f;
 
 SecureClientSocket::SecureClientSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-    IArchNetwork::EAddressFamily family)
-    : InverseClientSocket(events, socketMultiplexer, family) {}
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+)
+    : InverseClientSocket(events, socketMultiplexer, family)
+{
+}
 
-void SecureClientSocket::connect(const NetworkAddress &addr) {
+void SecureClientSocket::connect(const NetworkAddress &addr)
+{
   m_events->adoptHandler(
       m_events->forIDataSocket().connected(), getEventTarget(),
-      new TMethodEventJob<SecureClientSocket>(
-          this, &SecureClientSocket::handleTCPConnected));
+      new TMethodEventJob<SecureClientSocket>(this, &SecureClientSocket::handleTCPConnected)
+  );
 
   InverseClientSocket::connect(addr);
 }
 
-ISocketMultiplexerJob *SecureClientSocket::newJob() {
+ISocketMultiplexerJob *SecureClientSocket::newJob()
+{
   // after TCP connection is established, SecureClientSocket will pick up
   // connected event and do secureConnect
   if (m_connected && !m_secureReady) {
@@ -64,19 +68,22 @@ ISocketMultiplexerJob *SecureClientSocket::newJob() {
   return InverseClientSocket::newJob(getSocket());
 }
 
-void SecureClientSocket::secureConnect() {
+void SecureClientSocket::secureConnect()
+{
   setJob(new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this, &SecureClientSocket::serviceConnect, getSocket(), isReadable(),
-      isWritable()));
+      this, &SecureClientSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+  ));
 }
 
-void SecureClientSocket::secureAccept() {
+void SecureClientSocket::secureAccept()
+{
   setJob(new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this, &SecureClientSocket::serviceAccept, getSocket(), isReadable(),
-      isWritable()));
+      this, &SecureClientSocket::serviceAccept, getSocket(), isReadable(), isWritable()
+  ));
 }
 
-InverseClientSocket::EJobResult SecureClientSocket::doRead() {
+InverseClientSocket::EJobResult SecureClientSocket::doRead()
+{
   UInt8 buffer[4096] = {0};
   int bytesRead = 0;
   int status = 0;
@@ -126,7 +133,8 @@ InverseClientSocket::EJobResult SecureClientSocket::doRead() {
   return InverseClientSocket::EJobResult::kRetry;
 }
 
-InverseClientSocket::EJobResult SecureClientSocket::doWrite() {
+InverseClientSocket::EJobResult SecureClientSocket::doWrite()
+{
   static bool s_retry = false;
   static int s_retrySize = 0;
   static int s_staticBufferSize = 0;
@@ -177,7 +185,8 @@ InverseClientSocket::EJobResult SecureClientSocket::doWrite() {
   return InverseClientSocket::EJobResult::kRetry;
 }
 
-int SecureClientSocket::secureRead(void *buffer, int size, int &read) {
+int SecureClientSocket::secureRead(void *buffer, int size, int &read)
+{
   LOG((CLOG_DEBUG2 "reading secure socket"));
   read = m_ssl.read(static_cast<char *>(buffer), size);
 
@@ -199,7 +208,8 @@ int SecureClientSocket::secureRead(void *buffer, int size, int &read) {
   return read;
 }
 
-int SecureClientSocket::secureWrite(const void *buffer, int size, int &wrote) {
+int SecureClientSocket::secureWrite(const void *buffer, int size, int &wrote)
+{
   LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
   wrote = m_ssl.write(static_cast<const char *>(buffer), size);
 
@@ -222,13 +232,18 @@ int SecureClientSocket::secureWrite(const void *buffer, int size, int &wrote) {
   return wrote;
 }
 
-bool SecureClientSocket::isSecureReady() const { return m_secureReady; }
+bool SecureClientSocket::isSecureReady() const
+{
+  return m_secureReady;
+}
 
-bool SecureClientSocket::loadCertificates(const std::string &filename) {
+bool SecureClientSocket::loadCertificates(const std::string &filename)
+{
   return m_ssl.loadCertificate(filename);
 }
 
-int SecureClientSocket::secureAccept(int socket) {
+int SecureClientSocket::secureAccept(int socket)
+{
   LOG((CLOG_DEBUG2 "accepting secure socket"));
   static int retry = 0;
   checkResult(m_ssl.accept(socket), retry);
@@ -264,7 +279,8 @@ int SecureClientSocket::secureAccept(int socket) {
   return -1;
 }
 
-int SecureClientSocket::secureConnect(int socket) {
+int SecureClientSocket::secureConnect(int socket)
+{
   LOG((CLOG_DEBUG2 "connecting secure socket"));
   static int retry = 0;
   checkResult(m_ssl.connect(socket), retry);
@@ -302,17 +318,19 @@ int SecureClientSocket::secureConnect(int socket) {
   }
 }
 
-void SecureClientSocket::setFatal(int code) {
+void SecureClientSocket::setFatal(int code)
+{
   const std::set<int> nonFatal{
-      SSL_ERROR_NONE, SSL_ERROR_WANT_READ, SSL_ERROR_WANT_WRITE,
-      SSL_ERROR_WANT_CONNECT, SSL_ERROR_WANT_ACCEPT};
+      SSL_ERROR_NONE, SSL_ERROR_WANT_READ, SSL_ERROR_WANT_WRITE, SSL_ERROR_WANT_CONNECT, SSL_ERROR_WANT_ACCEPT
+  };
   m_fatal = nonFatal.find(code) == nonFatal.end();
 }
 
-int SecureClientSocket::getRetry(int errorCode, int retry) const {
+int SecureClientSocket::getRetry(int errorCode, int retry) const
+{
   const std::set<int> retryCodes{
-      SSL_ERROR_WANT_READ, SSL_ERROR_WANT_WRITE, SSL_ERROR_WANT_CONNECT,
-      SSL_ERROR_WANT_ACCEPT};
+      SSL_ERROR_WANT_READ, SSL_ERROR_WANT_WRITE, SSL_ERROR_WANT_CONNECT, SSL_ERROR_WANT_ACCEPT
+  };
 
   if (errorCode == SSL_ERROR_NONE || isFatal()) {
     retry = 0;
@@ -323,7 +341,8 @@ int SecureClientSocket::getRetry(int errorCode, int retry) const {
   return retry;
 }
 
-void SecureClientSocket::checkResult(int status, int &retry) {
+void SecureClientSocket::checkResult(int status, int &retry)
+{
   // ssl errors are a little quirky. the "want" errors are normal and
   // should result in a retry.
   int errorCode = m_ssl.getErrorCode(status);
@@ -364,14 +383,15 @@ void SecureClientSocket::checkResult(int status, int &retry) {
   }
 }
 
-void SecureClientSocket::disconnect() {
+void SecureClientSocket::disconnect()
+{
   sendEvent(getEvents()->forISocket().stopRetry());
   sendEvent(getEvents()->forISocket().disconnected());
   sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-ISocketMultiplexerJob *
-SecureClientSocket::serviceConnect(ISocketMultiplexerJob *, bool, bool, bool) {
+ISocketMultiplexerJob *SecureClientSocket::serviceConnect(ISocketMultiplexerJob *, bool, bool, bool)
+{
   Lock lock(&getMutex());
 
   int status = 0;
@@ -395,12 +415,12 @@ SecureClientSocket::serviceConnect(ISocketMultiplexerJob *, bool, bool, bool) {
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this, &SecureClientSocket::serviceConnect, getSocket(), isReadable(),
-      isWritable());
+      this, &SecureClientSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+  );
 }
 
-ISocketMultiplexerJob *
-SecureClientSocket::serviceAccept(ISocketMultiplexerJob *, bool, bool, bool) {
+ISocketMultiplexerJob *SecureClientSocket::serviceAccept(ISocketMultiplexerJob *, bool, bool, bool)
+{
   Lock lock(&getMutex());
 
   int status = 0;
@@ -422,11 +442,12 @@ SecureClientSocket::serviceAccept(ISocketMultiplexerJob *, bool, bool, bool) {
 
   // Retry case
   return new TSocketMultiplexerMethodJob<SecureClientSocket>(
-      this, &SecureClientSocket::serviceAccept, getSocket(), isReadable(),
-      isWritable());
+      this, &SecureClientSocket::serviceAccept, getSocket(), isReadable(), isWritable()
+  );
 }
 
-void SecureClientSocket::handleTCPConnected(const Event &, void *) {
+void SecureClientSocket::handleTCPConnected(const Event &, void *)
+{
   if (getSocket()) {
     secureConnect();
   } else {

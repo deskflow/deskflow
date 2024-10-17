@@ -29,7 +29,8 @@
 #include <Windows.h>
 #endif
 
-void setIndexFromItemData(QComboBox *comboBox, const QVariant &itemData) {
+void setIndexFromItemData(QComboBox *comboBox, const QVariant &itemData)
+{
   for (int i = 0; i < comboBox->count(); ++i) {
     if (comboBox->itemData(i) == itemData) {
       comboBox->setCurrentIndex(i);
@@ -38,13 +39,15 @@ void setIndexFromItemData(QComboBox *comboBox, const QVariant &itemData) {
   }
 }
 
-QString hash(const QString &string) {
+QString hash(const QString &string)
+{
   QByteArray data = string.toUtf8();
   QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
   return hash.toHex();
 }
 
-qProcessorArch getProcessorArch() {
+qProcessorArch getProcessorArch()
+{
 #if defined(Q_OS_WIN)
   SYSTEM_INFO systemInfo;
   GetNativeSystemInfo(&systemInfo);

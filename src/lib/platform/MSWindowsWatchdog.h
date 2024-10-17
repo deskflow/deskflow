@@ -33,11 +33,10 @@ class IpcLogOutputter;
 class IpcServer;
 class FileLogOutputter;
 
-class MSWindowsWatchdog {
+class MSWindowsWatchdog
+{
 public:
-  MSWindowsWatchdog(
-      bool autoDetectCommand, IpcServer &ipcServer,
-      IpcLogOutputter &ipcLogOutputter, bool foreground);
+  MSWindowsWatchdog(bool autoDetectCommand, IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground);
   virtual ~MSWindowsWatchdog();
 
   void startAsync();
@@ -55,8 +54,7 @@ private:
   HANDLE duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
   void startProcess();
-  BOOL startProcessAsUser(
-      String &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
+  BOOL startProcessAsUser(String &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
   BOOL startProcessInForeground(String &command);
   void sendSas();
   void getActiveDesktop(LPSECURITY_ATTRIBUTES security);
@@ -110,10 +108,16 @@ private:
 /*!
 An error occured in the process watchdog.
 */
-class XMSWindowsWatchdogError : public XDeskflow {
+class XMSWindowsWatchdogError : public XDeskflow
+{
 public:
-  XMSWindowsWatchdogError(const String &msg) : XDeskflow(msg) {}
+  XMSWindowsWatchdogError(const String &msg) : XDeskflow(msg)
+  {
+  }
 
   // XBase overrides
-  virtual String getWhat() const throw() { return what(); }
+  virtual String getWhat() const throw()
+  {
+    return what();
+  }
 };

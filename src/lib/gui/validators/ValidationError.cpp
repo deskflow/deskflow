@@ -23,25 +23,29 @@ using namespace deskflow::gui;
 
 namespace validators {
 
-void clear(QLabel *label) {
+void clear(QLabel *label)
+{
   if (label) {
     label->setStyleSheet(kStyleErrorInactiveLabel);
     label->setText("");
   }
 }
 
-ValidationError::ValidationError(QObject *parent, QLabel *label)
-    : QObject(parent),
-      m_pLabel(label) {
+ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(parent), m_pLabel(label)
+{
 
   if (m_pLabel) {
     clear(m_pLabel);
   }
 }
 
-const QString &ValidationError::message() const { return m_message; }
+const QString &ValidationError::message() const
+{
+  return m_message;
+}
 
-void ValidationError::setMessage(const QString &message) {
+void ValidationError::setMessage(const QString &message)
+{
   m_message = message;
 
   if (m_pLabel) {

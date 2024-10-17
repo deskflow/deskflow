@@ -19,7 +19,12 @@
 
 namespace deskflow {
 
-ServerArgs::~ServerArgs() {}
+ServerArgs::~ServerArgs()
+{
+}
 
-ServerArgs::ServerArgs() { m_classType = kServer; }
+ServerArgs::ServerArgs()
+{
+  m_classType = kServer;
+}
 } // namespace deskflow

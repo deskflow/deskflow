@@ -23,12 +23,12 @@
 class IEventQueue;
 class Mutex;
 
-class StreamChunker {
+class StreamChunker
+{
 public:
   static void sendFile(char *filename, IEventQueue *events, void *eventTarget);
-  static void sendClipboard(
-      String &data, size_t size, ClipboardID id, UInt32 sequence,
-      IEventQueue *events, void *eventTarget);
+  static void
+  sendClipboard(String &data, size_t size, ClipboardID id, UInt32 sequence, IEventQueue *events, void *eventTarget);
   static void interruptFile();
 
 private:

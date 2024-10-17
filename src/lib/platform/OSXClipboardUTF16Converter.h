@@ -21,7 +21,8 @@
 #include "platform/OSXClipboardAnyTextConverter.h"
 
 //! Convert to/from UTF-16 encoding
-class OSXClipboardUTF16Converter : public OSXClipboardAnyTextConverter {
+class OSXClipboardUTF16Converter : public OSXClipboardAnyTextConverter
+{
 public:
   OSXClipboardUTF16Converter();
   virtual ~OSXClipboardUTF16Converter();

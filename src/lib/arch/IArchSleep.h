@@ -25,7 +25,8 @@
 This interface defines the sleep operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchSleep : public IInterface {
+class IArchSleep : public IInterface
+{
 public:
   //! @name manipulators
   //@{

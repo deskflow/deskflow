@@ -26,7 +26,8 @@
 
 class MainWindow;
 
-class SetupWizard : public QDialog, public Ui::SetupWizardBase {
+class SetupWizard : public QDialog, public Ui::SetupWizardBase
+{
   Q_OBJECT
 
 public:

@@ -22,7 +22,8 @@
 #include "common/IInterface.h"
 #include "deskflow/IApp.h"
 
-class IAppUtil : public IInterface {
+class IAppUtil : public IInterface
+{
 public:
   virtual void adoptApp(IApp *app) = 0;
   virtual IApp &app() const = 0;
@@ -31,6 +32,5 @@ public:
   virtual void startNode() = 0;
   virtual std::vector<String> getKeyboardLayoutList() = 0;
   virtual String getCurrentLanguageCode() = 0;
-  virtual void
-  showNotification(const String &title, const String &text) const = 0;
+  virtual void showNotification(const String &title, const String &text) const = 0;
 };

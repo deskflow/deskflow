@@ -21,7 +21,8 @@
 
 #include <iostream>
 
-void ArchConsoleStd::writeConsole(ELevel level, const char *str) {
+void ArchConsoleStd::writeConsole(ELevel level, const char *str)
+{
   if ((level >= kFATAL) && (level <= kWARNING))
     std::cerr << str << std::endl;
   else

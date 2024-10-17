@@ -43,7 +43,8 @@ static PTimeGetTime s_tgt = NULL;
 // ArchTimeWindows
 //
 
-ArchTimeWindows::ArchTimeWindows() {
+ArchTimeWindows::ArchTimeWindows()
+{
   assert(s_freq == 0.0 || s_mmInstance == NULL);
 
   LARGE_INTEGER freq;
@@ -58,7 +59,8 @@ ArchTimeWindows::ArchTimeWindows() {
   }
 }
 
-ArchTimeWindows::~ArchTimeWindows() {
+ArchTimeWindows::~ArchTimeWindows()
+{
   s_freq = 0.0;
   if (s_mmInstance == NULL) {
     FreeLibrary(static_cast<HMODULE>(s_mmInstance));
@@ -67,7 +69,8 @@ ArchTimeWindows::~ArchTimeWindows() {
   }
 }
 
-double ArchTimeWindows::time() {
+double ArchTimeWindows::time()
+{
   // get time.  we try three ways, in order of descending precision
   if (s_freq != 0.0) {
     LARGE_INTEGER c;

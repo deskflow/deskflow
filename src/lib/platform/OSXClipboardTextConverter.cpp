@@ -24,23 +24,25 @@
 // OSXClipboardTextConverter
 //
 
-OSXClipboardTextConverter::OSXClipboardTextConverter() {
+OSXClipboardTextConverter::OSXClipboardTextConverter()
+{
   // do nothing
 }
 
-OSXClipboardTextConverter::~OSXClipboardTextConverter() {
+OSXClipboardTextConverter::~OSXClipboardTextConverter()
+{
   // do nothing
 }
 
-CFStringRef OSXClipboardTextConverter::getOSXFormat() const {
+CFStringRef OSXClipboardTextConverter::getOSXFormat() const
+{
   return CFSTR("public.plain-text");
 }
 
-String OSXClipboardTextConverter::convertString(
-    const String &data, CFStringEncoding fromEncoding,
-    CFStringEncoding toEncoding) {
-  CFStringRef stringRef = CFStringCreateWithCString(
-      kCFAllocatorDefault, data.c_str(), fromEncoding);
+String
+OSXClipboardTextConverter::convertString(const String &data, CFStringEncoding fromEncoding, CFStringEncoding toEncoding)
+{
+  CFStringRef stringRef = CFStringCreateWithCString(kCFAllocatorDefault, data.c_str(), fromEncoding);
 
   if (stringRef == NULL) {
     return String();
@@ -49,8 +51,7 @@ String OSXClipboardTextConverter::convertString(
   CFIndex buffSize;
   CFRange entireString = CFRangeMake(0, CFStringGetLength(stringRef));
 
-  CFStringGetBytes(
-      stringRef, entireString, toEncoding, 0, false, NULL, 0, &buffSize);
+  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, NULL, 0, &buffSize);
 
   char *buffer = new char[buffSize];
 
@@ -59,9 +60,7 @@ String OSXClipboardTextConverter::convertString(
     return String();
   }
 
-  CFStringGetBytes(
-      stringRef, entireString, toEncoding, 0, false, (UInt8 *)buffer, buffSize,
-      NULL);
+  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, (UInt8 *)buffer, buffSize, NULL);
 
   String result(buffer, buffSize);
 
@@ -71,12 +70,12 @@ String OSXClipboardTextConverter::convertString(
   return result;
 }
 
-String OSXClipboardTextConverter::doFromIClipboard(const String &data) const {
-  return convertString(
-      data, kCFStringEncodingUTF8, CFStringGetSystemEncoding());
+String OSXClipboardTextConverter::doFromIClipboard(const String &data) const
+{
+  return convertString(data, kCFStringEncodingUTF8, CFStringGetSystemEncoding());
 }
 
-String OSXClipboardTextConverter::doToIClipboard(const String &data) const {
-  return convertString(
-      data, CFStringGetSystemEncoding(), kCFStringEncodingUTF8);
+String OSXClipboardTextConverter::doToIClipboard(const String &data) const
+{
+  return convertString(data, CFStringGetSystemEncoding(), kCFStringEncodingUTF8);
 }

@@ -28,22 +28,26 @@ class QRadioButton;
 class QButtonGroup;
 class ServerConfig;
 
-class ActionDialog : public QDialog, public Ui::ActionDialogBase {
+class ActionDialog : public QDialog, public Ui::ActionDialogBase
+{
   Q_OBJECT
 
 public:
-  ActionDialog(
-      QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action);
+  ActionDialog(QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action);
 
 protected slots:
   void accept();
   void on_m_pKeySequenceWidgetHotkey_keySequenceChanged();
 
 protected:
-  const KeySequenceWidget *sequenceWidget() const {
+  const KeySequenceWidget *sequenceWidget() const
+  {
     return m_pKeySequenceWidgetHotkey;
   }
-  const ServerConfig &serverConfig() const { return m_ServerConfig; }
+  const ServerConfig &serverConfig() const
+  {
+    return m_ServerConfig;
+  }
 
 private:
   const ServerConfig &m_ServerConfig;

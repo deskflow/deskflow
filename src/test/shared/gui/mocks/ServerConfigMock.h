@@ -21,15 +21,16 @@
 
 #include <gmock/gmock.h>
 
-class ServerConfigMock : public deskflow::gui::IServerConfig {
+class ServerConfigMock : public deskflow::gui::IServerConfig
+{
 public:
-  ServerConfigMock() {
+  ServerConfigMock()
+  {
     ON_CALL(*this, screens()).WillByDefault(testing::ReturnRef(m_screensStub));
   }
 
   MOCK_METHOD(bool, isFull, (), (const, override));
-  MOCK_METHOD(
-      bool, screenExists, (const QString &screenName), (const, override));
+  MOCK_METHOD(bool, screenExists, (const QString &screenName), (const, override));
   MOCK_METHOD(bool, save, (const QString &fileName), (const, override));
   MOCK_METHOD(void, save, (QFile & file), (const, override));
   MOCK_METHOD(bool, enableDragAndDrop, (), (const, override));

@@ -24,7 +24,8 @@
 
 namespace deskflow::gui {
 
-inline int bytesToInt(const char *buffer, size_t size) {
+inline int bytesToInt(const char *buffer, size_t size)
+{
   QByteArray byteArray(buffer, static_cast<int>(size));
   QDataStream stream(byteArray);
   int result;
@@ -32,7 +33,8 @@ inline int bytesToInt(const char *buffer, size_t size) {
   return result;
 }
 
-inline QByteArray intToBytes(int value) {
+inline QByteArray intToBytes(int value)
+{
   QByteArray bytes;
   QDataStream stream(&bytes, QIODevice::WriteOnly);
   stream << value;

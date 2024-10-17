@@ -25,7 +25,8 @@
 
 namespace deskflow::gui {
 
-class TlsUtility : public QObject {
+class TlsUtility : public QObject
+{
   Q_OBJECT
 
 public:

@@ -45,7 +45,8 @@ const auto kUnixSystemConfigPath = "/usr/local/etc/";
  * Important: Qt will append the org name as a dir, and the app name as the
  * settings filename, i.e.: `{base-dir}/Deskflow/Deskflow.ini`
  */
-QString getSystemSettingsBaseDir() {
+QString getSystemSettingsBaseDir()
+{
 #if defined(Q_OS_WIN)
   return QCoreApplication::applicationDirPath();
 #elif defined(Q_OS_UNIX)
@@ -58,19 +59,18 @@ QString getSystemSettingsBaseDir() {
 #endif
 }
 
-void migrateLegacySystemSettings(QSettings &settings) {
+void migrateLegacySystemSettings(QSettings &settings)
+{
   if (QFile(settings.fileName()).exists()) {
     qDebug("system settings already exist, skipping migration");
     return;
   }
 
-  QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope,
-      kLegacySystemConfigFilename);
+  QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, kLegacySystemConfigFilename);
   QSettings oldSystemSettings(
-      QSettings::IniFormat, QSettings::SystemScope,
-      QCoreApplication::organizationName(),
-      QCoreApplication::applicationName());
+      QSettings::IniFormat, QSettings::SystemScope, QCoreApplication::organizationName(),
+      QCoreApplication::applicationName()
+  );
 
   if (QFile(oldSystemSettings.fileName()).exists()) {
     for (const auto &key : oldSystemSettings.allKeys()) {
@@ -78,11 +78,11 @@ void migrateLegacySystemSettings(QSettings &settings) {
     }
   }
 
-  QSettings::setPath(
-      QSettings::IniFormat, QSettings::SystemScope, getSystemSettingsBaseDir());
+  QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, getSystemSettingsBaseDir());
 }
 
-void migrateLegacyUserSettings(QSettings &newSettings) {
+void migrateLegacyUserSettings(QSettings &newSettings)
+{
   QString newPath = newSettings.fileName();
   QFile newFile(newPath);
   if (newFile.exists()) {
@@ -108,14 +108,14 @@ void migrateLegacyUserSettings(QSettings &newSettings) {
 
   qDebug(
       "migrating legacy settings: '%s' -> '%s'", //
-      qPrintable(oldFileInfo.fileName()), qPrintable(newFileInfo.fileName()));
+      qPrintable(oldFileInfo.fileName()), qPrintable(newFileInfo.fileName())
+  );
 
   QStringList keys = oldSettings.allKeys();
   for (const QString &key : keys) {
     QVariant oldValue = oldSettings.value(key);
     newSettings.setValue(key, oldValue);
-    logVerbose(
-        QString("migrating setting '%1' = '%2'").arg(key, oldValue.toString()));
+    logVerbose(QString("migrating setting '%1' = '%2'").arg(key, oldValue.toString()));
   }
 
   newSettings.sync();
@@ -125,7 +125,8 @@ void migrateLegacyUserSettings(QSettings &newSettings) {
 // QSettingsProxy
 //
 
-void QSettingsProxy::loadUser() {
+void QSettingsProxy::loadUser()
+{
   m_pSettings = std::make_unique<QSettings>();
 
 #if defined(Q_OS_MAC)
@@ -136,7 +137,8 @@ void QSettingsProxy::loadUser() {
 #endif // Q_OS_MAC
 }
 
-void QSettingsProxy::loadSystem() {
+void QSettingsProxy::loadSystem()
+{
   auto orgName = QCoreApplication::organizationName();
   if (orgName.isEmpty()) {
     qFatal("unable to load config, organization name is empty");
@@ -153,55 +155,73 @@ void QSettingsProxy::loadSystem() {
     qDebug() << "app name for config:" << appName;
   }
 
-  QSettings::setPath(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope,
-      getSystemSettingsBaseDir());
+  QSettings::setPath(QSettings::Format::IniFormat, QSettings::Scope::SystemScope, getSystemSettingsBaseDir());
 
-  m_pSettings = std::make_unique<QSettings>(
-      QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName,
-      appName);
+  m_pSettings =
+      std::make_unique<QSettings>(QSettings::Format::IniFormat, QSettings::Scope::SystemScope, orgName, appName);
 
 #if defined(Q_OS_WIN)
   migrateLegacySystemSettings(*m_pSettings);
 #endif // Q_OS_WIN
 }
 
-int QSettingsProxy::beginReadArray(const QString &prefix) {
+int QSettingsProxy::beginReadArray(const QString &prefix)
+{
   return m_pSettings->beginReadArray(prefix);
 }
 
-void QSettingsProxy::setArrayIndex(int i) { m_pSettings->setArrayIndex(i); }
+void QSettingsProxy::setArrayIndex(int i)
+{
+  m_pSettings->setArrayIndex(i);
+}
 
-QVariant QSettingsProxy::value(const QString &key) const {
+QVariant QSettingsProxy::value(const QString &key) const
+{
   return m_pSettings->value(key);
 }
 
-QVariant
-QSettingsProxy::value(const QString &key, const QVariant &defaultValue) const {
+QVariant QSettingsProxy::value(const QString &key, const QVariant &defaultValue) const
+{
   return m_pSettings->value(key, defaultValue);
 }
 
-void QSettingsProxy::endArray() { m_pSettings->endArray(); }
+void QSettingsProxy::endArray()
+{
+  m_pSettings->endArray();
+}
 
-void QSettingsProxy::beginWriteArray(const QString &prefix) {
+void QSettingsProxy::beginWriteArray(const QString &prefix)
+{
   m_pSettings->beginWriteArray(prefix);
 }
 
-void QSettingsProxy::setValue(const QString &key, const QVariant &value) {
+void QSettingsProxy::setValue(const QString &key, const QVariant &value)
+{
   m_pSettings->setValue(key, value);
 }
 
-void QSettingsProxy::beginGroup(const QString &prefix) {
+void QSettingsProxy::beginGroup(const QString &prefix)
+{
   m_pSettings->beginGroup(prefix);
 }
 
-void QSettingsProxy::remove(const QString &key) { m_pSettings->remove(key); }
+void QSettingsProxy::remove(const QString &key)
+{
+  m_pSettings->remove(key);
+}
 
-void QSettingsProxy::endGroup() { m_pSettings->endGroup(); }
+void QSettingsProxy::endGroup()
+{
+  m_pSettings->endGroup();
+}
 
-bool QSettingsProxy::isWritable() const { return m_pSettings->isWritable(); }
+bool QSettingsProxy::isWritable() const
+{
+  return m_pSettings->isWritable();
+}
 
-bool QSettingsProxy::contains(const QString &key) const {
+bool QSettingsProxy::contains(const QString &key) const
+{
   return m_pSettings->contains(key);
 }
 

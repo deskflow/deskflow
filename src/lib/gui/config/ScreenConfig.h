@@ -24,11 +24,13 @@
 #include "gui/proxy/QSettingsProxy.h"
 
 /// @brief Screen configuration base class
-class ScreenConfig {
+class ScreenConfig
+{
   using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
-  enum class Modifier {
+  enum class Modifier
+  {
     DefaultMod = -1,
     Shift,
     Ctrl,
@@ -38,23 +40,30 @@ public:
     None,
     NumModifiers
   };
-  enum class SwitchCorner {
+  enum class SwitchCorner
+  {
     TopLeft,
     TopRight,
     BottomLeft,
     BottomRight,
     NumSwitchCorners
   };
-  enum class Fix { CapsLock, NumLock, ScrollLock, XTest, NumFixes };
+  enum class Fix
+  {
+    CapsLock,
+    NumLock,
+    ScrollLock,
+    XTest,
+    NumFixes
+  };
 
 protected:
   explicit ScreenConfig() = default;
   ~ScreenConfig() = default;
 
   template <typename T1, typename T2>
-  void readSettings(
-      QSettingsProxy &settings, T1 &array, const QString &arrayName,
-      const T2 &defaultValue) {
+  void readSettings(QSettingsProxy &settings, T1 &array, const QString &arrayName, const T2 &defaultValue)
+  {
     int entries = settings.beginReadArray(arrayName + "Array");
     array.clear();
     for (int i = 0; i < entries; i++) {
@@ -66,9 +75,8 @@ protected:
   }
 
   template <typename T1, typename T2>
-  void readSettings(
-      QSettingsProxy &settings, T1 &array, const QString &arrayName,
-      const T2 &defaultValue, int entries) {
+  void readSettings(QSettingsProxy &settings, T1 &array, const QString &arrayName, const T2 &defaultValue, int entries)
+  {
     Q_ASSERT(array.size() >= entries);
     settings.beginReadArray(arrayName + "Array");
     for (int i = 0; i < entries; i++) {
@@ -79,10 +87,8 @@ protected:
     settings.endArray();
   }
 
-  template <typename T>
-  void writeSettings(
-      QSettingsProxy &settings, const T &array,
-      const QString &arrayName) const {
+  template <typename T> void writeSettings(QSettingsProxy &settings, const T &array, const QString &arrayName) const
+  {
     settings.beginWriteArray(arrayName + "Array");
     for (int i = 0; i < array.size(); i++) {
       settings.setArrayIndex(i);
@@ -92,9 +98,16 @@ protected:
   }
 
 public:
-  static const char *modifierName(int idx) { return m_ModifierNames[idx]; }
-  static const char *fixName(int idx) { return m_FixNames[idx]; }
-  static const char *switchCornerName(int idx) {
+  static const char *modifierName(int idx)
+  {
+    return m_ModifierNames[idx];
+  }
+  static const char *fixName(int idx)
+  {
+    return m_FixNames[idx];
+  }
+  static const char *switchCornerName(int idx)
+  {
     return m_SwitchCornerNames[idx];
   }
 

@@ -25,7 +25,8 @@
 This class measures time intervals.  All time interval measurement
 should use this class.
 */
-class Stopwatch {
+class Stopwatch
+{
 public:
   /*!
   The default constructor does an implicit reset() or setTrigger().

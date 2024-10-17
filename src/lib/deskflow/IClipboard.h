@@ -26,7 +26,8 @@
 /*!
 This interface defines the methods common to all clipboards.
 */
-class IClipboard : public IInterface {
+class IClipboard : public IInterface
+{
 public:
   //! Timestamp type
   /*!
@@ -55,7 +56,8 @@ public:
   HTML fragment (but not necessarily a complete HTML document).
   Newlines are LF.
   */
-  enum EFormat {
+  enum EFormat
+  {
     kText,      //!< Text format, UTF-8, newline is LF
     kHTML,      //!< HTML format, HTML fragment, UTF-8, newline is LF
     kBitmap,    //!< Bitmap format, BMP 24/32bpp, BI_RGB

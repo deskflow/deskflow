@@ -19,7 +19,8 @@
 
 #include "platform/OSXClipboardAnyTextConverter.h"
 
-class OSXClipboardUTF8Converter : public OSXClipboardAnyTextConverter {
+class OSXClipboardUTF8Converter : public OSXClipboardAnyTextConverter
+{
 public:
   virtual CFStringRef getOSXFormat() const;
 

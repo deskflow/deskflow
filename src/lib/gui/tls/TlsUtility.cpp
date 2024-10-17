@@ -24,14 +24,18 @@
 
 namespace deskflow::gui {
 
-TlsUtility::TlsUtility(const IAppConfig &appConfig) : m_appConfig(appConfig) {}
+TlsUtility::TlsUtility(const IAppConfig &appConfig) : m_appConfig(appConfig)
+{
+}
 
-bool TlsUtility::isEnabled() const {
+bool TlsUtility::isEnabled() const
+{
   const auto &config = m_appConfig;
   return config.tlsEnabled();
 }
 
-bool TlsUtility::generateCertificate() {
+bool TlsUtility::generateCertificate()
+{
   qDebug("generating tls certificate, "
          "all clients must trust the new fingerprint");
 
@@ -46,7 +50,8 @@ bool TlsUtility::generateCertificate() {
   return m_certificate.generateCertificate(m_appConfig.tlsCertPath(), length);
 }
 
-bool TlsUtility::persistCertificate() {
+bool TlsUtility::persistCertificate()
+{
   qDebug("persisting tls certificate");
 
   if (QFile::exists(m_appConfig.tlsCertPath())) {

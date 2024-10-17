@@ -30,7 +30,8 @@ it in the d'tor.  It's easier and safer than manually locking and
 unlocking since unlocking must usually be done no matter how a function
 exits (including by unwinding due to an exception).
 */
-class Lock {
+class Lock
+{
 public:
   //! Lock the mutex \c mutex
   Lock(const Mutex *mutex);

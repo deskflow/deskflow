@@ -21,7 +21,8 @@
 
 namespace deskflow::gui {
 
-class ServerMessage {
+class ServerMessage
+{
   QString m_message;
   QString m_clientName;
 

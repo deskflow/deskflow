@@ -22,25 +22,29 @@
 // BaseClientProxy
 //
 
-BaseClientProxy::BaseClientProxy(const String &name)
-    : m_name(name),
-      m_x(0),
-      m_y(0) {
+BaseClientProxy::BaseClientProxy(const String &name) : m_name(name), m_x(0), m_y(0)
+{
   // do nothing
 }
 
-BaseClientProxy::~BaseClientProxy() {
+BaseClientProxy::~BaseClientProxy()
+{
   // do nothing
 }
 
-void BaseClientProxy::setJumpCursorPos(SInt32 x, SInt32 y) {
+void BaseClientProxy::setJumpCursorPos(SInt32 x, SInt32 y)
+{
   m_x = x;
   m_y = y;
 }
 
-void BaseClientProxy::getJumpCursorPos(SInt32 &x, SInt32 &y) const {
+void BaseClientProxy::getJumpCursorPos(SInt32 &x, SInt32 &y) const
+{
   x = m_x;
   y = m_y;
 }
 
-String BaseClientProxy::getName() const { return m_name; }
+String BaseClientProxy::getName() const
+{
+  return m_name;
+}

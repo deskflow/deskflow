@@ -20,7 +20,8 @@
 
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
-class OSXPowerManager {
+class OSXPowerManager
+{
 public:
   OSXPowerManager();
   ~OSXPowerManager();

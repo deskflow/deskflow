@@ -22,7 +22,8 @@
 
 #include <gtest/gtest.h>
 
-TEST(dotenv_tests, dotenv_fileDoesNotExist_doesNotLoadEnvVar) {
+TEST(dotenv_tests, dotenv_fileDoesNotExist_doesNotLoadEnvVar)
+{
   const QString envFile = "tmp/test/.env";
 
   deskflow::gui::dotenv(envFile);
@@ -31,7 +32,8 @@ TEST(dotenv_tests, dotenv_fileDoesNotExist_doesNotLoadEnvVar) {
   EXPECT_TRUE(actualValue.isEmpty());
 }
 
-TEST(dotenv_tests, dotenv_envFileWithEntry_loadsEnvVar) {
+TEST(dotenv_tests, dotenv_envFileWithEntry_loadsEnvVar)
+{
   const QString envFile = "tmp/test/.env";
   QFile file(envFile);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {

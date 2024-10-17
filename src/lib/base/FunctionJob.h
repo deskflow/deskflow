@@ -24,7 +24,8 @@
 /*!
 A job class that invokes a function.
 */
-class FunctionJob : public IJob {
+class FunctionJob : public IJob
+{
 public:
   //! run() invokes \c func(arg)
   FunctionJob(void (*func)(void *), void *arg = NULL);

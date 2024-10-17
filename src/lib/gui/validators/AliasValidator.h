@@ -22,10 +22,10 @@
 
 namespace validators {
 
-class AliasValidator : public LineEditValidator {
+class AliasValidator : public LineEditValidator
+{
 public:
-  explicit AliasValidator(
-      QLineEdit *parent = nullptr, ValidationError *error = nullptr);
+  explicit AliasValidator(QLineEdit *parent = nullptr, ValidationError *error = nullptr);
 };
 
 } // namespace validators

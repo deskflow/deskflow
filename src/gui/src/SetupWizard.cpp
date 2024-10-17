@@ -23,7 +23,8 @@
 
 using namespace deskflow::gui;
 
-SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig) {
+SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig)
+{
   setupUi(this);
 
   setWindowTitle(QString("Setup %1").arg(DESKFLOW_APP_NAME));
@@ -31,26 +32,28 @@ SetupWizard::SetupWizard(AppConfig &appConfig) : m_appConfig(appConfig) {
   m_pLabelError->setStyleSheet(kStyleErrorActiveLabel);
 
   m_pLineEditName->setText(appConfig.screenName());
-  m_pLineEditName->setValidator(new validators::ScreenNameValidator(
-      m_pLineEditName, new validators::ValidationError(this, m_pLabelError)));
+  m_pLineEditName->setValidator(
+      new validators::ScreenNameValidator(m_pLineEditName, new validators::ValidationError(this, m_pLabelError))
+  );
 
   connect(m_pButtonApply, &QPushButton::clicked, this, &SetupWizard::accept);
-  connect(
-      m_pLineEditName, &QLineEdit::textChanged, this,
-      &SetupWizard::onLineEditNameChanged);
+  connect(m_pLineEditName, &QLineEdit::textChanged, this, &SetupWizard::onLineEditNameChanged);
 }
 
-void SetupWizard::accept() {
+void SetupWizard::accept()
+{
   m_appConfig.setWizardHasRun();
   m_appConfig.setScreenName(m_pLineEditName->text());
   QDialog::accept();
 }
 
-void SetupWizard::onLineEditNameChanged(const QString &error) {
+void SetupWizard::onLineEditNameChanged(const QString &error)
+{
   m_pButtonApply->setEnabled(m_pLineEditName->hasAcceptableInput());
 }
 
-void SetupWizard::reject() {
+void SetupWizard::reject()
+{
   QDialog::reject();
   QApplication::exit();
 }

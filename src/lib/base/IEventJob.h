@@ -26,7 +26,8 @@ class Event;
 /*!
 An event job is an interface for executing a event handler.
 */
-class IEventJob : public IInterface {
+class IEventJob : public IInterface
+{
 public:
   //! Run the job
   virtual void run(const Event &) = 0;

@@ -26,27 +26,26 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-void showHelp() {
-  std::cout << "Usage: " CORE_BINARY_NAME " <server | client> [...options]"
-            << std::endl;
-  std::cout << "server - start as a server (" << SERVER_BINARY_NAME << ")"
-            << std::endl;
-  std::cout << "client - start as a client (" << CLIENT_BINARY_NAME << ")"
-            << std::endl;
-  std::cout << "use " CORE_BINARY_NAME
-               " <server|client> --help for more information."
-            << std::endl;
+void showHelp()
+{
+  std::cout << "Usage: " CORE_BINARY_NAME " <server | client> [...options]" << std::endl;
+  std::cout << "server - start as a server (" << SERVER_BINARY_NAME << ")" << std::endl;
+  std::cout << "client - start as a client (" << CLIENT_BINARY_NAME << ")" << std::endl;
+  std::cout << "use " CORE_BINARY_NAME " <server|client> --help for more information." << std::endl;
 }
 
-bool isServer(int argc, char **argv) {
+bool isServer(int argc, char **argv)
+{
   return (argc > 1 && argv[1] == std::string("server"));
 }
 
-bool isClient(int argc, char **argv) {
+bool isClient(int argc, char **argv)
+{
   return (argc > 1 && argv[1] == std::string("client"));
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 #if SYSAPI_WIN32
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif

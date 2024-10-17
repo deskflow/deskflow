@@ -29,7 +29,8 @@
 #define ARCH_TASKBAR ArchTaskBarWindows
 
 //! Win32 implementation of IArchTaskBar
-class ArchTaskBarWindows : public IArchTaskBar {
+class ArchTaskBarWindows : public IArchTaskBar
+{
 public:
   ArchTaskBarWindows();
   virtual ~ArchTaskBarWindows();
@@ -56,7 +57,8 @@ public:
   virtual void updateReceiver(IArchTaskBarReceiver *);
 
 private:
-  class ReceiverInfo {
+  class ReceiverInfo
+  {
   public:
     UINT m_id;
   };
@@ -74,8 +76,7 @@ private:
   void updateIcon(UINT);
   void addAllIcons();
   void removeAllIcons();
-  void
-  modifyIconNoLock(ReceiverToInfoMap::const_iterator, DWORD taskBarMessage);
+  void modifyIconNoLock(ReceiverToInfoMap::const_iterator, DWORD taskBarMessage);
   void removeIconNoLock(UINT id);
   void handleIconMessage(IArchTaskBarReceiver *, LPARAM);
 

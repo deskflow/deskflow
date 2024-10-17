@@ -29,7 +29,8 @@
 
 #include <QDialog>
 
-class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
+class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
+{
   using IAppConfig = deskflow::gui::IAppConfig;
   using IServerConfig = deskflow::gui::IServerConfig;
   using CoreProcess = deskflow::gui::CoreProcess;
@@ -39,8 +40,8 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase {
 public:
   void extracted();
   SettingsDialog(
-      QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig,
-      const CoreProcess &coreProcess);
+      QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
+  );
 
 signals:
   void shown();

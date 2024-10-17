@@ -25,7 +25,8 @@
 This outputter writes output to the debugger. In Visual Studio, this
 can be seen in the Output window.
 */
-class MSWindowsDebugOutputter : public ILogOutputter {
+class MSWindowsDebugOutputter : public ILogOutputter
+{
 public:
   MSWindowsDebugOutputter();
   virtual ~MSWindowsDebugOutputter();

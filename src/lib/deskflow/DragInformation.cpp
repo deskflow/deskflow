@@ -24,10 +24,12 @@
 
 using namespace std;
 
-DragInformation::DragInformation() : m_filename(), m_filesize(0) {}
+DragInformation::DragInformation() : m_filename(), m_filesize(0)
+{
+}
 
-void DragInformation::parseDragInfo(
-    DragFileList &dragFileList, UInt32 fileNum, String data) {
+void DragInformation::parseDragInfo(DragFileList &dragFileList, UInt32 fileNum, String data)
+{
   size_t startPos = 0;
   size_t findResult1 = 0;
   size_t findResult2 = 0;
@@ -49,8 +51,7 @@ void DragInformation::parseDragInfo(
 
     // set filename
     if (findResult1 - findResult2 > 1) {
-      String filename =
-          data.substr(findResult2 + 1, findResult1 - findResult2 - 1);
+      String filename = data.substr(findResult2 + 1, findResult1 - findResult2 - 1);
       DragInformation di;
       di.setFilename(filename);
       dragFileList.push_back(di);
@@ -60,8 +61,7 @@ void DragInformation::parseDragInfo(
     // set filesize
     findResult2 = data.find(',', startPos);
     if (findResult2 - findResult1 > 1) {
-      String filesize =
-          data.substr(findResult1 + 1, findResult2 - findResult1 - 1);
+      String filesize = data.substr(findResult1 + 1, findResult2 - findResult1 - 1);
       size_t size = stringToNum(filesize);
       dragFileList.at(index).setFilesize(size);
     }
@@ -70,18 +70,15 @@ void DragInformation::parseDragInfo(
     ++index;
   }
 
-  LOG(
-      (CLOG_DEBUG "drag info received, total drag file number: %i",
-       dragFileList.size()));
+  LOG((CLOG_DEBUG "drag info received, total drag file number: %i", dragFileList.size()));
 
   for (size_t i = 0; i < dragFileList.size(); ++i) {
-    LOG(
-        (CLOG_DEBUG "dragging file %i name: %s", i + 1,
-         dragFileList.at(i).getFilename().c_str()));
+    LOG((CLOG_DEBUG "dragging file %i name: %s", i + 1, dragFileList.at(i).getFilename().c_str()));
   }
 }
 
-String DragInformation::getDragFileExtension(String filename) {
+String DragInformation::getDragFileExtension(String filename)
+{
   size_t findResult = string::npos;
   findResult = filename.find_last_of(".", filename.size());
   if (findResult != string::npos) {
@@ -91,7 +88,8 @@ String DragInformation::getDragFileExtension(String filename) {
   }
 }
 
-int DragInformation::setupDragInfo(DragFileList &fileList, String &output) {
+int DragInformation::setupDragInfo(DragFileList &fileList, String &output)
+{
   int size = static_cast<int>(fileList.size());
   for (int i = 0; i < size; ++i) {
     output.append(fileList.at(i).getFilename());
@@ -103,7 +101,8 @@ int DragInformation::setupDragInfo(DragFileList &fileList, String &output) {
   return size;
 }
 
-bool DragInformation::isFileValid(String filename) {
+bool DragInformation::isFileValid(String filename)
+{
   bool result = false;
   std::fstream file(filename.c_str(), ios::in | ios::binary);
 
@@ -116,14 +115,16 @@ bool DragInformation::isFileValid(String filename) {
   return result;
 }
 
-size_t DragInformation::stringToNum(String &str) {
+size_t DragInformation::stringToNum(String &str)
+{
   istringstream iss(str.c_str());
   size_t size;
   iss >> size;
   return size;
 }
 
-String DragInformation::getFileSize(String &filename) {
+String DragInformation::getFileSize(String &filename)
+{
   std::fstream file(filename.c_str(), ios::in | ios::binary);
 
   if (!file.is_open()) {

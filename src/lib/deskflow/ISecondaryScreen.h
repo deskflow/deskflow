@@ -28,7 +28,8 @@
 This interface defines the methods common to all platform dependent
 secondary screen implementations.
 */
-class ISecondaryScreen : public IInterface {
+class ISecondaryScreen : public IInterface
+{
 public:
   //! @name accessors
   //@{

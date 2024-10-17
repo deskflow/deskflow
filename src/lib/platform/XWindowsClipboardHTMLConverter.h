@@ -21,7 +21,8 @@
 #include "platform/XWindowsClipboard.h"
 
 //! Convert to/from HTML encoding
-class XWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter {
+class XWindowsClipboardHTMLConverter : public IXWindowsClipboardConverter
+{
 public:
   /*!
   \c name is converted to an atom and that is reported by getAtom().

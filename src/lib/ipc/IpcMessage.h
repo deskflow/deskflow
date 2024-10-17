@@ -21,12 +21,16 @@
 #include "base/String.h"
 #include "common/ipc.h"
 
-class IpcMessage : public EventData {
+class IpcMessage : public EventData
+{
 public:
   ~IpcMessage() override = default;
 
   //! Gets the message type ID.
-  IpcMessageType type() const { return m_type; }
+  IpcMessageType type() const
+  {
+    return m_type;
+  }
 
 protected:
   explicit IpcMessage(IpcMessageType type);
@@ -35,52 +39,69 @@ private:
   IpcMessageType m_type;
 };
 
-class IpcHelloMessage : public IpcMessage {
+class IpcHelloMessage : public IpcMessage
+{
 public:
   explicit IpcHelloMessage(IpcClientType clientType);
   ~IpcHelloMessage() override = default;
 
   //! Gets the message type ID.
-  IpcClientType clientType() const { return m_clientType; }
+  IpcClientType clientType() const
+  {
+    return m_clientType;
+  }
 
 private:
   IpcClientType m_clientType;
 };
 
-class IpcHelloBackMessage : public IpcMessage {
+class IpcHelloBackMessage : public IpcMessage
+{
 public:
   explicit IpcHelloBackMessage();
   ~IpcHelloBackMessage() override = default;
 };
 
-class IpcShutdownMessage : public IpcMessage {
+class IpcShutdownMessage : public IpcMessage
+{
 public:
   explicit IpcShutdownMessage();
   ~IpcShutdownMessage() override = default;
 };
 
-class IpcLogLineMessage : public IpcMessage {
+class IpcLogLineMessage : public IpcMessage
+{
 public:
   explicit IpcLogLineMessage(const String &logLine);
   ~IpcLogLineMessage() override = default;
 
   //! Gets the log line.
-  String logLine() const { return m_logLine; }
+  String logLine() const
+  {
+    return m_logLine;
+  }
 
 private:
   String m_logLine;
 };
 
-class IpcCommandMessage : public IpcMessage {
+class IpcCommandMessage : public IpcMessage
+{
 public:
   explicit IpcCommandMessage(const String &command, bool elevate);
   ~IpcCommandMessage() override = default;
 
   //! Gets the command.
-  String command() const { return m_command; }
+  String command() const
+  {
+    return m_command;
+  }
 
   //! Gets whether or not the process should be elevated on MS Windows.
-  bool elevate() const { return m_elevate; }
+  bool elevate() const
+  {
+    return m_elevate;
+  }
 
 private:
   String m_command;

@@ -26,7 +26,8 @@
 /*!
 An event queue buffer provides a queue of events for an IEventQueue.
 */
-class SimpleEventQueueBuffer : public IEventQueueBuffer {
+class SimpleEventQueueBuffer : public IEventQueueBuffer
+{
 public:
   SimpleEventQueueBuffer();
   SimpleEventQueueBuffer(SimpleEventQueueBuffer const &) = delete;
@@ -37,7 +38,9 @@ public:
   SimpleEventQueueBuffer &operator=(SimpleEventQueueBuffer &&) = delete;
 
   // IEventQueueBuffer overrides
-  void init() {}
+  void init()
+  {
+  }
   virtual void waitForEvent(double timeout);
   virtual Type getEvent(Event &event, UInt32 &dataID);
   virtual bool addEvent(UInt32 dataID);

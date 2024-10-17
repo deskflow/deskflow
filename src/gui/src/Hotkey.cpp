@@ -20,9 +20,12 @@
 
 #include <QSettings>
 
-Hotkey::Hotkey() : m_KeySequence(), m_Actions() {}
+Hotkey::Hotkey() : m_KeySequence(), m_Actions()
+{
+}
 
-QString Hotkey::text() const {
+QString Hotkey::text() const
+{
   QString text = keySequence().toString();
 
   if (keySequence().isMouseButton())
@@ -31,7 +34,8 @@ QString Hotkey::text() const {
   return "keystroke(" + text + ")";
 }
 
-void Hotkey::loadSettings(QSettings &settings) {
+void Hotkey::loadSettings(QSettings &settings)
+{
   keySequence().loadSettings(settings);
 
   actions().clear();
@@ -46,7 +50,8 @@ void Hotkey::loadSettings(QSettings &settings) {
   settings.endArray();
 }
 
-void Hotkey::saveSettings(QSettings &settings) const {
+void Hotkey::saveSettings(QSettings &settings) const
+{
   keySequence().saveSettings(settings);
 
   settings.beginWriteArray("actions");
@@ -57,14 +62,15 @@ void Hotkey::saveSettings(QSettings &settings) const {
   settings.endArray();
 }
 
-bool Hotkey::operator==(const Hotkey &hk) const {
+bool Hotkey::operator==(const Hotkey &hk) const
+{
   return m_KeySequence == hk.m_KeySequence && m_Actions == hk.m_Actions;
 }
 
-QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey) {
+QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
+{
   for (int i = 0; i < hotkey.actions().size(); i++)
-    outStream << "\t" << hotkey.text() << " = " << hotkey.actions()[i]
-              << Qt::endl;
+    outStream << "\t" << hotkey.text() << " = " << hotkey.actions()[i] << Qt::endl;
 
   return outStream;
 }

@@ -25,32 +25,38 @@
 // ArchLogWindows
 //
 
-ArchLogWindows::ArchLogWindows() : m_eventLog(NULL) {
+ArchLogWindows::ArchLogWindows() : m_eventLog(NULL)
+{
   // do nothing
 }
 
-ArchLogWindows::~ArchLogWindows() {
+ArchLogWindows::~ArchLogWindows()
+{
   // do nothing
 }
 
-void ArchLogWindows::openLog(const char *name) {
+void ArchLogWindows::openLog(const char *name)
+{
   if (m_eventLog == NULL) {
     m_eventLog = RegisterEventSource(NULL, name);
   }
 }
 
-void ArchLogWindows::closeLog() {
+void ArchLogWindows::closeLog()
+{
   if (m_eventLog != NULL) {
     DeregisterEventSource(m_eventLog);
     m_eventLog = NULL;
   }
 }
 
-void ArchLogWindows::showLog(bool) {
+void ArchLogWindows::showLog(bool)
+{
   // do nothing
 }
 
-void ArchLogWindows::writeLog(ELevel level, const char *msg) {
+void ArchLogWindows::writeLog(ELevel level, const char *msg)
+{
   if (m_eventLog != NULL) {
     // convert priority
     WORD type;
@@ -80,6 +86,7 @@ void ArchLogWindows::writeLog(ELevel level, const char *msg) {
         NULL, 0,
         (DWORD)strlen(msg) + 1, // raw data size
         NULL,
-        const_cast<char *>(msg)); // raw data
+        const_cast<char *>(msg)
+    ); // raw data
   }
 }

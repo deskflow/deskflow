@@ -36,55 +36,54 @@
 #include <libnotify/notify.h>
 #endif
 
-AppUtilUnix::AppUtilUnix(IEventQueue *events) {}
+AppUtilUnix::AppUtilUnix(IEventQueue *events)
+{
+}
 
-AppUtilUnix::~AppUtilUnix() {}
+AppUtilUnix::~AppUtilUnix()
+{
+}
 
-int standardStartupStatic(int argc, char **argv) {
+int standardStartupStatic(int argc, char **argv)
+{
   return AppUtil::instance().app().standardStartup(argc, argv);
 }
 
-int AppUtilUnix::run(int argc, char **argv) {
+int AppUtilUnix::run(int argc, char **argv)
+{
   return app().runInner(argc, argv, NULL, &standardStartupStatic);
 }
 
-void AppUtilUnix::startNode() { app().startNode(); }
+void AppUtilUnix::startNode()
+{
+  app().startNode();
+}
 
-std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
+std::vector<String> AppUtilUnix::getKeyboardLayoutList()
+{
   std::vector<String> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-  layoutLangCodes = X11LayoutsParser::getX11LanguageList(
-      "/usr/share/X11/xkb/rules/evdev.xml");
+  layoutLangCodes = X11LayoutsParser::getX11LanguageList("/usr/share/X11/xkb/rules/evdev.xml");
 #elif WINAPI_CARBON
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(
-      CFDictionaryCreate(
-          NULL, (const void **)keys, (const void **)values, 1, NULL, NULL),
-      CFRelease);
+  AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL), CFRelease);
   AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
   for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
-    TISInputSourceRef keyboardLayout =
-        (TISInputSourceRef)CFArrayGetValueAtIndex(kbds.get(), i);
-    auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(
-        keyboardLayout, kTISPropertyInputSourceLanguages);
+    TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds.get(), i);
+    auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
     char temporaryCString[128] = {0};
-    for (CFIndex index = 0;
-         index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
-      auto languageCode =
-          (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-      if (!languageCode ||
-          !CFStringGetCString(
-              languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
+    for (CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+      auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
+      if (!languageCode || !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
         continue;
       }
 
       std::string langCode(temporaryCString);
       if (langCode.size() == 2 &&
-          std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) ==
-              layoutLangCodes.end()) {
+          std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) == layoutLangCodes.end()) {
         layoutLangCodes.push_back(langCode);
       }
 
@@ -97,7 +96,8 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList() {
   return layoutLangCodes;
 }
 
-String AppUtilUnix::getCurrentLanguageCode() {
+String AppUtilUnix::getCurrentLanguageCode()
+{
   String result = "";
 #if WINAPI_XWINDOWS
 
@@ -129,12 +129,10 @@ String AppUtilUnix::getCurrentLanguageCode() {
     }
 
     auto group = rawLayouts.substr(groupStartI, strI - groupStartI);
-    if (group.find("group", 0, 5) == std::string::npos &&
-        group.find("inet", 0, 4) == std::string::npos &&
+    if (group.find("group", 0, 5) == std::string::npos && group.find("inet", 0, 4) == std::string::npos &&
         group.find("pc", 0, 2) == std::string::npos) {
       if (nedeedGroupIndex == groupIdx) {
-        result =
-            group.substr(0, std::min(group.find('(', 0), group.find(':', 0)));
+        result = group.substr(0, std::min(group.find('(', 0), group.find(':', 0)));
         break;
       }
       groupIdx++;
@@ -147,20 +145,15 @@ String AppUtilUnix::getCurrentLanguageCode() {
   XFree(kbdDescr);
   XCloseDisplay(display);
 
-  result = X11LayoutsParser::convertLayotToISO(
-      "/usr/share/X11/xkb/rules/evdev.xml", result);
+  result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
 
 #elif WINAPI_CARBON
-  auto layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(
-      TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
+  auto layoutLanguages =
+      (CFArrayRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
   char temporaryCString[128] = {0};
-  for (CFIndex index = 0;
-       index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
-    auto languageCode =
-        (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-    if (!languageCode ||
-        !CFStringGetCString(
-            languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
+  for (CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
+    auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
+    if (!languageCode || !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
       continue;
     }
 
@@ -171,19 +164,16 @@ String AppUtilUnix::getCurrentLanguageCode() {
   return result;
 }
 
-void AppUtilUnix::showNotification(
-    const String &title, const String &text) const {
+void AppUtilUnix::showNotification(const String &title, const String &text) const
+{
 #if HAVE_LIBNOTIFY
-  LOG(
-      (CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"",
-       title.c_str(), text.c_str()));
+  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
   if (!notify_init(DESKFLOW_APP_NAME)) {
     LOG((CLOG_INFO "failed to initialize libnotify"));
     return;
   }
 
-  auto notification =
-      notify_notification_new(title.c_str(), text.c_str(), nullptr);
+  auto notification = notify_notification_new(title.c_str(), text.c_str(), nullptr);
   if (notification == nullptr) {
     LOG((CLOG_INFO "failed to create notification"));
     return;

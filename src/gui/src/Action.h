@@ -28,12 +28,14 @@ class ActionDialog;
 class QSettings;
 class QTextStream;
 
-class Action {
+class Action
+{
   friend class ActionDialog;
   friend QTextStream &operator<<(QTextStream &outStream, const Action &action);
 
 public:
-  enum ActionType {
+  enum ActionType
+  {
     keyDown,
     keyUp,
     keystroke,
@@ -45,39 +47,107 @@ public:
     mouseUp,
     mousebutton,
   };
-  enum SwitchDirection { switchLeft, switchRight, switchUp, switchDown };
-  enum LockCursorMode { lockCursorToggle, lockCursonOn, lockCursorOff };
+  enum SwitchDirection
+  {
+    switchLeft,
+    switchRight,
+    switchUp,
+    switchDown
+  };
+  enum LockCursorMode
+  {
+    lockCursorToggle,
+    lockCursonOn,
+    lockCursorOff
+  };
 
 public:
   Action();
 
 public:
   QString text() const;
-  const KeySequence &keySequence() const { return m_KeySequence; }
+  const KeySequence &keySequence() const
+  {
+    return m_KeySequence;
+  }
   void loadSettings(QSettings &settings);
   void saveSettings(QSettings &settings) const;
-  int type() const { return m_Type; }
-  const QStringList &typeScreenNames() const { return m_TypeScreenNames; }
-  const QString &switchScreenName() const { return m_SwitchScreenName; }
-  int switchDirection() const { return m_SwitchDirection; }
-  int lockCursorMode() const { return m_LockCursorMode; }
-  bool activeOnRelease() const { return m_ActiveOnRelease; }
-  bool haveScreens() const { return m_HasScreens; }
-  bool restartServer() const { return m_restartServer; }
+  int type() const
+  {
+    return m_Type;
+  }
+  const QStringList &typeScreenNames() const
+  {
+    return m_TypeScreenNames;
+  }
+  const QString &switchScreenName() const
+  {
+    return m_SwitchScreenName;
+  }
+  int switchDirection() const
+  {
+    return m_SwitchDirection;
+  }
+  int lockCursorMode() const
+  {
+    return m_LockCursorMode;
+  }
+  bool activeOnRelease() const
+  {
+    return m_ActiveOnRelease;
+  }
+  bool haveScreens() const
+  {
+    return m_HasScreens;
+  }
+  bool restartServer() const
+  {
+    return m_restartServer;
+  }
 
   bool operator==(const Action &a) const;
 
 protected:
-  KeySequence &keySequence() { return m_KeySequence; }
-  void setKeySequence(const KeySequence &seq) { m_KeySequence = seq; }
-  void setType(int t) { m_Type = t; }
-  QStringList &typeScreenNames() { return m_TypeScreenNames; }
-  void setSwitchScreenName(const QString &n) { m_SwitchScreenName = n; }
-  void setSwitchDirection(int d) { m_SwitchDirection = d; }
-  void setLockCursorMode(int m) { m_LockCursorMode = m; }
-  void setActiveOnRelease(bool b) { m_ActiveOnRelease = b; }
-  void setHaveScreens(bool b) { m_HasScreens = b; }
-  void setRestartServer(bool b) { m_restartServer = b; }
+  KeySequence &keySequence()
+  {
+    return m_KeySequence;
+  }
+  void setKeySequence(const KeySequence &seq)
+  {
+    m_KeySequence = seq;
+  }
+  void setType(int t)
+  {
+    m_Type = t;
+  }
+  QStringList &typeScreenNames()
+  {
+    return m_TypeScreenNames;
+  }
+  void setSwitchScreenName(const QString &n)
+  {
+    m_SwitchScreenName = n;
+  }
+  void setSwitchDirection(int d)
+  {
+    m_SwitchDirection = d;
+  }
+  void setLockCursorMode(int m)
+  {
+    m_LockCursorMode = m;
+  }
+  void setActiveOnRelease(bool b)
+  {
+    m_ActiveOnRelease = b;
+  }
+  void setHaveScreens(bool b)
+  {
+    m_HasScreens = b;
+  }
+  void setRestartServer(bool b)
+  {
+    m_restartServer = b;
+  }
 
 private:
   KeySequence m_KeySequence;

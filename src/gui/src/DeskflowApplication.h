@@ -22,7 +22,8 @@
 
 class QSessionManager;
 
-class DeskflowApplication : public QApplication {
+class DeskflowApplication : public QApplication
+{
 public:
   DeskflowApplication(int &argc, char **argv);
   ~DeskflowApplication() override = default;

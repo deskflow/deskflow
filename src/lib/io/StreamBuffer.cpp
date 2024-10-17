@@ -25,15 +25,18 @@
 
 const UInt32 StreamBuffer::kChunkSize = 4096;
 
-StreamBuffer::StreamBuffer() : m_size(0), m_headUsed(0) {
+StreamBuffer::StreamBuffer() : m_size(0), m_headUsed(0)
+{
   // do nothing
 }
 
-StreamBuffer::~StreamBuffer() {
+StreamBuffer::~StreamBuffer()
+{
   // do nothing
 }
 
-const void *StreamBuffer::peek(UInt32 n) {
+const void *StreamBuffer::peek(UInt32 n)
+{
   assert(n <= m_size);
 
   // if requesting no data then return NULL so we don't try to access
@@ -57,7 +60,8 @@ const void *StreamBuffer::peek(UInt32 n) {
   return static_cast<const void *>(&(head->begin()[m_headUsed]));
 }
 
-void StreamBuffer::pop(UInt32 n) {
+void StreamBuffer::pop(UInt32 n)
+{
   // discard all chunks if n is greater than or equal to m_size
   if (n >= m_size) {
     m_size = 0;
@@ -85,7 +89,8 @@ void StreamBuffer::pop(UInt32 n) {
   }
 }
 
-void StreamBuffer::write(const void *vdata, UInt32 n) {
+void StreamBuffer::write(const void *vdata, UInt32 n)
+{
   assert(vdata != NULL);
 
   // ignore if no data, otherwise update size
@@ -130,4 +135,7 @@ void StreamBuffer::write(const void *vdata, UInt32 n) {
   }
 }
 
-UInt32 StreamBuffer::getSize() const { return m_size; }
+UInt32 StreamBuffer::getSize() const
+{
+  return m_size;
+}

@@ -24,7 +24,8 @@
 /*!
 This class implements a clipboard that stores data in memory.
 */
-class Clipboard : public IClipboard {
+class Clipboard : public IClipboard
+{
 public:
   Clipboard();
   virtual ~Clipboard();

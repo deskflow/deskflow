@@ -21,7 +21,8 @@
 #include "platform/MSWindowsClipboard.h"
 
 //! Convert to/from some text encoding
-class MSWindowsClipboardBitmapConverter : public IMSWindowsClipboardConverter {
+class MSWindowsClipboardBitmapConverter : public IMSWindowsClipboardConverter
+{
 public:
   MSWindowsClipboardBitmapConverter();
   virtual ~MSWindowsClipboardBitmapConverter();

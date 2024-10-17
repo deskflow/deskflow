@@ -26,7 +26,8 @@
 class IOSXClipboardConverter;
 
 //! OS X clipboard implementation
-class OSXClipboard : public IClipboard {
+class OSXClipboard : public IClipboard
+{
 public:
   OSXClipboard();
   virtual ~OSXClipboard();
@@ -60,7 +61,8 @@ private:
 /*!
 This interface defines the methods common to all Scrap book format
 */
-class IOSXClipboardConverter : public IInterface {
+class IOSXClipboardConverter : public IInterface
+{
 public:
   //! @name accessors
   //@{

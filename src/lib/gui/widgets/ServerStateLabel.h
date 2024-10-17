@@ -22,7 +22,8 @@
 
 namespace deskflow::gui::widgets {
 
-class ServerStateLabel : public QLabel {
+class ServerStateLabel : public QLabel
+{
 public:
   explicit ServerStateLabel(QWidget *parent = nullptr);
   void updateServerState(const QString &line);

@@ -32,7 +32,8 @@
 
 namespace deskflow {
 
-class PortalInputCapture {
+class PortalInputCapture
+{
 public:
   PortalInputCapture(EiScreen *screen, IEventQueue *events);
   ~PortalInputCapture();
@@ -40,7 +41,10 @@ public:
   void disable();
   void release();
   void release(double x, double y);
-  bool is_active() const { return is_active_; }
+  bool is_active() const
+  {
+    return is_active_;
+  }
 
 private:
   void glib_thread(void *);
@@ -50,37 +54,32 @@ private:
   void cb_set_pointer_barriers(GObject *object, GAsyncResult *res);
   void cb_session_closed(XdpSession *session);
   void cb_disabled(XdpInputCaptureSession *session);
-  void cb_activated(
-      XdpInputCaptureSession *session, std::uint32_t activation_id,
-      GVariant *options);
-  void cb_deactivated(
-      XdpInputCaptureSession *session, std::uint32_t activation_id,
-      GVariant *options);
+  void cb_activated(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options);
+  void cb_deactivated(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options);
   void cb_zones_changed(XdpInputCaptureSession *session, GVariant *options);
 
   /// g_signal_connect callback wrapper
-  static void cb_session_closed_cb(XdpSession *session, gpointer data) {
+  static void cb_session_closed_cb(XdpSession *session, gpointer data)
+  {
     reinterpret_cast<PortalInputCapture *>(data)->cb_session_closed(session);
   }
-  static void cb_disabled_cb(XdpInputCaptureSession *session, gpointer data) {
+  static void cb_disabled_cb(XdpInputCaptureSession *session, gpointer data)
+  {
     reinterpret_cast<PortalInputCapture *>(data)->cb_disabled(session);
   }
-  static void cb_activated_cb(
-      XdpInputCaptureSession *session, std::uint32_t activation_id,
-      GVariant *options, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_activated(
-        session, activation_id, options);
+  static void
+  cb_activated_cb(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options, gpointer data)
+  {
+    reinterpret_cast<PortalInputCapture *>(data)->cb_activated(session, activation_id, options);
   }
-  static void cb_deactivated_cb(
-      XdpInputCaptureSession *session, std::uint32_t activation_id,
-      GVariant *options, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_deactivated(
-        session, activation_id, options);
+  static void
+  cb_deactivated_cb(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options, gpointer data)
+  {
+    reinterpret_cast<PortalInputCapture *>(data)->cb_deactivated(session, activation_id, options);
   }
-  static void cb_zones_changed_cb(
-      XdpInputCaptureSession *session, GVariant *options, gpointer data) {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_zones_changed(
-        session, options);
+  static void cb_zones_changed_cb(XdpInputCaptureSession *session, GVariant *options, gpointer data)
+  {
+    reinterpret_cast<PortalInputCapture *>(data)->cb_zones_changed(session, options);
   }
 
   int fake_eis_fd();

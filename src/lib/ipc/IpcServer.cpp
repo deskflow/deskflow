@@ -37,32 +37,35 @@ IpcServer::IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer)
       m_events(events),
       m_socketMultiplexer(socketMultiplexer),
       m_socket(nullptr),
-      m_address(NetworkAddress(kIpcHost, kIpcPort)) {
+      m_address(NetworkAddress(kIpcHost, kIpcPort))
+{
   init();
 }
 
-IpcServer::IpcServer(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port)
+IpcServer::IpcServer(IEventQueue *events, SocketMultiplexer *socketMultiplexer, int port)
     : m_mock(false),
       m_events(events),
       m_socketMultiplexer(socketMultiplexer),
-      m_address(NetworkAddress(kIpcHost, port)) {
+      m_address(NetworkAddress(kIpcHost, port))
+{
   init();
 }
 
-void IpcServer::init() {
-  m_socket = new TCPListenSocket(
-      m_events, m_socketMultiplexer, IArchNetwork::EAddressFamily::kINET);
+void IpcServer::init()
+{
+  m_socket = new TCPListenSocket(m_events, m_socketMultiplexer, IArchNetwork::EAddressFamily::kINET);
 
   m_clientsMutex = ARCH->newMutex();
   m_address.resolve();
 
   m_events->adoptHandler(
       m_events->forIListenSocket().connecting(), m_socket,
-      new TMethodEventJob<IpcServer>(this, &IpcServer::handleClientConnecting));
+      new TMethodEventJob<IpcServer>(this, &IpcServer::handleClientConnecting)
+  );
 }
 
-IpcServer::~IpcServer() {
+IpcServer::~IpcServer()
+{
   if (m_mock) {
     return;
   }
@@ -83,9 +86,13 @@ IpcServer::~IpcServer() {
   m_events->removeHandler(m_events->forIListenSocket().connecting(), m_socket);
 }
 
-void IpcServer::listen() { m_socket->bind(m_address); }
+void IpcServer::listen()
+{
+  m_socket->bind(m_address);
+}
 
-void IpcServer::handleClientConnecting(const Event &, void *) {
+void IpcServer::handleClientConnecting(const Event &, void *)
+{
   deskflow::IStream *stream = m_socket->accept();
   if (stream == NULL) {
     return;
@@ -100,19 +107,19 @@ void IpcServer::handleClientConnecting(const Event &, void *) {
 
   m_events->adoptHandler(
       m_events->forIpcClientProxy().disconnected(), proxy,
-      new TMethodEventJob<IpcServer>(
-          this, &IpcServer::handleClientDisconnected));
+      new TMethodEventJob<IpcServer>(this, &IpcServer::handleClientDisconnected)
+  );
 
   m_events->adoptHandler(
       m_events->forIpcClientProxy().messageReceived(), proxy,
-      new TMethodEventJob<IpcServer>(this, &IpcServer::handleMessageReceived));
+      new TMethodEventJob<IpcServer>(this, &IpcServer::handleMessageReceived)
+  );
 
-  m_events->addEvent(Event(
-      m_events->forIpcServer().clientConnected(), this, proxy,
-      Event::kDontFreeData));
+  m_events->addEvent(Event(m_events->forIpcServer().clientConnected(), this, proxy, Event::kDontFreeData));
 }
 
-void IpcServer::handleClientDisconnected(const Event &e, void *) {
+void IpcServer::handleClientDisconnected(const Event &e, void *)
+{
   IpcClientProxy *proxy = static_cast<IpcClientProxy *>(e.getTarget());
 
   ArchMutexLock lock(m_clientsMutex);
@@ -122,20 +129,22 @@ void IpcServer::handleClientDisconnected(const Event &e, void *) {
   LOG((CLOG_DEBUG "ipc client proxy removed, connected=%d", m_clients.size()));
 }
 
-void IpcServer::handleMessageReceived(const Event &e, void *) {
+void IpcServer::handleMessageReceived(const Event &e, void *)
+{
   Event event(m_events->forIpcServer().messageReceived(), this);
   event.setDataObject(e.getDataObject());
   m_events->addEvent(event);
 }
 
-void IpcServer::deleteClient(IpcClientProxy *proxy) {
-  m_events->removeHandler(
-      m_events->forIpcClientProxy().messageReceived(), proxy);
+void IpcServer::deleteClient(IpcClientProxy *proxy)
+{
+  m_events->removeHandler(m_events->forIpcClientProxy().messageReceived(), proxy);
   m_events->removeHandler(m_events->forIpcClientProxy().disconnected(), proxy);
   delete proxy;
 }
 
-bool IpcServer::hasClients(IpcClientType clientType) const {
+bool IpcServer::hasClients(IpcClientType clientType) const
+{
   ArchMutexLock lock(m_clientsMutex);
 
   if (m_clients.empty()) {
@@ -155,7 +164,8 @@ bool IpcServer::hasClients(IpcClientType clientType) const {
   return false;
 }
 
-void IpcServer::send(const IpcMessage &message, IpcClientType filterType) {
+void IpcServer::send(const IpcMessage &message, IpcClientType filterType)
+{
   ArchMutexLock lock(m_clientsMutex);
 
   ClientList::iterator it;

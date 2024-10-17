@@ -40,12 +40,11 @@ bool StreamChunker::s_isChunkingFile = false;
 bool StreamChunker::s_interruptFile = false;
 Mutex *StreamChunker::s_interruptMutex = NULL;
 
-void StreamChunker::sendFile(
-    char *filename, IEventQueue *events, void *eventTarget) {
+void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTarget)
+{
   s_isChunkingFile = true;
 
-  std::fstream file(
-      static_cast<char *>(filename), std::ios::in | std::ios::binary);
+  std::fstream file(static_cast<char *>(filename), std::ios::in | std::ios::binary);
 
   if (!file.is_open()) {
     throw runtime_error("failed to open file");
@@ -59,8 +58,7 @@ void StreamChunker::sendFile(
   String fileSize = deskflow::string::sizeTypeToString(size);
   FileChunk *sizeMessage = FileChunk::start(fileSize);
 
-  events->addEvent(
-      Event(events->forFile().fileChunkSending(), eventTarget, sizeMessage));
+  events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, sizeMessage));
 
   // send chunk messages with a fixed chunk size
   size_t sentLength = 0;
@@ -87,8 +85,7 @@ void StreamChunker::sendFile(
     FileChunk *fileChunk = FileChunk::data(data, chunkSize);
     delete[] chunkData;
 
-    events->addEvent(
-        Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
+    events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, fileChunk));
 
     sentLength += chunkSize;
     file.seekg(sentLength, std::ios::beg);
@@ -101,8 +98,7 @@ void StreamChunker::sendFile(
   // send last message
   FileChunk *end = FileChunk::end();
 
-  events->addEvent(
-      Event(events->forFile().fileChunkSending(), eventTarget, end));
+  events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, end));
 
   file.close();
 
@@ -110,14 +106,14 @@ void StreamChunker::sendFile(
 }
 
 void StreamChunker::sendClipboard(
-    String &data, size_t size, ClipboardID id, UInt32 sequence,
-    IEventQueue *events, void *eventTarget) {
+    String &data, size_t size, ClipboardID id, UInt32 sequence, IEventQueue *events, void *eventTarget
+)
+{
   // send first message (data size)
   String dataSize = deskflow::string::sizeTypeToString(size);
   ClipboardChunk *sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 
-  events->addEvent(Event(
-      events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
+  events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
 
   // send clipboard chunk with a fixed size
   size_t sentLength = 0;
@@ -134,8 +130,7 @@ void StreamChunker::sendClipboard(
     String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
     ClipboardChunk *dataChunk = ClipboardChunk::data(id, sequence, chunk);
 
-    events->addEvent(Event(
-        events->forClipboard().clipboardSending(), eventTarget, dataChunk));
+    events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));
 
     sentLength += chunkSize;
     if (sentLength == size) {
@@ -146,13 +141,13 @@ void StreamChunker::sendClipboard(
   // send last message
   ClipboardChunk *end = ClipboardChunk::end(id, sequence);
 
-  events->addEvent(
-      Event(events->forClipboard().clipboardSending(), eventTarget, end));
+  events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, end));
 
   LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
 }
 
-void StreamChunker::interruptFile() {
+void StreamChunker::interruptFile()
+{
   if (s_isChunkingFile) {
     s_interruptFile = true;
     LOG((CLOG_INFO "previous dragged file has become invalid"));

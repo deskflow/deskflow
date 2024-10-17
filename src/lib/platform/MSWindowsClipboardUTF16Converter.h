@@ -21,8 +21,8 @@
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
 //! Convert to/from UTF-16 encoding
-class MSWindowsClipboardUTF16Converter
-    : public MSWindowsClipboardAnyTextConverter {
+class MSWindowsClipboardUTF16Converter : public MSWindowsClipboardAnyTextConverter
+{
 public:
   MSWindowsClipboardUTF16Converter();
   virtual ~MSWindowsClipboardUTF16Converter();

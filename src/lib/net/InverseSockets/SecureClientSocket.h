@@ -22,11 +22,10 @@
 /*!
 A secure socket using SSL.
 */
-class SecureClientSocket : public InverseClientSocket {
+class SecureClientSocket : public InverseClientSocket
+{
 public:
-  SecureClientSocket(
-      IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-      IArchNetwork::EAddressFamily family);
+  SecureClientSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family);
   SecureClientSocket(SecureClientSocket const &) = delete;
   SecureClientSocket(SecureClientSocket &&) = delete;
 
@@ -37,7 +36,10 @@ public:
   void connect(const NetworkAddress &) override;
 
   ISocketMultiplexerJob *newJob();
-  bool isFatal() const override { return m_fatal; }
+  bool isFatal() const override
+  {
+    return m_fatal;
+  }
   void setFatal(int code);
   int getRetry(int errorCode, int retry) const;
   bool isSecureReady() const;
@@ -57,11 +59,9 @@ private:
   void checkResult(int n, int &retry);
   void disconnect();
 
-  ISocketMultiplexerJob *
-  serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
 
-  ISocketMultiplexerJob *
-  serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
 
   void handleTCPConnected(const Event &, void *);
 

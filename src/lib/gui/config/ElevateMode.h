@@ -35,4 +35,9 @@
  *  kAlways      |   false   |   true     |
  *  kNever       |   false   |   false    |
  */
-enum class ElevateMode { kAutomatic = 0, kAlways = 1, kNever = 2 };
+enum class ElevateMode
+{
+  kAutomatic = 0,
+  kAlways = 1,
+  kNever = 2
+};

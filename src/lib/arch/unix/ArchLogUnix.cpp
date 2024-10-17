@@ -24,23 +24,33 @@
 // ArchLogUnix
 //
 
-ArchLogUnix::ArchLogUnix() {
+ArchLogUnix::ArchLogUnix()
+{
   // do nothing
 }
 
-ArchLogUnix::~ArchLogUnix() {
+ArchLogUnix::~ArchLogUnix()
+{
   // do nothing
 }
 
-void ArchLogUnix::openLog(const char *name) { openlog(name, 0, LOG_DAEMON); }
+void ArchLogUnix::openLog(const char *name)
+{
+  openlog(name, 0, LOG_DAEMON);
+}
 
-void ArchLogUnix::closeLog() { closelog(); }
+void ArchLogUnix::closeLog()
+{
+  closelog();
+}
 
-void ArchLogUnix::showLog(bool) {
+void ArchLogUnix::showLog(bool)
+{
   // do nothing
 }
 
-void ArchLogUnix::writeLog(ELevel level, const char *msg) {
+void ArchLogUnix::writeLog(ELevel level, const char *msg)
+{
   // convert level
   int priority;
   switch (level) {

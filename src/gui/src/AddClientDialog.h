@@ -24,7 +24,8 @@
 class QPushButton;
 class QLabel;
 
-enum {
+enum
+{
   kAddClientRight,
   kAddClientLeft,
   kAddClientUp,
@@ -33,13 +34,17 @@ enum {
   kAddClientIgnore
 };
 
-class AddClientDialog : public QDialog, public Ui::AddClientDialog {
+class AddClientDialog : public QDialog, public Ui::AddClientDialog
+{
   Q_OBJECT
 public:
   AddClientDialog(const QString &clientName, QWidget *parent = 0);
   ~AddClientDialog();
 
-  int addResult() { return m_AddResult; }
+  int addResult()
+  {
+    return m_AddResult;
+  }
 
 private slots:
   void handleButtonLeft();

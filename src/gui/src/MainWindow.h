@@ -55,7 +55,8 @@ class QAbstractButton;
 class DeskflowApplication;
 class SetupWizard;
 
-class MainWindow : public QMainWindow, public Ui::MainWindowBase {
+class MainWindow : public QMainWindow, public Ui::MainWindowBase
+{
   using CoreMode = deskflow::gui::CoreProcess::Mode;
   using CoreProcess = deskflow::gui::CoreProcess;
 
@@ -66,18 +67,27 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase {
   friend class SettingsDialog;
 
 public:
-  enum class LogLevel { Error, Info };
+  enum class LogLevel
+  {
+    Error,
+    Info
+  };
 
 public:
-  explicit MainWindow(
-      deskflow::gui::ConfigScopes &configScopes, AppConfig &appConfig);
+  explicit MainWindow(deskflow::gui::ConfigScopes &configScopes, AppConfig &appConfig);
   ~MainWindow() override;
 
   void setVisible(bool visible) override;
-  CoreMode coreMode() const { return m_CoreProcess.mode(); }
+  CoreMode coreMode() const
+  {
+    return m_CoreProcess.mode();
+  }
   QString address() const;
   void open();
-  ServerConfig &serverConfig() { return m_ServerConfig; }
+  ServerConfig &serverConfig()
+  {
+    return m_ServerConfig;
+  }
   void autoAddScreen(const QString name);
 
 signals:
@@ -133,8 +143,14 @@ private slots:
   void on_m_pLineEditClientIp_textChanged(const QString &text);
 
 private:
-  AppConfig &appConfig() { return m_AppConfig; }
-  AppConfig const &appConfig() const { return m_AppConfig; }
+  AppConfig &appConfig()
+  {
+    return m_AppConfig;
+  }
+  AppConfig const &appConfig() const
+  {
+    return m_AppConfig;
+  }
   void createMenuBar();
   void createStatusBar();
   void createTrayIcon();
@@ -163,7 +179,10 @@ private:
   void saveSettings();
   QString configFilename();
   void showConfigureServer(const QString &message);
-  void showConfigureServer() { showConfigureServer(""); }
+  void showConfigureServer()
+  {
+    showConfigureServer("");
+  }
   void restoreWindow();
   void saveWindow();
   void setupControls();
