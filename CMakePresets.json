@@ -2,23 +2,17 @@
   "version": 2,
   "configurePresets": [
     {
-      "name": "base",
+      "name": "dev",
       "hidden": true,
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON"
       }
     },
     {
-      "name": "minimal",
-      "hidden": true,
-      "environment": {
-        "DESKFLOW_BUILD_MINIMAL": "ON"
-      }
-    },
-    {
-      "name": "windows",
-      "inherits": "base",
+      "name": "dev-windows",
+      "inherits": "dev",
       "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
@@ -36,97 +30,78 @@
       }
     },
     {
-      "name": "linux",
+      "name": "dev-macos",
       "hidden": true,
-      "inherits": "base",
+      "inherits": "dev",
       "generator": "Unix Makefiles"
     },
     {
-      "name": "macos",
+      "name": "dev-linux",
       "hidden": true,
-      "inherits": "base",
+      "inherits": "dev",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "/usr"
+      }
+    },
+    {
+      "name": "dev-unix",
+      "hidden": true,
+      "inherits": "dev",
       "generator": "Unix Makefiles"
     },
     {
-      "name": "windows-debug",
-      "inherits": "windows",
+      "name": "dev-windows-debug",
+      "inherits": "dev-windows",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "windows-release",
-      "inherits": "windows",
+      "name": "dev-windows-release",
+      "inherits": "dev-windows",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "linux-debug",
-      "inherits": "linux",
+      "name": "dev-macos-debug",
+      "inherits": "dev-macos",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "linux-release",
-      "inherits": "linux",
+      "name": "dev-macos-release",
+      "inherits": "dev-macos",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "macos-debug",
-      "inherits": "macos",
+      "name": "dev-linux-debug",
+      "inherits": "dev-linux",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "macos-release",
-      "inherits": "macos",
+      "name": "dev-linux-release",
+      "inherits": "dev-linux",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "windows-debug-min",
-      "inherits": ["windows", "minimal"],
+      "name": "dev-unix-debug",
+      "inherits": "dev-unix",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "windows-release-min",
-      "inherits": ["windows", "minimal"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "linux-debug-min",
-      "inherits": ["linux", "minimal"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "linux-release-min",
-      "inherits": ["linux", "minimal"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "macos-debug-min",
-      "inherits": ["macos", "minimal"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "macos-release-min",
-      "inherits": ["macos", "minimal"],
+      "name": "dev-unix-release",
+      "inherits": "dev-unix",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }

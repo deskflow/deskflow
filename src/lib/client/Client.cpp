@@ -47,7 +47,10 @@
 #include <cstring>
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <sstream>
+
+using namespace deskflow::client;
 
 //
 // Client
@@ -95,6 +98,18 @@ Client::Client(
         m_events->forFile().fileRecieveCompleted(), this,
         new TMethodEventJob<Client>(this, &Client::handleFileRecieveCompleted));
   }
+
+  m_pHelloBack = std::make_unique<HelloBack>(std::make_shared<HelloBack::Deps>(
+      [this]() {
+        sendConnectionFailedEvent("got invalid hello message from server");
+        cleanupTimer();
+        cleanupConnection();
+      },
+      [this](int major, int minor) {
+        sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
+        cleanupTimer();
+        cleanupConnection();
+      }));
 }
 
 Client::~Client() {
@@ -519,7 +534,7 @@ void Client::cleanupStream() {
 }
 
 void Client::handleConnected(const Event &, void *) {
-  LOG((CLOG_DEBUG1 "connected;  wait for hello"));
+  LOG((CLOG_DEBUG1 "connected, waiting for hello"));
   cleanupConnecting();
   setupConnection();
 
@@ -596,59 +611,9 @@ void Client::handleClipboardGrabbed(const Event &event, void *) {
   }
 }
 
-bool Client::isCompatible(int major, int minor) const {
-  const std::map<int, std::set<int>> compatibleTable{
-      {6, {7, 8}}, // 1.6 is compatible with 1.7 and 1.8
-      {7, {8}}     // 1.7 is compatible with 1.8
-  };
-
-  bool isCompatible = false;
-
-  if (major == kProtocolMajorVersion) {
-    auto versions = compatibleTable.find(minor);
-    if (versions != compatibleTable.end()) {
-      auto compatibleVersions = versions->second;
-      isCompatible = compatibleVersions.find(kProtocolMinorVersion) !=
-                     compatibleVersions.end();
-    }
-  }
-
-  return isCompatible;
-}
-
 void Client::handleHello(const Event &, void *) {
-  SInt16 major, minor;
-  if (!ProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
-    sendConnectionFailedEvent(
-        "Protocol error from server, check encryption settings");
-    cleanupTimer();
-    cleanupConnection();
-    return;
-  }
 
-  // check versions
-  LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
-  SInt16 helloBackMajor = kProtocolMajorVersion;
-  SInt16 helloBackMinor = kProtocolMinorVersion;
-
-  if (isCompatible(major, minor)) {
-    // because 1.6 is comptable with 1.7 and 1.8 - downgrading protocol for
-    // server
-    LOG((CLOG_NOTE "downgrading protocol version for server"));
-    helloBackMinor = minor;
-  } else if (
-      major < kProtocolMajorVersion ||
-      (major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
-    sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
-    cleanupTimer();
-    cleanupConnection();
-    return;
-  }
-
-  // say hello back
-  LOG((CLOG_DEBUG1 "say hello version %d.%d", helloBackMajor, helloBackMinor));
-  ProtocolUtil::writef(
-      m_stream, kMsgHelloBack, helloBackMajor, helloBackMinor, &m_name);
+  m_pHelloBack->handleHello(m_stream, m_name);
 
   // now connected but waiting to complete handshake
   setupScreen();
