@@ -521,7 +521,7 @@ macro(configure_openssl)
     set(OPENSSL_USE_STATIC_LIBS TRUE)
   endif()
 
-  find_package(OpenSSL 1.1.1 REQUIRED COMPONENTS SSL Crypto)
+  find_package(OpenSSL 3.0 REQUIRED COMPONENTS SSL Crypto)
   if(WIN32) #Used for dev in TLS and WIX
     cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE
                "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows")
