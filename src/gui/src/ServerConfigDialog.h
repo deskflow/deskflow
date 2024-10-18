@@ -36,7 +36,6 @@ public:
 public slots:
   void accept() override;
   void reject() override;
-  void showEvent(QShowEvent *event) override;
   void message(const QString &message)
   {
     m_Message = message;
