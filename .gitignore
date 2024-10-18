@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2010 Jason Axelson <BostonVaulter@gmail.com>
 # SPDX-License-Identifier: MIT
 
-# temp dirs created during build
+# Temp dirs created during build
 /build
 /dist
 /deps
@@ -16,7 +16,7 @@
 aqtinstall.log
 Brewfile.lock.json
 
-# typical developer-created files
+# Typical developer-created files
 deskflow-config.toml
 .vscode
 .DS_Store
@@ -26,12 +26,11 @@ deskflow-config.toml
 /*.user
 *.ui.autosave
 
-#Generic linux files
+# Generic linux files
 **/*.directory
 
-#CMake ignores
-CMakeLists.txt.user
-CMakeCache.txt
-CMakeUserPresets.json
-CMakeFiles/*
-
+# CMake files
+/CMakeLists.txt.user
+/CMakeCache.txt
+/CMakeUserPresets.json
+/CMakeFiles/*
