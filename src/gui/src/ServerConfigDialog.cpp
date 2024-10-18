@@ -41,7 +41,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
       m_Message(""),
       m_appConfig(appConfig)
 {
-
   setupUi(this);
 
   // force the first tab, since qt creator sets the active tab as the last one
@@ -99,7 +98,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 
   // computers
   connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
-
 #if QT_VERSION <= QT_VERSION_CHECK(6, 7, 0)
   // advanced
   connect(m_pCheckBoxSwitchDelay, &QCheckBox::stateChanged, this, [this](const int &v) {
@@ -248,16 +246,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 bool ServerConfigDialog::addClient(const QString &clientName)
 {
   return addComputer(clientName, true);
-}
-
-void ServerConfigDialog::showEvent(QShowEvent *event)
-{
-  QDialog::show();
-
-  if (!m_Message.isEmpty()) {
-    // TODO: ideally this massage box should pop up after the dialog is shown
-    QMessageBox::information(this, tr("Configure server"), m_Message);
-  }
 }
 
 void ServerConfigDialog::accept()
