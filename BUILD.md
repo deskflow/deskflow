@@ -30,7 +30,7 @@ cmake -B build
 
 *Windows:*
 ```
-cmake -B build --preset=windows-release
+cmake -B build
 ```
 
 **3. Build:**

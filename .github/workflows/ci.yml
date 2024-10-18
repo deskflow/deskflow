@@ -166,7 +166,11 @@ jobs:
           github-binarycache: true
 
       - name: Configure
-        run: cmake ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+        run: |
+          cmake ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} `
+            -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -243,7 +247,9 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Configure
-        run: cmake -B build --preset=macos-release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+        run: |
+          cmake -B build \
+            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -335,7 +341,11 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
-        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON \
+            ${{ matrix.distro.extra-cmake-args }}
 
       - name: Build Package
         if: ${{ matrix.distro.arch-like != 'true'}}
