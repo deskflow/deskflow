@@ -16,19 +16,19 @@
  */
 
 #include "AddClientDialog.h"
-#include "ui_AddClientDialogBase.h"
+#include "ui_AddClientDialog.h"
 
 #include <QLabel>
 #include <QPushButton>
 
 AddClientDialog::AddClientDialog(const QString &clientName, QWidget *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::AddClientDialog(),
+      ui{std::make_unique<Ui::AddClientDialog>()},
       m_AddResult(kAddClientIgnore)
 {
-  setupUi(this);
+  ui->setupUi(this);
 
-  m_pLabelHead->setText(
+  ui->m_pLabelHead->setText(
       "A client wants to connect. "
       "Please choose a location for " +
       clientName + "."
@@ -40,47 +40,40 @@ AddClientDialog::AddClientDialog(const QString &clientName, QWidget *parent)
   m_pButtonLeft = new QPushButton(this);
   m_pButtonLeft->setIcon(icon);
   m_pButtonLeft->setIconSize(IconSize);
-  gridLayout->addWidget(m_pButtonLeft, 2, 0, 1, 1, Qt::AlignCenter);
+  ui->gridLayout->addWidget(m_pButtonLeft, 2, 0, 1, 1, Qt::AlignCenter);
   connect(m_pButtonLeft, &QPushButton::clicked, this, &AddClientDialog::handleButtonLeft);
 
   m_pButtonUp = new QPushButton(this);
   m_pButtonUp->setIcon(icon);
   m_pButtonUp->setIconSize(IconSize);
-  gridLayout->addWidget(m_pButtonUp, 1, 1, 1, 1, Qt::AlignCenter);
+  ui->gridLayout->addWidget(m_pButtonUp, 1, 1, 1, 1, Qt::AlignCenter);
   connect(m_pButtonUp, &QPushButton::clicked, this, &AddClientDialog::handleButtonUp);
 
   m_pButtonRight = new QPushButton(this);
   m_pButtonRight->setIcon(icon);
   m_pButtonRight->setIconSize(IconSize);
-  gridLayout->addWidget(m_pButtonRight, 2, 2, 1, 1, Qt::AlignCenter);
+  ui->gridLayout->addWidget(m_pButtonRight, 2, 2, 1, 1, Qt::AlignCenter);
   connect(m_pButtonRight, &QPushButton::clicked, this, &AddClientDialog::handleButtonRight);
 
   m_pButtonDown = new QPushButton(this);
   m_pButtonDown->setIcon(icon);
   m_pButtonDown->setIconSize(IconSize);
-  gridLayout->addWidget(m_pButtonDown, 3, 1, 1, 1, Qt::AlignCenter);
+  ui->gridLayout->addWidget(m_pButtonDown, 3, 1, 1, 1, Qt::AlignCenter);
   connect(m_pButtonDown, &QPushButton::clicked, this, &AddClientDialog::handleButtonDown);
 
   m_pLabelCenter = new QLabel(this);
   m_pLabelCenter->setPixmap(QPixmap(":res/icons/64x64/video-display.png"));
-  gridLayout->addWidget(m_pLabelCenter, 2, 1, 1, 1, Qt::AlignCenter);
+  ui->gridLayout->addWidget(m_pLabelCenter, 2, 1, 1, 1, Qt::AlignCenter);
 
 #if defined(Q_OS_MAC)
-  m_pDialogButtonBox->setLayoutDirection(Qt::RightToLeft);
+  ui->m_pDialogButtonBox->setLayoutDirection(Qt::RightToLeft);
 #endif
 
-  QPushButton *advanced = m_pDialogButtonBox->addButton("Advanced", QDialogButtonBox::HelpRole);
+  QPushButton *advanced = ui->m_pDialogButtonBox->addButton("Advanced", QDialogButtonBox::HelpRole);
   connect(advanced, &QPushButton::clicked, this, &AddClientDialog::handleButtonAdvanced);
 }
 
-AddClientDialog::~AddClientDialog()
-{
-  delete m_pButtonUp;
-  delete m_pButtonDown;
-  delete m_pButtonLeft;
-  delete m_pButtonRight;
-  delete m_pLabelCenter;
-}
+AddClientDialog::~AddClientDialog() = default;
 
 void AddClientDialog::handleButtonLeft()
 {
