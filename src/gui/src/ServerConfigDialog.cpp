@@ -29,6 +29,7 @@
 #include <QtGui>
 
 using enum ScreenConfig::SwitchCorner;
+using ServerProtocol = synergy::gui::ServerProtocol;
 
 ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, AppConfig &appConfig)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -50,6 +51,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   m_pEditConfigFile->setText(serverConfig().configFile());
   m_pCheckBoxUseExternalConfig->setChecked(serverConfig().useExternalConfig());
   m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
+  m_pRadioProtocolSynergy->setChecked(serverConfig().protocol() == ServerProtocol::kSynergy);
+  m_pRadioProtocolBarrier->setChecked(serverConfig().protocol() == ServerProtocol::kBarrier);
   m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
 
   m_pCheckBoxRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
@@ -98,6 +101,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 
   // computers
   connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+
+// Above Qt 6.7 the checkbox signal signature has changed from int to Qt::CheckState
 #if QT_VERSION <= QT_VERSION_CHECK(6, 7, 0)
   // advanced
   connect(m_pCheckBoxSwitchDelay, &QCheckBox::stateChanged, this, [this](const int &v) {
@@ -236,6 +241,18 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
         onChange();
       }
   );
+  connect(m_pRadioProtocolSynergy, &QRadioButton::toggled, this, [this](const bool &v) {
+    if (v) {
+      serverConfig().setProtocol(ServerProtocol::kSynergy);
+      onChange();
+    }
+  });
+  connect(m_pRadioProtocolBarrier, &QRadioButton::toggled, this, [this](const bool &v) {
+    if (v) {
+      serverConfig().setProtocol(ServerProtocol::kBarrier);
+      onChange();
+    }
+  });
 
   connect(m_pEditConfigFile, &QLineEdit::textChanged, this, [this]() {
     serverConfig().setConfigFile(m_pEditConfigFile->text());

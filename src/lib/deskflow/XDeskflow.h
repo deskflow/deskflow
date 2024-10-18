@@ -35,6 +35,12 @@ Thrown when the client fails to follow the protocol.
 */
 XBASE_SUBCLASS_WHAT(XBadClient, XDeskflow);
 
+//! Server protocol error
+/*!
+Thrown when the server protocol is unrecognized.
+*/
+XBASE_SUBCLASS_WHAT(XInvalidProtocol, XDeskflow);
+
 //! Incompatible client exception
 /*!
 Thrown when a client attempting to connect has an incompatible version.

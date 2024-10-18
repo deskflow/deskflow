@@ -22,7 +22,9 @@
 #include "common/stdistream.h"
 #include "common/stdostream.h"
 #include "deskflow/KeyMap.h"
+#include "deskflow/XDeskflow.h"
 #include "deskflow/key_types.h"
+#include "deskflow/option_types.h"
 #include "net/XSocket.h"
 #include "server/Server.h"
 
@@ -31,6 +33,9 @@
 using namespace deskflow::string;
 
 namespace deskflow::server {
+
+const auto kSynergyProtocolOption = "synergy";
+const auto kBarrierProtocolOption = "barrier";
 
 //
 // Config
@@ -675,6 +680,8 @@ void Config::readSectionOptions(ConfigReadContext &s)
       }
     } else if (name == "heartbeat") {
       addOption("", kOptionHeartbeat, s.parseInt(value));
+    } else if (name == "protocol") {
+      addOption("", kOptionProtocol, s.parseProtocol(value));
     } else if (name == "switchCorners") {
       addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
     } else if (name == "switchCornerSize") {
@@ -1325,6 +1332,17 @@ String Config::getOptionValue(OptionID id, OptionValue value)
     }
     return result;
   }
+  if (id == kOptionProtocol) {
+    using enum ENetworkProtocol;
+    const auto enumValue = static_cast<ENetworkProtocol>(value);
+    if (enumValue == kSynergy) {
+      return kSynergyProtocolOption;
+    } else if (enumValue == kBarrier) {
+      return kBarrierProtocolOption;
+    } else {
+      throw XInvalidProtocol();
+    }
+  }
 
   return "";
 }
@@ -1820,6 +1838,16 @@ OptionValue ConfigReadContext::parseCorner(const String &arg) const
     return kAllCornersMask;
   }
   throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
+}
+
+OptionValue ConfigReadContext::parseProtocol(const String &args) const
+{
+  if (CaselessCmp::equal(args, kSynergyProtocolOption)) {
+    return static_cast<OptionValue>(ENetworkProtocol::kSynergy);
+  } else if (CaselessCmp::equal(args, kBarrierProtocolOption)) {
+    return static_cast<OptionValue>(ENetworkProtocol::kBarrier);
+  }
+  throw XConfigRead(*this, "invalid protocol argument \"%{1}\"", args);
 }
 
 OptionValue ConfigReadContext::parseCorners(const String &args) const

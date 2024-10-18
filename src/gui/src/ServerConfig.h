@@ -36,9 +36,25 @@ class ServerConfigDialog;
 class MainWindow;
 class AppConfig;
 
+namespace synergy::gui {
+
+enum class ServerProtocol
+{
+  kSynergy,
+  kBarrier
+};
+
+// The default protocol was decided by a community vote.
+// TODO: Remove this link when the vote concludes:
+// https://github.com/deskflow/deskflow/discussions/7742
+const auto kDefaultProtocol = ServerProtocol::kSynergy;
+
+} // namespace synergy::gui
+
 class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
 {
   using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
+  using ServerProtocol = synergy::gui::ServerProtocol;
 
   friend class ServerConfigDialog;
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
@@ -79,6 +95,10 @@ public:
   int heartbeat() const
   {
     return m_Heartbeat;
+  }
+  ServerProtocol protocol() const
+  {
+    return m_Protocol;
   }
   bool relativeMouseMoves() const
   {
@@ -188,6 +208,10 @@ private:
   {
     m_Heartbeat = val;
   }
+  void setProtocol(ServerProtocol val)
+  {
+    m_Protocol = val;
+  }
   void setRelativeMouseMoves(bool on)
   {
     m_RelativeMouseMoves = on;
@@ -252,6 +276,7 @@ private:
 private:
   bool m_HasHeartbeat = false;
   int m_Heartbeat = 0;
+  ServerProtocol m_Protocol = synergy::gui::kDefaultProtocol;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
   bool m_HasSwitchDelay = false;

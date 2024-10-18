@@ -31,6 +31,7 @@
 #include "deskflow/clipboard_types.h"
 #include "deskflow/key_types.h"
 #include "deskflow/mouse_types.h"
+#include "deskflow/option_types.h"
 #include "server/Config.h"
 #include <memory>
 
@@ -191,6 +192,12 @@ public:
   //@}
   //! @name accessors
   //@{
+
+  //! Get the network protocol
+  /*!
+  Returns the network protocol used by the server.
+  */
+  std::string protocolString() const;
 
   //! Get number of connected clients
   /*!
@@ -421,6 +428,9 @@ private:
     String m_clipboardOwner;
     UInt32 m_clipboardSeqNum;
   };
+
+  // used in hello message sent to the client
+  ENetworkProtocol m_protocol;
 
   // the primary screen client
   PrimaryClient *m_primaryClient;
