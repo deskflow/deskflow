@@ -80,6 +80,15 @@ body:
         - label: I have authorized the app to run on my Mac
         - label: I am not using macOS
 
+  - type: checkboxes
+    id: continuous-build
+    attributes:
+      label: Continuous build
+      description: Please try the latest [continuous build](https://github.com/deskflow/deskflow/releases) of Deskflow. It may have a fix for your issue.
+      options:
+        - label: I have tried the latest continuous build and the issue persists
+        - label: I am unable to try the latest continuous build
+
   - type: textarea
     id: os-version
     attributes:
