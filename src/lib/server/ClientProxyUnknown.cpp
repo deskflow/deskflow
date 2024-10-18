@@ -60,9 +60,10 @@ ClientProxyUnknown::ClientProxyUnknown(deskflow::IStream *stream, double timeout
   m_timer = m_events->newOneShotTimer(timeout, this);
   addStreamHandlers();
 
-  std::string helloMessage = std::string(kSynergyProtocolName).append(kMsgHelloArgs);
+  const auto protocol = m_server->protocolString();
+  const auto helloMessage = protocol + kMsgHelloArgs;
 
-  LOG((CLOG_DEBUG1 "saying hello"));
+  LOG_DEBUG("saying hello as %s, protocol v%d.%d", protocol.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
   ProtocolUtil::writef(m_stream, helloMessage.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
 }
 

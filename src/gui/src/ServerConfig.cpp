@@ -72,15 +72,26 @@ bool ServerConfig::save(const QString &fileName) const
 
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
-  return m_Screens == sc.m_Screens && m_Columns == sc.m_Columns && m_Rows == sc.m_Rows &&
-         m_HasHeartbeat == sc.m_HasHeartbeat && m_Heartbeat == sc.m_Heartbeat &&
-         m_RelativeMouseMoves == sc.m_RelativeMouseMoves && m_Win32KeepForeground == sc.m_Win32KeepForeground &&
-         m_HasSwitchDelay == sc.m_HasSwitchDelay && m_SwitchDelay == sc.m_SwitchDelay &&
-         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap && m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&
-         m_SwitchCornerSize == sc.m_SwitchCornerSize && m_SwitchCorners == sc.m_SwitchCorners &&
-         m_Hotkeys == sc.m_Hotkeys && m_pAppConfig == sc.m_pAppConfig &&
-         m_EnableDragAndDrop == sc.m_EnableDragAndDrop && m_DisableLockToScreen == sc.m_DisableLockToScreen &&
-         m_ClipboardSharing == sc.m_ClipboardSharing && m_ClipboardSharingSize == sc.m_ClipboardSharingSize &&
+  return m_Screens == sc.m_Screens &&                           //
+         m_Columns == sc.m_Columns &&                           //
+         m_Rows == sc.m_Rows &&                                 //
+         m_HasHeartbeat == sc.m_HasHeartbeat &&                 //
+         m_Heartbeat == sc.m_Heartbeat &&                       //
+         m_Protocol == sc.m_Protocol &&                         //
+         m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&     //
+         m_Win32KeepForeground == sc.m_Win32KeepForeground &&   //
+         m_HasSwitchDelay == sc.m_HasSwitchDelay &&             //
+         m_SwitchDelay == sc.m_SwitchDelay &&                   //
+         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&     //
+         m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&           //
+         m_SwitchCornerSize == sc.m_SwitchCornerSize &&         //
+         m_SwitchCorners == sc.m_SwitchCorners &&               //
+         m_Hotkeys == sc.m_Hotkeys &&                           //
+         m_pAppConfig == sc.m_pAppConfig &&                     //
+         m_EnableDragAndDrop == sc.m_EnableDragAndDrop &&       //
+         m_DisableLockToScreen == sc.m_DisableLockToScreen &&   //
+         m_ClipboardSharing == sc.m_ClipboardSharing &&         //
+         m_ClipboardSharingSize == sc.m_ClipboardSharingSize && //
          m_pMainWindow == sc.m_pMainWindow;
 }
 
@@ -118,6 +129,7 @@ void ServerConfig::commit()
 
   settings().setValue("hasHeartbeat", hasHeartbeat());
   settings().setValue("heartbeat", heartbeat());
+  settings().setValue("protocol", static_cast<int>(protocol()));
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
   settings().setValue("hasSwitchDelay", hasSwitchDelay());
@@ -172,6 +184,7 @@ void ServerConfig::recall()
 
   haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
   setHeartbeat(settings().value("heartbeat", 5000).toInt());
+  setProtocol(static_cast<ServerProtocol>(settings().value("protocol", static_cast<int>(protocol())).toInt()));
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
@@ -232,6 +245,8 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 {
+  using enum synergy::gui::ServerProtocol;
+
   outStream << "section: screens" << Qt::endl;
 
   foreach (const Screen &s, config.screens())
@@ -266,8 +281,15 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "section: options" << Qt::endl;
 
   if (config.hasHeartbeat())
-    outStream << "\t"
-              << "heartbeat = " << config.heartbeat() << Qt::endl;
+    outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
+
+  if (config.protocol() == kSynergy) {
+    outStream << "\t" << "protocol = synergy" << Qt::endl;
+  } else if (config.protocol() == kBarrier) {
+    outStream << "\t" << "protocol = barrier" << Qt::endl;
+  } else {
+    qFatal("unrecognized protocol when writing config");
+  }
 
   outStream << "\t"
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
