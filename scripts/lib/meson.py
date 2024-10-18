@@ -34,7 +34,6 @@ def setup(no_system_list, static_list):
     # or somewhere other than this script, as it's a bit hacky.
     if env.is_windows():
         cmd.append("-Dsystem-gtest=false")
-        cmd.append("-Dsystem-tomlplusplus=false")
 
     for subproject in no_system_list or []:
         cmd.append(f"-Dsystem-{subproject}=false")

@@ -9,13 +9,6 @@ if host_machine.system() == 'windows'
   subproject('wintoast')
 endif
 
-system_tomlplusplus = get_option('system-tomlplusplus')
-if system_tomlplusplus
-  dependency('tomlplusplus', required: false)
-else
-  subproject('tomlplusplus')
-endif
-
 system_gtest = get_option('system-gtest')
 if system_gtest
   dependency('gtest', required: false)
