@@ -32,7 +32,7 @@ options=('!debug')
 package() {
   # By default, `makepkg` will run from the `src` directory, which would
   # only install the binaries, and not the .desktop file, etc. To install
-  # everything, we need to set `--prefix`.
+  # everything, we need to set DESTDIR.
   cd $startdir
-  cmake --install . --prefix "$pkgdir"
+  DESTDIR=$pkgdir cmake --install .
 }
