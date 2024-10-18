@@ -146,9 +146,6 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: Install dependencies
-        run: python ./scripts/install_deps.py --skip-vcpkg
-
       - name: vcpkg build
         id: vcpkg
         uses: johnwason/vcpkg-action@v6
@@ -157,6 +154,9 @@ jobs:
           triplet: x64-windows-release
           token: ${{ github.token }}
           github-binarycache: true
+
+      - name: setup env
+        run: python ./scripts/setup_venv.py
 
       - name: Configure
         run: |
