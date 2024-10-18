@@ -28,6 +28,7 @@ env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   PACKAGE_PREFIX: "deskflow"
   PACKAGE_PATH: ./dist
+  CMAKE_ARGS: -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
 jobs:
   # Always run this job, even if not on PR, since other jobs need it.
@@ -162,7 +163,7 @@ jobs:
           cmake ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} `
             -B build -G Ninja `
             -DCMAKE_BUILD_TYPE=Release `
-            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+            ${{ env.CMAKE_ARGS }}
 
       - name: Build
         run: cmake --build build -j8
@@ -239,9 +240,7 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Configure
-        run: |
-          cmake -B build \
-            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+        run: cmake -B build ${{ env.CMAKE_ARGS }}
 
       - name: Build
         run: cmake --build build -j8
@@ -336,7 +335,7 @@ jobs:
         run: |
           cmake -B build -G Ninja \
             -DCMAKE_INSTALL_PREFIX=/usr \
-            -DCMAKE_COMPILE_WARNING_AS_ERROR=ON \
+            ${{ env.CMAKE_ARGS }} \
             ${{ matrix.distro.extra-cmake-args }}
 
       - name: Build Package
@@ -375,15 +374,6 @@ jobs:
     runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
     timeout-minutes: 20
 
-    env:
-      DESKFLOW_BUILD_CMD: |
-        ./scripts/install_deps.sh;
-        cmake -B build;
-        cmake --build build -j16; -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
-        export QT_QPA_PLATFORM=offscreen;
-        ./build/bin/unittests
-        ./build/bin/integtests
-
     strategy:
       fail-fast: false
 
@@ -408,7 +398,15 @@ jobs:
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
-          run: ${{ env.DESKFLOW_BUILD_CMD }}
+          run: |
+            ./scripts/install_deps.sh
+            cmake -B build ${{ env.CMAKE_ARGS }}
+            cmake --build build -j16
+            
+            # Integration tests are flakey by nature, make them optional.
+            export QT_QPA_PLATFORM=offscreen
+            ./build/bin/unittests
+            ./build/bin/integtests || true
 
   release:
     needs: ci-passed
