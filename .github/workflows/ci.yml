@@ -109,7 +109,8 @@ jobs:
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
-    timeout-minutes: 20
+    timeout-minutes: 120
+    # If vcpkg has to rebuild the cache it takes a while
 
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one target may
@@ -141,12 +142,6 @@ jobs:
 
           key: vcpkg-${{ runner.os }}-1
 
-      - name: Cache deps dir
-        uses: actions/cache@v4
-        with:
-          path: ./deps
-          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
-
       # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
       # VC++ as that's already pre-installed on the Windows runner.
       - name: Setup VC++ environment
@@ -159,14 +154,19 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Install dependencies
-        env:
-          VCPKG_ROOT: ${{github.workspace}}/vcpkg
-        run: python ./scripts/install_deps.py
+        run: python ./scripts/install_deps.py --skip-vcpkg
+
+      - name: vcpkg build
+        id: vcpkg
+        uses: johnwason/vcpkg-action@v6
+        with:
+          manifest-dir: ${{ github.workspace }}
+          triplet: x64-windows-release
+          token: ${{ github.token }}
+          github-binarycache: true
 
       - name: Configure
-        env:
-          VCPKG_ROOT: ${{github.workspace}}/vcpkg
-        run: cmake -B build --preset=windows-release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+        run: cmake ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
