@@ -37,7 +37,6 @@
 #include "gui/core/ServerConnection.h"
 #include "gui/core/WaylandWarnings.h"
 #include "gui/tls/TlsUtility.h"
-#include "ui_MainWindowBase.h"
 
 class QAction;
 class QMenu;
@@ -55,7 +54,11 @@ class QAbstractButton;
 class DeskflowApplication;
 class SetupWizard;
 
-class MainWindow : public QMainWindow, public Ui::MainWindowBase
+namespace Ui {
+class MainWindow;
+}
+
+class MainWindow : public QMainWindow
 {
   using CoreMode = deskflow::gui::CoreProcess::Mode;
   using CoreProcess = deskflow::gui::CoreProcess;
@@ -143,6 +146,8 @@ private slots:
   void on_m_pLineEditClientIp_textChanged(const QString &text);
 
 private:
+  std::unique_ptr<Ui::MainWindow> ui;
+
   AppConfig &appConfig()
   {
     return m_AppConfig;

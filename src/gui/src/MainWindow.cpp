@@ -17,6 +17,7 @@
  */
 
 #include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 #include "ServerConfigDialog.h"
 #include "common/constants.h"
@@ -53,6 +54,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
+#include <memory>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -72,7 +74,8 @@ const auto kDarkIconFile = ":/icons/128x128/tray-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
-    : m_ConfigScopes(configScopes),
+    : ui{std::make_unique<Ui::MainWindow>()},
+      m_ConfigScopes(configScopes),
       m_AppConfig(appConfig),
       m_ServerConfig(appConfig, *this),
       m_CoreProcess(appConfig, m_ServerConfig),
@@ -82,7 +85,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_WindowSaveTimer(this)
 {
 
-  setupUi(this);
+  ui->setupUi(this);
   createMenuBar();
   setupControls();
   connectSlots();
@@ -139,18 +142,18 @@ void MainWindow::setupControls()
 {
   setWindowTitle(kAppName);
 
-  m_pActionHelp->setText(DESKFLOW_HELP_TEXT);
+  ui->m_pActionHelp->setText(DESKFLOW_HELP_TEXT);
 
   secureSocket(false);
   updateLocalFingerprint();
 
-  m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
-  m_pLabelUpdate->hide();
+  ui->m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
+  ui->m_pLabelUpdate->hide();
 
-  m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
-  m_pLabelNotice->hide();
+  ui->m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
+  ui->m_pLabelNotice->hide();
 
-  m_pLabelIpAddresses->setText(QString("This computer's IP addresses: %1").arg(getIPAddresses()));
+  ui->m_pLabelIpAddresses->setText(QString("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (m_AppConfig.lastVersion() != DESKFLOW_VERSION) {
     m_AppConfig.setLastVersion(DESKFLOW_VERSION);
@@ -158,8 +161,8 @@ void MainWindow::setupControls()
 
 #if defined(Q_OS_MAC)
 
-  m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
-  m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
+  ui->m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
+  ui->m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
 #endif
 }
@@ -206,14 +209,14 @@ void MainWindow::connectSlots()
 
   connect(&m_CoreProcess, &CoreProcess::secureSocket, this, &MainWindow::onCoreProcessSecureSocket);
 
-  connect(m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
+  connect(ui->m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(
-      m_pActionRestore, &QAction::triggered, //
+      ui->m_pActionRestore, &QAction::triggered, //
       [this]() { showAndActivate(); }
   );
 
-  connect(m_pActionQuit, &QAction::triggered, qApp, [this] {
+  connect(ui->m_pActionQuit, &QAction::triggered, qApp, [this] {
     qDebug("quitting application");
     m_Quitting = true;
     QApplication::quit();
@@ -300,8 +303,8 @@ void MainWindow::onVersionCheckerUpdateFound(const QString &version)
   const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
   const auto text = QString("A new version is available (v%1). %2").arg(version, link);
 
-  m_pLabelUpdate->show();
-  m_pLabelUpdate->setText(text);
+  ui->m_pLabelUpdate->show();
+  ui->m_pLabelUpdate->setText(text);
 }
 
 void MainWindow::onAppConfigScreenNameChanged()
@@ -413,12 +416,12 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pLineEditHostname_returnPressed()
 {
-  m_pButtonConnect->click();
+  ui->m_pButtonConnect->click();
 }
 
 void MainWindow::on_m_pLineEditClientIp_returnPressed()
 {
-  m_pButtonConnectToClient->click();
+  ui->m_pButtonConnectToClient->click();
 }
 
 void MainWindow::on_m_pLineEditHostname_textChanged(const QString &text)
@@ -439,7 +442,7 @@ void MainWindow::on_m_pButtonApply_clicked()
 
 void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &)
 {
-  m_pActionSettings->trigger();
+  ui->m_pActionSettings->trigger();
 }
 
 void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &)
@@ -511,8 +514,9 @@ void MainWindow::moveEvent(QMoveEvent *event)
 void MainWindow::open()
 {
 
-  std::vector<QAction *> trayMenu = {m_pActionStartCore, m_pActionStopCore, nullptr,      m_pActionMinimize,
-                                     m_pActionRestore,   nullptr,           m_pActionQuit};
+  std::vector<QAction *> trayMenu = {ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr,
+                                     ui->m_pActionMinimize,  ui->m_pActionRestore,  nullptr,
+                                     ui->m_pActionQuit};
 
   m_TrayIcon.create(trayMenu);
 
@@ -551,7 +555,7 @@ void MainWindow::onCoreProcessStarting()
 
 void MainWindow::setStatus(const QString &status)
 {
-  m_pStatusLabel->setText(status);
+  ui->m_pStatusLabel->setText(status);
 }
 
 void MainWindow::createMenuBar()
@@ -569,32 +573,32 @@ void MainWindow::createMenuBar()
 #endif
   m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-  m_pMenuFile->addAction(m_pActionStartCore);
-  m_pMenuFile->addAction(m_pActionStopCore);
+  m_pMenuFile->addAction(ui->m_pActionStartCore);
+  m_pMenuFile->addAction(ui->m_pActionStopCore);
   m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(m_pActionSave);
+  m_pMenuFile->addAction(ui->m_pActionSave);
   m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(m_pActionQuit);
+  m_pMenuFile->addAction(ui->m_pActionQuit);
 
-  m_pMenuEdit->addAction(m_pActionSettings);
+  m_pMenuEdit->addAction(ui->m_pActionSettings);
 
-  m_pMenuWindow->addAction(m_pActionMinimize);
-  m_pMenuWindow->addAction(m_pActionRestore);
+  m_pMenuWindow->addAction(ui->m_pActionMinimize);
+  m_pMenuWindow->addAction(ui->m_pActionRestore);
 
-  m_pMenuHelp->addAction(m_pActionAbout);
-  m_pMenuHelp->addAction(m_pActionHelp);
+  m_pMenuHelp->addAction(ui->m_pActionAbout);
+  m_pMenuHelp->addAction(ui->m_pActionHelp);
   m_pMenuFile->addSeparator();
-  m_pMenuHelp->addAction(m_pActionClearSettings);
+  m_pMenuHelp->addAction(ui->m_pActionClearSettings);
 
-  m_pActionAbout->setText(QString("About %1...").arg(kAppName));
+  ui->m_pActionAbout->setText(QString("About %1...").arg(kAppName));
 
   const auto enableTestMenu = strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
 
   if (enableTestMenu || kDebugBuild) {
     auto testMenu = new QMenu("Test", m_pMenuBar);
     m_pMenuBar->addMenu(testMenu);
-    testMenu->addAction(m_pActionTestFatalError);
-    testMenu->addAction(m_pActionTestCriticalError);
+    testMenu->addAction(ui->m_pActionTestFatalError);
+    testMenu->addAction(ui->m_pActionTestCriticalError);
   }
 
   setMenuBar(m_pMenuBar);
@@ -605,8 +609,8 @@ void MainWindow::applyConfig()
   enableServer(m_AppConfig.serverGroupChecked());
   enableClient(m_AppConfig.clientGroupChecked());
 
-  m_pLineEditHostname->setText(m_AppConfig.serverHostname());
-  m_pLineEditClientIp->setText(m_ServerConfig.getClientAddress());
+  ui->m_pLineEditHostname->setText(m_AppConfig.serverHostname());
+  ui->m_pLineEditClientIp->setText(m_ServerConfig.getClientAddress());
 }
 
 void MainWindow::applyCloseToTray() const
@@ -616,10 +620,10 @@ void MainWindow::applyCloseToTray() const
 
 void MainWindow::saveSettings()
 {
-  m_AppConfig.setServerGroupChecked(m_pRadioGroupServer->isChecked());
-  m_AppConfig.setClientGroupChecked(m_pRadioGroupClient->isChecked());
-  m_AppConfig.setServerHostname(m_pLineEditHostname->text());
-  m_ServerConfig.setClientAddress(m_pLineEditClientIp->text());
+  m_AppConfig.setServerGroupChecked(ui->m_pRadioGroupServer->isChecked());
+  m_AppConfig.setClientGroupChecked(ui->m_pRadioGroupClient->isChecked());
+  m_AppConfig.setServerHostname(ui->m_pLineEditHostname->text());
+  m_ServerConfig.setClientAddress(ui->m_pLineEditClientIp->text());
 
   m_ConfigScopes.save();
 }
@@ -652,18 +656,18 @@ void MainWindow::handleLogLine(const QString &line)
 {
   const int kScrollBottomThreshold = 2;
 
-  QScrollBar *verticalScroll = m_pLogOutput->verticalScrollBar();
+  QScrollBar *verticalScroll = ui->m_pLogOutput->verticalScrollBar();
   int currentScroll = verticalScroll->value();
   int maxScroll = verticalScroll->maximum();
   const auto scrollAtBottom = qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
 
   // only trim end instead of the whole line to prevent tab-indented debug
   // filenames from losing their indentation.
-  m_pLogOutput->appendPlainText(trimEnd(line));
+  ui->m_pLogOutput->appendPlainText(trimEnd(line));
 
   if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());
-    m_pLogOutput->horizontalScrollBar()->setValue(0);
+    ui->m_pLogOutput->horizontalScrollBar()->setValue(0);
   }
 
   updateFromLogLine(line);
@@ -677,12 +681,12 @@ void MainWindow::updateFromLogLine(const QString &line)
 
 void MainWindow::checkConnected(const QString &line)
 {
-  if (m_pRadioGroupServer->isChecked()) {
+  if (ui->m_pRadioGroupServer->isChecked()) {
     m_ServerConnection.handleLogLine(line);
-    m_pLabelServerState->updateServerState(line);
+    ui->m_pLabelServerState->updateServerState(line);
   } else {
     m_ClientConnection.handleLogLine(line);
-    m_pLabelClientState->updateClientState(line);
+    ui->m_pLabelClientState->updateClientState(line);
   }
 }
 
@@ -862,24 +866,24 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
       state == CoreProcessState::RetryPending) {
-    disconnect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore, &QAction::trigger);
-    connect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore, &QAction::trigger);
+    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStartCore, &QAction::trigger);
+    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStopCore, &QAction::trigger);
 
-    m_pButtonToggleStart->setText(QString("&Stop"));
-    m_pButtonApply->setEnabled(true);
+    ui->m_pButtonToggleStart->setText(QString("&Stop"));
+    ui->m_pButtonApply->setEnabled(true);
 
-    m_pActionStartCore->setEnabled(false);
-    m_pActionStopCore->setEnabled(true);
+    ui->m_pActionStartCore->setEnabled(false);
+    ui->m_pActionStopCore->setEnabled(true);
 
   } else {
-    disconnect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStopCore, &QAction::trigger);
-    connect(m_pButtonToggleStart, &QPushButton::clicked, m_pActionStartCore, &QAction::trigger);
+    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStopCore, &QAction::trigger);
+    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStartCore, &QAction::trigger);
 
-    m_pButtonToggleStart->setText(QString("&Start"));
-    m_pButtonApply->setEnabled(false);
+    ui->m_pButtonToggleStart->setText(QString("&Start"));
+    ui->m_pButtonApply->setEnabled(false);
 
-    m_pActionStartCore->setEnabled(true);
-    m_pActionStopCore->setEnabled(false);
+    ui->m_pActionStartCore->setEnabled(true);
+    ui->m_pActionStopCore->setEnabled(false);
   }
 }
 
@@ -903,8 +907,8 @@ void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
 void MainWindow::setVisible(bool visible)
 {
   QMainWindow::setVisible(visible);
-  m_pActionMinimize->setEnabled(visible);
-  m_pActionRestore->setEnabled(!visible);
+  ui->m_pActionMinimize->setEnabled(visible);
+  ui->m_pActionRestore->setEnabled(!visible);
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070 // lion
   // dock hide only supported on lion :(
@@ -960,10 +964,10 @@ void MainWindow::updateLocalFingerprint()
     qFatal("failed to check if fingerprint exists");
   }
 
-  if (m_AppConfig.tlsEnabled() && fingerprintExists && m_pRadioGroupServer->isChecked()) {
-    m_pLabelFingerprint->setVisible(true);
+  if (m_AppConfig.tlsEnabled() && fingerprintExists && ui->m_pRadioGroupServer->isChecked()) {
+    ui->m_pLabelFingerprint->setVisible(true);
   } else {
-    m_pLabelFingerprint->setVisible(false);
+    ui->m_pLabelFingerprint->setVisible(false);
   }
 }
 
@@ -999,18 +1003,18 @@ void MainWindow::secureSocket(bool secureSocket)
 {
   m_SecureSocket = secureSocket;
   if (secureSocket) {
-    m_pLabelPadlock->show();
+    ui->m_pLabelPadlock->show();
   } else {
-    m_pLabelPadlock->hide();
+    ui->m_pLabelPadlock->hide();
   }
 }
 
 void MainWindow::updateScreenName()
 {
-  m_pLabelComputerName->setText(QString("This computer's name: %1 "
-                                        R"((<a href="#" style="color: %2">change</a>))")
-                                    .arg(m_AppConfig.screenName())
-                                    .arg(kColorSecondary));
+  ui->m_pLabelComputerName->setText(QString("This computer's name: %1 "
+                                            R"((<a href="#" style="color: %2">change</a>))")
+                                        .arg(m_AppConfig.screenName())
+                                        .arg(kColorSecondary));
   m_ServerConfig.updateServerName();
 }
 
@@ -1018,13 +1022,13 @@ void MainWindow::enableServer(bool enable)
 {
   qDebug(enable ? "server enabled" : "server disabled");
   m_AppConfig.setServerGroupChecked(enable);
-  m_pRadioGroupServer->setChecked(enable);
-  m_pWidgetServer->setEnabled(enable);
-  m_pWidgetServerInput->setVisible(m_AppConfig.invertConnection());
+  ui->m_pRadioGroupServer->setChecked(enable);
+  ui->m_pWidgetServer->setEnabled(enable);
+  ui->m_pWidgetServerInput->setVisible(m_AppConfig.invertConnection());
 
   if (enable) {
-    m_pButtonToggleStart->setEnabled(true);
-    m_pActionStartCore->setEnabled(true);
+    ui->m_pButtonToggleStart->setEnabled(true);
+    ui->m_pActionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Server);
 
     // The server can run without any clients configured, and this is actually
@@ -1042,13 +1046,13 @@ void MainWindow::enableClient(bool enable)
 {
   qDebug(enable ? "client enabled" : "client disabled");
   m_AppConfig.setClientGroupChecked(enable);
-  m_pRadioGroupClient->setChecked(enable);
-  m_pWidgetClientInput->setEnabled(enable);
-  m_pWidgetClientInput->setVisible(!m_AppConfig.invertConnection());
+  ui->m_pRadioGroupClient->setChecked(enable);
+  ui->m_pWidgetClientInput->setEnabled(enable);
+  ui->m_pWidgetClientInput->setVisible(!m_AppConfig.invertConnection());
 
   if (enable) {
-    m_pButtonToggleStart->setEnabled(true);
-    m_pActionStartCore->setEnabled(true);
+    ui->m_pButtonToggleStart->setEnabled(true);
+    ui->m_pActionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Client);
   }
 }
