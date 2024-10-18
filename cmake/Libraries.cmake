@@ -636,6 +636,8 @@ macro(configure_wintoast)
     add_definitions(-DHAVE_WINTOAST=1)
     include_directories(${WINTOAST_DIR}/include)
   else()
+    find_package(unofficial-wintoast CONFIG REQUIRED)
+    set(wintoast-lib unofficial::wintoast::wintoast)
     message(WARNING "Subproject 'WinToast' not found")
   endif()
 

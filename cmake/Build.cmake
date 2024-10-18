@@ -85,6 +85,13 @@ macro(post_config_all)
     #      The CMake copy command also has similar shortfalls.
     #
     # Patches welcome! :)
+
+    add_custom_target(
+          run_post_build ALL
+          COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/setup_venv.py
+          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+          VERBATIM
+          COMMENT "Setting up Python venv")
     add_custom_target(
       run_post_build ALL
       COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/fancy_copy.py

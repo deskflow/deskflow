@@ -100,6 +100,7 @@ if(UNIX)
     server
     ${cli11_lib}
     ${tomlPP_lib}
+    ${wintoast-lib}
   )
 
   if(NOT APPLE)
