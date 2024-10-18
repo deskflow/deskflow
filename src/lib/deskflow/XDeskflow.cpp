@@ -29,6 +29,15 @@ String XBadClient::getWhat() const throw()
 }
 
 //
+// XInvalidProtocol
+//
+
+String XInvalidProtocol::getWhat() const throw()
+{
+  return "XInvalidProtocol";
+}
+
+//
 // XIncompatibleClient
 //
 

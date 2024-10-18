@@ -52,7 +52,7 @@ void HelloBack::handleHello(deskflow::IStream *stream, const std::string &client
   }
 
   // check versions
-  LOG_DEBUG("got hello version %s, %d.%d", protocolName.c_str(), serverMajor, serverMinor);
+  LOG_DEBUG("got hello from %s, protocol v%d.%d", protocolName.c_str(), serverMajor, serverMinor);
 
   const auto helloBackMajor = m_majorVersion;
   auto helloBackMinor = m_minorVersion;

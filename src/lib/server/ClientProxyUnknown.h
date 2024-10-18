@@ -21,6 +21,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/String.h"
+#include "deskflow/option_types.h"
 
 class ClientProxy;
 class EventQueueTimer;

@@ -537,6 +537,7 @@ public:
   OptionValue parseModifierKey(const String &) const;
   OptionValue parseCorner(const String &) const;
   OptionValue parseCorners(const String &) const;
+  OptionValue parseProtocol(const String &) const;
   Config::Interval parseInterval(const ArgList &args) const;
   void parseNameWithArgs(
       const String &type, const String &line, const String &delim, String::size_type &index, String &name, ArgList &args

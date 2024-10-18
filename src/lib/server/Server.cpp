@@ -31,6 +31,7 @@
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
+#include "deskflow/XDeskflow.h"
 #include "deskflow/option_types.h"
 #include "deskflow/protocol_types.h"
 #include "mt/Thread.h"
@@ -339,6 +340,17 @@ void Server::disconnect()
   } else {
     m_events->addEvent(Event(m_events->forServer().disconnected(), this));
   }
+}
+
+std::string Server::protocolString() const
+{
+  using enum ENetworkProtocol;
+  if (m_protocol == kSynergy) {
+    return kSynergyProtocolName;
+  } else if (m_protocol == kBarrier) {
+    return kBarrierProtocolName;
+  }
+  throw XInvalidProtocol();
 }
 
 UInt32 Server::getNumClients() const
@@ -1100,7 +1112,17 @@ void Server::processOptions()
   for (Config::ScreenOptions::const_iterator index = options->begin(); index != options->end(); ++index) {
     const OptionID id = index->first;
     const OptionValue value = index->second;
-    if (id == kOptionScreenSwitchDelay) {
+    if (id == kOptionProtocol) {
+      using enum ENetworkProtocol;
+      const auto enumValue = static_cast<ENetworkProtocol>(value);
+      if (enumValue == kSynergy) {
+        m_protocol = kSynergy;
+      } else if (enumValue == kBarrier) {
+        m_protocol = kBarrier;
+      } else {
+        throw XInvalidProtocol();
+      }
+    } else if (id == kOptionScreenSwitchDelay) {
       m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);
       if (m_switchWaitDelay < 0.0) {
         m_switchWaitDelay = 0.0;

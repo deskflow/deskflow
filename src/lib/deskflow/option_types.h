@@ -55,6 +55,7 @@ static const OptionID kOptionModifierMapForAltGr = OPTION_CODE("MMFG");
 static const OptionID kOptionModifierMapForMeta = OPTION_CODE("MMFM");
 static const OptionID kOptionModifierMapForSuper = OPTION_CODE("MMFR");
 static const OptionID kOptionHeartbeat = OPTION_CODE("HART");
+static const OptionID kOptionProtocol = OPTION_CODE("PROT");
 static const OptionID kOptionScreenSwitchCorners = OPTION_CODE("SSCM");
 static const OptionID kOptionScreenSwitchCornerSize = OPTION_CODE("SSCS");
 static const OptionID kOptionScreenSwitchDelay = OPTION_CODE("SSWT");
@@ -95,6 +96,15 @@ enum EScreenSwitchCornerMasks
   kBottomLeftMask = 1 << (kBottomLeft - kFirstCorner),
   kBottomRightMask = 1 << (kBottomRight - kFirstCorner),
   kAllCornersMask = kTopLeftMask | kTopRightMask | kBottomLeftMask | kBottomRightMask
+};
+//@}
+
+//! @name Network protocol
+//@{
+enum class ENetworkProtocol
+{
+  kSynergy,
+  kBarrier
 };
 //@}
 
