@@ -16,13 +16,6 @@ else
   subproject('tomlplusplus')
 endif
 
-system_cli11 = get_option('system-cli11')
-if system_cli11
-  dependency('cli11', required: false)
-else
-  subproject('cli11')
-endif
-
 system_gtest = get_option('system-gtest')
 if system_gtest
   dependency('gtest', required: false)
