@@ -29,7 +29,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="m_pTabScreens">
       <attribute name="title">
@@ -49,7 +49,7 @@
         <number>5</number>
        </property>
        <item>
-        <layout class="QHBoxLayout">
+        <layout class="QHBoxLayout" name="m_pLayoutScreens">
          <property name="spacing">
           <number>6</number>
          </property>
@@ -130,7 +130,7 @@
           </spacer>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="m_pLayoutAddComputer">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -334,326 +334,80 @@
       <attribute name="title">
        <string>Advanced</string>
       </attribute>
-      <layout class="QGridLayout">
-       <property name="leftMargin">
-        <number>9</number>
-       </property>
-       <property name="rightMargin">
-        <number>9</number>
-       </property>
-       <item row="1" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout_21">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QGroupBox" name="m_pGroupSwitch">
-           <property name="font">
-            <font>
-             <kerning>true</kerning>
-            </font>
-           </property>
-           <property name="title">
-            <string>&amp;Switch computer</string>
-           </property>
-           <layout class="QVBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="topMargin">
-             <number>6</number>
-            </property>
-            <property name="bottomMargin">
-             <number>6</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QCheckBox" name="m_pCheckBoxSwitchDelay">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>Switch &amp;after waiting</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="m_pSpinBoxSwitchDelay">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>10</number>
-                </property>
-                <property name="maximum">
-                 <number>10000</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>250</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="m_pLabel_14">
-                <property name="text">
-                 <string>ms</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>Switch on double &amp;tap within</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>10</number>
-                </property>
-                <property name="maximum">
-                 <number>10000</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>250</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="m_pLabel_15">
-                <property name="text">
-                 <string>ms</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_41">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>13</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_3">
-           <property name="font">
-            <font>
-             <kerning>true</kerning>
-            </font>
-           </property>
-           <property name="title">
-            <string>Clipboard sharing</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="topMargin">
-             <number>6</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Enable clipboard sharing</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximum">
-                 <number>10000</number>
-                </property>
-                <property name="value">
-                 <number>3</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_4">
-                <property name="text">
-                 <string>mb</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>60</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="5" column="0">
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="0" colspan="3">
-        <widget class="QGroupBox" name="m_pGroupSwitchCorners">
+      <layout class="QGridLayout" name="m_pGridCorners">
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="m_pGroupCorners">
          <property name="font">
           <font>
            <kerning>true</kerning>
           </font>
          </property>
          <property name="title">
-          <string>&amp;Dead corners for this computer</string>
+          <string>&amp;Dead corners (for this computer)</string>
          </property>
          <property name="checked">
           <bool>false</bool>
          </property>
-         <layout class="QGridLayout">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <property name="topMargin">
            <number>6</number>
           </property>
-          <item row="1" column="0" colspan="3">
-           <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
-            <property name="text">
-             <string>To&amp;p-left</string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QGridLayout" name="m_pLayoutCorners">
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
+              <property name="text">
+               <string>&amp;Bottom-left</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
+              <property name="text">
+               <string>To&amp;p-left</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
+              <property name="text">
+               <string>Bottom-ri&amp;ght</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
+              <property name="text">
+               <string>Top-rig&amp;ht</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="1" column="3" colspan="2">
-           <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
-            <property name="text">
-             <string>Top-rig&amp;ht</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="3">
-           <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
-            <property name="text">
-             <string>&amp;Bottom-left</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3" colspan="2">
-           <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
-            <property name="text">
-             <string>Bottom-ri&amp;ght</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="5">
-           <layout class="QHBoxLayout" name="horizontalLayout_21">
+          <item>
+           <layout class="QHBoxLayout" name="m_pLayoutCornerSize">
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>Cor&amp;ner Size:</string>
+               <string>Cor&amp;ner size</string>
               </property>
               <property name="buddy">
                <cstring>m_pSpinBoxSwitchCornerSize</cstring>
               </property>
              </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_7">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item>
              <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize">
@@ -664,6 +418,12 @@
             </item>
             <item>
              <widget class="QLabel" name="label_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>px</string>
               </property>
@@ -671,160 +431,429 @@
             </item>
            </layout>
           </item>
+          <item>
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
        </item>
-       <item row="1" column="2">
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <property name="topMargin">
-          <number>0</number>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="m_pGroupOptions">
+         <property name="font">
+          <font>
+           <kerning>false</kerning>
+          </font>
          </property>
-         <property name="rightMargin">
-          <number>0</number>
+         <property name="title">
+          <string>&amp;Misc</string>
          </property>
-         <item>
-          <widget class="QGroupBox" name="m_pGroupOptions">
-           <property name="font">
-            <font>
-             <kerning>false</kerning>
-            </font>
-           </property>
-           <property name="title">
-            <string>&amp;Options</string>
-           </property>
-           <layout class="QGridLayout">
-            <property name="verticalSpacing">
-             <number>12</number>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
+            <property name="text">
+             <string>Disable lock to screen (scroll lock key)</string>
             </property>
-            <item row="11" column="0">
-             <spacer>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Use &amp;relative mouse movements</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Don't take &amp;foreground window (Windows only)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="m_pLayoutClipboard">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Enable clipboard sharing</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>20</width>
-                <height>16</height>
+                <width>40</width>
+                <height>20</height>
                </size>
               </property>
              </spacer>
             </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+            <item>
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Limit:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
               <property name="enabled">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
-              <property name="text">
-               <string>Use &amp;relative mouse moves</string>
+              <property name="maximum">
+               <number>10000</number>
               </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>9</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="m_pCheckBoxHeartbeat">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>&amp;Check clients every</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimum">
-                 <number>1000</number>
-                </property>
-                <property name="maximum">
-                 <number>30000</number>
-                </property>
-                <property name="singleStep">
-                 <number>1000</number>
-                </property>
-                <property name="value">
-                 <number>5000</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="m_pLabel_16">
-                <property name="text">
-                 <string>ms</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="4" column="0">
-             <widget class="QCheckBox" name="m_pCheckBoxIgnoreAutoConfigClient">
-              <property name="text">
-               <string>Ignore auto config clients</string>
+              <property name="value">
+               <number>3</number>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
-             <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
+            <item>
+             <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Disable lock to screen</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>Don't take &amp;foreground window on Windows servers</string>
+               <string>MB</string>
               </property>
              </widget>
             </item>
            </layout>
-          </widget>
-         </item>
-        </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
        </item>
-       <item row="3" column="0">
-        <spacer name="verticalSpacer_5">
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="m_pGroupNetwork">
+         <property name="title">
+          <string>&amp;Network</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <layout class="QHBoxLayout">
+            <property name="spacing">
+             <number>9</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="m_pCheckBoxHeartbeat">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="whatsThis">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables the network heartbeat to ping clients every &lt;span style=&quot; font-style:italic;&quot;&gt;n&lt;/span&gt; seconds. This may help to diagnose network problems by retrying the connection if the client becomes unresponsive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>&amp;Check clients every</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>1000</number>
+              </property>
+              <property name="maximum">
+               <number>30000</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>5000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_pLabel_16">
+              <property name="text">
+               <string>ms</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="m_pLabelProtocol">
+              <property name="whatsThis">
+               <string>&lt;p&gt;Enables compatibility with programs that use either the Synergy or Barrier protocols:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Deskflow uses the Synergy protocol.&lt;/li&gt;
+&lt;li&gt;Input Leap uses the Barrier protocol.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A Deskflow client will automatically use either the Synergy or Barrier protocol depending on the server protocol.&lt;/p&gt;</string>
+              </property>
+              <property name="text">
+               <string>Network protocol</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="m_pRadioProtocolSynergy">
+              <property name="text">
+               <string>&amp;Synergy</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="m_pRadioProtocolBarrier">
+              <property name="text">
+               <string>&amp;Barrier</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="m_pGroupSwitch">
+         <property name="font">
+          <font>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="title">
+          <string>&amp;Switching</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QCheckBox" name="m_pCheckBoxSwitchDelay">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Switch &amp;after waiting</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchDelay">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>10</number>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>250</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_pLabel_14">
+              <property name="text">
+               <string>ms</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Switch on double &amp;tap within</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>10</number>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>250</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_pLabel_15">
+              <property name="text">
+               <string>ms</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>13</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -905,7 +934,7 @@ Enabling this setting will disable the server config GUI.</string>
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="m_pLayoutConfigCheckbox">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -966,7 +995,7 @@ Enabling this setting will disable the server config GUI.</string>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="m_pLayoutConfigPath">
          <property name="leftMargin">
           <number>40</number>
          </property>
@@ -1165,18 +1194,12 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>m_pCheckBoxHeartbeat</tabstop>
   <tabstop>m_pSpinBoxHeartbeat</tabstop>
   <tabstop>m_pCheckBoxRelativeMouseMoves</tabstop>
-  <tabstop>m_pCheckBoxWin32KeepForeground</tabstop>
-  <tabstop>m_pCheckBoxIgnoreAutoConfigClient</tabstop>
-  <tabstop>m_pCheckBoxDisableLockToScreen</tabstop>
-  <tabstop>m_pCheckBoxCornerTopLeft</tabstop>
-  <tabstop>m_pCheckBoxCornerBottomLeft</tabstop>
-  <tabstop>m_pCheckBoxCornerTopRight</tabstop>
-  <tabstop>m_pCheckBoxCornerBottomRight</tabstop>
   <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
   <tabstop>m_pCheckBoxUseExternalConfig</tabstop>
   <tabstop>m_pEditConfigFile</tabstop>
   <tabstop>m_pTabWidget</tabstop>
  </tabstops>
+ <resources/>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>
