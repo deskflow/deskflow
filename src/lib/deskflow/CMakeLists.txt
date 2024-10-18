@@ -32,6 +32,26 @@ else()
   message(STATUS "CLI11 INC_DIR: ${cli11_inc_dir}")
 endif()
 
+find_package(tomlplusplus QUIET)
+if(tomlplusplus_FOUND)
+  message(STATUS "tomlplusplus [System] Version: ${tomlplusplus_VERSION}")
+  set(tomlPP_lib tomlplusplus::tomlplusplus)
+else()
+  # Be sure to update the version and MD5 together
+  # Save our copy with .h not .hpp for compatibliy with system version < 3.4
+  set(TOMLPP_VERSION 3.4.0)
+  set(TOMLPP_MD5 caefb3b60119731fb4b4d24b6339e7fb)
+  file(
+    DOWNLOAD "https://raw.githubusercontent.com/marzer/tomlplusplus/refs/tags/v${TOMLPP_VERSION}/toml.hpp"
+    "${CMAKE_BINARY_DIR}/include/toml++/toml.h"
+    SHOW_PROGRESS
+    EXPECTED_MD5 ${TOMLPP_MD5}
+  )
+  set(tomlPP_inc_dir "${CMAKE_BINARY_DIR}/include")
+  message(STATUS "tomlplusplus [Downloaded] Version: 3.4.0")
+  message(STATUS "tomlplusplus INC DIR: ${tomlPP_inc_dir}")
+endif()
+
 set(lib_name app)
 
 file(GLOB headers "*.h" "languages/*.h")
@@ -60,7 +80,12 @@ endif()
 
 add_library(${lib_name} STATIC ${sources})
 
-target_include_directories( ${lib_name} PRIVATE ${cli11_inc_dir})
+target_include_directories(
+  ${lib_name}
+    PRIVATE
+      ${cli11_inc_dir}
+      ${tomlPP_inc_dir}
+)
 
 if(UNIX)
   target_link_libraries(
@@ -74,6 +99,7 @@ if(UNIX)
     mt
     server
     ${cli11_lib}
+    ${tomlPP_lib}
   )
 
   if(NOT APPLE)
