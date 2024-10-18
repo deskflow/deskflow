@@ -20,23 +20,26 @@
 
 #include <QDialog>
 
-#include "ui_ScreenSettingsDialogBase.h"
-
 class QWidget;
 class QString;
 
 class Screen;
 class ScreenList;
 
-class ScreenSettingsDialog : public QDialog, public Ui::ScreenSettingsDialogBase
+namespace Ui {
+class ScreenSettingsDialog;
+}
+
+class ScreenSettingsDialog : public QDialog
 {
   Q_OBJECT
 
 public:
   ScreenSettingsDialog(QWidget *parent, Screen *pScreen = nullptr, const ScreenList *pScreens = nullptr);
+  ~ScreenSettingsDialog() override;
 
 public slots:
-  void accept();
+  void accept() override;
 
 private slots:
   void on_m_pButtonAddAlias_clicked();
@@ -45,5 +48,6 @@ private slots:
   void on_m_pListAliases_itemSelectionChanged();
 
 private:
+  std::unique_ptr<Ui::ScreenSettingsDialog> ui_;
   Screen *m_pScreen;
 };

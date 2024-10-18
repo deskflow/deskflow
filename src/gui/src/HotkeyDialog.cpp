@@ -17,19 +17,22 @@
  */
 
 #include "HotkeyDialog.h"
+#include "ui_HotkeyDialog.h"
 
 #include <QtCore>
 #include <QtGui>
 
 HotkeyDialog::HotkeyDialog(QWidget *parent, Hotkey &hotkey)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      Ui::HotkeyDialogBase(),
+      ui{std::make_unique<Ui::HotkeyDialog>()},
       m_Hotkey(hotkey)
 {
-  setupUi(this);
+  ui->setupUi(this);
 
-  m_pKeySequenceWidgetHotkey->setText(m_Hotkey.text());
+  ui->m_pKeySequenceWidgetHotkey->setText(m_Hotkey.text());
 }
+
+HotkeyDialog::~HotkeyDialog() = default;
 
 void HotkeyDialog::accept()
 {
@@ -38,4 +41,9 @@ void HotkeyDialog::accept()
 
   hotkey().setKeySequence(sequenceWidget()->keySequence());
   QDialog::accept();
+}
+
+const KeySequenceWidget *HotkeyDialog::sequenceWidget() const
+{
+  return ui->m_pKeySequenceWidgetHotkey;
 }
