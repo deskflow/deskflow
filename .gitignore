@@ -26,7 +26,7 @@ deskflow-config.toml
 /*.user
 *.ui.autosave
 
-# Generic linux files
+# Generic Linux files
 **/*.directory
 
 # CMake files
@@ -34,3 +34,6 @@ deskflow-config.toml
 /CMakeCache.txt
 /CMakeUserPresets.json
 /CMakeFiles/*
+
+# Don't ignore docs
+!/doc/**
