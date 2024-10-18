@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ServerConfigDialogBase</class>
- <widget class="QDialog" name="ServerConfigDialogBase">
+ <class>ServerConfigDialog</class>
+ <widget class="QDialog" name="ServerConfigDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -1181,7 +1181,7 @@ Enabling this setting will disable the server config GUI.</string>
   <connection>
    <sender>m_pButtonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ServerConfigDialogBase</receiver>
+   <receiver>ServerConfigDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1197,7 +1197,7 @@ Enabling this setting will disable the server config GUI.</string>
   <connection>
    <sender>m_pButtonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ServerConfigDialogBase</receiver>
+   <receiver>ServerConfigDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

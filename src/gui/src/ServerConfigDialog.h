@@ -21,16 +21,20 @@
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
 #include "gui/config/AppConfig.h"
-#include "ui_ServerConfigDialogBase.h"
 
 #include <QDialog>
 
-class ServerConfigDialog : public QDialog, public Ui::ServerConfigDialogBase
+namespace Ui {
+class ServerConfigDialog;
+}
+
+class ServerConfigDialog : public QDialog
 {
   Q_OBJECT
 
 public:
   ServerConfigDialog(QWidget *parent, ServerConfig &config, AppConfig &appConfig);
+  ~ServerConfigDialog();
   bool addClient(const QString &clientName);
 
 public slots:
@@ -77,6 +81,7 @@ protected:
   }
 
 private:
+  std::unique_ptr<Ui::ServerConfigDialog> ui;
   ServerConfig &m_OriginalServerConfig;
   ServerConfig m_ServerConfig;
   bool m_OriginalServerConfigIsExternal;
