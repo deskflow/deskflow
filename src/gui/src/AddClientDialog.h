@@ -17,12 +17,14 @@
 
 #pragma once
 
-#include "ui_AddClientDialogBase.h"
-
 #include <QDialog>
 
 class QPushButton;
 class QLabel;
+
+namespace Ui {
+class AddClientDialog;
+}
 
 enum
 {
@@ -34,12 +36,12 @@ enum
   kAddClientIgnore
 };
 
-class AddClientDialog : public QDialog, public Ui::AddClientDialog
+class AddClientDialog : public QDialog
 {
   Q_OBJECT
 public:
   AddClientDialog(const QString &clientName, QWidget *parent = 0);
-  ~AddClientDialog();
+  ~AddClientDialog() override;
 
   int addResult()
   {
@@ -54,6 +56,7 @@ private slots:
   void handleButtonAdvanced();
 
 private:
+  std::unique_ptr<Ui::AddClientDialog> ui;
   QPushButton *m_pButtonLeft;
   QPushButton *m_pButtonUp;
   QPushButton *m_pButtonRight;
