@@ -67,6 +67,9 @@ bool Config::load(const std::string &firstArg)
   } catch (const toml::parse_error &err) {
     LOG((CLOG_ERR "toml parse error: %s", err.what()));
     throw ParseError();
+  } catch (const std::exception &err) {
+    LOG((CLOG_ERR "unknown parse error: %s", err.what()));
+    throw ParseError();
   }
 
   if (!configTable.contains(m_section)) {
