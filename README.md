@@ -5,12 +5,9 @@
 >
 > Alternatively, we have [other ways](https://github.com/deskflow/deskflow/wiki/Chat-with-us) to communicate.
 
-[![Sponsored by: Synergy](https://raw.githubusercontent.com/deskflow/deskflow-artwork/b2c72a3e60a42dee793bd47efc275b5ee0bdaa5f/misc/synergy-sponsor.svg)](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
-
-[![GitHub Release](https://img.shields.io/github/v/release/deskflow/deskflow?display_name=release&label=latest%20version)](https://github.com/deskflow/deskflow/releases)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow)](https://github.com/deskflow/deskflow/commits/master/)
 ![GitHub top language](https://img.shields.io/github/languages/top/deskflow/deskflow)
-[![GitHub License](https://img.shields.io/github/license/deskflow/deskflow)](LICENSE)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow)](https://github.com/deskflow/deskflow/commits/master/)
+[![Sponsored by: Synergy](https://raw.githubusercontent.com/deskflow/deskflow-artwork/b2c72a3e60a42dee793bd47efc275b5ee0bdaa5f/misc/synergy-sponsor.svg)](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=deskflow_deskflow&metric=coverage)](https://sonarcloud.io/summary/new_code?id=deskflow_deskflow)
@@ -61,55 +58,15 @@ Here are a few ways to join in with the project and get involved:
 * [Submit a PR](https://github.com/deskflow/deskflow/wiki/Contributing) (pull request) with a bug fix or improvement
 * [Let us know](https://github.com/deskflow/deskflow/issues) if you have an idea for an improvement
 
-## Build Quick Start
+## Building
 
-> [!TIP]
-> Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
-> wiki page if you have problems.
+To compile Deskflow, please read: [`doc/build.md`](doc/build.md)
 
-**1. Dependencies:**
+## Installing
 
-You can either copy/paste the commands for your OS from [`config.yaml`](config.yaml) or use the deps script.
+First, try: [Continuous Build](https://github.com/deskflow/deskflow/releases) release.
 
-*Linux, macOS, or BSD-derived:*
-```
-./scripts/install_deps.sh
-```
-
-*Windows:*
-```
-python scripts/install_deps.py
-```
-
-**2. Configure:**
-
-*Linux, macOS, or BSD-derived:*
-```
-cmake -B build
-```
-
-*Windows:*
-```
-cmake -B build --preset=windows-release
-```
-
-**3. Build:**
-```
-cmake --build build -j8
-```
-
-**4. Test:**
-```
-./build/bin/unittests
-./build/bin/integtests
-```
-
-**5. Run**
-```
-./build/bin/deskflow
-```
-
-## How to install (packages)
+Soon, you will also be able to install Deskflow using your favorite package manager.
 
 *macOS:*
 *(coming soon)*
@@ -145,63 +102,34 @@ choco install deskflow
 
 ## Operating Systems
 
-We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
+We support all major operating systems, including:
+Windows, macOS, Linux, and Unix-like BSD-derived.
 
-All Linux distributions are supported, primarily focusing on: 
-Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
+All Linux distributions are supported, focusing on: 
+Debian, Ubuntu, Fedora, openSUSE, Rocky Linux,AlmaLinux, Arch Linux, Manjaro.
 
-We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
+We officially support all BSD-derived Unix-like, focusing on FreeBSD.
 
 ## Collaborative Projects
 
-In the open source developer community, similar projects collaborate for the betterment of all
+In the open source developer community, similar projects collaborate for the benefit of all
 mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
 
 * [**Lan Mouse**](https://github.com/feschber/lan-mouse) -
-  Rust implementation with the goal of having native front-ends and interoperability with
-  Deskflow/Synergy.
+  Rust implementation with the goal of having native front-ends and interoperability with Deskflow/Synergy.
 * [**Input Leap**](https://github.com/input-leap/input-leap) -
-  Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier
-  became a dead fork.
+  Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier became a dead fork.
 * [**Synergy**](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy) -
-  Downstream commercial fork and Deskflow sponsor, geared toward adapting to customer
-  needs, offering business and enterprise licensing.
+  Downstream commercial fork and Deskflow sponsor, geared toward adapting to customer needs,
+  offering business and enterprise licensing.
 
 ## FAQ
 
-### Is Deskflow compatible with Lan Mouse or Input Leap?
-
-We would love to see compatibility between our fellow open source projects, Lan Mouse and 
-Input Leap. This idea is discussed occasionally in the communities for all of our projects,
-so it may happen in the not-too-distant future.
-
-### If I want to solve issues in Deskflow do I need to contribute to a fork?
-
-We welcome PRs (pull requests) from the community. If you'd like to make a change, please feel
-free to [start a discussion](https://github.com/deskflow/deskflow/discussions) or 
-[open a PR](https://github.com/deskflow/deskflow/wiki/Contributing).
-
-### Is clipboard sharing supported?
-
-Absolutely. The clipboard-sharing feature is a cornerstone feature of the product and we are 
-committed to maintaining and improving that feature.
-
-### Is Wayland for Linux supported?
-
-Yes! Wayland (the Linux display server protocol aimed to become the successor of the X Window 
-System) is an important platform for us.
-The [`libei`](https://gitlab.freedesktop.org/libinput/libei) and 
-[`libportal`](https://github.com/flatpak/libportal) libraries enable 
-Wayland support for Deskflow. We would like to give special thanks to Peter Hutterer,
-who is the author of `libei`, a major contributor to `libportal`, and the author of the Wayland
-implementation in Deskflow. Others such as Olivier Fourdan and Povilas Kanapickas helped with the
-Wayland implementation.
-
-### Where did it all start?
-
-Deskflow was first created as Synergy in 2001 by Chris Schoeneman.
-Read about the [history of the project](https://github.com/deskflow/deskflow/wiki/History) on our
-wiki.
+Please see our wiki [FAQ page](https://github.com/deskflow/deskflow/wiki/Project-FAQ) for answers to questions like:
+- What's the difference between Deskflow and other forks?
+- Is Deskflow compatible with Lan Mouse or Input Leap/Barrier?
+- Is clipboard sharing supported?
+- Is Wayland for Linux supported?
 
 ## Repology
 
