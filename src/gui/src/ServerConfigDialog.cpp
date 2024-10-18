@@ -318,15 +318,6 @@ bool ServerConfigDialog::addClient(const QString &clientName) {
   return addComputer(clientName, true);
 }
 
-void ServerConfigDialog::showEvent(QShowEvent *event) {
-  QDialog::show();
-
-  if (!m_Message.isEmpty()) {
-    // TODO: ideally this massage box should pop up after the dialog is shown
-    QMessageBox::information(this, tr("Configure server"), m_Message);
-  }
-}
-
 void ServerConfigDialog::accept() {
   if (m_pCheckBoxUseExternalConfig->isChecked() &&
       !QFile::exists(m_pEditConfigFile->text())) {
