@@ -5,10 +5,6 @@
 
 project('deskflow', 'cpp')
 
-if host_machine.system() == 'windows'
-  subproject('wintoast')
-endif
-
 if host_machine.system() == 'linux'
 
   system_libei = get_option('system-libei')
