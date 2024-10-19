@@ -18,6 +18,7 @@
 #include "SetupWizard.h"
 #include "ui_SetupWizard.h"
 
+#include "gui/config/AppConfig.h"
 #include "gui/styles.h"
 #include "gui/validators/ScreenNameValidator.h"
 #include "gui/validators/ValidationError.h"
