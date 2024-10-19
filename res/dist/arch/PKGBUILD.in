@@ -25,6 +25,8 @@ depends=(
   'qt6-tools'
   'libei'
   'libportal'
+  'tomlplusplus'
+  'cli11'
 )
 conflicts=('synergy-git' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin')
 options=('!debug')
