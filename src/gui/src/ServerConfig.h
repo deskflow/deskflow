@@ -45,9 +45,7 @@ enum class ServerProtocol
 };
 
 // The default protocol was decided by a community vote.
-// TODO: Remove this link when the vote concludes:
-// https://github.com/deskflow/deskflow/discussions/7742
-const auto kDefaultProtocol = ServerProtocol::kSynergy;
+const auto kDefaultProtocol = ServerProtocol::kBarrier;
 
 } // namespace synergy::gui
 
