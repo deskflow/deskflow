@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include "ui_SetupWizardBase.h"
-
 #include "gui/config/AppConfig.h"
 
 #include <QDialog>
@@ -26,18 +24,24 @@
 
 class MainWindow;
 
-class SetupWizard : public QDialog, public Ui::SetupWizardBase
+namespace Ui {
+class SetupWizard;
+}
+
+class SetupWizard : public QDialog
 {
   Q_OBJECT
 
 public:
   explicit SetupWizard(AppConfig &appConfig);
+  ~SetupWizard();
 
 protected:
-  void accept();
-  void reject();
+  void accept() override;
+  void reject() override;
 
 private:
+  std::unique_ptr<Ui::SetupWizard> ui;
   AppConfig &m_appConfig;
 
 public slots:
