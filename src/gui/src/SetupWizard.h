@@ -41,9 +41,8 @@ protected:
   void reject() override;
 
 private:
+  void nameChanged(const QString &error);
+
   std::unique_ptr<Ui::SetupWizard> ui;
   AppConfig &m_appConfig;
-
-public slots:
-  void onLineEditNameChanged(const QString &error);
 };
