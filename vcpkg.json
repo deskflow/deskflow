@@ -5,6 +5,7 @@
     "wintoast",
     "gtest",
     "pkgconf",
+    "brotli",
     {
       "name": "openssl",
       "features": [
