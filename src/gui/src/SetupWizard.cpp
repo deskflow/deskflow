@@ -1,59 +1,85 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * Copyright (C) 2012 Symless Ltd.
  *
- * This package is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * found in the file LICENSE that should have accompanied this file.
- *
- * This package is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-FileCopyrightText: Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: Copyright (C) 2012 Symless Ltd.
+ * SPDX-License-Identifier: GPL-2.0
  */
 
 #include "SetupWizard.h"
-#include "ui_SetupWizard.h"
+
+#include <QApplication>
+#include <QFormLayout>
+#include <QPushButton>
 
 #include "gui/config/AppConfig.h"
 #include "gui/styles.h"
 #include "gui/validators/ScreenNameValidator.h"
 #include "gui/validators/ValidationError.h"
 
-using namespace deskflow::gui;
-
-SetupWizard::SetupWizard(AppConfig &appConfig) : ui{std::make_unique<Ui::SetupWizard>()}, m_appConfig(appConfig)
+SetupWizard::SetupWizard(AppConfig &appConfig)
+    : m_appConfig{appConfig},
+      m_lblError{new QLabel(this)},
+      m_lineName{new QLineEdit(this)},
+      m_btnApply{new QPushButton(tr("Continue"), this)}
 {
-  ui->setupUi(this);
+  setWindowTitle(tr("Setup %1").arg(DESKFLOW_APP_NAME));
 
-  setWindowTitle(QString("Setup %1").arg(DESKFLOW_APP_NAME));
+  setFixedSize(740, 550);
 
-  ui->m_pLabelError->setStyleSheet(kStyleErrorActiveLabel);
+  auto headerFont = QFont(QStringLiteral("Cantarell"), 18, 600);
 
-  ui->m_pLineEditName->setText(appConfig.screenName());
-  ui->m_pLineEditName->setValidator(
-      new validators::ScreenNameValidator(ui->m_pLineEditName, new validators::ValidationError(this, ui->m_pLabelError))
+  auto labelTitle = new QLabel(this);
+  labelTitle->setFont(headerFont);
+  labelTitle->setText(tr("Name your computer"));
+  labelTitle->setAlignment(Qt::AlignHCenter | Qt::AlignHCenter);
+
+  auto labelName = new QLabel(this);
+  labelName->setText(tr("Computer Name"));
+
+  auto formLayout = new QFormLayout();
+  formLayout->addRow(labelName, m_lineName);
+  formLayout->addWidget(m_lblError);
+  formLayout->addWidget(new QLabel(tr("Call your computer something short and meaningful, but it must have:"), this));
+  formLayout->addWidget(new QLabel(tr("\t⬤ No spaces"), this));
+  formLayout->addWidget(new QLabel(tr("\t⬤ Only these special characters: _ - ."), this));
+  formLayout->addWidget(new QLabel(tr("\t⬤ Only English characters and numbers"), this));
+  formLayout->addWidget(new QLabel(tr("\t⬤ A different name from other computers"), this));
+
+  auto labelImage = new QLabel(this);
+  labelImage->setPixmap(QPixmap(QStringLiteral(":/image/welcome.png")));
+
+  auto mainLayout = new QVBoxLayout();
+  mainLayout->setContentsMargins(9, 30, 9, 9);
+  mainLayout->addWidget(labelImage, 0, Qt::AlignHCenter);
+  mainLayout->addWidget(labelTitle);
+  mainLayout->addLayout(formLayout);
+  mainLayout->addSpacerItem(new QSpacerItem(0, 25, QSizePolicy::Fixed, QSizePolicy::Fixed));
+  mainLayout->addWidget(m_btnApply);
+
+  setLayout(mainLayout);
+
+  m_lblError->setStyleSheet(deskflow::gui::kStyleErrorActiveLabel);
+
+  m_lineName->setText(appConfig.screenName());
+  m_lineName->setValidator(
+      new validators::ScreenNameValidator(m_lineName, new validators::ValidationError(this, m_lblError))
   );
 
-  connect(ui->m_pButtonApply, &QPushButton::clicked, this, &SetupWizard::accept);
-  connect(ui->m_pLineEditName, &QLineEdit::textChanged, this, &SetupWizard::nameChanged);
+  connect(m_btnApply, &QPushButton::clicked, this, &SetupWizard::accept);
+  connect(m_lineName, &QLineEdit::textChanged, this, &SetupWizard::nameChanged);
 }
-
-SetupWizard::~SetupWizard() = default;
 
 void SetupWizard::accept()
 {
   m_appConfig.setWizardHasRun();
-  m_appConfig.setScreenName(ui->m_pLineEditName->text());
+  m_appConfig.setScreenName(m_lineName->text());
   QDialog::accept();
 }
 
 void SetupWizard::nameChanged(const QString &error)
 {
-  ui->m_pButtonApply->setEnabled(ui->m_pLineEditName->hasAcceptableInput());
+  m_btnApply->setEnabled(m_lineName->hasAcceptableInput());
 }
 
 void SetupWizard::reject()
