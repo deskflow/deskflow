@@ -38,7 +38,7 @@ SetupWizard::SetupWizard(AppConfig &appConfig) : ui{std::make_unique<Ui::SetupWi
   );
 
   connect(ui->m_pButtonApply, &QPushButton::clicked, this, &SetupWizard::accept);
-  connect(ui->m_pLineEditName, &QLineEdit::textChanged, this, &SetupWizard::onLineEditNameChanged);
+  connect(ui->m_pLineEditName, &QLineEdit::textChanged, this, &SetupWizard::nameChanged);
 }
 
 SetupWizard::~SetupWizard() = default;
@@ -50,7 +50,7 @@ void SetupWizard::accept()
   QDialog::accept();
 }
 
-void SetupWizard::onLineEditNameChanged(const QString &error)
+void SetupWizard::nameChanged(const QString &error)
 {
   ui->m_pButtonApply->setEnabled(ui->m_pLineEditName->hasAcceptableInput());
 }
