@@ -17,12 +17,16 @@
 
 #pragma once
 
-#include "gui/config/AppConfig.h"
-
 #include <QDialog>
 #include <QObject>
 
 class MainWindow;
+
+namespace Ui {
+class SetupWizard;
+}
+
+class AppConfig;
 
 namespace Ui {
 class SetupWizard;
