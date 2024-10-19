@@ -110,8 +110,10 @@ jobs:
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
+
+    # CI should normally takes less than 10 mins to run,
+    # but if vcpkg has to rebuild the cache (should be rare), it takes about 90 mins.
     timeout-minutes: 120
-    # If vcpkg has to rebuild the cache it takes a while
 
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one target may
@@ -129,7 +131,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # the fetch-tags option for checkout does not work correctly so we need todo this
+      # The fetch-tags option for checkout does not work correctly so we need to do this.
       - name: Fetch tags
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -146,7 +148,7 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: vcpkg build
+      - name: Dependencies (vcpkg)
         id: vcpkg
         uses: johnwason/vcpkg-action@v6
         with:
@@ -155,7 +157,7 @@ jobs:
           token: ${{ github.token }}
           github-binarycache: true
 
-      - name: setup env
+      - name: Setup Python venv
         run: python ./scripts/setup_venv.py
 
       - name: Configure
@@ -224,7 +226,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # the fetch-tags option for checkout does not work correctly so we need todo this
+      # The fetch-tags option for checkout does not work correctly so we need to do this.
       - name: Fetch tags
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -308,7 +310,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # the fetch-tags option for checkout does not work correctly so we need todo this
+      # The fetch-tags option for checkout does not work correctly so we need to do this.
       - name: Fetch tags
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -320,7 +322,7 @@ jobs:
         with:
           distro: jammy
 
-      - name: Update Cmake
+      - name: Update CMake
         if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
         run: apt install cmake -y
 
@@ -338,11 +340,11 @@ jobs:
             ${{ env.CMAKE_ARGS }} \
             ${{ matrix.distro.extra-cmake-args }}
 
-      - name: Build Package
+      - name: Build package
         if: ${{ matrix.distro.arch-like != 'true'}}
         run: cmake --build build -j8 --target package
 
-      - name: Build Package (Arch-like)
+      - name: Build package (Arch-like)
         if: ${{ matrix.distro.arch-like == 'true' }}
         run: |
           cmake --build build -j8
@@ -353,7 +355,6 @@ jobs:
           export ARCH=$(uname -m)
           mv *.pkg.* $(ls *.pkg.* | sed "s/$ARCH/$OSNAME-$ARCH/g")
           cd ..
-
 
       - name: Tests
         uses: ./.github/actions/run-tests
@@ -387,7 +388,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # the fetch-tags option for checkout does not work correctly so we need todo this
+      # The fetch-tags option for checkout does not work correctly so we need to do this.
       - name: Fetch tags
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
