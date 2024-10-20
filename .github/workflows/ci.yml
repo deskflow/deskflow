@@ -28,7 +28,7 @@ env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   PACKAGE_PREFIX: "deskflow"
   PACKAGE_PATH: ./dist
-  CMAKE_ARGS: -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+  CMAKE_ARGS: "-DCMAKE_COMPILE_WARNING_AS_ERROR=ON"
 
 jobs:
   # Always run this job, even if not on PR, since other jobs need it.
@@ -214,9 +214,9 @@ jobs:
             arch: arm64
             shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
 
-          - name: ${{ vars.CI_MAC_INTEL_NAME || 'macos-13-x64' }}
+          - name: macos-13-x64
             timeout: 20
-            os: ${{ vars.CI_MAC_INTEL_RUNNER || 'macos-13' }}
+            os: macos-13
             arch: x64
             shell: "bash"
 
@@ -232,17 +232,25 @@ jobs:
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git fetch --tags --force
 
-      - name: Cache deps dir
-        uses: actions/cache@v4
-        with:
-          path: ./deps
-          key: ${{ runner.os }}-deps-${{ hashFiles('config.yaml') }}
-
       - name: Install dependencies
-        run: ./scripts/install_deps.py
+        run: brew install cmake openssl googletest --quiet
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+         dir: ${{env.qt-install-dir}}
+         version: ${{env.qt-version}}
+         cache: true
+         cache-key-prefix: ${{matrix.target.os}}-${{env.qt-version}}
+        env:
+         qt-version: 6.7.2
+         qt-install-dir: "/Users/runner"
 
       - name: Configure
-        run: cmake -B build ${{ env.CMAKE_ARGS }}
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release `
+            ${{ env.CMAKE_ARGS }} `
+            ${{matrix.target.extraCmakeConfig}}
 
       - name: Build
         run: cmake --build build -j8
@@ -257,7 +265,9 @@ jobs:
         uses: ./.github/actions/get-version
 
       - name: Package
-        run: ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
+        run: |
+          python ./scripts/setup_venv.py
+          ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
           APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
