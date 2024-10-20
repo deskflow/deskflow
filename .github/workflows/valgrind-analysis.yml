@@ -14,15 +14,13 @@ jobs:
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
-      - name: Add Kitware repo
-        uses: ./.github/actions/add-kitware-repo
-        with:
-          distro: jammy
-
       - name: Install dependencies
-        run: |
-          ./scripts/install_deps.py
-          apt install valgrind cmake -y
+        uses: ./.github/actions/install-dependencies
+        with:
+          like: "debian"
+
+      - name: Install valgrind
+        run: apt install valgrind -y
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive

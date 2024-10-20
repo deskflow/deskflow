@@ -134,20 +134,9 @@ jobs:
       - name: Setup VC++ environment
         uses: ilammy/msvc-dev-cmd@v1
 
-      # Install Ninja with an action instead of using Chocolatey, as it's more
-      # reliable and faster. The Ninja install action is pretty good as it
-      # downloads directly from the `ninja-build` GitHub project releases.
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: Dependencies (vcpkg)
-        id: vcpkg
-        uses: johnwason/vcpkg-action@v6
-        with:
-          manifest-dir: ${{ github.workspace }}
-          triplet: x64-windows-release
-          token: ${{ github.token }}
-          github-binarycache: true
+      - name: Install dependencies
+        id: install-dependencies
+        uses: ./.github/actions/install-dependencies
 
       - name: Setup Python venv
         run: python ./scripts/setup_venv.py
@@ -155,7 +144,7 @@ jobs:
       - name: Configure
         run: |
           ${{env.CMAKE_CONFIGURE}} -G Ninja `
-            ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+            ${{ steps.install-dependencies.outputs.vcpkg-cmake-config }}
 
       - name: Build
         run: cmake --build build -j8
@@ -210,19 +199,10 @@ jobs:
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
-      - name: Install dependencies
-        run: brew install cmake ninja openssl googletest --quiet
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
         with:
-         dir: ${{env.qt-install-dir}}
-         version: ${{env.qt-version}}
-         cache: true
-         cache-key-prefix: ${{matrix.target.os}}-${{env.qt-version}}
-        env:
-         qt-version: 6.7.2
-         qt-install-dir: "/Users/runner"
+          mac-qt-version: 6.7.2
 
       - name: Configure
         run: ${{env.CMAKE_CONFIGURE}} ${{matrix.target.extra-cmake-config}}
@@ -293,22 +273,10 @@ jobs:
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
-      - name: Add Kitware repo
-        if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
-        uses: ./.github/actions/add-kitware-repo
-        with:
-          distro: jammy
-
-      - name: Update CMake
-        if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
-        run: apt install cmake -y
-
       - name: Install dependencies
-        run: |
-          ./scripts/install_deps.py
-        env:
-          # Prevent apt prompting for input.
-          DEBIAN_FRONTEND: noninteractive
+        uses: ./.github/actions/install-dependencies
+        with:
+          distro-like: ${{ matrix.distro.like }}
 
       - name: Configure
         run: |
@@ -317,11 +285,11 @@ jobs:
               ${{ matrix.distro.extra-cmake-args }}
 
       - name: Build package
-        if: ${{ matrix.distro.arch-like != 'true'}}
+        if: ${{ matrix.distro.like != 'arch'}}
         run: cmake --build build -j8 --target package
 
       - name: Build package (Arch-like)
-        if: ${{ matrix.distro.arch-like == 'true' }}
+        if: ${{ matrix.distro.like == 'arch' }}
         run: |
           cmake --build build -j8
           sudo chown -R build build

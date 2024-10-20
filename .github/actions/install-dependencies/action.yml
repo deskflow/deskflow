@@ -1,0 +1,100 @@
+# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-License-Identifier: MIT
+
+name: "Install dependencies for deskflow"
+description: "Install the dependencies needed to build deskflow"
+
+inputs:
+  like:
+    description: "Used only on linux distro type: debian, fedora, suse, arch"
+    required: false
+
+  mac-qt-version:
+    description: "The verison of Qt to install on mac os"
+    required: false
+
+outputs:
+  vcpkg-cmake-config:
+    description: "windows vcpkg output for cmaket"
+    value: ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Install Depends
+      run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "Window not supported yet"
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            brew install cmake googletest ninja openssl --quiet
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+            if [ ${{inputs.like}} == "debian" ]; then
+              apt update -qqq > /dev/null
+              apt install -qqq cmake build-essential ninja-build \
+                xorg-dev libx11-dev libxtst-dev libssl-dev \
+                libglib2.0-dev libgdk-pixbuf-2.0-dev libnotify-dev \
+                libxkbfile-dev qt6-base-dev qt6-tools-dev \
+                libgtk-3-dev libgtest-dev libgmock-dev libpugixml-dev \
+                libei-dev libportal-dev libtomlplusplus-dev libcli11-dev -y >/dev/null
+            elif [ ${{inputs.like}} == "fedora" ]; then
+              dnf install -y cmake make ninja-build gcc-c++ \
+                rpm-build openssl-devel glib2-devel \
+                gdk-pixbuf2-devel libXtst-devel libnotify-devel \
+                libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
+                gtk3-devel gtest-devel gmock-devel pugixml-devel \
+                libei-devel libportal-devel tomlplusplus-devel \
+                cli11-devel
+            elif [ ${{inputs.like}} == "suse" ]; then
+              zypper refresh
+              zypper install -y --force-resolution \
+                cmake make ninja gcc-c++ rpm-build libopenssl-devel \
+                glib2-devel gdk-pixbuf-devel libXtst-devel libnotify-devel \
+                libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
+                googletest-devel googlemock-devel pugixml-devel libei-devel \
+                libportal-devel tomlplusplus-devel cli11-devel
+            elif [ ${{ inputs.like }} == "arch" ]; then
+              pacman -Syu --noconfirm base-devel cmake ninja \
+                gcc openssl glib2 gdk-pixbuf2 libxtst libnotify \
+                libxkbfile gtest pugixml libei libportal \
+                qt6-base qt6-tools gtk3 tomlplusplus cli11
+            else
+              echo "Unknown like"
+            fi
+          else
+            echo "Unknown OS: $RUNNER_OS"
+          fi
+      shell: bash
+
+    - name: Install Qt
+      if: ${{runner.os == 'macOS' }}
+      uses: jurplel/install-qt-action@v4
+      with:
+        dir: "/Users/runner"
+        version: ${{inputs.mac-qt-version}}
+        cache: true
+        cache-key-prefix: ${{matrix.target.os}}-${{env.qt-version}}
+
+    # Install Ninja with an action instead of using Chocolatey, as it's more
+    # reliable and faster. The Ninja install action is pretty good as it
+    # downloads directly from the `ninja-build` GitHub project releases.
+    - name: Install Ninja
+      if: ${{ runner.os == 'Windows' }}
+      uses: seanmiddleditch/gha-setup-ninja@master
+
+    - name: Build and cache vcpkg
+      if: ${{ runner.os == 'Windows' }}
+      id: vcpkg
+      uses: johnwason/vcpkg-action@v6
+      with:
+        manifest-dir: ${{ github.workspace }}
+        triplet: x64-windows-release
+        token: ${{ github.token }}
+        github-binarycache: true
+
+    - name: Install Wix
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        dotnet tool install --global wix --version 4.0.4
+        wix extension add --global WixToolset.UI.wixext/4.0.4
+      shell: pwsh
