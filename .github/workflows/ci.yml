@@ -329,10 +329,49 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ./scripts/install_deps.py
-        env:
-          # Prevent apt prompting for input.
-          DEBIAN_FRONTEND: noninteractive
+          if [[ "$MATRIX_DISTRO_LIKE" == "debian" ]]; then
+            apt update > /dev/null && apt install -qqq \
+              cmake build-essential ninja-build \
+              xorg-dev libx11-dev libxtst-dev libssl-dev \
+              libglib2.0-dev libgdk-pixbuf-2.0-dev libnotify-dev \
+              libxkbfile-dev qt6-base-dev qt6-tools-dev \
+              libgtk-3-dev libgtest-dev libgmock-dev libpugixml-dev \
+              libei-dev libportal-dev libtomlplusplus-dev libcli11-dev -y >/dev/null
+          elif [[ "$MATRIX_DISTRO_LIKE" == "fedora" ]]; then
+            dnf check-update && dnf install -y \
+              cmake make ninja-build gcc-c++ \
+              rpm-build openssl-devel glib2-devel \
+              gdk-pixbuf2-devel libXtst-devel libnotify-devel \
+              libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
+              gtk3-devel gtest-devel gmock-devel pugixml-devel \
+              libei-devel libportal-devel tomlplusplus-devel \
+              cli11-devel
+          elif [[ "$MATRIX_DISTRO_LIKE" == "rhel" ]]; then
+            dnf check-update && dnf install -y \
+              cmake make ninja-build gcc-c++ \
+              rpm-build openssl-devel glib2-devel \
+              gdk-pixbuf2-devel libXtst-devel libnotify-devel \
+              libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
+              gtk3-devel gtest-devel gmock-devel pugixml-devel \
+              libei-devel libportal-devel tomlplusplus-devel \
+              cli11-devel epel-release
+            dnf config-manager --set-enabled crb
+          elif [[ "$MATRIX_DISTRO_LIKE" == "rhel" ]]; then
+            zypper refresh && sudo zypper install -y --force-resolution \
+              cmake make ninja gcc-c++ rpm-build libopenssl-devel \
+              glib2-devel gdk-pixbuf-devel libXtst-devel libnotify-devel \
+              libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
+              googletest-devel googlemock-devel pugixml-devel libei-devel \
+              libportal-devel tomlplusplus-devel cli11-devel
+          elif [[ "$MATRIX_DISTRO_LIKE" == "arch" ]]; then
+            pacman -Syu --noconfirm base-devel cmake ninja \
+              gcc openssl glib2 gdk-pixbuf2 libxtst libnotify \
+              libxkbfile gtest pugixml libei libportal \
+              qt6-base qt6-tools gtk3 tomlplusplus cli11
+          else
+            echo "Unknown like"
+            exit 1
+          fi
 
       - name: Configure
         run: |
@@ -341,11 +380,11 @@ jobs:
               ${{ matrix.distro.extra-cmake-args }}
 
       - name: Build package
-        if: ${{ matrix.distro.arch-like != 'true'}}
+        if: ${{ matrix.distro.like != 'arch'}}
         run: cmake --build build -j8 --target package
 
       - name: Build package (Arch-like)
-        if: ${{ matrix.distro.arch-like == 'true' }}
+        if: ${{ matrix.distro.like == 'arch' }}
         run: |
           cmake --build build -j8
           sudo chown -R build build
