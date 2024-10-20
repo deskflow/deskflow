@@ -20,7 +20,6 @@ import lib.env as env
 import lib.cmd_utils as cmd_utils
 import lib.qt_utils as qt_utils
 import lib.github as github
-import lib.meson as meson
 
 path_env_var = "PATH"
 cmake_prefix_env_var = "CMAKE_PREFIX_PATH"
@@ -79,29 +78,6 @@ def parse_args(is_ci):
         "--skip-system",
         action="store_true",
         help="Do not install system dependencies (apt, dnf, etc)",
-    )
-    parser.add_argument(
-        "--skip-meson", action="store_true", help="Do not setup and compile with Meson"
-    )
-    parser.add_argument(
-        "--subprojects",
-        action="store_true",
-        help="Install dependencies for Meson subprojects (use with --meson-no-system)",
-    )
-    parser.add_argument(
-        "--meson-install",
-        action="store_true",
-        help="Install built Meson subprojects to system",
-    )
-    parser.add_argument(
-        "--meson-no-system",
-        nargs="+",
-        help="Specify which Meson subprojects to use instead of system dependencies",
-    )
-    parser.add_argument(
-        "--meson-static",
-        nargs="+",
-        help="Specify which Meson subprojects to build as static libraries",
     )
 
     if env.is_windows():
@@ -176,31 +152,6 @@ def install(args):
         import lib.vcpkg as vcpkg
 
         vcpkg.install(args.ci_env)
-
-    if not args.skip_meson:
-        if args.subprojects:
-            for subproject in args.meson_no_system or []:
-                deps = SubprojectDependencies(subproject)
-                deps.install()
-
-        run_meson(args.meson_install, args.meson_no_system, args.meson_static)
-
-
-# It's a bit weird to use Meson just for installing deps, but it's a stopgap until
-# we fully switch from CMake to Meson. For the meantime, Meson will install the deps
-# so that CMake can find them easily. Once we switch to Meson, it might be possible for
-# Meson handle the deps resolution, so that we won't need to install them on the system.
-def run_meson(install, no_system_list, static_list):
-    meson.setup(no_system_list, static_list)
-
-    # Only compile and install on Linux for now, since we're only using Meson to fetch
-    # the deps on Windows and macOS.
-    if env.is_linux():
-        meson.compile()
-
-    if install:
-        meson.install()
-
 
 class Dependencies:
 
