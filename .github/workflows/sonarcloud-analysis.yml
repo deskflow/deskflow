@@ -25,18 +25,16 @@ jobs:
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
-      - name: Add Kitware repo
-        uses: ./.github/actions/add-kitware-repo
-        with:
-          distro: jammy
-
       - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          like: "debian"
+
+      - name: Install dependencies (extra)
+        run: apt install curl unzip gcovr  -y
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive
-        run: |
-          ./scripts/install_deps.py
-          apt install curl unzip cmake gcovr  -y
 
       - name: Install sonar-scanner and build-wrapper
         uses: sonarsource/sonarcloud-github-c-cpp@v3
