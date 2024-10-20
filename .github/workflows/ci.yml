@@ -69,8 +69,8 @@ jobs:
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
   test-results:
-    needs: [windows, macos, linux]
-    if: always() && needs.windows.result != 'skipped' && needs.macos.result != 'skipped' && needs.linux.result != 'skipped'
+    needs: [macos, linux]
+    if: always() && needs.macos.result != 'skipped' && needs.linux.result != 'skipped'
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -104,90 +104,6 @@ jobs:
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  windows:
-    needs: lint-clang
-    name: ${{ matrix.target.name }}
-    runs-on: ${{ matrix.target.runs-on }}
-    container: ${{ matrix.target.container }}
-
-    # CI should normally takes less than 10 mins to run,
-    # but if vcpkg has to rebuild the cache (should be rare), it takes about 90 mins.
-    timeout-minutes: 120
-
-    strategy:
-      # Normally, we want to fail fast, but in this case we shouldn't since one target may
-      # fail due to transient issues unrelated to the build.
-      fail-fast: false
-
-      matrix:
-        target:
-          - name: windows-2022-x64
-            runs-on: ${{ vars.CI_WINDOWS_RUNNER || 'windows-2022' }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # The fetch-tags option for checkout does not work correctly so we need to do this.
-      - name: Fetch tags
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git fetch --tags --force
-
-      # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
-      # VC++ as that's already pre-installed on the Windows runner.
-      - name: Setup VC++ environment
-        uses: ilammy/msvc-dev-cmd@v1
-
-      # Install Ninja with an action instead of using Chocolatey, as it's more
-      # reliable and faster. The Ninja install action is pretty good as it
-      # downloads directly from the `ninja-build` GitHub project releases.
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: Dependencies (vcpkg)
-        id: vcpkg
-        uses: johnwason/vcpkg-action@v6
-        with:
-          manifest-dir: ${{ github.workspace }}
-          triplet: x64-windows-release
-          token: ${{ github.token }}
-          github-binarycache: true
-
-      - name: Setup Python venv
-        run: python ./scripts/setup_venv.py
-
-      - name: Configure
-        run: |
-          ${{env.CMAKE_CONFIGURE}} -G Ninja `
-            ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
-
-      - name: Build
-        run: cmake --build build -j8
-
-      - name: Tests
-        uses: ./.github/actions/run-tests
-        timeout-minutes: 2
-        with:
-          job: ${{ matrix.target.name }}
-
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      - name: Package
-        run: python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
-        env:
-          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
-          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
-          path: ${{ env.PACKAGE_PATH }}
 
   macos:
     needs: lint-clang
@@ -227,18 +143,9 @@ jobs:
           git fetch --tags --force
 
       - name: Install dependencies
-        run: brew install cmake ninja openssl googletest --quiet
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+        uses: ./.github/actions/install-dependencies
         with:
-         dir: ${{env.qt-install-dir}}
-         version: ${{env.qt-version}}
-         cache: true
-         cache-key-prefix: ${{matrix.target.os}}-${{env.qt-version}}
-        env:
-         qt-version: 6.7.2
-         qt-install-dir: "/Users/runner"
+          mac-qt-version: 6.7.3
 
       - name: Configure
         run: ${{env.CMAKE_CONFIGURE}} ${{matrix.target.extra-cmake-config}}
@@ -253,6 +160,7 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Get version
+        if: ${{ runner.os != 'Linux' }}
         uses: ./.github/actions/get-version
 
       - name: Package
@@ -288,7 +196,7 @@ jobs:
         uses: ./.github/actions/filter-json
         id: filter
         with:
-          json-file: .github/workflows/ci-linux.json
+          json-file: .github/workflows/ci-matrix.json
           condition: '"${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true"'
           jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
 
@@ -297,7 +205,7 @@ jobs:
     name: linux-${{ matrix.distro.name }}
     runs-on: ${{ matrix.distro.runs-on }}
     container: ${{ matrix.distro.container }}
-    timeout-minutes: 20
+    timeout-minutes: ${{ matrix.distro.timeout }}
 
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one distro may
@@ -323,65 +231,31 @@ jobs:
         with:
           distro: jammy
 
-      - name: Update CMake
-        if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
-        run: apt install cmake -y
+      # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
+      # VC++ as that's already pre-installed on the Windows runner.
+      - name: Setup VC++ environment
+        if: ${{ runner.os == 'Windows' }}
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install dependencies
-        run: |
-          if [[ "$MATRIX_DISTRO_LIKE" == "debian" ]]; then
-            apt update > /dev/null && apt install -qqq \
-              cmake build-essential ninja-build \
-              xorg-dev libx11-dev libxtst-dev libssl-dev \
-              libglib2.0-dev libgdk-pixbuf-2.0-dev libnotify-dev \
-              libxkbfile-dev qt6-base-dev qt6-tools-dev \
-              libgtk-3-dev libgtest-dev libgmock-dev libpugixml-dev \
-              libei-dev libportal-dev libtomlplusplus-dev libcli11-dev -y >/dev/null
-          elif [[ "$MATRIX_DISTRO_LIKE" == "fedora" ]]; then
-            dnf check-update && dnf install -y \
-              cmake make ninja-build gcc-c++ \
-              rpm-build openssl-devel glib2-devel \
-              gdk-pixbuf2-devel libXtst-devel libnotify-devel \
-              libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
-              gtk3-devel gtest-devel gmock-devel pugixml-devel \
-              libei-devel libportal-devel tomlplusplus-devel \
-              cli11-devel
-          elif [[ "$MATRIX_DISTRO_LIKE" == "rhel" ]]; then
-            dnf check-update && dnf install -y \
-              cmake make ninja-build gcc-c++ \
-              rpm-build openssl-devel glib2-devel \
-              gdk-pixbuf2-devel libXtst-devel libnotify-devel \
-              libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
-              gtk3-devel gtest-devel gmock-devel pugixml-devel \
-              libei-devel libportal-devel tomlplusplus-devel \
-              cli11-devel epel-release
-            dnf config-manager --set-enabled crb
-          elif [[ "$MATRIX_DISTRO_LIKE" == "rhel" ]]; then
-            zypper refresh && sudo zypper install -y --force-resolution \
-              cmake make ninja gcc-c++ rpm-build libopenssl-devel \
-              glib2-devel gdk-pixbuf-devel libXtst-devel libnotify-devel \
-              libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
-              googletest-devel googlemock-devel pugixml-devel libei-devel \
-              libportal-devel tomlplusplus-devel cli11-devel
-          elif [[ "$MATRIX_DISTRO_LIKE" == "arch" ]]; then
-            pacman -Syu --noconfirm base-devel cmake ninja \
-              gcc openssl glib2 gdk-pixbuf2 libxtst libnotify \
-              libxkbfile gtest pugixml libei libportal \
-              qt6-base qt6-tools gtk3 tomlplusplus cli11
-          else
-            echo "Unknown like"
-            exit 1
-          fi
+        id: depends
+        uses: ./.github/actions/install-dependencies
+        with:
+          distro-like: ${{ matrix.distro.like }}
 
       - name: Configure
         run: |
             ${{ env.CMAKE_CONFIGURE }} -G Ninja \
-              -DCMAKE_INSTALL_PREFIX=/usr \
-              ${{ matrix.distro.extra-cmake-args }}
+              ${{ matrix.distro.extra-cmake-args }} \
+              ${{ steps.depends.outputs.vcpkg-cmake-config }}
+
+      - name: Setup Python venv
+        if: ${{runner.os == 'Windows'}}
+        run: python ./scripts/setup_venv.py
 
       - name: Build package
-        if: ${{ matrix.distro.like != 'arch'}}
-        run: cmake --build build -j8 --target package
+        if: ${{ matrix.distro.like != 'arch' }}
+        run: cmake --build build -j8 ${{ matrix.distro.cmake-target }}
 
       - name: Build package (Arch-like)
         if: ${{ matrix.distro.like == 'arch' }}
@@ -399,7 +273,24 @@ jobs:
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
         with:
-          job: linux-${{ matrix.distro.name }}
+          job: ${{ matrix.distro.name }}
+
+      - name: Get version
+        if: ${{ runner.os != 'Linux' }}
+        uses: ./.github/actions/get-version
+
+      - name: Package
+        if: ${{runner.os != 'Linux'}}
+        run: python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
+        env:
+          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
+          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
+          APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
+          APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
+          APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
         uses: actions/upload-artifact@v4

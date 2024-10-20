@@ -1,0 +1,122 @@
+{
+  "distro": [
+    {
+      "name": "windows-2022-x64",
+      "runs-on": "windows-2022",
+      "timeout": "120",
+      "like": "windows"
+    },
+    {
+      "name": "macos-14 (arm)",
+      "timeout": "10",
+      "runs-on": "macos-14",
+      "extra-cmake-config": "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+    },
+    {
+      "name": "macos-13 (x86)",
+      "timeout": "20",
+      "runs-on": "macos-14",
+      "extra-cmake-config": "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+    },
+    {
+      "name": "debian-13-amd64",
+      "container": "deskflow/deskflow:debian-13-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "debian",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "debian-12-amd64",
+      "container": "deskflow/deskflow:debian-12-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "debian",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "ubuntu-24.04-amd64",
+      "container": "deskflow/deskflow:ubuntu-24.04-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "debian",
+      "extra-dep-args": "--meson-no-system libportal --meson-static libportal --subprojects",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr -DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON",
+      "target": "--target package"
+    },
+    {
+      "name": "ubuntu-22.04-amd64",
+      "container": "deskflow/deskflow:ubuntu-22.04-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "debian",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "fedora-40-amd64",
+      "container": "deskflow/deskflow:fedora-40-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "fedora",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "fedora-39-amd64",
+      "container": "deskflow/deskflow:fedora-39-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "fedora",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "opensuse-amd64",
+      "container": "deskflow/deskflow:opensuse-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "suse",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "rockylinux-9-amd64",
+      "container": "deskflow/deskflow:rockylinux-9-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "rhel",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "almalinux-9-amd64",
+      "container": "deskflow/deskflow:almalinux-9-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "rhel",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "archlinux-amd64",
+      "container": "deskflow/deskflow:archlinux-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "arch",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    },
+    {
+      "name": "manjaro-amd64",
+      "container": "deskflow/deskflow:manjaro-amd64",
+      "runs-on": "ubuntu-latest",
+      "timeout": "20",
+      "like": "arch",
+      "extra-cmake-args": "-DCMAKE_INSTALL_PREFIX=/usr",
+      "cmake-target": "--target package"
+    }
+  ]
+}
