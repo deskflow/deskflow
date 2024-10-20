@@ -28,7 +28,7 @@ env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   PACKAGE_PREFIX: "deskflow"
   PACKAGE_PATH: ./dist
-  CMAKE_ARGS: "-DCMAKE_COMPILE_WARNING_AS_ERROR=ON"
+  CMAKE_CONFIGURE: "cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON"
 
 jobs:
   # Always run this job, even if not on PR, since other jobs need it.
@@ -162,10 +162,8 @@ jobs:
 
       - name: Configure
         run: |
-          cmake ${{ steps.vcpkg.outputs.vcpkg-cmake-config }} `
-            -B build -G Ninja `
-            -DCMAKE_BUILD_TYPE=Release `
-            ${{ env.CMAKE_ARGS }}
+          ${{env.CMAKE_CONFIGURE}} -G Ninja `
+            ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
 
       - name: Build
         run: cmake --build build -j8
@@ -197,10 +195,6 @@ jobs:
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
 
-    defaults:
-      run:
-        shell: ${{ matrix.target.shell }}
-
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one target may
       # fail due to transient issues unrelated to the build.
@@ -212,13 +206,13 @@ jobs:
             timeout: 10
             os: "macos-14"
             arch: arm64
-            shell: "/usr/bin/arch -arch arm64e /bin/bash --noprofile --norc -eo pipefail {0}"
+            extra-cmake-config: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
 
           - name: macos-13-x64
             timeout: 20
             os: macos-13
             arch: x64
-            shell: "bash"
+            extra-cmake-config: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
 
     steps:
       - name: Checkout
@@ -233,7 +227,7 @@ jobs:
           git fetch --tags --force
 
       - name: Install dependencies
-        run: brew install cmake openssl googletest --quiet
+        run: brew install cmake ninja openssl googletest --quiet
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -247,10 +241,7 @@ jobs:
          qt-install-dir: "/Users/runner"
 
       - name: Configure
-        run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release `
-            ${{ env.CMAKE_ARGS }} `
-            ${{matrix.target.extraCmakeConfig}}
+        run: ${{env.CMAKE_CONFIGURE}} ${{matrix.target.extra-cmake-config}}
 
       - name: Build
         run: cmake --build build -j8
@@ -345,10 +336,9 @@ jobs:
 
       - name: Configure
         run: |
-          cmake -B build -G Ninja \
-            -DCMAKE_INSTALL_PREFIX=/usr \
-            ${{ env.CMAKE_ARGS }} \
-            ${{ matrix.distro.extra-cmake-args }}
+            ${{ env.CMAKE_CONFIGURE }} -G Ninja \
+              -DCMAKE_INSTALL_PREFIX=/usr \
+              ${{ matrix.distro.extra-cmake-args }}
 
       - name: Build package
         if: ${{ matrix.distro.arch-like != 'true'}}
@@ -411,7 +401,7 @@ jobs:
           usesh: true
           run: |
             ./scripts/install_deps.sh
-            cmake -B build ${{ env.CMAKE_ARGS }}
+            ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
             
             # Integration tests are flakey by nature, make them optional.
