@@ -67,82 +67,6 @@ Here are a few ways to join in with the project and get involved:
 > Check the [Build Guide](https://github.com/deskflow/deskflow/wiki/Build-Guide)
 > wiki page if you have problems.
 
-**1. Dependencies:**
-
-You can either copy/paste the commands for your OS from [`config.yaml`](config.yaml) or use the deps script.
-
-*Linux, macOS, or BSD-derived:*
-```
-./scripts/install_deps.sh
-```
-
-*Windows:*
-```
-python scripts/install_deps.py
-```
-
-**2. Configure:**
-
-*Linux, macOS, or BSD-derived:*
-```
-cmake -B build
-```
-
-*Windows:*
-```
-cmake -B build
-```
-
-**3. Build:**
-```
-cmake --build build -j8
-```
-
-**4. Test:**
-```
-./build/bin/unittests
-./build/bin/integtests
-```
-
-**5. Run**
-```
-./build/bin/deskflow
-```
-
-## How to install (packages)
-
-*macOS:*
-*(coming soon)*
-```
-brew install deskflow
-```
-
-*Fedora, Red Hat, etc:*
-*(coming soon)*
-```
-sudo dnf install deskflow
-```
-
-*Debian, Ubuntu, etc:*
-*(coming soon)*
-```
-sudo apt install deskflow
-```
-
-*Arch, Manjaro, etc:*
-*(coming soon)*
-```
-sudo pacman -S deskflow
-```
-
-*Windows:*
-*(coming soon)*
-```
-choco install deskflow
-```
-
-**Note:** We are working with package maintainers to have our new package name adopted.
-
 ## Operating Systems
 
 We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
@@ -151,6 +75,16 @@ All Linux distributions are supported, primarily focusing on:
 Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
 
 We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
+
+## Repology
+
+Repology monitors a huge number of package repositories and other sources comparing package
+versions across them and gathering other information.
+
+[![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?exclude_unsupported=1)](https://repology.org/project/deskflow/versions)
+
+
+**Note:** We are working with package maintainers to have our new package name adopted.
 
 ## Collaborative Projects
 
@@ -202,13 +136,6 @@ Wayland implementation.
 Deskflow was first created as Synergy in 2001 by Chris Schoeneman.
 Read about the [history of the project](https://github.com/deskflow/deskflow/wiki/History) on our
 wiki.
-
-## Repology
-
-Repology monitors a huge number of package repositories and other sources comparing package
-versions across them and gathering other information.
-
-[![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?exclude_unsupported=1)](https://repology.org/project/deskflow/versions)
 
 ## Meow'Dib (our mascot)
 
