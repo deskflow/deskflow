@@ -119,7 +119,7 @@ QTextStream &Screen::writeAliasesSection(QTextStream &outStream) const
   if (!aliases().isEmpty()) {
     outStream << "\t" << name() << ":" << Qt::endl;
 
-    foreach (const QString &alias, aliases())
+    for (const QString &alias : aliases())
       outStream << "\t\t" << alias << Qt::endl;
   }
 
