@@ -108,9 +108,7 @@ void PortalRemoteDesktop::cb_session_started(GObject *object, GAsyncResult *res)
   // version in the impl.portal), i.e. you'll need an updated compositor on
   // top of everything...
   auto fd = -1;
-#if HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS
   fd = xdp_session_connect_to_eis(session, &error);
-#endif
   if (fd < 0) {
     g_main_loop_quit(glib_main_loop_);
     events_->addEvent(Event::kQuit);
@@ -158,17 +156,6 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject *object, GAsync
       this
   );
 }
-
-#if !defined(HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL)
-static inline void xdp_portal_create_remote_desktop_session_full(
-    XdpPortal *portal, XdpDeviceType devices, XdpOutputType outputs, XdpRemoteDesktopFlags flags,
-    XdpCursorMode cursor_mode, XdpPersistMode _unused1, const char *_unused2, GCancellable *cancellable,
-    GAsyncReadyCallback callback, gpointer data
-)
-{
-  xdp_portal_create_remote_desktop_session(portal, devices, outputs, flags, cursor_mode, cancellable, callback, data);
-}
-#endif
 
 gboolean PortalRemoteDesktop::init_remote_desktop_session()
 {

@@ -44,6 +44,7 @@ add_library(${target} STATIC ${sources} ${ui_files} ${qrc_file})
 target_link_libraries(
   ${target}
   ${DESKFLOW_GUI_HOOK_LIB}
+  platform
   Qt6::Core
   Qt6::Widgets
   Qt6::Network)

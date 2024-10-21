@@ -13,6 +13,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+if(UNIX AND NOT APPLE)
+  pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= 1.3")
+  message(STATUS "libei version: ${LIBEI_VERSION}")
+
+  pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= 0.8")
+  message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+endif()
 
 if(WIN32)
   file(GLOB headers "MSWindows*.h")
@@ -68,16 +75,15 @@ add_library(platform STATIC ${sources})
 target_link_libraries(platform client ${libs})
 
 macro(link_wayland_libs)
+  target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+
   target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
-                        ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES})
+                        ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}
+                        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES}
+  )
 
-  if(LIBEI_FOUND)
-    target_link_libraries(platform ${LIBEI_LINK_LIBRARIES})
-  endif()
+  target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
 
-  if(LIBPORTAL_FOUND)
-    target_link_libraries(platform ${LIBPORTAL_LINK_LIBRARIES})
-  endif()
 endmacro()
 
 if(UNIX)

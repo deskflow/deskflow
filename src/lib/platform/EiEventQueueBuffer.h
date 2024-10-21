@@ -18,8 +18,6 @@
 
 #pragma once
 
-#include "config.h"
-
 #include "base/IEventQueueBuffer.h"
 #include "deskflow/IScreen.h"
 #include "mt/Thread.h"

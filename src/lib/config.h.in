@@ -188,13 +188,4 @@
 /* Define to `unsigned int` if <sys/types.h> does not define. */
 #cmakedefine size_t @size_t@
 
-/* Define if libportal has xdp_session_connect_to_eis */
-#cmakedefine HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS @HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS@
-
-/* Define if libportal has xdp_portal_create_remote_desktop_session_full */
-#cmakedefine HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL @HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL@
-
-/* Define if libportal has input capture support */
-#cmakedefine HAVE_LIBPORTAL_INPUTCAPTURE @HAVE_LIBPORTAL_INPUTCAPTURE@
-
 // clang-format on

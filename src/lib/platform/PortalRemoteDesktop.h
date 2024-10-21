@@ -18,19 +18,11 @@
 
 #pragma once
 
-#include "config.h"
-
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
 #include <glib.h>
 #include <libportal/portal.h>
-
-#if !HAVE_LIBPORTAL_OUTPUT_NONE
-// Added in libportal ad82a74 Jun 2022, not yet released in libportal 0.6
-// should be used as a patch on ≤ 0.6, and non-git
-#define XDP_OUTPUT_NONE (XdpOutputType)0
-#endif
 
 namespace deskflow {
 
