@@ -215,86 +215,23 @@ macro(configure_wayland_libs)
 endmacro()
 
 macro(configure_libei)
-  option(SYSTEM_LIBEI "Use system libei" ON)
-  if(SYSTEM_LIBEI)
-    pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
-    if(LIBEI_FOUND)
-      message(STATUS "libei version: ${LIBEI_VERSION}")
-      add_definitions(-DWINAPI_LIBEI=1)
-      include_directories(${LIBEI_INCLUDE_DIRS})
-    else()
-      message(WARNING "libei >= ${LIBEI_MIN_VERSION} not found")
-    endif()
-  else()
-    set(libei_bin_dir ${PROJECT_BINARY_DIR}/meson/subprojects/libei/src)
-    set(libei_src_dir ${PROJECT_SOURCE_DIR}/subprojects/libei)
-    find_library(
-      LIBEI_LINK_LIBRARIES
-      NAMES ei
-      PATHS ${libei_bin_dir}
-      NO_DEFAULT_PATH)
-    if(LIBEI_LINK_LIBRARIES)
-      message(STATUS "Using local subproject libei")
-      set(LIBEI_FOUND true)
-      add_definitions(-DWINAPI_LIBEI=1)
-      set(LIBEI_INCLUDE_DIRS ${libei_src_dir}/src)
-      include_directories(${LIBEI_INCLUDE_DIRS})
-    else()
-      message(WARNING "Local libei not found")
-    endif()
+  pkg_check_modules(LIBEI QUIET "libei-1.0 >= ${LIBEI_MIN_VERSION}")
+  if(NOT LIBEI_FOUND)
+    message(FATAL_ERROR "libei >= ${LIBEI_MIN_VERSION} not found")
   endif()
+  message(STATUS "libei version: ${LIBEI_VERSION}")
+  add_definitions(-DWINAPI_LIBEI=1)
+  include_directories(${LIBEI_INCLUDE_DIRS})
 endmacro()
 
 macro(configure_libportal)
-  option(SYSTEM_LIBPORTAL "Use system libportal" ON)
-  if(SYSTEM_LIBPORTAL)
-    pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
-    if(LIBPORTAL_FOUND)
-      message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
-      check_libportal()
-    else()
-      message(WARNING "libportal >= ${LIBPORTAL_MIN_VERSION} not found")
-    endif()
-  else()
-    set(libportal_bin_dir
-        ${PROJECT_BINARY_DIR}/meson/subprojects/libportal/libportal)
-    set(libportal_src_dir ${PROJECT_SOURCE_DIR}/subprojects/libportal)
-
-    option(LIBPORTAL_STATIC "Use the static libportal binary" OFF)
-    if(LIBPORTAL_STATIC)
-      set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
-    endif()
-
-    find_library(
-      LIBPORTAL_LINK_LIBRARIES
-      NAMES portal
-      PATHS ${libportal_bin_dir}
-      NO_DEFAULT_PATH)
-
-    if(LIBPORTAL_LINK_LIBRARIES)
-      message(STATUS "Using local subproject libportal")
-      set(LIBPORTAL_FOUND true)
-      set(LIBPORTAL_INCLUDE_DIRS ${libportal_src_dir})
-
-      message(STATUS "libportal library file: ${LIBPORTAL_LINK_LIBRARIES}")
-
-      # HACK: Somehow `check_symbol_exists` doesn't pick up on the symbols even though
-      # they are actually there. Since we use master branch of libportal, for now we'll
-      # assume that the symbols are there.
-      set(HAVE_LIBPORTAL_SESSION_CONNECT_TO_EIS true)
-      set(HAVE_LIBPORTAL_CREATE_REMOTE_DESKTOP_SESSION_FULL true)
-      set(HAVE_LIBPORTAL_INPUTCAPTURE true)
-      set(HAVE_LIBPORTAL_OUTPUT_NONE true)
-    else()
-      message(WARNING "Local libportal not found")
-    endif()
+  pkg_check_modules(LIBPORTAL QUIET "libportal >= ${LIBPORTAL_MIN_VERSION}")
+  if(NOT LIBPORTAL_FOUND)
+    message(FATAL_ERROR "libportal >= ${LIBPORTAL_MIN_VERSION} not found")
   endif()
 
-  if(LIBPORTAL_FOUND)
-    add_definitions(-DWINAPI_LIBPORTAL=1)
-    include_directories(${LIBPORTAL_INCLUDE_DIRS})
-  endif()
-
+  message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+  check_libportal()
 endmacro()
 
 # libportal 0.7 has xdp_session_connect_to_eis but it doesn't have remote desktop session restore or

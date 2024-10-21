@@ -337,8 +337,7 @@ jobs:
       - name: Configure
         run: |
             ${{ env.CMAKE_CONFIGURE }} -G Ninja \
-              -DCMAKE_INSTALL_PREFIX=/usr \
-              ${{ matrix.distro.extra-cmake-args }}
+              -DCMAKE_INSTALL_PREFIX=/usr
 
       - name: Build package
         if: ${{ matrix.distro.arch-like != 'true'}}
