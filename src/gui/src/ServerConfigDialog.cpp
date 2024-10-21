@@ -77,7 +77,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   ui->m_pSpinBoxClipboardSizeLimit->setValue(clipboardSharingSizeM);
   ui->m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
-  for (const Hotkey &hotkey : serverConfig().hotkeys())
+  for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->m_pListHotkeys->addItem(hotkey.text());
 
   ui->m_pScreenSetupView->setModel(&m_ScreenSetupModel);

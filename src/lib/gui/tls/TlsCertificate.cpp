@@ -116,7 +116,7 @@ bool TlsCertificate::runTool(const QStringList &args)
 
   QProcess process;
   process.setEnvironment(environment);
-  for (const auto &envVar : environment) {
+  for (const auto &envVar : std::as_const(environment)) {
     qDebug("set env var: %s", qUtf8Printable(envVar));
   }
 

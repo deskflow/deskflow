@@ -92,7 +92,8 @@ void ActionDialog::accept()
 
   m_Action.typeScreenNames().clear();
 
-  for (const QListWidgetItem *pItem : ui->m_pListScreens->selectedItems())
+  const auto &selection = ui->m_pListScreens->selectedItems();
+  for (const QListWidgetItem *pItem : selection)
     m_Action.typeScreenNames().append(pItem->text());
 
   m_Action.setSwitchScreenName(ui->m_pComboSwitchToScreen->currentText());
