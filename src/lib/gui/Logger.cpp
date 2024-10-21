@@ -123,7 +123,7 @@ void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const 
   }
 
   const auto logLine = printLine(out, typeString, message, fileLine);
-  emit newLine(logLine);
+  Q_EMIT newLine(logLine);
 }
 
 } // namespace deskflow::gui

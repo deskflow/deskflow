@@ -65,10 +65,10 @@ void IpcReader::onSocketReadyRead()
       readStream(dataBuf.data(), len);
       QString text = QString::fromUtf8(dataBuf.data(), len);
 
-      emit read(text);
+      Q_EMIT read(text);
     } else if (memcmp(codeBuf, kIpcMsgHelloBack, 4) == 0) {
       logVerbose("reading hello back");
-      emit helloBack();
+      Q_EMIT helloBack();
     } else {
       qCritical("aborting ipc read, message invalid");
       return;

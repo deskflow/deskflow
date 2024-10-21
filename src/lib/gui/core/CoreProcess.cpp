@@ -287,7 +287,7 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args)
     setProcessState(Started);
   } else {
     setProcessState(Stopped);
-    emit error(Error::StartFailed);
+    Q_EMIT error(Error::StartFailed);
   }
 }
 
@@ -365,7 +365,7 @@ void CoreProcess::handleLogLines(const QString &text)
 #endif
 
     checkLogLine(line);
-    emit logLine(line);
+    Q_EMIT logLine(line);
   }
 }
 
@@ -384,7 +384,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   // allow external listeners to abort the start process (e.g. licensing issue).
   setProcessState(ProcessState::Starting);
-  emit starting();
+  Q_EMIT starting();
   if (m_processState == ProcessState::Stopped) {
     qDebug("core process start was cancelled by listener");
     return;
@@ -574,7 +574,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     qDebug("inverting server connection");
 
     if (correctedAddress().isEmpty()) {
-      emit error(Error::AddressMissing);
+      Q_EMIT error(Error::AddressMissing);
       qDebug("address is missing for server args");
       return false;
     }
@@ -632,7 +632,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
   } else {
 
     if (correctedAddress().isEmpty()) {
-      emit error(Error::AddressMissing);
+      Q_EMIT error(Error::AddressMissing);
       qDebug("address is missing for client args");
       return false;
     }
@@ -684,7 +684,7 @@ void CoreProcess::setConnectionState(ConnectionState state)
   }
 
   m_connectionState = state;
-  emit connectionStateChanged(state);
+  Q_EMIT connectionStateChanged(state);
 }
 
 void CoreProcess::setProcessState(ProcessState state)
@@ -698,7 +698,7 @@ void CoreProcess::setProcessState(ProcessState state)
       qPrintable(processStateToString(m_processState)), qPrintable(processStateToString(state))
   );
   m_processState = state;
-  emit processStateChanged(state);
+  Q_EMIT processStateChanged(state);
 }
 
 void CoreProcess::checkLogLine(const QString &line)
@@ -733,7 +733,7 @@ bool CoreProcess::checkSecureSocket(const QString &line)
     return false;
   }
 
-  emit secureSocket(true);
+  Q_EMIT secureSocket(true);
   m_secureSocketVersion = line.mid(index + tlsCheckString.size());
   return true;
 }

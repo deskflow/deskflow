@@ -37,7 +37,7 @@ void TrashScreenWidget::dropEvent(QDropEvent *event)
 {
   if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
     event->acceptProposedAction();
-    emit screenRemoved();
+    Q_EMIT screenRemoved();
   } else {
     event->ignore();
   }

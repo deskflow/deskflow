@@ -78,7 +78,7 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
     if (!model()->screen(col, row).isNull()) {
       ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
       dlg.exec();
-      emit model() -> screensChanged();
+      Q_EMIT model()->screensChanged();
     }
   } else
     event->ignore();
@@ -145,7 +145,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     else
       model()->screen(indexes[0]).setSwapped(false);
 
-    emit model() -> screensChanged();
+    Q_EMIT model()->screensChanged();
   }
 }
 

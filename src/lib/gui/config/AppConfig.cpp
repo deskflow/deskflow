@@ -220,7 +220,7 @@ void AppConfig::commit()
 
   if (m_TlsChanged) {
     m_TlsChanged = false;
-    emit tlsChanged();
+    Q_EMIT tlsChanged();
   }
 }
 
@@ -663,7 +663,7 @@ void AppConfig::setLastVersion(const QString &version)
 void AppConfig::setScreenName(const QString &s)
 {
   m_ScreenName = s;
-  emit screenNameChanged();
+  Q_EMIT screenNameChanged();
 }
 
 void AppConfig::setPort(int i)
@@ -739,7 +739,7 @@ void AppConfig::setCloseToTray(bool minimize)
 void AppConfig::setInvertConnection(bool value)
 {
   m_InvertConnection = value;
-  emit invertConnectionChanged();
+  Q_EMIT invertConnectionChanged();
 }
 
 void AppConfig::setMainWindowSize(const QSize &size)

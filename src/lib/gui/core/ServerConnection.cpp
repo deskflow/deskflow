@@ -101,7 +101,7 @@ void ServerConnection::handleNewClient(const QString &clientName)
     return;
   }
 
-  emit messageShowing();
+  Q_EMIT messageShowing();
 
   m_messageShowing = true;
   const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName);
@@ -109,7 +109,7 @@ void ServerConnection::handleNewClient(const QString &clientName)
 
   if (result == Add) {
     qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
-    emit configureClient(clientName);
+    Q_EMIT configureClient(clientName);
   } else if (result == Ignore) {
     qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
   } else {

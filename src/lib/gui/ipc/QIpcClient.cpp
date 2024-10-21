@@ -167,10 +167,10 @@ void QIpcClient::onIpcReaderHelloBack()
   }
 
   m_isConnected = true;
-  serviceReady();
+  Q_EMIT serviceReady();
 }
 
 void QIpcClient::onIpcReaderRead(const QString &text)
 {
-  emit read(text);
+  Q_EMIT read(text);
 }

@@ -65,14 +65,14 @@ void ConfigScopes::clear() const
 
 void ConfigScopes::signalReady()
 {
-  emit ready();
+  Q_EMIT ready();
 }
 
 void ConfigScopes::save(bool emitSaving)
 {
   if (emitSaving) {
     qDebug("emitting config saving signal");
-    emit saving();
+    Q_EMIT saving();
   }
 
   qDebug("writing config to filesystem");

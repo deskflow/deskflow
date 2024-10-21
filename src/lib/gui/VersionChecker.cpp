@@ -65,7 +65,7 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
 
   if (!newestVersion.isEmpty() && compareVersions(DESKFLOW_VERSION, newestVersion) > 0) {
     qDebug("update found");
-    emit updateFound(newestVersion);
+    Q_EMIT updateFound(newestVersion);
   } else {
     qDebug("no updates found");
   }

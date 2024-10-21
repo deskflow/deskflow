@@ -157,7 +157,7 @@ void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool)
 void SettingsDialog::showEvent(QShowEvent *event)
 {
   QDialog::showEvent(event);
-  emit shown();
+  Q_EMIT shown();
 }
 
 void SettingsDialog::showReadOnlyMessage()

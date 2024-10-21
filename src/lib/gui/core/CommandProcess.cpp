@@ -53,7 +53,7 @@ QString CommandProcess::run()
     );
   }
 
-  emit finished();
+  Q_EMIT finished();
 
   return output;
 }

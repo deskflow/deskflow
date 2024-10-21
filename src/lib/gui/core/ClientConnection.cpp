@@ -66,7 +66,7 @@ void ClientConnection::showMessage(const QString &logLine)
 {
   using enum messages::ClientError;
 
-  emit messageShowing();
+  Q_EMIT messageShowing();
 
   const auto address = m_appConfig.serverHostname();
 
