@@ -108,9 +108,6 @@ int VersionChecker::compareVersions(const QString &left, const QString &right)
   QStringList leftParts = left.split("-");
   QStringList rightParts = right.split("-");
 
-  QString leftNumber = leftParts.at(0);
-  QString rightNumber = rightParts.at(0);
-
   QStringList leftNumberParts = left.split(".");
   QStringList rightNumberParts = right.split(".");
 

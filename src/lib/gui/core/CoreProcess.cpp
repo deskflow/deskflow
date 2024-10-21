@@ -645,7 +645,6 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
 
 QString CoreProcess::persistServerConfig() const
 {
-  QString configFullPath;
   if (m_appConfig.useExternalConfig()) {
     return m_appConfig.configFile();
   }
