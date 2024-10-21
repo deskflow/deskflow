@@ -691,7 +691,7 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
+  static const QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
   auto match = re.match(line);
   if (!match.hasMatch()) {
     return;

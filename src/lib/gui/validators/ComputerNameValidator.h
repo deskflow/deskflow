@@ -28,6 +28,10 @@ class ComputerNameValidator : public IStringValidator
 public:
   explicit ComputerNameValidator(const QString &message);
   bool validate(const QString &input) const override;
+
+private:
+  inline static const QRegularExpression m_nameValidator =
+      QRegularExpression(QStringLiteral("^[\\w\\._-]{0,255}$"), QRegularExpression::CaseInsensitiveOption);
 };
 
 } // namespace validators
