@@ -288,9 +288,13 @@ jobs:
         uses: ./.github/actions/filter-json
         id: filter
         with:
-          json-file: .github/workflows/ci-linux.json
-          condition: '"${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true"'
-          jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
+          json-file: .github/workflows/ci-matrix.json
+          jq-filter: "{distro: .linux}"
+
+      - name: Debug
+        run: |
+          echo "JSON: ${{ steps.filter.outputs.json }}"
+          echo "YAML: ${{fromJson(steps.filter.outputs.json)}}"
 
   linux:
     needs: linux-matrix

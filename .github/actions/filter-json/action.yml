@@ -6,10 +6,6 @@ inputs:
     description: "The JSON file to filter"
     required: true
 
-  condition:
-    description: "A condition to determine if the JSON should be filtered"
-    required: true
-
   jq-filter:
     description: "A `jq` filter to run on the JSON"
     required: true
@@ -25,13 +21,15 @@ runs:
     - id: filter
       shell: bash
       run: |
+        echo "Filtering JSON"
         json_file="${{ inputs.json-file }}"
-        if [ ${{ inputs.condition }} ]; then
-          echo "Filtering JSON"
-          json=$(jq '${{ inputs.jq-filter }}' $json_file)
-        else
-          echo "Not filtering JSON"
-          json=$(cat $json_file)
+        json=$(jq '${{ inputs.jq-filter }}' $json_file)
+
+        # Verify valid JSON
+        echo "$json" | jq empty
+        if [ $? -ne 0 ]; then
+          echo "Invalid JSON output" > /dev/stderr
+          exit 1
         fi
-        echo $json
-        echo "json=$(echo $json)" >> $GITHUB_OUTPUT
+
+        echo "json=$(echo $json)" | tee $GITHUB_OUTPUT
