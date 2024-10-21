@@ -29,7 +29,7 @@ jobs:
 
     name: Analyze
     runs-on: ubuntu-latest
-    container: deskflow/deskflow:debian-13-amd64
+    container: debian:trixie-slim
     timeout-minutes: 20
 
     strategy:
