@@ -16,8 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QString>
 #ifndef __APPLE__
-#include <QtDBus>
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusPendingReply>
 #endif
 
 #include "platform/XWindowsKeyState.h"

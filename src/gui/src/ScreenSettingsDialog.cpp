@@ -26,8 +26,6 @@
 #include "gui/validators/ValidationError.h"
 
 #include <QMessageBox>
-#include <QtCore>
-#include <QtGui>
 
 using namespace deskflow::gui;
 using enum ScreenConfig::Modifier;

@@ -25,7 +25,6 @@
 #include <QAbstractButton>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QtCore>
 
 using namespace deskflow::gui::proxy;
 using enum ScreenConfig::Modifier;

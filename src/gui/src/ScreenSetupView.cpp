@@ -21,9 +21,13 @@
 #include "ScreenSettingsDialog.h"
 #include "ScreenSetupModel.h"
 
+#include <QDrag>
+#include <QDragEnterEvent>
+#include <QDragMoveEvent>
 #include <QHeaderView>
-#include <QtCore>
-#include <QtGui>
+#include <QMimeData>
+#include <QMouseEvent>
+#include <QResizeEvent>
 
 ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
 {

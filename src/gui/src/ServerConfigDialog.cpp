@@ -26,8 +26,6 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QtCore>
-#include <QtGui>
 
 using enum ScreenConfig::SwitchCorner;
 using ServerProtocol = synergy::gui::ServerProtocol;

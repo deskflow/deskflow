@@ -40,9 +40,7 @@
 #include <QGuiApplication>
 #include <QMessageBox>
 #include <QObject>
-#include <QtCore>
 #include <QtGlobal>
-#include <QtGui>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>

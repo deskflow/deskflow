@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QString>
-#include <QtCore>
 
 namespace deskflow::gui::env_vars {
 

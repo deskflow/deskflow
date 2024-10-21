@@ -18,10 +18,11 @@
 
 #include "ScreenSetupModel.h"
 
-#include "gui/config/Screen.h"
+#include <QIODevice>
+#include <QIcon>
+#include <QMimeData>
 
-#include <QtCore>
-#include <QtGui>
+#include "gui/config/Screen.h"
 
 const QString ScreenSetupModel::m_MimeType = "application/x-" DESKFLOW_APP_ID "-screen";
 

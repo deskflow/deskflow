@@ -24,7 +24,6 @@
 
 #include <QDateTime>
 #include <QGuiApplication>
-#include <QtCore>
 
 using namespace deskflow::gui;
 

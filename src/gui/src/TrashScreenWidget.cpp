@@ -17,10 +17,12 @@
  */
 
 #include "TrashScreenWidget.h"
-#include "ScreenSetupModel.h"
 
-#include <QtCore>
-#include <QtGui>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+
+#include "ScreenSetupModel.h"
 
 void TrashScreenWidget::dragEnterEvent(QDragEnterEvent *event)
 {

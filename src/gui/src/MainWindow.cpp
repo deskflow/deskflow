@@ -48,12 +48,11 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
+#include <QNetworkInterface>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QScrollBar>
-#include <QtCore>
-#include <QtGui>
-#include <QtNetwork>
+
 #include <memory>
 
 #if defined(Q_OS_MAC)
