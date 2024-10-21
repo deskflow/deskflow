@@ -69,7 +69,6 @@ void ClientConnection::showMessage(const QString &logLine)
   emit messageShowing();
 
   const auto address = m_appConfig.serverHostname();
-  auto message = QString("<p>The connection to server '%1' didn't work.</p>").arg(address);
 
   if (logLine.contains("server already has a connected client with our name")) {
     m_deps->showError(m_pParent, AlreadyConnected, address);
