@@ -1,0 +1,107 @@
+{
+  "os": [
+    {
+      "name": "windows-2022-x64",
+      "family": "windows",
+      "runs-on": "windows-2022",
+      "timeout": "120",
+      "like": "windows"
+    },
+    {
+      "name": "macos-14-arm64",
+      "family": "macos",
+      "runs-on": "macos-14",
+      "timeout": "10",
+      "extra-cmake-config": "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+    },
+    {
+      "name": "macos-13-x64",
+      "family": "macos",
+      "runs-on": "macos-14",
+      "timeout": "20",
+      "extra-cmake-config": "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+    },
+    {
+      "name": "debian-13-amd64",
+      "runs-on": "ubuntu-latest",
+      "family": "linux",
+      "container": "deskflow/deskflow:debian-13-amd64"
+    },
+    {
+      "name": "debian-12-arm64",
+      "family": "linux",
+      "runs-on": "ubuntu-24.04-4-core-arm64",
+      "container": "deskflow/deskflow:debian-12-arm64"
+    },
+    {
+      "name": "debian-12-amd64",
+      "runs-on": "ubuntu-latest",
+      "family": "linux",
+      "container": "deskflow/deskflow:debian-12-amd64"
+    },
+    {
+      "name": "ubuntu-24.04-amd64",
+      "runs-on": "ubuntu-latest",
+      "family": "linux",
+      "container": "deskflow/deskflow:ubuntu-24.04-amd64",
+      "extra-dep-args": "--meson-no-system libportal --meson-static libportal --subprojects",
+      "extra-cmake-args": "-DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON"
+    },
+    {
+      "name": "ubuntu-22.04-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:ubuntu-22.04-amd64"
+    },
+    {
+      "name": "fedora-40-arm64",
+      "family": "linux",
+      "container": "deskflow/deskflow:fedora-40-arm64",
+      "runs-on": "ubuntu-24.04-4-core-arm64"
+    },
+    {
+      "name": "fedora-40-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:fedora-40-amd64"
+    },
+    {
+      "name": "fedora-39-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:fedora-39-amd64"
+    },
+    {
+      "name": "opensuse-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:opensuse-amd64"
+    },
+    {
+      "name": "rockylinux-9-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:rockylinux-9-amd64"
+    },
+    {
+      "name": "almalinux-9-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:almalinux-9-amd64"
+    },
+    {
+      "name": "archlinux-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:archlinux-amd64",
+      "arch-like": "true"
+    },
+    {
+      "name": "manjaro-amd64",
+      "family": "linux",
+      "runs-on": "ubuntu-latest",
+      "container": "deskflow/deskflow:manjaro-amd64",
+      "arch-like": "true"
+    }
+  ]
+}
