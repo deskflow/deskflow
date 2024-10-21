@@ -20,9 +20,6 @@
 
 #include "MainWindow.h"
 
-#include <QtCore>
-#include <QtGui>
-
 DeskflowApplication::DeskflowApplication(int &argc, char **argv) : QApplication(argc, argv)
 {
 

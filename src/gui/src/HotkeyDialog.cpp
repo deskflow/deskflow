@@ -19,9 +19,6 @@
 #include "HotkeyDialog.h"
 #include "ui_HotkeyDialog.h"
 
-#include <QtCore>
-#include <QtGui>
-
 HotkeyDialog::HotkeyDialog(QWidget *parent, Hotkey &hotkey)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::HotkeyDialog>()},

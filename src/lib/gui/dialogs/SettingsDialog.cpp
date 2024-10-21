@@ -33,8 +33,6 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QtCore>
-#include <QtGui>
 
 using namespace deskflow::gui;
 

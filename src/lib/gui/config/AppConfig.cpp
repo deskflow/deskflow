@@ -24,8 +24,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVariant>
-#include <QtCore>
-#include <QtNetwork>
 #include <functional>
 
 using namespace deskflow::gui;

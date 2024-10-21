@@ -20,8 +20,12 @@
 #include <array>
 
 #include <sys/utsname.h>
+
 #ifndef __APPLE__
-#include <QtDBus>
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QDBusInterface>
+#include <QDBusReply>
 #endif
 
 //

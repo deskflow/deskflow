@@ -19,9 +19,6 @@
 #include "Screen.h"
 #include "config/ScreenConfig.h"
 
-#include <QtCore>
-#include <QtGui>
-
 using namespace deskflow::gui::proxy;
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;

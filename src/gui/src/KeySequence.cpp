@@ -17,9 +17,7 @@
  */
 
 #include "KeySequence.h"
-
-#include <QtCore>
-#include <QtGui>
+#include <QSettings>
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)
 // and is heavily modified for Deskflow
