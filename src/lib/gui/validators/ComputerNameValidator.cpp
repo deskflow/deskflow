@@ -27,10 +27,8 @@ ComputerNameValidator::ComputerNameValidator(const QString &message) : IStringVa
 
 bool ComputerNameValidator::validate(const QString &input) const
 {
-  const QRegularExpression re("^[\\w\\._-]{0,255}$", QRegularExpression::CaseInsensitiveOption);
-  auto match = re.match(input);
-  auto result = match.hasMatch();
-  return result;
+  auto match = m_nameValidator.match(input);
+  return match.hasMatch();
 }
 
 } // namespace validators

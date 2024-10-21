@@ -86,11 +86,12 @@ int VersionChecker::getStageVersion(QString stage)
   if (stage.isEmpty() || stage == stableName) {
     return stableValue;
   } else if (stage.toLower().startsWith(rcName)) {
-    QRegularExpression re("\\d*", QRegularExpression::CaseInsensitiveOption);
-    if (re.match(stage).hasMatch()) {
+    static QRegularExpression re("\\d*", QRegularExpression::CaseInsensitiveOption);
+    auto match = re.match(stage);
+    if (match.hasMatch()) {
       // return the rc value plus the rc number (e.g. 2 + 1)
       // this should be ok since stable is max int.
-      return rcValue + re.match(stage).captured(1).toInt();
+      return rcValue + match.captured(1).toInt();
     }
   } else if (stage == betaName) {
     return betaValue;
