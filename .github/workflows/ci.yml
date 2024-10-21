@@ -136,28 +136,28 @@ jobs:
 
           - name: "debian-13-amd64"
             runs-on: ubuntu-latest
-            container: deskflow/deskflow:debian-13-amd64
+            container: debian:trixie-slim
             like: "debian"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
           - name: "fedora-40-amd64"
             runs-on: ubuntu-latest
-            container: deskflow/deskflow:fedora-40-amd64
+            container: fedora:40
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
           - name: "opensuse-amd64"
             runs-on: ubuntu-latest
-            container: deskflow/deskflow:opensuse-amd64
+            container: opensuse/tumbleweed:latest
             like: "suse"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
           - name: "archlinux-amd64"
             runs-on: ubuntu-latest
-            container: deskflow/deskflow:archlinux-amd64
+            container: archlinux:latest
             like: "arch"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
@@ -215,6 +215,7 @@ jobs:
           fi
 
           if [ ${{ matrix.target.like }} == "arch" ];then
+            useradd -m build
             sudo chown -R build build
             cd build
             sudo -u build makepkg -s
