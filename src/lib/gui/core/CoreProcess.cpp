@@ -188,7 +188,7 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError
   );
 
-  connect(&m_retryTimer, &QTimer::timeout, [this] {
+  connect(&m_retryTimer, &QTimer::timeout, this, [this] {
     if (m_processState == ProcessState::RetryPending) {
       start();
     } else {
