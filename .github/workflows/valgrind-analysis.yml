@@ -11,16 +11,8 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # the fetch-tags option for checkout does not work correctly so we need todo this
-      - name: Fetch tags
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git fetch --tags --force
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
 
       - name: Add Kitware repo
         uses: ./.github/actions/add-kitware-repo

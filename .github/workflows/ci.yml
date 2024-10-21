@@ -126,16 +126,8 @@ jobs:
             runs-on: ${{ vars.CI_WINDOWS_RUNNER || 'windows-2022' }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # The fetch-tags option for checkout does not work correctly so we need to do this.
-      - name: Fetch tags
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git fetch --tags --force
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
 
       # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
       # VC++ as that's already pre-installed on the Windows runner.
@@ -215,16 +207,8 @@ jobs:
             extra-cmake-config: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # The fetch-tags option for checkout does not work correctly so we need to do this.
-      - name: Fetch tags
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git fetch --tags --force
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
 
       - name: Install dependencies
         run: brew install cmake ninja openssl googletest --quiet
@@ -306,16 +290,8 @@ jobs:
       matrix: ${{fromJson(needs.linux-matrix.outputs.json-matrix)}}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # The fetch-tags option for checkout does not work correctly so we need to do this.
-      - name: Fetch tags
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git fetch --tags --force
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
 
       - name: Add Kitware repo
         if: ${{ matrix.distro.name  == 'ubuntu-22.04-amd64' }}
@@ -383,16 +359,8 @@ jobs:
           - name: freebsd
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # The fetch-tags option for checkout does not work correctly so we need to do this.
-      - name: Fetch tags
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          git fetch --tags --force
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
 
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
