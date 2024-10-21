@@ -27,7 +27,7 @@ void QNetworkAccessManagerProxy::init()
   m_network = std::make_shared<QNetworkAccessManager>();
 
   connect(m_network.get(), &QNetworkAccessManager::finished, this, [this](QNetworkReply *reply) {
-    emit finished(reply);
+    Q_EMIT finished(reply);
   });
 }
 

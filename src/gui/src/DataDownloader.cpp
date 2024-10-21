@@ -34,7 +34,7 @@ void DataDownloader::complete(QNetworkReply *reply)
 
   if (!m_Data.isEmpty()) {
     m_IsFinished = true;
-    emit isComplete();
+    Q_EMIT isComplete();
   }
 }
 

@@ -24,17 +24,17 @@ void QProcessProxy::create()
   m_pProcess = std::make_unique<QProcess>();
 
   connect(m_pProcess.get(), &QProcess::finished, this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
-    emit finished(exitCode, exitStatus);
+    Q_EMIT finished(exitCode, exitStatus);
   });
 
   connect(
       m_pProcess.get(), &QProcess::readyReadStandardOutput, //
-      this, [this]() { emit readyReadStandardOutput(); }
+      this, [this]() { Q_EMIT readyReadStandardOutput(); }
   );
 
   connect(
       m_pProcess.get(), &QProcess::readyReadStandardError, //
-      this, [this]() { emit readyReadStandardError(); }
+      this, [this]() { Q_EMIT readyReadStandardError(); }
   );
 }
 

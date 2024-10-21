@@ -79,7 +79,7 @@ void KeySequenceWidget::stopRecording()
   focusNextChild();
   releaseKeyboard();
   setStatus(Stopped);
-  emit keySequenceChanged();
+  Q_EMIT keySequenceChanged();
 }
 
 bool KeySequenceWidget::event(QEvent *event)

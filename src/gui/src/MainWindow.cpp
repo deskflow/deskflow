@@ -90,7 +90,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   connectSlots();
 
   // handled by `onCreated`
-  emit created();
+  Q_EMIT created();
 }
 
 MainWindow::~MainWindow()
@@ -741,7 +741,7 @@ QString MainWindow::getTimeStamp() const
 void MainWindow::showEvent(QShowEvent *event)
 {
   QMainWindow::showEvent(event);
-  emit shown();
+  Q_EMIT shown();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

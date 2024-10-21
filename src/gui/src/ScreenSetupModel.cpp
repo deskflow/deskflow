@@ -150,7 +150,7 @@ bool ScreenSetupModel::dropMimeData(
 
   screen(parent.column(), parent.row()) = droppedScreen;
 
-  emit screensChanged();
+  Q_EMIT screensChanged();
 
   return true;
 }
@@ -158,7 +158,7 @@ bool ScreenSetupModel::dropMimeData(
 void ScreenSetupModel::addScreen(const Screen &newScreen)
 {
   m_Screens.addScreenByPriority(newScreen);
-  emit screensChanged();
+  Q_EMIT screensChanged();
 }
 
 bool ScreenSetupModel::isFull() const
