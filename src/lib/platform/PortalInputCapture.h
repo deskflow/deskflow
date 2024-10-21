@@ -18,10 +18,6 @@
 
 #pragma once
 
-#include "config.h"
-
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
@@ -104,5 +100,3 @@ private:
 };
 
 } // namespace deskflow
-
-#endif // HAVE_LIBPORTAL_INPUTCAPTURE

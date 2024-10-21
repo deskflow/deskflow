@@ -29,11 +29,8 @@
 #include "deskflow/XScreen.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
-
-#if WINAPI_LIBPORTAL
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
-#endif
 
 #include <algorithm>
 #include <cmath>
@@ -70,21 +67,13 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
         new TMethodEventJob<EiScreen>(this, &EiScreen::handle_connected_to_eis_event)
     );
     if (is_primary) {
-#if HAVE_LIBPORTAL_INPUTCAPTURE
       portal_input_capture_ = new PortalInputCapture(this, events_);
-#else
-      throw std::invalid_argument("missing libportal input capture support");
-#endif // HAVE_LIBPORTAL_INPUTCAPTURE
     } else {
-#if WINAPI_LIBPORTAL
       events_->adoptHandler(
           events_->forEi().sessionClosed(), getEventTarget(),
           new TMethodEventJob<EiScreen>(this, &EiScreen::handle_portal_session_closed)
       );
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
-#else
-      throw std::invalid_argument("missing libportal remote desktop support");
-#endif // WINAPI_LIBPORTAL
     }
   } else {
     // Note: socket backend does not support reconnections
@@ -105,12 +94,8 @@ EiScreen::~EiScreen()
 
   delete key_state_;
 
-#if WINAPI_LIBPORTAL
   delete portal_remote_desktop_;
-#endif
-#if HAVE_LIBPORTAL_INPUTCAPTURE
   delete portal_input_capture_;
-#endif
 }
 
 void EiScreen::handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
@@ -365,13 +350,10 @@ void EiScreen::enter()
       ei_device_start_emulating(ei_abs_, sequence_number_);
       fakeMouseMove(cursor_x_, cursor_y_);
     }
-  }
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-  else {
+  } else {
     LOG_DEBUG("releasing input capture at x=%i y=%i", cursor_x_, cursor_y_);
     portal_input_capture_->release(cursor_x_, cursor_y_);
   }
-#endif
 }
 
 bool EiScreen::canLeave()
@@ -699,12 +681,9 @@ void EiScreen::on_motion_event(ei_event *event)
   if (is_on_screen_) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", cursor_x_, cursor_y_);
     sendEvent(events_->forIPrimaryScreen().motionOnPrimary(), MotionInfo::alloc(cursor_x_, cursor_y_));
-
-#if HAVE_LIBPORTAL_INPUTCAPTURE
     if (portal_input_capture_->is_active()) {
       portal_input_capture_->release();
     }
-#endif
   } else {
     buffer_dx += dx;
     buffer_dy += dy;

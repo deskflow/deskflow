@@ -4,31 +4,6 @@
       "name": "debian-13-amd64",
       "container": "deskflow/deskflow:debian-13-amd64",
       "runs-on": "ubuntu-latest",
-      "extra-packages": false
-    },
-    {
-      "name": "debian-12-arm64",
-      "container": "deskflow/deskflow:debian-12-arm64",
-      "runs-on": "ubuntu-24.04-4-core-arm64",
-      "extra-packages": false
-    },
-    {
-      "name": "debian-12-amd64",
-      "container": "deskflow/deskflow:debian-12-amd64",
-      "runs-on": "ubuntu-latest",
-      "extra-packages": false
-    },
-    {
-      "name": "ubuntu-24.04-amd64",
-      "container": "deskflow/deskflow:ubuntu-24.04-amd64",
-      "runs-on": "ubuntu-latest",
-      "extra-dep-args": "--meson-no-system libportal --meson-static libportal --subprojects",
-      "extra-cmake-args": "-DSYSTEM_LIBPORTAL=OFF -DSTATIC_LIBPORTAL=ON"
-    },
-    {
-      "name": "ubuntu-22.04-amd64",
-      "container": "deskflow/deskflow:ubuntu-22.04-amd64",
-      "runs-on": "ubuntu-latest"
     },
     {
       "name": "fedora-40-arm64",
@@ -41,34 +16,13 @@
       "runs-on": "ubuntu-latest"
     },
     {
-      "name": "fedora-39-amd64",
-      "container": "deskflow/deskflow:fedora-39-amd64",
-      "runs-on": "ubuntu-latest"
-    },
-    {
       "name": "opensuse-amd64",
       "container": "deskflow/deskflow:opensuse-amd64",
       "runs-on": "ubuntu-latest"
     },
     {
-      "name": "rockylinux-9-amd64",
-      "container": "deskflow/deskflow:rockylinux-9-amd64",
-      "runs-on": "ubuntu-latest"
-    },
-    {
-      "name": "almalinux-9-amd64",
-      "container": "deskflow/deskflow:almalinux-9-amd64",
-      "runs-on": "ubuntu-latest"
-    },
-    {
       "name": "archlinux-amd64",
       "container": "deskflow/deskflow:archlinux-amd64",
-      "runs-on": "ubuntu-latest",
-      "arch-like": "true"
-    },
-    {
-      "name": "manjaro-amd64",
-      "container": "deskflow/deskflow:manjaro-amd64",
       "runs-on": "ubuntu-latest",
       "arch-like": "true"
     }

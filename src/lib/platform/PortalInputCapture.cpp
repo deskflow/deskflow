@@ -16,14 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
-
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-
+#include "platform/PortalInputCapture.h"
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
-#include "platform/PortalInputCapture.h"
 
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
@@ -395,5 +391,3 @@ void PortalInputCapture::glib_thread(void *)
 }
 
 } // namespace deskflow
-
-#endif

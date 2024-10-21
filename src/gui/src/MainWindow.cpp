@@ -542,13 +542,9 @@ void MainWindow::open()
 
 void MainWindow::onCoreProcessStarting()
 {
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
   if (deskflow::platform::isWayland()) {
     m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
   }
-#endif
-
   saveSettings();
 }
 

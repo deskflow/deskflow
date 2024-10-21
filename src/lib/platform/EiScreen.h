@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "config.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 
@@ -37,9 +36,7 @@ namespace deskflow {
 class EiClipboard;
 class EiKeyState;
 class PortalRemoteDesktop;
-#if HAVE_LIBPORTAL_INPUTCAPTURE
 class PortalInputCapture;
-#endif
 
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen
@@ -159,9 +156,7 @@ private:
   mutable std::mutex mutex_;
 
   PortalRemoteDesktop *portal_remote_desktop_ = nullptr;
-#if HAVE_LIBPORTAL_INPUTCAPTURE
   PortalInputCapture *portal_input_capture_ = nullptr;
-#endif
 
   struct HotKeyItem
   {
