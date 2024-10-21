@@ -107,7 +107,7 @@ QString TlsFingerprint::readFirst() const
 QString TlsFingerprint::filePath() const
 {
   QString dir = TlsFingerprint::directoryPath();
-  return QString("%1/%2").arg(dir).arg(m_Filename);
+  return QString("%1/%2").arg(dir, m_Filename);
 }
 
 void TlsFingerprint::persistDirectory()
@@ -123,7 +123,7 @@ QString TlsFingerprint::directoryPath()
   CoreTool coreTool;
   QString profileDir = coreTool.getProfileDir();
 
-  return QString("%1/%2").arg(profileDir).arg(kDirName);
+  return QString("%1/%2").arg(profileDir, kDirName);
 }
 
 TlsFingerprint TlsFingerprint::local()
