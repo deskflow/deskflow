@@ -42,7 +42,7 @@ void VersionChecker::checkLatest() const
   const QString url = env_vars::versionUrl();
   qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
-  auto userAgent = QString("%1 %2 on %3").arg(kAppName).arg(kVersion).arg(QSysInfo::prettyProductName());
+  auto userAgent = QString("%1 %2 on %3").arg(kAppName, kVersion, QSysInfo::prettyProductName());
   request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
   request.setRawHeader("X-" DESKFLOW_APP_NAME "-Version", kVersion);
   request.setRawHeader("X-" DESKFLOW_APP_NAME "-Language", QLocale::system().name().toStdString().c_str());

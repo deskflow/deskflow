@@ -1012,8 +1012,7 @@ void MainWindow::updateScreenName()
 {
   ui->m_pLabelComputerName->setText(QString("This computer's name: %1 "
                                             R"((<a href="#" style="color: %2">change</a>))")
-                                        .arg(m_AppConfig.screenName())
-                                        .arg(kColorSecondary));
+                                        .arg(m_AppConfig.screenName(), kColorSecondary));
   m_ServerConfig.updateServerName();
 }
 

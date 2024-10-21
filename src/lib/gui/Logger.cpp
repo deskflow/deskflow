@@ -42,7 +42,7 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
 {
 
   auto datetime = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
-  auto logLine = QString("[%1] %2: %3").arg(datetime).arg(type).arg(message);
+  auto logLine = QString("[%1] %2: %3").arg(datetime, type, message);
 
   QTextStream stream(&logLine);
   stream << Qt::endl;
