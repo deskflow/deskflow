@@ -11,8 +11,8 @@ jobs:
   sonarcloud-analysis:
     if: ${{ vars.SONAR_SCANNER_ENABLED }}
 
-    runs-on: ${{ vars.SONAR_SCANNER_RUNNER || 'ubuntu-24.04' }}
-    container: deskflow/deskflow:ubuntu-22.04-amd64
+    runs-on: ubuntu-latest
+    container: deskflow/deskflow:debian-13-amd64
     timeout-minutes: 20
 
     env:
@@ -39,13 +39,12 @@ jobs:
           distro: jammy
 
       - name: Install dependencies
-        run: |
-          ./scripts/install_deps.py
-          apt install curl unzip cmake -y
-          pip install gcovr
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive
+        run: |
+          ./scripts/install_deps.py
+          apt install curl unzip cmake gcovr  -y
 
       - name: Install sonar-scanner and build-wrapper
         uses: sonarsource/sonarcloud-github-c-cpp@v3
