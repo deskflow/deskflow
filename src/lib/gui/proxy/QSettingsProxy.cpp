@@ -73,7 +73,8 @@ void migrateLegacySystemSettings(QSettings &settings)
   );
 
   if (QFile(oldSystemSettings.fileName()).exists()) {
-    for (const auto &key : oldSystemSettings.allKeys()) {
+    const auto keys = oldSystemSettings.allKeys();
+    for (const auto &key : keys) {
       settings.setValue(key, oldSystemSettings.value(key));
     }
   }
@@ -112,7 +113,7 @@ void migrateLegacyUserSettings(QSettings &newSettings)
   );
 
   QStringList keys = oldSettings.allKeys();
-  for (const QString &key : keys) {
+  for (const QString &key : std::as_const(keys)) {
     QVariant oldValue = oldSettings.value(key);
     newSettings.setValue(key, oldValue);
     logVerbose(QString("migrating setting '%1' = '%2'").arg(key, oldValue.toString()));

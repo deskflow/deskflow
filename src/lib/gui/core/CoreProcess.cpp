@@ -97,7 +97,7 @@ QString makeQuotedArgs(const QString &app, const QStringList &args)
   command << args;
 
   QStringList quoted;
-  for (const auto &arg : command) {
+  for (const auto &arg : std::as_const(command)) {
     if (arg.contains(' ')) {
       quoted << QString("\"%1\"").arg(arg);
     } else {
@@ -350,7 +350,8 @@ void CoreProcess::stopService()
 
 void CoreProcess::handleLogLines(const QString &text)
 {
-  for (const auto &line : text.split(kLineSplitRegex)) {
+  const auto lines = text.split(kLineSplitRegex);
+  for (const auto &line : lines) {
     if (line.isEmpty()) {
       continue;
     }

@@ -64,8 +64,8 @@ bool TlsFingerprint::fileExists() const
 
 bool TlsFingerprint::isTrusted(const QString &fingerprintText) const
 {
-  QStringList list = readList();
-  for (QString trusted : list) {
+  const QStringList list = readList();
+  for (const auto &trusted : list) {
     if (trusted == fingerprintText) {
       return true;
     }
