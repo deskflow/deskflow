@@ -249,23 +249,25 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   outStream << "section: screens" << Qt::endl;
 
-  foreach (const Screen &s, config.screens())
+  for (const Screen &s : config.screens()) {
     if (!s.isNull())
       s.writeScreensSection(outStream);
+  }
 
   outStream << "end" << Qt::endl << Qt::endl;
 
   outStream << "section: aliases" << Qt::endl;
 
-  foreach (const Screen &s, config.screens())
+  for (const Screen &s : config.screens()) {
     if (!s.isNull())
       s.writeAliasesSection(outStream);
+  }
 
   outStream << "end" << Qt::endl << Qt::endl;
 
   outStream << "section: links" << Qt::endl;
 
-  for (int i = 0; i < config.screens().size(); i++)
+  for (int i = 0; i < config.screens().size(); i++) {
     if (!config.screens()[i].isNull()) {
       outStream << "\t" << config.screens()[i].name() << ":" << Qt::endl;
 
@@ -275,6 +277,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
           outStream << "\t\t" << neighbourDirs[j].name << " = " << config.screens()[idx].name() << Qt::endl;
       }
     }
+  }
 
   outStream << "end" << Qt::endl << Qt::endl;
 
@@ -325,7 +328,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "\t"
             << "switchCornerSize = " << config.switchCornerSize() << Qt::endl;
 
-  foreach (const Hotkey &hotkey, config.hotkeys())
+  for (const Hotkey &hotkey : config.hotkeys())
     outStream << hotkey;
 
   outStream << "end" << Qt::endl << Qt::endl;
@@ -337,9 +340,10 @@ int ServerConfig::numScreens() const
 {
   int rval = 0;
 
-  foreach (const Screen &s, screens())
+  for (const Screen &s : screens()) {
     if (!s.isNull())
       rval++;
+  }
 
   return rval;
 }

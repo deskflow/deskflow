@@ -77,7 +77,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   ui->m_pSpinBoxClipboardSizeLimit->setValue(clipboardSharingSizeM);
   ui->m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
-  foreach (const Hotkey &hotkey, serverConfig().hotkeys())
+  for (const Hotkey &hotkey : serverConfig().hotkeys())
     ui->m_pListHotkeys->addItem(hotkey.text());
 
   ui->m_pScreenSetupView->setModel(&m_ScreenSetupModel);
@@ -353,7 +353,7 @@ void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
     Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
 
     const Hotkey &hotkey = serverConfig().hotkeys()[idx];
-    foreach (const Action &action, hotkey.actions())
+    for (const Action &action : hotkey.actions())
       ui->m_pListActions->addItem(action.text());
   }
 }
