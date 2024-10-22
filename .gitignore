@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: Copyright (C) 2011 Symless Ltd.
+# SPDX-FileCopyrightText: Copyright (C) 2010 Jason Axelson <BostonVaulter@gmail.com>
+# SPDX-License-Identifier: MIT
+
 # temp dirs created during build
 /build
 /dist
@@ -20,3 +25,13 @@ deskflow-config.toml
 /scripts/*.egg-info
 /*.user
 *.ui.autosave
+
+#Generic linux files
+**/*.directory
+
+#CMake ignores
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeUserPresets.json
+CMakeFiles/*
+

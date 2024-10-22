@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMMANDTHREAD_H
-#define COMMANDTHREAD_H
+#pragma once
 
 #include <QObject>
 #include <QStringList>
@@ -38,5 +37,3 @@ private:
   QStringList m_Arguments;
   QString m_Input;
 };
-
-#endif // COMMANDTHREAD_H

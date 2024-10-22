@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-License-Identifier: MIT
+
+#auto handle line feed
+* text=auto eol=lf
+
+.gitattributes export-ignore
+.gitignore export-ignore
+.github* export-ignore

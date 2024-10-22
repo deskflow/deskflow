@@ -20,14 +20,20 @@
 macro(configure_packaging)
 
   set(DESKFLOW_PROJECT_RES_DIR ${PROJECT_SOURCE_DIR}/res)
+  configure_file(${CMAKE_SOURCE_DIR}/cmake/CPackOptions.cmake.in
+                 ${CMAKE_BINARY_DIR}/cmake/CPackOptions.cmake @ONLY)
+  set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/CPackOptions.cmake)
 
   if(${BUILD_INSTALLER})
     set(CPACK_PACKAGE_NAME ${DESKFLOW_APP_ID})
     set(CPACK_PACKAGE_CONTACT ${DESKFLOW_MAINTAINER})
-    set(CPACK_PACKAGE_DESCRIPTION "Mouse and keyboard sharing utility")
+    set(CPACK_PACKAGE_DESCRIPTION ${CMAKE_PROJECT_DESCRIPTION})
     set(CPACK_PACKAGE_VENDOR ${DESKFLOW_AUTHOR_NAME})
     set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 
+    if(NOT CPACK_PACKAGE_VERSION)
+      set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
+    endif()
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       configure_windows_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -52,7 +58,6 @@ macro(configure_windows_packaging)
 
   message(VERBOSE "Configuring Windows installer")
 
-  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_MS})
   set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
 
   set(DESKFLOW_MSI_64_GUID
@@ -74,8 +79,6 @@ endmacro()
 macro(configure_mac_packaging)
 
   message(VERBOSE "Configuring macOS app bundle")
-
-  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
 
   set(CMAKE_INSTALL_RPATH
       "@loader_path/../Libraries;@loader_path/../Frameworks")
@@ -99,8 +102,7 @@ macro(configure_linux_packaging)
 
   message(VERBOSE "Configuring Linux packaging")
 
-  set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION_LINUX})
-  set(CPACK_GENERATOR "DEB;RPM;TGZ")
+  set(CPACK_GENERATOR "DEB;RPM")
 
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${DESKFLOW_MAINTAINER})
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
@@ -113,13 +115,6 @@ macro(configure_linux_packaging)
   # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
   # 12), so we must add it manually.
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
-
-  # The default for CMake seems to be /usr/local, which seems uncommon. While
-  # the default /usr/local prefix causes the app to appear on Debian and Fedora,
-  # it doesn't seem to appear on Arch Linux. Setting the prefix to /usr seems to
-  # work on a wider variety of distros, and that also seems to be where most
-  # apps install to.
-  set(CMAKE_INSTALL_PREFIX /usr)
 
   set(source_desktop_file ${DESKFLOW_PROJECT_RES_DIR}/dist/linux/app.desktop.in)
   set(configured_desktop_file ${PROJECT_BINARY_DIR}/app.desktop)

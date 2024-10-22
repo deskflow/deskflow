@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MSWINDOWSPOWERMANAGER_H
-#define MSWINDOWSPOWERMANAGER_H
+#pragma once
 
 class MSWindowsPowerManager {
 public:
@@ -32,5 +31,3 @@ public:
    */
   void enableSleep();
 };
-
-#endif // MSWINDOWSPOWERMANAGER_H

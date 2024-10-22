@@ -45,11 +45,9 @@ static const float s_retryDelay = 0.01f;
 
 enum { kMsgSize = 128 };
 
-static const char kFingerprintDirName[] = "SSL/Fingerprints";
-// static const char kFingerprintLocalFilename[] = "Local.txt";
-static const char kFingerprintTrustedServersFilename[] = "TrustedServers.txt";
-// static const char kFingerprintTrustedClientsFilename[] =
-// "TrustedClients.txt";
+// TODO: Reduce duplication of these strings between here and TlsFingerprint.cpp
+static const char kFingerprintDirName[] = "tls";
+static const char kFingerprintTrustedServersFilename[] = "trusted-servers";
 
 struct Ssl {
   SSL_CTX *m_context;

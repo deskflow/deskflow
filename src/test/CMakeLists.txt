@@ -16,6 +16,9 @@
 
 macro(config_all_tests)
 
+  # Required to load images from .qrc file.
+  set(CMAKE_AUTORCC ON)
+
   set(base_dir ${PROJECT_SOURCE_DIR})
   set(src_dir ${base_dir}/src)
   set(test_base_dir ${src_dir}/test)
@@ -65,6 +68,8 @@ macro(set_sources)
   if(WIN32)
     list(APPEND sources ${PROJECT_BINARY_DIR}/src/version.rc)
   endif()
+
+  list(APPEND sources ${GUI_QRC_FILE})
 
   replace_platform_sources()
   replace_arch_sources()

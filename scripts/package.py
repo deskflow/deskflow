@@ -31,11 +31,14 @@ DEFAULT_PROJECT_BUILD_DIR = "build"
 DEFAULT_DIST_DIR = "dist"
 DEFAULT_TEST_CMD = "deskflow-server --version"
 DEFAULT_PACKAGE_NAME = "deskflow"
-VERSION_FILE = "VERSION"
 
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--package-version",
+        help="Set the Package Version",
+        required=True)
     parser.add_argument(
         "--leave-test-installed",
         action="store_true",
@@ -47,36 +50,23 @@ def main():
 
     package(
         DEFAULT_FILENAME_BASE,
-        get_app_version(VERSION_FILE),
         DEFAULT_PROJECT_BUILD_DIR,
         DEFAULT_DIST_DIR,
         DEFAULT_TEST_CMD,
         DEFAULT_PRODUCT_NAME,
         DEFAULT_PACKAGE_NAME,
+        version=args.package_version,
         leave_test_installed=args.leave_test_installed,
     )
 
-
-def get_app_version(filename):
-    """
-    Returns the version either from the env var, or from the version file.
-    """
-    version = env.get_env("DESKFLOW_VERSION", required=False)
-    if version:
-        return version
-
-    with open(filename, "r") as f:
-        return f.read().strip()
-
-
 def package(
     filename_prefix,
-    version,
     project_build_dir,
     dist_dir,
     test_cmd,
     product_name,
     package_name,
+    version,
     source_dir=None,
     leave_test_installed=False,
 ):

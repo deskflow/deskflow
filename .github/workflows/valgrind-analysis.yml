@@ -13,16 +13,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Config Git safe dir
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
-      # Should only restore the .venv directory from cache.
-      - name: Init Python venv
-        uses: ./.github/actions/init-python
         with:
-          cache-key: "valgrind"
-          setup: false
+          fetch-depth: 0
+
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Install dependencies
         run: |

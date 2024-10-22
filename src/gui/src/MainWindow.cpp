@@ -18,7 +18,6 @@
 
 #include "MainWindow.h"
 
-#include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
@@ -26,6 +25,7 @@
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
+#include "gui/dialogs/AboutDialog.h"
 #include "gui/dialogs/SettingsDialog.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
@@ -64,11 +64,11 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile16 = ":/icons/16x16/tray.png";
+const auto kIconFile = ":/icons/128x128/tray.png";
 
 #ifdef Q_OS_MAC
-const auto kLightIconFile = ":/icons/64x64/tray-light.png";
-const auto kDarkIconFile = ":/icons/64x64/tray-dark.png";
+const auto kLightIconFile = ":/icons/128x128/tray-light.png";
+const auto kDarkIconFile = ":/icons/128x128/tray-dark.png";
 #endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
@@ -440,7 +440,7 @@ void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &) {
 
 void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &) {
   QMessageBox::information(
-      this, "SSL/TLS fingerprint", TlsFingerprint::local().readFirst());
+      this, "TLS fingerprint", TlsFingerprint::local().readFirst());
 }
 
 void MainWindow::on_m_pRadioGroupServer_clicked(bool) {
@@ -620,7 +620,7 @@ void MainWindow::setIcon() {
     break;
   }
 #else
-  icon.addFile(kIconFile16);
+  icon.addFile(kIconFile);
 #endif
 
   m_TrayIcon.setIcon(icon);

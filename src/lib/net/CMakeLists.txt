@@ -25,7 +25,7 @@ add_library(net STATIC ${sources})
 
 target_link_libraries(
   net
-  PUBLIC ${OPENSSL_LIBRARIES}
+  PUBLIC OpenSSL::SSL OpenSSL::Crypto
   PRIVATE mt io)
 
 if(WIN32)

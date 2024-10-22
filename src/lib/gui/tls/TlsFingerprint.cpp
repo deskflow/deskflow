@@ -22,10 +22,11 @@
 #include <QDir>
 #include <QTextStream>
 
-static const char kDirName[] = "SSL/Fingerprints";
-static const char kLocalFilename[] = "Local.txt";
-static const char kTrustedServersFilename[] = "TrustedServers.txt";
-static const char kTrustedClientsFilename[] = "TrustedClients.txt";
+// TODO: Reduce duplication of these strings between here and SecureSocket.cpp
+static const char kDirName[] = "tls";
+static const char kLocalFilename[] = "local-fingerprint";
+static const char kTrustedServersFilename[] = "trusted-servers";
+static const char kTrustedClientsFilename[] = "trusted-clients";
 
 TlsFingerprint::TlsFingerprint(const QString &filename)
     : m_Filename(filename) {}

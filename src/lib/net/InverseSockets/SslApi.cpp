@@ -159,9 +159,9 @@ std::string SslApi::getFingerprint() const {
 }
 
 bool SslApi::isTrustedFingerprint(const std::string &fingerprint) const {
+  // TODO: Reduce duplication of these strings between here and SecureSocket.cpp
   auto trustedServersFilename = deskflow::string::sprintf(
-      "%s/SSL/Fingerprints/TrustedServers.txt",
-      ARCH->getProfileDirectory().c_str());
+      "%s/tls/trusted-servers", ARCH->getProfileDirectory().c_str());
 
   // check if this fingerprint exist
   std::ifstream file;

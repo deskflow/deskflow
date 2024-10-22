@@ -15,10 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#if !defined(HOTKEY_H)
-
-#define HOTKEY_H
+#pragma once
 
 #include <QList>
 #include <QString>
@@ -62,5 +59,3 @@ private:
 typedef QList<Hotkey> HotkeyList;
 
 QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey);
-
-#endif

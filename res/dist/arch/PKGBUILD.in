@@ -1,11 +1,11 @@
 # Maintainer: @DESKFLOW_MAINTAINER@
 
 pkgname=@DESKFLOW_APP_ID@
-pkgver=@DESKFLOW_VERSION_FOUR_PART@
+pkgver=@DESKFLOW_VERSION@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
 url='@DESKFLOW_WEBSITE_URL@'
-arch=('x86_64')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 license=('GPL-2.0-only')
 depends=(
   'gcc-libs'
@@ -20,6 +20,7 @@ depends=(
   'libxkbcommon-x11'
   'libnotify'
   'hicolor-icon-theme'
+  'pugixml'
   'qt6-base'
   'qt6-tools'
   'libei'

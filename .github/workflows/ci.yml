@@ -5,18 +5,24 @@
 name: CI
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Deskflow version number
+  push:
+    branches: [master]
+    tags:
+      - 'v*'
   pull_request:
     types:
       - opened
       - reopened
       - synchronize
       - ready_for_review
-  schedule:
-    - cron: "0 5 * * *" # 5am UTC
+    paths-ignore:
+      - '**/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.editorconfig'
+      - '.env-example'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'cspell.json'
 
 env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -24,9 +30,10 @@ env:
   PACKAGE_PATH: ./dist
 
 jobs:
+  # Always run this job, even if not on PR, since other jobs need it.
   pr-comment-flags:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
+    needs: lint-clang
 
     outputs:
       no-sonar: ${{ steps.check.outputs.no-sonar }}
@@ -36,6 +43,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check PR comment for flags
+        if: ${{ github.event_name == 'pull_request' }}
         id: check
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
@@ -52,7 +60,7 @@ jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
     runs-on: ubuntu-latest
-    needs: [lint-cmake, lint-clang, windows, macos, linux, unix]
+    needs: [test-results, unix]
 
     steps:
       - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
@@ -61,7 +69,7 @@ jobs:
   # Runs even if the tests fail to provide a summary of the failures.
   test-results:
     needs: [windows, macos, linux]
-    if: always()
+    if: always() && needs.windows.result != 'skipped' && needs.macos.result != 'skipped' && needs.linux.result != 'skipped'
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -73,30 +81,31 @@ jobs:
       - name: Test summary
         uses: ./.github/actions/test-summary
 
-  lint-cmake:
-    if: ${{ github.event_name == 'pull_request' }}
-    uses: ./.github/workflows/lint-cmake.yml
-
   lint-clang:
-    if: ${{ github.event_name == 'pull_request' }}
-    uses: ./.github/workflows/lint-clang.yml
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Linting Clang
+        uses: ./.github/actions/lint-clang
 
   analyse-valgrind:
+    needs: lint-clang
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/valgrind-analysis.yml
 
-  analyse-codeql:
-    if: ${{ github.event_name == 'pull_request' }}
-    uses: ./.github/workflows/codeql-analysis.yml
-
   analyse-sonarcloud:
     needs: pr-comment-flags
-    if: ${{ github.event_name == 'pull_request' && needs.pr-comment-flags.outputs.no-sonar != 'true' }}
+    if: ${{ needs.pr-comment-flags.outputs.no-sonar != 'true' }}
     uses: ./.github/workflows/sonarcloud-analysis.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   windows:
+    needs: lint-clang
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
@@ -115,27 +124,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get version
-        uses: ./.github/actions/get-version
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Cache vcpkg dir
         uses: actions/cache@v4
         with:
-          # We also need to cache the `LOCALAPPDATA` dir; without doing so, openssl
-          # rebuilds (after it is detected in cache) every time, which takes around 10 mins.
           path: |
-            vcpkg
-            vcpkg_installed
-            ${{ env.LOCALAPPDATA }}/vcpkg
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+            ${{github.workspace}}/vcpkg
 
-      # Should only restore the .venv directory from cache.
-      - name: Init Python venv
-        uses: ./.github/actions/init-python
-        with:
-          cache-key: ci-${{ matrix.target.name }}
-          setup: false
+          key: vcpkg-${{ runner.os }}-1
 
       - name: Cache deps dir
         uses: actions/cache@v4
@@ -156,11 +160,13 @@ jobs:
 
       - name: Install dependencies
         env:
-          VCPKG_ROOT: "" # Unset deliberately to suppress 'already installed' warning.
+          VCPKG_ROOT: ${{github.workspace}}/vcpkg
         run: python ./scripts/install_deps.py
 
       - name: Configure
-        run: cmake -B build --preset=windows-release
+        env:
+          VCPKG_ROOT: ${{github.workspace}}/vcpkg
+        run: cmake -B build --preset=windows-release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -171,8 +177,11 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Package
-        run: python ./scripts/package.py
+        run: python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
@@ -180,10 +189,11 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
+          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
           path: ${{ env.PACKAGE_PATH }}
 
   macos:
+    needs: lint-clang
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: ${{ matrix.target.timeout }}
@@ -214,16 +224,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      # Should only restore the .venv directory from cache.
-      - name: Setup Python venv
-        uses: ./.github/actions/init-python
         with:
-          cache-key: ci-${{ matrix.target.name }}
-          setup: false
+          fetch-depth: 0
+
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Cache deps dir
         uses: actions/cache@v4
@@ -235,7 +243,7 @@ jobs:
         run: ./scripts/install_deps.py
 
       - name: Configure
-        run: cmake -B build --preset=macos-release
+        run: cmake -B build --preset=macos-release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -246,8 +254,11 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Package
-        run: ./scripts/package.py
+        run: ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
         env:
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
           APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
@@ -259,10 +270,11 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
+          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
           path: ${{ env.PACKAGE_PATH }}
 
   linux-matrix:
+    needs: lint-clang
     runs-on: ubuntu-latest
 
     outputs:
@@ -296,19 +308,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Should only restore the .venv directory from cache.
-      - name: Setup Python venv
-        uses: ./.github/actions/init-python
         with:
-          cache-key: ci-${{ matrix.distro.name }}
-          setup: false
+          fetch-depth: 0
 
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      - name: Config Git safe dir
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Install dependencies
         run: ./scripts/install_deps.py ${{ matrix.distro.extra-dep-args }}
@@ -317,7 +324,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
-        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }}
+        run: cmake -B build --preset=linux-release ${{ matrix.distro.extra-cmake-args }} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build -j8
@@ -328,20 +335,24 @@ jobs:
         with:
           job: linux-${{ matrix.distro.name }}
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Package
         env:
           LINUX_EXTRA_PACKAGES: ${{ matrix.distro.extra-packages }}
           LINUX_PACKAGE_USER: ${{ matrix.distro.package-user }}
-        run: ./scripts/package.py
+        run: ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
+          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
           path: ${{ env.PACKAGE_PATH }}
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
+    needs: lint-clang
     name: unix-${{ matrix.distro.name }}
     runs-on: ${{ vars.CI_UNIX_RUNNER || 'ubuntu-24.04' }}
     timeout-minutes: 20
@@ -350,7 +361,7 @@ jobs:
       DESKFLOW_BUILD_CMD: |
         ./scripts/install_deps.sh;
         cmake -B build;
-        cmake --build build -j16;
+        cmake --build build -j16; -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
         export QT_QPA_PLATFORM=offscreen;
         ./build/bin/unittests
         ./build/bin/integtests
@@ -365,6 +376,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
@@ -372,3 +391,31 @@ jobs:
         with:
           usesh: true
           run: ${{ env.DESKFLOW_BUILD_CMD }}
+
+  release:
+    needs: ci-passed
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Deploy continuous
+        if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
+        uses: crowbarmaster/GH-Automatic-Releases@latest
+        with:
+          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+          automatic_release_tag: "continuous"
+          prerelease: false
+          title: "Continuous Build"
+          files: |
+            package-*/*
+
+      - name: Deploy release
+        if: contains(github.ref, '/tags/v')
+        uses: crowbarmaster/GH-Automatic-Releases@latest
+        with:
+          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+          prerelease: false
+          files: |
+            package-*/*

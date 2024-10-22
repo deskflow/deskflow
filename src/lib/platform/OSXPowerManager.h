@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OSXPOWERMANAGER_H
-#define OSXPOWERMANAGER_H
+#pragma once
 
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
@@ -43,5 +42,3 @@ private:
   // handler for assertion preventing the system from going to sleep
   IOPMAssertionID m_sleepPreventionAssertionID = 0;
 };
-
-#endif // OSXPOWERMANAGER_H

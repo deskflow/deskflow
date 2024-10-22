@@ -1,8 +1,25 @@
 name: "CodeQL Analysis"
 
+# According to the docs, the CodeQL workflow should be triggered directly by push to master
+# and by pull requests (we only run this on open PRs as it's very slow). We also use the
+# `workflow_dispatch` event is also enabled to allow manual triggering of the workflow for testing.
+#
+# We should not trigger this workflow with `workflow_call` as this causes the error:
+#   "1 configuration present on `master` was not found"
+#
+# Sadly, this means we can't roll it into our monolithic CI workflow.
 on:
   workflow_dispatch:
-  workflow_call:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.editorconfig'
+      - '.env-example'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'cspell.json'
   push:
     branches: [master]
 
@@ -23,16 +40,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Config Git safe dir
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
-      # Should only restore the .venv directory from cache.
-      - name: Init Python venv
-        uses: ./.github/actions/init-python
         with:
-          cache-key: "codeql"
-          setup: false
+          fetch-depth: 0
+
+      # the fetch-tags option for checkout does not work correctly so we need todo this
+      - name: Fetch tags
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git fetch --tags --force
 
       - name: Install dependencies
         run: ./scripts/install_deps.py

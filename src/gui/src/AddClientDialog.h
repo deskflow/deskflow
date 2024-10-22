@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ADDCLIENTDIALOG_H
-#define ADDCLIENTDIALOG_H
+#pragma once
 
 #include "ui_AddClientDialogBase.h"
 
@@ -57,5 +56,3 @@ private:
   QLabel *m_pLabelCenter;
   int m_AddResult;
 };
-
-#endif // ADDCLIENTDIALOG_H

@@ -501,9 +501,24 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../../../../res/gui/app.qrc">:/icons/16x16/padlock.png</pixmap>
+         <pixmap resource="../../../../res/gui/app.qrc">:/icons/64x64/padlock.png</pixmap>
         </property>
-       </widget>
+        <property name="minimumSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+      </widget>
       </item>
       <item>
        <widget class="QLabel" name="m_pStatusLabel">
