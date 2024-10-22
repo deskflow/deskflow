@@ -52,6 +52,11 @@ else()
   message(STATUS "tomlplusplus INC DIR: ${tomlPP_inc_dir}")
 endif()
 
+if (WIN32)
+  find_package(unofficial-wintoast CONFIG REQUIRED)
+  set(wintoast-lib unofficial::wintoast::wintoast)
+endif()
+
 set(lib_name app)
 
 file(GLOB headers "*.h" "languages/*.h")
@@ -61,10 +66,6 @@ file(GLOB sources "*.cpp" "languages/*.cpp")
 if(WIN32)
   file(GLOB arch_headers "win32/*.h")
   file(GLOB arch_sources "win32/*.cpp")
-
-  if(HAVE_WINTOAST)
-    list(APPEND arch_sources ${WINTOAST_DIR}/src/wintoastlib.cpp)
-  endif()
 
 elseif(UNIX)
   file(GLOB arch_headers "unix/*.h")
@@ -79,6 +80,10 @@ if(ADD_HEADERS_TO_SOURCES)
 endif()
 
 add_library(${lib_name} STATIC ${sources})
+if(WIN32)
+    target_compile_definitions(${lib_name} PUBLIC HAVE_WINTOAST)
+    target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib} ${wintoast-lib})
+endif()
 
 target_include_directories(
   ${lib_name}
@@ -100,7 +105,6 @@ if(UNIX)
     server
     ${cli11_lib}
     ${tomlPP_lib}
-    ${wintoast-lib}
   )
 
   if(NOT APPLE)
