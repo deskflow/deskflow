@@ -114,11 +114,24 @@
 				<!-- HACK: Normally the C++ redistributable solves this dependency, including it can cause problems -->
 				<File Source="C:\Program Files (x86)\Windows Kits\10\bin\$(var.Platform)\ucrt\ucrtbased.dll"/>
 				<?else ?>
+				<File Source="$(var.BinDir)\brotlicommon.dll"/>
+				<File Source="$(var.BinDir)\brotlidec.dll"/>
+				<File Source="$(var.BinDir)\bz2.dll"/>
+				<File Source="$(var.BinDir)\double-conversion.dll"/>
+				<File Source="$(var.BinDir)\freetype.dll"/>
+				<File Source="$(var.BinDir)\harfbuzz.dll"/>
+				<File Source="$(var.BinDir)\icudt74.dll"/>
+				<File Source="$(var.BinDir)\icuin74.dll"/>
+				<File Source="$(var.BinDir)\icuuc74.dll"/>
+				<File Source="$(var.BinDir)\libpng16.dll"/>
+				<File Source="$(var.BinDir)\pcre2-16.dll"/>
 				<File Source="$(var.BinDir)\Qt6Core.dll"/>
 				<File Source="$(var.BinDir)\Qt6Gui.dll"/>
 				<File Source="$(var.BinDir)\Qt6Network.dll"/>
 				<File Source="$(var.BinDir)\Qt6Svg.dll"/>
 				<File Source="$(var.BinDir)\Qt6Widgets.dll"/>
+				<File Source="$(var.BinDir)\zlib1.dll"/>
+				<File Source="$(var.BinDir)\zstd.dll"/>
 				<File Source="$(var.BinDir)\styles\qmodernwindowsstyle.dll"/>
 				<?endif ?>
 			</Component>

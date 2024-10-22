@@ -52,7 +52,7 @@ endmacro()
 #
 macro(configure_windows_packaging)
 
-  set(QT_PATH $ENV{CMAKE_PREFIX_PATH})
+  cmake_path(SET QT_PATH NORMALIZE "${Qt6_DIR}../../")
 
   set(DESKFLOW_MSI_64_GUID
       "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8"
