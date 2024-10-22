@@ -455,8 +455,6 @@ endmacro()
 #
 macro(configure_windows_libs)
 
-  configure_wintoast()
-
   set(CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
@@ -562,20 +560,4 @@ macro(configure_coverage)
   else()
     message(STATUS "Code coverage is disabled")
   endif()
-endmacro()
-
-macro(configure_wintoast)
-  # WinToast is a pretty niche library, and there doesn't seem to be an installable package,
-  # so we rely on building from source.
-  file(GLOB WINTOAST_DIR ${PROJECT_SOURCE_DIR}/subprojects/WinToast-*)
-  if(WINTOAST_DIR)
-    set(HAVE_WINTOAST true)
-    add_definitions(-DHAVE_WINTOAST=1)
-    include_directories(${WINTOAST_DIR}/include)
-  else()
-    find_package(unofficial-wintoast CONFIG REQUIRED)
-    set(wintoast-lib unofficial::wintoast::wintoast)
-    message(WARNING "Subproject 'WinToast' not found")
-  endif()
-
 endmacro()
