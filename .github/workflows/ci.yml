@@ -69,8 +69,8 @@ jobs:
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
   test-results:
-    needs: [windows, macos, linux]
-    if: always() && needs.windows.result != 'skipped' && needs.macos.result != 'skipped' && needs.linux.result != 'skipped'
+    needs: main-build
+    if: always() && needs.main-build.result != 'skipped'
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -105,16 +105,12 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  windows:
+  main-build:
     needs: lint-clang
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
     container: ${{ matrix.target.container }}
-
-    # CI should normally takes less than 10 mins to run,
-    # but if vcpkg has to rebuild the cache (should be rare), it takes about 90 mins.
-    timeout-minutes: 120
-
+    timeout-minutes: ${{ matrix.target.timeout }}
     strategy:
       # Normally, we want to fail fast, but in this case we shouldn't since one target may
       # fail due to transient issues unrelated to the build.
@@ -122,93 +118,94 @@ jobs:
 
       matrix:
         target:
-          - name: windows-2022-x64
-            runs-on: ${{ vars.CI_WINDOWS_RUNNER || 'windows-2022' }}
+          - name: "windows-2022-x64"
+            runs-on: "windows-2022"
+            timeout: 120 #Windows can take while if it has to build vcpkg cache
+            config-args: "-G Ninja"
+
+          - name: "macos-14-arm64"
+            runs-on: "macos-14"
+            timeout: 10
+            arch: arm64
+            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+
+          - name: "macos-13-x64"
+            runs-on: macos-13
+            timeout: 20
+            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+
+          - name: "debian-13-amd64"
+            runs-on: ubuntu-latest
+            container: deskflow/deskflow:debian-13-amd64
+            like: "debian"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
+          - name: "fedora-40-amd64"
+            runs-on: ubuntu-latest
+            container: deskflow/deskflow:fedora-40-amd64
+            like: "fedora"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
+          - name: "opensuse-amd64"
+            runs-on: ubuntu-latest
+            container: deskflow/deskflow:opensuse-amd64
+            like: "suse"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
+          - name: "archlinux-amd64"
+            runs-on: ubuntu-latest
+            container: deskflow/deskflow:archlinux-amd64
+            like: "arch"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
     steps:
+      # Fancy checkout gets all the tags
+      # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
       # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
       # VC++ as that's already pre-installed on the Windows runner.
       - name: Setup VC++ environment
+        if: ${{ runner.os == 'Windows' }}
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install dependencies
-        id: install-dependencies
-        uses: ./.github/actions/install-dependencies
-
-      - name: Setup Python venv
-        run: python ./scripts/setup_venv.py
-
-      - name: Configure
-        run: |
-          ${{env.CMAKE_CONFIGURE}} -G Ninja `
-            ${{ steps.install-dependencies.outputs.vcpkg-cmake-config }}
-
-      - name: Build
-        run: cmake --build build -j8
-
-      - name: Tests
-        uses: ./.github/actions/run-tests
-        timeout-minutes: 2
-        with:
-          job: ${{ matrix.target.name }}
-
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      - name: Package
-        run: python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
-        env:
-          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
-          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
-          path: ${{ env.PACKAGE_PATH }}
-
-  macos:
-    needs: lint-clang
-    name: ${{ matrix.target.name }}
-    runs-on: ${{ matrix.target.os }}
-    timeout-minutes: ${{ matrix.target.timeout }}
-
-    strategy:
-      # Normally, we want to fail fast, but in this case we shouldn't since one target may
-      # fail due to transient issues unrelated to the build.
-      fail-fast: false
-
-      matrix:
-        target:
-          - name: "macos-14-arm64"
-            timeout: 10
-            os: "macos-14"
-            arch: arm64
-            extra-cmake-config: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
-
-          - name: macos-13-x64
-            timeout: 20
-            os: macos-13
-            arch: x64
-            extra-cmake-config: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
-
-    steps:
-      - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v1.0.0
-
-      - name: Install Dependencies
+        id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
           mac-qt-version: 6.7.2
+          like: ${{ matrix.target.like }}
+
+      - name: Setup Python
+        if: ${{runner.os != 'Linux' }}
+        run: python ./scripts/setup_venv.py
 
       - name: Configure
-        run: ${{env.CMAKE_CONFIGURE}} ${{matrix.target.extra-cmake-config}}
+        run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }}
 
       - name: Build
-        run: cmake --build build -j8
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" && "${{matrix.target.like}}" != "arch" ]]; then
+            cmake --build build -j8 --target package
+          else
+            cmake --build build -j8
+          fi
+
+          if [ ${{ matrix.target.like }} == "arch" ];then
+            sudo chown -R build build
+            cd build
+            sudo -u build makepkg -s
+            export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
+            export ARCH=$(uname -m)
+            mv *.pkg.* $(ls *.pkg.* | sed "s/$ARCH/$OSNAME-$ARCH/g")
+            cd ..
+          fi
 
       - name: Tests
         uses: ./.github/actions/run-tests
@@ -217,13 +214,18 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Get version
+        if: ${{ runner.os != 'Linux' }}
         uses: ./.github/actions/get-version
 
       - name: Package
+        if: ${{ runner.os != 'Linux' }}
+        shell: bash
         run: |
-          python ./scripts/setup_venv.py
-          ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
+          python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
+          mv dist/deskflow* build/
         env:
+          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
+          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
           APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
           APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
           APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
@@ -235,81 +237,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
-          path: ${{ env.PACKAGE_PATH }}
-
-  linux-matrix:
-    needs: lint-clang
-    runs-on: ubuntu-latest
-
-    outputs:
-      json-matrix: ${{ steps.filter.outputs.json }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Filter JSON
-        uses: ./.github/actions/filter-json
-        id: filter
-        with:
-          json-file: .github/workflows/ci-linux.json
-          condition: '"${{ vars.CI_USE_LINUX_ARM_RUNNER }}" != "true"'
-          jq-filter: .distro |= map(select(.["runs-on"] | contains("arm64") | not))
-
-  linux:
-    needs: linux-matrix
-    name: linux-${{ matrix.distro.name }}
-    runs-on: ${{ matrix.distro.runs-on }}
-    container: ${{ matrix.distro.container }}
-    timeout-minutes: 20
-
-    strategy:
-      # Normally, we want to fail fast, but in this case we shouldn't since one distro may
-      # fail due to transient issues unrelated to the build.
-      fail-fast: false
-      matrix: ${{fromJson(needs.linux-matrix.outputs.json-matrix)}}
-
-    steps:
-      - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v1.0.0
-
-      - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
-        with:
-          distro-like: ${{ matrix.distro.like }}
-
-      - name: Configure
-        run: |
-            ${{ env.CMAKE_CONFIGURE }} -G Ninja \
-              -DCMAKE_INSTALL_PREFIX=/usr \
-              ${{ matrix.distro.extra-cmake-args }}
-
-      - name: Build package
-        if: ${{ matrix.distro.like != 'arch'}}
-        run: cmake --build build -j8 --target package
-
-      - name: Build package (Arch-like)
-        if: ${{ matrix.distro.like == 'arch' }}
-        run: |
-          cmake --build build -j8
-          sudo chown -R build build
-          cd build
-          sudo -u build makepkg -s
-          export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
-          export ARCH=$(uname -m)
-          mv *.pkg.* $(ls *.pkg.* | sed "s/$ARCH/$OSNAME-$ARCH/g")
-          cd ..
-
-      - name: Tests
-        uses: ./.github/actions/run-tests
-        timeout-minutes: 2
-        with:
-          job: linux-${{ matrix.distro.name }}
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.distro.name }}
           path: ${{github.workspace}}/build/deskflow[-_]*.*
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
@@ -327,6 +254,8 @@ jobs:
           - name: freebsd
 
     steps:
+      # Fancy checkout gets all the tags
+      # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
