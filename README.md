@@ -37,7 +37,6 @@ To use Deskflow you can use one of our [packages](https://github.com/deskflow/de
 
 - Motivated by the community interests (not business-driven)
 - Privacy by default (e.g. update check is off by default)
-- Nothing customer-related (this is all moved downstream to Synergy)
 - Leading edge releases (we don't focus on supporting older systems)
 - Decisions are discussed and documented publicly with majority rule
 - Have fun; we don't need to worry about impressing anyone
