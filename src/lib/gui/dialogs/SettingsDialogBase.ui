@@ -625,7 +625,20 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>Specify when the Deskflow service should run at an elevated privilege level</string>
+                <string>Specify when the Windows background service should run the server or client
+                  process at an elevated privilege level.</string>
+              </property>
+              <property name="whatsThis">
+               <string>
+                &lt;p&gt;You may want to alter whether or not the privilege level of the server or client 
+                  process is automatically changed depending on your use case. In some cases it can help
+                  to diagnose or solve some problems related to elevated processes in Windows.&lt;/p&gt;
+                &lt;ul&gt;
+                  &lt;li&gt;Automatic: Elevate when the window session changes to secure mode&lt;/li&gt;
+                  &lt;li&gt;Always elevate: Always run in elevated mode (could be unsafe)&lt;/li&gt;
+                  &lt;li&gt;Never elevate: Turn off compatability with login screen and UAC&lt;/li&gt;
+                &lt;/ul&gt;
+                </string>
               </property>
               <property name="currentIndex">
                <number>0</number>
@@ -653,6 +666,20 @@
            <widget class="QCheckBox" name="m_pCheckBoxServiceEnabled">
             <property name="text">
              <string>Use background service (daemon)</string>
+            </property>
+            <property name="toolTip">
+              <string>Whether to launch the server or client process through the Windows background
+                service or direct from the GUI.</string>
+            </property>
+            <property name="whatsThis">
+             <string>
+              &lt;p&gt;The background service is only available on Windows.&lt;/p&gt;
+              &lt;p&gt;The Windows background service is used to:&lt;/p&gt;
+              &lt;ul&gt;
+              &lt;li&gt;Start the server or client automatically when the computer starts.&lt;/li&gt;
+              &lt;li&gt;Run the server or client in an elevated mode (e.g. on login screen, UAC dialogs, etc).&lt;/li&gt;
+              &lt;/ul&gt;
+              </string>
             </property>
            </widget>
           </item>
