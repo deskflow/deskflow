@@ -1,4 +1,5 @@
 # Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -14,11 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB headers "*.h")
-file(GLOB sources "*.cpp")
-
-if(ADD_HEADERS_TO_SOURCES)
-  list(APPEND sources ${headers})
-endif()
-
-add_library(mt STATIC ${sources})
+add_library(mt STATIC
+  CondVar.cpp
+  CondVar.h
+  Lock.cpp
+  Lock.h
+  Mutex.cpp
+  Mutex.h
+  Thread.cpp
+  Thread.h
+  XMT.cpp
+  XMT.h
+  XThread.h
+)
