@@ -15,6 +15,9 @@ and work seamlessly between them.
 It's like a software KVM (but without the video).
 TLS encryption is enabled by default. Wayland is supported. Clipboard sharing is supported.
 
+> [!WARNING]
+> **Ubuntu users:** For Wayland support, please use [Stable Release v1.17.0](https://github.com/deskflow/deskflow/releases/tag/v1.17.0) (instead of the Continuous Build).
+
 [![Downloads: Stable Release](https://img.shields.io/github/downloads/deskflow/deskflow/v1.17.0/total?style=for-the-badge&logo=github&label=Download%20Stable)](https://github.com/deskflow/deskflow/releases/tag/v1.17.0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Downloads: Continuous Build](https://img.shields.io/github/downloads/deskflow/deskflow/continuous/total?style=for-the-badge&logo=github&label=Download%20Continuous)](https://github.com/deskflow/deskflow/releases)
 
 To use Deskflow you can use one of our [packages](https://github.com/deskflow/deskflow/releases), install `deskflow` (if available in your package repository), or [build it](#build-quick-start) yourself from source.
