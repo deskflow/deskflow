@@ -11,6 +11,11 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Install container dependencies
+        run: |
+          apt update -qqq > /dev/null
+          apt install -qqq git valgrind > /dev/null
+
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
@@ -18,12 +23,6 @@ jobs:
         uses: ./.github/actions/install-dependencies
         with:
           like: "debian"
-
-      - name: Install valgrind
-        run: apt install valgrind -y
-        env:
-          # Prevent apt prompting for input.
-          DEBIAN_FRONTEND: noninteractive
 
       - name: Configure
         run: cmake -B build -G "Ninja"
