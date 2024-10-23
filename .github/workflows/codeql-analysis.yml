@@ -38,6 +38,11 @@ jobs:
         language: ["cpp"]
 
     steps:
+      - name: Install container dependencies
+        run: |
+          apt update -qqq > /dev/null
+          apt install -qqq git > /dev/null
+
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 

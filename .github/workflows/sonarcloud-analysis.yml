@@ -22,19 +22,18 @@ jobs:
       CPU_CORE_COUNT: ${{ vars.SONAR_SCANNER_CPU_COUNT || 4 }}
 
     steps:
+      - name: Install container dependencies
+        run: |
+          apt update -qqq > /dev/null
+          apt install -qqq git curl unzip gcovr > /dev/null
+
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
-      - name: Install dependencies
+      - name: Install project dependencies
         uses: ./.github/actions/install-dependencies
         with:
           like: "debian"
-
-      - name: Install dependencies (extra)
-        run: apt install curl unzip gcovr  -y
-        env:
-          # Prevent apt prompting for input.
-          DEBIAN_FRONTEND: noninteractive
 
       - name: Install sonar-scanner and build-wrapper
         uses: sonarsource/sonarcloud-github-c-cpp@v3

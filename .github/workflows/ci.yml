@@ -163,6 +163,23 @@ jobs:
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
     steps:
+      # Make sure the container has git before we do anything else
+      - name: Install Git on Container
+        if: ${{ matrix.target.container }}
+        shell: bash
+        run : |
+           if [ "${{matrix.target.like}}" == "debian" ]; then
+             apt update -qqq > /dev/null && apt install -qqq git devscripts > /dev/null
+           elif [ "${{matrix.target.like}}" == "fedora" ]; then
+             dnf install -y git
+           elif [ "${{matrix.target.like}}" == "suse" ]; then
+             zypper refresh
+             zypper install -y --force-resolution git
+           elif [ "${{matrix.target.like}}" == "arch" ]; then
+             pacman -Syu --noconfirm git
+           else
+             echo "Unknown: ${{matrix.target.like}}"
+           fi
       # Fancy checkout gets all the tags
       # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
