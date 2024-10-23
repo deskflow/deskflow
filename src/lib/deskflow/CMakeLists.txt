@@ -1,4 +1,5 @@
 # Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -57,29 +58,114 @@ if (WIN32)
   set(wintoast-lib unofficial::wintoast::wintoast)
 endif()
 
+####################Start Making Library#########################
 set(lib_name app)
-
-file(GLOB headers "*.h" "languages/*.h")
-file(GLOB sources "*.cpp" "languages/*.cpp")
 
 # arch
 if(WIN32)
-  file(GLOB arch_headers "win32/*.h")
-  file(GLOB arch_sources "win32/*.cpp")
-
+  set(PLATFORM_CODE
+    win32/AppUtilWindows.cpp
+    win32/AppUtilWindows.h
+  )
 elseif(UNIX)
-  file(GLOB arch_headers "unix/*.h")
-  file(GLOB arch_sources "unix/*.cpp")
+  set(PLATFORM_CODE
+    unix/AppUtilUnix.cpp
+    unix/AppUtilUnix.h
+    unix/DeskflowXkbKeyboard.cpp
+    unix/DeskflowXkbKeyboard.h
+    unix/ISO639Table.h
+    unix/X11LayoutsParser.cpp
+    unix/X11LayoutsParser.h
+  )
 endif()
 
-list(APPEND sources ${arch_sources})
-list(APPEND headers ${arch_headers})
+add_library(${lib_name} STATIC  ${PLATFORM_CODE}
+  App.cpp
+  App.h
+  AppUtil.cpp
+  AppUtil.h
+  ArgParser.cpp
+  ArgParser.h
+  ArgsBase.cpp
+  ArgsBase.h
+  Chunk.cpp
+  Chunk.h
+  ClientApp.cpp
+  ClientApp.h
+  ClientArgs.cpp
+  ClientArgs.h
+  ClientTaskBarReceiver.cpp
+  ClientTaskBarReceiver.h
+  clipboard_types.h
+  Clipboard.cpp
+  Clipboard.h
+  ClipboardChunk.cpp
+  ClipboardChunk.h
+  Config.cpp
+  Config.h
+  DaemonApp.cpp
+  DaemonApp.h
+  DisplayInvalidException.h
+  DragInformation.cpp
+  DragInformation.h
+  DropHelper.cpp
+  DropHelper.h
+  FileChunk.cpp
+  FileChunk.h
+  IApp.h
+  IAppUtil.h
+  IClient.h
+  IClipboard.cpp
+  IClipboard.h
+  IKeyState.cpp
+  IKeyState.h
+  INode.h
+  IPlatformScreen.cpp
+  IPlatformScreen.h
+  IPrimaryScreen.cpp
+  IPrimaryScreen.h
+  IScreen.h
+  IScreenSaver.h
+  ISecondaryScreen.h
+  key_types.cpp
+  key_types.h
+  KeyMap.cpp
+  KeyMap.h
+  KeyState.cpp
+  KeyState.h
+  mouse_types.h
+  option_types.h
+  PacketStreamFilter.cpp
+  PacketStreamFilter.h
+  PlatformScreen.cpp
+  PlatformScreen.h
+  protocol_types.cpp
+  protocol_types.h
+  ProtocolUtil.cpp
+  ProtocolUtil.h
+  Screen.cpp
+  Screen.h
+  ServerApp.cpp
+  ServerApp.h
+  ServerArgs.cpp
+  ServerArgs.h
+  ServerTaskBarReceiver.cpp
+  ServerTaskBarReceiver.h
+  StreamChunker.cpp
+  StreamChunker.h
+  ToolApp.cpp
+  ToolApp.h
+  ToolArgs.cpp
+  ToolArgs.h
+  XDeskflow.cpp
+  XDeskflow.h
+  XScreen.cpp
+  XScreen.h
+  languages/LanguageManager.cpp
+  languages/LanguageManager.h
+)
 
-if(ADD_HEADERS_TO_SOURCES)
-  list(APPEND sources ${headers})
-endif()
 
-add_library(${lib_name} STATIC ${sources})
 if(WIN32)
     target_compile_definitions(${lib_name} PUBLIC HAVE_WINTOAST)
     target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib} ${wintoast-lib})
