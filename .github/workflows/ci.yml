@@ -141,6 +141,13 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
+          - name: "fedora-41-amd64"
+            runs-on: ubuntu-latest
+            container: fedora:41
+            like: "fedora"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
           - name: "fedora-40-amd64"
             runs-on: ubuntu-latest
             container: fedora:40
