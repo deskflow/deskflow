@@ -23,9 +23,9 @@ macro(configure_libs)
     configure_unix_libs()
   elseif(WIN32)
     configure_windows_libs()
+    find_package(Python REQUIRED QUIET)
   endif()
 
-  configure_python()
   configure_qt()
   configure_openssl()
   configure_coverage()
@@ -343,14 +343,6 @@ macro(configure_windows_libs)
 
   configure_openssl()
 
-endmacro()
-
-macro(configure_python)
-  if(WIN32)
-    find_package(Python REQUIRED QUIET)
-  else()
-    find_package(Python3 REQUIRED QUIET)
-  endif()
 endmacro()
 
 macro(configure_qt)
