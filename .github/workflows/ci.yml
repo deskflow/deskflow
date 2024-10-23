@@ -9,6 +9,8 @@ on:
     inputs:
       version:
         description: Deskflow version number
+  push:
+    branches: [master]
   pull_request:
     types:
       - opened
