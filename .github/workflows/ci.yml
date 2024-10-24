@@ -132,13 +132,6 @@ jobs:
             ${{ env.LOCALAPPDATA }}/vcpkg
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
 
-      # Should only restore the .venv directory from cache.
-      - name: Init Python venv
-        uses: ./.github/actions/init-python
-        with:
-          cache-key: ci-${{ matrix.target.name }}
-          setup: false
-
       - name: Cache deps dir
         uses: actions/cache@v4
         with:
@@ -220,13 +213,6 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      # Should only restore the .venv directory from cache.
-      - name: Setup Python venv
-        uses: ./.github/actions/init-python
-        with:
-          cache-key: ci-${{ matrix.target.name }}
-          setup: false
-
       - name: Cache deps dir
         uses: actions/cache@v4
         with:
@@ -298,13 +284,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Should only restore the .venv directory from cache.
-      - name: Setup Python venv
-        uses: ./.github/actions/init-python
-        with:
-          cache-key: ci-${{ matrix.distro.name }}
-          setup: false
 
       - name: Get version
         uses: ./.github/actions/get-version
