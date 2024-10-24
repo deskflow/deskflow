@@ -1,4 +1,5 @@
 # Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -16,39 +17,35 @@
 
 set(server_source_name "deskflows")
 set(target ${SERVER_BINARY_NAME})
-set(sources ${server_source_name}.cpp)
 
 if(WIN32)
-  file(GLOB arch_headers "MSWindows*.h")
-  file(GLOB arch_sources "MSWindows*.cpp")
-  list(
-    APPEND
-    sources
-    resource.h
+  set(PLATFORM_SOURCES
+    ${server_source_name}.exe.manifest
     ${server_source_name}.ico
     ${server_source_name}.rc
+    MSWindowsServerTaskBarReceiver.cpp
+    MSWindowsServerTaskBarReceiver.h
+    resource.h
     tb_error.ico
     tb_idle.ico
     tb_run.ico
     tb_wait.ico
-    ${server_source_name}.exe.manifest
-    ${PROJECT_BINARY_DIR}/src/version.rc)
+    ${PROJECT_BINARY_DIR}/src/version.rc
+  )
 elseif(APPLE)
-  file(GLOB arch_headers "OSX*.h")
-  file(GLOB arch_sources "OSX*.cpp")
+  set(PLATFORM_SOURCES
+    OSXServerTaskBarReceiver.cpp
+    OSXServerTaskBarReceiver.h
+  )
 elseif(UNIX)
-  file(GLOB arch_headers "XWindows*.h")
-  file(GLOB arch_sources "XWindows*.cpp")
+  set(PLATFORM_SOURCES
+    XWindowsServerTaskBarReceiver.cpp
+    XWindowsServerTaskBarReceiver.h
+  )
 endif()
 
-list(APPEND sources ${arch_sources})
-list(APPEND headers ${arch_headers})
+add_executable(${target} ${PLATFORM_SOURCES} "${server_source_name}.cpp")
 
-if(ADD_HEADERS_TO_SOURCES)
-  list(APPEND sources ${headers})
-endif()
-
-add_executable(${target} ${sources})
 target_link_libraries(
   ${target}
   arch
