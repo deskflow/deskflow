@@ -1,4 +1,5 @@
 # Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -15,14 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(target ${CORE_BINARY_NAME})
-set(sources ${target}.cpp)
 
+add_executable(${target} "${target}.cpp")
 if(WIN32)
-  list(APPEND sources ${target}.exe.manifest
-       ${PROJECT_BINARY_DIR}/src/version.rc)
+  target_sources(${target} PRIVATE
+    "${target}.exe.manifest"
+    "${PROJECT_BINARY_DIR}/src/version.rc"
+  )
 endif()
 
-add_executable(${target} ${sources})
 target_link_libraries(
   ${target}
   arch
