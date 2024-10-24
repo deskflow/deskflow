@@ -1,4 +1,5 @@
 # Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # Copyright (C) 2012-2024 Symless Ltd.
 # Copyright (C) 2009-2012 Nick Bolton
 #
@@ -16,14 +17,11 @@
 
 set(target ${LEGACY_BINARY_NAME})
 
-file(GLOB headers "*.h")
-file(GLOB sources "*.cpp")
-
+add_executable(${target} "${target}.cpp")
 if(WIN32)
-  list(APPEND sources ${PROJECT_BINARY_DIR}/src/version.rc)
+  target_sources(${target} PRIVATE "${PROJECT_BINARY_DIR}/src/version.rc")
 endif()
 
-add_executable(${target} ${sources})
 target_link_libraries(
   ${target}
   app
