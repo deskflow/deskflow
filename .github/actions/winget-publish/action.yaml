@@ -1,0 +1,32 @@
+name: Winget Publish
+description: A composite action to publish packages to the Windows Package Manager (Winget) repository
+
+inputs:
+  release-version:
+    description: "Version to publish to Winget package manager (without 'v' prefix)"
+    required: true
+  token:
+    description: "GitHub token with public read permissions on the source repo"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Submit package to Windows Package Manager Community Repository
+      if: ${{ runner.os == 'Windows' }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+      run: |
+        # Download latest wingetcreate
+        Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+        
+        $packageId = "Deskflow.Deskflow"
+        $installerUrl = "https://github.com/deskflow/deskflow/releases/download/v${{ inputs.release-version }}/deskflow-${{ inputs.release-version }}.0_win64.msi"
+        
+        # Submit package update
+        .\wingetcreate.exe update "$packageId" `
+          --version "${{ inputs.release-version }}" `
+          --urls "$installerUrl" `
+          --submit `
+          --token "${{ inputs.token }}"
+      shell: pwsh
