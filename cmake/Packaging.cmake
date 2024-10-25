@@ -132,41 +132,38 @@ macro(configure_linux_package_name)
   string(REPLACE "\"" "" DISTRO_VERSION_ID "${_DISTRO_VERSION_ID}")
   message(STATUS "Distro ID: ${DISTRO_VERSION_ID}")
 
-  # Set Run Attempt portion of package name
-  # GITHUB_RUN_ATTEMPT is set by GITHUB when a job is run
-  # It is equal to the number of times the job was run on the same hash
-  set(PACKAGE_BUILD_ATTEMPT $ENV{GITHUB_RUN_ATTEMPT})
-  if("$ENV{GITHUB_RUN_ATTEMPT}" STREQUAL "")
-    set(PACKAGE_BUILD_ATTEMPT 1)
-  endif()
-
-  # Check if Debian-like
+  # Check if Debian-link
   string(REGEX MATCH debian|buntu DEBTYPE "${DISTRO_LIKE}")
   if((NOT ("${DEBTYPE}" STREQUAL "")) OR ("${DISTRO_NAME}" STREQUAL "debian"))
-    if("${CPACK_DEBIAN_PACKAGE_RELEASE}" STREQUAL "")
-      set(CPACK_DEBIAN_PACKAGE_RELEASE
-          "${PACKAGE_BUILD_ATTEMPT}~${DISTRO_CODENAME}")
-    endif()
     set(CPACK_GENERATOR "DEB")
-    message(STATUS "DEB Revision: ${CPACK_DEBIAN_PACKAGE_RELEASE}")
   endif()
 
-  check_is_rpm()
-
-  if("${DISTRO_NAME}" STREQUAL "arch")
-      set(DISTRO_VERSION_ID "")
-      # Arch linux is rolling the version id reported is the date of last iso.
+  # Check if Rpm-like
+  string(REGEX MATCH suse|fedora|rhel RPMTYPE "${DISTRO_LIKE}")
+  string(REGEX MATCH fedora|suse|rhel RPMNAME "${DISTRO_NAME}")
+  if((NOT ("${RPMTYPE}" STREQUAL "")) OR (NOT ("${RPMNAME}" STREQUAL "")))
+      set(CPACK_GENERATOR "RPM")
   endif()
 
-  # Determain the code name to be used
+  # Disto specific name adjustments
+  if("${DISTRO_NAME}" STREQUAL "opensuse-tumbleweed")
+    set(DISTRO_NAME "opensuse")
+    set(DISTRO_CODENAME "tumbleweed")
+  elseif("${DISTRO_NAME}" STREQUAL "arch")
+    # Arch linux is rolling the version id reported is the date of last iso.
+    set(DISTRO_VERSION_ID "")
+  endif()
+
+  # Determain the code name to be used if any
   if(NOT "${DISTRO_VERSION_ID}" STREQUAL "")
-    set(CN_STRING "${DISTRO_VERSION_ID}-")
+    set(CN_STRING "${DISTRO_VERSION_ID}_")
   endif()
 
   if(NOT "${DISTRO_CODENAME}" STREQUAL "")
-    set(CN_STRING "${DISTRO_CODENAME}-")
+    set(CN_STRING "${DISTRO_CODENAME}_")
   endif()
-  set(OS_STRING "${DISTRO_NAME}-${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
+
+  set(OS_STRING "${DISTRO_NAME}_${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
 
 endmacro()
 
@@ -176,12 +173,10 @@ macro(configure_linux_packaging)
   # This is used in package names
   configure_linux_package_name()
 
-  set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
   set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${DESKFLOW_MAINTAINER})
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-  set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
   set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
   set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
 
@@ -256,37 +251,6 @@ endmacro(configure_files)
 
 macro(check_is_rpm)
   # Check if RPM-like.
-  string(REGEX MATCH suse|fedora|rhel RPMTYPE "${DISTRO_LIKE}")
-  string(REGEX MATCH fedora|suse|rhel RPMNAME "${DISTRO_NAME}")
-  if((NOT ("${RPMTYPE}" STREQUAL "")) OR (NOT ("${RPMNAME}" STREQUAL "")))
 
-    if("${DISTRO_NAME}" STREQUAL "opensuse-tumbleweed")
-      set(DISTRO_NAME "opensuse")
-      set(DISTRO_CODENAME "tumbleweed")
-    elseif(${DISTRO_NAME} STREQUAL "fedora")
-      set(RPM_CN "fc${DISTRO_VERSION_ID}")
-    elseif(("${DISTRO_NAME}" STREQUAL "almalinux") OR ("${DISTRO_NAME}" STREQUAL "rocky"))
-      string(REGEX MATCH [0-9]+ V "${DISTRO_VERSION_ID}")
-      set(RPM_CN "${DISTRO_NAME}${V}")
-    endif()
-
-    # Determine if we hsould use
-    if ("${RPM_CN}" STREQUAL "")
-      if(NOT "${DISTRO_VERSION_ID}" STREQUAL "")
-        set(RPM_CN "${DISTRO_VERSION_ID}")
-      endif()
-      if(NOT "${DISTRO_CODENAME}" STREQUAL "")
-        set(RPM_CN "${DISTRO_CODENAME}")
-      endif()
-    endif()
-
-    if("${CPACK_RPM_PACKAGE_RELEASE}" STREQUAL "")
-      set(CPACK_RPM_PACKAGE_RELEASE "${PACKAGE_BUILD_ATTEMPT}~${RPM_CN}")
-    endif()
-
-    set(CPACK_GENERATOR "RPM")
-    message(STATUS "RPM Revision: ${CPACK_RPM_PACKAGE_RELEASE}")
-
-  endif()
 endmacro()
 
