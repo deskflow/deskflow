@@ -327,3 +327,20 @@ jobs:
           prerelease: false
           files: |
             package-*/*
+            
+  winget-publish:
+    needs: release
+    if: contains(github.ref, 'tags/v')
+    runs-on: windows-latest
+    steps:
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      - name: Submit
+        uses: ./.github/actions/winget-publish
+        with:
+          release-version: ${{env.DESKFLOW_VERSION}}
+          token: ${{ secrets.WINGET_DEPLOY_TOKEN }}
