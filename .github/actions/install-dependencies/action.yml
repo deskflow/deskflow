@@ -9,8 +9,20 @@ inputs:
     description: "Used only on linux distro type: debian, fedora, suse, arch"
     required: false
 
-  mac-qt-version:
-    description: "The verison of Qt to install on mac os"
+  qt-version:
+    description: "version of Qt to install when the Install Qt step is run"
+    required: false
+
+  qt-dir:
+    description: "directory where the Install Qt step will install qt"
+    required: false
+
+  ei-version:
+    description: "Version of libei required for appimage"
+    required: false
+
+  portal-version:
+    description: "Version of libportal required for appimage"
     required: false
 
 outputs:
@@ -23,6 +35,8 @@ runs:
 
   steps:
     - name: Install Depends
+      env:
+        DEBIAN_FRONTEND: noninteractive
       run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
             echo "Window not supported yet"
@@ -58,6 +72,16 @@ runs:
                 gcc openssl glib2 gdk-pixbuf2 libxtst libnotify \
                 libxkbfile gtest pugixml libei libportal \
                 qt6-base qt6-tools gtk3 tomlplusplus cli11
+            elif [ ${{ inputs.like }} == "appimage" ]; then
+              apt update -qqq > /dev/null
+              apt install -qqq cmake build-essential ninja-build \
+                xorg-dev libx11-dev libxtst-dev libssl-dev sudo \
+                libglib2.0-dev libgdk-pixbuf-2.0-dev libnotify-dev \
+                libxkbfile-dev libgtk-3-dev libgtest-dev libgmock-dev libpugixml-dev \
+                libgirepository1.0-dev libprotobuf-c-dev \
+                libsystemd-dev protobuf-c-compiler protobuf-compiler python3-attr \
+                python3-dbusmock python3-pip python3-pytest python3-jinja2 \
+                valac libxkbcommon-x11-0 libxcb-cursor0 meson libevdev-dev
             else
               echo "Unknown like"
             fi
@@ -67,13 +91,13 @@ runs:
       shell: bash
 
     - name: Install Qt
-      if: ${{runner.os == 'macOS' }}
+      if: ${{inputs.qt-dir}}
       uses: jurplel/install-qt-action@v4
       with:
-        dir: "/Users/runner"
-        version: ${{inputs.mac-qt-version}}
+        dir: ${{inputs.qt-dir}}
+        version: ${{inputs.qt-version}}
         cache: true
-        cache-key-prefix: ${{matrix.target.os}}-${{env.qt-version}}
+        cache-key-prefix: ${{runner.os}}-${{inputs.qt-version}}
 
     # Install Ninja with an action instead of using Chocolatey, as it's more
     # reliable and faster. The Ninja install action is pretty good as it
@@ -98,3 +122,39 @@ runs:
         dotnet tool install --global wix --version 4.0.4
         wix extension add --global WixToolset.UI.wixext/4.0.4
       shell: pwsh
+
+    - name: Cache libei
+      id: cache-libei
+      if: ${{ inputs.like == 'appimage' }}
+      uses: actions/cache@v4
+      with:
+        path: /opt/libei
+        key: appimage-libei-${{inputs.ei-version}}
+
+    - name: Build libei
+      if: ( ${{ inputs.like == 'appimage' }} && (steps.cache-libei.outputs.cache-hit != 'true'))
+      run: |
+        if [ ${{inputs.like }} == "appimage" ]; then
+          git clone --depth=1 --branch=${{inputs.ei-version}} --recurse-submodules https://gitlab.freedesktop.org/libinput/libei libei
+          meson setup -Dprefix=/opt/libei -Dtests=disabled -Dliboeffis=disabled -Ddocumentation=[] libei _libei_builddir
+          ninja -C _libei_builddir install
+        fi
+      shell: bash
+
+    - name: Cache libportal
+      id: cache-libportal
+      if: ${{inputs.like}} == 'appimage'
+      uses: actions/cache@v4
+      with:
+        path: /opt/libportal
+        key: appimage-libportal-${{inputs.portal-version}}
+
+    - name: Build libportal
+      if: ( ${{inputs.like == 'appimage' }} && (steps.cache-libportal.outputs.cache-hit != 'true'))
+      run: |
+        if [ ${{inputs.like }} == "appimage" ]; then
+          git clone --depth=1 --branch=${{inputs.portal-version}} https://github.com/flatpak/libportal libportal
+          meson setup --prefix=/usr -Dbackend-gtk3=enabled -Ddocs=false libportal _libportal_builddir
+          ninja -C _libportal_builddir install
+        fi
+      shell: bash

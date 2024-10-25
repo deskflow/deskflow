@@ -127,11 +127,13 @@ jobs:
             runs-on: "macos-14"
             timeout: 10
             arch: arm64
+            qt-dir: "/Users/runner"
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
 
           - name: "macos-13-x64"
             runs-on: macos-13
             timeout: 20
+            qt-dir: "/Users/runner"
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
 
           - name: "debian-13-amd64"
@@ -169,6 +171,14 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
+          - name: "appimage-amd64"
+            runs-on: ubuntu-latest
+            container: debian:12
+            like: "appimage"
+            timeout: 60
+            qt-dir: "/opt"
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
     steps:
       # Make sure the container has git before we do anything else
       - name: Install Git on Container
@@ -177,6 +187,8 @@ jobs:
         run : |
            if [ "${{matrix.target.like}}" == "debian" ]; then
              apt update -qqq > /dev/null && apt install -qqq git devscripts > /dev/null
+           elif [ "${{matrix.target.like}}" == "appimage" ]; then
+             apt update -qqq > /dev/null && apt install -qqq git > /dev/null
            elif [ "${{matrix.target.like}}" == "fedora" ]; then
              dnf install -y git
            elif [ "${{matrix.target.like}}" == "suse" ]; then
@@ -202,7 +214,10 @@ jobs:
         id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
-          mac-qt-version: 6.7.2
+          qt-dir: ${{ matrix.target.qt-dir }}
+          qt-version: 6.7.2
+          ei-version: 1.3.0
+          portal-version: 0.8.1
           like: ${{ matrix.target.like }}
 
       - name: Setup Python
@@ -215,7 +230,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          if [[ "$RUNNER_OS" == "Linux" && "${{matrix.target.like}}" != "arch" ]]; then
+          if [[ "$RUNNER_OS" == "Linux" && "${{matrix.target.like}}" != "arch" && "${{matrix.target.like}}" != "appimage" ]]; then
             cmake --build build -j8 --target package
           else
             cmake --build build -j8
@@ -239,8 +254,25 @@ jobs:
           job: ${{ matrix.target.name }}
 
       - name: Get version
-        if: ${{ runner.os != 'Linux' }}
+        if: (${{ runner.os != 'Linux' }} || ${{ matrix.target.like == 'appimage' }})
         uses: ./.github/actions/get-version
+
+      - name: Create Appimage
+        if: ${{ matrix.target.like == 'appimage' }}
+        run: |
+          DESTDIR=appdir cmake --build build --target install -j8
+          wget -qc "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+          wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+          chmod a+x linuxdeploy*.AppImage
+          export VERSION="${{env.DESKFLOW_VERSION}}"
+          export PATH=$PATH:/opt/Qt/6.7.2/gcc_64/libexec
+          cp /opt/Qt/${{ env.QtVersion }}/gcc_64/plugins/iconengines/libqsvgicon.so ./appdir/usr/plugins/iconengines/libqsvgicon.so
+          ./linuxdeploy-x86_64.AppImage --appdir=appdir  --output appimage \
+            -e appdir/usr/bin/deskflow \
+            -d appdir/usr/share/deskflow.desktop \
+            -i appdir/usr/share/blackchocobo.png \
+            --plugin=qt
+          cp deskflow*.AppImage build/
 
       - name: Package
         if: ${{ runner.os != 'Linux' }}
