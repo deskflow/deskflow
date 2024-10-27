@@ -18,7 +18,7 @@ runs:
     - name: Add repo
       run: |
           apt update -y -qqq
-          apt install ca-certificates gpg wget -y -qqq
+          apt install ca-certificates gpg wget -y -qqq > /dev/null
 
           wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
             | gpg --dearmor - \
