@@ -54,10 +54,6 @@ endmacro()
 
 macro(configure_meta)
 
-  set(DESKFLOW_DEPLOY_RES_DIR
-      "${PROJECT_SOURCE_DIR}/deploy"
-      CACHE STRING "Deploy resource directory for images, etc")
-
   set(DESKFLOW_MAC_BUNDLE_CODE
       "DFLW"
       CACHE STRING "Mac bundle code (4 characters)")
@@ -66,11 +62,10 @@ macro(configure_meta)
       true
       CACHE BOOL "Show developer thanks message")
 
-  message(VERBOSE "Res dir: ${DESKFLOW_DEPLOY_RES_DIR}")
+  # TODO: We need to move this to configure_file() in the future, which is much cleaner.
   message(VERBOSE "Mac bundle code: ${DESKFLOW_MAC_BUNDLE_CODE}")
   message(VERBOSE "Show dev thanks: ${DESKFLOW_SHOW_DEV_THANKS}")
 
-  # TODO: We need to move this to configure_file() in the future, which is much cleaner.
   if(DESKFLOW_SHOW_DEV_THANKS)
     message(VERBOSE "Showing developer thanks message")
     add_definitions(-DDESKFLOW_SHOW_DEV_THANKS)
