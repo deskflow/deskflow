@@ -255,7 +255,8 @@ void AppUtilWindows::showNotification(const String &title, const String &text) c
     WinToastLib::WinToast::instance()->setAppName(L""
                                                   "Deskflow");
     const auto aumi = WinToastLib::WinToast::configureAUMI(
-        L"" DESKFLOW_AUTHOR_NAME,
+        L""
+        "Deskflow",
         L""
         "Deskflow",
         L""
