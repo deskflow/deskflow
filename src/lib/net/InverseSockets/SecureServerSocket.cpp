@@ -74,8 +74,7 @@ std::string SecureServerSocket::getCertificateFileName() const
   if (certificateFilename.empty()) {
     // TODO: Reduce duplication of these strings between here and
     // SecureSocket.cpp
-    certificateFilename =
-        deskflow::string::sprintf("%s/tls/" DESKFLOW_APP_ID ".pem", ARCH->getProfileDirectory().c_str());
+    certificateFilename = deskflow::string::sprintf("%s/tls/deskflow.pem", ARCH->getProfileDirectory().c_str());
   }
 
   return certificateFilename;

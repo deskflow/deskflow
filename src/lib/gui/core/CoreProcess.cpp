@@ -39,7 +39,7 @@
 namespace deskflow::gui {
 
 const int kRetryDelay = 1000;
-const auto kServerConfigFilename = DESKFLOW_APP_ID "-server.conf";
+const auto kServerConfigFilename = QStringLiteral("deskflow-server.conf");
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 //

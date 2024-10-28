@@ -1441,7 +1441,7 @@ bool MSWindowsScreen::onClipboardChange()
       sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
     }
   } else if (!m_ownClipboard) {
-    LOG((CLOG_DEBUG "clipboard changed: " DESKFLOW_APP_ID " owned"));
+    LOG((CLOG_DEBUG "clipboard changed: deskflow owned"));
     m_ownClipboard = true;
   }
 

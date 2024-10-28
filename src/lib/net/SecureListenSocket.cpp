@@ -27,7 +27,7 @@
 
 // TODO: Reduce duplication of these strings between here and SecureSocket.cpp
 static const char s_certificateDir[] = {"tls"};
-static const char s_certificateFilename[] = {DESKFLOW_APP_ID ".pem"};
+static const char s_certificateFilename[] = {"deskflow.pem"};
 
 //
 // SecureListenSocket

@@ -501,7 +501,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../../../../res/gui/app.qrc">:/icons/64x64/padlock.png</pixmap>
+         <pixmap resource="../../../../res/gui/deskflow.qrc">:/icons/64x64/padlock.png</pixmap>
         </property>
         <property name="minimumSize">
          <size>

@@ -24,7 +24,7 @@
 
 #include "gui/config/Screen.h"
 
-const QString ScreenSetupModel::m_MimeType = "application/x-" DESKFLOW_APP_ID "-screen";
+const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
 
 ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numRows)
     : QAbstractTableModel(NULL),

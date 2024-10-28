@@ -6,11 +6,11 @@
     <key>CFBundleDisplayName</key>
     <string>@DESKFLOW_APP_NAME@</string>
     <key>CFBundleExecutable</key>
-    <string>@DESKFLOW_APP_ID@</string>
+    <string>deskflow</string>
     <key>CFBundleIconFile</key>
     <string>@DESKFLOW_APP_NAME@.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>@DESKFLOW_APP_ID@</string>
+    <string>org.deskflow.deskflow</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>

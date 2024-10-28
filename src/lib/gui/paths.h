@@ -24,7 +24,7 @@
 #include <QString>
 
 // TODO: Reduce duplication of these strings between here and SecureSocket.cpp
-const auto kCertificateFilename = QString("%1.pem").arg(DESKFLOW_APP_ID);
+const auto kCertificateFilename = QStringLiteral("deskflow.pem");
 const auto kSslDir = "tls";
 
 namespace deskflow::gui::paths {

@@ -38,12 +38,10 @@ static const char *const kLogLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"
 const char AppConfig::m_CoreServerName[] = SERVER_BINARY_NAME ".exe";
 const char AppConfig::m_CoreClientName[] = CLIENT_BINARY_NAME ".exe";
 const char AppConfig::m_LogDir[] = "log/";
-const char AppConfig::m_ConfigFilename[] = DESKFLOW_APP_ID ".sgc";
 #else
 const char AppConfig::m_CoreServerName[] = SERVER_BINARY_NAME;
 const char AppConfig::m_CoreClientName[] = CLIENT_BINARY_NAME;
 const char AppConfig::m_LogDir[] = "/var/log/";
-const char AppConfig::m_ConfigFilename[] = DESKFLOW_APP_ID ".conf";
 #endif
 
 // TODO: instead, use key value pair table, which would be less fragile.

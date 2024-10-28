@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-    <?define AppId="@DESKFLOW_APP_ID@"?>
+    <?define AppId="deskflow"?>
     <?define Name="@DESKFLOW_APP_NAME@"?>
     <?define Version="@DESKFLOW_VERSION@"?>
     <?define Author="@DESKFLOW_AUTHOR_NAME@"?>
     <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
-    <?define ProjectIcon="@CMAKE_SOURCE_DIR@/src/gui/src/app.ico"?>
+    <?define ProjectIcon="@CMAKE_SOURCE_DIR@/src/gui/src/deskflow.ico"?>
     <?define DeployResDir="@DESKFLOW_DEPLOY_RES_DIR@"?>
     <?define QtDir="@QT_PATH@"?>
     <?define QtBinDir="$(var.QtDir)\bin"?>
