@@ -18,7 +18,7 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
-    <string>@DESKFLOW_MAC_BUNDLE_CODE@</string>
+    <string>DFLW</string>
     <key>CFBundleShortVersionString</key>
     <string>@DESKFLOW_VERSION@</string>
     <key>CFBundleVersion</key>
