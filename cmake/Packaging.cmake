@@ -14,7 +14,7 @@ macro(configure_packaging)
 
   if(${BUILD_INSTALLER})
     set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
-    set(CPACK_PACKAGE_CONTACT ${DESKFLOW_MAINTAINER})
+    set(CPACK_PACKAGE_CONTACT "Deskflow <maintainers@deskflow.org>")
     set(CPACK_PACKAGE_DESCRIPTION ${CMAKE_PROJECT_DESCRIPTION})
     set(CPACK_PACKAGE_VENDOR "Deskflow")
     set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
@@ -173,7 +173,6 @@ macro(configure_linux_packaging)
   # This is used in package names
   configure_linux_package_name()
 
-  set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${DESKFLOW_MAINTAINER})
   set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 

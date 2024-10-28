@@ -54,10 +54,6 @@ endmacro()
 
 macro(configure_meta)
 
-  set(DESKFLOW_MAINTAINER
-      "Deskflow <maintainers@deskflow.org>"
-      CACHE STRING "Maintainer email address in RFC 5322 mailbox format")
-
   set(DESKFLOW_WEBSITE_URL
       "https://deskflow.org"
       CACHE STRING "URL of the app website")
@@ -82,7 +78,6 @@ macro(configure_meta)
       true
       CACHE BOOL "Show developer thanks message")
 
-  message(VERBOSE "Maintainer: ${DESKFLOW_MAINTAINER}")
   message(VERBOSE "Website URL: ${DESKFLOW_WEBSITE_URL}")
   message(VERBOSE "Version URL: ${DESKFLOW_VERSION_URL}")
   message(VERBOSE "Help text: ${DESKFLOW_HELP_TEXT}")
@@ -91,7 +86,6 @@ macro(configure_meta)
   message(VERBOSE "Show dev thanks: ${DESKFLOW_SHOW_DEV_THANKS}")
 
   # TODO: We need to move this to configure_file() in the future, which is much cleaner.
-  add_definitions(-DDESKFLOW_MAINTAINER="${DESKFLOW_MAINTAINER}")
   add_definitions(-DDESKFLOW_WEBSITE_URL="${DESKFLOW_WEBSITE_URL}")
   add_definitions(-DDESKFLOW_VERSION_URL="${DESKFLOW_VERSION_URL}")
   add_definitions(-DDESKFLOW_HELP_TEXT="${DESKFLOW_HELP_TEXT}")
