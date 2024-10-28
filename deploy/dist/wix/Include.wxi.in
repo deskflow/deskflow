@@ -6,7 +6,7 @@
     <?define Author="Deskflow"?>
     <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
     <?define ProjectIcon="@CMAKE_SOURCE_DIR@/src/gui/src/deskflow.ico"?>
-    <?define DeployResDir="@DESKFLOW_DEPLOY_RES_DIR@"?>
+    <?define DeployResDir="@CMAKE_SOURCE_DIR@/deploy"?>
     <?define QtDir="@QT_PATH@"?>
     <?define QtBinDir="$(var.QtDir)\bin"?>
     <?if $(var.Platform) = "x64"?>
