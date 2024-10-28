@@ -24,7 +24,7 @@ namespace deskflow::gui {
 // important: this is used for settings paths on some platforms,
 // and must not be a url. qt automatically converts this to reverse domain
 // notation (rdn), e.g. org.deskflow
-const auto kOrgDomain = DESKFLOW_DOMAIN;
+const auto kOrgDomain = QStringLiteral("deskflow.org");
 
 const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 

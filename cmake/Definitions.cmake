@@ -54,10 +54,6 @@ endmacro()
 
 macro(configure_meta)
 
-  set(DESKFLOW_DOMAIN
-      "deskflow.org"
-      CACHE STRING "Domain of the app maintainer (not a URL)")
-
   set(DESKFLOW_APP_NAME
       "Deskflow"
       CACHE STRING "App name (used in GUI title bar, etc)")
@@ -94,7 +90,6 @@ macro(configure_meta)
       true
       CACHE BOOL "Show developer thanks message")
 
-  message(VERBOSE "App domain: ${DESKFLOW_DOMAIN}")
   message(VERBOSE "App name: ${DESKFLOW_APP_NAME}")
   message(VERBOSE "Author name: ${DESKFLOW_AUTHOR_NAME}")
   message(VERBOSE "Maintainer: ${DESKFLOW_MAINTAINER}")
@@ -106,7 +101,6 @@ macro(configure_meta)
   message(VERBOSE "Show dev thanks: ${DESKFLOW_SHOW_DEV_THANKS}")
 
   # TODO: We need to move this to configure_file() in the future, which is much cleaner.
-  add_definitions(-DDESKFLOW_DOMAIN="${DESKFLOW_DOMAIN}")
   add_definitions(-DDESKFLOW_APP_NAME="${DESKFLOW_APP_NAME}")
   add_definitions(-DDESKFLOW_AUTHOR_NAME="${DESKFLOW_AUTHOR_NAME}")
   add_definitions(-DDESKFLOW_MAINTAINER="${DESKFLOW_MAINTAINER}")
