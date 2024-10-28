@@ -18,6 +18,7 @@
 #include "SecureServerSocket.h"
 
 #include <arch/XArch.h>
+#include <common/constants.h>
 #include <deskflow/ArgParser.h>
 #include <deskflow/ArgsBase.h>
 #include <net/SecureSocket.h>
@@ -74,8 +75,7 @@ std::string SecureServerSocket::getCertificateFileName() const
   if (certificateFilename.empty()) {
     // TODO: Reduce duplication of these strings between here and
     // SecureSocket.cpp
-    certificateFilename =
-        deskflow::string::sprintf("%s/tls/" DESKFLOW_APP_ID ".pem", ARCH->getProfileDirectory().c_str());
+    certificateFilename = deskflow::string::sprintf("%s/tls/%s.pem", ARCH->getProfileDirectory().c_str(), kAppId);
   }
 
   return certificateFilename;

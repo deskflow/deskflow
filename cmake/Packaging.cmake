@@ -13,7 +13,7 @@ macro(configure_packaging)
   set(DESKFLOW_PROJECT_RES_DIR ${PROJECT_SOURCE_DIR}/res)
 
   if(${BUILD_INSTALLER})
-    set(CPACK_PACKAGE_NAME ${DESKFLOW_APP_ID})
+    set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
     set(CPACK_PACKAGE_CONTACT ${DESKFLOW_MAINTAINER})
     set(CPACK_PACKAGE_DESCRIPTION ${CMAKE_PROJECT_DESCRIPTION})
     set(CPACK_PACKAGE_VENDOR ${DESKFLOW_AUTHOR_NAME})
@@ -91,9 +91,6 @@ macro(configure_mac_packaging)
   configure_files(${DESKFLOW_BUNDLE_SOURCE_DIR} ${DESKFLOW_BUNDLE_DIR})
 
   set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
-
-  file(RENAME ${DESKFLOW_BUNDLE_DIR}/Contents/Resources/App.icns
-       ${DESKFLOW_BUNDLE_DIR}/Contents/Resources/${DESKFLOW_APP_NAME}.icns)
 
 endmacro()
 

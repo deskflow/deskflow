@@ -18,6 +18,7 @@
 #include <array>
 #include <functional>
 
+#include "common/constants.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
@@ -237,7 +238,7 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help)
   deskflow::ClientArgs args;
   args.m_daemon = false;
   char const *argv[] = {
-      "deskflow",
+      kAppId,
       "--help"
 #if WINAPI_MSWINDOWS
       ,

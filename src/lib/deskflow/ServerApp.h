@@ -149,9 +149,9 @@ private:
 
 // configuration file name
 #if SYSAPI_WIN32
-#define USER_CONFIG_NAME DESKFLOW_APP_ID ".sgc"
-#define SYSTEM_CONFIG_NAME DESKFLOW_APP_ID ".sgc"
+#define USER_CONFIG_NAME "deskflow.sgc"
+#define SYSTEM_CONFIG_NAME "deskflow.sgc"
 #elif SYSAPI_UNIX
-#define USER_CONFIG_NAME "." DESKFLOW_APP_ID ".conf"
-#define SYSTEM_CONFIG_NAME DESKFLOW_APP_ID ".conf"
+#define USER_CONFIG_NAME ".deskflow.conf"
+#define SYSTEM_CONFIG_NAME "deskflow.conf"
 #endif
