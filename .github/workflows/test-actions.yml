@@ -39,3 +39,17 @@ jobs:
         with:
           download-pattern: test-result-${{ matrix.message.name }}
           upload-name: summary-${{ matrix.message.name }}
+
+  
+  winget-publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
+
+      - name: Submit
+        uses: ./.github/actions/winget-publish
+        with:
+          release-version: "1.17.0"
+          token: ${{ secrets.WINGET_DEPLOY_TOKEN }}
