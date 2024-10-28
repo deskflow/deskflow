@@ -68,7 +68,7 @@ body:
       label: Wayland on Linux
       description: If using Wayland on Linux, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499) before reporting.
       options:
-        - label: I have reviewed the Wayland known issues and my issue is new
+        - label: I have reviewed the Wayland [known issues](https://github.com/deskflow/deskflow/discussions/7499) and my issue is new
         - label: I am not using Wayland on Linux
 
   - type: checkboxes
