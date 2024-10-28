@@ -29,7 +29,7 @@ const auto kOrgDomain = QStringLiteral("deskflow.org");
 const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
 
 const auto kUrlSourceQuery = "source=gui";
-const auto kUrlApp = DESKFLOW_WEBSITE_URL;
+const auto kUrlApp = QStringLiteral("https://deskflow.org");
 const auto kUrlHelp = QString("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
 const auto kUrlDownload = QString("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
 
