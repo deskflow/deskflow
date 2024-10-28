@@ -19,6 +19,10 @@ TLS encryption is enabled by default. Wayland is supported. Clipboard sharing is
 
 To use Deskflow you can use one of our [packages](https://github.com/deskflow/deskflow/releases), install `deskflow` (if available in your package repository), or [build it](#build-quick-start) yourself from source.
 
+> [!TIP]
+> macOS users may need to run `xattr -c /Applications/Deskflow.app` after copying the app to the `Applications` dir.
+> You will also have to allow accessibility access to both the `Deskflow` app and the `deskflow` process.
+
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow?logo=github)](https://github.com/deskflow/deskflow/commits/master/)
 [![GitHub top language](https://img.shields.io/github/languages/top/deskflow/deskflow?logo=github)](https://github.com/deskflow/deskflow/commits/master/)
 [![GitHub License](https://img.shields.io/github/license/deskflow/deskflow?logo=github)](LICENSE)
