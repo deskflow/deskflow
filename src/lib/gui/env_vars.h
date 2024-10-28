@@ -23,10 +23,7 @@ namespace deskflow::gui::env_vars {
 
 inline QString versionUrl()
 {
-  if (QString(DESKFLOW_VERSION_URL).isEmpty()) {
-    qFatal("version url is not set");
-  }
-  return qEnvironmentVariable("DESKFLOW_VERSION_URL", DESKFLOW_VERSION_URL);
+  return qEnvironmentVariable("DESKFLOW_VERSION_URL", QStringLiteral("https://api.deskflow.org/version"));
 }
 
 } // namespace deskflow::gui::env_vars
