@@ -3,7 +3,7 @@
     <?define AppId="deskflow"?>
     <?define Name="Deskflow"?>
     <?define Version="@DESKFLOW_VERSION@"?>
-    <?define Author="@DESKFLOW_AUTHOR_NAME@"?>
+    <?define Author="Deskflow"?>
     <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
     <?define ProjectIcon="@CMAKE_SOURCE_DIR@/src/gui/src/deskflow.ico"?>
     <?define DeployResDir="@DESKFLOW_DEPLOY_RES_DIR@"?>
