@@ -23,7 +23,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(
   GLOB
   sources
-  res/app.qrc
+  res/deskflow.qrc
   src/*.cpp
   src/*.h
   src/dialogs/*.h
@@ -33,7 +33,7 @@ file(
 file(GLOB ui_files src/*.ui src/dialogs/*.ui)
 
 if(WIN32)
-  set(rc_files ${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc ${PROJECT_BINARY_DIR}/src/version.rc)
+  set(rc_files src/deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
 endif()
 
 # regular exe headers

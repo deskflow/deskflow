@@ -24,6 +24,7 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/TMethodEventJob.h"
+#include "common/constants.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/XScreen.h"
@@ -129,7 +130,8 @@ void EiScreen::init_ei()
   ei_set_user_data(ei_, this);
   ei_log_set_priority(ei_, EI_LOG_PRIORITY_DEBUG);
   ei_log_set_handler(ei_, cb_handle_ei_log_event);
-  ei_configure_name(ei_, DESKFLOW_APP_ID " client");
+  std::string configName = kAppId;
+  ei_configure_name(ei_, configName.append(" client").c_str());
 
   // install the platform event queue
   events_->adoptBuffer(nullptr);

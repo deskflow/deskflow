@@ -351,8 +351,6 @@ macro(configure_qt)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
-  set(GUI_QRC_FILE ${PROJECT_SOURCE_DIR}/src/gui/res/app.qrc)
-
 endmacro()
 
 macro(configure_openssl)

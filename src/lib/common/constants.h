@@ -23,6 +23,7 @@
 #endif
 
 const auto kAppName = DESKFLOW_APP_NAME;
+const auto kAppId = "deskflow";
 const auto kAppDescription = "Mouse and keyboard sharing utility";
 const auto kVersion = DESKFLOW_VERSION;
 

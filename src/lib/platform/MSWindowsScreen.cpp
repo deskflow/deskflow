@@ -26,6 +26,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
+#include "common/constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientApp.h"
@@ -1441,7 +1442,7 @@ bool MSWindowsScreen::onClipboardChange()
       sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
     }
   } else if (!m_ownClipboard) {
-    LOG((CLOG_DEBUG "clipboard changed: " DESKFLOW_APP_ID " owned"));
+    LOG((CLOG_DEBUG "clipboard changed: %s owned", kAppId));
     m_ownClipboard = true;
   }
 

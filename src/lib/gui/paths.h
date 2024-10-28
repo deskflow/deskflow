@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "common/constants.h"
 #include "core/CoreTool.h"
 
 #include <QDir>
@@ -24,7 +25,7 @@
 #include <QString>
 
 // TODO: Reduce duplication of these strings between here and SecureSocket.cpp
-const auto kCertificateFilename = QString("%1.pem").arg(DESKFLOW_APP_ID);
+const auto kCertificateFilename = QStringLiteral("%1.pem").arg(kAppId);
 const auto kSslDir = "tls";
 
 namespace deskflow::gui::paths {

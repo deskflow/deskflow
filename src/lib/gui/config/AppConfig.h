@@ -21,6 +21,7 @@
 #include "ElevateMode.h"
 #include "IAppConfig.h"
 #include "IConfigScopes.h"
+#include "common/constants.h"
 #include "gui/paths.h"
 
 #include <QDir>
@@ -35,7 +36,7 @@
 namespace deskflow::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
-const QString kDefaultLogFile = QString("%1.log").arg(DESKFLOW_APP_ID);
+const QString kDefaultLogFile = QStringLiteral("%1.log").arg(kAppId);
 const int kDefaultTlsKeyLength = 2048;
 
 #ifdef DESKFLOW_SHOW_DEV_THANKS
@@ -295,8 +296,12 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  /// @brief Core config filename (not the Qt settings filename)
-  static const char m_ConfigFilename[];
+  /// @brief Core config file extention (not the Qt settings filename)
+#ifdef Q_OS_WIN
+  inline static const auto s_ConfigFileExt = QStringLiteral("sgc");
+#else
+  inline static const auto s_ConfigFileExt = QStringLiteral("conf");
+#endif
 
   int m_Port = 24800;
   QString m_Interface = "";
@@ -315,7 +320,7 @@ private:
   bool m_InvertConnection = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
-  QString m_ConfigFile = QDir::homePath() + "/" + m_ConfigFilename;
+  QString m_ConfigFile = QStringLiteral("%1/%2.%3").arg(QDir::homePath(), kAppId, s_ConfigFileExt);
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";

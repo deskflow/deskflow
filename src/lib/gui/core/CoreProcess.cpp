@@ -17,6 +17,7 @@
 
 #include "CoreProcess.h"
 
+#include "common/constants.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
 #include "gui/paths.h"
@@ -39,7 +40,7 @@
 namespace deskflow::gui {
 
 const int kRetryDelay = 1000;
-const auto kServerConfigFilename = DESKFLOW_APP_ID "-server.conf";
+const auto kServerConfigFilename = QStringLiteral("%1-server.conf").arg(kAppId);
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 //

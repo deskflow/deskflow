@@ -19,6 +19,7 @@
 
 #include "SecureSocket.h"
 #include "arch/XArch.h"
+#include "common/constants.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ArgsBase.h"
 #include "net/NetworkAddress.h"
@@ -27,7 +28,7 @@
 
 // TODO: Reduce duplication of these strings between here and SecureSocket.cpp
 static const char s_certificateDir[] = {"tls"};
-static const char s_certificateFilename[] = {DESKFLOW_APP_ID ".pem"};
+static const char s_certificateFileExt[] = {"pem"};
 
 //
 // SecureListenSocket
@@ -53,7 +54,7 @@ IDataSocket *SecureListenSocket::accept()
 
     // default location of the TLS cert file in users dir
     String certificateFilename = deskflow::string::sprintf(
-        "%s/%s/%s", ARCH->getProfileDirectory().c_str(), s_certificateDir, s_certificateFilename
+        "%s/%s/%s.%s", ARCH->getProfileDirectory().c_str(), s_certificateDir, kAppId, s_certificateFileExt
     );
 
     // if the tls cert option is set use that for the certificate file
