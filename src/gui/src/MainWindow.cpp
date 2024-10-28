@@ -142,7 +142,7 @@ void MainWindow::setupControls()
 {
   setWindowTitle(kAppName);
 
-  ui->m_pActionHelp->setText(DESKFLOW_HELP_TEXT);
+  ui->m_pActionHelp->setText(tr("Report a Bug"));
 
   secureSocket(false);
   updateLocalFingerprint();
