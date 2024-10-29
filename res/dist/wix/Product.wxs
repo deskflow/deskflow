@@ -88,7 +88,6 @@
 				<File Source="$(var.BinDir)/$(var.ClientBin)">
 					<fire:FirewallException Id="ClientFirewallException" IgnoreFailure="yes" Name="$(var.Name) Client" Scope="any"/>
 				</File>
-				<File Source="$(var.BinDir)/$(var.LegacyBin)" />
 				<?if $(var.Platform) = x64 ?>
 					<File Source="$(var.OpenSslDllDir)/libssl-3-x64.dll"/>
 					<File Source="$(var.OpenSslDllDir)/libcrypto-3-x64.dll"/>

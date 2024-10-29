@@ -22,7 +22,6 @@
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/ToolArgs.h"
 
 #include <gtest/gtest.h>
 
@@ -209,27 +208,6 @@ TEST(ArgParserTests, assembleCommand_stringArrayWithSpace_returnCommand)
   String command = ArgParser::assembleCommand(argArray);
 
   EXPECT_EQ("\"stub1 space\" stub2 \"stub3 space\"", command);
-}
-
-TEST(ArgParserTests, parseToolArgs_matches_correspondingly)
-{
-  ArgParser parser(nullptr);
-  std::map<const char *, std::function<bool(ToolArgs const &)>> tests = {
-      {"--get-active-desktop", [](ToolArgs const &a) { return a.m_printActiveDesktopName; }},
-      {"--get-installed-dir", [](ToolArgs const &a) { return a.m_getInstalledDir; }},
-      {"--get-profile-dir", [](ToolArgs const &a) { return a.m_getProfileDir; }},
-      {"--get-arch", [](ToolArgs const &a) { return a.m_getArch; }}
-  };
-  for (auto const &test : tests) {
-    ToolArgs toolArgs;
-    EXPECT_FALSE(test.second(toolArgs));
-    std::array<const char *, 2> twoArgs{LEGACY_BINARY_NAME, test.first};
-    EXPECT_TRUE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
-    EXPECT_TRUE(test.second(toolArgs));
-  }
-  ToolArgs toolArgs;
-  std::array<const char *, 2> twoArgs{LEGACY_BINARY_NAME, "--garbage"};
-  EXPECT_FALSE(parser.parseToolArgs(toolArgs, 2, twoArgs.data()));
 }
 
 TEST(ArgParserTests, parseServerArgs_parses_each_category)

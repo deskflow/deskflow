@@ -23,7 +23,6 @@
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/ToolArgs.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -163,26 +162,6 @@ bool ArgParser::parsePlatformArgs(
   // no options for carbon
   return false;
 #endif
-}
-
-bool ArgParser::parseToolArgs(ToolArgs &args, int argc, const char *const *argv)
-{
-  // We support exactly one argument at a fix position
-  static const int only_index{1};
-  if (isArg(only_index, argc, argv, nullptr, "--get-active-desktop", 0)) {
-    args.m_printActiveDesktopName = true;
-    return true;
-  } else if (isArg(only_index, argc, argv, nullptr, "--get-installed-dir", 0)) {
-    args.m_getInstalledDir = true;
-    return true;
-  } else if (isArg(only_index, argc, argv, nullptr, "--get-profile-dir", 0)) {
-    args.m_getProfileDir = true;
-    return true;
-  } else if (isArg(only_index, argc, argv, nullptr, "--get-arch", 0)) {
-    args.m_getArch = true;
-    return true;
-  }
-  return false;
 }
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)

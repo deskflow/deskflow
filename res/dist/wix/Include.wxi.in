@@ -26,5 +26,4 @@
     <?define ClientBin="@CLIENT_BINARY_NAME@.exe"?>
     <?define CoreBin="@CORE_BINARY_NAME@.exe"?>
     <?define DaemonBin="@DAEMON_BINARY_NAME@.exe"?>
-    <?define LegacyBin="@LEGACY_BINARY_NAME@.exe"?>
 </Include>
