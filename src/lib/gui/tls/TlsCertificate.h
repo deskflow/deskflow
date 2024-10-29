@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include "gui/core/CoreTool.h"
-
 #include <QObject>
 
 class TlsCertificate : public QObject
@@ -37,5 +35,4 @@ private:
 
 private:
   QString m_toolStdout;
-  [[no_unique_address]] CoreTool m_coreTool;
 };
