@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
  * Copyright (C) 2015 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,37 +18,42 @@
 
 #include "gui/core/CoreTool.h"
 
-#include "CommandProcess.h"
+#if defined(Q_OS_UNIX)
+#include "arch/unix/ArchFileUnix.h"
+#include "arch/unix/ArchSystemUnix.h"
+#elif defined(Q_OS_WIN)
+#include "arch/win32/ArchFileWindows.h"
+#include "arch/win32/ArchSystemWindows.h"
+#endif
 
-#include <QCoreApplication>
 #include <QDir>
-#include <QProcess>
-#include <QtGlobal>
-
-static const char kCoreBinary[] = LEGACY_BINARY_NAME;
 
 QString CoreTool::getProfileDir() const
 {
-  QStringList args("--get-profile-dir");
-  return QDir::cleanPath(run(args));
+#if defined Q_OS_UNIX
+  ArchFileUnix sysInfo;
+#elif defined Q_OS_WIN
+  ArchFileWindows sysInfo;
+#endif
+  return QDir::cleanPath(QString::fromUtf8(sysInfo.getProfileDirectory()));
 }
 
 QString CoreTool::getInstalledDir() const
 {
-  QStringList args("--get-installed-dir");
-  return QDir::cleanPath(run(args));
+#if defined Q_OS_UNIX
+  ArchFileUnix sysInfo;
+#elif defined Q_OS_WIN
+  ArchFileWindows sysInfo;
+#endif
+  return QDir::cleanPath(QString::fromUtf8(sysInfo.getInstalledDirectory()));
 }
 
 QString CoreTool::getArch() const
 {
-  QStringList args("--get-arch");
-  return run(args);
-}
-
-QString CoreTool::run(const QStringList &args, const QString &input) const
-{
-  QString program(QCoreApplication::applicationDirPath() + "/" + kCoreBinary);
-
-  CommandProcess commandProcess(program, args, input);
-  return commandProcess.run();
+#if defined Q_OS_UNIX
+  ArchSystemUnix sysInfo;
+#elif defined Q_OS_WIN
+  ArchSystemWindows sysInfo;
+#endif
+  return QString::fromUtf8(sysInfo.getPlatformName());
 }

@@ -25,5 +25,4 @@ public:
   QString getProfileDir() const;
   QString getInstalledDir() const;
   QString getArch() const;
-  QString run(const QStringList &args, const QString &input = "") const;
 };
