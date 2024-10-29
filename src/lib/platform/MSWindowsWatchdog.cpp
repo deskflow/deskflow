@@ -603,38 +603,14 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 {
   String installedDir = ARCH->getInstalledDirectory();
   if (!installedDir.empty()) {
-    String deskflowLegacyCommand;
-    deskflowLegacyCommand.append("\"").append(installedDir).append("\\").append(LEGACY_BINARY_NAME).append("\"");
-    deskflowLegacyCommand.append(" --get-active-desktop");
-
-    m_session.updateActiveSession();
-    bool elevateProcess = m_elevateProcess;
-    m_elevateProcess = true;
-    HANDLE userToken = getUserToken(security);
-    m_elevateProcess = elevateProcess;
-
-    BOOL createRet = startProcessAsUser(deskflowLegacyCommand, userToken, security);
-    auto pid = m_processInfo.dwProcessId;
-    if (!createRet) {
-      DWORD rc = GetLastError();
-      RevertToSelf();
+    MSWindowsSession session;
+    String name = session.getActiveDesktopName();
+    if (name.empty()) {
+      LOG((CLOG_CRIT "failed to get active desktop name"));
     } else {
-      LOG((CLOG_DEBUG "launched %s to check active desktop", LEGACY_BINARY_NAME));
+      String output = deskflow::string::sprintf("activeDesktop:%s", name.c_str());
+      LOG((CLOG_INFO "%s", output.c_str()));
     }
-
-    ARCH->lockMutex(m_mutex);
-    int waitTime = 0;
-    while (!m_ready) {
-      if (waitTime >= MAXIMUM_WAIT_TIME) {
-        break;
-      }
-
-      ARCH->waitCondVar(m_condVar, m_mutex, 1.0);
-      waitTime++;
-    }
-    m_ready = false;
-    ARCH->unlockMutex(m_mutex);
-    closeProcessHandles(pid);
   }
 }
 

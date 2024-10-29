@@ -153,10 +153,6 @@ add_library(${lib_name} STATIC  ${PLATFORM_CODE}
   ServerTaskBarReceiver.h
   StreamChunker.cpp
   StreamChunker.h
-  ToolApp.cpp
-  ToolApp.h
-  ToolArgs.cpp
-  ToolArgs.h
   XDeskflow.cpp
   XDeskflow.h
   XScreen.cpp

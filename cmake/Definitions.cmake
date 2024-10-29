@@ -154,23 +154,19 @@ macro(configure_bin_names)
       "deskflow-daemon"
       CACHE STRING "Filename of the daemon binary")
 
-  set(LEGACY_BINARY_NAME
-      "deskflow-legacy"
-      CACHE STRING "Filename of the legacy binary")
 
   message(VERBOSE "GUI binary: ${GUI_BINARY_NAME}")
   message(VERBOSE "Server binary: ${SERVER_BINARY_NAME}")
   message(VERBOSE "Client binary: ${CLIENT_BINARY_NAME}")
   message(VERBOSE "Core binary: ${CORE_BINARY_NAME}")
   message(VERBOSE "Daemon binary: ${DAEMON_BINARY_NAME}")
-  message(VERBOSE "Legacy binary: ${LEGACY_BINARY_NAME}")
+
 
   add_definitions(-DGUI_BINARY_NAME="${GUI_BINARY_NAME}")
   add_definitions(-DSERVER_BINARY_NAME="${SERVER_BINARY_NAME}")
   add_definitions(-DCLIENT_BINARY_NAME="${CLIENT_BINARY_NAME}")
   add_definitions(-DCORE_BINARY_NAME="${CORE_BINARY_NAME}")
   add_definitions(-DDAEMON_BINARY_NAME="${DAEMON_BINARY_NAME}")
-  add_definitions(-DLEGACY_BINARY_NAME="${LEGACY_BINARY_NAME}")
 
 endmacro()
 

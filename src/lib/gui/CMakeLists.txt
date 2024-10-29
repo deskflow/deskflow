@@ -48,3 +48,11 @@ target_link_libraries(
   Qt6::Core
   Qt6::Widgets
   Qt6::Network)
+
+if(WIN32)
+  target_link_libraries(
+    ${target}
+    base
+    arch
+  )
+endif()

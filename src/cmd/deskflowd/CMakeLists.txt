@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target ${DAEMON_BINARY_NAME})
 # Daemon is only needed on Windows for elevating processes to deal with UAC.
 if(WIN32)
+  set(target ${DAEMON_BINARY_NAME})
   add_executable(${target} WIN32
     deskflowd.cpp
     "${PROJECT_BINARY_DIR}/src/version.rc"

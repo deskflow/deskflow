@@ -26,7 +26,6 @@ class ServerArgs;
 class ClientArgs;
 } // namespace deskflow
 
-class ToolArgs;
 class App;
 
 class ArgParser
@@ -38,7 +37,6 @@ public:
   bool parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv);
   bool parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv);
   bool parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer);
-  bool parseToolArgs(ToolArgs &args, int argc, const char *const *argv);
   bool parseGenericArgs(int argc, const char *const *argv, int &i);
   bool parseDeprecatedArgs(int argc, const char *const *argv, int &i);
   void setArgsBase(deskflow::ArgsBase &argsBase)
