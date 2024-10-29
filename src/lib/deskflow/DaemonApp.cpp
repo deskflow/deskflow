@@ -78,7 +78,7 @@ bool isServerCommandLine(const std::vector<String> &cmd)
 
   if (cmd.size() > 1) {
     isServer = (cmd[0].find("deskflow-server") != String::npos) ||
-               (cmd[0].find(CORE_BINARY_NAME) != String::npos && cmd[1] == "server");
+               (cmd[0].find("deskflow-core") != String::npos && cmd[1] == "server");
   }
 
   return isServer;
