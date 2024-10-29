@@ -95,7 +95,7 @@ macro(post_config_all)
 
     add_dependencies(
       run_post_build
-      ${GUI_BINARY_NAME}
+      deskflow
       ${CLIENT_BINARY_NAME}
       ${SERVER_BINARY_NAME}
       ${DAEMON_BINARY_NAME})
