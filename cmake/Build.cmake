@@ -96,7 +96,7 @@ macro(post_config_all)
     add_dependencies(
       run_post_build
       deskflow
-      ${CLIENT_BINARY_NAME}
+      deskflow-client
       deskflow-server
       ${DAEMON_BINARY_NAME})
   endif()
