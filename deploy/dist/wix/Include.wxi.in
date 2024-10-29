@@ -24,6 +24,6 @@
     <?define GuiBin="deskflow.exe"?>
     <?define ServerBin="deskflow-server.exe"?>
     <?define ClientBin="deskflow-client.exe"?>
-    <?define CoreBin="@CORE_BINARY_NAME@.exe"?>
+    <?define CoreBin="deskflow-core.exe"?>
     <?define DaemonBin="@DAEMON_BINARY_NAME@.exe"?>
 </Include>
