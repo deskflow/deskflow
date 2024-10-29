@@ -35,11 +35,9 @@ const int kWizardVersion = 8;
 static const char *const kLogLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
 
 #if defined(Q_OS_WIN)
-const char AppConfig::m_CoreServerName[] = SERVER_BINARY_NAME ".exe";
 const char AppConfig::m_CoreClientName[] = CLIENT_BINARY_NAME ".exe";
 const char AppConfig::m_LogDir[] = "log/";
 #else
-const char AppConfig::m_CoreServerName[] = SERVER_BINARY_NAME;
 const char AppConfig::m_CoreClientName[] = CLIENT_BINARY_NAME;
 const char AppConfig::m_LogDir[] = "/var/log/";
 #endif
@@ -469,7 +467,11 @@ QString AppConfig::lastVersion() const
 
 QString AppConfig::coreServerName() const
 {
-  return m_CoreServerName;
+#ifdef Q_OS_WIN
+  return s_winExeTemplate.arg(s_CoreServerName);
+#else
+  return s_CoreServerName;
+#endif
 }
 
 QString AppConfig::coreClientName() const

@@ -29,7 +29,7 @@
 void showHelp()
 {
   std::cout << "Usage: " CORE_BINARY_NAME " <server | client> [...options]" << std::endl;
-  std::cout << "server - start as a server (" << SERVER_BINARY_NAME << ")" << std::endl;
+  std::cout << "server - start as a server ( deskflow-server)" << std::endl;
   std::cout << "client - start as a client (" << CLIENT_BINARY_NAME << ")" << std::endl;
   std::cout << "use " CORE_BINARY_NAME " <server|client> --help for more information." << std::endl;
 }

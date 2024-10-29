@@ -289,7 +289,11 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  static const char m_CoreServerName[];
+  // Used to make the server and client names on windows.
+#ifdef Q_OS_WIN
+  inline static const auto s_winExeTemplate = QStringLiteral("%1.exe");
+#endif
+  inline static const auto s_CoreServerName = QStringLiteral("deskflow-server");
   static const char m_CoreClientName[];
   static const char m_LogDir[];
 
