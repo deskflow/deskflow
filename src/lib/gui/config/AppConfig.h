@@ -293,7 +293,7 @@ private:
   inline static const auto s_winExeTemplate = QStringLiteral("%1.exe");
 #endif
   inline static const auto s_CoreServerName = QStringLiteral("deskflow-server");
-  static const char m_CoreClientName[];
+  inline static const auto s_CoreClientName = QStringLiteral("deskflow-client");
   static const char m_LogDir[];
 
   /// @brief Contains the string values of the settings names that will be saved

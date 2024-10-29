@@ -167,7 +167,7 @@ const char *ClientApp::daemonName() const
 #if SYSAPI_WIN32
   return "Deskflow Client";
 #elif SYSAPI_UNIX
-  return CLIENT_BINARY_NAME;
+  return "deskflow-client";
 #endif
 }
 
