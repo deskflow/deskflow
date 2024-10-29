@@ -73,10 +73,6 @@ endmacro()
 
 macro(configure_bin_names)
 
-  set(SERVER_BINARY_NAME
-      "deskflow-server"
-      CACHE STRING "Filename of the server binary")
-
   set(CLIENT_BINARY_NAME
       "deskflow-client"
       CACHE STRING "Filename of the client binary")
@@ -90,13 +86,11 @@ macro(configure_bin_names)
       CACHE STRING "Filename of the daemon binary")
 
 
-  message(VERBOSE "Server binary: ${SERVER_BINARY_NAME}")
   message(VERBOSE "Client binary: ${CLIENT_BINARY_NAME}")
   message(VERBOSE "Core binary: ${CORE_BINARY_NAME}")
   message(VERBOSE "Daemon binary: ${DAEMON_BINARY_NAME}")
 
 
-  add_definitions(-DSERVER_BINARY_NAME="${SERVER_BINARY_NAME}")
   add_definitions(-DCLIENT_BINARY_NAME="${CLIENT_BINARY_NAME}")
   add_definitions(-DCORE_BINARY_NAME="${CORE_BINARY_NAME}")
   add_definitions(-DDAEMON_BINARY_NAME="${DAEMON_BINARY_NAME}")

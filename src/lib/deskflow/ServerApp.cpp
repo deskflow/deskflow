@@ -846,7 +846,7 @@ const char *ServerApp::daemonName() const
 #if SYSAPI_WIN32
   return "Deskflow Server";
 #elif SYSAPI_UNIX
-  return SERVER_BINARY_NAME;
+  return "deskflow-server";
 #endif
 }
 

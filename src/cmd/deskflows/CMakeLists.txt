@@ -15,14 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(server_source_name "deskflows")
-set(target ${SERVER_BINARY_NAME})
+set(target deskflow-server)
 
 if(WIN32)
   set(PLATFORM_SOURCES
-    ${server_source_name}.exe.manifest
-    ${server_source_name}.ico
-    ${server_source_name}.rc
+    deskflows.exe.manifest
+    deskflows.ico
+    deskflows.rc
     MSWindowsServerTaskBarReceiver.cpp
     MSWindowsServerTaskBarReceiver.h
     resource.h
@@ -44,7 +43,7 @@ elseif(UNIX)
   )
 endif()
 
-add_executable(${target} ${PLATFORM_SOURCES} "${server_source_name}.cpp")
+add_executable(${target} ${PLATFORM_SOURCES} deskflows.cpp)
 
 target_link_libraries(
   ${target}

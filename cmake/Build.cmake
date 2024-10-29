@@ -97,7 +97,7 @@ macro(post_config_all)
       run_post_build
       deskflow
       ${CLIENT_BINARY_NAME}
-      ${SERVER_BINARY_NAME}
+      deskflow-server
       ${DAEMON_BINARY_NAME})
   endif()
 
