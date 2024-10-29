@@ -73,20 +73,14 @@ endmacro()
 
 macro(configure_bin_names)
 
-  set(CORE_BINARY_NAME
-      "deskflow-core"
-      CACHE STRING "Filename of the core binary")
-
   set(DAEMON_BINARY_NAME
       "deskflow-daemon"
       CACHE STRING "Filename of the daemon binary")
 
 
-  message(VERBOSE "Core binary: ${CORE_BINARY_NAME}")
   message(VERBOSE "Daemon binary: ${DAEMON_BINARY_NAME}")
 
 
-  add_definitions(-DCORE_BINARY_NAME="${CORE_BINARY_NAME}")
   add_definitions(-DDAEMON_BINARY_NAME="${DAEMON_BINARY_NAME}")
 
 endmacro()

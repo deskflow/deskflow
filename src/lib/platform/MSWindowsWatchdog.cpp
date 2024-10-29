@@ -572,7 +572,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 
       if (_stricmp(entry.szExeFile, "deskflow-client.exe") == 0 ||
           _stricmp(entry.szExeFile, "deskflow-server.exe") == 0 ||
-          _stricmp(entry.szExeFile, CORE_BINARY_NAME ".exe") == 0) {
+          _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
 
         HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
         shutdownProcess(handle, entry.th32ProcessID, 10);
