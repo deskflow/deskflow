@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target ${GUI_BINARY_NAME})
+set(target deskflow)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
