@@ -1,11 +1,11 @@
 ![Deskflow](https://github.com/user-attachments/assets/f005b958-24df-4f4a-9bfd-4f834dae59d6)
 
 > [!NOTE]
-> 🚀 **Deskflow** is now the upstream project for Synergy.
+> **Deskflow** is the official upstream project for [Synergy](https://symless.com/).
+> Purchasing a Synergy license is one way to support Deskflow’s growth and sustainability.
 >
 > The Deskflow project was established to cultivate community-driven development where everyone can collaborate.
->
-> Synergy sponsors the Deskflow project by contributing code and providing financial support while maintaining its customer-oriented code downstream.
+> Synergy sponsors the Deskflow project by contributing code and providing financial support.
 >
 > More info: [Relationship with Synergy](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
 
