@@ -570,7 +570,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
     // make sure we're not checking the system process
     if (entry.th32ProcessID != 0) {
 
-      if (_stricmp(entry.szExeFile, CLIENT_BINARY_NAME ".exe") == 0 ||
+      if (_stricmp(entry.szExeFile, "deskflow-client.exe") == 0 ||
           _stricmp(entry.szExeFile, "deskflow-server.exe") == 0 ||
           _stricmp(entry.szExeFile, CORE_BINARY_NAME ".exe") == 0) {
 
