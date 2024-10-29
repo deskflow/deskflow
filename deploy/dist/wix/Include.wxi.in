@@ -21,7 +21,7 @@
     <?define QtPluginsPath="$(var.QtDir)\plugins"?>
     <?define OpenSslExeDir="@OPENSSL_EXE_DIR@"?>
     <?define OpenSslDllDir="@OPENSSL_ROOT_DIR@/bin"?>
-    <?define GuiBin="@GUI_BINARY_NAME@.exe"?>
+    <?define GuiBin="deskflow.exe"?>
     <?define ServerBin="@SERVER_BINARY_NAME@.exe"?>
     <?define ClientBin="@CLIENT_BINARY_NAME@.exe"?>
     <?define CoreBin="@CORE_BINARY_NAME@.exe"?>
