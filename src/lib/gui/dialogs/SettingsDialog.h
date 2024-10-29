@@ -23,7 +23,6 @@
 #include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/core/CoreProcess.h"
-#include "gui/core/CoreTool.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ValidationError.h"
 
@@ -76,7 +75,6 @@ private:
   /// @brief Enables controls when they should be.
   void updateControls();
 
-  [[no_unique_address]] CoreTool m_coreTool;
   validators::ValidationError *m_pScreenNameError;
 
   /// @brief Stores settings scope at start of settings dialog
