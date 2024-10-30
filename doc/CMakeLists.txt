@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 find_package(Doxygen QUIET)
-option(DOCS "Build and Install Documents" ${DOXYGEN_FOUND})
+option(BUILD_DOCS "Build and Install Documents" ${DOXYGEN_FOUND})
 
-if(DOCS)
+if(BUILD_DOCS)
   set(DOXYGEN_EXTRACT_ALL YES)
   set(DOXYGEN_STRIP_FROM_PATH ${CMAKE_SOURCE_DIR})
   set(DOXYGEN_USE_MDFILE_AS_MAINPAGE mainpage.md)
@@ -15,7 +15,7 @@ if(DOCS)
   doxygen_add_docs(user-docs ${CMAKE_SOURCE_DIR}/doc COMMENT "Generating User Documentation" ALL)
 
   # HACK Only these will show in your IDE
-  target_sources(docs PRIVATE
+  target_sources(user-docs PRIVATE
     mainpage.md
     configuration.md
   )
