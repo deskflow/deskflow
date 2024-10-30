@@ -312,7 +312,7 @@ jobs:
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
         uses: crowbarmaster/GH-Automatic-Releases@latest
         with:
-          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "continuous"
           prerelease: false
           title: "Continuous Build"
@@ -323,7 +323,7 @@ jobs:
         if: contains(github.ref, '/tags/v')
         uses: crowbarmaster/GH-Automatic-Releases@latest
         with:
-          repo_token: "${{ secrets.DEPLOY_TOKEN }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
             package-*/*
