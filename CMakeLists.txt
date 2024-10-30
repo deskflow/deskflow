@@ -87,9 +87,7 @@ configure_build()
 configure_libs()
 configure_packaging()
 
-option(BUILD_DOCS "Build documentation" ON)
 add_subdirectory(doc)
-
 add_subdirectory(src)
 
 post_config_all()
