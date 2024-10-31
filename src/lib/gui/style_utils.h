@@ -24,20 +24,17 @@
 namespace deskflow::gui {
 
 /**
- * @brief Detects dark mode depending on Qt version.
+ * @brief Detects dark mode in a universal manner (all Qt versions).
+ * Until better platform support is added, it's more reliable to use the old way (compare text and window lightness),
+ * because the newer versions in Qt 6.5+ are not always correct and some return `UnknownScheme`.
  * https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5
  */
 inline bool isDarkMode()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-  const auto scheme = QGuiApplication::styleHints()->colorScheme();
-  return scheme == Qt::ColorScheme::Dark;
-#else
   const QPalette defaultPalette;
   const auto text = defaultPalette.color(QPalette::WindowText);
   const auto window = defaultPalette.color(QPalette::Window);
   return text.lightness() > window.lightness();
-#endif // QT_VERSION
 }
 
 } // namespace deskflow::gui
