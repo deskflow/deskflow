@@ -194,7 +194,6 @@ private:
   void resizeEvent(QResizeEvent *event) override;
   void moveEvent(QMoveEvent *event) override;
   void showFirstConnectedMessage();
-  void showDevThanksMessage();
   void updateStatus();
   void showAndActivate();
 

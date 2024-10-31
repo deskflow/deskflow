@@ -47,8 +47,6 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
 
 void showCloseReminder(QWidget *parent);
 
-void showDevThanks(QWidget *parent, const QString &productName);
-
 void showClientConnectError(QWidget *parent, ClientError error, const QString &address);
 
 NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName);
