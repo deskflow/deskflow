@@ -60,7 +60,7 @@
 
 using namespace std;
 
-const char *const kLogFilename = DAEMON_BINARY_NAME ".log";
+const char *const kLogFilename = "deskflow-daemon.log";
 
 namespace {
 void updateSetting(const IpcMessage &message)
