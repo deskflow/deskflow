@@ -776,19 +776,6 @@ void MainWindow::showFirstConnectedMessage()
   messages::showFirstConnectedMessage(this, m_AppConfig.closeToTray(), m_AppConfig.enableService(), isServer);
 }
 
-void MainWindow::showDevThanksMessage()
-{
-  if (!m_AppConfig.showDevThanks()) {
-    qDebug("skipping dev thanks message");
-    return;
-  }
-
-  m_AppConfig.setShowDevThanks(false);
-  m_ConfigScopes.save();
-
-  messages::showDevThanks(this, kAppName);
-}
-
 void MainWindow::onCoreProcessSecureSocket(bool enabled)
 {
   secureSocket(enabled);
@@ -897,7 +884,6 @@ void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
     secureSocket(false);
   } else if (isVisible()) {
     showFirstConnectedMessage();
-    showDevThanksMessage();
   }
 }
 

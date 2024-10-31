@@ -16,7 +16,6 @@
 
 macro(configure_definitions)
 
-  configure_meta()
   configure_ninja()
   configure_options()
 
@@ -49,23 +48,6 @@ macro(configure_definitions)
   endif()
 
   set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
-
-endmacro()
-
-macro(configure_meta)
-
-  set(DESKFLOW_SHOW_DEV_THANKS
-      true
-      CACHE BOOL "Show developer thanks message")
-
-  message(VERBOSE "Show dev thanks: ${DESKFLOW_SHOW_DEV_THANKS}")
-
-  if(DESKFLOW_SHOW_DEV_THANKS)
-    message(VERBOSE "Showing developer thanks message")
-    add_definitions(-DDESKFLOW_SHOW_DEV_THANKS)
-  else()
-    message(VERBOSE "Not showing developer thanks message")
-  endif()
 
 endmacro()
 

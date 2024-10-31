@@ -38,12 +38,6 @@ const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
 const QString kDefaultLogFile = QStringLiteral("deskflow.log");
 const int kDefaultTlsKeyLength = 2048;
 
-#ifdef DESKFLOW_SHOW_DEV_THANKS
-const bool kDefaultShowDevThanks = true;
-#else
-const bool kDefaultShowDevThanks = false;
-#endif
-
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 #else
@@ -111,7 +105,7 @@ private:
     kCloseToTray = 38,
     kMainWindowSize = 39,
     kMainWindowPosition = 40,
-    kShowDevThanks = 41,
+    // 41 = show dev thanks, obsolete
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
   };
@@ -186,7 +180,6 @@ public:
   QString lastVersion() const;
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
-  bool showDevThanks() const;
   bool showCloseReminder() const;
   std::optional<bool> enableUpdateCheck() const;
 
@@ -227,7 +220,6 @@ public:
   void setLastVersion(const QString &version);
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
-  void setShowDevThanks(bool show);
   void setShowCloseReminder(bool show);
   void setEnableUpdateCheck(bool value);
 
@@ -332,7 +324,6 @@ private:
   int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
-  bool m_ShowDevThanks = deskflow::gui::kDefaultShowDevThanks;
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
