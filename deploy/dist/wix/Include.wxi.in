@@ -25,5 +25,5 @@
     <?define ServerBin="deskflow-server.exe"?>
     <?define ClientBin="deskflow-client.exe"?>
     <?define CoreBin="deskflow-core.exe"?>
-    <?define DaemonBin="@DAEMON_BINARY_NAME@.exe"?>
+    <?define DaemonBin="deskflow-daemon.exe"?>
 </Include>

@@ -67,22 +67,6 @@ macro(configure_meta)
     message(VERBOSE "Not showing developer thanks message")
   endif()
 
-  configure_bin_names()
-
-endmacro()
-
-macro(configure_bin_names)
-
-  set(DAEMON_BINARY_NAME
-      "deskflow-daemon"
-      CACHE STRING "Filename of the daemon binary")
-
-
-  message(VERBOSE "Daemon binary: ${DAEMON_BINARY_NAME}")
-
-
-  add_definitions(-DDAEMON_BINARY_NAME="${DAEMON_BINARY_NAME}")
-
 endmacro()
 
 macro(configure_ninja)
