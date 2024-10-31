@@ -113,16 +113,21 @@ def get_filename_base(version, prefix, use_linux_distro=True):
         # Also, that's what Linux distros tend to call that architecture anyway.
         if machine == "x86_64":
             machine = "amd64"
-    else:
+    elif os == "windows":
         # Some Windows users get confused by 'amd64' and think it's 'arm64',
         # so we'll use Intel's 'x64' branding (even though it's wrong).
         # Also replace 'x86_64' with 'x64' for consistency.
         if machine == "amd64" or machine == "x86_64":
-            machine = "x64"
+            os_part = "win64"
+    elif os == "mac":
+        if machine == "amd64" or machine == "x86_64":
+            os_part = "mac_x64"
+        else:
+            os_part = "mac_arm64"
 
     # Underscore is used to delimit different parts of the filename (e.g. version, OS, etc).
     # Dashes are used to delimit spaces, e.g. "debian-trixie" for "Debian Trixie".
-    return f"{prefix}_{version}_{os_part}_{machine}"
+    return f"{prefix}-{version}_{os_part}"
 
 
 def windows_package(filename_base, project_build_dir, dist_dir):
