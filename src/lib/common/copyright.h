@@ -17,27 +17,11 @@
 
 #pragma once
 
-#include <cstring>
-#include <string>
-#include <vector>
-
 namespace deskflow {
 
-const auto kCopyrightFormat = //
-    "Copyright (C) 2012-%s Symless Ltd.\n"
+const auto kCopyright = //
+    "Copyright (C) 2024 Deskflow Developers\n"
+    "Copyright (C) 2012-2024 Symless Ltd.\n"
     "Copyright (C) 2009-2012 Nick Bolton\n"
     "Copyright (C) 2002-2009 Chris Schoeneman";
-
-inline std::string copyright()
-{
-  const std::string date = BUILD_DATE;
-  const auto year = date.substr(0, 4);
-  const auto kBufferLength = 256;
-  std::vector<char> buffer(kBufferLength);
-  std::snprintf( // NOSONAR
-      buffer.data(), kBufferLength, kCopyrightFormat, year.c_str()
-  );
-  return std::string(buffer.data());
-}
-
 } // namespace deskflow

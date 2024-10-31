@@ -10,6 +10,8 @@
         <file>icons/128x128/tray.png</file>
         <file>image/welcome.png</file>
         <file>icons/64x64/folder.png</file>
+        <file>icons/64x64/copy-light.png</file>
+        <file>icons/64x64/copy-dark.png</file>
         <file>image/placeholder.png</file>
     </qresource>
 </RCC>
