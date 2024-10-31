@@ -17,7 +17,7 @@
 
 # Daemon is only needed on Windows for elevating processes to deal with UAC.
 if(WIN32)
-  set(target ${DAEMON_BINARY_NAME})
+  set(target deskflow-daemon)
   add_executable(${target} WIN32
     deskflowd.cpp
     "${PROJECT_BINARY_DIR}/src/version.rc"

@@ -98,7 +98,7 @@ macro(post_config_all)
       deskflow
       deskflow-client
       deskflow-server
-      ${DAEMON_BINARY_NAME})
+      deskflow-daemon)
   endif()
 
 endmacro()
