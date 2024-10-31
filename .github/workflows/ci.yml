@@ -314,7 +314,7 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "continuous"
-          prerelease: false
+          prerelease: true
           title: "Continuous Build"
           files: |
             package-*/*
