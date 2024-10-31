@@ -83,7 +83,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "closeToTray",
     "mainWindowSize",
     "mainWindowPosition",
-    "showDevThanks",
+    "", // 41 = Show dev thanks, obsolete
     "showCloseReminder",
     "enableUpdateCheck",
 };
@@ -149,7 +149,6 @@ void AppConfig::recallFromCurrentScope()
   m_MainWindowPosition =
       getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
-  m_ShowDevThanks = getFromCurrentScope(kShowDevThanks, m_ShowDevThanks).toBool();
   m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
   m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
 }
@@ -207,7 +206,6 @@ void AppConfig::commit()
     setInCurrentScope(kCloseToTray, m_CloseToTray);
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
-    setInCurrentScope(kShowDevThanks, m_ShowDevThanks);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
   }
@@ -576,11 +574,6 @@ std::optional<QPoint> AppConfig::mainWindowPosition() const
   return m_MainWindowPosition;
 }
 
-bool AppConfig::showDevThanks() const
-{
-  return m_ShowDevThanks;
-}
-
 bool AppConfig::showCloseReminder() const
 {
   return m_ShowCloseReminder;
@@ -752,11 +745,6 @@ void AppConfig::setMainWindowSize(const QSize &size)
 void AppConfig::setMainWindowPosition(const QPoint &position)
 {
   m_MainWindowPosition = position;
-}
-
-void AppConfig::setShowDevThanks(bool value)
-{
-  m_ShowDevThanks = value;
 }
 
 void AppConfig::setShowCloseReminder(bool value)

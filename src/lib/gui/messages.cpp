@@ -189,23 +189,6 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
   QMessageBox::information(parent, "Connected", message);
 }
 
-void showDevThanks(QWidget *parent, const QString &productName)
-{
-  if (productName.isEmpty()) {
-    qFatal("product name not set");
-  }
-
-  QMessageBox::information(
-      parent, "Thank you!",
-      QString("<p>Thanks for using %1.</p>"
-              "<p>If you enjoy using this tool, visit our website:</p>"
-              R"(<p><a href="%2" style="color: %3")>%2</a></p>)"
-              "<p>Please report bugs and consider contributing code.</p>"
-              "<p>This message will only appear once.</p>")
-          .arg(productName, kUrlApp, kColorSecondary)
-  );
-}
-
 void showClientConnectError(QWidget *parent, ClientError error, const QString &address)
 {
   using enum ClientError;
