@@ -28,9 +28,11 @@ file(
   sources
   src/*.cpp
   src/*.h
+  src/dialogs/*.h
+  src/dialogs/*.cpp
   src/validators/*
   src/widgets/*)
-file(GLOB ui_files src/*.ui)
+file(GLOB ui_files src/*.ui src/dialogs/*.ui)
 
 if(WIN32)
   set(rc_files ${res_dir}/win/app.rc ${PROJECT_BINARY_DIR}/src/version.rc)

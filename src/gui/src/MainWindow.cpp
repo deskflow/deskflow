@@ -21,12 +21,12 @@
 
 #include "ServerConfigDialog.h"
 #include "common/constants.h"
+#include "dialogs/AboutDialog.h"
 #include "gui/Logger.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
-#include "gui/dialogs/AboutDialog.h"
 #include "gui/dialogs/SettingsDialog.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
