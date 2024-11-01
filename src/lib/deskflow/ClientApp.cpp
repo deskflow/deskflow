@@ -26,6 +26,7 @@
 #include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "client/Client.h"
+#include "common/constants.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/Screen.h"
@@ -134,7 +135,7 @@ void ClientApp::help()
 #endif
        << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
        << "\n\n"
-       << "Connect to a " DESKFLOW_APP_NAME " mouse/keyboard sharing server.\n"
+       << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  local network interface address.\n"
        << HELP_COMMON_INFO_1 << HELP_SYS_INFO << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
@@ -165,7 +166,7 @@ void ClientApp::help()
 const char *ClientApp::daemonName() const
 {
 #if SYSAPI_WIN32
-  return DESKFLOW_APP_NAME " Client";
+  return "Deskflow Client";
 #elif SYSAPI_UNIX
   return CLIENT_BINARY_NAME;
 #endif

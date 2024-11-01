@@ -252,9 +252,15 @@ void AppUtilWindows::showNotification(const String &title, const String &text) c
     return;
   }
   if (!WinToastLib::WinToast::instance()->isInitialized()) {
-    WinToastLib::WinToast::instance()->setAppName(L"" DESKFLOW_APP_NAME);
+    WinToastLib::WinToast::instance()->setAppName(L""
+                                                  "Deskflow");
     const auto aumi = WinToastLib::WinToast::configureAUMI(
-        L"" DESKFLOW_AUTHOR_NAME, L"" DESKFLOW_APP_NAME, L"" DESKFLOW_APP_NAME, L"1.14.1+"
+        L"" DESKFLOW_AUTHOR_NAME,
+        L""
+        "Deskflow",
+        L""
+        "Deskflow",
+        L"1.14.1+"
     );
     WinToastLib::WinToast::instance()->setAppUserModelId(aumi);
 

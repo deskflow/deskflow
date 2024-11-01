@@ -44,8 +44,8 @@ void VersionChecker::checkLatest() const
   auto request = QNetworkRequest(url);
   auto userAgent = QString("%1 %2 on %3").arg(kAppName, kVersion, QSysInfo::prettyProductName());
   request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
-  request.setRawHeader("X-" DESKFLOW_APP_NAME "-Version", kVersion);
-  request.setRawHeader("X-" DESKFLOW_APP_NAME "-Language", QLocale::system().name().toStdString().c_str());
+  request.setRawHeader("X-Deskflow-Version", kVersion);
+  request.setRawHeader("X-Deskflow-Language", QLocale::system().name().toStdString().c_str());
   m_network->get(request);
 }
 

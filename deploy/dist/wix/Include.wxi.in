@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
     <?define AppId="deskflow"?>
-    <?define Name="@DESKFLOW_APP_NAME@"?>
+    <?define Name="Deskflow"?>
     <?define Version="@DESKFLOW_VERSION@"?>
     <?define Author="@DESKFLOW_AUTHOR_NAME@"?>
     <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>

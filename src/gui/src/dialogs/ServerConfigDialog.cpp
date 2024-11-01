@@ -19,6 +19,7 @@
 #include "ServerConfigDialog.h"
 #include "ui_ServerConfigDialog.h"
 
+#include "common/constants.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
@@ -447,12 +448,14 @@ void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked)
 bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
 {
 #if defined(Q_OS_WIN)
-  const QString deskflowConfigFilter(QString("%1 Configurations (*.sgc);;All files (*.*)").arg(DESKFLOW_APP_NAME));
+  static const auto configExt = QStringLiteral("sgc");
 #else
-  const QString deskflowConfigFilter(QString("%1 Configurations (*.conf);;All files (*.*)").arg(DESKFLOW_APP_NAME));
+  static const auto configExt = QStringLiteral("conf");
 #endif
+  static const auto deskflowConfigFilter = QStringLiteral("%1 Configurations (*.%2);;All files (*.*)");
 
-  QString fileName = QFileDialog::getOpenFileName(this, "Browse for a config file", "", deskflowConfigFilter);
+  QString fileName =
+      QFileDialog::getOpenFileName(this, "Browse for a config file", "", deskflowConfigFilter.arg(kAppName, configExt));
 
   if (!fileName.isEmpty()) {
     ui->m_pEditConfigFile->setText(fileName);

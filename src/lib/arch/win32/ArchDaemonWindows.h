@@ -20,6 +20,7 @@
 
 #include "arch/IArchDaemon.h"
 #include "arch/IArchMultithread.h"
+#include "common/constants.h"
 #include "common/stdstring.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -144,8 +145,8 @@ private:
   std::string m_commandLine;
 };
 
-#define DEFAULT_DAEMON_NAME _T(DESKFLOW_APP_NAME)
-#define DEFAULT_DAEMON_INFO _T("Manages the " DESKFLOW_APP_NAME " foreground processes.")
+#define DEFAULT_DAEMON_NAME _T(kAppName)
+#define DEFAULT_DAEMON_INFO _T("Manages the Deskflow foreground processes.")
 
-#define LEGACY_SERVER_DAEMON_NAME _T(DESKFLOW_APP_NAME " Server")
-#define LEGACY_CLIENT_DAEMON_NAME _T(DESKFLOW_APP_NAME " Client")
+#define LEGACY_SERVER_DAEMON_NAME _T("Deskflow Server")
+#define LEGACY_CLIENT_DAEMON_NAME _T("Deskflow Client")
