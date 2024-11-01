@@ -246,7 +246,7 @@ jobs:
         if: ${{ runner.os != 'Linux' }}
         shell: bash
         run: |
-          python ./scripts/package.py --package-version ${{env.DESKFLOW_VERSION}}
+          python ./scripts/package.py --package-version ${{env.DESKFLOW_PACKAGE_VERSION}}
           mv dist/deskflow* build/
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
@@ -308,6 +308,10 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
 
+      - name: Get version
+        if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
+        uses: ./.github/actions/get-version
+
       - name: Deploy continuous
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
         uses: crowbarmaster/GH-Automatic-Releases@latest
@@ -315,7 +319,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "continuous"
           prerelease: true
-          title: "Continuous Build"
+          title: "Continuous Build: ${{env.DESKFLOW_VERSION}}"
           files: |
             package-*/*
 
@@ -342,5 +346,5 @@ jobs:
       - name: Submit
         uses: ./.github/actions/winget-publish
         with:
-          release-version: ${{env.DESKFLOW_VERSION}}
+          release-version: ${{env.DESKFLOW_PACKAGE_VERSION}}
           token: ${{ secrets.WINGET_DEPLOY_TOKEN }}
