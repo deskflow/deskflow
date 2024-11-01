@@ -20,6 +20,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 
 #include "arch/XArch.h"
+#include "common/constants.h"
 
 #include "tchar.h"
 #include <string>
@@ -27,7 +28,7 @@
 #include <psapi.h>
 #include <windows.h>
 
-static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T(DESKFLOW_APP_NAME), NULL};
+static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T(kAppName), NULL};
 
 //
 // ArchSystemWindows

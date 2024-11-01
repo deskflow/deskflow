@@ -202,7 +202,7 @@ bool MSWindowsClipboard::isOwnedByDeskflow()
 {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT("Deskflow Ownership"));
   }
   return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
 }
@@ -211,7 +211,7 @@ UINT MSWindowsClipboard::getOwnershipFormat()
 {
   // create ownership format if we haven't yet
   if (s_ownershipFormat == 0) {
-    s_ownershipFormat = RegisterClipboardFormat(TEXT(DESKFLOW_APP_NAME "Ownership"));
+    s_ownershipFormat = RegisterClipboardFormat(TEXT("Deskflow Ownership"));
   }
 
   // return the format

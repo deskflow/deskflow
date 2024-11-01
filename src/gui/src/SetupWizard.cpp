@@ -12,6 +12,7 @@
 #include <QFormLayout>
 #include <QPushButton>
 
+#include "common/constants.h"
 #include "gui/config/AppConfig.h"
 #include "gui/styles.h"
 #include "gui/validators/ScreenNameValidator.h"
@@ -23,7 +24,7 @@ SetupWizard::SetupWizard(AppConfig &appConfig)
       m_lineName{new QLineEdit(this)},
       m_btnApply{new QPushButton(tr("Continue"), this)}
 {
-  setWindowTitle(tr("Setup %1").arg(DESKFLOW_APP_NAME));
+  setWindowTitle(tr("Setup %1").arg(kAppName));
 
   setFixedSize(740, 550);
 

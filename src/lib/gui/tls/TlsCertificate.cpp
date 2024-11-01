@@ -19,6 +19,8 @@
 
 #include "TlsFingerprint.h"
 
+#include "common/constants.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
@@ -26,7 +28,6 @@
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
 static const char *const kCertificateLifetime = "365";
-static const char *const kCertificateSubjectInfo = "/CN=" DESKFLOW_APP_NAME;
 
 #if defined(Q_OS_WIN)
 static const char *const kWinOpenSslDir = "OpenSSL";
@@ -167,8 +168,8 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
   // subject information
   arguments.append("-subj");
 
-  QString subInfo(kCertificateSubjectInfo);
-  arguments.append(subInfo);
+  QString subInfo("/CN=%1");
+  arguments.append(subInfo.arg(kAppName));
 
   // private key
   arguments.append("-newkey");

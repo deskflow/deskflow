@@ -23,6 +23,7 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
+#include "common/constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
@@ -123,8 +124,8 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
 
 void ServerApp::help()
 {
-  const auto userConfig = ARCH->concatPath(ARCH->getUserDirectory(), USER_CONFIG_NAME);
-  const auto sysConfig = ARCH->concatPath(ARCH->getSystemDirectory(), SYSTEM_CONFIG_NAME);
+  const auto userConfig = ARCH->concatPath(ARCH->getUserDirectory(), CONFIG_NAME);
+  const auto sysConfig = ARCH->concatPath(ARCH->getSystemDirectory(), CONFIG_NAME);
 
   std::stringstream help;
   help << "Usage: " << args().m_pname
@@ -141,7 +142,7 @@ void ServerApp::help()
 #endif
 
        << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
-       << "Start the " DESKFLOW_APP_NAME " mouse/keyboard sharing server.\n"
+       << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "
@@ -208,7 +209,7 @@ void ServerApp::loadConfig()
     path = ARCH->getUserDirectory();
     if (!path.empty()) {
       // complete path
-      path = ARCH->concatPath(path, USER_CONFIG_NAME);
+      path = ARCH->concatPath(path, CONFIG_NAME);
 
       // now try loading the user's configuration
       if (loadConfig(path)) {
@@ -220,7 +221,7 @@ void ServerApp::loadConfig()
       // try the system-wide config file
       path = ARCH->getSystemDirectory();
       if (!path.empty()) {
-        path = ARCH->concatPath(path, SYSTEM_CONFIG_NAME);
+        path = ARCH->concatPath(path, CONFIG_NAME);
         if (loadConfig(path)) {
           loaded = true;
           args().m_configFile = path;
@@ -844,7 +845,7 @@ int ServerApp::foregroundStartup(int argc, char **argv)
 const char *ServerApp::daemonName() const
 {
 #if SYSAPI_WIN32
-  return DESKFLOW_APP_NAME " Server";
+  return "Deskflow Server";
 #elif SYSAPI_UNIX
   return SERVER_BINARY_NAME;
 #endif
