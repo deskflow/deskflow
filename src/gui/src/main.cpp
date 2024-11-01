@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   QString version = QString::fromStdString(deskflow::version());
-  qInfo(DESKFLOW_APP_NAME " v%s", qPrintable(version));
+  qInfo("Deskflow v%s", qPrintable(version));
 
   dotenv();
   Logger::instance().loadEnvVars();
@@ -102,8 +102,8 @@ int main(int argc, char *argv[])
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QMessageBox::information(
-        NULL, DESKFLOW_APP_NAME,
-        "Please drag " DESKFLOW_APP_NAME " to the Applications folder, "
+        NULL, "Deskflow",
+        "Please drag Deskflow to the Applications folder, "
         "and open it from there."
     );
     return 1;
@@ -180,10 +180,10 @@ bool checkMacAssistiveDevices()
   bool result = AXAPIEnabled();
   if (!result) {
     QMessageBox::information(
-        NULL, DESKFLOW_APP_NAME,
+        NULL, "Deskflow",
         "Please enable access to assistive devices "
         "System Preferences -> Security & Privacy -> "
-        "Privacy -> Accessibility, then re-open " DESKFLOW_APP_NAME "."
+        "Privacy -> Accessibility, then re-open Deskflow."
     );
   }
   return result;

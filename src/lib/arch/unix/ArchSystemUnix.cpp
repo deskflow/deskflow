@@ -112,9 +112,7 @@ bool ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID, bool
       return false;
     }
 
-    reply = screenSaverInterface.call(
-        "Inhibit", DESKFLOW_APP_NAME, "Sleep is manually prevented by the " DESKFLOW_APP_NAME " preferences"
-    );
+    reply = screenSaverInterface.call("Inhibit", "Deskflow", "Sleep is manually prevented by the Deskflow preferences");
     if (reply.isValid())
       cookies[serviceNum] = reply.value();
   } else {

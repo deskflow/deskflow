@@ -26,7 +26,7 @@
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
 static const char *const kCertificateLifetime = "365";
-static const char *const kCertificateSubjectInfo = "/CN=" DESKFLOW_APP_NAME;
+static const char *const kCertificateSubjectInfo = "/CN=Deskflow";
 
 #if defined(Q_OS_WIN)
 static const char *const kWinOpenSslDir = "OpenSSL";

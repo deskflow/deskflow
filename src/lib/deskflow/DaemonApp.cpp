@@ -178,10 +178,10 @@ int DaemonApp::run(int argc, char **argv)
     } else {
 #if SYSAPI_WIN32
       LOG((CLOG_PRINT "daemonizing windows service"));
-      arch.daemonize(DESKFLOW_APP_NAME, winMainLoopStatic);
+      arch.daemonize("Deskflow", winMainLoopStatic);
 #elif SYSAPI_UNIX
       LOG((CLOG_PRINT "daemonizing unix service"));
-      arch.daemonize(DESKFLOW_APP_NAME, unixMainLoopStatic);
+      arch.daemonize("Deskflow", unixMainLoopStatic);
 #endif
     }
 

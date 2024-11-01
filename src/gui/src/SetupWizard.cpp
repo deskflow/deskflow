@@ -23,7 +23,7 @@ SetupWizard::SetupWizard(AppConfig &appConfig)
       m_lineName{new QLineEdit(this)},
       m_btnApply{new QPushButton(tr("Continue"), this)}
 {
-  setWindowTitle(tr("Setup %1").arg(DESKFLOW_APP_NAME));
+  setWindowTitle(tr("Setup Deskflow"));
 
   setFixedSize(740, 550);
 

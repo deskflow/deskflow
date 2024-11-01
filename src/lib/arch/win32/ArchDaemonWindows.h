@@ -144,8 +144,8 @@ private:
   std::string m_commandLine;
 };
 
-#define DEFAULT_DAEMON_NAME _T(DESKFLOW_APP_NAME)
-#define DEFAULT_DAEMON_INFO _T("Manages the " DESKFLOW_APP_NAME " foreground processes.")
+#define DEFAULT_DAEMON_NAME _T("Deskflow")
+#define DEFAULT_DAEMON_INFO _T("Manages the Deskflow foreground processes.")
 
-#define LEGACY_SERVER_DAEMON_NAME _T(DESKFLOW_APP_NAME " Server")
-#define LEGACY_CLIENT_DAEMON_NAME _T(DESKFLOW_APP_NAME " Client")
+#define LEGACY_SERVER_DAEMON_NAME _T("Deskflow Server")
+#define LEGACY_CLIENT_DAEMON_NAME _T("Deskflow Client")

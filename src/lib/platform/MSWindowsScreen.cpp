@@ -148,7 +148,7 @@ MSWindowsScreen::MSWindowsScreen(
 
     updateScreenShape();
     m_class = createWindowClass();
-    m_window = createWindow(m_class, DESKFLOW_APP_NAME);
+    m_window = createWindow(m_class, "Deskflow");
     forceShowCursor();
     LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
     LOG((CLOG_DEBUG "window is 0x%08x", m_window));
@@ -850,7 +850,7 @@ ATOM MSWindowsScreen::createWindowClass() const
   classInfo.hCursor = NULL;
   classInfo.hbrBackground = NULL;
   classInfo.lpszMenuName = NULL;
-  classInfo.lpszClassName = DESKFLOW_APP_NAME;
+  classInfo.lpszClassName = "Deskflow";
   classInfo.hIconSm = NULL;
   return RegisterClassEx(&classInfo);
 }

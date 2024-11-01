@@ -376,7 +376,7 @@ ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
   classInfo.hCursor = m_cursor;
   classInfo.hbrBackground = NULL;
   classInfo.lpszMenuName = NULL;
-  classInfo.lpszClassName = DESKFLOW_APP_NAME "Desk";
+  classInfo.lpszClassName = "Deskflow Desk";
   classInfo.hIconSm = NULL;
   return RegisterClassEx(&classInfo);
 }
@@ -592,7 +592,7 @@ void MSWindowsDesks::deskThread(void *vdesk)
 
     // create a window.  we use this window to hide the cursor.
     try {
-      desk->m_window = createWindow(m_deskClass, DESKFLOW_APP_NAME "Desk");
+      desk->m_window = createWindow(m_deskClass, "Deskflow Desk");
       LOG((CLOG_DEBUG "desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window));
     } catch (...) {
       // ignore

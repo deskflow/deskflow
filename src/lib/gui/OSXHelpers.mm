@@ -54,7 +54,7 @@ bool
 isOSXDevelopmentBuild()
 {
 	std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
-	return (bundleURL.find("Applications/" DESKFLOW_APP_NAME ".app") == std::string::npos);
+        return (bundleURL.find("Applications/Deskflow.app") == std::string::npos);
 }
 
 bool

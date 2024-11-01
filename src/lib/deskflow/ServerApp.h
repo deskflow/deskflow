@@ -145,13 +145,9 @@ private:
   ClientListener *m_listener;
   EventQueueTimer *m_timer;
   NetworkAddress *m_deskflowAddress;
-};
-
-// configuration file name
 #if SYSAPI_WIN32
-#define USER_CONFIG_NAME "deskflow.sgc"
-#define SYSTEM_CONFIG_NAME "deskflow.sgc"
+  inline static const std::string CONFIG_NAME = "deskflow.sgc";
 #elif SYSAPI_UNIX
-#define USER_CONFIG_NAME ".deskflow.conf"
-#define SYSTEM_CONFIG_NAME "deskflow.conf"
+  inline static const std::string CONFIG_NAME = "deskflow.conf";
 #endif
+};

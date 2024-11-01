@@ -168,7 +168,7 @@ void AppUtilUnix::showNotification(const String &title, const String &text) cons
 {
 #if HAVE_LIBNOTIFY
   LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
-  if (!notify_init(DESKFLOW_APP_NAME)) {
+  if (!notify_init("Deskflow")) {
     LOG((CLOG_INFO "failed to initialize libnotify"));
     return;
   }

@@ -4,17 +4,17 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleDisplayName</key>
-    <string>@DESKFLOW_APP_NAME@</string>
+    <string>Deskflow</string>
     <key>CFBundleExecutable</key>
     <string>deskflow</string>
     <key>CFBundleIconFile</key>
-    <string>@DESKFLOW_APP_NAME@.icns</string>
+    <string>Deskflow.icns</string>
     <key>CFBundleIdentifier</key>
     <string>org.deskflow.deskflow</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>@DESKFLOW_APP_NAME@</string>
+    <string>Deskflow</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>

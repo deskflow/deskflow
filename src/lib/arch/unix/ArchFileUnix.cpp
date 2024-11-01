@@ -90,7 +90,7 @@ std::string ArchFileUnix::getInstalledDirectory()
 #if WINAPI_XWINDOWS
   return "/usr/bin";
 #else
-  return "/Applications/" DESKFLOW_APP_NAME ".app/Contents/MacOS";
+  return "/Applications/Deskflow.app/Contents/MacOS";
 #endif
 }
 
@@ -121,12 +121,12 @@ std::string ArchFileUnix::getProfileDirectory()
 #if WINAPI_XWINDOWS
     const auto xdgDir = std::getenv("XDG_CONFIG_HOME");
     if (xdgDir != nullptr) {
-      return std::filesystem::path(xdgDir) / DESKFLOW_APP_NAME;
+      return std::filesystem::path(xdgDir) / "Deskflow";
     } else {
-      return homeDir / ".config" / DESKFLOW_APP_NAME;
+      return homeDir / ".config" / "Deskflow";
     }
 #else
-    return homeDir / "Library" / DESKFLOW_APP_NAME;
+    return homeDir / "Library" / "Deskflow";
 #endif
   }
 }

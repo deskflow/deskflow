@@ -85,7 +85,7 @@ macro(configure_mac_packaging)
   set(DESKFLOW_BUNDLE_SOURCE_DIR
       ${PROJECT_SOURCE_DIR}/deploy/dist/mac/bundle
       CACHE PATH "Path to the macOS app bundle")
-  set(DESKFLOW_BUNDLE_DIR ${PROJECT_BINARY_DIR}/bundle/${DESKFLOW_APP_NAME}.app)
+  set(DESKFLOW_BUNDLE_DIR ${PROJECT_BINARY_DIR}/bundle/Deskflow.app)
   set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_DIR}/Contents/MacOS)
 
   configure_files(${DESKFLOW_BUNDLE_SOURCE_DIR} ${DESKFLOW_BUNDLE_DIR})
