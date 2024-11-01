@@ -85,16 +85,12 @@ def get_filename_base(version, prefix):
         # so we'll use Intel's 'x64' branding (even though it's wrong).
         # Also replace 'x86_64' with 'x64' for consistency.
         if machine == "amd64" or machine == "x86_64":
-            os_part = "win64"
+            os_part = "x64"
     elif os == "mac":
-        if machine == "amd64" or machine == "x86_64":
-            os_part = "mac_x64"
-        else:
-            os_part = "mac_arm64"
+            os_part = "macos"
+    # Add '-' between our name parts we do not want spaces in the filename
+    return f"{prefix}-{version}-{os_part}-{machine}"
 
-    # Underscore is used to delimit different parts of the filename (e.g. version, OS, etc).
-    # Dashes are used to delimit spaces, e.g. "debian-trixie" for "Debian Trixie".
-    return f"{prefix}-{version}_{os_part}"
 
 
 def windows_package(filename_base, project_build_dir, dist_dir):
