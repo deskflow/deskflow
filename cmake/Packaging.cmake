@@ -34,10 +34,10 @@ macro(configure_packaging)
       configure_linux_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "|.*BSD")
       message(STATUS "BSD packaging not yet supported")
-      set(OS_STRING ${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_PROCESSOR})
+      set(OS_STRING ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
     endif()
 
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${PACKAGE_VERSION_LABEL}_${OS_STRING}")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${PACKAGE_VERSION_LABEL}-${OS_STRING}")
     message(STATUS "Package Basename: ${CPACK_PACKAGE_FILE_NAME}")
 
     include(CPack)
@@ -65,10 +65,12 @@ macro(configure_windows_packaging)
   configure_files(${PROJECT_SOURCE_DIR}/res/dist/wix
                   ${PROJECT_BINARY_DIR}/installer)
 
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(OS_STRING "win64")
-  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(OS_STRING "win32")
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES AMD64)
+      set(OS_STRING "win-x64")
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES ARM64)
+      set(OS_STRING "win-arm64")
+  else()
+      set(OS_STRING "win-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
 
 endmacro()
@@ -87,7 +89,8 @@ macro(configure_mac_packaging)
   set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_DIR}/Contents/MacOS)
 
   configure_files(${DESKFLOW_BUNDLE_SOURCE_DIR} ${DESKFLOW_BUNDLE_DIR})
-  set(OS_STRING "macos")
+
+  set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
 
   file(RENAME ${DESKFLOW_BUNDLE_DIR}/Contents/Resources/App.icns
        ${DESKFLOW_BUNDLE_DIR}/Contents/Resources/${DESKFLOW_APP_NAME}.icns)
@@ -156,14 +159,14 @@ macro(configure_linux_package_name)
 
   # Determain the code name to be used if any
   if(NOT "${DISTRO_VERSION_ID}" STREQUAL "")
-    set(CN_STRING "${DISTRO_VERSION_ID}_")
+    set(CN_STRING "${DISTRO_VERSION_ID}-")
   endif()
 
   if(NOT "${DISTRO_CODENAME}" STREQUAL "")
-    set(CN_STRING "${DISTRO_CODENAME}_")
+    set(CN_STRING "${DISTRO_CODENAME}-")
   endif()
 
-  set(OS_STRING "${DISTRO_NAME}_${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
+  set(OS_STRING "${DISTRO_NAME}-${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
 
 endmacro()
 
