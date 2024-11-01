@@ -209,8 +209,11 @@ jobs:
         if: ${{runner.os != 'Linux' }}
         run: python ./scripts/setup_venv.py
 
+      - name: Get version
+        uses: ./.github/actions/get-version
+
       - name: Configure
-        run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }}
+        run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL=${{env.DESKFLOW_PACKAGE_VERSION}}
 
       - name: Build
         shell: bash
@@ -228,7 +231,7 @@ jobs:
             sudo -u build makepkg -s
             export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
             export ARCH=$(uname -m)
-            mv *.pkg.* $(ls *.pkg.* | sed "s/$ARCH/$OSNAME-$ARCH/g")
+            mv *.pkg.tar.zst deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}_${OSNAME}_${ARCH}.pkg.tar.zst
             cd ..
           fi
 
@@ -238,9 +241,6 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
-      - name: Get version
-        if: ${{ runner.os != 'Linux' }}
-        uses: ./.github/actions/get-version
 
       - name: Package
         if: ${{ runner.os != 'Linux' }}
