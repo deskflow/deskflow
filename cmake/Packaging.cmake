@@ -11,9 +11,6 @@ macro(configure_packaging)
 
   message(VERBOSE "Configuring Packaging")
   set(DESKFLOW_PROJECT_RES_DIR ${PROJECT_SOURCE_DIR}/res)
-  configure_file(${CMAKE_SOURCE_DIR}/cmake/CPackOptions.cmake.in
-                 ${CMAKE_BINARY_DIR}/cmake/CPackOptions.cmake @ONLY)
-  set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/CPackOptions.cmake)
 
   if(${BUILD_INSTALLER})
     set(CPACK_PACKAGE_NAME ${DESKFLOW_APP_ID})
@@ -22,8 +19,11 @@ macro(configure_packaging)
     set(CPACK_PACKAGE_VENDOR ${DESKFLOW_AUTHOR_NAME})
     set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 
-    if(NOT CPACK_PACKAGE_VERSION)
-      set(CPACK_PACKAGE_VERSION ${DESKFLOW_VERSION})
+    set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})
+
+    #Prevent this override from being written in the package
+    if(NOT PACKAGE_VERSION_LABEL)
+        set (PACKAGE_VERSION_LABEL "${CPACK_PACKAGE_VERSION}")
     endif()
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -37,8 +37,8 @@ macro(configure_packaging)
       set(OS_STRING ${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_PROCESSOR})
     endif()
 
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${OS_STRING}")
-    message(STATUS "Package Basename: ${CPACK_PACKAGE_NAME}")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${PACKAGE_VERSION_LABEL}_${OS_STRING}")
+    message(STATUS "Package Basename: ${CPACK_PACKAGE_FILE_NAME}")
 
     include(CPack)
   else()
