@@ -1,7 +1,0 @@
-brew 'make'
-brew 'cmake'
-brew 'openssl'
-brew 'ninja'
-brew 'googletest'
-brew 'tomlplusplus'
-brew 'cli11'

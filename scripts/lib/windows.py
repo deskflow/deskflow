@@ -196,36 +196,6 @@ class WindowsPackager:
         run_codesign(path, cert_base64, cert_password)
 
 
-class WindowsChoco:
-    """Chocolatey for Windows."""
-
-    def ensure_choco_installed(self):
-        if cmd_utils.has_command("choco"):
-            return
-
-        if not cmd_utils.has_command("winget"):
-            print(
-                "The winget command was not found, please install Chocolatey manually",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-        print("The choco command was not found, installing Chocolatey...")
-        cmd_utils.run(
-            "winget install chocolatey",
-            check=False,
-            shell=True,
-            print_cmd=True,
-        )
-
-        if not cmd_utils.has_command("choco"):
-            print(
-                "The choco command was still not found, please re-run this script...",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-
 class WindowsService:
     def __init__(self, script, args):
         self.script = script
