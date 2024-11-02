@@ -187,13 +187,18 @@ void App::initApp(int argc, const char **argv)
 {
 
   std::string configFilename;
-  CLI::App cliApp{kAppDescription, kAppName};
+  CLI::App cliApp{kAppDescription};
   cliApp.add_option("--config-toml", configFilename, "Use TOML configuration file");
 
   // Allow legacy args.
   cliApp.allow_extras();
 
-  cliApp.parse(argc, argv);
+  // Having the help argument crashes without try / catch around it
+  try {
+    cliApp.parse(argc, argv);
+  } catch (const CLI::Error &e) {
+    cliApp.exit(e);
+  }
 
   if (!configFilename.empty()) {
     Config config(configFilename, configSection());
