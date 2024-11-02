@@ -28,7 +28,6 @@ DEFAULT_PRODUCT_NAME = "Deskflow"
 DEFAULT_FILENAME_BASE = "deskflow"
 DEFAULT_PROJECT_BUILD_DIR = "build"
 DEFAULT_DIST_DIR = "dist"
-DEFAULT_TEST_CMD = "deskflow-server --version"
 DEFAULT_PACKAGE_NAME = "deskflow"
 
 
@@ -51,7 +50,6 @@ def main():
         DEFAULT_FILENAME_BASE,
         DEFAULT_PROJECT_BUILD_DIR,
         DEFAULT_DIST_DIR,
-        DEFAULT_TEST_CMD,
         DEFAULT_PRODUCT_NAME,
         version=args.package_version,
     )
@@ -60,7 +58,6 @@ def package(
     filename_prefix,
     project_build_dir,
     dist_dir,
-    test_cmd,
     product_name,
     version,
     source_dir=None,
