@@ -1,0 +1,26 @@
+---
+name: Nix packaging tests
+
+on:
+  workflow_call:
+
+jobs:
+  check-nix-flake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: nix flake check --show-trace --print-build-logs --accept-flake-config --all-systems
+
+  build-nix-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: nix build --print-build-logs --accept-flake-config

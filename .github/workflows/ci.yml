@@ -98,6 +98,10 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/valgrind-analysis.yml
 
+  nix-tests:
+    needs: lint-clang
+    uses: ./.github/workflows/nix-tests.yml
+
   analyse-sonarcloud:
     needs: pr-comment-flags
     if: ${{ needs.pr-comment-flags.outputs.no-sonar != 'true' }}
