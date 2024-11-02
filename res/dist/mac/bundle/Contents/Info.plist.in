@@ -24,7 +24,7 @@
     <key>CFBundleVersion</key>
     <string>@DESKFLOW_VERSION@</string>
     <key>NSHumanReadableCopyright</key>
-    <string>© 2012-@DESKFLOW_BUILD_YEAR@ Symless Ltd</string>
+    <string>© 2024 Deskflow Developers</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.9.0</string>
   </dict>
