@@ -20,8 +20,7 @@ TLS encryption is enabled by default. Wayland is supported. Clipboard sharing is
 To use Deskflow you can use one of our [packages](https://github.com/deskflow/deskflow/releases), install `deskflow` (if available in your package repository), or [build it](#build-quick-start) yourself from source.
 
 > [!TIP]
-> macOS users may need to run `xattr -c /Applications/Deskflow.app` after copying the app to the `Applications` dir.
-> You will also have to allow accessibility access to both the `Deskflow` app and the `deskflow` process.
+> For macOS users, the easiest way to install and stay up to date is to use [Homebrew](https://brew.sh) with our [homebrew-tap](https://github.com/deskflow/homebrew-tap).
 
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow?logo=github)](https://github.com/deskflow/deskflow/commits/master/)
 [![GitHub top language](https://img.shields.io/github/languages/top/deskflow/deskflow?logo=github)](https://github.com/deskflow/deskflow/commits/master/)
@@ -76,8 +75,31 @@ versions across them and gathering other information.
 
 [![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?exclude_unsupported=1)](https://repology.org/project/deskflow/versions)
 
-
 **Note:** We are working with package maintainers to have our new package name adopted.
+
+## Installing on macOS
+
+When you install Deskflow on macOS, you need to allow accessibility access (Privacy & Security) to both the `Deskflow` app and the `deskflow` process.
+
+If using Sequoia, you may also need to allow `Deskflow` under Local Network‍ settings (Privacy & Security).
+When prompted by the OS, go to the settings and enable the access.
+
+If you are upgrading and you already have `Deskflow` or `deskflow`
+on the allowed list you will need to manually remove them before accessibility access can be granted to the new version.
+
+macOS users who download directly from releases may need to run `xattr -c /Applications/Deskflow.app` after copying the app to the `Applications` dir.
+
+It is recommend to install Deskflow using [Homebrew](https://brew.sh) from our [homebrew-tap](https://github.com/deskflow/homebrew-tap)
+
+To add our tap, run:
+```
+brew tap deskflow/homebrew-tap
+```
+Then install either:
+- Stable: `brew instal deskflow`
+- Continuous: `brew install deskflow-dev`
+
+
 
 ## Collaborative Projects
 
