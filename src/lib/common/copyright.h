@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include <string>
-
 namespace deskflow {
 
 const auto kCopyright = //

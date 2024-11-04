@@ -19,16 +19,16 @@
 
 #include "AboutDialog.h"
 
+#include "common/copyright.h"
+#include "common/version.h"
+#include "gui/style_utils.h"
+
 #include <QClipboard>
 #include <QDateTime>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QStyle>
-
-#include "common/copyright.h"
-#include "common/version.h"
-#include "gui/style_utils.h"
 
 AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
 {
@@ -37,7 +37,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
   QString version = QString::fromStdString(deskflow::version());
 
   auto copyIcon = QIcon::fromTheme(
-      QIcon::ThemeIcon::EditCopy, deskflow::gui::isDarkMode() ? QIcon(s_darkcopy) : QIcon(s_lightcopy)
+      QIcon::ThemeIcon::EditCopy, deskflow::gui::isDarkMode() ? QIcon(s_darkCopy) : QIcon(s_lightCopy)
   );
 
   auto btnCopyVersion = new QPushButton(copyIcon, QString(), this);
