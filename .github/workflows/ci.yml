@@ -305,15 +305,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1.0.0
 
       - name: Get version
-        if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
         uses: ./.github/actions/get-version
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Generate package checksums
+        id: generate_notes
+        shell: bash
+        run: |
+          mv $GITHUB_WORKSPACE/package-*/deskflow-* .
+          rm -rf $GITHUB_WORKSPACE/package-*
+          echo "Build: ${{env.DESKFLOW_VERSION }}" > sums.txt
+          sha256sum deskflow-* >> sums.txt
 
       - name: Deploy continuous
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
@@ -322,10 +330,10 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "continuous"
           prerelease: true
-          title: "Continuous Build"
-          body: "build: ${{env.DESKFLOW_VERSION}}"
+          title: 'Continuous Build'
           files: |
-            package-*/*
+            deskflow-*
+            sums.txt
 
       - name: Deploy release
         if: contains(github.ref, '/tags/v')
@@ -334,7 +342,8 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            package-*/*
+            deskflow-*
+            sums.txt
             
   winget-publish:
     needs: release
