@@ -148,6 +148,15 @@ wiki.
 
 ![Meow'Dib](https://github.com/user-attachments/assets/726f695c-3dfb-4abd-875d-ed658f6c610f)
 
+
+## Deskflow Contributors
+
+Deskflow is made by possible by these contributors.
+
+ <a href = "https://github.com/deskflow/deskflow/graphs/contributors">
+   <img src = "https://contrib.rocks/image?repo=deskflow/deskflow"/>
+ </a>
+
 ## License
 
 This project is licensed under [GPL-2.0](LICENSE) with an [OpenSSL exception](LICENSE_EXCEPTION).
