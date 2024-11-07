@@ -19,10 +19,11 @@
 #include "ServerConfigDialog.h"
 #include "ui_ServerConfigDialog.h"
 
-#include "HotkeyDialog.h"
+#include "dialogs/ActionDialog.h"
+#include "dialogs/HotkeyDialog.h"
+
 #include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
-#include "dialogs/ActionDialog.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
