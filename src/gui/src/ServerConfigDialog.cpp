@@ -21,8 +21,8 @@
 
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
+#include "dialogs/ScreenSettingsDialog.h"
 
-#include "ScreenSettingsDialog.h"
 #include "ServerConfig.h"
 
 #include <QFileDialog>
