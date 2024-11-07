@@ -18,8 +18,8 @@
 
 #include "ScreenSetupView.h"
 
-#include "ScreenSettingsDialog.h"
 #include "ScreenSetupModel.h"
+#include "dialogs/ScreenSettingsDialog.h"
 
 #include <QDrag>
 #include <QDragEnterEvent>
