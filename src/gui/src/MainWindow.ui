@@ -727,12 +727,12 @@
   <customwidget>
    <class>deskflow::gui::widgets::ServerStateLabel</class>
    <extends>QLabel</extends>
-   <header>gui/widgets/ServerStateLabel.h</header>
+   <header>widgets/ServerStateLabel.h</header>
   </customwidget>
   <customwidget>
    <class>deskflow::gui::widgets::ClientStateLabel</class>
    <extends>QLabel</extends>
-   <header>gui/widgets/ClientStateLabel.h</header>
+   <header>widgets/ClientStateLabel.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
