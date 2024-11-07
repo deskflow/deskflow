@@ -19,10 +19,11 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include "ServerConfigDialog.h"
-#include "common/constants.h"
 #include "dialogs/AboutDialog.h"
+#include "dialogs/ServerConfigDialog.h"
 #include "dialogs/SettingsDialog.h"
+
+#include "common/constants.h"
 #include "gui/Logger.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
