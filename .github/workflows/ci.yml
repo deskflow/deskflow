@@ -301,7 +301,7 @@ jobs:
 
   release:
     needs: ci-passed
-    if: (github.ref == 'refs/heads/master')
+    if: (github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v'))
     runs-on: ubuntu-latest
 
     steps:
