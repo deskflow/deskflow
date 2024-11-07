@@ -25,7 +25,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 file(GLOB_RECURSE sources *.cpp)
 file(GLOB_RECURSE headers *.h)
-file(GLOB_RECURSE ui_files *.ui)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   file(GLOB mac_sources *.mm)
@@ -39,7 +38,7 @@ endif()
 # generated includes
 include_directories(${PROJECT_BINARY_DIR}/config)
 
-add_library(${target} STATIC ${sources} ${ui_files} ${qrc_file})
+add_library(${target} STATIC ${sources} ${qrc_file})
 
 target_link_libraries(
   ${target}
