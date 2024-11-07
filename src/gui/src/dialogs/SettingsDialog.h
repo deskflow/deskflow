@@ -17,8 +17,7 @@
  */
 
 #pragma once
-
-#include "ui_SettingsDialogBase.h"
+#include <QDialog>
 
 #include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
@@ -26,9 +25,11 @@
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ValidationError.h"
 
-#include <QDialog>
+namespace Ui {
+class SettingsDialog;
+}
 
-class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
+class SettingsDialog : public QDialog
 {
   using IAppConfig = deskflow::gui::IAppConfig;
   using IServerConfig = deskflow::gui::IServerConfig;
@@ -41,6 +42,7 @@ public:
   SettingsDialog(
       QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
   );
+  ~SettingsDialog() override;
 
 signals:
   void shown();
@@ -82,6 +84,7 @@ private:
   /// the scope and doesn't save changes
   bool m_wasOriginallySystemScope = false;
 
+  std::unique_ptr<Ui::SettingsDialog> ui;
   IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
   const CoreProcess &m_coreProcess;
