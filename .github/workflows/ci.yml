@@ -264,6 +264,88 @@ jobs:
           name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
           path: ${{github.workspace}}/build/deskflow[-_]*.*
 
+  # ARM JOB
+  container_build:
+    runs-on: ubuntu-latest
+    name: ${{matrix.target.name}}
+    needs: lint-clang
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+         - name: "fedora-40-arm64"
+           distro: fedora_latest
+           arch: aarch64
+           like: "fedora"
+
+    steps:
+      - name: Checkout
+        uses: sithlord48/fancy-checkout@v1.0.0
+
+      - name: Build artifact
+        uses: uraimo/run-on-arch-action@v2.8.1
+        with:
+          arch: ${{ matrix.target.arch }}
+          distro: ${{ matrix.target.distro }}
+          githubToken: ${{ github.token }}
+          setup: mkdir -p "${PWD}/artifacts"
+          dockerRunArgs: --volume "${PWD}/artifacts:/artifacts"
+          shell: /bin/bash
+          install: |
+            if [ ${{matrix.target.like}} == "debian" ]; then
+              apt update -qqq > /dev/null
+              apt install -qqq cmake git build-essential ninja-build \
+                xorg-dev libx11-dev libxtst-dev libssl-dev \
+                libglib2.0-dev libgdk-pixbuf-2.0-dev libnotify-dev \
+                libxkbfile-dev qt6-base-dev qt6-tools-dev \
+                libgtk-3-dev libgtest-dev libgmock-dev libpugixml-dev \
+                libei-dev libportal-dev libtomlplusplus-dev libcli11-dev -y >/dev/null
+            elif [ ${{matrix.target.like}} == "fedora" ]; then
+              dnf install -y cmake git make ninja-build gcc-c++ \
+                rpm-build openssl-devel glib2-devel \
+                gdk-pixbuf2-devel libXtst-devel libnotify-devel \
+                libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
+                gtk3-devel gtest-devel gmock-devel pugixml-devel \
+                libei-devel libportal-devel tomlplusplus-devel \
+                cli11-devel
+            elif [ ${{matrix.target.like}} == "suse" ]; then
+              zypper refresh
+              zypper install -y --force-resolution \
+                cmake make ninja git gcc-c++ rpm-build libopenssl-devel \
+                glib2-devel gdk-pixbuf-devel libXtst-devel libnotify-devel \
+                libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
+                googletest-devel googlemock-devel pugixml-devel libei-devel \
+                libportal-devel tomlplusplus-devel cli11-devel
+            elif [ ${{ matrix.target.like }} == "arch" ]; then
+              pacman -Syu --noconfirm base-devel cmake ninja \
+                gcc openssl glib2 git gdk-pixbuf2 libxtst libnotify \
+                libxkbfile gtest pugixml libei libportal \
+                qt6-base qt6-tools gtk3 tomlplusplus cli11
+            else
+              echo "Unknown like"
+            fi
+          run: |
+            git config --global --add safe.directory /home/runner/work/deskflow/deskflow
+            ${{env.CMAKE_CONFIGURE}} -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+            if [ ${{ matrix.target.like }} != "arch" ]; then
+              cmake --build build --config Release --target package -j8
+            else
+              useradd -m build
+              cmake --build build --config Release -j8
+              sudo chown -R build build
+              cd build
+              sudo -u build makepkg -s
+              export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
+              export ARCH=$(uname -m)
+              mv *.pkg.* $(ls *.pkg.* | sed "s/$ARCH/$OSNAME-$ARCH/g")
+              cd ..
+            fi
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-${{matrix.target.name}}
+          path: build/deskflow[-_]*.*
+
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
     needs: lint-clang
