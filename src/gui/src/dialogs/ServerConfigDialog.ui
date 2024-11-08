@@ -1170,7 +1170,7 @@ Enabling this setting will disable the server config GUI.</string>
   <customwidget>
    <class>TrashScreenWidget</class>
    <extends>QLabel</extends>
-   <header>TrashScreenWidget.h</header>
+   <header>widgets/TrashScreenWidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
