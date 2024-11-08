@@ -305,7 +305,7 @@
   <customwidget>
    <class>KeySequenceWidget</class>
    <extends>QLineEdit</extends>
-   <header>KeySequenceWidget.h</header>
+   <header>widgets/KeySequenceWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
