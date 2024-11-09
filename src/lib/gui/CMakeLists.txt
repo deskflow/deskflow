@@ -15,9 +15,6 @@
 
 set(target gui)
 
-set(res_dir ${GUI_RES_DIR})
-set(qrc_file ${GUI_QRC_FILE})
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -38,7 +35,7 @@ endif()
 # generated includes
 include_directories(${PROJECT_BINARY_DIR}/config)
 
-add_library(${target} STATIC ${sources} ${qrc_file})
+add_library(${target} STATIC ${sources})
 
 target_link_libraries(
   ${target}
