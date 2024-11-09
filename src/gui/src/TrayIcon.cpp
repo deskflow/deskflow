@@ -17,8 +17,8 @@
 
 #include "TrayIcon.h"
 
-#include "Logger.h"
 #include "common/constants.h"
+#include "gui/Logger.h"
 
 namespace deskflow::gui {
 
