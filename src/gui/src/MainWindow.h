@@ -26,8 +26,8 @@
 #include <QThread>
 
 #include "ServerConfig.h"
+#include "TrayIcon.h"
 #include "common/ipc.h"
-#include "gui/TrayIcon.h"
 #include "gui/VersionChecker.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
