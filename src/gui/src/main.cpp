@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "DeskflowApplication.h"
 #include "MainWindow.h"
 #include "SetupWizard.h"
 #include "common/constants.h"
@@ -83,7 +82,14 @@ int main(int argc, char *argv[])
   // used as a prefix for settings paths, and must not be a url.
   QCoreApplication::setOrganizationDomain(kOrgDomain);
 
-  DeskflowApplication app(argc, argv);
+  QApplication app(argc, argv);
+
+#if !defined(Q_OS_MAC)
+  // causes dark mode to be used on some DE's
+  if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") != QLatin1String("KDE")) {
+    qApp->setStyle("fusion");
+  }
+#endif
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   QString version = QString::fromStdString(deskflow::version());
@@ -136,16 +142,13 @@ int main(int argc, char *argv[])
   }
 
   MainWindow mainWindow(configScopes, appConfig);
-
-  QObject::connect(&app, &DeskflowApplication::aboutToQuit, &mainWindow, &MainWindow::onAppAboutToQuit);
-
   mainWindow.open();
 
 #ifdef DESKFLOW_GUI_HOOK_START
   DESKFLOW_GUI_HOOK_START
 #endif
 
-  return DeskflowApplication::exec();
+  return qApp->exec();
 }
 
 #if defined(Q_OS_MAC)
