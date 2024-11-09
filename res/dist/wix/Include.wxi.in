@@ -6,6 +6,7 @@
     <?define Author="@DESKFLOW_AUTHOR_NAME@"?>
     <?define BinDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"?>
     <?define ProjectResDir="@DESKFLOW_PROJECT_RES_DIR@"?>
+    <?define ProjectIcon="@CMAKE_SOURCE_DIR@/src/gui/src/app.ico"?>
     <?define ResDir="@DESKFLOW_RES_DIR@"?>
     <?define QtDir="@QT_PATH@"?>
     <?define QtBinDir="$(var.QtDir)\bin"?>
