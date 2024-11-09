@@ -20,12 +20,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(res_dir ${GUI_RES_DIR})
-set(qrc_file ${GUI_QRC_FILE})
-
 file(
   GLOB
   sources
+  res/app.qrc
   src/*.cpp
   src/*.h
   src/dialogs/*.h
@@ -48,7 +46,7 @@ include_directories(${PROJECT_BINARY_DIR}/src/lib/gui/gui_autogen/include)
 # generated includes
 include_directories(${PROJECT_BINARY_DIR}/config)
 
-add_executable(${target} WIN32 ${sources} ${ui_files} ${rc_files} ${qrc_file})
+add_executable(${target} WIN32 ${sources} ${ui_files} ${rc_files})
 
 target_link_libraries(
   ${target}

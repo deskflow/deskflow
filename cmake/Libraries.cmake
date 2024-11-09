@@ -354,8 +354,7 @@ macro(configure_qt)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
-  set(GUI_RES_DIR ${DESKFLOW_RES_DIR}/gui)
-  set(GUI_QRC_FILE ${GUI_RES_DIR}/app.qrc)
+  set(GUI_QRC_FILE ${PROJECT_SOURCE_DIR}/src/gui/res/app.qrc)
 
 endmacro()
 
