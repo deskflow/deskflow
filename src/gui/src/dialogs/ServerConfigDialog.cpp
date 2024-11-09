@@ -44,6 +44,10 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 {
   ui->setupUi(this);
 
+  const auto folderIcon =
+      QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen, QIcon(QStringLiteral(":/icons/64x64/folder.png")));
+  ui->m_pButtonBrowseConfigFile->setIcon(folderIcon);
+
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
   ui->m_pTabWidget->setCurrentIndex(0);
