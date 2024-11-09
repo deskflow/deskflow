@@ -45,7 +45,7 @@
 		</DirectoryRef>
 		<Property Id="CommonBackground">CommonBackground</Property>
 		<Binary Id="CommonBackground" SourceFile="$(var.ResDir)\dist\wix\images\common_background.png"/>
-		<Icon Id="AppIcon" SourceFile="$(var.ResDir)/app.ico"/>
+		<Icon Id="AppIcon" SourceFile="$(var.ProjectIcon)"/>
 		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResDir)\dist\wix\images\banner.png"/>
 		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResDir)\dist\wix\images\dialog.png"/>
 		<Property Id="ARPPRODUCTICON" Value="AppIcon"/>
@@ -99,7 +99,7 @@
 			<Component Guid="BAC8149B-6287-45BF-9C27-43D71ED40214" Id="Gui">
 				<File Id="GuiProgram" KeyPath="yes" Source="$(var.BinDir)/$(var.GuiBin)">
 					<Shortcut Advertise="yes" Directory="ProgramMenuFolder" Icon="$(var.GuiBin)" Id="GuiShortcut" Name="$(var.Name)">
-						<Icon Id="$(var.GuiBin)" SourceFile="$(var.ResDir)/app.ico"/>
+						<Icon Id="$(var.GuiBin)" SourceFile="$(var.ProjectIcon)"/>
 					</Shortcut>
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="$(var.Name)" Scope="any"/>
 				</File>
