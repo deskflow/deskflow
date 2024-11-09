@@ -35,7 +35,7 @@ file(
 file(GLOB ui_files src/*.ui src/dialogs/*.ui)
 
 if(WIN32)
-  set(rc_files ${res_dir}/win/app.rc ${PROJECT_BINARY_DIR}/src/version.rc)
+  set(rc_files ${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc ${PROJECT_BINARY_DIR}/src/version.rc)
 endif()
 
 # regular exe headers
