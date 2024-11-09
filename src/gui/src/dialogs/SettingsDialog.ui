@@ -276,16 +276,6 @@
               <property name="text">
                <string/>
               </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>13</height>
-               </size>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -562,16 +552,6 @@
               </property>
               <property name="text">
                <string/>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>13</height>
-               </size>
               </property>
               <property name="flat">
                <bool>true</bool>
