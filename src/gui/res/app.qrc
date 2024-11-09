@@ -1,17 +1,17 @@
 <RCC>
     <qresource>
-        <file>icons/64x64/video-display.png</file>
-        <file>icons/64x64/user-trash.png</file>
-        <file>image/logo-light.png</file>
-        <file>image/logo-dark.png</file>
+        <file>icons/64x64/copy-dark.png</file>
+        <file>icons/64x64/copy-light.png</file>
+        <file>icons/64x64/folder.png</file>
         <file>icons/64x64/padlock.png</file>
+        <file>icons/64x64/user-trash.png</file>
+        <file>icons/64x64/video-display.png</file>
+        <file>icons/128x128/tray.png</file>
         <file>icons/128x128/tray-dark.png</file>
         <file>icons/128x128/tray-light.png</file>
-        <file>icons/128x128/tray.png</file>
-        <file>image/welcome.png</file>
-        <file>icons/64x64/folder.png</file>
-        <file>icons/64x64/copy-light.png</file>
-        <file>icons/64x64/copy-dark.png</file>
+        <file>image/logo-light.png</file>
+        <file>image/logo-dark.png</file>
         <file>image/placeholder.png</file>
+        <file>image/welcome.png</file>
     </qresource>
 </RCC>
