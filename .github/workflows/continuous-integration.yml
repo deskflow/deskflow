@@ -2,7 +2,7 @@
 # Runs on all platforms (Windows, macOS, and Linux)
 # for all events (pull request, release, and schedule).
 
-name: CI
+name: Continuous Integration
 
 on:
   push:
