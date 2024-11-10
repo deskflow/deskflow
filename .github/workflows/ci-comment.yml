@@ -11,7 +11,7 @@ name: CI comment
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["Continuous Integration"]
     types:
       - completed
 
