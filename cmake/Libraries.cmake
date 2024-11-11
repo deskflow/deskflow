@@ -338,9 +338,6 @@ macro(configure_windows_libs)
     /DDESKFLOW_VERSION=\"${DESKFLOW_VERSION}\"
     /D_XKEYCHECK_H)
 
-  configure_file(${PROJECT_SOURCE_DIR}/res/win/version.rc.in
-                 ${PROJECT_BINARY_DIR}/src/version.rc @ONLY)
-
   configure_openssl()
 
 endmacro()
