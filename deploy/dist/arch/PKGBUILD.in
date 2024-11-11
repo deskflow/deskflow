@@ -1,6 +1,6 @@
-# Maintainer: @DESKFLOW_MAINTAINER@
+# Maintainer: Deskflow Developers
 
-pkgname=@DESKFLOW_APP_ID@
+pkgname=deskflow
 pkgver=@DESKFLOW_VERSION@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"

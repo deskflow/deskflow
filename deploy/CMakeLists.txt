@@ -25,4 +25,11 @@ elseif(NOT APPLE)
     RENAME org.deskflow.deskflow.png
   )
 
+  # Prepare PKGBUILD for Arch Linux
+  configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/dist/arch/PKGBUILD.in
+    ${CMAKE_BINARY_DIR}/PKGBUILD
+    @ONLY
+  )
+
 endif()
