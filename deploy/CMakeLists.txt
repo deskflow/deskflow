@@ -12,6 +12,12 @@ if(WIN32)
 
 elseif(NOT APPLE)
 
+  # Install our desktop file
+  install(
+    FILES ${CMAKE_CURRENT_LIST_DIR}/org.deskflow.deskflow.desktop
+    DESTINATION share/applications
+  )
+
   # Install our icon
   install(
     FILES ${CMAKE_CURRENT_LIST_DIR}/deskflow.png

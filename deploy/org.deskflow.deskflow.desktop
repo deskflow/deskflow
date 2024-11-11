@@ -1,11 +1,10 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=@DESKFLOW_APP_NAME@
+Name=Deskflow
 Comment=Mouse and keyboard sharing utility
-Path=/usr/bin
-Exec=/usr/bin/@GUI_BINARY_NAME@
-Icon=@DESKFLOW_APP_ID@
+Exec=deskflow
+Icon=org.deskflow.deskflow
 Terminal=false
 Categories=Utility;
 Keywords=keyboard;mouse;sharing;network;share;
