@@ -62,7 +62,7 @@ macro(configure_windows_packaging)
       "8F57C657-BC87-45E6-840E-41242A93511C"
       CACHE STRING "GUID for 32-bit MSI installer")
 
-  configure_files(${PROJECT_SOURCE_DIR}/res/dist/wix
+  configure_files(${PROJECT_SOURCE_DIR}/deploy/dist/wix
                   ${PROJECT_BINARY_DIR}/installer)
 
   if(CMAKE_SYSTEM_PROCESSOR MATCHES AMD64)

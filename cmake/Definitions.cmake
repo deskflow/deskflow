@@ -86,9 +86,9 @@ macro(configure_meta)
       "Report a bug"
       CACHE STRING "Text label for the help menu item")
 
-  set(DESKFLOW_RES_DIR
-      "${PROJECT_SOURCE_DIR}/res"
-      CACHE STRING "Resource directory for images, etc")
+  set(DESKFLOW_DEPLOY_RES_DIR
+      "${PROJECT_SOURCE_DIR}/deploy"
+      CACHE STRING "Deploy resource directory for images, etc")
 
   set(DESKFLOW_MAC_BUNDLE_CODE
       "DFLW"
@@ -106,7 +106,7 @@ macro(configure_meta)
   message(VERBOSE "Website URL: ${DESKFLOW_WEBSITE_URL}")
   message(VERBOSE "Version URL: ${DESKFLOW_VERSION_URL}")
   message(VERBOSE "Help text: ${DESKFLOW_HELP_TEXT}")
-  message(VERBOSE "Res dir: ${DESKFLOW_RES_DIR}")
+  message(VERBOSE "Res dir: ${DESKFLOW_DEPLOY_RES_DIR}")
   message(VERBOSE "Mac bundle code: ${DESKFLOW_MAC_BUNDLE_CODE}")
   message(VERBOSE "Show dev thanks: ${DESKFLOW_SHOW_DEV_THANKS}")
 
@@ -119,7 +119,6 @@ macro(configure_meta)
   add_definitions(-DDESKFLOW_WEBSITE_URL="${DESKFLOW_WEBSITE_URL}")
   add_definitions(-DDESKFLOW_VERSION_URL="${DESKFLOW_VERSION_URL}")
   add_definitions(-DDESKFLOW_HELP_TEXT="${DESKFLOW_HELP_TEXT}")
-  add_definitions(-DDESKFLOW_RES_DIR="${DESKFLOW_RES_DIR}")
 
   if(DESKFLOW_SHOW_DEV_THANKS)
     message(VERBOSE "Showing developer thanks message")

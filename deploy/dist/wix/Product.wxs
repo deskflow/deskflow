@@ -38,16 +38,16 @@
 				<Condition><![CDATA[Installed OR (VersionNT >= 602)]]></Condition>
 			</Component>
 			<?if $(var.Platform) = x64 ?>
-				<Merge Id="VC_Redist" SourceFile="$(var.ProjectResDir)\dist\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
+				<Merge Id="VC_Redist" SourceFile="$(var.DeployResDir)\dist\wix\msm\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
 			<?else ?>
-				<Merge Id="VC_Redist" SourceFile="$(var.ProjectResDir)\dist\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
+				<Merge Id="VC_Redist" SourceFile="$(var.DeployResDir)\dist\wix\msm\Microsoft_VC142_CRT_x86.msm" DiskId="1" Language="0"/>
 			<?endif ?>
 		</DirectoryRef>
 		<Property Id="CommonBackground">CommonBackground</Property>
-		<Binary Id="CommonBackground" SourceFile="$(var.ResDir)\dist\wix\images\common_background.png"/>
+		<Binary Id="CommonBackground" SourceFile="$(var.DeployResDir)\dist\wix\images\common_background.png"/>
 		<Icon Id="AppIcon" SourceFile="$(var.ProjectIcon)"/>
-		<WixVariable Id="WixUIBannerBmp" Value="$(var.ResDir)\dist\wix\images\banner.png"/>
-		<WixVariable Id="WixUIDialogBmp" Value="$(var.ResDir)\dist\wix\images\dialog.png"/>
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.DeployResDir)\dist\wix\images\banner.png"/>
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.DeployResDir)\dist\wix\images\dialog.png"/>
 		<Property Id="ARPPRODUCTICON" Value="AppIcon"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
 		<Property Id="LEGACY_UNINSTALL_EXISTS">
