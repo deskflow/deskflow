@@ -10,4 +10,13 @@ if(WIN32)
     ${PROJECT_BINARY_DIR}/src/version.rc @ONLY
   )
 
+elseif(NOT APPLE)
+
+  # Install our icon
+  install(
+    FILES ${CMAKE_CURRENT_LIST_DIR}/deskflow.png
+    DESTINATION share/icons/hicolor/512x512/apps/
+    RENAME org.deskflow.deskflow.png
+  )
+
 endif()

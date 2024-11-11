@@ -199,11 +199,6 @@ macro(configure_linux_packaging)
     DESTINATION share/applications
     RENAME ${install_desktop_file})
 
-  install(
-    FILES ${DESKFLOW_RES_DIR}/app.png
-    DESTINATION share/pixmaps
-    RENAME ${DESKFLOW_APP_ID}.png)
-
   # Prepare PKGBUILD for Arch Linux
   configure_file(${DESKFLOW_PROJECT_RES_DIR}/dist/arch/PKGBUILD.in
                  ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
