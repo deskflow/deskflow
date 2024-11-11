@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>org.deskflow.deskflow</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>GPL-2.0+</project_license>
+	<name>Deskflow</name>
+	<developer_name>Deskflow Developers</developer_name>
+	<summary>Software Keyboard and mouse sharing</summary>
+	<description>
+		<p>
+			Use your keyboard and mouse to control other machines on the network or be controle
+		</p>
+	</description>
+	<launchable type="desktop-id">org.deskflow.deskflow.desktop</launchable>
+	<url type="homepage">https://deskflow.org</url>
+	<url type="bugtracker">https://github.com/deskflow/deskflow/issues</url>
+	<screenshots>
+		<screenshot type="default">
+			<image>https://github.com/user-attachments/assets/883660dc-f3f5-4b69-8821-a079a58d3882</image>
+		</screenshot>
+	</screenshots>
+	<provides> <id>org.deskflow.deskflow.desktop</id> </provides>
+	<categories>
+		<category>Utility</category>
+	</categories>
+	<keywords>
+		<keyword translate="no">Input</keyword>
+		<keyword translate="no">Sharing</keyword>
+		<keyword translate="no">KVM</keyword>
+		<keyword translate="no">Synergy</keyword>
+	</keywords>
+	<branding>
+		<color type="primary" scheme_preference="light">#deddda</color>
+		<color type="primary" scheme_preference="dark">#5e5c64</color>
+	</branding>
+	<content_rating type="oars-1.0" />
+	<releases>
+		<release version="1.17.1" date="2024-11-7" urgency="high">
+			<description>
+				<p>This stable Release Has a very long chagelog some notable ones are.</p>
+				<ul>
+					<li>Remove word 'beta' from Wayland message</li>
+					<li>docs: Update `README.md` with Matrix link</li>
+					<li>Make `README.md` more relevant to current repo state</li>
+					<li>Use #pragma once for headers</li>
+					<li>Remove Python `.venv` dir caching to reduce complexity</li>
+					<li>Add discussion value to project values in README.md</li>
+					<li>Use modern Qt connections in GUI</li>
+					<li>chore: rm unused string_utils file</li>
+					<li>build: findSSL via cmake</li>
+					<li>fix: Set correct QGuiApplication::desktopFileName</li>
+					<li>feat: Use native style on KDE Plasma</li>
+					<li>build: Don't force CMAKE_INSTALL_PREFIX</li>
+					<li>CI: Requires Lint to pass before running other jobs. Allow CI to be skipped for non code changes</li>
+					<li>Move res/config.h.in -> src/lib/config.h.in</li>
+					<li>build: Drop warnings_as_errors</li>
+					<li>chore: cmake user files to gitignore</li>
+					<li>chore: add basic .gitattributes</li>
+					<li>Use high res icons and remove unused</li>
+					<li>Coverage for `AboutDialog.cpp`</li>
+					<li>CI cleanup and consolidation</li>
+					<li>Remove dead `test-dist-upload.yml` file</li>
+					<li>fix: align --display explanation in help message</li>
+					<li>Use version from Git tags instead of `VERSION` file</li>
+					<li>Add leading edge philosophy to README.md</li>
+					<li>Fixed minor typos in the bug report template</li>
+					<li>Change TLS dir to same as Qt config</li>
+					<li>Restore `pull_request` trigger for `codeql-analysis.yml`</li>
+					<li>Fixed error count logic for test summary</li>
+					<li>Solve QCheckBox 6.7+ warning and exclude GUI from coverage</li>
+					<li>build: set project description</li>
+					<li>fix: Check for errors before reading version string</li>
+					<li>ci: clearer and cleaner steps</li>
+					<li>Arch package fixup</li>
+					<li>Force LF in gitattributes</li>
+					<li>docs: Add other build type to bug report template</li>
+					<li>Fixed code style in `ci.yml` workflow</li>
+					<li>Remove `cmake-format` linter (more harm than good)</li>
+					<li>Ignore paths for CodeQL Analysis</li>
+					<li>Always run PR comments job</li>
+					<li>docs: Add .editorconfig file</li>
+					<li>Remove Wayland experimental pop</li>
+					<li>build: linux packages with proper names using cpack</li>
+					<li>ci: vcpkg cache working</li>
+					<li>fix: Use `OPENSSL_EXE_DIR` instead of `OPENSSL_ROOT_DIR` on Windows</li>
+					<li>build: Add `gtest-args` for VS Code users</li>
+					<li>chore: Replace assert with warning for screen boundary issue</li>
+					<li>chore: resolve cmake cap nits</li>
+					<li>fix: Let users select version number and build in About Dialog</li>
+					<li>Adjust Clang-format linter rules</li>
+					<li>chore: Update feature request template</li>
+					<li>build: update required ssl to 3.0+</li>
+					<li>ci: Use `cmake` instead of `make` directly for Arch package</li>
+					<li>build: Require cmake 3.24</li>
+					<li>ci: use vcpkg action on ci to cache</li>
+					<li>ci: Remove CMake presets</li>
+					<li>build: get CLI11 via file download if not on system</li>
+					<li>ci: remove unused cache step</li>
+					<li>build: arch package won't install /bin</li>
+					<li>build: use File to dl toml++ if not on system</li>
+					<li>ci: Catch std::exception on toml::parse_file</li>
+					<li>Optional FreeBSD integtests  and reduce CMake arg dupe</li>
+					<li>fix: server config dialog show event</li>
+					<li>docs: Checkbox for continuous build on bug template</li>
+					<li>build: use vcpkg for all depends, vcpkg action on ci to cache</li>
+					<li>Remove `.ui` files from being the base class</li>
+					<li>Protocol interoperability for Input Leap (Barrier) and Synergy</li>
+					<li>build: arch package requires tomlplusplus and cli11</li>
+					<li>build: Use Fetch Content for Gtest</li>
+					<li>fix:#7760 use a proper fedora package name</li>
+					<li>Static cast screen column count for scan alert 559</li>
+					<li>build: remove stale meson parts for wintoast</li>
+					<li>ci: Normalize CI step names, descriptions, etc</li>
+					<li>ci: New macOS CI with Qt action</li>
+					<li>Drop `.ui` file for setup wizard</li>
+					<li>Clazy nits</li>
+					<li>ci: Bump containers for analyze workflows</li>
+					<li>ci: use fancy checkout action</li>
+					<li>Fix the windows installer</li>
+					<li>build: Require libei and libportal on linux</li>
+					<li>Unify Jobs into one matrix</li>
+					<li>docs: Update Readme</li>
+					<li>ci: remove unused libportal check from Librarires.cmake</li>
+					<li>docs: Remove confusing value line in readme</li>
+					<li>Simplify build by using Docker containers directly</li>
+					<li>docs: Remote build containers badge</li>
+					<li>Elaborate on settings dialog help (what's this)</li>
+					<li>Mosty glob free</li>
+					<li>build: update package names for linux to be more unified</li>
+					<li>chore: add link to wayland discussion</li>
+					<li>docs: readme add mac os xattr note</li>
+					<li>Update README.md to restore sponsor link</li>
+					<li>docs: Fixed sponsor link in README</li>
+					<li>User docs</li>
+					<li>chore: settingsDialog rm unused CoreTool include</li>
+					<li>Do not build deskflow legacy</li>
+					<li>build: add deskflow devs to binaries copyright</li>
+					<li>doc: correct target for documents</li>
+					<li>docs: Improve error messages around Doxygen</li>
+					<li>fix: crash on --help arg</li>
+					<li>docs: contributors on readme</li>
+					<li>Clean up scripts directory</li>
+					<li>No UI about dialog</li>
+					<li>chore: add homebrew tap info to readme</li>
+					<li>chore: Replace screen leave/enter asserts with warnings</li>
+					<li>CI: added updated winget package submission</li>
+					<li>ci: Use GITHUB_TOKEN in place of PAT</li>
+					<li>ci: use pre-release for continuous to stop it from grabbing latest tag</li>
+					<li>ci: git-version-action: Always report described version</li>
+					<li>ci: adjust pacakge script to use the names we would like when in cpack</li>
+				</ul>
+			</description>
+		<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.1</url>
+		</release>
+		<release version="1.17.0" date="2024-10-02" urgency="low">
+			<description>
+				<p>This is the first Deskflow Release.</p>
+				<ul>
+					<li>Use Deskflow Name</li>
+					<li>fix: windows build typos</li>
+					<li>Fix broken CI caused by renaming project to Deskflow</li>
+					<li>fix: protocol compatibility with Synergy</li>
+					<li>Remove Google Drive upload and always upload to GitHub</li>
+					<li>fix: stuck keys on leave</li>
+					<li>ci: always upgrade packages on arch</li>
+					<li>ci: option to skip changelog lint in PR</li>
+					<li>docs: fixed link to config.yaml in README.md</li>
+					<li>docs: add sponsor badge and blurb to readme</li>
+					<li>ci: lint and add comment to PR on fail</li>
+					<li>docs: add build type to bug report form</li>
+					<li>docs: add extra badges and fix sponsor link</li>
+					<li>build: default to system tomlplusplus and CLI11</li>
+					<li>ci: give write permission for PR comments</li>
+					<li>build: fixed option name for SYSTEM_TOMLPLUSPLUS</li>
+					<li>build: script to create Python virtual env</li>
+					<li>build: set BUILD_DATE instead of using __DATE__</li>
+					<li>ci: delete ChangeLog because it's redundant</li>
+					<li>feat: use new Deskflow graphics</li>
+					<li>fix: various typos found by unit193</li>
+					<li>docs: add new logo to readme and update screenshot</li>
+					<li>ci: use workflow_run to comment on PRs</li>
+					<li>feat: change most domains to Deskflow</li>
+					<li>feat: ask for permission before update check</li>
+					<li>ci: remove restore-keys for vcpkg and use local bootstrap</li>
+					<li>ci: add pr comment based on ci result</li>
+					<li>ci: add link back to workflow summary in pr comment</li>
+					<li>ci: use github.event.workflow_run.id for CI summary comment</li>
+					<li>ci: check for summaries dir before building message</li>
+					<li>ci: handle files with same name in ci comment workflow</li>
+					<li>ci: fixed syntax error in ci comment workflow</li>
+					<li>ci: use braces block for formatting in ci comment</li>
+					<li>ci: use job summary instead of pr comment</li>
+					<li>ci: lookup pr number by head sha for ci comment</li>
+					<li>fix: Update onMouseMoveSecondary to allow offset adjustments</li>
+					<li>ci: lock qt version to 6.7.2 on win/mac</li>
+					<li>docs: Fixed broken URL in README.md</li>
+					<li>fix: Use library config for Windows OpenSSL</li>
+					<li>Relocate commercial code downstream</li>
+					<li>build: Bump min libei and libportal versions</li>
+					<li>Use sonarsource/sonarcloud-github-c-cpp</li>
+				</ul>
+			</description>
+		<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.0</url>
+		</release>
+	</releases>
+</component>
