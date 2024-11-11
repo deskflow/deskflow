@@ -89,5 +89,6 @@ configure_packaging()
 
 add_subdirectory(doc)
 add_subdirectory(src)
+add_subdirectory(deploy)
 
 post_config_all()
