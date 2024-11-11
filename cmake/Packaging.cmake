@@ -188,10 +188,6 @@ macro(configure_linux_packaging)
   # 12), so we must add it manually.
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
 
-  # Prepare PKGBUILD for Arch Linux
-  configure_file(${DESKFLOW_PROJECT_RES_DIR}/dist/arch/PKGBUILD.in
-                 ${CMAKE_BINARY_DIR}/PKGBUILD @ONLY)
-
 endmacro()
 
 #
