@@ -83,7 +83,7 @@ macro(configure_mac_packaging)
   set(CMAKE_INSTALL_RPATH
       "@loader_path/../Libraries;@loader_path/../Frameworks")
   set(DESKFLOW_BUNDLE_SOURCE_DIR
-      ${PROJECT_SOURCE_DIR}/res/dist/mac/bundle
+      ${PROJECT_SOURCE_DIR}/deploy/dist/mac/bundle
       CACHE PATH "Path to the macOS app bundle")
   set(DESKFLOW_BUNDLE_DIR ${PROJECT_BINARY_DIR}/bundle/${DESKFLOW_APP_NAME}.app)
   set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_DIR}/Contents/MacOS)
