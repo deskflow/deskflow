@@ -1,4 +1,4 @@
-app-id: org.deskflow.Deskflow
+app-id: org.deskflow.deskflow
 runtime: org.kde.Platform
 runtime-version: "5.15-21.08"
 sdk: org.kde.Sdk
@@ -30,8 +30,6 @@ modules:
     sources:
       - type: dir
         path: ../
-      - type: patch
-        path: flatpak-desktop.patch
 command: deskflow
 finish-args:
   - "--share=ipc"
