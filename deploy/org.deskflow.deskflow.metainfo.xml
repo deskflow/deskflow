@@ -30,8 +30,8 @@
 		<keyword translate="no">Synergy</keyword>
 	</keywords>
 	<branding>
-		<color type="primary" scheme_preference="light">#deddda</color>
-		<color type="primary" scheme_preference="dark">#5e5c64</color>
+		<color type="primary" scheme_preference="light">#dddddd</color>
+		<color type="primary" scheme_preference="dark">#555555</color>
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
