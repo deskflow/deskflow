@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>582</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,30 +19,21 @@
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_9">
-   <property name="spacing">
-    <number>15</number>
-   </property>
-   <item alignment="Qt::AlignTop">
+  <layout class="QVBoxLayout" name="verticalLayout_7">
+   <item>
     <widget class="QTabWidget" name="m_pTabWidget">
      <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
+      <enum>QTabWidget::TabPosition::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="m_pTabRegular">
       <attribute name="title">
        <string>&amp;Regular</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
-       <property name="spacing">
-        <number>15</number>
-       </property>
-       <property name="topMargin">
-        <number>15</number>
-       </property>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QGroupBox" name="m_pGroupBasics">
          <property name="title">
           <string>Basics</string>
@@ -72,10 +63,10 @@
             <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Maximum</enum>
+               <enum>QSizePolicy::Policy::Maximum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -121,7 +112,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QGroupBox" name="m_pGroupApp">
          <property name="title">
           <string>App</string>
@@ -144,7 +135,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QGroupBox" name="m_pGroupSecurity">
          <property name="title">
           <string>Security</string>
@@ -177,7 +168,7 @@
             <item>
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -245,10 +236,10 @@
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
+               <enum>QSizePolicy::Policy::Minimum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -291,7 +282,7 @@
             <item>
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -313,33 +304,14 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="m_pTabAdvanced">
       <attribute name="title">
        <string>&amp;Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <property name="spacing">
-        <number>15</number>
-       </property>
-       <property name="topMargin">
-        <number>15</number>
-       </property>
-       <item alignment="Qt::AlignTop">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
         <widget class="QGroupBox" name="m_pGroupNetworking">
          <property name="title">
           <string>Networking</string>
@@ -414,7 +386,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QGroupBox" name="m_pGroupLogs">
          <property name="title">
           <string>Logs</string>
@@ -432,7 +404,7 @@
           <item row="0" column="1">
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -516,10 +488,10 @@
             <item>
              <spacer name="horizontalSpacer_7">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
+               <enum>QSizePolicy::Policy::Minimum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -563,7 +535,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QGroupBox" name="m_pGroupService">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -605,7 +577,7 @@
                </size>
               </property>
               <property name="toolTip">
-                <string>Specify when the Windows background service should run the server or client
+               <string>Specify when the Windows background service should run the server or client
                   process at an elevated privilege level.</string>
               </property>
               <property name="whatsThis">
@@ -644,11 +616,8 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxServiceEnabled">
-            <property name="text">
-             <string>Use background service (daemon)</string>
-            </property>
             <property name="toolTip">
-              <string>Whether to launch the server or client process through the Windows background
+             <string>Whether to launch the server or client process through the Windows background
                 service or direct from the GUI.</string>
             </property>
             <property name="whatsThis">
@@ -661,31 +630,21 @@
               &lt;/ul&gt;
               </string>
             </property>
+            <property name="text">
+             <string>Use background service (daemon)</string>
+            </property>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item>
         <widget class="QGroupBox" name="m_pGroupScope">
          <property name="title">
           <string>Use settings profile from</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <property name="topMargin">
-           <number>5</number>
-          </property>
-          <item row="0" column="1">
-           <widget class="QRadioButton" name="m_pRadioSystemScope">
-            <property name="text">
-             <string>All users</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
            <widget class="QRadioButton" name="m_pRadioUserScope">
             <property name="text">
              <string>Current user</string>
@@ -695,21 +654,18 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QRadioButton" name="m_pRadioSystemScope">
+            <property name="text">
+             <string>All users</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -718,12 +674,15 @@
    <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Policy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>20</height>
       </size>
      </property>
     </spacer>
@@ -731,10 +690,10 @@
    <item>
     <widget class="QDialogButtonBox" name="m_pButtonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Save</set>
      </property>
     </widget>
    </item>
@@ -757,6 +716,7 @@
   <tabstop>m_pRadioSystemScope</tabstop>
   <tabstop>m_pComboElevate</tabstop>
  </tabstops>
+ <resources/>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>
