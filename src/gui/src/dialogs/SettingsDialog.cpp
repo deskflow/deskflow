@@ -38,7 +38,7 @@
 using namespace deskflow::gui;
 
 SettingsDialog::SettingsDialog(
-    QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
+    QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
 )
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::SettingsDialog>()},
@@ -188,6 +188,7 @@ void SettingsDialog::accept()
   m_appConfig.setLogFilename(ui->m_pLineEditLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->m_pComboElevate->currentIndex()));
   m_appConfig.setAutoHide(ui->m_pCheckBoxAutoHide->isChecked());
+  m_appConfig.setEnableUpdateCheck(ui->m_pCheckBoxAutoUpdate->isChecked());
   m_appConfig.setPreventSleep(ui->m_pCheckBoxPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->m_pLineEditTlsCertPath->text());
   m_appConfig.setTlsKeyLength(ui->m_pComboBoxTlsKeyLength->currentText().toInt());
@@ -227,6 +228,12 @@ void SettingsDialog::loadFromConfig()
   ui->m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   ui->m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
   ui->m_pComboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+
+  if (m_appConfig.enableUpdateCheck().has_value()) {
+    ui->m_pCheckBoxAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
+  } else {
+    ui->m_pCheckBoxAutoUpdate->setChecked(false);
+  }
 
   if (m_appConfig.isActiveScopeSystem()) {
     ui->m_pRadioSystemScope->setChecked(true);
@@ -311,6 +318,7 @@ void SettingsDialog::updateControls()
   ui->m_pComboLogLevel->setEnabled(writable);
   ui->m_pCheckBoxLogToFile->setEnabled(writable);
   ui->m_pCheckBoxAutoHide->setEnabled(writable);
+  ui->m_pCheckBoxAutoUpdate->setEnabled(writable);
   ui->m_pCheckBoxPreventSleep->setEnabled(writable);
   ui->m_pLineEditTlsCertPath->setEnabled(writable);
   ui->m_pComboBoxTlsKeyLength->setEnabled(writable);

@@ -119,6 +119,13 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
+           <widget class="QCheckBox" name="m_pCheckBoxAutoUpdate">
+            <property name="text">
+             <string>Check for updates on startup </string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="m_pCheckBoxCloseToTray">
             <property name="text">
              <string>Leave app running in notification area when the window is closed</string>

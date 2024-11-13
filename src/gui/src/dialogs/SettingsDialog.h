@@ -19,7 +19,7 @@
 #pragma once
 #include <QDialog>
 
-#include "gui/config/IAppConfig.h"
+#include "gui/config/AppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsUtility.h"
@@ -31,7 +31,6 @@ class SettingsDialog;
 
 class SettingsDialog : public QDialog
 {
-  using IAppConfig = deskflow::gui::IAppConfig;
   using IServerConfig = deskflow::gui::IServerConfig;
   using CoreProcess = deskflow::gui::CoreProcess;
 
@@ -40,7 +39,7 @@ class SettingsDialog : public QDialog
 public:
   void extracted();
   SettingsDialog(
-      QWidget *parent, IAppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
+      QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
   );
   ~SettingsDialog() override;
 
@@ -85,7 +84,7 @@ private:
   bool m_wasOriginallySystemScope = false;
 
   std::unique_ptr<Ui::SettingsDialog> ui;
-  IAppConfig &m_appConfig;
+  AppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
   const CoreProcess &m_coreProcess;
   deskflow::gui::TlsUtility m_tlsUtility;
