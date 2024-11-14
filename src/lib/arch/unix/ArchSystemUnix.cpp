@@ -17,6 +17,8 @@
  */
 
 #include "arch/unix/ArchSystemUnix.h"
+#include "common/constants.h"
+
 #include <array>
 
 #include <sys/utsname.h>
@@ -112,7 +114,9 @@ bool ArchSystemUnix::DBusInhibitScreenCall(InhibitScreenServices serviceID, bool
       return false;
     }
 
-    reply = screenSaverInterface.call("Inhibit", "Deskflow", "Sleep is manually prevented by the Deskflow preferences");
+    reply = screenSaverInterface.call(
+        "Inhibit", kAppName, QString("Sleep is manually prevented by the %1 preferences").arg(kAppName)
+    );
     if (reply.isValid())
       cookies[serviceNum] = reply.value();
   } else {

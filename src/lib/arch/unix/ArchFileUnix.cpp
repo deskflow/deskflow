@@ -17,6 +17,7 @@
  */
 
 #include "arch/unix/ArchFileUnix.h"
+#include "common/constants.h"
 
 #include <cstring>
 #include <filesystem>
@@ -90,7 +91,9 @@ std::string ArchFileUnix::getInstalledDirectory()
 #if WINAPI_XWINDOWS
   return "/usr/bin";
 #else
-  return "/Applications/Deskflow.app/Contents/MacOS";
+  std::string rtn = "/Applications/";
+  rtn.append(kAppName).append(".app/Contents/MacOS");
+  return rtn;
 #endif
 }
 
@@ -121,12 +124,12 @@ std::string ArchFileUnix::getProfileDirectory()
 #if WINAPI_XWINDOWS
     const auto xdgDir = std::getenv("XDG_CONFIG_HOME");
     if (xdgDir != nullptr) {
-      return std::filesystem::path(xdgDir) / "Deskflow";
+      return std::filesystem::path(xdgDir) / kAppName;
     } else {
-      return homeDir / ".config" / "Deskflow";
+      return homeDir / ".config" / kAppName;
     }
 #else
-    return homeDir / "Library" / "Deskflow";
+    return homeDir / "Library" / kAppName;
 #endif
   }
 }

@@ -23,6 +23,7 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
+#include "common/constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
@@ -141,7 +142,7 @@ void ServerApp::help()
 #endif
 
        << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
-       << "Start the Deskflow mouse/keyboard sharing server.\n"
+       << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "

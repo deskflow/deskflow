@@ -31,6 +31,7 @@
 #endif
 #include "base/Log.h"
 #include "base/log_outputters.h"
+#include "common/constants.h"
 
 #if HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
@@ -168,7 +169,7 @@ void AppUtilUnix::showNotification(const String &title, const String &text) cons
 {
 #if HAVE_LIBNOTIFY
   LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
-  if (!notify_init("Deskflow")) {
+  if (!notify_init(kAppName)) {
     LOG((CLOG_INFO "failed to initialize libnotify"));
     return;
   }

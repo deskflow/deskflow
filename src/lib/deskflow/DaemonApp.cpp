@@ -25,6 +25,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
+#include "common/constants.h"
 #include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
@@ -178,10 +179,10 @@ int DaemonApp::run(int argc, char **argv)
     } else {
 #if SYSAPI_WIN32
       LOG((CLOG_PRINT "daemonizing windows service"));
-      arch.daemonize("Deskflow", winMainLoopStatic);
+      arch.daemonize(kAppName, winMainLoopStatic);
 #elif SYSAPI_UNIX
       LOG((CLOG_PRINT "daemonizing unix service"));
-      arch.daemonize("Deskflow", unixMainLoopStatic);
+      arch.daemonize(kAppName, unixMainLoopStatic);
 #endif
     }
 
