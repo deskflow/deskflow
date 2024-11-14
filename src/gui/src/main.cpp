@@ -48,6 +48,8 @@
 
 using namespace deskflow::gui;
 
+static auto s_startApp = true;
+
 class QThreadImpl : public QThread
 {
 public:
@@ -66,9 +68,10 @@ bool hasArg(const QString &arg, const QStringList &args)
   return std::ranges::any_of(args, [&arg](const QString &a) { return a == arg; });
 }
 
+int startApp();
+
 int main(int argc, char *argv[])
 {
-
 #if defined(Q_OS_MAC)
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
    * instantiated" */
@@ -114,14 +117,35 @@ int main(int argc, char *argv[])
   }
 #endif
 
+  int exitCode = kExitFailed;
+  s_startApp = true;
+
+  // Restart loop allows app to restart itself without needing to create a new process.
+  // This leads to fewer bugs (e.g. hang on exit) and makes the app easier to debug.
+  while (s_startApp) {
+    s_startApp = false;
+    exitCode = startApp();
+  }
+
+  if (exitCode == 0) {
+    qDebug("exiting with code %d", exitCode);
+  } else {
+    qCritical("exiting with code %d", exitCode);
+  }
+  return exitCode;
+}
+
+int startApp()
+{
+  qInfo("starting app");
+
   ConfigScopes configScopes;
 
-  // --no-reset
-  QStringList arguments = QCoreApplication::arguments();
-  const auto noReset = hasArg("--no-reset", arguments);
-  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_CLEAR_SETTINGS"));
-  if (resetEnvVar && !noReset) {
-    diagnostic::clearSettings(configScopes, false);
+  // A developer convenience to clear settings each time the app is started.
+  // Highly useful for testing a fresh install of the app.
+  const auto clearSettingsEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_CLEAR_SETTINGS"));
+  if (clearSettingsEnvVar) {
+    diagnostic::clearSettings(configScopes);
   }
 
   AppConfig appConfig(configScopes);
@@ -142,6 +166,10 @@ int main(int argc, char *argv[])
   }
 
   MainWindow mainWindow(configScopes, appConfig);
+
+  // Cause the app to restart after exiting when the settings are cleared.
+  QObject::connect(&mainWindow, &MainWindow::clearedSettings, []() { s_startApp = true; });
+
   mainWindow.open();
 
 #ifdef DESKFLOW_GUI_HOOK_START

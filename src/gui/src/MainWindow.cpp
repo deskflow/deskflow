@@ -367,7 +367,12 @@ void MainWindow::on_m_pActionClearSettings_triggered()
 
   m_Quitting = true;
   m_SaveOnExit = false;
-  diagnostic::clearSettings(m_ConfigScopes, true);
+  diagnostic::clearSettings(m_ConfigScopes);
+
+  // Expected to cause the app to restart after exiting.
+  Q_EMIT clearedSettings();
+
+  QApplication::quit();
 }
 
 bool MainWindow::on_m_pActionSave_triggered()
