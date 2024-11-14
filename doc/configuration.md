@@ -164,5 +164,5 @@ _last = "moe:24800"
 # DESKFLOW_GUI_VERBOSE=true
 
 # Reset all settings and delete all data on startup
-# DESKFLOW_RESET_ALL=true
+# DESKFLOW_CLEAR_SETTINGS=true
 ```

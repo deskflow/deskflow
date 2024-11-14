@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
   // --no-reset
   QStringList arguments = QCoreApplication::arguments();
   const auto noReset = hasArg("--no-reset", arguments);
-  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
+  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_CLEAR_SETTINGS"));
   if (resetEnvVar && !noReset) {
     diagnostic::clearSettings(configScopes, false);
   }
