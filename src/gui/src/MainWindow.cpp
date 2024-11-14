@@ -528,6 +528,7 @@ void MainWindow::open()
 
   if (!m_AppConfig.enableUpdateCheck().has_value()) {
     m_AppConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
+    m_ConfigScopes.save();
   }
 
   if (m_AppConfig.enableUpdateCheck().value()) {
