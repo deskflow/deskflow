@@ -96,7 +96,7 @@ To add our tap, run:
 brew tap deskflow/homebrew-tap
 ```
 Then install either:
-- Stable: `brew instal deskflow`
+- Stable: `brew install deskflow`
 - Continuous: `brew install deskflow-dev`
 
 
