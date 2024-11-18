@@ -218,7 +218,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          if [[ "$RUNNER_OS" == "Linux" && "${{matrix.target.like}}" != "arch" ]]; then
+          if [[ "$RUNNER_OS" != "Windows" && "${{matrix.target.like}}" != "arch" ]]; then
             cmake --build build -j8 --target package
           else
             cmake --build build -j8
@@ -243,7 +243,7 @@ jobs:
 
 
       - name: Package
-        if: ${{ runner.os != 'Linux' }}
+        if: ${{ runner.os == 'Windows' }}
         shell: bash
         run: |
           python ./scripts/package.py --package-version ${{env.DESKFLOW_PACKAGE_VERSION}}

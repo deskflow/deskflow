@@ -66,7 +66,6 @@ endmacro()
 macro(configure_options)
 
   set(DEFAULT_BUILD_GUI ON)
-  set(DEFAULT_BUILD_INSTALLER ON)
   set(DEFAULT_BUILD_TESTS ON)
 
   # unified binary is off by default for now, for backwards compatibility.
@@ -93,7 +92,6 @@ macro(configure_options)
   endif()
 
   option(BUILD_GUI "Build GUI" ${DEFAULT_BUILD_GUI})
-  option(BUILD_INSTALLER "Build installer" ${DEFAULT_BUILD_INSTALLER})
   option(BUILD_TESTS "Build tests" ${DEFAULT_BUILD_TESTS})
   option(BUILD_UNIFIED "Build unified binary" ${DEFAULT_BUILD_UNIFIED})
   option(ENABLE_COVERAGE "Enable test coverage" ${DEFAULT_ENABLE_COVERAGE})
