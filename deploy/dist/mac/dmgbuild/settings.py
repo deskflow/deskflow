@@ -12,12 +12,12 @@ format = defines.get("format", "UDBZ")
 size = defines.get("size", None)
 files = [app]
 symlinks = {"Applications": "/Applications"}
-icon = os.path.join(app, "Contents/Resources/Volume.icns")
+icon = os.path.join(app, "Contents/Resources/dmg-volume.icns")
 icon_locations = {
     app_basename: (144, 190),
     "Applications": (455, 190),
 }
-background = os.path.join(app, "Contents/Resources/Background.tiff")
+background = os.path.join(app, "Contents/Resources/dmg-background.tiff")
 show_status_bar = False
 show_tab_view = False
 show_toolbar = False

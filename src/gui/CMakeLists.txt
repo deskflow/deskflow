@@ -13,7 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflow)
+if(APPLE)
+  set(target Deskflow)
+else()
+  set(target deskflow)
+endif()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -33,7 +37,11 @@ file(
 file(GLOB ui_files src/*.ui src/dialogs/*.ui)
 
 if(WIN32)
-  set(rc_files src/deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
+  set(platform_extra src/deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
+elseif(APPLE)
+  set(platform_extra src/Deskflow.icns
+      ${PROJECT_SOURCE_DIR}/deploy/dmg-volume.icns ${PROJECT_SOURCE_DIR}/deploy/dmg-background.tiff)
+  set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
 # regular exe headers
@@ -46,7 +54,7 @@ include_directories(${PROJECT_BINARY_DIR}/src/lib/gui/gui_autogen/include)
 # generated includes
 include_directories(${PROJECT_BINARY_DIR}/config)
 
-add_executable(${target} WIN32 ${sources} ${ui_files} ${rc_files})
+add_executable(${target} WIN32 MACOSX_BUNDLE ${sources} ${ui_files} ${platform_extra})
 
 target_link_libraries(
   ${target}
@@ -63,21 +71,27 @@ target_compile_definitions(${target}
 
 if(WIN32)
   set_target_properties(${target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+elseif(APPLE)
+  set_target_properties(${target} PROPERTIES
+    MACOSX_BUNDLE_BUNDLE_NAME "Deskflow"
+    MACOSX_BUNDLE_DISPLAY_NAME "Deskflow"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow"
+    MACOSX_BUNDLE_ICON_FILE Deskflow.icns
+    MACOSX_BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}"
+    MACOSX_BUNDLE_COPYRIGHT "© 2024 Deskflow Developers"
+    MACOSX_BUNDLE_BUNDLE_VERSION ${DESKFLOW_VERSION}
+    MACOSX_BUNDLE_LONG_VERSION_STRING ${DESKFLOW_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${DESKFLOW_VERSION}
+  )
+  find_program(MACDEPLOYQT_BIN macdeployqt6)
+  add_custom_command(
+    TARGET ${target} POST_BUILD
+    COMMAND ${MACDEPLOYQT_BIN} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}.app"
+  )
+  install(TARGETS ${target} BUNDLE DESTINATION .)
 endif()
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
-  find_program(MACDEPLOYQT_BIN macdeployqt6)
-  message(STATUS "Found macdeployqt6: ${MACDEPLOYQT_BIN}")
-
-  set(MACDEPLOYQT_CMD
-      "${MACDEPLOYQT_BIN} ${DESKFLOW_BUNDLE_DIR} -always-overwrite")
-
-  install(TARGETS ${target} DESTINATION ${DESKFLOW_BUNDLE_BINARY_DIR})
-  install(CODE "MESSAGE (\"Running: ${MACDEPLOYQT_CMD}\")")
-  install(CODE "execute_process(COMMAND ${MACDEPLOYQT_CMD})")
-
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
   install(TARGETS ${target} DESTINATION bin)
 
