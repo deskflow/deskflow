@@ -1,40 +1,115 @@
 app-id: org.deskflow.deskflow
 runtime: org.kde.Platform
-runtime-version: "5.15-21.08"
+runtime-version: "6.8"
 sdk: org.kde.Sdk
-rename-icon: deskflow
-rename-desktop-file: deskflow.desktop
+command: deskflow
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=network
+  - --device=dri
+  - --talk-name=org.kde.StatusNotifierWatcher
+cleanup:
+  - /include
+  - "*.a"
+  - /bin/ei-debug-events
+  - /lib/cmake
+  - /lib/pkgconfig
+  - /share/pkgconfig
+  - /share/tomlplusplus
+  - /share/cmake
+  - /share/doc
+  - /share/gir-1.0
+  - /lib/debug
+  - /lib/girepository-1.0
 modules:
-  - name: openssl
+  - name: python3-attrs
     buildsystem: simple
     build-commands:
-      - "./config --prefix=/var/run/host/usr/local/ssl"
-      - "make"
-      - "make install_sw"
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+          --prefix=${FLATPAK_DEST} --no-build-isolation attrs
     sources:
-      - type: archive
-        url: https://github.com/openssl/openssl/archive/OpenSSL_1_1_1n.tar.gz
-        sha256: 6b2d2440ced8c802aaa61475919f0870ec556694c466ebea460e35ea2b14839e
-  - name: libnotify
+      - type: file
+        url: https://files.pythonhosted.org/packages/e0/44/827b2a91a5816512fcaf3cc4ebc465ccd5d598c45cefa6703fcf4a79018f/attrs-23.2.0-py3-none-any.whl
+        sha256: 99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1
+    cleanup:
+      - '*'
+  - name: python3-Jinja2
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} --no-build-isolation Jinja2
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/30/6d/6de6be2d02603ab56e72997708809e8a5b0fbfee080735109b40a3564843/Jinja2-3.1.3-py3-none-any.whl
+        sha256: 7d6d50dd97d52cbc355597bd845fabfbac3f551e1f99619e39a35ce8c370b5fa
+      - type: file
+        url: https://files.pythonhosted.org/packages/87/5b/aae44c6655f3801e81aa3eef09dbbf012431987ba564d7231722f68df02d/MarkupSafe-2.1.5.tar.gz
+        sha256: d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709c6544b
+    cleanup:
+      - '*'
+  - name: libei
     buildsystem: meson
     config-opts:
-      - "-Dman=false"
-      - "-Dgtk_doc=false"
+        - -Ddocumentation=[]
+        - -Dtests=disabled
+        - -Dliboeffis=disabled
+    sources:
+        - type: git
+          url: https://gitlab.freedesktop.org/libinput/libei
+          tag: 1.3.0
+          commit: 997b7c0f37faea4f8bae59613c8f27370925d5b0
+  - name: libportal
+    buildsystem: meson
+    config-opts:
+      - -Ddocs=false
+      - -Dtests=false
+      - -Dportal-tests=false
+      - -Dvapi=false
+      - -Dbackend-qt6=auto
     sources:
       - type: git
-        url: https://gitlab.gnome.org/GNOME/libnotify.git
+        url: https://github.com/flatpak/libportal.git
+        tag: 0.8.1
+        commit: 26c15008cbe579f57f89468384f8efc033f25f6f
+  - name: puixml
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/zeux/pugixml
+        tag: v1.14
+        commit: db78afc2b7d8f043b4bc6b185635d949ea2ed2a8
+  - name: cli11
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCLI11_BUILD_TESTS=OFF
+    sources:
+      - type: git
+        url: https://github.com/CLIUtils/CLI11
+        tag: v2.4.2
+        commit: 6c7b07a878ad834957b98d0f9ce1dbe0cb204fc9
+  - name: tomlplusplus
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/marzer/tomlplusplus
+        tag: v3.4.0
+        commit: 30172438cee64926dc41fdd9c11fb3ba5b2ba9de
+  - name: gtest
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/google/googletest.git
+        tag: v1.15.2
+        commit: b514bdc898e2951020cbdca1304b75f5950d1f59
+    cleanup:
+      - '*'
   - name: deskflow
     buildsystem: cmake-ninja
     config-opts:
       - "-DCMAKE_BUILD_TYPE=Release"
     sources:
       - type: dir
-        path: ../
-command: deskflow
-finish-args:
-  - "--share=ipc"
-  - "--socket=x11"
-  - "--share=network"
-  - "--device=dri"
-  - "--talk-name=org.a11y.*"
-  - "--filesystem=host"
+        path: ../../../
+
