@@ -61,7 +61,7 @@ jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
     runs-on: ubuntu-latest
-    needs: [test-results, unix]
+    needs: [test-results, unix, flatpak]
 
     steps:
       - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
@@ -298,6 +298,34 @@ jobs:
             export QT_QPA_PLATFORM=offscreen
             ./build/bin/unittests
             ./build/bin/integtests || true
+  flatpak:
+    needs: lint-clang
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
+      options: --privileged
+    steps:
+      - name: Check out repository
+        uses: sithlord48/fancy-checkout@v1.0.0
+
+      - run: git config --global protocol.file.allow always
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        name: "Build"
+        with:
+          bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-x86_64.flatpak
+          manifest-path: deploy/dist/flatpak/org.deskflow.deskflow.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ env.PACKAGE_PREFIX }}-flatpak
+          path: ${{github.workspace}}/deskflow[-_]*.flatpak
 
   release:
     needs: ci-passed
