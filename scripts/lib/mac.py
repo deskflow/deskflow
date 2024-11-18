@@ -78,7 +78,7 @@ def package(filename_base, source_dir, build_dir, dist_dir, product_name):
         )
 
     bundle_source_dir = os.path.join(
-        build_dir, os.path.join("bundle", product_name + ".app")
+        build_dir, os.path.join("bin", product_name + ".app")
     )
     build_bundle(bundle_source_dir)
 
@@ -139,8 +139,8 @@ def build_bundle(bundle_source_dir):
 
     print("Building bundle...")
 
-    # cmake build install target should run macdeployqt
-    cmd_utils.run("cmake --build build --target install", shell=True, print_cmd=True)
+    # cmake build target should run macdeployqt
+    cmd_utils.run("cmake --build build ", shell=True, print_cmd=True)
 
 
 def sign_bundle(bundle_source_dir, codesign_id):

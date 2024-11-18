@@ -29,7 +29,7 @@ macro(configure_packaging)
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       configure_windows_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      configure_mac_packaging()
+      set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       configure_linux_packaging()
     elseif(${CMAKE_SYSTEM_NAME} MATCHES "|.*BSD")
@@ -72,25 +72,6 @@ macro(configure_windows_packaging)
   else()
       set(OS_STRING "win-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
-
-endmacro()
-
-#
-# macOS app bundle
-#
-macro(configure_mac_packaging)
-
-  set(CMAKE_INSTALL_RPATH
-      "@loader_path/../Libraries;@loader_path/../Frameworks")
-  set(DESKFLOW_BUNDLE_SOURCE_DIR
-      ${PROJECT_SOURCE_DIR}/deploy/dist/mac/bundle
-      CACHE PATH "Path to the macOS app bundle")
-  set(DESKFLOW_BUNDLE_DIR ${PROJECT_BINARY_DIR}/bundle/Deskflow.app)
-  set(DESKFLOW_BUNDLE_BINARY_DIR ${DESKFLOW_BUNDLE_DIR}/Contents/MacOS)
-
-  configure_files(${DESKFLOW_BUNDLE_SOURCE_DIR} ${DESKFLOW_BUNDLE_DIR})
-
-  set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
 
 endmacro()
 
