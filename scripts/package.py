@@ -67,10 +67,6 @@ def package(
 
     if env.is_windows():
         windows_package(filename_base, project_build_dir, dist_dir)
-    elif env.is_mac():
-        mac_package(
-            filename_base, source_dir, project_build_dir, dist_dir, product_name
-        )
     else:
         raise RuntimeError(f"Unsupported platform: {env.get_os()}")
 
@@ -87,9 +83,6 @@ def get_filename_base(version, prefix):
         os_part= "win"
         if machine == "amd64" or machine == "x86_64":
             machine = "x64"
-    elif os == "mac":
-            os_part = "macos"
-    # Add '-' between our name parts we do not want spaces in the filename
     return f"{prefix}-{version}-{os_part}-{machine}"
 
 
@@ -98,12 +91,6 @@ def windows_package(filename_base, project_build_dir, dist_dir):
     import lib.windows as windows
 
     windows.package(filename_base, project_build_dir, dist_dir)
-
-
-def mac_package(filename_base, source_dir, project_build_dir, dist_dir, product_name):
-    import lib.mac as mac
-
-    mac.package(filename_base, source_dir, project_build_dir, dist_dir, product_name)
 
 if __name__ == "__main__":
     main()

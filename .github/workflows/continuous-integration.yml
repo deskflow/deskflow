@@ -241,7 +241,6 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
-
       - name: Package
         if: ${{ runner.os == 'Windows' }}
         shell: bash
@@ -251,12 +250,6 @@ jobs:
         env:
           WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
           WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
-          APPLE_CODESIGN_ID: ${{ secrets.APPLE_CODESIGN_ID }}
-          APPLE_P12_CERTIFICATE: ${{ secrets.APPLE_P12_CERTIFICATE }}
-          APPLE_P12_PASSWORD: ${{ secrets.APPLE_P12_PASSWORD }}
-          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
-          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload
         uses: actions/upload-artifact@v4

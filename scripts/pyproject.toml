@@ -7,7 +7,6 @@ dependencies = [
   "clang-format",
   "python-dotenv",
   "pyyaml",
-  "dmgbuild; sys_platform == 'darwin'",
   "colorama",
   "gitpython",
   "psutil",
