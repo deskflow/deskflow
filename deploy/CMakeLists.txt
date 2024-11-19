@@ -54,8 +54,36 @@ if(NOT PACKAGE_VERSION_LABEL)
     set (PACKAGE_VERSION_LABEL "${CPACK_PACKAGE_VERSION}")
 endif()
 
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
+set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  configure_windows_packaging()
+  cmake_path(SET QT_PATH NORMALIZE "${Qt6_DIR}../../")
+
+  set(DESKFLOW_MSI_64_GUID
+    "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8"
+    CACHE STRING "GUID for 64-bit MSI installer"
+  )
+
+  set(DESKFLOW_MSI_32_GUID
+    "8F57C657-BC87-45E6-840E-41242A93511C"
+    CACHE STRING "GUID for 32-bit MSI installer"
+  )
+
+  configure_files(
+    ${PROJECT_SOURCE_DIR}/deploy/dist/wix
+    ${PROJECT_BINARY_DIR}/installer
+  )
+
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES AMD64)
+    set(OS_STRING "win-x64")
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES ARM64)
+    set(OS_STRING "win-arm64")
+  else()
+    set(OS_STRING "win-${CMAKE_SYSTEM_PROCESSOR}")
+  endif()
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
   set(CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
@@ -65,7 +93,13 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(CPACK_DMG_VOLUME_NAME "Deskflow")
   set(CPACK_GENERATOR "DragNDrop")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  configure_linux_packaging()
+  # Gather distro info
+  # This is used in package names
+  configure_linux_package_name()
+  # HACK: The GUI depends on the Qt6 QPA plugins package, but that's not picked
+  # up by shlibdeps on Ubuntu 22 (though not a problem on Ubuntu 24 and Debian
+  # 12), so we must add it manually.
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "|.*BSD")
   message(STATUS "BSD packaging not yet supported")
   set(OS_STRING ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
