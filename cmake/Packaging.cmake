@@ -68,6 +68,10 @@ macro(configure_linux_package_name)
     set(CN_STRING "${DISTRO_CODENAME}-")
   endif()
 
+  if("${DISTRO_NAME}" STREQUAL "")
+    set(DISTRO_NAME "linux")
+  endif()
+
   set(OS_STRING "${DISTRO_NAME}-${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
 
 endmacro()
