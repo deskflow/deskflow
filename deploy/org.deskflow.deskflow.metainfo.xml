@@ -35,6 +35,60 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.17.2" date="2024-11-20" urgency="medium">
+			<description>
+				<p>This stable Release contains alot of internal refactoring.</p>
+				<ul>
+					<li>docs: Update readme to use latest for the stable link and continuous</li>
+					<li>chore: rm unused res/doxygen.cfg.in</li>
+					<li>chore: rm unused res/License.tex</li>
+					<li>chore: rm unused res/License.rtf</li>
+					<li>refactor: mv res/gui/win/app.rc => src/gui/src/app.rc</li>
+					<li>refactor: mv res/app.ico src/gui/src/app.ico</li>
+					<li>refactor: mv src/lib/gui/TrayIcon => src/gui/src/TrayIcon</li>
+					<li>feat: use platform native styles when possible</li>
+					<li>refactor: use theme icon for document open fallback to the folder icon</li>
+					<li>refactor mv: res/gui => src/gui/res</li>
+					<li>chore: alphabetize app.qrc resource file</li>
+					<li>chore rm: unused app.svg</li>
+					<li>refactor: mv res/app.png and res/app.svg => deploy</li>
+					<li>refactor: mv res/dist/linux/app.desktop.in => deploy/org.deskflow.desktop</li>
+					<li>refactor: mv res/dist/arch => deploy/dist/arch</li>
+					<li>chore: rm unneeded res/dist/flatpak/flatpak-desktop.patch</li>
+					<li>refactor: mv res/dist/flatpak => deploy/res/flatpak</li>
+					<li>refactor: mv res/dist/mac => deploy/dist/mac</li>
+					<li>refactor: mv res/dist/wix => deploy/dist/wix</li>
+					<li>build: add metainfo</li>
+					<li>ci: rename ci.yml to => continuous-integration.yml</li>
+					<li>Rename CI badge to match new .yml filename</li>
+					<li>chore: update the deskflow shipped icon to have proper padding</li>
+					<li>chore: adjust branding light / dark colors to dddddd / 555555</li>
+					<li>fix: SettingsDialog ui generating nonsence alignment tags when edited</li>
+					<li>feat: SettingsDialog, Allow user to toggle the check for updates settings</li>
+					<li>fix: MainWindow not saving initial update flag</li>
+					<li>build: rm DESKFLOW_APP_ID define</li>
+					<li>build: rm DESKFLOW_DOMAIN define</li>
+					<li>build: rm DESKFLOW_APP_NAME define</li>
+					<li>build: rm DESKFLOW_AUTHOR_NAME define</li>
+					<li>build: rm DESKFLOW_MAINTAINER define</li>
+					<li>build: rm DESKFLOW_WEBSITE_URL define</li>
+					<li>build: rm DESKFLOW_VERSION_URL define</li>
+					<li>build: rm DESKFLOW_HELP_TEXT define</li>
+					<li>build: rm DESKFLOW_RES_DIR define</li>
+					<li>build: rm DESKFLOW_MAC_BUNDLE_CODE</li>
+					<li>build: rm GUI_BINARY_NAME define</li>
+					<li>build: rm SERVER_BINARY_NAME define</li>
+					<li>build:rm CLIENT_BINARY_NAME define</li>
+					<li>build: rm CORE_BINARY_NAME define</li>
+					<li>build: rm DAEMON_BINARY_NAME</li>
+					<li>build: remove DESKFLOW_SHOW_DEV_THANKS define</li>
+					<li>fix: single typo in README.md</li>
+					<li>feat: fix flatpak recipe</li>
+					<li>ci: build flatpaks</li>
+				</ul>
+			</description>
+		<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.2</url>
+		</release>
 		<release version="1.17.1" date="2024-11-7" urgency="high">
 			<description>
 				<p>This stable Release Has a very long chagelog some notable ones are.</p>
