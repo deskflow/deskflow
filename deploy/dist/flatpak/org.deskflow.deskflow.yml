@@ -21,7 +21,6 @@ cleanup:
   - /share/cmake
   - /share/doc
   - /share/gir-1.0
-  - /lib/debug
   - /lib/girepository-1.0
 modules:
   - name: python3-attrs
