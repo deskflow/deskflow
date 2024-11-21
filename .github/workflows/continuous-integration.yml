@@ -306,7 +306,7 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@master
         name: "Build"
         with:
           bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-x86_64.flatpak
