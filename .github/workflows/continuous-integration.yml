@@ -317,7 +317,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: package-${{ env.PACKAGE_PREFIX }}-flatpak
+          name: package-${{ env.PACKAGE_PREFIX }}-flatpak-x86_64
           path: ${{github.workspace}}/deskflow[-_]*.flatpak
 
   release:
