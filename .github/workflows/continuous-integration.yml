@@ -134,35 +134,35 @@ jobs:
             timeout: 20
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
 
-          - name: "debian-13-amd64"
+          - name: "debian-13-x86_64"
             runs-on: ubuntu-latest
             container: debian:trixie-slim
             like: "debian"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "fedora-41-amd64"
+          - name: "fedora-41-x86_64"
             runs-on: ubuntu-latest
             container: fedora:41
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "fedora-40-amd64"
+          - name: "fedora-40-x86_84"
             runs-on: ubuntu-latest
             container: fedora:40
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "opensuse-amd64"
+          - name: "opensuse-x86_84"
             runs-on: ubuntu-latest
             container: opensuse/tumbleweed:latest
             like: "suse"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "archlinux-amd64"
+          - name: "archlinux-x86_84"
             runs-on: ubuntu-latest
             container: archlinux:latest
             like: "arch"
