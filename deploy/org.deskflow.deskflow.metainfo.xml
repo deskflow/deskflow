@@ -8,7 +8,7 @@
 	<summary>Software Keyboard and mouse sharing</summary>
 	<description>
 		<p>
-			Use your keyboard and mouse to control other machines on the network or be controle
+			Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
 		</p>
 	</description>
 	<launchable type="desktop-id">org.deskflow.deskflow.desktop</launchable>
