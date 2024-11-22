@@ -65,6 +65,31 @@ target_link_libraries(
 
 if(WIN32)
   set_target_properties(${target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
+  install(
+    TARGETS ${target}
+    RUNTIME_DEPENDENCY_SET guiDeps
+    DESTINATION .
+  )
+  install(RUNTIME_DEPENDENCY_SET guiDeps
+    PRE_EXCLUDE_REGEXES
+      "api-ms-win-.*"
+      "ext-ms-.*"
+      "^hvsifiletrust\\.dll$"
+    POST_EXCLUDE_REGEXES
+      ".*system32.*"
+    RUNTIME DESTINATION .
+  )
+  find_program(DEPLOYQT windeployqt6)
+  add_custom_command(
+    TARGET ${target} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/qtDeploy
+      COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network --dir ${CMAKE_BINARY_DIR}/qtDeploy $<TARGET_FILE:${target}>
+  )
+  install(
+    DIRECTORY ${CMAKE_BINARY_DIR}/qtDeploy/
+    DESTINATION .
+    FILES_MATCHING PATTERN "*.*"
+  )
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
     MACOSX_BUNDLE_BUNDLE_NAME "Deskflow"
@@ -83,46 +108,8 @@ elseif(APPLE)
     COMMAND ${MACDEPLOYQT_BIN} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}.app"
   )
   install(TARGETS ${target} BUNDLE DESTINATION .)
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-
+else()
   install(TARGETS ${target} DESTINATION bin)
-
-elseif(WIN32)
-
-  if(Qt6_FOUND
-     AND WIN32
-     AND TARGET Qt6::qmake
-     AND NOT TARGET Qt6::windeployqt)
-    get_target_property(_qt6_qmake_location Qt6::qmake IMPORTED_LOCATION)
-
-    execute_process(
-      COMMAND "${_qt6_qmake_location}" -query QT_INSTALL_PREFIX
-      RESULT_VARIABLE return_code
-      OUTPUT_VARIABLE qt6_install_prefix
-      OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-    set(imported_location "${qt6_install_prefix}/bin/windeployqt.exe")
-
-    if(EXISTS ${imported_location})
-      add_executable(Qt6::windeployqt IMPORTED)
-
-      set_target_properties(Qt6::windeployqt PROPERTIES IMPORTED_LOCATION
-                                                        ${imported_location})
-    endif()
-  endif()
-
-  if(TARGET Qt6::windeployqt)
-    # execute windeployqt in a tmp directory after build
-    add_custom_command(
-      TARGET ${target}
-      POST_BUILD
-      COMMAND set PATH=%PATH%$<SEMICOLON>${qt6_install_prefix}/bin
-      COMMAND Qt6::windeployqt
-              "$<TARGET_FILE_DIR:${target}>/$<TARGET_FILE_NAME:${target}>")
-  endif()
-
 endif()
 
 post_config()
