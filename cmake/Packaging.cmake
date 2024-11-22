@@ -5,37 +5,31 @@
 
 macro(configure_linux_package_name)
   # Get Distro name information
-  execute_process(
-    COMMAND bash "-c" "cat /etc/os-release | grep ^ID= | sed 's/ID=//g'"
-    OUTPUT_VARIABLE _DISTRO_NAME
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-  string(REPLACE "\"" "" DISTRO_NAME "${_DISTRO_NAME}")
-  message(STATUS "Distro Name: ${DISTRO_NAME}")
+  if(EXISTS "/etc/os-release")
+    FILE(STRINGS "/etc/os-release" RELEASE_FILE_CONTENTS)
+  else()
+    message(FATAL_ERROR "Unable to read file /etc/os-release")
+  endif()
 
-  execute_process(
-    COMMAND bash "-c"
-            "cat /etc/os-release | grep ^ID_LIKE= | sed 's/ID_LIKE=//g'"
-    OUTPUT_VARIABLE _DISTRO_LIKE
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-  string(REPLACE "\"" "" DISTRO_LIKE "${_DISTRO_LIKE}")
-  message(STATUS "Distro Like: ${DISTRO_LIKE}")
-
-  execute_process(
-    COMMAND
-      bash "-c"
-      "cat /etc/os-release | grep ^VERSION_CODENAME= | sed 's/VERSION_CODENAME=//g'"
-    OUTPUT_VARIABLE _DISTRO_CODENAME
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-  string(REPLACE "\"" "" DISTRO_CODENAME "${_DISTRO_CODENAME}")
-  message(STATUS "Distro Codename: ${DISTRO_CODENAME}")
-
-  execute_process(
-    COMMAND bash "-c"
-            "cat /etc/os-release | grep ^VERSION_ID= | sed 's/VERSION_ID=//g'"
-    OUTPUT_VARIABLE _DISTRO_VERSION_ID
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-  string(REPLACE "\"" "" DISTRO_VERSION_ID "${_DISTRO_VERSION_ID}")
-  message(STATUS "Distro ID: ${DISTRO_VERSION_ID}")
+  foreach(LINE IN LISTS RELEASE_FILE_CONTENTS)
+    if( "${LINE}" MATCHES "^ID=")
+      string(REGEX REPLACE "^ID=" "" DISTRO_NAME ${LINE})
+      string(REGEX REPLACE "\"" "" DISTRO_NAME ${DISTRO_NAME})
+      message(DEBUG "Distro Name :${DISTRO_NAME}")
+    elseif( "${LINE}" MATCHES "^ID_LIKE=")
+      string(REGEX REPLACE "^ID_LIKE=" "" DISTRO_LIKE "${LINE}")
+      string(REGEX REPLACE "\"" "" DISTRO_LIKE ${DISTRO_LIKE})
+      message(DEBUG "Distro Like :${DISTRO_LIKE}")
+    elseif( "${LINE}" MATCHES "^VERSION_CODENAME=")
+      string(REGEX REPLACE "^VERSION_CODENAME=" "" DISTRO_CODENAME "${LINE}")
+      string(REGEX REPLACE "\"" "" DISTRO_CODENAME "${DISTRO_CODENAME}")
+      message(DEBUG "Distro Codename:${DISTRO_CODENAME}")
+    elseif( "${LINE}" MATCHES "^VERSION_ID=")
+      string(REGEX REPLACE "^VERSION_ID=" "" DISTRO_VERSION_ID "${LINE}")
+      string(REGEX REPLACE "\"" "" DISTRO_VERSION_ID "${DISTRO_VERSION_ID}")
+      message(DEBUG "Distro VersionID:${DISTRO_VERSION_ID}")
+    endif()
+  endforeach()
 
   # Check if Debian-link
   string(REGEX MATCH debian|buntu DEBTYPE "${DISTRO_LIKE}")
