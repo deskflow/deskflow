@@ -39,7 +39,7 @@ file(GLOB ui_files src/*.ui src/dialogs/*.ui)
 if(WIN32)
   set(platform_extra src/deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
 elseif(APPLE)
-  set(platform_extra src/Deskflow.icns)
+  set(platform_extra src/Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 

@@ -89,6 +89,23 @@ configure_libs()
 add_subdirectory(doc)
 add_subdirectory(src)
 
+# Install License, License is in the App Bundle on mac os (src/gui)
+if(WIN32)
+  install(
+    FILES
+      ${PROJECT_SOURCE_DIR}/LICENSE
+      ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION
+    DESTINATION .
+  )
+elseif(UNIX AND NOT APPLE)
+  install(
+    FILES
+      ${PROJECT_SOURCE_DIR}/LICENSE
+      ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION
+    DESTINATION share/licenses/deskflow
+  )
+endif()
+
 option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
