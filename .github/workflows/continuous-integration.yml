@@ -218,13 +218,10 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          if [[ "$RUNNER_OS" != "Windows" && "${{matrix.target.like}}" != "arch" ]]; then
+          if [[ "${{matrix.target.like}}" != "arch" ]]; then
             cmake --build build --config Release -j8 --target package
           else
-            cmake --build build -j8
-          fi
-
-          if [ ${{ matrix.target.like }} == "arch" ];then
+            cmake --build build --config Release -j8
             useradd -m build
             sudo chown -R build build
             cd build
@@ -240,16 +237,6 @@ jobs:
         timeout-minutes: 2
         with:
           job: ${{ matrix.target.name }}
-
-      - name: Package
-        if: ${{ runner.os == 'Windows' }}
-        shell: bash
-        run: |
-          python ./scripts/package.py --package-version ${{env.DESKFLOW_PACKAGE_VERSION}}
-          mv dist/deskflow* build/
-        env:
-          WINDOWS_PFX_CERTIFICATE: ${{ secrets.WINDOWS_PFX }}
-          WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASS }}
 
       - name: Upload
         uses: actions/upload-artifact@v4
