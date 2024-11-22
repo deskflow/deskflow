@@ -50,6 +50,13 @@ macro(configure_libs)
     message(VERBOSE "Set OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
     set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
     add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
+    # HACK Install a copy of openssl on windows
+    install(
+        FILES
+          ${OPENSSL_EXE_DIR}/openssl.exe
+          ${OPENSSL_EXE_DIR}/openssl.cnf
+        DESTINATION .
+    )
   endif()
 
 

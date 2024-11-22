@@ -95,6 +95,8 @@ runs:
     - name: Install Wix
       if: ${{ runner.os == 'Windows' }}
       run: |
-        dotnet tool install --global wix --version 4.0.4
-        wix extension add --global WixToolset.UI.wixext/4.0.4
+        dotnet tool install --global wix --version 5.0.2
+        wix extension add --global WixToolset.UI.wixext/5.0.2
+        wix extension add --global WixToolset.Util.wixext/5.0.2
+        wix extension add --global WixToolset.Firewall.wixext/5.0.2
       shell: pwsh
