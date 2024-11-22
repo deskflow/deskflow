@@ -9,15 +9,9 @@
     <?define DeployResDir="@CMAKE_SOURCE_DIR@/deploy"?>
     <?define QtDir="@QT_PATH@"?>
     <?define QtBinDir="$(var.QtDir)\bin"?>
-    <?if $(var.Platform) = "x64"?>
     <?define ProgramFilesFolder="ProgramFiles64Folder"?>
     <?define PlatformSimpleName="64-bit"?>
-    <?define UpgradeGuid="@DESKFLOW_MSI_64_GUID@"?>
-    <?else?>
-    <?define ProgramFilesFolder="ProgramFilesFolder"?>
-    <?define PlatformSimpleName="32-bit"?>
-    <?define UpgradeGuid="@DESKFLOW_MSI_32_GUID@"?>
-    <?endif?>
+    <?define UpgradeGuid="@CPACK_WIX_UPGRADE_GUID@"?>
     <?define QtPluginsPath="$(var.QtDir)\plugins"?>
     <?define OpenSslExeDir="@OPENSSL_EXE_DIR@"?>
     <?define OpenSslDllDir="@OPENSSL_ROOT_DIR@/bin"?>
