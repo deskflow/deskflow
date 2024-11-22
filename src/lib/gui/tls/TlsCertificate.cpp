@@ -30,7 +30,6 @@ static const char *const kCertificateHashAlgorithm = "-sha256";
 static const char *const kCertificateLifetime = "365";
 
 #if defined(Q_OS_WIN)
-static const char *const kWinOpenSslDir = "OpenSSL";
 static const char *const kWinOpenSslBinary = "openssl.exe";
 static const char *const kConfigFile = "openssl.cnf";
 #elif defined(Q_OS_UNIX)
@@ -44,12 +43,12 @@ namespace deskflow::gui {
 QString openSslWindowsDir()
 {
 
-  auto appDir = QDir(QCoreApplication::applicationDirPath());
-  auto openSslDir = QDir(appDir.filePath(kWinOpenSslDir));
+  auto openSslDir = QDir(QCoreApplication::applicationDirPath());
+  auto openSslBin = QFile(QStringLiteral("%1/%2").arg(openSslDir.absolutePath(), kWinOpenSslBinary));
 
   // in production, openssl is deployed with the app.
   // in development, we can use the openssl path available at compile-time.
-  if (!openSslDir.exists()) {
+  if (!openSslBin.exists()) {
     openSslDir = QDir(OPENSSL_EXE_DIR);
   }
 
