@@ -69,15 +69,7 @@ set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   cmake_path(SET QT_PATH NORMALIZE "${Qt6_DIR}../../")
 
-  set(DESKFLOW_MSI_64_GUID
-    "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8"
-    CACHE STRING "GUID for 64-bit MSI installer"
-  )
-
-  set(DESKFLOW_MSI_32_GUID
-    "8F57C657-BC87-45E6-840E-41242A93511C"
-    CACHE STRING "GUID for 32-bit MSI installer"
-  )
+  set(CPACK_WIX_UPGRADE_GUID "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8")
 
   configure_files(
     ${PROJECT_SOURCE_DIR}/deploy/dist/wix
