@@ -1,6 +1,13 @@
 # SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
+# Copy License with txt ext for picky package creation tools
+file(COPY_FILE
+  ${CMAKE_SOURCE_DIR}/LICENSE
+  ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt
+  ONLY_IF_DIFFERENT
+)
+
 # Handle Pre install Items
 if(WIN32)
 
@@ -45,7 +52,7 @@ set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
 set(CPACK_PACKAGE_CONTACT "Deskflow <maintainers@deskflow.org>")
 set(CPACK_PACKAGE_DESCRIPTION ${CMAKE_PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR "Deskflow")
-set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt)
 
 set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})
 
@@ -91,6 +98,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(CPACK_DMG_BACKGROUND_IMAGE "${PROJECT_SOURCE_DIR}/deploy/dmg-background.tiff")
   set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/deploy/generate_ds_store.applescript")
   set(CPACK_DMG_VOLUME_NAME "Deskflow")
+  set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE ON)
   set(CPACK_GENERATOR "DragNDrop")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   # Gather distro info
