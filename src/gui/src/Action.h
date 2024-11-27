@@ -165,6 +165,6 @@ private:
   static const char *m_LockCursorModeNames[];
 };
 
-typedef QList<Action> ActionList;
+using ActionList = QList<Action>;
 
 QTextStream &operator<<(QTextStream &outStream, const Action &action);

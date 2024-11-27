@@ -34,7 +34,7 @@ class IArchTaskBarReceiver : public IInterface
 {
 public:
   // Icon data is architecture dependent
-  typedef void *Icon;
+  using Icon = void *;
 
   //! @name manipulators
   //@{

@@ -63,10 +63,10 @@ private:
     UINT m_id;
   };
 
-  typedef std::map<IArchTaskBarReceiver *, ReceiverInfo> ReceiverToInfoMap;
-  typedef std::map<UINT, ReceiverToInfoMap::iterator> CIDToReceiverMap;
-  typedef std::vector<UINT> CIDStack;
-  typedef std::map<HWND, bool> Dialogs;
+  using ReceiverToInfoMap = std::map<IArchTaskBarReceiver *, ReceiverInfo>;
+  using CIDToReceiverMap = std::map<UINT, ReceiverToInfoMap::iterator>;
+  using CIDStack = std::vector<UINT>;
+  using Dialogs = std::map<HWND, bool>;
 
   UINT getNextID();
   void recycleID(UINT);

@@ -22,7 +22,7 @@
 #include "common/stdvector.h"
 
 class DragInformation;
-typedef std::vector<DragInformation> DragFileList;
+using DragFileList = std::vector<DragInformation>;
 
 class DragInformation
 {

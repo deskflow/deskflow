@@ -89,7 +89,7 @@ public:
   }
 
 protected:
-  typedef deskflow::KeyMap::Keystroke Keystroke;
+  using Keystroke = deskflow::KeyMap::Keystroke;
 
   //! @name protected manipulators
   //@{
@@ -140,8 +140,8 @@ protected:
   //@}
 
 private:
-  typedef deskflow::KeyMap::Keystrokes Keystrokes;
-  typedef deskflow::KeyMap::ModifierToKeys ModifierToKeys;
+  using Keystrokes = deskflow::KeyMap::Keystrokes;
+  using ModifierToKeys = deskflow::KeyMap::ModifierToKeys;
 
 public:
   struct AddActiveModifierContext

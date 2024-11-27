@@ -1655,7 +1655,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
   // aliases section (if there are any)
   if (config.m_map.size() != config.m_nameToCanonicalName.size()) {
     // map canonical to alias
-    typedef std::multimap<String, String, CaselessCmp> CMNameMap;
+    using CMNameMap = std::multimap<String, String, CaselessCmp>;
     CMNameMap aliases;
     for (Config::NameMap::const_iterator index = config.m_nameToCanonicalName.begin();
          index != config.m_nameToCanonicalName.end(); ++index) {

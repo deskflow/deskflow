@@ -35,7 +35,7 @@ public:
   arbitrary starting time.  Timestamps will wrap around to 0
   after about 49 3/4 days.
   */
-  typedef UInt32 Time;
+  using Time = UInt32;
 
   //! Clipboard formats
   /*!

@@ -680,7 +680,7 @@ void XWindowsClipboard::motifFillCache()
   auto formats = static_cast<const SInt32 *>(static_cast<const void *>(item.m_size + data.data()));
 
   // get the available formats
-  typedef std::map<Atom, String> MotifFormatMap;
+  using MotifFormatMap = std::map<Atom, String>;
   MotifFormatMap motifFormats;
   for (SInt32 i = 0; i < numFormats; ++i) {
     // get Motif format property from the root window

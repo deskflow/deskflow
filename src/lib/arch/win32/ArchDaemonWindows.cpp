@@ -385,8 +385,8 @@ void ArchDaemonWindows::setStatusError(DWORD error)
 
 void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
 {
-  typedef std::vector<LPCTSTR> ArgList;
-  typedef std::vector<std::string> Arguments;
+  using ArgList = std::vector<LPCTSTR>;
+  using Arguments = std::vector<std::string>;
   const char **argv = const_cast<const char **>(argvIn);
 
   // create synchronization objects

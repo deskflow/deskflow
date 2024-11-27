@@ -50,7 +50,7 @@ private:
   void clearConverters();
 
 private:
-  typedef std::vector<IOSXClipboardConverter *> ConverterList;
+  using ConverterList = std::vector<IOSXClipboardConverter *>;
 
   mutable Time m_time;
   ConverterList m_converters;

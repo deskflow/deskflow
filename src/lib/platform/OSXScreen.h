@@ -36,7 +36,7 @@
 
 extern "C"
 {
-  typedef int CGSConnectionID;
+  using CGSConnectionID = int;
   CGError CGSSetConnectionProperty(CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key, CFTypeRef value);
   int _CGSDefaultConnection();
 }
@@ -242,10 +242,10 @@ private:
     std::bitset<NumButtonIDs> m_buttons;
   };
 
-  typedef std::map<UInt32, HotKeyItem> HotKeyMap;
-  typedef std::vector<UInt32> HotKeyIDList;
-  typedef std::map<KeyModifierMask, UInt32> ModifierHotKeyMap;
-  typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+  using HotKeyMap = std::map<UInt32, HotKeyItem>;
+  using HotKeyIDList = std::vector<UInt32>;
+  using ModifierHotKeyMap = std::map<KeyModifierMask, UInt32>;
+  using HotKeyToIDMap = std::map<HotKeyItem, UInt32>;
 
   // true if screen is being used as a primary screen, false otherwise
   bool m_isPrimary;
@@ -272,7 +272,7 @@ private:
      Evil, and this should be moved to a place where it need not
      be mutable as soon as possible. */
   mutable MouseButtonState m_buttonState;
-  typedef std::map<UInt16, CGEventType> MouseButtonEventMapType;
+  using MouseButtonEventMapType = std::map<UInt16, CGEventType>;
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
   bool m_cursorHidden;

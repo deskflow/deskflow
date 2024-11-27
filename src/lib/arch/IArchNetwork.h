@@ -24,7 +24,7 @@
 #include <vector>
 
 class ArchThreadImpl;
-typedef ArchThreadImpl *ArchThread;
+using ArchThread = ArchThreadImpl *;
 
 /*!
 \class ArchSocketImpl
@@ -38,7 +38,7 @@ class ArchSocketImpl;
 \brief Opaque socket type.
 An opaque type representing a socket.
 */
-typedef ArchSocketImpl *ArchSocket;
+using ArchSocket = ArchSocketImpl *;
 
 /*!
 \class ArchNetAddressImpl
@@ -53,7 +53,7 @@ class ArchNetAddressImpl;
 \brief Opaque network address type.
 An opaque type representing a network address.
 */
-typedef ArchNetAddressImpl *ArchNetAddress;
+using ArchNetAddress = ArchNetAddressImpl *;
 
 //! Interface for architecture dependent networking
 /*!

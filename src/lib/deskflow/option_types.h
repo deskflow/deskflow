@@ -25,16 +25,16 @@
 /*!
 Type to hold an option identifier.
 */
-typedef UInt32 OptionID;
+using OptionID = UInt32;
 
 //! Option Value
 /*!
 Type to hold an option value.
 */
-typedef SInt32 OptionValue;
+using OptionValue = SInt32;
 
 // for now, options are just pairs of integers
-typedef std::vector<UInt32> OptionsList;
+using OptionsList = std::vector<UInt32>;
 
 // macro for packing 4 character strings into 4 byte integers
 #define OPTION_CODE(_s)                                                                                                \

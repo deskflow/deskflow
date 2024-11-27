@@ -24,7 +24,7 @@
 /*!
 Type to hold a mouse button identifier.
 */
-typedef UInt8 ButtonID;
+using ButtonID = UInt8;
 
 //! @name Mouse button identifiers
 //@{

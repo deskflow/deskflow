@@ -22,7 +22,7 @@
 
 #include <Carbon/Carbon.h>
 
-typedef TISInputSourceRef KeyLayout;
+using KeyLayout = TISInputSourceRef;
 
 class OSXUchrKeyResource : public IOSXKeyResource
 {
@@ -38,7 +38,7 @@ public:
   virtual KeyID getKey(UInt32 table, UInt32 button) const;
 
 private:
-  typedef std::vector<KeyID> KeySequence;
+  using KeySequence = std::vector<KeyID>;
 
   bool getDeadKey(KeySequence &keys, UInt16 index) const;
   bool getKeyRecord(KeySequence &keys, UInt16 index, UInt16 &state) const;

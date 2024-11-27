@@ -258,9 +258,9 @@ protected:
     // index of next byte in m_data to send
     UInt32 m_ptr;
   };
-  typedef std::list<Reply *> ReplyList;
-  typedef std::map<Window, ReplyList> ReplyMap;
-  typedef std::map<Window, long> ReplyEventMask;
+  using ReplyList = std::list<Reply *>;
+  using ReplyMap = std::map<Window, ReplyList>;
+  using ReplyEventMask = std::map<Window, long>;
 
   // ICCCM interoperability methods
   void icccmFillCache();
@@ -291,7 +291,7 @@ protected:
   Atom getTimestampData(String &, int *format) const;
 
 private:
-  typedef std::vector<IXWindowsClipboardConverter *> ConverterList;
+  using ConverterList = std::vector<IXWindowsClipboardConverter *>;
 
   Display *m_display;
   Window m_window;

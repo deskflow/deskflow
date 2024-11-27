@@ -64,7 +64,7 @@ public:
     char m_screensBuffer[1];
   };
 
-  typedef std::set<KeyButton> KeyButtonSet;
+  using KeyButtonSet = std::set<KeyButton>;
 
   //! @name manipulators
   //@{

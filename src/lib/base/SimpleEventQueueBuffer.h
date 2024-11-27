@@ -49,7 +49,7 @@ public:
   virtual void deleteTimer(EventQueueTimer *) const;
 
 private:
-  typedef std::deque<UInt32> EventDeque;
+  using EventDeque = std::deque<UInt32>;
 
   ArchMutex m_queueMutex;
   ArchCond m_queueReadyCond;

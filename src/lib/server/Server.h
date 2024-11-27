@@ -436,13 +436,13 @@ private:
   PrimaryClient *m_primaryClient;
 
   // all clients (including the primary client) indexed by name
-  typedef std::map<String, BaseClientProxy *> ClientList;
-  typedef std::set<BaseClientProxy *> ClientSet;
+  using ClientList = std::map<String, BaseClientProxy *>;
+  using ClientSet = std::set<BaseClientProxy *>;
   ClientList m_clients;
   ClientSet m_clientSet;
 
   // all old connections that we're waiting to hangup
-  typedef std::map<BaseClientProxy *, EventQueueTimer *> OldClients;
+  using OldClients = std::map<BaseClientProxy *, EventQueueTimer *>;
   OldClients m_oldClients;
 
   // the client with focus

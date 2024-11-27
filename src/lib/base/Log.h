@@ -136,7 +136,7 @@ private:
   void output(ELevel priority, char *msg);
 
 private:
-  typedef std::list<ILogOutputter *> OutputterList;
+  using OutputterList = std::list<ILogOutputter *>;
 
   static Log *s_log;
 

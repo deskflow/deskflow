@@ -33,7 +33,7 @@ class ArchCondImpl;
 \brief Opaque condition variable type.
 An opaque type representing a condition variable.
 */
-typedef ArchCondImpl *ArchCond;
+using ArchCond = ArchCondImpl *;
 
 /*!
 \class ArchMutexImpl
@@ -47,7 +47,7 @@ class ArchMutexImpl;
 \brief Opaque mutex type.
 An opaque type representing a mutex.
 */
-typedef ArchMutexImpl *ArchMutex;
+using ArchMutex = ArchMutexImpl *;
 
 /*!
 \class ArchThreadImpl
@@ -61,7 +61,7 @@ class ArchThreadImpl;
 \brief Opaque thread type.
 An opaque type representing a thread.
 */
-typedef ArchThreadImpl *ArchThread;
+using ArchThread = ArchThreadImpl *;
 
 //! Interface for architecture dependent multithreading
 /*!
@@ -74,7 +74,7 @@ public:
   //! Type of thread entry point
   typedef void *(*ThreadFunc)(void *);
   //! Type of thread identifier
-  typedef unsigned int ThreadID;
+  using ThreadID = unsigned int;
   //! Types of signals
   /*!
   Not all platforms support all signals.  Unsupported signals are

@@ -63,10 +63,10 @@ namespace std {
 class stringbuf : public streambuf
 {
 public:
-  typedef char char_type;
-  typedef int int_type;
-  typedef streampos pos_type;
-  typedef streamoff off_type;
+  using char_type = char;
+  using int_type = int;
+  using pos_type = streampos;
+  using off_type = streamoff;
 
   explicit stringbuf(int which = ios::in | ios::out)
       : streambuf(),
@@ -231,10 +231,10 @@ private:
 class istringstream : public istream
 {
 public:
-  typedef char char_type;
-  typedef int int_type;
-  typedef streampos pos_type;
-  typedef streamoff off_type;
+  using char_type = char;
+  using int_type = int;
+  using pos_type = streampos;
+  using off_type = streamoff;
 
   explicit istringstream(int which = ios::in) : istream(&sb), sb(which | ios::in)
   {
@@ -265,10 +265,10 @@ private:
 class ostringstream : public ostream
 {
 public:
-  typedef char char_type;
-  typedef int int_type;
-  typedef streampos pos_type;
-  typedef streamoff off_type;
+  using char_type = char;
+  using int_type = int;
+  using pos_type = streampos;
+  using off_type = streamoff;
 
   explicit ostringstream(int which = ios::out) : ostream(&sb), sb(which | ios::out)
   {
@@ -300,10 +300,10 @@ private:
 class stringstream : public iostream
 {
 public:
-  typedef char char_type;
-  typedef int int_type;
-  typedef streampos pos_type;
-  typedef streamoff off_type;
+  using char_type = char;
+  using int_type = int;
+  using pos_type = streampos;
+  using off_type = streamoff;
 
   explicit stringstream(int which = ios::out | ios::in) : iostream(&sb), sb(which)
   {

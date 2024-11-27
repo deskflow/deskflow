@@ -71,8 +71,8 @@ public:
 private:
   static const UInt32 kChunkSize;
 
-  typedef std::vector<UInt8> Chunk;
-  typedef std::list<Chunk> ChunkList;
+  using Chunk = std::vector<UInt8>;
+  using ChunkList = std::list<Chunk>;
 
   ChunkList m_chunks;
   UInt32 m_size;

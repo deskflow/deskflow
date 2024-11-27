@@ -38,7 +38,7 @@
 #ifndef ES_CONTINUOUS
 #define ES_CONTINUOUS ((DWORD)0x80000000)
 #endif
-typedef DWORD EXECUTION_STATE;
+using EXECUTION_STATE = DWORD;
 
 //
 // ArchMiscWindows

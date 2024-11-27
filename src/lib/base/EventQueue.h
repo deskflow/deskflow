@@ -102,14 +102,14 @@ private:
     double m_time;
   };
 
-  typedef std::set<EventQueueTimer *> Timers;
-  typedef PriorityQueue<Timer> TimerQueue;
-  typedef std::map<UInt32, Event> EventTable;
-  typedef std::vector<UInt32> EventIDList;
-  typedef std::map<Event::Type, const char *> TypeMap;
-  typedef std::map<String, Event::Type> NameMap;
-  typedef std::map<Event::Type, IEventJob *> TypeHandlerTable;
-  typedef std::map<void *, TypeHandlerTable> HandlerTable;
+  using Timers = std::set<EventQueueTimer *>;
+  using TimerQueue = PriorityQueue<Timer>;
+  using EventTable = std::map<UInt32, Event>;
+  using EventIDList = std::vector<UInt32>;
+  using TypeMap = std::map<Event::Type, const char *>;
+  using NameMap = std::map<String, Event::Type>;
+  using TypeHandlerTable = std::map<Event::Type, IEventJob *>;
+  using HandlerTable = std::map<void *, TypeHandlerTable>;
 
   int m_systemTarget;
   ArchMutex m_mutex;

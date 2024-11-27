@@ -75,7 +75,7 @@ private:
   static UINT getOwnershipFormat();
 
 private:
-  typedef std::vector<IMSWindowsClipboardConverter *> ConverterList;
+  using ConverterList = std::vector<IMSWindowsClipboardConverter *>;
 
   HWND m_window;
   mutable Time m_time;

@@ -89,9 +89,9 @@ private:
   void removeUnknownClient(ClientProxyUnknown *unknownClient);
 
 private:
-  typedef std::set<ClientProxyUnknown *> NewClients;
-  typedef std::deque<ClientProxy *> WaitingClients;
-  typedef std::set<IDataSocket *> ClientSockets;
+  using NewClients = std::set<ClientProxyUnknown *>;
+  using WaitingClients = std::deque<ClientProxy *>;
+  using ClientSockets = std::set<IDataSocket *>;
 
   IListenSocket *m_listen;
   ISocketFactory *m_socketFactory;

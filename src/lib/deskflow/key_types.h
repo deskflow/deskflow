@@ -26,7 +26,12 @@ Type to hold a key symbol identifier.  The encoding is UTF-32, using
 U+E000 through U+EFFF for the various control keys (e.g. arrow
 keys, function keys, modifier keys, etc).
 */
+// Typedef has to be used on mac os as this is used in objective-C
+#if __APPLE__
 typedef UInt32 KeyID;
+#else
+using KeyID = UInt32;
+#endif
 
 //! Key Code
 /*!
@@ -35,19 +40,31 @@ physical key on the keyboard.  KeyButton 0 is reserved to be an
 invalid key;  platforms that use 0 as a physical key identifier
 will have to remap that value to some arbitrary unused id.
 */
+#if __APPLE__
 typedef UInt16 KeyButton;
+#else
+using KeyButton = UInt16;
+#endif
 
 //! Modifier key mask
 /*!
 Type to hold a bitmask of key modifiers (e.g. shift keys).
 */
+#if __APPLE__
 typedef UInt32 KeyModifierMask;
+#else
+using KeyModifierMask = UInt32;
+#endif
 
 //! Modifier key ID
 /*!
 Type to hold the id of a key modifier (e.g. a shift key).
 */
+#if __APPLE__
 typedef UInt32 KeyModifierID;
+#else
+using KeyModifierID = UInt32;
+#endif
 
 //! @name Modifier key masks
 //@{

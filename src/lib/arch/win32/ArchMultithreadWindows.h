@@ -109,7 +109,7 @@ private:
   static unsigned int __stdcall threadFunc(void *vrep);
 
 private:
-  typedef std::list<ArchThread> ThreadList;
+  using ThreadList = std::list<ArchThread>;
 
   static ArchMultithreadWindows *s_instance;
 
