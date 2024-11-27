@@ -41,9 +41,13 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
   btnCopyVersion->setFlat(true);
   connect(btnCopyVersion, &QPushButton::clicked, this, [] { QGuiApplication::clipboard()->setText(kVersion); });
 
+  // Set up the displayed version number
   auto versionString = QString(kVersion);
-  if (!QString(kVersionGitSha).isEmpty())
+  if (versionString.endsWith(QStringLiteral(".0"))) {
+    versionString.chop(2);
+  } else {
     versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
+  }
 
   auto versionLayout = new QHBoxLayout();
   versionLayout->addWidget(new QLabel(tr("Version:")));
