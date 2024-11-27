@@ -24,7 +24,6 @@ import platform
 from dotenv import load_dotenv  # type: ignore
 
 ENV_FILE = ".env"
-DEFAULT_PRODUCT_NAME = "Deskflow"
 DEFAULT_FILENAME_BASE = "deskflow"
 DEFAULT_PROJECT_BUILD_DIR = "build"
 DEFAULT_DIST_DIR = "dist"
@@ -50,7 +49,6 @@ def main():
         DEFAULT_FILENAME_BASE,
         DEFAULT_PROJECT_BUILD_DIR,
         DEFAULT_DIST_DIR,
-        DEFAULT_PRODUCT_NAME,
         version=args.package_version,
     )
 
@@ -58,9 +56,7 @@ def package(
     filename_prefix,
     project_build_dir,
     dist_dir,
-    product_name,
     version,
-    source_dir=None,
 ):
     filename_base = get_filename_base(version, filename_prefix)
     print(f"Package filename base: {filename_base}")
