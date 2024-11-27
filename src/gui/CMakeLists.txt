@@ -63,11 +63,6 @@ target_link_libraries(
   Qt6::Widgets
   Qt6::Network)
 
-target_compile_definitions(
-  ${target} PRIVATE -DDESKFLOW_VERSION_STAGE="${DESKFLOW_VERSION_STAGE}")
-target_compile_definitions(${target}
-                           PRIVATE -DDESKFLOW_REVISION="${DESKFLOW_REVISION}")
-
 if(WIN32)
   set_target_properties(${target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 elseif(APPLE)
