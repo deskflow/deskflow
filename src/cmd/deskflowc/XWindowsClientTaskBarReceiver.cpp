@@ -52,7 +52,7 @@ void CXWindowsClientTaskBarReceiver::primaryAction()
 
 IArchTaskBarReceiver::Icon CXWindowsClientTaskBarReceiver::getIcon() const
 {
-  return NULL;
+  return nullptr;
 }
 
 IArchTaskBarReceiver *createTaskBarReceiver(const BufferedLogOutputter *logBuffer, IEventQueue *events)
