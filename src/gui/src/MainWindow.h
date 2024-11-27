@@ -27,8 +27,8 @@
 
 #include "ServerConfig.h"
 #include "TrayIcon.h"
+#include "VersionChecker.h"
 #include "common/ipc.h"
-#include "gui/VersionChecker.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/config/ServerConfigDialogState.h"
