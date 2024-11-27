@@ -155,8 +155,8 @@ void MainWindow::setupControls()
 
   ui->m_pLabelIpAddresses->setText(QString("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-  if (m_AppConfig.lastVersion() != DESKFLOW_VERSION) {
-    m_AppConfig.setLastVersion(DESKFLOW_VERSION);
+  if (m_AppConfig.lastVersion() != kVersion) {
+    m_AppConfig.setLastVersion(kVersion);
   }
 
 #if defined(Q_OS_MAC)

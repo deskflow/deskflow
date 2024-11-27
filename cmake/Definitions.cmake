@@ -26,7 +26,6 @@ macro(configure_definitions)
     # Shorten the Git SHA to 8 chars for readability
     string(SUBSTRING "$ENV{GIT_SHA}" 0 8 GIT_SHA_SHORT)
     message(STATUS "Short Git SHA: ${GIT_SHA_SHORT}")
-    add_definitions(-DGIT_SHA_SHORT="${GIT_SHA_SHORT}")
   endif()
 
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
