@@ -19,7 +19,6 @@
 
 #include "Logger.h"
 #include "common/constants.h"
-#include "common/version.h"
 #include "constants.h"
 #include "env_vars.h"
 #include "styles.h"
@@ -66,8 +65,7 @@ void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType 
                   " and copy/paste the following error:</p>")
               .arg(kUrlHelp, kColorSecondary);
 
-  const QString version = QString::fromStdString(deskflow::version());
-  text += QString("<pre>v%1\n%2\n%3</pre>").arg(version, message, fileLine);
+  text += QString("<pre>v%1\n%2\n%3</pre>").arg(kVersion, message, fileLine);
 
   if (type == QtFatalMsg) {
     // create a blocking message box for fatal errors, as we want to wait

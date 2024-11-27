@@ -19,7 +19,6 @@
 #include "MainWindow.h"
 #include "SetupWizard.h"
 #include "common/constants.h"
-#include "common/version.h"
 #include "gui/Logger.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
@@ -92,8 +91,7 @@ int main(int argc, char *argv[])
 #endif
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
-  QString version = QString::fromStdString(deskflow::version());
-  qInfo("%s v%s", kAppName, qPrintable(version));
+  qInfo("%s v%s", kAppName, qPrintable(kVersion));
 
   dotenv();
   Logger::instance().loadEnvVars();

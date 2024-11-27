@@ -1,0 +1,19 @@
+// SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
+// SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
+// SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
+// SPDX-License-Identifier: GPL-2.0-only
+
+
+#pragma once
+
+const auto kAppName = "Deskflow";
+const auto kAppId = "deskflow";
+const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
+const auto kVersion = "@CMAKE_PROJECT_VERSION@";
+const auto kVersionGitSha = "@GIT_SHA_SHORT@";
+
+#ifndef NDEBUG
+const auto kDebugBuild = true;
+#else
+const auto kDebugBuild = false;
+#endif

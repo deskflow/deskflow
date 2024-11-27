@@ -19,8 +19,8 @@
 
 #include "AboutDialog.h"
 
+#include "common/constants.h"
 #include "common/copyright.h"
-#include "common/version.h"
 #include "gui/style_utils.h"
 
 #include <QClipboard>
@@ -34,19 +34,21 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
 {
   setWindowTitle(tr("About Deskflow"));
 
-  QString version = QString::fromStdString(deskflow::version());
-
   auto copyIcon = QIcon::fromTheme(
       QIcon::ThemeIcon::EditCopy, deskflow::gui::isDarkMode() ? QIcon(s_darkCopy) : QIcon(s_lightCopy)
   );
 
   auto btnCopyVersion = new QPushButton(copyIcon, QString(), this);
   btnCopyVersion->setFlat(true);
-  connect(btnCopyVersion, &QPushButton::clicked, this, [version] { qApp->clipboard()->setText(version); });
+  connect(btnCopyVersion, &QPushButton::clicked, this, [] { QGuiApplication::clipboard()->setText(kVersion); });
+
+  auto versionString = QString(kVersion);
+  if (!QString(kVersionGitSha).isEmpty())
+    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
 
   auto versionLayout = new QHBoxLayout();
   versionLayout->addWidget(new QLabel(tr("Version:")));
-  versionLayout->addWidget(new QLabel(version));
+  versionLayout->addWidget(new QLabel(versionString, this));
   versionLayout->addWidget(btnCopyVersion);
   versionLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed));
 

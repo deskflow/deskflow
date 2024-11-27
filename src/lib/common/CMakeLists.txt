@@ -1,11 +1,13 @@
 # SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+
+configure_file(constants.h.in constants.h @ONLY)
 
 add_library(common INTERFACE
   basic_types.h
   common.h
-  constants.h
   copyright.h
   IInterface.h
   ipc.h
@@ -23,15 +25,10 @@ add_library(common INTERFACE
   stdsstream.h
   stdstring.h
   stdvector.h
-  version.h
+  ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 
 if(APPLE)
   target_sources(common INTERFACE MacOSXPrecomp.h)
 endif()
 
-target_include_directories(common
-  INTERFACE
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
