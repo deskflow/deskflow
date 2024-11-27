@@ -33,6 +33,12 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
   if(GIT_FOUND)
     execute_process(
+      COMMAND ${GIT_EXECUTABLE} rev-parse --short=8 HEAD
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      OUTPUT_VARIABLE GIT_SHA_SHORT
+      ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    execute_process(
       COMMAND ${GIT_EXECUTABLE} describe --long --match v* --always
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       OUTPUT_VARIABLE GITREV
