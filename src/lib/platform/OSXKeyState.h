@@ -35,7 +35,7 @@ A key state for OS X.
 class OSXKeyState : public KeyState
 {
 public:
-  typedef std::vector<KeyID> KeyIDs;
+  using KeyIDs = std::vector<KeyID>;
 
   OSXKeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
   OSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled);
@@ -160,8 +160,8 @@ private:
     KeyButtonOffset = 1
   };
 
-  typedef std::map<CFDataRef, SInt32> GroupMap;
-  typedef std::map<UInt32, KeyID> VirtualKeyMap;
+  using GroupMap = std::map<CFDataRef, SInt32>;
+  using VirtualKeyMap = std::map<UInt32, KeyID>;
 
   VirtualKeyMap m_virtualKeyMap;
   mutable UInt32 m_deadKeyState;

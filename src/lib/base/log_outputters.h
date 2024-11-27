@@ -137,10 +137,10 @@ This outputter records the last N log messages.
 class BufferedLogOutputter : public ILogOutputter
 {
 private:
-  typedef std::deque<String> Buffer;
+  using Buffer = std::deque<String>;
 
 public:
-  typedef Buffer::const_iterator const_iterator;
+  using const_iterator = Buffer::const_iterator;
 
   BufferedLogOutputter(UInt32 maxBufferSize);
   virtual ~BufferedLogOutputter();

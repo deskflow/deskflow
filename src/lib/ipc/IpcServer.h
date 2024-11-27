@@ -77,7 +77,7 @@ private:
   void deleteClient(IpcClientProxy *proxy);
 
 private:
-  typedef std::list<IpcClientProxy *> ClientList;
+  using ClientList = std::list<IpcClientProxy *>;
 
   bool m_mock;
   IEventQueue *m_events;

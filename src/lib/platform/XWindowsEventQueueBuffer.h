@@ -59,7 +59,7 @@ private:
   int getPendingCountLocked();
 
 private:
-  typedef std::vector<XEvent> EventList;
+  using EventList = std::vector<XEvent>;
 
   Mutex m_mutex;
   Display *m_display;

@@ -116,7 +116,7 @@ private:
   bool isDPMSActivated() const;
 
 private:
-  typedef std::map<Window, long> WatchList;
+  using WatchList = std::map<Window, long>;
 
   // the X display
   Display *m_display;

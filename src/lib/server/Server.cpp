@@ -2112,7 +2112,7 @@ void Server::closeClients(const ServerConfig &config)
 {
   // collect the clients that are connected but are being dropped
   // from the configuration (or who's canonical name is changing).
-  typedef std::set<BaseClientProxy *> RemovedClients;
+  using RemovedClients = std::set<BaseClientProxy *>;
   RemovedClients removed;
   for (ClientList::iterator index = m_clients.begin(); index != m_clients.end(); ++index) {
     if (!config.isCanonicalName(index->first)) {

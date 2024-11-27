@@ -190,7 +190,7 @@ private:
   static DWORD WINAPI dummySetThreadExecutionState(DWORD);
 
 private:
-  typedef std::set<HWND> Dialogs;
+  using Dialogs = std::set<HWND>;
   typedef DWORD(WINAPI *STES_t)(DWORD);
 
   static Dialogs *s_dialogs;

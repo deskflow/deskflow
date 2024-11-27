@@ -45,7 +45,7 @@ A key state for X Windows.
 class XWindowsKeyState : public KeyState
 {
 public:
-  typedef std::vector<int> KeycodeList;
+  using KeycodeList = std::vector<int>;
   enum
   {
     kGroupPoll = -1,
@@ -142,13 +142,13 @@ private:
 #ifdef TEST_ENV
 public: // yuck
 #endif
-  typedef std::vector<KeyModifierMask> KeyModifierMaskList;
+  using KeyModifierMaskList = std::vector<KeyModifierMask>;
 
 private:
-  typedef std::map<KeyModifierMask, unsigned int> KeyModifierToXMask;
-  typedef std::multimap<KeyID, KeyCode> KeyToKeyCodeMap;
-  typedef std::map<KeyCode, unsigned int> NonXKBModifierMap;
-  typedef std::map<UInt32, XKBModifierInfo> XKBModifierMap;
+  using KeyModifierToXMask = std::map<KeyModifierMask, unsigned int>;
+  using KeyToKeyCodeMap = std::multimap<KeyID, KeyCode>;
+  using NonXKBModifierMap = std::map<KeyCode, unsigned int>;
+  using XKBModifierMap = std::map<UInt32, XKBModifierInfo>;
 
   Display *m_display;
 #if HAVE_XKB_EXTENSION

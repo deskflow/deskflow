@@ -40,11 +40,11 @@ class IEventQueue;
 namespace std {
 template <> struct iterator_traits<deskflow::server::Config>
 {
-  typedef String value_type;
-  typedef ptrdiff_t difference_type;
-  typedef bidirectional_iterator_tag iterator_category;
-  typedef String *pointer;
-  typedef String &reference;
+  using value_type = String;
+  using difference_type = ptrdiff_t;
+  using iterator_category = bidirectional_iterator_tag;
+  using pointer = String *;
+  using reference = String &;
 };
 }; // namespace std
 
@@ -63,8 +63,8 @@ namespace and must be unique.
 class Config
 {
 public:
-  typedef std::map<OptionID, OptionValue> ScreenOptions;
-  typedef std::pair<float, float> Interval;
+  using ScreenOptions = std::map<OptionID, OptionValue>;
+  using Interval = std::pair<float, float>;
 
   class CellEdge
   {
@@ -119,10 +119,10 @@ private:
   class Cell
   {
   private:
-    typedef std::map<CellEdge, CellEdge> EdgeLinks;
+    using EdgeLinks = std::map<CellEdge, CellEdge>;
 
   public:
-    typedef EdgeLinks::const_iterator const_iterator;
+    using const_iterator = EdgeLinks::const_iterator;
 
     bool add(const CellEdge &src, const CellEdge &dst);
     void remove(EDirection side);
@@ -147,13 +147,13 @@ private:
   public:
     ScreenOptions m_options;
   };
-  typedef std::map<String, Cell, deskflow::string::CaselessCmp> CellMap;
-  typedef std::map<String, String, deskflow::string::CaselessCmp> NameMap;
+  using CellMap = std::map<String, Cell, deskflow::string::CaselessCmp>;
+  using NameMap = std::map<String, String, deskflow::string::CaselessCmp>;
 
 public:
-  typedef Cell::const_iterator link_const_iterator;
-  typedef CellMap::const_iterator internal_const_iterator;
-  typedef NameMap::const_iterator all_const_iterator;
+  using link_const_iterator = Cell::const_iterator;
+  using internal_const_iterator = CellMap::const_iterator;
+  using all_const_iterator = NameMap::const_iterator;
   class const_iterator : std::iterator_traits<Config>
   {
   public:
@@ -522,7 +522,7 @@ Maintains a context when reading a configuration from a stream.
 class ConfigReadContext
 {
 public:
-  typedef std::vector<String> ArgList;
+  using ArgList = std::vector<String>;
 
   ConfigReadContext(std::istream &, SInt32 firstLine = 1);
   ~ConfigReadContext();

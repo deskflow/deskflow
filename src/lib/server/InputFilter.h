@@ -354,7 +354,7 @@ public:
     void copy(const Rule &);
 
   private:
-    typedef std::vector<Action *> ActionList;
+    using ActionList = std::vector<Action *>;
 
     Condition *m_condition;
     ActionList m_activateActions;
@@ -364,7 +364,7 @@ public:
   // -------------------------------------------------------------------------
   // Input Filter Class
   // -------------------------------------------------------------------------
-  typedef std::vector<Rule> RuleList;
+  using RuleList = std::vector<Rule>;
 
   InputFilter(IEventQueue *events);
   InputFilter(const InputFilter &);

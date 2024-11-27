@@ -41,7 +41,7 @@ struct sockaddr_storage
 #endif
 
 #if !HAVE_SOCKLEN_T
-typedef int socklen_t;
+using socklen_t = int;
 #endif
 
 #include <poll.h>
@@ -52,7 +52,7 @@ typedef int socklen_t;
 // old systems may use char* for [gs]etsockopt()'s optval argument.
 // this should be void on modern systems but char is forwards
 // compatible so we always use it.
-typedef char optval_t;
+using optval_t = char;
 
 class ArchSocketImpl
 {

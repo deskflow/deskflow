@@ -202,7 +202,7 @@ private:
     HWND m_foregroundWindow;
     bool m_lowLevel;
   };
-  typedef std::map<String, Desk *> Desks;
+  using Desks = std::map<String, Desk *>;
 
   // initialization and shutdown operations
   HCURSOR createBlankCursor() const;

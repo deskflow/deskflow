@@ -172,11 +172,11 @@ private:
     int m_keycode;
     unsigned int m_mask;
   };
-  typedef std::set<bool> FilteredKeycodes;
-  typedef std::vector<std::pair<int, unsigned int>> HotKeyList;
-  typedef std::map<UInt32, HotKeyList> HotKeyMap;
-  typedef std::vector<UInt32> HotKeyIDList;
-  typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
+  using FilteredKeycodes = std::set<bool>;
+  using HotKeyList = std::vector<std::pair<int, unsigned int>>;
+  using HotKeyMap = std::map<UInt32, HotKeyList>;
+  using HotKeyIDList = std::vector<UInt32>;
+  using HotKeyToIDMap = std::map<HotKeyItem, UInt32>;
 
   // true if screen is being used as a primary screen, false otherwise
   bool m_isPrimary;

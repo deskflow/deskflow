@@ -62,9 +62,9 @@ public:
 private:
   // list of jobs.  we use a list so we can safely iterate over it
   // while other threads modify it.
-  typedef std::list<ISocketMultiplexerJob *> SocketJobs;
-  typedef SocketJobs::iterator JobCursor;
-  typedef std::map<ISocket *, JobCursor> SocketJobMap;
+  using SocketJobs = std::list<ISocketMultiplexerJob *>;
+  using JobCursor = SocketJobs::iterator;
+  using SocketJobMap = std::map<ISocket *, JobCursor>;
 
   // service sockets.  the service thread will only access m_sockets
   // and m_update while m_pollable and m_polling are true.  all other

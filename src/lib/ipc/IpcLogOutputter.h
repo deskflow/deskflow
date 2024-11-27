@@ -98,7 +98,7 @@ private:
   bool isRunning();
 
 private:
-  typedef std::deque<String> Buffer;
+  using Buffer = std::deque<String>;
 
   IpcServer &m_ipcServer;
   Buffer m_buffer;

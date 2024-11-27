@@ -260,10 +260,10 @@ private:
     UINT m_keycode;
     UINT m_mask;
   };
-  typedef std::map<UInt32, HotKeyItem> HotKeyMap;
-  typedef std::vector<UInt32> HotKeyIDList;
-  typedef std::map<HotKeyItem, UInt32> HotKeyToIDMap;
-  typedef std::vector<KeyButton> PrimaryKeyDownList;
+  using HotKeyMap = std::map<UInt32, HotKeyItem>;
+  using HotKeyIDList = std::vector<UInt32>;
+  using HotKeyToIDMap = std::map<HotKeyItem, UInt32>;
+  using PrimaryKeyDownList = std::vector<KeyButton>;
 
   static HINSTANCE s_windowInstance;
 

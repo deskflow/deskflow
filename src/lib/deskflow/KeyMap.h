@@ -76,7 +76,7 @@ public:
   any modifier keys unless the KeyID is a modifier, in which case
   it has exactly one KeyItem for the modifier itself.
   */
-  typedef std::vector<KeyItem> KeyItemList;
+  using KeyItemList = std::vector<KeyItem>;
 
   //! A keystroke
   class Keystroke
@@ -119,13 +119,13 @@ public:
   };
 
   //! A sequence of keystrokes
-  typedef std::vector<Keystroke> Keystrokes;
+  using Keystrokes = std::vector<Keystroke>;
 
   //! A mapping of a modifier to keys for that modifier
-  typedef std::multimap<KeyModifierMask, KeyItem> ModifierToKeys;
+  using ModifierToKeys = std::multimap<KeyModifierMask, KeyItem>;
 
   //! A set of buttons
-  typedef std::map<KeyButton, const KeyItem *> ButtonToKeyMap;
+  using ButtonToKeyMap = std::map<KeyButton, const KeyItem *>;
 
   //! Callback type for \c foreachKey
   typedef void (*ForeachKeyCallback)(KeyID, SInt32 group, KeyItem &, void *userData);
@@ -353,7 +353,7 @@ private:
   };
 
   // A list of ways to synthesize a KeyID
-  typedef std::vector<KeyItemList> KeyEntryList;
+  using KeyEntryList = std::vector<KeyItemList>;
 
   // computes the number of groups
   SInt32 findNumGroups() const;
@@ -440,7 +440,7 @@ private:
   static void initKeyNameMaps();
 
   // Ways to synthesize a KeyID over multiple keyboard groups
-  typedef std::vector<KeyEntryList> KeyGroupTable;
+  using KeyGroupTable = std::vector<KeyEntryList>;
 
   void addGroupToKeystroke(Keystrokes &keys, SInt32 &group, const String &lang) const;
 
@@ -454,25 +454,25 @@ private:
 
 private:
   // Table of KeyID to ways to synthesize that KeyID
-  typedef std::map<KeyID, KeyGroupTable> KeyIDMap;
+  using KeyIDMap = std::map<KeyID, KeyGroupTable>;
 
   // List of KeyItems that generate a particular modifier
-  typedef std::vector<const KeyItem *> ModifierKeyItemList;
+  using ModifierKeyItemList = std::vector<const KeyItem *>;
 
   // Map a modifier to the KeyItems that synthesize that modifier
-  typedef std::vector<ModifierKeyItemList> ModifierToKeyTable;
+  using ModifierToKeyTable = std::vector<ModifierKeyItemList>;
 
   // A set of keys
-  typedef std::set<KeyID> KeySet;
+  using KeySet = std::set<KeyID>;
 
   // A set of buttons
-  typedef std::set<KeyButton> KeyButtonSet;
+  using KeyButtonSet = std::set<KeyButton>;
 
   // Key maps for parsing/formatting
-  typedef std::map<String, KeyID, deskflow::string::CaselessCmp> NameToKeyMap;
-  typedef std::map<String, KeyModifierMask, deskflow::string::CaselessCmp> NameToModifierMap;
-  typedef std::map<KeyID, String> KeyToNameMap;
-  typedef std::map<KeyModifierMask, String> ModifierToNameMap;
+  using NameToKeyMap = std::map<String, KeyID, deskflow::string::CaselessCmp>;
+  using NameToModifierMap = std::map<String, KeyModifierMask, deskflow::string::CaselessCmp>;
+  using KeyToNameMap = std::map<KeyID, String>;
+  using ModifierToNameMap = std::map<KeyModifierMask, String>;
 
   // KeyID info
   KeyIDMap m_keyIDMap;

@@ -178,7 +178,7 @@ protected:
   virtual KeyModifierMask &getActiveModifiersRValue();
 
 private:
-  typedef std::vector<HKL> GroupList;
+  using GroupList = std::vector<HKL>;
 
   // send ctrl+alt+del hotkey event on NT family
   static void ctrlAltDelThread(void *);
@@ -198,8 +198,8 @@ private:
   MSWindowsKeyState &operator=(const MSWindowsKeyState &);
 
 private:
-  typedef std::map<HKL, SInt32> GroupMap;
-  typedef std::map<KeyID, UINT> KeyToVKMap;
+  using GroupMap = std::map<HKL, SInt32>;
+  using KeyToVKMap = std::map<KeyID, UINT>;
 
   void *m_eventTarget;
   MSWindowsDesks *m_desks;

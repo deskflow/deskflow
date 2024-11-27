@@ -72,6 +72,6 @@ private:
   ActionList m_Actions;
 };
 
-typedef QList<Hotkey> HotkeyList;
+using HotkeyList = QList<Hotkey>;
 
 QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey);

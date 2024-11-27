@@ -61,7 +61,7 @@ public:
   virtual std::string getToolTip() const;
 
 protected:
-  typedef std::vector<String> Clients;
+  using Clients = std::vector<String>;
   enum EState
   {
     kNotRunning,

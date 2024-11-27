@@ -39,11 +39,11 @@ template <
 class PriorityQueue
 {
 public:
-  typedef typename Container::value_type value_type;
-  typedef typename Container::size_type size_type;
-  typedef typename Container::iterator iterator;
-  typedef typename Container::const_iterator const_iterator;
-  typedef Container container_type;
+  using value_type = Container::value_type;
+  using size_type = Container::size_type;
+  using iterator = Container::iterator;
+  using const_iterator = Container::const_iterator;
+  using container_type = Container;
 
   PriorityQueue()
   {
