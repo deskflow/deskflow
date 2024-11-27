@@ -81,7 +81,7 @@ public:
   to set the icon is left to subclasses.  Getting and setting
   the icon must be thread safe.
   */
-  virtual const Icon getIcon() const = 0;
+  virtual Icon getIcon() const = 0;
 
   //! Get tooltip
   /*!
