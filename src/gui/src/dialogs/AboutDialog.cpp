@@ -20,7 +20,6 @@
 #include "AboutDialog.h"
 
 #include "common/constants.h"
-#include "common/copyright.h"
 #include "gui/style_utils.h"
 
 #include <QClipboard>
@@ -55,7 +54,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
   auto lblLogo = new QLabel(this);
   lblLogo->setPixmap(deskflow::gui::isDarkMode() ? s_darkLogo : s_lightLogo);
 
-  auto lblCopyright = new QLabel(QString::fromStdString(deskflow::kCopyright));
+  auto lblCopyright = new QLabel(kCopyright, this);
 
   auto boldFont = font();
   boldFont.setBold(true);

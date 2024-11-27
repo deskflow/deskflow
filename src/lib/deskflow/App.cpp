@@ -27,7 +27,6 @@
 #include "base/XBase.h"
 #include "base/log_outputters.h"
 #include "common/constants.h"
-#include "common/copyright.h"
 #include "common/ipc.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
@@ -96,7 +95,7 @@ void App::version()
   std::vector<char> buffer(kBufferLength);
   std::snprintf(                                                   // NOSONAR
       buffer.data(), kBufferLength, "%s v%s, protocol v%d.%d\n%s", //
-      argsBase().m_pname, kVersion, kProtocolMajorVersion, kProtocolMinorVersion, deskflow::kCopyright
+      argsBase().m_pname, kVersion, kProtocolMajorVersion, kProtocolMinorVersion, kCopyright
   );
 
   std::cout << std::string(buffer.data()) << std::endl;
