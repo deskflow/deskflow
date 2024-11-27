@@ -17,8 +17,8 @@
  */
 #pragma once
 
-#include "common/stdpre.h"
+#include "stdpre.h"
 
 #include <string>
 
-#include "common/stdpost.h"
+#include "stdpost.h"

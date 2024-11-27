@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/common.h"
+#include "common.h"
 
 //! Base class of interfaces
 /*!
