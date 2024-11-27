@@ -29,10 +29,6 @@ const char *Action::m_ActionTypeNames[] = {
 const char *Action::m_SwitchDirectionNames[] = {"left", "right", "up", "down"};
 const char *Action::m_LockCursorModeNames[] = {"toggle", "on", "off"};
 
-Action::Action()
-{
-}
-
 QString Action::text() const
 {
   QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]) + "(";

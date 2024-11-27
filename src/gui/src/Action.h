@@ -62,7 +62,7 @@ public:
   };
 
 public:
-  Action();
+  Action() = default;
 
 public:
   QString text() const;
