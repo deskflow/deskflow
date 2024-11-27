@@ -151,13 +151,13 @@ protected:
 
 private:
   KeySequence m_KeySequence;
-  int m_Type;
-  QStringList m_TypeScreenNames;
-  QString m_SwitchScreenName;
-  int m_SwitchDirection;
-  int m_LockCursorMode;
-  bool m_ActiveOnRelease;
-  bool m_HasScreens;
+  int m_Type = keystroke;
+  QStringList m_TypeScreenNames = QStringList();
+  QString m_SwitchScreenName = QString();
+  int m_SwitchDirection = switchLeft;
+  int m_LockCursorMode = lockCursorToggle;
+  bool m_ActiveOnRelease = false;
+  bool m_HasScreens = false;
   bool m_restartServer;
 
   static const char *m_ActionTypeNames[];
