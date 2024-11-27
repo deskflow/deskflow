@@ -50,7 +50,7 @@ void OSXClientTaskBarReceiver::primaryAction()
   // do nothing
 }
 
-const IArchTaskBarReceiver::Icon OSXClientTaskBarReceiver::getIcon() const
+IArchTaskBarReceiver::Icon OSXClientTaskBarReceiver::getIcon() const
 {
   return NULL;
 }

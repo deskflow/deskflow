@@ -229,7 +229,7 @@ void MSWindowsServerTaskBarReceiver::primaryAction()
   showStatus();
 }
 
-const IArchTaskBarReceiver::Icon MSWindowsServerTaskBarReceiver::getIcon() const
+IArchTaskBarReceiver::Icon MSWindowsServerTaskBarReceiver::getIcon() const
 {
   return static_cast<Icon>(m_icon[getStatus()]);
 }

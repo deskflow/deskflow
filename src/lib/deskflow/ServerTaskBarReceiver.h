@@ -57,7 +57,7 @@ public:
   virtual void primaryAction() = 0;
   virtual void lock() const;
   virtual void unlock() const;
-  virtual const Icon getIcon() const = 0;
+  virtual Icon getIcon() const = 0;
   virtual std::string getToolTip() const;
 
 protected:

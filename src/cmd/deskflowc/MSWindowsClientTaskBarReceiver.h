@@ -37,7 +37,7 @@ public:
   virtual void showStatus();
   virtual void runMenu(int x, int y);
   virtual void primaryAction();
-  virtual const Icon getIcon() const;
+  virtual Icon getIcon() const;
   void cleanup();
 
 protected:
