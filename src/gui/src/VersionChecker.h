@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "proxy/QNetworkAccessManagerProxy.h"
+#include "gui/proxy/QNetworkAccessManagerProxy.h"
 
 #include <QObject>
 #include <QString>
