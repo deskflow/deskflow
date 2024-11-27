@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/common.h"
+#include "common.h"
 
 // VC++ has built-in sized types
 // moved from common.h (why was it there?)

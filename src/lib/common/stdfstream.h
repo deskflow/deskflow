@@ -17,9 +17,9 @@
  */
 #pragma once
 
-#include "common/stdpre.h"
+#include "stdpre.h"
 
-#include "common/stdistream.h"
+#include "stdistream.h"
 #include <fstream>
 
-#include "common/stdpost.h"
+#include "stdpost.h"

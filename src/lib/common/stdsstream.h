@@ -17,7 +17,7 @@
  */
 #pragma once
 
-#include "common/stdpre.h"
+#include "stdpre.h"
 
 #if HAVE_SSTREAM || !defined(__GNUC__) || (__GNUC__ >= 3)
 
@@ -339,6 +339,6 @@ private:
 
 #endif /* not g++ 2.95 and no <sstream> */
 
-#include "common/stdistream.h"
+#include "stdistream.h"
 
-#include "common/stdpost.h"
+#include "stdpost.h"

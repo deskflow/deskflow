@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "common/basic_types.h"
+#include "basic_types.h"
 
 enum class IpcMessageType : UInt8
 {

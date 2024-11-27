@@ -17,7 +17,7 @@
  */
 #pragma once
 
-#include "common/stdpre.h"
+#include "stdpre.h"
 
 #if HAVE_OSTREAM
 #include <ostream>
@@ -25,4 +25,4 @@
 #include <iostream>
 #endif
 
-#include "common/stdpost.h"
+#include "stdpost.h"
