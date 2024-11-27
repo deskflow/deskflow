@@ -22,12 +22,6 @@ macro(configure_definitions)
   set(INTEG_TESTS_BIN integtests)
   set(UNIT_TESTS_BIN unittests)
 
-  if(NOT "$ENV{GIT_SHA}" STREQUAL "")
-    # Shorten the Git SHA to 8 chars for readability
-    string(SUBSTRING "$ENV{GIT_SHA}" 0 8 GIT_SHA_SHORT)
-    message(STATUS "Short Git SHA: ${GIT_SHA_SHORT}")
-  endif()
-
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Disabling debug build")
     add_definitions(-DNDEBUG)
