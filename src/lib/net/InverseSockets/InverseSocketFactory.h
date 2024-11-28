@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012-2022 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -26,8 +27,12 @@ public:
   InverseSocketFactory(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
 
   // ISocketFactory overrides
-  IDataSocket *create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
-  IListenSocket *createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const override;
+  IDataSocket *create(
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+  ) const override;
+  IListenSocket *createListen(
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+  ) const override;
 
 private:
   IEventQueue *m_events = nullptr;
