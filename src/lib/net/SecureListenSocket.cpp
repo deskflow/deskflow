@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 - 2016 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -25,9 +26,12 @@ static const char s_certificateFileExt[] = {"pem"};
 //
 
 SecureListenSocket::SecureListenSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
+    SecurityLevel securityLevel
 )
-    : TCPListenSocket(events, socketMultiplexer, family)
+    : TCPListenSocket(events, socketMultiplexer, family),
+      m_securityLevel{securityLevel}
+
 {
 }
 
@@ -35,7 +39,7 @@ IDataSocket *SecureListenSocket::accept()
 {
   SecureSocket *socket = NULL;
   try {
-    socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+    socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL), m_securityLevel);
     socket->initSsl(true);
 
     if (socket != NULL) {
