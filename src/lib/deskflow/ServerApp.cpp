@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -626,7 +627,9 @@ void ServerApp::handleResume(const Event &, void *)
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
-  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, args().m_enableCrypto);
+  auto securityLevel = args().m_enableCrypto ? SecurityLevel::Encrypted : SecurityLevel::PlainText;
+
+  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
   m_events->adoptHandler(
       m_events->forClientListener().connected(), listen,

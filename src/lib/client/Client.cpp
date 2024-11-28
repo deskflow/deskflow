@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -141,6 +142,8 @@ void Client::connect(size_t addressIndex)
     return;
   }
 
+  auto securityLevel = m_useSecureNetwork ? SecurityLevel::Encrypted : SecurityLevel::PlainText;
+
   try {
     if (m_args.m_hostMode) {
       LOG((CLOG_NOTE "waiting for server connection on %i port", m_serverAddress.getPort()));
@@ -163,8 +166,7 @@ void Client::connect(size_t addressIndex)
     }
 
     // create the socket
-    IDataSocket *socket =
-        m_socketFactory->create(m_useSecureNetwork, ARCH->getAddrFamily(m_serverAddress.getAddress()));
+    IDataSocket *socket = m_socketFactory->create(ARCH->getAddrFamily(m_serverAddress.getAddress()), securityLevel);
     bindNetworkInterface(socket);
 
     // filter socket messages, including a packetizing filter
