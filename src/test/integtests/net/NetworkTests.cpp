@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2013 - 2016 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -101,7 +102,7 @@ TEST_F(NetworkTests, sendToClient_mockData) {
   SocketMultiplexer serverSocketMultiplexer;
   TCPSocketFactory *serverSocketFactory =
       new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-  ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+  ClientListener listener(serverAddress, serverSocketFactory, &m_events, SecurityLevel::PlainText);
   NiceMock<MockScreen> serverScreen;
   NiceMock<MockPrimaryClient> primaryClient;
   NiceMock<MockConfig> serverConfig;
@@ -165,7 +166,7 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
   SocketMultiplexer serverSocketMultiplexer;
   TCPSocketFactory *serverSocketFactory =
       new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-  ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+  ClientListener listener(serverAddress, serverSocketFactory, &m_events, SecurityLevel::PlainText);
   NiceMock<MockScreen> serverScreen;
   NiceMock<MockPrimaryClient> primaryClient;
   NiceMock<MockConfig> serverConfig;
@@ -228,7 +229,7 @@ TEST_F(NetworkTests, sendToServer_mockData) {
   SocketMultiplexer serverSocketMultiplexer;
   TCPSocketFactory *serverSocketFactory =
       new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-  ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+  ClientListener listener(serverAddress, serverSocketFactory, &m_events, SecurityLevel::PlainText);
   NiceMock<MockScreen> serverScreen;
   NiceMock<MockPrimaryClient> primaryClient;
   NiceMock<MockConfig> serverConfig;
@@ -292,7 +293,7 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
   SocketMultiplexer serverSocketMultiplexer;
   TCPSocketFactory *serverSocketFactory =
       new TCPSocketFactory(&m_events, &serverSocketMultiplexer);
-  ClientListener listener(serverAddress, serverSocketFactory, &m_events, false);
+  ClientListener listener(serverAddress, serverSocketFactory, &m_events, SecurityLevel::PlainText);
   NiceMock<MockScreen> serverScreen;
   NiceMock<MockPrimaryClient> primaryClient;
   NiceMock<MockConfig> serverConfig;

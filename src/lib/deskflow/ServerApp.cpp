@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -611,7 +612,9 @@ void ServerApp::handleResume(const Event &, void *)
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
-  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, args().m_enableCrypto);
+  auto securityLevel = args().m_enableCrypto ? SecurityLevel::Encrypted : SecurityLevel::PlainText;
+
+  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
   m_events->adoptHandler(
       m_events->forClientListener().connected(), listen,
