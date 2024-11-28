@@ -44,7 +44,7 @@ TCPSocketFactory::~TCPSocketFactory()
 IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
 {
   if (securityLevel != SecurityLevel::PlainText) {
-    SecureSocket *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
+    SecureSocket *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family, securityLevel);
     secureSocket->initSsl(false);
     return secureSocket;
   } else {
@@ -56,7 +56,7 @@ IListenSocket *TCPSocketFactory::createListen(IArchNetwork::EAddressFamily famil
 {
   IListenSocket *socket = NULL;
   if (securityLevel != SecurityLevel::PlainText) {
-    socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
+    socket = new SecureListenSocket(m_events, m_socketMultiplexer, family, securityLevel);
   } else {
     socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
   }
