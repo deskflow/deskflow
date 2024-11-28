@@ -14,6 +14,7 @@ add_library(net STATIC
   NetworkAddress.h
   SecureListenSocket.cpp
   SecureListenSocket.h
+  SecurityLevel.h
   SecureSocket.cpp
   SecureSocket.h
   SocketMultiplexer.cpp
