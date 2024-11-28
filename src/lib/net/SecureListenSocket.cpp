@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -35,9 +36,12 @@ static const char s_certificateFileExt[] = {"pem"};
 //
 
 SecureListenSocket::SecureListenSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
+    SecurityLevel securityLevel
 )
-    : TCPListenSocket(events, socketMultiplexer, family)
+    : TCPListenSocket(events, socketMultiplexer, family),
+      m_securityLevel{securityLevel}
+
 {
 }
 
@@ -45,7 +49,7 @@ IDataSocket *SecureListenSocket::accept()
 {
   SecureSocket *socket = NULL;
   try {
-    socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL));
+    socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, NULL), m_securityLevel);
     socket->initSsl(true);
 
     if (socket != NULL) {

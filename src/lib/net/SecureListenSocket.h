@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -18,6 +19,7 @@
 #pragma once
 
 #include "common/stdset.h"
+#include "net/SecurityLevel.h"
 #include "net/TCPListenSocket.h"
 
 class IEventQueue;
@@ -27,8 +29,14 @@ class IDataSocket;
 class SecureListenSocket : public TCPListenSocket
 {
 public:
-  SecureListenSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family);
+  SecureListenSocket(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
+      SecurityLevel securityLevel = SecurityLevel::PlainText
+  );
 
   // IListenSocket overrides
   virtual IDataSocket *accept();
+
+private:
+  SecurityLevel m_securityLevel;
 };
