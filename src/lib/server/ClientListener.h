@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -11,6 +12,7 @@
 #include "base/EventTypes.h"
 #include "common/stddeque.h"
 #include "common/stdset.h"
+#include "net/SecurityLevel.h"
 #include "server/Config.h"
 
 class ClientProxy;
@@ -26,7 +28,7 @@ class ClientListener
 {
 public:
   // The factories are adopted.
-  ClientListener(const NetworkAddress &, ISocketFactory *, IEventQueue *events, bool enableCrypto);
+  ClientListener(const NetworkAddress &, ISocketFactory *, IEventQueue *events, SecurityLevel securityLevel);
   ClientListener(ClientListener const &) = delete;
   ClientListener(ClientListener &&) = delete;
   ~ClientListener();
@@ -88,7 +90,7 @@ private:
   WaitingClients m_waitingClients;
   Server *m_server;
   IEventQueue *m_events;
-  bool m_useSecureNetwork;
+  SecurityLevel m_securityLevel;
   ClientSockets m_clientSockets;
   NetworkAddress m_address;
 };
