@@ -20,22 +20,27 @@ FingerprintDialog::FingerprintDialog(
 {
   ui->setupUi(this);
 
-  if (mode == FingerprintDialogMode::Remote) {
-    setWindowTitle(tr("Security Question"));
-    ui->lblBody->setText(tr("<p>You are connecting to a server.</p>"
-                            "<p>Compare the fingerprints below to the ones on your server. "
-                            "If the two don't match exactly, then it's probably not the server "
-                            "you're expecting (it could be a malicious user).\n</p>"));
-
-    ui->lblFooter->setText(tr("<p>Do you want to trust this fingerprint for future "
-                              "connections? If you don't, a connection cannot be made.</p>"));
-    ui->buttonBox->setStandardButtons(QDialogButtonBox::Yes | QDialogButtonBox::No);
-    connect(ui->buttonBox->button(QDialogButtonBox::Yes), &QPushButton::clicked, this, &QDialog::accept);
-    connect(ui->buttonBox->button(QDialogButtonBox::No), &QPushButton::clicked, this, &QDialog::reject);
-  } else {
+  if (mode == FingerprintDialogMode::Local) {
     setWindowTitle(tr("Your Fingerprints"));
     ui->lblBody->setText(tr("These are the fingerprints for this computer"));
     ui->lblFooter->setVisible(false);
+  } else {
+    auto body = tr("Compare the fingerprints in this dialog to those on the %1.\n"
+                   "Only accept this dialog if they match!");
+
+    if (mode == FingerprintDialogMode::Server) {
+      ui->lblBody->setText(tr("A new Client is connecting\n%1").arg(body.arg(tr("client"))));
+    } else {
+      ui->lblBody->setText(tr("You are connecting to a new server\n%1").arg(body.arg(tr("server"))));
+    }
+
+    setWindowTitle(tr("Security Question"));
+    ui->lblFooter->setText(tr("<p>Do you want to trust this fingerprint for future "
+                              "connections? If you don't, a connection cannot be made.</p>"));
+
+    ui->buttonBox->setStandardButtons(QDialogButtonBox::Yes | QDialogButtonBox::No);
+    connect(ui->buttonBox->button(QDialogButtonBox::Yes), &QPushButton::clicked, this, &QDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::No), &QPushButton::clicked, this, &QDialog::reject);
   }
 
   for (const auto &fingerprint : fingerprints) {

@@ -50,6 +50,11 @@ struct Ssl
   SSL *m_ssl;
 };
 
+static int verifyIgnoreCertCallback(X509_STORE_CTX *, void *)
+{
+  return 1;
+}
+
 SecureSocket::SecureSocket(
     IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
     SecurityLevel securityLevel
@@ -370,6 +375,13 @@ void SecureSocket::initContext(bool server)
   if (m_ssl->m_context == NULL) {
     SslLogger::logError();
   }
+
+  if (m_securityLevel == SecurityLevel::PeerAuth) {
+    // We want to ask for peer certificate, but not verify it. If we don't ask for peer
+    // certificate, e.g. client won't send it.
+    SSL_CTX_set_verify(m_ssl->m_context, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, nullptr);
+    SSL_CTX_set_cert_verify_callback(m_ssl->m_context, verifyIgnoreCertCallback, nullptr);
+  }
 }
 
 void SecureSocket::createSSL()
@@ -435,6 +447,16 @@ int SecureSocket::secureAccept(int socket)
 
   // If not fatal and no retry, state is good
   if (retry == 0) {
+    if (m_securityLevel == SecurityLevel::PeerAuth) {
+      std::string dbDir = deskflow::string::sprintf(
+          "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedClientsFilename
+      );
+      if (!verifyCertFingerprint(dbDir)) {
+        retry = 0;
+        disconnect();
+        return -1; // Fail
+      }
+    }
     m_secureReady = true;
     LOG((CLOG_INFO "accepted secure socket"));
     SslLogger::logSecureCipherInfo(m_ssl->m_ssl);
@@ -457,7 +479,6 @@ int SecureSocket::secureAccept(int socket)
 
 int SecureSocket::secureConnect(int socket)
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
   std::string certDir =
       deskflow::string::sprintf("%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kCertificateFilename);
@@ -467,6 +488,8 @@ int SecureSocket::secureConnect(int socket)
     disconnect();
     return -1;
   }
+
+  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
   createSSL();
 
@@ -501,7 +524,10 @@ int SecureSocket::secureConnect(int socket)
   retry = 0;
   // No error, set ready, process and return ok
   m_secureReady = true;
-  if (verifyCertFingerprint()) {
+  std::string dbDir = deskflow::string::sprintf(
+      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
+  );
+  if (verifyCertFingerprint(dbDir)) {
     LOG((CLOG_INFO "connected to secure socket"));
     if (!showCertificate()) {
       disconnect();
@@ -624,7 +650,7 @@ void SecureSocket::disconnect()
   sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-bool SecureSocket::verifyCertFingerprint()
+bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDbPath)
 {
   deskflow::FingerprintData sha1;
   deskflow::FingerprintData sha256;
@@ -639,25 +665,20 @@ bool SecureSocket::verifyCertFingerprint()
 
   // Gui Must Parse these two lines, DO NOT CHANGE
   LOG(
-      (CLOG_NOTE "server fingerprint: (SHA1) %s (SHA256) %s", deskflow::formatSSLFingerprint(sha1.data).c_str(),
+      (CLOG_NOTE "peer fingerprint: (SHA1) %s (SHA256) %s", deskflow::formatSSLFingerprint(sha1.data).c_str(),
        deskflow::formatSSLFingerprint(sha256.data).c_str())
   );
 
-  std::string trustedServersFilename = deskflow::string::sprintf(
-      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
-  );
-
   // check if this fingerprint exist
-  std::string fileLine;
   std::ifstream file;
 
-  deskflow::openUtf8Path(file, trustedServersFilename);
+  deskflow::openUtf8Path(file, fingerprintDbPath);
   deskflow::FingerprintDatabase db;
-  db.read(trustedServersFilename);
+  db.read(fingerprintDbPath);
   if (!db.fingerprints().empty()) {
-    LOG((CLOG_NOTE "read %d fingerprints from %s", db.fingerprints().size(), trustedServersFilename.c_str()));
+    LOG((CLOG_NOTE "read %d fingerprints from %s", db.fingerprints().size(), fingerprintDbPath.c_str()));
   } else {
-    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
+    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", fingerprintDbPath.c_str()));
     return false;
   }
 
