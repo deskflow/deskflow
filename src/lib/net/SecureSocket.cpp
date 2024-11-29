@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -463,6 +464,15 @@ int SecureSocket::secureAccept(int socket)
 int SecureSocket::secureConnect(int socket)
 {
   std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
+  String certDir = deskflow::string::sprintf("%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName);
+
+  if (!loadCertificates(certDir)) {
+    LOG((CLOG_ERR "could not load client certificates"));
+    // FIXME: this is fatal
+    disconnect();
+    return -1;
+  }
 
   createSSL();
 
