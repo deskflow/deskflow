@@ -72,6 +72,7 @@ public:
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
+  MOCK_METHOD(bool, requireClientCerts, (), (const, override));
 
   //
   // Setters
@@ -95,6 +96,7 @@ public:
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
   MOCK_METHOD(void, setCloseToTray, (bool closeToTray), (override));
   MOCK_METHOD(void, setInvertConnection, (bool invertConnection), (override));
+  MOCK_METHOD(void, setRequireClientCerts, (bool requireClientCerts), (override));
 
 private:
   const QString m_stub = "stub";
