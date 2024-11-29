@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -87,6 +88,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "showCloseReminder",
     "enableUpdateCheck",
     "logExpanded",
+    "requireClientCerts",
 };
 
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
@@ -147,6 +149,7 @@ void AppConfig::recallFromCurrentScope()
   m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
+  m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
   m_MainWindowPosition =
       getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
@@ -211,6 +214,7 @@ void AppConfig::commit()
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
     setInCurrentScope(kLogExpanded, m_logExpanded);
+    setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
   if (m_TlsChanged) {
@@ -562,6 +566,11 @@ bool AppConfig::clientGroupChecked() const
   return m_ClientGroupChecked;
 }
 
+bool AppConfig::requireClientCerts() const
+{
+  return m_RequireClientCert;
+}
+
 const QString &AppConfig::serverHostname() const
 {
   return m_ServerHostname;
@@ -743,6 +752,13 @@ void AppConfig::setInvertConnection(bool value)
 {
   m_InvertConnection = value;
   Q_EMIT invertConnectionChanged();
+}
+
+void AppConfig::setRequireClientCerts(bool requireClientCerts)
+{
+  if (requireClientCerts == m_RequireClientCert)
+    return;
+  m_RequireClientCert = requireClientCerts;
 }
 
 void AppConfig::setMainWindowSize(const QSize &size)

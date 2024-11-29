@@ -201,6 +201,7 @@ void SettingsDialog::accept()
   m_appConfig.setEnableService(ui->m_pCheckBoxServiceEnabled->isChecked());
   m_appConfig.setCloseToTray(ui->m_pCheckBoxCloseToTray->isChecked());
   m_appConfig.setInvertConnection(ui->m_pInvertConnection->isChecked());
+  m_appConfig.setRequireClientCerts(ui->chkRequireClientCert->isChecked());
 
   QDialog::accept();
 }
@@ -265,6 +266,8 @@ void SettingsDialog::updateTlsControls()
   ui->m_pCheckBoxEnableTls->setEnabled(writable);
   ui->m_pCheckBoxEnableTls->setChecked(writable && tlsEnabled);
   ui->m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
+  ui->chkRequireClientCert->setEnabled(writable);
+  ui->chkRequireClientCert->setChecked(m_appConfig.requireClientCerts());
 }
 
 void SettingsDialog::updateTlsControlsEnabled()
@@ -280,6 +283,7 @@ void SettingsDialog::updateTlsControlsEnabled()
   ui->m_pLineEditTlsCertPath->setEnabled(enabled);
   ui->m_pPushButtonTlsCertPath->setEnabled(enabled);
   ui->m_pPushButtonTlsRegenCert->setEnabled(enabled);
+  ui->chkRequireClientCert->setEnabled(enabled);
 }
 
 bool SettingsDialog::isClientMode() const
