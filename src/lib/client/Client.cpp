@@ -142,7 +142,7 @@ void Client::connect(size_t addressIndex)
     return;
   }
 
-  auto securityLevel = m_useSecureNetwork ? SecurityLevel::Encrypted : SecurityLevel::PlainText;
+  auto securityLevel = m_useSecureNetwork ? SecurityLevel::PeerAuth_And_Encrypted : SecurityLevel::PlainText;
 
   try {
     if (m_args.m_hostMode) {
