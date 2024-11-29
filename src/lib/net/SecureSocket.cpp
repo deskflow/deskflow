@@ -54,6 +54,7 @@ enum
 // TODO: Reduce duplication of these strings between here and TlsFingerprint.cpp
 static const char kFingerprintDirName[] = "tls";
 static const char kFingerprintTrustedServersFilename[] = "trusted-servers";
+static const char kFingerprintTrustedClientsFilename[] = "trusted-clients";
 
 struct Ssl
 {
@@ -351,6 +352,11 @@ bool SecureSocket::loadCertificates(String &filename)
   return true;
 }
 
+static int cert_verify_ignore_callback(X509_STORE_CTX *, void *)
+{
+  return 1;
+}
+
 void SecureSocket::initContext(bool server)
 {
   SSL_library_init();
@@ -380,6 +386,13 @@ void SecureSocket::initContext(bool server)
 
   if (m_ssl->m_context == NULL) {
     SslLogger::logError();
+  }
+
+  if (m_securityLevel == SecurityLevel::PeerAuth_And_Encrypted) {
+    // We want to ask for peer certificate, but not verify it. If we don't ask for peer
+    // certificate, e.g. client won't send it.
+    SSL_CTX_set_verify(m_ssl->m_context, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, nullptr);
+    SSL_CTX_set_cert_verify_callback(m_ssl->m_context, cert_verify_ignore_callback, nullptr);
   }
 }
 
@@ -446,6 +459,13 @@ int SecureSocket::secureAccept(int socket)
 
   // If not fatal and no retry, state is good
   if (retry == 0) {
+    if (m_securityLevel == SecurityLevel::PeerAuth_And_Encrypted) {
+      if (!verifyCertFingerprint()) {
+        retry = 0;
+        disconnect();
+        return -1; // Fail
+      }
+    }
     m_secureReady = true;
     LOG((CLOG_INFO "accepted secure socket"));
     SslLogger::logSecureCipherInfo(m_ssl->m_ssl);
@@ -672,7 +692,7 @@ bool SecureSocket::verifyCertFingerprint()
   // format fingerprint into hexdecimal format with colon separator
   String fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
   formatFingerprint(fingerprint);
-  LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
+  LOG((CLOG_NOTE "peer fingerprint: %s", fingerprint.c_str()));
 
   String trustedServersFilename;
   trustedServersFilename = deskflow::string::sprintf(
