@@ -32,3 +32,4 @@ const auto kTlsDbSize = 2;
 const auto kCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
 const auto kFingerprintLocalFilename = "local-fingerprint";
 const auto kFingerprintTrustedServersFilename = "trusted-servers";
+const auto kFingerprintTrustedClientsFilename = "trusted-clients";

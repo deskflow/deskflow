@@ -13,5 +13,6 @@
 enum class SecurityLevel
 {
   PlainText, /** Connections will not be encrypted */
-  Encrypted  /** Connections will be encrypted */
+  Encrypted, /** Connections will be encrypted */
+  PeerAuth   /** Connections will be encrypted and peers must be authenticated */
 };

@@ -718,7 +718,7 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const QRegularExpression re(R"(.*server fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
+  static const QRegularExpression re(R"(.*peer fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
   auto match = re.match(line);
   if (!match.hasMatch()) {
     return;
@@ -735,7 +735,10 @@ void MainWindow::checkFingerprint(const QString &line)
   };
 
   // Only Save the sha256
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
+  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
+  const auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), trustFile).toStdString();
+
   deskflow::FingerprintDatabase db;
   db.read(localPath);
   if (db.isTrusted(sha256)) {
@@ -744,7 +747,8 @@ void MainWindow::checkFingerprint(const QString &line)
 
   m_coreProcess.stop();
   const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
-  FingerprintDialog fingerprintDialog(this, fingerprints, FingerprintDialogMode::Remote);
+  auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
+  FingerprintDialog fingerprintDialog(this, fingerprints, dialogMode);
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
     db.write(localPath);
