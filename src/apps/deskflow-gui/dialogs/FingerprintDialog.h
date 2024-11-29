@@ -18,7 +18,8 @@ class FingerprintDialog;
 enum FingerprintDialogMode
 {
   Local,
-  Remote
+  Client,
+  Server
 };
 
 class FingerprintDialog : public QDialog

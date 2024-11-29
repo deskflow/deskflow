@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "io/filesystem.h"
 #include "net/SecurityLevel.h"
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
@@ -75,7 +76,7 @@ private:
   bool showCertificate() const;
   void checkResult(int n, int &retry);
   void disconnect();
-  bool verifyCertFingerprint();
+  bool verifyCertFingerprint(const deskflow::fs::path &fingerprintDbPath);
 
   ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
 
