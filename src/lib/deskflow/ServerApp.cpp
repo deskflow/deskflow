@@ -148,6 +148,9 @@ void ServerApp::help()
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "
        << "instead.\n" HELP_COMMON_INFO_1
+       << "      --disable-client-cert-check disable client SSL certificate \n"
+          "                                     checking (deprecated)\n"
+       << HELP_SYS_INFO HELP_COMMON_INFO_2 << "\n"
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
@@ -627,7 +630,9 @@ void ServerApp::handleResume(const Event &, void *)
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
-  auto securityLevel = args().m_enableCrypto ? SecurityLevel::Encrypted : SecurityLevel::PlainText;
+  auto securityLevel = args().m_enableCrypto
+                           ? args().m_chkPeerCert ? SecurityLevel::PeerAuth_And_Encrypted : SecurityLevel::Encrypted
+                           : SecurityLevel::PlainText;
 
   ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 

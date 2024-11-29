@@ -40,6 +40,7 @@ public:
 public:
   String m_configFile = "";
   std::shared_ptr<Config> m_config;
+  bool m_chkPeerCert = true;
 };
 
 } // namespace deskflow
