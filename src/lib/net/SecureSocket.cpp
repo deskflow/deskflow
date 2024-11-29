@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2024 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 - 2016 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -453,6 +454,15 @@ int SecureSocket::secureAccept(int socket)
 int SecureSocket::secureConnect(int socket)
 {
   std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+
+  std::string certDir = deskflow::string::sprintf("%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName);
+
+  if (!loadCertificates(certDir)) {
+    LOG((CLOG_ERR "could not load client certificates"));
+    // FIXME: this is fatal
+    disconnect();
+    return -1;
+  }
 
   createSSL();
 
