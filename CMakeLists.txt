@@ -89,6 +89,11 @@ if(APPLE)
   set(CMAKE_OSX_DEPLOYMENT_TARGET 12)
 endif()
 
+# Set Output Folders
+# TODO Remove when new wix packages are made with cpack
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+
 include(cmake/Definitions.cmake)
 include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
@@ -97,7 +102,6 @@ include(cmake/Packaging.cmake)
 include(GNUInstallDirs)
 
 configure_definitions()
-configure_build()
 configure_libs()
 
 add_subdirectory(doc)
