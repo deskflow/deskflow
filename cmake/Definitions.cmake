@@ -33,13 +33,6 @@ macro(configure_definitions)
     cmake_policy(SET CMP0005 NEW)
   endif()
 
-  # TODO: explain why we're adding headers to sources.
-  if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
-    set(ADD_HEADERS_TO_SOURCES FALSE)
-  else()
-    set(ADD_HEADERS_TO_SOURCES TRUE)
-  endif()
-
   set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
 
 endmacro()

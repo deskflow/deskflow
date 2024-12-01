@@ -16,5 +16,5 @@
 
 config_test()
 set(target ${UNIT_TESTS_BIN})
-add_executable(${target} ${sources})
+add_executable(${target} ${sources} ${headers})
 target_link_libraries(${target} ${test_libs})
