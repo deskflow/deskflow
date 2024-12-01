@@ -25,7 +25,6 @@
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ScreenNameValidator.h"
 #include "gui/validators/ValidationError.h"
-#include "gui_config.h" // IWYU pragma: keep
 
 #ifdef DESKFLOW_GUI_HOOK_HEADER
 #include DESKFLOW_GUI_HOOK_HEADER
