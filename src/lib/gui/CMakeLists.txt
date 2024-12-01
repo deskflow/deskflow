@@ -28,14 +28,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   list(APPEND sources ${mac_sources})
 endif()
 
-if(ADD_HEADERS_TO_SOURCES)
-  list(APPEND sources ${headers})
-endif()
-
 # generated includes
 include_directories(${PROJECT_BINARY_DIR}/config)
 
-add_library(${target} STATIC ${sources})
+add_library(${target} STATIC ${sources} ${headers})
 
 target_link_libraries(
   ${target}
