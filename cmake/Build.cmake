@@ -16,9 +16,6 @@
 macro(configure_build)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
-
-  configure_file(${PROJECT_SOURCE_DIR}/src/lib/gui/gui_config.h.in
-                 ${PROJECT_BINARY_DIR}/config/gui_config.h)
 endmacro()
 
 macro(post_config)
