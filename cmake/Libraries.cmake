@@ -345,7 +345,7 @@ endmacro()
 macro(configure_qt)
 
   find_package(
-    Qt6
+    Qt6 6.7.0
     COMPONENTS Core Widgets Network
     REQUIRED)
 
