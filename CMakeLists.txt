@@ -21,6 +21,12 @@
 # > See https://reproducible-builds.org/specs/source-date-epoch/ for details.
 cmake_minimum_required(VERSION 3.24)
 
+# Link items by fill path
+cmake_policy(SET CMP0003 NEW)
+
+# Fix define escaping
+cmake_policy(SET CMP0005 NEW)
+
 # Set CXX Requirements
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -90,9 +96,10 @@ if(APPLE)
 endif()
 
 # Set Output Folders
-# TODO Remove when new wix packages are made with cpack
+# TODO Remove when new wix packages are made with cpack and not using post_config macros
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
 
 include(cmake/Definitions.cmake)
 include(cmake/Build.cmake)
