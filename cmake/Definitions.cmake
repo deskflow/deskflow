@@ -16,7 +16,6 @@
 
 macro(configure_definitions)
 
-  configure_ninja()
   configure_options()
 
   set(INTEG_TESTS_BIN integtests)
@@ -35,18 +34,6 @@ macro(configure_definitions)
 
   set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
 
-endmacro()
-
-macro(configure_ninja)
-  # use response files so that ninja can compile on windows, otherwise you get
-  # an error when linking qt: "The input line is too long."
-  set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS 1)
-  set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 1)
-  set(CMAKE_C_RESPONSE_FILE_LINK_FLAG "@")
-  set(CMAKE_CXX_RESPONSE_FILE_LINK_FLAG "@")
-  set(CMAKE_NINJA_FORCE_RESPONSE_FILE
-      1
-      CACHE INTERNAL "")
 endmacro()
 
 macro(configure_options)
