@@ -26,11 +26,6 @@ macro(configure_build)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
   endif()
 
-  configure_file_shared()
-
-endmacro()
-
-macro(configure_file_shared)
   configure_file(${PROJECT_SOURCE_DIR}/src/lib/gui/gui_config.h.in
                  ${PROJECT_BINARY_DIR}/config/gui_config.h)
 endmacro()
