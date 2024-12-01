@@ -84,6 +84,11 @@ project(
 
 message(STATUS "Building ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}")
 
+# Set required macOS SDK
+if(APPLE)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET 12)
+endif()
+
 include(cmake/Definitions.cmake)
 include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
