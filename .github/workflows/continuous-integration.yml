@@ -127,12 +127,12 @@ jobs:
             runs-on: "macos-14"
             timeout: 10
             arch: arm64
-            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\""
 
           - name: "macos-13-x64"
             runs-on: macos-13
             timeout: 20
-            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DMACOSX_DEPLOYMENT_TARGET=12"
+            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\""
 
           - name: "debian-13-x86_64"
             runs-on: ubuntu-latest
