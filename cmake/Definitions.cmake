@@ -26,14 +26,6 @@ macro(configure_definitions)
     add_definitions(-DNDEBUG)
   endif()
 
-  # TODO: find out why we need these, and remove them if we don't.
-  if(COMMAND cmake_policy)
-    cmake_policy(SET CMP0003 NEW)
-    cmake_policy(SET CMP0005 NEW)
-  endif()
-
-  set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
-
 endmacro()
 
 macro(configure_options)
