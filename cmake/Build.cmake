@@ -26,18 +26,8 @@ macro(configure_build)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
   endif()
 
-  set_build_date()
   configure_file_shared()
 
-endmacro()
-
-macro(set_build_date)
-  # Since CMake 3.8.0, `string(TIMESTAMP ...)` respects `SOURCE_DATE_EPOCH` env var if set,
-  # which allows package maintainers to create reproducible builds.
-  # We require CMake 3.8.0 in the root `CMakeLists.txt` for this reason.
-  string(TIMESTAMP BUILD_DATE "%Y-%m-%d" UTC)
-  message(STATUS "Build date: ${BUILD_DATE}")
-  add_definitions(-DBUILD_DATE="${BUILD_DATE}")
 endmacro()
 
 macro(configure_file_shared)
