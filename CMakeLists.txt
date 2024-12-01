@@ -21,6 +21,11 @@
 # > See https://reproducible-builds.org/specs/source-date-epoch/ for details.
 cmake_minimum_required(VERSION 3.24)
 
+# Set CXX Requirements
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Fallback for when git can not be found
 set(DESKFLOW_VERSION_MAJOR 1)
 set(DESKFLOW_VERSION_MINOR 17)
