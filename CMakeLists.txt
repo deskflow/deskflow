@@ -101,7 +101,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
 
-include(cmake/Definitions.cmake)
 include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
 include(cmake/Packaging.cmake)
