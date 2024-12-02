@@ -14,15 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-macro(configure_definitions)
-
-  configure_options()
-
-  set(INTEG_TESTS_BIN integtests)
-  set(UNIT_TESTS_BIN unittests)
-
-endmacro()
-
 macro(configure_options)
 
   set(DEFAULT_BUILD_GUI ON)

@@ -15,6 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 config_test()
-set(target ${INTEG_TESTS_BIN})
+set(target integtests)
 add_executable(${target} ${sources} ${headers})
 target_link_libraries(${target} ${test_libs})

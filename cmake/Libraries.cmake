@@ -387,9 +387,9 @@ macro(configure_coverage)
 
     setup_target_for_coverage_gcovr_xml(
       NAME
-      coverage-${INTEG_TESTS_BIN}
+      coverage-integtests
       EXECUTABLE
-      ${INTEG_TESTS_BIN}
+      integtests
       BASE_DIRECTORY
       ${test_src}
       EXCLUDE
@@ -397,9 +397,9 @@ macro(configure_coverage)
 
     setup_target_for_coverage_gcovr_xml(
       NAME
-      coverage-${UNIT_TESTS_BIN}
+      coverage-unittests
       EXECUTABLE
-      ${UNIT_TESTS_BIN}
+      unittests
       BASE_DIRECTORY
       ${test_src}
       EXCLUDE
