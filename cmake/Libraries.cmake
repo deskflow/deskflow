@@ -30,7 +30,32 @@ macro(configure_libs)
   configure_openssl()
 
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
-  configure_coverage()
+  if(ENABLE_COVERAGE)
+    message(STATUS "Enabling code coverage")
+    include(cmake/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+    set(test_exclude subprojects/* build/* src/test/*)
+    set(test_src ${PROJECT_SOURCE_DIR}/src)
+
+    # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
+    # > Got negative hit value in gcov line 'branch  2 taken -1' caused by a bug in gcov tool
+    # Bug report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68080
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
+
+    setup_target_for_coverage_gcovr_xml(
+      NAME coverage-integtests
+      EXECUTABLE integtests
+      BASE_DIRECTORY ${test_src}
+      EXCLUDE ${test_exclude}
+    )
+
+    setup_target_for_coverage_gcovr_xml(
+      NAME coverage-unittests
+      EXECUTABLE unittests
+      BASE_DIRECTORY ${test_src}
+      EXCLUDE ${test_exclude}
+    )
+  endif()
 
 endmacro()
 
@@ -371,43 +396,4 @@ macro(configure_openssl)
     add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
   endif()
 
-endmacro()
-
-macro(configure_coverage)
-
-  if(ENABLE_COVERAGE)
-    message(STATUS "Enabling code coverage")
-    include(cmake/CodeCoverage.cmake)
-    append_coverage_compiler_flags()
-    set(test_exclude subprojects/* build/* src/test/*)
-    set(test_src ${PROJECT_SOURCE_DIR}/src)
-
-    # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
-    # > Got negative hit value in gcov line 'branch  2 taken -1' caused by a bug in gcov tool
-    # Bug report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68080
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
-
-    setup_target_for_coverage_gcovr_xml(
-      NAME
-      coverage-integtests
-      EXECUTABLE
-      integtests
-      BASE_DIRECTORY
-      ${test_src}
-      EXCLUDE
-      ${test_exclude})
-
-    setup_target_for_coverage_gcovr_xml(
-      NAME
-      coverage-unittests
-      EXECUTABLE
-      unittests
-      BASE_DIRECTORY
-      ${test_src}
-      EXCLUDE
-      ${test_exclude})
-
-  else()
-    message(STATUS "Code coverage is disabled")
-  endif()
 endmacro()
