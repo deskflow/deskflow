@@ -13,9 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(LIBEI_MIN_VERSION 1.3)
-set(LIBPORTAL_MIN_VERSION 0.8)
-
 macro(configure_libs)
 
   set(libs)
@@ -35,7 +32,24 @@ macro(configure_libs)
   endif()
 
   configure_qt()
-  configure_openssl()
+
+  # TODO SSL check can happen in lib/net when we make wix packages with cpack
+
+  # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
+  # libraries by apps is strongly discouraged."
+  # https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
+  if(APPLE)
+    set(OPENSSL_USE_STATIC_LIBS TRUE)
+  endif()
+
+  find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
+  if(WIN32) #Used for dev in TLS and WIX TODO RM when cpack used for wix
+    cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE "${OPENSSL_INCLUDE_DIR}/..")
+    message(VERBOSE "Set OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
+    set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
+    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
+  endif()
+
 
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
   if(ENABLE_COVERAGE)
@@ -333,24 +347,5 @@ macro(configure_qt)
     REQUIRED)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
-
-endmacro()
-
-macro(configure_openssl)
-  # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
-  # libraries by apps is strongly discouraged."
-  # https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
-  # TODO: How about bundling the OpenSSL .dylib files with the app so they can be updated?
-  if(APPLE)
-    set(OPENSSL_USE_STATIC_LIBS TRUE)
-  endif()
-
-  find_package(OpenSSL 3.0 REQUIRED COMPONENTS SSL Crypto)
-  if(WIN32) #Used for dev in TLS and WIX
-    cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE "${OPENSSL_INCLUDE_DIR}/..")
-    message(VERBOSE "Set OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
-    set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
-    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
-  endif()
 
 endmacro()
