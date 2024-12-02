@@ -21,11 +21,6 @@ macro(configure_definitions)
   set(INTEG_TESTS_BIN integtests)
   set(UNIT_TESTS_BIN unittests)
 
-  if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Disabling debug build")
-    add_definitions(-DNDEBUG)
-  endif()
-
 endmacro()
 
 macro(configure_options)
