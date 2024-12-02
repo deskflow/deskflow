@@ -103,7 +103,7 @@ add_library(arch STATIC ${PLATFORM_CODE}
 if(UNIX)
   target_link_libraries(arch ${CMAKE_DL_LIBS} ${libs})
   if(NOT APPLE)
-    find_package(Qt6 COMPONENTS DBus)
+    find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus)
     target_link_libraries(arch Qt6::DBus)
   endif()
 endif()

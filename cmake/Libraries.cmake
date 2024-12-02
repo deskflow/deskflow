@@ -31,7 +31,9 @@ macro(configure_libs)
     )
   endif()
 
-  configure_qt()
+  find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
+
+  message(STATUS "Qt version: ${Qt6_VERSION}")
 
   # TODO SSL check can happen in lib/net when we make wix packages with cpack
 
@@ -336,16 +338,5 @@ macro(configure_xorg_libs)
   endif()
 
   add_definitions(-DWINAPI_XWINDOWS=1)
-
-endmacro()
-
-macro(configure_qt)
-
-  find_package(
-    Qt6
-    COMPONENTS Core Widgets Network
-    REQUIRED)
-
-  message(STATUS "Qt version: ${Qt6_VERSION}")
 
 endmacro()
