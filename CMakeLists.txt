@@ -107,7 +107,6 @@ include(cmake/Packaging.cmake)
 
 include(GNUInstallDirs)
 
-configure_options()
 configure_libs()
 
 add_subdirectory(doc)

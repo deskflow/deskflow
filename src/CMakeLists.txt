@@ -20,10 +20,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
 add_subdirectory(lib)
 add_subdirectory(cmd)
 
+option(BUILD_GUI "Build GUI" ON)
 if(BUILD_GUI)
   add_subdirectory(gui)
 endif(BUILD_GUI)
 
+option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
   add_subdirectory(test)
 endif()
