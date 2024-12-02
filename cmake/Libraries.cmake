@@ -28,6 +28,8 @@ macro(configure_libs)
 
   configure_qt()
   configure_openssl()
+
+  option(ENABLE_COVERAGE "Enable test coverage" OFF)
   configure_coverage()
 
 endmacro()

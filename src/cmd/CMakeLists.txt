@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+option(BUILD_UNIFIED "Build unified binary" OFF)
 
 if(BUILD_UNIFIED)
   add_subdirectory(deskflow-core)
