@@ -22,8 +22,16 @@ macro(configure_libs)
   if(UNIX)
     configure_unix_libs()
   elseif(WIN32)
-    configure_windows_libs()
     find_package(Python REQUIRED QUIET)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
+    list(APPEND libs Wtsapi32 Userenv Wininet comsuppw Shlwapi)
+    add_definitions(
+      /DWIN32
+      /D_WINDOWS
+      /D_CRT_SECURE_NO_WARNINGS
+      /D_XKEYCHECK_H
+    )
   endif()
 
   configure_qt()
@@ -141,11 +149,35 @@ macro(configure_unix_libs)
   endif()
 
   if(APPLE)
-    configure_mac_libs()
+    set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1")
+    find_library(lib_ScreenSaver ScreenSaver)
+    find_library(lib_IOKit IOKit)
+    find_library(lib_ApplicationServices ApplicationServices)
+    find_library(lib_Foundation Foundation)
+    find_library(lib_Carbon Carbon)
+    find_library(lib_UserNotifications UserNotifications)
+    list(APPEND libs
+      ${lib_ScreenSaver} ${lib_IOKit} ${lib_ApplicationServices}
+      ${lib_Foundation} ${lib_Carbon} ${lib_UserNotifications}
+    )
+
+    add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
   else()
 
     configure_xorg_libs()
-    configure_wayland_libs()
+
+    include(FindPkgConfig)
+
+    if(PKG_CONFIG_FOUND)
+      pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+      pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
+      find_library(LIBM m)
+      include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
+                          ${LIBM_INCLUDE_DIRS})
+    else()
+      message(WARNING "pkg-config not found, skipping wayland libraries")
+    endif()
+
 
     find_package(pugixml REQUIRED)
 
@@ -188,53 +220,6 @@ macro(configure_unix_libs)
                  ${CMAKE_BINARY_DIR}/src/lib/config.h @ONLY)
 
   add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
-
-endmacro()
-
-#
-# Apple macOS
-#
-macro(configure_mac_libs)
-
-  set(CMAKE_CXX_FLAGS
-      "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1"
-  )
-
-  find_library(lib_ScreenSaver ScreenSaver)
-  find_library(lib_IOKit IOKit)
-  find_library(lib_ApplicationServices ApplicationServices)
-  find_library(lib_Foundation Foundation)
-  find_library(lib_Carbon Carbon)
-
-  list(
-    APPEND
-    libs
-    ${lib_ScreenSaver}
-    ${lib_IOKit}
-    ${lib_ApplicationServices}
-    ${lib_Foundation}
-    ${lib_Carbon})
-
-  find_library(lib_UserNotifications UserNotifications)
-  list(APPEND libs ${lib_UserNotifications})
-
-  add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
-
-endmacro()
-
-macro(configure_wayland_libs)
-
-  include(FindPkgConfig)
-
-  if(PKG_CONFIG_FOUND)
-    pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
-    pkg_check_modules(GLIB2 REQUIRED glib-2.0 gio-2.0)
-    find_library(LIBM m)
-    include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
-                        ${LIBM_INCLUDE_DIRS})
-  else()
-    message(WARNING "pkg-config not found, skipping wayland libraries")
-  endif()
 
 endmacro()
 
@@ -337,34 +322,6 @@ macro(configure_xorg_libs)
   endif()
 
   add_definitions(-DWINAPI_XWINDOWS=1)
-
-endmacro()
-
-#
-# Windows
-#
-macro(configure_windows_libs)
-
-  set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
-
-  list(
-    APPEND
-    libs
-    Wtsapi32
-    Userenv
-    Wininet
-    comsuppw
-    Shlwapi)
-
-  add_definitions(
-    /DWIN32
-    /D_WINDOWS
-    /D_CRT_SECURE_NO_WARNINGS
-    /D_XKEYCHECK_H)
-
-  configure_openssl()
 
 endmacro()
 
