@@ -219,7 +219,7 @@ jobs:
         shell: bash
         run: |
           if [[ "$RUNNER_OS" != "Windows" && "${{matrix.target.like}}" != "arch" ]]; then
-            cmake --build build -j8 --target package
+            cmake --build build --config Release -j8 --target package
           else
             cmake --build build -j8
           fi
