@@ -77,23 +77,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   else()
     set(OS_STRING "win-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
-  set(CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
-  set(CPACK_PACKAGE_ICON "${PROJECT_SOURCE_DIR}/deploy/dmg-volume.icns")
-  set(CPACK_DMG_BACKGROUND_IMAGE "${PROJECT_SOURCE_DIR}/deploy/dmg-background.tiff")
-  set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${PROJECT_SOURCE_DIR}/deploy/generate_ds_store.applescript")
-  set(CPACK_DMG_VOLUME_NAME "Deskflow")
-  set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE ON)
-  set(CPACK_GENERATOR "DragNDrop")
-endif()
-
-if(NOT APPLE)
-  # install linux / unix suport files
+elseif(UNIX AND NOT APPLE)
   include(linux/deploy.cmake)
+elseif(APPLE)
+  include(mac/deploy.cmake)
 endif()
-
-
 
 # Always use "deskflow" for start of name
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${PACKAGE_VERSION_LABEL}-${OS_STRING}")
