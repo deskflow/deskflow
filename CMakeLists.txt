@@ -117,7 +117,6 @@ set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
 
 include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
-include(cmake/Packaging.cmake)
 
 include(GNUInstallDirs)
 
