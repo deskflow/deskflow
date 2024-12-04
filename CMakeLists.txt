@@ -110,7 +110,7 @@ if(APPLE)
 endif()
 
 # Set Output Folders
-# TODO Remove when new wix packages are made with cpack and not using post_config macros
+# TODO Remove when not using post_config macros
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
