@@ -297,7 +297,7 @@ jobs:
         name: "Build"
         with:
           bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-x86_64.flatpak
-          manifest-path: deploy/dist/flatpak/org.deskflow.deskflow.yml
+          manifest-path: deploy/linux/flatpak/org.deskflow.deskflow.yml
           cache-key: flatpak-builder-${{ github.sha }}
           upload-artifact: false
 
