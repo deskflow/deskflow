@@ -35,7 +35,7 @@ macro(configure_libs)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
-  # TODO SSL check can happen in lib/net when we make wix packages with cpack
+  # TODO SSL check can happen in lib/net when don't have to deploy it any longer on windows
 
   # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
   # libraries by apps is strongly discouraged."
@@ -45,7 +45,7 @@ macro(configure_libs)
   endif()
 
   find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
-  if(WIN32) #Used for dev in TLS and WIX TODO RM when cpack used for wix
+  if(WIN32) #Used for dev in TLS and WIX
     cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE "${OPENSSL_INCLUDE_DIR}/..")
     message(VERBOSE "Set OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
     set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
