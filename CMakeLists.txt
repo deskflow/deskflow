@@ -96,6 +96,14 @@ set(REQUIRED_LIBEI_VERSION 1.3)
 set(REQUIRED_LIBPORTAL_VERSION 0.8)
 set(REQUIRED_QT_VERSION 6.7.0)
 
+# Control debug item visibility
+# When not set logging is forced to DEBUG and show code locations
+# Also exposes a test menu
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+  message(STATUS "Disabling debug build")
+  add_definitions(-DNDEBUG)
+endif()
+
 # Set required macOS SDK
 if(APPLE)
   set(CMAKE_OSX_DEPLOYMENT_TARGET 12)
