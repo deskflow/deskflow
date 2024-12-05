@@ -86,6 +86,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 41 = Show dev thanks, obsolete
     "showCloseReminder",
     "enableUpdateCheck",
+    "logExpanded",
 };
 
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
@@ -151,6 +152,7 @@ void AppConfig::recallFromCurrentScope()
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
   m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
   m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
+  m_logExpanded = getFromCurrentScope(kLogExpanded, m_logExpanded).toBool();
 }
 
 void AppConfig::recallScreenName()
@@ -208,6 +210,7 @@ void AppConfig::commit()
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
+    setInCurrentScope(kLogExpanded, m_logExpanded);
   }
 
   if (m_TlsChanged) {
@@ -584,6 +587,11 @@ std::optional<bool> AppConfig::enableUpdateCheck() const
   return m_EnableUpdateCheck;
 }
 
+bool AppConfig::logExpanded() const
+{
+  return m_logExpanded;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -755,6 +763,13 @@ void AppConfig::setShowCloseReminder(bool value)
 void AppConfig::setEnableUpdateCheck(bool value)
 {
   m_EnableUpdateCheck = value;
+}
+
+void AppConfig::setLogExpanded(bool expanded)
+{
+  if (expanded == m_logExpanded)
+    return;
+  m_logExpanded = expanded;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
