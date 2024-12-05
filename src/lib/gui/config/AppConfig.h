@@ -109,6 +109,7 @@ private:
     // 41 = show dev thanks, obsolete
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
+    kLogExpanded = 44,
   };
 
 public:
@@ -183,6 +184,7 @@ public:
   std::optional<QPoint> mainWindowPosition() const;
   bool showCloseReminder() const;
   std::optional<bool> enableUpdateCheck() const;
+  bool logExpanded() const;
 
   //
   // Setters (overrides)
@@ -223,6 +225,7 @@ public:
   void setMainWindowPosition(const QPoint &position);
   void setShowCloseReminder(bool show);
   void setEnableUpdateCheck(bool value);
+  void setLogExpanded(bool expanded);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -328,6 +331,7 @@ private:
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
+  bool m_logExpanded = true;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

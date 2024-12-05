@@ -101,6 +101,7 @@ public slots:
   void onAppAboutToQuit();
 
 private slots:
+  void toggleLogVisible(bool visible);
   //
   // Manual slots
   //
@@ -137,6 +138,7 @@ private slots:
 private:
   std::unique_ptr<Ui::MainWindow> ui;
 
+  void updateSize();
   AppConfig &appConfig()
   {
     return m_AppConfig;
@@ -200,6 +202,7 @@ private:
   deskflow::gui::ClientConnection m_ClientConnection;
   deskflow::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
+  QSize m_expandedSize = QSize();
 
   // Window Actions
   QAction *m_actionAbout = nullptr;
