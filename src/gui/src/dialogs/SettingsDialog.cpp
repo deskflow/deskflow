@@ -39,7 +39,7 @@ using namespace deskflow::gui;
 SettingsDialog::SettingsDialog(
     QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
 )
-    : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
+    : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
       m_appConfig(appConfig),
       m_serverConfig(serverConfig),
@@ -82,6 +82,10 @@ SettingsDialog::SettingsDialog(
 #ifdef DESKFLOW_GUI_HOOK_SETTINGS
   DESKFLOW_GUI_HOOK_SETTINGS
 #endif
+  adjustSize();
+  qApp->processEvents();
+  setFixedHeight(height());
+  setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
 }
 
 //
