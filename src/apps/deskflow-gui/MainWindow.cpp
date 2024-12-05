@@ -112,6 +112,16 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
 
+#ifdef Q_OS_MAC
+  ui->btnToggleLog->setFixedHeight(ui->lblLog->font().pixelSize());
+#endif
+
+  ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
+  if (m_AppConfig.logExpanded())
+    ui->btnToggleLog->click();
+
+  toggleLogVisible(m_AppConfig.logExpanded());
+
   createMenuBar();
   setupControls();
   connectSlots();
@@ -127,6 +137,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   restoreWindow();
 
   qDebug().noquote() << "active settings path:" << m_ConfigScopes.activeFilePath();
+
+  updateSize();
 }
 
 MainWindow::~MainWindow()
@@ -306,6 +318,8 @@ void MainWindow::connectSlots()
 
   connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
   connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
+
+  connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -313,6 +327,22 @@ void MainWindow::onAppAboutToQuit()
   if (m_SaveOnExit) {
     m_ConfigScopes.save();
   }
+}
+
+void MainWindow::toggleLogVisible(bool visible)
+{
+  if (visible) {
+    ui->btnToggleLog->setArrowType(Qt::DownArrow);
+    ui->textLog->setVisible(true);
+    m_AppConfig.setLogExpanded(true);
+  } else {
+    ui->btnToggleLog->setArrowType(Qt::RightArrow);
+    m_expandedSize = size();
+    ui->textLog->setVisible(false);
+    m_AppConfig.setLogExpanded(false);
+  }
+  // 10 ms is long enough to process events and quick enough to not see the visual change.
+  QTimer::singleShot(10, this, &MainWindow::updateSize);
 }
 
 void MainWindow::onShown()
@@ -463,6 +493,26 @@ void MainWindow::resetCore()
 {
   m_ClientConnection.setShowMessage();
   m_CoreProcess.restart();
+}
+
+void MainWindow::updateSize()
+{
+#ifdef Q_OS_MAC
+  // On mac os the titlebar is part of the height so we need to adjust our Y coord to avoid moving the window up
+  const auto kTitleBarOffset = 28
+#else
+  const auto kTitleBarOffset = 0;
+#endif
+  if (ui->textLog->isVisible()) {
+    setMaximumHeight(16777215);
+    setMaximumWidth(16777215);
+    setGeometry(x(), y() + kTitleBarOffset , m_expandedSize.width(), m_expandedSize.height());
+  } else {
+    adjustSize();
+    // Prevent Resize with log collapsed
+    setMaximumHeight(height());
+    setMaximumWidth(width());
+  }
 }
 
 void MainWindow::showMyFingerprint()
@@ -661,18 +711,18 @@ void MainWindow::handleLogLine(const QString &line)
 {
   const int kScrollBottomThreshold = 2;
 
-  QScrollBar *verticalScroll = ui->m_pLogOutput->verticalScrollBar();
+  QScrollBar *verticalScroll = ui->textLog->verticalScrollBar();
   int currentScroll = verticalScroll->value();
   int maxScroll = verticalScroll->maximum();
   const auto scrollAtBottom = qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
 
   // only trim end instead of the whole line to prevent tab-indented debug
   // filenames from losing their indentation.
-  ui->m_pLogOutput->appendPlainText(trimEnd(line));
+  ui->textLog->appendPlainText(trimEnd(line));
 
   if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());
-    ui->m_pLogOutput->horizontalScrollBar()->setValue(0);
+    ui->textLog->horizontalScrollBar()->setValue(0);
   }
 
   updateFromLogLine(line);
