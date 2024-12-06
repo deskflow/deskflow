@@ -138,7 +138,7 @@ Yes, Deskflow has network compatibility with all forks:
 
 ### Is Deskflow compatible with Lan Mouse?
 
-We would love to see compatibility with Lan Mouse. This maybe quite an effort as currently they way they handle the generated input is very different.
+We would love to see compatibility with Lan Mouse. This may be quite an effort as currently the way they handle the generated input is very different.
 
 ### If I want to solve issues in Deskflow do I need to contribute to a fork?
 
