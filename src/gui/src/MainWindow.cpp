@@ -288,14 +288,9 @@ void MainWindow::onAppConfigTlsChanged()
 
 void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-
-  if (reason == QSystemTrayIcon::DoubleClick) {
-    if (isVisible()) {
-      hide();
-    } else {
-      showAndActivate();
-    }
-  }
+  if (reason != QSystemTrayIcon::Trigger)
+    return;
+  isVisible() ? hide() : showAndActivate();
 }
 
 void MainWindow::onVersionCheckerUpdateFound(const QString &version)
@@ -514,9 +509,7 @@ void MainWindow::moveEvent(QMoveEvent *event)
 void MainWindow::open()
 {
 
-  std::vector<QAction *> trayMenu = {ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr,
-                                     ui->m_pActionMinimize,  ui->m_pActionRestore,  nullptr,
-                                     ui->m_pActionQuit};
+  std::vector<QAction *> trayMenu = {ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr, ui->m_pActionQuit};
 
   m_TrayIcon.create(trayMenu);
 
@@ -580,7 +573,6 @@ void MainWindow::createMenuBar()
   m_pMenuEdit->addAction(ui->m_pActionSettings);
 
   m_pMenuWindow->addAction(ui->m_pActionMinimize);
-  m_pMenuWindow->addAction(ui->m_pActionRestore);
 
   m_pMenuHelp->addAction(ui->m_pActionAbout);
   m_pMenuHelp->addAction(ui->m_pActionHelp);
