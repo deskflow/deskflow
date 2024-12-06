@@ -689,41 +689,54 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
+
+  static const QRegularExpression re(".*peer fingerprint: ([A-F0-9:]+)");
   auto match = re.match(line);
   if (!match.hasMatch()) {
     return;
   }
 
   auto fingerprint = match.captured(1);
-  if (TlsFingerprint::trustedServers().isTrusted(fingerprint)) {
+
+  bool clientMode = m_CoreProcess.mode() == CoreMode::Client;
+  bool alreadyTrusted = clientMode ? TlsFingerprint::trustedClients().isTrusted(fingerprint)
+                                   : TlsFingerprint::trustedServers().isTrusted(fingerprint);
+
+  // Check if already trusted
+  if (alreadyTrusted)
     return;
-  }
 
   static bool messageBoxAlreadyShown = false;
 
   if (!messageBoxAlreadyShown) {
-    m_CoreProcess.stop();
+    if (clientMode)
+      m_CoreProcess.stop();
+
+    QString type = clientMode ? QStringLiteral("server") : QStringLiteral("client");
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
         this, QString("Security question"),
-        QString("<p>You are connecting to a server.</p>"
+        QString("<p>You are connecting to a %1.</p>"
                 "<p>Here is it's TLS fingerprint:</p>"
-                "<p>%1</p>"
-                "<p>Compare this fingerprint to the one on your server's screen. "
-                "If the two don't match exactly, then it's probably not the server "
+                "<p>%2</p>"
+                "<p>Compare this fingerprint to the one on your %1's screen. "
+                "If the two don't match exactly, then it's probably not the %1 "
                 "you're expecting (it could be a malicious user).</p>"
                 "<p>Do you want to trust this fingerprint for future "
                 "connections? If you don't, a connection cannot be made.</p>")
-            .arg(fingerprint),
+            .arg(type, fingerprint),
         QMessageBox::Yes | QMessageBox::No
     );
 
     if (fingerprintReply == QMessageBox::Yes) {
-      // start core process again after trusting fingerprint.
-      TlsFingerprint::trustedServers().trust(fingerprint);
-      m_CoreProcess.start();
+      if (clientMode) {
+        TlsFingerprint::trustedServers().trust(fingerprint);
+        // start core process again after trusting fingerprint.
+        m_CoreProcess.start();
+      } else {
+        TlsFingerprint::trustedClients().trust(fingerprint);
+      }
     }
 
     messageBoxAlreadyShown = false;

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -147,6 +148,9 @@ void ServerApp::help()
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "
        << "instead.\n" HELP_COMMON_INFO_1
+       << "      --disable-client-cert-check disable client SSL certificate \n"
+          "                                     checking (deprecated)\n"
+       << HELP_SYS_INFO HELP_COMMON_INFO_2 << "\n"
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
@@ -626,7 +630,11 @@ void ServerApp::handleResume(const Event &, void *)
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
-  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, args().m_enableCrypto);
+  auto securityLevel = args().m_enableCrypto
+                           ? args().m_chkPeerCert ? SecurityLevel::PeerAuth_And_Encrypted : SecurityLevel::Encrypted
+                           : SecurityLevel::PlainText;
+
+  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
   m_events->adoptHandler(
       m_events->forClientListener().connected(), listen,

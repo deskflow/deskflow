@@ -308,6 +308,13 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QCheckBox" name="chkRequireClientCert">
+            <property name="text">
+             <string>Require client certificates</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

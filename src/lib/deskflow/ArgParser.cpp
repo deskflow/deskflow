@@ -55,6 +55,8 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
+    } else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-check")) {
+      args.m_chkPeerCert = false;
     } else {
       LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
       return false;
