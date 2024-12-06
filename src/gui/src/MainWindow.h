@@ -96,6 +96,7 @@ public:
 signals:
   void created();
   void shown();
+  void clearedSettings();
 
 public slots:
   void onAppAboutToQuit();
