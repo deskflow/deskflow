@@ -119,8 +119,11 @@ void Screen::disable() {
 }
 
 void Screen::enter(KeyModifierMask toggleMask) {
-  assert(m_entered == false);
   LOG((CLOG_INFO "entering screen"));
+
+  if (m_entered) {
+    LOG_WARN("screen already entered");
+  }
 
   // now on screen
   m_entered = true;
@@ -134,8 +137,11 @@ void Screen::enter(KeyModifierMask toggleMask) {
 }
 
 bool Screen::leave() {
-  assert(m_entered == true);
   LOG((CLOG_INFO "leaving screen"));
+
+  if (!m_entered) {
+    LOG_WARN("screen already left");
+  }
 
   if (!m_screen->canLeave()) {
     return false;
