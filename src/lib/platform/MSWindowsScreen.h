@@ -192,7 +192,7 @@ private: // HACK
   bool onMouseWheel(SInt32 xDelta, SInt32 yDelta);
   bool onScreensaver(bool activated);
   bool onDisplayChange();
-  bool onClipboardChange();
+  void onClipboardChange();
 
   // warp cursor without discarding queued events
   void warpCursorNoFlush(SInt32 x, SInt32 y);
@@ -314,7 +314,7 @@ private:
   // clipboard stuff.  our window is used mainly as a clipboard
   // owner and as a link in the clipboard viewer chain.
   HWND m_window;
-  HWND m_nextClipboardWindow;
+  DWORD m_clipboardSequenceNumber;
   bool m_ownClipboard;
 
   // one desk per desktop and a cond var to communicate with it
