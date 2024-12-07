@@ -63,6 +63,21 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:Deskflow>/MacOS)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(TARGETS ${target} DESTINATION bin)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  install(
+    TARGETS ${target}
+    RUNTIME_DEPENDENCY_SET serverDeps
+    DESTINATION .
+  )
+  install(RUNTIME_DEPENDENCY_SET serverDeps
+    PRE_EXCLUDE_REGEXES
+      "api-ms-win-.*"
+      "ext-ms-.*"
+      "^hvsifiletrust\\.dll$"
+    POST_EXCLUDE_REGEXES
+      ".*system32.*"
+    RUNTIME DESTINATION .
+  )
 endif()
 
 post_config()

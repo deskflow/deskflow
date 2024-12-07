@@ -1,9 +1,43 @@
-# SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
-# SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd.
-# SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
+# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
-macro(configure_linux_package_name)
+# HACK This is set when the files is included so its the real path
+# calling CMAKE_CURRENT_LIST_DIR after include would return the wrong scope var
+set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+# Install our desktop file
+install(
+  FILES ${MY_DIR}/org.deskflow.deskflow.desktop
+  DESTINATION share/applications
+)
+
+# Install our icon
+install(
+  FILES ${MY_DIR}/deskflow.png
+  DESTINATION share/icons/hicolor/512x512/apps/
+  RENAME org.deskflow.deskflow.png
+)
+
+# Install our metainfo
+install(
+  FILES ${MY_DIR}/org.deskflow.deskflow.metainfo.xml
+  DESTINATION share/metainfo/
+)
+
+# Prepare PKGBUILD for Arch Linux
+configure_file(
+  ${MY_DIR}/arch/PKGBUILD.in
+  ${CMAKE_BINARY_DIR}/PKGBUILD
+  @ONLY
+)
+
+
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
+set(CPACK_RPM_PACKAGE_GROUP "Applications/System")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   # Get Distro name information
   if(EXISTS "/etc/os-release")
     FILE(STRINGS "/etc/os-release" RELEASE_FILE_CONTENTS)
@@ -65,49 +99,9 @@ macro(configure_linux_package_name)
   if("${DISTRO_NAME}" STREQUAL "")
     set(DISTRO_NAME "linux")
   endif()
-
   set(OS_STRING "${DISTRO_NAME}-${CN_STRING}${CMAKE_SYSTEM_PROCESSOR}")
 
-endmacro()
-
-#
-# Same as the `configure_file` command but for directories recursively.
-#
-macro(configure_files srcDir destDir)
-
-  message(VERBOSE "Configuring directory ${destDir}")
-  make_directory(${destDir})
-
-  file(
-    GLOB_RECURSE sourceFiles
-    RELATIVE ${srcDir}
-    ${srcDir}/*)
-  file(
-    GLOB_RECURSE templateFiles
-    LIST_DIRECTORIES false
-    RELATIVE ${srcDir}
-    ${srcDir}/*.in)
-  list(REMOVE_ITEM sourceFiles ${templateFiles})
-
-  foreach(sourceFile ${sourceFiles})
-    set(sourceFilePath ${srcDir}/${sourceFile})
-    if(IS_DIRECTORY ${sourceFilePath})
-      message(VERBOSE "Copying directory ${sourceFile}")
-      make_directory(${destDir}/${sourceFile})
-    else()
-      message(VERBOSE "Copying file ${sourceFile}")
-      configure_file(${sourceFilePath} ${destDir}/${sourceFile} COPYONLY)
-    endif()
-
-  endforeach(sourceFile)
-
-  foreach(templateFile ${templateFiles})
-
-    set(sourceTemplateFilePath ${srcDir}/${templateFile})
-    string(REGEX REPLACE "\.in$" "" templateFile ${templateFile})
-    message(VERBOSE "Configuring file ${templateFile}")
-    configure_file(${sourceTemplateFilePath} ${destDir}/${templateFile} @ONLY)
-
-  endforeach(templateFile)
-
-endmacro(configure_files)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "|.*BSD")
+  message(STATUS "BSD packaging not yet supported")
+  set(OS_STRING ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
+endif()

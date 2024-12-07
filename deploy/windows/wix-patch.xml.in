@@ -1,0 +1,26 @@
+<CPackWiXPatch>
+  <CPackWiXFragment Id="CM_CP_deskflow_daemon.exe">
+    <ServiceInstall Description="Controls the Deskflow foreground processes." DisplayName="Deskflow" ErrorControl="normal" Id="ServiceInstall" Name="Deskflow" Start="auto" Type="ownProcess">
+      <util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
+    </ServiceInstall>
+    <ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
+  </CPackWiXFragment>
+  <CPackWiXFragment Id="CM_CP_deskflow_server.exe">
+    <firewall:FirewallException Id="ServerFirewallException" Name="Deskflow Server" Program="[INSTALL_ROOT]deskflow-server.exe" Scope="any"/>
+  </CPackWiXFragment>
+  <CPackWiXFragment Id="CM_CP_deskflow_client.exe">
+    <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-client.exe" Scope="any"/>
+  </CPackWiXFragment>
+  <CPackWiXFragment Id="#PRODUCT">
+    <StandardDirectory  Id="TARGETDIR">
+      <Merge Id="VCRedist" SourceFile="@CPACK_WIX_MSM_FILE@" DiskId="1" Language="0"/>
+    </StandardDirectory >
+    <Feature Id="VCRedist" Title="Visual C++ Runtime" AllowAbsent="no" AllowAdvertise="yes" Display="hidden" InstallDefault="local" TypicalDefault="install">
+      <MergeRef Id="VCRedist" Primary="yes"/>
+    </Feature>
+    <CustomAction Id="Run_Deskflow" ExeCommand="Deskflow" FileRef="CM_FP_deskflow.exe" Return="asyncNoWait"/>
+    <InstallExecuteSequence>
+      <Custom Action="Run_Deskflow" OnExit="success" Condition="NOT Installed"/>
+    </InstallExecuteSequence>
+  </CPackWiXFragment>
+</CPackWiXPatch>

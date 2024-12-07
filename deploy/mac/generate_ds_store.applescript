@@ -9,7 +9,7 @@ on run argv
     repeat while open_attempts < 5
       try
         open
-          delay 1
+          delay 5
           set open_attempts to 5
         close
       on error errStr number errorNumber

@@ -35,6 +35,20 @@ if(WIN32)
     app
     ${libs})
 
-  post_config()
+  install(
+    TARGETS ${target}
+    RUNTIME_DEPENDENCY_SET deamonDeps
+    DESTINATION .
+  )
+  install(RUNTIME_DEPENDENCY_SET daemonDeps
+    PRE_EXCLUDE_REGEXES
+      "api-ms-win-.*"
+      "ext-ms-.*"
+      "^hvsifiletrust\\.dll$"
+    POST_EXCLUDE_REGEXES
+      ".*system32.*"
+    RUNTIME DESTINATION .
+  )
 
+  post_config()
 endif()
