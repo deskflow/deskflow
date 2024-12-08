@@ -96,6 +96,11 @@ bool MSWindowsClipboard::empty()
 
 void MSWindowsClipboard::add(EFormat format, const String &data)
 {
+  // exit early if there is no data to prevent spurious "failed to convert clipboard data" errors
+  if (data.empty()) {
+    LOG((CLOG_DEBUG "not adding 0 bytes to clipboard format: %d", format));
+    return;
+  }
   bool isSucceeded = false;
   // convert data to win32 form
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
