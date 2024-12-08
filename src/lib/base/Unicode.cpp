@@ -459,9 +459,9 @@ String Unicode::doUTF16ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
       setError(errors);
       toUTF8(dst, s_replacement, NULL);
     } else if (c >= 0x0000d800 && c <= 0x0000dbff) {
-      UInt32 c2 = decode16(data, byteSwapped);
       data += 2;
       --n;
+      UInt32 c2 = decode16(data, byteSwapped);
       if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
         // error -- [d800,dbff] not followed by [dc00,dfff]
         setError(errors);
