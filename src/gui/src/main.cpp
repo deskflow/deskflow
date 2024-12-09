@@ -67,6 +67,11 @@ bool hasArg(const QString &arg, const QStringList &args) {
 
 int main(int argc, char *argv[]) {
 
+#if defined(Q_OS_UNIX)
+  // Fixes Fedora bug where qDebug() messages aren't printed.
+  qputenv("QT_LOGGING_RULES", "*.debug=true;qt.*=false");
+#endif
+
 #if defined(Q_OS_MAC)
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
    * instantiated" */

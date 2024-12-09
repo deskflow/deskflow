@@ -50,9 +50,10 @@ bool open(QFile &file, const QString &filePath) {
  */
 void dotenv(const QString &filename) {
   QString filePath = filename;
+  QFileInfo fileInfo(filePath);
+
   QFile file;
   if (!open(file, filePath)) {
-    QFileInfo fileInfo(filePath);
     qInfo(
         "no %s file in dir: %s", qPrintable(filename),
         qPrintable(fileInfo.absolutePath()));
@@ -71,7 +72,7 @@ void dotenv(const QString &filename) {
     }
   }
 
-  qInfo("loading env vars from: %s", qPrintable(filePath));
+  qInfo("loading env vars from: %s", qPrintable(fileInfo.absolutePath()));
 
   QTextStream in(&file);
   while (!in.atEnd()) {

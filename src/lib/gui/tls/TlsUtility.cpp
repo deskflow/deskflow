@@ -32,8 +32,8 @@ bool TlsUtility::isEnabled() const {
 }
 
 bool TlsUtility::generateCertificate() {
-  qDebug("generating tls certificate, "
-         "all clients must trust the new fingerprint");
+  qInfo("generating tls certificate, "
+        "all clients must trust the new fingerprint");
 
   if (!isEnabled()) {
     qCritical("unable to generate tls certificate, "

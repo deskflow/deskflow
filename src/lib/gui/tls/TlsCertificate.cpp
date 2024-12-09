@@ -22,6 +22,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
+#include <cstdint>
 
 static const char *const kCertificateKeyLength = "rsa:";
 static const char *const kCertificateHashAlgorithm = "-sha256";
@@ -125,11 +126,14 @@ bool TlsCertificate::runTool(const QStringList &args) {
   }
 
   if (int code = process.exitCode(); !success || code != 0) {
-    qDebug("openssl failed with code %d: %s", code, qUtf8Printable(toolStderr));
 
-    qCritical(
-        "failed to generate tls certificate:\n\n%s",
-        qUtf8Printable(toolStderr));
+    if (toolStderr.isEmpty()) {
+      qCritical("openssl failed with code %d", code);
+    } else {
+      qCritical(
+          "openssl failed with code %d, openssl error:\n\n%s", //
+          code, qUtf8Printable(toolStderr));
+    }
     return false;
   }
 
@@ -182,7 +186,7 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength) {
 
     return generateFingerprint(path);
   } else {
-    qCritical("failed to generate tls certificate");
+    // Error already shown, so no need to repeat.
     return false;
   }
 }

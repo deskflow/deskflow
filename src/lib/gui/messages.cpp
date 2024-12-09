@@ -293,7 +293,7 @@ void showWaylandExperimental(QWidget *parent) {
           "<p>Wayland support is experimental and contains bugs.</p>"
           R"(<p>Please <a href="%1" style="color: %2">report bugs</a> to us if you find any.</p>)"
           "<p>Happy testing!</p>")
-          .arg(kAppName, kUrlHelp, kColorSecondary));
+          .arg(kUrlHelp, kColorSecondary));
 }
 
 void showWaylandLibraryError(QWidget *parent) {

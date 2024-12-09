@@ -114,6 +114,10 @@ macro(configure_linux_packaging)
   # 12), so we must add it manually.
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
 
+  # We use the `openssl` binary to generate TLS certificates, but it's not a linked
+  # dependency, so we must add it manually.
+  set(CPACK_RPM_PACKAGE_REQUIRES "openssl")
+
   # The default for CMake seems to be /usr/local, which seems uncommon. While
   # the default /usr/local prefix causes the app to appear on Debian and Fedora,
   # it doesn't seem to appear on Arch Linux. Setting the prefix to /usr seems to
