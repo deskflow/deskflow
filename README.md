@@ -65,6 +65,8 @@ We support all major operating systems, including Windows, macOS, Linux, and Uni
 
 Windows 10 or higher is required.
 
+macOS 12 or higher is required.
+
 All Linux distributions are supported, primarily focusing on: 
 Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
 
