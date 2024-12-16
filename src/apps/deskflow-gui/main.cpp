@@ -44,6 +44,10 @@
 #include <cstdlib>
 #endif
 
+#if defined(Q_OS_UNIX) && defined(QT_DEBUG)
+#include <QLoggingCategory>
+#endif
+
 using namespace deskflow::gui;
 
 class QThreadImpl : public QThread
@@ -66,6 +70,10 @@ bool hasArg(const QString &arg, const QStringList &args)
 
 int main(int argc, char *argv[])
 {
+#if defined(Q_OS_UNIX) && defined(QT_DEBUG)
+  // Fixes Fedora bug where qDebug() messages aren't printed.
+  QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
+#endif
 
 #if defined(Q_OS_MAC)
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
