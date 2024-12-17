@@ -240,7 +240,10 @@ void MainWindow::connectSlots()
 
   connect(&m_WindowSaveTimer, &QTimer::timeout, this, &MainWindow::onWindowSaveTimerTimeout);
 
+// Mac os tray will only show a menu
+#ifndef Q_OS_MAC
   connect(&m_TrayIcon, &TrayIcon::activated, this, &MainWindow::onTrayIconActivated);
+#endif
 
   connect(
       &m_ServerConnection, &ServerConnection::configureClient, this, &MainWindow::onServerConnectionConfigureClient
@@ -522,8 +525,14 @@ void MainWindow::moveEvent(QMoveEvent *event)
 
 void MainWindow::open()
 {
+
   QList<QAction *> trayActions{ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr, ui->m_pActionQuit};
 
+#ifdef Q_OS_MAC
+  ui->m_pActionRestore->setText(tr("Open Deskflow"));
+  trayActions.insert(3, ui->m_pActionRestore);
+  trayActions.insert(4, nullptr);
+#endif
   m_TrayIcon.create(trayActions);
 
   if (m_AppConfig.autoHide()) {
@@ -896,9 +905,9 @@ void MainWindow::setVisible(bool visible)
 {
   QMainWindow::setVisible(visible);
   ui->m_pActionMinimize->setEnabled(visible);
+#ifndef Q_OS_MAC
   ui->m_pActionRestore->setEnabled(!visible);
-
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070 // lion
+#else
   // dock hide only supported on lion :(
   ProcessSerialNumber psn = {0, kCurrentProcess};
 #pragma GCC diagnostic push
@@ -1046,12 +1055,7 @@ void MainWindow::enableClient(bool enable)
 
 void MainWindow::showAndActivate()
 {
-  if (!isMinimized() && !isHidden()) {
-    qDebug("window already visible");
-    return;
-  }
-
-  showNormal();
+  show();
   raise();
   activateWindow();
 }
