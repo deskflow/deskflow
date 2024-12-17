@@ -19,6 +19,8 @@
 #include "deskflow/ProtocolUtil.h"
 #include "base/Log.h"
 #include "common/stdvector.h"
+#include "deskflow/XDeskflow.h"
+#include "deskflow/protocol_types.h"
 #include "io/IStream.h"
 #include <array>
 #include <iterator>
@@ -175,6 +177,13 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
 
       case 'I': {
         void *destination = va_arg(args, void *);
+        UInt32 n = read4BytesInt(stream);
+
+        if (n > PROTOCOL_MAX_LIST_LENGTH) {
+          LOG((CLOG_ERR "read: vector length exceeds maximum allowed size: %u", n));
+          throw XBadClient("Too long message received");
+        }
+
         switch (len) {
         case 1:
           // 1 byte integer
@@ -199,6 +208,12 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
 
       case 's': {
         String *destination = va_arg(args, String *);
+
+        if (len > PROTOCOL_MAX_STRING_LENGTH) {
+          LOG((CLOG_ERR "read: string length exceeds maximum allowed size: %u", len));
+          throw XBadClient("Too long message received");
+        }
+
         readBytes(stream, len, destination);
         break;
       }
