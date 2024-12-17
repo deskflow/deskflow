@@ -41,6 +41,8 @@
 
 #define MAX_ERROR_SIZE 65535
 
+static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
+
 static const float s_retryDelay = 0.01f;
 
 enum
@@ -146,6 +148,10 @@ TCPSocket::EJobResult SecureSocket::doRead()
     // slurp up as much as possible
     do {
       m_inputBuffer.write(buffer, bytesRead);
+
+      if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
+        break;
+      }
 
       status = secureRead(buffer, sizeof(buffer), bytesRead);
       if (status < 0) {

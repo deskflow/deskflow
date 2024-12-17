@@ -33,6 +33,8 @@
 #include <cstring>
 #include <memory>
 
+static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
+
 //
 // TCPSocket
 //
@@ -323,6 +325,10 @@ TCPSocket::EJobResult TCPSocket::doRead()
     // slurp up as much as possible
     do {
       m_inputBuffer.write(buffer, static_cast<UInt32>(bytesRead));
+
+      if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
+        break;
+      }
 
       bytesRead = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
     } while (bytesRead > 0);

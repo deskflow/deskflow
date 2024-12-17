@@ -54,6 +54,7 @@ REGISTER_EVENT(IStream, outputFlushed)
 REGISTER_EVENT(IStream, outputError)
 REGISTER_EVENT(IStream, inputShutdown)
 REGISTER_EVENT(IStream, outputShutdown)
+REGISTER_EVENT(IStream, inputFormatError)
 
 //
 // IpcClient
