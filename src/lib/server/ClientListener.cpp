@@ -208,6 +208,11 @@ void ClientListener::handleUnknownClient(const Event &, void *vclient)
         m_events->forClientProxy().disconnected(), client,
         new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientDisconnected, client)
     );
+  } else {
+    auto *stream = unknownClient->getStream();
+    if (stream) {
+      stream->close();
+    }
   }
 
   // now finished with unknown client
