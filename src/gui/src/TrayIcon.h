@@ -32,7 +32,7 @@ class TrayIcon : public QObject
 public:
   explicit TrayIcon() = default;
 
-  void create(std::vector<QAction *> const &actions);
+  void create(const QList<QAction *> &actions);
   void setIcon(const QIcon &icon);
 
 signals:

@@ -51,7 +51,7 @@ void TrayIcon::showRetryLoop()
   }
 }
 
-void TrayIcon::create(std::vector<QAction *> const &actions)
+void TrayIcon::create(const QList<QAction *> &actions)
 {
   m_pTrayIconMenu = std::make_unique<QMenu>();
 
