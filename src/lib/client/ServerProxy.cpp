@@ -29,6 +29,7 @@
 #include "deskflow/FileChunk.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
+#include "deskflow/XDeskflow.h"
 #include "deskflow/option_types.h"
 #include "deskflow/protocol_types.h"
 #include "io/IStream.h"
@@ -121,19 +122,26 @@ void ServerProxy::handleData(const Event &, void *)
 
     // parse message
     LOG((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
-    switch ((this->*m_parser)(code)) {
-    case kOkay:
-      break;
+    try {
+      switch ((this->*m_parser)(code)) {
+      case kOkay:
+        break;
 
-    case kUnknown:
-      LOG((CLOG_ERR "invalid message from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
-      // not possible to determine message boundaries
-      // read the whole stream to discard unkonwn data
-      while (m_stream->read(nullptr, 4))
-        ;
-      break;
+      case kUnknown:
+        LOG((CLOG_ERR "invalid message from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
+        // not possible to determine message boundaries
+        // read the whole stream to discard unkonwn data
+        while (m_stream->read(nullptr, 4))
+          ;
+        break;
 
-    case kDisconnect:
+      case kDisconnect:
+        return;
+      }
+    } catch (const XBadClient &e) {
+      LOG((CLOG_ERR "protocol error from server: %s", e.what()));
+      ProtocolUtil::writef(m_stream, kMsgEBad);
+      m_client->disconnect("invalid message from server");
       return;
     }
 
