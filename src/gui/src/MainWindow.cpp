@@ -522,10 +522,9 @@ void MainWindow::moveEvent(QMoveEvent *event)
 
 void MainWindow::open()
 {
+  QList<QAction *> trayActions{ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr, ui->m_pActionQuit};
 
-  std::vector<QAction *> trayMenu = {ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr, ui->m_pActionQuit};
-
-  m_TrayIcon.create(trayMenu);
+  m_TrayIcon.create(trayActions);
 
   if (m_AppConfig.autoHide()) {
     hide();
