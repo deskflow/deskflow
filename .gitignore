@@ -34,3 +34,6 @@ CMakeLists.txt.user
 CMakeCache.txt
 CMakeUserPresets.json
 CMakeFiles/*
+
+# vscode folder
+/.vscode
