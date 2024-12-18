@@ -280,6 +280,8 @@ void MainWindow::connectSlots()
 
   connect(&m_ServerConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
   connect(&m_ClientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
+
+  connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -890,20 +892,20 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
       state == CoreProcessState::RetryPending) {
-    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
-    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
+    disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
+    connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
-    ui->m_pButtonToggleStart->setText(QString("&Stop"));
+    ui->btnToggleCore->setText(QString("&Stop"));
     ui->m_pButtonApply->setEnabled(true);
 
     m_actionStartCore->setEnabled(false);
     m_actionStopCore->setEnabled(true);
 
   } else {
-    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
-    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
+    disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
+    connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 
-    ui->m_pButtonToggleStart->setText(QString("&Start"));
+    ui->btnToggleCore->setText(QString("&Start"));
     ui->m_pButtonApply->setEnabled(false);
 
     m_actionStartCore->setEnabled(true);
@@ -1049,7 +1051,7 @@ void MainWindow::enableServer(bool enable)
   ui->m_pWidgetServerInput->setVisible(m_AppConfig.invertConnection());
 
   if (enable) {
-    ui->m_pButtonToggleStart->setEnabled(true);
+    ui->btnToggleCore->setEnabled(true);
     m_actionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Server);
 
@@ -1073,7 +1075,7 @@ void MainWindow::enableClient(bool enable)
   ui->m_pWidgetClientInput->setVisible(!m_AppConfig.invertConnection());
 
   if (enable) {
-    ui->m_pButtonToggleStart->setEnabled(true);
+    ui->btnToggleCore->setEnabled(true);
     m_actionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Client);
   }

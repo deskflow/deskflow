@@ -586,7 +586,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="m_pButtonToggleStart">
+       <widget class="QPushButton" name="btnToggleCore">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -622,6 +622,6 @@
   <tabstop>m_pButtonConnect</tabstop>
   <tabstop>m_pLogOutput</tabstop>
   <tabstop>m_pButtonApply</tabstop>
-  <tabstop>m_pButtonToggleStart</tabstop>
+  <tabstop>btnToggleCore</tabstop>
  </tabstops>
 </ui>
