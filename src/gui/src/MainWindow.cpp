@@ -1055,6 +1055,9 @@ void MainWindow::enableClient(bool enable)
 
 void MainWindow::showAndActivate()
 {
+#ifdef Q_OS_MAC
+  forceAppActive();
+#endif
   show();
   raise();
   activateWindow();
