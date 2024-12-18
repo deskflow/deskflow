@@ -107,6 +107,11 @@ bool isOSXInterfaceStyleDark()
   return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
 }
 
+void forceAppActive()
+{
+  [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+}
+
 IconsTheme getOSXIconsTheme()
 {
   if (@available(macOS 11, *))
