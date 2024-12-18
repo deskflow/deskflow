@@ -1,18 +1,22 @@
-name: "Lint error"
+name: "Lint Check"
 description: "Checks for lint errors and posts a helpful comment"
 
 inputs:
   format-command:
     description: "The command to run to fix lint errors"
-    required: true
+    default: find src/ -regex '.*\.\(cpp\|hpp\|cc\|cxx\|h\|c\|m\|mm\)' -exec clang-format -style=file --assume-filename=$(pwd)/.clang-format -i {} \;
 
   format-tool:
     description: "The name of the linting tool"
-    required: true
+    default: "clang-format"
 
 runs:
   using: "composite"
   steps:
+    - name: Install Dependencies
+      run: pipx install --global clang_format
+      shell: bash
+
     - name: Run format command
       run: ${{ inputs.format-command }}
       shell: bash
