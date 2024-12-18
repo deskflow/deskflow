@@ -28,6 +28,8 @@ include_files = [
     "*.c",
     "*.hpp",
     "*.cpp",
+    "*.m",
+    "*.mm",
 ]
 
 dirs = ["src"]
