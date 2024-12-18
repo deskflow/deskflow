@@ -205,10 +205,6 @@ jobs:
           mac-qt-version: 6.7.2
           like: ${{ matrix.target.like }}
 
-      - name: Setup Python
-        if: ${{runner.os != 'Linux' }}
-        run: python ./scripts/setup_venv.py
-
       - name: Get version
         uses: ./.github/actions/get-version
 

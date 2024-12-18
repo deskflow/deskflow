@@ -110,14 +110,10 @@ if(APPLE)
 endif()
 
 # Set Output Folders
-# TODO Remove when not using post_config macros
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
-set(BIN_TEMP_DIR ${PROJECT_BINARY_DIR}/temp/bin)
 
-include(cmake/Build.cmake)
 include(cmake/Libraries.cmake)
-
 include(GNUInstallDirs)
 
 configure_libs()
@@ -146,4 +142,3 @@ option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
 endif()
-post_config_all()

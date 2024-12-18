@@ -49,6 +49,4 @@ if(WIN32)
       ".*system32.*"
     RUNTIME DESTINATION .
   )
-
-  post_config()
 endif()
