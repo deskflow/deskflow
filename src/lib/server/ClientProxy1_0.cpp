@@ -51,6 +51,10 @@ ClientProxy1_0::ClientProxy1_0(const String &name, deskflow::IStream *stream, IE
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleDisconnect, NULL)
   );
   m_events->adoptHandler(
+      m_events->forIStream().inputFormatError(), stream->getEventTarget(),
+      new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleDisconnect, NULL)
+  );
+  m_events->adoptHandler(
       m_events->forIStream().outputShutdown(), stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleWriteError, NULL)
   );
@@ -83,6 +87,7 @@ void ClientProxy1_0::removeHandlers()
   m_events->removeHandler(m_events->forIStream().outputError(), getStream()->getEventTarget());
   m_events->removeHandler(m_events->forIStream().inputShutdown(), getStream()->getEventTarget());
   m_events->removeHandler(m_events->forIStream().outputShutdown(), getStream()->getEventTarget());
+  m_events->removeHandler(m_events->forIStream().inputFormatError(), getStream()->getEventTarget());
   m_events->removeHandler(Event::kTimer, this);
 
   // remove timer
@@ -135,15 +140,22 @@ void ClientProxy1_0::handleData(const Event &, void *)
     }
 
     // parse message
-    LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
-    if (!(this->*m_parser)(code)) {
-      LOG((
-          CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]
-      ));
-      // not possible to determine message boundaries
-      // read the whole stream to discard unkonwn data
-      while (getStream()->read(nullptr, 4))
-        ;
+    try {
+      LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+      if (!(this->*m_parser)(code)) {
+        LOG(
+            (CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2],
+             code[3])
+        );
+        // not possible to determine message boundaries
+        // read the whole stream to discard unkonwn data
+        while (getStream()->read(nullptr, 4))
+          ;
+      }
+    } catch (const XBadClient &e) {
+      LOG((CLOG_ERR "protocol error from client \"%s\": %s", getName().c_str(), e.what()));
+      disconnect();
+      return;
     }
 
     // next message
