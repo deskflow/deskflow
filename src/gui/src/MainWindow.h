@@ -129,15 +129,12 @@ private slots:
   bool saveConfig();
   void testFatalError() const;
   void testCriticalError() const;
-
+  void resetCore();
   //
   // Auto-connect slots
   //
-  void on_m_pButtonApply_clicked();
   void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
-  void on_m_pButtonConnect_clicked();
-  void on_m_pButtonConnectToClient_clicked();
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
   void on_m_pButtonConfigureServer_clicked();

@@ -209,7 +209,7 @@
                    <widget class="QLineEdit" name="m_pLineEditClientIp"/>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="m_pButtonConnectToClient">
+                   <widget class="QPushButton" name="btnConnectToClient">
                     <property name="text">
                      <string>Connect</string>
                     </property>
@@ -389,7 +389,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="m_pButtonConnect">
+                <widget class="QPushButton" name="btnConnect">
                  <property name="text">
                   <string>Connect</string>
                  </property>
@@ -576,7 +576,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="m_pButtonApply">
+       <widget class="QPushButton" name="btnApplySettings">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -616,12 +616,12 @@
   <tabstop>m_pRadioGroupServer</tabstop>
   <tabstop>m_pRadioGroupClient</tabstop>
   <tabstop>m_pLineEditClientIp</tabstop>
-  <tabstop>m_pButtonConnectToClient</tabstop>
+  <tabstop>btnConnectToClient</tabstop>
   <tabstop>m_pButtonConfigureServer</tabstop>
   <tabstop>m_pLineEditHostname</tabstop>
-  <tabstop>m_pButtonConnect</tabstop>
+  <tabstop>btnConnect</tabstop>
   <tabstop>m_pLogOutput</tabstop>
-  <tabstop>m_pButtonApply</tabstop>
+  <tabstop>btnApplySettings</tabstop>
   <tabstop>btnToggleCore</tabstop>
  </tabstops>
 </ui>
