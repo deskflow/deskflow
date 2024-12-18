@@ -79,5 +79,3 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     RUNTIME DESTINATION .
   )
 endif()
-
-post_config()
