@@ -282,6 +282,9 @@ void MainWindow::connectSlots()
   connect(&m_ClientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
 
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
+  connect(ui->btnApplySettings, &QPushButton::clicked, this, &MainWindow::resetCore);
+  connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
+  connect(ui->btnConnectToClient, &QPushButton::clicked, this, &MainWindow::resetCore);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -458,12 +461,12 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::on_m_pLineEditHostname_returnPressed()
 {
-  ui->m_pButtonConnect->click();
+  ui->btnConnect->click();
 }
 
 void MainWindow::on_m_pLineEditClientIp_returnPressed()
 {
-  ui->m_pButtonConnectToClient->click();
+  ui->btnConnectToClient->click();
 }
 
 void MainWindow::on_m_pLineEditHostname_textChanged(const QString &text)
@@ -476,7 +479,7 @@ void MainWindow::on_m_pLineEditClientIp_textChanged(const QString &text)
   m_CoreProcess.setAddress(text);
 }
 
-void MainWindow::on_m_pButtonApply_clicked()
+void MainWindow::resetCore()
 {
   m_ClientConnection.setShowMessage();
   m_CoreProcess.restart();
@@ -504,16 +507,6 @@ void MainWindow::on_m_pRadioGroupClient_clicked(bool)
   enableClient(true);
   enableServer(false);
   m_ConfigScopes.save();
-}
-
-void MainWindow::on_m_pButtonConnect_clicked()
-{
-  on_m_pButtonApply_clicked();
-}
-
-void MainWindow::on_m_pButtonConnectToClient_clicked()
-{
-  on_m_pButtonApply_clicked();
 }
 
 void MainWindow::onWindowSaveTimerTimeout()
@@ -896,7 +889,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
     ui->btnToggleCore->setText(QString("&Stop"));
-    ui->m_pButtonApply->setEnabled(true);
+    ui->btnApplySettings->setEnabled(true);
 
     m_actionStartCore->setEnabled(false);
     m_actionStopCore->setEnabled(true);
@@ -906,7 +899,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 
     ui->btnToggleCore->setText(QString("&Start"));
-    ui->m_pButtonApply->setEnabled(false);
+    ui->btnApplySettings->setEnabled(false);
 
     m_actionStartCore->setEnabled(true);
     m_actionStopCore->setEnabled(false);
