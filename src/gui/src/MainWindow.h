@@ -120,6 +120,16 @@ private slots:
   void onWindowSaveTimerTimeout();
   void onServerConnectionConfigureClient(const QString &clientName);
 
+  void clearSettings();
+  void openAboutDialog();
+  void openHelpUrl() const;
+  void openSettings();
+  void startCore();
+  void stopCore();
+  bool saveConfig();
+  void testFatalError() const;
+  void testCriticalError() const;
+
   //
   // Auto-connect slots
   //
@@ -131,15 +141,6 @@ private slots:
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
   void on_m_pButtonConfigureServer_clicked();
-  bool on_m_pActionSave_triggered();
-  void on_m_pActionAbout_triggered();
-  void on_m_pActionHelp_triggered() const;
-  void on_m_pActionSettings_triggered();
-  void on_m_pActionStartCore_triggered();
-  void on_m_pActionStopCore_triggered();
-  void on_m_pActionTestFatalError_triggered() const;
-  void on_m_pActionTestCriticalError_triggered() const;
-  void on_m_pActionClearSettings_triggered();
   void on_m_pLineEditHostname_returnPressed();
   void on_m_pLineEditClientIp_returnPressed();
   void on_m_pLineEditHostname_textChanged(const QString &text);
@@ -220,4 +221,18 @@ private:
   deskflow::gui::ClientConnection m_ClientConnection;
   deskflow::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
+
+  // Window Actions
+  QAction *m_actionAbout = nullptr;
+  QAction *m_actionClearSettings = nullptr;
+  QAction *m_actionHelp = nullptr;
+  QAction *m_actionMinimize = nullptr;
+  QAction *m_actionQuit = nullptr;
+  QAction *m_actionRestore = nullptr;
+  QAction *m_actionSave = nullptr;
+  QAction *m_actionSettings = nullptr;
+  QAction *m_actionStartCore = nullptr;
+  QAction *m_actionStopCore = nullptr;
+  QAction *m_actionTestCriticalError = nullptr;
+  QAction *m_actionTestFatalError = nullptr;
 };

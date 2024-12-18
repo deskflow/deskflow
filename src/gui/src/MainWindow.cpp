@@ -82,10 +82,35 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_ServerConnection(this, appConfig, m_ServerConfig, m_ServerConfigDialogState),
       m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig),
-      m_WindowSaveTimer(this)
+      m_WindowSaveTimer(this),
+      m_actionAbout{new QAction(this)},
+      m_actionClearSettings{new QAction(tr("Clear settings"), this)},
+      m_actionHelp{new QAction(tr("Report a Bug"), this)},
+      m_actionMinimize{new QAction(tr("&Hide"), this)},
+      m_actionQuit{new QAction(tr("&Quit"), this)},
+      m_actionRestore{new QAction(tr("Show"), this)},
+      m_actionSave{new QAction(tr("Save configuration &as..."), this)},
+      m_actionSettings{new QAction(tr("Preferences"), this)},
+      m_actionStartCore{new QAction(tr("&Start"), this)},
+      m_actionStopCore{new QAction(tr("S&top"), this)},
+      m_actionTestCriticalError{new QAction(tr("Test Critical Error"), this)},
+      m_actionTestFatalError{new QAction(tr("Test Fatal Error"), this)}
 {
 
   ui->setupUi(this);
+
+  // Setup Actions
+  m_actionAbout->setText(tr("About %1...").arg(kAppName));
+  m_actionAbout->setMenuRole(QAction::AboutRole);
+
+  m_actionQuit->setShortcut(QKeySequence::Quit);
+  m_actionQuit->setMenuRole(QAction::QuitRole);
+
+  m_actionSettings->setMenuRole(QAction::PreferencesRole);
+  m_actionSave->setShortcut(QKeySequence(tr("Ctrl+Alt+S")));
+  m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
+  m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
+
   createMenuBar();
   setupControls();
   connectSlots();
@@ -156,8 +181,6 @@ void MainWindow::setupControls()
 {
   setWindowTitle(kAppName);
 
-  ui->m_pActionHelp->setText(tr("Report a Bug"));
-
   secureSocket(false);
   updateLocalFingerprint();
 
@@ -223,18 +246,24 @@ void MainWindow::connectSlots()
 
   connect(&m_CoreProcess, &CoreProcess::secureSocket, this, &MainWindow::onCoreProcessSecureSocket);
 
-  connect(ui->m_pActionMinimize, &QAction::triggered, this, &MainWindow::hide);
+  connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
+  connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
+  connect(m_actionHelp, &QAction::triggered, this, &MainWindow::openHelpUrl);
+  connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
-  connect(
-      ui->m_pActionRestore, &QAction::triggered, this, //
-      [this]() { showAndActivate(); }
-  );
-
-  connect(ui->m_pActionQuit, &QAction::triggered, qApp, [this] {
+  connect(m_actionQuit, &QAction::triggered, qApp, [this] {
     qDebug("quitting application");
     m_Quitting = true;
     QApplication::quit();
   });
+
+  connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
+  connect(m_actionSave, &QAction::triggered, this, &MainWindow::saveConfig);
+  connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
+  connect(m_actionStartCore, &QAction::triggered, this, &MainWindow::startCore);
+  connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
+  connect(m_actionTestFatalError, &QAction::triggered, this, &MainWindow::testFatalError);
+  connect(m_actionTestCriticalError, &QAction::triggered, this, &MainWindow::testCriticalError);
 
   connect(&m_VersionChecker, &VersionChecker::updateFound, this, &MainWindow::onVersionCheckerUpdateFound);
 
@@ -249,9 +278,8 @@ void MainWindow::connectSlots()
       &m_ServerConnection, &ServerConnection::configureClient, this, &MainWindow::onServerConnectionConfigureClient
   );
 
-  connect(&m_ServerConnection, &ServerConnection::messageShowing, this, [this]() { showAndActivate(); });
-
-  connect(&m_ClientConnection, &ClientConnection::messageShowing, this, [this]() { showAndActivate(); });
+  connect(&m_ServerConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
+  connect(&m_ClientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -346,29 +374,29 @@ void MainWindow::onCoreProcessError(CoreProcess::Error error)
   }
 }
 
-void MainWindow::on_m_pActionStartCore_triggered()
+void MainWindow::startCore()
 {
   m_ClientConnection.setShowMessage();
   m_CoreProcess.start();
 }
 
-void MainWindow::on_m_pActionStopCore_triggered()
+void MainWindow::stopCore()
 {
   qDebug("stopping core process");
   m_CoreProcess.stop();
 }
 
-void MainWindow::on_m_pActionTestFatalError_triggered() const
+void MainWindow::testFatalError() const
 {
   qFatal("test fatal error");
 }
 
-void MainWindow::on_m_pActionTestCriticalError_triggered() const
+void MainWindow::testCriticalError() const
 {
   qCritical("test critical error");
 }
 
-void MainWindow::on_m_pActionClearSettings_triggered()
+void MainWindow::clearSettings()
 {
   if (!messages::showClearSettings(this)) {
     qDebug("clear settings cancelled");
@@ -382,7 +410,7 @@ void MainWindow::on_m_pActionClearSettings_triggered()
   diagnostic::clearSettings(m_ConfigScopes, true);
 }
 
-bool MainWindow::on_m_pActionSave_triggered()
+bool MainWindow::saveConfig()
 {
   QString fileName = QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
 
@@ -394,18 +422,18 @@ bool MainWindow::on_m_pActionSave_triggered()
   return false;
 }
 
-void MainWindow::on_m_pActionAbout_triggered()
+void MainWindow::openAboutDialog()
 {
   AboutDialog about(this);
   about.exec();
 }
 
-void MainWindow::on_m_pActionHelp_triggered() const
+void MainWindow::openHelpUrl() const
 {
   QDesktopServices::openUrl(QUrl(kUrlHelp));
 }
 
-void MainWindow::on_m_pActionSettings_triggered()
+void MainWindow::openSettings()
 {
   auto dialog = SettingsDialog(this, m_AppConfig, m_ServerConfig, m_CoreProcess);
 
@@ -454,7 +482,7 @@ void MainWindow::on_m_pButtonApply_clicked()
 
 void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &)
 {
-  ui->m_pActionSettings->trigger();
+  m_actionSettings->trigger();
 }
 
 void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &)
@@ -526,11 +554,11 @@ void MainWindow::moveEvent(QMoveEvent *event)
 void MainWindow::open()
 {
 
-  QList<QAction *> trayActions{ui->m_pActionStartCore, ui->m_pActionStopCore, nullptr, ui->m_pActionQuit};
+  QList<QAction *> trayActions{m_actionStartCore, m_actionStopCore, nullptr, m_actionQuit};
 
 #ifdef Q_OS_MAC
-  ui->m_pActionRestore->setText(tr("Open Deskflow"));
-  trayActions.insert(3, ui->m_pActionRestore);
+  m_actionRestore->setText(tr("Open Deskflow"));
+  trayActions.insert(3, m_actionRestore);
   trayActions.insert(4, nullptr);
 #endif
   m_TrayIcon.create(trayActions);
@@ -585,31 +613,29 @@ void MainWindow::createMenuBar()
 #endif
   m_pMenuBar->addAction(m_pMenuHelp->menuAction());
 
-  m_pMenuFile->addAction(ui->m_pActionStartCore);
-  m_pMenuFile->addAction(ui->m_pActionStopCore);
+  m_pMenuFile->addAction(m_actionStartCore);
+  m_pMenuFile->addAction(m_actionStopCore);
   m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(ui->m_pActionSave);
+  m_pMenuFile->addAction(m_actionSave);
   m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(ui->m_pActionQuit);
+  m_pMenuFile->addAction(m_actionQuit);
 
-  m_pMenuEdit->addAction(ui->m_pActionSettings);
+  m_pMenuEdit->addAction(m_actionSettings);
 
-  m_pMenuWindow->addAction(ui->m_pActionMinimize);
+  m_pMenuWindow->addAction(m_actionMinimize);
 
-  m_pMenuHelp->addAction(ui->m_pActionAbout);
-  m_pMenuHelp->addAction(ui->m_pActionHelp);
+  m_pMenuHelp->addAction(m_actionAbout);
+  m_pMenuHelp->addAction(m_actionHelp);
   m_pMenuFile->addSeparator();
-  m_pMenuHelp->addAction(ui->m_pActionClearSettings);
-
-  ui->m_pActionAbout->setText(QString("About %1...").arg(kAppName));
+  m_pMenuHelp->addAction(m_actionClearSettings);
 
   const auto enableTestMenu = strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
 
   if (enableTestMenu || kDebugBuild) {
     auto testMenu = new QMenu("Test", m_pMenuBar);
     m_pMenuBar->addMenu(testMenu);
-    testMenu->addAction(ui->m_pActionTestFatalError);
-    testMenu->addAction(ui->m_pActionTestCriticalError);
+    testMenu->addAction(m_actionTestFatalError);
+    testMenu->addAction(m_actionTestCriticalError);
   }
 
   setMenuBar(m_pMenuBar);
@@ -864,24 +890,24 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
       state == CoreProcessState::RetryPending) {
-    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStartCore, &QAction::trigger);
-    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStopCore, &QAction::trigger);
+    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
+    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
 
     ui->m_pButtonToggleStart->setText(QString("&Stop"));
     ui->m_pButtonApply->setEnabled(true);
 
-    ui->m_pActionStartCore->setEnabled(false);
-    ui->m_pActionStopCore->setEnabled(true);
+    m_actionStartCore->setEnabled(false);
+    m_actionStopCore->setEnabled(true);
 
   } else {
-    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStopCore, &QAction::trigger);
-    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, ui->m_pActionStartCore, &QAction::trigger);
+    disconnect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
+    connect(ui->m_pButtonToggleStart, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
 
     ui->m_pButtonToggleStart->setText(QString("&Start"));
     ui->m_pButtonApply->setEnabled(false);
 
-    ui->m_pActionStartCore->setEnabled(true);
-    ui->m_pActionStopCore->setEnabled(false);
+    m_actionStartCore->setEnabled(true);
+    m_actionStopCore->setEnabled(false);
   }
 }
 
@@ -904,9 +930,9 @@ void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
 void MainWindow::setVisible(bool visible)
 {
   QMainWindow::setVisible(visible);
-  ui->m_pActionMinimize->setEnabled(visible);
+  m_actionMinimize->setEnabled(visible);
 #ifndef Q_OS_MAC
-  ui->m_pActionRestore->setEnabled(!visible);
+  m_actionRestore->setEnabled(!visible);
 #else
   // dock hide only supported on lion :(
   ProcessSerialNumber psn = {0, kCurrentProcess};
@@ -1024,7 +1050,7 @@ void MainWindow::enableServer(bool enable)
 
   if (enable) {
     ui->m_pButtonToggleStart->setEnabled(true);
-    ui->m_pActionStartCore->setEnabled(true);
+    m_actionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Server);
 
     // The server can run without any clients configured, and this is actually
@@ -1048,7 +1074,7 @@ void MainWindow::enableClient(bool enable)
 
   if (enable) {
     ui->m_pButtonToggleStart->setEnabled(true);
-    ui->m_pActionStartCore->setEnabled(true);
+    m_actionStartCore->setEnabled(true);
     m_CoreProcess.setMode(CoreProcess::Mode::Client);
   }
 }
