@@ -111,5 +111,3 @@ elseif(APPLE)
 else()
   install(TARGETS ${target} DESTINATION bin)
 endif()
-
-post_config()

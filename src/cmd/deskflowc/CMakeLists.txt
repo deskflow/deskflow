@@ -80,4 +80,3 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   )
 endif()
 
-post_config()
