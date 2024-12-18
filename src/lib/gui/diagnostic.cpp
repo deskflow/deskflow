@@ -26,22 +26,7 @@
 
 namespace deskflow::gui::diagnostic {
 
-void restart()
-{
-  QString program = QCoreApplication::applicationFilePath();
-  QStringList arguments = QCoreApplication::arguments();
-
-  // prevent infinite reset loop when env var set.
-  arguments << "--no-reset";
-
-  qInfo("launching new process: %s", qPrintable(program));
-  QProcess::startDetached(program, arguments);
-
-  qDebug("exiting current process");
-  QApplication::exit();
-}
-
-void clearSettings(ConfigScopes &scopes, bool enableRestart)
+void clearSettings(ConfigScopes &scopes)
 {
   qDebug("clearing settings");
   scopes.clear();
@@ -57,13 +42,6 @@ void clearSettings(ConfigScopes &scopes, bool enableRestart)
   auto profileDir = paths::coreProfileDir();
   qDebug("removing profile dir: %s", qPrintable(profileDir.absolutePath()));
   profileDir.removeRecursively();
-
-  if (enableRestart) {
-    qDebug("restarting");
-    restart();
-  } else {
-    qDebug("skipping restart");
-  }
 }
 
 } // namespace deskflow::gui::diagnostic
