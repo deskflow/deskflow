@@ -5,17 +5,12 @@ runs:
   using: "composite"
 
   steps:
-    - name: Setup Python venv
-      uses: ./.github/actions/init-python
-
     - name: Install dependencies
       shell: bash
-      run: |
-        source .venv/bin/activate
-        pip install pyyaml clang_format
+      run: pipx install --global clang_format
 
     - name: Linting with Clang formatter
       uses: ./.github/actions/lint-error
       with:
-        format-command: ./scripts/lint_clang.py -f
+        format-command: find src/ -regex '.*\.\(cpp\|hpp\|cc\|cxx\|h\|c\|m\|mm\)' -exec clang-format -style=file --assume-filename=$(pwd)/.clang-format -i {} \;
         format-tool: "clang-format"
