@@ -101,7 +101,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreWindow()
 {
-
   const auto &windowSize = m_AppConfig.mainWindowSize();
   if (windowSize.has_value()) {
     qDebug("restoring main window size");
@@ -110,8 +109,23 @@ void MainWindow::restoreWindow()
 
   const auto &windowPosition = m_AppConfig.mainWindowPosition();
   if (windowPosition.has_value()) {
-    qDebug("restoring main window position");
-    move(windowPosition.value());
+    int x = 0;
+    int y = 0;
+    int w = 0;
+    int h = 0;
+    for (auto screen : QGuiApplication::screens()) {
+      auto geo = screen->geometry();
+      x = std::min(geo.x(), x);
+      y = std::min(geo.y(), y);
+      w = std::max(geo.x() + geo.width(), w);
+      h = std::max(geo.y() + geo.height(), h);
+    }
+    const QSize totalScreenSize(w, h);
+    const QPoint point = windowPosition.value();
+    if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
+      qDebug("restoring main window position");
+      move(point);
+    }
   } else {
     // center main window in middle of screen
     const auto screen = QGuiApplication::primaryScreen();
