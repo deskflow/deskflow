@@ -22,6 +22,7 @@
 #include "arch/IArchMultithread.h"
 #include "base/EventTypes.h"
 #include "base/String.h"
+#include "common/constants.h"
 #include "deskflow/App.h"
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
@@ -146,8 +147,8 @@ private:
   EventQueueTimer *m_timer;
   NetworkAddress *m_deskflowAddress;
 #if SYSAPI_WIN32
-  inline static const std::string CONFIG_NAME = "%s.sgc", kAppName;
+  inline static const std::string CONFIG_NAME = std::string(kAppName) + ".sgc";
 #elif SYSAPI_UNIX
-  inline static const std::string CONFIG_NAME = "%s.conf", kAppName;
+  inline static const std::string CONFIG_NAME = std::string(kAppName) + ".conf";
 #endif
 };
