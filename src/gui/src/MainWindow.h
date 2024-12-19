@@ -184,11 +184,6 @@ private:
 
   VersionChecker m_VersionChecker;
   deskflow::gui::TrayIcon m_TrayIcon;
-  QMenuBar *m_pMenuBar = nullptr;
-  QMenu *m_pMenuFile = nullptr;
-  QMenu *m_pMenuEdit = nullptr;
-  QMenu *m_pMenuWindow = nullptr;
-  QMenu *m_pMenuHelp = nullptr;
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
   bool m_SaveWindow = false;

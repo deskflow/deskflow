@@ -570,45 +570,43 @@ void MainWindow::setStatus(const QString &status)
 
 void MainWindow::createMenuBar()
 {
-  m_pMenuBar = new QMenuBar(this);
-  m_pMenuFile = new QMenu(tr("File"), m_pMenuBar);
-  m_pMenuEdit = new QMenu(tr("Edit"), m_pMenuBar);
-  m_pMenuWindow = new QMenu(tr("Window"), m_pMenuBar);
-  m_pMenuHelp = new QMenu(tr("Help"), m_pMenuBar);
+  auto menuFile = new QMenu(tr("File"));
+  menuFile->addAction(m_actionStartCore);
+  menuFile->addAction(m_actionStopCore);
+  menuFile->addSeparator();
+  menuFile->addAction(m_actionSave);
+  menuFile->addSeparator();
+  menuFile->addAction(m_actionQuit);
 
-  m_pMenuBar->addAction(m_pMenuFile->menuAction());
-  m_pMenuBar->addAction(m_pMenuEdit->menuAction());
+  auto menuEdit = new QMenu(tr("Edit"));
+  menuEdit->addAction(m_actionSettings);
+
+  auto menuWindow = new QMenu(tr("Window"));
+  menuWindow->addAction(m_actionMinimize);
+
+  auto menuHelp = new QMenu(tr("Help"));
+  menuHelp->addAction(m_actionAbout);
+  menuHelp->addAction(m_actionHelp);
+  menuHelp->addSeparator();
+  menuHelp->addAction(m_actionClearSettings);
+
+  auto menuBar = new QMenuBar(this);
+  menuBar->addMenu(menuFile);
+  menuBar->addMenu(menuEdit);
 #if !defined(Q_OS_MAC)
-  m_pMenuBar->addAction(m_pMenuWindow->menuAction());
+  menuBar->addMenu(menuWindow);
 #endif
-  m_pMenuBar->addAction(m_pMenuHelp->menuAction());
-
-  m_pMenuFile->addAction(m_actionStartCore);
-  m_pMenuFile->addAction(m_actionStopCore);
-  m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(m_actionSave);
-  m_pMenuFile->addSeparator();
-  m_pMenuFile->addAction(m_actionQuit);
-
-  m_pMenuEdit->addAction(m_actionSettings);
-
-  m_pMenuWindow->addAction(m_actionMinimize);
-
-  m_pMenuHelp->addAction(m_actionAbout);
-  m_pMenuHelp->addAction(m_actionHelp);
-  m_pMenuFile->addSeparator();
-  m_pMenuHelp->addAction(m_actionClearSettings);
+  menuBar->addMenu(menuHelp);
 
   const auto enableTestMenu = strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
-
   if (enableTestMenu || kDebugBuild) {
-    auto testMenu = new QMenu(tr("Test"), m_pMenuBar);
-    m_pMenuBar->addMenu(testMenu);
+    auto testMenu = new QMenu(tr("Test"));
+    menuBar->addMenu(testMenu);
     testMenu->addAction(m_actionTestFatalError);
     testMenu->addAction(m_actionTestCriticalError);
   }
 
-  setMenuBar(m_pMenuBar);
+  setMenuBar(menuBar);
 }
 
 void MainWindow::applyConfig()
