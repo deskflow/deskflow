@@ -715,7 +715,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
     if (handled) {
       // make sure handled options aren't followed by more values
       if (i < line.size() && (line[i] == ',' || line[i] == ';')) {
-        throw XConfigRead(s, "to many arguments to %s", name);
+        throw XConfigRead(s, std::string("too many arguments for: ").append(name));
       }
     } else {
       // make filter rule
