@@ -231,7 +231,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="m_pLabelFingerprint">
+              <widget class="QLabel" name="lblMyFingerprint">
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS enabled (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;fingerprint&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
