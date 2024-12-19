@@ -33,7 +33,7 @@
     <item>
      <layout class="QHBoxLayout" name="m_layoutName">
       <item>
-       <widget class="QLabel" name="m_pLabelComputerName">
+       <widget class="QLabel" name="lblComputerName">
         <property name="text">
          <string notr="true">This computer's name:</string>
         </property>

@@ -134,7 +134,6 @@ private slots:
   //
   // Auto-connect slots
   //
-  void on_m_pLabelComputerName_linkActivated(const QString &link);
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
