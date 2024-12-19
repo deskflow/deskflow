@@ -285,6 +285,12 @@ void MainWindow::connectSlots()
   connect(ui->btnApplySettings, &QPushButton::clicked, this, &MainWindow::resetCore);
   connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
   connect(ui->btnConnectToClient, &QPushButton::clicked, this, &MainWindow::resetCore);
+
+  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
+  connect(ui->lineHostname, &QLineEdit::textChanged, &m_CoreProcess, &deskflow::gui::CoreProcess::setAddress);
+
+  connect(ui->lineClientIp, &QLineEdit::returnPressed, ui->btnConnectToClient, &QPushButton::click);
+  connect(ui->lineClientIp, &QLineEdit::textChanged, &m_CoreProcess, &deskflow::gui::CoreProcess::setAddress);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -459,26 +465,6 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
   showConfigureServer();
 }
 
-void MainWindow::on_m_pLineEditHostname_returnPressed()
-{
-  ui->btnConnect->click();
-}
-
-void MainWindow::on_m_pLineEditClientIp_returnPressed()
-{
-  ui->btnConnectToClient->click();
-}
-
-void MainWindow::on_m_pLineEditHostname_textChanged(const QString &text)
-{
-  m_CoreProcess.setAddress(text);
-}
-
-void MainWindow::on_m_pLineEditClientIp_textChanged(const QString &text)
-{
-  m_CoreProcess.setAddress(text);
-}
-
 void MainWindow::resetCore()
 {
   m_ClientConnection.setShowMessage();
@@ -641,8 +627,8 @@ void MainWindow::applyConfig()
   enableServer(m_AppConfig.serverGroupChecked());
   enableClient(m_AppConfig.clientGroupChecked());
 
-  ui->m_pLineEditHostname->setText(m_AppConfig.serverHostname());
-  ui->m_pLineEditClientIp->setText(m_ServerConfig.getClientAddress());
+  ui->lineHostname->setText(m_AppConfig.serverHostname());
+  ui->lineClientIp->setText(m_ServerConfig.getClientAddress());
 }
 
 void MainWindow::applyCloseToTray() const
@@ -654,8 +640,8 @@ void MainWindow::saveSettings()
 {
   m_AppConfig.setServerGroupChecked(ui->m_pRadioGroupServer->isChecked());
   m_AppConfig.setClientGroupChecked(ui->m_pRadioGroupClient->isChecked());
-  m_AppConfig.setServerHostname(ui->m_pLineEditHostname->text());
-  m_ServerConfig.setClientAddress(ui->m_pLineEditClientIp->text());
+  m_AppConfig.setServerHostname(ui->lineHostname->text());
+  m_ServerConfig.setClientAddress(ui->lineClientIp->text());
 
   m_ConfigScopes.save();
 }

@@ -130,6 +130,7 @@ private slots:
   void testFatalError() const;
   void testCriticalError() const;
   void resetCore();
+
   //
   // Auto-connect slots
   //
@@ -138,10 +139,6 @@ private slots:
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
   void on_m_pButtonConfigureServer_clicked();
-  void on_m_pLineEditHostname_returnPressed();
-  void on_m_pLineEditClientIp_returnPressed();
-  void on_m_pLineEditHostname_textChanged(const QString &text);
-  void on_m_pLineEditClientIp_textChanged(const QString &text);
 
 private:
   std::unique_ptr<Ui::MainWindow> ui;
