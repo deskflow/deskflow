@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -132,11 +133,8 @@ private slots:
   void resetCore();
 
   void showMyFingerprint();
-  //
-  // Auto-connect slots
-  //
-  void on_m_pRadioGroupServer_clicked(bool);
-  void on_m_pRadioGroupClient_clicked(bool);
+  void setModeServer();
+  void setModeClient();
 
 private:
   std::unique_ptr<Ui::MainWindow> ui;

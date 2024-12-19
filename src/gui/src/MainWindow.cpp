@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
  * Copyright (C) 2012 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -198,8 +199,8 @@ void MainWindow::setupControls()
 
 #if defined(Q_OS_MAC)
 
-  ui->m_pRadioGroupServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
-  ui->m_pRadioGroupClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
+  ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
+  ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
 #endif
 }
@@ -295,6 +296,9 @@ void MainWindow::connectSlots()
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
   connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
+
+  connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
+  connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -475,14 +479,14 @@ void MainWindow::showMyFingerprint()
   QMessageBox::information(this, "TLS fingerprint", TlsFingerprint::local().readFirst());
 }
 
-void MainWindow::on_m_pRadioGroupServer_clicked(bool)
+void MainWindow::setModeServer()
 {
   enableServer(true);
   enableClient(false);
   m_ConfigScopes.save();
 }
 
-void MainWindow::on_m_pRadioGroupClient_clicked(bool)
+void MainWindow::setModeClient()
 {
   enableClient(true);
   enableServer(false);
@@ -632,8 +636,8 @@ void MainWindow::applyCloseToTray() const
 
 void MainWindow::saveSettings()
 {
-  m_AppConfig.setServerGroupChecked(ui->m_pRadioGroupServer->isChecked());
-  m_AppConfig.setClientGroupChecked(ui->m_pRadioGroupClient->isChecked());
+  m_AppConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
+  m_AppConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
   m_AppConfig.setServerHostname(ui->lineHostname->text());
   m_ServerConfig.setClientAddress(ui->lineClientIp->text());
 
@@ -693,7 +697,7 @@ void MainWindow::updateFromLogLine(const QString &line)
 
 void MainWindow::checkConnected(const QString &line)
 {
-  if (ui->m_pRadioGroupServer->isChecked()) {
+  if (ui->rbModeServer->isChecked()) {
     m_ServerConnection.handleLogLine(line);
     ui->m_pLabelServerState->updateServerState(line);
   } else {
@@ -962,7 +966,7 @@ void MainWindow::updateLocalFingerprint()
     qFatal("failed to check if fingerprint exists");
   }
 
-  if (m_AppConfig.tlsEnabled() && fingerprintExists && ui->m_pRadioGroupServer->isChecked()) {
+  if (m_AppConfig.tlsEnabled() && fingerprintExists && ui->rbModeServer->isChecked()) {
     ui->lblMyFingerprint->setVisible(true);
   } else {
     ui->lblMyFingerprint->setVisible(false);
@@ -1019,7 +1023,7 @@ void MainWindow::enableServer(bool enable)
 {
   qDebug(enable ? "server enabled" : "server disabled");
   m_AppConfig.setServerGroupChecked(enable);
-  ui->m_pRadioGroupServer->setChecked(enable);
+  ui->rbModeServer->setChecked(enable);
   ui->m_pWidgetServer->setEnabled(enable);
   ui->m_pWidgetServerInput->setVisible(m_AppConfig.invertConnection());
 
@@ -1043,7 +1047,7 @@ void MainWindow::enableClient(bool enable)
 {
   qDebug(enable ? "client enabled" : "client disabled");
   m_AppConfig.setClientGroupChecked(enable);
-  ui->m_pRadioGroupClient->setChecked(enable);
+  ui->rbModeClient->setChecked(enable);
   ui->m_pWidgetClientInput->setEnabled(enable);
   ui->m_pWidgetClientInput->setVisible(!m_AppConfig.invertConnection());
 
