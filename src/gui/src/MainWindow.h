@@ -131,10 +131,10 @@ private slots:
   void testCriticalError() const;
   void resetCore();
 
+  void showMyFingerprint();
   //
   // Auto-connect slots
   //
-  void on_m_pLabelFingerprint_linkActivated(const QString &link);
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
 

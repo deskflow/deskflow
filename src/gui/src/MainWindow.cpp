@@ -294,6 +294,7 @@ void MainWindow::connectSlots()
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
+  connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -469,7 +470,7 @@ void MainWindow::resetCore()
   m_CoreProcess.restart();
 }
 
-void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &)
+void MainWindow::showMyFingerprint()
 {
   QMessageBox::information(this, "TLS fingerprint", TlsFingerprint::local().readFirst());
 }
@@ -962,9 +963,9 @@ void MainWindow::updateLocalFingerprint()
   }
 
   if (m_AppConfig.tlsEnabled() && fingerprintExists && ui->m_pRadioGroupServer->isChecked()) {
-    ui->m_pLabelFingerprint->setVisible(true);
+    ui->lblMyFingerprint->setVisible(true);
   } else {
-    ui->m_pLabelFingerprint->setVisible(false);
+    ui->lblMyFingerprint->setVisible(false);
   }
 }
 
