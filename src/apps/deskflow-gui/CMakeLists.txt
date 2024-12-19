@@ -27,24 +27,21 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(
   GLOB
   sources
-  res/deskflow.qrc
-  src/*.cpp
-  src/*.h
-  src/dialogs/*.h
-  src/dialogs/*.cpp
-  src/validators/*
-  src/widgets/*)
-file(GLOB ui_files src/*.ui src/dialogs/*.ui)
+  ../res/deskflow.qrc
+  *.cpp
+  *.h
+  dialogs/*.h
+  dialogs/*.cpp
+  validators/*
+  widgets/*)
+file(GLOB ui_files *.ui dialogs/*.ui)
 
 if(WIN32)
-  set(platform_extra src/deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
+  set(platform_extra deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
 elseif(APPLE)
-  set(platform_extra src/Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
+  set(platform_extra Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
-
-# regular exe headers
-include_directories(./src)
 
 # gui library autogen headers:
 # qt doesn't seem to auto include the autogen headers for libraries.
