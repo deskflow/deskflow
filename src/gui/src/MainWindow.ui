@@ -206,7 +206,7 @@
                    <number>20</number>
                   </property>
                   <item>
-                   <widget class="QLineEdit" name="m_pLineEditClientIp"/>
+                   <widget class="QLineEdit" name="lineClientIp"/>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btnConnectToClient">
@@ -376,7 +376,7 @@
                 <number>20</number>
                </property>
                <item>
-                <widget class="QLineEdit" name="m_pLineEditHostname">
+                <widget class="QLineEdit" name="lineHostname">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -615,10 +615,10 @@
  <tabstops>
   <tabstop>m_pRadioGroupServer</tabstop>
   <tabstop>m_pRadioGroupClient</tabstop>
-  <tabstop>m_pLineEditClientIp</tabstop>
+  <tabstop>lineClientIp</tabstop>
   <tabstop>btnConnectToClient</tabstop>
   <tabstop>m_pButtonConfigureServer</tabstop>
-  <tabstop>m_pLineEditHostname</tabstop>
+  <tabstop>lineHostname</tabstop>
   <tabstop>btnConnect</tabstop>
   <tabstop>m_pLogOutput</tabstop>
   <tabstop>btnApplySettings</tabstop>
