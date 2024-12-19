@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 option(BUILD_UNIFIED "Build unified binary" OFF)
-
 if(BUILD_UNIFIED)
   add_subdirectory(deskflow-core)
 else()
@@ -25,3 +24,8 @@ endif(BUILD_UNIFIED)
 
 ## Only used on windows
 add_subdirectory(deskflowd)
+
+option(BUILD_GUI "Build GUI" ON)
+if(BUILD_GUI)
+  add_subdirectory(deskflow-gui)
+endif(BUILD_GUI)
