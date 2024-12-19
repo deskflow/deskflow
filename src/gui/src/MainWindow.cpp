@@ -291,6 +291,8 @@ void MainWindow::connectSlots()
 
   connect(ui->lineClientIp, &QLineEdit::returnPressed, ui->btnConnectToClient, &QPushButton::click);
   connect(ui->lineClientIp, &QLineEdit::textChanged, &m_CoreProcess, &deskflow::gui::CoreProcess::setAddress);
+
+  connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -458,11 +460,6 @@ void MainWindow::openSettings()
       m_CoreProcess.restart();
     }
   }
-}
-
-void MainWindow::on_m_pButtonConfigureServer_clicked()
-{
-  showConfigureServer();
 }
 
 void MainWindow::resetCore()
