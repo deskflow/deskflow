@@ -293,6 +293,7 @@ void MainWindow::connectSlots()
   connect(ui->lineClientIp, &QLineEdit::textChanged, &m_CoreProcess, &deskflow::gui::CoreProcess::setAddress);
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
+  connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
 }
 
 void MainWindow::onAppAboutToQuit()
@@ -466,11 +467,6 @@ void MainWindow::resetCore()
 {
   m_ClientConnection.setShowMessage();
   m_CoreProcess.restart();
-}
-
-void MainWindow::on_m_pLabelComputerName_linkActivated(const QString &)
-{
-  m_actionSettings->trigger();
 }
 
 void MainWindow::on_m_pLabelFingerprint_linkActivated(const QString &)
@@ -1012,9 +1008,9 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  ui->m_pLabelComputerName->setText(QString("This computer's name: %1 "
-                                            R"((<a href="#" style="color: %2">change</a>))")
-                                        .arg(m_AppConfig.screenName(), kColorSecondary));
+  ui->lblComputerName->setText(QString("This computer's name: %1 "
+                                       R"((<a href="#" style="color: %2">change</a>))")
+                                   .arg(m_AppConfig.screenName(), kColorSecondary));
   m_ServerConfig.updateServerName();
 }
 
