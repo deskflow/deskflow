@@ -191,7 +191,7 @@ void MainWindow::setupControls()
   ui->m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
   ui->m_pLabelNotice->hide();
 
-  ui->m_pLabelIpAddresses->setText(QString("This computer's IP addresses: %1").arg(getIPAddresses()));
+  ui->m_pLabelIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (m_AppConfig.lastVersion() != kVersion) {
     m_AppConfig.setLastVersion(kVersion);
@@ -360,7 +360,7 @@ void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void MainWindow::onVersionCheckerUpdateFound(const QString &version)
 {
   const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
-  const auto text = QString("A new version is available (v%1). %2").arg(version, link);
+  const auto text = tr("A new version is available (v%1). %2").arg(version, link);
 
   ui->m_pLabelUpdate->show();
   ui->m_pLabelUpdate->setText(text);
@@ -380,12 +380,12 @@ void MainWindow::onCoreProcessError(CoreProcess::Error error)
 {
   if (error == CoreProcess::Error::AddressMissing) {
     QMessageBox::warning(
-        this, QString("Address missing"), QString("Please enter the hostname or IP address of the other computer.")
+        this, tr("Address missing"), tr("Please enter the hostname or IP address of the other computer.")
     );
   } else if (error == CoreProcess::Error::StartFailed) {
     show();
     QMessageBox::warning(
-        this, QString("Core cannot be started"),
+        this, tr("Core cannot be started"),
         "The Core executable could not be successfully started, "
         "although it does exist. "
         "Please check if you have sufficient permissions to run this program."
@@ -431,10 +431,10 @@ void MainWindow::clearSettings()
 
 bool MainWindow::saveConfig()
 {
-  QString fileName = QFileDialog::getSaveFileName(this, QString("Save configuration as..."));
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
 
   if (!fileName.isEmpty() && !m_ServerConfig.save(fileName)) {
-    QMessageBox::warning(this, QString("Save failed"), QString("Could not save configuration to file."));
+    QMessageBox::warning(this, tr("Save failed"), tr("Could not save configuration to file."));
     return true;
   }
 
@@ -580,10 +580,10 @@ void MainWindow::setStatus(const QString &status)
 void MainWindow::createMenuBar()
 {
   m_pMenuBar = new QMenuBar(this);
-  m_pMenuFile = new QMenu("File", m_pMenuBar);
-  m_pMenuEdit = new QMenu("Edit", m_pMenuBar);
-  m_pMenuWindow = new QMenu("Window", m_pMenuBar);
-  m_pMenuHelp = new QMenu("Help", m_pMenuBar);
+  m_pMenuFile = new QMenu(tr("File"), m_pMenuBar);
+  m_pMenuEdit = new QMenu(tr("Edit"), m_pMenuBar);
+  m_pMenuWindow = new QMenu(tr("Window"), m_pMenuBar);
+  m_pMenuHelp = new QMenu(tr("Help"), m_pMenuBar);
 
   m_pMenuBar->addAction(m_pMenuFile->menuAction());
   m_pMenuBar->addAction(m_pMenuEdit->menuAction());
@@ -611,7 +611,7 @@ void MainWindow::createMenuBar()
   const auto enableTestMenu = strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
 
   if (enableTestMenu || kDebugBuild) {
-    auto testMenu = new QMenu("Test", m_pMenuBar);
+    auto testMenu = new QMenu(tr("Test"), m_pMenuBar);
     m_pMenuBar->addMenu(testMenu);
     testMenu->addAction(m_actionTestFatalError);
     testMenu->addAction(m_actionTestCriticalError);
@@ -726,15 +726,15 @@ void MainWindow::checkFingerprint(const QString &line)
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
-        this, QString("Security question"),
-        QString("<p>You are connecting to a server.</p>"
-                "<p>Here is it's TLS fingerprint:</p>"
-                "<p>%1</p>"
-                "<p>Compare this fingerprint to the one on your server's screen. "
-                "If the two don't match exactly, then it's probably not the server "
-                "you're expecting (it could be a malicious user).</p>"
-                "<p>Do you want to trust this fingerprint for future "
-                "connections? If you don't, a connection cannot be made.</p>")
+        this, tr("Security question"),
+        tr("<p>You are connecting to a server.</p>"
+           "<p>Here is it's TLS fingerprint:</p>"
+           "<p>%1</p>"
+           "<p>Compare this fingerprint to the one on your server's screen. "
+           "If the two don't match exactly, then it's probably not the server "
+           "you're expecting (it could be a malicious user).</p>"
+           "<p>Do you want to trust this fingerprint for future "
+           "connections? If you don't, a connection cannot be made.</p>")
             .arg(fingerprint),
         QMessageBox::Yes | QMessageBox::No
     );
@@ -751,8 +751,7 @@ void MainWindow::checkFingerprint(const QString &line)
 
 QString MainWindow::getTimeStamp() const
 {
-  QDateTime current = QDateTime::currentDateTime();
-  return '[' + current.toString(Qt::ISODate) + ']';
+  return QStringLiteral("[%1]").arg(QDateTime::currentDateTime().toString(Qt::ISODate));
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -809,19 +808,19 @@ void MainWindow::updateStatus()
     using enum CoreProcessState;
 
   case Starting:
-    setStatus(QString("%1 is starting...").arg(kAppName));
+    setStatus(tr("%1 is starting...").arg(kAppName));
     break;
 
   case RetryPending:
-    setStatus(QString("%1 will retry in a moment...").arg(kAppName));
+    setStatus(tr("%1 will retry in a moment...").arg(kAppName));
     break;
 
   case Stopping:
-    setStatus(QString("%1 is stopping...").arg(kAppName));
+    setStatus(tr("%1 is stopping...").arg(kAppName));
     break;
 
   case Stopped:
-    setStatus(QString("%1 is not running").arg(kAppName));
+    setStatus(tr("%1 is not running").arg(kAppName));
     break;
 
   case Started: {
@@ -830,27 +829,27 @@ void MainWindow::updateStatus()
 
     case Listening: {
       if (m_CoreProcess.mode() == CoreMode::Server) {
-        setStatus(QString("%1 is waiting for clients").arg(kAppName));
+        setStatus(tr("%1 is waiting for clients").arg(kAppName));
       }
 
       break;
     }
 
     case Connecting:
-      setStatus(QString("%1 is connecting...").arg(kAppName));
+      setStatus(tr("%1 is connecting...").arg(kAppName));
       break;
 
     case Connected: {
       if (m_SecureSocket) {
-        setStatus(QString("%1 is connected (with %2)").arg(kAppName, m_CoreProcess.secureSocketVersion()));
+        setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_CoreProcess.secureSocketVersion()));
       } else {
-        setStatus(QString("%1 is connected (without TLS encryption)").arg(kAppName));
+        setStatus(tr("%1 is connected (without TLS encryption)").arg(kAppName));
       }
       break;
     }
 
     case Disconnected:
-      setStatus(QString("%1 is disconnected").arg(kAppName));
+      setStatus(tr("%1 is disconnected").arg(kAppName));
       break;
     }
   } break;
@@ -872,7 +871,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
-    ui->btnToggleCore->setText(QString("&Stop"));
+    ui->btnToggleCore->setText(tr("&Stop"));
     ui->btnApplySettings->setEnabled(true);
 
     m_actionStartCore->setEnabled(false);
@@ -882,7 +881,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 
-    ui->btnToggleCore->setText(QString("&Start"));
+    ui->btnToggleCore->setText(tr("&Start"));
     ui->btnApplySettings->setEnabled(false);
 
     m_actionStartCore->setEnabled(true);
@@ -980,12 +979,12 @@ void MainWindow::autoAddScreen(const QString name)
   if (r != kAutoAddScreenOk) {
     switch (r) {
     case kAutoAddScreenManualServer:
-      showConfigureServer(QString("Please add the server (%1) to the grid.").arg(m_AppConfig.screenName()));
+      showConfigureServer(tr("Please add the server (%1) to the grid.").arg(m_AppConfig.screenName()));
       break;
 
     case kAutoAddScreenManualClient:
-      showConfigureServer(QString("Please drag the new client screen (%1) "
-                                  "to the desired position on the grid.")
+      showConfigureServer(tr("Please drag the new client screen (%1) "
+                             "to the desired position on the grid.")
                               .arg(name));
       break;
     }
@@ -1013,8 +1012,8 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  ui->lblComputerName->setText(QString("This computer's name: %1 "
-                                       R"((<a href="#" style="color: %2">change</a>))")
+  ui->lblComputerName->setText(tr("This computer's name: %1 "
+                                  R"((<a href="#" style="color: %2">change</a>))")
                                    .arg(m_AppConfig.screenName(), kColorSecondary));
   m_ServerConfig.updateServerName();
 }
