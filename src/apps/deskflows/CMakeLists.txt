@@ -15,35 +15,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflow-client)
+set(target deskflow-server)
 
 if(WIN32)
   set(PLATFORM_SOURCES
-    deskflowc.exe.manifest
-    deskflowc.ico
-    deskflowc.rc
-    MSWindowsClientTaskBarReceiver.cpp
-    MSWindowsClientTaskBarReceiver.h
+    deskflows.exe.manifest
+    deskflows.rc
+    MSWindowsServerTaskBarReceiver.cpp
+    MSWindowsServerTaskBarReceiver.h
     resource.h
-    tb_error.ico
-    tb_idle.ico
-    tb_run.ico
-    tb_wait.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/deskflow.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/tb_error.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/tb_idle.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/tb_run.ico
     ${PROJECT_BINARY_DIR}/src/version.rc
   )
 elseif(APPLE)
   set(PLATFORM_SOURCES
-    OSXClientTaskBarReceiver.cpp
-    OSXClientTaskBarReceiver.h
+    OSXServerTaskBarReceiver.cpp
+    OSXServerTaskBarReceiver.h
   )
 elseif(UNIX)
   set(PLATFORM_SOURCES
-    XWindowsClientTaskBarReceiver.cpp
-    XWindowsClientTaskBarReceiver.h
+    XWindowsServerTaskBarReceiver.cpp
+    XWindowsServerTaskBarReceiver.h
   )
 endif()
 
-add_executable(${target} ${PLATFORM_SOURCES} deskflowc.cpp)
+add_executable(${target} ${PLATFORM_SOURCES} deskflows.cpp)
 
 target_link_libraries(
   ${target}
@@ -66,10 +65,10 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   install(
     TARGETS ${target}
-    RUNTIME_DEPENDENCY_SET clientDeps
+    RUNTIME_DEPENDENCY_SET serverDeps
     DESTINATION .
   )
-  install(RUNTIME_DEPENDENCY_SET clientDeps
+  install(RUNTIME_DEPENDENCY_SET serverDeps
     PRE_EXCLUDE_REGEXES
       "api-ms-win-.*"
       "ext-ms-.*"
