@@ -80,7 +80,7 @@ macro(set_sources)
     list(APPEND sources ${PROJECT_BINARY_DIR}/src/version.rc)
   endif()
 
-  list(APPEND sources ${PROJECT_SOURCE_DIR}/src/gui/res/deskflow.qrc)
+  list(APPEND sources ${PROJECT_SOURCE_DIR}/src/apps/res/deskflow.qrc)
 
   replace_platform_sources()
   replace_arch_sources()
