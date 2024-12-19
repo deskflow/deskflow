@@ -129,7 +129,7 @@ void MainWindow::restoreWindow()
 {
   const auto &windowSize = m_AppConfig.mainWindowSize();
   if (windowSize.has_value()) {
-    qDebug("restoring main window size");
+    qDebug() << "restoring main window size";
     resize(windowSize.value());
   }
 
@@ -149,7 +149,7 @@ void MainWindow::restoreWindow()
     const QSize totalScreenSize(w, h);
     const QPoint point = windowPosition.value();
     if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
-      qDebug("restoring main window position");
+      qDebug() << "restoring main window position";
       move(point);
     }
   } else {
@@ -168,11 +168,11 @@ void MainWindow::restoreWindow()
 void MainWindow::saveWindow()
 {
   if (!m_SaveWindow) {
-    qDebug("not yet ready to save window size and position, skipping");
+    qDebug() << "not yet ready to save window size and position, skipping";
     return;
   }
 
-  qDebug("saving window size and position");
+  qDebug() << "saving window size and position";
   m_AppConfig.setMainWindowSize(size());
   m_AppConfig.setMainWindowPosition(pos());
   m_ConfigScopes.save();
@@ -253,7 +253,7 @@ void MainWindow::connectSlots()
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(m_actionQuit, &QAction::triggered, qApp, [this] {
-    qDebug("quitting application");
+    qDebug() << "quitting application";
     m_Quitting = true;
     QApplication::quit();
   });
@@ -401,24 +401,24 @@ void MainWindow::startCore()
 
 void MainWindow::stopCore()
 {
-  qDebug("stopping core process");
+  qDebug() << "stopping core process";
   m_CoreProcess.stop();
 }
 
 void MainWindow::testFatalError() const
 {
-  qFatal("test fatal error");
+  qFatal() << "test fatal error";
 }
 
 void MainWindow::testCriticalError() const
 {
-  qCritical("test critical error");
+  qCritical() << "test critical error";
 }
 
 void MainWindow::clearSettings()
 {
   if (!messages::showClearSettings(this)) {
-    qDebug("clear settings cancelled");
+    qDebug() << "clear settings cancelled";
     return;
   }
 
@@ -556,7 +556,7 @@ void MainWindow::open()
   if (m_AppConfig.enableUpdateCheck().value()) {
     m_VersionChecker.checkLatest();
   } else {
-    qDebug("update check disabled");
+    qDebug() << "update check disabled";
   }
 
   if (m_AppConfig.startedBefore()) {
@@ -764,12 +764,12 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   if (m_Quitting) {
-    qDebug("skipping close event handle on quit");
+    qDebug() << "skipping close event handle on quit";
     return;
   }
 
   if (!m_AppConfig.closeToTray()) {
-    qDebug("window will not hide to tray");
+    qDebug() << "window will not hide to tray";
     return;
   }
 
@@ -779,7 +779,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   }
 
   m_ConfigScopes.save();
-  qDebug("window should hide to tray");
+  qDebug() << "window should hide to tray";
 }
 
 void MainWindow::showFirstConnectedMessage()
@@ -862,7 +862,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
   updateStatus();
 
   if (state == CoreProcessState::Started) {
-    qDebug("recording that core has started");
+    qDebug() << "recording that core has started";
     m_AppConfig.setStartedBefore(true);
     m_ConfigScopes.save();
   }
@@ -892,7 +892,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
 
 void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
 {
-  qDebug("core connection state changed: %d", static_cast<int>(state));
+  qDebug() << "core connection state changed: " << static_cast<int>(state);
 
   updateStatus();
 
@@ -963,7 +963,7 @@ void MainWindow::updateLocalFingerprint()
     fingerprintExists = TlsFingerprint::local().fileExists();
   } catch (const std::exception &e) {
     qDebug() << e.what();
-    qFatal("failed to check if fingerprint exists");
+    qFatal() << "failed to check if fingerprint exists";
   }
 
   if (m_AppConfig.tlsEnabled() && fingerprintExists && ui->rbModeServer->isChecked()) {
@@ -1021,7 +1021,8 @@ void MainWindow::updateScreenName()
 
 void MainWindow::enableServer(bool enable)
 {
-  qDebug(enable ? "server enabled" : "server disabled");
+  QString serverStr = enable ? QStringLiteral("server enabled") : QStringLiteral("server disabled");
+  qDebug() << serverStr;
   m_AppConfig.setServerGroupChecked(enable);
   ui->rbModeServer->setChecked(enable);
   ui->m_pWidgetServer->setEnabled(enable);
@@ -1036,7 +1037,7 @@ void MainWindow::enableServer(bool enable)
     // what you'll want to do the first time since you'll be prompted when an
     // unrecognized client tries to connect.
     if (!m_AppConfig.startedBefore()) {
-      qDebug("auto-starting core server for first time");
+      qDebug() << "auto-starting core server for first time";
       m_CoreProcess.start();
       messages::showFirstServerStartMessage(this);
     }
@@ -1045,7 +1046,8 @@ void MainWindow::enableServer(bool enable)
 
 void MainWindow::enableClient(bool enable)
 {
-  qDebug(enable ? "client enabled" : "client disabled");
+  QString clientStr = enable ? QStringLiteral("client enabled") : QStringLiteral("client disabled");
+  qDebug() << clientStr;
   m_AppConfig.setClientGroupChecked(enable);
   ui->rbModeClient->setChecked(enable);
   ui->m_pWidgetClientInput->setEnabled(enable);
