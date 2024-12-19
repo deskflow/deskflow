@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -94,7 +95,6 @@ public:
   void autoAddScreen(const QString name);
 
 signals:
-  void created();
   void shown();
 
 public slots:
@@ -104,7 +104,6 @@ private slots:
   //
   // Manual slots
   //
-  void onCreated();
   void onShown();
   void onConfigScopesSaving();
   void onAppConfigTlsChanged();
@@ -120,30 +119,20 @@ private slots:
   void onWindowSaveTimerTimeout();
   void onServerConnectionConfigureClient(const QString &clientName);
 
-  //
-  // Auto-connect slots
-  //
-  void on_m_pButtonApply_clicked();
-  void on_m_pLabelComputerName_linkActivated(const QString &link);
-  void on_m_pLabelFingerprint_linkActivated(const QString &link);
-  void on_m_pButtonConnect_clicked();
-  void on_m_pButtonConnectToClient_clicked();
-  void on_m_pRadioGroupServer_clicked(bool);
-  void on_m_pRadioGroupClient_clicked(bool);
-  void on_m_pButtonConfigureServer_clicked();
-  bool on_m_pActionSave_triggered();
-  void on_m_pActionAbout_triggered();
-  void on_m_pActionHelp_triggered() const;
-  void on_m_pActionSettings_triggered();
-  void on_m_pActionStartCore_triggered();
-  void on_m_pActionStopCore_triggered();
-  void on_m_pActionTestFatalError_triggered() const;
-  void on_m_pActionTestCriticalError_triggered() const;
-  void on_m_pActionClearSettings_triggered();
-  void on_m_pLineEditHostname_returnPressed();
-  void on_m_pLineEditClientIp_returnPressed();
-  void on_m_pLineEditHostname_textChanged(const QString &text);
-  void on_m_pLineEditClientIp_textChanged(const QString &text);
+  void clearSettings();
+  void openAboutDialog();
+  void openHelpUrl() const;
+  void openSettings();
+  void startCore();
+  void stopCore();
+  bool saveConfig();
+  void testFatalError() const;
+  void testCriticalError() const;
+  void resetCore();
+
+  void showMyFingerprint();
+  void setModeServer();
+  void setModeClient();
 
 private:
   std::unique_ptr<Ui::MainWindow> ui;
@@ -184,10 +173,6 @@ private:
   void saveSettings();
   QString configFilename();
   void showConfigureServer(const QString &message);
-  void showConfigureServer()
-  {
-    showConfigureServer("");
-  }
   void restoreWindow();
   void saveWindow();
   void setupControls();
@@ -199,11 +184,6 @@ private:
 
   VersionChecker m_VersionChecker;
   deskflow::gui::TrayIcon m_TrayIcon;
-  QMenuBar *m_pMenuBar = nullptr;
-  QMenu *m_pMenuFile = nullptr;
-  QMenu *m_pMenuEdit = nullptr;
-  QMenu *m_pMenuWindow = nullptr;
-  QMenu *m_pMenuHelp = nullptr;
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
   bool m_SaveWindow = false;
@@ -220,4 +200,18 @@ private:
   deskflow::gui::ClientConnection m_ClientConnection;
   deskflow::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
+
+  // Window Actions
+  QAction *m_actionAbout = nullptr;
+  QAction *m_actionClearSettings = nullptr;
+  QAction *m_actionHelp = nullptr;
+  QAction *m_actionMinimize = nullptr;
+  QAction *m_actionQuit = nullptr;
+  QAction *m_actionRestore = nullptr;
+  QAction *m_actionSave = nullptr;
+  QAction *m_actionSettings = nullptr;
+  QAction *m_actionStartCore = nullptr;
+  QAction *m_actionStopCore = nullptr;
+  QAction *m_actionTestCriticalError = nullptr;
+  QAction *m_actionTestFatalError = nullptr;
 };
