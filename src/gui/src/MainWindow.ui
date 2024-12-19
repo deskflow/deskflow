@@ -272,7 +272,7 @@
                 </spacer>
                </item>
                <item>
-                <widget class="QPushButton" name="m_pButtonConfigureServer">
+                <widget class="QPushButton" name="btnConfigureServer">
                  <property name="text">
                   <string>&amp;Configure</string>
                  </property>

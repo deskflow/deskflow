@@ -138,7 +138,6 @@ private slots:
   void on_m_pLabelFingerprint_linkActivated(const QString &link);
   void on_m_pRadioGroupServer_clicked(bool);
   void on_m_pRadioGroupClient_clicked(bool);
-  void on_m_pButtonConfigureServer_clicked();
 
 private:
   std::unique_ptr<Ui::MainWindow> ui;
@@ -179,10 +178,6 @@ private:
   void saveSettings();
   QString configFilename();
   void showConfigureServer(const QString &message);
-  void showConfigureServer()
-  {
-    showConfigureServer("");
-  }
   void restoreWindow();
   void saveWindow();
   void setupControls();
