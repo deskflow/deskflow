@@ -95,7 +95,6 @@ public:
   void autoAddScreen(const QString name);
 
 signals:
-  void created();
   void shown();
 
 public slots:
@@ -105,7 +104,6 @@ private slots:
   //
   // Manual slots
   //
-  void onCreated();
   void onShown();
   void onConfigScopesSaving();
   void onAppConfigTlsChanged();

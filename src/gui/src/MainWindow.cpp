@@ -116,8 +116,17 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   setupControls();
   connectSlots();
 
-  // handled by `onCreated`
-  Q_EMIT created();
+  setIcon();
+
+  m_ConfigScopes.signalReady();
+
+  applyCloseToTray();
+
+  updateScreenName();
+  applyConfig();
+  restoreWindow();
+
+  qDebug().noquote() << "active settings path:" << m_ConfigScopes.activeFilePath();
 }
 
 MainWindow::~MainWindow()
@@ -220,8 +229,6 @@ void MainWindow::connectSlots()
       [this](const QString &line) { handleLogLine(line); }
   );
 
-  connect(this, &MainWindow::created, this, &MainWindow::onCreated);
-
   connect(this, &MainWindow::shown, this, &MainWindow::onShown, Qt::QueuedConnection);
 
   connect(&m_ConfigScopes, &ConfigScopes::saving, this, &MainWindow::onConfigScopesSaving, Qt::DirectConnection);
@@ -306,22 +313,6 @@ void MainWindow::onAppAboutToQuit()
   if (m_SaveOnExit) {
     m_ConfigScopes.save();
   }
-}
-
-void MainWindow::onCreated()
-{
-
-  setIcon();
-
-  m_ConfigScopes.signalReady();
-
-  applyCloseToTray();
-
-  updateScreenName();
-  applyConfig();
-  restoreWindow();
-
-  qDebug().noquote() << "active settings path:" << m_ConfigScopes.activeFilePath();
 }
 
 void MainWindow::onShown()
