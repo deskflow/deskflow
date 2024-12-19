@@ -135,7 +135,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QRadioButton" name="m_pRadioGroupServer">
+              <widget class="QRadioButton" name="rbModeServer">
                <property name="text">
                 <string>Use this computer's keyboard and mouse</string>
                </property>
@@ -323,7 +323,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QRadioButton" name="m_pRadioGroupClient">
+              <widget class="QRadioButton" name="rbModeClient">
                <property name="text">
                 <string>Use another computer’s mouse and keyboard</string>
                </property>
@@ -613,8 +613,8 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>m_pRadioGroupServer</tabstop>
-  <tabstop>m_pRadioGroupClient</tabstop>
+  <tabstop>rbModeServer</tabstop>
+  <tabstop>rmModeClient</tabstop>
   <tabstop>lineClientIp</tabstop>
   <tabstop>btnConnectToClient</tabstop>
   <tabstop>m_pButtonConfigureServer</tabstop>
