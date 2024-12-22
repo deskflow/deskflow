@@ -18,12 +18,12 @@ option(BUILD_UNIFIED "Build unified binary" OFF)
 if(BUILD_UNIFIED)
   add_subdirectory(deskflow-core)
 else()
-  add_subdirectory(deskflowc)
-  add_subdirectory(deskflows)
+  add_subdirectory(deskflow-client)
+  add_subdirectory(deskflow-server)
 endif(BUILD_UNIFIED)
 
 ## Only used on windows
-add_subdirectory(deskflowd)
+add_subdirectory(deskflow-daemon)
 
 option(BUILD_GUI "Build GUI" ON)
 if(BUILD_GUI)
