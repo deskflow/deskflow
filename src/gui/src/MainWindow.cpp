@@ -527,9 +527,14 @@ void MainWindow::open()
   QList<QAction *> trayActions{m_actionStartCore, m_actionStopCore, nullptr, m_actionQuit};
 
 #ifdef Q_OS_MAC
+  // Duplicate quit needed for mac os tray menu
+  QAction *quit2 = new QAction(tr("Quit Deskflow"), this);
+  quit2->setShortcut(QKeySequence::Quit);
+
   m_actionRestore->setText(tr("Open Deskflow"));
   trayActions.insert(3, m_actionRestore);
-  trayActions.insert(4, nullptr);
+  trayActions.append(nullptr);
+  trayActions.append(quit2);
 #endif
   m_TrayIcon.create(trayActions);
 
@@ -1053,7 +1058,7 @@ void MainWindow::showAndActivate()
 #ifdef Q_OS_MAC
   forceAppActive();
 #endif
-  show();
+  showNormal();
   raise();
   activateWindow();
 }
