@@ -109,6 +109,7 @@ private:
     // 41 = show dev thanks, obsolete
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
+    kRequireClientCert = 44
   };
 
 public:
@@ -168,6 +169,7 @@ public:
   bool enableService() const override;
   bool closeToTray() const override;
   bool clientGroupChecked() const override;
+  bool requireClientCerts() const override;
 
   //
   // Getters (new methods)
@@ -205,6 +207,7 @@ public:
   void setTlsCertPath(const QString &path) override;
   void setTlsKeyLength(int length) override;
   void setInvertConnection(bool value) override;
+  void setRequireClientCerts(bool requireClientCerts) override;
 
   //
   // Setters (new methods)
@@ -328,6 +331,7 @@ private:
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
+  bool m_RequireClientCert = false;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

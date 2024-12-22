@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -40,10 +41,10 @@ TCPSocketFactory::~TCPSocketFactory()
   // do nothing
 }
 
-IDataSocket *TCPSocketFactory::create(bool secure, IArchNetwork::EAddressFamily family) const
+IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
 {
-  if (secure) {
-    SecureSocket *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family);
+  if (securityLevel != SecurityLevel::PlainText) {
+    SecureSocket *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family, securityLevel);
     secureSocket->initSsl(false);
     return secureSocket;
   } else {
@@ -51,11 +52,11 @@ IDataSocket *TCPSocketFactory::create(bool secure, IArchNetwork::EAddressFamily 
   }
 }
 
-IListenSocket *TCPSocketFactory::createListen(bool secure, IArchNetwork::EAddressFamily family) const
+IListenSocket *TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
 {
   IListenSocket *socket = NULL;
-  if (secure) {
-    socket = new SecureListenSocket(m_events, m_socketMultiplexer, family);
+  if (securityLevel != SecurityLevel::PlainText) {
+    socket = new SecureListenSocket(m_events, m_socketMultiplexer, family, securityLevel);
   } else {
     socket = new TCPListenSocket(m_events, m_socketMultiplexer, family);
   }

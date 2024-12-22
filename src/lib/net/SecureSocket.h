@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2015-2016 Symless Ltd.
  *
  * This package is free software; you can redistribute it and/or
@@ -17,6 +18,7 @@
 
 #pragma once
 
+#include "net/SecurityLevel.h"
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
 
@@ -33,8 +35,14 @@ A secure socket using SSL.
 class SecureSocket : public TCPSocket
 {
 public:
-  SecureSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family);
-  SecureSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket);
+  SecureSocket(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
+      SecurityLevel securityLevel = SecurityLevel::Encrypted
+  );
+  SecureSocket(
+      IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket,
+      SecurityLevel securityLevel = SecurityLevel::Encrypted
+  );
   SecureSocket(SecureSocket const &) = delete;
   SecureSocket(SecureSocket &&) = delete;
   ~SecureSocket();
@@ -90,4 +98,5 @@ private:
   Ssl *m_ssl;
   bool m_secureReady;
   bool m_fatal;
+  SecurityLevel m_securityLevel = SecurityLevel::Encrypted;
 };
