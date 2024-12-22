@@ -60,7 +60,7 @@ runs:
         summary=$(cat<<EOF
         ❌ \`${{ inputs.format-tool }}\`: It looks like your changes don't match our code style.
 
-        🛠️ Please either run \`${{ inputs.format-command }}\` or apply this patch with \`git apply\`:
+        🛠️ Please either run \`clang-format -i\` on the file, or apply this patch with \`git apply\`:
 
         [\`${{ steps.changes.outputs.file }}\`](${{ steps.upload.outputs.artifact-url }})
         $code_block diff

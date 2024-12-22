@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
   ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
 #endif
 
-  QCoreApplication::setApplicationName(kAppName);
+    QCoreApplication::setApplicationName(kAppName);
   QCoreApplication::setOrganizationName(kAppName);
   QGuiApplication::setDesktopFileName(QStringLiteral("org.deskflow.deskflow"));
 
