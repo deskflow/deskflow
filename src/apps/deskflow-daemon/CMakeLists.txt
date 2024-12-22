@@ -19,7 +19,7 @@
 if(WIN32)
   set(target deskflow-daemon)
   add_executable(${target} WIN32
-    deskflowd.cpp
+    deskflow-daemon.cpp
     "${PROJECT_BINARY_DIR}/src/version.rc"
   )
 

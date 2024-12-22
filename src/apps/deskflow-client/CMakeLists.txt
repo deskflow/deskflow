@@ -19,16 +19,15 @@ set(target deskflow-client)
 
 if(WIN32)
   set(PLATFORM_SOURCES
-    deskflowc.exe.manifest
-    deskflowc.ico
-    deskflowc.rc
+    deskflow-client.exe.manifest
+    deskflow-client.rc
     MSWindowsClientTaskBarReceiver.cpp
     MSWindowsClientTaskBarReceiver.h
     resource.h
-    tb_error.ico
-    tb_idle.ico
-    tb_run.ico
-    tb_wait.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/deskflow.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/tb_error.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/tb_idle.ico
+    ${PROJECT_SOURCE_DIR}/src/apps/res/tb_run.ico
     ${PROJECT_BINARY_DIR}/src/version.rc
   )
 elseif(APPLE)
@@ -43,7 +42,7 @@ elseif(UNIX)
   )
 endif()
 
-add_executable(${target} ${PLATFORM_SOURCES} deskflowc.cpp)
+add_executable(${target} ${PLATFORM_SOURCES} deskflow-client.cpp)
 
 target_link_libraries(
   ${target}
