@@ -39,6 +39,10 @@
 #include <QObject>
 #include <QtGlobal>
 
+#ifndef NDEBUG
+#include <QLoggingCategory>
+#endif
+
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
 #include <cstdlib>
@@ -66,6 +70,11 @@ bool hasArg(const QString &arg, const QStringList &args)
 
 int main(int argc, char *argv[])
 {
+
+#ifndef NDEBUG
+  // Fixes Fedora bug where qDebug() messages aren't printed.
+  QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true;qt.*=false"));
+#endif
 
 #if defined(Q_OS_MAC)
   /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
