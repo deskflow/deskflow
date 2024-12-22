@@ -1053,7 +1053,7 @@ void MainWindow::showAndActivate()
 #ifdef Q_OS_MAC
   forceAppActive();
 #endif
-  show();
+  showNormal();
   raise();
   activateWindow();
 }
