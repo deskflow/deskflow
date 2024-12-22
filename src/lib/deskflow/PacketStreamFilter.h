@@ -48,7 +48,7 @@ protected:
 
 private:
   bool isReadyNoLock() const;
-  void readPacketSize();
+  bool readPacketSize();
   bool readMore();
 
 private:

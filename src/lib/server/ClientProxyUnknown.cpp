@@ -121,6 +121,10 @@ void ClientProxyUnknown::addStreamHandlers()
       new TMethodEventJob<ClientProxyUnknown>(this, &ClientProxyUnknown::handleDisconnect)
   );
   m_events->adoptHandler(
+      m_events->forIStream().inputFormatError(), m_stream->getEventTarget(),
+      new TMethodEventJob<ClientProxyUnknown>(this, &ClientProxyUnknown::handleDisconnect)
+  );
+  m_events->adoptHandler(
       m_events->forIStream().outputShutdown(), m_stream->getEventTarget(),
       new TMethodEventJob<ClientProxyUnknown>(this, &ClientProxyUnknown::handleWriteError)
   );
@@ -146,6 +150,7 @@ void ClientProxyUnknown::removeHandlers()
     m_events->removeHandler(m_events->forIStream().inputReady(), m_stream->getEventTarget());
     m_events->removeHandler(m_events->forIStream().outputError(), m_stream->getEventTarget());
     m_events->removeHandler(m_events->forIStream().inputShutdown(), m_stream->getEventTarget());
+    m_events->removeHandler(m_events->forIStream().inputFormatError(), m_stream->getEventTarget());
     m_events->removeHandler(m_events->forIStream().outputShutdown(), m_stream->getEventTarget());
   }
   if (m_proxy != NULL) {
