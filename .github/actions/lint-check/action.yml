@@ -1,26 +1,21 @@
-name: "Lint error"
+name: "Lint Check"
 description: "Checks for lint errors and posts a helpful comment"
-
-inputs:
-  format-command:
-    description: "The command to run to fix lint errors"
-    required: true
-
-  format-tool:
-    description: "The name of the linting tool"
-    required: true
 
 runs:
   using: "composite"
   steps:
+    - name: Install Dependencies
+      run: pipx install --global clang_format
+      shell: bash
+
     - name: Run format command
-      run: ${{ inputs.format-command }}
+      run: find src/ -regex '.*\.\(cpp\|hpp\|cc\|cxx\|h\|c\|m\|mm\)' -exec clang-format -style=file --assume-filename=$(pwd)/.clang-format -i {} \;
       shell: bash
 
     - name: Find changes
       id: changes
       run: |
-        file=${{ inputs.format-tool }}.diff
+        file=clang-format.diff
         diff=$(git diff | tee $file)
 
         if [ -z "$diff" ]; then
@@ -43,7 +38,7 @@ runs:
       if: steps.changes.outputs.diff
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.format-tool }}-diff
+        name: clang-format-diff
         path: ${{ steps.changes.outputs.file }}
         if-no-files-found: error
 
@@ -54,9 +49,9 @@ runs:
         code_block="\`\`\`"
 
         summary=$(cat<<EOF
-        ❌ \`${{ inputs.format-tool }}\`: It looks like your changes don't match our code style.
+        ❌ \`clang-format\`: It looks like your changes don't match our code style.
 
-        🛠️ Please either run \`${{ inputs.format-command }}\` or apply this patch with \`git apply\`:
+        🛠️ Please either run \`clang-format -i\` on the file or apply this patch with \`git apply\`:
 
         [\`${{ steps.changes.outputs.file }}\`](${{ steps.upload.outputs.artifact-url }})
         $code_block diff
@@ -67,7 +62,7 @@ runs:
         echo "$summary" >> $GITHUB_STEP_SUMMARY
 
         file="ci_summary.md"
-        echo "❌🛠️ \`${{ inputs.format-tool }}\`: Lint errors, fix available." >> $file
+        echo "❌🛠️ \`clang-format\`: Lint errors, fix available." >> $file
         echo "file=$file" >> $GITHUB_OUTPUT
       shell: bash
 
@@ -75,7 +70,7 @@ runs:
       if: steps.summary.outputs.file
       uses: actions/upload-artifact@v4
       with:
-        name: summary-${{ inputs.format-tool }}
+        name: summary-clang-format
         path: ${{ steps.summary.outputs.file }}
         if-no-files-found: error
 
