@@ -19,6 +19,7 @@
 
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
+#include <mutex>
 
 class IEventQueue;
 class SocketMultiplexer;
@@ -87,6 +88,11 @@ private:
   void handleTCPConnected(const Event &event, void *);
 
 private:
+  // all accesses to m_ssl must be protected by this mutex. The only function that is called
+  // from outside SocketMultiplexer thread is close(), so we mostly care about things accessed
+  // by it.
+  std::mutex ssl_mutex_;
+
   Ssl *m_ssl;
   bool m_secureReady;
   bool m_fatal;
