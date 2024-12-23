@@ -6,21 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>883</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>750</width>
-    <height>550</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Deskflow</string>
@@ -32,8 +26,17 @@
     </property>
     <item>
      <layout class="QHBoxLayout" name="m_layoutName">
+      <property name="sizeConstraint">
+       <enum>QLayout::SizeConstraint::SetMinAndMaxSize</enum>
+      </property>
       <item>
        <widget class="QLabel" name="lblComputerName">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string notr="true">This computer's name:</string>
         </property>
@@ -42,7 +45,7 @@
       <item>
        <spacer name="m_pSpacerUpdate">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -54,6 +57,12 @@
       </item>
       <item>
        <widget class="QLabel" name="m_pLabelUpdate">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string notr="true">m_pLabelUpdate</string>
         </property>
@@ -66,6 +75,12 @@
     </item>
     <item>
      <widget class="QLabel" name="m_pLabelIpAddresses">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The highlighted IP is the one we think you should use. The server listens on all IPs, so the other IPs may work as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
@@ -110,7 +125,7 @@
           <property name="spacing">
            <number>15</number>
           </property>
-          <item alignment="Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QWidget" name="m_pWidgetServerRadio" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -154,7 +169,7 @@
             </layout>
            </widget>
           </item>
-          <item alignment="Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QWidget" name="m_pWidgetServer" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutServer">
              <property name="spacing">
@@ -236,7 +251,7 @@
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TLS enabled (&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#4285f4;&quot;&gt;fingerprint&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="textFormat">
-                <enum>Qt::RichText</enum>
+                <enum>Qt::TextFormat::RichText</enum>
                </property>
                <property name="indent">
                 <number>20</number>
@@ -246,7 +261,7 @@
              <item>
               <spacer name="verticalSpacer_2">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -261,7 +276,7 @@
                <item>
                 <spacer name="spacer_2">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
@@ -298,7 +313,7 @@
           <property name="spacing">
            <number>15</number>
           </property>
-          <item alignment="Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QWidget" name="m_pWidgetClientRadio" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -342,7 +357,7 @@
             </layout>
            </widget>
           </item>
-          <item alignment="Qt::AlignTop">
+          <item alignment="Qt::AlignmentFlag::AlignTop">
            <widget class="QWidget" name="m_pWidgetClientInput" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutClient">
              <property name="spacing">
@@ -410,19 +425,6 @@
             </layout>
            </widget>
           </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>1</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </widget>
        </item>
@@ -430,31 +432,55 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="m_pGroupLog">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
+     <widget class="QFrame" name="frameLog">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="title">
-       <string>Logs</string>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="leftMargin">
-        <number>8</number>
-       </property>
-       <property name="topMargin">
-        <number>8</number>
-       </property>
-       <property name="rightMargin">
-        <number>8</number>
-       </property>
-       <property name="bottomMargin">
-        <number>8</number>
-       </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QPlainTextEdit" name="m_pLogOutput">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SizeConstraint::SetMinAndMaxSize</enum>
+         </property>
+         <item>
+          <widget class="QToolButton" name="btnToggleLog">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::ArrowType::RightArrow</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblLog">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Log</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="textLog">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -471,7 +497,7 @@
           <bool>false</bool>
          </property>
          <property name="lineWrapMode">
-          <enum>QPlainTextEdit::NoWrap</enum>
+          <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -490,18 +516,12 @@
        <number>6</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
+       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
       <item>
        <widget class="QLabel" name="m_pLabelPadlock">
         <property name="enabled">
          <bool>true</bool>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="../../../../res/gui/deskflow.qrc">:/icons/64x64/padlock.png</pixmap>
         </property>
         <property name="minimumSize">
          <size>
@@ -515,10 +535,16 @@
           <height>32</height>
          </size>
         </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../res/deskflow.qrc">:/icons/64x64/padlock.png</pixmap>
+        </property>
         <property name="scaledContents">
          <bool>true</bool>
         </property>
-      </widget>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="m_pStatusLabel">
@@ -530,7 +556,7 @@
       <item>
        <spacer name="spacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -549,7 +575,7 @@
          <string notr="true">m_pLabelNotice</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="margin">
          <number>0</number>
@@ -562,10 +588,10 @@
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Policy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -614,14 +640,19 @@
  </customwidgets>
  <tabstops>
   <tabstop>rbModeServer</tabstop>
-  <tabstop>rmModeClient</tabstop>
   <tabstop>lineClientIp</tabstop>
   <tabstop>btnConnectToClient</tabstop>
-  <tabstop>m_pButtonConfigureServer</tabstop>
+  <tabstop>btnConfigureServer</tabstop>
+  <tabstop>rbModeClient</tabstop>
   <tabstop>lineHostname</tabstop>
   <tabstop>btnConnect</tabstop>
-  <tabstop>m_pLogOutput</tabstop>
+  <tabstop>btnToggleLog</tabstop>
+  <tabstop>textLog</tabstop>
   <tabstop>btnApplySettings</tabstop>
   <tabstop>btnToggleCore</tabstop>
  </tabstops>
+ <resources>
+  <include location="../res/deskflow.qrc"/>
+ </resources>
+ <connections/>
 </ui>
