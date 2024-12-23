@@ -10,7 +10,6 @@
 /tmp
 /vcpkg
 /vcpkg_installed
-/scripts/**/*.pyc
 /.cache
 /.venv
 aqtinstall.log
@@ -37,3 +36,6 @@ CMakeFiles/*
 
 # vscode folder
 /.vscode
+
+# scripts folder
+/scripts
