@@ -83,7 +83,7 @@ SettingsDialog::SettingsDialog(
   DESKFLOW_GUI_HOOK_SETTINGS
 #endif
   adjustSize();
-  qApp->processEvents();
+  QApplication::processEvents();
   setFixedHeight(height());
   setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
 }
