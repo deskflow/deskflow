@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 #if !defined(Q_OS_MAC)
   // causes dark mode to be used on some DE's
   if (qEnvironmentVariable("XDG_CURRENT_DESKTOP") != QLatin1String("KDE")) {
-    qApp->setStyle("fusion");
+    QApplication::setStyle("fusion");
   }
 #endif
 
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
   DESKFLOW_GUI_HOOK_START
 #endif
 
-  return qApp->exec();
+  return QApplication::exec();
 }
 
 #if defined(Q_OS_MAC)
