@@ -113,7 +113,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
 
 #ifdef Q_OS_MAC
-  ui->btnToggleLog->setFixedHeight(ui->lblLog->font().pixelSize());
+  ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
 
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
