@@ -9,7 +9,7 @@ runs:
       shell: bash
 
     - name: Run format command
-      run: find src/ -regex '.*\.\(cpp\|hpp\|cc\|cxx\|h\|c\|m\|mm\)' -exec clang-format -style=file --assume-filename=$(pwd)/.clang-format -i {} \;
+      run: find src/ -regex '.*\.\(cpp\|hpp\|cc\|cxx\|h\|c\|m\|mm\)' -exec clang-format -i {} \;
       shell: bash
 
     - name: Find changes
