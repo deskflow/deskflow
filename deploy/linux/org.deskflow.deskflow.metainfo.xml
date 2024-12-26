@@ -35,6 +35,25 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.18.0" date="2024-12-26" urgency="high">
+			<description>
+				<p>This stable Release Fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the relase page.</p>
+				<ul>
+					<li>Fix CVE-2021-42075: Close connection on app-level handshake failure</li>
+					<li>Fix CVE-2021-42074: Handle SSL race conditions and segmentation fault</li>
+					<li>Fix CVE-2021-42076: Enforce maximum message length </li>
+					<li>Add a visiblity toggle for the log</li>
+					<li>Fix deskflow will now hide or show when the tray icon is clicked</li>
+					<li>Fix how Utf-16 surrogates are handled</li>
+					<li>Avoid encoding empty data to the clipboard on Windows</li>
+					<li>Create new Tray Icons for windows</li>
+					<li>Always show the tray menu entry for the restore action on macOS</li>
+					<li>Correctly restore window when hidden with command+H on macOS</li>
+					<li>Update the windows clipboard format listener to monitor the clipboard</li>
+				</ul>
+			</description>
+		<url>https://github.com/deskflow/deskflow/releases/tag/v1.18.0</url>
+		</release>
 		<release version="1.17.2" date="2024-11-20" urgency="medium">
 			<description>
 				<p>This stable Release contains alot of internal refactoring.</p>

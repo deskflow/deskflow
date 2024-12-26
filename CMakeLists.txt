@@ -34,8 +34,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Fallback for when git can not be found
 set(DESKFLOW_VERSION_MAJOR 1)
-set(DESKFLOW_VERSION_MINOR 17)
-set(DESKFLOW_VERSION_PATCH 2)
+set(DESKFLOW_VERSION_MINOR 18)
+set(DESKFLOW_VERSION_PATCH 0)
 set(DESKFLOW_VERSION_TWEAK 0)
 
 # Get the version from git if it's a git repository
