@@ -440,7 +440,7 @@ void EiScreen::update_shape()
     }
   }
 
-  LOG_NOTE("logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
+  LOG_DEBUG("logical output size: %dx%d@%d.%d", w_, h_, x_, y_);
   cursor_x_ = x_ + w_ / 2;
   cursor_y_ = y_ + h_ / 2;
 
