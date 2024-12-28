@@ -138,6 +138,7 @@ private slots:
 private:
   std::unique_ptr<Ui::MainWindow> ui;
 
+  void quitApp();
   void updateSize();
   AppConfig &appConfig()
   {
