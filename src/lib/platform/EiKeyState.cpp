@@ -63,7 +63,7 @@ void EiKeyState::init(int fd, size_t len)
   auto sz = read(fd, buffer.get(), len);
 
   if ((size_t)sz < len) {
-    LOG_NOTE("failed to create xkb context: %s", strerror(errno));
+    LOG_DEBUG("failed to create xkb context: %s", strerror(errno));
     return;
   }
 
