@@ -39,19 +39,19 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
 
   auto btnCopyVersion = new QPushButton(copyIcon, QString(), this);
   btnCopyVersion->setFlat(true);
-  connect(btnCopyVersion, &QPushButton::clicked, this, [] { QGuiApplication::clipboard()->setText(kVersion); });
+  connect(btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
   // Set up the displayed version number
-  auto versionString = QString(kVersion);
-  if (versionString.endsWith(QStringLiteral(".0"))) {
-    versionString.chop(2);
+  m_versionString = QString(kVersion);
+  if (m_versionString.endsWith(QStringLiteral(".0"))) {
+    m_versionString.chop(2);
   } else {
-    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
+    m_versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
   }
 
   auto versionLayout = new QHBoxLayout();
   versionLayout->addWidget(new QLabel(tr("Version:")));
-  versionLayout->addWidget(new QLabel(versionString, this));
+  versionLayout->addWidget(new QLabel(m_versionString, this));
   versionLayout->addWidget(btnCopyVersion);
   versionLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed));
 
@@ -85,4 +85,9 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
   setLayout(mainLayout);
   adjustSize();
   setFixedSize(size());
+}
+
+void AboutDialog::copyVersionText()
+{
+  QGuiApplication::clipboard()->setText(m_versionString);
 }
