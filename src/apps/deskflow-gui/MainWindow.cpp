@@ -271,12 +271,7 @@ void MainWindow::connectSlots()
   connect(m_actionHelp, &QAction::triggered, this, &MainWindow::openHelpUrl);
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
-  connect(m_actionQuit, &QAction::triggered, qApp, [this] {
-    qDebug() << "quitting application";
-    m_Quitting = true;
-    QApplication::quit();
-  });
-
+  connect(m_actionQuit, &QAction::triggered, this, &MainWindow::quitApp);
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
   connect(m_actionSave, &QAction::triggered, this, &MainWindow::saveConfig);
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
@@ -534,6 +529,13 @@ void MainWindow::setModeClient()
   m_ConfigScopes.save();
 }
 
+void MainWindow::quitApp()
+{
+  qDebug() << "quitting application";
+  m_Quitting = true;
+  QApplication::quit();
+}
+
 void MainWindow::onWindowSaveTimerTimeout()
 {
   saveWindow();
@@ -580,6 +582,7 @@ void MainWindow::open()
   // Duplicate quit needed for mac os tray menu
   QAction *actionTrayQuit = new QAction(tr("Quit Deskflow"), this);
   actionTrayQuit->setShortcut(QKeySequence::Quit);
+  connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::quitApp);
 
   m_actionRestore->setText(tr("Open Deskflow"));
   trayActions.insert(3, m_actionRestore);
