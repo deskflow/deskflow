@@ -587,13 +587,8 @@ void MainWindow::open()
   trayActions.append(nullptr);
   trayActions.append(actionTrayQuit);
 #endif
-  m_TrayIcon.create(trayActions);
 
-  if (m_AppConfig.autoHide()) {
-    hide();
-  } else {
-    showAndActivate();
-  }
+  m_TrayIcon.create(trayActions);
 
   if (!m_AppConfig.enableUpdateCheck().has_value()) {
     m_AppConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
@@ -608,6 +603,12 @@ void MainWindow::open()
 
   if (m_AppConfig.startedBefore()) {
     m_CoreProcess.start();
+  }
+
+  if (m_AppConfig.autoHide()) {
+    hide();
+  } else {
+    showAndActivate();
   }
 }
 
