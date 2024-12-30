@@ -1011,7 +1011,7 @@ void MainWindow::updateLocalFingerprint()
     qFatal() << "failed to check if fingerprint exists";
   }
 
-  if (m_AppConfig.tlsEnabled() && fingerprintExists && ui->rbModeServer->isChecked()) {
+  if (m_AppConfig.tlsEnabled() && fingerprintExists) {
     ui->lblMyFingerprint->setVisible(true);
   } else {
     ui->lblMyFingerprint->setVisible(false);
