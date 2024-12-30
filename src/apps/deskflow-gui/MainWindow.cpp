@@ -204,7 +204,6 @@ void MainWindow::setupControls()
   setWindowTitle(kAppName);
 
   secureSocket(false);
-  updateLocalFingerprint();
 
   ui->m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
   ui->m_pLabelUpdate->hide();
@@ -360,7 +359,6 @@ void MainWindow::onConfigScopesSaving()
 
 void MainWindow::onAppConfigTlsChanged()
 {
-  updateLocalFingerprint();
   if (m_TlsUtility.isEnabled()) {
     m_TlsUtility.generateCertificate();
   }
@@ -674,6 +672,7 @@ void MainWindow::applyConfig()
 
   ui->lineHostname->setText(m_AppConfig.serverHostname());
   ui->lineClientIp->setText(m_ServerConfig.getClientAddress());
+  updateLocalFingerprint();
 }
 
 void MainWindow::applyCloseToTray() const
