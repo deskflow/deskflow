@@ -1077,12 +1077,16 @@ void MainWindow::enableServer(bool enable)
   if (enable) {
     ui->btnToggleCore->setEnabled(true);
     m_actionStartCore->setEnabled(true);
+
+    if (m_CoreProcess.isStarted() && m_CoreProcess.mode() != CoreProcess::Mode::Server)
+      m_CoreProcess.stop();
+
     m_CoreProcess.setMode(CoreProcess::Mode::Server);
 
     // The server can run without any clients configured, and this is actually
     // what you'll want to do the first time since you'll be prompted when an
     // unrecognized client tries to connect.
-    if (!m_AppConfig.startedBefore()) {
+    if (!m_AppConfig.startedBefore() && !m_CoreProcess.isStarted()) {
       qDebug() << "auto-starting core server for first time";
       m_CoreProcess.start();
       messages::showFirstServerStartMessage(this);
@@ -1102,6 +1106,8 @@ void MainWindow::enableClient(bool enable)
   if (enable) {
     ui->btnToggleCore->setEnabled(true);
     m_actionStartCore->setEnabled(true);
+    if (m_CoreProcess.isStarted() && m_CoreProcess.mode() != CoreProcess::Mode::Client)
+      m_CoreProcess.stop();
     m_CoreProcess.setMode(CoreProcess::Mode::Client);
   }
 }
