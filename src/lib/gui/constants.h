@@ -34,7 +34,7 @@ const auto kUrlHelp = QString("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
 const auto kUrlDownload = QString("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
 
 #if defined(Q_OS_LINUX)
-const auto kUrlGnomeTrayFix = "https://extensions.gnome.org/extension/2890/tray-icons-reloaded/";
+const auto kUrlGnomeTrayFix = "https://extensions.gnome.org/extension/615/appindicator-support/";
 #endif
 
 } // namespace deskflow::gui
