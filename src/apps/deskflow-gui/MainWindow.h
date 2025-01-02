@@ -138,7 +138,6 @@ private slots:
 private:
   std::unique_ptr<Ui::MainWindow> ui;
 
-  void quitApp();
   void updateSize();
   AppConfig &appConfig()
   {
@@ -152,7 +151,6 @@ private:
   void createStatusBar();
   void createTrayIcon();
   void applyConfig();
-  void applyCloseToTray() const;
   void setIcon();
   bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
@@ -190,7 +188,6 @@ private:
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
   bool m_SaveWindow = false;
-  bool m_Quitting = false;
   deskflow::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
   bool m_SaveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_WaylandWarnings;

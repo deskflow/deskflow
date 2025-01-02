@@ -130,8 +130,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   m_ConfigScopes.signalReady();
 
-  applyCloseToTray();
-
   updateScreenName();
   applyConfig();
   restoreWindow();
@@ -270,7 +268,7 @@ void MainWindow::connectSlots()
   connect(m_actionHelp, &QAction::triggered, this, &MainWindow::openHelpUrl);
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
-  connect(m_actionQuit, &QAction::triggered, this, &MainWindow::quitApp);
+  connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
   connect(m_actionSave, &QAction::triggered, this, &MainWindow::saveConfig);
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
@@ -438,7 +436,6 @@ void MainWindow::clearSettings()
 
   m_CoreProcess.stop();
 
-  m_Quitting = true;
   m_SaveOnExit = false;
   diagnostic::clearSettings(m_ConfigScopes, true);
 }
@@ -474,7 +471,6 @@ void MainWindow::openSettings()
     m_ConfigScopes.save();
 
     applyConfig();
-    applyCloseToTray();
 
     if (m_CoreProcess.isStarted()) {
       m_CoreProcess.restart();
@@ -527,13 +523,6 @@ void MainWindow::setModeClient()
   m_ConfigScopes.save();
 }
 
-void MainWindow::quitApp()
-{
-  qDebug() << "quitting application";
-  m_Quitting = true;
-  QApplication::quit();
-}
-
 void MainWindow::onWindowSaveTimerTimeout()
 {
   saveWindow();
@@ -580,7 +569,7 @@ void MainWindow::open()
   // Duplicate quit needed for mac os tray menu
   QAction *actionTrayQuit = new QAction(tr("Quit Deskflow"), this);
   actionTrayQuit->setShortcut(QKeySequence::Quit);
-  connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::quitApp);
+  connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
 
   m_actionRestore->setText(tr("Open Deskflow"));
   trayActions.insert(3, m_actionRestore);
@@ -674,11 +663,6 @@ void MainWindow::applyConfig()
   ui->lineHostname->setText(m_AppConfig.serverHostname());
   ui->lineClientIp->setText(m_ServerConfig.getClientAddress());
   updateLocalFingerprint();
-}
-
-void MainWindow::applyCloseToTray() const
-{
-  QApplication::setQuitOnLastWindowClosed(!m_AppConfig.closeToTray());
 }
 
 void MainWindow::saveSettings()
@@ -809,23 +793,23 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_Quitting) {
-    qDebug() << "skipping close event handle on quit";
+  if (m_AppConfig.closeToTray() && event->spontaneous()) {
+    if (m_AppConfig.showCloseReminder()) {
+      messages::showCloseReminder(this);
+      m_AppConfig.setShowCloseReminder(false);
+    }
+    qDebug() << "hiding to tray";
+    hide();
+    event->ignore();
     return;
   }
 
-  if (!m_AppConfig.closeToTray()) {
-    qDebug() << "window will not hide to tray";
-    return;
-  }
+  if (m_SaveOnExit)
+    m_ConfigScopes.save();
 
-  if (m_AppConfig.showCloseReminder()) {
-    messages::showCloseReminder(this);
-    m_AppConfig.setShowCloseReminder(false);
-  }
-
-  m_ConfigScopes.save();
-  qDebug() << "window should hide to tray";
+  qDebug() << "quitting application";
+  event->accept();
+  QApplication::quit();
 }
 
 void MainWindow::showFirstConnectedMessage()
