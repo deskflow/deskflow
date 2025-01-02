@@ -36,9 +36,6 @@
 #include "gui/tls/TlsFingerprint.h"
 #include "platform/wayland.h"
 
-#if defined(Q_OS_MAC)
-#include "gui/OSXHelpers.h"
-#endif
 #if defined(Q_OS_LINUX)
 #include "config.h"
 #endif

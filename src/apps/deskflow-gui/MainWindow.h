@@ -39,6 +39,10 @@
 #include "gui/core/WaylandWarnings.h"
 #include "gui/tls/TlsUtility.h"
 
+#ifdef Q_OS_MAC
+#include "gui/OSXHelpers.h"
+#endif
+
 class QAction;
 class QMenu;
 class QLineEdit;
@@ -93,6 +97,13 @@ public:
     return m_ServerConfig;
   }
   void autoAddScreen(const QString name);
+
+#ifdef Q_OS_MAC
+  void hide()
+  {
+    macOSNativeHide();
+  }
+#endif
 
 signals:
   void shown();
