@@ -314,13 +314,6 @@ void MainWindow::connectSlots()
   connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
 }
 
-void MainWindow::onAppAboutToQuit()
-{
-  if (m_SaveOnExit) {
-    m_ConfigScopes.save();
-  }
-}
-
 void MainWindow::toggleLogVisible(bool visible)
 {
   if (visible) {

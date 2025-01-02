@@ -97,9 +97,6 @@ public:
 signals:
   void shown();
 
-public slots:
-  void onAppAboutToQuit();
-
 private slots:
   void toggleLogVisible(bool visible);
   //
