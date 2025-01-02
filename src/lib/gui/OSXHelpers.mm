@@ -112,6 +112,11 @@ void forceAppActive()
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
+void macOSNativeHide()
+{
+  [NSApp hide:nil];
+}
+
 IconsTheme getOSXIconsTheme()
 {
   if (@available(macOS 11, *))
