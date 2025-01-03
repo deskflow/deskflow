@@ -55,6 +55,7 @@ class QCheckBox;
 class QRadioButton;
 class QMessageBox;
 class QAbstractButton;
+class QLocalServer;
 
 class DeskflowApplication;
 class SetupWizard;
@@ -209,6 +210,9 @@ private:
   deskflow::gui::TlsUtility m_TlsUtility;
   QTimer m_WindowSaveTimer;
   QSize m_expandedSize = QSize();
+
+  QLocalServer *m_guiDupeChecker = nullptr;
+  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
 
   // Window Actions
   QAction *m_actionAbout = nullptr;
