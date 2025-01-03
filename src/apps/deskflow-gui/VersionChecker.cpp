@@ -85,7 +85,7 @@ int VersionChecker::getStageVersion(QString stage)
 
   if (stage.isEmpty() || stage == stableName) {
     return stableValue;
-  } else if (stage.toLower().startsWith(rcName)) {
+  } else if (stage.startsWith(rcName, Qt::CaseInsensitive)) {
     static QRegularExpression re("\\d*", QRegularExpression::CaseInsensitiveOption);
     auto match = re.match(stage);
     if (match.hasMatch()) {
