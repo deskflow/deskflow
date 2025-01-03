@@ -99,11 +99,6 @@ elseif(APPLE)
     MACOSX_BUNDLE_LONG_VERSION_STRING ${CMAKE_PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${CMAKE_PROJECT_VERSION}
   )
-  find_program(MACDEPLOYQT_BIN macdeployqt6)
-  add_custom_command(
-    TARGET ${target} POST_BUILD
-    COMMAND ${MACDEPLOYQT_BIN} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}.app"
-  )
   install(TARGETS ${target} BUNDLE DESTINATION .)
 else()
   install(TARGETS ${target} DESTINATION bin)
