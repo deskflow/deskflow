@@ -35,8 +35,10 @@
 #include <QApplication>
 #include <QDebug>
 #include <QGuiApplication>
+#include <QLocalSocket>
 #include <QMessageBox>
 #include <QObject>
+#include <QSharedMemory>
 #include <QtGlobal>
 
 #if defined(Q_OS_MAC)
@@ -89,6 +91,29 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationDomain(kOrgDomain);
 
   QApplication app(argc, argv);
+
+  // Create a shared memory segment with a unique key
+  // This is to prevent a new instance from running if one is already running
+  QSharedMemory sharedMemory("deskflow-gui");
+
+  // Attempt to attach first and detach in order to clean up stale shm chunks
+  // This can happen if the previous instance was killed or crashed
+  if (sharedMemory.attach())
+    sharedMemory.detach();
+
+  // If we can create 1 byte of SHM we are the only instance
+  if (!sharedMemory.create(1)) {
+    // Ping the running instance to have it show itself
+    QLocalSocket socket;
+    socket.connectToServer("deskflow-gui", QLocalSocket::ReadOnly);
+    if (!socket.waitForConnected()) {
+      // If we can't connect to the other instance tell the user its running.
+      // This should never happen but just incase we should show something
+      QMessageBox::information(nullptr, QObject::tr("Deskflow"), QObject::tr("Deskflow is already running"));
+    }
+    socket.disconnectFromServer();
+    return 0;
+  }
 
 #if !defined(Q_OS_MAC)
   // causes dark mode to be used on some DE's
