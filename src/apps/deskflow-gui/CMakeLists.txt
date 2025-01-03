@@ -76,17 +76,6 @@ if(WIN32)
       ".*system32.*"
     RUNTIME DESTINATION .
   )
-  find_program(DEPLOYQT windeployqt6)
-  add_custom_command(
-    TARGET ${target} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/qtDeploy
-      COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network --dir ${CMAKE_BINARY_DIR}/qtDeploy $<TARGET_FILE:${target}>
-  )
-  install(
-    DIRECTORY ${CMAKE_BINARY_DIR}/qtDeploy/
-    DESTINATION .
-    FILES_MATCHING PATTERN "*.*"
-  )
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
