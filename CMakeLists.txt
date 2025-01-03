@@ -139,6 +139,13 @@ elseif(UNIX AND NOT APPLE)
 endif()
 
 option(BUILD_INSTALLER "Build installer" ON)
+
+# Building of packages with debug config is forbidden
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  message(STATUS "Disabling packaging in debug mode")
+  set(BUILD_INSTALLER OFF)
+endif()
+
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
 endif()
