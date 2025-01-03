@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2024 Deskflow Developers
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2002 Chris Schoeneman
  *
@@ -32,8 +33,12 @@ public:
   virtual ~TCPSocketFactory();
 
   // ISocketFactory overrides
-  virtual IDataSocket *create(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
-  virtual IListenSocket *createListen(bool secure, IArchNetwork::EAddressFamily family = IArchNetwork::kINET) const;
+  virtual IDataSocket *create(
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+  ) const;
+  virtual IListenSocket *createListen(
+      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+  ) const;
 
 private:
   IEventQueue *m_events;
