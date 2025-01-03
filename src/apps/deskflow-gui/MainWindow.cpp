@@ -43,6 +43,8 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include <QLocalServer>
+#include <QLocalSocket>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -81,6 +83,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig),
       m_WindowSaveTimer(this),
+      m_guiDupeChecker{new QLocalServer(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionHelp{new QAction(tr("Report a Bug"), this)},
@@ -119,6 +122,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   toggleLogVisible(m_AppConfig.logExpanded());
 
+  // Setup the Instance Checking
+  // In case of a previous crash remove first
+  m_guiDupeChecker->removeServer(m_guiSocketName);
+  m_guiDupeChecker->listen(m_guiSocketName);
+
   createMenuBar();
   setupControls();
   connectSlots();
@@ -138,6 +146,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
 MainWindow::~MainWindow()
 {
+  m_guiDupeChecker->close();
   m_CoreProcess.cleanup();
 }
 
@@ -309,6 +318,8 @@ void MainWindow::connectSlots()
   connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
 
   connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
+
+  connect(m_guiDupeChecker, &QLocalServer::newConnection, this, &MainWindow::showAndActivate);
 }
 
 void MainWindow::toggleLogVisible(bool visible)
