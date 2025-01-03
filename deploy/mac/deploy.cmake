@@ -5,6 +5,10 @@
 # calling CMAKE_CURRENT_LIST_DIR after include would return the wrong scope var
 set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 
+# Install depends into our staged copy
+find_program(MACDEPLOYQT_BIN macdeployqt6)
+install(CODE "execute_process(COMMAND ${MACDEPLOYQT_BIN} \"\${CMAKE_INSTALL_PREFIX}/Deskflow.app\")")
+
 set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
 set(CMAKE_INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks")
 set(CPACK_PACKAGE_ICON "${MY_DIR}/dmg-volume.icns")
