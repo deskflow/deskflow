@@ -28,10 +28,6 @@
 #include "gui/messages.h"
 #include "gui/string_utils.h"
 
-#ifdef DESKFLOW_GUI_HOOK_HEADER
-#include DESKFLOW_GUI_HOOK_HEADER
-#endif
-
 #include <QApplication>
 #include <QDebug>
 #include <QGuiApplication>

@@ -26,10 +26,6 @@
 #include "gui/validators/ScreenNameValidator.h"
 #include "gui/validators/ValidationError.h"
 
-#ifdef DESKFLOW_GUI_HOOK_HEADER
-#include DESKFLOW_GUI_HOOK_HEADER
-#endif
-
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
