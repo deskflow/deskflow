@@ -54,7 +54,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE ${sources} ${ui_files} ${platform_e
 
 target_link_libraries(
   ${target}
-  ${DESKFLOW_GUI_HOOK_LIB}
   gui
   Qt6::Core
   Qt6::Widgets
