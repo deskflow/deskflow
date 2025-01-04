@@ -89,6 +89,7 @@ if(WIN32)
   )
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
+    INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
     MACOSX_BUNDLE_BUNDLE_NAME "Deskflow"
     MACOSX_BUNDLE_DISPLAY_NAME "Deskflow"
     MACOSX_BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow"
