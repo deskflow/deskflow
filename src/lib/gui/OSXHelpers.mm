@@ -110,11 +110,13 @@ bool isOSXInterfaceStyleDark()
 void forceAppActive()
 {
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+  [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
 }
 
 void macOSNativeHide()
 {
   [NSApp hide:nil];
+  [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
 
 IconsTheme getOSXIconsTheme()
