@@ -25,6 +25,8 @@
 #include "KeySequence.h"
 #include "ServerConfig.h"
 
+#include <QTimer>
+
 ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ActionDialog>()},
@@ -42,8 +44,8 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   ui->keySequenceWidget->setText(m_action.keySequence().toString());
   ui->keySequenceWidget->setKeySequence(m_action.keySequence());
 
-  ui->m_pComboSwitchInDirection->setCurrentIndex(m_action.switchDirection());
-  ui->m_pComboLockCursorToScreen->setCurrentIndex(m_action.lockCursorMode());
+  ui->comboSwitchInDirection->setCurrentIndex(m_action.switchDirection());
+  ui->comboLockCursorToScreen->setCurrentIndex(m_action.lockCursorMode());
 
   ui->comboActionType->setCurrentIndex(m_action.type());
   ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
@@ -59,10 +61,19 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
     ui->listScreens->addItem(newListItem);
 
-    ui->m_pComboSwitchToScreen->addItem(screen.name());
+    ui->comboSwitchToScreen->addItem(tr("Switch to %1").arg(screen.name()));
     if (screen.name() == m_action.switchScreenName())
-      ui->m_pComboSwitchToScreen->setCurrentIndex(ui->m_pComboSwitchToScreen->count() - 1);
+      ui->comboSwitchToScreen->setCurrentIndex(ui->comboSwitchToScreen->count() - 1);
   }
+
+  ui->keySequenceWidget->setVisible(false);
+  ui->groupScreens->setVisible(false);
+  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->comboSwitchToScreen->setVisible(false);
+  ui->comboSwitchInDirection->setVisible(false);
+  ui->comboLockCursorToScreen->setVisible(false);
+
+  actionTypeChanged(ui->comboActionType->currentIndex());
 }
 
 void ActionDialog::accept()
@@ -92,9 +103,9 @@ void ActionDialog::accept()
 
   m_action.setHaveScreens(screenCount);
 
-  m_action.setSwitchScreenName(ui->m_pComboSwitchToScreen->currentText());
-  m_action.setSwitchDirection(ui->m_pComboSwitchInDirection->currentIndex());
-  m_action.setLockCursorMode(ui->m_pComboLockCursorToScreen->currentIndex());
+  m_action.setSwitchScreenName(ui->comboSwitchToScreen->currentText().remove(tr("Switch to ")));
+  m_action.setSwitchDirection(ui->comboSwitchInDirection->currentIndex());
+  m_action.setLockCursorMode(ui->comboLockCursorToScreen->currentIndex());
   m_action.setActiveOnRelease(ui->comboTriggerOn->currentIndex());
   m_action.setRestartServer(ui->comboActionType->currentIndex() == ActionTypes::RestartServer);
 
@@ -103,16 +114,18 @@ void ActionDialog::accept()
 
 void ActionDialog::keySequenceChanged()
 {
-  ui->listScreens->setEnabled(ui->keySequenceWidget->valid() && !ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
 }
 
 void ActionDialog::actionTypeChanged(int index)
 {
-  ui->keySequenceWidget->setEnabled(isKeyAction(index));
-  ui->listScreens->setEnabled(isKeyAction(index));
-  ui->m_pComboSwitchToScreen->setEnabled(index == ActionTypes::SwitchTo);
-  ui->m_pComboSwitchInDirection->setEnabled(index == ActionTypes::SwitchInDirection);
-  ui->m_pComboLockCursorToScreen->setEnabled(index == ActionTypes::ModifyCursorLock);
+  ui->keySequenceWidget->setVisible(isKeyAction(index));
+  ui->groupScreens->setVisible(isKeyAction(index));
+  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->comboSwitchToScreen->setVisible(index == ActionTypes::SwitchTo);
+  ui->comboSwitchInDirection->setVisible(index == ActionTypes::SwitchInDirection);
+  ui->comboLockCursorToScreen->setVisible(index == ActionTypes::ModifyCursorLock);
+  QTimer::singleShot(1, this, &ActionDialog::adjustSize);
 }
 
 bool ActionDialog::isKeyAction(int index)
