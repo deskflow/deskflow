@@ -68,37 +68,37 @@ public:
   QString text() const;
   const KeySequence &keySequence() const
   {
-    return m_KeySequence;
+    return m_keySequence;
   }
   void loadSettings(QSettings &settings);
   void saveSettings(QSettings &settings) const;
   int type() const
   {
-    return m_Type;
+    return m_type;
   }
   const QStringList &typeScreenNames() const
   {
-    return m_TypeScreenNames;
+    return m_typeScreenNames;
   }
   const QString &switchScreenName() const
   {
-    return m_SwitchScreenName;
+    return m_switchScreenName;
   }
   int switchDirection() const
   {
-    return m_SwitchDirection;
+    return m_switchDirection;
   }
   int lockCursorMode() const
   {
-    return m_LockCursorMode;
+    return m_lockCursorMode;
   }
   bool activeOnRelease() const
   {
-    return m_ActiveOnRelease;
+    return m_activeOnRelease;
   }
   bool haveScreens() const
   {
-    return m_HasScreens;
+    return m_hasScreens;
   }
   bool restartServer() const
   {
@@ -110,39 +110,39 @@ public:
 protected:
   KeySequence &keySequence()
   {
-    return m_KeySequence;
+    return m_keySequence;
   }
   void setKeySequence(const KeySequence &seq)
   {
-    m_KeySequence = seq;
+    m_keySequence = seq;
   }
   void setType(int t)
   {
-    m_Type = t;
+    m_type = t;
   }
   QStringList &typeScreenNames()
   {
-    return m_TypeScreenNames;
+    return m_typeScreenNames;
   }
   void setSwitchScreenName(const QString &n)
   {
-    m_SwitchScreenName = n;
+    m_switchScreenName = n;
   }
   void setSwitchDirection(int d)
   {
-    m_SwitchDirection = d;
+    m_switchDirection = d;
   }
   void setLockCursorMode(int m)
   {
-    m_LockCursorMode = m;
+    m_lockCursorMode = m;
   }
   void setActiveOnRelease(bool b)
   {
-    m_ActiveOnRelease = b;
+    m_activeOnRelease = b;
   }
   void setHaveScreens(bool b)
   {
-    m_HasScreens = b;
+    m_hasScreens = b;
   }
   void setRestartServer(bool b)
   {
@@ -150,19 +150,19 @@ protected:
   }
 
 private:
-  KeySequence m_KeySequence;
-  int m_Type = keystroke;
-  QStringList m_TypeScreenNames = QStringList();
-  QString m_SwitchScreenName = QString();
-  int m_SwitchDirection = switchLeft;
-  int m_LockCursorMode = lockCursorToggle;
-  bool m_ActiveOnRelease = false;
-  bool m_HasScreens = false;
+  KeySequence m_keySequence;
+  int m_type = keystroke;
+  QStringList m_typeScreenNames = QStringList();
+  QString m_switchScreenName = QString();
+  int m_switchDirection = switchLeft;
+  int m_lockCursorMode = lockCursorToggle;
+  bool m_activeOnRelease = false;
+  bool m_hasScreens = false;
   bool m_restartServer;
 
-  static const char *m_ActionTypeNames[];
-  static const char *m_SwitchDirectionNames[];
-  static const char *m_LockCursorModeNames[];
+  static const char *m_actionTypeNames[];
+  static const char *m_switchDirectionNames[];
+  static const char *m_lockCursorModeNames[];
 };
 
 using ActionList = QList<Action>;

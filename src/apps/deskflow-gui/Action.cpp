@@ -21,17 +21,17 @@
 #include <QSettings>
 #include <QTextStream>
 
-const char *Action::m_ActionTypeNames[] = {
+const char *Action::m_actionTypeNames[] = {
     "keyDown",       "keyUp",     "keystroke", "switchToScreen", "switchInDirection", "lockCursorToScreen",
     "restartServer", "mouseDown", "mouseUp",   "mousebutton"
 };
 
-const char *Action::m_SwitchDirectionNames[] = {"left", "right", "up", "down"};
-const char *Action::m_LockCursorModeNames[] = {"toggle", "on", "off"};
+const char *Action::m_switchDirectionNames[] = {"left", "right", "up", "down"};
+const char *Action::m_lockCursorModeNames[] = {"toggle", "on", "off"};
 
 QString Action::text() const
 {
-  QString text = QString(m_ActionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]) + "(";
+  QString text = QString(m_actionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]) + "(";
 
   switch (type()) {
   case keyDown:
@@ -59,11 +59,11 @@ QString Action::text() const
     break;
 
   case switchInDirection:
-    text += m_SwitchDirectionNames[m_SwitchDirection];
+    text += m_switchDirectionNames[m_switchDirection];
     break;
 
   case lockCursorToScreen:
-    text += m_LockCursorModeNames[m_LockCursorMode];
+    text += m_lockCursorModeNames[m_lockCursorMode];
     break;
 
   case restartAllConnections:
@@ -122,10 +122,10 @@ void Action::saveSettings(QSettings &settings) const
 
 bool Action::operator==(const Action &a) const
 {
-  return m_KeySequence == a.m_KeySequence && m_Type == a.m_Type && m_TypeScreenNames == a.m_TypeScreenNames &&
-         m_SwitchScreenName == a.m_SwitchScreenName && m_SwitchDirection == a.m_SwitchDirection &&
-         m_LockCursorMode == a.m_LockCursorMode && m_ActiveOnRelease == a.m_ActiveOnRelease &&
-         m_HasScreens == a.m_HasScreens && m_restartServer == a.m_restartServer;
+  return m_keySequence == a.m_keySequence && m_type == a.m_type && m_typeScreenNames == a.m_typeScreenNames &&
+         m_switchScreenName == a.m_switchScreenName && m_switchDirection == a.m_switchDirection &&
+         m_lockCursorMode == a.m_lockCursorMode && m_activeOnRelease == a.m_activeOnRelease &&
+         m_hasScreens == a.m_hasScreens && m_restartServer == a.m_restartServer;
 }
 
 QTextStream &operator<<(QTextStream &outStream, const Action &action)
