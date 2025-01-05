@@ -95,6 +95,7 @@ private:
   static void readVector1ByteInt(deskflow::IStream *, std::vector<UInt8> &);
   static void readVector2BytesInt(deskflow::IStream *, std::vector<UInt16> &);
   static void readVector4BytesInt(deskflow::IStream *, std::vector<UInt32> &);
+  static UInt32 readVectorSize(deskflow::IStream *stream);
 
   /**
    * @brief Handles an array of bytes

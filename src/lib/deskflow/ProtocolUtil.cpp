@@ -177,13 +177,6 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
 
       case 'I': {
         void *destination = va_arg(args, void *);
-        UInt32 n = read4BytesInt(stream);
-
-        if (n > PROTOCOL_MAX_LIST_LENGTH) {
-          LOG((CLOG_ERR "read: vector length exceeds maximum allowed size: %u", n));
-          throw XBadClient("Too long message received");
-        }
-
         switch (len) {
         case 1:
           // 1 byte integer
@@ -493,7 +486,7 @@ UInt32 ProtocolUtil::read4BytesInt(deskflow::IStream *stream)
 
 void ProtocolUtil::readVector1ByteInt(deskflow::IStream *stream, std::vector<UInt8> &destination)
 {
-  UInt32 size = read4BytesInt(stream);
+  UInt32 size = readVectorSize(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read1ByteInt(stream));
   }
@@ -501,7 +494,7 @@ void ProtocolUtil::readVector1ByteInt(deskflow::IStream *stream, std::vector<UIn
 
 void ProtocolUtil::readVector2BytesInt(deskflow::IStream *stream, std::vector<UInt16> &destination)
 {
-  UInt32 size = read4BytesInt(stream);
+  UInt32 size = readVectorSize(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read2BytesInt(stream));
   }
@@ -509,10 +502,22 @@ void ProtocolUtil::readVector2BytesInt(deskflow::IStream *stream, std::vector<UI
 
 void ProtocolUtil::readVector4BytesInt(deskflow::IStream *stream, std::vector<UInt32> &destination)
 {
-  UInt32 size = read4BytesInt(stream);
+  UInt32 size = readVectorSize(stream);
   for (UInt32 i = 0; i < size; ++i) {
     destination.push_back(read4BytesInt(stream));
   }
+}
+
+UInt32 ProtocolUtil::readVectorSize(deskflow::IStream *stream)
+{
+  UInt32 size = read4BytesInt(stream);
+
+  if (size > PROTOCOL_MAX_LIST_LENGTH) {
+    LOG((CLOG_ERR "readVectorSize: vector length exceeds maximum allowed size: %u", size));
+    throw XBadClient("Too long message received");
+  }
+
+  return size;
 }
 
 void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, String *destination)
