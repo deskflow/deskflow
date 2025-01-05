@@ -66,18 +66,18 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
   int idx = 0;
   for (const Screen &screen : config.screens()) {
-    if (!screen.isNull()) {
-      QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
-      ui->m_pListScreens->addItem(pListItem);
-      if (m_Action.typeScreenNames().indexOf(screen.name()) != -1)
-        ui->m_pListScreens->setCurrentItem(pListItem);
+    if (screen.isNull())
+      continue;
+    QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
+    ui->m_pListScreens->addItem(pListItem);
+    if (m_Action.typeScreenNames().indexOf(screen.name()) != -1)
+      ui->m_pListScreens->setCurrentItem(pListItem);
 
-      ui->m_pComboSwitchToScreen->addItem(screen.name());
-      if (screen.name() == m_Action.switchScreenName())
-        ui->m_pComboSwitchToScreen->setCurrentIndex(idx);
+    ui->m_pComboSwitchToScreen->addItem(screen.name());
+    if (screen.name() == m_Action.switchScreenName())
+      ui->m_pComboSwitchToScreen->setCurrentIndex(idx);
 
-      idx++;
-    }
+    idx++;
   }
 }
 
