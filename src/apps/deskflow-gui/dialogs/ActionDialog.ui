@@ -50,7 +50,7 @@
        </widget>
       </item>
       <item>
-       <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey">
+       <widget class="KeySequenceWidget" name="keySequenceWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>
@@ -345,7 +345,7 @@
   <connection>
    <sender>m_pGroupType</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -361,7 +361,7 @@
   <connection>
    <sender>m_pRadioSwitchInDirection</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -377,7 +377,7 @@
   <connection>
    <sender>m_pRadioLockCursorToScreen</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -393,7 +393,7 @@
   <connection>
    <sender>m_pRadioRestartAllConnections</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -409,7 +409,7 @@
   <connection>
    <sender>m_pRadioPress</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -425,7 +425,7 @@
   <connection>
    <sender>m_pRadioRelease</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -441,7 +441,7 @@
   <connection>
    <sender>m_pRadioPressAndRelease</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -617,7 +617,7 @@
   <connection>
    <sender>m_pRadioSwitchToScreen</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_pKeySequenceWidgetHotkey</receiver>
+   <receiver>keySequenceWidget</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
