@@ -172,10 +172,22 @@ private:
   bool m_hasScreens = false;
   bool m_restartServer;
 
-  static const char *m_actionTypeNames[];
-  static const char *m_switchDirectionNames[];
-  static const char *m_lockCursorModeNames[];
   inline static const QString m_commandTemplate = QStringLiteral("(%1)");
+  inline static const QStringList m_actionTypeNames{
+      QStringLiteral("keyDown"),           QStringLiteral("keyUp"),
+      QStringLiteral("keystroke"),         QStringLiteral("switchToScreen"),
+      QStringLiteral("switchInDirection"), QStringLiteral("lockCursorToScreen"),
+      QStringLiteral("restartServer"),     QStringLiteral("mouseDown"),
+      QStringLiteral("mouseUp"),           QStringLiteral("mousebutton")
+  };
+
+  inline static const QStringList m_switchDirectionNames{
+      QStringLiteral("left"), QStringLiteral("right"), QStringLiteral("up"), QStringLiteral("down")
+  };
+
+  inline static const QStringList m_lockCursorModeNames{
+      QStringLiteral("toggle"), QStringLiteral("on"), QStringLiteral("off")
+  };
 };
 
 using ActionList = QList<Action>;
