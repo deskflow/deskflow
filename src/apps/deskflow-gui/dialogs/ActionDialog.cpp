@@ -35,6 +35,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
       m_buttonGroupType(new QButtonGroup(this))
 {
   ui->setupUi(this);
+  connect(ui->keySequenceWidget, &KeySequenceWidget::keySequenceChanged, this, &ActionDialog::keySequenceChanged);
 
   // work around Qt Designer's lack of a QButtonGroup; we need it to get
   // at the button id of the checked radio button
@@ -51,8 +52,8 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
     m_buttonGroupType->addButton(typeButtons[i], i);
 
-  ui->m_pKeySequenceWidgetHotkey->setText(m_action.keySequence().toString());
-  ui->m_pKeySequenceWidgetHotkey->setKeySequence(m_action.keySequence());
+  ui->keySequenceWidget->setText(m_action.keySequence().toString());
+  ui->keySequenceWidget->setKeySequence(m_action.keySequence());
   m_buttonGroupType->button(m_action.type())->setChecked(true);
   ui->m_pComboSwitchInDirection->setCurrentIndex(m_action.switchDirection());
   ui->m_pComboLockCursorToScreen->setCurrentIndex(m_action.lockCursorMode());
@@ -80,10 +81,10 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
 void ActionDialog::accept()
 {
-  if (!sequenceWidget()->valid() && m_buttonGroupType->checkedId() >= 0 && m_buttonGroupType->checkedId() < 3)
+  if (!ui->keySequenceWidget->valid() && m_buttonGroupType->checkedId() >= 0 && m_buttonGroupType->checkedId() < 3)
     return;
 
-  m_action.setKeySequence(sequenceWidget()->keySequence());
+  m_action.setKeySequence(ui->keySequenceWidget->keySequence());
   m_action.setType(m_buttonGroupType->checkedId());
   m_action.setHaveScreens(ui->m_pGroupBoxScreens->isChecked());
 
@@ -102,20 +103,15 @@ void ActionDialog::accept()
   QDialog::accept();
 }
 
-void ActionDialog::on_m_pKeySequenceWidgetHotkey_keySequenceChanged()
+void ActionDialog::keySequenceChanged()
 {
-  if (sequenceWidget()->keySequence().isMouseButton()) {
+  if (ui->keySequenceWidget->keySequence().isMouseButton()) {
     ui->m_pGroupBoxScreens->setEnabled(false);
     ui->m_pListScreens->setEnabled(false);
   } else {
     ui->m_pGroupBoxScreens->setEnabled(true);
     ui->m_pListScreens->setEnabled(true);
   }
-}
-
-const KeySequenceWidget *ActionDialog::sequenceWidget() const
-{
-  return ui->m_pKeySequenceWidgetHotkey;
 }
 
 ActionDialog::~ActionDialog() = default;

@@ -41,12 +41,10 @@ public:
 
 protected slots:
   void accept() override;
-  void on_m_pKeySequenceWidgetHotkey_keySequenceChanged();
-
-protected:
-  const KeySequenceWidget *sequenceWidget() const;
 
 private:
+  void keySequenceChanged();
+
   std::unique_ptr<Ui::ActionDialog> ui;
   Hotkey &m_hotkey;
   Action &m_action;
