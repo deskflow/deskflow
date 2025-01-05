@@ -175,6 +175,7 @@ private:
   static const char *m_actionTypeNames[];
   static const char *m_switchDirectionNames[];
   static const char *m_lockCursorModeNames[];
+  inline static const QString m_commandTemplate = QStringLiteral("(%1)");
 };
 
 using ActionList = QList<Action>;
