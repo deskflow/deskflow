@@ -69,8 +69,19 @@ bool Hotkey::operator==(const Hotkey &hk) const
 
 QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
 {
-  for (int i = 0; i < hotkey.actions().size(); i++)
-    outStream << "\t" << hotkey.text() << " = " << hotkey.actions()[i] << Qt::endl;
+  // Don't write a config if there is no actions
+  if (hotkey.actions().size() == 0)
+    return outStream;
+
+  outStream << "\t" << hotkey.text() << " = ";
+  for (int i = 0; i < hotkey.actions().size(); i++) {
+    outStream << hotkey.actions()[i];
+    if (i != hotkey.actions().size() - 1) {
+      outStream << ", ";
+    }
+  }
+
+  outStream << "\n";
 
   return outStream;
 }
