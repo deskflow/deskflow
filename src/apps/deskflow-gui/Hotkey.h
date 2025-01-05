@@ -41,7 +41,7 @@ public:
   QString text() const;
   const KeySequence &keySequence() const
   {
-    return m_KeySequence;
+    return m_keySequence;
   }
   const ActionList &actions() const
   {
@@ -56,11 +56,11 @@ public:
 protected:
   KeySequence &keySequence()
   {
-    return m_KeySequence;
+    return m_keySequence;
   }
   void setKeySequence(const KeySequence &seq)
   {
-    m_KeySequence = seq;
+    m_keySequence = seq;
   }
   ActionList &actions()
   {
@@ -68,7 +68,7 @@ protected:
   }
 
 private:
-  KeySequence m_KeySequence;
+  KeySequence m_keySequence;
   ActionList m_Actions;
   inline static const QString kSectionActions = QStringLiteral("actions");
   inline static const QString kMousebutton = QStringLiteral("mousebutton(%1)");
